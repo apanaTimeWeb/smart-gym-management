@@ -18,30 +18,20 @@ let SettingsService = class SettingsService {
         this.prisma = prisma;
     }
     async getSettings() {
-        const settings = await this.prisma.settings.findFirst();
+        let settings = await this.prisma.settings.findFirst();
         if (!settings) {
-            return this.prisma.settings.create({
-                data: {
-                    gymName: 'GymSmart Fitness',
-                    ownerName: 'Admin',
-                    phone: '',
-                    email: '',
-                    city: '',
-                    gstNumber: '',
-                },
+            settings = await this.prisma.settings.create({
+                data: { gymName: 'GymSmart Fitness', ownerName: 'Admin', phone: '', email: '', city: '', gstNumber: '' },
             });
         }
-        return settings;
+        return { success: true, data: settings };
     }
     async updateSettings(dto) {
         const settings = await this.prisma.settings.findFirst();
-        if (settings) {
-            return this.prisma.settings.update({
-                where: { id: settings.id },
-                data: dto,
-            });
-        }
-        return this.prisma.settings.create({ data: dto });
+        const data = settings
+            ? await this.prisma.settings.update({ where: { id: settings.id }, data: dto })
+            : await this.prisma.settings.create({ data: dto });
+        return { success: true, data };
     }
 };
 exports.SettingsService = SettingsService;

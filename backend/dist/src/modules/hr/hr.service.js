@@ -18,65 +18,46 @@ let HrService = class HrService {
         this.prisma = prisma;
     }
     findAllStaff(query) {
-        return this.prisma.staff.findMany({ where: { isActive: true } });
+        return this.prisma.staff.findMany({ where: { isActive: true } }).then(data => ({ success: true, data }));
     }
     createStaff(dto) {
-        return this.prisma.staff.create({ data: dto });
+        return this.prisma.staff.create({ data: dto }).then(data => ({ success: true, data }));
     }
     findOneStaff(id) {
-        return this.prisma.staff.findUnique({ where: { id } });
+        return this.prisma.staff.findUnique({ where: { id } }).then(data => ({ success: true, data }));
     }
     updateStaff(id, dto) {
-        return this.prisma.staff.update({ where: { id }, data: dto });
+        return this.prisma.staff.update({ where: { id }, data: dto }).then(data => ({ success: true, data }));
     }
     removeStaff(id) {
-        return this.prisma.staff.update({
-            where: { id },
-            data: { isActive: false },
-        });
+        return this.prisma.staff.update({ where: { id }, data: { isActive: false } }).then(data => ({ success: true, data }));
     }
     findAllPayrolls(query) {
-        return this.prisma.payroll.findMany({ include: { staff: true } });
+        return this.prisma.payroll.findMany({ include: { staff: true }, orderBy: { id: 'desc' } }).then(data => ({ success: true, data }));
     }
     createPayroll(dto) {
-        return this.prisma.payroll.create({ data: dto });
+        return this.prisma.payroll.create({ data: dto }).then(data => ({ success: true, data }));
     }
     updatePayrollStatus(id, status) {
         return this.prisma.payroll.update({
             where: { id },
             data: { status, paidAt: status === 'Paid' ? new Date() : null },
-        });
+        }).then(data => ({ success: true, data }));
     }
     async getHrSummary() {
         const totalStaff = await this.prisma.staff.count();
-        const activeStaff = await this.prisma.staff.count({
-            where: { isActive: true },
-        });
-        const now = new Date();
-        const currentMonth = now.toLocaleString('default', {
-            month: 'long',
-            year: 'numeric',
-        });
+        const activeStaff = await this.prisma.staff.count({ where: { isActive: true } });
         const payrolls = await this.prisma.payroll.findMany();
-        let totalPayrollThisMonth = 0;
-        let paidCount = 0;
-        let pendingCount = 0;
+        let totalPayrollThisMonth = 0, paidCount = 0, pendingCount = 0;
         payrolls.forEach((p) => {
             if (p.status === 'Paid') {
                 paidCount++;
                 totalPayrollThisMonth += p.amount;
             }
-            else {
+            else
                 pendingCount++;
-            }
         });
-        return {
-            totalStaff,
-            activeStaff,
-            totalPayrollThisMonth,
-            paidCount,
-            pendingCount,
-        };
+        return { success: true, data: { totalStaff, activeStaff, totalPayrollThisMonth, paidCount, pendingCount } };
     }
 };
 exports.HrService = HrService;

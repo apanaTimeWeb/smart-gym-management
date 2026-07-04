@@ -143,6 +143,22 @@ async function main() {
         { name: 'Meena Joshi', phone: '+91 88776 65544', interest: 'Gold', status: 'FOLLOW_UP', source: 'Call' },
         { name: 'Karan Malhotra', phone: '+91 77665 54433', interest: 'PT', status: 'CONVERTED', source: 'Referral' },
         { name: 'Pooja Shah', phone: '+91 66554 43322', interest: 'Basic', status: 'NEW', source: 'Website' },
+        { name: 'Arjun Nair', phone: '+91 91122 33445', interest: 'Premium', status: 'FOLLOW_UP', source: 'Instagram' },
+        { name: 'Divya Menon', phone: '+91 92233 44556', interest: 'Gold', status: 'NEW', source: 'Facebook' },
+        { name: 'Suresh Pillai', phone: '+91 93344 55667', interest: 'Basic', status: 'LOST', source: 'Walk-in' },
+        { name: 'Kavita Joshi', phone: '+91 94455 66778', interest: 'Personal Training', status: 'CONVERTED', source: 'Referral' },
+        { name: 'Nikhil Bose', phone: '+91 95566 77889', interest: 'Premium', status: 'NEW', source: 'WhatsApp' },
+        { name: 'Rekha Sharma', phone: '+91 96677 88990', interest: 'Gold', status: 'FOLLOW_UP', source: 'Call' },
+        { name: 'Tarun Kapoor', phone: '+91 97788 99001', interest: 'Basic', status: 'NEW', source: 'Website' },
+        { name: 'Simran Kaur', phone: '+91 98899 00112', interest: 'Premium', status: 'CONVERTED', source: 'Instagram' },
+        { name: 'Deepak Yadav', phone: '+91 99900 11223', interest: 'Gold', status: 'LOST', source: 'Walk-in' },
+        { name: 'Anjali Singh', phone: '+91 90011 22334', interest: 'Basic', status: 'NEW', source: 'Facebook' },
+        { name: 'Mohit Saxena', phone: '+91 91122 44556', interest: 'Personal Training', status: 'FOLLOW_UP', source: 'Referral' },
+        { name: 'Preethi Nair', phone: '+91 92233 55667', interest: 'Premium', status: 'NEW', source: 'WhatsApp' },
+        { name: 'Gaurav Mishra', phone: '+91 93344 66778', interest: 'Gold', status: 'CONVERTED', source: 'Call' },
+        { name: 'Swati Pandey', phone: '+91 94455 77889', interest: 'Basic', status: 'NEW', source: 'Website' },
+        { name: 'Rohit Tiwari', phone: '+91 95566 88990', interest: 'Premium', status: 'FOLLOW_UP', source: 'Instagram' },
+        { name: 'Nisha Agarwal', phone: '+91 96677 99001', interest: 'Gold', status: 'LOST', source: 'Walk-in' },
     ];
     for (const i of inquiries) {
         const count = await prisma.inquiry.count({ where: { phone: i.phone } });
@@ -150,6 +166,166 @@ async function main() {
             await prisma.inquiry.create({ data: i });
     }
     console.log('✅ Inquiries created');
+    const extraMembers = [
+        { email: 'karan@gmail.com', name: 'Karan Mehta', phone: '+91 70001 00001', gender: 'MALE', address: 'Juhu', branch: 'Main Branch', planId: 1, billingCycle: 'ONE_MONTH', joinDate: new Date('2026-04-01'), expiryDate: new Date('2026-05-01'), paidAmount: 1200, pendingAmount: 0, status: 'ACTIVE' },
+        { email: 'neha@gmail.com', name: 'Neha Joshi', phone: '+91 70002 00002', gender: 'FEMALE', address: 'Malad', branch: 'Branch 2', planId: 2, billingCycle: 'THREE_MONTHS', joinDate: new Date('2026-03-15'), expiryDate: new Date('2026-06-15'), paidAmount: 4500, pendingAmount: 0, status: 'ACTIVE' },
+        { email: 'suresh@gmail.com', name: 'Suresh Nair', phone: '+91 70003 00003', gender: 'MALE', address: 'Goregaon', branch: 'Branch 3', planId: 3, billingCycle: 'SIX_MONTHS', joinDate: new Date('2026-02-01'), expiryDate: new Date('2026-08-01'), paidAmount: 12000, pendingAmount: 0, status: 'ACTIVE' },
+        { email: 'pooja@gmail.com', name: 'Pooja Verma', phone: '+91 70004 00004', gender: 'FEMALE', address: 'Kandivali', branch: 'Main Branch', planId: 1, billingCycle: 'ONE_MONTH', joinDate: new Date('2026-05-01'), expiryDate: new Date('2026-06-01'), paidAmount: 0, pendingAmount: 1200, status: 'PENDING' },
+        { email: 'arjun@gmail.com', name: 'Arjun Kapoor', phone: '+91 70005 00005', gender: 'MALE', address: 'Versova', branch: 'Branch 2', planId: 2, billingCycle: 'ONE_MONTH', joinDate: new Date('2025-11-01'), expiryDate: new Date('2025-12-01'), paidAmount: 1800, pendingAmount: 0, status: 'EXPIRED' },
+        { email: 'divya@gmail.com', name: 'Divya Pillai', phone: '+91 70006 00006', gender: 'FEMALE', address: 'Chembur', branch: 'Branch 3', planId: 3, billingCycle: 'TWELVE_MONTHS', joinDate: new Date('2026-01-10'), expiryDate: new Date('2027-01-10'), paidAmount: 22000, pendingAmount: 0, status: 'ACTIVE' },
+        { email: 'rohit2@gmail.com', name: 'Rohit Desai', phone: '+91 70007 00007', gender: 'MALE', address: 'Kurla', branch: 'Main Branch', planId: 2, billingCycle: 'THREE_MONTHS', joinDate: new Date('2026-04-10'), expiryDate: new Date('2026-07-10'), paidAmount: 4500, pendingAmount: 0, status: 'ACTIVE' },
+        { email: 'meena@gmail.com', name: 'Meena Rao', phone: '+91 70008 00008', gender: 'FEMALE', address: 'Sion', branch: 'Branch 2', planId: 1, billingCycle: 'SIX_MONTHS', joinDate: new Date('2026-03-01'), expiryDate: new Date('2026-09-01'), paidAmount: 5500, pendingAmount: 0, status: 'ACTIVE' },
+        { email: 'tarun@gmail.com', name: 'Tarun Bose', phone: '+91 70009 00009', gender: 'MALE', address: 'Mulund', branch: 'Branch 3', planId: 3, billingCycle: 'ONE_MONTH', joinDate: new Date('2026-05-15'), expiryDate: new Date('2026-06-15'), paidAmount: 0, pendingAmount: 2500, status: 'PENDING' },
+        { email: 'simran@gmail.com', name: 'Simran Kaur', phone: '+91 70010 00010', gender: 'FEMALE', address: 'Vikhroli', branch: 'Main Branch', planId: 2, billingCycle: 'TWELVE_MONTHS', joinDate: new Date('2025-07-01'), expiryDate: new Date('2025-07-31'), paidAmount: 1800, pendingAmount: 0, status: 'EXPIRED' },
+        { email: 'deepak@gmail.com', name: 'Deepak Sharma', phone: '+91 70011 00011', gender: 'MALE', address: 'Ghatkopar', branch: 'Branch 2', planId: 1, billingCycle: 'THREE_MONTHS', joinDate: new Date('2026-02-20'), expiryDate: new Date('2026-05-20'), paidAmount: 3000, pendingAmount: 0, status: 'ACTIVE' },
+        { email: 'anjali@gmail.com', name: 'Anjali Tiwari', phone: '+91 70012 00012', gender: 'FEMALE', address: 'Khar', branch: 'Branch 3', planId: 3, billingCycle: 'SIX_MONTHS', joinDate: new Date('2026-01-20'), expiryDate: new Date('2026-07-20'), paidAmount: 12000, pendingAmount: 0, status: 'ACTIVE' },
+        { email: 'mohit@gmail.com', name: 'Mohit Gupta', phone: '+91 70013 00013', gender: 'MALE', address: 'Santacruz', branch: 'Main Branch', planId: 2, billingCycle: 'ONE_MONTH', joinDate: new Date('2026-05-20'), expiryDate: new Date('2026-06-20'), paidAmount: 0, pendingAmount: 1800, status: 'PENDING' },
+        { email: 'preethi@gmail.com', name: 'Preethi Menon', phone: '+91 70014 00014', gender: 'FEMALE', address: 'Vile Parle', branch: 'Branch 2', planId: 1, billingCycle: 'TWELVE_MONTHS', joinDate: new Date('2026-03-05'), expiryDate: new Date('2027-03-05'), paidAmount: 10000, pendingAmount: 0, status: 'ACTIVE' },
+    ];
+    for (const m of extraMembers) {
+        const existing = await prisma.member.findUnique({ where: { email: m.email } });
+        if (!existing) {
+            const mem = await prisma.member.create({ data: m });
+            if (m.paidAmount > 0) {
+                await prisma.payment.create({
+                    data: { memberId: mem.id, amount: m.paidAmount, method: ['UPI', 'Cash', 'Card', 'NetBanking'][mem.id % 4], status: 'PAID', invoiceNo: 'INV-EX-' + mem.id, paidAt: m.joinDate }
+                });
+            }
+        }
+    }
+    console.log('✅ Extra Members created');
+    const allStaff = await prisma.staff.findMany();
+    const payrollMonths = ['April 2026', 'May 2026', 'June 2026', 'July 2026'];
+    for (const s of allStaff) {
+        for (const month of payrollMonths) {
+            const exists = await prisma.payroll.count({ where: { staffId: s.id, month } });
+            if (exists === 0) {
+                const isPaid = month !== 'July 2026';
+                await prisma.payroll.create({
+                    data: {
+                        staffId: s.id,
+                        month,
+                        amount: s.salary,
+                        status: isPaid ? 'Paid' : 'Pending',
+                        paidAt: isPaid ? new Date() : null,
+                    },
+                });
+            }
+        }
+    }
+    console.log('✅ Payrolls created — 20 entries (5 staff × 4 months)');
+    const allMembers = await prisma.member.findMany({ take: 10 });
+    const today = new Date();
+    const attCount = await prisma.attendance.count();
+    if (attCount === 0) {
+        for (let d = 0; d < 10; d++) {
+            const date = new Date(today);
+            date.setDate(today.getDate() - d);
+            date.setHours(0, 0, 0, 0);
+            const member = allMembers[d % allMembers.length];
+            const mCheckIn = new Date(date);
+            mCheckIn.setHours(6 + (d % 3));
+            const mCheckOut = new Date(date);
+            mCheckOut.setHours(mCheckIn.getHours() + 1 + (d % 2));
+            await prisma.attendance.create({
+                data: { memberId: member.id, date, checkIn: mCheckIn, checkOut: mCheckOut, type: 'MEMBER' },
+            });
+            const staffMember = allStaff[d % allStaff.length];
+            const sCheckIn = new Date(date);
+            sCheckIn.setHours(8);
+            const sCheckOut = new Date(date);
+            sCheckOut.setHours(17);
+            await prisma.attendance.create({
+                data: { staffId: staffMember.id, date, checkIn: sCheckIn, checkOut: sCheckOut, type: 'STAFF' },
+            });
+        }
+    }
+    console.log('✅ Attendance created — 20 records (10 member + 10 staff)');
+    const allProducts = await prisma.product.findMany();
+    const orderMethods = ['UPI', 'Cash', 'Card'];
+    const existingOrderCount = await prisma.order.count();
+    if (existingOrderCount === 0) {
+        for (let i = 0; i < 20; i++) {
+            const p1 = allProducts[i % allProducts.length];
+            const p2 = allProducts[(i + 2) % allProducts.length];
+            const qty1 = 1 + (i % 3);
+            const qty2 = 1 + (i % 2);
+            const total = p1.price * qty1 + p2.price * qty2;
+            const orderDate = new Date(today);
+            orderDate.setDate(today.getDate() - i);
+            await prisma.order.create({
+                data: {
+                    total,
+                    method: orderMethods[i % 3],
+                    status: 'Completed',
+                    createdAt: orderDate,
+                    items: {
+                        create: [
+                            { productId: p1.id, qty: qty1, price: p1.price },
+                            { productId: p2.id, qty: qty2, price: p2.price },
+                        ],
+                    },
+                },
+            });
+        }
+    }
+    console.log('✅ Orders created — 20 orders');
+    const allMembersForPay = await prisma.member.findMany({ take: 10 });
+    const payMethods = ['UPI', 'Cash', 'Card', 'NetBanking'];
+    for (let i = 0; i < 15; i++) {
+        const mem = allMembersForPay[i % allMembersForPay.length];
+        const invoiceNo = `INV-EXTRA-${Date.now()}-${i}`;
+        const payDate = new Date(today);
+        payDate.setDate(today.getDate() - i * 2);
+        await prisma.payment.create({
+            data: { memberId: mem.id, amount: [1200, 1800, 2500, 3000, 4500][i % 5], method: payMethods[i % 4], status: 'PAID', invoiceNo, paidAt: payDate }
+        });
+    }
+    console.log('✅ Extra Payments created');
+    const extraWorkouts = [
+        { name: 'Incline Dumbbell Press', category: 'Chest', muscleGroup: ['Upper Chest', 'Triceps'], sets: 4, reps: '10-12', difficulty: 'INTERMEDIATE' },
+        { name: 'Lat Pulldown', category: 'Back', muscleGroup: ['Lats', 'Biceps'], sets: 4, reps: '10-12', difficulty: 'BEGINNER' },
+        { name: 'Leg Press', category: 'Legs', muscleGroup: ['Quads', 'Glutes'], sets: 4, reps: '12-15', difficulty: 'BEGINNER' },
+        { name: 'Shoulder Press', category: 'Shoulders', muscleGroup: ['Deltoids', 'Triceps'], sets: 3, reps: '10-12', difficulty: 'INTERMEDIATE' },
+        { name: 'Bicep Curl', category: 'Arms', muscleGroup: ['Biceps'], sets: 3, reps: '12-15', difficulty: 'BEGINNER' },
+        { name: 'Tricep Pushdown', category: 'Arms', muscleGroup: ['Triceps'], sets: 3, reps: '12-15', difficulty: 'BEGINNER' },
+        { name: 'Leg Curl', category: 'Legs', muscleGroup: ['Hamstrings'], sets: 3, reps: '12-15', difficulty: 'BEGINNER' },
+        { name: 'Cable Fly', category: 'Chest', muscleGroup: ['Chest'], sets: 3, reps: '15-20', difficulty: 'INTERMEDIATE' },
+        { name: 'Romanian Deadlift', category: 'Legs', muscleGroup: ['Hamstrings', 'Glutes'], sets: 4, reps: '8-10', difficulty: 'ADVANCED' },
+        { name: 'Face Pull', category: 'Shoulders', muscleGroup: ['Rear Deltoids', 'Traps'], sets: 3, reps: '15-20', difficulty: 'BEGINNER' },
+        { name: 'Crunches', category: 'Core', muscleGroup: ['Abs'], sets: 3, reps: '20-25', difficulty: 'BEGINNER' },
+        { name: 'Mountain Climbers', category: 'Cardio', muscleGroup: ['Full Body'], duration: '30 sec', difficulty: 'INTERMEDIATE' },
+        { name: 'Jump Rope', category: 'Cardio', muscleGroup: ['Full Body'], duration: '10 min', difficulty: 'BEGINNER' },
+        { name: 'Dumbbell Row', category: 'Back', muscleGroup: ['Lats', 'Rhomboids'], sets: 4, reps: '10-12', difficulty: 'INTERMEDIATE' },
+    ];
+    for (const w of extraWorkouts) {
+        const count = await prisma.workout.count({ where: { name: w.name } });
+        if (count === 0)
+            await prisma.workout.create({ data: w });
+    }
+    console.log('✅ Extra Workouts created');
+    const extraDiets = [
+        { name: 'Keto Diet', goal: 'Weight Loss', calories: 1600, protein: 120, carbs: 30, fats: 110, meals: ['Eggs + Avocado (Breakfast)', 'Grilled Chicken + Salad (Lunch)', 'Paneer Tikka (Dinner)'] },
+        { name: 'Vegan Bulk', goal: 'Muscle Gain', calories: 2800, protein: 160, carbs: 380, fats: 70, meals: ['Oats + Banana + Peanut Butter', 'Tofu + Brown Rice', 'Lentil Soup + Roti'] },
+        { name: 'Maintenance Diet', goal: 'Maintenance', calories: 2200, protein: 140, carbs: 250, fats: 75, meals: ['Poha + Milk (Breakfast)', 'Dal + Rice + Sabzi (Lunch)', 'Roti + Paneer (Dinner)'] },
+        { name: 'Endurance Fuel', goal: 'Endurance', calories: 2600, protein: 130, carbs: 350, fats: 65, meals: ['Banana + Oats Smoothie', 'Pasta + Chicken', 'Sweet Potato + Fish'] },
+        { name: 'Fat Loss Express', goal: 'Weight Loss', calories: 1500, protein: 160, carbs: 100, fats: 50, meals: ['Greek Yogurt + Berries', 'Grilled Fish + Veggies', 'Protein Shake + Almonds'] },
+        { name: 'Lean Bulk', goal: 'Muscle Gain', calories: 3200, protein: 220, carbs: 380, fats: 85, meals: ['6 Eggs + Toast + OJ', 'Rice + Chicken + Broccoli', 'Whey Shake + Banana', 'Paneer + Roti'] },
+        { name: 'Flexibility Diet', goal: 'Flexibility', calories: 2000, protein: 100, carbs: 280, fats: 60, meals: ['Fruit Bowl + Nuts', 'Quinoa + Veggies', 'Soup + Salad'] },
+    ];
+    for (const d of extraDiets) {
+        const count = await prisma.dietPlan.count({ where: { name: d.name } });
+        if (count === 0)
+            await prisma.dietPlan.create({ data: d });
+    }
+    console.log('✅ Extra Diet Plans created');
+    const settingsCount = await prisma.settings.count();
+    if (settingsCount === 0) {
+        await prisma.settings.create({
+            data: { gymName: 'GymSmart Fitness', ownerName: 'Rohit Grandmaster', phone: '+91 83479 77566', email: 'admin@gymsmart.com', city: 'Mumbai', gstNumber: '27AABCG1234A1Z5' }
+        });
+    }
+    console.log('✅ Settings created');
     console.log('\n🎉 Seeding complete!');
 }
 main().catch(e => { console.error('❌ Seed failed:', e); process.exit(1); }).finally(async () => { await prisma.$disconnect(); });

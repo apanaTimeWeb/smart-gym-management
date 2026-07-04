@@ -7,42 +7,28 @@ export class FinanceService {
 
   async createPayment(dto: any) {
     const payment = await this.prisma.payment.create({
-      data: {
-        memberId: dto.memberId,
-        amount: dto.amount,
-        method: dto.method,
-        notes: dto.notes,
-        status: 'PAID',
-        invoiceNo: 'INV-' + Date.now(),
-        paidAt: new Date(),
-      },
+      data: { memberId: dto.memberId, amount: dto.amount, method: dto.method, notes: dto.notes, status: 'PAID', invoiceNo: 'INV-' + Date.now(), paidAt: new Date() },
     });
-    // update member paid amount
     await this.prisma.member.update({
       where: { id: dto.memberId },
-      data: {
-        paidAmount: { increment: dto.amount },
-        pendingAmount: { decrement: dto.amount }, // simple logic
-      },
+      data: { paidAmount: { increment: dto.amount }, pendingAmount: { decrement: dto.amount } },
     });
-    return payment;
+    return { success: true, data: payment };
   }
 
   async findAllPayments(query: any) {
     const limit = query.limit ? parseInt(query.limit) : 50;
     const payments = await this.prisma.payment.findMany({
-      include: { member: true },
+      include: { member: { include: { plan: true } } },
       take: limit,
       orderBy: { paidAt: 'desc' },
     });
-    return { payments, total: payments.length };
+    return { success: true, data: { payments, total: payments.length } };
   }
 
   async getPaymentsByMember(memberId: number) {
-    return this.prisma.payment.findMany({
-      where: { memberId },
-      orderBy: { paidAt: 'desc' },
-    });
+    const data = await this.prisma.payment.findMany({ where: { memberId }, orderBy: { paidAt: 'desc' } });
+    return { success: true, data };
   }
 
   async getSummary() {
@@ -132,13 +118,6 @@ export class FinanceService {
       ([month, revenue]) => ({ month, revenue }),
     );
 
-    return {
-      totalRevenue,
-      monthlyRevenue,
-      pendingAmount,
-      totalPayments,
-      revenueByMethod,
-      monthlyData,
-    };
+    return { success: true, data: { totalRevenue, monthlyRevenue, pendingAmount, totalPayments, revenueByMethod, monthlyData } };
   }
 }

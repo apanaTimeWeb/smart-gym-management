@@ -5,35 +5,37 @@ import { PrismaService } from '../../database/prisma.service';
 export class WorkoutService {
   constructor(private prisma: PrismaService) {}
 
-  findAllWorkouts(query: any) {
-    return this.prisma.workout.findMany({ where: { isActive: true } });
+  async findAllWorkouts(query: any) {
+    const data = await this.prisma.workout.findMany({ where: { isActive: true }, orderBy: { id: 'asc' } });
+    return { success: true, data };
   }
-  createWorkout(dto: any) {
-    return this.prisma.workout.create({ data: dto });
+  async createWorkout(dto: any) {
+    const data = await this.prisma.workout.create({ data: dto });
+    return { success: true, data };
   }
-  updateWorkout(id: number, dto: any) {
-    return this.prisma.workout.update({ where: { id }, data: dto });
+  async updateWorkout(id: number, dto: any) {
+    const data = await this.prisma.workout.update({ where: { id }, data: dto });
+    return { success: true, data };
   }
-  removeWorkout(id: number) {
-    return this.prisma.workout.update({
-      where: { id },
-      data: { isActive: false },
-    });
+  async removeWorkout(id: number) {
+    const data = await this.prisma.workout.update({ where: { id }, data: { isActive: false } });
+    return { success: true, data };
   }
 
-  findAllDietPlans(query: any) {
-    return this.prisma.dietPlan.findMany({ where: { isActive: true } });
+  async findAllDietPlans(query: any) {
+    const data = await this.prisma.dietPlan.findMany({ where: { isActive: true }, orderBy: { id: 'asc' } });
+    return { success: true, data };
   }
-  createDietPlan(dto: any) {
-    return this.prisma.dietPlan.create({ data: dto });
+  async createDietPlan(dto: any) {
+    const data = await this.prisma.dietPlan.create({ data: dto });
+    return { success: true, data };
   }
-  updateDietPlan(id: number, dto: any) {
-    return this.prisma.dietPlan.update({ where: { id }, data: dto });
+  async updateDietPlan(id: number, dto: any) {
+    const data = await this.prisma.dietPlan.update({ where: { id }, data: dto });
+    return { success: true, data };
   }
-  removeDietPlan(id: number) {
-    return this.prisma.dietPlan.update({
-      where: { id },
-      data: { isActive: false },
-    });
+  async removeDietPlan(id: number) {
+    const data = await this.prisma.dietPlan.update({ where: { id }, data: { isActive: false } });
+    return { success: true, data };
   }
 }

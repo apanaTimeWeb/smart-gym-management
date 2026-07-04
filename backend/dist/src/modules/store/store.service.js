@@ -17,82 +17,51 @@ let StoreService = class StoreService {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    findAllProducts(query) {
-        return this.prisma.product.findMany({
-            where: { isActive: true },
-            orderBy: { name: 'asc' },
-        });
+    async findAllProducts(query) {
+        const data = await this.prisma.product.findMany({ where: { isActive: true }, orderBy: { name: 'asc' } });
+        return { success: true, data };
     }
-    createProduct(dto) {
-        return this.prisma.product.create({ data: dto });
+    async createProduct(dto) {
+        const data = await this.prisma.product.create({ data: dto });
+        return { success: true, data };
     }
-    updateProduct(id, dto) {
-        return this.prisma.product.update({ where: { id }, data: dto });
+    async updateProduct(id, dto) {
+        const data = await this.prisma.product.update({ where: { id }, data: dto });
+        return { success: true, data };
     }
-    removeProduct(id) {
-        return this.prisma.product.update({
-            where: { id },
-            data: { isActive: false },
-        });
+    async removeProduct(id) {
+        const data = await this.prisma.product.update({ where: { id }, data: { isActive: false } });
+        return { success: true, data };
     }
-    findAllOrders(query) {
-        return this.prisma.order
-            .findMany({
+    async findAllOrders(query) {
+        const orders = await this.prisma.order.findMany({
             include: { items: { include: { product: true } } },
             orderBy: { id: 'desc' },
-        })
-            .then((orders) => ({ orders, total: orders.length }));
+        });
+        return { success: true, data: { orders, total: orders.length } };
     }
     async createOrder(dto) {
         let total = 0;
         const order = await this.prisma.order.create({
-            data: {
-                total: 0,
-                method: dto.method,
-                status: 'COMPLETED',
-                notes: dto.notes,
-            },
+            data: { total: 0, method: dto.method, status: 'Completed', notes: dto.notes },
         });
         for (const item of dto.items) {
-            const product = await this.prisma.product.findUnique({
-                where: { id: item.productId },
-            });
+            const product = await this.prisma.product.findUnique({ where: { id: item.productId } });
             if (product) {
                 total += product.price * item.qty;
-                await this.prisma.orderItem.create({
-                    data: {
-                        orderId: order.id,
-                        productId: item.productId,
-                        qty: item.qty,
-                        price: product.price,
-                    },
-                });
-                await this.prisma.product.update({
-                    where: { id: product.id },
-                    data: { stock: { decrement: item.qty } },
-                });
+                await this.prisma.orderItem.create({ data: { orderId: order.id, productId: item.productId, qty: item.qty, price: product.price } });
+                await this.prisma.product.update({ where: { id: product.id }, data: { stock: { decrement: item.qty } } });
             }
         }
-        await this.prisma.order.update({
-            where: { id: order.id },
-            data: { total },
-        });
-        return this.prisma.order.findUnique({
-            where: { id: order.id },
-            include: { items: true },
-        });
+        const data = await this.prisma.order.update({ where: { id: order.id }, data: { total }, include: { items: true } });
+        return { success: true, data };
     }
     async getStoreSummary() {
-        const totalProducts = await this.prisma.product.count({
-            where: { isActive: true },
-        });
+        const totalProducts = await this.prisma.product.count({ where: { isActive: true } });
         const totalOrders = await this.prisma.order.count();
-        const totalRevenue = (await this.prisma.order.aggregate({ _sum: { total: true } }))._sum
-            .total || 0;
-        const lowStockProducts = await this.prisma.product.findMany({
-            where: { stock: { lte: 10 }, isActive: true },
-        });
-        return { totalProducts, totalOrders, totalRevenue, lowStockProducts };
+        const totalRevenue = (await this.prisma.order.aggregate({ _sum: { total: true } }))._sum.total || 0;
+        const lowStockProducts = await this.prisma.product.findMany({ where: { stock: { lte: 10 }, isActive: true } });
+        return { success: true, data: { totalProducts, totalOrders, totalRevenue, lowStockProducts } };
     }
 };
 exports.StoreService = StoreService;

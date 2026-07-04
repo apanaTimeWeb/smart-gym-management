@@ -5,36 +5,36 @@ import { PrismaService } from '../../database/prisma.service';
 export class InquiriesService {
   constructor(private prisma: PrismaService) {}
 
-  findAll(query: any) {
-    return this.prisma.inquiry
-      .findMany({ orderBy: { id: 'desc' } })
-      .then((inquiries) => ({ inquiries, total: inquiries.length }));
+  async findAll(query: any) {
+    const limit = query.limit ? parseInt(query.limit) : 200;
+    const inquiries = await this.prisma.inquiry.findMany({ orderBy: { id: 'desc' }, take: limit });
+    return { success: true, data: { inquiries, total: inquiries.length } };
   }
-  create(dto: any) {
-    return this.prisma.inquiry.create({ data: dto });
+  async create(dto: any) {
+    const data = await this.prisma.inquiry.create({ data: dto });
+    return { success: true, data };
   }
-  findOne(id: number) {
-    return this.prisma.inquiry.findUnique({ where: { id } });
+  async findOne(id: number) {
+    const data = await this.prisma.inquiry.findUnique({ where: { id } });
+    return { success: true, data };
   }
-  update(id: number, dto: any) {
-    return this.prisma.inquiry.update({ where: { id }, data: dto });
+  async update(id: number, dto: any) {
+    const data = await this.prisma.inquiry.update({ where: { id }, data: dto });
+    return { success: true, data };
   }
-  remove(id: number) {
-    return this.prisma.inquiry.delete({ where: { id } });
+  async remove(id: number) {
+    const data = await this.prisma.inquiry.delete({ where: { id } });
+    return { success: true, data };
   }
 
   async getStats() {
-    const total = await this.prisma.inquiry.count();
-    const new_count = await this.prisma.inquiry.count({
-      where: { status: 'NEW' },
-    });
-    const followUp = await this.prisma.inquiry.count({
-      where: { status: 'FOLLOW_UP' },
-    });
-    const converted = await this.prisma.inquiry.count({
-      where: { status: 'CONVERTED' },
-    });
-    const lost = await this.prisma.inquiry.count({ where: { status: 'LOST' } });
-    return { total, new: new_count, followUp, converted, lost };
+    const [total, new_count, followUp, converted, lost] = await Promise.all([
+      this.prisma.inquiry.count(),
+      this.prisma.inquiry.count({ where: { status: 'NEW' } }),
+      this.prisma.inquiry.count({ where: { status: 'FOLLOW_UP' } }),
+      this.prisma.inquiry.count({ where: { status: 'CONVERTED' } }),
+      this.prisma.inquiry.count({ where: { status: 'LOST' } }),
+    ]);
+    return { success: true, data: { total, new: new_count, followUp, converted, lost } };
   }
 }

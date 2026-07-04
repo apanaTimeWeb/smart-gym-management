@@ -117,37 +117,34 @@ let DashboardService = class DashboardService {
             planCounts.set(pName, (planCounts.get(pName) || 0) + 1);
         });
         const membersByPlan = Array.from(planCounts.entries()).map(([plan, count]) => ({ plan, count }));
+        const pendingPaymentsList = await this.prisma.member.findMany({
+            where: { pendingAmount: { gt: 0 } },
+            select: { id: true, name: true, pendingAmount: true, expiryDate: true },
+            take: 10,
+        });
         return {
-            totalMembers,
-            activeMembers,
-            newMembersThisMonth,
-            totalRevenue,
-            monthlyRevenue,
-            pendingPayments,
-            totalStaff,
-            activeStaff,
-            totalProducts,
-            lowStockCount,
-            totalInquiries,
-            newInquiries,
-            memberGrowth,
-            revenueChart,
-            membersByPlan,
-            membersByStatus: {
-                active: activeMembers,
-                pending: pendingMembers,
-                expired: expiredMembers,
+            success: true,
+            data: {
+                totalMembers,
+                activeMembers,
+                newMembersThisMonth,
+                totalRevenue,
+                monthlyRevenue,
+                pendingPayments,
+                totalStaff,
+                activeStaff,
+                totalProducts,
+                lowStockCount,
+                totalInquiries,
+                newInquiries,
+                memberGrowth,
+                revenueChart,
+                membersByPlan,
+                membersByStatus: { active: activeMembers, pending: pendingMembers, expired: expiredMembers },
+                recentMembers: await this.prisma.member.findMany({ take: 5, orderBy: { id: 'desc' }, include: { plan: true } }),
+                recentPayments: await this.prisma.payment.findMany({ take: 5, orderBy: { id: 'desc' }, include: { member: true } }),
+                pendingPaymentsList,
             },
-            recentMembers: await this.prisma.member.findMany({
-                take: 5,
-                orderBy: { id: 'desc' },
-                include: { plan: true },
-            }),
-            recentPayments: await this.prisma.payment.findMany({
-                take: 5,
-                orderBy: { id: 'desc' },
-                include: { member: true },
-            }),
         };
     }
 };

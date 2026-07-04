@@ -17,27 +17,28 @@ let AttendanceService = class AttendanceService {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    markAttendance(dto) {
-        return this.prisma.attendance.create({ data: dto });
+    async markAttendance(dto) {
+        const data = await this.prisma.attendance.create({ data: dto });
+        return { success: true, data };
     }
-    findAll(query) {
-        return this.prisma.attendance.findMany({ orderBy: { date: 'desc' } });
+    async findAll(query) {
+        const data = await this.prisma.attendance.findMany({
+            orderBy: { date: 'desc' },
+            include: { member: { select: { name: true } }, staff: { select: { name: true } } },
+        });
+        return { success: true, data };
     }
     async getTodayStats() {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         const tomorrow = new Date(today);
         tomorrow.setDate(tomorrow.getDate() + 1);
-        const totalCheckIns = await this.prisma.attendance.count({
-            where: { date: { gte: today, lt: tomorrow } },
-        });
-        const memberCheckIns = await this.prisma.attendance.count({
-            where: { date: { gte: today, lt: tomorrow }, memberId: { not: null } },
-        });
-        const staffCheckIns = await this.prisma.attendance.count({
-            where: { date: { gte: today, lt: tomorrow }, staffId: { not: null } },
-        });
-        return { totalCheckIns, memberCheckIns, staffCheckIns };
+        const [totalCheckIns, memberCheckIns, staffCheckIns] = await Promise.all([
+            this.prisma.attendance.count({ where: { date: { gte: today, lt: tomorrow } } }),
+            this.prisma.attendance.count({ where: { date: { gte: today, lt: tomorrow }, memberId: { not: null } } }),
+            this.prisma.attendance.count({ where: { date: { gte: today, lt: tomorrow }, staffId: { not: null } } }),
+        ]);
+        return { success: true, data: { totalCheckIns, memberCheckIns, staffCheckIns } };
     }
 };
 exports.AttendanceService = AttendanceService;

@@ -17,23 +17,25 @@ let PlansService = class PlansService {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    create(dto) {
-        return this.prisma.plan.create({ data: dto });
+    async create(dto) {
+        const data = await this.prisma.plan.create({ data: dto });
+        return { success: true, data };
     }
-    findAll() {
-        return this.prisma.plan.findMany({ where: { isActive: true } });
+    async findAll() {
+        const data = await this.prisma.plan.findMany({ where: { isActive: true }, orderBy: { id: 'asc' } });
+        return { success: true, data };
     }
-    findOne(id) {
-        return this.prisma.plan.findUnique({ where: { id } });
+    async findOne(id) {
+        const data = await this.prisma.plan.findUnique({ where: { id } });
+        return { success: true, data };
     }
-    update(id, dto) {
-        return this.prisma.plan.update({ where: { id }, data: dto });
+    async update(id, dto) {
+        const data = await this.prisma.plan.update({ where: { id }, data: dto });
+        return { success: true, data };
     }
-    remove(id) {
-        return this.prisma.plan.update({
-            where: { id },
-            data: { isActive: false },
-        });
+    async remove(id) {
+        const data = await this.prisma.plan.update({ where: { id }, data: { isActive: false } });
+        return { success: true, data };
     }
 };
 exports.PlansService = PlansService;

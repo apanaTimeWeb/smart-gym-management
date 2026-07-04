@@ -20,7 +20,7 @@ export default function SettingsPage() {
 
   const fetchSettings = async () => {
     try {
-      const res: any = await apiFetch('/api/settings');
+      const res: any = await apiFetch('/settings');
       if (res.data) setForm(res.data);
     } catch (err: any) {
       toast.error('Failed to load settings');
@@ -32,7 +32,7 @@ export default function SettingsPage() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      await apiFetch('/api/settings', {
+      await apiFetch('/settings', {
         method: 'POST',
         body: JSON.stringify(form)
       });
