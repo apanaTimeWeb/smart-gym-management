@@ -1,0 +1,18 @@
+/* settings.css - Theme Variables for Settings Module */
+
+.settings-module {
+  /* Common backgrounds */
+  --settings-bg-card: var(--bg-card);
+  --settings-bg-input: var(--bg-input);
+
+  /* Text colors */
+  --settings-text-primary: var(--text-primary);
+  --settings-text-secondary: var(--text-secondary);
+
+  /* Borders */
+  --settings-border: var(--border);
+
+  /* Highlights */
+  --settings-highlight: hsl(24 95% 53%);
+  --settings-highlight-subtle: hsl(24 95% 95%);
+}
