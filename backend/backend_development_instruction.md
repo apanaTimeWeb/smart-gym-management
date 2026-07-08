@@ -112,6 +112,11 @@ Never use fragile relative imports (e.g., `../../../utils/helpers`).
 - `controllers/` handle HTTP (req, res).
 - `services/` handle the heavy lifting and should be highly split up (e.g., `paymentService.js`, `refundService.js`).
 
+## 11. Co-located Testing (Extreme Isolation for Tests)
+Never put tests in a global `tests/` or `pytest_tests/` directory separate from the application code. 
+* **The Rule:** Tests must live directly inside the module they are testing. Create a `tests/` folder inside the module (e.g., `modules/auth/tests/` or `modules/auth/auth_test/`), or keep `.spec.ts` / `test_*.py` files adjacent to the micro-feature they test.
+* **Why?** When an AI is asked to add a feature or fix a bug in `auth-login.service.ts`, providing the corresponding test file in the exact same directory ensures the AI has complete context of the feature's requirements and can update the test simultaneously without hunting across the codebase.
+
 ## Summary Checklist for Developers Providing Context to AI:
 1. Identify the exact layer where the bug/feature resides (Validation? DB Query? Business Logic?).
 2. Select the **one or two** micro-files associated with that layer.
