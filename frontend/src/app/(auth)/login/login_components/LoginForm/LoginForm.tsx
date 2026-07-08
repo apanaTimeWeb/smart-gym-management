@@ -1,11 +1,11 @@
 'use client';
 
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
-import { useLoginContext } from '../../login_context/LoginContext';
+import { useLoginForm } from './useLoginForm';
 import { LoginSharedConstants } from '../../login_constants/LoginSharedConstants';
 
 export default function LoginForm() {
-  const { email, setEmail, password, setPassword, error, loading, showPassword, setShowPassword, handleLogin } = useLoginContext();
+  const { email, setEmail, password, setPassword, error, loading, showPassword, setShowPassword, handleLogin } = useLoginForm();
 
   return (
     <div className="w-full max-w-[420px] bg-[var(--login-bg-card)] p-8 sm:p-10 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.5)] border border-[var(--login-border)]/50">
