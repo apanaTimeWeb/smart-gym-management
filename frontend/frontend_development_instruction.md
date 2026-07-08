@@ -22,10 +22,23 @@ Remove all hardcoded Tailwind color utilities (like `text-primary`, `bg-card`) f
 5. **Smart & Isolated State Management (Avoid Excessive Prop Drilling)**: 
 Because the components will be heavily micro-modularized (Rule #1), avoid creating a massive web of prop drilling (passing data through 5 layers of components). If multiple micro-components need to share the same state, create a state store exclusively for this module (e.g., a local React Context `[ModuleName]Context.tsx` or a feature-sliced Zustand/Redux store placed strictly inside this module's folder). Do NOT bloat the global app state; keep the state architecture isolated to this feature. Since components are heavily micro-modularized, if you use React Context, you MUST implement proper memoization (`useMemo`, `useCallback`) to prevent massive re-render chains across the sub-folders.
 
-6. **Leverage Next.js Native Features**: 
+6. **Separation of Logic and UI (Custom Hooks for Extreme Isolation)**: 
+Do not mix complex React logic (`useEffect`, multi-step state calculations, data transformations) with JSX markup.
+Extract all heavy logic into an adjacent custom hook file (e.g., `use[ComponentName].ts`). The actual `.tsx` file should act purely as a "View" layer that consumes the hook.
+*Why?* If there is a bug in the calculation logic, you feed the AI only the `use...` file. It fixes the logic with zero risk of accidentally deleting a `<div>` or altering the UI structure.
+
+7. **Interface & Type Isolation (The Prop Blueprint)**: 
+Never define complex `Interfaces` or `Types` directly inside the component files. Extract all TypeScript definitions (Component Props, API Payloads, State Shapes) into a dedicated `[moduleName]_types.ts` file or folder.
+*Why?* When an AI is generating a new micro-component, you only need to provide the `types` file. The AI instantly knows the exact data shape it is working with, drastically reducing hallucinations.
+
+8. **Strict Server vs. Client Component Boundaries (Next.js Specific)**: 
+Respect the Next.js App Router architecture. Keep top-level files like `page.tsx` or `layout.tsx` strictly as **Server Components** (no `"use client"`). Use these to fetch initial data securely. Pass this data downwards as props into your micro-modularized **Client Components**.
+*Why?* It creates a clean separation of concerns. Data fetching issues are solved in the Server Component; interactivity issues are solved in the Client Component. You will never need to feed an AI both files at the same time.
+
+9. **Leverage Next.js Native Features**: 
 Ensure that the module properly utilizes Next.js native routing features for a great user experience. Extract loading states into `loading.tsx` and error boundaries into `error.tsx` wherever applicable in the module's directory.
 
-7. **Update AI-Context Documentation**: 
+10. **Update AI-Context Documentation**: 
 Once the entire refactor is complete, update the project documentation in @[[MODULE_NAME]_features.md]. This document must serve as a map for future AI sessions. Clearly document the new "Feature-Based Sub-folder" directory structure, what each file precisely does, and where the centralized data/state is kept.
 
 Think step-by-step. Create a detailed implementation plan first so I can review it, and then execute it perfectly without breaking existing data flows!
