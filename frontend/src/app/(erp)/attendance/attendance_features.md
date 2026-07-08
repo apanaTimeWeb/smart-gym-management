@@ -1,29 +1,59 @@
-# Attendance Module Features & Architecture
+# Attendance Module - AI Context Documentation
 
-## Overview
-The Attendance module (`app/(erp)/attendance`) manages and tracks daily check-ins for both gym members and staff. It provides high-level daily statistics and a filterable history log.
+This document serves as an architectural map for the `attendance` module. It was generated to provide future AI assistants with a strict understanding of the module's boundaries, state management, and file structure.
 
-## AI-Context Architecture
-This module has been refactored into a strictly AI-Friendly, micro-modularized structure following the `frontend_development_instruction.md` guidelines.
+## 📁 Directory Structure
 
-### 1. `attendance_components/`
-- `AttendanceMain/AttendanceMain.tsx`: The primary Client Component layout wrapper that initiates the `AttendanceProvider` and renders the content.
-- `AttendanceKPIs/AttendanceKPIs.tsx`: Renders the high-level metrics for today's check-ins (Total, Members, Staff).
-- `AttendanceToolbar/AttendanceToolbar.tsx`: Houses the filter tabs (All, Members, Staff) and action buttons (Refresh, Mark Attendance).
-- `AttendanceTable/AttendanceTable.tsx`: Displays the filtered list of attendance records, differentiating between members and staff visually.
-- `AttendanceModal/AttendanceModal.tsx`: A self-contained modal form for submitting a new attendance check-in for either a member or staff.
+```
+attendance/
+├── attendance.css
+├── attendance_components
+│   ├── AttendanceKPIs
+│   │   └── AttendanceKPIs.tsx
+│   ├── AttendanceMain
+│   │   └── AttendanceMain.tsx
+│   ├── AttendanceModal
+│   │   └── AttendanceModal.tsx
+│   ├── AttendanceTable
+│   │   └── AttendanceTable.tsx
+│   └── AttendanceToolbar
+│       └── AttendanceToolbar.tsx
+├── attendance_context
+│   ├── AttendanceContext.tsx
+│   └── useAttendanceLogic.ts
+├── attendance_features.md
+├── attendance_types
+│   └── attendance_types.ts
+├── attendance_utils
+│   └── AttendanceSharedConstants.ts
+├── error.tsx
+├── loading.tsx
+└── page.tsx
+```
 
-### 2. `attendance_context/`
-- `useAttendanceLogic.ts`: An isolated custom hook containing the React logic to fetch attendance data and handle form submissions.
-- `AttendanceContext.tsx`: The single source of truth for the Attendance state. Consumes `useAttendanceLogic` and provides the state.
+## 🏗️ Architectural Rules & Guidelines
 
-### 3. `attendance_types/`
-- `attendance_types.ts`: Contains TypeScript definitions like `AttendanceContextType`.
+1. **Extreme Micro-Modularization:** 
+   This module is heavily broken down into micro-components located in `attendance_components/`. Each file must contain exactly ONE React component and handle ONE specific micro-functionality.
 
-### 4. `attendance_utils/`
-- `AttendanceSharedConstants.ts`: Centralizes formatting utility functions (`formatDate`, `formatTime`), table headers, and the empty state shape of the attendance form.
+2. **Isolated State Management (No Prop-Drilling):**
+   - The state is managed locally via React Context in `attendance_context/AttendanceContext.tsx`.
+   - The heavy logic (data fetching, calculations) is extracted into the custom hook `attendance_context/useAttendanceLogic.ts`.
 
-### 5. Root Files
-- `page.tsx`: A pure Server Component that acts as the entry point and renders `AttendanceMain`.
-- `loading.tsx` & `error.tsx`: Built-in Next.js layout features providing a smooth skeleton loading state and error boundary.
-- `attendance.css`: Maps generic global tokens (`var(--bg-card)`) to module-level tokens (`--attendance-bg-card`) ensuring no hardcoded Tailwind colors break the theme.
+3. **Centralized Hardcoded Data:**
+   - Any UI text, default arrays, dropdown options, or mock data MUST be placed in `attendance_utils/AttendanceSharedConstants.ts`. 
+   - Never hardcode these inside the `.tsx` view files.
+
+4. **Types and Interfaces:**
+   - All TypeScript interfaces and types are strictly isolated in `attendance_types/attendance_types.ts`.
+
+5. **Theme Independence:**
+   - **DO NOT** use inline Tailwind colors like `text-gray-800` or `bg-blue-500`.
+   - Use CSS variables defined in `attendance.css` mapping to the global design system (e.g. `var(--text-primary)`, `var(--attendance-bg)`).
+
+6. **Absolute Imports:**
+   - Never use relative imports like `../../`. 
+   - Always use absolute imports starting with `@/` (e.g., `@/app/(erp)/attendance/attendance_context/...`).
+
+## 🤖 Instructions for AI
+If you are asked to modify a feature, find the EXACT micro-component from the tree above. If modifying logic, edit the `use...Logic.ts` file. If adding data, edit the `...SharedConstants.ts` file. Do not hallucinate files outside this module's boundary.

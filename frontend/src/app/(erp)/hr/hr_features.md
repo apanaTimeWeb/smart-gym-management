@@ -1,30 +1,61 @@
-# HR Module Features & Architecture
+# Hr Module - AI Context Documentation
 
-## Overview
-The HR module (`app/(erp)/hr`) manages staff profiles, employee payrolls, branch assignments, and related HR analytics.
+This document serves as an architectural map for the `hr` module. It was generated to provide future AI assistants with a strict understanding of the module's boundaries, state management, and file structure.
 
-## AI-Context Architecture
-This module has been refactored into a strictly AI-Friendly, micro-modularized structure following the `frontend_development_instruction.md` guidelines.
+## 📁 Directory Structure
 
-### 1. `hr_components/`
-- `HrMain/HrMain.tsx`: The primary Client Component layout wrapper that initiates the `HrProvider` and renders the content.
-- `HrKPIs/HrKPIs.tsx`: Renders the high-level metrics for staff count and payroll amounts.
-- `HrTabs/HrTabs.tsx`: Controls tab switching between the staff directory and payroll records.
-- `StaffTable/StaffTable.tsx`: Displays a detailed table of staff members, including quick actions for editing or deleting profiles.
-- `PayrollTable/PayrollTable.tsx`: Displays payroll data and provides the action to mark a month's payroll as Paid.
-- `StaffModal/StaffModal.tsx`: A self-contained modal form for adding new staff or editing existing staff.
+```
+hr/
+├── error.tsx
+├── hr.css
+├── hr_components
+│   ├── HrKPIs
+│   │   └── HrKPIs.tsx
+│   ├── HrMain
+│   │   └── HrMain.tsx
+│   ├── HrTabs
+│   │   └── HrTabs.tsx
+│   ├── PayrollTable
+│   │   └── PayrollTable.tsx
+│   ├── StaffModal
+│   │   └── StaffModal.tsx
+│   └── StaffTable
+│       └── StaffTable.tsx
+├── hr_context
+│   ├── HrContext.tsx
+│   └── useHrLogic.ts
+├── hr_features.md
+├── hr_types
+│   └── hr_types.ts
+├── hr_utils
+│   └── HrSharedConstants.ts
+├── loading.tsx
+└── page.tsx
+```
 
-### 2. `hr_context/`
-- `useHrLogic.ts`: An isolated custom hook containing the React logic (`useState`, `useEffect`, `hrApi` calls) to fetch HR data and handle form states.
-- `HrContext.tsx`: The single source of truth for the HR state. It consumes `useHrLogic` and provides the state via `useHrContext`. This prevents massive prop drilling between the Tabs, Tables, and the Modal.
+## 🏗️ Architectural Rules & Guidelines
 
-### 3. `hr_types/`
-- `hr_types.ts`: Contains TypeScript definitions like `HrContextType`.
+1. **Extreme Micro-Modularization:** 
+   This module is heavily broken down into micro-components located in `hr_components/`. Each file must contain exactly ONE React component and handle ONE specific micro-functionality.
 
-### 4. `hr_utils/`
-- `HrSharedConstants.ts`: Houses the `EMPTY_STAFF` initialization object, select dropdown options (`GENDER_OPTIONS`, `BRANCH_OPTIONS`), and table headers to ensure one single point of modification.
+2. **Isolated State Management (No Prop-Drilling):**
+   - The state is managed locally via React Context in `hr_context/HrContext.tsx`.
+   - The heavy logic (data fetching, calculations) is extracted into the custom hook `hr_context/useHrLogic.ts`.
 
-### 5. Root Files
-- `page.tsx`: A pure Server Component that acts as the entry point and renders `HrMain`.
-- `loading.tsx` & `error.tsx`: Built-in Next.js layout features.
-- `hr.css`: Removes dependency on inline hardcoded Tailwind colors by mapping to the global design system (e.g. `--hr-bg-card` => `var(--bg-card)`).
+3. **Centralized Hardcoded Data:**
+   - Any UI text, default arrays, dropdown options, or mock data MUST be placed in `hr_utils/HrSharedConstants.ts`. 
+   - Never hardcode these inside the `.tsx` view files.
+
+4. **Types and Interfaces:**
+   - All TypeScript interfaces and types are strictly isolated in `hr_types/hr_types.ts`.
+
+5. **Theme Independence:**
+   - **DO NOT** use inline Tailwind colors like `text-gray-800` or `bg-blue-500`.
+   - Use CSS variables defined in `hr.css` mapping to the global design system (e.g. `var(--text-primary)`, `var(--hr-bg)`).
+
+6. **Absolute Imports:**
+   - Never use relative imports like `../../`. 
+   - Always use absolute imports starting with `@/` (e.g., `@/app/(erp)/hr/hr_context/...`).
+
+## 🤖 Instructions for AI
+If you are asked to modify a feature, find the EXACT micro-component from the tree above. If modifying logic, edit the `use...Logic.ts` file. If adding data, edit the `...SharedConstants.ts` file. Do not hallucinate files outside this module's boundary.

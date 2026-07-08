@@ -1,28 +1,57 @@
-# Settings Module Features & Architecture
+# Settings Module - AI Context Documentation
 
-## Overview
-The Settings module (`app/(erp)/settings`) allows gym administrators to configure global application settings, including Gym Profile, Notifications, Roles & Permissions, App Integrations, and General System Preferences.
+This document serves as an architectural map for the `settings` module. It was generated to provide future AI assistants with a strict understanding of the module's boundaries, state management, and file structure.
 
-## AI-Context Architecture
-This module has been refactored into a strictly AI-Friendly, micro-modularized structure following the `frontend_development_instruction.md` guidelines.
+## 📁 Directory Structure
 
-### 1. `settings_components/`
-- `SettingsMain/SettingsMain.tsx`: The primary Client Component layout wrapper that initiates the `SettingsProvider` and renders the content.
-- `SettingsNav/SettingsNav.tsx`: Displays a grid of cards that acts as the primary navigation between different settings categories.
-- `SettingsContent/SettingsContent.tsx`: The main dynamic area. Currently, it renders the form for 'Gym Profile' and acts as a placeholder for other tabs.
-- `SettingsBanner/SettingsBanner.tsx`: A static, promotional banner displayed at the bottom of the page for free demos.
+```
+settings/
+├── error.tsx
+├── loading.tsx
+├── page.tsx
+├── settings.css
+├── settings_components
+│   ├── SettingsBanner
+│   │   └── SettingsBanner.tsx
+│   ├── SettingsContent
+│   │   └── SettingsContent.tsx
+│   ├── SettingsMain
+│   │   └── SettingsMain.tsx
+│   └── SettingsNav
+│       └── SettingsNav.tsx
+├── settings_context
+│   ├── SettingsContext.tsx
+│   └── useSettingsLogic.ts
+├── settings_features.md
+├── settings_types
+│   └── settings_types.ts
+└── settings_utils
+    └── SettingsSharedConstants.ts
+```
 
-### 2. `settings_context/`
-- `useSettingsLogic.ts`: An isolated custom hook containing the React logic to fetch, update, and manage form state for application settings.
-- `SettingsContext.tsx`: The single source of truth for the settings UI state. It consumes `useSettingsLogic` and distributes state without prop drilling.
+## 🏗️ Architectural Rules & Guidelines
 
-### 3. `settings_types/`
-- `settings_types.ts`: Contains TypeScript definitions like `SettingsContextType`.
+1. **Extreme Micro-Modularization:** 
+   This module is heavily broken down into micro-components located in `settings_components/`. Each file must contain exactly ONE React component and handle ONE specific micro-functionality.
 
-### 4. `settings_utils/`
-- `SettingsSharedConstants.ts`: Centralizes static data like the configuration array for the settings navigation cards (icons, colors, titles) and the empty form schema.
+2. **Isolated State Management (No Prop-Drilling):**
+   - The state is managed locally via React Context in `settings_context/SettingsContext.tsx`.
+   - The heavy logic (data fetching, calculations) is extracted into the custom hook `settings_context/useSettingsLogic.ts`.
 
-### 5. Root Files
-- `page.tsx`: A pure Server Component that acts as the entry point and renders `SettingsMain`.
-- `loading.tsx` & `error.tsx`: Built-in Next.js layout features providing a smooth skeleton loading state and error boundary.
-- `settings.css`: Maps generic global tokens (`var(--bg-card)`) to module-level tokens (`--settings-bg-card`) ensuring theme independence.
+3. **Centralized Hardcoded Data:**
+   - Any UI text, default arrays, dropdown options, or mock data MUST be placed in `settings_utils/SettingsSharedConstants.ts`. 
+   - Never hardcode these inside the `.tsx` view files.
+
+4. **Types and Interfaces:**
+   - All TypeScript interfaces and types are strictly isolated in `settings_types/settings_types.ts`.
+
+5. **Theme Independence:**
+   - **DO NOT** use inline Tailwind colors like `text-gray-800` or `bg-blue-500`.
+   - Use CSS variables defined in `settings.css` mapping to the global design system (e.g. `var(--text-primary)`, `var(--settings-bg)`).
+
+6. **Absolute Imports:**
+   - Never use relative imports like `../../`. 
+   - Always use absolute imports starting with `@/` (e.g., `@/app/(erp)/settings/settings_context/...`).
+
+## 🤖 Instructions for AI
+If you are asked to modify a feature, find the EXACT micro-component from the tree above. If modifying logic, edit the `use...Logic.ts` file. If adding data, edit the `...SharedConstants.ts` file. Do not hallucinate files outside this module's boundary.

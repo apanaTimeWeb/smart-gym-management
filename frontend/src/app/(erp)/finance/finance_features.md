@@ -1,33 +1,63 @@
-# Finance Module Features & Architecture
+# Finance Module - AI Context Documentation
 
-## Overview
-The Finance module (`app/(erp)/finance`) provides the main hub for tracking gym revenue, recording payments, and monitoring the financial health of the gym.
+This document serves as an architectural map for the `finance` module. It was generated to provide future AI assistants with a strict understanding of the module's boundaries, state management, and file structure.
 
-## AI-Context Architecture
-This module has been refactored into a strictly AI-Friendly, micro-modularized structure following the `frontend_development_instruction.md` guidelines.
+## 📁 Directory Structure
 
-### 1. `finance_components/`
-Contains heavily isolated micro-components. Each file serves exactly one purpose and is highly descriptive:
-- `FinanceMain/FinanceMain.tsx`: The primary Client Component layout wrapper that initiates the `FinanceProvider` and renders the content.
-- `FinanceKPIs/FinanceKPIs.tsx`: Renders the top statistical financial cards.
-- `RevenueByMethod/RevenueByMethod.tsx`: Renders the breakdown of revenue by payment methods (UPI, Cash, Card, etc.).
-- `FinanceTabs/FinanceTabs.tsx`: Orchestrates the tab switching logic between the detailed Payments Table and the Revenue Summary chart.
-- `PaymentsTable/PaymentsTable.tsx`: Displays the detailed list of past payments (loaded conditionally under the "Payments" tab).
-- `RevenueSummary/RevenueSummary.tsx`: Displays a visual bar chart of monthly revenue (loaded conditionally under the "Summary" tab).
-- `AddPaymentModal/AddPaymentModal.tsx`: A form modal to record a new payment. Contains its own local form state.
+```
+finance/
+├── error.tsx
+├── finance.css
+├── finance_components
+│   ├── AddPaymentModal
+│   │   └── AddPaymentModal.tsx
+│   ├── FinanceKPIs
+│   │   └── FinanceKPIs.tsx
+│   ├── FinanceMain
+│   │   └── FinanceMain.tsx
+│   ├── FinanceTabs
+│   │   └── FinanceTabs.tsx
+│   ├── PaymentsTable
+│   │   └── PaymentsTable.tsx
+│   ├── RevenueByMethod
+│   │   └── RevenueByMethod.tsx
+│   └── RevenueSummary
+│       └── RevenueSummary.tsx
+├── finance_context
+│   ├── FinanceContext.tsx
+│   └── useFinanceLogic.ts
+├── finance_features.md
+├── finance_types
+│   └── finance_types.ts
+├── finance_utils
+│   └── FinanceSharedConstants.ts
+├── loading.tsx
+└── page.tsx
+```
 
-### 2. `finance_context/`
-- `useFinanceLogic.ts`: An isolated custom hook containing the React logic (`useState`, `useEffect`, `financeApi` calls) to fetch finance data.
-- `FinanceContext.tsx`: The single source of truth for the module's core data. It consumes `useFinanceLogic` and provides the state down the component tree.
+## 🏗️ Architectural Rules & Guidelines
 
-### 3. `finance_types/`
-- `finance_types.ts`: Contains TypeScript definitions like `FinanceContextType`.
+1. **Extreme Micro-Modularization:** 
+   This module is heavily broken down into micro-components located in `finance_components/`. Each file must contain exactly ONE React component and handle ONE specific micro-functionality.
 
-### 4. `finance_utils/`
-- `FinanceSharedConstants.ts`: Centralizes backend-ready hardcoded arrays such as `FINANCE_PAYMENT_METHODS`, `PAYMENTS_TABLE_HEADERS`, and status-to-style mappings for consistency.
+2. **Isolated State Management (No Prop-Drilling):**
+   - The state is managed locally via React Context in `finance_context/FinanceContext.tsx`.
+   - The heavy logic (data fetching, calculations) is extracted into the custom hook `finance_context/useFinanceLogic.ts`.
 
-### 5. Root Files
-- `page.tsx`: A pure Server Component that acts as the entry point and renders `FinanceMain`.
-- `loading.tsx`: Native Next.js loading state.
-- `error.tsx`: Native Next.js error boundary.
-- `finance.css`: Defines module-level CSS variables mapped to the global design system, removing inline Tailwind colors and ensuring a completely theme-independent module.
+3. **Centralized Hardcoded Data:**
+   - Any UI text, default arrays, dropdown options, or mock data MUST be placed in `finance_utils/FinanceSharedConstants.ts`. 
+   - Never hardcode these inside the `.tsx` view files.
+
+4. **Types and Interfaces:**
+   - All TypeScript interfaces and types are strictly isolated in `finance_types/finance_types.ts`.
+
+5. **Theme Independence:**
+   - **DO NOT** use inline Tailwind colors like `text-gray-800` or `bg-blue-500`.
+   - Use CSS variables defined in `finance.css` mapping to the global design system (e.g. `var(--text-primary)`, `var(--finance-bg)`).
+
+6. **Absolute Imports:**
+   - Never use relative imports like `../../`. 
+   - Always use absolute imports starting with `@/` (e.g., `@/app/(erp)/finance/finance_context/...`).
+
+## 🤖 Instructions for AI
+If you are asked to modify a feature, find the EXACT micro-component from the tree above. If modifying logic, edit the `use...Logic.ts` file. If adding data, edit the `...SharedConstants.ts` file. Do not hallucinate files outside this module's boundary.

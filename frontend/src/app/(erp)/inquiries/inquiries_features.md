@@ -1,29 +1,59 @@
-# Inquiries Module Features & Architecture
+# Inquiries Module - AI Context Documentation
 
-## Overview
-The Inquiries module (`app/(erp)/inquiries`) tracks new leads, handles follow-ups, and manages lead statuses to convert potential clients into members. It includes email and WhatsApp messaging integrations.
+This document serves as an architectural map for the `inquiries` module. It was generated to provide future AI assistants with a strict understanding of the module's boundaries, state management, and file structure.
 
-## AI-Context Architecture
-This module has been refactored into a strictly AI-Friendly, micro-modularized structure following the `frontend_development_instruction.md` guidelines.
+## 📁 Directory Structure
 
-### 1. `inquiries_components/`
-- `InquiriesMain/InquiriesMain.tsx`: The primary Client Component layout wrapper that initiates the `InquiriesProvider` and renders the content.
-- `InquiriesKPIs/InquiriesKPIs.tsx`: Renders the high-level metrics for new, follow-up, and converted leads.
-- `InquiriesToolbar/InquiriesToolbar.tsx`: Houses the search input, status filter select, and the button to add a new inquiry.
-- `InquiriesTable/InquiriesTable.tsx`: Displays the filtered list of inquiries with actions to edit, delete, update status, and send messages via WhatsApp or Email.
-- `InquiryModal/InquiryModal.tsx`: A self-contained modal form for adding or editing an inquiry.
+```
+inquiries/
+├── error.tsx
+├── inquiries.css
+├── inquiries_components
+│   ├── InquiriesKPIs
+│   │   └── InquiriesKPIs.tsx
+│   ├── InquiriesMain
+│   │   └── InquiriesMain.tsx
+│   ├── InquiriesTable
+│   │   └── InquiriesTable.tsx
+│   ├── InquiriesToolbar
+│   │   └── InquiriesToolbar.tsx
+│   └── InquiryModal
+│       └── InquiryModal.tsx
+├── inquiries_context
+│   ├── InquiriesContext.tsx
+│   └── useInquiriesLogic.ts
+├── inquiries_features.md
+├── inquiries_types
+│   └── inquiries_types.ts
+├── inquiries_utils
+│   └── InquiriesSharedConstants.ts
+├── loading.tsx
+└── page.tsx
+```
 
-### 2. `inquiries_context/`
-- `useInquiriesLogic.ts`: An isolated custom hook containing the React logic to fetch data, handle states, and process form submissions.
-- `InquiriesContext.tsx`: The single source of truth for the Inquiries state. It consumes `useInquiriesLogic` and provides the state down the tree, eliminating prop drilling.
+## 🏗️ Architectural Rules & Guidelines
 
-### 3. `inquiries_types/`
-- `inquiries_types.ts`: Contains TypeScript definitions like `InquiriesContextType`.
+1. **Extreme Micro-Modularization:** 
+   This module is heavily broken down into micro-components located in `inquiries_components/`. Each file must contain exactly ONE React component and handle ONE specific micro-functionality.
 
-### 4. `inquiries_utils/`
-- `InquiriesSharedConstants.ts`: Centralizes arrays such as `INQUIRY_SOURCES`, `INQUIRIES_TABLE_HEADERS`, `EMPTY_INQUIRY_FORM`, and maps styling colors to statuses (e.g. `NEW`, `FOLLOW_UP`). It also houses the `generateDefaultMessage` utility function.
+2. **Isolated State Management (No Prop-Drilling):**
+   - The state is managed locally via React Context in `inquiries_context/InquiriesContext.tsx`.
+   - The heavy logic (data fetching, calculations) is extracted into the custom hook `inquiries_context/useInquiriesLogic.ts`.
 
-### 5. Root Files
-- `page.tsx`: A pure Server Component that acts as the entry point and renders `InquiriesMain`.
-- `loading.tsx` & `error.tsx`: Built-in Next.js layout features.
-- `inquiries.css`: Maps generic global tokens (`var(--bg-card)`) to module-level tokens (`--inquiries-bg-card`) ensuring no hardcoded Tailwind colors break the theme.
+3. **Centralized Hardcoded Data:**
+   - Any UI text, default arrays, dropdown options, or mock data MUST be placed in `inquiries_utils/InquiriesSharedConstants.ts`. 
+   - Never hardcode these inside the `.tsx` view files.
+
+4. **Types and Interfaces:**
+   - All TypeScript interfaces and types are strictly isolated in `inquiries_types/inquiries_types.ts`.
+
+5. **Theme Independence:**
+   - **DO NOT** use inline Tailwind colors like `text-gray-800` or `bg-blue-500`.
+   - Use CSS variables defined in `inquiries.css` mapping to the global design system (e.g. `var(--text-primary)`, `var(--inquiries-bg)`).
+
+6. **Absolute Imports:**
+   - Never use relative imports like `../../`. 
+   - Always use absolute imports starting with `@/` (e.g., `@/app/(erp)/inquiries/inquiries_context/...`).
+
+## 🤖 Instructions for AI
+If you are asked to modify a feature, find the EXACT micro-component from the tree above. If modifying logic, edit the `use...Logic.ts` file. If adding data, edit the `...SharedConstants.ts` file. Do not hallucinate files outside this module's boundary.

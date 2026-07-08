@@ -1,32 +1,61 @@
-# Dashboard Module Features & Architecture
+# Dashboard Module - AI Context Documentation
 
-## Overview
-The Dashboard module (`app/(erp)/dashboard`) provides the main landing page for authenticated administrators, summarizing gym KPIs, recent members, pending payments, and membership distribution. 
+This document serves as an architectural map for the `dashboard` module. It was generated to provide future AI assistants with a strict understanding of the module's boundaries, state management, and file structure.
 
-## AI-Context Architecture
-This module has been refactored into a strictly AI-Friendly, micro-modularized structure following the `frontend_development_instruction.md` guidelines.
+## 📁 Directory Structure
 
-### 1. `dashboard_components/`
-Contains heavily isolated micro-components. Each file serves exactly one purpose and is highly descriptive:
-- `DashboardMain/DashboardMain.tsx`: The primary Client Component layout wrapper that initiates the `DashboardProvider` and renders the content.
-- `DashboardKPIs/DashboardKPIs.tsx`: Renders the top statistical KPI cards.
-- `MembershipDistribution/MembershipDistribution.tsx`: Displays the visual breakdown of plans.
-- `PendingPayments/PendingPayments.tsx`: Lists payments nearing expiry.
-- `PromoCard/PromoCard.tsx`: Static promotional banner.
-- `RecentMembers/RecentMembers.tsx`: Table showing recently joined members.
+```
+dashboard/
+├── dashboard.css
+├── dashboard_components
+│   ├── DashboardKPIs
+│   │   └── DashboardKPIs.tsx
+│   ├── DashboardMain
+│   │   └── DashboardMain.tsx
+│   ├── MembershipDistribution
+│   │   └── MembershipDistribution.tsx
+│   ├── PendingPayments
+│   │   └── PendingPayments.tsx
+│   ├── PromoCard
+│   │   └── PromoCard.tsx
+│   └── RecentMembers
+│       └── RecentMembers.tsx
+├── dashboard_context
+│   ├── DashboardContext.tsx
+│   └── useDashboardLogic.ts
+├── dashboard_features.md
+├── dashboard_types
+│   └── dashboard_types.ts
+├── dashboard_utils
+│   └── DashboardSharedConstants.ts
+├── error.tsx
+├── loading.tsx
+└── page.tsx
+```
 
-### 2. `dashboard_context/`
-- `useDashboardLogic.ts`: An isolated custom hook containing the React logic (`useState`, `useEffect`, `dashboardApi` calls) to fetch stats.
-- `DashboardContext.tsx`: The single source of truth for the module's state. It consumes `useDashboardLogic` and provides the state down the component tree to avoid prop drilling.
+## 🏗️ Architectural Rules & Guidelines
 
-### 3. `dashboard_types/`
-- `dashboard_types.ts`: Contains TypeScript definitions like `DashboardContextType` and `DashboardStats`.
+1. **Extreme Micro-Modularization:** 
+   This module is heavily broken down into micro-components located in `dashboard_components/`. Each file must contain exactly ONE React component and handle ONE specific micro-functionality.
 
-### 4. `dashboard_utils/`
-- `DashboardSharedConstants.ts`: Centralizes backend-ready hardcoded arrays, table headers, and status-to-style mappings. If backend APIs change these lists, update this single file.
+2. **Isolated State Management (No Prop-Drilling):**
+   - The state is managed locally via React Context in `dashboard_context/DashboardContext.tsx`.
+   - The heavy logic (data fetching, calculations) is extracted into the custom hook `dashboard_context/useDashboardLogic.ts`.
 
-### 5. Root Files
-- `page.tsx`: A pure Server Component that acts as the entry point and renders `DashboardMain`.
-- `loading.tsx`: Native Next.js loading state.
-- `error.tsx`: Native Next.js error boundary.
-- `dashboard.css`: Contains CSS variables mapped to the global design system (e.g. `--dashboard-bg-card`), making the module entirely theme-independent without relying on inline Tailwind colors.
+3. **Centralized Hardcoded Data:**
+   - Any UI text, default arrays, dropdown options, or mock data MUST be placed in `dashboard_utils/DashboardSharedConstants.ts`. 
+   - Never hardcode these inside the `.tsx` view files.
+
+4. **Types and Interfaces:**
+   - All TypeScript interfaces and types are strictly isolated in `dashboard_types/dashboard_types.ts`.
+
+5. **Theme Independence:**
+   - **DO NOT** use inline Tailwind colors like `text-gray-800` or `bg-blue-500`.
+   - Use CSS variables defined in `dashboard.css` mapping to the global design system (e.g. `var(--text-primary)`, `var(--dashboard-bg)`).
+
+6. **Absolute Imports:**
+   - Never use relative imports like `../../`. 
+   - Always use absolute imports starting with `@/` (e.g., `@/app/(erp)/dashboard/dashboard_context/...`).
+
+## 🤖 Instructions for AI
+If you are asked to modify a feature, find the EXACT micro-component from the tree above. If modifying logic, edit the `use...Logic.ts` file. If adding data, edit the `...SharedConstants.ts` file. Do not hallucinate files outside this module's boundary.

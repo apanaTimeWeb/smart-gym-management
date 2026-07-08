@@ -1,31 +1,63 @@
-# Sales Module Features & Architecture
+# Sales Module - AI Context Documentation
 
-## Overview
-The Sales module (`app/(erp)/sales`) is the analytics dashboard of the gym. It provides insights into monthly revenue, new member trends, accounts receivable (pending payments), and a full list of all active/expired memberships.
+This document serves as an architectural map for the `sales` module. It was generated to provide future AI assistants with a strict understanding of the module's boundaries, state management, and file structure.
 
-## AI-Context Architecture
-This module has been refactored into a strictly AI-Friendly, micro-modularized structure following the `frontend_development_instruction.md` guidelines.
+## 📁 Directory Structure
 
-### 1. `sales_components/`
-- `SalesMain/SalesMain.tsx`: The primary Client Component layout wrapper that initiates the `SalesProvider` and renders the content.
-- `SalesToolbar/SalesToolbar.tsx`: Houses the top action bar with Date Filters, "Filter by Name", and "Export" functionality.
-- `SalesTabs/SalesTabs.tsx`: Renders the sub-navigation tabs (Overview, Membership Report, Pending Payments, All Memberships).
-- `SalesOverview/SalesOverview.tsx`: Contains the `ReactApexCharts` visualizing monthly revenue (Bar chart) and new members (Area chart).
-- `MembershipReport/MembershipReport.tsx`: Renders a table summarizing receivables, received amounts, and refunds, grouped by membership tier.
-- `PendingPayments/PendingPayments.tsx`: Displays a list view of members whose payments are overdue.
-- `AllMemberships/AllMemberships.tsx`: A comprehensive table tracking the status, dates, and days remaining for all users' subscriptions.
+```
+sales/
+├── error.tsx
+├── loading.tsx
+├── page.tsx
+├── sales.css
+├── sales_components
+│   ├── AllMemberships
+│   │   └── AllMemberships.tsx
+│   ├── MembershipReport
+│   │   └── MembershipReport.tsx
+│   ├── PendingPayments
+│   │   └── PendingPayments.tsx
+│   ├── SalesMain
+│   │   └── SalesMain.tsx
+│   ├── SalesOverview
+│   │   └── SalesOverview.tsx
+│   ├── SalesTabs
+│   │   └── SalesTabs.tsx
+│   └── SalesToolbar
+│       └── SalesToolbar.tsx
+├── sales_context
+│   ├── SalesContext.tsx
+│   └── useSalesLogic.ts
+├── sales_features.md
+├── sales_types
+│   └── sales_types.ts
+└── sales_utils
+    └── SalesSharedConstants.ts
+```
 
-### 2. `sales_context/`
-- `useSalesLogic.ts`: An isolated custom hook containing the React logic to manage the active tab and date filter selections.
-- `SalesContext.tsx`: The single source of truth for UI state. It consumes `useSalesLogic` and distributes state without prop drilling.
+## 🏗️ Architectural Rules & Guidelines
 
-### 3. `sales_types/`
-- `sales_types.ts`: Contains TypeScript definitions like `SalesContextType`.
+1. **Extreme Micro-Modularization:** 
+   This module is heavily broken down into micro-components located in `sales_components/`. Each file must contain exactly ONE React component and handle ONE specific micro-functionality.
 
-### 4. `sales_utils/`
-- `SalesSharedConstants.ts`: Centralizes static types and mock data arrays (`monthlyData`, `membershipReport`, etc.) used across the dashboard.
+2. **Isolated State Management (No Prop-Drilling):**
+   - The state is managed locally via React Context in `sales_context/SalesContext.tsx`.
+   - The heavy logic (data fetching, calculations) is extracted into the custom hook `sales_context/useSalesLogic.ts`.
 
-### 5. Root Files
-- `page.tsx`: A pure Server Component that acts as the entry point and renders `SalesMain`.
-- `loading.tsx` & `error.tsx`: Built-in Next.js layout features providing a smooth skeleton loading state and error boundary.
-- `sales.css`: Maps generic global tokens (`var(--bg-card)`) to module-level tokens (`--sales-bg-card`) ensuring theme independence.
+3. **Centralized Hardcoded Data:**
+   - Any UI text, default arrays, dropdown options, or mock data MUST be placed in `sales_utils/SalesSharedConstants.ts`. 
+   - Never hardcode these inside the `.tsx` view files.
+
+4. **Types and Interfaces:**
+   - All TypeScript interfaces and types are strictly isolated in `sales_types/sales_types.ts`.
+
+5. **Theme Independence:**
+   - **DO NOT** use inline Tailwind colors like `text-gray-800` or `bg-blue-500`.
+   - Use CSS variables defined in `sales.css` mapping to the global design system (e.g. `var(--text-primary)`, `var(--sales-bg)`).
+
+6. **Absolute Imports:**
+   - Never use relative imports like `../../`. 
+   - Always use absolute imports starting with `@/` (e.g., `@/app/(erp)/sales/sales_context/...`).
+
+## 🤖 Instructions for AI
+If you are asked to modify a feature, find the EXACT micro-component from the tree above. If modifying logic, edit the `use...Logic.ts` file. If adding data, edit the `...SharedConstants.ts` file. Do not hallucinate files outside this module's boundary.

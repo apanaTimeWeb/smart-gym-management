@@ -1,30 +1,64 @@
-# Members Module Features & Architecture
+# Members Module - AI Context Documentation
 
-## Overview
-The Members module (`app/(erp)/members`) manages all gym members, memberships, and payments. It includes a comprehensive list view with statistics, and a detailed profile view for each member encompassing their overview, attendance, and payment history.
+This document serves as an architectural map for the `members` module. It was generated to provide future AI assistants with a strict understanding of the module's boundaries, state management, and file structure.
 
-## AI-Context Architecture
-This module has been refactored into a strictly AI-Friendly, micro-modularized structure following the `frontend_development_instruction.md` guidelines.
+## 📁 Directory Structure
 
-### 1. `members_components/`
-- `MembersMain/MembersMain.tsx`: The primary Client Component layout wrapper that initiates the `MembersProvider` and renders the content.
-- `MembersKPIs/MembersKPIs.tsx`: Renders the high-level metrics (Total, Active, Pending, Expired).
-- `MembersToolbar/MembersToolbar.tsx`: Houses the search input, status filter select, and the button to add a new member.
-- `MembersTable/MembersTable.tsx`: Displays the filtered list of members with actions to view profile, edit, delete, and send messages via WhatsApp or Email.
-- `MemberFormModal/MemberFormModal.tsx`: A self-contained modal form for adding or editing a member.
-- `MemberProfileModal/MemberProfileModal.tsx`: Contains the detailed view for a single member (Overview, Attendance, Payments).
+```
+members/
+├── error.tsx
+├── loading.tsx
+├── members.css
+├── members_components
+│   ├── MemberModal
+│   │   └── MemberModal.tsx
+│   ├── MemberProfile
+│   │   ├── MemberProfile.tsx
+│   │   ├── ProfileAttendance.tsx
+│   │   ├── ProfileOverview.tsx
+│   │   └── ProfilePayments.tsx
+│   ├── MembersKPIs
+│   │   └── MembersKPIs.tsx
+│   ├── MembersMain
+│   │   └── MembersMain.tsx
+│   ├── MembersTable
+│   │   └── MembersTable.tsx
+│   └── MembersToolbar
+│       └── MembersToolbar.tsx
+├── members_context
+│   ├── MembersContext.tsx
+│   └── useMembersLogic.ts
+├── members_features.md
+├── members_types
+│   └── members_types.ts
+├── members_utils
+│   └── MembersSharedConstants.ts
+└── page.tsx
+```
 
-### 2. `members_context/`
-- `useMembersLogic.ts`: An isolated custom hook containing the React logic to fetch members, plans, manage modals, and handle member-specific profile tabs.
-- `MembersContext.tsx`: The single source of truth for the Members state. It consumes `useMembersLogic` and provides the state down the tree, eliminating prop drilling.
+## 🏗️ Architectural Rules & Guidelines
 
-### 3. `members_types/`
-- `members_types.ts`: Contains TypeScript definitions like `MembersContextType`.
+1. **Extreme Micro-Modularization:** 
+   This module is heavily broken down into micro-components located in `members_components/`. Each file must contain exactly ONE React component and handle ONE specific micro-functionality.
 
-### 4. `members_utils/`
-- `MembersSharedConstants.ts`: Centralizes arrays and mappings such as `MEMBERS_STATUS_COLORS`, `MEMBERS_CYCLE_LABELS`, `EMPTY_MEMBER_FORM`, and utility functions like `formatCurrency` and `getPriceForCycle`.
+2. **Isolated State Management (No Prop-Drilling):**
+   - The state is managed locally via React Context in `members_context/MembersContext.tsx`.
+   - The heavy logic (data fetching, calculations) is extracted into the custom hook `members_context/useMembersLogic.ts`.
 
-### 5. Root Files
-- `page.tsx`: A pure Server Component that acts as the entry point and renders `MembersMain`.
-- `loading.tsx` & `error.tsx`: Built-in Next.js layout features.
-- `members.css`: Maps generic global tokens (`var(--bg-card)`) to module-level tokens (`--members-bg-card`) ensuring theme independence.
+3. **Centralized Hardcoded Data:**
+   - Any UI text, default arrays, dropdown options, or mock data MUST be placed in `members_utils/MembersSharedConstants.ts`. 
+   - Never hardcode these inside the `.tsx` view files.
+
+4. **Types and Interfaces:**
+   - All TypeScript interfaces and types are strictly isolated in `members_types/members_types.ts`.
+
+5. **Theme Independence:**
+   - **DO NOT** use inline Tailwind colors like `text-gray-800` or `bg-blue-500`.
+   - Use CSS variables defined in `members.css` mapping to the global design system (e.g. `var(--text-primary)`, `var(--members-bg)`).
+
+6. **Absolute Imports:**
+   - Never use relative imports like `../../`. 
+   - Always use absolute imports starting with `@/` (e.g., `@/app/(erp)/members/members_context/...`).
+
+## 🤖 Instructions for AI
+If you are asked to modify a feature, find the EXACT micro-component from the tree above. If modifying logic, edit the `use...Logic.ts` file. If adding data, edit the `...SharedConstants.ts` file. Do not hallucinate files outside this module's boundary.

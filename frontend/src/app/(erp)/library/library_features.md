@@ -1,30 +1,61 @@
-# Library Module Features & Architecture
+# Library Module - AI Context Documentation
 
-## Overview
-The Library module (`app/(erp)/library`) manages the gym's catalog of Exercises and Diet Plans. It allows staff to create, edit, and delete both exercises and nutritional plans, which can later be assigned to members.
+This document serves as an architectural map for the `library` module. It was generated to provide future AI assistants with a strict understanding of the module's boundaries, state management, and file structure.
 
-## AI-Context Architecture
-This module has been refactored into a strictly AI-Friendly, micro-modularized structure following the `frontend_development_instruction.md` guidelines.
+## 📁 Directory Structure
 
-### 1. `library_components/`
-- `LibraryMain/LibraryMain.tsx`: The primary Client Component layout wrapper that initiates the `LibraryProvider` and renders the content.
-- `LibraryTabs/LibraryTabs.tsx`: Houses the filter tabs ('Exercises' vs 'Diet Plans') and the action buttons for refreshing or adding new items.
-- `ExerciseGrid/ExerciseGrid.tsx`: Displays the catalog of exercises as cards with their difficulty, muscle groups, and actions (edit/delete).
-- `DietGrid/DietGrid.tsx`: Displays the catalog of diet plans as cards with their macros, goals, and meals list.
-- `ExerciseModal/ExerciseModal.tsx`: A self-contained modal form for creating or editing an Exercise.
-- `DietModal/DietModal.tsx`: A self-contained modal form for creating or editing a Diet Plan.
+```
+library/
+├── error.tsx
+├── library.css
+├── library_components
+│   ├── DietGrid
+│   │   └── DietGrid.tsx
+│   ├── DietModal
+│   │   └── DietModal.tsx
+│   ├── ExerciseGrid
+│   │   └── ExerciseGrid.tsx
+│   ├── ExerciseModal
+│   │   └── ExerciseModal.tsx
+│   ├── LibraryMain
+│   │   └── LibraryMain.tsx
+│   └── LibraryTabs
+│       └── LibraryTabs.tsx
+├── library_context
+│   ├── LibraryContext.tsx
+│   └── useLibraryLogic.ts
+├── library_features.md
+├── library_types
+│   └── library_types.ts
+├── library_utils
+│   └── LibrarySharedConstants.ts
+├── loading.tsx
+└── page.tsx
+```
 
-### 2. `library_context/`
-- `useLibraryLogic.ts`: An isolated custom hook containing the React logic to fetch workouts and diets, and process form submissions.
-- `LibraryContext.tsx`: The single source of truth for the Library state. It consumes `useLibraryLogic` and provides the state down the tree, eliminating prop drilling.
+## 🏗️ Architectural Rules & Guidelines
 
-### 3. `library_types/`
-- `library_types.ts`: Contains TypeScript definitions like `LibraryContextType`.
+1. **Extreme Micro-Modularization:** 
+   This module is heavily broken down into micro-components located in `library_components/`. Each file must contain exactly ONE React component and handle ONE specific micro-functionality.
 
-### 4. `library_utils/`
-- `LibrarySharedConstants.ts`: Centralizes static data like `CATEGORIES`, `DIFFICULTIES`, `GOALS`, and the empty state shape of the forms.
+2. **Isolated State Management (No Prop-Drilling):**
+   - The state is managed locally via React Context in `library_context/LibraryContext.tsx`.
+   - The heavy logic (data fetching, calculations) is extracted into the custom hook `library_context/useLibraryLogic.ts`.
 
-### 5. Root Files
-- `page.tsx`: A pure Server Component that acts as the entry point and renders `LibraryMain`.
-- `loading.tsx` & `error.tsx`: Built-in Next.js layout features providing a smooth skeleton loading state and error boundary.
-- `library.css`: Maps generic global tokens (`var(--bg-card)`) to module-level tokens (`--library-bg-card`) ensuring theme independence.
+3. **Centralized Hardcoded Data:**
+   - Any UI text, default arrays, dropdown options, or mock data MUST be placed in `library_utils/LibrarySharedConstants.ts`. 
+   - Never hardcode these inside the `.tsx` view files.
+
+4. **Types and Interfaces:**
+   - All TypeScript interfaces and types are strictly isolated in `library_types/library_types.ts`.
+
+5. **Theme Independence:**
+   - **DO NOT** use inline Tailwind colors like `text-gray-800` or `bg-blue-500`.
+   - Use CSS variables defined in `library.css` mapping to the global design system (e.g. `var(--text-primary)`, `var(--library-bg)`).
+
+6. **Absolute Imports:**
+   - Never use relative imports like `../../`. 
+   - Always use absolute imports starting with `@/` (e.g., `@/app/(erp)/library/library_context/...`).
+
+## 🤖 Instructions for AI
+If you are asked to modify a feature, find the EXACT micro-component from the tree above. If modifying logic, edit the `use...Logic.ts` file. If adding data, edit the `...SharedConstants.ts` file. Do not hallucinate files outside this module's boundary.
