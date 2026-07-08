@@ -1,0 +1,44 @@
+/* inquiries.css - Theme Variables for Inquiries Module */
+
+.inquiries-module {
+  /* Common backgrounds */
+  --inquiries-bg-card: var(--bg-card);
+  --inquiries-bg-input: var(--bg-input);
+
+  /* Text colors */
+  --inquiries-text-primary: var(--text-primary);
+  --inquiries-text-secondary: var(--text-secondary);
+
+  /* Borders */
+  --inquiries-border: var(--border);
+
+  /* Status Colors */
+  --inquiries-status-new-bg: var(--info-bg);
+  --inquiries-status-new-text: var(--info);
+  
+  --inquiries-status-follow-up-bg: var(--warning-bg);
+  --inquiries-status-follow-up-text: var(--warning);
+  
+  --inquiries-status-converted-bg: var(--success-bg);
+  --inquiries-status-converted-text: var(--success);
+  
+  --inquiries-status-lost-bg: var(--danger-bg);
+  --inquiries-status-lost-text: var(--danger);
+
+  /* KPI Colors */
+  --inquiries-kpi-blue-bg: var(--info-bg);
+  --inquiries-kpi-blue-text: var(--info);
+  
+  --inquiries-kpi-yellow-bg: var(--warning-bg);
+  --inquiries-kpi-yellow-text: var(--warning);
+  
+  --inquiries-kpi-orange-bg: var(--warning-bg);
+  --inquiries-kpi-orange-text: var(--warning);
+  
+  --inquiries-kpi-green-bg: var(--success-bg);
+  --inquiries-kpi-green-text: var(--success);
+
+  /* Highlights */
+  --inquiries-highlight: hsl(24 95% 53%);
+  --inquiries-highlight-subtle: hsl(24 95% 95%);
+}
