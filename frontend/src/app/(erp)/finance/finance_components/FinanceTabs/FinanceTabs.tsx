@@ -60,7 +60,8 @@ export default function FinanceTabs() {
  >
  <Plus size={14} /> Add Payment
  </button>
- </div>
+  </div>
+  </div>
  </div>
 
  <div className="p-5">
