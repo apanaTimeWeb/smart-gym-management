@@ -32,7 +32,7 @@ export default function MembersTable() {
         <>
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-black/5">
+              <thead className="bg-[var(--members-table-header-bg)]">
                 <tr>
                   {MEMBERS_TABLE_HEADERS.map(h => (
                     <th key={h} className="text-left text-xs font-semibold text-[var(--members-text-secondary)] uppercase tracking-wider px-5 py-3">
@@ -43,7 +43,7 @@ export default function MembersTable() {
               </thead>
               <tbody className="divide-y divide-[var(--members-border)]">
                 {currentData.map(m => (
-                  <tr key={m.id} className="hover:bg-black/5 transition-colors">
+                  <tr key={m.id} className="hover:bg-[var(--members-hover-bg)] transition-colors">
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm" style={{ background: 'var(--members-highlight-subtle)', color: 'var(--members-highlight)' }}>
@@ -58,7 +58,7 @@ export default function MembersTable() {
                     <td className="px-5 py-3.5 text-sm text-[var(--members-text-primary)]">{m.plan?.name || `Plan #${m.planId}`}</td>
                     <td className="px-5 py-3.5">
                       <span 
-                        className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium" 
+                        className="inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-semibold" 
                         style={{ background: MEMBERS_STATUS_COLORS[m.status]?.split(' ')[0] || '#f3f4f6', color: MEMBERS_STATUS_COLORS[m.status]?.split(' ')[1] || '#374151' }}
                       >
                         {m.status}

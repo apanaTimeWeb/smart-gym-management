@@ -13,11 +13,11 @@ export default function MemberModal() {
  if (!showAddModal) return null;
 
  return (
- <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+ <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
  <div className="bg-[var(--members-bg-card)] rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
  <div className="sticky top-0 bg-[var(--members-bg-card)] px-6 py-4 border-b border-[var(--members-border)] flex items-center justify-between">
  <h3 className="text-lg font-bold text-[var(--members-text-primary)]">{editId ? 'Edit Member' : 'Add New Member'}</h3>
- <button onClick={() => setShowAddModal(false)} className="p-2 rounded-lg hover:bg-black/5 text-[var(--members-text-secondary)]">
+ <button onClick={() => setShowAddModal(false)} className="p-2 rounded-lg hover:bg-[var(--members-hover-bg)] text-[var(--members-text-secondary)]">
  <X size={18} />
  </button>
  </div>
@@ -98,7 +98,7 @@ export default function MemberModal() {
  <button 
  type="button" 
  onClick={() => setShowAddModal(false)} 
- className="flex-1 py-2.5 border border-[var(--members-border)] rounded-xl text-sm font-medium text-[var(--members-text-primary)] hover:bg-black/5"
+ className="flex-1 py-2.5 border border-[var(--members-border)] rounded-xl text-sm font-medium text-[var(--members-text-primary)] hover:bg-[var(--members-hover-bg)]"
  >
  Cancel
  </button>

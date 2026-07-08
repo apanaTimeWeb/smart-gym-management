@@ -14,7 +14,7 @@ export default function WorkoutModal() {
  if (!showWkModal) return null;
 
  return (
- <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+ <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
  <div className="bg-[var(--workout-bg-card)] rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
  <div className="flex justify-between items-center p-5 border-b border-[var(--workout-border)]">
  <h3 className="font-bold text-lg text-[var(--workout-text-primary)]">

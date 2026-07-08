@@ -69,7 +69,7 @@ export default function RecentMembers() {
                 </td>
                 <td className="px-6 py-4 text-sm" style={{ color: 'var(--text-secondary)' }}>{(m.plan as any)?.name || m.plan || 'N/A'}</td>
                 <td className="px-6 py-4">
-                  <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium" style={{ backgroundColor: statusStyle.bg, color: statusStyle.text }}>
+                  <span className="inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-semibold" style={{ backgroundColor: statusStyle.bg, color: statusStyle.text }}>
                     {m.status}
                   </span>
                 </td>

@@ -50,12 +50,12 @@ export default function PaymentsTable() {
  <td className="px-4 py-3 text-sm font-medium" style={{ color: 'var(--finance-text-primary)' }}>{p.member?.name || `Member #${p.memberId}`}</td>
  <td className="px-4 py-3 text-sm font-bold" style={{ color: 'var(--finance-status-paid-text)' }}>{fmt(p.amount)}</td>
  <td className="px-4 py-3">
- <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium" style={{ backgroundColor: mStyle.bg, color: mStyle.text }}>
+ <span className="inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-semibold" style={{ backgroundColor: mStyle.bg, color: mStyle.text }}>
  {p.method}
  </span>
  </td>
  <td className="px-4 py-3">
- <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium" style={{ backgroundColor: sStyle.bg, color: sStyle.text }}>
+ <span className="inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-semibold" style={{ backgroundColor: sStyle.bg, color: sStyle.text }}>
  {p.status}
  </span>
  </td>

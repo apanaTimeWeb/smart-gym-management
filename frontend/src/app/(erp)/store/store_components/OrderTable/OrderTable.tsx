@@ -53,7 +53,7 @@ export default function OrderTable() {
                   {o.method}
                 </td>
                 <td className="px-4 py-3">
-                  <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium bg-[var(--success-bg)] text-[var(--success)] dark:bg-[var(--success-bg)] dark:text-[var(--success)]">
+                  <span className="inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-[var(--success-bg)] text-[var(--success)] dark:bg-[var(--success-bg)] dark:text-[var(--success)]">
                     {o.status}
                   </span>
                 </td>

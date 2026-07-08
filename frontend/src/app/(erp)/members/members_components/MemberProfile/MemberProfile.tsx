@@ -35,13 +35,13 @@ export default function MemberProfile() {
  <h2 className="text-xl font-bold text-[var(--members-text-primary)]">{selectedMember.name}</h2>
  <p className="text-[var(--members-text-secondary)] text-sm">{selectedMember.email} · {selectedMember.phone}</p>
  <div className="flex gap-2 mt-2">
- <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium" style={{ background: MEMBERS_STATUS_COLORS[selectedMember.status]?.split(' ')[0] || '#f3f4f6', color: MEMBERS_STATUS_COLORS[selectedMember.status]?.split(' ')[1] || '#374151' }}>
+ <span className="inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-semibold" style={{ background: MEMBERS_STATUS_COLORS[selectedMember.status]?.split(' ')[0] || '#f3f4f6', color: MEMBERS_STATUS_COLORS[selectedMember.status]?.split(' ')[1] || '#374151' }}>
  {selectedMember.status}
  </span>
- <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium bg-[var(--info-bg)] text-[var(--info)] dark:bg-[var(--info-bg)] dark:text-[var(--info)]">
+ <span className="inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-[var(--info-bg)] text-[var(--info)] dark:bg-[var(--info-bg)] dark:text-[var(--info)]">
  {selectedMember.plan?.name || ''}
  </span>
- <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-300">
+ <span className="inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-300">
  {MEMBERS_CYCLE_LABELS[selectedMember.billingCycle] || selectedMember.billingCycle}
  </span>
  </div>
@@ -50,7 +50,7 @@ export default function MemberProfile() {
  <div className="flex gap-2 flex-wrap">
  <button 
  onClick={() => openEdit(selectedMember)} 
- className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border border-[var(--members-border)] rounded-xl hover:bg-black/5 text-[var(--members-text-primary)] transition-colors"
+ className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border border-[var(--members-border)] rounded-xl hover:bg-[var(--members-hover-bg)] text-[var(--members-text-primary)] transition-colors"
  >
  <Edit size={14} /> Edit
  </button>

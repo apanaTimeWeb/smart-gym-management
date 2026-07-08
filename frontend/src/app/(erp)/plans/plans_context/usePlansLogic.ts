@@ -3,8 +3,10 @@ import { plansApi, type Plan } from '@/lib/api';
 import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
 import { EMPTY_PLAN_FORM } from '../plans_utils/PlansSharedConstants';
 import { PlansContextType } from '../plans_types/plans_types';
+import { useConfirm } from '@/app/(erp)/erp_components/ErpConfirmProvider';
 
 export function usePlansLogic(): PlansContextType {
+  const { confirm } = useConfirm();
  const [plans, setPlans] = useState<Plan[]>([]);
  const [loading, setLoading] = useState(true);
  const [saving, setSaving] = useState(false);
@@ -85,8 +87,9 @@ export function usePlansLogic(): PlansContextType {
  }, [editId, form, loadPlans, showToast]);
 
  const deletePlan = useCallback(async (id: number) => {
- if (!window.confirm('Are you sure you want to delete this plan?')) return;
- try { 
+  const isConfirmed = await confirm({ title: 'Delete Plan', message: 'Are you sure you want to delete this plan?', confirmText: 'Delete', type: 'danger' });
+  if (!isConfirmed) return;
+  try { 
  await plansApi.remove(id); 
  showToast('Plan deleted!', 'success'); 
  await loadPlans(); 

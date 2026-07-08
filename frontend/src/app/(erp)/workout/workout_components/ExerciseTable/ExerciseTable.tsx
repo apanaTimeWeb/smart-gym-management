@@ -17,7 +17,7 @@ export default function ExerciseTable() {
     <div className="flex flex-col h-full min-h-[400px]">
       <div className="overflow-x-auto flex-1">
         <table className="w-full">
-          <thead className="bg-[var(--bg-input)]">
+          <thead className="bg-[var(--workout-table-header-bg)]">
             <tr>
               {EXERCISE_TABLE_HEADERS.map(h => (
                 <th key={h} className="text-left text-xs font-semibold text-[var(--workout-text-secondary)] uppercase tracking-wider px-4 py-3">
@@ -28,7 +28,7 @@ export default function ExerciseTable() {
           </thead>
           <tbody className="divide-y divide-[var(--workout-border)]">
             {currentData.map(ex => (
-              <tr key={ex.id} className="hover:bg-[var(--primary-subtle)] transition-colors">
+              <tr key={ex.id} className="hover:bg-[var(--workout-hover-bg)] transition-colors">
                 <td className="px-4 py-3 text-sm font-medium text-[var(--workout-text-primary)]">{ex.name}</td>
                 <td className="px-4 py-3 text-sm text-[var(--workout-text-secondary)]">{ex.muscle}</td>
                 <td className="px-4 py-3">
@@ -37,7 +37,7 @@ export default function ExerciseTable() {
                   </span>
                 </td>
                 <td className="px-4 py-3">
-                  <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${
+                  <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-semibold ${
                     ex.difficulty === 'Beginner' 
                     ? 'bg-[var(--success-bg)] text-[var(--success)] dark:bg-[var(--success-bg)] dark:text-[var(--success)]' 
                     : ex.difficulty === 'Intermediate' 

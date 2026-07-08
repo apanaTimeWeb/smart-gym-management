@@ -12,7 +12,7 @@
   --dashboard-status-expired-bg: var(--danger-bg);
   
   --dashboard-status-default-text: var(--text-secondary);
-  --dashboard-status-default-bg: #1E1E2E;
+  --dashboard-status-default-bg: var(--bg-input);
 
   /* Plan Colors */
   --dashboard-plan-basic-bg: var(--info);

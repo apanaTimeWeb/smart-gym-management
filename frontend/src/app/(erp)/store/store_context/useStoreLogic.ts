@@ -4,8 +4,10 @@ import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
 import type { ErpReceiptData } from '@/app/(erp)/erp_components/ErpThermalReceipt';
 import { EMPTY_PRODUCT_FORM } from '../store_utils/StoreSharedConstants';
 import { StoreContextType, OrderItem } from '../store_types/store_types';
+import { useConfirm } from '@/app/(erp)/erp_components/ErpConfirmProvider';
 
 export function useStoreLogic(): StoreContextType {
+  const { confirm } = useConfirm();
  const [tab, setTab] = useState('Products');
  const [products, setProducts] = useState<Product[]>([]);
  const [orders, setOrders] = useState<Order[]>([]);
@@ -95,8 +97,9 @@ export function useStoreLogic(): StoreContextType {
  }, [editProductId, productForm, loadAll, showToast]);
 
  const deleteProduct = useCallback(async (id: number) => {
- if (!window.confirm('Delete this product?')) return;
- try { 
+  const isConfirmed = await confirm({ title: 'Delete Product', message: 'Delete this product?', confirmText: 'Delete', type: 'danger' });
+  if (!isConfirmed) return;
+  try { 
  await storeApi.removeProduct(id); 
  showToast('Product deleted', 'success'); 
  await loadAll(); 

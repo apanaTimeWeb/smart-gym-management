@@ -3,10 +3,12 @@ import { membersApi, plansApi, financeApi, type Member, type Plan, type Payment 
 import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
 import type { MessageType, ErpMessageRecipient } from '@/app/(erp)/erp_components/ErpMessageModal';
 import type { ErpReceiptData } from '@/app/(erp)/erp_components/ErpThermalReceipt';
+import { useConfirm } from '@/app/(erp)/erp_components/ErpConfirmProvider';
 import { EMPTY_MEMBER_FORM, formatCurrency } from '../members_utils/MembersSharedConstants';
 import { MembersContextType } from '../members_types/members_types';
 
 export function useMembersLogic(): MembersContextType {
+  const { confirm } = useConfirm();
  const [members, setMembers] = useState<Member[]>([]);
  const [plans, setPlans] = useState<Plan[]>([]);
  const [payments, setPayments] = useState<Payment[]>([]);
@@ -134,8 +136,9 @@ export function useMembersLogic(): MembersContextType {
  }, [editId, form, loadAll, showToast]);
 
  const deleteMember = useCallback(async (id: number) => {
- if (!window.confirm('Delete this member?')) return;
- try {
+  const isConfirmed = await confirm({ title: 'Delete Member', message: 'Are you sure you want to delete this member? This action cannot be undone.', confirmText: 'Delete', type: 'danger' });
+  if (!isConfirmed) return;
+  try {
  await membersApi.remove(id);
  showToast('Member deleted', 'success');
  if (selectedMember?.id === id) setSelectedMember(null);

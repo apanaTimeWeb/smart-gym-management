@@ -55,7 +55,7 @@ export default function AllMemberships() {
             <td className="px-4 py-3 text-sm text-[var(--sales-text-secondary)]">{r.start}</td>
             <td className="px-4 py-3 text-sm text-[var(--sales-text-secondary)]">{r.end}</td>
             <td className="px-4 py-3">
-              <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${
+              <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-semibold ${
                 r.status === 'Active' 
                 ? 'bg-[var(--success-bg)] text-[var(--success)] dark:bg-[var(--success-bg)] dark:text-[var(--success)]' 
                 : 'bg-[var(--danger-bg)] text-[var(--danger)] dark:bg-[var(--danger-bg)] dark:text-[var(--danger)]'

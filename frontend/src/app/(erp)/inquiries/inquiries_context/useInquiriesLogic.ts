@@ -4,8 +4,10 @@ import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
 import type { MessageType, ErpMessageRecipient } from '@/app/(erp)/erp_components/ErpMessageModal';
 import { EMPTY_INQUIRY_FORM, generateDefaultMessage } from '../inquiries_utils/InquiriesSharedConstants';
 import { InquiriesContextType } from '../inquiries_types/inquiries_types';
+import { useConfirm } from '@/app/(erp)/erp_components/ErpConfirmProvider';
 
 export function useInquiriesLogic(): InquiriesContextType {
+  const { confirm } = useConfirm();
  const [inquiries, setInquiries] = useState<Inquiry[]>([]);
  const [stats, setStats] = useState<InquiryStats | null>(null);
  const [loading, setLoading] = useState(true);
@@ -90,8 +92,9 @@ export function useInquiriesLogic(): InquiriesContextType {
  }, [form, editId, loadAll, showToast]);
 
  const deleteInquiry = useCallback(async (id: number) => {
- if (!window.confirm('Delete this inquiry?')) return;
- try { 
+  const isConfirmed = await confirm({ title: 'Delete Inquiry', message: 'Delete this inquiry?', confirmText: 'Delete', type: 'danger' });
+  if (!isConfirmed) return;
+  try { 
  await inquiriesApi.remove(id); 
  showToast('Deleted', 'success'); 
  await loadAll(); 

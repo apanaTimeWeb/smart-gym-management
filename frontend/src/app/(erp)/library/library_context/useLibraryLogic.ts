@@ -3,8 +3,10 @@ import { workoutApi, type Exercise, type DietPlan } from '@/lib/api';
 import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
 import { EMPTY_EXERCISE_FORM, EMPTY_DIET_FORM, type LibraryTab } from '../library_utils/LibrarySharedConstants';
 import { LibraryContextType } from '../library_types/library_types';
+import { useConfirm } from '@/app/(erp)/erp_components/ErpConfirmProvider';
 
 export function useLibraryLogic(): LibraryContextType {
+  const { confirm } = useConfirm();
  const [tab, setTab] = useState<LibraryTab>('Exercises');
  const [exercises, setExercises] = useState<Exercise[]>([]);
  const [dietPlans, setDietPlans] = useState<DietPlan[]>([]);
@@ -95,8 +97,9 @@ export function useLibraryLogic(): LibraryContextType {
  }, [editExId, exForm, loadAll, showToast]);
  
  const deleteExercise = useCallback(async (id: number) => {
- if (!window.confirm('Delete this exercise?')) return;
- try { 
+  const isConfirmed = await confirm({ title: 'Delete Exercise', message: 'Delete this exercise?', confirmText: 'Delete', type: 'danger' });
+  if (!isConfirmed) return;
+  try { 
  await workoutApi.removeExercise(id); 
  showToast('Deleted', 'success'); 
  await loadAll(); 
@@ -157,8 +160,9 @@ export function useLibraryLogic(): LibraryContextType {
  }, [editDietId, dietForm, loadAll, showToast]);
  
  const deleteDietPlan = useCallback(async (id: number) => {
- if (!window.confirm('Delete this diet plan?')) return;
- try { 
+  const isConfirmed = await confirm({ title: 'Delete Diet Plan', message: 'Delete this diet plan?', confirmText: 'Delete', type: 'danger' });
+  if (!isConfirmed) return;
+  try { 
  await workoutApi.removeDietPlan(id); 
  showToast('Deleted', 'success'); 
  await loadAll(); 

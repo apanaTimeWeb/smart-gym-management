@@ -3,8 +3,10 @@ import { hrApi, type Staff, type Payroll, type HrSummary } from '@/lib/api';
 import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
 import { EMPTY_STAFF } from '../hr_utils/HrSharedConstants';
 import { HrContextType } from '../hr_types/hr_types';
+import { useConfirm } from '@/app/(erp)/erp_components/ErpConfirmProvider';
 
 export function useHrLogic(): HrContextType {
+  const { confirm } = useConfirm();
  const [staff, setStaff] = useState<Staff[]>([]);
  const [payrolls, setPayrolls] = useState<Payroll[]>([]);
  const [summary, setSummary] = useState<HrSummary | null>(null);
@@ -90,8 +92,9 @@ export function useHrLogic(): HrContextType {
  }, [form, editId, loadAll, showToast]);
 
  const deleteStaff = useCallback(async (id: number) => {
- if (!window.confirm('Remove this staff member?')) return;
- try { 
+  const isConfirmed = await confirm({ title: 'Remove Staff', message: 'Remove this staff member?', confirmText: 'Remove', type: 'danger' });
+  if (!isConfirmed) return;
+  try { 
  await hrApi.removeStaff(id); 
  showToast('Staff removed', 'success'); 
  await loadAll(); 

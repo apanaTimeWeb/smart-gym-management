@@ -48,7 +48,7 @@ export default function PayrollTable() {
                 <td className="px-4 py-3 text-sm font-bold" style={{ color: 'var(--hr-kpi-green-text)' }}>{fmt(p.amount)}</td>
                 <td className="px-4 py-3">
                   <span 
-                    className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium" 
+                    className="inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-semibold" 
                     style={{ 
                       backgroundColor: p.status === 'Paid' ? 'var(--hr-status-paid-bg)' : 'var(--hr-status-pending-bg)', 
                       color: p.status === 'Paid' ? 'var(--hr-status-paid-text)' : 'var(--hr-status-pending-text)' 

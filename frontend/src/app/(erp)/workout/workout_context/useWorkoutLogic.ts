@@ -3,10 +3,11 @@ import {
  Workout, Exercise, 
  INITIAL_WORKOUTS, INITIAL_EXERCISES, 
  EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM 
-} from '../workout_utils/WorkoutSharedConstants';
 import { WorkoutContextType } from '../workout_types/workout_types';
+import { useConfirm } from '@/app/(erp)/erp_components/ErpConfirmProvider';
 
 export function useWorkoutLogic(): WorkoutContextType {
+  const { confirm } = useConfirm();
  const [tab, setTab] = useState('Workout Plans');
   const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -73,11 +74,12 @@ export function useWorkoutLogic(): WorkoutContextType {
  setShowWkModal(false);
  }, [editWkId, wkForm]);
  
- const deleteWk = useCallback((id: number) => { 
- if (window.confirm('Delete this workout plan?')) {
- setWorkouts(prev => prev.filter(w => w.id !== id));
- }
- }, []);
+ const deleteWk = useCallback(async (id: number) => { 
+  const isConfirmed = await confirm({ title: 'Delete Workout', message: 'Delete this workout plan?', confirmText: 'Delete', type: 'danger' });
+  if (isConfirmed) {
+  setWorkouts(prev => prev.filter(w => w.id !== id));
+  }
+ }, [confirm]);
 
  // Exercise CRUD
  const openAddEx = useCallback(() => { 
@@ -107,11 +109,12 @@ export function useWorkoutLogic(): WorkoutContextType {
  setShowExModal(false);
  }, [editExId, exForm]);
  
- const deleteEx = useCallback((id: number) => { 
- if (window.confirm('Delete this exercise?')) {
- setExercises(prev => prev.filter(ex => ex.id !== id));
- }
- }, []);
+ const deleteEx = useCallback(async (id: number) => { 
+  const isConfirmed = await confirm({ title: 'Delete Exercise', message: 'Delete this exercise?', confirmText: 'Delete', type: 'danger' });
+  if (isConfirmed) {
+  setExercises(prev => prev.filter(ex => ex.id !== id));
+  }
+ }, [confirm]);
 
   return {
     tab, setTab, search, setSearch, currentPage, setCurrentPage,
