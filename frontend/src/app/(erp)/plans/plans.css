@@ -1,0 +1,18 @@
+/* plans.css - Theme Variables for Plans Module */
+
+.plans-module {
+  /* Common backgrounds */
+  --plans-bg-card: var(--bg-card);
+  --plans-bg-input: var(--bg-input);
+
+  /* Text colors */
+  --plans-text-primary: var(--text-primary);
+  --plans-text-secondary: var(--text-secondary);
+
+  /* Borders */
+  --plans-border: var(--border);
+
+  /* Highlights */
+  --plans-highlight: hsl(24 95% 53%);
+  --plans-highlight-subtle: hsl(24 95% 95%);
+}
