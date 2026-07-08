@@ -112,10 +112,35 @@ Never use fragile relative imports (e.g., `../../../utils/helpers`).
 - `controllers/` handle HTTP (req, res).
 - `services/` handle the heavy lifting and should be highly split up (e.g., `paymentService.js`, `refundService.js`).
 
-## 11. Co-located Testing (Extreme Isolation for Tests)
+## 11. Co-located Testing (Unit & E2E - Extreme Isolation)
 Never put tests in a global `tests/` or `pytest_tests/` directory separate from the application code. 
-* **The Rule:** Tests must live directly inside the module they are testing. Create a `tests/` folder inside the module (e.g., `modules/auth/tests/` or `modules/auth/auth_test/`), or keep `.spec.ts` / `test_*.py` files adjacent to the micro-feature they test.
-* **Why?** When an AI is asked to add a feature or fix a bug in `auth-login.service.ts`, providing the corresponding test file in the exact same directory ensures the AI has complete context of the feature's requirements and can update the test simultaneously without hunting across the codebase.
+* **The Rule:** Both Unit and End-to-End (E2E) tests must live directly inside the module they are testing. Create a `tests/` folder inside the module (e.g., `modules/auth/tests/` or `modules/auth/auth_test/`), or keep `.spec.ts` / `test_*.py` files adjacent to the micro-feature they test.
+* **Why?** When an AI is asked to add a feature or fix a bug, providing the corresponding test file in the exact same directory ensures the AI has complete context of the feature's requirements. Running these E2E tests locally proves the AI has written great, working code before the developer even needs to review it manually.
+
+
+## 12. Strict API Documentation (Swagger/OpenAPI)
+* **The Rule:** Every endpoint MUST be documented using the framework's native OpenAPI/Swagger tools (e.g., `@ApiTags` and `@ApiResponse` in NestJS, `drf-spectacular` in Django, or `swagger-jsdoc` in Express).
+* **Why:** AI relies heavily on interface contracts. Keeping them mandatory and co-located with the controllers ensures frontend developers (and AI frontend agents) always have a mathematically accurate, up-to-date API contract to work with.
+
+## 13. Environment & Configuration Management
+* **The Rule:** Never use raw environment variables (e.g., `process.env.XXX` or `os.environ.get()`) directly inside business logic. Always use a centralized, strongly-typed Config Service or Settings class (e.g., `@nestjs/config` in NestJS, `settings.py` with `django-environ` in Django).
+* **Why:** If the AI needs to add a new third-party API key or change a timeout value, it should only modify the central configuration schema, not hunt for raw env calls scattered across 50 different micro-services.
+
+## 14. Standardized Logging & Correlation IDs
+* **The Rule:** Never use raw print statements (e.g., `console.log()` or `print()`). Always use the framework's official Logger instance or a structured logging library (like Winston/Pino in Node, or `logging` in Python). In enterprise apps, ensure requests carry a trace/correlation ID.
+* **Why:** When the AI is asked to "add logging" for debugging, it must use the established pattern so logs can be parsed by tools like Datadog or ELK. Standardized loggers also allow global turning on/off of debug statements.
+
+## 15. Dependency Injection & Inversion of Control
+* **The Rule:** Avoid instantiating complex service classes directly using `new MyService()` or `MyService()`. Rely on the framework's Dependency Injection system if it has one (NestJS, Spring Boot), or construct dependencies at the highest possible level (module/route boundaries) and pass them in.
+* **Why:** AI might take shortcuts and manually instantiate classes inside business logic, creating tight coupling. Enforcing Dependency Injection ensures that tests can easily mock out databases, external APIs, and child services.
+
+## 16. Module-Specific API Collections (Postman/Insomnia)
+* **The Rule:** Whenever a module is created or finalized, generate a `[module-name]_collection.json` file directly inside the module's folder (e.g., `modules/auth/auth_collection.json`). 
+* **Why:** This ensures that any developer (or human QA) can instantly import this JSON into Postman and manually test the module's endpoints without having to manually construct the headers, payloads, or figure out the routes. It provides immediate, highly-accessible testing verification.
+
+## 17. Standardized Pagination & Filtering (Enterprise Scale)
+* **The Rule:** Never write ad-hoc pagination for list endpoints. Always use a standardized wrapper or query dto (e.g., `limit/offset` or `cursor` based pagination) across all controllers.
+* **Why:** If the AI is asked to add pagination to `MemberAnalytics`, it should follow a global standard rather than inventing a new query format just for that feature.
 
 ## Summary Checklist for Developers Providing Context to AI:
 1. Identify the exact layer where the bug/feature resides (Validation? DB Query? Business Logic?).
