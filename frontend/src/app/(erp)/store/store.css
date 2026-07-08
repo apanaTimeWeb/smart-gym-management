@@ -1,0 +1,18 @@
+/* store.css - Theme Variables for Store Module */
+
+.store-module {
+  /* Common backgrounds */
+  --store-bg-card: var(--bg-card);
+  --store-bg-input: var(--bg-input);
+
+  /* Text colors */
+  --store-text-primary: var(--text-primary);
+  --store-text-secondary: var(--text-secondary);
+
+  /* Borders */
+  --store-border: var(--border);
+
+  /* Highlights */
+  --store-highlight: hsl(24 95% 53%);
+  --store-highlight-subtle: hsl(24 95% 95%);
+}
