@@ -3,13 +3,13 @@
 import { useState } from 'react';
 import { useFinanceContext } from '../../finance_context/FinanceContext';
 import { FINANCE_TABS } from '../../finance_utils/FinanceSharedConstants';
-import { RefreshCw, Plus } from 'lucide-react';
+import { RefreshCw, Plus, Search } from 'lucide-react';
 import PaymentsTable from '../PaymentsTable/PaymentsTable';
 import RevenueSummary from '../RevenueSummary/RevenueSummary';
 
 export default function FinanceTabs() {
- const [tab, setTab] = useState(FINANCE_TABS[0]);
- const { loadAll, setShowModal } = useFinanceContext();
+  const [tab, setTab] = useState(FINANCE_TABS[0]);
+  const { loadAll, setShowModal, search, setSearch, setCurrentPage } = useFinanceContext();
 
  return (
  <div className="rounded-xl shadow-sm border overflow-hidden finance-module" style={{ backgroundColor: 'var(--finance-bg-card)', borderColor: 'var(--finance-border)' }}>
@@ -30,7 +30,22 @@ export default function FinanceTabs() {
  </button>
  ))}
  </div>
- <div className="px-4 flex gap-2">
+  <div className="px-4 flex flex-wrap gap-3 items-center">
+    <div className="relative">
+      <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--finance-text-secondary)]" />
+      <input 
+        value={search} 
+        onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} 
+        placeholder="Search payments..." 
+        className="pl-9 pr-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 w-40 sm:w-64"
+        style={{ 
+          backgroundColor: 'var(--finance-bg-card)', 
+          borderColor: 'var(--finance-border)', 
+          color: 'var(--finance-text-primary)' 
+        }} 
+      />
+    </div>
+    <div className="flex gap-2">
  <button 
  onClick={loadAll} 
  className="flex items-center gap-2 px-3 py-2 text-sm border rounded-lg hover:opacity-80 transition-opacity"

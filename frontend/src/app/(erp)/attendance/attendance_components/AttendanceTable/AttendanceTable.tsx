@@ -3,15 +3,23 @@
 import { Clock } from 'lucide-react';
 import { useAttendanceContext } from '../../attendance_context/AttendanceContext';
 import { ATTENDANCE_TABLE_HEADERS, formatDate, formatTime } from '../../attendance_utils/AttendanceSharedConstants';
+import ErpPagination from '../../../erp_components/ErpPagination';
 
 export default function AttendanceTable() {
- const { records, tab, loading } = useAttendanceContext();
+  const { records, tab, loading, search, currentPage, setCurrentPage } = useAttendanceContext();
 
- const filtered = records.filter(r =>
- tab === 'All' ? true : tab === 'Members' ? r.type === 'MEMBER' : r.type === 'STAFF'
- );
+  const filtered = records.filter(r => {
+    const matchTab = tab === 'All' ? true : tab === 'Members' ? r.type === 'MEMBER' : r.type === 'STAFF';
+    const matchSearch = (r.member?.name || '').toLowerCase().includes(search.toLowerCase()) || 
+                        (r.staff?.name || '').toLowerCase().includes(search.toLowerCase());
+    return matchTab && matchSearch;
+  });
 
- return (
+  const ITEMS_PER_PAGE = 10;
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;
+  const paginated = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
+  return (
  <div className="p-5">
  {loading ? (
  <div className="flex justify-center py-10">
@@ -30,7 +38,7 @@ export default function AttendanceTable() {
  </tr>
  </thead>
  <tbody className="divide-y divide-[var(--attendance-border)]">
- {filtered.map(r => (
+ {paginated.map(r => (
  <tr key={r.id} className="hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
  <td className="px-4 py-3">
  <div className="flex items-center gap-2">
@@ -72,6 +80,23 @@ export default function AttendanceTable() {
  </table>
  </div>
  )}
- </div>
- );
+ 
+ {!loading && totalPages > 1 && (
+    <div className="border-t border-[var(--attendance-border)] mt-4 pt-4">
+      <ErpPagination 
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+        colors={{
+          text: 'var(--attendance-text-secondary)',
+          textActive: 'white',
+          bgActive: 'var(--attendance-highlight)',
+          border: 'var(--attendance-border)',
+          hoverBg: 'var(--attendance-highlight-subtle)'
+        }}
+      />
+    </div>
+  )}
+  </div>
+  );
 }

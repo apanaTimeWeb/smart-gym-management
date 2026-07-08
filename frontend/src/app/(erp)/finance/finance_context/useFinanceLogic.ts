@@ -8,8 +8,10 @@ export function useFinanceLogic(): FinanceContextType {
  const [summary, setSummary] = useState<FinanceSummary | null>(null);
  const [loading, setLoading] = useState(true);
  const [error, setError] = useState('');
- const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
- const [showModal, setShowModal] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [search, setSearch] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
 
  const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
  const hideToast = useCallback(() => setToast(null), []);
@@ -45,7 +47,11 @@ export function useFinanceLogic(): FinanceContextType {
  showToast,
  hideToast,
  loadAll,
- showModal,
- setShowModal
- };
+  showModal,
+  setShowModal,
+  search,
+  setSearch,
+  currentPage,
+  setCurrentPage
+  };
 }

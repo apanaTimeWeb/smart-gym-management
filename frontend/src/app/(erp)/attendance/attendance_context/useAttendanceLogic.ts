@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { attendanceApi, membersApi, hrApi, type Attendance, type Member, type Staff } from '@/lib/api';
 import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
-import { EMPTY_ATTENDANCE_FORM, type AttendanceTab } from '../attendance_utils/AttendanceSharedConstants';
+import { EMPTY_ATTENDANCE_FORM, ATTENDANCE_TABS, type AttendanceTab } from '../attendance_utils/AttendanceSharedConstants';
 import { AttendanceContextType } from '../attendance_types/attendance_types';
 
 export function useAttendanceLogic(): AttendanceContextType {
@@ -14,8 +14,10 @@ export function useAttendanceLogic(): AttendanceContextType {
  const [saving, setSaving] = useState(false);
  const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
  
- const [tab, setTab] = useState<AttendanceTab>('All');
- const [showModal, setShowModal] = useState(false);
+  const [tab, setTab] = useState<AttendanceTab>(ATTENDANCE_TABS[0]);
+  const [search, setSearch] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [showModal, setShowModal] = useState(false);
  const [form, setForm] = useState(EMPTY_ATTENDANCE_FORM);
 
  const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
@@ -69,13 +71,15 @@ export function useAttendanceLogic(): AttendanceContextType {
  }
  }, [form, loadAll, showToast]);
 
- return {
- records, todayStats, members, staff,
- loading, saving, toast,
- tab, setTab,
- showModal, setShowModal,
- form, setForm,
- showToast, hideToast,
- loadAll, markAttendance
- };
+  return {
+    records, todayStats, members, staff,
+    loading, saving, toast,
+    tab, setTab,
+    search, setSearch,
+    currentPage, setCurrentPage,
+    showModal, setShowModal,
+    form, setForm,
+    showToast, hideToast,
+    loadAll, markAttendance
+  };
 }

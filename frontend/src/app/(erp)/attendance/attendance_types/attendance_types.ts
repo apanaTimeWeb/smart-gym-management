@@ -11,8 +11,13 @@ export interface AttendanceContextType {
  saving: boolean;
  toast: { message: string; type: ToastType } | null;
  
- tab: AttendanceTab;
- setTab: (t: AttendanceTab) => void;
+  tab: AttendanceTab;
+  setTab: (t: AttendanceTab) => void;
+  
+  search: string;
+  setSearch: (s: string) => void;
+  currentPage: number;
+  setCurrentPage: (p: number) => void;
  
  showModal: boolean;
  setShowModal: (show: boolean) => void;

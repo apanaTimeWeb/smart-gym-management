@@ -10,6 +10,10 @@ export interface FinanceContextType {
  showToast: (msg: string, t: ToastType) => void;
  hideToast: () => void;
  loadAll: () => Promise<void>;
- showModal: boolean;
- setShowModal: (show: boolean) => void;
+  showModal: boolean;
+  setShowModal: (show: boolean) => void;
+  search: string;
+  setSearch: (s: string) => void;
+  currentPage: number;
+  setCurrentPage: (p: number) => void;
 }
