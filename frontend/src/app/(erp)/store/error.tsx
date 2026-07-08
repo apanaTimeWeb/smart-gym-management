@@ -30,7 +30,7 @@ export default function Error({
  <div className="pt-4">
  <button
  onClick={() => reset()}
- className="px-6 py-2.5 bg-[var(--danger)] hover:bg-[var(--danger)] text-white font-medium rounded-xl transition-colors shadow-sm shadow-red-500/20"
+ className="px-6 py-2.5 bg-[var(--danger)] hover:bg-[var(--danger)] text-white font-medium rounded-xl transition-colors shadow-sm shadow-[var(--danger)]/20"
  >
  Try again
  </button>

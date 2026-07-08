@@ -2,7 +2,7 @@
 
 import { X, Save } from 'lucide-react';
 import { useMembersContext } from '../../members_context/MembersContext';
-import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency } from '../../members_utils/MembersSharedConstants';
+import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency, BRANCH_OPTIONS } from '../../members_utils/MembersSharedConstants';
 
 export default function MemberModal() {
  const { 
@@ -60,7 +60,7 @@ export default function MemberModal() {
  onChange={e => setForm({ ...form, branch: e.target.value })} 
  className="w-full border border-[var(--members-border)] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--members-bg-input)] text-[var(--members-text-primary)]"
  >
- {['Main Branch', 'Branch 2', 'Branch 3'].map(b => <option key={b}>{b}</option>)}
+ {BRANCH_OPTIONS.map(b => <option key={b}>{b}</option>)}
  </select>
  </div>
  </div>

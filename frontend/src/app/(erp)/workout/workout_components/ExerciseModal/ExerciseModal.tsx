@@ -2,6 +2,7 @@
 
 import { X, Save } from 'lucide-react';
 import { useWorkoutContext } from '../../workout_context/WorkoutContext';
+import { EQUIPMENT_OPTIONS, EXERCISE_DIFFICULTY_OPTIONS } from '../../workout_utils/WorkoutSharedConstants';
 
 export default function ExerciseModal() {
  const { 
@@ -56,7 +57,7 @@ export default function ExerciseModal() {
  onChange={e => setExForm({ ...exForm, equipment: e.target.value })} 
  className="w-full px-3 py-2 border border-[var(--workout-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--workout-bg-input)] text-[var(--workout-text-primary)]"
  >
- {['Barbell', 'Dumbbell', 'Machine', 'Bodyweight', 'Cables', 'Kettlebell'].map(eq => <option key={eq}>{eq}</option>)}
+ {EQUIPMENT_OPTIONS.map(eq => <option key={eq}>{eq}</option>)}
  </select>
  </div>
  <div>
@@ -66,7 +67,7 @@ export default function ExerciseModal() {
  onChange={e => setExForm({ ...exForm, difficulty: e.target.value })} 
  className="w-full px-3 py-2 border border-[var(--workout-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--workout-bg-input)] text-[var(--workout-text-primary)]"
  >
- {['Beginner', 'Intermediate', 'Advanced'].map(d => <option key={d}>{d}</option>)}
+ {EXERCISE_DIFFICULTY_OPTIONS.map(d => <option key={d}>{d}</option>)}
  </select>
  </div>
  </div>

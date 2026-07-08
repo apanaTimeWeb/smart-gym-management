@@ -2,6 +2,7 @@
 
 import { X, Save } from 'lucide-react';
 import { useWorkoutContext } from '../../workout_context/WorkoutContext';
+import { WORKOUT_LEVEL_OPTIONS } from '../../workout_utils/WorkoutSharedConstants';
 
 export default function WorkoutModal() {
  const { 
@@ -46,7 +47,7 @@ export default function WorkoutModal() {
  onChange={e => setWkForm({ ...wkForm, level: e.target.value })} 
  className="w-full px-3 py-2 border border-[var(--workout-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--workout-bg-input)] text-[var(--workout-text-primary)]"
  >
- {['Beginner', 'Intermediate', 'Advanced', 'All Levels'].map(l => <option key={l}>{l}</option>)}
+ {WORKOUT_LEVEL_OPTIONS.map(l => <option key={l}>{l}</option>)}
  </select>
  </div>
  <div>

@@ -28,6 +28,8 @@ export const MEMBERS_TABLE_HEADERS = [
  'Member', 'Plan', 'Status', 'Billing Cycle', 'Paid', 'Pending', 'Expiry', 'Actions'
 ];
 
+export const BRANCH_OPTIONS = ['Main Branch', 'Branch 2', 'Branch 3'] as const;
+
 export const formatCurrency = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');
 
 export function getPriceForCycle(plan: Plan | undefined, cycle: string): number {

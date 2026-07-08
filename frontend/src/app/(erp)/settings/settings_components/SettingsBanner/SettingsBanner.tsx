@@ -10,7 +10,7 @@ export default function SettingsBanner() {
         <p className="text-white/80 text-xs font-medium uppercase tracking-wider mb-1">Call or WhatsApp for FREE Demo</p>
         <p className="text-2xl font-black tracking-tight mb-4">+91 83479 77566</p>
         <div className="flex flex-col sm:flex-row gap-3">
-          <a href="https://wa.me/918347977566" target="_blank" rel="noopener noreferrer" className="flex-1 bg-white text-[var(--primary)] font-bold py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50 transition-colors shadow-sm">
+          <a href="https://wa.me/918347977566" target="_blank" rel="noopener noreferrer" className="flex-1 bg-[var(--bg-card)] text-[var(--primary)] font-bold py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition-colors shadow-sm">
             WhatsApp Demo
           </a>
           <a href="tel:+918347977566" className="flex-1 border border-white/30 text-white font-bold py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 hover:bg-white/10 transition-colors">

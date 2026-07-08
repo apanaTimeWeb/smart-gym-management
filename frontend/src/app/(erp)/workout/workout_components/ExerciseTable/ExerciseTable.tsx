@@ -2,6 +2,7 @@
 
 import { Edit2, Trash2 } from 'lucide-react';
 import { useWorkoutContext } from '../../workout_context/WorkoutContext';
+import { EXERCISE_TABLE_HEADERS } from '../../workout_utils/WorkoutSharedConstants';
 
 import ErpPagination from '../../../erp_components/ErpPagination';
 
@@ -18,7 +19,7 @@ export default function ExerciseTable() {
         <table className="w-full">
           <thead className="bg-[var(--bg-input)]">
             <tr>
-              {['Exercise', 'Primary Muscle', 'Equipment', 'Difficulty', 'Actions'].map(h => (
+              {EXERCISE_TABLE_HEADERS.map(h => (
                 <th key={h} className="text-left text-xs font-semibold text-[var(--workout-text-secondary)] uppercase tracking-wider px-4 py-3">
                   {h}
                 </th>

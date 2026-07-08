@@ -25,4 +25,12 @@
   /* Highlights */
   --members-highlight: hsl(24 95% 53%);
   --members-highlight-subtle: hsl(24 95% 95%);
+
+  /* Action button colors */
+  --members-whatsapp: #25D366;
+  --members-email: var(--info);
+
+  /* Table */
+  --members-table-header-bg: rgba(99,102,241,0.08);
+  --members-hover-bg: rgba(99,102,241,0.06);
 }

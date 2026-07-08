@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-const ERP_PREFIX = ['/dashboard', '/members', '/plans', '/finance', '/hr', '/attendance', '/store', '/workout', '/inquiries', '/settings'];
+const ERP_PREFIX = ['/dashboard', '/members', '/plans', '/finance', '/hr', '/attendance', '/store', '/workout', '/inquiries', '/settings', '/library', '/sales'];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

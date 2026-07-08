@@ -15,4 +15,12 @@
   /* Highlights */
   --workout-highlight: hsl(24 95% 53%);
   --workout-highlight-subtle: hsl(24 95% 95%);
+
+  /* Banner gradient */
+  --workout-banner-gradient-start: var(--info);
+  --workout-banner-gradient-end: #2563eb;
+
+  /* Table */
+  --workout-table-header-bg: rgba(99,102,241,0.08);
+  --workout-hover-bg: rgba(99,102,241,0.06);
 }

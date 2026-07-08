@@ -2,6 +2,7 @@
 
 import { Search, Plus } from 'lucide-react';
 import { useWorkoutContext } from '../../workout_context/WorkoutContext';
+import { WORKOUT_TAB_OPTIONS } from '../../workout_utils/WorkoutSharedConstants';
 
 export default function WorkoutToolbar() {
   const { tab, setTab, search, setSearch, setCurrentPage, openAddWk, openAddEx } = useWorkoutContext();
@@ -9,7 +10,7 @@ export default function WorkoutToolbar() {
   return (
     <div className="border-b border-[var(--workout-border)] flex justify-between items-center bg-[var(--workout-bg-card)]">
       <div className="flex overflow-x-auto">
-        {['Workout Plans', 'Exercise Library'].map(t => (
+        {WORKOUT_TAB_OPTIONS.map(t => (
           <button 
             key={t} 
             onClick={() => { setTab(t); setCurrentPage(1); setSearch(''); }}

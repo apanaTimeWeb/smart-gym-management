@@ -1,21 +1,20 @@
-export interface Workout {
- id: number;
- name: string;
- level: string;
- days: number;
- exercises: number;
- focus: string;
- duration: string;
- tags: string[];
-}
+// Re-export data types from the canonical types file (Rule 7)
+export type { Workout, Exercise } from '../workout_types/workout_types';
+import type { Workout, Exercise } from '../workout_types/workout_types';
 
-export interface Exercise {
- id: number;
- name: string;
- muscle: string;
- equipment: string;
- difficulty: string;
-}
+/* ── Dropdown / Filter Options (Rule 3: Backend-Ready Constants) ── */
+
+export const WORKOUT_LEVEL_OPTIONS = ['Beginner', 'Intermediate', 'Advanced', 'All Levels'] as const;
+
+export const EXERCISE_DIFFICULTY_OPTIONS = ['Beginner', 'Intermediate', 'Advanced'] as const;
+
+export const EQUIPMENT_OPTIONS = ['Barbell', 'Dumbbell', 'Machine', 'Bodyweight', 'Cables', 'Kettlebell'] as const;
+
+export const WORKOUT_TAB_OPTIONS = ['Workout Plans', 'Exercise Library'] as const;
+
+export const EXERCISE_TABLE_HEADERS = ['Exercise', 'Primary Muscle', 'Equipment', 'Difficulty', 'Actions'] as const;
+
+/* ── Initial Mock Data (Backend-Ready) ── */
 
 export const INITIAL_WORKOUTS: Workout[] = [
  { id: 1, name: 'Push Pull Legs', level: 'Intermediate', days: 6, exercises: 24, focus: 'Hypertrophy', duration: '75 min', tags: ['PPL', 'Classic'] },
@@ -51,3 +50,4 @@ export const EMPTY_EXERCISE_FORM = {
  equipment: 'Barbell', 
  difficulty: 'Beginner' 
 };
+

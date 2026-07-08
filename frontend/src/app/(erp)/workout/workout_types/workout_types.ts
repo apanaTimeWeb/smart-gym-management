@@ -1,16 +1,34 @@
-import { 
- Workout, Exercise, 
- EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM 
-} from '../workout_utils/WorkoutSharedConstants';
+import { EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM } from '../workout_utils/WorkoutSharedConstants';
 import React from 'react';
+
+/** Core data shape for a workout plan */
+export interface Workout {
+ id: number;
+ name: string;
+ level: string;
+ days: number;
+ exercises: number;
+ focus: string;
+ duration: string;
+ tags: string[];
+}
+
+/** Core data shape for a single exercise */
+export interface Exercise {
+ id: number;
+ name: string;
+ muscle: string;
+ equipment: string;
+ difficulty: string;
+}
 
 export interface WorkoutContextType {
  tab: string;
  setTab: (tab: string) => void;
-  search: string;
-  setSearch: (s: string) => void;
-  currentPage: number;
-  setCurrentPage: (p: number) => void;
+ search: string;
+ setSearch: (s: string) => void;
+ currentPage: number;
+ setCurrentPage: (p: number) => void;
  
  workouts: Workout[];
  exercises: Exercise[];
