@@ -7,21 +7,21 @@ import { useInquiriesLogic } from './useInquiriesLogic';
 const InquiriesContext = createContext<InquiriesContextType | undefined>(undefined);
 
 export function InquiriesProvider({ children }: { children: React.ReactNode }) {
-  const logic = useInquiriesLogic();
+ const logic = useInquiriesLogic();
 
-  const value = useMemo(() => logic, [logic]);
+ const value = useMemo(() => logic, [logic]);
 
-  return (
-    <InquiriesContext.Provider value={value}>
-      {children}
-    </InquiriesContext.Provider>
-  );
+ return (
+ <InquiriesContext.Provider value={value}>
+ {children}
+ </InquiriesContext.Provider>
+ );
 }
 
 export function useInquiriesContext() {
-  const context = useContext(InquiriesContext);
-  if (context === undefined) {
-    throw new Error('useInquiriesContext must be used within an InquiriesProvider');
-  }
-  return context;
+ const context = useContext(InquiriesContext);
+ if (context === undefined) {
+ throw new Error('useInquiriesContext must be used within an InquiriesProvider');
+ }
+ return context;
 }

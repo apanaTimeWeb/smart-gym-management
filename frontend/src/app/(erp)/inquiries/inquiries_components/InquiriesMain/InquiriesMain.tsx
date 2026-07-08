@@ -11,41 +11,41 @@ import InquiryModal from '../InquiryModal/InquiryModal';
 import '../../inquiries.css';
 
 function InquiriesContent() {
-  const { toast, hideToast, msgModal, closeMsg, showToast } = useInquiriesContext();
+ const { toast, hideToast, msgModal, closeMsg, showToast } = useInquiriesContext();
 
-  return (
-    <div className="min-h-full pb-10 inquiries-module">
-      <ErpHeader title="Inquiries & Leads" subtitle="Track, follow up, and convert leads into members" />
-      <div className="p-6 space-y-5">
-        <InquiriesKPIs />
-        <InquiriesToolbar />
-        <InquiriesTable />
-      </div>
+ return (
+ <div className="min-h-full pb-10 inquiries-module">
+ <ErpHeader title="Inquiries & Leads" subtitle="Track, follow up, and convert leads into members" />
+ <div className="p-6 space-y-5">
+ <InquiriesKPIs />
+ <InquiriesToolbar />
+ <InquiriesTable />
+ </div>
 
-      <InquiryModal />
-      
-      {msgModal?.open && (
-        <ErpMessageModal 
-          open={msgModal.open}
-          type={msgModal.type}
-          recipient={msgModal.recipient}
-          message={msgModal.message}
-          onClose={closeMsg} 
-          onSuccess={msg => { showToast(msg, 'success'); closeMsg(); }} 
-        />
-      )}
-      
-      {toast && (
-        <ErpToast message={toast.message} type={toast.type} onClose={hideToast} />
-      )}
-    </div>
-  );
+ <InquiryModal />
+ 
+ {msgModal?.open && (
+ <ErpMessageModal 
+ open={msgModal.open}
+ type={msgModal.type}
+ recipient={msgModal.recipient}
+ message={msgModal.message}
+ onClose={closeMsg} 
+ onSuccess={msg => { showToast(msg, 'success'); closeMsg(); }} 
+ />
+ )}
+ 
+ {toast && (
+ <ErpToast message={toast.message} type={toast.type} onClose={hideToast} />
+ )}
+ </div>
+ );
 }
 
 export default function InquiriesMain() {
-  return (
-    <InquiriesProvider>
-      <InquiriesContent />
-    </InquiriesProvider>
-  );
+ return (
+ <InquiriesProvider>
+ <InquiriesContent />
+ </InquiriesProvider>
+ );
 }

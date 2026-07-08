@@ -4,9 +4,9 @@ export const CATEGORIES = ['Supplements', 'Accessories', 'Equipment', 'Merchandi
 export const PAYMENT_METHODS = ['UPI', 'Cash', 'Card'];
 
 export const EMPTY_PRODUCT_FORM = { 
-  name: '', 
-  category: 'Supplements', 
-  price: '', 
-  stock: '', 
-  description: '' 
+ name: '', 
+ category: 'Supplements', 
+ price: '', 
+ stock: '', 
+ description: '' 
 };

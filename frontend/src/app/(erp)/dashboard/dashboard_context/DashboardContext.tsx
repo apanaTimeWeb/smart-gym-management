@@ -7,21 +7,21 @@ import { useDashboardLogic } from './useDashboardLogic';
 const DashboardContext = createContext<DashboardContextType | undefined>(undefined);
 
 export function DashboardProvider({ children }: { children: React.ReactNode }) {
-  const logic = useDashboardLogic();
+ const logic = useDashboardLogic();
 
-  const value = useMemo(() => logic, [logic]);
+ const value = useMemo(() => logic, [logic]);
 
-  return (
-    <DashboardContext.Provider value={value}>
-      {children}
-    </DashboardContext.Provider>
-  );
+ return (
+ <DashboardContext.Provider value={value}>
+ {children}
+ </DashboardContext.Provider>
+ );
 }
 
 export function useDashboardContext() {
-  const context = useContext(DashboardContext);
-  if (context === undefined) {
-    throw new Error('useDashboardContext must be used within a DashboardProvider');
-  }
-  return context;
+ const context = useContext(DashboardContext);
+ if (context === undefined) {
+ throw new Error('useDashboardContext must be used within a DashboardProvider');
+ }
+ return context;
 }

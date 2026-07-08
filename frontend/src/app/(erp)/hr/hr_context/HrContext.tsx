@@ -7,21 +7,21 @@ import { useHrLogic } from './useHrLogic';
 const HrContext = createContext<HrContextType | undefined>(undefined);
 
 export function HrProvider({ children }: { children: React.ReactNode }) {
-  const logic = useHrLogic();
+ const logic = useHrLogic();
 
-  const value = useMemo(() => logic, [logic]);
+ const value = useMemo(() => logic, [logic]);
 
-  return (
-    <HrContext.Provider value={value}>
-      {children}
-    </HrContext.Provider>
-  );
+ return (
+ <HrContext.Provider value={value}>
+ {children}
+ </HrContext.Provider>
+ );
 }
 
 export function useHrContext() {
-  const context = useContext(HrContext);
-  if (context === undefined) {
-    throw new Error('useHrContext must be used within an HrProvider');
-  }
-  return context;
+ const context = useContext(HrContext);
+ if (context === undefined) {
+ throw new Error('useHrContext must be used within an HrProvider');
+ }
+ return context;
 }

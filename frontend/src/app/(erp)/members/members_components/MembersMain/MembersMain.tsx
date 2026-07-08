@@ -9,54 +9,54 @@ import { MembersProvider, useMembersContext } from '../../members_context/Member
 import MembersKPIs from '../MembersKPIs/MembersKPIs';
 import MembersToolbar from '../MembersToolbar/MembersToolbar';
 import MembersTable from '../MembersTable/MembersTable';
-import MemberProfileModal from '../MemberProfileModal/MemberProfileModal';
-import MemberFormModal from '../MemberFormModal/MemberFormModal';
+import MemberProfile from '../MemberProfile/MemberProfile';
+import MemberModal from '../MemberModal/MemberModal';
 
 import '../../members.css';
 
 function MembersContent() {
-  const { toast, hideToast, msgModal, closeMsg, showToast, printData, setPrintData } = useMembersContext();
+ const { toast, hideToast, msgModal, closeMsg, showToast, printData, setPrintData } = useMembersContext();
 
-  return (
-    <div className="min-h-full pb-10 members-module">
-      <div className="print-hide">
-        <ErpHeader title="Members Directory" subtitle="Manage gym members, profiles, and subscriptions" />
-        <div className="p-6 space-y-5">
-          <MembersKPIs />
-          <div className="bg-[var(--members-bg-card)] rounded-xl shadow-sm border border-[var(--members-border)] overflow-hidden">
-            <MembersToolbar />
-            <MembersTable />
-          </div>
-        </div>
+ return (
+ <div className="min-h-full pb-10 members-module">
+ <div className="print-hide">
+ <ErpHeader title="Members Directory" subtitle="Manage gym members, profiles, and subscriptions" />
+ <div className="p-6 space-y-5">
+ <MembersKPIs />
+ <div className="bg-[var(--members-bg-card)] rounded-xl shadow-sm border border-[var(--members-border)] overflow-hidden">
+ <MembersToolbar />
+ <MembersTable />
+ </div>
+ </div>
 
-        <MemberFormModal />
-        <MemberProfileModal />
+ <MemberModal />
+ <MemberProfile />
 
-        {msgModal?.open && (
-          <ErpMessageModal 
-            open={msgModal.open}
-            type={msgModal.type}
-            recipient={msgModal.recipient}
-            message={msgModal.message}
-            onClose={closeMsg} 
-            onSuccess={msg => { showToast(msg, 'success'); closeMsg(); }} 
-          />
-        )}
+ {msgModal?.open && (
+ <ErpMessageModal 
+ open={msgModal.open}
+ type={msgModal.type}
+ recipient={msgModal.recipient}
+ message={msgModal.message}
+ onClose={closeMsg} 
+ onSuccess={msg => { showToast(msg, 'success'); closeMsg(); }} 
+ />
+ )}
 
-        {toast && <ErpToast message={toast.message} type={toast.type} onClose={hideToast} />}
-      </div>
+ {toast && <ErpToast message={toast.message} type={toast.type} onClose={hideToast} />}
+ </div>
 
-      {printData && (
-        <ErpThermalReceipt data={printData} onHide={() => setPrintData(null)} />
-      )}
-    </div>
-  );
+ {printData && (
+ <ErpThermalReceipt data={printData} />
+ )}
+ </div>
+ );
 }
 
 export default function MembersMain() {
-  return (
-    <MembersProvider>
-      <MembersContent />
-    </MembersProvider>
-  );
+ return (
+ <MembersProvider>
+ <MembersContent />
+ </MembersProvider>
+ );
 }

@@ -9,22 +9,22 @@ import SettingsBanner from '../SettingsBanner/SettingsBanner';
 import '../../settings.css';
 
 function SettingsMainContent() {
-  return (
-    <div className="min-h-full pb-10 settings-module bg-[var(--bg-page)] text-[var(--settings-text-primary)]">
-      <ErpHeader title="Settings" subtitle="Configure your gym management system" />
-      <div className="p-6">
-        <SettingsNav />
-        <SettingsContent />
-        <SettingsBanner />
-      </div>
-    </div>
-  );
+ return (
+ <div className="min-h-full pb-10 settings-module bg-[var(--bg-page)] text-[var(--settings-text-primary)]">
+ <ErpHeader title="Settings" subtitle="Configure your gym management system" />
+ <div className="p-6">
+ <SettingsNav />
+ <SettingsContent />
+ <SettingsBanner />
+ </div>
+ </div>
+ );
 }
 
 export default function SettingsMain() {
-  return (
-    <SettingsProvider>
-      <SettingsMainContent />
-    </SettingsProvider>
-  );
+ return (
+ <SettingsProvider>
+ <SettingsMainContent />
+ </SettingsProvider>
+ );
 }

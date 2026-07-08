@@ -6,8 +6,8 @@ import LoginHeader from './login_components/LoginHeader/LoginHeader';
 import LoginForm from './login_components/LoginForm/LoginForm';
 import { LoginSharedConstants } from './login_constants/LoginSharedConstants';
 
-export default function Login() {
-  const cookieStore = cookies();
+export default async function Login() {
+  const cookieStore = await cookies();
   const userCookie = cookieStore.get('gymsmart_user');
   
   if (userCookie) {

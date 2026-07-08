@@ -7,21 +7,21 @@ import { useLibraryLogic } from './useLibraryLogic';
 const LibraryContext = createContext<LibraryContextType | undefined>(undefined);
 
 export function LibraryProvider({ children }: { children: React.ReactNode }) {
-  const logic = useLibraryLogic();
+ const logic = useLibraryLogic();
 
-  const value = useMemo(() => logic, [logic]);
+ const value = useMemo(() => logic, [logic]);
 
-  return (
-    <LibraryContext.Provider value={value}>
-      {children}
-    </LibraryContext.Provider>
-  );
+ return (
+ <LibraryContext.Provider value={value}>
+ {children}
+ </LibraryContext.Provider>
+ );
 }
 
 export function useLibraryContext() {
-  const context = useContext(LibraryContext);
-  if (context === undefined) {
-    throw new Error('useLibraryContext must be used within a LibraryProvider');
-  }
-  return context;
+ const context = useContext(LibraryContext);
+ if (context === undefined) {
+ throw new Error('useLibraryContext must be used within a LibraryProvider');
+ }
+ return context;
 }

@@ -3,29 +3,29 @@
 import { useEffect } from "react";
 
 export default function DashboardError({
-  error,
-  reset,
+ error,
+ reset,
 }: {
-  error: Error & { digest?: string };
-  reset: () => void;
+ error: Error & { digest?: string };
+ reset: () => void;
 }) {
-  useEffect(() => {
-    console.error(error);
-  }, [error]);
+ useEffect(() => {
+ console.error(error);
+ }, [error]);
 
-  return (
-    <div className="min-h-full flex items-center justify-center dashboard-module">
-      <div className="text-center">
-        <p className="font-medium" style={{ color: 'var(--danger)' }}>Something went wrong!</p>
-        <p className="text-sm mt-1" style={{ color: 'var(--danger)' }}>{error.message || 'An unexpected error occurred in the dashboard.'}</p>
-        <button
-          onClick={() => reset()}
-          className="mt-4 px-4 py-2 rounded-md font-medium text-white"
-          style={{ backgroundColor: 'var(--primary)' }}
-        >
-          Try again
-        </button>
-      </div>
-    </div>
-  );
+ return (
+ <div className="min-h-full flex items-center justify-center dashboard-module">
+ <div className="text-center">
+ <p className="font-medium" style={{ color: 'var(--danger)' }}>Something went wrong!</p>
+ <p className="text-sm mt-1" style={{ color: 'var(--danger)' }}>{error.message || 'An unexpected error occurred in the dashboard.'}</p>
+ <button
+ onClick={() => reset()}
+ className="mt-4 px-4 py-2 rounded-md font-medium text-white"
+ style={{ backgroundColor: 'var(--primary)' }}
+ >
+ Try again
+ </button>
+ </div>
+ </div>
+ );
 }

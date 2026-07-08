@@ -9,29 +9,29 @@ import DietModal from '../DietModal/DietModal';
 import '../../library.css';
 
 function LibraryContent() {
-  const { toast, hideToast } = useLibraryContext();
+ const { toast, hideToast } = useLibraryContext();
 
-  return (
-    <div className="min-h-full pb-10 library-module">
-      <ErpHeader title="Library" subtitle="Manage exercises and diet plans for member assignments" />
-      <div className="p-6 space-y-5">
-        <LibraryTabs />
-      </div>
+ return (
+ <div className="min-h-full pb-10 library-module">
+ <ErpHeader title="Library" subtitle="Manage exercises and diet plans for member assignments" />
+ <div className="p-6 space-y-5">
+ <LibraryTabs />
+ </div>
 
-      <ExerciseModal />
-      <DietModal />
+ <ExerciseModal />
+ <DietModal />
 
-      {toast && (
-        <ErpToast message={toast.message} type={toast.type} onClose={hideToast} />
-      )}
-    </div>
-  );
+ {toast && (
+ <ErpToast message={toast.message} type={toast.type} onClose={hideToast} />
+ )}
+ </div>
+ );
 }
 
 export default function LibraryMain() {
-  return (
-    <LibraryProvider>
-      <LibraryContent />
-    </LibraryProvider>
-  );
+ return (
+ <LibraryProvider>
+ <LibraryContent />
+ </LibraryProvider>
+ );
 }

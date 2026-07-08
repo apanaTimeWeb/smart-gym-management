@@ -7,21 +7,21 @@ import { usePlansLogic } from './usePlansLogic';
 const PlansContext = createContext<PlansContextType | undefined>(undefined);
 
 export function PlansProvider({ children }: { children: React.ReactNode }) {
-  const logic = usePlansLogic();
+ const logic = usePlansLogic();
 
-  const value = useMemo(() => logic, [logic]);
+ const value = useMemo(() => logic, [logic]);
 
-  return (
-    <PlansContext.Provider value={value}>
-      {children}
-    </PlansContext.Provider>
-  );
+ return (
+ <PlansContext.Provider value={value}>
+ {children}
+ </PlansContext.Provider>
+ );
 }
 
 export function usePlansContext() {
-  const context = useContext(PlansContext);
-  if (context === undefined) {
-    throw new Error('usePlansContext must be used within a PlansProvider');
-  }
-  return context;
+ const context = useContext(PlansContext);
+ if (context === undefined) {
+ throw new Error('usePlansContext must be used within a PlansProvider');
+ }
+ return context;
 }
