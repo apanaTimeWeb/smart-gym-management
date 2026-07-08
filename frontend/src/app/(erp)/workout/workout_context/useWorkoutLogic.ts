@@ -8,9 +8,10 @@ import { WorkoutContextType } from '../workout_types/workout_types';
 
 export function useWorkoutLogic(): WorkoutContextType {
  const [tab, setTab] = useState('Workout Plans');
- const [search, setSearch] = useState('');
- 
- const [workouts, setWorkouts] = useState<Workout[]>(INITIAL_WORKOUTS);
+  const [search, setSearch] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  
+  const [workouts, setWorkouts] = useState<Workout[]>(INITIAL_WORKOUTS);
  const [exercises, setExercises] = useState<Exercise[]>(INITIAL_EXERCISES);
 
  const [showWkModal, setShowWkModal] = useState(false);
@@ -112,9 +113,9 @@ export function useWorkoutLogic(): WorkoutContextType {
  }
  }, []);
 
- return {
- tab, setTab, search, setSearch,
- workouts, exercises, filteredWk, filteredEx,
+  return {
+    tab, setTab, search, setSearch, currentPage, setCurrentPage,
+    workouts, exercises, filteredWk, filteredEx,
  showWkModal, setShowWkModal, editWkId, wkForm, setWkForm,
  showExModal, setShowExModal, editExId, exForm, setExForm,
  openAddWk, openEditWk, saveWk, deleteWk,

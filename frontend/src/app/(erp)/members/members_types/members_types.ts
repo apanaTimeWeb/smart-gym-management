@@ -13,10 +13,12 @@ export interface MembersContextType {
  loading: boolean;
  saving: boolean;
  
- search: string;
- setSearch: (s: string) => void;
- statusFilter: string;
- setStatusFilter: (s: string) => void;
+  search: string;
+  setSearch: (s: string) => void;
+  statusFilter: string;
+  setStatusFilter: (s: string) => void;
+  currentPage: number;
+  setCurrentPage: (p: number) => void;
  
  toast: { message: string; type: ToastType } | null;
  showToast: (msg: string, t: ToastType) => void;

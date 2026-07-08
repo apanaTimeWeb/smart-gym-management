@@ -9,9 +9,15 @@ export interface HrContextType {
  summary: HrSummary | null;
  loading: boolean;
  error: string;
- toast: { message: string; type: ToastType } | null;
- showToast: (msg: string, t: ToastType) => void;
- hideToast: () => void;
+  toast: { message: string; type: ToastType } | null;
+  
+  search: string;
+  setSearch: (s: string) => void;
+  currentPage: number;
+  setCurrentPage: (p: number) => void;
+  
+  showToast: (msg: string, t: ToastType) => void;
+  hideToast: () => void;
  loadAll: () => Promise<void>;
  
  // Form / Modal State

@@ -10,7 +10,10 @@ export function useHrLogic(): HrContextType {
  const [summary, setSummary] = useState<HrSummary | null>(null);
  const [loading, setLoading] = useState(true);
  const [error, setError] = useState('');
- const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
+
+  const [search, setSearch] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
 
  const [showModal, setShowModal] = useState(false);
  const [editId, setEditId] = useState<number | null>(null);
@@ -107,8 +110,9 @@ export function useHrLogic(): HrContextType {
  }
  }, [loadAll, showToast]);
 
- return {
- staff, payrolls, summary, loading, error, toast, showToast, hideToast, loadAll,
- showModal, setShowModal, editId, form, setForm, saving, openAdd, openEdit, saveStaff, deleteStaff, markPayrollPaid
- };
+  return {
+    staff, payrolls, summary, loading, error, toast, showToast, hideToast, loadAll,
+    search, setSearch, currentPage, setCurrentPage,
+    showModal, setShowModal, editId, form, setForm, saving, openAdd, openEdit, saveStaff, deleteStaff, markPayrollPaid
+  };
 }

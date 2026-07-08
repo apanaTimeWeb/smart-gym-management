@@ -7,7 +7,12 @@ export interface PlansContextType {
  plans: Plan[];
  loading: boolean;
  saving: boolean;
- toast: { message: string; type: ToastType } | null;
+  toast: { message: string; type: ToastType } | null;
+  
+  search: string;
+  setSearch: (s: string) => void;
+  currentPage: number;
+  setCurrentPage: (p: number) => void;
  
  showModal: boolean;
  setShowModal: (show: boolean) => void;

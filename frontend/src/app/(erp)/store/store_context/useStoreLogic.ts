@@ -13,8 +13,11 @@ export function useStoreLogic(): StoreContextType {
  const [loading, setLoading] = useState(true);
  const [saving, setSaving] = useState(false);
  
- const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
- const [printData, setPrintData] = useState<ErpReceiptData | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
+  const [printData, setPrintData] = useState<ErpReceiptData | null>(null);
+
+  const [search, setSearch] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
 
  const [showProductModal, setShowProductModal] = useState(false);
  const [editProductId, setEditProductId] = useState<number | null>(null);
@@ -153,13 +156,14 @@ export function useStoreLogic(): StoreContextType {
  }
  }, [orderItems, orderMethod, orderTotal, loadAll, showToast]);
 
- return {
- tab, setTab,
- products, orders, summary, loading, saving,
- toast, printData,
- showProductModal, setShowProductModal, editProductId, productForm, setProductForm,
- showOrderModal, setShowOrderModal, orderItems, orderMethod, setOrderMethod,
- hideToast, setPrintData, loadAll,
+  return {
+    tab, setTab,
+    products, orders, summary, loading, saving,
+    toast, printData,
+    search, setSearch, currentPage, setCurrentPage,
+    showProductModal, setShowProductModal, editProductId, productForm, setProductForm,
+    showOrderModal, setShowOrderModal, orderItems, orderMethod, setOrderMethod,
+    hideToast, setPrintData, loadAll,
  openAddProduct, openEditProduct, saveProduct, deleteProduct,
  addToOrder, removeFromOrder, orderTotal, placeOrder
  };

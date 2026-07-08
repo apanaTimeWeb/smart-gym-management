@@ -14,12 +14,14 @@ export interface InquiriesContextType {
  hideToast: () => void;
  loadAll: () => Promise<void>;
  
- search: string;
- setSearch: (s: string) => void;
- statusFilter: string;
- setStatusFilter: (s: string) => void;
- dateFilter: string;
- setDateFilter: (s: string) => void;
+  search: string;
+  setSearch: (s: string) => void;
+  statusFilter: string;
+  setStatusFilter: (s: string) => void;
+  dateFilter: string;
+  setDateFilter: (s: string) => void;
+  currentPage: number;
+  setCurrentPage: (p: number) => void;
  
  // Modal State
  showModal: boolean;

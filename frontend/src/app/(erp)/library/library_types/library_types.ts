@@ -11,9 +11,14 @@ export interface LibraryContextType {
  dietPlans: DietPlan[];
  loading: boolean;
  saving: boolean;
- toast: { message: string; type: ToastType } | null;
- 
- showToast: (msg: string, t: ToastType) => void;
+  toast: { message: string; type: ToastType } | null;
+  
+  search: string;
+  setSearch: (s: string) => void;
+  currentPage: number;
+  setCurrentPage: (p: number) => void;
+  
+  showToast: (msg: string, t: ToastType) => void;
  hideToast: () => void;
  
  loadAll: () => Promise<void>;

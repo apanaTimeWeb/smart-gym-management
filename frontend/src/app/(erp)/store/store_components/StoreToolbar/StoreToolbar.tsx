@@ -1,14 +1,14 @@
 "use client";
 
-import { Plus, ShoppingCart, RefreshCw } from 'lucide-react';
+import { Plus, ShoppingCart, RefreshCw, Search } from 'lucide-react';
 import { useStoreContext } from '../../store_context/StoreContext';
 
 export default function StoreToolbar() {
- const { tab, setTab, loadAll, openAddProduct, setShowOrderModal } = useStoreContext();
+  const { tab, setTab, loadAll, openAddProduct, setShowOrderModal, search, setSearch, setCurrentPage } = useStoreContext();
 
- return (
- <div className="border-b border-[var(--store-border)] flex justify-between items-center bg-[var(--store-bg-card)]">
- <div className="flex overflow-x-auto">
+  return (
+    <div className="border-b border-[var(--store-border)] flex flex-wrap gap-4 justify-between items-center bg-[var(--store-bg-card)] p-2 sm:p-0">
+      <div className="flex overflow-x-auto">
  {['Products', 'Orders'].map(t => (
  <button 
  key={t} 
@@ -23,9 +23,18 @@ export default function StoreToolbar() {
  {t}
  </button>
  ))}
- </div>
- <div className="px-4 flex gap-2">
- <button 
+      </div>
+      <div className="px-4 flex flex-wrap gap-3 items-center">
+        <div className="relative">
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]" />
+          <input 
+            value={search} 
+            onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} 
+            placeholder="Search..." 
+            className="pl-9 pr-3 py-2 border border-[var(--store-border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--store-highlight)] w-40 sm:w-64 bg-[var(--store-bg-input)] text-[var(--store-text-primary)]" 
+          />
+        </div>
+        <button 
  onClick={loadAll} 
  className="flex items-center gap-2 px-3 py-2 text-sm border border-[var(--store-border)] rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-[var(--store-text-secondary)] transition-colors"
  >

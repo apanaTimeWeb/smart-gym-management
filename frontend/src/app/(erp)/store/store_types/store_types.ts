@@ -21,8 +21,13 @@ export interface StoreContextType {
  loading: boolean;
  saving: boolean;
  
- toast: { message: string; type: ToastType } | null;
- printData: ErpReceiptData | null;
+  toast: { message: string; type: ToastType } | null;
+  printData: ErpReceiptData | null;
+  
+  search: string;
+  setSearch: (s: string) => void;
+  currentPage: number;
+  setCurrentPage: (p: number) => void;
  
  showProductModal: boolean;
  setShowProductModal: (show: boolean) => void;

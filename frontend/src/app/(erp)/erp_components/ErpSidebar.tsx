@@ -14,8 +14,13 @@ interface ErpSidebarProps {
 
 export default function ErpSidebar({ isCollapsed, setIsCollapsed }: ErpSidebarProps) {
  const pathname = usePathname();
- const [isMobileOpen, setIsMobileOpen] = useState(false);
- const user = getUser();
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const user = getUser();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
  useEffect(() => {
  const handleToggle = () => {
@@ -89,15 +94,15 @@ export default function ErpSidebar({ isCollapsed, setIsCollapsed }: ErpSidebarPr
 
  {/* User */}
  <div className={`px-4 py-4 border-t border-[var(--border)] bg-[var(--bg-header)] flex items-center ${(!isCollapsed || isMobileOpen) ? 'gap-3' : 'justify-center'}`}>
- <div className="w-10 h-10 min-w-[40px] rounded-full flex items-center justify-center text-white text-sm font-bold border border-white/10" style={{ background: 'var(--primary)' }}>
- {user?.name?.charAt(0)?.toUpperCase() || 'A'}
- </div>
- {(!isCollapsed || isMobileOpen) && (
- <div className="whitespace-nowrap overflow-hidden flex-1">
- <div className="text-[var(--text-primary)] text-sm font-bold truncate">{user?.name || 'Admin User'}</div>
- <div className="text-[var(--text-secondary)] text-xs truncate">{user?.role || 'Super Admin'}</div>
- </div>
- )}
+        <div className="w-10 h-10 min-w-[40px] rounded-full flex items-center justify-center text-white text-sm font-bold border border-white/10" style={{ background: 'var(--primary)' }}>
+          {mounted ? (user?.name?.charAt(0)?.toUpperCase() || 'A') : 'A'}
+        </div>
+        {(!isCollapsed || isMobileOpen) && (
+          <div className="whitespace-nowrap overflow-hidden flex-1">
+            <div className="text-[var(--text-primary)] text-sm font-bold truncate">{mounted ? (user?.name || 'Admin User') : 'Admin User'}</div>
+            <div className="text-[var(--text-secondary)] text-xs truncate">{mounted ? (user?.role || 'Super Admin') : 'Super Admin'}</div>
+          </div>
+        )}
  </div>
  </aside>
  </>

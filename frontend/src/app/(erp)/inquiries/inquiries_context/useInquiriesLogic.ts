@@ -11,9 +11,10 @@ export function useInquiriesLogic(): InquiriesContextType {
  const [loading, setLoading] = useState(true);
  const [error, setError] = useState('');
  
- const [search, setSearch] = useState('');
- const [statusFilter, setStatusFilter] = useState('All');
- const [dateFilter, setDateFilter] = useState('all');
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('All');
+  const [dateFilter, setDateFilter] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
  
  const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
  const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
@@ -118,10 +119,10 @@ export function useInquiriesLogic(): InquiriesContextType {
  });
  }, []);
 
- return {
- inquiries, stats, loading, error, toast, showToast, hideToast, loadAll,
- search, setSearch, statusFilter, setStatusFilter, dateFilter, setDateFilter,
- showModal, setShowModal, editId, form, setForm, saving,
+  return {
+    inquiries, stats, loading, error, toast, showToast, hideToast, loadAll,
+    search, setSearch, statusFilter, setStatusFilter, dateFilter, setDateFilter, currentPage, setCurrentPage,
+    showModal, setShowModal, editId, form, setForm, saving,
  openAdd, openEdit, saveInquiry, deleteInquiry, updateStatus,
  msgModal, openMsg, closeMsg
  };

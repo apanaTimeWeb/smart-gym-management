@@ -5,21 +5,21 @@ import { INQUIRIES_STATUS_LABELS } from '../../inquiries_utils/InquiriesSharedCo
 import { RefreshCw, Plus } from 'lucide-react';
 
 export default function InquiriesToolbar() {
- const { search, setSearch, statusFilter, setStatusFilter, loadAll, openAdd } = useInquiriesContext();
+  const { search, setSearch, statusFilter, setStatusFilter, loadAll, openAdd, setCurrentPage } = useInquiriesContext();
 
- return (
- <div className="rounded-xl shadow-sm border p-4 flex flex-wrap gap-3 items-center justify-between inquiries-module" style={{ backgroundColor: 'var(--inquiries-bg-card)', borderColor: 'var(--inquiries-border)' }}>
- <input 
- value={search} 
- onChange={e => setSearch(e.target.value)} 
- placeholder="Search name or phone..." 
- className="border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--inquiries-highlight)] w-64"
- style={{ backgroundColor: 'var(--inquiries-bg-input)', borderColor: 'var(--inquiries-border)', color: 'var(--inquiries-text-primary)' }}
- />
- <div className="flex gap-2">
- <select 
- value={statusFilter} 
- onChange={e => setStatusFilter(e.target.value)} 
+  return (
+    <div className="rounded-xl shadow-sm border p-4 flex flex-wrap gap-3 items-center justify-between inquiries-module" style={{ backgroundColor: 'var(--inquiries-bg-card)', borderColor: 'var(--inquiries-border)' }}>
+      <input 
+        value={search} 
+        onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} 
+        placeholder="Search name or phone..." 
+        className="border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--inquiries-highlight)] w-64"
+        style={{ backgroundColor: 'var(--inquiries-bg-input)', borderColor: 'var(--inquiries-border)', color: 'var(--inquiries-text-primary)' }}
+      />
+      <div className="flex gap-2">
+        <select 
+          value={statusFilter} 
+          onChange={e => { setStatusFilter(e.target.value); setCurrentPage(1); }} 
  className="border rounded-xl text-sm px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[var(--inquiries-highlight)]"
  style={{ backgroundColor: 'var(--inquiries-bg-input)', borderColor: 'var(--inquiries-border)', color: 'var(--inquiries-text-primary)' }}
  >

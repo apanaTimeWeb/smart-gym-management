@@ -14,8 +14,9 @@ export function useMembersLogic(): MembersContextType {
  const [loading, setLoading] = useState(true);
  const [saving, setSaving] = useState(false);
 
- const [search, setSearch] = useState('');
- const [statusFilter, setStatusFilter] = useState('All');
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('All');
+  const [currentPage, setCurrentPage] = useState(1);
 
  const [showAddModal, setShowAddModal] = useState(false);
  const [editId, setEditId] = useState<number | null>(null);
@@ -167,9 +168,9 @@ export function useMembersLogic(): MembersContextType {
  setTimeout(() => window.print(), 100);
  }, [selectedMember]);
 
- return {
- members, plans, payments, stats, loading, saving,
- search, setSearch, statusFilter, setStatusFilter,
+  return {
+    members, plans, payments, stats, loading, saving,
+    search, setSearch, statusFilter, setStatusFilter, currentPage, setCurrentPage,
  toast, showToast, hideToast, loadAll,
  selectedMember, setSelectedMember, profileTab, setProfileTab, loadMemberProfile,
  attMap, getAtt, toggleAtt,

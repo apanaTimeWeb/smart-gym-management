@@ -7,8 +7,10 @@ import React from 'react';
 export interface WorkoutContextType {
  tab: string;
  setTab: (tab: string) => void;
- search: string;
- setSearch: (s: string) => void;
+  search: string;
+  setSearch: (s: string) => void;
+  currentPage: number;
+  setCurrentPage: (p: number) => void;
  
  workouts: Workout[];
  exercises: Exercise[];

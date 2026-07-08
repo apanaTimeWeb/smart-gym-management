@@ -8,10 +8,13 @@ export function usePlansLogic(): PlansContextType {
  const [plans, setPlans] = useState<Plan[]>([]);
  const [loading, setLoading] = useState(true);
  const [saving, setSaving] = useState(false);
- const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
- const [showModal, setShowModal] = useState(false);
- const [editId, setEditId] = useState<number | null>(null);
+  const [search, setSearch] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const [showModal, setShowModal] = useState(false);
+  const [editId, setEditId] = useState<number | null>(null);
  const [form, setForm] = useState(EMPTY_PLAN_FORM);
 
  const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
@@ -92,10 +95,11 @@ export function usePlansLogic(): PlansContextType {
  }
  }, [loadPlans, showToast]);
 
- return {
- plans, loading, saving, toast,
- showModal, setShowModal, editId, form, setForm,
- showToast, hideToast, loadPlans,
+  return {
+    plans, loading, saving, toast,
+    search, setSearch, currentPage, setCurrentPage,
+    showModal, setShowModal, editId, form, setForm,
+    showToast, hideToast, loadPlans,
  openAdd, openEdit, savePlan, deletePlan
  };
 }

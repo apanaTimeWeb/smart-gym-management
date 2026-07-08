@@ -18,7 +18,12 @@ export default function ErpHeader({ title, subtitle }: ErpHeaderProps) {
   const [showProfile, setShowProfile] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
   const user = getUser();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -94,21 +99,21 @@ export default function ErpHeader({ title, subtitle }: ErpHeaderProps) {
 
  {/* Profile */}
  <div className="relative" ref={profileRef}>
- <div
- onClick={() => setShowProfile(!showProfile)}
- className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold cursor-pointer transition-transform hover:scale-105 border border-white/10"
- style={{ background: 'var(--primary)' }}
- >
- {user?.name?.charAt(0)?.toUpperCase() || 'A'}
- </div>
+        <div
+          onClick={() => setShowProfile(!showProfile)}
+          className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold cursor-pointer transition-transform hover:scale-105 border border-white/10"
+          style={{ background: 'var(--primary)' }}
+        >
+          {mounted ? (user?.name?.charAt(0)?.toUpperCase() || 'A') : 'A'}
+        </div>
 
- {showProfile && (
- <div className="absolute right-0 mt-2 w-56 bg-[var(--bg-card)] rounded-xl shadow-2xl border border-[var(--border)] overflow-hidden z-50">
- <div className="px-4 py-3 border-b border-[var(--border)] bg-[var(--bg-header)]">
- <p className="text-sm font-semibold text-[var(--text-primary)]">{user?.name || 'Admin'}</p>
- <p className="text-xs text-[var(--text-secondary)]">{user?.email || ''}</p>
- {user?.role && <p className="text-xs text-[var(--warning)] font-medium mt-0.5">{user.role}</p>}
- </div>
+        {showProfile && (
+          <div className="absolute right-0 mt-2 w-56 bg-[var(--bg-card)] rounded-xl shadow-2xl border border-[var(--border)] overflow-hidden z-50">
+            <div className="px-4 py-3 border-b border-[var(--border)] bg-[var(--bg-header)]">
+              <p className="text-sm font-semibold text-[var(--text-primary)]">{mounted ? (user?.name || 'Admin') : 'Admin'}</p>
+              <p className="text-xs text-[var(--text-secondary)]">{mounted ? (user?.email || '') : ''}</p>
+              {(mounted && user?.role) && <p className="text-xs text-[var(--warning)] font-medium mt-0.5">{user.role}</p>}
+            </div>
  <div className="py-1">
  <Link href="/settings" className="flex items-center gap-2 px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-input)] transition-colors" onClick={() => setShowProfile(false)}>
  <User size={15} /> My Profile

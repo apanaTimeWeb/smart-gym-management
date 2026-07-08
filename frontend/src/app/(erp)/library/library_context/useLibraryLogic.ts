@@ -10,8 +10,11 @@ export function useLibraryLogic(): LibraryContextType {
  const [dietPlans, setDietPlans] = useState<DietPlan[]>([]);
  
  const [loading, setLoading] = useState(true);
- const [saving, setSaving] = useState(false);
- const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
+
+  const [search, setSearch] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
 
  const [showExModal, setShowExModal] = useState(false);
  const [editExId, setEditExId] = useState<number | null>(null);
@@ -164,11 +167,12 @@ export function useLibraryLogic(): LibraryContextType {
  }
  }, [loadAll, showToast]);
 
- return {
- tab, setTab,
- exercises, dietPlans,
- loading, saving, toast,
- showToast, hideToast, loadAll,
+  return {
+    tab, setTab,
+    exercises, dietPlans,
+    loading, saving, toast,
+    search, setSearch, currentPage, setCurrentPage,
+    showToast, hideToast, loadAll,
  showExModal, setShowExModal, editExId, exForm, setExForm, openAddEx, openEditEx, saveExercise, deleteExercise,
  showDietModal, setShowDietModal, editDietId, dietForm, setDietForm, openAddDiet, openEditDiet, saveDietPlan, deleteDietPlan
  };
