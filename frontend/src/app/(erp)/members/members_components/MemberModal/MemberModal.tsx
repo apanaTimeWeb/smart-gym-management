@@ -87,9 +87,9 @@ export default function MemberModal() {
  </div>
  </div>
  {form.planId && (
- <div className="bg-[var(--warning-bg)] rounded-xl p-3 text-sm border border-orange-100 ">
- <span className="font-medium text-[var(--warning)] dark:text-[var(--warning)]">Price: </span>
- <span className="text-orange-800 dark:text-[var(--warning)]">
+            <div className="bg-[var(--warning-bg)] rounded-xl p-3 text-sm border border-[var(--warning)]/30">
+              <span className="font-semibold text-[var(--warning)]">Price:</span> 
+              <span className="text-[var(--warning)] ml-1">
  {formatCurrency(getPriceForCycle(plans.find(p => p.id === Number(form.planId))!, form.billingCycle))}
  </span>
  </div>

@@ -28,8 +28,8 @@ export default function PlansGrid() {
  {plans.map((p, i) => (
  <div 
  key={p.id} 
- className={`bg-[var(--plans-bg-card)] rounded-2xl shadow-sm border overflow-hidden relative ${
- i === 1 ? 'border-[var(--warning)] shadow-orange-100/50 dark:shadow-orange-900/20' : 'border-[var(--plans-border)]'
+ className={`bg-[var(--bg-card)] border-2 rounded-2xl p-6 relative transition-all hover:scale-105 hover:-translate-y-1 ${
+ i === 1 ? 'border-[var(--warning)] shadow-lg shadow-[var(--warning)]/20' : 'border-[var(--border)]'
  }`}
  >
  {i === 1 && (
