@@ -1,0 +1,18 @@
+/* sales.css - Theme Variables for Sales Module */
+
+.sales-module {
+  /* Common backgrounds */
+  --sales-bg-card: var(--bg-card);
+  --sales-bg-input: var(--bg-input);
+
+  /* Text colors */
+  --sales-text-primary: var(--text-primary);
+  --sales-text-secondary: var(--text-secondary);
+
+  /* Borders */
+  --sales-border: var(--border);
+
+  /* Highlights */
+  --sales-highlight: hsl(24 95% 53%);
+  --sales-highlight-subtle: hsl(24 95% 95%);
+}
