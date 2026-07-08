@@ -1,16 +1,16 @@
 /* Theme variables derived from global_design_system.md for the Login module */
 :root {
-  --login-primary: #6366F1;
-  --login-primary-hover: #4F46E5;
-  --login-bg-page: #0F0F1A;
-  --login-bg-card: #1A1A2E;
-  --login-bg-input: #1E1E32;
-  --login-border: #2A2A3E;
-  --login-border-focus: #6366F1;
-  --login-text-primary: #F0F0FF;
-  --login-text-secondary: #8888AA;
-  --login-danger: #EF4444;
-  --login-danger-bg: rgba(239, 68, 68, 0.1);
-  --login-success: #10B981;
-  --login-success-bg: rgba(16, 185, 129, 0.1);
+  --login-primary: var(--primary);
+  --login-primary-hover: var(--primary-hover);
+  --login-bg-page: var(--bg-page);
+  --login-bg-card: var(--bg-card);
+  --login-bg-input: var(--bg-input);
+  --login-border: var(--border);
+  --login-border-focus: var(--border-focus);
+  --login-text-primary: var(--text-primary);
+  --login-text-secondary: var(--text-secondary);
+  --login-danger: var(--danger);
+  --login-danger-bg: var(--danger-bg);
+  --login-success: var(--success);
+  --login-success-bg: var(--success-bg);
 }
