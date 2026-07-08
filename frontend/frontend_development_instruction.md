@@ -38,7 +38,11 @@ Respect the Next.js App Router architecture. Keep top-level files like `page.tsx
 9. **Leverage Next.js Native Features**: 
 Ensure that the module properly utilizes Next.js native routing features for a great user experience. Extract loading states into `loading.tsx` and error boundaries into `error.tsx` wherever applicable in the module's directory.
 
-10. **Update AI-Context Documentation**: 
+10. **Absolute Imports Only (No Relative Paths)**: 
+Never use relative imports (like `../../` or `./`) for importing components, contexts, utilities, or types. Always use absolute imports starting with `@/` (e.g., `@/app/(erp)/workout/workout_context/WorkoutContext`).
+*Why?* This allows files to be moved around easily without breaking import paths and makes it much easier to copy-paste code snippets or have an AI generate standalone code without worrying about relative directory depth.
+
+11. **Update AI-Context Documentation**: 
 Once the entire refactor is complete, update the project documentation in @[[MODULE_NAME]_features.md]. This document must serve as a map for future AI sessions. Clearly document the new "Feature-Based Sub-folder" directory structure, what each file precisely does, and where the centralized data/state is kept.
 
 Think step-by-step. Create a detailed implementation plan first so I can review it, and then execute it perfectly without breaking existing data flows!
