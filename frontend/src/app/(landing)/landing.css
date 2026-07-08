@@ -1,0 +1,22 @@
+/* landing.css - Theme Variables for Landing Module */
+
+.landing-module {
+  /* Common backgrounds */
+  --landing-bg-dark: #0a0a0a;
+  --landing-bg-darker: #0f0f0f;
+  --landing-bg-card: rgba(255, 255, 255, 0.05);
+  --landing-bg-input: rgba(0, 0, 0, 0.5);
+
+  /* Text colors */
+  --landing-text-primary: #ffffff;
+  --landing-text-secondary: #9ca3af; /* gray-400 */
+  --landing-text-muted: #6b7280; /* gray-500 */
+
+  /* Borders */
+  --landing-border: rgba(255, 255, 255, 0.1);
+
+  /* Highlights mapped to Global Design System (Indigo) */
+  --landing-highlight-orange: var(--primary);
+  --landing-highlight-gradient: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  --landing-text-gradient: linear-gradient(135deg, var(--primary), var(--primary-hover));
+}

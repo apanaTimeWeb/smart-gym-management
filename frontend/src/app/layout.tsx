@@ -1,15 +1,19 @@
 import type { Metadata } from 'next';
-import './globals.css';
+import { Inter } from 'next/font/google';
+import '@/app/globals.css';
+import { ThemeProvider } from '@/components/ThemeProvider';
+
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 
 export const metadata: Metadata = {
-  title: 'GymSmart ERP – Gym Management Software',
-  description: 'Professional Gym Management ERP – Members, Plans, HR, Finance, Store, and more in one powerful platform.',
-  keywords: 'gym management, ERP, gym software, member management, fitness center',
-  openGraph: {
-    title: 'GymSmart ERP',
-    description: 'All-in-one Gym Management Software',
-    images: ['/opengraph.jpg'],
-  },
+ title: 'GymSmart ERP – Gym Management Software',
+ description: 'Professional Gym Management ERP – Members, Plans, HR, Finance, Store, and more in one powerful platform.',
+ keywords: 'gym management, ERP, gym software, member management, fitness center',
+ openGraph: {
+ title: 'GymSmart ERP',
+ description: 'All-in-one Gym Management Software',
+ images: ['/opengraph.jpg'],
+ },
 };
 
 export default function RootLayout({
@@ -18,14 +22,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" data-scroll-behavior="smooth">
+    <html lang="en" data-scroll-behavior="smooth" className={`${inter.variable}`} suppressHydrationWarning>
       <head>
         <link rel="icon" href="/icon.png" type="image/png" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
       </head>
-      <body>{children}</body>
+      <body>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

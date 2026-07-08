@@ -1,0 +1,57 @@
+# Plans Module - AI Context Documentation
+
+This document serves as an architectural map for the `plans` module. It was generated to provide future AI assistants with a strict understanding of the module's boundaries, state management, and file structure.
+
+## 📁 Directory Structure
+
+```
+plans/
+├── error.tsx
+├── loading.tsx
+├── page.tsx
+├── plans.css
+├── plans_components
+│   ├── PlanModal
+│   │   └── PlanModal.tsx
+│   ├── PlansGrid
+│   │   └── PlansGrid.tsx
+│   ├── PlansMain
+│   │   └── PlansMain.tsx
+│   └── PlansToolbar
+│       └── PlansToolbar.tsx
+├── plans_context
+│   ├── PlansContext.tsx
+│   └── usePlansLogic.ts
+├── plans_features.md
+├── plans_types
+│   └── plans_types.ts
+└── plans_utils
+    └── PlansSharedConstants.ts
+```
+
+## 🏗️ Architectural Rules & Guidelines
+
+1. **Extreme Micro-Modularization:** 
+   This module is heavily broken down into micro-components located in `plans_components/`. Each file must contain exactly ONE React component and handle ONE specific micro-functionality.
+
+2. **Isolated State Management (No Prop-Drilling):**
+   - The state is managed locally via React Context in `plans_context/PlansContext.tsx`.
+   - The heavy logic (data fetching, calculations) is extracted into the custom hook `plans_context/usePlansLogic.ts`.
+
+3. **Centralized Hardcoded Data:**
+   - Any UI text, default arrays, dropdown options, or mock data MUST be placed in `plans_utils/PlansSharedConstants.ts`. 
+   - Never hardcode these inside the `.tsx` view files.
+
+4. **Types and Interfaces:**
+   - All TypeScript interfaces and types are strictly isolated in `plans_types/plans_types.ts`.
+
+5. **Theme Independence:**
+   - **DO NOT** use inline Tailwind colors like `text-gray-800` or `bg-blue-500`.
+   - Use CSS variables defined in `plans.css` mapping to the global design system (e.g. `var(--text-primary)`, `var(--plans-bg)`).
+
+6. **Absolute Imports:**
+   - Never use relative imports like `../../`. 
+   - Always use absolute imports starting with `@/` (e.g., `@/app/(erp)/plans/plans_context/...`).
+
+## 🤖 Instructions for AI
+If you are asked to modify a feature, find the EXACT micro-component from the tree above. If modifying logic, edit the `use...Logic.ts` file. If adding data, edit the `...SharedConstants.ts` file. Do not hallucinate files outside this module's boundary.

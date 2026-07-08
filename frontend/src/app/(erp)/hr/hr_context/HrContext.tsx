@@ -1,0 +1,27 @@
+"use client";
+
+import React, { createContext, useContext, useMemo } from 'react';
+import { HrContextType } from '@/app/(erp)/hr/hr_types/hr_types';
+import { useHrLogic } from '@/app/(erp)/hr/hr_context/useHrLogic';
+
+const HrContext = createContext<HrContextType | undefined>(undefined);
+
+export function HrProvider({ children }: { children: React.ReactNode }) {
+ const logic = useHrLogic();
+
+ const value = useMemo(() => logic, [logic]);
+
+ return (
+ <HrContext.Provider value={value}>
+ {children}
+ </HrContext.Provider>
+ );
+}
+
+export function useHrContext() {
+ const context = useContext(HrContext);
+ if (context === undefined) {
+ throw new Error('useHrContext must be used within an HrProvider');
+ }
+ return context;
+}

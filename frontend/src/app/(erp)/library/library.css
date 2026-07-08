@@ -1,0 +1,18 @@
+/* library.css - Theme Variables for Library Module */
+
+.library-module {
+  /* Common backgrounds */
+  --library-bg-card: var(--bg-card);
+  --library-bg-input: var(--bg-input);
+
+  /* Text colors */
+  --library-text-primary: var(--text-primary);
+  --library-text-secondary: var(--text-secondary);
+
+  /* Borders */
+  --library-border: var(--border);
+
+  /* Highlights */
+  --library-highlight: hsl(24 95% 53%);
+  --library-highlight-subtle: hsl(24 95% 95%);
+}

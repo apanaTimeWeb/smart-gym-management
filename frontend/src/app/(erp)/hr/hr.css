@@ -1,0 +1,37 @@
+/* hr.css - Theme Variables for HR Module */
+
+.hr-module {
+  /* Common backgrounds */
+  --hr-bg-card: var(--bg-card);
+  --hr-bg-input: var(--bg-input);
+
+  /* Text colors */
+  --hr-text-primary: var(--text-primary);
+  --hr-text-secondary: var(--text-secondary);
+
+  /* Borders */
+  --hr-border: var(--border);
+
+  /* Theme mappings for specific badges/elements */
+  --hr-status-paid-bg: var(--success-bg);
+  --hr-status-paid-text: var(--success);
+  
+  --hr-status-pending-bg: var(--warning-bg);
+  --hr-status-pending-text: var(--warning);
+
+  /* Component specific colors */
+  --hr-kpi-blue-text: var(--info);
+  --hr-kpi-blue-bg: var(--info-bg);
+  
+  --hr-kpi-green-text: var(--success);
+  --hr-kpi-green-bg: var(--success-bg);
+  
+  --hr-kpi-orange-text: var(--warning);
+  --hr-kpi-orange-bg: var(--warning-bg);
+  
+  --hr-kpi-red-text: var(--danger);
+  --hr-kpi-red-bg: var(--danger-bg);
+
+  --hr-highlight: hsl(24 95% 53%);
+  --hr-highlight-subtle: hsl(24 95% 95%);
+}
