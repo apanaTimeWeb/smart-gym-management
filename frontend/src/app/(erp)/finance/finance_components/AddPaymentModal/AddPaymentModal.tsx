@@ -41,7 +41,7 @@ export default function AddPaymentModal() {
  <h3 className="text-lg font-bold" style={{ color: 'var(--finance-text-primary)' }}>Record Payment</h3>
  <button 
  onClick={() => setShowModal(false)} 
- className="p-2 rounded-lg transition-colors hover:bg-black/5 dark:hover:bg-white/5"
+ className="p-2 rounded-lg transition-colors hover:bg-[var(--primary-subtle)]"
  style={{ color: 'var(--finance-text-secondary)' }}
  >
  <X size={18} />
@@ -98,7 +98,7 @@ export default function AddPaymentModal() {
  <button 
  type="button" 
  onClick={() => setShowModal(false)} 
- className="flex-1 py-2.5 border rounded-xl text-sm font-medium transition-colors hover:bg-black/5 dark:hover:bg-white/5"
+ className="flex-1 py-2.5 border rounded-xl text-sm font-medium transition-colors hover:bg-[var(--primary-subtle)]"
  style={{ borderColor: 'var(--finance-border)', color: 'var(--finance-text-primary)' }}
  >
  Cancel

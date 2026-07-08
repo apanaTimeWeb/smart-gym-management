@@ -20,7 +20,7 @@ export default function MembershipReport() {
   <>
  <div className="overflow-x-auto">
  <table className="w-full">
- <thead className="bg-black/5 dark:bg-white/5">
+ <thead className="bg-[var(--bg-input)]">
  <tr>
  {['Plan', 'Total Receivable', 'Amount Received', 'Remaining', 'Refund'].map(h => (
  <th key={h} className="text-left text-xs font-semibold text-[var(--sales-text-secondary)] uppercase tracking-wider px-4 py-3">
@@ -31,7 +31,7 @@ export default function MembershipReport() {
  </thead>
   <tbody className="divide-y divide-[var(--sales-border)]">
   {paginated.map((r, i) => (
-  <tr key={i} className="hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+  <tr key={i} className="hover:bg-[var(--primary-subtle)] transition-colors">
   <td className="px-4 py-3 text-sm font-medium text-[var(--sales-text-primary)]">{r.plan}</td>
   <td className="px-4 py-3 text-sm text-[var(--sales-text-secondary)]">₹{r.receivable.toLocaleString()}</td>
   <td className="px-4 py-3 text-sm font-medium text-[var(--success)] dark:text-[var(--success)]">₹{r.received.toLocaleString()}</td>
@@ -39,7 +39,7 @@ export default function MembershipReport() {
   <td className="px-4 py-3 text-sm text-[var(--danger)]">₹{r.refund.toLocaleString()}</td>
   </tr>
   ))}
- <tr className="bg-black/5 dark:bg-white/5 font-semibold border-t-2 border-[var(--sales-border)]">
+ <tr className="bg-[var(--bg-input)] font-semibold border-t-2 border-[var(--sales-border)]">
  <td className="px-4 py-3 text-sm text-[var(--sales-text-primary)]">Total</td>
  <td className="px-4 py-3 text-sm text-[var(--sales-text-primary)]">₹4,82,500</td>
  <td className="px-4 py-3 text-sm text-[var(--success)] dark:text-[var(--success)]">₹4,53,600</td>

@@ -31,7 +31,7 @@ export default function OrderTable() {
     <div className="flex flex-col h-full min-h-[400px]">
       <div className="overflow-x-auto flex-1">
         <table className="w-full">
-          <thead className="bg-black/5 dark:bg-white/5">
+          <thead className="bg-[var(--bg-input)]">
             <tr>
               {['Order ID', 'Total', 'Method', 'Status', 'Date', 'Receipt'].map(h => (
                 <th key={h} className="text-left text-xs font-semibold text-[var(--store-text-secondary)] uppercase tracking-wider px-4 py-3">
@@ -42,7 +42,7 @@ export default function OrderTable() {
           </thead>
           <tbody className="divide-y divide-[var(--store-border)]">
             {currentData.map(o => (
-              <tr key={o.id} className="hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+              <tr key={o.id} className="hover:bg-[var(--primary-subtle)] transition-colors">
                 <td className="px-4 py-3 text-sm font-mono text-[var(--store-text-primary)]">
                   ORD-{String(o.id).padStart(4, '0')}
                 </td>
@@ -79,7 +79,7 @@ export default function OrderTable() {
                       });
                       setTimeout(() => window.print(), 100);
                     }} 
-                    className="p-1.5 rounded-lg bg-black/5 dark:bg-white/5 text-[var(--store-text-secondary)] hover:text-[var(--store-text-primary)] transition-colors"
+                    className="p-1.5 rounded-lg bg-[var(--bg-input)] text-[var(--store-text-secondary)] hover:text-[var(--store-text-primary)] transition-colors"
                   >
                     <Printer size={14} />
                   </button>

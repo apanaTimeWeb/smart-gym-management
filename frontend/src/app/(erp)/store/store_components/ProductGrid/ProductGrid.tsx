@@ -49,7 +49,7 @@ export default function ProductGrid() {
               <div className="flex gap-1">
                 <button 
                   onClick={() => openEditProduct(p)} 
-                  className="p-1.5 rounded-lg bg-black/5 dark:bg-white/5 text-[var(--store-text-secondary)] hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+                  className="p-1.5 rounded-lg bg-[var(--bg-input)] text-[var(--store-text-secondary)] hover:bg-[var(--primary-subtle)] transition-colors"
                 >
                   <Edit2 size={13} />
                 </button>

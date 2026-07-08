@@ -22,7 +22,7 @@ export default function ProductModal() {
  </h3>
  <button 
  onClick={() => setShowProductModal(false)} 
- className="p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-[var(--store-text-secondary)] transition-colors"
+ className="p-2 rounded-lg hover:bg-[var(--primary-subtle)] text-[var(--store-text-secondary)] transition-colors"
  >
  <X size={18} />
  </button>
@@ -61,7 +61,7 @@ export default function ProductModal() {
  <button 
  type="button" 
  onClick={() => setShowProductModal(false)} 
- className="flex-1 py-2.5 border border-[var(--store-border)] rounded-xl text-sm font-medium text-[var(--store-text-primary)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+ className="flex-1 py-2.5 border border-[var(--store-border)] rounded-xl text-sm font-medium text-[var(--store-text-primary)] hover:bg-[var(--primary-subtle)] transition-colors"
  >
  Cancel
  </button>

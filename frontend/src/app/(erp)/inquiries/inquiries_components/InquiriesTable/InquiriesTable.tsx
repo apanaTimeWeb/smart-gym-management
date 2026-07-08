@@ -94,7 +94,7 @@ export default function InquiriesTable() {
                       </button>
                       <button 
                         onClick={() => openEdit(inq)} 
-                        className="p-1.5 rounded-lg transition-colors hover:bg-black/5 dark:hover:bg-white/5" 
+                        className="p-1.5 rounded-lg transition-colors hover:bg-[var(--primary-subtle)]" 
                         style={{ color: 'var(--inquiries-text-secondary)' }}
                         title="Edit"
                       >

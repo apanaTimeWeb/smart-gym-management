@@ -58,7 +58,7 @@ export default function StaffTable() {
                   <div className="flex items-center gap-2">
                     <button 
                       onClick={() => openEdit(s)} 
-                      className="p-1.5 rounded-lg transition-colors hover:bg-black/5 dark:hover:bg-white/5" 
+                      className="p-1.5 rounded-lg transition-colors hover:bg-[var(--primary-subtle)]" 
                       style={{ color: 'var(--hr-text-secondary)' }}
                       title="Edit"
                     >

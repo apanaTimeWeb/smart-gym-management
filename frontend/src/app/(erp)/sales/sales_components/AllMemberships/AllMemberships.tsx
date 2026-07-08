@@ -38,7 +38,7 @@ export default function AllMemberships() {
  </div>
  <div className="overflow-x-auto">
  <table className="w-full">
- <thead className="bg-black/5 dark:bg-white/5">
+ <thead className="bg-[var(--bg-input)]">
  <tr>
  {['Member', 'Plan', 'Start', 'End Date', 'Status', 'Amount', 'Days Left'].map(h => (
  <th key={h} className="text-left text-xs font-semibold text-[var(--sales-text-secondary)] uppercase tracking-wider px-4 py-3">
@@ -49,7 +49,7 @@ export default function AllMemberships() {
  </thead>
  <tbody className="divide-y divide-[var(--sales-border)]">
         {paginated.map((r, i) => (
-          <tr key={i} className="hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+          <tr key={i} className="hover:bg-[var(--primary-subtle)] transition-colors">
             <td className="px-4 py-3 text-sm font-medium text-[var(--sales-text-primary)]">{r.name}</td>
             <td className="px-4 py-3 text-sm text-[var(--sales-text-secondary)]">{r.plan}</td>
             <td className="px-4 py-3 text-sm text-[var(--sales-text-secondary)]">{r.start}</td>

@@ -22,7 +22,7 @@ export default function PosModal() {
  <h3 className="text-lg font-bold text-[var(--store-text-primary)]">New Sale — POS</h3>
  <button 
  onClick={() => setShowOrderModal(false)} 
- className="p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-[var(--store-text-secondary)] transition-colors"
+ className="p-2 rounded-lg hover:bg-[var(--primary-subtle)] text-[var(--store-text-secondary)] transition-colors"
  >
  <X size={18} />
  </button>

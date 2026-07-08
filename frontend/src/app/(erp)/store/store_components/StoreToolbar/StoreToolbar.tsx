@@ -36,7 +36,7 @@ export default function StoreToolbar() {
         </div>
         <button 
  onClick={loadAll} 
- className="flex items-center gap-2 px-3 py-2 text-sm border border-[var(--store-border)] rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-[var(--store-text-secondary)] transition-colors"
+ className="flex items-center gap-2 px-3 py-2 text-sm border border-[var(--store-border)] rounded-lg hover:bg-[var(--primary-subtle)] text-[var(--store-text-secondary)] transition-colors"
  >
  <RefreshCw size={14} />
  </button>

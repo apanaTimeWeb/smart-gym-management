@@ -16,7 +16,7 @@ export default function StaffModal() {
  <h3 className="text-lg font-bold" style={{ color: 'var(--hr-text-primary)' }}>{editId ? 'Edit Staff' : 'Add Staff Member'}</h3>
  <button 
  onClick={() => setShowModal(false)} 
- className="p-2 rounded-lg transition-colors hover:bg-black/5 dark:hover:bg-white/5"
+ className="p-2 rounded-lg transition-colors hover:bg-[var(--primary-subtle)]"
  style={{ color: 'var(--hr-text-secondary)' }}
  >
  <X size={18} />
@@ -77,7 +77,7 @@ export default function StaffModal() {
  <button 
  type="button" 
  onClick={() => setShowModal(false)} 
- className="flex-1 py-2.5 border rounded-xl text-sm font-medium transition-colors hover:bg-black/5 dark:hover:bg-white/5"
+ className="flex-1 py-2.5 border rounded-xl text-sm font-medium transition-colors hover:bg-[var(--primary-subtle)]"
  style={{ borderColor: 'var(--hr-border)', color: 'var(--hr-text-primary)' }}
  >
  Cancel

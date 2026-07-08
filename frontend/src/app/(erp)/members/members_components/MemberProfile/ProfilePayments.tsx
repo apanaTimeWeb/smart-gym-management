@@ -48,7 +48,7 @@ export default function ProfilePayments() {
  </div>
  <button 
  onClick={() => handlePrint(p)} 
- className="p-2 rounded-lg bg-[var(--members-bg-input)] hover:bg-black/5 dark:hover:bg-white/5 text-[var(--members-text-secondary)] transition-colors"
+ className="p-2 rounded-lg bg-[var(--members-bg-input)] hover:bg-[var(--primary-subtle)] text-[var(--members-text-secondary)] transition-colors"
  >
  <Printer size={14} />
  </button>

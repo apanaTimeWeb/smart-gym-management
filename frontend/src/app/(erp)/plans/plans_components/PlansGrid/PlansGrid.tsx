@@ -50,14 +50,14 @@ export default function PlansGrid() {
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <h3 className="text-xl font-bold text-[var(--plans-text-primary)]">{p.name}</h3>
-                  <span className="inline-flex px-2 py-0.5 rounded-full text-xs font-semibold bg-black/5 dark:bg-white/5 text-[var(--plans-text-secondary)] mt-1">
+                  <span className="inline-flex px-2 py-0.5 rounded-full text-xs font-semibold bg-[var(--bg-input)] text-[var(--plans-text-secondary)] mt-1">
                     {p.tier}
                   </span>
                 </div>
                 <div className="flex gap-1">
                   <button 
                     onClick={() => openEdit(p)} 
-                    className="p-1.5 rounded-lg text-[var(--plans-text-secondary)] hover:text-[var(--plans-text-primary)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                    className="p-1.5 rounded-lg text-[var(--plans-text-secondary)] hover:text-[var(--plans-text-primary)] hover:bg-[var(--primary-subtle)] transition-colors"
                   >
                     <Edit2 size={16} />
                   </button>

@@ -43,7 +43,7 @@ export default function AttendanceToolbar() {
     <div className="flex gap-2">
  <button 
  onClick={loadAll} 
- className="flex items-center gap-2 px-3 py-2 text-sm border border-[var(--attendance-border)] rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-[var(--attendance-text-secondary)] transition-colors"
+ className="flex items-center gap-2 px-3 py-2 text-sm border border-[var(--attendance-border)] rounded-lg hover:bg-[var(--primary-subtle)] text-[var(--attendance-text-secondary)] transition-colors"
  >
  <RefreshCw size={14} />
  </button>

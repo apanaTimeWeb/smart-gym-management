@@ -40,7 +40,7 @@ export default function ExerciseGrid() {
                   <Dumbbell size={16} className="text-[var(--library-highlight)]" />
                   <p className="font-semibold text-[var(--library-text-primary)]">{ex.name}</p>
                 </div>
-                <span className="text-xs bg-black/5 dark:bg-white/5 text-[var(--library-text-secondary)] px-2 py-0.5 rounded-full">
+                <span className="text-xs bg-[var(--bg-input)] text-[var(--library-text-secondary)] px-2 py-0.5 rounded-full">
                   {ex.category}
                 </span>
                 <span className={`ml-1.5 text-xs px-2 py-0.5 rounded-full font-medium ${DIFF_COLORS[ex.difficulty] || 'bg-[var(--primary-subtle)] text-[var(--text-tertiary)]'}`}>
@@ -50,7 +50,7 @@ export default function ExerciseGrid() {
               <div className="flex gap-1">
                 <button 
                   onClick={() => openEditEx(ex)} 
-                  className="p-1.5 rounded-lg bg-black/5 dark:bg-white/5 text-[var(--library-text-secondary)] hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+                  className="p-1.5 rounded-lg bg-[var(--bg-input)] text-[var(--library-text-secondary)] hover:bg-[var(--primary-subtle)] transition-colors"
                 >
                   <Edit2 size={13} />
                 </button>

@@ -22,7 +22,7 @@ export default function PlanModal() {
  </h3>
  <button 
  onClick={() => setShowModal(false)} 
- className="p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-[var(--plans-text-secondary)] transition-colors"
+ className="p-2 rounded-lg hover:bg-[var(--primary-subtle)] text-[var(--plans-text-secondary)] transition-colors"
  >
  <X size={18} />
  </button>
@@ -86,7 +86,7 @@ export default function PlanModal() {
  <button 
  type="button" 
  onClick={() => setShowModal(false)} 
- className="flex-1 py-2.5 border border-[var(--plans-border)] rounded-xl text-sm font-medium text-[var(--plans-text-primary)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+ className="flex-1 py-2.5 border border-[var(--plans-border)] rounded-xl text-sm font-medium text-[var(--plans-text-primary)] hover:bg-[var(--primary-subtle)] transition-colors"
  >
  Cancel
  </button>

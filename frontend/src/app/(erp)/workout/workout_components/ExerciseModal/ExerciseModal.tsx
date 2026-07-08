@@ -21,7 +21,7 @@ export default function ExerciseModal() {
  </h3>
  <button 
  onClick={() => setShowExModal(false)} 
- className="text-[var(--workout-text-secondary)] hover:text-[var(--workout-text-primary)] hover:bg-black/5 dark:hover:bg-white/5 p-1 rounded-md transition-colors"
+ className="text-[var(--workout-text-secondary)] hover:text-[var(--workout-text-primary)] hover:bg-[var(--primary-subtle)] p-1 rounded-md transition-colors"
  >
  <X size={20} />
  </button>
@@ -75,7 +75,7 @@ export default function ExerciseModal() {
  <button 
  type="button" 
  onClick={() => setShowExModal(false)} 
- className="px-4 py-2 border border-[var(--workout-border)] rounded-lg font-medium text-[var(--workout-text-secondary)] hover:text-[var(--workout-text-primary)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+ className="px-4 py-2 border border-[var(--workout-border)] rounded-lg font-medium text-[var(--workout-text-secondary)] hover:text-[var(--workout-text-primary)] hover:bg-[var(--primary-subtle)] transition-colors"
  >
  Cancel
  </button>

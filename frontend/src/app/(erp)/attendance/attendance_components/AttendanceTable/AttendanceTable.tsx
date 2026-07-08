@@ -28,7 +28,7 @@ export default function AttendanceTable() {
  ) : (
  <div className="overflow-x-auto">
  <table className="w-full">
- <thead className="bg-black/5 dark:bg-white/5">
+ <thead className="bg-[var(--bg-input)]">
  <tr>
  {ATTENDANCE_TABLE_HEADERS.map(h => (
  <th key={h} className="text-left text-xs font-semibold text-[var(--attendance-text-secondary)] uppercase tracking-wider px-4 py-3">
@@ -39,7 +39,7 @@ export default function AttendanceTable() {
  </thead>
  <tbody className="divide-y divide-[var(--attendance-border)]">
  {paginated.map(r => (
- <tr key={r.id} className="hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+ <tr key={r.id} className="hover:bg-[var(--primary-subtle)] transition-colors">
  <td className="px-4 py-3">
  <div className="flex items-center gap-2">
  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold ${

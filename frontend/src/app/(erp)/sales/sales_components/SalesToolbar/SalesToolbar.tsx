@@ -39,7 +39,7 @@ export default function SalesToolbar() {
       }} 
     />
   </div>
- <button className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-[var(--sales-border)] rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-[var(--sales-text-secondary)] transition-colors">
+ <button className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-[var(--sales-border)] rounded-lg hover:bg-[var(--primary-subtle)] text-[var(--sales-text-secondary)] transition-colors">
  <Download size={13} /> Export
  </button>
  </div>

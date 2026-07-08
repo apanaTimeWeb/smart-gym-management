@@ -20,7 +20,7 @@ export default function AttendanceModal() {
  <h3 className="text-lg font-bold text-[var(--attendance-text-primary)]">Mark Attendance</h3>
  <button 
  onClick={() => setShowModal(false)} 
- className="p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-[var(--attendance-text-secondary)] transition-colors"
+ className="p-2 rounded-lg hover:bg-[var(--primary-subtle)] text-[var(--attendance-text-secondary)] transition-colors"
  >
  <X size={18} />
  </button>
@@ -90,7 +90,7 @@ export default function AttendanceModal() {
  <button 
  type="button" 
  onClick={() => setShowModal(false)} 
- className="flex-1 py-2.5 border border-[var(--attendance-border)] rounded-xl text-sm font-medium text-[var(--attendance-text-primary)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+ className="flex-1 py-2.5 border border-[var(--attendance-border)] rounded-xl text-sm font-medium text-[var(--attendance-text-primary)] hover:bg-[var(--primary-subtle)] transition-colors"
  >
  Cancel
  </button>

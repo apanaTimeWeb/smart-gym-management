@@ -22,7 +22,7 @@ export default function DietModal() {
  </h3>
  <button 
  onClick={() => setShowDietModal(false)} 
- className="p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-[var(--library-text-secondary)] transition-colors"
+ className="p-2 rounded-lg hover:bg-[var(--primary-subtle)] text-[var(--library-text-secondary)] transition-colors"
  >
  <X size={18} />
  </button>
@@ -80,7 +80,7 @@ export default function DietModal() {
  <button 
  type="button" 
  onClick={() => setShowDietModal(false)} 
- className="flex-1 py-2.5 border border-[var(--library-border)] rounded-xl text-sm font-medium text-[var(--library-text-primary)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+ className="flex-1 py-2.5 border border-[var(--library-border)] rounded-xl text-sm font-medium text-[var(--library-text-primary)] hover:bg-[var(--primary-subtle)] transition-colors"
  >
  Cancel
  </button>

@@ -25,7 +25,7 @@ export default function PlansToolbar() {
       <div className="flex gap-2">
  <button 
  onClick={loadPlans} 
- className="flex items-center gap-2 px-3 py-2 text-sm border border-[var(--plans-border)] rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-[var(--plans-text-secondary)] transition-colors"
+ className="flex items-center gap-2 px-3 py-2 text-sm border border-[var(--plans-border)] rounded-lg hover:bg-[var(--primary-subtle)] text-[var(--plans-text-secondary)] transition-colors"
  >
  <RefreshCw size={14} />
  </button>
