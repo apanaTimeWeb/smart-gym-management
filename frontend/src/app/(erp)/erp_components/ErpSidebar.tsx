@@ -56,7 +56,7 @@ export default function ErpSidebar({ isCollapsed, setIsCollapsed }: ErpSidebarPr
  <Image src="/logo.png" alt="GymSmart ERP" width={44} height={44} className="object-contain min-w-[44px] rounded-lg" />
  {(!isCollapsed || isMobileOpen) && (
  <div className="whitespace-nowrap transition-opacity duration-300 flex flex-col">
- <span className="text-white font-bold text-lg leading-tight tracking-tight">GymSmart</span>
+ <span className="text-[var(--text-primary)] font-bold text-lg leading-tight tracking-tight">GymSmart</span>
  <span className="text-[10px] text-[var(--warning)] font-bold uppercase tracking-wider -mt-0.5">ERP System</span>
  </div>
  )}
@@ -77,10 +77,10 @@ export default function ErpSidebar({ isCollapsed, setIsCollapsed }: ErpSidebarPr
  !showLabel ? 'justify-center px-0' : 'px-3.5'
  } ${
  active
- ? 'text-white border border-white/10 shadow-lg'
- : 'text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-input)]'
+ ? 'text-white border border-transparent shadow-lg'
+ : 'text-[var(--text-secondary)] hover:text-[var(--primary)] hover:bg-[var(--primary-subtle)]'
  }`} style={active ? { background: 'var(--primary)' } : {}}>
- <Icon size={22} className={active ? 'text-white' : 'text-[var(--text-secondary)] group-hover:text-white transition-colors'} />
+ <Icon size={22} className={active ? 'text-white' : 'text-[var(--text-secondary)] group-hover:text-[var(--primary)] transition-colors'} />
  {showLabel && <span className="text-sm whitespace-nowrap">{item.label}</span>}
  </Link>
  );
