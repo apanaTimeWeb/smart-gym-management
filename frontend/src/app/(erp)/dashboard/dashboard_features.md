@@ -8,6 +8,7 @@ This module has been refactored into a strictly AI-Friendly, micro-modularized s
 
 ### 1. `dashboard_components/`
 Contains heavily isolated micro-components. Each file serves exactly one purpose and is highly descriptive:
+- `DashboardMain/DashboardMain.tsx`: The primary Client Component layout wrapper that initiates the `DashboardProvider` and renders the content.
 - `DashboardKPIs/DashboardKPIs.tsx`: Renders the top statistical KPI cards.
 - `MembershipDistribution/MembershipDistribution.tsx`: Displays the visual breakdown of plans.
 - `PendingPayments/PendingPayments.tsx`: Lists payments nearing expiry.
@@ -15,13 +16,17 @@ Contains heavily isolated micro-components. Each file serves exactly one purpose
 - `RecentMembers/RecentMembers.tsx`: Table showing recently joined members.
 
 ### 2. `dashboard_context/`
-- `DashboardContext.tsx`: The single source of truth for the module's state. It executes `dashboardApi.getStats()` on mount and exposes the `stats`, `loading`, and `error` state via the `useDashboardContext` hook. This eliminates prop drilling across the micro-components.
+- `useDashboardLogic.ts`: An isolated custom hook containing the React logic (`useState`, `useEffect`, `dashboardApi` calls) to fetch stats.
+- `DashboardContext.tsx`: The single source of truth for the module's state. It consumes `useDashboardLogic` and provides the state down the component tree to avoid prop drilling.
 
-### 3. `dashboard_utils/`
+### 3. `dashboard_types/`
+- `dashboard_types.ts`: Contains TypeScript definitions like `DashboardContextType` and `DashboardStats`.
+
+### 4. `dashboard_utils/`
 - `DashboardSharedConstants.ts`: Centralizes backend-ready hardcoded arrays, table headers, and status-to-style mappings. If backend APIs change these lists, update this single file.
 
-### 4. Root Files
-- `page.tsx`: The module's entry point. It wraps `DashboardContent` within `DashboardProvider` to initialize the context and layout.
+### 5. Root Files
+- `page.tsx`: A pure Server Component that acts as the entry point and renders `DashboardMain`.
 - `loading.tsx`: Native Next.js loading state.
 - `error.tsx`: Native Next.js error boundary.
 - `dashboard.css`: Contains CSS variables mapped to the global design system (e.g. `--dashboard-bg-card`), making the module entirely theme-independent without relying on inline Tailwind colors.
