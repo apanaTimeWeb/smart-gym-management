@@ -36,20 +36,30 @@ Never mix data validation logic (checking if email is valid, password length) wi
 Extract all validation logic (Zod schemas, Class-Validator DTOs, Django Forms/Serializers) into their own isolated files.
 - **Why?** If the business logic is fine but the API is rejecting a payload, you only feed the AI `create-member.dto.ts`. The AI won't even see the database logic, guaranteeing 0% chance of breaking the database flow.
 
-## 4. Centralized Constants (Single Source of Truth)
+## 4. Interface & Type Isolation (The AI's Blueprint)
+AI relies heavily on data shapes to write correct code. If the AI knows the exact shape of a `User` or a `PaymentPayload`, it doesn't need to see the database schema or the entire service file.
+* **The Rule:** Extract all TypeScript `Interfaces`, `Types`, or Python `TypedDicts`/`Pydantic Models` into a dedicated `[module-name].interfaces.ts` file.
+* **Why?** When you want the AI to write a new function, you just feed it the `interfaces` file. The AI instantly knows exactly what properties are available without having to read 500 lines of implementation code.
+
+## 5. Centralized Constants (Single Source of Truth)
 Find all hardcoded strings, error messages, magic numbers, and default config values scattered across your backend. Extract them into a module-level `[ModuleName].constants.ts` (or `.py`).
 - ❌ **BAD:** `throw new Error("User age must be over 18")`
 - ✅ **GOOD:** `throw new Error(MEMBER_ERRORS.AGE_RESTRICTION)`
 - **Why?** Tomorrow, if the business requirement changes from 18 to 21, or if you need to translate error messages to a different language, you only feed the AI `members.constants.ts`. The business logic remains untouched.
 
-## 5. Isolated Database/Query Layer (The Repository Pattern)
+## 6. Centralized Custom Exceptions
+Handling errors with generic `throw new Error()` makes it hard for AI to write precise unit tests or generic error handlers.
+* **The Rule:** Create specific exception classes in an `[module-name].exceptions.ts` file (e.g., `class InsufficientFundsException extends Error`).
+* **Why?** If an AI is writing an Express error-handling middleware, providing the `exceptions.ts` file gives it a perfect, safe map of every possible error state it needs to catch and format for the frontend.
+
+## 7. Isolated Database/Query Layer (The Repository Pattern)
 Never write massive, complex raw SQL or 50-line ORM queries directly inside your business logic services.
 Extract complex queries into a dedicated Repository or Query file (e.g., `member-analytics.repository.ts`).
 - **Why?** If the dashboard stats are calculating incorrectly, it's a database query issue. You provide the AI the `repository` file, not the `service` file.
 
 ---
 
-## 6. Handling Edge Cases & Complex Scenarios
+## 8. Handling Edge Cases & Complex Scenarios
 
 ### Edge Case A: Cross-Module Dependencies (Tight Coupling)
 *Scenario:* The `MemberRegistrationService` needs to trigger the `FinanceService` to generate an invoice, and the `EmailService` to send a welcome email. If they are tightly coupled, the AI will need all three files to understand the flow.
@@ -65,6 +75,11 @@ Create a higher-level "Facade" or "Orchestrator" whose ONLY job is to open a tra
 *Scenario:* Developers dump everything into a global `utils/` folder, creating a "junk drawer" that AI struggles to navigate.
 *Solution:* **Module-Level Utils.**
 If a utility is only used by the Finance module (e.g., calculating compound interest), put it in `modules/finance/utils/`. Only put genuinely universal tools (like Date formatters or Base64 encoders) in the global `utils/` folder.
+
+### Edge Case D: External Service Adapters (Anti-Corruption Layer)
+*Scenario:* When your backend talks to the outside world (Stripe, AWS S3, SendGrid), never put the `axios.post()` or SDK calls directly inside your business logic.
+*Solution:* **Create an isolated wrapper or "Adapter"** for third-party tools (e.g., `stripe-payment.adapter.ts`). Your core service should only call generic methods like `paymentAdapter.charge()`.
+* **Why?** If Stripe changes their API version, you only give the AI the `stripe-payment.adapter.ts` file. The AI fixes the API call without ever seeing (or risking breaking) your internal checkout logic.
 
 ---
 
