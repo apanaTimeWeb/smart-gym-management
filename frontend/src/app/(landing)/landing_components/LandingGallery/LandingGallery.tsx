@@ -3,41 +3,41 @@
 import Image from 'next/image';
 
 export default function LandingGallery() {
-  return (
-    <section id="facility" className="py-24 px-4 bg-[var(--landing-bg-dark)]">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <div className="inline-block text-xs font-bold tracking-widest uppercase text-orange-400 bg-orange-500/10 border border-orange-500/20 rounded-full px-4 py-2 mb-5">
-            Our Facility
-          </div>
-          <h2 className="text-4xl sm:text-5xl font-black text-white mb-4">
-            World-Class <span style={{ background: 'var(--landing-text-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Equipment</span>
-          </h2>
-          <p className="text-[var(--landing-text-secondary)] max-w-xl mx-auto">
-            Train in an environment designed for champions.
-          </p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="rounded-2xl overflow-hidden aspect-video md:aspect-square relative group">
-            <Image src="/gym_gallery_cardio.png" alt="Cardio Section" fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transition-transform duration-700 group-hover:scale-110" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-              <span className="font-bold text-lg text-white">Advanced Cardio</span>
-            </div>
-          </div>
-          <div className="rounded-2xl overflow-hidden aspect-video md:aspect-square relative group">
-            <Image src="/gym_gallery_weights.png" alt="Free Weights" fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transition-transform duration-700 group-hover:scale-110" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-              <span className="font-bold text-lg text-white">Free Weights Area</span>
-            </div>
-          </div>
-          <div className="rounded-2xl overflow-hidden aspect-video md:aspect-square relative group">
-            <Image src="/gym_gallery_studio.png" alt="Studio" fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transition-transform duration-700 group-hover:scale-110" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-              <span className="font-bold text-lg text-white">Yoga & Group Studio</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
+ return (
+ <section id="facility" className="py-24 px-4 bg-[var(--landing-bg-dark)]">
+ <div className="max-w-7xl mx-auto">
+ <div className="text-center mb-16">
+ <div className="inline-block text-xs font-bold tracking-widest uppercase text-[var(--warning)] bg-[var(--warning)]/10 border border-[var(--warning)]/20 rounded-full px-4 py-2 mb-5">
+ Our Facility
+ </div>
+ <h2 className="text-4xl sm:text-5xl font-black text-white mb-4">
+ World-Class <span style={{ background: 'var(--landing-text-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Equipment</span>
+ </h2>
+ <p className="text-[var(--landing-text-secondary)] max-w-xl mx-auto">
+ Train in an environment designed for champions.
+ </p>
+ </div>
+ <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+ <div className="rounded-2xl overflow-hidden aspect-video md:aspect-square relative group">
+ <Image src="/gym_gallery_cardio.png" alt="Cardio Section" fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transition-transform duration-700 group-hover:scale-110" />
+ <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+ <span className="font-bold text-lg text-white">Advanced Cardio</span>
+ </div>
+ </div>
+ <div className="rounded-2xl overflow-hidden aspect-video md:aspect-square relative group">
+ <Image src="/gym_gallery_weights.png" alt="Free Weights" fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transition-transform duration-700 group-hover:scale-110" />
+ <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+ <span className="font-bold text-lg text-white">Free Weights Area</span>
+ </div>
+ </div>
+ <div className="rounded-2xl overflow-hidden aspect-video md:aspect-square relative group">
+ <Image src="/gym_gallery_studio.png" alt="Studio" fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transition-transform duration-700 group-hover:scale-110" />
+ <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+ <span className="font-bold text-lg text-white">Yoga & Group Studio</span>
+ </div>
+ </div>
+ </div>
+ </div>
+ </section>
+ );
 }
