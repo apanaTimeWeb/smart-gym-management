@@ -7,14 +7,14 @@ export declare class StoreController {
         data: {
             id: number;
             name: string;
+            isActive: boolean;
+            createdAt: Date;
+            updatedAt: Date;
             category: string;
             price: number;
             stock: number;
             description: string | null;
             imageUrl: string | null;
-            isActive: boolean;
-            createdAt: Date;
-            updatedAt: Date;
         }[];
     }>;
     createProduct(dto: any): Promise<{
@@ -22,14 +22,14 @@ export declare class StoreController {
         data: {
             id: number;
             name: string;
+            isActive: boolean;
+            createdAt: Date;
+            updatedAt: Date;
             category: string;
             price: number;
             stock: number;
             description: string | null;
             imageUrl: string | null;
-            isActive: boolean;
-            createdAt: Date;
-            updatedAt: Date;
         };
     }>;
     updateProduct(id: string, dto: any): Promise<{
@@ -37,14 +37,14 @@ export declare class StoreController {
         data: {
             id: number;
             name: string;
+            isActive: boolean;
+            createdAt: Date;
+            updatedAt: Date;
             category: string;
             price: number;
             stock: number;
             description: string | null;
             imageUrl: string | null;
-            isActive: boolean;
-            createdAt: Date;
-            updatedAt: Date;
         };
     }>;
     removeProduct(id: string): Promise<{
@@ -52,14 +52,14 @@ export declare class StoreController {
         data: {
             id: number;
             name: string;
+            isActive: boolean;
+            createdAt: Date;
+            updatedAt: Date;
             category: string;
             price: number;
             stock: number;
             description: string | null;
             imageUrl: string | null;
-            isActive: boolean;
-            createdAt: Date;
-            updatedAt: Date;
         };
     }>;
     findAllOrders(query: any): Promise<{
@@ -70,29 +70,29 @@ export declare class StoreController {
                     product: {
                         id: number;
                         name: string;
+                        isActive: boolean;
+                        createdAt: Date;
+                        updatedAt: Date;
                         category: string;
                         price: number;
                         stock: number;
                         description: string | null;
                         imageUrl: string | null;
-                        isActive: boolean;
-                        createdAt: Date;
-                        updatedAt: Date;
                     };
                 } & {
                     id: number;
                     price: number;
-                    orderId: number;
-                    productId: number;
                     qty: number;
+                    productId: number;
+                    orderId: number;
                 })[];
             } & {
                 id: number;
                 createdAt: Date;
-                total: number;
-                method: string;
                 status: string;
+                method: string;
                 notes: string | null;
+                total: number;
             })[];
             total: number;
         };
@@ -103,17 +103,17 @@ export declare class StoreController {
             items: {
                 id: number;
                 price: number;
-                orderId: number;
-                productId: number;
                 qty: number;
+                productId: number;
+                orderId: number;
             }[];
         } & {
             id: number;
             createdAt: Date;
-            total: number;
-            method: string;
             status: string;
+            method: string;
             notes: string | null;
+            total: number;
         };
     }>;
     getStoreSummary(): Promise<{
@@ -125,14 +125,14 @@ export declare class StoreController {
             lowStockProducts: {
                 id: number;
                 name: string;
+                isActive: boolean;
+                createdAt: Date;
+                updatedAt: Date;
                 category: string;
                 price: number;
                 stock: number;
                 description: string | null;
                 imageUrl: string | null;
-                isActive: boolean;
-                createdAt: Date;
-                updatedAt: Date;
             }[];
         };
     }>;

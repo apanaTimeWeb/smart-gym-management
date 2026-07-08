@@ -7,18 +7,18 @@ export declare class WorkoutController {
         data: {
             id: number;
             name: string;
-            category: string;
-            muscleGroup: string[];
-            sets: number | null;
-            reps: string | null;
-            duration: string | null;
-            difficulty: string;
-            description: string | null;
-            videoUrl: string | null;
-            imageUrl: string | null;
             isActive: boolean;
             createdAt: Date;
             updatedAt: Date;
+            category: string;
+            description: string | null;
+            imageUrl: string | null;
+            duration: string | null;
+            sets: number | null;
+            muscleGroup: string[];
+            reps: string | null;
+            difficulty: string;
+            videoUrl: string | null;
         }[];
     }>;
     createWorkout(dto: any): Promise<{
@@ -26,18 +26,18 @@ export declare class WorkoutController {
         data: {
             id: number;
             name: string;
-            category: string;
-            muscleGroup: string[];
-            sets: number | null;
-            reps: string | null;
-            duration: string | null;
-            difficulty: string;
-            description: string | null;
-            videoUrl: string | null;
-            imageUrl: string | null;
             isActive: boolean;
             createdAt: Date;
             updatedAt: Date;
+            category: string;
+            description: string | null;
+            imageUrl: string | null;
+            duration: string | null;
+            sets: number | null;
+            muscleGroup: string[];
+            reps: string | null;
+            difficulty: string;
+            videoUrl: string | null;
         };
     }>;
     updateWorkout(id: string, dto: any): Promise<{
@@ -45,18 +45,18 @@ export declare class WorkoutController {
         data: {
             id: number;
             name: string;
-            category: string;
-            muscleGroup: string[];
-            sets: number | null;
-            reps: string | null;
-            duration: string | null;
-            difficulty: string;
-            description: string | null;
-            videoUrl: string | null;
-            imageUrl: string | null;
             isActive: boolean;
             createdAt: Date;
             updatedAt: Date;
+            category: string;
+            description: string | null;
+            imageUrl: string | null;
+            duration: string | null;
+            sets: number | null;
+            muscleGroup: string[];
+            reps: string | null;
+            difficulty: string;
+            videoUrl: string | null;
         };
     }>;
     removeWorkout(id: string): Promise<{
@@ -64,18 +64,18 @@ export declare class WorkoutController {
         data: {
             id: number;
             name: string;
-            category: string;
-            muscleGroup: string[];
-            sets: number | null;
-            reps: string | null;
-            duration: string | null;
-            difficulty: string;
-            description: string | null;
-            videoUrl: string | null;
-            imageUrl: string | null;
             isActive: boolean;
             createdAt: Date;
             updatedAt: Date;
+            category: string;
+            description: string | null;
+            imageUrl: string | null;
+            duration: string | null;
+            sets: number | null;
+            muscleGroup: string[];
+            reps: string | null;
+            difficulty: string;
+            videoUrl: string | null;
         };
     }>;
     findAllDietPlans(query: any): Promise<{
@@ -83,10 +83,10 @@ export declare class WorkoutController {
         data: {
             id: number;
             name: string;
-            description: string | null;
             isActive: boolean;
             createdAt: Date;
             updatedAt: Date;
+            description: string | null;
             goal: string;
             calories: number | null;
             protein: number | null;
@@ -100,10 +100,10 @@ export declare class WorkoutController {
         data: {
             id: number;
             name: string;
-            description: string | null;
             isActive: boolean;
             createdAt: Date;
             updatedAt: Date;
+            description: string | null;
             goal: string;
             calories: number | null;
             protein: number | null;
@@ -117,10 +117,10 @@ export declare class WorkoutController {
         data: {
             id: number;
             name: string;
-            description: string | null;
             isActive: boolean;
             createdAt: Date;
             updatedAt: Date;
+            description: string | null;
             goal: string;
             calories: number | null;
             protein: number | null;
@@ -134,10 +134,10 @@ export declare class WorkoutController {
         data: {
             id: number;
             name: string;
-            description: string | null;
             isActive: boolean;
             createdAt: Date;
             updatedAt: Date;
+            description: string | null;
             goal: string;
             calories: number | null;
             protein: number | null;

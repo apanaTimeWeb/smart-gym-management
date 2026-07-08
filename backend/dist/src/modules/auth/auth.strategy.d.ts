@@ -1,4 +1,5 @@
 import { PrismaService } from '../../database/prisma.service';
+import { ConfigService } from '@nestjs/config';
 export interface JwtPayload {
     sub: number;
     email: string;
@@ -7,7 +8,7 @@ export interface JwtPayload {
 declare const JwtStrategy_base: new (...args: any) => any;
 export declare class JwtStrategy extends JwtStrategy_base {
     private prisma;
-    constructor(prisma: PrismaService);
+    constructor(prisma: PrismaService, configService: ConfigService);
     validate(payload: JwtPayload): Promise<{
         id: number;
         email: string;

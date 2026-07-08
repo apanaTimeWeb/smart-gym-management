@@ -6,28 +6,28 @@ export declare class SettingsController {
         success: boolean;
         data: {
             id: number;
-            gymName: string;
-            ownerName: string | null;
-            phone: string | null;
             email: string | null;
-            city: string | null;
-            gstNumber: string | null;
+            phone: string | null;
             createdAt: Date;
             updatedAt: Date;
+            gymName: string;
+            ownerName: string | null;
+            city: string | null;
+            gstNumber: string | null;
         };
     }>;
     updateSettings(dto: any): Promise<{
         success: boolean;
         data: {
             id: number;
-            gymName: string;
-            ownerName: string | null;
-            phone: string | null;
             email: string | null;
-            city: string | null;
-            gstNumber: string | null;
+            phone: string | null;
             createdAt: Date;
             updatedAt: Date;
+            gymName: string;
+            ownerName: string | null;
+            city: string | null;
+            gstNumber: string | null;
         };
     }>;
 }

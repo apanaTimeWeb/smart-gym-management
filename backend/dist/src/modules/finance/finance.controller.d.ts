@@ -5,15 +5,15 @@ export declare class FinanceController {
     createPayment(dto: any): Promise<{
         success: boolean;
         data: {
+            id: number;
+            createdAt: Date;
+            status: import("@prisma/client").$Enums.PaymentStatus;
+            memberId: number;
             amount: number;
             method: string;
-            status: import("@prisma/client").$Enums.PaymentStatus;
             notes: string | null;
             invoiceNo: string;
             paidAt: Date;
-            createdAt: Date;
-            id: number;
-            memberId: number;
         };
     }>;
     findAllPayments(query: any): Promise<{
@@ -22,9 +22,10 @@ export declare class FinanceController {
             payments: ({
                 member: {
                     plan: {
-                        createdAt: Date;
                         id: number;
                         name: string;
+                        isActive: boolean;
+                        createdAt: Date;
                         updatedAt: Date;
                         tier: import("@prisma/client").$Enums.PlanTier;
                         price1Month: number;
@@ -32,37 +33,36 @@ export declare class FinanceController {
                         price6Month: number;
                         price12Month: number;
                         features: string[];
-                        isActive: boolean;
                     };
                 } & {
-                    status: import("@prisma/client").$Enums.MemberStatus;
-                    createdAt: Date;
                     id: number;
-                    name: string;
                     email: string;
+                    name: string;
                     phone: string;
+                    branch: string;
+                    createdAt: Date;
+                    updatedAt: Date;
                     gender: import("@prisma/client").$Enums.Gender;
                     address: string | null;
-                    branch: string;
+                    joinDate: Date;
                     planId: number;
                     billingCycle: import("@prisma/client").$Enums.BillingCycle;
-                    joinDate: Date;
+                    status: import("@prisma/client").$Enums.MemberStatus;
                     expiryDate: Date;
                     paidAmount: number;
                     pendingAmount: number;
                     photo: string | null;
-                    updatedAt: Date;
                 };
             } & {
+                id: number;
+                createdAt: Date;
+                status: import("@prisma/client").$Enums.PaymentStatus;
+                memberId: number;
                 amount: number;
                 method: string;
-                status: import("@prisma/client").$Enums.PaymentStatus;
                 notes: string | null;
                 invoiceNo: string;
                 paidAt: Date;
-                createdAt: Date;
-                id: number;
-                memberId: number;
             })[];
             total: number;
         };
@@ -84,15 +84,15 @@ export declare class FinanceController {
     getPaymentsByMember(memberId: string): Promise<{
         success: boolean;
         data: {
+            id: number;
+            createdAt: Date;
+            status: import("@prisma/client").$Enums.PaymentStatus;
+            memberId: number;
             amount: number;
             method: string;
-            status: import("@prisma/client").$Enums.PaymentStatus;
             notes: string | null;
             invoiceNo: string;
             paidAt: Date;
-            createdAt: Date;
-            id: number;
-            memberId: number;
         }[];
     }>;
 }

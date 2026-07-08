@@ -6,90 +6,90 @@ export declare class HrController {
         success: boolean;
         data: {
             id: number;
-            name: string;
             email: string;
+            name: string;
             phone: string;
             role: string;
-            salary: number;
             branch: string;
-            gender: import("@prisma/client").$Enums.Gender;
-            address: string | null;
-            joinDate: Date;
             isActive: boolean;
             createdAt: Date;
             updatedAt: Date;
+            salary: number;
+            gender: import("@prisma/client").$Enums.Gender;
+            address: string | null;
+            joinDate: Date;
         }[];
     }>;
     createStaff(dto: any): Promise<{
         success: boolean;
         data: {
             id: number;
-            name: string;
             email: string;
+            name: string;
             phone: string;
             role: string;
-            salary: number;
             branch: string;
-            gender: import("@prisma/client").$Enums.Gender;
-            address: string | null;
-            joinDate: Date;
             isActive: boolean;
             createdAt: Date;
             updatedAt: Date;
+            salary: number;
+            gender: import("@prisma/client").$Enums.Gender;
+            address: string | null;
+            joinDate: Date;
         };
     }>;
     findOneStaff(id: string): Promise<{
         success: boolean;
         data: {
             id: number;
-            name: string;
             email: string;
+            name: string;
             phone: string;
             role: string;
-            salary: number;
             branch: string;
-            gender: import("@prisma/client").$Enums.Gender;
-            address: string | null;
-            joinDate: Date;
             isActive: boolean;
             createdAt: Date;
             updatedAt: Date;
+            salary: number;
+            gender: import("@prisma/client").$Enums.Gender;
+            address: string | null;
+            joinDate: Date;
         } | null;
     }>;
     updateStaff(id: string, dto: any): Promise<{
         success: boolean;
         data: {
             id: number;
-            name: string;
             email: string;
+            name: string;
             phone: string;
             role: string;
-            salary: number;
             branch: string;
-            gender: import("@prisma/client").$Enums.Gender;
-            address: string | null;
-            joinDate: Date;
             isActive: boolean;
             createdAt: Date;
             updatedAt: Date;
+            salary: number;
+            gender: import("@prisma/client").$Enums.Gender;
+            address: string | null;
+            joinDate: Date;
         };
     }>;
     removeStaff(id: string): Promise<{
         success: boolean;
         data: {
             id: number;
-            name: string;
             email: string;
+            name: string;
             phone: string;
             role: string;
-            salary: number;
             branch: string;
-            gender: import("@prisma/client").$Enums.Gender;
-            address: string | null;
-            joinDate: Date;
             isActive: boolean;
             createdAt: Date;
             updatedAt: Date;
+            salary: number;
+            gender: import("@prisma/client").$Enums.Gender;
+            address: string | null;
+            joinDate: Date;
         };
     }>;
     findAllPayrolls(query: any): Promise<{
@@ -97,28 +97,28 @@ export declare class HrController {
         data: ({
             staff: {
                 id: number;
-                name: string;
                 email: string;
+                name: string;
                 phone: string;
                 role: string;
-                salary: number;
                 branch: string;
-                gender: import("@prisma/client").$Enums.Gender;
-                address: string | null;
-                joinDate: Date;
                 isActive: boolean;
                 createdAt: Date;
                 updatedAt: Date;
+                salary: number;
+                gender: import("@prisma/client").$Enums.Gender;
+                address: string | null;
+                joinDate: Date;
             };
         } & {
             id: number;
             createdAt: Date;
+            status: string;
+            amount: number;
+            notes: string | null;
+            paidAt: Date | null;
             staffId: number;
             month: string;
-            amount: number;
-            status: string;
-            paidAt: Date | null;
-            notes: string | null;
         })[];
     }>;
     createPayroll(dto: any): Promise<{
@@ -126,12 +126,12 @@ export declare class HrController {
         data: {
             id: number;
             createdAt: Date;
+            status: string;
+            amount: number;
+            notes: string | null;
+            paidAt: Date | null;
             staffId: number;
             month: string;
-            amount: number;
-            status: string;
-            paidAt: Date | null;
-            notes: string | null;
         };
     }>;
     updatePayrollStatus(id: string, body: any): Promise<{
@@ -139,12 +139,12 @@ export declare class HrController {
         data: {
             id: number;
             createdAt: Date;
+            status: string;
+            amount: number;
+            notes: string | null;
+            paidAt: Date | null;
             staffId: number;
             month: string;
-            amount: number;
-            status: string;
-            paidAt: Date | null;
-            notes: string | null;
         };
     }>;
     getHrSummary(): Promise<{

@@ -6,36 +6,36 @@ export declare class MembersService {
         success: boolean;
         data: {
             plan: {
+                id: number;
                 name: string;
+                isActive: boolean;
                 createdAt: Date;
                 updatedAt: Date;
-                id: number;
                 tier: import("@prisma/client").$Enums.PlanTier;
                 price1Month: number;
                 price3Month: number;
                 price6Month: number;
                 price12Month: number;
                 features: string[];
-                isActive: boolean;
             };
         } & {
-            name: string;
+            id: number;
             email: string;
+            name: string;
             phone: string;
+            branch: string;
+            createdAt: Date;
+            updatedAt: Date;
             gender: import("@prisma/client").$Enums.Gender;
             address: string | null;
-            branch: string;
+            joinDate: Date;
+            planId: number;
             billingCycle: import("@prisma/client").$Enums.BillingCycle;
             status: import("@prisma/client").$Enums.MemberStatus;
-            joinDate: Date;
             expiryDate: Date;
             paidAmount: number;
             pendingAmount: number;
             photo: string | null;
-            createdAt: Date;
-            updatedAt: Date;
-            id: number;
-            planId: number;
         };
     }>;
     findAll(query: any): Promise<{
@@ -43,36 +43,36 @@ export declare class MembersService {
         data: {
             members: ({
                 plan: {
+                    id: number;
                     name: string;
+                    isActive: boolean;
                     createdAt: Date;
                     updatedAt: Date;
-                    id: number;
                     tier: import("@prisma/client").$Enums.PlanTier;
                     price1Month: number;
                     price3Month: number;
                     price6Month: number;
                     price12Month: number;
                     features: string[];
-                    isActive: boolean;
                 };
             } & {
-                name: string;
+                id: number;
                 email: string;
+                name: string;
                 phone: string;
+                branch: string;
+                createdAt: Date;
+                updatedAt: Date;
                 gender: import("@prisma/client").$Enums.Gender;
                 address: string | null;
-                branch: string;
+                joinDate: Date;
+                planId: number;
                 billingCycle: import("@prisma/client").$Enums.BillingCycle;
                 status: import("@prisma/client").$Enums.MemberStatus;
-                joinDate: Date;
                 expiryDate: Date;
                 paidAmount: number;
                 pendingAmount: number;
                 photo: string | null;
-                createdAt: Date;
-                updatedAt: Date;
-                id: number;
-                planId: number;
             })[];
             total: number;
             page: number;
@@ -83,22 +83,22 @@ export declare class MembersService {
         success: boolean;
         data: ({
             plan: {
+                id: number;
                 name: string;
+                isActive: boolean;
                 createdAt: Date;
                 updatedAt: Date;
-                id: number;
                 tier: import("@prisma/client").$Enums.PlanTier;
                 price1Month: number;
                 price3Month: number;
                 price6Month: number;
                 price12Month: number;
                 features: string[];
-                isActive: boolean;
             };
             payments: {
-                status: import("@prisma/client").$Enums.PaymentStatus;
-                createdAt: Date;
                 id: number;
+                createdAt: Date;
+                status: import("@prisma/client").$Enums.PaymentStatus;
                 memberId: number;
                 amount: number;
                 method: string;
@@ -107,103 +107,103 @@ export declare class MembersService {
                 paidAt: Date;
             }[];
         } & {
-            name: string;
+            id: number;
             email: string;
+            name: string;
             phone: string;
+            branch: string;
+            createdAt: Date;
+            updatedAt: Date;
             gender: import("@prisma/client").$Enums.Gender;
             address: string | null;
-            branch: string;
+            joinDate: Date;
+            planId: number;
             billingCycle: import("@prisma/client").$Enums.BillingCycle;
             status: import("@prisma/client").$Enums.MemberStatus;
-            joinDate: Date;
             expiryDate: Date;
             paidAmount: number;
             pendingAmount: number;
             photo: string | null;
-            createdAt: Date;
-            updatedAt: Date;
-            id: number;
-            planId: number;
         }) | null;
     }>;
     update(id: number, dto: any): Promise<{
         success: boolean;
         data: {
             plan: {
+                id: number;
                 name: string;
+                isActive: boolean;
                 createdAt: Date;
                 updatedAt: Date;
-                id: number;
                 tier: import("@prisma/client").$Enums.PlanTier;
                 price1Month: number;
                 price3Month: number;
                 price6Month: number;
                 price12Month: number;
                 features: string[];
-                isActive: boolean;
             };
         } & {
-            name: string;
+            id: number;
             email: string;
+            name: string;
             phone: string;
+            branch: string;
+            createdAt: Date;
+            updatedAt: Date;
             gender: import("@prisma/client").$Enums.Gender;
             address: string | null;
-            branch: string;
+            joinDate: Date;
+            planId: number;
             billingCycle: import("@prisma/client").$Enums.BillingCycle;
             status: import("@prisma/client").$Enums.MemberStatus;
-            joinDate: Date;
             expiryDate: Date;
             paidAmount: number;
             pendingAmount: number;
             photo: string | null;
-            createdAt: Date;
-            updatedAt: Date;
-            id: number;
-            planId: number;
         };
     }>;
     remove(id: number): Promise<{
         success: boolean;
         data: {
-            name: string;
+            id: number;
             email: string;
+            name: string;
             phone: string;
+            branch: string;
+            createdAt: Date;
+            updatedAt: Date;
             gender: import("@prisma/client").$Enums.Gender;
             address: string | null;
-            branch: string;
+            joinDate: Date;
+            planId: number;
             billingCycle: import("@prisma/client").$Enums.BillingCycle;
             status: import("@prisma/client").$Enums.MemberStatus;
-            joinDate: Date;
             expiryDate: Date;
             paidAmount: number;
             pendingAmount: number;
             photo: string | null;
-            createdAt: Date;
-            updatedAt: Date;
-            id: number;
-            planId: number;
         };
     }>;
     renewMembership(id: number, dto: any): Promise<{
         success: boolean;
         data: {
-            name: string;
+            id: number;
             email: string;
+            name: string;
             phone: string;
+            branch: string;
+            createdAt: Date;
+            updatedAt: Date;
             gender: import("@prisma/client").$Enums.Gender;
             address: string | null;
-            branch: string;
+            joinDate: Date;
+            planId: number;
             billingCycle: import("@prisma/client").$Enums.BillingCycle;
             status: import("@prisma/client").$Enums.MemberStatus;
-            joinDate: Date;
             expiryDate: Date;
             paidAmount: number;
             pendingAmount: number;
             photo: string | null;
-            createdAt: Date;
-            updatedAt: Date;
-            id: number;
-            planId: number;
         };
     }>;
     getStats(): Promise<{

@@ -37,8 +37,8 @@ export declare class DashboardController {
             recentMembers: ({
                 plan: {
                     id: number;
-                    isActive: boolean;
                     name: string;
+                    isActive: boolean;
                     createdAt: Date;
                     updatedAt: Date;
                     tier: import("@prisma/client").$Enums.PlanTier;
@@ -49,50 +49,50 @@ export declare class DashboardController {
                     features: string[];
                 };
             } & {
-                status: import("@prisma/client").$Enums.MemberStatus;
                 id: number;
-                pendingAmount: number;
-                planId: number;
-                paidAmount: number;
-                name: string;
                 email: string;
+                name: string;
                 phone: string;
-                gender: import("@prisma/client").$Enums.Gender;
-                address: string | null;
                 branch: string;
-                billingCycle: import("@prisma/client").$Enums.BillingCycle;
-                joinDate: Date;
-                expiryDate: Date;
-                photo: string | null;
                 createdAt: Date;
                 updatedAt: Date;
+                gender: import("@prisma/client").$Enums.Gender;
+                address: string | null;
+                joinDate: Date;
+                planId: number;
+                billingCycle: import("@prisma/client").$Enums.BillingCycle;
+                status: import("@prisma/client").$Enums.MemberStatus;
+                expiryDate: Date;
+                paidAmount: number;
+                pendingAmount: number;
+                photo: string | null;
             })[];
             recentPayments: ({
                 member: {
-                    status: import("@prisma/client").$Enums.MemberStatus;
                     id: number;
-                    pendingAmount: number;
-                    planId: number;
-                    paidAmount: number;
-                    name: string;
                     email: string;
+                    name: string;
                     phone: string;
-                    gender: import("@prisma/client").$Enums.Gender;
-                    address: string | null;
                     branch: string;
-                    billingCycle: import("@prisma/client").$Enums.BillingCycle;
-                    joinDate: Date;
-                    expiryDate: Date;
-                    photo: string | null;
                     createdAt: Date;
                     updatedAt: Date;
+                    gender: import("@prisma/client").$Enums.Gender;
+                    address: string | null;
+                    joinDate: Date;
+                    planId: number;
+                    billingCycle: import("@prisma/client").$Enums.BillingCycle;
+                    status: import("@prisma/client").$Enums.MemberStatus;
+                    expiryDate: Date;
+                    paidAmount: number;
+                    pendingAmount: number;
+                    photo: string | null;
                 };
             } & {
-                status: import("@prisma/client").$Enums.PaymentStatus;
-                amount: number;
                 id: number;
-                memberId: number;
                 createdAt: Date;
+                status: import("@prisma/client").$Enums.PaymentStatus;
+                memberId: number;
+                amount: number;
                 method: string;
                 notes: string | null;
                 invoiceNo: string;
@@ -100,9 +100,9 @@ export declare class DashboardController {
             })[];
             pendingPaymentsList: {
                 id: number;
-                pendingAmount: number;
                 name: string;
                 expiryDate: Date;
+                pendingAmount: number;
             }[];
         };
     }>;

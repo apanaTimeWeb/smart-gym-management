@@ -7,16 +7,16 @@ export declare class InquiriesController {
         data: {
             inquiries: {
                 id: number;
+                email: string | null;
                 name: string;
                 phone: string;
-                email: string | null;
-                interest: string;
-                status: import("@prisma/client").$Enums.InquiryStatus;
-                source: string | null;
-                notes: string | null;
-                followUpDate: Date | null;
                 createdAt: Date;
                 updatedAt: Date;
+                status: import("@prisma/client").$Enums.InquiryStatus;
+                notes: string | null;
+                interest: string;
+                source: string | null;
+                followUpDate: Date | null;
             }[];
             total: number;
         };
@@ -25,16 +25,16 @@ export declare class InquiriesController {
         success: boolean;
         data: {
             id: number;
+            email: string | null;
             name: string;
             phone: string;
-            email: string | null;
-            interest: string;
-            status: import("@prisma/client").$Enums.InquiryStatus;
-            source: string | null;
-            notes: string | null;
-            followUpDate: Date | null;
             createdAt: Date;
             updatedAt: Date;
+            status: import("@prisma/client").$Enums.InquiryStatus;
+            notes: string | null;
+            interest: string;
+            source: string | null;
+            followUpDate: Date | null;
         };
     }>;
     getStats(): Promise<{
@@ -51,48 +51,48 @@ export declare class InquiriesController {
         success: boolean;
         data: {
             id: number;
+            email: string | null;
             name: string;
             phone: string;
-            email: string | null;
-            interest: string;
-            status: import("@prisma/client").$Enums.InquiryStatus;
-            source: string | null;
-            notes: string | null;
-            followUpDate: Date | null;
             createdAt: Date;
             updatedAt: Date;
+            status: import("@prisma/client").$Enums.InquiryStatus;
+            notes: string | null;
+            interest: string;
+            source: string | null;
+            followUpDate: Date | null;
         } | null;
     }>;
     update(id: string, dto: any): Promise<{
         success: boolean;
         data: {
             id: number;
+            email: string | null;
             name: string;
             phone: string;
-            email: string | null;
-            interest: string;
-            status: import("@prisma/client").$Enums.InquiryStatus;
-            source: string | null;
-            notes: string | null;
-            followUpDate: Date | null;
             createdAt: Date;
             updatedAt: Date;
+            status: import("@prisma/client").$Enums.InquiryStatus;
+            notes: string | null;
+            interest: string;
+            source: string | null;
+            followUpDate: Date | null;
         };
     }>;
     remove(id: string): Promise<{
         success: boolean;
         data: {
             id: number;
+            email: string | null;
             name: string;
             phone: string;
-            email: string | null;
-            interest: string;
-            status: import("@prisma/client").$Enums.InquiryStatus;
-            source: string | null;
-            notes: string | null;
-            followUpDate: Date | null;
             createdAt: Date;
             updatedAt: Date;
+            status: import("@prisma/client").$Enums.InquiryStatus;
+            notes: string | null;
+            interest: string;
+            source: string | null;
+            followUpDate: Date | null;
         };
     }>;
 }

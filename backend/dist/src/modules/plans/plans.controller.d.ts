@@ -5,81 +5,81 @@ export declare class PlansController {
     create(dto: any): Promise<{
         success: boolean;
         data: {
+            id: number;
             name: string;
+            isActive: boolean;
+            createdAt: Date;
+            updatedAt: Date;
             tier: import("@prisma/client").$Enums.PlanTier;
             price1Month: number;
             price3Month: number;
             price6Month: number;
             price12Month: number;
             features: string[];
-            isActive: boolean;
-            createdAt: Date;
-            updatedAt: Date;
-            id: number;
         };
     }>;
     findAll(): Promise<{
         success: boolean;
         data: {
+            id: number;
             name: string;
+            isActive: boolean;
+            createdAt: Date;
+            updatedAt: Date;
             tier: import("@prisma/client").$Enums.PlanTier;
             price1Month: number;
             price3Month: number;
             price6Month: number;
             price12Month: number;
             features: string[];
-            isActive: boolean;
-            createdAt: Date;
-            updatedAt: Date;
-            id: number;
         }[];
     }>;
     findOne(id: string): Promise<{
         success: boolean;
         data: {
+            id: number;
             name: string;
+            isActive: boolean;
+            createdAt: Date;
+            updatedAt: Date;
             tier: import("@prisma/client").$Enums.PlanTier;
             price1Month: number;
             price3Month: number;
             price6Month: number;
             price12Month: number;
             features: string[];
-            isActive: boolean;
-            createdAt: Date;
-            updatedAt: Date;
-            id: number;
         } | null;
     }>;
     update(id: string, dto: any): Promise<{
         success: boolean;
         data: {
+            id: number;
             name: string;
+            isActive: boolean;
+            createdAt: Date;
+            updatedAt: Date;
             tier: import("@prisma/client").$Enums.PlanTier;
             price1Month: number;
             price3Month: number;
             price6Month: number;
             price12Month: number;
             features: string[];
-            isActive: boolean;
-            createdAt: Date;
-            updatedAt: Date;
-            id: number;
         };
     }>;
     remove(id: string): Promise<{
         success: boolean;
         data: {
+            id: number;
             name: string;
+            isActive: boolean;
+            createdAt: Date;
+            updatedAt: Date;
             tier: import("@prisma/client").$Enums.PlanTier;
             price1Month: number;
             price3Month: number;
             price6Month: number;
             price12Month: number;
             features: string[];
-            isActive: boolean;
-            createdAt: Date;
-            updatedAt: Date;
-            id: number;
         };
     }>;
 }
