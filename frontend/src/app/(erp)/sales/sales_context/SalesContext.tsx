@@ -1,25 +1,15 @@
 "use client";
 
-import React, { createContext, useContext, useState, useMemo } from 'react';
-import { type SalesTab, type DateFilter } from '../sales_utils/SalesSharedConstants';
-
-interface SalesContextType {
-  tab: SalesTab;
-  setTab: (t: SalesTab) => void;
-  dateFilter: DateFilter;
-  setDateFilter: (d: DateFilter) => void;
-}
+import React, { createContext, useContext, useMemo } from 'react';
+import { SalesContextType } from '../sales_types/sales_types';
+import { useSalesLogic } from './useSalesLogic';
 
 const SalesContext = createContext<SalesContextType | undefined>(undefined);
 
 export function SalesProvider({ children }: { children: React.ReactNode }) {
-  const [tab, setTab] = useState<SalesTab>('Overview');
-  const [dateFilter, setDateFilter] = useState<DateFilter>('This Month');
+  const logic = useSalesLogic();
 
-  const value = useMemo(() => ({
-    tab, setTab,
-    dateFilter, setDateFilter
-  }), [tab, dateFilter]);
+  const value = useMemo(() => logic, [logic]);
 
   return (
     <SalesContext.Provider value={value}>
