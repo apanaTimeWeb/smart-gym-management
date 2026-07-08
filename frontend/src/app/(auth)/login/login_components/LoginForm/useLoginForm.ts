@@ -5,7 +5,7 @@ import { UseLoginFormReturn } from '../../login_types/login_types';
 
 export function useLoginForm(): UseLoginFormReturn {
  const [email, setEmail] = useState('admin@gymsmart.com');
- const [password, setPassword] = useState('admin123');
+ const [password, setPassword] = useState('superadmin123');
  const [error, setError] = useState('');
  const [loading, setLoading] = useState(false);
  const [showPassword, setShowPassword] = useState(false);
