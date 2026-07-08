@@ -4,7 +4,7 @@ import { useState } from 'react';
 import ErpSidebar from './ErpSidebar';
 
 export default function ErpLayout({ children }: { children: React.ReactNode }) {
- const [isCollapsed, setIsCollapsed] = useState(true);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
  return (
  <div className="flex h-screen overflow-hidden bg-[var(--bg-page)] text-[var(--text-primary)]">
