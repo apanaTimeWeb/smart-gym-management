@@ -36,8 +36,8 @@ export declare class FinanceController {
                     };
                 } & {
                     id: number;
-                    email: string;
                     name: string;
+                    email: string;
                     phone: string;
                     branch: string;
                     createdAt: Date;

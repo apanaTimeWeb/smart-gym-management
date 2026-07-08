@@ -20,8 +20,8 @@ export declare class MembersController {
             };
         } & {
             id: number;
-            email: string;
             name: string;
+            email: string;
             phone: string;
             branch: string;
             createdAt: Date;
@@ -66,8 +66,8 @@ export declare class MembersController {
                 };
             } & {
                 id: number;
-                email: string;
                 name: string;
+                email: string;
                 phone: string;
                 branch: string;
                 createdAt: Date;
@@ -117,8 +117,8 @@ export declare class MembersController {
             }[];
         } & {
             id: number;
-            email: string;
             name: string;
+            email: string;
             phone: string;
             branch: string;
             createdAt: Date;
@@ -153,8 +153,8 @@ export declare class MembersController {
             };
         } & {
             id: number;
-            email: string;
             name: string;
+            email: string;
             phone: string;
             branch: string;
             createdAt: Date;
@@ -175,8 +175,8 @@ export declare class MembersController {
         success: boolean;
         data: {
             id: number;
-            email: string;
             name: string;
+            email: string;
             phone: string;
             branch: string;
             createdAt: Date;
@@ -197,8 +197,8 @@ export declare class MembersController {
         success: boolean;
         data: {
             id: number;
-            email: string;
             name: string;
+            email: string;
             phone: string;
             branch: string;
             createdAt: Date;
