@@ -1,0 +1,27 @@
+/* dashboard.css - Theme Variables for Dashboard Module */
+
+.dashboard-module {
+  /* Status Colors */
+  --dashboard-status-active-text: var(--success);
+  --dashboard-status-active-bg: var(--success-bg);
+  
+  --dashboard-status-pending-text: var(--warning);
+  --dashboard-status-pending-bg: var(--warning-bg);
+
+  --dashboard-status-expired-text: var(--danger);
+  --dashboard-status-expired-bg: var(--danger-bg);
+  
+  --dashboard-status-default-text: var(--text-secondary);
+  --dashboard-status-default-bg: #1E1E2E;
+
+  /* Plan Colors */
+  --dashboard-plan-basic-bg: var(--info);
+  --dashboard-plan-gold-bg: var(--warning);
+  --dashboard-plan-premium-bg: var(--primary);
+  --dashboard-plan-default-bg: var(--text-secondary);
+
+  /* Promo Card Theme */
+  --dashboard-promo-gradient-start: hsl(24 95% 53%);
+  --dashboard-promo-gradient-end: hsl(20 95% 45%);
+  --dashboard-promo-text-highlight: #ffedd5; /* orange-100 equivalent */
+}
