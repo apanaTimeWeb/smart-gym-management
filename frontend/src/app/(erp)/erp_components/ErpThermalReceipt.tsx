@@ -1,6 +1,6 @@
 import React from 'react';
 
-export interface ReceiptData {
+export interface ErpErpErpReceiptData {
   gymName: string;
   gymPhone: string;
   receiptNo: string;
@@ -11,7 +11,7 @@ export interface ReceiptData {
   paymentMethod: string;
 }
 
-export default function ThermalReceipt({ data }: { data: ReceiptData | null }) {
+export default function ErpThermalReceipt({ data }: { data: ErpErpErpReceiptData | null }) {
   if (!data) return null;
 
   return (

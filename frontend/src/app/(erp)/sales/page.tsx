@@ -1,6 +1,6 @@
 "use client";
 
-import Header from '@/components/Header';
+import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
 import { SalesProvider, useSalesContext } from './sales_context/SalesContext';
 import SalesToolbar from './sales_components/SalesToolbar/SalesToolbar';
 import SalesTabs from './sales_components/SalesTabs/SalesTabs';
@@ -16,7 +16,7 @@ function SalesContent() {
 
   return (
     <div className="min-h-full pb-10 sales-module bg-[var(--bg-page)] text-[var(--sales-text-primary)]">
-      <Header title="Sales & Reports" subtitle="Monitor membership revenue, track payments and analyze performance" />
+      <ErpHeader title="Sales & Reports" subtitle="Monitor membership revenue, track payments and analyze performance" />
       <div className="p-6 space-y-5">
         <SalesToolbar />
 

@@ -1,8 +1,8 @@
 "use client";
 
-import Header from '@/components/Header';
-import Toast from '@/components/Toast';
-import MessageModal from '@/components/MessageModal';
+import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
+import ErpToast, { ToastType } from '@/app/(erp)/erp_components/ErpToast';
+import ErpMessageModal, { ErpErpErpMessageRecipient, MessageType } from '@/app/(erp)/erp_components/ErpMessageModal';
 import { InquiriesProvider, useInquiriesContext } from './inquiries_context/InquiriesContext';
 import InquiriesKPIs from './inquiries_components/InquiriesKPIs/InquiriesKPIs';
 import InquiriesToolbar from './inquiries_components/InquiriesToolbar/InquiriesToolbar';
@@ -15,7 +15,7 @@ function InquiriesContent() {
 
   return (
     <div className="min-h-full pb-10 inquiries-module">
-      <Header title="Inquiries & Leads" subtitle="Track, follow up, and convert leads into members" />
+      <ErpHeader title="Inquiries & Leads" subtitle="Track, follow up, and convert leads into members" />
       <div className="p-6 space-y-5">
         <InquiriesKPIs />
         <InquiriesToolbar />
@@ -25,7 +25,7 @@ function InquiriesContent() {
       <InquiryModal />
       
       {msgModal?.open && (
-        <MessageModal 
+        <ErpMessageModal 
           open={msgModal.open}
           type={msgModal.type}
           recipient={msgModal.recipient}
@@ -36,7 +36,7 @@ function InquiriesContent() {
       )}
       
       {toast && (
-        <Toast message={toast.message} type={toast.type} onClose={hideToast} />
+        <ErpToast message={toast.message} type={toast.type} onClose={hideToast} />
       )}
     </div>
   );

@@ -2,8 +2,8 @@
 
 import React, { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react';
 import { storeApi, type Product, type Order, type StoreSummary } from '@/lib/api';
-import type { ToastType } from '@/components/Toast';
-import type { ReceiptData } from '@/components/ThermalReceipt';
+import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
+import type { ErpReceiptData } from '@/app/(erp)/erp_components/ErpThermalReceipt';
 import { EMPTY_PRODUCT_FORM } from '../store_utils/StoreSharedConstants';
 
 interface OrderItem {
@@ -24,7 +24,7 @@ interface StoreContextType {
   saving: boolean;
   
   toast: { message: string; type: ToastType } | null;
-  printData: ReceiptData | null;
+  printData: ErpReceiptData | null;
   
   showProductModal: boolean;
   setShowProductModal: (show: boolean) => void;
@@ -39,7 +39,7 @@ interface StoreContextType {
   setOrderMethod: (method: string) => void;
   
   hideToast: () => void;
-  setPrintData: (data: ReceiptData | null) => void;
+  setPrintData: (data: ErpReceiptData | null) => void;
   
   loadAll: () => Promise<void>;
   openAddProduct: () => void;
@@ -64,7 +64,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [saving, setSaving] = useState(false);
   
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
-  const [printData, setPrintData] = useState<ReceiptData | null>(null);
+  const [printData, setPrintData] = useState<ErpReceiptData | null>(null);
 
   const [showProductModal, setShowProductModal] = useState(false);
   const [editProductId, setEditProductId] = useState<number | null>(null);

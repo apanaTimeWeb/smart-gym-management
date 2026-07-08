@@ -1,6 +1,6 @@
 "use client";
 
-import Header from '@/components/Header';
+import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
 import { WorkoutProvider, useWorkoutContext } from './workout_context/WorkoutContext';
 import WorkoutBanner from './workout_components/WorkoutBanner/WorkoutBanner';
 import WorkoutToolbar from './workout_components/WorkoutToolbar/WorkoutToolbar';
@@ -16,7 +16,7 @@ function WorkoutContent() {
 
   return (
     <div className="min-h-full pb-10 workout-module bg-[var(--bg-page)] text-[var(--workout-text-primary)]">
-      <Header title="Workout Library" subtitle="Comprehensive exercise and workout plan database" />
+      <ErpHeader title="Workout Library" subtitle="Comprehensive exercise and workout plan database" />
       
       <div className="p-6 space-y-5">
         <WorkoutBanner />

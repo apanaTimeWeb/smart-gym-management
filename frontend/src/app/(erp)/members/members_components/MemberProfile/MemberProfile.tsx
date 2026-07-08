@@ -1,7 +1,7 @@
 "use client";
 
 import { Edit, MessageCircle, Mail } from 'lucide-react';
-import Header from '@/components/Header';
+import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
 import { useMembersContext } from '../../members_context/MembersContext';
 import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS, formatCurrency } from '../../members_utils/MembersSharedConstants';
 import ProfileOverview from './ProfileOverview';
@@ -15,7 +15,7 @@ export default function MemberProfile() {
 
   return (
     <div className="min-h-full">
-      <Header title="Member Profile" subtitle={`Viewing profile of ${selectedMember.name}`} />
+      <ErpHeader title="Member Profile" subtitle={`Viewing profile of ${selectedMember.name}`} />
       <div className="p-6 space-y-5">
         <button 
           onClick={() => setSelectedMember(null)} 

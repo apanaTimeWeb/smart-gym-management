@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react';
 import { workoutApi, type Exercise, type DietPlan } from '@/lib/api';
-import type { ToastType } from '@/components/Toast';
+import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
 import { EMPTY_EXERCISE_FORM, EMPTY_DIET_FORM, type LibraryTab } from '../library_utils/LibrarySharedConstants';
 
 interface LibraryContextType {

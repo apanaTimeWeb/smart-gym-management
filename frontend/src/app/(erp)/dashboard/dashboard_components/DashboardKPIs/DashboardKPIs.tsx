@@ -1,7 +1,7 @@
 "use client";
 
 import { useDashboardContext } from '../dashboard_context/DashboardContext';
-import StatCard from '@/components/StatCard';
+import ErpStatCard from '@/app/(erp)/erp_components/ErpStatCard';
 import { Users, DollarSign, TrendingUp, AlertCircle, CheckCircle, Clock, UserCheck, ShoppingCart } from 'lucide-react';
 
 const fmt = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');
@@ -14,7 +14,7 @@ export default function DashboardKPIs() {
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        <StatCard 
+        <ErpStatCard 
           title="Total Members" 
           value={s.totalMembers.toLocaleString()} 
           change="All time" 
@@ -23,7 +23,7 @@ export default function DashboardKPIs() {
           iconBg="dashboard-icon-info-bg" 
           iconColor="dashboard-icon-info-text" 
         />
-        <StatCard 
+        <ErpStatCard 
           title="Monthly Revenue" 
           value={fmt(s.monthlyRevenue)} 
           change="This month" 
@@ -32,7 +32,7 @@ export default function DashboardKPIs() {
           iconBg="dashboard-icon-success-bg" 
           iconColor="dashboard-icon-success-text" 
         />
-        <StatCard 
+        <ErpStatCard 
           title="Active Members" 
           value={s.activeMembers.toLocaleString()} 
           change={`${s.totalMembers ? Math.round((s.activeMembers / s.totalMembers) * 100) : 0}% of total`} 
@@ -41,7 +41,7 @@ export default function DashboardKPIs() {
           iconBg="dashboard-icon-warning-bg" 
           iconColor="dashboard-icon-warning-text" 
         />
-        <StatCard 
+        <ErpStatCard 
           title="Pending Payments" 
           value={fmt(s.pendingPayments)} 
           change={`${s.membersByStatus?.pending || 0} members`} 
@@ -53,7 +53,7 @@ export default function DashboardKPIs() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mt-6">
-        <StatCard 
+        <ErpStatCard 
           title="New Members (Month)" 
           value={s.newMembersThisMonth.toLocaleString()} 
           change="This month" 
@@ -62,7 +62,7 @@ export default function DashboardKPIs() {
           iconBg="dashboard-icon-purple-bg" 
           iconColor="dashboard-icon-purple-text" 
         />
-        <StatCard 
+        <ErpStatCard 
           title="Total Staff" 
           value={s.activeStaff.toLocaleString()} 
           change="Active staff" 
@@ -71,7 +71,7 @@ export default function DashboardKPIs() {
           iconBg="dashboard-icon-warning-bg" 
           iconColor="dashboard-icon-warning-text" 
         />
-        <StatCard 
+        <ErpStatCard 
           title="Store Products" 
           value={s.totalProducts.toLocaleString()} 
           change={s.lowStockCount > 0 ? `${s.lowStockCount} low stock` : 'All stocked'} 
@@ -80,7 +80,7 @@ export default function DashboardKPIs() {
           iconBg="dashboard-icon-info-bg" 
           iconColor="dashboard-icon-info-text" 
         />
-        <StatCard 
+        <ErpStatCard 
           title="New Inquiries" 
           value={s.newInquiries.toLocaleString()} 
           change={`${s.totalInquiries} total`} 

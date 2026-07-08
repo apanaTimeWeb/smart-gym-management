@@ -1,7 +1,7 @@
 "use client";
 
-import Header from '@/components/Header';
-import Toast from '@/components/Toast';
+import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
+import ErpToast, { ToastType } from '@/app/(erp)/erp_components/ErpToast';
 import { FinanceProvider, useFinanceContext } from './finance_context/FinanceContext';
 import FinanceKPIs from './finance_components/FinanceKPIs/FinanceKPIs';
 import RevenueByMethod from './finance_components/RevenueByMethod/RevenueByMethod';
@@ -14,7 +14,7 @@ function FinanceContent() {
 
   return (
     <div className="min-h-full pb-10 finance-module">
-      <Header title="Finance" subtitle="Track revenue, payments and financial overview" />
+      <ErpHeader title="Finance" subtitle="Track revenue, payments and financial overview" />
       <div className="p-6 space-y-5">
         <FinanceKPIs />
         <RevenueByMethod />
@@ -24,7 +24,7 @@ function FinanceContent() {
       <AddPaymentModal />
       
       {toast && (
-        <Toast message={toast.message} type={toast.type} onClose={hideToast} />
+        <ErpToast message={toast.message} type={toast.type} onClose={hideToast} />
       )}
     </div>
   );

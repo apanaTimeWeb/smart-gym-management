@@ -1,7 +1,7 @@
 "use client";
 
-import Header from '@/components/Header';
-import Toast from '@/components/Toast';
+import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
+import ErpToast, { ToastType } from '@/app/(erp)/erp_components/ErpToast';
 
 import { AttendanceProvider, useAttendanceContext } from './attendance_context/AttendanceContext';
 import AttendanceKPIs from './attendance_components/AttendanceKPIs/AttendanceKPIs';
@@ -16,7 +16,7 @@ function AttendanceContent() {
 
   return (
     <div className="min-h-full pb-10 attendance-module bg-[var(--bg-page)] text-[var(--attendance-text-primary)]">
-      <Header title="Attendance" subtitle="Track daily member and staff check-ins" />
+      <ErpHeader title="Attendance" subtitle="Track daily member and staff check-ins" />
       <div className="p-6 space-y-5">
         <AttendanceKPIs />
         
@@ -29,7 +29,7 @@ function AttendanceContent() {
       <AttendanceModal />
 
       {toast && (
-        <Toast message={toast.message} type={toast.type} onClose={hideToast} />
+        <ErpToast message={toast.message} type={toast.type} onClose={hideToast} />
       )}
     </div>
   );

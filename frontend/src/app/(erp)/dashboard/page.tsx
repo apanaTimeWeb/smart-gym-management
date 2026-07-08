@@ -1,6 +1,6 @@
 "use client";
 
-import Header from '@/components/Header';
+import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
 import { DashboardProvider, useDashboardContext } from './dashboard_context/DashboardContext';
 import DashboardKPIs from './dashboard_components/DashboardKPIs/DashboardKPIs';
 import RecentMembers from './dashboard_components/RecentMembers/RecentMembers';
@@ -32,7 +32,7 @@ function DashboardContent() {
 
   return (
     <>
-      <Header title="Dashboard" subtitle="Welcome back, Admin! Here's your gym overview." />
+      <ErpHeader title="Dashboard" subtitle="Welcome back, Admin! Here's your gym overview." />
       <div className="p-6 space-y-6">
         <DashboardKPIs />
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">

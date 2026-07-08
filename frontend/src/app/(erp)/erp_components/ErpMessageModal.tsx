@@ -1,33 +1,32 @@
 'use client';
 
 import { useState } from 'react';
-import { X, Send, MessageCircle, Mail, CheckCircle, User, Phone, AtSign } from 'lucide-react';
+import { X, Send, MessageCircle, Mail, CheckCircle, Phone, AtSign } from 'lucide-react';
 
 export type MessageType = 'whatsapp' | 'email';
 
-export interface MessageRecipient {
+export interface ErpErpErpMessageRecipient {
   name: string;
   phone?: string;
   email?: string;
 }
 
-interface MessageModalProps {
+interface ErpMessageModalProps {
   isOpen?: boolean;
   open?: boolean;
   onClose: () => void;
-  recipient: MessageRecipient;
+  recipient: ErpErpErpMessageRecipient;
   type: MessageType;
   defaultMessage?: string;
   message?: string;
-  subject?: string; // for email
+  subject?: string;
   onSuccess?: (msg: string) => void;
 }
 
 const WA_GREEN = '#25D366';
-const EMAIL_BLUE = 'hsl(217 91% 60%)';
-const GYM_ORANGE = 'hsl(24 95% 53%)';
+const EMAIL_BLUE = 'var(--info)';
 
-export default function MessageModal({
+export default function ErpMessageModal({
   isOpen,
   open,
   onClose,
@@ -37,7 +36,7 @@ export default function MessageModal({
   message: propMessage,
   subject: defaultSubject = 'Message from GymSmart',
   onSuccess,
-}: MessageModalProps) {
+}: ErpMessageModalProps) {
   const [message, setMessage] = useState(defaultMessage || propMessage || '');
   const [subject, setSubject] = useState(defaultSubject);
   const [sending, setSending] = useState(false);
@@ -53,9 +52,8 @@ export default function MessageModal({
   const handleSend = async () => {
     setSending(true);
     
-    // Actually trigger WhatsApp or Email
     if (type === 'whatsapp') {
-      const phone = contactInfo?.replace(/\D/g, '') || ''; // strip non-digits (e.g. +91 98765 -> 9198765)
+      const phone = contactInfo?.replace(/\D/g, '') || '';
       const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
       window.open(url, '_blank');
     } else {
@@ -82,15 +80,14 @@ export default function MessageModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.55)' }}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
       <div
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-lg relative overflow-hidden"
+        className="bg-[var(--bg-card)] rounded-2xl shadow-2xl w-full max-w-lg relative overflow-hidden border border-[var(--border)]"
         style={{ animation: 'fadeScaleIn 0.2s ease' }}
       >
-        {/* Header */}
         <div
           className="px-6 py-4 flex items-center justify-between"
-          style={{ background: accentColor }}
+          style={{ background: type === 'whatsapp' ? WA_GREEN : 'var(--info)' }}
         >
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center">
@@ -110,39 +107,31 @@ export default function MessageModal({
           </button>
         </div>
 
-        {/* Recipient Info */}
         <div className="px-6 pt-4 pb-2">
-          <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100">
+          <div className="flex items-center gap-3 p-3 bg-[var(--bg-input)] rounded-xl border border-[var(--border)]">
             <div
               className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
-              style={{ background: GYM_ORANGE }}
+              style={{ background: 'var(--primary)' }}
             >
               {recipient.name.charAt(0)}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-gray-900 truncate">{recipient.name}</p>
+              <p className="text-sm font-semibold text-[var(--text-primary)] truncate">{recipient.name}</p>
               <div className="flex items-center gap-1 mt-0.5">
                 {type === 'whatsapp' ? (
-                  <Phone size={11} className="text-gray-400 flex-shrink-0" />
+                  <Phone size={11} className="text-[var(--text-secondary)] flex-shrink-0" />
                 ) : (
-                  <AtSign size={11} className="text-gray-400 flex-shrink-0" />
+                  <AtSign size={11} className="text-[var(--text-secondary)] flex-shrink-0" />
                 )}
-                <p className="text-xs text-gray-500 truncate">{contactInfo || 'N/A'}</p>
+                <p className="text-xs text-[var(--text-secondary)] truncate">{contactInfo || 'N/A'}</p>
               </div>
             </div>
-            <span
-              className="text-xs font-medium px-2.5 py-1 rounded-full flex-shrink-0"
-              style={{ background: type === 'whatsapp' ? '#dcfce7' : '#dbeafe', color: accentColor }}
-            >
-              {label}
-            </span>
           </div>
         </div>
 
-        {/* Subject (Email only) */}
         {type === 'email' && (
           <div className="px-6 pt-2">
-            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">
               Subject
             </label>
             <input
@@ -150,16 +139,14 @@ export default function MessageModal({
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
               disabled={sending || sent}
-              className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 disabled:opacity-60 disabled:bg-gray-50"
-              style={{ focusRingColor: EMAIL_BLUE } as any}
+              className="w-full px-3 py-2.5 text-sm bg-[var(--bg-input)] border border-[var(--border)] rounded-lg focus:outline-none focus:border-[var(--border-focus)] text-[var(--text-primary)] disabled:opacity-60"
               placeholder="Email subject..."
             />
           </div>
         )}
 
-        {/* Message Textarea */}
         <div className="px-6 pt-3 pb-2">
-          <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
+          <label className="block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">
             Message
           </label>
           <textarea
@@ -167,18 +154,17 @@ export default function MessageModal({
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             disabled={sending || sent}
-            className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 resize-none disabled:opacity-60 disabled:bg-gray-50"
+            className="w-full px-3 py-2.5 text-sm bg-[var(--bg-input)] border border-[var(--border)] rounded-xl focus:outline-none focus:border-[var(--border-focus)] text-[var(--text-primary)] resize-none disabled:opacity-60"
             placeholder="Type your message..."
           />
-          <p className="text-right text-xs text-gray-400 mt-1">{message.length} chars</p>
+          <p className="text-right text-xs text-[var(--text-secondary)] mt-1">{message.length} chars</p>
         </div>
 
-        {/* Footer Buttons */}
         <div className="px-6 pb-5 flex gap-3">
           <button
             onClick={handleClose}
             disabled={sending}
-            className="flex-1 px-4 py-2.5 text-sm border border-gray-200 rounded-xl hover:bg-gray-50 text-gray-700 font-medium transition-colors disabled:opacity-50"
+            className="flex-1 px-4 py-2.5 text-sm border border-[var(--border)] rounded-xl hover:bg-[var(--bg-input)] text-[var(--text-primary)] font-medium transition-colors disabled:opacity-50"
           >
             Cancel
           </button>
@@ -186,7 +172,7 @@ export default function MessageModal({
             onClick={handleSend}
             disabled={sending || sent || !message.trim()}
             className="flex-1 px-4 py-2.5 text-sm font-semibold text-white rounded-xl flex items-center justify-center gap-2 transition-all disabled:opacity-50"
-            style={{ background: sent ? '#16a34a' : accentColor }}
+            style={{ background: sent ? 'var(--success)' : (type === 'whatsapp' ? WA_GREEN : 'var(--info)') }}
           >
             {sent ? (
               <>

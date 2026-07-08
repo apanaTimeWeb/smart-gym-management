@@ -1,9 +1,9 @@
 "use client";
 
-import Header from '@/components/Header';
-import MessageModal from '@/components/MessageModal';
-import Toast from '@/components/Toast';
-import ThermalReceipt from '@/components/ThermalReceipt';
+import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
+import ErpMessageModal, { ErpErpErpMessageRecipient, MessageType } from '@/app/(erp)/erp_components/ErpMessageModal';
+import ErpToast, { ToastType } from '@/app/(erp)/erp_components/ErpToast';
+import ErpThermalReceipt, { ErpErpErpReceiptData } from '@/app/(erp)/erp_components/ErpThermalReceipt';
 
 import { MembersProvider, useMembersContext } from './members_context/MembersContext';
 import MembersKPIs from './members_components/MembersKPIs/MembersKPIs';
@@ -28,7 +28,7 @@ function MembersContent() {
         <MemberProfile />
       ) : (
         <>
-          <Header title="Members" subtitle="Manage all gym members, memberships and payments" />
+          <ErpHeader title="Members" subtitle="Manage all gym members, memberships and payments" />
           <div className="p-6 space-y-5">
             <MembersKPIs />
             <MembersToolbar />
@@ -41,7 +41,7 @@ function MembersContent() {
       <MemberModal />
       
       {msgModal?.open && (
-        <MessageModal 
+        <ErpMessageModal 
           open={msgModal.open}
           type={msgModal.type}
           recipient={msgModal.recipient}
@@ -53,11 +53,11 @@ function MembersContent() {
       )}
       
       {toast && (
-        <Toast message={toast.message} type={toast.type} onClose={hideToast} />
+        <ErpToast message={toast.message} type={toast.type} onClose={hideToast} />
       )}
       
       {printData && (
-        <ThermalReceipt data={printData} />
+        <ErpThermalReceipt data={printData} />
       )}
     </div>
   );

@@ -2,9 +2,9 @@
 
 import React, { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react';
 import { membersApi, plansApi, financeApi, type Member, type Plan, type Payment } from '@/lib/api';
-import type { ToastType } from '@/components/Toast';
-import type { MessageType, MessageRecipient } from '@/components/MessageModal';
-import type { ReceiptData } from '@/components/ThermalReceipt';
+import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
+import type { MessageType, ErpMessageRecipient } from '@/app/(erp)/erp_components/ErpMessageModal';
+import type { ErpReceiptData } from '@/app/(erp)/erp_components/ErpThermalReceipt';
 import { EMPTY_MEMBER_FORM, formatCurrency } from '../members_utils/MembersSharedConstants';
 
 interface MembersContextType {
@@ -52,14 +52,14 @@ interface MembersContextType {
   deleteMember: (id: number) => Promise<void>;
   
   // Message Modal
-  msgModal: { open: boolean; recipient: MessageRecipient; type: MessageType; message: string; subject?: string } | null;
+  msgModal: { open: boolean; recipient: ErpMessageRecipient; type: MessageType; message: string; subject?: string } | null;
   openMsg: (m: Member, type: MessageType) => void;
   closeMsg: () => void;
   
   // Receipt Printing
-  printData: ReceiptData | null;
+  printData: ErpReceiptData | null;
   handlePrint: (p: Payment) => void;
-  setPrintData: (data: ReceiptData | null) => void;
+  setPrintData: (data: ErpReceiptData | null) => void;
 }
 
 const MembersContext = createContext<MembersContextType | undefined>(undefined);
@@ -82,9 +82,9 @@ export function MembersProvider({ children }: { children: React.ReactNode }) {
 
   const [form, setForm] = useState(EMPTY_MEMBER_FORM);
 
-  const [msgModal, setMsgModal] = useState<{ open: boolean; recipient: MessageRecipient; type: MessageType; message: string; subject?: string } | null>(null);
+  const [msgModal, setMsgModal] = useState<{ open: boolean; recipient: ErpMessageRecipient; type: MessageType; message: string; subject?: string } | null>(null);
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
-  const [printData, setPrintData] = useState<ReceiptData | null>(null);
+  const [printData, setPrintData] = useState<ErpReceiptData | null>(null);
 
   const [attMap, setAttMap] = useState<Record<number, { day: number; status: string }[]>>({});
 

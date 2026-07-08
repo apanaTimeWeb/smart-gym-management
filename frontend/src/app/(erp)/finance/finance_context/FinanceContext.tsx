@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react';
 import { financeApi, type Payment, type FinanceSummary } from '@/lib/api';
-import type { ToastType } from '@/components/Toast';
+import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
 
 interface FinanceContextType {
   payments: Payment[];

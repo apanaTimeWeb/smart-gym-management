@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react';
 import { plansApi, type Plan } from '@/lib/api';
-import type { ToastType } from '@/components/Toast';
+import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
 import { EMPTY_PLAN_FORM } from '../plans_utils/PlansSharedConstants';
 
 interface PlansContextType {

@@ -2,8 +2,8 @@
 
 import React, { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react';
 import { inquiriesApi, type Inquiry, type InquiryStats } from '@/lib/api';
-import type { ToastType } from '@/components/Toast';
-import type { MessageType, MessageRecipient } from '@/components/MessageModal';
+import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
+import type { MessageType, ErpMessageRecipient } from '@/app/(erp)/erp_components/ErpMessageModal';
 import { EMPTY_INQUIRY_FORM, generateDefaultMessage } from '../inquiries_utils/InquiriesSharedConstants';
 
 interface InquiriesContextType {
@@ -20,6 +20,8 @@ interface InquiriesContextType {
   setSearch: (s: string) => void;
   statusFilter: string;
   setStatusFilter: (s: string) => void;
+  dateFilter: string;
+  setDateFilter: (s: string) => void;
   
   // Modal State
   showModal: boolean;
@@ -37,7 +39,7 @@ interface InquiriesContextType {
   updateStatus: (id: number, status: string) => Promise<void>;
   
   // Message Modal State
-  msgModal: { open: boolean; recipient: MessageRecipient; type: MessageType; message: string } | null;
+  msgModal: { open: boolean; recipient: ErpMessageRecipient; type: MessageType; message: string; subject?: string } | null;
   openMsg: (inq: Inquiry, type: MessageType) => void;
   closeMsg: () => void;
 }
@@ -52,6 +54,7 @@ export function InquiriesProvider({ children }: { children: React.ReactNode }) {
   
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
+  const [dateFilter, setDateFilter] = useState('all');
   
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
   const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
@@ -62,7 +65,7 @@ export function InquiriesProvider({ children }: { children: React.ReactNode }) {
   const [form, setForm] = useState(EMPTY_INQUIRY_FORM);
   const [saving, setSaving] = useState(false);
   
-  const [msgModal, setMsgModal] = useState<{ open: boolean; recipient: MessageRecipient; type: MessageType; message: string } | null>(null);
+  const [msgModal, setMsgModal] = useState<{ open: boolean; recipient: ErpErpMessageRecipient; type: MessageType; message: string } | null>(null);
   const closeMsg = useCallback(() => setMsgModal(null), []);
 
   const loadAll = useCallback(async () => {

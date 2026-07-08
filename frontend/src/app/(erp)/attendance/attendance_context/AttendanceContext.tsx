@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react';
 import { attendanceApi, membersApi, hrApi, type Attendance, type Member, type Staff } from '@/lib/api';
-import type { ToastType } from '@/components/Toast';
+import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
 import { EMPTY_ATTENDANCE_FORM, type AttendanceTab } from '../attendance_utils/AttendanceSharedConstants';
 
 interface AttendanceContextType {

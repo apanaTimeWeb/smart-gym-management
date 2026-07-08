@@ -1,8 +1,8 @@
 "use client";
 
-import Header from '@/components/Header';
-import Toast from '@/components/Toast';
-import ThermalReceipt from '@/components/ThermalReceipt';
+import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
+import ErpToast, { ToastType } from '@/app/(erp)/erp_components/ErpToast';
+import ErpThermalReceipt, { ErpErpErpReceiptData } from '@/app/(erp)/erp_components/ErpThermalReceipt';
 
 import { StoreProvider, useStoreContext } from './store_context/StoreContext';
 import StoreKPIs from './store_components/StoreKPIs/StoreKPIs';
@@ -19,7 +19,7 @@ function StoreContent() {
 
   return (
     <div className="min-h-full pb-10 store-module bg-[var(--bg-page)] text-[var(--store-text-primary)]">
-      <Header title="Store" subtitle="Manage products, inventory and sales" />
+      <ErpHeader title="Store" subtitle="Manage products, inventory and sales" />
       <div className="p-6 space-y-5">
         
         <StoreKPIs />
@@ -37,11 +37,11 @@ function StoreContent() {
       <PosModal />
 
       {toast && (
-        <Toast message={toast.message} type={toast.type} onClose={hideToast} />
+        <ErpToast message={toast.message} type={toast.type} onClose={hideToast} />
       )}
       
       {printData && (
-        <ThermalReceipt data={printData} />
+        <ErpThermalReceipt data={printData} />
       )}
     </div>
   );

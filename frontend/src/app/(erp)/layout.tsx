@@ -1,5 +1,5 @@
-import Layout from '@/components/Layout';
+import ErpLayout from '@/app/(erp)/erp_components/ErpLayout';
 
 export default function ERPLayout({ children }: { children: React.ReactNode }) {
-  return <Layout>{children}</Layout>;
+  return <ErpLayout>{children}</ErpLayout>;
 }

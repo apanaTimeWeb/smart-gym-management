@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react';
 import { hrApi, type Staff, type Payroll, type HrSummary } from '@/lib/api';
-import type { ToastType } from '@/components/Toast';
+import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
 import { EMPTY_STAFF } from '../hr_utils/HrSharedConstants';
 
 interface HrContextType {

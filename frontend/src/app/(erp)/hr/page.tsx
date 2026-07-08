@@ -1,7 +1,7 @@
 "use client";
 
-import Header from '@/components/Header';
-import Toast from '@/components/Toast';
+import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
+import ErpToast, { ToastType } from '@/app/(erp)/erp_components/ErpToast';
 import { HrProvider, useHrContext } from './hr_context/HrContext';
 import HrKPIs from './hr_components/HrKPIs/HrKPIs';
 import HrTabs from './hr_components/HrTabs/HrTabs';
@@ -13,7 +13,7 @@ function HrContent() {
 
   return (
     <div className="min-h-full pb-10 hr-module">
-      <Header title="HR Management" subtitle="Manage staff, shifts, and payroll" />
+      <ErpHeader title="HR Management" subtitle="Manage staff, shifts, and payroll" />
       <div className="p-6 space-y-5">
         <HrKPIs />
         <HrTabs />
@@ -21,7 +21,7 @@ function HrContent() {
 
       <StaffModal />
       
-      {toast && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
+      {toast && <ErpToast message={toast.message} type={toast.type} onClose={hideToast} />}
     </div>
   );
 }
