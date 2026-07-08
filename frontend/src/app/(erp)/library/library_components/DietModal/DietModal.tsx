@@ -48,7 +48,7 @@ export default function DietModal() {
  {GOALS.map(g => <option key={g}>{g}</option>)}
  </select>
  </div>
- <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  {[
  { label: 'Calories (kcal)', key: 'calories' }, 
  { label: 'Protein (g)', key: 'protein' }, 

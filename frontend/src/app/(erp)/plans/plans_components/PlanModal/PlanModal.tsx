@@ -28,7 +28,7 @@ export default function PlanModal() {
  </button>
  </div>
  <form onSubmit={savePlan} className="p-6 space-y-4">
- <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  <div>
  <label className="block text-sm font-medium text-[var(--plans-text-secondary)] mb-1">Plan Name</label>
  <input 
@@ -51,7 +51,7 @@ export default function PlanModal() {
  </select>
  </div>
  </div>
- <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  {[
  { label: '1 Month Price (₹)', key: 'price1Month' }, 
  { label: '3 Months Price (₹)', key: 'price3Month' }, 

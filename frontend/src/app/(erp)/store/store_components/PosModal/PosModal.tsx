@@ -27,7 +27,7 @@ export default function PosModal() {
  <X size={18} />
  </button>
  </div>
- <div className="p-6 grid grid-cols-2 gap-4">
+          <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
  
  {/* Product Grid */}
  <div>

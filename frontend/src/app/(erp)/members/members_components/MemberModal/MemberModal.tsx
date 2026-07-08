@@ -40,7 +40,7 @@ export default function MemberModal() {
  />
  </div>
  ))}
- <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  <div>
  <label className="block text-sm font-medium text-[var(--members-text-secondary)] mb-1">Gender</label>
  <select 
@@ -64,7 +64,7 @@ export default function MemberModal() {
  </select>
  </div>
  </div>
- <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  <div>
  <label className="block text-sm font-medium text-[var(--members-text-secondary)] mb-1">Plan</label>
  <select 
