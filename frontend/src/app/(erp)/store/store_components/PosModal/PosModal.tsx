@@ -1,8 +1,8 @@
 "use client";
 
 import { X, Printer } from 'lucide-react';
-import { useStoreContext } from '../../store_context/StoreContext';
-import { PAYMENT_METHODS, formatCurrency } from '../../store_utils/StoreSharedConstants';
+import { useStoreContext } from '@/app/(erp)/store/store_context/StoreContext';
+import { PAYMENT_METHODS, formatCurrency } from '@/app/(erp)/store/store_utils/StoreSharedConstants';
 
 export default function PosModal() {
  const { 

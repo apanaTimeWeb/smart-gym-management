@@ -1,10 +1,10 @@
 "use client";
 
 import { Dumbbell, Edit2, Trash2 } from 'lucide-react';
-import { useLibraryContext } from '../../library_context/LibraryContext';
-import { DIFF_COLORS } from '../../library_utils/LibrarySharedConstants';
+import { useLibraryContext } from '@/app/(erp)/library/library_context/LibraryContext';
+import { DIFF_COLORS } from '@/app/(erp)/library/library_utils/LibrarySharedConstants';
 
-import ErpPagination from '../../../erp_components/ErpPagination';
+import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
 
 export default function ExerciseGrid() {
   const { exercises, loading, search, currentPage, setCurrentPage, openEditEx, deleteExercise } = useLibraryContext();

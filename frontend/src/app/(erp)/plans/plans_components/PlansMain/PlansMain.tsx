@@ -3,12 +3,12 @@
 import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
 import ErpToast from '@/app/(erp)/erp_components/ErpToast';
 
-import { PlansProvider, usePlansContext } from '../../plans_context/PlansContext';
-import PlansToolbar from '../PlansToolbar/PlansToolbar';
-import PlansGrid from '../PlansGrid/PlansGrid';
-import PlanModal from '../PlanModal/PlanModal';
+import { PlansProvider, usePlansContext } from '@/app/(erp)/plans/plans_context/PlansContext';
+import PlansToolbar from '@/app/(erp)/plans/plans_components/PlansToolbar/PlansToolbar';
+import PlansGrid from '@/app/(erp)/plans/plans_components/PlansGrid/PlansGrid';
+import PlanModal from '@/app/(erp)/plans/plans_components/PlanModal/PlanModal';
 
-import '../../plans.css';
+import '@/app/(erp)/plans/plans.css';
 
 function PlansContent() {
  const { toast, hideToast } = usePlansContext();

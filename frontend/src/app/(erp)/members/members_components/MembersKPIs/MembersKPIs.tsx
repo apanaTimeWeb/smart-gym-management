@@ -1,7 +1,7 @@
 "use client";
 
 import { User, CheckCircle, Clock, XCircle } from 'lucide-react';
-import { useMembersContext } from '../../members_context/MembersContext';
+import { useMembersContext } from '@/app/(erp)/members/members_context/MembersContext';
 
 export default function MembersKPIs() {
  const { stats } = useMembersContext();

@@ -4,15 +4,15 @@ import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
 import ErpToast from '@/app/(erp)/erp_components/ErpToast';
 import ErpThermalReceipt from '@/app/(erp)/erp_components/ErpThermalReceipt';
 
-import { StoreProvider, useStoreContext } from '../../store_context/StoreContext';
-import StoreKPIs from '../StoreKPIs/StoreKPIs';
-import StoreToolbar from '../StoreToolbar/StoreToolbar';
-import ProductGrid from '../ProductGrid/ProductGrid';
-import OrderTable from '../OrderTable/OrderTable';
-import ProductModal from '../ProductModal/ProductModal';
-import PosModal from '../PosModal/PosModal';
+import { StoreProvider, useStoreContext } from '@/app/(erp)/store/store_context/StoreContext';
+import StoreKPIs from '@/app/(erp)/store/store_components/StoreKPIs/StoreKPIs';
+import StoreToolbar from '@/app/(erp)/store/store_components/StoreToolbar/StoreToolbar';
+import ProductGrid from '@/app/(erp)/store/store_components/ProductGrid/ProductGrid';
+import OrderTable from '@/app/(erp)/store/store_components/OrderTable/OrderTable';
+import ProductModal from '@/app/(erp)/store/store_components/ProductModal/ProductModal';
+import PosModal from '@/app/(erp)/store/store_components/PosModal/PosModal';
 
-import '../../store.css';
+import '@/app/(erp)/store/store.css';
 
 function StoreContent() {
  const { tab, toast, hideToast, printData, setPrintData } = useStoreContext();

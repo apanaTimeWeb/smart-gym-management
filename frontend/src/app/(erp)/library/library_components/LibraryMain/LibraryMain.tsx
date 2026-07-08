@@ -2,11 +2,11 @@
 
 import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
 import ErpToast from '@/app/(erp)/erp_components/ErpToast';
-import { LibraryProvider, useLibraryContext } from '../../library_context/LibraryContext';
-import LibraryTabs from '../LibraryTabs/LibraryTabs';
-import ExerciseModal from '../ExerciseModal/ExerciseModal';
-import DietModal from '../DietModal/DietModal';
-import '../../library.css';
+import { LibraryProvider, useLibraryContext } from '@/app/(erp)/library/library_context/LibraryContext';
+import LibraryTabs from '@/app/(erp)/library/library_components/LibraryTabs/LibraryTabs';
+import ExerciseModal from '@/app/(erp)/library/library_components/ExerciseModal/ExerciseModal';
+import DietModal from '@/app/(erp)/library/library_components/DietModal/DietModal';
+import '@/app/(erp)/library/library.css';
 
 function LibraryContent() {
  const { toast, hideToast } = useLibraryContext();

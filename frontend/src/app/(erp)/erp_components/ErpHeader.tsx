@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Bell, Search, LogOut, Settings, User, X, Menu } from 'lucide-react';
 import Link from 'next/link';
 import { getUser, logout } from '@/lib/api';
-import { ERP_NOTIFICATIONS } from '../erp_utils/ErpSharedConstants';
+import { ERP_NOTIFICATIONS } from '@/app/(erp)/erp_utils/ErpSharedConstants';
 
 import { ThemeToggle } from '@/components/ThemeToggle';
 

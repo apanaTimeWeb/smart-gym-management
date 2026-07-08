@@ -2,7 +2,7 @@ import { type Member, type Plan, type Payment } from '@/lib/api';
 import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
 import type { MessageType, ErpMessageRecipient } from '@/app/(erp)/erp_components/ErpMessageModal';
 import type { ErpReceiptData } from '@/app/(erp)/erp_components/ErpThermalReceipt';
-import { EMPTY_MEMBER_FORM } from '../members_utils/MembersSharedConstants';
+import { EMPTY_MEMBER_FORM } from '@/app/(erp)/members/members_utils/MembersSharedConstants';
 import React from 'react';
 
 export interface MembersContextType {

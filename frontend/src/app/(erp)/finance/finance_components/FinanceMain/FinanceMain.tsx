@@ -2,12 +2,12 @@
 
 import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
 import ErpToast from '@/app/(erp)/erp_components/ErpToast';
-import { FinanceProvider, useFinanceContext } from '../../finance_context/FinanceContext';
-import FinanceKPIs from '../FinanceKPIs/FinanceKPIs';
-import RevenueByMethod from '../RevenueByMethod/RevenueByMethod';
-import FinanceTabs from '../FinanceTabs/FinanceTabs';
-import AddPaymentModal from '../AddPaymentModal/AddPaymentModal';
-import '../../finance.css';
+import { FinanceProvider, useFinanceContext } from '@/app/(erp)/finance/finance_context/FinanceContext';
+import FinanceKPIs from '@/app/(erp)/finance/finance_components/FinanceKPIs/FinanceKPIs';
+import RevenueByMethod from '@/app/(erp)/finance/finance_components/RevenueByMethod/RevenueByMethod';
+import FinanceTabs from '@/app/(erp)/finance/finance_components/FinanceTabs/FinanceTabs';
+import AddPaymentModal from '@/app/(erp)/finance/finance_components/AddPaymentModal/AddPaymentModal';
+import '@/app/(erp)/finance/finance.css';
 
 function FinanceContent() {
  const { toast, hideToast } = useFinanceContext();

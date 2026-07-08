@@ -1,8 +1,8 @@
 "use client";
 
 import { X, Save } from 'lucide-react';
-import { useMembersContext } from '../../members_context/MembersContext';
-import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency, BRANCH_OPTIONS } from '../../members_utils/MembersSharedConstants';
+import { useMembersContext } from '@/app/(erp)/members/members_context/MembersContext';
+import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency, BRANCH_OPTIONS } from '@/app/(erp)/members/members_utils/MembersSharedConstants';
 
 export default function MemberModal() {
  const { 

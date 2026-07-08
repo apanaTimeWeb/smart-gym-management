@@ -1,6 +1,6 @@
 import type { Attendance, Member, Staff } from '@/lib/api';
 import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
-import type { AttendanceTab, EMPTY_ATTENDANCE_FORM } from '../attendance_utils/AttendanceSharedConstants';
+import type { AttendanceTab, EMPTY_ATTENDANCE_FORM } from '@/app/(erp)/attendance/attendance_utils/AttendanceSharedConstants';
 
 export interface AttendanceContextType {
  records: Attendance[];

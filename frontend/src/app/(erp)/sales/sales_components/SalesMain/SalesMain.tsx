@@ -1,15 +1,15 @@
 "use client";
 
 import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
-import { SalesProvider, useSalesContext } from '../../sales_context/SalesContext';
-import SalesToolbar from '../SalesToolbar/SalesToolbar';
-import SalesTabs from '../SalesTabs/SalesTabs';
-import SalesOverview from '../SalesOverview/SalesOverview';
-import MembershipReport from '../MembershipReport/MembershipReport';
-import PendingPayments from '../PendingPayments/PendingPayments';
-import AllMemberships from '../AllMemberships/AllMemberships';
+import { SalesProvider, useSalesContext } from '@/app/(erp)/sales/sales_context/SalesContext';
+import SalesToolbar from '@/app/(erp)/sales/sales_components/SalesToolbar/SalesToolbar';
+import SalesTabs from '@/app/(erp)/sales/sales_components/SalesTabs/SalesTabs';
+import SalesOverview from '@/app/(erp)/sales/sales_components/SalesOverview/SalesOverview';
+import MembershipReport from '@/app/(erp)/sales/sales_components/MembershipReport/MembershipReport';
+import PendingPayments from '@/app/(erp)/sales/sales_components/PendingPayments/PendingPayments';
+import AllMemberships from '@/app/(erp)/sales/sales_components/AllMemberships/AllMemberships';
 
-import '../../sales.css';
+import '@/app/(erp)/sales/sales.css';
 
 function SalesContent() {
  const { tab } = useSalesContext();

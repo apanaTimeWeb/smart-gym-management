@@ -1,8 +1,8 @@
 "use client";
 
 import { X, Save } from 'lucide-react';
-import { usePlansContext } from '../../plans_context/PlansContext';
-import { TIERS } from '../../plans_utils/PlansSharedConstants';
+import { usePlansContext } from '@/app/(erp)/plans/plans_context/PlansContext';
+import { TIERS } from '@/app/(erp)/plans/plans_utils/PlansSharedConstants';
 
 export default function PlanModal() {
  const { 

@@ -1,8 +1,8 @@
 "use client";
 
 import { RefreshCw, Plus, Search } from 'lucide-react';
-import { useLibraryContext } from '../../library_context/LibraryContext';
-import { LIBRARY_TABS } from '../../library_utils/LibrarySharedConstants';
+import { useLibraryContext } from '@/app/(erp)/library/library_context/LibraryContext';
+import { LIBRARY_TABS } from '@/app/(erp)/library/library_utils/LibrarySharedConstants';
 
 export default function LibraryTabs() {
   const { tab, setTab, loadAll, openAddEx, openAddDiet, search, setSearch, setCurrentPage } = useLibraryContext();

@@ -1,7 +1,7 @@
 "use client";
 
-import { useSalesContext } from '../../sales_context/SalesContext';
-import { SALES_TABS } from '../../sales_utils/SalesSharedConstants';
+import { useSalesContext } from '@/app/(erp)/sales/sales_context/SalesContext';
+import { SALES_TABS } from '@/app/(erp)/sales/sales_utils/SalesSharedConstants';
 
 export default function SalesTabs() {
  const { tab, setTab } = useSalesContext();

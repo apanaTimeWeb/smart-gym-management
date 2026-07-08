@@ -1,4 +1,4 @@
-import PlansMain from './plans_components/PlansMain/PlansMain';
+import PlansMain from '@/app/(erp)/plans/plans_components/PlansMain/PlansMain';
 
 export default function PlansPage() {
  return <PlansMain />;

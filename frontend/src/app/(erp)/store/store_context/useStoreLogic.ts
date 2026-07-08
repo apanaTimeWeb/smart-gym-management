@@ -2,8 +2,8 @@ import { useState, useCallback, useEffect, useMemo } from 'react';
 import { storeApi, type Product, type Order, type StoreSummary } from '@/lib/api';
 import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
 import type { ErpReceiptData } from '@/app/(erp)/erp_components/ErpThermalReceipt';
-import { EMPTY_PRODUCT_FORM } from '../store_utils/StoreSharedConstants';
-import { StoreContextType, OrderItem } from '../store_types/store_types';
+import { EMPTY_PRODUCT_FORM } from '@/app/(erp)/store/store_utils/StoreSharedConstants';
+import { StoreContextType, OrderItem } from '@/app/(erp)/store/store_types/store_types';
 import { useConfirm } from '@/app/(erp)/erp_components/ErpConfirmProvider';
 
 export function useStoreLogic(): StoreContextType {

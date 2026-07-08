@@ -1,7 +1,7 @@
 "use client";
 
 import { Star } from 'lucide-react';
-import { TESTIMONIALS } from '../../landing_utils/LandingSharedConstants';
+import { TESTIMONIALS } from '@/app/(landing)/landing_utils/LandingSharedConstants';
 
 export default function LandingTestimonials() {
  return (

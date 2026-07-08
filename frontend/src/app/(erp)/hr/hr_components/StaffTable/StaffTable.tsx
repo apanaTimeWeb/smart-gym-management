@@ -1,10 +1,10 @@
 "use client";
 
-import { useHrContext } from '../../hr_context/HrContext';
-import { STAFF_TABLE_HEADERS } from '../../hr_utils/HrSharedConstants';
+import { useHrContext } from '@/app/(erp)/hr/hr_context/HrContext';
+import { STAFF_TABLE_HEADERS } from '@/app/(erp)/hr/hr_utils/HrSharedConstants';
 import { Edit2, Trash2 } from 'lucide-react';
 const fmt = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');
-import ErpPagination from '../../../erp_components/ErpPagination';
+import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
 
 export default function StaffTable() {
   const { staff, search, currentPage, setCurrentPage, openEdit, deleteStaff } = useHrContext();

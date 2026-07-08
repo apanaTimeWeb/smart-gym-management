@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
-import ErpConfirmModal from './ErpConfirmModal';
+import ErpConfirmModal from '@/app/(erp)/erp_components/ErpConfirmModal';
 
 interface ConfirmOptions {
   title: string;

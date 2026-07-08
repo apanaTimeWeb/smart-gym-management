@@ -1,8 +1,8 @@
 "use client";
 
 import React, { createContext, useContext, useMemo } from 'react';
-import { DashboardContextType } from '../dashboard_types/dashboard_types';
-import { useDashboardLogic } from './useDashboardLogic';
+import { DashboardContextType } from '@/app/(erp)/dashboard/dashboard_types/dashboard_types';
+import { useDashboardLogic } from '@/app/(erp)/dashboard/dashboard_context/useDashboardLogic';
 
 const DashboardContext = createContext<DashboardContextType | undefined>(undefined);
 

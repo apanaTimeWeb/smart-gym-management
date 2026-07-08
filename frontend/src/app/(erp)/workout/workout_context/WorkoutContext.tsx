@@ -1,8 +1,8 @@
 "use client";
 
 import React, { createContext, useContext, useMemo } from 'react';
-import { WorkoutContextType } from '../workout_types/workout_types';
-import { useWorkoutLogic } from './useWorkoutLogic';
+import { WorkoutContextType } from '@/app/(erp)/workout/workout_types/workout_types';
+import { useWorkoutLogic } from '@/app/(erp)/workout/workout_context/useWorkoutLogic';
 
 const WorkoutContext = createContext<WorkoutContextType | undefined>(undefined);
 

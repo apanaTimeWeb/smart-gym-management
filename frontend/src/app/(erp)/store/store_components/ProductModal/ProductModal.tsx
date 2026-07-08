@@ -1,8 +1,8 @@
 "use client";
 
 import { X, Save } from 'lucide-react';
-import { useStoreContext } from '../../store_context/StoreContext';
-import { CATEGORIES } from '../../store_utils/StoreSharedConstants';
+import { useStoreContext } from '@/app/(erp)/store/store_context/StoreContext';
+import { CATEGORIES } from '@/app/(erp)/store/store_utils/StoreSharedConstants';
 
 export default function ProductModal() {
  const { 

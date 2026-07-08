@@ -1,7 +1,7 @@
 import { type Product, type Order, type StoreSummary } from '@/lib/api';
 import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
 import type { ErpReceiptData } from '@/app/(erp)/erp_components/ErpThermalReceipt';
-import { EMPTY_PRODUCT_FORM } from '../store_utils/StoreSharedConstants';
+import { EMPTY_PRODUCT_FORM } from '@/app/(erp)/store/store_utils/StoreSharedConstants';
 import React from 'react';
 
 export interface OrderItem {

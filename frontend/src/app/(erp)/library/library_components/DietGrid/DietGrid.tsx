@@ -1,9 +1,9 @@
 "use client";
 
 import { Utensils, Edit2, Trash2, CheckCircle2 } from 'lucide-react';
-import { useLibraryContext } from '../../library_context/LibraryContext';
+import { useLibraryContext } from '@/app/(erp)/library/library_context/LibraryContext';
 
-import ErpPagination from '../../../erp_components/ErpPagination';
+import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
 
 export default function DietGrid() {
   const { dietPlans, loading, search, currentPage, setCurrentPage, openEditDiet, deleteDietPlan } = useLibraryContext();

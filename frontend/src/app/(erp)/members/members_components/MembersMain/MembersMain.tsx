@@ -5,14 +5,14 @@ import ErpToast from '@/app/(erp)/erp_components/ErpToast';
 import ErpMessageModal from '@/app/(erp)/erp_components/ErpMessageModal';
 import ErpThermalReceipt from '@/app/(erp)/erp_components/ErpThermalReceipt';
 
-import { MembersProvider, useMembersContext } from '../../members_context/MembersContext';
-import MembersKPIs from '../MembersKPIs/MembersKPIs';
-import MembersToolbar from '../MembersToolbar/MembersToolbar';
-import MembersTable from '../MembersTable/MembersTable';
-import MemberProfile from '../MemberProfile/MemberProfile';
-import MemberModal from '../MemberModal/MemberModal';
+import { MembersProvider, useMembersContext } from '@/app/(erp)/members/members_context/MembersContext';
+import MembersKPIs from '@/app/(erp)/members/members_components/MembersKPIs/MembersKPIs';
+import MembersToolbar from '@/app/(erp)/members/members_components/MembersToolbar/MembersToolbar';
+import MembersTable from '@/app/(erp)/members/members_components/MembersTable/MembersTable';
+import MemberProfile from '@/app/(erp)/members/members_components/MemberProfile/MemberProfile';
+import MemberModal from '@/app/(erp)/members/members_components/MemberModal/MemberModal';
 
-import '../../members.css';
+import '@/app/(erp)/members/members.css';
 
 function MembersContent() {
  const { toast, hideToast, msgModal, closeMsg, showToast, printData, setPrintData } = useMembersContext();

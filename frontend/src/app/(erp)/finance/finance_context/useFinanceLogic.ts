@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { financeApi, type Payment, type FinanceSummary } from '@/lib/api';
 import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
-import { FinanceContextType } from '../finance_types/finance_types';
+import { FinanceContextType } from '@/app/(erp)/finance/finance_types/finance_types';
 
 export function useFinanceLogic(): FinanceContextType {
  const [payments, setPayments] = useState<Payment[]>([]);

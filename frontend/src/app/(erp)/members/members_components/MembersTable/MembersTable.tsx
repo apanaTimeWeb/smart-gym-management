@@ -1,10 +1,10 @@
 "use client";
 
 import { Eye, Edit, MessageCircle, Mail, Trash2 } from 'lucide-react';
-import { useMembersContext } from '../../members_context/MembersContext';
-import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS, MEMBERS_TABLE_HEADERS, formatCurrency } from '../../members_utils/MembersSharedConstants';
+import { useMembersContext } from '@/app/(erp)/members/members_context/MembersContext';
+import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS, MEMBERS_TABLE_HEADERS, formatCurrency } from '@/app/(erp)/members/members_utils/MembersSharedConstants';
 
-import ErpPagination from '../../../erp_components/ErpPagination';
+import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
 
 export default function MembersTable() {
   const { 

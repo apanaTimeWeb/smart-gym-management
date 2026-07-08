@@ -1,8 +1,8 @@
 "use client";
 
 import React, { createContext, useContext, useMemo } from 'react';
-import { FinanceContextType } from '../finance_types/finance_types';
-import { useFinanceLogic } from './useFinanceLogic';
+import { FinanceContextType } from '@/app/(erp)/finance/finance_types/finance_types';
+import { useFinanceLogic } from '@/app/(erp)/finance/finance_context/useFinanceLogic';
 
 const FinanceContext = createContext<FinanceContextType | undefined>(undefined);
 

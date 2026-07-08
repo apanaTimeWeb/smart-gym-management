@@ -2,11 +2,11 @@
 
 import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
 import ErpToast from '@/app/(erp)/erp_components/ErpToast';
-import { HrProvider, useHrContext } from '../../hr_context/HrContext';
-import HrKPIs from '../HrKPIs/HrKPIs';
-import HrTabs from '../HrTabs/HrTabs';
-import StaffModal from '../StaffModal/StaffModal';
-import '../../hr.css';
+import { HrProvider, useHrContext } from '@/app/(erp)/hr/hr_context/HrContext';
+import HrKPIs from '@/app/(erp)/hr/hr_components/HrKPIs/HrKPIs';
+import HrTabs from '@/app/(erp)/hr/hr_components/HrTabs/HrTabs';
+import StaffModal from '@/app/(erp)/hr/hr_components/StaffModal/StaffModal';
+import '@/app/(erp)/hr/hr.css';
 
 function HrContent() {
  const { toast, hideToast } = useHrContext();

@@ -1,7 +1,7 @@
 "use client";
 
 import { X } from 'lucide-react';
-import { useAttendanceContext } from '../../attendance_context/AttendanceContext';
+import { useAttendanceContext } from '@/app/(erp)/attendance/attendance_context/AttendanceContext';
 
 export default function AttendanceModal() {
  const { 

@@ -1,10 +1,10 @@
 "use client";
 
-import { useInquiriesContext } from '../../inquiries_context/InquiriesContext';
-import { INQUIRIES_TABLE_HEADERS, INQUIRIES_STATUS_LABELS, INQUIRIES_STATUS_STYLES } from '../../inquiries_utils/InquiriesSharedConstants';
+import { useInquiriesContext } from '@/app/(erp)/inquiries/inquiries_context/InquiriesContext';
+import { INQUIRIES_TABLE_HEADERS, INQUIRIES_STATUS_LABELS, INQUIRIES_STATUS_STYLES } from '@/app/(erp)/inquiries/inquiries_utils/InquiriesSharedConstants';
 import { MessageCircle, Mail, Edit2, Trash2 } from 'lucide-react';
 
-import ErpPagination from '../../../erp_components/ErpPagination';
+import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
 
 export default function InquiriesTable() {
   const { inquiries, search, statusFilter, loading, currentPage, setCurrentPage, updateStatus, openMsg, openEdit, deleteInquiry } = useInquiriesContext();

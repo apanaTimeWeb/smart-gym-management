@@ -1,8 +1,8 @@
 "use client";
 
 import React, { createContext, useContext, useMemo } from 'react';
-import { SettingsContextType } from '../settings_types/settings_types';
-import { useSettingsLogic } from './useSettingsLogic';
+import { SettingsContextType } from '@/app/(erp)/settings/settings_types/settings_types';
+import { useSettingsLogic } from '@/app/(erp)/settings/settings_context/useSettingsLogic';
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
 

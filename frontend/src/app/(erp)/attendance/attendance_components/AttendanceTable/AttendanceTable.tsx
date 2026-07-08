@@ -1,9 +1,9 @@
 "use client";
 
 import { Clock } from 'lucide-react';
-import { useAttendanceContext } from '../../attendance_context/AttendanceContext';
-import { ATTENDANCE_TABLE_HEADERS, formatDate, formatTime } from '../../attendance_utils/AttendanceSharedConstants';
-import ErpPagination from '../../../erp_components/ErpPagination';
+import { useAttendanceContext } from '@/app/(erp)/attendance/attendance_context/AttendanceContext';
+import { ATTENDANCE_TABLE_HEADERS, formatDate, formatTime } from '@/app/(erp)/attendance/attendance_utils/AttendanceSharedConstants';
+import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
 
 export default function AttendanceTable() {
   const { records, tab, loading, search, currentPage, setCurrentPage } = useAttendanceContext();

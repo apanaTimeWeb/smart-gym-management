@@ -1,7 +1,7 @@
 "use client";
 
 import { RefreshCw, Save, Settings } from 'lucide-react';
-import { useSettingsContext } from '../../settings_context/SettingsContext';
+import { useSettingsContext } from '@/app/(erp)/settings/settings_context/SettingsContext';
 
 export default function SettingsContent() {
  const { 

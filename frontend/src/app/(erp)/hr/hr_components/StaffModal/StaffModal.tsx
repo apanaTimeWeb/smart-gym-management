@@ -1,7 +1,7 @@
 "use client";
 
-import { useHrContext } from '../../hr_context/HrContext';
-import { STAFF_MODAL_FIELDS, GENDER_OPTIONS, BRANCH_OPTIONS } from '../../hr_utils/HrSharedConstants';
+import { useHrContext } from '@/app/(erp)/hr/hr_context/HrContext';
+import { STAFF_MODAL_FIELDS, GENDER_OPTIONS, BRANCH_OPTIONS } from '@/app/(erp)/hr/hr_utils/HrSharedConstants';
 import { X, Save } from 'lucide-react';
 
 export default function StaffModal() {

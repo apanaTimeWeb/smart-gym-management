@@ -1,8 +1,8 @@
 "use client";
 
-import { useFinanceContext } from '../../finance_context/FinanceContext';
-import { PAYMENTS_TABLE_HEADERS, FINANCE_METHOD_STYLES, FINANCE_STATUS_STYLES } from '../../finance_utils/FinanceSharedConstants';
-import ErpPagination from '../../../erp_components/ErpPagination';
+import { useFinanceContext } from '@/app/(erp)/finance/finance_context/FinanceContext';
+import { PAYMENTS_TABLE_HEADERS, FINANCE_METHOD_STYLES, FINANCE_STATUS_STYLES } from '@/app/(erp)/finance/finance_utils/FinanceSharedConstants';
+import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
 
 const fmt = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowRight } from 'lucide-react';
-import { TRANSFORMATIONS } from '../../landing_utils/LandingSharedConstants';
+import { TRANSFORMATIONS } from '@/app/(landing)/landing_utils/LandingSharedConstants';
 
 export default function LandingTransformations() {
  return (

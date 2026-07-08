@@ -1,7 +1,7 @@
 "use client";
 
 import { Search, RefreshCw, Plus } from 'lucide-react';
-import { useMembersContext } from '../../members_context/MembersContext';
+import { useMembersContext } from '@/app/(erp)/members/members_context/MembersContext';
 
 export default function MembersToolbar() {
   const { search, setSearch, statusFilter, setStatusFilter, loadAll, openAdd, setCurrentPage } = useMembersContext();

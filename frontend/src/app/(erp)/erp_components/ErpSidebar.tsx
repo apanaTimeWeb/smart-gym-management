@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getUser } from '@/lib/api';
-import { ERP_NAV_ITEMS } from '../erp_utils/ErpSharedConstants';
+import { ERP_NAV_ITEMS } from '@/app/(erp)/erp_utils/ErpSharedConstants';
 
 interface ErpSidebarProps {
  isCollapsed: boolean;

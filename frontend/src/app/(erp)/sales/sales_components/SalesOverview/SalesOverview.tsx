@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from 'next/dynamic';
-import { monthlyData } from '../../sales_utils/SalesSharedConstants';
+import { monthlyData } from '@/app/(erp)/sales/sales_utils/SalesSharedConstants';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 

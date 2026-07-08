@@ -1,6 +1,6 @@
 "use client";
 
-import { useHrContext } from '../../hr_context/HrContext';
+import { useHrContext } from '@/app/(erp)/hr/hr_context/HrContext';
 import { Users, DollarSign, CheckCircle, Clock } from 'lucide-react';
 
 const fmt = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');

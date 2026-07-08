@@ -1,8 +1,8 @@
 "use client";
 
 import { X, Save } from 'lucide-react';
-import { useWorkoutContext } from '../../workout_context/WorkoutContext';
-import { WORKOUT_LEVEL_OPTIONS } from '../../workout_utils/WorkoutSharedConstants';
+import { useWorkoutContext } from '@/app/(erp)/workout/workout_context/WorkoutContext';
+import { WORKOUT_LEVEL_OPTIONS } from '@/app/(erp)/workout/workout_utils/WorkoutSharedConstants';
 
 export default function WorkoutModal() {
  const { 

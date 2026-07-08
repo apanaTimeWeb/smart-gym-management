@@ -2,8 +2,8 @@ import { useState, useCallback, useEffect } from 'react';
 import { inquiriesApi, type Inquiry, type InquiryStats } from '@/lib/api';
 import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
 import type { MessageType, ErpMessageRecipient } from '@/app/(erp)/erp_components/ErpMessageModal';
-import { EMPTY_INQUIRY_FORM, generateDefaultMessage } from '../inquiries_utils/InquiriesSharedConstants';
-import { InquiriesContextType } from '../inquiries_types/inquiries_types';
+import { EMPTY_INQUIRY_FORM, generateDefaultMessage } from '@/app/(erp)/inquiries/inquiries_utils/InquiriesSharedConstants';
+import { InquiriesContextType } from '@/app/(erp)/inquiries/inquiries_types/inquiries_types';
 import { useConfirm } from '@/app/(erp)/erp_components/ErpConfirmProvider';
 
 export function useInquiriesLogic(): InquiriesContextType {

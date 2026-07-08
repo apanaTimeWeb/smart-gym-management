@@ -1,7 +1,7 @@
 "use client";
 
-import { useInquiriesContext } from '../../inquiries_context/InquiriesContext';
-import { INQUIRIES_STATUS_LABELS } from '../../inquiries_utils/InquiriesSharedConstants';
+import { useInquiriesContext } from '@/app/(erp)/inquiries/inquiries_context/InquiriesContext';
+import { INQUIRIES_STATUS_LABELS } from '@/app/(erp)/inquiries/inquiries_utils/InquiriesSharedConstants';
 import { RefreshCw, Plus } from 'lucide-react';
 
 export default function InquiriesToolbar() {

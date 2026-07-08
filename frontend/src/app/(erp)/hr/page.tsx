@@ -1,4 +1,4 @@
-import HrMain from './hr_components/HrMain/HrMain';
+import HrMain from '@/app/(erp)/hr/hr_components/HrMain/HrMain';
 
 export default function HrPage() {
  return <HrMain />;

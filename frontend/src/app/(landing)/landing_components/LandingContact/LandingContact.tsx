@@ -1,7 +1,7 @@
 "use client";
 
 import { MapPin, Phone, Mail, CheckCircle } from 'lucide-react';
-import { useLandingContext } from '../../landing_context/LandingContext';
+import { useLandingContext } from '@/app/(landing)/landing_context/LandingContext';
 
 export default function LandingContact() {
  const { contactSuccess, isSending, contactData, setContactData, handleContact } = useLandingContext();

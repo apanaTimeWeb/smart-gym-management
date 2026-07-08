@@ -1,8 +1,8 @@
 import { useState, useCallback, useEffect } from 'react';
 import { plansApi, type Plan } from '@/lib/api';
 import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
-import { EMPTY_PLAN_FORM } from '../plans_utils/PlansSharedConstants';
-import { PlansContextType } from '../plans_types/plans_types';
+import { EMPTY_PLAN_FORM } from '@/app/(erp)/plans/plans_utils/PlansSharedConstants';
+import { PlansContextType } from '@/app/(erp)/plans/plans_types/plans_types';
 import { useConfirm } from '@/app/(erp)/erp_components/ErpConfirmProvider';
 
 export function usePlansLogic(): PlansContextType {

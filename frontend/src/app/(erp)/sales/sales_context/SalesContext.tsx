@@ -1,8 +1,8 @@
 "use client";
 
 import React, { createContext, useContext, useMemo } from 'react';
-import { SalesContextType } from '../sales_types/sales_types';
-import { useSalesLogic } from './useSalesLogic';
+import { SalesContextType } from '@/app/(erp)/sales/sales_types/sales_types';
+import { useSalesLogic } from '@/app/(erp)/sales/sales_context/useSalesLogic';
 
 const SalesContext = createContext<SalesContextType | undefined>(undefined);
 

@@ -1,13 +1,13 @@
 "use client";
 
 import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
-import { DashboardProvider, useDashboardContext } from '../../dashboard_context/DashboardContext';
-import DashboardKPIs from '../DashboardKPIs/DashboardKPIs';
-import RecentMembers from '../RecentMembers/RecentMembers';
-import PendingPayments from '../PendingPayments/PendingPayments';
-import PromoCard from '../PromoCard/PromoCard';
-import MembershipDistribution from '../MembershipDistribution/MembershipDistribution';
-import '../../dashboard.css';
+import { DashboardProvider, useDashboardContext } from '@/app/(erp)/dashboard/dashboard_context/DashboardContext';
+import DashboardKPIs from '@/app/(erp)/dashboard/dashboard_components/DashboardKPIs/DashboardKPIs';
+import RecentMembers from '@/app/(erp)/dashboard/dashboard_components/RecentMembers/RecentMembers';
+import PendingPayments from '@/app/(erp)/dashboard/dashboard_components/PendingPayments/PendingPayments';
+import PromoCard from '@/app/(erp)/dashboard/dashboard_components/PromoCard/PromoCard';
+import MembershipDistribution from '@/app/(erp)/dashboard/dashboard_components/MembershipDistribution/MembershipDistribution';
+import '@/app/(erp)/dashboard/dashboard.css';
 
 function DashboardContent() {
  const { loading, error } = useDashboardContext();

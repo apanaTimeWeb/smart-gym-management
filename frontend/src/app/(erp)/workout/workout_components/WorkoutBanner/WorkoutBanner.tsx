@@ -1,7 +1,7 @@
 "use client";
 
 import { Dumbbell } from 'lucide-react';
-import { useWorkoutContext } from '../../workout_context/WorkoutContext';
+import { useWorkoutContext } from '@/app/(erp)/workout/workout_context/WorkoutContext';
 
 export default function WorkoutBanner() {
  const { workouts, exercises } = useWorkoutContext();

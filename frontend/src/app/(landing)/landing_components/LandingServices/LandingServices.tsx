@@ -1,6 +1,6 @@
 "use client";
 
-import { SERVICES } from '../../landing_utils/LandingSharedConstants';
+import { SERVICES } from '@/app/(landing)/landing_utils/LandingSharedConstants';
 
 export default function LandingServices() {
  return (

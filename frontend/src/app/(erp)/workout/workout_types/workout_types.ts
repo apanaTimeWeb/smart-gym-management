@@ -1,4 +1,4 @@
-import { EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM } from '../workout_utils/WorkoutSharedConstants';
+import { EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM } from '@/app/(erp)/workout/workout_utils/WorkoutSharedConstants';
 import React from 'react';
 
 /** Core data shape for a workout plan */

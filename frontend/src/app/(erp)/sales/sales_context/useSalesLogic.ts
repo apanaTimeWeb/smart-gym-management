@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { type SalesTab, type DateFilter } from '../sales_utils/SalesSharedConstants';
-import { SalesContextType } from '../sales_types/sales_types';
+import { type SalesTab, type DateFilter } from '@/app/(erp)/sales/sales_utils/SalesSharedConstants';
+import { SalesContextType } from '@/app/(erp)/sales/sales_types/sales_types';
 
 export function useSalesLogic(): SalesContextType {
   const [tab, setTab] = useState<SalesTab>('Overview');

@@ -1,8 +1,8 @@
 'use client';
 
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
-import { useLoginForm } from './useLoginForm';
-import { LoginSharedConstants } from '../../login_constants/LoginSharedConstants';
+import { useLoginForm } from '@/app/(auth)/login/login_components/LoginForm/useLoginForm';
+import { LoginSharedConstants } from '@/app/(auth)/login/login_constants/LoginSharedConstants';
 
 export default function LoginForm() {
  const { email, setEmail, password, setPassword, error, loading, showPassword, setShowPassword, handleLogin } = useLoginForm();

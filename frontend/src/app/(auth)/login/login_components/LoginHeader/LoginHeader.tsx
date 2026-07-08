@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { LoginSharedConstants } from '../../login_constants/LoginSharedConstants';
+import { LoginSharedConstants } from '@/app/(auth)/login/login_constants/LoginSharedConstants';
 
 export default function LoginHeader() {
  return (

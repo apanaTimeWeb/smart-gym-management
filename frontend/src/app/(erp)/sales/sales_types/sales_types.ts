@@ -1,4 +1,4 @@
-import { type SalesTab, type DateFilter } from '../sales_utils/SalesSharedConstants';
+import { type SalesTab, type DateFilter } from '@/app/(erp)/sales/sales_utils/SalesSharedConstants';
 
 export interface SalesContextType {
  tab: SalesTab;

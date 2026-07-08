@@ -1,8 +1,8 @@
 "use client";
 
 import React, { createContext, useContext, useMemo } from 'react';
-import { InquiriesContextType } from '../inquiries_types/inquiries_types';
-import { useInquiriesLogic } from './useInquiriesLogic';
+import { InquiriesContextType } from '@/app/(erp)/inquiries/inquiries_types/inquiries_types';
+import { useInquiriesLogic } from '@/app/(erp)/inquiries/inquiries_context/useInquiriesLogic';
 
 const InquiriesContext = createContext<InquiriesContextType | undefined>(undefined);
 

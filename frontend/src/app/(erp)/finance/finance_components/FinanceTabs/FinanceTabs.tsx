@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from 'react';
-import { useFinanceContext } from '../../finance_context/FinanceContext';
-import { FINANCE_TABS } from '../../finance_utils/FinanceSharedConstants';
+import { useFinanceContext } from '@/app/(erp)/finance/finance_context/FinanceContext';
+import { FINANCE_TABS } from '@/app/(erp)/finance/finance_utils/FinanceSharedConstants';
 import { RefreshCw, Plus, Search } from 'lucide-react';
-import PaymentsTable from '../PaymentsTable/PaymentsTable';
-import RevenueSummary from '../RevenueSummary/RevenueSummary';
+import PaymentsTable from '@/app/(erp)/finance/finance_components/PaymentsTable/PaymentsTable';
+import RevenueSummary from '@/app/(erp)/finance/finance_components/RevenueSummary/RevenueSummary';
 
 export default function FinanceTabs() {
   const [tab, setTab] = useState(FINANCE_TABS[0]);

@@ -1,15 +1,15 @@
 "use client";
 
 import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
-import { WorkoutProvider, useWorkoutContext } from '../../workout_context/WorkoutContext';
-import WorkoutBanner from '../WorkoutBanner/WorkoutBanner';
-import WorkoutToolbar from '../WorkoutToolbar/WorkoutToolbar';
-import WorkoutPlansGrid from '../WorkoutPlansGrid/WorkoutPlansGrid';
-import ExerciseTable from '../ExerciseTable/ExerciseTable';
-import WorkoutModal from '../WorkoutModal/WorkoutModal';
-import ExerciseModal from '../ExerciseModal/ExerciseModal';
+import { WorkoutProvider, useWorkoutContext } from '@/app/(erp)/workout/workout_context/WorkoutContext';
+import WorkoutBanner from '@/app/(erp)/workout/workout_components/WorkoutBanner/WorkoutBanner';
+import WorkoutToolbar from '@/app/(erp)/workout/workout_components/WorkoutToolbar/WorkoutToolbar';
+import WorkoutPlansGrid from '@/app/(erp)/workout/workout_components/WorkoutPlansGrid/WorkoutPlansGrid';
+import ExerciseTable from '@/app/(erp)/workout/workout_components/ExerciseTable/ExerciseTable';
+import WorkoutModal from '@/app/(erp)/workout/workout_components/WorkoutModal/WorkoutModal';
+import ExerciseModal from '@/app/(erp)/workout/workout_components/ExerciseModal/ExerciseModal';
 
-import '../../workout.css';
+import '@/app/(erp)/workout/workout.css';
 
 function WorkoutContent() {
  const { tab } = useWorkoutContext();

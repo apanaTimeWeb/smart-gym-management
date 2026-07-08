@@ -1,8 +1,8 @@
 "use client";
 
 import { RefreshCw, Plus, Search } from 'lucide-react';
-import { useAttendanceContext } from '../../attendance_context/AttendanceContext';
-import { ATTENDANCE_TABS } from '../../attendance_utils/AttendanceSharedConstants';
+import { useAttendanceContext } from '@/app/(erp)/attendance/attendance_context/AttendanceContext';
+import { ATTENDANCE_TABS } from '@/app/(erp)/attendance/attendance_utils/AttendanceSharedConstants';
 
 export default function AttendanceToolbar() {
   const { tab, setTab, loadAll, setShowModal, search, setSearch, setCurrentPage } = useAttendanceContext();

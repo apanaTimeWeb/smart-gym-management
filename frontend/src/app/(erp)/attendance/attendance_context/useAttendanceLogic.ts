@@ -1,8 +1,8 @@
 import { useState, useCallback, useEffect } from 'react';
 import { attendanceApi, membersApi, hrApi, type Attendance, type Member, type Staff } from '@/lib/api';
 import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
-import { EMPTY_ATTENDANCE_FORM, ATTENDANCE_TABS, type AttendanceTab } from '../attendance_utils/AttendanceSharedConstants';
-import { AttendanceContextType } from '../attendance_types/attendance_types';
+import { EMPTY_ATTENDANCE_FORM, ATTENDANCE_TABS, type AttendanceTab } from '@/app/(erp)/attendance/attendance_utils/AttendanceSharedConstants';
+import { AttendanceContextType } from '@/app/(erp)/attendance/attendance_types/attendance_types';
 
 export function useAttendanceLogic(): AttendanceContextType {
  const [records, setRecords] = useState<Attendance[]>([]);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useInquiriesContext } from '../../inquiries_context/InquiriesContext';
+import { useInquiriesContext } from '@/app/(erp)/inquiries/inquiries_context/InquiriesContext';
 import { MessageSquare, Plus, Clock, CheckCircle } from 'lucide-react';
 
 export default function InquiriesKPIs() {

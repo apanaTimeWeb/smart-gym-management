@@ -1,8 +1,8 @@
 "use client";
 
 import React, { createContext, useContext, useMemo } from 'react';
-import { HrContextType } from '../hr_types/hr_types';
-import { useHrLogic } from './useHrLogic';
+import { HrContextType } from '@/app/(erp)/hr/hr_types/hr_types';
+import { useHrLogic } from '@/app/(erp)/hr/hr_context/useHrLogic';
 
 const HrContext = createContext<HrContextType | undefined>(undefined);
 

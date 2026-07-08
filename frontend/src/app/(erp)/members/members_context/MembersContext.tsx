@@ -1,8 +1,8 @@
 "use client";
 
 import React, { createContext, useContext, useMemo } from 'react';
-import { MembersContextType } from '../members_types/members_types';
-import { useMembersLogic } from './useMembersLogic';
+import { MembersContextType } from '@/app/(erp)/members/members_types/members_types';
+import { useMembersLogic } from '@/app/(erp)/members/members_context/useMembersLogic';
 
 const MembersContext = createContext<MembersContextType | undefined>(undefined);
 

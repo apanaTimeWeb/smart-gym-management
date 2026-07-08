@@ -2,11 +2,11 @@
 
 import { Edit, MessageCircle, Mail } from 'lucide-react';
 import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
-import { useMembersContext } from '../../members_context/MembersContext';
-import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS, formatCurrency } from '../../members_utils/MembersSharedConstants';
-import ProfileOverview from './ProfileOverview';
-import ProfileAttendance from './ProfileAttendance';
-import ProfilePayments from './ProfilePayments';
+import { useMembersContext } from '@/app/(erp)/members/members_context/MembersContext';
+import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS, formatCurrency } from '@/app/(erp)/members/members_utils/MembersSharedConstants';
+import ProfileOverview from '@/app/(erp)/members/members_components/MemberProfile/ProfileOverview';
+import ProfileAttendance from '@/app/(erp)/members/members_components/MemberProfile/ProfileAttendance';
+import ProfilePayments from '@/app/(erp)/members/members_components/MemberProfile/ProfilePayments';
 
 export default function MemberProfile() {
  const { selectedMember, setSelectedMember, profileTab, setProfileTab, loadMemberProfile, openEdit, openMsg } = useMembersContext();

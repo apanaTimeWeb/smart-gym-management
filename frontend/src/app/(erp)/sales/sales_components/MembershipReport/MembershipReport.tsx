@@ -1,8 +1,8 @@
 "use client";
 
-import { membershipReport } from '../../sales_utils/SalesSharedConstants';
-import { useSalesContext } from '../../sales_context/SalesContext';
-import ErpPagination from '../../../erp_components/ErpPagination';
+import { membershipReport } from '@/app/(erp)/sales/sales_utils/SalesSharedConstants';
+import { useSalesContext } from '@/app/(erp)/sales/sales_context/SalesContext';
+import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
 
 export default function MembershipReport() {
   const { search, currentPage, setCurrentPage } = useSalesContext();

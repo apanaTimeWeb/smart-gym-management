@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from 'react';
-import { useHrContext } from '../../hr_context/HrContext';
-import { HR_TABS } from '../../hr_utils/HrSharedConstants';
+import { useHrContext } from '@/app/(erp)/hr/hr_context/HrContext';
+import { HR_TABS } from '@/app/(erp)/hr/hr_utils/HrSharedConstants';
 import { RefreshCw, Plus, Search } from 'lucide-react';
-import StaffTable from '../StaffTable/StaffTable';
-import PayrollTable from '../PayrollTable/PayrollTable';
+import StaffTable from '@/app/(erp)/hr/hr_components/StaffTable/StaffTable';
+import PayrollTable from '@/app/(erp)/hr/hr_components/PayrollTable/PayrollTable';
 
 export default function HrTabs() {
   const [activeTab, setActiveTab] = useState(HR_TABS[0]);

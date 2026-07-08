@@ -1,10 +1,10 @@
 "use client";
 
 import { Edit2, Trash2 } from 'lucide-react';
-import { useStoreContext } from '../../store_context/StoreContext';
-import { formatCurrency } from '../../store_utils/StoreSharedConstants';
+import { useStoreContext } from '@/app/(erp)/store/store_context/StoreContext';
+import { formatCurrency } from '@/app/(erp)/store/store_utils/StoreSharedConstants';
 
-import ErpPagination from '../../../erp_components/ErpPagination';
+import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
 
 export default function ProductGrid() {
   const { products, loading, search, currentPage, setCurrentPage, openEditProduct, deleteProduct } = useStoreContext();

@@ -1,8 +1,8 @@
 import { useState, useCallback, useEffect } from 'react';
 import { apiFetch } from '@/lib/api';
 import toast from 'react-hot-toast';
-import { EMPTY_SETTINGS_FORM } from '../settings_utils/SettingsSharedConstants';
-import { SettingsContextType } from '../settings_types/settings_types';
+import { EMPTY_SETTINGS_FORM } from '@/app/(erp)/settings/settings_utils/SettingsSharedConstants';
+import { SettingsContextType } from '@/app/(erp)/settings/settings_types/settings_types';
 
 export function useSettingsLogic(): SettingsContextType {
  const [activeTab, setActiveTab] = useState('Gym Profile');

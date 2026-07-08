@@ -1,6 +1,6 @@
 "use client";
 
-import { useDashboardContext } from '../../dashboard_context/DashboardContext';
+import { useDashboardContext } from '@/app/(erp)/dashboard/dashboard_context/DashboardContext';
 import ErpStatCard from '@/app/(erp)/erp_components/ErpStatCard';
 import { Users, DollarSign, TrendingUp, AlertCircle, CheckCircle, Clock, UserCheck, ShoppingCart } from 'lucide-react';
 

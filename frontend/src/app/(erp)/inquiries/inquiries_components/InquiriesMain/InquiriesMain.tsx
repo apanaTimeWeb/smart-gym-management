@@ -3,12 +3,12 @@
 import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
 import ErpToast from '@/app/(erp)/erp_components/ErpToast';
 import ErpMessageModal from '@/app/(erp)/erp_components/ErpMessageModal';
-import { InquiriesProvider, useInquiriesContext } from '../../inquiries_context/InquiriesContext';
-import InquiriesKPIs from '../InquiriesKPIs/InquiriesKPIs';
-import InquiriesToolbar from '../InquiriesToolbar/InquiriesToolbar';
-import InquiriesTable from '../InquiriesTable/InquiriesTable';
-import InquiryModal from '../InquiryModal/InquiryModal';
-import '../../inquiries.css';
+import { InquiriesProvider, useInquiriesContext } from '@/app/(erp)/inquiries/inquiries_context/InquiriesContext';
+import InquiriesKPIs from '@/app/(erp)/inquiries/inquiries_components/InquiriesKPIs/InquiriesKPIs';
+import InquiriesToolbar from '@/app/(erp)/inquiries/inquiries_components/InquiriesToolbar/InquiriesToolbar';
+import InquiriesTable from '@/app/(erp)/inquiries/inquiries_components/InquiriesTable/InquiriesTable';
+import InquiryModal from '@/app/(erp)/inquiries/inquiries_components/InquiryModal/InquiryModal';
+import '@/app/(erp)/inquiries/inquiries.css';
 
 function InquiriesContent() {
  const { toast, hideToast, msgModal, closeMsg, showToast } = useInquiriesContext();

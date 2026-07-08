@@ -1,9 +1,10 @@
 import { useState, useMemo, useCallback } from 'react';
 import { 
- Workout, Exercise, 
- INITIAL_WORKOUTS, INITIAL_EXERCISES, 
- EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM 
-import { WorkoutContextType } from '../workout_types/workout_types';
+  Workout, Exercise, 
+  INITIAL_WORKOUTS, INITIAL_EXERCISES, 
+  EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM 
+} from '@/app/(erp)/workout/workout_utils/WorkoutSharedConstants';
+import { WorkoutContextType } from '@/app/(erp)/workout/workout_types/workout_types';
 import { useConfirm } from '@/app/(erp)/erp_components/ErpConfirmProvider';
 
 export function useWorkoutLogic(): WorkoutContextType {

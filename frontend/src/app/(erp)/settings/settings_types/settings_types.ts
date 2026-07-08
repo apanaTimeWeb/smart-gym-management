@@ -1,4 +1,4 @@
-import { EMPTY_SETTINGS_FORM } from '../settings_utils/SettingsSharedConstants';
+import { EMPTY_SETTINGS_FORM } from '@/app/(erp)/settings/settings_utils/SettingsSharedConstants';
 
 export interface SettingsContextType {
  activeTab: string;

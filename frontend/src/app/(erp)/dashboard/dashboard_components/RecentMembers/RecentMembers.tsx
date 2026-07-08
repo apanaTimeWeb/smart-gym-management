@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Search } from 'lucide-react';
-import { useDashboardContext } from '../../dashboard_context/DashboardContext';
-import { RECENT_MEMBERS_HEADERS, DASHBOARD_STATUS_STYLES } from '../../dashboard_utils/DashboardSharedConstants';
+import { useDashboardContext } from '@/app/(erp)/dashboard/dashboard_context/DashboardContext';
+import { RECENT_MEMBERS_HEADERS, DASHBOARD_STATUS_STYLES } from '@/app/(erp)/dashboard/dashboard_utils/DashboardSharedConstants';
 
 const fmt = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');
 

@@ -1,6 +1,6 @@
 import { type Plan } from '@/lib/api';
 import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
-import { EMPTY_PLAN_FORM } from '../plans_utils/PlansSharedConstants';
+import { EMPTY_PLAN_FORM } from '@/app/(erp)/plans/plans_utils/PlansSharedConstants';
 import React from 'react';
 
 export interface PlansContextType {

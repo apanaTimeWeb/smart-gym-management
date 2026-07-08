@@ -1,7 +1,7 @@
 "use client";
 
-import { useDashboardContext } from '../../dashboard_context/DashboardContext';
-import { DASHBOARD_PLAN_BG_COLORS } from '../../dashboard_utils/DashboardSharedConstants';
+import { useDashboardContext } from '@/app/(erp)/dashboard/dashboard_context/DashboardContext';
+import { DASHBOARD_PLAN_BG_COLORS } from '@/app/(erp)/dashboard/dashboard_utils/DashboardSharedConstants';
 
 export default function MembershipDistribution() {
  const { stats } = useDashboardContext();

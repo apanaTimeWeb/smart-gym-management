@@ -1,8 +1,8 @@
 "use client";
 
 import React, { createContext, useContext, useMemo } from 'react';
-import { useLandingLogic } from './useLandingLogic';
-import type { LandingContextType } from '../landing_types/landing_types';
+import { useLandingLogic } from '@/app/(landing)/landing_context/useLandingLogic';
+import type { LandingContextType } from '@/app/(landing)/landing_types/landing_types';
 
 const LandingContext = createContext<LandingContextType | undefined>(undefined);
 

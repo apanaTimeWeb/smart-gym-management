@@ -1,7 +1,7 @@
 "use client";
 
-import { useSettingsContext } from '../../settings_context/SettingsContext';
-import { SETTINGS_TABS } from '../../settings_utils/SettingsSharedConstants';
+import { useSettingsContext } from '@/app/(erp)/settings/settings_context/SettingsContext';
+import { SETTINGS_TABS } from '@/app/(erp)/settings/settings_utils/SettingsSharedConstants';
 
 export default function SettingsNav() {
  const { activeTab, setActiveTab } = useSettingsContext();

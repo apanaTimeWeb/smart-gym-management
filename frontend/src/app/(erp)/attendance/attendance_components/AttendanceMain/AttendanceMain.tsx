@@ -3,13 +3,13 @@
 import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
 import ErpToast from '@/app/(erp)/erp_components/ErpToast';
 
-import { AttendanceProvider, useAttendanceContext } from '../../attendance_context/AttendanceContext';
-import AttendanceKPIs from '../AttendanceKPIs/AttendanceKPIs';
-import AttendanceToolbar from '../AttendanceToolbar/AttendanceToolbar';
-import AttendanceTable from '../AttendanceTable/AttendanceTable';
-import AttendanceModal from '../AttendanceModal/AttendanceModal';
+import { AttendanceProvider, useAttendanceContext } from '@/app/(erp)/attendance/attendance_context/AttendanceContext';
+import AttendanceKPIs from '@/app/(erp)/attendance/attendance_components/AttendanceKPIs/AttendanceKPIs';
+import AttendanceToolbar from '@/app/(erp)/attendance/attendance_components/AttendanceToolbar/AttendanceToolbar';
+import AttendanceTable from '@/app/(erp)/attendance/attendance_components/AttendanceTable/AttendanceTable';
+import AttendanceModal from '@/app/(erp)/attendance/attendance_components/AttendanceModal/AttendanceModal';
 
-import '../../attendance.css';
+import '@/app/(erp)/attendance/attendance.css';
 
 function AttendanceContent() {
  const { toast, hideToast } = useAttendanceContext();

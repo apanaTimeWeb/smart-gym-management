@@ -1,8 +1,8 @@
 "use client";
 
 import React, { createContext, useContext, useMemo } from 'react';
-import { LibraryContextType } from '../library_types/library_types';
-import { useLibraryLogic } from './useLibraryLogic';
+import { LibraryContextType } from '@/app/(erp)/library/library_types/library_types';
+import { useLibraryLogic } from '@/app/(erp)/library/library_context/useLibraryLogic';
 
 const LibraryContext = createContext<LibraryContextType | undefined>(undefined);
 

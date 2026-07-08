@@ -1,10 +1,10 @@
 "use client";
 
 import { Edit2, Trash2 } from 'lucide-react';
-import { useWorkoutContext } from '../../workout_context/WorkoutContext';
-import { EXERCISE_TABLE_HEADERS } from '../../workout_utils/WorkoutSharedConstants';
+import { useWorkoutContext } from '@/app/(erp)/workout/workout_context/WorkoutContext';
+import { EXERCISE_TABLE_HEADERS } from '@/app/(erp)/workout/workout_utils/WorkoutSharedConstants';
 
-import ErpPagination from '../../../erp_components/ErpPagination';
+import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
 
 export default function ExerciseTable() {
   const { filteredEx, search, currentPage, setCurrentPage, openEditEx, deleteEx } = useWorkoutContext();

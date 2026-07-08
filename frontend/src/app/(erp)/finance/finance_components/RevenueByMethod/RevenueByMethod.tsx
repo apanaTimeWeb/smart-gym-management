@@ -1,6 +1,6 @@
 "use client";
 
-import { useFinanceContext } from '../../finance_context/FinanceContext';
+import { useFinanceContext } from '@/app/(erp)/finance/finance_context/FinanceContext';
 
 const fmt = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');
 

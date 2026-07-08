@@ -1,22 +1,22 @@
 "use client";
 
-import LandingNavbar from '../LandingNavbar/LandingNavbar';
-import LandingHero from '../LandingHero/LandingHero';
-import LandingAbout from '../LandingAbout/LandingAbout';
-import LandingBmiCalc from '../LandingBmiCalc/LandingBmiCalc';
-import LandingPlans from '../LandingPlans/LandingPlans';
-import LandingTrainers from '../LandingTrainers/LandingTrainers';
-import LandingServices from '../LandingServices/LandingServices';
-import LandingSchedule from '../LandingSchedule/LandingSchedule';
-import LandingGallery from '../LandingGallery/LandingGallery';
-import LandingBooking from '../LandingBooking/LandingBooking';
-import LandingTransformations from '../LandingTransformations/LandingTransformations';
-import LandingTestimonials from '../LandingTestimonials/LandingTestimonials';
-import LandingContact from '../LandingContact/LandingContact';
-import LandingFooter from '../LandingFooter/LandingFooter';
+import LandingNavbar from '@/app/(landing)/landing_components/LandingNavbar/LandingNavbar';
+import LandingHero from '@/app/(landing)/landing_components/LandingHero/LandingHero';
+import LandingAbout from '@/app/(landing)/landing_components/LandingAbout/LandingAbout';
+import LandingBmiCalc from '@/app/(landing)/landing_components/LandingBmiCalc/LandingBmiCalc';
+import LandingPlans from '@/app/(landing)/landing_components/LandingPlans/LandingPlans';
+import LandingTrainers from '@/app/(landing)/landing_components/LandingTrainers/LandingTrainers';
+import LandingServices from '@/app/(landing)/landing_components/LandingServices/LandingServices';
+import LandingSchedule from '@/app/(landing)/landing_components/LandingSchedule/LandingSchedule';
+import LandingGallery from '@/app/(landing)/landing_components/LandingGallery/LandingGallery';
+import LandingBooking from '@/app/(landing)/landing_components/LandingBooking/LandingBooking';
+import LandingTransformations from '@/app/(landing)/landing_components/LandingTransformations/LandingTransformations';
+import LandingTestimonials from '@/app/(landing)/landing_components/LandingTestimonials/LandingTestimonials';
+import LandingContact from '@/app/(landing)/landing_components/LandingContact/LandingContact';
+import LandingFooter from '@/app/(landing)/landing_components/LandingFooter/LandingFooter';
 
-import '../../landing.css';
-import { LandingProvider } from '../../landing_context/LandingContext';
+import '@/app/(landing)/landing.css';
+import { LandingProvider } from '@/app/(landing)/landing_context/LandingContext';
 
 function LandingContent() {
  return (

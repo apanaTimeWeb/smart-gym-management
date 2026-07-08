@@ -1,8 +1,8 @@
 "use client";
 
 import { Download, Filter, Search } from 'lucide-react';
-import { useSalesContext } from '../../sales_context/SalesContext';
-import { DATE_FILTERS } from '../../sales_utils/SalesSharedConstants';
+import { useSalesContext } from '@/app/(erp)/sales/sales_context/SalesContext';
+import { DATE_FILTERS } from '@/app/(erp)/sales/sales_utils/SalesSharedConstants';
 
 export default function SalesToolbar() {
   const { dateFilter, setDateFilter, search, setSearch, setCurrentPage } = useSalesContext();

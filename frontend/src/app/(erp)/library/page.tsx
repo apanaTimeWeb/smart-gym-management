@@ -1,4 +1,4 @@
-import LibraryMain from './library_components/LibraryMain/LibraryMain';
+import LibraryMain from '@/app/(erp)/library/library_components/LibraryMain/LibraryMain';
 
 export default function LibraryPage() {
  return <LibraryMain />;

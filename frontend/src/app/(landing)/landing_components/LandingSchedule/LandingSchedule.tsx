@@ -1,6 +1,6 @@
 "use client";
 
-import { SCHEDULE } from '../../landing_utils/LandingSharedConstants';
+import { SCHEDULE } from '@/app/(landing)/landing_utils/LandingSharedConstants';
 
 export default function LandingSchedule() {
  return (

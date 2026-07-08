@@ -1,4 +1,4 @@
-import FinanceMain from './finance_components/FinanceMain/FinanceMain';
+import FinanceMain from '@/app/(erp)/finance/finance_components/FinanceMain/FinanceMain';
 
 export default function FinancePage() {
  return <FinanceMain />;

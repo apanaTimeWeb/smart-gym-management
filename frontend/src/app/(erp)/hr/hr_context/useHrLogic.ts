@@ -1,8 +1,8 @@
 import { useState, useCallback, useEffect } from 'react';
 import { hrApi, type Staff, type Payroll, type HrSummary } from '@/lib/api';
 import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
-import { EMPTY_STAFF } from '../hr_utils/HrSharedConstants';
-import { HrContextType } from '../hr_types/hr_types';
+import { EMPTY_STAFF } from '@/app/(erp)/hr/hr_utils/HrSharedConstants';
+import { HrContextType } from '@/app/(erp)/hr/hr_types/hr_types';
 import { useConfirm } from '@/app/(erp)/erp_components/ErpConfirmProvider';
 
 export function useHrLogic(): HrContextType {

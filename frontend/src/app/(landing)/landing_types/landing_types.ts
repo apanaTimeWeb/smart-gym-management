@@ -1,5 +1,5 @@
 import React from 'react';
-import { EMPTY_BOOKING_FORM, EMPTY_CONTACT_FORM } from '../landing_utils/LandingSharedConstants';
+import { EMPTY_BOOKING_FORM, EMPTY_CONTACT_FORM } from '@/app/(landing)/landing_utils/LandingSharedConstants';
 
 export interface BmiResult {
  value: string;

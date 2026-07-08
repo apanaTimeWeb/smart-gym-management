@@ -1,8 +1,8 @@
 "use client";
 
 import { MessageCircle, Mail } from 'lucide-react';
-import { useMembersContext } from '../../members_context/MembersContext';
-import { formatCurrency } from '../../members_utils/MembersSharedConstants';
+import { useMembersContext } from '@/app/(erp)/members/members_context/MembersContext';
+import { formatCurrency } from '@/app/(erp)/members/members_utils/MembersSharedConstants';
 
 export default function ProfileOverview() {
  const { selectedMember, openMsg } = useMembersContext();

@@ -1,6 +1,6 @@
 "use client";
 
-import { TRAINERS } from '../../landing_utils/LandingSharedConstants';
+import { TRAINERS } from '@/app/(landing)/landing_utils/LandingSharedConstants';
 
 export default function LandingTrainers() {
  return (

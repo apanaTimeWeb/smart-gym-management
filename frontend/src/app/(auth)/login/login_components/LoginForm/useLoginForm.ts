@@ -1,7 +1,7 @@
 import { useState, useCallback, FormEvent } from 'react';
 import { authApi } from '@/lib/api';
-import { LoginSharedConstants } from '../../login_constants/LoginSharedConstants';
-import { UseLoginFormReturn } from '../../login_types/login_types';
+import { LoginSharedConstants } from '@/app/(auth)/login/login_constants/LoginSharedConstants';
+import { UseLoginFormReturn } from '@/app/(auth)/login/login_types/login_types';
 
 export function useLoginForm(): UseLoginFormReturn {
  const [email, setEmail] = useState('admin@gymsmart.com');

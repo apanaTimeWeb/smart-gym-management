@@ -1,8 +1,8 @@
 "use client";
 
 import { X, Save } from 'lucide-react';
-import { useLibraryContext } from '../../library_context/LibraryContext';
-import { CATEGORIES, DIFFICULTIES } from '../../library_utils/LibrarySharedConstants';
+import { useLibraryContext } from '@/app/(erp)/library/library_context/LibraryContext';
+import { CATEGORIES, DIFFICULTIES } from '@/app/(erp)/library/library_utils/LibrarySharedConstants';
 
 export default function ExerciseModal() {
  const { 

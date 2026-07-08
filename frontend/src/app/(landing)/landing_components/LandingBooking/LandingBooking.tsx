@@ -1,7 +1,7 @@
 "use client";
 
 import { CheckCircle, Ticket, CreditCard, Calendar, ArrowRight } from 'lucide-react';
-import { useLandingContext } from '../../landing_context/LandingContext';
+import { useLandingContext } from '@/app/(landing)/landing_context/LandingContext';
 
 export default function LandingBooking() {
  const { bookingSuccess, isBooking, bookingData, setBookingData, handleBooking } = useLandingContext();

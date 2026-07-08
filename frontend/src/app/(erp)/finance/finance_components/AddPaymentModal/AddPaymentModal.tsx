@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from 'react';
-import { useFinanceContext } from '../../finance_context/FinanceContext';
-import { FINANCE_PAYMENT_METHODS } from '../../finance_utils/FinanceSharedConstants';
+import { useFinanceContext } from '@/app/(erp)/finance/finance_context/FinanceContext';
+import { FINANCE_PAYMENT_METHODS } from '@/app/(erp)/finance/finance_utils/FinanceSharedConstants';
 import { X } from 'lucide-react';
 import { financeApi } from '@/lib/api';
 

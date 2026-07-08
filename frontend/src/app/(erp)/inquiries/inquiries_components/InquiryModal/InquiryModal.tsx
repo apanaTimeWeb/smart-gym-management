@@ -1,7 +1,7 @@
 "use client";
 
-import { useInquiriesContext } from '../../inquiries_context/InquiriesContext';
-import { INQUIRY_MODAL_FIELDS, INQUIRIES_STATUS_LABELS, INQUIRY_SOURCES } from '../../inquiries_utils/InquiriesSharedConstants';
+import { useInquiriesContext } from '@/app/(erp)/inquiries/inquiries_context/InquiriesContext';
+import { INQUIRY_MODAL_FIELDS, INQUIRIES_STATUS_LABELS, INQUIRY_SOURCES } from '@/app/(erp)/inquiries/inquiries_utils/InquiriesSharedConstants';
 import { X, Save } from 'lucide-react';
 
 export default function InquiryModal() {

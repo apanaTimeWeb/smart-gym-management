@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { dashboardApi, type DashboardStats } from '@/lib/api';
-import { DashboardContextType } from '../dashboard_types/dashboard_types';
+import { DashboardContextType } from '@/app/(erp)/dashboard/dashboard_types/dashboard_types';
 
 export function useDashboardLogic(): DashboardContextType {
  const [stats, setStats] = useState<DashboardStats | null>(null);

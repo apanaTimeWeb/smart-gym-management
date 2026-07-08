@@ -1,7 +1,7 @@
 "use client";
 
 import { CheckCircle } from 'lucide-react';
-import { PLANS } from '../../landing_utils/LandingSharedConstants';
+import { PLANS } from '@/app/(landing)/landing_utils/LandingSharedConstants';
 
 export default function LandingPlans() {
  return (

@@ -4,8 +4,8 @@ import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
 import type { MessageType, ErpMessageRecipient } from '@/app/(erp)/erp_components/ErpMessageModal';
 import type { ErpReceiptData } from '@/app/(erp)/erp_components/ErpThermalReceipt';
 import { useConfirm } from '@/app/(erp)/erp_components/ErpConfirmProvider';
-import { EMPTY_MEMBER_FORM, formatCurrency } from '../members_utils/MembersSharedConstants';
-import { MembersContextType } from '../members_types/members_types';
+import { EMPTY_MEMBER_FORM, formatCurrency } from '@/app/(erp)/members/members_utils/MembersSharedConstants';
+import { MembersContextType } from '@/app/(erp)/members/members_types/members_types';
 
 export function useMembersLogic(): MembersContextType {
   const { confirm } = useConfirm();

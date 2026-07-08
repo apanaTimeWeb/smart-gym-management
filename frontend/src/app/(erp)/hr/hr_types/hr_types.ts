@@ -1,6 +1,6 @@
 import { type Staff, type Payroll, type HrSummary } from '@/lib/api';
 import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
-import { EMPTY_STAFF } from '../hr_utils/HrSharedConstants';
+import { EMPTY_STAFF } from '@/app/(erp)/hr/hr_utils/HrSharedConstants';
 import React from 'react';
 
 export interface HrContextType {

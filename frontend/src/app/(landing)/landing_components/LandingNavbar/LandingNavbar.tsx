@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Menu, X } from 'lucide-react';
-import { useLandingContext } from '../../landing_context/LandingContext';
+import { useLandingContext } from '@/app/(landing)/landing_context/LandingContext';
 
 import { ThemeToggle } from '@/components/ThemeToggle';
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { RefreshCw, Plus, Search } from 'lucide-react';
-import { usePlansContext } from '../../plans_context/PlansContext';
+import { usePlansContext } from '@/app/(erp)/plans/plans_context/PlansContext';
 
 export default function PlansToolbar() {
   const { plans, loadPlans, openAdd, search, setSearch, setCurrentPage } = usePlansContext();

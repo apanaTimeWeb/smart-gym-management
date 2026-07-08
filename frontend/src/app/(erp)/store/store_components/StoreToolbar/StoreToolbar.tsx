@@ -1,7 +1,7 @@
 "use client";
 
 import { Plus, ShoppingCart, RefreshCw, Search } from 'lucide-react';
-import { useStoreContext } from '../../store_context/StoreContext';
+import { useStoreContext } from '@/app/(erp)/store/store_context/StoreContext';
 
 export default function StoreToolbar() {
   const { tab, setTab, loadAll, openAddProduct, setShowOrderModal, search, setSearch, setCurrentPage } = useStoreContext();

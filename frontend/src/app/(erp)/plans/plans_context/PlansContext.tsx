@@ -1,8 +1,8 @@
 "use client";
 
 import React, { createContext, useContext, useMemo } from 'react';
-import { PlansContextType } from '../plans_types/plans_types';
-import { usePlansLogic } from './usePlansLogic';
+import { PlansContextType } from '@/app/(erp)/plans/plans_types/plans_types';
+import { usePlansLogic } from '@/app/(erp)/plans/plans_context/usePlansLogic';
 
 const PlansContext = createContext<PlansContextType | undefined>(undefined);
 

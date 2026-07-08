@@ -1,7 +1,7 @@
 "use client";
 
 import { Heart } from 'lucide-react';
-import { useLandingContext } from '../../landing_context/LandingContext';
+import { useLandingContext } from '@/app/(landing)/landing_context/LandingContext';
 
 export default function LandingBmiCalc() {
  const { weight, setWeight, height, setHeight, bmiResult, calculateBMI } = useLandingContext();

@@ -1,8 +1,8 @@
 "use client";
 
 import { Package, ShoppingCart, TrendingUp, AlertTriangle } from 'lucide-react';
-import { useStoreContext } from '../../store_context/StoreContext';
-import { formatCurrency } from '../../store_utils/StoreSharedConstants';
+import { useStoreContext } from '@/app/(erp)/store/store_context/StoreContext';
+import { formatCurrency } from '@/app/(erp)/store/store_utils/StoreSharedConstants';
 
 export default function StoreKPIs() {
  const { summary } = useStoreContext();
