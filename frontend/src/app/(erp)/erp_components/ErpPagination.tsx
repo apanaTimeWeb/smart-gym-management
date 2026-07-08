@@ -5,22 +5,37 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 interface ErpPaginationProps {
   currentPage: number;
   totalPages: number;
-  totalItems: number;
-  itemsPerPage: number;
   onPageChange: (page: number) => void;
+  // Optional detailed info props
+  totalItems?: number;
+  itemsPerPage?: number;
+  // Optional color overrides (uses CSS vars by default)
+  colors?: {
+    text?: string;
+    textActive?: string;
+    bgActive?: string;
+    border?: string;
+    hoverBg?: string;
+  };
 }
 
 export default function ErpPagination({ 
   currentPage, 
-  totalPages, 
-  totalItems, 
-  itemsPerPage, 
-  onPageChange 
+  totalPages,
+  onPageChange,
+  totalItems,
+  itemsPerPage,
+  colors,
 }: ErpPaginationProps) {
-  if (totalItems === 0) return null;
+  if (totalPages <= 1) return null;
 
-  const startItem = (currentPage - 1) * itemsPerPage + 1;
-  const endItem = Math.min(currentPage * itemsPerPage, totalItems);
+  const startItem = totalItems && itemsPerPage ? (currentPage - 1) * itemsPerPage + 1 : null;
+  const endItem = totalItems && itemsPerPage ? Math.min(currentPage * itemsPerPage, totalItems) : null;
+
+  const bgActive = colors?.bgActive ?? 'var(--primary)';
+  const textActive = colors?.textActive ?? 'white';
+  const textColor = colors?.text ?? 'var(--text-secondary)';
+  const borderColor = colors?.border ?? 'var(--border)';
 
   const getVisiblePages = () => {
     const pages = [];
@@ -39,16 +54,29 @@ export default function ErpPagination({
   };
 
   return (
-    <div className="px-5 py-4 border-t border-[var(--border)] bg-[var(--bg-card)] flex flex-col sm:flex-row items-center justify-between gap-4 mt-auto">
-      <div className="text-sm text-[var(--text-secondary)] text-center sm:text-left">
-        Showing <span className="font-medium text-[var(--text-primary)]">{startItem}</span> to <span className="font-medium text-[var(--text-primary)]">{endItem}</span> of <span className="font-medium text-[var(--text-primary)]">{totalItems}</span> results
-      </div>
+    <div 
+      className="px-5 py-4 flex flex-col sm:flex-row items-center justify-between gap-4"
+      style={{ borderColor }}
+    >
+      {startItem !== null && endItem !== null && totalItems !== undefined ? (
+        <div className="text-sm text-center sm:text-left" style={{ color: textColor }}>
+          Showing <span className="font-medium">{startItem}</span> to{' '}
+          <span className="font-medium">{endItem}</span> of{' '}
+          <span className="font-medium">{totalItems}</span> results
+        </div>
+      ) : (
+        <div className="text-sm" style={{ color: textColor }}>
+          Page <span className="font-medium">{currentPage}</span> of{' '}
+          <span className="font-medium">{totalPages}</span>
+        </div>
+      )}
       
       <div className="flex items-center gap-1">
         <button 
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="p-1.5 rounded-lg text-[var(--text-secondary)] hover:bg-[var(--bg-input)] hover:text-[var(--text-primary)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="p-1.5 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          style={{ color: textColor }}
         >
           <ChevronLeft size={18} />
         </button>
@@ -56,16 +84,17 @@ export default function ErpPagination({
         <div className="flex items-center gap-1 mx-1">
           {getVisiblePages().map((p, i) => (
             p === '...' ? (
-              <span key={`dots-${i}`} className="px-2 text-[var(--text-secondary)]">...</span>
+              <span key={`dots-${i}`} className="px-2" style={{ color: textColor }}>...</span>
             ) : (
               <button
                 key={p}
                 onClick={() => onPageChange(p as number)}
-                className={`w-8 h-8 flex items-center justify-center rounded-lg text-sm font-medium transition-colors ${
+                className="w-8 h-8 flex items-center justify-center rounded-lg text-sm font-medium transition-all"
+                style={
                   currentPage === p 
-                    ? 'bg-[var(--primary)] text-white' 
-                    : 'text-[var(--text-secondary)] hover:bg-[var(--bg-input)] hover:text-[var(--text-primary)]'
-                }`}
+                    ? { background: bgActive, color: textActive }
+                    : { color: textColor }
+                }
               >
                 {p}
               </button>
@@ -76,7 +105,8 @@ export default function ErpPagination({
         <button 
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="p-1.5 rounded-lg text-[var(--text-secondary)] hover:bg-[var(--bg-input)] hover:text-[var(--text-primary)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="p-1.5 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          style={{ color: textColor }}
         >
           <ChevronRight size={18} />
         </button>
