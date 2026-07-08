@@ -1,0 +1,28 @@
+/* members.css - Theme Variables for Members Module */
+
+.members-module {
+  /* Common backgrounds */
+  --members-bg-card: var(--bg-card);
+  --members-bg-input: var(--bg-input);
+
+  /* Text colors */
+  --members-text-primary: var(--text-primary);
+  --members-text-secondary: var(--text-secondary);
+
+  /* Borders */
+  --members-border: var(--border);
+
+  /* Status Colors (Tailwind classes replaced with standard tokens) */
+  --members-status-active-bg: var(--success-bg);
+  --members-status-active-text: var(--success);
+  
+  --members-status-pending-bg: var(--warning-bg);
+  --members-status-pending-text: var(--warning);
+  
+  --members-status-expired-bg: var(--danger-bg);
+  --members-status-expired-text: var(--danger);
+
+  /* Highlights */
+  --members-highlight: hsl(24 95% 53%);
+  --members-highlight-subtle: hsl(24 95% 95%);
+}
