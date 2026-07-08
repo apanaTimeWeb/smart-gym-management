@@ -329,4 +329,17 @@ All charts: dark background (`--bg-card`), `--text-secondary` axis labels, gridl
 
 ---
 
+## 11. THEMING & DARK/LIGHT MODE
+
+This design system intrinsically supports both Dark and Light modes using CSS variables. 
+When building modules or components, **ALWAYS follow these rules** to ensure seamless theme switching:
+
+1. **Never use hardcoded Tailwind colors** for backgrounds or text (e.g., `bg-white`, `bg-gray-900`, `text-black`, `text-white`) unless explicitly required for a specific UI element (like a primary button where text is always white).
+2. **Always use CSS Variables**: Map all colors to the global CSS variables defined in this system (e.g., `bg-[var(--bg-card)]`, `text-[var(--text-primary)]`, `border-[var(--border)]`).
+3. **Theme Provider**: Ensure the app is wrapped in a `ThemeProvider` (like `next-themes`) that toggles a `.dark` class on the `<html>` or `<body>` tag.
+4. **CSS Setup**: In your global CSS file (e.g., `globals.css`), define the light mode variables inside `:root { ... }` and the dark mode variables inside `.dark { ... }`.
+5. **Gradients & Shadows**: For gradients and shadows, use variables like `var(--primary)` instead of hardcoded hex/rgba to ensure they adapt naturally when the theme changes.
+
+---
+
 *END OF GLOBAL DESIGN SYSTEM — Paste this block before every module you give to Stitch.*
