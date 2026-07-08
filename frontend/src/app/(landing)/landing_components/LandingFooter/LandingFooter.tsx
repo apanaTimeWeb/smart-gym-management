@@ -21,7 +21,7 @@ export default function LandingFooter() {
  </p>
  <div className="flex gap-4">
  {[FbIcon, InstaIcon, XIcon, YtIcon].map((Icon, i) => (
- <a key={i} href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-[var(--warning)] hover:text-white transition-all">
+ <a key={i} href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-[var(--text-secondary)] hover:bg-[var(--warning)] hover:text-white transition-all">
  <Icon />
  </a>
  ))}

@@ -64,7 +64,7 @@ export default function MembersTable() {
  <td className="px-5 py-3.5">
  <div className="flex items-center gap-2">
  <button onClick={() => { setSelectedMember(m); loadMemberProfile(m.id); }} className="p-1.5 rounded-lg bg-[var(--info-bg)] text-[var(--info)] hover:bg-[var(--info-bg)]" title="View Profile"><Eye size={14} /></button>
- <button onClick={() => openEdit(m)} className="p-1.5 rounded-lg bg-gray-50 text-gray-600 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300" title="Edit"><Edit size={14} /></button>
+ <button onClick={() => openEdit(m)} className="p-1.5 rounded-lg bg-[var(--bg-page)] text-[var(--text-tertiary)] hover:bg-[var(--primary-subtle)] dark:bg-[var(--bg-card)] dark:text-[var(--text-secondary)]" title="Edit"><Edit size={14} /></button>
  <button onClick={() => openMsg(m, 'whatsapp')} className="p-1.5 rounded-lg text-white" style={{ background: '#25D366' }} title="WhatsApp"><MessageCircle size={14} /></button>
  <button onClick={() => openMsg(m, 'email')} className="p-1.5 rounded-lg text-white" style={{ background: 'hsl(217 91% 60%)' }} title="Email"><Mail size={14} /></button>
  <button onClick={() => deleteMember(m.id)} className="p-1.5 rounded-lg bg-[var(--danger-bg)] text-[var(--danger)] hover:bg-[var(--danger-bg)]" title="Delete"><Trash2 size={14} /></button>

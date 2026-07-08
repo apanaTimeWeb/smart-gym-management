@@ -33,7 +33,7 @@ export default function LandingSchedule() {
  </thead>
  <tbody className="divide-y divide-[var(--landing-border)]">
  {SCHEDULE.map((row, i) => (
- <tr key={i} className="hover:bg-white/5 transition-colors text-sm text-gray-300">
+ <tr key={i} className="hover:bg-white/5 transition-colors text-sm text-[var(--text-secondary)]">
  <td className="py-4 px-4 font-semibold text-[var(--warning)]">{row.time}</td>
  <td className="py-4 px-4">{row.monday}</td>
  <td className="py-4 px-4">{row.tuesday}</td>

@@ -39,7 +39,7 @@ export default function LandingAbout() {
  </p>
  <div className="grid grid-cols-2 gap-4 mt-8">
  {FEATURES.map((f, i) => (
- <div key={i} className="flex items-center gap-2.5 text-sm text-gray-300">
+ <div key={i} className="flex items-center gap-2.5 text-sm text-[var(--text-secondary)]">
  <CheckCircle size={16} className="text-[var(--warning)] flex-shrink-0" />
  {f}
  </div>

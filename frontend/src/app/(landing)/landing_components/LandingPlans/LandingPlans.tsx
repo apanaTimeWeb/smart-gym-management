@@ -38,7 +38,7 @@ export default function LandingPlans() {
  </div>
  <div className="space-y-3 mb-6 flex-1">
  {p.features.map((f, j) => (
- <div key={j} className="flex items-start gap-2.5 text-xs text-gray-300">
+ <div key={j} className="flex items-start gap-2.5 text-xs text-[var(--text-secondary)]">
  <CheckCircle size={14} className="text-[var(--warning)] flex-shrink-0 mt-0.5" />
  {f}
  </div>

@@ -32,7 +32,7 @@ export default function LandingTestimonials() {
  <div className="flex gap-1 text-[var(--warning)] mb-4">
  {[...Array(t.rating)].map((_, j) => <Star key={j} size={16} fill="currentColor" />)}
  </div>
- <p className="text-gray-300 italic mb-6 leading-relaxed">&quot;{t.text}&quot;</p>
+ <p className="text-[var(--text-secondary)] italic mb-6 leading-relaxed">&quot;{t.text}&quot;</p>
  </div>
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm">

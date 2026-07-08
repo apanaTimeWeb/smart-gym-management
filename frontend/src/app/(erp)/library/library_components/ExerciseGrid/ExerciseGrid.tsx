@@ -31,7 +31,7 @@ export default function ExerciseGrid() {
  <span className="text-xs bg-black/5 dark:bg-white/5 text-[var(--library-text-secondary)] px-2 py-0.5 rounded-full">
  {ex.category}
  </span>
- <span className={`ml-1.5 text-xs px-2 py-0.5 rounded-full font-medium ${DIFF_COLORS[ex.difficulty] || 'bg-gray-100 text-gray-700'}`}>
+ <span className={`ml-1.5 text-xs px-2 py-0.5 rounded-full font-medium ${DIFF_COLORS[ex.difficulty] || 'bg-[var(--primary-subtle)] text-[var(--text-tertiary)]'}`}>
  {ex.difficulty}
  </span>
  </div>

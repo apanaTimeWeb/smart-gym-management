@@ -27,7 +27,7 @@ export default function LandingHero() {
  </span>
  </h1>
 
- <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto mb-10 leading-relaxed">
+ <p className="text-lg sm:text-xl text-[var(--text-secondary)] max-w-2xl mx-auto mb-10 leading-relaxed">
  Join our premium fitness center with expert trainers, personalized workout plans, diet guidance, and modern equipment. <br className="hidden sm:block" />
  <strong className="text-white">Your fitness journey starts today.</strong>
  </p>

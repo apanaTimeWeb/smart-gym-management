@@ -59,7 +59,7 @@ export default function LandingBmiCalc() {
  <div className="bg-[var(--landing-bg-input)] border border-[var(--landing-border)] rounded-2xl p-8 text-center h-full flex flex-col justify-center items-center">
  {bmiResult ? (
  <div className="animate-in fade-in zoom-in duration-300">
- <h3 className="text-lg font-bold text-gray-300 mb-2">Your BMI is</h3>
+ <h3 className="text-lg font-bold text-[var(--text-secondary)] mb-2">Your BMI is</h3>
  <div className={`text-6xl font-black mb-4 ${bmiResult.color}`}>{bmiResult.value}</div>
  <div className="inline-block px-4 py-1.5 rounded-full bg-white/10 border border-[var(--landing-border)] text-white font-semibold mb-6">
  {bmiResult.status}

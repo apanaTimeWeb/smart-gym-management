@@ -45,7 +45,7 @@ export default function LandingTransformations() {
  </div>
  <div className="px-6 pb-6">
  <div className="bg-white/5 rounded-xl p-4">
- <p className="text-gray-300 text-sm italic">&quot;{t.review}&quot;</p>
+ <p className="text-[var(--text-secondary)] text-sm italic">&quot;{t.review}&quot;</p>
  </div>
  </div>
  </div>
