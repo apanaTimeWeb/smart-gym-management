@@ -6,62 +6,67 @@ import Link from 'next/link';
 import { getUser, logout } from '@/lib/api';
 import { ERP_NOTIFICATIONS } from '../erp_utils/ErpSharedConstants';
 
+import { ThemeToggle } from '@/components/ThemeToggle';
+
 interface ErpHeaderProps {
- title: string;
- subtitle?: string;
+  title: string;
+  subtitle?: string;
 }
 
 export default function ErpHeader({ title, subtitle }: ErpHeaderProps) {
- const [showNotifications, setShowNotifications] = useState(false);
- const [showProfile, setShowProfile] = useState(false);
- const notifRef = useRef<HTMLDivElement>(null);
- const profileRef = useRef<HTMLDivElement>(null);
- const user = getUser();
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
+  const notifRef = useRef<HTMLDivElement>(null);
+  const profileRef = useRef<HTMLDivElement>(null);
+  const user = getUser();
 
- useEffect(() => {
- function handleClickOutside(event: MouseEvent) {
- if (notifRef.current && !notifRef.current.contains(event.target as Node)) {
- setShowNotifications(false);
- }
- if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
- setShowProfile(false);
- }
- }
- document.addEventListener('mousedown', handleClickOutside);
- return () => document.removeEventListener('mousedown', handleClickOutside);
- }, []);
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (notifRef.current && !notifRef.current.contains(event.target as Node)) {
+        setShowNotifications(false);
+      }
+      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+        setShowProfile(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
- return (
- <header className="bg-[var(--bg-card)] border-b border-[var(--border)] px-6 py-4 flex items-center justify-between sticky top-0 z-30">
- <div className="flex items-center gap-4">
- <button
- className="p-2 -ml-3 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors bg-[var(--bg-input)] hover:bg-[var(--bg-page)] rounded-lg border border-[var(--border)]"
- onClick={() => window.dispatchEvent(new Event('toggle-sidebar'))}
- title="Toggle Sidebar"
- >
- <Menu size={20} />
- </button>
- <div>
- <h1 className="text-xl font-bold text-[var(--text-primary)]">{title}</h1>
- {subtitle && <p className="text-sm text-[var(--text-secondary)] mt-0.5">{subtitle}</p>}
- </div>
- </div>
- <div className="flex items-center gap-4">
- <div className="relative hidden sm:block">
- <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]" />
- <input
- type="text"
- placeholder="Search..."
- className="pl-9 pr-4 py-2 text-sm bg-[var(--bg-input)] border border-[var(--border)] rounded-lg focus:outline-none focus:border-[var(--border-focus)] text-[var(--text-primary)] w-52 transition-colors"
- />
- </div>
+  return (
+    <header className="bg-[var(--bg-card)] border-b border-[var(--border)] px-6 py-4 flex items-center justify-between sticky top-0 z-30">
+      <div className="flex items-center gap-4">
+        <button
+          className="p-2 -ml-3 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors bg-[var(--bg-input)] hover:bg-[var(--bg-page)] rounded-lg border border-[var(--border)]"
+          onClick={() => window.dispatchEvent(new Event('toggle-sidebar'))}
+          title="Toggle Sidebar"
+        >
+          <Menu size={20} />
+        </button>
+        <div>
+          <h1 className="text-xl font-bold text-[var(--text-primary)]">{title}</h1>
+          {subtitle && <p className="text-sm text-[var(--text-secondary)] mt-0.5">{subtitle}</p>}
+        </div>
+      </div>
+      <div className="flex items-center gap-4">
+        <div className="relative hidden sm:block">
+          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]" />
+          <input
+            type="text"
+            placeholder="Search..."
+            className="pl-9 pr-4 py-2 text-sm bg-[var(--bg-input)] border border-[var(--border)] rounded-lg focus:outline-none focus:border-[var(--border-focus)] text-[var(--text-primary)] w-52 transition-colors"
+          />
+        </div>
 
- {/* Notifications */}
- <div className="relative" ref={notifRef}>
- <button
- onClick={() => setShowNotifications(!showNotifications)}
- className="relative p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-input)] rounded-lg transition-colors border border-transparent hover:border-[var(--border)]"
- >
+        {/* Theme Toggle */}
+        <ThemeToggle />
+
+        {/* Notifications */}
+        <div className="relative" ref={notifRef}>
+          <button
+            onClick={() => setShowNotifications(!showNotifications)}
+            className="relative p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-input)] rounded-lg transition-colors border border-transparent hover:border-[var(--border)]"
+          >
  <Bell size={19} />
  <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full" style={{ background: 'var(--primary)' }}></span>
  </button>

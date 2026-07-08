@@ -5,34 +5,37 @@ import Image from 'next/image';
 import { Menu, X } from 'lucide-react';
 import { useLandingContext } from '../../landing_context/LandingContext';
 
+import { ThemeToggle } from '@/components/ThemeToggle';
+
 export default function LandingNavbar() {
- const { menuOpen, setMenuOpen, scrolled } = useLandingContext();
+  const { menuOpen, setMenuOpen, scrolled } = useLandingContext();
 
- return (
- <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-black/95 backdrop-blur-md shadow-lg' : 'bg-transparent'}`}>
- <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
- <div className="flex items-center gap-2.5">
- <Image src="/logo.png" alt="GymSmart" width={40} height={40} className="rounded-lg object-cover" />
- <div>
- <span className="font-bold text-lg text-white tracking-tight">GymSmart</span>
- <span className="text-[10px] text-[var(--warning)] block -mt-1 tracking-widest uppercase">Fitness ERP</span>
- </div>
- </div>
+  return (
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-black/95 backdrop-blur-md shadow-lg' : 'bg-transparent'}`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
+        <div className="flex items-center gap-2.5">
+          <Image src="/logo.png" alt="GymSmart" width={40} height={40} className="rounded-lg object-cover" />
+          <div>
+            <span className="font-bold text-lg text-white tracking-tight">GymSmart</span>
+            <span className="text-[10px] text-[var(--warning)] block -mt-1 tracking-widest uppercase">Fitness ERP</span>
+          </div>
+        </div>
 
- <div className="hidden md:flex items-center gap-6 text-sm font-medium text-[var(--text-secondary)]">
- {['About', 'Plans', 'Trainers', 'Services', 'Schedule', 'Booking', 'Gallery'].map(item => (
- <a key={item} href={`#${item.toLowerCase()}`} className="hover:text-[var(--warning)] transition-colors">{item}</a>
- ))}
- </div>
+        <div className="hidden md:flex items-center gap-6 text-sm font-medium text-[var(--text-secondary)]">
+          {['About', 'Plans', 'Trainers', 'Services', 'Schedule', 'Booking', 'Gallery'].map(item => (
+            <a key={item} href={`#${item.toLowerCase()}`} className="hover:text-[var(--warning)] transition-colors">{item}</a>
+          ))}
+        </div>
 
- <div className="hidden md:flex items-center gap-3">
- <Link href="/dashboard" className="text-sm font-medium text-[var(--text-secondary)] hover:text-white transition-colors px-3 py-1.5">
- ERP Login
- </Link>
- <a href="#booking" className="text-sm font-bold px-5 py-2.5 rounded-xl text-white transition-all hover:scale-105" style={{ background: 'var(--landing-highlight-gradient)' }}>
- Join Now
- </a>
- </div>
+        <div className="hidden md:flex items-center gap-3">
+          <ThemeToggle />
+          <Link href="/dashboard" className="text-sm font-medium text-[var(--text-secondary)] hover:text-white transition-colors px-3 py-1.5">
+            ERP Login
+          </Link>
+          <a href="#booking" className="text-sm font-bold px-5 py-2.5 rounded-xl text-white transition-all hover:scale-105" style={{ background: 'var(--landing-highlight-gradient)' }}>
+            Join Now
+          </a>
+        </div>
 
  <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden p-2 text-[var(--text-secondary)]">
  {menuOpen ? <X size={22} /> : <Menu size={22} />}
