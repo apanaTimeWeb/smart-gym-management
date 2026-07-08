@@ -15,8 +15,8 @@
   /* Borders */
   --landing-border: rgba(255, 255, 255, 0.1);
 
-  /* Highlights */
-  --landing-highlight-orange: hsl(24 95% 53%);
-  --landing-highlight-gradient: linear-gradient(135deg, hsl(24 95% 53%), hsl(10 90% 45%));
-  --landing-text-gradient: linear-gradient(135deg, #f97316, #ef4444);
+  /* Highlights mapped to Global Design System (Indigo) */
+  --landing-highlight-orange: var(--primary);
+  --landing-highlight-gradient: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  --landing-text-gradient: linear-gradient(135deg, var(--primary), var(--primary-hover));
 }

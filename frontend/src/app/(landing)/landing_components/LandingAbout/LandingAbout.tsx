@@ -3,7 +3,7 @@
 import { CheckCircle, Users, Award, Clock, Heart } from 'lucide-react';
 
 const STATS_CARDS = [
- { label: 'Happy Members', value: '5000+', icon: Users, color: 'from-orange-500 to-red-600' },
+  { label: 'Happy Members', value: '5000+', icon: Users, color: 'from-indigo-500 to-indigo-600' },
  { label: 'Expert Trainers', value: '10+', icon: Award, color: 'from-blue-500 to-indigo-600' },
  { label: 'Hours Open', value: '24/7', icon: Clock, color: 'from-green-500 to-emerald-600' },
  { label: 'Transformations', value: '2000+', icon: Heart, color: 'from-pink-500 to-rose-600' },

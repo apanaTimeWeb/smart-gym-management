@@ -33,8 +33,8 @@ export default function LandingHero() {
  </p>
 
  <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
- <a href="#plans" className="px-8 py-4 text-white font-bold text-lg rounded-2xl transition-all hover:scale-105 hover:shadow-2xl flex items-center gap-2 w-full sm:w-auto justify-center" style={{ background: 'var(--landing-highlight-gradient)', boxShadow: '0 0 40px rgba(249,115,22,0.4)' }}>
- Join Now <ArrowRight size={18} />
+        <a href="#plans" className="px-8 py-4 text-white font-bold text-lg rounded-2xl transition-all hover:scale-105 hover:shadow-2xl flex items-center gap-2 w-full sm:w-auto justify-center" style={{ background: 'var(--landing-highlight-gradient)', boxShadow: '0 0 40px rgba(99,102,241,0.4)' }}>
+          Join Now <ArrowRight size={18} />
  </a>
  <a href="#booking" className="px-8 py-4 font-bold text-lg rounded-2xl border-2 border-[var(--landing-border)] text-white hover:bg-white/10 transition-all flex items-center gap-2 w-full sm:w-auto justify-center backdrop-blur-sm">
  Free Trial

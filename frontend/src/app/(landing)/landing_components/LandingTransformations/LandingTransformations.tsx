@@ -20,8 +20,8 @@ export default function LandingTransformations() {
  <div key={i} className="bg-[var(--landing-bg-card)] border border-[var(--landing-border)] rounded-2xl overflow-hidden hover:border-[var(--warning)]/30 transition-all group">
  <div className="p-6 pb-4">
  <div className="flex items-center gap-4 mb-4">
- <div className="w-14 h-14 rounded-full bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center text-white font-black text-xl">
- {t.initials}
+                    <div className="w-14 h-14 rounded-full flex items-center justify-center text-white font-black text-xl" style={{ background: 'var(--landing-highlight-gradient)' }}>
+                      {t.initials}
  </div>
  <div>
  <h3 className="font-bold text-white">{t.name}</h3>
