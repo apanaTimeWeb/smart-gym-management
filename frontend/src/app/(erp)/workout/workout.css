@@ -1,0 +1,18 @@
+/* workout.css - Theme Variables for Workout Module */
+
+.workout-module {
+  /* Common backgrounds */
+  --workout-bg-card: var(--bg-card);
+  --workout-bg-input: var(--bg-input);
+
+  /* Text colors */
+  --workout-text-primary: var(--text-primary);
+  --workout-text-secondary: var(--text-secondary);
+
+  /* Borders */
+  --workout-border: var(--border);
+
+  /* Highlights */
+  --workout-highlight: hsl(24 95% 53%);
+  --workout-highlight-subtle: hsl(24 95% 95%);
+}
