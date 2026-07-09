@@ -1,0 +1,35 @@
+{
+  "info": {
+    "name": "GymSmart Settings Module",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get Settings",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/settings",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "settings"]
+        }
+      }
+    },
+    {
+      "name": "Update Settings",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "{{baseUrl}}/api/settings",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "settings"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"gymName\":\"GymSmart Super Fitness\",\"ownerName\":\"Admin\"}",
+          "options": { "raw": { "language": "json" } }
+        }
+      }
+    }
+  ]
+}

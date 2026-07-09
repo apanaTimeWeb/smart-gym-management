@@ -1,0 +1,19 @@
+{
+  "info": {
+    "name": "GymSmart Plans Module",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get Plans",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/plans?limit=10&page=1",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "plans"]
+        }
+      }
+    }
+  ]
+}

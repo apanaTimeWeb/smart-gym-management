@@ -1,0 +1,19 @@
+{
+  "info": {
+    "name": "GymSmart Attendance Module",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get Attendance",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/attendance?limit=10&page=1",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "attendance"]
+        }
+      }
+    }
+  ]
+}

@@ -10,6 +10,13 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const typeorm_1 = require("@nestjs/typeorm");
+const throttler_1 = require("@nestjs/throttler");
+const cache_manager_1 = require("@nestjs/cache-manager");
+const event_emitter_1 = require("@nestjs/event-emitter");
+const bullmq_1 = require("@nestjs/bullmq");
+const nestjs_pino_1 = require("nestjs-pino");
+const correlation_id_middleware_1 = require("./core/middleware/correlation-id.middleware");
+const health_module_1 = require("./core/health/health.module");
 const auth_module_1 = require("./modules/auth/auth.module");
 const members_module_1 = require("./modules/members/members.module");
 const plans_module_1 = require("./modules/plans/plans.module");
@@ -21,7 +28,11 @@ const workout_module_1 = require("./modules/workout/workout.module");
 const dashboard_module_1 = require("./modules/dashboard/dashboard.module");
 const inquiries_module_1 = require("./modules/inquiries/inquiries.module");
 const settings_module_1 = require("./modules/settings/settings.module");
+const media_module_1 = require("./core/media/media.module");
 let AppModule = class AppModule {
+    configure(consumer) {
+        consumer.apply(correlation_id_middleware_1.CorrelationIdMiddleware).forRoutes('*');
+    }
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
@@ -31,6 +42,33 @@ exports.AppModule = AppModule = __decorate([
                 isGlobal: true,
                 envFilePath: '.env',
             }),
+            nestjs_pino_1.LoggerModule.forRoot({
+                pinoHttp: {
+                    transport: {
+                        target: 'pino-pretty',
+                        options: { singleLine: true },
+                    },
+                },
+            }),
+            throttler_1.ThrottlerModule.forRoot([{
+                    ttl: 60000,
+                    limit: 100,
+                }]),
+            cache_manager_1.CacheModule.register({
+                isGlobal: true,
+                ttl: 5000,
+            }),
+            bullmq_1.BullModule.forRootAsync({
+                imports: [config_1.ConfigModule],
+                inject: [config_1.ConfigService],
+                useFactory: (configService) => ({
+                    connection: {
+                        host: configService.get('REDIS_HOST') || 'localhost',
+                        port: configService.get('REDIS_PORT') || 6379,
+                    },
+                }),
+            }),
+            event_emitter_1.EventEmitterModule.forRoot(),
             typeorm_1.TypeOrmModule.forRootAsync({
                 imports: [config_1.ConfigModule],
                 inject: [config_1.ConfigService],
@@ -41,6 +79,8 @@ exports.AppModule = AppModule = __decorate([
                     synchronize: false,
                 }),
             }),
+            health_module_1.HealthModule,
+            media_module_1.MediaModule,
             auth_module_1.AuthModule,
             members_module_1.MembersModule,
             plans_module_1.PlansModule,

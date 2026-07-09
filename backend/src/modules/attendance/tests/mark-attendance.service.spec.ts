@@ -31,7 +31,7 @@ describe('MarkAttendanceService', () => {
 
   it('should throw UserNotLinkedException if neither memberId nor staffId is provided', async () => {
     await expect(
-      service.mark({ date: new Date().toISOString(), type: AttendanceType.CHECK_IN }),
+      service.mark({ date: new Date().toISOString(), type: AttendanceType.MEMBER }),
     ).rejects.toThrow(UserNotLinkedException);
   });
 });

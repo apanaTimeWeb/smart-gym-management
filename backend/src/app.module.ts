@@ -1,6 +1,15 @@
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { CacheModule } from '@nestjs/cache-manager';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { BullModule } from '@nestjs/bullmq';
+import { LoggerModule } from 'nestjs-pino';
+
+import { CorrelationIdMiddleware } from '@/core/middleware/correlation-id.middleware';
+import { HealthModule } from '@/core/health/health.module';
+
 import { AuthModule } from '@/modules/auth/auth.module';
 import { MembersModule } from '@/modules/members/members.module';
 import { PlansModule } from '@/modules/plans/plans.module';
@@ -12,6 +21,7 @@ import { WorkoutModule } from '@/modules/workout/workout.module';
 import { DashboardModule } from '@/modules/dashboard/dashboard.module';
 import { InquiriesModule } from '@/modules/inquiries/inquiries.module';
 import { SettingsModule } from '@/modules/settings/settings.module';
+import { MediaModule } from '@/core/media/media.module';
 
 @Module({
   imports: [
@@ -20,6 +30,43 @@ import { SettingsModule } from '@/modules/settings/settings.module';
       isGlobal: true,
       envFilePath: '.env',
     }),
+
+    // ─── Observability (Pino Logging) ──────────────────────────────────────
+    LoggerModule.forRoot({
+      pinoHttp: {
+        transport: {
+          target: 'pino-pretty',
+          options: { singleLine: true },
+        },
+      },
+    }),
+
+    // ─── Security (Rate Limiting) ─────────────────────────────────────────
+    ThrottlerModule.forRoot([{
+      ttl: 60000,
+      limit: 100, // 100 requests per minute
+    }]),
+
+    // ─── Performance (Caching) ────────────────────────────────────────────
+    CacheModule.register({
+      isGlobal: true,
+      ttl: 5000, // default 5 seconds
+    }),
+
+    // ─── Background Jobs (BullMQ) ─────────────────────────────────────────
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        connection: {
+          host: configService.get('REDIS_HOST') || 'localhost',
+          port: configService.get('REDIS_PORT') || 6379,
+        },
+      }),
+    }),
+
+    // ─── Event Emitter ────────────────────────────────────────────────────
+    EventEmitterModule.forRoot(),
 
     // ─── Database ─────────────────────────────────────────────────────────
     TypeOrmModule.forRootAsync({
@@ -32,6 +79,10 @@ import { SettingsModule } from '@/modules/settings/settings.module';
         synchronize: false,
       }),
     }),
+
+    // ─── Infrastructure Modules ───────────────────────────────────────────
+    HealthModule,
+    MediaModule,
 
     // ─── Feature Modules ──────────────────────────────────────────────────
     AuthModule,
@@ -47,4 +98,8 @@ import { SettingsModule } from '@/modules/settings/settings.module';
     SettingsModule,
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(CorrelationIdMiddleware).forRoutes('*');
+  }
+}

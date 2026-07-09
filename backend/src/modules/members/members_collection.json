@@ -1,0 +1,19 @@
+{
+  "info": {
+    "name": "GymSmart Members Module",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get Members",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/members?limit=10&page=1",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "members"]
+        }
+      }
+    }
+  ]
+}

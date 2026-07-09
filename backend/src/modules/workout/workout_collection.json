@@ -1,0 +1,40 @@
+{
+  "info": {
+    "name": "GymSmart Workout Module",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Exercises",
+      "item": [
+        {
+          "name": "Get Exercises",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/workout/exercises?limit=10&page=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "workout", "exercises"]
+            }
+          }
+        },
+        {
+          "name": "Create Exercise",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/workout/exercises",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "workout", "exercises"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Pushups\",\"description\":\"Basic chest exercise\",\"category\":\"Strength\",\"difficulty\":\"Beginner\"}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

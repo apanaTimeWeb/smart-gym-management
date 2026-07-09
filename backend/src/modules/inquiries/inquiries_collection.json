@@ -1,0 +1,46 @@
+{
+  "info": {
+    "name": "GymSmart Inquiries Module",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get Inquiries",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/inquiries?limit=10&page=1",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "inquiries"]
+        }
+      }
+    },
+    {
+      "name": "Get Stats",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/inquiries/meta/stats",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "inquiries", "meta", "stats"]
+        }
+      }
+    },
+    {
+      "name": "Create Inquiry",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "{{baseUrl}}/api/inquiries",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "inquiries"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"name\":\"Alice\",\"phone\":\"1234567890\",\"source\":\"Instagram\"}",
+          "options": { "raw": { "language": "json" } }
+        }
+      }
+    }
+  ]
+}

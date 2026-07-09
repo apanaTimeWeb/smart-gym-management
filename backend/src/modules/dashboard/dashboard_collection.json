@@ -1,0 +1,41 @@
+{
+  "info": {
+    "name": "GymSmart Dashboard Module",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get KPI",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/dashboard/kpi",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "dashboard", "kpi"]
+        }
+      }
+    },
+    {
+      "name": "Get Charts",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/dashboard/charts",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "dashboard", "charts"]
+        }
+      }
+    },
+    {
+      "name": "Get Recent",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/dashboard/recent",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "dashboard", "recent"]
+        }
+      }
+    }
+  ]
+}

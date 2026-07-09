@@ -1,19 +1,39 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '@/app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, Logger } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ResponseInterceptor } from '@/modules/core/interceptors/response.interceptor';
 import { HttpExceptionFilter } from '@/modules/core/filters/http-exception.filter';
+import helmet from 'helmet';
+import compression from 'compression';
+import { ConfigService } from '@nestjs/config';
+import { Logger as PinoLogger } from 'nestjs-pino';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+
+  // ─── Observability (Pino Logger) ──────────────────────────────────────────
+  app.useLogger(app.get(PinoLogger));
+  const logger = new Logger('Bootstrap');
+
+  // ─── Graceful Shutdown ────────────────────────────────────────────────────
+  app.enableShutdownHooks();
 
   // ─── Global Prefix ────────────────────────────────────────────────────────
   app.setGlobalPrefix('api');
 
+  // ─── Security Headers (Helmet) ────────────────────────────────────────────
+  app.use(helmet());
+
+  // ─── Compression (Gzip) ───────────────────────────────────────────────────
+  app.use(compression());
+
   // ─── CORS ─────────────────────────────────────────────────────────────────
+  const configService = app.get(ConfigService);
+  const frontendUrl = configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
+  
   app.enableCors({
-    origin: true, // Allow all origins for now to prevent CORS issues
+    origin: [frontendUrl], // Strict CORS
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT'],
   });
@@ -59,12 +79,13 @@ async function bootstrap() {
     swaggerOptions: { persistAuthorization: true },
   });
 
-  const port = process.env.PORT || 5000;
+  const port = configService.get<number>('PORT') || 5000;
   await app.listen(port);
 
-  console.log(`\n🏋️  GymSmart Backend is running!`);
-  console.log(`🚀  API:     http://localhost:${port}/api`);
-  console.log(`📚  Docs:    http://localhost:${port}/api/docs\n`);
+  logger.log(`\n🏋️  GymSmart Backend is running!`);
+  logger.log(`🚀  API:     http://localhost:${port}/api`);
+  logger.log(`📚  Docs:    http://localhost:${port}/api/docs\n`);
 }
 
 bootstrap();
+
