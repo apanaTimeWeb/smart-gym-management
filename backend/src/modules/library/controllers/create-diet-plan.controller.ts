@@ -5,14 +5,14 @@ import {
   ApiBearerAuth,
   ApiResponse,
 } from '@nestjs/swagger';
-import { CreateDietPlanService } from '@/modules/workout/services/create-diet-plan.service';
-import { CreateDietPlanDto } from '@/modules/workout/dto/create-diet-plan.dto';
+import { CreateDietPlanService } from '@/modules/library/services/create-diet-plan.service';
+import { CreateDietPlanDto } from '@/modules/library/dto/create-diet-plan.dto';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 
-@ApiTags('Workout')
+@ApiTags('Exercise')
 @ApiBearerAuth('JWT-auth')
 @UseGuards(JwtAuthGuard)
-@Controller('workout/diet-plans')
+@Controller('library/diet-plans')
 export class CreateDietPlanController {
   constructor(private readonly createDietPlanService: CreateDietPlanService) {}
 

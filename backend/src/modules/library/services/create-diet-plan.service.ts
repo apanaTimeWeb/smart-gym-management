@@ -1,12 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { WorkoutRepository } from '@/modules/workout/workout.repository';
-import { CreateDietPlanDto } from '@/modules/workout/dto/create-diet-plan.dto';
+import { LibraryRepository } from '@/modules/library/library.repository';
+import { CreateDietPlanDto } from '@/modules/library/dto/create-diet-plan.dto';
 
 @Injectable()
 export class CreateDietPlanService {
   private readonly logger = new Logger(CreateDietPlanService.name);
 
-  constructor(private readonly repository: WorkoutRepository) {}
+  constructor(private readonly repository: LibraryRepository) {}
 
   async execute(dto: CreateDietPlanDto) {
     this.logger.log(`Creating diet plan: ${dto.name}`);

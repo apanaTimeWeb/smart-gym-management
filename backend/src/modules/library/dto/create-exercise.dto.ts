@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsOptional, IsBoolean } from 'class-validator';
 
-export class CreateWorkoutDto {
-  @ApiProperty({ description: 'Workout name', example: 'Push Day' })
+export class CreateExerciseDto {
+  @ApiProperty({ description: 'Exercise name', example: 'Push Day' })
   @IsString()
   name: string;
 

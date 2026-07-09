@@ -13,14 +13,14 @@ import {
   ApiBearerAuth,
   ApiResponse,
 } from '@nestjs/swagger';
-import { UpdateDietPlanService } from '@/modules/workout/services/update-diet-plan.service';
-import { UpdateDietPlanDto } from '@/modules/workout/dto/update-diet-plan.dto';
+import { UpdateDietPlanService } from '@/modules/library/services/update-diet-plan.service';
+import { UpdateDietPlanDto } from '@/modules/library/dto/update-diet-plan.dto';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 
-@ApiTags('Workout')
+@ApiTags('Exercise')
 @ApiBearerAuth('JWT-auth')
 @UseGuards(JwtAuthGuard)
-@Controller('workout/diet-plans')
+@Controller('library/diet-plans')
 export class UpdateDietPlanController {
   constructor(private readonly updateDietPlanService: UpdateDietPlanService) {}
 

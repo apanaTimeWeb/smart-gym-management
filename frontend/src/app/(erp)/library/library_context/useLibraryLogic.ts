@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { workoutApi, type Exercise, type DietPlan } from '@/lib/api';
+import { libraryApi, type Exercise, type DietPlan } from '@/lib/api';
 import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
 import { EMPTY_EXERCISE_FORM, EMPTY_DIET_FORM, type LibraryTab } from '@/app/(erp)/library/library_utils/LibrarySharedConstants';
 import { LibraryContextType } from '@/app/(erp)/library/library_types/library_types';
@@ -33,8 +33,8 @@ export function useLibraryLogic(): LibraryContextType {
  setLoading(true);
  try {
  const [exRes, dietRes] = await Promise.all([
- workoutApi.getExercises(),
- workoutApi.getDietPlans(),
+ libraryApi.getExercises(),
+ libraryApi.getDietPlans(),
  ]);
  setExercises(exRes.data);
  setDietPlans(dietRes.data);
@@ -81,10 +81,10 @@ export function useLibraryLogic(): LibraryContextType {
  };
  
  if (editExId) { 
- const res = await workoutApi.updateExercise(editExId, payload); 
+ const res = await libraryApi.updateExercise(editExId, payload); 
  showToast((res as any).message, 'success'); 
  } else { 
- const res = await workoutApi.createExercise(payload); 
+ const res = await libraryApi.createExercise(payload); 
  showToast((res as any).message, 'success'); 
  }
  setShowExModal(false); 
@@ -100,7 +100,7 @@ export function useLibraryLogic(): LibraryContextType {
   const isConfirmed = await confirm({ title: 'Delete Exercise', message: 'Delete this exercise?', confirmText: 'Delete', type: 'danger' });
   if (!isConfirmed) return;
   try { 
- const res = await workoutApi.removeExercise(id); 
+ const res = await libraryApi.removeExercise(id); 
  showToast((res as any).message, 'success'); 
  await loadAll(); 
  } catch (err) { 
@@ -144,10 +144,10 @@ export function useLibraryLogic(): LibraryContextType {
  };
  
  if (editDietId) { 
- const res = await workoutApi.updateDietPlan(editDietId, payload); 
+ const res = await libraryApi.updateDietPlan(editDietId, payload); 
  showToast((res as any).message, 'success'); 
  } else { 
- const res = await workoutApi.createDietPlan(payload); 
+ const res = await libraryApi.createDietPlan(payload); 
  showToast((res as any).message, 'success'); 
  }
  setShowDietModal(false); 
@@ -162,8 +162,8 @@ export function useLibraryLogic(): LibraryContextType {
  const deleteDietPlan = useCallback(async (id: number) => {
   const isConfirmed = await confirm({ title: 'Delete Diet Plan', message: 'Delete this diet plan?', confirmText: 'Delete', type: 'danger' });
   if (!isConfirmed) return;
-  try { 
- const res = await workoutApi.removeDietPlan(id); 
+ try { 
+ const res = await libraryApi.removeDietPlan(id); 
  showToast((res as any).message, 'success'); 
  await loadAll(); 
  } catch (err) { 

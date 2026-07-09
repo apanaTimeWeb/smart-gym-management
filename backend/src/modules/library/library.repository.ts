@@ -1,22 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Workout } from '@/modules/workout/entities/workout.entity';
-import { DietPlan } from '@/modules/workout/entities/diet-plan.entity';
+import { Exercise } from '@/modules/library/entities/exercise.entity';
+import { DietPlan } from '@/modules/library/entities/diet-plan.entity';
 import { PaginationQueryDto } from '@/core/dto/pagination-query.dto';
-import { WORKOUT_CONSTANTS } from './workout.constants';
+import { WORKOUT_CONSTANTS } from './library.constants';
 
 @Injectable()
-export class WorkoutRepository {
+export class LibraryRepository {
   constructor(
-    @InjectRepository(Workout)
-    public readonly workoutRepository: Repository<Workout>,
+    @InjectRepository(Exercise)
+    public readonly libraryRepository: Repository<Exercise>,
     @InjectRepository(DietPlan)
     public readonly dietPlanRepository: Repository<DietPlan>,
   ) {}
 
-  async findAllWorkouts(query: PaginationQueryDto) {
-    return this.workoutRepository.findAndCount({
+  async findAllExercises(query: PaginationQueryDto) {
+    return this.libraryRepository.findAndCount({
       where: { isActive: true },
       order: { id: WORKOUT_CONSTANTS.SORT.ASC },
       take: query.limit,

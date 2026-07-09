@@ -37,6 +37,8 @@ const inquiries_module_1 = require("./modules/inquiries/inquiries.module");
 const settings_module_1 = require("./modules/settings/settings.module");
 const media_module_1 = require("./core/media/media.module");
 const audit_module_1 = require("./modules/audit/audit.module");
+const sales_module_1 = require("./modules/sales/sales.module");
+const library_module_1 = require("./modules/library/library.module");
 const audit_interceptor_1 = require("./core/interceptors/audit.interceptor");
 const idempotency_interceptor_1 = require("./core/interceptors/idempotency.interceptor");
 const nestjs_prometheus_1 = require("@willsoto/nestjs-prometheus");
@@ -65,10 +67,12 @@ exports.AppModule = AppModule = __decorate([
                 imports: [config_1.ConfigModule],
                 inject: [config_1.ConfigService],
                 useFactory: (config) => ({
-                    throttlers: [{
+                    throttlers: [
+                        {
                             ttl: 60000,
                             limit: 100,
-                        }],
+                        },
+                    ],
                     storage: new throttler_storage_redis_1.ThrottlerStorageRedisService(`redis://${config.get('REDIS_HOST', 'localhost')}:${config.get('REDIS_PORT', 6379)}`),
                 }),
             }),
@@ -121,6 +125,8 @@ exports.AppModule = AppModule = __decorate([
             inquiries_module_1.InquiriesModule,
             settings_module_1.SettingsModule,
             audit_module_1.AuditModule,
+            sales_module_1.SalesModule,
+            library_module_1.LibraryModule,
             nestjs_prometheus_1.PrometheusModule.register({
                 path: '/metrics',
                 defaultMetrics: {

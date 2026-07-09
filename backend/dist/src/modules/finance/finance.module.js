@@ -23,10 +23,7 @@ exports.FinanceModule = FinanceModule;
 exports.FinanceModule = FinanceModule = __decorate([
     (0, common_1.Module)({
         imports: [typeorm_1.TypeOrmModule.forFeature([payment_entity_1.Payment, member_entity_1.Member])],
-        controllers: [
-            payment_controller_1.PaymentController,
-            finance_summary_controller_1.FinanceSummaryController,
-        ],
+        controllers: [payment_controller_1.PaymentController, finance_summary_controller_1.FinanceSummaryController],
         providers: [
             finance_repository_1.FinanceRepository,
             payment_service_1.PaymentService,

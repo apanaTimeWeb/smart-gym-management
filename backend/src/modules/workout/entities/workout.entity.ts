@@ -16,31 +16,22 @@ export class Workout {
   name: string;
 
   @Column()
-  category: string;
-
-  @Column('simple-array')
-  muscleGroup: string[];
-
-  @Column({ nullable: true })
-  sets: number;
-
-  @Column({ nullable: true })
-  reps: string;
-
-  @Column({ nullable: true })
-  duration: string;
+  level: string;
 
   @Column()
-  difficulty: string;
+  days: number;
 
-  @Column({ nullable: true })
-  description: string;
+  @Column()
+  exercises: number;
 
-  @Column({ nullable: true })
-  videoUrl: string;
+  @Column()
+  focus: string;
 
-  @Column({ nullable: true })
-  imageUrl: string;
+  @Column()
+  duration: string;
+
+  @Column('simple-array')
+  tags: string[];
 
   @Column({ default: true })
   isActive: boolean;

@@ -32,7 +32,8 @@ exports.AuthModule = AuthModule = __decorate([
                 useFactory: async (configService) => ({
                     secret: configService.get('JWT_SECRET') || 'gymsmart_secret',
                     signOptions: {
-                        expiresIn: (configService.get('JWT_EXPIRES_IN') || '7d'),
+                        expiresIn: (configService.get('JWT_EXPIRES_IN') ||
+                            '7d'),
                     },
                 }),
                 inject: [config_1.ConfigService],

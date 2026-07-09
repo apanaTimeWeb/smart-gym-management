@@ -1,13 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { WorkoutRepository } from '@/modules/workout/workout.repository';
-import { UpdateDietPlanDto } from '@/modules/workout/dto/update-diet-plan.dto';
-import { DietPlanNotFoundException } from '@/modules/workout/workout.exceptions';
+import { LibraryRepository } from '@/modules/library/library.repository';
+import { UpdateDietPlanDto } from '@/modules/library/dto/update-diet-plan.dto';
+import { DietPlanNotFoundException } from '@/modules/library/library.exceptions';
 
 @Injectable()
 export class UpdateDietPlanService {
   private readonly logger = new Logger(UpdateDietPlanService.name);
 
-  constructor(private readonly repository: WorkoutRepository) {}
+  constructor(private readonly repository: LibraryRepository) {}
 
   async execute(id: number, dto: UpdateDietPlanDto) {
     this.logger.log(`Updating diet plan ID: ${id}`);

@@ -23,11 +23,7 @@ exports.PlansModule = PlansModule;
 exports.PlansModule = PlansModule = __decorate([
     (0, common_1.Module)({
         imports: [typeorm_1.TypeOrmModule.forFeature([plan_entity_1.Plan])],
-        controllers: [
-            create_plan_controller_1.CreatePlanController,
-            find_plan_controller_1.FindPlanController,
-            update_plan_controller_1.UpdatePlanController,
-        ],
+        controllers: [create_plan_controller_1.CreatePlanController, find_plan_controller_1.FindPlanController, update_plan_controller_1.UpdatePlanController],
         providers: [
             plans_repository_1.PlansRepository,
             create_plan_service_1.CreatePlanService,

@@ -19,7 +19,7 @@ import { AuthLoginService } from '@/modules/auth/services/auth-login.service';
 import { LoginDto } from '@/modules/auth/dto/login.dto';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 import type { AuthLoginResponse } from '@/modules/auth/auth.interfaces';
-import { Request } from 'express';
+import type { Request } from 'express';
 
 @ApiTags('Auth')
 @Controller('auth')

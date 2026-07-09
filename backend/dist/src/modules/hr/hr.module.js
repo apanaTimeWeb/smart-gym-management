@@ -24,17 +24,8 @@ exports.HrModule = HrModule;
 exports.HrModule = HrModule = __decorate([
     (0, common_1.Module)({
         imports: [typeorm_1.TypeOrmModule.forFeature([staff_entity_1.Staff, payroll_entity_1.Payroll])],
-        controllers: [
-            staff_controller_1.StaffController,
-            payroll_controller_1.PayrollController,
-            hr_stats_controller_1.HrStatsController,
-        ],
-        providers: [
-            hr_repository_1.HrRepository,
-            staff_service_1.StaffService,
-            payroll_service_1.PayrollService,
-            hr_stats_service_1.HrStatsService,
-        ],
+        controllers: [staff_controller_1.StaffController, payroll_controller_1.PayrollController, hr_stats_controller_1.HrStatsController],
+        providers: [hr_repository_1.HrRepository, staff_service_1.StaffService, payroll_service_1.PayrollService, hr_stats_service_1.HrStatsService],
     })
 ], HrModule);
 //# sourceMappingURL=hr.module.js.map

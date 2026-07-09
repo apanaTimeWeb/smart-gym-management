@@ -21,15 +21,8 @@ exports.SettingsModule = SettingsModule;
 exports.SettingsModule = SettingsModule = __decorate([
     (0, common_1.Module)({
         imports: [typeorm_1.TypeOrmModule.forFeature([setting_entity_1.Settings])],
-        controllers: [
-            get_settings_controller_1.GetSettingsController,
-            update_settings_controller_1.UpdateSettingsController,
-        ],
-        providers: [
-            settings_repository_1.SettingsRepository,
-            get_settings_service_1.GetSettingsService,
-            update_settings_service_1.UpdateSettingsService,
-        ],
+        controllers: [get_settings_controller_1.GetSettingsController, update_settings_controller_1.UpdateSettingsController],
+        providers: [settings_repository_1.SettingsRepository, get_settings_service_1.GetSettingsService, update_settings_service_1.UpdateSettingsService],
     })
 ], SettingsModule);
 //# sourceMappingURL=settings.module.js.map

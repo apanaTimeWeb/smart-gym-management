@@ -1,12 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { WorkoutRepository } from '@/modules/workout/workout.repository';
+import { LibraryRepository } from '@/modules/library/library.repository';
 import { PaginationQueryDto } from '@/core/dto/pagination-query.dto';
 
 @Injectable()
 export class FindDietPlanService {
   private readonly logger = new Logger(FindDietPlanService.name);
 
-  constructor(private readonly repository: WorkoutRepository) {}
+  constructor(private readonly repository: LibraryRepository) {}
 
   async execute(query: PaginationQueryDto) {
     this.logger.log(`Fetching diet plans`);

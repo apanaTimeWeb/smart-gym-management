@@ -11,8 +11,9 @@ import { Gender } from '../modules/members/utils/members.enums';
 import { Member } from '../modules/members/entities/member.entity';
 import { Payment } from '../modules/finance/entities/payment.entity';
 import { Product } from '../modules/store/entities/product.entity';
+import { Exercise } from '../modules/library/entities/exercise.entity';
 import { Workout } from '../modules/workout/entities/workout.entity';
-import { DietPlan } from '../modules/workout/entities/diet-plan.entity';
+import { DietPlan } from '../modules/library/entities/diet-plan.entity';
 import { Inquiry } from '../modules/inquiries/entities/inquiry.entity';
 import { Settings } from '../modules/settings/entities/setting.entity';
 import { Payroll } from '../modules/hr/entities/payroll.entity';
@@ -33,7 +34,7 @@ const AppDataSource = new DataSource({
     Member,
     Payment,
     Product,
-    Workout,
+    Exercise,
     DietPlan,
     Inquiry,
     Settings,

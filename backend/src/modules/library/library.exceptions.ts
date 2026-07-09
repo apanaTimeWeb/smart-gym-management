@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { WORKOUT_CONSTANTS } from './workout.constants';
+import { WORKOUT_CONSTANTS } from './library.constants';
 
-export class WorkoutNotFoundException extends HttpException {
+export class ExerciseNotFoundException extends HttpException {
   constructor(message?: string) {
     super(
       message || WORKOUT_CONSTANTS.ERROR_MESSAGES.WORKOUT_NOT_FOUND,
