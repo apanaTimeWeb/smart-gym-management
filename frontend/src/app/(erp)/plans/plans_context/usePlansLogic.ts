@@ -71,11 +71,11 @@ export function usePlansLogic(): PlansContextType {
  };
  
  if (editId) { 
- await plansApi.update(editId, payload); 
- showToast('Plan updated!', 'success'); 
+ const res = await plansApi.update(editId, payload); 
+ showToast((res as any).message, 'success'); 
  } else { 
- await plansApi.create(payload); 
- showToast('Plan created!', 'success'); 
+ const res = await plansApi.create(payload); 
+ showToast((res as any).message, 'success'); 
  }
  setShowModal(false); 
  await loadPlans();
@@ -90,8 +90,8 @@ export function usePlansLogic(): PlansContextType {
   const isConfirmed = await confirm({ title: 'Delete Plan', message: 'Are you sure you want to delete this plan?', confirmText: 'Delete', type: 'danger' });
   if (!isConfirmed) return;
   try { 
- await plansApi.remove(id); 
- showToast('Plan deleted!', 'success'); 
+ const res = await plansApi.remove(id); 
+ showToast((res as any).message, 'success'); 
  await loadPlans(); 
  } catch (err) { 
  showToast((err as Error).message, 'error'); 

@@ -52,4 +52,8 @@ Never hardcode numeric HTTP status codes (e.g., `401`, `500`, `200`) in API rout
 14. **Update AI-Context Documentation**: 
 Once the entire refactor is complete, update the project documentation in @[[MODULE_NAME]_features.md]. This document must serve as a map for future AI sessions. Clearly document the new "Feature-Based Sub-folder" directory structure, what each file precisely does, and where the centralized data/state is kept.
 
+15. **Backend-Driven UI Messages (No Hardcoded Toasts/Alerts)**: 
+Never hardcode success or error messages (e.g., "User created successfully" or "Invalid credentials") in the frontend components, hooks, or toast notifications. The frontend must strictly display the `message` string provided by the backend's standardized JSON response envelope.
+*Why?* If the business requirement for a message changes, or if we need to implement localization/translations tomorrow, we only want to update the text in one place: the backend. The frontend should act purely as a dumb display layer for API messages.
+
 Think step-by-step. Create a detailed implementation plan first so I can review it, and then execute it perfectly without breaking existing data flows!

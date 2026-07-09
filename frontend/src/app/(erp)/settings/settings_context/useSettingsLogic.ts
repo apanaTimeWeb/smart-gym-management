@@ -17,8 +17,8 @@ export function useSettingsLogic(): SettingsContextType {
  // eslint-disable-next-line @typescript-eslint/no-explicit-any
  const res: any = await apiFetch(SettingsUrlConfig.BACKEND_API.BASE);
  if (res.data) setForm(res.data);
- } catch {
- toast.error('Failed to load settings');
+ } catch (e: any) {
+ toast.error(e.message);
  } finally {
  setLoading(false);
  }
@@ -31,13 +31,13 @@ export function useSettingsLogic(): SettingsContextType {
  const handleSave = useCallback(async () => {
  setSaving(true);
  try {
- await apiFetch(SettingsUrlConfig.BACKEND_API.BASE, {
+ const res: any = await apiFetch(SettingsUrlConfig.BACKEND_API.BASE, {
  method: 'POST',
  body: JSON.stringify(form)
  });
- toast.success('Settings saved successfully!');
- } catch {
- toast.error('Failed to save settings');
+ toast.success(res.message);
+ } catch (e: any) {
+ toast.error(e.message);
  } finally {
  setSaving(false);
  }

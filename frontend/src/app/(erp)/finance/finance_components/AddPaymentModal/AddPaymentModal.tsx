@@ -17,13 +17,13 @@ export default function AddPaymentModal() {
  e.preventDefault();
  setSaving(true);
  try {
- await financeApi.createPayment({ 
+ const res = await financeApi.createPayment({ 
  memberId: Number(form.memberId), 
  amount: Number(form.amount), 
  method: form.method, 
  notes: form.notes 
  });
- showToast('Payment recorded!', 'success');
+ showToast((res as any).message, 'success');
  setShowModal(false);
  setForm({ memberId: '', amount: '', method: 'UPI', notes: '' });
  await loadAll();

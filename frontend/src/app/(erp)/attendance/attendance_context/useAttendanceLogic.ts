@@ -59,8 +59,8 @@ export function useAttendanceLogic(): AttendanceContextType {
  payload.staffId = Number(form.staffId);
  }
  
- await attendanceApi.mark(payload);
- showToast('Attendance marked!', 'success');
+ const res = await attendanceApi.mark(payload);
+ showToast((res as any).message, 'success');
  setShowModal(false);
  setForm(EMPTY_ATTENDANCE_FORM);
  await loadAll();

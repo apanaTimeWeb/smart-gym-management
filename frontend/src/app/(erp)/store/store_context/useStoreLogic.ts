@@ -81,11 +81,11 @@ export function useStoreLogic(): StoreContextType {
  };
  
  if (editProductId) { 
- await storeApi.updateProduct(editProductId, payload); 
- showToast('Product updated!', 'success'); 
+ const res = await storeApi.updateProduct(editProductId, payload); 
+ showToast((res as any).message, 'success'); 
  } else { 
- await storeApi.createProduct(payload); 
- showToast('Product added!', 'success'); 
+ const res = await storeApi.createProduct(payload); 
+ showToast((res as any).message, 'success'); 
  }
  setShowProductModal(false); 
  await loadAll();
@@ -100,8 +100,8 @@ export function useStoreLogic(): StoreContextType {
   const isConfirmed = await confirm({ title: 'Delete Product', message: 'Delete this product?', confirmText: 'Delete', type: 'danger' });
   if (!isConfirmed) return;
   try { 
- await storeApi.removeProduct(id); 
- showToast('Product deleted', 'success'); 
+ const res = await storeApi.removeProduct(id); 
+ showToast((res as any).message, 'success'); 
  await loadAll(); 
  } catch (err) { 
  showToast((err as Error).message, 'error'); 
@@ -133,9 +133,9 @@ export function useStoreLogic(): StoreContextType {
  const res = await storeApi.createOrder({ 
  items: orderItems.map(i => ({ productId: i.productId, qty: i.qty })), 
  method: orderMethod 
- }) as { data: Order };
+ }) as { data: Order, message: string };
  
- showToast('Order placed!', 'success');
+ showToast(res.message, 'success');
  
  setPrintData({
  gymName: 'GymSmart Store', 

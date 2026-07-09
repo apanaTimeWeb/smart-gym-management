@@ -81,11 +81,11 @@ export function useLibraryLogic(): LibraryContextType {
  };
  
  if (editExId) { 
- await workoutApi.updateExercise(editExId, payload); 
- showToast('Exercise updated!', 'success'); 
+ const res = await workoutApi.updateExercise(editExId, payload); 
+ showToast((res as any).message, 'success'); 
  } else { 
- await workoutApi.createExercise(payload); 
- showToast('Exercise added!', 'success'); 
+ const res = await workoutApi.createExercise(payload); 
+ showToast((res as any).message, 'success'); 
  }
  setShowExModal(false); 
  await loadAll();
@@ -100,8 +100,8 @@ export function useLibraryLogic(): LibraryContextType {
   const isConfirmed = await confirm({ title: 'Delete Exercise', message: 'Delete this exercise?', confirmText: 'Delete', type: 'danger' });
   if (!isConfirmed) return;
   try { 
- await workoutApi.removeExercise(id); 
- showToast('Deleted', 'success'); 
+ const res = await workoutApi.removeExercise(id); 
+ showToast((res as any).message, 'success'); 
  await loadAll(); 
  } catch (err) { 
  showToast((err as Error).message, 'error'); 
@@ -144,11 +144,11 @@ export function useLibraryLogic(): LibraryContextType {
  };
  
  if (editDietId) { 
- await workoutApi.updateDietPlan(editDietId, payload); 
- showToast('Diet plan updated!', 'success'); 
+ const res = await workoutApi.updateDietPlan(editDietId, payload); 
+ showToast((res as any).message, 'success'); 
  } else { 
- await workoutApi.createDietPlan(payload); 
- showToast('Diet plan created!', 'success'); 
+ const res = await workoutApi.createDietPlan(payload); 
+ showToast((res as any).message, 'success'); 
  }
  setShowDietModal(false); 
  await loadAll();
@@ -163,8 +163,8 @@ export function useLibraryLogic(): LibraryContextType {
   const isConfirmed = await confirm({ title: 'Delete Diet Plan', message: 'Delete this diet plan?', confirmText: 'Delete', type: 'danger' });
   if (!isConfirmed) return;
   try { 
- await workoutApi.removeDietPlan(id); 
- showToast('Deleted', 'success'); 
+ const res = await workoutApi.removeDietPlan(id); 
+ showToast((res as any).message, 'success'); 
  await loadAll(); 
  } catch (err) { 
  showToast((err as Error).message, 'error'); 

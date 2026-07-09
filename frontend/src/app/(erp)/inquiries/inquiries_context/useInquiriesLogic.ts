@@ -76,11 +76,11 @@ export function useInquiriesLogic(): InquiriesContextType {
  setSaving(true);
  try {
  if (editId) { 
- await inquiriesApi.update(editId, form); 
- showToast('Inquiry updated!', 'success'); 
+ const res = await inquiriesApi.update(editId, form); 
+ showToast((res as any).message, 'success'); 
  } else { 
- await inquiriesApi.create(form); 
- showToast('Inquiry added!', 'success'); 
+ const res = await inquiriesApi.create(form); 
+ showToast((res as any).message, 'success'); 
  }
  setShowModal(false);
  await loadAll();
@@ -95,8 +95,8 @@ export function useInquiriesLogic(): InquiriesContextType {
   const isConfirmed = await confirm({ title: 'Delete Inquiry', message: 'Delete this inquiry?', confirmText: 'Delete', type: 'danger' });
   if (!isConfirmed) return;
   try { 
- await inquiriesApi.remove(id); 
- showToast('Deleted', 'success'); 
+ const res = await inquiriesApi.remove(id); 
+ showToast((res as any).message, 'success'); 
  await loadAll(); 
  } catch (err) { 
  showToast((err as Error).message, 'error'); 

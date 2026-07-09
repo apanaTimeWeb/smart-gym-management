@@ -97,11 +97,11 @@ export function useWorkoutLogic(): WorkoutContextType {
       };
       
       if (editWkId) {
-        await workoutApi.updateWorkout(editWkId, payload);
-        showToast('Workout plan updated!', 'success');
+        const res = await workoutApi.updateWorkout(editWkId, payload);
+        showToast((res as any).message, 'success');
       } else {
-        await workoutApi.createWorkout(payload);
-        showToast('Workout plan created!', 'success');
+        const res = await workoutApi.createWorkout(payload);
+        showToast((res as any).message, 'success');
       }
       setShowWkModal(false);
       await loadAll();
@@ -116,8 +116,8 @@ export function useWorkoutLogic(): WorkoutContextType {
     const isConfirmed = await confirm({ title: 'Delete Workout', message: 'Delete this workout plan?', confirmText: 'Delete', type: 'danger' });
     if (!isConfirmed) return;
     try {
-      await workoutApi.removeWorkout(id);
-      showToast('Deleted workout plan', 'success');
+      const res = await workoutApi.removeWorkout(id);
+      showToast((res as any).message, 'success');
       await loadAll();
     } catch (err) {
       showToast((err as Error).message, 'error');
@@ -149,11 +149,11 @@ export function useWorkoutLogic(): WorkoutContextType {
       // adapt to Exercise backend payload shape if needed, here we pass the form
       const payload = { ...exForm, muscleGroup: exForm.muscle.split(',').map(s => s.trim()) };
       if (editExId) {
-        await workoutApi.updateExercise(editExId, payload);
-        showToast('Exercise updated!', 'success');
+        const res = await workoutApi.updateExercise(editExId, payload);
+        showToast((res as any).message, 'success');
       } else {
-        await workoutApi.createExercise(payload);
-        showToast('Exercise created!', 'success');
+        const res = await workoutApi.createExercise(payload);
+        showToast((res as any).message, 'success');
       }
       setShowExModal(false);
       await loadAll();
@@ -168,8 +168,8 @@ export function useWorkoutLogic(): WorkoutContextType {
     const isConfirmed = await confirm({ title: 'Delete Exercise', message: 'Delete this exercise?', confirmText: 'Delete', type: 'danger' });
     if (!isConfirmed) return;
     try {
-      await workoutApi.removeExercise(id);
-      showToast('Deleted exercise', 'success');
+      const res = await workoutApi.removeExercise(id);
+      showToast((res as any).message, 'success');
       await loadAll();
     } catch (err) {
       showToast((err as Error).message, 'error');

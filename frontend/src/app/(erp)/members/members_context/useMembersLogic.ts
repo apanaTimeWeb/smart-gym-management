@@ -116,11 +116,11 @@ export function useMembersLogic(): MembersContextType {
  setSaving(true);
  try {
  if (editId) {
- await membersApi.update(editId, { ...form, planId: Number(form.planId) });
- showToast('Member updated!', 'success');
+ const res = await membersApi.update(editId, { ...form, planId: Number(form.planId) });
+ showToast((res as any).message, 'success');
  } else {
- await membersApi.create({ ...form, planId: Number(form.planId), joinDate: new Date().toISOString() });
- showToast('Member added!', 'success');
+ const res = await membersApi.create({ ...form, planId: Number(form.planId), joinDate: new Date().toISOString() });
+ showToast((res as any).message, 'success');
  }
  setShowAddModal(false);
  await loadAll();
@@ -135,8 +135,8 @@ export function useMembersLogic(): MembersContextType {
   const isConfirmed = await confirm({ title: 'Delete Member', message: 'Are you sure you want to delete this member? This action cannot be undone.', confirmText: 'Delete', type: 'danger' });
   if (!isConfirmed) return;
   try {
- await membersApi.remove(id);
- showToast('Member deleted', 'success');
+ const res = await membersApi.remove(id);
+ showToast((res as any).message, 'success');
  if (selectedMember?.id === id) setSelectedMember(null);
  await loadAll();
  } catch (err) { 

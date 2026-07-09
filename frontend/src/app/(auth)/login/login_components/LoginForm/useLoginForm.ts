@@ -33,7 +33,7 @@ export function useLoginForm(): UseLoginFormReturn {
 
         if (!cookieRes.ok) throw new Error('Session setup failed');
         
-        toast.success('Login successful!');
+        toast.success((res as any).message);
         window.location.replace(AuthUrlConfig.PAGES.DASHBOARD);
       }
     } catch (err: unknown) {
