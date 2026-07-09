@@ -188,6 +188,10 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **The Rule:** An enterprise API must never be released without a versioning strategy. Always prefix routes with a version (e.g., `/api/v1/users`). In frameworks like NestJS, enable URI versioning globally.
 * **Why:** If the business scales and requires mobile apps or external integrations, releasing a breaking `v2` API should not crash the legacy mobile apps that still rely on `v1`.
 
+## 27. API Testing Strategy (Pytest)
+* **The Rule:** All API (End-to-End) or unit testing must be written in Python using `pytest`, rather than relying on built-in Node.js/NestJS testing frameworks (like Jest/Supertest) for API validation.
+* **Why:** Decoupling API tests from the application codebase allows QA engineers, SDETs, and automation pipelines to test the API completely agnostically, simulating true black-box client behavior.
+
 ## Summary Checklist for Developers Providing Context to AI:
 1. Identify the exact layer where the bug/feature resides (Validation? DB Query? Business Logic?).
 2. Select the **one or two** micro-files associated with that layer.
