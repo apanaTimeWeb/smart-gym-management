@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useAuditContext } from '../../audit_context/AuditContext';
 import { AuditLog, AuditLogResponse } from '../../audit_types/audit_types';
 import { AUDIT_URLS } from '../../audit_url_config';
+import { apiFetch } from '@/lib/api';
 
 export const useAuditTable = () => {
   const { filters, setFilters } = useAuditContext();
@@ -22,15 +23,10 @@ export const useAuditTable = () => {
       if (filters.entityType) queryParams.append('entityType', filters.entityType);
       if (filters.actorId) queryParams.append('actorId', filters.actorId);
 
-      const url = `http://localhost:3000${AUDIT_URLS.FETCH_LOGS}?${queryParams.toString()}`;
+      const data = await apiFetch<AuditLogResponse>(
+        `${AUDIT_URLS.BACKEND_API.BASE}?${queryParams.toString()}`
+      );
       
-      const response = await fetch(url);
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch audit logs');
-      }
-      
-      const data: AuditLogResponse = await response.json();
       setLogs(data.data || []);
       setTotalCount(data.meta?.total || 0);
     } catch (err: any) {

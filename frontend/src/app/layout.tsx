@@ -7,14 +7,15 @@ import { Toaster } from 'react-hot-toast';
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 
 export const metadata: Metadata = {
- title: 'GymSmart ERP – Gym Management Software',
- description: 'Professional Gym Management ERP – Members, Plans, HR, Finance, Store, and more in one powerful platform.',
- keywords: 'gym management, ERP, gym software, member management, fitness center',
- openGraph: {
- title: 'GymSmart ERP',
- description: 'All-in-one Gym Management Software',
- images: ['/opengraph.jpg'],
- },
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
+  title: 'GymSmart ERP – Gym Management Software',
+  description: 'Professional Gym Management ERP – Members, Plans, HR, Finance, Store, and more in one powerful platform.',
+  keywords: 'gym management, ERP, gym software, member management, fitness center',
+  openGraph: {
+    title: 'GymSmart ERP',
+    description: 'All-in-one Gym Management Software',
+    images: ['/opengraph.jpg'],
+  },
 };
 
 export default function RootLayout({
@@ -27,7 +28,7 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/icon.png" type="image/png" />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
