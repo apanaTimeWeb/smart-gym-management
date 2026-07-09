@@ -22,6 +22,8 @@ export interface Exercise {
  difficulty: string;
 }
 
+import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
+
 export interface WorkoutContextType {
  tab: string;
  setTab: (tab: string) => void;
@@ -35,6 +37,13 @@ export interface WorkoutContextType {
  filteredWk: Workout[];
  filteredEx: Exercise[];
  
+ loading: boolean;
+ saving: boolean;
+ toast: { message: string; type: ToastType } | null;
+ showToast: (msg: string, type: ToastType) => void;
+ hideToast: () => void;
+ loadAll: () => Promise<void>;
+
  showWkModal: boolean;
  setShowWkModal: (show: boolean) => void;
  editWkId: number | null;

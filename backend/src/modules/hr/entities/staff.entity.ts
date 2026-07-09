@@ -1,16 +1,26 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
-import { Gender } from '../../../common/enums/database.enums';
-import { Payroll } from './payroll.entity';
-import { Attendance } from '../../attendance/entities/attendance.entity';
+import {
+  DeleteDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+  Index,
+} from 'typeorm';
+import { Gender } from '@/modules/hr/utils/hr.enums';
+import { Payroll } from '@/modules/hr/entities/payroll.entity';
+import { Attendance } from '@/modules/attendance/entities/attendance.entity';
 
 @Entity('staff')
 export class Staff {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   name: string;
 
+  @Index()
   @Column({ unique: true })
   email: string;
 
@@ -38,10 +48,10 @@ export class Staff {
   @Column({ default: true })
   isActive: boolean;
 
-  @OneToMany(() => Payroll, payroll => payroll.staff)
+  @OneToMany(() => Payroll, (payroll) => payroll.staff)
   payrolls: Payroll[];
 
-  @OneToMany(() => Attendance, attendance => attendance.staff)
+  @OneToMany(() => Attendance, (attendance) => attendance.staff)
   attendances: Attendance[];
 
   @CreateDateColumn()
@@ -49,4 +59,7 @@ export class Staff {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }

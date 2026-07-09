@@ -1,5 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { InquiryStatus } from '../../../common/enums/database.enums';
+import {
+  DeleteDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  Index,
+} from 'typeorm';
+import { InquiryStatus } from '@/modules/inquiries/utils/inquiries.enums';
 
 @Entity('inquiries')
 export class Inquiry {
@@ -18,6 +26,7 @@ export class Inquiry {
   @Column()
   interest: string;
 
+  @Index()
   @Column({ type: 'enum', enum: InquiryStatus, default: InquiryStatus.NEW })
   status: InquiryStatus;
 
@@ -35,4 +44,7 @@ export class Inquiry {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }

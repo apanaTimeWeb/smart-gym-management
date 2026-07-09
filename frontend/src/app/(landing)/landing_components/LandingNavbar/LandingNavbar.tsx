@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Menu, X } from 'lucide-react';
 import { useLandingContext } from '@/app/(landing)/landing_context/LandingContext';
+import { LandingUrlConfig } from '@/app/(landing)/landing_url_config';
 
 import { ThemeToggle } from '@/components/ThemeToggle';
 
@@ -29,10 +30,10 @@ export default function LandingNavbar() {
 
         <div className="hidden md:flex items-center gap-3">
           <ThemeToggle />
-          <Link href="/dashboard" className="text-sm font-medium text-[var(--text-secondary)] hover:text-white transition-colors px-3 py-1.5">
+          <Link href={LandingUrlConfig.PAGES.ERP_LOGIN} className="text-sm font-medium text-[var(--text-secondary)] hover:text-white transition-colors px-3 py-1.5">
             ERP Login
           </Link>
-          <a href="#booking" className="text-sm font-bold px-5 py-2.5 rounded-xl text-white transition-all hover:scale-105" style={{ background: 'var(--landing-highlight-gradient)' }}>
+          <a href={LandingUrlConfig.ANCHORS.BOOKING} className="text-sm font-bold px-5 py-2.5 rounded-xl text-white transition-all hover:scale-105" style={{ background: 'var(--landing-highlight-gradient)' }}>
             Join Now
           </a>
         </div>
@@ -48,7 +49,7 @@ export default function LandingNavbar() {
  <a key={item} href={`#${item.toLowerCase()}`} onClick={() => setMenuOpen(false)} className="block text-[var(--text-secondary)] hover:text-[var(--warning)] py-2 text-sm font-medium">{item}</a>
  ))}
  <div className="flex gap-3 pt-2">
- <Link href="/dashboard" className="flex-1 text-center border border-white/20 py-2.5 rounded-xl text-sm font-medium">ERP Login</Link>
+ <Link href={LandingUrlConfig.PAGES.ERP_LOGIN} className="flex-1 text-center border border-white/20 py-2.5 rounded-xl text-sm font-medium">ERP Login</Link>
  </div>
  </div>
  )}

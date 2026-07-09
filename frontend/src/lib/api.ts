@@ -4,6 +4,18 @@
  * Base URL: http://localhost:5000/api
  */
 
+import { AuthUrlConfig } from '@/app/(auth)/auth_url_config';
+import { StatusCodes } from 'http-status-codes';
+import { DashboardUrlConfig } from '@/app/(erp)/dashboard/dashboard_url_config';
+import { MembersUrlConfig } from '@/app/(erp)/members/members_url_config';
+import { PlansUrlConfig } from '@/app/(erp)/plans/plans_url_config';
+import { FinanceUrlConfig } from '@/app/(erp)/finance/finance_url_config';
+import { HrUrlConfig } from '@/app/(erp)/hr/hr_url_config';
+import { AttendanceUrlConfig } from '@/app/(erp)/attendance/attendance_url_config';
+import { StoreUrlConfig } from '@/app/(erp)/store/store_url_config';
+import { WorkoutUrlConfig } from '@/app/(erp)/workout/workout_url_config';
+import { InquiriesUrlConfig } from '@/app/(erp)/inquiries/inquiries_url_config';
+
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
 // ─── User Helper (reads from non-HttpOnly cookie set by server) ───────────────
@@ -16,8 +28,8 @@ export function getUser(): { name: string; email: string; role: string } | null 
 }
 
 export async function logout() {
-  await fetch('/api/auth/logout', { method: 'POST' });
-  window.location.replace('/login');
+  await fetch(AuthUrlConfig.PROXY_API.LOGOUT, { method: 'POST' });
+  window.location.replace(AuthUrlConfig.PAGES.LOGIN);
 }
 
 // ─── Core Fetch ───────────────────────────────────────────────────────────────
@@ -39,7 +51,7 @@ export async function apiFetch<T = unknown>(
 
   // Token is in HttpOnly cookie — read via Next.js proxy to avoid CORS/exposure
   if (auth) {
-    const tokenRes = await fetch('/api/auth/token').catch(() => null);
+    const tokenRes = await fetch(AuthUrlConfig.PROXY_API.TOKEN).catch(() => null);
     if (tokenRes?.ok) {
       const { token } = await tokenRes.json();
       if (token) headers['Authorization'] = `Bearer ${token}`;
@@ -47,16 +59,33 @@ export async function apiFetch<T = unknown>(
   }
 
   const res = await fetch(`${BASE_URL}${path}`, { ...rest, headers });
-  const json = await res.json();
-
-  if (!res.ok) {
-    if (res.status === 401) {
-      // Session expired — clear cookies and redirect
-      await fetch('/api/auth/logout', { method: 'POST' });
-      window.location.replace('/login');
+  
+  let finalRes = res;
+  
+  if (res.status === StatusCodes.UNAUTHORIZED && auth) {
+    // Attempt to refresh the token
+    const refreshRes = await fetch(AuthUrlConfig.PROXY_API.REFRESH, { method: 'POST' });
+    
+    if (refreshRes.ok) {
+      // Refresh succeeded, grab new token from response
+      const { accessToken } = await refreshRes.json();
+      if (accessToken) {
+        // Retry original request with new token
+        headers['Authorization'] = `Bearer ${accessToken}`;
+        finalRes = await fetch(`${BASE_URL}${path}`, { ...rest, headers });
+      }
+    } else {
+      // Refresh failed, session genuinely expired
+      await fetch(AuthUrlConfig.PROXY_API.LOGOUT, { method: 'POST' });
+      window.location.replace(AuthUrlConfig.PAGES.LOGIN);
       throw new Error('Session expired. Please login again.');
     }
-    throw new Error(json.message || `API Error: ${res.status}`);
+  }
+
+  const json = await finalRes.json();
+
+  if (!finalRes.ok) {
+    throw new Error(json.message || `API Error: ${finalRes.status}`);
   }
 
   return json;
@@ -65,19 +94,20 @@ export async function apiFetch<T = unknown>(
 // ─── Auth ─────────────────────────────────────────────────────────────────────
 
 export const authApi = {
-  login: (email: string, password: string) =>
-    apiFetch<{ success: boolean; data: { accessToken: string; user: unknown } }>(
-      '/auth/login',
-      { method: 'POST', body: JSON.stringify({ email, password }), auth: false }
-    ),
-
-  me: () => apiFetch('/auth/me'),
+  login: async (email: string, password: string) => {
+    return apiFetch(AuthUrlConfig.BACKEND_API.LOGIN, {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+      auth: false,
+    });
+  },
+  me: () => apiFetch(AuthUrlConfig.BACKEND_API.ME),
 };
 
 // ─── Dashboard ────────────────────────────────────────────────────────────────
 
 export const dashboardApi = {
-  getStats: () => apiFetch<{ success: boolean; data: DashboardStats }>('/dashboard/stats'),
+  getStats: () => apiFetch<{ success: boolean; data: DashboardStats }>(DashboardUrlConfig.BACKEND_API.STATS),
 };
 
 export interface DashboardStats {
@@ -119,17 +149,17 @@ export interface PendingPayment {
 export const membersApi = {
   getAll: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<{ success: boolean; data: { members: Member[]; total: number; page: number; limit: number } }>(`/members${q}`);
+    return apiFetch<{ success: boolean; data: { members: Member[]; total: number; page: number; limit: number } }>(`${MembersUrlConfig.BACKEND_API.BASE}${q}`);
   },
-  getOne: (id: number) => apiFetch<{ success: boolean; data: Member }>(`/members/${id}`),
-  getStats: () => apiFetch<{ success: boolean; data: MemberStats }>('/members/stats'),
+  getOne: (id: number) => apiFetch<{ success: boolean; data: Member }>(MembersUrlConfig.BACKEND_API.GET_ONE(id)),
+  getStats: () => apiFetch<{ success: boolean; data: MemberStats }>(MembersUrlConfig.BACKEND_API.STATS),
   create: (body: Partial<Member>) =>
-    apiFetch('/members', { method: 'POST', body: JSON.stringify(body) }),
+    apiFetch(MembersUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body) }),
   update: (id: number, body: Partial<Member>) =>
-    apiFetch(`/members/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
-  remove: (id: number) => apiFetch(`/members/${id}`, { method: 'DELETE' }),
+    apiFetch(MembersUrlConfig.BACKEND_API.UPDATE(id), { method: 'PATCH', body: JSON.stringify(body) }),
+  remove: (id: number) => apiFetch(MembersUrlConfig.BACKEND_API.DELETE(id), { method: 'DELETE' }),
   renew: (id: number, body: unknown) =>
-    apiFetch(`/members/${id}/renew`, { method: 'POST', body: JSON.stringify(body) }),
+    apiFetch(MembersUrlConfig.BACKEND_API.RENEW(id), { method: 'POST', body: JSON.stringify(body) }),
 };
 
 export interface Member {
@@ -148,13 +178,13 @@ export interface MemberStats {
 // ─── Plans ────────────────────────────────────────────────────────────────────
 
 export const plansApi = {
-  getAll: () => apiFetch<{ success: boolean; data: Plan[] }>('/plans'),
-  getOne: (id: number) => apiFetch<{ success: boolean; data: Plan }>(`/plans/${id}`),
+  getAll: () => apiFetch<{ success: boolean; data: Plan[] }>(PlansUrlConfig.BACKEND_API.BASE),
+  getOne: (id: number) => apiFetch<{ success: boolean; data: Plan }>(PlansUrlConfig.BACKEND_API.GET_ONE(id)),
   create: (body: Partial<Plan>) =>
-    apiFetch('/plans', { method: 'POST', body: JSON.stringify(body) }),
+    apiFetch(PlansUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body) }),
   update: (id: number, body: Partial<Plan>) =>
-    apiFetch(`/plans/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
-  remove: (id: number) => apiFetch(`/plans/${id}`, { method: 'DELETE' }),
+    apiFetch(PlansUrlConfig.BACKEND_API.UPDATE(id), { method: 'PATCH', body: JSON.stringify(body) }),
+  remove: (id: number) => apiFetch(PlansUrlConfig.BACKEND_API.DELETE(id), { method: 'DELETE' }),
 };
 
 export interface Plan {
@@ -169,13 +199,13 @@ export interface Plan {
 export const financeApi = {
   getPayments: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<{ success: boolean; data: { payments: Payment[]; total: number } }>(`/finance/payments${q}`);
+    return apiFetch<{ success: boolean; data: { payments: Payment[]; total: number } }>(`${FinanceUrlConfig.BACKEND_API.PAYMENTS_BASE}${q}`);
   },
   createPayment: (body: Partial<Payment>) =>
-    apiFetch('/finance/payments', { method: 'POST', body: JSON.stringify(body) }),
-  getSummary: () => apiFetch<{ success: boolean; data: FinanceSummary }>('/finance/summary'),
+    apiFetch(FinanceUrlConfig.BACKEND_API.PAYMENTS_BASE, { method: 'POST', body: JSON.stringify(body) }),
+  getSummary: () => apiFetch<{ success: boolean; data: FinanceSummary }>(FinanceUrlConfig.BACKEND_API.SUMMARY),
   getByMember: (memberId: number) =>
-    apiFetch<{ success: boolean; data: Payment[] }>(`/finance/payments/member/${memberId}`),
+    apiFetch<{ success: boolean; data: Payment[] }>(FinanceUrlConfig.BACKEND_API.PAYMENTS_BY_MEMBER(memberId)),
 };
 
 export interface Payment {
@@ -195,23 +225,23 @@ export interface FinanceSummary {
 export const hrApi = {
   getStaff: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<{ success: boolean; data: Staff[] }>(`/hr/staff${q}`);
+    return apiFetch<{ success: boolean; data: Staff[] }>(`${HrUrlConfig.BACKEND_API.STAFF_BASE}${q}`);
   },
-  getOneStaff: (id: number) => apiFetch<{ success: boolean; data: Staff }>(`/hr/staff/${id}`),
+  getOneStaff: (id: number) => apiFetch<{ success: boolean; data: Staff }>(HrUrlConfig.BACKEND_API.STAFF_GET_ONE(id)),
   createStaff: (body: Partial<Staff>) =>
-    apiFetch('/hr/staff', { method: 'POST', body: JSON.stringify(body) }),
+    apiFetch(HrUrlConfig.BACKEND_API.STAFF_BASE, { method: 'POST', body: JSON.stringify(body) }),
   updateStaff: (id: number, body: Partial<Staff>) =>
-    apiFetch(`/hr/staff/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
-  removeStaff: (id: number) => apiFetch(`/hr/staff/${id}`, { method: 'DELETE' }),
+    apiFetch(HrUrlConfig.BACKEND_API.STAFF_UPDATE(id), { method: 'PATCH', body: JSON.stringify(body) }),
+  removeStaff: (id: number) => apiFetch(HrUrlConfig.BACKEND_API.STAFF_DELETE(id), { method: 'DELETE' }),
   getPayrolls: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<{ success: boolean; data: Payroll[] }>(`/hr/payrolls${q}`);
+    return apiFetch<{ success: boolean; data: Payroll[] }>(`${HrUrlConfig.BACKEND_API.PAYROLLS_BASE}${q}`);
   },
   createPayroll: (body: Partial<Payroll>) =>
-    apiFetch('/hr/payrolls', { method: 'POST', body: JSON.stringify(body) }),
+    apiFetch(HrUrlConfig.BACKEND_API.PAYROLLS_BASE, { method: 'POST', body: JSON.stringify(body) }),
   updatePayrollStatus: (id: number, status: string) =>
-    apiFetch(`/hr/payrolls/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) }),
-  getSummary: () => apiFetch<{ success: boolean; data: HrSummary }>('/hr/summary'),
+    apiFetch(HrUrlConfig.BACKEND_API.PAYROLL_STATUS_UPDATE(id), { method: 'PATCH', body: JSON.stringify({ status }) }),
+  getSummary: () => apiFetch<{ success: boolean; data: HrSummary }>(HrUrlConfig.BACKEND_API.SUMMARY),
 };
 
 export interface Staff {
@@ -233,14 +263,14 @@ export interface HrSummary {
 
 export const attendanceApi = {
   mark: (body: { memberId?: number; staffId?: number; date: string; checkIn?: string; type: string }) =>
-    apiFetch('/attendance', { method: 'POST', body: JSON.stringify(body) }),
+    apiFetch(AttendanceUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body) }),
   getAll: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<{ success: boolean; data: Attendance[] }>(`/attendance${q}`);
+    return apiFetch<{ success: boolean; data: Attendance[] }>(`${AttendanceUrlConfig.BACKEND_API.BASE}${q}`);
   },
   getTodayStats: () =>
     apiFetch<{ success: boolean; data: { totalCheckIns: number; memberCheckIns: number; staffCheckIns: number } }>(
-      '/attendance/today-stats'
+      AttendanceUrlConfig.BACKEND_API.TODAY_STATS
     ),
 };
 
@@ -255,20 +285,20 @@ export interface Attendance {
 export const storeApi = {
   getProducts: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<{ success: boolean; data: Product[] }>(`/store/products${q}`);
+    return apiFetch<{ success: boolean; data: Product[] }>(`${StoreUrlConfig.BACKEND_API.PRODUCTS_BASE}${q}`);
   },
   createProduct: (body: Partial<Product>) =>
-    apiFetch('/store/products', { method: 'POST', body: JSON.stringify(body) }),
+    apiFetch(StoreUrlConfig.BACKEND_API.PRODUCTS_BASE, { method: 'POST', body: JSON.stringify(body) }),
   updateProduct: (id: number, body: Partial<Product>) =>
-    apiFetch(`/store/products/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
-  removeProduct: (id: number) => apiFetch(`/store/products/${id}`, { method: 'DELETE' }),
+    apiFetch(StoreUrlConfig.BACKEND_API.PRODUCT_UPDATE(id), { method: 'PATCH', body: JSON.stringify(body) }),
+  removeProduct: (id: number) => apiFetch(StoreUrlConfig.BACKEND_API.PRODUCT_DELETE(id), { method: 'DELETE' }),
   getOrders: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<{ success: boolean; data: { orders: Order[]; total: number } }>(`/store/orders${q}`);
+    return apiFetch<{ success: boolean; data: { orders: Order[]; total: number } }>(`${StoreUrlConfig.BACKEND_API.ORDERS_BASE}${q}`);
   },
   createOrder: (body: { items: { productId: number; qty: number }[]; method: string; notes?: string }) =>
-    apiFetch('/store/orders', { method: 'POST', body: JSON.stringify(body) }),
-  getStoreSummary: () => apiFetch<{ success: boolean; data: StoreSummary }>('/store/summary'),
+    apiFetch(StoreUrlConfig.BACKEND_API.ORDERS_BASE, { method: 'POST', body: JSON.stringify(body) }),
+  getStoreSummary: () => apiFetch<{ success: boolean; data: StoreSummary }>(StoreUrlConfig.BACKEND_API.SUMMARY),
 };
 
 export interface Product {
@@ -288,26 +318,39 @@ export interface StoreSummary {
 // ─── Workout ──────────────────────────────────────────────────────────────────
 
 export const workoutApi = {
+  getWorkouts: (params?: Record<string, string>) => {
+    const q = params ? '?' + new URLSearchParams(params).toString() : '';
+    return apiFetch<{ success: boolean; data: Workout[] }>(`${WorkoutUrlConfig.BACKEND_API.WORKOUTS_BASE}${q}`);
+  },
+  createWorkout: (body: Partial<Workout>) =>
+    apiFetch(WorkoutUrlConfig.BACKEND_API.WORKOUTS_BASE, { method: 'POST', body: JSON.stringify(body) }),
+  updateWorkout: (id: number, body: Partial<Workout>) =>
+    apiFetch(WorkoutUrlConfig.BACKEND_API.WORKOUT_UPDATE(id), { method: 'PATCH', body: JSON.stringify(body) }),
+  removeWorkout: (id: number) => apiFetch(WorkoutUrlConfig.BACKEND_API.WORKOUT_DELETE(id), { method: 'DELETE' }),
   getExercises: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<{ success: boolean; data: Exercise[] }>(`/workout/exercises${q}`);
+    return apiFetch<{ success: boolean; data: Exercise[] }>(`${WorkoutUrlConfig.BACKEND_API.EXERCISES_BASE}${q}`);
   },
   createExercise: (body: Partial<Exercise>) =>
-    apiFetch('/workout/exercises', { method: 'POST', body: JSON.stringify(body) }),
+    apiFetch(WorkoutUrlConfig.BACKEND_API.EXERCISES_BASE, { method: 'POST', body: JSON.stringify(body) }),
   updateExercise: (id: number, body: Partial<Exercise>) =>
-    apiFetch(`/workout/exercises/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
-  removeExercise: (id: number) => apiFetch(`/workout/exercises/${id}`, { method: 'DELETE' }),
+    apiFetch(WorkoutUrlConfig.BACKEND_API.EXERCISE_UPDATE(id), { method: 'PATCH', body: JSON.stringify(body) }),
+  removeExercise: (id: number) => apiFetch(WorkoutUrlConfig.BACKEND_API.EXERCISE_DELETE(id), { method: 'DELETE' }),
   getDietPlans: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<{ success: boolean; data: DietPlan[] }>(`/workout/diet-plans${q}`);
+    return apiFetch<{ success: boolean; data: DietPlan[] }>(`${WorkoutUrlConfig.BACKEND_API.DIET_PLANS_BASE}${q}`);
   },
   createDietPlan: (body: Partial<DietPlan>) =>
-    apiFetch('/workout/diet-plans', { method: 'POST', body: JSON.stringify(body) }),
+    apiFetch(WorkoutUrlConfig.BACKEND_API.DIET_PLANS_BASE, { method: 'POST', body: JSON.stringify(body) }),
   updateDietPlan: (id: number, body: Partial<DietPlan>) =>
-    apiFetch(`/workout/diet-plans/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
-  removeDietPlan: (id: number) => apiFetch(`/workout/diet-plans/${id}`, { method: 'DELETE' }),
+    apiFetch(WorkoutUrlConfig.BACKEND_API.DIET_PLAN_UPDATE(id), { method: 'PATCH', body: JSON.stringify(body) }),
+  removeDietPlan: (id: number) => apiFetch(WorkoutUrlConfig.BACKEND_API.DIET_PLAN_DELETE(id), { method: 'DELETE' }),
 };
 
+export interface Workout {
+  id: number; name: string; level: string; days: number;
+  exercises: number; focus: string; duration: string; tags: string[]; isActive?: boolean;
+}
 export interface Exercise {
   id: number; name: string; category: string; muscleGroup: string[];
   sets?: number; reps?: string; duration?: string;
@@ -324,15 +367,15 @@ export interface DietPlan {
 export const inquiriesApi = {
   getAll: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<{ success: boolean; data: { inquiries: Inquiry[]; total: number } }>(`/inquiries${q}`);
+    return apiFetch<{ success: boolean; data: { inquiries: Inquiry[]; total: number } }>(`${InquiriesUrlConfig.BACKEND_API.BASE}${q}`);
   },
-  getOne: (id: number) => apiFetch<{ success: boolean; data: Inquiry }>(`/inquiries/${id}`),
-  getStats: () => apiFetch<{ success: boolean; data: InquiryStats }>('/inquiries/stats'),
+  getOne: (id: number) => apiFetch<{ success: boolean; data: Inquiry }>(InquiriesUrlConfig.BACKEND_API.GET_ONE(id)),
+  getStats: () => apiFetch<{ success: boolean; data: InquiryStats }>(InquiriesUrlConfig.BACKEND_API.STATS),
   create: (body: Partial<Inquiry>) =>
-    apiFetch('/inquiries', { method: 'POST', body: JSON.stringify(body) }),
+    apiFetch(InquiriesUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body) }),
   update: (id: number, body: Partial<Inquiry>) =>
-    apiFetch(`/inquiries/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
-  remove: (id: number) => apiFetch(`/inquiries/${id}`, { method: 'DELETE' }),
+    apiFetch(InquiriesUrlConfig.BACKEND_API.UPDATE(id), { method: 'PATCH', body: JSON.stringify(body) }),
+  remove: (id: number) => apiFetch(InquiriesUrlConfig.BACKEND_API.DELETE(id), { method: 'DELETE' }),
 };
 
 export interface Inquiry {

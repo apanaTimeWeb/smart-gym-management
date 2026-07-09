@@ -1,0 +1,117 @@
+{
+  "info": {
+    "name": "GymSmart Workout Module",
+    "description": "Exercise library and diet plan management",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000", "type": "string" },
+    { "key": "accessToken", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Get All Workouts",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/workout/exercises?page=1&limit=20",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "workout", "exercises"],
+          "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "20" }]
+        }
+      }
+    },
+    {
+      "name": "Get All Diet Plans",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/workout/diet-plans?page=1&limit=20",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "workout", "diet-plans"],
+          "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "20" }]
+        }
+      }
+    },
+    {
+      "name": "Create Workout / Exercise",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Barbell Bench Press\",\n  \"category\": \"Strength\",\n  \"muscleGroup\": \"Chest\",\n  \"equipment\": \"Barbell\",\n  \"difficulty\": \"Intermediate\",\n  \"instructions\": \"Lie on bench, grip barbell shoulder-width apart, lower to chest and press up.\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/workout/exercises",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "workout", "exercises"]
+        }
+      }
+    },
+    {
+      "name": "Create Diet Plan",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Muscle Gain Diet\",\n  \"calories\": 3200,\n  \"protein\": 180,\n  \"carbs\": 350,\n  \"fat\": 90,\n  \"goal\": \"Muscle Gain\",\n  \"description\": \"High-protein diet for muscle hypertrophy\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/workout/diet-plans",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "workout", "diet-plans"]
+        }
+      }
+    },
+    {
+      "name": "Update Workout",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"difficulty\": \"Advanced\",\n  \"instructions\": \"Updated instructions...\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/workout/exercises/:id",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "workout", "exercises", ":id"],
+          "variable": [{ "key": "id", "value": "1" }]
+        }
+      }
+    },
+    {
+      "name": "Update Diet Plan",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"calories\": 3400,\n  \"protein\": 200\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/workout/diet-plans/:id",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "workout", "diet-plans", ":id"],
+          "variable": [{ "key": "id", "value": "1" }]
+        }
+      }
+    }
+  ]
+}

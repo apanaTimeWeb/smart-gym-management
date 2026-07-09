@@ -1,0 +1,49 @@
+{
+  "info": {
+    "name": "GymSmart Dashboard Module",
+    "description": "KPI metrics, chart data, and recent activity feeds — all with caching",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000", "type": "string" },
+    { "key": "accessToken", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Get Dashboard KPIs",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/dashboard/kpi",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "dashboard", "kpi"]
+        }
+      }
+    },
+    {
+      "name": "Get Dashboard Charts",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/dashboard/charts",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "dashboard", "charts"]
+        }
+      }
+    },
+    {
+      "name": "Get Recent Activity",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/dashboard/recent",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "dashboard", "recent"]
+        }
+      }
+    }
+  ]
+}

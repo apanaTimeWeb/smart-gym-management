@@ -2,6 +2,7 @@
 
 import { CheckCircle } from 'lucide-react';
 import { PLANS } from '@/app/(landing)/landing_utils/LandingSharedConstants';
+import { LandingUrlConfig } from '@/app/(landing)/landing_url_config';
 
 export default function LandingPlans() {
  return (
@@ -45,7 +46,7 @@ export default function LandingPlans() {
  ))}
  </div>
  <a 
- href="#booking" 
+ href={LandingUrlConfig.ANCHORS.BOOKING} 
  className="block text-center py-3 rounded-xl text-sm font-bold transition-all hover:scale-105"
  style={p.badge 
  ? { background: 'var(--landing-highlight-gradient)', color: 'white' } 

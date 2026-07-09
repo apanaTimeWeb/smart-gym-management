@@ -31,6 +31,7 @@ workout/
 ├── workout_features.md
 ├── workout_types
 │   └── workout_types.ts
+├── workout_url_config.ts
 └── workout_utils
     └── WorkoutSharedConstants.ts
 ```

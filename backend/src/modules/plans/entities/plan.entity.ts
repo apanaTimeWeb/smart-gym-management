@@ -1,11 +1,19 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
-import { PlanTier } from '../../../common/enums/database.enums';
-import { Member } from '../../members/entities/member.entity';
+import {
+  DeleteDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+} from 'typeorm';
+import { PlanTier } from '@/modules/plans/utils/plans.enums';
+import { Member } from '@/modules/members/entities/member.entity';
 
 @Entity('plans')
 export class Plan {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   name: string;
@@ -31,7 +39,7 @@ export class Plan {
   @Column({ default: true })
   isActive: boolean;
 
-  @OneToMany(() => Member, member => member.plan)
+  @OneToMany(() => Member, (member) => member.plan)
   members: Member[];
 
   @CreateDateColumn()
@@ -39,4 +47,7 @@ export class Plan {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }

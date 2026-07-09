@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { apiFetch } from '@/lib/api';
+import { SettingsUrlConfig } from '@/app/(erp)/settings/settings_url_config';
 import toast from 'react-hot-toast';
 import { EMPTY_SETTINGS_FORM } from '@/app/(erp)/settings/settings_utils/SettingsSharedConstants';
 import { SettingsContextType } from '@/app/(erp)/settings/settings_types/settings_types';
@@ -14,7 +15,7 @@ export function useSettingsLogic(): SettingsContextType {
  setLoading(true);
  try {
  // eslint-disable-next-line @typescript-eslint/no-explicit-any
- const res: any = await apiFetch('/settings');
+ const res: any = await apiFetch(SettingsUrlConfig.BACKEND_API.BASE);
  if (res.data) setForm(res.data);
  } catch {
  toast.error('Failed to load settings');
@@ -30,7 +31,7 @@ export function useSettingsLogic(): SettingsContextType {
  const handleSave = useCallback(async () => {
  setSaving(true);
  try {
- await apiFetch('/settings', {
+ await apiFetch(SettingsUrlConfig.BACKEND_API.BASE, {
  method: 'POST',
  body: JSON.stringify(form)
  });

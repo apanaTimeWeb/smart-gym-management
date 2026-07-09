@@ -1,17 +1,33 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
-import { Gender, BillingCycle, MemberStatus } from '../../../common/enums/database.enums';
-import { Plan } from '../../plans/entities/plan.entity';
-import { Payment } from '../../finance/entities/payment.entity';
-import { Attendance } from '../../attendance/entities/attendance.entity';
+import {
+  DeleteDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  OneToMany,
+  JoinColumn,
+  Index,
+} from 'typeorm';
+import {
+  Gender,
+  BillingCycle,
+  MemberStatus,
+} from '@/modules/members/utils/members.enums';
+import { Plan } from '@/modules/plans/entities/plan.entity';
+import { Payment } from '@/modules/finance/entities/payment.entity';
+import { Attendance } from '@/modules/attendance/entities/attendance.entity';
 
 @Entity('members')
 export class Member {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   name: string;
 
+  @Index()
   @Column({ unique: true })
   email: string;
 
@@ -27,16 +43,18 @@ export class Member {
   @Column()
   branch: string;
 
-  @ManyToOne(() => Plan, plan => plan.members)
+  @ManyToOne(() => Plan, (plan) => plan.members)
   @JoinColumn({ name: 'planId' })
   plan: Plan;
 
+  @Index()
   @Column()
-  planId: number;
+  planId: string;
 
   @Column({ type: 'enum', enum: BillingCycle })
   billingCycle: BillingCycle;
 
+  @Index()
   @Column({ type: 'enum', enum: MemberStatus, default: MemberStatus.PENDING })
   status: MemberStatus;
 
@@ -55,10 +73,10 @@ export class Member {
   @Column({ nullable: true })
   photo: string;
 
-  @OneToMany(() => Payment, payment => payment.member)
+  @OneToMany(() => Payment, (payment) => payment.member)
   payments: Payment[];
 
-  @OneToMany(() => Attendance, attendance => attendance.member)
+  @OneToMany(() => Attendance, (attendance) => attendance.member)
   attendances: Attendance[];
 
   @CreateDateColumn()
@@ -66,4 +84,7 @@ export class Member {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }

@@ -1,65 +1,50 @@
 import {
-  IsEmail,
   IsString,
+  IsEmail,
   IsEnum,
   IsOptional,
-  IsNotEmpty,
   IsNumber,
   IsDateString,
 } from 'class-validator';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
+import { Gender, BillingCycle } from '@/modules/members/utils/members.enums';
 
 export class CreateMemberDto {
-  @ApiProperty({ example: 'Rahul Sharma' })
-  @IsNotEmpty()
+  @ApiProperty()
   @IsString()
   name: string;
 
-  @ApiProperty({ example: 'rahul@gmail.com' })
-  @IsNotEmpty()
+  @ApiProperty()
   @IsEmail()
   email: string;
 
-  @ApiProperty({ example: '+91 98765 43210' })
-  @IsNotEmpty()
+  @ApiProperty()
   @IsString()
   phone: string;
 
-  @ApiProperty({ enum: ['MALE', 'FEMALE', 'OTHER'] })
-  @IsEnum(['MALE', 'FEMALE', 'OTHER'])
-  gender: 'MALE' | 'FEMALE' | 'OTHER';
+  @ApiProperty({ enum: Gender })
+  @IsEnum(Gender)
+  gender: Gender;
 
-  @ApiPropertyOptional({ example: 'Andheri, Mumbai' })
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
   address?: string;
 
-  @ApiProperty({ example: 'Main Branch' })
-  @IsNotEmpty()
+  @ApiProperty()
   @IsString()
   branch: string;
 
-  @ApiProperty({
-    example: 1,
-    description: 'Plan ID (1=Basic, 2=Gold, 3=Premium)',
-  })
-  @IsNotEmpty()
-  @IsNumber()
-  planId: number;
+  @ApiProperty()
+  @IsString()
+  planId: string;
 
-  @ApiProperty({
-    enum: ['ONE_MONTH', 'THREE_MONTHS', 'SIX_MONTHS', 'TWELVE_MONTHS'],
-  })
-  @IsEnum(['ONE_MONTH', 'THREE_MONTHS', 'SIX_MONTHS', 'TWELVE_MONTHS'])
-  billingCycle: 'ONE_MONTH' | 'THREE_MONTHS' | 'SIX_MONTHS' | 'TWELVE_MONTHS';
+  @ApiProperty({ enum: BillingCycle })
+  @IsEnum(BillingCycle)
+  billingCycle: BillingCycle;
 
-  @ApiProperty({ example: '2026-01-15' })
-  @IsNotEmpty()
-  @IsDateString()
-  joinDate: string;
-
-  @ApiPropertyOptional({ example: 2500 })
+  @ApiProperty({ required: false })
   @IsOptional()
-  @IsNumber()
-  paidAmount?: number;
+  @IsDateString()
+  joinDate?: string;
 }

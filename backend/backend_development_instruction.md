@@ -55,6 +55,7 @@ Handling errors with generic `throw new Error()` makes it hard for AI to write p
 ## 7. Isolated Database/Query Layer (The Repository Pattern)
 Never write massive, complex raw SQL or 50-line ORM queries directly inside your business logic services.
 Extract complex queries into a dedicated Repository or Query file (e.g., `member-analytics.repository.ts`).
+* **The Rule:** If the backend is built using a JavaScript/TypeScript framework (NestJS, Express), you MUST use **TypeORM**. For other languages/frameworks (like Django), use the framework's native/standard ORM.
 - **Why?** If the dashboard stats are calculating incorrectly, it's a database query issue. You provide the AI the `repository` file, not the `service` file.
 
 ---
@@ -87,9 +88,10 @@ Never hardcode HTTP status code numbers (e.g., `200`, `400`, `500`) in controlle
 * **The Rule:** Always use a framework-provided enum or a status code library (e.g., `HttpStatus` in NestJS, `http-status-codes` in Node, `rest_framework.status` in Django).
 * **Why?** It improves readability, prevents magic numbers, and reduces the risk of typos (e.g., typing `401` when you meant `403`).
 
-## 10. Dynamic / Absolute Imports
-Never use fragile relative imports (e.g., `../../../utils/helpers`). 
-* **The Rule:** Configure the backend framework to use absolute path aliases (e.g., mapping `@/` to the `src/` directory).
+## 10. Dynamic / Absolute Imports (No Hardcoded Relative Paths)
+*(Applicable to JavaScript/TypeScript Frameworks)*
+Never use fragile, hardcoded relative imports (e.g., `../../../utils/helpers`). 
+* **The Rule:** Configure the backend framework to use absolute path aliases (e.g., mapping `@/` to the `src/` directory). Always use dynamic imports with `@/` (or your configured alias) instead of traversing directories up and down with `../..`.
 * **Why?** It prevents import paths from breaking when files are refactored, moved, or copy-pasted, drastically improving the ability for AI to generate drop-in code without path hallucinations.
 
 ---
@@ -143,8 +145,169 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **The Rule:** Never write ad-hoc pagination for list endpoints. Always use a standardized wrapper or query dto (e.g., `limit/offset` or `cursor` based pagination) across all controllers.
 * **Why:** If the AI is asked to add pagination to `MemberAnalytics`, it should follow a global standard rather than inventing a new query format just for that feature.
 
+## 18. Strict ES Modules (No `require`)
+*(Applicable to JavaScript/TypeScript Frameworks)*
+* **The Rule:** Never use the `require()` keyword. It is considered dead/legacy in this architecture. You must exclusively use ES module `import` and `export` statements.
+* **Why:** ES Modules are the modern standard, they provide strict typing compatibility out of the box in TypeScript, support better static analysis/tree-shaking, and ensure consistent import syntax across the entire codebase.
+
+## 19. Module-Level Feature Documentation
+*(Crucial for AI Context & Onboarding)*
+* **The Rule:** Every single module must contain a `[module_name]_backend_feature.md` file at its root (e.g., `modules/auth/auth_backend_feature.md`). 
+* **What it must contain:**
+  1. A high-level explanation of what the module does.
+  2. A breakdown of the folder structure and what exactly each file is responsible for.
+  3. Explanations of core business logic or complex workflows within the module.
+* **Why:** Before an AI or a new human developer makes any changes to a module, they will read this file first. It acts as the ultimate localized context guide, instantly explaining the routing, file responsibilities, and logic, drastically reducing the risk of hallucination or breaking existing architecture.
+
+## 20. Performance & Network Optimization (Compression, Rate Limiting & Caching)
+* **The Rule:** Enterprise APIs must protect their bandwidth and server load. 
+  1. **Rate Limiting / Redis:** Implement strict rate limiters on all public endpoints (especially Auth and generic GET routes). Use Redis (or similar caching layers like Memcached) to handle rate limiting and to cache expensive, frequently requested data.
+  2. **Response Compression:** Enable gzip/Brotli compression at the framework level (e.g., `compression` middleware in Node.js, `GZipMiddleware` in Django, or `server.compression.enabled` in Spring Boot) to drastically reduce JSON response sizes and save bandwidth.
+* **Why:** This ensures the backend remains highly available under load and saves massive amounts of egress bandwidth costs.
+
+## 21. Asset Optimization (The WebP Rule)
+* **The Rule:** Never store unoptimized images (like `.png`, `.jpg`, `.jpeg`, `.bmp`) on the server disk or cloud storage. When an image is uploaded (e.g., a member profile picture), it must immediately be processed, compressed, and converted to `.webp` format before saving.
+* **Why:** WebP reduces image file sizes by up to 80% compared to JPEG/PNG without visible quality loss. This drastically reduces cloud storage costs and speeds up frontend loading times, resulting in a much faster app.
+
+## 22. Security Headers, CORS, & Protection
+* **The Rule:** An enterprise app cannot go to production naked. Always implement security middleware (e.g., `Helmet.js` in Node, `SecurityMiddleware` in Django, or `Spring Security`) to set strict HTTP headers. Configure strict CORS policies (only allowing exact frontend domains). Ensure inputs are stripped of executable scripts (XSS protection) and standard ORMs are used to natively prevent SQL injection.
+
+## 23. Background Jobs & Queues (No Hanging Requests)
+* **The Rule:** An HTTP request should respond in under 500ms. If a user triggers a heavy task (e.g., "Send 1,000 promotional emails", "Generate a 50-page PDF report", "Process a video"), DO NOT process it in the main HTTP thread.
+* **Why:** Use a Message Queue or Task Broker (e.g., BullMQ for Node, Celery for Python/Django, or Spring AMQP/RabbitMQ). The controller should immediately return `202 Accepted: Job Started`, and the background worker handles the heavy lifting safely. This prevents server timeouts and crashed requests.
+
+## 24. Database Migrations (No Auto-Syncing)
+* **The Rule:** In development, auto-syncing tools (like TypeORM's `synchronize: true` or Hibernate's `update`) are fine. But in an enterprise environment, database schemas must be strictly version-controlled using **Migrations** (e.g., Django `makemigrations`, Flyway/Liquibase for Java, Alembic for Python). 
+* **Why:** If the AI needs to add a new column to a table, it should generate a explicit migration file. This guarantees that production databases can be safely upgraded (or rolled back) without data loss or rogue schema syncing breaking the app.
+
+## 25. Graceful Shutdown & Health Probes (Kubernetes/Docker Ready)
+* **The Rule:** Enterprise apps are deployed in containers. You must include a `/health` or `/ping` endpoint for Kubernetes/AWS liveness probes. Furthermore, the application must intercept termination signals (`SIGINT`, `SIGTERM`).
+* **Why:** When a server restarts or a container is killed, it shouldn't just die instantly, dropping user requests mid-flight. It must stop accepting new requests, finish processing current ones, safely close the database connection, and *then* shut down.
+
+## 26. API Versioning (URI Based)
+* **The Rule:** An enterprise API must never be released without a versioning strategy. Always prefix routes with a version (e.g., `/api/v1/users`). In frameworks like NestJS, enable URI versioning globally.
+* **Why:** If the business scales and requires mobile apps or external integrations, releasing a breaking `v2` API should not crash the legacy mobile apps that still rely on `v1`.
+
+## 27. API Testing Strategy (Pytest)
+* **The Rule:** All API (End-to-End) or unit testing must be written in Python using `pytest`, rather than relying on built-in Node.js/NestJS testing frameworks (like Jest/Supertest) for API validation.
+* **Why:** Decoupling API tests from the application codebase allows QA engineers, SDETs, and automation pipelines to test the API completely agnostically, simulating true black-box client behavior.
+
 ## Summary Checklist for Developers Providing Context to AI:
 1. Identify the exact layer where the bug/feature resides (Validation? DB Query? Business Logic?).
 2. Select the **one or two** micro-files associated with that layer.
 3. Pass ONLY those files to the AI.
 4. Review the AI's isolated changes.
+
+---
+
+## 28. Standardized Response Envelope (The API Contract)
+* **The Rule:** Every API endpoint — success or failure — must return a response in a single, predictable JSON "envelope" shape. Never return raw objects, raw arrays, or ad-hoc structures directly from controllers.
+* **Recommended shape:**
+  ```json
+  {
+    "success": true,
+    "message": "Members fetched successfully",
+    "data": { ... },
+    "meta": { "page": 1, "total": 250, "limit": 20 }
+  }
+  ```
+  For errors:
+  ```json
+  {
+    "success": false,
+    "message": "Member not found",
+    "error": "MemberNotFoundException",
+    "statusCode": 404
+  }
+  ```
+* **Implement via:** A global `ResponseInterceptor` (NestJS), `APIView` / custom `Renderer` (Django), or a `res.success()` helper (Express). The AI should NEVER shape the raw response manually inside a controller or service.
+* **Why:** When an AI frontend agent hits an API, it needs a predictable contract. A raw, inconsistent response from a delete endpoint (`null`, `"ok"`, `{ deleted: true }`) forces the frontend AI to write brittle, guessing-game parsers. A standard envelope eliminates all ambiguity.
+
+---
+
+## 29. Soft Deletes (Never Hard-Delete Production Data)
+* **The Rule:** Never use destructive `DELETE` SQL / ORM calls directly on production data. Instead, all entities must have an `is_deleted: boolean` (or `deleted_at: timestamp`) column. A "delete" operation only sets this flag — the data is never physically removed.
+* **Why:**
+  1. **Audit & Recovery:** If an admin accidentally deletes 1,000 members, the data is instantly recoverable.
+  2. **Referential Integrity:** Foreign keys referencing a "deleted" record remain valid, preventing cascade failures.
+  3. **AI Safety:** An AI asked to "implement the delete endpoint" will set a flag, not wipe database rows. This prevents catastrophic, irreversible data loss.
+* **Implementation:** Add a global query filter (e.g., TypeORM's `@DeleteDateColumn`, Django's `django-softdelete`, or a `WHERE is_deleted = false` scope in a base repository class) so that all standard `find` queries automatically exclude soft-deleted records.
+
+---
+
+## 30. Audit Trail / Activity Log (Who Did What & When)
+* **The Rule:** Every meaningful state change to critical entities (Members, Payments, Staff, Settings) MUST be recorded in an `audit_logs` table. At minimum, log: `actor_id`, `actor_role`, `action` (e.g., `MEMBER_UPDATED`), `entity_type`, `entity_id`, `old_value` (JSON), `new_value` (JSON), `ip_address`, `timestamp`.
+* **How:** Implement this as a cross-cutting concern using:
+  - **NestJS/Express:** An interceptor or middleware that fires an event after mutating requests.
+  - **Django:** Model `post_save` / `post_delete` signals.
+  - **Spring Boot:** AOP (Aspect-Oriented Programming) with `@AfterReturning` advice.
+* **Why:** Regulators, auditors, and enterprise clients will always ask "who changed this record and when?". Building this from day one costs almost nothing. Retrofitting it onto a live production system costs weeks. It also gives AI agents an immutable history to reason about when debugging.
+
+---
+
+## 31. Idempotency Keys for Critical Mutations
+* **The Rule:** Any endpoint that triggers a financial transaction, sends a communication, or creates a resource that must never be duplicated MUST support an `Idempotency-Key` request header. The server caches the result of the first request with that key. If the same key is received again (e.g., due to a network retry), it returns the original cached result without re-executing the operation.
+* **Why:** Networks are unreliable. A client (mobile app, frontend, partner API) might retry a `POST /payments` request after a timeout, not knowing the first one succeeded. Without idempotency, the member gets double-charged. This is a critical rule for any fintech or e-commerce feature.
+* **Implementation:** Store `(idempotency_key, response_payload)` in Redis with a TTL of 24 hours. Check before processing. Return cached response if key already exists.
+
+---
+
+## 32. Observability: The Three Pillars (Logs, Metrics, Traces)
+* **The Rule:** Logging alone is not sufficient for enterprise observability. You MUST implement all three pillars:
+  1. **Structured Logs** (Rule 14): Already covered. Use JSON-formatted logs.
+  2. **Metrics:** Expose a `/metrics` endpoint (Prometheus format) tracking: request count, request latency histograms, error rates, queue depth, DB connection pool usage. Use libraries like `prom-client` (Node), `django-prometheus` (Django), or Spring Boot Actuator.
+  3. **Distributed Traces:** Integrate OpenTelemetry to trace a single request as it flows through controllers → services → repositories → external APIs. Each span should include `correlation_id`, `duration_ms`, and `status`.
+* **Why:** When a production request is slow or fails silently, logs tell you WHAT happened, metrics tell you HOW OFTEN it happened, and traces tell you EXACTLY WHERE the bottleneck is. An AI debugging agent with access to all three can diagnose issues orders of magnitude faster.
+
+---
+
+## 33. Secret Management (Never Trust `.env` Files in Production)
+* **The Rule:** `.env` files are acceptable in local development ONLY. In staging and production environments, secrets (API keys, DB passwords, JWT secrets) MUST be injected from a dedicated secrets manager:
+  - **AWS:** AWS Secrets Manager or Parameter Store
+  - **GCP:** Google Secret Manager
+  - **Azure:** Azure Key Vault
+  - **Self-hosted:** HashiCorp Vault
+* **Rules:**
+  1. `.env` files must NEVER be committed to source control (enforce with `.gitignore`).
+  2. The application must fail fast on startup with a clear error if a required secret is missing.
+  3. Secrets must be rotated regularly. The application should support hot-reloading of secrets without a restart.
+* **Why:** A leaked `.env` file on GitHub has caused catastrophic security breaches for companies. An AI writing deployment configs must be instructed to always reference the secrets manager, never hardcode credentials.
+
+---
+
+## 34. Database Query Optimization (The N+1 Rule & Index Strategy)
+* **The Rule:** The single most common performance killer in any ORM-backed backend is the N+1 query problem. You must proactively prevent it.
+  1. **N+1 Prevention:** Always use eager loading / `JOIN` fetching when you know you'll need related data (e.g., `prefetch_related` in Django, `relations` in TypeORM, `@EntityGraph` in JPA). Never fetch a list of 100 members and then loop to fetch each one's plan separately.
+  2. **Index Strategy:** Every foreign key column, every column used in a `WHERE` clause, and every column used in an `ORDER BY` clause MUST have a database index. Indexes should be explicitly defined in migration files — never rely on the ORM to create them automatically.
+  3. **Slow Query Logging:** Enable slow query logging in the database (queries > 100ms). Review this log weekly.
+* **Why:** An AI asked to write a "Get all members with their plans" repository method will often produce an N+1 query by default. This rule forces a review gate.
+
+---
+
+## 35. GDPR & Data Privacy by Design
+* **The Rule:** Data privacy is not a feature — it is a foundation. Implement the following from day one:
+  1. **Data Minimization:** Only collect data you absolutely need. Never store sensitive fields (passwords, card numbers) in plaintext. Always hash passwords (bcrypt/argon2) and tokenize payment data.
+  2. **Right to Erasure:** The "delete account" flow must be able to fully anonymize or purge a user's PII (Personally Identifiable Information) from all tables, logs, and caches on demand. (Works hand-in-hand with Soft Deletes — Rule 29).
+  3. **Data Retention Policy:** Old logs, inactive accounts, and historical records must be automatically purged after a defined retention period (e.g., 3 years). Implement a scheduled background job for this.
+  4. **Sensitive Field Masking in Logs:** Never log raw PII. Phone numbers, emails, and names in log lines must be partially masked (e.g., `r***@gmail.com`).
+* **Why:** GDPR violations can result in fines up to 4% of global annual revenue. An AI writing a logging statement must be aware it cannot log raw user data.
+
+---
+
+## 36. Defensive Programming & Fail-Fast Principle
+* **The Rule:** Never assume inputs are valid at any layer. Every function, service method, and repository call must validate its inputs and fail immediately and loudly if assumptions are violated — rather than silently producing corrupt data downstream.
+  - **At the Controller layer:** Validate request shape with DTOs/serializers (Rule 3).
+  - **At the Service layer:** Assert that objects received from repositories are not null before operating on them. If a `findById` returns `null`, throw the appropriate custom exception immediately (Rule 6) — don't pass `null` to the next function.
+  - **At the Database layer:** Enforce data integrity constraints (NOT NULL, UNIQUE, CHECK constraints, foreign keys) at the database level. Never rely solely on application-level validation.
+* **Why:** Silent failures are the hardest bugs to find and the most dangerous in production. An AI writing a service method that receives a `null` user and calls `user.email` will produce a `NullPointerException` / `AttributeError` that crashes the request. The Fail-Fast principle ensures errors surface immediately at their origin, with a clear, actionable error message, not silently 10 layers later.
+
+---
+
+## Updated Summary Checklist (v2):
+1. Identify the exact layer (Validation? Query? Business Logic? External Adapter?).
+2. Select the **one or two** micro-files associated with that layer.
+3. Check the module's `_backend_feature.md` for context before giving the AI any files.
+4. Pass ONLY those files to the AI along with the feature doc.
+5. After the AI writes code, verify: Is there N+1? Is there a missing null check? Is a secret hardcoded? Is the response wrapped in the standard envelope?
+6. Run `pytest` against the live API to confirm contract compliance.
+7. Review the AI's isolated changes.

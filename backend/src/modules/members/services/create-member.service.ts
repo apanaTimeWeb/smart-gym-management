@@ -1,0 +1,65 @@
+import { Injectable, Logger } from '@nestjs/common';
+import { MembersRepository } from '@/modules/members/members.repository';
+import { CreateMemberDto } from '@/modules/members/dto/create-member.dto';
+import { DuplicateEmailException } from '@/modules/members/members.exceptions';
+import { MEMBER_MESSAGES } from '@/modules/members/members.constants';
+import type { MemberResponse } from '@/modules/members/members.interfaces';
+import {
+  MemberStatus,
+  BillingCycle,
+} from '@/modules/members/utils/members.enums';
+
+import { EventEmitter2 } from '@nestjs/event-emitter';
+
+@Injectable()
+export class CreateMemberService {
+  private readonly logger = new Logger(CreateMemberService.name);
+
+  constructor(
+    private readonly membersRepository: MembersRepository,
+    private readonly eventEmitter: EventEmitter2,
+  ) {}
+
+  async create(dto: CreateMemberDto): Promise<MemberResponse> {
+    this.logger.log(`Attempting to create member with email: ${dto.email}`);
+
+    const existing = await this.membersRepository.findMemberByEmail(dto.email);
+    if (existing) {
+      this.logger.warn(
+        `Member creation failed. Email ${dto.email} already exists.`,
+      );
+      throw new DuplicateEmailException();
+    }
+
+    const cycleMonths: Record<string, number> = {
+      [BillingCycle.ONE_MONTH]: 1,
+      [BillingCycle.THREE_MONTHS]: 3,
+      [BillingCycle.SIX_MONTHS]: 6,
+      [BillingCycle.TWELVE_MONTHS]: 12,
+    };
+
+    const joinDate = dto.joinDate ? new Date(dto.joinDate) : new Date();
+    const expiryDate = new Date(joinDate);
+    expiryDate.setMonth(
+      expiryDate.getMonth() + (cycleMonths[dto.billingCycle] || 1),
+    );
+
+    const payload = {
+      ...dto,
+      joinDate,
+      expiryDate,
+      status: MemberStatus.ACTIVE,
+      paidAmount: 0,
+      pendingAmount: 0,
+    };
+
+    const member = await this.membersRepository.createMember(payload);
+
+    this.eventEmitter.emit('member.registered', member);
+
+    return {
+      message: MEMBER_MESSAGES.CREATED_SUCCESS,
+      data: member,
+    };
+  }
+}

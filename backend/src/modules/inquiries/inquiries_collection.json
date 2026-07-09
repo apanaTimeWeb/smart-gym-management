@@ -1,0 +1,81 @@
+{
+  "info": {
+    "name": "GymSmart Inquiries Module",
+    "description": "Lead management: create, list, update status, and stats",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000", "type": "string" },
+    { "key": "accessToken", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Get All Inquiries",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/inquiries?page=1&limit=20&status=NEW",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "inquiries"],
+          "query": [
+            { "key": "page", "value": "1" },
+            { "key": "limit", "value": "20" },
+            { "key": "status", "value": "NEW" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Inquiry Stats",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/inquiries/stats",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "inquiries", "stats"]
+        }
+      }
+    },
+    {
+      "name": "Create Inquiry (Lead)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Ravi Tiwari\",\n  \"phone\": \"+91 99887 76655\",\n  \"email\": \"ravi@gmail.com\",\n  \"interest\": \"Premium Plan\",\n  \"source\": \"Walk-in\",\n  \"notes\": \"Interested in PT sessions\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/inquiries",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "inquiries"]
+        }
+      }
+    },
+    {
+      "name": "Update Inquiry Status",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"FOLLOW_UP\",\n  \"notes\": \"Called, will visit tomorrow\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/inquiries/:id",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "inquiries", ":id"],
+          "variable": [{ "key": "id", "value": "1" }]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "info": {
+    "name": "GymSmart Attendance Module",
+    "description": "Attendance marking, history retrieval, and today's stats",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000", "type": "string" },
+    { "key": "accessToken", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Get All Attendance",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/attendance?page=1&limit=20&type=MEMBER",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "attendance"],
+          "query": [
+            { "key": "page", "value": "1" },
+            { "key": "limit", "value": "20" },
+            { "key": "type", "value": "MEMBER" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Today Attendance Stats",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/attendance/stats",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "attendance", "stats"]
+        }
+      }
+    },
+    {
+      "name": "Mark Member Attendance",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"memberId\": \"member-uuid-here\",\n  \"date\": \"2026-07-09T10:00:00.000Z\",\n  \"type\": \"MEMBER\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/attendance",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "attendance"]
+        }
+      }
+    },
+    {
+      "name": "Mark Staff Attendance",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"staffId\": \"staff-uuid-here\",\n  \"date\": \"2026-07-09T09:00:00.000Z\",\n  \"type\": \"STAFF\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/attendance",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "attendance"]
+        }
+      }
+    }
+  ]
+}

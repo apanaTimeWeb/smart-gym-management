@@ -1,5 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
-import { OrderItem } from './order-item.entity';
+import {
+  DeleteDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+  Index,
+} from 'typeorm';
+import { OrderItem } from '@/modules/store/entities/order-item.entity';
 
 @Entity('products')
 export class Product {
@@ -9,6 +18,7 @@ export class Product {
   @Column()
   name: string;
 
+  @Index()
   @Column()
   category: string;
 
@@ -24,10 +34,11 @@ export class Product {
   @Column({ nullable: true })
   imageUrl: string;
 
+  @Index()
   @Column({ default: true })
   isActive: boolean;
 
-  @OneToMany(() => OrderItem, orderItem => orderItem.product)
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.product)
   orderItems: OrderItem[];
 
   @CreateDateColumn()
@@ -35,4 +46,7 @@ export class Product {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }
