@@ -11,20 +11,20 @@ export class HrStatsService {
 
   async getSummary(): Promise<HrResponse> {
     this.logger.log('Fetching HR summary stats');
-    
+
     const totalStaff = await this.hrRepository.countTotalStaff();
     const activeStaff = await this.hrRepository.countActiveStaff();
-    
+
     const payrolls = await this.hrRepository.findAllPayrollsForAggregation();
-    
+
     let totalPayrollThisMonth = 0;
     let paidCount = 0;
     let pendingCount = 0;
-    
+
     payrolls.forEach((p) => {
-      if (p.status === 'Paid') { 
-        paidCount++; 
-        totalPayrollThisMonth += p.amount; 
+      if (p.status === 'Paid') {
+        paidCount++;
+        totalPayrollThisMonth += p.amount;
       } else {
         pendingCount++;
       }
@@ -32,12 +32,12 @@ export class HrStatsService {
 
     return {
       message: HR_MESSAGES.STATS_FETCHED_SUCCESS,
-      data: { 
-        totalStaff, 
-        activeStaff, 
-        totalPayrollThisMonth, 
-        paidCount, 
-        pendingCount 
+      data: {
+        totalStaff,
+        activeStaff,
+        totalPayrollThisMonth,
+        paidCount,
+        pendingCount,
       },
     };
   }

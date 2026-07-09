@@ -27,9 +27,20 @@ const AppDataSource = new DataSource({
   url: process.env.DATABASE_URL,
   synchronize: true, // Auto-create tables for the seed
   entities: [
-    User, Plan, Staff, Member, Payment, Product,
-    Workout, DietPlan, Inquiry, Settings,
-    Payroll, Attendance, Order, OrderItem
+    User,
+    Plan,
+    Staff,
+    Member,
+    Payment,
+    Product,
+    Workout,
+    DietPlan,
+    Inquiry,
+    Settings,
+    Payroll,
+    Attendance,
+    Order,
+    OrderItem,
   ],
 });
 
@@ -50,7 +61,9 @@ async function main() {
 
   // 1. Create SuperAdmin User
   const hashedPassword = await bcrypt.hash('superadmin123', 10);
-  let admin = await userRepo.findOne({ where: { email: 'admin@gymsmart.com' } });
+  let admin = await userRepo.findOne({
+    where: { email: 'admin@gymsmart.com' },
+  });
   if (!admin) {
     admin = userRepo.create({
       name: 'Super Admin',
@@ -67,9 +80,33 @@ async function main() {
 
   // 2. Plans
   const plans = [
-    { name: 'Basic', tier: 'BASIC' as any, price1Month: 1200, price3Month: 3000, price6Month: 5500, price12Month: 10000, features: ['Gym Access', 'Locker'] },
-    { name: 'Gold', tier: 'GOLD' as any, price1Month: 1800, price3Month: 4500, price6Month: 8000, price12Month: 15000, features: ['Gym Access', 'Group Classes'] },
-    { name: 'Premium', tier: 'PREMIUM' as any, price1Month: 2500, price3Month: 6500, price6Month: 12000, price12Month: 22000, features: ['24/7 Access', 'PT'] },
+    {
+      name: 'Basic',
+      tier: 'BASIC' as any,
+      price1Month: 1200,
+      price3Month: 3000,
+      price6Month: 5500,
+      price12Month: 10000,
+      features: ['Gym Access', 'Locker'],
+    },
+    {
+      name: 'Gold',
+      tier: 'GOLD' as any,
+      price1Month: 1800,
+      price3Month: 4500,
+      price6Month: 8000,
+      price12Month: 15000,
+      features: ['Gym Access', 'Group Classes'],
+    },
+    {
+      name: 'Premium',
+      tier: 'PREMIUM' as any,
+      price1Month: 2500,
+      price3Month: 6500,
+      price6Month: 12000,
+      price12Month: 22000,
+      features: ['24/7 Access', 'PT'],
+    },
   ];
   for (const p of plans) {
     const plan = await planRepo.findOne({ where: { name: p.name } });
@@ -81,8 +118,26 @@ async function main() {
 
   // 3. Staff
   const staffData = [
-    { email: 'trainer@gymsmart.com', name: 'Rajesh Kumar', phone: '+91 91234 56789', role: 'Head Trainer', salary: 35000, branch: 'Main Branch', gender: Gender.MALE, joinDate: new Date('2025-01-01') },
-    { email: 'reception@gymsmart.com', name: 'Priya Desai', phone: '+91 92345 67890', role: 'Receptionist', salary: 22000, branch: 'Main Branch', gender: Gender.FEMALE, joinDate: new Date('2025-03-01') },
+    {
+      email: 'trainer@gymsmart.com',
+      name: 'Rajesh Kumar',
+      phone: '+91 91234 56789',
+      role: 'Head Trainer',
+      salary: 35000,
+      branch: 'Main Branch',
+      gender: Gender.MALE,
+      joinDate: new Date('2025-01-01'),
+    },
+    {
+      email: 'reception@gymsmart.com',
+      name: 'Priya Desai',
+      phone: '+91 92345 67890',
+      role: 'Receptionist',
+      salary: 22000,
+      branch: 'Main Branch',
+      gender: Gender.FEMALE,
+      joinDate: new Date('2025-03-01'),
+    },
   ];
   for (const s of staffData) {
     const staff = await staffRepo.findOne({ where: { email: s.email } });
@@ -94,7 +149,20 @@ async function main() {
 
   // 4. Members & Payments
   const membersData = [
-    { email: 'rahul@gmail.com', name: 'Rahul Sharma', phone: '+91 98765 43210', gender: Gender.MALE, address: 'Andheri', branch: 'Main Branch', planName: 'Premium', joinDate: new Date('2026-01-15'), expiryDate: new Date('2026-02-15'), paidAmount: 2500, pendingAmount: 0, status: 'ACTIVE' },
+    {
+      email: 'rahul@gmail.com',
+      name: 'Rahul Sharma',
+      phone: '+91 98765 43210',
+      gender: Gender.MALE,
+      address: 'Andheri',
+      branch: 'Main Branch',
+      planName: 'Premium',
+      joinDate: new Date('2026-01-15'),
+      expiryDate: new Date('2026-02-15'),
+      paidAmount: 2500,
+      pendingAmount: 0,
+      status: 'ACTIVE',
+    },
   ];
   for (const m of membersData) {
     let mem = await memberRepo.findOne({ where: { email: m.email } });
@@ -102,10 +170,21 @@ async function main() {
       const { planName, paidAmount, ...rest } = m;
       const plan = await planRepo.findOne({ where: { name: planName } });
       if (plan) {
-        mem = await memberRepo.save(memberRepo.create({ ...rest, plan: plan as any, status: rest.status as any }));
+        mem = await memberRepo.save(
+          memberRepo.create({
+            ...rest,
+            plan: plan as any,
+            status: rest.status as any,
+          }),
+        );
         if (paidAmount > 0) {
           const payment = paymentRepo.create({
-            amount: paidAmount, method: 'UPI', status: 'PAID' as any, invoiceNo: 'INV-' + mem.id, paidAt: m.joinDate, member: mem as any
+            amount: paidAmount,
+            method: 'UPI',
+            status: 'PAID' as any,
+            invoiceNo: 'INV-' + mem.id,
+            paidAt: m.joinDate,
+            member: mem as any,
           });
           await paymentRepo.save(payment);
         }
@@ -126,7 +205,14 @@ async function main() {
 
   // 6. Inquiries
   const inquiries = [
-    { name: 'Ravi Tiwari', phone: '+91 99887 76655', email: 'ravi@gmail.com', interest: 'Premium', status: 'NEW' as any, source: 'Walk-in' },
+    {
+      name: 'Ravi Tiwari',
+      phone: '+91 99887 76655',
+      email: 'ravi@gmail.com',
+      interest: 'Premium',
+      status: 'NEW' as any,
+      source: 'Walk-in',
+    },
   ];
   for (const i of inquiries) {
     const inquiry = await inquiryRepo.findOne({ where: { phone: i.phone } });
@@ -137,9 +223,16 @@ async function main() {
   // 7. Settings
   const settings = await settingsRepo.findOne({ where: {} });
   if (!settings) {
-    await settingsRepo.save(settingsRepo.create({
-      gymName: 'GymSmart Fitness', ownerName: 'Admin', phone: '123', email: 'admin@a.com', city: 'Mumbai', gstNumber: '123'
-    }));
+    await settingsRepo.save(
+      settingsRepo.create({
+        gymName: 'GymSmart Fitness',
+        ownerName: 'Admin',
+        phone: '123',
+        email: 'admin@a.com',
+        city: 'Mumbai',
+        gstNumber: '123',
+      }),
+    );
   }
   logger.log('✅ Settings created');
 
@@ -147,4 +240,7 @@ async function main() {
   await AppDataSource.destroy();
 }
 
-main().catch(e => { logger.error('❌ Seed failed:', e); process.exit(1); });
+main().catch((e) => {
+  logger.error('❌ Seed failed:', e);
+  process.exit(1);
+});

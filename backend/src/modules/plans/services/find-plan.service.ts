@@ -23,7 +23,7 @@ export class FindPlanService {
   async findOne(id: string): Promise<PlanResponse> {
     this.logger.log(`Fetching plan with ID: ${id}`);
     const plan = await this.plansRepository.findPlanById(id);
-    
+
     if (!plan) {
       throw new PlanNotFoundException();
     }

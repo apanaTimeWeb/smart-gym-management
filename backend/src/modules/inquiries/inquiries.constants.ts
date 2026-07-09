@@ -10,5 +10,5 @@ export const INQUIRIES_CONSTANTS = {
   },
   SORT: {
     DESC: 'DESC' as const,
-  }
+  },
 };

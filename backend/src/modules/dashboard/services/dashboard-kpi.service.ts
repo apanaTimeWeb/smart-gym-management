@@ -33,14 +33,14 @@ export class DashboardKpiService {
       revenueStats,
       staffStats,
       productStats,
-      inquiryStats
+      inquiryStats,
     ] = await Promise.all([
       this.repository.getMemberCounts(),
       this.repository.getNewMembersThisMonth(firstDayOfMonth),
       this.repository.getRevenueStats(firstDayOfMonth),
       this.repository.getStaffStats(),
       this.repository.getProductStats(),
-      this.repository.getInquiryStats()
+      this.repository.getInquiryStats(),
     ]);
 
     const data: IDashboardKpi = {
@@ -58,7 +58,11 @@ export class DashboardKpiService {
       newInquiries: inquiryStats.newInquiries,
     };
 
-    await this.cacheManager.set(cacheKey, data, DASHBOARD_CONSTANTS.CACHE_TTL.KPI);
+    await this.cacheManager.set(
+      cacheKey,
+      data,
+      DASHBOARD_CONSTANTS.CACHE_TTL.KPI,
+    );
     return { success: true, data };
   }
 }

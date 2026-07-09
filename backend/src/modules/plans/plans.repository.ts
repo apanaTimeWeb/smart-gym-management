@@ -11,7 +11,9 @@ export class PlansRepository {
   ) {}
 
   async createPlan(data: Partial<Plan>): Promise<Plan> {
-    const plan = this.planRepo.create(data as import('typeorm').DeepPartial<Plan>);
+    const plan = this.planRepo.create(
+      data as import('typeorm').DeepPartial<Plan>,
+    );
     return this.planRepo.save(plan);
   }
 

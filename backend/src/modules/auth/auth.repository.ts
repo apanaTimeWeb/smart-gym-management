@@ -19,7 +19,16 @@ export class AuthRepository {
   async findUserByIdForMe(id: string): Promise<Partial<User> | null> {
     return this.userRepository.findOne({
       where: { id },
-      select: ['id', 'name', 'email', 'phone', 'role', 'branch', 'isActive', 'createdAt'],
+      select: [
+        'id',
+        'name',
+        'email',
+        'phone',
+        'role',
+        'branch',
+        'isActive',
+        'createdAt',
+      ],
     });
   }
 
@@ -28,5 +37,15 @@ export class AuthRepository {
       where: { id },
       select: ['id', 'name', 'email', 'role', 'branch', 'isActive'],
     });
+  }
+
+  async findUserById(id: string): Promise<User | null> {
+    return this.userRepository.findOne({
+      where: { id },
+    });
+  }
+
+  async updateUser(id: string, data: Partial<User>): Promise<void> {
+    await this.userRepository.update(id, data);
   }
 }

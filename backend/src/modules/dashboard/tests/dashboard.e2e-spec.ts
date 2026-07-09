@@ -24,10 +24,14 @@ describe('DashboardController (e2e)', () => {
   });
 
   it('/api/dashboard/charts (GET) - should return 401 without auth token', () => {
-    return request(app.getHttpServer()).get('/api/dashboard/charts').expect(401);
+    return request(app.getHttpServer())
+      .get('/api/dashboard/charts')
+      .expect(401);
   });
 
   it('/api/dashboard/recent (GET) - should return 401 without auth token', () => {
-    return request(app.getHttpServer()).get('/api/dashboard/recent').expect(401);
+    return request(app.getHttpServer())
+      .get('/api/dashboard/recent')
+      .expect(401);
   });
 });

@@ -2,7 +2,10 @@ import { Injectable, Logger } from '@nestjs/common';
 import { FinanceRepository } from '@/modules/finance/finance.repository';
 import { CreatePaymentDto } from '@/modules/finance/dto/create-payment.dto';
 import { FindPaymentDto } from '@/modules/finance/dto/find-payment.dto';
-import { MemberNotFoundForPaymentException, PaymentProcessingException } from '@/modules/finance/finance.exceptions';
+import {
+  MemberNotFoundForPaymentException,
+  PaymentProcessingException,
+} from '@/modules/finance/finance.exceptions';
 import { FINANCE_MESSAGES } from '@/modules/finance/finance.constants';
 import type { FinanceResponse } from '@/modules/finance/finance.interfaces';
 
@@ -18,8 +21,10 @@ export class PaymentService {
   ) {}
 
   async createPayment(dto: CreatePaymentDto): Promise<FinanceResponse> {
-    this.logger.log(`Processing payment of ${dto.amount} for member: ${dto.memberId}`);
-    
+    this.logger.log(
+      `Processing payment of ${dto.amount} for member: ${dto.memberId}`,
+    );
+
     const member = await this.financeRepository.findMemberById(dto.memberId);
     if (!member) {
       throw new MemberNotFoundForPaymentException();
@@ -27,15 +32,18 @@ export class PaymentService {
 
     try {
       const payment = await this.financeRepository.processPayment(dto);
-      
+
       this.eventEmitter.emit('payment.processed', payment);
-      
+
       return {
         message: FINANCE_MESSAGES.PAYMENT_CREATED_SUCCESS,
         data: payment,
       };
     } catch (error: any) {
-      this.logger.error(`Failed to process payment for member ${dto.memberId}`, error.stack);
+      this.logger.error(
+        `Failed to process payment for member ${dto.memberId}`,
+        error.stack,
+      );
       throw new PaymentProcessingException(error.message);
     }
   }
@@ -53,13 +61,14 @@ export class PaymentService {
 
   async getPaymentsByMember(memberId: string): Promise<FinanceResponse> {
     this.logger.log(`Fetching payments for member: ${memberId}`);
-    
+
     const member = await this.financeRepository.findMemberById(memberId);
     if (!member) {
       throw new MemberNotFoundForPaymentException();
     }
 
-    const payments = await this.financeRepository.findPaymentsByMember(memberId);
+    const payments =
+      await this.financeRepository.findPaymentsByMember(memberId);
 
     return {
       message: FINANCE_MESSAGES.PAYMENTS_FETCHED_SUCCESS,

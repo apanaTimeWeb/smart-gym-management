@@ -8,7 +8,10 @@ export class CreateOrderDto {
   @IsString()
   method: string;
 
-  @ApiPropertyOptional({ description: 'Order notes', example: 'Deliver to front desk' })
+  @ApiPropertyOptional({
+    description: 'Order notes',
+    example: 'Deliver to front desk',
+  })
   @IsString()
   @IsOptional()
   notes?: string;

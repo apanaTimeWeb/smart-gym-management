@@ -1,5 +1,10 @@
 import { Controller, Get, UseGuards, HttpStatus } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 import { FinanceSummaryService } from '@/modules/finance/services/finance-summary.service';
 
@@ -12,7 +17,10 @@ export class FinanceSummaryController {
 
   @Get()
   @ApiOperation({ summary: 'Get aggregated dashboard summary for finances' })
-  @ApiResponse({ status: HttpStatus.OK, description: 'Finance summary fetched successfully' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Finance summary fetched successfully',
+  })
   getSummary() {
     return this.financeSummaryService.getSummary();
   }

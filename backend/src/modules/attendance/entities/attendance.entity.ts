@@ -1,4 +1,13 @@
-import { DeleteDateColumn, Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn, Index } from 'typeorm';
+import {
+  DeleteDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  ManyToOne,
+  JoinColumn,
+  Index,
+} from 'typeorm';
 import { AttendanceType } from '@/modules/attendance/utils/attendance.enums';
 import { Member } from '@/modules/members/entities/member.entity';
 import { Staff } from '@/modules/hr/entities/staff.entity';
@@ -8,7 +17,7 @@ export class Attendance {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => Member, member => member.attendances, { nullable: true })
+  @ManyToOne(() => Member, (member) => member.attendances, { nullable: true })
   @JoinColumn({ name: 'memberId' })
   member: Member;
 
@@ -16,7 +25,7 @@ export class Attendance {
   @Column({ nullable: true })
   memberId: string;
 
-  @ManyToOne(() => Staff, staff => staff.attendances, { nullable: true })
+  @ManyToOne(() => Staff, (staff) => staff.attendances, { nullable: true })
   @JoinColumn({ name: 'staffId' })
   staff: Staff;
 

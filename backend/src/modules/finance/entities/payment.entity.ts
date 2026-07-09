@@ -1,4 +1,13 @@
-import { DeleteDateColumn, Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn, Index } from 'typeorm';
+import {
+  DeleteDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  ManyToOne,
+  JoinColumn,
+  Index,
+} from 'typeorm';
 import { PaymentStatus } from '@/modules/finance/utils/finance.enums';
 import { Member } from '@/modules/members/entities/member.entity';
 
@@ -7,7 +16,7 @@ export class Payment {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => Member, member => member.payments)
+  @ManyToOne(() => Member, (member) => member.payments)
   @JoinColumn({ name: 'memberId' })
   member: Member;
 

@@ -8,6 +8,7 @@ export interface AuthLoginResponse {
   message: string;
   data: {
     accessToken: string;
+    refreshToken: string;
     user: {
       id: string;
       email: string;

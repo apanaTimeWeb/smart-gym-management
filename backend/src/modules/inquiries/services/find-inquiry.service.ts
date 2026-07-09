@@ -17,7 +17,9 @@ export class FindInquiryService {
 
   async findOne(id: number) {
     this.logger.log(`Fetching inquiry ID: ${id}`);
-    const data = await this.repository.inquiryRepository.findOne({ where: { id } });
+    const data = await this.repository.inquiryRepository.findOne({
+      where: { id },
+    });
     if (!data) throw new InquiryNotFoundException();
     return { success: true, data };
   }

@@ -19,7 +19,8 @@ export const otelSDK = new NodeSDK({
 
 // gracefully shut down the SDK on process exit
 process.on('SIGTERM', () => {
-  otelSDK.shutdown()
+  otelSDK
+    .shutdown()
     .then(() => console.log('Tracing terminated'))
     .catch((error) => console.log('Error terminating tracing', error))
     .finally(() => process.exit(0));

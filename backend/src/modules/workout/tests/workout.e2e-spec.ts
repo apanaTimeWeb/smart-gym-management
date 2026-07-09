@@ -20,11 +20,15 @@ describe('WorkoutController (e2e)', () => {
   });
 
   it('/api/workout/exercises (GET) - should return 401 without auth token', () => {
-    return request(app.getHttpServer()).get('/api/workout/exercises').expect(401);
+    return request(app.getHttpServer())
+      .get('/api/workout/exercises')
+      .expect(401);
   });
 
   it('/api/workout/diet-plans (GET) - should return 401 without auth token', () => {
-    return request(app.getHttpServer()).get('/api/workout/diet-plans').expect(401);
+    return request(app.getHttpServer())
+      .get('/api/workout/diet-plans')
+      .expect(401);
   });
 
   it('/api/workout/exercises (POST) - should return 401 without auth token', () => {

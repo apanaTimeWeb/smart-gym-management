@@ -11,17 +11,23 @@ export class UpdateInquiryService {
 
   async execute(id: number, dto: UpdateInquiryDto) {
     this.logger.log(`Updating inquiry ID: ${id}`);
-    const existing = await this.repository.inquiryRepository.findOne({ where: { id } });
+    const existing = await this.repository.inquiryRepository.findOne({
+      where: { id },
+    });
     if (!existing) throw new InquiryNotFoundException();
 
     await this.repository.inquiryRepository.update(id, dto);
-    const data = await this.repository.inquiryRepository.findOne({ where: { id } });
+    const data = await this.repository.inquiryRepository.findOne({
+      where: { id },
+    });
     return { success: true, data };
   }
 
   async remove(id: number) {
     this.logger.log(`Deleting inquiry ID: ${id}`);
-    const existing = await this.repository.inquiryRepository.findOne({ where: { id } });
+    const existing = await this.repository.inquiryRepository.findOne({
+      where: { id },
+    });
     if (!existing) throw new InquiryNotFoundException();
 
     await this.repository.inquiryRepository.softDelete(id);

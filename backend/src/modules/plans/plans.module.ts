@@ -14,11 +14,7 @@ import { UpdatePlanController } from '@/modules/plans/controllers/update-plan.co
 
 @Module({
   imports: [TypeOrmModule.forFeature([Plan])],
-  controllers: [
-    CreatePlanController,
-    FindPlanController,
-    UpdatePlanController,
-  ],
+  controllers: [CreatePlanController, FindPlanController, UpdatePlanController],
   providers: [
     PlansRepository,
     CreatePlanService,

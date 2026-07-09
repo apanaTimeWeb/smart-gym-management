@@ -24,16 +24,13 @@ export class DashboardRecentService {
     }
 
     this.logger.log('Fetching Recent stats from DB');
-    
-    const [
-      recentMembers,
-      recentPayments,
-      pendingPaymentsList
-    ] = await Promise.all([
-      this.repository.getRecentMembers(),
-      this.repository.getRecentPayments(),
-      this.repository.getPendingPaymentsList()
-    ]);
+
+    const [recentMembers, recentPayments, pendingPaymentsList] =
+      await Promise.all([
+        this.repository.getRecentMembers(),
+        this.repository.getRecentPayments(),
+        this.repository.getPendingPaymentsList(),
+      ]);
 
     const data: IDashboardRecent = {
       recentMembers,
@@ -41,7 +38,11 @@ export class DashboardRecentService {
       pendingPaymentsList,
     };
 
-    await this.cacheManager.set(cacheKey, data, DASHBOARD_CONSTANTS.CACHE_TTL.RECENT);
+    await this.cacheManager.set(
+      cacheKey,
+      data,
+      DASHBOARD_CONSTANTS.CACHE_TTL.RECENT,
+    );
     return { success: true, data };
   }
 }

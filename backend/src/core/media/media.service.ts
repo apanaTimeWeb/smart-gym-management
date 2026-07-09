@@ -36,7 +36,7 @@ export class MediaService {
         data: {
           url: `/uploads/${filename}`,
           filename,
-        }
+        },
       };
     } catch (error) {
       this.logger.error(`Error processing image: ${error.message}`);

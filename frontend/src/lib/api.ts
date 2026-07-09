@@ -47,16 +47,33 @@ export async function apiFetch<T = unknown>(
   }
 
   const res = await fetch(`${BASE_URL}${path}`, { ...rest, headers });
-  const json = await res.json();
-
-  if (!res.ok) {
-    if (res.status === 401) {
-      // Session expired — clear cookies and redirect
+  
+  let finalRes = res;
+  
+  if (res.status === 401 && auth) {
+    // Attempt to refresh the token
+    const refreshRes = await fetch('/api/auth/refresh', { method: 'POST' });
+    
+    if (refreshRes.ok) {
+      // Refresh succeeded, grab new token from response
+      const { accessToken } = await refreshRes.json();
+      if (accessToken) {
+        // Retry original request with new token
+        headers['Authorization'] = `Bearer ${accessToken}`;
+        finalRes = await fetch(`${BASE_URL}${path}`, { ...rest, headers });
+      }
+    } else {
+      // Refresh failed, session genuinely expired
       await fetch('/api/auth/logout', { method: 'POST' });
       window.location.replace('/login');
       throw new Error('Session expired. Please login again.');
     }
-    throw new Error(json.message || `API Error: ${res.status}`);
+  }
+
+  const json = await finalRes.json();
+
+  if (!finalRes.ok) {
+    throw new Error(json.message || `API Error: ${finalRes.status}`);
   }
 
   return json;

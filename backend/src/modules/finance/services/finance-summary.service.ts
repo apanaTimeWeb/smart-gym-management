@@ -1,7 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { FinanceRepository } from '@/modules/finance/finance.repository';
 import { FINANCE_MESSAGES } from '@/modules/finance/finance.constants';
-import type { FinanceResponse, FinanceSummary } from '@/modules/finance/finance.interfaces';
+import type {
+  FinanceResponse,
+  FinanceSummary,
+} from '@/modules/finance/finance.interfaces';
 
 @Injectable()
 export class FinanceSummaryService {
@@ -11,20 +14,21 @@ export class FinanceSummaryService {
 
   async getSummary(): Promise<FinanceResponse> {
     this.logger.log('Fetching aggregated finance summary dashboard');
-    
+
     const totalRevenue = await this.financeRepository.getTotalRevenue();
     const totalPayments = await this.financeRepository.getTotalPaymentsCount();
     const pendingAmount = await this.financeRepository.getTotalPendingAmount();
-    
+
     // Dynamic Revenue by Method
-    const methodAggregations = await this.financeRepository.getRevenueByMethod();
+    const methodAggregations =
+      await this.financeRepository.getRevenueByMethod();
     const revenueByMethod: Record<string, number> = {
       UPI: 0,
       Cash: 0,
       Card: 0,
       NetBanking: 0,
     };
-    
+
     for (const agg of methodAggregations) {
       if (agg.method) {
         revenueByMethod[agg.method] = agg.total;
@@ -34,16 +38,31 @@ export class FinanceSummaryService {
     // Dynamic Monthly Data
     const now = new Date();
     const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    const monthlyRevenue = await this.financeRepository.getMonthlyRevenue(firstDayOfMonth);
+    const monthlyRevenue =
+      await this.financeRepository.getMonthlyRevenue(firstDayOfMonth);
 
     const sixMonthsAgo = new Date();
     sixMonthsAgo.setMonth(now.getMonth() - 5);
     sixMonthsAgo.setDate(1);
     sixMonthsAgo.setHours(0, 0, 0, 0);
 
-    const recentPaymentsForChart = await this.financeRepository.getRecentPaymentsForChart(sixMonthsAgo);
+    const recentPaymentsForChart =
+      await this.financeRepository.getRecentPaymentsForChart(sixMonthsAgo);
 
-    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const monthNames = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
     const revenueMap = new Map<string, number>();
 
     // Initialize last 6 months

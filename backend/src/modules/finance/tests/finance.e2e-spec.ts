@@ -20,7 +20,9 @@ describe('FinanceController (e2e)', () => {
   });
 
   it('/api/finance/payments (GET) - should return 401 without auth token', () => {
-    return request(app.getHttpServer()).get('/api/finance/payments').expect(401);
+    return request(app.getHttpServer())
+      .get('/api/finance/payments')
+      .expect(401);
   });
 
   it('/api/finance/summary (GET) - should return 401 without auth token', () => {

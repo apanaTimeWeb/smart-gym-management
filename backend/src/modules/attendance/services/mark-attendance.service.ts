@@ -12,10 +12,14 @@ export class MarkAttendanceService {
   constructor(private readonly attendanceRepository: AttendanceRepository) {}
 
   async mark(dto: MarkAttendanceDto): Promise<AttendanceResponse> {
-    this.logger.log(`Marking attendance for ${dto.memberId ? 'Member: ' + dto.memberId : 'Staff: ' + dto.staffId}`);
+    this.logger.log(
+      `Marking attendance for ${dto.memberId ? 'Member: ' + dto.memberId : 'Staff: ' + dto.staffId}`,
+    );
 
     if (!dto.memberId && !dto.staffId) {
-      this.logger.warn('Failed to mark attendance: No member or staff ID provided');
+      this.logger.warn(
+        'Failed to mark attendance: No member or staff ID provided',
+      );
       throw new UserNotLinkedException();
     }
 

@@ -6,7 +6,10 @@ export class CreateWorkoutDto {
   @IsString()
   name: string;
 
-  @ApiProperty({ description: 'Description', example: 'Chest, shoulders, triceps' })
+  @ApiProperty({
+    description: 'Description',
+    example: 'Chest, shoulders, triceps',
+  })
   @IsString()
   description: string;
 

@@ -41,4 +41,3 @@ import { UpdateDietPlanService } from './services/update-diet-plan.service';
   ],
 })
 export class WorkoutModule {}
-

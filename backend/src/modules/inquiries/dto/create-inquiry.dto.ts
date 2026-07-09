@@ -11,12 +11,18 @@ export class CreateInquiryDto {
   @IsString()
   phone: string;
 
-  @ApiPropertyOptional({ description: 'Email address', example: 'john@example.com' })
+  @ApiPropertyOptional({
+    description: 'Email address',
+    example: 'john@example.com',
+  })
   @IsEmail()
   @IsOptional()
   email?: string;
-  
-  @ApiProperty({ description: 'Interest (e.g. Weight Loss, Muscle Gain)', example: 'Weight Loss' })
+
+  @ApiProperty({
+    description: 'Interest (e.g. Weight Loss, Muscle Gain)',
+    example: 'Weight Loss',
+  })
   @IsString()
   interest: string;
 
@@ -24,12 +30,19 @@ export class CreateInquiryDto {
   @IsString()
   source: string;
 
-  @ApiPropertyOptional({ description: 'Inquiry status', enum: InquiryStatus, default: InquiryStatus.NEW })
+  @ApiPropertyOptional({
+    description: 'Inquiry status',
+    enum: InquiryStatus,
+    default: InquiryStatus.NEW,
+  })
   @IsEnum(InquiryStatus)
   @IsOptional()
   status?: InquiryStatus = InquiryStatus.NEW;
 
-  @ApiPropertyOptional({ description: 'Notes', example: 'Interested in annual plan' })
+  @ApiPropertyOptional({
+    description: 'Notes',
+    example: 'Interested in annual plan',
+  })
   @IsString()
   @IsOptional()
   notes?: string;

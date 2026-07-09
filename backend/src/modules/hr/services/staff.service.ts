@@ -3,7 +3,10 @@ import { HrRepository } from '@/modules/hr/hr.repository';
 import { CreateStaffDto } from '@/modules/hr/dto/create-staff.dto';
 import { UpdateStaffDto } from '@/modules/hr/dto/update-staff.dto';
 import { FindStaffDto } from '@/modules/hr/dto/find-staff.dto';
-import { StaffNotFoundException, DuplicateStaffEmailException } from '@/modules/hr/hr.exceptions';
+import {
+  StaffNotFoundException,
+  DuplicateStaffEmailException,
+} from '@/modules/hr/hr.exceptions';
 import { HR_MESSAGES } from '@/modules/hr/hr.constants';
 import type { HrResponse } from '@/modules/hr/hr.interfaces';
 
@@ -15,10 +18,12 @@ export class StaffService {
 
   async create(dto: CreateStaffDto): Promise<HrResponse> {
     this.logger.log(`Attempting to create staff with email: ${dto.email}`);
-    
+
     const existing = await this.hrRepository.findStaffByEmail(dto.email);
     if (existing) {
-      this.logger.warn(`Staff creation failed. Email ${dto.email} already exists.`);
+      this.logger.warn(
+        `Staff creation failed. Email ${dto.email} already exists.`,
+      );
       throw new DuplicateStaffEmailException();
     }
 
@@ -29,7 +34,7 @@ export class StaffService {
     };
 
     const staff = await this.hrRepository.createStaff(payload);
-    
+
     return {
       message: HR_MESSAGES.STAFF_CREATED_SUCCESS,
       data: staff,
@@ -50,7 +55,7 @@ export class StaffService {
   async findOne(id: string): Promise<HrResponse> {
     this.logger.log(`Fetching staff with ID: ${id}`);
     const staff = await this.hrRepository.findStaffById(id);
-    
+
     if (!staff) {
       throw new StaffNotFoundException();
     }
@@ -64,7 +69,7 @@ export class StaffService {
   async update(id: string, dto: UpdateStaffDto): Promise<HrResponse> {
     this.logger.log(`Updating staff with ID: ${id}`);
     const existing = await this.hrRepository.findStaffById(id);
-    
+
     if (!existing) {
       throw new StaffNotFoundException();
     }
@@ -85,13 +90,15 @@ export class StaffService {
   async remove(id: string): Promise<HrResponse> {
     this.logger.log(`Deactivating staff with ID: ${id}`);
     const existing = await this.hrRepository.findStaffById(id);
-    
+
     if (!existing) {
       throw new StaffNotFoundException();
     }
 
     // Soft delete by setting isActive to false
-    const deactivatedStaff = await this.hrRepository.updateStaff(id, { isActive: false });
+    const deactivatedStaff = await this.hrRepository.updateStaff(id, {
+      isActive: false,
+    });
 
     return {
       message: HR_MESSAGES.STAFF_DELETED_SUCCESS,

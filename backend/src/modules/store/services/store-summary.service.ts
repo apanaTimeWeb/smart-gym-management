@@ -10,15 +10,15 @@ export class StoreSummaryService {
   async execute() {
     this.logger.log(`Fetching store summary stats`);
     const stats = await this.repository.getSummaryStats();
-    
-    return { 
-      success: true, 
+
+    return {
+      success: true,
       data: {
         totalProducts: stats.totalProducts,
         totalOrders: stats.totalOrders,
         totalRevenue: parseFloat(stats.totalRevenue) || 0,
         lowStockProducts: stats.lowStockProducts,
-      } 
+      },
     };
   }
 }

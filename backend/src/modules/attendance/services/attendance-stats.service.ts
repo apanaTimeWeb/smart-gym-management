@@ -16,7 +16,10 @@ export class AttendanceStatsService {
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    const stats = await this.attendanceRepository.getStatsForDateRange(today, tomorrow);
+    const stats = await this.attendanceRepository.getStatsForDateRange(
+      today,
+      tomorrow,
+    );
 
     return {
       message: ATTENDANCE_MESSAGES.STATS_FETCHED_SUCCESS,

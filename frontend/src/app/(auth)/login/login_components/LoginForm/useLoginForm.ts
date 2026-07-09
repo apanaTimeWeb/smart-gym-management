@@ -1,48 +1,48 @@
-import { useState, useCallback, FormEvent } from 'react';
+import { useState, useCallback } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import toast from 'react-hot-toast';
 import { authApi } from '@/lib/api';
 import { LoginSharedConstants } from '@/app/(auth)/login/login_constants/LoginSharedConstants';
-import { UseLoginFormReturn } from '@/app/(auth)/login/login_types/login_types';
+import { UseLoginFormReturn, loginSchema, LoginFormData } from '@/app/(auth)/login/login_types/login_types';
 
 export function useLoginForm(): UseLoginFormReturn {
- const [email, setEmail] = useState('admin@gymsmart.com');
- const [password, setPassword] = useState('superadmin123');
- const [error, setError] = useState('');
- const [loading, setLoading] = useState(false);
- const [showPassword, setShowPassword] = useState(false);
+  const form = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { email: '', password: '' },
+  });
 
- const handleLogin = useCallback(async (e: FormEvent) => {
- e.preventDefault();
- setLoading(true);
- setError('');
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
- try {
- const res = await authApi.login(email, password);
- if (res.success && res.data.accessToken) {
- const cookieRes = await fetch(LoginSharedConstants.PATHS.SET_COOKIE_API, {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
- body: JSON.stringify({ token: res.data.accessToken, user: res.data.user }),
- });
+  const onSubmit = useCallback(async (data: LoginFormData) => {
+    setLoading(true);
 
- if (!cookieRes.ok) throw new Error('Session setup failed');
+    try {
+      const res = await authApi.login(data.email, data.password);
+      if (res.success && res.data.accessToken) {
+        const cookieRes = await fetch(LoginSharedConstants.PATHS.SET_COOKIE_API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            token: res.data.accessToken, 
+            refreshToken: (res.data as any).refreshToken, 
+            user: res.data.user 
+          }),
+        });
 
- window.location.replace(LoginSharedConstants.PATHS.DASHBOARD);
- }
- } catch (err: unknown) {
- setError(err instanceof Error ? err.message : 'Login failed. Please try again.');
- setLoading(false);
- }
- }, [email, password]);
+        if (!cookieRes.ok) throw new Error('Session setup failed');
+        
+        toast.success('Login successful!');
+        window.location.replace(LoginSharedConstants.PATHS.DASHBOARD);
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Login failed. Please try again.';
+      toast.error(msg);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
- return {
- email,
- setEmail,
- password,
- setPassword,
- error,
- loading,
- showPassword,
- setShowPassword,
- handleLogin
- };
+  return { form, loading, showPassword, setShowPassword, onSubmit };
 }

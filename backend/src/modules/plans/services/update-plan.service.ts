@@ -14,7 +14,7 @@ export class UpdatePlanService {
   async update(id: string, dto: UpdatePlanDto): Promise<PlanResponse> {
     this.logger.log(`Updating plan with ID: ${id}`);
     const existing = await this.plansRepository.findPlanById(id);
-    
+
     if (!existing) {
       throw new PlanNotFoundException();
     }
@@ -30,12 +30,14 @@ export class UpdatePlanService {
   async remove(id: string): Promise<PlanResponse> {
     this.logger.log(`Deactivating plan with ID: ${id}`);
     const existing = await this.plansRepository.findPlanById(id);
-    
+
     if (!existing) {
       throw new PlanNotFoundException();
     }
 
-    const deactivatedPlan = await this.plansRepository.updatePlan(id, { isActive: false });
+    const deactivatedPlan = await this.plansRepository.updatePlan(id, {
+      isActive: false,
+    });
 
     return {
       message: PLAN_MESSAGES.DELETED_SUCCESS,

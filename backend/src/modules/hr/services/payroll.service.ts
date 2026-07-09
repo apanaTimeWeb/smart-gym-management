@@ -2,7 +2,10 @@ import { Injectable, Logger } from '@nestjs/common';
 import { HrRepository } from '@/modules/hr/hr.repository';
 import { CreatePayrollDto } from '@/modules/hr/dto/create-payroll.dto';
 import { FindPayrollDto } from '@/modules/hr/dto/find-payroll.dto';
-import { PayrollNotFoundException, StaffNotFoundException } from '@/modules/hr/hr.exceptions';
+import {
+  PayrollNotFoundException,
+  StaffNotFoundException,
+} from '@/modules/hr/hr.exceptions';
 import { HR_MESSAGES } from '@/modules/hr/hr.constants';
 import type { HrResponse } from '@/modules/hr/hr.interfaces';
 
@@ -14,14 +17,14 @@ export class PayrollService {
 
   async create(dto: CreatePayrollDto): Promise<HrResponse> {
     this.logger.log(`Attempting to create payroll for staffId: ${dto.staffId}`);
-    
+
     const staff = await this.hrRepository.findStaffById(dto.staffId);
     if (!staff) {
       throw new StaffNotFoundException();
     }
 
     const payroll = await this.hrRepository.createPayroll(dto);
-    
+
     return {
       message: HR_MESSAGES.PAYROLL_CREATED_SUCCESS,
       data: payroll,
@@ -42,7 +45,7 @@ export class PayrollService {
   async updateStatus(id: string, status: string): Promise<HrResponse> {
     this.logger.log(`Updating payroll status for ID: ${id} to ${status}`);
     const existing = await this.hrRepository.findPayrollById(id);
-    
+
     if (!existing) {
       throw new PayrollNotFoundException();
     }
@@ -52,7 +55,10 @@ export class PayrollService {
       paidAt: status === 'Paid' ? new Date() : null,
     };
 
-    const updatedPayroll = await this.hrRepository.updatePayroll(id, payload as any);
+    const updatedPayroll = await this.hrRepository.updatePayroll(
+      id,
+      payload as any,
+    );
 
     return {
       message: HR_MESSAGES.PAYROLL_STATUS_UPDATED_SUCCESS,

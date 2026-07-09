@@ -24,13 +24,19 @@ describe('AttendanceController (e2e)', () => {
   });
 
   it('/api/attendance/stats (GET) - should return 401 without auth token', () => {
-    return request(app.getHttpServer()).get('/api/attendance/stats').expect(401);
+    return request(app.getHttpServer())
+      .get('/api/attendance/stats')
+      .expect(401);
   });
 
   it('/api/attendance (POST) - should return 401 without auth token', () => {
     return request(app.getHttpServer())
       .post('/api/attendance')
-      .send({ memberId: 'uuid-1', date: new Date().toISOString(), type: 'MEMBER' })
+      .send({
+        memberId: 'uuid-1',
+        date: new Date().toISOString(),
+        type: 'MEMBER',
+      })
       .expect(401);
   });
 });

@@ -1,4 +1,13 @@
-import { DeleteDateColumn, Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, Index } from 'typeorm';
+import {
+  DeleteDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+  Index,
+} from 'typeorm';
 import { Gender } from '@/modules/hr/utils/hr.enums';
 import { Payroll } from '@/modules/hr/entities/payroll.entity';
 import { Attendance } from '@/modules/attendance/entities/attendance.entity';
@@ -39,10 +48,10 @@ export class Staff {
   @Column({ default: true })
   isActive: boolean;
 
-  @OneToMany(() => Payroll, payroll => payroll.staff)
+  @OneToMany(() => Payroll, (payroll) => payroll.staff)
   payrolls: Payroll[];
 
-  @OneToMany(() => Attendance, attendance => attendance.staff)
+  @OneToMany(() => Attendance, (attendance) => attendance.staff)
   attendances: Attendance[];
 
   @CreateDateColumn()

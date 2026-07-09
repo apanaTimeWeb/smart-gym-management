@@ -9,5 +9,5 @@ export const SETTINGS_CONSTANTS = {
   },
   ERROR_MESSAGES: {
     SETTINGS_NOT_FOUND: 'Settings not found',
-  }
+  },
 };

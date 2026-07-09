@@ -13,7 +13,9 @@ export class GetSettingsService {
     let settings = await this.repository.findFirst();
     if (!settings) {
       this.logger.log(`Initializing default settings`);
-      settings = this.repository.settingRepository.create(SETTINGS_CONSTANTS.DEFAULT_VALUES);
+      settings = this.repository.settingRepository.create(
+        SETTINGS_CONSTANTS.DEFAULT_VALUES,
+      );
       await this.repository.settingRepository.save(settings);
     }
     return { success: true, data: settings };

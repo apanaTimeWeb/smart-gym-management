@@ -54,11 +54,15 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        throttlers: [{
-          ttl: 60000,
-          limit: 100, // 100 requests per minute
-        }],
-        storage: new ThrottlerStorageRedisService(`redis://${config.get('REDIS_HOST', 'localhost')}:${config.get('REDIS_PORT', 6379)}`),
+        throttlers: [
+          {
+            ttl: 60000,
+            limit: 100, // 100 requests per minute
+          },
+        ],
+        storage: new ThrottlerStorageRedisService(
+          `redis://${config.get('REDIS_HOST', 'localhost')}:${config.get('REDIS_PORT', 6379)}`,
+        ),
       }),
     }),
 

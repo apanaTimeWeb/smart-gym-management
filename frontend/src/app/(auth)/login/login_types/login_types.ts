@@ -1,13 +1,17 @@
-import { FormEvent } from 'react';
+import { UseFormReturn } from 'react-hook-form';
+import { z } from 'zod';
+
+export const loginSchema = z.object({
+  email: z.string().email('Please enter a valid email address'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+});
+
+export type LoginFormData = z.infer<typeof loginSchema>;
 
 export interface UseLoginFormReturn {
- email: string;
- setEmail: (val: string) => void;
- password: string;
- setPassword: (val: string) => void;
- error: string;
- loading: boolean;
- showPassword: boolean;
- setShowPassword: (val: boolean) => void;
- handleLogin: (e: FormEvent) => Promise<void>;
+  form: UseFormReturn<LoginFormData>;
+  loading: boolean;
+  showPassword: boolean;
+  setShowPassword: (val: boolean) => void;
+  onSubmit: (data: LoginFormData) => Promise<void>;
 }

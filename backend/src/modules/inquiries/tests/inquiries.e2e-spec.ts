@@ -30,7 +30,12 @@ describe('InquiriesController (e2e)', () => {
   it('/api/inquiries (POST) - should return 401 without auth token', () => {
     return request(app.getHttpServer())
       .post('/api/inquiries')
-      .send({ name: 'Test Lead', phone: '9999999999', email: 'lead@test.com', interest: 'Premium' })
+      .send({
+        name: 'Test Lead',
+        phone: '9999999999',
+        email: 'lead@test.com',
+        interest: 'Premium',
+      })
       .expect(401);
   });
 });

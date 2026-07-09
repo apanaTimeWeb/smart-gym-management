@@ -14,10 +14,7 @@ import { FinanceSummaryController } from '@/modules/finance/controllers/finance-
 
 @Module({
   imports: [TypeOrmModule.forFeature([Payment, Member])],
-  controllers: [
-    PaymentController,
-    FinanceSummaryController,
-  ],
+  controllers: [PaymentController, FinanceSummaryController],
   providers: [
     FinanceRepository,
     PaymentService,

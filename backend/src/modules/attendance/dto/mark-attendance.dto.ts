@@ -1,4 +1,10 @@
-import { IsOptional, IsNumber, IsDateString, IsEnum, IsString } from 'class-validator';
+import {
+  IsOptional,
+  IsNumber,
+  IsDateString,
+  IsEnum,
+  IsString,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { AttendanceType } from '@/modules/attendance/utils/attendance.enums';
 

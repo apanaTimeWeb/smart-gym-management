@@ -34,12 +34,12 @@ export class DashboardChartsService {
       recentMembersForChart,
       recentPaymentsForChart,
       membersWithPlans,
-      memberCounts
+      memberCounts,
     ] = await Promise.all([
       this.repository.getRecentMembersForChart(sixMonthsAgo),
       this.repository.getRecentPaymentsForChart(sixMonthsAgo),
       this.repository.getMembersWithPlans(),
-      this.repository.getMemberCounts()
+      this.repository.getMemberCounts(),
     ]);
 
     const memberGrowthMap = new Map<string, number>();
@@ -55,38 +55,50 @@ export class DashboardChartsService {
 
     recentMembersForChart.forEach((m) => {
       const mName = DASHBOARD_CONSTANTS.MONTH_NAMES[m.joinDate.getMonth()];
-      if (memberGrowthMap.has(mName)) memberGrowthMap.set(mName, memberGrowthMap.get(mName)! + 1);
+      if (memberGrowthMap.has(mName))
+        memberGrowthMap.set(mName, memberGrowthMap.get(mName)! + 1);
     });
 
     recentPaymentsForChart.forEach((p) => {
       if (p.paidAt) {
         const mName = DASHBOARD_CONSTANTS.MONTH_NAMES[p.paidAt.getMonth()];
-        if (revenueMap.has(mName)) revenueMap.set(mName, revenueMap.get(mName)! + p.amount);
+        if (revenueMap.has(mName))
+          revenueMap.set(mName, revenueMap.get(mName)! + p.amount);
       }
     });
 
-    const memberGrowth = Array.from(memberGrowthMap.entries()).map(([month, count]) => ({ month, count }));
-    const revenueChart = Array.from(revenueMap.entries()).map(([month, revenue]) => ({ month, revenue }));
+    const memberGrowth = Array.from(memberGrowthMap.entries()).map(
+      ([month, count]) => ({ month, count }),
+    );
+    const revenueChart = Array.from(revenueMap.entries()).map(
+      ([month, revenue]) => ({ month, revenue }),
+    );
 
     const planCounts = new Map<string, number>();
     membersWithPlans.forEach((m) => {
       const pName = m.plan?.name || 'Unknown';
       planCounts.set(pName, (planCounts.get(pName) || 0) + 1);
     });
-    const membersByPlan = Array.from(planCounts.entries()).map(([plan, count]) => ({ plan, count }));
+    const membersByPlan = Array.from(planCounts.entries()).map(
+      ([plan, count]) => ({ plan, count }),
+    );
 
     const data: IDashboardCharts = {
       memberGrowth,
       revenueChart,
       membersByPlan,
-      membersByStatus: { 
-        active: memberCounts.active, 
-        pending: memberCounts.pending, 
-        expired: memberCounts.expired 
+      membersByStatus: {
+        active: memberCounts.active,
+        pending: memberCounts.pending,
+        expired: memberCounts.expired,
       },
     };
 
-    await this.cacheManager.set(cacheKey, data, DASHBOARD_CONSTANTS.CACHE_TTL.CHARTS);
+    await this.cacheManager.set(
+      cacheKey,
+      data,
+      DASHBOARD_CONSTANTS.CACHE_TTL.CHARTS,
+    );
     return { success: true, data };
   }
 }

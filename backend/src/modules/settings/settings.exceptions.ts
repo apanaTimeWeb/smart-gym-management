@@ -3,6 +3,9 @@ import { SETTINGS_CONSTANTS } from './settings.constants';
 
 export class SettingsNotFoundException extends HttpException {
   constructor(message?: string) {
-    super(message || SETTINGS_CONSTANTS.ERROR_MESSAGES.SETTINGS_NOT_FOUND, HttpStatus.NOT_FOUND);
+    super(
+      message || SETTINGS_CONSTANTS.ERROR_MESSAGES.SETTINGS_NOT_FOUND,
+      HttpStatus.NOT_FOUND,
+    );
   }
 }

@@ -12,14 +12,7 @@ import { UpdateSettingsService } from './services/update-settings.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Settings])],
-  controllers: [
-    GetSettingsController,
-    UpdateSettingsController,
-  ],
-  providers: [
-    SettingsRepository,
-    GetSettingsService,
-    UpdateSettingsService,
-  ],
+  controllers: [GetSettingsController, UpdateSettingsController],
+  providers: [SettingsRepository, GetSettingsService, UpdateSettingsService],
 })
 export class SettingsModule {}

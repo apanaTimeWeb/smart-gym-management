@@ -16,8 +16,10 @@ export class MemberRegisteredListener {
 
   @OnEvent('member.registered')
   async handleMemberRegisteredEvent(member: any) {
-    this.logger.log(`Handling member.registered event for member: ${member.id}`);
-    
+    this.logger.log(
+      `Handling member.registered event for member: ${member.id}`,
+    );
+
     // Create an initial invoice/payment record for the new member
     try {
       await this.paymentRepository.save(
@@ -27,11 +29,14 @@ export class MemberRegisteredListener {
           method: 'SYSTEM',
           status: PaymentStatus.DUE,
           invoiceNo: `INV-${Date.now()}`,
-        })
+        }),
       );
       this.logger.log(`Created initial due payment for member: ${member.id}`);
     } catch (error: any) {
-      this.logger.error(`Failed to create initial payment for member: ${member.id}`, error.stack);
+      this.logger.error(
+        `Failed to create initial payment for member: ${member.id}`,
+        error.stack,
+      );
     }
   }
 }

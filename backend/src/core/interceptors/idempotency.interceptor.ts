@@ -14,7 +14,10 @@ import type { Cache } from 'cache-manager';
 export class IdempotencyInterceptor implements NestInterceptor {
   constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {}
 
-  async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
+  async intercept(
+    context: ExecutionContext,
+    next: CallHandler,
+  ): Promise<Observable<any>> {
     const request = context.switchToHttp().getRequest();
     const idempotencyKey = request.headers['idempotency-key'];
 

@@ -17,7 +17,10 @@ export class AuditService {
       const auditLog = this.auditLogRepository.create(data);
       await this.auditLogRepository.save(auditLog);
     } catch (error) {
-      this.logger.error(`Failed to save audit log: ${error.message}`, error.stack);
+      this.logger.error(
+        `Failed to save audit log: ${error.message}`,
+        error.stack,
+      );
     }
   }
 }

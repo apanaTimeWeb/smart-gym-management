@@ -11,7 +11,9 @@ export class FindAttendanceService {
   constructor(private readonly attendanceRepository: AttendanceRepository) {}
 
   async findAll(query: FindAttendanceDto): Promise<AttendanceResponse> {
-    this.logger.log(`Fetching attendances with query: ${JSON.stringify(query)}`);
+    this.logger.log(
+      `Fetching attendances with query: ${JSON.stringify(query)}`,
+    );
     const data = await this.attendanceRepository.findAllAttendances(query);
 
     return {

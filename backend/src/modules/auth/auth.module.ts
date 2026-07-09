@@ -21,7 +21,8 @@ import { JwtStrategy } from '@/modules/auth/auth.strategy';
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET') || 'gymsmart_secret',
         signOptions: {
-          expiresIn: (configService.get<string>('JWT_EXPIRES_IN') || '7d') as `${number}${'s' | 'm' | 'h' | 'd' | 'w' | 'y'}`,
+          expiresIn: (configService.get<string>('JWT_EXPIRES_IN') ||
+            '7d') as `${number}${'s' | 'm' | 'h' | 'd' | 'w' | 'y'}`,
         },
       }),
       inject: [ConfigService],

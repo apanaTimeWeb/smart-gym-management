@@ -1,5 +1,10 @@
 import { Controller, Get, Param, UseGuards, HttpStatus } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 import { FindPlanService } from '@/modules/plans/services/find-plan.service';
 
@@ -12,14 +17,20 @@ export class FindPlanController {
 
   @Get()
   @ApiOperation({ summary: 'Find all active plans' })
-  @ApiResponse({ status: HttpStatus.OK, description: 'Plans fetched successfully' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Plans fetched successfully',
+  })
   findAll() {
     return this.findPlanService.findAll();
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Find a plan by ID' })
-  @ApiResponse({ status: HttpStatus.OK, description: 'Plan fetched successfully' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Plan fetched successfully',
+  })
   findOne(@Param('id') id: string) {
     return this.findPlanService.findOne(id);
   }

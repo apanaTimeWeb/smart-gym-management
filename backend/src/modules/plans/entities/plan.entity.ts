@@ -1,4 +1,12 @@
-import { DeleteDateColumn, Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import {
+  DeleteDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+} from 'typeorm';
 import { PlanTier } from '@/modules/plans/utils/plans.enums';
 import { Member } from '@/modules/members/entities/member.entity';
 
@@ -31,7 +39,7 @@ export class Plan {
   @Column({ default: true })
   isActive: boolean;
 
-  @OneToMany(() => Member, member => member.plan)
+  @OneToMany(() => Member, (member) => member.plan)
   members: Member[];
 
   @CreateDateColumn()

@@ -23,10 +23,18 @@ export class InquiriesRepository {
   async getStats() {
     const [total, new_count, followUp, converted, lost] = await Promise.all([
       this.inquiryRepository.count(),
-      this.inquiryRepository.count({ where: { status: INQUIRIES_CONSTANTS.STATUS.NEW as any } }),
-      this.inquiryRepository.count({ where: { status: INQUIRIES_CONSTANTS.STATUS.FOLLOW_UP as any } }),
-      this.inquiryRepository.count({ where: { status: INQUIRIES_CONSTANTS.STATUS.CONVERTED as any } }),
-      this.inquiryRepository.count({ where: { status: INQUIRIES_CONSTANTS.STATUS.LOST as any } }),
+      this.inquiryRepository.count({
+        where: { status: INQUIRIES_CONSTANTS.STATUS.NEW as any },
+      }),
+      this.inquiryRepository.count({
+        where: { status: INQUIRIES_CONSTANTS.STATUS.FOLLOW_UP as any },
+      }),
+      this.inquiryRepository.count({
+        where: { status: INQUIRIES_CONSTANTS.STATUS.CONVERTED as any },
+      }),
+      this.inquiryRepository.count({
+        where: { status: INQUIRIES_CONSTANTS.STATUS.LOST as any },
+      }),
     ]);
     return { total, new: new_count, followUp, converted, lost };
   }

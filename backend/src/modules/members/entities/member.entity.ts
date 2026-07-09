@@ -1,5 +1,20 @@
-import { DeleteDateColumn, Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany, JoinColumn, Index } from 'typeorm';
-import { Gender, BillingCycle, MemberStatus } from '@/modules/members/utils/members.enums';
+import {
+  DeleteDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  OneToMany,
+  JoinColumn,
+  Index,
+} from 'typeorm';
+import {
+  Gender,
+  BillingCycle,
+  MemberStatus,
+} from '@/modules/members/utils/members.enums';
 import { Plan } from '@/modules/plans/entities/plan.entity';
 import { Payment } from '@/modules/finance/entities/payment.entity';
 import { Attendance } from '@/modules/attendance/entities/attendance.entity';
@@ -28,7 +43,7 @@ export class Member {
   @Column()
   branch: string;
 
-  @ManyToOne(() => Plan, plan => plan.members)
+  @ManyToOne(() => Plan, (plan) => plan.members)
   @JoinColumn({ name: 'planId' })
   plan: Plan;
 
@@ -58,10 +73,10 @@ export class Member {
   @Column({ nullable: true })
   photo: string;
 
-  @OneToMany(() => Payment, payment => payment.member)
+  @OneToMany(() => Payment, (payment) => payment.member)
   payments: Payment[];
 
-  @OneToMany(() => Attendance, attendance => attendance.member)
+  @OneToMany(() => Attendance, (attendance) => attendance.member)
   attendances: Attendance[];
 
   @CreateDateColumn()

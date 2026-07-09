@@ -12,7 +12,7 @@ export class UpdateSettingsService {
   async execute(dto: UpdateSettingsDto) {
     this.logger.log(`Updating settings`);
     let settings = await this.repository.findFirst();
-    
+
     if (settings) {
       await this.repository.settingRepository.update(settings.id, dto);
       const data = await this.repository.findFirst();

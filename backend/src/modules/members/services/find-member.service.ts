@@ -25,7 +25,7 @@ export class FindMemberService {
   async findOne(id: string): Promise<MemberResponse> {
     this.logger.log(`Fetching member with ID: ${id}`);
     const member = await this.membersRepository.findMemberById(id);
-    
+
     if (!member) {
       throw new MemberNotFoundException();
     }

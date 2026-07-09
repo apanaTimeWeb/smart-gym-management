@@ -106,7 +106,10 @@ export class FinanceRepository {
       .groupBy('payment.method')
       .getRawMany();
 
-    return results.map(r => ({ method: r.method, total: parseFloat(r.total) }));
+    return results.map((r) => ({
+      method: r.method,
+      total: parseFloat(r.total),
+    }));
   }
 
   async getMonthlyRevenue(firstDayOfMonth: Date): Promise<number> {
@@ -119,7 +122,9 @@ export class FinanceRepository {
     return result?.total ? parseFloat(result.total) : 0;
   }
 
-  async getRecentPaymentsForChart(sixMonthsAgo: Date): Promise<{ paidAt: Date; amount: number }[]> {
+  async getRecentPaymentsForChart(
+    sixMonthsAgo: Date,
+  ): Promise<{ paidAt: Date; amount: number }[]> {
     return this.paymentRepo
       .createQueryBuilder('payment')
       .select(['payment.paidAt', 'payment.amount'])

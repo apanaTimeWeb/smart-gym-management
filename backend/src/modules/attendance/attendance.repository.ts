@@ -28,29 +28,33 @@ export class AttendanceRepository {
       select: {
         member: { name: true },
         staff: { name: true },
-      }
+      },
     });
   }
 
   async getStatsForDateRange(startDate: Date, endDate: Date) {
     const [total, members, staff] = await Promise.all([
       this.attendanceRepo.count({
-        where: { date: Between(startDate, endDate) }
+        where: { date: Between(startDate, endDate) },
       }),
       this.attendanceRepo.count({
-        where: { 
+        where: {
           date: Between(startDate, endDate),
           memberId: Not(IsNull()),
-        }
+        },
       }),
       this.attendanceRepo.count({
-        where: { 
+        where: {
           date: Between(startDate, endDate),
           staffId: Not(IsNull()),
-        }
+        },
       }),
     ]);
 
-    return { totalCheckIns: total, memberCheckIns: members, staffCheckIns: staff };
+    return {
+      totalCheckIns: total,
+      memberCheckIns: members,
+      staffCheckIns: staff,
+    };
   }
 }

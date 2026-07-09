@@ -38,16 +38,21 @@ export class StoreRepository {
   }
 
   async getSummaryStats() {
-    const totalProducts = await this.productRepository.count({ where: { isActive: true } });
+    const totalProducts = await this.productRepository.count({
+      where: { isActive: true },
+    });
     const totalOrders = await this.orderRepository.count();
-    
+
     const { totalRevenue } = await this.orderRepository
       .createQueryBuilder('order')
       .select('SUM(order.total)', 'totalRevenue')
       .getRawOne();
 
     const lowStockProducts = await this.productRepository.find({
-      where: { isActive: true, stock: LessThanOrEqual(STORE_CONSTANTS.LOW_STOCK_THRESHOLD) },
+      where: {
+        isActive: true,
+        stock: LessThanOrEqual(STORE_CONSTANTS.LOW_STOCK_THRESHOLD),
+      },
     });
 
     return { totalProducts, totalOrders, totalRevenue, lowStockProducts };

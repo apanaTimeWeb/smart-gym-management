@@ -4,7 +4,10 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class CustomCacheInterceptor extends CacheInterceptor {
-  async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
+  async intercept(
+    context: ExecutionContext,
+    next: CallHandler,
+  ): Promise<Observable<any>> {
     const key = this.trackBy(context);
     const response = context.switchToHttp().getResponse();
 
@@ -20,7 +23,7 @@ export class CustomCacheInterceptor extends CacheInterceptor {
         response.setHeader('X-Cache', 'MISS');
       }
     }
-    
+
     return super.intercept(context, next);
   }
 }

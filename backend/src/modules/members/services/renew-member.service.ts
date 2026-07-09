@@ -15,12 +15,14 @@ export class RenewMemberService {
   async renew(id: string, dto: RenewMemberDto): Promise<MemberResponse> {
     this.logger.log(`Renewing member with ID: ${id}`);
     const existing = await this.membersRepository.findMemberById(id);
-    
+
     if (!existing) {
       throw new MemberNotFoundException();
     }
 
-    const updatedMember = await this.membersRepository.updateMember(id, { status: MemberStatus.ACTIVE });
+    const updatedMember = await this.membersRepository.updateMember(id, {
+      status: MemberStatus.ACTIVE,
+    });
 
     return {
       message: MEMBER_MESSAGES.RENEWED_SUCCESS,

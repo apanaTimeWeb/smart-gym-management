@@ -15,16 +15,7 @@ import { HrStatsController } from '@/modules/hr/controllers/hr-stats.controller'
 
 @Module({
   imports: [TypeOrmModule.forFeature([Staff, Payroll])],
-  controllers: [
-    StaffController,
-    PayrollController,
-    HrStatsController,
-  ],
-  providers: [
-    HrRepository,
-    StaffService,
-    PayrollService,
-    HrStatsService,
-  ],
+  controllers: [StaffController, PayrollController, HrStatsController],
+  providers: [HrRepository, StaffService, PayrollService, HrStatsService],
 })
 export class HrModule {}

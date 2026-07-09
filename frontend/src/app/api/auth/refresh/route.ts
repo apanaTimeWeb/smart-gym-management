@@ -1,0 +1,52 @@
+import { NextRequest, NextResponse } from 'next/server';
+
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+
+export async function POST(req: NextRequest) {
+  const refreshToken = req.cookies.get('gymsmart_refresh_token')?.value;
+
+  if (!refreshToken) {
+    return NextResponse.json({ error: 'No refresh token' }, { status: 401 });
+  }
+
+  try {
+    const backendRes = await fetch(`${BASE_URL}/auth/refresh`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${refreshToken}`,
+      },
+    });
+
+    if (!backendRes.ok) {
+      return NextResponse.json({ error: 'Refresh failed' }, { status: 401 });
+    }
+
+    const json = await backendRes.json();
+    const { accessToken, refreshToken: newRefreshToken } = json.data;
+
+    const res = NextResponse.json({ success: true, accessToken });
+
+    res.cookies.set('gymsmart_token', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 60 * 15, // 15 mins
+      path: '/',
+    });
+
+    if (newRefreshToken) {
+      res.cookies.set('gymsmart_refresh_token', newRefreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+        path: '/',
+      });
+    }
+
+    return res;
+  } catch (error) {
+    return NextResponse.json({ error: 'Refresh failed' }, { status: 401 });
+  }
+}

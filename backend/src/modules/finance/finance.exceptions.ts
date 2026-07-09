@@ -9,6 +9,9 @@ export class MemberNotFoundForPaymentException extends HttpException {
 
 export class PaymentProcessingException extends HttpException {
   constructor(message: string) {
-    super(`${FINANCE_ERRORS.PAYMENT_FAILED}: ${message}`, HttpStatus.INTERNAL_SERVER_ERROR);
+    super(
+      `${FINANCE_ERRORS.PAYMENT_FAILED}: ${message}`,
+      HttpStatus.INTERNAL_SERVER_ERROR,
+    );
   }
 }

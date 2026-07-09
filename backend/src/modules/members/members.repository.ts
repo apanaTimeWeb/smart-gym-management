@@ -12,7 +12,9 @@ export class MembersRepository {
   ) {}
 
   async createMember(data: Partial<Member>): Promise<Member> {
-    const member = this.memberRepo.create(data as import('typeorm').DeepPartial<Member>);
+    const member = this.memberRepo.create(
+      data as import('typeorm').DeepPartial<Member>,
+    );
     return this.memberRepo.save(member);
   }
 
@@ -30,7 +32,7 @@ export class MembersRepository {
       relations: ['plan', 'payments'],
     });
   }
-  
+
   async findMemberByEmail(email: string): Promise<Member | null> {
     return this.memberRepo.findOne({ where: { email } });
   }

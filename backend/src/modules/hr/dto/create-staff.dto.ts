@@ -1,4 +1,12 @@
-import { IsString, IsEmail, IsEnum, IsOptional, IsNumber, IsDateString, IsBoolean } from 'class-validator';
+import {
+  IsString,
+  IsEmail,
+  IsEnum,
+  IsOptional,
+  IsNumber,
+  IsDateString,
+  IsBoolean,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Gender } from '@/modules/hr/utils/hr.enums';
 

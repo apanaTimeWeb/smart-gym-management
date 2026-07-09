@@ -34,7 +34,13 @@ describe('HrController (e2e)', () => {
   it('/api/hr/staff (POST) - should return 401 without auth token', () => {
     return request(app.getHttpServer())
       .post('/api/hr/staff')
-      .send({ name: 'Test', email: 'test@test.com', phone: '123', role: 'Trainer', salary: 25000 })
+      .send({
+        name: 'Test',
+        email: 'test@test.com',
+        phone: '123',
+        role: 'Trainer',
+        salary: 25000,
+      })
       .expect(401);
   });
 });

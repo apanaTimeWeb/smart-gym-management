@@ -15,7 +15,9 @@ export class AuthMeService {
     const user = await this.authRepository.findUserByIdForMe(userId);
 
     if (!user) {
-      this.logger.warn(`Failed to fetch profile: User not found for id ${userId}`);
+      this.logger.warn(
+        `Failed to fetch profile: User not found for id ${userId}`,
+      );
       throw new UserNotFoundException();
     }
 

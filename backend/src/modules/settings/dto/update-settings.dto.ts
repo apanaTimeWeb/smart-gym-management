@@ -17,7 +17,10 @@ export class UpdateSettingsDto {
   @IsOptional()
   phone?: string;
 
-  @ApiPropertyOptional({ description: 'Email address', example: 'admin@gymsmart.com' })
+  @ApiPropertyOptional({
+    description: 'Email address',
+    example: 'admin@gymsmart.com',
+  })
   @IsEmail()
   @IsOptional()
   email?: string;

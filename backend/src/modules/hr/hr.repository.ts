@@ -15,7 +15,9 @@ export class HrRepository {
 
   // --- STAFF ---
   async createStaff(data: Partial<Staff>): Promise<Staff> {
-    const staff = this.staffRepo.create(data as import('typeorm').DeepPartial<Staff>);
+    const staff = this.staffRepo.create(
+      data as import('typeorm').DeepPartial<Staff>,
+    );
     return this.staffRepo.save(staff);
   }
 
@@ -50,7 +52,9 @@ export class HrRepository {
 
   // --- PAYROLL ---
   async createPayroll(data: Partial<Payroll>): Promise<Payroll> {
-    const payroll = this.payrollRepo.create(data as import('typeorm').DeepPartial<Payroll>);
+    const payroll = this.payrollRepo.create(
+      data as import('typeorm').DeepPartial<Payroll>,
+    );
     return this.payrollRepo.save(payroll);
   }
 

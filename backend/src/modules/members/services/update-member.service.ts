@@ -14,7 +14,7 @@ export class UpdateMemberService {
   async update(id: string, dto: UpdateMemberDto): Promise<MemberResponse> {
     this.logger.log(`Updating member with ID: ${id}`);
     const existing = await this.membersRepository.findMemberById(id);
-    
+
     if (!existing) {
       throw new MemberNotFoundException();
     }
@@ -30,7 +30,7 @@ export class UpdateMemberService {
   async remove(id: string): Promise<MemberResponse> {
     this.logger.log(`Deleting member with ID: ${id}`);
     const existing = await this.membersRepository.findMemberById(id);
-    
+
     if (!existing) {
       throw new MemberNotFoundException();
     }

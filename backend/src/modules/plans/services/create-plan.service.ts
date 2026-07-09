@@ -13,10 +13,12 @@ export class CreatePlanService {
 
   async create(dto: CreatePlanDto): Promise<PlanResponse> {
     this.logger.log(`Attempting to create plan with tier: ${dto.tier}`);
-    
+
     const existing = await this.plansRepository.findPlanByTier(dto.tier);
     if (existing) {
-      this.logger.warn(`Plan creation failed. Tier ${dto.tier} already exists.`);
+      this.logger.warn(
+        `Plan creation failed. Tier ${dto.tier} already exists.`,
+      );
       throw new DuplicatePlanTierException();
     }
 
@@ -26,7 +28,7 @@ export class CreatePlanService {
     };
 
     const plan = await this.plansRepository.createPlan(payload);
-    
+
     return {
       message: PLAN_MESSAGES.CREATED_SUCCESS,
       data: plan,
