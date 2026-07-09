@@ -4,6 +4,8 @@
  * Base URL: http://localhost:5000/api
  */
 
+import { AuthUrlConfig } from '@/app/(auth)/auth_url_config';
+
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
 // ─── User Helper (reads from non-HttpOnly cookie set by server) ───────────────
@@ -52,7 +54,7 @@ export async function apiFetch<T = unknown>(
   
   if (res.status === 401 && auth) {
     // Attempt to refresh the token
-    const refreshRes = await fetch('/api/auth/refresh', { method: 'POST' });
+    const refreshRes = await fetch(AuthUrlConfig.PROXY_API.REFRESH, { method: 'POST' });
     
     if (refreshRes.ok) {
       // Refresh succeeded, grab new token from response
@@ -64,8 +66,8 @@ export async function apiFetch<T = unknown>(
       }
     } else {
       // Refresh failed, session genuinely expired
-      await fetch('/api/auth/logout', { method: 'POST' });
-      window.location.replace('/login');
+      await fetch(AuthUrlConfig.PROXY_API.LOGOUT, { method: 'POST' });
+      window.location.replace(AuthUrlConfig.PAGES.LOGIN);
       throw new Error('Session expired. Please login again.');
     }
   }
@@ -82,12 +84,13 @@ export async function apiFetch<T = unknown>(
 // ─── Auth ─────────────────────────────────────────────────────────────────────
 
 export const authApi = {
-  login: (email: string, password: string) =>
-    apiFetch<{ success: boolean; data: { accessToken: string; user: unknown } }>(
-      '/auth/login',
-      { method: 'POST', body: JSON.stringify({ email, password }), auth: false }
-    ),
-
+  login: async (email: string, password: string) => {
+    return apiFetch(AuthUrlConfig.BACKEND_API.LOGIN, {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+      auth: false,
+    });
+  },
   me: () => apiFetch('/auth/me'),
 };
 
