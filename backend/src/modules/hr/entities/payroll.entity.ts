@@ -3,15 +3,15 @@ import { Staff } from './staff.entity';
 
 @Entity('payrolls')
 export class Payroll {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @ManyToOne(() => Staff, staff => staff.payrolls)
   @JoinColumn({ name: 'staffId' })
   staff: Staff;
 
   @Column()
-  staffId: number;
+  staffId: string;
 
   @Column()
   month: string;

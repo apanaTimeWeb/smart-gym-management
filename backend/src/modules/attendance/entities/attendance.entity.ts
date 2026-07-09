@@ -20,7 +20,7 @@ export class Attendance {
   staff: Staff;
 
   @Column({ nullable: true })
-  staffId: number;
+  staffId: string;
 
   @Column()
   date: Date;

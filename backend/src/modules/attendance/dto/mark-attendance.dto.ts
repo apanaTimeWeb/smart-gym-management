@@ -10,8 +10,8 @@ export class MarkAttendanceDto {
 
   @ApiProperty({ required: false })
   @IsOptional()
-  @IsNumber()
-  staffId?: number;
+  @IsString()
+  staffId?: string;
 
   @ApiProperty()
   @IsDateString()

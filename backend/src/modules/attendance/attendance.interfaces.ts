@@ -3,7 +3,7 @@ import { Attendance } from '@/modules/attendance/entities/attendance.entity';
 
 export interface MarkAttendancePayload {
   memberId?: string;
-  staffId?: number;
+  staffId?: string;
   date: Date;
   checkIn?: Date;
   checkOut?: Date;

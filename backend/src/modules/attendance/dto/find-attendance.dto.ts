@@ -10,7 +10,6 @@ export class FindAttendanceDto {
 
   @ApiProperty({ required: false })
   @IsOptional()
-  @IsNumber()
-  @Type(() => Number)
-  staffId?: number;
+  @IsString()
+  staffId?: string;
 }
