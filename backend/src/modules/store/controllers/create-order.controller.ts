@@ -5,8 +5,8 @@ import {
   ApiBearerAuth,
   ApiResponse,
 } from '@nestjs/swagger';
-import { CreateOrderService } from '../services/create-order.service';
-import { CreateOrderDto } from '../dto/create-order.dto';
+import { CreateOrderService } from '@/modules/store/services/create-order.service';
+import { CreateOrderDto } from '@/modules/store/dto/create-order.dto';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 
 @ApiTags('Store')

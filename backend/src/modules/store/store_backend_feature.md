@@ -20,5 +20,7 @@ The Store module handles products inventory and customer orders (POS system).
 - `store.constants.ts`: Error messages, statuses, etc.
 - `store.exceptions.ts`: Custom exceptions.
 
-## Complex Workflows
-- **Order Creation**: `create-order.service.ts` uses TypeORM `DataSource` transaction to ensure stock decrement and order creation are atomic.
+## Core Business Logic
+- **Order Creation Transactions:** `create-order.service.ts` uses TypeORM `DataSource` transactions to ensure stock decrement and order creation are atomic. If stock is insufficient or any error occurs, the entire operation is rolled back, preventing orphaned order records or negative stock.
+- **Stock Decrement Logic:** For each `OrderItem` in the order, the corresponding `Product`'s stock is checked. If it is greater than or equal to the requested quantity, the stock is decremented. Otherwise, an exception is thrown.
+- **Order & OrderItem Relationship:** An `Order` entity is the parent containing the total amount and metadata. It has a one-to-many relationship with `OrderItem` entities, which track the specific products, quantities, and historical prices at the time of purchase.

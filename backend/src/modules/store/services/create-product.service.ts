@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { StoreRepository } from '../store.repository';
-import { CreateProductDto } from '../dto/create-product.dto';
+import { StoreRepository } from '@/modules/store/store.repository';
+import { CreateProductDto } from '@/modules/store/dto/create-product.dto';
 
 @Injectable()
 export class CreateProductService {

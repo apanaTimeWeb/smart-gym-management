@@ -3,6 +3,9 @@ import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentation
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
 import { resourceFromAttributes } from '@opentelemetry/resources';
 import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
+import pino from 'pino';
+
+const logger = pino();
 
 const traceExporter = new OTLPTraceExporter({
   url: process.env.OTLP_TRACE_URL || 'http://localhost:4318/v1/traces',
@@ -21,7 +24,7 @@ export const otelSDK = new NodeSDK({
 process.on('SIGTERM', () => {
   otelSDK
     .shutdown()
-    .then(() => console.log('Tracing terminated'))
-    .catch((error) => console.log('Error terminating tracing', error))
+    .then(() => logger.info('Tracing terminated'))
+    .catch((error) => logger.error({ err: error }, 'Error terminating tracing'))
     .finally(() => process.exit(0));
 });

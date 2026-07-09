@@ -16,3 +16,9 @@ The Inquiries module handles gym leads and prospective members.
 - `inquiries.interfaces.ts`: Typings.
 - `inquiries.constants.ts`: Sort orders and messages.
 - `inquiries.exceptions.ts`: Custom exceptions.
+
+## Core Business Logic
+- **Inquiry Lifecycle:** Inquiries follow a strict status progression: `New` → `Contacted` → `Converted` or `Closed`.
+- **Creation:** When a new inquiry is submitted (e.g., from the landing page), it is saved with a `New` status.
+- **Follow-up:** Staff update the inquiry status to `Contacted` after reaching out, and optionally set a follow-up date.
+- **Conversion:** If the prospect becomes a member, the inquiry is updated to `Converted`. If they are no longer interested, it is marked as `Closed`.

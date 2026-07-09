@@ -18,3 +18,8 @@ The Workout module handles the library of exercises/workouts and diet plans that
 - `workout.interfaces.ts`: Typings.
 - `workout.constants.ts`: Sort orders and messages.
 - `workout.exceptions.ts`: Custom exceptions.
+
+## Core Business Logic
+- **Entity Distinction:** A `Workout` represents a complete workout plan (e.g., "Push Pull Legs") with assigned levels, days, and duration. An `Exercise` (managed alongside workouts) represents individual movements (e.g., "Barbell Squat") categorized by muscle group and difficulty.
+- **Diet Plans:** A `DietPlan` is a separate entity that represents nutritional goals, macros, and meal instructions.
+- **Data Model:** Workouts, Exercises, and DietPlans are managed independently but share the same module boundaries as they collectively constitute the "Library" of gym resources.

@@ -5,7 +5,7 @@ import {
   ApiBearerAuth,
   ApiResponse,
 } from '@nestjs/swagger';
-import { FindOrderService } from '../services/find-order.service';
+import { FindOrderService } from '@/modules/store/services/find-order.service';
 import { PaginationQueryDto } from '@/core/dto/pagination-query.dto';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 

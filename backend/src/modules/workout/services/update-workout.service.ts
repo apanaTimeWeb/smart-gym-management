@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { WorkoutRepository } from '../workout.repository';
-import { UpdateWorkoutDto } from '../dto/update-workout.dto';
-import { WorkoutNotFoundException } from '../workout.exceptions';
+import { WorkoutRepository } from '@/modules/workout/workout.repository';
+import { UpdateWorkoutDto } from '@/modules/workout/dto/update-workout.dto';
+import { WorkoutNotFoundException } from '@/modules/workout/workout.exceptions';
 
 @Injectable()
 export class UpdateWorkoutService {

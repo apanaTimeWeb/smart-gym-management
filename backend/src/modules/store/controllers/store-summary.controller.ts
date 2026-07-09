@@ -5,7 +5,7 @@ import {
   ApiBearerAuth,
   ApiResponse,
 } from '@nestjs/swagger';
-import { StoreSummaryService } from '../services/store-summary.service';
+import { StoreSummaryService } from '@/modules/store/services/store-summary.service';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 
 @ApiTags('Store')

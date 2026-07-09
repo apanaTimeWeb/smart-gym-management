@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { StoreRepository } from '../store.repository';
-import { UpdateProductDto } from '../dto/update-product.dto';
-import { ProductNotFoundException } from '../store.exceptions';
+import { StoreRepository } from '@/modules/store/store.repository';
+import { UpdateProductDto } from '@/modules/store/dto/update-product.dto';
+import { ProductNotFoundException } from '@/modules/store/store.exceptions';
 
 @Injectable()
 export class UpdateProductService {

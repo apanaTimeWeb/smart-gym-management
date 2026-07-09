@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { WorkoutRepository } from '../workout.repository';
+import { WorkoutRepository } from '@/modules/workout/workout.repository';
 import { PaginationQueryDto } from '@/core/dto/pagination-query.dto';
 
 @Injectable()

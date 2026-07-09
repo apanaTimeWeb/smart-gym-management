@@ -13,8 +13,8 @@ import {
   ApiBearerAuth,
   ApiResponse,
 } from '@nestjs/swagger';
-import { UpdateWorkoutService } from '../services/update-workout.service';
-import { UpdateWorkoutDto } from '../dto/update-workout.dto';
+import { UpdateWorkoutService } from '@/modules/workout/services/update-workout.service';
+import { UpdateWorkoutDto } from '@/modules/workout/dto/update-workout.dto';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 
 @ApiTags('Workout')

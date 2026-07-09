@@ -5,8 +5,8 @@ import {
   ApiBearerAuth,
   ApiResponse,
 } from '@nestjs/swagger';
-import { CreateWorkoutService } from '../services/create-workout.service';
-import { CreateWorkoutDto } from '../dto/create-workout.dto';
+import { CreateWorkoutService } from '@/modules/workout/services/create-workout.service';
+import { CreateWorkoutDto } from '@/modules/workout/dto/create-workout.dto';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 
 @ApiTags('Workout')

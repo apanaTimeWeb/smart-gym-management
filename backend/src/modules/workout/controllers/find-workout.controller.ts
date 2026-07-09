@@ -5,7 +5,7 @@ import {
   ApiBearerAuth,
   ApiResponse,
 } from '@nestjs/swagger';
-import { FindWorkoutService } from '../services/find-workout.service';
+import { FindWorkoutService } from '@/modules/workout/services/find-workout.service';
 import { PaginationQueryDto } from '@/core/dto/pagination-query.dto';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 

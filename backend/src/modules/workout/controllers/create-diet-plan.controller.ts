@@ -5,8 +5,8 @@ import {
   ApiBearerAuth,
   ApiResponse,
 } from '@nestjs/swagger';
-import { CreateDietPlanService } from '../services/create-diet-plan.service';
-import { CreateDietPlanDto } from '../dto/create-diet-plan.dto';
+import { CreateDietPlanService } from '@/modules/workout/services/create-diet-plan.service';
+import { CreateDietPlanDto } from '@/modules/workout/dto/create-diet-plan.dto';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 
 @ApiTags('Workout')

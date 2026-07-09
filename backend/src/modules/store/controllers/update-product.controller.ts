@@ -13,8 +13,8 @@ import {
   ApiBearerAuth,
   ApiResponse,
 } from '@nestjs/swagger';
-import { UpdateProductService } from '../services/update-product.service';
-import { UpdateProductDto } from '../dto/update-product.dto';
+import { UpdateProductService } from '@/modules/store/services/update-product.service';
+import { UpdateProductDto } from '@/modules/store/dto/update-product.dto';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 
 @ApiTags('Store')

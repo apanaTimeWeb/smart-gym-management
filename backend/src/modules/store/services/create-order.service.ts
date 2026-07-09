@@ -1,15 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { StoreRepository } from '../store.repository';
-import { CreateOrderDto } from '../dto/create-order.dto';
-import { OrderItem } from '../entities/order-item.entity';
-import { Product } from '../entities/product.entity';
-import { Order } from '../entities/order.entity';
+import { StoreRepository } from '@/modules/store/store.repository';
+import { CreateOrderDto } from '@/modules/store/dto/create-order.dto';
+import { OrderItem } from '@/modules/store/entities/order-item.entity';
+import { Product } from '@/modules/store/entities/product.entity';
+import { Order } from '@/modules/store/entities/order.entity';
 import {
   InsufficientStockException,
   OrderCreationFailedException,
   ProductNotFoundException,
-} from '../store.exceptions';
-import { STORE_CONSTANTS } from '../store.constants';
+} from '@/modules/store/store.exceptions';
+import { STORE_CONSTANTS } from '@/modules/store/store.constants';
 
 @Injectable()
 export class CreateOrderService {

@@ -5,7 +5,7 @@ import {
   ApiBearerAuth,
   ApiResponse,
 } from '@nestjs/swagger';
-import { FindDietPlanService } from '../services/find-diet-plan.service';
+import { FindDietPlanService } from '@/modules/workout/services/find-diet-plan.service';
 import { PaginationQueryDto } from '@/core/dto/pagination-query.dto';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 

@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { StoreRepository } from '../store.repository';
+import { StoreRepository } from '@/modules/store/store.repository';
 
 @Injectable()
 export class StoreSummaryService {
