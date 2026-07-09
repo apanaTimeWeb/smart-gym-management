@@ -1,4 +1,4 @@
-import { DeleteDateColumn, Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { DeleteDateColumn, Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, Index } from 'typeorm';
 import { Gender } from '@/modules/hr/utils/hr.enums';
 import { Payroll } from '@/modules/hr/entities/payroll.entity';
 import { Attendance } from '@/modules/attendance/entities/attendance.entity';
@@ -11,6 +11,7 @@ export class Staff {
   @Column()
   name: string;
 
+  @Index()
   @Column({ unique: true })
   email: string;
 

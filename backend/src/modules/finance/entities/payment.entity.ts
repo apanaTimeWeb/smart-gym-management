@@ -1,4 +1,4 @@
-import { DeleteDateColumn, Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { DeleteDateColumn, Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn, Index } from 'typeorm';
 import { PaymentStatus } from '@/modules/finance/utils/finance.enums';
 import { Member } from '@/modules/members/entities/member.entity';
 
@@ -11,6 +11,7 @@ export class Payment {
   @JoinColumn({ name: 'memberId' })
   member: Member;
 
+  @Index()
   @Column()
   memberId: string;
 

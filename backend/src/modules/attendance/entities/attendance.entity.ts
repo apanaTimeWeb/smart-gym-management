@@ -1,4 +1,4 @@
-import { DeleteDateColumn, Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { DeleteDateColumn, Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn, Index } from 'typeorm';
 import { AttendanceType } from '@/modules/attendance/utils/attendance.enums';
 import { Member } from '@/modules/members/entities/member.entity';
 import { Staff } from '@/modules/hr/entities/staff.entity';
@@ -12,6 +12,7 @@ export class Attendance {
   @JoinColumn({ name: 'memberId' })
   member: Member;
 
+  @Index()
   @Column({ nullable: true })
   memberId: string;
 
@@ -22,6 +23,7 @@ export class Attendance {
   @Column({ nullable: true })
   staffId: string;
 
+  @Index()
   @Column()
   date: Date;
 

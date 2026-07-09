@@ -1,4 +1,4 @@
-import { DeleteDateColumn, Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { DeleteDateColumn, Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
 import { Role } from '@/modules/auth/utils/auth.enums';
 
 @Entity('users')
@@ -9,6 +9,7 @@ export class User {
   @Column()
   name: string;
 
+  @Index()
   @Column({ unique: true })
   email: string;
 

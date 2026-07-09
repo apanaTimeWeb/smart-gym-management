@@ -41,7 +41,7 @@ export class MembersRepository {
   }
 
   async deleteMember(id: string): Promise<void> {
-    await this.memberRepo.delete(id);
+    await this.memberRepo.softDelete(id);
   }
 
   async getStats() {

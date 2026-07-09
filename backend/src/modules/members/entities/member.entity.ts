@@ -1,4 +1,4 @@
-import { DeleteDateColumn, Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
+import { DeleteDateColumn, Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany, JoinColumn, Index } from 'typeorm';
 import { Gender, BillingCycle, MemberStatus } from '@/modules/members/utils/members.enums';
 import { Plan } from '@/modules/plans/entities/plan.entity';
 import { Payment } from '@/modules/finance/entities/payment.entity';
@@ -12,6 +12,7 @@ export class Member {
   @Column()
   name: string;
 
+  @Index()
   @Column({ unique: true })
   email: string;
 
@@ -31,12 +32,14 @@ export class Member {
   @JoinColumn({ name: 'planId' })
   plan: Plan;
 
+  @Index()
   @Column()
   planId: string;
 
   @Column({ type: 'enum', enum: BillingCycle })
   billingCycle: BillingCycle;
 
+  @Index()
   @Column({ type: 'enum', enum: MemberStatus, default: MemberStatus.PENDING })
   status: MemberStatus;
 

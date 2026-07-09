@@ -24,7 +24,7 @@ export class UpdateInquiryService {
     const existing = await this.repository.inquiryRepository.findOne({ where: { id } });
     if (!existing) throw new InquiryNotFoundException();
 
-    await this.repository.inquiryRepository.delete(id);
+    await this.repository.inquiryRepository.softDelete(id);
     return { success: true, data: existing };
   }
 }

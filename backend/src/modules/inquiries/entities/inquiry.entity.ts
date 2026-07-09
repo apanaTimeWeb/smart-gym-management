@@ -1,4 +1,4 @@
-import { DeleteDateColumn, Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { DeleteDateColumn, Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
 import { InquiryStatus } from '@/modules/inquiries/utils/inquiries.enums';
 
 @Entity('inquiries')
@@ -18,6 +18,7 @@ export class Inquiry {
   @Column()
   interest: string;
 
+  @Index()
   @Column({ type: 'enum', enum: InquiryStatus, default: InquiryStatus.NEW })
   status: InquiryStatus;
 
