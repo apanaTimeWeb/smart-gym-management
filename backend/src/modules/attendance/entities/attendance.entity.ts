@@ -13,7 +13,7 @@ export class Attendance {
   member: Member;
 
   @Column({ nullable: true })
-  memberId: number;
+  memberId: string;
 
   @ManyToOne(() => Staff, staff => staff.attendances, { nullable: true })
   @JoinColumn({ name: 'staffId' })

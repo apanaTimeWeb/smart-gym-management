@@ -6,8 +6,8 @@ import { Attendance } from '../../attendance/entities/attendance.entity';
 
 @Entity('members')
 export class Member {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   name: string;

@@ -12,7 +12,7 @@ export class Payment {
   member: Member;
 
   @Column()
-  memberId: number;
+  memberId: string;
 
   @Column('float')
   amount: number;

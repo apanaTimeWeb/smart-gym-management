@@ -2,7 +2,7 @@ import { AttendanceType } from '@/common/enums/database.enums';
 import { Attendance } from '@/modules/attendance/entities/attendance.entity';
 
 export interface MarkAttendancePayload {
-  memberId?: number;
+  memberId?: string;
   staffId?: number;
   date: Date;
   checkIn?: Date;
