@@ -197,3 +197,117 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 2. Select the **one or two** micro-files associated with that layer.
 3. Pass ONLY those files to the AI.
 4. Review the AI's isolated changes.
+
+---
+
+## 28. Standardized Response Envelope (The API Contract)
+* **The Rule:** Every API endpoint — success or failure — must return a response in a single, predictable JSON "envelope" shape. Never return raw objects, raw arrays, or ad-hoc structures directly from controllers.
+* **Recommended shape:**
+  ```json
+  {
+    "success": true,
+    "message": "Members fetched successfully",
+    "data": { ... },
+    "meta": { "page": 1, "total": 250, "limit": 20 }
+  }
+  ```
+  For errors:
+  ```json
+  {
+    "success": false,
+    "message": "Member not found",
+    "error": "MemberNotFoundException",
+    "statusCode": 404
+  }
+  ```
+* **Implement via:** A global `ResponseInterceptor` (NestJS), `APIView` / custom `Renderer` (Django), or a `res.success()` helper (Express). The AI should NEVER shape the raw response manually inside a controller or service.
+* **Why:** When an AI frontend agent hits an API, it needs a predictable contract. A raw, inconsistent response from a delete endpoint (`null`, `"ok"`, `{ deleted: true }`) forces the frontend AI to write brittle, guessing-game parsers. A standard envelope eliminates all ambiguity.
+
+---
+
+## 29. Soft Deletes (Never Hard-Delete Production Data)
+* **The Rule:** Never use destructive `DELETE` SQL / ORM calls directly on production data. Instead, all entities must have an `is_deleted: boolean` (or `deleted_at: timestamp`) column. A "delete" operation only sets this flag — the data is never physically removed.
+* **Why:**
+  1. **Audit & Recovery:** If an admin accidentally deletes 1,000 members, the data is instantly recoverable.
+  2. **Referential Integrity:** Foreign keys referencing a "deleted" record remain valid, preventing cascade failures.
+  3. **AI Safety:** An AI asked to "implement the delete endpoint" will set a flag, not wipe database rows. This prevents catastrophic, irreversible data loss.
+* **Implementation:** Add a global query filter (e.g., TypeORM's `@DeleteDateColumn`, Django's `django-softdelete`, or a `WHERE is_deleted = false` scope in a base repository class) so that all standard `find` queries automatically exclude soft-deleted records.
+
+---
+
+## 30. Audit Trail / Activity Log (Who Did What & When)
+* **The Rule:** Every meaningful state change to critical entities (Members, Payments, Staff, Settings) MUST be recorded in an `audit_logs` table. At minimum, log: `actor_id`, `actor_role`, `action` (e.g., `MEMBER_UPDATED`), `entity_type`, `entity_id`, `old_value` (JSON), `new_value` (JSON), `ip_address`, `timestamp`.
+* **How:** Implement this as a cross-cutting concern using:
+  - **NestJS/Express:** An interceptor or middleware that fires an event after mutating requests.
+  - **Django:** Model `post_save` / `post_delete` signals.
+  - **Spring Boot:** AOP (Aspect-Oriented Programming) with `@AfterReturning` advice.
+* **Why:** Regulators, auditors, and enterprise clients will always ask "who changed this record and when?". Building this from day one costs almost nothing. Retrofitting it onto a live production system costs weeks. It also gives AI agents an immutable history to reason about when debugging.
+
+---
+
+## 31. Idempotency Keys for Critical Mutations
+* **The Rule:** Any endpoint that triggers a financial transaction, sends a communication, or creates a resource that must never be duplicated MUST support an `Idempotency-Key` request header. The server caches the result of the first request with that key. If the same key is received again (e.g., due to a network retry), it returns the original cached result without re-executing the operation.
+* **Why:** Networks are unreliable. A client (mobile app, frontend, partner API) might retry a `POST /payments` request after a timeout, not knowing the first one succeeded. Without idempotency, the member gets double-charged. This is a critical rule for any fintech or e-commerce feature.
+* **Implementation:** Store `(idempotency_key, response_payload)` in Redis with a TTL of 24 hours. Check before processing. Return cached response if key already exists.
+
+---
+
+## 32. Observability: The Three Pillars (Logs, Metrics, Traces)
+* **The Rule:** Logging alone is not sufficient for enterprise observability. You MUST implement all three pillars:
+  1. **Structured Logs** (Rule 14): Already covered. Use JSON-formatted logs.
+  2. **Metrics:** Expose a `/metrics` endpoint (Prometheus format) tracking: request count, request latency histograms, error rates, queue depth, DB connection pool usage. Use libraries like `prom-client` (Node), `django-prometheus` (Django), or Spring Boot Actuator.
+  3. **Distributed Traces:** Integrate OpenTelemetry to trace a single request as it flows through controllers → services → repositories → external APIs. Each span should include `correlation_id`, `duration_ms`, and `status`.
+* **Why:** When a production request is slow or fails silently, logs tell you WHAT happened, metrics tell you HOW OFTEN it happened, and traces tell you EXACTLY WHERE the bottleneck is. An AI debugging agent with access to all three can diagnose issues orders of magnitude faster.
+
+---
+
+## 35. Secret Management (Never Trust `.env` Files in Production)
+* **The Rule:** `.env` files are acceptable in local development ONLY. In staging and production environments, secrets (API keys, DB passwords, JWT secrets) MUST be injected from a dedicated secrets manager:
+  - **AWS:** AWS Secrets Manager or Parameter Store
+  - **GCP:** Google Secret Manager
+  - **Azure:** Azure Key Vault
+  - **Self-hosted:** HashiCorp Vault
+* **Rules:**
+  1. `.env` files must NEVER be committed to source control (enforce with `.gitignore`).
+  2. The application must fail fast on startup with a clear error if a required secret is missing.
+  3. Secrets must be rotated regularly. The application should support hot-reloading of secrets without a restart.
+* **Why:** A leaked `.env` file on GitHub has caused catastrophic security breaches for companies. An AI writing deployment configs must be instructed to always reference the secrets manager, never hardcode credentials.
+
+---
+
+## 36. Database Query Optimization (The N+1 Rule & Index Strategy)
+* **The Rule:** The single most common performance killer in any ORM-backed backend is the N+1 query problem. You must proactively prevent it.
+  1. **N+1 Prevention:** Always use eager loading / `JOIN` fetching when you know you'll need related data (e.g., `prefetch_related` in Django, `relations` in TypeORM, `@EntityGraph` in JPA). Never fetch a list of 100 members and then loop to fetch each one's plan separately.
+  2. **Index Strategy:** Every foreign key column, every column used in a `WHERE` clause, and every column used in an `ORDER BY` clause MUST have a database index. Indexes should be explicitly defined in migration files — never rely on the ORM to create them automatically.
+  3. **Slow Query Logging:** Enable slow query logging in the database (queries > 100ms). Review this log weekly.
+* **Why:** An AI asked to write a "Get all members with their plans" repository method will often produce an N+1 query by default. This rule forces a review gate.
+
+---
+
+## 37. GDPR & Data Privacy by Design
+* **The Rule:** Data privacy is not a feature — it is a foundation. Implement the following from day one:
+  1. **Data Minimization:** Only collect data you absolutely need. Never store sensitive fields (passwords, card numbers) in plaintext. Always hash passwords (bcrypt/argon2) and tokenize payment data.
+  2. **Right to Erasure:** The "delete account" flow must be able to fully anonymize or purge a user's PII (Personally Identifiable Information) from all tables, logs, and caches on demand. (Works hand-in-hand with Soft Deletes — Rule 29).
+  3. **Data Retention Policy:** Old logs, inactive accounts, and historical records must be automatically purged after a defined retention period (e.g., 3 years). Implement a scheduled background job for this.
+  4. **Sensitive Field Masking in Logs:** Never log raw PII. Phone numbers, emails, and names in log lines must be partially masked (e.g., `r***@gmail.com`).
+* **Why:** GDPR violations can result in fines up to 4% of global annual revenue. An AI writing a logging statement must be aware it cannot log raw user data.
+
+---
+
+## 38. Defensive Programming & Fail-Fast Principle
+* **The Rule:** Never assume inputs are valid at any layer. Every function, service method, and repository call must validate its inputs and fail immediately and loudly if assumptions are violated — rather than silently producing corrupt data downstream.
+  - **At the Controller layer:** Validate request shape with DTOs/serializers (Rule 3).
+  - **At the Service layer:** Assert that objects received from repositories are not null before operating on them. If a `findById` returns `null`, throw the appropriate custom exception immediately (Rule 6) — don't pass `null` to the next function.
+  - **At the Database layer:** Enforce data integrity constraints (NOT NULL, UNIQUE, CHECK constraints, foreign keys) at the database level. Never rely solely on application-level validation.
+* **Why:** Silent failures are the hardest bugs to find and the most dangerous in production. An AI writing a service method that receives a `null` user and calls `user.email` will produce a `NullPointerException` / `AttributeError` that crashes the request. The Fail-Fast principle ensures errors surface immediately at their origin, with a clear, actionable error message, not silently 10 layers later.
+
+---
+
+## Updated Summary Checklist (v2):
+1. Identify the exact layer (Validation? Query? Business Logic? External Adapter?).
+2. Select the **one or two** micro-files associated with that layer.
+3. Check the module's `_backend_feature.md` for context before giving the AI any files.
+4. Pass ONLY those files to the AI along with the feature doc.
+5. After the AI writes code, verify: Is there N+1? Is there a missing null check? Is a secret hardcoded? Is the response wrapped in the standard envelope?
+6. Run `pytest` against the live API to confirm contract compliance.
+7. Review the AI's isolated changes.
