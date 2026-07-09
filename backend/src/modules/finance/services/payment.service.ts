@@ -6,11 +6,16 @@ import { MemberNotFoundForPaymentException, PaymentProcessingException } from '@
 import { FINANCE_MESSAGES } from '@/modules/finance/finance.constants';
 import type { FinanceResponse } from '@/modules/finance/finance.interfaces';
 
+import { EventEmitter2 } from '@nestjs/event-emitter';
+
 @Injectable()
 export class PaymentService {
   private readonly logger = new Logger(PaymentService.name);
 
-  constructor(private readonly financeRepository: FinanceRepository) {}
+  constructor(
+    private readonly financeRepository: FinanceRepository,
+    private readonly eventEmitter: EventEmitter2,
+  ) {}
 
   async createPayment(dto: CreatePaymentDto): Promise<FinanceResponse> {
     this.logger.log(`Processing payment of ${dto.amount} for member: ${dto.memberId}`);
@@ -22,6 +27,8 @@ export class PaymentService {
 
     try {
       const payment = await this.financeRepository.processPayment(dto);
+      
+      this.eventEmitter.emit('payment.processed', payment);
       
       return {
         message: FINANCE_MESSAGES.PAYMENT_CREATED_SUCCESS,

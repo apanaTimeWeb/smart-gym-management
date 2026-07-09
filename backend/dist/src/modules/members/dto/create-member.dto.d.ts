@@ -1,4 +1,4 @@
-import { Gender, BillingCycle } from "../utils/database.enums";
+import { Gender, BillingCycle } from "../utils/members.enums";
 export declare class CreateMemberDto {
     name: string;
     email: string;

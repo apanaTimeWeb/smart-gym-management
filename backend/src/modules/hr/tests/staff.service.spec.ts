@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { StaffService } from '@/modules/hr/services/staff.service';
 import { HrRepository } from '@/modules/hr/services/hr.repository';
 import { StaffNotFoundException } from '@/modules/hr/hr.exceptions';
-import { v4 as uuidv4 } from 'uuid';
 
 describe('StaffService', () => {
   let service: StaffService;
@@ -32,6 +31,6 @@ describe('StaffService', () => {
   it('should throw StaffNotFoundException if staff is not found', async () => {
     jest.spyOn(repository, 'findStaffById').mockResolvedValue(null);
     
-    await expect(service.findOne(uuidv4())).rejects.toThrow(StaffNotFoundException);
+    await expect(service.findOne('test-id')).rejects.toThrow(StaffNotFoundException);
   });
 });

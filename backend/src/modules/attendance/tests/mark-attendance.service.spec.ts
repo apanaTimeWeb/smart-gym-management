@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MarkAttendanceService } from '@/modules/attendance/services/mark-attendance.service';
 import { AttendanceRepository } from '@/modules/attendance/services/attendance.repository';
 import { UserNotLinkedException } from '@/modules/attendance/attendance.exceptions';
-import { AttendanceType } from '@/modules/attendance/utils/database.enums';
+import { AttendanceType } from '@/modules/attendance/utils/attendance.enums';
 
 describe('MarkAttendanceService', () => {
   let service: MarkAttendanceService;

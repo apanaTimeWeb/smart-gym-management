@@ -21,6 +21,7 @@ const find_member_controller_1 = require("./controllers/find-member.controller")
 const update_member_controller_1 = require("./controllers/update-member.controller");
 const renew_member_controller_1 = require("./controllers/renew-member.controller");
 const member_stats_controller_1 = require("./controllers/member-stats.controller");
+const payment_processed_listener_1 = require("./listeners/payment-processed.listener");
 let MembersModule = class MembersModule {
 };
 exports.MembersModule = MembersModule;
@@ -41,6 +42,7 @@ exports.MembersModule = MembersModule = __decorate([
             update_member_service_1.UpdateMemberService,
             renew_member_service_1.RenewMemberService,
             member_stats_service_1.MemberStatsService,
+            payment_processed_listener_1.PaymentProcessedListener,
         ],
     })
 ], MembersModule);

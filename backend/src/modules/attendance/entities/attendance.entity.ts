@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
-import { AttendanceType } from '@/modules/attendance/utils/database.enums';
+import { AttendanceType } from '@/modules/attendance/utils/attendance.enums';
 import { Member } from '@/modules/members/entities/member.entity';
 import { Staff } from '@/modules/hr/entities/staff.entity';
 

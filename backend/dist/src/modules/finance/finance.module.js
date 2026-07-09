@@ -14,6 +14,7 @@ const member_entity_1 = require("../members/entities/member.entity");
 const finance_repository_1 = require("./services/finance.repository");
 const payment_service_1 = require("./services/payment.service");
 const finance_summary_service_1 = require("./services/finance-summary.service");
+const member_registered_listener_1 = require("./listeners/member-registered.listener");
 const payment_controller_1 = require("./controllers/payment.controller");
 const finance_summary_controller_1 = require("./controllers/finance-summary.controller");
 let FinanceModule = class FinanceModule {
@@ -30,6 +31,7 @@ exports.FinanceModule = FinanceModule = __decorate([
             finance_repository_1.FinanceRepository,
             payment_service_1.PaymentService,
             finance_summary_service_1.FinanceSummaryService,
+            member_registered_listener_1.MemberRegisteredListener,
         ],
     })
 ], FinanceModule);

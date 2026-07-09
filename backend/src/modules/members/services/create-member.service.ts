@@ -4,13 +4,18 @@ import { CreateMemberDto } from '@/modules/members/dto/create-member.dto';
 import { DuplicateEmailException } from '@/modules/members/members.exceptions';
 import { MEMBER_MESSAGES } from '@/modules/members/members.constants';
 import type { MemberResponse } from '@/modules/members/members.interfaces';
-import { MemberStatus, BillingCycle } from '@/modules/members/utils/database.enums';
+import { MemberStatus, BillingCycle } from '@/modules/members/utils/members.enums';
+
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class CreateMemberService {
   private readonly logger = new Logger(CreateMemberService.name);
 
-  constructor(private readonly membersRepository: MembersRepository) {}
+  constructor(
+    private readonly membersRepository: MembersRepository,
+    private readonly eventEmitter: EventEmitter2,
+  ) {}
 
   async create(dto: CreateMemberDto): Promise<MemberResponse> {
     this.logger.log(`Attempting to create member with email: ${dto.email}`);
@@ -42,6 +47,8 @@ export class CreateMemberService {
     };
 
     const member = await this.membersRepository.createMember(payload);
+    
+    this.eventEmitter.emit('member.registered', member);
     
     return {
       message: MEMBER_MESSAGES.CREATED_SUCCESS,

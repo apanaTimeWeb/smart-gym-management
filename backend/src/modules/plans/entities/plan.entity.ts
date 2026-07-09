@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
-import { PlanTier } from '@/modules/plans/utils/database.enums';
+import { PlanTier } from '@/modules/plans/utils/plans.enums';
 import { Member } from '@/modules/members/entities/member.entity';
 
 @Entity('plans')

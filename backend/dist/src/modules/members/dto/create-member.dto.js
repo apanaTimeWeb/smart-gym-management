@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateMemberDto = void 0;
 const class_validator_1 = require("class-validator");
 const swagger_1 = require("@nestjs/swagger");
-const database_enums_1 = require("../utils/database.enums");
+const members_enums_1 = require("../utils/members.enums");
 class CreateMemberDto {
     name;
     email;
@@ -41,8 +41,8 @@ __decorate([
     __metadata("design:type", String)
 ], CreateMemberDto.prototype, "phone", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ enum: database_enums_1.Gender }),
-    (0, class_validator_1.IsEnum)(database_enums_1.Gender),
+    (0, swagger_1.ApiProperty)({ enum: members_enums_1.Gender }),
+    (0, class_validator_1.IsEnum)(members_enums_1.Gender),
     __metadata("design:type", String)
 ], CreateMemberDto.prototype, "gender", void 0);
 __decorate([
@@ -62,8 +62,8 @@ __decorate([
     __metadata("design:type", String)
 ], CreateMemberDto.prototype, "planId", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ enum: database_enums_1.BillingCycle }),
-    (0, class_validator_1.IsEnum)(database_enums_1.BillingCycle),
+    (0, swagger_1.ApiProperty)({ enum: members_enums_1.BillingCycle }),
+    (0, class_validator_1.IsEnum)(members_enums_1.BillingCycle),
     __metadata("design:type", String)
 ], CreateMemberDto.prototype, "billingCycle", void 0);
 __decorate([

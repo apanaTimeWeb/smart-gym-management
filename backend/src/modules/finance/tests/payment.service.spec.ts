@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PaymentService } from '@/modules/finance/services/payment.service';
 import { FinanceRepository } from '@/modules/finance/services/finance.repository';
 import { MemberNotFoundForPaymentException } from '@/modules/finance/finance.exceptions';
-import { v4 as uuidv4 } from 'uuid';
 
 describe('PaymentService', () => {
   let service: PaymentService;
@@ -19,6 +19,12 @@ describe('PaymentService', () => {
             processPayment: jest.fn(),
           },
         },
+        {
+          provide: EventEmitter2,
+          useValue: {
+            emit: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
@@ -30,7 +36,7 @@ describe('PaymentService', () => {
     jest.spyOn(repository, 'findMemberById').mockResolvedValue(null);
     
     await expect(service.createPayment({
-      memberId: uuidv4(),
+      memberId: 'test-id',
       amount: 100,
       method: 'Card',
     })).rejects.toThrow(MemberNotFoundForPaymentException);

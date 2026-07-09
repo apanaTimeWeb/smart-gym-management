@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { InquiryStatus } from '@/modules/inquiries/utils/database.enums';
+import { InquiryStatus } from '@/modules/inquiries/utils/inquiries.enums';
 
 @Entity('inquiries')
 export class Inquiry {

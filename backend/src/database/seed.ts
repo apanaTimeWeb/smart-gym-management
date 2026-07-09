@@ -6,7 +6,7 @@ import * as bcrypt from 'bcrypt';
 import { User } from '../modules/auth/entities/user.entity';
 import { Plan } from '../modules/plans/entities/plan.entity';
 import { Staff } from '../modules/hr/entities/staff.entity';
-import { Gender } from '../modules/members/utils/database.enums';
+import { Gender } from '../modules/members/utils/members.enums';
 import { Member } from '../modules/members/entities/member.entity';
 import { Payment } from '../modules/finance/entities/payment.entity';
 import { Product } from '../modules/store/entities/product.entity';

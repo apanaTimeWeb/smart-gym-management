@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsString, IsEmail, IsOptional, IsEnum } from 'class-validator';
-import { InquiryStatus } from '../utils/database.enums';
+import { InquiryStatus } from '../utils/inquiries.enums';
 
 export class CreateInquiryDto {
   @ApiProperty({ description: 'Inquirer name', example: 'John Doe' })

@@ -15,6 +15,7 @@ import { FindMemberController } from '@/modules/members/controllers/find-member.
 import { UpdateMemberController } from '@/modules/members/controllers/update-member.controller';
 import { RenewMemberController } from '@/modules/members/controllers/renew-member.controller';
 import { MemberStatsController } from '@/modules/members/controllers/member-stats.controller';
+import { PaymentProcessedListener } from './listeners/payment-processed.listener';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Member])],
@@ -32,6 +33,7 @@ import { MemberStatsController } from '@/modules/members/controllers/member-stat
     UpdateMemberService,
     RenewMemberService,
     MemberStatsService,
+    PaymentProcessedListener,
   ],
 })
 export class MembersModule {}

@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
-import { Gender } from '@/modules/hr/utils/database.enums';
+import { Gender } from '@/modules/hr/utils/hr.enums';
 import { Payroll } from '@/modules/hr/entities/payroll.entity';
 import { Attendance } from '@/modules/attendance/entities/attendance.entity';
 

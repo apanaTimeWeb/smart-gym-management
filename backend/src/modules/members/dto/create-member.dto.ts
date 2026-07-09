@@ -1,6 +1,6 @@
 import { IsString, IsEmail, IsEnum, IsOptional, IsNumber, IsDateString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { Gender, BillingCycle } from '@/modules/members/utils/database.enums';
+import { Gender, BillingCycle } from '@/modules/members/utils/members.enums';
 
 export class CreateMemberDto {
   @ApiProperty()
