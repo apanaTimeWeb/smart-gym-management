@@ -16,9 +16,10 @@ describe('UpdateInquiryService', () => {
         {
           provide: InquiriesRepository,
           useValue: {
-            findById: jest.fn(),
-            update: jest.fn(),
-            inquiryRepository: {},
+            inquiryRepository: {
+              findOne: jest.fn(),
+              update: jest.fn(),
+            }
           },
         },
       ],
@@ -33,16 +34,18 @@ describe('UpdateInquiryService', () => {
   });
 
   it('should throw InquiryNotFoundException when inquiry does not exist', async () => {
-    jest.spyOn(repository, 'findById').mockResolvedValue(null);
-    await expect(service.update(999, { status: 'CONVERTED' } as any)).rejects.toThrow(InquiryNotFoundException);
+    jest.spyOn(repository.inquiryRepository, 'findOne').mockResolvedValue(null);
+    await expect(service.execute(999, { status: 'CONVERTED' } as any)).rejects.toThrow(InquiryNotFoundException);
   });
 
   it('should update inquiry status successfully', async () => {
     const updated = { ...mockInquiry, status: 'CONVERTED' };
-    jest.spyOn(repository, 'findById').mockResolvedValue(mockInquiry as any);
-    jest.spyOn(repository, 'update').mockResolvedValue(updated as any);
+    jest.spyOn(repository.inquiryRepository, 'findOne')
+      .mockResolvedValueOnce(mockInquiry as any)
+      .mockResolvedValueOnce(updated as any);
+    jest.spyOn(repository.inquiryRepository, 'update').mockResolvedValue({} as any);
 
-    const result = await service.update(1, { status: 'CONVERTED' } as any);
+    const result = await service.execute(1, { status: 'CONVERTED' } as any);
     expect(result.data).toEqual(updated);
   });
 });

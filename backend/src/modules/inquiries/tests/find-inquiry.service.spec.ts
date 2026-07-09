@@ -35,8 +35,8 @@ describe('FindInquiryService', () => {
   });
 
   it('should return all inquiries', async () => {
-    jest.spyOn(repository, 'findAll').mockResolvedValue(mockInquiries as any);
-    const result = await service.findAll({ limit: 10, page: 1 } as any);
+    jest.spyOn(repository, 'findAll').mockResolvedValue([mockInquiries, 2] as any);
+    const result = await service.execute({ limit: 10, page: 1 } as any);
     expect(repository.findAll).toHaveBeenCalled();
     expect(result.data).toBeDefined();
   });

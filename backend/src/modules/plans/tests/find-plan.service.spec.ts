@@ -16,7 +16,7 @@ describe('FindPlanService', () => {
         {
           provide: PlansRepository,
           useValue: {
-            findAllPlans: jest.fn(),
+            findPlans: jest.fn(),
             findPlanById: jest.fn(),
           },
         },
@@ -32,9 +32,9 @@ describe('FindPlanService', () => {
   });
 
   it('should return all plans', async () => {
-    jest.spyOn(repository, 'findAllPlans').mockResolvedValue([mockPlan] as any);
+    jest.spyOn(repository, 'findPlans').mockResolvedValue([mockPlan] as any);
     const result = await service.findAll();
-    expect(repository.findAllPlans).toHaveBeenCalled();
+    expect(repository.findPlans).toHaveBeenCalled();
     expect(result.data).toHaveLength(1);
   });
 

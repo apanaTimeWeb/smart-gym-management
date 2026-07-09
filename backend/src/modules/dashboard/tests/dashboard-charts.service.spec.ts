@@ -15,10 +15,10 @@ describe('DashboardChartsService', () => {
         {
           provide: DashboardRepository,
           useValue: {
-            getMemberGrowthChart: jest.fn(),
-            getRevenueChart: jest.fn(),
-            getMembersByPlan: jest.fn(),
-            getMembersByStatus: jest.fn(),
+            getRecentMembersForChart: jest.fn(),
+            getRecentPaymentsForChart: jest.fn(),
+            getMembersWithPlans: jest.fn(),
+            getMemberCounts: jest.fn(),
           },
         },
         {
@@ -41,14 +41,14 @@ describe('DashboardChartsService', () => {
   });
 
   it('should fetch chart data from repository when cache is empty', async () => {
-    jest.spyOn(repository, 'getMemberGrowthChart').mockResolvedValue([] as any);
-    jest.spyOn(repository, 'getRevenueChart').mockResolvedValue([] as any);
-    jest.spyOn(repository, 'getMembersByPlan').mockResolvedValue([] as any);
-    jest.spyOn(repository, 'getMembersByStatus').mockResolvedValue({ active: 0, pending: 0, expired: 0 } as any);
+    jest.spyOn(repository, 'getRecentMembersForChart').mockResolvedValue([] as any);
+    jest.spyOn(repository, 'getRecentPaymentsForChart').mockResolvedValue([] as any);
+    jest.spyOn(repository, 'getMembersWithPlans').mockResolvedValue([] as any);
+    jest.spyOn(repository, 'getMemberCounts').mockResolvedValue({ active: 0, pending: 0, expired: 0 } as any);
 
     const result = await service.execute();
-    expect(repository.getMemberGrowthChart).toHaveBeenCalled();
-    expect(repository.getRevenueChart).toHaveBeenCalled();
+    expect(repository.getRecentMembersForChart).toHaveBeenCalled();
+    expect(repository.getRecentPaymentsForChart).toHaveBeenCalled();
     expect(result.data).toBeDefined();
   });
 
@@ -57,7 +57,7 @@ describe('DashboardChartsService', () => {
     jest.spyOn(cacheManager, 'get').mockResolvedValue(mockCached);
 
     const result = await service.execute();
-    expect(repository.getMemberGrowthChart).not.toHaveBeenCalled();
+    expect(repository.getRecentMembersForChart).not.toHaveBeenCalled();
     expect(result.data).toEqual(mockCached);
   });
 });

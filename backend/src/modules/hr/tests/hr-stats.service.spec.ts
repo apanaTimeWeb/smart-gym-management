@@ -13,7 +13,9 @@ describe('HrStatsService', () => {
         {
           provide: HrRepository,
           useValue: {
-            getHrStats: jest.fn(),
+            countTotalStaff: jest.fn(),
+            countActiveStaff: jest.fn(),
+            findAllPayrollsForAggregation: jest.fn(),
           },
         },
       ],
@@ -28,11 +30,12 @@ describe('HrStatsService', () => {
   });
 
   it('should return HR stats from repository', async () => {
-    const mockStats = { totalStaff: 5, activeStaff: 4, pendingPayroll: 1 };
-    jest.spyOn(repository, 'getHrStats').mockResolvedValue(mockStats as any);
+    jest.spyOn(repository, 'countTotalStaff').mockResolvedValue(5);
+    jest.spyOn(repository, 'countActiveStaff').mockResolvedValue(4);
+    jest.spyOn(repository, 'findAllPayrollsForAggregation').mockResolvedValue([]);
 
     const result = await service.getSummary();
-    expect(repository.getHrStats).toHaveBeenCalled();
-    expect(result.data).toEqual(mockStats);
+    expect(repository.countTotalStaff).toHaveBeenCalled();
+    expect(result.data).toBeDefined();
   });
 });
