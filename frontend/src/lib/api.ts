@@ -318,6 +318,15 @@ export interface StoreSummary {
 // ─── Workout ──────────────────────────────────────────────────────────────────
 
 export const workoutApi = {
+  getWorkouts: (params?: Record<string, string>) => {
+    const q = params ? '?' + new URLSearchParams(params).toString() : '';
+    return apiFetch<{ success: boolean; data: Workout[] }>(`${WorkoutUrlConfig.BACKEND_API.WORKOUTS_BASE}${q}`);
+  },
+  createWorkout: (body: Partial<Workout>) =>
+    apiFetch(WorkoutUrlConfig.BACKEND_API.WORKOUTS_BASE, { method: 'POST', body: JSON.stringify(body) }),
+  updateWorkout: (id: number, body: Partial<Workout>) =>
+    apiFetch(WorkoutUrlConfig.BACKEND_API.WORKOUT_UPDATE(id), { method: 'PATCH', body: JSON.stringify(body) }),
+  removeWorkout: (id: number) => apiFetch(WorkoutUrlConfig.BACKEND_API.WORKOUT_DELETE(id), { method: 'DELETE' }),
   getExercises: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
     return apiFetch<{ success: boolean; data: Exercise[] }>(`${WorkoutUrlConfig.BACKEND_API.EXERCISES_BASE}${q}`);
@@ -338,6 +347,10 @@ export const workoutApi = {
   removeDietPlan: (id: number) => apiFetch(WorkoutUrlConfig.BACKEND_API.DIET_PLAN_DELETE(id), { method: 'DELETE' }),
 };
 
+export interface Workout {
+  id: number; name: string; level: string; days: number;
+  exercises: number; focus: string; duration: string; tags: string[]; isActive?: boolean;
+}
 export interface Exercise {
   id: number; name: string; category: string; muscleGroup: string[];
   sets?: number; reps?: string; duration?: string;

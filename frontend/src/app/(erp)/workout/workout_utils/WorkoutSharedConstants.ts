@@ -1,7 +1,4 @@
-// Re-export data types from the canonical types file (Rule 7)
-export type { Workout, Exercise } from '@/app/(erp)/workout/workout_types/workout_types';
 import type { Workout, Exercise } from '@/app/(erp)/workout/workout_types/workout_types';
-
 /* ── Dropdown / Filter Options (Rule 3: Backend-Ready Constants) ── */
 
 export const WORKOUT_LEVEL_OPTIONS = ['Beginner', 'Intermediate', 'Advanced', 'All Levels'] as const;

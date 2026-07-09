@@ -1,128 +1,188 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { 
-  Workout, Exercise, 
-  INITIAL_WORKOUTS, INITIAL_EXERCISES, 
   EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM 
 } from '@/app/(erp)/workout/workout_utils/WorkoutSharedConstants';
-import { WorkoutContextType } from '@/app/(erp)/workout/workout_types/workout_types';
+import { WorkoutContextType, Workout, Exercise } from '@/app/(erp)/workout/workout_types/workout_types';
 import { useConfirm } from '@/app/(erp)/erp_components/ErpConfirmProvider';
+import { workoutApi } from '@/lib/api';
+import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
 
 export function useWorkoutLogic(): WorkoutContextType {
   const { confirm } = useConfirm();
- const [tab, setTab] = useState('Workout Plans');
+  const [tab, setTab] = useState('Workout Plans');
   const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   
-  const [workouts, setWorkouts] = useState<Workout[]>(INITIAL_WORKOUTS);
- const [exercises, setExercises] = useState<Exercise[]>(INITIAL_EXERCISES);
+  const [workouts, setWorkouts] = useState<Workout[]>([]);
+  const [exercises, setExercises] = useState<Exercise[]>([]);
 
- const [showWkModal, setShowWkModal] = useState(false);
- const [editWkId, setEditWkId] = useState<number | null>(null);
- const [wkForm, setWkForm] = useState(EMPTY_WORKOUT_FORM);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
- const [showExModal, setShowExModal] = useState(false);
- const [editExId, setEditExId] = useState<number | null>(null);
- const [exForm, setExForm] = useState(EMPTY_EXERCISE_FORM);
+  const [showWkModal, setShowWkModal] = useState(false);
+  const [editWkId, setEditWkId] = useState<number | null>(null);
+  const [wkForm, setWkForm] = useState(EMPTY_WORKOUT_FORM);
 
- // Derived state
- const filteredWk = useMemo(() => 
- workouts.filter(w => w.name.toLowerCase().includes(search.toLowerCase())),
- [workouts, search]
- );
- 
- const filteredEx = useMemo(() => 
- exercises.filter(ex => 
- ex.name.toLowerCase().includes(search.toLowerCase()) || 
- ex.muscle.toLowerCase().includes(search.toLowerCase())
- ),
- [exercises, search]
- );
+  const [showExModal, setShowExModal] = useState(false);
+  const [editExId, setEditExId] = useState<number | null>(null);
+  const [exForm, setExForm] = useState(EMPTY_EXERCISE_FORM);
 
- // Workout CRUD
- const openAddWk = useCallback(() => { 
- setEditWkId(null); 
- setWkForm(EMPTY_WORKOUT_FORM); 
- setShowWkModal(true); 
- }, []);
- 
- const openEditWk = useCallback((w: Workout) => { 
- setEditWkId(w.id); 
- setWkForm({ 
- name: w.name, 
- level: w.level, 
- days: String(w.days), 
- exercises: String(w.exercises), 
- focus: w.focus, 
- duration: w.duration, 
- tags: w.tags.join(', ') 
- }); 
- setShowWkModal(true); 
- }, []);
- 
- const saveWk = useCallback((e: React.FormEvent) => {
- e.preventDefault();
- const data = { 
- ...wkForm, 
- days: Number(wkForm.days), 
- exercises: Number(wkForm.exercises), 
- tags: wkForm.tags.split(',').map(t => t.trim()).filter(Boolean) 
- };
- if (editWkId) {
- setWorkouts(prev => prev.map(w => w.id === editWkId ? { ...w, ...data } : w));
- } else {
- setWorkouts(prev => [...prev, { id: Date.now(), ...data }]);
- }
- setShowWkModal(false);
- }, [editWkId, wkForm]);
- 
- const deleteWk = useCallback(async (id: number) => { 
-  const isConfirmed = await confirm({ title: 'Delete Workout', message: 'Delete this workout plan?', confirmText: 'Delete', type: 'danger' });
-  if (isConfirmed) {
-  setWorkouts(prev => prev.filter(w => w.id !== id));
-  }
- }, [confirm]);
+  const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
+  const hideToast = useCallback(() => setToast(null), []);
 
- // Exercise CRUD
- const openAddEx = useCallback(() => { 
- setEditExId(null); 
- setExForm(EMPTY_EXERCISE_FORM); 
- setShowExModal(true); 
- }, []);
- 
- const openEditEx = useCallback((ex: Exercise) => { 
- setEditExId(ex.id); 
- setExForm({ 
- name: ex.name, 
- muscle: ex.muscle, 
- equipment: ex.equipment, 
- difficulty: ex.difficulty 
- }); 
- setShowExModal(true); 
- }, []);
- 
- const saveEx = useCallback((e: React.FormEvent) => {
- e.preventDefault();
- if (editExId) {
- setExercises(prev => prev.map(ex => ex.id === editExId ? { ...ex, ...exForm } : ex));
- } else {
- setExercises(prev => [...prev, { id: Date.now(), ...exForm }]);
- }
- setShowExModal(false);
- }, [editExId, exForm]);
- 
- const deleteEx = useCallback(async (id: number) => { 
-  const isConfirmed = await confirm({ title: 'Delete Exercise', message: 'Delete this exercise?', confirmText: 'Delete', type: 'danger' });
-  if (isConfirmed) {
-  setExercises(prev => prev.filter(ex => ex.id !== id));
-  }
- }, [confirm]);
+  const loadAll = useCallback(async () => {
+    setLoading(true);
+    try {
+      const [wkRes, exRes] = await Promise.all([
+        workoutApi.getWorkouts(),
+        workoutApi.getExercises(),
+      ]);
+      setWorkouts(wkRes.data);
+      setExercises(exRes.data);
+    } catch (e) {
+      showToast((e as Error).message, 'error');
+    } finally {
+      setLoading(false);
+    }
+  }, [showToast]);
+
+  useEffect(() => { loadAll(); }, [loadAll]);
+
+  // Derived state
+  const filteredWk = useMemo(() => 
+    workouts.filter(w => w.name.toLowerCase().includes(search.toLowerCase())),
+    [workouts, search]
+  );
+  
+  const filteredEx = useMemo(() => 
+    exercises.filter(ex => 
+      ex.name.toLowerCase().includes(search.toLowerCase()) || 
+      ex.muscleGroup?.join(' ').toLowerCase().includes(search.toLowerCase()) ||
+      ex.muscle?.toLowerCase().includes(search.toLowerCase())
+    ),
+    [exercises, search]
+  );
+
+  // Workout CRUD
+  const openAddWk = useCallback(() => { 
+    setEditWkId(null); 
+    setWkForm(EMPTY_WORKOUT_FORM); 
+    setShowWkModal(true); 
+  }, []);
+  
+  const openEditWk = useCallback((w: Workout) => { 
+    setEditWkId(w.id); 
+    setWkForm({ 
+      name: w.name, 
+      level: w.level, 
+      days: String(w.days), 
+      exercises: String(w.exercises), 
+      focus: w.focus, 
+      duration: w.duration, 
+      tags: w.tags.join(', ') 
+    }); 
+    setShowWkModal(true); 
+  }, []);
+  
+  const saveWk = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    try {
+      const payload = { 
+        ...wkForm, 
+        days: Number(wkForm.days), 
+        exercises: Number(wkForm.exercises), 
+        tags: wkForm.tags.split(',').map(t => t.trim()).filter(Boolean) 
+      };
+      
+      if (editWkId) {
+        await workoutApi.updateWorkout(editWkId, payload);
+        showToast('Workout plan updated!', 'success');
+      } else {
+        await workoutApi.createWorkout(payload);
+        showToast('Workout plan created!', 'success');
+      }
+      setShowWkModal(false);
+      await loadAll();
+    } catch (err) {
+      showToast((err as Error).message, 'error');
+    } finally {
+      setSaving(false);
+    }
+  }, [editWkId, wkForm, loadAll, showToast]);
+  
+  const deleteWk = useCallback(async (id: number) => { 
+    const isConfirmed = await confirm({ title: 'Delete Workout', message: 'Delete this workout plan?', confirmText: 'Delete', type: 'danger' });
+    if (!isConfirmed) return;
+    try {
+      await workoutApi.removeWorkout(id);
+      showToast('Deleted workout plan', 'success');
+      await loadAll();
+    } catch (err) {
+      showToast((err as Error).message, 'error');
+    }
+  }, [confirm, loadAll, showToast]);
+
+  // Exercise CRUD
+  const openAddEx = useCallback(() => { 
+    setEditExId(null); 
+    setExForm(EMPTY_EXERCISE_FORM); 
+    setShowExModal(true); 
+  }, []);
+  
+  const openEditEx = useCallback((ex: Exercise) => { 
+    setEditExId(ex.id); 
+    setExForm({ 
+      name: ex.name, 
+      muscle: ex.muscle || ex.muscleGroup?.join(', ') || '', 
+      equipment: ex.equipment || '', 
+      difficulty: ex.difficulty 
+    }); 
+    setShowExModal(true); 
+  }, []);
+  
+  const saveEx = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    try {
+      // adapt to Exercise backend payload shape if needed, here we pass the form
+      const payload = { ...exForm, muscleGroup: exForm.muscle.split(',').map(s => s.trim()) };
+      if (editExId) {
+        await workoutApi.updateExercise(editExId, payload);
+        showToast('Exercise updated!', 'success');
+      } else {
+        await workoutApi.createExercise(payload);
+        showToast('Exercise created!', 'success');
+      }
+      setShowExModal(false);
+      await loadAll();
+    } catch (err) {
+      showToast((err as Error).message, 'error');
+    } finally {
+      setSaving(false);
+    }
+  }, [editExId, exForm, loadAll, showToast]);
+  
+  const deleteEx = useCallback(async (id: number) => { 
+    const isConfirmed = await confirm({ title: 'Delete Exercise', message: 'Delete this exercise?', confirmText: 'Delete', type: 'danger' });
+    if (!isConfirmed) return;
+    try {
+      await workoutApi.removeExercise(id);
+      showToast('Deleted exercise', 'success');
+      await loadAll();
+    } catch (err) {
+      showToast((err as Error).message, 'error');
+    }
+  }, [confirm, loadAll, showToast]);
 
   return {
     tab, setTab, search, setSearch, currentPage, setCurrentPage,
     workouts, exercises, filteredWk, filteredEx,
- showWkModal, setShowWkModal, editWkId, wkForm, setWkForm,
- showExModal, setShowExModal, editExId, exForm, setExForm,
- openAddWk, openEditWk, saveWk, deleteWk,
- openAddEx, openEditEx, saveEx, deleteEx
- };
+    loading, saving, toast, showToast, hideToast, loadAll,
+    showWkModal, setShowWkModal, editWkId, wkForm, setWkForm,
+    showExModal, setShowExModal, editExId, exForm, setExForm,
+    openAddWk, openEditWk, saveWk, deleteWk,
+    openAddEx, openEditEx, saveEx, deleteEx
+  };
 }
