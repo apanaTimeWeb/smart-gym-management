@@ -159,6 +159,16 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
   3. Explanations of core business logic or complex workflows within the module.
 * **Why:** Before an AI or a new human developer makes any changes to a module, they will read this file first. It acts as the ultimate localized context guide, instantly explaining the routing, file responsibilities, and logic, drastically reducing the risk of hallucination or breaking existing architecture.
 
+## 20. Performance & Network Optimization (Compression, Rate Limiting & Caching)
+* **The Rule:** Enterprise APIs must protect their bandwidth and server load. 
+  1. **Rate Limiting / Redis:** Implement strict rate limiters on all public endpoints (especially Auth and generic GET routes). Use Redis to handle rate limiting and to cache expensive, frequently requested data (like `HrStats` or `DashboardSummary`).
+  2. **Response Compression:** Enable gzip/Brotli compression at the framework level (e.g., using `compression` middleware in Node.js) to drastically reduce JSON response sizes and save bandwidth.
+* **Why:** This ensures the backend remains highly available under load and saves massive amounts of egress bandwidth costs.
+
+## 21. Asset Optimization (The WebP Rule)
+* **The Rule:** Never store unoptimized images (like `.png`, `.jpg`, `.jpeg`, `.bmp`) on the server disk or cloud storage. When an image is uploaded (e.g., a member profile picture), it must immediately be processed, compressed, and converted to `.webp` format before saving.
+* **Why:** WebP reduces image file sizes by up to 80% compared to JPEG/PNG without visible quality loss. This drastically reduces cloud storage costs and speeds up frontend loading times, resulting in a much faster app.
+
 ## Summary Checklist for Developers Providing Context to AI:
 1. Identify the exact layer where the bug/feature resides (Validation? DB Query? Business Logic?).
 2. Select the **one or two** micro-files associated with that layer.
