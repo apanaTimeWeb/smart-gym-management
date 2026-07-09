@@ -6,7 +6,7 @@ export declare class CreateMemberDto {
     gender: Gender;
     address?: string;
     branch: string;
-    planId: number;
+    planId: string;
     billingCycle: BillingCycle;
     joinDate?: string;
 }

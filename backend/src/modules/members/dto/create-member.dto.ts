@@ -29,8 +29,8 @@ export class CreateMemberDto {
   branch: string;
 
   @ApiProperty()
-  @IsNumber()
-  planId: number;
+  @IsString()
+  planId: string;
 
   @ApiProperty({ enum: BillingCycle })
   @IsEnum(BillingCycle)

@@ -32,7 +32,7 @@ export class Member {
   plan: Plan;
 
   @Column()
-  planId: number;
+  planId: string;
 
   @Column({ type: 'enum', enum: BillingCycle })
   billingCycle: BillingCycle;

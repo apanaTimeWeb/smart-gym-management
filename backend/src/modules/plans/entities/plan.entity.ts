@@ -4,8 +4,8 @@ import { Member } from '../../members/entities/member.entity';
 
 @Entity('plans')
 export class Plan {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   name: string;
