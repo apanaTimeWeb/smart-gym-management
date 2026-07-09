@@ -1,7 +1,7 @@
 import {
  LayoutDashboard, Users, ClipboardList, BarChart2,
  UserCog, ShoppingBag, DollarSign, BookOpen, Dumbbell,
- MessageSquare, Settings, CalendarCheck
+ MessageSquare, Settings, CalendarCheck, Shield
 } from 'lucide-react';
 
 export const ERP_NAV_ITEMS = [
@@ -16,6 +16,7 @@ export const ERP_NAV_ITEMS = [
  { href: '/library', label: 'Diet Library', icon: BookOpen },
  { href: '/workout', label: 'Workout Library', icon: Dumbbell },
  { href: '/inquiries', label: 'Inquiries & Leads',icon: MessageSquare },
+ { href: '/audit', label: 'Audit Logs', icon: Shield },
  { href: '/settings', label: 'Settings', icon: Settings },
 ];
 
