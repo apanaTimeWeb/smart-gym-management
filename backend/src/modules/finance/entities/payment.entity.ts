@@ -4,8 +4,8 @@ import { Member } from '../../members/entities/member.entity';
 
 @Entity('payments')
 export class Payment {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @ManyToOne(() => Member, member => member.payments)
   @JoinColumn({ name: 'memberId' })
