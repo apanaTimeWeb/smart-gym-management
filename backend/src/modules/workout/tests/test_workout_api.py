@@ -42,3 +42,20 @@ def test_update_diet_plan(auth_client, api_url):
         "protein": 200
     })
     assert response.status_code in [200, 401, 404]
+
+
+def test_get_workout_by_id(auth_client, api_url):
+    response = auth_client.get(f"{api_url}/v1/workout/exercises/1")
+    assert response.status_code in [200, 401, 404]
+
+def test_delete_workout(auth_client, api_url):
+    response = auth_client.delete(f"{api_url}/v1/workout/exercises/1")
+    assert response.status_code in [200, 204, 401, 404]
+
+def test_get_diet_plan_by_id(auth_client, api_url):
+    response = auth_client.get(f"{api_url}/v1/workout/diet-plans/1")
+    assert response.status_code in [200, 401, 404]
+
+def test_delete_diet_plan(auth_client, api_url):
+    response = auth_client.delete(f"{api_url}/v1/workout/diet-plans/1")
+    assert response.status_code in [200, 204, 401, 404]

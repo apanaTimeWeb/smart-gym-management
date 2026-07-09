@@ -3,7 +3,7 @@ def test_get_all_attendance(auth_client, api_url):
     assert response.status_code in [200, 401]
 
 def test_get_today_attendance_stats(auth_client, api_url):
-    response = auth_client.get(f"{api_url}/v1/attendance/stats")
+    response = auth_client.get(f"{api_url}/v1/attendance/today-stats")
     assert response.status_code in [200, 401]
 
 def test_mark_member_attendance(auth_client, api_url):

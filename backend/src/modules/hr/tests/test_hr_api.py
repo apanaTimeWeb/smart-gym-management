@@ -51,3 +51,8 @@ def test_update_payroll_status(auth_client, api_url):
         "status": "Paid"
     })
     assert response.status_code in [200, 401, 404]
+
+
+def test_delete_staff(auth_client, api_url):
+    response = auth_client.delete(f"{api_url}/v1/hr/staff/uuid-here")
+    assert response.status_code in [200, 204, 401, 404]
