@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { StatusCodes } from 'http-status-codes';
 import { AuthUrlConfig } from '@/app/(auth)/auth_url_config';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
@@ -7,7 +8,7 @@ export async function POST(req: NextRequest) {
   const refreshToken = req.cookies.get('gymsmart_refresh_token')?.value;
 
   if (!refreshToken) {
-    return NextResponse.json({ error: 'No refresh token' }, { status: 401 });
+    return NextResponse.json({ error: 'No refresh token' }, { status: StatusCodes.UNAUTHORIZED });
   }
 
   try {
@@ -20,7 +21,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (!backendRes.ok) {
-      return NextResponse.json({ error: 'Refresh failed' }, { status: 401 });
+      return NextResponse.json({ error: 'Refresh failed' }, { status: StatusCodes.UNAUTHORIZED });
     }
 
     const json = await backendRes.json();
@@ -48,6 +49,6 @@ export async function POST(req: NextRequest) {
 
     return res;
   } catch (error) {
-    return NextResponse.json({ error: 'Refresh failed' }, { status: 401 });
+    return NextResponse.json({ error: 'Refresh failed' }, { status: StatusCodes.UNAUTHORIZED });
   }
 }

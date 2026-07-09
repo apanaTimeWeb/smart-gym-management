@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { StatusCodes } from 'http-status-codes';
 
 export async function POST(req: NextRequest) {
   const { token, refreshToken, user } = await req.json();
-  if (!token) return NextResponse.json({ error: 'No token' }, { status: 400 });
+  if (!token) return NextResponse.json({ error: 'No token' }, { status: StatusCodes.BAD_REQUEST });
 
   const res = NextResponse.json({ success: true });
 
