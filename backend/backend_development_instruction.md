@@ -161,13 +161,28 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 
 ## 20. Performance & Network Optimization (Compression, Rate Limiting & Caching)
 * **The Rule:** Enterprise APIs must protect their bandwidth and server load. 
-  1. **Rate Limiting / Redis:** Implement strict rate limiters on all public endpoints (especially Auth and generic GET routes). Use Redis to handle rate limiting and to cache expensive, frequently requested data (like `HrStats` or `DashboardSummary`).
-  2. **Response Compression:** Enable gzip/Brotli compression at the framework level (e.g., using `compression` middleware in Node.js) to drastically reduce JSON response sizes and save bandwidth.
+  1. **Rate Limiting / Redis:** Implement strict rate limiters on all public endpoints (especially Auth and generic GET routes). Use Redis (or similar caching layers like Memcached) to handle rate limiting and to cache expensive, frequently requested data.
+  2. **Response Compression:** Enable gzip/Brotli compression at the framework level (e.g., `compression` middleware in Node.js, `GZipMiddleware` in Django, or `server.compression.enabled` in Spring Boot) to drastically reduce JSON response sizes and save bandwidth.
 * **Why:** This ensures the backend remains highly available under load and saves massive amounts of egress bandwidth costs.
 
 ## 21. Asset Optimization (The WebP Rule)
 * **The Rule:** Never store unoptimized images (like `.png`, `.jpg`, `.jpeg`, `.bmp`) on the server disk or cloud storage. When an image is uploaded (e.g., a member profile picture), it must immediately be processed, compressed, and converted to `.webp` format before saving.
 * **Why:** WebP reduces image file sizes by up to 80% compared to JPEG/PNG without visible quality loss. This drastically reduces cloud storage costs and speeds up frontend loading times, resulting in a much faster app.
+
+## 22. Security Headers, CORS, & Protection
+* **The Rule:** An enterprise app cannot go to production naked. Always implement security middleware (e.g., `Helmet.js` in Node, `SecurityMiddleware` in Django, or `Spring Security`) to set strict HTTP headers. Configure strict CORS policies (only allowing exact frontend domains). Ensure inputs are stripped of executable scripts (XSS protection) and standard ORMs are used to natively prevent SQL injection.
+
+## 23. Background Jobs & Queues (No Hanging Requests)
+* **The Rule:** An HTTP request should respond in under 500ms. If a user triggers a heavy task (e.g., "Send 1,000 promotional emails", "Generate a 50-page PDF report", "Process a video"), DO NOT process it in the main HTTP thread.
+* **Why:** Use a Message Queue or Task Broker (e.g., BullMQ for Node, Celery for Python/Django, or Spring AMQP/RabbitMQ). The controller should immediately return `202 Accepted: Job Started`, and the background worker handles the heavy lifting safely. This prevents server timeouts and crashed requests.
+
+## 24. Database Migrations (No Auto-Syncing)
+* **The Rule:** In development, auto-syncing tools (like TypeORM's `synchronize: true` or Hibernate's `update`) are fine. But in an enterprise environment, database schemas must be strictly version-controlled using **Migrations** (e.g., Django `makemigrations`, Flyway/Liquibase for Java, Alembic for Python). 
+* **Why:** If the AI needs to add a new column to a table, it should generate a explicit migration file. This guarantees that production databases can be safely upgraded (or rolled back) without data loss or rogue schema syncing breaking the app.
+
+## 25. Graceful Shutdown & Health Probes (Kubernetes/Docker Ready)
+* **The Rule:** Enterprise apps are deployed in containers. You must include a `/health` or `/ping` endpoint for Kubernetes/AWS liveness probes. Furthermore, the application must intercept termination signals (`SIGINT`, `SIGTERM`).
+* **Why:** When a server restarts or a container is killed, it shouldn't just die instantly, dropping user requests mid-flight. It must stop accepting new requests, finish processing current ones, safely close the database connection, and *then* shut down.
 
 ## Summary Checklist for Developers Providing Context to AI:
 1. Identify the exact layer where the bug/feature resides (Validation? DB Query? Business Logic?).
