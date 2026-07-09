@@ -1,4 +1,4 @@
-import { Controller, Patch, Delete, Param, Body, UseGuards } from '@nestjs/common';
+import { Controller, Patch, Delete, Param, Body, UseGuards , HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { UpdateProductService } from '../services/update-product.service';
 import { UpdateProductDto } from '../dto/update-product.dto';
@@ -13,14 +13,14 @@ export class UpdateProductController {
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update a product' })
-  @ApiResponse({ status: 200, description: 'Product updated successfully' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Product updated successfully' })
   update(@Param('id') id: string, @Body() dto: UpdateProductDto) {
     return this.updateProductService.execute(+id, dto);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Remove a product' })
-  @ApiResponse({ status: 200, description: 'Product removed successfully' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Product removed successfully' })
   remove(@Param('id') id: string) {
     return this.updateProductService.remove(+id);
   }

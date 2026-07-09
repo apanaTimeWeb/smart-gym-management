@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards , HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { CreateProductService } from '../services/create-product.service';
 import { CreateProductDto } from '../dto/create-product.dto';
@@ -13,7 +13,7 @@ export class CreateProductController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new product' })
-  @ApiResponse({ status: 201, description: 'Product created successfully' })
+  @ApiResponse({ status: HttpStatus.CREATED, description: 'Product created successfully' })
   execute(@Body() dto: CreateProductDto) {
     return this.createProductService.execute(dto);
   }

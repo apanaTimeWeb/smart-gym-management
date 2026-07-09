@@ -4,3 +4,8 @@ export const PLAN_MESSAGES = {
   UPDATED_SUCCESS: 'Plan updated successfully',
   DELETED_SUCCESS: 'Plan deleted successfully',
 };
+
+export const PLAN_ERRORS = {
+  NOT_FOUND: 'Plan not found',
+  DUPLICATE_TIER: 'A plan with this tier already exists',
+};

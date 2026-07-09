@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, Param, UseGuards , HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { FindInquiryService } from '../services/find-inquiry.service';
 import { PaginationQueryDto } from '@/core/dto/pagination-query.dto';
@@ -13,14 +13,14 @@ export class FindInquiryController {
 
   @Get()
   @ApiOperation({ summary: 'Get all inquiries' })
-  @ApiResponse({ status: 200, description: 'Return all inquiries' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Return all inquiries' })
   execute(@Query() query: PaginationQueryDto) {
     return this.findInquiryService.execute(query);
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get inquiry by ID' })
-  @ApiResponse({ status: 200, description: 'Return single inquiry' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Return single inquiry' })
   findOne(@Param('id') id: string) {
     return this.findInquiryService.findOne(+id);
   }

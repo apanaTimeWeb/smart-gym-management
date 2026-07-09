@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards , HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { CreateWorkoutService } from '../services/create-workout.service';
 import { CreateWorkoutDto } from '../dto/create-workout.dto';
@@ -13,7 +13,7 @@ export class CreateWorkoutController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new workout' })
-  @ApiResponse({ status: 201, description: 'Workout created successfully' })
+  @ApiResponse({ status: HttpStatus.CREATED, description: 'Workout created successfully' })
   execute(@Body() dto: CreateWorkoutDto) {
     return this.createWorkoutService.execute(dto);
   }

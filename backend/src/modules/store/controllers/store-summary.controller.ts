@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, UseGuards , HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { StoreSummaryService } from '../services/store-summary.service';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
@@ -12,7 +12,7 @@ export class StoreSummaryController {
 
   @Get()
   @ApiOperation({ summary: 'Get store summary stats' })
-  @ApiResponse({ status: 200, description: 'Store stats retrieved successfully' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Store stats retrieved successfully' })
   execute() {
     return this.storeSummaryService.execute();
   }

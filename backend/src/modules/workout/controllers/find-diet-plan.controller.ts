@@ -1,4 +1,4 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards , HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { FindDietPlanService } from '../services/find-diet-plan.service';
 import { PaginationQueryDto } from '@/core/dto/pagination-query.dto';
@@ -13,7 +13,7 @@ export class FindDietPlanController {
 
   @Get()
   @ApiOperation({ summary: 'Get all diet plans' })
-  @ApiResponse({ status: 200, description: 'Return all diet plans' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Return all diet plans' })
   execute(@Query() query: PaginationQueryDto) {
     return this.findDietPlanService.execute(query);
   }

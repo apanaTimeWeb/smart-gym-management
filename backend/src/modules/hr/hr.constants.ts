@@ -10,3 +10,9 @@ export const HR_MESSAGES = {
   
   STATS_FETCHED_SUCCESS: 'HR summary fetched successfully',
 };
+
+export const HR_ERRORS = {
+  STAFF_NOT_FOUND: 'Staff member not found',
+  PAYROLL_NOT_FOUND: 'Payroll record not found',
+  DUPLICATE_STAFF_EMAIL: 'A staff member with this email already exists',
+};

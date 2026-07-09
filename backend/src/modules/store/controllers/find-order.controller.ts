@@ -1,4 +1,4 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards , HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { FindOrderService } from '../services/find-order.service';
 import { PaginationQueryDto } from '@/core/dto/pagination-query.dto';
@@ -13,7 +13,7 @@ export class FindOrderController {
 
   @Get()
   @ApiOperation({ summary: 'Get all orders' })
-  @ApiResponse({ status: 200, description: 'Return all orders' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Return all orders' })
   execute(@Query() query: PaginationQueryDto) {
     return this.findOrderService.execute(query);
   }

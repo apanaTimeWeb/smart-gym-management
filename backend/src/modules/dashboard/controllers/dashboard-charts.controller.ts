@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, UseGuards, UseInterceptors , HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { CustomCacheInterceptor } from '@/modules/core/interceptors/custom-cache.interceptor';
 import { DashboardChartsService } from '../services/dashboard-charts.service';
@@ -14,7 +14,7 @@ export class DashboardChartsController {
   @Get()
   @UseInterceptors(CustomCacheInterceptor)
   @ApiOperation({ summary: 'Get Dashboard Charts data' })
-  @ApiResponse({ status: 200, description: 'Charts data retrieved successfully' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Charts data retrieved successfully' })
   execute() {
     return this.chartsService.execute();
   }

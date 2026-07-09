@@ -1,4 +1,4 @@
-import { Controller, Patch, Delete, Param, Body, UseGuards } from '@nestjs/common';
+import { Controller, Patch, Delete, Param, Body, UseGuards , HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { UpdateInquiryService } from '../services/update-inquiry.service';
 import { UpdateInquiryDto } from '../dto/update-inquiry.dto';
@@ -13,14 +13,14 @@ export class UpdateInquiryController {
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update an inquiry' })
-  @ApiResponse({ status: 200, description: 'Inquiry updated successfully' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Inquiry updated successfully' })
   update(@Param('id') id: string, @Body() dto: UpdateInquiryDto) {
     return this.updateInquiryService.execute(+id, dto);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Remove an inquiry' })
-  @ApiResponse({ status: 200, description: 'Inquiry removed successfully' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Inquiry removed successfully' })
   remove(@Param('id') id: string) {
     return this.updateInquiryService.remove(+id);
   }

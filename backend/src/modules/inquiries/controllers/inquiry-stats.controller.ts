@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, UseGuards , HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { InquiryStatsService } from '../services/inquiry-stats.service';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
@@ -12,7 +12,7 @@ export class InquiryStatsController {
 
   @Get()
   @ApiOperation({ summary: 'Get inquiry stats' })
-  @ApiResponse({ status: 200, description: 'Return inquiry stats' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Return inquiry stats' })
   execute() {
     return this.inquiryStatsService.execute();
   }

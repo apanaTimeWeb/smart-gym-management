@@ -6,3 +6,8 @@ export const MEMBER_MESSAGES = {
   RENEWED_SUCCESS: 'Membership renewed successfully',
   STATS_FETCHED_SUCCESS: 'Member statistics fetched successfully',
 };
+
+export const MEMBER_ERRORS = {
+  NOT_FOUND: 'Member not found',
+  DUPLICATE_EMAIL: 'A member with this email already exists',
+};

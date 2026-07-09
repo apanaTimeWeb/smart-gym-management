@@ -1,4 +1,4 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards , HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { FindWorkoutService } from '../services/find-workout.service';
 import { PaginationQueryDto } from '@/core/dto/pagination-query.dto';
@@ -13,7 +13,7 @@ export class FindWorkoutController {
 
   @Get()
   @ApiOperation({ summary: 'Get all workouts' })
-  @ApiResponse({ status: 200, description: 'Return all workouts' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Return all workouts' })
   execute(@Query() query: PaginationQueryDto) {
     return this.findWorkoutService.execute(query);
   }

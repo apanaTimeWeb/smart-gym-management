@@ -1,13 +1,14 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { PLAN_ERRORS } from '@/modules/plans/plans.constants';
 
 export class PlanNotFoundException extends HttpException {
   constructor() {
-    super('Plan not found', HttpStatus.NOT_FOUND);
+    super(PLAN_ERRORS.NOT_FOUND, HttpStatus.NOT_FOUND);
   }
 }
 
 export class DuplicatePlanTierException extends HttpException {
   constructor() {
-    super('A plan with this tier already exists', HttpStatus.CONFLICT);
+    super(PLAN_ERRORS.DUPLICATE_TIER, HttpStatus.CONFLICT);
   }
 }

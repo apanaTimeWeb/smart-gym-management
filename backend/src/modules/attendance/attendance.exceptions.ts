@@ -1,13 +1,14 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { ATTENDANCE_ERRORS } from '@/modules/attendance/attendance.constants';
 
 export class InvalidAttendanceTypeException extends HttpException {
   constructor() {
-    super('Invalid attendance type provided', HttpStatus.BAD_REQUEST);
+    super(ATTENDANCE_ERRORS.INVALID_TYPE, HttpStatus.BAD_REQUEST);
   }
 }
 
 export class UserNotLinkedException extends HttpException {
   constructor() {
-    super('Attendance must be linked to either a member or a staff', HttpStatus.BAD_REQUEST);
+    super(ATTENDANCE_ERRORS.USER_NOT_LINKED, HttpStatus.BAD_REQUEST);
   }
 }
