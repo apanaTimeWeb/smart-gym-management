@@ -1,17 +1,124 @@
 {
   "info": {
     "name": "GymSmart Members Module",
+    "description": "Complete CRUD for gym member management including stats and renewal",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000", "type": "string" },
+    { "key": "accessToken", "value": "", "type": "string" }
+  ],
   "item": [
     {
-      "name": "Get Members",
+      "name": "Get All Members",
       "request": {
         "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
-          "raw": "{{baseUrl}}/api/members?limit=10&page=1",
+          "raw": "{{baseUrl}}/api/members?page=1&limit=10",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "members"],
+          "query": [
+            { "key": "page", "value": "1" },
+            { "key": "limit", "value": "10" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Member by ID",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/members/:id",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "members", ":id"],
+          "variable": [{ "key": "id", "value": "member-uuid-here" }]
+        }
+      }
+    },
+    {
+      "name": "Get Member Stats",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/members/stats",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "members", "stats"]
+        }
+      }
+    },
+    {
+      "name": "Create Member",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Rahul Sharma\",\n  \"email\": \"rahul@gmail.com\",\n  \"phone\": \"+91 98765 43210\",\n  \"gender\": \"MALE\",\n  \"address\": \"Andheri West, Mumbai\",\n  \"branch\": \"Main Branch\",\n  \"planId\": 1,\n  \"billingCycle\": \"ONE_MONTH\",\n  \"joinDate\": \"2026-07-09\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/members",
           "host": ["{{baseUrl}}"],
           "path": ["api", "members"]
+        }
+      }
+    },
+    {
+      "name": "Update Member",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"phone\": \"+91 91234 56789\",\n  \"address\": \"Bandra East, Mumbai\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/members/:id",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "members", ":id"],
+          "variable": [{ "key": "id", "value": "member-uuid-here" }]
+        }
+      }
+    },
+    {
+      "name": "Renew Membership",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"planId\": 1,\n  \"billingCycle\": \"THREE_MONTHS\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/members/:id/renew",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "members", ":id", "renew"],
+          "variable": [{ "key": "id", "value": "member-uuid-here" }]
+        }
+      }
+    },
+    {
+      "name": "Delete Member",
+      "request": {
+        "method": "DELETE",
+        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/members/:id",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "members", ":id"],
+          "variable": [{ "key": "id", "value": "member-uuid-here" }]
         }
       }
     }

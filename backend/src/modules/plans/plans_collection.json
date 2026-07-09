@@ -1,17 +1,75 @@
 {
   "info": {
     "name": "GymSmart Plans Module",
+    "description": "Membership plan CRUD operations",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000", "type": "string" },
+    { "key": "accessToken", "value": "", "type": "string" }
+  ],
   "item": [
     {
-      "name": "Get Plans",
+      "name": "Get All Plans",
       "request": {
         "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
-          "raw": "{{baseUrl}}/api/plans?limit=10&page=1",
+          "raw": "{{baseUrl}}/api/plans",
           "host": ["{{baseUrl}}"],
           "path": ["api", "plans"]
+        }
+      }
+    },
+    {
+      "name": "Get Plan by ID",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/plans/:id",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "plans", ":id"],
+          "variable": [{ "key": "id", "value": "1" }]
+        }
+      }
+    },
+    {
+      "name": "Create Plan",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Diamond\",\n  \"tier\": \"PREMIUM\",\n  \"price1Month\": 3000,\n  \"price3Month\": 8000,\n  \"price6Month\": 14000,\n  \"price12Month\": 25000,\n  \"features\": [\"24/7 Access\", \"Personal Trainer\", \"Spa Access\"],\n  \"isActive\": true\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/plans",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "plans"]
+        }
+      }
+    },
+    {
+      "name": "Update Plan",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"price1Month\": 3500,\n  \"isActive\": true\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/plans/:id",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "plans", ":id"],
+          "variable": [{ "key": "id", "value": "1" }]
         }
       }
     }

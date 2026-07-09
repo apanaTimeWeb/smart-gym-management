@@ -1,13 +1,19 @@
 {
   "info": {
     "name": "GymSmart Settings Module",
+    "description": "Gym profile settings management — read and update",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000", "type": "string" },
+    { "key": "accessToken", "value": "", "type": "string" }
+  ],
   "item": [
     {
       "name": "Get Settings",
       "request": {
         "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
           "raw": "{{baseUrl}}/api/settings",
           "host": ["{{baseUrl}}"],
@@ -18,16 +24,19 @@
     {
       "name": "Update Settings",
       "request": {
-        "method": "POST",
+        "method": "PATCH",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"gymName\": \"GymSmart Pro Fitness\",\n  \"ownerName\": \"Satya Swarup\",\n  \"phone\": \"+91 98765 43210\",\n  \"email\": \"admin@gymsmart.com\",\n  \"city\": \"Mumbai\",\n  \"address\": \"123 Fitness Street, Andheri West\",\n  \"gstNumber\": \"27AABCU9603R1ZX\",\n  \"currency\": \"INR\",\n  \"timezone\": \"Asia/Kolkata\"\n}"
+        },
         "url": {
           "raw": "{{baseUrl}}/api/settings",
           "host": ["{{baseUrl}}"],
           "path": ["api", "settings"]
-        },
-        "body": {
-          "mode": "raw",
-          "raw": "{\"gymName\":\"GymSmart Super Fitness\",\"ownerName\":\"Admin\"}",
-          "options": { "raw": { "language": "json" } }
         }
       }
     }

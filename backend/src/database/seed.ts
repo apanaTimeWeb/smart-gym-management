@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import { DataSource } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Logger } from '@nestjs/common';
 
 // Entities
 import { User } from '../modules/auth/entities/user.entity';
@@ -19,20 +20,22 @@ import { Attendance } from '../modules/attendance/entities/attendance.entity';
 import { Order } from '../modules/store/entities/order.entity';
 import { OrderItem } from '../modules/store/entities/order-item.entity';
 
+const logger = new Logger('DatabaseSeed');
+
 const AppDataSource = new DataSource({
   type: 'postgres',
   url: process.env.DATABASE_URL,
   synchronize: true, // Auto-create tables for the seed
   entities: [
-    User, Plan, Staff, Member, Payment, Product, 
-    Workout, DietPlan, Inquiry, Settings, 
+    User, Plan, Staff, Member, Payment, Product,
+    Workout, DietPlan, Inquiry, Settings,
     Payroll, Attendance, Order, OrderItem
   ],
 });
 
 async function main() {
   await AppDataSource.initialize();
-  console.log('🌱 Seeding GymSmart database with TypeORM...\n');
+  logger.log('🌱 Seeding GymSmart database with TypeORM...');
 
   const userRepo = AppDataSource.getRepository(User);
   const planRepo = AppDataSource.getRepository(Plan);
@@ -60,7 +63,7 @@ async function main() {
     });
     await userRepo.save(admin);
   }
-  console.log('✅ SuperAdmin created');
+  logger.log('✅ SuperAdmin created');
 
   // 2. Plans
   const plans = [
@@ -69,12 +72,12 @@ async function main() {
     { name: 'Premium', tier: 'PREMIUM' as any, price1Month: 2500, price3Month: 6500, price6Month: 12000, price12Month: 22000, features: ['24/7 Access', 'PT'] },
   ];
   for (const p of plans) {
-    let plan = await planRepo.findOne({ where: { name: p.name } });
+    const plan = await planRepo.findOne({ where: { name: p.name } });
     if (!plan) {
       await planRepo.save(planRepo.create(p));
     }
   }
-  console.log('✅ Plans created');
+  logger.log('✅ Plans created');
 
   // 3. Staff
   const staffData = [
@@ -82,12 +85,12 @@ async function main() {
     { email: 'reception@gymsmart.com', name: 'Priya Desai', phone: '+91 92345 67890', role: 'Receptionist', salary: 22000, branch: 'Main Branch', gender: Gender.FEMALE, joinDate: new Date('2025-03-01') },
   ];
   for (const s of staffData) {
-    let staff = await staffRepo.findOne({ where: { email: s.email } });
+    const staff = await staffRepo.findOne({ where: { email: s.email } });
     if (!staff) {
       await staffRepo.save(staffRepo.create(s));
     }
   }
-  console.log('✅ Staff created');
+  logger.log('✅ Staff created');
 
   // 4. Members & Payments
   const membersData = [
@@ -109,39 +112,39 @@ async function main() {
       }
     }
   }
-  console.log('✅ Members & Payments created');
+  logger.log('✅ Members & Payments created');
 
   // 5. Products
   const products = [
     { name: 'Whey Protein', category: 'Supplements', price: 2500, stock: 50 },
   ];
   for (const p of products) {
-    let product = await productRepo.findOne({ where: { name: p.name } });
+    const product = await productRepo.findOne({ where: { name: p.name } });
     if (!product) await productRepo.save(productRepo.create(p));
   }
-  console.log('✅ Products created');
+  logger.log('✅ Products created');
 
   // 6. Inquiries
   const inquiries = [
     { name: 'Ravi Tiwari', phone: '+91 99887 76655', email: 'ravi@gmail.com', interest: 'Premium', status: 'NEW' as any, source: 'Walk-in' },
   ];
   for (const i of inquiries) {
-    let inquiry = await inquiryRepo.findOne({ where: { phone: i.phone } });
+    const inquiry = await inquiryRepo.findOne({ where: { phone: i.phone } });
     if (!inquiry) await inquiryRepo.save(inquiryRepo.create(i as any));
   }
-  console.log('✅ Inquiries created');
+  logger.log('✅ Inquiries created');
 
   // 7. Settings
-  let settings = await settingsRepo.findOne({ where: {} });
+  const settings = await settingsRepo.findOne({ where: {} });
   if (!settings) {
     await settingsRepo.save(settingsRepo.create({
       gymName: 'GymSmart Fitness', ownerName: 'Admin', phone: '123', email: 'admin@a.com', city: 'Mumbai', gstNumber: '123'
     }));
   }
-  console.log('✅ Settings created');
+  logger.log('✅ Settings created');
 
-  console.log('\n🎉 Seeding complete!');
+  logger.log('🎉 Seeding complete!');
   await AppDataSource.destroy();
 }
 
-main().catch(e => { console.error('❌ Seed failed:', e); process.exit(1); });
+main().catch(e => { logger.error('❌ Seed failed:', e); process.exit(1); });

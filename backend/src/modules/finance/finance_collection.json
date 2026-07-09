@@ -1,15 +1,66 @@
 {
   "info": {
     "name": "GymSmart Finance Module",
+    "description": "Payment processing, finance summary, and revenue tracking",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000", "type": "string" },
+    { "key": "accessToken", "value": "", "type": "string" }
+  ],
   "item": [
     {
-      "name": "Get Payments",
+      "name": "Get All Payments",
       "request": {
         "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
-          "raw": "{{baseUrl}}/api/finance/payments?limit=10&page=1",
+          "raw": "{{baseUrl}}/api/finance/payments?page=1&limit=20",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "finance", "payments"],
+          "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "20" }]
+        }
+      }
+    },
+    {
+      "name": "Get Finance Summary",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/finance/summary",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "finance", "summary"]
+        }
+      }
+    },
+    {
+      "name": "Get Payments by Member",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/finance/payments/member/:memberId",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "finance", "payments", "member", ":memberId"],
+          "variable": [{ "key": "memberId", "value": "member-uuid-here" }]
+        }
+      }
+    },
+    {
+      "name": "Create Payment",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"memberId\": \"member-uuid-here\",\n  \"amount\": 2500,\n  \"method\": \"UPI\",\n  \"notes\": \"Monthly membership renewal\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/finance/payments",
           "host": ["{{baseUrl}}"],
           "path": ["api", "finance", "payments"]
         }

@@ -1,70 +1,107 @@
 {
   "info": {
     "name": "GymSmart Store Module",
+    "description": "Product management, POS order creation, and store summary",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000", "type": "string" },
+    { "key": "accessToken", "value": "", "type": "string" }
+  ],
   "item": [
     {
-      "name": "Products",
-      "item": [
-        {
-          "name": "Get Products",
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "{{baseUrl}}/api/store/products?limit=10&page=1",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "store", "products"]
-            }
-          }
-        },
-        {
-          "name": "Create Product",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{baseUrl}}/api/store/products",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "store", "products"]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\"name\":\"Whey Protein\",\"sku\":\"WP-1KG\",\"price\":59.99,\"stock\":100}",
-              "options": { "raw": { "language": "json" } }
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "Orders",
-      "item": [
-        {
-          "name": "Create Order",
-          "request": {
-            "method": "POST",
-            "url": {
-              "raw": "{{baseUrl}}/api/store/orders",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "store", "orders"]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\"method\":\"Card\",\"items\":[{\"productId\":1,\"qty\":2}]}",
-              "options": { "raw": { "language": "json" } }
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "Get Summary",
+      "name": "Get All Products",
       "request": {
         "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/store/products?page=1&limit=20",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "store", "products"],
+          "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "20" }]
+        }
+      }
+    },
+    {
+      "name": "Get All Orders",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/store/orders?page=1&limit=20",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "store", "orders"],
+          "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "20" }]
+        }
+      }
+    },
+    {
+      "name": "Get Store Summary",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
           "raw": "{{baseUrl}}/api/store/summary",
           "host": ["{{baseUrl}}"],
           "path": ["api", "store", "summary"]
+        }
+      }
+    },
+    {
+      "name": "Create Product",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Whey Protein 1kg\",\n  \"category\": \"Supplements\",\n  \"price\": 2500,\n  \"stock\": 50,\n  \"description\": \"Premium whey protein isolate\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/store/products",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "store", "products"]
+        }
+      }
+    },
+    {
+      "name": "Update Product",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"price\": 2750,\n  \"stock\": 80\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/store/products/:id",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "store", "products", ":id"],
+          "variable": [{ "key": "id", "value": "1" }]
+        }
+      }
+    },
+    {
+      "name": "Create Order (POS)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"items\": [\n    { \"productId\": 1, \"qty\": 2 },\n    { \"productId\": 3, \"qty\": 1 }\n  ],\n  \"method\": \"UPI\",\n  \"notes\": \"Walk-in customer purchase\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/store/orders",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "store", "orders"]
         }
       }
     }

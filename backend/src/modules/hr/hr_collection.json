@@ -1,17 +1,139 @@
 {
   "info": {
     "name": "GymSmart HR Module",
+    "description": "Staff management, payroll processing, and HR stats",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000", "type": "string" },
+    { "key": "accessToken", "value": "", "type": "string" }
+  ],
   "item": [
     {
-      "name": "Get Staff",
+      "name": "Get All Staff",
       "request": {
         "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
-          "raw": "{{baseUrl}}/api/hr/staff?limit=10&page=1",
+          "raw": "{{baseUrl}}/api/hr/staff?page=1&limit=20",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "hr", "staff"],
+          "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "20" }]
+        }
+      }
+    },
+    {
+      "name": "Get Staff by ID",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/hr/staff/:id",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "hr", "staff", ":id"],
+          "variable": [{ "key": "id", "value": "staff-uuid-here" }]
+        }
+      }
+    },
+    {
+      "name": "Get HR Summary",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/hr/summary",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "hr", "summary"]
+        }
+      }
+    },
+    {
+      "name": "Create Staff",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Vikas Singh\",\n  \"email\": \"vikas@gymsmart.com\",\n  \"phone\": \"+91 93456 78901\",\n  \"role\": \"Personal Trainer\",\n  \"salary\": 30000,\n  \"branch\": \"Main Branch\",\n  \"gender\": \"MALE\",\n  \"joinDate\": \"2026-07-01\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/hr/staff",
           "host": ["{{baseUrl}}"],
           "path": ["api", "hr", "staff"]
+        }
+      }
+    },
+    {
+      "name": "Update Staff",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"salary\": 35000,\n  \"role\": \"Head Trainer\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/hr/staff/:id",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "hr", "staff", ":id"],
+          "variable": [{ "key": "id", "value": "staff-uuid-here" }]
+        }
+      }
+    },
+    {
+      "name": "Get All Payrolls",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/hr/payroll",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "hr", "payroll"]
+        }
+      }
+    },
+    {
+      "name": "Create Payroll",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"staffId\": \"staff-uuid-here\",\n  \"month\": \"July\",\n  \"year\": 2026,\n  \"amount\": 30000,\n  \"bonus\": 2000,\n  \"deductions\": 0,\n  \"status\": \"Pending\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/hr/payroll",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "hr", "payroll"]
+        }
+      }
+    },
+    {
+      "name": "Update Payroll Status",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"Paid\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/hr/payroll/:id/status",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "hr", "payroll", ":id", "status"],
+          "variable": [{ "key": "id", "value": "payroll-uuid-here" }]
         }
       }
     }

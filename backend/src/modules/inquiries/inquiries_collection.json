@@ -1,44 +1,79 @@
 {
   "info": {
     "name": "GymSmart Inquiries Module",
+    "description": "Lead management: create, list, update status, and stats",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000", "type": "string" },
+    { "key": "accessToken", "value": "", "type": "string" }
+  ],
   "item": [
     {
-      "name": "Get Inquiries",
+      "name": "Get All Inquiries",
       "request": {
         "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
-          "raw": "{{baseUrl}}/api/inquiries?limit=10&page=1",
+          "raw": "{{baseUrl}}/api/inquiries?page=1&limit=20&status=NEW",
           "host": ["{{baseUrl}}"],
-          "path": ["api", "inquiries"]
+          "path": ["api", "inquiries"],
+          "query": [
+            { "key": "page", "value": "1" },
+            { "key": "limit", "value": "20" },
+            { "key": "status", "value": "NEW" }
+          ]
         }
       }
     },
     {
-      "name": "Get Stats",
+      "name": "Get Inquiry Stats",
       "request": {
         "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
-          "raw": "{{baseUrl}}/api/inquiries/meta/stats",
+          "raw": "{{baseUrl}}/api/inquiries/stats",
           "host": ["{{baseUrl}}"],
-          "path": ["api", "inquiries", "meta", "stats"]
+          "path": ["api", "inquiries", "stats"]
         }
       }
     },
     {
-      "name": "Create Inquiry",
+      "name": "Create Inquiry (Lead)",
       "request": {
         "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Ravi Tiwari\",\n  \"phone\": \"+91 99887 76655\",\n  \"email\": \"ravi@gmail.com\",\n  \"interest\": \"Premium Plan\",\n  \"source\": \"Walk-in\",\n  \"notes\": \"Interested in PT sessions\"\n}"
+        },
         "url": {
           "raw": "{{baseUrl}}/api/inquiries",
           "host": ["{{baseUrl}}"],
           "path": ["api", "inquiries"]
-        },
+        }
+      }
+    },
+    {
+      "name": "Update Inquiry Status",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
         "body": {
           "mode": "raw",
-          "raw": "{\"name\":\"Alice\",\"phone\":\"1234567890\",\"source\":\"Instagram\"}",
-          "options": { "raw": { "language": "json" } }
+          "raw": "{\n  \"status\": \"FOLLOW_UP\",\n  \"notes\": \"Called, will visit tomorrow\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/inquiries/:id",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "inquiries", ":id"],
+          "variable": [{ "key": "id", "value": "1" }]
         }
       }
     }
