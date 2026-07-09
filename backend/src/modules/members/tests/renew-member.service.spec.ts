@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RenewMemberService } from '@/modules/members/services/renew-member.service';
-import { MembersRepository } from '@/modules/members/services/members.repository';
+import { MembersRepository } from '@/modules/members/members.repository';
 import { MemberNotFoundException } from '@/modules/members/members.exceptions';
 
 describe('RenewMemberService', () => {

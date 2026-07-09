@@ -5,7 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { User } from '@/modules/auth/entities/user.entity';
-import { AuthRepository } from '@/modules/auth/services/auth.repository';
+import { AuthRepository } from '@/modules/auth/auth.repository';
 import { AuthLoginController } from '@/modules/auth/controllers/auth-login.controller';
 import { AuthMeController } from '@/modules/auth/controllers/auth-me.controller';
 import { AuthLoginService } from '@/modules/auth/services/auth-login.service';

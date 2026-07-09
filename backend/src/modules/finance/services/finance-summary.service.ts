@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { FinanceRepository } from '@/modules/finance/services/finance.repository';
+import { FinanceRepository } from '@/modules/finance/finance.repository';
 import { FINANCE_MESSAGES } from '@/modules/finance/finance.constants';
 import type { FinanceResponse, FinanceSummary } from '@/modules/finance/finance.interfaces';
 

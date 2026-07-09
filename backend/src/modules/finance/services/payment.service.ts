@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { FinanceRepository } from '@/modules/finance/services/finance.repository';
+import { FinanceRepository } from '@/modules/finance/finance.repository';
 import { CreatePaymentDto } from '@/modules/finance/dto/create-payment.dto';
 import { FindPaymentDto } from '@/modules/finance/dto/find-payment.dto';
 import { MemberNotFoundForPaymentException, PaymentProcessingException } from '@/modules/finance/finance.exceptions';

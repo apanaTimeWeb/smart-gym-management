@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PayrollService } from '@/modules/hr/services/payroll.service';
-import { HrRepository } from '@/modules/hr/services/hr.repository';
+import { HrRepository } from '@/modules/hr/hr.repository';
 import { StaffNotFoundException, PayrollNotFoundException } from '@/modules/hr/hr.exceptions';
 
 describe('PayrollService', () => {

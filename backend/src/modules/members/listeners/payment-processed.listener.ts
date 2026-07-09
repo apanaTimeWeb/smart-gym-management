@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
-import { MembersRepository } from '../services/members.repository';
+import { MembersRepository } from '../members.repository';
 
 @Injectable()
 export class PaymentProcessedListener {

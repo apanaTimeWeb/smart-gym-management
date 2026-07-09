@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { MembersRepository } from '@/modules/members/services/members.repository';
+import { MembersRepository } from '@/modules/members/members.repository';
 import { MEMBER_MESSAGES } from '@/modules/members/members.constants';
 import type { MemberResponse } from '@/modules/members/members.interfaces';
 

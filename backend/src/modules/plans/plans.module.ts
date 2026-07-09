@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { Plan } from '@/modules/plans/entities/plan.entity';
-import { PlansRepository } from '@/modules/plans/services/plans.repository';
+import { PlansRepository } from '@/modules/plans/plans.repository';
 
 import { CreatePlanService } from '@/modules/plans/services/create-plan.service';
 import { FindPlanService } from '@/modules/plans/services/find-plan.service';

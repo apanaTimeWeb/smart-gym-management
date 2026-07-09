@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { AuthRepository } from '@/modules/auth/services/auth.repository';
+import { AuthRepository } from '@/modules/auth/auth.repository';
 import { LoginDto } from '@/modules/auth/dto/login.dto';
 import { InvalidCredentialsException, AccountDeactivatedException } from '@/modules/auth/auth.exceptions';
 import { AUTH_MESSAGES } from '@/modules/auth/auth.constants';

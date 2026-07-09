@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { AttendanceRepository } from '@/modules/attendance/services/attendance.repository';
+import { AttendanceRepository } from '@/modules/attendance/attendance.repository';
 import { ATTENDANCE_MESSAGES } from '@/modules/attendance/attendance.constants';
 import type { AttendanceResponse } from '@/modules/attendance/attendance.interfaces';
 

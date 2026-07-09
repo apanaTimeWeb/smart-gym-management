@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthMeService } from '@/modules/auth/services/auth-me.service';
-import { AuthRepository } from '@/modules/auth/services/auth.repository';
+import { AuthRepository } from '@/modules/auth/auth.repository';
 import { UserNotFoundException } from '@/modules/auth/auth.exceptions';
 
 describe('AuthMeService', () => {

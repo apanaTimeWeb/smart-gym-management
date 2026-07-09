@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PaymentService } from '@/modules/finance/services/payment.service';
-import { FinanceRepository } from '@/modules/finance/services/finance.repository';
+import { FinanceRepository } from '@/modules/finance/finance.repository';
 import { MemberNotFoundForPaymentException } from '@/modules/finance/finance.exceptions';
 
 describe('PaymentService', () => {

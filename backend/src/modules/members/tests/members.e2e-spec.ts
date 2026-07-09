@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from '@/app.module';
-import { MembersRepository } from '@/modules/members/services/members.repository';
+import { MembersRepository } from '@/modules/members/members.repository';
 
 describe('MembersController (e2e)', () => {
   let app: INestApplication;

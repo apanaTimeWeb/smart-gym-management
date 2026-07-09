@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { FindPlanService } from '@/modules/plans/services/find-plan.service';
-import { PlansRepository } from '@/modules/plans/services/plans.repository';
+import { PlansRepository } from '@/modules/plans/plans.repository';
 import { PlanNotFoundException } from '@/modules/plans/plans.exceptions';
 
 describe('FindPlanService', () => {

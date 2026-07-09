@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { AttendanceRepository } from '@/modules/attendance/services/attendance.repository';
+import { AttendanceRepository } from '@/modules/attendance/attendance.repository';
 import { MarkAttendanceDto } from '@/modules/attendance/dto/mark-attendance.dto';
 import { UserNotLinkedException } from '@/modules/attendance/attendance.exceptions';
 import { ATTENDANCE_MESSAGES } from '@/modules/attendance/attendance.constants';

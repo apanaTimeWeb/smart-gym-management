@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { HrRepository } from '@/modules/hr/services/hr.repository';
+import { HrRepository } from '@/modules/hr/hr.repository';
 import { HR_MESSAGES } from '@/modules/hr/hr.constants';
 import type { HrResponse } from '@/modules/hr/hr.interfaces';
 

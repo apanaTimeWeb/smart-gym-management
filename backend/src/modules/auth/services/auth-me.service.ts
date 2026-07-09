@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { AuthRepository } from '@/modules/auth/services/auth.repository';
+import { AuthRepository } from '@/modules/auth/auth.repository';
 import { UserNotFoundException } from '@/modules/auth/auth.exceptions';
 import { AUTH_MESSAGES } from '@/modules/auth/auth.constants';
 import type { AuthMeResponse } from '@/modules/auth/auth.interfaces';

@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { Attendance } from '@/modules/attendance/entities/attendance.entity';
-import { AttendanceRepository } from '@/modules/attendance/services/attendance.repository';
+import { AttendanceRepository } from '@/modules/attendance/attendance.repository';
 
 import { MarkAttendanceService } from '@/modules/attendance/services/mark-attendance.service';
 import { FindAttendanceService } from '@/modules/attendance/services/find-attendance.service';

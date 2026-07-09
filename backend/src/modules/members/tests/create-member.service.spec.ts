@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CreateMemberService } from '@/modules/members/services/create-member.service';
-import { MembersRepository } from '@/modules/members/services/members.repository';
+import { MembersRepository } from '@/modules/members/members.repository';
 import { DuplicateEmailException } from '@/modules/members/members.exceptions';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 

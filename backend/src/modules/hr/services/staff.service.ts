@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { HrRepository } from '@/modules/hr/services/hr.repository';
+import { HrRepository } from '@/modules/hr/hr.repository';
 import { CreateStaffDto } from '@/modules/hr/dto/create-staff.dto';
 import { UpdateStaffDto } from '@/modules/hr/dto/update-staff.dto';
 import { FindStaffDto } from '@/modules/hr/dto/find-staff.dto';

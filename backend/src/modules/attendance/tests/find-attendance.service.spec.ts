@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { FindAttendanceService } from '@/modules/attendance/services/find-attendance.service';
-import { AttendanceRepository } from '@/modules/attendance/services/attendance.repository';
+import { AttendanceRepository } from '@/modules/attendance/attendance.repository';
 
 describe('FindAttendanceService', () => {
   let service: FindAttendanceService;

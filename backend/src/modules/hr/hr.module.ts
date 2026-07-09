@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { Staff } from '@/modules/hr/entities/staff.entity';
 import { Payroll } from '@/modules/hr/entities/payroll.entity';
-import { HrRepository } from '@/modules/hr/services/hr.repository';
+import { HrRepository } from '@/modules/hr/hr.repository';
 
 import { StaffService } from '@/modules/hr/services/staff.service';
 import { PayrollService } from '@/modules/hr/services/payroll.service';

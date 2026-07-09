@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PlansRepository } from '@/modules/plans/services/plans.repository';
+import { PlansRepository } from '@/modules/plans/plans.repository';
 import { UpdatePlanDto } from '@/modules/plans/dto/update-plan.dto';
 import { PlanNotFoundException } from '@/modules/plans/plans.exceptions';
 import { PLAN_MESSAGES } from '@/modules/plans/plans.constants';

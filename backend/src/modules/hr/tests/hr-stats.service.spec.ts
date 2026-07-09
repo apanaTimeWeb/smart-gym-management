@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HrStatsService } from '@/modules/hr/services/hr-stats.service';
-import { HrRepository } from '@/modules/hr/services/hr.repository';
+import { HrRepository } from '@/modules/hr/hr.repository';
 
 describe('HrStatsService', () => {
   let service: HrStatsService;

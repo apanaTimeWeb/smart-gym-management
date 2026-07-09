@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PlansRepository } from '@/modules/plans/services/plans.repository';
+import { PlansRepository } from '@/modules/plans/plans.repository';
 import { PlanNotFoundException } from '@/modules/plans/plans.exceptions';
 import { PLAN_MESSAGES } from '@/modules/plans/plans.constants';
 import type { PlanResponse } from '@/modules/plans/plans.interfaces';

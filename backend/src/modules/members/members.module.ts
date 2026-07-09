@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { Member } from '@/modules/members/entities/member.entity';
-import { MembersRepository } from '@/modules/members/services/members.repository';
+import { MembersRepository } from '@/modules/members/members.repository';
 
 import { CreateMemberService } from '@/modules/members/services/create-member.service';
 import { FindMemberService } from '@/modules/members/services/find-member.service';

@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { HrRepository } from '@/modules/hr/services/hr.repository';
+import { HrRepository } from '@/modules/hr/hr.repository';
 import { CreatePayrollDto } from '@/modules/hr/dto/create-payroll.dto';
 import { FindPayrollDto } from '@/modules/hr/dto/find-payroll.dto';
 import { PayrollNotFoundException, StaffNotFoundException } from '@/modules/hr/hr.exceptions';

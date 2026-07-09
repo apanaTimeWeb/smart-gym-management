@@ -1,4 +1,4 @@
-import { AuthRepository } from "./services/auth.repository";
+import { AuthRepository } from "./auth.repository";
 import { ConfigService } from '@nestjs/config';
 import { JwtPayload } from "./auth.interfaces";
 declare const JwtStrategy_base: new (...args: any) => any;

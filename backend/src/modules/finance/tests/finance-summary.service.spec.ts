@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { FinanceSummaryService } from '@/modules/finance/services/finance-summary.service';
-import { FinanceRepository } from '@/modules/finance/services/finance.repository';
+import { FinanceRepository } from '@/modules/finance/finance.repository';
 
 describe('FinanceSummaryService', () => {
   let service: FinanceSummaryService;

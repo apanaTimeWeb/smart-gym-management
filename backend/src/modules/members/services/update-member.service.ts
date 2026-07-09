@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { MembersRepository } from '@/modules/members/services/members.repository';
+import { MembersRepository } from '@/modules/members/members.repository';
 import { UpdateMemberDto } from '@/modules/members/dto/update-member.dto';
 import { MemberNotFoundException } from '@/modules/members/members.exceptions';
 import { MEMBER_MESSAGES } from '@/modules/members/members.constants';

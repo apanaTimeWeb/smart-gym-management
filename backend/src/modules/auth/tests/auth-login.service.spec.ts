@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthLoginService } from '@/modules/auth/services/auth-login.service';
-import { AuthRepository } from '@/modules/auth/services/auth.repository';
+import { AuthRepository } from '@/modules/auth/auth.repository';
 import { JwtService } from '@nestjs/jwt';
 import { InvalidCredentialsException } from '@/modules/auth/auth.exceptions';
 
