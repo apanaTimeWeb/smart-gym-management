@@ -10,11 +10,14 @@ exports.SettingsModule = void 0;
 const common_1 = require("@nestjs/common");
 const settings_controller_1 = require("./settings.controller");
 const settings_service_1 = require("./settings.service");
+const typeorm_1 = require("@nestjs/typeorm");
+const setting_entity_1 = require("./entities/setting.entity");
 let SettingsModule = class SettingsModule {
 };
 exports.SettingsModule = SettingsModule;
 exports.SettingsModule = SettingsModule = __decorate([
     (0, common_1.Module)({
+        imports: [typeorm_1.TypeOrmModule.forFeature([setting_entity_1.Settings])],
         controllers: [settings_controller_1.SettingsController],
         providers: [settings_service_1.SettingsService],
     })

@@ -10,7 +10,6 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const typeorm_1 = require("@nestjs/typeorm");
-const prisma_module_1 = require("./database/prisma.module");
 const auth_module_1 = require("./modules/auth/auth.module");
 const members_module_1 = require("./modules/members/members.module");
 const plans_module_1 = require("./modules/plans/plans.module");
@@ -32,7 +31,6 @@ exports.AppModule = AppModule = __decorate([
                 isGlobal: true,
                 envFilePath: '.env',
             }),
-            prisma_module_1.PrismaModule,
             typeorm_1.TypeOrmModule.forRootAsync({
                 imports: [config_1.ConfigModule],
                 inject: [config_1.ConfigService],

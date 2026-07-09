@@ -10,11 +10,14 @@ exports.InquiriesModule = void 0;
 const common_1 = require("@nestjs/common");
 const inquiries_controller_1 = require("./inquiries.controller");
 const inquiries_service_1 = require("./inquiries.service");
+const typeorm_1 = require("@nestjs/typeorm");
+const inquiry_entity_1 = require("./entities/inquiry.entity");
 let InquiriesModule = class InquiriesModule {
 };
 exports.InquiriesModule = InquiriesModule;
 exports.InquiriesModule = InquiriesModule = __decorate([
     (0, common_1.Module)({
+        imports: [typeorm_1.TypeOrmModule.forFeature([inquiry_entity_1.Inquiry])],
         controllers: [inquiries_controller_1.InquiriesController],
         providers: [inquiries_service_1.InquiriesService],
     })

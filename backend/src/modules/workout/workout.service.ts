@@ -1,41 +1,67 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '@/database/prisma.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Workout } from './entities/workout.entity';
+import { DietPlan } from './entities/diet-plan.entity';
 
 @Injectable()
 export class WorkoutService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    @InjectRepository(Workout)
+    private readonly workoutRepository: Repository<Workout>,
+    @InjectRepository(DietPlan)
+    private readonly dietPlanRepository: Repository<DietPlan>,
+  ) {}
 
   async findAllWorkouts(query: any) {
-    const data = await this.prisma.workout.findMany({ where: { isActive: true }, orderBy: { id: 'asc' } });
+    const data = await this.workoutRepository.find({
+      where: { isActive: true },
+      order: { id: 'ASC' },
+    });
     return { success: true, data };
   }
+
   async createWorkout(dto: any) {
-    const data = await this.prisma.workout.create({ data: dto });
+    const workout = this.workoutRepository.create(dto);
+    const data = await this.workoutRepository.save(workout);
     return { success: true, data };
   }
+
   async updateWorkout(id: number, dto: any) {
-    const data = await this.prisma.workout.update({ where: { id }, data: dto });
+    await this.workoutRepository.update(id, dto);
+    const data = await this.workoutRepository.findOne({ where: { id } });
     return { success: true, data };
   }
+
   async removeWorkout(id: number) {
-    const data = await this.prisma.workout.update({ where: { id }, data: { isActive: false } });
+    await this.workoutRepository.update(id, { isActive: false });
+    const data = await this.workoutRepository.findOne({ where: { id } });
     return { success: true, data };
   }
 
   async findAllDietPlans(query: any) {
-    const data = await this.prisma.dietPlan.findMany({ where: { isActive: true }, orderBy: { id: 'asc' } });
+    const data = await this.dietPlanRepository.find({
+      where: { isActive: true },
+      order: { id: 'ASC' },
+    });
     return { success: true, data };
   }
+
   async createDietPlan(dto: any) {
-    const data = await this.prisma.dietPlan.create({ data: dto });
+    const dietPlan = this.dietPlanRepository.create(dto);
+    const data = await this.dietPlanRepository.save(dietPlan);
     return { success: true, data };
   }
+
   async updateDietPlan(id: number, dto: any) {
-    const data = await this.prisma.dietPlan.update({ where: { id }, data: dto });
+    await this.dietPlanRepository.update(id, dto);
+    const data = await this.dietPlanRepository.findOne({ where: { id } });
     return { success: true, data };
   }
+
   async removeDietPlan(id: number) {
-    const data = await this.prisma.dietPlan.update({ where: { id }, data: { isActive: false } });
+    await this.dietPlanRepository.update(id, { isActive: false });
+    const data = await this.dietPlanRepository.findOne({ where: { id } });
     return { success: true, data };
   }
 }

@@ -1,97 +1,83 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '@/database/prisma.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, MoreThanOrEqual } from 'typeorm';
+
+import { Member } from '@/modules/members/entities/member.entity';
+import { Payment } from '@/modules/finance/entities/payment.entity';
+import { Staff } from '@/modules/hr/entities/staff.entity';
+import { Product } from '@/modules/store/entities/product.entity';
+import { Inquiry } from '@/modules/inquiries/entities/inquiry.entity';
 
 @Injectable()
 export class DashboardService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    @InjectRepository(Member) private readonly memberRepository: Repository<Member>,
+    @InjectRepository(Payment) private readonly paymentRepository: Repository<Payment>,
+    @InjectRepository(Staff) private readonly staffRepository: Repository<Staff>,
+    @InjectRepository(Product) private readonly productRepository: Repository<Product>,
+    @InjectRepository(Inquiry) private readonly inquiryRepository: Repository<Inquiry>,
+  ) {}
 
   async getStats() {
     const now = new Date();
     const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
-    // Six months ago logic
     const sixMonthsAgo = new Date();
     sixMonthsAgo.setMonth(now.getMonth() - 5);
     sixMonthsAgo.setDate(1);
     sixMonthsAgo.setHours(0, 0, 0, 0);
 
-    const totalMembers = await this.prisma.member.count();
-    const activeMembers = await this.prisma.member.count({
-      where: { status: 'ACTIVE' },
-    });
-    const pendingMembers = await this.prisma.member.count({
-      where: { status: 'PENDING' },
-    });
-    const expiredMembers = await this.prisma.member.count({
-      where: { status: 'EXPIRED' },
+    const totalMembers = await this.memberRepository.count();
+    const activeMembers = await this.memberRepository.count({ where: { status: 'ACTIVE' as any } });
+    const pendingMembers = await this.memberRepository.count({ where: { status: 'PENDING' as any } });
+    const expiredMembers = await this.memberRepository.count({ where: { status: 'EXPIRED' as any } });
+
+    const newMembersThisMonth = await this.memberRepository.count({
+      where: { joinDate: MoreThanOrEqual(firstDayOfMonth) },
     });
 
-    const newMembersThisMonth = await this.prisma.member.count({
-      where: { joinDate: { gte: firstDayOfMonth } },
+    const { totalRevenue } = await this.paymentRepository
+      .createQueryBuilder('payment')
+      .select('SUM(payment.amount)', 'totalRevenue')
+      .where('payment.status = :status', { status: 'PAID' })
+      .getRawOne();
+
+    const { monthlyRevenue } = await this.paymentRepository
+      .createQueryBuilder('payment')
+      .select('SUM(payment.amount)', 'monthlyRevenue')
+      .where('payment.status = :status', { status: 'PAID' })
+      .andWhere('payment.paidAt >= :firstDayOfMonth', { firstDayOfMonth })
+      .getRawOne();
+
+    const { pendingPayments } = await this.memberRepository
+      .createQueryBuilder('member')
+      .select('SUM(member.pendingAmount)', 'pendingPayments')
+      .getRawOne();
+
+    const totalStaff = await this.staffRepository.count();
+    const activeStaff = await this.staffRepository.count({ where: { isActive: true } });
+
+    const totalProducts = await this.productRepository.count();
+    const allProducts = await this.productRepository.find();
+    const lowStockCount = allProducts.filter(p => p.stock <= 10).length;
+
+    const totalInquiries = await this.inquiryRepository.count();
+    const newInquiries = await this.inquiryRepository.count({ where: { status: 'NEW' as any } });
+
+    const recentMembersForChart = await this.memberRepository.find({
+      where: { joinDate: MoreThanOrEqual(sixMonthsAgo) },
+      select: ['joinDate'],
     });
 
-    const totalRevenueResult = await this.prisma.payment.aggregate({
-      _sum: { amount: true },
-      where: { status: 'PAID' },
-    });
-    const totalRevenue = totalRevenueResult._sum.amount || 0;
-
-    const monthlyRevenueResult = await this.prisma.payment.aggregate({
-      _sum: { amount: true },
-      where: { status: 'PAID', paidAt: { gte: firstDayOfMonth } },
-    });
-    const monthlyRevenue = monthlyRevenueResult._sum.amount || 0;
-
-    const pendingPaymentsResult = await this.prisma.member.aggregate({
-      _sum: { pendingAmount: true },
-    });
-    const pendingPayments = pendingPaymentsResult._sum.pendingAmount || 0;
-
-    const totalStaff = await this.prisma.staff.count();
-    const activeStaff = await this.prisma.staff.count({
-      where: { isActive: true },
+    const recentPaymentsForChart = await this.paymentRepository.find({
+      where: { status: 'PAID' as any, paidAt: MoreThanOrEqual(sixMonthsAgo) },
+      select: ['paidAt', 'amount'],
     });
 
-    const totalProducts = await this.prisma.product.count();
-    const lowStockCount = await this.prisma.product.count({
-      where: { stock: { lte: 10 } },
-    });
-
-    const totalInquiries = await this.prisma.inquiry.count();
-    const newInquiries = await this.prisma.inquiry.count({
-      where: { status: 'NEW' },
-    });
-
-    // Dynamic Chart: Member Growth (Last 6 Months)
-    const recentMembersForChart = await this.prisma.member.findMany({
-      where: { joinDate: { gte: sixMonthsAgo } },
-      select: { joinDate: true },
-    });
-
-    // Dynamic Chart: Revenue (Last 6 Months)
-    const recentPaymentsForChart = await this.prisma.payment.findMany({
-      where: { status: 'PAID', paidAt: { gte: sixMonthsAgo } },
-      select: { paidAt: true, amount: true },
-    });
-
-    const monthNames = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const memberGrowthMap = new Map<string, number>();
     const revenueMap = new Map<string, number>();
 
-    // Initialize last 6 months
     for (let i = 5; i >= 0; i--) {
       const d = new Date();
       d.setMonth(now.getMonth() - i);
@@ -102,43 +88,33 @@ export class DashboardService {
 
     recentMembersForChart.forEach((m) => {
       const mName = monthNames[m.joinDate.getMonth()];
-      if (memberGrowthMap.has(mName))
-        memberGrowthMap.set(mName, memberGrowthMap.get(mName)! + 1);
+      if (memberGrowthMap.has(mName)) memberGrowthMap.set(mName, memberGrowthMap.get(mName)! + 1);
     });
 
     recentPaymentsForChart.forEach((p) => {
       if (p.paidAt) {
         const mName = monthNames[p.paidAt.getMonth()];
-        if (revenueMap.has(mName))
-          revenueMap.set(mName, revenueMap.get(mName)! + p.amount);
+        if (revenueMap.has(mName)) revenueMap.set(mName, revenueMap.get(mName)! + p.amount);
       }
     });
 
-    const memberGrowth = Array.from(memberGrowthMap.entries()).map(
-      ([month, count]) => ({ month, count }),
-    );
-    const revenueChart = Array.from(revenueMap.entries()).map(
-      ([month, revenue]) => ({ month, revenue }),
-    );
+    const memberGrowth = Array.from(memberGrowthMap.entries()).map(([month, count]) => ({ month, count }));
+    const revenueChart = Array.from(revenueMap.entries()).map(([month, revenue]) => ({ month, revenue }));
 
-    // Dynamic membersByPlan
-    const membersWithPlans = await this.prisma.member.findMany({
-      include: { plan: true },
-    });
+    const membersWithPlans = await this.memberRepository.find({ relations: ['plan'] });
     const planCounts = new Map<string, number>();
     membersWithPlans.forEach((m) => {
       const pName = m.plan?.name || 'Unknown';
       planCounts.set(pName, (planCounts.get(pName) || 0) + 1);
     });
-    const membersByPlan = Array.from(planCounts.entries()).map(
-      ([plan, count]) => ({ plan, count }),
-    );
+    const membersByPlan = Array.from(planCounts.entries()).map(([plan, count]) => ({ plan, count }));
 
-    const pendingPaymentsList = await this.prisma.member.findMany({
-      where: { pendingAmount: { gt: 0 } },
-      select: { id: true, name: true, pendingAmount: true, expiryDate: true },
-      take: 10,
-    });
+    const pendingPaymentsListResult = await this.memberRepository
+      .createQueryBuilder('member')
+      .where('member.pendingAmount > 0')
+      .select(['member.id', 'member.name', 'member.pendingAmount', 'member.expiryDate'])
+      .take(10)
+      .getMany();
 
     return {
       success: true,
@@ -146,9 +122,9 @@ export class DashboardService {
         totalMembers,
         activeMembers,
         newMembersThisMonth,
-        totalRevenue,
-        monthlyRevenue,
-        pendingPayments,
+        totalRevenue: parseFloat(totalRevenue) || 0,
+        monthlyRevenue: parseFloat(monthlyRevenue) || 0,
+        pendingPayments: parseFloat(pendingPayments) || 0,
         totalStaff,
         activeStaff,
         totalProducts,
@@ -159,9 +135,9 @@ export class DashboardService {
         revenueChart,
         membersByPlan,
         membersByStatus: { active: activeMembers, pending: pendingMembers, expired: expiredMembers },
-        recentMembers: await this.prisma.member.findMany({ take: 5, orderBy: { id: 'desc' }, include: { plan: true } }),
-        recentPayments: await this.prisma.payment.findMany({ take: 5, orderBy: { id: 'desc' }, include: { member: true } }),
-        pendingPaymentsList,
+        recentMembers: await this.memberRepository.find({ take: 5, order: { id: 'DESC' }, relations: ['plan'] }),
+        recentPayments: await this.paymentRepository.find({ take: 5, order: { id: 'DESC' }, relations: ['member'] }),
+        pendingPaymentsList: pendingPaymentsListResult,
       },
     };
   }

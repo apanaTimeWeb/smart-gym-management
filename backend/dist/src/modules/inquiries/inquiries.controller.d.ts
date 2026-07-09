@@ -5,37 +5,13 @@ export declare class InquiriesController {
     findAll(query: any): Promise<{
         success: boolean;
         data: {
-            inquiries: {
-                id: number;
-                name: string;
-                email: string | null;
-                phone: string;
-                createdAt: Date;
-                updatedAt: Date;
-                status: import("@prisma/client").$Enums.InquiryStatus;
-                notes: string | null;
-                interest: string;
-                source: string | null;
-                followUpDate: Date | null;
-            }[];
+            inquiries: import("./entities/inquiry.entity").Inquiry[];
             total: number;
         };
     }>;
     create(dto: any): Promise<{
         success: boolean;
-        data: {
-            id: number;
-            name: string;
-            email: string | null;
-            phone: string;
-            createdAt: Date;
-            updatedAt: Date;
-            status: import("@prisma/client").$Enums.InquiryStatus;
-            notes: string | null;
-            interest: string;
-            source: string | null;
-            followUpDate: Date | null;
-        };
+        data: import("./entities/inquiry.entity").Inquiry[];
     }>;
     getStats(): Promise<{
         success: boolean;
@@ -49,50 +25,14 @@ export declare class InquiriesController {
     }>;
     findOne(id: string): Promise<{
         success: boolean;
-        data: {
-            id: number;
-            name: string;
-            email: string | null;
-            phone: string;
-            createdAt: Date;
-            updatedAt: Date;
-            status: import("@prisma/client").$Enums.InquiryStatus;
-            notes: string | null;
-            interest: string;
-            source: string | null;
-            followUpDate: Date | null;
-        } | null;
+        data: import("./entities/inquiry.entity").Inquiry | null;
     }>;
     update(id: string, dto: any): Promise<{
         success: boolean;
-        data: {
-            id: number;
-            name: string;
-            email: string | null;
-            phone: string;
-            createdAt: Date;
-            updatedAt: Date;
-            status: import("@prisma/client").$Enums.InquiryStatus;
-            notes: string | null;
-            interest: string;
-            source: string | null;
-            followUpDate: Date | null;
-        };
+        data: import("./entities/inquiry.entity").Inquiry | null;
     }>;
     remove(id: string): Promise<{
         success: boolean;
-        data: {
-            id: number;
-            name: string;
-            email: string | null;
-            phone: string;
-            createdAt: Date;
-            updatedAt: Date;
-            status: import("@prisma/client").$Enums.InquiryStatus;
-            notes: string | null;
-            interest: string;
-            source: string | null;
-            followUpDate: Date | null;
-        };
+        data: import("./entities/inquiry.entity").Inquiry | null;
     }>;
 }

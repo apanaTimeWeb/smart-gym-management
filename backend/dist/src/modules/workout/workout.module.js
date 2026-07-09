@@ -10,11 +10,15 @@ exports.WorkoutModule = void 0;
 const common_1 = require("@nestjs/common");
 const workout_controller_1 = require("./workout.controller");
 const workout_service_1 = require("./workout.service");
+const typeorm_1 = require("@nestjs/typeorm");
+const workout_entity_1 = require("./entities/workout.entity");
+const diet_plan_entity_1 = require("./entities/diet-plan.entity");
 let WorkoutModule = class WorkoutModule {
 };
 exports.WorkoutModule = WorkoutModule;
 exports.WorkoutModule = WorkoutModule = __decorate([
     (0, common_1.Module)({
+        imports: [typeorm_1.TypeOrmModule.forFeature([workout_entity_1.Workout, diet_plan_entity_1.DietPlan])],
         controllers: [workout_controller_1.WorkoutController],
         providers: [workout_service_1.WorkoutService],
     })

@@ -10,11 +10,16 @@ exports.StoreModule = void 0;
 const common_1 = require("@nestjs/common");
 const store_controller_1 = require("./store.controller");
 const store_service_1 = require("./store.service");
+const typeorm_1 = require("@nestjs/typeorm");
+const product_entity_1 = require("./entities/product.entity");
+const order_entity_1 = require("./entities/order.entity");
+const order_item_entity_1 = require("./entities/order-item.entity");
 let StoreModule = class StoreModule {
 };
 exports.StoreModule = StoreModule;
 exports.StoreModule = StoreModule = __decorate([
     (0, common_1.Module)({
+        imports: [typeorm_1.TypeOrmModule.forFeature([product_entity_1.Product, order_entity_1.Order, order_item_entity_1.OrderItem])],
         controllers: [store_controller_1.StoreController],
         providers: [store_service_1.StoreService],
     })

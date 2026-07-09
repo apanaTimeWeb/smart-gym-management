@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PrismaModule } from '@/database/prisma.module';
 import { AuthModule } from '@/modules/auth/auth.module';
 import { MembersModule } from '@/modules/members/members.module';
 import { PlansModule } from '@/modules/plans/plans.module';
@@ -23,7 +22,6 @@ import { SettingsModule } from '@/modules/settings/settings.module';
     }),
 
     // ─── Database ─────────────────────────────────────────────────────────
-    PrismaModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

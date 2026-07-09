@@ -1,33 +1,17 @@
-import { PrismaService } from "../../database/prisma.service";
+import { Repository } from 'typeorm';
+import { Settings } from './entities/setting.entity';
 export declare class SettingsService {
-    private prisma;
-    constructor(prisma: PrismaService);
+    private readonly settingRepository;
+    constructor(settingRepository: Repository<Settings>);
     getSettings(): Promise<{
         success: boolean;
-        data: {
-            id: number;
-            email: string | null;
-            phone: string | null;
-            createdAt: Date;
-            updatedAt: Date;
-            gymName: string;
-            ownerName: string | null;
-            city: string | null;
-            gstNumber: string | null;
-        };
+        data: Settings;
     }>;
     updateSettings(dto: any): Promise<{
         success: boolean;
-        data: {
-            id: number;
-            email: string | null;
-            phone: string | null;
-            createdAt: Date;
-            updatedAt: Date;
-            gymName: string;
-            ownerName: string | null;
-            city: string | null;
-            gstNumber: string | null;
-        };
+        data: Settings | null;
+    } | {
+        success: boolean;
+        data: Settings[];
     }>;
 }

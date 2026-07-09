@@ -4,117 +4,30 @@ export declare class StoreController {
     constructor(storeService: StoreService);
     findAllProducts(query: any): Promise<{
         success: boolean;
-        data: {
-            id: number;
-            name: string;
-            isActive: boolean;
-            createdAt: Date;
-            updatedAt: Date;
-            category: string;
-            price: number;
-            stock: number;
-            description: string | null;
-            imageUrl: string | null;
-        }[];
+        data: import("./entities/product.entity").Product[];
     }>;
     createProduct(dto: any): Promise<{
         success: boolean;
-        data: {
-            id: number;
-            name: string;
-            isActive: boolean;
-            createdAt: Date;
-            updatedAt: Date;
-            category: string;
-            price: number;
-            stock: number;
-            description: string | null;
-            imageUrl: string | null;
-        };
+        data: import("./entities/product.entity").Product[];
     }>;
     updateProduct(id: string, dto: any): Promise<{
         success: boolean;
-        data: {
-            id: number;
-            name: string;
-            isActive: boolean;
-            createdAt: Date;
-            updatedAt: Date;
-            category: string;
-            price: number;
-            stock: number;
-            description: string | null;
-            imageUrl: string | null;
-        };
+        data: import("./entities/product.entity").Product | null;
     }>;
     removeProduct(id: string): Promise<{
         success: boolean;
-        data: {
-            id: number;
-            name: string;
-            isActive: boolean;
-            createdAt: Date;
-            updatedAt: Date;
-            category: string;
-            price: number;
-            stock: number;
-            description: string | null;
-            imageUrl: string | null;
-        };
+        data: import("./entities/product.entity").Product | null;
     }>;
     findAllOrders(query: any): Promise<{
         success: boolean;
         data: {
-            orders: ({
-                items: ({
-                    product: {
-                        id: number;
-                        name: string;
-                        isActive: boolean;
-                        createdAt: Date;
-                        updatedAt: Date;
-                        category: string;
-                        price: number;
-                        stock: number;
-                        description: string | null;
-                        imageUrl: string | null;
-                    };
-                } & {
-                    id: number;
-                    price: number;
-                    qty: number;
-                    productId: number;
-                    orderId: number;
-                })[];
-            } & {
-                id: number;
-                createdAt: Date;
-                status: string;
-                method: string;
-                notes: string | null;
-                total: number;
-            })[];
+            orders: import("./entities/order.entity").Order[];
             total: number;
         };
     }>;
     createOrder(dto: any): Promise<{
         success: boolean;
-        data: {
-            items: {
-                id: number;
-                price: number;
-                qty: number;
-                productId: number;
-                orderId: number;
-            }[];
-        } & {
-            id: number;
-            createdAt: Date;
-            status: string;
-            method: string;
-            notes: string | null;
-            total: number;
-        };
+        data: import("./entities/order.entity").Order;
     }>;
     getStoreSummary(): Promise<{
         success: boolean;
@@ -122,18 +35,7 @@ export declare class StoreController {
             totalProducts: number;
             totalOrders: number;
             totalRevenue: number;
-            lowStockProducts: {
-                id: number;
-                name: string;
-                isActive: boolean;
-                createdAt: Date;
-                updatedAt: Date;
-                category: string;
-                price: number;
-                stock: number;
-                description: string | null;
-                imageUrl: string | null;
-            }[];
+            lowStockProducts: import("./entities/product.entity").Product[];
         };
     }>;
 }

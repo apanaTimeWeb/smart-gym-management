@@ -1,25 +1,41 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '@/database/prisma.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Settings } from './entities/setting.entity';
 
 @Injectable()
 export class SettingsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    @InjectRepository(Settings)
+    private readonly settingRepository: Repository<Settings>,
+  ) {}
 
   async getSettings() {
-    let settings = await this.prisma.settings.findFirst();
+    let settings = await this.settingRepository.findOne({ where: {} });
     if (!settings) {
-      settings = await this.prisma.settings.create({
-        data: { gymName: 'GymSmart Fitness', ownerName: 'Admin', phone: '', email: '', city: '', gstNumber: '' },
+      settings = this.settingRepository.create({
+        gymName: 'GymSmart Fitness',
+        ownerName: 'Admin',
+        phone: '',
+        email: '',
+        city: '',
+        gstNumber: '',
       });
+      await this.settingRepository.save(settings);
     }
     return { success: true, data: settings };
   }
 
   async updateSettings(dto: any) {
-    const settings = await this.prisma.settings.findFirst();
-    const data = settings
-      ? await this.prisma.settings.update({ where: { id: settings.id }, data: dto })
-      : await this.prisma.settings.create({ data: dto });
-    return { success: true, data };
+    let settings = await this.settingRepository.findOne({ where: {} });
+    if (settings) {
+      await this.settingRepository.update(settings.id, dto);
+      const data = await this.settingRepository.findOne({ where: {} });
+      return { success: true, data };
+    } else {
+      const newSettings = this.settingRepository.create(dto);
+      const data = await this.settingRepository.save(newSettings);
+      return { success: true, data };
+    }
   }
 }

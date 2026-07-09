@@ -1,149 +1,40 @@
-import { PrismaService } from "../../database/prisma.service";
+import { Repository } from 'typeorm';
+import { Workout } from './entities/workout.entity';
+import { DietPlan } from './entities/diet-plan.entity';
 export declare class WorkoutService {
-    private prisma;
-    constructor(prisma: PrismaService);
+    private readonly workoutRepository;
+    private readonly dietPlanRepository;
+    constructor(workoutRepository: Repository<Workout>, dietPlanRepository: Repository<DietPlan>);
     findAllWorkouts(query: any): Promise<{
         success: boolean;
-        data: {
-            id: number;
-            name: string;
-            isActive: boolean;
-            createdAt: Date;
-            updatedAt: Date;
-            category: string;
-            description: string | null;
-            imageUrl: string | null;
-            duration: string | null;
-            sets: number | null;
-            muscleGroup: string[];
-            reps: string | null;
-            difficulty: string;
-            videoUrl: string | null;
-        }[];
+        data: Workout[];
     }>;
     createWorkout(dto: any): Promise<{
         success: boolean;
-        data: {
-            id: number;
-            name: string;
-            isActive: boolean;
-            createdAt: Date;
-            updatedAt: Date;
-            category: string;
-            description: string | null;
-            imageUrl: string | null;
-            duration: string | null;
-            sets: number | null;
-            muscleGroup: string[];
-            reps: string | null;
-            difficulty: string;
-            videoUrl: string | null;
-        };
+        data: Workout[];
     }>;
     updateWorkout(id: number, dto: any): Promise<{
         success: boolean;
-        data: {
-            id: number;
-            name: string;
-            isActive: boolean;
-            createdAt: Date;
-            updatedAt: Date;
-            category: string;
-            description: string | null;
-            imageUrl: string | null;
-            duration: string | null;
-            sets: number | null;
-            muscleGroup: string[];
-            reps: string | null;
-            difficulty: string;
-            videoUrl: string | null;
-        };
+        data: Workout | null;
     }>;
     removeWorkout(id: number): Promise<{
         success: boolean;
-        data: {
-            id: number;
-            name: string;
-            isActive: boolean;
-            createdAt: Date;
-            updatedAt: Date;
-            category: string;
-            description: string | null;
-            imageUrl: string | null;
-            duration: string | null;
-            sets: number | null;
-            muscleGroup: string[];
-            reps: string | null;
-            difficulty: string;
-            videoUrl: string | null;
-        };
+        data: Workout | null;
     }>;
     findAllDietPlans(query: any): Promise<{
         success: boolean;
-        data: {
-            id: number;
-            name: string;
-            isActive: boolean;
-            createdAt: Date;
-            updatedAt: Date;
-            description: string | null;
-            goal: string;
-            calories: number | null;
-            protein: number | null;
-            carbs: number | null;
-            fats: number | null;
-            meals: string[];
-        }[];
+        data: DietPlan[];
     }>;
     createDietPlan(dto: any): Promise<{
         success: boolean;
-        data: {
-            id: number;
-            name: string;
-            isActive: boolean;
-            createdAt: Date;
-            updatedAt: Date;
-            description: string | null;
-            goal: string;
-            calories: number | null;
-            protein: number | null;
-            carbs: number | null;
-            fats: number | null;
-            meals: string[];
-        };
+        data: DietPlan[];
     }>;
     updateDietPlan(id: number, dto: any): Promise<{
         success: boolean;
-        data: {
-            id: number;
-            name: string;
-            isActive: boolean;
-            createdAt: Date;
-            updatedAt: Date;
-            description: string | null;
-            goal: string;
-            calories: number | null;
-            protein: number | null;
-            carbs: number | null;
-            fats: number | null;
-            meals: string[];
-        };
+        data: DietPlan | null;
     }>;
     removeDietPlan(id: number): Promise<{
         success: boolean;
-        data: {
-            id: number;
-            name: string;
-            isActive: boolean;
-            createdAt: Date;
-            updatedAt: Date;
-            description: string | null;
-            goal: string;
-            calories: number | null;
-            protein: number | null;
-            carbs: number | null;
-            fats: number | null;
-            meals: string[];
-        };
+        data: DietPlan | null;
     }>;
 }

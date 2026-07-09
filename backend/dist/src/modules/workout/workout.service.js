@@ -8,51 +8,74 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.WorkoutService = void 0;
 const common_1 = require("@nestjs/common");
-const prisma_service_1 = require("../../database/prisma.service");
+const typeorm_1 = require("@nestjs/typeorm");
+const typeorm_2 = require("typeorm");
+const workout_entity_1 = require("./entities/workout.entity");
+const diet_plan_entity_1 = require("./entities/diet-plan.entity");
 let WorkoutService = class WorkoutService {
-    prisma;
-    constructor(prisma) {
-        this.prisma = prisma;
+    workoutRepository;
+    dietPlanRepository;
+    constructor(workoutRepository, dietPlanRepository) {
+        this.workoutRepository = workoutRepository;
+        this.dietPlanRepository = dietPlanRepository;
     }
     async findAllWorkouts(query) {
-        const data = await this.prisma.workout.findMany({ where: { isActive: true }, orderBy: { id: 'asc' } });
+        const data = await this.workoutRepository.find({
+            where: { isActive: true },
+            order: { id: 'ASC' },
+        });
         return { success: true, data };
     }
     async createWorkout(dto) {
-        const data = await this.prisma.workout.create({ data: dto });
+        const workout = this.workoutRepository.create(dto);
+        const data = await this.workoutRepository.save(workout);
         return { success: true, data };
     }
     async updateWorkout(id, dto) {
-        const data = await this.prisma.workout.update({ where: { id }, data: dto });
+        await this.workoutRepository.update(id, dto);
+        const data = await this.workoutRepository.findOne({ where: { id } });
         return { success: true, data };
     }
     async removeWorkout(id) {
-        const data = await this.prisma.workout.update({ where: { id }, data: { isActive: false } });
+        await this.workoutRepository.update(id, { isActive: false });
+        const data = await this.workoutRepository.findOne({ where: { id } });
         return { success: true, data };
     }
     async findAllDietPlans(query) {
-        const data = await this.prisma.dietPlan.findMany({ where: { isActive: true }, orderBy: { id: 'asc' } });
+        const data = await this.dietPlanRepository.find({
+            where: { isActive: true },
+            order: { id: 'ASC' },
+        });
         return { success: true, data };
     }
     async createDietPlan(dto) {
-        const data = await this.prisma.dietPlan.create({ data: dto });
+        const dietPlan = this.dietPlanRepository.create(dto);
+        const data = await this.dietPlanRepository.save(dietPlan);
         return { success: true, data };
     }
     async updateDietPlan(id, dto) {
-        const data = await this.prisma.dietPlan.update({ where: { id }, data: dto });
+        await this.dietPlanRepository.update(id, dto);
+        const data = await this.dietPlanRepository.findOne({ where: { id } });
         return { success: true, data };
     }
     async removeDietPlan(id) {
-        const data = await this.prisma.dietPlan.update({ where: { id }, data: { isActive: false } });
+        await this.dietPlanRepository.update(id, { isActive: false });
+        const data = await this.dietPlanRepository.findOne({ where: { id } });
         return { success: true, data };
     }
 };
 exports.WorkoutService = WorkoutService;
 exports.WorkoutService = WorkoutService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    __param(0, (0, typeorm_1.InjectRepository)(workout_entity_1.Workout)),
+    __param(1, (0, typeorm_1.InjectRepository)(diet_plan_entity_1.DietPlan)),
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository])
 ], WorkoutService);
 //# sourceMappingURL=workout.service.js.map

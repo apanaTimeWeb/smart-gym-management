@@ -4,30 +4,13 @@ export declare class SettingsController {
     constructor(settingsService: SettingsService);
     getSettings(): Promise<{
         success: boolean;
-        data: {
-            id: number;
-            email: string | null;
-            phone: string | null;
-            createdAt: Date;
-            updatedAt: Date;
-            gymName: string;
-            ownerName: string | null;
-            city: string | null;
-            gstNumber: string | null;
-        };
+        data: import("./entities/setting.entity").Settings;
     }>;
     updateSettings(dto: any): Promise<{
         success: boolean;
-        data: {
-            id: number;
-            email: string | null;
-            phone: string | null;
-            createdAt: Date;
-            updatedAt: Date;
-            gymName: string;
-            ownerName: string | null;
-            city: string | null;
-            gstNumber: string | null;
-        };
+        data: import("./entities/setting.entity").Settings | null;
+    } | {
+        success: boolean;
+        data: import("./entities/setting.entity").Settings[];
     }>;
 }

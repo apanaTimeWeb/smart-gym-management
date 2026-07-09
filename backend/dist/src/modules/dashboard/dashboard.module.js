@@ -10,11 +10,18 @@ exports.DashboardModule = void 0;
 const common_1 = require("@nestjs/common");
 const dashboard_controller_1 = require("./dashboard.controller");
 const dashboard_service_1 = require("./dashboard.service");
+const typeorm_1 = require("@nestjs/typeorm");
+const member_entity_1 = require("../members/entities/member.entity");
+const payment_entity_1 = require("../finance/entities/payment.entity");
+const staff_entity_1 = require("../hr/entities/staff.entity");
+const product_entity_1 = require("../store/entities/product.entity");
+const inquiry_entity_1 = require("../inquiries/entities/inquiry.entity");
 let DashboardModule = class DashboardModule {
 };
 exports.DashboardModule = DashboardModule;
 exports.DashboardModule = DashboardModule = __decorate([
     (0, common_1.Module)({
+        imports: [typeorm_1.TypeOrmModule.forFeature([member_entity_1.Member, payment_entity_1.Payment, staff_entity_1.Staff, product_entity_1.Product, inquiry_entity_1.Inquiry])],
         controllers: [dashboard_controller_1.DashboardController],
         providers: [dashboard_service_1.DashboardService],
     })

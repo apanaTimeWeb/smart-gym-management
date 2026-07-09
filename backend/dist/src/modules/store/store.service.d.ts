@@ -1,120 +1,38 @@
-import { PrismaService } from "../../database/prisma.service";
+import { Repository } from 'typeorm';
+import { Product } from './entities/product.entity';
+import { Order } from './entities/order.entity';
+import { OrderItem } from './entities/order-item.entity';
 export declare class StoreService {
-    private prisma;
-    constructor(prisma: PrismaService);
+    private readonly productRepository;
+    private readonly orderRepository;
+    private readonly orderItemRepository;
+    constructor(productRepository: Repository<Product>, orderRepository: Repository<Order>, orderItemRepository: Repository<OrderItem>);
     findAllProducts(query: any): Promise<{
         success: boolean;
-        data: {
-            id: number;
-            name: string;
-            isActive: boolean;
-            createdAt: Date;
-            updatedAt: Date;
-            category: string;
-            price: number;
-            stock: number;
-            description: string | null;
-            imageUrl: string | null;
-        }[];
+        data: Product[];
     }>;
     createProduct(dto: any): Promise<{
         success: boolean;
-        data: {
-            id: number;
-            name: string;
-            isActive: boolean;
-            createdAt: Date;
-            updatedAt: Date;
-            category: string;
-            price: number;
-            stock: number;
-            description: string | null;
-            imageUrl: string | null;
-        };
+        data: Product[];
     }>;
     updateProduct(id: number, dto: any): Promise<{
         success: boolean;
-        data: {
-            id: number;
-            name: string;
-            isActive: boolean;
-            createdAt: Date;
-            updatedAt: Date;
-            category: string;
-            price: number;
-            stock: number;
-            description: string | null;
-            imageUrl: string | null;
-        };
+        data: Product | null;
     }>;
     removeProduct(id: number): Promise<{
         success: boolean;
-        data: {
-            id: number;
-            name: string;
-            isActive: boolean;
-            createdAt: Date;
-            updatedAt: Date;
-            category: string;
-            price: number;
-            stock: number;
-            description: string | null;
-            imageUrl: string | null;
-        };
+        data: Product | null;
     }>;
     findAllOrders(query: any): Promise<{
         success: boolean;
         data: {
-            orders: ({
-                items: ({
-                    product: {
-                        id: number;
-                        name: string;
-                        isActive: boolean;
-                        createdAt: Date;
-                        updatedAt: Date;
-                        category: string;
-                        price: number;
-                        stock: number;
-                        description: string | null;
-                        imageUrl: string | null;
-                    };
-                } & {
-                    id: number;
-                    price: number;
-                    qty: number;
-                    productId: number;
-                    orderId: number;
-                })[];
-            } & {
-                id: number;
-                createdAt: Date;
-                status: string;
-                method: string;
-                notes: string | null;
-                total: number;
-            })[];
+            orders: Order[];
             total: number;
         };
     }>;
     createOrder(dto: any): Promise<{
         success: boolean;
-        data: {
-            items: {
-                id: number;
-                price: number;
-                qty: number;
-                productId: number;
-                orderId: number;
-            }[];
-        } & {
-            id: number;
-            createdAt: Date;
-            status: string;
-            method: string;
-            notes: string | null;
-            total: number;
-        };
+        data: Order;
     }>;
     getStoreSummary(): Promise<{
         success: boolean;
@@ -122,18 +40,7 @@ export declare class StoreService {
             totalProducts: number;
             totalOrders: number;
             totalRevenue: number;
-            lowStockProducts: {
-                id: number;
-                name: string;
-                isActive: boolean;
-                createdAt: Date;
-                updatedAt: Date;
-                category: string;
-                price: number;
-                stock: number;
-                description: string | null;
-                imageUrl: string | null;
-            }[];
+            lowStockProducts: Product[];
         };
     }>;
 }

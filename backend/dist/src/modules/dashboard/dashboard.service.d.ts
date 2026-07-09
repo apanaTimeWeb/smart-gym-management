@@ -1,7 +1,16 @@
-import { PrismaService } from "../../database/prisma.service";
+import { Repository } from 'typeorm';
+import { Member } from "../members/entities/member.entity";
+import { Payment } from "../finance/entities/payment.entity";
+import { Staff } from "../hr/entities/staff.entity";
+import { Product } from "../store/entities/product.entity";
+import { Inquiry } from "../inquiries/entities/inquiry.entity";
 export declare class DashboardService {
-    private prisma;
-    constructor(prisma: PrismaService);
+    private readonly memberRepository;
+    private readonly paymentRepository;
+    private readonly staffRepository;
+    private readonly productRepository;
+    private readonly inquiryRepository;
+    constructor(memberRepository: Repository<Member>, paymentRepository: Repository<Payment>, staffRepository: Repository<Staff>, productRepository: Repository<Product>, inquiryRepository: Repository<Inquiry>);
     getStats(): Promise<{
         success: boolean;
         data: {
@@ -34,76 +43,9 @@ export declare class DashboardService {
                 pending: number;
                 expired: number;
             };
-            recentMembers: ({
-                plan: {
-                    id: number;
-                    name: string;
-                    isActive: boolean;
-                    createdAt: Date;
-                    updatedAt: Date;
-                    tier: import("@prisma/client").$Enums.PlanTier;
-                    price1Month: number;
-                    price3Month: number;
-                    price6Month: number;
-                    price12Month: number;
-                    features: string[];
-                };
-            } & {
-                id: number;
-                name: string;
-                email: string;
-                phone: string;
-                branch: string;
-                createdAt: Date;
-                updatedAt: Date;
-                gender: import("@prisma/client").$Enums.Gender;
-                address: string | null;
-                joinDate: Date;
-                planId: number;
-                billingCycle: import("@prisma/client").$Enums.BillingCycle;
-                status: import("@prisma/client").$Enums.MemberStatus;
-                expiryDate: Date;
-                paidAmount: number;
-                pendingAmount: number;
-                photo: string | null;
-            })[];
-            recentPayments: ({
-                member: {
-                    id: number;
-                    name: string;
-                    email: string;
-                    phone: string;
-                    branch: string;
-                    createdAt: Date;
-                    updatedAt: Date;
-                    gender: import("@prisma/client").$Enums.Gender;
-                    address: string | null;
-                    joinDate: Date;
-                    planId: number;
-                    billingCycle: import("@prisma/client").$Enums.BillingCycle;
-                    status: import("@prisma/client").$Enums.MemberStatus;
-                    expiryDate: Date;
-                    paidAmount: number;
-                    pendingAmount: number;
-                    photo: string | null;
-                };
-            } & {
-                id: number;
-                createdAt: Date;
-                status: import("@prisma/client").$Enums.PaymentStatus;
-                memberId: number;
-                amount: number;
-                method: string;
-                notes: string | null;
-                invoiceNo: string;
-                paidAt: Date;
-            })[];
-            pendingPaymentsList: {
-                id: number;
-                name: string;
-                expiryDate: Date;
-                pendingAmount: number;
-            }[];
+            recentMembers: Member[];
+            recentPayments: Payment[];
+            pendingPaymentsList: Member[];
         };
     }>;
 }
