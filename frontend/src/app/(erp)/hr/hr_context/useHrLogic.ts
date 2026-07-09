@@ -76,11 +76,11 @@ export function useHrLogic(): HrContextType {
  try {
  const payload = { ...form, salary: Number(form.salary), joinDate: new Date(form.joinDate).toISOString() };
  if (editId) { 
- await hrApi.updateStaff(editId, payload); 
- showToast('Staff updated!', 'success'); 
+ const res = await hrApi.updateStaff(editId, payload); 
+ showToast((res as any).message, 'success'); 
  } else { 
- await hrApi.createStaff(payload); 
- showToast('Staff added!', 'success'); 
+ const res = await hrApi.createStaff(payload); 
+ showToast((res as any).message, 'success'); 
  }
  setShowModal(false);
  await loadAll();
@@ -95,8 +95,8 @@ export function useHrLogic(): HrContextType {
   const isConfirmed = await confirm({ title: 'Remove Staff', message: 'Remove this staff member?', confirmText: 'Remove', type: 'danger' });
   if (!isConfirmed) return;
   try { 
- await hrApi.removeStaff(id); 
- showToast('Staff removed', 'success'); 
+ const res = await hrApi.removeStaff(id); 
+ showToast((res as any).message, 'success'); 
  await loadAll(); 
  } catch (err) { 
  showToast((err as Error).message, 'error'); 
@@ -105,8 +105,8 @@ export function useHrLogic(): HrContextType {
 
  const markPayrollPaid = useCallback(async (id: number) => {
  try { 
- await hrApi.updatePayrollStatus(id, 'Paid'); 
- showToast('Payroll marked as paid!', 'success'); 
+ const res = await hrApi.updatePayrollStatus(id, 'Paid'); 
+ showToast((res as any).message, 'success'); 
  await loadAll(); 
  } catch (err) { 
  showToast((err as Error).message, 'error'); 
