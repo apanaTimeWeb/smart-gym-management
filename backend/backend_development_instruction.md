@@ -150,6 +150,15 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **The Rule:** Never use the `require()` keyword. It is considered dead/legacy in this architecture. You must exclusively use ES module `import` and `export` statements.
 * **Why:** ES Modules are the modern standard, they provide strict typing compatibility out of the box in TypeScript, support better static analysis/tree-shaking, and ensure consistent import syntax across the entire codebase.
 
+## 19. Module-Level Feature Documentation
+*(Crucial for AI Context & Onboarding)*
+* **The Rule:** Every single module must contain a `[module_name]_backend_feature.md` file at its root (e.g., `modules/auth/auth_backend_feature.md`). 
+* **What it must contain:**
+  1. A high-level explanation of what the module does.
+  2. A breakdown of the folder structure and what exactly each file is responsible for.
+  3. Explanations of core business logic or complex workflows within the module.
+* **Why:** Before an AI or a new human developer makes any changes to a module, they will read this file first. It acts as the ultimate localized context guide, instantly explaining the routing, file responsibilities, and logic, drastically reducing the risk of hallucination or breaking existing architecture.
+
 ## Summary Checklist for Developers Providing Context to AI:
 1. Identify the exact layer where the bug/feature resides (Validation? DB Query? Business Logic?).
 2. Select the **one or two** micro-files associated with that layer.
