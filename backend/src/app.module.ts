@@ -1,4 +1,5 @@
 import { Module, MiddlewareConsumer, NestModule } from '@nestjs/common';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ThrottlerModule } from '@nestjs/throttler';
@@ -25,6 +26,10 @@ import { DashboardModule } from '@/modules/dashboard/dashboard.module';
 import { InquiriesModule } from '@/modules/inquiries/inquiries.module';
 import { SettingsModule } from '@/modules/settings/settings.module';
 import { MediaModule } from '@/core/media/media.module';
+import { AuditModule } from '@/modules/audit/audit.module';
+import { AuditInterceptor } from '@/core/interceptors/audit.interceptor';
+import { IdempotencyInterceptor } from '@/core/interceptors/idempotency.interceptor';
+import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 
 @Module({
   imports: [
@@ -116,6 +121,23 @@ import { MediaModule } from '@/core/media/media.module';
     DashboardModule,
     InquiriesModule,
     SettingsModule,
+    AuditModule,
+    PrometheusModule.register({
+      path: '/metrics',
+      defaultMetrics: {
+        enabled: true,
+      },
+    }),
+  ],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: AuditInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: IdempotencyInterceptor,
+    },
   ],
 })
 export class AppModule implements NestModule {

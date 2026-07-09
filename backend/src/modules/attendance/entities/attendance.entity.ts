@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { DeleteDateColumn, Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { AttendanceType } from '@/modules/attendance/utils/attendance.enums';
 import { Member } from '@/modules/members/entities/member.entity';
 import { Staff } from '@/modules/hr/entities/staff.entity';
@@ -36,4 +36,7 @@ export class Attendance {
 
   @CreateDateColumn()
   createdAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }

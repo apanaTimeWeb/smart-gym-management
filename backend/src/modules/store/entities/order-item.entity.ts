@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { DeleteDateColumn, Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { Order } from '@/modules/store/entities/order.entity';
 import { Product } from '@/modules/store/entities/product.entity';
 
@@ -26,4 +26,7 @@ export class OrderItem {
 
   @Column('float')
   price: number;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }

@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
+import { DeleteDateColumn, Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { Gender, BillingCycle, MemberStatus } from '@/modules/members/utils/members.enums';
 import { Plan } from '@/modules/plans/entities/plan.entity';
 import { Payment } from '@/modules/finance/entities/payment.entity';
@@ -66,4 +66,7 @@ export class Member {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }

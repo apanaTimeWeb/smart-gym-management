@@ -11,6 +11,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
+const core_1 = require("@nestjs/core");
 const config_1 = require("@nestjs/config");
 const typeorm_1 = require("@nestjs/typeorm");
 const throttler_1 = require("@nestjs/throttler");
@@ -35,6 +36,10 @@ const dashboard_module_1 = require("./modules/dashboard/dashboard.module");
 const inquiries_module_1 = require("./modules/inquiries/inquiries.module");
 const settings_module_1 = require("./modules/settings/settings.module");
 const media_module_1 = require("./core/media/media.module");
+const audit_module_1 = require("./modules/audit/audit.module");
+const audit_interceptor_1 = require("./core/interceptors/audit.interceptor");
+const idempotency_interceptor_1 = require("./core/interceptors/idempotency.interceptor");
+const nestjs_prometheus_1 = require("@willsoto/nestjs-prometheus");
 let AppModule = class AppModule {
     configure(consumer) {
         consumer.apply(correlation_id_middleware_1.CorrelationIdMiddleware).forRoutes('*');
@@ -115,6 +120,23 @@ exports.AppModule = AppModule = __decorate([
             dashboard_module_1.DashboardModule,
             inquiries_module_1.InquiriesModule,
             settings_module_1.SettingsModule,
+            audit_module_1.AuditModule,
+            nestjs_prometheus_1.PrometheusModule.register({
+                path: '/metrics',
+                defaultMetrics: {
+                    enabled: true,
+                },
+            }),
+        ],
+        providers: [
+            {
+                provide: core_1.APP_INTERCEPTOR,
+                useClass: audit_interceptor_1.AuditInterceptor,
+            },
+            {
+                provide: core_1.APP_INTERCEPTOR,
+                useClass: idempotency_interceptor_1.IdempotencyInterceptor,
+            },
         ],
     })
 ], AppModule);
