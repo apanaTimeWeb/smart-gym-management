@@ -30,7 +30,7 @@ import { SettingsModule } from './modules/settings/settings.module';
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
         url: configService.get<string>('DATABASE_URL'),
-        autoLoadEntities: true,
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: false,
       }),
     }),

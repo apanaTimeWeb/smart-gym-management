@@ -5,8 +5,8 @@ import { Staff } from '../../hr/entities/staff.entity';
 
 @Entity('attendances')
 export class Attendance {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @ManyToOne(() => Member, member => member.attendances, { nullable: true })
   @JoinColumn({ name: 'memberId' })

@@ -39,7 +39,7 @@ exports.AppModule = AppModule = __decorate([
                 useFactory: (configService) => ({
                     type: 'postgres',
                     url: configService.get('DATABASE_URL'),
-                    autoLoadEntities: true,
+                    entities: [__dirname + '/**/*.entity{.ts,.js}'],
                     synchronize: false,
                 }),
             }),
