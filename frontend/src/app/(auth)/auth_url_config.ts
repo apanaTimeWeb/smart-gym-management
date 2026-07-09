@@ -11,5 +11,7 @@ export const AuthUrlConfig = {
   },
   BACKEND_API: {
     LOGIN: '/auth/login',
+    REFRESH: '/auth/refresh',
+    ME: '/auth/me',
   }
 };

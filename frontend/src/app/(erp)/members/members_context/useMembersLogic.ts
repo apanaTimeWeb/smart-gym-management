@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { membersApi, plansApi, financeApi, type Member, type Plan, type Payment } from '@/lib/api';
+import { membersApi, plansApi, financeApi, attendanceApi, type Member, type Plan, type Payment } from '@/lib/api';
 import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
 import type { MessageType, ErpMessageRecipient } from '@/app/(erp)/erp_components/ErpMessageModal';
 import type { ErpReceiptData } from '@/app/(erp)/erp_components/ErpThermalReceipt';
@@ -62,11 +62,7 @@ export function useMembersLogic(): MembersContextType {
  const pRes = await financeApi.getByMember(memberId);
  setPayments(pRes.data);
  
- const tokenRes = await fetch('/api/auth/token');
- const { token } = tokenRes.ok ? await tokenRes.json() : { token: null };
- const aRes = await fetch(`http://localhost:5000/api/attendance?memberId=${memberId}`, {
- headers: token ? { Authorization: `Bearer ${token}` } : {},
- }).then(r => r.json());
+ const aRes = await attendanceApi.getAll({ memberId: memberId.toString() });
  
  if (aRes.success) {
  const daysInMonth = 30;

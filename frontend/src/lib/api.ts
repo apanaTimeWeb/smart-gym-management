@@ -5,6 +5,7 @@
  */
 
 import { AuthUrlConfig } from '@/app/(auth)/auth_url_config';
+import { StatusCodes } from 'http-status-codes';
 import { DashboardUrlConfig } from '@/app/(erp)/dashboard/dashboard_url_config';
 import { MembersUrlConfig } from '@/app/(erp)/members/members_url_config';
 import { PlansUrlConfig } from '@/app/(erp)/plans/plans_url_config';
@@ -61,7 +62,7 @@ export async function apiFetch<T = unknown>(
   
   let finalRes = res;
   
-  if (res.status === 401 && auth) {
+  if (res.status === StatusCodes.UNAUTHORIZED && auth) {
     // Attempt to refresh the token
     const refreshRes = await fetch(AuthUrlConfig.PROXY_API.REFRESH, { method: 'POST' });
     
@@ -100,7 +101,7 @@ export const authApi = {
       auth: false,
     });
   },
-  me: () => apiFetch('/auth/me'),
+  me: () => apiFetch(AuthUrlConfig.BACKEND_API.ME),
 };
 
 // ─── Dashboard ────────────────────────────────────────────────────────────────
