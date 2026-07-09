@@ -261,7 +261,7 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 
 ---
 
-## 35. Secret Management (Never Trust `.env` Files in Production)
+## 33. Secret Management (Never Trust `.env` Files in Production)
 * **The Rule:** `.env` files are acceptable in local development ONLY. In staging and production environments, secrets (API keys, DB passwords, JWT secrets) MUST be injected from a dedicated secrets manager:
   - **AWS:** AWS Secrets Manager or Parameter Store
   - **GCP:** Google Secret Manager
@@ -275,7 +275,7 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 
 ---
 
-## 36. Database Query Optimization (The N+1 Rule & Index Strategy)
+## 34. Database Query Optimization (The N+1 Rule & Index Strategy)
 * **The Rule:** The single most common performance killer in any ORM-backed backend is the N+1 query problem. You must proactively prevent it.
   1. **N+1 Prevention:** Always use eager loading / `JOIN` fetching when you know you'll need related data (e.g., `prefetch_related` in Django, `relations` in TypeORM, `@EntityGraph` in JPA). Never fetch a list of 100 members and then loop to fetch each one's plan separately.
   2. **Index Strategy:** Every foreign key column, every column used in a `WHERE` clause, and every column used in an `ORDER BY` clause MUST have a database index. Indexes should be explicitly defined in migration files — never rely on the ORM to create them automatically.
@@ -284,7 +284,7 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 
 ---
 
-## 37. GDPR & Data Privacy by Design
+## 35. GDPR & Data Privacy by Design
 * **The Rule:** Data privacy is not a feature — it is a foundation. Implement the following from day one:
   1. **Data Minimization:** Only collect data you absolutely need. Never store sensitive fields (passwords, card numbers) in plaintext. Always hash passwords (bcrypt/argon2) and tokenize payment data.
   2. **Right to Erasure:** The "delete account" flow must be able to fully anonymize or purge a user's PII (Personally Identifiable Information) from all tables, logs, and caches on demand. (Works hand-in-hand with Soft Deletes — Rule 29).
@@ -294,7 +294,7 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 
 ---
 
-## 38. Defensive Programming & Fail-Fast Principle
+## 36. Defensive Programming & Fail-Fast Principle
 * **The Rule:** Never assume inputs are valid at any layer. Every function, service method, and repository call must validate its inputs and fail immediately and loudly if assumptions are violated — rather than silently producing corrupt data downstream.
   - **At the Controller layer:** Validate request shape with DTOs/serializers (Rule 3).
   - **At the Service layer:** Assert that objects received from repositories are not null before operating on them. If a `findById` returns `null`, throw the appropriate custom exception immediately (Rule 6) — don't pass `null` to the next function.
