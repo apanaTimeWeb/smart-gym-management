@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Member } from '@/modules/members/entities/member.entity';
-import { MemberStatus } from '@/common/enums/database.enums';
+import { MemberStatus } from '@/modules/members/utils/database.enums';
 
 @Injectable()
 export class MembersRepository {

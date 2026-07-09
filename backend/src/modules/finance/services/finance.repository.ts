@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
 import { Payment } from '@/modules/finance/entities/payment.entity';
 import { Member } from '@/modules/members/entities/member.entity';
-import { PaymentStatus } from '@/common/enums/database.enums';
+import { PaymentStatus } from '@/modules/finance/utils/database.enums';
 import { CreatePaymentDto } from '@/modules/finance/dto/create-payment.dto';
 
 @Injectable()

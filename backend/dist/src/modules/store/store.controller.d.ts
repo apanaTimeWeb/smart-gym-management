@@ -1,4 +1,4 @@
-import { StoreService } from './store.service';
+import { StoreService } from "./store.service";
 export declare class StoreController {
     private readonly storeService;
     constructor(storeService: StoreService);

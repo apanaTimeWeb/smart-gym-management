@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Query, UseGuards, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
-import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 import { PayrollService } from '@/modules/hr/services/payroll.service';
 import { CreatePayrollDto } from '@/modules/hr/dto/create-payroll.dto';
 import { FindPayrollDto } from '@/modules/hr/dto/find-payroll.dto';

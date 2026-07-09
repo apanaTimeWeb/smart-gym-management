@@ -1,4 +1,4 @@
-import { AttendanceType } from '@/common/enums/database.enums';
+import { AttendanceType } from '@/modules/attendance/utils/database.enums';
 import { Attendance } from '@/modules/attendance/entities/attendance.entity';
 
 export interface MarkAttendancePayload {

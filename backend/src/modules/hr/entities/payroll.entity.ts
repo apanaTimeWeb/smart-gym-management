@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
-import { Staff } from './staff.entity';
+import { Staff } from '@/modules/hr/entities/staff.entity';
 
 @Entity('payrolls')
 export class Payroll {

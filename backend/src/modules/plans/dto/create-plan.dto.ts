@@ -1,6 +1,6 @@
 import { IsString, IsNumber, IsEnum, IsArray, IsOptional, IsBoolean } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { PlanTier } from '@/common/enums/database.enums';
+import { PlanTier } from '@/modules/plans/utils/database.enums';
 
 export class CreatePlanDto {
   @ApiProperty()

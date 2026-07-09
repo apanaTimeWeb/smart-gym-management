@@ -1,5 +1,5 @@
 import { UnauthorizedException, NotFoundException } from '@nestjs/common';
-import { AUTH_ERRORS } from './auth.constants';
+import { AUTH_ERRORS } from '@/modules/auth/auth.constants';
 
 export class InvalidCredentialsException extends UnauthorizedException {
   constructor() {

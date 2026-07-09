@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Query, UseGuards, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
-import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 import { FindMemberService } from '@/modules/members/services/find-member.service';
 import { FindMemberDto } from '@/modules/members/dto/find-member.dto';
 

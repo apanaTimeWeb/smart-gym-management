@@ -1,6 +1,6 @@
 import { IsString, IsEmail, IsEnum, IsOptional, IsNumber, IsDateString, IsBoolean } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { Gender } from '@/common/enums/database.enums';
+import { Gender } from '@/modules/hr/utils/database.enums';
 
 export class CreateStaffDto {
   @ApiProperty()

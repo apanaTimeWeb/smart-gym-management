@@ -4,7 +4,7 @@ import { RenewMemberDto } from '@/modules/members/dto/renew-member.dto';
 import { MemberNotFoundException } from '@/modules/members/members.exceptions';
 import { MEMBER_MESSAGES } from '@/modules/members/members.constants';
 import type { MemberResponse } from '@/modules/members/members.interfaces';
-import { MemberStatus } from '@/common/enums/database.enums';
+import { MemberStatus } from '@/modules/members/utils/database.enums';
 
 @Injectable()
 export class RenewMemberService {

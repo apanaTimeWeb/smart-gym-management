@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { InquiriesController } from './inquiries.controller';
-import { InquiriesService } from './inquiries.service';
+import { InquiriesController } from '@/modules/inquiries/inquiries.controller';
+import { InquiriesService } from '@/modules/inquiries/inquiries.service';
 
 @Module({
   controllers: [InquiriesController],

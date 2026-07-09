@@ -1,6 +1,6 @@
 import { IsOptional, IsNumber, IsDateString, IsEnum, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { AttendanceType } from '@/common/enums/database.enums';
+import { AttendanceType } from '@/modules/attendance/utils/database.enums';
 
 export class MarkAttendanceDto {
   @ApiProperty({ required: false })

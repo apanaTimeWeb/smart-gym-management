@@ -1,6 +1,6 @@
 import { Controller, Post, Body, UseGuards, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
-import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 import { MarkAttendanceService } from '@/modules/attendance/services/mark-attendance.service';
 import { MarkAttendanceDto } from '@/modules/attendance/dto/mark-attendance.dto';
 

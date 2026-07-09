@@ -1,6 +1,6 @@
 import { Controller, Get, UseGuards, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
-import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 import { MemberStatsService } from '@/modules/members/services/member-stats.service';
 
 @ApiTags('Members')

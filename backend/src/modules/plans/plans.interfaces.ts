@@ -1,4 +1,4 @@
-import { Plan } from './entities/plan.entity';
+import { Plan } from '@/modules/plans/entities/plan.entity';
 
 export interface PlanResponse {
   message: string;

@@ -1,6 +1,6 @@
 import { Controller, Patch, Param, Body, Delete, UseGuards, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
-import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 import { UpdatePlanService } from '@/modules/plans/services/update-plan.service';
 import { UpdatePlanDto } from '@/modules/plans/dto/update-plan.dto';
 

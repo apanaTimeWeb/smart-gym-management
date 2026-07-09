@@ -1,6 +1,6 @@
 import { Controller, Get, Param, UseGuards, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
-import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 import { FindPlanService } from '@/modules/plans/services/find-plan.service';
 
 @ApiTags('Plans - Find')

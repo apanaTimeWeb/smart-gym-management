@@ -1,5 +1,5 @@
-import { Staff } from './entities/staff.entity';
-import { Payroll } from './entities/payroll.entity';
+import { Staff } from '@/modules/hr/entities/staff.entity';
+import { Payroll } from '@/modules/hr/entities/payroll.entity';
 
 export interface HrResponse {
   message: string;

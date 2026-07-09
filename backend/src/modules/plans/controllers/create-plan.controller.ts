@@ -1,6 +1,6 @@
 import { Controller, Post, Body, UseGuards, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
-import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 import { CreatePlanService } from '@/modules/plans/services/create-plan.service';
 import { CreatePlanDto } from '@/modules/plans/dto/create-plan.dto';
 

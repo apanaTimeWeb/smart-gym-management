@@ -1,8 +1,8 @@
 import { Controller, Get, UseGuards, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthMeService } from '@/modules/auth/services/auth-me.service';
-import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
-import { CurrentUser } from '@/common/decorators/current-user.decorator';
+import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
+import { CurrentUser } from '@/modules/auth/decorators/current-user.decorator';
 import type { JwtPayload, AuthMeResponse } from '@/modules/auth/auth.interfaces';
 
 @ApiTags('Auth')

@@ -1,8 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
-import { Gender, BillingCycle, MemberStatus } from '../../../common/enums/database.enums';
-import { Plan } from '../../plans/entities/plan.entity';
-import { Payment } from '../../finance/entities/payment.entity';
-import { Attendance } from '../../attendance/entities/attendance.entity';
+import { Gender, BillingCycle, MemberStatus } from '@/modules/members/utils/database.enums';
+import { Plan } from '@/modules/plans/entities/plan.entity';
+import { Payment } from '@/modules/finance/entities/payment.entity';
+import { Attendance } from '@/modules/attendance/entities/attendance.entity';
 
 @Entity('members')
 export class Member {

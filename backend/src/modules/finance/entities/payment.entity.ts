@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
-import { PaymentStatus } from '../../../common/enums/database.enums';
-import { Member } from '../../members/entities/member.entity';
+import { PaymentStatus } from '@/modules/finance/utils/database.enums';
+import { Member } from '@/modules/members/entities/member.entity';
 
 @Entity('payments')
 export class Payment {

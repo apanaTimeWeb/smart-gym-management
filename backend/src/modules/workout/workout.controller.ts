@@ -9,8 +9,8 @@ import {
   UseGuards,
   Query,
 } from '@nestjs/common';
-import { WorkoutService } from './workout.service';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { WorkoutService } from '@/modules/workout/workout.service';
+import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 
 @UseGuards(JwtAuthGuard)
 @Controller('workout')

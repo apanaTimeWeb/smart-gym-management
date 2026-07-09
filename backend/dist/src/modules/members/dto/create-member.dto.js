@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateMemberDto = void 0;
 const class_validator_1 = require("class-validator");
 const swagger_1 = require("@nestjs/swagger");
-const database_enums_1 = require("../../../common/enums/database.enums");
+const database_enums_1 = require("../utils/database.enums");
 class CreateMemberDto {
     name;
     email;

@@ -1,4 +1,4 @@
-import { Payment } from './entities/payment.entity';
+import { Payment } from '@/modules/finance/entities/payment.entity';
 
 export interface FinanceResponse {
   message: string;

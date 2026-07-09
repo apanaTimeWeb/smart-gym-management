@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CreatePlanService } from '@/modules/plans/services/create-plan.service';
 import { PlansRepository } from '@/modules/plans/services/plans.repository';
 import { DuplicatePlanTierException } from '@/modules/plans/plans.exceptions';
-import { PlanTier } from '@/common/enums/database.enums';
+import { PlanTier } from '@/modules/plans/utils/database.enums';
 
 describe('CreatePlanService', () => {
   let service: CreatePlanService;

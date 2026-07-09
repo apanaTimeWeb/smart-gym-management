@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
-import { Gender } from '../../../common/enums/database.enums';
-import { Payroll } from './payroll.entity';
-import { Attendance } from '../../attendance/entities/attendance.entity';
+import { Gender } from '@/modules/hr/utils/database.enums';
+import { Payroll } from '@/modules/hr/entities/payroll.entity';
+import { Attendance } from '@/modules/attendance/entities/attendance.entity';
 
 @Entity('staff')
 export class Staff {

@@ -1,6 +1,6 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
-import { DashboardService } from './dashboard.service';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { DashboardService } from '@/modules/dashboard/dashboard.service';
+import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 
 @UseGuards(JwtAuthGuard)
 @Controller('dashboard')

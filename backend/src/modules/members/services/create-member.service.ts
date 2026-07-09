@@ -4,7 +4,7 @@ import { CreateMemberDto } from '@/modules/members/dto/create-member.dto';
 import { DuplicateEmailException } from '@/modules/members/members.exceptions';
 import { MEMBER_MESSAGES } from '@/modules/members/members.constants';
 import type { MemberResponse } from '@/modules/members/members.interfaces';
-import { MemberStatus, BillingCycle } from '@/common/enums/database.enums';
+import { MemberStatus, BillingCycle } from '@/modules/members/utils/database.enums';
 
 @Injectable()
 export class CreateMemberService {

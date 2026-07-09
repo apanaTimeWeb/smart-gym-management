@@ -1,4 +1,4 @@
-import { WorkoutService } from './workout.service';
+import { WorkoutService } from "./workout.service";
 export declare class WorkoutController {
     private readonly workoutService;
     constructor(workoutService: WorkoutService);
