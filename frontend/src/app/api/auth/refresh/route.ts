@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { AuthUrlConfig } from '@/app/(auth)/auth_url_config';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
@@ -10,7 +11,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const backendRes = await fetch(`${BASE_URL}/auth/refresh`, {
+    const backendRes = await fetch(`${BASE_URL}${AuthUrlConfig.BACKEND_API.REFRESH}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

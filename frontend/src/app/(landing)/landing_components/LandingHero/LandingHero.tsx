@@ -1,6 +1,7 @@
 "use client";
 
-import { ChevronDown, ArrowRight } from 'lucide-react';
+import { ChevronDown, Play, ArrowRight } from 'lucide-react';
+import { LandingUrlConfig } from '@/app/(landing)/landing_url_config';
 
 export default function LandingHero() {
  return (
@@ -33,13 +34,13 @@ export default function LandingHero() {
  </p>
 
  <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-        <a href="#plans" className="px-8 py-4 text-white font-bold text-lg rounded-2xl transition-all hover:scale-105 hover:shadow-2xl flex items-center gap-2 w-full sm:w-auto justify-center" style={{ background: 'var(--landing-highlight-gradient)', boxShadow: '0 0 40px rgba(99,102,241,0.4)' }}>
-          Join Now <ArrowRight size={18} />
+        <a href={LandingUrlConfig.ANCHORS.PLANS} className="px-8 py-4 text-white font-bold text-lg rounded-2xl transition-all hover:scale-105 hover:shadow-2xl flex items-center gap-2 w-full sm:w-auto justify-center" style={{ background: 'var(--landing-highlight-gradient)', boxShadow: '0 0 40px rgba(99,102,241,0.4)' }}>
+          Start Journey <ArrowRight size={20} />
  </a>
- <a href="#booking" className="px-8 py-4 font-bold text-lg rounded-2xl border-2 border-[var(--landing-border)] text-white hover:bg-white/10 transition-all flex items-center gap-2 w-full sm:w-auto justify-center backdrop-blur-sm">
- Free Trial
+ <a href={LandingUrlConfig.ANCHORS.BOOKING} className="px-8 py-4 font-bold text-lg rounded-2xl border-2 border-[var(--landing-border)] text-white hover:bg-white/10 transition-all flex items-center gap-2 w-full sm:w-auto justify-center backdrop-blur-sm">
+ <Play size={20} className="text-[var(--landing-primary)]" fill="currentColor" /> Book Trial
  </a>
- <a href="#contact" className="px-8 py-4 font-bold text-lg rounded-2xl border-2 border-[var(--landing-border)] text-[var(--landing-text-secondary)] hover:bg-white/5 transition-all flex items-center gap-2 w-full sm:w-auto justify-center backdrop-blur-sm">
+ <a href={LandingUrlConfig.ANCHORS.CONTACT} className="px-8 py-4 font-bold text-lg rounded-2xl border-2 border-[var(--landing-border)] text-[var(--landing-text-secondary)] hover:bg-white/5 transition-all flex items-center gap-2 w-full sm:w-auto justify-center backdrop-blur-sm">
  Contact Us
  </a>
  </div>
