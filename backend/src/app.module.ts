@@ -2,7 +2,10 @@ import { Module, MiddlewareConsumer, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis';
 import { CacheModule } from '@nestjs/cache-manager';
+import { Keyv } from 'keyv';
+import KeyvRedis from '@keyv/redis';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { BullModule } from '@nestjs/bullmq';
 import { LoggerModule } from 'nestjs-pino';
@@ -41,16 +44,33 @@ import { MediaModule } from '@/core/media/media.module';
       },
     }),
 
-    // ─── Security (Rate Limiting) ─────────────────────────────────────────
-    ThrottlerModule.forRoot([{
-      ttl: 60000,
-      limit: 100, // 100 requests per minute
-    }]),
+    // ✨ Security (Rate Limiting) ✨
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        throttlers: [{
+          ttl: 60000,
+          limit: 100, // 100 requests per minute
+        }],
+        storage: new ThrottlerStorageRedisService(`redis://${config.get('REDIS_HOST', 'localhost')}:${config.get('REDIS_PORT', 6379)}`),
+      }),
+    }),
 
-    // ─── Performance (Caching) ────────────────────────────────────────────
-    CacheModule.register({
+    // ✨ Performance (Caching) ✨
+    CacheModule.registerAsync({
       isGlobal: true,
-      ttl: 5000, // default 5 seconds
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
+        const redisUrl = `redis://${config.get('REDIS_HOST', 'localhost')}:${config.get('REDIS_PORT', 6379)}`;
+        return {
+          store: new Keyv({
+            store: new KeyvRedis(redisUrl),
+          }),
+          ttl: 5000, // default 5 seconds
+        };
+      },
     }),
 
     // ─── Background Jobs (BullMQ) ─────────────────────────────────────────
