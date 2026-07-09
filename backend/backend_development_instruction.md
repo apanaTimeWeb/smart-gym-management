@@ -184,6 +184,10 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **The Rule:** Enterprise apps are deployed in containers. You must include a `/health` or `/ping` endpoint for Kubernetes/AWS liveness probes. Furthermore, the application must intercept termination signals (`SIGINT`, `SIGTERM`).
 * **Why:** When a server restarts or a container is killed, it shouldn't just die instantly, dropping user requests mid-flight. It must stop accepting new requests, finish processing current ones, safely close the database connection, and *then* shut down.
 
+## 26. API Versioning (URI Based)
+* **The Rule:** An enterprise API must never be released without a versioning strategy. Always prefix routes with a version (e.g., `/api/v1/users`). In frameworks like NestJS, enable URI versioning globally.
+* **Why:** If the business scales and requires mobile apps or external integrations, releasing a breaking `v2` API should not crash the legacy mobile apps that still rely on `v1`.
+
 ## Summary Checklist for Developers Providing Context to AI:
 1. Identify the exact layer where the bug/feature resides (Validation? DB Query? Business Logic?).
 2. Select the **one or two** micro-files associated with that layer.
