@@ -1,0 +1,14 @@
+/* Audit Module specific CSS variables */
+:root {
+  --audit-primary-bg: #f9fafb;
+  --audit-border-color: #e5e7eb;
+  --audit-text-primary: #111827;
+  --audit-text-secondary: #6b7280;
+  --audit-accent: #2563eb;
+  --audit-row-hover: #f3f4f6;
+}
+
+.audit-container {
+  background-color: var(--audit-primary-bg);
+  color: var(--audit-text-primary);
+}
