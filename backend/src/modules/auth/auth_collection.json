@@ -20,7 +20,7 @@
           "raw": "{\n  \"email\": \"admin@smartgym.com\",\n  \"password\": \"password123\"\n}"
         },
         "url": {
-          "raw": "{{baseUrl}}/api/auth/login",
+          "raw": "{{baseUrl}}/api/v1/auth/login",
           "host": [
             "{{baseUrl}}"
           ],
@@ -43,7 +43,7 @@
           }
         ],
         "url": {
-          "raw": "{{baseUrl}}/api/auth/me",
+          "raw": "{{baseUrl}}/api/v1/auth/me",
           "host": [
             "{{baseUrl}}"
           ],

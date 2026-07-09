@@ -15,7 +15,7 @@
         "method": "GET",
         "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
-          "raw": "{{baseUrl}}/api/attendance?page=1&limit=20&type=MEMBER",
+          "raw": "{{baseUrl}}/api/v1/attendance?page=1&limit=20&type=MEMBER",
           "host": ["{{baseUrl}}"],
           "path": ["api", "attendance"],
           "query": [
@@ -32,7 +32,7 @@
         "method": "GET",
         "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
-          "raw": "{{baseUrl}}/api/attendance/stats",
+          "raw": "{{baseUrl}}/api/v1/attendance/stats",
           "host": ["{{baseUrl}}"],
           "path": ["api", "attendance", "stats"]
         }
@@ -51,7 +51,7 @@
           "raw": "{\n  \"memberId\": \"member-uuid-here\",\n  \"date\": \"2026-07-09T10:00:00.000Z\",\n  \"type\": \"MEMBER\"\n}"
         },
         "url": {
-          "raw": "{{baseUrl}}/api/attendance",
+          "raw": "{{baseUrl}}/api/v1/attendance",
           "host": ["{{baseUrl}}"],
           "path": ["api", "attendance"]
         }
@@ -70,7 +70,7 @@
           "raw": "{\n  \"staffId\": \"staff-uuid-here\",\n  \"date\": \"2026-07-09T09:00:00.000Z\",\n  \"type\": \"STAFF\"\n}"
         },
         "url": {
-          "raw": "{{baseUrl}}/api/attendance",
+          "raw": "{{baseUrl}}/api/v1/attendance",
           "host": ["{{baseUrl}}"],
           "path": ["api", "attendance"]
         }

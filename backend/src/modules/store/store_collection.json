@@ -15,7 +15,7 @@
         "method": "GET",
         "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
-          "raw": "{{baseUrl}}/api/store/products?page=1&limit=20",
+          "raw": "{{baseUrl}}/api/v1/store/products?page=1&limit=20",
           "host": ["{{baseUrl}}"],
           "path": ["api", "store", "products"],
           "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "20" }]
@@ -28,7 +28,7 @@
         "method": "GET",
         "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
-          "raw": "{{baseUrl}}/api/store/orders?page=1&limit=20",
+          "raw": "{{baseUrl}}/api/v1/store/orders?page=1&limit=20",
           "host": ["{{baseUrl}}"],
           "path": ["api", "store", "orders"],
           "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "20" }]
@@ -41,7 +41,7 @@
         "method": "GET",
         "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
-          "raw": "{{baseUrl}}/api/store/summary",
+          "raw": "{{baseUrl}}/api/v1/store/summary",
           "host": ["{{baseUrl}}"],
           "path": ["api", "store", "summary"]
         }
@@ -60,7 +60,7 @@
           "raw": "{\n  \"name\": \"Whey Protein 1kg\",\n  \"category\": \"Supplements\",\n  \"price\": 2500,\n  \"stock\": 50,\n  \"description\": \"Premium whey protein isolate\"\n}"
         },
         "url": {
-          "raw": "{{baseUrl}}/api/store/products",
+          "raw": "{{baseUrl}}/api/v1/store/products",
           "host": ["{{baseUrl}}"],
           "path": ["api", "store", "products"]
         }
@@ -79,7 +79,7 @@
           "raw": "{\n  \"price\": 2750,\n  \"stock\": 80\n}"
         },
         "url": {
-          "raw": "{{baseUrl}}/api/store/products/:id",
+          "raw": "{{baseUrl}}/api/v1/store/products/:id",
           "host": ["{{baseUrl}}"],
           "path": ["api", "store", "products", ":id"],
           "variable": [{ "key": "id", "value": "1" }]
@@ -99,7 +99,7 @@
           "raw": "{\n  \"items\": [\n    { \"productId\": 1, \"qty\": 2 },\n    { \"productId\": 3, \"qty\": 1 }\n  ],\n  \"method\": \"UPI\",\n  \"notes\": \"Walk-in customer purchase\"\n}"
         },
         "url": {
-          "raw": "{{baseUrl}}/api/store/orders",
+          "raw": "{{baseUrl}}/api/v1/store/orders",
           "host": ["{{baseUrl}}"],
           "path": ["api", "store", "orders"]
         }

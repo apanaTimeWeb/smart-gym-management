@@ -15,7 +15,7 @@
         "method": "GET",
         "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
-          "raw": "{{baseUrl}}/api/dashboard/kpi",
+          "raw": "{{baseUrl}}/api/v1/dashboard/kpi",
           "host": ["{{baseUrl}}"],
           "path": ["api", "dashboard", "kpi"]
         }
@@ -27,7 +27,7 @@
         "method": "GET",
         "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
-          "raw": "{{baseUrl}}/api/dashboard/charts",
+          "raw": "{{baseUrl}}/api/v1/dashboard/charts",
           "host": ["{{baseUrl}}"],
           "path": ["api", "dashboard", "charts"]
         }
@@ -39,7 +39,7 @@
         "method": "GET",
         "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
-          "raw": "{{baseUrl}}/api/dashboard/recent",
+          "raw": "{{baseUrl}}/api/v1/dashboard/recent",
           "host": ["{{baseUrl}}"],
           "path": ["api", "dashboard", "recent"]
         }

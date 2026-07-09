@@ -15,7 +15,7 @@
         "method": "GET",
         "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
-          "raw": "{{baseUrl}}/api/settings",
+          "raw": "{{baseUrl}}/api/v1/settings",
           "host": ["{{baseUrl}}"],
           "path": ["api", "settings"]
         }
@@ -34,7 +34,7 @@
           "raw": "{\n  \"gymName\": \"GymSmart Pro Fitness\",\n  \"ownerName\": \"Satya Swarup\",\n  \"phone\": \"+91 98765 43210\",\n  \"email\": \"admin@gymsmart.com\",\n  \"city\": \"Mumbai\",\n  \"address\": \"123 Fitness Street, Andheri West\",\n  \"gstNumber\": \"27AABCU9603R1ZX\",\n  \"currency\": \"INR\",\n  \"timezone\": \"Asia/Kolkata\"\n}"
         },
         "url": {
-          "raw": "{{baseUrl}}/api/settings",
+          "raw": "{{baseUrl}}/api/v1/settings",
           "host": ["{{baseUrl}}"],
           "path": ["api", "settings"]
         }

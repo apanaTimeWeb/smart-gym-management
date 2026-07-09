@@ -15,7 +15,7 @@
         "method": "GET",
         "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
-          "raw": "{{baseUrl}}/api/members?page=1&limit=10",
+          "raw": "{{baseUrl}}/api/v1/members?page=1&limit=10",
           "host": ["{{baseUrl}}"],
           "path": ["api", "members"],
           "query": [
@@ -31,7 +31,7 @@
         "method": "GET",
         "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
-          "raw": "{{baseUrl}}/api/members/:id",
+          "raw": "{{baseUrl}}/api/v1/members/:id",
           "host": ["{{baseUrl}}"],
           "path": ["api", "members", ":id"],
           "variable": [{ "key": "id", "value": "member-uuid-here" }]
@@ -44,7 +44,7 @@
         "method": "GET",
         "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
-          "raw": "{{baseUrl}}/api/members/stats",
+          "raw": "{{baseUrl}}/api/v1/members/stats",
           "host": ["{{baseUrl}}"],
           "path": ["api", "members", "stats"]
         }
@@ -63,7 +63,7 @@
           "raw": "{\n  \"name\": \"Rahul Sharma\",\n  \"email\": \"rahul@gmail.com\",\n  \"phone\": \"+91 98765 43210\",\n  \"gender\": \"MALE\",\n  \"address\": \"Andheri West, Mumbai\",\n  \"branch\": \"Main Branch\",\n  \"planId\": 1,\n  \"billingCycle\": \"ONE_MONTH\",\n  \"joinDate\": \"2026-07-09\"\n}"
         },
         "url": {
-          "raw": "{{baseUrl}}/api/members",
+          "raw": "{{baseUrl}}/api/v1/members",
           "host": ["{{baseUrl}}"],
           "path": ["api", "members"]
         }
@@ -82,7 +82,7 @@
           "raw": "{\n  \"phone\": \"+91 91234 56789\",\n  \"address\": \"Bandra East, Mumbai\"\n}"
         },
         "url": {
-          "raw": "{{baseUrl}}/api/members/:id",
+          "raw": "{{baseUrl}}/api/v1/members/:id",
           "host": ["{{baseUrl}}"],
           "path": ["api", "members", ":id"],
           "variable": [{ "key": "id", "value": "member-uuid-here" }]
@@ -102,7 +102,7 @@
           "raw": "{\n  \"planId\": 1,\n  \"billingCycle\": \"THREE_MONTHS\"\n}"
         },
         "url": {
-          "raw": "{{baseUrl}}/api/members/:id/renew",
+          "raw": "{{baseUrl}}/api/v1/members/:id/renew",
           "host": ["{{baseUrl}}"],
           "path": ["api", "members", ":id", "renew"],
           "variable": [{ "key": "id", "value": "member-uuid-here" }]
@@ -115,7 +115,7 @@
         "method": "DELETE",
         "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
-          "raw": "{{baseUrl}}/api/members/:id",
+          "raw": "{{baseUrl}}/api/v1/members/:id",
           "host": ["{{baseUrl}}"],
           "path": ["api", "members", ":id"],
           "variable": [{ "key": "id", "value": "member-uuid-here" }]

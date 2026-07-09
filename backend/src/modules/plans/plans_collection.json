@@ -15,7 +15,7 @@
         "method": "GET",
         "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
-          "raw": "{{baseUrl}}/api/plans",
+          "raw": "{{baseUrl}}/api/v1/plans",
           "host": ["{{baseUrl}}"],
           "path": ["api", "plans"]
         }
@@ -27,7 +27,7 @@
         "method": "GET",
         "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
-          "raw": "{{baseUrl}}/api/plans/:id",
+          "raw": "{{baseUrl}}/api/v1/plans/:id",
           "host": ["{{baseUrl}}"],
           "path": ["api", "plans", ":id"],
           "variable": [{ "key": "id", "value": "1" }]
@@ -47,7 +47,7 @@
           "raw": "{\n  \"name\": \"Diamond\",\n  \"tier\": \"PREMIUM\",\n  \"price1Month\": 3000,\n  \"price3Month\": 8000,\n  \"price6Month\": 14000,\n  \"price12Month\": 25000,\n  \"features\": [\"24/7 Access\", \"Personal Trainer\", \"Spa Access\"],\n  \"isActive\": true\n}"
         },
         "url": {
-          "raw": "{{baseUrl}}/api/plans",
+          "raw": "{{baseUrl}}/api/v1/plans",
           "host": ["{{baseUrl}}"],
           "path": ["api", "plans"]
         }
@@ -66,7 +66,7 @@
           "raw": "{\n  \"price1Month\": 3500,\n  \"isActive\": true\n}"
         },
         "url": {
-          "raw": "{{baseUrl}}/api/plans/:id",
+          "raw": "{{baseUrl}}/api/v1/plans/:id",
           "host": ["{{baseUrl}}"],
           "path": ["api", "plans", ":id"],
           "variable": [{ "key": "id", "value": "1" }]

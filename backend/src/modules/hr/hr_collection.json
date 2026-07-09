@@ -15,7 +15,7 @@
         "method": "GET",
         "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
-          "raw": "{{baseUrl}}/api/hr/staff?page=1&limit=20",
+          "raw": "{{baseUrl}}/api/v1/hr/staff?page=1&limit=20",
           "host": ["{{baseUrl}}"],
           "path": ["api", "hr", "staff"],
           "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "20" }]
@@ -28,7 +28,7 @@
         "method": "GET",
         "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
-          "raw": "{{baseUrl}}/api/hr/staff/:id",
+          "raw": "{{baseUrl}}/api/v1/hr/staff/:id",
           "host": ["{{baseUrl}}"],
           "path": ["api", "hr", "staff", ":id"],
           "variable": [{ "key": "id", "value": "staff-uuid-here" }]
@@ -41,7 +41,7 @@
         "method": "GET",
         "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
-          "raw": "{{baseUrl}}/api/hr/summary",
+          "raw": "{{baseUrl}}/api/v1/hr/summary",
           "host": ["{{baseUrl}}"],
           "path": ["api", "hr", "summary"]
         }
@@ -60,7 +60,7 @@
           "raw": "{\n  \"name\": \"Vikas Singh\",\n  \"email\": \"vikas@gymsmart.com\",\n  \"phone\": \"+91 93456 78901\",\n  \"role\": \"Personal Trainer\",\n  \"salary\": 30000,\n  \"branch\": \"Main Branch\",\n  \"gender\": \"MALE\",\n  \"joinDate\": \"2026-07-01\"\n}"
         },
         "url": {
-          "raw": "{{baseUrl}}/api/hr/staff",
+          "raw": "{{baseUrl}}/api/v1/hr/staff",
           "host": ["{{baseUrl}}"],
           "path": ["api", "hr", "staff"]
         }
@@ -79,7 +79,7 @@
           "raw": "{\n  \"salary\": 35000,\n  \"role\": \"Head Trainer\"\n}"
         },
         "url": {
-          "raw": "{{baseUrl}}/api/hr/staff/:id",
+          "raw": "{{baseUrl}}/api/v1/hr/staff/:id",
           "host": ["{{baseUrl}}"],
           "path": ["api", "hr", "staff", ":id"],
           "variable": [{ "key": "id", "value": "staff-uuid-here" }]
@@ -92,7 +92,7 @@
         "method": "GET",
         "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
-          "raw": "{{baseUrl}}/api/hr/payroll",
+          "raw": "{{baseUrl}}/api/v1/hr/payroll",
           "host": ["{{baseUrl}}"],
           "path": ["api", "hr", "payroll"]
         }
@@ -111,7 +111,7 @@
           "raw": "{\n  \"staffId\": \"staff-uuid-here\",\n  \"month\": \"July\",\n  \"year\": 2026,\n  \"amount\": 30000,\n  \"bonus\": 2000,\n  \"deductions\": 0,\n  \"status\": \"Pending\"\n}"
         },
         "url": {
-          "raw": "{{baseUrl}}/api/hr/payroll",
+          "raw": "{{baseUrl}}/api/v1/hr/payroll",
           "host": ["{{baseUrl}}"],
           "path": ["api", "hr", "payroll"]
         }
@@ -130,7 +130,7 @@
           "raw": "{\n  \"status\": \"Paid\"\n}"
         },
         "url": {
-          "raw": "{{baseUrl}}/api/hr/payroll/:id/status",
+          "raw": "{{baseUrl}}/api/v1/hr/payroll/:id/status",
           "host": ["{{baseUrl}}"],
           "path": ["api", "hr", "payroll", ":id", "status"],
           "variable": [{ "key": "id", "value": "payroll-uuid-here" }]

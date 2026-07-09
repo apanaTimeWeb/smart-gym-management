@@ -15,7 +15,7 @@
         "method": "GET",
         "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
-          "raw": "{{baseUrl}}/api/inquiries?page=1&limit=20&status=NEW",
+          "raw": "{{baseUrl}}/api/v1/inquiries?page=1&limit=20&status=NEW",
           "host": ["{{baseUrl}}"],
           "path": ["api", "inquiries"],
           "query": [
@@ -32,7 +32,7 @@
         "method": "GET",
         "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
-          "raw": "{{baseUrl}}/api/inquiries/stats",
+          "raw": "{{baseUrl}}/api/v1/inquiries/stats",
           "host": ["{{baseUrl}}"],
           "path": ["api", "inquiries", "stats"]
         }
@@ -51,7 +51,7 @@
           "raw": "{\n  \"name\": \"Ravi Tiwari\",\n  \"phone\": \"+91 99887 76655\",\n  \"email\": \"ravi@gmail.com\",\n  \"interest\": \"Premium Plan\",\n  \"source\": \"Walk-in\",\n  \"notes\": \"Interested in PT sessions\"\n}"
         },
         "url": {
-          "raw": "{{baseUrl}}/api/inquiries",
+          "raw": "{{baseUrl}}/api/v1/inquiries",
           "host": ["{{baseUrl}}"],
           "path": ["api", "inquiries"]
         }
@@ -70,7 +70,7 @@
           "raw": "{\n  \"status\": \"FOLLOW_UP\",\n  \"notes\": \"Called, will visit tomorrow\"\n}"
         },
         "url": {
-          "raw": "{{baseUrl}}/api/inquiries/:id",
+          "raw": "{{baseUrl}}/api/v1/inquiries/:id",
           "host": ["{{baseUrl}}"],
           "path": ["api", "inquiries", ":id"],
           "variable": [{ "key": "id", "value": "1" }]

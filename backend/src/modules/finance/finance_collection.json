@@ -15,7 +15,7 @@
         "method": "GET",
         "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
-          "raw": "{{baseUrl}}/api/finance/payments?page=1&limit=20",
+          "raw": "{{baseUrl}}/api/v1/finance/payments?page=1&limit=20",
           "host": ["{{baseUrl}}"],
           "path": ["api", "finance", "payments"],
           "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "20" }]
@@ -28,7 +28,7 @@
         "method": "GET",
         "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
-          "raw": "{{baseUrl}}/api/finance/summary",
+          "raw": "{{baseUrl}}/api/v1/finance/summary",
           "host": ["{{baseUrl}}"],
           "path": ["api", "finance", "summary"]
         }
@@ -40,7 +40,7 @@
         "method": "GET",
         "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
         "url": {
-          "raw": "{{baseUrl}}/api/finance/payments/member/:memberId",
+          "raw": "{{baseUrl}}/api/v1/finance/payments/member/:memberId",
           "host": ["{{baseUrl}}"],
           "path": ["api", "finance", "payments", "member", ":memberId"],
           "variable": [{ "key": "memberId", "value": "member-uuid-here" }]
@@ -60,7 +60,7 @@
           "raw": "{\n  \"memberId\": \"member-uuid-here\",\n  \"amount\": 2500,\n  \"method\": \"UPI\",\n  \"notes\": \"Monthly membership renewal\"\n}"
         },
         "url": {
-          "raw": "{{baseUrl}}/api/finance/payments",
+          "raw": "{{baseUrl}}/api/v1/finance/payments",
           "host": ["{{baseUrl}}"],
           "path": ["api", "finance", "payments"]
         }

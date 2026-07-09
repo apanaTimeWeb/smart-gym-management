@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '@/app.module';
-import { ValidationPipe, Logger } from '@nestjs/common';
+import { ValidationPipe, Logger, VersioningType } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ResponseInterceptor } from '@/modules/core/interceptors/response.interceptor';
 import { HttpExceptionFilter } from '@/modules/core/filters/http-exception.filter';
@@ -19,8 +19,12 @@ async function bootstrap() {
   // ─── Graceful Shutdown ────────────────────────────────────────────────────
   app.enableShutdownHooks();
 
-  // ─── Global Prefix ────────────────────────────────────────────────────────
+  // ✨ Global Prefix & Versioning ✨
   app.setGlobalPrefix('api');
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: '1',
+  });
 
   // ─── Security Headers (Helmet) ────────────────────────────────────────────
   app.use(helmet());
