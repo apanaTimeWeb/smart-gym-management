@@ -1,21 +1,11 @@
-import { PrismaService } from '../../database/prisma.service';
+import { AuthRepository } from "./services/auth.repository";
 import { ConfigService } from '@nestjs/config';
-export interface JwtPayload {
-    sub: number;
-    email: string;
-    role: string;
-}
+import { JwtPayload } from "./auth.interfaces";
 declare const JwtStrategy_base: new (...args: any) => any;
 export declare class JwtStrategy extends JwtStrategy_base {
-    private prisma;
-    constructor(prisma: PrismaService, configService: ConfigService);
-    validate(payload: JwtPayload): Promise<{
-        id: number;
-        name: string;
-        email: string;
-        role: import("@prisma/client").$Enums.Role;
-        branch: string | null;
-        isActive: boolean;
-    }>;
+    private authRepository;
+    private readonly logger;
+    constructor(authRepository: AuthRepository, configService: ConfigService);
+    validate(payload: JwtPayload): Promise<Partial<import("./entities/user.entity").User>>;
 }
 export {};

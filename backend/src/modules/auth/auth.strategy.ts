@@ -1,19 +1,16 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { PrismaService } from '../../database/prisma.service';
+import { AuthRepository } from '@/modules/auth/services/auth.repository';
 import { ConfigService } from '@nestjs/config';
-
-export interface JwtPayload {
-  sub: number; // user id
-  email: string;
-  role: string;
-}
+import { JwtPayload } from '@/modules/auth/auth.interfaces';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
+  private readonly logger = new Logger(JwtStrategy.name);
+
   constructor(
-    private prisma: PrismaService,
+    private authRepository: AuthRepository,
     configService: ConfigService,
   ) {
     super({
@@ -24,19 +21,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: JwtPayload) {
-    const user = await this.prisma.user.findUnique({
-      where: { id: payload.sub },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-        branch: true,
-        isActive: true,
-      },
-    });
+    const user = await this.authRepository.findUserByIdForStrategy(payload.sub);
 
     if (!user || !user.isActive) {
+      this.logger.warn(`JWT validation failed for user id: ${payload.sub}`);
       throw new UnauthorizedException('User not found or account deactivated');
     }
 

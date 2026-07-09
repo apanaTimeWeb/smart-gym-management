@@ -55,6 +55,7 @@ Handling errors with generic `throw new Error()` makes it hard for AI to write p
 ## 7. Isolated Database/Query Layer (The Repository Pattern)
 Never write massive, complex raw SQL or 50-line ORM queries directly inside your business logic services.
 Extract complex queries into a dedicated Repository or Query file (e.g., `member-analytics.repository.ts`).
+* **The Rule:** If the backend is built using a JavaScript/TypeScript framework (NestJS, Express), you MUST use **TypeORM**. For other languages/frameworks (like Django), use the framework's native/standard ORM.
 - **Why?** If the dashboard stats are calculating incorrectly, it's a database query issue. You provide the AI the `repository` file, not the `service` file.
 
 ---
@@ -87,9 +88,10 @@ Never hardcode HTTP status code numbers (e.g., `200`, `400`, `500`) in controlle
 * **The Rule:** Always use a framework-provided enum or a status code library (e.g., `HttpStatus` in NestJS, `http-status-codes` in Node, `rest_framework.status` in Django).
 * **Why?** It improves readability, prevents magic numbers, and reduces the risk of typos (e.g., typing `401` when you meant `403`).
 
-## 10. Dynamic / Absolute Imports
-Never use fragile relative imports (e.g., `../../../utils/helpers`). 
-* **The Rule:** Configure the backend framework to use absolute path aliases (e.g., mapping `@/` to the `src/` directory).
+## 10. Dynamic / Absolute Imports (No Hardcoded Relative Paths)
+*(Applicable to JavaScript/TypeScript Frameworks)*
+Never use fragile, hardcoded relative imports (e.g., `../../../utils/helpers`). 
+* **The Rule:** Configure the backend framework to use absolute path aliases (e.g., mapping `@/` to the `src/` directory). Always use dynamic imports with `@/` (or your configured alias) instead of traversing directories up and down with `../..`.
 * **Why?** It prevents import paths from breaking when files are refactored, moved, or copy-pasted, drastically improving the ability for AI to generate drop-in code without path hallucinations.
 
 ---
@@ -142,6 +144,11 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 ## 17. Standardized Pagination & Filtering (Enterprise Scale)
 * **The Rule:** Never write ad-hoc pagination for list endpoints. Always use a standardized wrapper or query dto (e.g., `limit/offset` or `cursor` based pagination) across all controllers.
 * **Why:** If the AI is asked to add pagination to `MemberAnalytics`, it should follow a global standard rather than inventing a new query format just for that feature.
+
+## 18. Strict ES Modules (No `require`)
+*(Applicable to JavaScript/TypeScript Frameworks)*
+* **The Rule:** Never use the `require()` keyword. It is considered dead/legacy in this architecture. You must exclusively use ES module `import` and `export` statements.
+* **Why:** ES Modules are the modern standard, they provide strict typing compatibility out of the box in TypeScript, support better static analysis/tree-shaking, and ensure consistent import syntax across the entire codebase.
 
 ## Summary Checklist for Developers Providing Context to AI:
 1. Identify the exact layer where the bug/feature resides (Validation? DB Query? Business Logic?).
