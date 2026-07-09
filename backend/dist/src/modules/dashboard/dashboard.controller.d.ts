@@ -50,8 +50,8 @@ export declare class DashboardController {
                 };
             } & {
                 id: number;
-                email: string;
                 name: string;
+                email: string;
                 phone: string;
                 branch: string;
                 createdAt: Date;
@@ -70,8 +70,8 @@ export declare class DashboardController {
             recentPayments: ({
                 member: {
                     id: number;
-                    email: string;
                     name: string;
+                    email: string;
                     phone: string;
                     branch: string;
                     createdAt: Date;

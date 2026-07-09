@@ -36,8 +36,8 @@ export declare class FinanceService {
                     };
                 } & {
                     id: number;
-                    email: string;
                     name: string;
+                    email: string;
                     phone: string;
                     branch: string;
                     createdAt: Date;

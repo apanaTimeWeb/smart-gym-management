@@ -6,8 +6,8 @@ export declare class HrService {
         success: boolean;
         data: {
             id: number;
-            email: string;
             name: string;
+            email: string;
             phone: string;
             role: string;
             branch: string;
@@ -24,8 +24,8 @@ export declare class HrService {
         success: boolean;
         data: {
             id: number;
-            email: string;
             name: string;
+            email: string;
             phone: string;
             role: string;
             branch: string;
@@ -42,8 +42,8 @@ export declare class HrService {
         success: boolean;
         data: {
             id: number;
-            email: string;
             name: string;
+            email: string;
             phone: string;
             role: string;
             branch: string;
@@ -60,8 +60,8 @@ export declare class HrService {
         success: boolean;
         data: {
             id: number;
-            email: string;
             name: string;
+            email: string;
             phone: string;
             role: string;
             branch: string;
@@ -78,8 +78,8 @@ export declare class HrService {
         success: boolean;
         data: {
             id: number;
-            email: string;
             name: string;
+            email: string;
             phone: string;
             role: string;
             branch: string;
@@ -97,8 +97,8 @@ export declare class HrService {
         data: ({
             staff: {
                 id: number;
-                email: string;
                 name: string;
+                email: string;
                 phone: string;
                 role: string;
                 branch: string;

@@ -20,8 +20,8 @@ export declare class MembersService {
             };
         } & {
             id: number;
-            email: string;
             name: string;
+            email: string;
             phone: string;
             branch: string;
             createdAt: Date;
@@ -57,8 +57,8 @@ export declare class MembersService {
                 };
             } & {
                 id: number;
-                email: string;
                 name: string;
+                email: string;
                 phone: string;
                 branch: string;
                 createdAt: Date;
@@ -108,8 +108,8 @@ export declare class MembersService {
             }[];
         } & {
             id: number;
-            email: string;
             name: string;
+            email: string;
             phone: string;
             branch: string;
             createdAt: Date;
@@ -144,8 +144,8 @@ export declare class MembersService {
             };
         } & {
             id: number;
-            email: string;
             name: string;
+            email: string;
             phone: string;
             branch: string;
             createdAt: Date;
@@ -166,8 +166,8 @@ export declare class MembersService {
         success: boolean;
         data: {
             id: number;
-            email: string;
             name: string;
+            email: string;
             phone: string;
             branch: string;
             createdAt: Date;
@@ -188,8 +188,8 @@ export declare class MembersService {
         success: boolean;
         data: {
             id: number;
-            email: string;
             name: string;
+            email: string;
             phone: string;
             branch: string;
             createdAt: Date;

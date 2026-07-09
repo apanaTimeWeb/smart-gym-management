@@ -7,8 +7,8 @@ export declare class InquiriesService {
         data: {
             inquiries: {
                 id: number;
-                email: string | null;
                 name: string;
+                email: string | null;
                 phone: string;
                 createdAt: Date;
                 updatedAt: Date;
@@ -25,8 +25,8 @@ export declare class InquiriesService {
         success: boolean;
         data: {
             id: number;
-            email: string | null;
             name: string;
+            email: string | null;
             phone: string;
             createdAt: Date;
             updatedAt: Date;
@@ -41,8 +41,8 @@ export declare class InquiriesService {
         success: boolean;
         data: {
             id: number;
-            email: string | null;
             name: string;
+            email: string | null;
             phone: string;
             createdAt: Date;
             updatedAt: Date;
@@ -57,8 +57,8 @@ export declare class InquiriesService {
         success: boolean;
         data: {
             id: number;
-            email: string | null;
             name: string;
+            email: string | null;
             phone: string;
             createdAt: Date;
             updatedAt: Date;
@@ -73,8 +73,8 @@ export declare class InquiriesService {
         success: boolean;
         data: {
             id: number;
-            email: string | null;
             name: string;
+            email: string | null;
             phone: string;
             createdAt: Date;
             updatedAt: Date;

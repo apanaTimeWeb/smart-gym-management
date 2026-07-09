@@ -71,10 +71,11 @@ The `MemberRegistrationService` should only save the user and emit an event: `Ev
 *Solution:* **Orchestrator Pattern.** 
 Create a higher-level "Facade" or "Orchestrator" whose ONLY job is to open a transaction, call the micro-services passing the transaction object (`tx`), and commit/rollback. The micro-services themselves should remain pure and unaware of transaction boundaries.
 
-### Edge Case C: Shared Utility Bloat
-*Scenario:* Developers dump everything into a global `utils/` folder, creating a "junk drawer" that AI struggles to navigate.
-*Solution:* **Module-Level Utils.**
-If a utility is only used by the Finance module (e.g., calculating compound interest), put it in `modules/finance/utils/`. Only put genuinely universal tools (like Date formatters or Base64 encoders) in the global `utils/` folder.
+### Edge Case C: Shared Utility Bloat (The "No Common Folder" Rule)
+*Scenario:* Developers dump code into a global `utils/`, `common/`, or `shared/` folder to adhere to the DRY (Don't Repeat Yourself) principle. 
+*Solution:* **WET over DRY for AI (Write Everything Twice).**
+Strictly ban global `common/` or `shared/` folders. If a utility, enum, or type is used by the Finance module, put it in `modules/finance/utils/`. If the HR module needs the exact same utility, **duplicate the code** into `modules/hr/utils/`. 
+* **Why?** In an AI-driven codebase, code repetition is entirely acceptable because AI writes the code. If we use a global `common/` folder, an AI might modify a shared function to fix a bug in HR, inadvertently breaking the Finance module. Complete module isolation guarantees 0% cross-module side effects.
 
 ### Edge Case D: External Service Adapters (Anti-Corruption Layer)
 *Scenario:* When your backend talks to the outside world (Stripe, AWS S3, SendGrid), never put the `axios.post()` or SDK calls directly inside your business logic.
