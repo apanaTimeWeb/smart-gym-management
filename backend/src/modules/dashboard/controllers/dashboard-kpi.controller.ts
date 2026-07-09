@@ -1,6 +1,6 @@
 import { Controller, Get, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
-import { CacheInterceptor } from '@nestjs/cache-manager';
+import { CustomCacheInterceptor } from '@/modules/core/interceptors/custom-cache.interceptor';
 import { DashboardKpiService } from '../services/dashboard-kpi.service';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 
@@ -12,7 +12,7 @@ export class DashboardKpiController {
   constructor(private readonly kpiService: DashboardKpiService) {}
 
   @Get()
-  @UseInterceptors(CacheInterceptor)
+  @UseInterceptors(CustomCacheInterceptor)
   @ApiOperation({ summary: 'Get Dashboard KPI stats' })
   @ApiResponse({ status: 200, description: 'KPI stats retrieved successfully' })
   execute() {

@@ -1,6 +1,6 @@
 import { Controller, Get, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
-import { CacheInterceptor } from '@nestjs/cache-manager';
+import { CustomCacheInterceptor } from '@/modules/core/interceptors/custom-cache.interceptor';
 import { DashboardRecentService } from '../services/dashboard-recent.service';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 
@@ -12,7 +12,7 @@ export class DashboardRecentController {
   constructor(private readonly recentService: DashboardRecentService) {}
 
   @Get()
-  @UseInterceptors(CacheInterceptor)
+  @UseInterceptors(CustomCacheInterceptor)
   @ApiOperation({ summary: 'Get Dashboard Recent data' })
   @ApiResponse({ status: 200, description: 'Recent data retrieved successfully' })
   execute() {

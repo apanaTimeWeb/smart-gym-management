@@ -12,6 +12,7 @@ export interface ApiResponse<T> {
   statusCode: number;
   message: string;
   data: T;
+  cache?: boolean;
 }
 
 @Injectable()
@@ -31,6 +32,7 @@ export class ResponseInterceptor<T> implements NestInterceptor<
         statusCode: response.statusCode,
         message: data?.message || 'Request successful',
         data: data?.data !== undefined ? data.data : data,
+        cache: response.getHeader('X-Cache') === 'HIT',
       })),
     );
   }
