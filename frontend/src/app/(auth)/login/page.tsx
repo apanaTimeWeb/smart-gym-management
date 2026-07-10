@@ -9,9 +9,9 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 
 export default async function Login() {
   const cookieStore = await cookies();
-  const userCookie = cookieStore.get('gymsmart_user');
+  const tokenCookie = cookieStore.get('gymsmart_token');
   
-  if (userCookie) {
+  if (tokenCookie) {
     redirect(LoginSharedConstants.PATHS.DASHBOARD);
   }
 
