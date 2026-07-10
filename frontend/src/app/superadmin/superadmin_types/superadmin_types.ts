@@ -115,3 +115,52 @@ export interface SchemaMigration {
   appliedAt: string | null;
   status: 'PENDING' | 'SUCCESS' | 'FAILED';
 }
+
+// Phase 4 Types
+export interface GlobalAuditLog {
+  id: string;
+  actorName: string;
+  actorRole: 'SUPERADMIN' | 'SUPPORT_AGENT' | 'BILLING_ADMIN';
+  action: string;
+  targetResource: string;
+  timestamp: string;
+  ipAddress: string;
+}
+
+export type BroadcastStatus = 'SENT' | 'SCHEDULED' | 'DRAFT';
+export type BroadcastAudience = 'ALL_TENANTS' | 'PRO_ONLY' | 'SUSPENDED_ONLY';
+
+export interface Broadcast {
+  id: string;
+  title: string;
+  content: string;
+  status: BroadcastStatus;
+  audience: BroadcastAudience;
+  scheduledDate: string | null;
+  sentDate: string | null;
+}
+
+export type CouponStatus = 'ACTIVE' | 'EXPIRED' | 'DEPLETED';
+
+export interface Coupon {
+  id: string;
+  code: string;
+  discountPercentage: number;
+  maxUses: number;
+  currentUses: number;
+  status: CouponStatus;
+  expiryDate: string;
+}
+
+export type AffiliateStatus = 'ACTIVE' | 'INACTIVE';
+
+export interface Affiliate {
+  id: string;
+  name: string;
+  email: string;
+  referralCode: string;
+  totalReferred: number;
+  commissionEarned: number;
+  status: AffiliateStatus;
+  joinedAt: string;
+}

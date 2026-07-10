@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Building2, ServerCog, LogOut, ChevronLeft, ChevronRight, CreditCard, Ticket, Activity, HardDrive, DatabaseBackup, Receipt, ToggleLeft, DatabaseZap } from 'lucide-react';
+import { LayoutDashboard, Building2, ServerCog, LogOut, ChevronLeft, ChevronRight, CreditCard, Ticket, Activity, HardDrive, DatabaseBackup, Receipt, ToggleLeft, DatabaseZap, ShieldAlert, Megaphone, Tag, Users } from 'lucide-react';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 
 interface SidebarProps {
@@ -21,7 +21,15 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Sideb
         { name: 'Tenants (Gyms)', href: SuperadminUrlConfig.PAGES.GYMS_LIST, icon: Building2 },
         { name: 'Subscription Plans', href: SuperadminUrlConfig.PAGES.PLANS, icon: CreditCard },
         { name: 'SaaS Invoices', href: SuperadminUrlConfig.PAGES.INVOICES, icon: Receipt },
+        { name: 'Promotional Coupons', href: SuperadminUrlConfig.PAGES.COUPONS, icon: Tag },
+        { name: 'Affiliate Partners', href: SuperadminUrlConfig.PAGES.AFFILIATES, icon: Users },
         { name: 'Support Tickets', href: SuperadminUrlConfig.PAGES.TICKETS, icon: Ticket },
+      ]
+    },
+    {
+      group: 'Communication',
+      items: [
+        { name: 'Announcements', href: SuperadminUrlConfig.PAGES.BROADCASTS, icon: Megaphone },
       ]
     },
     {
@@ -37,7 +45,8 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Sideb
         { name: 'Schema Rollouts', href: SuperadminUrlConfig.PAGES.MIGRATIONS, icon: DatabaseZap },
         { name: 'Background Jobs', href: SuperadminUrlConfig.PAGES.JOBS, icon: Activity },
         { name: 'Database Backups', href: SuperadminUrlConfig.PAGES.BACKUPS, icon: DatabaseBackup },
-        { name: 'System & Audit', href: SuperadminUrlConfig.PAGES.SYSTEM_HEALTH, icon: ServerCog },
+        { name: 'System Health', href: SuperadminUrlConfig.PAGES.SYSTEM_HEALTH, icon: ServerCog },
+        { name: 'Global Audit Logs', href: SuperadminUrlConfig.PAGES.AUDIT_LOGS, icon: ShieldAlert },
       ]
     }
   ];

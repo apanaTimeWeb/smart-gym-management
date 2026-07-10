@@ -227,3 +227,28 @@ export const DUMMY_MIGRATIONS: import('../superadmin_types/superadmin_types').Sc
   { id: 'mig-003', name: '1689000000003-CreateDietPlans', appliedAt: null, status: 'PENDING' },
 ];
 
+export const DUMMY_GLOBAL_AUDIT_LOGS: import('../superadmin_types/superadmin_types').GlobalAuditLog[] = [
+  { id: 'gal-1', actorName: 'John Admin', actorRole: 'SUPERADMIN', action: 'CREATE_TENANT', targetResource: 'Iron Forge Fitness', timestamp: '2026-07-10T10:00:00Z', ipAddress: '192.168.1.1' },
+  { id: 'gal-2', actorName: 'Sarah Support', actorRole: 'SUPPORT_AGENT', action: 'RESET_TENANT_PASSWORD', targetResource: 'Vitality Studio', timestamp: '2026-07-11T11:30:00Z', ipAddress: '192.168.1.15' },
+  { id: 'gal-3', actorName: 'John Admin', actorRole: 'SUPERADMIN', action: 'UPDATE_PLAN_PRICE', targetResource: 'PRO Plan', timestamp: '2026-07-11T12:00:00Z', ipAddress: '192.168.1.1' },
+  { id: 'gal-4', actorName: 'Mike Billing', actorRole: 'BILLING_ADMIN', action: 'ISSUE_REFUND', targetResource: 'Apex Muscle Gym', timestamp: '2026-07-11T14:45:00Z', ipAddress: '192.168.1.20' }
+];
+
+export const DUMMY_BROADCASTS: import('../superadmin_types/superadmin_types').Broadcast[] = [
+  { id: 'bc-1', title: 'Scheduled Maintenance', content: 'Database maintenance will occur on Sunday at 2 AM EST.', status: 'SCHEDULED', audience: 'ALL_TENANTS', scheduledDate: '2026-07-20T02:00:00Z', sentDate: null },
+  { id: 'bc-2', title: 'New Feature: AI Diet Planner', content: 'We are thrilled to announce the AI Diet Planner for PRO tenants.', status: 'SENT', audience: 'PRO_ONLY', scheduledDate: null, sentDate: '2026-07-01T10:00:00Z' },
+  { id: 'bc-3', title: 'Billing Issue Resolved', content: 'The recent Stripe processing delays have been resolved.', status: 'SENT', audience: 'ALL_TENANTS', scheduledDate: null, sentDate: '2026-07-10T15:30:00Z' }
+];
+
+export const DUMMY_COUPONS: import('../superadmin_types/superadmin_types').Coupon[] = [
+  { id: 'cpn-1', code: 'LAUNCH50', discountPercentage: 50, maxUses: 100, currentUses: 85, status: 'ACTIVE', expiryDate: '2026-12-31T23:59:59Z' },
+  { id: 'cpn-2', code: 'WELCOME20', discountPercentage: 20, maxUses: 1000, currentUses: 1000, status: 'DEPLETED', expiryDate: '2026-12-31T23:59:59Z' },
+  { id: 'cpn-3', code: 'WINTERSALE', discountPercentage: 30, maxUses: 50, currentUses: 10, status: 'EXPIRED', expiryDate: '2026-02-28T23:59:59Z' }
+];
+
+export const DUMMY_AFFILIATES: import('../superadmin_types/superadmin_types').Affiliate[] = [
+  { id: 'aff-1', name: 'Fitness Gurus LLC', email: 'partners@fitnessgurus.com', referralCode: 'FG2026', totalReferred: 14, commissionEarned: 2100.50, status: 'ACTIVE', joinedAt: '2025-11-15T08:00:00Z' },
+  { id: 'aff-2', name: 'Gym Consultants Inc', email: 'hello@gymconsultants.com', referralCode: 'GCI-PRO', totalReferred: 45, commissionEarned: 6750.00, status: 'ACTIVE', joinedAt: '2025-06-10T10:30:00Z' },
+  { id: 'aff-3', name: 'Bob Smith', email: 'bob.smith@gmail.com', referralCode: 'BOBSMITH', totalReferred: 0, commissionEarned: 0, status: 'INACTIVE', joinedAt: '2026-01-20T14:15:00Z' }
+];
+
