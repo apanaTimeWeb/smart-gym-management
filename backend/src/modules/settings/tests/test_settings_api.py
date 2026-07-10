@@ -3,7 +3,7 @@ def test_get_settings(auth_client, api_url):
     assert response.status_code in [200, 401]
 
 def test_update_settings(auth_client, api_url):
-    response = auth_client.patch(f"{api_url}/v1/settings", json={
+    response = auth_client.post(f"{api_url}/v1/settings", json={
         "gymName": "GymSmart Pro Fitness",
         "ownerName": "Satya Swarup",
         "phone": "+91 98765 43210",
