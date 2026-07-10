@@ -14,7 +14,17 @@ export class CreateProductDto {
 
   @ApiProperty({ description: 'SKU code', example: 'WP-1KG-CHOC' })
   @IsString()
-  sku: string;
+  @IsOptional()
+  sku?: string;
+
+  @ApiProperty({ description: 'Category', example: 'Supplements' })
+  @IsString()
+  category: string;
+
+  @ApiProperty({ description: 'Product description', example: 'High quality whey protein' })
+  @IsString()
+  @IsOptional()
+  description?: string;
 
   @ApiProperty({ description: 'Price in currency', example: 59.99 })
   @IsNumber()
