@@ -1,9 +1,10 @@
 
 import type { ToastType } from '@/app/(erp)/erp_components/ErpFeedback/ErpToast';
 
-export interface FinanceContextType {
- payments: Payment[];
- summary: FinanceSummary | null;
+ export interface FinanceContextType {
+  payments: Payment[];
+  totalPayments: number;
+  summary: FinanceSummary | null;
  loading: boolean;
  error: string;
  toast: { message: string; type: ToastType } | null;

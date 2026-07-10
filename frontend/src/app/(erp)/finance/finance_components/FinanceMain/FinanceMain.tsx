@@ -30,9 +30,9 @@ function FinanceContent() {
  );
 }
 
-export default function FinanceMain() {
+export default function FinanceMain({ initialData }: { initialData?: any }) {
  return (
- <FinanceProvider>
+ <FinanceProvider initialData={initialData}>
  <FinanceContent />
  </FinanceProvider>
  );

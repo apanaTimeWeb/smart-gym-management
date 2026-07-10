@@ -29,7 +29,7 @@ export function useAttendanceLogic(): AttendanceContextType {
  const [attRes, statsRes, memRes, staffRes] = await Promise.all([
  attendanceApi.getAll(),
  attendanceApi.getTodayStats(),
- membersApi.getAll({ limit: '200' }),
+ membersApi.getAll({ limit: '1000' }),
  hrApi.getStaff(),
  ]);
  setRecords(attRes.data);

@@ -6,8 +6,8 @@ import { useFinanceLogic } from '@/app/(erp)/finance/finance_context/useFinanceL
 
 const FinanceContext = createContext<FinanceContextType | undefined>(undefined);
 
-export function FinanceProvider({ children }: { children: React.ReactNode }) {
- const logic = useFinanceLogic();
+export function FinanceProvider({ children, initialData }: { children: React.ReactNode, initialData?: any }) {
+ const logic = useFinanceLogic(initialData);
 
  const value = useMemo(() => logic, [logic]);
 

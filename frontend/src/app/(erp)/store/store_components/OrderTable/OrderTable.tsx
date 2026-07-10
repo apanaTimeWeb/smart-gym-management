@@ -3,6 +3,7 @@
 import { Printer } from 'lucide-react';
 import { useStoreContext } from '@/app/(erp)/store/store_context/StoreContext';
 import { formatCurrency } from '@/app/(erp)/store/store_utils/StoreSharedConstants';
+import { GYM_DETAILS } from '@/app/(erp)/erp_utils/ErpSharedConstants';
 
 import ErpPagination from '@/app/(erp)/erp_components/ErpShared/ErpPagination';
 
@@ -58,8 +59,8 @@ export default function OrderTable() {
                     onClick={(e) => {
                       e.stopPropagation();
                       setPrintData({ 
-                        gymName: 'GymSmart Store', 
-                        gymPhone: '+91 83479 77566', 
+                        gymName: GYM_DETAILS.name, 
+                        gymPhone: GYM_DETAILS.phone, 
                         receiptNo: `ORD-${o.id}`, 
                         date: new Date(o.createdAt).toLocaleDateString('en-IN'), 
                         customerName: 'Customer', 
