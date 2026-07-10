@@ -112,10 +112,6 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
     // ─── Route Prefixing ──────────────────────────────────────────────────
     RouterModule.register([
       {
-        path: 'erp',
-        module: ErpModule,
-      },
-      {
         path: 'auth',
         module: AuthModule,
       },

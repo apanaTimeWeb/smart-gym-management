@@ -13,6 +13,8 @@ import { SettingsModule } from '@/modules/erp/settings/settings.module';
 import { StoreModule } from '@/modules/erp/store/store.module';
 import { WorkoutModule } from '@/modules/erp/workout/workout.module';
 
+import { RouterModule } from '@nestjs/core';
+
 @Module({
   imports: [
     AttendanceModule,
@@ -28,6 +30,26 @@ import { WorkoutModule } from '@/modules/erp/workout/workout.module';
     SettingsModule,
     StoreModule,
     WorkoutModule,
+    RouterModule.register([
+      {
+        path: 'erp',
+        children: [
+          AttendanceModule,
+          AuditModule,
+          DashboardModule,
+          FinanceModule,
+          HrModule,
+          InquiriesModule,
+          LibraryModule,
+          MembersModule,
+          PlansModule,
+          SalesModule,
+          SettingsModule,
+          StoreModule,
+          WorkoutModule,
+        ],
+      },
+    ]),
   ],
 })
 export class ErpModule {}
