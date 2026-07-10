@@ -36,8 +36,8 @@ export class User {
   @Column({ default: true })
   isActive: boolean;
 
-  @Column({ nullable: true })
-  refreshToken: string;
+  @Column({ type: 'varchar', nullable: true })
+  refreshToken: string | null;
 
   @Column({ type: 'timestamp', nullable: true })
   lastLoginAt: Date;

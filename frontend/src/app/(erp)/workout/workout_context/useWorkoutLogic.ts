@@ -4,7 +4,7 @@ import {
 } from '@/app/(erp)/workout/workout_utils/WorkoutSharedConstants';
 import { WorkoutContextType, Workout, Exercise } from '@/app/(erp)/workout/workout_types/workout_types';
 import { useConfirm } from '@/app/(erp)/erp_components/ErpConfirmProvider';
-import { workoutApi } from '@/lib/api';
+import { workoutApi, libraryApi } from '@/lib/api';
 import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
 
 export function useWorkoutLogic(): WorkoutContextType {
@@ -36,10 +36,10 @@ export function useWorkoutLogic(): WorkoutContextType {
     try {
       const [wkRes, exRes] = await Promise.all([
         workoutApi.getWorkouts(),
-        workoutApi.getExercises(),
+        libraryApi.getExercises(),
       ]);
       setWorkouts(wkRes.data);
-      setExercises(exRes.data);
+      setExercises(Array.isArray(exRes.data) ? exRes.data : (exRes.data as any).Exercises || []);
     } catch (e) {
       showToast((e as Error).message, 'error');
     } finally {
@@ -58,8 +58,7 @@ export function useWorkoutLogic(): WorkoutContextType {
   const filteredEx = useMemo(() => 
     exercises.filter(ex => 
       ex.name.toLowerCase().includes(search.toLowerCase()) || 
-      ex.muscleGroup?.join(' ').toLowerCase().includes(search.toLowerCase()) ||
-      ex.muscle?.toLowerCase().includes(search.toLowerCase())
+      ex.muscleGroup?.join(' ').toLowerCase().includes(search.toLowerCase())
     ),
     [exercises, search]
   );
@@ -135,8 +134,8 @@ export function useWorkoutLogic(): WorkoutContextType {
     setEditExId(ex.id); 
     setExForm({ 
       name: ex.name, 
-      muscle: ex.muscle || ex.muscleGroup?.join(', ') || '', 
-      equipment: ex.equipment || '', 
+      muscle: ex.muscleGroup?.join(', ') || '', 
+      equipment: ex.category || '', 
       difficulty: ex.difficulty 
     }); 
     setShowExModal(true); 
@@ -149,10 +148,10 @@ export function useWorkoutLogic(): WorkoutContextType {
       // adapt to Exercise backend payload shape if needed, here we pass the form
       const payload = { ...exForm, muscleGroup: exForm.muscle.split(',').map(s => s.trim()) };
       if (editExId) {
-        const res = await workoutApi.updateExercise(editExId, payload);
+        const res = await libraryApi.updateExercise(editExId, payload);
         showToast((res as any).message, 'success');
       } else {
-        const res = await workoutApi.createExercise(payload);
+        const res = await libraryApi.createExercise(payload);
         showToast((res as any).message, 'success');
       }
       setShowExModal(false);
@@ -168,7 +167,7 @@ export function useWorkoutLogic(): WorkoutContextType {
     const isConfirmed = await confirm({ title: 'Delete Exercise', message: 'Delete this exercise?', confirmText: 'Delete', type: 'danger' });
     if (!isConfirmed) return;
     try {
-      const res = await workoutApi.removeExercise(id);
+      const res = await libraryApi.removeExercise(id);
       showToast((res as any).message, 'success');
       await loadAll();
     } catch (err) {

@@ -3,6 +3,8 @@ export const DashboardUrlConfig = {
     HOME: '/dashboard',
   },
   BACKEND_API: {
-    STATS: '/dashboard/stats',
+    STATS: '/dashboard/kpi',
+    CHARTS: '/dashboard/charts',
+    RECENT: '/dashboard/recent',
   }
 };

@@ -27,6 +27,8 @@ import { InquiriesModule } from '@/modules/inquiries/inquiries.module';
 import { SettingsModule } from '@/modules/settings/settings.module';
 import { MediaModule } from '@/core/media/media.module';
 import { AuditModule } from '@/modules/audit/audit.module';
+import { SalesModule } from '@/modules/sales/sales.module';
+import { LibraryModule } from '@/modules/library/library.module';
 import { AuditInterceptor } from '@/core/interceptors/audit.interceptor';
 import { IdempotencyInterceptor } from '@/core/interceptors/idempotency.interceptor';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
@@ -126,6 +128,8 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
     InquiriesModule,
     SettingsModule,
     AuditModule,
+    SalesModule,
+    LibraryModule,
     PrometheusModule.register({
       path: '/metrics',
       defaultMetrics: {

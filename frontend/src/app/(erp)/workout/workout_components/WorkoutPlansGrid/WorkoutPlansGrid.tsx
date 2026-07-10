@@ -65,7 +65,7 @@ export default function WorkoutPlansGrid() {
             </div>
             
             <div className="flex flex-wrap gap-1 mb-3">
-              {w.tags.map(tag => (
+              {w.tags?.map((tag: string) => (
                 <span key={tag} className="text-xs bg-[var(--bg-input)] text-[var(--workout-text-secondary)] px-2 py-0.5 rounded-full">
                   {tag}
                 </span>

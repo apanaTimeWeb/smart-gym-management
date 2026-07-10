@@ -23,4 +23,28 @@ export class AuditService {
       );
     }
   }
+
+  async findAll(
+    page: number = 1,
+    limit: number = 10,
+    entityType?: string,
+    actorId?: string,
+  ): Promise<{ data: AuditLog[]; total: number }> {
+    const query = this.auditLogRepository.createQueryBuilder('audit_logs');
+    
+    if (entityType) {
+      query.andWhere('audit_logs.entityType = :entityType', { entityType });
+    }
+    
+    if (actorId) {
+      query.andWhere('audit_logs.actorId = :actorId', { actorId });
+    }
+
+    query.orderBy('audit_logs.timestamp', 'DESC');
+    query.skip((page - 1) * limit);
+    query.take(limit);
+
+    const [data, total] = await query.getManyAndCount();
+    return { data, total };
+  }
 }

@@ -4,7 +4,7 @@ import os
 
 # Assuming NestJS runs locally on port 5000 during tests
 # For enterprise apps, you might fetch this from environment variables
-BASE_URL = os.getenv("API_BASE_URL", "http://localhost:5000")
+BASE_URL = os.getenv("API_BASE_URL", "http://localhost:5000/api")
 
 @pytest.fixture(scope="session")
 def api_url():

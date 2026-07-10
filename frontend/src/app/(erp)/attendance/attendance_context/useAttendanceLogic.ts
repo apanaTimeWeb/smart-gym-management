@@ -35,7 +35,7 @@ export function useAttendanceLogic(): AttendanceContextType {
  setRecords(attRes.data);
  setTodayStats(statsRes.data);
  setMembers(memRes.data.members);
- setStaff(staffRes.data);
+ setStaff(Array.isArray(staffRes.data) ? staffRes.data : (staffRes.data as any).staff || []);
  } catch (e) { 
  showToast((e as Error).message, 'error'); 
  } finally { 

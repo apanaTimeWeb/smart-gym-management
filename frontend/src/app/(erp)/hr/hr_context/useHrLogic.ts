@@ -34,8 +34,8 @@ export function useHrLogic(): HrContextType {
  hrApi.getPayrolls(),
  hrApi.getSummary(),
  ]);
- setStaff(staffRes.data);
- setPayrolls(payrollRes.data);
+  setStaff(Array.isArray(staffRes.data) ? staffRes.data : (staffRes.data as any).staff || []);
+  setPayrolls(Array.isArray(payrollRes.data) ? payrollRes.data : (payrollRes.data as any).payrolls || []);
  setSummary(summaryRes.data);
  } catch (e) {
  const msg = (e as Error).message;

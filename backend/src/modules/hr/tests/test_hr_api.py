@@ -31,11 +31,11 @@ def test_update_staff(auth_client, api_url):
     assert response.status_code in [200, 401, 404]
 
 def test_get_all_payrolls(auth_client, api_url):
-    response = auth_client.get(f"{api_url}/v1/hr/payroll")
+    response = auth_client.get(f"{api_url}/v1/hr/payrolls")
     assert response.status_code in [200, 401]
 
 def test_create_payroll(auth_client, api_url):
-    response = auth_client.post(f"{api_url}/v1/hr/payroll", json={
+    response = auth_client.post(f"{api_url}/v1/hr/payrolls", json={
         "staffId": "staff-uuid-here",
         "month": "July",
         "year": 2026,
@@ -47,7 +47,7 @@ def test_create_payroll(auth_client, api_url):
     assert response.status_code in [201, 401, 404]
 
 def test_update_payroll_status(auth_client, api_url):
-    response = auth_client.patch(f"{api_url}/v1/hr/payroll/uuid-here/status", json={
+    response = auth_client.patch(f"{api_url}/v1/hr/payrolls/uuid-here/status", json={
         "status": "Paid"
     })
     assert response.status_code in [200, 401, 404]

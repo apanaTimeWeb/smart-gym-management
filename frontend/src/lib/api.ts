@@ -1,7 +1,7 @@
 /**
  * GymSmart API Client
  * Centralised fetch wrapper for all backend API calls.
- * Base URL: http://localhost:5000/api
+ * Base URL: http://localhost:5000/api/v1
  */
 
 import { AuthUrlConfig } from '@/app/(auth)/auth_url_config';
@@ -14,9 +14,11 @@ import { HrUrlConfig } from '@/app/(erp)/hr/hr_url_config';
 import { AttendanceUrlConfig } from '@/app/(erp)/attendance/attendance_url_config';
 import { StoreUrlConfig } from '@/app/(erp)/store/store_url_config';
 import { WorkoutUrlConfig } from '@/app/(erp)/workout/workout_url_config';
+import { LibraryUrlConfig } from '@/app/(erp)/library/library_url_config';
 import { InquiriesUrlConfig } from '@/app/(erp)/inquiries/inquiries_url_config';
+import { SalesUrlConfig } from '@/app/(erp)/sales/sales_url_config';
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 
 // ─── User Helper (reads from non-HttpOnly cookie set by server) ───────────────
 
@@ -95,7 +97,7 @@ export async function apiFetch<T = unknown>(
 
 export const authApi = {
   login: async (email: string, password: string) => {
-    return apiFetch(AuthUrlConfig.BACKEND_API.LOGIN, {
+    return apiFetch<{ success: boolean; data: { accessToken: string; user: any } }>(AuthUrlConfig.BACKEND_API.LOGIN, {
       method: 'POST',
       body: JSON.stringify({ email, password }),
       auth: false,
@@ -107,7 +109,21 @@ export const authApi = {
 // ─── Dashboard ────────────────────────────────────────────────────────────────
 
 export const dashboardApi = {
-  getStats: () => apiFetch<{ success: boolean; data: DashboardStats }>(DashboardUrlConfig.BACKEND_API.STATS),
+  getStats: async () => {
+    const [kpiRes, chartsRes, recentRes] = await Promise.all([
+      apiFetch<{ success: boolean; data: any }>(DashboardUrlConfig.BACKEND_API.STATS),
+      apiFetch<{ success: boolean; data: any }>(DashboardUrlConfig.BACKEND_API.CHARTS),
+      apiFetch<{ success: boolean; data: any }>(DashboardUrlConfig.BACKEND_API.RECENT),
+    ]);
+    return {
+      success: true,
+      data: {
+        ...kpiRes.data,
+        ...chartsRes.data,
+        ...recentRes.data,
+      } as DashboardStats,
+    };
+  },
 };
 
 export interface DashboardStats {
@@ -225,7 +241,7 @@ export interface FinanceSummary {
 export const hrApi = {
   getStaff: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<{ success: boolean; data: Staff[] }>(`${HrUrlConfig.BACKEND_API.STAFF_BASE}${q}`);
+    return apiFetch<{ success: boolean; data: { staff: Staff[]; total: number } }>(`${HrUrlConfig.BACKEND_API.STAFF_BASE}${q}`);
   },
   getOneStaff: (id: number) => apiFetch<{ success: boolean; data: Staff }>(HrUrlConfig.BACKEND_API.STAFF_GET_ONE(id)),
   createStaff: (body: Partial<Staff>) =>
@@ -235,7 +251,7 @@ export const hrApi = {
   removeStaff: (id: number) => apiFetch(HrUrlConfig.BACKEND_API.STAFF_DELETE(id), { method: 'DELETE' }),
   getPayrolls: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<{ success: boolean; data: Payroll[] }>(`${HrUrlConfig.BACKEND_API.PAYROLLS_BASE}${q}`);
+    return apiFetch<{ success: boolean; data: { payrolls: Payroll[]; total: number } }>(`${HrUrlConfig.BACKEND_API.PAYROLLS_BASE}${q}`);
   },
   createPayroll: (body: Partial<Payroll>) =>
     apiFetch(HrUrlConfig.BACKEND_API.PAYROLLS_BASE, { method: 'POST', body: JSON.stringify(body) }),
@@ -285,7 +301,7 @@ export interface Attendance {
 export const storeApi = {
   getProducts: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<{ success: boolean; data: Product[] }>(`${StoreUrlConfig.BACKEND_API.PRODUCTS_BASE}${q}`);
+    return apiFetch<{ success: boolean; data: { products: Product[]; total: number } }>(`${StoreUrlConfig.BACKEND_API.PRODUCTS_BASE}${q}`);
   },
   createProduct: (body: Partial<Product>) =>
     apiFetch(StoreUrlConfig.BACKEND_API.PRODUCTS_BASE, { method: 'POST', body: JSON.stringify(body) }),
@@ -315,6 +331,12 @@ export interface StoreSummary {
   totalRevenue: number; lowStockProducts: Product[];
 }
 
+// ─── Sales ────────────────────────────────────────────────────────────────────
+
+export const salesApi = {
+  getOverview: () => apiFetch<{ success: boolean; data: any }>(SalesUrlConfig.BACKEND_API.BASE),
+};
+
 // ─── Workout ──────────────────────────────────────────────────────────────────
 
 export const workoutApi = {
@@ -327,24 +349,27 @@ export const workoutApi = {
   updateWorkout: (id: number, body: Partial<Workout>) =>
     apiFetch(WorkoutUrlConfig.BACKEND_API.WORKOUT_UPDATE(id), { method: 'PATCH', body: JSON.stringify(body) }),
   removeWorkout: (id: number) => apiFetch(WorkoutUrlConfig.BACKEND_API.WORKOUT_DELETE(id), { method: 'DELETE' }),
+};
+
+export const libraryApi = {
   getExercises: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<{ success: boolean; data: Exercise[] }>(`${WorkoutUrlConfig.BACKEND_API.EXERCISES_BASE}${q}`);
+    return apiFetch<{ success: boolean; data: { Exercises: Exercise[]; total: number } }>(`${LibraryUrlConfig.BACKEND_API.EXERCISES_BASE}${q}`);
   },
   createExercise: (body: Partial<Exercise>) =>
-    apiFetch(WorkoutUrlConfig.BACKEND_API.EXERCISES_BASE, { method: 'POST', body: JSON.stringify(body) }),
+    apiFetch(LibraryUrlConfig.BACKEND_API.EXERCISES_BASE, { method: 'POST', body: JSON.stringify(body) }),
   updateExercise: (id: number, body: Partial<Exercise>) =>
-    apiFetch(WorkoutUrlConfig.BACKEND_API.EXERCISE_UPDATE(id), { method: 'PATCH', body: JSON.stringify(body) }),
-  removeExercise: (id: number) => apiFetch(WorkoutUrlConfig.BACKEND_API.EXERCISE_DELETE(id), { method: 'DELETE' }),
+    apiFetch(LibraryUrlConfig.BACKEND_API.EXERCISE_UPDATE(id), { method: 'PATCH', body: JSON.stringify(body) }),
+  removeExercise: (id: number) => apiFetch(LibraryUrlConfig.BACKEND_API.EXERCISE_DELETE(id), { method: 'DELETE' }),
   getDietPlans: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<{ success: boolean; data: DietPlan[] }>(`${WorkoutUrlConfig.BACKEND_API.DIET_PLANS_BASE}${q}`);
+    return apiFetch<{ success: boolean; data: { dietPlans: DietPlan[]; total: number } }>(`${LibraryUrlConfig.BACKEND_API.DIET_PLANS_BASE}${q}`);
   },
   createDietPlan: (body: Partial<DietPlan>) =>
-    apiFetch(WorkoutUrlConfig.BACKEND_API.DIET_PLANS_BASE, { method: 'POST', body: JSON.stringify(body) }),
+    apiFetch(LibraryUrlConfig.BACKEND_API.DIET_PLANS_BASE, { method: 'POST', body: JSON.stringify(body) }),
   updateDietPlan: (id: number, body: Partial<DietPlan>) =>
-    apiFetch(WorkoutUrlConfig.BACKEND_API.DIET_PLAN_UPDATE(id), { method: 'PATCH', body: JSON.stringify(body) }),
-  removeDietPlan: (id: number) => apiFetch(WorkoutUrlConfig.BACKEND_API.DIET_PLAN_DELETE(id), { method: 'DELETE' }),
+    apiFetch(LibraryUrlConfig.BACKEND_API.DIET_PLAN_UPDATE(id), { method: 'PATCH', body: JSON.stringify(body) }),
+  removeDietPlan: (id: number) => apiFetch(LibraryUrlConfig.BACKEND_API.DIET_PLAN_DELETE(id), { method: 'DELETE' }),
 };
 
 export interface Workout {

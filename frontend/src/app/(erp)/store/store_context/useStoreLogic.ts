@@ -40,7 +40,7 @@ export function useStoreLogic(): StoreContextType {
  storeApi.getOrders({ limit: '100' }),
  storeApi.getStoreSummary(),
  ]);
- setProducts(productsRes.data);
+ setProducts(Array.isArray(productsRes.data) ? productsRes.data : (productsRes.data as any).products || []);
  setOrders(ordersRes.data.orders);
  setSummary(summaryRes.data);
  } catch (e) { 

@@ -1,0 +1,19 @@
+/* audit.css - Theme Variables for Audit Module */
+
+.audit-container {
+  /* Common backgrounds */
+  --audit-bg-card: var(--bg-card);
+  --audit-bg-input: var(--bg-input);
+
+  /* Text colors */
+  --audit-text-primary: var(--text-primary);
+  --audit-text-secondary: var(--text-secondary);
+
+  /* Borders */
+  --audit-border-color: var(--border);
+
+  /* Highlights */
+  --audit-accent: var(--primary);
+  --audit-table-header-bg: rgba(99,102,241,0.08);
+  --audit-row-hover: rgba(99,102,241,0.06);
+}

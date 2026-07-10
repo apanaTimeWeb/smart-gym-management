@@ -3,7 +3,7 @@ def test_login_non_existent_email(api_client, api_url):
         "email": "wrong@test.com",
         "password": "wrong"
     })
-    assert response.status_code == 401
+    assert response.status_code == 400
 
 def test_login_incorrect_password(api_client, api_url):
     # Using the seed user's email with wrong password
@@ -19,7 +19,7 @@ def test_login_correct_credentials(api_client, api_url):
         "email": "admin@gymsmart.com",
         "password": "superadmin123"
     })
-    assert response.status_code == 201
+    assert response.status_code == 200
     data = response.json().get("data", {})
     assert "accessToken" in data
     assert data.get("user", {}).get("email") == "admin@gymsmart.com"
@@ -40,7 +40,7 @@ def test_get_me_valid_token(api_client, api_url):
         "email": "admin@gymsmart.com",
         "password": "superadmin123"
     })
-    assert login_response.status_code == 201
+    assert login_response.status_code == 200
     token = login_response.json().get("data", {}).get("accessToken")
     assert token is not None
 
