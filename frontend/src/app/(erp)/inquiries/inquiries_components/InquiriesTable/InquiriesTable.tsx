@@ -7,10 +7,13 @@ import { MessageCircle, Mail, Edit2, Trash2 } from 'lucide-react';
 import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
 
 export default function InquiriesTable() {
-  const { inquiries, search, statusFilter, loading, currentPage, setCurrentPage, updateStatus, openMsg, openEdit, deleteInquiry } = useInquiriesContext();
+  const { 
+    inquiries, loading, search, debouncedSearch, statusFilter, dateFilter, currentPage, setCurrentPage, 
+    openEdit, openMsg, deleteInquiry, updateStatus 
+  } = useInquiriesContext();
 
   const filtered = inquiries.filter(inq => {
-    const ms = inq.name.toLowerCase().includes(search.toLowerCase()) || inq.phone.includes(search);
+    const ms = inq.name.toLowerCase().includes(debouncedSearch.toLowerCase()) || inq.phone.includes(debouncedSearch);
     const mf = statusFilter === 'All' || inq.status === statusFilter;
     return ms && mf;
   });

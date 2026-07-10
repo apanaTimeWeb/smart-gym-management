@@ -1,15 +1,34 @@
 "use client";
 
+import { useEffect } from 'react';
 import { X, Save } from 'lucide-react';
 import { useLibraryContext } from '@/app/(erp)/library/library_context/LibraryContext';
-import { CATEGORIES, DIFFICULTIES } from '@/app/(erp)/library/library_utils/LibrarySharedConstants';
+import { CATEGORIES, DIFFICULTIES, ExerciseSchema, type ExerciseFormValues } from '@/app/(erp)/library/library_utils/LibrarySharedConstants';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 export default function ExerciseModal() {
  const { 
  showExModal, setShowExModal, 
- editExId, exForm, setExForm, 
+ editExId, editExData, 
  saving, saveExercise 
  } = useLibraryContext();
+
+ const { 
+   register, 
+   handleSubmit, 
+   reset,
+   formState: { errors } 
+ } = useForm<ExerciseFormValues>({
+   resolver: zodResolver(ExerciseSchema),
+   defaultValues: editExData || {}
+ });
+
+ useEffect(() => {
+   if (showExModal && editExData) {
+     reset(editExData);
+   }
+ }, [showExModal, editExData, reset]);
 
  if (!showExModal) return null;
 
@@ -27,49 +46,50 @@ export default function ExerciseModal() {
  <X size={18} />
  </button>
  </div>
- <form onSubmit={saveExercise} className="p-6 space-y-4">
+ <form onSubmit={handleSubmit(saveExercise)} className="p-6 space-y-4">
  {[
  { label: 'Exercise Name', key: 'name', type: 'text' }, 
  { label: 'Muscle Groups (comma separated)', key: 'muscleGroup', type: 'text', placeholder: 'Chest, Triceps' }, 
- { label: 'Sets', key: 'sets', type: 'number', req: false }, 
- { label: 'Reps', key: 'reps', type: 'text', req: false, placeholder: '8-12' }, 
- { label: 'Duration', key: 'duration', type: 'text', req: false, placeholder: '30 min' }, 
- { label: 'Video URL (optional)', key: 'videoUrl', type: 'url', req: false }, 
- { label: 'Description', key: 'description', type: 'text', req: false }
+ { label: 'Sets', key: 'sets', type: 'number' }, 
+ { label: 'Reps', key: 'reps', type: 'number', placeholder: '12' }, 
+ { label: 'Duration (mins)', key: 'duration', type: 'number', placeholder: '30' }, 
+ { label: 'Video URL (optional)', key: 'videoUrl', type: 'url' }, 
+ { label: 'Description', key: 'description', type: 'text' }
  ].map(f => (
  <div key={f.key}>
  <label className="block text-sm font-medium text-[var(--library-text-secondary)] mb-1">
  {f.label}
  </label>
  <input 
- required={f.req !== false} 
  type={f.type} 
  placeholder={f.placeholder} 
- value={(exForm as Record<string, string>)[f.key]} 
- onChange={e => setExForm({ ...exForm, [f.key]: e.target.value })} 
- className="w-full border border-[var(--library-border)] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--library-bg-input)] text-[var(--library-text-primary)]" 
+ {...register(f.key as keyof ExerciseFormValues)}
+ className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 ${
+   errors[f.key as keyof ExerciseFormValues] ? 'border-[var(--danger)] focus:ring-[var(--danger)]' : 'border-[var(--library-border)] focus:ring-[var(--warning)]'
+ } bg-[var(--library-bg-input)] text-[var(--library-text-primary)]`}
  />
+ {errors[f.key as keyof ExerciseFormValues] && (
+   <p className="text-[var(--danger)] text-xs mt-1">{errors[f.key as keyof ExerciseFormValues]?.message}</p>
+ )}
  </div>
  ))}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  <div>
  <label className="block text-sm font-medium text-[var(--library-text-secondary)] mb-1">Category</label>
  <select 
- value={exForm.category} 
- onChange={e => setExForm({ ...exForm, category: e.target.value })} 
+ {...register('category')}
  className="w-full border border-[var(--library-border)] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--library-bg-input)] text-[var(--library-text-primary)]"
  >
- {CATEGORIES.map(c => <option key={c}>{c}</option>)}
+ {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
  </select>
  </div>
  <div>
  <label className="block text-sm font-medium text-[var(--library-text-secondary)] mb-1">Difficulty</label>
  <select 
- value={exForm.difficulty} 
- onChange={e => setExForm({ ...exForm, difficulty: e.target.value })} 
+ {...register('difficulty')}
  className="w-full border border-[var(--library-border)] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--library-bg-input)] text-[var(--library-text-primary)]"
  >
- {DIFFICULTIES.map(d => <option key={d}>{d}</option>)}
+ {DIFFICULTIES.map(d => <option key={d} value={d}>{d}</option>)}
  </select>
  </div>
  </div>

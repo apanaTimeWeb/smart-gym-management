@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useDebounce } from '@/app/(erp)/erp_utils/useDebounce';
 import { storeApi, type Product, type Order, type StoreSummary } from '@/lib/api';
 import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
 import type { ErpReceiptData } from '@/app/(erp)/erp_components/ErpThermalReceipt';
@@ -19,11 +20,12 @@ export function useStoreLogic(): StoreContextType {
   const [printData, setPrintData] = useState<ErpReceiptData | null>(null);
 
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
   const [currentPage, setCurrentPage] = useState(1);
 
  const [showProductModal, setShowProductModal] = useState(false);
  const [editProductId, setEditProductId] = useState<number | null>(null);
- const [productForm, setProductForm] = useState(EMPTY_PRODUCT_FORM);
+ const [editProductData, setEditProductData] = useState<any>(null);
 
  const [showOrderModal, setShowOrderModal] = useState(false);
  const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
@@ -54,13 +56,13 @@ export function useStoreLogic(): StoreContextType {
 
  const openAddProduct = useCallback(() => { 
  setEditProductId(null); 
- setProductForm(EMPTY_PRODUCT_FORM); 
+ setEditProductData(EMPTY_PRODUCT_FORM); 
  setShowProductModal(true); 
  }, []);
  
  const openEditProduct = useCallback((p: Product) => {
  setEditProductId(p.id);
- setProductForm({ 
+ setEditProductData({ 
  name: p.name, 
  category: p.category, 
  price: String(p.price), 
@@ -70,14 +72,13 @@ export function useStoreLogic(): StoreContextType {
  setShowProductModal(true);
  }, []);
 
- const saveProduct = useCallback(async (e: React.FormEvent) => {
- e.preventDefault(); 
+ const saveProduct = useCallback(async (data: any) => {
  setSaving(true);
  try {
  const payload = { 
- ...productForm, 
- price: Number(productForm.price), 
- stock: Number(productForm.stock) 
+ ...data, 
+ price: Number(data.price), 
+ stock: Number(data.stock) 
  };
  
  if (editProductId) { 
@@ -94,7 +95,7 @@ export function useStoreLogic(): StoreContextType {
  } finally { 
  setSaving(false); 
  }
- }, [editProductId, productForm, loadAll, showToast]);
+ }, [editProductId, loadAll, showToast]);
 
  const deleteProduct = useCallback(async (id: number) => {
   const isConfirmed = await confirm({ title: 'Delete Product', message: 'Delete this product?', confirmText: 'Delete', type: 'danger' });
@@ -163,8 +164,8 @@ export function useStoreLogic(): StoreContextType {
     tab, setTab,
     products, orders, summary, loading, saving,
     toast, printData,
-    search, setSearch, currentPage, setCurrentPage,
-    showProductModal, setShowProductModal, editProductId, productForm, setProductForm,
+    search, debouncedSearch, setSearch, currentPage, setCurrentPage,
+    showProductModal, setShowProductModal, editProductId, editProductData,
     showOrderModal, setShowOrderModal, orderItems, orderMethod, setOrderMethod,
     hideToast, setPrintData, loadAll,
  openAddProduct, openEditProduct, saveProduct, deleteProduct,

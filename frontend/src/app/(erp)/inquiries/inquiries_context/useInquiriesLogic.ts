@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
+import { useDebounce } from '@/app/(erp)/erp_utils/useDebounce';
 import { inquiriesApi, type Inquiry, type InquiryStats } from '@/lib/api';
 import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
 import type { MessageType, ErpMessageRecipient } from '@/app/(erp)/erp_components/ErpMessageModal';
@@ -14,6 +15,7 @@ export function useInquiriesLogic(): InquiriesContextType {
  const [error, setError] = useState('');
  
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
   const [statusFilter, setStatusFilter] = useState('All');
   const [dateFilter, setDateFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
@@ -24,7 +26,7 @@ export function useInquiriesLogic(): InquiriesContextType {
 
  const [showModal, setShowModal] = useState(false);
  const [editId, setEditId] = useState<number | null>(null);
- const [form, setForm] = useState(EMPTY_INQUIRY_FORM);
+ const [editData, setEditData] = useState<any>(null);
  const [saving, setSaving] = useState(false);
  
  const [msgModal, setMsgModal] = useState<{ open: boolean; recipient: ErpMessageRecipient; type: MessageType; message: string; subject?: string } | null>(null);
@@ -53,13 +55,13 @@ export function useInquiriesLogic(): InquiriesContextType {
 
  const openAdd = useCallback(() => {
  setEditId(null);
- setForm(EMPTY_INQUIRY_FORM);
+ setEditData(EMPTY_INQUIRY_FORM);
  setShowModal(true);
  }, []);
 
  const openEdit = useCallback((inq: Inquiry) => {
  setEditId(inq.id);
- setForm({ 
+ setEditData({ 
  name: inq.name, 
  phone: inq.phone, 
  email: inq.email || '', 
@@ -71,15 +73,14 @@ export function useInquiriesLogic(): InquiriesContextType {
  setShowModal(true);
  }, []);
 
- const saveInquiry = useCallback(async (e: React.FormEvent) => {
- e.preventDefault();
+ const saveInquiry = useCallback(async (data: any) => {
  setSaving(true);
  try {
  if (editId) { 
- const res = await inquiriesApi.update(editId, form); 
+ const res = await inquiriesApi.update(editId, data); 
  showToast((res as any).message, 'success'); 
  } else { 
- const res = await inquiriesApi.create(form); 
+ const res = await inquiriesApi.create(data); 
  showToast((res as any).message, 'success'); 
  }
  setShowModal(false);
@@ -89,7 +90,7 @@ export function useInquiriesLogic(): InquiriesContextType {
  } finally { 
  setSaving(false); 
  }
- }, [form, editId, loadAll, showToast]);
+ }, [editId, loadAll, showToast]);
 
  const deleteInquiry = useCallback(async (id: number) => {
   const isConfirmed = await confirm({ title: 'Delete Inquiry', message: 'Delete this inquiry?', confirmText: 'Delete', type: 'danger' });
@@ -124,8 +125,8 @@ export function useInquiriesLogic(): InquiriesContextType {
 
   return {
     inquiries, stats, loading, error, toast, showToast, hideToast, loadAll,
-    search, setSearch, statusFilter, setStatusFilter, dateFilter, setDateFilter, currentPage, setCurrentPage,
-    showModal, setShowModal, editId, form, setForm, saving,
+    search, debouncedSearch, setSearch, statusFilter, setStatusFilter, dateFilter, setDateFilter, currentPage, setCurrentPage,
+    showModal, setShowModal, editId, editData, saving,
  openAdd, openEdit, saveInquiry, deleteInquiry, updateStatus,
  msgModal, openMsg, closeMsg
  };

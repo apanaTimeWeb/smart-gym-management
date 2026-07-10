@@ -1,3 +1,17 @@
+import { z } from 'zod';
+
+export const InquirySchema = z.object({
+  name: z.string().min(2, "Name is required"),
+  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  email: z.string().email("Invalid email address").optional().or(z.literal('')),
+  interest: z.string().min(2, "Interest is required"),
+  status: z.enum(['NEW', 'FOLLOW_UP', 'CONVERTED', 'LOST']),
+  source: z.string(),
+  notes: z.string().optional()
+});
+
+export type InquiryFormValues = z.infer<typeof InquirySchema>;
+
 export const INQUIRIES_STATUS_LABELS: Record<string, string> = {
  NEW: 'New', 
  FOLLOW_UP: 'Follow Up', 

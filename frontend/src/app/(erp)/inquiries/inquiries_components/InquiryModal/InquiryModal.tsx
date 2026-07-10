@@ -1,11 +1,30 @@
 "use client";
 
+import { useEffect } from 'react';
 import { useInquiriesContext } from '@/app/(erp)/inquiries/inquiries_context/InquiriesContext';
-import { INQUIRY_MODAL_FIELDS, INQUIRIES_STATUS_LABELS, INQUIRY_SOURCES } from '@/app/(erp)/inquiries/inquiries_utils/InquiriesSharedConstants';
+import { INQUIRY_MODAL_FIELDS, INQUIRIES_STATUS_LABELS, INQUIRY_SOURCES, InquirySchema, type InquiryFormValues } from '@/app/(erp)/inquiries/inquiries_utils/InquiriesSharedConstants';
 import { X, Save } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 export default function InquiryModal() {
- const { showModal, setShowModal, editId, form, setForm, saveInquiry, saving } = useInquiriesContext();
+ const { showModal, setShowModal, editId, editData, saveInquiry, saving } = useInquiriesContext();
+
+ const { 
+   register, 
+   handleSubmit, 
+   reset,
+   formState: { errors } 
+ } = useForm<InquiryFormValues>({
+   resolver: zodResolver(InquirySchema),
+   defaultValues: editData || {}
+ });
+
+ useEffect(() => {
+   if (showModal && editData) {
+     reset(editData);
+   }
+ }, [showModal, editData, reset]);
 
  if (!showModal) return null;
 
@@ -22,27 +41,29 @@ export default function InquiryModal() {
  <X size={18} />
  </button>
  </div>
- <form onSubmit={saveInquiry} className="p-6 space-y-4">
+ <form onSubmit={handleSubmit(saveInquiry)} className="p-6 space-y-4">
  {INQUIRY_MODAL_FIELDS.map(f => (
  <div key={f.key}>
  <label className="block text-sm font-medium mb-1" style={{ color: 'var(--inquiries-text-secondary)' }}>{f.label}</label>
  <input 
- required={f.req !== false} 
  type={f.type} 
  placeholder={f.placeholder} 
- value={(form as any)[f.key]} 
- onChange={e => setForm({ ...form, [f.key]: e.target.value })} 
- className="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--inquiries-highlight)]" 
- style={{ backgroundColor: 'var(--inquiries-bg-input)', borderColor: 'var(--inquiries-border)', color: 'var(--inquiries-text-primary)' }}
+ {...register(f.key as keyof InquiryFormValues)}
+ className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 ${
+   errors[f.key as keyof InquiryFormValues] ? 'border-[var(--danger)] focus:ring-[var(--danger)]' : 'focus:ring-[var(--inquiries-highlight)]'
+ }`}
+ style={{ backgroundColor: 'var(--inquiries-bg-input)', borderColor: errors[f.key as keyof InquiryFormValues] ? 'var(--danger)' : 'var(--inquiries-border)', color: 'var(--inquiries-text-primary)' }}
  />
+ {errors[f.key as keyof InquiryFormValues] && (
+   <p className="text-[var(--danger)] text-xs mt-1">{errors[f.key as keyof InquiryFormValues]?.message}</p>
+ )}
  </div>
  ))}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  <div>
  <label className="block text-sm font-medium mb-1" style={{ color: 'var(--inquiries-text-secondary)' }}>Status</label>
  <select 
- value={form.status} 
- onChange={e => setForm({ ...form, status: e.target.value })} 
+ {...register('status')}
  className="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--inquiries-highlight)]"
  style={{ backgroundColor: 'var(--inquiries-bg-input)', borderColor: 'var(--inquiries-border)', color: 'var(--inquiries-text-primary)' }}
  >
@@ -54,12 +75,11 @@ export default function InquiryModal() {
  <div>
  <label className="block text-sm font-medium mb-1" style={{ color: 'var(--inquiries-text-secondary)' }}>Source</label>
  <select 
- value={form.source} 
- onChange={e => setForm({ ...form, source: e.target.value })} 
+ {...register('source')}
  className="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--inquiries-highlight)]"
  style={{ backgroundColor: 'var(--inquiries-bg-input)', borderColor: 'var(--inquiries-border)', color: 'var(--inquiries-text-primary)' }}
  >
- {INQUIRY_SOURCES.map(s => <option key={s}>{s}</option>)}
+ {INQUIRY_SOURCES.map(s => <option key={s} value={s}>{s}</option>)}
  </select>
  </div>
  </div>

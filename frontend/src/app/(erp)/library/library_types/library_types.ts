@@ -14,6 +14,7 @@ export interface LibraryContextType {
   toast: { message: string; type: ToastType } | null;
   
   search: string;
+  debouncedSearch: string;
   setSearch: (s: string) => void;
   currentPage: number;
   setCurrentPage: (p: number) => void;
@@ -27,21 +28,19 @@ export interface LibraryContextType {
  showExModal: boolean;
  setShowExModal: (show: boolean) => void;
  editExId: number | null;
- exForm: typeof EMPTY_EXERCISE_FORM;
- setExForm: React.Dispatch<React.SetStateAction<typeof EMPTY_EXERCISE_FORM>>;
+ editExData: any;
  openAddEx: () => void;
  openEditEx: (ex: Exercise) => void;
- saveExercise: (e: React.FormEvent) => Promise<void>;
+ saveExercise: (data: any) => Promise<void>;
  deleteExercise: (id: number) => Promise<void>;
  
  // Diet Modal State
  showDietModal: boolean;
  setShowDietModal: (show: boolean) => void;
  editDietId: number | null;
- dietForm: typeof EMPTY_DIET_FORM;
- setDietForm: React.Dispatch<React.SetStateAction<typeof EMPTY_DIET_FORM>>;
+ editDietData: any;
  openAddDiet: () => void;
  openEditDiet: (d: DietPlan) => void;
- saveDietPlan: (e: React.FormEvent) => Promise<void>;
+ saveDietPlan: (data: any) => Promise<void>;
  deleteDietPlan: (id: number) => Promise<void>;
 }

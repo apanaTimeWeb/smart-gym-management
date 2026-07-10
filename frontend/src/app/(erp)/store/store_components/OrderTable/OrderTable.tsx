@@ -7,11 +7,12 @@ import { formatCurrency } from '@/app/(erp)/store/store_utils/StoreSharedConstan
 import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
 
 export default function OrderTable() {
-  const { orders, loading, search, currentPage, setCurrentPage, setPrintData } = useStoreContext();
+  const { orders, loading, debouncedSearch, currentPage, setCurrentPage, setPrintData } = useStoreContext();
 
   const filtered = orders.filter(o => {
-    const idMatch = `ORD-${String(o.id).padStart(4, '0')}`.toLowerCase().includes(search.toLowerCase());
-    const methodMatch = o.method.toLowerCase().includes(search.toLowerCase());
+    const s = debouncedSearch.toLowerCase();
+    const idMatch = `ORD-${String(o.id).padStart(4, '0')}`.toLowerCase().includes(s);
+    const methodMatch = o.method.toLowerCase().includes(s);
     return idMatch || methodMatch;
   });
 

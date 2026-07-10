@@ -7,13 +7,13 @@ const fmt = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');
 import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
 
 export default function StaffTable() {
-  const { staff, search, currentPage, setCurrentPage, openEdit, deleteStaff } = useHrContext();
+  const { staff, debouncedSearch, currentPage, setCurrentPage, openEdit, deleteStaff } = useHrContext();
 
   const filtered = staff.filter(s => 
-    s.name.toLowerCase().includes(search.toLowerCase()) || 
-    s.email.toLowerCase().includes(search.toLowerCase()) ||
-    s.role.toLowerCase().includes(search.toLowerCase()) ||
-    s.branch.toLowerCase().includes(search.toLowerCase())
+    s.name.toLowerCase().includes(debouncedSearch.toLowerCase()) || 
+    s.email.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+    s.role.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+    s.branch.toLowerCase().includes(debouncedSearch.toLowerCase())
   );
 
   const ITEMS_PER_PAGE = 10;

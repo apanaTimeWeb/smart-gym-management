@@ -7,9 +7,12 @@ import { formatCurrency } from '@/app/(erp)/store/store_utils/StoreSharedConstan
 import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
 
 export default function ProductGrid() {
-  const { products, loading, search, currentPage, setCurrentPage, openEditProduct, deleteProduct } = useStoreContext();
+  const { products, loading, debouncedSearch, currentPage, setCurrentPage, openEditProduct, deleteProduct, addToOrder } = useStoreContext();
 
-  const filtered = products.filter(p => p.name.toLowerCase().includes(search.toLowerCase()) || p.category.toLowerCase().includes(search.toLowerCase()));
+  const filtered = products.filter(p => {
+    const s = debouncedSearch.toLowerCase();
+    return p.name.toLowerCase().includes(s) || p.category.toLowerCase().includes(s);
+  });
 
   const ITEMS_PER_PAGE = 12;
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);

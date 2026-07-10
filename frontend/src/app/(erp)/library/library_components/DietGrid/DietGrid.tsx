@@ -6,12 +6,12 @@ import { useLibraryContext } from '@/app/(erp)/library/library_context/LibraryCo
 import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
 
 export default function DietGrid() {
-  const { dietPlans, loading, search, currentPage, setCurrentPage, openEditDiet, deleteDietPlan } = useLibraryContext();
+  const { dietPlans, loading, search, debouncedSearch, currentPage, setCurrentPage, openEditDiet, deleteDietPlan } = useLibraryContext();
 
-  const filtered = dietPlans.filter(d => 
-    d.name.toLowerCase().includes(search.toLowerCase()) || 
-    d.goal.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = dietPlans.filter(d => {
+    const s = debouncedSearch.toLowerCase();
+    return d.name.toLowerCase().includes(s) || d.goal.toLowerCase().includes(s);
+  });
 
   const ITEMS_PER_PAGE = 12;
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);

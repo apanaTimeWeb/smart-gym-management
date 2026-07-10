@@ -15,6 +15,7 @@ export interface InquiriesContextType {
  loadAll: () => Promise<void>;
  
   search: string;
+  debouncedSearch: string;
   setSearch: (s: string) => void;
   statusFilter: string;
   setStatusFilter: (s: string) => void;
@@ -27,14 +28,13 @@ export interface InquiriesContextType {
  showModal: boolean;
  setShowModal: (show: boolean) => void;
  editId: number | null;
- form: typeof EMPTY_INQUIRY_FORM;
- setForm: React.Dispatch<React.SetStateAction<typeof EMPTY_INQUIRY_FORM>>;
+ editData: any;
  saving: boolean;
  
  // Actions
  openAdd: () => void;
  openEdit: (inq: Inquiry) => void;
- saveInquiry: (e: React.FormEvent) => Promise<void>;
+ saveInquiry: (data: any) => Promise<void>;
  deleteInquiry: (id: number) => Promise<void>;
  updateStatus: (id: number, status: string) => Promise<void>;
  

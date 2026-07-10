@@ -12,6 +12,7 @@ export interface HrContextType {
   toast: { message: string; type: ToastType } | null;
   
   search: string;
+  debouncedSearch: string;
   setSearch: (s: string) => void;
   currentPage: number;
   setCurrentPage: (p: number) => void;
@@ -24,14 +25,13 @@ export interface HrContextType {
  showModal: boolean;
  setShowModal: (show: boolean) => void;
  editId: number | null;
- form: typeof EMPTY_STAFF;
- setForm: React.Dispatch<React.SetStateAction<typeof EMPTY_STAFF>>;
+ editData: any;
  saving: boolean;
  
  // Actions
  openAdd: () => void;
  openEdit: (s: Staff) => void;
- saveStaff: (e: React.FormEvent) => Promise<void>;
+ saveStaff: (data: any) => Promise<void>;
  deleteStaff: (id: number) => Promise<void>;
  markPayrollPaid: (id: number) => Promise<void>;
 }

@@ -25,6 +25,7 @@ export interface StoreContextType {
   printData: ErpReceiptData | null;
   
   search: string;
+  debouncedSearch: string;
   setSearch: (s: string) => void;
   currentPage: number;
   setCurrentPage: (p: number) => void;
@@ -32,8 +33,7 @@ export interface StoreContextType {
  showProductModal: boolean;
  setShowProductModal: (show: boolean) => void;
  editProductId: number | null;
- productForm: typeof EMPTY_PRODUCT_FORM;
- setProductForm: React.Dispatch<React.SetStateAction<typeof EMPTY_PRODUCT_FORM>>;
+ editProductData: any;
  
  showOrderModal: boolean;
  setShowOrderModal: (show: boolean) => void;
@@ -47,7 +47,7 @@ export interface StoreContextType {
  loadAll: () => Promise<void>;
  openAddProduct: () => void;
  openEditProduct: (p: Product) => void;
- saveProduct: (e: React.FormEvent) => Promise<void>;
+ saveProduct: (data: any) => Promise<void>;
  deleteProduct: (id: number) => Promise<void>;
  
  addToOrder: (p: Product) => void;

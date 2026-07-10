@@ -7,12 +7,12 @@ import { DIFF_COLORS } from '@/app/(erp)/library/library_utils/LibrarySharedCons
 import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
 
 export default function ExerciseGrid() {
-  const { exercises, loading, search, currentPage, setCurrentPage, openEditEx, deleteExercise } = useLibraryContext();
+  const { exercises, loading, search, debouncedSearch, currentPage, setCurrentPage, openEditEx, deleteExercise } = useLibraryContext();
 
-  const filtered = exercises.filter(ex => 
-    ex.name.toLowerCase().includes(search.toLowerCase()) || 
-    ex.category.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = exercises.filter(e => {
+    const s = debouncedSearch.toLowerCase();
+    return e.name.toLowerCase().includes(s) || e.category.toLowerCase().includes(s);
+  });
 
   const ITEMS_PER_PAGE = 12;
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
