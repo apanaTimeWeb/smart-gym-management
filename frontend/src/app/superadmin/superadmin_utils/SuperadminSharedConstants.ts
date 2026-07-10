@@ -188,12 +188,6 @@ export const DUMMY_SUPPORT_TICKETS: import('../superadmin_types/superadmin_types
   { id: 'TKT-1004', tenantName: 'Core Wellness Hub', subject: 'Database extremely slow during peak hours', status: 'OPEN', priority: 'CRITICAL', createdAt: '2026-07-11T09:45:00Z', lastUpdated: '2026-07-11T09:50:00Z' }
 ];
 
-export const DUMMY_STAFF: import('../superadmin_types/superadmin_types').SuperadminStaff[] = [
-  { id: 'sa-1', name: 'Super Admin', email: 'admin@gymsmart.com', role: 'SUPERADMIN', status: 'ACTIVE', lastLogin: '2026-07-11T09:00:00Z' },
-  { id: 'sa-2', name: 'Alice Support', email: 'alice@gymsmart.com', role: 'SUPPORT_AGENT', status: 'ACTIVE', lastLogin: '2026-07-11T08:30:00Z' },
-  { id: 'sa-3', name: 'Bob Billing', email: 'bob@gymsmart.com', role: 'BILLING_ADMIN', status: 'INACTIVE', lastLogin: '2026-07-01T12:00:00Z' }
-];
-
 export const DUMMY_BACKGROUND_JOBS: import('../superadmin_types/superadmin_types').BackgroundJob[] = [
   { id: 'job-9821', queueName: 'email_queue', jobName: 'SendWelcomeEmail', status: 'FAILED', attempts: 3, error: 'SMTP Connection Timeout', createdAt: '2026-07-11T09:45:00Z' },
   { id: 'job-9822', queueName: 'billing_queue', jobName: 'ProcessMonthlyRenewals', status: 'ACTIVE', attempts: 1, createdAt: '2026-07-11T09:55:00Z' },

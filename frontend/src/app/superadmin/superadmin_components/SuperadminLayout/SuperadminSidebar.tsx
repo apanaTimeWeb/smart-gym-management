@@ -22,7 +22,6 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Sideb
         { name: 'Subscription Plans', href: SuperadminUrlConfig.PAGES.PLANS, icon: CreditCard },
         { name: 'SaaS Invoices', href: SuperadminUrlConfig.PAGES.INVOICES, icon: Receipt },
         { name: 'Support Tickets', href: SuperadminUrlConfig.PAGES.TICKETS, icon: Ticket },
-        { name: 'Staff Roles', href: SuperadminUrlConfig.PAGES.STAFF, icon: Users },
       ]
     },
     {

@@ -5,7 +5,6 @@ export const SuperadminUrlConfig = {
     GYM_ADD: '/superadmin/gyms/add',
     PLANS: '/superadmin/plans',
     TICKETS: '/superadmin/tickets',
-    STAFF: '/superadmin/staff',
     INVOICES: '/superadmin/invoices',
     SYSTEM_HEALTH: '/superadmin/system',
     JOBS: '/superadmin/jobs',

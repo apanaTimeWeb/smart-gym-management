@@ -62,15 +62,6 @@ export interface SupportTicket {
   lastUpdated: string;
 }
 
-export interface SuperadminStaff {
-  id: string;
-  name: string;
-  email: string;
-  role: 'SUPERADMIN' | 'SUPPORT_AGENT' | 'BILLING_ADMIN';
-  status: 'ACTIVE' | 'INACTIVE';
-  lastLogin: string;
-}
-
 export interface BackgroundJob {
   id: string;
   queueName: string;
