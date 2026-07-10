@@ -2,6 +2,7 @@ export const LandingUrlConfig = {
   PAGES: {
     HOME: '/',
     ERP_LOGIN: '/login',
+    SAAS_LOGIN: '/saas/dashboard',
     DASHBOARD: '/dashboard',
   },
   ANCHORS: {

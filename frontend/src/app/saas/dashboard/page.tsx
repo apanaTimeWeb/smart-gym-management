@@ -5,7 +5,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { 
   DUMMY_DASHBOARD_METRICS, 
   REVENUE_CHART_DATA 
-} from '@/app/(saas)/superadmin_utils/SuperadminSharedConstants';
+} from '@/app/saas/superadmin_utils/SuperadminSharedConstants';
 
 export default function SaaSDashboard() {
   const metrics = [
@@ -88,3 +88,4 @@ export default function SaaSDashboard() {
     </div>
   );
 }
+

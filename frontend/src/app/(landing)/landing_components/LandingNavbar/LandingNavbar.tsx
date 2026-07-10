@@ -30,6 +30,9 @@ export default function LandingNavbar() {
 
         <div className="hidden md:flex items-center gap-3">
           <ThemeToggle />
+          <Link href={LandingUrlConfig.PAGES.SAAS_LOGIN} className="text-sm font-medium text-[var(--warning)] hover:text-white transition-colors px-3 py-1.5 border border-[var(--warning)]/30 rounded-lg">
+            SaaS Login
+          </Link>
           <Link href={LandingUrlConfig.PAGES.ERP_LOGIN} className="text-sm font-medium text-[var(--text-secondary)] hover:text-white transition-colors px-3 py-1.5">
             ERP Login
           </Link>
@@ -48,9 +51,10 @@ export default function LandingNavbar() {
  {['About', 'Plans', 'Trainers', 'Services', 'Schedule', 'Booking', 'Gallery', 'Contact'].map(item => (
  <a key={item} href={`#${item.toLowerCase()}`} onClick={() => setMenuOpen(false)} className="block text-[var(--text-secondary)] hover:text-[var(--warning)] py-2 text-sm font-medium">{item}</a>
  ))}
- <div className="flex gap-3 pt-2">
- <Link href={LandingUrlConfig.PAGES.ERP_LOGIN} className="flex-1 text-center border border-white/20 py-2.5 rounded-xl text-sm font-medium">ERP Login</Link>
- </div>
+  <div className="flex gap-3 pt-2 flex-col">
+  <Link href={LandingUrlConfig.PAGES.SAAS_LOGIN} className="w-full text-center border border-[var(--warning)] text-[var(--warning)] py-2.5 rounded-xl text-sm font-medium">SaaS Admin Login</Link>
+  <Link href={LandingUrlConfig.PAGES.ERP_LOGIN} className="w-full text-center border border-white/20 py-2.5 rounded-xl text-sm font-medium">ERP Login</Link>
+  </div>
  </div>
  )}
  </nav>

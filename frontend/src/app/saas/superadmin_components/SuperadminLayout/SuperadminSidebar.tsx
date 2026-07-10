@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LayoutDashboard, Building2, ServerCog, LogOut, ChevronLeft, ChevronRight } from 'lucide-react';
-import { SuperadminUrlConfig } from '@/app/(saas)/superadmin_url_config';
+import { SuperadminUrlConfig } from '@/app/saas/superadmin_url_config';
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -73,3 +73,4 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Sideb
     </aside>
   );
 }
+

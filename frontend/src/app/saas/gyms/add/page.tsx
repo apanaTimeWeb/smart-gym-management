@@ -6,8 +6,8 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, Database, Save, Loader2 } from 'lucide-react';
-import { SuperadminUrlConfig } from '@/app/(saas)/superadmin_url_config';
-import { OnboardGymSchema, OnboardGymFormValues } from '@/app/(saas)/superadmin_utils/SuperadminValidation';
+import { SuperadminUrlConfig } from '@/app/saas/superadmin_url_config';
+import { OnboardGymSchema, OnboardGymFormValues } from '@/app/saas/superadmin_utils/SuperadminValidation';
 import toast from 'react-hot-toast';
 
 export default function AddGymPage() {
@@ -181,3 +181,4 @@ export default function AddGymPage() {
     </div>
   );
 }
+

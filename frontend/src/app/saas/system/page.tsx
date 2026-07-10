@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Database, ShieldAlert, Activity, Filter, RefreshCcw, Search } from 'lucide-react';
-import { DUMMY_TENANTS, DUMMY_AUDIT_LOGS } from '@/app/(saas)/superadmin_utils/SuperadminSharedConstants';
+import { DUMMY_TENANTS, DUMMY_AUDIT_LOGS } from '@/app/saas/superadmin_utils/SuperadminSharedConstants';
 
 export default function SystemHealthPage() {
   const [logSearch, setLogSearch] = useState('');
@@ -128,3 +128,4 @@ export default function SystemHealthPage() {
     </div>
   );
 }
+

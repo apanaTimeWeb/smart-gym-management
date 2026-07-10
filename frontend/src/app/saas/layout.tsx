@@ -1,4 +1,4 @@
-import SuperadminLayout from '@/app/(saas)/superadmin_components/SuperadminLayout/SuperadminLayout';
+import SuperadminLayout from '@/app/saas/superadmin_components/SuperadminLayout/SuperadminLayout';
 
 export default function SaaSLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -7,3 +7,4 @@ export default function SaaSLayout({ children }: { children: React.ReactNode }) 
     </div>
   );
 }
+

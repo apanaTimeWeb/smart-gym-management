@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Plus, Search, MoreVertical, LogIn, Ban, CheckCircle2 } from 'lucide-react';
-import { DUMMY_TENANTS } from '@/app/(saas)/superadmin_utils/SuperadminSharedConstants';
-import { SuperadminUrlConfig } from '@/app/(saas)/superadmin_url_config';
+import { DUMMY_TENANTS } from '@/app/saas/superadmin_utils/SuperadminSharedConstants';
+import { SuperadminUrlConfig } from '@/app/saas/superadmin_url_config';
 import toast from 'react-hot-toast';
 
 export default function GymsList() {
@@ -143,3 +143,4 @@ export default function GymsList() {
     </div>
   );
 }
+
