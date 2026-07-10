@@ -208,3 +208,28 @@ export const DUMMY_BACKUPS: import('../superadmin_types/superadmin_types').Backu
   { id: 'bkp-3', tenantName: 'Vitality Studio', databaseName: 'tenant_db_102', sizeMB: 450.2, status: 'SUCCESS', timestamp: '2026-07-11T02:05:00Z' },
   { id: 'bkp-4', tenantName: 'Core Wellness Hub', databaseName: 'tenant_db_104', sizeMB: 85.1, status: 'FAILED', timestamp: '2026-07-11T02:10:00Z' }
 ];
+
+export const DUMMY_INVOICES: import('../superadmin_types/superadmin_types').SaaSInvoice[] = [
+  { id: 'inv-881', tenantName: 'Iron Forge Fitness', amount: 99.00, currency: 'USD', status: 'PAID', date: '2026-07-01T08:00:00Z', planName: 'PRO' },
+  { id: 'inv-882', tenantName: 'Apex Muscle Gym', amount: 249.00, currency: 'USD', status: 'FAILED', date: '2026-07-05T08:00:00Z', planName: 'ENTERPRISE' },
+  { id: 'inv-883', tenantName: 'Vitality Studio', amount: 49.00, currency: 'USD', status: 'PAID', date: '2026-07-02T08:00:00Z', planName: 'BASIC' },
+  { id: 'inv-884', tenantName: 'Titanium Lifting Club', amount: 99.00, currency: 'USD', status: 'PENDING', date: '2026-07-10T08:00:00Z', planName: 'PRO' },
+];
+
+export const DUMMY_FEATURE_FLAGS: import('../superadmin_types/superadmin_types').FeatureFlag[] = [
+  { id: 'ff-1', name: 'AI_DIET_PLANNER', description: 'Generates diet plans using LLMs', isGlobalEnabled: false, enabledTenantIds: ['t-101', 't-103'] },
+  { id: 'ff-2', name: 'WHATSAPP_INTEGRATION', description: 'Automated WhatsApp reminders', isGlobalEnabled: true, enabledTenantIds: [] },
+  { id: 'ff-3', name: 'FINGERPRINT_SCANNER', description: 'Hardware integration for biometric attendance', isGlobalEnabled: false, enabledTenantIds: ['t-103'] },
+];
+
+export const DUMMY_RELEASE_NOTES: import('../superadmin_types/superadmin_types').ReleaseNote[] = [
+  { id: 'rn-1', version: 'v2.5.0', title: 'WhatsApp Integration is Live!', content: 'You can now connect your gym WhatsApp account...', date: '2026-07-01T10:00:00Z', isPublished: true },
+  { id: 'rn-2', version: 'v2.6.0', title: 'AI Diet Planner Beta', content: 'Testing out the new AI diet planner...', date: '2026-07-15T10:00:00Z', isPublished: false },
+];
+
+export const DUMMY_MIGRATIONS: import('../superadmin_types/superadmin_types').SchemaMigration[] = [
+  { id: 'mig-001', name: '1689000000001-CreateUsersTable', appliedAt: '2026-01-01T00:00:00Z', status: 'SUCCESS' },
+  { id: 'mig-002', name: '1689000000002-AddGSTToInvoices', appliedAt: '2026-06-15T00:00:00Z', status: 'SUCCESS' },
+  { id: 'mig-003', name: '1689000000003-CreateDietPlans', appliedAt: null, status: 'PENDING' },
+];
+

@@ -89,3 +89,38 @@ export interface BackupRecord {
   status: 'SUCCESS' | 'FAILED' | 'IN_PROGRESS';
   timestamp: string;
 }
+
+// Phase 3 Types
+export interface SaaSInvoice {
+  id: string;
+  tenantName: string;
+  amount: number;
+  currency: string;
+  status: 'PAID' | 'PENDING' | 'FAILED';
+  date: string;
+  planName: SaaSPlanTier;
+}
+
+export interface FeatureFlag {
+  id: string;
+  name: string;
+  description: string;
+  isGlobalEnabled: boolean;
+  enabledTenantIds: string[];
+}
+
+export interface ReleaseNote {
+  id: string;
+  version: string;
+  title: string;
+  content: string;
+  date: string;
+  isPublished: boolean;
+}
+
+export interface SchemaMigration {
+  id: string;
+  name: string;
+  appliedAt: string | null;
+  status: 'PENDING' | 'SUCCESS' | 'FAILED';
+}

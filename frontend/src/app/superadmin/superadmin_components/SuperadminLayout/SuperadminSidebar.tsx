@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Building2, ServerCog, LogOut, ChevronLeft, ChevronRight, CreditCard, Ticket, Users, Activity, HardDrive, DatabaseBackup } from 'lucide-react';
+import { LayoutDashboard, Building2, ServerCog, LogOut, ChevronLeft, ChevronRight, CreditCard, Ticket, Users, Activity, HardDrive, DatabaseBackup, Receipt, ToggleLeft, DatabaseZap } from 'lucide-react';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 
 interface SidebarProps {
@@ -20,14 +20,22 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Sideb
         { name: 'Dashboard', href: SuperadminUrlConfig.PAGES.DASHBOARD, icon: LayoutDashboard },
         { name: 'Tenants (Gyms)', href: SuperadminUrlConfig.PAGES.GYMS_LIST, icon: Building2 },
         { name: 'Subscription Plans', href: SuperadminUrlConfig.PAGES.PLANS, icon: CreditCard },
+        { name: 'SaaS Invoices', href: SuperadminUrlConfig.PAGES.INVOICES, icon: Receipt },
         { name: 'Support Tickets', href: SuperadminUrlConfig.PAGES.TICKETS, icon: Ticket },
         { name: 'Staff Roles', href: SuperadminUrlConfig.PAGES.STAFF, icon: Users },
+      ]
+    },
+    {
+      group: 'Product',
+      items: [
+        { name: 'Feature Flags', href: SuperadminUrlConfig.PAGES.FEATURES, icon: ToggleLeft },
       ]
     },
     {
       group: 'System & Infra',
       items: [
         { name: 'Infrastructure', href: SuperadminUrlConfig.PAGES.INFRASTRUCTURE, icon: HardDrive },
+        { name: 'Schema Rollouts', href: SuperadminUrlConfig.PAGES.MIGRATIONS, icon: DatabaseZap },
         { name: 'Background Jobs', href: SuperadminUrlConfig.PAGES.JOBS, icon: Activity },
         { name: 'Database Backups', href: SuperadminUrlConfig.PAGES.BACKUPS, icon: DatabaseBackup },
         { name: 'System & Audit', href: SuperadminUrlConfig.PAGES.SYSTEM_HEALTH, icon: ServerCog },
