@@ -14,6 +14,7 @@ import { HrUrlConfig } from '@/app/(erp)/hr/hr_url_config';
 import { AttendanceUrlConfig } from '@/app/(erp)/attendance/attendance_url_config';
 import { StoreUrlConfig } from '@/app/(erp)/store/store_url_config';
 import { WorkoutUrlConfig } from '@/app/(erp)/workout/workout_url_config';
+import { LibraryUrlConfig } from '@/app/(erp)/library/library_url_config';
 import { InquiriesUrlConfig } from '@/app/(erp)/inquiries/inquiries_url_config';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
@@ -299,7 +300,7 @@ export interface Attendance {
 export const storeApi = {
   getProducts: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<{ success: boolean; data: Product[] }>(`${StoreUrlConfig.BACKEND_API.PRODUCTS_BASE}${q}`);
+    return apiFetch<{ success: boolean; data: { products: Product[]; total: number } }>(`${StoreUrlConfig.BACKEND_API.PRODUCTS_BASE}${q}`);
   },
   createProduct: (body: Partial<Product>) =>
     apiFetch(StoreUrlConfig.BACKEND_API.PRODUCTS_BASE, { method: 'POST', body: JSON.stringify(body) }),
@@ -352,7 +353,7 @@ export const workoutApi = {
 export const libraryApi = {
   getExercises: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<{ success: boolean; data: Exercise[] }>(`${LibraryUrlConfig.BACKEND_API.EXERCISES_BASE}${q}`);
+    return apiFetch<{ success: boolean; data: { Exercises: Exercise[]; total: number } }>(`${LibraryUrlConfig.BACKEND_API.EXERCISES_BASE}${q}`);
   },
   createExercise: (body: Partial<Exercise>) =>
     apiFetch(LibraryUrlConfig.BACKEND_API.EXERCISES_BASE, { method: 'POST', body: JSON.stringify(body) }),
@@ -361,7 +362,7 @@ export const libraryApi = {
   removeExercise: (id: number) => apiFetch(LibraryUrlConfig.BACKEND_API.EXERCISE_DELETE(id), { method: 'DELETE' }),
   getDietPlans: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<{ success: boolean; data: DietPlan[] }>(`${LibraryUrlConfig.BACKEND_API.DIET_PLANS_BASE}${q}`);
+    return apiFetch<{ success: boolean; data: { dietPlans: DietPlan[]; total: number } }>(`${LibraryUrlConfig.BACKEND_API.DIET_PLANS_BASE}${q}`);
   },
   createDietPlan: (body: Partial<DietPlan>) =>
     apiFetch(LibraryUrlConfig.BACKEND_API.DIET_PLANS_BASE, { method: 'POST', body: JSON.stringify(body) }),
