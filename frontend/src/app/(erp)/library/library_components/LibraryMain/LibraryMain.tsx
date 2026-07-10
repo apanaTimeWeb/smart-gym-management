@@ -6,16 +6,22 @@ import { LibraryProvider, useLibraryContext } from '@/app/(erp)/library/library_
 import LibraryTabs from '@/app/(erp)/library/library_components/LibraryTabs/LibraryTabs';
 import ExerciseModal from '@/app/(erp)/library/library_components/ExerciseModal/ExerciseModal';
 import DietModal from '@/app/(erp)/library/library_components/DietModal/DietModal';
+import ExerciseGrid from '@/app/(erp)/library/library_components/ExerciseGrid/ExerciseGrid';
+import DietGrid from '@/app/(erp)/library/library_components/DietGrid/DietGrid';
 import '@/app/(erp)/library/library.css';
 
 function LibraryContent() {
- const { toast, hideToast } = useLibraryContext();
+ const { toast, hideToast, tab } = useLibraryContext();
 
  return (
  <div className="min-h-full pb-10 library-module">
  <ErpHeader title="Library" subtitle="Manage exercises and diet plans for member assignments" />
  <div className="p-6 space-y-5">
  <LibraryTabs />
+ 
+ <div className="bg-[var(--library-bg-card)] rounded-xl shadow-sm border border-[var(--library-border)] overflow-hidden p-5">
+   {tab === 'Exercises' ? <ExerciseGrid /> : <DietGrid />}
+ </div>
  </div>
 
  <ExerciseModal />
