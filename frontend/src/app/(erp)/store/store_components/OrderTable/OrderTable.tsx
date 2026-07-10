@@ -7,18 +7,10 @@ import { formatCurrency } from '@/app/(erp)/store/store_utils/StoreSharedConstan
 import ErpPagination from '@/app/(erp)/erp_components/ErpShared/ErpPagination';
 
 export default function OrderTable() {
-  const { orders, loading, debouncedSearch, currentPage, setCurrentPage, setPrintData } = useStoreContext();
-
-  const filtered = orders.filter(o => {
-    const s = debouncedSearch.toLowerCase();
-    const idMatch = `ORD-${String(o.id).padStart(4, '0')}`.toLowerCase().includes(s);
-    const methodMatch = o.method.toLowerCase().includes(s);
-    return idMatch || methodMatch;
-  });
+  const { orders, totalOrders, loading, currentPage, setCurrentPage, setPrintData } = useStoreContext();
 
   const ITEMS_PER_PAGE = 10;
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
-  const currentData = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(totalOrders / ITEMS_PER_PAGE);
 
   if (loading) {
     return (
@@ -42,7 +34,7 @@ export default function OrderTable() {
             </tr>
           </thead>
           <tbody className="divide-y divide-[var(--store-border)]">
-            {currentData.map(o => (
+            {orders.map(o => (
               <tr key={o.id} className="hover:bg-[var(--primary-subtle)] transition-colors">
                 <td className="px-4 py-3 text-sm font-mono text-[var(--store-text-primary)]">
                   ORD-{String(o.id).padStart(4, '0')}
@@ -89,7 +81,7 @@ export default function OrderTable() {
                 </td>
               </tr>
             ))}
-            {filtered.length === 0 && (
+            {orders.length === 0 && (
               <tr>
                 <td colSpan={6} className="text-center py-10 text-[var(--store-text-secondary)]">
                   No orders found.
@@ -102,7 +94,7 @@ export default function OrderTable() {
       <ErpPagination 
         currentPage={currentPage} 
         totalPages={totalPages} 
-        totalItems={filtered.length} 
+        totalItems={totalOrders} 
         itemsPerPage={ITEMS_PER_PAGE} 
         onPageChange={setCurrentPage} 
       />

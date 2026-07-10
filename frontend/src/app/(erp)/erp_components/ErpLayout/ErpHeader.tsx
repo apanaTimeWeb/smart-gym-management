@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Bell, Search, LogOut, Settings, User, X, Menu } from 'lucide-react';
 import Link from 'next/link';
 import { getUser, logout } from '@/lib/api';
-import { ERP_NOTIFICATIONS } from '@/app/(erp)/erp_utils/ErpSharedConstants';
+import { ERP_PLACEHOLDER_NOTIFICATIONS } from '@/app/(erp)/erp_utils/ErpSharedConstants';
 
 import { ThemeToggle } from '@/components/ThemeToggle';
 
@@ -83,7 +83,7 @@ export default function ErpHeader({ title, subtitle }: ErpHeaderProps) {
  <button onClick={() => setShowNotifications(false)} className="text-[var(--text-secondary)] hover:text-[var(--text-primary)]"><X size={16} /></button>
  </div>
  <div className="max-h-[300px] overflow-y-auto">
- {ERP_NOTIFICATIONS.map(n => (
+              {ERP_PLACEHOLDER_NOTIFICATIONS.map(n => (
  <div key={n.id} className={`px-4 py-3 border-b border-[var(--border)] hover:bg-[var(--bg-input)] transition-colors cursor-pointer ${n.unread ? 'bg-[var(--primary-subtle)]' : ''}`}>
  <p className={`text-sm ${n.unread ? 'text-[var(--text-primary)] font-medium' : 'text-[var(--text-secondary)]'}`}>{n.text}</p>
  <span className="text-xs text-[var(--text-secondary)] mt-1 block">{n.time}</span>

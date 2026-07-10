@@ -20,7 +20,8 @@ export const ERP_NAV_ITEMS = [
  { href: '/settings', label: 'Settings', icon: Settings },
 ];
 
-export const ERP_NOTIFICATIONS = [
+// TODO: Replace with real API call once Notifications backend module is built.
+export const ERP_PLACEHOLDER_NOTIFICATIONS = [
  { id: 1, text: 'New member Amit registered', time: '5m ago', unread: true },
  { id: 2, text: 'Payment received from Rahul', time: '1h ago', unread: false },
  { id: 3, text: 'Pooja requested a trial session', time: '2h ago', unread: false },

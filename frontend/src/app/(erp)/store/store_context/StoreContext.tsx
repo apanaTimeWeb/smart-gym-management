@@ -10,7 +10,7 @@ export function StoreProvider({ children, initialData }: { children: React.React
  const logic = useStoreLogic(initialData);
 
  const {
-   tab, products, orders, summary, loading, saving,
+   tab, products, orders, totalOrders, summary, loading, saving,
    toast, printData, search, debouncedSearch, currentPage,
    showProductModal, editProductId, editProductData,
    showOrderModal, orderItems, orderMethod, orderTotal
@@ -18,7 +18,7 @@ export function StoreProvider({ children, initialData }: { children: React.React
 
  // eslint-disable-next-line react-hooks/exhaustive-deps
  const value = useMemo(() => logic, [
-   tab, products, orders, summary, loading, saving,
+   tab, products, orders, totalOrders, summary, loading, saving,
    toast, printData, search, debouncedSearch, currentPage,
    showProductModal, editProductId, editProductData,
    showOrderModal, orderItems, orderMethod, orderTotal

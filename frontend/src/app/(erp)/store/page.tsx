@@ -7,12 +7,13 @@ export default async function StorePage() {
   try {
     const [productsRes, ordersRes, summaryRes] = await Promise.all([
       ssrStoreApi.getProducts(),
-      ssrStoreApi.getOrders({ limit: '100' }),
+      ssrStoreApi.getOrders({ limit: '10', page: '1' }),
       ssrStoreApi.getStoreSummary(),
     ]);
     initialData = {
       products: Array.isArray(productsRes.data) ? productsRes.data : (productsRes.data as any).products || [],
       orders: ordersRes.data.orders || [],
+      totalOrders: ordersRes.data.total || 0,
       summary: summaryRes.data || null
     };
   } catch (e) {

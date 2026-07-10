@@ -1,7 +1,7 @@
 "use client";
 
 import { useDashboardContext } from '@/app/(erp)/dashboard/dashboard_context/DashboardContext';
-import ErpStatCard from '@/app/(erp)/erp_components/ErpStatCard';
+import ErpStatCard from '@/app/(erp)/erp_components/ErpShared/ErpStatCard';
 import { Users, DollarSign, TrendingUp, AlertCircle, CheckCircle, Clock, UserCheck, ShoppingCart } from 'lucide-react';
 
 const fmt = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');

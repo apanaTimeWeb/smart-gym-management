@@ -17,6 +17,7 @@ export interface StoreContextType {
  
  products: Product[];
  orders: Order[];
+ totalOrders: number;
  summary: StoreSummary | null;
  loading: boolean;
  saving: boolean;

@@ -13,6 +13,7 @@ export function useStoreLogic(initialData?: any): StoreContextType {
   const [tab, setTab] = useState('Products');
   const [products, setProducts] = useState<Product[]>(initialData?.products || []);
   const [orders, setOrders] = useState<Order[]>(initialData?.orders || []);
+  const [totalOrders, setTotalOrders] = useState<number>(initialData?.totalOrders || 0);
   const [summary, setSummary] = useState<StoreSummary | null>(initialData?.summary || null);
   const [loading, setLoading] = useState(!initialData);
   const [saving, setSaving] = useState(false);
@@ -39,20 +40,27 @@ export function useStoreLogic(initialData?: any): StoreContextType {
  const loadAll = useCallback(async () => {
  setLoading(true);
  try {
- const [productsRes, ordersRes, summaryRes] = await Promise.all([
- storeApi.getProducts(),
- storeApi.getOrders({ limit: '100' }),
- storeApi.getStoreSummary(),
- ]);
- setProducts(Array.isArray(productsRes.data) ? productsRes.data : (productsRes.data as any).products || []);
- setOrders(ordersRes.data.orders);
- setSummary(summaryRes.data);
+      const params: Record<string, string> = { 
+        limit: '10', 
+        page: currentPage.toString() 
+      };
+      if (debouncedSearch) params.search = debouncedSearch;
+
+      const [productsRes, ordersRes, summaryRes] = await Promise.all([
+        storeApi.getProducts(),
+        storeApi.getOrders(params),
+        storeApi.getStoreSummary(),
+      ]);
+      setProducts(Array.isArray(productsRes.data) ? productsRes.data : (productsRes.data as any).products || []);
+      setOrders(ordersRes.data.orders || []);
+      setTotalOrders(ordersRes.data.total || 0);
+      setSummary(summaryRes.data);
  } catch (e) { 
  showToast((e as Error).message, 'error'); 
  } finally { 
  setLoading(false); 
  }
- }, [showToast]);
+ }, [showToast, currentPage, debouncedSearch]);
 
   useEffect(() => { 
     if (isFirstRender.current && initialData) {
@@ -170,9 +178,9 @@ export function useStoreLogic(initialData?: any): StoreContextType {
 
   return {
     tab, setTab,
-    products, orders, summary, loading, saving,
-    toast, printData,
-    search, debouncedSearch, setSearch, currentPage, setCurrentPage,
+    products, orders, totalOrders, summary, loading, saving,
+    toast, printData, search, debouncedSearch, setSearch,
+    currentPage, setCurrentPage,
     showProductModal, setShowProductModal, editProductId, editProductData,
     showOrderModal, setShowOrderModal, orderItems, orderMethod, setOrderMethod,
     hideToast, setPrintData, loadAll,
