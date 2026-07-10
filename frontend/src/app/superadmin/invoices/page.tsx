@@ -210,14 +210,25 @@ export default function SaaSInvoicesPage() {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1.5">Payment Method / Reference</label>
-                <input type="text" placeholder="e.g. Bank Transfer (Ref: TXN123)" className="w-full bg-[var(--bg-input)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)]" />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1.5">Payment Method</label>
+                  <select className="w-full bg-[var(--bg-input)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] cursor-pointer">
+                    <option value="UPI">UPI</option>
+                    <option value="CASH">Cash</option>
+                    <option value="BANK_TRANSFER">Bank Transfer</option>
+                    <option value="OFFLINE">Other / Offline</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1.5">Reference ID</label>
+                  <input type="text" placeholder="e.g. TXN123456" className="w-full bg-[var(--bg-input)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)]" />
+                </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1.5">Date Received</label>
-                <input type="date" className="w-full bg-[var(--bg-input)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)]" />
+                <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1.5">Date & Time Received</label>
+                <input type="datetime-local" className="w-full bg-[var(--bg-input)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)]" />
               </div>
             </div>
 
