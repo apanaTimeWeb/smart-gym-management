@@ -239,7 +239,7 @@ export interface FinanceSummary {
 export const hrApi = {
   getStaff: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<{ success: boolean; data: Staff[] }>(`${HrUrlConfig.BACKEND_API.STAFF_BASE}${q}`);
+    return apiFetch<{ success: boolean; data: { staff: Staff[]; total: number } }>(`${HrUrlConfig.BACKEND_API.STAFF_BASE}${q}`);
   },
   getOneStaff: (id: number) => apiFetch<{ success: boolean; data: Staff }>(HrUrlConfig.BACKEND_API.STAFF_GET_ONE(id)),
   createStaff: (body: Partial<Staff>) =>
@@ -249,7 +249,7 @@ export const hrApi = {
   removeStaff: (id: number) => apiFetch(HrUrlConfig.BACKEND_API.STAFF_DELETE(id), { method: 'DELETE' }),
   getPayrolls: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<{ success: boolean; data: Payroll[] }>(`${HrUrlConfig.BACKEND_API.PAYROLLS_BASE}${q}`);
+    return apiFetch<{ success: boolean; data: { payrolls: Payroll[]; total: number } }>(`${HrUrlConfig.BACKEND_API.PAYROLLS_BASE}${q}`);
   },
   createPayroll: (body: Partial<Payroll>) =>
     apiFetch(HrUrlConfig.BACKEND_API.PAYROLLS_BASE, { method: 'POST', body: JSON.stringify(body) }),
