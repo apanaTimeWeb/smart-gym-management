@@ -22,7 +22,7 @@ import type { AuthLoginResponse } from '@/modules/auth/auth.interfaces';
 import type { Request } from 'express';
 
 @ApiTags('Auth')
-@Controller('auth')
+@Controller()
 export class AuthLoginController {
   constructor(private readonly authLoginService: AuthLoginService) {}
 
