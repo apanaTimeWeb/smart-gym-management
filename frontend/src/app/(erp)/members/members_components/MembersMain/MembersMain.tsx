@@ -15,22 +15,27 @@ import MemberModal from '@/app/(erp)/members/members_components/MemberModal/Memb
 import '@/app/(erp)/members/members.css';
 
 function MembersContent() {
- const { toast, hideToast, msgModal, closeMsg, showToast, printData, setPrintData } = useMembersContext();
+  const { toast, hideToast, msgModal, closeMsg, showToast, printData, setPrintData, selectedMember } = useMembersContext();
 
- return (
- <div className="min-h-full pb-10 members-module">
- <div className="print-hide">
- <ErpHeader title="Members Directory" subtitle="Manage gym members, profiles, and subscriptions" />
- <div className="p-6 space-y-5">
- <MembersKPIs />
- <div className="bg-[var(--members-bg-card)] rounded-xl shadow-sm border border-[var(--members-border)] overflow-hidden">
- <MembersToolbar />
- <MembersTable />
- </div>
- </div>
+  return (
+    <div className="min-h-full pb-10 members-module">
+      <div className="print-hide">
+        {!selectedMember ? (
+          <>
+            <ErpHeader title="Members Directory" subtitle="Manage gym members, profiles, and subscriptions" />
+            <div className="p-6 space-y-5">
+              <MembersKPIs />
+              <div className="bg-[var(--members-bg-card)] rounded-xl shadow-sm border border-[var(--members-border)] overflow-hidden">
+                <MembersToolbar />
+                <MembersTable />
+              </div>
+            </div>
+          </>
+        ) : (
+          <MemberProfile />
+        )}
 
- <MemberModal />
- <MemberProfile />
+        <MemberModal />
 
  {msgModal?.open && (
  <ErpMessageModal 
