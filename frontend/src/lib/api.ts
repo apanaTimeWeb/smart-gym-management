@@ -265,12 +265,6 @@ export const storeApi = {
 
 
 
-// ─── Sales ────────────────────────────────────────────────────────────────────
-
-export const salesApi = {
-  getOverview: () => apiFetch<{ success: boolean; data: any }>(SalesUrlConfig.BACKEND_API.BASE),
-};
-
 // ─── Workout ──────────────────────────────────────────────────────────────────
 
 export const workoutApi = {
@@ -325,5 +319,22 @@ export const inquiriesApi = {
   remove: (id: number) => apiFetch(InquiriesUrlConfig.BACKEND_API.DELETE(id), { method: 'DELETE' }),
 };
 
+// ─── Sales ────────────────────────────────────────────────────────────────────
+
+export const salesApi = {
+  getOverview: () => apiFetch<{ success: boolean; data: { monthlyRevenue: any[] } }>(SalesUrlConfig.BACKEND_API.OVERVIEW),
+  getMembershipReport: (params?: Record<string, string>) => {
+    const q = params ? '?' + new URLSearchParams(params).toString() : '';
+    return apiFetch<{ success: boolean; data: { report: any[]; totals: any } }>(`${SalesUrlConfig.BACKEND_API.MEMBERSHIP_REPORT}${q}`);
+  },
+  getPendingPayments: (params?: Record<string, string>) => {
+    const q = params ? '?' + new URLSearchParams(params).toString() : '';
+    return apiFetch<{ success: boolean; data: { members: any[]; total: number } }>(`${SalesUrlConfig.BACKEND_API.PENDING_PAYMENTS}${q}`);
+  },
+  getAllMemberships: (params?: Record<string, string>) => {
+    const q = params ? '?' + new URLSearchParams(params).toString() : '';
+    return apiFetch<{ success: boolean; data: { members: any[]; total: number } }>(`${SalesUrlConfig.BACKEND_API.ALL_MEMBERSHIPS}${q}`);
+  },
+};
 
 

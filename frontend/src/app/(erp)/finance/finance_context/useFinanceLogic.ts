@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { financeApi, type Payment, type FinanceSummary } from '@/lib/api';
 import type { ToastType } from '@/app/(erp)/erp_components/ErpFeedback/ErpToast';
 import { FinanceContextType } from '@/app/(erp)/finance/finance_types/finance_types';
@@ -14,7 +14,7 @@ export function useFinanceLogic(initialData?: any): FinanceContextType {
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const isFirstRender = React.useRef(true);
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(search), 300);
