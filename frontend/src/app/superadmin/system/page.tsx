@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { Database, ShieldAlert, Activity, Filter, RefreshCcw, Search } from 'lucide-react';
 import { DUMMY_TENANTS, DUMMY_AUDIT_LOGS } from '@/app/superadmin/superadmin_utils/SuperadminSharedConstants';
 
+export const metadata = { title: 'System & Audit | GymSmart SaaS' };
+
 export default function SystemHealthPage() {
   const [logSearch, setLogSearch] = useState('');
   

@@ -7,6 +7,8 @@ import {
   REVENUE_CHART_DATA 
 } from '@/app/superadmin/superadmin_utils/SuperadminSharedConstants';
 
+export const metadata = { title: 'SaaS Dashboard | GymSmart' };
+
 export default function SaaSDashboard() {
   const metrics = [
     { label: 'Total MRR', value: `$${DUMMY_DASHBOARD_METRICS.monthlyRecurringRevenue.toLocaleString()}`, icon: CreditCard, color: 'text-[var(--success)]' },

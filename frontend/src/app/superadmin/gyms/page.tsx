@@ -7,6 +7,8 @@ import { DUMMY_TENANTS } from '@/app/superadmin/superadmin_utils/SuperadminShare
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import toast from 'react-hot-toast';
 
+export const metadata = { title: 'Manage Tenants | GymSmart SaaS' };
+
 export default function GymsList() {
   const [search, setSearch] = useState('');
   
