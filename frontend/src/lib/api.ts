@@ -4,41 +4,41 @@
  * Base URL: http://localhost:5000/api/v1
  */
 
-import { AuthUrlConfig } from '@/app/(auth)/auth_url_config';
+import { AuthUrlConfig } from '@/app/auth/auth_url_config';
 import { StatusCodes } from 'http-status-codes';
-import { DashboardUrlConfig } from '@/app/(erp)/dashboard/dashboard_url_config';
-import { MembersUrlConfig } from '@/app/(erp)/members/members_url_config';
-import { PlansUrlConfig } from '@/app/(erp)/plans/plans_url_config';
-import { FinanceUrlConfig } from '@/app/(erp)/finance/finance_url_config';
-import { HrUrlConfig } from '@/app/(erp)/hr/hr_url_config';
-import { AttendanceUrlConfig } from '@/app/(erp)/attendance/attendance_url_config';
-import { StoreUrlConfig } from '@/app/(erp)/store/store_url_config';
-import { WorkoutUrlConfig } from '@/app/(erp)/workout/workout_url_config';
-import { LibraryUrlConfig } from '@/app/(erp)/library/library_url_config';
-import { InquiriesUrlConfig } from '@/app/(erp)/inquiries/inquiries_url_config';
-import { SalesUrlConfig } from '@/app/(erp)/sales/sales_url_config';
+import { DashboardUrlConfig } from '@/app/erp/dashboard/dashboard_url_config';
+import { MembersUrlConfig } from '@/app/erp/members/members_url_config';
+import { PlansUrlConfig } from '@/app/erp/plans/plans_url_config';
+import { FinanceUrlConfig } from '@/app/erp/finance/finance_url_config';
+import { HrUrlConfig } from '@/app/erp/hr/hr_url_config';
+import { AttendanceUrlConfig } from '@/app/erp/attendance/attendance_url_config';
+import { StoreUrlConfig } from '@/app/erp/store/store_url_config';
+import { WorkoutUrlConfig } from '@/app/erp/workout/workout_url_config';
+import { LibraryUrlConfig } from '@/app/erp/library/library_url_config';
+import { InquiriesUrlConfig } from '@/app/erp/inquiries/inquiries_url_config';
+import { SalesUrlConfig } from '@/app/erp/sales/sales_url_config';
 
-export type { DashboardStats, RecentMember, RecentPayment, PendingPayment } from '@/app/(erp)/dashboard/dashboard_types/dashboard_types';
-export type { Member, MemberStats } from '@/app/(erp)/members/members_types/members_types';
-export type { Plan } from '@/app/(erp)/plans/plans_types/plans_types';
-export type { Payment, FinanceSummary } from '@/app/(erp)/finance/finance_types/finance_types';
-export type { Staff, Payroll, HrSummary } from '@/app/(erp)/hr/hr_types/hr_types';
-export type { Attendance } from '@/app/(erp)/attendance/attendance_types/attendance_types';
-export type { Product, Order, StoreSummary } from '@/app/(erp)/store/store_types/store_types';
-export type { Workout } from '@/app/(erp)/workout/workout_types/workout_types';
-export type { Exercise, DietPlan } from '@/app/(erp)/library/library_types/library_types';
-export type { Inquiry, InquiryStats } from '@/app/(erp)/inquiries/inquiries_types/inquiries_types';
+export type { DashboardStats, RecentMember, RecentPayment, PendingPayment } from '@/app/erp/dashboard/dashboard_types/dashboard_types';
+export type { Member, MemberStats } from '@/app/erp/members/members_types/members_types';
+export type { Plan } from '@/app/erp/plans/plans_types/plans_types';
+export type { Payment, FinanceSummary } from '@/app/erp/finance/finance_types/finance_types';
+export type { Staff, Payroll, HrSummary } from '@/app/erp/hr/hr_types/hr_types';
+export type { Attendance } from '@/app/erp/attendance/attendance_types/attendance_types';
+export type { Product, Order, StoreSummary } from '@/app/erp/store/store_types/store_types';
+export type { Workout } from '@/app/erp/workout/workout_types/workout_types';
+export type { Exercise, DietPlan } from '@/app/erp/library/library_types/library_types';
+export type { Inquiry, InquiryStats } from '@/app/erp/inquiries/inquiries_types/inquiries_types';
 
-import type { DashboardStats, RecentMember, RecentPayment, PendingPayment } from '@/app/(erp)/dashboard/dashboard_types/dashboard_types';
-import type { Member, MemberStats } from '@/app/(erp)/members/members_types/members_types';
-import type { Plan } from '@/app/(erp)/plans/plans_types/plans_types';
-import type { Payment, FinanceSummary } from '@/app/(erp)/finance/finance_types/finance_types';
-import type { Staff, Payroll, HrSummary } from '@/app/(erp)/hr/hr_types/hr_types';
-import type { Attendance } from '@/app/(erp)/attendance/attendance_types/attendance_types';
-import type { Product, Order, StoreSummary } from '@/app/(erp)/store/store_types/store_types';
-import type { Workout } from '@/app/(erp)/workout/workout_types/workout_types';
-import type { Exercise, DietPlan } from '@/app/(erp)/library/library_types/library_types';
-import type { Inquiry, InquiryStats } from '@/app/(erp)/inquiries/inquiries_types/inquiries_types';
+import type { DashboardStats, RecentMember, RecentPayment, PendingPayment } from '@/app/erp/dashboard/dashboard_types/dashboard_types';
+import type { Member, MemberStats } from '@/app/erp/members/members_types/members_types';
+import type { Plan } from '@/app/erp/plans/plans_types/plans_types';
+import type { Payment, FinanceSummary } from '@/app/erp/finance/finance_types/finance_types';
+import type { Staff, Payroll, HrSummary } from '@/app/erp/hr/hr_types/hr_types';
+import type { Attendance } from '@/app/erp/attendance/attendance_types/attendance_types';
+import type { Product, Order, StoreSummary } from '@/app/erp/store/store_types/store_types';
+import type { Workout } from '@/app/erp/workout/workout_types/workout_types';
+import type { Exercise, DietPlan } from '@/app/erp/library/library_types/library_types';
+import type { Inquiry, InquiryStats } from '@/app/erp/inquiries/inquiries_types/inquiries_types';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 

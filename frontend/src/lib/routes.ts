@@ -1,18 +1,18 @@
 export const ROUTES = {
-  LOGIN: '/login',
-  DASHBOARD: '/dashboard',
+  LOGIN: '/auth/login',
+  DASHBOARD: '/erp/dashboard',
   ERP_PREFIXES: [
-    '/dashboard',
-    '/members',
-    '/plans',
-    '/finance',
-    '/hr',
-    '/attendance',
-    '/store',
-    '/workout',
-    '/inquiries',
-    '/settings',
-    '/library',
-    '/sales'
+    '/erp/dashboard',
+    '/erp/members',
+    '/erp/plans',
+    '/erp/finance',
+    '/erp/hr',
+    '/erp/attendance',
+    '/erp/store',
+    '/erp/workout',
+    '/erp/inquiries',
+    '/erp/settings',
+    '/erp/library',
+    '/erp/sales'
   ]
 };

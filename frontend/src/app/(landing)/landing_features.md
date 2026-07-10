@@ -74,7 +74,7 @@ landing/
 
 6. **Absolute Imports:**
    - Never use relative imports like `../../`. 
-   - Always use absolute imports starting with `@/` (e.g., `@/app/(erp)/landing/landing_context/...`).
+   - Always use absolute imports starting with `@/` (e.g., `@/app/erp/landing/landing_context/...`).
 
 ## 🤖 Instructions for AI
 If you are asked to modify a feature, find the EXACT micro-component from the tree above. If modifying logic, edit the `use...Logic.ts` file. If adding data, edit the `...SharedConstants.ts` file. Do not hallucinate files outside this module's boundary.

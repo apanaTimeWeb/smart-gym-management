@@ -1,9 +1,9 @@
 import { cookies } from 'next/headers';
 import { StatusCodes } from 'http-status-codes';
-import { MembersUrlConfig } from '@/app/(erp)/members/members_url_config';
-import { StoreUrlConfig } from '@/app/(erp)/store/store_url_config';
-import { PlansUrlConfig } from '@/app/(erp)/plans/plans_url_config';
-import { FinanceUrlConfig } from '@/app/(erp)/finance/finance_url_config';
+import { MembersUrlConfig } from '@/app/erp/members/members_url_config';
+import { StoreUrlConfig } from '@/app/erp/store/store_url_config';
+import { PlansUrlConfig } from '@/app/erp/plans/plans_url_config';
+import { FinanceUrlConfig } from '@/app/erp/finance/finance_url_config';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 
