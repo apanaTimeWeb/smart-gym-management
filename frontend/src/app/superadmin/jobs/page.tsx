@@ -1,6 +1,7 @@
 'use client';
 
-import { DUMMY_BACKGROUND_JOBS } from '@/app/superadmin/superadmin_utils/SuperadminSharedConstants';
+import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
+import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { Activity, Play, RefreshCw, XCircle, AlertTriangle } from 'lucide-react';
 import { BackgroundJob } from '@/app/superadmin/superadmin_types/superadmin_types';
 
@@ -12,6 +13,11 @@ const StatusColors: Record<BackgroundJob['status'], string> = {
 };
 
 export default function JobsPage() {
+  const { data: DUMMY_BACKGROUND_JOBS, loading, error } = useSuperadminData<BackgroundJob[]>(SuperadminUrlConfig.BACKEND_API.JOBS_BASE);
+
+  if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]">Loading...</div>;
+  if (error || !DUMMY_BACKGROUND_JOBS) return <div className="p-8 text-center text-[var(--danger)]">Error loading data.</div>;
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">

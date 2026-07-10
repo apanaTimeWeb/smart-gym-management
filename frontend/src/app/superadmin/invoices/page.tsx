@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { DUMMY_INVOICES, DUMMY_TENANTS } from '@/app/superadmin/superadmin_utils/SuperadminSharedConstants';
+import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
+import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { Receipt, Search, Filter, DollarSign, ArrowUpRight, AlertCircle, Plus, X } from 'lucide-react';
-import { SaaSInvoice } from '@/app/superadmin/superadmin_types/superadmin_types';
+import { SaaSInvoice, Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 const StatusColors: Record<SaaSInvoice['status'], string> = {
   PAID: 'text-[var(--success)] bg-[var(--success)]/10',
@@ -12,6 +13,13 @@ const StatusColors: Record<SaaSInvoice['status'], string> = {
 };
 
 export default function SaaSInvoicesPage() {
+  const { data, loading, error } = useSuperadminData<{ invoices: SaaSInvoice[], tenants: Tenant[] }>(SuperadminUrlConfig.BACKEND_API.INVOICES_BASE);
+
+  if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]">Loading...</div>;
+  if (error || !data) return <div className="p-8 text-center text-[var(--danger)]">Error loading data.</div>;
+
+  const { invoices: DUMMY_INVOICES, tenants: DUMMY_TENANTS } = data;
+
   const [search, setSearch] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
   

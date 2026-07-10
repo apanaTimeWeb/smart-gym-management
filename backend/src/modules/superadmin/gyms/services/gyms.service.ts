@@ -1,3 +1,4 @@
+import { DUMMY_TENANTS } from '../../superadmin.constants';
 import { Injectable } from '@nestjs/common';
 import { CreateGymDto } from '../dto/create-gyms.dto';
 import { UpdateGymDto } from '../dto/update-gyms.dto';
@@ -9,7 +10,7 @@ export class GymsService {
   }
 
   findAll() {
-    return { success: true, message: 'This action returns all gyms' };
+    return { success: true, message: 'Data fetched successfully', data: DUMMY_TENANTS };
   }
 
   findOne(id: string) {

@@ -1,3 +1,4 @@
+import { DUMMY_AFFILIATES } from '../../superadmin.constants';
 import { Injectable } from '@nestjs/common';
 import { CreateAffiliateDto } from '../dto/create-affiliates.dto';
 import { UpdateAffiliateDto } from '../dto/update-affiliates.dto';
@@ -9,7 +10,7 @@ export class AffiliatesService {
   }
 
   findAll() {
-    return { success: true, message: 'This action returns all affiliates' };
+    return { success: true, message: 'Data fetched successfully', data: DUMMY_AFFILIATES };
   }
 
   findOne(id: string) {

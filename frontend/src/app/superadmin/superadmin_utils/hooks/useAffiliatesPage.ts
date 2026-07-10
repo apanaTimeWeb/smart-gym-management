@@ -1,12 +1,20 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback  } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DUMMY_AFFILIATES } from '../SuperadminSharedConstants';
+import { useSuperadminData } from '../useSuperadminData';
+import { SuperadminUrlConfig } from '../../superadmin_url_config';
 import { Affiliate } from '../../superadmin_types/superadmin_types';
 import { AffiliateSchema, AffiliateFormData } from '../SuperadminZodSchemas';
 
 export const useAffiliatesPage = () => {
-  const [affiliates, setAffiliates] = useState<Affiliate[]>(DUMMY_AFFILIATES);
+  const [affiliates, setAffiliates] = useState<Affiliate[]>([]);
+  const { data: fetchedData, loading, error } = useSuperadminData<Affiliate[]>(SuperadminUrlConfig.BACKEND_API.AFFILIATES_BASE);
+
+  useEffect(() => {
+    if (fetchedData) {
+      setAffiliates(fetchedData);
+    }
+  }, [fetchedData]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -49,6 +57,8 @@ export const useAffiliatesPage = () => {
   }, [affiliates, searchQuery]);
 
   return {
+    loading,
+    error,
     affiliates: filteredAffiliates,
     searchQuery,
     setSearchQuery,

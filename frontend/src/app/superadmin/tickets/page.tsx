@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { DUMMY_SUPPORT_TICKETS } from '@/app/superadmin/superadmin_utils/SuperadminSharedConstants';
+import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
+import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { Ticket, Search, Filter, MessageSquare } from 'lucide-react';
 import { TicketStatus, TicketPriority } from '@/app/superadmin/superadmin_types/superadmin_types';
+import { SupportTicket } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 const PriorityColors: Record<TicketPriority, string> = {
   LOW: 'text-[var(--success)] bg-[var(--success)]/10 border-[var(--success)]/20',
@@ -19,6 +21,11 @@ const StatusColors: Record<TicketStatus, string> = {
 };
 
 export default function TicketsPage() {
+  const { data: DUMMY_SUPPORT_TICKETS, loading, error } = useSuperadminData<SupportTicket[]>(SuperadminUrlConfig.BACKEND_API.TICKETS_BASE);
+
+  if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]">Loading...</div>;
+  if (error || !DUMMY_SUPPORT_TICKETS) return <div className="p-8 text-center text-[var(--danger)]">Error loading data.</div>;
+
   const [search, setSearch] = useState('');
 
   const filtered = DUMMY_SUPPORT_TICKETS.filter(t => t.tenantName.toLowerCase().includes(search.toLowerCase()) || t.subject.toLowerCase().includes(search.toLowerCase()));

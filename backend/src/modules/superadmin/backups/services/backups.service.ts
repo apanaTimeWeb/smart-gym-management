@@ -1,3 +1,4 @@
+import { DUMMY_BACKUPS } from '../../superadmin.constants';
 import { Injectable } from '@nestjs/common';
 import { CreateBackupDto } from '../dto/create-backups.dto';
 import { UpdateBackupDto } from '../dto/update-backups.dto';
@@ -9,7 +10,7 @@ export class BackupsService {
   }
 
   findAll() {
-    return { success: true, message: 'This action returns all backups' };
+    return { success: true, message: 'Data fetched successfully', data: DUMMY_BACKUPS };
   }
 
   findOne(id: string) {

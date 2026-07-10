@@ -1,3 +1,4 @@
+import { DUMMY_SUBSCRIPTION_PLANS } from '../../superadmin.constants';
 import { Injectable } from '@nestjs/common';
 import { CreatePlanDto } from '../dto/create-plans.dto';
 import { UpdatePlanDto } from '../dto/update-plans.dto';
@@ -9,7 +10,7 @@ export class PlansService {
   }
 
   findAll() {
-    return { success: true, message: 'This action returns all plans' };
+    return { success: true, message: 'Data fetched successfully', data: DUMMY_SUBSCRIPTION_PLANS };
   }
 
   findOne(id: string) {

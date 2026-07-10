@@ -1,3 +1,4 @@
+import { DUMMY_BROADCASTS } from '../../superadmin.constants';
 import { Injectable } from '@nestjs/common';
 import { CreateBroadcastDto } from '../dto/create-broadcasts.dto';
 import { UpdateBroadcastDto } from '../dto/update-broadcasts.dto';
@@ -9,7 +10,7 @@ export class BroadcastsService {
   }
 
   findAll() {
-    return { success: true, message: 'This action returns all broadcasts' };
+    return { success: true, message: 'Data fetched successfully', data: DUMMY_BROADCASTS };
   }
 
   findOne(id: string) {

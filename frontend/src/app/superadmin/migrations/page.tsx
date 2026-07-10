@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { DUMMY_MIGRATIONS, DUMMY_TENANTS } from '@/app/superadmin/superadmin_utils/SuperadminSharedConstants';
+import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
+import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { DatabaseZap, AlertTriangle, Play, CheckCircle2, Clock, Search, X, Target } from 'lucide-react';
+import { SchemaMigration, Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 const StatusIcons = {
   SUCCESS: <CheckCircle2 className="text-[var(--success)]" size={18} />,
@@ -11,6 +13,13 @@ const StatusIcons = {
 };
 
 export default function MigrationsPage() {
+  const { data, loading, error } = useSuperadminData<{ migrations: SchemaMigration[], tenants: Tenant[] }>(SuperadminUrlConfig.BACKEND_API.MIGRATIONS_BASE);
+
+  if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]">Loading...</div>;
+  if (error || !data) return <div className="p-8 text-center text-[var(--danger)]">Error loading data.</div>;
+
+  const { migrations: DUMMY_MIGRATIONS, tenants: DUMMY_TENANTS } = data;
+
   const pendingCount = DUMMY_MIGRATIONS.filter(m => m.status === 'PENDING').length;
 
   const [showTargetModal, setShowTargetModal] = useState(false);

@@ -1,3 +1,4 @@
+import { DUMMY_COUPONS } from '../../superadmin.constants';
 import { Injectable } from '@nestjs/common';
 import { CreateCouponDto } from '../dto/create-coupons.dto';
 import { UpdateCouponDto } from '../dto/update-coupons.dto';
@@ -9,7 +10,7 @@ export class CouponsService {
   }
 
   findAll() {
-    return { success: true, message: 'This action returns all coupons' };
+    return { success: true, message: 'Data fetched successfully', data: DUMMY_COUPONS };
   }
 
   findOne(id: string) {

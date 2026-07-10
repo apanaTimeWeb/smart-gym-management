@@ -1,3 +1,4 @@
+import { DUMMY_BACKGROUND_JOBS } from '../../superadmin.constants';
 import { Injectable } from '@nestjs/common';
 import { CreateJobDto } from '../dto/create-jobs.dto';
 import { UpdateJobDto } from '../dto/update-jobs.dto';
@@ -9,7 +10,7 @@ export class JobsService {
   }
 
   findAll() {
-    return { success: true, message: 'This action returns all jobs' };
+    return { success: true, message: 'Data fetched successfully', data: DUMMY_BACKGROUND_JOBS };
   }
 
   findOne(id: string) {

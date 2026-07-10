@@ -1,3 +1,4 @@
+import { DUMMY_MIGRATIONS, DUMMY_TENANTS } from '../../superadmin.constants';
 import { Injectable } from '@nestjs/common';
 import { CreateMigrationDto } from '../dto/create-migrations.dto';
 import { UpdateMigrationDto } from '../dto/update-migrations.dto';
@@ -9,7 +10,7 @@ export class MigrationsService {
   }
 
   findAll() {
-    return { success: true, message: 'This action returns all migrations' };
+    return { success: true, message: 'Data fetched successfully', data: { migrations: DUMMY_MIGRATIONS, tenants: DUMMY_TENANTS } };
   }
 
   findOne(id: string) {

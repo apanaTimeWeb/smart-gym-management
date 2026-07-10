@@ -1,3 +1,4 @@
+import { DUMMY_FEATURE_FLAGS, DUMMY_RELEASE_NOTES } from '../../superadmin.constants';
 import { Injectable } from '@nestjs/common';
 import { CreateFeatureDto } from '../dto/create-features.dto';
 import { UpdateFeatureDto } from '../dto/update-features.dto';
@@ -9,7 +10,7 @@ export class FeaturesService {
   }
 
   findAll() {
-    return { success: true, message: 'This action returns all features' };
+    return { success: true, message: 'Data fetched successfully', data: { flags: DUMMY_FEATURE_FLAGS, notes: DUMMY_RELEASE_NOTES } };
   }
 
   findOne(id: string) {

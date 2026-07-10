@@ -28,7 +28,10 @@ export default function BroadcastsPage() {
     setIsModalOpen,
     form,
     handleCreateBroadcast
-  } = useBroadcastsPage();
+  , loading, error} = useBroadcastsPage();
+
+  if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]">Loading...</div>;
+  if (error) return <div className="p-8 text-center text-[var(--danger)]">Error loading data.</div>;
 
   const handleRowClick = (title: string) => {
     toast(`Clicked on broadcast: ${title}`);

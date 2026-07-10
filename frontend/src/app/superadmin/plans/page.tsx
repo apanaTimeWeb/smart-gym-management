@@ -1,9 +1,16 @@
 'use client';
 
-import { DUMMY_SUBSCRIPTION_PLANS } from '@/app/superadmin/superadmin_utils/SuperadminSharedConstants';
+import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
+import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { CreditCard, Edit, Check } from 'lucide-react';
+import { SubscriptionPlan } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 export default function PlansPage() {
+  const { data: DUMMY_SUBSCRIPTION_PLANS, loading, error } = useSuperadminData<SubscriptionPlan[]>(SuperadminUrlConfig.BACKEND_API.PLANS_BASE);
+
+  if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]">Loading...</div>;
+  if (error || !DUMMY_SUBSCRIPTION_PLANS) return <div className="p-8 text-center text-[var(--danger)]">Error loading data.</div>;
+
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">

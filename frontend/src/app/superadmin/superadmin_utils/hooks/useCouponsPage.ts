@@ -1,12 +1,20 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback  } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DUMMY_COUPONS } from '../SuperadminSharedConstants';
+import { useSuperadminData } from '../useSuperadminData';
+import { SuperadminUrlConfig } from '../../superadmin_url_config';
 import { Coupon } from '../../superadmin_types/superadmin_types';
 import { CouponSchema, CouponFormData } from '../SuperadminZodSchemas';
 
 export const useCouponsPage = () => {
-  const [coupons, setCoupons] = useState<Coupon[]>(DUMMY_COUPONS);
+  const [coupons, setCoupons] = useState<Coupon[]>([]);
+  const { data: fetchedData, loading, error } = useSuperadminData<Coupon[]>(SuperadminUrlConfig.BACKEND_API.COUPONS_BASE);
+
+  useEffect(() => {
+    if (fetchedData) {
+      setCoupons(fetchedData);
+    }
+  }, [fetchedData]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -45,6 +53,8 @@ export const useCouponsPage = () => {
   }, [coupons, searchQuery]);
 
   return {
+    loading,
+    error,
     coupons: filteredCoupons,
     searchQuery,
     setSearchQuery,

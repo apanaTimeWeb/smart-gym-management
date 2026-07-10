@@ -1,3 +1,4 @@
+import { DUMMY_GLOBAL_AUDIT_LOGS } from '../../superadmin.constants';
 import { Injectable } from '@nestjs/common';
 import { CreateAuditLogDto } from '../dto/create-audit-logs.dto';
 import { UpdateAuditLogDto } from '../dto/update-audit-logs.dto';
@@ -9,7 +10,7 @@ export class AuditLogsService {
   }
 
   findAll() {
-    return { success: true, message: 'This action returns all auditLogs' };
+    return { success: true, message: 'Data fetched successfully', data: DUMMY_GLOBAL_AUDIT_LOGS };
   }
 
   findOne(id: string) {

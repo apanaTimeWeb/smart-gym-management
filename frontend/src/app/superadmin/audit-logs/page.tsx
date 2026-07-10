@@ -2,9 +2,16 @@
 
 import React from 'react';
 import { ShieldAlert, Search } from 'lucide-react';
-import { DUMMY_GLOBAL_AUDIT_LOGS } from '@/app/superadmin/superadmin_utils/SuperadminSharedConstants';
+import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
+import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
+import { GlobalAuditLog } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 export default function GlobalAuditLogsPage() {
+  const { data: DUMMY_GLOBAL_AUDIT_LOGS, loading, error } = useSuperadminData<GlobalAuditLog[]>(SuperadminUrlConfig.BACKEND_API.AUDIT_LOGS_BASE);
+
+  if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]">Loading...</div>;
+  if (error || !DUMMY_GLOBAL_AUDIT_LOGS) return <div className="p-8 text-center text-[var(--danger)]">Error loading data.</div>;
+
   return (
     <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto">
       {/* Header */}

@@ -1,3 +1,4 @@
+import { DUMMY_DASHBOARD_METRICS, REVENUE_CHART_DATA, GYM_GROWTH_DATA } from '../../superadmin.constants';
 import { Injectable } from '@nestjs/common';
 import { CreateDashboardDto } from '../dto/create-dashboard.dto';
 import { UpdateDashboardDto } from '../dto/update-dashboard.dto';
@@ -9,7 +10,7 @@ export class DashboardService {
   }
 
   findAll() {
-    return { success: true, message: 'This action returns all dashboard' };
+    return { success: true, message: 'Data fetched successfully', data: { metrics: DUMMY_DASHBOARD_METRICS, revenue: REVENUE_CHART_DATA, growth: GYM_GROWTH_DATA } };
   }
 
   findOne(id: string) {

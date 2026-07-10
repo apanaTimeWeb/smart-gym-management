@@ -1,12 +1,20 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback  } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DUMMY_BROADCASTS } from '../SuperadminSharedConstants';
+import { useSuperadminData } from '../useSuperadminData';
+import { SuperadminUrlConfig } from '../../superadmin_url_config';
 import { Broadcast } from '../../superadmin_types/superadmin_types';
 import { BroadcastSchema, BroadcastFormData } from '../SuperadminZodSchemas';
 
 export const useBroadcastsPage = () => {
-  const [broadcasts, setBroadcasts] = useState<Broadcast[]>(DUMMY_BROADCASTS);
+  const [broadcasts, setBroadcasts] = useState<Broadcast[]>([]);
+  const { data: fetchedData, loading, error } = useSuperadminData<Broadcast[]>(SuperadminUrlConfig.BACKEND_API.BROADCASTS_BASE);
+
+  useEffect(() => {
+    if (fetchedData) {
+      setBroadcasts(fetchedData);
+    }
+  }, [fetchedData]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -46,6 +54,8 @@ export const useBroadcastsPage = () => {
   }, [broadcasts, searchQuery]);
 
   return {
+    loading,
+    error,
     broadcasts: filteredBroadcasts,
     searchQuery,
     setSearchQuery,

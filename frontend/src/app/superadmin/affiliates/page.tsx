@@ -29,7 +29,10 @@ export default function AffiliatesPage() {
     handleAddAffiliate,
     totalAffiliates,
     totalCommission
-  } = useAffiliatesPage();
+  , loading, error} = useAffiliatesPage();
+
+  if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]">Loading...</div>;
+  if (error) return <div className="p-8 text-center text-[var(--danger)]">Error loading data.</div>;
 
   const handleRowClick = (name: string) => {
     toast(`Clicked on affiliate: ${name}`);

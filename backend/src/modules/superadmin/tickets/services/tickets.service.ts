@@ -1,3 +1,4 @@
+import { DUMMY_SUPPORT_TICKETS } from '../../superadmin.constants';
 import { Injectable } from '@nestjs/common';
 import { CreateTicketDto } from '../dto/create-tickets.dto';
 import { UpdateTicketDto } from '../dto/update-tickets.dto';
@@ -9,7 +10,7 @@ export class TicketsService {
   }
 
   findAll() {
-    return { success: true, message: 'This action returns all tickets' };
+    return { success: true, message: 'Data fetched successfully', data: DUMMY_SUPPORT_TICKETS };
   }
 
   findOne(id: string) {
