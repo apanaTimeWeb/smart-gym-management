@@ -58,6 +58,13 @@ export class FeaturesController {
     return this.featuresService.updateFlag(id, updateDto);
   }
 
+  @Patch('flags/:id/toggle')
+  @ApiOperation({ summary: 'Toggle the global status of a Feature Flag' })
+  @ApiResponse({ status: HttpStatus.OK })
+  toggleFlag(@Param('id') id: string) {
+    return this.featuresService.toggleFlag(id);
+  }
+
   @Delete('flags/:id')
   @ApiOperation({ summary: 'Delete a Feature Flag' })
   @ApiResponse({ status: HttpStatus.OK })

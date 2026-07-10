@@ -1,11 +1,65 @@
-import { Settings, Shield, BellRing, Database } from 'lucide-react';
+'use client';
 
-export const metadata = {
-  title: 'Platform Settings | SaaS Master',
-  description: 'Global SaaS platform configurations',
-};
+import { useState, useEffect } from 'react';
+import { Settings, Shield, BellRing, Database, Loader2, Save } from 'lucide-react';
+import { superadminApi } from '@/lib/superadmin-api';
+import { useSuperadminMutation } from '@/app/superadmin/superadmin_utils/hooks/useSuperadminMutation';
+import toast from 'react-hot-toast';
 
 export default function SuperadminSettings() {
+  const [settings, setSettings] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [editedValues, setEditedValues] = useState<Record<string, any>>({});
+  
+  const { mutate, isMutating } = useSuperadminMutation();
+
+  const fetchSettings = async () => {
+    try {
+      const res = await superadminApi.settings.getAll();
+      setSettings(res.data || []);
+    } catch (e: any) {
+      toast.error('Failed to load settings');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchSettings();
+  }, []);
+
+  const handleSave = async (id: string) => {
+    const newValue = editedValues[id];
+    if (newValue === undefined) return;
+    
+    await mutate(
+      () => superadminApi.settings.update(id, { value: newValue }),
+      {
+        successMessage: 'Setting updated successfully',
+        onSuccess: () => {
+          setSettings(prev => prev.map(s => s.id === id ? { ...s, value: newValue } : s));
+          setEditedValues(prev => {
+            const next = { ...prev };
+            delete next[id];
+            return next;
+          });
+        }
+      }
+    );
+  };
+
+  if (isLoading) {
+    return <div className="flex h-96 items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-[var(--primary)]" /></div>;
+  }
+
+  // Group settings by category
+  const groupedSettings = settings.reduce((acc, curr) => {
+    const cat = curr.category || 'general';
+    if (!acc[cat]) acc[cat] = [];
+    acc[cat].push(curr);
+    return acc;
+  }, {} as Record<string, any[]>);
+
   return (
     <div className="space-y-6">
       <div>
@@ -15,43 +69,59 @@ export default function SuperadminSettings() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6">
-            <div className="flex items-center gap-2 mb-4 border-b border-[var(--border)] pb-4">
-              <Shield className="w-5 h-5 text-[var(--primary)]" />
-              <h2 className="text-lg font-bold text-[var(--text-primary)]">Global Security</h2>
-            </div>
-            
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="font-medium text-[var(--text-primary)]">Enforce 2FA for all Gym Admins</h3>
-                  <p className="text-sm text-[var(--text-secondary)]">Require Two-Factor Authentication for all tenant owners.</p>
-                </div>
-                <div className="w-12 h-6 bg-[var(--primary)] rounded-full relative cursor-pointer opacity-50 cursor-not-allowed">
-                  <div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full"></div>
-                </div>
+          
+          {Object.entries(groupedSettings).map(([category, items]) => (
+            <div key={category} className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6">
+              <div className="flex items-center gap-2 mb-4 border-b border-[var(--border)] pb-4">
+                <Settings className="w-5 h-5 text-[var(--primary)]" />
+                <h2 className="text-lg font-bold text-[var(--text-primary)] uppercase">{category}</h2>
+              </div>
+              
+              <div className="space-y-4 text-sm">
+                {items.map(setting => {
+                  const hasChanges = editedValues[setting.id] !== undefined && editedValues[setting.id] !== setting.value;
+                  const currentValue = editedValues[setting.id] !== undefined ? editedValues[setting.id] : setting.value;
+                  
+                  return (
+                    <div key={setting.id} className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-2 border-b border-[var(--border)] last:border-0">
+                      <div className="flex-1">
+                        <h3 className="font-medium text-[var(--text-primary)]">{setting.key}</h3>
+                        <p className="text-xs text-[var(--text-secondary)] mt-1">{setting.description}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {setting.dataType === 'boolean' ? (
+                          <select 
+                            value={String(currentValue)}
+                            onChange={(e) => setEditedValues(prev => ({ ...prev, [setting.id]: e.target.value }))}
+                            className="bg-[var(--bg-input)] border border-[var(--border)] text-[var(--text-primary)] rounded-lg px-3 py-1.5 focus:outline-none focus:border-[var(--primary)]"
+                          >
+                            <option value="true">Enabled</option>
+                            <option value="false">Disabled</option>
+                          </select>
+                        ) : (
+                          <input 
+                            type={setting.dataType === 'number' ? 'number' : 'text'}
+                            value={currentValue}
+                            onChange={(e) => setEditedValues(prev => ({ ...prev, [setting.id]: e.target.value }))}
+                            className="bg-[var(--bg-input)] border border-[var(--border)] text-[var(--text-primary)] rounded-lg px-3 py-1.5 focus:outline-none focus:border-[var(--primary)]"
+                          />
+                        )}
+                        {hasChanges && (
+                          <button 
+                            onClick={() => handleSave(setting.id)}
+                            disabled={isMutating}
+                            className="p-1.5 bg-[var(--primary)]/10 text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white rounded-lg transition-colors"
+                          >
+                            <Save className="w-4 h-4" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
-          </div>
-
-          <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6">
-            <div className="flex items-center gap-2 mb-4 border-b border-[var(--border)] pb-4">
-              <Database className="w-5 h-5 text-[var(--primary)]" />
-              <h2 className="text-lg font-bold text-[var(--text-primary)]">Database Provisioning Limits</h2>
-            </div>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="text-sm font-medium text-[var(--text-secondary)]">Max Concurrent Migrations</label>
-                <input 
-                  type="number" 
-                  disabled
-                  value={10}
-                  className="w-full mt-1 bg-[var(--bg-input)] border border-[var(--border)] text-[var(--text-disabled)] rounded-lg px-4 py-2 cursor-not-allowed"
-                />
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
 
         <div className="space-y-6">

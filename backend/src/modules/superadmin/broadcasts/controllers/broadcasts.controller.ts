@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, UseGuards, Query } from '@nestjs/common';
 import { BroadcastsService } from '../services/broadcasts.service';
 import { CreateBroadcastDto } from '../dto/create-broadcasts.dto';
 import { UpdateBroadcastDto } from '../dto/update-broadcasts.dto';
@@ -22,8 +22,14 @@ export class BroadcastsController {
   @Get()
   @ApiOperation({ summary: 'Get all Broadcasts' })
   @ApiResponse({ status: HttpStatus.OK })
-  findAll() {
-    return this.broadcastsService.findAll();
+  findAll(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+    @Query('search') search?: string,
+  ) {
+    const pageNum = page ? parseInt(page, 10) : 1;
+    const limitNum = limit ? parseInt(limit, 10) : 20;
+    return this.broadcastsService.findAll(pageNum, limitNum, search || '');
   }
 
   @Get(':id')
@@ -38,6 +44,13 @@ export class BroadcastsController {
   @ApiResponse({ status: HttpStatus.OK })
   update(@Param('id') id: string, @Body() updateDto: UpdateBroadcastDto) {
     return this.broadcastsService.update(id, updateDto);
+  }
+
+  @Post(':id/send')
+  @ApiOperation({ summary: 'Dispatch/Send a specific Broadcast' })
+  @ApiResponse({ status: HttpStatus.OK })
+  sendBroadcast(@Param('id') id: string) {
+    return this.broadcastsService.sendBroadcast(id);
   }
 
   @Delete(':id')

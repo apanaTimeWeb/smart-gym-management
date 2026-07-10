@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, UseGuards, Query } from '@nestjs/common';
 import { GymsService } from '../services/gyms.service';
 import { CreateGymDto } from '../dto/create-gyms.dto';
 import { UpdateGymDto } from '../dto/update-gyms.dto';
@@ -22,8 +22,14 @@ export class GymsController {
   @Get()
   @ApiOperation({ summary: 'Get all Gyms' })
   @ApiResponse({ status: HttpStatus.OK })
-  findAll() {
-    return this.gymsService.findAll();
+  findAll(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+    @Query('search') search?: string,
+  ) {
+    const pageNum = page ? parseInt(page, 10) : 1;
+    const limitNum = limit ? parseInt(limit, 10) : 20;
+    return this.gymsService.findAll(pageNum, limitNum, search || '');
   }
 
   @Get(':id')
@@ -38,6 +44,13 @@ export class GymsController {
   @ApiResponse({ status: HttpStatus.OK })
   update(@Param('id') id: string, @Body() updateDto: UpdateGymDto) {
     return this.gymsService.update(id, updateDto);
+  }
+
+  @Patch(':id/status')
+  @ApiOperation({ summary: 'Change the status of a specific Gym' })
+  @ApiResponse({ status: HttpStatus.OK })
+  changeStatus(@Param('id') id: string, @Body('status') status: string) {
+    return this.gymsService.changeStatus(id, status);
   }
 
   @Delete(':id')

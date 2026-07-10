@@ -25,13 +25,30 @@ export class BroadcastsService {
     };
   }
 
-  findAll() {
-    this.logger.log('Fetching all broadcasts');
+  findAll(page: number = 1, limit: number = 20, search: string = '') {
+    this.logger.log(`Fetching broadcasts (page: ${page}, limit: ${limit}, search: ${search})`);
+    
+    let filteredBroadcasts = DUMMY_BROADCASTS;
+    if (search) {
+      const lowerSearch = search.toLowerCase();
+      filteredBroadcasts = filteredBroadcasts.filter(b => 
+        b.title.toLowerCase().includes(lowerSearch) || 
+        b.content.toLowerCase().includes(lowerSearch)
+      );
+    }
+    
+    const startIndex = (page - 1) * limit;
+    const paginatedBroadcasts = filteredBroadcasts.slice(startIndex, startIndex + limit);
+
     return {
       success: true,
       message: 'Broadcasts fetched successfully',
-      data: DUMMY_BROADCASTS,
-      meta: { total: DUMMY_BROADCASTS.length },
+      data: paginatedBroadcasts,
+      meta: { 
+        total: filteredBroadcasts.length,
+        page,
+        limit,
+      },
     };
   }
 
@@ -53,6 +70,19 @@ export class BroadcastsService {
       success: true,
       message: 'Broadcast updated successfully',
       data: { ...broadcast, ...updateDto, updatedAt: new Date().toISOString() },
+    };
+  }
+
+  sendBroadcast(id: string) {
+    const broadcast = DUMMY_BROADCASTS.find((b) => b.id === id);
+    if (!broadcast) {
+      throw new NotFoundException(`Broadcast with ID "${id}" not found`);
+    }
+    this.logger.log(`Sending broadcast: ${id}`);
+    return {
+      success: true,
+      message: 'Broadcast dispatched successfully',
+      data: { ...broadcast, status: 'SENT', sentDate: new Date().toISOString(), updatedAt: new Date().toISOString() },
     };
   }
 

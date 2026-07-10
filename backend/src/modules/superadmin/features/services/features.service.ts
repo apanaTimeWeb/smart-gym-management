@@ -68,6 +68,20 @@ export class FeaturesService {
     };
   }
 
+  toggleFlag(id: string) {
+    const flag = DUMMY_FEATURE_FLAGS.find((f) => f.id === id);
+    if (!flag) {
+      throw new NotFoundException(`Feature flag with ID "${id}" not found`);
+    }
+    const newValue = !flag.isGlobalEnabled;
+    this.logger.log(`Toggling feature flag: ${id} to ${newValue}`);
+    return {
+      success: true,
+      message: `Feature flag globally ${newValue ? 'enabled' : 'disabled'}`,
+      data: { ...flag, isGlobalEnabled: newValue, updatedAt: new Date().toISOString() },
+    };
+  }
+
   removeFlag(id: string) {
     const flag = DUMMY_FEATURE_FLAGS.find((f) => f.id === id);
     if (!flag) {

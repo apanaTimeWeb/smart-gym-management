@@ -31,16 +31,31 @@ export class GymsService {
     };
   }
 
-  findAll() {
-    this.logger.log('Fetching all gym tenants');
+  findAll(page: number = 1, limit: number = 20, search: string = '') {
+    this.logger.log(`Fetching gym tenants (page: ${page}, limit: ${limit}, search: ${search})`);
+    
+    let filteredTenants = DUMMY_TENANTS;
+    if (search) {
+      const lowerSearch = search.toLowerCase();
+      filteredTenants = filteredTenants.filter(t => 
+        t.name.toLowerCase().includes(lowerSearch) || 
+        t.ownerName?.toLowerCase().includes(lowerSearch) ||
+        t.adminEmail?.toLowerCase().includes(lowerSearch)
+      );
+    }
+    
+    // Manual pagination slice
+    const startIndex = (page - 1) * limit;
+    const paginatedTenants = filteredTenants.slice(startIndex, startIndex + limit);
+
     return {
       success: true,
       message: 'Gym tenants fetched successfully',
-      data: DUMMY_TENANTS,
+      data: paginatedTenants,
       meta: {
-        total: DUMMY_TENANTS.length,
-        page: 1,
-        limit: 20,
+        total: filteredTenants.length,
+        page,
+        limit,
       },
     };
   }
@@ -67,6 +82,19 @@ export class GymsService {
       success: true,
       message: 'Gym tenant updated successfully',
       data: { ...gym, ...updateDto, updatedAt: new Date().toISOString() },
+    };
+  }
+
+  changeStatus(id: string, status: string) {
+    const gym = DUMMY_TENANTS.find((t) => t.id === id);
+    if (!gym) {
+      throw new NotFoundException(`Gym tenant with ID "${id}" not found`);
+    }
+    this.logger.log(`Changing status for gym tenant: ${id} to ${status}`);
+    return {
+      success: true,
+      message: `Gym tenant status changed to ${status}`,
+      data: { ...gym, status, updatedAt: new Date().toISOString() },
     };
   }
 
