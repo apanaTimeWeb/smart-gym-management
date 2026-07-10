@@ -5,7 +5,7 @@ export const InquiriesUrlConfig = {
   BACKEND_API: {
     BASE: '/inquiries',
     GET_ONE: (id: number) => `/inquiries/${id}`,
-    STATS: '/inquiries/stats',
+    STATS: '/inquiries/meta/stats',
     UPDATE: (id: number) => `/inquiries/${id}`,
     DELETE: (id: number) => `/inquiries/${id}`,
   }
