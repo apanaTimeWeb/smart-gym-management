@@ -1,14 +1,19 @@
-/* Audit Module specific CSS variables */
-:root {
-  --audit-primary-bg: #f9fafb;
-  --audit-border-color: #e5e7eb;
-  --audit-text-primary: #111827;
-  --audit-text-secondary: #6b7280;
-  --audit-accent: #2563eb;
-  --audit-row-hover: #f3f4f6;
-}
+/* audit.css - Theme Variables for Audit Module */
 
 .audit-container {
-  background-color: var(--audit-primary-bg);
-  color: var(--audit-text-primary);
+  /* Common backgrounds */
+  --audit-bg-card: var(--bg-card);
+  --audit-bg-input: var(--bg-input);
+
+  /* Text colors */
+  --audit-text-primary: var(--text-primary);
+  --audit-text-secondary: var(--text-secondary);
+
+  /* Borders */
+  --audit-border-color: var(--border);
+
+  /* Highlights */
+  --audit-accent: var(--primary);
+  --audit-table-header-bg: rgba(99,102,241,0.08);
+  --audit-row-hover: rgba(99,102,241,0.06);
 }

@@ -8,15 +8,16 @@ export const AuditFilters = () => {
   const { filters, handleEntityTypeChange, handleActorIdChange, entityTypes } = useAuditFilters();
 
   return (
-    <div className="flex flex-col md:flex-row gap-4 mb-6 p-4 rounded-lg" style={{ backgroundColor: 'var(--audit-primary-bg)', border: '1px solid var(--audit-border-color)' }}>
-      <div className="flex flex-col">
-        <label htmlFor="entityType" className="text-sm font-medium mb-1" style={{ color: 'var(--audit-text-primary)' }}>Entity Type</label>
+    <div className="flex flex-col md:flex-row gap-4 p-6 bg-[var(--audit-bg-card)]">
+      <div className="flex flex-col flex-1">
+        <label htmlFor="entityType" className="text-sm font-semibold mb-1.5 text-[var(--audit-text-primary)]">
+          Entity Type
+        </label>
         <select
           id="entityType"
           value={filters.entityType || ''}
           onChange={handleEntityTypeChange}
-          className="p-2 rounded border"
-          style={{ borderColor: 'var(--audit-border-color)' }}
+          className="p-2.5 rounded-xl border border-[var(--audit-border-color)] bg-[var(--audit-bg-input)] text-[var(--audit-text-primary)] outline-none focus:border-[var(--audit-accent)] focus:ring-1 focus:ring-[var(--audit-accent)] transition-all shadow-sm"
         >
           {entityTypes.map((type) => (
             <option key={type.value} value={type.value}>
@@ -26,16 +27,17 @@ export const AuditFilters = () => {
         </select>
       </div>
 
-      <div className="flex flex-col">
-        <label htmlFor="actorId" className="text-sm font-medium mb-1" style={{ color: 'var(--audit-text-primary)' }}>Actor ID</label>
+      <div className="flex flex-col flex-1">
+        <label htmlFor="actorId" className="text-sm font-semibold mb-1.5 text-[var(--audit-text-primary)]">
+          Actor ID
+        </label>
         <input
           id="actorId"
           type="text"
-          placeholder="Filter by Actor ID"
+          placeholder="Filter by Actor ID (e.g. 1)"
           value={filters.actorId || ''}
           onChange={handleActorIdChange}
-          className="p-2 rounded border"
-          style={{ borderColor: 'var(--audit-border-color)' }}
+          className="p-2.5 rounded-xl border border-[var(--audit-border-color)] bg-[var(--audit-bg-input)] text-[var(--audit-text-primary)] outline-none focus:border-[var(--audit-accent)] focus:ring-1 focus:ring-[var(--audit-accent)] transition-all shadow-sm placeholder:text-[var(--audit-text-secondary)]"
         />
       </div>
     </div>
