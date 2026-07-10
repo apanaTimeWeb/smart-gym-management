@@ -14,8 +14,8 @@ export default function StaffModal() {
    register, 
    handleSubmit, 
    reset,
-   formState: { errors } 
- } = useForm<StaffFormValues>({
+   formState: { errors }
+  } = useForm({
    resolver: zodResolver(StaffSchema),
    defaultValues: editData || {}
  });
@@ -41,7 +41,7 @@ export default function StaffModal() {
  <X size={18} />
  </button>
  </div>
- <form onSubmit={handleSubmit(saveStaff)} className="p-6 space-y-4">
+ <form onSubmit={handleSubmit(saveStaff as any)} className="p-6 space-y-4">
  {STAFF_MODAL_FIELDS.map(f => (
  <div key={f.key}>
  <label className="block text-sm font-medium mb-1" style={{ color: 'var(--hr-text-secondary)' }}>{f.label}</label>
@@ -55,7 +55,7 @@ export default function StaffModal() {
  style={{ backgroundColor: 'var(--hr-bg-input)', borderColor: errors[f.key as keyof StaffFormValues] ? 'var(--danger)' : 'var(--hr-border)', color: 'var(--hr-text-primary)' }}
  />
  {errors[f.key as keyof StaffFormValues] && (
-   <p className="text-[var(--danger)] text-xs mt-1">{errors[f.key as keyof StaffFormValues]?.message}</p>
+   <p className="text-[var(--danger)] text-xs mt-1">{errors[f.key as keyof StaffFormValues]?.message as string}</p>
  )}
  </div>
  ))}

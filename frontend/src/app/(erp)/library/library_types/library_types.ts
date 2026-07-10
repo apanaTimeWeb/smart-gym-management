@@ -1,5 +1,5 @@
-import type { Exercise, DietPlan } from '@/lib/api';
-import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
+import type { } from '@/lib/api';
+import type { ToastType } from '@/app/(erp)/erp_components/ErpFeedback/ErpToast';
 import { EMPTY_EXERCISE_FORM, EMPTY_DIET_FORM, type LibraryTab } from '@/app/(erp)/library/library_utils/LibrarySharedConstants';
 import React from 'react';
 
@@ -43,4 +43,15 @@ export interface LibraryContextType {
  openEditDiet: (d: DietPlan) => void;
  saveDietPlan: (data: any) => Promise<void>;
  deleteDietPlan: (id: number) => Promise<void>;
+}
+
+export interface Exercise {
+  id: number; name: string; category: string; muscleGroup: string[];
+  sets?: number; reps?: string; duration?: string;
+  difficulty: string; description?: string; videoUrl?: string; imageUrl?: string; isActive: boolean;
+}
+export interface DietPlan {
+  id: number; name: string; goal: string;
+  calories?: number; protein?: number; carbs?: number; fats?: number;
+  description?: string; meals: string[]; isActive: boolean;
 }

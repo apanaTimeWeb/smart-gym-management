@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { X, Save } from 'lucide-react';
 import { useLibraryContext } from '@/app/(erp)/library/library_context/LibraryContext';
-import { CATEGORIES, DIFFICULTIES, ExerciseSchema, type ExerciseFormValues } from '@/app/(erp)/library/library_utils/LibrarySharedConstants';
+import { CATEGORIES, DIFFICULTIES, ExerciseSchema, type ExerciseFormValues, EMPTY_EXERCISE_FORM } from '@/app/(erp)/library/library_utils/LibrarySharedConstants';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -19,9 +19,9 @@ export default function ExerciseModal() {
    handleSubmit, 
    reset,
    formState: { errors } 
- } = useForm<ExerciseFormValues>({
+ } = useForm({
    resolver: zodResolver(ExerciseSchema),
-   defaultValues: editExData || {}
+   defaultValues: (editExData as ExerciseFormValues) || (EMPTY_EXERCISE_FORM as unknown as ExerciseFormValues)
  });
 
  useEffect(() => {
@@ -46,7 +46,7 @@ export default function ExerciseModal() {
  <X size={18} />
  </button>
  </div>
- <form onSubmit={handleSubmit(saveExercise)} className="p-6 space-y-4">
+ <form onSubmit={handleSubmit(saveExercise as any)} className="p-6 space-y-4">
  {[
  { label: 'Exercise Name', key: 'name', type: 'text' }, 
  { label: 'Muscle Groups (comma separated)', key: 'muscleGroup', type: 'text', placeholder: 'Chest, Triceps' }, 

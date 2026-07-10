@@ -7,9 +7,20 @@ import { useInquiriesLogic } from '@/app/(erp)/inquiries/inquiries_context/useIn
 const InquiriesContext = createContext<InquiriesContextType | undefined>(undefined);
 
 export function InquiriesProvider({ children }: { children: React.ReactNode }) {
- const logic = useInquiriesLogic();
+  const logic = useInquiriesLogic();
 
- const value = useMemo(() => logic, [logic]);
+  const {
+    inquiries, stats, loading, error, toast, totalInquiries,
+    search, debouncedSearch, statusFilter, dateFilter, currentPage,
+    showModal, editId, editData, saving, msgModal
+  } = logic;
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const value = useMemo(() => logic, [
+    inquiries, stats, loading, error, toast, totalInquiries,
+    search, debouncedSearch, statusFilter, dateFilter, currentPage,
+    showModal, editId, editData, saving, msgModal
+  ]);
 
  return (
  <InquiriesContext.Provider value={value}>

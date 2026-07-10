@@ -3,7 +3,7 @@
 import { Utensils, Edit2, Trash2, CheckCircle2 } from 'lucide-react';
 import { useLibraryContext } from '@/app/(erp)/library/library_context/LibraryContext';
 
-import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
+import ErpPagination from '@/app/(erp)/erp_components/ErpShared/ErpPagination';
 
 export default function DietGrid() {
   const { dietPlans, loading, search, debouncedSearch, currentPage, setCurrentPage, openEditDiet, deleteDietPlan } = useLibraryContext();

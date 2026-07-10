@@ -4,7 +4,7 @@ import { useHrContext } from '@/app/(erp)/hr/hr_context/HrContext';
 import { STAFF_TABLE_HEADERS } from '@/app/(erp)/hr/hr_utils/HrSharedConstants';
 import { Edit2, Trash2 } from 'lucide-react';
 const fmt = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');
-import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
+import ErpPagination from '@/app/(erp)/erp_components/ErpShared/ErpPagination';
 
 export default function StaffTable() {
   const { staff, debouncedSearch, currentPage, setCurrentPage, openEdit, deleteStaff } = useHrContext();
@@ -83,8 +83,8 @@ export default function StaffTable() {
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={7} className="text-center py-10 text-sm" style={{ color: 'var(--hr-text-secondary)' }}>
-                  No staff members found matching "{search}".
+                <td colSpan={7} className="text-center py-12 text-[var(--hr-text-secondary)]">
+                  {debouncedSearch ? 'No staff match the filter.' : 'No staff members yet. Add your first staff!'}
                 </td>
               </tr>
             )}

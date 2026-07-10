@@ -25,3 +25,8 @@ export const ERP_NOTIFICATIONS = [
  { id: 2, text: 'Payment received from Rahul', time: '1h ago', unread: false },
  { id: 3, text: 'Pooja requested a trial session', time: '2h ago', unread: false },
 ];
+
+export const GYM_DETAILS = {
+  name: process.env.NEXT_PUBLIC_GYM_NAME || 'GymSmart Fitness',
+  phone: process.env.NEXT_PUBLIC_GYM_PHONE || '+91 83479 77566'
+};

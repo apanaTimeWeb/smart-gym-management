@@ -1,31 +1,34 @@
-import { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { membersApi, plansApi, financeApi, attendanceApi, type Member, type Plan, type Payment } from '@/lib/api';
-import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
-import type { MessageType, ErpMessageRecipient } from '@/app/(erp)/erp_components/ErpMessageModal';
-import type { ErpReceiptData } from '@/app/(erp)/erp_components/ErpThermalReceipt';
-import { useConfirm } from '@/app/(erp)/erp_components/ErpConfirmProvider';
-import { EMPTY_MEMBER_FORM, formatCurrency } from '@/app/(erp)/members/members_utils/MembersSharedConstants';
+import type { ToastType } from '@/app/(erp)/erp_components/ErpFeedback/ErpToast';
+import type { MessageType, ErpMessageRecipient } from '@/app/(erp)/erp_components/ErpFeedback/ErpMessageModal';
+import type { ErpReceiptData } from '@/app/(erp)/erp_components/ErpShared/ErpThermalReceipt';
+import { useConfirm } from '@/app/(erp)/erp_components/ErpFeedback/ErpConfirmProvider';
+import { EMPTY_MEMBER_FORM, formatCurrency, MSG_TEMPLATES, MemberFormValues } from '@/app/(erp)/members/members_utils/MembersSharedConstants';
+import { GYM_DETAILS } from '@/app/(erp)/erp_utils/ErpSharedConstants';
 import { MembersContextType } from '@/app/(erp)/members/members_types/members_types';
 
 import { useDebounce } from '@/app/(erp)/erp_utils/useDebounce';
 
-export function useMembersLogic(): MembersContextType {
+export function useMembersLogic(initialData?: any): MembersContextType {
   const { confirm } = useConfirm();
- const [members, setMembers] = useState<Member[]>([]);
- const [plans, setPlans] = useState<Plan[]>([]);
- const [payments, setPayments] = useState<Payment[]>([]);
- const [stats, setStats] = useState({ total: 0, active: 0, pending: 0, expired: 0 });
- const [loading, setLoading] = useState(true);
- const [saving, setSaving] = useState(false);
+  const [members, setMembers] = useState<Member[]>(initialData?.members || []);
+  const [plans, setPlans] = useState<Plan[]>(initialData?.plans || []);
+  const [payments, setPayments] = useState<Payment[]>([]);
+  const [stats, setStats] = useState(initialData?.stats || { total: 0, active: 0, pending: 0, expired: 0 });
+  const [loading, setLoading] = useState(!initialData);
+  const [saving, setSaving] = useState(false);
+  const isFirstRender = React.useRef(true);
 
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 300);
   const [statusFilter, setStatusFilter] = useState('All');
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalMembers, setTotalMembers] = useState(initialData?.totalMembers || 0);
 
  const [showAddModal, setShowAddModal] = useState(false);
  const [editId, setEditId] = useState<number | null>(null);
- const [editData, setEditData] = useState<any>(null);
+ const [editData, setEditData] = useState<MemberFormValues | null>(null);
  const [selectedMember, setSelectedMember] = useState<Member | null>(null);
  const [profileTab, setProfileTab] = useState<'overview' | 'attendance' | 'payments'>('overview');
 
@@ -39,25 +42,39 @@ export function useMembersLogic(): MembersContextType {
  const hideToast = useCallback(() => setToast(null), []);
  const closeMsg = useCallback(() => setMsgModal(null), []);
 
- const loadAll = useCallback(async () => {
- setLoading(true);
- try {
- const [membersRes, plansRes, statsRes] = await Promise.all([
- membersApi.getAll({ limit: '500' }),
- plansApi.getAll(),
- membersApi.getStats(),
- ]);
- setMembers(membersRes.data.members);
- setPlans(plansRes.data);
- setStats(statsRes.data);
- } catch (e) {
- showToast((e as Error).message, 'error');
- } finally {
- setLoading(false);
- }
- }, [showToast]);
+  const loadAll = useCallback(async () => {
+    setLoading(true);
+    try {
+      const params: Record<string, string> = { 
+        limit: '10', 
+        page: currentPage.toString() 
+      };
+      if (debouncedSearch) params.search = debouncedSearch;
+      if (statusFilter !== 'All') params.status = statusFilter;
 
- useEffect(() => { loadAll(); }, [loadAll]);
+      const [membersRes, plansRes, statsRes] = await Promise.all([
+        membersApi.getAll(params),
+        plansApi.getAll(),
+        membersApi.getStats(),
+      ]);
+      setMembers(membersRes.data.members || []);
+      setTotalMembers(membersRes.data.total || 0);
+      setPlans(plansRes.data);
+      setStats(statsRes.data);
+    } catch (e) {
+      showToast((e as Error).message, 'error');
+    } finally {
+      setLoading(false);
+    }
+  }, [showToast, currentPage, debouncedSearch, statusFilter]);
+
+  useEffect(() => { 
+    if (isFirstRender.current && initialData) {
+      isFirstRender.current = false;
+      return;
+    }
+    loadAll(); 
+  }, [loadAll, initialData]);
 
  const loadMemberProfile = async (memberId: number) => {
  try {
@@ -105,15 +122,15 @@ export function useMembersLogic(): MembersContextType {
  email: m.email || '', 
  phone: m.phone, 
  address: m.address || '', 
- gender: m.gender, 
+ gender: (m.gender as "MALE"|"FEMALE"|"OTHER") || 'MALE', 
  branch: m.branch, 
  billingCycle: m.billingCycle, 
  planId: m.planId 
- });
+ } as unknown as MemberFormValues);
  setShowAddModal(true);
  }, []);
 
- const saveMember = useCallback(async (data: any) => {
+ const saveMember = useCallback(async (data: MemberFormValues) => {
  setSaving(true);
  try {
  if (editId) {
@@ -145,21 +162,21 @@ export function useMembersLogic(): MembersContextType {
  }
  }, [loadAll, showToast, selectedMember]);
 
- const openMsg = useCallback((m: Member, type: MessageType) => {
- const tpl = m.status === 'EXPIRED'
- ? `Hi ${m.name}! 🔔\n\nYour membership has expired. Renew today to continue your fitness journey!\n\n— Team GymSmart`
- : m.pendingAmount > 0
- ? `Hi ${m.name} 🙏\n\nFriendly reminder: You have a pending amount of ${formatCurrency(m.pendingAmount)}. Please clear your dues at the earliest.\n\n— Team GymSmart`
- : `Hi ${m.name}! 👋\n\nThis is a message from GymSmart. We hope you're enjoying your fitness journey!\n\n— Team GymSmart`;
- setMsgModal({ open: true, type, recipient: { name: m.name, phone: m.phone, email: m.email }, message: tpl });
- }, []);
+  const openMsg = useCallback((m: Member, type: MessageType) => {
+    const tpl = m.status === 'EXPIRED'
+      ? MSG_TEMPLATES.EXPIRED(m.name)
+      : m.pendingAmount > 0
+      ? MSG_TEMPLATES.PENDING(m.name, formatCurrency(m.pendingAmount))
+      : MSG_TEMPLATES.DEFAULT(m.name);
+    setMsgModal({ open: true, type, recipient: { name: m.name, phone: m.phone, email: m.email }, message: tpl });
+  }, []);
 
  const handlePrint = useCallback((p: Payment) => {
  if (!selectedMember) return;
  const m = selectedMember;
- setPrintData({
- gymName: 'GymSmart Fitness', gymPhone: '+91 83479 77566',
- receiptNo: p.invoiceNo,
+    setPrintData({
+      gymName: GYM_DETAILS.name, gymPhone: GYM_DETAILS.phone,
+      receiptNo: p.invoiceNo,
  date: new Date(p.paidAt).toLocaleDateString('en-IN'),
  customerName: m.name,
  items: [{ name: `Membership - ${m.plan?.name || ''}`, price: p.amount, amount: p.amount }],
@@ -169,7 +186,7 @@ export function useMembersLogic(): MembersContextType {
  }, [selectedMember]);
 
   return {
-    members, plans, payments, stats, loading, saving,
+    members, plans, payments, stats, loading, saving, totalMembers,
     search, debouncedSearch, setSearch, statusFilter, setStatusFilter, currentPage, setCurrentPage,
  toast, showToast, hideToast, loadAll,
  selectedMember, setSelectedMember, profileTab, setProfileTab, loadMemberProfile,

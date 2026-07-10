@@ -1,11 +1,11 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useDebounce } from '@/app/(erp)/erp_utils/useDebounce';
 import { inquiriesApi, type Inquiry, type InquiryStats } from '@/lib/api';
-import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
-import type { MessageType, ErpMessageRecipient } from '@/app/(erp)/erp_components/ErpMessageModal';
+import type { ToastType } from '@/app/(erp)/erp_components/ErpFeedback/ErpToast';
+import type { MessageType, ErpMessageRecipient } from '@/app/(erp)/erp_components/ErpFeedback/ErpMessageModal';
 import { EMPTY_INQUIRY_FORM, generateDefaultMessage } from '@/app/(erp)/inquiries/inquiries_utils/InquiriesSharedConstants';
 import { InquiriesContextType } from '@/app/(erp)/inquiries/inquiries_types/inquiries_types';
-import { useConfirm } from '@/app/(erp)/erp_components/ErpConfirmProvider';
+import { useConfirm } from '@/app/(erp)/erp_components/ErpFeedback/ErpConfirmProvider';
 
 export function useInquiriesLogic(): InquiriesContextType {
   const { confirm } = useConfirm();
@@ -19,6 +19,7 @@ export function useInquiriesLogic(): InquiriesContextType {
   const [statusFilter, setStatusFilter] = useState('All');
   const [dateFilter, setDateFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalInquiries, setTotalInquiries] = useState(0);
  
  const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
  const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
@@ -32,24 +33,33 @@ export function useInquiriesLogic(): InquiriesContextType {
  const [msgModal, setMsgModal] = useState<{ open: boolean; recipient: ErpMessageRecipient; type: MessageType; message: string; subject?: string } | null>(null);
  const closeMsg = useCallback(() => setMsgModal(null), []);
 
- const loadAll = useCallback(async () => {
- setLoading(true);
- setError('');
- try {
- const [inqRes, statsRes] = await Promise.all([
- inquiriesApi.getAll({ limit: '200' }),
- inquiriesApi.getStats(),
- ]);
- setInquiries(inqRes.data.inquiries);
- setStats(statsRes.data);
- } catch (e) {
- const msg = (e as Error).message;
- setError(msg);
- showToast(msg, 'error');
- } finally {
- setLoading(false);
- }
- }, [showToast]);
+  const loadAll = useCallback(async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const params: Record<string, string> = {
+        limit: '10',
+        page: currentPage.toString()
+      };
+      if (debouncedSearch) params.search = debouncedSearch;
+      if (statusFilter !== 'All') params.status = statusFilter;
+      // You can add dateFilter passing here if backend supports
+
+      const [inqRes, statsRes] = await Promise.all([
+        inquiriesApi.getAll(params),
+        inquiriesApi.getStats(),
+      ]);
+      setInquiries(inqRes.data.inquiries || []);
+      setTotalInquiries(inqRes.data.total || 0);
+      setStats(statsRes.data);
+    } catch (e) {
+      const msg = (e as Error).message;
+      setError(msg);
+      showToast(msg, 'error');
+    } finally {
+      setLoading(false);
+    }
+  }, [showToast, currentPage, debouncedSearch, statusFilter]);
 
  useEffect(() => { loadAll(); }, [loadAll]);
 
@@ -124,7 +134,7 @@ export function useInquiriesLogic(): InquiriesContextType {
  }, []);
 
   return {
-    inquiries, stats, loading, error, toast, showToast, hideToast, loadAll,
+    inquiries, stats, loading, error, toast, showToast, hideToast, loadAll, totalInquiries,
     search, debouncedSearch, setSearch, statusFilter, setStatusFilter, dateFilter, setDateFilter, currentPage, setCurrentPage,
     showModal, setShowModal, editId, editData, saving,
  openAdd, openEdit, saveInquiry, deleteInquiry, updateStatus,

@@ -1,7 +1,7 @@
 "use client";
 
-import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
-import ErpToast from '@/app/(erp)/erp_components/ErpToast';
+import ErpHeader from '@/app/(erp)/erp_components/ErpLayout/ErpHeader';
+import ErpToast from '@/app/(erp)/erp_components/ErpFeedback/ErpToast';
 import { LibraryProvider, useLibraryContext } from '@/app/(erp)/library/library_context/LibraryContext';
 import LibraryTabs from '@/app/(erp)/library/library_components/LibraryTabs/LibraryTabs';
 import ExerciseModal from '@/app/(erp)/library/library_components/ExerciseModal/ExerciseModal';

@@ -1,6 +1,6 @@
 "use client";
 
-import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
+import ErpHeader from '@/app/(erp)/erp_components/ErpLayout/ErpHeader';
 import { SalesProvider, useSalesContext } from '@/app/(erp)/sales/sales_context/SalesContext';
 import SalesToolbar from '@/app/(erp)/sales/sales_components/SalesToolbar/SalesToolbar';
 import SalesTabs from '@/app/(erp)/sales/sales_components/SalesTabs/SalesTabs';

@@ -4,7 +4,7 @@ import { Edit2, Trash2 } from 'lucide-react';
 import { useStoreContext } from '@/app/(erp)/store/store_context/StoreContext';
 import { formatCurrency } from '@/app/(erp)/store/store_utils/StoreSharedConstants';
 
-import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
+import ErpPagination from '@/app/(erp)/erp_components/ErpShared/ErpPagination';
 
 export default function ProductGrid() {
   const { products, loading, debouncedSearch, currentPage, setCurrentPage, openEditProduct, deleteProduct, addToOrder } = useStoreContext();
@@ -53,12 +53,14 @@ export default function ProductGrid() {
                 <button 
                   onClick={() => openEditProduct(p)} 
                   className="p-1.5 rounded-lg bg-[var(--bg-input)] text-[var(--store-text-secondary)] hover:bg-[var(--primary-subtle)] transition-colors"
+                  aria-label={`Edit ${p.name}`}
                 >
                   <Edit2 size={13} />
                 </button>
                 <button 
                   onClick={() => deleteProduct(p.id)} 
                   className="p-1.5 rounded-lg bg-[var(--danger-bg)] dark:bg-[var(--danger-bg)] text-[var(--danger)] hover:bg-[var(--danger-bg)] dark:hover:bg-[var(--danger-bg)] transition-colors"
+                  aria-label={`Delete ${p.name}`}
                 >
                   <Trash2 size={13} />
                 </button>
@@ -82,7 +84,7 @@ export default function ProductGrid() {
         ))}
         {filtered.length === 0 && (
           <div className="col-span-full text-center py-10 text-[var(--store-text-secondary)]">
-            No products found matching "{search}".
+            No products found matching "{debouncedSearch}".
           </div>
         )}
       </div>

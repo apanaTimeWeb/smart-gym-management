@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { X, Save } from 'lucide-react';
 import { useLibraryContext } from '@/app/(erp)/library/library_context/LibraryContext';
-import { GOALS, DietSchema, type DietFormValues } from '@/app/(erp)/library/library_utils/LibrarySharedConstants';
+import { GOALS, DietSchema, type DietFormValues, EMPTY_DIET_FORM } from '@/app/(erp)/library/library_utils/LibrarySharedConstants';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -19,9 +19,9 @@ export default function DietModal() {
    handleSubmit, 
    reset,
    formState: { errors } 
- } = useForm<DietFormValues>({
+ } = useForm({
    resolver: zodResolver(DietSchema),
-   defaultValues: editDietData || {}
+   defaultValues: (editDietData as DietFormValues) || (EMPTY_DIET_FORM as unknown as DietFormValues)
  });
 
  useEffect(() => {
@@ -46,7 +46,7 @@ export default function DietModal() {
  <X size={18} />
  </button>
  </div>
- <form onSubmit={handleSubmit(saveDietPlan)} className="p-6 space-y-4">
+ <form onSubmit={handleSubmit(saveDietPlan as any)} className="p-6 space-y-4">
  {[
  { label: 'Plan Name', key: 'name', type: 'text' }, 
  { label: 'Calories', key: 'calories', type: 'number', placeholder: '2500' }, 

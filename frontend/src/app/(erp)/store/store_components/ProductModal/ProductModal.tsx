@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { X, Save } from 'lucide-react';
 import { useStoreContext } from '@/app/(erp)/store/store_context/StoreContext';
-import { CATEGORIES, ProductSchema, type ProductFormValues } from '@/app/(erp)/store/store_utils/StoreSharedConstants';
+import { CATEGORIES, ProductSchema, type ProductFormValues, EMPTY_PRODUCT_FORM } from '@/app/(erp)/store/store_utils/StoreSharedConstants';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -19,9 +19,9 @@ export default function ProductModal() {
    handleSubmit, 
    reset,
    formState: { errors } 
- } = useForm<ProductFormValues>({
+ } = useForm({
    resolver: zodResolver(ProductSchema),
-   defaultValues: editProductData || {}
+   defaultValues: editProductData || EMPTY_PRODUCT_FORM
  });
 
  useEffect(() => {
@@ -46,7 +46,7 @@ export default function ProductModal() {
  <X size={18} />
  </button>
  </div>
- <form onSubmit={handleSubmit(saveProduct)} className="p-6 space-y-4">
+ <form onSubmit={handleSubmit(saveProduct as any)} className="p-6 space-y-4">
  {[
  { label: 'Product Name', key: 'name', type: 'text' }, 
  { label: 'Price (₹)', key: 'price', type: 'number' }, 

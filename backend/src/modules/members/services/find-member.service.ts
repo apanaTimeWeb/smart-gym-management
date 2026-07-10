@@ -12,13 +12,14 @@ export class FindMemberService {
   constructor(private readonly membersRepository: MembersRepository) {}
 
   async findAll(query: FindMemberDto): Promise<MemberResponse> {
-    this.logger.log(`Fetching members with limit: ${query.limit}`);
+    this.logger.log(`Fetching members with query: ${JSON.stringify(query)}`);
     const limit = query.limit || 50;
-    const [members, total] = await this.membersRepository.findMembers(limit);
+    const page = query.page || 1;
+    const [members, total] = await this.membersRepository.findMembers(query);
 
     return {
       message: MEMBER_MESSAGES.FETCHED_SUCCESS,
-      data: { members, total, page: 1, limit },
+      data: { members, total, page, limit },
     };
   }
 

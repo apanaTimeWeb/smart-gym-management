@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { allMemberships } from '@/app/(erp)/sales/sales_utils/SalesSharedConstants';
 import { useSalesContext } from '@/app/(erp)/sales/sales_context/SalesContext';
-import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
+import ErpPagination from '@/app/(erp)/erp_components/ErpShared/ErpPagination';
 
 export default function AllMemberships() {
   const [filter, setFilter] = useState('All');

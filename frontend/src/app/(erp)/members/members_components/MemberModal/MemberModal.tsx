@@ -5,14 +5,7 @@ import { X, Save } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMembersContext } from '@/app/(erp)/members/members_context/MembersContext';
-import { 
-  MEMBERS_CYCLE_LABELS, 
-  getPriceForCycle, 
-  formatCurrency, 
-  BRANCH_OPTIONS,
-  MemberSchema,
-  type MemberFormValues
-} from '@/app/(erp)/members/members_utils/MembersSharedConstants';
+import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency, BRANCH_OPTIONS, MemberSchema, type MemberFormValues, EMPTY_MEMBER_FORM } from '@/app/(erp)/members/members_utils/MembersSharedConstants';
 
 export default function MemberModal() {
  const { 
@@ -25,10 +18,11 @@ export default function MemberModal() {
    handleSubmit, 
    watch, 
    reset,
+   setValue,
    formState: { errors } 
- } = useForm<MemberFormValues>({
+ } = useForm({
    resolver: zodResolver(MemberSchema),
-   defaultValues: editData || {}
+   defaultValues: editData || EMPTY_MEMBER_FORM
  });
 
  // Reset form whenever editData changes (e.g., when opening modal for edit)
@@ -38,8 +32,8 @@ export default function MemberModal() {
    }
  }, [showAddModal, editData, reset]);
 
- const watchPlanId = watch('planId');
- const watchBillingCycle = watch('billingCycle');
+  const watchPlanId = watch('planId') as number;
+  const watchBillingCycle = watch('billingCycle') as string;
 
  if (!showAddModal) return null;
 
@@ -52,7 +46,7 @@ export default function MemberModal() {
  <X size={18} />
  </button>
  </div>
- <form onSubmit={handleSubmit(saveMember)} className="p-6 space-y-4">
+ <form onSubmit={handleSubmit(saveMember as any)} className="p-6 space-y-4">
  {[
  { label: 'Full Name', key: 'name', type: 'text', placeholder: 'Rahul Sharma' },
  { label: 'Email', key: 'email', type: 'email', placeholder: 'rahul@gmail.com' },

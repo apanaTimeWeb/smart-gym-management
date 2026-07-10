@@ -4,23 +4,16 @@ import { Edit, MessageCircle, Mail, Trash2 } from 'lucide-react';
 import { useMembersContext } from '@/app/(erp)/members/members_context/MembersContext';
 import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS, MEMBERS_TABLE_HEADERS, formatCurrency } from '@/app/(erp)/members/members_utils/MembersSharedConstants';
 
-import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
+import ErpPagination from '@/app/(erp)/erp_components/ErpShared/ErpPagination';
 
 export default function MembersTable() {
   const { 
     members, loading, search, debouncedSearch, statusFilter, currentPage, setCurrentPage,
-    setSelectedMember, loadMemberProfile, openEdit, openMsg, deleteMember 
+    setSelectedMember, loadMemberProfile, openEdit, openMsg, deleteMember, totalMembers
   } = useMembersContext();
 
-  const filtered = members.filter(m => {
-    const ms = m.name.toLowerCase().includes(debouncedSearch.toLowerCase()) || m.phone.includes(debouncedSearch);
-    const mf = statusFilter === 'All' || m.status === statusFilter;
-    return ms && mf;
-  });
-
   const ITEMS_PER_PAGE = 10;
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
-  const currentData = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(totalMembers / ITEMS_PER_PAGE);
 
   return (
     <div className="bg-[var(--members-bg-card)] rounded-xl shadow-sm border border-[var(--members-border)] overflow-hidden flex flex-col h-full min-h-[400px]">
@@ -42,7 +35,7 @@ export default function MembersTable() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[var(--members-border)]">
-                {currentData.map(m => (
+                {members.map(m => (
                   <tr 
                     key={m.id} 
                     className="hover:bg-[var(--members-hover-bg)] transition-colors cursor-pointer"
@@ -74,15 +67,15 @@ export default function MembersTable() {
                     <td className="px-5 py-3.5 text-sm text-[var(--members-text-secondary)]">{new Date(m.expiryDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-2">
-                        <button onClick={(e) => { e.stopPropagation(); openEdit(m); }} className="p-1.5 rounded-lg bg-[var(--bg-page)] text-[var(--text-tertiary)] hover:bg-[var(--primary-subtle)] dark:bg-[var(--bg-card)] dark:text-[var(--text-secondary)]" title="Edit"><Edit size={14} /></button>
-                        <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'whatsapp'); }} className="p-1.5 rounded-lg text-white" style={{ background: '#25D366' }} title="WhatsApp"><MessageCircle size={14} /></button>
-                        <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'email'); }} className="p-1.5 rounded-lg text-white" style={{ background: 'hsl(217 91% 60%)' }} title="Email"><Mail size={14} /></button>
-                        <button onClick={(e) => { e.stopPropagation(); deleteMember(m.id); }} className="p-1.5 rounded-lg bg-[var(--danger-bg)] text-[var(--danger)] hover:bg-[var(--danger-bg)]" title="Delete"><Trash2 size={14} /></button>
+                        <button onClick={(e) => { e.stopPropagation(); openEdit(m); }} className="p-1.5 rounded-lg bg-[var(--bg-page)] text-[var(--text-tertiary)] hover:bg-[var(--primary-subtle)] dark:bg-[var(--bg-card)] dark:text-[var(--text-secondary)]" title="Edit" aria-label={`Edit ${m.name}`}><Edit size={14} /></button>
+                        <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'whatsapp'); }} className="p-1.5 rounded-lg text-white" style={{ background: '#25D366' }} title="WhatsApp" aria-label={`Message ${m.name} on WhatsApp`}><MessageCircle size={14} /></button>
+                        <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'email'); }} className="p-1.5 rounded-lg text-white" style={{ background: 'hsl(217 91% 60%)' }} title="Email" aria-label={`Email ${m.name}`}><Mail size={14} /></button>
+                        <button onClick={(e) => { e.stopPropagation(); deleteMember(m.id); }} className="p-1.5 rounded-lg bg-[var(--danger-bg)] text-[var(--danger)] hover:bg-[var(--danger-bg)]" title="Delete" aria-label={`Delete ${m.name}`}><Trash2 size={14} /></button>
                       </div>
                     </td>
                   </tr>
                 ))}
-                {filtered.length === 0 && !loading && (
+                {members.length === 0 && !loading && (
                   <tr>
                     <td colSpan={8} className="text-center py-12 text-[var(--members-text-secondary)]">
                       {search || statusFilter !== 'All' ? 'No members match the filter.' : 'No members yet. Add your first member!'}
@@ -95,7 +88,7 @@ export default function MembersTable() {
           <ErpPagination 
             currentPage={currentPage} 
             totalPages={totalPages} 
-            totalItems={filtered.length} 
+            totalItems={totalMembers} 
             itemsPerPage={ITEMS_PER_PAGE} 
             onPageChange={setCurrentPage} 
           />

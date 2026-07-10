@@ -1,6 +1,6 @@
-import { type Inquiry, type InquiryStats } from '@/lib/api';
-import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
-import type { MessageType, ErpMessageRecipient } from '@/app/(erp)/erp_components/ErpMessageModal';
+
+import type { ToastType } from '@/app/(erp)/erp_components/ErpFeedback/ErpToast';
+import type { MessageType, ErpMessageRecipient } from '@/app/(erp)/erp_components/ErpFeedback/ErpMessageModal';
 import { EMPTY_INQUIRY_FORM } from '@/app/(erp)/inquiries/inquiries_utils/InquiriesSharedConstants';
 import React from 'react';
 
@@ -9,6 +9,7 @@ export interface InquiriesContextType {
  stats: InquiryStats | null;
  loading: boolean;
  error: string;
+ totalInquiries: number;
  toast: { message: string; type: ToastType } | null;
  showToast: (msg: string, t: ToastType) => void;
  hideToast: () => void;
@@ -42,4 +43,13 @@ export interface InquiriesContextType {
  msgModal: { open: boolean; recipient: ErpMessageRecipient; type: MessageType; message: string; subject?: string } | null;
  openMsg: (inq: Inquiry, type: MessageType) => void;
  closeMsg: () => void;
+}
+
+export interface Inquiry {
+  id: number; name: string; phone: string; email?: string;
+  interest: string; status: string; source?: string;
+  notes?: string; followUpDate?: string; createdAt: string;
+}
+export interface InquiryStats {
+  total: number; new: number; followUp: number; converted: number; lost: number;
 }

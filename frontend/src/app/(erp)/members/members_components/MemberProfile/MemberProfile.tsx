@@ -1,7 +1,7 @@
 "use client";
 
 import { Edit, MessageCircle, Mail } from 'lucide-react';
-import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
+import ErpHeader from '@/app/(erp)/erp_components/ErpLayout/ErpHeader';
 import { useMembersContext } from '@/app/(erp)/members/members_context/MembersContext';
 import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS, formatCurrency } from '@/app/(erp)/members/members_utils/MembersSharedConstants';
 import ProfileOverview from '@/app/(erp)/members/members_components/MemberProfile/ProfileOverview';

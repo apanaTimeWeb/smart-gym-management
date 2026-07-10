@@ -1,5 +1,5 @@
-import type { Attendance, Member, Staff } from '@/lib/api';
-import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
+import type { Member, Staff } from '@/lib/api';
+import type { ToastType } from '@/app/(erp)/erp_components/ErpFeedback/ErpToast';
 import type { AttendanceTab, EMPTY_ATTENDANCE_FORM } from '@/app/(erp)/attendance/attendance_utils/AttendanceSharedConstants';
 
 export interface AttendanceContextType {
@@ -30,4 +30,10 @@ export interface AttendanceContextType {
  
  loadAll: () => Promise<void>;
  markAttendance: (e: React.FormEvent) => Promise<void>;
+}
+
+export interface Attendance {
+  id: number; memberId?: number; staffId?: number;
+  date: string; checkIn?: string; checkOut?: string; type: string;
+  member?: { name: string }; staff?: { name: string };
 }

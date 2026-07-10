@@ -4,7 +4,7 @@ import { Edit2, Trash2, Tag, CheckCircle } from 'lucide-react';
 import { usePlansContext } from '@/app/(erp)/plans/plans_context/PlansContext';
 import { formatCurrency } from '@/app/(erp)/plans/plans_utils/PlansSharedConstants';
 
-import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
+import ErpPagination from '@/app/(erp)/erp_components/ErpShared/ErpPagination';
 
 export default function PlansGrid() {
   const { plans, loading, search, currentPage, setCurrentPage, openEdit, deletePlan } = usePlansContext();

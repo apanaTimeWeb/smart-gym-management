@@ -36,7 +36,7 @@ export const EMPTY_MEMBER_FORM = {
  branch: 'Main Branch', 
  billingCycle: 'ONE_MONTH', 
  planId: 1 
-};
+} as unknown as MemberFormValues;
 
 export const MEMBERS_TABLE_HEADERS = [
  'Member', 'Plan', 'Status', 'Billing Cycle', 'Paid', 'Pending', 'Expiry', 'Actions'
@@ -56,3 +56,9 @@ export function getPriceForCycle(plan: Plan | undefined, cycle: string): number 
  };
  return map[cycle] || 0;
 }
+
+export const MSG_TEMPLATES = {
+  EXPIRED: (name: string) => `Hi ${name}! 🔔\n\nYour membership has expired. Renew today to continue your fitness journey!\n\n— Team GymSmart`,
+  PENDING: (name: string, formattedAmount: string) => `Hi ${name} 🙏\n\nFriendly reminder: You have a pending amount of ${formattedAmount}. Please clear your dues at the earliest.\n\n— Team GymSmart`,
+  DEFAULT: (name: string) => `Hi ${name}! 👋\n\nThis is a message from GymSmart. We hope you're enjoying your fitness journey!\n\n— Team GymSmart`
+};

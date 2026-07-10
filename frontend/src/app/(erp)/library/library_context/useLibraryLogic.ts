@@ -1,10 +1,10 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useDebounce } from '@/app/(erp)/erp_utils/useDebounce';
 import { libraryApi, type Exercise, type DietPlan } from '@/lib/api';
-import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
+import type { ToastType } from '@/app/(erp)/erp_components/ErpFeedback/ErpToast';
 import { EMPTY_EXERCISE_FORM, EMPTY_DIET_FORM, type LibraryTab } from '@/app/(erp)/library/library_utils/LibrarySharedConstants';
 import { LibraryContextType } from '@/app/(erp)/library/library_types/library_types';
-import { useConfirm } from '@/app/(erp)/erp_components/ErpConfirmProvider';
+import { useConfirm } from '@/app/(erp)/erp_components/ErpFeedback/ErpConfirmProvider';
 
 export function useLibraryLogic(): LibraryContextType {
   const { confirm } = useConfirm();

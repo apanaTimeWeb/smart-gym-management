@@ -1,16 +1,18 @@
 "use client";
 
-import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
-import ErpToast from '@/app/(erp)/erp_components/ErpToast';
-import ErpMessageModal from '@/app/(erp)/erp_components/ErpMessageModal';
-import ErpThermalReceipt from '@/app/(erp)/erp_components/ErpThermalReceipt';
+import ErpHeader from '@/app/(erp)/erp_components/ErpLayout/ErpHeader';
+import ErpToast from '@/app/(erp)/erp_components/ErpFeedback/ErpToast';
+import ErpMessageModal from '@/app/(erp)/erp_components/ErpFeedback/ErpMessageModal';
+import ErpThermalReceipt from '@/app/(erp)/erp_components/ErpShared/ErpThermalReceipt';
 
 import { MembersProvider, useMembersContext } from '@/app/(erp)/members/members_context/MembersContext';
 import MembersKPIs from '@/app/(erp)/members/members_components/MembersKPIs/MembersKPIs';
 import MembersToolbar from '@/app/(erp)/members/members_components/MembersToolbar/MembersToolbar';
 import MembersTable from '@/app/(erp)/members/members_components/MembersTable/MembersTable';
 import MemberProfile from '@/app/(erp)/members/members_components/MemberProfile/MemberProfile';
-import MemberModal from '@/app/(erp)/members/members_components/MemberModal/MemberModal';
+import dynamic from 'next/dynamic';
+
+const MemberModal = dynamic(() => import('@/app/(erp)/members/members_components/MemberModal/MemberModal'), { ssr: false });
 
 import '@/app/(erp)/members/members.css';
 
@@ -37,31 +39,31 @@ function MembersContent() {
 
         <MemberModal />
 
- {msgModal?.open && (
- <ErpMessageModal 
- open={msgModal.open}
- type={msgModal.type}
- recipient={msgModal.recipient}
- message={msgModal.message}
- onClose={closeMsg} 
- onSuccess={msg => { showToast(msg, 'success'); closeMsg(); }} 
- />
- )}
+        {msgModal?.open && (
+          <ErpMessageModal 
+            open={msgModal.open}
+            type={msgModal.type}
+            recipient={msgModal.recipient}
+            message={msgModal.message}
+            onClose={closeMsg} 
+            onSuccess={msg => { showToast(msg, 'success'); closeMsg(); }} 
+          />
+        )}
 
- {toast && <ErpToast message={toast.message} type={toast.type} onClose={hideToast} />}
- </div>
+        {toast && <ErpToast message={toast.message} type={toast.type} onClose={hideToast} />}
+      </div>
 
- {printData && (
- <ErpThermalReceipt data={printData} />
- )}
- </div>
- );
+      {printData && (
+        <ErpThermalReceipt data={printData} />
+      )}
+    </div>
+  );
 }
 
-export default function MembersMain() {
- return (
- <MembersProvider>
- <MembersContent />
- </MembersProvider>
- );
+export default function MembersMain({ initialData }: { initialData?: any }) {
+  return (
+    <MembersProvider initialData={initialData}>
+      <MembersContent />
+    </MembersProvider>
+  );
 }

@@ -1,20 +1,22 @@
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useDebounce } from '@/app/(erp)/erp_utils/useDebounce';
 import { storeApi, type Product, type Order, type StoreSummary } from '@/lib/api';
-import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
-import type { ErpReceiptData } from '@/app/(erp)/erp_components/ErpThermalReceipt';
-import { EMPTY_PRODUCT_FORM } from '@/app/(erp)/store/store_utils/StoreSharedConstants';
+import type { ToastType } from '@/app/(erp)/erp_components/ErpFeedback/ErpToast';
+import type { ErpReceiptData } from '@/app/(erp)/erp_components/ErpShared/ErpThermalReceipt';
+import { EMPTY_PRODUCT_FORM, ERR_EMPTY_ORDER, ProductFormValues } from '@/app/(erp)/store/store_utils/StoreSharedConstants';
+import { GYM_DETAILS } from '@/app/(erp)/erp_utils/ErpSharedConstants';
 import { StoreContextType, OrderItem } from '@/app/(erp)/store/store_types/store_types';
-import { useConfirm } from '@/app/(erp)/erp_components/ErpConfirmProvider';
+import { useConfirm } from '@/app/(erp)/erp_components/ErpFeedback/ErpConfirmProvider';
 
-export function useStoreLogic(): StoreContextType {
+export function useStoreLogic(initialData?: any): StoreContextType {
   const { confirm } = useConfirm();
- const [tab, setTab] = useState('Products');
- const [products, setProducts] = useState<Product[]>([]);
- const [orders, setOrders] = useState<Order[]>([]);
- const [summary, setSummary] = useState<StoreSummary | null>(null);
- const [loading, setLoading] = useState(true);
- const [saving, setSaving] = useState(false);
+  const [tab, setTab] = useState('Products');
+  const [products, setProducts] = useState<Product[]>(initialData?.products || []);
+  const [orders, setOrders] = useState<Order[]>(initialData?.orders || []);
+  const [summary, setSummary] = useState<StoreSummary | null>(initialData?.summary || null);
+  const [loading, setLoading] = useState(!initialData);
+  const [saving, setSaving] = useState(false);
+  const isFirstRender = React.useRef(true);
  
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
   const [printData, setPrintData] = useState<ErpReceiptData | null>(null);
@@ -25,7 +27,7 @@ export function useStoreLogic(): StoreContextType {
 
  const [showProductModal, setShowProductModal] = useState(false);
  const [editProductId, setEditProductId] = useState<number | null>(null);
- const [editProductData, setEditProductData] = useState<any>(null);
+  const [editProductData, setEditProductData] = useState<ProductFormValues | null>(null);
 
  const [showOrderModal, setShowOrderModal] = useState(false);
  const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
@@ -52,27 +54,33 @@ export function useStoreLogic(): StoreContextType {
  }
  }, [showToast]);
 
- useEffect(() => { loadAll(); }, [loadAll]);
+  useEffect(() => { 
+    if (isFirstRender.current && initialData) {
+      isFirstRender.current = false;
+      return;
+    }
+    loadAll(); 
+  }, [loadAll, initialData]);
 
- const openAddProduct = useCallback(() => { 
- setEditProductId(null); 
- setEditProductData(EMPTY_PRODUCT_FORM); 
- setShowProductModal(true); 
- }, []);
+  const openAddProduct = useCallback(() => { 
+    setEditProductId(null); 
+    setEditProductData(EMPTY_PRODUCT_FORM as unknown as ProductFormValues); 
+    setShowProductModal(true); 
+  }, []);
  
  const openEditProduct = useCallback((p: Product) => {
  setEditProductId(p.id);
  setEditProductData({ 
  name: p.name, 
  category: p.category, 
- price: String(p.price), 
- stock: String(p.stock), 
+ price: p.price, 
+ stock: p.stock, 
  description: p.description || '' 
  });
  setShowProductModal(true);
  }, []);
 
- const saveProduct = useCallback(async (data: any) => {
+ const saveProduct = useCallback(async (data: ProductFormValues) => {
  setSaving(true);
  try {
  const payload = { 
@@ -127,9 +135,9 @@ export function useStoreLogic(): StoreContextType {
  return orderItems.reduce((s, i) => s + i.price * i.qty, 0);
  }, [orderItems]);
 
- const placeOrder = useCallback(async () => {
- if (orderItems.length === 0) return showToast('Add items to order first', 'error');
- setSaving(true);
+  const placeOrder = useCallback(async () => {
+    if (orderItems.length === 0) return showToast(ERR_EMPTY_ORDER, 'error');
+    setSaving(true);
  try {
  const res = await storeApi.createOrder({ 
  items: orderItems.map(i => ({ productId: i.productId, qty: i.qty })), 
@@ -138,10 +146,10 @@ export function useStoreLogic(): StoreContextType {
  
  showToast(res.message, 'success');
  
- setPrintData({
- gymName: 'GymSmart Store', 
- gymPhone: '+91 83479 77566',
- receiptNo: `ORD-${res.data.id}`, 
+    setPrintData({
+      gymName: GYM_DETAILS.name, 
+      gymPhone: GYM_DETAILS.phone,
+      receiptNo: `ORD-${res.data.id}`, 
  date: new Date().toLocaleDateString('en-IN'),
  customerName: 'Walk-in Customer',
  items: orderItems.map(i => ({ name: i.name, price: i.price, amount: i.price * i.qty })),

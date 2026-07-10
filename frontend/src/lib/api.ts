@@ -18,6 +18,28 @@ import { LibraryUrlConfig } from '@/app/(erp)/library/library_url_config';
 import { InquiriesUrlConfig } from '@/app/(erp)/inquiries/inquiries_url_config';
 import { SalesUrlConfig } from '@/app/(erp)/sales/sales_url_config';
 
+export type { DashboardStats, RecentMember, RecentPayment, PendingPayment } from '@/app/(erp)/dashboard/dashboard_types/dashboard_types';
+export type { Member, MemberStats } from '@/app/(erp)/members/members_types/members_types';
+export type { Plan } from '@/app/(erp)/plans/plans_types/plans_types';
+export type { Payment, FinanceSummary } from '@/app/(erp)/finance/finance_types/finance_types';
+export type { Staff, Payroll, HrSummary } from '@/app/(erp)/hr/hr_types/hr_types';
+export type { Attendance } from '@/app/(erp)/attendance/attendance_types/attendance_types';
+export type { Product, Order, StoreSummary } from '@/app/(erp)/store/store_types/store_types';
+export type { Workout } from '@/app/(erp)/workout/workout_types/workout_types';
+export type { Exercise, DietPlan } from '@/app/(erp)/library/library_types/library_types';
+export type { Inquiry, InquiryStats } from '@/app/(erp)/inquiries/inquiries_types/inquiries_types';
+
+import type { DashboardStats, RecentMember, RecentPayment, PendingPayment } from '@/app/(erp)/dashboard/dashboard_types/dashboard_types';
+import type { Member, MemberStats } from '@/app/(erp)/members/members_types/members_types';
+import type { Plan } from '@/app/(erp)/plans/plans_types/plans_types';
+import type { Payment, FinanceSummary } from '@/app/(erp)/finance/finance_types/finance_types';
+import type { Staff, Payroll, HrSummary } from '@/app/(erp)/hr/hr_types/hr_types';
+import type { Attendance } from '@/app/(erp)/attendance/attendance_types/attendance_types';
+import type { Product, Order, StoreSummary } from '@/app/(erp)/store/store_types/store_types';
+import type { Workout } from '@/app/(erp)/workout/workout_types/workout_types';
+import type { Exercise, DietPlan } from '@/app/(erp)/library/library_types/library_types';
+import type { Inquiry, InquiryStats } from '@/app/(erp)/inquiries/inquiries_types/inquiries_types';
+
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 
 // ─── User Helper (reads from non-HttpOnly cookie set by server) ───────────────
@@ -126,39 +148,6 @@ export const dashboardApi = {
   },
 };
 
-export interface DashboardStats {
-  totalMembers: number;
-  activeMembers: number;
-  newMembersThisMonth: number;
-  totalRevenue: number;
-  monthlyRevenue: number;
-  pendingPayments: number;
-  totalStaff: number;
-  activeStaff: number;
-  totalProducts: number;
-  lowStockCount: number;
-  totalInquiries: number;
-  newInquiries: number;
-  memberGrowth: { month: string; count: number }[];
-  revenueChart: { month: string; revenue: number }[];
-  membersByPlan: { plan: string; count: number }[];
-  membersByStatus: { active: number; pending: number; expired: number };
-  recentMembers: RecentMember[];
-  recentPayments: RecentPayment[];
-  pendingPaymentsList: PendingPayment[];
-}
-
-export interface RecentMember {
-  id: number; name: string; plan: string; status: string;
-  joinDate: string; paidAmount: number;
-}
-export interface RecentPayment {
-  id: number; invoiceNo: string; amount: number; method: string; paidAt: string;
-  member: { name: string };
-}
-export interface PendingPayment {
-  id: number; name: string; pendingAmount: number; expiryDate: string;
-}
 
 // ─── Members ──────────────────────────────────────────────────────────────────
 
@@ -178,18 +167,7 @@ export const membersApi = {
     apiFetch(MembersUrlConfig.BACKEND_API.RENEW(id), { method: 'POST', body: JSON.stringify(body) }),
 };
 
-export interface Member {
-  id: number; name: string; email: string; phone: string;
-  gender: string; address?: string; branch: string;
-  planId: number; plan?: { id: number; name: string; tier: string };
-  billingCycle: string; status: string;
-  joinDate: string; expiryDate: string;
-  paidAmount: number; pendingAmount: number; photo?: string;
-  createdAt: string;
-}
-export interface MemberStats {
-  total: number; active: number; pending: number; expired: number;
-}
+
 
 // ─── Plans ────────────────────────────────────────────────────────────────────
 
@@ -203,12 +181,6 @@ export const plansApi = {
   remove: (id: number) => apiFetch(PlansUrlConfig.BACKEND_API.DELETE(id), { method: 'DELETE' }),
 };
 
-export interface Plan {
-  id: number; name: string; tier: string;
-  price1Month: number; price3Month: number;
-  price6Month: number; price12Month: number;
-  features: string[]; isActive: boolean;
-}
 
 // ─── Finance ──────────────────────────────────────────────────────────────────
 
@@ -224,17 +196,7 @@ export const financeApi = {
     apiFetch<{ success: boolean; data: Payment[] }>(FinanceUrlConfig.BACKEND_API.PAYMENTS_BY_MEMBER(memberId)),
 };
 
-export interface Payment {
-  id: number; memberId: number; amount: number; method: string;
-  status: string; notes?: string; invoiceNo: string; paidAt: string;
-  member?: { name: string; email: string; phone: string; plan?: { name: string } };
-}
-export interface FinanceSummary {
-  totalRevenue: number; monthlyRevenue: number; pendingAmount: number;
-  totalPayments: number;
-  revenueByMethod: { UPI: number; Cash: number; Card: number; NetBanking: number };
-  monthlyData: { month: string; revenue: number }[];
-}
+
 
 // ─── HR ───────────────────────────────────────────────────────────────────────
 
@@ -260,20 +222,8 @@ export const hrApi = {
   getSummary: () => apiFetch<{ success: boolean; data: HrSummary }>(HrUrlConfig.BACKEND_API.SUMMARY),
 };
 
-export interface Staff {
-  id: number; name: string; email: string; phone: string;
-  role: string; salary: number; branch: string; gender: string;
-  address?: string; joinDate: string; isActive: boolean;
-}
-export interface Payroll {
-  id: number; staffId: number; month: string; amount: number;
-  status: string; paidAt?: string; notes?: string;
-  staff?: { name: string; role: string };
-}
-export interface HrSummary {
-  totalStaff: number; activeStaff: number;
-  totalPayrollThisMonth: number; paidCount: number; pendingCount: number;
-}
+
+
 
 // ─── Attendance ───────────────────────────────────────────────────────────────
 
@@ -290,11 +240,6 @@ export const attendanceApi = {
     ),
 };
 
-export interface Attendance {
-  id: number; memberId?: number; staffId?: number;
-  date: string; checkIn?: string; checkOut?: string; type: string;
-  member?: { name: string }; staff?: { name: string };
-}
 
 // ─── Store ────────────────────────────────────────────────────────────────────
 
@@ -317,19 +262,8 @@ export const storeApi = {
   getStoreSummary: () => apiFetch<{ success: boolean; data: StoreSummary }>(StoreUrlConfig.BACKEND_API.SUMMARY),
 };
 
-export interface Product {
-  id: number; name: string; category: string; price: number;
-  stock: number; description?: string; imageUrl?: string; isActive: boolean;
-}
-export interface Order {
-  id: number; total: number; method: string; status: string;
-  notes?: string; createdAt: string;
-  items?: { id: number; qty: number; price: number; product: { name: string } }[];
-}
-export interface StoreSummary {
-  totalProducts: number; totalOrders: number;
-  totalRevenue: number; lowStockProducts: Product[];
-}
+
+
 
 // ─── Sales ────────────────────────────────────────────────────────────────────
 
@@ -372,20 +306,8 @@ export const libraryApi = {
   removeDietPlan: (id: number) => apiFetch(LibraryUrlConfig.BACKEND_API.DIET_PLAN_DELETE(id), { method: 'DELETE' }),
 };
 
-export interface Workout {
-  id: number; name: string; level: string; days: number;
-  exercises: number; focus: string; duration: string; tags: string[]; isActive?: boolean;
-}
-export interface Exercise {
-  id: number; name: string; category: string; muscleGroup: string[];
-  sets?: number; reps?: string; duration?: string;
-  difficulty: string; description?: string; videoUrl?: string; imageUrl?: string; isActive: boolean;
-}
-export interface DietPlan {
-  id: number; name: string; goal: string;
-  calories?: number; protein?: number; carbs?: number; fats?: number;
-  description?: string; meals: string[]; isActive: boolean;
-}
+
+
 
 // ─── Inquiries ────────────────────────────────────────────────────────────────
 
@@ -403,11 +325,5 @@ export const inquiriesApi = {
   remove: (id: number) => apiFetch(InquiriesUrlConfig.BACKEND_API.DELETE(id), { method: 'DELETE' }),
 };
 
-export interface Inquiry {
-  id: number; name: string; phone: string; email?: string;
-  interest: string; status: string; source?: string;
-  notes?: string; followUpDate?: string; createdAt: string;
-}
-export interface InquiryStats {
-  total: number; new: number; followUp: number; converted: number; lost: number;
-}
+
+

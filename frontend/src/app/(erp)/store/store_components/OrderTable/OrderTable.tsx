@@ -4,7 +4,7 @@ import { Printer } from 'lucide-react';
 import { useStoreContext } from '@/app/(erp)/store/store_context/StoreContext';
 import { formatCurrency } from '@/app/(erp)/store/store_utils/StoreSharedConstants';
 
-import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
+import ErpPagination from '@/app/(erp)/erp_components/ErpShared/ErpPagination';
 
 export default function OrderTable() {
   const { orders, loading, debouncedSearch, currentPage, setCurrentPage, setPrintData } = useStoreContext();
@@ -82,6 +82,7 @@ export default function OrderTable() {
                       setTimeout(() => window.print(), 100);
                     }} 
                     className="p-1.5 rounded-lg bg-[var(--bg-input)] text-[var(--store-text-secondary)] hover:text-[var(--store-text-primary)] transition-colors"
+                    aria-label={`Print Receipt ORD-${o.id}`}
                   >
                     <Printer size={14} />
                   </button>

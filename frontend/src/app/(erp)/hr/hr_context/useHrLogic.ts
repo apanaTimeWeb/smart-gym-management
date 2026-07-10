@@ -1,10 +1,10 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useDebounce } from '@/app/(erp)/erp_utils/useDebounce';
 import { hrApi, type Staff, type Payroll, type HrSummary } from '@/lib/api';
-import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
+import type { ToastType } from '@/app/(erp)/erp_components/ErpFeedback/ErpToast';
 import { EMPTY_STAFF } from '@/app/(erp)/hr/hr_utils/HrSharedConstants';
 import { HrContextType } from '@/app/(erp)/hr/hr_types/hr_types';
-import { useConfirm } from '@/app/(erp)/erp_components/ErpConfirmProvider';
+import { useConfirm } from '@/app/(erp)/erp_components/ErpFeedback/ErpConfirmProvider';
 
 export function useHrLogic(): HrContextType {
   const { confirm } = useConfirm();

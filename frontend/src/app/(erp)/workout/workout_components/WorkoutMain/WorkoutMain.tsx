@@ -1,6 +1,6 @@
 "use client";
 
-import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
+import ErpHeader from '@/app/(erp)/erp_components/ErpLayout/ErpHeader';
 import { WorkoutProvider, useWorkoutContext } from '@/app/(erp)/workout/workout_context/WorkoutContext';
 import WorkoutBanner from '@/app/(erp)/workout/workout_components/WorkoutBanner/WorkoutBanner';
 import WorkoutToolbar from '@/app/(erp)/workout/workout_components/WorkoutToolbar/WorkoutToolbar';

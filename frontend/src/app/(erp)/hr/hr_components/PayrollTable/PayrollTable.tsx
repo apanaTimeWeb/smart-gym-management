@@ -4,7 +4,7 @@ import { useHrContext } from '@/app/(erp)/hr/hr_context/HrContext';
 import { PAYROLL_TABLE_HEADERS } from '@/app/(erp)/hr/hr_utils/HrSharedConstants';
 
 const fmt = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');
-import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
+import ErpPagination from '@/app/(erp)/erp_components/ErpShared/ErpPagination';
 
 export default function PayrollTable() {
   const { payrolls, search, currentPage, setCurrentPage, markPayrollPaid } = useHrContext();

@@ -4,23 +4,16 @@ import { useInquiriesContext } from '@/app/(erp)/inquiries/inquiries_context/Inq
 import { INQUIRIES_TABLE_HEADERS, INQUIRIES_STATUS_LABELS, INQUIRIES_STATUS_STYLES } from '@/app/(erp)/inquiries/inquiries_utils/InquiriesSharedConstants';
 import { MessageCircle, Mail, Edit2, Trash2 } from 'lucide-react';
 
-import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
+import ErpPagination from '@/app/(erp)/erp_components/ErpShared/ErpPagination';
 
 export default function InquiriesTable() {
   const { 
     inquiries, loading, search, debouncedSearch, statusFilter, dateFilter, currentPage, setCurrentPage, 
-    openEdit, openMsg, deleteInquiry, updateStatus 
+    openEdit, openMsg, deleteInquiry, updateStatus, totalInquiries
   } = useInquiriesContext();
 
-  const filtered = inquiries.filter(inq => {
-    const ms = inq.name.toLowerCase().includes(debouncedSearch.toLowerCase()) || inq.phone.includes(debouncedSearch);
-    const mf = statusFilter === 'All' || inq.status === statusFilter;
-    return ms && mf;
-  });
-
   const ITEMS_PER_PAGE = 10;
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
-  const currentData = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(totalInquiries / ITEMS_PER_PAGE);
 
   if (loading) {
     return (
@@ -44,7 +37,7 @@ export default function InquiriesTable() {
             </tr>
           </thead>
           <tbody className="divide-y" style={{ borderColor: 'var(--inquiries-border)' }}>
-            {currentData.map(inq => {
+            {inquiries.map(inq => {
               const statusStyle = INQUIRIES_STATUS_STYLES[inq.status] || { bg: 'var(--inquiries-bg-input)', text: 'var(--inquiries-text-primary)' };
               return (
                 <tr key={inq.id} className="transition-colors hover:bg-[rgba(99,102,241,0.06)] cursor-pointer" onClick={() => openEdit(inq)}>
@@ -117,7 +110,7 @@ export default function InquiriesTable() {
                 </tr>
               );
             })}
-            {filtered.length === 0 && (
+            {inquiries.length === 0 && (
               <tr>
                 <td colSpan={7} className="text-center py-12 text-sm" style={{ color: 'var(--inquiries-text-secondary)' }}>
                   No inquiries found.
@@ -130,7 +123,7 @@ export default function InquiriesTable() {
       <ErpPagination 
         currentPage={currentPage} 
         totalPages={totalPages} 
-        totalItems={filtered.length} 
+        totalItems={totalInquiries} 
         itemsPerPage={ITEMS_PER_PAGE} 
         onPageChange={setCurrentPage} 
       />

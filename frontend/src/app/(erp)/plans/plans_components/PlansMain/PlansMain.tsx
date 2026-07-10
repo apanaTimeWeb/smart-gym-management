@@ -1,7 +1,7 @@
 "use client";
 
-import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
-import ErpToast from '@/app/(erp)/erp_components/ErpToast';
+import ErpHeader from '@/app/(erp)/erp_components/ErpLayout/ErpHeader';
+import ErpToast from '@/app/(erp)/erp_components/ErpFeedback/ErpToast';
 
 import { PlansProvider, usePlansContext } from '@/app/(erp)/plans/plans_context/PlansContext';
 import PlansToolbar from '@/app/(erp)/plans/plans_components/PlansToolbar/PlansToolbar';

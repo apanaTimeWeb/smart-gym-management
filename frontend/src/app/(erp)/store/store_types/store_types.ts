@@ -1,7 +1,7 @@
-import { type Product, type Order, type StoreSummary } from '@/lib/api';
-import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
-import type { ErpReceiptData } from '@/app/(erp)/erp_components/ErpThermalReceipt';
-import { EMPTY_PRODUCT_FORM } from '@/app/(erp)/store/store_utils/StoreSharedConstants';
+
+import type { ToastType } from '@/app/(erp)/erp_components/ErpFeedback/ErpToast';
+import type { ErpReceiptData } from '@/app/(erp)/erp_components/ErpShared/ErpThermalReceipt';
+import { type ProductFormValues } from '@/app/(erp)/store/store_utils/StoreSharedConstants';
 import React from 'react';
 
 export interface OrderItem {
@@ -33,7 +33,7 @@ export interface StoreContextType {
  showProductModal: boolean;
  setShowProductModal: (show: boolean) => void;
  editProductId: number | null;
- editProductData: any;
+ editProductData: ProductFormValues | null;
  
  showOrderModal: boolean;
  setShowOrderModal: (show: boolean) => void;
@@ -47,11 +47,25 @@ export interface StoreContextType {
  loadAll: () => Promise<void>;
  openAddProduct: () => void;
  openEditProduct: (p: Product) => void;
- saveProduct: (data: any) => Promise<void>;
+ saveProduct: (data: ProductFormValues) => Promise<void>;
  deleteProduct: (id: number) => Promise<void>;
  
  addToOrder: (p: Product) => void;
  removeFromOrder: (productId: number) => void;
  orderTotal: number;
  placeOrder: () => Promise<void>;
+}
+
+export interface Product {
+  id: number; name: string; category: string; price: number;
+  stock: number; description?: string; imageUrl?: string; isActive: boolean;
+}
+export interface Order {
+  id: number; total: number; method: string; status: string;
+  notes?: string; createdAt: string;
+  items?: { id: number; qty: number; price: number; product: { name: string } }[];
+}
+export interface StoreSummary {
+  totalProducts: number; totalOrders: number;
+  totalRevenue: number; lowStockProducts: Product[];
 }
