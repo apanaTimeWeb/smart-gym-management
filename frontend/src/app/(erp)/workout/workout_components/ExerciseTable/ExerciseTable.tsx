@@ -28,7 +28,7 @@ export default function ExerciseTable() {
           </thead>
           <tbody className="divide-y divide-[var(--workout-border)]">
             {currentData.map(ex => (
-              <tr key={ex.id} className="hover:bg-[var(--workout-hover-bg)] transition-colors">
+              <tr key={ex.id} className="hover:bg-[var(--workout-hover-bg)] transition-colors cursor-pointer" onClick={() => openEditEx(ex)}>
                 <td className="px-4 py-3 text-sm font-medium text-[var(--workout-text-primary)]">{ex.name}</td>
                 <td className="px-4 py-3 text-sm text-[var(--workout-text-secondary)]">{ex.muscleGroup?.join(', ')}</td>
                 <td className="px-4 py-3">
@@ -50,13 +50,13 @@ export default function ExerciseTable() {
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
                     <button 
-                      onClick={() => openEditEx(ex)} 
+                      onClick={(e) => { e.stopPropagation(); openEditEx(ex); }} 
                       className="text-[var(--info)] hover:text-[var(--info)] dark:hover:text-[var(--info)] p-1 rounded-md hover:bg-[var(--info-bg)] dark:hover:bg-[var(--info-bg)] transition-colors"
                     >
                       <Edit2 size={15} />
                     </button>
                     <button 
-                      onClick={() => deleteEx(ex.id)} 
+                      onClick={(e) => { e.stopPropagation(); deleteEx(ex.id); }} 
                       className="text-[var(--danger)] hover:text-[var(--danger)] dark:hover:text-[var(--danger)] p-1 rounded-md hover:bg-[var(--danger-bg)] dark:hover:bg-[var(--danger-bg)] transition-colors"
                     >
                       <Trash2 size={15} />

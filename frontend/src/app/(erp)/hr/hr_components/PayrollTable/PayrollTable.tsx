@@ -63,7 +63,7 @@ export default function PayrollTable() {
                 <td className="px-4 py-3">
                   {p.status !== 'Paid' && (
                     <button 
-                      onClick={() => markPayrollPaid(p.id)} 
+                      onClick={(e) => { e.stopPropagation(); markPayrollPaid(p.id); }} 
                       className="px-3 py-1.5 text-xs font-semibold text-white rounded-lg hover:opacity-90 transition-opacity" 
                       style={{ backgroundColor: 'var(--hr-highlight)' }}
                     >

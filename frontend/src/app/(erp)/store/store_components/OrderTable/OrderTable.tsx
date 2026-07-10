@@ -62,7 +62,8 @@ export default function OrderTable() {
                 </td>
                 <td className="px-4 py-3">
                   <button 
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation();
                       setPrintData({ 
                         gymName: 'GymSmart Store', 
                         gymPhone: '+91 83479 77566', 
