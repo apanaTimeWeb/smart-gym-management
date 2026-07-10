@@ -5,21 +5,21 @@ import { Logger } from '@nestjs/common';
 
 // Entities
 import { User } from '../modules/auth/entities/user.entity';
-import { Plan } from '../modules/plans/entities/plan.entity';
-import { Staff } from '../modules/hr/entities/staff.entity';
-import { Gender } from '../modules/members/utils/members.enums';
-import { Member } from '../modules/members/entities/member.entity';
-import { Payment } from '../modules/finance/entities/payment.entity';
-import { Product } from '../modules/store/entities/product.entity';
-import { Exercise } from '../modules/library/entities/exercise.entity';
-import { Workout } from '../modules/workout/entities/workout.entity';
-import { DietPlan } from '../modules/library/entities/diet-plan.entity';
-import { Inquiry } from '../modules/inquiries/entities/inquiry.entity';
-import { Settings } from '../modules/settings/entities/setting.entity';
-import { Payroll } from '../modules/hr/entities/payroll.entity';
-import { Attendance } from '../modules/attendance/entities/attendance.entity';
-import { Order } from '../modules/store/entities/order.entity';
-import { OrderItem } from '../modules/store/entities/order-item.entity';
+import { Plan } from '../modules/erp/plans/entities/plan.entity';
+import { Staff } from '../modules/erp/hr/entities/staff.entity';
+import { Gender } from '../modules/erp/members/utils/members.enums';
+import { Member } from '../modules/erp/members/entities/member.entity';
+import { Payment } from '../modules/erp/finance/entities/payment.entity';
+import { Product } from '../modules/erp/store/entities/product.entity';
+import { Exercise } from '../modules/erp/library/entities/exercise.entity';
+import { Workout } from '../modules/erp/workout/entities/workout.entity';
+import { DietPlan } from '../modules/erp/library/entities/diet-plan.entity';
+import { Inquiry } from '../modules/erp/inquiries/entities/inquiry.entity';
+import { Settings } from '../modules/erp/settings/entities/setting.entity';
+import { Payroll } from '../modules/erp/hr/entities/payroll.entity';
+import { Attendance } from '../modules/erp/attendance/entities/attendance.entity';
+import { Order } from '../modules/erp/store/entities/order.entity';
+import { OrderItem } from '../modules/erp/store/entities/order-item.entity';
 
 const logger = new Logger('DatabaseSeed');
 

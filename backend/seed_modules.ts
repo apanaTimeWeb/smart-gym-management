@@ -2,20 +2,20 @@ import 'dotenv/config';
 import { DataSource } from 'typeorm';
 
 // Entities
-import { Attendance } from './src/modules/attendance/entities/attendance.entity';
-import { Staff } from './src/modules/hr/entities/staff.entity';
-import { Payroll } from './src/modules/hr/entities/payroll.entity';
-import { Product } from './src/modules/store/entities/product.entity';
-import { Order } from './src/modules/store/entities/order.entity';
-import { OrderItem } from './src/modules/store/entities/order-item.entity';
-import { DietPlan } from './src/modules/library/entities/diet-plan.entity';
-import { Exercise } from './src/modules/library/entities/exercise.entity';
-import { Workout } from './src/modules/workout/entities/workout.entity';
-import { Member } from './src/modules/members/entities/member.entity';
-import { Plan } from './src/modules/plans/entities/plan.entity';
+import { Attendance } from './src/modules/erp/attendance/entities/attendance.entity';
+import { Staff } from './src/modules/erp/hr/entities/staff.entity';
+import { Payroll } from './src/modules/erp/hr/entities/payroll.entity';
+import { Product } from './src/modules/erp/store/entities/product.entity';
+import { Order } from './src/modules/erp/store/entities/order.entity';
+import { OrderItem } from './src/modules/erp/store/entities/order-item.entity';
+import { DietPlan } from './src/modules/erp/library/entities/diet-plan.entity';
+import { Exercise } from './src/modules/erp/library/entities/exercise.entity';
+import { Workout } from './src/modules/erp/workout/entities/workout.entity';
+import { Member } from './src/modules/erp/members/entities/member.entity';
+import { Plan } from './src/modules/erp/plans/entities/plan.entity';
 
 // Enums
-import { AttendanceType, PlanTier, BillingCycle, MemberStatus, Gender } from './src/modules/members/utils/members.enums';
+import { AttendanceType, PlanTier, BillingCycle, MemberStatus, Gender } from './src/modules/erp/members/utils/members.enums';
 
 const AppDataSource = new DataSource({
   type: 'postgres',
