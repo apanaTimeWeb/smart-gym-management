@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { StatusCodes } from 'http-status-codes';
-import { AuthUrlConfig } from '@/app/(auth)/auth_url_config';
+import { AuthUrlConfig } from '@/app/auth/auth_url_config';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 

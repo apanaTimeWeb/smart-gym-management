@@ -1,0 +1,38 @@
+"use client";
+
+import React, { createContext, useContext, useMemo } from 'react';
+import { InquiriesContextType } from '@/app/erp/inquiries/inquiries_types/inquiries_types';
+import { useInquiriesLogic } from '@/app/erp/inquiries/inquiries_context/useInquiriesLogic';
+
+const InquiriesContext = createContext<InquiriesContextType | undefined>(undefined);
+
+export function InquiriesProvider({ children }: { children: React.ReactNode }) {
+  const logic = useInquiriesLogic();
+
+  const {
+    inquiries, stats, loading, error, toast, totalInquiries,
+    search, debouncedSearch, statusFilter, dateFilter, currentPage,
+    showModal, editId, editData, saving, msgModal
+  } = logic;
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const value = useMemo(() => logic, [
+    inquiries, stats, loading, error, toast, totalInquiries,
+    search, debouncedSearch, statusFilter, dateFilter, currentPage,
+    showModal, editId, editData, saving, msgModal
+  ]);
+
+ return (
+ <InquiriesContext.Provider value={value}>
+ {children}
+ </InquiriesContext.Provider>
+ );
+}
+
+export function useInquiriesContext() {
+ const context = useContext(InquiriesContext);
+ if (context === undefined) {
+ throw new Error('useInquiriesContext must be used within an InquiriesProvider');
+ }
+ return context;
+}

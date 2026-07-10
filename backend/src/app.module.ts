@@ -10,25 +10,15 @@ import KeyvRedis from '@keyv/redis';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { BullModule } from '@nestjs/bullmq';
 import { LoggerModule } from 'nestjs-pino';
+import { RouterModule } from '@nestjs/core';
 
 import { CorrelationIdMiddleware } from '@/core/middleware/correlation-id.middleware';
 import { HealthModule } from '@/core/health/health.module';
 
 import { AuthModule } from '@/modules/auth/auth.module';
-import { MembersModule } from '@/modules/members/members.module';
-import { PlansModule } from '@/modules/plans/plans.module';
-import { FinanceModule } from '@/modules/finance/finance.module';
-import { HrModule } from '@/modules/hr/hr.module';
-import { AttendanceModule } from '@/modules/attendance/attendance.module';
-import { StoreModule } from '@/modules/store/store.module';
-import { WorkoutModule } from '@/modules/workout/workout.module';
-import { DashboardModule } from '@/modules/dashboard/dashboard.module';
-import { InquiriesModule } from '@/modules/inquiries/inquiries.module';
-import { SettingsModule } from '@/modules/settings/settings.module';
+import { ErpModule } from '@/modules/erp/erp.module';
+
 import { MediaModule } from '@/core/media/media.module';
-import { AuditModule } from '@/modules/audit/audit.module';
-import { SalesModule } from '@/modules/sales/sales.module';
-import { LibraryModule } from '@/modules/library/library.module';
 import { AuditInterceptor } from '@/core/interceptors/audit.interceptor';
 import { IdempotencyInterceptor } from '@/core/interceptors/idempotency.interceptor';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
@@ -117,19 +107,16 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 
     // ─── Feature Modules ──────────────────────────────────────────────────
     AuthModule,
-    MembersModule,
-    PlansModule,
-    FinanceModule,
-    HrModule,
-    AttendanceModule,
-    StoreModule,
-    WorkoutModule,
-    DashboardModule,
-    InquiriesModule,
-    SettingsModule,
-    AuditModule,
-    SalesModule,
-    LibraryModule,
+    ErpModule,
+    
+    // ─── Route Prefixing ──────────────────────────────────────────────────
+    RouterModule.register([
+      {
+        path: 'auth',
+        module: AuthModule,
+      },
+    ]),
+
     PrometheusModule.register({
       path: '/metrics',
       defaultMetrics: {

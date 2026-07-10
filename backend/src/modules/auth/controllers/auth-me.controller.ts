@@ -14,7 +14,7 @@ import type {
 } from '@/modules/auth/auth.interfaces';
 
 @ApiTags('Auth')
-@Controller('auth')
+@Controller()
 export class AuthMeController {
   constructor(private readonly authMeService: AuthMeService) {}
 
