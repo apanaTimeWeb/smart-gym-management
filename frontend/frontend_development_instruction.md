@@ -71,4 +71,8 @@ Never handle generic global errors (like `401 Unauthorized` token expiries or `5
 18. **Enterprise Accessibility (a11y)**:
 Ensure UI components are accessible. Use semantic HTML (e.g., `<button>` instead of `<div onClick={...}>`), include `aria-label` tags for icon-only buttons (like the Eye/Edit/Delete icons), and ensure modals and dropdowns can be navigated via keyboard (Tab trapping, Esc to close).
 
+19. **Interactive Data Tables (Clickable Rows)**:
+Whenever displaying a list of entities in a table (e.g., Members, Inquiries, Staff, Orders...etc ), the entire row MUST be clickable. Clicking anywhere on the row should open the detailed profile/modal view for that entity. 
+* **Implementation Details:** Add `cursor-pointer` to the `<tr>` element, bind the `onClick` handler to the row to open the details view, and strictly remove redundant "View/Eye" buttons from the actions column to keep the UI clean. Any other action buttons (Edit, Delete, Email) inside the row must have `e.stopPropagation()` to prevent accidentally triggering the row click.
+
 Think step-by-step. Create a detailed implementation plan first so I can review it, and then execute it perfectly without breaking existing data flows!
