@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { DUMMY_INVOICES } from '@/app/superadmin/superadmin_utils/SuperadminSharedConstants';
-import { Receipt, Search, Filter, DollarSign, ArrowUpRight, AlertCircle } from 'lucide-react';
+import { DUMMY_INVOICES, DUMMY_TENANTS } from '@/app/superadmin/superadmin_utils/SuperadminSharedConstants';
+import { Receipt, Search, Filter, DollarSign, ArrowUpRight, AlertCircle, Plus, X } from 'lucide-react';
 import { SaaSInvoice } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 const StatusColors: Record<SaaSInvoice['status'], string> = {
@@ -13,6 +13,7 @@ const StatusColors: Record<SaaSInvoice['status'], string> = {
 
 export default function SaaSInvoicesPage() {
   const [search, setSearch] = useState('');
+  const [showAddModal, setShowAddModal] = useState(false);
 
   const filtered = DUMMY_INVOICES.filter(i => 
     i.tenantName.toLowerCase().includes(search.toLowerCase()) || 
@@ -23,15 +24,23 @@ export default function SaaSInvoicesPage() {
   const failedRevenue = DUMMY_INVOICES.filter(i => i.status === 'FAILED').reduce((acc, curr) => acc + curr.amount, 0);
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6 relative">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-[var(--text-primary)]">SaaS Revenue & Invoices</h1>
           <p className="text-[var(--text-secondary)] mt-1">Track actual payments from gym owners via Stripe/Razorpay.</p>
         </div>
-        <button className="bg-[var(--primary)] text-white px-4 py-2 rounded-lg font-medium hover:bg-[var(--primary-hover)] transition-colors flex items-center gap-2">
-          <ArrowUpRight size={18} /> Export CSV
-        </button>
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={() => setShowAddModal(true)}
+            className="bg-[var(--bg-input)] text-[var(--text-primary)] border border-[var(--border)] px-4 py-2 rounded-lg font-medium hover:bg-[var(--border)] transition-colors flex items-center gap-2"
+          >
+            <Plus size={18} /> Log Manual Payment
+          </button>
+          <button className="bg-[var(--primary)] text-white px-4 py-2 rounded-lg font-medium hover:bg-[var(--primary-hover)] transition-colors flex items-center gap-2">
+            <ArrowUpRight size={18} /> Export CSV
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -120,6 +129,69 @@ export default function SaaSInvoicesPage() {
           </table>
         </div>
       </div>
+
+      {/* Manual Payment Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowAddModal(false)}></div>
+          <div className="relative bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between p-5 border-b border-[var(--border)]">
+              <h2 className="text-xl font-bold text-[var(--text-primary)]">Log Manual Payment</h2>
+              <button onClick={() => setShowAddModal(false)} className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
+                <X size={20} />
+              </button>
+            </div>
+            
+            <div className="p-5 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1.5">Select Gym (Tenant)</label>
+                <select className="w-full bg-[var(--bg-input)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)]">
+                  <option value="">-- Choose Gym --</option>
+                  {DUMMY_TENANTS.map(t => (
+                    <option key={t.id} value={t.id}>{t.name} ({t.plan})</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1.5">Amount (₹ / $)</label>
+                <div className="relative">
+                  <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-secondary)]" />
+                  <input type="number" placeholder="e.g. 4999" className="w-full pl-9 pr-4 py-2.5 bg-[var(--bg-input)] border border-[var(--border)] rounded-lg text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)]" />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1.5">Payment Method / Reference</label>
+                <input type="text" placeholder="e.g. Bank Transfer (Ref: TXN123)" className="w-full bg-[var(--bg-input)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)]" />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1.5">Date Received</label>
+                <input type="date" className="w-full bg-[var(--bg-input)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)]" />
+              </div>
+            </div>
+
+            <div className="p-5 border-t border-[var(--border)] bg-[var(--bg-header)] flex justify-end gap-3">
+              <button 
+                onClick={() => setShowAddModal(false)}
+                className="px-4 py-2 bg-[var(--bg-input)] border border-[var(--border)] text-[var(--text-primary)] rounded-lg text-sm font-medium hover:bg-[var(--border)] transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={() => {
+                  alert('Payment logged successfully (Mock)');
+                  setShowAddModal(false);
+                }}
+                className="px-4 py-2 bg-[var(--primary)] text-white rounded-lg text-sm font-medium hover:bg-[var(--primary-hover)] transition-colors"
+              >
+                Save Payment
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
