@@ -20,11 +20,11 @@ import { PaymentProcessedListener } from './listeners/payment-processed.listener
 @Module({
   imports: [TypeOrmModule.forFeature([Member])],
   controllers: [
+    MemberStatsController,
     CreateMemberController,
     FindMemberController,
     UpdateMemberController,
     RenewMemberController,
-    MemberStatsController,
   ],
   providers: [
     MembersRepository,
