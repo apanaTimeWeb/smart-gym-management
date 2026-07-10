@@ -16,6 +16,7 @@ import { StoreUrlConfig } from '@/app/(erp)/store/store_url_config';
 import { WorkoutUrlConfig } from '@/app/(erp)/workout/workout_url_config';
 import { LibraryUrlConfig } from '@/app/(erp)/library/library_url_config';
 import { InquiriesUrlConfig } from '@/app/(erp)/inquiries/inquiries_url_config';
+import { SalesUrlConfig } from '@/app/(erp)/sales/sales_url_config';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 
@@ -96,7 +97,7 @@ export async function apiFetch<T = unknown>(
 
 export const authApi = {
   login: async (email: string, password: string) => {
-    return apiFetch(AuthUrlConfig.BACKEND_API.LOGIN, {
+    return apiFetch<{ success: boolean; data: { accessToken: string; user: any } }>(AuthUrlConfig.BACKEND_API.LOGIN, {
       method: 'POST',
       body: JSON.stringify({ email, password }),
       auth: false,

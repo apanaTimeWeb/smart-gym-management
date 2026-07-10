@@ -30,10 +30,10 @@ export default function ExerciseTable() {
             {currentData.map(ex => (
               <tr key={ex.id} className="hover:bg-[var(--workout-hover-bg)] transition-colors">
                 <td className="px-4 py-3 text-sm font-medium text-[var(--workout-text-primary)]">{ex.name}</td>
-                <td className="px-4 py-3 text-sm text-[var(--workout-text-secondary)]">{ex.muscle}</td>
+                <td className="px-4 py-3 text-sm text-[var(--workout-text-secondary)]">{ex.muscleGroup?.join(', ')}</td>
                 <td className="px-4 py-3">
                   <span className="text-xs bg-[var(--workout-bg-input)] text-[var(--workout-text-secondary)] border border-[var(--workout-border)] px-2 py-1 rounded-full">
-                    {ex.equipment}
+                    {ex.category || 'N/A'}
                   </span>
                 </td>
                 <td className="px-4 py-3">

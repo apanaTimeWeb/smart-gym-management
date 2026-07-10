@@ -39,7 +39,7 @@ export function useWorkoutLogic(): WorkoutContextType {
         libraryApi.getExercises(),
       ]);
       setWorkouts(wkRes.data);
-      setExercises(exRes.data);
+      setExercises(Array.isArray(exRes.data) ? exRes.data : (exRes.data as any).Exercises || []);
     } catch (e) {
       showToast((e as Error).message, 'error');
     } finally {
@@ -58,8 +58,7 @@ export function useWorkoutLogic(): WorkoutContextType {
   const filteredEx = useMemo(() => 
     exercises.filter(ex => 
       ex.name.toLowerCase().includes(search.toLowerCase()) || 
-      ex.muscleGroup?.join(' ').toLowerCase().includes(search.toLowerCase()) ||
-      ex.muscle?.toLowerCase().includes(search.toLowerCase())
+      ex.muscleGroup?.join(' ').toLowerCase().includes(search.toLowerCase())
     ),
     [exercises, search]
   );
@@ -135,8 +134,8 @@ export function useWorkoutLogic(): WorkoutContextType {
     setEditExId(ex.id); 
     setExForm({ 
       name: ex.name, 
-      muscle: ex.muscle || ex.muscleGroup?.join(', ') || '', 
-      equipment: ex.equipment || '', 
+      muscle: ex.muscleGroup?.join(', ') || '', 
+      equipment: ex.category || '', 
       difficulty: ex.difficulty 
     }); 
     setShowExModal(true); 
