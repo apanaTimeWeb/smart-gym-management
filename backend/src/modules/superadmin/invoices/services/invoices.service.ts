@@ -1,27 +1,76 @@
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { DUMMY_INVOICES, DUMMY_TENANTS } from '../../superadmin.constants';
-import { Injectable } from '@nestjs/common';
 import { CreateInvoiceDto } from '../dto/create-invoices.dto';
 import { UpdateInvoiceDto } from '../dto/update-invoices.dto';
 
 @Injectable()
 export class InvoicesService {
+  private readonly logger = new Logger(InvoicesService.name);
+
   create(createDto: CreateInvoiceDto) {
-    return { success: true, message: 'This action adds a new invoices' };
+    this.logger.log(`Creating SaaS invoice for tenant: ${createDto.tenantName}`);
+    return {
+      success: true,
+      message: 'Invoice created successfully',
+      data: {
+        id: `inv-${Date.now()}`,
+        ...createDto,
+        currency: createDto.currency ?? 'USD',
+        status: createDto.status ?? 'PENDING',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+    };
   }
 
   findAll() {
-    return { success: true, message: 'Data fetched successfully', data: { invoices: DUMMY_INVOICES, tenants: DUMMY_TENANTS } };
+    this.logger.log('Fetching all SaaS invoices');
+    return {
+      success: true,
+      message: 'Invoices fetched successfully',
+      data: {
+        invoices: DUMMY_INVOICES,
+        tenants: DUMMY_TENANTS,
+      },
+      meta: { total: DUMMY_INVOICES.length },
+    };
   }
 
   findOne(id: string) {
-    return { success: true, message: `This action returns a #${id} invoices` };
+    const invoice = DUMMY_INVOICES.find((i) => i.id === id);
+    if (!invoice) {
+      throw new NotFoundException(`Invoice with ID "${id}" not found`);
+    }
+    return {
+      success: true,
+      message: 'Invoice fetched successfully',
+      data: invoice,
+    };
   }
 
   update(id: string, updateDto: UpdateInvoiceDto) {
-    return { success: true, message: `This action updates a #${id} invoices` };
+    const invoice = DUMMY_INVOICES.find((i) => i.id === id);
+    if (!invoice) {
+      throw new NotFoundException(`Invoice with ID "${id}" not found`);
+    }
+    this.logger.log(`Updating invoice: ${id}`);
+    return {
+      success: true,
+      message: 'Invoice updated successfully',
+      data: { ...invoice, ...updateDto, updatedAt: new Date().toISOString() },
+    };
   }
 
   remove(id: string) {
-    return { success: true, message: `This action removes a #${id} invoices` };
+    const invoice = DUMMY_INVOICES.find((i) => i.id === id);
+    if (!invoice) {
+      throw new NotFoundException(`Invoice with ID "${id}" not found`);
+    }
+    this.logger.log(`Soft-deleting invoice: ${id}`);
+    return {
+      success: true,
+      message: 'Invoice removed successfully',
+      data: { id, isDeleted: true, deletedAt: new Date().toISOString() },
+    };
   }
 }

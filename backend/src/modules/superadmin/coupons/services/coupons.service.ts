@@ -1,27 +1,69 @@
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { DUMMY_COUPONS } from '../../superadmin.constants';
-import { Injectable } from '@nestjs/common';
 import { CreateCouponDto } from '../dto/create-coupons.dto';
 import { UpdateCouponDto } from '../dto/update-coupons.dto';
 
 @Injectable()
 export class CouponsService {
+  private readonly logger = new Logger(CouponsService.name);
+
   create(createDto: CreateCouponDto) {
-    return { success: true, message: 'This action adds a new coupons' };
+    this.logger.log(`Creating coupon: ${createDto.code}`);
+    return {
+      success: true,
+      message: 'Coupon created successfully',
+      data: {
+        id: `cpn-${Date.now()}`,
+        ...createDto,
+        currentUses: createDto.currentUses ?? 0,
+        status: createDto.status ?? 'ACTIVE',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+    };
   }
 
   findAll() {
-    return { success: true, message: 'Data fetched successfully', data: DUMMY_COUPONS };
+    this.logger.log('Fetching all coupons');
+    return {
+      success: true,
+      message: 'Coupons fetched successfully',
+      data: DUMMY_COUPONS,
+      meta: { total: DUMMY_COUPONS.length },
+    };
   }
 
   findOne(id: string) {
-    return { success: true, message: `This action returns a #${id} coupons` };
+    const coupon = DUMMY_COUPONS.find((c) => c.id === id);
+    if (!coupon) {
+      throw new NotFoundException(`Coupon with ID "${id}" not found`);
+    }
+    return { success: true, message: 'Coupon fetched successfully', data: coupon };
   }
 
   update(id: string, updateDto: UpdateCouponDto) {
-    return { success: true, message: `This action updates a #${id} coupons` };
+    const coupon = DUMMY_COUPONS.find((c) => c.id === id);
+    if (!coupon) {
+      throw new NotFoundException(`Coupon with ID "${id}" not found`);
+    }
+    this.logger.log(`Updating coupon: ${id}`);
+    return {
+      success: true,
+      message: 'Coupon updated successfully',
+      data: { ...coupon, ...updateDto, updatedAt: new Date().toISOString() },
+    };
   }
 
   remove(id: string) {
-    return { success: true, message: `This action removes a #${id} coupons` };
+    const coupon = DUMMY_COUPONS.find((c) => c.id === id);
+    if (!coupon) {
+      throw new NotFoundException(`Coupon with ID "${id}" not found`);
+    }
+    this.logger.log(`Soft-deleting coupon: ${id}`);
+    return {
+      success: true,
+      message: 'Coupon removed successfully',
+      data: { id, isDeleted: true, deletedAt: new Date().toISOString() },
+    };
   }
 }

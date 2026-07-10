@@ -1,10 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, HttpStatus, UseGuards } from '@nestjs/common';
 import { SystemService } from '../services/system.service';
-import { CreateSystemDto } from '../dto/create-system.dto';
-import { UpdateSystemDto } from '../dto/update-system.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 
+/**
+ * SystemController — read-only system health monitoring.
+ * System health is computed in real-time, not stored or managed via CRUD.
+ */
 @ApiTags('Superadmin: System')
 @Controller('system')
 @UseGuards(JwtAuthGuard)
@@ -12,38 +14,24 @@ import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 export class SystemController {
   constructor(private readonly systemService: SystemService) {}
 
-  @Post()
-  @ApiOperation({ summary: 'Create a new System' })
-  @ApiResponse({ status: HttpStatus.CREATED })
-  create(@Body() createDto: CreateSystemDto) {
-    return this.systemService.create(createDto);
-  }
-
   @Get()
-  @ApiOperation({ summary: 'Get all System' })
+  @ApiOperation({ summary: 'Get system health status for all services' })
   @ApiResponse({ status: HttpStatus.OK })
   findAll() {
     return this.systemService.findAll();
   }
 
+  @Get('health')
+  @ApiOperation({ summary: 'Get lightweight system health probe (Kubernetes liveness)' })
+  @ApiResponse({ status: HttpStatus.OK })
+  getHealthProbe() {
+    return this.systemService.getHealthProbe();
+  }
+
   @Get(':id')
-  @ApiOperation({ summary: 'Get a specific System' })
+  @ApiOperation({ summary: 'Get health status for a specific service by service name' })
   @ApiResponse({ status: HttpStatus.OK })
   findOne(@Param('id') id: string) {
     return this.systemService.findOne(id);
-  }
-
-  @Patch(':id')
-  @ApiOperation({ summary: 'Update a specific System' })
-  @ApiResponse({ status: HttpStatus.OK })
-  update(@Param('id') id: string, @Body() updateDto: UpdateSystemDto) {
-    return this.systemService.update(id, updateDto);
-  }
-
-  @Delete(':id')
-  @ApiOperation({ summary: 'Delete a specific System' })
-  @ApiResponse({ status: HttpStatus.OK })
-  remove(@Param('id') id: string) {
-    return this.systemService.remove(id);
   }
 }

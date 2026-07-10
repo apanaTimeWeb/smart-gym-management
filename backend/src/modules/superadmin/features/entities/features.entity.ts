@@ -1,13 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-
-@Entity()
-export class Feature {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-}
+/**
+ * @deprecated This file is intentionally empty. The features module uses two separate entities:
+ * - feature-flag.entity.ts (for global feature toggles)
+ * - release-note.entity.ts (for product changelog entries)
+ *
+ * Please import from those files directly.
+ */

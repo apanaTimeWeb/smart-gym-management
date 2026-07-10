@@ -1,10 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, UseGuards } from '@nestjs/common';
+import { Controller, Get, HttpStatus, UseGuards } from '@nestjs/common';
 import { DashboardService } from '../services/dashboard.service';
-import { CreateDashboardDto } from '../dto/create-dashboard.dto';
-import { UpdateDashboardDto } from '../dto/update-dashboard.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 
+/**
+ * DashboardController — serves aggregated read-only metrics.
+ * No POST/PATCH/DELETE endpoints — dashboard is computed, not managed.
+ */
 @ApiTags('Superadmin: Dashboard')
 @Controller('dashboard')
 @UseGuards(JwtAuthGuard)
@@ -12,38 +14,22 @@ import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
 
-  @Post()
-  @ApiOperation({ summary: 'Create a new Dashboard' })
-  @ApiResponse({ status: HttpStatus.CREATED })
-  create(@Body() createDto: CreateDashboardDto) {
-    return this.dashboardService.create(createDto);
-  }
-
+  /**
+   * Primary endpoint — returns all dashboard metrics, charts, and recent onboards.
+   * Consumed by the frontend /superadmin/dashboard page.
+   */
   @Get()
-  @ApiOperation({ summary: 'Get all Dashboard' })
-  @ApiResponse({ status: HttpStatus.OK })
-  findAll() {
-    return this.dashboardService.findAll();
+  @ApiOperation({ summary: 'Get all SaaS dashboard metrics (KPIs, charts, recent onboards)' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Returns { metrics, recentOnboards, revenueChartData, gymGrowthData }' })
+  getDashboardData() {
+    return this.dashboardService.getDashboardData();
   }
 
-  @Get(':id')
-  @ApiOperation({ summary: 'Get a specific Dashboard' })
+  /** Lightweight polling endpoint — returns only KPI numbers */
+  @Get('metrics')
+  @ApiOperation({ summary: 'Get lightweight KPI metrics (for polling)' })
   @ApiResponse({ status: HttpStatus.OK })
-  findOne(@Param('id') id: string) {
-    return this.dashboardService.findOne(id);
-  }
-
-  @Patch(':id')
-  @ApiOperation({ summary: 'Update a specific Dashboard' })
-  @ApiResponse({ status: HttpStatus.OK })
-  update(@Param('id') id: string, @Body() updateDto: UpdateDashboardDto) {
-    return this.dashboardService.update(id, updateDto);
-  }
-
-  @Delete(':id')
-  @ApiOperation({ summary: 'Delete a specific Dashboard' })
-  @ApiResponse({ status: HttpStatus.OK })
-  remove(@Param('id') id: string) {
-    return this.dashboardService.remove(id);
+  getMetrics() {
+    return this.dashboardService.getMetrics();
   }
 }

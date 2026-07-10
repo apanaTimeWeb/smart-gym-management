@@ -2,11 +2,12 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { InfrastructureService } from './services/infrastructure.service';
 import { InfrastructureController } from './controllers/infrastructure.controller';
-import { Infrastructure } from './entities/infrastructure.entity';
+import { InfrastructureNode } from './entities/infrastructure.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Infrastructure])],
+  imports: [TypeOrmModule.forFeature([InfrastructureNode])],
   controllers: [InfrastructureController],
   providers: [InfrastructureService],
+  exports: [InfrastructureService],
 })
 export class InfrastructureModule {}

@@ -1,12 +1,16 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { DashboardService } from './services/dashboard.service';
 import { DashboardController } from './controllers/dashboard.controller';
-import { Dashboard } from './entities/dashboard.entity';
 
+/**
+ * DashboardModule — no TypeORM entity registration needed.
+ * The DashboardService computes metrics from other services/constants,
+ * not from a dedicated database table.
+ */
 @Module({
-  imports: [TypeOrmModule.forFeature([Dashboard])],
+  imports: [],
   controllers: [DashboardController],
   providers: [DashboardService],
+  exports: [DashboardService],
 })
 export class DashboardModule {}
