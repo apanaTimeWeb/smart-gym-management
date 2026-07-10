@@ -14,6 +14,7 @@ export interface MembersContextType {
  saving: boolean;
  
   search: string;
+  debouncedSearch: string;
   setSearch: (s: string) => void;
   statusFilter: string;
   setStatusFilter: (s: string) => void;
@@ -42,13 +43,12 @@ export interface MembersContextType {
  showAddModal: boolean;
  setShowAddModal: (show: boolean) => void;
  editId: number | null;
- form: typeof EMPTY_MEMBER_FORM;
- setForm: React.Dispatch<React.SetStateAction<typeof EMPTY_MEMBER_FORM>>;
+ editData: any;
  
  // Actions
  openAdd: () => void;
  openEdit: (m: Member) => void;
- saveMember: (e: React.FormEvent) => Promise<void>;
+ saveMember: (data: any) => Promise<void>;
  deleteMember: (id: number) => Promise<void>;
  
  // Message Modal

@@ -8,12 +8,12 @@ import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
 
 export default function MembersTable() {
   const { 
-    members, loading, search, statusFilter, currentPage, setCurrentPage,
+    members, loading, search, debouncedSearch, statusFilter, currentPage, setCurrentPage,
     setSelectedMember, loadMemberProfile, openEdit, openMsg, deleteMember 
   } = useMembersContext();
 
   const filtered = members.filter(m => {
-    const ms = m.name.toLowerCase().includes(search.toLowerCase()) || m.phone.includes(search);
+    const ms = m.name.toLowerCase().includes(debouncedSearch.toLowerCase()) || m.phone.includes(debouncedSearch);
     const mf = statusFilter === 'All' || m.status === statusFilter;
     return ms && mf;
   });

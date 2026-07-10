@@ -7,6 +7,8 @@ import { useConfirm } from '@/app/(erp)/erp_components/ErpConfirmProvider';
 import { EMPTY_MEMBER_FORM, formatCurrency } from '@/app/(erp)/members/members_utils/MembersSharedConstants';
 import { MembersContextType } from '@/app/(erp)/members/members_types/members_types';
 
+import { useDebounce } from '@/app/(erp)/erp_utils/useDebounce';
+
 export function useMembersLogic(): MembersContextType {
   const { confirm } = useConfirm();
  const [members, setMembers] = useState<Member[]>([]);
@@ -17,15 +19,15 @@ export function useMembersLogic(): MembersContextType {
  const [saving, setSaving] = useState(false);
 
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
   const [statusFilter, setStatusFilter] = useState('All');
   const [currentPage, setCurrentPage] = useState(1);
 
  const [showAddModal, setShowAddModal] = useState(false);
  const [editId, setEditId] = useState<number | null>(null);
+ const [editData, setEditData] = useState<any>(null);
  const [selectedMember, setSelectedMember] = useState<Member | null>(null);
  const [profileTab, setProfileTab] = useState<'overview' | 'attendance' | 'payments'>('overview');
-
- const [form, setForm] = useState(EMPTY_MEMBER_FORM);
 
  const [msgModal, setMsgModal] = useState<{ open: boolean; recipient: ErpMessageRecipient; type: MessageType; message: string; subject?: string } | null>(null);
  const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
@@ -92,15 +94,15 @@ export function useMembersLogic(): MembersContextType {
 
  const openAdd = useCallback(() => { 
  setEditId(null); 
- setForm(EMPTY_MEMBER_FORM); 
+ setEditData(EMPTY_MEMBER_FORM); 
  setShowAddModal(true); 
  }, []);
  
  const openEdit = useCallback((m: Member) => {
  setEditId(m.id);
- setForm({ 
+ setEditData({ 
  name: m.name, 
- email: m.email, 
+ email: m.email || '', 
  phone: m.phone, 
  address: m.address || '', 
  gender: m.gender, 
@@ -111,15 +113,14 @@ export function useMembersLogic(): MembersContextType {
  setShowAddModal(true);
  }, []);
 
- const saveMember = useCallback(async (e: React.FormEvent) => {
- e.preventDefault();
+ const saveMember = useCallback(async (data: any) => {
  setSaving(true);
  try {
  if (editId) {
- const res = await membersApi.update(editId, { ...form, planId: Number(form.planId) });
+ const res = await membersApi.update(editId, { ...data, planId: Number(data.planId) });
  showToast((res as any).message, 'success');
  } else {
- const res = await membersApi.create({ ...form, planId: Number(form.planId), joinDate: new Date().toISOString() });
+ const res = await membersApi.create({ ...data, planId: Number(data.planId), joinDate: new Date().toISOString() });
  showToast((res as any).message, 'success');
  }
  setShowAddModal(false);
@@ -129,7 +130,7 @@ export function useMembersLogic(): MembersContextType {
  } finally { 
  setSaving(false); 
  }
- }, [editId, form, loadAll, showToast]);
+ }, [editId, loadAll, showToast]);
 
  const deleteMember = useCallback(async (id: number) => {
   const isConfirmed = await confirm({ title: 'Delete Member', message: 'Are you sure you want to delete this member? This action cannot be undone.', confirmText: 'Delete', type: 'danger' });
@@ -169,11 +170,11 @@ export function useMembersLogic(): MembersContextType {
 
   return {
     members, plans, payments, stats, loading, saving,
-    search, setSearch, statusFilter, setStatusFilter, currentPage, setCurrentPage,
+    search, debouncedSearch, setSearch, statusFilter, setStatusFilter, currentPage, setCurrentPage,
  toast, showToast, hideToast, loadAll,
  selectedMember, setSelectedMember, profileTab, setProfileTab, loadMemberProfile,
  attMap, getAtt, toggleAtt,
- showAddModal, setShowAddModal, editId, form, setForm,
+ showAddModal, setShowAddModal, editId, editData,
  openAdd, openEdit, saveMember, deleteMember,
  msgModal, openMsg, closeMsg,
  printData, handlePrint, setPrintData

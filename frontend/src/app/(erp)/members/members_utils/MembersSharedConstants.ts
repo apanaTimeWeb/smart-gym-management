@@ -1,4 +1,18 @@
 import type { Plan } from '@/lib/api';
+import { z } from 'zod';
+
+export const MemberSchema = z.object({
+  name: z.string().min(2, "Name is required"),
+  email: z.string().email("Invalid email address").optional().or(z.literal('')),
+  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  address: z.string().optional(),
+  gender: z.enum(['MALE', 'FEMALE', 'OTHER']),
+  branch: z.string(),
+  billingCycle: z.string(),
+  planId: z.coerce.number().min(1, "Please select a plan"),
+});
+
+export type MemberFormValues = z.infer<typeof MemberSchema>;
 
 export const MEMBERS_STATUS_COLORS: Record<string, string> = {
  ACTIVE: 'var(--members-status-active-bg) var(--members-status-active-text)',
