@@ -310,6 +310,16 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 
 ---
 
+## 38. Domain-Driven Module Grouping (The "Route Group" Equivalent)
+* **The Rule:** Just like modern frontend frameworks (e.g., Next.js) use `(group)` folders to isolate UI domains like `(erp)` or `(superadmin)`, the backend MUST group its modules into top-level domain folders before splitting them into specific features.
+  - ❌ **BAD:** `src/modules/billing/`, `src/modules/superadmin-stats/`, `src/modules/attendance/` (All dumped into a flat `modules/` directory).
+  - ✅ **GOOD:** `src/modules/erp/billing/`, `src/modules/superadmin/stats/`, `src/modules/members-app/attendance/`.
+* **API Route Grouping:** The API endpoint URLs must strictly mirror this domain grouping (e.g., `/api/erp/billing`, `/api/superadmin/stats`). Use the framework's native router grouping feature (e.g., `RouterModule` in NestJS, `include()` in Django `urls.py`, or `express.Router().use('/erp', ...)` in Node) to enforce this prefix globally for the entire domain.
+* **1:1 Mirror Mapping:** The backend folder structure MUST strictly mirror the frontend route structure. If the frontend `(superadmin)` domain has 5 feature folders (e.g., `broadcasts`, `coupons`, `affiliates`), the backend `superadmin` domain MUST have exactly 5 matching modules. 
+* **Why:** This creates a perfect 1:1 mapped architecture. If a bug occurs in the "Coupons" feature, you provide the AI with exactly two things: `frontend/.../superadmin/coupons/` and `backend/.../superadmin/coupons/`. The AI gets the complete vertical slice (Frontend UI + Backend Logic) for that specific feature without seeing the rest of the application. This guarantees zero hallucination, massive token savings, and perfect separation of concerns.
+
+---
+
 ## Updated Summary Checklist (v2):
 1. Identify the exact layer (Validation? Query? Business Logic? External Adapter?).
 2. Select the **one or two** micro-files associated with that layer.
