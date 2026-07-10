@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LayoutDashboard, Building2, ServerCog, LogOut, ChevronLeft, ChevronRight } from 'lucide-react';
-import { SuperadminUrlConfig } from '@/app/saas/superadmin_url_config';
+import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -21,18 +21,18 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Sideb
 
   return (
     <aside
-      className={`fixed inset-y-0 left-0 z-50 flex flex-col bg-gray-950 border-r border-gray-800 transition-all duration-300 ${
+      className={`fixed inset-y-0 left-0 z-50 flex flex-col bg-[var(--bg-page)] border-r border-[var(--border)] transition-all duration-300 ${
         isCollapsed ? 'w-[80px]' : 'w-64'
       }`}
     >
-      <div className="flex h-20 items-center justify-between px-4 border-b border-gray-800">
+      <div className="flex h-20 items-center justify-between px-4 border-b border-[var(--border)]">
         {!isCollapsed && (
           <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500">
             SaaS Master
           </span>
         )}
         {isCollapsed && (
-          <span className="text-xl font-bold text-blue-500 mx-auto">SM</span>
+          <span className="text-xl font-bold text-[var(--primary)] mx-auto">SM</span>
         )}
       </div>
 
@@ -46,26 +46,26 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Sideb
               href={item.href}
               className={`flex items-center gap-3 rounded-lg px-3 py-3 transition-colors ${
                 isActive
-                  ? 'bg-blue-600/10 text-blue-400 border border-blue-500/20'
-                  : 'text-gray-400 hover:bg-gray-900 hover:text-gray-100'
+                  ? 'bg-[var(--primary)]/10 text-[var(--primary)] border border-blue-500/20'
+                  : 'text-[var(--text-secondary)] hover:bg-[var(--bg-card)] hover:text-[var(--text-primary)]'
               } ${isCollapsed ? 'justify-center' : ''}`}
             >
-              <Icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-blue-400' : 'opacity-70'}`} />
+              <Icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-[var(--primary)]' : 'opacity-70'}`} />
               {!isCollapsed && <span className="font-medium text-sm">{item.name}</span>}
             </Link>
           );
         })}
       </nav>
 
-      <div className="p-4 border-t border-gray-800">
+      <div className="p-4 border-t border-[var(--border)]">
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-gray-900 p-2 text-gray-400 hover:bg-gray-800 transition-colors mb-4"
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--bg-card)] p-2 text-[var(--text-secondary)] hover:bg-[var(--border)] transition-colors mb-4"
         >
           {isCollapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
         </button>
         
-        <button className={`flex w-full items-center gap-3 rounded-lg px-3 py-3 text-red-400 hover:bg-red-500/10 transition-colors ${isCollapsed ? 'justify-center' : ''}`}>
+        <button className={`flex w-full items-center gap-3 rounded-lg px-3 py-3 text-[var(--danger)] hover:bg-[var(--danger)]/10 transition-colors ${isCollapsed ? 'justify-center' : ''}`}>
           <LogOut className="w-5 h-5 shrink-0" />
           {!isCollapsed && <span className="font-medium text-sm">Exit to ERP</span>}
         </button>
@@ -73,4 +73,7 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Sideb
     </aside>
   );
 }
+
+
+
 

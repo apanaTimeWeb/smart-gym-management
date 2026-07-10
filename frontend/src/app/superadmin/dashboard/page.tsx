@@ -5,14 +5,14 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { 
   DUMMY_DASHBOARD_METRICS, 
   REVENUE_CHART_DATA 
-} from '@/app/saas/superadmin_utils/SuperadminSharedConstants';
+} from '@/app/superadmin/superadmin_utils/SuperadminSharedConstants';
 
 export default function SaaSDashboard() {
   const metrics = [
-    { label: 'Total MRR', value: `$${DUMMY_DASHBOARD_METRICS.monthlyRecurringRevenue.toLocaleString()}`, icon: CreditCard, color: 'text-emerald-400' },
-    { label: 'Total Gyms (Tenants)', value: DUMMY_DASHBOARD_METRICS.totalGyms, icon: Building2, color: 'text-blue-400' },
-    { label: 'Active Gyms', value: DUMMY_DASHBOARD_METRICS.activeGyms, icon: Activity, color: 'text-indigo-400' },
-    { label: 'Total End Users', value: DUMMY_DASHBOARD_METRICS.totalEndUsers.toLocaleString(), icon: Users, color: 'text-purple-400' },
+    { label: 'Total MRR', value: `$${DUMMY_DASHBOARD_METRICS.monthlyRecurringRevenue.toLocaleString()}`, icon: CreditCard, color: 'text-[var(--success)]' },
+    { label: 'Total Gyms (Tenants)', value: DUMMY_DASHBOARD_METRICS.totalGyms, icon: Building2, color: 'text-[var(--primary)]' },
+    { label: 'Active Gyms', value: DUMMY_DASHBOARD_METRICS.activeGyms, icon: Activity, color: 'text-[var(--primary)]' },
+    { label: 'Total End Users', value: DUMMY_DASHBOARD_METRICS.totalEndUsers.toLocaleString(), icon: Users, color: 'text-[var(--purple)]' },
   ];
 
   return (
@@ -21,24 +21,24 @@ export default function SaaSDashboard() {
         <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500">
           SaaS Overview
         </h1>
-        <p className="text-gray-400 mt-1">Monitor the health and growth of your Multi-Tenant SaaS platform.</p>
+        <p className="text-[var(--text-secondary)] mt-1">Monitor the health and growth of your Multi-Tenant SaaS platform.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {metrics.map((m) => (
-          <div key={m.label} className="bg-gray-950 border border-gray-800 rounded-xl p-6 shadow-sm">
+          <div key={m.label} className="bg-[var(--bg-page)] border border-[var(--border)] rounded-xl p-6 shadow-sm">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-gray-400 font-medium text-sm">{m.label}</span>
+              <span className="text-[var(--text-secondary)] font-medium text-sm">{m.label}</span>
               <m.icon className={`w-5 h-5 ${m.color}`} />
             </div>
-            <div className="text-3xl font-bold text-gray-100">{m.value}</div>
+            <div className="text-3xl font-bold text-[var(--text-primary)]">{m.value}</div>
           </div>
         ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-gray-950 border border-gray-800 rounded-xl p-6">
-          <h2 className="text-lg font-bold text-gray-100 mb-6">MRR Growth (Monthly Recurring Revenue)</h2>
+        <div className="lg:col-span-2 bg-[var(--bg-page)] border border-[var(--border)] rounded-xl p-6">
+          <h2 className="text-lg font-bold text-[var(--text-primary)] mb-6">MRR Growth (Monthly Recurring Revenue)</h2>
           <div className="h-80 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={REVENUE_CHART_DATA}>
@@ -61,24 +61,24 @@ export default function SaaSDashboard() {
           </div>
         </div>
 
-        <div className="bg-gray-950 border border-gray-800 rounded-xl p-6">
-          <h2 className="text-lg font-bold text-gray-100 mb-6">Recent Onboards</h2>
+        <div className="bg-[var(--bg-page)] border border-[var(--border)] rounded-xl p-6">
+          <h2 className="text-lg font-bold text-[var(--text-primary)] mb-6">Recent Onboards</h2>
           <div className="space-y-4">
             {DUMMY_DASHBOARD_METRICS.recentOnboards.map((tenant) => (
-              <div key={tenant.id} className="flex items-center justify-between p-4 bg-gray-900 rounded-lg border border-gray-800">
+              <div key={tenant.id} className="flex items-center justify-between p-4 bg-[var(--bg-card)] rounded-lg border border-[var(--border)]">
                 <div>
-                  <h3 className="font-semibold text-gray-100">{tenant.name}</h3>
-                  <p className="text-xs text-gray-400 mt-1">{tenant.ownerName}</p>
+                  <h3 className="font-semibold text-[var(--text-primary)]">{tenant.name}</h3>
+                  <p className="text-xs text-[var(--text-secondary)] mt-1">{tenant.ownerName}</p>
                 </div>
                 <div className="text-right">
                   <span className={`text-xs px-2 py-1 rounded-full font-medium ${
-                    tenant.plan === 'ENTERPRISE' ? 'bg-purple-500/10 text-purple-400 border border-purple-500/20' : 
-                    tenant.plan === 'PRO' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' : 
-                    'bg-gray-500/10 text-gray-400 border border-gray-500/20'
+                    tenant.plan === 'ENTERPRISE' ? 'bg-purple-500/10 text-[var(--purple)] border border-purple-500/20' : 
+                    tenant.plan === 'PRO' ? 'bg-blue-500/10 text-[var(--primary)] border border-blue-500/20' : 
+                    'bg-[var(--text-disabled)]/10 text-[var(--text-secondary)] border border-[var(--text-disabled)]/20'
                   }`}>
                     {tenant.plan}
                   </span>
-                  <p className="text-xs text-gray-500 mt-2">{tenant.createdAt}</p>
+                  <p className="text-xs text-[var(--text-disabled)] mt-2">{tenant.createdAt}</p>
                 </div>
               </div>
             ))}
@@ -88,4 +88,7 @@ export default function SaaSDashboard() {
     </div>
   );
 }
+
+
+
 
