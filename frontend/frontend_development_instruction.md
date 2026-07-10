@@ -75,4 +75,8 @@ Ensure UI components are accessible. Use semantic HTML (e.g., `<button>` instead
 Whenever displaying a list of entities in a table (e.g., Members, Inquiries, Staff, Orders...etc ), the entire row MUST be clickable. Clicking anywhere on the row should open the detailed profile/modal view for that entity. 
 * **Implementation Details:** Add `cursor-pointer` to the `<tr>` element, bind the `onClick` handler to the row to open the details view, and strictly remove redundant "View/Eye" buttons from the actions column to keep the UI clean. Any other action buttons (Edit, Delete, Email) inside the row must have `e.stopPropagation()` to prevent accidentally triggering the row click.
 
+20. **Searchable Dropdowns for Large Datasets**:
+Whenever presenting a dropdown that selects from a potentially large dataset (e.g., selecting Gyms, Users, Plans, Members..etc), you MUST NOT use a native HTML `<select>` element. Instead, you must implement a custom popover/dropdown component that includes a search `<input>` field at the top.
+*Why?* If there are 500 gyms, a user cannot scroll through a native dropdown to find one. A search box inside the dropdown is mandatory for a scalable enterprise UI.
+
 Think step-by-step. Create a detailed implementation plan first so I can review it, and then execute it perfectly without breaking existing data flows!

@@ -14,6 +14,13 @@ const StatusColors: Record<SaaSInvoice['status'], string> = {
 export default function SaaSInvoicesPage() {
   const [search, setSearch] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
+  
+  const [gymSearchTerm, setGymSearchTerm] = useState('');
+  const [isGymDropdownOpen, setIsGymDropdownOpen] = useState(false);
+  const [selectedGymId, setSelectedGymId] = useState('');
+
+  const filteredGymsForDropdown = DUMMY_TENANTS.filter(t => t.name.toLowerCase().includes(gymSearchTerm.toLowerCase()));
+  const selectedGym = DUMMY_TENANTS.find(t => t.id === selectedGymId);
 
   const filtered = DUMMY_INVOICES.filter(i => 
     i.tenantName.toLowerCase().includes(search.toLowerCase()) || 
@@ -143,14 +150,56 @@ export default function SaaSInvoicesPage() {
             </div>
             
             <div className="p-5 space-y-4">
-              <div>
+              <div className="relative">
                 <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1.5">Select Gym (Tenant)</label>
-                <select className="w-full bg-[var(--bg-input)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)]">
-                  <option value="">-- Choose Gym --</option>
-                  {DUMMY_TENANTS.map(t => (
-                    <option key={t.id} value={t.id}>{t.name} ({t.plan})</option>
-                  ))}
-                </select>
+                
+                {/* Custom Searchable Dropdown */}
+                <div 
+                  className="w-full bg-[var(--bg-input)] border border-[var(--border)] rounded-lg px-4 py-2.5 text-sm text-[var(--text-primary)] cursor-pointer flex justify-between items-center hover:border-[var(--primary)] transition-colors"
+                  onClick={() => setIsGymDropdownOpen(!isGymDropdownOpen)}
+                >
+                  <span className={selectedGym ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)]'}>
+                    {selectedGym ? `${selectedGym.name} (${selectedGym.plan})` : '-- Choose Gym --'}
+                  </span>
+                  <span className="text-[var(--text-secondary)] text-xs">▼</span>
+                </div>
+
+                {isGymDropdownOpen && (
+                  <div className="absolute z-10 top-[calc(100%+4px)] left-0 right-0 bg-[var(--bg-card)] border border-[var(--border)] rounded-lg shadow-xl overflow-hidden max-h-64 flex flex-col animate-in fade-in zoom-in-95 duration-100">
+                    <div className="p-2 border-b border-[var(--border)] bg-[var(--bg-header)]">
+                      <div className="relative">
+                        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--text-secondary)]" />
+                        <input 
+                          type="text" 
+                          placeholder="Search gym by name..." 
+                          className="w-full pl-8 pr-3 py-1.5 bg-[var(--bg-input)] border border-[var(--border)] rounded text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)]"
+                          value={gymSearchTerm}
+                          onChange={(e) => setGymSearchTerm(e.target.value)}
+                          onClick={(e) => e.stopPropagation()}
+                          autoFocus
+                        />
+                      </div>
+                    </div>
+                    <div className="overflow-y-auto p-1 custom-scrollbar">
+                      {filteredGymsForDropdown.map(t => (
+                        <div 
+                          key={t.id} 
+                          className="px-3 py-2.5 text-sm text-[var(--text-primary)] hover:bg-[var(--bg-input)] hover:text-[var(--primary)] cursor-pointer rounded-md transition-colors"
+                          onClick={() => {
+                            setSelectedGymId(t.id);
+                            setIsGymDropdownOpen(false);
+                            setGymSearchTerm('');
+                          }}
+                        >
+                          <span className="font-bold">{t.name}</span> <span className="text-[var(--text-secondary)] text-xs ml-1">({t.plan})</span>
+                        </div>
+                      ))}
+                      {filteredGymsForDropdown.length === 0 && (
+                        <div className="px-3 py-6 text-center text-sm text-[var(--text-disabled)] font-medium">No gyms found</div>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div>
