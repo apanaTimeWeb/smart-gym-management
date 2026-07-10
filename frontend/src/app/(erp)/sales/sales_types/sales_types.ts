@@ -20,5 +20,8 @@ export interface SalesContextType {
   loading: boolean;
   
   loadAll: () => Promise<void>;
+  
+  toast: { message: string; type: any } | null;
+  showToast: (message: string, type: any) => void;
 }
 

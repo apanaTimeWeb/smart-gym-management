@@ -8,11 +8,12 @@ import SalesOverview from '@/app/(erp)/sales/sales_components/SalesOverview/Sale
 import MembershipReport from '@/app/(erp)/sales/sales_components/MembershipReport/MembershipReport';
 import PendingPayments from '@/app/(erp)/sales/sales_components/PendingPayments/PendingPayments';
 import AllMemberships from '@/app/(erp)/sales/sales_components/AllMemberships/AllMemberships';
+import ErpToast from '@/app/(erp)/erp_components/ErpFeedback/ErpToast';
 
 import '@/app/(erp)/sales/sales.css';
 
 function SalesContent() {
- const { tab } = useSalesContext();
+ const { tab, toast, showToast } = useSalesContext();
 
  return (
  <div className="min-h-full pb-10 sales-module bg-[var(--bg-page)] text-[var(--sales-text-primary)]">
@@ -31,6 +32,8 @@ function SalesContent() {
  </div>
  </div>
  </div>
+ 
+ {toast && <ErpToast message={toast.message} type={toast.type} onClose={() => showToast('', toast.type)} />}
  </div>
  );
 }

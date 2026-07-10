@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { type SalesTab, type DateFilter } from '@/app/(erp)/sales/sales_utils/SalesSharedConstants';
 import { SalesContextType } from '@/app/(erp)/sales/sales_types/sales_types';
 import { salesApi } from '@/lib/api';
+import type { ToastType } from '@/app/(erp)/erp_components/ErpFeedback/ErpToast';
 
 export function useSalesLogic(): SalesContextType {
   const [tab, setTab] = useState<SalesTab>('Overview');
@@ -10,6 +11,12 @@ export function useSalesLogic(): SalesContextType {
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
+
+  const showToast = useCallback((message: string, type: ToastType) => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  }, []);
 
   const [overviewData, setOverviewData] = useState<any[]>([]);
   const [membershipReport, setMembershipReport] = useState<any[]>([]);
@@ -48,7 +55,7 @@ export function useSalesLogic(): SalesContextType {
       setAllMembershipsTotal(allRes.data?.total || 0);
 
     } catch (e) {
-      console.error(e);
+      showToast(e instanceof Error ? e.message : 'Failed to fetch sales data', 'error');
     } finally {
       setLoading(false);
     }
@@ -71,6 +78,8 @@ export function useSalesLogic(): SalesContextType {
     allMemberships,
     allMembershipsTotal,
     loading,
-    loadAll
+    loadAll,
+    toast,
+    showToast
   };
 }
