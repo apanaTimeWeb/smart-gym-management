@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { StatusCodes } from 'http-status-codes';
 import { AuthUrlConfig } from '@/app/(auth)/auth_url_config';
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 
 export async function POST(req: NextRequest) {
   const refreshToken = req.cookies.get('gymsmart_refresh_token')?.value;

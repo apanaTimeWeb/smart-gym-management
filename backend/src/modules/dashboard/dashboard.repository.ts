@@ -45,23 +45,23 @@ export class DashboardRepository {
   }
 
   async getRevenueStats(firstDayOfMonth: Date) {
-    const { totalRevenue } = await this.paymentRepository
+    const { totalRevenue } = (await this.paymentRepository
       .createQueryBuilder('payment')
       .select('SUM(payment.amount)', 'totalRevenue')
       .where('payment.status = :status', { status: 'PAID' })
-      .getRawOne();
+      .getRawOne()) || {};
 
-    const { monthlyRevenue } = await this.paymentRepository
+    const { monthlyRevenue } = (await this.paymentRepository
       .createQueryBuilder('payment')
       .select('SUM(payment.amount)', 'monthlyRevenue')
       .where('payment.status = :status', { status: 'PAID' })
       .andWhere('payment.paidAt >= :firstDayOfMonth', { firstDayOfMonth })
-      .getRawOne();
+      .getRawOne()) || {};
 
-    const { pendingPayments } = await this.memberRepository
+    const { pendingPayments } = (await this.memberRepository
       .createQueryBuilder('member')
       .select('SUM(member.pendingAmount)', 'pendingPayments')
-      .getRawOne();
+      .getRawOne()) || {};
 
     return {
       totalRevenue: parseFloat(totalRevenue) || 0,

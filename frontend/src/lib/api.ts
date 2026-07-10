@@ -1,7 +1,7 @@
 /**
  * GymSmart API Client
  * Centralised fetch wrapper for all backend API calls.
- * Base URL: http://localhost:5000/api
+ * Base URL: http://localhost:5000/api/v1
  */
 
 import { AuthUrlConfig } from '@/app/(auth)/auth_url_config';
@@ -16,7 +16,7 @@ import { StoreUrlConfig } from '@/app/(erp)/store/store_url_config';
 import { WorkoutUrlConfig } from '@/app/(erp)/workout/workout_url_config';
 import { InquiriesUrlConfig } from '@/app/(erp)/inquiries/inquiries_url_config';
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 
 // ─── User Helper (reads from non-HttpOnly cookie set by server) ───────────────
 
@@ -107,7 +107,21 @@ export const authApi = {
 // ─── Dashboard ────────────────────────────────────────────────────────────────
 
 export const dashboardApi = {
-  getStats: () => apiFetch<{ success: boolean; data: DashboardStats }>(DashboardUrlConfig.BACKEND_API.STATS),
+  getStats: async () => {
+    const [kpiRes, chartsRes, recentRes] = await Promise.all([
+      apiFetch<{ success: boolean; data: any }>(DashboardUrlConfig.BACKEND_API.STATS),
+      apiFetch<{ success: boolean; data: any }>(DashboardUrlConfig.BACKEND_API.CHARTS),
+      apiFetch<{ success: boolean; data: any }>(DashboardUrlConfig.BACKEND_API.RECENT),
+    ]);
+    return {
+      success: true,
+      data: {
+        ...kpiRes.data,
+        ...chartsRes.data,
+        ...recentRes.data,
+      } as DashboardStats,
+    };
+  },
 };
 
 export interface DashboardStats {
