@@ -36,3 +36,56 @@ export interface SaaSDashboardMetrics {
   monthlyRecurringRevenue: number;
   recentOnboards: Tenant[];
 }
+
+// Phase 2 Types
+export interface SubscriptionPlan {
+  id: string;
+  name: SaaSPlanTier;
+  priceMonthly: number;
+  priceAnnual: number;
+  maxMembers: number;
+  maxStaff: number;
+  features: string[];
+  activeTenants: number;
+}
+
+export type TicketStatus = 'OPEN' | 'IN_PROGRESS' | 'RESOLVED';
+export type TicketPriority = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+
+export interface SupportTicket {
+  id: string;
+  tenantName: string;
+  subject: string;
+  status: TicketStatus;
+  priority: TicketPriority;
+  createdAt: string;
+  lastUpdated: string;
+}
+
+export interface SuperadminStaff {
+  id: string;
+  name: string;
+  email: string;
+  role: 'SUPERADMIN' | 'SUPPORT_AGENT' | 'BILLING_ADMIN';
+  status: 'ACTIVE' | 'INACTIVE';
+  lastLogin: string;
+}
+
+export interface BackgroundJob {
+  id: string;
+  queueName: string;
+  jobName: string;
+  status: 'ACTIVE' | 'COMPLETED' | 'FAILED' | 'DELAYED';
+  attempts: number;
+  error?: string;
+  createdAt: string;
+}
+
+export interface BackupRecord {
+  id: string;
+  tenantName: string;
+  databaseName: string;
+  sizeMB: number;
+  status: 'SUCCESS' | 'FAILED' | 'IN_PROGRESS';
+  timestamp: string;
+}

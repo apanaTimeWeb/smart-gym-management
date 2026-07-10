@@ -147,3 +147,64 @@ export const GYM_GROWTH_DATA = [
   { month: 'Jun', newGyms: 25, churned: 2 },
   { month: 'Jul', newGyms: 20, churned: 1 },
 ];
+
+export const DUMMY_SUBSCRIPTION_PLANS: import('../superadmin_types/superadmin_types').SubscriptionPlan[] = [
+  {
+    id: 'plan-basic',
+    name: 'BASIC',
+    priceMonthly: 49,
+    priceAnnual: 490,
+    maxMembers: 200,
+    maxStaff: 2,
+    features: ['Member Management', 'Basic Billing', 'Attendance Tracking'],
+    activeTenants: 45
+  },
+  {
+    id: 'plan-pro',
+    name: 'PRO',
+    priceMonthly: 99,
+    priceAnnual: 990,
+    maxMembers: 1000,
+    maxStaff: 10,
+    features: ['Everything in Basic', 'WhatsApp Integration', 'Advanced Reports', 'Diet Plans'],
+    activeTenants: 68
+  },
+  {
+    id: 'plan-enterprise',
+    name: 'ENTERPRISE',
+    priceMonthly: 249,
+    priceAnnual: 2490,
+    maxMembers: 5000,
+    maxStaff: 50,
+    features: ['Everything in Pro', 'Custom Branding', 'API Access', 'Dedicated Support Manager'],
+    activeTenants: 15
+  }
+];
+
+export const DUMMY_SUPPORT_TICKETS: import('../superadmin_types/superadmin_types').SupportTicket[] = [
+  { id: 'TKT-1001', tenantName: 'Iron Forge Fitness', subject: 'WhatsApp Integration failing', status: 'OPEN', priority: 'HIGH', createdAt: '2026-07-11T08:00:00Z', lastUpdated: '2026-07-11T08:15:00Z' },
+  { id: 'TKT-1002', tenantName: 'Apex Muscle Gym', subject: 'Need help exporting member data', status: 'IN_PROGRESS', priority: 'MEDIUM', createdAt: '2026-07-10T14:30:00Z', lastUpdated: '2026-07-10T16:00:00Z' },
+  { id: 'TKT-1003', tenantName: 'Vitality Studio', subject: 'Billing cycle issue', status: 'RESOLVED', priority: 'LOW', createdAt: '2026-07-09T09:10:00Z', lastUpdated: '2026-07-09T11:45:00Z' },
+  { id: 'TKT-1004', tenantName: 'Core Wellness Hub', subject: 'Database extremely slow during peak hours', status: 'OPEN', priority: 'CRITICAL', createdAt: '2026-07-11T09:45:00Z', lastUpdated: '2026-07-11T09:50:00Z' }
+];
+
+export const DUMMY_STAFF: import('../superadmin_types/superadmin_types').SuperadminStaff[] = [
+  { id: 'sa-1', name: 'Super Admin', email: 'admin@gymsmart.com', role: 'SUPERADMIN', status: 'ACTIVE', lastLogin: '2026-07-11T09:00:00Z' },
+  { id: 'sa-2', name: 'Alice Support', email: 'alice@gymsmart.com', role: 'SUPPORT_AGENT', status: 'ACTIVE', lastLogin: '2026-07-11T08:30:00Z' },
+  { id: 'sa-3', name: 'Bob Billing', email: 'bob@gymsmart.com', role: 'BILLING_ADMIN', status: 'INACTIVE', lastLogin: '2026-07-01T12:00:00Z' }
+];
+
+export const DUMMY_BACKGROUND_JOBS: import('../superadmin_types/superadmin_types').BackgroundJob[] = [
+  { id: 'job-9821', queueName: 'email_queue', jobName: 'SendWelcomeEmail', status: 'FAILED', attempts: 3, error: 'SMTP Connection Timeout', createdAt: '2026-07-11T09:45:00Z' },
+  { id: 'job-9822', queueName: 'billing_queue', jobName: 'ProcessMonthlyRenewals', status: 'ACTIVE', attempts: 1, createdAt: '2026-07-11T09:55:00Z' },
+  { id: 'job-9823', queueName: 'report_queue', jobName: 'GenerateDailyMetrics', status: 'COMPLETED', attempts: 1, createdAt: '2026-07-11T00:01:00Z' },
+  { id: 'job-9824', queueName: 'email_queue', jobName: 'SendRenewalReminders', status: 'DELAYED', attempts: 0, createdAt: '2026-07-11T10:00:00Z' },
+  { id: 'job-9825', queueName: 'email_queue', jobName: 'SendWelcomeEmail', status: 'FAILED', attempts: 3, error: 'Invalid Recipient Email Address', createdAt: '2026-07-11T09:46:00Z' }
+];
+
+export const DUMMY_BACKUPS: import('../superadmin_types/superadmin_types').BackupRecord[] = [
+  { id: 'bkp-1', tenantName: 'Iron Forge Fitness', databaseName: 'tenant_db_101', sizeMB: 1450.5, status: 'SUCCESS', timestamp: '2026-07-11T02:00:00Z' },
+  { id: 'bkp-2', tenantName: 'Apex Muscle Gym', databaseName: 'tenant_db_103', sizeMB: 3200.0, status: 'IN_PROGRESS', timestamp: '2026-07-11T10:00:00Z' },
+  { id: 'bkp-3', tenantName: 'Vitality Studio', databaseName: 'tenant_db_102', sizeMB: 450.2, status: 'SUCCESS', timestamp: '2026-07-11T02:05:00Z' },
+  { id: 'bkp-4', tenantName: 'Core Wellness Hub', databaseName: 'tenant_db_104', sizeMB: 85.1, status: 'FAILED', timestamp: '2026-07-11T02:10:00Z' }
+];

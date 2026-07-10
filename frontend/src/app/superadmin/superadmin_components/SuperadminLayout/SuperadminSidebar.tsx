@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Building2, ServerCog, LogOut, ChevronLeft, ChevronRight } from 'lucide-react';
+import { LayoutDashboard, Building2, ServerCog, LogOut, ChevronLeft, ChevronRight, CreditCard, Ticket, Users, Activity, HardDrive, DatabaseBackup } from 'lucide-react';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 
 interface SidebarProps {
@@ -13,10 +13,26 @@ interface SidebarProps {
 export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: SidebarProps) {
   const pathname = usePathname();
 
-  const navItems = [
-    { name: 'Dashboard', href: SuperadminUrlConfig.PAGES.DASHBOARD, icon: LayoutDashboard },
-    { name: 'Tenants (Gyms)', href: SuperadminUrlConfig.PAGES.GYMS_LIST, icon: Building2 },
-    { name: 'System & Audit', href: SuperadminUrlConfig.PAGES.SYSTEM_HEALTH, icon: ServerCog },
+  const navGroups = [
+    {
+      group: 'SaaS Business',
+      items: [
+        { name: 'Dashboard', href: SuperadminUrlConfig.PAGES.DASHBOARD, icon: LayoutDashboard },
+        { name: 'Tenants (Gyms)', href: SuperadminUrlConfig.PAGES.GYMS_LIST, icon: Building2 },
+        { name: 'Subscription Plans', href: SuperadminUrlConfig.PAGES.PLANS, icon: CreditCard },
+        { name: 'Support Tickets', href: SuperadminUrlConfig.PAGES.TICKETS, icon: Ticket },
+        { name: 'Staff Roles', href: SuperadminUrlConfig.PAGES.STAFF, icon: Users },
+      ]
+    },
+    {
+      group: 'System & Infra',
+      items: [
+        { name: 'Infrastructure', href: SuperadminUrlConfig.PAGES.INFRASTRUCTURE, icon: HardDrive },
+        { name: 'Background Jobs', href: SuperadminUrlConfig.PAGES.JOBS, icon: Activity },
+        { name: 'Database Backups', href: SuperadminUrlConfig.PAGES.BACKUPS, icon: DatabaseBackup },
+        { name: 'System & Audit', href: SuperadminUrlConfig.PAGES.SYSTEM_HEALTH, icon: ServerCog },
+      ]
+    }
   ];
 
   return (
@@ -36,25 +52,33 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Sideb
         )}
       </div>
 
-      <nav className="flex-1 space-y-2 overflow-y-auto p-4 custom-scrollbar">
-        {navItems.map((item) => {
-          const isActive = pathname.startsWith(item.href);
-          const Icon = item.icon;
-          return (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={`flex items-center gap-3 rounded-lg px-3 py-3 transition-colors ${
-                isActive
-                  ? 'bg-[var(--primary)]/10 text-[var(--primary)] border border-blue-500/20'
-                  : 'text-[var(--text-secondary)] hover:bg-[var(--bg-card)] hover:text-[var(--text-primary)]'
-              } ${isCollapsed ? 'justify-center' : ''}`}
-            >
-              <Icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-[var(--primary)]' : 'opacity-70'}`} />
-              {!isCollapsed && <span className="font-medium text-sm">{item.name}</span>}
-            </Link>
-          );
-        })}
+      <nav className="flex-1 space-y-4 overflow-y-auto p-4 custom-scrollbar">
+        {navGroups.map((group) => (
+          <div key={group.group}>
+            {!isCollapsed && <p className="text-xs font-semibold text-[var(--text-disabled)] mb-2 uppercase tracking-wider">{group.group}</p>}
+            <div className="space-y-1">
+              {group.items.map((item) => {
+                const isActive = pathname.startsWith(item.href);
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    title={isCollapsed ? item.name : undefined}
+                    className={`flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors ${
+                      isActive
+                        ? 'bg-[var(--primary)]/10 text-[var(--primary)] border border-[var(--primary)]/20'
+                        : 'text-[var(--text-secondary)] hover:bg-[var(--bg-card)] hover:text-[var(--text-primary)] border border-transparent'
+                    } ${isCollapsed ? 'justify-center' : ''}`}
+                  >
+                    <Icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-[var(--primary)]' : 'opacity-70'}`} />
+                    {!isCollapsed && <span className="font-medium text-sm">{item.name}</span>}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </nav>
 
       <div className="p-4 border-t border-[var(--border)]">
