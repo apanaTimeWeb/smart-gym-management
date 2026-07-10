@@ -7,14 +7,13 @@ import { useState } from 'react';
 import { FeatureFlag, ReleaseNote } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 export default function FeaturesPage() {
+  const [activeTab, setActiveTab] = useState<'FLAGS' | 'NOTES'>('FLAGS');
   const { data, loading, error } = useSuperadminData<{ flags: FeatureFlag[], notes: ReleaseNote[] }>(SuperadminUrlConfig.BACKEND_API.FEATURES_BASE);
 
   if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]">Loading...</div>;
   if (error || !data) return <div className="p-8 text-center text-[var(--danger)]">Error loading data.</div>;
 
   const { flags: DUMMY_FEATURE_FLAGS, notes: DUMMY_RELEASE_NOTES } = data;
-
-  const [activeTab, setActiveTab] = useState<'FLAGS' | 'NOTES'>('FLAGS');
 
   return (
     <div className="space-y-6">
