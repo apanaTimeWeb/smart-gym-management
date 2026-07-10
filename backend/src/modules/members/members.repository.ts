@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, ILike } from 'typeorm';
 import { Member } from '@/modules/members/entities/member.entity';
+import { FindMemberDto } from '@/modules/members/dto/find-member.dto';
 import { MemberStatus } from '@/modules/members/utils/members.enums';
 
 @Injectable()
@@ -18,9 +19,23 @@ export class MembersRepository {
     return this.memberRepo.save(member);
   }
 
-  async findMembers(limit: number): Promise<[Member[], number]> {
+  async findMembers(query: FindMemberDto): Promise<[Member[], number]> {
+    const limit = query.limit || 50;
+    const page = query.page || 1;
+    const skip = (page - 1) * limit;
+    
+    const where: any = {};
+    if (query.search) {
+      where.name = ILike(`%${query.search}%`);
+    }
+    if (query.status && query.status !== 'All') {
+      where.status = query.status;
+    }
+
     return this.memberRepo.findAndCount({
+      where,
       take: limit,
+      skip: skip,
       order: { id: 'DESC' },
       relations: ['plan'],
     });

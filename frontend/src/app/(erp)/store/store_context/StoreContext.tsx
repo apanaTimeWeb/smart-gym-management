@@ -6,10 +6,23 @@ import { useStoreLogic } from '@/app/(erp)/store/store_context/useStoreLogic';
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
 
-export function StoreProvider({ children }: { children: React.ReactNode }) {
- const logic = useStoreLogic();
+export function StoreProvider({ children, initialData }: { children: React.ReactNode, initialData?: any }) {
+ const logic = useStoreLogic(initialData);
 
- const value = useMemo(() => logic, [logic]);
+ const {
+   tab, products, orders, totalOrders, summary, loading, saving,
+   toast, printData, search, debouncedSearch, currentPage,
+   showProductModal, editProductId, editProductData,
+   showOrderModal, orderItems, orderMethod, orderTotal
+ } = logic;
+
+ // eslint-disable-next-line react-hooks/exhaustive-deps
+ const value = useMemo(() => logic, [
+   tab, products, orders, totalOrders, summary, loading, saving,
+   toast, printData, search, debouncedSearch, currentPage,
+   showProductModal, editProductId, editProductData,
+   showOrderModal, orderItems, orderMethod, orderTotal
+ ]);
 
  return (
  <StoreContext.Provider value={value}>

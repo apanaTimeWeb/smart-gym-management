@@ -1,8 +1,8 @@
 "use client";
 
-import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
-import ErpToast from '@/app/(erp)/erp_components/ErpToast';
-import ErpMessageModal from '@/app/(erp)/erp_components/ErpMessageModal';
+import ErpHeader from '@/app/(erp)/erp_components/ErpLayout/ErpHeader';
+import ErpToast from '@/app/(erp)/erp_components/ErpFeedback/ErpToast';
+import ErpMessageModal from '@/app/(erp)/erp_components/ErpFeedback/ErpMessageModal';
 import { InquiriesProvider, useInquiriesContext } from '@/app/(erp)/inquiries/inquiries_context/InquiriesContext';
 import InquiriesKPIs from '@/app/(erp)/inquiries/inquiries_components/InquiriesKPIs/InquiriesKPIs';
 import InquiriesToolbar from '@/app/(erp)/inquiries/inquiries_components/InquiriesToolbar/InquiriesToolbar';

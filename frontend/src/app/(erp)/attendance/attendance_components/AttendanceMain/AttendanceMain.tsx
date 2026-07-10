@@ -1,7 +1,7 @@
 "use client";
 
-import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
-import ErpToast from '@/app/(erp)/erp_components/ErpToast';
+import ErpHeader from '@/app/(erp)/erp_components/ErpLayout/ErpHeader';
+import ErpToast from '@/app/(erp)/erp_components/ErpFeedback/ErpToast';
 
 import { AttendanceProvider, useAttendanceContext } from '@/app/(erp)/attendance/attendance_context/AttendanceContext';
 import AttendanceKPIs from '@/app/(erp)/attendance/attendance_components/AttendanceKPIs/AttendanceKPIs';

@@ -4,16 +4,16 @@ import { useHrContext } from '@/app/(erp)/hr/hr_context/HrContext';
 import { STAFF_TABLE_HEADERS } from '@/app/(erp)/hr/hr_utils/HrSharedConstants';
 import { Edit2, Trash2 } from 'lucide-react';
 const fmt = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');
-import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
+import ErpPagination from '@/app/(erp)/erp_components/ErpShared/ErpPagination';
 
 export default function StaffTable() {
-  const { staff, search, currentPage, setCurrentPage, openEdit, deleteStaff } = useHrContext();
+  const { staff, debouncedSearch, currentPage, setCurrentPage, openEdit, deleteStaff } = useHrContext();
 
   const filtered = staff.filter(s => 
-    s.name.toLowerCase().includes(search.toLowerCase()) || 
-    s.email.toLowerCase().includes(search.toLowerCase()) ||
-    s.role.toLowerCase().includes(search.toLowerCase()) ||
-    s.branch.toLowerCase().includes(search.toLowerCase())
+    s.name.toLowerCase().includes(debouncedSearch.toLowerCase()) || 
+    s.email.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+    s.role.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+    s.branch.toLowerCase().includes(debouncedSearch.toLowerCase())
   );
 
   const ITEMS_PER_PAGE = 10;
@@ -35,7 +35,12 @@ export default function StaffTable() {
           </thead>
           <tbody className="divide-y" style={{ borderColor: 'var(--hr-border)' }}>
             {currentData.map(s => (
-              <tr key={s.id} className="transition-colors hover:bg-[rgba(99,102,241,0.06)]" style={{ backgroundColor: 'var(--hr-bg-card)' }}>
+              <tr 
+                key={s.id} 
+                className="transition-colors hover:bg-[rgba(99,102,241,0.06)] cursor-pointer" 
+                style={{ backgroundColor: 'var(--hr-bg-card)' }}
+                onClick={() => openEdit(s)}
+              >
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm" style={{ backgroundColor: 'var(--hr-kpi-blue-bg)', color: 'var(--hr-kpi-blue-text)' }}>
@@ -57,7 +62,7 @@ export default function StaffTable() {
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
                     <button 
-                      onClick={() => openEdit(s)} 
+                      onClick={(e) => { e.stopPropagation(); openEdit(s); }} 
                       className="p-1.5 rounded-lg transition-colors hover:bg-[var(--primary-subtle)]" 
                       style={{ color: 'var(--hr-text-secondary)' }}
                       title="Edit"
@@ -65,7 +70,7 @@ export default function StaffTable() {
                       <Edit2 size={14} />
                     </button>
                     <button 
-                      onClick={() => deleteStaff(s.id)} 
+                      onClick={(e) => { e.stopPropagation(); deleteStaff(s.id); }} 
                       className="p-1.5 rounded-lg transition-colors hover:bg-[var(--danger-bg)]" 
                       style={{ color: 'var(--hr-kpi-red-text)', backgroundColor: 'var(--hr-kpi-red-bg)' }}
                       title="Delete"
@@ -78,8 +83,8 @@ export default function StaffTable() {
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={7} className="text-center py-10 text-sm" style={{ color: 'var(--hr-text-secondary)' }}>
-                  No staff members found matching "{search}".
+                <td colSpan={7} className="text-center py-12 text-[var(--hr-text-secondary)]">
+                  {debouncedSearch ? 'No staff match the filter.' : 'No staff members yet. Add your first staff!'}
                 </td>
               </tr>
             )}

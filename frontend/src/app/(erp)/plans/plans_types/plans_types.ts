@@ -1,5 +1,5 @@
-import { type Plan } from '@/lib/api';
-import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
+
+import type { ToastType } from '@/app/(erp)/erp_components/ErpFeedback/ErpToast';
 import { EMPTY_PLAN_FORM } from '@/app/(erp)/plans/plans_utils/PlansSharedConstants';
 import React from 'react';
 
@@ -28,4 +28,11 @@ export interface PlansContextType {
  openEdit: (p: Plan) => void;
  savePlan: (e: React.FormEvent) => Promise<void>;
  deletePlan: (id: number) => Promise<void>;
+}
+
+export interface Plan {
+  id: number; name: string; tier: string;
+  price1Month: number; price3Month: number;
+  price6Month: number; price12Month: number;
+  features: string[]; isActive: boolean;
 }

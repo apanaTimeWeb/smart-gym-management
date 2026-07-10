@@ -3,6 +3,7 @@ import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagg
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 import { WorkoutService } from '@/modules/workout/services/workout.service';
 import { Workout } from '@/modules/workout/entities/workout.entity';
+import { CreateWorkoutDto, UpdateWorkoutDto } from '@/modules/workout/dto/create-workout.dto';
 
 @ApiTags('Workout')
 @ApiBearerAuth('JWT-auth')
@@ -20,13 +21,13 @@ export class WorkoutController {
 
   @Post()
   @ApiOperation({ summary: 'Create workout' })
-  create(@Body() body: Partial<Workout>) {
+  create(@Body() body: CreateWorkoutDto) {
     return this.workoutService.create(body);
   }
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update workout' })
-  update(@Param('id') id: string, @Body() body: Partial<Workout>) {
+  update(@Param('id') id: string, @Body() body: UpdateWorkoutDto) {
     return this.workoutService.update(+id, body);
   }
 

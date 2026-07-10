@@ -1,4 +1,5 @@
-import type { Workout, Exercise } from '@/app/(erp)/workout/workout_types/workout_types';
+import { z } from 'zod';
+import type { Exercise, Workout } from '@/lib/api';
 /* ── Dropdown / Filter Options (Rule 3: Backend-Ready Constants) ── */
 
 export const WORKOUT_LEVEL_OPTIONS = ['Beginner', 'Intermediate', 'Advanced', 'All Levels'] as const;

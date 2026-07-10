@@ -3,15 +3,15 @@
 import { Utensils, Edit2, Trash2, CheckCircle2 } from 'lucide-react';
 import { useLibraryContext } from '@/app/(erp)/library/library_context/LibraryContext';
 
-import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
+import ErpPagination from '@/app/(erp)/erp_components/ErpShared/ErpPagination';
 
 export default function DietGrid() {
-  const { dietPlans, loading, search, currentPage, setCurrentPage, openEditDiet, deleteDietPlan } = useLibraryContext();
+  const { dietPlans, loading, search, debouncedSearch, currentPage, setCurrentPage, openEditDiet, deleteDietPlan } = useLibraryContext();
 
-  const filtered = dietPlans.filter(d => 
-    d.name.toLowerCase().includes(search.toLowerCase()) || 
-    d.goal.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = dietPlans.filter(d => {
+    const s = debouncedSearch.toLowerCase();
+    return d.name.toLowerCase().includes(s) || d.goal.toLowerCase().includes(s);
+  });
 
   const ITEMS_PER_PAGE = 12;
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);

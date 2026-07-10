@@ -1,7 +1,7 @@
 "use client";
 
-import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
-import ErpToast from '@/app/(erp)/erp_components/ErpToast';
+import ErpHeader from '@/app/(erp)/erp_components/ErpLayout/ErpHeader';
+import ErpToast from '@/app/(erp)/erp_components/ErpFeedback/ErpToast';
 import { HrProvider, useHrContext } from '@/app/(erp)/hr/hr_context/HrContext';
 import HrKPIs from '@/app/(erp)/hr/hr_components/HrKPIs/HrKPIs';
 import HrTabs from '@/app/(erp)/hr/hr_components/HrTabs/HrTabs';

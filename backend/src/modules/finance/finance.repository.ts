@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DataSource } from 'typeorm';
+import { Repository, DataSource, ILike } from 'typeorm';
+import { FindPaymentDto } from '@/modules/finance/dto/find-payment.dto';
 import { Payment } from '@/modules/finance/entities/payment.entity';
 import { Member } from '@/modules/members/entities/member.entity';
 import { PaymentStatus } from '@/modules/finance/utils/finance.enums';
@@ -59,10 +60,19 @@ export class FinanceRepository {
     }
   }
 
-  async findPayments(limit: number): Promise<[Payment[], number]> {
+  async findPayments(query: FindPaymentDto): Promise<[Payment[], number]> {
+    const where: any = {};
+    if (query.search) {
+      where.invoiceNo = ILike(`%${query.search}%`);
+      // We can also search by member name but since it's a relation it requires QueryBuilder.
+      // For simplicity, let's just search invoiceNo using findAndCount.
+    }
+
     return this.paymentRepo.findAndCount({
+      where,
       relations: ['member', 'member.plan'],
-      take: limit,
+      take: query.limit,
+      skip: query.offset,
       order: { paidAt: 'DESC' },
     });
   }

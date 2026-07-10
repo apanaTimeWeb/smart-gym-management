@@ -1,4 +1,18 @@
 import type { Plan } from '@/lib/api';
+import { z } from 'zod';
+
+export const MemberSchema = z.object({
+  name: z.string().min(2, "Name is required"),
+  email: z.string().email("Invalid email address").optional().or(z.literal('')),
+  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  address: z.string().optional(),
+  gender: z.enum(['MALE', 'FEMALE', 'OTHER']),
+  branch: z.string(),
+  billingCycle: z.string(),
+  planId: z.coerce.number().min(1, "Please select a plan"),
+});
+
+export type MemberFormValues = z.infer<typeof MemberSchema>;
 
 export const MEMBERS_STATUS_COLORS: Record<string, string> = {
  ACTIVE: 'var(--members-status-active-bg) var(--members-status-active-text)',
@@ -22,7 +36,7 @@ export const EMPTY_MEMBER_FORM = {
  branch: 'Main Branch', 
  billingCycle: 'ONE_MONTH', 
  planId: 1 
-};
+} as unknown as MemberFormValues;
 
 export const MEMBERS_TABLE_HEADERS = [
  'Member', 'Plan', 'Status', 'Billing Cycle', 'Paid', 'Pending', 'Expiry', 'Actions'
@@ -42,3 +56,9 @@ export function getPriceForCycle(plan: Plan | undefined, cycle: string): number 
  };
  return map[cycle] || 0;
 }
+
+export const MSG_TEMPLATES = {
+  EXPIRED: (name: string) => `Hi ${name}! 🔔\n\nYour membership has expired. Renew today to continue your fitness journey!\n\n— Team GymSmart`,
+  PENDING: (name: string, formattedAmount: string) => `Hi ${name} 🙏\n\nFriendly reminder: You have a pending amount of ${formattedAmount}. Please clear your dues at the earliest.\n\n— Team GymSmart`,
+  DEFAULT: (name: string) => `Hi ${name}! 👋\n\nThis is a message from GymSmart. We hope you're enjoying your fitness journey!\n\n— Team GymSmart`
+};

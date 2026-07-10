@@ -1,11 +1,21 @@
 "use client";
 
 import dynamic from 'next/dynamic';
-import { monthlyData } from '@/app/(erp)/sales/sales_utils/SalesSharedConstants';
+import { useSalesContext } from '@/app/(erp)/sales/sales_context/SalesContext';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 export default function SalesOverview() {
+  const { overviewData, loading } = useSalesContext();
+
+  if (loading) {
+    return (
+      <div className="flex justify-center py-10">
+        <div className="w-8 h-8 border-4 border-t-transparent border-[var(--primary)] rounded-full animate-spin" />
+      </div>
+    );
+  }
+
  return (
  <div className="space-y-6">
  <div className="bg-[var(--sales-bg-card)] p-5 rounded-xl border border-[var(--sales-border)] shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-none">
@@ -18,7 +28,7 @@ export default function SalesOverview() {
  plotOptions: { bar: { borderRadius: 6, columnWidth: '35%' } },
  dataLabels: { enabled: false },
  xaxis: { 
- categories: monthlyData.map(d => d.month), 
+ categories: overviewData.map(d => d.month), 
  axisBorder: { show: false }, 
  axisTicks: { show: false },
  labels: { style: { colors: '#64748b' } }
@@ -36,7 +46,7 @@ export default function SalesOverview() {
  },
  tooltip: { theme: 'light', y: { formatter: (val) => `₹${val.toLocaleString()}` } }
  }}
- series={[{ name: 'Revenue', data: monthlyData.map(d => d.revenue) }]}
+ series={[{ name: 'Revenue', data: overviewData.map(d => d.revenue) }]}
  type="bar"
  height="100%"
  />
@@ -53,7 +63,7 @@ export default function SalesOverview() {
  dataLabels: { enabled: false },
  stroke: { curve: 'smooth', width: 3 },
  xaxis: { 
- categories: monthlyData.map(d => d.month), 
+ categories: overviewData.map(d => d.month), 
  axisBorder: { show: false }, 
  axisTicks: { show: false },
  labels: { style: { colors: '#64748b' } }
@@ -66,7 +76,7 @@ export default function SalesOverview() {
  },
  tooltip: { theme: 'light' }
  }}
- series={[{ name: 'New Members', data: monthlyData.map(d => d.members) }]}
+ series={[{ name: 'New Members', data: overviewData.map(d => d.newMembers) }]}
  type="area"
  height="100%"
  />

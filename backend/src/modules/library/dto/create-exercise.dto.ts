@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsOptional, IsBoolean } from 'class-validator';
+import { IsString, IsOptional, IsBoolean, IsNumber, IsArray } from 'class-validator';
 
 export class CreateExerciseDto {
   @ApiProperty({ description: 'Exercise name', example: 'Push Day' })
@@ -20,6 +20,32 @@ export class CreateExerciseDto {
   @ApiProperty({ description: 'Difficulty level', example: 'Intermediate' })
   @IsString()
   difficulty: string;
+
+  @ApiProperty({ description: 'Muscle groups', example: ['Chest', 'Triceps'] })
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  muscleGroup?: string[];
+
+  @ApiProperty({ description: 'Sets', example: 3 })
+  @IsNumber()
+  @IsOptional()
+  sets?: number;
+
+  @ApiProperty({ description: 'Reps', example: '10-12' })
+  @IsString()
+  @IsOptional()
+  reps?: string;
+
+  @ApiProperty({ description: 'Duration', example: '15 mins' })
+  @IsString()
+  @IsOptional()
+  duration?: string;
+
+  @ApiProperty({ description: 'Video URL', example: 'https://youtube.com/...' })
+  @IsString()
+  @IsOptional()
+  videoUrl?: string;
 
   @ApiProperty({ description: 'Is active', default: true, required: false })
   @IsBoolean()

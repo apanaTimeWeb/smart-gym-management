@@ -1,15 +1,34 @@
 "use client";
 
+import { useEffect } from 'react';
 import { X, Save } from 'lucide-react';
 import { useStoreContext } from '@/app/(erp)/store/store_context/StoreContext';
-import { CATEGORIES } from '@/app/(erp)/store/store_utils/StoreSharedConstants';
+import { CATEGORIES, ProductSchema, type ProductFormValues, EMPTY_PRODUCT_FORM } from '@/app/(erp)/store/store_utils/StoreSharedConstants';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 export default function ProductModal() {
  const { 
  showProductModal, setShowProductModal, 
- editProductId, productForm, setProductForm, 
+ editProductId, editProductData, 
  saving, saveProduct 
  } = useStoreContext();
+
+ const { 
+   register, 
+   handleSubmit, 
+   reset,
+   formState: { errors } 
+ } = useForm({
+   resolver: zodResolver(ProductSchema),
+   defaultValues: editProductData || EMPTY_PRODUCT_FORM
+ });
+
+ useEffect(() => {
+   if (showProductModal && editProductData) {
+     reset(editProductData);
+   }
+ }, [showProductModal, editProductData, reset]);
 
  if (!showProductModal) return null;
 
@@ -27,7 +46,7 @@ export default function ProductModal() {
  <X size={18} />
  </button>
  </div>
- <form onSubmit={saveProduct} className="p-6 space-y-4">
+ <form onSubmit={handleSubmit(saveProduct as any)} className="p-6 space-y-4">
  {[
  { label: 'Product Name', key: 'name', type: 'text' }, 
  { label: 'Price (₹)', key: 'price', type: 'number' }, 
@@ -39,22 +58,24 @@ export default function ProductModal() {
  {f.label}
  </label>
  <input 
- required={f.key !== 'description'} 
  type={f.type} 
- value={(productForm as Record<string, string>)[f.key]} 
- onChange={e => setProductForm({ ...productForm, [f.key]: e.target.value })} 
- className="w-full border border-[var(--store-border)] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--store-bg-input)] text-[var(--store-text-primary)]" 
+ {...register(f.key as keyof ProductFormValues)}
+ className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 ${
+   errors[f.key as keyof ProductFormValues] ? 'border-[var(--danger)] focus:ring-[var(--danger)]' : 'border-[var(--store-border)] focus:ring-[var(--warning)]'
+ } bg-[var(--store-bg-input)] text-[var(--store-text-primary)]`}
  />
+ {errors[f.key as keyof ProductFormValues] && (
+   <p className="text-[var(--danger)] text-xs mt-1">{errors[f.key as keyof ProductFormValues]?.message}</p>
+ )}
  </div>
  ))}
  <div>
  <label className="block text-sm font-medium text-[var(--store-text-secondary)] mb-1">Category</label>
  <select 
- value={productForm.category} 
- onChange={e => setProductForm({ ...productForm, category: e.target.value })} 
+ {...register('category')}
  className="w-full border border-[var(--store-border)] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--store-bg-input)] text-[var(--store-text-primary)]"
  >
- {CATEGORIES.map(c => <option key={c}>{c}</option>)}
+ {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
  </select>
  </div>
  <div className="flex gap-3 pt-2">

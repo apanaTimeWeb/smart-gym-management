@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import ErpSidebar from '@/app/(erp)/erp_components/ErpSidebar';
+import ErpSidebar from '@/app/(erp)/erp_components/ErpLayout/ErpSidebar';
 
 export default function ErpLayout({ children }: { children: React.ReactNode }) {
   const [isCollapsed, setIsCollapsed] = useState(false);

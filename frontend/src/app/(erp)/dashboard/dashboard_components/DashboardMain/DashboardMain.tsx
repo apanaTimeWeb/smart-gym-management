@@ -1,6 +1,6 @@
 "use client";
 
-import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
+import ErpHeader from '@/app/(erp)/erp_components/ErpLayout/ErpHeader';
 import { DashboardProvider, useDashboardContext } from '@/app/(erp)/dashboard/dashboard_context/DashboardContext';
 import DashboardKPIs from '@/app/(erp)/dashboard/dashboard_components/DashboardKPIs/DashboardKPIs';
 import RecentMembers from '@/app/(erp)/dashboard/dashboard_components/RecentMembers/RecentMembers';

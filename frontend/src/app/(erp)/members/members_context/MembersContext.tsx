@@ -6,10 +6,23 @@ import { useMembersLogic } from '@/app/(erp)/members/members_context/useMembersL
 
 const MembersContext = createContext<MembersContextType | undefined>(undefined);
 
-export function MembersProvider({ children }: { children: React.ReactNode }) {
- const logic = useMembersLogic();
+export function MembersProvider({ children, initialData }: { children: React.ReactNode, initialData?: any }) {
+ const logic = useMembersLogic(initialData);
 
- const value = useMemo(() => logic, [logic]);
+ const {
+   members, plans, payments, stats, loading, saving, totalMembers,
+   search, debouncedSearch, statusFilter, currentPage,
+   toast, selectedMember, profileTab, attMap,
+   showAddModal, editId, editData, msgModal, printData
+ } = logic;
+
+ // eslint-disable-next-line react-hooks/exhaustive-deps
+ const value = useMemo(() => logic, [
+   members, plans, payments, stats, loading, saving, totalMembers,
+   search, debouncedSearch, statusFilter, currentPage,
+   toast, selectedMember, profileTab, attMap,
+   showAddModal, editId, editData, msgModal, printData
+ ]);
 
  return (
  <MembersContext.Provider value={value}>

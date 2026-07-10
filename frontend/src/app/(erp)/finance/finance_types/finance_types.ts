@@ -1,9 +1,10 @@
-import { type Payment, type FinanceSummary } from '@/lib/api';
-import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
 
-export interface FinanceContextType {
- payments: Payment[];
- summary: FinanceSummary | null;
+import type { ToastType } from '@/app/(erp)/erp_components/ErpFeedback/ErpToast';
+
+ export interface FinanceContextType {
+  payments: Payment[];
+  totalPayments: number;
+  summary: FinanceSummary | null;
  loading: boolean;
  error: string;
  toast: { message: string; type: ToastType } | null;
@@ -16,4 +17,16 @@ export interface FinanceContextType {
   setSearch: (s: string) => void;
   currentPage: number;
   setCurrentPage: (p: number) => void;
+}
+
+export interface Payment {
+  id: number; memberId: number; amount: number; method: string;
+  status: string; notes?: string; invoiceNo: string; paidAt: string;
+  member?: { name: string; email: string; phone: string; plan?: { name: string } };
+}
+export interface FinanceSummary {
+  totalRevenue: number; monthlyRevenue: number; pendingAmount: number;
+  totalPayments: number;
+  revenueByMethod: { UPI: number; Cash: number; Card: number; NetBanking: number };
+  monthlyData: { month: string; revenue: number }[];
 }

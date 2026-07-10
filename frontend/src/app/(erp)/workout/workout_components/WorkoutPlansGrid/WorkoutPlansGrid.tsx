@@ -3,7 +3,7 @@
 import { Dumbbell, Edit2, Trash2 } from 'lucide-react';
 import { useWorkoutContext } from '@/app/(erp)/workout/workout_context/WorkoutContext';
 
-import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
+import ErpPagination from '@/app/(erp)/erp_components/ErpShared/ErpPagination';
 
 export default function WorkoutPlansGrid() {
   const { filteredWk, search, currentPage, setCurrentPage, openEditWk, deleteWk } = useWorkoutContext();

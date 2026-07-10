@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Workout } from '@/modules/workout/entities/workout.entity';
+import { CreateWorkoutDto, UpdateWorkoutDto } from '@/modules/workout/dto/create-workout.dto';
 
 @Injectable()
 export class WorkoutService {
@@ -15,13 +16,13 @@ export class WorkoutService {
     return { success: true, data: workouts };
   }
 
-  async create(data: Partial<Workout>) {
+  async create(data: CreateWorkoutDto) {
     const workout = this.workoutRepo.create(data);
     await this.workoutRepo.save(workout);
     return { success: true, message: 'Workout plan created!', data: workout };
   }
 
-  async update(id: number, data: Partial<Workout>) {
+  async update(id: number, data: UpdateWorkoutDto) {
     await this.workoutRepo.update(id, data);
     return { success: true, message: 'Workout plan updated!' };
   }

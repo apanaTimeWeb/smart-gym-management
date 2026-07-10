@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { attendanceApi, membersApi, hrApi, type Attendance, type Member, type Staff } from '@/lib/api';
-import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
+import type { ToastType } from '@/app/(erp)/erp_components/ErpFeedback/ErpToast';
 import { EMPTY_ATTENDANCE_FORM, ATTENDANCE_TABS, type AttendanceTab } from '@/app/(erp)/attendance/attendance_utils/AttendanceSharedConstants';
 import { AttendanceContextType } from '@/app/(erp)/attendance/attendance_types/attendance_types';
 
@@ -29,7 +29,7 @@ export function useAttendanceLogic(): AttendanceContextType {
  const [attRes, statsRes, memRes, staffRes] = await Promise.all([
  attendanceApi.getAll(),
  attendanceApi.getTodayStats(),
- membersApi.getAll({ limit: '200' }),
+ membersApi.getAll({ limit: '1000' }),
  hrApi.getStaff(),
  ]);
  setRecords(attRes.data);

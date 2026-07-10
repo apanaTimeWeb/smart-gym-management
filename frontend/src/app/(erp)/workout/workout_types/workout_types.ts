@@ -1,10 +1,9 @@
 import { EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM } from '@/app/(erp)/workout/workout_utils/WorkoutSharedConstants';
 import React from 'react';
 
-import type { Workout, Exercise } from '@/lib/api';
-export type { Workout, Exercise };
+import type { Exercise } from '@/lib/api';
 
-import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
+import type { ToastType } from '@/app/(erp)/erp_components/ErpFeedback/ErpToast';
 
 export interface WorkoutContextType {
  tab: string;
@@ -47,4 +46,9 @@ export interface WorkoutContextType {
  openEditEx: (ex: Exercise) => void;
  saveEx: (e: React.FormEvent) => void;
  deleteEx: (id: number) => void;
+}
+
+export interface Workout {
+  id: number; name: string; level: string; days: number;
+  exercises: number; focus: string; duration: string; tags: string[]; isActive?: boolean;
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DataSource, LessThanOrEqual } from 'typeorm';
+import { Repository, DataSource, LessThanOrEqual, ILike } from 'typeorm';
 import { Product } from '@/modules/store/entities/product.entity';
 import { Order } from '@/modules/store/entities/order.entity';
 import { OrderItem } from '@/modules/store/entities/order-item.entity';
@@ -29,7 +29,13 @@ export class StoreRepository {
   }
 
   async findAllOrders(query: PaginationQueryDto) {
+    const where: any = {};
+    if (query.search) {
+      where.method = ILike(`%${query.search}%`);
+    }
+
     return this.orderRepository.findAndCount({
+      where,
       relations: ['items', 'items.product'],
       order: { id: STORE_CONSTANTS.SORT.DESC },
       take: query.limit,

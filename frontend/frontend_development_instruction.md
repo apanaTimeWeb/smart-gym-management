@@ -46,14 +46,33 @@ Never use relative imports (like `../../` or `./`) for importing components, con
 Never hardcode URLs (e.g., `/api/auth/refresh`, `/login`, etc.) directly into API wrappers or React components. Each module must have exactly one centralized URL configuration file, named exactly `[moduleName]_url_config.ts` (e.g., `auth_url_config.ts`). This file must export all internal page routes and external API routes used by that module as named constants. Any file in the module or global utilities that needs to call an endpoint or navigate to a page must import the URL from this specific config file.
 *Why?* If the backend controller path changes or the frontend route structure is updated, we only need to change the path in ONE file instead of hunting down string literals across multiple components and API clients.
 
-13. **No Hardcoded HTTP Status Codes**: 
+12. **No Hardcoded HTTP Status Codes**: 
 Never hardcode numeric HTTP status codes (e.g., `401`, `500`, `200`) in API routes, proxies, or fetch wrappers. Always use standard enums/constants from libraries like `http-status-codes` (e.g., `StatusCodes.UNAUTHORIZED`). This improves code readability and prevents silly typos in status codes.
 
-14. **Update AI-Context Documentation**: 
+13. **Update AI-Context Documentation**: 
 Once the entire refactor is complete, update the project documentation in @[[MODULE_NAME]_features.md]. This document must serve as a map for future AI sessions. Clearly document the new "Feature-Based Sub-folder" directory structure, what each file precisely does, and where the centralized data/state is kept.
 
-15. **Backend-Driven UI Messages (No Hardcoded Toasts/Alerts)**: 
+14. **Backend-Driven UI Messages (No Hardcoded Toasts/Alerts)**: 
 Never hardcode success or error messages (e.g., "User created successfully" or "Invalid credentials") in the frontend components, hooks, or toast notifications. The frontend must strictly display the `message` string provided by the backend's standardized JSON response envelope.
 *Why?* If the business requirement for a message changes, or if we need to implement localization/translations tomorrow, we only want to update the text in one place: the backend. The frontend should act purely as a dumb display layer for API messages.
+
+15. **Performance & Optimization Architecture**:
+- **Debounce API Calls**: Any search input or filter that triggers backend API calls MUST be debounced (e.g., using a custom `useDebounce` hook or a library like `lodash.debounce`) with at least a 300ms delay. Never fire an API request on every single keystroke.
+- **Server-Side Pagination & Filtering**: Do not fetch thousands of records and paginate/filter them on the client. Always implement robust server-side pagination, sorting, and filtering. The frontend should only manage page numbers and search states, passing them as query parameters.
+- **Lazy Loading & Suspense**: For heavy components that are not immediately visible on initial load (e.g., complex charts, heavy modals, or detailed tabs), use React's `lazy()` or Next.js `next/dynamic` to code-split them. Wrap them in `<Suspense>` with skeleton loaders. This dramatically reduces the initial JS bundle size.
+- **Strict Memoization for Contexts**: If you are using React Context to avoid prop drilling, ensure that the Context Provider's value object is strictly memoized using `useMemo`, and all functions passed inside it are wrapped in `useCallback`. This prevents the entire module from re-rendering whenever a single context state updates.
+
+16. **Robust Form Handling & Validation**:
+For any forms with more than two inputs, strictly avoid using individual `useState` hooks for every field, as this triggers unnecessary re-renders on every keystroke. Use a robust form management library (like **React Hook Form**) paired with a schema validation library (like **Zod** ). Define the validation schema in your `_types` or `_utils` folder to enforce strict frontend validation before making API calls.
+
+17. **Centralized API Error Interception**:
+Never handle generic global errors (like `401 Unauthorized` token expiries or `500 Server Errors`) inside individual UI components. Implement a centralized API wrapper or interceptor (in your `api.ts` or fetch utilities) that catches these global status codes, triggers a global toast/redirect, and smoothly refreshes tokens without the UI components ever needing to know about it.
+
+18. **Enterprise Accessibility (a11y)**:
+Ensure UI components are accessible. Use semantic HTML (e.g., `<button>` instead of `<div onClick={...}>`), include `aria-label` tags for icon-only buttons (like the Eye/Edit/Delete icons), and ensure modals and dropdowns can be navigated via keyboard (Tab trapping, Esc to close).
+
+19. **Interactive Data Tables (Clickable Rows)**:
+Whenever displaying a list of entities in a table (e.g., Members, Inquiries, Staff, Orders...etc ), the entire row MUST be clickable. Clicking anywhere on the row should open the detailed profile/modal view for that entity. 
+* **Implementation Details:** Add `cursor-pointer` to the `<tr>` element, bind the `onClick` handler to the row to open the details view, and strictly remove redundant "View/Eye" buttons from the actions column to keep the UI clean. Any other action buttons (Edit, Delete, Email) inside the row must have `e.stopPropagation()` to prevent accidentally triggering the row click.
 
 Think step-by-step. Create a detailed implementation plan first so I can review it, and then execute it perfectly without breaking existing data flows!

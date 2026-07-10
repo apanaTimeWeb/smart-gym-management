@@ -1,7 +1,7 @@
 "use client";
 
-import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
-import ErpToast from '@/app/(erp)/erp_components/ErpToast';
+import ErpHeader from '@/app/(erp)/erp_components/ErpLayout/ErpHeader';
+import ErpToast from '@/app/(erp)/erp_components/ErpFeedback/ErpToast';
 import { FinanceProvider, useFinanceContext } from '@/app/(erp)/finance/finance_context/FinanceContext';
 import FinanceKPIs from '@/app/(erp)/finance/finance_components/FinanceKPIs/FinanceKPIs';
 import RevenueByMethod from '@/app/(erp)/finance/finance_components/RevenueByMethod/RevenueByMethod';
@@ -30,9 +30,9 @@ function FinanceContent() {
  );
 }
 
-export default function FinanceMain() {
+export default function FinanceMain({ initialData }: { initialData?: any }) {
  return (
- <FinanceProvider>
+ <FinanceProvider initialData={initialData}>
  <FinanceContent />
  </FinanceProvider>
  );

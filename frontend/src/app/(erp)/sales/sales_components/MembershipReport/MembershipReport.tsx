@@ -1,20 +1,27 @@
 "use client";
 
-import { membershipReport } from '@/app/(erp)/sales/sales_utils/SalesSharedConstants';
+
 import { useSalesContext } from '@/app/(erp)/sales/sales_context/SalesContext';
-import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
+import ErpPagination from '@/app/(erp)/erp_components/ErpShared/ErpPagination';
 
 export default function MembershipReport() {
-  const { search, currentPage, setCurrentPage } = useSalesContext();
+  const { search, currentPage, setCurrentPage, membershipReport, membershipTotals, loading } = useSalesContext();
   
-  const filtered = membershipReport.filter(r => 
+  const filtered = membershipReport.filter((r: any) => 
     r.plan.toLowerCase().includes(search.toLowerCase())
-
   );
 
   const ITEMS_PER_PAGE = 10;
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;
   const paginated = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center py-10">
+        <div className="w-8 h-8 border-4 border-t-transparent border-[var(--primary)] rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
   <>
@@ -41,10 +48,10 @@ export default function MembershipReport() {
   ))}
  <tr className="bg-[var(--bg-input)] font-semibold border-t-2 border-[var(--sales-border)]">
  <td className="px-4 py-3 text-sm text-[var(--sales-text-primary)]">Total</td>
- <td className="px-4 py-3 text-sm text-[var(--sales-text-primary)]">₹4,82,500</td>
- <td className="px-4 py-3 text-sm text-[var(--success)] dark:text-[var(--success)]">₹4,53,600</td>
- <td className="px-4 py-3 text-sm text-[var(--warning)] dark:text-[var(--warning)]">₹28,900</td>
- <td className="px-4 py-3 text-sm text-[var(--danger)] dark:text-[var(--danger)]">₹5,200</td>
+ <td className="px-4 py-3 text-sm text-[var(--sales-text-primary)]">₹{(membershipTotals.totalReceivable || 0).toLocaleString()}</td>
+ <td className="px-4 py-3 text-sm text-[var(--success)] dark:text-[var(--success)]">₹{(membershipTotals.totalReceived || 0).toLocaleString()}</td>
+ <td className="px-4 py-3 text-sm text-[var(--warning)] dark:text-[var(--warning)]">₹{(membershipTotals.remaining || 0).toLocaleString()}</td>
+ <td className="px-4 py-3 text-sm text-[var(--danger)] dark:text-[var(--danger)]">₹{(membershipTotals.refunds || 0).toLocaleString()}</td>
  </tr>
   </tbody>
   </table>

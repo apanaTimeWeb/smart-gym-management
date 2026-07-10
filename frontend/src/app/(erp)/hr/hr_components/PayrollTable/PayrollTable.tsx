@@ -4,7 +4,7 @@ import { useHrContext } from '@/app/(erp)/hr/hr_context/HrContext';
 import { PAYROLL_TABLE_HEADERS } from '@/app/(erp)/hr/hr_utils/HrSharedConstants';
 
 const fmt = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');
-import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
+import ErpPagination from '@/app/(erp)/erp_components/ErpShared/ErpPagination';
 
 export default function PayrollTable() {
   const { payrolls, search, currentPage, setCurrentPage, markPayrollPaid } = useHrContext();
@@ -63,7 +63,7 @@ export default function PayrollTable() {
                 <td className="px-4 py-3">
                   {p.status !== 'Paid' && (
                     <button 
-                      onClick={() => markPayrollPaid(p.id)} 
+                      onClick={(e) => { e.stopPropagation(); markPayrollPaid(p.id); }} 
                       className="px-3 py-1.5 text-xs font-semibold text-white rounded-lg hover:opacity-90 transition-opacity" 
                       style={{ backgroundColor: 'var(--hr-highlight)' }}
                     >

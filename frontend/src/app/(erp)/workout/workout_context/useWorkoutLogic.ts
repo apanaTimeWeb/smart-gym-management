@@ -2,10 +2,11 @@ import { useState, useMemo, useCallback, useEffect } from 'react';
 import { 
   EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM 
 } from '@/app/(erp)/workout/workout_utils/WorkoutSharedConstants';
-import { WorkoutContextType, Workout, Exercise } from '@/app/(erp)/workout/workout_types/workout_types';
-import { useConfirm } from '@/app/(erp)/erp_components/ErpConfirmProvider';
+import { WorkoutContextType, Workout } from '@/app/(erp)/workout/workout_types/workout_types';
+import { useConfirm } from '@/app/(erp)/erp_components/ErpFeedback/ErpConfirmProvider';
 import { workoutApi, libraryApi } from '@/lib/api';
-import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
+import type { Exercise } from '@/lib/api';
+import type { ToastType } from '@/app/(erp)/erp_components/ErpFeedback/ErpToast';
 
 export function useWorkoutLogic(): WorkoutContextType {
   const { confirm } = useConfirm();

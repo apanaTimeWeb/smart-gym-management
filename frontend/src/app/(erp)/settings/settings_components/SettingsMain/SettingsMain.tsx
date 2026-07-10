@@ -1,6 +1,6 @@
 "use client";
 
-import ErpHeader from '@/app/(erp)/erp_components/ErpHeader';
+import ErpHeader from '@/app/(erp)/erp_components/ErpLayout/ErpHeader';
 import { SettingsProvider } from '@/app/(erp)/settings/settings_context/SettingsContext';
 import SettingsNav from '@/app/(erp)/settings/settings_components/SettingsNav/SettingsNav';
 import SettingsContent from '@/app/(erp)/settings/settings_components/SettingsContent/SettingsContent';

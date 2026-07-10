@@ -1,9 +1,10 @@
 import { useState, useCallback, useEffect } from 'react';
+import { useDebounce } from '@/app/(erp)/erp_utils/useDebounce';
 import { libraryApi, type Exercise, type DietPlan } from '@/lib/api';
-import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
+import type { ToastType } from '@/app/(erp)/erp_components/ErpFeedback/ErpToast';
 import { EMPTY_EXERCISE_FORM, EMPTY_DIET_FORM, type LibraryTab } from '@/app/(erp)/library/library_utils/LibrarySharedConstants';
 import { LibraryContextType } from '@/app/(erp)/library/library_types/library_types';
-import { useConfirm } from '@/app/(erp)/erp_components/ErpConfirmProvider';
+import { useConfirm } from '@/app/(erp)/erp_components/ErpFeedback/ErpConfirmProvider';
 
 export function useLibraryLogic(): LibraryContextType {
   const { confirm } = useConfirm();
@@ -16,15 +17,16 @@ export function useLibraryLogic(): LibraryContextType {
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
   const [currentPage, setCurrentPage] = useState(1);
 
  const [showExModal, setShowExModal] = useState(false);
  const [editExId, setEditExId] = useState<number | null>(null);
- const [exForm, setExForm] = useState(EMPTY_EXERCISE_FORM);
+ const [editExData, setEditExData] = useState<any>(null);
 
  const [showDietModal, setShowDietModal] = useState(false);
  const [editDietId, setEditDietId] = useState<number | null>(null);
- const [dietForm, setDietForm] = useState(EMPTY_DIET_FORM);
+ const [editDietData, setEditDietData] = useState<any>(null);
 
  const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
  const hideToast = useCallback(() => setToast(null), []);
@@ -50,17 +52,17 @@ export function useLibraryLogic(): LibraryContextType {
  // Exercise CRUD
  const openAddEx = useCallback(() => { 
  setEditExId(null); 
- setExForm(EMPTY_EXERCISE_FORM); 
+ setEditExData(EMPTY_EXERCISE_FORM); 
  setShowExModal(true); 
  }, []);
  
  const openEditEx = useCallback((ex: Exercise) => {
  setEditExId(ex.id);
- setExForm({ 
+ setEditExData({ 
  name: ex.name, 
  category: ex.category, 
  muscleGroup: ex.muscleGroup.join(', '), 
- sets: String(ex.sets || ''), 
+ sets: ex.sets ? String(ex.sets) : '', 
  reps: ex.reps || '', 
  duration: ex.duration || '', 
  difficulty: ex.difficulty, 
@@ -70,14 +72,13 @@ export function useLibraryLogic(): LibraryContextType {
  setShowExModal(true);
  }, []);
  
- const saveExercise = useCallback(async (e: React.FormEvent) => {
- e.preventDefault(); 
+ const saveExercise = useCallback(async (data: any) => {
  setSaving(true);
  try {
  const payload = { 
- ...exForm, 
- muscleGroup: exForm.muscleGroup.split(',').map(s => s.trim()), 
- sets: exForm.sets ? Number(exForm.sets) : undefined 
+ ...data, 
+ muscleGroup: data.muscleGroup ? data.muscleGroup.split(',').map((s: string) => s.trim()) : [], 
+ sets: data.sets ? Number(data.sets) : undefined 
  };
  
  if (editExId) { 
@@ -94,7 +95,7 @@ export function useLibraryLogic(): LibraryContextType {
  } finally { 
  setSaving(false); 
  }
- }, [editExId, exForm, loadAll, showToast]);
+ }, [editExId, loadAll, showToast]);
  
  const deleteExercise = useCallback(async (id: number) => {
   const isConfirmed = await confirm({ title: 'Delete Exercise', message: 'Delete this exercise?', confirmText: 'Delete', type: 'danger' });
@@ -111,36 +112,35 @@ export function useLibraryLogic(): LibraryContextType {
  // Diet CRUD
  const openAddDiet = useCallback(() => { 
  setEditDietId(null); 
- setDietForm(EMPTY_DIET_FORM); 
+ setEditDietData(EMPTY_DIET_FORM); 
  setShowDietModal(true); 
  }, []);
  
  const openEditDiet = useCallback((d: DietPlan) => {
  setEditDietId(d.id);
- setDietForm({ 
+ setEditDietData({ 
  name: d.name, 
  goal: d.goal, 
- calories: String(d.calories || ''), 
- protein: String(d.protein || ''), 
- carbs: String(d.carbs || ''), 
- fats: String(d.fats || ''), 
+ calories: d.calories ? String(d.calories) : '', 
+ protein: d.protein ? String(d.protein) : '', 
+ carbs: d.carbs ? String(d.carbs) : '', 
+ fats: d.fats ? String(d.fats) : '', 
  description: d.description || '', 
  meals: d.meals.join('\n') 
  });
  setShowDietModal(true);
  }, []);
  
- const saveDietPlan = useCallback(async (e: React.FormEvent) => {
- e.preventDefault(); 
+ const saveDietPlan = useCallback(async (data: any) => {
  setSaving(true);
  try {
  const payload = { 
- ...dietForm, 
- calories: dietForm.calories ? Number(dietForm.calories) : undefined, 
- protein: dietForm.protein ? Number(dietForm.protein) : undefined, 
- carbs: dietForm.carbs ? Number(dietForm.carbs) : undefined, 
- fats: dietForm.fats ? Number(dietForm.fats) : undefined, 
- meals: dietForm.meals.split('\n').map(s => s.trim()).filter(Boolean) 
+ ...data, 
+ calories: data.calories ? Number(data.calories) : undefined, 
+ protein: data.protein ? Number(data.protein) : undefined, 
+ carbs: data.carbs ? Number(data.carbs) : undefined, 
+ fats: data.fats ? Number(data.fats) : undefined, 
+ meals: data.meals ? data.meals.split('\n').map((s: string) => s.trim()).filter(Boolean) : [] 
  };
  
  if (editDietId) { 
@@ -157,7 +157,7 @@ export function useLibraryLogic(): LibraryContextType {
  } finally { 
  setSaving(false); 
  }
- }, [editDietId, dietForm, loadAll, showToast]);
+ }, [editDietId, loadAll, showToast]);
  
  const deleteDietPlan = useCallback(async (id: number) => {
   const isConfirmed = await confirm({ title: 'Delete Diet Plan', message: 'Delete this diet plan?', confirmText: 'Delete', type: 'danger' });
@@ -175,9 +175,9 @@ export function useLibraryLogic(): LibraryContextType {
     tab, setTab,
     exercises, dietPlans,
     loading, saving, toast,
-    search, setSearch, currentPage, setCurrentPage,
+    search, debouncedSearch, setSearch, currentPage, setCurrentPage,
     showToast, hideToast, loadAll,
- showExModal, setShowExModal, editExId, exForm, setExForm, openAddEx, openEditEx, saveExercise, deleteExercise,
- showDietModal, setShowDietModal, editDietId, dietForm, setDietForm, openAddDiet, openEditDiet, saveDietPlan, deleteDietPlan
+ showExModal, setShowExModal, editExId, editExData, openAddEx, openEditEx, saveExercise, deleteExercise,
+ showDietModal, setShowDietModal, editDietId, editDietData, openAddDiet, openEditDiet, saveDietPlan, deleteDietPlan
  };
 }

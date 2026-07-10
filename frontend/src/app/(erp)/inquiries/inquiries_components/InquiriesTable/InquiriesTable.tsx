@@ -4,20 +4,16 @@ import { useInquiriesContext } from '@/app/(erp)/inquiries/inquiries_context/Inq
 import { INQUIRIES_TABLE_HEADERS, INQUIRIES_STATUS_LABELS, INQUIRIES_STATUS_STYLES } from '@/app/(erp)/inquiries/inquiries_utils/InquiriesSharedConstants';
 import { MessageCircle, Mail, Edit2, Trash2 } from 'lucide-react';
 
-import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
+import ErpPagination from '@/app/(erp)/erp_components/ErpShared/ErpPagination';
 
 export default function InquiriesTable() {
-  const { inquiries, search, statusFilter, loading, currentPage, setCurrentPage, updateStatus, openMsg, openEdit, deleteInquiry } = useInquiriesContext();
-
-  const filtered = inquiries.filter(inq => {
-    const ms = inq.name.toLowerCase().includes(search.toLowerCase()) || inq.phone.includes(search);
-    const mf = statusFilter === 'All' || inq.status === statusFilter;
-    return ms && mf;
-  });
+  const { 
+    inquiries, loading, search, debouncedSearch, statusFilter, dateFilter, currentPage, setCurrentPage, 
+    openEdit, openMsg, deleteInquiry, updateStatus, totalInquiries
+  } = useInquiriesContext();
 
   const ITEMS_PER_PAGE = 10;
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
-  const currentData = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(totalInquiries / ITEMS_PER_PAGE);
 
   if (loading) {
     return (
@@ -41,10 +37,10 @@ export default function InquiriesTable() {
             </tr>
           </thead>
           <tbody className="divide-y" style={{ borderColor: 'var(--inquiries-border)' }}>
-            {currentData.map(inq => {
+            {inquiries.map(inq => {
               const statusStyle = INQUIRIES_STATUS_STYLES[inq.status] || { bg: 'var(--inquiries-bg-input)', text: 'var(--inquiries-text-primary)' };
               return (
-                <tr key={inq.id} className="transition-colors hover:bg-[rgba(99,102,241,0.06)]">
+                <tr key={inq.id} className="transition-colors hover:bg-[rgba(99,102,241,0.06)] cursor-pointer" onClick={() => openEdit(inq)}>
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm" style={{ backgroundColor: 'var(--inquiries-kpi-orange-bg)', color: 'var(--inquiries-kpi-orange-text)' }}>
@@ -63,6 +59,7 @@ export default function InquiriesTable() {
                     <select 
                       value={inq.status} 
                       onChange={e => updateStatus(inq.id, e.target.value)}
+                      onClick={e => e.stopPropagation()}
                       className="text-xs font-medium px-2.5 py-1 rounded-full border-0 cursor-pointer focus:outline-none"
                       style={{ backgroundColor: statusStyle.bg, color: statusStyle.text }}
                     >
@@ -77,7 +74,7 @@ export default function InquiriesTable() {
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-2">
                       <button 
-                        onClick={() => openMsg(inq, 'whatsapp')} 
+                        onClick={(e) => { e.stopPropagation(); openMsg(inq, 'whatsapp'); }} 
                         className="p-1.5 rounded-lg text-white transition-opacity hover:opacity-80" 
                         style={{ backgroundColor: '#25D366' }} 
                         title="WhatsApp"
@@ -85,7 +82,7 @@ export default function InquiriesTable() {
                         <MessageCircle size={13} />
                       </button>
                       <button 
-                        onClick={() => openMsg(inq, 'email')} 
+                        onClick={(e) => { e.stopPropagation(); openMsg(inq, 'email'); }} 
                         className="p-1.5 rounded-lg text-white transition-opacity hover:opacity-80" 
                         style={{ backgroundColor: 'hsl(217 91% 60%)' }} 
                         title="Email"
@@ -93,7 +90,7 @@ export default function InquiriesTable() {
                         <Mail size={13} />
                       </button>
                       <button 
-                        onClick={() => openEdit(inq)} 
+                        onClick={(e) => { e.stopPropagation(); openEdit(inq); }} 
                         className="p-1.5 rounded-lg transition-colors hover:bg-[var(--primary-subtle)]" 
                         style={{ color: 'var(--inquiries-text-secondary)' }}
                         title="Edit"
@@ -101,7 +98,7 @@ export default function InquiriesTable() {
                         <Edit2 size={13} />
                       </button>
                       <button 
-                        onClick={() => deleteInquiry(inq.id)} 
+                        onClick={(e) => { e.stopPropagation(); deleteInquiry(inq.id); }} 
                         className="p-1.5 rounded-lg transition-colors hover:bg-[var(--danger-bg)] dark:hover:bg-[var(--danger-bg)]" 
                         style={{ color: 'var(--inquiries-status-lost-text)', backgroundColor: 'var(--inquiries-status-lost-bg)' }}
                         title="Delete"
@@ -113,7 +110,7 @@ export default function InquiriesTable() {
                 </tr>
               );
             })}
-            {filtered.length === 0 && (
+            {inquiries.length === 0 && (
               <tr>
                 <td colSpan={7} className="text-center py-12 text-sm" style={{ color: 'var(--inquiries-text-secondary)' }}>
                   No inquiries found.
@@ -126,7 +123,7 @@ export default function InquiriesTable() {
       <ErpPagination 
         currentPage={currentPage} 
         totalPages={totalPages} 
-        totalItems={filtered.length} 
+        totalItems={totalInquiries} 
         itemsPerPage={ITEMS_PER_PAGE} 
         onPageChange={setCurrentPage} 
       />

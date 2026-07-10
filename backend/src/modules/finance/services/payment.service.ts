@@ -49,13 +49,14 @@ export class PaymentService {
   }
 
   async findAllPayments(query: FindPaymentDto): Promise<FinanceResponse> {
-    this.logger.log(`Fetching payments with limit: ${query.limit}`);
-    const limit = query.limit || 50;
-    const [payments, total] = await this.financeRepository.findPayments(limit);
+    this.logger.log(`Fetching payments with limit: ${query.limit}, offset: ${query.offset}`);
+    const limit = query.limit || 10;
+    const page = query.page || 1;
+    const [payments, total] = await this.financeRepository.findPayments(query);
 
     return {
       message: FINANCE_MESSAGES.PAYMENTS_FETCHED_SUCCESS,
-      data: { payments, total, page: 1, limit },
+      data: { payments, total, page, limit },
     };
   }
 

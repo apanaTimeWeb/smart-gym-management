@@ -1,9 +1,10 @@
 import { useState, useCallback, useEffect } from 'react';
+import { useDebounce } from '@/app/(erp)/erp_utils/useDebounce';
 import { hrApi, type Staff, type Payroll, type HrSummary } from '@/lib/api';
-import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
+import type { ToastType } from '@/app/(erp)/erp_components/ErpFeedback/ErpToast';
 import { EMPTY_STAFF } from '@/app/(erp)/hr/hr_utils/HrSharedConstants';
 import { HrContextType } from '@/app/(erp)/hr/hr_types/hr_types';
-import { useConfirm } from '@/app/(erp)/erp_components/ErpConfirmProvider';
+import { useConfirm } from '@/app/(erp)/erp_components/ErpFeedback/ErpConfirmProvider';
 
 export function useHrLogic(): HrContextType {
   const { confirm } = useConfirm();
@@ -15,11 +16,12 @@ export function useHrLogic(): HrContextType {
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
   const [currentPage, setCurrentPage] = useState(1);
 
  const [showModal, setShowModal] = useState(false);
  const [editId, setEditId] = useState<number | null>(null);
- const [form, setForm] = useState(EMPTY_STAFF);
+ const [editData, setEditData] = useState<any>(null);
  const [saving, setSaving] = useState(false);
 
  const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
@@ -50,13 +52,13 @@ export function useHrLogic(): HrContextType {
 
  const openAdd = useCallback(() => {
  setEditId(null);
- setForm(EMPTY_STAFF);
+ setEditData(EMPTY_STAFF);
  setShowModal(true);
  }, []);
 
  const openEdit = useCallback((s: Staff) => {
  setEditId(s.id);
- setForm({ 
+ setEditData({ 
  name: s.name, 
  email: s.email, 
  phone: s.phone, 
@@ -70,11 +72,10 @@ export function useHrLogic(): HrContextType {
  setShowModal(true);
  }, []);
 
- const saveStaff = useCallback(async (e: React.FormEvent) => {
- e.preventDefault();
+ const saveStaff = useCallback(async (data: any) => {
  setSaving(true);
  try {
- const payload = { ...form, salary: Number(form.salary), joinDate: new Date(form.joinDate).toISOString() };
+ const payload = { ...data, salary: Number(data.salary), joinDate: new Date(data.joinDate).toISOString() };
  if (editId) { 
  const res = await hrApi.updateStaff(editId, payload); 
  showToast((res as any).message, 'success'); 
@@ -89,7 +90,7 @@ export function useHrLogic(): HrContextType {
  } finally { 
  setSaving(false); 
  }
- }, [form, editId, loadAll, showToast]);
+ }, [editId, loadAll, showToast]);
 
  const deleteStaff = useCallback(async (id: number) => {
   const isConfirmed = await confirm({ title: 'Remove Staff', message: 'Remove this staff member?', confirmText: 'Remove', type: 'danger' });
@@ -115,7 +116,7 @@ export function useHrLogic(): HrContextType {
 
   return {
     staff, payrolls, summary, loading, error, toast, showToast, hideToast, loadAll,
-    search, setSearch, currentPage, setCurrentPage,
-    showModal, setShowModal, editId, form, setForm, saving, openAdd, openEdit, saveStaff, deleteStaff, markPayrollPaid
+    search, debouncedSearch, setSearch, currentPage, setCurrentPage,
+    showModal, setShowModal, editId, editData, saving, openAdd, openEdit, saveStaff, deleteStaff, markPayrollPaid
   };
 }

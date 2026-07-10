@@ -1,5 +1,5 @@
-import { type Staff, type Payroll, type HrSummary } from '@/lib/api';
-import type { ToastType } from '@/app/(erp)/erp_components/ErpToast';
+
+import type { ToastType } from '@/app/(erp)/erp_components/ErpFeedback/ErpToast';
 import { EMPTY_STAFF } from '@/app/(erp)/hr/hr_utils/HrSharedConstants';
 import React from 'react';
 
@@ -12,6 +12,7 @@ export interface HrContextType {
   toast: { message: string; type: ToastType } | null;
   
   search: string;
+  debouncedSearch: string;
   setSearch: (s: string) => void;
   currentPage: number;
   setCurrentPage: (p: number) => void;
@@ -24,14 +25,28 @@ export interface HrContextType {
  showModal: boolean;
  setShowModal: (show: boolean) => void;
  editId: number | null;
- form: typeof EMPTY_STAFF;
- setForm: React.Dispatch<React.SetStateAction<typeof EMPTY_STAFF>>;
+ editData: any;
  saving: boolean;
  
  // Actions
  openAdd: () => void;
  openEdit: (s: Staff) => void;
- saveStaff: (e: React.FormEvent) => Promise<void>;
+ saveStaff: (data: any) => Promise<void>;
  deleteStaff: (id: number) => Promise<void>;
  markPayrollPaid: (id: number) => Promise<void>;
+}
+
+export interface Staff {
+  id: number; name: string; email: string; phone: string;
+  role: string; salary: number; branch: string; gender: string;
+  address?: string; joinDate: string; isActive: boolean;
+}
+export interface Payroll {
+  id: number; staffId: number; month: string; amount: number;
+  status: string; paidAt?: string; notes?: string;
+  staff?: { name: string; role: string };
+}
+export interface HrSummary {
+  totalStaff: number; activeStaff: number;
+  totalPayrollThisMonth: number; paidCount: number; pendingCount: number;
 }

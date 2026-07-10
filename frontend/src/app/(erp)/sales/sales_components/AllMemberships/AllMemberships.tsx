@@ -1,23 +1,24 @@
 "use client";
 
 import { useState } from 'react';
-import { allMemberships } from '@/app/(erp)/sales/sales_utils/SalesSharedConstants';
+
 import { useSalesContext } from '@/app/(erp)/sales/sales_context/SalesContext';
-import ErpPagination from '@/app/(erp)/erp_components/ErpPagination';
+import ErpPagination from '@/app/(erp)/erp_components/ErpShared/ErpPagination';
 
 export default function AllMemberships() {
   const [filter, setFilter] = useState('All');
-  const { search, currentPage, setCurrentPage } = useSalesContext();
+  const { currentPage, setCurrentPage, allMemberships, allMembershipsTotal, loading } = useSalesContext();
   
-  const filtered = allMemberships.filter(r => {
-    const matchFilter = filter === 'All' ? true : r.status === filter || (filter === 'Expiring Soon' && r.days > 0 && r.days <= 30);
-    const matchSearch = r.name.toLowerCase().includes(search.toLowerCase()) || r.plan.toLowerCase().includes(search.toLowerCase());
-    return matchFilter && matchSearch;
-  });
-
   const ITEMS_PER_PAGE = 10;
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;
-  const paginated = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(allMembershipsTotal / ITEMS_PER_PAGE) || 1;
+
+  if (loading) {
+    return (
+      <div className="flex justify-center py-10">
+        <div className="w-8 h-8 border-4 border-t-transparent border-[var(--primary)] rounded-full animate-spin" />
+      </div>
+    );
+  }
 
  return (
  <div>
@@ -48,30 +49,30 @@ export default function AllMemberships() {
  </tr>
  </thead>
  <tbody className="divide-y divide-[var(--sales-border)]">
-        {paginated.map((r, i) => (
+        {allMemberships.map((r: any, i: number) => (
           <tr key={i} className="hover:bg-[var(--primary-subtle)] transition-colors">
             <td className="px-4 py-3 text-sm font-medium text-[var(--sales-text-primary)]">{r.name}</td>
             <td className="px-4 py-3 text-sm text-[var(--sales-text-secondary)]">{r.plan}</td>
-            <td className="px-4 py-3 text-sm text-[var(--sales-text-secondary)]">{r.start}</td>
-            <td className="px-4 py-3 text-sm text-[var(--sales-text-secondary)]">{r.end}</td>
+            <td className="px-4 py-3 text-sm text-[var(--sales-text-secondary)]">{new Date(r.joinDate).toLocaleDateString()}</td>
+            <td className="px-4 py-3 text-sm text-[var(--sales-text-secondary)]">{new Date(r.expiryDate).toLocaleDateString()}</td>
             <td className="px-4 py-3">
               <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-semibold ${
-                r.status === 'Active' 
+                r.status === 'ACTIVE' 
                 ? 'bg-[var(--success-bg)] text-[var(--success)] dark:bg-[var(--success-bg)] dark:text-[var(--success)]' 
                 : 'bg-[var(--danger-bg)] text-[var(--danger)] dark:bg-[var(--danger-bg)] dark:text-[var(--danger)]'
               }`}>
                 {r.status}
               </span>
             </td>
-            <td className="px-4 py-3 text-sm font-medium text-[var(--sales-text-primary)]">{r.amount}</td>
+            <td className="px-4 py-3 text-sm font-medium text-[var(--sales-text-primary)]">₹{r.paidAmount?.toLocaleString() || 0}</td>
             <td className="px-4 py-3 text-sm font-medium" style={{ 
-              color: r.days < 0 ? '#ef4444' : r.days <= 7 ? '#ef4444' : r.days <= 30 ? '#f59e0b' : '#22c55e' 
+              color: r.daysLeft === 0 ? '#ef4444' : r.daysLeft <= 7 ? '#ef4444' : r.daysLeft <= 30 ? '#f59e0b' : '#22c55e' 
             }}>
-              {r.days < 0 ? `${Math.abs(r.days)}d ago` : `${r.days} days`}
+              {r.daysLeft === 0 ? 'Expired' : `${r.daysLeft} days`}
             </td>
           </tr>
         ))}
-        {paginated.length === 0 && (
+        {allMemberships.length === 0 && (
           <tr>
             <td colSpan={7} className="text-center py-8 text-[var(--sales-text-secondary)]">
               No memberships found.

@@ -9,4 +9,19 @@ export interface SalesContextType {
   setSearch: (s: string) => void;
   currentPage: number;
   setCurrentPage: (p: number) => void;
+  
+  overviewData: any[];
+  membershipReport: any[];
+  membershipTotals: any;
+  pendingPayments: any[];
+  pendingTotal: number;
+  allMemberships: any[];
+  allMembershipsTotal: number;
+  loading: boolean;
+  
+  loadAll: () => Promise<void>;
+  
+  toast: { message: string; type: any } | null;
+  showToast: (message: string, type: any) => void;
 }
+
