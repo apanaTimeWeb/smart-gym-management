@@ -15,17 +15,21 @@ const StatusIcons = {
 export default function MigrationsPage() {
   const { data, loading, error } = useSuperadminData<{ migrations: SchemaMigration[], tenants: Tenant[] }>(SuperadminUrlConfig.BACKEND_API.MIGRATIONS_BASE);
 
-  if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]">Loading...</div>;
+    const [showTargetModal, setShowTargetModal] = useState(false);
+  const [gymSearchTerm, setGymSearchTerm] = useState('');
+  const [isGymDropdownOpen, setIsGymDropdownOpen] = useState(false);
+  const [selectedGymId, setSelectedGymId] = useState('');
+if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]">Loading...</div>;
   if (error || !data) return <div className="p-8 text-center text-[var(--danger)]">Error loading data.</div>;
 
   const { migrations: DUMMY_MIGRATIONS, tenants: DUMMY_TENANTS } = data;
 
   const pendingCount = DUMMY_MIGRATIONS.filter(m => m.status === 'PENDING').length;
 
-  const [showTargetModal, setShowTargetModal] = useState(false);
-  const [gymSearchTerm, setGymSearchTerm] = useState('');
-  const [isGymDropdownOpen, setIsGymDropdownOpen] = useState(false);
-  const [selectedGymId, setSelectedGymId] = useState('');
+
+
+
+
   
   const filteredGymsForDropdown = DUMMY_TENANTS.filter(t => t.name.toLowerCase().includes(gymSearchTerm.toLowerCase()));
   const selectedGym = DUMMY_TENANTS.find(t => t.id === selectedGymId);

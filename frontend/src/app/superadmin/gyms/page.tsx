@@ -11,10 +11,11 @@ import { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
 export default function GymsList() {
   const { data: DUMMY_TENANTS, loading, error } = useSuperadminData<Tenant[]>(SuperadminUrlConfig.BACKEND_API.GYMS_BASE);
 
-  if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]">Loading...</div>;
+    const [search, setSearch] = useState('');
+if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]">Loading...</div>;
   if (error || !DUMMY_TENANTS) return <div className="p-8 text-center text-[var(--danger)]">Error loading data.</div>;
 
-  const [search, setSearch] = useState('');
+
   
   const filteredGyms = DUMMY_TENANTS.filter(g => 
     g.name.toLowerCase().includes(search.toLowerCase()) || 
