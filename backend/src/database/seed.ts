@@ -27,6 +27,7 @@ const AppDataSource = new DataSource({
   type: 'postgres',
   url: process.env.DATABASE_URL,
   synchronize: true, // Auto-create tables for the seed
+  dropSchema: true, // Wipe existing schema to avoid conflict
   entities: [
     User,
     Plan,
@@ -163,6 +164,7 @@ async function main() {
       paidAmount: 2500,
       pendingAmount: 0,
       status: 'ACTIVE',
+      billingCycle: 'ONE_MONTH' as any,
     },
   ];
   for (const m of membersData) {

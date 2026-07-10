@@ -9,7 +9,7 @@ import { UseLoginFormReturn, loginSchema, LoginFormData } from '@/app/(auth)/log
 export function useLoginForm(): UseLoginFormReturn {
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: '', password: '' },
+    defaultValues: { email: 'admin@gymsmart.com', password: 'superadmin123' },
   });
 
   const [loading, setLoading] = useState(false);
