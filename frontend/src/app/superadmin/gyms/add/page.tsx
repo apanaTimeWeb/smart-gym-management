@@ -10,8 +10,6 @@ import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { OnboardGymSchema, OnboardGymFormValues } from '@/app/superadmin/superadmin_utils/SuperadminValidation';
 import toast from 'react-hot-toast';
 
-export const metadata = { title: 'Provision Tenant | GymSmart SaaS' };
-
 export default function AddGymPage() {
   const router = useRouter();
   const [isProvisioning, setIsProvisioning] = useState(false);
