@@ -66,7 +66,7 @@ export class FindDashboardService {
         name: t.name,
         ownerName: t.ownerName,
         plan: t.plan || 'BASIC',
-        createdAt: new Date(t.createdAt).toLocaleDateString()
+        createdAt: new Date(t.createdAt || 0).toLocaleDateString()
       }));
 
     return {

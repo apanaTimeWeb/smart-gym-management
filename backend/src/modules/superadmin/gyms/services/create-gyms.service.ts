@@ -46,9 +46,11 @@ export class CreateGymsService {
     try {
       await this.provisionTenantService.provisionNewTenant(gym.id, dto.adminEmail, dto.ownerName, dto.temporaryPassword);
       gym.status = TenantStatus.ACTIVE;
+      await this.repository.update(gym.id, { status: TenantStatus.ACTIVE });
     } catch (err) {
       this.logger.error('Failed to provision tenant DB', err);
       gym.status = TenantStatus.SUSPENDED;
+      await this.repository.update(gym.id, { status: TenantStatus.SUSPENDED });
     }
     
     return { success: true, data: gym };
