@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
 import {  } from '../settings.interfaces';
 
-@Entity('settings')
+@Entity('saas_settings')
 export class GlobalSetting {
   @PrimaryGeneratedColumn('uuid')
   id: string;

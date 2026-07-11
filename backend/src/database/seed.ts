@@ -28,22 +28,7 @@ const AppDataSource = new DataSource({
   url: process.env.DATABASE_URL,
   synchronize: true, // Auto-create tables for the seed
   dropSchema: true, // Wipe existing schema to avoid conflict
-  entities: [
-    User,
-    Plan,
-    Staff,
-    Member,
-    Payment,
-    Product,
-    Exercise,
-    DietPlan,
-    Inquiry,
-    Settings,
-    Payroll,
-    Attendance,
-    Order,
-    OrderItem,
-  ],
+  entities: [__dirname + '/../**/*.entity{.ts,.js}'],
 });
 
 async function main() {
@@ -82,33 +67,33 @@ async function main() {
 
   // 2. Plans
   const plans = [
-    {
+    AppDataSource.manager.create(Plan, {
       name: 'Basic',
       tier: 'BASIC' as any,
       price1Month: 1200,
       price3Month: 3000,
       price6Month: 5500,
       price12Month: 10000,
-      features: ['Gym Access', 'Locker'],
-    },
-    {
+      features: ['Gym Access', 'Locker'] as any,
+    }),
+    AppDataSource.manager.create(Plan, {
       name: 'Gold',
       tier: 'GOLD' as any,
-      price1Month: 1800,
-      price3Month: 4500,
-      price6Month: 8000,
-      price12Month: 15000,
-      features: ['Gym Access', 'Group Classes'],
-    },
-    {
+      price1Month: 2000,
+      price3Month: 5000,
+      price6Month: 9500,
+      price12Month: 18000,
+      features: ['Gym Access', 'Locker', 'Cardio', 'Diet Plan'] as any,
+    }),
+    AppDataSource.manager.create(Plan, {
       name: 'Premium',
       tier: 'PREMIUM' as any,
       price1Month: 2500,
       price3Month: 6500,
       price6Month: 12000,
       price12Month: 22000,
-      features: ['24/7 Access', 'PT'],
-    },
+      features: ['24/7 Access', 'PT'] as any,
+    }),
   ];
   for (const p of plans) {
     const plan = await planRepo.findOne({ where: { name: p.name } });

@@ -58,12 +58,24 @@ export class FindDashboardService {
       value: totalGyms > 0 ? (g.value / totalGyms) * monthlyRecurringRevenue : 0
     }));
 
+    const recentOnboards = [...allGyms]
+      .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
+      .slice(0, 5)
+      .map(t => ({
+        id: t.id,
+        name: t.name,
+        ownerName: t.ownerName,
+        plan: t.plan || 'BASIC',
+        createdAt: new Date(t.createdAt).toLocaleDateString()
+      }));
+
     return {
       metrics: {
         monthlyRecurringRevenue,
         totalGyms,
         activeGyms,
-        totalEndUsers
+        totalEndUsers,
+        recentOnboards
       },
       revenue,
       growth

@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
 import {  } from '../plans.interfaces';
 
-@Entity('plans')
+@Entity('subscription_plans')
 export class SubscriptionPlan {
   @PrimaryGeneratedColumn('uuid')
   id: string;

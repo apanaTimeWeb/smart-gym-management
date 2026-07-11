@@ -1,6 +1,7 @@
 export const ROUTES = {
   LOGIN: '/auth/login',
   DASHBOARD: '/erp/dashboard',
+  SUPERADMIN_DASHBOARD: '/superadmin/dashboard',
   ERP_PREFIXES: [
     '/erp/dashboard',
     '/erp/members',
