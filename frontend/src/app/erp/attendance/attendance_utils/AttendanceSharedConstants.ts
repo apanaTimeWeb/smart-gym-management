@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 export const formatDate = (d: string) => 
  new Date(d).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
 
@@ -11,7 +13,32 @@ export const ATTENDANCE_TABLE_HEADERS = [
 export const ATTENDANCE_TABS = ['All', 'Members', 'Staff'] as const;
 export type AttendanceTab = typeof ATTENDANCE_TABS[number];
 
-export const EMPTY_ATTENDANCE_FORM = { 
+export const AttendanceSchema = z.object({
+  type: z.enum(['MEMBER', 'STAFF']),
+  memberId: z.string().optional(),
+  staffId: z.string().optional(),
+  date: z.string().min(1, 'Date is required'),
+  checkIn: z.string().min(1, 'Time is required')
+}).superRefine((data, ctx) => {
+  if (data.type === 'MEMBER' && !data.memberId) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Member is required',
+      path: ['memberId']
+    });
+  }
+  if (data.type === 'STAFF' && !data.staffId) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Staff is required',
+      path: ['staffId']
+    });
+  }
+});
+
+export type AttendanceFormValues = z.infer<typeof AttendanceSchema>;
+
+export const EMPTY_ATTENDANCE_FORM: AttendanceFormValues = { 
  type: 'MEMBER', 
  memberId: '', 
  staffId: '', 

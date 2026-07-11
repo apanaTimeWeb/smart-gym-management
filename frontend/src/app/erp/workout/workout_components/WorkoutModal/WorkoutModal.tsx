@@ -1,136 +1,160 @@
 "use client";
 
+import { useEffect } from 'react';
 import { X, Save } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useWorkoutContext } from '@/app/erp/workout/workout_context/WorkoutContext';
-import { WORKOUT_LEVEL_OPTIONS } from '@/app/erp/workout/workout_utils/WorkoutSharedConstants';
+import { WORKOUT_LEVEL_OPTIONS, WorkoutSchema, type WorkoutFormValues, EMPTY_WORKOUT_FORM } from '@/app/erp/workout/workout_utils/WorkoutSharedConstants';
 
 export default function WorkoutModal() {
- const { 
- showWkModal, setShowWkModal, 
- editWkId, wkForm, setWkForm, 
- saveWk 
- } = useWorkoutContext();
+  const { 
+    showWkModal, setShowWkModal, 
+    editWkId, wkForm, 
+    saveWk, saving 
+  } = useWorkoutContext();
 
- if (!showWkModal) return null;
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors }
+  } = useForm<WorkoutFormValues>({
+    resolver: zodResolver(WorkoutSchema),
+    defaultValues: wkForm || EMPTY_WORKOUT_FORM
+  });
 
- return (
- <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
- <div className="bg-[var(--workout-bg-card)] rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
- <div className="flex justify-between items-center p-5 border-b border-[var(--workout-border)]">
- <h3 className="font-bold text-lg text-[var(--workout-text-primary)]">
- {editWkId ? 'Edit Workout Plan' : 'Add Workout Plan'}
- </h3>
- <button 
- onClick={() => setShowWkModal(false)} 
- className="text-[var(--workout-text-secondary)] hover:text-[var(--workout-text-primary)] hover:bg-[var(--primary-subtle)] p-1 rounded-md transition-colors"
- >
- <X size={20} />
- </button>
- </div>
- <form onSubmit={saveWk} className="p-5 space-y-4">
- <div>
- <label className="block text-sm font-medium text-[var(--workout-text-secondary)] mb-1">Plan Name *</label>
- <input 
- required 
- type="text" 
- value={wkForm.name} 
- onChange={e => setWkForm({ ...wkForm, name: e.target.value })} 
- className="w-full px-3 py-2 border border-[var(--workout-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--workout-bg-input)] text-[var(--workout-text-primary)]" 
- />
- </div>
- 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
- <div>
- <label className="block text-sm font-medium text-[var(--workout-text-secondary)] mb-1">Level</label>
- <select 
- value={wkForm.level} 
- onChange={e => setWkForm({ ...wkForm, level: e.target.value })} 
- className="w-full px-3 py-2 border border-[var(--workout-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--workout-bg-input)] text-[var(--workout-text-primary)]"
- >
- {WORKOUT_LEVEL_OPTIONS.map(l => <option key={l}>{l}</option>)}
- </select>
- </div>
- <div>
- <label className="block text-sm font-medium text-[var(--workout-text-secondary)] mb-1">Days per week</label>
- <input 
- required 
- type="number" 
- min="1" 
- max="7" 
- value={wkForm.days} 
- onChange={e => setWkForm({ ...wkForm, days: e.target.value })} 
- className="w-full px-3 py-2 border border-[var(--workout-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--workout-bg-input)] text-[var(--workout-text-primary)]" 
- />
- </div>
- </div>
- 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
- <div>
- <label className="block text-sm font-medium text-[var(--workout-text-secondary)] mb-1">Focus Area</label>
- <input 
- required 
- type="text" 
- placeholder="e.g. Hypertrophy" 
- value={wkForm.focus} 
- onChange={e => setWkForm({ ...wkForm, focus: e.target.value })} 
- className="w-full px-3 py-2 border border-[var(--workout-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--workout-bg-input)] text-[var(--workout-text-primary)]" 
- />
- </div>
- <div>
- <label className="block text-sm font-medium text-[var(--workout-text-secondary)] mb-1">Duration</label>
- <input 
- required 
- type="text" 
- placeholder="e.g. 60 min" 
- value={wkForm.duration} 
- onChange={e => setWkForm({ ...wkForm, duration: e.target.value })} 
- className="w-full px-3 py-2 border border-[var(--workout-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--workout-bg-input)] text-[var(--workout-text-primary)]" 
- />
- </div>
- </div>
- 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
- <div>
- <label className="block text-sm font-medium text-[var(--workout-text-secondary)] mb-1">No. of Exercises</label>
- <input 
- required 
- type="number" 
- min="1" 
- value={wkForm.exercises} 
- onChange={e => setWkForm({ ...wkForm, exercises: e.target.value })} 
- className="w-full px-3 py-2 border border-[var(--workout-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--workout-bg-input)] text-[var(--workout-text-primary)]" 
- />
- </div>
- <div>
- <label className="block text-sm font-medium text-[var(--workout-text-secondary)] mb-1">Tags (comma separated)</label>
- <input 
- type="text" 
- placeholder="e.g. PPL, Classic" 
- value={wkForm.tags} 
- onChange={e => setWkForm({ ...wkForm, tags: e.target.value })} 
- className="w-full px-3 py-2 border border-[var(--workout-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--workout-bg-input)] text-[var(--workout-text-primary)]" 
- />
- </div>
- </div>
- 
- <div className="pt-2 flex justify-end gap-3">
- <button 
- type="button" 
- onClick={() => setShowWkModal(false)} 
- className="px-4 py-2 border border-[var(--workout-border)] rounded-lg font-medium text-[var(--workout-text-secondary)] hover:text-[var(--workout-text-primary)] hover:bg-[var(--primary-subtle)] transition-colors"
- >
- Cancel
- </button>
- <button 
- type="submit" 
- className="px-4 py-2 rounded-lg font-medium text-white flex items-center gap-2 hover:opacity-90 transition-opacity" 
- style={{ background: 'var(--workout-highlight)' }}
- >
- <Save size={15} /> Save
- </button>
- </div>
- </form>
- </div>
- </div>
- );
+  useEffect(() => {
+    if (showWkModal) {
+      reset(wkForm);
+    }
+  }, [showWkModal, wkForm, reset]);
+
+  if (!showWkModal) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+      <div className="bg-[var(--workout-bg-card)] rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
+        <div className="flex justify-between items-center p-5 border-b border-[var(--workout-border)]">
+          <h3 className="font-bold text-lg text-[var(--workout-text-primary)]">
+            {editWkId ? 'Edit Workout Plan' : 'Add Workout Plan'}
+          </h3>
+          <button 
+            type="button"
+            onClick={() => setShowWkModal(false)} 
+            className="text-[var(--workout-text-secondary)] hover:text-[var(--workout-text-primary)] hover:bg-[var(--primary-subtle)] p-1 rounded-md transition-colors"
+          >
+            <X size={20} />
+          </button>
+        </div>
+        <form onSubmit={handleSubmit(saveWk as any)} className="p-5 space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-[var(--workout-text-secondary)] mb-1">Plan Name *</label>
+            <input 
+              type="text" 
+              {...register('name')}
+              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                errors.name ? 'border-[var(--danger)] focus:ring-[var(--danger)]' : 'border-[var(--workout-border)] focus:ring-[var(--warning)]'
+              } bg-[var(--workout-bg-input)] text-[var(--workout-text-primary)]`} 
+            />
+            {errors.name && <p className="text-[var(--danger)] text-xs mt-1">{errors.name.message}</p>}
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-[var(--workout-text-secondary)] mb-1">Level</label>
+              <select 
+                {...register('level')}
+                className="w-full px-3 py-2 border border-[var(--workout-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--workout-bg-input)] text-[var(--workout-text-primary)]"
+              >
+                {WORKOUT_LEVEL_OPTIONS.map(l => <option key={l}>{l}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[var(--workout-text-secondary)] mb-1">Days per week</label>
+              <input 
+                type="number" 
+                min="1" 
+                max="7" 
+                {...register('days')}
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                  errors.days ? 'border-[var(--danger)] focus:ring-[var(--danger)]' : 'border-[var(--workout-border)] focus:ring-[var(--warning)]'
+                } bg-[var(--workout-bg-input)] text-[var(--workout-text-primary)]`} 
+              />
+              {errors.days && <p className="text-[var(--danger)] text-xs mt-1">{errors.days.message}</p>}
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-[var(--workout-text-secondary)] mb-1">Focus Area</label>
+              <input 
+                type="text" 
+                placeholder="e.g. Hypertrophy" 
+                {...register('focus')}
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                  errors.focus ? 'border-[var(--danger)] focus:ring-[var(--danger)]' : 'border-[var(--workout-border)] focus:ring-[var(--warning)]'
+                } bg-[var(--workout-bg-input)] text-[var(--workout-text-primary)]`} 
+              />
+              {errors.focus && <p className="text-[var(--danger)] text-xs mt-1">{errors.focus.message}</p>}
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[var(--workout-text-secondary)] mb-1">Duration</label>
+              <input 
+                type="text" 
+                placeholder="e.g. 60 min" 
+                {...register('duration')}
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                  errors.duration ? 'border-[var(--danger)] focus:ring-[var(--danger)]' : 'border-[var(--workout-border)] focus:ring-[var(--warning)]'
+                } bg-[var(--workout-bg-input)] text-[var(--workout-text-primary)]`} 
+              />
+              {errors.duration && <p className="text-[var(--danger)] text-xs mt-1">{errors.duration.message}</p>}
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-[var(--workout-text-secondary)] mb-1">No. of Exercises</label>
+              <input 
+                type="number" 
+                min="1" 
+                {...register('exercises')}
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                  errors.exercises ? 'border-[var(--danger)] focus:ring-[var(--danger)]' : 'border-[var(--workout-border)] focus:ring-[var(--warning)]'
+                } bg-[var(--workout-bg-input)] text-[var(--workout-text-primary)]`} 
+              />
+              {errors.exercises && <p className="text-[var(--danger)] text-xs mt-1">{errors.exercises.message}</p>}
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[var(--workout-text-secondary)] mb-1">Tags (comma separated)</label>
+              <input 
+                type="text" 
+                placeholder="e.g. PPL, Classic" 
+                {...register('tags')}
+                className="w-full px-3 py-2 border border-[var(--workout-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--workout-bg-input)] text-[var(--workout-text-primary)]" 
+              />
+            </div>
+          </div>
+          
+          <div className="pt-2 flex justify-end gap-3">
+            <button 
+              type="button" 
+              onClick={() => setShowWkModal(false)} 
+              className="px-4 py-2 border border-[var(--workout-border)] rounded-lg font-medium text-[var(--workout-text-secondary)] hover:text-[var(--workout-text-primary)] hover:bg-[var(--primary-subtle)] transition-colors"
+            >
+              Cancel
+            </button>
+            <button 
+              type="submit" 
+              disabled={saving}
+              className="px-4 py-2 rounded-lg font-medium text-white flex items-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-70" 
+              style={{ background: 'var(--workout-highlight)' }}
+            >
+              {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><Save size={15} /> Save</>}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 }

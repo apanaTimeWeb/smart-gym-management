@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 export const FINANCE_METHOD_STYLES: Record<string, { bg: string; text: string }> = {
  UPI: { bg: 'var(--finance-method-upi-bg)', text: 'var(--finance-method-upi-text)' },
  Cash: { bg: 'var(--finance-method-cash-bg)', text: 'var(--finance-method-cash-text)' },
@@ -16,3 +18,18 @@ export const FINANCE_PAYMENT_METHODS = ['UPI', 'Cash', 'Card', 'NetBanking'];
 export const PAYMENTS_TABLE_HEADERS = ['Invoice No', 'Member', 'Amount', 'Method', 'Status', 'Date'];
 
 export const FINANCE_TABS = ['Payments', 'Summary'];
+
+export const AddPaymentSchema = z.object({
+  memberId: z.string().refine(val => !isNaN(Number(val)) && Number(val) > 0, 'Valid Member ID required'),
+  amount: z.string().refine(val => !isNaN(Number(val)) && Number(val) > 0, 'Valid amount required'),
+  method: z.string(),
+  notes: z.string().optional()
+});
+export type AddPaymentFormValues = z.infer<typeof AddPaymentSchema>;
+
+export const EMPTY_PAYMENT_FORM: AddPaymentFormValues = {
+  memberId: '',
+  amount: '',
+  method: 'UPI',
+  notes: ''
+};

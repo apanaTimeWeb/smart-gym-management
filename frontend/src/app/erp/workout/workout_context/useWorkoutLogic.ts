@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { 
-  EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM 
+  EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM, WorkoutFormValues, ExerciseFormValues
 } from '@/app/erp/workout/workout_utils/WorkoutSharedConstants';
 import { WorkoutContextType, Workout } from '@/app/erp/workout/workout_types/workout_types';
 import { useConfirm } from '@/app/erp/erp_components/ErpFeedback/ErpConfirmProvider';
@@ -85,15 +85,14 @@ export function useWorkoutLogic(): WorkoutContextType {
     setShowWkModal(true); 
   }, []);
   
-  const saveWk = useCallback(async (e: React.FormEvent) => {
-    e.preventDefault();
+  const saveWk = useCallback(async (data: WorkoutFormValues) => {
     setSaving(true);
     try {
       const payload = { 
-        ...wkForm, 
-        days: Number(wkForm.days), 
-        exercises: Number(wkForm.exercises), 
-        tags: wkForm.tags.split(',').map(t => t.trim()).filter(Boolean) 
+        ...data, 
+        days: Number(data.days), 
+        exercises: Number(data.exercises), 
+        tags: data.tags.split(',').map(t => t.trim()).filter(Boolean) 
       };
       
       if (editWkId) {
@@ -110,7 +109,7 @@ export function useWorkoutLogic(): WorkoutContextType {
     } finally {
       setSaving(false);
     }
-  }, [editWkId, wkForm, loadAll, showToast]);
+  }, [editWkId, loadAll, showToast]);
   
   const deleteWk = useCallback(async (id: number) => { 
     const isConfirmed = await confirm({ title: 'Delete Workout', message: 'Delete this workout plan?', confirmText: 'Delete', type: 'danger' });
@@ -142,12 +141,11 @@ export function useWorkoutLogic(): WorkoutContextType {
     setShowExModal(true); 
   }, []);
   
-  const saveEx = useCallback(async (e: React.FormEvent) => {
-    e.preventDefault();
+  const saveEx = useCallback(async (data: ExerciseFormValues) => {
     setSaving(true);
     try {
       // adapt to Exercise backend payload shape if needed, here we pass the form
-      const payload = { ...exForm, muscleGroup: exForm.muscle.split(',').map(s => s.trim()) };
+      const payload = { ...data, muscleGroup: data.muscle.split(',').map(s => s.trim()) };
       if (editExId) {
         const res = await libraryApi.updateExercise(editExId, payload);
         showToast((res as any).message, 'success');
@@ -162,7 +160,7 @@ export function useWorkoutLogic(): WorkoutContextType {
     } finally {
       setSaving(false);
     }
-  }, [editExId, exForm, loadAll, showToast]);
+  }, [editExId, loadAll, showToast]);
   
   const deleteEx = useCallback(async (id: number) => { 
     const isConfirmed = await confirm({ title: 'Delete Exercise', message: 'Delete this exercise?', confirmText: 'Delete', type: 'danger' });

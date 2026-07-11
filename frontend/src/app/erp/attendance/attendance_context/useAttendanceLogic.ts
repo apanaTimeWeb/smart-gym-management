@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { attendanceApi, membersApi, hrApi, type Attendance, type Member, type Staff } from '@/lib/api';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
-import { EMPTY_ATTENDANCE_FORM, ATTENDANCE_TABS, type AttendanceTab } from '@/app/erp/attendance/attendance_utils/AttendanceSharedConstants';
+import { EMPTY_ATTENDANCE_FORM, ATTENDANCE_TABS, type AttendanceTab, AttendanceFormValues } from '@/app/erp/attendance/attendance_utils/AttendanceSharedConstants';
 import { AttendanceContextType } from '@/app/erp/attendance/attendance_types/attendance_types';
 
 export function useAttendanceLogic(): AttendanceContextType {
@@ -45,19 +45,18 @@ export function useAttendanceLogic(): AttendanceContextType {
 
  useEffect(() => { loadAll(); }, [loadAll]);
 
- const markAttendance = useCallback(async (e: React.FormEvent) => {
- e.preventDefault();
- setSaving(true);
- try {
- const dateTime = new Date(`${form.date}T${form.checkIn}:00`);
- // eslint-disable-next-line @typescript-eslint/no-explicit-any
- const payload: any = { type: form.type, date: dateTime.toISOString(), checkIn: dateTime.toISOString() };
- 
- if (form.type === 'MEMBER') {
- payload.memberId = Number(form.memberId);
- } else {
- payload.staffId = Number(form.staffId);
- }
+  const markAttendance = useCallback(async (data: AttendanceFormValues) => {
+    setSaving(true);
+    try {
+      const dateTime = new Date(`${data.date}T${data.checkIn}:00`);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const payload: any = { type: data.type, date: dateTime.toISOString(), checkIn: dateTime.toISOString() };
+      
+      if (data.type === 'MEMBER') {
+        payload.memberId = Number(data.memberId);
+      } else {
+        payload.staffId = Number(data.staffId);
+      }
  
  const res = await attendanceApi.mark(payload);
  showToast((res as any).message, 'success');
@@ -66,10 +65,10 @@ export function useAttendanceLogic(): AttendanceContextType {
  await loadAll();
  } catch (err) { 
  showToast((err as Error).message, 'error'); 
- } finally { 
- setSaving(false); 
- }
- }, [form, loadAll, showToast]);
+    } finally { 
+      setSaving(false); 
+    }
+  }, [loadAll, showToast]);
 
   return {
     records, todayStats, members, staff,
