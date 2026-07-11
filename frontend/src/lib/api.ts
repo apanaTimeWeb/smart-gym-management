@@ -251,7 +251,7 @@ export const attendanceApi = {
     apiFetch(AttendanceUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body) }),
   getAll: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<{ success: boolean; data: Attendance[] }>(`${AttendanceUrlConfig.BACKEND_API.BASE}${q}`);
+    return apiFetch<{ success: boolean; data: { attendance: Attendance[], total: number } }>(`${AttendanceUrlConfig.BACKEND_API.BASE}${q}`);
   },
   getTodayStats: () =>
     apiFetch<{ success: boolean; data: { totalCheckIns: number; memberCheckIns: number; staffCheckIns: number } }>(
@@ -289,7 +289,7 @@ export const storeApi = {
 export const workoutApi = {
   getWorkouts: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<{ success: boolean; data: Workout[] }>(`${WorkoutUrlConfig.BACKEND_API.WORKOUTS_BASE}${q}`);
+    return apiFetch<{ success: boolean; data: { workouts: Workout[], total: number } }>(`${WorkoutUrlConfig.BACKEND_API.WORKOUTS_BASE}${q}`);
   },
   createWorkout: (body: Partial<Workout>) =>
     apiFetch(WorkoutUrlConfig.BACKEND_API.WORKOUTS_BASE, { method: 'POST', body: JSON.stringify(body) }),
@@ -301,7 +301,7 @@ export const workoutApi = {
 export const libraryApi = {
   getExercises: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<{ success: boolean; data: { Exercises: Exercise[]; total: number } }>(`${LibraryUrlConfig.BACKEND_API.EXERCISES_BASE}${q}`);
+    return apiFetch<{ success: boolean; data: { exercises: Exercise[], total: number } }>(`${LibraryUrlConfig.BACKEND_API.EXERCISES_BASE}${q}`);
   },
   createExercise: (body: Partial<Exercise>) =>
     apiFetch(LibraryUrlConfig.BACKEND_API.EXERCISES_BASE, { method: 'POST', body: JSON.stringify(body) }),

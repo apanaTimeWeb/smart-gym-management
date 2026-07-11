@@ -76,28 +76,28 @@ export function useMembersLogic(initialData?: any): MembersContextType {
     loadAll(); 
   }, [loadAll, initialData]);
 
- const loadMemberProfile = async (memberId: number) => {
- try {
- const pRes = await financeApi.getByMember(memberId);
- setPayments(pRes.data);
- 
- const aRes = await attendanceApi.getAll({ memberId: memberId.toString() });
- 
- if (aRes.success) {
- const daysInMonth = 30;
- const realAtt = Array.from({ length: daysInMonth }, (_, i) => {
- const d = i + 1;
- // eslint-disable-next-line @typescript-eslint/no-explicit-any
- const rec = aRes.data.find((a: any) => new Date(a.date).getDate() === d);
- return { day: d, status: rec ? 'P' : 'A' };
- });
- setAttMap(prev => ({ ...prev, [memberId]: realAtt }));
- }
- } catch { 
- setPayments([]); 
- setAttMap(prev => ({ ...prev, [memberId]: [] }));
- }
- };
+  const loadMemberProfile = useCallback(async (memberId: number) => {
+    try {
+      const pRes = await financeApi.getByMember(memberId);
+      setPayments(pRes.data);
+      
+      const aRes = await attendanceApi.getAll({ memberId: memberId.toString() });
+      
+      if (aRes.success) {
+        const daysInMonth = 30;
+        const realAtt = Array.from({ length: daysInMonth }, (_, i) => {
+          const d = i + 1;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const rec = aRes.data.attendance?.find((a: any) => new Date(a.date).getDate() === d);
+          return { day: d, status: rec ? 'P' : 'A' };
+        });
+        setAttMap(prev => ({ ...prev, [memberId]: realAtt }));
+      }
+    } catch { 
+      setPayments([]); 
+      setAttMap(prev => ({ ...prev, [memberId]: [] }));
+    }
+  }, []);
 
  const getAtt = useCallback((id: number) => attMap[id] || [], [attMap]);
  

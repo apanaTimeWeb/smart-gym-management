@@ -2,8 +2,9 @@
 
 import { useEffect } from 'react';
 import { X, Save } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 import { useWorkoutContext } from '@/app/erp/workout/workout_context/WorkoutContext';
 import { WORKOUT_LEVEL_OPTIONS, WorkoutSchema, type WorkoutFormValues, EMPTY_WORKOUT_FORM } from '@/app/erp/workout/workout_utils/WorkoutSharedConstants';
 
@@ -18,6 +19,7 @@ export default function WorkoutModal() {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors }
   } = useForm<WorkoutFormValues>({
     resolver: zodResolver(WorkoutSchema),
@@ -62,14 +64,20 @@ export default function WorkoutModal() {
           
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-[var(--workout-text-secondary)] mb-1">Level</label>
-              <select 
-                {...register('level')}
-                className="w-full px-3 py-2 border border-[var(--workout-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--workout-bg-input)] text-[var(--workout-text-primary)]"
-              >
-                {WORKOUT_LEVEL_OPTIONS.map(l => <option key={l}>{l}</option>)}
-              </select>
-            </div>
+            <label className="block text-sm font-medium text-[var(--workout-text-secondary)] mb-1">Level</label>
+            <Controller
+              name="level"
+              control={control}
+              render={({ field }) => (
+                <SearchableDropdown
+                  options={['Beginner', 'Intermediate', 'Advanced'].map(l => ({ label: l, value: l }))}
+                  value={field.value}
+                  onChange={field.onChange}
+                  placeholder="Select Level..."
+                />
+              )}
+            />
+          </div>
             <div>
               <label className="block text-sm font-medium text-[var(--workout-text-secondary)] mb-1">Days per week</label>
               <input 

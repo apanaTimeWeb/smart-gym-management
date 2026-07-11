@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useMemo } from 'react';
+import React, { createContext, useContext } from 'react';
 import { MembersContextType } from '@/app/erp/members/members_types/members_types';
 import { useMembersLogic } from '@/app/erp/members/members_context/useMembersLogic';
 
@@ -15,17 +15,8 @@ export function MembersProvider({ children, initialData }: { children: React.Rea
    toast, selectedMember, profileTab, attMap,
    showAddModal, editId, editData, msgModal, printData
  } = logic;
-
- // eslint-disable-next-line react-hooks/exhaustive-deps
- const value = useMemo(() => logic, [
-   members, plans, payments, stats, loading, saving, totalMembers,
-   search, debouncedSearch, statusFilter, currentPage,
-   toast, selectedMember, profileTab, attMap,
-   showAddModal, editId, editData, msgModal, printData
- ]);
-
  return (
- <MembersContext.Provider value={value}>
+ <MembersContext.Provider value={logic}>
  {children}
  </MembersContext.Provider>
  );

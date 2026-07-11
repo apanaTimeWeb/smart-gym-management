@@ -7,11 +7,10 @@ import { EXERCISE_TABLE_HEADERS } from '@/app/erp/workout/workout_utils/WorkoutS
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
 
 export default function ExerciseTable() {
-  const { filteredEx, search, currentPage, setCurrentPage, openEditEx, deleteEx } = useWorkoutContext();
+  const { exercises, totalExercises, search, currentPage, setCurrentPage, openEditEx, deleteEx } = useWorkoutContext();
 
   const ITEMS_PER_PAGE = 10;
-  const totalPages = Math.ceil(filteredEx.length / ITEMS_PER_PAGE);
-  const currentData = filteredEx.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(totalExercises / ITEMS_PER_PAGE) || 1;
 
   return (
     <div className="flex flex-col h-full min-h-[400px]">
@@ -27,7 +26,7 @@ export default function ExerciseTable() {
             </tr>
           </thead>
           <tbody className="divide-y divide-[var(--workout-border)]">
-            {currentData.map(ex => (
+            {exercises.map(ex => (
               <tr key={ex.id} className="hover:bg-[var(--workout-hover-bg)] transition-colors cursor-pointer" onClick={() => openEditEx(ex)}>
                 <td className="px-4 py-3 text-sm font-medium text-[var(--workout-text-primary)]">{ex.name}</td>
                 <td className="px-4 py-3 text-sm text-[var(--workout-text-secondary)]">{ex.muscleGroup?.join(', ')}</td>
@@ -65,7 +64,7 @@ export default function ExerciseTable() {
                 </td>
               </tr>
             ))}
-            {filteredEx.length === 0 && (
+            {exercises.length === 0 && (
               <tr>
                 <td colSpan={5} className="text-center py-8 text-[var(--workout-text-secondary)]">
                   No exercises found matching "{search}".
@@ -78,7 +77,7 @@ export default function ExerciseTable() {
       <ErpPagination 
         currentPage={currentPage} 
         totalPages={totalPages} 
-        totalItems={filteredEx.length} 
+        totalItems={totalExercises} 
         itemsPerPage={ITEMS_PER_PAGE} 
         onPageChange={setCurrentPage} 
       />

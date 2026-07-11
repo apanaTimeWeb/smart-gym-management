@@ -1,5 +1,6 @@
 
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
+import { AddPaymentFormValues } from '@/app/erp/finance/finance_utils/FinanceSharedConstants';
 
  export interface FinanceContextType {
   payments: Payment[];
@@ -17,6 +18,7 @@ import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
   setSearch: (s: string) => void;
   currentPage: number;
   setCurrentPage: (p: number) => void;
+  savePayment: (data: AddPaymentFormValues) => Promise<void>;
 }
 
 export interface Payment {

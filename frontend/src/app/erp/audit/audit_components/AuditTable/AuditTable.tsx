@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useAuditTable } from './useAuditTable';
-import { AUDIT_TABLE_HEADERS } from '../../audit_constants/AuditConstants';
+import { AUDIT_TABLE_HEADERS } from '../../audit_utils/AuditSharedConstants';
 import '../../audit.css';
 
 export const AuditTable = () => {

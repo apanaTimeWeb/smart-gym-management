@@ -1,8 +1,9 @@
-import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { 
   EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM, WorkoutFormValues, ExerciseFormValues
 } from '@/app/erp/workout/workout_utils/WorkoutSharedConstants';
 import { WorkoutContextType, Workout } from '@/app/erp/workout/workout_types/workout_types';
+import useDebounce from '@/app/erp/erp_utils/useDebounce';
 import { useConfirm } from '@/app/erp/erp_components/ErpFeedback/ErpConfirmProvider';
 import { workoutApi, libraryApi } from '@/lib/api';
 import type { Exercise } from '@/lib/api';
@@ -12,10 +13,13 @@ export function useWorkoutLogic(): WorkoutContextType {
   const { confirm } = useConfirm();
   const [tab, setTab] = useState('Workout Plans');
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
   const [currentPage, setCurrentPage] = useState(1);
   
   const [workouts, setWorkouts] = useState<Workout[]>([]);
+  const [totalWorkouts, setTotalWorkouts] = useState(0);
   const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [totalExercises, setTotalExercises] = useState(0);
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -35,34 +39,30 @@ export function useWorkoutLogic(): WorkoutContextType {
   const loadAll = useCallback(async () => {
     setLoading(true);
     try {
+      const params: Record<string, string> = {
+        limit: '12',
+        page: currentPage.toString()
+      };
+      if (debouncedSearch) params.search = debouncedSearch;
+
       const [wkRes, exRes] = await Promise.all([
-        workoutApi.getWorkouts(),
-        libraryApi.getExercises(),
+        workoutApi.getWorkouts(params),
+        libraryApi.getExercises(params),
       ]);
-      setWorkouts(wkRes.data);
-      setExercises(Array.isArray(exRes.data) ? exRes.data : (exRes.data as any).Exercises || []);
+      setWorkouts(wkRes.data.workouts || []);
+      setTotalWorkouts(wkRes.data.total || 0);
+      setExercises(exRes.data.exercises || []);
+      setTotalExercises(exRes.data.total || 0);
     } catch (e) {
       showToast((e as Error).message, 'error');
     } finally {
       setLoading(false);
     }
-  }, [showToast]);
+  }, [showToast, currentPage, debouncedSearch]);
 
   useEffect(() => { loadAll(); }, [loadAll]);
 
   // Derived state
-  const filteredWk = useMemo(() => 
-    workouts.filter(w => w.name.toLowerCase().includes(search.toLowerCase())),
-    [workouts, search]
-  );
-  
-  const filteredEx = useMemo(() => 
-    exercises.filter(ex => 
-      ex.name.toLowerCase().includes(search.toLowerCase()) || 
-      ex.muscleGroup?.join(' ').toLowerCase().includes(search.toLowerCase())
-    ),
-    [exercises, search]
-  );
 
   // Workout CRUD
   const openAddWk = useCallback(() => { 
@@ -176,7 +176,7 @@ export function useWorkoutLogic(): WorkoutContextType {
 
   return {
     tab, setTab, search, setSearch, currentPage, setCurrentPage,
-    workouts, exercises, filteredWk, filteredEx,
+    workouts, totalWorkouts, exercises, totalExercises,
     loading, saving, toast, showToast, hideToast, loadAll,
     showWkModal, setShowWkModal, editWkId, wkForm, setWkForm,
     showExModal, setShowExModal, editExId, exForm, setExForm,

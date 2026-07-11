@@ -6,16 +6,15 @@ import { useWorkoutContext } from '@/app/erp/workout/workout_context/WorkoutCont
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
 
 export default function WorkoutPlansGrid() {
-  const { filteredWk, search, currentPage, setCurrentPage, openEditWk, deleteWk } = useWorkoutContext();
+  const { workouts, totalWorkouts, search, currentPage, setCurrentPage, openEditWk, deleteWk } = useWorkoutContext();
 
   const ITEMS_PER_PAGE = 12;
-  const totalPages = Math.ceil(filteredWk.length / ITEMS_PER_PAGE);
-  const currentData = filteredWk.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(totalWorkouts / ITEMS_PER_PAGE) || 1;
 
   return (
     <div className="flex flex-col h-full min-h-[400px]">
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 flex-1 content-start">
-        {currentData.map(w => (
+        {workouts.map(w => (
           <div 
             key={w.id} 
             className="border border-[var(--workout-border)] rounded-xl p-4 hover:border-[var(--info)] dark:hover:border-[var(--info)] hover:shadow-sm transition-all bg-[var(--workout-bg-card)]"
@@ -77,7 +76,7 @@ export default function WorkoutPlansGrid() {
             </p>
           </div>
         ))}
-        {filteredWk.length === 0 && (
+        {workouts.length === 0 && (
           <div className="col-span-full text-center py-10 text-[var(--workout-text-secondary)]">
             No workout plans found matching "{search}".
           </div>
@@ -87,7 +86,7 @@ export default function WorkoutPlansGrid() {
         <ErpPagination 
           currentPage={currentPage} 
           totalPages={totalPages} 
-          totalItems={filteredWk.length} 
+          totalItems={totalWorkouts} 
           itemsPerPage={ITEMS_PER_PAGE} 
           onPageChange={setCurrentPage} 
         />

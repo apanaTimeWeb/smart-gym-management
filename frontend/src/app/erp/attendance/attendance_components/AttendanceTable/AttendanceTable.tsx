@@ -6,18 +6,10 @@ import { ATTENDANCE_TABLE_HEADERS, formatDate, formatTime } from '@/app/erp/atte
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
 
 export default function AttendanceTable() {
-  const { records, tab, loading, search, currentPage, setCurrentPage } = useAttendanceContext();
-
-  const filtered = records.filter(r => {
-    const matchTab = tab === 'All' ? true : tab === 'Members' ? r.type === 'MEMBER' : r.type === 'STAFF';
-    const matchSearch = (r.member?.name || '').toLowerCase().includes(search.toLowerCase()) || 
-                        (r.staff?.name || '').toLowerCase().includes(search.toLowerCase());
-    return matchTab && matchSearch;
-  });
+  const { records, totalRecords, loading, currentPage, setCurrentPage } = useAttendanceContext();
 
   const ITEMS_PER_PAGE = 10;
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;
-  const paginated = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(totalRecords / ITEMS_PER_PAGE) || 1;
 
   return (
  <div className="p-5">
@@ -38,7 +30,7 @@ export default function AttendanceTable() {
  </tr>
  </thead>
  <tbody className="divide-y divide-[var(--attendance-border)]">
- {paginated.map(r => (
+ {records.map(r => (
  <tr key={r.id} className="hover:bg-[var(--primary-subtle)] transition-colors">
  <td className="px-4 py-3">
  <div className="flex items-center gap-2">
@@ -69,7 +61,7 @@ export default function AttendanceTable() {
  <td className="px-4 py-3 text-sm text-[var(--attendance-text-secondary)]">{formatTime(r.checkOut)}</td>
  </tr>
  ))}
- {filtered.length === 0 && !loading && (
+ {records.length === 0 && !loading && (
  <tr>
  <td colSpan={5} className="text-center py-10 text-[var(--attendance-text-secondary)]">
  No attendance records found.

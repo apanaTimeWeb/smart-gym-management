@@ -4,18 +4,18 @@ import { useState, useEffect } from 'react';
 import { useFinanceContext } from '@/app/erp/finance/finance_context/FinanceContext';
 import { FINANCE_PAYMENT_METHODS, AddPaymentSchema, type AddPaymentFormValues, EMPTY_PAYMENT_FORM } from '@/app/erp/finance/finance_utils/FinanceSharedConstants';
 import { X, Save } from 'lucide-react';
-import { financeApi } from '@/lib/api';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 
 export default function AddPaymentModal() {
-  const { showModal, setShowModal, showToast, loadAll } = useFinanceContext();
-  const [saving, setSaving] = useState(false);
+  const { showModal, setShowModal, savePayment, loading } = useFinanceContext();
 
   const {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors }
   } = useForm<AddPaymentFormValues>({
     resolver: zodResolver(AddPaymentSchema),
@@ -31,23 +31,8 @@ export default function AddPaymentModal() {
   if (!showModal) return null;
 
   const handleAddPayment = async (data: AddPaymentFormValues) => {
-    setSaving(true);
-    try {
-      const res = await financeApi.createPayment({ 
-        memberId: Number(data.memberId), 
-        amount: Number(data.amount), 
-        method: data.method, 
-        notes: data.notes 
-      });
-      showToast((res as any).message, 'success');
-      setShowModal(false);
-      reset(EMPTY_PAYMENT_FORM);
-      await loadAll();
-    } catch (err) { 
-      showToast((err as Error).message, 'error'); 
-    } finally { 
-      setSaving(false); 
-    }
+    await savePayment(data);
+    reset(EMPTY_PAYMENT_FORM);
   };
 
   return (
@@ -89,13 +74,18 @@ export default function AddPaymentModal() {
           </div>
           <div>
             <label className="block text-sm font-medium mb-1" style={{ color: 'var(--finance-text-secondary)' }}>Payment Method</label>
-            <select 
-              {...register('method')}
-              className="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--finance-highlight)]"
-              style={{ backgroundColor: 'var(--finance-bg-input)', borderColor: 'var(--finance-border)', color: 'var(--finance-text-primary)' }}
-            >
-              {FINANCE_PAYMENT_METHODS.map(m => <option key={m}>{m}</option>)}
-            </select>
+            <Controller
+              name="method"
+              control={control}
+              render={({ field }) => (
+                <SearchableDropdown
+                  options={FINANCE_PAYMENT_METHODS.map(m => ({ label: m, value: m }))}
+                  value={field.value}
+                  onChange={field.onChange}
+                  placeholder="Select Method..."
+                />
+              )}
+            />
           </div>
           <div>
             <label className="block text-sm font-medium mb-1" style={{ color: 'var(--finance-text-secondary)' }}>Notes (optional)</label>
@@ -118,11 +108,11 @@ export default function AddPaymentModal() {
             </button>
             <button 
               type="submit" 
-              disabled={saving} 
+              disabled={loading} 
               className="flex-1 py-2.5 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 disabled:opacity-70 transition-opacity" 
               style={{ backgroundColor: 'var(--finance-highlight)' }}
             >
-              {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><Save size={15} /> Record Payment</>}
+              {loading ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><Save size={15} /> Record Payment</>}
             </button>
           </div>
         </form>
