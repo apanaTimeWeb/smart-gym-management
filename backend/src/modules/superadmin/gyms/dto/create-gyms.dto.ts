@@ -21,7 +21,6 @@ export class CreateTenantDto {
   @IsString()
   plan: SaaSPlanTier;
 
-  @IsDateString()
   @IsNumber()
   memberCount: number;
 

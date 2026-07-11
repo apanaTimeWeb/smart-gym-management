@@ -1,4 +1,4 @@
-import TableSkeleton from '@/app/erp/erp_components/ErpShared/TableSkeleton';
+import { TableSkeleton } from '@/app/erp/erp_components/ErpShared/TableSkeleton';
 
 export default function AuditLoading() {
   return (
