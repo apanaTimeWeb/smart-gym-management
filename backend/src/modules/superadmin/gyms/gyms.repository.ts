@@ -41,6 +41,13 @@ export class GymsRepository {
   }
 
   async softDelete(id: string): Promise<void> {
-    await this.repo.update(id, { isDeleted: true } as any);
+    const entity = await this.findById(id);
+    if (entity) {
+      const timestamp = new Date().getTime();
+      await this.repo.update(id, { 
+        isDeleted: true,
+        adminEmail: `deleted_${timestamp}_${entity.adminEmail}`
+      } as any);
+    }
   }
 }
