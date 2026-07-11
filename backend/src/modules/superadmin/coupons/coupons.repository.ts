@@ -23,6 +23,10 @@ export class CouponsRepository {
     return await this.repo.findOne({ where: { id, isDeleted: false } });
   }
 
+  async findByCode(code: string): Promise<Coupon | null> {
+    return await this.repo.findOne({ where: { code, isDeleted: false } });
+  }
+
   async update(id: string, data: Partial<Coupon>): Promise<Coupon | null> {
     await this.repo.update(id, data);
     return this.findById(id);

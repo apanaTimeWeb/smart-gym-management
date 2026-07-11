@@ -1,4 +1,8 @@
-export type InvoiceStatus = 'PAID' | 'PENDING' | 'FAILED';
+export enum InvoiceStatus {
+  PAID = 'PAID',
+  PENDING = 'PENDING',
+  FAILED = 'FAILED'
+}
 export interface ISaaSInvoice {
   id: string;
   tenantName: string;

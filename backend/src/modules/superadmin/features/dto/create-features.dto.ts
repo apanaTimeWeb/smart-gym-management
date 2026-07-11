@@ -1,22 +1,19 @@
 import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray, IsEnum } from 'class-validator';
-import type {    } from '../features.interfaces';
+import {  } from '../features.interfaces';
 
 export class CreateFeatureFlagDto {
   @IsString()
-  @IsOptional()
-  name?: string;
+  name: string;
 
   @IsString()
-  @IsOptional()
-  description?: string;
+  description: string;
 
   @IsBoolean()
   @IsOptional()
   isGlobalEnabled?: boolean;
 
   @IsArray()
-  @IsOptional()
-  enabledTenantIds?: string[];
+  enabledTenantIds: string[];
 
 
 }

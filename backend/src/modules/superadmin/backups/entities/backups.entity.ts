@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
-import type {  BackupStatus  } from '../backups.interfaces';
+import { BackupStatus } from '../backups.interfaces';
 
 @Entity('backups')
 export class BackupRecord {

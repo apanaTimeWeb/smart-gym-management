@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
-import type {  MigrationStatus  } from '../migrations.interfaces';
+import { MigrationStatus } from '../migrations.interfaces';
 
 @Entity('migrations')
 export class SchemaMigration {

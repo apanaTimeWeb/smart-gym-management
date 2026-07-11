@@ -15,5 +15,6 @@ import { AffiliatesRepository } from './affiliates.repository';
   imports: [TypeOrmModule.forFeature([Affiliate])],
   controllers: [CreateAffiliatesController, FindAffiliatesController, UpdateAffiliatesController, DeleteAffiliatesController],
   providers: [CreateAffiliatesService, FindAffiliatesService, UpdateAffiliatesService, DeleteAffiliatesService, AffiliatesRepository],
+  exports: [AffiliatesRepository],
 })
 export class AffiliatesModule {}

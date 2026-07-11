@@ -1,43 +1,41 @@
 import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray, IsEnum } from 'class-validator';
-import type {  SaaSPlanTier, TenantStatus  } from '../gyms.interfaces';
+import { SaaSPlanTier, TenantStatus } from '../gyms.interfaces';
 
 export class CreateTenantDto {
   @IsString()
-  @IsOptional()
-  name?: string;
+  name: string;
 
   @IsString()
-  @IsOptional()
-  ownerName?: string;
+  ownerName: string;
 
   @IsString()
-  @IsOptional()
-  adminEmail?: string;
+  adminEmail: string;
 
   @IsString()
-  @IsOptional()
-  phone?: string;
+  phone: string;
 
   @IsString()
   @IsOptional()
   status?: TenantStatus;
 
   @IsString()
-  @IsOptional()
-  plan?: SaaSPlanTier;
+  plan: SaaSPlanTier;
 
   @IsDateString()
   @IsNumber()
-  @IsOptional()
-  memberCount?: number;
+  memberCount: number;
 
   @IsNumber()
-  @IsOptional()
-  monthlyRevenue?: number;
+  monthlyRevenue: number;
+
+  @IsString()
+  databaseVersion: string;
 
   @IsString()
   @IsOptional()
-  databaseVersion?: string;
+  couponCode?: string;
 
-
+  @IsString()
+  @IsOptional()
+  referralCode?: string;
 }

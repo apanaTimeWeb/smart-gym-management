@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
-import type {    } from '../system.interfaces';
+import {  } from '../system.interfaces';
 
 @Entity('system')
 export class ReleaseNote {

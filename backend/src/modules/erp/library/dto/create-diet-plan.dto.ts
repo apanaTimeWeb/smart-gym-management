@@ -20,40 +20,33 @@ export class CreateDietPlanDto {
   @ApiProperty({ description: 'Daily calories', example: 3000 })
   @IsNumber()
   @Min(0)
-  @IsOptional()
-  calories?: number;
+  calories: number;
 
   @ApiProperty({ description: 'Protein (g)', example: 150 })
   @IsNumber()
   @Min(0)
-  @IsOptional()
-  protein?: number;
+  protein: number;
 
   @ApiProperty({ description: 'Carbs (g)', example: 200 })
   @IsNumber()
   @Min(0)
-  @IsOptional()
-  carbs?: number;
+  carbs: number;
 
   @ApiProperty({ description: 'Fats (g)', example: 70 })
   @IsNumber()
   @Min(0)
-  @IsOptional()
-  fats?: number;
+  fats: number;
 
   @ApiProperty({ description: 'Description', example: 'High protein diet' })
   @IsString()
-  @IsOptional()
-  description?: string;
+  description: string;
 
   @ApiProperty({ description: 'Meals', example: ['Oatmeal', 'Chicken Rice'] })
   @IsArray()
   @IsString({ each: true })
-  @IsOptional()
-  meals?: string[];
+  meals: string[];
 
   @ApiProperty({ description: 'Is active', default: true, required: false })
   @IsBoolean()
-  @IsOptional()
-  isActive?: boolean;
+  isActive: boolean;
 }

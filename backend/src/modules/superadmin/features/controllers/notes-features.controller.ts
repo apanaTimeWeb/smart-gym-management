@@ -10,5 +10,5 @@ import { NotesFeaturesService } from '../services/notes-features.service';
 export class NotesFeaturesController {
   constructor(private readonly service: NotesFeaturesService) {}
   @Post()
-  async execute(@Body() dto: any) { return this.service.execute(dto); }
+  async execute(@Body() dto: CreateFeaturesDto) { return this.service.execute(dto); }
 }

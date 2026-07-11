@@ -1,4 +1,7 @@
-export type AffiliateStatus = 'ACTIVE' | 'INACTIVE';
+export enum AffiliateStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE'
+}
 export interface IAffiliate {
   id: string;
   name: string;

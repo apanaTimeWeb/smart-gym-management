@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
-import type {  BroadcastStatus, BroadcastAudience  } from '../broadcasts.interfaces';
+import { BroadcastStatus, BroadcastAudience } from '../broadcasts.interfaces';
 
 @Entity('broadcasts')
 export class Broadcast {

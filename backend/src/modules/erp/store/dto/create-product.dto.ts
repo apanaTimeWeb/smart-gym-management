@@ -14,8 +14,7 @@ export class CreateProductDto {
 
   @ApiProperty({ description: 'SKU code', example: 'WP-1KG-CHOC' })
   @IsString()
-  @IsOptional()
-  sku?: string;
+  sku: string;
 
   @ApiProperty({ description: 'Category', example: 'Supplements' })
   @IsString()
@@ -23,8 +22,7 @@ export class CreateProductDto {
 
   @ApiProperty({ description: 'Product description', example: 'High quality whey protein' })
   @IsString()
-  @IsOptional()
-  description?: string;
+  description: string;
 
   @ApiProperty({ description: 'Price in currency', example: 59.99 })
   @IsNumber()
@@ -42,6 +40,5 @@ export class CreateProductDto {
     required: false,
   })
   @IsBoolean()
-  @IsOptional()
-  isActive?: boolean;
+  isActive: boolean;
 }

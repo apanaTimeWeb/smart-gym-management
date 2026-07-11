@@ -1,5 +1,14 @@
-export type SaaSPlanTier = 'BASIC' | 'PRO' | 'ENTERPRISE';
-export type TenantStatus = 'ACTIVE' | 'SUSPENDED' | 'TRIAL' | 'CANCELLED';
+export enum SaaSPlanTier {
+  BASIC = 'BASIC',
+  PRO = 'PRO',
+  ENTERPRISE = 'ENTERPRISE'
+}
+export enum TenantStatus {
+  ACTIVE = 'ACTIVE',
+  SUSPENDED = 'SUSPENDED',
+  TRIAL = 'TRIAL',
+  CANCELLED = 'CANCELLED'
+}
 export interface ITenant {
   id: string;
   name: string;

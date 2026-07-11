@@ -1,26 +1,22 @@
 import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray, IsEnum } from 'class-validator';
-import type {  AffiliateStatus  } from '../affiliates.interfaces';
+import { AffiliateStatus } from '../affiliates.interfaces';
 
 export class CreateAffiliateDto {
   @IsString()
-  @IsOptional()
-  name?: string;
+  name: string;
 
   @IsString()
-  @IsOptional()
-  email?: string;
+  email: string;
 
   @IsString()
   @IsOptional()
   referralCode?: string;
 
   @IsNumber()
-  @IsOptional()
-  totalReferred?: number;
+  totalReferred: number;
 
   @IsNumber()
-  @IsOptional()
-  commissionEarned?: number;
+  commissionEarned: number;
 
   @IsString()
   @IsOptional()

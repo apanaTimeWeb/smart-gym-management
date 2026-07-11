@@ -1,25 +1,20 @@
 import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray, IsEnum } from 'class-validator';
-import type {    } from '../audit-logs.interfaces';
+import {  } from '../audit-logs.interfaces';
 
 export class CreateGlobalAuditLogDto {
   @IsString()
-  @IsOptional()
-  actorName?: string;
+  actorName: string;
 
   @IsString()
-  @IsOptional()
-  actorRole?: string;
+  actorRole: string;
 
   @IsString()
-  @IsOptional()
-  action?: string;
+  action: string;
 
   @IsString()
-  @IsOptional()
-  targetResource?: string;
+  targetResource: string;
 
   @IsString()
-  @IsOptional()
-  ipAddress?: string;
+  ipAddress: string;
 
   }

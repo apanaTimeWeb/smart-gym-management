@@ -40,7 +40,6 @@ export class CreatePlanDto {
   features: string[];
 
   @ApiProperty({ required: false })
-  @IsOptional()
   @IsBoolean()
-  isActive?: boolean;
+  isActive: boolean;
 }

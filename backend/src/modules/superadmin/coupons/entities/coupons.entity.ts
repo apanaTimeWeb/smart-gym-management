@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
-import type {  CouponStatus  } from '../coupons.interfaces';
+import { CouponStatus } from '../coupons.interfaces';
 
 @Entity('coupons')
 export class Coupon {

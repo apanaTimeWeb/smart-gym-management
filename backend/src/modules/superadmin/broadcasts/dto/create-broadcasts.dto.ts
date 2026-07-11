@@ -1,30 +1,25 @@
 import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray, IsEnum } from 'class-validator';
-import type {  BroadcastStatus, BroadcastAudience  } from '../broadcasts.interfaces';
+import { BroadcastStatus, BroadcastAudience } from '../broadcasts.interfaces';
 
 export class CreateBroadcastDto {
   @IsString()
-  @IsOptional()
-  title?: string;
+  title: string;
 
   @IsString()
-  @IsOptional()
-  content?: string;
+  content: string;
 
   @IsString()
   @IsOptional()
   status?: BroadcastStatus;
 
   @IsString()
-  @IsOptional()
-  audience?: BroadcastAudience;
+  audience: BroadcastAudience;
 
   @IsDateString()
-  @IsOptional()
-  scheduledDate?: Date | null;
+  scheduledDate: Date | null;
 
   @IsDateString()
-  @IsOptional()
-  sentDate?: Date | null;
+  sentDate: Date | null;
 
 
 }

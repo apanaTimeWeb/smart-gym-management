@@ -1,4 +1,8 @@
-export type MigrationStatus = 'PENDING' | 'SUCCESS' | 'FAILED';
+export enum MigrationStatus {
+  PENDING = 'PENDING',
+  SUCCESS = 'SUCCESS',
+  FAILED = 'FAILED'
+}
 export interface ISchemaMigration {
   id: string;
   name: string;

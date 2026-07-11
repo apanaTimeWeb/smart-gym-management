@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
-import type {  SaaSPlanTier, TenantStatus  } from '../gyms.interfaces';
+import { SaaSPlanTier, TenantStatus } from '../gyms.interfaces';
 
 @Entity('gyms')
 export class Tenant {

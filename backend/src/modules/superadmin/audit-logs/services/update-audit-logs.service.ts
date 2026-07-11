@@ -5,7 +5,7 @@ import { AuditLogsRepository } from '../audit-logs.repository';
 export class UpdateAuditLogsService {
   constructor(private readonly repository: AuditLogsRepository) {}
   
-  async execute(id: string, dto: any): Promise<any> {
+  async execute(id: string, dto: UpdateAuditLogsDto): Promise<any> {
     return await this.repository.update(id, dto);
   }
 }

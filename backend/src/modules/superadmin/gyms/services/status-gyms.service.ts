@@ -6,7 +6,7 @@ export class StatusGymsService {
   private readonly logger = new Logger(StatusGymsService.name);
   constructor(private readonly repository: GymsRepository) {}
 
-  async execute(id: string, dto: any) {
+  async execute(id: string, dto: UpdateGymsDto) {
     this.logger.log(`Updating gym status ${id}`);
     const gym = await this.repository.findOne({ where: { id } });
     if (!gym) throw new NotFoundException('Gym not found');

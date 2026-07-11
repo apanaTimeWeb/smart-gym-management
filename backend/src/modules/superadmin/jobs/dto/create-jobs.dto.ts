@@ -1,25 +1,21 @@
 import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray, IsEnum } from 'class-validator';
-import type {  JobStatus  } from '../jobs.interfaces';
+import { JobStatus } from '../jobs.interfaces';
 
 export class CreateBackgroundJobDto {
   @IsString()
-  @IsOptional()
-  queueName?: string;
+  queueName: string;
 
   @IsString()
-  @IsOptional()
-  jobName?: string;
+  jobName: string;
 
   @IsString()
   @IsOptional()
   status?: JobStatus;
 
   @IsNumber()
-  @IsOptional()
-  attempts?: number;
+  attempts: number;
 
   @IsString()
-  @IsOptional()
-  error?: string | null;
+  error: string | null;
 
   }

@@ -5,7 +5,7 @@ import { BackupsRepository } from '../backups.repository';
 export class UpdateBackupsService {
   constructor(private readonly repository: BackupsRepository) {}
   
-  async execute(id: string, dto: any): Promise<any> {
+  async execute(id: string, dto: UpdateBackupsDto): Promise<any> {
     return await this.repository.update(id, dto);
   }
 }

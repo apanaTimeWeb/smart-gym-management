@@ -23,6 +23,10 @@ export class AffiliatesRepository {
     return await this.repo.findOne({ where: { id, isDeleted: false } });
   }
 
+  async findByReferralCode(referralCode: string): Promise<Affiliate | null> {
+    return await this.repo.findOne({ where: { referralCode, isDeleted: false } });
+  }
+
   async update(id: string, data: Partial<Affiliate>): Promise<Affiliate | null> {
     await this.repo.update(id, data);
     return this.findById(id);

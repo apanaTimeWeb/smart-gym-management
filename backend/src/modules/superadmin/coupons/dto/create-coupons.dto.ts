@@ -1,30 +1,25 @@
 import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray, IsEnum } from 'class-validator';
-import type {  CouponStatus  } from '../coupons.interfaces';
+import { CouponStatus } from '../coupons.interfaces';
 
 export class CreateCouponDto {
   @IsString()
-  @IsOptional()
-  code?: string;
+  code: string;
 
   @IsNumber()
-  @IsOptional()
-  discountPercentage?: number;
+  discountPercentage: number;
 
   @IsNumber()
-  @IsOptional()
-  maxUses?: number;
+  maxUses: number;
 
   @IsNumber()
-  @IsOptional()
-  currentUses?: number;
+  currentUses: number;
 
   @IsString()
   @IsOptional()
   status?: CouponStatus;
 
   @IsDateString()
-  @IsOptional()
-  expiryDate?: Date;
+  expiryDate: Date;
 
 
 }

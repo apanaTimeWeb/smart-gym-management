@@ -5,7 +5,7 @@ import { SystemRepository } from '../system.repository';
 export class UpdateSystemService {
   constructor(private readonly repository: SystemRepository) {}
   
-  async execute(id: string, dto: any): Promise<any> {
+  async execute(id: string, dto: UpdateSystemDto): Promise<any> {
     return await this.repository.update(id, dto);
   }
 }

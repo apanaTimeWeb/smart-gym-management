@@ -40,16 +40,14 @@ export class CreateStaffDto {
   gender: Gender;
 
   @ApiProperty({ required: false })
-  @IsOptional()
   @IsString()
-  address?: string;
+  address: string;
 
   @ApiProperty()
   @IsDateString()
   joinDate: string;
 
   @ApiProperty({ required: false })
-  @IsOptional()
   @IsBoolean()
-  isActive?: boolean;
+  isActive: boolean;
 }

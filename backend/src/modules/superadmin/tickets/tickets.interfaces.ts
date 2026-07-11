@@ -1,5 +1,14 @@
-export type TicketStatus = 'OPEN' | 'IN_PROGRESS' | 'RESOLVED';
-export type TicketPriority = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+export enum TicketStatus {
+  OPEN = 'OPEN',
+  IN_PROGRESS = 'IN_PROGRESS',
+  RESOLVED = 'RESOLVED'
+}
+export enum TicketPriority {
+  LOW = 'LOW',
+  MEDIUM = 'MEDIUM',
+  HIGH = 'HIGH',
+  CRITICAL = 'CRITICAL'
+}
 export interface ISupportTicket {
   id: string;
   tenantName: string;

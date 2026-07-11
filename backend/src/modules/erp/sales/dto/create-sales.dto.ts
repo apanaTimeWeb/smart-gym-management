@@ -7,8 +7,7 @@ export class CreateSalesDto {
   memberId: string;
 
   @IsString()
-  @IsOptional()
-  planId?: string;
+  planId: string;
 
   @IsNumber()
   @Min(0)
@@ -19,10 +18,8 @@ export class CreateSalesDto {
   status?: SalesStatus;
 
   @IsString()
-  @IsOptional()
-  paymentMethod?: string;
+  paymentMethod: string;
 
   @IsString()
-  @IsOptional()
-  transactionId?: string;
+  transactionId: string;
 }

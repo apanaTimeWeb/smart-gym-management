@@ -1,18 +1,15 @@
 import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray, IsEnum } from 'class-validator';
-import type {  BackupStatus  } from '../backups.interfaces';
+import { BackupStatus } from '../backups.interfaces';
 
 export class CreateBackupRecordDto {
   @IsString()
-  @IsOptional()
-  tenantName?: string;
+  tenantName: string;
 
   @IsString()
-  @IsOptional()
-  databaseName?: string;
+  databaseName: string;
 
   @IsNumber()
-  @IsOptional()
-  sizeMB?: number;
+  sizeMB: number;
 
   @IsString()
   @IsOptional()

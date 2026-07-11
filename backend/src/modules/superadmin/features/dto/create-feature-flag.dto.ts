@@ -30,8 +30,7 @@ export class CreateFeatureFlagDto {
     example: ['t-101', 't-103'],
     type: [String],
   })
-  @IsOptional()
   @IsArray()
   @IsString({ each: true })
-  enabledTenantIds?: string[];
+  enabledTenantIds: string[];
 }

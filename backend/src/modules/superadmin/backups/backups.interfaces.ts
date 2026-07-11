@@ -1,4 +1,8 @@
-export type BackupStatus = 'SUCCESS' | 'FAILED' | 'IN_PROGRESS';
+export enum BackupStatus {
+  SUCCESS = 'SUCCESS',
+  FAILED = 'FAILED',
+  IN_PROGRESS = 'IN_PROGRESS'
+}
 export interface IBackupRecord {
   id: string;
   tenantName: string;

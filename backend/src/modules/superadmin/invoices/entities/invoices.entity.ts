@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
-import type {  InvoiceStatus  } from '../invoices.interfaces';
+import { InvoiceStatus } from '../invoices.interfaces';
 
 @Entity('invoices')
 export class SaaSInvoice {

@@ -5,7 +5,7 @@ import { SettingsRepository } from '../settings.repository';
 export class CreateSettingsService {
   constructor(private readonly repository: SettingsRepository) {}
   
-  async execute(dto: any): Promise<any> {
+  async execute(dto: CreateSettingsDto): Promise<any> {
     return await this.repository.create(dto);
   }
 }

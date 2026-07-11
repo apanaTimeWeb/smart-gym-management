@@ -1,10 +1,9 @@
 import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray, IsEnum } from 'class-validator';
-import type {  InvoiceStatus  } from '../invoices.interfaces';
+import { InvoiceStatus } from '../invoices.interfaces';
 
 export class CreateSaaSInvoiceDto {
   @IsString()
-  @IsOptional()
-  tenantName?: string;
+  tenantName: string;
 
   @IsNumber()
   @IsOptional()

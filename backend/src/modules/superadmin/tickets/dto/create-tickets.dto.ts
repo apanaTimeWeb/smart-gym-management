@@ -1,21 +1,18 @@
 import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray, IsEnum } from 'class-validator';
-import type {  TicketStatus, TicketPriority  } from '../tickets.interfaces';
+import { TicketStatus, TicketPriority } from '../tickets.interfaces';
 
 export class CreateSupportTicketDto {
   @IsString()
-  @IsOptional()
-  tenantName?: string;
+  tenantName: string;
 
   @IsString()
-  @IsOptional()
-  subject?: string;
+  subject: string;
 
   @IsString()
   @IsOptional()
   status?: TicketStatus;
 
   @IsString()
-  @IsOptional()
-  priority?: TicketPriority;
+  priority: TicketPriority;
 
 }

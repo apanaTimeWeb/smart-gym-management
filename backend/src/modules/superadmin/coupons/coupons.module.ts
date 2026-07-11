@@ -15,5 +15,6 @@ import { CouponsRepository } from './coupons.repository';
   imports: [TypeOrmModule.forFeature([Coupon])],
   controllers: [CreateCouponsController, FindCouponsController, UpdateCouponsController, DeleteCouponsController],
   providers: [CreateCouponsService, FindCouponsService, UpdateCouponsService, DeleteCouponsService, CouponsRepository],
+  exports: [CouponsRepository],
 })
 export class CouponsModule {}

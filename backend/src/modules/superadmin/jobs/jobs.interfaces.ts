@@ -1,4 +1,9 @@
-export type JobStatus = 'ACTIVE' | 'COMPLETED' | 'FAILED' | 'DELAYED';
+export enum JobStatus {
+  ACTIVE = 'ACTIVE',
+  COMPLETED = 'COMPLETED',
+  FAILED = 'FAILED',
+  DELAYED = 'DELAYED'
+}
 export interface IBackgroundJob {
   id: string;
   queueName: string;

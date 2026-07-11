@@ -11,7 +11,7 @@ export class StatusGymsController {
   constructor(private readonly service: StatusGymsService) {}
   
   @Patch(':id/status')
-  async execute(@Param('id') id: string, @Body() dto: any) {
+  async execute(@Param('id') id: string, @Body() dto: UpdateGymsDto) {
     return this.service.execute(id, dto);
   }
 }

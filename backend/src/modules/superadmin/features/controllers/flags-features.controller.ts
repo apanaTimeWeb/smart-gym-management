@@ -10,5 +10,5 @@ import { FlagsFeaturesService } from '../services/flags-features.service';
 export class FlagsFeaturesController {
   constructor(private readonly service: FlagsFeaturesService) {}
   @Post()
-  async execute(@Body() dto: any) { return this.service.execute(dto); }
+  async execute(@Body() dto: CreateFeaturesDto) { return this.service.execute(dto); }
 }

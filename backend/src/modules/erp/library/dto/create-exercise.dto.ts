@@ -24,36 +24,29 @@ export class CreateExerciseDto {
   @ApiProperty({ description: 'Muscle groups', example: ['Chest', 'Triceps'] })
   @IsArray()
   @IsString({ each: true })
-  @IsOptional()
-  muscleGroup?: string[];
+  muscleGroup: string[];
 
   @ApiProperty({ description: 'Sets', example: 3 })
   @IsNumber()
-  @IsOptional()
-  sets?: number;
+  sets: number;
 
   @ApiProperty({ description: 'Reps', example: '10-12' })
   @IsString()
-  @IsOptional()
-  reps?: string;
+  reps: string;
 
   @ApiProperty({ description: 'Duration', example: '15 mins' })
   @IsString()
-  @IsOptional()
-  duration?: string;
+  duration: string;
 
   @ApiProperty({ description: 'Video URL', example: 'https://youtube.com/...' })
   @IsString()
-  @IsOptional()
-  videoUrl?: string;
+  videoUrl: string;
 
   @ApiProperty({ description: 'Image / thumbnail URL', example: 'https://cdn.example.com/exercises/pushup.webp', required: false })
   @IsString()
-  @IsOptional()
-  imageUrl?: string;
+  imageUrl: string;
 
   @ApiProperty({ description: 'Is active', default: true, required: false })
   @IsBoolean()
-  @IsOptional()
-  isActive?: boolean;
+  isActive: boolean;
 }

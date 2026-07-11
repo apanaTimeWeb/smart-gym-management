@@ -1,18 +1,15 @@
 import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray, IsEnum } from 'class-validator';
-import type {    } from '../settings.interfaces';
+import {  } from '../settings.interfaces';
 
 export class CreateGlobalSettingDto {
   @IsString()
-  @IsOptional()
-  key?: string;
+  key: string;
 
   @IsString()
-  @IsOptional()
-  value?: string;
+  value: string;
 
   @IsString()
-  @IsOptional()
-  group?: string;
+  group: string;
 
 
 }

@@ -5,7 +5,7 @@ import { AffiliatesRepository } from '../affiliates.repository';
 export class UpdateAffiliatesService {
   constructor(private readonly repository: AffiliatesRepository) {}
   
-  async execute(id: string, dto: any): Promise<any> {
+  async execute(id: string, dto: UpdateAffiliatesDto): Promise<any> {
     return await this.repository.update(id, dto);
   }
 }

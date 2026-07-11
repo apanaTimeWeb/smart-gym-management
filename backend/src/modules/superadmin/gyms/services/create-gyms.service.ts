@@ -1,6 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, BadRequestException } from '@nestjs/common';
 import { GymsRepository } from '../gyms.repository';
 import { ProvisionTenantService } from '../../tenants/services/provision-tenant.service';
+import { CouponsRepository } from '../../coupons/coupons.repository';
+import { AffiliatesRepository } from '../../affiliates/affiliates.repository';
+import { TenantStatus } from '../gyms.interfaces';
 
 @Injectable()
 export class CreateGymsService {
@@ -9,19 +12,42 @@ export class CreateGymsService {
   constructor(
     private readonly repository: GymsRepository,
     private readonly provisionTenantService: ProvisionTenantService,
+    private readonly couponsRepository: CouponsRepository,
+    private readonly affiliatesRepository: AffiliatesRepository,
   ) {}
   
-  async execute(dto: any): Promise<any> {
+  async execute(dto: CreateGymsDto): Promise<any> {
     this.logger.log('Creating new gym (tenant)...');
+
+    // 1. Coupon validation
+    if (dto.couponCode) {
+      const coupon = await this.couponsRepository.findByCode(dto.couponCode);
+      if (!coupon) throw new BadRequestException('Invalid coupon code');
+      if (coupon.expiryDate && new Date(coupon.expiryDate) < new Date()) throw new BadRequestException('Coupon expired');
+      if (coupon.maxUses && coupon.currentUses >= coupon.maxUses) throw new BadRequestException('Coupon usage limit reached');
+      
+      // Increment uses
+      await this.couponsRepository.update(coupon.id, { currentUses: coupon.currentUses + 1 });
+    }
+
+    // 2. Affiliate tracking
+    if (dto.referralCode) {
+      const affiliate = await this.affiliatesRepository.findByReferralCode(dto.referralCode);
+      if (affiliate) {
+        // Increment totalReferred
+        await this.affiliatesRepository.update(affiliate.id, { totalReferred: affiliate.totalReferred + 1 });
+      }
+    }
+
     const gym = await this.repository.create(dto);
     
     // Trigger tenant provisioning (database creation, migrations, etc.)
     try {
       await this.provisionTenantService.provisionNewTenant(gym.id);
-      gym.status = 'ACTIVE';
+      gym.status = TenantStatus.ACTIVE;
     } catch (err) {
       this.logger.error('Failed to provision tenant DB', err);
-      gym.status = 'SUSPENDED';
+      gym.status = TenantStatus.SUSPENDED;
     }
     
     return { success: true, data: gym };

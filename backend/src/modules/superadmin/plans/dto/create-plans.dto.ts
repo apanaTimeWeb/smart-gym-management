@@ -1,34 +1,27 @@
 import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray, IsEnum } from 'class-validator';
-import type {    } from '../plans.interfaces';
+import {  } from '../plans.interfaces';
 
 export class CreateSubscriptionPlanDto {
   @IsString()
-  @IsOptional()
-  name?: string;
+  name: string;
 
   @IsNumber()
-  @IsOptional()
-  priceMonthly?: number;
+  priceMonthly: number;
 
   @IsNumber()
-  @IsOptional()
-  priceAnnual?: number;
+  priceAnnual: number;
 
   @IsNumber()
-  @IsOptional()
-  maxMembers?: number;
+  maxMembers: number;
 
   @IsNumber()
-  @IsOptional()
-  maxStaff?: number;
+  maxStaff: number;
 
   @IsArray()
-  @IsOptional()
-  features?: string[];
+  features: string[];
 
   @IsNumber()
-  @IsOptional()
-  activeTenants?: number;
+  activeTenants: number;
 
 
 }

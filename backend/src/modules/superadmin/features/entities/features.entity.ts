@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
-import type {    } from '../features.interfaces';
+import {  } from '../features.interfaces';
 
 @Entity('features')
 export class FeatureFlag {
