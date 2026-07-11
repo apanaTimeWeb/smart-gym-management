@@ -1,17 +1,24 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { Controller, Get, Get, Post, Patch, Delete, Param, Body, UseGuards, HttpStatus } from '@nestjs/common';
+import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 import { FindGymsService } from '../services/find-gyms.service';
+
 
 @ApiTags('Gyms')
 @Controller('gyms')
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth('JWT-auth')
 export class FindGymsController {
-  constructor(private readonly gymsService: FindGymsService) {}
+  constructor(private readonly service: FindGymsService) {}
   
   @Get()
-  async execute() {
-    return this.gymsService.execute();
+  async executeAll() {
+    return this.service.execute();
+  }
+  @Get(':id')
+  @ApiOperation({ summary: 'Find Tenant' })
+  @ApiResponse({ status: HttpStatus.OK })
+  async execute(@Param('id') id: string) {
+    return this.service.findOne(id);
   }
 }

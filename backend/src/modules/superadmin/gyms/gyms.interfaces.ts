@@ -1,10 +1,15 @@
-export interface IGyms {
+export type SaaSPlanTier = 'BASIC' | 'PRO' | 'ENTERPRISE';
+export type TenantStatus = 'ACTIVE' | 'SUSPENDED' | 'TRIAL' | 'CANCELLED';
+export interface ITenant {
   id: string;
-  [key: string]: any;
-}
-
-export interface IGymsListResponse {
-  data: IGyms[];
-  meta: { total: number; page: number; limit: number };
-  message: string;
+  name: string;
+  ownerName: string;
+  adminEmail: string;
+  phone: string;
+  status: TenantStatus;
+  plan: SaaSPlanTier;
+  createdAt: Date;
+  memberCount: number;
+  monthlyRevenue: number;
+  databaseVersion: string;
 }

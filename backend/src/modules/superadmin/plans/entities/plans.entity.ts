@@ -1,54 +1,33 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  Index,
-} from 'typeorm';
-import { SaaSPlanTier } from '@/modules/superadmin/superadmin.constants';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
+import {  } from '../plans.interfaces';
 
-// Re-export for backwards compatibility with existing imports
-export { SaaSPlanTier };
-
-@Entity('superadmin_plans')
-export class Plan {
+@Entity('plans')
+export class SubscriptionPlan {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'enum', enum: SaaSPlanTier, unique: true })
-  @Index()
-  name: SaaSPlanTier;
+  @Column({ type: 'varchar', unique: true })
+  name: string;
 
-  @Column({ name: 'price_monthly', type: 'decimal', precision: 10, scale: 2 })
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
   priceMonthly: number;
 
-  @Column({ name: 'price_annual', type: 'decimal', precision: 10, scale: 2 })
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
   priceAnnual: number;
 
-  @Column({ name: 'max_members', type: 'int' })
+  @Column({ type: 'int' })
   maxMembers: number;
 
-  @Column({ name: 'max_staff', type: 'int' })
+  @Column({ type: 'int' })
   maxStaff: number;
 
-  // Stored as JSON array of feature strings (e.g., ["Member Management", "Basic Billing"])
-  @Column({ type: 'simple-array' })
+  @Column({ type: 'jsonb', default: [] })
   features: string[];
 
-  @Column({ name: 'active_tenants', type: 'int', default: 0 })
+  @Column({ type: 'int', default: 0 })
   activeTenants: number;
 
-  // Soft delete support (Rule 29)
-  @Column({ name: 'is_deleted', type: 'boolean', default: false })
+
+  @Column({ type: 'boolean', default: false })
   isDeleted: boolean;
-
-  @Column({ name: 'deleted_at', type: 'timestamp', nullable: true })
-  deletedAt: Date | null;
-
-  @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
-
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
 }

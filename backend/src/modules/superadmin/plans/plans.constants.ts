@@ -1,8 +1,10 @@
 export const PLANS_MESSAGES = {
-  FETCHED_SUCCESS: 'plans fetched successfully',
-  UPDATED_SUCCESS: 'plans updated successfully',
+  CREATED: 'SubscriptionPlan created successfully',
+  FETCHED: 'SubscriptionPlans fetched successfully',
+  UPDATED: 'SubscriptionPlan updated successfully',
+  DELETED: 'SubscriptionPlan deleted successfully',
 };
 
 export const PLANS_ERRORS = {
-  NOT_FOUND: 'plans not found',
+  NOT_FOUND: 'SubscriptionPlan not found',
 };

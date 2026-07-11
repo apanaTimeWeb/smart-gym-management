@@ -5,7 +5,7 @@ import { SettingsRepository } from '../settings.repository';
 export class DeleteSettingsService {
   constructor(private readonly repository: SettingsRepository) {}
   
-  async execute() {
-    // Implement delete logic
+  async execute(id: string): Promise<void> {
+    await this.repository.softDelete(id);
   }
 }

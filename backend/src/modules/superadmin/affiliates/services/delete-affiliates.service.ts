@@ -5,7 +5,7 @@ import { AffiliatesRepository } from '../affiliates.repository';
 export class DeleteAffiliatesService {
   constructor(private readonly repository: AffiliatesRepository) {}
   
-  async execute() {
-    // Implement delete logic
+  async execute(id: string): Promise<void> {
+    await this.repository.softDelete(id);
   }
 }

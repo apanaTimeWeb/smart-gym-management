@@ -5,7 +5,12 @@ import { BroadcastsRepository } from '../broadcasts.repository';
 export class FindBroadcastsService {
   constructor(private readonly repository: BroadcastsRepository) {}
   
-  async execute() {
-    // Implement find logic
+  async execute(): Promise<any[]> {
+    return await this.repository.findAll();
+  }
+  async findOne(id: string): Promise<any> {
+    const entity = await this.repository.findById(id);
+    if (!entity) throw new Error('Broadcast not found');
+    return entity;
   }
 }

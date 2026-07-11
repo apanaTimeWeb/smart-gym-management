@@ -1,4 +1,4 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateInvoiceDto } from './create-invoices.dto';
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateSaaSInvoiceDto } from './create-invoices.dto';
 
-export class UpdateInvoiceDto extends PartialType(CreateInvoiceDto) {}
+export class UpdateSaaSInvoiceDto extends PartialType(CreateSaaSInvoiceDto) {}

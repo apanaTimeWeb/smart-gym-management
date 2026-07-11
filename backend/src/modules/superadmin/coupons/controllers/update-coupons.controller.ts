@@ -1,17 +1,20 @@
-import { Controller, Patch, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { Controller, Patch, Get, Post, Patch, Delete, Param, Body, UseGuards, HttpStatus } from '@nestjs/common';
+import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 import { UpdateCouponsService } from '../services/update-coupons.service';
+import { UpdateCouponDto } from '../dto/update-coupons.dto';
 
 @ApiTags('Coupons')
 @Controller('coupons')
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth('JWT-auth')
 export class UpdateCouponsController {
-  constructor(private readonly couponsService: UpdateCouponsService) {}
+  constructor(private readonly service: UpdateCouponsService) {}
   
-  @Patch()
-  async execute() {
-    return this.couponsService.execute();
+  @Patch(':id')
+  @ApiOperation({ summary: 'Update Coupon' })
+  @ApiResponse({ status: HttpStatus.OK })
+  async execute(@Param('id') id: string, @Body() dto: UpdateCouponDto) {
+    return this.service.execute(id, dto);
   }
 }

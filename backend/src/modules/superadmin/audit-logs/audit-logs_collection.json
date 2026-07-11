@@ -1,7 +1,17 @@
 {
   "info": {
-    "name": "AuditLogs Collection",
+    "name": "GlobalAuditLog Collection",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
-  "item": []
+  "item": [
+    {
+      "name": "Get GlobalAuditLog",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/superadmin/audit-logs"
+        }
+      }
+    }
+  ]
 }

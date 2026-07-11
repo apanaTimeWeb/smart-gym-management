@@ -5,7 +5,7 @@ import { PlansRepository } from '../plans.repository';
 export class DeletePlansService {
   constructor(private readonly repository: PlansRepository) {}
   
-  async execute() {
-    // Implement delete logic
+  async execute(id: string): Promise<void> {
+    await this.repository.softDelete(id);
   }
 }

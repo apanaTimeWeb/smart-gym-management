@@ -1,10 +1,10 @@
-export interface IJobs {
+export type JobStatus = 'ACTIVE' | 'COMPLETED' | 'FAILED' | 'DELAYED';
+export interface IBackgroundJob {
   id: string;
-  [key: string]: any;
-}
-
-export interface IJobsListResponse {
-  data: IJobs[];
-  meta: { total: number; page: number; limit: number };
-  message: string;
+  queueName: string;
+  jobName: string;
+  status: JobStatus;
+  attempts: number;
+  error: string | null;
+  createdAt: Date;
 }

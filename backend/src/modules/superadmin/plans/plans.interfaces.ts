@@ -1,10 +1,11 @@
-export interface IPlans {
-  id: string;
-  [key: string]: any;
-}
 
-export interface IPlansListResponse {
-  data: IPlans[];
-  meta: { total: number; page: number; limit: number };
-  message: string;
+export interface ISubscriptionPlan {
+  id: string;
+  name: string;
+  priceMonthly: number;
+  priceAnnual: number;
+  maxMembers: number;
+  maxStaff: number;
+  features: string[];
+  activeTenants: number;
 }

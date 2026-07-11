@@ -1,62 +1,42 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  Index,
-} from 'typeorm';
-import { SaaSPlanTier, TenantStatus } from '@/modules/superadmin/superadmin.constants';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
+import { SaaSPlanTier, TenantStatus } from '../gyms.interfaces';
 
-// Re-export for backwards compatibility with existing imports
-export { SaaSPlanTier, TenantStatus };
-
-@Entity('superadmin_gyms')
-export class Gym {
+@Entity('gyms')
+export class Tenant {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 255 })
-  @Index()
+  @Column({ type: 'varchar' })
   name: string;
 
-  @Column({ name: 'owner_name', type: 'varchar', length: 255 })
+  @Column({ type: 'varchar' })
   ownerName: string;
 
-  @Column({ name: 'admin_email', type: 'varchar', length: 255, unique: true })
-  @Index()
+  @Column({ type: 'varchar', unique: true })
   adminEmail: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'varchar' })
   phone: string;
 
-  @Column({ type: 'enum', enum: TenantStatus, default: TenantStatus.TRIAL })
-  @Index()
+  @Column({ type: 'varchar', default: 'TRIAL' })
   status: TenantStatus;
 
-  @Column({ type: 'enum', enum: SaaSPlanTier, default: SaaSPlanTier.BASIC })
+  @Column({ type: 'varchar' })
   plan: SaaSPlanTier;
-
-  @Column({ name: 'member_count', type: 'int', default: 0 })
-  memberCount: number;
-
-  @Column({ name: 'monthly_revenue', type: 'decimal', precision: 12, scale: 2, default: 0 })
-  monthlyRevenue: number;
-
-  @Column({ name: 'database_version', type: 'varchar', length: 50, default: 'v1.0.0' })
-  databaseVersion: string;
-
-  // Soft delete support (Rule 29)
-  @Column({ name: 'is_deleted', type: 'boolean', default: false })
-  @Index()
-  isDeleted: boolean;
-
-  @Column({ name: 'deleted_at', type: 'timestamp', nullable: true })
-  deletedAt: Date | null;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
+  @Column({ type: 'int', default: 0 })
+  memberCount: number;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  monthlyRevenue: number;
+
+  @Column({ type: 'varchar', default: '1.0.0' })
+  databaseVersion: string;
+
+
+  @Column({ type: 'boolean', default: false })
+  isDeleted: boolean;
 }

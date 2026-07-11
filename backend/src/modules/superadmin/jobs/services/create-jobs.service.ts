@@ -5,7 +5,7 @@ import { JobsRepository } from '../jobs.repository';
 export class CreateJobsService {
   constructor(private readonly repository: JobsRepository) {}
   
-  async execute() {
-    // Implement create logic
+  async execute(dto: any): Promise<any> {
+    return await this.repository.create(dto);
   }
 }

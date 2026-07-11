@@ -1,17 +1,20 @@
-import { Controller, Patch, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { Controller, Patch, Get, Post, Patch, Delete, Param, Body, UseGuards, HttpStatus } from '@nestjs/common';
+import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 import { UpdateSettingsService } from '../services/update-settings.service';
+import { UpdateGlobalSettingDto } from '../dto/update-settings.dto';
 
 @ApiTags('Settings')
 @Controller('settings')
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth('JWT-auth')
 export class UpdateSettingsController {
-  constructor(private readonly settingsService: UpdateSettingsService) {}
+  constructor(private readonly service: UpdateSettingsService) {}
   
-  @Patch()
-  async execute() {
-    return this.settingsService.execute();
+  @Patch(':id')
+  @ApiOperation({ summary: 'Update GlobalSetting' })
+  @ApiResponse({ status: HttpStatus.OK })
+  async execute(@Param('id') id: string, @Body() dto: UpdateGlobalSettingDto) {
+    return this.service.execute(id, dto);
   }
 }

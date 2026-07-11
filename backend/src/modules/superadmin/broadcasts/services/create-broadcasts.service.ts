@@ -5,7 +5,7 @@ import { BroadcastsRepository } from '../broadcasts.repository';
 export class CreateBroadcastsService {
   constructor(private readonly repository: BroadcastsRepository) {}
   
-  async execute() {
-    // Implement create logic
+  async execute(dto: any): Promise<any> {
+    return await this.repository.create(dto);
   }
 }

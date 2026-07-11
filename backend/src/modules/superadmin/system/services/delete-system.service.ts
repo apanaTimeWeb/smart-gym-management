@@ -5,7 +5,7 @@ import { SystemRepository } from '../system.repository';
 export class DeleteSystemService {
   constructor(private readonly repository: SystemRepository) {}
   
-  async execute() {
-    // Implement delete logic
+  async execute(id: string): Promise<void> {
+    await this.repository.softDelete(id);
   }
 }

@@ -5,7 +5,7 @@ import { GymsRepository } from '../gyms.repository';
 export class CreateGymsService {
   constructor(private readonly repository: GymsRepository) {}
   
-  async execute() {
-    // Implement create logic
+  async execute(dto: any): Promise<any> {
+    return await this.repository.create(dto);
   }
 }

@@ -1,11 +1,15 @@
-export interface IProvisionTenantResult {
-  tenantId: string;
-  databaseName: string;
-  status: 'PROVISIONED' | 'ALREADY_EXISTS';
-  migrationsRan: boolean;
-  provisionedAt: string;
-}
-
-export interface ITenantProvisionRequest {
-  tenantId: string;
+export type SaaSPlanTier = 'BASIC' | 'PRO' | 'ENTERPRISE';
+export type TenantStatus = 'ACTIVE' | 'SUSPENDED' | 'TRIAL' | 'CANCELLED';
+export interface ITenant {
+  id: string;
+  name: string;
+  ownerName: string;
+  adminEmail: string;
+  phone: string;
+  status: TenantStatus;
+  plan: SaaSPlanTier;
+  createdAt: Date;
+  memberCount: number;
+  monthlyRevenue: number;
+  databaseVersion: string;
 }

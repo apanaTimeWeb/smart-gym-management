@@ -1,3 +1,4 @@
+export type AffiliateStatus = 'ACTIVE' | 'INACTIVE';
 export interface IAffiliate {
   id: string;
   name: string;
@@ -5,12 +6,6 @@ export interface IAffiliate {
   referralCode: string;
   totalReferred: number;
   commissionEarned: number;
-  status: 'ACTIVE' | 'INACTIVE';
-  joinedAt: string;
-}
-
-export interface IAffiliateListResponse {
-  data: IAffiliate[];
-  meta: { total: number; page: number; limit: number };
-  message: string;
+  status: AffiliateStatus;
+  joinedAt: Date;
 }

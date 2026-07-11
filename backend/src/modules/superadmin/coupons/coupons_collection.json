@@ -1,7 +1,17 @@
 {
   "info": {
-    "name": "Coupons Collection",
+    "name": "Coupon Collection",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
-  "item": []
+  "item": [
+    {
+      "name": "Get Coupon",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/superadmin/coupons"
+        }
+      }
+    }
+  ]
 }

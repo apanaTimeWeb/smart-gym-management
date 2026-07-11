@@ -1,10 +1,10 @@
-export interface IInvoices {
+export type InvoiceStatus = 'PAID' | 'PENDING' | 'FAILED';
+export interface ISaaSInvoice {
   id: string;
-  [key: string]: any;
-}
-
-export interface IInvoicesListResponse {
-  data: IInvoices[];
-  meta: { total: number; page: number; limit: number };
-  message: string;
+  tenantName: string;
+  amount: number;
+  currency: string;
+  status: InvoiceStatus;
+  date: Date;
+  planName: string;
 }

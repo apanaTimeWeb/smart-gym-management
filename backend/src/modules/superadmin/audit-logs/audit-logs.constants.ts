@@ -1,17 +1,10 @@
 export const AUDIT_LOGS_MESSAGES = {
-  FETCHED_SUCCESS: 'Audit logs fetched successfully',
+  CREATED: 'GlobalAuditLog created successfully',
+  FETCHED: 'GlobalAuditLogs fetched successfully',
+  UPDATED: 'GlobalAuditLog updated successfully',
+  DELETED: 'GlobalAuditLog deleted successfully',
 };
 
 export const AUDIT_LOGS_ERRORS = {
-  LOG_NOT_FOUND: 'Audit log entry not found',
+  NOT_FOUND: 'GlobalAuditLog not found',
 };
-
-export const AUDIT_LOG_ACTIONS = {
-  CREATE_TENANT: 'CREATE_TENANT',
-  UPDATE_TENANT: 'UPDATE_TENANT',
-  SUSPEND_TENANT: 'SUSPEND_TENANT',
-  DELETE_TENANT: 'DELETE_TENANT',
-  RESET_PASSWORD: 'RESET_TENANT_PASSWORD',
-  UPDATE_PLAN: 'UPDATE_PLAN_PRICE',
-  ISSUE_REFUND: 'ISSUE_REFUND',
-} as const;

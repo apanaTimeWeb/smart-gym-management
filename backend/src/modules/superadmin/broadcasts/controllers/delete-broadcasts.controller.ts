@@ -1,17 +1,20 @@
-import { Controller, Delete, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { Controller, Delete, Get, Post, Patch, Delete, Param, Body, UseGuards, HttpStatus } from '@nestjs/common';
+import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 import { DeleteBroadcastsService } from '../services/delete-broadcasts.service';
+
 
 @ApiTags('Broadcasts')
 @Controller('broadcasts')
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth('JWT-auth')
 export class DeleteBroadcastsController {
-  constructor(private readonly broadcastsService: DeleteBroadcastsService) {}
+  constructor(private readonly service: DeleteBroadcastsService) {}
   
-  @Delete()
-  async execute() {
-    return this.broadcastsService.execute();
+  @Delete(':id')
+  @ApiOperation({ summary: 'Delete Broadcast' })
+  @ApiResponse({ status: HttpStatus.OK })
+  async execute(@Param('id') id: string) {
+    return this.service.execute(id);
   }
 }

@@ -1,17 +1,24 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { Controller, Get, Get, Post, Patch, Delete, Param, Body, UseGuards, HttpStatus } from '@nestjs/common';
+import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 import { FindSystemService } from '../services/find-system.service';
+
 
 @ApiTags('System')
 @Controller('system')
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth('JWT-auth')
 export class FindSystemController {
-  constructor(private readonly systemService: FindSystemService) {}
+  constructor(private readonly service: FindSystemService) {}
   
   @Get()
-  async execute() {
-    return this.systemService.execute();
+  async executeAll() {
+    return this.service.execute();
+  }
+  @Get(':id')
+  @ApiOperation({ summary: 'Find ReleaseNote' })
+  @ApiResponse({ status: HttpStatus.OK })
+  async execute(@Param('id') id: string) {
+    return this.service.findOne(id);
   }
 }

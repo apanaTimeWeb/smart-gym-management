@@ -5,7 +5,7 @@ import { TicketsRepository } from '../tickets.repository';
 export class UpdateTicketsService {
   constructor(private readonly repository: TicketsRepository) {}
   
-  async execute() {
-    // Implement update logic
+  async execute(id: string, dto: any): Promise<any> {
+    return await this.repository.update(id, dto);
   }
 }

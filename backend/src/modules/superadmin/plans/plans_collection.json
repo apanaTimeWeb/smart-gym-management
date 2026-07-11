@@ -1,7 +1,17 @@
 {
   "info": {
-    "name": "Plans Collection",
+    "name": "SubscriptionPlan Collection",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
-  "item": []
+  "item": [
+    {
+      "name": "Get SubscriptionPlan",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/superadmin/plans"
+        }
+      }
+    }
+  ]
 }

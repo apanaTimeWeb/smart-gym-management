@@ -1,7 +1,17 @@
 {
   "info": {
-    "name": "Tickets Collection",
+    "name": "SupportTicket Collection",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
-  "item": []
+  "item": [
+    {
+      "name": "Get SupportTicket",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/superadmin/tickets"
+        }
+      }
+    }
+  ]
 }

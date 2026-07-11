@@ -1,8 +1,10 @@
 export const MIGRATIONS_MESSAGES = {
-  FETCHED_SUCCESS: 'migrations fetched successfully',
-  UPDATED_SUCCESS: 'migrations updated successfully',
+  CREATED: 'SchemaMigration created successfully',
+  FETCHED: 'SchemaMigrations fetched successfully',
+  UPDATED: 'SchemaMigration updated successfully',
+  DELETED: 'SchemaMigration deleted successfully',
 };
 
 export const MIGRATIONS_ERRORS = {
-  NOT_FOUND: 'migrations not found',
+  NOT_FOUND: 'SchemaMigration not found',
 };

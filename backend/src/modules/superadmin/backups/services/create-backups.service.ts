@@ -5,7 +5,7 @@ import { BackupsRepository } from '../backups.repository';
 export class CreateBackupsService {
   constructor(private readonly repository: BackupsRepository) {}
   
-  async execute() {
-    // Implement create logic
+  async execute(dto: any): Promise<any> {
+    return await this.repository.create(dto);
   }
 }

@@ -1,9 +1,26 @@
-import { IsString, IsOptional } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray, IsEnum } from 'class-validator';
+import {  } from '../system.interfaces';
 
-export class CreateSystemDto {
-  @ApiProperty({ description: 'Placeholder field for System' })
+export class CreateReleaseNoteDto {
   @IsString()
   @IsOptional()
-  name?: string;
+  version?: string;
+
+  @IsString()
+  @IsOptional()
+  title?: string;
+
+  @IsString()
+  @IsOptional()
+  content?: string;
+
+  @IsDateString()
+  @IsOptional()
+  date?: Date;
+
+  @IsBoolean()
+  @IsOptional()
+  isPublished?: boolean;
+
+
 }

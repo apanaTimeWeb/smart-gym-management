@@ -1,8 +1,10 @@
 export const INVOICES_MESSAGES = {
-  FETCHED_SUCCESS: 'invoices fetched successfully',
-  UPDATED_SUCCESS: 'invoices updated successfully',
+  CREATED: 'SaaSInvoice created successfully',
+  FETCHED: 'SaaSInvoices fetched successfully',
+  UPDATED: 'SaaSInvoice updated successfully',
+  DELETED: 'SaaSInvoice deleted successfully',
 };
 
 export const INVOICES_ERRORS = {
-  NOT_FOUND: 'invoices not found',
+  NOT_FOUND: 'SaaSInvoice not found',
 };

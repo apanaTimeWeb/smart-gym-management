@@ -1,7 +1,17 @@
 {
   "info": {
-    "name": "Features Collection",
+    "name": "FeatureFlag Collection",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
-  "item": []
+  "item": [
+    {
+      "name": "Get FeatureFlag",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/superadmin/features"
+        }
+      }
+    }
+  ]
 }

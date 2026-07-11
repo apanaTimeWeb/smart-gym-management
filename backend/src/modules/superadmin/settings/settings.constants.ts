@@ -1,8 +1,10 @@
 export const SETTINGS_MESSAGES = {
-  FETCHED_SUCCESS: 'settings fetched successfully',
-  UPDATED_SUCCESS: 'settings updated successfully',
+  CREATED: 'GlobalSetting created successfully',
+  FETCHED: 'GlobalSettings fetched successfully',
+  UPDATED: 'GlobalSetting updated successfully',
+  DELETED: 'GlobalSetting deleted successfully',
 };
 
 export const SETTINGS_ERRORS = {
-  NOT_FOUND: 'settings not found',
+  NOT_FOUND: 'GlobalSetting not found',
 };

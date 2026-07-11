@@ -5,7 +5,7 @@ import { MigrationsRepository } from '../migrations.repository';
 export class UpdateMigrationsService {
   constructor(private readonly repository: MigrationsRepository) {}
   
-  async execute() {
-    // Implement update logic
+  async execute(id: string, dto: any): Promise<any> {
+    return await this.repository.update(id, dto);
   }
 }

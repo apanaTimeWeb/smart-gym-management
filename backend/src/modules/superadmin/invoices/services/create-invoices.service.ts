@@ -5,7 +5,7 @@ import { InvoicesRepository } from '../invoices.repository';
 export class CreateInvoicesService {
   constructor(private readonly repository: InvoicesRepository) {}
   
-  async execute() {
-    // Implement create logic
+  async execute(dto: any): Promise<any> {
+    return await this.repository.create(dto);
   }
 }

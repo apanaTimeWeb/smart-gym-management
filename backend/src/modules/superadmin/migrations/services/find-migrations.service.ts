@@ -5,7 +5,12 @@ import { MigrationsRepository } from '../migrations.repository';
 export class FindMigrationsService {
   constructor(private readonly repository: MigrationsRepository) {}
   
-  async execute() {
-    // Implement find logic
+  async execute(): Promise<any[]> {
+    return await this.repository.findAll();
+  }
+  async findOne(id: string): Promise<any> {
+    const entity = await this.repository.findById(id);
+    if (!entity) throw new Error('SchemaMigration not found');
+    return entity;
   }
 }

@@ -5,7 +5,7 @@ import { AffiliatesRepository } from '../affiliates.repository';
 export class CreateAffiliatesService {
   constructor(private readonly repository: AffiliatesRepository) {}
   
-  async execute() {
-    // Implement create logic
+  async execute(dto: any): Promise<any> {
+    return await this.repository.create(dto);
   }
 }

@@ -1,8 +1,10 @@
 export const GYMS_MESSAGES = {
-  FETCHED_SUCCESS: 'gyms fetched successfully',
-  UPDATED_SUCCESS: 'gyms updated successfully',
+  CREATED: 'Tenant created successfully',
+  FETCHED: 'Tenants fetched successfully',
+  UPDATED: 'Tenant updated successfully',
+  DELETED: 'Tenant deleted successfully',
 };
 
 export const GYMS_ERRORS = {
-  NOT_FOUND: 'gyms not found',
+  NOT_FOUND: 'Tenant not found',
 };

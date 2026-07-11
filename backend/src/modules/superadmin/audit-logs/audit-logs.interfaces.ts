@@ -1,15 +1,10 @@
+
 export interface IGlobalAuditLog {
   id: string;
   actorName: string;
-  actorRole: 'SUPERADMIN' | 'SUPPORT_AGENT' | 'BILLING_ADMIN';
+  actorRole: string;
   action: string;
   targetResource: string;
-  timestamp: string;
   ipAddress: string;
-}
-
-export interface IAuditLogListResponse {
-  data: IGlobalAuditLog[];
-  meta: { total: number; page: number; limit: number };
-  message: string;
+  timestamp: Date;
 }

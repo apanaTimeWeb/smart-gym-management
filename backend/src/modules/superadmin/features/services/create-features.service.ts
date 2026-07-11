@@ -5,7 +5,7 @@ import { FeaturesRepository } from '../features.repository';
 export class CreateFeaturesService {
   constructor(private readonly repository: FeaturesRepository) {}
   
-  async execute() {
-    // Implement create logic
+  async execute(dto: any): Promise<any> {
+    return await this.repository.create(dto);
   }
 }

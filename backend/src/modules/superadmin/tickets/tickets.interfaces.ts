@@ -1,10 +1,11 @@
-export interface ITickets {
+export type TicketStatus = 'OPEN' | 'IN_PROGRESS' | 'RESOLVED';
+export type TicketPriority = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+export interface ISupportTicket {
   id: string;
-  [key: string]: any;
-}
-
-export interface ITicketsListResponse {
-  data: ITickets[];
-  meta: { total: number; page: number; limit: number };
-  message: string;
+  tenantName: string;
+  subject: string;
+  status: TicketStatus;
+  priority: TicketPriority;
+  createdAt: Date;
+  lastUpdated: Date;
 }

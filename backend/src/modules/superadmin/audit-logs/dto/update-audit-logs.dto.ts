@@ -1,4 +1,4 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateAuditLogDto } from './create-audit-logs.dto';
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateGlobalAuditLogDto } from './create-audit-logs.dto';
 
-export class UpdateAuditLogDto extends PartialType(CreateAuditLogDto) {}
+export class UpdateGlobalAuditLogDto extends PartialType(CreateGlobalAuditLogDto) {}

@@ -1,8 +1,10 @@
 export const JOBS_MESSAGES = {
-  FETCHED_SUCCESS: 'jobs fetched successfully',
-  UPDATED_SUCCESS: 'jobs updated successfully',
+  CREATED: 'BackgroundJob created successfully',
+  FETCHED: 'BackgroundJobs fetched successfully',
+  UPDATED: 'BackgroundJob updated successfully',
+  DELETED: 'BackgroundJob deleted successfully',
 };
 
 export const JOBS_ERRORS = {
-  NOT_FOUND: 'jobs not found',
+  NOT_FOUND: 'BackgroundJob not found',
 };

@@ -1,17 +1,20 @@
-import { Controller, Delete, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { Controller, Delete, Get, Post, Patch, Delete, Param, Body, UseGuards, HttpStatus } from '@nestjs/common';
+import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 import { DeleteBackupsService } from '../services/delete-backups.service';
+
 
 @ApiTags('Backups')
 @Controller('backups')
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth('JWT-auth')
 export class DeleteBackupsController {
-  constructor(private readonly backupsService: DeleteBackupsService) {}
+  constructor(private readonly service: DeleteBackupsService) {}
   
-  @Delete()
-  async execute() {
-    return this.backupsService.execute();
+  @Delete(':id')
+  @ApiOperation({ summary: 'Delete BackupRecord' })
+  @ApiResponse({ status: HttpStatus.OK })
+  async execute(@Param('id') id: string) {
+    return this.service.execute(id);
   }
 }

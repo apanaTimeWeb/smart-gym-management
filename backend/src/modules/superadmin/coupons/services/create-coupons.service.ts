@@ -5,7 +5,7 @@ import { CouponsRepository } from '../coupons.repository';
 export class CreateCouponsService {
   constructor(private readonly repository: CouponsRepository) {}
   
-  async execute() {
-    // Implement create logic
+  async execute(dto: any): Promise<any> {
+    return await this.repository.create(dto);
   }
 }

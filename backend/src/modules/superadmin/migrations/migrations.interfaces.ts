@@ -1,10 +1,7 @@
-export interface IMigrations {
+export type MigrationStatus = 'PENDING' | 'SUCCESS' | 'FAILED';
+export interface ISchemaMigration {
   id: string;
-  [key: string]: any;
-}
-
-export interface IMigrationsListResponse {
-  data: IMigrations[];
-  meta: { total: number; page: number; limit: number };
-  message: string;
+  name: string;
+  appliedAt: Date | null;
+  status: MigrationStatus;
 }

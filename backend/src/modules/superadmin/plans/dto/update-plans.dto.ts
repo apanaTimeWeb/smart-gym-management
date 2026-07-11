@@ -1,4 +1,4 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreatePlanDto } from './create-plans.dto';
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateSubscriptionPlanDto } from './create-plans.dto';
 
-export class UpdatePlanDto extends PartialType(CreatePlanDto) {}
+export class UpdateSubscriptionPlanDto extends PartialType(CreateSubscriptionPlanDto) {}

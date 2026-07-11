@@ -5,11 +5,12 @@ import { CreateAuditService } from './services/create-audit.service';
 import { FindAuditService } from './services/find-audit.service';
 import { AuditRepository } from './audit.repository';
 import { AuditLogRetrievalController } from './controllers/audit-log-retrieval.controller';
+import { CreateAuditLogController } from './controllers/create-audit-log.controller';
 
 @Global()
 @Module({
   imports: [TypeOrmModule.forFeature([AuditLog])],
-  controllers: [AuditLogRetrievalController],
+  controllers: [AuditLogRetrievalController, CreateAuditLogController],
   providers: [CreateAuditService, FindAuditService, AuditRepository],
   exports: [CreateAuditService, FindAuditService],
 })

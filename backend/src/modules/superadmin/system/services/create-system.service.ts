@@ -5,7 +5,7 @@ import { SystemRepository } from '../system.repository';
 export class CreateSystemService {
   constructor(private readonly repository: SystemRepository) {}
   
-  async execute() {
-    // Implement create logic
+  async execute(dto: any): Promise<any> {
+    return await this.repository.create(dto);
   }
 }

@@ -1,7 +1,17 @@
 {
   "info": {
-    "name": "Migrations Collection",
+    "name": "SchemaMigration Collection",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
-  "item": []
+  "item": [
+    {
+      "name": "Get SchemaMigration",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/superadmin/migrations"
+        }
+      }
+    }
+  ]
 }

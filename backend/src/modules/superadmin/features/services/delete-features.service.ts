@@ -5,7 +5,7 @@ import { FeaturesRepository } from '../features.repository';
 export class DeleteFeaturesService {
   constructor(private readonly repository: FeaturesRepository) {}
   
-  async execute() {
-    // Implement delete logic
+  async execute(id: string): Promise<void> {
+    await this.repository.softDelete(id);
   }
 }

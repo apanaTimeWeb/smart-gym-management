@@ -1,8 +1,10 @@
 export const TICKETS_MESSAGES = {
-  FETCHED_SUCCESS: 'tickets fetched successfully',
-  UPDATED_SUCCESS: 'tickets updated successfully',
+  CREATED: 'SupportTicket created successfully',
+  FETCHED: 'SupportTickets fetched successfully',
+  UPDATED: 'SupportTicket updated successfully',
+  DELETED: 'SupportTicket deleted successfully',
 };
 
 export const TICKETS_ERRORS = {
-  NOT_FOUND: 'tickets not found',
+  NOT_FOUND: 'SupportTicket not found',
 };
