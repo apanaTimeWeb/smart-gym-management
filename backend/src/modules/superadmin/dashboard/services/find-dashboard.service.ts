@@ -11,11 +11,11 @@ export class FindDashboardService {
   ) {}
 
   async execute() {
-    const totalGyms = await this.tenantRepo.count();
-    const activeGyms = await this.tenantRepo.count({ where: { status: 'ACTIVE' as any } });
+    const totalGyms = await this.tenantRepo.count({ where: { isDeleted: false } });
+    const activeGyms = await this.tenantRepo.count({ where: { status: 'ACTIVE' as any, isDeleted: false } });
     
     // Sum up members and revenue
-    const allGyms = await this.tenantRepo.find();
+    const allGyms = await this.tenantRepo.find({ where: { isDeleted: false } });
     let totalEndUsers = 0;
     let monthlyRecurringRevenue = 0;
     
