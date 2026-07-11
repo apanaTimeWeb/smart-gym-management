@@ -5,6 +5,8 @@ import { ProvisionTenantService } from '../../tenants/services/provision-tenant.
 import { CouponsRepository } from '../../coupons/coupons.repository';
 import { AffiliatesRepository } from '../../affiliates/affiliates.repository';
 import { TenantStatus } from '../gyms.interfaces';
+import { TenantAlreadyExistsException } from '../gyms.exceptions';
+import { GYMS_ERRORS } from '../gyms.constants';
 
 @Injectable()
 export class CreateGymsService {
@@ -40,7 +42,15 @@ export class CreateGymsService {
       }
     }
 
-    const gym = await this.repository.create(dto);
+    let gym;
+    try {
+      gym = await this.repository.create(dto);
+    } catch (err: any) {
+      if (err.code === '23505') {
+        throw new TenantAlreadyExistsException(GYMS_ERRORS.ALREADY_EXISTS);
+      }
+      throw err;
+    }
     
     // Trigger tenant provisioning (database creation, migrations, etc.)
     try {

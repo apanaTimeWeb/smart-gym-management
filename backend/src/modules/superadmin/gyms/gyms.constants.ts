@@ -7,4 +7,5 @@ export const GYMS_MESSAGES = {
 
 export const GYMS_ERRORS = {
   NOT_FOUND: 'Tenant not found',
+  ALREADY_EXISTS: 'A tenant with this email already exists',
 };

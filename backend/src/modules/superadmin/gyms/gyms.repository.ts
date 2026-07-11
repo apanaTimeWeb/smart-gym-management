@@ -6,11 +6,15 @@ import { Tenant } from './entities/gyms.entity';
 @Injectable()
 export class GymsRepository {
   async count(options?: any): Promise<number> {
-    return this.repo.count(options);
+    const opts = options || {};
+    opts.where = { ...opts.where, isDeleted: false };
+    return this.repo.count(opts);
   }
   
   async findOne(options: any): Promise<any> {
-    return this.repo.findOne(options);
+    const opts = options || {};
+    opts.where = { ...opts.where, isDeleted: false };
+    return this.repo.findOne(opts);
   }
   
   async save(gym: any): Promise<any> {
@@ -46,7 +50,8 @@ export class GymsRepository {
       const timestamp = new Date().getTime();
       await this.repo.update(id, { 
         isDeleted: true,
-        adminEmail: `deleted_${timestamp}_${entity.adminEmail}`
+        adminEmail: `deleted_${timestamp}_${entity.adminEmail}`,
+        name: `deleted_${timestamp}_${entity.name}`
       } as any);
     }
   }
