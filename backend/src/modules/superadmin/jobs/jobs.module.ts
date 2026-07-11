@@ -12,6 +12,7 @@ import { DeleteJobsService } from './services/delete-jobs.service';
 import { JobsRepository } from './jobs.repository';
 
 import { BullModule } from '@nestjs/bullmq';
+import { DataRetentionProcessor } from './processors/data-retention.processor';
 
 @Module({
   imports: [
@@ -19,10 +20,18 @@ import { BullModule } from '@nestjs/bullmq';
     BullModule.registerQueue(
       { name: 'broadcasts' },
       { name: 'backups' },
+      { name: 'data-retention' }
     )
   ],
   controllers: [CreateJobsController, FindJobsController, UpdateJobsController, DeleteJobsController],
-  providers: [CreateJobsService, FindJobsService, UpdateJobsService, DeleteJobsService, JobsRepository],
+  providers: [
+    CreateJobsService, 
+    FindJobsService, 
+    UpdateJobsService, 
+    DeleteJobsService, 
+    JobsRepository,
+    ...(process.platform !== 'win32' ? [DataRetentionProcessor] : [])
+  ],
   exports: [CreateJobsService, FindJobsService, UpdateJobsService, DeleteJobsService],
 })
 export class JobsModule {}

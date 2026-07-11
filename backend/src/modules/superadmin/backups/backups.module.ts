@@ -10,8 +10,8 @@ import { FindBackupsService } from './services/find-backups.service';
 import { UpdateBackupsService } from './services/update-backups.service';
 import { DeleteBackupsService } from './services/delete-backups.service';
 import { BackupsRepository } from './backups.repository';
-
 import { BullModule } from '@nestjs/bullmq';
+import { BackupProcessor } from './processors/backup.processor';
 
 @Module({
   imports: [
@@ -19,6 +19,13 @@ import { BullModule } from '@nestjs/bullmq';
     BullModule.registerQueue({ name: 'backups' })
   ],
   controllers: [CreateBackupsController, FindBackupsController, UpdateBackupsController, DeleteBackupsController],
-  providers: [CreateBackupsService, FindBackupsService, UpdateBackupsService, DeleteBackupsService, BackupsRepository],
+  providers: [
+    CreateBackupsService, 
+    FindBackupsService, 
+    UpdateBackupsService, 
+    DeleteBackupsService, 
+    BackupsRepository,
+    ...(process.platform !== 'win32' ? [BackupProcessor] : [])
+  ],
 })
 export class BackupsModule {}

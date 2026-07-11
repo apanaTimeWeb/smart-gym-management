@@ -1,16 +1,10 @@
-import 'dotenv/config';
-import { DataSource } from 'typeorm';
+import dataSource from './src/database/data-source';
 
-const AppDataSource = new DataSource({
-  type: 'postgres',
-  url: process.env.DATABASE_URL,
-});
-
-async function check() {
-  await AppDataSource.initialize();
-  const tables = await AppDataSource.query(`SELECT tablename FROM pg_tables WHERE schemaname='public'`);
-  console.log('Tables in public schema:', tables.map(t => t.tablename).join(', '));
-  await AppDataSource.destroy();
+async function run() {
+  await dataSource.initialize();
+  const tables = await dataSource.query(`SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname = 'public'`);
+  console.log(JSON.stringify(tables, null, 2));
+  process.exit(0);
 }
 
-check().catch(console.error);
+run().catch(console.error);

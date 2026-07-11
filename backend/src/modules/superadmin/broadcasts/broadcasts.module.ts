@@ -13,6 +13,7 @@ import { FindBroadcastsService } from './services/find-broadcasts.service';
 import { UpdateBroadcastsService } from './services/update-broadcasts.service';
 import { DeleteBroadcastsService } from './services/delete-broadcasts.service';
 import { BroadcastsRepository } from './broadcasts.repository';
+import { BroadcastProcessor } from './processors/broadcast.processor';
 
 @Module({
   imports: [
@@ -22,6 +23,14 @@ import { BroadcastsRepository } from './broadcasts.repository';
     }),
   ],
   controllers: [SendBroadcastsController, CreateBroadcastsController, FindBroadcastsController, UpdateBroadcastsController, DeleteBroadcastsController],
-  providers: [SendBroadcastsService, CreateBroadcastsService, FindBroadcastsService, UpdateBroadcastsService, DeleteBroadcastsService, BroadcastsRepository],
+  providers: [
+    SendBroadcastsService, 
+    CreateBroadcastsService, 
+    FindBroadcastsService, 
+    UpdateBroadcastsService, 
+    DeleteBroadcastsService, 
+    BroadcastsRepository,
+    ...(process.platform !== 'win32' ? [BroadcastProcessor] : [])
+  ],
 })
 export class BroadcastsModule {}
