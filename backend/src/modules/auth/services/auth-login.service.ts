@@ -1,6 +1,8 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { InjectDataSource } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { AuthRepository } from '@/modules/auth/auth.repository';
 import { LoginDto } from '@/modules/auth/dto/login.dto';
@@ -22,6 +24,7 @@ export class AuthLoginService {
     private authRepository: AuthRepository,
     private jwtService: JwtService,
     private configService: ConfigService,
+    @InjectDataSource() private readonly dataSource: DataSource,
   ) {}
 
   async login(loginDto: LoginDto): Promise<AuthLoginResponse> {
@@ -63,11 +66,22 @@ export class AuthLoginService {
       ...userWithoutPassword
     } = user;
 
+    let tenantId = undefined;
+    if (user.role === 'ADMIN') {
+      const tenantResult = await this.dataSource.query(
+        'SELECT id FROM gyms WHERE "adminEmail" = $1 AND "isDeleted" = false LIMIT 1',
+        [user.email]
+      );
+      if (tenantResult && tenantResult.length > 0) {
+        tenantId = tenantResult[0].id;
+      }
+    }
+
     return {
       message: AUTH_MESSAGES.LOGIN_SUCCESS,
       data: {
         ...tokens,
-        user: userWithoutPassword,
+        user: { ...userWithoutPassword, tenantId },
       },
     };
   }

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { LandingUrlConfig } from '@/app/(landing)/landing_url_config';
+import { logout } from '@/lib/api';
 
 export default function SuperadminHeader() {
   const [showProfile, setShowProfile] = useState(false);
@@ -77,13 +78,15 @@ export default function SuperadminHeader() {
                 </Link>
               </div>
               <div className="border-t border-[var(--border)] py-1 bg-[var(--bg-header)]">
-                <Link
-                  href={LandingUrlConfig.PAGES.HOME}
+                <button
                   className="w-full flex items-center gap-2 px-4 py-2 text-sm text-[var(--danger)] hover:bg-[var(--danger-bg)] font-medium transition-colors"
-                  onClick={() => { setShowProfile(false); }}
+                  onClick={async () => {
+                    setShowProfile(false);
+                    await logout();
+                  }}
                 >
                   <LogOut size={15} /> Exit SaaS Panel
-                </Link>
+                </button>
               </div>
             </div>
           )}

@@ -12,7 +12,7 @@ export class ProvisionTenantService {
     @InjectDataSource() private readonly masterDataSource: DataSource, // Injects the default master connection
   ) {}
 
-  async provisionNewTenant(tenantId: string): Promise<void> {
+  async provisionNewTenant(tenantId: string, adminEmail?: string, ownerName?: string, temporaryPassword?: string): Promise<void> {
     const dbName = `tenant_db_${tenantId}`;
     this.logger.log(`Starting provisioning for new tenant database: ${dbName}`);
 
@@ -51,6 +51,20 @@ export class ProvisionTenantService {
       this.logger.log(`Running migrations for ${dbName}...`);
       await tenantDataSource.runMigrations();
       this.logger.log(`Migrations completed successfully for ${dbName}`);
+
+      // Seed the admin user if credentials are provided
+      if (adminEmail && ownerName && temporaryPassword) {
+        this.logger.log(`Seeding initial ADMIN user for ${dbName}...`);
+        const bcrypt = require('bcrypt');
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(temporaryPassword, salt);
+
+        await this.masterDataSource.query(
+          `INSERT INTO "users" ("name", "email", "password", "role", "isActive") VALUES ($1, $2, $3, $4, $5)`,
+          [ownerName, adminEmail, hashedPassword, 'ADMIN', true]
+        );
+        this.logger.log(`Successfully seeded ADMIN user for ${dbName}`);
+      }
     } catch (error: any) {
       this.logger.error(`Migration failed for ${dbName}`, error.stack);
       throw error;
@@ -61,3 +75,4 @@ export class ProvisionTenantService {
     }
   }
 }
+

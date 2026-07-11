@@ -63,6 +63,7 @@ export default function AddGymPage() {
         memberCount: 0,
         monthlyRevenue: 0,
         databaseVersion: 'v1.0.0',
+        temporaryPassword: data.temporaryPassword,
       });
       
       addLog('Provisioning complete! Redirecting...');

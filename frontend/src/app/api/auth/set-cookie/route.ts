@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
   }
 
   if (user) {
-    res.cookies.set('gymsmart_user', JSON.stringify({ name: user?.name, email: user?.email, role: user?.role }), {
+    res.cookies.set('gymsmart_user', JSON.stringify({ name: user?.name, email: user?.email, role: user?.role, tenantId: user?.tenantId }), {
       httpOnly: false,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',

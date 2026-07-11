@@ -44,7 +44,7 @@ export class CreateGymsService {
     
     // Trigger tenant provisioning (database creation, migrations, etc.)
     try {
-      await this.provisionTenantService.provisionNewTenant(gym.id);
+      await this.provisionTenantService.provisionNewTenant(gym.id, dto.adminEmail, dto.ownerName, dto.temporaryPassword);
       gym.status = TenantStatus.ACTIVE;
     } catch (err) {
       this.logger.error('Failed to provision tenant DB', err);
