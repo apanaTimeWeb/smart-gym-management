@@ -1,6 +1,6 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { AuditService } from '../audit.service';
-import { GetAuditLogsDto } from '../dtos/get-audit-logs.dto';
+import { GetAuditLogsDto } from '../dto/get-audit-logs.dto';
 
 @Controller('audit')
 export class AuditLogRetrievalController {

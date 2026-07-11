@@ -16,6 +16,7 @@ import { MigrationsModule } from './migrations/migrations.module';
 import { PlansModule } from './plans/plans.module';
 import { SettingsModule } from './settings/settings.module';
 import { SystemModule } from './system/system.module';
+import { TenantsModule } from './tenants/tenants.module';
 import { TicketsModule } from './tickets/tickets.module';
 
 @Module({
@@ -35,6 +36,7 @@ import { TicketsModule } from './tickets/tickets.module';
     PlansModule,
     SettingsModule,
     SystemModule,
+    TenantsModule,
     TicketsModule,
     RouterModule.register([
       {
@@ -55,7 +57,8 @@ import { TicketsModule } from './tickets/tickets.module';
           PlansModule,
           SettingsModule,
           SystemModule,
-          TicketsModule
+          TenantsModule,
+          TicketsModule,
         ],
       },
     ]),

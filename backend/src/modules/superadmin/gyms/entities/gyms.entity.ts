@@ -6,19 +6,10 @@ import {
   UpdateDateColumn,
   Index,
 } from 'typeorm';
+import { SaaSPlanTier, TenantStatus } from '@/modules/superadmin/superadmin.constants';
 
-export enum TenantStatus {
-  ACTIVE = 'ACTIVE',
-  SUSPENDED = 'SUSPENDED',
-  TRIAL = 'TRIAL',
-  CANCELLED = 'CANCELLED',
-}
-
-export enum SaaSPlanTier {
-  BASIC = 'BASIC',
-  PRO = 'PRO',
-  ENTERPRISE = 'ENTERPRISE',
-}
+// Re-export for backwards compatibility with existing imports
+export { SaaSPlanTier, TenantStatus };
 
 @Entity('superadmin_gyms')
 export class Gym {

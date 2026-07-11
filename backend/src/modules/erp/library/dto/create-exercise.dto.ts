@@ -47,6 +47,11 @@ export class CreateExerciseDto {
   @IsOptional()
   videoUrl?: string;
 
+  @ApiProperty({ description: 'Image / thumbnail URL', example: 'https://cdn.example.com/exercises/pushup.webp', required: false })
+  @IsString()
+  @IsOptional()
+  imageUrl?: string;
+
   @ApiProperty({ description: 'Is active', default: true, required: false })
   @IsBoolean()
   @IsOptional()

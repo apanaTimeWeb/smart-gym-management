@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   Index,
 } from 'typeorm';
+import { SaaSPlanTier } from '@/modules/superadmin/superadmin.constants';
 
 export enum InvoiceStatus {
   PAID = 'PAID',
@@ -13,11 +14,8 @@ export enum InvoiceStatus {
   FAILED = 'FAILED',
 }
 
-export enum SaaSPlanTier {
-  BASIC = 'BASIC',
-  PRO = 'PRO',
-  ENTERPRISE = 'ENTERPRISE',
-}
+// Re-export for backwards compatibility
+export { SaaSPlanTier };
 
 @Entity('superadmin_invoices')
 export class Invoice {

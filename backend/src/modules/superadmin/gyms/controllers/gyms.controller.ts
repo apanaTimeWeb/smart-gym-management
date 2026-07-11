@@ -32,6 +32,13 @@ export class GymsController {
     return this.gymsService.findAll(pageNum, limitNum, search || '');
   }
 
+  @Get('stats')
+  @ApiOperation({ summary: 'Get aggregated gym/tenant statistics for the superadmin dashboard' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Gym statistics fetched successfully' })
+  getStats() {
+    return this.gymsService.getStats();
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get a specific Gym' })
   @ApiResponse({ status: HttpStatus.OK })
