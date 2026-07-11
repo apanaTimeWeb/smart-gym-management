@@ -47,6 +47,7 @@ export class ProvisionTenantService {
       entities: [__dirname + '/../../../../**/*.entity{.ts,.js}'],
       migrations: [__dirname + '/../../../../database/migrations/*{.ts,.js}'],
       synchronize: false,
+      migrationsTableName: 'typeorm_migrations',
     });
 
     try {
