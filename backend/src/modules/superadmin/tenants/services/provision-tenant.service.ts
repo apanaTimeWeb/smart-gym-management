@@ -45,16 +45,13 @@ export class ProvisionTenantService {
       type: 'postgres',
       url: parsedUrl.toString(),
       entities: [__dirname + '/../../../../**/*.entity{.ts,.js}'],
-      migrations: [__dirname + '/../../../../database/migrations/*{.ts,.js}'],
-      synchronize: false,
-      migrationsTableName: 'typeorm_migrations',
+      synchronize: true, // Use auto-sync for fresh tenant DBs to avoid mixed master/tenant migration conflicts
     });
 
     try {
+      this.logger.log(`Initializing schema for ${dbName}...`);
       await tenantDataSource.initialize();
-      this.logger.log(`Running migrations for ${dbName}...`);
-      await tenantDataSource.runMigrations();
-      this.logger.log(`Migrations completed successfully for ${dbName}`);
+      this.logger.log(`Successfully initialized schema for ${dbName}`);
 
       // Seed the admin user if credentials are provided
       if (adminEmail && ownerName && temporaryPassword) {
