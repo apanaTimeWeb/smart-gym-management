@@ -1,12 +1,22 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback  } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DUMMY_BROADCASTS } from '../SuperadminSharedConstants';
+import { useSuperadminData } from '../useSuperadminData';
+import { SuperadminUrlConfig } from '../../superadmin_url_config';
 import { Broadcast } from '../../superadmin_types/superadmin_types';
 import { BroadcastSchema, BroadcastFormData } from '../SuperadminZodSchemas';
+import { useSuperadminMutation } from './useSuperadminMutation';
+import { superadminApi } from '@/lib/superadmin-api';
 
 export const useBroadcastsPage = () => {
-  const [broadcasts, setBroadcasts] = useState<Broadcast[]>(DUMMY_BROADCASTS);
+  const [broadcasts, setBroadcasts] = useState<Broadcast[]>([]);
+  const { data: fetchedData, loading, error } = useSuperadminData<Broadcast[]>(SuperadminUrlConfig.BACKEND_API.BROADCASTS_BASE);
+
+  useEffect(() => {
+    if (fetchedData) {
+      setBroadcasts(fetchedData);
+    }
+  }, [fetchedData]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -21,21 +31,21 @@ export const useBroadcastsPage = () => {
     },
   });
 
-  const handleCreateBroadcast = useCallback((data: BroadcastFormData) => {
-    const newBroadcast: Broadcast = {
-      id: `bc-new-${Date.now()}`,
-      title: data.title,
-      content: data.content,
-      audience: data.audience,
-      status: data.status,
-      scheduledDate: data.status === 'SCHEDULED' ? data.scheduledDate || null : null,
-      sentDate: data.status === 'SENT' ? new Date().toISOString() : null,
-    };
+  const { mutate, isMutating } = useSuperadminMutation();
 
-    setBroadcasts((prev) => [newBroadcast, ...prev]);
-    setIsModalOpen(false);
-    form.reset();
-  }, [form]);
+  const handleCreateBroadcast = useCallback(async (data: BroadcastFormData) => {
+    await mutate(
+      () => superadminApi.broadcasts.create(data),
+      {
+        successMessage: 'Broadcast created successfully',
+        onSuccess: (res) => {
+          setBroadcasts(prev => [res.data, ...prev]);
+          setIsModalOpen(false);
+          form.reset();
+        }
+      }
+    );
+  }, [form, mutate]);
 
   const filteredBroadcasts = useMemo(() => {
     const lowerQuery = searchQuery.toLowerCase();
@@ -46,6 +56,8 @@ export const useBroadcastsPage = () => {
   }, [broadcasts, searchQuery]);
 
   return {
+    loading,
+    error,
     broadcasts: filteredBroadcasts,
     searchQuery,
     setSearchQuery,
@@ -53,5 +65,6 @@ export const useBroadcastsPage = () => {
     setIsModalOpen,
     form,
     handleCreateBroadcast,
+    isMutating,
   };
 };

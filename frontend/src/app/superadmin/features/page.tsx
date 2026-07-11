@@ -1,11 +1,19 @@
 'use client';
 
-import { DUMMY_FEATURE_FLAGS, DUMMY_RELEASE_NOTES } from '@/app/superadmin/superadmin_utils/SuperadminSharedConstants';
+import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
+import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { ToggleLeft, Send, Search } from 'lucide-react';
 import { useState } from 'react';
+import { FeatureFlag, ReleaseNote } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 export default function FeaturesPage() {
   const [activeTab, setActiveTab] = useState<'FLAGS' | 'NOTES'>('FLAGS');
+  const { data, loading, error } = useSuperadminData<{ flags: FeatureFlag[], notes: ReleaseNote[] }>(SuperadminUrlConfig.BACKEND_API.FEATURES_BASE);
+
+  if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]">Loading...</div>;
+  if (error || !data) return <div className="p-8 text-center text-[var(--danger)]">Error loading data.</div>;
+
+  const { flags: DUMMY_FEATURE_FLAGS, notes: DUMMY_RELEASE_NOTES } = data;
 
   return (
     <div className="space-y-6">

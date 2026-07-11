@@ -1,17 +1,48 @@
 'use client';
 
-import { useState } from 'react';
-import { Database, ShieldAlert, Activity, Filter, RefreshCcw, Search } from 'lucide-react';
-import { DUMMY_TENANTS, DUMMY_AUDIT_LOGS } from '@/app/superadmin/superadmin_utils/SuperadminSharedConstants';
+import { useState, useEffect } from 'react';
+import { Database, ShieldAlert, Activity, Filter, RefreshCcw, Search, Loader2 } from 'lucide-react';
+import { superadminApi } from '@/lib/superadmin-api';
+import toast from 'react-hot-toast';
 
 export default function SystemHealthPage() {
   const [logSearch, setLogSearch] = useState('');
-  
-  const filteredLogs = DUMMY_AUDIT_LOGS.filter(log => 
-    log.tenantName.toLowerCase().includes(logSearch.toLowerCase()) || 
-    log.action.toLowerCase().includes(logSearch.toLowerCase()) ||
-    log.actorEmail.toLowerCase().includes(logSearch.toLowerCase())
+  const [tenants, setTenants] = useState<any[]>([]);
+  const [auditLogs, setAuditLogs] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const [migrationsRes, auditRes] = await Promise.all([
+          superadminApi.migrations.getAll(),
+          superadminApi.auditLogs.getGlobalLogs()
+        ]);
+        
+        // The migrations service returns { migrations: [], tenants: [] }
+        setTenants(migrationsRes.data?.tenants || []);
+        
+        // The global audit log service returns { globalLogs: [] } or just the array
+        const logs = auditRes.data?.globalLogs || auditRes.data || [];
+        setAuditLogs(Array.isArray(logs) ? logs : []);
+      } catch (error: any) {
+        toast.error('Failed to load system data');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchData();
+  }, []);
+
+  const filteredLogs = auditLogs.filter(log => 
+    log.tenantName?.toLowerCase().includes(logSearch.toLowerCase()) || 
+    log.action?.toLowerCase().includes(logSearch.toLowerCase()) ||
+    log.actorEmail?.toLowerCase().includes(logSearch.toLowerCase())
   );
+
+  if (isLoading) {
+    return <div className="flex h-96 items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-[var(--primary)]" /></div>;
+  }
 
   return (
     <div className="space-y-8">
@@ -28,7 +59,7 @@ export default function SystemHealthPage() {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {DUMMY_TENANTS.map(tenant => {
+          {tenants.map(tenant => {
             const isOutdated = tenant.databaseVersion !== 'v2.4.1';
             return (
               <div key={tenant.id} className={`border rounded-xl p-6 ${isOutdated ? 'bg-[var(--warning)]/5 border-orange-500/20' : 'bg-[var(--bg-page)] border-[var(--border)]'}`}>
@@ -100,10 +131,10 @@ export default function SystemHealthPage() {
                     {new Date(log.timestamp).toLocaleString()}
                   </td>
                   <td className="p-4 text-[var(--primary)] font-medium">
-                    {log.tenantName}
+                    {log.targetResource || log.tenantName}
                   </td>
                   <td className="p-4">
-                    <p className="text-[var(--text-primary)]">{log.actorEmail}</p>
+                    <p className="text-[var(--text-primary)]">{log.actorName || log.actorEmail}</p>
                     <span className="text-xs text-[var(--text-disabled)] bg-[var(--border)] px-2 py-0.5 rounded mt-1 inline-block">{log.actorRole}</span>
                   </td>
                   <td className="p-4 font-mono text-xs text-orange-300">

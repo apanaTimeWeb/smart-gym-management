@@ -3,12 +3,19 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Plus, Search, MoreVertical, LogIn, Ban, CheckCircle2 } from 'lucide-react';
-import { DUMMY_TENANTS } from '@/app/superadmin/superadmin_utils/SuperadminSharedConstants';
+import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import toast from 'react-hot-toast';
+import { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 export default function GymsList() {
-  const [search, setSearch] = useState('');
+  const { data: DUMMY_TENANTS, loading, error } = useSuperadminData<Tenant[]>(SuperadminUrlConfig.BACKEND_API.GYMS_BASE);
+
+    const [search, setSearch] = useState('');
+if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]">Loading...</div>;
+  if (error || !DUMMY_TENANTS) return <div className="p-8 text-center text-[var(--danger)]">Error loading data.</div>;
+
+
   
   const filteredGyms = DUMMY_TENANTS.filter(g => 
     g.name.toLowerCase().includes(search.toLowerCase()) || 

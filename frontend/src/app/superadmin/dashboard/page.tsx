@@ -2,12 +2,18 @@
 
 import { Users, Building2, CreditCard, Activity } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { 
-  DUMMY_DASHBOARD_METRICS, 
-  REVENUE_CHART_DATA 
-} from '@/app/superadmin/superadmin_utils/SuperadminSharedConstants';
+import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
+import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
+import { SaaSDashboardMetrics, Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 export default function SaaSDashboard() {
+  const { data, loading, error } = useSuperadminData<{ metrics: SaaSDashboardMetrics, revenue: any[], growth: any[] }>(SuperadminUrlConfig.BACKEND_API.DASHBOARD_BASE);
+
+  if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]">Loading...</div>;
+  if (error || !data) return <div className="p-8 text-center text-[var(--danger)]">Error loading data.</div>;
+
+  const { metrics: DUMMY_DASHBOARD_METRICS, revenue: REVENUE_CHART_DATA, growth: GYM_GROWTH_DATA } = data;
+
   const metrics = [
     { label: 'Total MRR', value: `$${DUMMY_DASHBOARD_METRICS.monthlyRecurringRevenue.toLocaleString()}`, icon: CreditCard, color: 'text-[var(--success)]' },
     { label: 'Total Gyms (Tenants)', value: DUMMY_DASHBOARD_METRICS.totalGyms, icon: Building2, color: 'text-[var(--primary)]' },

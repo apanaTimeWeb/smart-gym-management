@@ -1,6 +1,7 @@
 'use client';
 
-import { DUMMY_BACKUPS } from '@/app/superadmin/superadmin_utils/SuperadminSharedConstants';
+import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
+import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { DatabaseBackup, Search, Download, RotateCcw } from 'lucide-react';
 import { BackupRecord } from '@/app/superadmin/superadmin_types/superadmin_types';
 import { useState } from 'react';
@@ -12,7 +13,13 @@ const StatusColors: Record<BackupRecord['status'], string> = {
 };
 
 export default function BackupsPage() {
-  const [search, setSearch] = useState('');
+  const { data: DUMMY_BACKUPS, loading, error } = useSuperadminData<BackupRecord[]>(SuperadminUrlConfig.BACKEND_API.BACKUPS_BASE);
+
+    const [search, setSearch] = useState('');
+if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]">Loading...</div>;
+  if (error || !DUMMY_BACKUPS) return <div className="p-8 text-center text-[var(--danger)]">Error loading data.</div>;
+
+
 
   const filtered = DUMMY_BACKUPS.filter(b => b.tenantName.toLowerCase().includes(search.toLowerCase()) || b.databaseName.toLowerCase().includes(search.toLowerCase()));
 

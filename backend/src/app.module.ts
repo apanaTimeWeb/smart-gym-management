@@ -17,6 +17,7 @@ import { HealthModule } from '@/core/health/health.module';
 
 import { AuthModule } from '@/modules/auth/auth.module';
 import { ErpModule } from '@/modules/erp/erp.module';
+import { SuperadminModule } from '@/modules/superadmin/superadmin.module';
 
 import { MediaModule } from '@/core/media/media.module';
 import { AuditInterceptor } from '@/core/interceptors/audit.interceptor';
@@ -108,6 +109,7 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
     // ─── Feature Modules ──────────────────────────────────────────────────
     AuthModule,
     ErpModule,
+    SuperadminModule,
     
     // ─── Route Prefixing ──────────────────────────────────────────────────
     RouterModule.register([

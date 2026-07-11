@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, Database, Save, Loader2 } from 'lucide-react';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { OnboardGymSchema, OnboardGymFormValues } from '@/app/superadmin/superadmin_utils/SuperadminValidation';
+import { superadminApi } from '@/lib/superadmin-api';
 import toast from 'react-hot-toast';
 
 export default function AddGymPage() {
@@ -50,12 +51,31 @@ export default function AddGymPage() {
     addLog('Sending Welcome Email with temporary password...');
     await new Promise(r => setTimeout(r, 800));
     
-    addLog('Provisioning complete! Redirecting...');
-    await new Promise(r => setTimeout(r, 500));
+    try {
+      addLog('Sending payload to backend...');
+      await superadminApi.gyms.create({
+        name: data.gymName,
+        ownerName: data.ownerName,
+        adminEmail: data.adminEmail,
+        phone: data.phone,
+        plan: data.plan,
+        status: 'TRIAL',
+        memberCount: 0,
+        monthlyRevenue: 0,
+        databaseVersion: 'v1.0.0',
+      });
+      
+      addLog('Provisioning complete! Redirecting...');
+      await new Promise(r => setTimeout(r, 500));
 
-    toast.success('Tenant database provisioned successfully!');
-    setIsProvisioning(false);
-    router.push(SuperadminUrlConfig.PAGES.GYMS_LIST);
+      toast.success('Tenant database provisioned successfully!');
+      router.push(SuperadminUrlConfig.PAGES.GYMS_LIST);
+    } catch (e: any) {
+      toast.error(e.message || 'Failed to provision tenant');
+      addLog(`Error: ${e.message || 'Failed to provision tenant'}`);
+    } finally {
+      setIsProvisioning(false);
+    }
   };
 
   return (

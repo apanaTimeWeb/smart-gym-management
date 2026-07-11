@@ -1,12 +1,22 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback  } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DUMMY_COUPONS } from '../SuperadminSharedConstants';
+import { useSuperadminData } from '../useSuperadminData';
+import { SuperadminUrlConfig } from '../../superadmin_url_config';
 import { Coupon } from '../../superadmin_types/superadmin_types';
 import { CouponSchema, CouponFormData } from '../SuperadminZodSchemas';
+import { useSuperadminMutation } from './useSuperadminMutation';
+import { superadminApi } from '@/lib/superadmin-api';
 
 export const useCouponsPage = () => {
-  const [coupons, setCoupons] = useState<Coupon[]>(DUMMY_COUPONS);
+  const [coupons, setCoupons] = useState<Coupon[]>([]);
+  const { data: fetchedData, loading, error } = useSuperadminData<Coupon[]>(SuperadminUrlConfig.BACKEND_API.COUPONS_BASE);
+
+  useEffect(() => {
+    if (fetchedData) {
+      setCoupons(fetchedData);
+    }
+  }, [fetchedData]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -20,21 +30,21 @@ export const useCouponsPage = () => {
     },
   });
 
-  const handleCreateCoupon = useCallback((data: CouponFormData) => {
-    const newCoupon: Coupon = {
-      id: `cpn-new-${Date.now()}`,
-      code: data.code.toUpperCase(),
-      discountPercentage: data.discountPercentage,
-      maxUses: data.maxUses,
-      currentUses: 0,
-      status: 'ACTIVE',
-      expiryDate: data.expiryDate,
-    };
+  const { mutate, isMutating } = useSuperadminMutation();
 
-    setCoupons((prev) => [newCoupon, ...prev]);
-    setIsModalOpen(false);
-    form.reset();
-  }, [form]);
+  const handleCreateCoupon = useCallback(async (data: CouponFormData) => {
+    await mutate(
+      () => superadminApi.coupons.create(data),
+      {
+        successMessage: 'Coupon created successfully',
+        onSuccess: (res) => {
+          setCoupons(prev => [res.data, ...prev]);
+          setIsModalOpen(false);
+          form.reset();
+        }
+      }
+    );
+  }, [form, mutate]);
 
   const activeCoupons = useMemo(() => coupons.filter(c => c.status === 'ACTIVE').length, [coupons]);
   const totalRedeemed = useMemo(() => coupons.reduce((sum, c) => sum + c.currentUses, 0), [coupons]);
@@ -45,6 +55,8 @@ export const useCouponsPage = () => {
   }, [coupons, searchQuery]);
 
   return {
+    loading,
+    error,
     coupons: filteredCoupons,
     searchQuery,
     setSearchQuery,
@@ -52,6 +64,7 @@ export const useCouponsPage = () => {
     setIsModalOpen,
     form,
     handleCreateCoupon,
+    isMutating,
     activeCoupons,
     totalRedeemed,
   };

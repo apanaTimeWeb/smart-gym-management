@@ -31,7 +31,10 @@ export default function CouponsPage() {
     handleCreateCoupon,
     activeCoupons,
     totalRedeemed
-  } = useCouponsPage();
+  , loading, error} = useCouponsPage();
+
+  if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]">Loading...</div>;
+  if (error) return <div className="p-8 text-center text-[var(--danger)]">Error loading data.</div>;
 
   const handleRowClick = (code: string) => {
     toast(`Clicked on coupon: ${code}`);

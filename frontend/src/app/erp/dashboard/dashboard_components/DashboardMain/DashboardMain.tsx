@@ -48,9 +48,9 @@ function DashboardContent() {
  );
 }
 
-export default function DashboardMain() {
+export default function DashboardMain({ initialData }: { initialData?: any }) {
  return (
- <DashboardProvider>
+ <DashboardProvider initialData={initialData}>
  <div className="min-h-full dashboard-module">
  <DashboardContent />
  </div>

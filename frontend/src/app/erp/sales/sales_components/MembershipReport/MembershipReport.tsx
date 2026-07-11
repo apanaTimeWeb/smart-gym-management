@@ -8,7 +8,7 @@ export default function MembershipReport() {
   const { search, currentPage, setCurrentPage, membershipReport, membershipTotals, loading } = useSalesContext();
   
   const filtered = membershipReport.filter((r: any) => 
-    r.plan.toLowerCase().includes(search.toLowerCase())
+    (r.plan || '').toLowerCase().includes(search.toLowerCase())
   );
 
   const ITEMS_PER_PAGE = 10;
@@ -39,11 +39,11 @@ export default function MembershipReport() {
   <tbody className="divide-y divide-[var(--sales-border)]">
   {paginated.map((r, i) => (
   <tr key={i} className="hover:bg-[var(--primary-subtle)] transition-colors">
-  <td className="px-4 py-3 text-sm font-medium text-[var(--sales-text-primary)]">{r.plan}</td>
-  <td className="px-4 py-3 text-sm text-[var(--sales-text-secondary)]">₹{r.receivable.toLocaleString()}</td>
-  <td className="px-4 py-3 text-sm font-medium text-[var(--success)] dark:text-[var(--success)]">₹{r.received.toLocaleString()}</td>
-  <td className="px-4 py-3 text-sm font-medium text-[var(--warning)] dark:text-[var(--warning)]">₹{r.remaining.toLocaleString()}</td>
-  <td className="px-4 py-3 text-sm text-[var(--danger)]">₹{r.refund.toLocaleString()}</td>
+  <td className="px-4 py-3 text-sm font-medium text-[var(--sales-text-primary)]">{r.plan || ''}</td>
+  <td className="px-4 py-3 text-sm text-[var(--sales-text-secondary)]">₹{(r.receivable || 0).toLocaleString()}</td>
+  <td className="px-4 py-3 text-sm font-medium text-[var(--success)] dark:text-[var(--success)]">₹{(r.received || 0).toLocaleString()}</td>
+  <td className="px-4 py-3 text-sm font-medium text-[var(--warning)] dark:text-[var(--warning)]">₹{(r.remaining || 0).toLocaleString()}</td>
+  <td className="px-4 py-3 text-sm text-[var(--danger)]">₹{(r.refund || 0).toLocaleString()}</td>
   </tr>
   ))}
  <tr className="bg-[var(--bg-input)] font-semibold border-t-2 border-[var(--sales-border)]">
