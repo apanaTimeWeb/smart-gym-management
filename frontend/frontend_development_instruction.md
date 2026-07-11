@@ -90,4 +90,18 @@ For any real-time in-app communication (e.g., Support chat, global maintenance b
 22. **Tenant Context & Centralized Headers (Multi-Tenancy)**:
 The backend utilizes a strict Database-per-Tenant architecture. Therefore, the frontend MUST NOT rely on individual components to manually send tenant information. You must implement a centralized API fetch wrapper (e.g., `src/lib/api.ts`) that automatically intercepts every outgoing request and injects the required `x-tenant-id` header (extracted from the authenticated user's session, JWT, or subdomain) along with the `Authorization` token. Individual UI components and hooks must remain completely unaware of the tenant routing logic.
 
+23. **Password Visibility Toggle**:
+Whenever there is a password input field (e.g., Login, Registration, Change Password, Provision Tenant), you MUST include an eye icon (visibility toggle) inside or next to the input field. Clicking this icon should toggle the input type between `password` and `text`, allowing the user to see the password they have typed. Use standard icons (like `Eye` and `EyeOff` from lucide-react) for this functionality.
+24. **Date & Time Standardization (Timezone Safety)**:
+Frontend UI components must never send raw `new Date()` objects directly to the backend. The backend must always receive dates in **UTC (ISO 8601 format)**. When displaying dates back to the user, the frontend must intercept the UTC string and convert it to the user's local timezone using a standard library (like `date-fns` or `dayjs`). This guarantees zero offset clashes for a global SaaS.
+
+25. **Role-Based UI Hiding (RBAC)**:
+Never rely solely on the backend to block unauthorized actions while leaving the action button visible on the frontend. The frontend must implement a centralized `usePermissions()` or `useAuth()` hook that checks the active user's role (e.g., SUPERADMIN, STAFF, MEMBER). Destructive or restricted UI elements (like 'Delete Gym' or 'Refund Payment') MUST be completely hidden or safely disabled if the user lacks the required role.
+
+26. **Skeleton Loaders over Generic Spinners**:
+When fetching complex layout data or lists (like a Dashboard or Member List), do NOT use full-page generic spinning circles that cause massive layout shifts once data loads. Instead, implement **Skeleton Loaders** (using Tailwind's `animate-pulse` utility or a skeleton library) that mimic the shape of the incoming data. This provides a vastly superior, premium user experience.
+
+27. **Strict TypeScript (No `any` Rule)**:
+The use of the `any` type is strictly forbidden across the frontend architecture. If an API payload or dynamic structure's exact shape is temporarily unknown, use the `unknown` type and assert or validate it safely (using Zod) at runtime. This prevents AI code generation from taking shortcuts that eventually cause runtime crashes in production.
+
 Think step-by-step. Create a detailed implementation plan first so I can review it, and then execute it perfectly without breaking existing data flows!
