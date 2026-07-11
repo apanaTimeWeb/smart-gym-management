@@ -1,5 +1,4 @@
 import { Injectable, Inject } from '@nestjs/common';
-
 import { Repository, DataSource, LessThanOrEqual, ILike } from 'typeorm';
 import { Product } from '@/modules/erp/store/entities/product.entity';
 import { Order } from '@/modules/erp/store/entities/order.entity';
@@ -9,9 +8,7 @@ import { STORE_CONSTANTS } from './store.constants';
 
 @Injectable()
 export class StoreRepository {
-
-
-    public readonly productRepository: Repository<Product>;
+  public readonly productRepository: Repository<Product>;
   public readonly orderRepository: Repository<Order>;
   public readonly orderItemRepository: Repository<OrderItem>;
 
@@ -70,5 +67,24 @@ export class StoreRepository {
 
   getDataSource() {
     return this.dataSource;
+  }
+
+  async createProduct(data: Partial<Product>) {
+    const entity = this.productRepository.create(data);
+    return this.productRepository.save(entity);
+  }
+
+  async updateProduct(id: number, data: Partial<Product>) {
+    await this.productRepository.update(id, data);
+    return this.productRepository.findOne({ where: { id } });
+  }
+
+  async softDeleteProduct(id: number) {
+    await this.productRepository.update(id, { isActive: false } as any);
+  }
+
+  async createOrder(data: Partial<Order>) {
+    const entity = this.orderRepository.create(data);
+    return this.orderRepository.save(entity);
   }
 }

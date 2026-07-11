@@ -18,4 +18,14 @@ export class SettingsRepository {
   async findFirst() {
     return this.settingRepository.findOne({ where: {} });
   }
+
+  async create(data: Partial<Settings>) {
+    const entity = this.settingRepository.create(data);
+    return this.settingRepository.save(entity);
+  }
+
+  async update(id: number, data: Partial<Settings>) {
+    await this.settingRepository.update(id, data);
+    return this.settingRepository.findOne({ where: { id } });
+  }
 }

@@ -19,6 +19,7 @@ import { DatabaseModule } from '@/core/database/database.module';
 import { AuthModule } from '@/modules/auth/auth.module';
 import { ErpModule } from '@/modules/erp/erp.module';
 import { SuperadminModule } from '@/modules/superadmin/superadmin.module';
+import { LandingModule } from '@/modules/core/public/landing/landing.module';
 
 import { MediaModule } from '@/core/media/media.module';
 import { AuditInterceptor } from '@/core/interceptors/audit.interceptor';
@@ -113,6 +114,7 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
     AuthModule,
     ErpModule,
     SuperadminModule,
+    LandingModule,
     
     // ─── Route Prefixing ──────────────────────────────────────────────────
     RouterModule.register([

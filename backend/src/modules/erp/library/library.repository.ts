@@ -34,4 +34,24 @@ export class LibraryRepository {
       skip: query.offset,
     });
   }
+
+  async createExercise(data: Partial<Exercise>) {
+    const entity = this.libraryRepository.create(data);
+    return this.libraryRepository.save(entity);
+  }
+
+  async updateExercise(id: number, data: Partial<Exercise>) {
+    await this.libraryRepository.update(id, data);
+    return this.libraryRepository.findOne({ where: { id } });
+  }
+
+  async createDietPlan(data: Partial<DietPlan>) {
+    const entity = this.dietPlanRepository.create(data);
+    return this.dietPlanRepository.save(entity);
+  }
+
+  async updateDietPlan(id: number, data: Partial<DietPlan>) {
+    await this.dietPlanRepository.update(id, data);
+    return this.dietPlanRepository.findOne({ where: { id } });
+  }
 }
