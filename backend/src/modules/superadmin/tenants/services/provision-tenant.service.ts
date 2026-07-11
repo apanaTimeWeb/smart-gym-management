@@ -2,6 +2,9 @@ import { Injectable, Logger } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { InjectDataSource } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
+import { User } from '@/modules/auth/entities/user.entity';
+import { Role } from '@/modules/auth/utils/auth.enums';
 
 @Injectable()
 export class ProvisionTenantService {
@@ -55,14 +58,20 @@ export class ProvisionTenantService {
       // Seed the admin user if credentials are provided
       if (adminEmail && ownerName && temporaryPassword) {
         this.logger.log(`Seeding initial ADMIN user for ${dbName}...`);
-        const bcrypt = require('bcrypt');
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(temporaryPassword, salt);
-
-        await this.masterDataSource.query(
-          `INSERT INTO "users" ("name", "email", "password", "role", "isActive") VALUES ($1, $2, $3, $4, $5)`,
-          [ownerName, adminEmail, hashedPassword, 'ADMIN', true]
-        );
+        
+        const userRepo = this.masterDataSource.getRepository(User);
+        
+        const newUser = userRepo.create({
+          name: ownerName,
+          email: adminEmail,
+          password: hashedPassword,
+          role: Role.ADMIN,
+          isActive: true
+        });
+        await userRepo.save(newUser);
+        
         this.logger.log(`Successfully seeded ADMIN user for ${dbName}`);
       }
     } catch (error: any) {
