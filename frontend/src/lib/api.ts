@@ -53,6 +53,10 @@ export function getUser(): { name: string; email: string; role: string; tenantId
 }
 
 export async function logout() {
+  if (typeof window !== 'undefined') {
+    localStorage.clear();
+    sessionStorage.clear();
+  }
   await fetch(AuthUrlConfig.PROXY_API.LOGOUT, { method: 'POST' });
   window.location.replace(AuthUrlConfig.PAGES.LOGIN);
 }
