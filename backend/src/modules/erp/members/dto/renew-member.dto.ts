@@ -1,4 +1,4 @@
-import { IsString, IsOptional } from 'class-validator';
+import { IsString, IsOptional, IsNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class RenewMemberDto {
@@ -6,4 +6,19 @@ export class RenewMemberDto {
   @IsOptional()
   @IsString()
   notes?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  planId?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  billingCycle?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsNumber()
+  durationMonths?: number;
 }

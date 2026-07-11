@@ -1,3 +1,9 @@
+import { NotesFeaturesService } from './services/notes-features.service';
+import { ToggleFeaturesService } from './services/toggle-features.service';
+import { FlagsFeaturesService } from './services/flags-features.service';
+import { NotesFeaturesController } from './controllers/notes-features.controller';
+import { ToggleFeaturesController } from './controllers/toggle-features.controller';
+import { FlagsFeaturesController } from './controllers/flags-features.controller';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FeatureFlag } from './entities/feature-flag.entity';
@@ -14,8 +20,8 @@ import { FeaturesRepository } from './features.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([FeatureFlag, ReleaseNote])],
-  controllers: [CreateFeaturesController, FindFeaturesController, UpdateFeaturesController, DeleteFeaturesController],
-  providers: [CreateFeaturesService, FindFeaturesService, UpdateFeaturesService, DeleteFeaturesService, FeaturesRepository],
+  controllers: [NotesFeaturesController, ToggleFeaturesController, FlagsFeaturesController, CreateFeaturesController, FindFeaturesController, UpdateFeaturesController, DeleteFeaturesController],
+  providers: [NotesFeaturesService, ToggleFeaturesService, FlagsFeaturesService, CreateFeaturesService, FindFeaturesService, UpdateFeaturesService, DeleteFeaturesService, FeaturesRepository],
   exports: [CreateFeaturesService, FindFeaturesService, UpdateFeaturesService, DeleteFeaturesService],
 })
 export class FeaturesModule {}

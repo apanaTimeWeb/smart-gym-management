@@ -1,7 +1,8 @@
-import { Controller, Post, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 import { CreateWorkoutService } from '../services/create-workout.service';
+import { CreateWorkoutDto } from '../dto/create-workout.dto';
 
 @ApiTags('Workout')
 @Controller('workout')
@@ -11,7 +12,7 @@ export class CreateWorkoutController {
   constructor(private readonly workoutService: CreateWorkoutService) {}
   
   @Post()
-  async execute() {
-    return this.workoutService.execute();
+  async execute(@Body() dto: CreateWorkoutDto) {
+    return this.workoutService.execute(dto);
   }
 }

@@ -1,3 +1,8 @@
+import { TenantsModule } from '../tenants/tenants.module';
+import { StatusGymsService } from './services/status-gyms.service';
+import { StatsGymsService } from './services/stats-gyms.service';
+import { StatusGymsController } from './controllers/status-gyms.controller';
+import { StatsGymsController } from './controllers/stats-gyms.controller';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Tenant } from './entities/gyms.entity';
@@ -12,8 +17,8 @@ import { DeleteGymsService } from './services/delete-gyms.service';
 import { GymsRepository } from './gyms.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Tenant])],
-  controllers: [CreateGymsController, FindGymsController, UpdateGymsController, DeleteGymsController],
-  providers: [CreateGymsService, FindGymsService, UpdateGymsService, DeleteGymsService, GymsRepository],
+  imports: [TenantsModule, TypeOrmModule.forFeature([Tenant])],
+  controllers: [StatusGymsController, StatsGymsController, CreateGymsController, FindGymsController, UpdateGymsController, DeleteGymsController],
+  providers: [StatusGymsService, StatsGymsService, CreateGymsService, FindGymsService, UpdateGymsService, DeleteGymsService, GymsRepository],
 })
 export class GymsModule {}

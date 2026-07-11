@@ -6,6 +6,7 @@ export class FindWorkoutService {
   constructor(private readonly repository: WorkoutRepository) {}
   
   async execute() {
-    // Implement find logic
+    const workouts = await this.repository.repo.find();
+    return { success: true, data: workouts };
   }
 }

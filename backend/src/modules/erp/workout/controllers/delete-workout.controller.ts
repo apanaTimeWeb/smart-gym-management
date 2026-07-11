@@ -1,4 +1,4 @@
-import { Controller, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Param, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 import { DeleteWorkoutService } from '../services/delete-workout.service';
@@ -10,8 +10,8 @@ import { DeleteWorkoutService } from '../services/delete-workout.service';
 export class DeleteWorkoutController {
   constructor(private readonly workoutService: DeleteWorkoutService) {}
   
-  @Delete()
-  async execute() {
-    return this.workoutService.execute();
+  @Delete(':id')
+  async execute(@Param('id') id: string) {
+    return this.workoutService.execute(Number(id));
   }
 }

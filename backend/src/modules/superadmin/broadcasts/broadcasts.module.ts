@@ -1,3 +1,5 @@
+import { SendBroadcastsService } from './services/send-broadcasts.service';
+import { SendBroadcastsController } from './controllers/send-broadcasts.controller';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Broadcast } from './entities/broadcasts.entity';
@@ -13,7 +15,7 @@ import { BroadcastsRepository } from './broadcasts.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Broadcast])],
-  controllers: [CreateBroadcastsController, FindBroadcastsController, UpdateBroadcastsController, DeleteBroadcastsController],
-  providers: [CreateBroadcastsService, FindBroadcastsService, UpdateBroadcastsService, DeleteBroadcastsService, BroadcastsRepository],
+  controllers: [SendBroadcastsController, CreateBroadcastsController, FindBroadcastsController, UpdateBroadcastsController, DeleteBroadcastsController],
+  providers: [SendBroadcastsService, CreateBroadcastsService, FindBroadcastsService, UpdateBroadcastsService, DeleteBroadcastsService, BroadcastsRepository],
 })
 export class BroadcastsModule {}
