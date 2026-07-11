@@ -21,7 +21,7 @@ export class CreateGymsService {
       gym.status = 'ACTIVE';
     } catch (err) {
       this.logger.error('Failed to provision tenant DB', err);
-      gym.status = 'PROVISION_FAILED';
+      gym.status = 'SUSPENDED';
     }
     
     return { success: true, data: gym };
