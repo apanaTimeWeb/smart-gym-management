@@ -342,3 +342,12 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 5. After the AI writes code, verify: Is there N+1? Is there a missing null check? Is a secret hardcoded? Is the response wrapped in the standard envelope?
 6. Run `pytest` against the live API to confirm contract compliance.
 7. Review the AI's isolated changes.
+
+## 38. True E2E Test Database Isolation & Lifecycle Verification
+* **The Rule:** End-to-End (E2E) test suites must NEVER run against your local development or production databases. Instead, the test suite setup (e.g., `conftest.py`) must dynamically hit the API to create a brand-new, isolated Test Tenant/Database specifically for that test run. All subsequent tests must inject this test tenant's ID into the `x-tenant-id` headers.
+* **The Data Lifecycle Rule:** True E2E tests must verify the full CRUD lifecycle within that isolated database. Tests cannot rely on stub IDs. They must:
+  1. **POST**: Create a uniquely identifiable record and extract its real ID from the `201` response.
+  2. **GET by ID**: Fetch that exact ID and assert `200 OK`.
+  3. **PATCH**: Update that exact ID and assert `200 OK`.
+  4. **DELETE**: Delete that exact ID, and then make a follow-up `GET` request to mathematically verify a `404 Not Found` response is returned.
+* **Why:** This architecture guarantees 100% test isolation, prevents test data pollution in your main database, and actively proves that your database provisioning systems (like TypeORM migrations) are actually executing correctly under the hood.
