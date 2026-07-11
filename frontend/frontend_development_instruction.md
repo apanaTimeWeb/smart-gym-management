@@ -86,4 +86,7 @@ For any real-time in-app communication (e.g., Support chat, global maintenance b
 - The Next.js frontend must act purely as a WebSocket client (using `socket.io-client`) connecting directly to the dedicated Node.js backend server.
 - All persistent connections and socket rooms are managed strictly inside the Node.js backend on the same VPS, avoiding Next.js serverless connection drop limitations.
 
+22. **Tenant Context & Centralized Headers (Multi-Tenancy)**:
+The backend utilizes a strict Database-per-Tenant architecture. Therefore, the frontend MUST NOT rely on individual components to manually send tenant information. You must implement a centralized API fetch wrapper (e.g., `src/lib/api.ts`) that automatically intercepts every outgoing request and injects the required `x-tenant-id` header (extracted from the authenticated user's session, JWT, or subdomain) along with the `Authorization` token. Individual UI components and hooks must remain completely unaware of the tenant routing logic.
+
 Think step-by-step. Create a detailed implementation plan first so I can review it, and then execute it perfectly without breaking existing data flows!

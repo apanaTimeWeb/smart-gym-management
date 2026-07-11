@@ -320,6 +320,20 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 
 ---
 
+## 39. True Multi-Tenancy (Database-per-Tenant Architecture)
+* **The Rule:** The application MUST be built using a strict **Database-per-Tenant** architecture to guarantee absolute data isolation, high performance, and security. It is unacceptable to dump all gyms or whatever the project is ' data into a single database with a `tenant_id` column (row-level multi-tenancy).
+* **Architecture Strategy:**
+  1. **Master Database:** A central database (e.g., `gymsmart_master`) must exist solely to manage global resources: Users, Authentication, Tenants (Gyms), Subscriptions, and Feature Flags.
+  2. **Tenant Databases:** Every time a new gym registers, the backend must programmatically create a brand-new database (e.g., `tenant_db_101`) and run all schema migrations on it automatically. *(Note: All these logical databases reside within the same single MySQL/PostgreSQL server instance; do not spin up new physical servers/VPS per tenant).*
+  3. **Dynamic Connection Routing (Request Scoped):** The backend must intercept every incoming API request. Using a global middleware or interceptor, it must extract the `x-tenant-id` (from HTTP headers or JWT payload) and dynamically construct or switch the database connection to point to that specific tenant's database for the lifecycle of that request.
+* **How to Apply to Different Frameworks:**
+  - **NestJS (Node/TypeScript):** Do not use a static `TypeOrmModule.forRoot`. Use request-scoped providers or custom connection factories that cache and resolve `DataSource` instances based on the request's tenant header.
+  - **Django (Python):** Use database routers (`db_for_read`, `db_for_write`) paired with thread-local storage or middleware to dynamically route queries to the correct database alias based on the request.
+  - **Spring Boot (Java):** Implement `AbstractRoutingDataSource` and use a `ThreadLocal` context holder populated via a HandlerInterceptor to route database connections dynamically.
+* **Why:** If Gym A and Gym B share the same database tables, a single missing `WHERE tenant_id = X` clause in a business query results in a catastrophic cross-tenant data breach. Database-per-tenant completely eliminates this risk at the infrastructure level. Furthermore, queries are infinitely faster because a table only contains the data of one specific gym, avoiding massive billion-row bottlenecks.
+
+---
+
 ## Updated Summary Checklist (v2):
 1. Identify the exact layer (Validation? Query? Business Logic? External Adapter?).
 2. Select the **one or two** micro-files associated with that layer.
