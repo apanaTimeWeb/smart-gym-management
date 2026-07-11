@@ -1,5 +1,5 @@
 import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray, IsEnum } from 'class-validator';
-import { BroadcastStatus, BroadcastAudience } from '../broadcasts.interfaces';
+import type {  BroadcastStatus, BroadcastAudience  } from '../broadcasts.interfaces';
 
 export class CreateBroadcastDto {
   @IsString()

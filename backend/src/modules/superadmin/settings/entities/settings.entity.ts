@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
-import {  } from '../settings.interfaces';
+import type {    } from '../settings.interfaces';
 
 @Entity('settings')
 export class GlobalSetting {

@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
-import { JobStatus } from '../jobs.interfaces';
+import type {  JobStatus  } from '../jobs.interfaces';
 
 @Entity('jobs')
 export class BackgroundJob {

@@ -1,5 +1,5 @@
 import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray, IsEnum } from 'class-validator';
-import {  } from '../settings.interfaces';
+import type {    } from '../settings.interfaces';
 
 export class CreateGlobalSettingDto {
   @IsString()

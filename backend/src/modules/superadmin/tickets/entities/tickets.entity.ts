@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
-import { TicketStatus, TicketPriority } from '../tickets.interfaces';
+import type {  TicketStatus, TicketPriority  } from '../tickets.interfaces';
 
 @Entity('tickets')
 export class SupportTicket {

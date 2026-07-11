@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Plan } from './entities/plans.entity';
+import { SubscriptionPlan } from './entities/plans.entity';
 import { CreatePlansController } from './controllers/create-plans.controller';
 import { FindPlansController } from './controllers/find-plans.controller';
 import { UpdatePlansController } from './controllers/update-plans.controller';
@@ -12,7 +12,7 @@ import { DeletePlansService } from './services/delete-plans.service';
 import { PlansRepository } from './plans.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Plan])],
+  imports: [TypeOrmModule.forFeature([SubscriptionPlan])],
   controllers: [CreatePlansController, FindPlansController, UpdatePlansController, DeletePlansController],
   providers: [CreatePlansService, FindPlansService, UpdatePlansService, DeletePlansService, PlansRepository],
 })

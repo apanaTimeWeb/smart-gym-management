@@ -1,5 +1,5 @@
 import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray, IsEnum } from 'class-validator';
-import {  } from '../audit-logs.interfaces';
+import type {    } from '../audit-logs.interfaces';
 
 export class CreateGlobalAuditLogDto {
   @IsString()

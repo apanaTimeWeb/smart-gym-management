@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
-import {  } from '../audit-logs.interfaces';
+import type {    } from '../audit-logs.interfaces';
 
 @Entity('audit-logs')
 export class GlobalAuditLog {

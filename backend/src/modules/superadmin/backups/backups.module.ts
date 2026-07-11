@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Backup } from './entities/backups.entity';
+import { BackupRecord } from './entities/backups.entity';
 import { CreateBackupsController } from './controllers/create-backups.controller';
 import { FindBackupsController } from './controllers/find-backups.controller';
 import { UpdateBackupsController } from './controllers/update-backups.controller';
@@ -12,7 +12,7 @@ import { DeleteBackupsService } from './services/delete-backups.service';
 import { BackupsRepository } from './backups.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Backup])],
+  imports: [TypeOrmModule.forFeature([BackupRecord])],
   controllers: [CreateBackupsController, FindBackupsController, UpdateBackupsController, DeleteBackupsController],
   providers: [CreateBackupsService, FindBackupsService, UpdateBackupsService, DeleteBackupsService, BackupsRepository],
 })

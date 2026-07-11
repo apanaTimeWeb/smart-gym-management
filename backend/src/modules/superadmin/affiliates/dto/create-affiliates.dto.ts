@@ -1,5 +1,5 @@
 import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray, IsEnum } from 'class-validator';
-import { AffiliateStatus } from '../affiliates.interfaces';
+import type {  AffiliateStatus  } from '../affiliates.interfaces';
 
 export class CreateAffiliateDto {
   @IsString()

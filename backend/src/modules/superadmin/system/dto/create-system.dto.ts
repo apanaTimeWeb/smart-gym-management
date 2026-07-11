@@ -1,5 +1,5 @@
 import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray, IsEnum } from 'class-validator';
-import {  } from '../system.interfaces';
+import type {    } from '../system.interfaces';
 
 export class CreateReleaseNoteDto {
   @IsString()

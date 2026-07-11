@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
-import { AffiliateStatus } from '../affiliates.interfaces';
+import type {  AffiliateStatus  } from '../affiliates.interfaces';
 
 @Entity('affiliates')
 export class Affiliate {

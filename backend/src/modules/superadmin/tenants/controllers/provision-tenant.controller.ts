@@ -3,7 +3,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagg
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 import { ProvisionTenantService } from '../services/provision-tenant.service';
 import { ProvisionTenantDto } from '../dto/provision-tenant.dto';
-import { TENANT_MESSAGES } from '../tenants.constants';
+import { TENANTS_MESSAGES } from '../tenants.constants';
 
 /**
  * TenantsController — handles low-level tenant infrastructure operations.
@@ -27,7 +27,7 @@ export class TenantsController {
   })
   @ApiResponse({
     status: HttpStatus.CREATED,
-    description: TENANT_MESSAGES.PROVISIONED_SUCCESS,
+    description: TENANTS_MESSAGES.PROVISIONED_SUCCESS,
   })
   @ApiResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -37,7 +37,7 @@ export class TenantsController {
     await this.provisionTenantService.provisionNewTenant(dto.tenantId);
     return {
       success: true,
-      message: TENANT_MESSAGES.PROVISIONED_SUCCESS,
+      message: TENANTS_MESSAGES.PROVISIONED_SUCCESS,
       data: {
         tenantId: dto.tenantId,
         databaseName: `tenant_db_${dto.tenantId}`,

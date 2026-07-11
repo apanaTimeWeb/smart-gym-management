@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Setting } from './entities/settings.entity';
+import { GlobalSetting } from './entities/settings.entity';
 import { CreateSettingsController } from './controllers/create-settings.controller';
 import { FindSettingsController } from './controllers/find-settings.controller';
 import { UpdateSettingsController } from './controllers/update-settings.controller';
@@ -12,7 +12,7 @@ import { DeleteSettingsService } from './services/delete-settings.service';
 import { SettingsRepository } from './settings.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Setting])],
+  imports: [TypeOrmModule.forFeature([GlobalSetting])],
   controllers: [CreateSettingsController, FindSettingsController, UpdateSettingsController, DeleteSettingsController],
   providers: [CreateSettingsService, FindSettingsService, UpdateSettingsService, DeleteSettingsService, SettingsRepository],
 })

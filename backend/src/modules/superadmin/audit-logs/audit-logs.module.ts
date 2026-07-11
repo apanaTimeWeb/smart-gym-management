@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuditLog } from './entities/audit-logs.entity';
-import { GlobalAuditLog } from './entities/global-audit-log.entity';
+import { GlobalAuditLog } from './entities/audit-logs.entity';
 import { CreateAuditLogsController } from './controllers/create-audit-logs.controller';
 import { FindAuditLogsController } from './controllers/find-audit-logs.controller';
 import { UpdateAuditLogsController } from './controllers/update-audit-logs.controller';
@@ -13,7 +12,7 @@ import { DeleteAuditLogsService } from './services/delete-audit-logs.service';
 import { AuditLogsRepository } from './audit-logs.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([AuditLog, GlobalAuditLog])],
+  imports: [TypeOrmModule.forFeature([GlobalAuditLog])],
   controllers: [CreateAuditLogsController, FindAuditLogsController, UpdateAuditLogsController, DeleteAuditLogsController],
   providers: [CreateAuditLogsService, FindAuditLogsService, UpdateAuditLogsService, DeleteAuditLogsService, AuditLogsRepository],
   exports: [CreateAuditLogsService, FindAuditLogsService, UpdateAuditLogsService, DeleteAuditLogsService],

@@ -3,6 +3,7 @@ export const TENANTS_MESSAGES = {
   FETCHED: 'Tenants fetched successfully',
   UPDATED: 'Tenant updated successfully',
   DELETED: 'Tenant deleted successfully',
+  PROVISIONED_SUCCESS: 'Tenant provisioned successfully',
 };
 
 export const TENANTS_ERRORS = {

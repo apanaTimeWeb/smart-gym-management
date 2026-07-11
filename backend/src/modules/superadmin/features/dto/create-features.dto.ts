@@ -1,5 +1,5 @@
 import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray, IsEnum } from 'class-validator';
-import {  } from '../features.interfaces';
+import type {    } from '../features.interfaces';
 
 export class CreateFeatureFlagDto {
   @IsString()

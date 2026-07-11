@@ -1,5 +1,5 @@
 import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray, IsEnum } from 'class-validator';
-import { SaaSPlanTier, TenantStatus } from '../gyms.interfaces';
+import type {  SaaSPlanTier, TenantStatus  } from '../gyms.interfaces';
 
 export class CreateTenantDto {
   @IsString()

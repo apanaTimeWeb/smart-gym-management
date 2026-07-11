@@ -1,5 +1,5 @@
 import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray, IsEnum } from 'class-validator';
-import { CouponStatus } from '../coupons.interfaces';
+import type {  CouponStatus  } from '../coupons.interfaces';
 
 export class CreateCouponDto {
   @IsString()

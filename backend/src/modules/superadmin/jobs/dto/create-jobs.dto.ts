@@ -1,5 +1,5 @@
 import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray, IsEnum } from 'class-validator';
-import { JobStatus } from '../jobs.interfaces';
+import type {  JobStatus  } from '../jobs.interfaces';
 
 export class CreateBackgroundJobDto {
   @IsString()

@@ -1,10 +1,4 @@
-import {
-  Controller,
-  Get,
-  UseGuards,
-  UseInterceptors,
-  HttpStatus,
-} from '@nestjs/common';
+import { Controller, Get, UseGuards, UseInterceptors, HttpStatus } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,

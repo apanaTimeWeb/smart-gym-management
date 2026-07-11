@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
-import {  } from '../plans.interfaces';
+import type {    } from '../plans.interfaces';
 
 @Entity('plans')
 export class SubscriptionPlan {

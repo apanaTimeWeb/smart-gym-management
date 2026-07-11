@@ -1,5 +1,5 @@
 import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray, IsEnum } from 'class-validator';
-import {  } from '../plans.interfaces';
+import type {    } from '../plans.interfaces';
 
 export class CreateSubscriptionPlanDto {
   @IsString()

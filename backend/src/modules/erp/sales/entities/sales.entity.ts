@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, ManyToOne, JoinColumn } from 'typeorm';
-import { SalesStatus } from '../sales.interfaces';
+import type {  SalesStatus  } from '../sales.interfaces';
 
 @Entity('sales')
 export class SalesEntity {

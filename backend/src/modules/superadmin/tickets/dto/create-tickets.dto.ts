@@ -1,5 +1,5 @@
 import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray, IsEnum } from 'class-validator';
-import { TicketStatus, TicketPriority } from '../tickets.interfaces';
+import type {  TicketStatus, TicketPriority  } from '../tickets.interfaces';
 
 export class CreateSupportTicketDto {
   @IsString()
