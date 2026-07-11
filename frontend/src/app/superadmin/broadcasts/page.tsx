@@ -4,7 +4,7 @@ import React from 'react';
 import { Megaphone, Plus, Search } from 'lucide-react';
 import { BroadcastStatus } from '@/app/superadmin/superadmin_types/superadmin_types';
 import { useBroadcastsPage } from '../superadmin_utils/hooks/useBroadcastsPage';
-import { SuperadminBroadcastModal } from '../superadmin_components/Broadcasts/SuperadminBroadcastModal';
+import { SuperadminBroadcastModal } from '@/app/superadmin/broadcasts/broadcasts_components/SuperadminBroadcastModal';
 import { toast } from 'react-hot-toast';
 
 const getStatusBadge = (status: BroadcastStatus) => {

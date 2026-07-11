@@ -55,7 +55,7 @@ if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]"
               placeholder="Search gyms by name or owner..." 
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-[var(--bg-card)] border border-[var(--border)] text-[var(--text-primary)] rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+              className="w-full bg-[var(--bg-card)] border border-[var(--border)] text-[var(--text-primary)] rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:border-[var(--border-focus)] focus:ring-1 focus:ring-[var(--border-focus)] transition-all"
             />
           </div>
         </div>
@@ -73,7 +73,7 @@ if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]"
                 <th className="p-4 font-medium text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-800">
+            <tbody className="divide-y divide-[var(--border)]">
               {filteredGyms.map(gym => (
                 <tr key={gym.id} className="hover:bg-[var(--bg-card)]/50 transition-colors group">
                   <td className="p-4">
@@ -86,8 +86,8 @@ if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]"
                   </td>
                   <td className="p-4">
                     <span className={`text-xs px-2 py-1 rounded-full font-medium ${
-                      gym.plan === 'ENTERPRISE' ? 'bg-purple-500/10 text-[var(--purple)] border border-purple-500/20' : 
-                      gym.plan === 'PRO' ? 'bg-blue-500/10 text-[var(--primary)] border border-blue-500/20' : 
+                      gym.plan === 'ENTERPRISE' ? 'bg-[var(--purple-bg)] text-[var(--purple)] border border-[var(--purple)]' : 
+                      gym.plan === 'PRO' ? 'bg-[var(--primary-subtle)] text-[var(--primary)] border border-[var(--primary)]' : 
                       'bg-[var(--text-disabled)]/10 text-[var(--text-secondary)] border border-[var(--text-disabled)]/20'
                     }`}>
                       {gym.plan}
@@ -116,7 +116,7 @@ if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]"
                     <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                       <button 
                         onClick={() => handleGhostLogin(gym.name)}
-                        className="p-2 text-[var(--primary)] hover:bg-blue-500/10 rounded-lg transition-colors"
+                        className="p-2 text-[var(--primary)] hover:bg-[var(--primary-subtle)] rounded-lg transition-colors"
                         title="Ghost Login (Login As Admin)"
                       >
                         <LogIn className="w-5 h-5" />

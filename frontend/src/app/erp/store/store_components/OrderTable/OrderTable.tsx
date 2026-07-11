@@ -36,7 +36,27 @@ export default function OrderTable() {
           </thead>
           <tbody className="divide-y divide-[var(--store-border)]">
             {orders.map(o => (
-              <tr key={o.id} className="hover:bg-[var(--primary-subtle)] transition-colors">
+              <tr 
+                key={o.id} 
+                className="hover:bg-[var(--primary-subtle)] transition-colors cursor-pointer"
+                onClick={() => {
+                  setPrintData({ 
+                    gymName: GYM_DETAILS.name, 
+                    gymPhone: GYM_DETAILS.phone, 
+                    receiptNo: `ORD-${o.id}`, 
+                    date: new Date(o.createdAt).toLocaleDateString('en-IN'), 
+                    customerName: 'Customer', 
+                    items: (o.items || []).map(i => ({ 
+                      name: i.product?.name || '', 
+                      price: i.price, 
+                      amount: i.price * i.qty 
+                    })), 
+                    total: o.total, 
+                    paymentMethod: o.method 
+                  });
+                  setTimeout(() => window.print(), 100);
+                }}
+              >
                 <td className="px-4 py-3 text-sm font-mono text-[var(--store-text-primary)]">
                   ORD-{String(o.id).padStart(4, '0')}
                 </td>

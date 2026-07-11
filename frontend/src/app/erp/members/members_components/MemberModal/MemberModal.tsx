@@ -2,8 +2,9 @@
 
 import { useEffect } from 'react';
 import { X, Save } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 import { useMembersContext } from '@/app/erp/members/members_context/MembersContext';
 import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency, BRANCH_OPTIONS, MemberSchema, type MemberFormValues, EMPTY_MEMBER_FORM } from '@/app/erp/members/members_utils/MembersSharedConstants';
 
@@ -13,6 +14,11 @@ export default function MemberModal() {
  plans, saving, saveMember 
  } = useMembersContext();
 
+ const useFormReturn = useForm({
+   resolver: zodResolver(MemberSchema),
+   defaultValues: editData || EMPTY_MEMBER_FORM
+ });
+
  const { 
    register, 
    handleSubmit, 
@@ -20,10 +26,7 @@ export default function MemberModal() {
    reset,
    setValue,
    formState: { errors } 
- } = useForm({
-   resolver: zodResolver(MemberSchema),
-   defaultValues: editData || EMPTY_MEMBER_FORM
- });
+ } = useFormReturn;
 
  // Reset form whenever editData changes (e.g., when opening modal for edit)
  useEffect(() => {
@@ -82,23 +85,35 @@ export default function MemberModal() {
  </div>
  <div>
  <label className="block text-sm font-medium text-[var(--members-text-secondary)] mb-1">Branch</label>
- <select 
- {...register('branch')}
- className="w-full border border-[var(--members-border)] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--members-bg-input)] text-[var(--members-text-primary)]"
- >
- {BRANCH_OPTIONS.map(b => <option key={b} value={b}>{b}</option>)}
- </select>
+ <Controller
+   name="branch"
+   control={useFormReturn.control}
+   render={({ field }) => (
+     <SearchableDropdown
+       options={BRANCH_OPTIONS.map(b => ({ value: b, label: b }))}
+       value={field.value}
+       onChange={field.onChange}
+       placeholder="Select branch..."
+     />
+   )}
+ />
  </div>
  </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  <div>
  <label className="block text-sm font-medium text-[var(--members-text-secondary)] mb-1">Plan</label>
- <select 
- {...register('planId')}
- className="w-full border border-[var(--members-border)] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--members-bg-input)] text-[var(--members-text-primary)]"
- >
- {plans.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
- </select>
+ <Controller
+   name="planId"
+   control={useFormReturn.control}
+   render={({ field }) => (
+     <SearchableDropdown
+       options={plans.map(p => ({ value: p.id, label: p.name }))}
+       value={field.value}
+       onChange={field.onChange}
+       placeholder="Select plan..."
+     />
+   )}
+ />
  </div>
  <div>
  <label className="block text-sm font-medium text-[var(--members-text-secondary)] mb-1">Billing Cycle</label>

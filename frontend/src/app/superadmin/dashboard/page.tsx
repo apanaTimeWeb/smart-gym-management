@@ -78,8 +78,8 @@ export default function SaaSDashboard() {
                 </div>
                 <div className="text-right">
                   <span className={`text-xs px-2 py-1 rounded-full font-medium ${
-                    tenant.plan === 'ENTERPRISE' ? 'bg-purple-500/10 text-[var(--purple)] border border-purple-500/20' : 
-                    tenant.plan === 'PRO' ? 'bg-blue-500/10 text-[var(--primary)] border border-blue-500/20' : 
+                    tenant.plan === 'ENTERPRISE' ? 'bg-[var(--purple-bg)] text-[var(--purple)] border border-[var(--purple)]' : 
+                    tenant.plan === 'PRO' ? 'bg-[var(--primary-subtle)] text-[var(--primary)] border border-[var(--primary)]' : 
                     'bg-[var(--text-disabled)]/10 text-[var(--text-secondary)] border border-[var(--text-disabled)]/20'
                   }`}>
                     {tenant.plan}

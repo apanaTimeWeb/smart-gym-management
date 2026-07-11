@@ -16,7 +16,7 @@ export default function LandingHero() {
 
  <div className="relative z-10 text-center px-4 max-w-5xl mx-auto pt-20">
  <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 text-sm font-medium text-[var(--warning)] mb-8">
- <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+ <span className="w-2 h-2 rounded-full bg-[var(--success)] animate-pulse"></span>
  Welcome to GymSmart
  </div>
 

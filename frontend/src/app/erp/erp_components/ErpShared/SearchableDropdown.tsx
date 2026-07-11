@@ -1,0 +1,106 @@
+"use client";
+
+import React, { useState, useRef, useEffect } from 'react';
+import { Search, ChevronDown, Check } from 'lucide-react';
+
+interface Option {
+  value: string | number;
+  label: string;
+}
+
+interface SearchableDropdownProps {
+  options: Option[];
+  value: string | number;
+  onChange: (value: string | number) => void;
+  placeholder?: string;
+  className?: string;
+  disabled?: boolean;
+}
+
+export const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
+  options,
+  value,
+  onChange,
+  placeholder = 'Select an option...',
+  className = '',
+  disabled = false,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const selectedOption = options.find((opt) => opt.value === value);
+
+  const filteredOptions = options.filter((opt) =>
+    opt.label.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+        setSearchTerm('');
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleSelect = (optionValue: string | number) => {
+    onChange(optionValue);
+    setIsOpen(false);
+    setSearchTerm('');
+  };
+
+  return (
+    <div className={`relative w-full ${className}`} ref={dropdownRef}>
+      <div
+        className={`w-full bg-[var(--bg-input)] border border-[var(--border)] rounded-lg px-4 py-2.5 flex items-center justify-between cursor-pointer ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+        onClick={() => !disabled && setIsOpen(!isOpen)}
+      >
+        <span className={`text-sm ${!selectedOption ? 'text-[var(--text-muted)]' : 'text-[var(--text-primary)]'} truncate`}>
+          {selectedOption ? selectedOption.label : placeholder}
+        </span>
+        <ChevronDown size={16} className="text-[var(--text-muted)]" />
+      </div>
+
+      {isOpen && !disabled && (
+        <div className="absolute z-50 w-full mt-1 bg-[var(--bg-card)] border border-[var(--border)] rounded-lg shadow-lg overflow-hidden animate-in fade-in zoom-in-95 duration-100">
+          <div className="p-2 border-b border-[var(--border)] relative">
+            <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
+            <input
+              type="text"
+              className="w-full pl-8 pr-4 py-1.5 text-sm bg-[var(--bg-input)] border border-[var(--border)] rounded-md focus:outline-none focus:border-[var(--primary)] text-[var(--text-primary)] placeholder-[var(--text-muted)]"
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              autoFocus
+            />
+          </div>
+
+          <div className="max-h-60 overflow-y-auto p-1 custom-scrollbar">
+            {filteredOptions.length > 0 ? (
+              filteredOptions.map((option) => (
+                <div
+                  key={option.value}
+                  className={`flex items-center justify-between px-3 py-2 text-sm rounded-md cursor-pointer hover:bg-[var(--bg-input)] ${
+                    option.value === value ? 'text-[var(--primary)] font-medium' : 'text-[var(--text-primary)]'
+                  }`}
+                  onClick={() => handleSelect(option.value)}
+                >
+                  <span className="truncate">{option.label}</span>
+                  {option.value === value && <Check size={14} className="text-[var(--primary)]" />}
+                </div>
+              ))
+            ) : (
+              <div className="px-3 py-4 text-sm text-center text-[var(--text-muted)]">
+                No results found
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};

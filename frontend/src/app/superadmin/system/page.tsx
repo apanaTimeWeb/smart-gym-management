@@ -104,7 +104,7 @@ export default function SystemHealthPage() {
                 placeholder="Search logs..." 
                 value={logSearch}
                 onChange={(e) => setLogSearch(e.target.value)}
-                className="bg-[var(--bg-card)] border border-[var(--border)] text-[var(--text-primary)] text-sm rounded-lg pl-9 pr-4 py-2 focus:outline-none focus:border-indigo-500"
+                className="bg-[var(--bg-card)] border border-[var(--border)] text-[var(--text-primary)] text-sm rounded-lg pl-9 pr-4 py-2 focus:outline-none focus:border-[var(--border-focus)]"
               />
             </div>
             <button className="p-2 bg-[var(--bg-card)] border border-[var(--border)] rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
