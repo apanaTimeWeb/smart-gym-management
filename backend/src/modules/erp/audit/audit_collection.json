@@ -1,0 +1,27 @@
+{
+  "info": {
+    "name": "ERP Audit Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get Audit Logs",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/erp/audit",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "erp",
+            "audit"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

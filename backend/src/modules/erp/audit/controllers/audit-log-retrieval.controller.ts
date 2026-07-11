@@ -1,15 +1,15 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
-import { AuditService } from '../audit.service';
+import { FindAuditService } from '../services/find-audit.service';
 import { GetAuditLogsDto } from '../dto/get-audit-logs.dto';
 
 @Controller('audit')
 export class AuditLogRetrievalController {
-  constructor(private readonly auditService: AuditService) {}
+  constructor(private readonly findAuditService: FindAuditService) {}
 
   @Get()
   async getAuditLogs(@Query() query: GetAuditLogsDto) {
     const { page, limit, entityType, actorId } = query;
-    const { data, total } = await this.auditService.findAll(
+    const { data, total } = await this.findAuditService.findAll(
       page,
       limit,
       entityType,

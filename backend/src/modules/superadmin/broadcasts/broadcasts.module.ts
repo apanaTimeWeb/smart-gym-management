@@ -1,12 +1,19 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { BroadcastsService } from './services/broadcasts.service';
-import { BroadcastsController } from './controllers/broadcasts.controller';
 import { Broadcast } from './entities/broadcasts.entity';
+import { CreateBroadcastsController } from './controllers/create-broadcasts.controller';
+import { FindBroadcastsController } from './controllers/find-broadcasts.controller';
+import { UpdateBroadcastsController } from './controllers/update-broadcasts.controller';
+import { DeleteBroadcastsController } from './controllers/delete-broadcasts.controller';
+import { CreateBroadcastsService } from './services/create-broadcasts.service';
+import { FindBroadcastsService } from './services/find-broadcasts.service';
+import { UpdateBroadcastsService } from './services/update-broadcasts.service';
+import { DeleteBroadcastsService } from './services/delete-broadcasts.service';
+import { BroadcastsRepository } from './broadcasts.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Broadcast])],
-  controllers: [BroadcastsController],
-  providers: [BroadcastsService],
+  controllers: [CreateBroadcastsController, FindBroadcastsController, UpdateBroadcastsController, DeleteBroadcastsController],
+  providers: [CreateBroadcastsService, FindBroadcastsService, UpdateBroadcastsService, DeleteBroadcastsService, BroadcastsRepository],
 })
 export class BroadcastsModule {}

@@ -6,13 +6,13 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { AuditService } from '@/modules/erp/audit/audit.service';
+import { CreateAuditService } from '@/modules/erp/audit/services/create-audit.service';
 import { DataSource } from 'typeorm';
 
 @Injectable()
 export class AuditInterceptor implements NestInterceptor {
   constructor(
-    private readonly auditService: AuditService,
+    private readonly createAuditService: CreateAuditService,
     private readonly dataSource: DataSource
   ) {}
 
@@ -43,7 +43,7 @@ export class AuditInterceptor implements NestInterceptor {
       return next.handle().pipe(
         tap(() => {
           // Fire and forget audit log creation
-          this.auditService.createAuditLog({
+          this.createAuditService.createAuditLog({
             actorId: user?.sub || user?.id || null,
             actorRole: user?.role || null,
             action: method,

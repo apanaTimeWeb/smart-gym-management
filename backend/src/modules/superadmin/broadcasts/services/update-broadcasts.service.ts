@@ -1,0 +1,11 @@
+import { Injectable } from '@nestjs/common';
+import { BroadcastsRepository } from '../broadcasts.repository';
+
+@Injectable()
+export class UpdateBroadcastsService {
+  constructor(private readonly repository: BroadcastsRepository) {}
+  
+  async execute() {
+    // Implement update logic
+  }
+}
