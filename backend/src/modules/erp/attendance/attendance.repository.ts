@@ -1,15 +1,20 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Between, IsNull, Not } from 'typeorm';
+import { Injectable, Inject } from '@nestjs/common';
+
+import { Repository, DataSource , Between, IsNull, Not } from 'typeorm';
 import { Attendance } from '@/modules/erp/attendance/entities/attendance.entity';
 import type { MarkAttendanceDto } from '@/modules/erp/attendance/dto/mark-attendance.dto';
 
 @Injectable()
 export class AttendanceRepository {
+    public readonly attendanceRepository: Repository<Attendance>;
+
+    public readonly attendanceRepo: Repository<Attendance>;
+
   constructor(
-    @InjectRepository(Attendance)
-    private readonly attendanceRepo: Repository<Attendance>,
-  ) {}
+    @Inject('TENANT_CONNECTION') private readonly dataSource: DataSource,
+  ) {
+    this.attendanceRepo = this.dataSource.getRepository(Attendance);
+  }
 
   async createAttendance(data: MarkAttendanceDto): Promise<Attendance> {
     const attendance = this.attendanceRepo.create(data);

@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+
 
 import { Staff } from '@/modules/erp/hr/entities/staff.entity';
 import { Payroll } from '@/modules/erp/hr/entities/payroll.entity';
@@ -14,7 +14,7 @@ import { PayrollController } from '@/modules/erp/hr/controllers/payroll.controll
 import { HrStatsController } from '@/modules/erp/hr/controllers/hr-stats.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Staff, Payroll])],
+  imports: [],
   controllers: [StaffController, PayrollController, HrStatsController],
   providers: [HrRepository, StaffService, PayrollService, HrStatsService],
 })

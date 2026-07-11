@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, MoreThanOrEqual } from 'typeorm';
+import { Injectable, Inject } from '@nestjs/common';
+
+import { Repository, DataSource , MoreThanOrEqual } from 'typeorm';
 
 import { Member } from '@/modules/erp/members/entities/member.entity';
 import { Payment } from '@/modules/erp/finance/entities/payment.entity';
@@ -10,18 +10,27 @@ import { Inquiry } from '@/modules/erp/inquiries/entities/inquiry.entity';
 
 @Injectable()
 export class DashboardRepository {
+    public readonly memberRepo: Repository<Member>;
+  public readonly paymentRepo: Repository<Payment>;
+  public readonly staffRepo: Repository<Staff>;
+  public readonly productRepo: Repository<Product>;
+  public readonly inquiryRepo: Repository<Inquiry>;
+
+    public readonly memberRepository: Repository<Member>;
+  public readonly paymentRepository: Repository<Payment>;
+  public readonly staffRepository: Repository<Staff>;
+  public readonly productRepository: Repository<Product>;
+  public readonly inquiryRepository: Repository<Inquiry>;
+
   constructor(
-    @InjectRepository(Member)
-    private readonly memberRepository: Repository<Member>,
-    @InjectRepository(Payment)
-    private readonly paymentRepository: Repository<Payment>,
-    @InjectRepository(Staff)
-    private readonly staffRepository: Repository<Staff>,
-    @InjectRepository(Product)
-    private readonly productRepository: Repository<Product>,
-    @InjectRepository(Inquiry)
-    private readonly inquiryRepository: Repository<Inquiry>,
-  ) {}
+    @Inject('TENANT_CONNECTION') private readonly dataSource: DataSource,
+  ) {
+    this.memberRepository = this.dataSource.getRepository(Member);
+    this.paymentRepository = this.dataSource.getRepository(Payment);
+    this.staffRepository = this.dataSource.getRepository(Staff);
+    this.productRepository = this.dataSource.getRepository(Product);
+    this.inquiryRepository = this.dataSource.getRepository(Inquiry);
+  }
 
   // ─── KPI Queries ──────────────────────────────────────────────────────────
   async getMemberCounts() {

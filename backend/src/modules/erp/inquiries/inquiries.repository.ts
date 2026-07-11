@@ -1,16 +1,21 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Injectable, Inject } from '@nestjs/common';
+
+import { Repository, DataSource  } from 'typeorm';
 import { Inquiry } from '@/modules/erp/inquiries/entities/inquiry.entity';
 import { PaginationQueryDto } from '@/core/dto/pagination-query.dto';
 import { INQUIRIES_CONSTANTS } from './inquiries.constants';
 
 @Injectable()
 export class InquiriesRepository {
+
+
+    public readonly inquiryRepository: Repository<Inquiry>;
+
   constructor(
-    @InjectRepository(Inquiry)
-    public readonly inquiryRepository: Repository<Inquiry>,
-  ) {}
+    @Inject('TENANT_CONNECTION') private readonly dataSource: DataSource,
+  ) {
+    this.inquiryRepository = this.dataSource.getRepository(Inquiry);
+  }
 
   async findAll(query: PaginationQueryDto) {
     return this.inquiryRepository.findAndCount({

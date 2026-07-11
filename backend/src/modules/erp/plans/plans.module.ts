@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+
 
 import { Plan } from '@/modules/erp/plans/entities/plan.entity';
 import { PlansRepository } from '@/modules/erp/plans/plans.repository';
@@ -13,7 +13,7 @@ import { FindPlanController } from '@/modules/erp/plans/controllers/find-plan.co
 import { UpdatePlanController } from '@/modules/erp/plans/controllers/update-plan.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Plan])],
+  imports: [],
   controllers: [CreatePlanController, FindPlanController, UpdatePlanController],
   providers: [
     PlansRepository,

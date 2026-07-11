@@ -1,7 +1,7 @@
 import { DeleteProductService } from './services/delete-product.service';
 import { DeleteProductController } from './controllers/delete-product.controller';
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+
 
 import { Product } from './entities/product.entity';
 import { Order } from './entities/order.entity';
@@ -24,7 +24,7 @@ import { FindOrderService } from './services/find-order.service';
 import { StoreSummaryService } from './services/store-summary.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Product, Order, OrderItem])],
+  imports: [],
   controllers: [DeleteProductController, 
     CreateProductController,
     FindProductController,

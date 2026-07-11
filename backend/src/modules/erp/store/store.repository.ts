@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Injectable, Inject } from '@nestjs/common';
+
 import { Repository, DataSource, LessThanOrEqual, ILike } from 'typeorm';
 import { Product } from '@/modules/erp/store/entities/product.entity';
 import { Order } from '@/modules/erp/store/entities/order.entity';
@@ -9,15 +9,19 @@ import { STORE_CONSTANTS } from './store.constants';
 
 @Injectable()
 export class StoreRepository {
+
+
+    public readonly productRepository: Repository<Product>;
+  public readonly orderRepository: Repository<Order>;
+  public readonly orderItemRepository: Repository<OrderItem>;
+
   constructor(
-    @InjectRepository(Product)
-    public readonly productRepository: Repository<Product>,
-    @InjectRepository(Order)
-    public readonly orderRepository: Repository<Order>,
-    @InjectRepository(OrderItem)
-    public readonly orderItemRepository: Repository<OrderItem>,
-    private readonly dataSource: DataSource,
-  ) {}
+    @Inject('TENANT_CONNECTION') private readonly dataSource: DataSource,
+  ) {
+    this.productRepository = this.dataSource.getRepository(Product);
+    this.orderRepository = this.dataSource.getRepository(Order);
+    this.orderItemRepository = this.dataSource.getRepository(OrderItem);
+  }
 
   async findAllProducts(query: PaginationQueryDto) {
     return this.productRepository.findAndCount({

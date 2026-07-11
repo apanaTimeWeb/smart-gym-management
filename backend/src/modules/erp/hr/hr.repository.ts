@@ -1,17 +1,23 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Injectable, Inject } from '@nestjs/common';
+
+import { Repository, DataSource  } from 'typeorm';
 import { Staff } from '@/modules/erp/hr/entities/staff.entity';
 import { Payroll } from '@/modules/erp/hr/entities/payroll.entity';
 
 @Injectable()
 export class HrRepository {
+    public readonly staffRepository: Repository<Staff>;
+  public readonly payrollRepository: Repository<Payroll>;
+
+    public readonly staffRepo: Repository<Staff>;
+  public readonly payrollRepo: Repository<Payroll>;
+
   constructor(
-    @InjectRepository(Staff)
-    private readonly staffRepo: Repository<Staff>,
-    @InjectRepository(Payroll)
-    private readonly payrollRepo: Repository<Payroll>,
-  ) {}
+    @Inject('TENANT_CONNECTION') private readonly dataSource: DataSource,
+  ) {
+    this.staffRepo = this.dataSource.getRepository(Staff);
+    this.payrollRepo = this.dataSource.getRepository(Payroll);
+  }
 
   // --- STAFF ---
   async createStaff(data: Partial<Staff>): Promise<Staff> {

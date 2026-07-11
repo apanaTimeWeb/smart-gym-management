@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+
 
 import { Attendance } from '@/modules/erp/attendance/entities/attendance.entity';
 import { AttendanceRepository } from '@/modules/erp/attendance/attendance.repository';
@@ -13,7 +13,7 @@ import { FindAttendanceController } from '@/modules/erp/attendance/controllers/f
 import { AttendanceStatsController } from '@/modules/erp/attendance/controllers/attendance-stats.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Attendance])],
+  imports: [],
   controllers: [
     MarkAttendanceController,
     FindAttendanceController,

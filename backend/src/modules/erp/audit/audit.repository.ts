@@ -1,15 +1,20 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Injectable, Inject } from '@nestjs/common';
+
+import { Repository, DataSource  } from 'typeorm';
 import { AuditLog } from './entities/audit-log.entity';
 import { AuditLogResponse } from './audit.interfaces';
 
 @Injectable()
 export class AuditRepository {
+    public readonly auditRepository: Repository<AuditLog>;
+
+    public readonly repository: Repository<AuditLog>;
+
   constructor(
-    @InjectRepository(AuditLog)
-    private readonly repository: Repository<AuditLog>,
-  ) {}
+    @Inject('TENANT_CONNECTION') private readonly dataSource: DataSource,
+  ) {
+    this.repository = this.dataSource.getRepository(AuditLog);
+  }
 
   async create(data: Partial<AuditLog>): Promise<AuditLog> {
     const auditLog = this.repository.create(data);
