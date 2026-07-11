@@ -14,6 +14,7 @@ import { RouterModule } from '@nestjs/core';
 
 import { CorrelationIdMiddleware } from '@/core/middleware/correlation-id.middleware';
 import { HealthModule } from '@/core/health/health.module';
+import { DatabaseModule } from '@/core/database/database.module';
 
 import { AuthModule } from '@/modules/auth/auth.module';
 import { ErpModule } from '@/modules/erp/erp.module';
@@ -104,6 +105,7 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 
     // ─── Infrastructure Modules ───────────────────────────────────────────
     HealthModule,
+    DatabaseModule,
     MediaModule,
 
     // ─── Feature Modules ──────────────────────────────────────────────────

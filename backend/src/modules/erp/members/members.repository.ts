@@ -1,16 +1,19 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, ILike } from 'typeorm';
+import { Injectable, Inject } from '@nestjs/common';
+import { Repository, ILike, DataSource } from 'typeorm';
 import { Member } from '@/modules/erp/members/entities/member.entity';
 import { FindMemberDto } from '@/modules/erp/members/dto/find-member.dto';
 import { MemberStatus } from '@/modules/erp/members/utils/members.enums';
 
 @Injectable()
 export class MembersRepository {
+  private readonly memberRepo: Repository<Member>;
+
   constructor(
-    @InjectRepository(Member)
-    private readonly memberRepo: Repository<Member>,
-  ) {}
+    @Inject('TENANT_CONNECTION')
+    private readonly dataSource: DataSource,
+  ) {
+    this.memberRepo = this.dataSource.getRepository(Member);
+  }
 
   async createMember(data: Partial<Member>): Promise<Member> {
     const member = this.memberRepo.create(
