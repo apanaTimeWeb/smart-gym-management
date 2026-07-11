@@ -1,3 +1,4 @@
+import { CreateCouponDto } from '../dto/create-coupons.dto';
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { CouponsRepository } from '../coupons.repository';
 import * as crypto from 'crypto';
@@ -6,7 +7,7 @@ import * as crypto from 'crypto';
 export class CreateCouponsService {
   constructor(private readonly repository: CouponsRepository) {}
   
-  async execute(dto: CreateCouponsDto): Promise<any> {
+  async execute(dto: CreateCouponDto): Promise<any> {
     if (dto.expiryDate && new Date(dto.expiryDate) < new Date()) {
       throw new BadRequestException('Expiry date cannot be in the past');
     }

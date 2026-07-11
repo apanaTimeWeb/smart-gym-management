@@ -15,9 +15,11 @@ import { FindGymsService } from './services/find-gyms.service';
 import { UpdateGymsService } from './services/update-gyms.service';
 import { DeleteGymsService } from './services/delete-gyms.service';
 import { GymsRepository } from './gyms.repository';
+import { CouponsModule } from '../coupons/coupons.module';
+import { AffiliatesModule } from '../affiliates/affiliates.module';
 
 @Module({
-  imports: [TenantsModule, TypeOrmModule.forFeature([Tenant])],
+  imports: [TenantsModule, TypeOrmModule.forFeature([Tenant]), CouponsModule, AffiliatesModule],
   controllers: [StatusGymsController, StatsGymsController, CreateGymsController, FindGymsController, UpdateGymsController, DeleteGymsController],
   providers: [StatusGymsService, StatsGymsService, CreateGymsService, FindGymsService, UpdateGymsService, DeleteGymsService, GymsRepository],
 })

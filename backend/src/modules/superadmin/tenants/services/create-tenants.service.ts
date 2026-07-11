@@ -1,3 +1,4 @@
+import { CreateTenantDto } from '../dto/create-tenants.dto';
 import { Injectable } from '@nestjs/common';
 import { TenantsRepository } from '../tenants.repository';
 
@@ -5,7 +6,7 @@ import { TenantsRepository } from '../tenants.repository';
 export class CreateTenantsService {
   constructor(private readonly repository: TenantsRepository) {}
   
-  async execute(dto: CreateTenantsDto): Promise<any> {
+  async execute(dto: CreateTenantDto): Promise<any> {
     return await this.repository.create(dto);
   }
 }

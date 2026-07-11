@@ -1,3 +1,4 @@
+import { UpdateFeatureFlagDto } from '../dto/update-feature-flag.dto';
 import { Injectable } from '@nestjs/common';
 import { FeaturesRepository } from '../features.repository';
 
@@ -5,7 +6,7 @@ import { FeaturesRepository } from '../features.repository';
 export class UpdateFeaturesService {
   constructor(private readonly repository: FeaturesRepository) {}
   
-  async execute(id: string, dto: UpdateFeaturesDto): Promise<any> {
+  async execute(id: string, dto: UpdateFeatureFlagDto): Promise<any> {
     return await this.repository.update(id, dto);
   }
 }

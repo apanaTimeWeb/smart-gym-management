@@ -7,14 +7,15 @@ export class ToggleFeaturesService {
   
   constructor(private readonly repository: FeaturesRepository) {}
 
-  async execute(id: string, dto: CreateFeaturesDto) {
+  async execute(id: string) {
     this.logger.log(`Toggling feature flag ${id}`);
     
     const feature = await this.repository.findById(id);
     if (!feature) throw new NotFoundException('Feature not found');
     
-    await this.repository.update(id, { isEnabled: dto.isEnabled });
+    const newState = !feature.isGlobalEnabled;
+    await this.repository.update(id, { isGlobalEnabled: newState });
     
-    return { success: true, data: { id, isEnabled: dto.isEnabled } };
+    return { success: true, data: { id, isGlobalEnabled: newState } };
   }
 }

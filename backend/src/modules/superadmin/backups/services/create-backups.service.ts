@@ -1,3 +1,4 @@
+import { CreateBackupRecordDto } from '../dto/create-backups.dto';
 import { Injectable } from '@nestjs/common';
 import { BackupsRepository } from '../backups.repository';
 
@@ -5,7 +6,7 @@ import { BackupsRepository } from '../backups.repository';
 export class CreateBackupsService {
   constructor(private readonly repository: BackupsRepository) {}
   
-  async execute(dto: CreateBackupsDto): Promise<any> {
+  async execute(dto: CreateBackupRecordDto): Promise<any> {
     return await this.repository.create(dto);
   }
 }

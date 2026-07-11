@@ -1,3 +1,4 @@
+import { UpdateBroadcastDto } from '../dto/update-broadcasts.dto';
 import { Injectable } from '@nestjs/common';
 import { BroadcastsRepository } from '../broadcasts.repository';
 
@@ -5,7 +6,7 @@ import { BroadcastsRepository } from '../broadcasts.repository';
 export class UpdateBroadcastsService {
   constructor(private readonly repository: BroadcastsRepository) {}
   
-  async execute(id: string, dto: UpdateBroadcastsDto): Promise<any> {
+  async execute(id: string, dto: UpdateBroadcastDto): Promise<any> {
     return await this.repository.update(id, dto);
   }
 }

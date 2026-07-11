@@ -1,3 +1,4 @@
+import { CreateFeatureFlagDto } from '../dto/create-feature-flag.dto';
 import { Injectable } from '@nestjs/common';
 import { FeaturesRepository } from '../features.repository';
 
@@ -5,7 +6,7 @@ import { FeaturesRepository } from '../features.repository';
 export class CreateFeaturesService {
   constructor(private readonly repository: FeaturesRepository) {}
   
-  async execute(dto: CreateFeaturesDto): Promise<any> {
+  async execute(dto: CreateFeatureFlagDto): Promise<any> {
     return await this.repository.create(dto);
   }
 }

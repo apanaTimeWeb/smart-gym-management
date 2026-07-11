@@ -1,3 +1,4 @@
+import { CreateSchemaMigrationDto } from '../dto/create-migrations.dto';
 import { Injectable } from '@nestjs/common';
 import { MigrationsRepository } from '../migrations.repository';
 
@@ -5,7 +6,7 @@ import { MigrationsRepository } from '../migrations.repository';
 export class CreateMigrationsService {
   constructor(private readonly repository: MigrationsRepository) {}
   
-  async execute(dto: CreateMigrationsDto): Promise<any> {
+  async execute(dto: CreateSchemaMigrationDto): Promise<any> {
     return await this.repository.create(dto);
   }
 }

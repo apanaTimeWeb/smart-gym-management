@@ -1,3 +1,4 @@
+import { CreateBackgroundJobDto } from '../dto/create-jobs.dto';
 import { Injectable } from '@nestjs/common';
 import { JobsRepository } from '../jobs.repository';
 
@@ -5,7 +6,7 @@ import { JobsRepository } from '../jobs.repository';
 export class CreateJobsService {
   constructor(private readonly repository: JobsRepository) {}
   
-  async execute(dto: CreateJobsDto): Promise<any> {
+  async execute(dto: CreateBackgroundJobDto): Promise<any> {
     return await this.repository.create(dto);
   }
 }

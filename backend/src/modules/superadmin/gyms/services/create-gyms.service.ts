@@ -1,3 +1,4 @@
+import { CreateTenantDto } from '../dto/create-gyms.dto';
 import { Injectable, Logger, BadRequestException } from '@nestjs/common';
 import { GymsRepository } from '../gyms.repository';
 import { ProvisionTenantService } from '../../tenants/services/provision-tenant.service';
@@ -16,7 +17,7 @@ export class CreateGymsService {
     private readonly affiliatesRepository: AffiliatesRepository,
   ) {}
   
-  async execute(dto: CreateGymsDto): Promise<any> {
+  async execute(dto: CreateTenantDto): Promise<any> {
     this.logger.log('Creating new gym (tenant)...');
 
     // 1. Coupon validation

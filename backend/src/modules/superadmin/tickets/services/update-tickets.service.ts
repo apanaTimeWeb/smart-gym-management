@@ -1,3 +1,4 @@
+import { UpdateSupportTicketDto } from '../dto/update-tickets.dto';
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { TicketsRepository } from '../tickets.repository';
 import { TicketStatus } from '../tickets.interfaces';
@@ -6,7 +7,7 @@ import { TicketStatus } from '../tickets.interfaces';
 export class UpdateTicketsService {
   constructor(private readonly repository: TicketsRepository) {}
   
-  async execute(id: string, dto: UpdateTicketsDto): Promise<any> {
+  async execute(id: string, dto: UpdateSupportTicketDto): Promise<any> {
     const ticket = await this.repository.findById(id);
     if (!ticket) throw new NotFoundException('Ticket not found');
     
@@ -26,8 +27,11 @@ export class UpdateTicketsService {
     }
     
     // Automatically update lastUpdated timestamp (typeorm should do this with @UpdateDateColumn, but let's be safe)
-    dto.lastUpdated = new Date();
+    const payload = {
+      ...dto,
+      lastUpdated: new Date()
+    };
     
-    return await this.repository.update(id, dto);
+    return await this.repository.update(id, payload);
   }
 }
