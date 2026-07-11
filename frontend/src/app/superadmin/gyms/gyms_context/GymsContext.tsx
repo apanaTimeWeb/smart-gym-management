@@ -22,7 +22,7 @@ interface GymsContextType {
 const GymsContext = createContext<GymsContextType | undefined>(undefined);
 
 export function GymsProvider({ children }: { children: React.ReactNode }) {
-  const { data: gyms, loading, error } = useSuperadminData<Tenant[]>(SuperadminUrlConfig.BACKEND_API.GYMS_BASE);
+  const { data: gyms, loading, error, mutate } = useSuperadminData<Tenant[]>(SuperadminUrlConfig.BACKEND_API.GYMS_BASE);
   const [search, setSearch] = useState('');
 
   const filteredGyms = useMemo(() => {
@@ -47,21 +47,32 @@ export function GymsProvider({ children }: { children: React.ReactNode }) {
         body: JSON.stringify({ status: newStatus })
       });
       toast.success(`${name} is now ${newStatus}.`);
-      // Note: Ideally we refetch or update local state here
+      
+      // Pessimistic UI Update (Cache Mutation)
+      mutate((prevGyms) => {
+        if (!prevGyms) return prevGyms;
+        return prevGyms.map(gym => gym.id === id ? { ...gym, status: newStatus as any } : gym);
+      });
     } catch (e: any) {
       toast.error(`Failed to update status for ${name}`);
     }
-  }, []);
+  }, [mutate]);
 
   const handleDelete = useCallback(async (id: string, name: string) => {
     if (!confirm(`Are you sure you want to delete gym ${name}?`)) return;
     try {
       await apiFetch(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}/${id}`, { method: 'DELETE' });
       toast.success(`${name} deleted successfully.`);
+      
+      // Pessimistic UI Update (Cache Mutation)
+      mutate((prevGyms) => {
+        if (!prevGyms) return prevGyms;
+        return prevGyms.filter(gym => gym.id !== id);
+      });
     } catch (e: any) {
       toast.error(`Failed to delete gym ${name}`);
     }
-  }, []);
+  }, [mutate]);
 
   const value = useMemo(() => ({
     gyms,
