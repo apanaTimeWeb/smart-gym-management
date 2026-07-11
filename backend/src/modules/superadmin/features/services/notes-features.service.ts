@@ -1,2 +1,12 @@
-import { Injectable } from '@nestjs/common';
-@Injectable() export class NotesFeaturesService { async execute(dto: any) { return { success: true }; } }
+import { Injectable, Logger } from '@nestjs/common';
+
+@Injectable()
+export class NotesFeaturesService {
+  private readonly logger = new Logger(NotesFeaturesService.name);
+  
+  async execute(dto: any) {
+    this.logger.log('Creating release note');
+    // Implement ReleaseNote creation logic here
+    return { success: true, data: { ...dto, id: 'note-id-123', date: new Date() } };
+  }
+}

@@ -40,6 +40,7 @@ def auth_client(api_client, admin_token):
     """Fixture to provide a requests session with the Authorization header set."""
     if admin_token:
         api_client.headers.update({
-            "Authorization": f"Bearer {admin_token}"
+            "Authorization": f"Bearer {admin_token}",
+            "x-tenant-id": os.getenv("TEST_TENANT_ID", "test-tenant-id")
         })
     return api_client

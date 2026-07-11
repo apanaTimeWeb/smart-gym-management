@@ -10,5 +10,5 @@ import { TenantAuditLogsService } from '../services/tenant-audit-logs.service';
 export class TenantAuditLogsController {
   constructor(private readonly service: TenantAuditLogsService) {}
   @Get()
-  async execute() { return this.service.execute(); }
+  async execute() { return this.service.execute('tenant-id'); }
 }

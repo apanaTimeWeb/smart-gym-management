@@ -13,7 +13,7 @@ import { WorkoutRepository } from './workout.repository';
 import { Workout } from './entities/workout.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Workout])],
+  imports: [],
   controllers: [CreateWorkoutController, FindWorkoutController, UpdateWorkoutController, DeleteWorkoutController],
   providers: [CreateWorkoutService, FindWorkoutService, UpdateWorkoutService, DeleteWorkoutService, WorkoutRepository],
 })

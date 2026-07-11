@@ -10,5 +10,5 @@ import { ToggleFeaturesService } from '../services/toggle-features.service';
 export class ToggleFeaturesController {
   constructor(private readonly service: ToggleFeaturesService) {}
   @Patch()
-  async execute(@Param('id') id: string) { return this.service.execute(id); }
+  async execute(@Param('id') id: string) { return this.service.execute(id, {}); }
 }

@@ -25,7 +25,7 @@ import { UpdateDietPlanService } from './services/update-diet-plan.service';
 import { LibraryRepository } from './library.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Exercise, DietPlan])],
+  imports: [],
   controllers: [DeleteDietPlanController, DeleteExerciseController, 
     CreateExerciseController,
     FindExerciseController,

@@ -17,7 +17,7 @@ import { SalesPendingPaymentsService } from './services/sales-pending-payments.s
 import { SalesAllMembershipsService } from './services/sales-all-memberships.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Member, Payment, Plan])],
+  imports: [],
   controllers: [
     SalesOverviewController,
     SalesMembershipReportController,

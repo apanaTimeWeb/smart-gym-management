@@ -5,6 +5,18 @@ import { Tenant } from './entities/gyms.entity';
 
 @Injectable()
 export class GymsRepository {
+  async count(options?: any): Promise<number> {
+    return this.repo.count(options);
+  }
+  
+  async findOne(options: any): Promise<any> {
+    return this.repo.findOne(options);
+  }
+  
+  async save(gym: any): Promise<any> {
+    return this.repo.save(gym);
+  }
+
   constructor(
     @InjectRepository(Tenant)
     private readonly repo: Repository<Tenant>,

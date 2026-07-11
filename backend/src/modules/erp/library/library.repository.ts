@@ -1,6 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Injectable, Inject } from '@nestjs/common';
+import { Repository, DataSource } from 'typeorm';
 import { Exercise } from '@/modules/erp/library/entities/exercise.entity';
 import { DietPlan } from '@/modules/erp/library/entities/diet-plan.entity';
 import { PaginationQueryDto } from '@/core/dto/pagination-query.dto';
@@ -8,12 +7,15 @@ import { WORKOUT_CONSTANTS } from './library.constants';
 
 @Injectable()
 export class LibraryRepository {
+  public readonly libraryRepository: Repository<Exercise>;
+  public readonly dietPlanRepository: Repository<DietPlan>;
+
   constructor(
-    @InjectRepository(Exercise)
-    public readonly libraryRepository: Repository<Exercise>,
-    @InjectRepository(DietPlan)
-    public readonly dietPlanRepository: Repository<DietPlan>,
-  ) {}
+    @Inject('TENANT_CONNECTION') private readonly dataSource: DataSource,
+  ) {
+    this.libraryRepository = this.dataSource.getRepository(Exercise);
+    this.dietPlanRepository = this.dataSource.getRepository(DietPlan);
+  }
 
   async findAllExercises(query: PaginationQueryDto) {
     return this.libraryRepository.findAndCount({
