@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { GymsRepository } from '../gyms.repository';
+import { TenantNotFoundException } from '../gyms.exceptions';
+import { GYMS_ERRORS } from '../gyms.constants';
 
 @Injectable()
 export class FindGymsService {
@@ -10,7 +12,7 @@ export class FindGymsService {
   }
   async findOne(id: string): Promise<any> {
     const entity = await this.repository.findById(id);
-    if (!entity) throw new Error('Tenant not found');
+    if (!entity) throw new TenantNotFoundException(GYMS_ERRORS.NOT_FOUND);
     return entity;
   }
 }

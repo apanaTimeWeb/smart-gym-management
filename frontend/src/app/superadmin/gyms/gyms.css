@@ -1,0 +1,6 @@
+/* Custom CSS for Gyms module.
+   Using standard global variables as requested by the architecture. 
+*/
+.gyms-dropdown-overlay {
+  z-index: 50; /* Ensure it stays above the table rows */
+}
