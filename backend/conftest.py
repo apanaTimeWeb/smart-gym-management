@@ -25,7 +25,7 @@ def api_client():
 def admin_token(api_url):
     """Fixture to obtain an admin JWT token for authenticated requests."""
     session = requests.Session()
-    response = session.post(f"{api_url}/v1/auth/login", json={
+    response = session.post(f"{api_url}/auth/login", json={
         "email": "admin@gymsmart.com",
         "password": "superadmin123"
     })

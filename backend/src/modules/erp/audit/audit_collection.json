@@ -1,27 +1,81 @@
 {
   "info": {
-    "name": "ERP Audit Collection",
+    "name": "Audit - Smart Gym API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Get Audit Logs",
+      "name": "GET /)\n  async getAuditLogs(@Query() query: GetAuditLogsDto) {\n    const { page, limit, entityType, actorId } = query;\n    const { data, total } = await this.findAuditService.findAll(\n      page,\n      limit,\n      entityType,\n      actorId,\n    ",
       "request": {
         "method": "GET",
-        "header": [],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
         "url": {
-          "raw": "{{baseUrl}}/api/erp/audit",
+          "raw": "{{baseUrl}}/audit/)\n  async getAuditLogs(@Query() query: GetAuditLogsDto) {\n    const { page, limit, entityType, actorId } = query;\n    const { data, total } = await this.findAuditService.findAll(\n      page,\n      limit,\n      entityType,\n      actorId,\n    ",
           "host": [
             "{{baseUrl}}"
           ],
           "path": [
-            "api",
-            "erp",
-            "audit"
+            "audit",
+            ")\n  async getAuditLogs(@Query() query: GetAuditLogsDto) {\n    const { page, limit, entityType, actorId } = query;\n    const { data, total } = await this.findAuditService.findAll(\n      page,\n      limit,\n      entityType,\n      actorId,\n    "
           ]
         }
-      },
-      "response": []
+      }
+    },
+    {
+      "name": "POST /",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/audit",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "audit"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{AUTH_TOKEN}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.request.headers.add({key: 'x-tenant-id', value: '{{TENANT_ID}}'});"
+        ]
+      }
     }
   ]
 }

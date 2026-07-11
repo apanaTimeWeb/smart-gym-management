@@ -1,48 +1,97 @@
 {
   "info": {
-    "name": "GymSmart Dashboard Module",
-    "description": "KPI metrics, chart data, and recent activity feeds — all with caching",
+    "name": "Dashboard - Smart Gym API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
-  "variable": [
-    { "key": "baseUrl", "value": "http://localhost:5000", "type": "string" },
-    { "key": "accessToken", "value": "", "type": "string" }
-  ],
   "item": [
     {
-      "name": "Get Dashboard KPIs",
+      "name": "GET /)\r\n  @UseInterceptors(CustomCacheInterceptor",
       "request": {
         "method": "GET",
-        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
         "url": {
-          "raw": "{{baseUrl}}/api/v1/dashboard/kpi",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "dashboard", "kpi"]
+          "raw": "{{baseUrl}}/dashboard/charts/)\r\n  @UseInterceptors(CustomCacheInterceptor",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "dashboard",
+            "charts",
+            ")\r\n  @UseInterceptors(CustomCacheInterceptor"
+          ]
         }
       }
     },
     {
-      "name": "Get Dashboard Charts",
+      "name": "GET /)\r\n  @UseInterceptors(CustomCacheInterceptor",
       "request": {
         "method": "GET",
-        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
         "url": {
-          "raw": "{{baseUrl}}/api/v1/dashboard/charts",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "dashboard", "charts"]
+          "raw": "{{baseUrl}}/dashboard/kpi/)\r\n  @UseInterceptors(CustomCacheInterceptor",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "dashboard",
+            "kpi",
+            ")\r\n  @UseInterceptors(CustomCacheInterceptor"
+          ]
         }
       }
     },
     {
-      "name": "Get Recent Activity",
+      "name": "GET /)\r\n  @UseInterceptors(CustomCacheInterceptor",
       "request": {
         "method": "GET",
-        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
         "url": {
-          "raw": "{{baseUrl}}/api/v1/dashboard/recent",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "dashboard", "recent"]
+          "raw": "{{baseUrl}}/dashboard/recent/)\r\n  @UseInterceptors(CustomCacheInterceptor",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "dashboard",
+            "recent",
+            ")\r\n  @UseInterceptors(CustomCacheInterceptor"
+          ]
         }
+      }
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{AUTH_TOKEN}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.request.headers.add({key: 'x-tenant-id', value: '{{TENANT_ID}}'});"
+        ]
       }
     }
   ]

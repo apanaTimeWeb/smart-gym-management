@@ -1,7 +1,135 @@
 {
   "info": {
-    "name": "Dashboard Collection",
+    "name": "Dashboard - Smart Gym API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
-  "item": []
+  "item": [
+    {
+      "name": "POST /)\r\n  async execute() {\r\n    return this.dashboardService.execute(",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/dashboard/)\r\n  async execute() {\r\n    return this.dashboardService.execute(",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "dashboard",
+            ")\r\n  async execute() {\r\n    return this.dashboardService.execute("
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "DELETE /)\r\n  async execute() {\r\n    return this.dashboardService.execute(",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/dashboard/)\r\n  async execute() {\r\n    return this.dashboardService.execute(",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "dashboard",
+            ")\r\n  async execute() {\r\n    return this.dashboardService.execute("
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /)\r\n  async execute() {\r\n    return this.dashboardService.execute(",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/dashboard/)\r\n  async execute() {\r\n    return this.dashboardService.execute(",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "dashboard",
+            ")\r\n  async execute() {\r\n    return this.dashboardService.execute("
+          ]
+        }
+      }
+    },
+    {
+      "name": "PATCH /)\r\n  async execute() {\r\n    return this.dashboardService.execute(",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/dashboard/)\r\n  async execute() {\r\n    return this.dashboardService.execute(",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "dashboard",
+            ")\r\n  async execute() {\r\n    return this.dashboardService.execute("
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{AUTH_TOKEN}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
 }

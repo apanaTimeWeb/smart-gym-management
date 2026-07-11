@@ -1,35 +1,43 @@
-# Attendance Module - Backend Feature Documentation
+# Attendance Module - Backend Feature Guide
 
-## Overview
-The Attendance module tracks daily check-ins and check-outs for both Gym Members and Staff. It calculates real-time daily statistics and adheres strictly to the micro-modular architecture, utilizing TypeORM for all database interactions.
+## 1. Overview
+The **Attendance** module is responsible for managing attendance-related operations within the Smart Gym Management system. It exposes RESTful APIs for creating, reading, updating, and deleting attendance data, while maintaining strict access control based on user roles and tenant scopes.
 
-## Folder Structure & File Responsibilities
+## 2. Directory Structure
 
-### `controllers/`
-- **`mark-attendance.controller.ts`**: Handles the `POST /api/attendance` endpoint. Used by scanners or receptionists to check-in/out a user.
-- **`find-attendance.controller.ts`**: Handles `GET /api/attendance`. Supports query filtering (e.g., by memberId or staffId) for fetching historical records.
-- **`attendance-stats.controller.ts`**: Handles `GET /api/attendance/today-stats`. Returns aggregated check-in counts for the current day.
+```text
+src/modules/.../attendance/
+├── controllers/
+├── dto/
+├── entities/
+├── services/
+├── tests/
+├── utils/
+├── attendance.constants.ts
+├── attendance.exceptions.ts
+├── attendance.interfaces.ts
+├── attendance.module.ts
+├── attendance.repository.ts
+```
 
-### `services/`
-- **`mark-attendance.service.ts`**: Business logic validating that an attendance record is linked to a valid user, and delegating the creation.
-- **`find-attendance.service.ts`**: Handles the fetching logic for historical attendances.
-- **`attendance-stats.service.ts`**: Calculates date ranges (midnight to midnight) to fetch accurate daily aggregates.
-- **`attendance.repository.ts`**: The dedicated data-access layer wrapping `Repository<Attendance>`. Abstracts all SQL where-clauses and joins.
+## 3. Core Components
 
-### `dto/`
-- **`mark-attendance.dto.ts`**: Validates the payload for marking attendance, ensuring the `AttendanceType` enum is respected.
-- **`find-attendance.dto.ts`**: Validates query parameters for filtering records.
+### 3.1 Controllers (`controllers/`)
+Handles incoming HTTP requests and maps them to the appropriate services. All endpoints are secured using guards (JWT, Roles, or API Key). DTOs are used heavily here to validate incoming payloads before they hit the business logic.
 
-### `tests/`
-- **`mark-attendance.service.spec.ts`**: Co-located unit tests ensuring `UserNotLinkedException` triggers correctly.
+### 3.2 Services (`services/`)
+Contains the core business logic.
+- Each service generally handles a single micro-feature (e.g., `create-attendance.service.ts`, `find-attendance.service.ts`).
+- Services utilize Dependency Injection to access repositories, external APIs, and cross-module providers.
 
-### Module Root
-- **`attendance.constants.ts`**: Centralized response messages.
-- **`attendance.exceptions.ts`**: Custom exceptions (e.g., `UserNotLinkedException`).
-- **`attendance.interfaces.ts`**: Typings for internal data shapes.
-- **`entities/attendance.entity.ts`**: The TypeORM entity schema with a `uuid` primary key.
-- **`attendance.module.ts`**: Configures DI, linking controllers to services and the repository.
+### 3.3 Data Access
+- **Entities (`entities/`)**: TypeORM entities defining the SQL table structure.
+- **Repositories (`attendance.repository.ts`)**: Abstracts direct database calls. For ERP modules, it relies on `TENANT_CONNECTION` to query the isolated tenant database. For Superadmin, it queries the master DB.
 
-## Core Logic & Workflows
-1. **Polymorphic Foreign Keys**: An `Attendance` row belongs to either a `Member` or a `Staff`. The `mark-attendance` logic guarantees at least one ID is present to prevent orphaned records.
-2. **Stats Calculation**: The stats service dynamically calculates the current day's bounding timestamps (00:00:00 to 23:59:59) and runs parallel database queries via `Promise.all` in the repository for performance optimization.
+### 3.4 Data Transfer Objects (`dto/`)
+Defines the expected shape of incoming request bodies and query parameters. Uses `class-validator` to ensure strict typing and security (e.g., rejecting unexpected fields or malformed data).
+
+## 4. Workflows & Architecture Rules
+- **No `any` types**: All service inputs must use the strongly typed DTOs.
+- **Error Handling**: Standard `HttpException` filters catch and format errors for the frontend.
+- **Logging**: Operations are logged via `Logger` and intercepted by `AuditInterceptor` for compliance tracking.

@@ -1,76 +1,154 @@
 {
   "info": {
-    "name": "GymSmart Plans Module",
-    "description": "Membership plan CRUD operations",
+    "name": "Plans - Smart Gym API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
-  "variable": [
-    { "key": "baseUrl", "value": "http://localhost:5000", "type": "string" },
-    { "key": "accessToken", "value": "", "type": "string" }
-  ],
   "item": [
     {
-      "name": "Get All Plans",
-      "request": {
-        "method": "GET",
-        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
-        "url": {
-          "raw": "{{baseUrl}}/api/v1/plans",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "plans"]
-        }
-      }
-    },
-    {
-      "name": "Get Plan by ID",
-      "request": {
-        "method": "GET",
-        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
-        "url": {
-          "raw": "{{baseUrl}}/api/v1/plans/:id",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "plans", ":id"],
-          "variable": [{ "key": "id", "value": "1" }]
-        }
-      }
-    },
-    {
-      "name": "Create Plan",
+      "name": "POST /",
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
-          { "key": "Content-Type", "value": "application/json" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
+        "url": {
+          "raw": "{{baseUrl}}/plans",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "plans"
+          ]
+        },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"name\": \"Diamond\",\n  \"tier\": \"PREMIUM\",\n  \"price1Month\": 3000,\n  \"price3Month\": 8000,\n  \"price6Month\": 14000,\n  \"price12Month\": 25000,\n  \"features\": [\"24/7 Access\", \"Personal Trainer\", \"Spa Access\"],\n  \"isActive\": true\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/api/v1/plans",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "plans"]
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         }
       }
     },
     {
-      "name": "Update Plan",
+      "name": "GET /",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/plans",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "plans"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /:id",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/plans/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "plans",
+            "{{id}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "PATCH /:id",
       "request": {
         "method": "PATCH",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
-          { "key": "Content-Type", "value": "application/json" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
+        "url": {
+          "raw": "{{baseUrl}}/plans/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "plans",
+            "{{id}}"
+          ]
+        },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"price1Month\": 3500,\n  \"isActive\": true\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/api/v1/plans/:id",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "plans", ":id"],
-          "variable": [{ "key": "id", "value": "1" }]
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         }
+      }
+    },
+    {
+      "name": "DELETE /:id",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/plans/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "plans",
+            "{{id}}"
+          ]
+        }
+      }
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{AUTH_TOKEN}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.request.headers.add({key: 'x-tenant-id', value: '{{TENANT_ID}}'});"
+        ]
       }
     }
   ]

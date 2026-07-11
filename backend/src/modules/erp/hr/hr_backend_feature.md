@@ -1,38 +1,43 @@
-# HR Module - Backend Feature Documentation
+# Hr Module - Backend Feature Guide
 
-## Overview
-The HR Module is a dual-domain module responsible for managing the Gym's `Staff` and their associated `Payroll`. It handles onboarding, salary assignments, payroll record generation, and status tracking (paid vs pending).
+## 1. Overview
+The **Hr** module is responsible for managing hr-related operations within the Smart Gym Management system. It exposes RESTful APIs for creating, reading, updating, and deleting hr data, while maintaining strict access control based on user roles and tenant scopes.
 
-## Folder Structure & File Responsibilities
+## 2. Directory Structure
 
-### `controllers/`
-- **`staff.controller.ts`**: Manages the `GET`, `POST`, `PATCH`, and `DELETE` (soft delete) operations for `Staff`.
-- **`payroll.controller.ts`**: Handles generating payroll records and updating their status (`/api/hr/payrolls/:id/status`).
-- **`hr-stats.controller.ts`**: Exposes `/api/hr/summary` which provides dashboard-level aggregations.
+```text
+src/modules/.../hr/
+├── controllers/
+├── dto/
+├── entities/
+├── services/
+├── tests/
+├── utils/
+├── hr.constants.ts
+├── hr.exceptions.ts
+├── hr.interfaces.ts
+├── hr.module.ts
+├── hr.repository.ts
+```
 
-### `services/`
-- **`staff.service.ts`**: Handles staff CRUD and email uniqueness validation. Soft deletes staff by toggling `isActive` to `false` instead of actually deleting the row.
-- **`payroll.service.ts`**: Enforces foreign key constraints by ensuring `staffId` is valid before creating a payroll record. Automatically tags `paidAt` with the current date when status transitions to `Paid`.
-- **`hr-stats.service.ts`**: Performs memory-efficient looping to calculate total payroll payouts, pending payouts, and active staff counts.
-- **`hr.repository.ts`**: Centralized TypeORM data access wrapper. Holds `Repository<Staff>` and `Repository<Payroll>`.
+## 3. Core Components
 
-### `dto/`
-- **`create-staff.dto.ts`**: Uses `class-validator` to strictly enforce fields like `role`, `salary`, and `email`.
-- **`create-payroll.dto.ts`**: Validates the payload for generating a month's payroll.
-- **`find-staff.dto.ts` & `find-payroll.dto.ts`**: Validates pagination limiters.
-- **`update-payroll-status.dto.ts`**: Simplifies the status update endpoint payload requirements.
+### 3.1 Controllers (`controllers/`)
+Handles incoming HTTP requests and maps them to the appropriate services. All endpoints are secured using guards (JWT, Roles, or API Key). DTOs are used heavily here to validate incoming payloads before they hit the business logic.
 
-### `tests/`
-- **`staff.service.spec.ts`**: Unit test suite confirming exception handling.
+### 3.2 Services (`services/`)
+Contains the core business logic.
+- Each service generally handles a single micro-feature (e.g., `create-hr.service.ts`, `find-hr.service.ts`).
+- Services utilize Dependency Injection to access repositories, external APIs, and cross-module providers.
 
-### Module Root
-- **`entities/staff.entity.ts`**: The TypeORM schema for Staff. Primary Key `id` is a `uuid` string.
-- **`entities/payroll.entity.ts`**: The TypeORM schema for Payroll. Primary Key `id` is a `uuid` string. Foreign Key `staffId` is a `uuid` string linking to the `Staff` table.
-- **`hr.constants.ts`**: Contains all standardized response messages (e.g. `HR_MESSAGES.PAYROLL_STATUS_UPDATED_SUCCESS`).
-- **`hr.exceptions.ts`**: Shared HTTP exceptions such as `PayrollNotFoundException`.
-- **`hr.interfaces.ts`**: Standardizes the service responses via `HrResponse`.
-- **`hr.module.ts`**: Configures all nested micro-providers and imports `TypeOrmModule.forFeature([Staff, Payroll])`.
+### 3.3 Data Access
+- **Entities (`entities/`)**: TypeORM entities defining the SQL table structure.
+- **Repositories (`hr.repository.ts`)**: Abstracts direct database calls. For ERP modules, it relies on `TENANT_CONNECTION` to query the isolated tenant database. For Superadmin, it queries the master DB.
 
-## Core Logic & Workflows
-1. **Cascading UUID Architecture**: Both `Staff.id` and `Payroll.id` utilize UUIDs. Notably, because `Staff.id` is globally tracked, any external dependencies (such as the `Attendance` module which logs Staff check-ins) also utilize UUID strings for the `staffId` foreign key.
-2. **Soft Deletion**: We do not destroy `Staff` rows in the database, because deleting a staff member would sever their historical `Payroll` records. Instead, `remove()` toggles `isActive: false`, which filters them out of regular `findAll` queries.
+### 3.4 Data Transfer Objects (`dto/`)
+Defines the expected shape of incoming request bodies and query parameters. Uses `class-validator` to ensure strict typing and security (e.g., rejecting unexpected fields or malformed data).
+
+## 4. Workflows & Architecture Rules
+- **No `any` types**: All service inputs must use the strongly typed DTOs.
+- **Error Handling**: Standard `HttpException` filters catch and format errors for the frontend.
+- **Logging**: Operations are logged via `Logger` and intercepted by `AuditInterceptor` for compliance tracking.

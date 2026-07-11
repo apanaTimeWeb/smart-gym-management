@@ -1,30 +1,43 @@
-# Plans Module - Backend Feature Documentation
+# Plans Module - Backend Feature Guide
 
-## Overview
-The Plans Module manages the various subscription tiers (`PlanTier`) available to members. It defines the pricing models and features associated with each membership option.
+## 1. Overview
+The **Plans** module is responsible for managing plans-related operations within the Smart Gym Management system. It exposes RESTful APIs for creating, reading, updating, and deleting plans data, while maintaining strict access control based on user roles and tenant scopes.
 
-## Folder Structure & File Responsibilities
+## 2. Directory Structure
 
-### `controllers/`
-- **`create-plan.controller.ts`**: Handles the `POST /api/plans` endpoint to register a new plan.
-- **`find-plan.controller.ts`**: Manages `GET /api/plans` and `GET /api/plans/:id`. Ensures that standard `find` queries only return active plans.
-- **`update-plan.controller.ts`**: Exposes `PATCH` for pricing or feature updates, and `DELETE` for soft-deletions.
+```text
+src/modules/.../plans/
+├── controllers/
+├── dto/
+├── entities/
+├── services/
+├── tests/
+├── utils/
+├── plans.constants.ts
+├── plans.exceptions.ts
+├── plans.interfaces.ts
+├── plans.module.ts
+├── plans.repository.ts
+```
 
-### `services/`
-- **`create-plan.service.ts`**: Verifies that a Plan's tier is unique before inserting it into the database via the Repository layer.
-- **`find-plan.service.ts`**: Retrieves records and throws `PlanNotFoundException` when appropriate.
-- **`update-plan.service.ts`**: Modifies the `isActive` property to `false` for soft deletion, ensuring that legacy `Member` records referencing this plan do not throw foreign key constraint errors.
-- **`plans.repository.ts`**: Encapsulates `TypeORM` database operations (`find`, `findOne`, `create`, `update`) for the `Plan` entity.
+## 3. Core Components
 
-### `dto/`
-- **`create-plan.dto.ts`**: Strictly validates incoming variables. Validates all four duration prices (`price1Month`, `price3Month`, etc) and maps the `tier` variable securely against the global `PlanTier` enumeration.
-- **`update-plan.dto.ts`**: Extends `CreatePlanDto` using NestJS's `@nestjs/swagger` `PartialType`.
+### 3.1 Controllers (`controllers/`)
+Handles incoming HTTP requests and maps them to the appropriate services. All endpoints are secured using guards (JWT, Roles, or API Key). DTOs are used heavily here to validate incoming payloads before they hit the business logic.
 
-### Module Root
-- **`entities/plan.entity.ts`**: The TypeORM schema. We upgraded the ID column (`id`) to be a UUID string. 
-- **`plans.constants.ts`**: Centralized string constants for all success and error messages.
-- **`plans.exceptions.ts`**: Inherits standard HttpExceptions to throw domain-specific errors like `DuplicatePlanTierException`.
+### 3.2 Services (`services/`)
+Contains the core business logic.
+- Each service generally handles a single micro-feature (e.g., `create-plans.service.ts`, `find-plans.service.ts`).
+- Services utilize Dependency Injection to access repositories, external APIs, and cross-module providers.
 
-## Core Logic & Workflows
-1. **The UUID Cascade**: When transitioning the legacy architecture to the enterprise UUID architecture, we converted `Plan.id` to `@PrimaryGeneratedColumn('uuid')`. To prevent the `Members` module from crashing, this migration also forced an update on `Member.planId` to become a `string`. 
-2. **Soft Deletion Mechanism**: Like most enterprise systems, we cannot afford to `DELETE FROM plans` because thousands of `Member` rows depend on the `planId` foreign key. Deactivating a plan instead ensures it no longer appears in the `GET /api/plans` dropdown in the frontend while preserving historical integrity.
+### 3.3 Data Access
+- **Entities (`entities/`)**: TypeORM entities defining the SQL table structure.
+- **Repositories (`plans.repository.ts`)**: Abstracts direct database calls. For ERP modules, it relies on `TENANT_CONNECTION` to query the isolated tenant database. For Superadmin, it queries the master DB.
+
+### 3.4 Data Transfer Objects (`dto/`)
+Defines the expected shape of incoming request bodies and query parameters. Uses `class-validator` to ensure strict typing and security (e.g., rejecting unexpected fields or malformed data).
+
+## 4. Workflows & Architecture Rules
+- **No `any` types**: All service inputs must use the strongly typed DTOs.
+- **Error Handling**: Standard `HttpException` filters catch and format errors for the frontend.
+- **Logging**: Operations are logged via `Logger` and intercepted by `AuditInterceptor` for compliance tracking.

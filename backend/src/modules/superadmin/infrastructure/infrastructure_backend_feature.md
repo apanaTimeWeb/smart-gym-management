@@ -1,23 +1,44 @@
-# Infrastructure Module — Backend Feature Documentation
+# Infrastructure Module - Backend Feature Guide
 
-## Overview
-The Infrastructure module provides functionality for managing infrastructure within the superadmin scope.
+## 1. Overview
+The **Infrastructure** module is responsible for managing infrastructure-related operations within the Smart Gym Management system. It exposes RESTful APIs for creating, reading, updating, and deleting infrastructure data, while maintaining strict access control based on user roles and tenant scopes.
 
-## Folder Structure & File Responsibilities
+## 2. Directory Structure
 
-### controllers/
-- Handles the HTTP endpoints for infrastructure.
+```text
+src/modules/.../infrastructure/
+├── controllers/
+├── dto/
+├── entities/
+├── listeners/
+├── services/
+├── tests/
+├── utils/
+├── infrastructure.constants.ts
+├── infrastructure.exceptions.ts
+├── infrastructure.interfaces.ts
+├── infrastructure.module.ts
+├── infrastructure.repository.ts
+```
 
-### services/
-- Contains business logic for infrastructure operations.
+## 3. Core Components
 
-### dto/
-- Validates data transfer objects for requests.
+### 3.1 Controllers (`controllers/`)
+Handles incoming HTTP requests and maps them to the appropriate services. All endpoints are secured using guards (JWT, Roles, or API Key). DTOs are used heavily here to validate incoming payloads before they hit the business logic.
 
-### entities/
-- TypeORM entities defining the database tables.
+### 3.2 Services (`services/`)
+Contains the core business logic.
+- Each service generally handles a single micro-feature (e.g., `create-infrastructure.service.ts`, `find-infrastructure.service.ts`).
+- Services utilize Dependency Injection to access repositories, external APIs, and cross-module providers.
 
-### Module Root
-- **$module.constants.ts**: Defines success/error message constants (Rule 5).
-- **$module.exceptions.ts**: Standardized custom exceptions (Rule 6).
-- **$module.interfaces.ts**: Standard interfaces for internal data transfer (Rule 4).
+### 3.3 Data Access
+- **Entities (`entities/`)**: TypeORM entities defining the SQL table structure.
+- **Repositories (`infrastructure.repository.ts`)**: Abstracts direct database calls. For ERP modules, it relies on `TENANT_CONNECTION` to query the isolated tenant database. For Superadmin, it queries the master DB.
+
+### 3.4 Data Transfer Objects (`dto/`)
+Defines the expected shape of incoming request bodies and query parameters. Uses `class-validator` to ensure strict typing and security (e.g., rejecting unexpected fields or malformed data).
+
+## 4. Workflows & Architecture Rules
+- **No `any` types**: All service inputs must use the strongly typed DTOs.
+- **Error Handling**: Standard `HttpException` filters catch and format errors for the frontend.
+- **Logging**: Operations are logged via `Logger` and intercepted by `AuditInterceptor` for compliance tracking.

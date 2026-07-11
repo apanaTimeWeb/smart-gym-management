@@ -1,16 +1,252 @@
 {
   "info": {
-    "name": "FeatureFlag Collection",
+    "name": "Features - Smart Gym API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Get FeatureFlag",
+      "name": "POST /",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/features",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "features"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "DELETE /:id",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/features/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "features",
+            "{{id}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /)\r\n  async executeAll() {\r\n    return this.service.execute(",
       "request": {
         "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
         "url": {
-          "raw": "{{baseUrl}}/api/superadmin/features"
+          "raw": "{{baseUrl}}/features/)\r\n  async executeAll() {\r\n    return this.service.execute(",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "features",
+            ")\r\n  async executeAll() {\r\n    return this.service.execute("
+          ]
         }
+      }
+    },
+    {
+      "name": "GET /:id",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/features/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "features",
+            "{{id}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /)\n  async execute(@Body() dto: CreateFeatureFlagDto) { return this.service.execute(dto",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/features/flags/)\n  async execute(@Body() dto: CreateFeatureFlagDto) { return this.service.execute(dto",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "features",
+            "flags",
+            ")\n  async execute(@Body() dto: CreateFeatureFlagDto) { return this.service.execute(dto"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "POST /)\n  async execute(@Body() dto: CreateFeatureFlagDto) { return this.service.execute(dto",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/features/notes/)\n  async execute(@Body() dto: CreateFeatureFlagDto) { return this.service.execute(dto",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "features",
+            "notes",
+            ")\n  async execute(@Body() dto: CreateFeatureFlagDto) { return this.service.execute(dto"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "PATCH /",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/features/flags/{{id}}/toggle",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "features",
+            "flags",
+            "{{id}}",
+            "toggle"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "PATCH /:id",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/features/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "features",
+            "{{id}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{AUTH_TOKEN}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
       }
     }
   ]

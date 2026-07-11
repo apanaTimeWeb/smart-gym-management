@@ -1,43 +1,79 @@
 {
   "info": {
-    "name": "GymSmart Settings Module",
-    "description": "Gym profile settings management — read and update",
+    "name": "Settings - Smart Gym API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
-  "variable": [
-    { "key": "baseUrl", "value": "http://localhost:5000", "type": "string" },
-    { "key": "accessToken", "value": "", "type": "string" }
-  ],
   "item": [
     {
-      "name": "Get Settings",
+      "name": "GET /",
       "request": {
         "method": "GET",
-        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
         "url": {
-          "raw": "{{baseUrl}}/api/v1/settings",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "settings"]
+          "raw": "{{baseUrl}}/settings",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "settings"
+          ]
         }
       }
     },
     {
-      "name": "Update Settings",
+      "name": "POST /",
       "request": {
-        "method": "PATCH",
+        "method": "POST",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
-          { "key": "Content-Type", "value": "application/json" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
+        "url": {
+          "raw": "{{baseUrl}}/settings",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "settings"
+          ]
+        },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"gymName\": \"GymSmart Pro Fitness\",\n  \"ownerName\": \"Satya Swarup\",\n  \"phone\": \"+91 98765 43210\",\n  \"email\": \"admin@gymsmart.com\",\n  \"city\": \"Mumbai\",\n  \"address\": \"123 Fitness Street, Andheri West\",\n  \"gstNumber\": \"27AABCU9603R1ZX\",\n  \"currency\": \"INR\",\n  \"timezone\": \"Asia/Kolkata\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/api/v1/settings",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "settings"]
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         }
+      }
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{AUTH_TOKEN}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.request.headers.add({key: 'x-tenant-id', value: '{{TENANT_ID}}'});"
+        ]
       }
     }
   ]
