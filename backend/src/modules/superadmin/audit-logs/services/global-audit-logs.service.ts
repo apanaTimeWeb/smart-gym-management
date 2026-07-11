@@ -1,12 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { AuditLogsRepository } from '../audit-logs.repository';
 
 @Injectable()
 export class GlobalAuditLogsService {
   private readonly logger = new Logger(GlobalAuditLogsService.name);
   
+  constructor(private readonly repository: AuditLogsRepository) {}
+
   async execute() {
     this.logger.log('Fetching global audit logs');
-    // Implement repo query
-    return { success: true, data: [] };
+    const logs = await this.repository.findAll();
+    return { success: true, data: logs };
   }
 }

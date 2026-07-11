@@ -6,11 +6,16 @@ import { MEMBER_MESSAGES } from '@/modules/erp/members/members.constants';
 import type { MemberResponse } from '@/modules/erp/members/members.interfaces';
 import { MemberStatus } from '@/modules/erp/members/utils/members.enums';
 
+import { EventEmitter2 } from '@nestjs/event-emitter';
+
 @Injectable()
 export class RenewMemberService {
   private readonly logger = new Logger(RenewMemberService.name);
 
-  constructor(private readonly membersRepository: MembersRepository) {}
+  constructor(
+    private readonly membersRepository: MembersRepository,
+    private readonly eventEmitter: EventEmitter2,
+  ) {}
 
   async renew(id: string, dto: RenewMemberDto): Promise<MemberResponse> {
     this.logger.log(`Renewing member with ID: ${id}`);
@@ -38,6 +43,14 @@ export class RenewMemberService {
     }
 
     const updatedMember = await this.membersRepository.updateMember(id, updates);
+
+    // Emit event for finance module to create an invoice/payment record
+    this.eventEmitter.emit('member.renewed', { 
+      memberId: id,
+      planId: updatedMember.planId || dto.planId,
+      billingCycle: updatedMember.billingCycle || dto.billingCycle,
+      tenantId: (existing as any).tenantId || (existing as any).gymId // Ensure finance module knows which DB context to use
+    });
 
     return {
       message: MEMBER_MESSAGES.RENEWED_SUCCESS,

@@ -11,8 +11,16 @@ import { UpdateJobsService } from './services/update-jobs.service';
 import { DeleteJobsService } from './services/delete-jobs.service';
 import { JobsRepository } from './jobs.repository';
 
+import { BullModule } from '@nestjs/bullmq';
+
 @Module({
-  imports: [TypeOrmModule.forFeature([BackgroundJob])],
+  imports: [
+    TypeOrmModule.forFeature([BackgroundJob]),
+    BullModule.registerQueue(
+      { name: 'broadcasts' },
+      { name: 'backups' },
+    )
+  ],
   controllers: [CreateJobsController, FindJobsController, UpdateJobsController, DeleteJobsController],
   providers: [CreateJobsService, FindJobsService, UpdateJobsService, DeleteJobsService, JobsRepository],
   exports: [CreateJobsService, FindJobsService, UpdateJobsService, DeleteJobsService],

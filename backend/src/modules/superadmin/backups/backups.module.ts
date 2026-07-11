@@ -11,8 +11,13 @@ import { UpdateBackupsService } from './services/update-backups.service';
 import { DeleteBackupsService } from './services/delete-backups.service';
 import { BackupsRepository } from './backups.repository';
 
+import { BullModule } from '@nestjs/bullmq';
+
 @Module({
-  imports: [TypeOrmModule.forFeature([BackupRecord])],
+  imports: [
+    TypeOrmModule.forFeature([BackupRecord]),
+    BullModule.registerQueue({ name: 'backups' })
+  ],
   controllers: [CreateBackupsController, FindBackupsController, UpdateBackupsController, DeleteBackupsController],
   providers: [CreateBackupsService, FindBackupsService, UpdateBackupsService, DeleteBackupsService, BackupsRepository],
 })

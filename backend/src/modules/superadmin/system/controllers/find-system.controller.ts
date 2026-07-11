@@ -11,6 +11,13 @@ import { FindSystemService } from '../services/find-system.service';
 export class FindSystemController {
   constructor(private readonly service: FindSystemService) {}
   
+  @Get('health')
+  @ApiOperation({ summary: 'System Health Check' })
+  @ApiResponse({ status: HttpStatus.OK })
+  async executeHealth() {
+    return this.service.getHealth();
+  }
+
   @Get()
   async executeAll() {
     return this.service.execute();

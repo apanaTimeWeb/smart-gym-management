@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, BadRequestException } from '@nestjs/common';
 import { HrRepository } from '@/modules/erp/hr/hr.repository';
 import { CreatePayrollDto } from '@/modules/erp/hr/dto/create-payroll.dto';
 import { FindPayrollDto } from '@/modules/erp/hr/dto/find-payroll.dto';
@@ -19,8 +19,13 @@ export class PayrollService {
     this.logger.log(`Attempting to create payroll for staffId: ${dto.staffId}`);
 
     const staff = await this.hrRepository.findStaffById(dto.staffId);
+    
     if (!staff) {
       throw new StaffNotFoundException();
+    }
+
+    if (dto.amount !== Number(staff.salary)) {
+      throw new BadRequestException(`Disbursement amount (${dto.amount}) does not match staff base salary (${staff.salary})`);
     }
 
     const payroll = await this.hrRepository.createPayroll(dto);

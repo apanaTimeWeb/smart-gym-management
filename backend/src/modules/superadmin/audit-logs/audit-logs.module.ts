@@ -14,9 +14,10 @@ import { FindAuditLogsService } from './services/find-audit-logs.service';
 import { UpdateAuditLogsService } from './services/update-audit-logs.service';
 import { DeleteAuditLogsService } from './services/delete-audit-logs.service';
 import { AuditLogsRepository } from './audit-logs.repository';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([GlobalAuditLog])],
+  imports: [TypeOrmModule.forFeature([GlobalAuditLog]), ConfigModule],
   controllers: [GlobalAuditLogsController, TenantAuditLogsController, CreateAuditLogsController, FindAuditLogsController, UpdateAuditLogsController, DeleteAuditLogsController],
   providers: [GlobalAuditLogsService, TenantAuditLogsService, CreateAuditLogsService, FindAuditLogsService, UpdateAuditLogsService, DeleteAuditLogsService, AuditLogsRepository],
   exports: [CreateAuditLogsService, FindAuditLogsService, UpdateAuditLogsService, DeleteAuditLogsService],
