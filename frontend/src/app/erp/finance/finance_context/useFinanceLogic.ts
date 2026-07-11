@@ -3,7 +3,7 @@ import { financeApi, type Payment, type FinanceSummary } from '@/lib/api';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import { FinanceContextType } from '@/app/erp/finance/finance_types/finance_types';
 import { AddPaymentFormValues } from '@/app/erp/finance/finance_utils/FinanceSharedConstants';
-import useDebounce from '@/app/erp/erp_utils/useDebounce';
+import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
 
 export function useFinanceLogic(initialData?: any): FinanceContextType {
   const [payments, setPayments] = useState<Payment[]>(initialData?.payments || []);

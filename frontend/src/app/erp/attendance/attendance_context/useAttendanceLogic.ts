@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { attendanceApi, membersApi, hrApi, type Attendance, type Member, type Staff } from '@/lib/api';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import { EMPTY_ATTENDANCE_FORM, ATTENDANCE_TABS, type AttendanceTab, AttendanceFormValues } from '@/app/erp/attendance/attendance_utils/AttendanceSharedConstants';
-import useDebounce from '@/app/erp/erp_utils/useDebounce';
+import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
 import { AttendanceContextType } from '@/app/erp/attendance/attendance_types/attendance_types';
 
 export function useAttendanceLogic(): AttendanceContextType {

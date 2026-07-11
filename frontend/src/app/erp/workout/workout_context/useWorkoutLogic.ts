@@ -3,7 +3,7 @@ import {
   EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM, WorkoutFormValues, ExerciseFormValues
 } from '@/app/erp/workout/workout_utils/WorkoutSharedConstants';
 import { WorkoutContextType, Workout } from '@/app/erp/workout/workout_types/workout_types';
-import useDebounce from '@/app/erp/erp_utils/useDebounce';
+import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
 import { useConfirm } from '@/app/erp/erp_components/ErpFeedback/ErpConfirmProvider';
 import { workoutApi, libraryApi } from '@/lib/api';
 import type { Exercise } from '@/lib/api';
