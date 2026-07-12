@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Tag, Plus, Search } from 'lucide-react';
+import { Tag, Plus, Search, Edit2, Trash2, RefreshCw } from 'lucide-react';
 import { CouponStatus } from '@/app/superadmin/superadmin_types/superadmin_types';
 import { useCouponsPage } from '../superadmin_utils/hooks/useCouponsPage';
 import { SuperadminCouponModal } from '@/app/superadmin/coupons/coupons_components/SuperadminCouponModal';
@@ -147,37 +147,40 @@ export default function CouponsPage() {
                   <td className="px-6 py-4 whitespace-nowrap text-[14px] text-[var(--text-secondary)]">
                     {new Date(cpn.expiryDate).toLocaleDateString()}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right">
+                  <td className="px-6 py-4 whitespace-nowrap text-right flex items-center justify-end gap-2">
                     {cpn.isDeleted ? (
                       <button
+                        title="Restore Coupon"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleToggleRestore(cpn.id);
                         }}
-                        className="text-[var(--text-secondary)] hover:text-[var(--success)] transition-colors px-3 py-1.5 bg-[var(--bg-input)] hover:bg-[var(--success)]/10 rounded-md text-[12px] font-semibold border border-[var(--border)]"
+                        className="text-[var(--text-secondary)] hover:text-[var(--success)] transition-colors p-1.5 bg-[var(--bg-input)] hover:bg-[var(--success)]/10 rounded-md border border-[var(--border)]"
                       >
-                        Restore
+                        <RefreshCw className="w-4 h-4" />
                       </button>
                     ) : (
                       <>
                         <button
+                          title="Edit Coupon"
                           onClick={(e) => {
                             e.stopPropagation();
                             setSelectedCoupon(cpn);
                             setIsEditModalOpen(true);
                           }}
-                          className="text-[var(--text-secondary)] hover:text-[var(--primary)] transition-colors px-2 py-1 bg-[var(--bg-input)] hover:bg-[var(--primary)]/10 rounded-md text-[12px] font-semibold mr-2"
+                          className="text-[var(--text-secondary)] hover:text-[var(--primary)] transition-colors p-1.5 bg-[var(--bg-input)] hover:bg-[var(--primary)]/10 rounded-md border border-[var(--border)]"
                         >
-                          Edit
+                          <Edit2 className="w-4 h-4" />
                         </button>
                         <button
+                          title="Delete Coupon"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleDeleteCoupon(cpn.id);
                           }}
-                          className="text-[var(--text-secondary)] hover:text-[var(--danger)] transition-colors px-2 py-1 bg-[var(--bg-input)] hover:bg-[var(--danger)]/10 rounded-md text-[12px] font-semibold"
+                          className="text-[var(--text-secondary)] hover:text-[var(--danger)] transition-colors p-1.5 bg-[var(--bg-input)] hover:bg-[var(--danger)]/10 rounded-md border border-[var(--border)]"
                         >
-                          Delete
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       </>
                     )}
