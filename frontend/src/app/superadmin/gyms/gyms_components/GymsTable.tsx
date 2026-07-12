@@ -4,10 +4,12 @@ import React from 'react';
 import { CheckCircle2, Ban, LogIn, PlayCircle } from 'lucide-react';
 import { useGymsContext } from '../gyms_context/GymsContext';
 import GymActionDropdown from './GymActionDropdown';
+import GymEditModal from './GymEditModal';
+import GymEmailModal from './GymEmailModal';
 import toast from 'react-hot-toast';
 
 export default function GymsTable() {
-  const { filteredGyms, loading, error, handleGhostLogin, handleSuspend, handleDelete } = useGymsContext();
+  const { filteredGyms, loading, error, handleGhostLogin, handleSuspend, handleDelete, openEditModal, openEmailModal } = useGymsContext();
 
   if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]">Loading...</div>;
   if (error) return <div className="p-8 text-center text-[var(--danger)]">Error loading data.</div>;
@@ -106,8 +108,8 @@ export default function GymsTable() {
                   </button>
                   <GymActionDropdown 
                     gymName={gym.name} 
-                    onEdit={() => toast(`Edit clicked for ${gym.name} (would open modal)`)}
-                    onEmail={() => window.location.href = `mailto:${gym.adminEmail}`}
+                    onEdit={() => openEditModal(gym)}
+                    onEmail={() => openEmailModal(gym)}
                     onDelete={() => handleDelete(gym.id, gym.name)}
                   />
                 </div>
@@ -124,6 +126,8 @@ export default function GymsTable() {
           )}
         </tbody>
       </table>
+      <GymEditModal />
+      <GymEmailModal />
     </div>
   );
 }

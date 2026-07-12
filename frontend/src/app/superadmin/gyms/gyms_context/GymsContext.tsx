@@ -17,6 +17,15 @@ interface GymsContextType {
   handleGhostLogin: (id: string, name: string) => void;
   handleSuspend: (id: string, name: string, status: string) => void;
   handleDelete: (id: string, name: string) => void;
+  selectedGym: Tenant | null;
+  isEditModalOpen: boolean;
+  isEmailModalOpen: boolean;
+  openEditModal: (gym: Tenant) => void;
+  closeEditModal: () => void;
+  openEmailModal: (gym: Tenant) => void;
+  closeEmailModal: () => void;
+  handleEditGym: (id: string, data: any) => Promise<void>;
+  handleEmailOwner: (id: string, data: any) => Promise<void>;
 }
 
 const GymsContext = createContext<GymsContextType | undefined>(undefined);
@@ -24,6 +33,29 @@ const GymsContext = createContext<GymsContextType | undefined>(undefined);
 export function GymsProvider({ children }: { children: React.ReactNode }) {
   const { data: gyms, loading, error, mutate } = useSuperadminData<Tenant[]>(SuperadminUrlConfig.BACKEND_API.GYMS_BASE);
   const [search, setSearch] = useState('');
+  const [selectedGym, setSelectedGym] = useState<Tenant | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+
+  const openEditModal = useCallback((gym: Tenant) => {
+    setSelectedGym(gym);
+    setIsEditModalOpen(true);
+  }, []);
+
+  const closeEditModal = useCallback(() => {
+    setIsEditModalOpen(false);
+    setTimeout(() => setSelectedGym(null), 200); // slight delay for animation
+  }, []);
+
+  const openEmailModal = useCallback((gym: Tenant) => {
+    setSelectedGym(gym);
+    setIsEmailModalOpen(true);
+  }, []);
+
+  const closeEmailModal = useCallback(() => {
+    setIsEmailModalOpen(false);
+    setTimeout(() => setSelectedGym(null), 200);
+  }, []);
 
   const filteredGyms = useMemo(() => {
     if (!gyms) return [];
@@ -74,6 +106,37 @@ export function GymsProvider({ children }: { children: React.ReactNode }) {
     }
   }, [mutate]);
 
+  const handleEditGym = useCallback(async (id: string, data: any) => {
+    try {
+      await apiFetch(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}/${id}`, { 
+        method: 'PATCH',
+        body: JSON.stringify(data)
+      });
+      toast.success(`Gym details updated successfully.`);
+      
+      mutate((prevGyms) => {
+        if (!prevGyms) return prevGyms;
+        return prevGyms.map(gym => gym.id === id ? { ...gym, ...data } : gym);
+      });
+      closeEditModal();
+    } catch (e: any) {
+      toast.error(`Failed to update gym details.`);
+    }
+  }, [mutate, closeEditModal]);
+
+  const handleEmailOwner = useCallback(async (id: string, data: any) => {
+    try {
+      await apiFetch(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}/${id}/email`, { 
+        method: 'POST',
+        body: JSON.stringify(data)
+      });
+      toast.success(`Email sent successfully.`);
+      closeEmailModal();
+    } catch (e: any) {
+      toast.error(`Failed to send email.`);
+    }
+  }, [closeEmailModal]);
+
   const value = useMemo(() => ({
     gyms,
     loading,
@@ -83,8 +146,17 @@ export function GymsProvider({ children }: { children: React.ReactNode }) {
     filteredGyms,
     handleGhostLogin,
     handleSuspend,
-    handleDelete
-  }), [gyms, loading, error, search, filteredGyms, handleGhostLogin, handleSuspend, handleDelete]);
+    handleDelete,
+    selectedGym,
+    isEditModalOpen,
+    isEmailModalOpen,
+    openEditModal,
+    closeEditModal,
+    openEmailModal,
+    closeEmailModal,
+    handleEditGym,
+    handleEmailOwner
+  }), [gyms, loading, error, search, filteredGyms, handleGhostLogin, handleSuspend, handleDelete, selectedGym, isEditModalOpen, isEmailModalOpen, openEditModal, closeEditModal, openEmailModal, closeEmailModal, handleEditGym, handleEmailOwner]);
 
   return (
     <GymsContext.Provider value={value}>

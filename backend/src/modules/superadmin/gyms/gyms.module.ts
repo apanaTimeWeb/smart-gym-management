@@ -14,13 +14,15 @@ import { CreateGymsService } from './services/create-gyms.service';
 import { FindGymsService } from './services/find-gyms.service';
 import { UpdateGymsService } from './services/update-gyms.service';
 import { DeleteGymsService } from './services/delete-gyms.service';
+import { EmailGymsController } from './controllers/email-gyms.controller';
+import { EmailGymsService } from './services/email-gyms.service';
 import { GymsRepository } from './gyms.repository';
 import { CouponsModule } from '../coupons/coupons.module';
 import { AffiliatesModule } from '../affiliates/affiliates.module';
 
 @Module({
   imports: [TenantsModule, TypeOrmModule.forFeature([Tenant]), CouponsModule, AffiliatesModule],
-  controllers: [StatusGymsController, StatsGymsController, CreateGymsController, FindGymsController, UpdateGymsController, DeleteGymsController],
-  providers: [StatusGymsService, StatsGymsService, CreateGymsService, FindGymsService, UpdateGymsService, DeleteGymsService, GymsRepository],
+  controllers: [StatusGymsController, StatsGymsController, CreateGymsController, FindGymsController, UpdateGymsController, DeleteGymsController, EmailGymsController],
+  providers: [StatusGymsService, StatsGymsService, CreateGymsService, FindGymsService, UpdateGymsService, DeleteGymsService, EmailGymsService, GymsRepository],
 })
 export class GymsModule {}
