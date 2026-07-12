@@ -21,12 +21,16 @@ export class AttendanceRepository {
     return this.attendanceRepo.save(attendance);
   }
 
-  async findAllAttendances(query: any): Promise<Attendance[]> {
+  async findAllAttendances(query: any): Promise<[Attendance[], number]> {
     const where: any = {};
     if (query.memberId) where.memberId = query.memberId;
     if (query.staffId) where.staffId = query.staffId;
 
-    return this.attendanceRepo.find({
+    const page = query.page || 1;
+    const limit = query.limit || 50;
+    const skip = (page - 1) * limit;
+
+    return this.attendanceRepo.findAndCount({
       where,
       order: { date: 'DESC' },
       relations: ['member', 'staff'],
@@ -34,6 +38,8 @@ export class AttendanceRepository {
         member: { name: true },
         staff: { name: true },
       },
+      take: limit,
+      skip,
     });
   }
 

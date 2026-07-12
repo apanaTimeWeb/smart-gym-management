@@ -14,11 +14,18 @@ export class FindAttendanceService {
     this.logger.log(
       `Fetching attendances with query: ${JSON.stringify(query)}`,
     );
-    const data = await this.attendanceRepository.findAllAttendances(query);
+    const [attendances, total] = await this.attendanceRepository.findAllAttendances(query);
+    const page = query.page || 1;
+    const limit = query.limit || 50;
 
     return {
       message: ATTENDANCE_MESSAGES.FETCHED_SUCCESS,
-      data,
+      data: {
+        attendances,
+        total,
+        page,
+        limit,
+      },
     };
   }
 }
