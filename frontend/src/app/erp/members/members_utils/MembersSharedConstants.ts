@@ -9,7 +9,7 @@ export const MemberSchema = z.object({
   gender: z.enum(['MALE', 'FEMALE', 'OTHER']),
   billingCycle: z.string(),
   customDays: z.coerce.number().min(1, "Please enter valid days").optional(),
-  planId: z.coerce.number().min(1, "Please select a plan"),
+  planId: z.string().min(1, "Please select a plan"),
 });
 
 export type MemberFormValues = z.infer<typeof MemberSchema>;
@@ -35,7 +35,7 @@ export const EMPTY_MEMBER_FORM = {
  address: '', 
  gender: 'MALE', 
  billingCycle: 'ONE_MONTH', 
- planId: 1 
+ planId: '' 
 } as unknown as MemberFormValues;
 
 export const MEMBERS_TABLE_HEADERS = [

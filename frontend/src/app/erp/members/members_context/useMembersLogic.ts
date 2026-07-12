@@ -133,13 +133,13 @@ export function useMembersLogic(initialData?: any): MembersContextType {
  const saveMember = useCallback(async (data: MemberFormValues) => {
  setSaving(true);
  try {
- if (editId) {
- const res = await membersApi.update(editId, { ...data, planId: Number(data.planId) });
- showToast((res as any).message, 'success');
- } else {
- const res = await membersApi.create({ ...data, planId: Number(data.planId), joinDate: new Date().toISOString() });
- showToast((res as any).message, 'success');
- }
+  if (editId) {
+  const res = await membersApi.update(editId, { ...data, planId: data.planId });
+  showToast((res as any).message, 'success');
+  } else {
+  const res = await membersApi.create({ ...data, planId: data.planId, joinDate: new Date().toISOString() });
+  showToast((res as any).message, 'success');
+  }
  setShowAddModal(false);
  await loadAll();
  } catch (err) { 

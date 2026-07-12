@@ -35,7 +35,7 @@ export default function MemberModal() {
    }
  }, [showAddModal, editData, reset]);
 
-  const watchPlanId = watch('planId') as number;
+  const watchPlanId = watch('planId') as string;
   const watchBillingCycle = watch('billingCycle') as string;
   const watchCustomDays = watch('customDays') as number;
 
@@ -132,12 +132,12 @@ export default function MemberModal() {
               <div>
                 <span className="font-semibold text-[var(--warning)]">Calculated Price:</span> 
                 <span className="text-[var(--warning)] ml-1 font-bold">
- {formatCurrency(getPriceForCycle(plans.find(p => p.id === Number(watchPlanId)), watchBillingCycle, Number(watchCustomDays) || 0))}
+ {formatCurrency(getPriceForCycle(plans.find(p => p.id.toString() === watchPlanId.toString()), watchBillingCycle, Number(watchCustomDays) || 0))}
  </span>
               </div>
               {watchBillingCycle === 'CUSTOM' && (
                 <div className="text-[var(--warning)] text-xs opacity-80">
-                  (Per Day: {formatCurrency((plans.find(p => p.id === Number(watchPlanId)) as any)?.priceCustom || 0)} × {watchCustomDays || 0} days)
+                  (Per Day: {formatCurrency((plans.find(p => p.id.toString() === watchPlanId.toString()) as any)?.priceCustom || 0)} × {watchCustomDays || 0} days)
                 </div>
               )}
  </div>
