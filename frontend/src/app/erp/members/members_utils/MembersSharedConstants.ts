@@ -7,8 +7,8 @@ export const MemberSchema = z.object({
   phone: z.string().min(10, "Phone number must be at least 10 digits"),
   address: z.string().optional(),
   gender: z.enum(['MALE', 'FEMALE', 'OTHER']),
-  branch: z.string(),
   billingCycle: z.string(),
+  customDays: z.coerce.number().min(1, "Please enter valid days").optional(),
   planId: z.coerce.number().min(1, "Please select a plan"),
 });
 
@@ -25,6 +25,7 @@ export const MEMBERS_CYCLE_LABELS: Record<string, string> = {
  THREE_MONTHS: '3 Months',
  SIX_MONTHS: '6 Months',
  TWELVE_MONTHS: '12 Months',
+ CUSTOM: 'Custom (Days)',
 };
 
 export const EMPTY_MEMBER_FORM = { 
@@ -33,7 +34,6 @@ export const EMPTY_MEMBER_FORM = {
  phone: '', 
  address: '', 
  gender: 'MALE', 
- branch: 'Main Branch', 
  billingCycle: 'ONE_MONTH', 
  planId: 1 
 } as unknown as MemberFormValues;

@@ -46,7 +46,6 @@ async function seed() {
       email: 'john@example.com',
       phone: '1234567890',
       gender: Gender.MALE,
-      branch: 'Main',
       planId: plan.id,
       billingCycle: BillingCycle.ONE_MONTH,
       status: MemberStatus.ACTIVE,

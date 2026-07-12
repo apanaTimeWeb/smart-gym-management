@@ -30,9 +30,10 @@ export class CreateMemberDto {
   @IsString()
   address: string;
 
-  @ApiProperty()
-  @IsString()
-  branch: string;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsNumber()
+  customDays?: number;
 
   @ApiProperty()
   @IsString()

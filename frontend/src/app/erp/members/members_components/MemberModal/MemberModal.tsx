@@ -84,23 +84,6 @@ export default function MemberModal() {
  </select>
  </div>
  <div>
- <label className="block text-sm font-medium text-[var(--members-text-secondary)] mb-1">Branch</label>
- <Controller
-   name="branch"
-   control={useFormReturn.control}
-   render={({ field }) => (
-     <SearchableDropdown
-       options={BRANCH_OPTIONS.map(b => ({ value: b, label: b }))}
-       value={field.value}
-       onChange={field.onChange}
-       placeholder="Select branch..."
-     />
-   )}
- />
- </div>
- </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
- <div>
  <label className="block text-sm font-medium text-[var(--members-text-secondary)] mb-1">Plan</label>
  <Controller
    name="planId"
@@ -115,6 +98,8 @@ export default function MemberModal() {
    )}
  />
  </div>
+ </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  <div>
  <label className="block text-sm font-medium text-[var(--members-text-secondary)] mb-1">Billing Cycle</label>
  <select 
@@ -124,6 +109,22 @@ export default function MemberModal() {
  {Object.entries(MEMBERS_CYCLE_LABELS).map(([val, label]) => <option key={val} value={val}>{label}</option>)}
  </select>
  </div>
+ {watchBillingCycle === 'CUSTOM' && (
+ <div>
+ <label className="block text-sm font-medium text-[var(--members-text-secondary)] mb-1">Custom Days</label>
+ <input 
+ type="number"
+ {...register('customDays')}
+ placeholder="e.g. 15"
+ className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 bg-[var(--members-bg-input)] text-[var(--members-text-primary)] ${
+   errors.customDays ? 'border-[var(--danger)] focus:ring-[var(--danger)]' : 'border-[var(--members-border)] focus:ring-[var(--warning)]'
+ }`}
+ />
+ {errors.customDays && (
+   <p className="text-[var(--danger)] text-xs mt-1">{errors.customDays?.message}</p>
+ )}
+ </div>
+ )}
  </div>
  {watchPlanId && (
             <div className="bg-[var(--warning-bg)] rounded-xl p-3 text-sm border border-[var(--warning)]/30">

@@ -123,8 +123,8 @@ export function useMembersLogic(initialData?: any): MembersContextType {
  phone: m.phone, 
  address: m.address || '', 
  gender: (m.gender as "MALE"|"FEMALE"|"OTHER") || 'MALE', 
- branch: m.branch, 
  billingCycle: m.billingCycle, 
+ customDays: (m as any).customDays, // We will type this properly later
  planId: m.planId 
  } as unknown as MemberFormValues);
  setShowAddModal(true);

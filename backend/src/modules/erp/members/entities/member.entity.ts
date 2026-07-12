@@ -40,8 +40,8 @@ export class Member {
   @Column({ nullable: true })
   address: string;
 
-  @Column()
-  branch: string;
+  @Column({ nullable: true })
+  customDays: number;
 
   @ManyToOne(() => Plan, (plan) => plan.members)
   @JoinColumn({ name: 'planId' })

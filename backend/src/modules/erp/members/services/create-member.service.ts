@@ -40,9 +40,14 @@ export class CreateMemberService {
 
     const joinDate = dto.joinDate ? new Date(dto.joinDate) : new Date();
     const expiryDate = new Date(joinDate);
-    expiryDate.setMonth(
-      expiryDate.getMonth() + (cycleMonths[dto.billingCycle] || 1),
-    );
+    
+    if (dto.billingCycle === BillingCycle.CUSTOM && dto.customDays) {
+      expiryDate.setDate(expiryDate.getDate() + dto.customDays);
+    } else {
+      expiryDate.setMonth(
+        expiryDate.getMonth() + (cycleMonths[dto.billingCycle] || 1),
+      );
+    }
 
     const payload = {
       ...dto,
