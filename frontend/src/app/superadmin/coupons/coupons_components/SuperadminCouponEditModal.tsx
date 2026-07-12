@@ -18,7 +18,7 @@ export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps>
   onSubmit,
   coupon,
 }) => {
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<CouponFormData>({
+  const { register, handleSubmit, watch, formState: { errors }, reset } = useForm<CouponFormData>({
     resolver: zodResolver(CouponSchema),
   });
 
@@ -77,13 +77,20 @@ export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps>
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-[14px] font-bold text-[var(--text-secondary)]">Discount Value <span className="text-[var(--danger)]">*</span></label>
-              <input 
-                type="number" 
-                {...register('discountValue', { valueAsNumber: true })}
-                className="w-full px-4 py-2.5 bg-[var(--bg-input)] border border-[var(--border)] rounded-lg text-[14px] text-[var(--text-primary)] focus:outline-none focus:border-[var(--border-focus)] transition-colors"
-                placeholder="25"
-              />
+              <label className="text-[14px] font-bold text-[var(--text-secondary)]">
+                {watch('discountType') === 'PERCENTAGE' ? 'Discount %' : 'Discount Amount'} <span className="text-[var(--danger)]">*</span>
+              </label>
+              <div className="relative">
+                {watch('discountType') === 'EXACT' && (
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] text-[14px] font-semibold">Rs</span>
+                )}
+                <input 
+                  type="number" 
+                  {...register('discountValue', { valueAsNumber: true })}
+                  className={`w-full ${watch('discountType') === 'EXACT' ? 'pl-9 pr-4' : 'px-4'} py-2.5 bg-[var(--bg-input)] border border-[var(--border)] rounded-lg text-[14px] text-[var(--text-primary)] focus:outline-none focus:border-[var(--border-focus)] transition-colors`}
+                  placeholder={watch('discountType') === 'PERCENTAGE' ? '25' : '500'}
+                />
+              </div>
               {errors.discountValue && <span className="text-[12px] text-[var(--danger)]">{errors.discountValue.message}</span>}
             </div>
 

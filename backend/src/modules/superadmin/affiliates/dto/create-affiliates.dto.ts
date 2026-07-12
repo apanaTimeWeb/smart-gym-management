@@ -13,10 +13,12 @@ export class CreateAffiliateDto {
   referralCode?: string;
 
   @IsNumber()
-  totalReferred: number;
+  @IsOptional()
+  totalReferred?: number;
 
   @IsNumber()
-  commissionEarned: number;
+  @IsOptional()
+  commissionEarned?: number;
 
   @IsString()
   @IsOptional()

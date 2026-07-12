@@ -8,6 +8,7 @@ interface SuperadminBroadcastModalProps {
   onClose: () => void;
   form: UseFormReturn<BroadcastFormData>;
   onSubmit: (data: BroadcastFormData) => void;
+  isEditMode?: boolean;
 }
 
 export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> = ({
@@ -15,6 +16,7 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
   onClose,
   form,
   onSubmit,
+  isEditMode = false,
 }) => {
   if (!isOpen) return null;
 
@@ -25,7 +27,7 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
     <div className="fixed inset-0 bg-black/60 z-[1000] flex items-center justify-center p-4 backdrop-blur-sm">
       <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl w-full max-w-[480px] shadow-xl overflow-hidden flex flex-col">
         <div className="flex items-center justify-between px-7 py-5 border-b border-[var(--border)]">
-          <h2 className="text-[18px] font-bold text-[var(--text-primary)]">New Broadcast</h2>
+          <h2 className="text-[18px] font-bold text-[var(--text-primary)]">{isEditMode ? 'Edit Broadcast' : 'New Broadcast'}</h2>
           <button onClick={onClose} className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
             <X className="w-5 h-5" />
           </button>

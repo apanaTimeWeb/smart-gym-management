@@ -7,7 +7,8 @@ export enum CouponStatus {
 export interface ICoupon {
   id: string;
   code: string;
-  discountPercentage: number;
+  discountType: 'PERCENTAGE' | 'EXACT';
+  discountValue: number;
   maxUses: number;
   currentUses: number;
   status: CouponStatus;
