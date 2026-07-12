@@ -5,6 +5,7 @@ import { Tag, Plus, Search } from 'lucide-react';
 import { CouponStatus } from '@/app/superadmin/superadmin_types/superadmin_types';
 import { useCouponsPage } from '../superadmin_utils/hooks/useCouponsPage';
 import { SuperadminCouponModal } from '@/app/superadmin/coupons/coupons_components/SuperadminCouponModal';
+import { SuperadminCouponEditModal } from '@/app/superadmin/coupons/coupons_components/SuperadminCouponEditModal';
 import { toast } from 'react-hot-toast';
 
 const getStatusBadge = (status: CouponStatus) => {
@@ -30,14 +31,23 @@ export default function CouponsPage() {
     form,
     handleCreateCoupon,
     activeCoupons,
-    totalRedeemed
-  , loading, error} = useCouponsPage();
+    totalRedeemed,
+    loading, 
+    error,
+    isEditModalOpen,
+    setIsEditModalOpen,
+    selectedCoupon,
+    setSelectedCoupon,
+    handleUpdateCoupon,
+    handleDeleteCoupon,
+    handleToggleRestore
+  } = useCouponsPage();
 
   if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]">Loading...</div>;
   if (error) return <div className="p-8 text-center text-[var(--danger)]">Error loading data.</div>;
 
   const handleRowClick = (code: string) => {
-    toast(`Clicked on coupon: ${code}`);
+    // Only fire if not clicking an action button (handled via stopPropagation on buttons)
   };
 
   return (
@@ -107,17 +117,19 @@ export default function CouponsPage() {
                 <th className="px-6 py-4 text-[12px] font-semibold text-[var(--text-secondary)] uppercase tracking-wider">Usage</th>
                 <th className="px-6 py-4 text-[12px] font-semibold text-[var(--text-secondary)] uppercase tracking-wider">Status</th>
                 <th className="px-6 py-4 text-[12px] font-semibold text-[var(--text-secondary)] uppercase tracking-wider">Expiry Date</th>
+                <th className="px-6 py-4 text-[12px] font-semibold text-[var(--text-secondary)] uppercase tracking-wider text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--border)]">
               {coupons.map((cpn) => (
                 <tr 
                   key={cpn.id} 
-                  className="hover:bg-[var(--primary)]/5 transition-colors group cursor-pointer"
+                  className={`hover:bg-[var(--primary)]/5 transition-colors group cursor-pointer ${cpn.isDeleted ? 'opacity-50 grayscale' : ''}`}
                   onClick={() => handleRowClick(cpn.code)}
                 >
                   <td className="px-6 py-4 whitespace-nowrap text-[14px] font-bold text-[var(--text-primary)] tracking-wide">
                     {cpn.code}
+                    {cpn.isDeleted && <span className="ml-2 text-[10px] bg-[var(--danger)]/20 text-[var(--danger)] px-2 py-0.5 rounded-full">DELETED</span>}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-[14px] text-[var(--text-secondary)]">
                     <span className="font-semibold text-[var(--success)]">{cpn.discountPercentage}% OFF</span>
@@ -131,11 +143,46 @@ export default function CouponsPage() {
                   <td className="px-6 py-4 whitespace-nowrap text-[14px] text-[var(--text-secondary)]">
                     {new Date(cpn.expiryDate).toLocaleDateString()}
                   </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right">
+                    {cpn.isDeleted ? (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleToggleRestore(cpn.id);
+                        }}
+                        className="text-[var(--text-secondary)] hover:text-[var(--success)] transition-colors px-3 py-1.5 bg-[var(--bg-input)] hover:bg-[var(--success)]/10 rounded-md text-[12px] font-semibold border border-[var(--border)]"
+                      >
+                        Restore
+                      </button>
+                    ) : (
+                      <>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedCoupon(cpn);
+                            setIsEditModalOpen(true);
+                          }}
+                          className="text-[var(--text-secondary)] hover:text-[var(--primary)] transition-colors px-2 py-1 bg-[var(--bg-input)] hover:bg-[var(--primary)]/10 rounded-md text-[12px] font-semibold mr-2"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteCoupon(cpn.id);
+                          }}
+                          className="text-[var(--text-secondary)] hover:text-[var(--danger)] transition-colors px-2 py-1 bg-[var(--bg-input)] hover:bg-[var(--danger)]/10 rounded-md text-[12px] font-semibold"
+                        >
+                          Delete
+                        </button>
+                      </>
+                    )}
+                  </td>
                 </tr>
               ))}
               {coupons.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-[var(--text-secondary)]">
+                  <td colSpan={6} className="px-6 py-12 text-center text-[var(--text-secondary)]">
                     <Tag className="w-12 h-12 mx-auto mb-3 opacity-20" />
                     <p>No coupons found.</p>
                   </td>
@@ -151,6 +198,13 @@ export default function CouponsPage() {
         onClose={() => setIsModalOpen(false)}
         form={form}
         onSubmit={handleCreateCoupon}
+      />
+
+      <SuperadminCouponEditModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onSubmit={handleUpdateCoupon}
+        coupon={selectedCoupon}
       />
     </div>
   );

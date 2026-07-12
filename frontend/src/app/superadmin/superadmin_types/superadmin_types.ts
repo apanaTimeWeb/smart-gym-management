@@ -150,6 +150,7 @@ export interface Coupon {
   currentUses: number;
   status: CouponStatus;
   expiryDate: string;
+  isDeleted: boolean;
 }
 
 export type AffiliateStatus = 'ACTIVE' | 'INACTIVE';

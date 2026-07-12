@@ -8,8 +8,15 @@ export class CreateCouponsService {
   constructor(private readonly repository: CouponsRepository) {}
   
   async execute(dto: CreateCouponDto): Promise<any> {
-    if (dto.expiryDate && new Date(dto.expiryDate) < new Date()) {
-      throw new BadRequestException('Expiry date cannot be in the past');
+    if (dto.expiryDate) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const expDate = new Date(dto.expiryDate);
+      expDate.setHours(0, 0, 0, 0);
+      
+      if (expDate < today) {
+        throw new BadRequestException('Expiry date cannot be in the past');
+      }
     }
     
     if (!dto.code) {
@@ -18,6 +25,9 @@ export class CreateCouponsService {
     
     const existing = await this.repository.findByCode(dto.code);
     if (existing) {
+      if (existing.isDeleted) {
+        throw new BadRequestException('Coupon code already exists (but is deleted). Please restore it instead.');
+      }
       throw new BadRequestException('Coupon code already exists');
     }
 

@@ -27,4 +27,13 @@ export class Coupon {
 
   @Column({ type: 'boolean', default: false })
   isDeleted: boolean;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }

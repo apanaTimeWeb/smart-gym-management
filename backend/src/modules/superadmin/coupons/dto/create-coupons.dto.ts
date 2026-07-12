@@ -12,7 +12,8 @@ export class CreateCouponDto {
   maxUses: number;
 
   @IsNumber()
-  currentUses: number;
+  @IsOptional()
+  currentUses?: number;
 
   @IsString()
   @IsOptional()
