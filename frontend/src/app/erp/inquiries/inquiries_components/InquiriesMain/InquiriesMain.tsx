@@ -3,6 +3,7 @@
 import ErpHeader from '@/app/erp/erp_components/ErpLayout/ErpHeader';
 import ErpToast from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import ErpMessageModal from '@/app/erp/erp_components/ErpFeedback/ErpMessageModal';
+import ErpBulkMessageModal from '@/app/erp/erp_components/ErpFeedback/ErpBulkMessageModal';
 import { InquiriesProvider, useInquiriesContext } from '@/app/erp/inquiries/inquiries_context/InquiriesContext';
 import InquiriesKPIs from '@/app/erp/inquiries/inquiries_components/InquiriesKPIs/InquiriesKPIs';
 import InquiriesToolbar from '@/app/erp/inquiries/inquiries_components/InquiriesToolbar/InquiriesToolbar';
@@ -11,7 +12,7 @@ import InquiryModal from '@/app/erp/inquiries/inquiries_components/InquiryModal/
 import '@/app/erp/inquiries/inquiries.css';
 
 function InquiriesContent() {
- const { toast, hideToast, msgModal, closeMsg, showToast } = useInquiriesContext();
+ const { toast, hideToast, msgModal, closeMsg, showToast, bulkMsgModal, closeBulkMsg, clearSelection } = useInquiriesContext();
 
  return (
  <div className="min-h-full pb-10 inquiries-module">
@@ -24,7 +25,7 @@ function InquiriesContent() {
 
  <InquiryModal />
  
- {msgModal?.open && (
+  {msgModal?.open && (
  <ErpMessageModal 
  open={msgModal.open}
  type={msgModal.type}
@@ -33,6 +34,16 @@ function InquiriesContent() {
  onClose={closeMsg} 
  onSuccess={msg => { showToast(msg, 'success'); closeMsg(); }} 
  />
+ )}
+ 
+ {bulkMsgModal?.open && (
+  <ErpBulkMessageModal
+    open={bulkMsgModal.open}
+    type={bulkMsgModal.type}
+    recipients={bulkMsgModal.recipients}
+    onClose={closeBulkMsg}
+    onSuccess={msg => { showToast(msg, 'success'); closeBulkMsg(); clearSelection(); }}
+  />
  )}
  
  {toast && (

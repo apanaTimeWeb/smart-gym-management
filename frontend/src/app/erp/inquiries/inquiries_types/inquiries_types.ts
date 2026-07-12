@@ -25,6 +25,12 @@ export interface InquiriesContextType {
   currentPage: number;
   setCurrentPage: (p: number) => void;
  
+  // Selection State
+  selectedIds: number[];
+  toggleSelectAll: (selectAll: boolean) => void;
+  toggleSelectOne: (id: number) => void;
+  clearSelection: () => void;
+ 
  // Modal State
  showModal: boolean;
  setShowModal: (show: boolean) => void;
@@ -39,10 +45,15 @@ export interface InquiriesContextType {
  deleteInquiry: (id: number) => Promise<void>;
  updateStatus: (id: number, status: string) => Promise<void>;
  
- // Message Modal State
- msgModal: { open: boolean; recipient: ErpMessageRecipient; type: MessageType; message: string; subject?: string } | null;
- openMsg: (inq: Inquiry, type: MessageType) => void;
- closeMsg: () => void;
+  // Message Modal State
+  msgModal: { open: boolean; recipient: ErpMessageRecipient; type: MessageType; message: string; subject?: string } | null;
+  openMsg: (inq: Inquiry, type: MessageType) => void;
+  closeMsg: () => void;
+
+  // Bulk Message Modal State
+  bulkMsgModal: { open: boolean; type: MessageType; recipients: ErpMessageRecipient[] } | null;
+  openBulkMsg: (type: MessageType) => void;
+  closeBulkMsg: () => void;
 }
 
 export interface Inquiry {

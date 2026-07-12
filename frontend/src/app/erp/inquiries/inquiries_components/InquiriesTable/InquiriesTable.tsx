@@ -9,8 +9,12 @@ import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
 export default function InquiriesTable() {
   const { 
     inquiries, loading, search, debouncedSearch, statusFilter, dateFilter, currentPage, setCurrentPage, 
-    openEdit, openMsg, deleteInquiry, updateStatus, totalInquiries
+    openEdit, openMsg, deleteInquiry, updateStatus, totalInquiries,
+    selectedIds, toggleSelectAll, toggleSelectOne
   } = useInquiriesContext();
+
+  const allSelected = inquiries.length > 0 && selectedIds.length === inquiries.length;
+  const isSelected = (id: number) => selectedIds.includes(id);
 
   const ITEMS_PER_PAGE = 10;
   const totalPages = Math.ceil(totalInquiries / ITEMS_PER_PAGE);
@@ -29,6 +33,14 @@ export default function InquiriesTable() {
         <table className="w-full">
           <thead style={{ backgroundColor: 'var(--inquiries-bg-input)' }}>
             <tr>
+              <th className="px-5 py-3 w-12 text-left">
+                <input 
+                  type="checkbox" 
+                  checked={allSelected} 
+                  onChange={(e) => toggleSelectAll(e.target.checked)}
+                  className="w-4 h-4 rounded border-gray-300 text-[var(--inquiries-highlight)] focus:ring-[var(--inquiries-highlight)] cursor-pointer"
+                />
+              </th>
               {INQUIRIES_TABLE_HEADERS.map(h => (
                 <th key={h} className="text-left text-xs font-semibold uppercase tracking-wider px-5 py-3" style={{ color: 'var(--inquiries-text-secondary)' }}>
                   {h}
@@ -39,8 +51,22 @@ export default function InquiriesTable() {
           <tbody className="divide-y" style={{ borderColor: 'var(--inquiries-border)' }}>
             {inquiries.map(inq => {
               const statusStyle = INQUIRIES_STATUS_STYLES[inq.status] || { bg: 'var(--inquiries-bg-input)', text: 'var(--inquiries-text-primary)' };
+              const selected = isSelected(inq.id);
+              
               return (
-                <tr key={inq.id} className="transition-colors hover:bg-[rgba(99,102,241,0.06)] cursor-pointer" onClick={() => openEdit(inq)}>
+                <tr 
+                  key={inq.id} 
+                  className={`transition-colors cursor-pointer ${selected ? 'bg-[rgba(99,102,241,0.08)]' : 'hover:bg-[rgba(99,102,241,0.04)]'}`} 
+                  onClick={() => openEdit(inq)}
+                >
+                  <td className="px-5 py-3.5 w-12" onClick={e => e.stopPropagation()}>
+                    <input 
+                      type="checkbox" 
+                      checked={selected} 
+                      onChange={() => toggleSelectOne(inq.id)}
+                      className="w-4 h-4 rounded border-gray-300 text-[var(--inquiries-highlight)] focus:ring-[var(--inquiries-highlight)] cursor-pointer"
+                    />
+                  </td>
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm" style={{ backgroundColor: 'var(--inquiries-kpi-orange-bg)', color: 'var(--inquiries-kpi-orange-text)' }}>
@@ -112,7 +138,7 @@ export default function InquiriesTable() {
             })}
             {inquiries.length === 0 && (
               <tr>
-                <td colSpan={7} className="text-center py-12 text-sm" style={{ color: 'var(--inquiries-text-secondary)' }}>
+                <td colSpan={8} className="text-center py-12 text-sm" style={{ color: 'var(--inquiries-text-secondary)' }}>
                   No inquiries found.
                 </td>
               </tr>
