@@ -32,20 +32,39 @@ export const INITIAL_EXERCISES: any[] = [
  { id: 6, name: 'Romanian Deadlift',muscle: 'Hamstrings', equipment: 'Barbell', difficulty: 'Intermediate' },
 ];
 
-export const EMPTY_WORKOUT_FORM = { 
- name: '', 
- level: 'Beginner', 
- days: '', 
- exercises: '', 
- focus: '', 
- duration: '', 
- tags: '' 
+export const WorkoutSchema = z.object({
+  name: z.string().min(2, 'Name is required'),
+  level: z.string(),
+  days: z.string().refine(val => !isNaN(Number(val)) && Number(val) > 0, { message: 'Must be a valid number > 0' }),
+  exercises: z.string().refine(val => !isNaN(Number(val)) && Number(val) > 0, { message: 'Must be a valid number > 0' }),
+  focus: z.string().min(2, 'Focus area is required'),
+  duration: z.string().min(2, 'Duration is required'),
+  tags: z.string()
+});
+export type WorkoutFormValues = z.infer<typeof WorkoutSchema>;
+
+export const EMPTY_WORKOUT_FORM: WorkoutFormValues = { 
+  name: '', 
+  level: 'Beginner', 
+  days: '', 
+  exercises: '', 
+  focus: '', 
+  duration: '', 
+  tags: '' 
 };
 
-export const EMPTY_EXERCISE_FORM = { 
- name: '', 
- muscle: '', 
- equipment: 'Barbell', 
- difficulty: 'Beginner' 
+export const ExerciseSchema = z.object({
+  name: z.string().min(2, 'Name is required'),
+  muscle: z.string().min(2, 'Primary muscle is required'),
+  equipment: z.string(),
+  difficulty: z.string()
+});
+export type ExerciseFormValues = z.infer<typeof ExerciseSchema>;
+
+export const EMPTY_EXERCISE_FORM: ExerciseFormValues = { 
+  name: '', 
+  muscle: '', 
+  equipment: 'Barbell', 
+  difficulty: 'Beginner' 
 };
 

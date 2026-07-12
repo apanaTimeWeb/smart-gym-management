@@ -1,80 +1,177 @@
 {
   "info": {
-    "name": "GymSmart Inquiries Module",
-    "description": "Lead management: create, list, update status, and stats",
+    "name": "Inquiries - Smart Gym API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
-  "variable": [
-    { "key": "baseUrl", "value": "http://localhost:5000", "type": "string" },
-    { "key": "accessToken", "value": "", "type": "string" }
-  ],
   "item": [
     {
-      "name": "Get All Inquiries",
+      "name": "POST /",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/inquiries",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "inquiries"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "GET /",
       "request": {
         "method": "GET",
-        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
         "url": {
-          "raw": "{{baseUrl}}/api/v1/inquiries?page=1&limit=20&status=NEW",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "inquiries"],
-          "query": [
-            { "key": "page", "value": "1" },
-            { "key": "limit", "value": "20" },
-            { "key": "status", "value": "NEW" }
+          "raw": "{{baseUrl}}/inquiries",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "inquiries"
           ]
         }
       }
     },
     {
-      "name": "Get Inquiry Stats",
+      "name": "GET /:id",
       "request": {
         "method": "GET",
-        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
-        "url": {
-          "raw": "{{baseUrl}}/api/v1/inquiries/stats",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "inquiries", "stats"]
-        }
-      }
-    },
-    {
-      "name": "Create Inquiry (Lead)",
-      "request": {
-        "method": "POST",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
-          { "key": "Content-Type", "value": "application/json" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"name\": \"Ravi Tiwari\",\n  \"phone\": \"+91 99887 76655\",\n  \"email\": \"ravi@gmail.com\",\n  \"interest\": \"Premium Plan\",\n  \"source\": \"Walk-in\",\n  \"notes\": \"Interested in PT sessions\"\n}"
-        },
         "url": {
-          "raw": "{{baseUrl}}/api/v1/inquiries",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "inquiries"]
+          "raw": "{{baseUrl}}/inquiries/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "inquiries",
+            "{{id}}"
+          ]
         }
       }
     },
     {
-      "name": "Update Inquiry Status",
+      "name": "GET /",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/inquiries/meta/stats",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "inquiries",
+            "meta",
+            "stats"
+          ]
+        }
+      }
+    },
+    {
+      "name": "PATCH /:id",
       "request": {
         "method": "PATCH",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
-          { "key": "Content-Type", "value": "application/json" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
+        "url": {
+          "raw": "{{baseUrl}}/inquiries/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "inquiries",
+            "{{id}}"
+          ]
+        },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"status\": \"FOLLOW_UP\",\n  \"notes\": \"Called, will visit tomorrow\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/api/v1/inquiries/:id",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "inquiries", ":id"],
-          "variable": [{ "key": "id", "value": "1" }]
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         }
+      }
+    },
+    {
+      "name": "DELETE /:id",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/inquiries/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "inquiries",
+            "{{id}}"
+          ]
+        }
+      }
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{AUTH_TOKEN}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.request.headers.add({key: 'x-tenant-id', value: '{{TENANT_ID}}'});"
+        ]
       }
     }
   ]

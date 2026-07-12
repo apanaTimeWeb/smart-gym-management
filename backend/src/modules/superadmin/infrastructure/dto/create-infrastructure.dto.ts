@@ -4,6 +4,5 @@ import { ApiProperty } from '@nestjs/swagger';
 export class CreateInfrastructureDto {
   @ApiProperty({ description: 'Placeholder field for Infrastructure' })
   @IsString()
-  @IsOptional()
-  name?: string;
+  name: string;
 }

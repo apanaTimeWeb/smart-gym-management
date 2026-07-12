@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
 import { authApi } from '@/lib/api';
 import { AuthUrlConfig } from '@/app/auth/auth_url_config';
+import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { UseLoginFormReturn, loginSchema, LoginFormData } from '@/app/auth/login/login_types/login_types';
 
 export function useLoginForm(): UseLoginFormReturn {
@@ -34,7 +35,12 @@ export function useLoginForm(): UseLoginFormReturn {
         if (!cookieRes.ok) throw new Error('Session setup failed');
         
         toast.success((res as any).message);
-        window.location.replace(AuthUrlConfig.PAGES.DASHBOARD);
+        
+        if (res.data.user?.role === 'SUPERADMIN') {
+          window.location.replace(SuperadminUrlConfig.PAGES.DASHBOARD);
+        } else {
+          window.location.replace(AuthUrlConfig.PAGES.DASHBOARD);
+        }
       }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Login failed. Please try again.';

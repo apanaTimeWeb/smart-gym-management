@@ -6,13 +6,14 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { AuditService } from '@/modules/erp/audit/audit.service';
+import { CreateAuditService } from '@/modules/erp/audit/services/create-audit.service';
 import { DataSource } from 'typeorm';
+import { ModuleRef, ContextIdFactory } from '@nestjs/core';
 
 @Injectable()
 export class AuditInterceptor implements NestInterceptor {
   constructor(
-    private readonly auditService: AuditService,
+    private readonly moduleRef: ModuleRef,
     private readonly dataSource: DataSource
   ) {}
 
@@ -41,18 +42,27 @@ export class AuditInterceptor implements NestInterceptor {
       }
 
       return next.handle().pipe(
-        tap(() => {
-          // Fire and forget audit log creation
-          this.auditService.createAuditLog({
-            actorId: user?.sub || user?.id || null,
-            actorRole: user?.role || null,
-            action: method,
-            entityType: url.split('/')[2] || url, // naive extraction from /api/v1/:entity
-            entityId: entityId,
-            newValue: body ? { ...body } : null,
-            oldValue: oldValue,
-            ipAddress: ip || request.headers['x-forwarded-for'],
-          });
+        tap(async () => {
+          try {
+            // Because CreateAuditService depends on TENANT_CONNECTION (which is request-scoped),
+            // it is also request-scoped. We must use resolve() with the current request context.
+            const contextId = ContextIdFactory.getByRequest(request);
+            const createAuditService = await this.moduleRef.resolve(CreateAuditService, contextId, { strict: false });
+
+            // Fire and forget audit log creation
+            await createAuditService.createAuditLog({
+              actorId: user?.sub || user?.id || null,
+              actorRole: user?.role || null,
+              action: method,
+              entityType: url.split('/')[2] || url, // naive extraction from /api/v1/:entity
+              entityId: entityId,
+              newValue: body ? { ...body } : null,
+              oldValue: oldValue,
+              ipAddress: ip || request.headers['x-forwarded-for'],
+            });
+          } catch (err) {
+            // Ignore resolution errors for global routes that lack tenant headers
+          }
         }),
       );
     }

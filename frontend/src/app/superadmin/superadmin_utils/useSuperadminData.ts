@@ -25,5 +25,5 @@ export function useSuperadminData<T>(endpoint: string) {
     return () => { isMounted = false; };
   }, [endpoint]);
 
-  return { data, loading, error };
+  return { data, loading, error, mutate: setData };
 }

@@ -1,3 +1,7 @@
+import { DeleteDietPlanService } from './services/delete-diet-plan.service';
+import { DeleteExerciseService } from './services/delete-exercise.service';
+import { DeleteDietPlanController } from './controllers/delete-diet-plan.controller';
+import { DeleteExerciseController } from './controllers/delete-exercise.controller';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -21,8 +25,8 @@ import { UpdateDietPlanService } from './services/update-diet-plan.service';
 import { LibraryRepository } from './library.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Exercise, DietPlan])],
-  controllers: [
+  imports: [],
+  controllers: [DeleteDietPlanController, DeleteExerciseController, 
     CreateExerciseController,
     FindExerciseController,
     UpdateExerciseController,
@@ -30,7 +34,7 @@ import { LibraryRepository } from './library.repository';
     FindDietPlanController,
     UpdateDietPlanController,
   ],
-  providers: [
+  providers: [DeleteDietPlanService, DeleteExerciseService, 
     LibraryRepository,
     CreateExerciseService,
     FindExerciseService,

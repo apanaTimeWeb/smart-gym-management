@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+
 
 import { Member } from '@/modules/erp/members/entities/member.entity';
 import { Payment } from '@/modules/erp/finance/entities/payment.entity';
@@ -19,7 +19,7 @@ import { DashboardRecentService } from './services/dashboard-recent.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Member, Payment, Staff, Product, Inquiry]),
+    
   ],
   controllers: [
     DashboardKpiController,

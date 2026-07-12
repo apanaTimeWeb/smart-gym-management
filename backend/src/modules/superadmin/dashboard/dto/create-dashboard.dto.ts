@@ -4,6 +4,5 @@ import { ApiProperty } from '@nestjs/swagger';
 export class CreateDashboardDto {
   @ApiProperty({ description: 'Placeholder field for Dashboard' })
   @IsString()
-  @IsOptional()
-  name?: string;
+  name: string;
 }

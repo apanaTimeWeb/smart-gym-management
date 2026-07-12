@@ -18,7 +18,7 @@ import { MemberStatsController } from '@/modules/erp/members/controllers/member-
 import { PaymentProcessedListener } from './listeners/payment-processed.listener';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Member])],
+  imports: [],
   controllers: [
     MemberStatsController,
     CreateMemberController,

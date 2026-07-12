@@ -1,9 +1,10 @@
 "use client";
 
-import dynamic from 'next/dynamic';
 import { useSalesContext } from '@/app/erp/sales/sales_context/SalesContext';
-
-const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
+import { 
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  AreaChart, Area
+} from 'recharts';
 
 export default function SalesOverview() {
   const { overviewData, loading } = useSalesContext();
@@ -19,67 +20,44 @@ export default function SalesOverview() {
  return (
  <div className="space-y-6">
  <div className="bg-[var(--sales-bg-card)] p-5 rounded-xl border border-[var(--sales-border)] shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-none">
- <h3 className="font-bold text-[var(--sales-text-primary)] mb-2">Monthly Revenue (₹)</h3>
+ <h3 className="font-bold text-[var(--sales-text-primary)] mb-4">Monthly Revenue (₹)</h3>
  <div className="h-[280px] w-full">
- <ReactApexChart 
- options={{
- chart: { type: 'bar', toolbar: { show: false }, fontFamily: 'inherit', parentHeightOffset: 0 },
- colors: ['#4F46E5'],
- plotOptions: { bar: { borderRadius: 6, columnWidth: '35%' } },
- dataLabels: { enabled: false },
- xaxis: { 
- categories: overviewData.map(d => d.month), 
- axisBorder: { show: false }, 
- axisTicks: { show: false },
- labels: { style: { colors: '#64748b' } }
- },
- yaxis: { 
- labels: { 
- formatter: (val) => `${(val / 1000).toFixed(0)}K`,
- style: { colors: '#64748b' }
- } 
- },
- grid: { borderColor: 'var(--sales-border)', strokeDashArray: 4, xaxis: { lines: { show: false } }, yaxis: { lines: { show: true } } },
- fill: { 
- type: 'gradient', 
- gradient: { type: 'vertical', shadeIntensity: 1, opacityFrom: 1, opacityTo: 0.8, colorStops: [ { offset: 0, color: '#818cf8', opacity: 1 }, { offset: 100, color: '#4F46E5', opacity: 1 } ] } 
- },
- tooltip: { theme: 'light', y: { formatter: (val) => `₹${val.toLocaleString()}` } }
- }}
- series={[{ name: 'Revenue', data: overviewData.map(d => d.revenue) }]}
- type="bar"
- height="100%"
- />
+  <ResponsiveContainer width="100%" height="100%">
+    <BarChart data={overviewData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--sales-border)" />
+      <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} />
+      <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} tickFormatter={(val) => `${(val / 1000).toFixed(0)}K`} />
+      <Tooltip 
+        cursor={{ fill: 'var(--sales-border)', opacity: 0.2 }}
+        contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', backgroundColor: 'var(--bg-card)', color: 'var(--text-primary)' }}
+        formatter={(value: number) => [`₹${value.toLocaleString()}`, 'Revenue']}
+      />
+      <Bar dataKey="revenue" fill="#4F46E5" radius={[6, 6, 0, 0]} barSize={40} />
+    </BarChart>
+  </ResponsiveContainer>
  </div>
  </div>
  
  <div className="bg-[var(--sales-bg-card)] p-5 rounded-xl border border-[var(--sales-border)] shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-none">
- <h3 className="font-bold text-[var(--sales-text-primary)] mb-2">New Members Trend</h3>
+ <h3 className="font-bold text-[var(--sales-text-primary)] mb-4">New Members Trend</h3>
  <div className="h-[250px] w-full">
- <ReactApexChart 
- options={{
- chart: { type: 'area', toolbar: { show: false }, fontFamily: 'inherit', parentHeightOffset: 0 },
- colors: ['#F43F5E'],
- dataLabels: { enabled: false },
- stroke: { curve: 'smooth', width: 3 },
- xaxis: { 
- categories: overviewData.map(d => d.month), 
- axisBorder: { show: false }, 
- axisTicks: { show: false },
- labels: { style: { colors: '#64748b' } }
- },
- yaxis: { labels: { style: { colors: '#64748b' } } },
- grid: { borderColor: 'var(--sales-border)', strokeDashArray: 4, xaxis: { lines: { show: false } }, yaxis: { lines: { show: true } } },
- fill: { 
- type: 'gradient', 
- gradient: { shadeIntensity: 1, opacityFrom: 0.4, opacityTo: 0, stops: [0, 100] } 
- },
- tooltip: { theme: 'light' }
- }}
- series={[{ name: 'New Members', data: overviewData.map(d => d.newMembers) }]}
- type="area"
- height="100%"
- />
+  <ResponsiveContainer width="100%" height="100%">
+    <AreaChart data={overviewData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+      <defs>
+        <linearGradient id="colorMembers" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="5%" stopColor="#F43F5E" stopOpacity={0.4}/>
+          <stop offset="95%" stopColor="#F43F5E" stopOpacity={0}/>
+        </linearGradient>
+      </defs>
+      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--sales-border)" />
+      <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} />
+      <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} />
+      <Tooltip 
+        contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', backgroundColor: 'var(--bg-card)', color: 'var(--text-primary)' }}
+      />
+      <Area type="monotone" dataKey="newMembers" stroke="#F43F5E" strokeWidth={3} fillOpacity={1} fill="url(#colorMembers)" />
+    </AreaChart>
+  </ResponsiveContainer>
  </div>
  </div>
  </div>

@@ -16,8 +16,7 @@ export class CreateInquiryDto {
     example: 'john@example.com',
   })
   @IsEmail()
-  @IsOptional()
-  email?: string;
+  email: string;
 
   @ApiProperty({
     description: 'Interest (e.g. Weight Loss, Muscle Gain)',

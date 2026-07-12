@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource, ILike } from 'typeorm';
 import { FindPaymentDto } from '@/modules/erp/finance/dto/find-payment.dto';
@@ -9,13 +9,16 @@ import { CreatePaymentDto } from '@/modules/erp/finance/dto/create-payment.dto';
 
 @Injectable()
 export class FinanceRepository {
+  
+  private readonly paymentRepo: Repository<Payment>;
+  private readonly memberRepo: Repository<Member>;
+  
   constructor(
-    @InjectRepository(Payment)
-    private readonly paymentRepo: Repository<Payment>,
-    @InjectRepository(Member)
-    private readonly memberRepo: Repository<Member>,
-    private readonly dataSource: DataSource,
-  ) {}
+    @Inject('TENANT_CONNECTION') private readonly dataSource: DataSource,
+  ) {
+    this.paymentRepo = this.dataSource.getRepository(Payment);
+    this.memberRepo = this.dataSource.getRepository(Member);
+  }
 
   async findMemberById(id: string): Promise<Member | null> {
     return this.memberRepo.findOne({ where: { id } });

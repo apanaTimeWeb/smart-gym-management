@@ -14,9 +14,9 @@ export interface WorkoutContextType {
  setCurrentPage: (p: number) => void;
  
  workouts: Workout[];
+ totalWorkouts: number;
  exercises: Exercise[];
- filteredWk: Workout[];
- filteredEx: Exercise[];
+ totalExercises: number;
  
  loading: boolean;
  saving: boolean;

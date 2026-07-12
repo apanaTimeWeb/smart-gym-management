@@ -25,25 +25,21 @@ export class CreateGlobalAuditLogDto {
   action: string;
 
   @ApiPropertyOptional({ description: 'The resource acted upon', example: 'Iron Forge Fitness' })
-  @IsOptional()
   @IsString()
   @MaxLength(500)
-  targetResource?: string;
+  targetResource: string;
 
   @ApiPropertyOptional({ description: 'IP address of the superadmin actor' })
-  @IsOptional()
   @IsString()
-  ipAddress?: string;
+  ipAddress: string;
 
   @ApiPropertyOptional({ description: 'Before-state snapshot (JSON)' })
-  @IsOptional()
   @IsObject()
-  oldValue?: Record<string, unknown>;
+  oldValue: Record<string, unknown>;
 
   @ApiPropertyOptional({ description: 'After-state snapshot (JSON)' })
-  @IsOptional()
   @IsObject()
-  newValue?: Record<string, unknown>;
+  newValue: Record<string, unknown>;
 
   @ApiProperty({ description: 'When the action occurred (ISO 8601)' })
   @IsDateString()

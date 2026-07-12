@@ -1,14 +1,19 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Injectable, Inject } from '@nestjs/common';
+
+import { Repository, DataSource  } from 'typeorm';
 import { Plan } from '@/modules/erp/plans/entities/plan.entity';
 
 @Injectable()
 export class PlansRepository {
+    public readonly planRepository: Repository<Plan>;
+
+    public readonly planRepo: Repository<Plan>;
+
   constructor(
-    @InjectRepository(Plan)
-    private readonly planRepo: Repository<Plan>,
-  ) {}
+    @Inject('TENANT_CONNECTION') private readonly dataSource: DataSource,
+  ) {
+    this.planRepo = this.dataSource.getRepository(Plan);
+  }
 
   async createPlan(data: Partial<Plan>): Promise<Plan> {
     const plan = this.planRepo.create(

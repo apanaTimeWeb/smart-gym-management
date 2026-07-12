@@ -1,4 +1,4 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateBackupDto } from './create-backups.dto';
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateBackupRecordDto } from './create-backups.dto';
 
-export class UpdateBackupDto extends PartialType(CreateBackupDto) {}
+export class UpdateBackupRecordDto extends PartialType(CreateBackupRecordDto) {}

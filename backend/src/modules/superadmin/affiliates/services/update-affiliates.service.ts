@@ -1,0 +1,12 @@
+import { UpdateAffiliateDto } from '../dto/update-affiliates.dto';
+import { Injectable } from '@nestjs/common';
+import { AffiliatesRepository } from '../affiliates.repository';
+
+@Injectable()
+export class UpdateAffiliatesService {
+  constructor(private readonly repository: AffiliatesRepository) {}
+  
+  async execute(id: string, dto: UpdateAffiliateDto): Promise<any> {
+    return await this.repository.update(id, dto);
+  }
+}

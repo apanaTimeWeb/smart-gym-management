@@ -1,7 +1,7 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Inject } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DataSource } from 'typeorm';
 import { Payment } from '../entities/payment.entity';
 import { PaymentStatus } from '../utils/finance.enums';
 
@@ -9,10 +9,13 @@ import { PaymentStatus } from '../utils/finance.enums';
 export class MemberRegisteredListener {
   private readonly logger = new Logger(MemberRegisteredListener.name);
 
+  private readonly paymentRepository: Repository<Payment>;
+
   constructor(
-    @InjectRepository(Payment)
-    private readonly paymentRepository: Repository<Payment>,
-  ) {}
+    @Inject('TENANT_CONNECTION') private readonly dataSource: DataSource,
+  ) {
+    this.paymentRepository = this.dataSource.getRepository(Payment);
+  }
 
   @OnEvent('member.registered')
   async handleMemberRegisteredEvent(member: any) {

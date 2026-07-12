@@ -1,4 +1,4 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateMigrationDto } from './create-migrations.dto';
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateSchemaMigrationDto } from './create-migrations.dto';
 
-export class UpdateMigrationDto extends PartialType(CreateMigrationDto) {}
+export class UpdateSchemaMigrationDto extends PartialType(CreateSchemaMigrationDto) {}

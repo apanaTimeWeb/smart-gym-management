@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { plansApi, type Plan } from '@/lib/api';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
-import { EMPTY_PLAN_FORM } from '@/app/erp/plans/plans_utils/PlansSharedConstants';
+import { EMPTY_PLAN_FORM, PlanFormValues } from '@/app/erp/plans/plans_utils/PlansSharedConstants';
 import { PlansContextType } from '@/app/erp/plans/plans_types/plans_types';
 import { useConfirm } from '@/app/erp/erp_components/ErpFeedback/ErpConfirmProvider';
 
@@ -56,19 +56,18 @@ export function usePlansLogic(): PlansContextType {
  setShowModal(true);
  }, []);
 
- const savePlan = useCallback(async (e: React.FormEvent) => {
- e.preventDefault(); 
- setSaving(true);
- try {
- const payload = {
- name: form.name, 
- tier: form.tier,
- price1Month: Number(form.price1Month), 
- price3Month: Number(form.price3Month), 
- price6Month: Number(form.price6Month), 
- price12Month: Number(form.price12Month),
- features: form.features.split('\n').map(s => s.trim()).filter(Boolean)
- };
+  const savePlan = useCallback(async (data: PlanFormValues) => {
+    setSaving(true);
+    try {
+      const payload = {
+        name: data.name, 
+        tier: data.tier,
+        price1Month: Number(data.price1Month), 
+        price3Month: Number(data.price3Month), 
+        price6Month: Number(data.price6Month), 
+        price12Month: Number(data.price12Month),
+        features: data.features.split('\n').map(s => s.trim()).filter(Boolean)
+      };
  
  if (editId) { 
  const res = await plansApi.update(editId, payload); 
@@ -81,10 +80,10 @@ export function usePlansLogic(): PlansContextType {
  await loadPlans();
  } catch (err) { 
  showToast((err as Error).message, 'error'); 
- } finally { 
- setSaving(false); 
- }
- }, [editId, form, loadPlans, showToast]);
+  } finally { 
+  setSaving(false); 
+  }
+  }, [editId, loadPlans, showToast]);
 
  const deletePlan = useCallback(async (id: number) => {
   const isConfirmed = await confirm({ title: 'Delete Plan', message: 'Are you sure you want to delete this plan?', confirmText: 'Delete', type: 'danger' });

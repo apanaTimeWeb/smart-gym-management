@@ -14,10 +14,12 @@ import { RouterModule } from '@nestjs/core';
 
 import { CorrelationIdMiddleware } from '@/core/middleware/correlation-id.middleware';
 import { HealthModule } from '@/core/health/health.module';
+import { DatabaseModule } from '@/core/database/database.module';
 
 import { AuthModule } from '@/modules/auth/auth.module';
 import { ErpModule } from '@/modules/erp/erp.module';
 import { SuperadminModule } from '@/modules/superadmin/superadmin.module';
+import { LandingModule } from '@/modules/core/public/landing/landing.module';
 
 import { MediaModule } from '@/core/media/media.module';
 import { AuditInterceptor } from '@/core/interceptors/audit.interceptor';
@@ -83,6 +85,7 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
         connection: {
           host: configService.get('REDIS_HOST') || 'localhost',
           port: configService.get('REDIS_PORT') || 6379,
+          skipVersionCheck: true,
         },
       }),
     }),
@@ -104,12 +107,14 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 
     // ─── Infrastructure Modules ───────────────────────────────────────────
     HealthModule,
+    DatabaseModule,
     MediaModule,
 
     // ─── Feature Modules ──────────────────────────────────────────────────
     AuthModule,
     ErpModule,
     SuperadminModule,
+    LandingModule,
     
     // ─── Route Prefixing ──────────────────────────────────────────────────
     RouterModule.register([

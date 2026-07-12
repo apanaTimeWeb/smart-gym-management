@@ -5,6 +5,7 @@ import LoginVisual from '@/app/auth/login/login_components/LoginVisual/LoginVisu
 import LoginHeader from '@/app/auth/login/login_components/LoginHeader/LoginHeader';
 import LoginForm from '@/app/auth/login/login_components/LoginForm/LoginForm';
 import { LoginSharedConstants } from '@/app/auth/login/login_constants/LoginSharedConstants';
+import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { ThemeToggle } from '@/components/ThemeToggle';
 
 export default async function Login() {
@@ -12,7 +13,20 @@ export default async function Login() {
   const tokenCookie = cookieStore.get('gymsmart_token');
   
   if (tokenCookie) {
-    redirect(LoginSharedConstants.PATHS.DASHBOARD);
+    const userCookie = cookieStore.get('gymsmart_user');
+    let role = '';
+    try {
+      if (userCookie?.value) {
+        const user = JSON.parse(decodeURIComponent(userCookie.value));
+        role = user?.role || '';
+      }
+    } catch (e) {}
+
+    if (role === 'SUPERADMIN') {
+      redirect(SuperadminUrlConfig.PAGES.DASHBOARD);
+    } else {
+      redirect(LoginSharedConstants.PATHS.DASHBOARD);
+    }
   }
 
   return (

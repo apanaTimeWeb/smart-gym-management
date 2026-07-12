@@ -9,12 +9,15 @@ import { ArrowLeft, Database, Save, Loader2 } from 'lucide-react';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { OnboardGymSchema, OnboardGymFormValues } from '@/app/superadmin/superadmin_utils/SuperadminValidation';
 import { superadminApi } from '@/lib/superadmin-api';
+import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
+import { SubscriptionPlan } from '@/app/superadmin/superadmin_types/superadmin_types';
 import toast from 'react-hot-toast';
 
 export default function AddGymPage() {
   const router = useRouter();
   const [isProvisioning, setIsProvisioning] = useState(false);
   const [provisioningLogs, setProvisioningLogs] = useState<string[]>([]);
+  const { data: plans, loading: loadingPlans } = useSuperadminData<SubscriptionPlan[]>(SuperadminUrlConfig.BACKEND_API.PLANS_BASE);
 
   const {
     register,
@@ -23,7 +26,7 @@ export default function AddGymPage() {
   } = useForm<OnboardGymFormValues>({
     resolver: zodResolver(OnboardGymSchema),
     defaultValues: {
-      plan: 'BASIC'
+      plan: ''
     }
   });
 
@@ -63,6 +66,7 @@ export default function AddGymPage() {
         memberCount: 0,
         monthlyRevenue: 0,
         databaseVersion: 'v1.0.0',
+        temporaryPassword: data.temporaryPassword,
       });
       
       addLog('Provisioning complete! Redirecting...');
@@ -155,9 +159,14 @@ export default function AddGymPage() {
                   {...register('plan')}
                   className="w-full bg-[var(--bg-card)] border border-[var(--border)] text-[var(--text-primary)] rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500 transition-colors"
                 >
-                  <option value="BASIC">Basic ($49/mo - up to 500 members)</option>
-                  <option value="PRO">Pro ($99/mo - up to 2000 members)</option>
-                  <option value="ENTERPRISE">Enterprise ($199/mo - unlimited)</option>
+                  <option value="">Select a plan</option>
+                  {loadingPlans ? (
+                    <option disabled>Loading plans...</option>
+                  ) : (
+                    plans?.map(p => (
+                      <option key={p.id} value={p.name}>{p.name} (${Number(p.priceMonthly).toFixed(2)}/mo)</option>
+                    ))
+                  )}
                 </select>
                 {errors.plan && <p className="text-[var(--danger)] text-xs">{errors.plan.message}</p>}
               </div>

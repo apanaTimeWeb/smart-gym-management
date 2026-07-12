@@ -1,52 +1,47 @@
 {
   "info": {
-    "name": "GymSmart - Sales Module",
-    "description": "API endpoints for the Sales module",
+    "name": "Sales - Smart Gym API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Get Sales Overview",
+      "name": "GET /",
       "request": {
         "method": "GET",
         "header": [
           {
-            "key": "Authorization",
-            "value": "Bearer {{token}}"
+            "key": "Content-Type",
+            "value": "application/json"
           }
         ],
         "url": {
-          "raw": "{{baseUrl}}/api/v1/sales/overview",
+          "raw": "{{baseUrl}}/sales/all-memberships",
           "host": [
             "{{baseUrl}}"
           ],
           "path": [
-            "api",
-            "v1",
             "sales",
-            "overview"
+            "all-memberships"
           ]
         }
       }
     },
     {
-      "name": "Get Membership Report",
+      "name": "GET /",
       "request": {
         "method": "GET",
         "header": [
           {
-            "key": "Authorization",
-            "value": "Bearer {{token}}"
+            "key": "Content-Type",
+            "value": "application/json"
           }
         ],
         "url": {
-          "raw": "{{baseUrl}}/api/v1/sales/membership-report",
+          "raw": "{{baseUrl}}/sales/membership-report",
           "host": [
             "{{baseUrl}}"
           ],
           "path": [
-            "api",
-            "v1",
             "sales",
             "membership-report"
           ]
@@ -54,71 +49,68 @@
       }
     },
     {
-      "name": "Get Pending Payments",
+      "name": "GET /",
       "request": {
         "method": "GET",
         "header": [
           {
-            "key": "Authorization",
-            "value": "Bearer {{token}}"
+            "key": "Content-Type",
+            "value": "application/json"
           }
         ],
         "url": {
-          "raw": "{{baseUrl}}/api/v1/sales/pending-payments?limit=10&page=1",
+          "raw": "{{baseUrl}}/sales/overview",
           "host": [
             "{{baseUrl}}"
           ],
           "path": [
-            "api",
-            "v1",
             "sales",
-            "pending-payments"
-          ],
-          "query": [
-            {
-              "key": "limit",
-              "value": "10"
-            },
-            {
-              "key": "page",
-              "value": "1"
-            }
+            "overview"
           ]
         }
       }
     },
     {
-      "name": "Get All Memberships",
+      "name": "GET /",
       "request": {
         "method": "GET",
         "header": [
           {
-            "key": "Authorization",
-            "value": "Bearer {{token}}"
+            "key": "Content-Type",
+            "value": "application/json"
           }
         ],
         "url": {
-          "raw": "{{baseUrl}}/api/v1/sales/all-memberships?limit=10&page=1",
+          "raw": "{{baseUrl}}/sales/pending-payments",
           "host": [
             "{{baseUrl}}"
           ],
           "path": [
-            "api",
-            "v1",
             "sales",
-            "all-memberships"
-          ],
-          "query": [
-            {
-              "key": "limit",
-              "value": "10"
-            },
-            {
-              "key": "page",
-              "value": "1"
-            }
+            "pending-payments"
           ]
         }
+      }
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{AUTH_TOKEN}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.request.headers.add({key: 'x-tenant-id', value: '{{TENANT_ID}}'});"
+        ]
       }
     }
   ]

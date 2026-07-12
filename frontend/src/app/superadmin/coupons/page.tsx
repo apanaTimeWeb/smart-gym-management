@@ -4,7 +4,7 @@ import React from 'react';
 import { Tag, Plus, Search } from 'lucide-react';
 import { CouponStatus } from '@/app/superadmin/superadmin_types/superadmin_types';
 import { useCouponsPage } from '../superadmin_utils/hooks/useCouponsPage';
-import { SuperadminCouponModal } from '../superadmin_components/Coupons/SuperadminCouponModal';
+import { SuperadminCouponModal } from '@/app/superadmin/coupons/coupons_components/SuperadminCouponModal';
 import { toast } from 'react-hot-toast';
 
 const getStatusBadge = (status: CouponStatus) => {

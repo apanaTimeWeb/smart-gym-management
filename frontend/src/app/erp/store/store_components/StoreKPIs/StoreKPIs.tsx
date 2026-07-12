@@ -31,7 +31,7 @@ export default function StoreKPIs() {
  </div>
 
  {(summary?.lowStockProducts?.length ?? 0) > 0 && (
- <div className="bg-[var(--danger-bg)] dark:bg-[var(--danger-bg)] border border-red-200 rounded-xl p-4 flex items-center gap-3">
+ <div className="bg-[var(--danger-bg)] dark:bg-[var(--danger-bg)] border border-[var(--danger)] rounded-xl p-4 flex items-center gap-3">
  <AlertTriangle size={18} className="text-[var(--danger)] flex-shrink-0" />
  <p className="text-sm text-[var(--danger)] dark:text-[var(--danger)] font-medium">
  Low stock alert: {summary!.lowStockProducts.map(p => p.name).join(', ')}

@@ -1,41 +1,5 @@
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
-
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
-
-async function apiFetch<T = unknown>(path: string, options: RequestInit = {}): Promise<T> {
-  let token = null;
-  if (typeof window !== 'undefined') {
-    const match = document.cookie.match(new RegExp('(^| )gymsmart_token=([^;]+)'));
-    if (match) token = match[2];
-  }
-
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-    ...((options.headers as Record<string, string>) || {}),
-  };
-
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-
-  const res = await fetch(`${BASE_URL}${path}`, {
-    ...options,
-    headers,
-  });
-
-  if (!res.ok) {
-    let errorMsg = `API Error: ${res.status}`;
-    try {
-      const errorData = await res.json();
-      errorMsg = errorData.message || errorData.error || errorMsg;
-    } catch (e) {
-      // Ignored
-    }
-    throw new Error(errorMsg);
-  }
-
-  return res.json();
-}
+import { apiFetch } from '@/lib/api';
 
 /**
  * Superadmin API Client

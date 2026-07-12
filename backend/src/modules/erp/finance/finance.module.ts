@@ -13,7 +13,7 @@ import { PaymentController } from '@/modules/erp/finance/controllers/payment.con
 import { FinanceSummaryController } from '@/modules/erp/finance/controllers/finance-summary.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Payment, Member])],
+  imports: [],
   controllers: [PaymentController, FinanceSummaryController],
   providers: [
     FinanceRepository,

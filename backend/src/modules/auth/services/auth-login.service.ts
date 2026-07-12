@@ -1,6 +1,8 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { InjectDataSource } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { AuthRepository } from '@/modules/auth/auth.repository';
 import { LoginDto } from '@/modules/auth/dto/login.dto';
@@ -13,6 +15,7 @@ import type {
   JwtPayload,
   AuthLoginResponse,
 } from '@/modules/auth/auth.interfaces';
+import { User } from '@/modules/auth/entities/user.entity';
 
 @Injectable()
 export class AuthLoginService {
@@ -22,6 +25,7 @@ export class AuthLoginService {
     private authRepository: AuthRepository,
     private jwtService: JwtService,
     private configService: ConfigService,
+    @InjectDataSource() private readonly dataSource: DataSource,
   ) {}
 
   async login(loginDto: LoginDto): Promise<AuthLoginResponse> {
@@ -63,11 +67,14 @@ export class AuthLoginService {
       ...userWithoutPassword
     } = user;
 
+    // 3.5 Validate Tenant Status
+    const tenantId = await this.validateTenantStatus(user);
+
     return {
       message: AUTH_MESSAGES.LOGIN_SUCCESS,
       data: {
         ...tokens,
-        user: userWithoutPassword,
+        user: { ...userWithoutPassword, tenantId },
       },
     };
   }
@@ -99,6 +106,9 @@ export class AuthLoginService {
     if (!user || !user.refreshToken || !user.isActive) {
       throw new UnauthorizedException('Access Denied');
     }
+
+    // Validate Tenant Status (blocks refresh if gym is suspended/deleted)
+    await this.validateTenantStatus(user);
 
     const rtMatches = await bcrypt.compare(refreshToken, user.refreshToken);
     if (!rtMatches) {
@@ -136,5 +146,46 @@ export class AuthLoginService {
     await this.authRepository.updateUser(userId, {
       refreshToken: hashedRefreshToken,
     });
+  }
+
+  private async validateTenantStatus(user: User | Partial<User>): Promise<string | undefined> {
+    if (user.role === 'SUPERADMIN') return undefined;
+
+    let tenantId = undefined;
+    let tenantStatus = undefined;
+
+    if (user.role === 'ADMIN') {
+      const tenantResult = await this.dataSource.query(
+        'SELECT id, status FROM gyms WHERE "adminEmail" = $1 AND "isDeleted" = false LIMIT 1',
+        [user.email]
+      );
+      if (tenantResult && tenantResult.length > 0) {
+        tenantId = tenantResult[0].id;
+        tenantStatus = tenantResult[0].status;
+      }
+    } else if (user.role === 'STAFF' || user.role === 'MEMBER') {
+      if (user.branch) {
+        const tenantResult = await this.dataSource.query(
+          'SELECT id, status FROM gyms WHERE id = $1 AND "isDeleted" = false LIMIT 1',
+          [user.branch]
+        );
+        if (tenantResult && tenantResult.length > 0) {
+          tenantId = tenantResult[0].id;
+          tenantStatus = tenantResult[0].status;
+        }
+      }
+    }
+
+    if (!tenantId) {
+      this.logger.warn(`Tenant validation failed: Gym not found or deleted for user ${user.email}`);
+      throw new AccountDeactivatedException('Your gym account no longer exists.');
+    }
+
+    if (tenantStatus === 'SUSPENDED') {
+      this.logger.warn(`Tenant validation failed: Gym is suspended for user ${user.email}`);
+      throw new AccountDeactivatedException('Your gym has been suspended. Please contact support.');
+    }
+
+    return tenantId;
   }
 }

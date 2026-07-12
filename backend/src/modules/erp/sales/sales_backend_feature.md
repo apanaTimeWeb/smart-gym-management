@@ -1,26 +1,44 @@
-# Sales Module
+# Sales Module - Backend Feature Guide
 
-## Overview
-The Sales module is responsible for aggregating and serving analytical data across memberships and payments. It provides four distinct reports:
-1. **Overview Data:** Monthly revenue and new membership trends.
-2. **Membership Report:** Aggregates receivables, received amounts, and remaining balances per plan type.
-3. **Pending Payments:** Paginated list of members with an active pending balance.
-4. **All Memberships:** Paginated list of all members across the system with their status and days left.
+## 1. Overview
+The **Sales** module is responsible for managing sales-related operations within the Smart Gym Management system. It exposes RESTful APIs for creating, reading, updating, and deleting sales data, while maintaining strict access control based on user roles and tenant scopes.
 
-## Data Structure
-This module operates exclusively as an aggregation layer and does not own any exclusive database tables.
-It joins data from the following entities:
-- `Member` (from `src/modules/members`)
-- `Payment` (from `src/modules/finance`)
-- `Plan` (from `src/modules/plans`)
+## 2. Directory Structure
 
-## Endpoints
-- `GET /sales/overview` - Returns monthly revenue chart data
-- `GET /sales/membership-report` - Returns plan-level revenue aggregations
-- `GET /sales/pending-payments` - Returns paginated list of members with pending payments
-- `GET /sales/all-memberships` - Returns paginated list of all members
+```text
+src/modules/.../sales/
+├── controllers/
+├── dto/
+├── entities/
+├── listeners/
+├── services/
+├── tests/
+├── utils/
+├── sales.constants.ts
+├── sales.exceptions.ts
+├── sales.interfaces.ts
+├── sales.module.ts
+├── sales.repository.ts
+```
 
-## Key Features
-- **Read-Only Aggregations:** This module only implements `GET` queries and does not mutate any data.
-- **Cross-Module Integration:** Safely queries other module's tables via TypeORM relations.
-- **Pagination & Search:** Integrates standard pagination and search filtering for lists.
+## 3. Core Components
+
+### 3.1 Controllers (`controllers/`)
+Handles incoming HTTP requests and maps them to the appropriate services. All endpoints are secured using guards (JWT, Roles, or API Key). DTOs are used heavily here to validate incoming payloads before they hit the business logic.
+
+### 3.2 Services (`services/`)
+Contains the core business logic.
+- Each service generally handles a single micro-feature (e.g., `create-sales.service.ts`, `find-sales.service.ts`).
+- Services utilize Dependency Injection to access repositories, external APIs, and cross-module providers.
+
+### 3.3 Data Access
+- **Entities (`entities/`)**: TypeORM entities defining the SQL table structure.
+- **Repositories (`sales.repository.ts`)**: Abstracts direct database calls. For ERP modules, it relies on `TENANT_CONNECTION` to query the isolated tenant database. For Superadmin, it queries the master DB.
+
+### 3.4 Data Transfer Objects (`dto/`)
+Defines the expected shape of incoming request bodies and query parameters. Uses `class-validator` to ensure strict typing and security (e.g., rejecting unexpected fields or malformed data).
+
+## 4. Workflows & Architecture Rules
+- **No `any` types**: All service inputs must use the strongly typed DTOs.
+- **Error Handling**: Standard `HttpException` filters catch and format errors for the frontend.
+- **Logging**: Operations are logged via `Logger` and intercepted by `AuditInterceptor` for compliance tracking.

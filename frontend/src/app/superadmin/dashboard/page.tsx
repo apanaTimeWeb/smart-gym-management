@@ -77,12 +77,15 @@ export default function SaaSDashboard() {
                   <p className="text-xs text-[var(--text-secondary)] mt-1">{tenant.ownerName}</p>
                 </div>
                 <div className="text-right">
-                  <span className={`text-xs px-2 py-1 rounded-full font-medium ${
-                    tenant.plan === 'ENTERPRISE' ? 'bg-purple-500/10 text-[var(--purple)] border border-purple-500/20' : 
-                    tenant.plan === 'PRO' ? 'bg-blue-500/10 text-[var(--primary)] border border-blue-500/20' : 
-                    'bg-[var(--text-disabled)]/10 text-[var(--text-secondary)] border border-[var(--text-disabled)]/20'
-                  }`}>
-                    {tenant.plan}
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold
+                    ${
+                      tenant.plan?.toUpperCase() === 'ENTERPRISE' ? 'bg-[var(--purple-bg)] text-[var(--purple)] border border-[var(--purple)]' : 
+                      tenant.plan?.toUpperCase() === 'PRO' ? 'bg-[var(--primary-light)] text-[var(--primary)] border border-[var(--primary)]' : 
+                      tenant.plan?.toUpperCase() === 'STARTER' || tenant.plan?.toUpperCase() === 'BASIC' ? 'bg-[var(--success-bg)] text-[var(--success)] border border-[var(--success)]' :
+                      'bg-[var(--bg-input)] text-[var(--text-secondary)] border border-[var(--border)]'
+                    }
+                  `}>
+                    {tenant.plan?.toUpperCase() || 'UNKNOWN'}
                   </span>
                   <p className="text-xs text-[var(--text-disabled)] mt-2">{tenant.createdAt}</p>
                 </div>

@@ -1,8 +1,291 @@
 {
   "info": {
-    "name": "GymSmart - Library Module",
-    "description": "API endpoints for Library",
+    "name": "Library - Smart Gym API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
-  "item": []
+  "item": [
+    {
+      "name": "POST /",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/library/diet-plans",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "diet-plans"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "POST /",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/library/exercises",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "exercises"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "DELETE /:id",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/library/diet-plans/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "diet-plans",
+            "{{id}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "DELETE /:id",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/library/exercises/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "exercises",
+            "{{id}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/library/diet-plans",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "diet-plans"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/library/exercises",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "exercises"
+          ]
+        }
+      }
+    },
+    {
+      "name": "PATCH /:id",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/library/diet-plans/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "diet-plans",
+            "{{id}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "DELETE /:id",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/library/diet-plans/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "diet-plans",
+            "{{id}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "PATCH /:id",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/library/exercises/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "exercises",
+            "{{id}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "DELETE /:id",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/library/exercises/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "exercises",
+            "{{id}}"
+          ]
+        }
+      }
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{AUTH_TOKEN}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.request.headers.add({key: 'x-tenant-id', value: '{{TENANT_ID}}'});"
+        ]
+      }
+    }
+  ]
 }

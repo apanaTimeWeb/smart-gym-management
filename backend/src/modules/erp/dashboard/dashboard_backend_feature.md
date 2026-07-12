@@ -1,19 +1,41 @@
-# Dashboard Module
+# Dashboard Module - Backend Feature Guide
 
-## Overview
-The Dashboard module aggregates cross-module data to display high-level KPIs, charts, and recent activity for administrators. 
+## 1. Overview
+The **Dashboard** module is responsible for managing dashboard-related operations within the Smart Gym Management system. It exposes RESTful APIs for creating, reading, updating, and deleting dashboard data, while maintaining strict access control based on user roles and tenant scopes.
 
-## Caching & Performance
-Because the dashboard aggregates data from `Member`, `Payment`, `Staff`, `Product`, and `Inquiry` tables using expensive queries, the data is heavily cached using `@nestjs/cache-manager`.
-The services rely on `dashboard.repository.ts` which encapsulates all raw TypeORM logic.
+## 2. Directory Structure
 
-## Folder Structure
-- `controllers/`: Handles HTTP requests.
-  - `dashboard-kpi.controller.ts`: Fetches key performance indicators.
-  - `dashboard-charts.controller.ts`: Fetches chart plotting data.
-  - `dashboard-recent.controller.ts`: Fetches recent transactions.
-- `services/`: Business logic. Heavily rely on caching layers.
-- `dashboard.repository.ts`: Encapsulates all DB query logic.
-- `dashboard.interfaces.ts`: Defines `IDashboardKpi`, `IDashboardCharts`, `IDashboardRecent`.
-- `dashboard.constants.ts`: Cache TTls and Keys.
-- `dashboard.exceptions.ts`: Custom exceptions.
+```text
+src/modules/.../dashboard/
+├── controllers/
+├── dto/
+├── services/
+├── tests/
+├── dashboard.constants.ts
+├── dashboard.exceptions.ts
+├── dashboard.interfaces.ts
+├── dashboard.module.ts
+├── dashboard.repository.ts
+```
+
+## 3. Core Components
+
+### 3.1 Controllers (`controllers/`)
+Handles incoming HTTP requests and maps them to the appropriate services. All endpoints are secured using guards (JWT, Roles, or API Key). DTOs are used heavily here to validate incoming payloads before they hit the business logic.
+
+### 3.2 Services (`services/`)
+Contains the core business logic.
+- Each service generally handles a single micro-feature (e.g., `create-dashboard.service.ts`, `find-dashboard.service.ts`).
+- Services utilize Dependency Injection to access repositories, external APIs, and cross-module providers.
+
+### 3.3 Data Access
+- **Entities (`entities/`)**: TypeORM entities defining the SQL table structure.
+- **Repositories (`dashboard.repository.ts`)**: Abstracts direct database calls. For ERP modules, it relies on `TENANT_CONNECTION` to query the isolated tenant database. For Superadmin, it queries the master DB.
+
+### 3.4 Data Transfer Objects (`dto/`)
+Defines the expected shape of incoming request bodies and query parameters. Uses `class-validator` to ensure strict typing and security (e.g., rejecting unexpected fields or malformed data).
+
+## 4. Workflows & Architecture Rules
+- **No `any` types**: All service inputs must use the strongly typed DTOs.
+- **Error Handling**: Standard `HttpException` filters catch and format errors for the frontend.
+- **Logging**: Operations are logged via `Logger` and intercepted by `AuditInterceptor` for compliance tracking.

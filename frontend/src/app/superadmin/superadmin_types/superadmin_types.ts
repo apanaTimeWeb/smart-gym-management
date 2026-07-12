@@ -1,4 +1,4 @@
-export type SaaSPlanTier = 'BASIC' | 'PRO' | 'ENTERPRISE';
+// Removed SaaSPlanTier enum
 export type TenantStatus = 'ACTIVE' | 'SUSPENDED' | 'TRIAL' | 'CANCELLED';
 
 export interface Tenant {
@@ -8,7 +8,7 @@ export interface Tenant {
   adminEmail: string;
   phone: string;
   status: TenantStatus;
-  plan: SaaSPlanTier;
+  plan: string;
   createdAt: string;
   memberCount: number;
   monthlyRevenue: number;

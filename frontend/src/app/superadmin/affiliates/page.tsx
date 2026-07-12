@@ -4,7 +4,7 @@ import React from 'react';
 import { Users, Plus, Search, IndianRupee } from 'lucide-react';
 import { AffiliateStatus } from '@/app/superadmin/superadmin_types/superadmin_types';
 import { useAffiliatesPage } from '../superadmin_utils/hooks/useAffiliatesPage';
-import { SuperadminAffiliateModal } from '../superadmin_components/Affiliates/SuperadminAffiliateModal';
+import { SuperadminAffiliateModal } from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliateModal';
 import { toast } from 'react-hot-toast';
 
 const getStatusBadge = (status: AffiliateStatus) => {

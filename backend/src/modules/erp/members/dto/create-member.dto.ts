@@ -27,9 +27,8 @@ export class CreateMemberDto {
   gender: Gender;
 
   @ApiProperty({ required: false })
-  @IsOptional()
   @IsString()
-  address?: string;
+  address: string;
 
   @ApiProperty()
   @IsString()
@@ -44,7 +43,6 @@ export class CreateMemberDto {
   billingCycle: BillingCycle;
 
   @ApiProperty({ required: false })
-  @IsOptional()
   @IsDateString()
-  joinDate?: string;
+  joinDate: string;
 }

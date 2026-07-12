@@ -1,0 +1,22 @@
+/* superadmin.css - Theme Variables for Superadmin Module */
+
+.superadmin-module {
+  /* Common backgrounds */
+  --superadmin-bg-card: var(--bg-card);
+  --superadmin-bg-input: var(--bg-input);
+
+  /* Text colors */
+  --superadmin-text-primary: var(--text-primary);
+  --superadmin-text-secondary: var(--text-secondary);
+
+  /* Borders */
+  --superadmin-border: var(--border);
+
+  /* Highlights */
+  --superadmin-highlight: var(--primary);
+  --superadmin-highlight-subtle: var(--primary-subtle);
+  
+  /* Table */
+  --superadmin-table-header-bg: rgba(99,102,241,0.08);
+  --superadmin-hover-bg: rgba(99,102,241,0.06);
+}

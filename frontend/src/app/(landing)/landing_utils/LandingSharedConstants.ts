@@ -44,7 +44,7 @@ export const PLANS = [
  { name: '3 Months', price: '₹4,000', oldPrice: '₹4,500', duration: '3 months', features: ['Everything in 1 Month', 'Basic Diet Guidance', 'Group Classes'], color: 'border-[var(--info)]', badge: 'Popular' },
  { name: '6 Months', price: '₹7,500', oldPrice: '₹9,000', duration: '6 months', features: ['Everything in 3 Months', '1 PT Session/month', 'Body comp analysis'], color: 'border-[var(--warning)]' },
  { name: '12 Months', price: '₹12,000', oldPrice: '₹18,000', duration: 'Annual', features: ['Everything in 6 Months', '2 months FREE', 'Advanced Meal Planning'], color: 'border-[var(--warning)]', badge: 'Best Value' },
- { name: 'Personal Training', price: '₹8,000', oldPrice: '₹10,000', duration: '/month', features: ['1-on-1 Dedicated Trainer', 'Custom Daily Diet', 'Priority Access'], color: 'border-purple-500' },
+ { name: 'Personal Training', price: '₹8,000', oldPrice: '₹10,000', duration: '/month', features: ['1-on-1 Dedicated Trainer', 'Custom Daily Diet', 'Priority Access'], color: 'border-[var(--primary)]' },
 ];
 
 export const SCHEDULE = [

@@ -5,12 +5,15 @@ import { ShieldAlert, Search } from 'lucide-react';
 import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { GlobalAuditLog } from '@/app/superadmin/superadmin_types/superadmin_types';
+import { DUMMY_GLOBAL_AUDIT_LOGS as FALLBACK_LOGS } from '@/app/superadmin/superadmin_utils/SuperadminSharedConstants';
 
 export default function GlobalAuditLogsPage() {
-  const { data: DUMMY_GLOBAL_AUDIT_LOGS, loading, error } = useSuperadminData<GlobalAuditLog[]>(SuperadminUrlConfig.BACKEND_API.AUDIT_LOGS_BASE);
+  const { data, loading, error } = useSuperadminData<GlobalAuditLog[] | { logs: GlobalAuditLog[] }>(SuperadminUrlConfig.BACKEND_API.AUDIT_LOGS_BASE);
 
   if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]">Loading...</div>;
-  if (error || !DUMMY_GLOBAL_AUDIT_LOGS) return <div className="p-8 text-center text-[var(--danger)]">Error loading data.</div>;
+  if (error) return <div className="p-8 text-center text-[var(--danger)]">Error loading data.</div>;
+
+  const logs = Array.isArray(data) ? data : (data?.logs || FALLBACK_LOGS);
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto">
@@ -51,7 +54,7 @@ export default function GlobalAuditLogsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--border)]">
-              {DUMMY_GLOBAL_AUDIT_LOGS.map((log) => (
+              {logs.map((log) => (
                 <tr key={log.id} className="hover:bg-[var(--primary)]/5 transition-colors group">
                   <td className="px-6 py-4 whitespace-nowrap text-[14px] text-[var(--text-secondary)]">
                     {new Date(log.timestamp).toLocaleString()}
@@ -75,7 +78,7 @@ export default function GlobalAuditLogsPage() {
                   </td>
                 </tr>
               ))}
-              {DUMMY_GLOBAL_AUDIT_LOGS.length === 0 && (
+              {logs.length === 0 && (
                 <tr>
                   <td colSpan={5} className="px-6 py-12 text-center text-[var(--text-secondary)]">
                     <ShieldAlert className="w-12 h-12 mx-auto mb-3 opacity-20" />

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LayoutDashboard, Building2, ServerCog, LogOut, ChevronLeft, ChevronRight, CreditCard, Ticket, Activity, HardDrive, DatabaseBackup, Receipt, ToggleLeft, DatabaseZap, ShieldAlert, Megaphone, Tag, Users } from 'lucide-react';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
+import { logout } from '@/lib/api';
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -18,11 +19,11 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Sideb
       group: 'SaaS Business',
       items: [
         { name: 'Dashboard', href: SuperadminUrlConfig.PAGES.DASHBOARD, icon: LayoutDashboard },
-        { name: 'Tenants (Gyms)', href: SuperadminUrlConfig.PAGES.GYMS_LIST, icon: Building2 },
         { name: 'Subscription Plans', href: SuperadminUrlConfig.PAGES.PLANS, icon: CreditCard },
-        { name: 'SaaS Invoices', href: SuperadminUrlConfig.PAGES.INVOICES, icon: Receipt },
         { name: 'Promotional Coupons', href: SuperadminUrlConfig.PAGES.COUPONS, icon: Tag },
         { name: 'Affiliate Partners', href: SuperadminUrlConfig.PAGES.AFFILIATES, icon: Users },
+        { name: 'Tenants (Gyms)', href: SuperadminUrlConfig.PAGES.GYMS_LIST, icon: Building2 },
+        { name: 'SaaS Invoices', href: SuperadminUrlConfig.PAGES.INVOICES, icon: Receipt },
         { name: 'Support Tickets', href: SuperadminUrlConfig.PAGES.TICKETS, icon: Ticket },
       ]
     },
@@ -105,7 +106,10 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Sideb
           {isCollapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
         </button>
         
-        <button className={`flex w-full items-center gap-3 rounded-lg px-3 py-3 text-[var(--danger)] hover:bg-[var(--danger)]/10 transition-colors ${isCollapsed ? 'justify-center' : ''}`}>
+        <button 
+          className={`flex w-full items-center gap-3 rounded-lg px-3 py-3 text-[var(--danger)] hover:bg-[var(--danger)]/10 transition-colors ${isCollapsed ? 'justify-center' : ''}`}
+          onClick={async () => { await logout(); }}
+        >
           <LogOut className="w-5 h-5 shrink-0" />
           {!isCollapsed && <span className="font-medium text-sm">Exit to ERP</span>}
         </button>

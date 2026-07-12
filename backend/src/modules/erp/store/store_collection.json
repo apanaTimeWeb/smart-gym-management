@@ -1,108 +1,234 @@
 {
   "info": {
-    "name": "GymSmart Store Module",
-    "description": "Product management, POS order creation, and store summary",
+    "name": "Store - Smart Gym API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
-  "variable": [
-    { "key": "baseUrl", "value": "http://localhost:5000", "type": "string" },
-    { "key": "accessToken", "value": "", "type": "string" }
-  ],
   "item": [
     {
-      "name": "Get All Products",
-      "request": {
-        "method": "GET",
-        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
-        "url": {
-          "raw": "{{baseUrl}}/api/v1/store/products?page=1&limit=20",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "store", "products"],
-          "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "20" }]
-        }
-      }
-    },
-    {
-      "name": "Get All Orders",
-      "request": {
-        "method": "GET",
-        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
-        "url": {
-          "raw": "{{baseUrl}}/api/v1/store/orders?page=1&limit=20",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "store", "orders"],
-          "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "20" }]
-        }
-      }
-    },
-    {
-      "name": "Get Store Summary",
-      "request": {
-        "method": "GET",
-        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
-        "url": {
-          "raw": "{{baseUrl}}/api/v1/store/summary",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "store", "summary"]
-        }
-      }
-    },
-    {
-      "name": "Create Product",
+      "name": "POST /",
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
-          { "key": "Content-Type", "value": "application/json" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
+        "url": {
+          "raw": "{{baseUrl}}/store/orders",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "store",
+            "orders"
+          ]
+        },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"name\": \"Whey Protein 1kg\",\n  \"category\": \"Supplements\",\n  \"price\": 2500,\n  \"stock\": 50,\n  \"description\": \"Premium whey protein isolate\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/api/v1/store/products",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "store", "products"]
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         }
       }
     },
     {
-      "name": "Update Product",
+      "name": "POST /",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/store/products",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "store",
+            "products"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "DELETE /:id",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/store/products/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "store",
+            "products",
+            "{{id}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/store/orders",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "store",
+            "orders"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/store/products",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "store",
+            "products"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/store/summary",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "store",
+            "summary"
+          ]
+        }
+      }
+    },
+    {
+      "name": "PATCH /:id",
       "request": {
         "method": "PATCH",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
-          { "key": "Content-Type", "value": "application/json" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
+        "url": {
+          "raw": "{{baseUrl}}/store/products/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "store",
+            "products",
+            "{{id}}"
+          ]
+        },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"price\": 2750,\n  \"stock\": 80\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/api/v1/store/products/:id",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "store", "products", ":id"],
-          "variable": [{ "key": "id", "value": "1" }]
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         }
       }
     },
     {
-      "name": "Create Order (POS)",
+      "name": "DELETE /:id",
       "request": {
-        "method": "POST",
+        "method": "DELETE",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
-          { "key": "Content-Type", "value": "application/json" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"items\": [\n    { \"productId\": 1, \"qty\": 2 },\n    { \"productId\": 3, \"qty\": 1 }\n  ],\n  \"method\": \"UPI\",\n  \"notes\": \"Walk-in customer purchase\"\n}"
-        },
         "url": {
-          "raw": "{{baseUrl}}/api/v1/store/orders",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "store", "orders"]
+          "raw": "{{baseUrl}}/store/products/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "store",
+            "products",
+            "{{id}}"
+          ]
         }
+      }
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{AUTH_TOKEN}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.request.headers.add({key: 'x-tenant-id', value: '{{TENANT_ID}}'});"
+        ]
       }
     }
   ]

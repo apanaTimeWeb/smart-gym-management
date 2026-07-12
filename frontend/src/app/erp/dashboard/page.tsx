@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 
 async function getDashboardData() {
   try {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const token = cookieStore.get('gymsmart_token')?.value;
     
     if (!token) return null;

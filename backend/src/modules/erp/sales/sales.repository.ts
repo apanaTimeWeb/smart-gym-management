@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource, ILike } from 'typeorm';
 import { Member } from '@/modules/erp/members/entities/member.entity';
@@ -8,12 +8,17 @@ import { FindSalesDto } from '@/modules/erp/sales/dto/find-sales.dto';
 
 @Injectable()
 export class SalesRepository {
+  private readonly memberRepo: Repository<Member>;
+  private readonly paymentRepo: Repository<Payment>;
+  private readonly planRepo: Repository<Plan>;
+
   constructor(
-    @InjectRepository(Member) private readonly memberRepo: Repository<Member>,
-    @InjectRepository(Payment) private readonly paymentRepo: Repository<Payment>,
-    @InjectRepository(Plan) private readonly planRepo: Repository<Plan>,
-    private readonly dataSource: DataSource,
-  ) {}
+    @Inject('TENANT_CONNECTION') private readonly dataSource: DataSource,
+  ) {
+    this.memberRepo = this.dataSource.getRepository(Member);
+    this.paymentRepo = this.dataSource.getRepository(Payment);
+    this.planRepo = this.dataSource.getRepository(Plan);
+  }
 
   async getMonthlyOverview() {
     // Basic implementation: fetch all payments and group by month locally for simplicity, 

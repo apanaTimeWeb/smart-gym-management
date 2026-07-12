@@ -1,9 +1,19 @@
-import { IsString, IsOptional } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray, IsEnum } from 'class-validator';
+import {  } from '../features.interfaces';
 
-export class CreateFeatureDto {
-  @ApiProperty({ description: 'Placeholder field for Feature' })
+export class CreateFeatureFlagDto {
   @IsString()
+  name: string;
+
+  @IsString()
+  description: string;
+
+  @IsBoolean()
   @IsOptional()
-  name?: string;
+  isGlobalEnabled?: boolean;
+
+  @IsArray()
+  enabledTenantIds: string[];
+
+
 }

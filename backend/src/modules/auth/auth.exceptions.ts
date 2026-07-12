@@ -8,8 +8,8 @@ export class InvalidCredentialsException extends UnauthorizedException {
 }
 
 export class AccountDeactivatedException extends UnauthorizedException {
-  constructor() {
-    super(AUTH_ERRORS.ACCOUNT_DEACTIVATED);
+  constructor(message?: string) {
+    super(message || AUTH_ERRORS.ACCOUNT_DEACTIVATED);
   }
 }
 

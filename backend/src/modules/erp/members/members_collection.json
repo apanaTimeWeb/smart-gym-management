@@ -1,125 +1,208 @@
 {
   "info": {
-    "name": "GymSmart Members Module",
-    "description": "Complete CRUD for gym member management including stats and renewal",
+    "name": "Members - Smart Gym API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
-  "variable": [
-    { "key": "baseUrl", "value": "http://localhost:5000", "type": "string" },
-    { "key": "accessToken", "value": "", "type": "string" }
-  ],
   "item": [
     {
-      "name": "Get All Members",
+      "name": "POST /",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/members",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "members"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "GET /",
       "request": {
         "method": "GET",
-        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
         "url": {
-          "raw": "{{baseUrl}}/api/v1/members?page=1&limit=10",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "members"],
-          "query": [
-            { "key": "page", "value": "1" },
-            { "key": "limit", "value": "10" }
+          "raw": "{{baseUrl}}/members",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "members"
           ]
         }
       }
     },
     {
-      "name": "Get Member by ID",
+      "name": "GET /:id",
       "request": {
         "method": "GET",
-        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
         "url": {
-          "raw": "{{baseUrl}}/api/v1/members/:id",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "members", ":id"],
-          "variable": [{ "key": "id", "value": "member-uuid-here" }]
+          "raw": "{{baseUrl}}/members/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "members",
+            "{{id}}"
+          ]
         }
       }
     },
     {
-      "name": "Get Member Stats",
+      "name": "GET /stats",
       "request": {
         "method": "GET",
-        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
         "url": {
-          "raw": "{{baseUrl}}/api/v1/members/stats",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "members", "stats"]
+          "raw": "{{baseUrl}}/members/stats",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "members",
+            "stats"
+          ]
         }
       }
     },
     {
-      "name": "Create Member",
+      "name": "POST /:id/renew",
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
-          { "key": "Content-Type", "value": "application/json" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
+        "url": {
+          "raw": "{{baseUrl}}/members/{{id}}/renew",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "members",
+            "{{id}}",
+            "renew"
+          ]
+        },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"name\": \"Rahul Sharma\",\n  \"email\": \"rahul@gmail.com\",\n  \"phone\": \"+91 98765 43210\",\n  \"gender\": \"MALE\",\n  \"address\": \"Andheri West, Mumbai\",\n  \"branch\": \"Main Branch\",\n  \"planId\": 1,\n  \"billingCycle\": \"ONE_MONTH\",\n  \"joinDate\": \"2026-07-09\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/api/v1/members",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "members"]
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         }
       }
     },
     {
-      "name": "Update Member",
+      "name": "PATCH /:id",
       "request": {
         "method": "PATCH",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
-          { "key": "Content-Type", "value": "application/json" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
+        "url": {
+          "raw": "{{baseUrl}}/members/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "members",
+            "{{id}}"
+          ]
+        },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"phone\": \"+91 91234 56789\",\n  \"address\": \"Bandra East, Mumbai\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/api/v1/members/:id",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "members", ":id"],
-          "variable": [{ "key": "id", "value": "member-uuid-here" }]
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         }
       }
     },
     {
-      "name": "Renew Membership",
-      "request": {
-        "method": "POST",
-        "header": [
-          { "key": "Authorization", "value": "Bearer {{accessToken}}" },
-          { "key": "Content-Type", "value": "application/json" }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"planId\": 1,\n  \"billingCycle\": \"THREE_MONTHS\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/api/v1/members/:id/renew",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "members", ":id", "renew"],
-          "variable": [{ "key": "id", "value": "member-uuid-here" }]
-        }
-      }
-    },
-    {
-      "name": "Delete Member",
+      "name": "DELETE /:id",
       "request": {
         "method": "DELETE",
-        "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
         "url": {
-          "raw": "{{baseUrl}}/api/v1/members/:id",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "members", ":id"],
-          "variable": [{ "key": "id", "value": "member-uuid-here" }]
+          "raw": "{{baseUrl}}/members/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "members",
+            "{{id}}"
+          ]
         }
+      }
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{AUTH_TOKEN}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.request.headers.add({key: 'x-tenant-id', value: '{{TENANT_ID}}'});"
+        ]
       }
     }
   ]

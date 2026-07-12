@@ -129,9 +129,14 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **The Rule:** Never use raw environment variables (e.g., `process.env.XXX` or `os.environ.get()`) directly inside business logic. Always use a centralized, strongly-typed Config Service or Settings class (e.g., `@nestjs/config` in NestJS, `settings.py` with `django-environ` in Django).
 * **Why:** If the AI needs to add a new third-party API key or change a timeout value, it should only modify the central configuration schema, not hunt for raw env calls scattered across 50 different micro-services.
 
-## 14. Standardized Logging & Correlation IDs
-* **The Rule:** Never use raw print statements (e.g., `console.log()` or `print()`). Always use the framework's official Logger instance or a structured logging library (like Winston/Pino in Node, or `logging` in Python). In enterprise apps, ensure requests carry a trace/correlation ID.
-* **Why:** When the AI is asked to "add logging" for debugging, it must use the established pattern so logs can be parsed by tools like Datadog or ELK. Standardized loggers also allow global turning on/off of debug statements.
+## 14. Standardized Logging & Correlation IDs (Pino & OpenTelemetry)
+* **The Rule:** Never use raw print statements (e.g., `console.log()` or `print()`). Always use a structured, high-performance JSON logger (e.g., `nestjs-pino` / `pino` or winston or in django we have other or other as per backend choicee). 
+* **The Log Structure:** Every log entry must automatically attach the current execution context. A standard log output must include:
+  - `req` and `res` objects (for HTTP request tracking)
+  - `trace_id` and `span_id` (injected via OpenTelemetry/AsyncLocalStorage)
+  - `context` (e.g., the exact class or service name emitting the log)
+  - `responseTime` (for access logs)
+* **Why:** When logs are pushed to an aggregator like Datadog, ELK, or CloudWatch, developers can simply search for `trace_id="b8174fe8b671..."` to instantly pull up the exact journey of a request across 15 different micro-files. Standardized loggers also allow global turning on/off of debug statements and eliminate the need for manual ID passing.
 
 ## 15. Dependency Injection & Inversion of Control
 * **The Rule:** Avoid instantiating complex service classes directly using `new MyService()` or `MyService()`. Rely on the framework's Dependency Injection system if it has one (NestJS, Spring Boot), or construct dependencies at the highest possible level (module/route boundaries) and pass them in.
@@ -342,3 +347,12 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 5. After the AI writes code, verify: Is there N+1? Is there a missing null check? Is a secret hardcoded? Is the response wrapped in the standard envelope?
 6. Run `pytest` against the live API to confirm contract compliance.
 7. Review the AI's isolated changes.
+
+## 38. True E2E Test Database Isolation & Lifecycle Verification
+* **The Rule:** End-to-End (E2E) test suites must NEVER run against your local development or production databases. Instead, the test suite setup (e.g., `conftest.py`) must dynamically hit the API to create a brand-new, isolated Test Tenant/Database specifically for that test run. All subsequent tests must inject this test tenant's ID into the `x-tenant-id` headers.
+* **The Data Lifecycle Rule:** True E2E tests must verify the full CRUD lifecycle within that isolated database. Tests cannot rely on stub IDs. They must:
+  1. **POST**: Create a uniquely identifiable record and extract its real ID from the `201` response.
+  2. **GET by ID**: Fetch that exact ID and assert `200 OK`.
+  3. **PATCH**: Update that exact ID and assert `200 OK`.
+  4. **DELETE**: Delete that exact ID, and then make a follow-up `GET` request to mathematically verify a `404 Not Found` response is returned.
+* **Why:** This architecture guarantees 100% test isolation, prevents test data pollution in your main database, and actively proves that your database provisioning systems (like TypeORM migrations) are actually executing correctly under the hood.

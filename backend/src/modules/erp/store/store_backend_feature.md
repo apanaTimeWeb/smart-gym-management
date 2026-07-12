@@ -1,26 +1,42 @@
-# Store Module
+# Store Module - Backend Feature Guide
 
-## Overview
-The Store module handles products inventory and customer orders (POS system).
+## 1. Overview
+The **Store** module is responsible for managing store-related operations within the Smart Gym Management system. It exposes RESTful APIs for creating, reading, updating, and deleting store data, while maintaining strict access control based on user roles and tenant scopes.
 
-## Folder Structure
-- `controllers/`: Handles HTTP requests, deeply split by feature.
-  - `create-product.controller.ts`: Create product.
-  - `find-product.controller.ts`: Fetch products.
-  - `update-product.controller.ts`: Update/Remove product.
-  - `create-order.controller.ts`: Place an order.
-  - `find-order.controller.ts`: List orders.
-  - `store-summary.controller.ts`: Fetch store KPI dashboard.
-- `services/`: Business logic.
-  - `create-order.service.ts`: Handles the transaction logic for decrementing stock and saving order lines.
-- `dto/`: Data Transfer Objects for validation.
-- `entities/`: TypeORM entities.
-- `store.repository.ts`: Database query layer for Store features.
-- `store.interfaces.ts`: Typings.
-- `store.constants.ts`: Error messages, statuses, etc.
-- `store.exceptions.ts`: Custom exceptions.
+## 2. Directory Structure
 
-## Core Business Logic
-- **Order Creation Transactions:** `create-order.service.ts` uses TypeORM `DataSource` transactions to ensure stock decrement and order creation are atomic. If stock is insufficient or any error occurs, the entire operation is rolled back, preventing orphaned order records or negative stock.
-- **Stock Decrement Logic:** For each `OrderItem` in the order, the corresponding `Product`'s stock is checked. If it is greater than or equal to the requested quantity, the stock is decremented. Otherwise, an exception is thrown.
-- **Order & OrderItem Relationship:** An `Order` entity is the parent containing the total amount and metadata. It has a one-to-many relationship with `OrderItem` entities, which track the specific products, quantities, and historical prices at the time of purchase.
+```text
+src/modules/.../store/
+├── controllers/
+├── dto/
+├── entities/
+├── services/
+├── tests/
+├── store.constants.ts
+├── store.exceptions.ts
+├── store.interfaces.ts
+├── store.module.ts
+├── store.repository.ts
+```
+
+## 3. Core Components
+
+### 3.1 Controllers (`controllers/`)
+Handles incoming HTTP requests and maps them to the appropriate services. All endpoints are secured using guards (JWT, Roles, or API Key). DTOs are used heavily here to validate incoming payloads before they hit the business logic.
+
+### 3.2 Services (`services/`)
+Contains the core business logic.
+- Each service generally handles a single micro-feature (e.g., `create-store.service.ts`, `find-store.service.ts`).
+- Services utilize Dependency Injection to access repositories, external APIs, and cross-module providers.
+
+### 3.3 Data Access
+- **Entities (`entities/`)**: TypeORM entities defining the SQL table structure.
+- **Repositories (`store.repository.ts`)**: Abstracts direct database calls. For ERP modules, it relies on `TENANT_CONNECTION` to query the isolated tenant database. For Superadmin, it queries the master DB.
+
+### 3.4 Data Transfer Objects (`dto/`)
+Defines the expected shape of incoming request bodies and query parameters. Uses `class-validator` to ensure strict typing and security (e.g., rejecting unexpected fields or malformed data).
+
+## 4. Workflows & Architecture Rules
+- **No `any` types**: All service inputs must use the strongly typed DTOs.
+- **Error Handling**: Standard `HttpException` filters catch and format errors for the frontend.
+- **Logging**: Operations are logged via `Logger` and intercepted by `AuditInterceptor` for compliance tracking.

@@ -6,6 +6,7 @@
 
 import { AuthUrlConfig } from '@/app/auth/auth_url_config';
 import { StatusCodes } from 'http-status-codes';
+import toast from 'react-hot-toast';
 import { DashboardUrlConfig } from '@/app/erp/dashboard/dashboard_url_config';
 import { MembersUrlConfig } from '@/app/erp/members/members_url_config';
 import { PlansUrlConfig } from '@/app/erp/plans/plans_url_config';
@@ -44,7 +45,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v
 
 // ─── User Helper (reads from non-HttpOnly cookie set by server) ───────────────
 
-export function getUser(): { name: string; email: string; role: string } | null {
+export function getUser(): { name: string; email: string; role: string; tenantId?: string } | null {
   if (typeof window === 'undefined') return null;
   const c = document.cookie.split(';').find(x => x.trim().startsWith('gymsmart_user='));
   if (!c) return null;
@@ -52,6 +53,10 @@ export function getUser(): { name: string; email: string; role: string } | null 
 }
 
 export async function logout() {
+  if (typeof window !== 'undefined') {
+    localStorage.clear();
+    sessionStorage.clear();
+  }
   await fetch(AuthUrlConfig.PROXY_API.LOGOUT, { method: 'POST' });
   window.location.replace(AuthUrlConfig.PAGES.LOGIN);
 }
@@ -72,6 +77,20 @@ export async function apiFetch<T = unknown>(
     'Content-Type': 'application/json',
     ...(rest.headers as Record<string, string>),
   };
+
+  // Inject Tenant ID for Multi-Tenancy
+  if (typeof window !== 'undefined') {
+    const user = getUser();
+    if (user && user.tenantId) {
+      headers['x-tenant-id'] = user.tenantId;
+    } else {
+      // Fallback to checking a specific cookie if tenantId is stored separately
+      const tenantCookie = document.cookie.split(';').find(x => x.trim().startsWith('x-tenant-id='));
+      if (tenantCookie) {
+        headers['x-tenant-id'] = tenantCookie.split('=')[1].trim();
+      }
+    }
+  }
 
   // Token is in HttpOnly cookie — read via Next.js proxy to avoid CORS/exposure
   if (auth) {
@@ -109,7 +128,11 @@ export async function apiFetch<T = unknown>(
   const json = await finalRes.json();
 
   if (!finalRes.ok) {
-    throw new Error(json.message || `API Error: ${finalRes.status}`);
+    const errorMsg = json.message || `API Error: ${finalRes.status}`;
+    if (typeof window !== 'undefined') {
+      toast.error(errorMsg);
+    }
+    throw new Error(errorMsg);
   }
 
   return json;
@@ -232,7 +255,7 @@ export const attendanceApi = {
     apiFetch(AttendanceUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body) }),
   getAll: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<{ success: boolean; data: Attendance[] }>(`${AttendanceUrlConfig.BACKEND_API.BASE}${q}`);
+    return apiFetch<{ success: boolean; data: { attendance: Attendance[], total: number } }>(`${AttendanceUrlConfig.BACKEND_API.BASE}${q}`);
   },
   getTodayStats: () =>
     apiFetch<{ success: boolean; data: { totalCheckIns: number; memberCheckIns: number; staffCheckIns: number } }>(
@@ -270,7 +293,7 @@ export const storeApi = {
 export const workoutApi = {
   getWorkouts: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<{ success: boolean; data: Workout[] }>(`${WorkoutUrlConfig.BACKEND_API.WORKOUTS_BASE}${q}`);
+    return apiFetch<{ success: boolean; data: { workouts: Workout[], total: number } }>(`${WorkoutUrlConfig.BACKEND_API.WORKOUTS_BASE}${q}`);
   },
   createWorkout: (body: Partial<Workout>) =>
     apiFetch(WorkoutUrlConfig.BACKEND_API.WORKOUTS_BASE, { method: 'POST', body: JSON.stringify(body) }),
@@ -282,7 +305,7 @@ export const workoutApi = {
 export const libraryApi = {
   getExercises: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<{ success: boolean; data: { Exercises: Exercise[]; total: number } }>(`${LibraryUrlConfig.BACKEND_API.EXERCISES_BASE}${q}`);
+    return apiFetch<{ success: boolean; data: { exercises: Exercise[], total: number } }>(`${LibraryUrlConfig.BACKEND_API.EXERCISES_BASE}${q}`);
   },
   createExercise: (body: Partial<Exercise>) =>
     apiFetch(LibraryUrlConfig.BACKEND_API.EXERCISES_BASE, { method: 'POST', body: JSON.stringify(body) }),

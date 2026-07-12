@@ -2,6 +2,8 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { financeApi, type Payment, type FinanceSummary } from '@/lib/api';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import { FinanceContextType } from '@/app/erp/finance/finance_types/finance_types';
+import { AddPaymentFormValues } from '@/app/erp/finance/finance_utils/FinanceSharedConstants';
+import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
 
 export function useFinanceLogic(initialData?: any): FinanceContextType {
   const [payments, setPayments] = useState<Payment[]>(initialData?.payments || []);
@@ -12,14 +14,9 @@ export function useFinanceLogic(initialData?: any): FinanceContextType {
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [search, setSearch] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
   const [currentPage, setCurrentPage] = useState(1);
   const isFirstRender = useRef(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setDebouncedSearch(search), 300);
-    return () => clearTimeout(timer);
-  }, [search]);
 
  const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
  const hideToast = useCallback(() => setToast(null), []);
@@ -57,6 +54,25 @@ export function useFinanceLogic(initialData?: any): FinanceContextType {
     loadAll(); 
   }, [loadAll, initialData]);
 
+  const savePayment = useCallback(async (data: AddPaymentFormValues) => {
+    setLoading(true);
+    try {
+      const res = await financeApi.createPayment({ 
+        memberId: Number(data.memberId), 
+        amount: Number(data.amount), 
+        method: data.method, 
+        notes: data.notes 
+      });
+      showToast((res as any).message, 'success');
+      setShowModal(false);
+      await loadAll();
+    } catch (err) { 
+      showToast((err as Error).message, 'error'); 
+    } finally { 
+      setLoading(false); 
+    }
+  }, [loadAll, showToast]);
+
  return {
  payments,
  totalPayments,
@@ -72,6 +88,7 @@ export function useFinanceLogic(initialData?: any): FinanceContextType {
   search,
   setSearch,
   currentPage,
-  setCurrentPage
+  setCurrentPage,
+  savePayment
   };
 }

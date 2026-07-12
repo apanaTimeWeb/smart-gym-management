@@ -1,53 +1,25 @@
-import {
-  IsString,
-  IsEmail,
-  IsEnum,
-  IsNumber,
-  IsOptional,
-  IsDateString,
-  Min,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { AffiliateStatus } from '../entities/affiliates.entity';
+import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray, IsEnum } from 'class-validator';
+import { AffiliateStatus } from '../affiliates.interfaces';
 
 export class CreateAffiliateDto {
-  @ApiProperty({ description: 'Full name of the affiliate partner', example: 'Fitness Gurus LLC' })
   @IsString()
-  @MinLength(2)
-  @MaxLength(255)
   name: string;
 
-  @ApiProperty({ description: 'Contact email of the affiliate', example: 'partners@fitnessgurus.com' })
-  @IsEmail()
+  @IsString()
   email: string;
 
-  @ApiProperty({ description: 'Unique referral tracking code', example: 'FG2026' })
   @IsString()
-  @MinLength(3)
-  @MaxLength(100)
-  referralCode: string;
-
-  @ApiPropertyOptional({ description: 'Total gyms referred (usually starts at 0)', default: 0 })
   @IsOptional()
+  referralCode?: string;
+
   @IsNumber()
-  @Min(0)
-  totalReferred?: number;
+  totalReferred: number;
 
-  @ApiPropertyOptional({ description: 'Total commission earned in USD', default: 0 })
-  @IsOptional()
   @IsNumber()
-  @Min(0)
-  commissionEarned?: number;
+  commissionEarned: number;
 
-  @ApiPropertyOptional({ enum: AffiliateStatus, default: AffiliateStatus.ACTIVE })
+  @IsString()
   @IsOptional()
-  @IsEnum(AffiliateStatus)
   status?: AffiliateStatus;
 
-  @ApiPropertyOptional({ description: 'Date they joined the affiliate program (ISO 8601)' })
-  @IsOptional()
-  @IsDateString()
-  joinedAt?: string;
-}
+  }
