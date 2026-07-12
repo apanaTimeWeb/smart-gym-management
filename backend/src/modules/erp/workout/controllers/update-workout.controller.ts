@@ -11,7 +11,7 @@ import { UpdateWorkoutDto } from '../dto/update-workout.dto';
 export class UpdateWorkoutController {
   constructor(private readonly workoutService: UpdateWorkoutService) {}
   
-  @Patch(':id')
+  @Patch('workouts/:id')
   async execute(@Param('id') id: string, @Body() dto: UpdateWorkoutDto) {
     return this.workoutService.execute(Number(id), dto);
   }

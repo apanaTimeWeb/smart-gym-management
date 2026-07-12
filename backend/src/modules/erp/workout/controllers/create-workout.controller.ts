@@ -11,7 +11,7 @@ import { CreateWorkoutDto } from '../dto/create-workout.dto';
 export class CreateWorkoutController {
   constructor(private readonly workoutService: CreateWorkoutService) {}
   
-  @Post()
+  @Post('workouts')
   async execute(@Body() dto: CreateWorkoutDto) {
     return this.workoutService.execute(dto);
   }
