@@ -170,6 +170,16 @@ export function useStoreLogic(initialData?: any): StoreContextType {
  
      if (!sendViaWhatsapp) {
        setTimeout(() => window.print(), 100);
+     } else {
+       let billMsg = `*${GYM_DETAILS.name} Receipt*\nReceipt No: ORD-${res.data.id}\nDate: ${new Date().toLocaleDateString('en-IN')}\n\n*Items:*\n`;
+       orderItems.forEach(i => {
+         billMsg += `- ${i.name} x${i.qty} (₹${i.qty * i.price})\n`;
+       });
+       billMsg += `\n*Total: ₹${orderTotal}*\nPayment Method: ${orderMethod}\n\nThank you for shopping with us!`;
+       
+       const cleanPhone = customerPhone.replace(/[^0-9]/g, '');
+       const url = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(billMsg)}`;
+       window.open(url, '_blank');
      }
      
      setOrderItems([]); 
