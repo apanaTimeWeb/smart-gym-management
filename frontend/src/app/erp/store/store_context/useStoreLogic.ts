@@ -25,6 +25,9 @@ export function useStoreLogic(initialData?: any): StoreContextType {
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 300);
   const [currentPage, setCurrentPage] = useState(1);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [sortOrder, setSortOrder] = useState<'ASC' | 'DESC'>('DESC');
 
  const [showProductModal, setShowProductModal] = useState(false);
  const [editProductId, setEditProductId] = useState<number | null>(null);
@@ -44,9 +47,12 @@ export function useStoreLogic(initialData?: any): StoreContextType {
  try {
       const params: Record<string, string> = { 
         limit: '10', 
-        page: currentPage.toString() 
+        page: currentPage.toString(),
+        sortOrder
       };
       if (debouncedSearch) params.search = debouncedSearch;
+      if (startDate) params.startDate = startDate;
+      if (endDate) params.endDate = endDate;
 
       const [productsRes, ordersRes, summaryRes] = await Promise.all([
         storeApi.getProducts(),
@@ -62,7 +68,7 @@ export function useStoreLogic(initialData?: any): StoreContextType {
  } finally { 
  setLoading(false); 
  }
- }, [showToast, currentPage, debouncedSearch]);
+ }, [showToast, currentPage, debouncedSearch, startDate, endDate, sortOrder]);
 
   useEffect(() => { 
     if (isFirstRender.current && initialData) {
@@ -199,6 +205,7 @@ export function useStoreLogic(initialData?: any): StoreContextType {
     products, orders, totalOrders, summary, loading, saving,
     toast, printData, search, debouncedSearch, setSearch,
     currentPage, setCurrentPage,
+    startDate, setStartDate, endDate, setEndDate, sortOrder, setSortOrder,
     showProductModal, setShowProductModal, editProductId, editProductData,
     showOrderModal, setShowOrderModal, orderItems, orderMethod, setOrderMethod,
     customerPhone, setCustomerPhone, sendViaWhatsapp, setSendViaWhatsapp,

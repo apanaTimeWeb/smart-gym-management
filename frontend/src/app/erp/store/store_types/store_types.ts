@@ -30,6 +30,13 @@ export interface StoreContextType {
   setSearch: (s: string) => void;
   currentPage: number;
   setCurrentPage: (p: number) => void;
+  
+  startDate: string;
+  setStartDate: (d: string) => void;
+  endDate: string;
+  setEndDate: (d: string) => void;
+  sortOrder: 'ASC' | 'DESC';
+  setSortOrder: (o: 'ASC' | 'DESC') => void;
  
  showProductModal: boolean;
  setShowProductModal: (show: boolean) => void;

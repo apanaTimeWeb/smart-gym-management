@@ -8,7 +8,10 @@ import { GYM_DETAILS } from '@/app/erp/erp_utils/ErpSharedConstants';
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
 
 export default function OrderTable() {
-  const { orders, totalOrders, loading, currentPage, setCurrentPage, setPrintData } = useStoreContext();
+  const { 
+    orders, totalOrders, loading, currentPage, setCurrentPage, setPrintData,
+    startDate, setStartDate, endDate, setEndDate, sortOrder, setSortOrder
+  } = useStoreContext();
 
   const ITEMS_PER_PAGE = 10;
   const totalPages = Math.ceil(totalOrders / ITEMS_PER_PAGE);
@@ -23,7 +26,42 @@ export default function OrderTable() {
 
   return (
     <div className="flex flex-col h-full min-h-[400px]">
-      <div className="overflow-x-auto flex-1">
+      {/* Filter and Sort Bar */}
+      <div className="flex flex-col sm:flex-row gap-4 justify-between items-center bg-[var(--store-bg-card)] p-4 rounded-xl border border-[var(--store-border)] mb-4">
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          <div className="flex flex-col">
+            <label className="text-[10px] text-[var(--store-text-secondary)] uppercase font-semibold mb-1">Start Date</label>
+            <input 
+              type="date" 
+              value={startDate} 
+              onChange={e => setStartDate(e.target.value)} 
+              className="text-sm px-3 py-2 rounded-lg border border-[var(--store-border)] bg-[var(--store-bg-input)] text-[var(--store-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--store-highlight)]"
+            />
+          </div>
+          <div className="flex flex-col">
+            <label className="text-[10px] text-[var(--store-text-secondary)] uppercase font-semibold mb-1">End Date</label>
+            <input 
+              type="date" 
+              value={endDate} 
+              onChange={e => setEndDate(e.target.value)} 
+              className="text-sm px-3 py-2 rounded-lg border border-[var(--store-border)] bg-[var(--store-bg-input)] text-[var(--store-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--store-highlight)]"
+            />
+          </div>
+        </div>
+        <div className="flex flex-col w-full sm:w-auto">
+          <label className="text-[10px] text-[var(--store-text-secondary)] uppercase font-semibold mb-1">Sort By Date</label>
+          <select 
+            value={sortOrder} 
+            onChange={e => setSortOrder(e.target.value as 'ASC' | 'DESC')}
+            className="text-sm px-3 py-2 rounded-lg border border-[var(--store-border)] bg-[var(--store-bg-input)] text-[var(--store-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--store-highlight)]"
+          >
+            <option value="DESC">Newest First</option>
+            <option value="ASC">Oldest First</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="overflow-x-auto flex-1 bg-[var(--store-bg-card)] rounded-xl border border-[var(--store-border)]">
         <table className="w-full">
           <thead className="bg-[var(--bg-input)]">
             <tr>
