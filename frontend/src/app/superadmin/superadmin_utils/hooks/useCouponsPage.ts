@@ -26,7 +26,8 @@ export const useCouponsPage = () => {
     resolver: zodResolver(CouponSchema),
     defaultValues: {
       code: '',
-      discountPercentage: undefined,
+      discountType: 'PERCENTAGE',
+      discountValue: undefined,
       maxUses: undefined,
       expiryDate: '',
     },

@@ -74,6 +74,8 @@ if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]"
               {filtered.map((ticket) => (
                 <tr key={ticket.id} className="hover:bg-[var(--bg-input)] transition-colors">
                   <td className="p-4 text-sm font-medium text-[var(--text-primary)]">{ticket.id}</td>
+
+
                   <td className="p-4 text-sm text-[var(--text-secondary)]">{ticket.tenantName}</td>
                   <td className="p-4 text-sm text-[var(--text-primary)] font-medium">{ticket.subject}</td>
                   <td className="p-4 text-sm">
@@ -86,8 +88,11 @@ if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]"
                   </td>
                   <td className="p-4 text-sm text-[var(--text-secondary)]">{new Date(ticket.lastUpdated).toLocaleString()}</td>
                   <td className="p-4 text-sm text-right">
-                    <button className="p-2 text-[var(--primary)] hover:bg-[var(--primary)]/10 rounded-lg transition-colors inline-flex items-center gap-1 font-medium">
-                      <MessageSquare size={16} /> Reply
+                    <button 
+                      className="p-2 text-[var(--primary)] hover:bg-[var(--primary)]/10 rounded-lg transition-colors inline-flex items-center justify-center font-medium"
+                      title="Reply"
+                    >
+                      <MessageSquare size={18} />
                     </button>
                   </td>
                 </tr>

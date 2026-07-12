@@ -3,7 +3,8 @@ import { CouponStatus } from '../coupons.interfaces';
 
 export class CreateCouponDto {
   @IsString()
-  code: string;
+  @IsOptional()
+  code?: string;
 
   @IsNumber()
   @Min(1)

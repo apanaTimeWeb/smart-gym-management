@@ -37,7 +37,7 @@ export const useAffiliatesPage = () => {
       {
         successMessage: 'Affiliate added successfully',
         onSuccess: (res) => {
-          setAffiliates(prev => [res.data, ...prev]);
+          setAffiliates(prev => [res, ...prev]);
           setIsModalOpen(false);
           form.reset();
         }
@@ -54,7 +54,7 @@ export const useAffiliatesPage = () => {
       {
         successMessage: 'Affiliate updated successfully',
         onSuccess: (res) => {
-          setAffiliates(prev => prev.map(a => a.id === editingAffiliate.id ? res.data : a));
+          setAffiliates(prev => prev.map(a => a.id === editingAffiliate.id ? res : a));
           setIsModalOpen(false);
           setEditingAffiliate(null);
           form.reset();

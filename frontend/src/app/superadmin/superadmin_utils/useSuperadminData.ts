@@ -12,7 +12,8 @@ export function useSuperadminData<T>(endpoint: string) {
     apiFetch<{ success: boolean; data: T }>(endpoint)
       .then(res => {
         if (isMounted) {
-          setData(res.data);
+          const responseData = (res as any).data !== undefined ? (res as any).data : res;
+          setData(responseData);
           setLoading(false);
         }
       })
