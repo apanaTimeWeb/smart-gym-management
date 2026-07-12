@@ -1,10 +1,16 @@
 'use client';
 
-import { Check, Edit } from 'lucide-react';
+import { Check, Edit, Trash2 } from 'lucide-react';
 import { usePlansContext } from '../plans_context/PlansContext';
 
 export default function PlansList() {
-  const { plans, loading, error } = usePlansContext();
+  const { plans, loading, error, openEditModal, handleDeletePlan } = usePlansContext();
+
+  const onDeleteClick = (id: string, name: string) => {
+    if (window.confirm(`Are you sure you want to delete the plan "${name}"?`)) {
+      handleDeletePlan(id);
+    }
+  };
 
   if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]">Loading...</div>;
   if (error || !plans) return <div className="p-8 text-center text-[var(--danger)]">Error loading data.</div>;
@@ -43,9 +49,21 @@ export default function PlansList() {
             </div>
           </div>
 
-          <button className="w-full py-2.5 flex items-center justify-center gap-2 bg-[var(--bg-input)] hover:bg-[var(--primary)] hover:text-white text-[var(--text-primary)] rounded-xl font-medium transition-colors border border-[var(--border)]">
-            <Edit size={16} /> Edit Limits & Pricing
-          </button>
+          <div className="flex gap-2">
+            <button 
+              onClick={() => openEditModal(plan)}
+              className="flex-1 py-2.5 flex items-center justify-center gap-2 bg-[var(--bg-input)] hover:bg-[var(--primary)] hover:text-white text-[var(--text-primary)] rounded-xl font-medium transition-colors border border-[var(--border)]"
+            >
+              <Edit size={16} /> Edit
+            </button>
+            <button 
+              onClick={() => onDeleteClick(plan.id, plan.name)}
+              className="px-4 py-2.5 flex items-center justify-center bg-[var(--bg-input)] hover:bg-[var(--danger)] hover:text-white text-[var(--text-secondary)] rounded-xl font-medium transition-colors border border-[var(--border)]"
+              title="Delete Plan"
+            >
+              <Trash2 size={16} />
+            </button>
+          </div>
         </div>
       ))}
     </div>

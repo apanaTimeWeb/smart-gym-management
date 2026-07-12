@@ -3,6 +3,7 @@
 import { PlansProvider, usePlansContext } from './plans_context/PlansContext';
 import PlansList from './plans_components/PlansList';
 import PlanCreateModal from './plans_components/PlanCreateModal';
+import PlanEditModal from './plans_components/PlanEditModal';
 
 function PlansPageContent() {
   const { openCreateModal } = usePlansContext();
@@ -24,6 +25,7 @@ function PlansPageContent() {
 
       <PlansList />
       <PlanCreateModal />
+      <PlanEditModal />
     </div>
   );
 }
