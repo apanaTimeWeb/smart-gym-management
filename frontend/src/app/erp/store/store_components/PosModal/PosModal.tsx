@@ -3,6 +3,7 @@
 import { X, Printer } from 'lucide-react';
 import { useStoreContext } from '@/app/erp/store/store_context/StoreContext';
 import { PAYMENT_METHODS, formatCurrency } from '@/app/erp/store/store_utils/StoreSharedConstants';
+import { useState } from 'react';
 
 export default function PosModal() {
  const { 
@@ -13,6 +14,8 @@ export default function PosModal() {
  customerPhone, setCustomerPhone, sendViaWhatsapp, setSendViaWhatsapp,
  saving, placeOrder 
  } = useStoreContext();
+
+ const [productSearch, setProductSearch] = useState('');
 
  if (!showOrderModal) return null;
 
@@ -32,9 +35,18 @@ export default function PosModal() {
  
  {/* Product Grid */}
  <div>
- <p className="text-sm font-medium text-[var(--store-text-secondary)] mb-3">Select Products</p>
+ <div className="flex items-center justify-between mb-3">
+   <p className="text-sm font-medium text-[var(--store-text-secondary)]">Select Products</p>
+   <input 
+     type="text" 
+     placeholder="Search..." 
+     value={productSearch}
+     onChange={e => setProductSearch(e.target.value)}
+     className="w-1/2 px-3 py-1.5 text-xs rounded-lg border border-[var(--store-border)] bg-[var(--store-bg-input)] text-[var(--store-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--store-highlight)]"
+   />
+ </div>
  <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
- {products.filter(p => p.stock > 0).map(p => (
+ {products.filter(p => p.stock > 0 && p.name.toLowerCase().includes(productSearch.toLowerCase())).map(p => (
  <button 
  key={p.id} 
  onClick={() => addToOrder(p)} 
