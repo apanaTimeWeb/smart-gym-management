@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray, IsEnum } from 'class-validator';
+import { IsString, IsNumber, IsOptional, Min, Max, IsEnum, IsDateString, IsBoolean, IsArray } from 'class-validator';
 import { CouponStatus } from '../coupons.interfaces';
 
 export class CreateCouponDto {
