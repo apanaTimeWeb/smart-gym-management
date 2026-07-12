@@ -20,8 +20,9 @@ export class CreateSubscriptionPlanDto {
   @IsArray()
   features: string[];
 
+  @IsOptional()
   @IsNumber()
-  activeTenants: number;
+  activeTenants?: number;
 
 
 }
