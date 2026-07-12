@@ -140,7 +140,7 @@ export interface Broadcast {
   sentDate: string | null;
 }
 
-export type CouponStatus = 'ACTIVE' | 'EXPIRED' | 'DEPLETED';
+export type CouponStatus = 'ACTIVE' | 'INACTIVE' | 'EXPIRED' | 'DEPLETED';
 
 export interface Coupon {
   id: string;

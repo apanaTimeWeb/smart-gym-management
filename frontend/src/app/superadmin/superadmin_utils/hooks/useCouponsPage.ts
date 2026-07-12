@@ -88,6 +88,24 @@ export const useCouponsPage = () => {
     );
   }, [mutate]);
 
+  const handleToggleStatus = useCallback(async (id: string, currentStatus: CouponStatus) => {
+    // Only toggle if it's ACTIVE or INACTIVE. Ignore EXPIRED or DEPLETED.
+    if (currentStatus !== 'ACTIVE' && currentStatus !== 'INACTIVE') {
+      toast.error(`Cannot toggle status of ${currentStatus.toLowerCase()} coupon`);
+      return;
+    }
+    const newStatus = currentStatus === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
+    await mutate(
+      () => superadminApi.coupons.update(id, { status: newStatus }),
+      {
+        successMessage: `Coupon marked as ${newStatus}`,
+        onSuccess: (res) => {
+          setCoupons(prev => prev.map(c => c.id === id ? { ...c, ...res } : c));
+        }
+      }
+    );
+  }, [mutate]);
+
   const activeCoupons = useMemo(() => coupons.filter(c => c.status === 'ACTIVE' && !c.isDeleted).length, [coupons]);
   const totalRedeemed = useMemo(() => coupons.reduce((sum, c) => sum + c.currentUses, 0), [coupons]);
 
@@ -120,6 +138,7 @@ export const useCouponsPage = () => {
     setSelectedCoupon,
     handleUpdateCoupon,
     handleDeleteCoupon,
-    handleToggleRestore
+    handleToggleRestore,
+    handleToggleStatus
   };
 };

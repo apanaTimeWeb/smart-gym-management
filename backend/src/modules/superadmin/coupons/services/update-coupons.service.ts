@@ -36,10 +36,13 @@ export class UpdateCouponsService {
 
     const finalStatus = dto.status ?? existingCoupon.status;
     
-    if (finalCurrentUses >= finalMaxUses && finalStatus !== CouponStatus.EXPIRED) {
-      dto.status = CouponStatus.DEPLETED;
-    } else if (finalCurrentUses < finalMaxUses && finalStatus === CouponStatus.DEPLETED) {
-      dto.status = CouponStatus.ACTIVE;
+    // Only auto-heal if it's not explicitly set/currently INACTIVE or EXPIRED
+    if (finalStatus !== CouponStatus.INACTIVE && finalStatus !== CouponStatus.EXPIRED) {
+      if (finalCurrentUses >= finalMaxUses) {
+        dto.status = CouponStatus.DEPLETED;
+      } else {
+        dto.status = CouponStatus.ACTIVE;
+      }
     }
 
     return await this.repository.update(id, dto);

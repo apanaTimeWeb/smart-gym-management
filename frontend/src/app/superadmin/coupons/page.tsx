@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Tag, Plus, Search, Edit2, Trash2, RefreshCw } from 'lucide-react';
+import { Tag, Plus, Search, Edit2, Trash2, RefreshCw, ToggleLeft, ToggleRight } from 'lucide-react';
 import { CouponStatus } from '@/app/superadmin/superadmin_types/superadmin_types';
 import { useCouponsPage } from '../superadmin_utils/hooks/useCouponsPage';
 import { SuperadminCouponModal } from '@/app/superadmin/coupons/coupons_components/SuperadminCouponModal';
@@ -12,6 +12,8 @@ const getStatusBadge = (status: CouponStatus) => {
   switch (status) {
     case 'ACTIVE':
       return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[var(--success-bg)] text-[var(--success)]">ACTIVE</span>;
+    case 'INACTIVE':
+      return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#1E1E2E] text-[var(--text-secondary)]">INACTIVE</span>;
     case 'EXPIRED':
       return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#1E1E2E] text-[var(--text-secondary)]">EXPIRED</span>;
     case 'DEPLETED':
@@ -40,7 +42,8 @@ export default function CouponsPage() {
     setSelectedCoupon,
     handleUpdateCoupon,
     handleDeleteCoupon,
-    handleToggleRestore
+    handleToggleRestore,
+    handleToggleStatus
   } = useCouponsPage();
 
   if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]">Loading...</div>;
@@ -161,6 +164,23 @@ export default function CouponsPage() {
                       </button>
                     ) : (
                       <>
+                        <button
+                          title={cpn.status === 'ACTIVE' ? 'Deactivate Coupon' : 'Activate Coupon'}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleToggleStatus(cpn.id, cpn.status);
+                          }}
+                          disabled={cpn.status === 'EXPIRED' || cpn.status === 'DEPLETED'}
+                          className={`p-1.5 rounded-md border border-[var(--border)] transition-colors ${
+                            cpn.status === 'EXPIRED' || cpn.status === 'DEPLETED' 
+                              ? 'opacity-30 cursor-not-allowed bg-[var(--bg-input)]' 
+                              : cpn.status === 'ACTIVE'
+                                ? 'text-[var(--success)] hover:text-white bg-[var(--success)]/10 hover:bg-[var(--success)]'
+                                : 'text-[var(--text-secondary)] hover:text-white bg-[var(--bg-input)] hover:bg-[var(--text-secondary)]'
+                          }`}
+                        >
+                          {cpn.status === 'ACTIVE' ? <ToggleRight className="w-4 h-4" /> : <ToggleLeft className="w-4 h-4" />}
+                        </button>
                         <button
                           title="Edit Coupon"
                           onClick={(e) => {
