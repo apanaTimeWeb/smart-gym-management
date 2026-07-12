@@ -40,7 +40,7 @@ export const useCouponsPage = () => {
       {
         successMessage: 'Coupon created successfully',
         onSuccess: (res) => {
-          setCoupons(prev => [res.data, ...prev]);
+          setCoupons(prev => [res, ...prev]);
           setIsModalOpen(false);
           form.reset();
         }
@@ -54,7 +54,7 @@ export const useCouponsPage = () => {
       {
         successMessage: 'Coupon updated successfully',
         onSuccess: (res) => {
-          setCoupons(prev => prev.map(c => c.id === id ? { ...c, ...res.data } : c));
+          setCoupons(prev => prev.map(c => c.id === id ? { ...c, ...res } : c));
           setIsEditModalOpen(false);
           setSelectedCoupon(null);
         }
@@ -82,7 +82,7 @@ export const useCouponsPage = () => {
       {
         successMessage: 'Coupon restored successfully',
         onSuccess: (res) => {
-          setCoupons(prev => prev.map(c => c.id === id ? { ...c, ...res.data } : c));
+          setCoupons(prev => prev.map(c => c.id === id ? { ...c, ...res } : c));
         }
       }
     );

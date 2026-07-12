@@ -145,7 +145,8 @@ export type CouponStatus = 'ACTIVE' | 'EXPIRED' | 'DEPLETED';
 export interface Coupon {
   id: string;
   code: string;
-  discountPercentage: number;
+  discountType: 'PERCENTAGE' | 'EXACT';
+  discountValue: number;
   maxUses: number;
   currentUses: number;
   status: CouponStatus;

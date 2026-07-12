@@ -21,16 +21,17 @@ export function useSuperadminMutation() {
     setIsMutating(true);
     try {
       const response = await mutationFn();
+      const responseData = response.data !== undefined ? response.data : response;
       
       if (options?.successMessage || response.message) {
         toast.success(options?.successMessage || response.message || 'Action successful');
       }
       
       if (options?.onSuccess) {
-        options.onSuccess(response.data);
+        options.onSuccess(responseData);
       }
       
-      return response.data;
+      return responseData;
     } catch (error: any) {
       const message = options?.errorMessage || error.message || 'Something went wrong';
       toast.error(message);

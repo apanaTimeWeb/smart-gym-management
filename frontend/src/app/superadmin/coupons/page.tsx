@@ -132,7 +132,11 @@ export default function CouponsPage() {
                     {cpn.isDeleted && <span className="ml-2 text-[10px] bg-[var(--danger)]/20 text-[var(--danger)] px-2 py-0.5 rounded-full">DELETED</span>}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-[14px] text-[var(--text-secondary)]">
-                    <span className="font-semibold text-[var(--success)]">{cpn.discountPercentage}% OFF</span>
+                    {cpn.discountType === 'PERCENTAGE' ? (
+                      <span className="font-semibold text-[var(--success)]">{cpn.discountValue}% OFF</span>
+                    ) : (
+                      <span className="font-semibold text-[var(--success)]">Rs {cpn.discountValue} OFF</span>
+                    )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-[14px] text-[var(--text-secondary)]">
                     {cpn.currentUses} / {cpn.maxUses}

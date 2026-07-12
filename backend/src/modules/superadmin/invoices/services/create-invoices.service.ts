@@ -55,7 +55,12 @@ export class CreateInvoicesService {
       }
 
       // Apply discount
-      const discountAmount = (dto.amount * coupon.discountPercentage) / 100;
+      let discountAmount = 0;
+      if (coupon.discountType === 'PERCENTAGE') {
+        discountAmount = (dto.amount * coupon.discountValue) / 100;
+      } else if (coupon.discountType === 'EXACT') {
+        discountAmount = coupon.discountValue;
+      }
       dto.amount = Math.max(0, dto.amount - discountAmount);
 
       // Increment usage

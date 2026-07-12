@@ -26,7 +26,8 @@ export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps>
     if (isOpen && coupon) {
       reset({
         code: coupon.code,
-        discountPercentage: coupon.discountPercentage,
+        discountType: coupon.discountType,
+        discountValue: coupon.discountValue,
         maxUses: coupon.maxUses,
         expiryDate: new Date(coupon.expiryDate).toISOString().split('T')[0],
       });
@@ -64,14 +65,26 @@ export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
-              <label className="text-[14px] font-bold text-[var(--text-secondary)]">Discount % <span className="text-[var(--danger)]">*</span></label>
+              <label className="text-[14px] font-bold text-[var(--text-secondary)]">Discount Type <span className="text-[var(--danger)]">*</span></label>
+              <select
+                {...register('discountType')}
+                className="w-full px-4 py-2.5 bg-[var(--bg-input)] border border-[var(--border)] rounded-lg text-[14px] text-[var(--text-primary)] focus:outline-none focus:border-[var(--border-focus)] transition-colors appearance-none"
+              >
+                <option value="PERCENTAGE">Percentage (%)</option>
+                <option value="EXACT">Exact Amount (Rs)</option>
+              </select>
+              {errors.discountType && <span className="text-[12px] text-[var(--danger)]">{errors.discountType.message}</span>}
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[14px] font-bold text-[var(--text-secondary)]">Discount Value <span className="text-[var(--danger)]">*</span></label>
               <input 
                 type="number" 
-                {...register('discountPercentage', { valueAsNumber: true })}
+                {...register('discountValue', { valueAsNumber: true })}
                 className="w-full px-4 py-2.5 bg-[var(--bg-input)] border border-[var(--border)] rounded-lg text-[14px] text-[var(--text-primary)] focus:outline-none focus:border-[var(--border-focus)] transition-colors"
                 placeholder="25"
               />
-              {errors.discountPercentage && <span className="text-[12px] text-[var(--danger)]">{errors.discountPercentage.message}</span>}
+              {errors.discountValue && <span className="text-[12px] text-[var(--danger)]">{errors.discountValue.message}</span>}
             </div>
 
             <div className="flex flex-col gap-1.5">

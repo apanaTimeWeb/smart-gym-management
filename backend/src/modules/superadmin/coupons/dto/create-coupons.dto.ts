@@ -6,7 +6,12 @@ export class CreateCouponDto {
   code: string;
 
   @IsNumber()
-  discountPercentage: number;
+  @Min(1)
+  discountValue: number;
+
+  @IsEnum(['PERCENTAGE', 'EXACT'])
+  @IsOptional()
+  discountType?: 'PERCENTAGE' | 'EXACT';
 
   @IsNumber()
   maxUses: number;

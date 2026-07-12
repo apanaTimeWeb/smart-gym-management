@@ -19,10 +19,19 @@ export const BroadcastSchema = z.object({
 export type BroadcastFormData = z.infer<typeof BroadcastSchema>;
 
 export const CouponSchema = z.object({
-  code: z.string().min(3, 'Code must be at least 3 characters').regex(/^[A-Z0-9]+$/, 'Only uppercase letters and numbers allowed'),
-  discountPercentage: z.number().min(1, 'Minimum discount is 1%').max(100, 'Maximum discount is 100%'),
-  maxUses: z.number().min(1, 'Minimum max uses is 1'),
+  code: z.string().optional(),
+  discountType: z.enum(['PERCENTAGE', 'EXACT']),
+  discountValue: z.number().min(1, 'Discount value must be at least 1'),
+  maxUses: z.number().min(1, 'Max uses must be at least 1'),
   expiryDate: z.string().min(1, 'Expiry date is required'),
+}).refine(data => {
+  if (data.discountType === 'PERCENTAGE' && data.discountValue > 100) {
+    return false;
+  }
+  return true;
+}, {
+  message: "Percentage discount cannot exceed 100",
+  path: ["discountValue"]
 });
 
 export type CouponFormData = z.infer<typeof CouponSchema>;
