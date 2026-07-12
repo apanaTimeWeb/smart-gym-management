@@ -24,6 +24,8 @@ export interface HrContextType {
  // Form / Modal State
  showModal: boolean;
  setShowModal: (show: boolean) => void;
+ showPayrollModal: boolean;
+ setShowPayrollModal: (show: boolean) => void;
  editId: number | null;
  editData: any;
  saving: boolean;
@@ -31,7 +33,9 @@ export interface HrContextType {
  // Actions
  openAdd: () => void;
  openEdit: (s: Staff) => void;
+ openAddPayroll: () => void;
  saveStaff: (data: any) => Promise<void>;
+ savePayroll: (data: any) => Promise<void>;
  deleteStaff: (id: number) => Promise<void>;
  markPayrollPaid: (id: number) => Promise<void>;
 }

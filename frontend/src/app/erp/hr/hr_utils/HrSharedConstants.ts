@@ -28,6 +28,22 @@ export const EMPTY_STAFF = {
  joinDate: new Date().toISOString().split('T')[0] 
 };
 
+export const PayrollSchema = z.object({
+  staffId: z.string().min(1, "Please select staff"),
+  month: z.string().min(1, "Month is required"),
+  amount: z.coerce.number().min(0, "Amount must be positive"),
+  notes: z.string().optional()
+});
+
+export type PayrollFormValues = z.infer<typeof PayrollSchema>;
+
+export const EMPTY_PAYROLL_FORM = {
+  staffId: '',
+  month: new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
+  amount: 0,
+  notes: ''
+} as unknown as PayrollFormValues;
+
 export const STAFF_TABLE_HEADERS = ['Name', 'Role', 'Phone', 'Branch', 'Salary', 'Joined', 'Actions'];
 
 export const PAYROLL_TABLE_HEADERS = ['Staff', 'Month', 'Amount', 'Status', 'Paid On', 'Actions'];

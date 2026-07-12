@@ -20,6 +20,7 @@ export function useHrLogic(): HrContextType {
   const [currentPage, setCurrentPage] = useState(1);
 
  const [showModal, setShowModal] = useState(false);
+ const [showPayrollModal, setShowPayrollModal] = useState(false);
  const [editId, setEditId] = useState<number | null>(null);
  const [editData, setEditData] = useState<any>(null);
  const [saving, setSaving] = useState(false);
@@ -92,6 +93,25 @@ export function useHrLogic(): HrContextType {
  }
  }, [editId, loadAll, showToast]);
 
+ const openAddPayroll = useCallback(() => {
+   setShowPayrollModal(true);
+ }, []);
+
+ const savePayroll = useCallback(async (data: any) => {
+   setSaving(true);
+   try {
+     const payload = { ...data, amount: Number(data.amount), status: 'DUE' };
+     const res = await hrApi.createPayroll(payload);
+     showToast((res as any).message, 'success');
+     setShowPayrollModal(false);
+     await loadAll();
+   } catch (err) {
+     showToast((err as Error).message, 'error');
+   } finally {
+     setSaving(false);
+   }
+ }, [loadAll, showToast]);
+
  const deleteStaff = useCallback(async (id: number) => {
   const isConfirmed = await confirm({ title: 'Remove Staff', message: 'Remove this staff member?', confirmText: 'Remove', type: 'danger' });
   if (!isConfirmed) return;
@@ -117,6 +137,6 @@ export function useHrLogic(): HrContextType {
   return {
     staff, payrolls, summary, loading, error, toast, showToast, hideToast, loadAll,
     search, debouncedSearch, setSearch, currentPage, setCurrentPage,
-    showModal, setShowModal, editId, editData, saving, openAdd, openEdit, saveStaff, deleteStaff, markPayrollPaid
+    showModal, setShowModal, showPayrollModal, setShowPayrollModal, editId, editData, saving, openAdd, openEdit, openAddPayroll, saveStaff, savePayroll, deleteStaff, markPayrollPaid
   };
 }
