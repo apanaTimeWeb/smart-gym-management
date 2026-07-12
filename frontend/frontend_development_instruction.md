@@ -108,4 +108,8 @@ The use of the `any` type is strictly forbidden across the frontend architecture
 Whenever displaying action buttons in data tables, lists, or dense UI components (e.g., Edit, Delete, Restore, Settings, Re-activate, Deactivate,etc), strictly prioritize using semantic icons (e.g., from `lucide-react`) instead of bulky text labels. 
 *Why?* It drastically saves horizontal space, makes the UI look significantly cleaner and more premium, and ensures the layout doesn't break on mobile views. Always include descriptive tooltips (e.g., `title="Edit User"`) and proper `aria-label`s for screen readers.
 
+29. **Multi-Medium Sending Selection (Radio Buttons)**:
+Whenever the user performs an action that sends a proof or document (like sending a bill, receipt, or alert), the UI MUST present an option to choose between at least **two mediums** (e.g., WhatsApp vs. Email). 
+* **Implementation:** Use rounded Radio Buttons (`<input type="radio">`) so that the user can visually see both options but can only select one preferred medium at a time. Do NOT use checkboxes if only one medium should be selected. The frontend must then pass the selected medium back to the API payload.
+
 Think step-by-step. Create a detailed implementation plan first so I can review it, and then execute it perfectly without breaking existing data flows!
