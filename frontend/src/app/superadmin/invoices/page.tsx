@@ -15,29 +15,23 @@ const StatusColors: Record<SaaSInvoice['status'], string> = {
 export default function SaaSInvoicesPage() {
   const { data, loading, error } = useSuperadminData<{ invoices: SaaSInvoice[], tenants: Tenant[] }>(SuperadminUrlConfig.BACKEND_API.INVOICES_BASE);
 
-    const [search, setSearch] = useState('');
+  const [search, setSearch] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
   const [gymSearchTerm, setGymSearchTerm] = useState('');
   const [isGymDropdownOpen, setIsGymDropdownOpen] = useState(false);
   const [selectedGymId, setSelectedGymId] = useState('');
-if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]">Loading...</div>;
+
+  if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]">Loading...</div>;
   if (error || !data) return <div className="p-8 text-center text-[var(--danger)]">Error loading data.</div>;
 
-  const { invoices: DUMMY_INVOICES, tenants: DUMMY_TENANTS } = data;
+  const { invoices: DUMMY_INVOICES = [], tenants: DUMMY_TENANTS = [] } = data || {};
 
-
-
-  
-
-
-
-
-  const filteredGymsForDropdown = DUMMY_TENANTS.filter(t => t.name.toLowerCase().includes(gymSearchTerm.toLowerCase()));
+  const filteredGymsForDropdown = DUMMY_TENANTS.filter(t => t.name?.toLowerCase().includes(gymSearchTerm.toLowerCase()));
   const selectedGym = DUMMY_TENANTS.find(t => t.id === selectedGymId);
 
   const filtered = DUMMY_INVOICES.filter(i => 
-    i.tenantName.toLowerCase().includes(search.toLowerCase()) || 
-    i.id.toLowerCase().includes(search.toLowerCase())
+    i.tenantName?.toLowerCase().includes(search.toLowerCase()) || 
+    i.id?.toLowerCase().includes(search.toLowerCase())
   );
 
   const totalRevenue = DUMMY_INVOICES.filter(i => i.status === 'PAID').reduce((acc, curr) => acc + curr.amount, 0);
