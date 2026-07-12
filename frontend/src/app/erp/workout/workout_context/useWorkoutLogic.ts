@@ -144,8 +144,13 @@ export function useWorkoutLogic(): WorkoutContextType {
   const saveEx = useCallback(async (data: ExerciseFormValues) => {
     setSaving(true);
     try {
-      // adapt to Exercise backend payload shape if needed, here we pass the form
-      const payload = { ...data, muscleGroup: data.muscle.split(',').map(s => s.trim()) };
+      // adapt to Exercise backend payload shape
+      const { muscle, equipment, ...rest } = data;
+      const payload = { 
+        ...rest, 
+        category: equipment,
+        muscleGroup: muscle.split(',').map(s => s.trim()) 
+      };
       if (editExId) {
         const res = await libraryApi.updateExercise(editExId, payload);
         showToast((res as any).message, 'success');
