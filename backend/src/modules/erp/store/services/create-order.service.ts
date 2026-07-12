@@ -80,8 +80,10 @@ export class CreateOrderService {
       if (dto.customerPhone) {
         let billMsg = `*Smart Gym Receipt*\nReceipt No: ORD-${savedOrder.id}\nDate: ${new Date().toLocaleDateString('en-IN')}\n\n*Items:*\n`;
         for (const item of dto.items) {
-           const prodName = await queryRunner.manager.findOne(Product, { where: { id: item.productId } }).then(p => p?.name || 'Item');
-           billMsg += `- ${prodName} x${item.qty} (₹${item.qty * item.price || 0})\n`;
+           const product = await queryRunner.manager.findOne(Product, { where: { id: item.productId } });
+           const prodName = product?.name || 'Item';
+           const prodPrice = product?.price || 0;
+           billMsg += `- ${prodName} x${item.qty} (₹${item.qty * prodPrice})\n`;
         }
         billMsg += `\n*Total: ₹${total}*\nPayment Method: ${dto.method}\n\nThank you for shopping with us!`;
         
