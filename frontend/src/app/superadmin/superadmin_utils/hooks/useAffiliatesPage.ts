@@ -37,13 +37,68 @@ export const useAffiliatesPage = () => {
       {
         successMessage: 'Affiliate added successfully',
         onSuccess: (res) => {
-          setAffiliates(prev => [res.data, ...prev]);
+          setAffiliates(prev => [res, ...prev]);
           setIsModalOpen(false);
           form.reset();
         }
       }
     );
   }, [form, mutate]);
+
+  const [editingAffiliate, setEditingAffiliate] = useState<Affiliate | null>(null);
+
+  const handleEditAffiliate = useCallback(async (data: AffiliateFormData) => {
+    if (!editingAffiliate) return;
+    await mutate(
+      () => superadminApi.affiliates.update(editingAffiliate.id, data),
+      {
+        successMessage: 'Affiliate updated successfully',
+        onSuccess: (res) => {
+          setAffiliates(prev => prev.map(a => a.id === editingAffiliate.id ? res : a));
+          setIsModalOpen(false);
+          setEditingAffiliate(null);
+          form.reset();
+        }
+      }
+    );
+  }, [editingAffiliate, form, mutate]);
+
+  const handleToggleAffiliateStatus = useCallback(async (id: string, currentStatus: AffiliateStatus) => {
+    const newStatus: AffiliateStatus = currentStatus === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
+    await mutate(
+      () => superadminApi.affiliates.updateStatus(id, newStatus),
+      {
+        successMessage: `Affiliate status updated successfully`,
+        onSuccess: () => {
+          setAffiliates(prev => prev.map(a => a.id === id ? { ...a, status: newStatus } : a));
+        }
+      }
+    );
+  }, [mutate]);
+
+  const handleDeleteAffiliate = useCallback(async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this affiliate?')) return;
+    await mutate(
+      () => superadminApi.affiliates.delete(id),
+      {
+        successMessage: 'Affiliate deleted successfully',
+        onSuccess: () => {
+          setAffiliates(prev => prev.filter(a => a.id !== id));
+        }
+      }
+    );
+  }, [mutate]);
+
+  const openEditModal = useCallback((affiliate: Affiliate) => {
+    setEditingAffiliate(affiliate);
+    form.reset({
+      name: affiliate.name,
+      email: affiliate.email,
+      referralCode: affiliate.referralCode,
+    });
+    setIsModalOpen(true);
+  }, [form]);
+
 
   const totalAffiliates = affiliates.length;
   const totalCommission = useMemo(() => affiliates.reduce((sum, a) => sum + a.commissionEarned, 0), [affiliates]);
@@ -67,6 +122,12 @@ export const useAffiliatesPage = () => {
     setIsModalOpen,
     form,
     handleAddAffiliate,
+    handleEditAffiliate,
+    handleToggleAffiliateStatus,
+    handleDeleteAffiliate,
+    openEditModal,
+    editingAffiliate,
+    setEditingAffiliate,
     isMutating,
     totalAffiliates,
     totalCommission,

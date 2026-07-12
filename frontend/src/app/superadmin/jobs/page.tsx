@@ -80,10 +80,11 @@ export default function JobsPage() {
                   </td>
                   <td className="p-4 text-right">
                     <button 
-                      className={`text-sm font-medium hover:underline ${job.status === 'FAILED' ? 'text-[var(--primary)]' : 'text-[var(--text-disabled)] cursor-not-allowed'}`}
+                      className={`p-2 rounded-lg transition-colors inline-flex items-center justify-center ${job.status === 'FAILED' ? 'text-[var(--primary)] hover:bg-[var(--primary)]/10' : 'text-[var(--text-disabled)] cursor-not-allowed'}`}
                       disabled={job.status !== 'FAILED'}
+                      title="Retry Job"
                     >
-                      Retry
+                      <RefreshCw size={18} />
                     </button>
                   </td>
                 </tr>

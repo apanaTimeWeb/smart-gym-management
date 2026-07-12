@@ -1,4 +1,5 @@
-import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray, IsEnum } from 'class-validator';
+import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray, IsEnum, ValidateIf } from 'class-validator';
+import { Transform } from 'class-transformer';
 import { BroadcastStatus, BroadcastAudience } from '../broadcasts.interfaces';
 
 export class CreateBroadcastDto {
@@ -15,11 +16,15 @@ export class CreateBroadcastDto {
   @IsString()
   audience: BroadcastAudience;
 
+  @IsOptional()
+  @Transform(({ value }) => value === '' ? null : value)
   @IsDateString()
-  scheduledDate: Date | null;
+  scheduledDate?: Date | null;
 
+  @IsOptional()
+  @Transform(({ value }) => value === '' ? null : value)
   @IsDateString()
-  sentDate: Date | null;
+  sentDate?: Date | null;
 
 
 }

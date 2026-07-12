@@ -1,18 +1,25 @@
-import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray, IsEnum } from 'class-validator';
+import { IsString, IsNumber, IsOptional, Min, Max, IsEnum, IsDateString, IsBoolean, IsArray } from 'class-validator';
 import { CouponStatus } from '../coupons.interfaces';
 
 export class CreateCouponDto {
   @IsString()
-  code: string;
+  @IsOptional()
+  code?: string;
 
   @IsNumber()
-  discountPercentage: number;
+  @Min(1)
+  discountValue: number;
+
+  @IsEnum(['PERCENTAGE', 'EXACT'])
+  @IsOptional()
+  discountType?: 'PERCENTAGE' | 'EXACT';
 
   @IsNumber()
   maxUses: number;
 
   @IsNumber()
-  currentUses: number;
+  @IsOptional()
+  currentUses?: number;
 
   @IsString()
   @IsOptional()

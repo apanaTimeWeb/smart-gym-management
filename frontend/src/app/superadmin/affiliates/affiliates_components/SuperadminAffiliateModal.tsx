@@ -8,6 +8,7 @@ interface SuperadminAffiliateModalProps {
   onClose: () => void;
   form: UseFormReturn<AffiliateFormData>;
   onSubmit: (data: AffiliateFormData) => void;
+  isEdit?: boolean;
 }
 
 export const SuperadminAffiliateModal: React.FC<SuperadminAffiliateModalProps> = ({
@@ -15,6 +16,7 @@ export const SuperadminAffiliateModal: React.FC<SuperadminAffiliateModalProps> =
   onClose,
   form,
   onSubmit,
+  isEdit = false,
 }) => {
   if (!isOpen) return null;
 
@@ -24,7 +26,9 @@ export const SuperadminAffiliateModal: React.FC<SuperadminAffiliateModalProps> =
     <div className="fixed inset-0 bg-black/60 z-[1000] flex items-center justify-center p-4 backdrop-blur-sm">
       <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl w-full max-w-[480px] shadow-xl overflow-hidden flex flex-col">
         <div className="flex items-center justify-between px-7 py-5 border-b border-[var(--border)]">
-          <h2 className="text-[18px] font-bold text-[var(--text-primary)]">Add Affiliate Partner</h2>
+          <h2 className="text-[18px] font-bold text-[var(--text-primary)]">
+            {isEdit ? 'Edit Affiliate Partner' : 'Add Affiliate Partner'}
+          </h2>
           <button onClick={onClose} className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
             <X className="w-5 h-5" />
           </button>
@@ -75,7 +79,7 @@ export const SuperadminAffiliateModal: React.FC<SuperadminAffiliateModalProps> =
               type="submit" 
               className="px-5 py-2.5 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white font-medium rounded-lg transition-colors text-[14px]"
             >
-              Save Partner
+              {isEdit ? 'Save Changes' : 'Save Partner'}
             </button>
           </div>
         </form>

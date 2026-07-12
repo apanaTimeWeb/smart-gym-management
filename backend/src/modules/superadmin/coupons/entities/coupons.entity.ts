@@ -9,8 +9,11 @@ export class Coupon {
   @Column({ type: 'varchar', unique: true })
   code: string;
 
-  @Column({ type: 'float' })
-  discountPercentage: number;
+  @Column({ type: 'varchar', default: 'PERCENTAGE' })
+  discountType: 'PERCENTAGE' | 'EXACT';
+
+  @Column({ type: 'float', default: 0 })
+  discountValue: number;
 
   @Column({ type: 'int' })
   maxUses: number;
@@ -27,4 +30,13 @@ export class Coupon {
 
   @Column({ type: 'boolean', default: false })
   isDeleted: boolean;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }

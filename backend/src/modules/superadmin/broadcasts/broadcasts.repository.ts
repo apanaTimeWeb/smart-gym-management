@@ -11,6 +11,9 @@ export class BroadcastsRepository {
   ) {}
 
   async create(data: Partial<Broadcast>): Promise<Broadcast> {
+    if (data.scheduledDate === '' as any) data.scheduledDate = null as any;
+    if (data.sentDate === '' as any) data.sentDate = null as any;
+    
     const entity = this.repo.create(data);
     return await this.repo.save(entity);
   }

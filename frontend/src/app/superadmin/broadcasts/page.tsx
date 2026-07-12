@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Megaphone, Plus, Search } from 'lucide-react';
+import { Megaphone, Plus, Search, Edit2, Trash2, Send } from 'lucide-react';
 import { BroadcastStatus } from '@/app/superadmin/superadmin_types/superadmin_types';
 import { useBroadcastsPage } from '../superadmin_utils/hooks/useBroadcastsPage';
 import { SuperadminBroadcastModal } from '@/app/superadmin/broadcasts/broadcasts_components/SuperadminBroadcastModal';
@@ -27,8 +27,15 @@ export default function BroadcastsPage() {
     isModalOpen,
     setIsModalOpen,
     form,
-    handleCreateBroadcast
-  , loading, error} = useBroadcastsPage();
+    handleCreateBroadcast,
+    handleDeleteBroadcast,
+    handleSendBroadcast,
+    openEditModal,
+    openCreateModal,
+    editingId,
+    loading, 
+    error
+  } = useBroadcastsPage();
 
   if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]">Loading...</div>;
   if (error) return <div className="p-8 text-center text-[var(--danger)]">Error loading data.</div>;
@@ -62,7 +69,7 @@ export default function BroadcastsPage() {
             />
           </div>
           <button 
-            onClick={() => setIsModalOpen(true)}
+            onClick={openCreateModal}
             className="flex items-center gap-2 px-5 py-2.5 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white font-medium rounded-lg transition-colors text-[14px]"
           >
             <Plus className="w-4 h-4" />
@@ -81,6 +88,7 @@ export default function BroadcastsPage() {
                 <th className="px-6 py-4 text-[12px] font-semibold text-[var(--text-secondary)] uppercase tracking-wider">Audience</th>
                 <th className="px-6 py-4 text-[12px] font-semibold text-[var(--text-secondary)] uppercase tracking-wider">Status</th>
                 <th className="px-6 py-4 text-[12px] font-semibold text-[var(--text-secondary)] uppercase tracking-wider">Scheduled / Sent Date</th>
+                <th className="px-6 py-4 text-[12px] font-semibold text-[var(--text-secondary)] uppercase tracking-wider text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--border)]">
@@ -109,11 +117,38 @@ export default function BroadcastsPage() {
                     {bc.status === 'SENT' && bc.sentDate ? new Date(bc.sentDate).toLocaleString() : ''}
                     {bc.status === 'DRAFT' && '-'}
                   </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right">
+                    <div className="flex items-center justify-end gap-2">
+                      {bc.status === 'DRAFT' && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleSendBroadcast(bc.id); }}
+                          className="p-1.5 text-[var(--text-secondary)] hover:text-[var(--primary)] hover:bg-[var(--primary-subtle)] rounded-lg transition-colors"
+                          title="Send Now"
+                        >
+                          <Send className="w-4 h-4" />
+                        </button>
+                      )}
+                      <button
+                        onClick={(e) => { e.stopPropagation(); openEditModal(bc); }}
+                        className="p-1.5 text-[var(--text-secondary)] hover:text-[var(--primary)] hover:bg-[var(--primary-subtle)] rounded-lg transition-colors"
+                        title="Edit Broadcast"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); handleDeleteBroadcast(bc.id); }}
+                        className="p-1.5 text-[var(--text-secondary)] hover:text-[var(--danger)] hover:bg-red-500/10 rounded-lg transition-colors"
+                        title="Delete Broadcast"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               ))}
               {broadcasts.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center text-[var(--text-secondary)]">
+                  <td colSpan={5} className="px-6 py-12 text-center text-[var(--text-secondary)]">
                     <Megaphone className="w-12 h-12 mx-auto mb-3 opacity-20" />
                     <p>No broadcasts found.</p>
                   </td>
@@ -129,6 +164,7 @@ export default function BroadcastsPage() {
         onClose={() => setIsModalOpen(false)}
         form={form}
         onSubmit={handleCreateBroadcast}
+        isEditMode={!!editingId}
       />
     </div>
   );

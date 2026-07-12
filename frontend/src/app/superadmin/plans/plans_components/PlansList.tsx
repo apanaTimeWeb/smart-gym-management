@@ -1,6 +1,6 @@
 'use client';
 
-import { Check, Edit, Trash2 } from 'lucide-react';
+import { Check, Edit2, Trash2 } from 'lucide-react';
 import { usePlansContext } from '../plans_context/PlansContext';
 
 export default function PlansList() {
@@ -52,16 +52,17 @@ export default function PlansList() {
           <div className="flex gap-2">
             <button 
               onClick={() => openEditModal(plan)}
-              className="flex-1 py-2.5 flex items-center justify-center gap-2 bg-[var(--bg-input)] hover:bg-[var(--primary)] hover:text-white text-[var(--text-primary)] rounded-xl font-medium transition-colors border border-[var(--border)]"
+              className="flex-1 py-2.5 flex items-center justify-center bg-[var(--bg-input)] hover:bg-[var(--primary)] hover:text-white text-[var(--text-primary)] rounded-xl transition-colors border border-[var(--border)]"
+              title="Edit Plan"
             >
-              <Edit size={16} /> Edit
+              <Edit2 size={18} />
             </button>
             <button 
               onClick={() => onDeleteClick(plan.id, plan.name)}
-              className="px-4 py-2.5 flex items-center justify-center bg-[var(--bg-input)] hover:bg-[var(--danger)] hover:text-white text-[var(--text-secondary)] rounded-xl font-medium transition-colors border border-[var(--border)]"
+              className="flex-1 py-2.5 flex items-center justify-center bg-[var(--bg-input)] hover:bg-[var(--danger)] hover:text-white text-[var(--text-secondary)] rounded-xl transition-colors border border-[var(--border)]"
               title="Delete Plan"
             >
-              <Trash2 size={16} />
+              <Trash2 size={18} />
             </button>
           </div>
         </div>

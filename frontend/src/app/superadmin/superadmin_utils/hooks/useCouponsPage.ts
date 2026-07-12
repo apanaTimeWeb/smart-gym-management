@@ -18,13 +18,16 @@ export const useCouponsPage = () => {
     }
   }, [fetchedData]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
   const form = useForm<CouponFormData>({
     resolver: zodResolver(CouponSchema),
     defaultValues: {
       code: '',
-      discountPercentage: undefined,
+      discountType: 'PERCENTAGE',
+      discountValue: undefined,
       maxUses: undefined,
       expiryDate: '',
     },
@@ -38,7 +41,7 @@ export const useCouponsPage = () => {
       {
         successMessage: 'Coupon created successfully',
         onSuccess: (res) => {
-          setCoupons(prev => [res.data, ...prev]);
+          setCoupons(prev => [res, ...prev]);
           setIsModalOpen(false);
           form.reset();
         }
@@ -46,12 +49,75 @@ export const useCouponsPage = () => {
     );
   }, [form, mutate]);
 
-  const activeCoupons = useMemo(() => coupons.filter(c => c.status === 'ACTIVE').length, [coupons]);
+  const handleUpdateCoupon = useCallback(async (id: string, data: Partial<CouponFormData>) => {
+    await mutate(
+      () => superadminApi.coupons.update(id, data),
+      {
+        successMessage: 'Coupon updated successfully',
+        onSuccess: (res) => {
+          setCoupons(prev => prev.map(c => c.id === id ? { ...c, ...res } : c));
+          setIsEditModalOpen(false);
+          setSelectedCoupon(null);
+        }
+      }
+    );
+  }, [mutate]);
+
+  const handleDeleteCoupon = useCallback(async (id: string) => {
+    if (window.confirm('Are you sure you want to delete this coupon?')) {
+      await mutate(
+        () => superadminApi.coupons.delete(id),
+        {
+          successMessage: 'Coupon deleted successfully',
+          onSuccess: () => {
+            setCoupons(prev => prev.filter(c => c.id !== id));
+          }
+        }
+      );
+    }
+  }, [mutate]);
+
+  const handleToggleRestore = useCallback(async (id: string) => {
+    await mutate(
+      () => superadminApi.coupons.update(id, { isDeleted: false }),
+      {
+        successMessage: 'Coupon restored successfully',
+        onSuccess: (res) => {
+          setCoupons(prev => prev.map(c => c.id === id ? { ...c, ...res } : c));
+        }
+      }
+    );
+  }, [mutate]);
+
+  const handleToggleStatus = useCallback(async (id: string, currentStatus: CouponStatus) => {
+    // Only toggle if it's ACTIVE or INACTIVE. Ignore EXPIRED or DEPLETED.
+    if (currentStatus !== 'ACTIVE' && currentStatus !== 'INACTIVE') {
+      toast.error(`Cannot toggle status of ${currentStatus.toLowerCase()} coupon`);
+      return;
+    }
+    const newStatus = currentStatus === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
+    await mutate(
+      () => superadminApi.coupons.update(id, { status: newStatus }),
+      {
+        successMessage: `Coupon marked as ${newStatus}`,
+        onSuccess: (res) => {
+          setCoupons(prev => prev.map(c => c.id === id ? { ...c, ...res } : c));
+        }
+      }
+    );
+  }, [mutate]);
+
+  const activeCoupons = useMemo(() => coupons.filter(c => c.status === 'ACTIVE' && !c.isDeleted).length, [coupons]);
   const totalRedeemed = useMemo(() => coupons.reduce((sum, c) => sum + c.currentUses, 0), [coupons]);
 
   const filteredCoupons = useMemo(() => {
     const lowerQuery = searchQuery.toLowerCase();
-    return coupons.filter(c => c.code.toLowerCase().includes(lowerQuery));
+    const sorted = [...coupons].sort((a, b) => {
+      if (a.isDeleted && !b.isDeleted) return 1;
+      if (!a.isDeleted && b.isDeleted) return -1;
+      return 0;
+    });
+    return sorted.filter(c => c.code.toLowerCase().includes(lowerQuery));
   }, [coupons, searchQuery]);
 
   return {
@@ -67,5 +133,13 @@ export const useCouponsPage = () => {
     isMutating,
     activeCoupons,
     totalRedeemed,
+    isEditModalOpen,
+    setIsEditModalOpen,
+    selectedCoupon,
+    setSelectedCoupon,
+    handleUpdateCoupon,
+    handleDeleteCoupon,
+    handleToggleRestore,
+    handleToggleStatus
   };
 };

@@ -140,16 +140,18 @@ export interface Broadcast {
   sentDate: string | null;
 }
 
-export type CouponStatus = 'ACTIVE' | 'EXPIRED' | 'DEPLETED';
+export type CouponStatus = 'ACTIVE' | 'INACTIVE' | 'EXPIRED' | 'DEPLETED';
 
 export interface Coupon {
   id: string;
   code: string;
-  discountPercentage: number;
+  discountType: 'PERCENTAGE' | 'EXACT';
+  discountValue: number;
   maxUses: number;
   currentUses: number;
   status: CouponStatus;
   expiryDate: string;
+  isDeleted: boolean;
 }
 
 export type AffiliateStatus = 'ACTIVE' | 'INACTIVE';

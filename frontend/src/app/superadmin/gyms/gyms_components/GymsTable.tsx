@@ -1,9 +1,8 @@
 'use client';
 
 import React from 'react';
-import { CheckCircle2, Ban, LogIn, PlayCircle } from 'lucide-react';
+import { CheckCircle2, Ban, LogIn, PlayCircle, Edit2, Mail, Trash2 } from 'lucide-react';
 import { useGymsContext } from '../gyms_context/GymsContext';
-import GymActionDropdown from './GymActionDropdown';
 import GymEditModal from './GymEditModal';
 import GymEmailModal from './GymEmailModal';
 import toast from 'react-hot-toast';
@@ -109,12 +108,27 @@ export default function GymsTable() {
                   >
                     {gym.status === 'SUSPENDED' ? <PlayCircle className="w-5 h-5" /> : <Ban className="w-5 h-5" />}
                   </button>
-                  <GymActionDropdown 
-                    gymName={gym.name} 
-                    onEdit={() => openEditModal(gym)}
-                    onEmail={() => openEmailModal(gym)}
-                    onDelete={() => handleDelete(gym.id, gym.name)}
-                  />
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); openEmailModal(gym); }}
+                    className="p-2 text-[var(--text-secondary)] hover:bg-[var(--info-bg)] hover:text-[var(--info)] rounded-lg transition-colors"
+                    title="Email Owner"
+                  >
+                    <Mail className="w-5 h-5" />
+                  </button>
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); openEditModal(gym); }}
+                    className="p-2 text-[var(--text-secondary)] hover:bg-[var(--primary-subtle)] hover:text-[var(--primary)] rounded-lg transition-colors"
+                    title="Edit Gym"
+                  >
+                    <Edit2 className="w-5 h-5" />
+                  </button>
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); handleDelete(gym.id, gym.name); }}
+                    className="p-2 text-[var(--text-secondary)] hover:bg-[var(--danger)]/10 hover:text-[var(--danger)] rounded-lg transition-colors"
+                    title="Delete Gym"
+                  >
+                    <Trash2 className="w-5 h-5" />
+                  </button>
                 </div>
               </td>
             </tr>

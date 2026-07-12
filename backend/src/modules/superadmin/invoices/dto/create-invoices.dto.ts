@@ -25,5 +25,9 @@ export class CreateSaaSInvoiceDto {
   @IsOptional()
   planName?: string;
 
+  @IsString()
+  @IsOptional()
+  couponCode?: string;
+
 
 }

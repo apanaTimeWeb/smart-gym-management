@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Users, Plus, Search, IndianRupee } from 'lucide-react';
+import { Users, Plus, Search, IndianRupee, Pencil, Trash2, Power, Check } from 'lucide-react';
 import { AffiliateStatus } from '@/app/superadmin/superadmin_types/superadmin_types';
 import { useAffiliatesPage } from '../superadmin_utils/hooks/useAffiliatesPage';
 import { SuperadminAffiliateModal } from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliateModal';
@@ -14,6 +14,7 @@ const getStatusBadge = (status: AffiliateStatus) => {
     case 'INACTIVE':
       return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#1E1E2E] text-[var(--text-secondary)]">INACTIVE</span>;
     default:
+
       return null;
   }
 };
@@ -27,16 +28,18 @@ export default function AffiliatesPage() {
     setIsModalOpen,
     form,
     handleAddAffiliate,
+    handleEditAffiliate,
+    handleToggleAffiliateStatus,
+    handleDeleteAffiliate,
+    openEditModal,
+    editingAffiliate,
+    setEditingAffiliate,
     totalAffiliates,
     totalCommission
   , loading, error} = useAffiliatesPage();
 
   if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]">Loading...</div>;
   if (error) return <div className="p-8 text-center text-[var(--danger)]">Error loading data.</div>;
-
-  const handleRowClick = (name: string) => {
-    toast(`Clicked on affiliate: ${name}`);
-  };
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto">
@@ -105,14 +108,14 @@ export default function AffiliatesPage() {
                 <th className="px-6 py-4 text-[12px] font-semibold text-[var(--text-secondary)] uppercase tracking-wider">Total Referred</th>
                 <th className="px-6 py-4 text-[12px] font-semibold text-[var(--text-secondary)] uppercase tracking-wider">Commission Earned</th>
                 <th className="px-6 py-4 text-[12px] font-semibold text-[var(--text-secondary)] uppercase tracking-wider">Status</th>
+                <th className="px-6 py-4 text-[12px] font-semibold text-[var(--text-secondary)] uppercase tracking-wider text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--border)]">
               {affiliates.map((aff) => (
                 <tr 
                   key={aff.id} 
-                  className="hover:bg-[var(--primary)]/5 transition-colors group cursor-pointer"
-                  onClick={() => handleRowClick(aff.name)}
+                  className="hover:bg-[var(--primary)]/5 transition-colors group"
                 >
                   <td className="px-6 py-4">
                     <div className="flex flex-col">
@@ -132,11 +135,36 @@ export default function AffiliatesPage() {
                   <td className="px-6 py-4 whitespace-nowrap">
                     {getStatusBadge(aff.status)}
                   </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-[14px]">
+                    <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button 
+                        onClick={() => handleToggleAffiliateStatus(aff.id, aff.status)}
+                        className="p-1.5 text-[var(--text-secondary)] hover:text-[var(--primary)] transition-colors"
+                        title={aff.status === 'ACTIVE' ? "Suspend Affiliate" : "Activate Affiliate"}
+                      >
+                        {aff.status === 'ACTIVE' ? <Power className="w-4 h-4" /> : <Check className="w-4 h-4" />}
+                      </button>
+                      <button 
+                        onClick={() => openEditModal(aff)}
+                        className="p-1.5 text-[var(--text-secondary)] hover:text-[var(--info)] transition-colors"
+                        title="Edit Affiliate"
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </button>
+                      <button 
+                        onClick={() => handleDeleteAffiliate(aff.id)}
+                        className="p-1.5 text-[var(--text-secondary)] hover:text-[var(--danger)] transition-colors"
+                        title="Delete Affiliate"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               ))}
               {affiliates.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-[var(--text-secondary)]">
+                  <td colSpan={6} className="px-6 py-12 text-center text-[var(--text-secondary)]">
                     <Users className="w-12 h-12 mx-auto mb-3 opacity-20" />
                     <p>No affiliates found.</p>
                   </td>
@@ -149,9 +177,14 @@ export default function AffiliatesPage() {
 
       <SuperadminAffiliateModal 
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={() => {
+          setIsModalOpen(false);
+          setEditingAffiliate(null);
+          form.reset({ name: '', email: '', referralCode: '' });
+        }}
         form={form}
-        onSubmit={handleAddAffiliate}
+        onSubmit={editingAffiliate ? handleEditAffiliate : handleAddAffiliate}
+        isEdit={!!editingAffiliate}
       />
     </div>
   );
