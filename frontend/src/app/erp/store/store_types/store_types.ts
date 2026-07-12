@@ -41,6 +41,10 @@ export interface StoreContextType {
  orderItems: OrderItem[];
  orderMethod: string;
  setOrderMethod: (method: string) => void;
+ customerPhone: string;
+ setCustomerPhone: (p: string) => void;
+ sendViaWhatsapp: boolean;
+ setSendViaWhatsapp: (s: boolean) => void;
  
  hideToast: () => void;
  setPrintData: (data: ErpReceiptData | null) => void;

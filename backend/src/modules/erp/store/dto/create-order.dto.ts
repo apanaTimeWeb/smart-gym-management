@@ -16,6 +16,14 @@ export class CreateOrderDto {
   @IsOptional()
   notes?: string;
 
+  @ApiPropertyOptional({
+    description: 'WhatsApp number for the bill',
+    example: '+919999999999',
+  })
+  @IsString()
+  @IsOptional()
+  customerPhone?: string;
+
   @ApiProperty({ type: [OrderItemDto] })
   @IsArray()
   @ValidateNested({ each: true })

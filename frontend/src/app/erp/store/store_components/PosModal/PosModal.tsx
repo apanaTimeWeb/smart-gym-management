@@ -10,6 +10,7 @@ export default function PosModal() {
  products, 
  orderItems, addToOrder, removeFromOrder, orderTotal, 
  orderMethod, setOrderMethod, 
+ customerPhone, setCustomerPhone, sendViaWhatsapp, setSendViaWhatsapp,
  saving, placeOrder 
  } = useStoreContext();
 
@@ -74,6 +75,7 @@ export default function PosModal() {
  <span className="font-semibold text-[var(--store-text-primary)]">Total</span>
  <span className="font-bold text-lg text-[var(--success)] dark:text-[var(--success)]">{formatCurrency(orderTotal)}</span>
  </div>
+ 
  <select 
  value={orderMethod} 
  onChange={e => setOrderMethod(e.target.value)} 
@@ -81,13 +83,34 @@ export default function PosModal() {
  >
  {PAYMENT_METHODS.map(m => <option key={m}>{m}</option>)}
  </select>
+
+ <label className="flex items-center gap-2 mb-3 cursor-pointer text-sm text-[var(--store-text-primary)] font-medium">
+   <input 
+     type="checkbox" 
+     checked={sendViaWhatsapp}
+     onChange={e => setSendViaWhatsapp(e.target.checked)}
+     className="w-4 h-4 rounded border-[var(--store-border)] accent-[var(--store-highlight)]"
+   />
+   Send bill via WhatsApp
+ </label>
+
+ {sendViaWhatsapp && (
+   <input 
+     type="tel"
+     placeholder="WhatsApp Number (e.g. +919999999999)"
+     value={customerPhone}
+     onChange={e => setCustomerPhone(e.target.value)}
+     className="w-full border border-[var(--store-border)] rounded-xl px-4 py-2.5 text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--store-bg-input)] text-[var(--store-text-primary)]"
+   />
+ )}
+
  <button 
  onClick={placeOrder} 
- disabled={saving || orderItems.length === 0} 
+ disabled={saving || orderItems.length === 0 || (sendViaWhatsapp && !customerPhone)} 
  className="w-full py-3 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 disabled:opacity-70 transition-colors" 
  style={{ background: 'var(--store-highlight)' }}
  >
- {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><Printer size={15} /> Complete & Print</>}
+ {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : (sendViaWhatsapp ? 'Complete & Send WhatsApp' : <><Printer size={15} /> Complete & Print</>)}
  </button>
  </div>
  </div>

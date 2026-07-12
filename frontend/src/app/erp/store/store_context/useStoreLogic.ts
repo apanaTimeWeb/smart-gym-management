@@ -33,6 +33,8 @@ export function useStoreLogic(initialData?: any): StoreContextType {
  const [showOrderModal, setShowOrderModal] = useState(false);
  const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
  const [orderMethod, setOrderMethod] = useState('Cash');
+ const [customerPhone, setCustomerPhone] = useState('');
+ const [sendViaWhatsapp, setSendViaWhatsapp] = useState(false);
 
  const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
  const hideToast = useCallback(() => setToast(null), []);
@@ -149,32 +151,38 @@ export function useStoreLogic(initialData?: any): StoreContextType {
  try {
  const res = await storeApi.createOrder({ 
  items: orderItems.map(i => ({ productId: i.productId, qty: i.qty })), 
- method: orderMethod 
+ method: orderMethod,
+ ...(sendViaWhatsapp && customerPhone ? { customerPhone } : {})
  }) as { data: Order, message: string };
  
  showToast(res.message, 'success');
  
-    setPrintData({
-      gymName: GYM_DETAILS.name, 
-      gymPhone: GYM_DETAILS.phone,
-      receiptNo: `ORD-${res.data.id}`, 
- date: new Date().toLocaleDateString('en-IN'),
- customerName: 'Walk-in Customer',
- items: orderItems.map(i => ({ name: i.name, price: i.price, amount: i.price * i.qty })),
- total: orderTotal, 
- paymentMethod: orderMethod,
- });
+     setPrintData({
+       gymName: GYM_DETAILS.name, 
+       gymPhone: GYM_DETAILS.phone,
+       receiptNo: `ORD-${res.data.id}`, 
+       date: new Date().toLocaleDateString('en-IN'),
+       customerName: sendViaWhatsapp && customerPhone ? customerPhone : 'Walk-in Customer',
+       items: orderItems.map(i => ({ name: i.name, price: i.price, amount: i.price * i.qty })),
+       total: orderTotal, 
+       paymentMethod: orderMethod,
+     });
  
- setTimeout(() => window.print(), 100);
- setOrderItems([]); 
- setShowOrderModal(false); 
- await loadAll();
- } catch (err) { 
- showToast((err as Error).message, 'error'); 
- } finally { 
- setSaving(false); 
- }
- }, [orderItems, orderMethod, orderTotal, loadAll, showToast]);
+     if (!sendViaWhatsapp) {
+       setTimeout(() => window.print(), 100);
+     }
+     
+     setOrderItems([]); 
+     setCustomerPhone('');
+     setSendViaWhatsapp(false);
+     setShowOrderModal(false); 
+     await loadAll();
+   } catch (err) { 
+     showToast((err as Error).message, 'error'); 
+   } finally { 
+     setSaving(false); 
+   }
+ }, [orderItems, orderMethod, orderTotal, loadAll, showToast, sendViaWhatsapp, customerPhone]);
 
   return {
     tab, setTab,
@@ -183,6 +191,7 @@ export function useStoreLogic(initialData?: any): StoreContextType {
     currentPage, setCurrentPage,
     showProductModal, setShowProductModal, editProductId, editProductData,
     showOrderModal, setShowOrderModal, orderItems, orderMethod, setOrderMethod,
+    customerPhone, setCustomerPhone, sendViaWhatsapp, setSendViaWhatsapp,
     hideToast, setPrintData, loadAll,
  openAddProduct, openEditProduct, saveProduct, deleteProduct,
  addToOrder, removeFromOrder, orderTotal, placeOrder
