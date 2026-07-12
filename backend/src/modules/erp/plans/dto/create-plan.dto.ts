@@ -34,12 +34,17 @@ export class CreatePlanDto {
   @IsNumber()
   price12Month: number;
 
+  @ApiProperty()
+  @IsNumber()
+  priceCustom: number;
+
   @ApiProperty({ type: [String] })
   @IsArray()
   @IsString({ each: true })
   features: string[];
 
   @ApiProperty({ required: false })
+  @IsOptional()
   @IsBoolean()
   isActive: boolean;
 }

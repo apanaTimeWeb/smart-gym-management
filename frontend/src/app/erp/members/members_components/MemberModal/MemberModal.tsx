@@ -37,6 +37,7 @@ export default function MemberModal() {
 
   const watchPlanId = watch('planId') as number;
   const watchBillingCycle = watch('billingCycle') as string;
+  const watchCustomDays = watch('customDays') as number;
 
  if (!showAddModal) return null;
 
@@ -127,11 +128,18 @@ export default function MemberModal() {
  )}
  </div>
  {watchPlanId && (
-            <div className="bg-[var(--warning-bg)] rounded-xl p-3 text-sm border border-[var(--warning)]/30">
-              <span className="font-semibold text-[var(--warning)]">Price:</span> 
-              <span className="text-[var(--warning)] ml-1">
- {formatCurrency(getPriceForCycle(plans.find(p => p.id === Number(watchPlanId)), watchBillingCycle))}
+            <div className="bg-[var(--warning-bg)] rounded-xl p-3 text-sm border border-[var(--warning)]/30 flex justify-between items-center">
+              <div>
+                <span className="font-semibold text-[var(--warning)]">Calculated Price:</span> 
+                <span className="text-[var(--warning)] ml-1 font-bold">
+ {formatCurrency(getPriceForCycle(plans.find(p => p.id === Number(watchPlanId)), watchBillingCycle, Number(watchCustomDays) || 0))}
  </span>
+              </div>
+              {watchBillingCycle === 'CUSTOM' && (
+                <div className="text-[var(--warning)] text-xs opacity-80">
+                  (Per Day: {formatCurrency((plans.find(p => p.id === Number(watchPlanId)) as any)?.priceCustom || 0)} × {watchCustomDays || 0} days)
+                </div>
+              )}
  </div>
  )}
  <div className="flex gap-3 pt-2">

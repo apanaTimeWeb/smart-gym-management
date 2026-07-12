@@ -9,6 +9,7 @@ export const PlanSchema = z.object({
   price3Month: z.string().refine(val => !isNaN(Number(val)) && Number(val) > 0, 'Valid price required'),
   price6Month: z.string().refine(val => !isNaN(Number(val)) && Number(val) > 0, 'Valid price required'),
   price12Month: z.string().refine(val => !isNaN(Number(val)) && Number(val) > 0, 'Valid price required'),
+  priceCustom: z.string().refine(val => !isNaN(Number(val)) && Number(val) > 0, 'Valid price required'),
   features: z.string().min(2, 'Features are required')
 });
 export type PlanFormValues = z.infer<typeof PlanSchema>;
@@ -20,6 +21,7 @@ export const EMPTY_PLAN_FORM: PlanFormValues = {
  price3Month: '', 
  price6Month: '', 
  price12Month: '', 
+ priceCustom: '', 
  features: '' 
 };
 
