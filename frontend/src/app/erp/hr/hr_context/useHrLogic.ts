@@ -75,7 +75,7 @@ export function useHrLogic(): HrContextType {
  const saveStaff = useCallback(async (data: any) => {
  setSaving(true);
  try {
- const payload = { ...data, salary: Number(data.salary), joinDate: new Date(data.joinDate).toISOString() };
+ const payload = { ...data, salary: Number(data.salary), joinDate: new Date(data.joinDate).toISOString(), isActive: true };
  if (editId) { 
  const res = await hrApi.updateStaff(editId, payload); 
  showToast((res as any).message, 'success'); 
