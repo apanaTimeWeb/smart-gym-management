@@ -24,18 +24,18 @@ export default function SaaSInvoicesPage() {
   if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]">Loading...</div>;
   if (error || !data) return <div className="p-8 text-center text-[var(--danger)]">Error loading data.</div>;
 
-  const { invoices: DUMMY_INVOICES = [], tenants: DUMMY_TENANTS = [] } = data || {};
+  const { invoices = [], tenants = [] } = data || {};
 
-  const filteredGymsForDropdown = DUMMY_TENANTS.filter(t => t.name?.toLowerCase().includes(gymSearchTerm.toLowerCase()));
-  const selectedGym = DUMMY_TENANTS.find(t => t.id === selectedGymId);
+  const filteredGymsForDropdown = tenants.filter(t => t.name?.toLowerCase().includes(gymSearchTerm.toLowerCase()));
+  const selectedGym = tenants.find(t => t.id === selectedGymId);
 
-  const filtered = DUMMY_INVOICES.filter(i => 
+  const filtered = invoices.filter(i => 
     i.tenantName?.toLowerCase().includes(search.toLowerCase()) || 
     i.id?.toLowerCase().includes(search.toLowerCase())
   );
 
-  const totalRevenue = DUMMY_INVOICES.filter(i => i.status === 'PAID').reduce((acc, curr) => acc + curr.amount, 0);
-  const failedRevenue = DUMMY_INVOICES.filter(i => i.status === 'FAILED').reduce((acc, curr) => acc + curr.amount, 0);
+  const totalRevenue = invoices.filter(i => i.status === 'PAID').reduce((acc, curr) => acc + curr.amount, 0);
+  const failedRevenue = invoices.filter(i => i.status === 'FAILED').reduce((acc, curr) => acc + curr.amount, 0);
 
   return (
     <div className="space-y-6 relative">
