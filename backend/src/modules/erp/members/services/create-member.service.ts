@@ -1,6 +1,6 @@
 import { Injectable, Logger, Inject } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
-import { Request } from 'express';
+import type { Request } from 'express';
 import { MembersRepository } from '@/modules/erp/members/members.repository';
 import { CreateMemberDto } from '@/modules/erp/members/dto/create-member.dto';
 import { DuplicateEmailException } from '@/modules/erp/members/members.exceptions';

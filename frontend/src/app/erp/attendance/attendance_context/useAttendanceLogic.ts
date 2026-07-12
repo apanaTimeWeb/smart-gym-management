@@ -64,9 +64,9 @@ export function useAttendanceLogic(): AttendanceContextType {
       const payload: any = { type: data.type, date: dateTime.toISOString(), checkIn: dateTime.toISOString() };
       
       if (data.type === 'MEMBER') {
-        payload.memberId = Number(data.memberId);
+        payload.memberId = data.memberId;
       } else {
-        payload.staffId = Number(data.staffId);
+        payload.staffId = data.staffId;
       }
  
  const res = await attendanceApi.mark(payload);
