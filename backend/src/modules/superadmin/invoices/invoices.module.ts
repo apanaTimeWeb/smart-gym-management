@@ -10,9 +10,10 @@ import { FindInvoicesService } from './services/find-invoices.service';
 import { UpdateInvoicesService } from './services/update-invoices.service';
 import { DeleteInvoicesService } from './services/delete-invoices.service';
 import { InvoicesRepository } from './invoices.repository';
+import { PlansModule } from '../plans/plans.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([SaaSInvoice])],
+  imports: [TypeOrmModule.forFeature([SaaSInvoice]), PlansModule],
   controllers: [CreateInvoicesController, FindInvoicesController, UpdateInvoicesController, DeleteInvoicesController],
   providers: [CreateInvoicesService, FindInvoicesService, UpdateInvoicesService, DeleteInvoicesService, InvoicesRepository],
 })

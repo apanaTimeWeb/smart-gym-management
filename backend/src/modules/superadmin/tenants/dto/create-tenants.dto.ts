@@ -1,5 +1,5 @@
-import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray, IsEnum } from 'class-validator';
-import { SaaSPlanTier, TenantStatus } from '../tenants.interfaces';
+import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString, IsArray } from 'class-validator';
+import { TenantStatus } from '../tenants.interfaces';
 
 export class CreateTenantDto {
   @IsString()
@@ -19,7 +19,7 @@ export class CreateTenantDto {
   status?: TenantStatus;
 
   @IsString()
-  plan: SaaSPlanTier;
+  plan: string;
 
   @IsDateString()
   @IsNumber()

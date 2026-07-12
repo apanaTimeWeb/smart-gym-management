@@ -58,13 +58,16 @@ export default function GymsTable() {
                 <p className="text-[var(--text-secondary)]">{gym.ownerName}</p>
                 <p className="text-xs text-[var(--text-disabled)] mt-1">{gym.adminEmail}</p>
               </td>
-              <td className="p-4">
-                <span className={`text-xs px-2 py-1 rounded-full font-medium ${
-                  gym.plan === 'ENTERPRISE' ? 'bg-[var(--purple-bg)] text-[var(--purple)] border border-[var(--purple)]' : 
-                  gym.plan === 'PRO' ? 'bg-[var(--primary-subtle)] text-[var(--primary)] border border-[var(--primary)]' : 
-                  'bg-[var(--text-disabled)]/10 text-[var(--text-secondary)] border border-[var(--text-disabled)]/20'
-                }`}>
-                  {gym.plan}
+              <td className="px-5 py-4">
+                <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[12px] font-semibold tracking-wide
+                  ${
+                    gym.plan?.toUpperCase() === 'ENTERPRISE' ? 'bg-[var(--purple-bg)] text-[var(--purple)] border border-[var(--purple)]' : 
+                    gym.plan?.toUpperCase() === 'PRO' ? 'bg-[var(--primary-light)] text-[var(--primary)] border border-[var(--primary)]' : 
+                    gym.plan?.toUpperCase() === 'STARTER' || gym.plan?.toUpperCase() === 'BASIC' ? 'bg-[var(--success-bg)] text-[var(--success)] border border-[var(--success)]' :
+                    'bg-[var(--bg-input)] text-[var(--text-secondary)] border border-[var(--border)]'
+                  }
+                `}>
+                  {gym.plan?.toUpperCase() || 'UNKNOWN'}
                 </span>
               </td>
               <td className="p-4 text-[var(--text-secondary)] font-medium">

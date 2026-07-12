@@ -7,18 +7,22 @@ import { z } from 'zod';
 import { X } from 'lucide-react';
 import { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
 import { useGymsContext } from '../gyms_context/GymsContext';
+import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
+import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
+import { SubscriptionPlan } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 const gymEditSchema = z.object({
   name: z.string().min(1, 'Gym Name is required'),
   ownerName: z.string().min(1, 'Owner Name is required'),
   adminEmail: z.string().email('Invalid email address'),
-  plan: z.enum(['STARTER', 'PRO', 'ENTERPRISE']),
+  plan: z.string().min(1, 'Please select a plan'),
 });
 
 type GymEditFormValues = z.infer<typeof gymEditSchema>;
 
 export default function GymEditModal() {
   const { isEditModalOpen, closeEditModal, selectedGym, handleEditGym } = useGymsContext();
+  const { data: plans, loading: loadingPlans } = useSuperadminData<SubscriptionPlan[]>(SuperadminUrlConfig.BACKEND_API.PLANS_BASE);
 
   const {
     register,
@@ -36,7 +40,7 @@ export default function GymEditModal() {
         name: selectedGym.name,
         ownerName: selectedGym.ownerName,
         adminEmail: selectedGym.adminEmail,
-        plan: selectedGym.plan as 'STARTER' | 'PRO' | 'ENTERPRISE',
+        plan: selectedGym.plan,
       });
     }
   }, [selectedGym, isEditModalOpen, reset]);
@@ -97,9 +101,16 @@ export default function GymEditModal() {
               {...register('plan')}
               className="w-full bg-[var(--bg-input)] border border-[var(--border)] rounded-lg px-[14px] py-[10px] text-[14px] text-[var(--text-primary)] focus:border-[var(--border-focus)] focus:outline-none transition-colors"
             >
-              <option value="STARTER">Starter</option>
-              <option value="PRO">Pro</option>
-              <option value="ENTERPRISE">Enterprise</option>
+              <option value="">Select a plan</option>
+              {loadingPlans ? (
+                <option disabled>Loading plans...</option>
+              ) : (
+                plans?.map((p) => (
+                  <option key={p.id} value={p.name}>
+                    {p.name} (${Number(p.priceMonthly).toFixed(2)}/mo)
+                  </option>
+                ))
+              )}
             </select>
             {errors.plan && <p className="text-[12px] text-[var(--danger)] mt-1">{errors.plan.message}</p>}
           </div>

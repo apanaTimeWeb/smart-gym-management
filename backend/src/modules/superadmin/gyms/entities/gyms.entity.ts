@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
-import { SaaSPlanTier, TenantStatus } from '../gyms.interfaces';
+import { TenantStatus } from '../gyms.interfaces';
 
 @Entity('gyms')
 export class Tenant {
@@ -22,7 +22,7 @@ export class Tenant {
   status: TenantStatus;
 
   @Column({ type: 'varchar' })
-  plan: SaaSPlanTier;
+  plan: string;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

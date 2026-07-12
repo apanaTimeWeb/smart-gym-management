@@ -15,5 +15,6 @@ import { PlansRepository } from './plans.repository';
   imports: [TypeOrmModule.forFeature([SubscriptionPlan])],
   controllers: [CreatePlansController, FindPlansController, UpdatePlansController, DeletePlansController],
   providers: [CreatePlansService, FindPlansService, UpdatePlansService, DeletePlansService, PlansRepository],
+  exports: [PlansRepository],
 })
 export class PlansModule {}

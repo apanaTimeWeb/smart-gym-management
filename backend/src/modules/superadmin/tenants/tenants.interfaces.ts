@@ -1,8 +1,4 @@
-export enum SaaSPlanTier {
-  BASIC = 'BASIC',
-  PRO = 'PRO',
-  ENTERPRISE = 'ENTERPRISE'
-}
+// Removed SaaSPlanTier enum
 export enum TenantStatus {
   ACTIVE = 'ACTIVE',
   SUSPENDED = 'SUSPENDED',
@@ -16,7 +12,7 @@ export interface ITenant {
   adminEmail: string;
   phone: string;
   status: TenantStatus;
-  plan: SaaSPlanTier;
+  plan: string;
   createdAt: Date;
   memberCount: number;
   monthlyRevenue: number;

@@ -5,7 +5,7 @@ export const OnboardGymSchema = z.object({
   ownerName: z.string().min(2, 'Owner name is required'),
   adminEmail: z.string().email('Invalid email address'),
   phone: z.string().min(10, 'Valid phone number required'),
-  plan: z.enum(['BASIC', 'PRO', 'ENTERPRISE']),
+  plan: z.string().min(1, 'Please select a plan'),
   temporaryPassword: z.string().min(8, 'Password must be at least 8 characters')
 });
 
