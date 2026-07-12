@@ -146,9 +146,10 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **The Rule:** Whenever a module is created or finalized, generate a `[module-name]_collection.json` file directly inside the module's folder (e.g., `modules/auth/auth_collection.json`). 
 * **Why:** This ensures that any developer (or human QA) can instantly import this JSON into Postman and manually test the module's endpoints without having to manually construct the headers, payloads, or figure out the routes. It provides immediate, highly-accessible testing verification.
 
-## 17. Standardized Pagination & Filtering (Enterprise Scale)
-* **The Rule:** Never write ad-hoc pagination for list endpoints. Always use a standardized wrapper or query dto (e.g., `limit/offset` or `cursor` based pagination) across all controllers.
-* **Why:** If the AI is asked to add pagination to `MemberAnalytics`, it should follow a global standard rather than inventing a new query format just for that feature.
+## 17. Standardized Pagination, Sorting & Filtering (Enterprise Scale)
+* **The Rule:** Any endpoint that returns tabular or list data (e.g., Orders, Members) MUST ALWAYS support pagination, sorting (e.g., `sortOrder=ASC/DESC`), and filtering (e.g., `startDate`, `endDate`, `search`). Never return raw, unpaginated lists if the dataset can grow large.
+* **Implementation:** Always use a standardized wrapper or query DTO (e.g., `limit/offset` based pagination extended with filtering/sorting properties) across all controllers.
+* **Why:** Returning thousands of unfiltered rows crashes browsers. If the AI is asked to add an endpoint for `MemberAnalytics` or `Orders`, it must proactively build in sorting and date filtering capabilities so the frontend can display robust table controls.
 
 ## 18. Strict ES Modules (No `require`)
 *(Applicable to JavaScript/TypeScript Frameworks)*

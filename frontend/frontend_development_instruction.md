@@ -112,4 +112,7 @@ Whenever displaying action buttons in data tables, lists, or dense UI components
 Whenever the user performs an action that sends a proof or document (like sending a bill, receipt, or alert), the UI MUST present an option to choose between at least **two mediums** (e.g., WhatsApp vs. Email). 
 * **Implementation:** Use rounded Radio Buttons (`<input type="radio">`) so that the user can visually see both options but can only select one preferred medium at a time. Do NOT use checkboxes if only one medium should be selected. The frontend must then pass the selected medium back to the API payload.
 
+30. **Mandatory Table Controls (Pagination, Sorting, & Filtering)**:
+Whenever displaying tabular data (like Orders, Members, or Transactions), you MUST always implement pagination, column sorting (e.g., Sort by Date ASC/DESC), and relevant filtering (e.g., Date Range pickers, status dropdowns, or search boxes) directly above the table. It is unacceptable to display a massive raw table without giving the user these enterprise-grade data management controls.
+
 Think step-by-step. Create a detailed implementation plan first so I can review it, and then execute it perfectly without breaking existing data flows!
