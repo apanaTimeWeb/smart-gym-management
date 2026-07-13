@@ -34,12 +34,12 @@ export default function BroadcastsClient() {
     openEditModal,
     openCreateModal,
     editingId,
-    loading, 
-    error
+    fetchState,
+    error,
   } = useBroadcastsPage();
 
-  if (loading) return <div className="p-8 text-center text-disabled">Loading...</div>;
-  if (error) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
+  if (fetchState === 'loading') return <div className="p-8 text-center text-disabled animate-pulse">Loading...</div>;
+  if (fetchState === 'error' || error) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
 
   const handleRowClick = (title: string) => {
     toast(`Clicked on broadcast: ${title}`);

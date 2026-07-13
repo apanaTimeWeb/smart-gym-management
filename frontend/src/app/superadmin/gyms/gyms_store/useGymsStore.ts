@@ -13,9 +13,7 @@ import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import { apiFetch } from '@/lib/api';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 
-import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
-
-export type FetchState = 'idle' | 'loading' | 'success' | 'error';
+import type { Tenant, FetchState } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 interface GymsState {
   // Data State
@@ -122,7 +120,7 @@ export const useGymsStore = create<GymsState>((set, get) => ({
       
       const { gyms } = get();
       if (gyms) {
-        set({ gyms: gyms.map(gym => gym.id === id ? { ...gym, status: newStatus as any } : gym) });
+        set({ gyms: gyms.map(gym => gym.id === id ? { ...gym, status: newStatus as import('@/app/superadmin/superadmin_types/superadmin_types').TenantStatus } : gym) });
       }
     } catch (error: unknown) {
       const errMsg = error instanceof Error ? error.message : String(error) || `Failed to update status for ${name}`;

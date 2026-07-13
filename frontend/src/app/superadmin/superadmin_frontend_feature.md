@@ -7,11 +7,11 @@ The Master Control Panel for the Multi-Tenant SaaS platform. Strictly isolated f
 
 ### State Management Decision (Rule 58)
 - **Zustand** (`gyms_store/useGymsStore.ts`): All async API data for the Gyms module (the most complex module with full CRUD + modals).
-- **React Context** (`plans_context/PlansContext.tsx`): Subscription Plans module — synchronous modal state + pessimistic cache mutations via `useSuperadminData.mutate`.
+- **Zustand** (`plans_store/usePlansStore.ts`): Subscription Plans module — all async API data, modal state, and CRUD actions. `plans_context/` is intentionally empty per Rule 58.
 - **Local `useState`**: All other pages (Tickets, Invoices, Coupons, Affiliates, Broadcasts, etc.) use local state via `useSuperadminData` hook or direct `superadminApi` calls.
 
 ### Data Fetching
-- `superadmin_utils/useSuperadminData.ts` — Generic hook wrapping `apiFetch`. Returns `{ data, loading, error, mutate }`. Used by simpler pages.
+- `superadmin_utils/useSuperadminData.ts` — Generic hook wrapping `apiFetch`. Returns `{ data, fetchState, error, mutate }`. Used by simpler pages.
 - `superadmin_api/superadmin_api.ts` — Centralized typed API client for all 16 modules. Imports `apiFetch` from `src/lib/api.ts`.
 - `superadmin_url_config.ts` — Single source of truth for all page routes and backend API paths.
 
@@ -51,9 +51,9 @@ superadmin/
 │   │   ├── SuperadminSidebar.tsx       # Collapsible sidebar with nav groups
 │   │   └── SuperadminHeader.tsx        # Top header with search, theme toggle, profile dropdown
 │   ├── DashboardClient/
-│   │   └── DashboardClient.tsx         # SaaS KPI cards + ApexCharts MRR area chart + recent onboards
+│   │   └── DashboardView.tsx           # SaaS KPI cards + ApexCharts MRR area chart + recent onboards
 │   ├── JobsClient/
-│   │   └── JobsClient.tsx              # BullMQ background jobs table
+│   │   └── JobsView.tsx                # BullMQ background jobs table + metrics cards
 │   └── AuditLogsClient/
 │       └── AuditLogsClient.tsx         # Global audit logs table with URL-synced pagination + debounced search
 │
@@ -76,11 +76,12 @@ superadmin/
 │       ├── GymDeleteModal/             # Type-to-confirm delete modal
 │       └── AddGymForm/                 # Multi-field onboarding form
 │
-├── plans/                              # React Context (modal state + pessimistic cache)
+├── plans/                              # Zustand store (usePlansStore) — Rule 58
 │   ├── page.tsx
 │   ├── PlansClient.tsx
-│   ├── plans_context/
-│   │   └── PlansContext.tsx            # Context: plans[], modal state, CRUD handlers
+│   ├── plans_store/
+│   │   └── usePlansStore.ts            # Zustand: plans[], fetchState, modal state, CRUD actions
+│   ├── plans_context/                  # Intentionally empty — Zustand used instead (Rule 58)
 │   └── plans_components/
 │       ├── PlansList.tsx               # Grid of plan cards
 │       ├── PlanCreateModal.tsx         # RHF + Zod create form

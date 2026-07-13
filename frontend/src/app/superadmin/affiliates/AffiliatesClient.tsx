@@ -36,11 +36,13 @@ export default function AffiliatesClient() {
     editingAffiliate,
     setEditingAffiliate,
     totalAffiliates,
-    totalCommission
-  , loading, error} = useAffiliatesPage();
+    totalCommission,
+    fetchState,
+    error,
+  } = useAffiliatesPage();
 
-  if (loading) return <div className="p-8 text-center text-disabled">Loading...</div>;
-  if (error) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
+  if (fetchState === 'loading') return <div className="p-8 text-center text-disabled animate-pulse">Loading...</div>;
+  if (fetchState === 'error' || error) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto">

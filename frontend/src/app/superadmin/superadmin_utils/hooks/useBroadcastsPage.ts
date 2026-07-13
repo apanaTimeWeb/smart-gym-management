@@ -132,7 +132,7 @@ export const useBroadcastsPage = () => {
   }, [broadcasts, searchQuery]);
 
   return {
-    loading,
+    fetchState,
     error,
     broadcasts: filteredBroadcasts,
     searchQuery,

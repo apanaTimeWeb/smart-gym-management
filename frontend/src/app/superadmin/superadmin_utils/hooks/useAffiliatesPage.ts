@@ -114,7 +114,7 @@ export const useAffiliatesPage = () => {
   }, [affiliates, searchQuery]);
 
   return {
-    loading,
+    fetchState,
     error,
     affiliates: filteredAffiliates,
     searchQuery,

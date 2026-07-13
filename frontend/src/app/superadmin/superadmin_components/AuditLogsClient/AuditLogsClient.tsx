@@ -8,6 +8,8 @@ import { GlobalAuditLog } from '@/app/superadmin/superadmin_types/superadmin_typ
 import { useDebounce } from '@/app/superadmin/superadmin_utils/useDebounce';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 
+const PAGE_SIZE = 10;
+
 const FALLBACK_LOGS: GlobalAuditLog[] = [
   { id: 'gal-1', actorName: 'John Admin', actorRole: 'SUPERADMIN', action: 'CREATE_TENANT', targetResource: 'Iron Forge Fitness', timestamp: '2026-07-10T10:00:00Z', ipAddress: '192.168.1.1' },
   { id: 'gal-2', actorName: 'Sarah Support', actorRole: 'SUPPORT_AGENT', action: 'RESET_TENANT_PASSWORD', targetResource: 'Vitality Studio', timestamp: '2026-07-11T11:30:00Z', ipAddress: '192.168.1.15' },
@@ -28,7 +30,8 @@ export default function AuditLogsClient() {
   const [searchInput, setSearchInput] = useState(searchParam || '');
   const debouncedSearch = useDebounce(searchInput, 300);
 
-  // Sync state to URL when page or search changes
+  // Sync state to URL when debounced search or page changes
+  // eslint-disable-next-line react-hooks/exhaustive-deps — searchParams intentionally excluded to avoid infinite loop on push
   useEffect(() => {
     // Refetch when search/page changes by syncing to URL
     const currentUrlParams = new URLSearchParams(Array.from(searchParams.entries()));
@@ -51,7 +54,7 @@ export default function AuditLogsClient() {
     if (changed) {
       router.push(`${pathname}?${currentUrlParams.toString()}`);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps — searchParams intentionally excluded to avoid infinite loop on push
   }, [debouncedSearch, currentPage, pathname, router]);
 
   // Construct query string for API
@@ -74,11 +77,11 @@ export default function AuditLogsClient() {
     );
   }
 
-  if (error) return <div className="p-8 text-center text-danger">Error loading data.</div>;
+  if (error) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
 
   const logs = data?.logs || FALLBACK_LOGS;
   const totalLogs = data?.total || FALLBACK_LOGS.length;
-  const totalPages = Math.ceil(totalLogs / 10);
+  const totalPages = Math.ceil(totalLogs / PAGE_SIZE);
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto">
@@ -162,7 +165,7 @@ export default function AuditLogsClient() {
         {logs.length > 0 && (
           <div className="flex items-center justify-between px-6 py-3 border-t border-border bg-card">
             <span className="text-sm text-secondary">
-              Showing {(currentPage - 1) * 10 + 1} to {Math.min(currentPage * 10, totalLogs)} of {totalLogs} results
+              Showing {(currentPage - 1) * PAGE_SIZE + 1} to {Math.min(currentPage * PAGE_SIZE, totalLogs)} of {totalLogs} results
             </span>
             <div className="flex gap-2">
               <button 

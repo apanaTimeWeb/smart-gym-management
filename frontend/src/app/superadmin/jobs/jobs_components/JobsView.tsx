@@ -1,5 +1,5 @@
-// RESPONSIBILITY: JobsClient.tsx handles the logic and UI for its corresponding feature.
 "use client";
+// RESPONSIBILITY: JobsView.tsx renders the BullMQ background jobs table and metrics cards. Reads from useSuperadminData. No direct API calls.
 import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { Activity, Play, RefreshCw, XCircle, AlertTriangle } from 'lucide-react';
@@ -76,7 +76,7 @@ export default function JobsView() {
                       {job.status}
                     </span>
                   </td>
-                  <td className="p-4 text-sm text-secondary font-mono">{job.attempts} / 3</td>
+                  <td className="p-4 text-sm text-secondary font-mono">{job.attempts}</td>
                   <td className="p-4 text-xs text-destructive max-w-xs truncate" title={job.error}>
                     {job.error || '-'}
                   </td>

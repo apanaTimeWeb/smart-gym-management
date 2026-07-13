@@ -34,7 +34,7 @@ export default function GymActionDropdown({ gymId }: GymActionDropdownProps) {
             <Ban className="w-4 h-4 text-warning" /> Suspend
           </button>
           <div className="h-px bg-border my-1"></div>
-          <button className="w-full flex items-center gap-2 px-4 py-2 text-sm text-danger hover:bg-danger/10 transition-colors">
+          <button className="w-full flex items-center gap-2 px-4 py-2 text-sm text-destructive hover:bg-destructive/10 transition-colors">
             <Trash2 className="w-4 h-4" /> Delete
           </button>
         </div>

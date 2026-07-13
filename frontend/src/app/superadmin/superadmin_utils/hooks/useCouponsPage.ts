@@ -131,7 +131,7 @@ export const useCouponsPage = () => {
   }, [coupons, searchQuery]);
 
   return {
-    loading,
+    fetchState,
     error,
     coupons: filteredCoupons,
     searchQuery,

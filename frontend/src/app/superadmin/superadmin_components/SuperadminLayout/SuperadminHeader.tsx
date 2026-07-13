@@ -67,7 +67,7 @@ export default function SuperadminHeader() {
           </div>
 
           {showProfile && (
-            <div className="absolute right-0 mt-2 w-56 bg-card rounded-xl shadow-2xl border border-border overflow-hidden z-50">
+            <div className="absolute right-0 mt-2 w-56 bg-card rounded-xl shadow-2xl border border-border overflow-hidden z-30">
               <div className="px-4 py-3 border-b border-border bg-header">
                 <p className="text-sm font-semibold text-foreground">Superadmin</p>
                 <p className="text-xs text-secondary">admin@gymsmart.com</p>
