@@ -7,16 +7,7 @@ import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import { useSuperadminMutation } from '@/app/superadmin/superadmin_utils/hooks/useSuperadminMutation';
 import toast from 'react-hot-toast';
 import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
-import type { FetchState } from '@/app/superadmin/superadmin_types/superadmin_types';
-
-interface PlatformSetting {
-  id: string;
-  key: string;
-  value: string;
-  description: string;
-  category: string;
-  dataType: 'string' | 'number' | 'boolean';
-}
+import type { FetchState, PlatformSetting } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 export default function SettingsClient() {
   const [settings, setSettings] = useState<PlatformSetting[]>([]);

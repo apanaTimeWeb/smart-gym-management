@@ -18,7 +18,10 @@ import type {
   BackupRecord,
   SchemaMigration,
   GlobalAuditLog,
-  SaaSDashboardMetrics
+  SaaSDashboardMetrics,
+  PlatformSetting,
+  MigrationsPageData,
+  InfrastructureNode,
 } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 /**
@@ -117,7 +120,7 @@ export const superadminApi = {
   migrations: {
     getAll: (params?: Record<string, string>) => {
       const q = params ? '?' + new URLSearchParams(params).toString() : '';
-      return apiFetch<ApiResponse<any>>(`${SuperadminUrlConfig.BACKEND_API.MIGRATIONS_BASE}${q}`);
+      return apiFetch<ApiResponse<MigrationsPageData>>(`${SuperadminUrlConfig.BACKEND_API.MIGRATIONS_BASE}${q}`);
     },
   },
   auditLogs: {
@@ -136,14 +139,14 @@ export const superadminApi = {
     getMetrics: () => apiFetch<ApiResponse<SaaSDashboardMetrics>>(`${SuperadminUrlConfig.BACKEND_API.DASHBOARD_BASE}/metrics`),
   },
   settings: {
-    getAll: () => apiFetch<ApiResponse<any>>(SuperadminUrlConfig.BACKEND_API.SETTINGS_BASE),
-    update: (id: string, body: Record<string, unknown>) => apiFetch<ApiResponse<any>>(`${SuperadminUrlConfig.BACKEND_API.SETTINGS_BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
+    getAll: () => apiFetch<ApiResponse<PlatformSetting[]>>(SuperadminUrlConfig.BACKEND_API.SETTINGS_BASE),
+    update: (id: string, body: Record<string, unknown>) => apiFetch<ApiResponse<PlatformSetting>>(`${SuperadminUrlConfig.BACKEND_API.SETTINGS_BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
   },
   system: {
     getAll: () => apiFetch<ApiResponse<unknown>>(SuperadminUrlConfig.BACKEND_API.SYSTEM_BASE),
     getHealthProbe: () => apiFetch<ApiResponse<unknown>>(`${SuperadminUrlConfig.BACKEND_API.SYSTEM_BASE}/health`),
   },
   infrastructure: {
-    getAll: () => apiFetch<ApiResponse<any>>(SuperadminUrlConfig.BACKEND_API.INFRASTRUCTURE_BASE),
+    getAll: () => apiFetch<ApiResponse<InfrastructureNode[]>>(SuperadminUrlConfig.BACKEND_API.INFRASTRUCTURE_BASE),
   },
 };

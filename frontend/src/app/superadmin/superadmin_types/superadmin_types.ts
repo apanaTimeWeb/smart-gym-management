@@ -198,3 +198,26 @@ export interface Affiliate {
   status: AffiliateStatus;
   joinedAt: string;
 }
+
+export interface PlatformSetting {
+  id: string;
+  key: string;
+  value: string;
+  description: string;
+  category: string;
+  dataType: 'string' | 'number' | 'boolean';
+}
+
+export interface InfrastructureNode {
+  id: string;
+  name: string;
+  cpuPercent: number | null;
+  memoryPercent: number | null;
+  diskPercent: number | null;
+  status: string;
+}
+
+export interface MigrationsPageData {
+  migrations: SchemaMigration[];
+  tenants: Tenant[];
+}

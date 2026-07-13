@@ -25,7 +25,12 @@ export default function TicketsClient() {
   const { data: DUMMY_SUPPORT_TICKETS, fetchState, error } = useSuperadminData<SupportTicket[]>(SuperadminUrlConfig.BACKEND_API.TICKETS_BASE);
 
     const [search, setSearch] = useState('');
-if (fetchState === 'loading') return <div className="p-8 text-center text-disabled">Loading...</div>;
+if (fetchState === 'loading') return (
+    <div className="space-y-6 animate-pulse">
+      <div className="h-8 bg-card rounded w-48" />
+      <div className="h-96 bg-card rounded-xl border border-border" />
+    </div>
+  );
   if (error || !DUMMY_SUPPORT_TICKETS) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
 
 

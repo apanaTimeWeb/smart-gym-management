@@ -17,7 +17,12 @@ export default function BackupsClient() {
   const { data: DUMMY_BACKUPS, fetchState, error } = useSuperadminData<BackupRecord[]>(SuperadminUrlConfig.BACKEND_API.BACKUPS_BASE);
 
     const [search, setSearch] = useState('');
-if (fetchState === 'loading') return <div className="p-8 text-center text-disabled">Loading...</div>;
+if (fetchState === 'loading') return (
+    <div className="space-y-6 animate-pulse">
+      <div className="h-8 bg-card rounded w-48" />
+      <div className="h-96 bg-card rounded-xl border border-border" />
+    </div>
+  );
   if (error || !DUMMY_BACKUPS) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
 
 

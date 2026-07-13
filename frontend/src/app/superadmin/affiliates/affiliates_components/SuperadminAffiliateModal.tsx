@@ -4,7 +4,7 @@
 import React from 'react';
 import { X } from 'lucide-react';
 import { UseFormReturn } from 'react-hook-form';
-import { AffiliateFormData } from '@/app/superadmin/superadmin_utils/SuperadminZodSchemas';
+import type { AffiliateFormData } from '@/app/superadmin/affiliates/affiliates_types/affiliates_types';
 
 interface SuperadminAffiliateModalProps {
   isOpen: boolean;

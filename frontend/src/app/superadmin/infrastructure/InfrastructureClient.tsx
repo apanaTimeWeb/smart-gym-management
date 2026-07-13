@@ -5,19 +5,10 @@ import { useState, useEffect } from 'react';
 import { Cpu, HardDrive, Server, Zap, RefreshCcw, Loader2 } from 'lucide-react';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import toast from 'react-hot-toast';
-import type { FetchState } from '@/app/superadmin/superadmin_types/superadmin_types';
-
-interface InfraNode {
-  id: string;
-  name: string;
-  cpuPercent: number | null;
-  memoryPercent: number | null;
-  diskPercent: number | null;
-  status: string;
-}
+import type { FetchState, InfrastructureNode } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 export default function InfrastructureClient() {
-  const [nodes, setNodes] = useState<InfraNode[]>([]);
+  const [nodes, setNodes] = useState<InfrastructureNode[]>([]);
   const [fetchState, setFetchState] = useState<FetchState>('idle');
 
   const fetchNodes = async () => {
