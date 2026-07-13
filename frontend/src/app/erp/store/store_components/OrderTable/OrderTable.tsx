@@ -1,9 +1,11 @@
+// RESPONSIBILITY: OrderTable.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
 import { Printer } from 'lucide-react';
 import { useStoreContext } from '@/app/erp/store/store_context/StoreContext';
 import { formatCurrency } from '@/app/erp/store/store_utils/StoreSharedConstants';
 import { GYM_DETAILS } from '@/app/erp/erp_utils/ErpSharedConstants';
+import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
 
@@ -50,14 +52,14 @@ export default function OrderTable() {
         </div>
         <div className="flex flex-col w-full sm:w-auto">
           <label className="text-[10px] text-secondary uppercase font-semibold mb-1">Sort By Date</label>
-          <select 
-            value={sortOrder} 
-            onChange={e => setSortOrder(e.target.value as 'ASC' | 'DESC')}
-            className="text-sm px-3 py-2 rounded-lg border border-border bg-input text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
-          >
-            <option value="DESC">Newest First</option>
-            <option value="ASC">Oldest First</option>
-          </select>
+          <SearchableDropdown
+            value={sortOrder}
+            onChange={(val) => setSortOrder(String(val) as 'ASC' | 'DESC')}
+            options={[
+              { label: 'Newest First', value: 'DESC' },
+              { label: 'Oldest First', value: 'ASC' }
+            ]}
+          />
         </div>
       </div>
 

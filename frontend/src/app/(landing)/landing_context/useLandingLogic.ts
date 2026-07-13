@@ -1,3 +1,4 @@
+// RESPONSIBILITY: useLandingLogic.ts handles the logic and UI for its corresponding feature.
 import { useState, useEffect, useCallback } from 'react';
 import type { LandingContextType, BmiResult } from '@/app/(landing)/landing_types/landing_types';
 import { EMPTY_BOOKING_FORM, EMPTY_CONTACT_FORM } from '@/app/(landing)/landing_utils/LandingSharedConstants';

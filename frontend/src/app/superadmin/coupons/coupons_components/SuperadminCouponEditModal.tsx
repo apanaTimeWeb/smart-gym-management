@@ -1,9 +1,11 @@
+// RESPONSIBILITY: SuperadminCouponEditModal.tsx handles the logic and UI for its corresponding feature.
 'use client';
 
 import React, { useEffect } from 'react';
 import { X } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 import { CouponSchema, CouponFormData } from '@/app/superadmin/superadmin_utils/SuperadminZodSchemas';
 import { Coupon } from '@/app/superadmin/superadmin_types/superadmin_types';
 
@@ -20,7 +22,7 @@ export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps>
   onSubmit,
   coupon,
 }) => {
-  const { register, handleSubmit, watch, formState: { errors }, reset } = useForm<CouponFormData>({
+  const { register, handleSubmit, watch, control, formState: { errors }, reset } = useForm<CouponFormData>({
     resolver: zodResolver(CouponSchema),
   });
 
@@ -68,13 +70,20 @@ export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps>
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-bold text-secondary">Discount Type <span className="text-destructive">*</span></label>
-              <select
-                {...register('discountType')}
-                className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus transition-colors appearance-none"
-              >
-                <option value="PERCENTAGE">Percentage (%)</option>
-                <option value="EXACT">Exact Amount (Rs)</option>
-              </select>
+              <Controller
+                name="discountType"
+                control={control}
+                render={({ field }) => (
+                  <SearchableDropdown
+                    value={field.value || ''}
+                    onChange={field.onChange}
+                    options={[
+                      { label: 'Percentage (%)', value: 'PERCENTAGE' },
+                      { label: 'Exact Amount (Rs)', value: 'EXACT' }
+                    ]}
+                  />
+                )}
+              />
               {errors.discountType && <span className="text-xs text-destructive">{errors.discountType.message}</span>}
             </div>
 

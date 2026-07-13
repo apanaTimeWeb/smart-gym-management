@@ -1,3 +1,4 @@
+// RESPONSIBILITY: superadmin_types.ts handles the logic and UI for its corresponding feature.
 // Removed SaaSPlanTier enum
 export type TenantStatus = 'ACTIVE' | 'SUSPENDED' | 'TRIAL' | 'CANCELLED';
 
@@ -40,7 +41,7 @@ export interface SaaSDashboardMetrics {
 // Phase 2 Types
 export interface SubscriptionPlan {
   id: string;
-  name: SaaSPlanTier;
+  name: string;
   priceMonthly: number;
   priceAnnual: number;
   maxMembers: number;
@@ -89,7 +90,7 @@ export interface SaaSInvoice {
   currency: string;
   status: 'PAID' | 'PENDING' | 'FAILED';
   date: string;
-  planName: SaaSPlanTier;
+  planName: string;
 }
 
 export interface FeatureFlag {

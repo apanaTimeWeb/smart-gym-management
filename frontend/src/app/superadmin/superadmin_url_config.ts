@@ -1,3 +1,4 @@
+// RESPONSIBILITY: superadmin_url_config.ts handles the logic and UI for its corresponding feature.
 export const SuperadminUrlConfig = {
   PAGES: {
     DASHBOARD: '/superadmin/dashboard',

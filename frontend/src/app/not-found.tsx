@@ -1,3 +1,4 @@
+// RESPONSIBILITY: not-found.tsx handles the logic and UI for its corresponding feature.
 import Link from 'next/link';
 
 export default function NotFound() {

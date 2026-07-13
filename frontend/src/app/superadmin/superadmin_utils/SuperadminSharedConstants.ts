@@ -1,3 +1,4 @@
+// RESPONSIBILITY: SuperadminSharedConstants.ts handles the logic and UI for its corresponding feature.
 import { Tenant, AuditLog, SaaSDashboardMetrics } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 export const DUMMY_TENANTS: Tenant[] = [
@@ -241,9 +242,9 @@ export const DUMMY_BROADCASTS: import('../superadmin_types/superadmin_types').Br
 ];
 
 export const DUMMY_COUPONS: import('../superadmin_types/superadmin_types').Coupon[] = [
-  { id: 'cpn-1', code: 'LAUNCH50', discountPercentage: 50, maxUses: 100, currentUses: 85, status: 'ACTIVE', expiryDate: '2026-12-31T23:59:59Z' },
-  { id: 'cpn-2', code: 'WELCOME20', discountPercentage: 20, maxUses: 1000, currentUses: 1000, status: 'DEPLETED', expiryDate: '2026-12-31T23:59:59Z' },
-  { id: 'cpn-3', code: 'WINTERSALE', discountPercentage: 30, maxUses: 50, currentUses: 10, status: 'EXPIRED', expiryDate: '2026-02-28T23:59:59Z' }
+  { id: 'cpn-1', code: 'LAUNCH50', discountType: 'PERCENTAGE', discountValue: 50, maxUses: 100, currentUses: 85, status: 'ACTIVE', expiryDate: '2026-12-31T23:59:59Z', isDeleted: false },
+  { id: 'cpn-2', code: 'WELCOME20', discountType: 'PERCENTAGE', discountValue: 20, maxUses: 1000, currentUses: 1000, status: 'DEPLETED', expiryDate: '2026-12-31T23:59:59Z', isDeleted: false },
+  { id: 'cpn-3', code: 'WINTERSALE', discountType: 'PERCENTAGE', discountValue: 30, maxUses: 50, currentUses: 10, status: 'EXPIRED', expiryDate: '2026-02-28T23:59:59Z', isDeleted: false }
 ];
 
 export const DUMMY_AFFILIATES: import('../superadmin_types/superadmin_types').Affiliate[] = [

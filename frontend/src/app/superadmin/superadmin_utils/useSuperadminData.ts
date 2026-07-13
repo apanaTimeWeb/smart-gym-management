@@ -1,3 +1,4 @@
+// RESPONSIBILITY: useSuperadminData.ts handles the logic and UI for its corresponding feature.
 
 import { useState, useEffect } from 'react';
 import { apiFetch } from '@/lib/api';

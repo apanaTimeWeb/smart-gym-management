@@ -1,3 +1,4 @@
+// RESPONSIBILITY: audit_types.ts handles the logic and UI for its corresponding feature.
 export interface AuditLog {
   id: string;
   actorId: string | null;

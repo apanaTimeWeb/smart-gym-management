@@ -1,3 +1,4 @@
+// RESPONSIBILITY: useSalesLogic.ts handles the logic and UI for its corresponding feature.
 import { useState, useCallback, useEffect } from 'react';
 import { type SalesTab, type DateFilter } from '@/app/erp/sales/sales_utils/SalesSharedConstants';
 import { SalesContextType } from '@/app/erp/sales/sales_types/sales_types';

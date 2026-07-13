@@ -1,3 +1,4 @@
+// RESPONSIBILITY: ErpToast.tsx handles the logic and UI for its corresponding feature.
 'use client';
 
 import { useEffect } from 'react';

@@ -1,9 +1,11 @@
+// RESPONSIBILITY: PlanModal.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
 import { useEffect } from 'react';
 import { X, Save } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 import { usePlansContext } from '@/app/erp/plans/plans_context/PlansContext';
 import { TIERS, PlanSchema, type PlanFormValues, EMPTY_PLAN_FORM } from '@/app/erp/plans/plans_utils/PlansSharedConstants';
 
@@ -18,6 +20,7 @@ export default function PlanModal() {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors }
   } = useForm<PlanFormValues>({
     resolver: zodResolver(PlanSchema),
@@ -63,12 +66,17 @@ export default function PlanModal() {
             </div>
             <div>
               <label className="block text-sm font-medium text-secondary mb-1">Tier</label>
-              <select 
-                {...register('tier')}
-                className="w-full border border-border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-warning bg-input text-foreground"
-              >
-                {TIERS.map(t => <option key={t} value={t}>{t}</option>)}
-              </select>
+              <Controller
+                name="tier"
+                control={control}
+                render={({ field }) => (
+                  <SearchableDropdown
+                    value={field.value || ''}
+                    onChange={field.onChange}
+                    options={TIERS.map(t => ({ label: t, value: t }))}
+                  />
+                )}
+              />
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

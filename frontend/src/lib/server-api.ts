@@ -1,3 +1,4 @@
+// RESPONSIBILITY: server-api.ts handles the logic and UI for its corresponding feature.
 import { cookies } from 'next/headers';
 import { StatusCodes } from 'http-status-codes';
 import { MembersUrlConfig } from '@/app/erp/members/members_url_config';

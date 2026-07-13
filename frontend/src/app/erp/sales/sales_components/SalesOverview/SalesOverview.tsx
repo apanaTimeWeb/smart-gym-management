@@ -1,3 +1,4 @@
+// RESPONSIBILITY: SalesOverview.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
 import { useSalesContext } from '@/app/erp/sales/sales_context/SalesContext';
@@ -30,7 +31,7 @@ export default function SalesOverview() {
       <Tooltip 
         cursor={{ fill: 'var(--sales-border)', opacity: 0.2 }}
         contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', backgroundColor: 'var(--bg-card)', color: 'var(--text-primary)' }}
-        formatter={(value: number) => [`₹${value.toLocaleString()}`, 'Revenue']}
+        formatter={(value: any) => [`₹${Number(value).toLocaleString()}`, 'Revenue']}
       />
       <Bar dataKey="revenue" fill="#4F46E5" radius={[6, 6, 0, 0]} barSize={40} />
     </BarChart>

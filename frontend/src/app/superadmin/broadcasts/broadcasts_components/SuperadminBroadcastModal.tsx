@@ -1,9 +1,11 @@
+// RESPONSIBILITY: SuperadminBroadcastModal.tsx handles the logic and UI for its corresponding feature.
 'use client';
 
 import React from 'react';
 import { X } from 'lucide-react';
-import { UseFormReturn } from 'react-hook-form';
+import { UseFormReturn, Controller } from 'react-hook-form';
 import { BroadcastFormData } from '@/app/superadmin/superadmin_utils/SuperadminZodSchemas';
+import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 
 interface SuperadminBroadcastModalProps {
   isOpen: boolean;
@@ -60,27 +62,41 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-bold text-secondary">Audience <span className="text-destructive">*</span></label>
-              <select 
-                {...register('audience')}
-                className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus transition-colors appearance-none"
-              >
-                <option value="ALL_TENANTS">All Tenants</option>
-                <option value="PRO_ONLY">Pro Plan Only</option>
-                <option value="SUSPENDED_ONLY">Suspended Only</option>
-              </select>
+              <Controller
+                name="audience"
+                control={form.control}
+                render={({ field }) => (
+                  <SearchableDropdown
+                    value={field.value || ''}
+                    onChange={field.onChange}
+                    options={[
+                      { label: 'All Tenants', value: 'ALL_TENANTS' },
+                      { label: 'Pro Plan Only', value: 'PRO_ONLY' },
+                      { label: 'Suspended Only', value: 'SUSPENDED_ONLY' }
+                    ]}
+                  />
+                )}
+              />
               {errors.audience && <span className="text-xs text-destructive">{errors.audience.message}</span>}
             </div>
 
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-bold text-secondary">Status <span className="text-destructive">*</span></label>
-              <select 
-                {...register('status')}
-                className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus transition-colors appearance-none"
-              >
-                <option value="DRAFT">Draft</option>
-                <option value="SCHEDULED">Scheduled</option>
-                <option value="SENT">Send Now</option>
-              </select>
+              <Controller
+                name="status"
+                control={form.control}
+                render={({ field }) => (
+                  <SearchableDropdown
+                    value={field.value || ''}
+                    onChange={field.onChange}
+                    options={[
+                      { label: 'Draft', value: 'DRAFT' },
+                      { label: 'Scheduled', value: 'SCHEDULED' },
+                      { label: 'Send Now', value: 'SENT' }
+                    ]}
+                  />
+                )}
+              />
               {errors.status && <span className="text-xs text-destructive">{errors.status.message}</span>}
             </div>
           </div>

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: page.tsx handles the logic and UI for its corresponding feature.
 import { Users, Building2, CreditCard, Activity } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';

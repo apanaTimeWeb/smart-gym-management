@@ -1,3 +1,4 @@
+// RESPONSIBILITY: ThemeProvider.tsx handles the logic and UI for its corresponding feature.
 'use client';
 
 import * as React from 'react';

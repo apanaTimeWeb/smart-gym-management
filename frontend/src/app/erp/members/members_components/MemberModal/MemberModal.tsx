@@ -76,14 +76,21 @@ export default function MemberModal() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  <div>
  <label className="block text-sm font-medium text-secondary mb-1">Gender</label>
- <select 
- {...register('gender')}
- className="w-full border border-border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-warning bg-input text-foreground"
- >
- <option value="MALE">Male</option>
- <option value="FEMALE">Female</option>
- <option value="OTHER">Other</option>
- </select>
+ <Controller
+   name="gender"
+   control={useFormReturn.control}
+   render={({ field }) => (
+     <SearchableDropdown
+       value={field.value || ''}
+       onChange={field.onChange}
+       options={[
+         { label: 'Male', value: 'MALE' },
+         { label: 'Female', value: 'FEMALE' },
+         { label: 'Other', value: 'OTHER' }
+       ]}
+     />
+   )}
+ />
  </div>
  <div>
  <label className="block text-sm font-medium text-secondary mb-1">Plan</label>
@@ -104,12 +111,17 @@ export default function MemberModal() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  <div>
  <label className="block text-sm font-medium text-secondary mb-1">Billing Cycle</label>
- <select 
- {...register('billingCycle')}
- className="w-full border border-border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-warning bg-input text-foreground"
- >
- {Object.entries(MEMBERS_CYCLE_LABELS).map(([val, label]) => <option key={val} value={val}>{label}</option>)}
- </select>
+ <Controller
+   name="billingCycle"
+   control={useFormReturn.control}
+   render={({ field }) => (
+     <SearchableDropdown
+       value={field.value || ''}
+       onChange={field.onChange}
+       options={Object.entries(MEMBERS_CYCLE_LABELS).map(([val, label]) => ({ label, value: val }))}
+     />
+   )}
+ />
  </div>
  {watchBillingCycle === 'CUSTOM' && (
  <div>

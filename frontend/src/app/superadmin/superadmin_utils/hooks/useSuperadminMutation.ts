@@ -1,3 +1,4 @@
+// RESPONSIBILITY: useSuperadminMutation.ts handles the logic and UI for its corresponding feature.
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 

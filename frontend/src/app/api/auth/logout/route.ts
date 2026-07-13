@@ -1,3 +1,4 @@
+// RESPONSIBILITY: route.ts handles the logic and UI for its corresponding feature.
 import { NextRequest, NextResponse } from 'next/server';
 import { AuthUrlConfig } from '@/app/auth/auth_url_config';
 

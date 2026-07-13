@@ -1,11 +1,13 @@
+// RESPONSIBILITY: ExerciseModal.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
 import { useEffect } from 'react';
 import { X, Save } from 'lucide-react';
 import { useLibraryContext } from '@/app/erp/library/library_context/LibraryContext';
 import { CATEGORIES, DIFFICULTIES, ExerciseSchema, type ExerciseFormValues, EMPTY_EXERCISE_FORM } from '@/app/erp/library/library_utils/LibrarySharedConstants';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 
 export default function ExerciseModal() {
  const { 
@@ -18,6 +20,7 @@ export default function ExerciseModal() {
    register, 
    handleSubmit, 
    reset,
+   control,
    formState: { errors } 
  } = useForm({
    resolver: zodResolver(ExerciseSchema),
@@ -76,21 +79,31 @@ export default function ExerciseModal() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  <div>
  <label className="block text-sm font-medium text-secondary mb-1">Category</label>
- <select 
- {...register('category')}
- className="w-full border border-border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-warning bg-input text-foreground"
- >
- {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
- </select>
+ <Controller
+   name="category"
+   control={control}
+   render={({ field }) => (
+     <SearchableDropdown
+       value={field.value || ''}
+       onChange={field.onChange}
+       options={CATEGORIES.map(c => ({ label: c, value: c }))}
+     />
+   )}
+ />
  </div>
  <div>
  <label className="block text-sm font-medium text-secondary mb-1">Difficulty</label>
- <select 
- {...register('difficulty')}
- className="w-full border border-border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-warning bg-input text-foreground"
- >
- {DIFFICULTIES.map(d => <option key={d} value={d}>{d}</option>)}
- </select>
+ <Controller
+   name="difficulty"
+   control={control}
+   render={({ field }) => (
+     <SearchableDropdown
+       value={field.value || ''}
+       onChange={field.onChange}
+       options={DIFFICULTIES.map(d => ({ label: d, value: d }))}
+     />
+   )}
+ />
  </div>
  </div>
  <div className="flex gap-3 pt-2">

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: hr_types.ts handles the logic and UI for its corresponding feature.
 
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import { EMPTY_STAFF } from '@/app/erp/hr/hr_utils/HrSharedConstants';

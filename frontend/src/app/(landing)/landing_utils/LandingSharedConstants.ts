@@ -1,3 +1,4 @@
+// RESPONSIBILITY: LandingSharedConstants.ts handles the logic and UI for its corresponding feature.
 import { Dumbbell, ArrowRight, Heart, Zap as Lightning, Users, Shield, Award, Clock } from 'lucide-react';
 
 export const STATS = [

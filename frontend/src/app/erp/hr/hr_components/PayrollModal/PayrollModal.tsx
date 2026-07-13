@@ -1,8 +1,10 @@
+// RESPONSIBILITY: PayrollModal.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
 import React, { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 import { X, Check } from 'lucide-react';
 import { useHrContext } from '@/app/erp/hr/hr_context/HrContext';
 import { PayrollSchema, type PayrollFormValues, EMPTY_PAYROLL_FORM } from '@/app/erp/hr/hr_utils/HrSharedConstants';
@@ -10,7 +12,7 @@ import { PayrollSchema, type PayrollFormValues, EMPTY_PAYROLL_FORM } from '@/app
 export default function PayrollModal() {
   const { showPayrollModal, setShowPayrollModal, savePayroll, saving, staff } = useHrContext();
 
-  const { register, handleSubmit, reset, watch, setValue, formState: { errors } } = useForm<PayrollFormValues>({
+  const { register, handleSubmit, reset, watch, setValue, control, formState: { errors } } = useForm<any>({
     resolver: zodResolver(PayrollSchema),
     defaultValues: EMPTY_PAYROLL_FORM
   });
@@ -50,17 +52,19 @@ export default function PayrollModal() {
             
             <div className="space-y-1.5">
               <label className="text-sm font-semibold" style={{ color: 'var(--hr-text-primary)' }}>Staff Member <span className="text-red-500">*</span></label>
-              <select 
-                {...register('staffId')}
-                className="w-full px-4 py-2.5 rounded-xl border text-sm focus:ring-2 focus:outline-none transition-all"
-                style={{ backgroundColor: 'var(--hr-bg-input)', borderColor: 'var(--hr-border)', color: 'var(--hr-text-primary)' }}
-              >
-                <option value="">Select Staff</option>
-                {staff.map(s => (
-                  <option key={s.id} value={s.id}>{s.name} ({s.role}) - ₹{s.salary}</option>
-                ))}
-              </select>
-              {errors.staffId && <p className="text-red-500 text-xs mt-1">{errors.staffId.message}</p>}
+              <Controller
+                name="staffId"
+                control={control}
+                render={({ field }) => (
+                  <SearchableDropdown
+                    value={field.value || ''}
+                    onChange={field.onChange}
+                    placeholder="Select Staff"
+                    options={staff.map(s => ({ label: `${s.name} (${s.role}) - ₹${s.salary}`, value: s.id }))}
+                  />
+                )}
+              />
+              {errors.staffId && <p className="text-red-500 text-xs mt-1">{errors.staffId.message as string}</p>}
             </div>
 
             <div className="space-y-1.5">
@@ -72,20 +76,20 @@ export default function PayrollModal() {
                 style={{ backgroundColor: 'var(--hr-bg-input)', borderColor: 'var(--hr-border)', color: 'var(--hr-text-primary)' }}
                 placeholder="e.g. Jan 2024"
               />
-              {errors.month && <p className="text-red-500 text-xs mt-1">{errors.month.message}</p>}
+              {errors.month && <p className="text-red-500 text-xs mt-1">{errors.month.message as string}</p>}
             </div>
 
             <div className="space-y-1.5">
               <label className="text-sm font-semibold" style={{ color: 'var(--hr-text-primary)' }}>Amount (₹) <span className="text-red-500">*</span></label>
               <input 
                 type="number"
-                {...register('amount')}
+                {...register('amount', { valueAsNumber: true })}
                 readOnly
                 className="w-full px-4 py-2.5 rounded-xl border text-sm bg-background cursor-not-allowed opacity-80"
                 style={{ borderColor: 'var(--hr-border)', color: 'var(--hr-text-primary)' }}
               />
               <p className="text-xs" style={{ color: 'var(--hr-text-secondary)' }}>Amount is automatically set to the staff's base salary.</p>
-              {errors.amount && <p className="text-red-500 text-xs mt-1">{errors.amount.message}</p>}
+              {errors.amount && <p className="text-red-500 text-xs mt-1">{errors.amount.message as string}</p>}
             </div>
             
             <div className="space-y-1.5">

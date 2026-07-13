@@ -1,3 +1,4 @@
+// RESPONSIBILITY: sales_types.ts handles the logic and UI for its corresponding feature.
 import { type SalesTab, type DateFilter } from '@/app/erp/sales/sales_utils/SalesSharedConstants';
 
 export interface SalesContextType {

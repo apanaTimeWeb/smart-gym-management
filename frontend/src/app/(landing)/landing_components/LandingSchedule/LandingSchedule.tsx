@@ -1,3 +1,4 @@
+// RESPONSIBILITY: LandingSchedule.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
 import { SCHEDULE } from '@/app/(landing)/landing_utils/LandingSharedConstants';

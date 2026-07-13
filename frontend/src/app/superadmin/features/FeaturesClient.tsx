@@ -1,3 +1,4 @@
+// RESPONSIBILITY: FeaturesClient.tsx handles the logic and UI for its corresponding feature.
 'use client';
 
 import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';

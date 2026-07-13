@@ -1,3 +1,4 @@
+// RESPONSIBILITY: DietGrid.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
 import { Utensils, Edit2, Trash2, CheckCircle2 } from 'lucide-react';

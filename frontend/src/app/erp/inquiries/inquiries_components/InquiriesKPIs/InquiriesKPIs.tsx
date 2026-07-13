@@ -1,3 +1,4 @@
+// RESPONSIBILITY: InquiriesKPIs.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
 import { useInquiriesContext } from '@/app/erp/inquiries/inquiries_context/InquiriesContext';

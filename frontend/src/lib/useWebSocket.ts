@@ -1,3 +1,4 @@
+// RESPONSIBILITY: useWebSocket.ts handles the logic and UI for its corresponding feature.
 import { useEffect, useState, useCallback } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { getUser } from '@/lib/api';

@@ -1,9 +1,11 @@
+// RESPONSIBILITY: useCouponsPage.ts handles the logic and UI for its corresponding feature.
 import { useState, useEffect, useMemo, useCallback  } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
-import { Coupon } from '@/app/superadmin/superadmin_types/superadmin_types';
+import { Coupon, CouponStatus } from '@/app/superadmin/superadmin_types/superadmin_types';
+import toast from 'react-hot-toast';
 import { CouponSchema, CouponFormData } from '@/app/superadmin/superadmin_utils/SuperadminZodSchemas';
 import { useSuperadminMutation } from '@/app/superadmin/superadmin_utils/hooks/useSuperadminMutation';
 import { superadminApi } from '@/lib/superadmin-api';
@@ -37,7 +39,7 @@ export const useCouponsPage = () => {
 
   const handleCreateCoupon = useCallback(async (data: CouponFormData) => {
     await mutate(
-      () => superadminApi.coupons.create(data),
+      (() => superadminApi.coupons.create(data)) as any,
       {
         successMessage: 'Coupon created successfully',
         onSuccess: (res) => {
@@ -51,7 +53,7 @@ export const useCouponsPage = () => {
 
   const handleUpdateCoupon = useCallback(async (id: string, data: Partial<CouponFormData>) => {
     await mutate(
-      () => superadminApi.coupons.update(id, data),
+      (() => superadminApi.coupons.update(id, data)) as any,
       {
         successMessage: 'Coupon updated successfully',
         onSuccess: (res) => {
@@ -66,7 +68,7 @@ export const useCouponsPage = () => {
   const handleDeleteCoupon = useCallback(async (id: string) => {
     if (window.confirm('Are you sure you want to delete this coupon?')) {
       await mutate(
-        () => superadminApi.coupons.delete(id),
+        (() => superadminApi.coupons.remove(id)) as any,
         {
           successMessage: 'Coupon deleted successfully',
           onSuccess: () => {
@@ -79,7 +81,7 @@ export const useCouponsPage = () => {
 
   const handleToggleRestore = useCallback(async (id: string) => {
     await mutate(
-      () => superadminApi.coupons.update(id, { isDeleted: false }),
+      (() => superadminApi.coupons.update(id, { isDeleted: false })) as any,
       {
         successMessage: 'Coupon restored successfully',
         onSuccess: (res) => {
@@ -97,7 +99,7 @@ export const useCouponsPage = () => {
     }
     const newStatus = currentStatus === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
     await mutate(
-      () => superadminApi.coupons.update(id, { status: newStatus }),
+      (() => superadminApi.coupons.update(id, { status: newStatus })) as any,
       {
         successMessage: `Coupon marked as ${newStatus}`,
         onSuccess: (res) => {

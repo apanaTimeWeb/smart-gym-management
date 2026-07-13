@@ -1,3 +1,4 @@
+// RESPONSIBILITY: page.tsx handles the logic and UI for its corresponding feature.
 import StoreMain from '@/app/erp/store/store_components/StoreMain/StoreMain';
 import { ssrStoreApi } from '@/lib/server-api';
 

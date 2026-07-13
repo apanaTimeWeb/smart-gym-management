@@ -1,3 +1,4 @@
+// RESPONSIBILITY: ErpThermalReceipt.tsx handles the logic and UI for its corresponding feature.
 import React from 'react';
 
 export interface ErpReceiptData {

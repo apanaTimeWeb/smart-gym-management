@@ -1,3 +1,4 @@
+// RESPONSIBILITY: page.tsx handles the logic and UI for its corresponding feature.
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';

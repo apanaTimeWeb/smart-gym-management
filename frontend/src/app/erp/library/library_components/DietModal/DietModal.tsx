@@ -1,11 +1,13 @@
+// RESPONSIBILITY: DietModal.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
 import { useEffect } from 'react';
 import { X, Save } from 'lucide-react';
 import { useLibraryContext } from '@/app/erp/library/library_context/LibraryContext';
 import { GOALS, DietSchema, type DietFormValues, EMPTY_DIET_FORM } from '@/app/erp/library/library_utils/LibrarySharedConstants';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 
 export default function DietModal() {
  const { 
@@ -18,6 +20,7 @@ export default function DietModal() {
    register, 
    handleSubmit, 
    reset,
+   control,
    formState: { errors } 
  } = useForm({
    resolver: zodResolver(DietSchema),
@@ -75,12 +78,17 @@ export default function DietModal() {
         <div className="grid grid-cols-1 gap-4">
  <div>
  <label className="block text-sm font-medium text-secondary mb-1">Goal</label>
- <select 
- {...register('goal')}
- className="w-full border border-border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-warning bg-input text-foreground"
- >
- {GOALS.map(g => <option key={g} value={g}>{g}</option>)}
- </select>
+ <Controller
+   name="goal"
+   control={control}
+   render={({ field }) => (
+     <SearchableDropdown
+       value={field.value || ''}
+       onChange={field.onChange}
+       options={GOALS.map(g => ({ label: g, value: g }))}
+     />
+   )}
+ />
  </div>
  </div>
  <div>

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: ErpStatCard.tsx handles the logic and UI for its corresponding feature.
 import { LucideIcon } from 'lucide-react';
 
 interface ErpStatCardProps {

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: useFinanceLogic.ts handles the logic and UI for its corresponding feature.
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { financeApi, type Payment, type FinanceSummary } from '@/lib/api';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';

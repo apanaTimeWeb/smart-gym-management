@@ -1,3 +1,4 @@
+// RESPONSIBILITY: layout.tsx handles the logic and UI for its corresponding feature.
 import './superadmin.css';
 import SuperadminLayout from '@/app/superadmin/superadmin_components/SuperadminLayout/SuperadminLayout';
 

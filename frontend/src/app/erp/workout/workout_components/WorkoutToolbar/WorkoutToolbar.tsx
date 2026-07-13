@@ -1,3 +1,4 @@
+// RESPONSIBILITY: WorkoutToolbar.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
 import { Search, Plus } from 'lucide-react';

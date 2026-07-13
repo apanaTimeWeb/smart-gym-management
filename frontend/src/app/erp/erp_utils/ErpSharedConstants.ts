@@ -1,3 +1,4 @@
+// RESPONSIBILITY: ErpSharedConstants.ts handles the logic and UI for its corresponding feature.
 import {
  LayoutDashboard, Users, ClipboardList, BarChart2,
  UserCog, ShoppingBag, DollarSign, BookOpen, Dumbbell,

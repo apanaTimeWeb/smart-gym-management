@@ -1,3 +1,4 @@
+// RESPONSIBILITY: finance_types.ts handles the logic and UI for its corresponding feature.
 
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import { AddPaymentFormValues } from '@/app/erp/finance/finance_utils/FinanceSharedConstants';

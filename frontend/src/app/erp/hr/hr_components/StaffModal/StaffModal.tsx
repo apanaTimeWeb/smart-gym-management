@@ -1,11 +1,13 @@
+// RESPONSIBILITY: StaffModal.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
 import { useEffect } from 'react';
 import { useHrContext } from '@/app/erp/hr/hr_context/HrContext';
 import { STAFF_MODAL_FIELDS, GENDER_OPTIONS, BRANCH_OPTIONS, StaffSchema, type StaffFormValues } from '@/app/erp/hr/hr_utils/HrSharedConstants';
 import { X, Save } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 
 export default function StaffModal() {
  const { showModal, setShowModal, editId, editData, saveStaff, saving } = useHrContext();
@@ -14,6 +16,7 @@ export default function StaffModal() {
    register, 
    handleSubmit, 
    reset,
+   control,
    formState: { errors }
   } = useForm({
    resolver: zodResolver(StaffSchema),
@@ -62,25 +65,31 @@ export default function StaffModal() {
  <div className="grid grid-cols-2 gap-4">
  <div>
  <label className="block text-sm font-medium mb-1" style={{ color: 'var(--hr-text-secondary)' }}>Gender</label>
- <select 
- {...register('gender')}
- className="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
- style={{ backgroundColor: 'var(--hr-bg-input)', borderColor: 'var(--hr-border)', color: 'var(--hr-text-primary)' }}
- >
- {GENDER_OPTIONS.map(g => (
- <option key={g.value} value={g.value}>{g.label}</option>
- ))}
- </select>
+ <Controller
+   name="gender"
+   control={control}
+   render={({ field }) => (
+     <SearchableDropdown
+       value={field.value || ''}
+       onChange={field.onChange}
+       options={GENDER_OPTIONS}
+     />
+   )}
+ />
  </div>
  <div>
  <label className="block text-sm font-medium mb-1" style={{ color: 'var(--hr-text-secondary)' }}>Branch</label>
- <select 
- {...register('branch')}
- className="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
- style={{ backgroundColor: 'var(--hr-bg-input)', borderColor: 'var(--hr-border)', color: 'var(--hr-text-primary)' }}
- >
- {BRANCH_OPTIONS.map(b => <option key={b} value={b}>{b}</option>)}
- </select>
+ <Controller
+   name="branch"
+   control={control}
+   render={({ field }) => (
+     <SearchableDropdown
+       value={field.value || ''}
+       onChange={field.onChange}
+       options={BRANCH_OPTIONS.map(b => ({ label: b, value: b }))}
+     />
+   )}
+ />
  </div>
  </div>
  <div>

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: library_types.ts handles the logic and UI for its corresponding feature.
 import type { } from '@/lib/api';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import { EMPTY_EXERCISE_FORM, EMPTY_DIET_FORM, type LibraryTab } from '@/app/erp/library/library_utils/LibrarySharedConstants';

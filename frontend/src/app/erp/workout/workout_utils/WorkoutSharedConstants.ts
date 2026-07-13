@@ -1,3 +1,4 @@
+// RESPONSIBILITY: WorkoutSharedConstants.ts handles the logic and UI for its corresponding feature.
 import { z } from 'zod';
 import type { Exercise, Workout } from '@/lib/api';
 /* ── Dropdown / Filter Options (Rule 3: Backend-Ready Constants) ── */

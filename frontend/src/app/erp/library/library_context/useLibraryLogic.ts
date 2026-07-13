@@ -1,3 +1,4 @@
+// RESPONSIBILITY: useLibraryLogic.ts handles the logic and UI for its corresponding feature.
 import { useState, useCallback, useEffect } from 'react';
 import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
 import { libraryApi, type Exercise, type DietPlan } from '@/lib/api';

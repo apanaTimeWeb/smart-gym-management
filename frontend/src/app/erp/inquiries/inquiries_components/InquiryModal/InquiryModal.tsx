@@ -1,11 +1,13 @@
+// RESPONSIBILITY: InquiryModal.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
 import { useEffect } from 'react';
 import { useInquiriesContext } from '@/app/erp/inquiries/inquiries_context/InquiriesContext';
 import { INQUIRY_MODAL_FIELDS, INQUIRIES_STATUS_LABELS, INQUIRY_SOURCES, InquirySchema, type InquiryFormValues } from '@/app/erp/inquiries/inquiries_utils/InquiriesSharedConstants';
 import { X, Save } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 
 export default function InquiryModal() {
  const { showModal, setShowModal, editId, editData, saveInquiry, saving } = useInquiriesContext();
@@ -14,6 +16,7 @@ export default function InquiryModal() {
    register, 
    handleSubmit, 
    reset,
+   control,
    formState: { errors } 
  } = useForm<InquiryFormValues>({
    resolver: zodResolver(InquirySchema),
@@ -62,25 +65,31 @@ export default function InquiryModal() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  <div>
  <label className="block text-sm font-medium mb-1" style={{ color: 'var(--inquiries-text-secondary)' }}>Status</label>
- <select 
- {...register('status')}
- className="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
- style={{ backgroundColor: 'var(--inquiries-bg-input)', borderColor: 'var(--inquiries-border)', color: 'var(--inquiries-text-primary)' }}
- >
- {Object.entries(INQUIRIES_STATUS_LABELS).map(([val, label]) => (
- <option key={val} value={val}>{label}</option>
- ))}
- </select>
+ <Controller
+   name="status"
+   control={control}
+   render={({ field }) => (
+     <SearchableDropdown
+       value={field.value || ''}
+       onChange={field.onChange}
+       options={Object.entries(INQUIRIES_STATUS_LABELS).map(([val, label]) => ({ label, value: val }))}
+     />
+   )}
+ />
  </div>
  <div>
  <label className="block text-sm font-medium mb-1" style={{ color: 'var(--inquiries-text-secondary)' }}>Source</label>
- <select 
- {...register('source')}
- className="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
- style={{ backgroundColor: 'var(--inquiries-bg-input)', borderColor: 'var(--inquiries-border)', color: 'var(--inquiries-text-primary)' }}
- >
- {INQUIRY_SOURCES.map(s => <option key={s} value={s}>{s}</option>)}
- </select>
+ <Controller
+   name="source"
+   control={control}
+   render={({ field }) => (
+     <SearchableDropdown
+       value={field.value || ''}
+       onChange={field.onChange}
+       options={INQUIRY_SOURCES.map(s => ({ label: s, value: s }))}
+     />
+   )}
+ />
  </div>
  </div>
  <div className="flex gap-3 pt-2">

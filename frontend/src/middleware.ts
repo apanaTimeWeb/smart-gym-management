@@ -1,3 +1,4 @@
+// RESPONSIBILITY: middleware.ts handles the logic and UI for its corresponding feature.
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { ROUTES } from '@/lib/routes';

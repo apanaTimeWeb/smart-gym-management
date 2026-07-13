@@ -1,3 +1,4 @@
+// RESPONSIBILITY: useAuditFilters.ts handles the logic and UI for its corresponding feature.
 "use client";
 
 import { useAuditContext } from '@/app/erp/audit/audit_context/AuditContext';

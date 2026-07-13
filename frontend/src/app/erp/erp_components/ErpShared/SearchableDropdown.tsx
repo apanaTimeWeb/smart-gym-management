@@ -1,3 +1,4 @@
+// RESPONSIBILITY: SearchableDropdown.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
@@ -15,6 +16,7 @@ interface SearchableDropdownProps {
   placeholder?: string;
   className?: string;
   disabled?: boolean;
+  containerStyle?: React.CSSProperties;
 }
 
 export const SearchableDropdown: React.FC<SearchableDropdownProps> = ({

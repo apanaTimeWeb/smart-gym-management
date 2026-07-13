@@ -1,7 +1,9 @@
+// RESPONSIBILITY: AuditFilters.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
 import React from 'react';
 import { useAuditFilters } from '@/app/erp/audit/audit_components/AuditFilters/useAuditFilters';
+import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 import '../../audit.css';
 
 export const AuditFilters = () => {
@@ -13,18 +15,11 @@ export const AuditFilters = () => {
         <label htmlFor="entityType" className="text-sm font-semibold mb-1.5 text-foreground">
           Entity Type
         </label>
-        <select
-          id="entityType"
+        <SearchableDropdown
           value={filters.entityType || ''}
-          onChange={handleEntityTypeChange}
-          className="p-2.5 rounded-xl border border-border bg-input text-foreground outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all shadow-sm"
-        >
-          {entityTypes.map((type) => (
-            <option key={type.value} value={type.value}>
-              {type.label}
-            </option>
-          ))}
-        </select>
+          onChange={(val) => handleEntityTypeChange({ target: { value: val } } as any)}
+          options={entityTypes}
+        />
       </div>
 
       <div className="flex flex-col flex-1">

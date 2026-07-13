@@ -1,8 +1,10 @@
+// RESPONSIBILITY: GymEditModal.tsx handles the logic and UI for its corresponding feature.
 'use client';
 
 import React, { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 import { z } from 'zod';
 import { X } from 'lucide-react';
 import { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
@@ -28,6 +30,7 @@ export default function GymEditModal() {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<GymEditFormValues>({
     resolver: zodResolver(gymEditSchema),
@@ -97,21 +100,19 @@ export default function GymEditModal() {
 
           <div>
             <label className="block text-sm font-bold text-secondary mb-1">Subscription Plan <span className="text-destructive">*</span></label>
-            <select
-              {...register('plan')}
-              className="w-full bg-input border border-border rounded-lg px-[14px] py-[10px] text-sm text-foreground focus:border-border-focus focus:outline-none transition-colors"
-            >
-              <option value="">Select a plan</option>
-              {loadingPlans ? (
-                <option disabled>Loading plans...</option>
-              ) : (
-                plans?.map((p) => (
-                  <option key={p.id} value={p.name}>
-                    {p.name} (${Number(p.priceMonthly).toFixed(2)}/mo)
-                  </option>
-                ))
+            <Controller
+              name="plan"
+              control={control}
+              render={({ field }) => (
+                <SearchableDropdown
+                  value={field.value || ''}
+                  onChange={field.onChange}
+                  options={plans ? plans.map(p => ({ label: `${p.name} ($${Number(p.priceMonthly).toFixed(2)}/mo)`, value: p.name })) : []}
+                  disabled={loadingPlans}
+                  placeholder={loadingPlans ? "Loading plans..." : "Select a plan"}
+                />
               )}
-            </select>
+            />
             {errors.plan && <p className="text-xs text-destructive mt-1">{errors.plan.message}</p>}
           </div>
 

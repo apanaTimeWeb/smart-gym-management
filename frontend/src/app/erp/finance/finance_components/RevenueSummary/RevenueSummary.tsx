@@ -1,3 +1,4 @@
+// RESPONSIBILITY: RevenueSummary.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
 import { useFinanceContext } from '@/app/erp/finance/finance_context/FinanceContext';

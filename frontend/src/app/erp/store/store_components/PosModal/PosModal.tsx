@@ -1,9 +1,11 @@
+// RESPONSIBILITY: PosModal.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
 import { X, Printer } from 'lucide-react';
 import { useStoreContext } from '@/app/erp/store/store_context/StoreContext';
 import { PAYMENT_METHODS, formatCurrency } from '@/app/erp/store/store_utils/StoreSharedConstants';
 import { useState } from 'react';
+import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 
 export default function PosModal() {
  const { 
@@ -88,13 +90,12 @@ export default function PosModal() {
  <span className="font-bold text-lg text-success dark:text-success">{formatCurrency(orderTotal)}</span>
  </div>
  
- <select 
- value={orderMethod} 
- onChange={e => setOrderMethod(e.target.value)} 
- className="w-full border border-border rounded-xl px-4 py-2.5 text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-warning bg-input text-foreground"
- >
- {PAYMENT_METHODS.map(m => <option key={m}>{m}</option>)}
- </select>
+ <SearchableDropdown
+ value={orderMethod}
+ onChange={(val) => setOrderMethod(String(val))}
+ className="mb-3"
+ options={PAYMENT_METHODS.map(m => ({ label: m, value: m }))}
+ />
 
  <label className="flex items-center gap-2 mb-3 cursor-pointer text-sm text-foreground font-medium">
    <input 

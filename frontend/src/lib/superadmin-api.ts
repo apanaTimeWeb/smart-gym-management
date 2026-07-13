@@ -1,3 +1,4 @@
+// RESPONSIBILITY: superadmin-api.ts handles the logic and UI for its corresponding feature.
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { apiFetch } from '@/lib/api';
 
@@ -68,6 +69,7 @@ export const superadminApi = {
     },
     create: (body: any) => apiFetch(SuperadminUrlConfig.BACKEND_API.AFFILIATES_BASE, { method: 'POST', body: JSON.stringify(body) }),
     update: (id: string, body: any) => apiFetch(`${SuperadminUrlConfig.BACKEND_API.AFFILIATES_BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
+    updateStatus: (id: string, status: string) => apiFetch(`${SuperadminUrlConfig.BACKEND_API.AFFILIATES_BASE}/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) }),
     remove: (id: string) => apiFetch(`${SuperadminUrlConfig.BACKEND_API.AFFILIATES_BASE}/${id}`, { method: 'DELETE' }),
   },
   broadcasts: {

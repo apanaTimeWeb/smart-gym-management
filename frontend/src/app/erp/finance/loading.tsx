@@ -1,3 +1,4 @@
+// RESPONSIBILITY: loading.tsx handles the logic and UI for its corresponding feature.
 export default function FinanceLoading() {
  return (
  <div className="min-h-full flex items-center justify-center">

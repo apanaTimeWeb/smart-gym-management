@@ -1,3 +1,4 @@
+// RESPONSIBILITY: FinanceSharedConstants.ts handles the logic and UI for its corresponding feature.
 import { z } from 'zod';
 
 export const FINANCE_METHOD_STYLES: Record<string, { bg: string; text: string }> = {

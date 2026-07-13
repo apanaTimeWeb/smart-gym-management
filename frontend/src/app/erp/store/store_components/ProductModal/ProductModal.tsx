@@ -1,11 +1,13 @@
+// RESPONSIBILITY: ProductModal.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
 import { useEffect } from 'react';
 import { X, Save } from 'lucide-react';
 import { useStoreContext } from '@/app/erp/store/store_context/StoreContext';
 import { CATEGORIES, ProductSchema, type ProductFormValues, EMPTY_PRODUCT_FORM } from '@/app/erp/store/store_utils/StoreSharedConstants';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 
 export default function ProductModal() {
  const { 
@@ -18,6 +20,7 @@ export default function ProductModal() {
    register, 
    handleSubmit, 
    reset,
+   control,
    formState: { errors } 
  } = useForm({
    resolver: zodResolver(ProductSchema),
@@ -71,12 +74,17 @@ export default function ProductModal() {
  ))}
  <div>
  <label className="block text-sm font-medium text-secondary mb-1">Category</label>
- <select 
- {...register('category')}
- className="w-full border border-border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-warning bg-input text-foreground"
- >
- {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
- </select>
+ <Controller
+   name="category"
+   control={control}
+   render={({ field }) => (
+     <SearchableDropdown
+       value={field.value || ''}
+       onChange={field.onChange}
+       options={CATEGORIES.map(c => ({ label: c, value: c }))}
+     />
+   )}
+ />
  </div>
  <div className="flex gap-3 pt-2">
  <button 

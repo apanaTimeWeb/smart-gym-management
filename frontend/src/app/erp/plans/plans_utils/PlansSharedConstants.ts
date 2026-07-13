@@ -1,3 +1,4 @@
+// RESPONSIBILITY: PlansSharedConstants.ts handles the logic and UI for its corresponding feature.
 import { z } from 'zod';
 
 export const TIERS = ['BASIC', 'GOLD', 'PREMIUM'];

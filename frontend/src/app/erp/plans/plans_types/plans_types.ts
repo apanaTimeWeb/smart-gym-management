@@ -1,3 +1,4 @@
+// RESPONSIBILITY: plans_types.ts handles the logic and UI for its corresponding feature.
 
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import { EMPTY_PLAN_FORM } from '@/app/erp/plans/plans_utils/PlansSharedConstants';
@@ -26,7 +27,7 @@ export interface PlansContextType {
  loadPlans: () => Promise<void>;
  openAdd: () => void;
  openEdit: (p: Plan) => void;
- savePlan: (e: React.FormEvent) => Promise<void>;
+ savePlan: (data: any) => Promise<void>;
  deletePlan: (id: number) => Promise<void>;
 }
 

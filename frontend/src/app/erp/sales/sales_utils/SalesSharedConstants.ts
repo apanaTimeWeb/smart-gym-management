@@ -1,3 +1,4 @@
+// RESPONSIBILITY: SalesSharedConstants.ts handles the logic and UI for its corresponding feature.
 export const DATE_FILTERS = ['Today', 'This Week', 'This Month', 'This Year'] as const;
 export type DateFilter = typeof DATE_FILTERS[number];
 

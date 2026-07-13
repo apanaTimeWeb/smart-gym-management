@@ -1,3 +1,4 @@
+// RESPONSIBILITY: LandingBooking.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
 import { CheckCircle, Ticket, CreditCard, Calendar, ArrowRight } from 'lucide-react';

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: SalesTabs.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
 import { useSalesContext } from '@/app/erp/sales/sales_context/SalesContext';

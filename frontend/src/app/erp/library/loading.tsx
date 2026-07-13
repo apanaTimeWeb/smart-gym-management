@@ -1,3 +1,4 @@
+// RESPONSIBILITY: loading.tsx handles the logic and UI for its corresponding feature.
 import { TableSkeleton } from '@/app/erp/erp_components/ErpShared/TableSkeleton';
 export default function Loading() {
  return (

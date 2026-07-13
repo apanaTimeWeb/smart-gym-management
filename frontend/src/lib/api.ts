@@ -1,3 +1,4 @@
+// RESPONSIBILITY: api.ts handles the logic and UI for its corresponding feature.
 /**
  * GymSmart API Client
  * Centralised fetch wrapper for all backend API calls.
@@ -174,10 +175,20 @@ export const dashboardApi = {
 
 // ─── Members ──────────────────────────────────────────────────────────────────
 
-
-
-
-
+export const membersApi = {
+  getAll: (params?: Record<string, string>) => {
+    const q = params ? '?' + new URLSearchParams(params).toString() : '';
+    return apiFetch<{ success: boolean; data: { members: Member[]; total: number } }>(`${MembersUrlConfig.BACKEND_API.BASE}${q}`);
+  },
+  getOne: (id: number) => apiFetch<{ success: boolean; data: Member }>(MembersUrlConfig.BACKEND_API.GET_ONE(id)),
+  create: (body: Partial<Member>) =>
+    apiFetch(MembersUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body) }),
+  update: (id: number, body: Partial<Member>) =>
+    apiFetch(MembersUrlConfig.BACKEND_API.UPDATE(id), { method: 'PATCH', body: JSON.stringify(body) }),
+  remove: (id: number) => apiFetch(MembersUrlConfig.BACKEND_API.DELETE(id), { method: 'DELETE' }),
+  getStats: () => apiFetch<{ success: boolean; data: MemberStats }>(MembersUrlConfig.BACKEND_API.STATS),
+  renew: (id: number, planId: number) => apiFetch(MembersUrlConfig.BACKEND_API.RENEW(id), { method: 'POST', body: JSON.stringify({ planId }) }),
+};
 // ─── Plans ────────────────────────────────────────────────────────────────────
 
 export const plansApi = {

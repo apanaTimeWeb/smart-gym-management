@@ -1,3 +1,4 @@
+// RESPONSIBILITY: LandingServices.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
 import { SERVICES } from '@/app/(landing)/landing_utils/LandingSharedConstants';

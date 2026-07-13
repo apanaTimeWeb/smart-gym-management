@@ -1,3 +1,4 @@
+// RESPONSIBILITY: useHrLogic.ts handles the logic and UI for its corresponding feature.
 import { useState, useCallback, useEffect } from 'react';
 import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
 import { hrApi, type Staff, type Payroll, type HrSummary } from '@/lib/api';

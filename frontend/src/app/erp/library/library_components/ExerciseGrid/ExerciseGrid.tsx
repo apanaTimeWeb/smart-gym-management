@@ -1,3 +1,4 @@
+// RESPONSIBILITY: ExerciseGrid.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
 import { Dumbbell, Edit2, Trash2 } from 'lucide-react';

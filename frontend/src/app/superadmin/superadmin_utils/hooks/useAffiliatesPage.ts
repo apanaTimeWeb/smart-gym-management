@@ -1,9 +1,10 @@
+// RESPONSIBILITY: useAffiliatesPage.ts handles the logic and UI for its corresponding feature.
 import { useState, useEffect, useMemo, useCallback  } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
-import { Affiliate } from '@/app/superadmin/superadmin_types/superadmin_types';
+import { Affiliate, AffiliateStatus } from '@/app/superadmin/superadmin_types/superadmin_types';
 import { AffiliateSchema, AffiliateFormData } from '@/app/superadmin/superadmin_utils/SuperadminZodSchemas';
 import { useSuperadminMutation } from '@/app/superadmin/superadmin_utils/hooks/useSuperadminMutation';
 import { superadminApi } from '@/lib/superadmin-api';
@@ -33,7 +34,7 @@ export const useAffiliatesPage = () => {
 
   const handleAddAffiliate = useCallback(async (data: AffiliateFormData) => {
     await mutate(
-      () => superadminApi.affiliates.create(data),
+      (() => superadminApi.affiliates.create(data)) as any,
       {
         successMessage: 'Affiliate added successfully',
         onSuccess: (res) => {
@@ -50,7 +51,7 @@ export const useAffiliatesPage = () => {
   const handleEditAffiliate = useCallback(async (data: AffiliateFormData) => {
     if (!editingAffiliate) return;
     await mutate(
-      () => superadminApi.affiliates.update(editingAffiliate.id, data),
+      (() => superadminApi.affiliates.update(editingAffiliate.id, data)) as any,
       {
         successMessage: 'Affiliate updated successfully',
         onSuccess: (res) => {
@@ -66,7 +67,7 @@ export const useAffiliatesPage = () => {
   const handleToggleAffiliateStatus = useCallback(async (id: string, currentStatus: AffiliateStatus) => {
     const newStatus: AffiliateStatus = currentStatus === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
     await mutate(
-      () => superadminApi.affiliates.updateStatus(id, newStatus),
+      (() => superadminApi.affiliates.updateStatus(id, newStatus)) as any,
       {
         successMessage: `Affiliate status updated successfully`,
         onSuccess: () => {
@@ -79,7 +80,7 @@ export const useAffiliatesPage = () => {
   const handleDeleteAffiliate = useCallback(async (id: string) => {
     if (!window.confirm('Are you sure you want to delete this affiliate?')) return;
     await mutate(
-      () => superadminApi.affiliates.delete(id),
+      (() => superadminApi.affiliates.remove(id)) as any,
       {
         successMessage: 'Affiliate deleted successfully',
         onSuccess: () => {

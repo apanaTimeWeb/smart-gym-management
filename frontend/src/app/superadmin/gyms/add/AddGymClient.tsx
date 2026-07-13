@@ -1,10 +1,12 @@
+// RESPONSIBILITY: AddGymClient.tsx handles the logic and UI for its corresponding feature.
 'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 import { ArrowLeft, Database, Save, Loader2 } from 'lucide-react';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { OnboardGymSchema, OnboardGymFormValues } from '@/app/superadmin/superadmin_utils/SuperadminValidation';
@@ -22,6 +24,7 @@ export default function AddGymClient() {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors }
   } = useForm<OnboardGymFormValues>({
     resolver: zodResolver(OnboardGymSchema),
@@ -155,19 +158,19 @@ export default function AddGymClient() {
 
               <div className="space-y-2">
                 <label className="text-sm font-medium text-secondary">SaaS Plan</label>
-                <select 
-                  {...register('plan')}
-                  className="w-full bg-card border border-border text-foreground rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500 transition-colors"
-                >
-                  <option value="">Select a plan</option>
-                  {loadingPlans ? (
-                    <option disabled>Loading plans...</option>
-                  ) : (
-                    plans?.map(p => (
-                      <option key={p.id} value={p.name}>{p.name} (${Number(p.priceMonthly).toFixed(2)}/mo)</option>
-                    ))
+                <Controller
+                  name="plan"
+                  control={control}
+                  render={({ field }) => (
+                    <SearchableDropdown
+                      value={field.value || ''}
+                      onChange={field.onChange}
+                      options={plans ? plans.map(p => ({ label: `${p.name} ($${Number(p.priceMonthly).toFixed(2)}/mo)`, value: p.name })) : []}
+                      disabled={loadingPlans}
+                      placeholder={loadingPlans ? "Loading plans..." : "Select a plan"}
+                    />
                   )}
-                </select>
+                />
                 {errors.plan && <p className="text-destructive text-xs">{errors.plan.message}</p>}
               </div>
             </div>

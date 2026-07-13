@@ -1,3 +1,4 @@
+// RESPONSIBILITY: attendance_types.ts handles the logic and UI for its corresponding feature.
 import type { Member, Staff } from '@/lib/api';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import type { AttendanceTab, EMPTY_ATTENDANCE_FORM } from '@/app/erp/attendance/attendance_utils/AttendanceSharedConstants';
@@ -7,6 +8,7 @@ export interface AttendanceContextType {
  todayStats: { totalCheckIns: number; memberCheckIns: number; staffCheckIns: number };
  members: Member[];
  staff: Staff[];
+ totalRecords: number;
  loading: boolean;
  saving: boolean;
  toast: { message: string; type: ToastType } | null;
@@ -29,7 +31,7 @@ export interface AttendanceContextType {
  hideToast: () => void;
  
  loadAll: () => Promise<void>;
- markAttendance: (e: React.FormEvent) => Promise<void>;
+ markAttendance: (data: any) => Promise<void>;
 }
 
 export interface Attendance {

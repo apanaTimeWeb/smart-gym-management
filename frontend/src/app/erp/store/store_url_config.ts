@@ -1,3 +1,4 @@
+// RESPONSIBILITY: store_url_config.ts handles the logic and UI for its corresponding feature.
 export const StoreUrlConfig = {
   PAGES: {
     PRODUCTS: '/erp/store',

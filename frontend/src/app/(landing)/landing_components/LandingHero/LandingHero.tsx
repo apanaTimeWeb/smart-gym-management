@@ -1,3 +1,4 @@
+// RESPONSIBILITY: LandingHero.tsx handles the logic and UI for its corresponding feature.
 import Link from 'next/link';
 "use client";
 

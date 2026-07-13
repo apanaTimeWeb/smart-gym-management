@@ -1,3 +1,4 @@
+// RESPONSIBILITY: PlansContext.tsx handles the logic and UI for its corresponding feature.
 'use client';
 
 import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
@@ -46,7 +47,7 @@ export function PlansProvider({ children }: { children: React.ReactNode }) {
 
   const handleCreatePlan = useCallback(async (data: any) => {
     try {
-      const response = await apiFetch(SuperadminUrlConfig.BACKEND_API.PLANS_BASE, {
+      const response = await apiFetch<any>(SuperadminUrlConfig.BACKEND_API.PLANS_BASE, {
         method: 'POST',
         body: JSON.stringify(data),
       });
@@ -68,7 +69,7 @@ export function PlansProvider({ children }: { children: React.ReactNode }) {
 
   const handleUpdatePlan = useCallback(async (id: string, data: any) => {
     try {
-      const response = await apiFetch(`${SuperadminUrlConfig.BACKEND_API.PLANS_BASE}/${id}`, {
+      const response = await apiFetch<any>(`${SuperadminUrlConfig.BACKEND_API.PLANS_BASE}/${id}`, {
         method: 'PATCH',
         body: JSON.stringify(data),
       });

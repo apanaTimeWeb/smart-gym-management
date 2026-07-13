@@ -1,8 +1,10 @@
+// RESPONSIBILITY: InquiriesTable.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
 import { useInquiriesContext } from '@/app/erp/inquiries/inquiries_context/InquiriesContext';
 import { INQUIRIES_TABLE_HEADERS, INQUIRIES_STATUS_LABELS, INQUIRIES_STATUS_STYLES } from '@/app/erp/inquiries/inquiries_utils/InquiriesSharedConstants';
 import { MessageCircle, Mail, Edit2, Trash2 } from 'lucide-react';
+import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
 
@@ -81,18 +83,14 @@ export default function InquiriesTable() {
                   </td>
                   <td className="px-5 py-3.5 text-sm" style={{ color: 'var(--inquiries-text-primary)' }}>{inq.interest}</td>
                   <td className="px-5 py-3.5 text-sm" style={{ color: 'var(--inquiries-text-secondary)' }}>{inq.source || '—'}</td>
-                  <td className="px-5 py-3.5">
-                    <select 
-                      value={inq.status} 
-                      onChange={e => updateStatus(inq.id, e.target.value)}
-                      onClick={e => e.stopPropagation()}
-                      className="text-xs font-medium px-2.5 py-1 rounded-full border-0 cursor-pointer focus:outline-none"
-                      style={{ backgroundColor: statusStyle.bg, color: statusStyle.text }}
-                    >
-                      {Object.entries(INQUIRIES_STATUS_LABELS).map(([val, label]) => (
-                        <option key={val} value={val}>{label}</option>
-                      ))}
-                    </select>
+                  <td className="px-5 py-3.5" onClick={e => e.stopPropagation()}>
+                    <div className="w-32">
+                      <SearchableDropdown
+                        value={inq.status}
+                        onChange={(val) => updateStatus(inq.id, String(val))}
+                        options={Object.entries(INQUIRIES_STATUS_LABELS).map(([val, label]) => ({ label, value: val }))}
+                      />
+                    </div>
                   </td>
                   <td className="px-5 py-3.5 text-sm" style={{ color: 'var(--inquiries-text-secondary)' }}>
                     {new Date(inq.createdAt).toLocaleDateString('en-IN')}

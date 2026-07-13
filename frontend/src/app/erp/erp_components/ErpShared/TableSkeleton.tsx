@@ -1,6 +1,7 @@
+// RESPONSIBILITY: TableSkeleton.tsx handles the logic and UI for its corresponding feature.
 import React from 'react';
 
-export const TableSkeleton = ({ rows = 6 }: { rows?: number }) => {
+export const TableSkeleton = ({ rows = 6, columns = 5 }: { rows?: number, columns?: number }) => {
   return (
     <div className="w-full bg-card border border-border rounded-xl overflow-hidden mt-4">
       <div className="w-full h-[50px] bg-[rgba(99,102,241,0.08)] border-b border-border"></div>

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: PlansClient.tsx handles the logic and UI for its corresponding feature.
 'use client';
 
 import { PlansProvider, usePlansContext } from '@/app/superadmin/plans/plans_context/PlansContext';

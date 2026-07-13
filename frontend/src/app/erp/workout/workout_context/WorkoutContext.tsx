@@ -1,3 +1,4 @@
+// RESPONSIBILITY: WorkoutContext.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
 import React, { createContext, useContext } from 'react';

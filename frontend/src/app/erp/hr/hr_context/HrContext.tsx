@@ -1,3 +1,4 @@
+// RESPONSIBILITY: HrContext.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
 import React, { createContext, useContext, useMemo } from 'react';

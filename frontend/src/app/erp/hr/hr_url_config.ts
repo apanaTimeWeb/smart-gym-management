@@ -1,3 +1,4 @@
+// RESPONSIBILITY: hr_url_config.ts handles the logic and UI for its corresponding feature.
 export const HrUrlConfig = {
   PAGES: {
     STAFF_LIST: '/erp/hr/staff',

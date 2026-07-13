@@ -1,3 +1,4 @@
+// RESPONSIBILITY: loading.tsx handles the logic and UI for its corresponding feature.
 export default function Loading() {
  return (
  <div className="min-h-screen bg-background flex flex-col">

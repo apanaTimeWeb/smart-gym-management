@@ -1,3 +1,4 @@
+// RESPONSIBILITY: SettingsSharedConstants.ts handles the logic and UI for its corresponding feature.
 import { Building, Bell, Shield, Smartphone, Settings as SettingsIcon } from 'lucide-react';
 
 export const SETTINGS_TABS = [

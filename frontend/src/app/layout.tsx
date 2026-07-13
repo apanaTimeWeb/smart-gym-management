@@ -1,3 +1,4 @@
+// RESPONSIBILITY: layout.tsx handles the logic and UI for its corresponding feature.
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import '@/app/globals.css';

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: SettingsClient.tsx handles the logic and UI for its corresponding feature.
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -5,6 +6,7 @@ import { Settings, Shield, BellRing, Database, Loader2, Save } from 'lucide-reac
 import { superadminApi } from '@/lib/superadmin-api';
 import { useSuperadminMutation } from '@/app/superadmin/superadmin_utils/hooks/useSuperadminMutation';
 import toast from 'react-hot-toast';
+import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 
 export default function SettingsClient() {
   const [settings, setSettings] = useState<any[]>([]);
@@ -33,7 +35,7 @@ export default function SettingsClient() {
     if (newValue === undefined) return;
     
     await mutate(
-      () => superadminApi.settings.update(id, { value: newValue }),
+      (() => superadminApi.settings.update(id, { value: newValue })) as any,
       {
         successMessage: 'Setting updated successfully',
         onSuccess: () => {
@@ -78,7 +80,7 @@ export default function SettingsClient() {
               </div>
               
               <div className="space-y-4 text-sm">
-                {items.map(setting => {
+                {(items as any[]).map(setting => {
                   const hasChanges = editedValues[setting.id] !== undefined && editedValues[setting.id] !== setting.value;
                   const currentValue = editedValues[setting.id] !== undefined ? editedValues[setting.id] : setting.value;
                   
@@ -90,14 +92,15 @@ export default function SettingsClient() {
                       </div>
                       <div className="flex items-center gap-2">
                         {setting.dataType === 'boolean' ? (
-                          <select 
+                          <SearchableDropdown
                             value={String(currentValue)}
-                            onChange={(e) => setEditedValues(prev => ({ ...prev, [setting.id]: e.target.value }))}
-                            className="bg-input border border-border text-foreground rounded-lg px-3 py-1.5 focus:outline-none focus:border-primary"
-                          >
-                            <option value="true">Enabled</option>
-                            <option value="false">Disabled</option>
-                          </select>
+                            onChange={(val) => setEditedValues(prev => ({ ...prev, [setting.id]: val }))}
+                            className="w-32"
+                            options={[
+                              { label: 'Enabled', value: 'true' },
+                              { label: 'Disabled', value: 'false' }
+                            ]}
+                          />
                         ) : (
                           <input 
                             type={setting.dataType === 'number' ? 'number' : 'text'}

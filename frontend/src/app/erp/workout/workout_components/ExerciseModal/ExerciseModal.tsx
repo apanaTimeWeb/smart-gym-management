@@ -1,9 +1,11 @@
+// RESPONSIBILITY: ExerciseModal.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
 import { useEffect } from 'react';
 import { X, Save } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 import { useWorkoutContext } from '@/app/erp/workout/workout_context/WorkoutContext';
 import { EQUIPMENT_OPTIONS, EXERCISE_DIFFICULTY_OPTIONS, ExerciseSchema, type ExerciseFormValues, EMPTY_EXERCISE_FORM } from '@/app/erp/workout/workout_utils/WorkoutSharedConstants';
 
@@ -18,6 +20,7 @@ export default function ExerciseModal() {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors }
   } = useForm<ExerciseFormValues>({
     resolver: zodResolver(ExerciseSchema),
@@ -74,21 +77,31 @@ export default function ExerciseModal() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-secondary mb-1">Equipment</label>
-              <select 
-                {...register('equipment')}
-                className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-warning bg-input text-foreground"
-              >
-                {EQUIPMENT_OPTIONS.map(eq => <option key={eq}>{eq}</option>)}
-              </select>
+              <Controller
+                name="equipment"
+                control={control}
+                render={({ field }) => (
+                  <SearchableDropdown
+                    value={field.value || ''}
+                    onChange={field.onChange}
+                    options={EQUIPMENT_OPTIONS.map(eq => ({ label: eq, value: eq }))}
+                  />
+                )}
+              />
             </div>
             <div>
               <label className="block text-sm font-medium text-secondary mb-1">Difficulty</label>
-              <select 
-                {...register('difficulty')}
-                className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-warning bg-input text-foreground"
-              >
-                {EXERCISE_DIFFICULTY_OPTIONS.map(d => <option key={d}>{d}</option>)}
-              </select>
+              <Controller
+                name="difficulty"
+                control={control}
+                render={({ field }) => (
+                  <SearchableDropdown
+                    value={field.value || ''}
+                    onChange={field.onChange}
+                    options={EXERCISE_DIFFICULTY_OPTIONS.map(d => ({ label: d, value: d }))}
+                  />
+                )}
+              />
             </div>
           </div>
           

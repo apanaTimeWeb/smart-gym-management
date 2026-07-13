@@ -1,3 +1,4 @@
+// RESPONSIBILITY: useSettingsLogic.ts handles the logic and UI for its corresponding feature.
 import { useState, useCallback, useEffect } from 'react';
 import { apiFetch } from '@/lib/api';
 import { SettingsUrlConfig } from '@/app/erp/settings/settings_url_config';

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: useInquiriesLogic.ts handles the logic and UI for its corresponding feature.
 import { useState, useCallback, useEffect } from 'react';
 import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
 import { inquiriesApi, type Inquiry, type InquiryStats } from '@/lib/api';

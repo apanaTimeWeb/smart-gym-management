@@ -1,3 +1,4 @@
+// RESPONSIBILITY: page.tsx handles the logic and UI for its corresponding feature.
 import React from 'react';
 import { ShieldAlert, Search } from 'lucide-react';
 import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: StoreMain.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
 import ErpHeader from '@/app/erp/erp_components/ErpLayout/ErpHeader';

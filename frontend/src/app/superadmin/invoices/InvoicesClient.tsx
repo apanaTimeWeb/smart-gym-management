@@ -1,3 +1,4 @@
+// RESPONSIBILITY: InvoicesClient.tsx handles the logic and UI for its corresponding feature.
 'use client';
 
 import { useState } from 'react';
@@ -5,6 +6,7 @@ import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadm
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { Receipt, Search, Filter, DollarSign, ArrowUpRight, AlertCircle, Plus, X } from 'lucide-react';
 import { SaaSInvoice, Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
+import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 
 const StatusColors: Record<SaaSInvoice['status'], string> = {
   PAID: 'text-success bg-success/10',
@@ -20,6 +22,7 @@ export default function InvoicesClient() {
   const [gymSearchTerm, setGymSearchTerm] = useState('');
   const [isGymDropdownOpen, setIsGymDropdownOpen] = useState(false);
   const [selectedGymId, setSelectedGymId] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('UPI');
 
   if (loading) return <div className="p-8 text-center text-disabled">Loading...</div>;
   if (error || !data) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
@@ -220,12 +223,16 @@ export default function InvoicesClient() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-secondary mb-1.5">Payment Method</label>
-                  <select className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary cursor-pointer">
-                    <option value="UPI">UPI</option>
-                    <option value="CASH">Cash</option>
-                    <option value="BANK_TRANSFER">Bank Transfer</option>
-                    <option value="OFFLINE">Other / Offline</option>
-                  </select>
+                  <SearchableDropdown
+                    value={paymentMethod}
+                    onChange={(val) => setPaymentMethod(String(val))}
+                    options={[
+                      { label: 'UPI', value: 'UPI' },
+                      { label: 'Cash', value: 'CASH' },
+                      { label: 'Bank Transfer', value: 'BANK_TRANSFER' },
+                      { label: 'Other / Offline', value: 'OFFLINE' }
+                    ]}
+                  />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-secondary mb-1.5">Reference ID</label>

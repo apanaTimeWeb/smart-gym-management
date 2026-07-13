@@ -1,3 +1,4 @@
+// RESPONSIBILITY: inquiries_types.ts handles the logic and UI for its corresponding feature.
 
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import type { MessageType, ErpMessageRecipient } from '@/app/erp/erp_components/ErpFeedback/ErpMessageModal';

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: landing_types.ts handles the logic and UI for its corresponding feature.
 import React from 'react';
 import { EMPTY_BOOKING_FORM, EMPTY_CONTACT_FORM } from '@/app/(landing)/landing_utils/LandingSharedConstants';
 

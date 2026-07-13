@@ -1,3 +1,4 @@
+// RESPONSIBILITY: AddPaymentModal.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
 import { useState, useEffect } from 'react';

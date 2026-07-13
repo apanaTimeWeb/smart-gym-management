@@ -1,3 +1,4 @@
+// RESPONSIBILITY: HrTabs.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
 import { useState } from 'react';
@@ -9,7 +10,7 @@ import PayrollTable from '@/app/erp/hr/hr_components/PayrollTable/PayrollTable';
 
 export default function HrTabs() {
   const [activeTab, setActiveTab] = useState(HR_TABS[0]);
-  const { loadAll, openAdd, loading, search, setSearch, setCurrentPage } = useHrContext();
+  const { loadAll, openAdd, openAddPayroll, loading, search, setSearch, setCurrentPage } = useHrContext();
 
   return (
     <div className="rounded-xl shadow-sm border overflow-hidden hr-module" style={{ backgroundColor: 'var(--hr-bg-card)', borderColor: 'var(--hr-border)' }}>

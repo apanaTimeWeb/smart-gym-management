@@ -1,8 +1,8 @@
+// RESPONSIBILITY: workout_types.ts handles the logic and UI for its corresponding feature.
 import { EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM } from '@/app/erp/workout/workout_utils/WorkoutSharedConstants';
 import React from 'react';
 
 import type { Exercise } from '@/lib/api';
-
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 
 export interface WorkoutContextType {
@@ -39,12 +39,12 @@ export interface WorkoutContextType {
  
  openAddWk: () => void;
  openEditWk: (w: Workout) => void;
- saveWk: (e: React.FormEvent) => void;
+ saveWk: (data: any) => void;
  deleteWk: (id: number) => void;
  
  openAddEx: () => void;
  openEditEx: (ex: Exercise) => void;
- saveEx: (e: React.FormEvent) => void;
+ saveEx: (data: any) => void;
  deleteEx: (id: number) => void;
 }
 

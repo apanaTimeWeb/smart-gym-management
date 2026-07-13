@@ -1,3 +1,4 @@
+// RESPONSIBILITY: LibraryTabs.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
 import { RefreshCw, Plus, Search } from 'lucide-react';

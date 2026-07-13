@@ -1,3 +1,4 @@
+// RESPONSIBILITY: useBroadcastsPage.ts handles the logic and UI for its corresponding feature.
 import { useState, useEffect, useMemo, useCallback  } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -43,7 +44,7 @@ export const useBroadcastsPage = () => {
     
     if (editingId) {
       await mutate(
-        () => superadminApi.broadcasts.update(editingId, payload),
+        (() => superadminApi.broadcasts.update(editingId, payload)) as any,
         {
           successMessage: 'Broadcast updated successfully',
           onSuccess: (res) => {
@@ -56,7 +57,7 @@ export const useBroadcastsPage = () => {
       );
     } else {
       await mutate(
-        () => superadminApi.broadcasts.create(payload),
+        (() => superadminApi.broadcasts.create(payload)) as any,
         {
           successMessage: 'Broadcast created successfully',
           onSuccess: (res) => {
@@ -72,7 +73,7 @@ export const useBroadcastsPage = () => {
   const handleDeleteBroadcast = useCallback(async (id: string) => {
     if (!window.confirm('Are you sure you want to delete this broadcast?')) return;
     await mutate(
-      () => superadminApi.broadcasts.remove(id),
+      (() => superadminApi.broadcasts.remove(id)) as any,
       {
         successMessage: 'Broadcast deleted successfully',
         onSuccess: () => {
@@ -85,7 +86,7 @@ export const useBroadcastsPage = () => {
   const handleSendBroadcast = useCallback(async (id: string) => {
     if (!window.confirm('Are you sure you want to send this broadcast now?')) return;
     await mutate(
-      () => superadminApi.broadcasts.send(id),
+      (() => superadminApi.broadcasts.send(id)) as any,
       {
         successMessage: 'Broadcast sent successfully',
         onSuccess: (res) => {

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: page.tsx handles the logic and UI for its corresponding feature.
 import FinanceMain from '@/app/erp/finance/finance_components/FinanceMain/FinanceMain';
 import { ssrFinanceApi } from '@/lib/server-api';
 

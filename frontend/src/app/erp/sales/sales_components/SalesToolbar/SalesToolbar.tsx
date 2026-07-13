@@ -1,3 +1,4 @@
+// RESPONSIBILITY: SalesToolbar.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
 import { Download, Filter, Search } from 'lucide-react';

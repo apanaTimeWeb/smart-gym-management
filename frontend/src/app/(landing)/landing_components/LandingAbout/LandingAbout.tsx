@@ -1,3 +1,4 @@
+// RESPONSIBILITY: LandingAbout.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
 import { CheckCircle, Users, Award, Clock, Heart } from 'lucide-react';

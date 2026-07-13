@@ -1,3 +1,4 @@
+// RESPONSIBILITY: LibrarySharedConstants.ts handles the logic and UI for its corresponding feature.
 import { z } from 'zod';
 
 export const ExerciseSchema = z.object({

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: useAuditTable.ts handles the logic and UI for its corresponding feature.
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
