@@ -342,4 +342,31 @@ When building modules or components, **ALWAYS follow these rules** to ensure sea
 
 ---
 
+## 12. PREMIUM UI & MICRO-INTERACTIONS (The WOW Factor)
+
+To ensure the application feels like a world-class, premium SaaS, **every developer and AI agent MUST adhere to these interaction details:**
+
+1. **Universal Micro-Animations:** No interactive element should change state instantly. 
+   - Apply `transition-all duration-200 ease-in-out` universally to buttons, cards, list items, and dropdown items.
+   - **Hover effects:** Cards should elevate (`hover:-translate-y-1 hover:shadow-lg`), and buttons should have subtle brightness changes.
+   - **Active states:** Buttons should scale down slightly when clicked (`active:scale-95`).
+
+2. **Glassmorphism & Depth (Z-Axis Elevation):**
+   - **Sticky Headers:** Must not be solid flat colors. Use translucent backgrounds with blur (e.g., `bg-[var(--bg-header)]/80 backdrop-blur-md`).
+   - **Modals, Tooltips, & Dropdowns:** Must use deep, soft shadows to create physical separation from the background (e.g., `shadow-2xl shadow-black/50` in dark mode).
+
+3. **Custom Premium Scrollbars:**
+   - Default browser scrollbars destroy the premium aesthetic.
+   - Implement custom thin scrollbars globally via CSS: `::-webkit-scrollbar { width: 6px; height: 6px; }`, with a rounded thumb (`bg-[var(--border)]`) and a transparent track.
+
+4. **Strict Z-Index Layering Scale:**
+   Never use random `z-50` or `z-999` classes. Strictly follow this scale to prevent UI collision:
+   - `z-10`: Sticky Table Headers & Sticky Action Bars
+   - `z-20`: Top App Header (Navbar)
+   - `z-30`: Popovers, Tooltips, & Dropdowns
+   - `z-40`: Modal Overlays & Dialogs
+   - `z-50`: Toast Notifications & Critical Alerts
+
+---
+
 *END OF GLOBAL DESIGN SYSTEM — Paste this block before every module you give to Stitch.*
