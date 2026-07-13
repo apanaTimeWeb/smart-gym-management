@@ -1,4 +1,4 @@
-// RESPONSIBILITY: audit_types.ts handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Defines strict types and API response interfaces for the Audit module to ensure type safety.
 export interface AuditLog {
   id: string;
   actorId: string | null;
@@ -6,21 +6,15 @@ export interface AuditLog {
   action: string;
   entityType: string;
   entityId: string | null;
-  oldValue: any | null;
-  newValue: any | null;
+  oldValue: unknown | null;
+  newValue: unknown | null;
   ipAddress: string | null;
   timestamp: string;
 }
 
 export interface AuditLogResponse {
-  success: boolean;
-  message: string;
-  data: AuditLog[];
-  meta: {
-    page: number;
-    limit: number;
-    total: number;
-  };
+  logs: AuditLog[];
+  total: number;
 }
 
 export interface AuditFilterState {

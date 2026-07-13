@@ -1,10 +1,9 @@
-// RESPONSIBILITY: AuditFilters.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Renders the search/filter inputs for Audit logs and syncs them via useAuditFilters.
 "use client";
 
 import React from 'react';
 import { useAuditFilters } from '@/app/erp/audit/audit_components/AuditFilters/useAuditFilters';
 import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
-import '../../audit.css';
 
 export const AuditFilters = () => {
   const { filters, handleEntityTypeChange, handleActorIdChange, entityTypes } = useAuditFilters();
@@ -17,7 +16,7 @@ export const AuditFilters = () => {
         </label>
         <SearchableDropdown
           value={filters.entityType || ''}
-          onChange={(val) => handleEntityTypeChange({ target: { value: val } } as any)}
+          onChange={handleEntityTypeChange}
           options={entityTypes}
         />
       </div>

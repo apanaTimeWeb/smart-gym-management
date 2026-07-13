@@ -1,12 +1,10 @@
-// RESPONSIBILITY: AuditMain.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Entry component for the Audit module. Renders the layout, filters, and table for tracking system activities.
 "use client";
 
 import React from 'react';
 import ErpHeader from '@/app/erp/erp_components/ErpLayout/ErpHeader';
-import { AuditProvider } from '@/app/erp/audit/audit_context/AuditContext';
 import { AuditFilters } from '@/app/erp/audit/audit_components/AuditFilters/AuditFilters';
 import { AuditTable } from '@/app/erp/audit/audit_components/AuditTable/AuditTable';
-import '@/app/erp/audit/audit.css';
 
 function AuditContent() {
   return (
@@ -32,9 +30,5 @@ function AuditContent() {
 }
 
 export default function AuditMain() {
-  return (
-    <AuditProvider>
-      <AuditContent />
-    </AuditProvider>
-  );
+  return <AuditContent />;
 }

@@ -1,14 +1,23 @@
-// RESPONSIBILITY: useAuditTable.ts handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Custom hook for AuditTable. Reads filters from the URL, fetches logs from the backend, and handles pagination.
+// DATA FLOW: URL Search Params -> useAuditTable -> apiFetch -> AuditTable UI
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
-import { useAuditContext } from '@/app/erp/audit/audit_context/AuditContext';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { AuditLog, AuditLogResponse } from '@/app/erp/audit/audit_types/audit_types';
 import { AUDIT_URLS } from '@/app/erp/audit/audit_url_config';
-import { apiFetch } from '@/lib/api';
+import { apiFetch, ApiResponse } from '@/lib/api';
 
 export const useAuditTable = () => {
-  const { filters, setFilters } = useAuditContext();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const page = parseInt(searchParams.get('page') || '1', 10);
+  const limit = 10;
+  const entityType = searchParams.get('entityType') || '';
+  const actorId = searchParams.get('actorId') || '';
+
   const [logs, setLogs] = useState<AuditLog[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -19,48 +28,52 @@ export const useAuditTable = () => {
     setError(null);
     try {
       const queryParams = new URLSearchParams();
-      queryParams.append('page', filters.page.toString());
-      queryParams.append('limit', filters.limit.toString());
-      if (filters.entityType) queryParams.append('entityType', filters.entityType);
-      if (filters.actorId) queryParams.append('actorId', filters.actorId);
+      queryParams.append('page', page.toString());
+      queryParams.append('limit', limit.toString());
+      if (entityType) queryParams.append('entityType', entityType);
+      if (actorId) queryParams.append('actorId', actorId);
 
-      const data = await apiFetch<AuditLogResponse>(
+      // Using strict generic envelope ApiResponse to cast the result
+      const data = await apiFetch<ApiResponse<AuditLogResponse>>(
         `${AUDIT_URLS.BACKEND_API.BASE}?${queryParams.toString()}`
       );
       
-      setLogs(data.data || []);
-      setTotalCount(data.meta?.total || 0);
+      // If the backend wraps in { data: AuditLog[], meta: { total: number } } 
+      // instead of the new AuditLogResponse, we handle both defensively.
+      const responseData = data.data as unknown as { data: AuditLog[], meta: { total: number } } | AuditLogResponse;
+      
+      if ('logs' in responseData) {
+        setLogs(responseData.logs || []);
+        setTotalCount(responseData.total || 0);
+      } else {
+        setLogs(responseData.data || []);
+        setTotalCount(responseData.meta?.total || 0);
+      }
+      
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
     }
-  }, [filters]);
+  }, [page, limit, entityType, actorId]);
 
   useEffect(() => {
     fetchLogs();
   }, [fetchLogs]);
 
-  const handleNextPage = () => {
-    if (filters.page * filters.limit < totalCount) {
-      setFilters({ page: filters.page + 1 });
-    }
-  };
-
-  const handlePrevPage = () => {
-    if (filters.page > 1) {
-      setFilters({ page: filters.page - 1 });
-    }
+  const setCurrentPage = (newPage: number) => {
+    const currentParams = new URLSearchParams(Array.from(searchParams.entries()));
+    currentParams.set('page', newPage.toString());
+    router.push(`${pathname}?${currentParams.toString()}`);
   };
 
   return {
     logs,
     loading,
     error,
-    page: filters.page,
-    limit: filters.limit,
+    page,
+    limit,
     totalCount,
-    handleNextPage,
-    handlePrevPage,
+    setCurrentPage,
   };
 };

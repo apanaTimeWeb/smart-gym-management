@@ -1,10 +1,10 @@
-// RESPONSIBILITY: AuditTable.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Renders the table of audit logs and standard pagination controls.
 "use client";
 
 import React from 'react';
 import { useAuditTable } from '@/app/erp/audit/audit_components/AuditTable/useAuditTable';
 import { AUDIT_TABLE_HEADERS } from '@/app/erp/audit/audit_utils/AuditSharedConstants';
-import '../../audit.css';
+import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
 
 export const AuditTable = () => {
   const {
@@ -14,9 +14,10 @@ export const AuditTable = () => {
     page,
     limit,
     totalCount,
-    handleNextPage,
-    handlePrevPage,
+    setCurrentPage,
   } = useAuditTable();
+
+  const totalPages = Math.ceil(totalCount / limit) || 1;
 
   if (loading) {
     return <div className="p-4 text-center">Loading audit logs...</div>;
@@ -48,7 +49,7 @@ export const AuditTable = () => {
               </tr>
             ) : (
               logs.map((log) => (
-                <tr key={log.id} className="hover:bg-accent transition-colors">
+                <tr key={log.id} className="hover:bg-primary-subtle transition-colors">
                   <td className="px-6 py-4">{new Date(log.timestamp).toLocaleString()}</td>
                   <td className="px-6 py-4 font-medium">{log.actorId || 'System'}</td>
                   <td className="px-6 py-4">
@@ -80,26 +81,14 @@ export const AuditTable = () => {
         </table>
       </div>
 
-      <div className="flex flex-col sm:flex-row justify-between items-center mt-6 text-sm text-secondary">
-        <span className="mb-4 sm:mb-0">
-          Showing <span className="font-medium text-foreground">{totalCount === 0 ? 0 : (page - 1) * limit + 1}</span> to <span className="font-medium text-foreground">{Math.min(page * limit, totalCount)}</span> of <span className="font-medium text-foreground">{totalCount}</span> entries
-        </span>
-        <div className="flex gap-2">
-          <button
-            onClick={handlePrevPage}
-            disabled={page === 1}
-            className="px-4 py-2 rounded-xl border border-border bg-card hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium text-foreground"
-          >
-            Previous
-          </button>
-          <button
-            onClick={handleNextPage}
-            disabled={page * limit >= totalCount}
-            className="px-4 py-2 rounded-xl border border-border bg-card hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium text-foreground"
-          >
-            Next
-          </button>
-        </div>
+      <div className="mt-4 border-t border-border pt-4">
+        <ErpPagination
+          currentPage={page}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          totalItems={totalCount}
+          itemsPerPage={limit}
+        />
       </div>
     </div>
   );
