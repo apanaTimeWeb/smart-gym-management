@@ -1,8 +1,9 @@
-// RESPONSIBILITY: useSalesLogic.ts handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Custom hook encapsulating all business logic, async API calls, URL-synced state (search, page), and data for the Sales & Reports module. Feeds SalesContext.
+// DATA FLOW: salesApi → useSalesLogic → SalesContext → Sales components
 import { useState, useCallback, useEffect } from 'react';
 import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
 import { type SalesTab, type DateFilter } from '@/app/erp/sales/sales_utils/SalesSharedConstants';
-import { SalesContextType, SalesInitialData, FetchState, OverviewDataPoint, MembershipReportItem, MembershipTotals } from '@/app/erp/sales/sales_types/sales_types';
+import { SalesContextType, SalesInitialData, FetchState, OverviewDataPoint, MembershipReportItem, MembershipTotals, PendingPaymentMember } from '@/app/erp/sales/sales_types/sales_types';
 import type { Member } from '@/app/erp/members/members_types/members_types';
 import { salesApi } from '@/app/erp/sales/sales_api/sales_api';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
@@ -42,7 +43,7 @@ export function useSalesLogic(initialData?: SalesInitialData | null): SalesConte
   const [overviewData, setOverviewData] = useState<OverviewDataPoint[]>(initialData?.overviewData || []);
   const [membershipReport, setMembershipReport] = useState<MembershipReportItem[]>(initialData?.membershipReport || []);
   const [membershipTotals, setMembershipTotals] = useState<MembershipTotals>(initialData?.membershipTotals || { activeCount: 0, revenue: 0 });
-  const [pendingPayments, setPendingPayments] = useState<PendingPaymentMember[]>(initialData?.pendingPayments || []);
+  const [pendingPayments, setPendingPayments] = useState<PendingPaymentMember[]>((initialData?.pendingPayments as PendingPaymentMember[]) || []);
   const [pendingTotal, setPendingTotal] = useState(initialData?.pendingTotal || 0);
   const [allMemberships, setAllMemberships] = useState<Member[]>(initialData?.allMemberships || []);
   const [allMembershipsTotal, setAllMembershipsTotal] = useState(initialData?.allMembershipsTotal || 0);
@@ -66,14 +67,14 @@ export function useSalesLogic(initialData?: SalesInitialData | null): SalesConte
       setMembershipReport(reportRes.data?.report || []);
       setMembershipTotals(reportRes.data?.totals || { activeCount: 0, revenue: 0 });
       
-      setPendingPayments((pendingRes.data?.members || []) as PendingPaymentMember[]);
+      setPendingPayments((pendingRes.data?.members || []) as PendingPaymentMember[]);  // cast: backend returns generic member shape
       setPendingTotal(pendingRes.data?.total || 0);
       
       setAllMemberships(allRes.data?.members || []);
       setAllMembershipsTotal(allRes.data?.total || 0);
       
       setFetchState('success');
-    } catch (e) {
+    } catch (e: unknown) {
       showToast(e instanceof Error ? e.message : 'Failed to fetch sales data', 'error');
       setFetchState('error');
     }

@@ -23,8 +23,8 @@ export default async function SalesPage() {
       allMemberships: allRes.data?.members || [],
       allMembershipsTotal: allRes.data?.total || 0
     };
-  } catch (e) {
-    // Error logged to monitoring service
+  } catch (e: unknown) {
+    console.error('[SalesPage SSR] Failed to fetch initial data:', e);
   }
 
   return <SalesMain initialData={initialData} />;

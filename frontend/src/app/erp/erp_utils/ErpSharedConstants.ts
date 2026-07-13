@@ -1,4 +1,4 @@
-// RESPONSIBILITY: ErpSharedConstants.ts handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Centralized constants shared across all ERP modules — nav items, placeholder notifications, gym identity (name/phone), sensitive data masking utility, and pagination page size.
 import {
  LayoutDashboard, Users, ClipboardList, BarChart2,
  UserCog, ShoppingBag, DollarSign, BookOpen, Dumbbell,

@@ -1,9 +1,13 @@
-// RESPONSIBILITY: ErpBulkMessageModal.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Renders a bulk messaging modal for sending WhatsApp or Email messages to multiple recipients. Manages per-recipient send tracking for WhatsApp queue mode.
 'use client';
 
 import { useState, useEffect } from 'react';
 import { X, Send, MessageCircle, Mail, CheckCircle, Phone, AtSign, Users } from 'lucide-react';
 import type { MessageType, ErpMessageRecipient } from '@/app/erp/erp_components/ErpFeedback/ErpMessageModal';
+
+// WhatsApp brand green — cannot be a CSS variable as it is a third-party brand color, not a design system token.
+// Defined here as a constant so it is changed in exactly one place if the brand color ever updates.
+const WA_GREEN = '#25D366';
 
 interface ErpBulkMessageModalProps {
   open?: boolean;
@@ -13,9 +17,6 @@ interface ErpBulkMessageModalProps {
   defaultMessage?: string;
   onSuccess?: (msg: string) => void;
 }
-
-const WA_GREEN = '#25D366';
-const EMAIL_BLUE = 'var(--info)';
 
 export default function ErpBulkMessageModal({
   open,
@@ -27,10 +28,11 @@ export default function ErpBulkMessageModal({
 }: ErpBulkMessageModalProps) {
   const [message, setMessage] = useState(defaultMessage);
   const [subject, setSubject] = useState('Message from GymSmart');
-  
+
   // For WhatsApp Queue Tracking
   const [sentIndexes, setSentIndexes] = useState<Set<number>>(new Set());
 
+  // Reset send state and message whenever the modal opens with new data.
   useEffect(() => {
     if (open) {
       setSentIndexes(new Set());
@@ -40,17 +42,19 @@ export default function ErpBulkMessageModal({
 
   if (!open) return null;
 
-  const accentColor = type === 'whatsapp' ? WA_GREEN : EMAIL_BLUE;
+  // accentColor is dynamic (WhatsApp brand green vs CSS variable info blue) — inline style is acceptable here
+  // because it is a runtime-computed value, not a hardcoded design system color.
+  const accentColor = type === 'whatsapp' ? WA_GREEN : 'var(--info)';
   const Icon = type === 'whatsapp' ? MessageCircle : Mail;
   const label = type === 'whatsapp' ? 'WhatsApp' : 'Email';
 
   const handleSendEmail = () => {
     const validEmails = recipients.map(r => r.email).filter(Boolean).join(',');
     if (!validEmails) return;
-    
+
     const url = `mailto:?bcc=${validEmails}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
     window.location.href = url;
-    
+
     setTimeout(() => {
       onSuccess?.('Bulk email client opened successfully!');
       onClose();
@@ -64,7 +68,7 @@ export default function ErpBulkMessageModal({
 
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
-    
+
     setSentIndexes(prev => new Set(prev).add(index));
   };
 
@@ -77,10 +81,7 @@ export default function ErpBulkMessageModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div
-        className="bg-card rounded-2xl shadow-2xl w-full max-w-2xl relative overflow-hidden border border-border max-h-[90vh] flex flex-col"
-        style={{ animation: 'fadeScaleIn 0.2s ease' }}
-      >
+      <div className="bg-card rounded-2xl shadow-2xl w-full max-w-2xl relative overflow-hidden border border-border max-h-[90vh] flex flex-col animate-in zoom-in-95 duration-200">
         <div
           className="px-6 py-4 flex items-center justify-between shrink-0"
           style={{ background: accentColor }}
@@ -144,16 +145,18 @@ export default function ErpBulkMessageModal({
                 </span>
               )}
             </div>
-            
+
             <div className="flex-1 overflow-y-auto bg-input rounded-xl border border-border p-2 space-y-1.5">
               {recipients.map((rec, idx) => {
                 const isSent = sentIndexes.has(idx);
                 const hasContactInfo = type === 'whatsapp' ? !!rec.phone : !!rec.email;
-                
+                // Stable composite key: phone+email uniquely identifies a recipient in this list
+                const stableKey = `${rec.phone ?? ''}-${rec.email ?? ''}-${rec.name}`;
+
                 return (
-                  <div key={idx} className="flex items-center justify-between p-2.5 bg-card rounded-lg border border-border">
+                  <div key={stableKey} className="flex items-center justify-between p-2.5 bg-card rounded-lg border border-border">
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs shrink-0" style={{ background: 'var(--primary)' }}>
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs shrink-0 bg-primary">
                         {rec.name.charAt(0)}
                       </div>
                       <div className="min-w-0">
@@ -164,16 +167,17 @@ export default function ErpBulkMessageModal({
                         </div>
                       </div>
                     </div>
-                    
+
                     {type === 'whatsapp' && (
                       <button
                         onClick={() => handleSendWhatsApp(idx)}
                         disabled={!hasContactInfo || !message.trim()}
                         className={`shrink-0 px-3 py-1.5 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-all ${
-                          isSent 
+                          isSent
                             ? 'bg-success/10 text-success border border-success/20'
-                            : 'bg-[#25D366] text-white hover:opacity-90 disabled:opacity-50'
+                            : 'text-white hover:opacity-90 disabled:opacity-50'
                         }`}
+                        style={!isSent ? { background: WA_GREEN } : undefined}
                       >
                         {isSent ? (
                           <><CheckCircle size={12} /> Sent</>
@@ -188,7 +192,7 @@ export default function ErpBulkMessageModal({
             </div>
             {type === 'whatsapp' && (
               <p className="text-xs text-secondary mt-2 italic text-center">
-                * WhatsApp prevents automated bulk sending. Please click "Send" for each recipient to safely message them via WhatsApp Web.
+                * WhatsApp prevents automated bulk sending. Please click &quot;Send&quot; for each recipient to safely message them via WhatsApp Web.
               </p>
             )}
           </div>
@@ -201,13 +205,12 @@ export default function ErpBulkMessageModal({
           >
             Cancel
           </button>
-          
+
           {type === 'email' ? (
             <button
               onClick={handleSendEmail}
               disabled={!message.trim()}
-              className="flex-1 px-4 py-2.5 text-sm font-semibold text-white rounded-xl flex items-center justify-center gap-2 transition-all hover:opacity-90 disabled:opacity-50"
-              style={{ background: EMAIL_BLUE }}
+              className="flex-1 px-4 py-2.5 text-sm font-semibold text-white rounded-xl flex items-center justify-center gap-2 transition-all hover:opacity-90 disabled:opacity-50 bg-info"
             >
               <Send size={15} />
               Open Email Client (BCC All)
@@ -228,13 +231,6 @@ export default function ErpBulkMessageModal({
           )}
         </div>
       </div>
-
-      <style>{`
-        @keyframes fadeScaleIn {
-          from { opacity: 0; transform: scale(0.95); }
-          to { opacity: 1; transform: scale(1); }
-        }
-      `}</style>
     </div>
   );
 }

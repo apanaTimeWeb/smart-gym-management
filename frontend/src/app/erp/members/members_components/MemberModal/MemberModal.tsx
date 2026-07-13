@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Renders a modal for creating or editing a member.
-"use client";
+'use client';
 
 import { useEffect } from 'react';
 import { X, Save } from 'lucide-react';
@@ -39,6 +39,8 @@ export default function MemberModal() {
   const watchBillingCycle = watch('billingCycle') as string;
   const watchCustomDays = watch('customDays') as number;
 
+  const onSubmit = (data: MemberFormValues) => saveMember(data);
+
   if (!showAddModal) return null;
 
   const selectedPlan = plans.find(p => p.id.toString() === watchPlanId?.toString()) as PlanWithCustom | undefined;
@@ -47,7 +49,7 @@ export default function MemberModal() {
     <div className="fixed inset-0 bg-black/60 z-40 flex items-center justify-center p-4">
       <div className="bg-card rounded-2xl shadow-2xl shadow-black/50 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-border">
         <div className="sticky top-0 bg-card px-6 py-4 border-b border-border flex items-center justify-between">
-          <h3 className="text-lg font-bold text-primary">{editId ? 'Edit Member' : 'Add New Member'}</h3>
+          <h3 className="text-lg font-bold text-foreground">{editId ? 'Edit Member' : 'Add New Member'}</h3>
           <button
             onClick={() => setShowAddModal(false)}
             className="p-2 rounded-lg hover:bg-primary-subtle text-secondary transition-all duration-200"
@@ -56,7 +58,7 @@ export default function MemberModal() {
             <X size={18} />
           </button>
         </div>
-        <form onSubmit={handleSubmit(saveMember as any)} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4">
           {[
             { label: 'Full Name', key: 'name', type: 'text', placeholder: 'Rahul Sharma' },
             { label: 'Email', key: 'email', type: 'email', placeholder: 'rahul@gmail.com' },

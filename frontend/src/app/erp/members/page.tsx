@@ -19,8 +19,8 @@ export default async function MembersPage() {
       plans: plansRes.data || [],
       stats: statsRes.data || { total: 0, active: 0, pending: 0, expired: 0 }
     };
-  } catch (e) {
-    // console.error('Failed to fetch members initial data:', e);
+  } catch (e: unknown) {
+    console.error('[MembersPage SSR] Failed to fetch initial data:', e);
   }
 
   return <MembersMain initialData={initialData} />;

@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Renders the primary tabular list of members with actions, filtering state, and pagination.
-"use client";
+'use client';
 
 import { Edit, MessageCircle, Mail, Trash2, Loader2 } from 'lucide-react';
 import { useMembersContext } from '@/app/erp/members/members_context/MembersContext';
@@ -53,12 +53,12 @@ export default function MembersTable() {
                           {m.name.charAt(0)}
                         </div>
                         <div>
-                          <p className="text-sm font-semibold text-primary">{m.name}</p>
+                          <p className="text-sm font-semibold text-foreground">{m.name}</p>
                           <p className="text-xs text-secondary">{maskSensitiveData(m.phone, 'phone')}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-5 py-3.5 text-sm text-primary">{m.plan?.name || `Plan #${m.planId}`}</td>
+                    <td className="px-5 py-3.5 text-sm text-foreground">{m.plan?.name || `Plan #${m.planId}`}</td>
                     <td className="px-5 py-3.5">
                       <span 
                         className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusStyle.bg} ${statusStyle.text}`}

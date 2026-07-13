@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Centralized constants, Zod schema, and shared utilities for the Members module. Single source of truth for form defaults, status colors, billing labels, and message templates.
 import type { Plan } from '@/app/erp/plans/plans_types/plans_types';
+import type { PlanWithCustom } from '@/app/erp/members/members_types/members_types';
 import { z } from 'zod';
 import { ERP_ITEMS_PER_PAGE } from '@/app/erp/erp_utils/ErpSharedConstants';
 
@@ -43,15 +44,16 @@ export const GENDER_OPTIONS = [
   { label: 'Other', value: 'OTHER' }
 ];
 
-export const EMPTY_MEMBER_FORM = { 
- name: '', 
- email: '', 
- phone: '', 
- address: '', 
- gender: 'MALE', 
- billingCycle: 'ONE_MONTH', 
- planId: '' 
-} as unknown as MemberFormValues;
+export const EMPTY_MEMBER_FORM: MemberFormValues = {
+  name: '',
+  email: '',
+  phone: '',
+  address: '',
+  gender: 'MALE',
+  billingCycle: 'ONE_MONTH',
+  planId: '',
+  customDays: 0,
+};
 
 
 
@@ -69,9 +71,7 @@ export const PROFILE_TABS = [
 
 export const formatCurrency = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');
 
-export interface PlanWithCustom extends Plan {
-  priceCustom?: number;
-}
+export { type PlanWithCustom } from '@/app/erp/members/members_types/members_types';
 
 export function getPriceForCycle(plan: PlanWithCustom | undefined, cycle: string, customDays: number = 0): number {
   if (!plan) return 0;

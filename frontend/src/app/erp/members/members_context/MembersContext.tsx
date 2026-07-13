@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Provides members state to the members module hierarchy.
 // DATA FLOW: useMembersLogic -> MembersContext -> Members components
-"use client";
+'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';
 import { MembersContextType, MembersInitialData } from '@/app/erp/members/members_types/members_types';
@@ -11,10 +11,11 @@ const MembersContext = createContext<MembersContextType | undefined>(undefined);
 export function MembersProvider({ children, initialData }: { children: React.ReactNode, initialData?: MembersInitialData | null }) {
   const logic = useMembersLogic(initialData);
 
-  // Memoize with explicit primitive deps to prevent re-render chains across micro-components
+  // Memoize with explicit primitive deps to prevent re-render chains across micro-components.
+  // Each dep listed individually because `logic` is a new object reference on every render;
+  // spreading `logic` directly would make useMemo a no-op.
   const value = useMemo<MembersContextType>(
     () => logic,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [logic.members, logic.fetchState, logic.totalMembers, logic.search, logic.statusFilter,
      logic.currentPage, logic.toast, logic.selectedMember, logic.showAddModal,
      logic.editId, logic.msgModal, logic.printData, logic.attMap, logic.plans]

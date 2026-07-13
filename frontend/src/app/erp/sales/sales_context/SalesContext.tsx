@@ -1,5 +1,6 @@
-// RESPONSIBILITY: Provides the implementation for SalesContext.tsx functionality within its module.
-"use client";
+// RESPONSIBILITY: Provides sales module state (revenue data, membership reports, pending payments) to all Sales components via React Context. Sync UI state only — async data must migrate to Zustand (see useSalesLogic.ts).
+// DATA FLOW: useSalesLogic → SalesContext → Sales components
+'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';
 import { SalesContextType, SalesInitialData } from '@/app/erp/sales/sales_types/sales_types';

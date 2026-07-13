@@ -94,9 +94,9 @@ export function useMembersLogic(initialData?: MembersInitialData | null): Member
       setPlans(plansRes.data);
       setStats(statsRes.data);
       setFetchState(FetchState.SUCCESS);
-    } catch (e) {
+    } catch (e: unknown) {
       setFetchState(FetchState.ERROR);
-      showToast((e as Error).message, 'error');
+      showToast(e instanceof Error ? e.message : 'Failed to load members', 'error');
     }
   }, [showToast, currentPage, debouncedSearch, statusFilter]);
 
@@ -116,7 +116,7 @@ export function useMembersLogic(initialData?: MembersInitialData | null): Member
       const aRes = await attendanceApi.getAll({ memberId: memberId.toString() });
       
       if (aRes.success) {
-        const daysInMonth = 30;
+        const daysInMonth = 30; // Fixed 30-day display grid for attendance calendar preview
         const realAtt = Array.from({ length: daysInMonth }, (_, i) => {
           const d = i + 1;
           const rec = (aRes.data.attendance as Array<{ date: string }>)?.find(a => new Date(a.date).getDate() === d);
@@ -173,8 +173,8 @@ export function useMembersLogic(initialData?: MembersInitialData | null): Member
    }
   setShowAddModal(false);
   await loadAll();
-  } catch (err) { 
-  showToast((err as Error).message, 'error'); 
+  } catch (err: unknown) { 
+  showToast(err instanceof Error ? err.message : 'Save failed', 'error'); 
   } finally { 
   setSaving(false); 
   }
@@ -188,8 +188,8 @@ export function useMembersLogic(initialData?: MembersInitialData | null): Member
   showToast(res.message || 'Deleted successfully', 'success');
   if (selectedMember?.id === id) setSelectedMember(null);
   await loadAll();
-  } catch (err) { 
-  showToast((err as Error).message, 'error'); 
+  } catch (err: unknown) { 
+  showToast(err instanceof Error ? err.message : 'Delete failed', 'error'); 
   }
   }, [loadAll, showToast, selectedMember, confirm]);
 
@@ -213,7 +213,8 @@ export function useMembersLogic(initialData?: MembersInitialData | null): Member
  items: [{ name: `Membership - ${m.plan?.name || ''}`, price: p.amount, amount: p.amount }],
  total: p.amount, paymentMethod: p.method,
  });
- setTimeout(() => window.print(), 100);
+ // SSR-safe print trigger — window is only available on the client
+ if (typeof window !== 'undefined') setTimeout(() => window.print(), 100);
  }, [selectedMember]);
 
   return {
