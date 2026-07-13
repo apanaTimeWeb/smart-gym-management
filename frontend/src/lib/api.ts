@@ -20,7 +20,7 @@ import { LibraryUrlConfig } from '@/app/erp/library/library_url_config';
 import { InquiriesUrlConfig } from '@/app/erp/inquiries/inquiries_url_config';
 import { SalesUrlConfig } from '@/app/erp/sales/sales_url_config';
 
-export type { DashboardStats, RecentMember, RecentPayment, PendingPayment } from '@/app/erp/dashboard/dashboard_types/dashboard_types';
+export type { DashboardStats } from '@/app/erp/dashboard/dashboard_types/dashboard_types';
 export type { Member, MemberStats } from '@/app/erp/members/members_types/members_types';
 export type { Plan } from '@/app/erp/plans/plans_types/plans_types';
 export type { Payment, FinanceSummary } from '@/app/erp/finance/finance_types/finance_types';
@@ -31,7 +31,7 @@ export type { Workout } from '@/app/erp/workout/workout_types/workout_types';
 export type { Exercise, DietPlan } from '@/app/erp/library/library_types/library_types';
 export type { Inquiry, InquiryStats } from '@/app/erp/inquiries/inquiries_types/inquiries_types';
 
-import type { DashboardStats, RecentMember, RecentPayment, PendingPayment } from '@/app/erp/dashboard/dashboard_types/dashboard_types';
+import type { DashboardStats } from '@/app/erp/dashboard/dashboard_types/dashboard_types';
 import type { Member, MemberStats } from '@/app/erp/members/members_types/members_types';
 import type { Plan } from '@/app/erp/plans/plans_types/plans_types';
 import type { Payment, FinanceSummary } from '@/app/erp/finance/finance_types/finance_types';
@@ -141,38 +141,7 @@ export async function apiFetch<T = unknown>(
 
 // ─── Auth ─────────────────────────────────────────────────────────────────────
 
-export const authApi = {
-  login: async (email: string, password: string) => {
-    return apiFetch<{ success: boolean; data: { accessToken: string; user: any } }>(AuthUrlConfig.BACKEND_API.LOGIN, {
-      method: 'POST',
-      body: JSON.stringify({ email, password }),
-      auth: false,
-    });
-  },
-  me: () => apiFetch(AuthUrlConfig.BACKEND_API.ME),
-};
-
 // ─── Dashboard ────────────────────────────────────────────────────────────────
-
-export const dashboardApi = {
-  getStats: async () => {
-    const [kpiRes, chartsRes, recentRes] = await Promise.all([
-      apiFetch<{ success: boolean; data: any }>(DashboardUrlConfig.BACKEND_API.STATS),
-      apiFetch<{ success: boolean; data: any }>(DashboardUrlConfig.BACKEND_API.CHARTS),
-      apiFetch<{ success: boolean; data: any }>(DashboardUrlConfig.BACKEND_API.RECENT),
-    ]);
-    return {
-      success: true,
-      data: {
-        ...kpiRes.data,
-        ...chartsRes.data,
-        ...recentRes.data,
-      } as DashboardStats,
-    };
-  },
-};
-
-
 // ─── Members ──────────────────────────────────────────────────────────────────
 
 export const membersApi = {

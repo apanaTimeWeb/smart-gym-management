@@ -8,7 +8,7 @@ import { FinanceUrlConfig } from '@/app/erp/finance/finance_url_config';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 
-export async function ssrApiFetch<T = unknown>(path: string): Promise<T> {
+async function ssrApiFetch<T = unknown>(path: string): Promise<T> {
   const cookieStore = await cookies();
   const token = cookieStore.get('gymsmart_token')?.value;
 
