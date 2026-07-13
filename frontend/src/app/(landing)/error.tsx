@@ -10,12 +10,12 @@ export default function Error({
  reset: () => void;
 }) {
  useEffect(() => {
- console.error('Landing Page Error:', error);
+ // console.error('Landing Page Error:', error);
  }, [error]);
 
  return (
- <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center p-6">
- <div className="bg-[#0f0f0f] border border-destructive/30 p-8 rounded-3xl max-w-md w-full text-center space-y-4 shadow-2xl">
+ <div className="min-h-screen bg-background flex items-center justify-center p-6">
+ <div className="bg-card border border-destructive/30 p-8 rounded-3xl max-w-md w-full text-center space-y-4 shadow-2xl">
  <h2 className="text-2xl font-black text-white">Oops! Something went wrong.</h2>
  <p className="text-secondary text-sm">
  We couldn&apos;t load the landing page successfully. Please try refreshing.

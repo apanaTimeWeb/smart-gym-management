@@ -18,7 +18,7 @@ export default async function MembersPage() {
       stats: statsRes.data || { total: 0, active: 0, pending: 0, expired: 0 }
     };
   } catch (e) {
-    console.error('Failed to fetch members initial data:', e);
+    // console.error('Failed to fetch members initial data:', e);
   }
 
   return <MembersMain initialData={initialData} />;

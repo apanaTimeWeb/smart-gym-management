@@ -2,9 +2,9 @@
 
 import React from 'react';
 import { CheckCircle2, Ban, LogIn, PlayCircle, Edit2, Mail, Trash2 } from 'lucide-react';
-import { useGymsContext } from '../gyms_context/GymsContext';
-import GymEditModal from './GymEditModal';
-import GymEmailModal from './GymEmailModal';
+import { useGymsContext } from '@/app/superadmin/gyms/gyms_context/GymsContext';
+import GymEditModal from '@/app/superadmin/gyms/gyms_components/GymEditModal';
+import GymEmailModal from '@/app/superadmin/gyms/gyms_components/GymEmailModal';
 import toast from 'react-hot-toast';
 
 export default function GymsTable() {
@@ -58,7 +58,7 @@ export default function GymsTable() {
                 <p className="text-xs text-disabled mt-1">{gym.adminEmail}</p>
               </td>
               <td className="px-5 py-4">
-                <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[12px] font-semibold tracking-wide
+                <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold tracking-wide
                   ${
                     gym.plan?.toUpperCase() === 'ENTERPRISE' ? 'bg-purple-bg text-purple border border-purple' : 
                     gym.plan?.toUpperCase() === 'PRO' ? 'bg-primary-subtle text-primary border border-primary' : 

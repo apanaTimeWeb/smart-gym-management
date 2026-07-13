@@ -1,7 +1,7 @@
 'use client';
 
 import { Check, Edit2, Trash2 } from 'lucide-react';
-import { usePlansContext } from '../plans_context/PlansContext';
+import { usePlansContext } from '@/app/superadmin/plans/plans_context/PlansContext';
 
 export default function PlansList() {
   const { plans, loading, error, openEditModal, handleDeletePlan } = usePlansContext();

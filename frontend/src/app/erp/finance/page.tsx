@@ -15,7 +15,7 @@ export default async function FinancePage() {
       summary: summaryRes.data || null
     };
   } catch (e) {
-    console.error('Failed to fetch finance initial data:', e);
+    // console.error('Failed to fetch finance initial data:', e);
   }
 
   return <FinanceMain initialData={initialData} />;

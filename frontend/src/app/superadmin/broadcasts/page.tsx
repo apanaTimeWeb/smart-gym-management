@@ -3,19 +3,19 @@
 import React from 'react';
 import { Megaphone, Plus, Search, Edit2, Trash2, Send } from 'lucide-react';
 import { BroadcastStatus } from '@/app/superadmin/superadmin_types/superadmin_types';
-import { useBroadcastsPage } from '../superadmin_utils/hooks/useBroadcastsPage';
+import { useBroadcastsPage } from '@/app/superadmin/superadmin_utils/hooks/useBroadcastsPage';
 import { SuperadminBroadcastModal } from '@/app/superadmin/broadcasts/broadcasts_components/SuperadminBroadcastModal';
 import { toast } from 'react-hot-toast';
 
 const getStatusBadge = (status: BroadcastStatus) => {
   switch (status) {
     case 'SENT':
-      return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-success-bg text-success">SENT</span>;
+      return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success-bg text-success">SENT</span>;
     case 'SCHEDULED':
-      return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-warning-bg text-warning">SCHEDULED</span>;
+      return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-warning-bg text-warning">SCHEDULED</span>;
     case 'DRAFT':
     default:
-      return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#1E1E2E] text-secondary">DRAFT</span>;
+      return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-[#1E1E2E] text-secondary">DRAFT</span>;
   }
 };
 
@@ -49,11 +49,11 @@ export default function BroadcastsPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-[22px] font-bold text-foreground flex items-center gap-2">
+          <h1 className="text-xl font-bold text-foreground flex items-center gap-2">
             <Megaphone className="w-6 h-6 text-primary" />
             Announcements & Broadcasts
           </h1>
-          <p className="text-[14px] text-secondary mt-1">
+          <p className="text-sm text-secondary mt-1">
             Push notifications and announcements to all gym dashboards.
           </p>
         </div>
@@ -65,12 +65,12 @@ export default function BroadcastsPage() {
               placeholder="Search broadcasts..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-[14px] text-foreground focus:outline-none focus:border-border-focus transition-colors w-64"
+              className="pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus transition-colors w-64"
             />
           </div>
           <button 
             onClick={openCreateModal}
-            className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-white font-medium rounded-lg transition-colors text-[14px]"
+            className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-white font-medium rounded-lg transition-colors text-sm"
           >
             <Plus className="w-4 h-4" />
             New Broadcast
@@ -84,11 +84,11 @@ export default function BroadcastsPage() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-primary/5 border-b border-border">
-                <th className="px-6 py-4 text-[12px] font-semibold text-secondary uppercase tracking-wider">Title</th>
-                <th className="px-6 py-4 text-[12px] font-semibold text-secondary uppercase tracking-wider">Audience</th>
-                <th className="px-6 py-4 text-[12px] font-semibold text-secondary uppercase tracking-wider">Status</th>
-                <th className="px-6 py-4 text-[12px] font-semibold text-secondary uppercase tracking-wider">Scheduled / Sent Date</th>
-                <th className="px-6 py-4 text-[12px] font-semibold text-secondary uppercase tracking-wider text-right">Actions</th>
+                <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Title</th>
+                <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Audience</th>
+                <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Status</th>
+                <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Scheduled / Sent Date</th>
+                <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -100,19 +100,19 @@ export default function BroadcastsPage() {
                 >
                   <td className="px-6 py-4">
                     <div className="flex flex-col">
-                      <span className="text-[14px] font-medium text-foreground">{bc.title}</span>
-                      <span className="text-[12px] text-secondary truncate max-w-xs">{bc.content}</span>
+                      <span className="text-sm font-medium text-foreground">{bc.title}</span>
+                      <span className="text-xs text-secondary truncate max-w-xs">{bc.content}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-primary-subtle text-primary border border-primary/20">
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-primary-subtle text-primary border border-primary/20">
                       {bc.audience.replace('_', ' ')}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {getStatusBadge(bc.status)}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-[14px] text-secondary">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary">
                     {bc.status === 'SCHEDULED' && bc.scheduledDate ? new Date(bc.scheduledDate).toLocaleString() : ''}
                     {bc.status === 'SENT' && bc.sentDate ? new Date(bc.sentDate).toLocaleString() : ''}
                     {bc.status === 'DRAFT' && '-'}

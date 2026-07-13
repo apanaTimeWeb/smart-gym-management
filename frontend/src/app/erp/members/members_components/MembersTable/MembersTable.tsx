@@ -59,7 +59,7 @@ export default function MembersTable() {
                     <td className="px-5 py-3.5 text-sm text-primary">{m.plan?.name || `Plan #${m.planId}`}</td>
                     <td className="px-5 py-3.5">
                       <span 
-                        className={`inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${statusStyle.bg} ${statusStyle.text}`}
+                        className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusStyle.bg} ${statusStyle.text}`}
                       >
                         {m.status}
                       </span>

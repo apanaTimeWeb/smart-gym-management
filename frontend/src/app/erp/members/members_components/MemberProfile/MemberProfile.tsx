@@ -36,13 +36,13 @@ export default function MemberProfile() {
  <h2 className="text-xl font-bold text-foreground">{selectedMember.name}</h2>
  <p className="text-secondary text-sm">{selectedMember.email} · {selectedMember.phone}</p>
  <div className="flex gap-2 mt-2">
- <span className="inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-semibold" style={{ background: MEMBERS_STATUS_COLORS[selectedMember.status]?.split(' ')[0] || '#f3f4f6', color: MEMBERS_STATUS_COLORS[selectedMember.status]?.split(' ')[1] || '#374151' }}>
+ <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold" style={{ background: MEMBERS_STATUS_COLORS[selectedMember.status]?.split(' ')[0] || '#f3f4f6', color: MEMBERS_STATUS_COLORS[selectedMember.status]?.split(' ')[1] || '#374151' }}>
  {selectedMember.status}
  </span>
- <span className="inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-info-bg text-info dark:bg-info-bg dark:text-info">
+ <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-info-bg text-info dark:bg-info-bg dark:text-info">
  {selectedMember.plan?.name || ''}
  </span>
- <span className="inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-300">
+ <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-300">
  {MEMBERS_CYCLE_LABELS[selectedMember.billingCycle] || selectedMember.billingCycle}
  </span>
  </div>

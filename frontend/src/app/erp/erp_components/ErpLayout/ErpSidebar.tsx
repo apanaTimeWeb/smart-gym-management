@@ -50,7 +50,7 @@ export default function ErpSidebar({ isCollapsed, setIsCollapsed }: ErpSidebarPr
  )}
 
  <aside className={`fixed left-0 top-0 h-full bg-sidebar border-r border-border z-50 flex flex-col transition-all duration-300 ${
- isCollapsed ? 'lg:w-[92px]' : 'lg:w-64'
+ isCollapsed ? 'lg:w-23' : 'lg:w-64'
  } ${
  isMobileOpen ? 'w-64 translate-x-0' : 'w-64 -translate-x-full lg:translate-x-0'
  }`}>
@@ -58,7 +58,7 @@ export default function ErpSidebar({ isCollapsed, setIsCollapsed }: ErpSidebarPr
  {/* Logo & Toggle */}
  <div className="flex items-center justify-center px-4 py-5 border-b border-border">
  <div className="flex items-center gap-3 overflow-hidden">
- <Image src="/logo.png" alt="GymSmart ERP" width={44} height={44} className="object-contain min-w-[44px] rounded-lg" />
+ <Image src="/logo.png" alt="GymSmart ERP" width={44} height={44} className="object-contain min-w-11 rounded-lg" />
  {(!isCollapsed || isMobileOpen) && (
  <div className="whitespace-nowrap transition-opacity duration-300 flex flex-col">
  <span className="text-foreground font-bold text-lg leading-tight tracking-tight">GymSmart</span>
@@ -94,7 +94,7 @@ export default function ErpSidebar({ isCollapsed, setIsCollapsed }: ErpSidebarPr
 
  {/* User */}
  <div className={`px-4 py-4 border-t border-border bg-header flex items-center ${(!isCollapsed || isMobileOpen) ? 'gap-3' : 'justify-center'}`}>
-        <div className="w-10 h-10 min-w-[40px] rounded-full flex items-center justify-center text-white text-sm font-bold border border-white/10" style={{ background: 'var(--primary)' }}>
+        <div className="w-10 h-10 min-w-10 rounded-full flex items-center justify-center text-white text-sm font-bold border border-white/10" style={{ background: 'var(--primary)' }}>
           {mounted ? (user?.name?.charAt(0)?.toUpperCase() || 'A') : 'A'}
         </div>
         {(!isCollapsed || isMobileOpen) && (

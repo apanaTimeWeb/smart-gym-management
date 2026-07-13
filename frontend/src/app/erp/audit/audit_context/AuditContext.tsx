@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useMemo, useCallback, ReactNode } from 'react';
-import { AuditFilterState } from '../audit_types/audit_types';
+import { AuditFilterState } from '@/app/erp/audit/audit_types/audit_types';
 
 interface AuditContextProps {
   filters: AuditFilterState;

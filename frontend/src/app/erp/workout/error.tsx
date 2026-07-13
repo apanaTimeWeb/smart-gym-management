@@ -11,7 +11,7 @@ export default function Error({
  reset: () => void;
 }) {
  useEffect(() => {
- console.error('Workout Module Error:', error);
+ // console.error('Workout Module Error:', error);
  }, [error]);
 
  return (

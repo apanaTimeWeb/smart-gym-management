@@ -15,8 +15,8 @@ export default function ErpStatCard({ title, value, change, changeType = 'neutra
  <div className="bg-card rounded-xl p-5 shadow-sm border border-border hover:border-border-focus transition-colors">
  <div className="flex items-center justify-between">
  <div>
- <p className="text-[11px] font-medium text-secondary uppercase tracking-wider">{title}</p>
- <p className="text-[28px] font-bold text-foreground mt-1">{value}</p>
+ <p className="text-xs font-medium text-secondary uppercase tracking-wider">{title}</p>
+ <p className="text-3xl font-bold text-foreground mt-1">{value}</p>
  {change && (
  <p className={`text-xs mt-1 font-medium ${
  changeType === 'up' ? 'text-success' :

@@ -70,7 +70,7 @@ export default function ProductGrid() {
               <span className="text-lg font-bold text-foreground">
                 {formatCurrency(p.price)}
               </span>
-              <span className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full ${
+              <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${
                 p.stock <= 5 
                   ? 'bg-danger-bg text-destructive dark:bg-danger-bg dark:text-destructive' 
                   : p.stock <= 20 

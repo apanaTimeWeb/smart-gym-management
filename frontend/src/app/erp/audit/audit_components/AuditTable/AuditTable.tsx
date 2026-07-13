@@ -1,8 +1,8 @@
 "use client";
 
 import React from 'react';
-import { useAuditTable } from './useAuditTable';
-import { AUDIT_TABLE_HEADERS } from '../../audit_utils/AuditSharedConstants';
+import { useAuditTable } from '@/app/erp/audit/audit_components/AuditTable/useAuditTable';
+import { AUDIT_TABLE_HEADERS } from '@/app/erp/audit/audit_utils/AuditSharedConstants';
 import '../../audit.css';
 
 export const AuditTable = () => {

@@ -1,4 +1,4 @@
-import { Tenant, AuditLog, SaaSDashboardMetrics } from '../superadmin_types/superadmin_types';
+import { Tenant, AuditLog, SaaSDashboardMetrics } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 export const DUMMY_TENANTS: Tenant[] = [
   {

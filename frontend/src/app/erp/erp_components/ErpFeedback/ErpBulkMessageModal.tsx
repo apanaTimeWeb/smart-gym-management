@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { X, Send, MessageCircle, Mail, CheckCircle, Phone, AtSign, Users } from 'lucide-react';
-import type { MessageType, ErpMessageRecipient } from './ErpMessageModal';
+import type { MessageType, ErpMessageRecipient } from '@/app/erp/erp_components/ErpFeedback/ErpMessageModal';
 
 interface ErpBulkMessageModalProps {
   open?: boolean;

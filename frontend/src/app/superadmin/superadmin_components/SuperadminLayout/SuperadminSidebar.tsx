@@ -55,7 +55,7 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Sideb
   return (
     <aside
       className={`fixed inset-y-0 left-0 z-50 flex flex-col bg-background border-r border-border transition-all duration-300 ${
-        isCollapsed ? 'w-[80px]' : 'w-64'
+        isCollapsed ? 'w-20' : 'w-64'
       }`}
     >
       <div className="flex h-20 items-center justify-between px-4 border-b border-border">

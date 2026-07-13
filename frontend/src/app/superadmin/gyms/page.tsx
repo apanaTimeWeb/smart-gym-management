@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
-import { GymsProvider } from './gyms_context/GymsContext';
-import GymsToolbar from './gyms_components/GymsToolbar';
-import GymsTable from './gyms_components/GymsTable';
+import { GymsProvider } from '@/app/superadmin/gyms/gyms_context/GymsContext';
+import GymsToolbar from '@/app/superadmin/gyms/gyms_components/GymsToolbar';
+import GymsTable from '@/app/superadmin/gyms/gyms_components/GymsTable';
 import './gyms.css';
 
 export default function GymsList() {

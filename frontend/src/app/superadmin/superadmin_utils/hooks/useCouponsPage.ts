@@ -1,11 +1,11 @@
 import { useState, useEffect, useMemo, useCallback  } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSuperadminData } from '../useSuperadminData';
-import { SuperadminUrlConfig } from '../../superadmin_url_config';
-import { Coupon } from '../../superadmin_types/superadmin_types';
-import { CouponSchema, CouponFormData } from '../SuperadminZodSchemas';
-import { useSuperadminMutation } from './useSuperadminMutation';
+import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
+import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
+import { Coupon } from '@/app/superadmin/superadmin_types/superadmin_types';
+import { CouponSchema, CouponFormData } from '@/app/superadmin/superadmin_utils/SuperadminZodSchemas';
+import { useSuperadminMutation } from '@/app/superadmin/superadmin_utils/hooks/useSuperadminMutation';
 import { superadminApi } from '@/lib/superadmin-api';
 
 export const useCouponsPage = () => {

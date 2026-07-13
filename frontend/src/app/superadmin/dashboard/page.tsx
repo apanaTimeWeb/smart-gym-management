@@ -77,7 +77,7 @@ export default function SaaSDashboard() {
                   <p className="text-xs text-secondary mt-1">{tenant.ownerName}</p>
                 </div>
                 <div className="text-right">
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold
                     ${
                       tenant.plan?.toUpperCase() === 'ENTERPRISE' ? 'bg-purple-bg text-purple border border-purple' : 
                       tenant.plan?.toUpperCase() === 'PRO' ? 'bg-primary-subtle text-primary border border-primary' : 

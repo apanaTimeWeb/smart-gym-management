@@ -10,7 +10,7 @@ export default function FinanceError({
  reset: () => void;
 }) {
  useEffect(() => {
- console.error(error);
+ // console.error(error);
  }, [error]);
 
  return (

@@ -1,9 +1,9 @@
 'use client';
 
-import { PlansProvider, usePlansContext } from './plans_context/PlansContext';
-import PlansList from './plans_components/PlansList';
-import PlanCreateModal from './plans_components/PlanCreateModal';
-import PlanEditModal from './plans_components/PlanEditModal';
+import { PlansProvider, usePlansContext } from '@/app/superadmin/plans/plans_context/PlansContext';
+import PlansList from '@/app/superadmin/plans/plans_components/PlansList';
+import PlanCreateModal from '@/app/superadmin/plans/plans_components/PlanCreateModal';
+import PlanEditModal from '@/app/superadmin/plans/plans_components/PlanEditModal';
 
 function PlansPageContent() {
   const { openCreateModal } = usePlansContext();

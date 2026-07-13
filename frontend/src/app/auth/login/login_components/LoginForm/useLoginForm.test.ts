@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Contains logic, types, or component definition for this module.
 import { renderHook } from '@testing-library/react';
-import { useLoginForm } from './useLoginForm';
+import { useLoginForm } from '@/app/auth/login/login_components/LoginForm/useLoginForm';
 
 describe('useLoginForm', () => {
   it('should initialize with default values', () => {

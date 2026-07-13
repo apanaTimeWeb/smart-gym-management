@@ -11,7 +11,7 @@ export default function Error({
  reset: () => void;
 }) {
  useEffect(() => {
- console.error('Library Module Error:', error);
+ // console.error('Library Module Error:', error);
  }, [error]);
 
  return (

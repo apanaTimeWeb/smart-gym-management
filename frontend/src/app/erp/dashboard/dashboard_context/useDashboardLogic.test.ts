@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Contains logic, types, or component definition for this module.
 import { renderHook } from '@testing-library/react';
-import { useDashboardLogic } from './useDashboardLogic';
+import { useDashboardLogic } from '@/app/erp/dashboard/dashboard_context/useDashboardLogic';
 
 describe('useDashboardLogic', () => {
   it('should initialize with loading state if no initialData', () => {

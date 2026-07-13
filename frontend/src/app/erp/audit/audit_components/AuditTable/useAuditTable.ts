@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
-import { useAuditContext } from '../../audit_context/AuditContext';
-import { AuditLog, AuditLogResponse } from '../../audit_types/audit_types';
-import { AUDIT_URLS } from '../../audit_url_config';
+import { useAuditContext } from '@/app/erp/audit/audit_context/AuditContext';
+import { AuditLog, AuditLogResponse } from '@/app/erp/audit/audit_types/audit_types';
+import { AUDIT_URLS } from '@/app/erp/audit/audit_url_config';
 import { apiFetch } from '@/lib/api';
 
 export const useAuditTable = () => {

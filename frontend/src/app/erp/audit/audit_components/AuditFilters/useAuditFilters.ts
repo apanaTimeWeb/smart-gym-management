@@ -1,7 +1,7 @@
 "use client";
 
-import { useAuditContext } from '../../audit_context/AuditContext';
-import { AUDIT_ENTITY_TYPES } from '../../audit_utils/AuditSharedConstants';
+import { useAuditContext } from '@/app/erp/audit/audit_context/AuditContext';
+import { AUDIT_ENTITY_TYPES } from '@/app/erp/audit/audit_utils/AuditSharedConstants';
 
 export const useAuditFilters = () => {
   const { filters, setFilters } = useAuditContext();

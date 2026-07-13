@@ -11,7 +11,7 @@ export default function Error({
  reset: () => void;
 }) {
  useEffect(() => {
- console.error('Plans Module Error:', error);
+ // console.error('Plans Module Error:', error);
  }, [error]);
 
  return (

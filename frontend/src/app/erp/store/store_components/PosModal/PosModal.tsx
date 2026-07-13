@@ -62,7 +62,7 @@ export default function PosModal() {
  {/* Cart */}
  <div>
  <p className="text-sm font-medium text-secondary mb-3">Cart</p>
- <div className="space-y-2 min-h-[100px]">
+ <div className="space-y-2 min-h-25">
  {orderItems.length === 0 && (
  <p className="text-sm text-secondary text-center py-4">No items added</p>
  )}

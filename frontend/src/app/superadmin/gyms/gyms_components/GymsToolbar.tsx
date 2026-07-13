@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Search } from 'lucide-react';
-import { useGymsContext } from '../gyms_context/GymsContext';
+import { useGymsContext } from '@/app/superadmin/gyms/gyms_context/GymsContext';
 
 export default function GymsToolbar() {
   const { search, setSearch } = useGymsContext();

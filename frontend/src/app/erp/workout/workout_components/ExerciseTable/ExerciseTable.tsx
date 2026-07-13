@@ -36,7 +36,7 @@ export default function ExerciseTable() {
                   </span>
                 </td>
                 <td className="px-4 py-3">
-                  <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-semibold ${
+                  <span className={`text-xs px-2.5 py-0.5 rounded-full font-semibold ${
                     ex.difficulty === 'Beginner' 
                     ? 'bg-success-bg text-success dark:bg-success-bg dark:text-success' 
                     : ex.difficulty === 'Intermediate' 

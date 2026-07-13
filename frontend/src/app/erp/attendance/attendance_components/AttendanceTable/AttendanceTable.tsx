@@ -45,7 +45,7 @@ export default function AttendanceTable() {
  </div>
  </td>
  <td className="px-4 py-3">
- <span className={`inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${
+ <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
  r.type === 'MEMBER' 
  ? 'bg-info-bg text-info dark:bg-info-bg dark:text-info' 
  : 'bg-success-bg text-success dark:bg-success-bg dark:text-success'

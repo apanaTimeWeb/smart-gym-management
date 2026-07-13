@@ -1,11 +1,11 @@
 export default function Loading() {
  return (
- <div className="min-h-screen bg-[#0a0a0a] flex flex-col">
+ <div className="min-h-screen bg-background flex flex-col">
  {/* Navbar Skeleton */}
  <div className="h-16 border-b border-white/10 bg-black/50"></div>
  
  {/* Hero Skeleton */}
- <div className="flex-1 flex items-center justify-center relative bg-[#0f0f0f]">
+ <div className="flex-1 flex items-center justify-center relative bg-card">
  <div className="absolute inset-0 bg-white/5 animate-pulse"></div>
  <div className="relative z-10 w-full max-w-4xl px-4 space-y-6 flex flex-col items-center">
  <div className="h-8 w-48 bg-white/10 rounded-full animate-pulse"></div>

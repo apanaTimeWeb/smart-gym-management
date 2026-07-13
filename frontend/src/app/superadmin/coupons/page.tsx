@@ -3,7 +3,7 @@
 import React from 'react';
 import { Tag, Plus, Search, Edit2, Trash2, RefreshCw, ToggleLeft, ToggleRight } from 'lucide-react';
 import { CouponStatus } from '@/app/superadmin/superadmin_types/superadmin_types';
-import { useCouponsPage } from '../superadmin_utils/hooks/useCouponsPage';
+import { useCouponsPage } from '@/app/superadmin/superadmin_utils/hooks/useCouponsPage';
 import { SuperadminCouponModal } from '@/app/superadmin/coupons/coupons_components/SuperadminCouponModal';
 import { SuperadminCouponEditModal } from '@/app/superadmin/coupons/coupons_components/SuperadminCouponEditModal';
 import { toast } from 'react-hot-toast';
@@ -11,13 +11,13 @@ import { toast } from 'react-hot-toast';
 const getStatusBadge = (status: CouponStatus) => {
   switch (status) {
     case 'ACTIVE':
-      return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-success-bg text-success">ACTIVE</span>;
+      return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success-bg text-success">ACTIVE</span>;
     case 'INACTIVE':
-      return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#1E1E2E] text-secondary">INACTIVE</span>;
+      return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-[#1E1E2E] text-secondary">INACTIVE</span>;
     case 'EXPIRED':
-      return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#1E1E2E] text-secondary">EXPIRED</span>;
+      return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-[#1E1E2E] text-secondary">EXPIRED</span>;
     case 'DEPLETED':
-      return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-warning-bg text-warning">DEPLETED</span>;
+      return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-warning-bg text-warning">DEPLETED</span>;
     default:
       return null;
   }
@@ -58,11 +58,11 @@ export default function CouponsPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-[22px] font-bold text-foreground flex items-center gap-2">
+          <h1 className="text-xl font-bold text-foreground flex items-center gap-2">
             <Tag className="w-6 h-6 text-primary" />
             Promotional Coupons
           </h1>
-          <p className="text-[14px] text-secondary mt-1">
+          <p className="text-sm text-secondary mt-1">
             Manage global discount codes for new SaaS subscriptions.
           </p>
         </div>
@@ -74,12 +74,12 @@ export default function CouponsPage() {
               placeholder="Search coupons..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-[14px] text-foreground focus:outline-none focus:border-border-focus transition-colors w-64"
+              className="pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus transition-colors w-64"
             />
           </div>
           <button 
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-white font-medium rounded-lg transition-colors text-[14px]"
+            className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-white font-medium rounded-lg transition-colors text-sm"
           >
             <Plus className="w-4 h-4" />
             Create Coupon
@@ -94,18 +94,18 @@ export default function CouponsPage() {
             <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
               <Tag className="w-5 h-5 text-primary" />
             </div>
-            <span className="text-[11px] font-medium text-secondary uppercase tracking-wider">Active Coupons</span>
+            <span className="text-xs font-medium text-secondary uppercase tracking-wider">Active Coupons</span>
           </div>
-          <div className="text-[28px] font-bold text-foreground mt-1">{activeCoupons}</div>
+          <div className="text-3xl font-bold text-foreground mt-1">{activeCoupons}</div>
         </div>
         <div className="bg-card border border-border rounded-xl p-5 flex flex-col justify-center">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-lg bg-success-bg/30 flex items-center justify-center">
               <Tag className="w-5 h-5 text-success" />
             </div>
-            <span className="text-[11px] font-medium text-secondary uppercase tracking-wider">Total Redeemed</span>
+            <span className="text-xs font-medium text-secondary uppercase tracking-wider">Total Redeemed</span>
           </div>
-          <div className="text-[28px] font-bold text-foreground mt-1">{totalRedeemed.toLocaleString()}</div>
+          <div className="text-3xl font-bold text-foreground mt-1">{totalRedeemed.toLocaleString()}</div>
         </div>
       </div>
 
@@ -115,12 +115,12 @@ export default function CouponsPage() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-primary/5 border-b border-border">
-                <th className="px-6 py-4 text-[12px] font-semibold text-secondary uppercase tracking-wider">Code</th>
-                <th className="px-6 py-4 text-[12px] font-semibold text-secondary uppercase tracking-wider">Discount</th>
-                <th className="px-6 py-4 text-[12px] font-semibold text-secondary uppercase tracking-wider">Usage</th>
-                <th className="px-6 py-4 text-[12px] font-semibold text-secondary uppercase tracking-wider">Status</th>
-                <th className="px-6 py-4 text-[12px] font-semibold text-secondary uppercase tracking-wider">Expiry Date</th>
-                <th className="px-6 py-4 text-[12px] font-semibold text-secondary uppercase tracking-wider text-right">Actions</th>
+                <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Code</th>
+                <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Discount</th>
+                <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Usage</th>
+                <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Status</th>
+                <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Expiry Date</th>
+                <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -130,24 +130,24 @@ export default function CouponsPage() {
                   className={`hover:bg-primary/5 transition-colors group cursor-pointer ${cpn.isDeleted ? 'opacity-50 grayscale' : ''}`}
                   onClick={() => handleRowClick(cpn.code)}
                 >
-                  <td className="px-6 py-4 whitespace-nowrap text-[14px] font-bold text-foreground tracking-wide">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-foreground tracking-wide">
                     {cpn.code}
                     {cpn.isDeleted && <span className="ml-2 text-[10px] bg-destructive/20 text-destructive px-2 py-0.5 rounded-full">DELETED</span>}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-[14px] text-secondary">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary">
                     {cpn.discountType === 'PERCENTAGE' ? (
                       <span className="font-semibold text-success">{cpn.discountValue}% OFF</span>
                     ) : (
                       <span className="font-semibold text-success">Rs {cpn.discountValue} OFF</span>
                     )}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-[14px] text-secondary">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary">
                     {cpn.currentUses} / {cpn.maxUses}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {getStatusBadge(cpn.status)}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-[14px] text-secondary">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary">
                     {new Date(cpn.expiryDate).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right flex items-center justify-end gap-2">

@@ -56,7 +56,7 @@ export default function AllMemberships() {
             <td className="px-4 py-3 text-sm text-secondary">{new Date(r.joinDate).toLocaleDateString()}</td>
             <td className="px-4 py-3 text-sm text-secondary">{new Date(r.expiryDate).toLocaleDateString()}</td>
             <td className="px-4 py-3">
-              <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-semibold ${
+              <span className={`text-xs px-2.5 py-0.5 rounded-full font-semibold ${
                 r.status === 'ACTIVE' 
                 ? 'bg-success-bg text-success dark:bg-success-bg dark:text-success' 
                 : 'bg-danger-bg text-destructive dark:bg-danger-bg dark:text-destructive'

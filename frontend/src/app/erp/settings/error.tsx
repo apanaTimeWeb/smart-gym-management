@@ -11,7 +11,7 @@ export default function Error({
  reset: () => void;
 }) {
  useEffect(() => {
- console.error('Settings Module Error:', error);
+ // console.error('Settings Module Error:', error);
  }, [error]);
 
  return (

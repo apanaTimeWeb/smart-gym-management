@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { useAuditFilters } from './useAuditFilters';
+import { useAuditFilters } from '@/app/erp/audit/audit_components/AuditFilters/useAuditFilters';
 import '../../audit.css';
 
 export const AuditFilters = () => {

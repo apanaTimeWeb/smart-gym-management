@@ -65,7 +65,7 @@ export default function RecentMembers() {
                 </td>
                 <td className="px-6 py-4 text-sm text-secondary">{(m.plan as any)?.name || m.plan || 'N/A'}</td>
                 <td className="px-6 py-4">
-                  <span className={`inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${statusStyle.bg} ${statusStyle.text}`}>
+                  <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusStyle.bg} ${statusStyle.text}`}>
                     {m.status}
                   </span>
                 </td>

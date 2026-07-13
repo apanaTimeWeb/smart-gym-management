@@ -82,7 +82,7 @@ export default function ErpHeader({ title, subtitle }: ErpHeaderProps) {
  <h3 className="font-semibold text-foreground">Notifications</h3>
  <button onClick={() => setShowNotifications(false)} className="text-secondary hover:text-foreground"><X size={16} /></button>
  </div>
- <div className="max-h-[300px] overflow-y-auto">
+ <div className="max-h-75 overflow-y-auto">
               {ERP_PLACEHOLDER_NOTIFICATIONS.map(n => (
  <div key={n.id} className={`px-4 py-3 border-b border-border hover:bg-input transition-colors cursor-pointer ${n.unread ? 'bg-primary-subtle' : ''}`}>
  <p className={`text-sm ${n.unread ? 'text-foreground font-medium' : 'text-secondary'}`}>{n.text}</p>

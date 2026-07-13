@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { usePlansContext } from '../plans_context/PlansContext';
+import { usePlansContext } from '@/app/superadmin/plans/plans_context/PlansContext';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';

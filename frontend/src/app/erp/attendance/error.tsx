@@ -11,7 +11,7 @@ export default function Error({
  reset: () => void;
 }) {
  useEffect(() => {
- console.error('Attendance Module Error:', error);
+ // console.error('Attendance Module Error:', error);
  }, [error]);
 
  return (

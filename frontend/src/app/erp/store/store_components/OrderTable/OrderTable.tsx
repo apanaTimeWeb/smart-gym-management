@@ -105,7 +105,7 @@ export default function OrderTable() {
                   {o.method}
                 </td>
                 <td className="px-4 py-3">
-                  <span className="inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-success-bg text-success dark:bg-success-bg dark:text-success">
+                  <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success-bg text-success dark:bg-success-bg dark:text-success">
                     {o.status}
                   </span>
                 </td>

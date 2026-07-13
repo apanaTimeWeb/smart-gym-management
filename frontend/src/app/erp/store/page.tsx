@@ -17,7 +17,7 @@ export default async function StorePage() {
       summary: summaryRes.data || null
     };
   } catch (e) {
-    console.error('Failed to fetch store initial data:', e);
+    // console.error('Failed to fetch store initial data:', e);
   }
 
   return <StoreMain initialData={initialData} />;

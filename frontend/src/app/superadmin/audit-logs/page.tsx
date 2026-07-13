@@ -20,11 +20,11 @@ export default function GlobalAuditLogsPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-[22px] font-bold text-foreground flex items-center gap-2">
+          <h1 className="text-xl font-bold text-foreground flex items-center gap-2">
             <ShieldAlert className="w-6 h-6 text-primary" />
             Global Audit Logs
           </h1>
-          <p className="text-[14px] text-secondary mt-1">
+          <p className="text-sm text-secondary mt-1">
             Immutable record of all superadmin and system-level actions.
           </p>
         </div>
@@ -34,7 +34,7 @@ export default function GlobalAuditLogsPage() {
             <input 
               type="text" 
               placeholder="Search logs..." 
-              className="pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-[14px] text-foreground focus:outline-none focus:border-border-focus transition-colors w-64"
+              className="pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus transition-colors w-64"
             />
           </div>
         </div>
@@ -46,34 +46,34 @@ export default function GlobalAuditLogsPage() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-primary/5 border-b border-border">
-                <th className="px-6 py-4 text-[12px] font-semibold text-secondary uppercase tracking-wider">Timestamp</th>
-                <th className="px-6 py-4 text-[12px] font-semibold text-secondary uppercase tracking-wider">Actor</th>
-                <th className="px-6 py-4 text-[12px] font-semibold text-secondary uppercase tracking-wider">Action</th>
-                <th className="px-6 py-4 text-[12px] font-semibold text-secondary uppercase tracking-wider">Target Resource</th>
-                <th className="px-6 py-4 text-[12px] font-semibold text-secondary uppercase tracking-wider">IP Address</th>
+                <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Timestamp</th>
+                <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Actor</th>
+                <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Action</th>
+                <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Target Resource</th>
+                <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">IP Address</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
               {logs.map((log) => (
                 <tr key={log.id} className="hover:bg-primary/5 transition-colors group">
-                  <td className="px-6 py-4 whitespace-nowrap text-[14px] text-secondary">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary">
                     {new Date(log.timestamp).toLocaleString()}
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex flex-col">
-                      <span className="text-[14px] font-medium text-foreground">{log.actorName}</span>
-                      <span className="text-[12px] text-secondary">{log.actorRole}</span>
+                      <span className="text-sm font-medium text-foreground">{log.actorName}</span>
+                      <span className="text-xs text-secondary">{log.actorRole}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-info-bg text-info">
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-info-bg text-info">
                       {log.action}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-[14px] text-foreground">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">
                     {log.targetResource}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-[14px] text-secondary">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary">
                     {log.ipAddress}
                   </td>
                 </tr>

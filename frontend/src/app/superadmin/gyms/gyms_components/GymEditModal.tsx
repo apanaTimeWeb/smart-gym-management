@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { X } from 'lucide-react';
 import { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
-import { useGymsContext } from '../gyms_context/GymsContext';
+import { useGymsContext } from '@/app/superadmin/gyms/gyms_context/GymsContext';
 import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { SubscriptionPlan } from '@/app/superadmin/superadmin_types/superadmin_types';
@@ -61,45 +61,45 @@ export default function GymEditModal() {
           <X className="w-5 h-5" />
         </button>
 
-        <h2 className="text-[18px] font-bold text-foreground mb-1">Edit Gym Details</h2>
+        <h2 className="text-lg font-bold text-foreground mb-1">Edit Gym Details</h2>
         <p className="text-sm text-secondary mb-6">Update the information for {selectedGym.name}.</p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="block text-[14px] font-bold text-secondary mb-1">Gym Name <span className="text-destructive">*</span></label>
+            <label className="block text-sm font-bold text-secondary mb-1">Gym Name <span className="text-destructive">*</span></label>
             <input
               type="text"
               {...register('name')}
-              className="w-full bg-input border border-border rounded-lg px-[14px] py-[10px] text-[14px] text-foreground focus:border-border-focus focus:outline-none transition-colors"
+              className="w-full bg-input border border-border rounded-lg px-[14px] py-[10px] text-sm text-foreground focus:border-border-focus focus:outline-none transition-colors"
             />
-            {errors.name && <p className="text-[12px] text-destructive mt-1">{errors.name.message}</p>}
+            {errors.name && <p className="text-xs text-destructive mt-1">{errors.name.message}</p>}
           </div>
 
           <div>
-            <label className="block text-[14px] font-bold text-secondary mb-1">Owner Name <span className="text-destructive">*</span></label>
+            <label className="block text-sm font-bold text-secondary mb-1">Owner Name <span className="text-destructive">*</span></label>
             <input
               type="text"
               {...register('ownerName')}
-              className="w-full bg-input border border-border rounded-lg px-[14px] py-[10px] text-[14px] text-foreground focus:border-border-focus focus:outline-none transition-colors"
+              className="w-full bg-input border border-border rounded-lg px-[14px] py-[10px] text-sm text-foreground focus:border-border-focus focus:outline-none transition-colors"
             />
-            {errors.ownerName && <p className="text-[12px] text-destructive mt-1">{errors.ownerName.message}</p>}
+            {errors.ownerName && <p className="text-xs text-destructive mt-1">{errors.ownerName.message}</p>}
           </div>
 
           <div>
-            <label className="block text-[14px] font-bold text-secondary mb-1">Admin Email <span className="text-destructive">*</span></label>
+            <label className="block text-sm font-bold text-secondary mb-1">Admin Email <span className="text-destructive">*</span></label>
             <input
               type="email"
               {...register('adminEmail')}
-              className="w-full bg-input border border-border rounded-lg px-[14px] py-[10px] text-[14px] text-foreground focus:border-border-focus focus:outline-none transition-colors"
+              className="w-full bg-input border border-border rounded-lg px-[14px] py-[10px] text-sm text-foreground focus:border-border-focus focus:outline-none transition-colors"
             />
-            {errors.adminEmail && <p className="text-[12px] text-destructive mt-1">{errors.adminEmail.message}</p>}
+            {errors.adminEmail && <p className="text-xs text-destructive mt-1">{errors.adminEmail.message}</p>}
           </div>
 
           <div>
-            <label className="block text-[14px] font-bold text-secondary mb-1">Subscription Plan <span className="text-destructive">*</span></label>
+            <label className="block text-sm font-bold text-secondary mb-1">Subscription Plan <span className="text-destructive">*</span></label>
             <select
               {...register('plan')}
-              className="w-full bg-input border border-border rounded-lg px-[14px] py-[10px] text-[14px] text-foreground focus:border-border-focus focus:outline-none transition-colors"
+              className="w-full bg-input border border-border rounded-lg px-[14px] py-[10px] text-sm text-foreground focus:border-border-focus focus:outline-none transition-colors"
             >
               <option value="">Select a plan</option>
               {loadingPlans ? (
@@ -112,21 +112,21 @@ export default function GymEditModal() {
                 ))
               )}
             </select>
-            {errors.plan && <p className="text-[12px] text-destructive mt-1">{errors.plan.message}</p>}
+            {errors.plan && <p className="text-xs text-destructive mt-1">{errors.plan.message}</p>}
           </div>
 
           <div className="flex justify-end gap-3 pt-4 mt-6">
             <button
               type="button"
               onClick={closeEditModal}
-              className="px-5 py-2.5 rounded-lg text-[14px] font-medium text-foreground border border-border hover:bg-background transition-colors"
+              className="px-5 py-2.5 rounded-lg text-sm font-medium text-foreground border border-border hover:bg-background transition-colors"
               disabled={isSubmitting}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-5 py-2.5 rounded-lg text-[14px] font-medium text-white bg-primary hover:bg-primary-hover transition-colors disabled:opacity-50"
+              className="px-5 py-2.5 rounded-lg text-sm font-medium text-white bg-primary hover:bg-primary-hover transition-colors disabled:opacity-50"
               disabled={isSubmitting}
             >
               {isSubmitting ? 'Saving...' : 'Save Changes'}

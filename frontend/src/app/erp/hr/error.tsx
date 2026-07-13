@@ -10,7 +10,7 @@ export default function HrError({
  reset: () => void;
 }) {
  useEffect(() => {
- console.error(error);
+ // console.error(error);
  }, [error]);
 
  return (
