@@ -5,12 +5,13 @@ import { Dumbbell, Edit2, Trash2 } from 'lucide-react';
 import { useWorkoutContext } from '@/app/erp/workout/workout_context/WorkoutContext';
 
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
+import { ERP_ITEMS_PER_PAGE } from '@/app/erp/erp_utils/ErpSharedConstants';
 
 export default function WorkoutPlansGrid() {
   const { workouts, totalWorkouts, search, currentPage, setCurrentPage, openEditWk, deleteWk } = useWorkoutContext();
 
-  const ITEMS_PER_PAGE = 12;
-  const totalPages = Math.ceil(totalWorkouts / ITEMS_PER_PAGE) || 1;
+  
+  const totalPages = Math.ceil(totalWorkouts / ERP_ITEMS_PER_PAGE) || 1;
 
   return (
     <div className="flex flex-col h-full min-h-96">
@@ -88,7 +89,7 @@ export default function WorkoutPlansGrid() {
           currentPage={currentPage} 
           totalPages={totalPages} 
           totalItems={totalWorkouts} 
-          itemsPerPage={ITEMS_PER_PAGE} 
+          itemsPerPage={ERP_ITEMS_PER_PAGE} 
           onPageChange={setCurrentPage} 
         />
       </div>

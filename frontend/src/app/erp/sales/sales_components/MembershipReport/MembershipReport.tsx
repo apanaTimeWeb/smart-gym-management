@@ -5,6 +5,7 @@
 import { useSalesContext } from '@/app/erp/sales/sales_context/SalesContext';
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
 import { Loader2 } from 'lucide-react';
+import { ERP_ITEMS_PER_PAGE } from '@/app/erp/erp_utils/ErpSharedConstants';
 
 export default function MembershipReport() {
   const { search, currentPage, setCurrentPage, membershipReport, membershipTotals, fetchState } = useSalesContext();
@@ -13,9 +14,9 @@ export default function MembershipReport() {
     (r.plan || '').toLowerCase().includes(search.toLowerCase())
   );
 
-  const ITEMS_PER_PAGE = 10;
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;
-  const paginated = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+  
+  const totalPages = Math.ceil(filtered.length / ERP_ITEMS_PER_PAGE) || 1;
+  const paginated = filtered.slice((currentPage - 1) * ERP_ITEMS_PER_PAGE, currentPage * ERP_ITEMS_PER_PAGE);
 
   if (fetchState === 'loading') {
     return (

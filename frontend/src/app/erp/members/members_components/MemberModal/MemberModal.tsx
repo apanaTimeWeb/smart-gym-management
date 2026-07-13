@@ -7,7 +7,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 import { useMembersContext } from '@/app/erp/members/members_context/MembersContext';
-import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency, MemberSchema, type MemberFormValues, EMPTY_MEMBER_FORM, type PlanWithCustom } from '@/app/erp/members/members_utils/MembersSharedConstants';
+import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency, MemberSchema, type MemberFormValues, EMPTY_MEMBER_FORM, type PlanWithCustom, GENDER_OPTIONS } from '@/app/erp/members/members_utils/MembersSharedConstants';
 
 export default function MemberModal() {
   const {
@@ -56,7 +56,7 @@ export default function MemberModal() {
             <X size={18} />
           </button>
         </div>
-        <form onSubmit={handleSubmit(saveMember)} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit(saveMember as any)} className="p-6 space-y-4">
           {[
             { label: 'Full Name', key: 'name', type: 'text', placeholder: 'Rahul Sharma' },
             { label: 'Email', key: 'email', type: 'email', placeholder: 'rahul@gmail.com' },
@@ -89,11 +89,7 @@ export default function MemberModal() {
                   <SearchableDropdown
                     value={field.value || ''}
                     onChange={field.onChange}
-                    options={[
-                      { label: 'Male', value: 'MALE' },
-                      { label: 'Female', value: 'FEMALE' },
-                      { label: 'Other', value: 'OTHER' }
-                    ]}
+                    options={GENDER_OPTIONS}
                   />
                 )}
               />

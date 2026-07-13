@@ -4,7 +4,7 @@
 import { Edit, MessageCircle, Mail } from 'lucide-react';
 import ErpHeader from '@/app/erp/erp_components/ErpLayout/ErpHeader';
 import { useMembersContext } from '@/app/erp/members/members_context/MembersContext';
-import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS, formatCurrency } from '@/app/erp/members/members_utils/MembersSharedConstants';
+import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS, formatCurrency, PROFILE_TABS } from '@/app/erp/members/members_utils/MembersSharedConstants';
 import ProfileOverview from '@/app/erp/members/members_components/MemberProfile/ProfileOverview';
 import ProfileAttendance from '@/app/erp/members/members_components/MemberProfile/ProfileAttendance';
 import ProfilePayments from '@/app/erp/members/members_components/MemberProfile/ProfilePayments';
@@ -94,7 +94,7 @@ export default function MemberProfile() {
         {/* Sub Tabs */}
         <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
           <div className="flex border-b border-border">
-            {([['overview', 'Overview'], ['attendance', 'Attendance'], ['payments', 'Payment History']] as [typeof profileTab, string][]).map(([t, label]) => (
+            {PROFILE_TABS.map(({ id: t, label }) => (
               <button
                 key={t}
                 onClick={() => { setProfileTab(t); if (t === 'payments') loadMemberProfile(selectedMember.id); }}

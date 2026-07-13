@@ -4,6 +4,7 @@
 import { Search, RefreshCw, Plus } from 'lucide-react';
 import { useMembersContext } from '@/app/erp/members/members_context/MembersContext';
 import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
+import { MEMBER_STATUS_OPTIONS } from '@/app/erp/members/members_utils/MembersSharedConstants';
 
 export default function MembersToolbar() {
   const { search, setSearch, statusFilter, setStatusFilter, loadAll, openAdd } = useMembersContext();
@@ -24,12 +25,7 @@ export default function MembersToolbar() {
           value={statusFilter}
           onChange={(val) => setStatusFilter(String(val))}
           className="w-48"
-          options={[
-            { label: 'All Status', value: 'All' },
-            { label: 'Active', value: 'ACTIVE' },
-            { label: 'Pending', value: 'PENDING' },
-            { label: 'Expired', value: 'EXPIRED' }
-          ]}
+          options={MEMBER_STATUS_OPTIONS}
         />
  <button 
  onClick={loadAll} 

@@ -10,7 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 
 export default function AddPaymentModal() {
-  const { showModal, setShowModal, savePayment, fetchState } = useFinanceContext();
+  const { showModal, setShowModal, savePayment, saving } = useFinanceContext();
 
   const {
     register,
@@ -98,8 +98,8 @@ export default function AddPaymentModal() {
             <button type="button" onClick={() => setShowModal(false)} className="px-5 py-2.5 text-sm font-semibold rounded-xl border border-border text-secondary hover:bg-primary/5 transition-colors flex-1">
               Cancel
             </button>
-            <button type="submit" disabled={fetchState === 'loading'} className="px-5 py-2.5 text-sm font-semibold text-primary-foreground bg-primary rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center min-w-[120px] flex-1">
-              {fetchState === 'loading' ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> : 'Record Payment'}
+            <button type="submit" disabled={saving} className="px-5 py-2.5 text-sm font-semibold text-primary-foreground bg-primary rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center min-w-[120px] flex-1">
+              {saving ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> : 'Record Payment'}
             </button>
           </div>
         </form>

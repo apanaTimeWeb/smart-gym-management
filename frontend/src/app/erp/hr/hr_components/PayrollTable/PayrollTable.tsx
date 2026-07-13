@@ -5,6 +5,7 @@ import { useHrContext } from '@/app/erp/hr/hr_context/HrContext';
 import { PAYROLL_TABLE_HEADERS } from '@/app/erp/hr/hr_utils/HrSharedConstants';
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
 import { CheckCircle2 } from 'lucide-react';
+import { ERP_ITEMS_PER_PAGE } from '@/app/erp/erp_utils/ErpSharedConstants';
 
 export default function PayrollTable() {
   const { payrolls, search, currentPage, setCurrentPage, markPayrollPaid, fetchState } = useHrContext();
@@ -16,9 +17,8 @@ export default function PayrollTable() {
     return nameMatch || roleMatch || monthMatch;
   });
 
-  const ITEMS_PER_PAGE = 10;
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
-  const currentData = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+    const totalPages = Math.ceil(filtered.length / ERP_ITEMS_PER_PAGE);
+  const currentData = filtered.slice((currentPage - 1) * ERP_ITEMS_PER_PAGE, currentPage * ERP_ITEMS_PER_PAGE);
 
   if (fetchState === 'loading') {
     return (
@@ -119,7 +119,7 @@ export default function PayrollTable() {
         currentPage={currentPage} 
         totalPages={totalPages} 
         totalItems={filtered.length} 
-        itemsPerPage={ITEMS_PER_PAGE} 
+        itemsPerPage={ERP_ITEMS_PER_PAGE} 
         onPageChange={setCurrentPage} 
       />
     </div>

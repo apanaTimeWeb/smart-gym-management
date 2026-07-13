@@ -8,6 +8,7 @@ import ErpThermalReceipt from '@/app/erp/erp_components/ErpShared/ErpThermalRece
 import { StoreProvider, useStoreContext } from '@/app/erp/store/store_context/StoreContext';
 import StoreKPIs from '@/app/erp/store/store_components/StoreKPIs/StoreKPIs';
 import StoreToolbar from '@/app/erp/store/store_components/StoreToolbar/StoreToolbar';
+import StoreFilters from '@/app/erp/store/store_components/StoreFilters/StoreFilters';
 import ProductGrid from '@/app/erp/store/store_components/ProductGrid/ProductGrid';
 import OrderTable from '@/app/erp/store/store_components/OrderTable/OrderTable';
 import dynamic from 'next/dynamic';
@@ -29,6 +30,7 @@ function StoreContent() {
 
         <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
           <StoreToolbar />
+          {tab === 'Orders' && <StoreFilters />}
 
           <div className="p-5">
             {tab === 'Products' ? <ProductGrid /> : <OrderTable />}

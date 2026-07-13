@@ -4,6 +4,7 @@
 import { useLibraryContext } from '@/app/erp/library/library_context/LibraryContext';
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
 import { Apple, Edit2, Trash2, Flame, Loader2 } from 'lucide-react';
+import { ERP_ITEMS_PER_PAGE } from '@/app/erp/erp_utils/ErpSharedConstants';
 
 export default function DietGrid() {
   const { dietPlans, loading, debouncedSearch, currentPage, setCurrentPage, openEditDiet, deleteDietPlan } = useLibraryContext();
@@ -13,9 +14,9 @@ export default function DietGrid() {
     return d.name.toLowerCase().includes(s) || d.goal.toLowerCase().includes(s);
   });
 
-  const ITEMS_PER_PAGE = 12;
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
-  const currentData = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+  
+  const totalPages = Math.ceil(filtered.length / ERP_ITEMS_PER_PAGE);
+  const currentData = filtered.slice((currentPage - 1) * ERP_ITEMS_PER_PAGE, currentPage * ERP_ITEMS_PER_PAGE);
 
   if (loading) {
     return (
@@ -85,7 +86,7 @@ export default function DietGrid() {
             currentPage={currentPage} 
             totalPages={totalPages} 
             totalItems={filtered.length} 
-            itemsPerPage={ITEMS_PER_PAGE} 
+            itemsPerPage={ERP_ITEMS_PER_PAGE} 
             onPageChange={setCurrentPage} 
           />
         </div>

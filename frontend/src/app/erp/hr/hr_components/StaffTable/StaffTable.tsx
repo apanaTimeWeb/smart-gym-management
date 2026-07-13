@@ -5,20 +5,14 @@ import { useHrContext } from '@/app/erp/hr/hr_context/HrContext';
 import { STAFF_TABLE_HEADERS } from '@/app/erp/hr/hr_utils/HrSharedConstants';
 import { Edit2, Trash2 } from 'lucide-react';
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
+import { ERP_ITEMS_PER_PAGE } from '@/app/erp/erp_utils/ErpSharedConstants';
 
 export default function StaffTable() {
-  const { staff, fetchState, debouncedSearch, currentPage, setCurrentPage, openEdit, deleteStaff } = useHrContext();
+  const { staff, summary, fetchState, debouncedSearch, currentPage, setCurrentPage, openEdit, deleteStaff } = useHrContext();
 
-  const filtered = staff.filter(s => 
-    s.name.toLowerCase().includes(debouncedSearch.toLowerCase()) || 
-    s.email.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-    s.role.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-    s.branch.toLowerCase().includes(debouncedSearch.toLowerCase())
-  );
-
-  const ITEMS_PER_PAGE = 10;
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
-  const currentData = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+  // Remove client-side filtering; API handles it now.
+    const totalStaff = summary?.totalStaff || staff.length;
+  const totalPages = Math.ceil(totalStaff / ERP_ITEMS_PER_PAGE) || 1;
 
   if (fetchState === 'loading') {
     return (
@@ -70,7 +64,7 @@ export default function StaffTable() {
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {currentData.map(s => (
+            {staff.map(s => (
               <tr 
                 key={s.id} 
                 className="transition-colors hover:bg-primary/5 cursor-pointer" 
@@ -114,7 +108,7 @@ export default function StaffTable() {
                 </td>
               </tr>
             ))}
-            {filtered.length === 0 && (
+            {staff.length === 0 && (
               <tr>
                 <td colSpan={7} className="text-center py-12 text-secondary">
                   {debouncedSearch ? 'No staff match the filter.' : 'No staff members yet. Add your first staff!'}
@@ -127,8 +121,8 @@ export default function StaffTable() {
       <ErpPagination 
         currentPage={currentPage} 
         totalPages={totalPages} 
-        totalItems={filtered.length} 
-        itemsPerPage={ITEMS_PER_PAGE} 
+        totalItems={totalStaff} 
+        itemsPerPage={ERP_ITEMS_PER_PAGE} 
         onPageChange={setCurrentPage} 
       />
     </div>

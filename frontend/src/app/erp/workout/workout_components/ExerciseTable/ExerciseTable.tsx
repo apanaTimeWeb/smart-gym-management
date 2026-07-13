@@ -6,12 +6,13 @@ import { useWorkoutContext } from '@/app/erp/workout/workout_context/WorkoutCont
 import { EXERCISE_TABLE_HEADERS } from '@/app/erp/workout/workout_utils/WorkoutSharedConstants';
 
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
+import { ERP_ITEMS_PER_PAGE } from '@/app/erp/erp_utils/ErpSharedConstants';
 
 export default function ExerciseTable() {
   const { exercises, totalExercises, search, currentPage, setCurrentPage, openEditEx, deleteEx } = useWorkoutContext();
 
-  const ITEMS_PER_PAGE = 10;
-  const totalPages = Math.ceil(totalExercises / ITEMS_PER_PAGE) || 1;
+  
+  const totalPages = Math.ceil(totalExercises / ERP_ITEMS_PER_PAGE) || 1;
 
   return (
     <div className="flex flex-col h-full min-h-96">
@@ -79,7 +80,7 @@ export default function ExerciseTable() {
         currentPage={currentPage} 
         totalPages={totalPages} 
         totalItems={totalExercises} 
-        itemsPerPage={ITEMS_PER_PAGE} 
+        itemsPerPage={ERP_ITEMS_PER_PAGE} 
         onPageChange={setCurrentPage} 
       />
     </div>

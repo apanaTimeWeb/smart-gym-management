@@ -6,13 +6,14 @@ import { useState } from 'react';
 import { useSalesContext } from '@/app/erp/sales/sales_context/SalesContext';
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
 import { Loader2 } from 'lucide-react';
+import { ERP_ITEMS_PER_PAGE } from '@/app/erp/erp_utils/ErpSharedConstants';
 
 export default function AllMemberships() {
   const [filter, setFilter] = useState('All');
   const { currentPage, setCurrentPage, allMemberships, allMembershipsTotal, fetchState } = useSalesContext();
   
-  const ITEMS_PER_PAGE = 10;
-  const totalPages = Math.ceil(allMembershipsTotal / ITEMS_PER_PAGE) || 1;
+  
+  const totalPages = Math.ceil(allMembershipsTotal / ERP_ITEMS_PER_PAGE) || 1;
 
   if (fetchState === 'loading') {
     return (

@@ -5,16 +5,16 @@ import { Edit2, Trash2, Tag, CheckCircle, Loader2 } from 'lucide-react';
 import { usePlansContext } from '@/app/erp/plans/plans_context/PlansContext';
 import { formatCurrency } from '@/app/erp/plans/plans_utils/PlansSharedConstants';
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
+import { ERP_ITEMS_PER_PAGE } from '@/app/erp/erp_utils/ErpSharedConstants';
 
-const ITEMS_PER_PAGE = 12;
 
 export default function PlansGrid() {
   const { plans, fetchState, search, currentPage, setCurrentPage, openEdit, deletePlan } = usePlansContext();
 
   // Client-side filter on the already-fetched plans list (plans count is typically small, <100)
   const filtered = plans.filter(p => p.name.toLowerCase().includes(search.toLowerCase()));
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
-  const currentData = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(filtered.length / ERP_ITEMS_PER_PAGE);
+  const currentData = filtered.slice((currentPage - 1) * ERP_ITEMS_PER_PAGE, currentPage * ERP_ITEMS_PER_PAGE);
 
   if (fetchState === 'loading') {
     return (
@@ -116,7 +116,7 @@ export default function PlansGrid() {
           currentPage={currentPage}
           totalPages={totalPages}
           totalItems={filtered.length}
-          itemsPerPage={ITEMS_PER_PAGE}
+          itemsPerPage={ERP_ITEMS_PER_PAGE}
           onPageChange={setCurrentPage}
         />
       </div>

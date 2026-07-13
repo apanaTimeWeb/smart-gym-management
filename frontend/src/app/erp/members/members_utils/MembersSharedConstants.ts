@@ -1,6 +1,7 @@
 // RESPONSIBILITY: Centralized constants, Zod schema, and shared utilities for the Members module. Single source of truth for form defaults, status colors, billing labels, and message templates.
 import type { Plan } from '@/app/erp/plans/plans_types/plans_types';
 import { z } from 'zod';
+import { ERP_ITEMS_PER_PAGE } from '@/app/erp/erp_utils/ErpSharedConstants';
 
 export const MemberSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -29,6 +30,19 @@ export const MEMBERS_CYCLE_LABELS: Record<string, string> = {
  CUSTOM: 'Custom (Days)',
 };
 
+export const MEMBER_STATUS_OPTIONS = [
+  { label: 'All Status', value: 'All' },
+  { label: 'Active', value: 'ACTIVE' },
+  { label: 'Pending', value: 'PENDING' },
+  { label: 'Expired', value: 'EXPIRED' }
+];
+
+export const GENDER_OPTIONS = [
+  { label: 'Male', value: 'MALE' },
+  { label: 'Female', value: 'FEMALE' },
+  { label: 'Other', value: 'OTHER' }
+];
+
 export const EMPTY_MEMBER_FORM = { 
  name: '', 
  email: '', 
@@ -39,13 +53,19 @@ export const EMPTY_MEMBER_FORM = {
  planId: '' 
 } as unknown as MemberFormValues;
 
-export const MEMBERS_ITEMS_PER_PAGE = 10;
+
 
 export const MEMBERS_TABLE_HEADERS = [
  'Member', 'Plan', 'Status', 'Billing Cycle', 'Paid', 'Pending', 'Expiry', 'Actions'
 ];
 
 export const BRANCH_OPTIONS = ['Main Branch', 'Branch 2', 'Branch 3'] as const;
+
+export const PROFILE_TABS = [
+  { id: 'overview', label: 'Overview' },
+  { id: 'attendance', label: 'Attendance' },
+  { id: 'payments', label: 'Payment History' }
+] as const;
 
 export const formatCurrency = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');
 

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Contains logic, types, or component definition for this module.
+// RESPONSIBILITY: Renders the payment history and transaction records for a specific member profile.
 "use client";
 
 import { Printer } from 'lucide-react';

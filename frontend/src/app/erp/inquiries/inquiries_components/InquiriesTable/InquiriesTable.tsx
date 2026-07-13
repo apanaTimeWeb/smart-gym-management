@@ -3,10 +3,11 @@
 
 import { useInquiriesContext } from '@/app/erp/inquiries/inquiries_context/InquiriesContext';
 import { FetchState } from '@/app/erp/inquiries/inquiries_types/inquiries_types';
-import { INQUIRIES_TABLE_HEADERS, INQUIRIES_STATUS_LABELS, INQUIRIES_STATUS_STYLES, INQUIRIES_ITEMS_PER_PAGE } from '@/app/erp/inquiries/inquiries_utils/InquiriesSharedConstants';
+import { INQUIRIES_TABLE_HEADERS, INQUIRIES_STATUS_LABELS, INQUIRIES_STATUS_STYLES } from '@/app/erp/inquiries/inquiries_utils/InquiriesSharedConstants';
 import { MessageCircle, Mail, Edit2, Trash2 } from 'lucide-react';
 import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
+import { ERP_ITEMS_PER_PAGE } from '@/app/erp/erp_utils/ErpSharedConstants';
 
 export default function InquiriesTable() {
   const {
@@ -18,7 +19,7 @@ export default function InquiriesTable() {
   const allSelected = inquiries.length > 0 && selectedIds.length === inquiries.length;
   const isSelected = (id: number) => selectedIds.includes(id);
 
-  const totalPages = Math.ceil(totalInquiries / INQUIRIES_ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(totalInquiries / ERP_ITEMS_PER_PAGE);
 
   if (fetchState === FetchState.LOADING) {
     return (
@@ -177,7 +178,7 @@ export default function InquiriesTable() {
         currentPage={currentPage}
         totalPages={totalPages}
         totalItems={totalInquiries}
-        itemsPerPage={INQUIRIES_ITEMS_PER_PAGE}
+        itemsPerPage={ERP_ITEMS_PER_PAGE}
         onPageChange={setCurrentPage}
       />
     </div>

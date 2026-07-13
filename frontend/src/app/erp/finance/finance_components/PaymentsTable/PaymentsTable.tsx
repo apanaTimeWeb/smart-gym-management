@@ -4,12 +4,12 @@
 import { useFinanceContext } from '@/app/erp/finance/finance_context/FinanceContext';
 import { PAYMENTS_TABLE_HEADERS, FINANCE_METHOD_STYLES, FINANCE_STATUS_STYLES } from '@/app/erp/finance/finance_utils/FinanceSharedConstants';
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
+import { ERP_ITEMS_PER_PAGE } from '@/app/erp/erp_utils/ErpSharedConstants';
 
 export default function PaymentsTable() {
   const { payments, totalPayments, fetchState, search, currentPage, setCurrentPage } = useFinanceContext();
   
-  const ITEMS_PER_PAGE = 10;
-  const totalPages = Math.ceil(totalPayments / ITEMS_PER_PAGE) || 1;
+    const totalPages = Math.ceil(totalPayments / ERP_ITEMS_PER_PAGE) || 1;
 
  if (fetchState === 'loading') {
  return (
@@ -97,7 +97,7 @@ export default function PaymentsTable() {
         currentPage={currentPage}
         totalPages={totalPages}
         totalItems={totalPayments}
-        itemsPerPage={ITEMS_PER_PAGE}
+        itemsPerPage={ERP_ITEMS_PER_PAGE}
         onPageChange={setCurrentPage}
       />
     </div>

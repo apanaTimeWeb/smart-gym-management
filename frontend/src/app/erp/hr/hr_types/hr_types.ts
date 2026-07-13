@@ -35,15 +35,15 @@ export interface HrContextType {
  showPayrollModal: boolean;
  setShowPayrollModal: (show: boolean) => void;
  editId: number | null;
- editData: unknown;
+ editData: Partial<Staff> | null;
  saving: boolean;
  
  // Actions
  openAdd: () => void;
  openEdit: (s: Staff) => void;
  openAddPayroll: () => void;
- saveStaff: (data: unknown) => Promise<void>;
- savePayroll: (data: unknown) => Promise<void>;
+ saveStaff: (data: Partial<Staff> & { joinDate?: string | Date; salary?: string | number }) => Promise<void>;
+ savePayroll: (data: Partial<Payroll> & { amount?: string | number }) => Promise<void>;
  deleteStaff: (id: number) => Promise<void>;
  markPayrollPaid: (id: number) => Promise<void>;
 }

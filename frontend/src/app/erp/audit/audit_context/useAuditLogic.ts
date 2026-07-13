@@ -5,6 +5,7 @@ import { AuditLog, AuditLogResponse } from '@/app/erp/audit/audit_types/audit_ty
 import { auditApi } from '@/app/erp/audit/audit_api/audit_api';
 import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
 import { AUDIT_ENTITY_TYPES } from '@/app/erp/audit/audit_utils/AuditSharedConstants';
+import { ERP_ITEMS_PER_PAGE } from '@/app/erp/erp_utils/ErpSharedConstants';
 
 export function useAuditLogic() {
   const router = useRouter();
@@ -12,9 +13,12 @@ export function useAuditLogic() {
   const searchParams = useSearchParams();
 
   const page = parseInt(searchParams.get('page') || '1', 10);
-  const limit = 10;
+  const limit = ERP_ITEMS_PER_PAGE;
   const entityType = searchParams.get('entityType') || '';
   const actorId = searchParams.get('actorId') || '';
+  const actionType = searchParams.get('actionType') || '';
+  const startDate = searchParams.get('startDate') || '';
+  const endDate = searchParams.get('endDate') || '';
   
   const debouncedActorId = useDebounce(actorId, 300);
 
@@ -34,6 +38,9 @@ export function useAuditLogic() {
   const setCurrentPage = useCallback((newPage: number) => setUrlParam('page', newPage.toString()), [setUrlParam]);
   const handleEntityTypeChange = useCallback((val: string | number) => setUrlParam('entityType', String(val)), [setUrlParam]);
   const handleActorIdChange = useCallback((val: string) => setUrlParam('actorId', val), [setUrlParam]);
+  const handleActionTypeChange = useCallback((val: string | number) => setUrlParam('actionType', String(val)), [setUrlParam]);
+  const handleStartDateChange = useCallback((val: string) => setUrlParam('startDate', val), [setUrlParam]);
+  const handleEndDateChange = useCallback((val: string) => setUrlParam('endDate', val), [setUrlParam]);
 
   const fetchLogs = useCallback(async () => {
     setFetchState('loading');
@@ -44,6 +51,9 @@ export function useAuditLogic() {
       queryParams.append('limit', limit.toString());
       if (entityType) queryParams.append('entityType', entityType);
       if (debouncedActorId) queryParams.append('actorId', debouncedActorId);
+      if (actionType) queryParams.append('action', actionType);
+      if (startDate) queryParams.append('startDate', startDate);
+      if (endDate) queryParams.append('endDate', endDate);
 
       const data = await auditApi.getLogs(Object.fromEntries(queryParams));
       
@@ -61,7 +71,7 @@ export function useAuditLogic() {
       setError(err instanceof Error ? err.message : String(err));
       setFetchState('error');
     }
-  }, [page, limit, entityType, debouncedActorId]);
+  }, [page, limit, entityType, debouncedActorId, actionType, startDate, endDate]);
 
   useEffect(() => {
     fetchLogs();
@@ -75,9 +85,12 @@ export function useAuditLogic() {
     limit,
     totalCount,
     setCurrentPage,
-    filters: { entityType, actorId },
+    filters: { entityType, actorId, actionType, startDate, endDate },
     handleEntityTypeChange,
     handleActorIdChange,
+    handleActionTypeChange,
+    handleStartDateChange,
+    handleEndDateChange,
     entityTypes: AUDIT_ENTITY_TYPES,
   };
 }

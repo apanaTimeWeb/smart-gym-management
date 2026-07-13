@@ -40,7 +40,7 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
  const [showModal, setShowModal] = useState(false);
  const [showPayrollModal, setShowPayrollModal] = useState(false);
  const [editId, setEditId] = useState<number | null>(null);
- const [editData, setEditData] = useState<unknown>(null);
+ const [editData, setEditData] = useState<Partial<Staff> | null>(null);
   const [saving, setSaving] = useState(false);
 
   const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
@@ -50,22 +50,25 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
   setFetchState('loading');
   setError('');
   try {
+  const params: Record<string, string> = { limit: '10', page: currentPage.toString() };
+  if (debouncedSearch) params.search = debouncedSearch;
+
   const [staffRes, payrollRes, summaryRes] = await Promise.all([
-  hrApi.getStaff(),
-  hrApi.getPayrolls(),
+  hrApi.getStaff(params),
+  hrApi.getPayrolls(params),
   hrApi.getSummary(),
   ]);
    setStaff(staffRes.data?.staff || staffRes.data || []);
    setPayrolls(payrollRes.data?.payrolls || payrollRes.data || []);
   setSummary(summaryRes.data || null);
+  setFetchState('success');
   } catch (e) {
   const msg = (e as Error).message;
   setError(msg);
   showToast(msg, 'error');
-  } finally {
-  setFetchState('success');
+  setFetchState('error');
   }
-  }, [showToast]);
+  }, [showToast, currentPage, debouncedSearch]);
 
  useEffect(() => { loadAll(); }, [loadAll]);
 

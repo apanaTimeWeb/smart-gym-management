@@ -130,11 +130,11 @@ export function useStoreLogic(initialData?: StoreInitialData | null): StoreConte
  };
  
  if (editProductId) { 
- const res = await storeApi.updateProduct(editProductId, payload); 
- showToast((res as any).message, 'success'); 
+ const res = await storeApi.updateProduct(editProductId, payload) as { message: string }; 
+ showToast(res.message, 'success'); 
  } else { 
- const res = await storeApi.createProduct(payload); 
- showToast((res as any).message, 'success'); 
+ const res = await storeApi.createProduct(payload) as { message: string }; 
+ showToast(res.message, 'success'); 
  }
  setShowProductModal(false); 
  await loadAll();
@@ -149,8 +149,8 @@ export function useStoreLogic(initialData?: StoreInitialData | null): StoreConte
   const isConfirmed = await confirm({ title: 'Delete Product', message: 'Delete this product?', confirmText: 'Delete', type: 'danger' });
   if (!isConfirmed) return;
   try { 
- const res = await storeApi.removeProduct(id); 
- showToast((res as any).message, 'success'); 
+ const res = await storeApi.removeProduct(id) as { message: string }; 
+ showToast(res.message, 'success'); 
  await loadAll(); 
  } catch (err) { 
  showToast((err as Error).message, 'error'); 

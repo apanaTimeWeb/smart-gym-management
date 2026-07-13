@@ -3,7 +3,7 @@
 
 import { Dumbbell, Edit2, Trash2, Loader2, Clock } from 'lucide-react';
 import { useLibraryContext } from '@/app/erp/library/library_context/LibraryContext';
-import { DIFF_COLORS, ITEMS_PER_PAGE } from '@/app/erp/library/library_utils/LibrarySharedConstants';
+import { DIFF_COLORS } from '@/app/erp/library/library_utils/LibrarySharedConstants';
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
 
 export default function ExerciseGrid() {
@@ -14,8 +14,8 @@ export default function ExerciseGrid() {
     return e.name.toLowerCase().includes(s) || e.category.toLowerCase().includes(s);
   });
 
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
-  const currentData = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(filtered.length / ERP_ITEMS_PER_PAGE);
+  const currentData = filtered.slice((currentPage - 1) * ERP_ITEMS_PER_PAGE, currentPage * ERP_ITEMS_PER_PAGE);
 
   if (loading) {
     return (
@@ -84,7 +84,7 @@ export default function ExerciseGrid() {
             currentPage={currentPage} 
             totalPages={totalPages} 
             totalItems={filtered.length} 
-            itemsPerPage={ITEMS_PER_PAGE} 
+            itemsPerPage={ERP_ITEMS_PER_PAGE} 
             onPageChange={setCurrentPage} 
           />
         </div>

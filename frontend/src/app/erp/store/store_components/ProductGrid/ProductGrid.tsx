@@ -6,18 +6,14 @@ import { useStoreContext } from '@/app/erp/store/store_context/StoreContext';
 import { formatCurrency } from '@/app/erp/store/store_utils/StoreSharedConstants';
 
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
+import { ERP_ITEMS_PER_PAGE } from '@/app/erp/erp_utils/ErpSharedConstants';
 
 export default function ProductGrid() {
-  const { products, fetchState, debouncedSearch, currentPage, setCurrentPage, openEditProduct, deleteProduct, addToOrder } = useStoreContext();
+  const { products, summary, fetchState, debouncedSearch, currentPage, setCurrentPage, openEditProduct, deleteProduct, addToOrder } = useStoreContext();
 
-  const filtered = products.filter(p => {
-    const s = debouncedSearch.toLowerCase();
-    return p.name.toLowerCase().includes(s) || p.category.toLowerCase().includes(s);
-  });
-
-  const ITEMS_PER_PAGE = 12;
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
-  const currentData = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+  
+  const totalProducts = summary?.totalProducts || products.length;
+  const totalPages = Math.ceil(totalProducts / ERP_ITEMS_PER_PAGE) || 1;
 
   if (fetchState === 'loading') {
     return (
@@ -48,7 +44,7 @@ export default function ProductGrid() {
   return (
     <div className="flex flex-col h-full min-h-96">
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 flex-1 content-start">
-        {currentData.map(p => (
+        {products.map(p => (
           <div 
             key={p.id} 
             className="border border-border rounded-xl p-4 hover:shadow-md transition-shadow bg-card"
@@ -93,7 +89,7 @@ export default function ProductGrid() {
             </div>
           </div>
         ))}
-        {filtered.length === 0 && (
+        {products.length === 0 && (
           <div className="col-span-full text-center py-10 text-secondary">
             No products found matching "{debouncedSearch}".
           </div>
@@ -103,8 +99,8 @@ export default function ProductGrid() {
         <ErpPagination 
           currentPage={currentPage} 
           totalPages={totalPages} 
-          totalItems={filtered.length} 
-          itemsPerPage={ITEMS_PER_PAGE} 
+          totalItems={totalProducts} 
+          itemsPerPage={ERP_ITEMS_PER_PAGE} 
           onPageChange={setCurrentPage} 
         />
       </div>

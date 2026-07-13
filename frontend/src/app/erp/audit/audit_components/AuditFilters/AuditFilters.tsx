@@ -6,7 +6,9 @@ import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/Searchabl
 import { useAuditContext } from '@/app/erp/audit/audit_context/AuditContext';
 
 export const AuditFilters = () => {
-  const { filters, handleEntityTypeChange, handleActorIdChange, entityTypes } = useAuditContext();
+  const { 
+    filters, handleEntityTypeChange, handleActorIdChange, handleActionTypeChange, handleStartDateChange, handleEndDateChange, entityTypes 
+  } = useAuditContext();
 
   return (
     <div className="flex flex-col md:flex-row gap-4 p-6 bg-card">
@@ -32,6 +34,48 @@ export const AuditFilters = () => {
           value={filters.actorId || ''}
           onChange={(e) => handleActorIdChange(e.target.value)}
           className="p-2.5 rounded-xl border border-border bg-input text-primary outline-none focus:border-primary focus-visible:ring-1 focus-visible:ring-primary transition-all shadow-sm placeholder:text-secondary"
+        />
+      </div>
+
+      <div className="flex flex-col flex-1">
+        <label htmlFor="actionType" className="text-sm font-semibold mb-1.5 text-primary">
+          Action
+        </label>
+        <SearchableDropdown
+          value={filters.actionType || ''}
+          onChange={handleActionTypeChange}
+          options={[
+            { label: 'All Actions', value: '' },
+            { label: 'CREATE', value: 'CREATE' },
+            { label: 'UPDATE', value: 'UPDATE' },
+            { label: 'DELETE', value: 'DELETE' }
+          ]}
+        />
+      </div>
+
+      <div className="flex flex-col flex-1">
+        <label htmlFor="startDate" className="text-sm font-semibold mb-1.5 text-primary">
+          Start Date
+        </label>
+        <input
+          id="startDate"
+          type="date"
+          value={filters.startDate || ''}
+          onChange={(e) => handleStartDateChange(e.target.value)}
+          className="p-2.5 rounded-xl border border-border bg-input text-primary outline-none focus:border-primary focus-visible:ring-1 focus-visible:ring-primary transition-all shadow-sm"
+        />
+      </div>
+
+      <div className="flex flex-col flex-1">
+        <label htmlFor="endDate" className="text-sm font-semibold mb-1.5 text-primary">
+          End Date
+        </label>
+        <input
+          id="endDate"
+          type="date"
+          value={filters.endDate || ''}
+          onChange={(e) => handleEndDateChange(e.target.value)}
+          className="p-2.5 rounded-xl border border-border bg-input text-primary outline-none focus:border-primary focus-visible:ring-1 focus-visible:ring-primary transition-all shadow-sm"
         />
       </div>
     </div>

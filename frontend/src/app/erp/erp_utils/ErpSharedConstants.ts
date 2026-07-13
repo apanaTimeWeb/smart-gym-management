@@ -46,3 +46,5 @@ export const maskSensitiveData = (value: string, type: 'phone' | 'email' | 'text
   }
   return '***';
 };
+
+export const ERP_ITEMS_PER_PAGE = 10;

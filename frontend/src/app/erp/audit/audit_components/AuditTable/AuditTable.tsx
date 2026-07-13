@@ -72,10 +72,10 @@ export const AuditTable = () => {
                   </td>
                   <td className="px-6 py-4">
                     <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
-                      log.action === 'CREATE' ? 'bg-success/10 text-success' :
-                      log.action === 'UPDATE' ? 'bg-info/10 text-info' :
-                      log.action === 'DELETE' ? 'bg-danger/10 text-danger' :
-                      'bg-warning/10 text-warning'
+                      log.action === 'CREATE' ? 'bg-success-bg text-success dark:bg-success-bg dark:text-success' :
+                      log.action === 'UPDATE' ? 'bg-info-bg text-info dark:bg-info-bg dark:text-info' :
+                      log.action === 'DELETE' ? 'bg-danger-bg text-danger dark:bg-danger-bg dark:text-danger' :
+                      'bg-warning-bg text-warning dark:bg-warning-bg dark:text-warning'
                     }`}>
                       {log.action}
                     </span>

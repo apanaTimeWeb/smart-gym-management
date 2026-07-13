@@ -1,5 +1,6 @@
 // RESPONSIBILITY: LibrarySharedConstants.ts handles the logic and UI for its corresponding feature.
 import { z } from 'zod';
+import { ERP_ITEMS_PER_PAGE } from '@/app/erp/erp_utils/ErpSharedConstants';
 
 export const ExerciseSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -65,4 +66,3 @@ export const EMPTY_DIET_FORM = {
 
 export const LIBRARY_TABS = ['Exercises', 'Diet Plans'] as const;
 export type LibraryTab = typeof LIBRARY_TABS[number];
-export const ITEMS_PER_PAGE = 12;

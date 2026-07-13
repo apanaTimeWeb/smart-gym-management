@@ -1,5 +1,6 @@
 // RESPONSIBILITY: useSalesLogic.ts handles the logic and UI for its corresponding feature.
 import { useState, useCallback, useEffect } from 'react';
+import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
 import { type SalesTab, type DateFilter } from '@/app/erp/sales/sales_utils/SalesSharedConstants';
 import { SalesContextType, SalesInitialData, FetchState, OverviewDataPoint, MembershipReportItem, MembershipTotals } from '@/app/erp/sales/sales_types/sales_types';
 import type { Member } from '@/app/erp/members/members_types/members_types';
@@ -41,7 +42,7 @@ export function useSalesLogic(initialData?: SalesInitialData | null): SalesConte
   const [overviewData, setOverviewData] = useState<OverviewDataPoint[]>(initialData?.overviewData || []);
   const [membershipReport, setMembershipReport] = useState<MembershipReportItem[]>(initialData?.membershipReport || []);
   const [membershipTotals, setMembershipTotals] = useState<MembershipTotals>(initialData?.membershipTotals || { activeCount: 0, revenue: 0 });
-  const [pendingPayments, setPendingPayments] = useState<Member[]>(initialData?.pendingPayments || []);
+  const [pendingPayments, setPendingPayments] = useState<PendingPaymentMember[]>(initialData?.pendingPayments || []);
   const [pendingTotal, setPendingTotal] = useState(initialData?.pendingTotal || 0);
   const [allMemberships, setAllMemberships] = useState<Member[]>(initialData?.allMemberships || []);
   const [allMembershipsTotal, setAllMembershipsTotal] = useState(initialData?.allMembershipsTotal || 0);
@@ -51,7 +52,7 @@ export function useSalesLogic(initialData?: SalesInitialData | null): SalesConte
   const loadAll = useCallback(async () => {
     setFetchState('loading');
     try {
-      const params: any = { limit: '10', page: currentPage.toString() };
+      const params: Record<string, string> = { limit: '10', page: currentPage.toString() };
       if (debouncedSearch) params.search = debouncedSearch;
 
       const [overviewRes, reportRes, pendingRes, allRes] = await Promise.all([
@@ -65,19 +66,18 @@ export function useSalesLogic(initialData?: SalesInitialData | null): SalesConte
       setMembershipReport(reportRes.data?.report || []);
       setMembershipTotals(reportRes.data?.totals || { activeCount: 0, revenue: 0 });
       
-      setPendingPayments(pendingRes.data?.members || []);
+      setPendingPayments((pendingRes.data?.members || []) as PendingPaymentMember[]);
       setPendingTotal(pendingRes.data?.total || 0);
       
       setAllMemberships(allRes.data?.members || []);
       setAllMembershipsTotal(allRes.data?.total || 0);
-
+      
+      setFetchState('success');
     } catch (e) {
       showToast(e instanceof Error ? e.message : 'Failed to fetch sales data', 'error');
       setFetchState('error');
-    } finally {
-      setFetchState('success');
     }
-  }, [currentPage, debouncedSearch]);
+  }, [currentPage, debouncedSearch, showToast]);
 
   useEffect(() => {
     loadAll();

@@ -5,18 +5,35 @@ import { Printer } from 'lucide-react';
 import { useStoreContext } from '@/app/erp/store/store_context/StoreContext';
 import { formatCurrency } from '@/app/erp/store/store_utils/StoreSharedConstants';
 import { GYM_DETAILS } from '@/app/erp/erp_utils/ErpSharedConstants';
-import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
+import { ERP_ITEMS_PER_PAGE } from '@/app/erp/erp_utils/ErpSharedConstants';
 
 export default function OrderTable() {
   const { 
-    orders, totalOrders, fetchState, currentPage, setCurrentPage, setPrintData,
-    startDate, setStartDate, endDate, setEndDate, sortOrder, setSortOrder
+    orders, totalOrders, fetchState, currentPage, setCurrentPage, setPrintData
   } = useStoreContext();
 
-  const ITEMS_PER_PAGE = 10;
-  const totalPages = Math.ceil(totalOrders / ITEMS_PER_PAGE);
+  const handlePrint = (o: any) => {
+    setPrintData({ 
+      gymName: GYM_DETAILS.name, 
+      gymPhone: GYM_DETAILS.phone, 
+      receiptNo: `ORD-${o.id}`, 
+      date: new Date(o.createdAt).toLocaleDateString('en-IN'), 
+      customerName: 'Customer', 
+      items: (o.items || []).map((i: any) => ({ 
+        name: i.product?.name || '', 
+        price: i.price, 
+        amount: i.price * i.qty 
+      })), 
+      total: o.total, 
+      paymentMethod: o.method 
+    });
+    setTimeout(() => window.print(), 100);
+  };
+
+  
+  const totalPages = Math.ceil(totalOrders / ERP_ITEMS_PER_PAGE);
 
   if (fetchState === 'loading') {
     return (
@@ -36,40 +53,6 @@ export default function OrderTable() {
 
   return (
     <div className="flex flex-col h-full min-h-96">
-      {/* Filter and Sort Bar */}
-      <div className="flex flex-col sm:flex-row gap-4 justify-between items-center bg-card p-4 rounded-xl border border-border mb-4">
-        <div className="flex items-center gap-3 w-full sm:w-auto">
-          <div className="flex flex-col">
-            <label className="text-xs text-secondary uppercase font-semibold mb-1">Start Date</label>
-            <input 
-              type="date" 
-              value={startDate} 
-              onChange={e => setStartDate(e.target.value)} 
-              className="text-sm px-3 py-2 rounded-lg border border-border bg-input text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
-            />
-          </div>
-          <div className="flex flex-col">
-            <label className="text-xs text-secondary uppercase font-semibold mb-1">End Date</label>
-            <input 
-              type="date" 
-              value={endDate} 
-              onChange={e => setEndDate(e.target.value)} 
-              className="text-sm px-3 py-2 rounded-lg border border-border bg-input text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
-            />
-          </div>
-        </div>
-        <div className="flex flex-col w-full sm:w-auto">
-          <label className="text-xs text-secondary uppercase font-semibold mb-1">Sort By Date</label>
-          <SearchableDropdown
-            value={sortOrder}
-            onChange={(val) => setSortOrder(String(val) as 'ASC' | 'DESC')}
-            options={[
-              { label: 'Newest First', value: 'DESC' },
-              { label: 'Oldest First', value: 'ASC' }
-            ]}
-          />
-        </div>
-      </div>
 
       <div className="overflow-x-auto flex-1 bg-card rounded-xl border border-border">
         <table className="w-full">
@@ -87,23 +70,7 @@ export default function OrderTable() {
               <tr 
                 key={o.id} 
                 className="hover:bg-primary-subtle transition-colors cursor-pointer"
-                onClick={() => {
-                  setPrintData({ 
-                    gymName: GYM_DETAILS.name, 
-                    gymPhone: GYM_DETAILS.phone, 
-                    receiptNo: `ORD-${o.id}`, 
-                    date: new Date(o.createdAt).toLocaleDateString('en-IN'), 
-                    customerName: 'Customer', 
-                    items: (o.items || []).map(i => ({ 
-                      name: i.product?.name || '', 
-                      price: i.price, 
-                      amount: i.price * i.qty 
-                    })), 
-                    total: o.total, 
-                    paymentMethod: o.method 
-                  });
-                  setTimeout(() => window.print(), 100);
-                }}
+                onClick={() => handlePrint(o)}
               >
                 <td className="px-4 py-3 text-sm font-mono text-foreground">
                   ORD-{String(o.id).padStart(4, '0')}
@@ -126,22 +93,8 @@ export default function OrderTable() {
                   <button 
                     onClick={(e) => {
                       e.stopPropagation();
-                      setPrintData({ 
-                        gymName: GYM_DETAILS.name, 
-                        gymPhone: GYM_DETAILS.phone, 
-                        receiptNo: `ORD-${o.id}`, 
-                        date: new Date(o.createdAt).toLocaleDateString('en-IN'), 
-                        customerName: 'Customer', 
-                        items: (o.items || []).map(i => ({ 
-                          name: i.product?.name || '', 
-                          price: i.price, 
-                          amount: i.price * i.qty 
-                        })), 
-                        total: o.total, 
-                        paymentMethod: o.method 
-                      });
-                      setTimeout(() => window.print(), 100);
-                    }} 
+                      handlePrint(o);
+                    }}
                     className="p-1.5 rounded-lg bg-input text-secondary hover:text-foreground transition-colors"
                     aria-label={`Print Receipt ORD-${o.id}`}
                   >
@@ -164,7 +117,7 @@ export default function OrderTable() {
         currentPage={currentPage} 
         totalPages={totalPages} 
         totalItems={totalOrders} 
-        itemsPerPage={ITEMS_PER_PAGE} 
+        itemsPerPage={ERP_ITEMS_PER_PAGE} 
         onPageChange={setCurrentPage} 
       />
     </div>

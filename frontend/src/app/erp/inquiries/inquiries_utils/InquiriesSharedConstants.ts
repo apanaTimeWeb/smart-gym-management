@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Centralized constants, Zod schema, and shared data for the Inquiries module. Single source of truth for all hardcoded values.
 import { z } from 'zod';
+import { ERP_ITEMS_PER_PAGE } from '@/app/erp/erp_utils/ErpSharedConstants';
 
 export const InquirySchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -41,7 +42,7 @@ export const INQUIRY_SOURCES = [
  'Walk-in', 'Call', 'Website', 'WhatsApp', 'Referral', 'Facebook', 'Instagram'
 ];
 
-export const INQUIRIES_ITEMS_PER_PAGE = 10;
+
 
 export const INQUIRIES_TABLE_HEADERS = [
  'Lead', 'Contact', 'Interest', 'Source', 'Status', 'Date', 'Actions'

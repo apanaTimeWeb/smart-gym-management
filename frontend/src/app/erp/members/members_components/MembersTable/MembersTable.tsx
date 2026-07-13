@@ -4,11 +4,12 @@
 import { Edit, MessageCircle, Mail, Trash2, Loader2 } from 'lucide-react';
 import { useMembersContext } from '@/app/erp/members/members_context/MembersContext';
 import { FetchState } from '@/app/erp/members/members_types/members_types';
-import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS, MEMBERS_TABLE_HEADERS, formatCurrency, MEMBERS_ITEMS_PER_PAGE } from '@/app/erp/members/members_utils/MembersSharedConstants';
+import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS, MEMBERS_TABLE_HEADERS, formatCurrency } from '@/app/erp/members/members_utils/MembersSharedConstants';
 import { maskSensitiveData } from '@/app/erp/erp_utils/ErpSharedConstants';
 import MembersEmptyState from '@/app/erp/members/members_components/MembersEmptyState/MembersEmptyState';
 
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
+import { ERP_ITEMS_PER_PAGE } from '@/app/erp/erp_utils/ErpSharedConstants';
 
 export default function MembersTable() {
   const { 
@@ -16,7 +17,7 @@ export default function MembersTable() {
     setSelectedMember, loadMemberProfile, openEdit, openMsg, deleteMember, totalMembers
   } = useMembersContext();
 
-  const totalPages = Math.ceil(totalMembers / MEMBERS_ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(totalMembers / ERP_ITEMS_PER_PAGE);
 
   return (
     <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden flex flex-col h-full min-h-96">
@@ -93,7 +94,7 @@ export default function MembersTable() {
             currentPage={currentPage} 
             totalPages={totalPages} 
             totalItems={totalMembers} 
-            itemsPerPage={MEMBERS_ITEMS_PER_PAGE} 
+            itemsPerPage={ERP_ITEMS_PER_PAGE} 
             onPageChange={setCurrentPage} 
           />
         </>
