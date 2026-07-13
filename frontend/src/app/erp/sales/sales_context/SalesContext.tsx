@@ -2,13 +2,13 @@
 "use client";
 
 import React, { createContext, useContext, useMemo } from 'react';
-import { SalesContextType } from '@/app/erp/sales/sales_types/sales_types';
+import { SalesContextType, SalesInitialData } from '@/app/erp/sales/sales_types/sales_types';
 import { useSalesLogic } from '@/app/erp/sales/sales_context/useSalesLogic';
 
 const SalesContext = createContext<SalesContextType | undefined>(undefined);
 
-export function SalesProvider({ children }: { children: React.ReactNode }) {
- const logic = useSalesLogic();
+export function SalesProvider({ children, initialData }: { children: React.ReactNode, initialData?: SalesInitialData | null }) {
+ const logic = useSalesLogic(initialData);
 
  const value = useMemo(() => logic, [logic]);
 

@@ -7,6 +7,7 @@ import { PlansUrlConfig } from '@/app/erp/plans/plans_url_config';
 import { FinanceUrlConfig } from '@/app/erp/finance/finance_url_config';
 import { HrUrlConfig } from '@/app/erp/hr/hr_url_config';
 import { LibraryUrlConfig } from '@/app/erp/library/library_url_config';
+import { SalesUrlConfig } from '@/app/erp/sales/sales_url_config';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 
@@ -74,3 +75,20 @@ export const ssrLibraryApi = {
   getExercises: () => ssrApiFetch<{ success: boolean; data: any }>(LibraryUrlConfig.BACKEND_API.EXERCISES_BASE),
   getDietPlans: () => ssrApiFetch<{ success: boolean; data: any }>(LibraryUrlConfig.BACKEND_API.DIET_PLANS_BASE),
 };
+
+export const ssrSalesApi = {
+  getOverview: () => ssrApiFetch<{ success: boolean; data: any }>(SalesUrlConfig.BACKEND_API.OVERVIEW),
+  getMembershipReport: (params?: Record<string, string>) => {
+    const q = params ? '?' + new URLSearchParams(params).toString() : '';
+    return ssrApiFetch<{ success: boolean; data: any }>(`${SalesUrlConfig.BACKEND_API.MEMBERSHIP_REPORT}${q}`);
+  },
+  getPendingPayments: (params?: Record<string, string>) => {
+    const q = params ? '?' + new URLSearchParams(params).toString() : '';
+    return ssrApiFetch<{ success: boolean; data: any }>(`${SalesUrlConfig.BACKEND_API.PENDING_PAYMENTS}${q}`);
+  },
+  getAllMemberships: (params?: Record<string, string>) => {
+    const q = params ? '?' + new URLSearchParams(params).toString() : '';
+    return ssrApiFetch<{ success: boolean; data: any }>(`${SalesUrlConfig.BACKEND_API.ALL_MEMBERSHIPS}${q}`);
+  },
+};
+

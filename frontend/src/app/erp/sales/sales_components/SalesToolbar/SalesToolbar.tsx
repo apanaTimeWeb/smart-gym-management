@@ -15,11 +15,11 @@ export default function SalesToolbar() {
  <button 
  key={d} 
  onClick={() => setDateFilter(d)}
- className="px-3 py-1.5 text-sm rounded-lg font-medium transition-colors"
- style={dateFilter === d 
- ? { background: 'var(--sales-highlight)', color: 'white' } 
- : { border: '1px solid var(--sales-border)', color: 'var(--sales-text-secondary)' }
- }
+ className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-colors border ${
+  dateFilter === d 
+  ? 'bg-primary text-primary-foreground border-transparent' 
+  : 'border-border text-secondary hover:text-foreground'
+ }`}
  >
  {d}
  </button>
@@ -32,12 +32,7 @@ export default function SalesToolbar() {
       value={search} 
       onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} 
       placeholder="Search..." 
-      className="pl-9 pr-3 py-1.5 border rounded-lg text-sm focus:outline-none focus:ring-2 w-40 sm:w-64"
-      style={{ 
-        backgroundColor: 'var(--sales-bg-card)', 
-        borderColor: 'var(--sales-border)', 
-        color: 'var(--sales-text-primary)' 
-      }} 
+      className="pl-9 pr-3 py-1.5 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-40 sm:w-64 bg-input text-foreground"
     />
   </div>
  <button className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary transition-colors">

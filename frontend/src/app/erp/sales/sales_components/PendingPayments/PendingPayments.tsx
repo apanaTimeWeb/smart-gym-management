@@ -4,6 +4,7 @@
 
 import { useSalesContext } from '@/app/erp/sales/sales_context/SalesContext';
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
+import { Loader2 } from 'lucide-react';
 
 export default function PendingPayments() {
   const { currentPage, setCurrentPage, pendingPayments, pendingTotal, loading } = useSalesContext();
@@ -14,7 +15,7 @@ export default function PendingPayments() {
   if (loading) {
     return (
       <div className="flex justify-center py-10">
-        <div className="w-8 h-8 border-4 border-t-transparent border-primary rounded-full animate-spin" />
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -42,8 +43,7 @@ export default function PendingPayments() {
  <p className="text-xs text-secondary opacity-80">{p.daysOverdue || 0} days overdue</p>
  </div>
  <button 
- className="px-3 py-1.5 text-xs text-white rounded-lg font-medium transition-opacity hover:opacity-90" 
- style={{ background: 'var(--sales-highlight)' }}
+ className="px-3 py-1.5 text-xs text-primary-foreground bg-primary rounded-lg font-medium transition-colors hover:bg-primary/90" 
  >
  Send Reminder
  </button>
@@ -62,13 +62,6 @@ export default function PendingPayments() {
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
-        colors={{
-          text: 'var(--sales-text-secondary)',
-          textActive: 'white',
-          bgActive: 'var(--sales-highlight)',
-          border: 'var(--sales-border)',
-          hoverBg: 'var(--sales-highlight-subtle)'
-        }}
       />
     </div>
   )}

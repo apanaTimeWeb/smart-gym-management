@@ -10,14 +10,13 @@ import MembershipReport from '@/app/erp/sales/sales_components/MembershipReport/
 import PendingPayments from '@/app/erp/sales/sales_components/PendingPayments/PendingPayments';
 import AllMemberships from '@/app/erp/sales/sales_components/AllMemberships/AllMemberships';
 import ErpToast from '@/app/erp/erp_components/ErpFeedback/ErpToast';
-
-import '@/app/erp/sales/sales.css';
+import { SalesInitialData } from '@/app/erp/sales/sales_types/sales_types';
 
 function SalesContent() {
  const { tab, toast, showToast } = useSalesContext();
 
  return (
- <div className="min-h-full pb-10 sales-module bg-background text-foreground">
+ <div className="min-h-full pb-10 bg-background text-foreground">
  <ErpHeader title="Sales & Reports" subtitle="Monitor membership revenue, track payments and analyze performance" />
  <div className="p-6 space-y-5">
  <SalesToolbar />
@@ -39,9 +38,9 @@ function SalesContent() {
  );
 }
 
-export default function SalesMain() {
+export default function SalesMain({ initialData }: { initialData?: SalesInitialData | null }) {
  return (
- <SalesProvider>
+ <SalesProvider initialData={initialData}>
  <SalesContent />
  </SalesProvider>
  );

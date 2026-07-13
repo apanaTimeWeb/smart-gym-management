@@ -1,31 +1,49 @@
 // RESPONSIBILITY: useSalesLogic.ts handles the logic and UI for its corresponding feature.
 import { useState, useCallback, useEffect } from 'react';
 import { type SalesTab, type DateFilter } from '@/app/erp/sales/sales_utils/SalesSharedConstants';
-import { SalesContextType } from '@/app/erp/sales/sales_types/sales_types';
+import { SalesContextType, SalesInitialData } from '@/app/erp/sales/sales_types/sales_types';
 import { salesApi } from '@/lib/api';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
+import { useRouter, useSearchParams } from 'next/navigation';
 
-export function useSalesLogic(): SalesContextType {
+export function useSalesLogic(initialData?: SalesInitialData | null): SalesContextType {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [tab, setTab] = useState<SalesTab>('Overview');
   const [dateFilter, setDateFilter] = useState<DateFilter>('This Month');
-  const [search, setSearch] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!initialData);
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
+
+  const search = searchParams.get('search') || '';
+  const currentPage = Number(searchParams.get('page')) || 1;
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
+
+  const setSearch = useCallback((val: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (val) { params.set('search', val); params.set('page', '1'); }
+    else { params.delete('search'); params.set('page', '1'); }
+    router.push(`?${params.toString()}`, { scroll: false });
+  }, [router, searchParams]);
+
+  const setCurrentPage = useCallback((page: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('page', page.toString());
+    router.push(`?${params.toString()}`, { scroll: false });
+  }, [router, searchParams]);
 
   const showToast = useCallback((message: string, type: ToastType) => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3000);
   }, []);
 
-  const [overviewData, setOverviewData] = useState<any[]>([]);
-  const [membershipReport, setMembershipReport] = useState<any[]>([]);
-  const [membershipTotals, setMembershipTotals] = useState<any>({});
-  const [pendingPayments, setPendingPayments] = useState<any[]>([]);
-  const [pendingTotal, setPendingTotal] = useState(0);
-  const [allMemberships, setAllMemberships] = useState<any[]>([]);
-  const [allMembershipsTotal, setAllMembershipsTotal] = useState(0);
+  const [overviewData, setOverviewData] = useState<any[]>(initialData?.overviewData || []);
+  const [membershipReport, setMembershipReport] = useState<any[]>(initialData?.membershipReport || []);
+  const [membershipTotals, setMembershipTotals] = useState<any>(initialData?.membershipTotals || {});
+  const [pendingPayments, setPendingPayments] = useState<any[]>(initialData?.pendingPayments || []);
+  const [pendingTotal, setPendingTotal] = useState(initialData?.pendingTotal || 0);
+  const [allMemberships, setAllMemberships] = useState<any[]>(initialData?.allMemberships || []);
+  const [allMembershipsTotal, setAllMembershipsTotal] = useState(initialData?.allMembershipsTotal || 0);
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(search), 300);

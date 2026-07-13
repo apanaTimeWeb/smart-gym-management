@@ -4,6 +4,7 @@
 
 import { useSalesContext } from '@/app/erp/sales/sales_context/SalesContext';
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
+import { Loader2 } from 'lucide-react';
 
 export default function MembershipReport() {
   const { search, currentPage, setCurrentPage, membershipReport, membershipTotals, loading } = useSalesContext();
@@ -19,7 +20,7 @@ export default function MembershipReport() {
   if (loading) {
     return (
       <div className="flex justify-center py-10">
-        <div className="w-8 h-8 border-4 border-t-transparent border-primary rounded-full animate-spin" />
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -63,13 +64,6 @@ export default function MembershipReport() {
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
-        colors={{
-          text: 'var(--sales-text-secondary)',
-          textActive: 'white',
-          bgActive: 'var(--sales-highlight)',
-          border: 'var(--sales-border)',
-          hoverBg: 'var(--sales-highlight-subtle)'
-        }}
       />
     </div>
   )}

@@ -5,6 +5,7 @@ import { useState } from 'react';
 
 import { useSalesContext } from '@/app/erp/sales/sales_context/SalesContext';
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
+import { Loader2 } from 'lucide-react';
 
 export default function AllMemberships() {
   const [filter, setFilter] = useState('All');
@@ -16,7 +17,7 @@ export default function AllMemberships() {
   if (loading) {
     return (
       <div className="flex justify-center py-10">
-        <div className="w-8 h-8 border-4 border-t-transparent border-primary rounded-full animate-spin" />
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -28,11 +29,11 @@ export default function AllMemberships() {
  <button 
  key={f} 
  onClick={() => setFilter(f)}
- className="px-3 py-1.5 text-xs rounded-full font-medium border transition-colors" 
- style={f === filter 
- ? { background: 'var(--sales-highlight)', color: 'white', borderColor: 'transparent' } 
- : { borderColor: 'var(--sales-border)', color: 'var(--sales-text-secondary)' }
- }
+ className={`px-3 py-1.5 text-xs rounded-full font-medium border transition-colors ${
+  f === filter 
+  ? 'bg-primary text-primary-foreground border-transparent' 
+  : 'border-border text-secondary hover:text-foreground'
+ }`}
  >
  {f}
  </button>
@@ -89,13 +90,6 @@ export default function AllMemberships() {
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={setCurrentPage}
-            colors={{
-              text: 'var(--sales-text-secondary)',
-              textActive: 'white',
-              bgActive: 'var(--sales-highlight)',
-              border: 'var(--sales-border)',
-              hoverBg: 'var(--sales-highlight-subtle)'
-            }}
           />
         </div>
       )}

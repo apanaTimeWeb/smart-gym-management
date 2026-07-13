@@ -1,5 +1,14 @@
 // RESPONSIBILITY: sales_types.ts handles the logic and UI for its corresponding feature.
 import { type SalesTab, type DateFilter } from '@/app/erp/sales/sales_utils/SalesSharedConstants';
+export interface SalesInitialData {
+  overviewData: any[];
+  membershipReport: any[];
+  membershipTotals: any;
+  pendingPayments: any[];
+  pendingTotal: number;
+  allMemberships: any[];
+  allMembershipsTotal: number;
+}
 
 export interface SalesContextType {
  tab: SalesTab;
