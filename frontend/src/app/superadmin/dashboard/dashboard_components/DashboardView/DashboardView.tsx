@@ -80,7 +80,7 @@ export default function DashboardView() {
     },
     theme: { mode: 'dark' as const },
     tooltip: {
-      theme: 'dark'
+      theme: 'dark' as const
     }
   };
 

@@ -5,7 +5,7 @@ import { Plus } from 'lucide-react';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import GymsToolbar from '@/app/superadmin/gyms/gyms_components/GymsToolbar/GymsToolbar';
 import GymsTable from '@/app/superadmin/gyms/gyms_components/GymsTable/GymsTable';
-import './gyms.css';
+
 
 export default function GymsClient() {
   return (
