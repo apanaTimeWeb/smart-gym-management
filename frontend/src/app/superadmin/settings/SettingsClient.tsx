@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { Settings, Shield, BellRing, Database, Loader2, Save } from 'lucide-react';
-import { superadminApi } from '@/lib/superadmin-api';
+import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import { useSuperadminMutation } from '@/app/superadmin/superadmin_utils/hooks/useSuperadminMutation';
 import toast from 'react-hot-toast';
 import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { OnboardGymSchema, OnboardGymFormValues } from '@/app/superadmin/superadmin_utils/SuperadminValidation';
-import { superadminApi } from '@/lib/superadmin-api';
+import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
 import { SubscriptionPlan } from '@/app/superadmin/superadmin_types/superadmin_types';

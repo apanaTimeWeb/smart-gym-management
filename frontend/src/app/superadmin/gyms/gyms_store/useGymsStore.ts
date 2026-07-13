@@ -9,7 +9,7 @@
 import { create } from 'zustand';
 import toast from 'react-hot-toast';
 
-import { superadminApi } from '@/lib/superadmin-api';
+import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import { apiFetch } from '@/lib/api';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 

@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { Cpu, HardDrive, Server, Zap, RefreshCcw, Loader2 } from 'lucide-react';
-import { superadminApi } from '@/lib/superadmin-api';
+import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import toast from 'react-hot-toast';
 
 export default function InfrastructureClient() {

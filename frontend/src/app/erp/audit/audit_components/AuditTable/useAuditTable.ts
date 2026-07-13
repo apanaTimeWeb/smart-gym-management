@@ -5,8 +5,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { AuditLog, AuditLogResponse } from '@/app/erp/audit/audit_types/audit_types';
-import { AUDIT_URLS } from '@/app/erp/audit/audit_url_config';
-import { apiFetch, ApiResponse } from '@/lib/api';
+import { auditApi } from '@/app/erp/audit/audit_api/audit_api';
 
 export const useAuditTable = () => {
   const router = useRouter();
@@ -33,10 +32,7 @@ export const useAuditTable = () => {
       if (entityType) queryParams.append('entityType', entityType);
       if (actorId) queryParams.append('actorId', actorId);
 
-      // Using strict generic envelope ApiResponse to cast the result
-      const data = await apiFetch<ApiResponse<AuditLogResponse>>(
-        `${AUDIT_URLS.BACKEND_API.BASE}?${queryParams.toString()}`
-      );
+      const data = await auditApi.getLogs(Object.fromEntries(queryParams));
       
       // If the backend wraps in { data: AuditLog[], meta: { total: number } } 
       // instead of the new AuditLogResponse, we handle both defensively.

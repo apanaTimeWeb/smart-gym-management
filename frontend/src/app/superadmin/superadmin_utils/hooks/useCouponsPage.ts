@@ -8,7 +8,7 @@ import { Coupon, CouponStatus } from '@/app/superadmin/superadmin_types/superadm
 import toast from 'react-hot-toast';
 import { CouponSchema, CouponFormData } from '@/app/superadmin/superadmin_utils/SuperadminZodSchemas';
 import { useSuperadminMutation } from '@/app/superadmin/superadmin_utils/hooks/useSuperadminMutation';
-import { superadminApi } from '@/lib/superadmin-api';
+import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 
 export const useCouponsPage = () => {
   const [coupons, setCoupons] = useState<Coupon[]>([]);
