@@ -1,7 +1,7 @@
 import pytest
 import uuid
 
-def test_create_audit-log(auth_client, api_url):
+def test_create_audit_log(auth_client, api_url):
     unique_val = f"test_{uuid.uuid4().hex[:8]}"
     response = auth_client.post(f"{api_url}/superadmin/audit-logs", json={
         "name": f"Test Audit-log {unique_val}",
@@ -21,7 +21,7 @@ def test_create_audit-log(auth_client, api_url):
         assert "data" in data
         assert "id" in data["data"]
 
-def test_get_audit-logs(auth_client, api_url):
+def test_get_audit_logs(auth_client, api_url):
     response = auth_client.get(f"{api_url}/superadmin/audit-logs")
     assert response.status_code in [200, 403]
     
