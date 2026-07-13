@@ -13,7 +13,9 @@ export function StoreProvider({ children, initialData }: { children: React.React
    tab, products, orders, totalOrders, summary, loading, saving,
    toast, printData, search, debouncedSearch, currentPage,
    showProductModal, editProductId, editProductData,
-   showOrderModal, orderItems, orderMethod, orderTotal
+   showOrderModal, orderItems, orderMethod, orderTotal,
+   customerPhone, sendViaWhatsapp,
+   startDate, endDate, sortOrder
  } = logic;
 
  // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -21,7 +23,9 @@ export function StoreProvider({ children, initialData }: { children: React.React
    tab, products, orders, totalOrders, summary, loading, saving,
    toast, printData, search, debouncedSearch, currentPage,
    showProductModal, editProductId, editProductData,
-   showOrderModal, orderItems, orderMethod, orderTotal
+   showOrderModal, orderItems, orderMethod, orderTotal,
+   customerPhone, sendViaWhatsapp,
+   startDate, endDate, sortOrder
  ]);
 
  return (

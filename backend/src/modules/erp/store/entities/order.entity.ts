@@ -28,6 +28,9 @@ export class Order {
   @Column({ nullable: true })
   notes: string;
 
+  @Column({ nullable: true })
+  customerPhone: string;
+
   @CreateDateColumn()
   createdAt: Date;
 

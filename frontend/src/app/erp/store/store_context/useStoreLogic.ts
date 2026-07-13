@@ -25,6 +25,9 @@ export function useStoreLogic(initialData?: any): StoreContextType {
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 300);
   const [currentPage, setCurrentPage] = useState(1);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [sortOrder, setSortOrder] = useState<'ASC' | 'DESC'>('DESC');
 
  const [showProductModal, setShowProductModal] = useState(false);
  const [editProductId, setEditProductId] = useState<number | null>(null);
@@ -33,6 +36,8 @@ export function useStoreLogic(initialData?: any): StoreContextType {
  const [showOrderModal, setShowOrderModal] = useState(false);
  const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
  const [orderMethod, setOrderMethod] = useState('Cash');
+ const [customerPhone, setCustomerPhone] = useState('');
+ const [sendViaWhatsapp, setSendViaWhatsapp] = useState(false);
 
  const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
  const hideToast = useCallback(() => setToast(null), []);
@@ -42,9 +47,12 @@ export function useStoreLogic(initialData?: any): StoreContextType {
  try {
       const params: Record<string, string> = { 
         limit: '10', 
-        page: currentPage.toString() 
+        page: currentPage.toString(),
+        sortOrder
       };
       if (debouncedSearch) params.search = debouncedSearch;
+      if (startDate) params.startDate = startDate;
+      if (endDate) params.endDate = endDate;
 
       const [productsRes, ordersRes, summaryRes] = await Promise.all([
         storeApi.getProducts(),
@@ -60,7 +68,7 @@ export function useStoreLogic(initialData?: any): StoreContextType {
  } finally { 
  setLoading(false); 
  }
- }, [showToast, currentPage, debouncedSearch]);
+ }, [showToast, currentPage, debouncedSearch, startDate, endDate, sortOrder]);
 
   useEffect(() => { 
     if (isFirstRender.current && initialData) {
@@ -149,40 +157,58 @@ export function useStoreLogic(initialData?: any): StoreContextType {
  try {
  const res = await storeApi.createOrder({ 
  items: orderItems.map(i => ({ productId: i.productId, qty: i.qty })), 
- method: orderMethod 
+ method: orderMethod,
+ ...(sendViaWhatsapp && customerPhone ? { customerPhone } : {})
  }) as { data: Order, message: string };
  
  showToast(res.message, 'success');
  
-    setPrintData({
-      gymName: GYM_DETAILS.name, 
-      gymPhone: GYM_DETAILS.phone,
-      receiptNo: `ORD-${res.data.id}`, 
- date: new Date().toLocaleDateString('en-IN'),
- customerName: 'Walk-in Customer',
- items: orderItems.map(i => ({ name: i.name, price: i.price, amount: i.price * i.qty })),
- total: orderTotal, 
- paymentMethod: orderMethod,
- });
+     setPrintData({
+       gymName: GYM_DETAILS.name, 
+       gymPhone: GYM_DETAILS.phone,
+       receiptNo: `ORD-${res.data.id}`, 
+       date: new Date().toLocaleDateString('en-IN'),
+       customerName: sendViaWhatsapp && customerPhone ? customerPhone : 'Walk-in Customer',
+       items: orderItems.map(i => ({ name: i.name, price: i.price, amount: i.price * i.qty })),
+       total: orderTotal, 
+       paymentMethod: orderMethod,
+     });
  
- setTimeout(() => window.print(), 100);
- setOrderItems([]); 
- setShowOrderModal(false); 
- await loadAll();
- } catch (err) { 
- showToast((err as Error).message, 'error'); 
- } finally { 
- setSaving(false); 
- }
- }, [orderItems, orderMethod, orderTotal, loadAll, showToast]);
+     if (!sendViaWhatsapp) {
+       setTimeout(() => window.print(), 100);
+     } else {
+       let billMsg = `*${GYM_DETAILS.name} Receipt*\nReceipt No: ORD-${res.data.id}\nDate: ${new Date().toLocaleDateString('en-IN')}\n\n*Items:*\n`;
+       orderItems.forEach(i => {
+         billMsg += `- ${i.name} x${i.qty} (₹${i.qty * i.price})\n`;
+       });
+       billMsg += `\n*Total: ₹${orderTotal}*\nPayment Method: ${orderMethod}\n\nThank you for shopping with us!`;
+       
+       const cleanPhone = customerPhone.replace(/[^0-9]/g, '');
+       const url = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(billMsg)}`;
+       window.open(url, '_blank');
+     }
+     
+     setOrderItems([]); 
+     setCustomerPhone('');
+     setSendViaWhatsapp(false);
+     setShowOrderModal(false); 
+     await loadAll();
+   } catch (err) { 
+     showToast((err as Error).message, 'error'); 
+   } finally { 
+     setSaving(false); 
+   }
+ }, [orderItems, orderMethod, orderTotal, loadAll, showToast, sendViaWhatsapp, customerPhone]);
 
   return {
     tab, setTab,
     products, orders, totalOrders, summary, loading, saving,
     toast, printData, search, debouncedSearch, setSearch,
     currentPage, setCurrentPage,
+    startDate, setStartDate, endDate, setEndDate, sortOrder, setSortOrder,
     showProductModal, setShowProductModal, editProductId, editProductData,
     showOrderModal, setShowOrderModal, orderItems, orderMethod, setOrderMethod,
+    customerPhone, setCustomerPhone, sendViaWhatsapp, setSendViaWhatsapp,
     hideToast, setPrintData, loadAll,
  openAddProduct, openEditProduct, saveProduct, deleteProduct,
  addToOrder, removeFromOrder, orderTotal, placeOrder

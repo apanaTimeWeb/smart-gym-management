@@ -33,6 +33,9 @@ export class Plan {
   @Column('float')
   price12Month: number;
 
+  @Column('float', { default: 0 })
+  priceCustom: number;
+
   @Column('simple-array')
   features: string[];
 

@@ -25,6 +25,7 @@ export class AttendanceRepository {
     const where: any = {};
     if (query.memberId) where.memberId = query.memberId;
     if (query.staffId) where.staffId = query.staffId;
+    if (query.type) where.type = query.type;
 
     const page = query.page || 1;
     const limit = query.limit || 50;

@@ -11,6 +11,6 @@ export class FindExerciseService {
   async execute(query: PaginationQueryDto) {
     this.logger.log(`Fetching Exercises`);
     const [Exercises, total] = await this.repository.findAllExercises(query);
-    return { success: true, data: { Exercises, total } };
+    return { success: true, data: { exercises: Exercises, total } };
   }
 }

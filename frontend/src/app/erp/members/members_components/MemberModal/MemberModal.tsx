@@ -35,8 +35,9 @@ export default function MemberModal() {
    }
  }, [showAddModal, editData, reset]);
 
-  const watchPlanId = watch('planId') as number;
+  const watchPlanId = watch('planId') as string;
   const watchBillingCycle = watch('billingCycle') as string;
+  const watchCustomDays = watch('customDays') as number;
 
  if (!showAddModal) return null;
 
@@ -84,23 +85,6 @@ export default function MemberModal() {
  </select>
  </div>
  <div>
- <label className="block text-sm font-medium text-[var(--members-text-secondary)] mb-1">Branch</label>
- <Controller
-   name="branch"
-   control={useFormReturn.control}
-   render={({ field }) => (
-     <SearchableDropdown
-       options={BRANCH_OPTIONS.map(b => ({ value: b, label: b }))}
-       value={field.value}
-       onChange={field.onChange}
-       placeholder="Select branch..."
-     />
-   )}
- />
- </div>
- </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
- <div>
  <label className="block text-sm font-medium text-[var(--members-text-secondary)] mb-1">Plan</label>
  <Controller
    name="planId"
@@ -115,6 +99,8 @@ export default function MemberModal() {
    )}
  />
  </div>
+ </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  <div>
  <label className="block text-sm font-medium text-[var(--members-text-secondary)] mb-1">Billing Cycle</label>
  <select 
@@ -124,13 +110,36 @@ export default function MemberModal() {
  {Object.entries(MEMBERS_CYCLE_LABELS).map(([val, label]) => <option key={val} value={val}>{label}</option>)}
  </select>
  </div>
+ {watchBillingCycle === 'CUSTOM' && (
+ <div>
+ <label className="block text-sm font-medium text-[var(--members-text-secondary)] mb-1">Custom Days</label>
+ <input 
+ type="number"
+ {...register('customDays')}
+ placeholder="e.g. 15"
+ className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 bg-[var(--members-bg-input)] text-[var(--members-text-primary)] ${
+   errors.customDays ? 'border-[var(--danger)] focus:ring-[var(--danger)]' : 'border-[var(--members-border)] focus:ring-[var(--warning)]'
+ }`}
+ />
+ {errors.customDays && (
+   <p className="text-[var(--danger)] text-xs mt-1">{errors.customDays?.message}</p>
+ )}
+ </div>
+ )}
  </div>
  {watchPlanId && (
-            <div className="bg-[var(--warning-bg)] rounded-xl p-3 text-sm border border-[var(--warning)]/30">
-              <span className="font-semibold text-[var(--warning)]">Price:</span> 
-              <span className="text-[var(--warning)] ml-1">
- {formatCurrency(getPriceForCycle(plans.find(p => p.id === Number(watchPlanId)), watchBillingCycle))}
+            <div className="bg-[var(--warning-bg)] rounded-xl p-3 text-sm border border-[var(--warning)]/30 flex justify-between items-center">
+              <div>
+                <span className="font-semibold text-[var(--warning)]">Calculated Price:</span> 
+                <span className="text-[var(--warning)] ml-1 font-bold">
+ {formatCurrency(getPriceForCycle(plans.find(p => p.id.toString() === watchPlanId.toString()), watchBillingCycle, Number(watchCustomDays) || 0))}
  </span>
+              </div>
+              {watchBillingCycle === 'CUSTOM' && (
+                <div className="text-[var(--warning)] text-xs opacity-80">
+                  (Per Day: {formatCurrency((plans.find(p => p.id.toString() === watchPlanId.toString()) as any)?.priceCustom || 0)} × {watchCustomDays || 0} days)
+                </div>
+              )}
  </div>
  )}
  <div className="flex gap-3 pt-2">

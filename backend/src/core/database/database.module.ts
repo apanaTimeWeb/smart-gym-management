@@ -15,7 +15,7 @@ import { UnauthorizedException } from '@nestjs/common';
       scope: Scope.REQUEST,
       inject: [REQUEST, TenantConnectionService],
       useFactory: async (request: Request, connectionService: TenantConnectionService) => {
-        const tenantId = request.headers['x-tenant-id'] as string;
+        const tenantId = request?.headers?.['x-tenant-id'] as string;
         
         if (!tenantId) {
           throw new UnauthorizedException('x-tenant-id header is required for tenant-specific routes');

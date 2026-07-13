@@ -35,7 +35,7 @@ export class TenantConnectionService {
       type: 'postgres',
       url: tenantUrl,
       entities: [__dirname + '/../../**/*.entity{.ts,.js}'],
-      synchronize: false, // Strict rule: migrations only
+      synchronize: true, // Enabled for dev mode column creation
       logging: ['error', 'warn'],
     });
 

@@ -6,6 +6,7 @@ import { HrProvider, useHrContext } from '@/app/erp/hr/hr_context/HrContext';
 import HrKPIs from '@/app/erp/hr/hr_components/HrKPIs/HrKPIs';
 import HrTabs from '@/app/erp/hr/hr_components/HrTabs/HrTabs';
 import StaffModal from '@/app/erp/hr/hr_components/StaffModal/StaffModal';
+import PayrollModal from '@/app/erp/hr/hr_components/PayrollModal/PayrollModal';
 import '@/app/erp/hr/hr.css';
 
 function HrContent() {
@@ -20,6 +21,7 @@ function HrContent() {
  </div>
 
  <StaffModal />
+ <PayrollModal />
  
  {toast && <ErpToast message={toast.message} type={toast.type} onClose={hideToast} />}
  </div>

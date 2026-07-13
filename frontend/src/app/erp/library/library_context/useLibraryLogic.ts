@@ -38,7 +38,7 @@ export function useLibraryLogic(): LibraryContextType {
  libraryApi.getExercises(),
  libraryApi.getDietPlans(),
  ]);
- setExercises(Array.isArray(exRes.data) ? exRes.data : (exRes.data as any).Exercises || []);
+ setExercises(Array.isArray(exRes.data) ? exRes.data : (exRes.data as any).exercises || []);
  setDietPlans(Array.isArray(dietRes.data) ? dietRes.data : (dietRes.data as any).dietPlans || []);
  } catch (e) { 
  showToast((e as Error).message, 'error'); 

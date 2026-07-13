@@ -1,4 +1,6 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Inject } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
+import type { Request } from 'express';
 import { MembersRepository } from '@/modules/erp/members/members.repository';
 import { CreateMemberDto } from '@/modules/erp/members/dto/create-member.dto';
 import { DuplicateEmailException } from '@/modules/erp/members/members.exceptions';
@@ -18,6 +20,7 @@ export class CreateMemberService {
   constructor(
     private readonly membersRepository: MembersRepository,
     private readonly eventEmitter: EventEmitter2,
+    @Inject(REQUEST) private readonly request: Request,
   ) {}
 
   async create(dto: CreateMemberDto): Promise<MemberResponse> {
@@ -40,9 +43,14 @@ export class CreateMemberService {
 
     const joinDate = dto.joinDate ? new Date(dto.joinDate) : new Date();
     const expiryDate = new Date(joinDate);
-    expiryDate.setMonth(
-      expiryDate.getMonth() + (cycleMonths[dto.billingCycle] || 1),
-    );
+    
+    if (dto.billingCycle === BillingCycle.CUSTOM && dto.customDays) {
+      expiryDate.setDate(expiryDate.getDate() + dto.customDays);
+    } else {
+      expiryDate.setMonth(
+        expiryDate.getMonth() + (cycleMonths[dto.billingCycle] || 1),
+      );
+    }
 
     const payload = {
       ...dto,
@@ -55,7 +63,8 @@ export class CreateMemberService {
 
     const member = await this.membersRepository.createMember(payload);
 
-    this.eventEmitter.emit('member.registered', member);
+    const tenantId = this.request.headers['x-tenant-id'] as string;
+    this.eventEmitter.emit('member.registered', { member, tenantId });
 
     return {
       message: MEMBER_MESSAGES.CREATED_SUCCESS,

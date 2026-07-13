@@ -50,7 +50,8 @@ export function usePlansLogic(): PlansContextType {
  price1Month: String(p.price1Month), 
  price3Month: String(p.price3Month), 
  price6Month: String(p.price6Month), 
- price12Month: String(p.price12Month), 
+ price12Month: String(p.price12Month),
+ priceCustom: String((p as any).priceCustom || 0),
  features: p.features.join('\n') 
  });
  setShowModal(true);
@@ -66,6 +67,8 @@ export function usePlansLogic(): PlansContextType {
         price3Month: Number(data.price3Month), 
         price6Month: Number(data.price6Month), 
         price12Month: Number(data.price12Month),
+        priceCustom: Number(data.priceCustom),
+        isActive: true,
         features: data.features.split('\n').map(s => s.trim()).filter(Boolean)
       };
  

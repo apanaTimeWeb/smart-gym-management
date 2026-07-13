@@ -2,7 +2,6 @@ import { DeleteProductService } from './services/delete-product.service';
 import { DeleteProductController } from './controllers/delete-product.controller';
 import { Module } from '@nestjs/common';
 
-
 import { Product } from './entities/product.entity';
 import { Order } from './entities/order.entity';
 import { OrderItem } from './entities/order-item.entity';
@@ -22,10 +21,12 @@ import { UpdateProductService } from './services/update-product.service';
 import { CreateOrderService } from './services/create-order.service';
 import { FindOrderService } from './services/find-order.service';
 import { StoreSummaryService } from './services/store-summary.service';
+import { WhatsappService } from './services/whatsapp.service';
 
 @Module({
   imports: [],
-  controllers: [DeleteProductController, 
+  controllers: [
+    DeleteProductController, 
     CreateProductController,
     FindProductController,
     UpdateProductController,
@@ -33,7 +34,8 @@ import { StoreSummaryService } from './services/store-summary.service';
     FindOrderController,
     StoreSummaryController,
   ],
-  providers: [DeleteProductService, 
+  providers: [
+    DeleteProductService, 
     StoreRepository,
     CreateProductService,
     FindProductService,
@@ -41,6 +43,7 @@ import { StoreSummaryService } from './services/store-summary.service';
     CreateOrderService,
     FindOrderService,
     StoreSummaryService,
+    WhatsappService,
   ],
 })
 export class StoreModule {}

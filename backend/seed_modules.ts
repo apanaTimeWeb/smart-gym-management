@@ -34,7 +34,7 @@ async function seed() {
   const planRepo = AppDataSource.getRepository(Plan);
   let plan = await planRepo.findOne({ where: {} });
   if (!plan) {
-    plan = planRepo.create({ name: 'Pro Plan', tier: PlanTier.GOLD, price1Month: 50, price3Month: 140, price6Month: 250, price12Month: 450, features: ['All Gym Access'], isActive: true });
+    plan = planRepo.create({ name: 'Pro Plan', tier: PlanTier.GOLD, price1Month: 50, price3Month: 140, price6Month: 250, price12Month: 450, priceCustom: 0, features: ['All Gym Access'], isActive: true });
     await planRepo.save(plan);
   }
 
@@ -46,7 +46,6 @@ async function seed() {
       email: 'john@example.com',
       phone: '1234567890',
       gender: Gender.MALE,
-      branch: 'Main',
       planId: plan.id,
       billingCycle: BillingCycle.ONE_MONTH,
       status: MemberStatus.ACTIVE,

@@ -7,9 +7,9 @@ export const MemberSchema = z.object({
   phone: z.string().min(10, "Phone number must be at least 10 digits"),
   address: z.string().optional(),
   gender: z.enum(['MALE', 'FEMALE', 'OTHER']),
-  branch: z.string(),
   billingCycle: z.string(),
-  planId: z.coerce.number().min(1, "Please select a plan"),
+  customDays: z.coerce.number().min(1, "Please enter valid days").optional(),
+  planId: z.string().min(1, "Please select a plan"),
 });
 
 export type MemberFormValues = z.infer<typeof MemberSchema>;
@@ -25,6 +25,7 @@ export const MEMBERS_CYCLE_LABELS: Record<string, string> = {
  THREE_MONTHS: '3 Months',
  SIX_MONTHS: '6 Months',
  TWELVE_MONTHS: '12 Months',
+ CUSTOM: 'Custom (Days)',
 };
 
 export const EMPTY_MEMBER_FORM = { 
@@ -33,9 +34,8 @@ export const EMPTY_MEMBER_FORM = {
  phone: '', 
  address: '', 
  gender: 'MALE', 
- branch: 'Main Branch', 
  billingCycle: 'ONE_MONTH', 
- planId: 1 
+ planId: '' 
 } as unknown as MemberFormValues;
 
 export const MEMBERS_TABLE_HEADERS = [
@@ -46,13 +46,14 @@ export const BRANCH_OPTIONS = ['Main Branch', 'Branch 2', 'Branch 3'] as const;
 
 export const formatCurrency = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');
 
-export function getPriceForCycle(plan: Plan | undefined, cycle: string): number {
+export function getPriceForCycle(plan: Plan | undefined, cycle: string, customDays: number = 0): number {
  if (!plan) return 0;
  const map: Record<string, number> = {
  ONE_MONTH: plan.price1Month,
  THREE_MONTHS: plan.price3Month,
  SIX_MONTHS: plan.price6Month,
  TWELVE_MONTHS: plan.price12Month,
+ CUSTOM: ((plan as any).priceCustom || 0) * (customDays || 0),
  };
  return map[cycle] || 0;
 }

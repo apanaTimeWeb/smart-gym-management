@@ -10,12 +10,16 @@ import {
   ProductNotFoundException,
 } from '@/modules/erp/store/store.exceptions';
 import { STORE_CONSTANTS } from '@/modules/erp/store/store.constants';
+import { WhatsappService } from '@/modules/erp/store/services/whatsapp.service';
 
 @Injectable()
 export class CreateOrderService {
   private readonly logger = new Logger(CreateOrderService.name);
 
-  constructor(private readonly repository: StoreRepository) {}
+  constructor(
+    private readonly repository: StoreRepository,
+    private readonly whatsappService: WhatsappService,
+  ) {}
 
   async execute(dto: CreateOrderDto) {
     this.logger.log(`Creating order with ${dto.items.length} items`);
@@ -32,6 +36,7 @@ export class CreateOrderService {
         method: dto.method,
         status: STORE_CONSTANTS.ORDER_STATUS.COMPLETED,
         notes: dto.notes,
+        customerPhone: dto.customerPhone,
       });
       const savedOrder = await queryRunner.manager.save(Order, order);
 
@@ -71,6 +76,21 @@ export class CreateOrderService {
       const data = await queryRunner.manager.save(Order, savedOrder);
 
       await queryRunner.commitTransaction();
+
+      if (dto.customerPhone) {
+        let billMsg = `*Smart Gym Receipt*\nReceipt No: ORD-${savedOrder.id}\nDate: ${new Date().toLocaleDateString('en-IN')}\n\n*Items:*\n`;
+        for (const item of dto.items) {
+           const product = await queryRunner.manager.findOne(Product, { where: { id: item.productId } });
+           const prodName = product?.name || 'Item';
+           const prodPrice = product?.price || 0;
+           billMsg += `- ${prodName} x${item.qty} (₹${item.qty * prodPrice})\n`;
+        }
+        billMsg += `\n*Total: ₹${total}*\nPayment Method: ${dto.method}\n\nThank you for shopping with us!`;
+        
+        // This won't block the API response
+        this.whatsappService.sendBill(dto.customerPhone, billMsg);
+      }
+
       return { success: true, data };
     } catch (err) {
       this.logger.error(`Failed to create order: ${err.message}`);

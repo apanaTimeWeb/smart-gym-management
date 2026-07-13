@@ -3,6 +3,7 @@
 import { X, Printer } from 'lucide-react';
 import { useStoreContext } from '@/app/erp/store/store_context/StoreContext';
 import { PAYMENT_METHODS, formatCurrency } from '@/app/erp/store/store_utils/StoreSharedConstants';
+import { useState } from 'react';
 
 export default function PosModal() {
  const { 
@@ -10,8 +11,11 @@ export default function PosModal() {
  products, 
  orderItems, addToOrder, removeFromOrder, orderTotal, 
  orderMethod, setOrderMethod, 
+ customerPhone, setCustomerPhone, sendViaWhatsapp, setSendViaWhatsapp,
  saving, placeOrder 
  } = useStoreContext();
+
+ const [productSearch, setProductSearch] = useState('');
 
  if (!showOrderModal) return null;
 
@@ -31,9 +35,18 @@ export default function PosModal() {
  
  {/* Product Grid */}
  <div>
- <p className="text-sm font-medium text-[var(--store-text-secondary)] mb-3">Select Products</p>
+ <div className="flex items-center justify-between mb-3">
+   <p className="text-sm font-medium text-[var(--store-text-secondary)]">Select Products</p>
+   <input 
+     type="text" 
+     placeholder="Search..." 
+     value={productSearch}
+     onChange={e => setProductSearch(e.target.value)}
+     className="w-1/2 px-3 py-1.5 text-xs rounded-lg border border-[var(--store-border)] bg-[var(--store-bg-input)] text-[var(--store-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--store-highlight)]"
+   />
+ </div>
  <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
- {products.filter(p => p.stock > 0).map(p => (
+ {products.filter(p => p.stock > 0 && p.name.toLowerCase().includes(productSearch.toLowerCase())).map(p => (
  <button 
  key={p.id} 
  onClick={() => addToOrder(p)} 
@@ -74,6 +87,7 @@ export default function PosModal() {
  <span className="font-semibold text-[var(--store-text-primary)]">Total</span>
  <span className="font-bold text-lg text-[var(--success)] dark:text-[var(--success)]">{formatCurrency(orderTotal)}</span>
  </div>
+ 
  <select 
  value={orderMethod} 
  onChange={e => setOrderMethod(e.target.value)} 
@@ -81,13 +95,34 @@ export default function PosModal() {
  >
  {PAYMENT_METHODS.map(m => <option key={m}>{m}</option>)}
  </select>
+
+ <label className="flex items-center gap-2 mb-3 cursor-pointer text-sm text-[var(--store-text-primary)] font-medium">
+   <input 
+     type="checkbox" 
+     checked={sendViaWhatsapp}
+     onChange={e => setSendViaWhatsapp(e.target.checked)}
+     className="w-4 h-4 rounded border-[var(--store-border)] accent-[var(--store-highlight)]"
+   />
+   Send bill via WhatsApp
+ </label>
+
+ {sendViaWhatsapp && (
+   <input 
+     type="tel"
+     placeholder="WhatsApp Number (e.g. +919999999999)"
+     value={customerPhone}
+     onChange={e => setCustomerPhone(e.target.value)}
+     className="w-full border border-[var(--store-border)] rounded-xl px-4 py-2.5 text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--store-bg-input)] text-[var(--store-text-primary)]"
+   />
+ )}
+
  <button 
  onClick={placeOrder} 
- disabled={saving || orderItems.length === 0} 
+ disabled={saving || orderItems.length === 0 || (sendViaWhatsapp && !customerPhone)} 
  className="w-full py-3 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 disabled:opacity-70 transition-colors" 
  style={{ background: 'var(--store-highlight)' }}
  >
- {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><Printer size={15} /> Complete & Print</>}
+ {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : (sendViaWhatsapp ? 'Complete & Send WhatsApp' : <><Printer size={15} /> Complete & Print</>)}
  </button>
  </div>
  </div>

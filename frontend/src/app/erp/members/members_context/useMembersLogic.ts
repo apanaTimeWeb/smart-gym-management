@@ -123,8 +123,8 @@ export function useMembersLogic(initialData?: any): MembersContextType {
  phone: m.phone, 
  address: m.address || '', 
  gender: (m.gender as "MALE"|"FEMALE"|"OTHER") || 'MALE', 
- branch: m.branch, 
  billingCycle: m.billingCycle, 
+ customDays: (m as any).customDays, // We will type this properly later
  planId: m.planId 
  } as unknown as MemberFormValues);
  setShowAddModal(true);
@@ -133,13 +133,13 @@ export function useMembersLogic(initialData?: any): MembersContextType {
  const saveMember = useCallback(async (data: MemberFormValues) => {
  setSaving(true);
  try {
- if (editId) {
- const res = await membersApi.update(editId, { ...data, planId: Number(data.planId) });
- showToast((res as any).message, 'success');
- } else {
- const res = await membersApi.create({ ...data, planId: Number(data.planId), joinDate: new Date().toISOString() });
- showToast((res as any).message, 'success');
- }
+  if (editId) {
+  const res = await membersApi.update(editId, { ...data, planId: data.planId });
+  showToast((res as any).message, 'success');
+  } else {
+  const res = await membersApi.create({ ...data, planId: data.planId, joinDate: new Date().toISOString() });
+  showToast((res as any).message, 'success');
+  }
  setShowAddModal(false);
  await loadAll();
  } catch (err) { 

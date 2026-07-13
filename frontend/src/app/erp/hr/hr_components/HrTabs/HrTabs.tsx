@@ -62,6 +62,15 @@ export default function HrTabs() {
         <Plus size={14} /> Add Staff
       </button>
     )}
+    {activeTab === 'Payroll' && (
+      <button 
+        onClick={openAddPayroll} 
+        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white rounded-lg hover:opacity-90 transition-opacity" 
+        style={{ backgroundColor: 'var(--hr-highlight)' }}
+      >
+        <Plus size={14} /> Add Payroll
+      </button>
+    )}
   </div>
 </div>
 </div>

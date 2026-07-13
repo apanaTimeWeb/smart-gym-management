@@ -6,8 +6,8 @@ import {
 
 export const ERP_NAV_ITEMS = [
  { href: '/erp/dashboard', label: 'Dashboard', icon: LayoutDashboard },
- { href: '/erp/members', label: 'Members', icon: Users },
  { href: '/erp/plans', label: 'Plans', icon: ClipboardList },
+ { href: '/erp/members', label: 'Members', icon: Users },
  { href: '/erp/sales', label: 'Sales & Reports', icon: BarChart2 },
  { href: '/erp/attendance', label: 'Attendance', icon: CalendarCheck },
  { href: '/erp/hr', label: 'HR Management', icon: UserCog },

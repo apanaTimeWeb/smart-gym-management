@@ -32,8 +32,9 @@ export class CreateWorkoutDto {
   tags: string[];
 
   @ApiProperty({ description: 'Is active', default: true, required: false })
+  @IsOptional()
   @IsBoolean()
-  isActive: boolean;
+  isActive?: boolean;
 }
 
 export class UpdateWorkoutDto extends PartialType(CreateWorkoutDto) {}

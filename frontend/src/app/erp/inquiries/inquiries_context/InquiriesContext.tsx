@@ -19,7 +19,8 @@ export function InquiriesProvider({ children }: { children: React.ReactNode }) {
   const value = useMemo(() => logic, [
     inquiries, stats, loading, error, toast, totalInquiries,
     search, debouncedSearch, statusFilter, dateFilter, currentPage,
-    showModal, editId, editData, saving, msgModal
+    showModal, editId, editData, saving, msgModal,
+    logic.selectedIds, logic.bulkMsgModal
   ]);
 
  return (

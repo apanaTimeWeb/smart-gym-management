@@ -10,7 +10,7 @@ import { DeleteWorkoutService } from '../services/delete-workout.service';
 export class DeleteWorkoutController {
   constructor(private readonly workoutService: DeleteWorkoutService) {}
   
-  @Delete(':id')
+  @Delete('workouts/:id')
   async execute(@Param('id') id: string) {
     return this.workoutService.execute(Number(id));
   }

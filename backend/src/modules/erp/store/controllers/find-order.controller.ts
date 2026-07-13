@@ -6,7 +6,7 @@ import {
   ApiResponse,
 } from '@nestjs/swagger';
 import { FindOrderService } from '@/modules/erp/store/services/find-order.service';
-import { PaginationQueryDto } from '@/core/dto/pagination-query.dto';
+import { FindOrderDto } from '@/modules/erp/store/dto/find-order.dto';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 
 @ApiTags('Store')
@@ -19,7 +19,7 @@ export class FindOrderController {
   @Get()
   @ApiOperation({ summary: 'Get all orders' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Return all orders' })
-  execute(@Query() query: PaginationQueryDto) {
+  execute(@Query() query: FindOrderDto) {
     return this.findOrderService.execute(query);
   }
 }

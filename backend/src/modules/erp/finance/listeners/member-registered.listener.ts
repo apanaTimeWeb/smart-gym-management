@@ -1,34 +1,37 @@
-import { Injectable, Logger, Inject } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DataSource } from 'typeorm';
 import { Payment } from '../entities/payment.entity';
 import { PaymentStatus } from '../utils/finance.enums';
+import { TenantConnectionService } from '@/core/database/tenant-connection.service';
 
 @Injectable()
 export class MemberRegisteredListener {
   private readonly logger = new Logger(MemberRegisteredListener.name);
 
-  private readonly paymentRepository: Repository<Payment>;
-
   constructor(
-    @Inject('TENANT_CONNECTION') private readonly dataSource: DataSource,
-  ) {
-    this.paymentRepository = this.dataSource.getRepository(Payment);
-  }
+    private readonly tenantConnectionService: TenantConnectionService,
+  ) {}
 
   @OnEvent('member.registered')
-  async handleMemberRegisteredEvent(member: any) {
-    this.logger.log(
-      `Handling member.registered event for member: ${member.id}`,
-    );
+  async handleMemberRegisteredEvent(payload: any) {
+    this.logger.log(`Handling member.registered event`);
+    
+    const member = payload.member || payload;
+    const tenantId = payload.tenantId || member.tenantId || member.gymId;
+    
+    if (!tenantId) {
+      this.logger.error(`Cannot process member.registered: Missing tenantId`);
+      return;
+    }
 
-    // Create an initial invoice/payment record for the new member
     try {
-      await this.paymentRepository.save(
-        this.paymentRepository.create({
+      const dataSource = await this.tenantConnectionService.getTenantConnection(tenantId);
+      const paymentRepository = dataSource.getRepository(Payment);
+      
+      await paymentRepository.save(
+        paymentRepository.create({
           memberId: member.id,
-          amount: 0, // Should be calculated based on plan, using 0 as placeholder
+          amount: 0, 
           method: 'SYSTEM',
           status: PaymentStatus.DUE,
           invoiceNo: `INV-${Date.now()}`,

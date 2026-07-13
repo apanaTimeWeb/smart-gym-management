@@ -30,8 +30,27 @@ export function useInquiriesLogic(): InquiriesContextType {
  const [editData, setEditData] = useState<any>(null);
  const [saving, setSaving] = useState(false);
  
- const [msgModal, setMsgModal] = useState<{ open: boolean; recipient: ErpMessageRecipient; type: MessageType; message: string; subject?: string } | null>(null);
- const closeMsg = useCallback(() => setMsgModal(null), []);
+  const [msgModal, setMsgModal] = useState<{ open: boolean; recipient: ErpMessageRecipient; type: MessageType; message: string; subject?: string } | null>(null);
+  const closeMsg = useCallback(() => setMsgModal(null), []);
+
+  // Selection & Bulk Msg
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const toggleSelectAll = useCallback((selectAll: boolean) => {
+    setSelectedIds(selectAll ? inquiries.map(i => i.id) : []);
+  }, [inquiries]);
+  const toggleSelectOne = useCallback((id: number) => {
+    setSelectedIds(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
+  }, []);
+  const clearSelection = useCallback(() => setSelectedIds([]), []);
+
+  const [bulkMsgModal, setBulkMsgModal] = useState<{ open: boolean; type: MessageType; recipients: ErpMessageRecipient[] } | null>(null);
+  const openBulkMsg = useCallback((type: MessageType) => {
+    const recipients = inquiries
+      .filter(i => selectedIds.includes(i.id))
+      .map(i => ({ name: i.name, phone: i.phone, email: i.email || '' }));
+    setBulkMsgModal({ open: true, type, recipients });
+  }, [inquiries, selectedIds]);
+  const closeBulkMsg = useCallback(() => setBulkMsgModal(null), []);
 
   const loadAll = useCallback(async () => {
     setLoading(true);
@@ -52,6 +71,7 @@ export function useInquiriesLogic(): InquiriesContextType {
       setInquiries(inqRes.data.inquiries || []);
       setTotalInquiries(inqRes.data.total || 0);
       setStats(statsRes.data);
+      setSelectedIds([]); // Clear selection when data reloads (e.g. page change)
     } catch (e) {
       const msg = (e as Error).message;
       setError(msg);
@@ -136,8 +156,10 @@ export function useInquiriesLogic(): InquiriesContextType {
   return {
     inquiries, stats, loading, error, toast, showToast, hideToast, loadAll, totalInquiries,
     search, debouncedSearch, setSearch, statusFilter, setStatusFilter, dateFilter, setDateFilter, currentPage, setCurrentPage,
+    selectedIds, toggleSelectAll, toggleSelectOne, clearSelection,
     showModal, setShowModal, editId, editData, saving,
- openAdd, openEdit, saveInquiry, deleteInquiry, updateStatus,
- msgModal, openMsg, closeMsg
- };
+    openAdd, openEdit, saveInquiry, deleteInquiry, updateStatus,
+    msgModal, openMsg, closeMsg,
+    bulkMsgModal, openBulkMsg, closeBulkMsg
+  };
 }

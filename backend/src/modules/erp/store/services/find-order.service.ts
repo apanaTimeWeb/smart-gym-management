@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { StoreRepository } from '@/modules/erp/store/store.repository';
-import { PaginationQueryDto } from '@/core/dto/pagination-query.dto';
+import { FindOrderDto } from '@/modules/erp/store/dto/find-order.dto';
 
 @Injectable()
 export class FindOrderService {
@@ -8,7 +8,7 @@ export class FindOrderService {
 
   constructor(private readonly repository: StoreRepository) {}
 
-  async execute(query: PaginationQueryDto) {
+  async execute(query: FindOrderDto) {
     this.logger.log(`Fetching orders`);
     const [orders, total] = await this.repository.findAllOrders(query);
     return { success: true, data: { orders, total } };

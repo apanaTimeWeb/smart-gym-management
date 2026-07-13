@@ -117,8 +117,8 @@ Never use fragile, hardcoded relative imports (e.g., `../../../utils/helpers`).
 
 ## 11. Co-located Testing (Unit & E2E - Extreme Isolation)
 Never put tests in a global `tests/` or `pytest_tests/` directory separate from the application code. 
-* **The Rule:** Both Unit and End-to-End (E2E) tests must live directly inside the module they are testing. Create a `tests/` folder inside the module (e.g., `modules/auth/tests/` or `modules/auth/auth_test/`), or keep `.spec.ts` / `test_*.py` files adjacent to the micro-feature they test.
-* **Why?** When an AI is asked to add a feature or fix a bug, providing the corresponding test file in the exact same directory ensures the AI has complete context of the feature's requirements. Running these E2E tests locally proves the AI has written great, working code before the developer even needs to review it manually.
+* **The Rule:** Unit tests (`.spec.ts`) must live directly inside the module they are testing, adjacent to the micro-feature file (e.g., `member-registration.service.spec.ts` next to `member-registration.service.ts`). E2E / black-box API tests are written in Python pytest and live in a separate top-level `e2e/` directory (see Rule 27). Do NOT co-locate pytest files inside the NestJS module folders.
+* **Why?** When an AI is asked to add a feature or fix a bug, providing the co-located `.spec.ts` file gives it complete unit-test context. The pytest E2E suite is decoupled from the Node.js runtime entirely.
 
 
 ## 12. Strict API Documentation (Swagger/OpenAPI)
@@ -129,8 +129,8 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **The Rule:** Never use raw environment variables (e.g., `process.env.XXX` or `os.environ.get()`) directly inside business logic. Always use a centralized, strongly-typed Config Service or Settings class (e.g., `@nestjs/config` in NestJS, `settings.py` with `django-environ` in Django).
 * **Why:** If the AI needs to add a new third-party API key or change a timeout value, it should only modify the central configuration schema, not hunt for raw env calls scattered across 50 different micro-services.
 
-## 14. Standardized Logging & Correlation IDs (Pino & OpenTelemetry)
-* **The Rule:** Never use raw print statements (e.g., `console.log()` or `print()`). Always use a structured, high-performance JSON logger (e.g., `nestjs-pino` / `pino` or winston or in django we have other or other as per backend choicee). 
+## 14. Standardized Logging & Correlation IDs (nestjs-pino & OpenTelemetry)
+* **The Rule:** Never use raw print statements (e.g., `console.log()` or `print()`). The canonical logger for this NestJS project is **`nestjs-pino`** (wrapping `pino`). Do not use Winston or any other logger. 
 * **The Log Structure:** Every log entry must automatically attach the current execution context. A standard log output must include:
   - `req` and `res` objects (for HTTP request tracking)
   - `trace_id` and `span_id` (injected via OpenTelemetry/AsyncLocalStorage)
@@ -146,9 +146,10 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **The Rule:** Whenever a module is created or finalized, generate a `[module-name]_collection.json` file directly inside the module's folder (e.g., `modules/auth/auth_collection.json`). 
 * **Why:** This ensures that any developer (or human QA) can instantly import this JSON into Postman and manually test the module's endpoints without having to manually construct the headers, payloads, or figure out the routes. It provides immediate, highly-accessible testing verification.
 
-## 17. Standardized Pagination & Filtering (Enterprise Scale)
-* **The Rule:** Never write ad-hoc pagination for list endpoints. Always use a standardized wrapper or query dto (e.g., `limit/offset` or `cursor` based pagination) across all controllers.
-* **Why:** If the AI is asked to add pagination to `MemberAnalytics`, it should follow a global standard rather than inventing a new query format just for that feature.
+## 17. Standardized Pagination, Sorting & Filtering (Enterprise Scale)
+* **The Rule:** Any endpoint that returns tabular or list data (e.g., Orders, Members) MUST ALWAYS support pagination, sorting (e.g., `sortOrder=ASC/DESC`), and filtering (e.g., `startDate`, `endDate`, `search`). Never return raw, unpaginated lists if the dataset can grow large.
+* **Implementation:** Always use a standardized wrapper or query DTO (e.g., `limit/offset` based pagination extended with filtering/sorting properties) across all controllers.
+* **Why:** Returning thousands of unfiltered rows crashes browsers. If the AI is asked to add an endpoint for `MemberAnalytics` or `Orders`, it must proactively build in sorting and date filtering capabilities so the frontend can display robust table controls.
 
 ## 18. Strict ES Modules (No `require`)
 *(Applicable to JavaScript/TypeScript Frameworks)*
@@ -193,9 +194,11 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **The Rule:** An enterprise API must never be released without a versioning strategy. Always prefix routes with a version (e.g., `/api/v1/users`). In frameworks like NestJS, enable URI versioning globally.
 * **Why:** If the business scales and requires mobile apps or external integrations, releasing a breaking `v2` API should not crash the legacy mobile apps that still rely on `v1`.
 
-## 27. API Testing Strategy (Pytest)
-* **The Rule:** All API (End-to-End) or unit testing must be written in Python using `pytest`, rather than relying on built-in Node.js/NestJS testing frameworks (like Jest/Supertest) for API validation.
-* **Why:** Decoupling API tests from the application codebase allows QA engineers, SDETs, and automation pipelines to test the API completely agnostically, simulating true black-box client behavior.
+## 27. API Testing Strategy (Two-Tier: Jest Unit + Pytest E2E)
+* **The Rule:** This project uses a strict two-tier testing strategy:
+  1. **Jest `.spec.ts` (Unit Tests):** Co-located with source files (see Rule 11). Tests individual service methods, DTOs, and utilities in isolation with mocked dependencies. This is the AI's primary safety net when modifying a micro-file.
+  2. **Python `pytest` (Black-Box E2E / API Tests):** Lives in a top-level `e2e/` directory, completely decoupled from the Node.js runtime. Tests the running API as a true external client — no knowledge of internal implementation. QA engineers and CI pipelines use this tier.
+* **Strict Boundary:** Jest is NEVER used for API/E2E testing. Pytest is NEVER used for unit testing internal service logic. These two tiers must never overlap.
 
 ## Summary Checklist for Developers Providing Context to AI:
 1. Identify the exact layer where the bug/feature resides (Validation? DB Query? Business Logic?).
@@ -310,7 +313,7 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 ---
 
 ## 37. Strict Edge Payload Validation (No Mass Assignment)
-* **The Rule:** It is not enough to just validate that `email` and `password` exist in a DTO. Your payload validator MUST strictly strip or reject any unrecognized properties sent by the client. (e.g., in NestJS: `whitelist: true, forbidNonWhitelisted: true`). Additionally, enforce strict JSON payload size limits globally (e.g., `1mb`).
+* **The Rule:** It is not enough to just validate that `email` and `password` exist in a DTO. Your payload validator MUST strictly strip or reject any unrecognized properties sent by the client. (e.g., in NestJS: `whitelist: true, forbidNonWhitelisted: true`). Additionally, enforce a **default global JSON payload size limit of `1mb`** at the framework middleware level. Individual endpoints that require larger payloads (e.g., file uploads) must explicitly override this limit per-endpoint (see Rule 72).
 * **Why:** If a malicious user sends `{ "email": "test@test.com", "role": "admin" }` to the registration endpoint, and you blindly pass the `req.body` to the ORM's save method, you have a Mass Assignment vulnerability. Stripping unknown keys guarantees this is mathematically impossible.
 
 ---
@@ -339,6 +342,125 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 
 ---
 
+## 40. Multi-Medium Sending Architecture (Proof of Delivery)
+* **The Rule:** Whenever the system needs to send something to a user as a proof of transaction (e.g., a bill, a receipt, a report, or an alert), the backend MUST architect the payload and services to support at least **two different mediums** (e.g., WhatsApp and Email, or SMS and Email).
+* **Mandatory Fallback:** One of the two mediums must always be configured as the mandatory fallback or default. The backend API should accept an explicit `deliveryMedium` parameter (e.g., `WHATSAPP` or `EMAIL`) from the frontend payload and route the message via the chosen service.
+* **Why:** This ensures that if one provider fails or a user doesn't have WhatsApp, they can still receive critical proofs via Email or another backup medium.
+
+---
+
+## 41. Transaction Locks & Race Condition Prevention
+* **The Rule:** For highly concurrent mutations (e.g., deducting wallet balances, booking limited seats, processing inventory), standard database transactions are not enough to prevent race conditions. You MUST implement **Pessimistic Locking** (e.g., `SELECT ... FOR UPDATE` via `QueryBuilder.setLock('pessimistic_write')` in TypeORM or `select_for_update()` in Django) or **Optimistic Locking** (using a `@VersionColumn`).
+* **Why:** If two concurrent requests try to deduct money at the exact same millisecond, a standard transaction might allow both to succeed based on stale read data, causing negative balances. Enforcing this rule ensures AI always explicitly handles concurrency.
+
+---
+
+## 42. Distributed Cron Jobs (No Local Schedulers)
+* **The Rule:** Never use local cron jobs (like `setInterval`, `node-cron`, or `@Cron()` without a lock) inside the backend code. You must use a **Distributed Task Scheduler** backed by Redis (like BullMQ in Node, Celery Beat in Python) or a database-backed distributed lock (like Redlock/ShedLock).
+* **Why:** In an enterprise environment, your backend will scale horizontally (e.g., 3 instances running behind a load balancer). If you use a local cron job to send "Morning Reminders", all 3 instances will fire it simultaneously, sending 3 duplicate emails to the user. A distributed scheduler guarantees a job only runs exactly once across the entire cluster.
+
+---
+
+## 43. True E2E Test Database Isolation & Lifecycle Verification
+* **The Rule:** End-to-End (E2E) test suites must NEVER run against your local development or production databases. Instead, the test suite setup (e.g., `conftest.py`) must dynamically hit the API to create a brand-new, isolated Test Tenant/Database specifically for that test run. All subsequent tests must inject this test tenant's ID into the `x-tenant-id` headers.
+* **The Data Lifecycle Rule:** True E2E tests must verify the full CRUD lifecycle within that isolated database. Tests cannot rely on stub IDs. They must:
+  1. **POST**: Create a uniquely identifiable record and extract its real ID from the `201` response.
+  2. **GET by ID**: Fetch that exact ID and assert `200 OK`.
+  3. **PATCH**: Update that exact ID and assert `200 OK`.
+  4. **DELETE**: Delete that exact ID, and then make a follow-up `GET` request to mathematically verify a `404 Not Found` response is returned.
+* **Why:** This architecture guarantees 100% test isolation, prevents test data pollution in your main database, and actively proves that your database provisioning systems are actually executing correctly under the hood.
+
+---
+
+## 44. Centralized API Rate Limit Tiers
+* **The Rule:** Define distinct rate-limit tiers in a centralized `rate-limit.config.ts`. (e.g., Public Auth: 5 req/min, Authenticated Read: 100 req/min, Export: 2 req/min). Never hardcode rate limits inside controllers.
+
+## 45. Webhook Signature Verification
+* **The Rule:** All inbound webhooks (e.g., Payment gateways) MUST verify the cryptographic signature (HMAC-SHA256) before processing. Furthermore, check timestamps to prevent replay attacks.
+
+## 46. Strict Input Sanitization Layer
+* **The Rule:** Beyond validation, inputs must be sanitized. Strip HTML/script tags from free-text fields. Strip leading/trailing whitespaces. Normalize emails (lowercase) and phone numbers to canonical formats before saving.
+
+## 47. Circuit Breaker Pattern for External Services
+* **The Rule:** External adapters (WhatsApp, SMS, Payments) MUST be wrapped in a Circuit Breaker. If the external service fails repeatedly, the breaker opens, rejecting requests instantly with a `503` to prevent thread pool exhaustion, triggering a defined fallback queue.
+
+## 48. CQRS Lite (Query vs Command Controllers)
+* **The Rule:** Read operations (GET) and Write operations (POST/PATCH/DELETE) must be split into separate controllers (e.g., `[module]-query.controller.ts` and `[module]-command.controller.ts`). This guarantees AI never accidentally touches mutation logic when fixing a read query.
+
+## 49. Explicit Module Dependency Graph
+* **The Rule:** Every module must have a `[module]_dependencies.md` detailing which other modules it depends on, and which modules depend on it. This maps downstream impact instantly.
+
+## 50. Standardized Event Naming Convention
+* **The Rule:** Event names MUST follow `DOMAIN.ENTITY.ACTION` in SCREAMING_SNAKE_CASE (e.g., `BILLING.PAYMENT.FAILED`) and be registered in a centralized `event-registry.constants.ts`.
+
+## 51. API Changelog & Deprecation Policy
+* **The Rule:** When an endpoint changes destructively, do not delete it immediately. Return a `Deprecation` header with a sunset date, track it in `CHANGELOG.md`, and maintain it for the deprecation window.
+
+## 52. JWT Refresh Token Rotation & Revocation
+* **The Rule:** Access tokens must be short-lived. Refresh tokens must be stored in HttpOnly cookies. On every refresh, the old token must be rotated/invalidated. A Redis denylist must exist for immediate manual revocation.
+
+## 53. Sensitive Field Encryption at Rest
+* **The Rule:** Aadhaar numbers, bank accounts, and medical notes MUST be encrypted at the application layer (AES-256) before hitting the DB. Use an `@Encrypted` decorator or EncryptionService. Hash is not enough.
+
+## 54. Brute Force & Account Lockout Policy
+* **The Rule:** After 5 failed login attempts, the account is temporarily locked via Redis. Lockout state must be logged in the audit trail.
+
+## 55. Deterministic Seed Data Strategy
+* **The Rule:** Every module must have a co-located `[module].seeder.ts` that is deterministic and idempotent. A master seed script orchestrates them in dependency order for local testing.
+
+## 56. Strict Null Safety in Repository Returns
+* **The Rule:** Repositories must correctly type `findById()` as returning `Entity | null`. AI must use a dedicated `findByIdOrThrow()` method to ensure null exceptions are handled defensively.
+
+## 57. Request Context Propagation (AsyncLocalStorage)
+* **The Rule:** Use Node's `AsyncLocalStorage` to store context (tenant_id, user_id, trace_id) at the request boundary. Deep services/repositories must pull from this context rather than prop-drilling parameters through 5 layers of functions.
+
+## 58. Standardized Database Entity Base Class
+* **The Rule:** All database entities MUST extend a common `BaseEntity` class that explicitly defines `id` (UUID), `createdAt` (timestamp with timezone), `updatedAt` (timestamp with timezone), and `deletedAt` (nullable timestamp for soft deletes). AI must never manually define these fields per entity.
+
+## 59. API Response Time SLA Categories
+* **The Rule:** Every endpoint must declare its SLA category in a comment (`// SLA: FAST`). FAST (< 200ms), STANDARD (< 500ms), HEAVY (> 500ms). Heavy tasks must be moved to background jobs (Rule 23). Enforce via monitoring middleware.
+
+## 60. Strict Foreign Key Naming Convention
+* **The Rule:** Database columns must use `snake_case` (e.g., `member_id`). TypeScript entity properties must use `camelCase` (e.g., `memberId`). Explicitly map them using `@Column({ name: 'member_id' })`. Foreign key constraints must follow `FK_[table]_[referenced_table]`.
+
+## 61. Dead Letter Queue (DLQ) for Failed Background Jobs
+* **The Rule:** Every background job queue (BullMQ/Celery) MUST have a configured Dead Letter Queue. If a job fails all retries, it must be moved to the DLQ (not discarded) so admins can manually inspect and retry it.
+
+## 62. Explicit Return Types on ALL Service Methods
+* **The Rule:** Relying on TypeScript implicit `any` or inferred returns is forbidden for async operations. Every service method and repository method MUST have an explicitly declared return type (e.g., `Promise<MemberEntity>`).
+
+## 63. Database Connection Pool Configuration
+* **The Rule:** Default ORM connection pools are forbidden. The `database.config.ts` must explicitly define `max` connections (e.g., 20), `acquireTimeout` (30000ms), and `idleTimeoutMillis` (10000ms). **CRITICAL for Multi-Tenancy (Rule 39):** This pool configuration applies to the GLOBAL connection manager, not per-tenant DataSource. With N tenants on the same DB server, the total active connections across all tenant DataSources must be budgeted carefully. Do NOT blindly apply `max: 20` per tenant DataSource or you will exhaust the database server's connection limit.
+
+## 64. Structured Machine-Readable Error Codes
+* **The Rule:** Error responses must include a machine-readable `errorCode` string following `DOMAIN.ENTITY.REASON` (e.g., `BILLING.SUBSCRIPTION.EXPIRED`). The frontend relies on this code to trigger specific UI logic (e.g., redirecting to a payment page).
+
+## 65. File Upload Security & Validation
+* **The Rule:** All file uploads must undergo MIME type validation (not just extension checking) and enforce strict size limits. Files must never be saved directly to the server disk; upload to cloud storage (e.g., S3). Original filenames must be discarded and replaced with a UUID.
+
+## 66. Strict Database Table Naming Convention
+* **The Rule:** All table names must be `plural_snake_case` (e.g., `payment_transactions`). Junction tables must combine the two table names alphabetically (e.g., `member_plans`). Never use legacy prefixes like `tbl_`. Enforce explicitly via `@Entity('table_name')`.
+
+## 67. API Contract Freeze Before Frontend Development
+* **The Rule:** The backend developer/AI must first write the DTOs and Swagger spec. This contract must be "frozen" and approved by the frontend layer before any backend implementation code is written. This prevents data shape mismatches.
+
+## 68. Health Check Depth Levels
+* **The Rule:** Implement 3 levels of health checks: `/health/live` (Process alive? 200 OK), `/health/ready` (DB/Redis reachable? Traffic ready), and `/health/deep` (Full dependency chain check, not exposed publicly).
+
+## 69. Strict `tsconfig.json` Enforcement
+* **The Rule:** The backend MUST run with `strict: true`. No `implicitAny`, no `implicitThis`. AI must never add `@ts-ignore` or `@ts-nocheck` to bypass type errors.
+
+## 70. No Raw `any` from ORM
+* **The Rule:** Never allow raw `any` types to escape the ORM layer. Query builder results or raw SQL executions must immediately be mapped to a strictly typed DTO or Entity class.
+
+## 71. UTC Datetime Storage Format
+* **The Rule:** ALL dates and times MUST be stored in the database as UTC. The backend must never store local timezones. Any datetime conversion should happen purely on the frontend (Rule 24).
+
+## 72. Per-Endpoint Payload Size Limits
+* **The Rule:** The default global `1mb` limit (Rule 37) can be overridden per-endpoint for specific use cases. General endpoints must reject payloads >1MB. File-upload endpoints must explicitly declare their own larger limit (e.g., `10mb` for profile images, `50mb` for bulk import CSVs). These overrides must be declared in the endpoint's controller decorator, not scattered in middleware.
+
+---
+
 ## Updated Summary Checklist (v2):
 1. Identify the exact layer (Validation? Query? Business Logic? External Adapter?).
 2. Select the **one or two** micro-files associated with that layer.
@@ -347,12 +469,3 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 5. After the AI writes code, verify: Is there N+1? Is there a missing null check? Is a secret hardcoded? Is the response wrapped in the standard envelope?
 6. Run `pytest` against the live API to confirm contract compliance.
 7. Review the AI's isolated changes.
-
-## 38. True E2E Test Database Isolation & Lifecycle Verification
-* **The Rule:** End-to-End (E2E) test suites must NEVER run against your local development or production databases. Instead, the test suite setup (e.g., `conftest.py`) must dynamically hit the API to create a brand-new, isolated Test Tenant/Database specifically for that test run. All subsequent tests must inject this test tenant's ID into the `x-tenant-id` headers.
-* **The Data Lifecycle Rule:** True E2E tests must verify the full CRUD lifecycle within that isolated database. Tests cannot rely on stub IDs. They must:
-  1. **POST**: Create a uniquely identifiable record and extract its real ID from the `201` response.
-  2. **GET by ID**: Fetch that exact ID and assert `200 OK`.
-  3. **PATCH**: Update that exact ID and assert `200 OK`.
-  4. **DELETE**: Delete that exact ID, and then make a follow-up `GET` request to mathematically verify a `404 Not Found` response is returned.
-* **Why:** This architecture guarantees 100% test isolation, prevents test data pollution in your main database, and actively proves that your database provisioning systems (like TypeORM migrations) are actually executing correctly under the hood.

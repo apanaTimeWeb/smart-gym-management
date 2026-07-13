@@ -21,6 +21,7 @@ export enum BillingCycle {
   THREE_MONTHS = 'THREE_MONTHS',
   SIX_MONTHS = 'SIX_MONTHS',
   TWELVE_MONTHS = 'TWELVE_MONTHS',
+  CUSTOM = 'CUSTOM',
 }
 
 export enum PlanTier {

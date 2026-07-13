@@ -48,6 +48,7 @@ export class CreateStaffDto {
   joinDate: string;
 
   @ApiProperty({ required: false })
+  @IsOptional()
   @IsBoolean()
   isActive: boolean;
 }
