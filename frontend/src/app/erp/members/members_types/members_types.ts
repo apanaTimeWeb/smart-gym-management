@@ -5,12 +5,19 @@ import type { ErpReceiptData } from '@/app/erp/erp_components/ErpShared/ErpTherm
 import { EMPTY_MEMBER_FORM, MemberFormValues } from '@/app/erp/members/members_utils/MembersSharedConstants';
 import React from 'react';
 
+export enum FetchState {
+  IDLE = 'IDLE',
+  LOADING = 'LOADING',
+  SUCCESS = 'SUCCESS',
+  ERROR = 'ERROR'
+}
+
 export interface MembersContextType {
  members: Member[];
  plans: Plan[];
  payments: Payment[];
  stats: { total: number; active: number; pending: number; expired: number };
- loading: boolean;
+ fetchState: FetchState;
  saving: boolean;
  totalMembers: number;
  

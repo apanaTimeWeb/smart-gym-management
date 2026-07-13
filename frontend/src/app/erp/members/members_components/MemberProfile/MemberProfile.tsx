@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders a detailed view of a selected member's profile.
 "use client";
 
 import { Edit, MessageCircle, Mail } from 'lucide-react';

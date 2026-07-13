@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders key performance indicators for the members module.
 "use client";
 
 import { User, CheckCircle, Clock, XCircle } from 'lucide-react';

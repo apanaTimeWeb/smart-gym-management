@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders the toolbar for searching, filtering, and initiating the "Add Member" action.
 "use client";
 
 import { Search, RefreshCw, Plus } from 'lucide-react';

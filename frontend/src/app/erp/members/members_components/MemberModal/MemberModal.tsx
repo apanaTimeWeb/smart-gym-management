@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders a modal for creating or editing a member.
 "use client";
 
 import { useEffect } from 'react';

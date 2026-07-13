@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Server Component that fetches initial SSR data for the dashboard layout.
 import DashboardMain from '@/app/erp/dashboard/dashboard_components/DashboardMain/DashboardMain';
 import { cookies } from 'next/headers';
 

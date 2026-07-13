@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Provides members state to the members module hierarchy.
+// DATA FLOW: useMembersLogic -> MembersContext -> Members components
 "use client";
 
 import React, { createContext, useContext } from 'react';
@@ -10,7 +12,7 @@ export function MembersProvider({ children, initialData }: { children: React.Rea
  const logic = useMembersLogic(initialData);
 
  const {
-   members, plans, payments, stats, loading, saving, totalMembers,
+   members, plans, payments, stats, fetchState, saving, totalMembers,
    search, debouncedSearch, statusFilter, currentPage,
    toast, selectedMember, profileTab, attMap,
    showAddModal, editId, editData, msgModal, printData

@@ -1,22 +1,28 @@
+// RESPONSIBILITY: Custom hook encapsulating all business logic, state, and API interactions for the members module.
+// DATA FLOW: membersApi -> useMembersLogic -> MembersContext
 import React, { useState, useCallback, useEffect } from 'react';
-import { membersApi, plansApi, financeApi, attendanceApi, type Member, type Plan, type Payment } from '@/lib/api';
+import { plansApi, financeApi, attendanceApi, type Member, type Plan, type Payment } from '@/lib/api';
+import { membersApi } from '@/app/erp/members/members_api/members_api';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import type { MessageType, ErpMessageRecipient } from '@/app/erp/erp_components/ErpFeedback/ErpMessageModal';
 import type { ErpReceiptData } from '@/app/erp/erp_components/ErpShared/ErpThermalReceipt';
 import { useConfirm } from '@/app/erp/erp_components/ErpFeedback/ErpConfirmProvider';
 import { EMPTY_MEMBER_FORM, formatCurrency, MSG_TEMPLATES, MemberFormValues } from '@/app/erp/members/members_utils/MembersSharedConstants';
 import { GYM_DETAILS } from '@/app/erp/erp_utils/ErpSharedConstants';
-import { MembersContextType } from '@/app/erp/members/members_types/members_types';
+import { MembersContextType, FetchState } from '@/app/erp/members/members_types/members_types';
 
 import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
 
+/**
+ * Hook to manage members data, state, and API fetching.
+ */
 export function useMembersLogic(initialData?: any): MembersContextType {
   const { confirm } = useConfirm();
   const [members, setMembers] = useState<Member[]>(initialData?.members || []);
   const [plans, setPlans] = useState<Plan[]>(initialData?.plans || []);
   const [payments, setPayments] = useState<Payment[]>([]);
   const [stats, setStats] = useState(initialData?.stats || { total: 0, active: 0, pending: 0, expired: 0 });
-  const [loading, setLoading] = useState(!initialData);
+  const [fetchState, setFetchState] = useState<FetchState>(initialData ? FetchState.SUCCESS : FetchState.LOADING);
   const [saving, setSaving] = useState(false);
   const isFirstRender = React.useRef(true);
 
@@ -43,7 +49,7 @@ export function useMembersLogic(initialData?: any): MembersContextType {
  const closeMsg = useCallback(() => setMsgModal(null), []);
 
   const loadAll = useCallback(async () => {
-    setLoading(true);
+    setFetchState(FetchState.LOADING);
     try {
       const params: Record<string, string> = { 
         limit: '10', 
@@ -61,10 +67,10 @@ export function useMembersLogic(initialData?: any): MembersContextType {
       setTotalMembers(membersRes.data.total || 0);
       setPlans(plansRes.data);
       setStats(statsRes.data);
+      setFetchState(FetchState.SUCCESS);
     } catch (e) {
+      setFetchState(FetchState.ERROR);
       showToast((e as Error).message, 'error');
-    } finally {
-      setLoading(false);
     }
   }, [showToast, currentPage, debouncedSearch, statusFilter]);
 
@@ -186,7 +192,7 @@ export function useMembersLogic(initialData?: any): MembersContextType {
  }, [selectedMember]);
 
   return {
-    members, plans, payments, stats, loading, saving, totalMembers,
+    members, plans, payments, stats, fetchState, saving, totalMembers,
     search, debouncedSearch, setSearch, statusFilter, setStatusFilter, currentPage, setCurrentPage,
  toast, showToast, hideToast, loadAll,
  selectedMember, setSelectedMember, profileTab, setProfileTab, loadMemberProfile,

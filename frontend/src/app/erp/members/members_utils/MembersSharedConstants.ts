@@ -14,10 +14,10 @@ export const MemberSchema = z.object({
 
 export type MemberFormValues = z.infer<typeof MemberSchema>;
 
-export const MEMBERS_STATUS_COLORS: Record<string, string> = {
- ACTIVE: 'var(--members-status-active-bg) var(--members-status-active-text)',
- PENDING: 'var(--members-status-pending-bg) var(--members-status-pending-text)',
- EXPIRED: 'var(--members-status-expired-bg) var(--members-status-expired-text)',
+export const MEMBERS_STATUS_COLORS: Record<string, { bg: string; text: string }> = {
+ ACTIVE: { bg: 'bg-success-bg', text: 'text-success' },
+ PENDING: { bg: 'bg-warning-bg', text: 'text-warning' },
+ EXPIRED: { bg: 'bg-danger-bg', text: 'text-danger' },
 };
 
 export const MEMBERS_CYCLE_LABELS: Record<string, string> = {
