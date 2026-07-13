@@ -115,4 +115,8 @@ Whenever the user performs an action that sends a proof or document (like sendin
 30. **Mandatory Table Controls (Pagination, Sorting, & Filtering)**:
 Whenever displaying tabular data (like Orders, Members, or Transactions), you MUST always implement pagination, column sorting (e.g., Sort by Date ASC/DESC), and relevant filtering (e.g., Date Range pickers, status dropdowns, or search boxes) directly above the table. It is unacceptable to display a massive raw table without giving the user these enterprise-grade data management controls.
 
+31. **Modularized API Clients (No Centralized API Blob)**:
+Do not define module-specific API routes in a giant global file (like `src/lib/api.ts`). Every module MUST have its own API file inside a dedicated folder (e.g., `[moduleName]_api/[moduleName]_api.ts`). This file should import the core base fetcher (`apiFetch` from `src/lib/api.ts`) and define only the endpoints strictly needed for that specific module. 
+*Why?* This guarantees **Extreme Isolation**. When a module is extracted to feed an AI, the AI will receive all the API fetching logic specific to that module, eliminating missing context errors.
+
 Think step-by-step. Create a detailed implementation plan first so I can review it, and then execute it perfectly without breaking existing data flows!
