@@ -9,7 +9,7 @@ export const MemberSchema = z.object({
   address: z.string().optional(),
   gender: z.enum(['MALE', 'FEMALE', 'OTHER']),
   billingCycle: z.string(),
-  customDays: z.coerce.number().min(1, "Please enter valid days").optional(),
+  customDays: z.number().min(1, "Please enter valid days").optional(),
   planId: z.string().min(1, "Please select a plan"),
 });
 
@@ -75,3 +75,9 @@ export const MSG_TEMPLATES = {
   DEFAULT: (name: string) => `Hi ${name}! 👋\n\nThis is a message from GymSmart. We hope you're enjoying your fitness journey!\n\n— Team GymSmart`
 };
 
+export const MEMBERS_TABLE_HEADERS = ['ID', 'MEMBER NAME', 'PLAN', 'STATUS', 'CYCLE', 'AMOUNT', 'ACTIONS'];
+export const PROFILE_TABS = [
+  { id: 'overview', label: 'Overview' },
+  { id: 'attendance', label: 'Attendance' },
+  { id: 'payments', label: 'Payments' }
+];

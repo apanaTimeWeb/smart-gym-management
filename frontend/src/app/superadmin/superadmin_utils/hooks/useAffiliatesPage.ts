@@ -64,7 +64,7 @@ export const useAffiliatesPage = () => {
 
   const handleToggleAffiliateStatus = useCallback(async (id: string, currentStatus: AffiliateStatus) => {
     const newStatus: AffiliateStatus = currentStatus === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
-    await mutate<void>(
+    await mutate<Affiliate>(
       () => superadminApi.affiliates.updateStatus(id, newStatus),
       {
         successMessage: 'Affiliate status updated successfully',

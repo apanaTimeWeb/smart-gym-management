@@ -86,7 +86,7 @@ export const useBroadcastsPage = () => {
 
   const handleSendBroadcast = useCallback(async (id: string) => {
     // Confirmation is handled by the caller via a modal — not window.confirm
-    await mutate<Broadcast>(
+    await mutate<void>(
       () => superadminApi.broadcasts.send(id),
       {
         successMessage: 'Broadcast sent successfully',

@@ -91,7 +91,7 @@ export default function PaymentsTable() {
  </tbody>
  </table>
  </div>
- {totalPages > 1 && fetchState !== 'loading' && (
+ {totalPages > 1 && (
     <div className="mt-4 pt-4 border-t border-border">
       <ErpPagination 
         currentPage={currentPage}

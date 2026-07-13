@@ -6,7 +6,7 @@ import { X } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
-import { CouponSchema, CouponFormData } from '@/app/superadmin/superadmin_utils/SuperadminZodSchemas';
+import { CouponSchema, CouponFormData } from '@/app/superadmin/coupons/coupons_types/coupons_types';
 import { Coupon } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 interface SuperadminCouponEditModalProps {

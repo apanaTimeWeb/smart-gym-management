@@ -10,7 +10,7 @@ import PayrollTable from '@/app/erp/hr/hr_components/PayrollTable/PayrollTable';
 
 export default function HrTabs() {
   const [activeTab, setActiveTab] = useState(HR_TABS[0]);
-  const { loadAll, openAdd, openAddPayroll, loading, search, setSearch, setCurrentPage } = useHrContext();
+  const { loadAll, openAdd, openAddPayroll, fetchState, search, setSearch, setCurrentPage } = useHrContext();
 
   return (
     <div className="rounded-xl shadow-sm border overflow-hidden bg-card border-border">
@@ -66,7 +66,7 @@ export default function HrTabs() {
 </div>
 
  <div className="p-5">
- {loading ? (
+ {fetchState === 'loading' ? (
  <div className="flex justify-center py-10">
  <div className="w-8 h-8 border-4 border-t-transparent rounded-full animate-spin" style={{ borderColor: 'var(--hr-highlight)', borderTopColor: 'transparent' }} />
  </div>

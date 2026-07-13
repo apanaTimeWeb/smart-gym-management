@@ -71,7 +71,7 @@ export default function AttendanceTable() {
  <td className="px-4 py-3 text-sm text-secondary">{formatTime(r.checkOut)}</td>
  </tr>
  ))}
- {records.length === 0 && fetchState !== 'loading' && (
+ {records.length === 0 && (
  <tr>
  <td colSpan={5} className="text-center py-10 text-secondary">
  No attendance records found.
@@ -83,7 +83,7 @@ export default function AttendanceTable() {
  </div>
  )}
  
- {fetchState !== 'loading' && totalPages > 1 && (
+ {totalPages > 1 && (
     <div className="border-t border-border mt-4 pt-4">
       <ErpPagination 
         currentPage={currentPage}

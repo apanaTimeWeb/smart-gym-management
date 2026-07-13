@@ -6,7 +6,7 @@ import { Search, LogOut, Settings, User, Menu } from 'lucide-react';
 import Link from 'next/link';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
-import { LandingUrlConfig } from '@/app/(landing)/landing_url_config';
+import { LandingUrlConfig } from '@/app/landing/landing_url_config';
 import { logout } from '@/lib/api';
 
 export default function SuperadminHeader() {
@@ -98,3 +98,4 @@ export default function SuperadminHeader() {
     </header>
   );
 }
+

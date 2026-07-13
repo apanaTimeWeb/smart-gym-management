@@ -5,6 +5,7 @@ import { Dumbbell, Edit2, Trash2, Loader2, Clock } from 'lucide-react';
 import { useLibraryContext } from '@/app/erp/library/library_context/LibraryContext';
 import { DIFF_COLORS } from '@/app/erp/library/library_utils/LibrarySharedConstants';
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
+import { ERP_ITEMS_PER_PAGE } from '@/app/erp/erp_utils/ErpSharedConstants';
 
 export default function ExerciseGrid() {
   const { exercises, loading, debouncedSearch, currentPage, setCurrentPage, openEditEx, deleteExercise } = useLibraryContext();

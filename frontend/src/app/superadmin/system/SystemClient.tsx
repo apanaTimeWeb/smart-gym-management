@@ -30,7 +30,7 @@ export default function SystemClient() {
         ]);
 
         setTenants(migrationsRes.data?.tenants ?? []);
-        const logs = auditRes.data?.globalLogs ?? auditRes.data ?? [];
+        const logs = auditRes.data ?? [];
         setAuditLogs(Array.isArray(logs) ? logs : []);
         setFetchState('success');
       } catch (error: unknown) {
