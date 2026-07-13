@@ -19,13 +19,14 @@ export class AuditLogRetrievalController {
     // Per Rule 28, returning object that interceptor will wrap
     // The wrapper usually expects data and meta from controller if pagination exists
     return {
+      success: true,
+      message: 'Audit logs retrieved successfully',
       data,
       meta: {
         page: page || 1,
         limit: limit || 10,
         total,
       },
-      message: 'Audit logs retrieved successfully'
     };
   }
 }

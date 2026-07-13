@@ -26,6 +26,7 @@ export class MarkAttendanceService {
     const data = await this.attendanceRepository.createAttendance(dto);
 
     return {
+      success: true,
       message: ATTENDANCE_MESSAGES.MARKED_SUCCESS,
       data,
     };

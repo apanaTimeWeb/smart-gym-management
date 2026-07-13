@@ -2,7 +2,7 @@ import { Injectable, Inject, Logger } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import type { Cache } from 'cache-manager';
 import { DashboardRepository } from '../dashboard.repository';
-import { IDashboardCharts } from '../dashboard.interfaces';
+import { IDashboardCharts, DashboardChartsResponse } from '../dashboard.interfaces';
 import { DASHBOARD_CONSTANTS } from '../dashboard.constants';
 
 @Injectable()
@@ -14,13 +14,13 @@ export class DashboardChartsService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
-  async execute(): Promise<{ success: boolean; data: IDashboardCharts }> {
+  async execute(): Promise<DashboardChartsResponse> {
     const cacheKey = DASHBOARD_CONSTANTS.CACHE_KEYS.CHARTS;
     const cachedData = await this.cacheManager.get<IDashboardCharts>(cacheKey);
 
     if (cachedData) {
       this.logger.log('Returning Chart stats from cache');
-      return { success: true, data: cachedData };
+      return { success: true, message: DASHBOARD_CONSTANTS.MESSAGES.CHARTS_FETCHED, data: cachedData };
     }
 
     this.logger.log('Fetching Chart stats from DB');
@@ -99,6 +99,6 @@ export class DashboardChartsService {
       data,
       DASHBOARD_CONSTANTS.CACHE_TTL.CHARTS,
     );
-    return { success: true, data };
+    return { success: true, message: DASHBOARD_CONSTANTS.MESSAGES.CHARTS_FETCHED, data };
   }
 }

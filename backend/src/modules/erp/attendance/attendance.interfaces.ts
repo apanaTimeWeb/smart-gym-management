@@ -11,6 +11,7 @@ export interface MarkAttendancePayload {
 }
 
 export interface AttendanceResponse {
+  success: boolean;
   message: string;
   data: Attendance | Attendance[] | any;
 }

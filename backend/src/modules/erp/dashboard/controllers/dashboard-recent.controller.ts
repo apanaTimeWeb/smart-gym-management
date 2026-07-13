@@ -7,6 +7,7 @@ import {
 } from '@nestjs/swagger';
 import { CustomCacheInterceptor } from '@/modules/core/interceptors/custom-cache.interceptor';
 import { DashboardRecentService } from '../services/dashboard-recent.service';
+import { DashboardRecentResponse } from '../dashboard.interfaces';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 
 @ApiTags('Dashboard')
@@ -23,7 +24,7 @@ export class DashboardRecentController {
     status: HttpStatus.OK,
     description: 'Recent data retrieved successfully',
   })
-  execute() {
+  execute(): Promise<DashboardRecentResponse> {
     return this.recentService.execute();
   }
 }

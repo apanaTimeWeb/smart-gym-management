@@ -11,7 +11,7 @@ export class FindAuditService {
     limit: number = 10,
     entityType?: string,
     actorId?: string,
-  ): Promise<AuditLogResponse> {
+  ): Promise<{ data: any[]; total: number }> {
     return this.auditRepository.findAll(page, limit, entityType, actorId);
   }
 }
