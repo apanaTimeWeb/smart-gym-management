@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
-import { ArrowLeft, Database, Save, Loader2 } from 'lucide-react';
+import { ArrowLeft, Database, Save, Loader2, Eye, EyeOff } from 'lucide-react';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { OnboardGymSchema, OnboardGymFormValues } from '@/app/superadmin/superadmin_utils/SuperadminValidation';
 import { superadminApi } from '@/lib/superadmin-api';
@@ -19,6 +19,7 @@ export default function AddGymClient() {
   const router = useRouter();
   const [isProvisioning, setIsProvisioning] = useState(false);
   const [provisioningLogs, setProvisioningLogs] = useState<string[]>([]);
+  const [showPassword, setShowPassword] = useState(false);
   const { data: plans, loading: loadingPlans } = useSuperadminData<SubscriptionPlan[]>(SuperadminUrlConfig.BACKEND_API.PLANS_BASE);
 
   const {
@@ -147,12 +148,21 @@ export default function AddGymClient() {
               
               <div className="space-y-2">
                 <label className="text-sm font-medium text-secondary">Temporary Password</label>
-                <input 
-                  type="password"
-                  {...register('temporaryPassword')}
-                  className="w-full bg-card border border-border text-foreground rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500 transition-colors"
-                  placeholder="Min 8 characters"
-                />
+                <div className="relative">
+                  <input 
+                    type={showPassword ? "text" : "password"}
+                    {...register('temporaryPassword')}
+                    className="w-full bg-card border border-border text-foreground rounded-lg px-4 py-2 pr-10 focus:outline-none focus:border-border-focus transition-colors"
+                    placeholder="Min 8 characters"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-foreground transition-colors"
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
                 {errors.temporaryPassword && <p className="text-destructive text-xs">{errors.temporaryPassword.message}</p>}
               </div>
 
