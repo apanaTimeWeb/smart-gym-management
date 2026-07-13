@@ -347,6 +347,31 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 
 ---
 
+---
+
+## 41. Transaction Locks & Race Condition Prevention
+* **The Rule:** For highly concurrent mutations (e.g., deducting wallet balances, booking limited seats, processing inventory), standard database transactions are not enough to prevent race conditions. You MUST implement **Pessimistic Locking** (e.g., `SELECT ... FOR UPDATE` via `QueryBuilder.setLock('pessimistic_write')` in TypeORM or `select_for_update()` in Django) or **Optimistic Locking** (using a `@VersionColumn`).
+* **Why:** If two concurrent requests try to deduct money at the exact same millisecond, a standard transaction might allow both to succeed based on stale read data, causing negative balances. Enforcing this rule ensures AI always explicitly handles concurrency.
+
+---
+
+## 42. Distributed Cron Jobs (No Local Schedulers)
+* **The Rule:** Never use local cron jobs (like `setInterval`, `node-cron`, or `@Cron()` without a lock) inside the backend code. You must use a **Distributed Task Scheduler** backed by Redis (like BullMQ in Node, Celery Beat in Python) or a database-backed distributed lock (like Redlock/ShedLock).
+* **Why:** In an enterprise environment, your backend will scale horizontally (e.g., 3 instances running behind a load balancer). If you use a local cron job to send "Morning Reminders", all 3 instances will fire it simultaneously, sending 3 duplicate emails to the user. A distributed scheduler guarantees a job only runs exactly once across the entire cluster.
+
+---
+
+## 43. True E2E Test Database Isolation & Lifecycle Verification
+* **The Rule:** End-to-End (E2E) test suites must NEVER run against your local development or production databases. Instead, the test suite setup (e.g., `conftest.py`) must dynamically hit the API to create a brand-new, isolated Test Tenant/Database specifically for that test run. All subsequent tests must inject this test tenant's ID into the `x-tenant-id` headers.
+* **The Data Lifecycle Rule:** True E2E tests must verify the full CRUD lifecycle within that isolated database. Tests cannot rely on stub IDs. They must:
+  1. **POST**: Create a uniquely identifiable record and extract its real ID from the `201` response.
+  2. **GET by ID**: Fetch that exact ID and assert `200 OK`.
+  3. **PATCH**: Update that exact ID and assert `200 OK`.
+  4. **DELETE**: Delete that exact ID, and then make a follow-up `GET` request to mathematically verify a `404 Not Found` response is returned.
+* **Why:** This architecture guarantees 100% test isolation, prevents test data pollution in your main database, and actively proves that your database provisioning systems are actually executing correctly under the hood.
+
+---
+
 ## Updated Summary Checklist (v2):
 1. Identify the exact layer (Validation? Query? Business Logic? External Adapter?).
 2. Select the **one or two** micro-files associated with that layer.
@@ -355,12 +380,3 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 5. After the AI writes code, verify: Is there N+1? Is there a missing null check? Is a secret hardcoded? Is the response wrapped in the standard envelope?
 6. Run `pytest` against the live API to confirm contract compliance.
 7. Review the AI's isolated changes.
-
-## 38. True E2E Test Database Isolation & Lifecycle Verification
-* **The Rule:** End-to-End (E2E) test suites must NEVER run against your local development or production databases. Instead, the test suite setup (e.g., `conftest.py`) must dynamically hit the API to create a brand-new, isolated Test Tenant/Database specifically for that test run. All subsequent tests must inject this test tenant's ID into the `x-tenant-id` headers.
-* **The Data Lifecycle Rule:** True E2E tests must verify the full CRUD lifecycle within that isolated database. Tests cannot rely on stub IDs. They must:
-  1. **POST**: Create a uniquely identifiable record and extract its real ID from the `201` response.
-  2. **GET by ID**: Fetch that exact ID and assert `200 OK`.
-  3. **PATCH**: Update that exact ID and assert `200 OK`.
-  4. **DELETE**: Delete that exact ID, and then make a follow-up `GET` request to mathematically verify a `404 Not Found` response is returned.
-* **Why:** This architecture guarantees 100% test isolation, prevents test data pollution in your main database, and actively proves that your database provisioning systems (like TypeORM migrations) are actually executing correctly under the hood.
