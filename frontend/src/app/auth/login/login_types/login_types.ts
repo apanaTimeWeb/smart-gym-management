@@ -8,9 +8,11 @@ export const loginSchema = z.object({
 
 export type LoginFormData = z.infer<typeof loginSchema>;
 
+export type FetchState = 'idle' | 'loading' | 'success' | 'error';
+
 export interface UseLoginFormReturn {
   form: UseFormReturn<LoginFormData>;
-  loading: boolean;
+  status: FetchState;
   showPassword: boolean;
   setShowPassword: (val: boolean) => void;
   onSubmit: (data: LoginFormData) => Promise<void>;
