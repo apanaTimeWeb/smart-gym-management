@@ -245,6 +245,14 @@ Badges are small pill-shaped labels: `border-radius: 999px`, `padding: 2px 10px`
 - **Layout:** Slide-in from the right side, width 480px, full-height.
 - **Footer:** Cancel (ghost) | Confirm Action (danger or primary).
 
+### 5k. Inline Editable Cell Pattern
+- **Usage:** For rapid editing inside data tables without opening a modal.
+- **Default State:** Text display with `truncate`.
+- **Active State (On click):** Input field appears in-place with `--border-focus` ring.
+- **Save (On blur/Enter):** Save changes and revert to text display.
+- **Cancel (On Escape):** Revert without saving.
+- **Loading:** Show a small spinner inside the cell while the API call is in flight.
+
 ---
 
 ## 6. FEEDBACK & STATE PATTERNS
@@ -428,6 +436,41 @@ Enterprise users have different preferences for how much data fits on a screen.
 - **Usage:** On tables and Kanban cards, right-clicking should open a custom context menu.
 - **Actions:** Must mirror the inline action column (e.g., 👁️ View, ✏️ Edit, 🗑️ Delete, 📋 Copy ID).
 - **Styling:** Small dropdown menu with `shadow-2xl` matching the Glassmorphism rules (z-index: 30).
+
+## 19. TOOLTIP DESIGN SPECIFICATION
+- **Background:** `var(--bg-card)` with `1px solid var(--border)`.
+- **Typography:** `12px`, `var(--text-primary)`.
+- **Layout:** `max-width: 240px`, word-wrap enabled.
+- **Arrow:** Small triangle pointing to the trigger element.
+- **Animation/Delay:** 300ms show delay, 100ms hide delay (prevents flicker on mouse-over).
+- **Z-index:** `z-30`.
+
+## 20. FORM FIELD DISABLED & READ-ONLY STATES
+- **Disabled:** `opacity: 0.5`, `cursor: not-allowed`, background `--bg-input` (no change), no focus ring.
+- **Read-only:** Full opacity, `cursor: default`, subtle `--border` dashed instead of solid, no focus ring.
+- **Filled/Success:** `border-color: --success` with a small checkmark icon inside the input.
+
+## 21. NUMBER & CURRENCY FORMATTING RULES
+- **Currency:** Always format using the Indian Numbering System: `₹1,23,456.00` (never `₹123456`).
+- **Large Numbers (KPIs):** Abbreviate: `₹12.4L`, `₹2.3Cr`.
+- **Percentages:** Always 1 decimal place: `12.5%`.
+- **Negative Numbers:** Red color (`--danger`) with minus sign: `-₹500`.
+- **Implementation:** Centralized in `src/lib/formatters.ts`.
+
+## 22. TABLE COLUMN WIDTH STRATEGY
+- **ID/Reference Columns:** Fixed narrow width (`w-24`).
+- **Name Columns:** Flexible, `min-width` set, `truncate` class mandatory.
+- **Status Badge Columns:** Fixed width (`w-28`), center-aligned.
+- **Date Columns:** Fixed width (`w-32`).
+- **Amount/Number Columns:** Fixed width, right-aligned (standard accounting convention).
+- **Action Columns:** Fixed narrow width (`w-20`), right-aligned, never truncated.
+
+## 23. DRAG & DROP INTERACTION PATTERN
+- **Library:** Use `@dnd-kit/core`.
+- **Dragging Item State:** `opacity: 0.5`, `cursor: grabbing`, subtle scale up `scale-105`.
+- **Valid Drop Target:** `border: 2px dashed var(--primary)`, background `rgba(99,102,241,0.08)`.
+- **Invalid Drop Target:** `border: 2px dashed var(--danger)`.
+- **Animation:** After drop, use a smooth snap animation (`transition: transform 200ms ease`).
 
 ---
 
