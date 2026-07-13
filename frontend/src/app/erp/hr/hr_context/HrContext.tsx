@@ -2,13 +2,13 @@
 "use client";
 
 import React, { createContext, useContext, useMemo } from 'react';
-import { HrContextType } from '@/app/erp/hr/hr_types/hr_types';
+import { HrContextType, HrInitialData } from '@/app/erp/hr/hr_types/hr_types';
 import { useHrLogic } from '@/app/erp/hr/hr_context/useHrLogic';
 
 const HrContext = createContext<HrContextType | undefined>(undefined);
 
-export function HrProvider({ children }: { children: React.ReactNode }) {
- const logic = useHrLogic();
+export function HrProvider({ children, initialData }: { children: React.ReactNode, initialData?: HrInitialData | null }) {
+ const logic = useHrLogic(initialData);
 
  const value = useMemo(() => logic, [logic]);
 

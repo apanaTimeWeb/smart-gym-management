@@ -3,12 +3,13 @@
 
 import { useHrContext } from '@/app/erp/hr/hr_context/HrContext';
 import { PAYROLL_TABLE_HEADERS } from '@/app/erp/hr/hr_utils/HrSharedConstants';
+import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
+import { CheckCircle2, Loader2 } from 'lucide-react';
 
 const fmt = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');
-import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
 
 export default function PayrollTable() {
-  const { payrolls, search, currentPage, setCurrentPage, markPayrollPaid } = useHrContext();
+  const { payrolls, search, currentPage, setCurrentPage, markPayrollPaid, loading } = useHrContext();
 
   const filtered = payrolls.filter(p => {
     const nameMatch = (p.staff?.name || '').toLowerCase().includes(search.toLowerCase());
@@ -21,63 +22,69 @@ export default function PayrollTable() {
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const currentData = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
+  if (loading) {
+    return (
+      <div className="flex justify-center py-10">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col h-full min-h-96">
-      <div className="overflow-x-auto hr-module flex-1">
+    <div className="flex flex-col h-full">
+      <div className="overflow-x-auto flex-1">
         <table className="w-full">
-          <thead style={{ backgroundColor: 'var(--hr-bg-input)' }}>
+          <thead className="bg-muted text-muted-foreground">
             <tr>
               {PAYROLL_TABLE_HEADERS.map(h => (
-                <th key={h} className="text-left text-xs font-semibold uppercase tracking-wider px-4 py-3" style={{ color: 'var(--hr-text-secondary)' }}>
+                <th key={h} className="text-left text-xs font-semibold uppercase tracking-wider px-4 py-3">
                   {h}
                 </th>
               ))}
+              <th className="text-right text-xs font-semibold uppercase tracking-wider px-4 py-3">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y" style={{ borderColor: 'var(--hr-border)' }}>
+          <tbody className="divide-y divide-border">
             {currentData.map(p => (
-              <tr key={p.id} className="transition-colors hover:bg-[rgba(99,102,241,0.06)]" style={{ backgroundColor: 'var(--hr-bg-card)' }}>
+              <tr key={p.id} className="transition-colors hover:bg-muted/50 bg-card">
                 <td className="px-4 py-3">
-                  <p className="text-sm font-medium" style={{ color: 'var(--hr-text-primary)' }}>
+                  <p className="text-sm font-medium text-foreground">
                     {p.staff?.name || `Staff #${p.staffId}`}
                   </p>
-                  <div className="text-xs" style={{ color: 'var(--hr-text-secondary)' }}>
+                  <div className="text-xs text-muted-foreground">
                     {p.staff?.role}
                   </div>
                 </td>
-                <td className="px-4 py-3 text-sm" style={{ color: 'var(--hr-text-primary)' }}>{p.month}</td>
-                <td className="px-4 py-3 text-sm font-bold" style={{ color: 'var(--hr-kpi-green-text)' }}>{fmt(p.amount)}</td>
+                <td className="px-4 py-3 text-sm text-foreground">{p.month}</td>
+                <td className="px-4 py-3 text-sm font-bold text-emerald-600">{fmt(p.amount)}</td>
                 <td className="px-4 py-3">
                   <span 
-                    className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold" 
-                    style={{ 
-                      backgroundColor: p.status === 'Paid' ? 'var(--hr-status-paid-bg)' : 'var(--hr-status-pending-bg)', 
-                      color: p.status === 'Paid' ? 'var(--hr-status-paid-text)' : 'var(--hr-status-pending-text)' 
-                    }}
+                    className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
+                      p.status === 'Paid' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+                    }`}
                   >
                     {p.status}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-sm" style={{ color: 'var(--hr-text-secondary)' }}>
+                <td className="px-4 py-3 text-sm text-muted-foreground">
                   {p.paidAt ? new Date(p.paidAt).toLocaleDateString('en-IN') : '—'}
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-4 py-3 text-right">
                   {p.status !== 'Paid' && (
                     <button 
-                      onClick={(e) => { e.stopPropagation(); markPayrollPaid(p.id); }} 
-                      className="px-3 py-1.5 text-xs font-semibold text-white rounded-lg hover:opacity-90 transition-opacity" 
-                      style={{ backgroundColor: 'var(--hr-highlight)' }}
+                      onClick={() => markPayrollPaid(p.id)}
+                      className="flex items-center justify-end w-full gap-1 px-3 py-1.5 text-xs font-semibold text-primary-foreground bg-primary rounded-lg hover:opacity-90 transition-opacity"
                     >
-                      Mark Paid
+                      <CheckCircle2 size={14} /> Mark Paid
                     </button>
                   )}
                 </td>
               </tr>
             ))}
-            {filtered.length === 0 && (
+            {currentData.length === 0 && (
               <tr>
-                <td colSpan={6} className="text-center py-10 text-sm" style={{ color: 'var(--hr-text-secondary)' }}>
-                  No payroll records found matching "{search}".
+                <td colSpan={6} className="text-center py-10 text-sm text-muted-foreground">
+                  No payroll records found.
                 </td>
               </tr>
             )}

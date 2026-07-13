@@ -4,6 +4,12 @@ import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import { EMPTY_STAFF } from '@/app/erp/hr/hr_utils/HrSharedConstants';
 import React from 'react';
 
+export interface HrInitialData {
+  staff: Staff[];
+  payrolls: Payroll[];
+  summary: HrSummary | null;
+}
+
 export interface HrContextType {
  staff: Staff[];
  payrolls: Payroll[];
@@ -28,15 +34,15 @@ export interface HrContextType {
  showPayrollModal: boolean;
  setShowPayrollModal: (show: boolean) => void;
  editId: number | null;
- editData: any;
+ editData: Record<string, any>;
  saving: boolean;
  
  // Actions
  openAdd: () => void;
  openEdit: (s: Staff) => void;
  openAddPayroll: () => void;
- saveStaff: (data: any) => Promise<void>;
- savePayroll: (data: any) => Promise<void>;
+ saveStaff: (data: Record<string, any>) => Promise<void>;
+ savePayroll: (data: Record<string, any>) => Promise<void>;
  deleteStaff: (id: number) => Promise<void>;
  markPayrollPaid: (id: number) => Promise<void>;
 }
