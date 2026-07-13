@@ -14,10 +14,10 @@ const StatusColors: Record<BackupRecord['status'], string> = {
 };
 
 export default function BackupsClient() {
-  const { data: DUMMY_BACKUPS, loading, error } = useSuperadminData<BackupRecord[]>(SuperadminUrlConfig.BACKEND_API.BACKUPS_BASE);
+  const { data: DUMMY_BACKUPS, fetchState, error } = useSuperadminData<BackupRecord[]>(SuperadminUrlConfig.BACKEND_API.BACKUPS_BASE);
 
     const [search, setSearch] = useState('');
-if (loading) return <div className="p-8 text-center text-disabled">Loading...</div>;
+if (fetchState === 'loading') return <div className="p-8 text-center text-disabled">Loading...</div>;
   if (error || !DUMMY_BACKUPS) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
 
 

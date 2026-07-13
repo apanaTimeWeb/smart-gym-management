@@ -40,7 +40,7 @@ export function useAddGymForm() {
   const [provisioningLogs, setProvisioningLogs] = useState<string[]>([]);
   const [showPassword, setShowPassword] = useState(false);
 
-  const { data: plans, loading: loadingPlans } = useSuperadminData<SubscriptionPlan[]>(
+  const { data: plans, loading: fetchStatePlans } = useSuperadminData<SubscriptionPlan[]>(
     SuperadminUrlConfig.BACKEND_API.PLANS_BASE
   );
 

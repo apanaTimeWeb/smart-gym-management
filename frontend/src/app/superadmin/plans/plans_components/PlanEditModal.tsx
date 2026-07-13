@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders the modal form for editing an existing subscription plan. Reads/writes via usePlansStore.
 'use client';
+// RESPONSIBILITY: Renders the modal form for editing an existing subscription plan. Reads/writes via usePlansStore.
 
 import { useEffect } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';

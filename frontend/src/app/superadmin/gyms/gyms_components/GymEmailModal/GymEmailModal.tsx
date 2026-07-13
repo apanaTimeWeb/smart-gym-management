@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders the modal UI for sending an email to a Gym owner. Purely a view component.
 'use client';
+// RESPONSIBILITY: Renders the modal UI for sending an email to a Gym owner. Purely a view component.
 
 import React from 'react';
 import { X } from 'lucide-react';

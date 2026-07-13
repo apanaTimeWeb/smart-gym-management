@@ -88,6 +88,14 @@ export interface BackgroundJob {
   createdAt: string;
 }
 
+export interface JobsMetrics {
+  activeJobs: number;
+  completed24h: number;
+  failed24h: number;
+  delayed: number;
+}
+
+
 export interface BackupRecord {
   id: string;
   tenantName: string;

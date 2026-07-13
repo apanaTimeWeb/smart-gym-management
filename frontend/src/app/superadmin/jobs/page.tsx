@@ -1,6 +1,6 @@
 // RESPONSIBILITY: page.tsx acts as a Server Component entry point.
-import JobsClient from '@/app/superadmin/superadmin_components/JobsClient/JobsClient';
+import JobsView from '@/app/superadmin/jobs/jobs_components/JobsView';
 
 export default function JobsPage() {
-  return <JobsClient />;
+  return <JobsView />;
 }

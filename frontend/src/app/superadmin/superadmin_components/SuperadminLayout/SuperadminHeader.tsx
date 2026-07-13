@@ -29,7 +29,7 @@ export default function SuperadminHeader() {
   }, []);
 
   return (
-    <header className="bg-card border-b border-border px-6 py-4 flex items-center justify-between sticky top-0 z-30">
+    <header className="bg-card border-b border-border px-6 py-4 flex items-center justify-between sticky top-0 z-20">
       <div className="flex items-center gap-4">
         <button
           className="lg:hidden p-2 -ml-3 text-secondary hover:text-foreground transition-colors bg-input hover:bg-background rounded-lg border border-border"

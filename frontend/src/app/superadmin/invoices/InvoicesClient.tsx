@@ -15,7 +15,7 @@ const StatusColors: Record<SaaSInvoice['status'], string> = {
 };
 
 export default function InvoicesClient() {
-  const { data, loading, error } = useSuperadminData<{ invoices: SaaSInvoice[], tenants: Tenant[] }>(SuperadminUrlConfig.BACKEND_API.INVOICES_BASE);
+  const { data, fetchState, error } = useSuperadminData<{ invoices: SaaSInvoice[], tenants: Tenant[] }>(SuperadminUrlConfig.BACKEND_API.INVOICES_BASE);
 
   const [search, setSearch] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
@@ -24,7 +24,7 @@ export default function InvoicesClient() {
   const [selectedGymId, setSelectedGymId] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('UPI');
 
-  if (loading) return <div className="p-8 text-center text-disabled">Loading...</div>;
+  if (fetchState === 'loading') return <div className="p-8 text-center text-disabled">Loading...</div>;
   if (error || !data) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
 
   const { invoices = [], tenants = [] } = data || {};

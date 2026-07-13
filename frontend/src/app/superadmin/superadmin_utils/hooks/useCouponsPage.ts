@@ -13,7 +13,7 @@ import type { Coupon, CouponStatus } from '@/app/superadmin/superadmin_types/sup
 
 export const useCouponsPage = () => {
   const [coupons, setCoupons] = useState<Coupon[]>([]);
-  const { data: fetchedData, loading, error } = useSuperadminData<Coupon[]>(
+  const { data: fetchedData, fetchState, error } = useSuperadminData<Coupon[]>(
     SuperadminUrlConfig.BACKEND_API.COUPONS_BASE
   );
 

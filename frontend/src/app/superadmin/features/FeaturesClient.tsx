@@ -9,9 +9,9 @@ import { FeatureFlag, ReleaseNote } from '@/app/superadmin/superadmin_types/supe
 
 export default function FeaturesClient() {
   const [activeTab, setActiveTab] = useState<'FLAGS' | 'NOTES'>('FLAGS');
-  const { data, loading, error } = useSuperadminData<{ flags: FeatureFlag[], notes: ReleaseNote[] }>(SuperadminUrlConfig.BACKEND_API.FEATURES_BASE);
+  const { data, fetchState, error } = useSuperadminData<{ flags: FeatureFlag[], notes: ReleaseNote[] }>(SuperadminUrlConfig.BACKEND_API.FEATURES_BASE);
 
-  if (loading) return <div className="p-8 text-center text-disabled">Loading...</div>;
+  if (fetchState === 'loading') return <div className="p-8 text-center text-disabled">Loading...</div>;
   if (error || !data) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
 
   const { flags: DUMMY_FEATURE_FLAGS, notes: DUMMY_RELEASE_NOTES } = data;

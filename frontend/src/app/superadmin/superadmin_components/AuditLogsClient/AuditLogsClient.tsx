@@ -63,9 +63,9 @@ export default function AuditLogsClient() {
 
   const endpoint = `${SuperadminUrlConfig.BACKEND_API.AUDIT_LOGS_BASE}?${queryParams.toString()}`;
   
-  const { data, loading, error } = useSuperadminData<{ logs: GlobalAuditLog[], total: number }>(endpoint);
+  const { data, fetchState, error } = useSuperadminData<{ logs: GlobalAuditLog[], total: number }>(endpoint);
 
-  if (loading) {
+  if (fetchState === 'loading') {
     return (
       <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto animate-pulse">
         <div className="h-10 bg-card rounded w-1/4"></div>

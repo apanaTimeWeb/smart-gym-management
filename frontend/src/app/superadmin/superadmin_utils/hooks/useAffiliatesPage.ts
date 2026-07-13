@@ -12,7 +12,7 @@ import type { Affiliate, AffiliateStatus } from '@/app/superadmin/superadmin_typ
 
 export const useAffiliatesPage = () => {
   const [affiliates, setAffiliates] = useState<Affiliate[]>([]);
-  const { data: fetchedData, loading, error } = useSuperadminData<Affiliate[]>(
+  const { data: fetchedData, fetchState, error } = useSuperadminData<Affiliate[]>(
     SuperadminUrlConfig.BACKEND_API.AFFILIATES_BASE
   );
 

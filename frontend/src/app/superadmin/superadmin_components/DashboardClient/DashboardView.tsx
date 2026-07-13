@@ -10,9 +10,9 @@ import { SaaSDashboardMetrics, RevenueChartData, GrowthChartData } from '@/app/s
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 export default function DashboardView() {
-  const { data, loading, error } = useSuperadminData<{ metrics: SaaSDashboardMetrics, revenue: RevenueChartData[], growth: GrowthChartData[] }>(SuperadminUrlConfig.BACKEND_API.DASHBOARD_BASE);
+  const { data, fetchState, error } = useSuperadminData<{ metrics: SaaSDashboardMetrics, revenue: RevenueChartData[], growth: GrowthChartData[] }>(SuperadminUrlConfig.BACKEND_API.DASHBOARD_BASE);
 
-  if (loading) {
+  if (fetchState === 'loading') {
     return (
       <div className="space-y-6">
         <div>

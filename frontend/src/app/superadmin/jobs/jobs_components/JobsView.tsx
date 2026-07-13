@@ -12,11 +12,13 @@ const StatusColors: Record<BackgroundJob['status'], string> = {
   DELAYED: 'text-warning bg-warning/10'
 };
 
-export default function JobsClient() {
-  const { data: DUMMY_BACKGROUND_JOBS, loading, error } = useSuperadminData<BackgroundJob[]>(SuperadminUrlConfig.BACKEND_API.JOBS_BASE);
+export default function JobsView() {
+  const { data: responseData, fetchState, error } = useSuperadminData<{ jobs: BackgroundJob[], metrics: import('@/app/superadmin/superadmin_types/superadmin_types').JobsMetrics }>(SuperadminUrlConfig.BACKEND_API.JOBS_BASE);
 
-  if (loading) return <div className="p-8 text-center text-disabled">Loading...</div>;
-  if (error || !DUMMY_BACKGROUND_JOBS) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
+  if (fetchState === 'loading') return <div className="p-8 text-center text-disabled">Loading...</div>;
+  if (error || !responseData) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
+
+  const { jobs: DUMMY_BACKGROUND_JOBS, metrics } = responseData;
 
   return (
     <div className="space-y-6">
@@ -32,10 +34,10 @@ export default function JobsClient() {
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         {[
-          { label: 'Active Jobs', value: 24, icon: Play, color: 'text-primary' },
-          { label: 'Completed (24h)', value: 1420, icon: Activity, color: 'text-success' },
-          { label: 'Failed (24h)', value: 3, icon: XCircle, color: 'text-destructive' },
-          { label: 'Delayed', value: 12, icon: AlertTriangle, color: 'text-warning' }
+          { label: 'Active Jobs', value: metrics?.activeJobs || 0, icon: Play, color: 'text-primary' },
+          { label: 'Completed (24h)', value: metrics?.completed24h || 0, icon: Activity, color: 'text-success' },
+          { label: 'Failed (24h)', value: metrics?.failed24h || 0, icon: XCircle, color: 'text-destructive' },
+          { label: 'Delayed', value: metrics?.delayed || 0, icon: AlertTriangle, color: 'text-warning' }
         ].map(stat => (
           <div key={stat.label} className="bg-card border border-border rounded-xl p-4 flex items-center gap-4">
             <div className={`p-3 rounded-lg bg-input ${stat.color}`}>

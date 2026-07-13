@@ -15,13 +15,13 @@ const StatusIcons = {
 };
 
 export default function MigrationsClient() {
-  const { data, loading, error } = useSuperadminData<{ migrations: SchemaMigration[], tenants: Tenant[] }>(SuperadminUrlConfig.BACKEND_API.MIGRATIONS_BASE);
+  const { data, fetchState, error } = useSuperadminData<{ migrations: SchemaMigration[], tenants: Tenant[] }>(SuperadminUrlConfig.BACKEND_API.MIGRATIONS_BASE);
 
     const [showTargetModal, setShowTargetModal] = useState(false);
   const [gymSearchTerm, setGymSearchTerm] = useState('');
   const [isGymDropdownOpen, setIsGymDropdownOpen] = useState(false);
   const [selectedGymId, setSelectedGymId] = useState('');
-if (loading) return <div className="p-8 text-center text-disabled">Loading...</div>;
+if (fetchState === 'loading') return <div className="p-8 text-center text-disabled">Loading...</div>;
   if (error || !data) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
 
   const { migrations: DUMMY_MIGRATIONS, tenants: DUMMY_TENANTS } = data;

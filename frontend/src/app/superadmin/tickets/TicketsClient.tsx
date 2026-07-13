@@ -22,10 +22,10 @@ const StatusColors: Record<TicketStatus, string> = {
 };
 
 export default function TicketsClient() {
-  const { data: DUMMY_SUPPORT_TICKETS, loading, error } = useSuperadminData<SupportTicket[]>(SuperadminUrlConfig.BACKEND_API.TICKETS_BASE);
+  const { data: DUMMY_SUPPORT_TICKETS, fetchState, error } = useSuperadminData<SupportTicket[]>(SuperadminUrlConfig.BACKEND_API.TICKETS_BASE);
 
     const [search, setSearch] = useState('');
-if (loading) return <div className="p-8 text-center text-disabled">Loading...</div>;
+if (fetchState === 'loading') return <div className="p-8 text-center text-disabled">Loading...</div>;
   if (error || !DUMMY_SUPPORT_TICKETS) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
 
 

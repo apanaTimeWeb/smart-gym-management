@@ -12,7 +12,7 @@ import { apiFetch } from '@/lib/api';
  */
 export function useSuperadminData<T>(endpoint: string) {
   const [data, setData] = useState<T | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [fetchState, setFetchState] = useState<import('@/app/superadmin/superadmin_types/superadmin_types').FetchState>('loading');
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -22,17 +22,17 @@ export function useSuperadminData<T>(endpoint: string) {
         if (isMounted) {
           const responseData = ('data' in res) ? res.data : (res as unknown as T);
           setData(responseData);
-          setLoading(false);
+          setFetchState('success');
         }
       })
       .catch((err: Error) => {
         if (isMounted) {
           setError(err.message);
-          setLoading(false);
+          setFetchState('error');
         }
       });
     return () => { isMounted = false; };
   }, [endpoint]);
 
-  return { data, loading, error, mutate: setData };
+  return { data, fetchState, error, mutate: setData };
 }

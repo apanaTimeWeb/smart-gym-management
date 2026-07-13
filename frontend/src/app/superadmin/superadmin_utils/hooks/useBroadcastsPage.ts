@@ -12,7 +12,7 @@ import type { Broadcast, BroadcastAudience, BroadcastStatus } from '@/app/supera
 
 export const useBroadcastsPage = () => {
   const [broadcasts, setBroadcasts] = useState<Broadcast[]>([]);
-  const { data: fetchedData, loading, error } = useSuperadminData<Broadcast[]>(
+  const { data: fetchedData, fetchState, error } = useSuperadminData<Broadcast[]>(
     SuperadminUrlConfig.BACKEND_API.BROADCASTS_BASE
   );
 
