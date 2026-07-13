@@ -1,6 +1,7 @@
 // RESPONSIBILITY: usePlansLogic.ts handles the logic and UI for its corresponding feature.
 import { useState, useCallback, useEffect } from 'react';
-import { plansApi, type Plan } from '@/lib/api';
+import { plansApi } from '@/app/erp/plans/plans_api/plans_api';
+import type { Plan } from '@/app/erp/plans/plans_types/plans_types';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import { EMPTY_PLAN_FORM, PlanFormValues } from '@/app/erp/plans/plans_utils/PlansSharedConstants';
 import { PlansContextType, PlansInitialData } from '@/app/erp/plans/plans_types/plans_types';

@@ -1,7 +1,8 @@
 // RESPONSIBILITY: useInquiriesLogic.ts handles the logic and UI for its corresponding feature.
 import { useState, useCallback, useEffect } from 'react';
 import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
-import { inquiriesApi, type Inquiry, type InquiryStats } from '@/lib/api';
+import { inquiriesApi } from '@/app/erp/inquiries/inquiries_api/inquiries_api';
+import type { Inquiry, InquiryStats } from '@/app/erp/inquiries/inquiries_types/inquiries_types';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import type { MessageType, ErpMessageRecipient } from '@/app/erp/erp_components/ErpFeedback/ErpMessageModal';
 import { EMPTY_INQUIRY_FORM, generateDefaultMessage } from '@/app/erp/inquiries/inquiries_utils/InquiriesSharedConstants';

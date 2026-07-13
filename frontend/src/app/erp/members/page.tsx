@@ -1,6 +1,7 @@
 // RESPONSIBILITY: Server component that handles initial SSR data fetching for the members module.
 import MembersMain from '@/app/erp/members/members_components/MembersMain/MembersMain';
-import { ssrMembersApi, ssrPlansApi } from '@/lib/server-api';
+import { ssrMembersApi } from '@/app/erp/members/members_api/members_server_api';
+import { ssrPlansApi } from '@/app/erp/plans/plans_api/plans_server_api';
 import { MembersInitialData } from '@/app/erp/members/members_types/members_types';
 
 export default async function MembersPage() {

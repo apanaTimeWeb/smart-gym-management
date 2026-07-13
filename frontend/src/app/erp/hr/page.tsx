@@ -1,6 +1,6 @@
 // RESPONSIBILITY: page.tsx handles the logic and UI for its corresponding feature.
 import HrMain from '@/app/erp/hr/hr_components/HrMain/HrMain';
-import { ssrHrApi } from '@/lib/server-api';
+import { ssrHrApi } from '@/app/erp/hr/hr_api/hr_server_api';
 import { HrInitialData } from '@/app/erp/hr/hr_types/hr_types';
 
 export default async function HrPage() {

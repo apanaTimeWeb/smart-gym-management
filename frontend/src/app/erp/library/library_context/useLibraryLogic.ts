@@ -1,7 +1,8 @@
 // RESPONSIBILITY: useLibraryLogic.ts handles the logic and UI for its corresponding feature.
 import { useState, useCallback, useEffect } from 'react';
 import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
-import { libraryApi, type Exercise, type DietPlan } from '@/lib/api';
+import { libraryApi } from '@/app/erp/library/library_api/library_api';
+import type { Exercise, DietPlan } from '@/app/erp/library/library_types/library_types';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import { EMPTY_EXERCISE_FORM, EMPTY_DIET_FORM, type LibraryTab } from '@/app/erp/library/library_utils/LibrarySharedConstants';
 import { LibraryContextType, LibraryInitialData } from '@/app/erp/library/library_types/library_types';

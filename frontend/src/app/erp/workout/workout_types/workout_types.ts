@@ -2,7 +2,7 @@
 import { EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM } from '@/app/erp/workout/workout_utils/WorkoutSharedConstants';
 import React from 'react';
 
-import type { Exercise } from '@/lib/api';
+import type { Exercise } from '@/app/erp/library/library_types/library_types';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 
 export interface WorkoutContextType {

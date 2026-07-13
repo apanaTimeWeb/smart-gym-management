@@ -1,6 +1,6 @@
 // RESPONSIBILITY: page.tsx handles the logic and UI for its corresponding feature.
 import PlansMain from '@/app/erp/plans/plans_components/PlansMain/PlansMain';
-import { ssrPlansApi } from '@/lib/server-api';
+import { ssrPlansApi } from '@/app/erp/plans/plans_api/plans_server_api';
 import { PlansInitialData } from '@/app/erp/plans/plans_types/plans_types';
 
 export default async function PlansPage() {
@@ -9,7 +9,7 @@ export default async function PlansPage() {
   try {
     const res = await ssrPlansApi.getAll();
     initialData = {
-      plans: res.data?.plans || res.data || [],
+      plans: Array.isArray(res.data) ? res.data : [],
     };
   } catch (e) {
     console.error('Failed to fetch plans initial data:', e);

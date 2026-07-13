@@ -1,6 +1,7 @@
 // RESPONSIBILITY: WorkoutSharedConstants.ts handles the logic and UI for its corresponding feature.
 import { z } from 'zod';
-import type { Exercise, Workout } from '@/lib/api';
+import type { Exercise } from '@/app/erp/library/library_types/library_types';
+import type { Workout } from '@/app/erp/workout/workout_types/workout_types';
 /* ── Dropdown / Filter Options (Rule 3: Backend-Ready Constants) ── */
 
 export const WORKOUT_LEVEL_OPTIONS = ['Beginner', 'Intermediate', 'Advanced', 'All Levels'] as const;

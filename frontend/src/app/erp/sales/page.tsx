@@ -1,6 +1,6 @@
 // RESPONSIBILITY: page.tsx handles the logic and UI for its corresponding feature.
 import SalesMain from '@/app/erp/sales/sales_components/SalesMain/SalesMain';
-import { ssrSalesApi } from '@/lib/server-api';
+import { ssrSalesApi } from '@/app/erp/sales/sales_api/sales_server_api';
 import { SalesInitialData } from '@/app/erp/sales/sales_types/sales_types';
 
 export default async function SalesPage() {

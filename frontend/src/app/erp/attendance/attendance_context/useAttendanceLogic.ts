@@ -2,7 +2,12 @@
 // DATA FLOW: UI Components -> useAttendanceLogic (State + URL) -> API (Backend)
 import { useState, useCallback, useEffect } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import { attendanceApi, membersApi, hrApi, type Member, type Staff, type ApiResponse } from '@/lib/api';
+import { ApiResponse } from '@/lib/api';
+import { attendanceApi } from '@/app/erp/attendance/attendance_api/attendance_api';
+import { hrApi } from '@/app/erp/hr/hr_api/hr_api';
+import { membersApi } from '@/app/erp/members/members_api/members_api';
+import type { Member } from '@/app/erp/members/members_types/members_types';
+import type { Staff } from '@/app/erp/hr/hr_types/hr_types';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import { EMPTY_ATTENDANCE_FORM, ATTENDANCE_TABS, type AttendanceTab, AttendanceFormValues } from '@/app/erp/attendance/attendance_utils/AttendanceSharedConstants';
 import { useDebounce } from '@/app/erp/erp_utils/useDebounce';

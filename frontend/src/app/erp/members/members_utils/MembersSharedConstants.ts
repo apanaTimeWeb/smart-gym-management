@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Contains logic, types, or component definition for this module.
-import type { Plan } from '@/lib/api';
+import type { Plan } from '@/app/erp/plans/plans_types/plans_types';
 import { z } from 'zod';
 
 export const MemberSchema = z.object({

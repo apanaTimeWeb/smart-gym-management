@@ -1,6 +1,6 @@
 // RESPONSIBILITY: page.tsx handles the logic and UI for its corresponding feature.
 import StoreMain from '@/app/erp/store/store_components/StoreMain/StoreMain';
-import { ssrStoreApi } from '@/lib/server-api';
+import { ssrStoreApi } from '@/app/erp/store/store_api/store_server_api';
 
 export default async function StorePage() {
   let initialData = undefined;

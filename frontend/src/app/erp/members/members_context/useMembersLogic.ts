@@ -1,7 +1,13 @@
 // RESPONSIBILITY: Custom hook encapsulating all business logic, state, and API interactions for the members module.
 // DATA FLOW: membersApi -> useMembersLogic -> MembersContext
 import React, { useState, useCallback, useEffect } from 'react';
-import { plansApi, financeApi, attendanceApi, type Member, type Plan, type Payment, ApiResponse } from '@/lib/api';
+import { ApiResponse } from '@/lib/api';
+import { plansApi } from '@/app/erp/plans/plans_api/plans_api';
+import { financeApi } from '@/app/erp/finance/finance_api/finance_api';
+import { attendanceApi } from '@/app/erp/attendance/attendance_api/attendance_api';
+import type { Member } from '@/app/erp/members/members_types/members_types';
+import type { Plan } from '@/app/erp/plans/plans_types/plans_types';
+import type { Payment } from '@/app/erp/finance/finance_types/finance_types';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { membersApi } from '@/app/erp/members/members_api/members_api';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';

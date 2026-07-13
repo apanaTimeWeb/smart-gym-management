@@ -1,6 +1,6 @@
 // RESPONSIBILITY: page.tsx handles the logic and UI for its corresponding feature.
 import FinanceMain from '@/app/erp/finance/finance_components/FinanceMain/FinanceMain';
-import { ssrFinanceApi } from '@/lib/server-api';
+import { ssrFinanceApi } from '@/app/erp/finance/finance_api/finance_server_api';
 import { FinanceInitialData } from '@/app/erp/finance/finance_types/finance_types';
 
 export default async function FinancePage() {

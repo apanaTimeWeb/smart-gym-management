@@ -1,7 +1,8 @@
 // RESPONSIBILITY: useStoreLogic.ts handles the logic and UI for its corresponding feature.
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
-import { storeApi, type Product, type Order, type StoreSummary } from '@/lib/api';
+import { storeApi } from '@/app/erp/store/store_api/store_api';
+import type { Product, Order, StoreSummary } from '@/app/erp/store/store_types/store_types';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import type { ErpReceiptData } from '@/app/erp/erp_components/ErpShared/ErpThermalReceipt';
 import { EMPTY_PRODUCT_FORM, ERR_EMPTY_ORDER, ProductFormValues } from '@/app/erp/store/store_utils/StoreSharedConstants';

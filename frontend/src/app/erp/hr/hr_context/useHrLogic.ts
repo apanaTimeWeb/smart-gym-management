@@ -1,7 +1,8 @@
 // RESPONSIBILITY: useHrLogic.ts handles the logic and UI for its corresponding feature.
 import { useState, useCallback, useEffect } from 'react';
 import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
-import { hrApi, type Staff, type Payroll, type HrSummary } from '@/lib/api';
+import { hrApi } from '@/app/erp/hr/hr_api/hr_api';
+import type { Staff, Payroll, HrSummary } from '@/app/erp/hr/hr_types/hr_types';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import { EMPTY_STAFF } from '@/app/erp/hr/hr_utils/HrSharedConstants';
 import { HrContextType, HrInitialData } from '@/app/erp/hr/hr_types/hr_types';

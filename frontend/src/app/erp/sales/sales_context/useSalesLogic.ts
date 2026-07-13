@@ -2,7 +2,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { type SalesTab, type DateFilter } from '@/app/erp/sales/sales_utils/SalesSharedConstants';
 import { SalesContextType, SalesInitialData } from '@/app/erp/sales/sales_types/sales_types';
-import { salesApi } from '@/lib/api';
+import { salesApi } from '@/app/erp/sales/sales_api/sales_api';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import { useRouter, useSearchParams } from 'next/navigation';
 

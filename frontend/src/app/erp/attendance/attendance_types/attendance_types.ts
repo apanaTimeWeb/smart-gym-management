@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Defines strict types and API response interfaces for the Attendance module to ensure type safety.
-import type { Member, Staff } from '@/lib/api';
+import type { Member } from '@/app/erp/members/members_types/members_types';
+import type { Staff } from '@/app/erp/hr/hr_types/hr_types';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import type { AttendanceTab, EMPTY_ATTENDANCE_FORM } from '@/app/erp/attendance/attendance_utils/AttendanceSharedConstants';
 

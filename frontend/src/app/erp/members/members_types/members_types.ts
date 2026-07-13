@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Contains logic, types, or component definition for this module.
-import { type Plan, type Payment } from '@/lib/api';
+import type { Plan } from '@/app/erp/plans/plans_types/plans_types';
+import type { Payment } from '@/app/erp/finance/finance_types/finance_types';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import type { MessageType, ErpMessageRecipient } from '@/app/erp/erp_components/ErpFeedback/ErpMessageModal';
 import type { ErpReceiptData } from '@/app/erp/erp_components/ErpShared/ErpThermalReceipt';

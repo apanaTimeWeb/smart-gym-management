@@ -1,6 +1,7 @@
 // RESPONSIBILITY: useFinanceLogic.ts handles the logic and UI for its corresponding feature.
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { financeApi, type Payment, type FinanceSummary } from '@/lib/api';
+import { financeApi } from '@/app/erp/finance/finance_api/finance_api';
+import type { Payment, FinanceSummary } from '@/app/erp/finance/finance_types/finance_types';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import { FinanceContextType, FinanceInitialData } from '@/app/erp/finance/finance_types/finance_types';
 import { AddPaymentFormValues } from '@/app/erp/finance/finance_utils/FinanceSharedConstants';
