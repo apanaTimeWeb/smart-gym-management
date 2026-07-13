@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Contains logic, types, or component definition for this module.
+// RESPONSIBILITY: Centralized constants, Zod schema, and shared utilities for the Members module. Single source of truth for form defaults, status colors, billing labels, and message templates.
 import type { Plan } from '@/app/erp/plans/plans_types/plans_types';
 import { z } from 'zod';
 

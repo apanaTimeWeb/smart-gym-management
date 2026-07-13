@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Custom hook managing the asynchronous fetching of dashboard statistics.
-// DATA FLOW: DashboardContext -> useDashboardLogic.ts (Hook) -> dashboard_api.ts (API)
+// DATA FLOW: page.tsx (SSR) → DashboardMain → useDashboardLogic → DashboardContext → KPI/Chart components
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -14,9 +14,10 @@ export function useDashboardLogic(initialData?: DashboardStats | null): Dashboar
   const [status, setStatus] = useState<FetchState>(initialData ? 'success' : 'loading');
   const [error, setError] = useState('');
 
+  // Fetch only when no SSR initialData was passed from page.tsx; initialData in deps prevents re-fetch on SSR hydration
   useEffect(() => {
     if (initialData) return;
-    
+
     setStatus('loading');
     dashboardApi.getStats()
       .then(res => {

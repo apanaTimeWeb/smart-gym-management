@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Contains logic, types, or component definition for this module.
+// RESPONSIBILITY: Defines all TypeScript types, interfaces, and the FetchState enum for the Members module. Single source of truth for member data shapes.
 import type { Plan } from '@/app/erp/plans/plans_types/plans_types';
 import type { Payment } from '@/app/erp/finance/finance_types/finance_types';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';

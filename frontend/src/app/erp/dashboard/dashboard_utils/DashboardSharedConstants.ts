@@ -13,3 +13,5 @@ export const DASHBOARD_PLAN_BG_COLORS: Record<string, string> = {
 
 export const RECENT_MEMBERS_HEADERS = ['Member', 'Plan', 'Status', 'Joined', 'Amount'];
 
+export const formatCurrency = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');
+
