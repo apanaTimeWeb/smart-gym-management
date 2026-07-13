@@ -77,10 +77,10 @@ export function useAddGymForm() {
       addLog('Provisioning complete! Redirecting...');
       await new Promise(r => setTimeout(r, 500));
 
-      toast.success((response as any)?.message || 'Tenant database provisioned successfully!');
+      toast.success((response as { message?: string })?.message || 'Tenant database provisioned successfully!');
       router.push(SuperadminUrlConfig.PAGES.GYMS_LIST);
-    } catch (e: any) {
-      const errMsg = e?.response?.data?.message || e.message || 'Failed to provision tenant';
+    } catch (e: unknown) {
+      const errMsg = e instanceof Error ? e.message : String(e) || 'Failed to provision tenant';
       toast.error(errMsg);
       addLog(`Error: ${errMsg}`);
     } finally {

@@ -19,7 +19,7 @@ export default function MembershipDistribution() {
  const pct = total > 0 ? Math.round((p.count / total) * 100) : 0;
  const bgStyle = DASHBOARD_PLAN_BG_COLORS[p.plan] || 'bg-secondary';
  return (
- <div key={p.plan} className="flex-1 min-w-[150px] rounded-lg p-4 bg-input">
+ <div key={p.plan} className="flex-1 min-w-40 rounded-lg p-4 bg-input">
  <div className="flex items-center gap-2 mb-2">
  <div className={`w-3 h-3 rounded-full ${bgStyle}`} />
  <span className="text-sm font-medium text-primary">{p.plan}</span>

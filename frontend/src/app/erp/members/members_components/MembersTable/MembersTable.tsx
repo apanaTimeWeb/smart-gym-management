@@ -18,7 +18,7 @@ export default function MembersTable() {
   const totalPages = Math.ceil(totalMembers / ITEMS_PER_PAGE);
 
   return (
-    <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden flex flex-col h-full min-h-[400px]">
+    <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden flex flex-col h-full min-h-96">
       {fetchState === FetchState.LOADING ? (
         <div className="flex items-center justify-center py-16 flex-1">
           <div className="w-8 h-8 border-4 border-warning border-t-transparent rounded-full animate-spin" />

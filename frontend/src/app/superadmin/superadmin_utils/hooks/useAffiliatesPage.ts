@@ -37,7 +37,7 @@ export const useAffiliatesPage = () => {
       (() => superadminApi.affiliates.create(data)) as any,
       {
         successMessage: 'Affiliate added successfully',
-        onSuccess: (res) => {
+        onSuccess: (res: any) => {
           setAffiliates(prev => [res, ...prev]);
           setIsModalOpen(false);
           form.reset();
@@ -54,7 +54,7 @@ export const useAffiliatesPage = () => {
       (() => superadminApi.affiliates.update(editingAffiliate.id, data)) as any,
       {
         successMessage: 'Affiliate updated successfully',
-        onSuccess: (res) => {
+        onSuccess: (res: any) => {
           setAffiliates(prev => prev.map(a => a.id === editingAffiliate.id ? res : a));
           setIsModalOpen(false);
           setEditingAffiliate(null);

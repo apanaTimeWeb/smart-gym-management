@@ -42,7 +42,7 @@ export const useCouponsPage = () => {
       (() => superadminApi.coupons.create(data)) as any,
       {
         successMessage: 'Coupon created successfully',
-        onSuccess: (res) => {
+        onSuccess: (res: any) => {
           setCoupons(prev => [res, ...prev]);
           setIsModalOpen(false);
           form.reset();
@@ -56,8 +56,8 @@ export const useCouponsPage = () => {
       (() => superadminApi.coupons.update(id, data)) as any,
       {
         successMessage: 'Coupon updated successfully',
-        onSuccess: (res) => {
-          setCoupons(prev => prev.map(c => c.id === id ? { ...c, ...res } : c));
+        onSuccess: (res: any) => {
+          setCoupons(prev => prev.map(c => c.id === id ? { ...c, ...(res as Record<string, unknown>) } : c));
           setIsEditModalOpen(false);
           setSelectedCoupon(null);
         }
@@ -84,8 +84,8 @@ export const useCouponsPage = () => {
       (() => superadminApi.coupons.update(id, { isDeleted: false })) as any,
       {
         successMessage: 'Coupon restored successfully',
-        onSuccess: (res) => {
-          setCoupons(prev => prev.map(c => c.id === id ? { ...c, ...res } : c));
+        onSuccess: (res: any) => {
+          setCoupons(prev => prev.map(c => c.id === id ? { ...c, ...(res as Record<string, unknown>) } : c));
         }
       }
     );
@@ -102,8 +102,8 @@ export const useCouponsPage = () => {
       (() => superadminApi.coupons.update(id, { status: newStatus })) as any,
       {
         successMessage: `Coupon marked as ${newStatus}`,
-        onSuccess: (res) => {
-          setCoupons(prev => prev.map(c => c.id === id ? { ...c, ...res } : c));
+        onSuccess: (res: any) => {
+          setCoupons(prev => prev.map(c => c.id === id ? { ...c, ...(res as Record<string, unknown>) } : c));
         }
       }
     );

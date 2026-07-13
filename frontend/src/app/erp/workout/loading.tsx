@@ -8,7 +8,7 @@ export default function Loading() {
  <div className="h-32 bg-card rounded-xl animate-pulse"></div>
 
  {/* Main Content Skeleton */}
- <div className="h-[500px] bg-card rounded-xl animate-pulse mt-6"></div>
+ <div className="h-[32rem] bg-card rounded-xl animate-pulse mt-6"></div>
  </div>
  );
 }

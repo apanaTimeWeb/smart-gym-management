@@ -101,7 +101,7 @@ export default function InvoicesClient() {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse min-w-[900px]">
+          <table className="w-full text-left border-collapse min-w-full">
             <thead>
               <tr className="bg-header border-b border-border text-sm">
                 <th className="p-4 font-semibold text-secondary">Invoice ID</th>
@@ -149,7 +149,7 @@ export default function InvoicesClient() {
 
       {/* Manual Payment Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowAddModal(false)}></div>
           <div className="relative bg-card border border-border rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200">
             <div className="flex items-center justify-between p-5 border-b border-border">

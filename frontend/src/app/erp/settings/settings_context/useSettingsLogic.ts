@@ -15,11 +15,10 @@ export function useSettingsLogic(): SettingsContextType {
  const fetchSettings = useCallback(async () => {
  setLoading(true);
  try {
- // eslint-disable-next-line @typescript-eslint/no-explicit-any
- const res: any = await apiFetch(SettingsUrlConfig.BACKEND_API.BASE);
- if (res.data) setForm(res.data);
- } catch (e: any) {
- toast.error(e.message);
+ const res = await apiFetch<{ data?: Record<string, unknown>; message?: string }>(SettingsUrlConfig.BACKEND_API.BASE);
+ if (res.data) setForm(res.data as typeof form);
+ } catch (e: unknown) {
+ toast.error(e instanceof Error ? e.message : String(e));
  } finally {
  setLoading(false);
  }
@@ -32,13 +31,13 @@ export function useSettingsLogic(): SettingsContextType {
  const handleSave = useCallback(async () => {
  setSaving(true);
  try {
- const res: any = await apiFetch(SettingsUrlConfig.BACKEND_API.BASE, {
+ const res = await apiFetch<{ message?: string }>(SettingsUrlConfig.BACKEND_API.BASE, {
  method: 'POST',
  body: JSON.stringify(form)
  });
- toast.success(res.message);
- } catch (e: any) {
- toast.error(e.message);
+ toast.success(res.message || 'Saved');
+ } catch (e: unknown) {
+ toast.error(e instanceof Error ? e.message : String(e));
  } finally {
  setSaving(false);
  }

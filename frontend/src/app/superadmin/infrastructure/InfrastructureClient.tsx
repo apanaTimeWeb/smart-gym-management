@@ -15,8 +15,8 @@ export default function InfrastructureClient() {
     try {
       const res = await superadminApi.infrastructure.getAll();
       setNodes(res.data || []);
-    } catch (e: any) {
-      toast.error('Failed to load infrastructure metrics');
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : String(e));
     } finally {
       setIsLoading(false);
     }

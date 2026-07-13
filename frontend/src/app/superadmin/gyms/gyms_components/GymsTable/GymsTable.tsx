@@ -42,13 +42,13 @@ export default function GymsTable() {
       <table className="w-full text-left border-collapse">
         <thead>
           <tr className="bg-primary/10 border-b border-border text-secondary text-sm">
-            <th className="p-4 font-semibold uppercase text-[12px] tracking-wider w-48">Gym Name</th>
-            <th className="p-4 font-semibold uppercase text-[12px] tracking-wider min-w-[150px]">Owner</th>
-            <th className="p-4 font-semibold uppercase text-[12px] tracking-wider w-32">Plan</th>
-            <th className="p-4 font-semibold uppercase text-[12px] tracking-wider text-right w-24">Members</th>
-            <th className="p-4 font-semibold uppercase text-[12px] tracking-wider text-right w-32">MRR</th>
-            <th className="p-4 font-semibold uppercase text-[12px] tracking-wider text-center w-32">Status</th>
-            <th className="p-4 font-semibold uppercase text-[12px] tracking-wider text-right w-40">Actions</th>
+            <th className="p-4 font-semibold uppercase text-xs tracking-wider w-48">Gym Name</th>
+            <th className="p-4 font-semibold uppercase text-xs tracking-wider min-w-40">Owner</th>
+            <th className="p-4 font-semibold uppercase text-xs tracking-wider w-32">Plan</th>
+            <th className="p-4 font-semibold uppercase text-xs tracking-wider text-right w-24">Members</th>
+            <th className="p-4 font-semibold uppercase text-xs tracking-wider text-right w-32">MRR</th>
+            <th className="p-4 font-semibold uppercase text-xs tracking-wider text-center w-32">Status</th>
+            <th className="p-4 font-semibold uppercase text-xs tracking-wider text-right w-40">Actions</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-border">
@@ -70,7 +70,7 @@ export default function GymsTable() {
                   <p className="text-xs text-disabled mt-1 truncate" title={gym.adminEmail}>{gym.adminEmail}</p>
                 </td>
                 <td className="px-4 py-4">
-                  <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide
+                  <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold tracking-wide
                     ${
                       gym.plan?.toUpperCase() === 'ENTERPRISE' ? 'bg-purple-bg text-purple border border-purple' : 
                       gym.plan?.toUpperCase() === 'PRO' ? 'bg-primary-subtle text-primary border border-primary' : 
@@ -90,15 +90,15 @@ export default function GymsTable() {
                 <td className="p-4">
                   <div className="flex justify-center">
                     {gym.status === 'ACTIVE' ? (
-                      <span className="flex items-center gap-1 text-success text-[11px] font-semibold bg-success-bg px-2.5 py-1 rounded-full border border-success/20">
+                      <span className="flex items-center gap-1 text-success text-xs font-semibold bg-success-bg px-2.5 py-1 rounded-full border border-success/20">
                         <CheckCircle2 className="w-3 h-3" /> Active
                       </span>
                     ) : gym.status === 'SUSPENDED' ? (
-                      <span className="flex items-center gap-1 text-destructive text-[11px] font-semibold bg-danger-bg px-2.5 py-1 rounded-full border border-destructive/20">
+                      <span className="flex items-center gap-1 text-destructive text-xs font-semibold bg-danger-bg px-2.5 py-1 rounded-full border border-destructive/20">
                         <Ban className="w-3 h-3" /> Suspended
                       </span>
                     ) : (
-                      <span className="text-secondary text-[11px] font-semibold bg-input px-2.5 py-1 rounded-full border border-border">{gym.status}</span>
+                      <span className="text-secondary text-xs font-semibold bg-input px-2.5 py-1 rounded-full border border-border">{gym.status}</span>
                     )}
                   </div>
                 </td>
@@ -169,8 +169,8 @@ export default function GymsTable() {
                   <div className="bg-card p-4 rounded-full border border-border mb-3">
                     <Ban className="w-8 h-8 opacity-50" />
                   </div>
-                  <h3 className="text-[16px] font-medium text-foreground">No gyms found</h3>
-                  <p className="text-[13px] mt-1 max-w-sm">We couldn't find any gyms matching your current search. Try adjusting your filters.</p>
+                  <h3 className="text-base font-medium text-foreground">No gyms found</h3>
+                  <p className="text-sm mt-1 max-w-sm">We couldn't find any gyms matching your current search. Try adjusting your filters.</p>
                 </div>
               </td>
             </tr>

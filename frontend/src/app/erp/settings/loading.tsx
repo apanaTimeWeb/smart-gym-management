@@ -10,7 +10,7 @@ export default function Loading() {
  ))}
  </div>
 
- <div className="h-[400px] bg-card rounded-xl animate-pulse mt-6"></div>
+ <div className="h-96 bg-card rounded-xl animate-pulse mt-6"></div>
  </div>
  );
 }

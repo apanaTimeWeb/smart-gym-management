@@ -47,8 +47,8 @@ export const useBroadcastsPage = () => {
         (() => superadminApi.broadcasts.update(editingId, payload)) as any,
         {
           successMessage: 'Broadcast updated successfully',
-          onSuccess: (res) => {
-            setBroadcasts(prev => prev.map(b => b.id === editingId ? res.data : b));
+          onSuccess: (res: any) => {
+            setBroadcasts(prev => prev.map(b => b.id === editingId ? (res as { data?: unknown })?.data : b));
             setIsModalOpen(false);
             setEditingId(null);
             form.reset();
@@ -60,8 +60,8 @@ export const useBroadcastsPage = () => {
         (() => superadminApi.broadcasts.create(payload)) as any,
         {
           successMessage: 'Broadcast created successfully',
-          onSuccess: (res) => {
-            setBroadcasts(prev => [res.data, ...prev]);
+          onSuccess: (res: any) => {
+            setBroadcasts(prev => [(res as { data?: unknown })?.data, ...prev]);
             setIsModalOpen(false);
             form.reset();
           }
@@ -89,8 +89,8 @@ export const useBroadcastsPage = () => {
       (() => superadminApi.broadcasts.send(id)) as any,
       {
         successMessage: 'Broadcast sent successfully',
-        onSuccess: (res) => {
-          setBroadcasts(prev => prev.map(b => b.id === id ? res.data : b));
+        onSuccess: (res: any) => {
+          setBroadcasts(prev => prev.map(b => b.id === id ? (res as { data?: unknown })?.data : b));
         }
       }
     );

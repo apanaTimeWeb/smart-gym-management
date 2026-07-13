@@ -95,8 +95,8 @@ export const useGymsStore = create<GymsState>((set, get) => ({
     try {
       const response = await superadminApi.gyms.getAll(searchQuery ? { search: searchQuery } : undefined);
       set({ gyms: response.data, fetchState: 'success' });
-    } catch (error: any) {
-      const errMsg = error?.response?.data?.message || error.message || 'Failed to fetch gyms';
+    } catch (error: unknown) {
+      const errMsg = error instanceof Error ? error.message : String(error) || 'Failed to fetch gyms';
       set({ error: errMsg, fetchState: 'error' });
       toast.error(errMsg);
     }
@@ -118,14 +118,14 @@ export const useGymsStore = create<GymsState>((set, get) => ({
     set({ actionLoadingId: id });
     try {
       const response = await superadminApi.gyms.changeStatus(id, newStatus);
-      toast.success((response as any)?.message || `${name} is now ${newStatus}.`);
+      toast.success((response as { message?: string })?.message || `${name} is now ${newStatus}.`);
       
       const { gyms } = get();
       if (gyms) {
         set({ gyms: gyms.map(gym => gym.id === id ? { ...gym, status: newStatus as any } : gym) });
       }
-    } catch (error: any) {
-      const errMsg = error?.response?.data?.message || error.message || `Failed to update status for ${name}`;
+    } catch (error: unknown) {
+      const errMsg = error instanceof Error ? error.message : String(error) || `Failed to update status for ${name}`;
       toast.error(errMsg);
     } finally {
       set({ actionLoadingId: null });
@@ -136,15 +136,15 @@ export const useGymsStore = create<GymsState>((set, get) => ({
     set({ actionLoadingId: id });
     try {
       const response = await superadminApi.gyms.remove(id);
-      toast.success((response as any)?.message || `Tenant deleted successfully.`);
+      toast.success((response as { message?: string })?.message || `Tenant deleted successfully.`);
       
       const { gyms } = get();
       if (gyms) {
         set({ gyms: gyms.filter(gym => gym.id !== id) });
       }
       get().closeDeleteModal();
-    } catch (error: any) {
-      const errMsg = error?.response?.data?.message || error.message || `Failed to delete tenant`;
+    } catch (error: unknown) {
+      const errMsg = error instanceof Error ? error.message : String(error) || `Failed to delete tenant`;
       toast.error(errMsg);
     } finally {
       set({ actionLoadingId: null });
@@ -155,15 +155,15 @@ export const useGymsStore = create<GymsState>((set, get) => ({
     set({ actionLoadingId: id });
     try {
       const response = await superadminApi.gyms.update(id, data);
-      toast.success((response as any)?.message || `Gym details updated successfully.`);
+      toast.success((response as { message?: string })?.message || `Gym details updated successfully.`);
       
       const { gyms } = get();
       if (gyms) {
         set({ gyms: gyms.map(gym => gym.id === id ? { ...gym, ...(data as Partial<Tenant>) } : gym) });
       }
       get().closeEditModal();
-    } catch (error: any) {
-      const errMsg = error?.response?.data?.message || error.message || `Failed to update gym details.`;
+    } catch (error: unknown) {
+      const errMsg = error instanceof Error ? error.message : String(error) || `Failed to update gym details.`;
       toast.error(errMsg);
     } finally {
       set({ actionLoadingId: null });
@@ -177,10 +177,10 @@ export const useGymsStore = create<GymsState>((set, get) => ({
         method: 'POST',
         body: JSON.stringify(data)
       });
-      toast.success((response as any)?.message || `Email sent successfully.`);
+      toast.success((response as { message?: string })?.message || `Email sent successfully.`);
       get().closeEmailModal();
-    } catch (error: any) {
-      const errMsg = error?.response?.data?.message || error.message || `Failed to send email.`;
+    } catch (error: unknown) {
+      const errMsg = error instanceof Error ? error.message : String(error) || `Failed to send email.`;
       toast.error(errMsg);
     } finally {
       set({ actionLoadingId: null });

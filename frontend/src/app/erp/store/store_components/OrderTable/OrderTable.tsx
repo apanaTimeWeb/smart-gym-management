@@ -27,12 +27,12 @@ export default function OrderTable() {
   }
 
   return (
-    <div className="flex flex-col h-full min-h-[400px]">
+    <div className="flex flex-col h-full min-h-96">
       {/* Filter and Sort Bar */}
       <div className="flex flex-col sm:flex-row gap-4 justify-between items-center bg-card p-4 rounded-xl border border-border mb-4">
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <div className="flex flex-col">
-            <label className="text-[10px] text-secondary uppercase font-semibold mb-1">Start Date</label>
+            <label className="text-xs text-secondary uppercase font-semibold mb-1">Start Date</label>
             <input 
               type="date" 
               value={startDate} 
@@ -41,7 +41,7 @@ export default function OrderTable() {
             />
           </div>
           <div className="flex flex-col">
-            <label className="text-[10px] text-secondary uppercase font-semibold mb-1">End Date</label>
+            <label className="text-xs text-secondary uppercase font-semibold mb-1">End Date</label>
             <input 
               type="date" 
               value={endDate} 
@@ -51,7 +51,7 @@ export default function OrderTable() {
           </div>
         </div>
         <div className="flex flex-col w-full sm:w-auto">
-          <label className="text-[10px] text-secondary uppercase font-semibold mb-1">Sort By Date</label>
+          <label className="text-xs text-secondary uppercase font-semibold mb-1">Sort By Date</label>
           <SearchableDropdown
             value={sortOrder}
             onChange={(val) => setSortOrder(String(val) as 'ASC' | 'DESC')}

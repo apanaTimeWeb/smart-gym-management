@@ -98,14 +98,14 @@ export function useHrLogic(): HrContextType {
    setShowPayrollModal(true);
  }, []);
 
- const savePayroll = useCallback(async (data: any) => {
-   setSaving(true);
-   try {
-     const payload = { ...data, amount: Number(data.amount), status: 'DUE' };
-     const res = await hrApi.createPayroll(payload);
-     showToast((res as any).message, 'success');
-     setShowPayrollModal(false);
-     await loadAll();
+  const savePayroll = useCallback(async (data: Record<string, unknown>) => {
+    setSaving(true);
+    try {
+      const payload = { ...data, amount: Number(data.amount), status: 'DUE' };
+      const res = await hrApi.createPayroll(payload);
+      showToast((res as { message?: string }).message || 'Success', 'success');
+      setShowPayrollModal(false);
+      await loadAll();
    } catch (err) {
      showToast((err as Error).message, 'error');
    } finally {

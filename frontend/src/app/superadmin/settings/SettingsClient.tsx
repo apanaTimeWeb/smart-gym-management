@@ -19,8 +19,8 @@ export default function SettingsClient() {
     try {
       const res = await superadminApi.settings.getAll();
       setSettings(res.data || []);
-    } catch (e: any) {
-      toast.error('Failed to load settings');
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : String(e));
     } finally {
       setIsLoading(false);
     }

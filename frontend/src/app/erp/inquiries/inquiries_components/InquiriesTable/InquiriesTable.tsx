@@ -30,7 +30,7 @@ export default function InquiriesTable() {
   }
 
   return (
-    <div className="rounded-xl shadow-sm border overflow-hidden flex flex-col h-full min-h-[400px] inquiries-module" style={{ backgroundColor: 'var(--inquiries-bg-card)', borderColor: 'var(--inquiries-border)' }}>
+    <div className="rounded-xl shadow-sm border overflow-hidden flex flex-col h-full min-h-96 inquiries-module" style={{ backgroundColor: 'var(--inquiries-bg-card)', borderColor: 'var(--inquiries-border)' }}>
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead style={{ backgroundColor: 'var(--inquiries-bg-input)' }}>

@@ -22,7 +22,7 @@ export default function PayrollTable() {
   const currentData = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   return (
-    <div className="flex flex-col h-full min-h-[400px]">
+    <div className="flex flex-col h-full min-h-96">
       <div className="overflow-x-auto hr-module flex-1">
         <table className="w-full">
           <thead style={{ backgroundColor: 'var(--hr-bg-input)' }}>

@@ -14,7 +14,7 @@ export default function ExerciseTable() {
   const totalPages = Math.ceil(totalExercises / ITEMS_PER_PAGE) || 1;
 
   return (
-    <div className="flex flex-col h-full min-h-[400px]">
+    <div className="flex flex-col h-full min-h-96">
       <div className="overflow-x-auto flex-1">
         <table className="w-full">
           <thead className="bg-muted">

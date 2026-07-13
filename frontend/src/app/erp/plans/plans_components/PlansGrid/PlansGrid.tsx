@@ -33,7 +33,7 @@ export default function PlansGrid() {
   }
 
   return (
-    <div className="flex flex-col h-full min-h-[400px]">
+    <div className="flex flex-col h-full min-h-96">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1">
         {currentData.map((p, i) => (
           <div 
@@ -43,7 +43,7 @@ export default function PlansGrid() {
             }`}
           >
             {i === 1 && (
-              <div className="bg-warning text-white text-[10px] font-bold uppercase tracking-wider text-center py-1 absolute top-0 w-full left-0">
+              <div className="bg-warning text-white text-xs font-bold uppercase tracking-wider text-center py-1 absolute top-0 w-full left-0">
                 Most Popular
               </div>
             )}

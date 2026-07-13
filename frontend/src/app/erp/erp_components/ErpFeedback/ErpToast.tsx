@@ -28,7 +28,7 @@ export default function ErpToast({ message, type, onClose }: ErpToastProps) {
 
  return (
  <div
- className="fixed bottom-6 right-6 z-[9999] flex items-center gap-3 w-80 p-4 rounded-xl shadow-2xl bg-card text-foreground"
+ className="fixed bottom-6 right-6 z-50 flex items-center gap-3 w-80 p-4 rounded-xl shadow-2xl bg-card text-foreground"
  style={{ 
  borderLeft: `4px solid ${border}`,
  animation: 'toastIn 0.3s ease-out forwards'

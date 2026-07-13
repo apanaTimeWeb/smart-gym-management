@@ -36,7 +36,7 @@ export default function ProductGrid() {
   }
 
   return (
-    <div className="flex flex-col h-full min-h-[400px]">
+    <div className="flex flex-col h-full min-h-96">
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 flex-1 content-start">
         {currentData.map(p => (
           <div 

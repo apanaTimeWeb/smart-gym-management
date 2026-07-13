@@ -41,7 +41,7 @@ export default function SalesOverview() {
  
  <div className="bg-card p-5 rounded-xl border border-border shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-none">
  <h3 className="font-bold text-foreground mb-4">New Members Trend</h3>
- <div className="h-[250px] w-full">
+ <div className="h-64 w-full">
   <ResponsiveContainer width="100%" height="100%">
     <AreaChart data={overviewData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
       <defs>

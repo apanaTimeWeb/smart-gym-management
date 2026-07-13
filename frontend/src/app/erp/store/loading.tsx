@@ -7,12 +7,12 @@ export default function Loading() {
  {/* KPI Skeletons */}
  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
  {[1, 2, 3, 4].map(i => (
- <div key={i} className="h-[90px] bg-card rounded-xl animate-pulse"></div>
+ <div key={i} className="h-24 bg-card rounded-xl animate-pulse"></div>
  ))}
  </div>
 
  {/* Main Content Skeleton */}
- <div className="h-[500px] bg-card rounded-xl animate-pulse mt-6"></div>
+ <div className="h-[32rem] bg-card rounded-xl animate-pulse mt-6"></div>
  </div>
  );
 }

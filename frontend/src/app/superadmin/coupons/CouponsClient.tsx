@@ -133,7 +133,7 @@ export default function CouponsClient() {
                 >
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-foreground tracking-wide">
                     {cpn.code}
-                    {cpn.isDeleted && <span className="ml-2 text-[10px] bg-destructive/20 text-destructive px-2 py-0.5 rounded-full">DELETED</span>}
+                    {cpn.isDeleted && <span className="ml-2 text-xs bg-destructive/20 text-destructive px-2 py-0.5 rounded-full">DELETED</span>}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary">
                     {cpn.discountType === 'PERCENTAGE' ? (

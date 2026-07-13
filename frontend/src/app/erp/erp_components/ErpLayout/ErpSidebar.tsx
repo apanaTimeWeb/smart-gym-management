@@ -63,7 +63,7 @@ export default function ErpSidebar({ isCollapsed, setIsCollapsed }: ErpSidebarPr
  {(!isCollapsed || isMobileOpen) && (
  <div className="whitespace-nowrap transition-opacity duration-300 flex flex-col">
  <span className="text-foreground font-bold text-lg leading-tight tracking-tight">GymSmart</span>
- <span className="text-[10px] text-warning font-bold uppercase tracking-wider -mt-0.5">ERP System</span>
+ <span className="text-xs text-warning font-bold uppercase tracking-wider -mt-0.5">ERP System</span>
  </div>
  )}
  </div>

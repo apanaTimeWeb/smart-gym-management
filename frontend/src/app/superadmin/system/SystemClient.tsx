@@ -26,8 +26,8 @@ export default function SystemClient() {
         // The global audit log service returns { globalLogs: [] } or just the array
         const logs = auditRes.data?.globalLogs || auditRes.data || [];
         setAuditLogs(Array.isArray(logs) ? logs : []);
-      } catch (error: any) {
-        toast.error('Failed to load system data');
+      } catch (error: unknown) {
+        toast.error(error instanceof Error ? error.message : String(error));
       } finally {
         setIsLoading(false);
       }

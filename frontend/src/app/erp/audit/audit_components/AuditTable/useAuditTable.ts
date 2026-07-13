@@ -30,8 +30,8 @@ export const useAuditTable = () => {
       
       setLogs(data.data || []);
       setTotalCount(data.meta?.total || 0);
-    } catch (err: any) {
-      setError(err.message || 'An unknown error occurred');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
     }

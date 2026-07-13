@@ -26,8 +26,8 @@ export const SuperadminAffiliateModal: React.FC<SuperadminAffiliateModalProps> =
   const { register, handleSubmit, formState: { errors } } = form;
 
   return (
-    <div className="fixed inset-0 bg-black/60 z-[1000] flex items-center justify-center p-4 backdrop-blur-sm">
-      <div className="bg-card border border-border rounded-2xl w-full max-w-[480px] shadow-xl overflow-hidden flex flex-col">
+    <div className="fixed inset-0 bg-black/60 z-40 flex items-center justify-center p-4 backdrop-blur-sm">
+      <div className="bg-card border border-border rounded-2xl w-full max-w-md shadow-xl overflow-hidden flex flex-col">
         <div className="flex items-center justify-between px-7 py-5 border-b border-border">
           <h2 className="text-lg font-bold text-foreground">
             {isEdit ? 'Edit Affiliate Partner' : 'Add Affiliate Partner'}

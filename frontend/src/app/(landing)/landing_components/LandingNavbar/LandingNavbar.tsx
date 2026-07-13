@@ -19,7 +19,7 @@ export default function LandingNavbar() {
           <Image src="/logo.png" alt="GymSmart" width={40} height={40} className="rounded-lg object-cover" />
           <div>
             <span className="font-bold text-lg text-white tracking-tight">GymSmart</span>
-            <span className="text-[10px] text-warning block -mt-1 tracking-widest uppercase">Fitness ERP</span>
+            <span className="text-xs text-warning block -mt-1 tracking-widest uppercase">Fitness ERP</span>
           </div>
         </div>
 

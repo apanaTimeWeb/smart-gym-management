@@ -20,8 +20,8 @@ export default function GymEmailModal() {
   if (!isEmailModalOpen || !selectedGym) return null;
 
   return (
-    <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/60 p-4">
-      <div className="bg-card rounded-2xl p-7 max-w-[480px] w-full border border-border shadow-2xl relative">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 p-4">
+      <div className="bg-card rounded-2xl p-7 max-w-md w-full border border-border shadow-2xl relative">
         <button
           onClick={closeEmailModal}
           className="absolute top-5 right-5 text-secondary hover:text-foreground transition-colors"
@@ -38,7 +38,7 @@ export default function GymEmailModal() {
             <input
               type="text"
               {...register('subject')}
-              className="w-full bg-input border border-border rounded-lg px-[14px] py-[10px] text-sm text-foreground focus:border-border-focus focus:outline-none transition-colors"
+              className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-border-focus focus:outline-none transition-colors"
               placeholder="e.g., Important update about your subscription"
             />
             {errors.subject && <p className="text-xs text-destructive mt-1">{errors.subject.message}</p>}
@@ -49,7 +49,7 @@ export default function GymEmailModal() {
             <textarea
               {...register('message')}
               rows={5}
-              className="w-full bg-input border border-border rounded-lg px-[14px] py-[10px] text-sm text-foreground focus:border-border-focus focus:outline-none transition-colors resize-none"
+              className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-border-focus focus:outline-none transition-colors resize-none"
               placeholder="Type your message here..."
             />
             {errors.message && <p className="text-xs text-destructive mt-1">{errors.message.message}</p>}

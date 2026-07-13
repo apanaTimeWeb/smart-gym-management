@@ -59,7 +59,7 @@ if (loading) return <div className="p-8 text-center text-disabled">Loading...</d
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse min-w-[800px]">
+          <table className="w-full text-left border-collapse min-w-[48rem]">
             <thead>
               <tr className="bg-header border-b border-border text-sm">
                 <th className="p-4 font-semibold text-secondary">Ticket ID</th>

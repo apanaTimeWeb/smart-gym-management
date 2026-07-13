@@ -59,10 +59,10 @@ export function PlansProvider({ children }: { children: React.ReactNode }) {
         return [...prevPlans, newPlan];
       });
 
-      toast.success('Subscription plan created successfully!');
+      toast.success((res as Record<string, unknown>)?.message as string || 'Plan created');
       closeCreateModal();
-    } catch (err: any) {
-      toast.error('Failed to create subscription plan.');
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : String(err));
       throw err;
     }
   }, [mutate, closeCreateModal]);
@@ -81,10 +81,10 @@ export function PlansProvider({ children }: { children: React.ReactNode }) {
         return prevPlans.map(p => p.id === id ? { ...p, ...updatedPlan } : p);
       });
 
-      toast.success('Subscription plan updated successfully!');
+      toast.success((res as Record<string, unknown>)?.message as string || 'Plan updated');
       closeEditModal();
-    } catch (err: any) {
-      toast.error('Failed to update subscription plan.');
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : String(err));
       throw err;
     }
   }, [mutate, closeEditModal]);
@@ -100,9 +100,9 @@ export function PlansProvider({ children }: { children: React.ReactNode }) {
         return prevPlans.filter(p => p.id !== id);
       });
 
-      toast.success('Subscription plan deleted successfully!');
-    } catch (err: any) {
-      toast.error('Failed to delete subscription plan.');
+      toast.success((res as Record<string, unknown>)?.message as string || 'Plan deleted');
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : String(err));
       throw err;
     }
   }, [mutate]);

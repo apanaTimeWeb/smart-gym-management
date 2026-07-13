@@ -16,7 +16,7 @@ export default function ErpThermalReceipt({ data }: { data: ErpReceiptData | nul
  if (!data) return null;
 
  return (
- <div id="thermal-receipt" className="hidden print:block absolute top-0 left-0 w-[80mm] p-4 bg-white text-black font-mono text-sm leading-snug z-[99999] break-words">
+ <div id="thermal-receipt" className="hidden print:block absolute top-0 left-0 w-80 p-4 bg-white text-black font-mono text-sm leading-snug z-50 break-words">
  <div className="text-center border-b-2 border-black pb-3 mb-3">
  <h2 className="font-bold text-xl uppercase tracking-wider">{data.gymName}</h2>
  <p className="text-sm">Ph: {data.gymPhone}</p>

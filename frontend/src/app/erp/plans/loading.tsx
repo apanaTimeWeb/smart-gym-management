@@ -8,7 +8,7 @@ export default function Loading() {
  
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
  {[1, 2, 3].map(i => (
- <div key={i} className="h-[400px] bg-card rounded-2xl animate-pulse"></div>
+ <div key={i} className="h-96 bg-card rounded-2xl animate-pulse"></div>
  ))}
  </div>
  </div>
