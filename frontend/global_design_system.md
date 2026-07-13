@@ -369,4 +369,23 @@ To ensure the application feels like a world-class, premium SaaS, **every develo
 
 ---
 
+## 13. ENTERPRISE UX SAFEGUARDS & ACCESSIBILITY
+
+To guarantee stability, safety, and compliance in an ERP environment, these rules are mandatory:
+
+1. **Data Overflow Strategy (Truncation + Tooltips):**
+   - **The Problem:** Unpredictably long user inputs (e.g., a 100-character email) will stretch and break responsive table and card layouts.
+   - **The Rule:** Any dynamic text inside a constrained container MUST use Tailwind's `truncate` class. Whenever text is truncated, you MUST wrap it in a Tooltip component so the user can hover to read the full value.
+
+2. **Irreversible Action Safeguards ("Type-to-Confirm"):**
+   - **The Problem:** Standard confirmation modals are too easy to accidentally click through for catastrophic actions (like "Delete Entire Branch" or "Purge Financial Records").
+   - **The Rule:** For highly destructive and irreversible actions, the modal MUST require the user to manually type a confirmation phrase (e.g., `Please type "DELETE" to confirm`) into an input field before the Danger button is enabled.
+
+3. **Enterprise Accessibility (WCAG Focus Rings):**
+   - **The Problem:** Default browser focus outlines (when users navigate via the `Tab` key) are often inconsistent or invisible in dark mode, failing WCAG accessibility standards.
+   - **The Rule:** Never rely on default outlines. All interactive elements (Inputs, Buttons, Links, Dropdown Items) MUST explicitly define a `focus-visible` state that matches the design system.
+   - **Snippet:** `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-page)]`
+
+---
+
 *END OF GLOBAL DESIGN SYSTEM — Paste this block before every module you give to Stitch.*
