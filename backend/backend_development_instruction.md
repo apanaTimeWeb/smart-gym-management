@@ -372,6 +372,50 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 
 ---
 
+## 44. Centralized API Rate Limit Tiers
+* **The Rule:** Define distinct rate-limit tiers in a centralized `rate-limit.config.ts`. (e.g., Public Auth: 5 req/min, Authenticated Read: 100 req/min, Export: 2 req/min). Never hardcode rate limits inside controllers.
+
+## 45. Webhook Signature Verification
+* **The Rule:** All inbound webhooks (e.g., Payment gateways) MUST verify the cryptographic signature (HMAC-SHA256) before processing. Furthermore, check timestamps to prevent replay attacks.
+
+## 46. Strict Input Sanitization Layer
+* **The Rule:** Beyond validation, inputs must be sanitized. Strip HTML/script tags from free-text fields. Strip leading/trailing whitespaces. Normalize emails (lowercase) and phone numbers to canonical formats before saving.
+
+## 47. Circuit Breaker Pattern for External Services
+* **The Rule:** External adapters (WhatsApp, SMS, Payments) MUST be wrapped in a Circuit Breaker. If the external service fails repeatedly, the breaker opens, rejecting requests instantly with a `503` to prevent thread pool exhaustion, triggering a defined fallback queue.
+
+## 48. CQRS Lite (Query vs Command Controllers)
+* **The Rule:** Read operations (GET) and Write operations (POST/PATCH/DELETE) must be split into separate controllers (e.g., `[module]-query.controller.ts` and `[module]-command.controller.ts`). This guarantees AI never accidentally touches mutation logic when fixing a read query.
+
+## 49. Explicit Module Dependency Graph
+* **The Rule:** Every module must have a `[module]_dependencies.md` detailing which other modules it depends on, and which modules depend on it. This maps downstream impact instantly.
+
+## 50. Standardized Event Naming Convention
+* **The Rule:** Event names MUST follow `DOMAIN.ENTITY.ACTION` in SCREAMING_SNAKE_CASE (e.g., `BILLING.PAYMENT.FAILED`) and be registered in a centralized `event-registry.constants.ts`.
+
+## 51. API Changelog & Deprecation Policy
+* **The Rule:** When an endpoint changes destructively, do not delete it immediately. Return a `Deprecation` header with a sunset date, track it in `CHANGELOG.md`, and maintain it for the deprecation window.
+
+## 52. JWT Refresh Token Rotation & Revocation
+* **The Rule:** Access tokens must be short-lived. Refresh tokens must be stored in HttpOnly cookies. On every refresh, the old token must be rotated/invalidated. A Redis denylist must exist for immediate manual revocation.
+
+## 53. Sensitive Field Encryption at Rest
+* **The Rule:** Aadhaar numbers, bank accounts, and medical notes MUST be encrypted at the application layer (AES-256) before hitting the DB. Use an `@Encrypted` decorator or EncryptionService. Hash is not enough.
+
+## 54. Brute Force & Account Lockout Policy
+* **The Rule:** After 5 failed login attempts, the account is temporarily locked via Redis. Lockout state must be logged in the audit trail.
+
+## 55. Deterministic Seed Data Strategy
+* **The Rule:** Every module must have a co-located `[module].seeder.ts` that is deterministic and idempotent. A master seed script orchestrates them in dependency order for local testing.
+
+## 56. Strict Null Safety in Repository Returns
+* **The Rule:** Repositories must correctly type `findById()` as returning `Entity | null`. AI must use a dedicated `findByIdOrThrow()` method to ensure null exceptions are handled defensively.
+
+## 57. Request Context Propagation (AsyncLocalStorage)
+* **The Rule:** Use Node's `AsyncLocalStorage` to store context (tenant_id, user_id, trace_id) at the request boundary. Deep services/repositories must pull from this context rather than prop-drilling parameters through 5 layers of functions.
+
+---
+
 ## Updated Summary Checklist (v2):
 1. Identify the exact layer (Validation? Query? Business Logic? External Adapter?).
 2. Select the **one or two** micro-files associated with that layer.
