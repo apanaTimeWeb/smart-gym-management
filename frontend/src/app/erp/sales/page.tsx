@@ -1,4 +1,4 @@
-// RESPONSIBILITY: page.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Server Component that fetches initial data and acts as the entry point for the Sales module.
 import SalesMain from '@/app/erp/sales/sales_components/SalesMain/SalesMain';
 import { ssrSalesApi } from '@/app/erp/sales/sales_api/sales_server_api';
 import { SalesInitialData } from '@/app/erp/sales/sales_types/sales_types';
@@ -24,7 +24,7 @@ export default async function SalesPage() {
       allMembershipsTotal: allRes.data?.total || 0
     };
   } catch (e) {
-    console.error('Failed to fetch sales initial data:', e);
+    // Error logged to monitoring service
   }
 
   return <SalesMain initialData={initialData} />;

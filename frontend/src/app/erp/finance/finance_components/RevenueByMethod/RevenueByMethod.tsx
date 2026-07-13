@@ -1,4 +1,4 @@
-// RESPONSIBILITY: RevenueByMethod.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Provides the implementation for RevenueByMethod.tsx functionality within its module.
 "use client";
 
 import { useFinanceContext } from '@/app/erp/finance/finance_context/FinanceContext';

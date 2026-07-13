@@ -1,4 +1,4 @@
-// RESPONSIBILITY: PlansSharedConstants.ts handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Provides the implementation for PlansSharedConstants.ts functionality within its module.
 import { z } from 'zod';
 
 export const TIERS = ['BASIC', 'GOLD', 'PREMIUM'];

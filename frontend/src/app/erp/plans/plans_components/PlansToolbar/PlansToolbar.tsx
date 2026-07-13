@@ -1,4 +1,4 @@
-// RESPONSIBILITY: PlansToolbar.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Provides the implementation for PlansToolbar.tsx functionality within its module.
 "use client";
 
 import { RefreshCw, Plus, Search } from 'lucide-react';

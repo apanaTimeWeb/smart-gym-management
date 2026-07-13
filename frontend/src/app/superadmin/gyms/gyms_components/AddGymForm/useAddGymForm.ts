@@ -77,11 +77,11 @@ export function useAddGymForm() {
       addLog('Provisioning complete! Redirecting...');
       await new Promise(r => setTimeout(r, 500));
 
-      toast.success((response as { message?: string })?.message || 'Tenant database provisioned successfully!');
+      toast.success((response as { message: string }).message);
       router.push(SuperadminUrlConfig.PAGES.GYMS_LIST);
-    } catch (e: unknown) {
-      const errMsg = e instanceof Error ? e.message : String(e) || 'Failed to provision tenant';
-      toast.error(errMsg);
+    } catch (e: any) {
+      const errMsg = e.message || 'An error occurred';
+      // Note: error toast is handled globally in api.ts interceptor
       addLog(`Error: ${errMsg}`);
     } finally {
       setIsProvisioning(false);

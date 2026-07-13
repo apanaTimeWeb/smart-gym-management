@@ -1,4 +1,4 @@
-// RESPONSIBILITY: page.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Server Component that acts as the entry point for the Audit module.
 import React from 'react';
 import AuditMain from '@/app/erp/audit/audit_components/AuditMain/AuditMain';
 

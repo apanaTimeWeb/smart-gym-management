@@ -1,4 +1,4 @@
-// RESPONSIBILITY: SalesOverview.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Provides the implementation for SalesOverview.tsx functionality within its module.
 "use client";
 
 import { useSalesContext } from '@/app/erp/sales/sales_context/SalesContext';

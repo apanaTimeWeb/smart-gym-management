@@ -1,4 +1,4 @@
-// RESPONSIBILITY: usePlansLogic.ts handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Provides the implementation for usePlansLogic.ts functionality within its module.
 import { useState, useCallback, useEffect } from 'react';
 import { plansApi } from '@/app/erp/plans/plans_api/plans_api';
 import type { Plan } from '@/app/erp/plans/plans_types/plans_types';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: PlansGrid.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Provides the implementation for PlansGrid.tsx functionality within its module.
 "use client";
 
 import { Edit2, Trash2, Tag, CheckCircle, Loader2 } from 'lucide-react';

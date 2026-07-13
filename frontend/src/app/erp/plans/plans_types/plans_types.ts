@@ -1,4 +1,4 @@
-// RESPONSIBILITY: plans_types.ts handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Provides the implementation for plans_types.ts functionality within its module.
 
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import { EMPTY_PLAN_FORM } from '@/app/erp/plans/plans_utils/PlansSharedConstants';

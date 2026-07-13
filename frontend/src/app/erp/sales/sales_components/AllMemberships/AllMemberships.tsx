@@ -1,4 +1,4 @@
-// RESPONSIBILITY: AllMemberships.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Provides the implementation for AllMemberships.tsx functionality within its module.
 "use client";
 
 import { useState } from 'react';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: server-api.ts handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Provides server-side fetch wrappers to securely fetch data from the backend during Server Component rendering (SSR), automatically handling token injection.
 import { cookies } from 'next/headers';
 import { StatusCodes } from 'http-status-codes';
 

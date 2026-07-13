@@ -1,4 +1,4 @@
-// RESPONSIBILITY: PlansContext.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Provides the implementation for PlansContext.tsx functionality within its module.
 "use client";
 
 import React, { createContext, useContext } from 'react';

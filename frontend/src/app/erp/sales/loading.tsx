@@ -1,4 +1,4 @@
-// RESPONSIBILITY: loading.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Provides the implementation for loading.tsx functionality within its module.
 import { TableSkeleton } from '@/app/erp/erp_components/ErpShared/TableSkeleton';
 export default function Loading() {
  return (

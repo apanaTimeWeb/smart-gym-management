@@ -1,4 +1,4 @@
-// RESPONSIBILITY: page.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Server Component that fetches initial data and acts as the entry point for the Finance module.
 import FinanceMain from '@/app/erp/finance/finance_components/FinanceMain/FinanceMain';
 import { ssrFinanceApi } from '@/app/erp/finance/finance_api/finance_server_api';
 import { FinanceInitialData } from '@/app/erp/finance/finance_types/finance_types';

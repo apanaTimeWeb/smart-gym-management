@@ -1,4 +1,4 @@
-// RESPONSIBILITY: PlanModal.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Provides the implementation for PlanModal.tsx functionality within its module.
 "use client";
 
 import { useEffect } from 'react';

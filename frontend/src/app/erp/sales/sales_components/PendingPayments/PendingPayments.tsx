@@ -1,4 +1,4 @@
-// RESPONSIBILITY: PendingPayments.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Provides the implementation for PendingPayments.tsx functionality within its module.
 "use client";
 
 
