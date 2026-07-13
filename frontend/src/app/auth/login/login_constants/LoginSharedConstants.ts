@@ -1,9 +1,5 @@
 // RESPONSIBILITY: Centralizes all static text, asset paths, and routing paths for the Login module to avoid magic strings in components.
 export const LoginSharedConstants = {
- PATHS: {
- DASHBOARD: '/erp/dashboard',
- SET_COOKIE_API: '/api/auth/set-cookie',
- },
  ASSETS: {
  LOGO: '/logo.png',
  HERO_IMAGE: '/gym-hero.jpg',
@@ -18,4 +14,3 @@ export const LoginSharedConstants = {
  FORM_SUBTITLE: 'Enter your administrative credentials to continue',
  }
 };
-

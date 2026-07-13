@@ -3,15 +3,16 @@ import Image from 'next/image';
 import { CheckCircle2 } from 'lucide-react';
 import { LoginSharedConstants } from '@/app/auth/login/login_constants/LoginSharedConstants';
 
-export default function LoginVisual() {
+export default function LoginHeroSection() {
  return (
  <div className="hidden lg:flex lg:w-3/5 relative bg-black overflow-hidden flex-col justify-between p-12">
- <div className="absolute inset-0" style={{
- backgroundImage: `url('${LoginSharedConstants.ASSETS.HERO_IMAGE}')`,
- backgroundSize: 'cover',
- backgroundPosition: 'center',
- opacity: 0.4
- }} />
+ <Image 
+   src={LoginSharedConstants.ASSETS.HERO_IMAGE} 
+   alt="Gym Hero Background"
+   fill
+   className="object-cover opacity-40" 
+   priority
+ />
  <div className="absolute inset-0 bg-gradient-to-r from-page/90 to-transparent" />
 
  <div className="relative z-10 flex items-center gap-3">

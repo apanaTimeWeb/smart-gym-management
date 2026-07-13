@@ -1,0 +1,8 @@
+/* login.css */
+/* Minimal variables injected directly into the component. 
+ * As per rule 4, these should ideally map to tailwind.config, 
+ * but since we are encapsulating them here as per login_features.md */
+:root {
+  --login-primary: #6366F1;
+  --login-bg-page: #0F0F1A;
+}

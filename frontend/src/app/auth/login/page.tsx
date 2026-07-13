@@ -1,11 +1,13 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import LoginVisual from '@/app/auth/login/login_components/LoginVisual/LoginVisual';
-import LoginHeader from '@/app/auth/login/login_components/LoginHeader/LoginHeader';
+import LoginHeroSection from '@/app/auth/login/login_components/LoginHeroSection/LoginHeroSection';
+import LoginMobileHeader from '@/app/auth/login/login_components/LoginMobileHeader/LoginMobileHeader';
 import LoginForm from '@/app/auth/login/login_components/LoginForm/LoginForm';
-import { LoginSharedConstants } from '@/app/auth/login/login_constants/LoginSharedConstants';
+import LoginErrorBoundary from '@/app/auth/login/login_components/LoginErrorBoundary/LoginErrorBoundary';
+import { AuthUrlConfig } from '@/app/auth/auth_url_config';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import './login.css';
 
 // RESPONSIBILITY: Server Component that handles initial auth check and renders the login layout.
 export default async function Login() {
@@ -25,7 +27,7 @@ export default async function Login() {
     if (role === 'SUPERADMIN') {
       redirect(SuperadminUrlConfig.PAGES.DASHBOARD);
     } else {
-      redirect(LoginSharedConstants.PATHS.DASHBOARD);
+      redirect(AuthUrlConfig.PAGES.DASHBOARD);
     }
   }
 
@@ -34,11 +36,13 @@ export default async function Login() {
       <div className="absolute top-6 right-6 z-50">
         <ThemeToggle />
       </div>
-      <LoginVisual />
-      <div className="w-full lg:w-2/5 flex items-center justify-center p-6 sm:p-12 relative z-10 bg-page">
-        <LoginHeader />
-        <LoginForm />
-      </div>
+      <LoginErrorBoundary>
+        <LoginHeroSection />
+        <div className="w-full lg:w-2/5 flex items-center justify-center p-6 sm:p-12 relative z-10 bg-page">
+          <LoginMobileHeader />
+          <LoginForm />
+        </div>
+      </LoginErrorBoundary>
     </div>
   );
 }

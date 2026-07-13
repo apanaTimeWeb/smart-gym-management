@@ -8,7 +8,8 @@ import toast from 'react-hot-toast';
 import { authApi } from '@/app/auth/auth_api/auth_api';
 import { AuthUrlConfig } from '@/app/auth/auth_url_config';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
-import { UseLoginFormReturn, loginSchema, LoginFormData, FetchState } from '@/app/auth/login/login_types/login_types';
+import type { UseLoginFormReturn, LoginFormData, FetchState } from '@/app/auth/login/login_types/login_types';
+import { loginSchema } from '@/app/auth/login/login_types/login_types';
 
 /**
  * Hook to manage login form state, validation, and handle the authentication flow.
