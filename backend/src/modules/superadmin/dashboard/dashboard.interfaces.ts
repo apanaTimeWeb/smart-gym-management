@@ -1,10 +1,13 @@
-export interface IDashboard {
-  id: string;
-  [key: string]: any;
+export interface IDashboardKpiStats {
+  totalGyms: number;
+  activeGyms: number;
+  suspendedGyms: number;
+  trialGyms: number;
+  totalRevenue: number;
+  totalMembers: number;
 }
 
 export interface IDashboardListResponse {
-  data: IDashboard[];
-  meta: { total: number; page: number; limit: number };
+  data: IDashboardKpiStats;
   message: string;
 }

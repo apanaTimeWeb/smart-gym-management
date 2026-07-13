@@ -1,17 +1,13 @@
-// Removed SaaSPlanTier Enum
-export enum TenantStatus {
-  ACTIVE = 'ACTIVE',
-  SUSPENDED = 'SUSPENDED',
-  TRIAL = 'TRIAL',
-  CANCELLED = 'CANCELLED'
-}
+// TenantStatus is the canonical enum — imported from superadmin.constants.ts (single source of truth)
+export { TenantStatus } from '../superadmin.constants';
+
 export interface ITenant {
   id: string;
   name: string;
   ownerName: string;
   adminEmail: string;
   phone: string;
-  status: TenantStatus;
+  status: string;
   plan: string;
   createdAt: Date;
   memberCount: number;
