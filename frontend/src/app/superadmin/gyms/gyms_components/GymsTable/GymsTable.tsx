@@ -7,6 +7,7 @@ import { CheckCircle2, Ban, LogIn, PlayCircle, Edit2, Mail, Trash2, Loader2 } fr
 import { useGymsTable } from '@/app/superadmin/gyms/gyms_components/GymsTable/useGymsTable';
 import GymEditModal from '@/app/superadmin/gyms/gyms_components/GymEditModal/GymEditModal';
 import GymEmailModal from '@/app/superadmin/gyms/gyms_components/GymEmailModal/GymEmailModal';
+import GymDeleteModal from '@/app/superadmin/gyms/gyms_components/GymDeleteModal/GymDeleteModal';
 
 export default function GymsTable() {
   const {
@@ -146,7 +147,7 @@ export default function GymsTable() {
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button 
-                          onClick={(e) => onDeleteClick(e, gym.id, gym.name)}
+                          onClick={(e) => onDeleteClick(e, gym)}
                           className="p-1.5 text-secondary hover:bg-destructive/10 hover:text-destructive rounded-lg transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
                           title="Delete Gym"
                           aria-label={`Delete ${gym.name}`}
@@ -178,6 +179,7 @@ export default function GymsTable() {
       </table>
       <GymEditModal />
       <GymEmailModal />
+      <GymDeleteModal />
     </div>
   );
 }

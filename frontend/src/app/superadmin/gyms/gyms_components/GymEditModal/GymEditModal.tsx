@@ -25,8 +25,8 @@ export default function GymEditModal() {
   if (!isEditModalOpen || !selectedGym) return null;
 
   return (
-    <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/60 p-4">
-      <div className="bg-card rounded-2xl p-7 max-w-[480px] w-full border border-border shadow-2xl relative">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 p-4">
+      <div className="bg-card rounded-2xl p-7 max-w-md w-full border border-border shadow-2xl relative">
         <button
           onClick={closeEditModal}
           className="absolute top-5 right-5 text-secondary hover:text-foreground transition-colors"
@@ -43,7 +43,7 @@ export default function GymEditModal() {
             <input
               type="text"
               {...register('name')}
-              className="w-full bg-input border border-border rounded-lg px-[14px] py-[10px] text-sm text-foreground focus:border-border-focus focus:outline-none transition-colors"
+              className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-border-focus focus:outline-none transition-colors"
             />
             {errors.name && <p className="text-xs text-destructive mt-1">{errors.name.message}</p>}
           </div>
@@ -53,7 +53,7 @@ export default function GymEditModal() {
             <input
               type="text"
               {...register('ownerName')}
-              className="w-full bg-input border border-border rounded-lg px-[14px] py-[10px] text-sm text-foreground focus:border-border-focus focus:outline-none transition-colors"
+              className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-border-focus focus:outline-none transition-colors"
             />
             {errors.ownerName && <p className="text-xs text-destructive mt-1">{errors.ownerName.message}</p>}
           </div>
@@ -63,7 +63,7 @@ export default function GymEditModal() {
             <input
               type="email"
               {...register('adminEmail')}
-              className="w-full bg-input border border-border rounded-lg px-[14px] py-[10px] text-sm text-foreground focus:border-border-focus focus:outline-none transition-colors"
+              className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-border-focus focus:outline-none transition-colors"
             />
             {errors.adminEmail && <p className="text-xs text-destructive mt-1">{errors.adminEmail.message}</p>}
           </div>

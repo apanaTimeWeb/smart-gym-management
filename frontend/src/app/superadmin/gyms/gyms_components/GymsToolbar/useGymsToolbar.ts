@@ -1,5 +1,7 @@
-// RESPONSIBILITY: Manages the logic for the Gyms search toolbar, including search debouncing.
-// DATA FLOW: GymsToolbar -> useGymsToolbar -> useGymsStore -> API
+/**
+ * RESPONSIBILITY: Manages the logic for the Gyms search toolbar, including search debouncing.
+ * DATA FLOW: GymsToolbar -> useGymsToolbar -> useGymsStore -> API
+ */
 
 import { useEffect, useState, useMemo } from 'react';
 import debounce from 'lodash.debounce';

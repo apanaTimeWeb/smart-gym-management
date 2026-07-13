@@ -1,10 +1,13 @@
-// RESPONSIBILITY: Provides the logic and state for the GymsTable component by interacting with useGymsStore.
-// DATA FLOW: useGymsStore -> useGymsTable -> GymsTable
+/**
+ * RESPONSIBILITY: Provides the logic and state for the GymsTable component by interacting with useGymsStore.
+ * DATA FLOW: useGymsStore -> useGymsTable -> GymsTable
+ */
 
 import { useEffect, useMemo } from 'react';
 import toast from 'react-hot-toast';
 
 import { useGymsStore } from '@/app/superadmin/gyms/gyms_store/useGymsStore';
+import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 export function useGymsTable() {
   const gyms = useGymsStore(state => state.gyms);
@@ -16,7 +19,7 @@ export function useGymsTable() {
   
   const handleGhostLogin = useGymsStore(state => state.handleGhostLogin);
   const handleSuspend = useGymsStore(state => state.handleSuspend);
-  const handleDelete = useGymsStore(state => state.handleDelete);
+  const openDeleteModal = useGymsStore(state => state.openDeleteModal);
   const openEditModal = useGymsStore(state => state.openEditModal);
   const openEmailModal = useGymsStore(state => state.openEmailModal);
 
@@ -30,7 +33,7 @@ export function useGymsTable() {
     );
   }, [gyms, search]);
 
-  // Refetch when component mounts
+  // We only want to fetch the initial data once on mount, hence the empty dependency array.
   useEffect(() => {
     fetchGyms();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -50,9 +53,9 @@ export function useGymsTable() {
     handleSuspend(gymId, gymName, status);
   };
 
-  const onDeleteClick = (e: React.MouseEvent, gymId: string, gymName: string) => {
+  const onDeleteClick = (e: React.MouseEvent, gym: Tenant) => {
     e.stopPropagation();
-    handleDelete(gymId, gymName);
+    openDeleteModal(gym);
   };
 
   return {

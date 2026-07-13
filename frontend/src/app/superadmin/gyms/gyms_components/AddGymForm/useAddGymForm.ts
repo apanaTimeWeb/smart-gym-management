@@ -61,7 +61,7 @@ export function useAddGymForm() {
     
     try {
       addLog('Sending payload to backend...');
-      await superadminApi.gyms.create({
+      const response = await superadminApi.gyms.create({
         name: data.gymName,
         ownerName: data.ownerName,
         adminEmail: data.adminEmail,
@@ -77,11 +77,12 @@ export function useAddGymForm() {
       addLog('Provisioning complete! Redirecting...');
       await new Promise(r => setTimeout(r, 500));
 
-      toast.success('Tenant database provisioned successfully!');
+      toast.success((response as any)?.message || 'Tenant database provisioned successfully!');
       router.push(SuperadminUrlConfig.PAGES.GYMS_LIST);
     } catch (e: any) {
-      toast.error(e.message || 'Failed to provision tenant');
-      addLog(`Error: ${e.message || 'Failed to provision tenant'}`);
+      const errMsg = e?.response?.data?.message || e.message || 'Failed to provision tenant';
+      toast.error(errMsg);
+      addLog(`Error: ${errMsg}`);
     } finally {
       setIsProvisioning(false);
     }

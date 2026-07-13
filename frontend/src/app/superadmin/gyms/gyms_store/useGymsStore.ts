@@ -1,5 +1,10 @@
-// RESPONSIBILITY: Zustand store that manages all async data, UI state (modals, search), and actions for the Gyms module.
-// DATA FLOW: API (superadminApi) <-> useGymsStore.ts <-> UI Components (GymsTable, GymEditModal, etc.)
+/**
+ * RESPONSIBILITY: Zustand store that manages all async data, UI state (modals, search), and actions for the Gyms module.
+ * DATA FLOW: API (superadminApi) <-> useGymsStore.ts <-> UI Components (GymsTable, GymEditModal, etc.)
+ * 
+ * Provides centralized state management for the Superadmin Gyms (Tenants) module,
+ * ensuring UI components remain purely presentational.
+ */
 
 import { create } from 'zustand';
 import toast from 'react-hot-toast';
@@ -24,6 +29,8 @@ interface GymsState {
   selectedGym: Tenant | null;
   isEditModalOpen: boolean;
   isEmailModalOpen: boolean;
+  isDeleteModalOpen: boolean;
+  gymToDelete: Tenant | null;
 
   // Actions
   setSearch: (search: string) => void;
@@ -31,12 +38,14 @@ interface GymsState {
   closeEditModal: () => void;
   openEmailModal: (gym: Tenant) => void;
   closeEmailModal: () => void;
+  openDeleteModal: (gym: Tenant) => void;
+  closeDeleteModal: () => void;
   
   // Async Actions
   fetchGyms: (searchQuery?: string) => Promise<void>;
   handleGhostLogin: (id: string, name: string) => Promise<void>;
   handleSuspend: (id: string, name: string, currentStatus: string) => Promise<void>;
-  handleDelete: (id: string, name: string) => Promise<void>;
+  handleDelete: (id: string) => Promise<void>;
   handleEditGym: (id: string, data: unknown) => Promise<void>;
   handleEmailOwner: (id: string, data: unknown) => Promise<void>;
 }
@@ -50,6 +59,8 @@ export const useGymsStore = create<GymsState>((set, get) => ({
   selectedGym: null,
   isEditModalOpen: false,
   isEmailModalOpen: false,
+  isDeleteModalOpen: false,
+  gymToDelete: null,
 
   setSearch: (search) => {
     set({ search });
@@ -72,23 +83,31 @@ export const useGymsStore = create<GymsState>((set, get) => ({
     setTimeout(() => set({ selectedGym: null }), 200);
   },
 
+  openDeleteModal: (gym) => set({ gymToDelete: gym, isDeleteModalOpen: true }),
+  
+  closeDeleteModal: () => {
+    set({ isDeleteModalOpen: false });
+    setTimeout(() => set({ gymToDelete: null }), 200);
+  },
+
   fetchGyms: async (searchQuery = '') => {
     set({ fetchState: 'loading', error: null });
     try {
       const response = await superadminApi.gyms.getAll(searchQuery ? { search: searchQuery } : undefined);
       set({ gyms: response.data, fetchState: 'success' });
-    } catch (error: unknown) {
-      const errMsg = error instanceof Error ? error.message : 'Failed to fetch gyms';
+    } catch (error: any) {
+      const errMsg = error?.response?.data?.message || error.message || 'Failed to fetch gyms';
       set({ error: errMsg, fetchState: 'error' });
-      toast.error('Failed to load gyms');
+      toast.error(errMsg);
     }
   },
 
   handleGhostLogin: async (id, name) => {
     set({ actionLoadingId: id });
     try {
-      // await apiFetch('/api/v1/auth/ghost-login', { method: 'POST', body: JSON.stringify({ tenantId: id }) });
-      toast.success(`Ghost login initiated for ${name}.`);
+      // const response = await apiFetch('/api/v1/auth/ghost-login', { method: 'POST', body: JSON.stringify({ tenantId: id }) });
+      // toast.success(response.message || `Ghost login initiated for ${name}.`);
+      toast.success(`Ghost login initiated for ${name}.`); // Mock response for now
     } finally {
       set({ actionLoadingId: null });
     }
@@ -98,33 +117,35 @@ export const useGymsStore = create<GymsState>((set, get) => ({
     const newStatus = currentStatus === 'SUSPENDED' ? 'ACTIVE' : 'SUSPENDED';
     set({ actionLoadingId: id });
     try {
-      await superadminApi.gyms.changeStatus(id, newStatus);
-      toast.success(`${name} is now ${newStatus}.`);
+      const response = await superadminApi.gyms.changeStatus(id, newStatus);
+      toast.success((response as any)?.message || `${name} is now ${newStatus}.`);
       
       const { gyms } = get();
       if (gyms) {
         set({ gyms: gyms.map(gym => gym.id === id ? { ...gym, status: newStatus as any } : gym) });
       }
-    } catch (e: unknown) {
-      toast.error(`Failed to update status for ${name}`);
+    } catch (error: any) {
+      const errMsg = error?.response?.data?.message || error.message || `Failed to update status for ${name}`;
+      toast.error(errMsg);
     } finally {
       set({ actionLoadingId: null });
     }
   },
 
-  handleDelete: async (id, name) => {
-    if (!window.confirm(`Are you sure you want to delete gym ${name}?`)) return;
+  handleDelete: async (id) => {
     set({ actionLoadingId: id });
     try {
-      await superadminApi.gyms.remove(id);
-      toast.success(`${name} deleted successfully.`);
+      const response = await superadminApi.gyms.remove(id);
+      toast.success((response as any)?.message || `Tenant deleted successfully.`);
       
       const { gyms } = get();
       if (gyms) {
         set({ gyms: gyms.filter(gym => gym.id !== id) });
       }
-    } catch (e: unknown) {
-      toast.error(`Failed to delete gym ${name}`);
+      get().closeDeleteModal();
+    } catch (error: any) {
+      const errMsg = error?.response?.data?.message || error.message || `Failed to delete tenant`;
+      toast.error(errMsg);
     } finally {
       set({ actionLoadingId: null });
     }
@@ -133,16 +154,17 @@ export const useGymsStore = create<GymsState>((set, get) => ({
   handleEditGym: async (id, data) => {
     set({ actionLoadingId: id });
     try {
-      await superadminApi.gyms.update(id, data);
-      toast.success(`Gym details updated successfully.`);
+      const response = await superadminApi.gyms.update(id, data);
+      toast.success((response as any)?.message || `Gym details updated successfully.`);
       
       const { gyms } = get();
       if (gyms) {
         set({ gyms: gyms.map(gym => gym.id === id ? { ...gym, ...(data as Partial<Tenant>) } : gym) });
       }
       get().closeEditModal();
-    } catch (e: unknown) {
-      toast.error(`Failed to update gym details.`);
+    } catch (error: any) {
+      const errMsg = error?.response?.data?.message || error.message || `Failed to update gym details.`;
+      toast.error(errMsg);
     } finally {
       set({ actionLoadingId: null });
     }
@@ -151,14 +173,15 @@ export const useGymsStore = create<GymsState>((set, get) => ({
   handleEmailOwner: async (id, data) => {
     set({ actionLoadingId: id });
     try {
-      await apiFetch(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}/${id}/email`, { 
+      const response = await apiFetch(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}/${id}/email`, { 
         method: 'POST',
         body: JSON.stringify(data)
       });
-      toast.success(`Email sent successfully.`);
+      toast.success((response as any)?.message || `Email sent successfully.`);
       get().closeEmailModal();
-    } catch (e: unknown) {
-      toast.error(`Failed to send email.`);
+    } catch (error: any) {
+      const errMsg = error?.response?.data?.message || error.message || `Failed to send email.`;
+      toast.error(errMsg);
     } finally {
       set({ actionLoadingId: null });
     }
