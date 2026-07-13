@@ -1,6 +1,6 @@
 // RESPONSIBILITY: LandingPlans.tsx handles the logic and UI for its corresponding feature.
-import Link from 'next/link';
 "use client";
+import Link from 'next/link';
 
 import { CheckCircle } from 'lucide-react';
 import { PLANS } from '@/app/(landing)/landing_utils/LandingSharedConstants';

@@ -48,7 +48,7 @@ export const useBroadcastsPage = () => {
         {
           successMessage: 'Broadcast updated successfully',
           onSuccess: (res: any) => {
-            setBroadcasts(prev => prev.map(b => b.id === editingId ? (res as { data?: unknown })?.data : b));
+            setBroadcasts(prev => prev.map(b => b.id === editingId ? (res as { data?: Broadcast })?.data as Broadcast : b));
             setIsModalOpen(false);
             setEditingId(null);
             form.reset();
@@ -61,7 +61,7 @@ export const useBroadcastsPage = () => {
         {
           successMessage: 'Broadcast created successfully',
           onSuccess: (res: any) => {
-            setBroadcasts(prev => [(res as { data?: unknown })?.data, ...prev]);
+            setBroadcasts(prev => [(res as { data?: Broadcast })?.data as Broadcast, ...prev]);
             setIsModalOpen(false);
             form.reset();
           }
@@ -90,7 +90,7 @@ export const useBroadcastsPage = () => {
       {
         successMessage: 'Broadcast sent successfully',
         onSuccess: (res: any) => {
-          setBroadcasts(prev => prev.map(b => b.id === id ? (res as { data?: unknown })?.data : b));
+          setBroadcasts(prev => prev.map(b => b.id === id ? (res as { data?: Broadcast })?.data as Broadcast : b));
         }
       }
     );

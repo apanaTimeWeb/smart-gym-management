@@ -59,7 +59,7 @@ export function PlansProvider({ children }: { children: React.ReactNode }) {
         return [...prevPlans, newPlan];
       });
 
-      toast.success((res as Record<string, unknown>)?.message as string || 'Plan created');
+      toast.success((response as Record<string, unknown>)?.message as string || 'Plan created');
       closeCreateModal();
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : String(err));
@@ -81,7 +81,7 @@ export function PlansProvider({ children }: { children: React.ReactNode }) {
         return prevPlans.map(p => p.id === id ? { ...p, ...updatedPlan } : p);
       });
 
-      toast.success((res as Record<string, unknown>)?.message as string || 'Plan updated');
+      toast.success((response as Record<string, unknown>)?.message as string || 'Plan updated');
       closeEditModal();
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : String(err));
@@ -91,7 +91,7 @@ export function PlansProvider({ children }: { children: React.ReactNode }) {
 
   const handleDeletePlan = useCallback(async (id: string) => {
     try {
-      await apiFetch(`${SuperadminUrlConfig.BACKEND_API.PLANS_BASE}/${id}`, {
+      const response = await apiFetch<any>(`${SuperadminUrlConfig.BACKEND_API.PLANS_BASE}/${id}`, {
         method: 'DELETE',
       });
 
@@ -100,7 +100,7 @@ export function PlansProvider({ children }: { children: React.ReactNode }) {
         return prevPlans.filter(p => p.id !== id);
       });
 
-      toast.success((res as Record<string, unknown>)?.message as string || 'Plan deleted');
+      toast.success((response as Record<string, unknown>)?.message as string || 'Plan deleted');
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : String(err));
       throw err;
