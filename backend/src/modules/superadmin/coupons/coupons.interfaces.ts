@@ -14,3 +14,9 @@ export interface ICoupon {
   status: CouponStatus;
   expiryDate: Date;
 }
+
+export interface CouponResponse {
+  success: boolean;
+  message: string;
+  data: ICoupon | ICoupon[] | null;
+}

@@ -2,12 +2,14 @@ import { CreateCouponDto } from '../dto/create-coupons.dto';
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { CouponsRepository } from '../coupons.repository';
 import * as crypto from 'crypto';
+import { CouponResponse } from '../coupons.interfaces';
+import { COUPONS_MESSAGES } from '../coupons.constants';
 
 @Injectable()
 export class CreateCouponsService {
   constructor(private readonly repository: CouponsRepository) {}
   
-  async execute(dto: CreateCouponDto): Promise<any> {
+  async execute(dto: CreateCouponDto): Promise<CouponResponse> {
     if (dto.expiryDate) {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
@@ -32,6 +34,11 @@ export class CreateCouponsService {
     }
 
     dto.currentUses = 0;
-    return await this.repository.create(dto);
+    const data = await this.repository.create(dto);
+    return {
+      success: true,
+      message: COUPONS_MESSAGES.CREATED,
+      data
+    };
   }
 }

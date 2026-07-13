@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Tenant } from '../../gyms/entities/gyms.entity';
+import { DashboardResponse } from '../dashboard.interfaces';
+import { DASHBOARD_MESSAGES } from '../dashboard.constants';
 
 @Injectable()
 export class FindDashboardService {
@@ -10,7 +12,7 @@ export class FindDashboardService {
     private readonly tenantRepo: Repository<Tenant>,
   ) {}
 
-  async execute() {
+  async execute(): Promise<DashboardResponse> {
     const totalGyms = await this.tenantRepo.count({ where: { isDeleted: false } });
     const activeGyms = await this.tenantRepo.count({ where: { status: 'ACTIVE' as any, isDeleted: false } });
     
@@ -69,7 +71,7 @@ export class FindDashboardService {
         createdAt: new Date(t.createdAt || 0).toLocaleDateString()
       }));
 
-    return {
+    const data = {
       metrics: {
         monthlyRecurringRevenue,
         totalGyms,
@@ -79,6 +81,12 @@ export class FindDashboardService {
       },
       revenue,
       growth
+    };
+    
+    return {
+      success: true,
+      message: DASHBOARD_MESSAGES.FETCHED_SUCCESS,
+      data
     };
   }
 }

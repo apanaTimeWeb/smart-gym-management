@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
+import { BroadcastResponse } from '../broadcasts.interfaces';
 
 @Injectable()
 export class SendBroadcastsService {
@@ -8,7 +9,7 @@ export class SendBroadcastsService {
 
   constructor(@InjectQueue('broadcasts') private readonly queue: Queue) {}
 
-  async execute(id: string) {
+  async execute(id: string): Promise<BroadcastResponse> {
     this.logger.log(`Sending broadcast ${id}`);
     
     await this.queue.add('send-email', { broadcastId: id });

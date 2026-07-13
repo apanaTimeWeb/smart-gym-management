@@ -1,13 +1,14 @@
 import { UpdateCouponDto } from '../dto/update-coupons.dto';
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { CouponsRepository } from '../coupons.repository';
-import { CouponStatus } from '../coupons.interfaces';
+import { CouponStatus, CouponResponse } from '../coupons.interfaces';
+import { COUPONS_MESSAGES } from '../coupons.constants';
 
 @Injectable()
 export class UpdateCouponsService {
   constructor(private readonly repository: CouponsRepository) {}
   
-  async execute(id: string, dto: UpdateCouponDto): Promise<any> {
+  async execute(id: string, dto: UpdateCouponDto): Promise<CouponResponse> {
     const existingCoupon = await this.repository.findById(id);
     if (!existingCoupon) throw new NotFoundException('Coupon not found');
 
@@ -45,6 +46,11 @@ export class UpdateCouponsService {
       }
     }
 
-    return await this.repository.update(id, dto);
+    const data = await this.repository.update(id, dto);
+    return {
+      success: true,
+      message: COUPONS_MESSAGES.UPDATED,
+      data
+    };
   }
 }

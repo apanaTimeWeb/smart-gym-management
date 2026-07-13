@@ -8,6 +8,7 @@ export enum BroadcastAudience {
   PRO_ONLY = 'PRO_ONLY',
   SUSPENDED_ONLY = 'SUSPENDED_ONLY'
 }
+
 export interface IBroadcast {
   id: string;
   title: string;
@@ -16,4 +17,10 @@ export interface IBroadcast {
   audience: BroadcastAudience;
   scheduledDate: Date | null;
   sentDate: Date | null;
+}
+
+export interface BroadcastResponse {
+  success: boolean;
+  message: string;
+  data: IBroadcast | IBroadcast[] | any | null;
 }
