@@ -40,14 +40,6 @@ export interface PlanWithCustom extends Plan {
 }
 
 export interface MembersContextType {
-  members: Member[];
-  plans: Plan[];
-  payments: Payment[];
-  stats: { total: number; active: number; pending: number; expired: number };
-  fetchState: FetchState;
-  saving: boolean;
-  totalMembers: number;
-
   search: string;
   debouncedSearch: string;
   setSearch: (s: string) => void;
@@ -60,19 +52,13 @@ export interface MembersContextType {
   showToast: (msg: string, t: ToastType) => void;
   hideToast: () => void;
 
-  loadAll: () => Promise<void>;
-
   // Member Profile
   selectedMember: Member | null;
   setSelectedMember: (m: Member | null) => void;
   profileTab: 'overview' | 'attendance' | 'payments';
   setProfileTab: (tab: 'overview' | 'attendance' | 'payments') => void;
-  loadMemberProfile: (id: number) => Promise<void>;
-
-  // Attendance
-  attMap: Record<number, { day: number; status: string }[]>;
-  getAtt: (id: number) => { day: number; status: string }[];
-  toggleAtt: (memberId: number, day: number) => void;
+  profileTab: 'overview' | 'attendance' | 'payments';
+  setProfileTab: (tab: 'overview' | 'attendance' | 'payments') => void;
 
   // Add/Edit Modal
   showAddModal: boolean;

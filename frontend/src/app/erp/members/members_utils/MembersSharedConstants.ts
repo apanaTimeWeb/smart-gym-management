@@ -51,22 +51,6 @@ export const EMPTY_MEMBER_FORM: MemberFormValues = {
   address: '',
   gender: 'MALE',
   billingCycle: 'ONE_MONTH',
-  planId: '',
-  customDays: 0,
-};
-
-
-
-export const MEMBERS_TABLE_HEADERS = [
- 'Member', 'Plan', 'Status', 'Billing Cycle', 'Paid', 'Pending', 'Expiry', 'Actions'
-];
-
-export const BRANCH_OPTIONS = ['Main Branch', 'Branch 2', 'Branch 3'] as const;
-
-export const PROFILE_TABS = [
-  { id: 'overview', label: 'Overview' },
-  { id: 'attendance', label: 'Attendance' },
-  { id: 'payments', label: 'Payment History' }
 ] as const;
 
 export const formatCurrency = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');

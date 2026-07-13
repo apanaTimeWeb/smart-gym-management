@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Provides members state to the members module hierarchy.
+// RESPONSIBILITY: Provides UI orchestration state to the members module hierarchy. Async data is in Zustand.
 // DATA FLOW: useMembersLogic -> MembersContext -> Members components
 'use client';
 
@@ -11,14 +11,15 @@ const MembersContext = createContext<MembersContextType | undefined>(undefined);
 export function MembersProvider({ children, initialData }: { children: React.ReactNode, initialData?: MembersInitialData | null }) {
   const logic = useMembersLogic(initialData);
 
-  // Memoize with explicit primitive deps to prevent re-render chains across micro-components.
-  // Each dep listed individually because `logic` is a new object reference on every render;
-  // spreading `logic` directly would make useMemo a no-op.
+  // Memoize with explicit deps to prevent re-render chains across micro-components.
   const value = useMemo<MembersContextType>(
     () => logic,
-    [logic.members, logic.fetchState, logic.totalMembers, logic.search, logic.statusFilter,
-     logic.currentPage, logic.toast, logic.selectedMember, logic.showAddModal,
-     logic.editId, logic.msgModal, logic.printData, logic.attMap, logic.plans]
+    [
+      logic.search, logic.statusFilter, logic.currentPage, 
+      logic.toast, logic.selectedMember, logic.profileTab,
+      logic.showAddModal, logic.editId, logic.editData, 
+      logic.msgModal, logic.printData
+    ]
   );
 
   return (

@@ -3,11 +3,17 @@
 
 import { Search, RefreshCw, Plus } from 'lucide-react';
 import { useMembersContext } from '@/app/erp/members/members_context/MembersContext';
+import { useMembersStore } from '@/app/erp/members/members_store/useMembersStore';
 import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 import { MEMBER_STATUS_OPTIONS } from '@/app/erp/members/members_utils/MembersSharedConstants';
 
 export default function MembersToolbar() {
-  const { search, setSearch, statusFilter, setStatusFilter, loadAll, openAdd } = useMembersContext();
+  const { search, setSearch, statusFilter, setStatusFilter, openAdd, currentPage } = useMembersContext();
+  const loadAll = useMembersStore(s => s.loadAll);
+
+  const handleRefresh = () => {
+    loadAll({ search, status: statusFilter, page: currentPage.toString() });
+  };
 
   return (
     <div className="bg-card rounded-xl shadow-sm border border-border p-4 flex flex-wrap gap-3 items-center justify-between">
@@ -28,7 +34,7 @@ export default function MembersToolbar() {
           options={MEMBER_STATUS_OPTIONS}
         />
  <button 
- onClick={loadAll} 
+ onClick={handleRefresh} 
  className="flex items-center gap-2 px-3 py-2.5 text-sm border border-border rounded-xl hover:opacity-80 text-primary"
  >
  <RefreshCw size={14} /> Refresh

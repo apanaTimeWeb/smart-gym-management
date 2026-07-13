@@ -2,13 +2,16 @@
 'use client';
 
 import { useMembersContext } from '@/app/erp/members/members_context/MembersContext';
+import { useMembersStore } from '@/app/erp/members/members_store/useMembersStore';
 
 export default function ProfileAttendance() {
- const { selectedMember, getAtt, toggleAtt } = useMembersContext();
+ const { selectedMember } = useMembersContext();
+ const attMap = useMembersStore(s => s.attMap);
+ const toggleAtt = useMembersStore(s => s.toggleAtt);
 
  if (!selectedMember) return null;
 
- const att = getAtt(selectedMember.id);
+ const att = attMap[selectedMember.id] || [];
  const presentDays = att.filter(a => a.status === 'P').length;
  const absentDays = att.filter(a => a.status === 'A').length;
  const leaveDays = att.filter(a => a.status === 'L').length;

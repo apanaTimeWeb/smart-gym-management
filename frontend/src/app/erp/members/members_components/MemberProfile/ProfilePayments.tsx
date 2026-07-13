@@ -3,10 +3,12 @@
 
 import { Printer } from 'lucide-react';
 import { useMembersContext } from '@/app/erp/members/members_context/MembersContext';
+import { useMembersStore } from '@/app/erp/members/members_store/useMembersStore';
 import { formatCurrency } from '@/app/erp/members/members_utils/MembersSharedConstants';
 
 export default function ProfilePayments() {
- const { payments, handlePrint } = useMembersContext();
+ const { handlePrint } = useMembersContext();
+ const payments = useMembersStore(s => s.payments);
 
  const totalPaid = payments.filter(p => p.status === 'PAID').reduce((s, p) => s + p.amount, 0);
  const totalDue = payments.filter(p => p.status === 'DUE').reduce((s, p) => s + p.amount, 0);
