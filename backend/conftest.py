@@ -36,11 +36,12 @@ def admin_token(api_url):
     return None
 
 @pytest.fixture(scope="session")
-def test_tenant_id(api_client, api_url, admin_token):
+def test_tenant_id(api_url, admin_token):
     """Fixture to create a completely new test tenant DB for isolated testing."""
     if not admin_token:
         return "test-tenant-id"
     
+    api_client = requests.Session()
     api_client.headers.update({"Authorization": f"Bearer {admin_token}"})
     
     # Create a fresh Gym/Tenant
