@@ -25,7 +25,8 @@ export function useGymEditModal() {
   const selectedGym = useGymsStore(state => state.selectedGym);
   const handleEditGym = useGymsStore(state => state.handleEditGym);
   
-  const { data: plans, loading: fetchStatePlans } = useSuperadminData<SubscriptionPlan[]>(SuperadminUrlConfig.BACKEND_API.PLANS_BASE);
+  const { data: plans, fetchState: fetchStatePlans } = useSuperadminData<SubscriptionPlan[]>(SuperadminUrlConfig.BACKEND_API.PLANS_BASE);
+  const loadingPlans = fetchStatePlans === 'loading';
 
   const {
     register,

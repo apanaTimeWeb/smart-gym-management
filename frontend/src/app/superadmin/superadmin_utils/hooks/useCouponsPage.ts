@@ -42,7 +42,7 @@ export const useCouponsPage = () => {
 
   const handleCreateCoupon = useCallback(async (data: CouponFormData) => {
     await mutate<Coupon>(
-      () => superadminApi.coupons.create(data) as Promise<{ success: boolean; data: Coupon; message: string }>,
+      () => superadminApi.coupons.create(data),
       {
         successMessage: 'Coupon created successfully',
         onSuccess: (res) => {
@@ -56,7 +56,7 @@ export const useCouponsPage = () => {
 
   const handleUpdateCoupon = useCallback(async (id: string, data: Partial<CouponFormData>) => {
     await mutate<Coupon>(
-      () => superadminApi.coupons.update(id, data) as Promise<{ success: boolean; data: Coupon; message: string }>,
+      () => superadminApi.coupons.update(id, data),
       {
         successMessage: 'Coupon updated successfully',
         onSuccess: (res) => {
@@ -70,8 +70,8 @@ export const useCouponsPage = () => {
 
   const handleDeleteCoupon = useCallback(async (id: string) => {
     // Confirmation is handled by the caller via a modal — not window.confirm
-    await mutate<null>(
-      () => superadminApi.coupons.remove(id) as Promise<{ success: boolean; data: null; message: string }>,
+    await mutate<void>(
+      () => superadminApi.coupons.remove(id),
       {
         successMessage: 'Coupon deleted successfully',
         onSuccess: () => {
@@ -83,7 +83,7 @@ export const useCouponsPage = () => {
 
   const handleToggleRestore = useCallback(async (id: string) => {
     await mutate<Coupon>(
-      () => superadminApi.coupons.update(id, { isDeleted: false }) as Promise<{ success: boolean; data: Coupon; message: string }>,
+      () => superadminApi.coupons.update(id, { isDeleted: false }),
       {
         successMessage: 'Coupon restored successfully',
         onSuccess: (res) => {
@@ -100,7 +100,7 @@ export const useCouponsPage = () => {
     }
     const newStatus: CouponStatus = currentStatus === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
     await mutate<Coupon>(
-      () => superadminApi.coupons.update(id, { status: newStatus }) as Promise<{ success: boolean; data: Coupon; message: string }>,
+      () => superadminApi.coupons.update(id, { status: newStatus }),
       {
         successMessage: `Coupon marked as ${newStatus}`,
         onSuccess: (res) => {

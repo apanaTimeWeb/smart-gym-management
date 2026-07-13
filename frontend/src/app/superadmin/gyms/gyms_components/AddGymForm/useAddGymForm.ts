@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
-import { OnboardGymSchema, OnboardGymFormValues } from '@/app/superadmin/superadmin_utils/SuperadminValidation';
+import { OnboardGymSchema, OnboardGymFormValues } from '@/app/superadmin/gyms/gyms_utils/GymsValidationSchemas';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
@@ -40,9 +40,11 @@ export function useAddGymForm() {
   const [provisioningLogs, setProvisioningLogs] = useState<string[]>([]);
   const [showPassword, setShowPassword] = useState(false);
 
-  const { data: plans, loading: fetchStatePlans } = useSuperadminData<SubscriptionPlan[]>(
+  const { data: plans, fetchState: fetchStatePlans } = useSuperadminData<SubscriptionPlan[]>(
     SuperadminUrlConfig.BACKEND_API.PLANS_BASE
   );
+  
+  const loadingPlans = fetchStatePlans === 'loading';
 
   const { register, handleSubmit, control, formState: { errors } } = useForm<OnboardGymFormValues>({
     resolver: zodResolver(OnboardGymSchema),
@@ -85,7 +87,7 @@ export function useAddGymForm() {
         monthlyRevenue: NEW_TENANT_DEFAULTS.MONTHLY_REVENUE,
         databaseVersion: NEW_TENANT_DEFAULTS.DB_VERSION,
         temporaryPassword: data.temporaryPassword,
-      });
+      } as unknown as Partial<Tenant>);
 
       addLog('Provisioning complete! Redirecting...');
       await delay(PROVISIONING_DELAYS.REDIRECT);

@@ -34,7 +34,7 @@ export const useAffiliatesPage = () => {
 
   const handleAddAffiliate = useCallback(async (data: AffiliateFormData) => {
     await mutate<Affiliate>(
-      () => superadminApi.affiliates.create(data) as Promise<{ success: boolean; data: Affiliate; message: string }>,
+      () => superadminApi.affiliates.create(data),
       {
         successMessage: 'Affiliate added successfully',
         onSuccess: (res) => {
@@ -49,7 +49,7 @@ export const useAffiliatesPage = () => {
   const handleEditAffiliate = useCallback(async (data: AffiliateFormData) => {
     if (!editingAffiliate) return;
     await mutate<Affiliate>(
-      () => superadminApi.affiliates.update(editingAffiliate.id, data) as Promise<{ success: boolean; data: Affiliate; message: string }>,
+      () => superadminApi.affiliates.update(editingAffiliate.id, data),
       {
         successMessage: 'Affiliate updated successfully',
         onSuccess: (res) => {
@@ -64,8 +64,8 @@ export const useAffiliatesPage = () => {
 
   const handleToggleAffiliateStatus = useCallback(async (id: string, currentStatus: AffiliateStatus) => {
     const newStatus: AffiliateStatus = currentStatus === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
-    await mutate<null>(
-      () => superadminApi.affiliates.updateStatus(id, newStatus) as Promise<{ success: boolean; data: null; message: string }>,
+    await mutate<void>(
+      () => superadminApi.affiliates.updateStatus(id, newStatus),
       {
         successMessage: 'Affiliate status updated successfully',
         onSuccess: () => {
@@ -77,8 +77,8 @@ export const useAffiliatesPage = () => {
 
   const handleDeleteAffiliate = useCallback(async (id: string) => {
     // Confirmation is handled by the caller via a modal — not window.confirm
-    await mutate<null>(
-      () => superadminApi.affiliates.remove(id) as Promise<{ success: boolean; data: null; message: string }>,
+    await mutate<void>(
+      () => superadminApi.affiliates.remove(id),
       {
         successMessage: 'Affiliate deleted successfully',
         onSuccess: () => {

@@ -45,7 +45,7 @@ export const useBroadcastsPage = () => {
 
     if (editingId) {
       await mutate<Broadcast>(
-        () => superadminApi.broadcasts.update(editingId, payload) as Promise<{ success: boolean; data: Broadcast; message: string }>,
+        () => superadminApi.broadcasts.update(editingId, payload),
         {
           successMessage: 'Broadcast updated successfully',
           onSuccess: (res) => {
@@ -58,7 +58,7 @@ export const useBroadcastsPage = () => {
       );
     } else {
       await mutate<Broadcast>(
-        () => superadminApi.broadcasts.create(payload) as Promise<{ success: boolean; data: Broadcast; message: string }>,
+        () => superadminApi.broadcasts.create(payload),
         {
           successMessage: 'Broadcast created successfully',
           onSuccess: (res) => {
@@ -73,8 +73,8 @@ export const useBroadcastsPage = () => {
 
   const handleDeleteBroadcast = useCallback(async (id: string) => {
     // Confirmation is handled by the caller via a modal — not window.confirm
-    await mutate<null>(
-      () => superadminApi.broadcasts.remove(id) as Promise<{ success: boolean; data: null; message: string }>,
+    await mutate<void>(
+      () => superadminApi.broadcasts.remove(id),
       {
         successMessage: 'Broadcast deleted successfully',
         onSuccess: () => {
@@ -87,7 +87,7 @@ export const useBroadcastsPage = () => {
   const handleSendBroadcast = useCallback(async (id: string) => {
     // Confirmation is handled by the caller via a modal — not window.confirm
     await mutate<Broadcast>(
-      () => superadminApi.broadcasts.send(id) as Promise<{ success: boolean; data: Broadcast; message: string }>,
+      () => superadminApi.broadcasts.send(id),
       {
         successMessage: 'Broadcast sent successfully',
         onSuccess: (res) => {

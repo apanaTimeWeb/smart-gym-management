@@ -1,15 +1,15 @@
-// RESPONSIBILITY: Encapsulates all state and logic for the Invoices page — filtering, modal state, stats calculations.
-// DATA FLOW: useSuperadminData → useInvoicesPage → InvoicesClient
+// RESPONSIBILITY: Encapsulates local UI state for the Invoices page (filtering, modal state, derived stats).
+// DATA FLOW: useInvoicesStore -> useInvoicesPage -> InvoicesClient
 'use client';
-import { useState, useMemo } from 'react';
-import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
-import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
-import type { SaaSInvoice, Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
+import { useState, useMemo, useEffect } from 'react';
+import { useInvoicesStore } from '@/app/superadmin/invoices/invoices_store/useInvoicesStore';
 
 export function useInvoicesPage() {
-  const { data, fetchState, error } = useSuperadminData<{ invoices: SaaSInvoice[]; tenants: Tenant[] }>(
-    SuperadminUrlConfig.BACKEND_API.INVOICES_BASE
-  );
+  const { invoices, tenants, fetchState, error, fetchData } = useInvoicesStore();
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const [search, setSearch] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
@@ -17,9 +17,6 @@ export function useInvoicesPage() {
   const [isGymDropdownOpen, setIsGymDropdownOpen] = useState(false);
   const [selectedGymId, setSelectedGymId] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('UPI');
-
-  const invoices = data?.invoices ?? [];
-  const tenants = data?.tenants ?? [];
 
   const filteredInvoices = useMemo(() => {
     const lower = search.toLowerCase();
@@ -74,3 +71,4 @@ export function useInvoicesPage() {
     handleSelectGym,
   };
 }
+

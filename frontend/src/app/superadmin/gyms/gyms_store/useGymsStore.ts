@@ -41,8 +41,8 @@ interface GymsState {
   handleGhostLogin: (id: string, name: string) => Promise<void>;
   handleSuspend: (id: string, name: string, currentStatus: string) => Promise<void>;
   handleDelete: (id: string) => Promise<void>;
-  handleEditGym: (id: string, data: unknown) => Promise<void>;
-  handleEmailOwner: (id: string, data: unknown) => Promise<void>;
+  handleEditGym: (id: string, data: Partial<Tenant>) => Promise<void>;
+  handleEmailOwner: (id: string, data: { subject: string; message: string; [key: string]: unknown }) => Promise<void>;
 }
 
 export const useGymsStore = create<GymsState>((set, get) => ({
@@ -154,7 +154,7 @@ export const useGymsStore = create<GymsState>((set, get) => ({
       
       const { gyms } = get();
       if (gyms) {
-        set({ gyms: gyms.map(gym => gym.id === id ? { ...gym, ...(data as Partial<Tenant>) } : gym) });
+        set({ gyms: gyms.map(gym => gym.id === id ? { ...gym, ...data } : gym) });
       }
       get().closeEditModal();
     } catch (error: unknown) {
