@@ -3,8 +3,8 @@
 
 import { useInquiriesContext } from '@/app/erp/inquiries/inquiries_context/InquiriesContext';
 import { FetchState } from '@/app/erp/inquiries/inquiries_types/inquiries_types';
-import { INQUIRIES_TABLE_HEADERS, INQUIRIES_STATUS_LABELS, INQUIRIES_STATUS_STYLES } from '@/app/erp/inquiries/inquiries_utils/InquiriesSharedConstants';
-import { MessageCircle, Mail, Edit2, Trash2, Loader2 } from 'lucide-react';
+import { INQUIRIES_TABLE_HEADERS, INQUIRIES_STATUS_LABELS, INQUIRIES_STATUS_STYLES, INQUIRIES_ITEMS_PER_PAGE } from '@/app/erp/inquiries/inquiries_utils/InquiriesSharedConstants';
+import { MessageCircle, Mail, Edit2, Trash2 } from 'lucide-react';
 import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
 
@@ -18,13 +18,42 @@ export default function InquiriesTable() {
   const allSelected = inquiries.length > 0 && selectedIds.length === inquiries.length;
   const isSelected = (id: number) => selectedIds.includes(id);
 
-  const ITEMS_PER_PAGE = 10;
-  const totalPages = Math.ceil(totalInquiries / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(totalInquiries / INQUIRIES_ITEMS_PER_PAGE);
 
   if (fetchState === FetchState.LOADING) {
     return (
-      <div className="bg-card rounded-xl shadow-sm border border-border flex justify-center py-16">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden flex flex-col h-full min-h-96">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-primary/5">
+              <tr>
+                <th className="px-5 py-3 w-12" />
+                {INQUIRIES_TABLE_HEADERS.map(h => (
+                  <th key={h} className="text-left text-xs font-semibold text-secondary uppercase tracking-wider px-5 py-3">
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {[...Array(5)].map((_, i) => (
+                <tr key={i} className="animate-pulse">
+                  <td className="px-5 py-4"><div className="h-4 bg-muted rounded w-4"></div></td>
+                  <td className="px-5 py-4 flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-full bg-muted"></div>
+                    <div className="h-4 bg-muted rounded w-24"></div>
+                  </td>
+                  <td className="px-5 py-4"><div className="h-4 bg-muted rounded w-32"></div></td>
+                  <td className="px-5 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
+                  <td className="px-5 py-4"><div className="h-4 bg-muted rounded w-16"></div></td>
+                  <td className="px-5 py-4"><div className="h-8 bg-muted rounded-lg w-28"></div></td>
+                  <td className="px-5 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
+                  <td className="px-5 py-4"><div className="h-8 bg-muted rounded-lg w-32"></div></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }
@@ -148,7 +177,7 @@ export default function InquiriesTable() {
         currentPage={currentPage}
         totalPages={totalPages}
         totalItems={totalInquiries}
-        itemsPerPage={ITEMS_PER_PAGE}
+        itemsPerPage={INQUIRIES_ITEMS_PER_PAGE}
         onPageChange={setCurrentPage}
       />
     </div>

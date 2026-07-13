@@ -11,17 +11,25 @@ import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
 
 export default function OrderTable() {
   const { 
-    orders, totalOrders, loading, currentPage, setCurrentPage, setPrintData,
+    orders, totalOrders, fetchState, currentPage, setCurrentPage, setPrintData,
     startDate, setStartDate, endDate, setEndDate, sortOrder, setSortOrder
   } = useStoreContext();
 
   const ITEMS_PER_PAGE = 10;
   const totalPages = Math.ceil(totalOrders / ITEMS_PER_PAGE);
 
-  if (loading) {
+  if (fetchState === 'loading') {
     return (
-      <div className="flex justify-center py-10">
-        <div className="w-8 h-8 border-4 border-warning border-t-transparent rounded-full animate-spin" />
+      <div className="animate-pulse bg-card rounded-xl border border-border mt-4">
+        {[...Array(5)].map((_, i) => (
+          <div key={i} className="h-16 border-b border-border flex items-center px-4 gap-4">
+            <div className="h-4 bg-muted rounded w-16"></div>
+            <div className="h-4 bg-muted rounded w-24"></div>
+            <div className="h-4 bg-muted rounded w-20"></div>
+            <div className="h-6 bg-muted rounded-full w-20"></div>
+            <div className="h-6 bg-muted rounded-full w-20"></div>
+          </div>
+        ))}
       </div>
     );
   }

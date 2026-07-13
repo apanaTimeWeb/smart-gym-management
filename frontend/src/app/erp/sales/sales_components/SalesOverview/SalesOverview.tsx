@@ -9,9 +9,9 @@ import {
 import { Loader2 } from 'lucide-react';
 
 export default function SalesOverview() {
-  const { overviewData, loading } = useSalesContext();
+  const { overviewData, fetchState } = useSalesContext();
 
-  if (loading) {
+  if (fetchState === 'loading') {
     return (
       <div className="flex justify-center py-10">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />

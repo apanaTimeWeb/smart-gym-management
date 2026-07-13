@@ -11,12 +11,12 @@ const PlansContext = createContext<PlansContextType | undefined>(undefined);
 export function PlansProvider({ children, initialData }: { children: React.ReactNode, initialData?: PlansInitialData | null }) {
   const logic = usePlansLogic(initialData);
 
-  const { plans, loading, saving, toast, search, currentPage, showModal, editId, form } = logic;
+  const { plans, fetchState, saving, toast, search, currentPage, showModal, editId, form } = logic;
 
   // Memoize with explicit primitive deps to prevent re-render chains across micro-components
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const value = useMemo<PlansContextType>(() => logic, [
-    plans, loading, saving, toast, search, currentPage, showModal, editId, form,
+    plans, fetchState, saving, toast, search, currentPage, showModal, editId, form,
   ]);
 
   return (

@@ -41,6 +41,8 @@ export const INQUIRY_SOURCES = [
  'Walk-in', 'Call', 'Website', 'WhatsApp', 'Referral', 'Facebook', 'Instagram'
 ];
 
+export const INQUIRIES_ITEMS_PER_PAGE = 10;
+
 export const INQUIRIES_TABLE_HEADERS = [
  'Lead', 'Contact', 'Interest', 'Source', 'Status', 'Date', 'Actions'
 ];

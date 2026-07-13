@@ -7,7 +7,7 @@ import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
 import { Loader2 } from 'lucide-react';
 
 export default function MembershipReport() {
-  const { search, currentPage, setCurrentPage, membershipReport, membershipTotals, loading } = useSalesContext();
+  const { search, currentPage, setCurrentPage, membershipReport, membershipTotals, fetchState } = useSalesContext();
   
   const filtered = membershipReport.filter((r: any) => 
     (r.plan || '').toLowerCase().includes(search.toLowerCase())
@@ -17,7 +17,7 @@ export default function MembershipReport() {
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;
   const paginated = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
-  if (loading) {
+  if (fetchState === 'loading') {
     return (
       <div className="flex justify-center py-10">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />

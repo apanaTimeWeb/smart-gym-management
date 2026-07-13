@@ -5,6 +5,15 @@ import type { ErpReceiptData } from '@/app/erp/erp_components/ErpShared/ErpTherm
 import { type ProductFormValues } from '@/app/erp/store/store_utils/StoreSharedConstants';
 import React from 'react';
 
+export interface StoreInitialData {
+  products: Product[];
+  orders: Order[];
+  totalOrders: number;
+  summary: StoreSummary | null;
+}
+
+export type FetchState = 'idle' | 'loading' | 'success' | 'error';
+
 export interface OrderItem {
  productId: number;
  qty: number;
@@ -20,7 +29,7 @@ export interface StoreContextType {
  orders: Order[];
  totalOrders: number;
  summary: StoreSummary | null;
- loading: boolean;
+ fetchState: FetchState;
  saving: boolean;
  
   toast: { message: string; type: ToastType } | null;

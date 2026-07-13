@@ -2,25 +2,38 @@
 "use client";
 
 import React from 'react';
-import { useAuditTable } from '@/app/erp/audit/audit_components/AuditTable/useAuditTable';
+import { useAuditContext } from '@/app/erp/audit/audit_context/AuditContext';
 import { AUDIT_TABLE_HEADERS } from '@/app/erp/audit/audit_utils/AuditSharedConstants';
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
 
 export const AuditTable = () => {
   const {
     logs,
-    loading,
+    fetchState,
     error,
     page,
     limit,
     totalCount,
     setCurrentPage,
-  } = useAuditTable();
+  } = useAuditContext();
 
   const totalPages = Math.ceil(totalCount / limit) || 1;
 
-  if (loading) {
-    return <div className="p-4 text-center">Loading audit logs...</div>;
+  if (fetchState === 'loading') {
+    return (
+      <div className="animate-pulse bg-card rounded-xl border border-border mt-4">
+        {[...Array(5)].map((_, i) => (
+          <div key={i} className="h-16 border-b border-border flex items-center px-6 gap-4">
+            <div className="h-4 bg-muted rounded w-24"></div>
+            <div className="h-4 bg-muted rounded w-16"></div>
+            <div className="h-4 bg-muted rounded w-20"></div>
+            <div className="h-6 bg-muted rounded-full w-24"></div>
+            <div className="h-4 bg-muted rounded w-24"></div>
+            <div className="h-4 bg-muted rounded w-16"></div>
+          </div>
+        ))}
+      </div>
+    );
   }
 
   if (error) {

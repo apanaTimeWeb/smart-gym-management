@@ -10,7 +10,21 @@ const SalesContext = createContext<SalesContextType | undefined>(undefined);
 export function SalesProvider({ children, initialData }: { children: React.ReactNode, initialData?: SalesInitialData | null }) {
  const logic = useSalesLogic(initialData);
 
- const value = useMemo(() => logic, [logic]);
+ const value = useMemo(() => logic, [
+    logic.tab,
+    logic.dateFilter,
+    logic.search,
+    logic.currentPage,
+    logic.overviewData,
+    logic.membershipReport,
+    logic.membershipTotals,
+    logic.pendingPayments,
+    logic.pendingTotal,
+    logic.allMemberships,
+    logic.allMembershipsTotal,
+    logic.fetchState,
+    logic.toast
+  ]);
 
  return (
  <SalesContext.Provider value={value}>

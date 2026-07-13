@@ -9,12 +9,12 @@ import { Loader2 } from 'lucide-react';
 
 export default function AllMemberships() {
   const [filter, setFilter] = useState('All');
-  const { currentPage, setCurrentPage, allMemberships, allMembershipsTotal, loading } = useSalesContext();
+  const { currentPage, setCurrentPage, allMemberships, allMembershipsTotal, fetchState } = useSalesContext();
   
   const ITEMS_PER_PAGE = 10;
   const totalPages = Math.ceil(allMembershipsTotal / ITEMS_PER_PAGE) || 1;
 
-  if (loading) {
+  if (fetchState === 'loading') {
     return (
       <div className="flex justify-center py-10">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />

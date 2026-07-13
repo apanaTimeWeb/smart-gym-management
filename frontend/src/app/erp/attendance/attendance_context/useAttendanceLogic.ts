@@ -18,15 +18,23 @@ export function useAttendanceLogic(): AttendanceContextType {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // URL State
-  const pageParam = searchParams.get('page');
-  const searchParam = searchParams.get('search');
+  const currentPage = parseInt(searchParams.get('page') || '1', 10);
+  const search = searchParams.get('search') || '';
   const tabParam = searchParams.get('tab') as AttendanceTab | null;
-
-  const [currentPage, setCurrentPage] = useState(pageParam ? parseInt(pageParam, 10) : 1);
-  const [search, setSearch] = useState(searchParam || '');
-  const [tab, setTab] = useState<AttendanceTab>(tabParam && ATTENDANCE_TABS.includes(tabParam) ? tabParam : ATTENDANCE_TABS[0]);
+  const tab: AttendanceTab = tabParam && ATTENDANCE_TABS.includes(tabParam) ? tabParam : ATTENDANCE_TABS[0];
   const debouncedSearch = useDebounce(search, 300);
+
+  const setUrlParam = useCallback((key: string, value: string | null) => {
+    const current = new URLSearchParams(Array.from(searchParams.entries()));
+    if (value) current.set(key, value);
+    else current.delete(key);
+    if (key !== 'page') current.set('page', '1');
+    router.push(`${pathname}?${current.toString()}`, { scroll: false });
+  }, [searchParams, pathname, router]);
+
+  const setSearch = useCallback((val: string) => setUrlParam('search', val || null), [setUrlParam]);
+  const setCurrentPage = useCallback((val: number) => setUrlParam('page', val.toString()), [setUrlParam]);
+  const setTab = useCallback((val: AttendanceTab) => setUrlParam('tab', val), [setUrlParam]);
 
   // Local State
   const [records, setRecords] = useState<Attendance[]>([]);
@@ -44,34 +52,6 @@ export function useAttendanceLogic(): AttendanceContextType {
 
   const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
   const hideToast = useCallback(() => setToast(null), []);
-
-  // Sync state to URL when page, search, or tab changes
-  useEffect(() => {
-    const currentUrlParams = new URLSearchParams(Array.from(searchParams.entries()));
-    let changed = false;
-
-    if (debouncedSearch !== (currentUrlParams.get('search') || '')) {
-      if (debouncedSearch) currentUrlParams.set('search', debouncedSearch);
-      else currentUrlParams.delete('search');
-      currentUrlParams.set('page', '1');
-      setCurrentPage(1);
-      changed = true;
-    } else if (currentPage.toString() !== (currentUrlParams.get('page') || '1')) {
-      currentUrlParams.set('page', currentPage.toString());
-      changed = true;
-    }
-    
-    if (tab !== (currentUrlParams.get('tab') || ATTENDANCE_TABS[0])) {
-      currentUrlParams.set('tab', tab);
-      currentUrlParams.set('page', '1');
-      setCurrentPage(1);
-      changed = true;
-    }
-
-    if (changed) {
-      router.push(`${pathname}?${currentUrlParams.toString()}`);
-    }
-  }, [debouncedSearch, currentPage, tab, pathname, router, searchParams]);
 
   const loadAll = useCallback(async () => {
     setFetchState('loading');

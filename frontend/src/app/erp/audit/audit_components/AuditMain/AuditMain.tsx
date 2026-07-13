@@ -5,6 +5,7 @@ import React from 'react';
 import ErpHeader from '@/app/erp/erp_components/ErpLayout/ErpHeader';
 import { AuditFilters } from '@/app/erp/audit/audit_components/AuditFilters/AuditFilters';
 import { AuditTable } from '@/app/erp/audit/audit_components/AuditTable/AuditTable';
+import { AuditProvider } from '@/app/erp/audit/audit_context/AuditContext';
 
 function AuditContent() {
   return (
@@ -30,5 +31,9 @@ function AuditContent() {
 }
 
 export default function AuditMain() {
-  return <AuditContent />;
+  return (
+    <AuditProvider>
+      <AuditContent />
+    </AuditProvider>
+  );
 }

@@ -32,3 +32,17 @@ export const GYM_DETAILS = {
   name: process.env.NEXT_PUBLIC_GYM_NAME || 'GymSmart Fitness',
   phone: process.env.NEXT_PUBLIC_GYM_PHONE || '+91 83479 77566'
 };
+
+export const maskSensitiveData = (value: string, type: 'phone' | 'email' | 'text' = 'text'): string => {
+  if (!value) return '';
+  if (type === 'phone') {
+    if (value.length < 10) return value;
+    return `${value.slice(0, 2)}******${value.slice(-2)}`;
+  }
+  if (type === 'email') {
+    const parts = value.split('@');
+    if (parts.length !== 2) return value;
+    return `${parts[0].charAt(0)}***@${parts[1]}`;
+  }
+  return '***';
+};

@@ -91,16 +91,20 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
  setShowModal(true);
  }, []);
 
- const saveStaff = useCallback(async (data: unknown) => {
+ const saveStaff = useCallback(async (data: Partial<Staff> & { joinDate?: string | Date; salary?: string | number }) => {
  setSaving(true);
  try {
- const d = data as Record<string, any>;
- const payload = { ...d, salary: Number(d.salary), joinDate: new Date(d.joinDate).toISOString(), isActive: true };
+ const payload: Partial<Staff> = { 
+   ...data, 
+   salary: Number(data.salary || 0), 
+   joinDate: data.joinDate ? new Date(data.joinDate).toISOString() : new Date().toISOString(), 
+   isActive: true 
+ };
  if (editId) { 
- const res = await hrApi.updateStaff(editId, payload) as { message?: string }; 
+ const res = await hrApi.updateStaff(editId, payload); 
  showToast(res.message || 'Staff updated successfully', 'success'); 
  } else { 
- const res = await hrApi.createStaff(payload) as { message?: string }; 
+ const res = await hrApi.createStaff(payload); 
  showToast(res.message || 'Staff created successfully', 'success'); 
  }
  setShowModal(false);
@@ -116,12 +120,11 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
    setShowPayrollModal(true);
  }, []);
 
-   const savePayroll = useCallback(async (data: unknown) => {
+   const savePayroll = useCallback(async (data: Partial<Payroll> & { amount?: string | number }) => {
      setSaving(true);
      try {
-       const d = data as Record<string, any>;
-       const payload = { ...d, amount: Number(d.amount), status: 'DUE' };
-       const res = await hrApi.createPayroll(payload) as { message?: string };
+       const payload: Partial<Payroll> = { ...data, amount: Number(data.amount || 0), status: 'DUE' };
+       const res = await hrApi.createPayroll(payload);
        showToast(res.message || 'Payroll recorded successfully', 'success');
       setShowPayrollModal(false);
       await loadAll();
@@ -136,7 +139,7 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
   const isConfirmed = await confirm({ title: 'Remove Staff', message: 'Remove this staff member?', confirmText: 'Remove', type: 'danger' });
   if (!isConfirmed) return;
   try { 
- const res = await hrApi.removeStaff(id) as { message?: string }; 
+ const res = await hrApi.removeStaff(id); 
  showToast(res.message || 'Staff removed successfully', 'success'); 
  await loadAll(); 
  } catch (err) { 
@@ -146,7 +149,7 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
 
  const markPayrollPaid = useCallback(async (id: number) => {
   try { 
- const res = await hrApi.updatePayrollStatus(id, 'Paid') as { message?: string }; 
+ const res = await hrApi.updatePayrollStatus(id, 'Paid'); 
  showToast(res.message || 'Payroll marked as paid', 'success'); 
  await loadAll(); 
  } catch (err) { 

@@ -4,7 +4,9 @@
 import { Edit, MessageCircle, Mail, Trash2, Loader2 } from 'lucide-react';
 import { useMembersContext } from '@/app/erp/members/members_context/MembersContext';
 import { FetchState } from '@/app/erp/members/members_types/members_types';
-import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS, MEMBERS_TABLE_HEADERS, formatCurrency } from '@/app/erp/members/members_utils/MembersSharedConstants';
+import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS, MEMBERS_TABLE_HEADERS, formatCurrency, MEMBERS_ITEMS_PER_PAGE } from '@/app/erp/members/members_utils/MembersSharedConstants';
+import { maskSensitiveData } from '@/app/erp/erp_utils/ErpSharedConstants';
+import MembersEmptyState from '@/app/erp/members/members_components/MembersEmptyState/MembersEmptyState';
 
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
 
@@ -14,8 +16,7 @@ export default function MembersTable() {
     setSelectedMember, loadMemberProfile, openEdit, openMsg, deleteMember, totalMembers
   } = useMembersContext();
 
-  const ITEMS_PER_PAGE = 10;
-  const totalPages = Math.ceil(totalMembers / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(totalMembers / MEMBERS_ITEMS_PER_PAGE);
 
   return (
     <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden flex flex-col h-full min-h-96">
@@ -52,7 +53,7 @@ export default function MembersTable() {
                         </div>
                         <div>
                           <p className="text-sm font-semibold text-primary">{m.name}</p>
-                          <p className="text-xs text-secondary">{m.phone}</p>
+                          <p className="text-xs text-secondary">{maskSensitiveData(m.phone, 'phone')}</p>
                         </div>
                       </div>
                     </td>
@@ -80,8 +81,8 @@ export default function MembersTable() {
                 )})}
                 {members.length === 0 && fetchState === FetchState.SUCCESS && (
                   <tr>
-                    <td colSpan={8} className="text-center py-12 text-secondary">
-                      {search || statusFilter !== 'All' ? 'No members match the filter.' : 'No members yet. Add your first member!'}
+                    <td colSpan={8} className="p-0 border-b-0">
+                      <MembersEmptyState isFiltered={Boolean(search || statusFilter !== 'All')} />
                     </td>
                   </tr>
                 )}
@@ -92,7 +93,7 @@ export default function MembersTable() {
             currentPage={currentPage} 
             totalPages={totalPages} 
             totalItems={totalMembers} 
-            itemsPerPage={ITEMS_PER_PAGE} 
+            itemsPerPage={MEMBERS_ITEMS_PER_PAGE} 
             onPageChange={setCurrentPage} 
           />
         </>

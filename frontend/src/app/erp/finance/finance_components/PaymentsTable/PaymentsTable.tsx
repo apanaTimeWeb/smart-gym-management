@@ -4,7 +4,6 @@
 import { useFinanceContext } from '@/app/erp/finance/finance_context/FinanceContext';
 import { PAYMENTS_TABLE_HEADERS, FINANCE_METHOD_STYLES, FINANCE_STATUS_STYLES } from '@/app/erp/finance/finance_utils/FinanceSharedConstants';
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
-import { Loader2 } from 'lucide-react';
 
 export default function PaymentsTable() {
   const { payments, totalPayments, fetchState, search, currentPage, setCurrentPage } = useFinanceContext();
@@ -14,9 +13,33 @@ export default function PaymentsTable() {
 
  if (fetchState === 'loading') {
  return (
- <div className="flex justify-center py-10">
- <Loader2 className="w-8 h-8 animate-spin text-primary" />
+ <>
+ <div className="overflow-x-auto">
+ <table className="w-full">
+ <thead className="bg-input text-secondary">
+ <tr>
+ {PAYMENTS_TABLE_HEADERS.map(h => (
+ <th key={h} className="text-left text-xs font-semibold uppercase tracking-wider px-4 py-3">
+ {h}
+ </th>
+ ))}
+ </tr>
+ </thead>
+ <tbody className="divide-y divide-border">
+ {[...Array(5)].map((_, i) => (
+ <tr key={i} className="animate-pulse bg-card">
+ <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
+ <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-32"></div></td>
+ <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-16"></div></td>
+ <td className="px-4 py-4"><div className="h-5 bg-muted rounded-full w-20"></div></td>
+ <td className="px-4 py-4"><div className="h-5 bg-muted rounded-full w-24"></div></td>
+ <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-24"></div></td>
+ </tr>
+ ))}
+ </tbody>
+ </table>
  </div>
+ </>
  );
  }
 

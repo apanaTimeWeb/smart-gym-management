@@ -4,13 +4,15 @@ import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import type { PlanFormValues } from '@/app/erp/plans/plans_utils/PlansSharedConstants';
 import React from 'react';
 
+export type FetchState = 'idle' | 'loading' | 'success' | 'error';
+
 export interface PlansInitialData {
   plans: Plan[];
 }
 
 export interface PlansContextType {
   plans: Plan[];
-  loading: boolean;
+  fetchState: FetchState;
   saving: boolean;
   toast: { message: string; type: ToastType } | null;
 

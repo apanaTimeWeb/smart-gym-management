@@ -39,6 +39,8 @@ export const EMPTY_MEMBER_FORM = {
  planId: '' 
 } as unknown as MemberFormValues;
 
+export const MEMBERS_ITEMS_PER_PAGE = 10;
+
 export const MEMBERS_TABLE_HEADERS = [
  'Member', 'Plan', 'Status', 'Billing Cycle', 'Paid', 'Pending', 'Expiry', 'Actions'
 ];

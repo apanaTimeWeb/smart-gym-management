@@ -7,12 +7,12 @@ import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
 import { Loader2 } from 'lucide-react';
 
 export default function PendingPayments() {
-  const { currentPage, setCurrentPage, pendingPayments, pendingTotal, loading } = useSalesContext();
+  const { currentPage, setCurrentPage, pendingPayments, pendingTotal, fetchState } = useSalesContext();
   
   const ITEMS_PER_PAGE = 10;
   const totalPages = Math.ceil(pendingTotal / ITEMS_PER_PAGE) || 1;
 
-  if (loading) {
+  if (fetchState === 'loading') {
     return (
       <div className="flex justify-center py-10">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />

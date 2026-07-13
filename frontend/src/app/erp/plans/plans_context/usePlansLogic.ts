@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { plansApi } from '@/app/erp/plans/plans_api/plans_api';
-import type { Plan, PlansContextType, PlansInitialData } from '@/app/erp/plans/plans_types/plans_types';
+import type { Plan, PlansContextType, PlansInitialData, FetchState } from '@/app/erp/plans/plans_types/plans_types';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import { EMPTY_PLAN_FORM, type PlanFormValues } from '@/app/erp/plans/plans_utils/PlansSharedConstants';
 import { useConfirm } from '@/app/erp/erp_components/ErpFeedback/ErpConfirmProvider';
@@ -17,7 +17,7 @@ export function usePlansLogic(initialData?: PlansInitialData | null): PlansConte
   const searchParams = useSearchParams();
 
   const [plans, setPlans] = useState<Plan[]>(initialData?.plans || []);
-  const [loading, setLoading] = useState(!initialData);
+  const [fetchState, setFetchState] = useState<FetchState>(initialData ? 'success' : 'loading');
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
@@ -45,15 +45,15 @@ export function usePlansLogic(initialData?: PlansInitialData | null): PlansConte
   const hideToast = useCallback(() => setToast(null), []);
 
   const loadPlans = useCallback(async () => {
-    setLoading(true);
+    setFetchState('loading');
     try {
       const res = await plansApi.getAll();
       const data = res.data;
       setPlans(Array.isArray(data) ? data : (data as { plans?: Plan[] })?.plans || []);
+      setFetchState('success');
     } catch (e) {
       showToast((e as Error).message, 'error');
-    } finally {
-      setLoading(false);
+      setFetchState('error');
     }
   }, [showToast]);
 
@@ -128,7 +128,7 @@ export function usePlansLogic(initialData?: PlansInitialData | null): PlansConte
   }, [loadPlans, showToast, confirm]);
 
   return {
-    plans, loading, saving, toast,
+    plans, fetchState, saving, toast,
     search, setSearch, currentPage, setCurrentPage,
     showModal, setShowModal, editId, form, setForm,
     showToast, hideToast, loadPlans,

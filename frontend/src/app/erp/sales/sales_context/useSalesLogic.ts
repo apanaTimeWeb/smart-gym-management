@@ -1,7 +1,8 @@
 // RESPONSIBILITY: useSalesLogic.ts handles the logic and UI for its corresponding feature.
 import { useState, useCallback, useEffect } from 'react';
 import { type SalesTab, type DateFilter } from '@/app/erp/sales/sales_utils/SalesSharedConstants';
-import { SalesContextType, SalesInitialData } from '@/app/erp/sales/sales_types/sales_types';
+import { SalesContextType, SalesInitialData, FetchState, OverviewDataPoint, MembershipReportItem, MembershipTotals } from '@/app/erp/sales/sales_types/sales_types';
+import type { Member } from '@/app/erp/members/members_types/members_types';
 import { salesApi } from '@/app/erp/sales/sales_api/sales_api';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -12,12 +13,12 @@ export function useSalesLogic(initialData?: SalesInitialData | null): SalesConte
 
   const [tab, setTab] = useState<SalesTab>('Overview');
   const [dateFilter, setDateFilter] = useState<DateFilter>('This Month');
-  const [loading, setLoading] = useState(!initialData);
+  const [fetchState, setFetchState] = useState<FetchState>(initialData ? 'success' : 'loading');
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
   const search = searchParams.get('search') || '';
   const currentPage = Number(searchParams.get('page')) || 1;
-  const [debouncedSearch, setDebouncedSearch] = useState(search);
+  const debouncedSearch = useDebounce(search, 300);
 
   const setSearch = useCallback((val: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -37,21 +38,18 @@ export function useSalesLogic(initialData?: SalesInitialData | null): SalesConte
     setTimeout(() => setToast(null), 3000);
   }, []);
 
-  const [overviewData, setOverviewData] = useState<any[]>(initialData?.overviewData || []);
-  const [membershipReport, setMembershipReport] = useState<any[]>(initialData?.membershipReport || []);
-  const [membershipTotals, setMembershipTotals] = useState<any>(initialData?.membershipTotals || {});
-  const [pendingPayments, setPendingPayments] = useState<any[]>(initialData?.pendingPayments || []);
+  const [overviewData, setOverviewData] = useState<OverviewDataPoint[]>(initialData?.overviewData || []);
+  const [membershipReport, setMembershipReport] = useState<MembershipReportItem[]>(initialData?.membershipReport || []);
+  const [membershipTotals, setMembershipTotals] = useState<MembershipTotals>(initialData?.membershipTotals || { activeCount: 0, revenue: 0 });
+  const [pendingPayments, setPendingPayments] = useState<Member[]>(initialData?.pendingPayments || []);
   const [pendingTotal, setPendingTotal] = useState(initialData?.pendingTotal || 0);
-  const [allMemberships, setAllMemberships] = useState<any[]>(initialData?.allMemberships || []);
+  const [allMemberships, setAllMemberships] = useState<Member[]>(initialData?.allMemberships || []);
   const [allMembershipsTotal, setAllMembershipsTotal] = useState(initialData?.allMembershipsTotal || 0);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setDebouncedSearch(search), 300);
-    return () => clearTimeout(timer);
-  }, [search]);
+
 
   const loadAll = useCallback(async () => {
-    setLoading(true);
+    setFetchState('loading');
     try {
       const params: any = { limit: '10', page: currentPage.toString() };
       if (debouncedSearch) params.search = debouncedSearch;
@@ -65,7 +63,7 @@ export function useSalesLogic(initialData?: SalesInitialData | null): SalesConte
 
       setOverviewData(overviewRes.data?.monthlyRevenue || []);
       setMembershipReport(reportRes.data?.report || []);
-      setMembershipTotals(reportRes.data?.totals || {});
+      setMembershipTotals(reportRes.data?.totals || { activeCount: 0, revenue: 0 });
       
       setPendingPayments(pendingRes.data?.members || []);
       setPendingTotal(pendingRes.data?.total || 0);
@@ -75,8 +73,9 @@ export function useSalesLogic(initialData?: SalesInitialData | null): SalesConte
 
     } catch (e) {
       showToast(e instanceof Error ? e.message : 'Failed to fetch sales data', 'error');
+      setFetchState('error');
     } finally {
-      setLoading(false);
+      setFetchState('success');
     }
   }, [currentPage, debouncedSearch]);
 
@@ -96,7 +95,7 @@ export function useSalesLogic(initialData?: SalesInitialData | null): SalesConte
     pendingTotal,
     allMemberships,
     allMembershipsTotal,
-    loading,
+    fetchState,
     loadAll,
     toast,
     showToast

@@ -8,7 +8,7 @@ import { formatCurrency } from '@/app/erp/store/store_utils/StoreSharedConstants
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
 
 export default function ProductGrid() {
-  const { products, loading, debouncedSearch, currentPage, setCurrentPage, openEditProduct, deleteProduct, addToOrder } = useStoreContext();
+  const { products, fetchState, debouncedSearch, currentPage, setCurrentPage, openEditProduct, deleteProduct, addToOrder } = useStoreContext();
 
   const filtered = products.filter(p => {
     const s = debouncedSearch.toLowerCase();
@@ -19,10 +19,20 @@ export default function ProductGrid() {
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const currentData = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
-  if (loading) {
+  if (fetchState === 'loading') {
     return (
-      <div className="flex justify-center py-10">
-        <div className="w-8 h-8 border-4 border-warning border-t-transparent rounded-full animate-spin" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {[...Array(8)].map((_, i) => (
+          <div key={i} className="animate-pulse bg-card rounded-xl border border-border p-4 h-64">
+            <div className="h-32 bg-muted rounded-lg mb-4"></div>
+            <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
+            <div className="h-4 bg-muted rounded w-1/2 mb-4"></div>
+            <div className="flex justify-between items-center mt-auto">
+              <div className="h-6 bg-muted rounded w-1/3"></div>
+              <div className="h-8 bg-muted rounded w-1/4"></div>
+            </div>
+          </div>
+        ))}
       </div>
     );
   }

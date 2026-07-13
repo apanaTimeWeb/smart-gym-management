@@ -2,11 +2,11 @@
 "use client";
 
 import React from 'react';
-import { useAuditFilters } from '@/app/erp/audit/audit_components/AuditFilters/useAuditFilters';
 import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
+import { useAuditContext } from '@/app/erp/audit/audit_context/AuditContext';
 
 export const AuditFilters = () => {
-  const { filters, handleEntityTypeChange, handleActorIdChange, entityTypes } = useAuditFilters();
+  const { filters, handleEntityTypeChange, handleActorIdChange, entityTypes } = useAuditContext();
 
   return (
     <div className="flex flex-col md:flex-row gap-4 p-6 bg-card">
@@ -30,7 +30,7 @@ export const AuditFilters = () => {
           type="text"
           placeholder="Filter by Actor ID (e.g. 1)"
           value={filters.actorId || ''}
-          onChange={handleActorIdChange}
+          onChange={(e) => handleActorIdChange(e.target.value)}
           className="p-2.5 rounded-xl border border-border bg-input text-primary outline-none focus:border-primary focus-visible:ring-1 focus-visible:ring-primary transition-all shadow-sm placeholder:text-secondary"
         />
       </div>

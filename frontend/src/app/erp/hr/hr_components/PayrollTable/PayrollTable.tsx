@@ -4,7 +4,7 @@
 import { useHrContext } from '@/app/erp/hr/hr_context/HrContext';
 import { PAYROLL_TABLE_HEADERS } from '@/app/erp/hr/hr_utils/HrSharedConstants';
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
-import { CheckCircle2, Loader2 } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 
 export default function PayrollTable() {
   const { payrolls, search, currentPage, setCurrentPage, markPayrollPaid, fetchState } = useHrContext();
@@ -22,8 +22,34 @@ export default function PayrollTable() {
 
   if (fetchState === 'loading') {
     return (
-      <div className="flex justify-center py-10">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      <div className="flex flex-col h-full">
+        <div className="overflow-x-auto flex-1">
+          <table className="w-full">
+            <thead className="bg-input text-secondary">
+              <tr>
+                {PAYROLL_TABLE_HEADERS.map(h => (
+                  <th key={h} className="text-left text-xs font-semibold uppercase tracking-wider px-4 py-3">{h}</th>
+                ))}
+                <th className="text-right text-xs font-semibold uppercase tracking-wider px-4 py-3">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {[...Array(5)].map((_, i) => (
+                <tr key={i} className="animate-pulse bg-card">
+                  <td className="px-4 py-4">
+                    <div className="h-4 bg-muted rounded w-32 mb-2"></div>
+                    <div className="h-3 bg-muted rounded w-20"></div>
+                  </td>
+                  <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-16"></div></td>
+                  <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-24"></div></td>
+                  <td className="px-4 py-4"><div className="h-5 bg-muted rounded-full w-16"></div></td>
+                  <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
+                  <td className="px-4 py-4 text-right"><div className="h-8 bg-muted rounded-lg w-24 ml-auto"></div></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }

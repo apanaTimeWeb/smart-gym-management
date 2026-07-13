@@ -16,6 +16,7 @@ export interface FinanceContextType {
   totalPayments: number;
   summary: FinanceSummary | null;
  fetchState: FetchState;
+ saving: boolean;
  error: string;
  toast: { message: string; type: ToastType } | null;
  showToast: (msg: string, t: ToastType) => void;

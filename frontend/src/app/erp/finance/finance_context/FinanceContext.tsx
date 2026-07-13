@@ -15,6 +15,7 @@ export function FinanceProvider({ children, initialData }: { children: React.Rea
    logic.totalPayments,
    logic.summary,
    logic.fetchState,
+   logic.saving,
    logic.error,
    logic.toast,
    logic.showModal,

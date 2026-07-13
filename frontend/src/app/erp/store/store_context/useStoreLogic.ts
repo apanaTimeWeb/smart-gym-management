@@ -7,29 +7,50 @@ import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import type { ErpReceiptData } from '@/app/erp/erp_components/ErpShared/ErpThermalReceipt';
 import { EMPTY_PRODUCT_FORM, ERR_EMPTY_ORDER, ProductFormValues } from '@/app/erp/store/store_utils/StoreSharedConstants';
 import { GYM_DETAILS } from '@/app/erp/erp_utils/ErpSharedConstants';
-import { StoreContextType, OrderItem } from '@/app/erp/store/store_types/store_types';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { StoreContextType, OrderItem, StoreInitialData, FetchState } from '@/app/erp/store/store_types/store_types';
 import { useConfirm } from '@/app/erp/erp_components/ErpFeedback/ErpConfirmProvider';
 
-export function useStoreLogic(initialData?: any): StoreContextType {
+export function useStoreLogic(initialData?: StoreInitialData | null): StoreContextType {
   const { confirm } = useConfirm();
-  const [tab, setTab] = useState('Products');
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const tab = searchParams.get('tab') || 'Products';
+  
+  const search = searchParams.get('search') || '';
+  const currentPage = parseInt(searchParams.get('page') || '1', 10);
+  const startDate = searchParams.get('startDate') || '';
+  const endDate = searchParams.get('endDate') || '';
+  const sortOrder = (searchParams.get('sortOrder') as 'ASC' | 'DESC') || 'DESC';
+  
+  const debouncedSearch = useDebounce(search, 300);
+
+  const setUrlParam = useCallback((key: string, value: string | null) => {
+    const current = new URLSearchParams(Array.from(searchParams.entries()));
+    if (value) current.set(key, value);
+    else current.delete(key);
+    if (key !== 'page' && key !== 'tab') current.set('page', '1');
+    router.push(`${pathname}?${current.toString()}`, { scroll: false });
+  }, [searchParams, pathname, router]);
+
+  const setTab = useCallback((val: string) => setUrlParam('tab', val), [setUrlParam]);
+  const setSearch = useCallback((val: string) => setUrlParam('search', val || null), [setUrlParam]);
+  const setCurrentPage = useCallback((val: number) => setUrlParam('page', val.toString()), [setUrlParam]);
+  const setStartDate = useCallback((val: string) => setUrlParam('startDate', val || null), [setUrlParam]);
+  const setEndDate = useCallback((val: string) => setUrlParam('endDate', val || null), [setUrlParam]);
+  const setSortOrder = useCallback((val: 'ASC' | 'DESC') => setUrlParam('sortOrder', val), [setUrlParam]);
   const [products, setProducts] = useState<Product[]>(initialData?.products || []);
   const [orders, setOrders] = useState<Order[]>(initialData?.orders || []);
   const [totalOrders, setTotalOrders] = useState<number>(initialData?.totalOrders || 0);
   const [summary, setSummary] = useState<StoreSummary | null>(initialData?.summary || null);
-  const [loading, setLoading] = useState(!initialData);
+  const [fetchState, setFetchState] = useState<FetchState>(initialData ? 'success' : 'loading');
   const [saving, setSaving] = useState(false);
   const isFirstRender = React.useRef(true);
  
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
   const [printData, setPrintData] = useState<ErpReceiptData | null>(null);
-
-  const [search, setSearch] = useState('');
-  const debouncedSearch = useDebounce(search, 300);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [sortOrder, setSortOrder] = useState<'ASC' | 'DESC'>('DESC');
 
  const [showProductModal, setShowProductModal] = useState(false);
  const [editProductId, setEditProductId] = useState<number | null>(null);
@@ -45,7 +66,7 @@ export function useStoreLogic(initialData?: any): StoreContextType {
  const hideToast = useCallback(() => setToast(null), []);
 
  const loadAll = useCallback(async () => {
- setLoading(true);
+ setFetchState('loading');
  try {
       const params: Record<string, string> = { 
         limit: '10', 
@@ -67,8 +88,9 @@ export function useStoreLogic(initialData?: any): StoreContextType {
       setSummary(summaryRes.data);
  } catch (e) { 
  showToast((e as Error).message, 'error'); 
+ setFetchState('error');
  } finally { 
- setLoading(false); 
+ setFetchState('success'); 
  }
  }, [showToast, currentPage, debouncedSearch, startDate, endDate, sortOrder]);
 
@@ -204,7 +226,7 @@ export function useStoreLogic(initialData?: any): StoreContextType {
 
   return {
     tab, setTab,
-    products, orders, totalOrders, summary, loading, saving,
+    products, orders, totalOrders, summary, fetchState, saving,
     toast, printData, search, debouncedSearch, setSearch,
     currentPage, setCurrentPage,
     startDate, setStartDate, endDate, setEndDate, sortOrder, setSortOrder,

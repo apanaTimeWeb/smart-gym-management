@@ -9,14 +9,14 @@ import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
 const ITEMS_PER_PAGE = 12;
 
 export default function PlansGrid() {
-  const { plans, loading, search, currentPage, setCurrentPage, openEdit, deletePlan } = usePlansContext();
+  const { plans, fetchState, search, currentPage, setCurrentPage, openEdit, deletePlan } = usePlansContext();
 
   // Client-side filter on the already-fetched plans list (plans count is typically small, <100)
   const filtered = plans.filter(p => p.name.toLowerCase().includes(search.toLowerCase()));
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const currentData = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
-  if (loading) {
+  if (fetchState === 'loading') {
     return (
       <div className="flex items-center justify-center py-16">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />

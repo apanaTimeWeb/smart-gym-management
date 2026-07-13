@@ -14,6 +14,7 @@ export function useFinanceLogic(initialData?: FinanceInitialData | null): Financ
   const [totalPayments, setTotalPayments] = useState<number>(initialData?.totalPayments || 0);
   const [summary, setSummary] = useState<FinanceSummary | null>(initialData?.summary || null);
   const [fetchState, setFetchState] = useState<FetchState>(initialData ? 'success' : 'loading');
+  const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
   const [showModal, setShowModal] = useState(false);
@@ -59,12 +60,13 @@ export function useFinanceLogic(initialData?: FinanceInitialData | null): Financ
       setPayments(paymentsRes.data?.payments || []);
       setTotalPayments(paymentsRes.data?.total || 0);
       setSummary(summaryRes.data || null);
+      setFetchState('success');
   } catch (e) { 
   const msg = (e as Error).message;
   setError(msg);
   showToast(msg, 'error');  
+  setFetchState('error');
  }
-  finally { setFetchState('success'); }
   }, [showToast, currentPage, debouncedSearch]);
 
   useEffect(() => { 
@@ -76,7 +78,7 @@ export function useFinanceLogic(initialData?: FinanceInitialData | null): Financ
   }, [loadAll, initialData]);
 
   const savePayment = useCallback(async (data: AddPaymentFormValues) => {
-    setFetchState('loading');
+    setSaving(true);
     try {
       const res = await financeApi.createPayment({ 
         memberId: Number(data.memberId), 
@@ -90,7 +92,7 @@ export function useFinanceLogic(initialData?: FinanceInitialData | null): Financ
     } catch (err) { 
       showToast((err as Error).message, 'error'); 
     } finally { 
-      setFetchState('success'); 
+      setSaving(false); 
     }
   }, [loadAll, showToast]);
 
@@ -99,6 +101,7 @@ export function useFinanceLogic(initialData?: FinanceInitialData | null): Financ
  totalPayments,
  summary,
  fetchState,
+ saving,
  error,
  toast,
  showToast,
