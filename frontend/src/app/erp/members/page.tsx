@@ -1,9 +1,10 @@
 // RESPONSIBILITY: Server component that handles initial SSR data fetching for the members module.
 import MembersMain from '@/app/erp/members/members_components/MembersMain/MembersMain';
 import { ssrMembersApi, ssrPlansApi } from '@/lib/server-api';
+import { MembersInitialData } from '@/app/erp/members/members_types/members_types';
 
 export default async function MembersPage() {
-  let initialData = undefined;
+  let initialData: MembersInitialData | null = null;
   
   try {
     const [membersRes, plansRes, statsRes] = await Promise.all([

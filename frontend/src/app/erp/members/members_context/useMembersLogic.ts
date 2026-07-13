@@ -1,7 +1,8 @@
 // RESPONSIBILITY: Custom hook encapsulating all business logic, state, and API interactions for the members module.
 // DATA FLOW: membersApi -> useMembersLogic -> MembersContext
 import React, { useState, useCallback, useEffect } from 'react';
-import { plansApi, financeApi, attendanceApi, type Member, type Plan, type Payment } from '@/lib/api';
+import { plansApi, financeApi, attendanceApi, type Member, type Plan, type Payment, ApiResponse } from '@/lib/api';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { membersApi } from '@/app/erp/members/members_api/members_api';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import type { MessageType, ErpMessageRecipient } from '@/app/erp/erp_components/ErpFeedback/ErpMessageModal';
@@ -9,14 +10,14 @@ import type { ErpReceiptData } from '@/app/erp/erp_components/ErpShared/ErpTherm
 import { useConfirm } from '@/app/erp/erp_components/ErpFeedback/ErpConfirmProvider';
 import { EMPTY_MEMBER_FORM, formatCurrency, MSG_TEMPLATES, MemberFormValues } from '@/app/erp/members/members_utils/MembersSharedConstants';
 import { GYM_DETAILS } from '@/app/erp/erp_utils/ErpSharedConstants';
-import { MembersContextType, FetchState } from '@/app/erp/members/members_types/members_types';
+import { MembersContextType, FetchState, MembersInitialData } from '@/app/erp/members/members_types/members_types';
 
 import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
 
 /**
  * Hook to manage members data, state, and API fetching.
  */
-export function useMembersLogic(initialData?: any): MembersContextType {
+export function useMembersLogic(initialData?: MembersInitialData | null): MembersContextType {
   const { confirm } = useConfirm();
   const [members, setMembers] = useState<Member[]>(initialData?.members || []);
   const [plans, setPlans] = useState<Plan[]>(initialData?.plans || []);
@@ -26,11 +27,30 @@ export function useMembersLogic(initialData?: any): MembersContextType {
   const [saving, setSaving] = useState(false);
   const isFirstRender = React.useRef(true);
 
-  const [search, setSearch] = useState('');
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  // Read state from URL
+  const search = searchParams.get('search') || '';
+  const statusFilter = searchParams.get('status') || 'All';
+  const currentPage = parseInt(searchParams.get('page') || '1', 10);
   const debouncedSearch = useDebounce(search, 300);
-  const [statusFilter, setStatusFilter] = useState('All');
-  const [currentPage, setCurrentPage] = useState(1);
+  
   const [totalMembers, setTotalMembers] = useState(initialData?.totalMembers || 0);
+
+  // Sync state back to URL
+  const setUrlParam = useCallback((key: string, value: string | null) => {
+    const current = new URLSearchParams(Array.from(searchParams.entries()));
+    if (value) current.set(key, value);
+    else current.delete(key);
+    if (key !== 'page') current.set('page', '1'); // Reset page when filters change
+    router.push(`${pathname}?${current.toString()}`);
+  }, [searchParams, pathname, router]);
+
+  const setSearch = useCallback((val: string) => setUrlParam('search', val || null), [setUrlParam]);
+  const setStatusFilter = useCallback((val: string) => setUrlParam('status', val === 'All' ? null : val), [setUrlParam]);
+  const setCurrentPage = useCallback((val: number) => setUrlParam('page', val.toString()), [setUrlParam]);
 
  const [showAddModal, setShowAddModal] = useState(false);
  const [editId, setEditId] = useState<number | null>(null);
@@ -128,45 +148,45 @@ export function useMembersLogic(initialData?: any): MembersContextType {
  email: m.email || '', 
  phone: m.phone, 
  address: m.address || '', 
- gender: (m.gender as "MALE"|"FEMALE"|"OTHER") || 'MALE', 
+ gender: (m.gender || 'MALE') as "MALE"|"FEMALE"|"OTHER", 
  billingCycle: m.billingCycle, 
- customDays: (m as any).customDays, // We will type this properly later
- planId: m.planId 
- } as unknown as MemberFormValues);
+ customDays: 0,
+ planId: String(m.planId) 
+ } as MemberFormValues);
  setShowAddModal(true);
  }, []);
 
- const saveMember = useCallback(async (data: MemberFormValues) => {
- setSaving(true);
- try {
-   if (editId) {
-   const res = await membersApi.update(Number(editId), { ...data, planId: Number(data.planId) });
-   showToast((res as any).message, 'success');
-   } else {
-   const res = await membersApi.create({ ...data, planId: Number(data.planId), joinDate: new Date().toISOString() });
-  showToast((res as any).message, 'success');
-  }
- setShowAddModal(false);
- await loadAll();
- } catch (err) { 
- showToast((err as Error).message, 'error'); 
- } finally { 
- setSaving(false); 
- }
- }, [editId, loadAll, showToast]);
-
- const deleteMember = useCallback(async (id: number) => {
-  const isConfirmed = await confirm({ title: 'Delete Member', message: 'Are you sure you want to delete this member? This action cannot be undone.', confirmText: 'Delete', type: 'danger' });
-  if (!isConfirmed) return;
+  const saveMember = useCallback(async (data: MemberFormValues) => {
+  setSaving(true);
   try {
- const res = await membersApi.remove(id);
- showToast((res as any).message, 'success');
- if (selectedMember?.id === id) setSelectedMember(null);
- await loadAll();
- } catch (err) { 
- showToast((err as Error).message, 'error'); 
- }
- }, [loadAll, showToast, selectedMember]);
+    if (editId) {
+    const res = await membersApi.update(Number(editId), { ...data, planId: Number(data.planId) });
+    showToast(res.message || 'Updated successfully', 'success');
+    } else {
+    const res = await membersApi.create({ ...data, planId: Number(data.planId), joinDate: new Date().toISOString() });
+   showToast(res.message || 'Created successfully', 'success');
+   }
+  setShowAddModal(false);
+  await loadAll();
+  } catch (err) { 
+  showToast((err as Error).message, 'error'); 
+  } finally { 
+  setSaving(false); 
+  }
+  }, [editId, loadAll, showToast]);
+
+  const deleteMember = useCallback(async (id: number) => {
+   const isConfirmed = await confirm({ title: 'Delete Member', message: 'Are you sure you want to delete this member? This action cannot be undone.', confirmText: 'Delete', type: 'danger' });
+   if (!isConfirmed) return;
+   try {
+  const res = await membersApi.remove(id);
+  showToast(res.message || 'Deleted successfully', 'success');
+  if (selectedMember?.id === id) setSelectedMember(null);
+  await loadAll();
+  } catch (err) { 
+  showToast((err as Error).message, 'error'); 
+  }
+  }, [loadAll, showToast, selectedMember, confirm]);
 
   const openMsg = useCallback((m: Member, type: MessageType) => {
     const tpl = m.status === 'EXPIRED'

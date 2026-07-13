@@ -13,6 +13,13 @@ export enum FetchState {
   ERROR = 'ERROR'
 }
 
+export interface MembersInitialData {
+  members: Member[];
+  plans: Plan[];
+  stats: MemberStats;
+  totalMembers: number;
+}
+
 export interface MembersContextType {
  members: Member[];
  plans: Plan[];

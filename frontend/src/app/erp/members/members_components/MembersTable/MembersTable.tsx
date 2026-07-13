@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Renders the primary tabular list of members with actions, filtering state, and pagination.
 "use client";
 
-import { Edit, MessageCircle, Mail, Trash2 } from 'lucide-react';
+import { Edit, MessageCircle, Mail, Trash2, Loader2 } from 'lucide-react';
 import { useMembersContext } from '@/app/erp/members/members_context/MembersContext';
 import { FetchState } from '@/app/erp/members/members_types/members_types';
 import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS, MEMBERS_TABLE_HEADERS, formatCurrency } from '@/app/erp/members/members_utils/MembersSharedConstants';
@@ -21,7 +21,7 @@ export default function MembersTable() {
     <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden flex flex-col h-full min-h-96">
       {fetchState === FetchState.LOADING ? (
         <div className="flex items-center justify-center py-16 flex-1">
-          <div className="w-8 h-8 border-4 border-warning border-t-transparent rounded-full animate-spin" />
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
         </div>
       ) : (
         <>

@@ -11,6 +11,7 @@ import MembersKPIs from '@/app/erp/members/members_components/MembersKPIs/Member
 import MembersToolbar from '@/app/erp/members/members_components/MembersToolbar/MembersToolbar';
 import MembersTable from '@/app/erp/members/members_components/MembersTable/MembersTable';
 import MemberProfile from '@/app/erp/members/members_components/MemberProfile/MemberProfile';
+import { MembersInitialData } from '@/app/erp/members/members_types/members_types';
 import dynamic from 'next/dynamic';
 
 const MemberModal = dynamic(() => import('@/app/erp/members/members_components/MemberModal/MemberModal'), { ssr: false });
@@ -59,7 +60,7 @@ function MembersContent() {
   );
 }
 
-export default function MembersMain({ initialData }: { initialData?: any }) {
+export default function MembersMain({ initialData }: { initialData?: MembersInitialData | null }) {
   return (
     <MembersProvider initialData={initialData}>
       <MembersContent />
