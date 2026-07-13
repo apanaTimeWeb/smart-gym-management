@@ -18,7 +18,7 @@ export default async function HrPage() {
       summary: summaryRes.data || null
     };
   } catch (e) {
-    console.error('Failed to fetch hr initial data:', e);
+    // console.error('Failed to fetch hr initial data:', e);
   }
 
   return <HrMain initialData={initialData} />;
