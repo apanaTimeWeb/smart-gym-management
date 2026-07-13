@@ -32,8 +32,7 @@ export default function PlansToolbar() {
  </button>
  <button 
  onClick={openAdd} 
- className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white rounded-lg hover:opacity-90 transition-opacity" 
- style={{ background: 'var(--plans-highlight)' }}
+ className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg transition-colors hover:bg-primary/90" 
  >
  <Plus size={16} /> Create Plan
  </button>

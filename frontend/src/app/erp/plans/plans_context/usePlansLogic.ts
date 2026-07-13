@@ -3,18 +3,35 @@ import { useState, useCallback, useEffect } from 'react';
 import { plansApi, type Plan } from '@/lib/api';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import { EMPTY_PLAN_FORM, PlanFormValues } from '@/app/erp/plans/plans_utils/PlansSharedConstants';
-import { PlansContextType } from '@/app/erp/plans/plans_types/plans_types';
+import { PlansContextType, PlansInitialData } from '@/app/erp/plans/plans_types/plans_types';
 import { useConfirm } from '@/app/erp/erp_components/ErpFeedback/ErpConfirmProvider';
+import { useRouter, useSearchParams } from 'next/navigation';
 
-export function usePlansLogic(): PlansContextType {
+export function usePlansLogic(initialData?: PlansInitialData | null): PlansContextType {
   const { confirm } = useConfirm();
- const [plans, setPlans] = useState<Plan[]>([]);
- const [loading, setLoading] = useState(true);
- const [saving, setSaving] = useState(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const [plans, setPlans] = useState<Plan[]>(initialData?.plans || []);
+  const [loading, setLoading] = useState(!initialData);
+  const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
-  const [search, setSearch] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
+  const search = searchParams.get('search') || '';
+  const currentPage = Number(searchParams.get('page')) || 1;
+
+  const setSearch = useCallback((val: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (val) { params.set('search', val); params.set('page', '1'); }
+    else { params.delete('search'); params.set('page', '1'); }
+    router.push(`?${params.toString()}`, { scroll: false });
+  }, [router, searchParams]);
+
+  const setCurrentPage = useCallback((page: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('page', page.toString());
+    router.push(`?${params.toString()}`, { scroll: false });
+  }, [router, searchParams]);
 
   const [showModal, setShowModal] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);
@@ -27,7 +44,7 @@ export function usePlansLogic(): PlansContextType {
  setLoading(true);
  try {
  const res = await plansApi.getAll();
- setPlans(res.data);
+ setPlans(Array.isArray(res.data) ? res.data : (res.data as any)?.plans || []);
  } catch (e) { 
  showToast((e as Error).message, 'error'); 
  } finally { 
@@ -43,44 +60,44 @@ export function usePlansLogic(): PlansContextType {
  setShowModal(true); 
  }, []);
  
- const openEdit = useCallback((p: Plan) => {
- setEditId(p.id);
- setForm({ 
- name: p.name, 
- tier: p.tier, 
- price1Month: String(p.price1Month), 
- price3Month: String(p.price3Month), 
- price6Month: String(p.price6Month), 
- price12Month: String(p.price12Month),
- priceCustom: String((p as any).priceCustom || 0),
- features: p.features.join('\n') 
- });
- setShowModal(true);
- }, []);
+  const openEdit = useCallback((p: Plan) => {
+  setEditId(p.id);
+  setForm({ 
+  name: p.name, 
+  tier: p.tier, 
+  price1Month: String(p.price1Month), 
+  price3Month: String(p.price3Month), 
+  price6Month: String(p.price6Month), 
+  price12Month: String(p.price12Month),
+  priceCustom: String((p as Record<string, any>).priceCustom || 0),
+  features: p.features.join('\n') 
+  });
+  setShowModal(true);
+  }, []);
 
-  const savePlan = useCallback(async (data: PlanFormValues) => {
-    setSaving(true);
-    try {
-      const payload = {
-        name: data.name, 
-        tier: data.tier,
-        price1Month: Number(data.price1Month), 
-        price3Month: Number(data.price3Month), 
-        price6Month: Number(data.price6Month), 
-        price12Month: Number(data.price12Month),
-        priceCustom: Number(data.priceCustom),
-        isActive: true,
-        features: data.features.split('\n').map(s => s.trim()).filter(Boolean)
-      };
- 
- if (editId) { 
- const res = await plansApi.update(editId, payload); 
- showToast((res as any).message, 'success'); 
- } else { 
- const res = await plansApi.create(payload); 
- showToast((res as any).message, 'success'); 
- }
- setShowModal(false); 
+   const savePlan = useCallback(async (data: Record<string, any>) => {
+     setSaving(true);
+     try {
+       const payload = {
+         name: data.name, 
+         tier: data.tier,
+         price1Month: Number(data.price1Month), 
+         price3Month: Number(data.price3Month), 
+         price6Month: Number(data.price6Month), 
+         price12Month: Number(data.price12Month),
+         priceCustom: Number(data.priceCustom),
+         isActive: true,
+         features: data.features.split('\n').map((s: string) => s.trim()).filter(Boolean)
+       };
+  
+  if (editId) { 
+  const res = await plansApi.update(editId, payload) as unknown as { message?: string }; 
+  showToast(res.message || 'Plan updated', 'success'); 
+  } else { 
+  const res = await plansApi.create(payload) as unknown as { message?: string }; 
+  showToast(res.message || 'Plan created', 'success'); 
+  }
+  setShowModal(false); 
  await loadPlans();
  } catch (err) { 
  showToast((err as Error).message, 'error'); 
@@ -89,14 +106,14 @@ export function usePlansLogic(): PlansContextType {
   }
   }, [editId, loadPlans, showToast]);
 
- const deletePlan = useCallback(async (id: number) => {
-  const isConfirmed = await confirm({ title: 'Delete Plan', message: 'Are you sure you want to delete this plan?', confirmText: 'Delete', type: 'danger' });
-  if (!isConfirmed) return;
-  try { 
- const res = await plansApi.remove(id); 
- showToast((res as any).message, 'success'); 
- await loadPlans(); 
- } catch (err) { 
+  const deletePlan = useCallback(async (id: number) => {
+   const isConfirmed = await confirm({ title: 'Delete Plan', message: 'Are you sure you want to delete this plan?', confirmText: 'Delete', type: 'danger' });
+   if (!isConfirmed) return;
+   try { 
+  const res = await plansApi.remove(id) as unknown as { message?: string }; 
+  showToast(res.message || 'Plan deleted', 'success'); 
+  await loadPlans(); 
+  } catch (err) { 
  showToast((err as Error).message, 'error'); 
  }
  }, [loadPlans, showToast]);

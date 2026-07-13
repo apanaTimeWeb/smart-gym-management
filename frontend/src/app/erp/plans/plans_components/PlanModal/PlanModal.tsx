@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect } from 'react';
-import { X, Save } from 'lucide-react';
+import { X, Save, Loader2 } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
@@ -124,10 +124,9 @@ export default function PlanModal() {
             <button 
               type="submit" 
               disabled={saving} 
-              className="flex-1 py-2.5 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 disabled:opacity-70 transition-colors" 
-              style={{ background: 'var(--plans-highlight)' }}
+              className="flex-1 py-2.5 rounded-xl text-sm font-bold text-primary-foreground bg-primary hover:bg-primary/90 flex items-center justify-center gap-2 disabled:opacity-70 transition-colors" 
             >
-              {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><Save size={15} />{editId ? 'Update' : 'Create Plan'}</>}
+              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Save size={15} />{editId ? 'Update' : 'Create Plan'}</>}
             </button>
           </div>
         </form>

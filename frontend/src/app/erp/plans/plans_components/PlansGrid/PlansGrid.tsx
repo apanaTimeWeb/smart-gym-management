@@ -1,7 +1,7 @@
 // RESPONSIBILITY: PlansGrid.tsx handles the logic and UI for its corresponding feature.
 "use client";
 
-import { Edit2, Trash2, Tag, CheckCircle } from 'lucide-react';
+import { Edit2, Trash2, Tag, CheckCircle, Loader2 } from 'lucide-react';
 import { usePlansContext } from '@/app/erp/plans/plans_context/PlansContext';
 import { formatCurrency } from '@/app/erp/plans/plans_utils/PlansSharedConstants';
 
@@ -19,7 +19,7 @@ export default function PlansGrid() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-16">
-        <div className="w-8 h-8 border-4 border-warning border-t-transparent rounded-full animate-spin" />
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
   }

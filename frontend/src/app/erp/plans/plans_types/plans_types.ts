@@ -4,6 +4,10 @@ import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import { EMPTY_PLAN_FORM } from '@/app/erp/plans/plans_utils/PlansSharedConstants';
 import React from 'react';
 
+export interface PlansInitialData {
+  plans: Plan[];
+}
+
 export interface PlansContextType {
  plans: Plan[];
  loading: boolean;
@@ -27,7 +31,7 @@ export interface PlansContextType {
  loadPlans: () => Promise<void>;
  openAdd: () => void;
  openEdit: (p: Plan) => void;
- savePlan: (data: any) => Promise<void>;
+ savePlan: (data: Record<string, any>) => Promise<void>;
  deletePlan: (id: number) => Promise<void>;
 }
 

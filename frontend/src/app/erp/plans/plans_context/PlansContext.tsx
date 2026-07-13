@@ -2,13 +2,13 @@
 "use client";
 
 import React, { createContext, useContext } from 'react';
-import { PlansContextType } from '@/app/erp/plans/plans_types/plans_types';
+import { PlansContextType, PlansInitialData } from '@/app/erp/plans/plans_types/plans_types';
 import { usePlansLogic } from '@/app/erp/plans/plans_context/usePlansLogic';
 
 const PlansContext = createContext<PlansContextType | undefined>(undefined);
 
-export function PlansProvider({ children }: { children: React.ReactNode }) {
- const logic = usePlansLogic();
+export function PlansProvider({ children, initialData }: { children: React.ReactNode, initialData?: PlansInitialData | null }) {
+ const logic = usePlansLogic(initialData);
 
  return (
  <PlansContext.Provider value={logic}>
