@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { X } from 'lucide-react';
-import { useGymEmailModal } from './useGymEmailModal';
+import { useGymEmailModal } from '@/app/superadmin/gyms/gyms_components/GymEmailModal/useGymEmailModal';
 
 export default function GymEmailModal() {
   const {

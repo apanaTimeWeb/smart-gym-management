@@ -3,11 +3,11 @@
 
 import React from 'react';
 import { Search } from 'lucide-react';
-import { useGymsStore } from '@/app/superadmin/gyms/gyms_store/useGymsStore';
+
+import { useGymsToolbar } from '@/app/superadmin/gyms/gyms_components/GymsToolbar/useGymsToolbar';
 
 export default function GymsToolbar() {
-  const search = useGymsStore(state => state.search);
-  const setSearch = useGymsStore(state => state.setSearch);
+  const { search, handleSearchChange } = useGymsToolbar();
 
   return (
     <div className="p-4 border-b border-border flex items-center gap-4">
@@ -17,8 +17,9 @@ export default function GymsToolbar() {
           type="text" 
           placeholder="Search gyms by name or owner..." 
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full bg-card border border-border text-foreground rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:border-border-focus focus:ring-1 focus:ring-border-focus transition-all"
+          onChange={(e) => handleSearchChange(e.target.value)}
+          className="w-full bg-card border border-border text-foreground rounded-lg pl-10 pr-4 py-2 transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
+          aria-label="Search gyms"
         />
       </div>
     </div>
