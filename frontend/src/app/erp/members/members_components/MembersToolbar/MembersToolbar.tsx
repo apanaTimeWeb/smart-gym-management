@@ -16,7 +16,7 @@ export default function MembersToolbar() {
           value={search} 
           onChange={e => setSearch(e.target.value)} 
           placeholder="Search by name or phone..." 
-          className="pl-9 pr-3 py-2.5 border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-warning w-64 bg-input text-foreground" 
+          className="pl-9 pr-3 py-2.5 border border-border rounded-xl text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page w-64 bg-input text-primary" 
         />
       </div>
       <div className="flex gap-2">
@@ -33,7 +33,7 @@ export default function MembersToolbar() {
         />
  <button 
  onClick={loadAll} 
- className="flex items-center gap-2 px-3 py-2.5 text-sm border border-border rounded-xl hover:opacity-80 text-foreground"
+ className="flex items-center gap-2 px-3 py-2.5 text-sm border border-border rounded-xl hover:opacity-80 text-primary"
  >
  <RefreshCw size={14} /> Refresh
  </button>

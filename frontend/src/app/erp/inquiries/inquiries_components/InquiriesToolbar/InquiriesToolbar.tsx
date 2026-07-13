@@ -44,7 +44,7 @@ export default function InquiriesToolbar() {
         value={search}
         onChange={e => setSearch(e.target.value)}
         placeholder="Search name or phone..."
-        className="border border-border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary w-64 bg-input text-primary"
+        className="border border-border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page w-64 bg-input text-primary"
       />
       <div className="flex gap-2">
         <div className="w-48">

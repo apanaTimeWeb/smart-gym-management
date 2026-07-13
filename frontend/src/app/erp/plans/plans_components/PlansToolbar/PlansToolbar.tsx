@@ -11,7 +11,7 @@ export default function PlansToolbar() {
     <div className="bg-card rounded-xl shadow-sm border border-border p-4 flex flex-wrap gap-3 justify-between items-center mb-6">
       <div className="flex items-center gap-4">
         <p className="text-sm text-secondary hidden sm:block">
-          Active Plans: <span className="font-bold text-foreground">{plans.length}</span>
+          Active Plans: <span className="font-bold text-primary">{plans.length}</span>
         </p>
         <div className="relative">
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
@@ -19,7 +19,7 @@ export default function PlansToolbar() {
             value={search} 
             onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} 
             placeholder="Search plans..." 
-            className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-48 sm:w-64 bg-input text-foreground" 
+            className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page w-48 sm:w-64 bg-input text-primary" 
           />
         </div>
       </div>

@@ -69,8 +69,8 @@ export default function MemberModal() {
                 type={f.type}
                 placeholder={f.placeholder}
                 {...register(f.key as keyof MemberFormValues)}
-                className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 bg-input text-primary transition-colors ${
-                  errors[f.key as keyof MemberFormValues] ? 'border-danger focus:ring-danger' : 'border-border focus:ring-primary'
+                className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-colors ${
+                  errors[f.key as keyof MemberFormValues] ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
                 }`}
               />
               {errors[f.key as keyof MemberFormValues] && (
@@ -137,8 +137,8 @@ export default function MemberModal() {
                   type="number"
                   {...register('customDays')}
                   placeholder="e.g. 15"
-                  className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 bg-input text-primary transition-colors ${
-                    errors.customDays ? 'border-danger focus:ring-danger' : 'border-border focus:ring-primary'
+                  className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-colors ${
+                    errors.customDays ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
                   }`}
                 />
                 {errors.customDays && (
