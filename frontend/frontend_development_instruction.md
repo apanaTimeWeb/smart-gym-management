@@ -122,4 +122,20 @@ Whenever displaying tabular data (like Orders, Members, or Transactions), you MU
 Do not define module-specific API routes in a giant global file (like `src/lib/api.ts`). Every module MUST have its own API file inside a dedicated folder (e.g., `[moduleName]_api/[moduleName]_api.ts`). This file should import the core base fetcher (`apiFetch` from `src/lib/api.ts`) and define only the endpoints strictly needed for that specific module. 
 *Why?* This guarantees **Extreme Isolation**. When a module is extracted to feed an AI, the AI will receive all the API fetching logic specific to that module, eliminating missing context errors.
 
+32. **The "No Barrel File" Rule (Avoid `index.ts`)**:
+Strictly avoid using `index.ts` or `index.js` files to re-export modules. Always import directly from the explicitly named file (e.g., `import X from './Folder/X.tsx'`).
+*Why?* Barrel files completely destroy the "Extreme Isolation" philosophy. They cause circular dependencies and force the AI (and humans) to trace imports through multiple files just to find the actual source of a component.
+
+33. **Framework-Specific Media Optimization**:
+Never use standard HTML `<img>` tags for remote or static assets if the framework provides an optimized alternative. 
+- **If Next.js**: You must strictly mandate the use of the Next.js `<Image>` component (`next/image`). This ensures automatic WebP conversion, lazy loading, and prevents layout shifts.
+- **If React (Vite) / Angular**: Use the respective optimized image handling libraries or directives available in those ecosystems to ensure heavy assets do not block rendering.
+
+34. **Environment Variable Segregation & Security**:
+Strictly segregate public and private environment variables according to the framework's specific rules.
+- **If Next.js**: Prefix public variables with `NEXT_PUBLIC_`.
+- **If React (Vite/CRA)**: Prefix with `VITE_` or `REACT_APP_`.
+- **If Angular**: Manage securely through `environment.ts` files.
+Never leak secret backend API keys, database credentials, or secret tokens into the frontend client bundle.
+
 Think step-by-step. Create a detailed implementation plan first so I can review it, and then execute it perfectly without breaking existing data flows!
