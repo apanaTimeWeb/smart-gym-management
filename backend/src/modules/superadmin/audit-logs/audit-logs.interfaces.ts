@@ -8,3 +8,9 @@ export interface IGlobalAuditLog {
   ipAddress: string;
   timestamp: Date;
 }
+
+export interface GlobalAuditLogResponse {
+  success: boolean;
+  message: string;
+  data: IGlobalAuditLog | IGlobalAuditLog[] | any | null;
+}

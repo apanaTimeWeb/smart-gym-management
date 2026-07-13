@@ -1,16 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { AffiliatesRepository } from '../affiliates.repository';
+import { AffiliateResponse } from '../affiliates.interfaces';
+import { AFFILIATES_MESSAGES, AFFILIATES_ERRORS } from '../affiliates.constants';
 
 @Injectable()
 export class FindAffiliatesService {
   constructor(private readonly repository: AffiliatesRepository) {}
   
-  async execute(): Promise<any[]> {
-    return await this.repository.findAll();
+  async execute(): Promise<AffiliateResponse> {
+    const data = await this.repository.findAll();
+    return {
+      success: true,
+      message: AFFILIATES_MESSAGES.FETCHED,
+      data
+    };
   }
-  async findOne(id: string): Promise<any> {
-    const entity = await this.repository.findById(id);
-    if (!entity) throw new Error('Affiliate not found');
-    return entity;
+  async findOne(id: string): Promise<AffiliateResponse> {
+    const data = await this.repository.findById(id);
+    if (!data) throw new Error(AFFILIATES_ERRORS.NOT_FOUND);
+    return {
+      success: true,
+      message: AFFILIATES_MESSAGES.FETCHED,
+      data
+    };
   }
 }

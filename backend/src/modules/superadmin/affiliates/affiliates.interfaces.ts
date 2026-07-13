@@ -3,6 +3,8 @@ export enum AffiliateStatus {
   INACTIVE = 'INACTIVE'
 }
 export interface IAffiliate {
+}
+export interface IAffiliate {
   id: string;
   name: string;
   email: string;
@@ -11,4 +13,10 @@ export interface IAffiliate {
   commissionEarned: number;
   status: AffiliateStatus;
   joinedAt: Date;
+}
+
+export interface AffiliateResponse {
+  success: boolean;
+  message: string;
+  data: IAffiliate | IAffiliate[] | null;
 }
