@@ -3,7 +3,13 @@
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import { AddPaymentFormValues } from '@/app/erp/finance/finance_utils/FinanceSharedConstants';
 
- export interface FinanceContextType {
+export interface FinanceInitialData {
+  payments: Payment[];
+  totalPayments: number;
+  summary: FinanceSummary | null;
+}
+
+export interface FinanceContextType {
   payments: Payment[];
   totalPayments: number;
   summary: FinanceSummary | null;

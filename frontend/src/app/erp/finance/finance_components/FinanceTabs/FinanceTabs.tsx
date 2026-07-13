@@ -13,19 +13,14 @@ export default function FinanceTabs() {
   const { loadAll, setShowModal, search, setSearch, setCurrentPage } = useFinanceContext();
 
  return (
- <div className="rounded-xl shadow-sm border overflow-hidden finance-module" style={{ backgroundColor: 'var(--finance-bg-card)', borderColor: 'var(--finance-border)' }}>
- <div className="border-b flex justify-between items-center" style={{ borderColor: 'var(--finance-border)' }}>
+ <div className="rounded-xl shadow-sm border overflow-hidden bg-card border-border">
+ <div className="border-b border-border flex justify-between items-center">
  <div className="flex">
  {FINANCE_TABS.map(t => (
  <button 
  key={t} 
  onClick={() => setTab(t)}
- className={`px-5 py-3.5 text-sm font-medium transition-colors border-b-2 ${tab === t ? '' : 'border-transparent hover:opacity-80'}`}
- style={{
- color: tab === t ? 'var(--finance-highlight)' : 'var(--finance-text-secondary)',
- borderBottomColor: tab === t ? 'var(--finance-highlight)' : 'transparent',
- backgroundColor: tab === t ? 'var(--finance-highlight-subtle)' : 'transparent'
- }}
+ className={`px-5 py-3.5 text-sm font-medium transition-colors border-b-2 ${tab === t ? 'text-primary border-primary bg-primary/5' : 'text-secondary border-transparent hover:opacity-80 bg-transparent'}`}
  >
  {t}
  </button>
@@ -38,26 +33,19 @@ export default function FinanceTabs() {
         value={search} 
         onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} 
         placeholder="Search payments..." 
-        className="pl-9 pr-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 w-40 sm:w-64"
-        style={{ 
-          backgroundColor: 'var(--finance-bg-card)', 
-          borderColor: 'var(--finance-border)', 
-          color: 'var(--finance-text-primary)' 
-        }} 
+        className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 bg-card text-foreground w-40 sm:w-64"
       />
     </div>
     <div className="flex gap-2">
  <button 
  onClick={loadAll} 
- className="flex items-center gap-2 px-3 py-2 text-sm border rounded-lg hover:opacity-80 transition-opacity"
- style={{ borderColor: 'var(--finance-border)', color: 'var(--finance-text-secondary)' }}
+ className="flex items-center gap-2 px-3 py-2 text-sm border border-border text-secondary rounded-lg hover:opacity-80 transition-opacity"
  >
  <RefreshCw size={14} />
  </button>
  <button 
  onClick={() => setShowModal(true)} 
- className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white rounded-lg hover:opacity-90 transition-opacity" 
- style={{ backgroundColor: 'var(--finance-highlight)' }}
+ className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:opacity-90 transition-opacity"
  >
  <Plus size={14} /> Add Payment
  </button>

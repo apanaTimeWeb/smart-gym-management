@@ -4,6 +4,7 @@
 import { useFinanceContext } from '@/app/erp/finance/finance_context/FinanceContext';
 import { PAYMENTS_TABLE_HEADERS, FINANCE_METHOD_STYLES, FINANCE_STATUS_STYLES } from '@/app/erp/finance/finance_utils/FinanceSharedConstants';
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
+import { Loader2 } from 'lucide-react';
 
 const fmt = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');
 
@@ -15,45 +16,45 @@ export default function PaymentsTable() {
 
  if (loading) {
  return (
- <div className="flex justify-center py-10 finance-module">
- <div className="w-8 h-8 border-4 border-t-transparent rounded-full animate-spin" style={{ borderColor: 'var(--finance-highlight)', borderTopColor: 'transparent' }} />
+ <div className="flex justify-center py-10">
+ <Loader2 className="w-8 h-8 animate-spin text-primary" />
  </div>
  );
  }
 
  return (
  <>
- <div className="overflow-x-auto finance-module">
+ <div className="overflow-x-auto">
  <table className="w-full">
- <thead style={{ backgroundColor: 'var(--finance-bg-input)' }}>
+ <thead className="bg-input text-secondary">
  <tr>
  {PAYMENTS_TABLE_HEADERS.map(h => (
- <th key={h} className="text-left text-xs font-semibold uppercase tracking-wider px-4 py-3" style={{ color: 'var(--finance-text-secondary)' }}>
+ <th key={h} className="text-left text-xs font-semibold uppercase tracking-wider px-4 py-3">
  {h}
  </th>
  ))}
  </tr>
  </thead>
- <tbody className="divide-y" style={{ borderColor: 'var(--finance-border)' }}>
+ <tbody className="divide-y divide-border">
  {payments.map(p => {
- const mStyle = FINANCE_METHOD_STYLES[p.method] || { bg: 'var(--finance-bg-input)', text: 'var(--finance-text-secondary)' };
- const sStyle = FINANCE_STATUS_STYLES[p.status] || { bg: 'var(--finance-bg-input)', text: 'var(--finance-text-secondary)' };
+ const mStyle = FINANCE_METHOD_STYLES[p.method] || { bg: 'bg-input', text: 'text-secondary' };
+ const sStyle = FINANCE_STATUS_STYLES[p.status] || { bg: 'bg-input', text: 'text-secondary' };
  return (
- <tr key={p.id} className="transition-colors hover:bg-[rgba(99,102,241,0.06)]" style={{ backgroundColor: 'var(--finance-bg-card)' }}>
- <td className="px-4 py-3 text-sm font-mono" style={{ color: 'var(--finance-text-secondary)' }}>{p.invoiceNo}</td>
- <td className="px-4 py-3 text-sm font-medium" style={{ color: 'var(--finance-text-primary)' }}>{p.member?.name || `Member #${p.memberId}`}</td>
- <td className="px-4 py-3 text-sm font-bold" style={{ color: 'var(--finance-status-paid-text)' }}>{fmt(p.amount)}</td>
+ <tr key={p.id} className="transition-colors hover:bg-primary/5 bg-card">
+ <td className="px-4 py-3 text-sm font-mono text-secondary">{p.invoiceNo}</td>
+ <td className="px-4 py-3 text-sm font-medium text-foreground">{p.member?.name || `Member #${p.memberId}`}</td>
+ <td className="px-4 py-3 text-sm font-bold text-success">{fmt(p.amount)}</td>
  <td className="px-4 py-3">
- <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold" style={{ backgroundColor: mStyle.bg, color: mStyle.text }}>
+ <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${mStyle.bg} ${mStyle.text}`}>
  {p.method}
  </span>
  </td>
  <td className="px-4 py-3">
- <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold" style={{ backgroundColor: sStyle.bg, color: sStyle.text }}>
+ <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${sStyle.bg} ${sStyle.text}`}>
  {p.status}
  </span>
  </td>
- <td className="px-4 py-3 text-sm" style={{ color: 'var(--finance-text-secondary)' }}>
+ <td className="px-4 py-3 text-sm text-secondary">
  {new Date(p.paidAt).toLocaleDateString('en-IN')}
  </td>
  </tr>
@@ -61,7 +62,7 @@ export default function PaymentsTable() {
  })}
  {payments.length === 0 && (
  <tr>
- <td colSpan={6} className="text-center py-10 text-sm" style={{ color: 'var(--finance-text-secondary)' }}>
+ <td colSpan={6} className="text-center py-10 text-sm text-secondary">
  No payments recorded yet.
  </td>
  </tr>
@@ -77,13 +78,6 @@ export default function PaymentsTable() {
         totalItems={totalPayments}
         itemsPerPage={ITEMS_PER_PAGE}
         onPageChange={setCurrentPage}
-        colors={{
-          text: 'var(--finance-text-secondary)',
-          textActive: 'white',
-          bgActive: 'var(--finance-highlight)',
-          border: 'var(--finance-border)',
-          hoverBg: 'var(--finance-highlight-subtle)'
-        }}
       />
     </div>
   )}

@@ -2,11 +2,12 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { financeApi, type Payment, type FinanceSummary } from '@/lib/api';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
-import { FinanceContextType } from '@/app/erp/finance/finance_types/finance_types';
+import { FinanceContextType, FinanceInitialData } from '@/app/erp/finance/finance_types/finance_types';
 import { AddPaymentFormValues } from '@/app/erp/finance/finance_utils/FinanceSharedConstants';
 import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
-export function useFinanceLogic(initialData?: any): FinanceContextType {
+export function useFinanceLogic(initialData?: FinanceInitialData | null): FinanceContextType {
   const [payments, setPayments] = useState<Payment[]>(initialData?.payments || []);
   const [totalPayments, setTotalPayments] = useState<number>(initialData?.totalPayments || 0);
   const [summary, setSummary] = useState<FinanceSummary | null>(initialData?.summary || null);
@@ -14,10 +15,27 @@ export function useFinanceLogic(initialData?: any): FinanceContextType {
   const [error, setError] = useState('');
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
   const [showModal, setShowModal] = useState(false);
-  const [search, setSearch] = useState('');
-  const debouncedSearch = useDebounce(search, 300);
-  const [currentPage, setCurrentPage] = useState(1);
   const isFirstRender = useRef(true);
+
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  // URL State
+  const search = searchParams.get('search') || '';
+  const currentPage = parseInt(searchParams.get('page') || '1', 10);
+  const debouncedSearch = useDebounce(search, 300);
+
+  const setUrlParam = useCallback((key: string, value: string | null) => {
+    const current = new URLSearchParams(Array.from(searchParams.entries()));
+    if (value) current.set(key, value);
+    else current.delete(key);
+    if (key !== 'page') current.set('page', '1');
+    router.push(`${pathname}?${current.toString()}`);
+  }, [searchParams, pathname, router]);
+
+  const setSearch = useCallback((val: string) => setUrlParam('search', val || null), [setUrlParam]);
+  const setCurrentPage = useCallback((val: number) => setUrlParam('page', val.toString()), [setUrlParam]);
 
  const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
  const hideToast = useCallback(() => setToast(null), []);
@@ -36,13 +54,13 @@ export function useFinanceLogic(initialData?: any): FinanceContextType {
         financeApi.getPayments(params),
         financeApi.getSummary(),
       ]);
-      setPayments(paymentsRes.data.payments || []);
-      setTotalPayments(paymentsRes.data.total || 0);
-      setSummary(summaryRes.data);
- } catch (e) { 
- const msg = (e as Error).message;
- setError(msg);
- showToast(msg, 'error'); 
+      setPayments(paymentsRes.data?.payments || []);
+      setTotalPayments(paymentsRes.data?.total || 0);
+      setSummary(summaryRes.data || null);
+  } catch (e) { 
+  const msg = (e as Error).message;
+  setError(msg);
+  showToast(msg, 'error');  
  }
  finally { setLoading(false); }
   }, [showToast, currentPage, debouncedSearch]);
@@ -63,8 +81,8 @@ export function useFinanceLogic(initialData?: any): FinanceContextType {
         amount: Number(data.amount), 
         method: data.method, 
         notes: data.notes 
-      });
-      showToast((res as any).message, 'success');
+      }) as unknown as { message?: string };
+      showToast(res.message || 'Payment created successfully', 'success');
       setShowModal(false);
       await loadAll();
     } catch (err) { 
