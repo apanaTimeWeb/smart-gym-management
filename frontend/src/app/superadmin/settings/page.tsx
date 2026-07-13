@@ -49,7 +49,7 @@ export default function SuperadminSettings() {
   };
 
   if (isLoading) {
-    return <div className="flex h-96 items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-[var(--primary)]" /></div>;
+    return <div className="flex h-96 items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
   }
 
   // Group settings by category
@@ -63,18 +63,18 @@ export default function SuperadminSettings() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-[var(--text-primary)]">Platform Settings</h1>
-        <p className="text-[var(--text-secondary)] mt-1">Configure global SaaS limits, master credentials, and system defaults.</p>
+        <h1 className="text-3xl font-bold text-foreground">Platform Settings</h1>
+        <p className="text-secondary mt-1">Configure global SaaS limits, master credentials, and system defaults.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
           
           {Object.entries(groupedSettings).map(([category, items]) => (
-            <div key={category} className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6">
-              <div className="flex items-center gap-2 mb-4 border-b border-[var(--border)] pb-4">
-                <Settings className="w-5 h-5 text-[var(--primary)]" />
-                <h2 className="text-lg font-bold text-[var(--text-primary)] uppercase">{category}</h2>
+            <div key={category} className="bg-card border border-border rounded-xl p-6">
+              <div className="flex items-center gap-2 mb-4 border-b border-border pb-4">
+                <Settings className="w-5 h-5 text-primary" />
+                <h2 className="text-lg font-bold text-foreground uppercase">{category}</h2>
               </div>
               
               <div className="space-y-4 text-sm">
@@ -83,17 +83,17 @@ export default function SuperadminSettings() {
                   const currentValue = editedValues[setting.id] !== undefined ? editedValues[setting.id] : setting.value;
                   
                   return (
-                    <div key={setting.id} className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-2 border-b border-[var(--border)] last:border-0">
+                    <div key={setting.id} className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-2 border-b border-border last:border-0">
                       <div className="flex-1">
-                        <h3 className="font-medium text-[var(--text-primary)]">{setting.key}</h3>
-                        <p className="text-xs text-[var(--text-secondary)] mt-1">{setting.description}</p>
+                        <h3 className="font-medium text-foreground">{setting.key}</h3>
+                        <p className="text-xs text-secondary mt-1">{setting.description}</p>
                       </div>
                       <div className="flex items-center gap-2">
                         {setting.dataType === 'boolean' ? (
                           <select 
                             value={String(currentValue)}
                             onChange={(e) => setEditedValues(prev => ({ ...prev, [setting.id]: e.target.value }))}
-                            className="bg-[var(--bg-input)] border border-[var(--border)] text-[var(--text-primary)] rounded-lg px-3 py-1.5 focus:outline-none focus:border-[var(--primary)]"
+                            className="bg-input border border-border text-foreground rounded-lg px-3 py-1.5 focus:outline-none focus:border-primary"
                           >
                             <option value="true">Enabled</option>
                             <option value="false">Disabled</option>
@@ -103,14 +103,14 @@ export default function SuperadminSettings() {
                             type={setting.dataType === 'number' ? 'number' : 'text'}
                             value={currentValue}
                             onChange={(e) => setEditedValues(prev => ({ ...prev, [setting.id]: e.target.value }))}
-                            className="bg-[var(--bg-input)] border border-[var(--border)] text-[var(--text-primary)] rounded-lg px-3 py-1.5 focus:outline-none focus:border-[var(--primary)]"
+                            className="bg-input border border-border text-foreground rounded-lg px-3 py-1.5 focus:outline-none focus:border-primary"
                           />
                         )}
                         {hasChanges && (
                           <button 
                             onClick={() => handleSave(setting.id)}
                             disabled={isMutating}
-                            className="p-1.5 bg-[var(--primary)]/10 text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white rounded-lg transition-colors"
+                            className="p-1.5 bg-primary/10 text-primary hover:bg-primary hover:text-white rounded-lg transition-colors"
                           >
                             <Save className="w-4 h-4" />
                           </button>
@@ -125,18 +125,18 @@ export default function SuperadminSettings() {
         </div>
 
         <div className="space-y-6">
-          <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-6">
-            <div className="flex items-center gap-2 mb-4 border-b border-[var(--border)] pb-4">
-              <BellRing className="w-5 h-5 text-[var(--warning)]" />
-              <h2 className="text-lg font-bold text-[var(--text-primary)]">Global Broadcast</h2>
+          <div className="bg-card border border-border rounded-xl p-6">
+            <div className="flex items-center gap-2 mb-4 border-b border-border pb-4">
+              <BellRing className="w-5 h-5 text-warning" />
+              <h2 className="text-lg font-bold text-foreground">Global Broadcast</h2>
             </div>
-            <p className="text-sm text-[var(--text-secondary)] mb-4">Send a push notification to all Admins across all 50+ gyms.</p>
+            <p className="text-sm text-secondary mb-4">Send a push notification to all Admins across all 50+ gyms.</p>
             <textarea 
               disabled
               placeholder="e.g. System maintenance at 2AM EST..."
-              className="w-full bg-[var(--bg-input)] border border-[var(--border)] text-[var(--text-disabled)] rounded-lg px-4 py-2 h-24 resize-none cursor-not-allowed"
+              className="w-full bg-input border border-border text-disabled rounded-lg px-4 py-2 h-24 resize-none cursor-not-allowed"
             ></textarea>
-            <button disabled className="mt-2 w-full bg-[var(--primary)]/50 text-white font-medium py-2 rounded-lg cursor-not-allowed">
+            <button disabled className="mt-2 w-full bg-primary/50 text-white font-medium py-2 rounded-lg cursor-not-allowed">
               Broadcast Message
             </button>
           </div>

@@ -10,12 +10,12 @@ import { toast } from 'react-hot-toast';
 const getStatusBadge = (status: BroadcastStatus) => {
   switch (status) {
     case 'SENT':
-      return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[var(--success-bg)] text-[var(--success)]">SENT</span>;
+      return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-success-bg text-success">SENT</span>;
     case 'SCHEDULED':
-      return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[var(--warning-bg)] text-[var(--warning)]">SCHEDULED</span>;
+      return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-warning-bg text-warning">SCHEDULED</span>;
     case 'DRAFT':
     default:
-      return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#1E1E2E] text-[var(--text-secondary)]">DRAFT</span>;
+      return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#1E1E2E] text-secondary">DRAFT</span>;
   }
 };
 
@@ -37,8 +37,8 @@ export default function BroadcastsPage() {
     error
   } = useBroadcastsPage();
 
-  if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]">Loading...</div>;
-  if (error) return <div className="p-8 text-center text-[var(--danger)]">Error loading data.</div>;
+  if (loading) return <div className="p-8 text-center text-disabled">Loading...</div>;
+  if (error) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
 
   const handleRowClick = (title: string) => {
     toast(`Clicked on broadcast: ${title}`);
@@ -49,28 +49,28 @@ export default function BroadcastsPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-[22px] font-bold text-[var(--text-primary)] flex items-center gap-2">
-            <Megaphone className="w-6 h-6 text-[var(--primary)]" />
+          <h1 className="text-[22px] font-bold text-foreground flex items-center gap-2">
+            <Megaphone className="w-6 h-6 text-primary" />
             Announcements & Broadcasts
           </h1>
-          <p className="text-[14px] text-[var(--text-secondary)] mt-1">
+          <p className="text-[14px] text-secondary mt-1">
             Push notifications and announcements to all gym dashboards.
           </p>
         </div>
         <div className="flex items-center gap-3">
           <div className="relative">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]" />
+            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
             <input 
               type="text" 
               placeholder="Search broadcasts..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 pr-4 py-2 bg-[var(--bg-input)] border border-[var(--border)] rounded-lg text-[14px] text-[var(--text-primary)] focus:outline-none focus:border-[var(--border-focus)] transition-colors w-64"
+              className="pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-[14px] text-foreground focus:outline-none focus:border-border-focus transition-colors w-64"
             />
           </div>
           <button 
             onClick={openCreateModal}
-            className="flex items-center gap-2 px-5 py-2.5 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white font-medium rounded-lg transition-colors text-[14px]"
+            className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-white font-medium rounded-lg transition-colors text-[14px]"
           >
             <Plus className="w-4 h-4" />
             New Broadcast
@@ -79,40 +79,40 @@ export default function BroadcastsPage() {
       </div>
 
       {/* Data Table */}
-      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl overflow-hidden shadow-sm">
+      <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-[var(--primary)]/5 border-b border-[var(--border)]">
-                <th className="px-6 py-4 text-[12px] font-semibold text-[var(--text-secondary)] uppercase tracking-wider">Title</th>
-                <th className="px-6 py-4 text-[12px] font-semibold text-[var(--text-secondary)] uppercase tracking-wider">Audience</th>
-                <th className="px-6 py-4 text-[12px] font-semibold text-[var(--text-secondary)] uppercase tracking-wider">Status</th>
-                <th className="px-6 py-4 text-[12px] font-semibold text-[var(--text-secondary)] uppercase tracking-wider">Scheduled / Sent Date</th>
-                <th className="px-6 py-4 text-[12px] font-semibold text-[var(--text-secondary)] uppercase tracking-wider text-right">Actions</th>
+              <tr className="bg-primary/5 border-b border-border">
+                <th className="px-6 py-4 text-[12px] font-semibold text-secondary uppercase tracking-wider">Title</th>
+                <th className="px-6 py-4 text-[12px] font-semibold text-secondary uppercase tracking-wider">Audience</th>
+                <th className="px-6 py-4 text-[12px] font-semibold text-secondary uppercase tracking-wider">Status</th>
+                <th className="px-6 py-4 text-[12px] font-semibold text-secondary uppercase tracking-wider">Scheduled / Sent Date</th>
+                <th className="px-6 py-4 text-[12px] font-semibold text-secondary uppercase tracking-wider text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--border)]">
+            <tbody className="divide-y divide-border">
               {broadcasts.map((bc) => (
                 <tr 
                   key={bc.id} 
-                  className="hover:bg-[var(--primary)]/5 transition-colors group cursor-pointer"
+                  className="hover:bg-primary/5 transition-colors group cursor-pointer"
                   onClick={() => handleRowClick(bc.title)}
                 >
                   <td className="px-6 py-4">
                     <div className="flex flex-col">
-                      <span className="text-[14px] font-medium text-[var(--text-primary)]">{bc.title}</span>
-                      <span className="text-[12px] text-[var(--text-secondary)] truncate max-w-xs">{bc.content}</span>
+                      <span className="text-[14px] font-medium text-foreground">{bc.title}</span>
+                      <span className="text-[12px] text-secondary truncate max-w-xs">{bc.content}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[var(--primary-subtle)] text-[var(--primary)] border border-[var(--primary)]/20">
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-primary-subtle text-primary border border-primary/20">
                       {bc.audience.replace('_', ' ')}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {getStatusBadge(bc.status)}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-[14px] text-[var(--text-secondary)]">
+                  <td className="px-6 py-4 whitespace-nowrap text-[14px] text-secondary">
                     {bc.status === 'SCHEDULED' && bc.scheduledDate ? new Date(bc.scheduledDate).toLocaleString() : ''}
                     {bc.status === 'SENT' && bc.sentDate ? new Date(bc.sentDate).toLocaleString() : ''}
                     {bc.status === 'DRAFT' && '-'}
@@ -122,7 +122,7 @@ export default function BroadcastsPage() {
                       {bc.status === 'DRAFT' && (
                         <button
                           onClick={(e) => { e.stopPropagation(); handleSendBroadcast(bc.id); }}
-                          className="p-1.5 text-[var(--text-secondary)] hover:text-[var(--primary)] hover:bg-[var(--primary-subtle)] rounded-lg transition-colors"
+                          className="p-1.5 text-secondary hover:text-primary hover:bg-primary-subtle rounded-lg transition-colors"
                           title="Send Now"
                         >
                           <Send className="w-4 h-4" />
@@ -130,14 +130,14 @@ export default function BroadcastsPage() {
                       )}
                       <button
                         onClick={(e) => { e.stopPropagation(); openEditModal(bc); }}
-                        className="p-1.5 text-[var(--text-secondary)] hover:text-[var(--primary)] hover:bg-[var(--primary-subtle)] rounded-lg transition-colors"
+                        className="p-1.5 text-secondary hover:text-primary hover:bg-primary-subtle rounded-lg transition-colors"
                         title="Edit Broadcast"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button
                         onClick={(e) => { e.stopPropagation(); handleDeleteBroadcast(bc.id); }}
-                        className="p-1.5 text-[var(--text-secondary)] hover:text-[var(--danger)] hover:bg-red-500/10 rounded-lg transition-colors"
+                        className="p-1.5 text-secondary hover:text-destructive hover:bg-red-500/10 rounded-lg transition-colors"
                         title="Delete Broadcast"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -148,7 +148,7 @@ export default function BroadcastsPage() {
               ))}
               {broadcasts.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-[var(--text-secondary)]">
+                  <td colSpan={5} className="px-6 py-12 text-center text-secondary">
                     <Megaphone className="w-12 h-12 mx-auto mb-3 opacity-20" />
                     <p>No broadcasts found.</p>
                   </td>

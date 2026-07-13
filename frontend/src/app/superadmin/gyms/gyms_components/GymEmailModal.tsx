@@ -40,52 +40,52 @@ export default function GymEmailModal() {
 
   return (
     <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/60 p-4">
-      <div className="bg-[var(--bg-card)] rounded-2xl p-7 max-w-[480px] w-full border border-[var(--border)] shadow-2xl relative">
+      <div className="bg-card rounded-2xl p-7 max-w-[480px] w-full border border-border shadow-2xl relative">
         <button
           onClick={closeEmailModal}
-          className="absolute top-5 right-5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+          className="absolute top-5 right-5 text-secondary hover:text-foreground transition-colors"
         >
           <X className="w-5 h-5" />
         </button>
 
-        <h2 className="text-[18px] font-bold text-[var(--text-primary)] mb-1">Email Owner</h2>
-        <p className="text-sm text-[var(--text-secondary)] mb-6">Send an email to {selectedGym.ownerName} ({selectedGym.adminEmail}).</p>
+        <h2 className="text-[18px] font-bold text-foreground mb-1">Email Owner</h2>
+        <p className="text-sm text-secondary mb-6">Send an email to {selectedGym.ownerName} ({selectedGym.adminEmail}).</p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="block text-[14px] font-bold text-[var(--text-secondary)] mb-1">Subject <span className="text-[var(--danger)]">*</span></label>
+            <label className="block text-[14px] font-bold text-secondary mb-1">Subject <span className="text-destructive">*</span></label>
             <input
               type="text"
               {...register('subject')}
-              className="w-full bg-[var(--bg-input)] border border-[var(--border)] rounded-lg px-[14px] py-[10px] text-[14px] text-[var(--text-primary)] focus:border-[var(--border-focus)] focus:outline-none transition-colors"
+              className="w-full bg-input border border-border rounded-lg px-[14px] py-[10px] text-[14px] text-foreground focus:border-border-focus focus:outline-none transition-colors"
               placeholder="E.g. Important Update regarding your subscription"
             />
-            {errors.subject && <p className="text-[12px] text-[var(--danger)] mt-1">{errors.subject.message}</p>}
+            {errors.subject && <p className="text-[12px] text-destructive mt-1">{errors.subject.message}</p>}
           </div>
 
           <div>
-            <label className="block text-[14px] font-bold text-[var(--text-secondary)] mb-1">Message <span className="text-[var(--danger)]">*</span></label>
+            <label className="block text-[14px] font-bold text-secondary mb-1">Message <span className="text-destructive">*</span></label>
             <textarea
               {...register('message')}
               rows={5}
-              className="w-full bg-[var(--bg-input)] border border-[var(--border)] rounded-lg px-[14px] py-[10px] text-[14px] text-[var(--text-primary)] focus:border-[var(--border-focus)] focus:outline-none transition-colors resize-none"
+              className="w-full bg-input border border-border rounded-lg px-[14px] py-[10px] text-[14px] text-foreground focus:border-border-focus focus:outline-none transition-colors resize-none"
               placeholder="Type your message here..."
             />
-            {errors.message && <p className="text-[12px] text-[var(--danger)] mt-1">{errors.message.message}</p>}
+            {errors.message && <p className="text-[12px] text-destructive mt-1">{errors.message.message}</p>}
           </div>
 
           <div className="flex justify-end gap-3 pt-4 mt-6">
             <button
               type="button"
               onClick={closeEmailModal}
-              className="px-5 py-2.5 rounded-lg text-[14px] font-medium text-[var(--text-primary)] border border-[var(--border)] hover:bg-[var(--bg-page)] transition-colors"
+              className="px-5 py-2.5 rounded-lg text-[14px] font-medium text-foreground border border-border hover:bg-background transition-colors"
               disabled={isSubmitting}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-[14px] font-medium text-white bg-[var(--primary)] hover:bg-[var(--primary-hover)] transition-colors disabled:opacity-50"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-[14px] font-medium text-white bg-primary hover:bg-primary-hover transition-colors disabled:opacity-50"
               disabled={isSubmitting}
             >
               <Send className="w-4 h-4" /> {isSubmitting ? 'Sending...' : 'Send Email'}

@@ -9,16 +9,16 @@ import { SaaSDashboardMetrics, Tenant } from '@/app/superadmin/superadmin_types/
 export default function SaaSDashboard() {
   const { data, loading, error } = useSuperadminData<{ metrics: SaaSDashboardMetrics, revenue: any[], growth: any[] }>(SuperadminUrlConfig.BACKEND_API.DASHBOARD_BASE);
 
-  if (loading) return <div className="p-8 text-center text-[var(--text-disabled)]">Loading...</div>;
-  if (error || !data) return <div className="p-8 text-center text-[var(--danger)]">Error loading data.</div>;
+  if (loading) return <div className="p-8 text-center text-disabled">Loading...</div>;
+  if (error || !data) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
 
   const { metrics: DUMMY_DASHBOARD_METRICS, revenue: REVENUE_CHART_DATA, growth: GYM_GROWTH_DATA } = data;
 
   const metrics = [
-    { label: 'Total MRR', value: `$${DUMMY_DASHBOARD_METRICS.monthlyRecurringRevenue.toLocaleString()}`, icon: CreditCard, color: 'text-[var(--success)]' },
-    { label: 'Total Gyms (Tenants)', value: DUMMY_DASHBOARD_METRICS.totalGyms, icon: Building2, color: 'text-[var(--primary)]' },
-    { label: 'Active Gyms', value: DUMMY_DASHBOARD_METRICS.activeGyms, icon: Activity, color: 'text-[var(--primary)]' },
-    { label: 'Total End Users', value: DUMMY_DASHBOARD_METRICS.totalEndUsers.toLocaleString(), icon: Users, color: 'text-[var(--purple)]' },
+    { label: 'Total MRR', value: `$${DUMMY_DASHBOARD_METRICS.monthlyRecurringRevenue.toLocaleString()}`, icon: CreditCard, color: 'text-success' },
+    { label: 'Total Gyms (Tenants)', value: DUMMY_DASHBOARD_METRICS.totalGyms, icon: Building2, color: 'text-primary' },
+    { label: 'Active Gyms', value: DUMMY_DASHBOARD_METRICS.activeGyms, icon: Activity, color: 'text-primary' },
+    { label: 'Total End Users', value: DUMMY_DASHBOARD_METRICS.totalEndUsers.toLocaleString(), icon: Users, color: 'text-purple' },
   ];
 
   return (
@@ -27,24 +27,24 @@ export default function SaaSDashboard() {
         <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500">
           SaaS Overview
         </h1>
-        <p className="text-[var(--text-secondary)] mt-1">Monitor the health and growth of your Multi-Tenant SaaS platform.</p>
+        <p className="text-secondary mt-1">Monitor the health and growth of your Multi-Tenant SaaS platform.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {metrics.map((m) => (
-          <div key={m.label} className="bg-[var(--bg-page)] border border-[var(--border)] rounded-xl p-6 shadow-sm">
+          <div key={m.label} className="bg-background border border-border rounded-xl p-6 shadow-sm">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-[var(--text-secondary)] font-medium text-sm">{m.label}</span>
+              <span className="text-secondary font-medium text-sm">{m.label}</span>
               <m.icon className={`w-5 h-5 ${m.color}`} />
             </div>
-            <div className="text-3xl font-bold text-[var(--text-primary)]">{m.value}</div>
+            <div className="text-3xl font-bold text-foreground">{m.value}</div>
           </div>
         ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-[var(--bg-page)] border border-[var(--border)] rounded-xl p-6">
-          <h2 className="text-lg font-bold text-[var(--text-primary)] mb-6">MRR Growth (Monthly Recurring Revenue)</h2>
+        <div className="lg:col-span-2 bg-background border border-border rounded-xl p-6">
+          <h2 className="text-lg font-bold text-foreground mb-6">MRR Growth (Monthly Recurring Revenue)</h2>
           <div className="h-80 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={REVENUE_CHART_DATA}>
@@ -67,27 +67,27 @@ export default function SaaSDashboard() {
           </div>
         </div>
 
-        <div className="bg-[var(--bg-page)] border border-[var(--border)] rounded-xl p-6">
-          <h2 className="text-lg font-bold text-[var(--text-primary)] mb-6">Recent Onboards</h2>
+        <div className="bg-background border border-border rounded-xl p-6">
+          <h2 className="text-lg font-bold text-foreground mb-6">Recent Onboards</h2>
           <div className="space-y-4">
             {DUMMY_DASHBOARD_METRICS.recentOnboards.map((tenant) => (
-              <div key={tenant.id} className="flex items-center justify-between p-4 bg-[var(--bg-card)] rounded-lg border border-[var(--border)]">
+              <div key={tenant.id} className="flex items-center justify-between p-4 bg-card rounded-lg border border-border">
                 <div>
-                  <h3 className="font-semibold text-[var(--text-primary)]">{tenant.name}</h3>
-                  <p className="text-xs text-[var(--text-secondary)] mt-1">{tenant.ownerName}</p>
+                  <h3 className="font-semibold text-foreground">{tenant.name}</h3>
+                  <p className="text-xs text-secondary mt-1">{tenant.ownerName}</p>
                 </div>
                 <div className="text-right">
                   <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold
                     ${
-                      tenant.plan?.toUpperCase() === 'ENTERPRISE' ? 'bg-[var(--purple-bg)] text-[var(--purple)] border border-[var(--purple)]' : 
-                      tenant.plan?.toUpperCase() === 'PRO' ? 'bg-[var(--primary-light)] text-[var(--primary)] border border-[var(--primary)]' : 
-                      tenant.plan?.toUpperCase() === 'STARTER' || tenant.plan?.toUpperCase() === 'BASIC' ? 'bg-[var(--success-bg)] text-[var(--success)] border border-[var(--success)]' :
-                      'bg-[var(--bg-input)] text-[var(--text-secondary)] border border-[var(--border)]'
+                      tenant.plan?.toUpperCase() === 'ENTERPRISE' ? 'bg-purple-bg text-purple border border-purple' : 
+                      tenant.plan?.toUpperCase() === 'PRO' ? 'bg-primary-subtle text-primary border border-primary' : 
+                      tenant.plan?.toUpperCase() === 'STARTER' || tenant.plan?.toUpperCase() === 'BASIC' ? 'bg-success-bg text-success border border-success' :
+                      'bg-input text-secondary border border-border'
                     }
                   `}>
                     {tenant.plan?.toUpperCase() || 'UNKNOWN'}
                   </span>
-                  <p className="text-xs text-[var(--text-disabled)] mt-2">{tenant.createdAt}</p>
+                  <p className="text-xs text-disabled mt-2">{tenant.createdAt}</p>
                 </div>
               </div>
             ))}

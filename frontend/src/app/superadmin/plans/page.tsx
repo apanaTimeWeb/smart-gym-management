@@ -12,12 +12,12 @@ function PlansPageContent() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-[var(--text-primary)]">Subscription Plans</h1>
-          <p className="text-[var(--text-secondary)] mt-1">Manage pricing tiers and limits for SaaS tenants.</p>
+          <h1 className="text-3xl font-bold text-foreground">Subscription Plans</h1>
+          <p className="text-secondary mt-1">Manage pricing tiers and limits for SaaS tenants.</p>
         </div>
         <button 
           onClick={openCreateModal}
-          className="bg-[var(--primary)] text-white px-4 py-2 rounded-lg font-medium hover:bg-[var(--primary-hover)] transition-colors"
+          className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-hover transition-colors"
         >
           Create New Plan
         </button>
