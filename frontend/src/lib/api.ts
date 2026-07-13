@@ -5,6 +5,13 @@
  * Base URL: http://localhost:5000/api/v1
  */
 
+export interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  message: string;
+}
+
+
 import { AuthUrlConfig } from '@/app/auth/auth_url_config';
 import { StatusCodes } from 'http-status-codes';
 import toast from 'react-hot-toast';

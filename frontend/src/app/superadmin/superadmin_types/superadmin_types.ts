@@ -50,6 +50,11 @@ export interface SubscriptionPlan {
   activeTenants: number;
 }
 
+export type CreatePlanPayload = Omit<SubscriptionPlan, 'id' | 'activeTenants'>;
+export type UpdatePlanPayload = Partial<CreatePlanPayload>;
+
+export type FetchState = 'idle' | 'loading' | 'success' | 'error';
+
 export type TicketStatus = 'OPEN' | 'IN_PROGRESS' | 'RESOLVED';
 export type TicketPriority = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 
