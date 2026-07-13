@@ -1,4 +1,4 @@
-// RESPONSIBILITY: SuperadminCouponModal.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Renders the Create Coupon modal form. Receives form state via props from useCouponsPage. No API calls.
 'use client';
 
 import React from 'react';

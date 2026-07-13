@@ -26,10 +26,14 @@ export function useMembersLogic(initialData?: MembersInitialData | null): Member
   const storeDeleteMember = useMembersStore((s) => s.deleteMember);
 
   const isFirstRender = React.useRef(true);
-  
-  if (isFirstRender.current && initialData) {
-    hydrate(initialData);
-  }
+
+  // Hydrate Zustand with SSR data exactly once on mount.
+  // useEffect: SSR hydration runs once on mount only.
+  useEffect(() => {
+    if (initialData) {
+      hydrate(initialData);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps -- intentionally empty: SSR hydration runs once on mount only
 
   // URL State
   const search = searchParams.get('search') || '';
@@ -49,17 +53,6 @@ export function useMembersLogic(initialData?: MembersInitialData | null): Member
   const setStatusFilter = useCallback((val: string) => setUrlParam('status', val === 'All' ? null : val), [setUrlParam]);
   const setCurrentPage = useCallback((val: number) => setUrlParam('page', val.toString()), [setUrlParam]);
 
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-    // Only load if URL params change. Initial render is handled by SSR/hydrate.
-    loadAll({ search: debouncedSearch, status: statusFilter, page: currentPage.toString() }).catch(() => {
-      showToast('Failed to load members', 'error');
-    });
-  }, [loadAll, debouncedSearch, statusFilter, currentPage]);
-
   // UI State
   const [showAddModal, setShowAddModal] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);
@@ -73,6 +66,18 @@ export function useMembersLogic(initialData?: MembersInitialData | null): Member
   const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
   const hideToast = useCallback(() => setToast(null), []);
   const closeMsg = useCallback(() => setMsgModal(null), []);
+
+  // Refetch when URL params change after initial SSR hydration.
+  // showToast is defined above so the closure captures the correct reference.
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    loadAll({ search: debouncedSearch, status: statusFilter, page: currentPage.toString() }).catch(() => {
+      showToast('Failed to load members', 'error');
+    });
+  }, [loadAll, debouncedSearch, statusFilter, currentPage, showToast]);
 
   const openAdd = useCallback(() => { 
     setEditId(null); 

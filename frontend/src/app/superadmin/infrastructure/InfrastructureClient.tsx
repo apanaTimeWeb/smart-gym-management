@@ -45,7 +45,7 @@ export default function InfrastructureClient() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Server Infrastructure</h1>
+          <h1 className="text-2xl font-bold text-foreground">Server Infrastructure</h1>
           <p className="text-secondary mt-1">Real-time health metrics of your Docker/Kubernetes cluster.</p>
         </div>
         <button

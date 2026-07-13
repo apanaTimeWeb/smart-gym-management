@@ -1,4 +1,4 @@
-// RESPONSIBILITY: TicketsClient.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Renders the Support Tickets list page. Fetches ticket data via useSuperadminData. Supports search filtering. No mutations wired yet.
 'use client';
 
 import { useState } from 'react';
@@ -41,7 +41,7 @@ if (fetchState === 'loading') return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Support Tickets</h1>
+          <h1 className="text-2xl font-bold text-foreground">Support Tickets</h1>
           <p className="text-secondary mt-1">Manage incoming issues from SaaS tenants.</p>
         </div>
       </div>

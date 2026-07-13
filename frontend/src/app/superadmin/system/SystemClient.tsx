@@ -54,7 +54,7 @@ export default function SystemClient() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-foreground">System & Audit</h1>
+        <h1 className="text-2xl font-bold text-foreground">System & Audit</h1>
         <p className="text-secondary mt-1">Global database migration health and cross-tenant audit logs.</p>
       </div>
 

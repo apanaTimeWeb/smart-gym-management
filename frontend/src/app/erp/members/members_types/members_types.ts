@@ -6,12 +6,7 @@ import type { MessageType, ErpMessageRecipient } from '@/app/erp/erp_components/
 import type { ErpReceiptData } from '@/app/erp/erp_components/ErpShared/ErpThermalReceipt';
 import type { MemberFormValues } from '@/app/erp/members/members_utils/MembersSharedConstants';
 
-export enum FetchState {
-  IDLE = 'IDLE',
-  LOADING = 'LOADING',
-  SUCCESS = 'SUCCESS',
-  ERROR = 'ERROR'
-}
+export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 
 export interface MembersInitialData {
   members: Member[];
@@ -55,8 +50,6 @@ export interface MembersContextType {
   // Member Profile
   selectedMember: Member | null;
   setSelectedMember: (m: Member | null) => void;
-  profileTab: 'overview' | 'attendance' | 'payments';
-  setProfileTab: (tab: 'overview' | 'attendance' | 'payments') => void;
   profileTab: 'overview' | 'attendance' | 'payments';
   setProfileTab: (tab: 'overview' | 'attendance' | 'payments') => void;
 

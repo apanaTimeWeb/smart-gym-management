@@ -1,4 +1,4 @@
-// RESPONSIBILITY: SuperadminCouponEditModal.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Renders the Edit Coupon modal form. Manages its own local form state via React Hook Form. No API calls — delegates save to onSubmit prop.
 'use client';
 
 import React, { useEffect } from 'react';

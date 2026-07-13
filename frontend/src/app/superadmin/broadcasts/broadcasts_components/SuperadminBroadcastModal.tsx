@@ -1,4 +1,4 @@
-// RESPONSIBILITY: SuperadminBroadcastModal.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Renders the Create/Edit Broadcast modal form. Receives form state via props from useBroadcastsPage. No API calls.
 'use client';
 
 import React from 'react';

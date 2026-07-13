@@ -1,4 +1,4 @@
-// RESPONSIBILITY: ErpLayout.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Root shell layout for all ERP pages. Composes ErpSidebar with the main content area. Manages sidebar collapsed state only.
 'use client';
 
 import { useState } from 'react';

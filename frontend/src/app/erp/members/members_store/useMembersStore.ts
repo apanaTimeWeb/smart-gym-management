@@ -36,7 +36,7 @@ export const useMembersStore = create<MembersState>((set, get) => ({
   plans: [],
   payments: [],
   stats: { total: 0, active: 0, pending: 0, expired: 0 },
-  fetchState: 'idle' as FetchState,
+  fetchState: 'idle',
   saving: false,
   totalMembers: 0,
   attMap: {},
@@ -47,12 +47,12 @@ export const useMembersStore = create<MembersState>((set, get) => ({
       plans: data.plans || [],
       stats: data.stats || { total: 0, active: 0, pending: 0, expired: 0 },
       totalMembers: data.totalMembers || 0,
-      fetchState: 'success' as FetchState,
+      fetchState: 'success',
     });
   },
 
   loadAll: async (params) => {
-    set({ fetchState: 'loading' as FetchState });
+    set({ fetchState: 'loading' });
     try {
       const apiParams: Record<string, string> = { 
         limit: '10', 
@@ -72,10 +72,10 @@ export const useMembersStore = create<MembersState>((set, get) => ({
         totalMembers: membersRes.data.total || 0,
         plans: plansRes.data || [],
         stats: statsRes.data || { total: 0, active: 0, pending: 0, expired: 0 },
-        fetchState: 'success' as FetchState,
+        fetchState: 'success',
       });
     } catch (e: unknown) {
-      set({ fetchState: 'error' as FetchState });
+      set({ fetchState: 'error' });
       throw e; // Let the UI handle toast
     }
   },

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: FeaturesClient.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Renders the Product Management page — feature flag toggles and release note publishing. Fetches data via useSuperadminData. No mutations wired yet.
 'use client';
 
 import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
@@ -20,7 +20,7 @@ export default function FeaturesClient() {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Product Management</h1>
+          <h1 className="text-2xl font-bold text-foreground">Product Management</h1>
           <p className="text-secondary mt-1">Control feature rollout and publish release notes to gyms.</p>
         </div>
         <div className="flex bg-input p-1 rounded-lg border border-border">

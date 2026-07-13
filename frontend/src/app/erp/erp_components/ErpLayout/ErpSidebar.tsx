@@ -8,10 +8,7 @@ import Image from 'next/image';
 import { getUser } from '@/lib/api';
 import { ERP_NAV_ITEMS } from '@/app/erp/erp_utils/ErpSharedConstants';
 
-export interface ErpSidebarProps {
-  isCollapsed: boolean;
-  setIsCollapsed: (v: boolean) => void;
-}
+import type { ErpSidebarProps } from '@/app/erp/erp_components/ErpLayout/ErpLayoutTypes';
 
 export default function ErpSidebar({ isCollapsed, setIsCollapsed }: ErpSidebarProps) {
   const pathname = usePathname();

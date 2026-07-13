@@ -8,10 +8,7 @@ import { getUser, logout } from '@/lib/api';
 import { ERP_PLACEHOLDER_NOTIFICATIONS } from '@/app/erp/erp_utils/ErpSharedConstants';
 import { ThemeToggle } from '@/components/ThemeToggle';
 
-export interface ErpHeaderProps {
-  title: string;
-  subtitle?: string;
-}
+import type { ErpHeaderProps } from '@/app/erp/erp_components/ErpLayout/ErpLayoutTypes';
 
 export default function ErpHeader({ title, subtitle }: ErpHeaderProps) {
   const [showNotifications, setShowNotifications] = useState(false);

@@ -1,22 +1,27 @@
-// RESPONSIBILITY: useSuperadminData.ts fetches and manages server state for Superadmin components.
-// DATA FLOW: API -> useSuperadminData.ts -> Component
+// RESPONSIBILITY: Generic fetch hook for Superadmin read-only data. Manages loading/error state for a single API endpoint. For mutations, use useSuperadminMutation instead.
+// DATA FLOW: API -> useSuperadminData -> Superadmin page components (FeaturesClient, BackupsClient, MigrationsClient, DashboardView)
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { apiFetch } from '@/lib/api';
+import type { FetchState } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 /**
- * Custom hook to fetch and manage data for Superadmin components.
- * Automatically handles loading and error states.
- * @param endpoint The API endpoint to fetch data from.
- * @returns An object containing the data, loading state, error message, and a mutate function.
+ * Fetches read-only data from a superadmin API endpoint.
+ * Handles loading/error/success states automatically.
+ * For mutations (create/update/delete), use useSuperadminMutation (Rule 58).
+ * @param endpoint - The API path to fetch (e.g. SuperadminUrlConfig.BACKEND_API.FEATURES_BASE)
  */
 export function useSuperadminData<T>(endpoint: string) {
   const [data, setData] = useState<T | null>(null);
-  const [fetchState, setFetchState] = useState<import('@/app/superadmin/superadmin_types/superadmin_types').FetchState>('loading');
+  const [fetchState, setFetchState] = useState<FetchState>('loading');
   const [error, setError] = useState<string | null>(null);
 
+  // Refetch when endpoint changes (navigating between superadmin pages).
   useEffect(() => {
     let isMounted = true;
+    setFetchState('loading');
+    setError(null);
+
     apiFetch<{ success: boolean; data: T }>(endpoint)
       .then(res => {
         if (isMounted) {
@@ -31,8 +36,18 @@ export function useSuperadminData<T>(endpoint: string) {
           setFetchState('error');
         }
       });
+
     return () => { isMounted = false; };
   }, [endpoint]);
 
-  return { data, fetchState, error, mutate: setData };
+  /** Pessimistically mutate local cache after a confirmed API write. */
+  const mutate = useCallback((updater: T | ((prev: T | null) => T | null)) => {
+    setData(prev =>
+      typeof updater === 'function'
+        ? (updater as (prev: T | null) => T | null)(prev)
+        : updater
+    );
+  }, []);
+
+  return { data, fetchState, error, mutate };
 }

@@ -4,7 +4,6 @@
 import { Edit, MessageCircle, Mail, Trash2, Loader2 } from 'lucide-react';
 import { useMembersContext } from '@/app/erp/members/members_context/MembersContext';
 import { useMembersStore } from '@/app/erp/members/members_store/useMembersStore';
-import { FetchState } from '@/app/erp/members/members_types/members_types';
 import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS, MEMBERS_TABLE_HEADERS, formatCurrency } from '@/app/erp/members/members_utils/MembersSharedConstants';
 import { maskSensitiveData } from '@/app/erp/erp_utils/ErpSharedConstants';
 import MembersEmptyState from '@/app/erp/members/members_components/MembersEmptyState/MembersEmptyState';
@@ -27,7 +26,7 @@ export default function MembersTable() {
 
   return (
     <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden flex flex-col h-full min-h-96">
-      {fetchState === FetchState.LOADING ? (
+      {fetchState === 'loading' ? (
         <div className="flex items-center justify-center py-16 flex-1">
           <Loader2 className="w-8 h-8 animate-spin text-primary" />
         </div>
@@ -86,7 +85,7 @@ export default function MembersTable() {
                     </td>
                   </tr>
                 )})}
-                {members.length === 0 && fetchState === FetchState.SUCCESS && (
+                {members.length === 0 && fetchState === 'success' && (
                   <tr>
                     <td colSpan={8} className="p-0 border-b-0">
                       <MembersEmptyState isFiltered={Boolean(search || statusFilter !== 'All')} />

@@ -8,7 +8,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 import { useMembersContext } from '@/app/erp/members/members_context/MembersContext';
 import { useMembersStore } from '@/app/erp/members/members_store/useMembersStore';
-import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency, MemberSchema, type MemberFormValues, EMPTY_MEMBER_FORM, type PlanWithCustom, GENDER_OPTIONS } from '@/app/erp/members/members_utils/MembersSharedConstants';
+import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency, MemberSchema, type MemberFormValues, EMPTY_MEMBER_FORM, GENDER_OPTIONS } from '@/app/erp/members/members_utils/MembersSharedConstants';
+import type { PlanWithCustom } from '@/app/erp/members/members_types/members_types';
 
 export default function MemberModal() {
   const {

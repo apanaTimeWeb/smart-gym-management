@@ -1,4 +1,4 @@
-// RESPONSIBILITY: SuperadminAffiliateModal.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Renders the Create/Edit Affiliate modal form. Receives form state via props from useAffiliatesPage. No API calls.
 'use client';
 
 import React from 'react';

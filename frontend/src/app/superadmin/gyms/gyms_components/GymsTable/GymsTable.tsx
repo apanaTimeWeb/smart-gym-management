@@ -12,7 +12,6 @@ export default function GymsTable() {
   const {
     filteredGyms,
     fetchState,
-    error,
     actionLoadingId,
     handleRowClick,
     onGhostLoginClick,
@@ -33,7 +32,7 @@ export default function GymsTable() {
   }
 
   if (fetchState === 'error') {
-    return <div className="p-8 text-center text-destructive">Error loading data.</div>;
+    return <div className="p-8 text-center text-destructive">Error loading gyms. Please try again.</div>;
   }
 
   return (
@@ -124,7 +123,7 @@ export default function GymsTable() {
                               ? 'text-success hover:bg-success/10' 
                               : 'text-destructive hover:bg-destructive/10'
                           }`}
-                          title={gym.status === 'SUSPENDED' ? "Activate Tenant" : "Suspend Tenant"}
+                          title={gym.status === 'SUSPENDED' ? 'Activate Tenant' : 'Suspend Tenant'}
                           aria-label={gym.status === 'SUSPENDED' ? `Activate ${gym.name}` : `Suspend ${gym.name}`}
                         >
                           {gym.status === 'SUSPENDED' ? <PlayCircle className="w-4 h-4" /> : <Ban className="w-4 h-4" />}

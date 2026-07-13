@@ -1,4 +1,4 @@
-// RESPONSIBILITY: useSuperadminMutation.ts handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Generic mutation hook for all Superadmin write operations (POST/PATCH/DELETE). Manages isMutating state, shows toasts from backend message, and calls onSuccess/onError callbacks.
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 

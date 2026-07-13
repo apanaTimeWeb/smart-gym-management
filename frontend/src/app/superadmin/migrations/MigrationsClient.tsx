@@ -1,4 +1,4 @@
-// RESPONSIBILITY: MigrationsClient.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: MigrationsClient renders the Schema Rollouts page — pending migration alerts, history table, and targeted sync modal. Fetches data via useSuperadminData.
 'use client';
 
 import { useState } from 'react';
@@ -40,7 +40,7 @@ if (fetchState === 'loading') return <div className="p-8 text-center text-disabl
     <div className="space-y-6 relative">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Schema Rollouts</h1>
+          <h1 className="text-2xl font-bold text-foreground">Schema Rollouts</h1>
           <p className="text-secondary mt-1">Manage TypeORM migrations across all 50+ tenant databases.</p>
         </div>
       </div>
@@ -63,7 +63,7 @@ if (fetchState === 'loading') return <div className="p-8 text-center text-disabl
             >
               <Target size={18} /> Targeted Sync
             </button>
-            <button className="flex-1 md:flex-none bg-warning text-black px-6 py-3 rounded-lg font-bold hover:bg-[#e69b00] transition-colors flex items-center justify-center gap-2 whitespace-nowrap shadow-lg shadow-warning/20">
+            <button className="flex-1 md:flex-none bg-warning text-black px-6 py-3 rounded-lg font-bold hover:opacity-90 transition-all duration-200 flex items-center justify-center gap-2 whitespace-nowrap shadow-lg shadow-warning/20">
               <Play size={18} /> Run on All Tenants
             </button>
           </div>
@@ -196,8 +196,8 @@ if (fetchState === 'loading') return <div className="p-8 text-center text-disabl
                   setShowTargetModal(false);
                 }}
                 disabled={!selectedGymId}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${
-                  selectedGymId ? 'bg-warning text-black hover:bg-[#e69b00]' : 'bg-input text-disabled cursor-not-allowed border border-border'
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
+                  selectedGymId ? 'bg-warning text-black hover:opacity-90' : 'bg-input text-disabled cursor-not-allowed border border-border'
                 }`}
               >
                 <Play size={16} /> Run Target Sync

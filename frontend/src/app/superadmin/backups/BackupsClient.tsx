@@ -33,7 +33,7 @@ if (fetchState === 'loading') return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Tenant Database Backups</h1>
+          <h1 className="text-2xl font-bold text-foreground">Tenant Database Backups</h1>
           <p className="text-secondary mt-1">Manage automated pg_dump snapshots for all isolated gym databases.</p>
         </div>
         <button className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-hover transition-colors flex items-center gap-2">
