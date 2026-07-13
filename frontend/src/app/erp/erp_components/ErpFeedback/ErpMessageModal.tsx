@@ -82,7 +82,7 @@ export default function ErpMessageModal({
  return (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
  <div
- className="bg-[var(--bg-card)] rounded-2xl shadow-2xl w-full max-w-lg relative overflow-hidden border border-[var(--border)]"
+ className="bg-card rounded-2xl shadow-2xl w-full max-w-lg relative overflow-hidden border border-border"
  style={{ animation: 'fadeScaleIn 0.2s ease' }}
  >
  <div
@@ -108,7 +108,7 @@ export default function ErpMessageModal({
  </div>
 
  <div className="px-6 pt-4 pb-2">
- <div className="flex items-center gap-3 p-3 bg-[var(--bg-input)] rounded-xl border border-[var(--border)]">
+ <div className="flex items-center gap-3 p-3 bg-input rounded-xl border border-border">
  <div
  className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
  style={{ background: 'var(--primary)' }}
@@ -116,14 +116,14 @@ export default function ErpMessageModal({
  {recipient.name.charAt(0)}
  </div>
  <div className="flex-1 min-w-0">
- <p className="text-sm font-semibold text-[var(--text-primary)] truncate">{recipient.name}</p>
+ <p className="text-sm font-semibold text-foreground truncate">{recipient.name}</p>
  <div className="flex items-center gap-1 mt-0.5">
  {type === 'whatsapp' ? (
- <Phone size={11} className="text-[var(--text-secondary)] flex-shrink-0" />
+ <Phone size={11} className="text-secondary flex-shrink-0" />
  ) : (
- <AtSign size={11} className="text-[var(--text-secondary)] flex-shrink-0" />
+ <AtSign size={11} className="text-secondary flex-shrink-0" />
  )}
- <p className="text-xs text-[var(--text-secondary)] truncate">{contactInfo || 'N/A'}</p>
+ <p className="text-xs text-secondary truncate">{contactInfo || 'N/A'}</p>
  </div>
  </div>
  </div>
@@ -131,7 +131,7 @@ export default function ErpMessageModal({
 
  {type === 'email' && (
  <div className="px-6 pt-2">
- <label className="block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">
+ <label className="block text-xs font-semibold text-secondary uppercase tracking-wider mb-1.5">
  Subject
  </label>
  <input
@@ -139,14 +139,14 @@ export default function ErpMessageModal({
  value={subject}
  onChange={(e) => setSubject(e.target.value)}
  disabled={sending || sent}
- className="w-full px-3 py-2.5 text-sm bg-[var(--bg-input)] border border-[var(--border)] rounded-lg focus:outline-none focus:border-[var(--border-focus)] text-[var(--text-primary)] disabled:opacity-60"
+ className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-lg focus:outline-none focus:border-border-focus text-foreground disabled:opacity-60"
  placeholder="Email subject..."
  />
  </div>
  )}
 
  <div className="px-6 pt-3 pb-2">
- <label className="block text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">
+ <label className="block text-xs font-semibold text-secondary uppercase tracking-wider mb-1.5">
  Message
  </label>
  <textarea
@@ -154,17 +154,17 @@ export default function ErpMessageModal({
  value={message}
  onChange={(e) => setMessage(e.target.value)}
  disabled={sending || sent}
- className="w-full px-3 py-2.5 text-sm bg-[var(--bg-input)] border border-[var(--border)] rounded-xl focus:outline-none focus:border-[var(--border-focus)] text-[var(--text-primary)] resize-none disabled:opacity-60"
+ className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-xl focus:outline-none focus:border-border-focus text-foreground resize-none disabled:opacity-60"
  placeholder="Type your message..."
  />
- <p className="text-right text-xs text-[var(--text-secondary)] mt-1">{message.length} chars</p>
+ <p className="text-right text-xs text-secondary mt-1">{message.length} chars</p>
  </div>
 
  <div className="px-6 pb-5 flex gap-3">
  <button
  onClick={handleClose}
  disabled={sending}
- className="flex-1 px-4 py-2.5 text-sm border border-[var(--border)] rounded-xl hover:bg-[var(--bg-input)] text-[var(--text-primary)] font-medium transition-colors disabled:opacity-50"
+ className="flex-1 px-4 py-2.5 text-sm border border-border rounded-xl hover:bg-input text-foreground font-medium transition-colors disabled:opacity-50"
  >
  Cancel
  </button>

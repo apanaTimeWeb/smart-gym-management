@@ -41,7 +41,7 @@ export default function ErpThermalReceipt({ data }: { data: ErpReceiptData | nul
  <td className="py-2 pr-2">
  {item.name}
  {item.qty && item.qty > 1 && (
- <span className="block text-xs text-[var(--text-primary)] mt-0.5">
+ <span className="block text-xs text-foreground mt-0.5">
  {item.qty} x {item.price.toLocaleString()}
  </span>
  )}

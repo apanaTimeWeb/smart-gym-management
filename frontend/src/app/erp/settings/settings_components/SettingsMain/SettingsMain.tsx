@@ -10,7 +10,7 @@ import '@/app/erp/settings/settings.css';
 
 function SettingsMainContent() {
  return (
- <div className="min-h-full pb-10 settings-module bg-[var(--bg-page)] text-[var(--settings-text-primary)]">
+ <div className="min-h-full pb-10 settings-module bg-background text-foreground">
  <ErpHeader title="Settings" subtitle="Configure your gym management system" />
  <div className="p-6">
  <SettingsNav />

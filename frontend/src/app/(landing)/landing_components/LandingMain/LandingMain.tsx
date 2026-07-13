@@ -20,7 +20,7 @@ import { LandingProvider } from '@/app/(landing)/landing_context/LandingContext'
 
 function LandingContent() {
  return (
- <div className="min-h-screen landing-module bg-[var(--landing-bg-dark)] text-[var(--landing-text-primary)] font-sans" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+ <div className="min-h-screen landing-module bg-background text-foreground font-sans" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
  <LandingNavbar />
  <LandingHero />
  <LandingAbout />

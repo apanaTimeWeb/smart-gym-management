@@ -7,15 +7,15 @@ export default function SalesTabs() {
  const { tab, setTab } = useSalesContext();
 
  return (
- <div className="border-b border-[var(--sales-border)] flex overflow-x-auto bg-[var(--sales-bg-card)]">
+ <div className="border-b border-border flex overflow-x-auto bg-card">
  {SALES_TABS.map(t => (
  <button 
  key={t} 
  onClick={() => setTab(t)}
  className={`px-5 py-3.5 text-sm font-medium transition-colors border-b-2 whitespace-nowrap ${
  tab === t 
- ? 'text-[var(--sales-highlight)] bg-[var(--sales-highlight-subtle)]' 
- : 'border-transparent text-[var(--sales-text-secondary)] hover:text-[var(--sales-text-primary)]'
+ ? 'text-primary bg-primary-subtle' 
+ : 'border-transparent text-secondary hover:text-foreground'
  }`}
  style={tab === t ? { borderBottomColor: 'var(--sales-highlight)' } : {}}
  >

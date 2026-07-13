@@ -35,7 +35,7 @@ export default function StaffModal() {
  <h3 className="text-lg font-bold" style={{ color: 'var(--hr-text-primary)' }}>{editId ? 'Edit Staff' : 'Add Staff Member'}</h3>
  <button 
  onClick={() => setShowModal(false)} 
- className="p-2 rounded-lg transition-colors hover:bg-[var(--primary-subtle)]"
+ className="p-2 rounded-lg transition-colors hover:bg-primary-subtle"
  style={{ color: 'var(--hr-text-secondary)' }}
  >
  <X size={18} />
@@ -50,12 +50,12 @@ export default function StaffModal() {
  placeholder={f.placeholder} 
  {...register(f.key as keyof StaffFormValues)}
  className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 ${
-   errors[f.key as keyof StaffFormValues] ? 'border-[var(--danger)] focus:ring-[var(--danger)]' : 'focus:ring-[var(--hr-highlight)]'
+   errors[f.key as keyof StaffFormValues] ? 'border-destructive focus:ring-destructive' : 'focus:ring-primary'
  }`}
  style={{ backgroundColor: 'var(--hr-bg-input)', borderColor: errors[f.key as keyof StaffFormValues] ? 'var(--danger)' : 'var(--hr-border)', color: 'var(--hr-text-primary)' }}
  />
  {errors[f.key as keyof StaffFormValues] && (
-   <p className="text-[var(--danger)] text-xs mt-1">{errors[f.key as keyof StaffFormValues]?.message as string}</p>
+   <p className="text-destructive text-xs mt-1">{errors[f.key as keyof StaffFormValues]?.message as string}</p>
  )}
  </div>
  ))}
@@ -64,7 +64,7 @@ export default function StaffModal() {
  <label className="block text-sm font-medium mb-1" style={{ color: 'var(--hr-text-secondary)' }}>Gender</label>
  <select 
  {...register('gender')}
- className="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--hr-highlight)]"
+ className="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
  style={{ backgroundColor: 'var(--hr-bg-input)', borderColor: 'var(--hr-border)', color: 'var(--hr-text-primary)' }}
  >
  {GENDER_OPTIONS.map(g => (
@@ -76,7 +76,7 @@ export default function StaffModal() {
  <label className="block text-sm font-medium mb-1" style={{ color: 'var(--hr-text-secondary)' }}>Branch</label>
  <select 
  {...register('branch')}
- className="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--hr-highlight)]"
+ className="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
  style={{ backgroundColor: 'var(--hr-bg-input)', borderColor: 'var(--hr-border)', color: 'var(--hr-text-primary)' }}
  >
  {BRANCH_OPTIONS.map(b => <option key={b} value={b}>{b}</option>)}
@@ -88,7 +88,7 @@ export default function StaffModal() {
  <input 
  type="date" 
  {...register('joinDate')}
- className="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--hr-highlight)]" 
+ className="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary" 
  style={{ backgroundColor: 'var(--hr-bg-input)', borderColor: 'var(--hr-border)', color: 'var(--hr-text-primary)' }}
  />
  </div>
@@ -96,7 +96,7 @@ export default function StaffModal() {
  <button 
  type="button" 
  onClick={() => setShowModal(false)} 
- className="flex-1 py-2.5 border rounded-xl text-sm font-medium transition-colors hover:bg-[var(--primary-subtle)]"
+ className="flex-1 py-2.5 border rounded-xl text-sm font-medium transition-colors hover:bg-primary-subtle"
  style={{ borderColor: 'var(--hr-border)', color: 'var(--hr-text-primary)' }}
  >
  Cancel

@@ -14,17 +14,17 @@ export default function SettingsNav() {
  <button 
  key={i} 
  onClick={() => setActiveTab(s.title)}
- className={`bg-[var(--settings-bg-card)] border rounded-xl p-5 text-left transition-all group ${
+ className={`bg-card border rounded-xl p-5 text-left transition-all group ${
  isActive 
- ? 'border-[var(--warning)] shadow-md ring-1 ring-[var(--warning)]' 
- : 'border-[var(--settings-border)] hover:border-[var(--warning)] dark:hover:border-[var(--warning)] hover:shadow-sm'
+ ? 'border-warning shadow-md ring-1 ring-warning' 
+ : 'border-border hover:border-warning dark:hover:border-warning hover:shadow-sm'
  }`}
  >
  <div className={`w-10 h-10 rounded-xl ${s.bg} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
  <s.icon size={19} className={s.color} />
  </div>
- <h3 className="font-semibold text-[var(--settings-text-primary)] mb-1">{s.title}</h3>
- <p className="text-sm text-[var(--settings-text-secondary)]">{s.desc}</p>
+ <h3 className="font-semibold text-foreground mb-1">{s.title}</h3>
+ <p className="text-sm text-secondary">{s.desc}</p>
  </button>
  );
  })}

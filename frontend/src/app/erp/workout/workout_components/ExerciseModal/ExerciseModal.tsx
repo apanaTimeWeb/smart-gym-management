@@ -34,58 +34,58 @@ export default function ExerciseModal() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-      <div className="bg-[var(--workout-bg-card)] rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
-        <div className="flex justify-between items-center p-5 border-b border-[var(--workout-border)]">
-          <h3 className="font-bold text-lg text-[var(--workout-text-primary)]">
+      <div className="bg-card rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
+        <div className="flex justify-between items-center p-5 border-b border-border">
+          <h3 className="font-bold text-lg text-foreground">
             {editExId ? 'Edit Exercise' : 'Add Exercise'}
           </h3>
           <button 
             type="button"
             onClick={() => setShowExModal(false)} 
-            className="text-[var(--workout-text-secondary)] hover:text-[var(--workout-text-primary)] hover:bg-[var(--primary-subtle)] p-1 rounded-md transition-colors"
+            className="text-secondary hover:text-foreground hover:bg-primary-subtle p-1 rounded-md transition-colors"
           >
             <X size={20} />
           </button>
         </div>
         <form onSubmit={handleSubmit(saveEx as any)} className="p-5 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-[var(--workout-text-secondary)] mb-1">Exercise Name *</label>
+            <label className="block text-sm font-medium text-secondary mb-1">Exercise Name *</label>
             <input 
               type="text" 
               {...register('name')}
               className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
-                errors.name ? 'border-[var(--danger)] focus:ring-[var(--danger)]' : 'border-[var(--workout-border)] focus:ring-[var(--warning)]'
-              } bg-[var(--workout-bg-input)] text-[var(--workout-text-primary)]`} 
+                errors.name ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-warning'
+              } bg-input text-foreground`} 
             />
-            {errors.name && <p className="text-[var(--danger)] text-xs mt-1">{errors.name.message}</p>}
+            {errors.name && <p className="text-destructive text-xs mt-1">{errors.name.message}</p>}
           </div>
           <div>
-            <label className="block text-sm font-medium text-[var(--workout-text-secondary)] mb-1">Primary Muscle *</label>
+            <label className="block text-sm font-medium text-secondary mb-1">Primary Muscle *</label>
             <input 
               type="text" 
               placeholder="e.g. Chest, Quadriceps" 
               {...register('muscle')}
               className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
-                errors.muscle ? 'border-[var(--danger)] focus:ring-[var(--danger)]' : 'border-[var(--workout-border)] focus:ring-[var(--warning)]'
-              } bg-[var(--workout-bg-input)] text-[var(--workout-text-primary)]`} 
+                errors.muscle ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-warning'
+              } bg-input text-foreground`} 
             />
-            {errors.muscle && <p className="text-[var(--danger)] text-xs mt-1">{errors.muscle.message}</p>}
+            {errors.muscle && <p className="text-destructive text-xs mt-1">{errors.muscle.message}</p>}
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-[var(--workout-text-secondary)] mb-1">Equipment</label>
+              <label className="block text-sm font-medium text-secondary mb-1">Equipment</label>
               <select 
                 {...register('equipment')}
-                className="w-full px-3 py-2 border border-[var(--workout-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--workout-bg-input)] text-[var(--workout-text-primary)]"
+                className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-warning bg-input text-foreground"
               >
                 {EQUIPMENT_OPTIONS.map(eq => <option key={eq}>{eq}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-[var(--workout-text-secondary)] mb-1">Difficulty</label>
+              <label className="block text-sm font-medium text-secondary mb-1">Difficulty</label>
               <select 
                 {...register('difficulty')}
-                className="w-full px-3 py-2 border border-[var(--workout-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--workout-bg-input)] text-[var(--workout-text-primary)]"
+                className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-warning bg-input text-foreground"
               >
                 {EXERCISE_DIFFICULTY_OPTIONS.map(d => <option key={d}>{d}</option>)}
               </select>
@@ -96,7 +96,7 @@ export default function ExerciseModal() {
             <button 
               type="button" 
               onClick={() => setShowExModal(false)} 
-              className="px-4 py-2 border border-[var(--workout-border)] rounded-lg font-medium text-[var(--workout-text-secondary)] hover:text-[var(--workout-text-primary)] hover:bg-[var(--primary-subtle)] transition-colors"
+              className="px-4 py-2 border border-border rounded-lg font-medium text-secondary hover:text-foreground hover:bg-primary-subtle transition-colors"
             >
               Cancel
             </button>

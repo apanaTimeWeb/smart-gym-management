@@ -19,7 +19,7 @@ export default function OrderTable() {
   if (loading) {
     return (
       <div className="flex justify-center py-10">
-        <div className="w-8 h-8 border-4 border-[var(--warning)] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-warning border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -27,33 +27,33 @@ export default function OrderTable() {
   return (
     <div className="flex flex-col h-full min-h-[400px]">
       {/* Filter and Sort Bar */}
-      <div className="flex flex-col sm:flex-row gap-4 justify-between items-center bg-[var(--store-bg-card)] p-4 rounded-xl border border-[var(--store-border)] mb-4">
+      <div className="flex flex-col sm:flex-row gap-4 justify-between items-center bg-card p-4 rounded-xl border border-border mb-4">
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <div className="flex flex-col">
-            <label className="text-[10px] text-[var(--store-text-secondary)] uppercase font-semibold mb-1">Start Date</label>
+            <label className="text-[10px] text-secondary uppercase font-semibold mb-1">Start Date</label>
             <input 
               type="date" 
               value={startDate} 
               onChange={e => setStartDate(e.target.value)} 
-              className="text-sm px-3 py-2 rounded-lg border border-[var(--store-border)] bg-[var(--store-bg-input)] text-[var(--store-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--store-highlight)]"
+              className="text-sm px-3 py-2 rounded-lg border border-border bg-input text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
             />
           </div>
           <div className="flex flex-col">
-            <label className="text-[10px] text-[var(--store-text-secondary)] uppercase font-semibold mb-1">End Date</label>
+            <label className="text-[10px] text-secondary uppercase font-semibold mb-1">End Date</label>
             <input 
               type="date" 
               value={endDate} 
               onChange={e => setEndDate(e.target.value)} 
-              className="text-sm px-3 py-2 rounded-lg border border-[var(--store-border)] bg-[var(--store-bg-input)] text-[var(--store-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--store-highlight)]"
+              className="text-sm px-3 py-2 rounded-lg border border-border bg-input text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
             />
           </div>
         </div>
         <div className="flex flex-col w-full sm:w-auto">
-          <label className="text-[10px] text-[var(--store-text-secondary)] uppercase font-semibold mb-1">Sort By Date</label>
+          <label className="text-[10px] text-secondary uppercase font-semibold mb-1">Sort By Date</label>
           <select 
             value={sortOrder} 
             onChange={e => setSortOrder(e.target.value as 'ASC' | 'DESC')}
-            className="text-sm px-3 py-2 rounded-lg border border-[var(--store-border)] bg-[var(--store-bg-input)] text-[var(--store-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--store-highlight)]"
+            className="text-sm px-3 py-2 rounded-lg border border-border bg-input text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
           >
             <option value="DESC">Newest First</option>
             <option value="ASC">Oldest First</option>
@@ -61,22 +61,22 @@ export default function OrderTable() {
         </div>
       </div>
 
-      <div className="overflow-x-auto flex-1 bg-[var(--store-bg-card)] rounded-xl border border-[var(--store-border)]">
+      <div className="overflow-x-auto flex-1 bg-card rounded-xl border border-border">
         <table className="w-full">
-          <thead className="bg-[var(--bg-input)]">
+          <thead className="bg-input">
             <tr>
               {['Order ID', 'Total', 'Method', 'Status', 'Date', 'Receipt'].map(h => (
-                <th key={h} className="text-left text-xs font-semibold text-[var(--store-text-secondary)] uppercase tracking-wider px-4 py-3">
+                <th key={h} className="text-left text-xs font-semibold text-secondary uppercase tracking-wider px-4 py-3">
                   {h}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-[var(--store-border)]">
+          <tbody className="divide-y divide-border">
             {orders.map(o => (
               <tr 
                 key={o.id} 
-                className="hover:bg-[var(--primary-subtle)] transition-colors cursor-pointer"
+                className="hover:bg-primary-subtle transition-colors cursor-pointer"
                 onClick={() => {
                   setPrintData({ 
                     gymName: GYM_DETAILS.name, 
@@ -95,21 +95,21 @@ export default function OrderTable() {
                   setTimeout(() => window.print(), 100);
                 }}
               >
-                <td className="px-4 py-3 text-sm font-mono text-[var(--store-text-primary)]">
+                <td className="px-4 py-3 text-sm font-mono text-foreground">
                   ORD-{String(o.id).padStart(4, '0')}
                 </td>
-                <td className="px-4 py-3 text-sm font-bold text-[var(--success)] dark:text-[var(--success)]">
+                <td className="px-4 py-3 text-sm font-bold text-success dark:text-success">
                   {formatCurrency(o.total)}
                 </td>
-                <td className="px-4 py-3 text-sm text-[var(--store-text-primary)]">
+                <td className="px-4 py-3 text-sm text-foreground">
                   {o.method}
                 </td>
                 <td className="px-4 py-3">
-                  <span className="inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-[var(--success-bg)] text-[var(--success)] dark:bg-[var(--success-bg)] dark:text-[var(--success)]">
+                  <span className="inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-success-bg text-success dark:bg-success-bg dark:text-success">
                     {o.status}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-sm text-[var(--store-text-secondary)]">
+                <td className="px-4 py-3 text-sm text-secondary">
                   {new Date(o.createdAt).toLocaleDateString('en-IN')}
                 </td>
                 <td className="px-4 py-3">
@@ -132,7 +132,7 @@ export default function OrderTable() {
                       });
                       setTimeout(() => window.print(), 100);
                     }} 
-                    className="p-1.5 rounded-lg bg-[var(--bg-input)] text-[var(--store-text-secondary)] hover:text-[var(--store-text-primary)] transition-colors"
+                    className="p-1.5 rounded-lg bg-input text-secondary hover:text-foreground transition-colors"
                     aria-label={`Print Receipt ORD-${o.id}`}
                   >
                     <Printer size={14} />
@@ -142,7 +142,7 @@ export default function OrderTable() {
             ))}
             {orders.length === 0 && (
               <tr>
-                <td colSpan={6} className="text-center py-10 text-[var(--store-text-secondary)]">
+                <td colSpan={6} className="text-center py-10 text-secondary">
                   No orders found.
                 </td>
               </tr>

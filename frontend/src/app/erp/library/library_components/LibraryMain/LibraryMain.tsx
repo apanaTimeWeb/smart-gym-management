@@ -19,7 +19,7 @@ function LibraryContent() {
  <div className="p-6 space-y-5">
  <LibraryTabs />
  
- <div className="bg-[var(--library-bg-card)] rounded-xl shadow-sm border border-[var(--library-border)] overflow-hidden p-5">
+ <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden p-5">
    {tab === 'Exercises' ? <ExerciseGrid /> : <DietGrid />}
  </div>
  </div>

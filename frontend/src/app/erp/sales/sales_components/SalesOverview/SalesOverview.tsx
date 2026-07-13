@@ -12,15 +12,15 @@ export default function SalesOverview() {
   if (loading) {
     return (
       <div className="flex justify-center py-10">
-        <div className="w-8 h-8 border-4 border-t-transparent border-[var(--primary)] rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-t-transparent border-primary rounded-full animate-spin" />
       </div>
     );
   }
 
  return (
  <div className="space-y-6">
- <div className="bg-[var(--sales-bg-card)] p-5 rounded-xl border border-[var(--sales-border)] shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-none">
- <h3 className="font-bold text-[var(--sales-text-primary)] mb-4">Monthly Revenue (₹)</h3>
+ <div className="bg-card p-5 rounded-xl border border-border shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-none">
+ <h3 className="font-bold text-foreground mb-4">Monthly Revenue (₹)</h3>
  <div className="h-[280px] w-full">
   <ResponsiveContainer width="100%" height="100%">
     <BarChart data={overviewData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
@@ -38,8 +38,8 @@ export default function SalesOverview() {
  </div>
  </div>
  
- <div className="bg-[var(--sales-bg-card)] p-5 rounded-xl border border-[var(--sales-border)] shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-none">
- <h3 className="font-bold text-[var(--sales-text-primary)] mb-4">New Members Trend</h3>
+ <div className="bg-card p-5 rounded-xl border border-border shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-none">
+ <h3 className="font-bold text-foreground mb-4">New Members Trend</h3>
  <div className="h-[250px] w-full">
   <ResponsiveContainer width="100%" height="100%">
     <AreaChart data={overviewData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>

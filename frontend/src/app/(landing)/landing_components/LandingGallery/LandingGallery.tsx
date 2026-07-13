@@ -4,16 +4,16 @@ import Image from 'next/image';
 
 export default function LandingGallery() {
  return (
- <section id="facility" className="py-24 px-4 bg-[var(--landing-bg-dark)]">
+ <section id="facility" className="py-24 px-4 bg-background">
  <div className="max-w-7xl mx-auto">
  <div className="text-center mb-16">
- <div className="inline-block text-xs font-bold tracking-widest uppercase text-[var(--warning)] bg-[var(--warning)]/10 border border-[var(--warning)]/20 rounded-full px-4 py-2 mb-5">
+ <div className="inline-block text-xs font-bold tracking-widest uppercase text-warning bg-warning/10 border border-warning/20 rounded-full px-4 py-2 mb-5">
  Our Facility
  </div>
  <h2 className="text-4xl sm:text-5xl font-black text-white mb-4">
  World-Class <span style={{ background: 'var(--landing-text-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Equipment</span>
  </h2>
- <p className="text-[var(--landing-text-secondary)] max-w-xl mx-auto">
+ <p className="text-secondary max-w-xl mx-auto">
  Train in an environment designed for champions.
  </p>
  </div>

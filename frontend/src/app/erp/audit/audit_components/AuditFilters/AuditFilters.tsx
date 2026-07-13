@@ -8,16 +8,16 @@ export const AuditFilters = () => {
   const { filters, handleEntityTypeChange, handleActorIdChange, entityTypes } = useAuditFilters();
 
   return (
-    <div className="flex flex-col md:flex-row gap-4 p-6 bg-[var(--audit-bg-card)]">
+    <div className="flex flex-col md:flex-row gap-4 p-6 bg-card">
       <div className="flex flex-col flex-1">
-        <label htmlFor="entityType" className="text-sm font-semibold mb-1.5 text-[var(--audit-text-primary)]">
+        <label htmlFor="entityType" className="text-sm font-semibold mb-1.5 text-foreground">
           Entity Type
         </label>
         <select
           id="entityType"
           value={filters.entityType || ''}
           onChange={handleEntityTypeChange}
-          className="p-2.5 rounded-xl border border-[var(--audit-border-color)] bg-[var(--audit-bg-input)] text-[var(--audit-text-primary)] outline-none focus:border-[var(--audit-accent)] focus:ring-1 focus:ring-[var(--audit-accent)] transition-all shadow-sm"
+          className="p-2.5 rounded-xl border border-border bg-input text-foreground outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all shadow-sm"
         >
           {entityTypes.map((type) => (
             <option key={type.value} value={type.value}>
@@ -28,7 +28,7 @@ export const AuditFilters = () => {
       </div>
 
       <div className="flex flex-col flex-1">
-        <label htmlFor="actorId" className="text-sm font-semibold mb-1.5 text-[var(--audit-text-primary)]">
+        <label htmlFor="actorId" className="text-sm font-semibold mb-1.5 text-foreground">
           Actor ID
         </label>
         <input
@@ -37,7 +37,7 @@ export const AuditFilters = () => {
           placeholder="Filter by Actor ID (e.g. 1)"
           value={filters.actorId || ''}
           onChange={handleActorIdChange}
-          className="p-2.5 rounded-xl border border-[var(--audit-border-color)] bg-[var(--audit-bg-input)] text-[var(--audit-text-primary)] outline-none focus:border-[var(--audit-accent)] focus:ring-1 focus:ring-[var(--audit-accent)] transition-all shadow-sm placeholder:text-[var(--audit-text-secondary)]"
+          className="p-2.5 rounded-xl border border-border bg-input text-foreground outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all shadow-sm placeholder:text-secondary"
         />
       </div>
     </div>

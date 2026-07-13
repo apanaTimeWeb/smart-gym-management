@@ -9,14 +9,14 @@ export default function InquiriesToolbar() {
 
   if (selectedIds.length > 0) {
     return (
-      <div className="rounded-xl shadow-sm border p-4 flex flex-wrap gap-3 items-center justify-between inquiries-module bg-[var(--inquiries-highlight)]/10 border-[var(--inquiries-highlight)]/30 transition-all">
+      <div className="rounded-xl shadow-sm border p-4 flex flex-wrap gap-3 items-center justify-between inquiries-module bg-primary/10 border-primary/30 transition-all">
         <div className="flex items-center gap-4">
-          <span className="font-semibold text-[var(--inquiries-highlight)]">
+          <span className="font-semibold text-primary">
             {selectedIds.length} {selectedIds.length === 1 ? 'inquiry' : 'inquiries'} selected
           </span>
           <button 
             onClick={clearSelection}
-            className="text-sm font-medium text-[var(--inquiries-text-secondary)] hover:text-[var(--inquiries-text-primary)] transition-colors"
+            className="text-sm font-medium text-secondary hover:text-foreground transition-colors"
           >
             Clear Selection
           </button>
@@ -31,7 +31,7 @@ export default function InquiriesToolbar() {
           </button>
           <button 
             onClick={() => openBulkMsg('email')}
-            className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white rounded-xl hover:opacity-90 transition-opacity bg-[var(--info)]"
+            className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white rounded-xl hover:opacity-90 transition-opacity bg-info"
           >
             Bulk Email
           </button>
@@ -46,14 +46,14 @@ export default function InquiriesToolbar() {
         value={search} 
         onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} 
         placeholder="Search name or phone..." 
-        className="border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--inquiries-highlight)] w-64"
+        className="border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary w-64"
         style={{ backgroundColor: 'var(--inquiries-bg-input)', borderColor: 'var(--inquiries-border)', color: 'var(--inquiries-text-primary)' }}
       />
       <div className="flex gap-2">
         <select 
           value={statusFilter} 
           onChange={e => { setStatusFilter(e.target.value); setCurrentPage(1); }} 
- className="border rounded-xl text-sm px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[var(--inquiries-highlight)]"
+ className="border rounded-xl text-sm px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary"
  style={{ backgroundColor: 'var(--inquiries-bg-input)', borderColor: 'var(--inquiries-border)', color: 'var(--inquiries-text-primary)' }}
  >
  <option value="All">All Status</option>

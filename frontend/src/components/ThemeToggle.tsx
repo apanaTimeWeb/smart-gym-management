@@ -14,7 +14,7 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <button className="relative p-2 text-[var(--text-secondary)] rounded-lg border border-transparent opacity-0">
+      <button className="relative p-2 text-secondary rounded-lg border border-transparent opacity-0">
         <Sun size={19} />
       </button>
     );
@@ -23,7 +23,7 @@ export function ThemeToggle() {
   return (
     <button
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      className="relative p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-input)] rounded-lg transition-colors border border-transparent hover:border-[var(--border)]"
+      className="relative p-2 text-secondary hover:text-foreground hover:bg-input rounded-lg transition-colors border border-transparent hover:border-border"
       aria-label="Toggle theme"
       title="Toggle theme"
     >

@@ -56,22 +56,22 @@ export const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
   return (
     <div className={`relative w-full ${className}`} ref={dropdownRef}>
       <div
-        className={`w-full bg-[var(--bg-input)] border border-[var(--border)] rounded-lg px-4 py-2.5 flex items-center justify-between cursor-pointer ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+        className={`w-full bg-input border border-border rounded-lg px-4 py-2.5 flex items-center justify-between cursor-pointer ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
         onClick={() => !disabled && setIsOpen(!isOpen)}
       >
-        <span className={`text-sm ${!selectedOption ? 'text-[var(--text-muted)]' : 'text-[var(--text-primary)]'} truncate`}>
+        <span className={`text-sm ${!selectedOption ? 'text-muted-foreground' : 'text-foreground'} truncate`}>
           {selectedOption ? selectedOption.label : placeholder}
         </span>
-        <ChevronDown size={16} className="text-[var(--text-muted)]" />
+        <ChevronDown size={16} className="text-muted-foreground" />
       </div>
 
       {isOpen && !disabled && (
-        <div className="absolute z-50 w-full mt-1 bg-[var(--bg-card)] border border-[var(--border)] rounded-lg shadow-lg overflow-hidden animate-in fade-in zoom-in-95 duration-100">
-          <div className="p-2 border-b border-[var(--border)] relative">
-            <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
+        <div className="absolute z-50 w-full mt-1 bg-card border border-border rounded-lg shadow-lg overflow-hidden animate-in fade-in zoom-in-95 duration-100">
+          <div className="p-2 border-b border-border relative">
+            <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
             <input
               type="text"
-              className="w-full pl-8 pr-4 py-1.5 text-sm bg-[var(--bg-input)] border border-[var(--border)] rounded-md focus:outline-none focus:border-[var(--primary)] text-[var(--text-primary)] placeholder-[var(--text-muted)]"
+              className="w-full pl-8 pr-4 py-1.5 text-sm bg-input border border-border rounded-md focus:outline-none focus:border-primary text-foreground placeholder-muted-foreground"
               placeholder="Search..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -84,17 +84,17 @@ export const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
               filteredOptions.map((option) => (
                 <div
                   key={option.value}
-                  className={`flex items-center justify-between px-3 py-2 text-sm rounded-md cursor-pointer hover:bg-[var(--bg-input)] ${
-                    option.value === value ? 'text-[var(--primary)] font-medium' : 'text-[var(--text-primary)]'
+                  className={`flex items-center justify-between px-3 py-2 text-sm rounded-md cursor-pointer hover:bg-input ${
+                    option.value === value ? 'text-primary font-medium' : 'text-foreground'
                   }`}
                   onClick={() => handleSelect(option.value)}
                 >
                   <span className="truncate">{option.label}</span>
-                  {option.value === value && <Check size={14} className="text-[var(--primary)]" />}
+                  {option.value === value && <Check size={14} className="text-primary" />}
                 </div>
               ))
             ) : (
-              <div className="px-3 py-4 text-sm text-center text-[var(--text-muted)]">
+              <div className="px-3 py-4 text-sm text-center text-muted-foreground">
                 No results found
               </div>
             )}

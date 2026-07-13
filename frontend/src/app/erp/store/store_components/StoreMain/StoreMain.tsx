@@ -20,13 +20,13 @@ function StoreContent() {
   const { tab, toast, hideToast, printData, setPrintData } = useStoreContext();
 
   return (
-    <div className="min-h-full pb-10 store-module bg-[var(--bg-page)] text-[var(--store-text-primary)]">
+    <div className="min-h-full pb-10 store-module bg-background text-foreground">
       <ErpHeader title="Store" subtitle="Manage products, inventory and sales" />
       <div className="p-6 space-y-5">
         
         <StoreKPIs />
 
-        <div className="bg-[var(--store-bg-card)] rounded-xl shadow-sm border border-[var(--store-border)] overflow-hidden">
+        <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
           <StoreToolbar />
 
           <div className="p-5">

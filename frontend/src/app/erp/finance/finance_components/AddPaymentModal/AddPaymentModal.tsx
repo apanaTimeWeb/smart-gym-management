@@ -43,7 +43,7 @@ export default function AddPaymentModal() {
           <button 
             type="button"
             onClick={() => setShowModal(false)} 
-            className="p-2 rounded-lg transition-colors hover:bg-[var(--primary-subtle)]"
+            className="p-2 rounded-lg transition-colors hover:bg-primary-subtle"
             style={{ color: 'var(--finance-text-secondary)' }}
           >
             <X size={18} />
@@ -56,10 +56,10 @@ export default function AddPaymentModal() {
               type="number" 
               placeholder="Enter Member ID" 
               {...register('memberId')}
-              className="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--finance-highlight)]" 
+              className="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary" 
               style={{ backgroundColor: 'var(--finance-bg-input)', borderColor: errors.memberId ? 'var(--danger)' : 'var(--finance-border)', color: 'var(--finance-text-primary)' }}
             />
-            {errors.memberId && <p className="text-[var(--danger)] text-xs mt-1">{errors.memberId.message}</p>}
+            {errors.memberId && <p className="text-destructive text-xs mt-1">{errors.memberId.message}</p>}
           </div>
           <div>
             <label className="block text-sm font-medium mb-1" style={{ color: 'var(--finance-text-secondary)' }}>Amount (₹)</label>
@@ -67,10 +67,10 @@ export default function AddPaymentModal() {
               type="number" 
               placeholder="2500" 
               {...register('amount')}
-              className="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--finance-highlight)]" 
+              className="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary" 
               style={{ backgroundColor: 'var(--finance-bg-input)', borderColor: errors.amount ? 'var(--danger)' : 'var(--finance-border)', color: 'var(--finance-text-primary)' }}
             />
-            {errors.amount && <p className="text-[var(--danger)] text-xs mt-1">{errors.amount.message}</p>}
+            {errors.amount && <p className="text-destructive text-xs mt-1">{errors.amount.message}</p>}
           </div>
           <div>
             <label className="block text-sm font-medium mb-1" style={{ color: 'var(--finance-text-secondary)' }}>Payment Method</label>
@@ -93,7 +93,7 @@ export default function AddPaymentModal() {
               type="text" 
               placeholder="Any notes..." 
               {...register('notes')}
-              className="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--finance-highlight)]" 
+              className="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary" 
               style={{ backgroundColor: 'var(--finance-bg-input)', borderColor: 'var(--finance-border)', color: 'var(--finance-text-primary)' }}
             />
           </div>
@@ -101,7 +101,7 @@ export default function AddPaymentModal() {
             <button 
               type="button" 
               onClick={() => setShowModal(false)} 
-              className="flex-1 py-2.5 border rounded-xl text-sm font-medium transition-colors hover:bg-[var(--primary-subtle)]"
+              className="flex-1 py-2.5 border rounded-xl text-sm font-medium transition-colors hover:bg-primary-subtle"
               style={{ borderColor: 'var(--finance-border)', color: 'var(--finance-text-primary)' }}
             >
               Cancel

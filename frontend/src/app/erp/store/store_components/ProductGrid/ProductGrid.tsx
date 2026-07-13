@@ -21,14 +21,14 @@ export default function ProductGrid() {
   if (loading) {
     return (
       <div className="flex justify-center py-10">
-        <div className="w-8 h-8 border-4 border-[var(--warning)] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-warning border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   if (products.length === 0) {
     return (
-      <div className="text-center py-10 text-[var(--store-text-secondary)]">
+      <div className="text-center py-10 text-secondary">
         No products added yet.
       </div>
     );
@@ -40,26 +40,26 @@ export default function ProductGrid() {
         {currentData.map(p => (
           <div 
             key={p.id} 
-            className="border border-[var(--store-border)] rounded-xl p-4 hover:shadow-md transition-shadow bg-[var(--store-bg-card)]"
+            className="border border-border rounded-xl p-4 hover:shadow-md transition-shadow bg-card"
           >
             <div className="flex justify-between items-start mb-3">
               <div>
-                <p className="font-semibold text-[var(--store-text-primary)]">{p.name}</p>
-                <span className="text-xs bg-[var(--info-bg)] text-[var(--info)] dark:bg-[var(--info-bg)] dark:text-[var(--info)] px-2 py-0.5 rounded-full">
+                <p className="font-semibold text-foreground">{p.name}</p>
+                <span className="text-xs bg-info-bg text-info dark:bg-info-bg dark:text-info px-2 py-0.5 rounded-full">
                   {p.category}
                 </span>
               </div>
               <div className="flex gap-1">
                 <button 
                   onClick={() => openEditProduct(p)} 
-                  className="p-1.5 rounded-lg bg-[var(--bg-input)] text-[var(--store-text-secondary)] hover:bg-[var(--primary-subtle)] transition-colors"
+                  className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle transition-colors"
                   aria-label={`Edit ${p.name}`}
                 >
                   <Edit2 size={13} />
                 </button>
                 <button 
                   onClick={() => deleteProduct(p.id)} 
-                  className="p-1.5 rounded-lg bg-[var(--danger-bg)] dark:bg-[var(--danger-bg)] text-[var(--danger)] hover:bg-[var(--danger-bg)] dark:hover:bg-[var(--danger-bg)] transition-colors"
+                  className="p-1.5 rounded-lg bg-danger-bg dark:bg-danger-bg text-destructive hover:bg-danger-bg dark:hover:bg-danger-bg transition-colors"
                   aria-label={`Delete ${p.name}`}
                 >
                   <Trash2 size={13} />
@@ -67,15 +67,15 @@ export default function ProductGrid() {
               </div>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-lg font-bold text-[var(--store-text-primary)]">
+              <span className="text-lg font-bold text-foreground">
                 {formatCurrency(p.price)}
               </span>
               <span className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full ${
                 p.stock <= 5 
-                  ? 'bg-[var(--danger-bg)] text-[var(--danger)] dark:bg-[var(--danger-bg)] dark:text-[var(--danger)]' 
+                  ? 'bg-danger-bg text-destructive dark:bg-danger-bg dark:text-destructive' 
                   : p.stock <= 20 
-                  ? 'bg-[var(--warning-bg)] text-[var(--warning)] dark:bg-[var(--warning-bg)] dark:text-[var(--warning)]' 
-                  : 'bg-[var(--success-bg)] text-[var(--success)] dark:bg-[var(--success-bg)] dark:text-[var(--success)]'
+                  ? 'bg-warning-bg text-warning dark:bg-warning-bg dark:text-warning' 
+                  : 'bg-success-bg text-success dark:bg-success-bg dark:text-success'
               }`}>
                 {p.stock} in stock
               </span>
@@ -83,7 +83,7 @@ export default function ProductGrid() {
           </div>
         ))}
         {filtered.length === 0 && (
-          <div className="col-span-full text-center py-10 text-[var(--store-text-secondary)]">
+          <div className="col-span-full text-center py-10 text-secondary">
             No products found matching "{debouncedSearch}".
           </div>
         )}

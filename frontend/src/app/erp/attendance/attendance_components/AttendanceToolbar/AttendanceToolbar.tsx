@@ -8,7 +8,7 @@ export default function AttendanceToolbar() {
   const { tab, setTab, loadAll, setShowModal, search, setSearch, setCurrentPage } = useAttendanceContext();
 
  return (
- <div className="border-b border-[var(--attendance-border)] flex justify-between items-center">
+ <div className="border-b border-border flex justify-between items-center">
  <div className="flex">
  {ATTENDANCE_TABS.map(t => (
  <button 
@@ -16,8 +16,8 @@ export default function AttendanceToolbar() {
  onClick={() => setTab(t)}
  className={`px-5 py-3.5 text-sm font-medium transition-colors border-b-2 ${
  tab === t 
- ? 'text-[var(--attendance-highlight)] bg-[var(--attendance-highlight-subtle)]' 
- : 'border-transparent text-[var(--attendance-text-secondary)] hover:text-[var(--attendance-text-primary)]'
+ ? 'text-primary bg-primary-subtle' 
+ : 'border-transparent text-secondary hover:text-foreground'
  }`}
  style={tab === t ? { borderBottomColor: 'var(--attendance-highlight)' } : {}}
  >
@@ -27,7 +27,7 @@ export default function AttendanceToolbar() {
  </div>
   <div className="px-4 flex flex-wrap gap-3 items-center">
     <div className="relative">
-      <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--attendance-text-secondary)]" />
+      <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
       <input 
         value={search} 
         onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} 
@@ -43,7 +43,7 @@ export default function AttendanceToolbar() {
     <div className="flex gap-2">
  <button 
  onClick={loadAll} 
- className="flex items-center gap-2 px-3 py-2 text-sm border border-[var(--attendance-border)] rounded-lg hover:bg-[var(--primary-subtle)] text-[var(--attendance-text-secondary)] transition-colors"
+ className="flex items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary transition-colors"
  >
  <RefreshCw size={14} />
  </button>

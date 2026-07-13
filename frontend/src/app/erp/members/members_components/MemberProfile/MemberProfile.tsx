@@ -20,26 +20,26 @@ export default function MemberProfile() {
  <div className="p-6 space-y-5">
  <button 
  onClick={() => setSelectedMember(null)} 
- className="text-sm text-[var(--members-text-secondary)] hover:text-[var(--members-text-primary)] flex items-center gap-1.5 transition-colors"
+ className="text-sm text-secondary hover:text-foreground flex items-center gap-1.5 transition-colors"
  >
  ← Back to Members
  </button>
 
  {/* Profile Card */}
- <div className="bg-[var(--members-bg-card)] rounded-xl shadow-sm border border-[var(--members-border)] p-6">
+ <div className="bg-card rounded-xl shadow-sm border border-border p-6">
  <div className="flex flex-wrap items-center justify-between gap-5 mb-6">
  <div className="flex items-center gap-5">
- <div className="w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold text-[var(--members-highlight)]" style={{ background: 'var(--members-highlight-subtle)' }}>
+ <div className="w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold text-primary" style={{ background: 'var(--members-highlight-subtle)' }}>
  {selectedMember.name.charAt(0)}
  </div>
  <div>
- <h2 className="text-xl font-bold text-[var(--members-text-primary)]">{selectedMember.name}</h2>
- <p className="text-[var(--members-text-secondary)] text-sm">{selectedMember.email} · {selectedMember.phone}</p>
+ <h2 className="text-xl font-bold text-foreground">{selectedMember.name}</h2>
+ <p className="text-secondary text-sm">{selectedMember.email} · {selectedMember.phone}</p>
  <div className="flex gap-2 mt-2">
  <span className="inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-semibold" style={{ background: MEMBERS_STATUS_COLORS[selectedMember.status]?.split(' ')[0] || '#f3f4f6', color: MEMBERS_STATUS_COLORS[selectedMember.status]?.split(' ')[1] || '#374151' }}>
  {selectedMember.status}
  </span>
- <span className="inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-[var(--info-bg)] text-[var(--info)] dark:bg-[var(--info-bg)] dark:text-[var(--info)]">
+ <span className="inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-info-bg text-info dark:bg-info-bg dark:text-info">
  {selectedMember.plan?.name || ''}
  </span>
  <span className="inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-300">
@@ -51,7 +51,7 @@ export default function MemberProfile() {
  <div className="flex gap-2 flex-wrap">
  <button 
  onClick={() => openEdit(selectedMember)} 
- className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border border-[var(--members-border)] rounded-xl hover:bg-[var(--members-hover-bg)] text-[var(--members-text-primary)] transition-colors"
+ className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border border-border rounded-xl hover:bg-accent text-foreground transition-colors"
  >
  <Edit size={14} /> Edit
  </button>
@@ -83,25 +83,25 @@ export default function MemberProfile() {
  { label: 'Total Paid', value: formatCurrency(selectedMember.paidAmount) },
  { label: 'Pending', value: formatCurrency(selectedMember.pendingAmount) },
  ].map((f, i) => (
- <div key={i} className="bg-[var(--members-bg-input)] rounded-lg p-3">
- <p className="text-xs text-[var(--members-text-secondary)] mb-0.5">{f.label}</p>
- <p className="text-sm font-semibold text-[var(--members-text-primary)]">{f.value}</p>
+ <div key={i} className="bg-input rounded-lg p-3">
+ <p className="text-xs text-secondary mb-0.5">{f.label}</p>
+ <p className="text-sm font-semibold text-foreground">{f.value}</p>
  </div>
  ))}
  </div>
  </div>
 
  {/* Sub Tabs */}
- <div className="bg-[var(--members-bg-card)] rounded-xl shadow-sm border border-[var(--members-border)] overflow-hidden">
- <div className="flex border-b border-[var(--members-border)]">
+ <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
+ <div className="flex border-b border-border">
  {([['overview', 'Overview'], ['attendance', 'Attendance'], ['payments', 'Payment History']] as [typeof profileTab, string][]).map(([t, label]) => (
  <button 
  key={t} 
  onClick={() => { setProfileTab(t); if (t === 'payments') loadMemberProfile(selectedMember.id); }}
  className={`px-5 py-3.5 text-sm font-medium transition-colors border-b-2 ${
  profileTab === t 
- ? 'text-[var(--members-highlight)] bg-[var(--members-highlight-subtle)]' 
- : 'border-transparent text-[var(--members-text-secondary)] hover:text-[var(--members-text-primary)]'
+ ? 'text-primary bg-primary-subtle' 
+ : 'border-transparent text-secondary hover:text-foreground'
  }`}
  style={profileTab === t ? { borderBottomColor: 'var(--members-highlight)' } : {}}
  >

@@ -69,7 +69,7 @@ export default function PaymentsTable() {
  </table>
  </div>
  {totalPages > 1 && !loading && (
-    <div className="mt-4 pt-4 border-t border-[var(--finance-border)]">
+    <div className="mt-4 pt-4 border-t border-border">
       <ErpPagination 
         currentPage={currentPage}
         totalPages={totalPages}

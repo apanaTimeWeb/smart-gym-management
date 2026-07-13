@@ -35,7 +35,7 @@ export default function InquiryModal() {
  <h3 className="text-lg font-bold" style={{ color: 'var(--inquiries-text-primary)' }}>{editId ? 'Edit Inquiry' : 'New Inquiry'}</h3>
  <button 
  onClick={() => setShowModal(false)} 
- className="p-2 rounded-lg transition-colors hover:bg-[var(--primary-subtle)]"
+ className="p-2 rounded-lg transition-colors hover:bg-primary-subtle"
  style={{ color: 'var(--inquiries-text-secondary)' }}
  >
  <X size={18} />
@@ -50,12 +50,12 @@ export default function InquiryModal() {
  placeholder={f.placeholder} 
  {...register(f.key as keyof InquiryFormValues)}
  className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 ${
-   errors[f.key as keyof InquiryFormValues] ? 'border-[var(--danger)] focus:ring-[var(--danger)]' : 'focus:ring-[var(--inquiries-highlight)]'
+   errors[f.key as keyof InquiryFormValues] ? 'border-destructive focus:ring-destructive' : 'focus:ring-primary'
  }`}
  style={{ backgroundColor: 'var(--inquiries-bg-input)', borderColor: errors[f.key as keyof InquiryFormValues] ? 'var(--danger)' : 'var(--inquiries-border)', color: 'var(--inquiries-text-primary)' }}
  />
  {errors[f.key as keyof InquiryFormValues] && (
-   <p className="text-[var(--danger)] text-xs mt-1">{errors[f.key as keyof InquiryFormValues]?.message}</p>
+   <p className="text-destructive text-xs mt-1">{errors[f.key as keyof InquiryFormValues]?.message}</p>
  )}
  </div>
  ))}
@@ -64,7 +64,7 @@ export default function InquiryModal() {
  <label className="block text-sm font-medium mb-1" style={{ color: 'var(--inquiries-text-secondary)' }}>Status</label>
  <select 
  {...register('status')}
- className="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--inquiries-highlight)]"
+ className="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
  style={{ backgroundColor: 'var(--inquiries-bg-input)', borderColor: 'var(--inquiries-border)', color: 'var(--inquiries-text-primary)' }}
  >
  {Object.entries(INQUIRIES_STATUS_LABELS).map(([val, label]) => (
@@ -76,7 +76,7 @@ export default function InquiryModal() {
  <label className="block text-sm font-medium mb-1" style={{ color: 'var(--inquiries-text-secondary)' }}>Source</label>
  <select 
  {...register('source')}
- className="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--inquiries-highlight)]"
+ className="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
  style={{ backgroundColor: 'var(--inquiries-bg-input)', borderColor: 'var(--inquiries-border)', color: 'var(--inquiries-text-primary)' }}
  >
  {INQUIRY_SOURCES.map(s => <option key={s} value={s}>{s}</option>)}
@@ -87,7 +87,7 @@ export default function InquiryModal() {
  <button 
  type="button" 
  onClick={() => setShowModal(false)} 
- className="flex-1 py-2.5 border rounded-xl text-sm font-medium transition-colors hover:bg-[var(--primary-subtle)]"
+ className="flex-1 py-2.5 border rounded-xl text-sm font-medium transition-colors hover:bg-primary-subtle"
  style={{ borderColor: 'var(--inquiries-border)', color: 'var(--inquiries-text-primary)' }}
  >
  Cancel

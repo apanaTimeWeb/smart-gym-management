@@ -38,7 +38,7 @@ export default function InquiriesTable() {
                   type="checkbox" 
                   checked={allSelected} 
                   onChange={(e) => toggleSelectAll(e.target.checked)}
-                  className="w-4 h-4 rounded border-gray-300 text-[var(--inquiries-highlight)] focus:ring-[var(--inquiries-highlight)] cursor-pointer"
+                  className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
                 />
               </th>
               {INQUIRIES_TABLE_HEADERS.map(h => (
@@ -64,7 +64,7 @@ export default function InquiriesTable() {
                       type="checkbox" 
                       checked={selected} 
                       onChange={() => toggleSelectOne(inq.id)}
-                      className="w-4 h-4 rounded border-gray-300 text-[var(--inquiries-highlight)] focus:ring-[var(--inquiries-highlight)] cursor-pointer"
+                      className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
                     />
                   </td>
                   <td className="px-5 py-3.5">
@@ -117,7 +117,7 @@ export default function InquiriesTable() {
                       </button>
                       <button 
                         onClick={(e) => { e.stopPropagation(); openEdit(inq); }} 
-                        className="p-1.5 rounded-lg transition-colors hover:bg-[var(--primary-subtle)]" 
+                        className="p-1.5 rounded-lg transition-colors hover:bg-primary-subtle" 
                         style={{ color: 'var(--inquiries-text-secondary)' }}
                         title="Edit"
                       >
@@ -125,7 +125,7 @@ export default function InquiriesTable() {
                       </button>
                       <button 
                         onClick={(e) => { e.stopPropagation(); deleteInquiry(inq.id); }} 
-                        className="p-1.5 rounded-lg transition-colors hover:bg-[var(--danger-bg)] dark:hover:bg-[var(--danger-bg)]" 
+                        className="p-1.5 rounded-lg transition-colors hover:bg-danger-bg dark:hover:bg-danger-bg" 
                         style={{ color: 'var(--inquiries-status-lost-text)', backgroundColor: 'var(--inquiries-status-lost-bg)' }}
                         title="Delete"
                       >

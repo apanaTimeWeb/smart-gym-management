@@ -18,7 +18,7 @@ export default function MembershipReport() {
   if (loading) {
     return (
       <div className="flex justify-center py-10">
-        <div className="w-8 h-8 border-4 border-t-transparent border-[var(--primary)] rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-t-transparent border-primary rounded-full animate-spin" />
       </div>
     );
   }
@@ -27,37 +27,37 @@ export default function MembershipReport() {
   <>
  <div className="overflow-x-auto">
  <table className="w-full">
- <thead className="bg-[var(--bg-input)]">
+ <thead className="bg-input">
  <tr>
  {['Plan', 'Total Receivable', 'Amount Received', 'Remaining', 'Refund'].map(h => (
- <th key={h} className="text-left text-xs font-semibold text-[var(--sales-text-secondary)] uppercase tracking-wider px-4 py-3">
+ <th key={h} className="text-left text-xs font-semibold text-secondary uppercase tracking-wider px-4 py-3">
  {h}
  </th>
  ))}
  </tr>
  </thead>
-  <tbody className="divide-y divide-[var(--sales-border)]">
+  <tbody className="divide-y divide-border">
   {paginated.map((r, i) => (
-  <tr key={i} className="hover:bg-[var(--primary-subtle)] transition-colors">
-  <td className="px-4 py-3 text-sm font-medium text-[var(--sales-text-primary)]">{r.plan || ''}</td>
-  <td className="px-4 py-3 text-sm text-[var(--sales-text-secondary)]">₹{(r.receivable || 0).toLocaleString()}</td>
-  <td className="px-4 py-3 text-sm font-medium text-[var(--success)] dark:text-[var(--success)]">₹{(r.received || 0).toLocaleString()}</td>
-  <td className="px-4 py-3 text-sm font-medium text-[var(--warning)] dark:text-[var(--warning)]">₹{(r.remaining || 0).toLocaleString()}</td>
-  <td className="px-4 py-3 text-sm text-[var(--danger)]">₹{(r.refund || 0).toLocaleString()}</td>
+  <tr key={i} className="hover:bg-primary-subtle transition-colors">
+  <td className="px-4 py-3 text-sm font-medium text-foreground">{r.plan || ''}</td>
+  <td className="px-4 py-3 text-sm text-secondary">₹{(r.receivable || 0).toLocaleString()}</td>
+  <td className="px-4 py-3 text-sm font-medium text-success dark:text-success">₹{(r.received || 0).toLocaleString()}</td>
+  <td className="px-4 py-3 text-sm font-medium text-warning dark:text-warning">₹{(r.remaining || 0).toLocaleString()}</td>
+  <td className="px-4 py-3 text-sm text-destructive">₹{(r.refund || 0).toLocaleString()}</td>
   </tr>
   ))}
- <tr className="bg-[var(--bg-input)] font-semibold border-t-2 border-[var(--sales-border)]">
- <td className="px-4 py-3 text-sm text-[var(--sales-text-primary)]">Total</td>
- <td className="px-4 py-3 text-sm text-[var(--sales-text-primary)]">₹{(membershipTotals.totalReceivable || 0).toLocaleString()}</td>
- <td className="px-4 py-3 text-sm text-[var(--success)] dark:text-[var(--success)]">₹{(membershipTotals.totalReceived || 0).toLocaleString()}</td>
- <td className="px-4 py-3 text-sm text-[var(--warning)] dark:text-[var(--warning)]">₹{(membershipTotals.remaining || 0).toLocaleString()}</td>
- <td className="px-4 py-3 text-sm text-[var(--danger)] dark:text-[var(--danger)]">₹{(membershipTotals.refunds || 0).toLocaleString()}</td>
+ <tr className="bg-input font-semibold border-t-2 border-border">
+ <td className="px-4 py-3 text-sm text-foreground">Total</td>
+ <td className="px-4 py-3 text-sm text-foreground">₹{(membershipTotals.totalReceivable || 0).toLocaleString()}</td>
+ <td className="px-4 py-3 text-sm text-success dark:text-success">₹{(membershipTotals.totalReceived || 0).toLocaleString()}</td>
+ <td className="px-4 py-3 text-sm text-warning dark:text-warning">₹{(membershipTotals.remaining || 0).toLocaleString()}</td>
+ <td className="px-4 py-3 text-sm text-destructive dark:text-destructive">₹{(membershipTotals.refunds || 0).toLocaleString()}</td>
  </tr>
   </tbody>
   </table>
   </div>
   {totalPages > 1 && (
-    <div className="mt-4 pt-4 border-t border-[var(--sales-border)]">
+    <div className="mt-4 pt-4 border-t border-border">
       <ErpPagination 
         currentPage={currentPage}
         totalPages={totalPages}

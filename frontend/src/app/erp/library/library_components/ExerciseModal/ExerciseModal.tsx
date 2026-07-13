@@ -34,14 +34,14 @@ export default function ExerciseModal() {
 
  return (
  <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
- <div className="bg-[var(--library-bg-card)] rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
- <div className="sticky top-0 bg-[var(--library-bg-card)] px-6 py-4 border-b border-[var(--library-border)] flex items-center justify-between">
- <h3 className="text-lg font-bold text-[var(--library-text-primary)]">
+ <div className="bg-card rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+ <div className="sticky top-0 bg-card px-6 py-4 border-b border-border flex items-center justify-between">
+ <h3 className="text-lg font-bold text-foreground">
  {editExId ? 'Edit Exercise' : 'Add Exercise'}
  </h3>
  <button 
  onClick={() => setShowExModal(false)} 
- className="p-2 rounded-lg hover:bg-[var(--primary-subtle)] text-[var(--library-text-secondary)] transition-colors"
+ className="p-2 rounded-lg hover:bg-primary-subtle text-secondary transition-colors"
  >
  <X size={18} />
  </button>
@@ -57,7 +57,7 @@ export default function ExerciseModal() {
  { label: 'Description', key: 'description', type: 'text' }
  ].map(f => (
  <div key={f.key}>
- <label className="block text-sm font-medium text-[var(--library-text-secondary)] mb-1">
+ <label className="block text-sm font-medium text-secondary mb-1">
  {f.label}
  </label>
  <input 
@@ -65,29 +65,29 @@ export default function ExerciseModal() {
  placeholder={f.placeholder} 
  {...register(f.key as keyof ExerciseFormValues)}
  className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 ${
-   errors[f.key as keyof ExerciseFormValues] ? 'border-[var(--danger)] focus:ring-[var(--danger)]' : 'border-[var(--library-border)] focus:ring-[var(--warning)]'
- } bg-[var(--library-bg-input)] text-[var(--library-text-primary)]`}
+   errors[f.key as keyof ExerciseFormValues] ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-warning'
+ } bg-input text-foreground`}
  />
  {errors[f.key as keyof ExerciseFormValues] && (
-   <p className="text-[var(--danger)] text-xs mt-1">{errors[f.key as keyof ExerciseFormValues]?.message}</p>
+   <p className="text-destructive text-xs mt-1">{errors[f.key as keyof ExerciseFormValues]?.message}</p>
  )}
  </div>
  ))}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  <div>
- <label className="block text-sm font-medium text-[var(--library-text-secondary)] mb-1">Category</label>
+ <label className="block text-sm font-medium text-secondary mb-1">Category</label>
  <select 
  {...register('category')}
- className="w-full border border-[var(--library-border)] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--library-bg-input)] text-[var(--library-text-primary)]"
+ className="w-full border border-border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-warning bg-input text-foreground"
  >
  {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
  </select>
  </div>
  <div>
- <label className="block text-sm font-medium text-[var(--library-text-secondary)] mb-1">Difficulty</label>
+ <label className="block text-sm font-medium text-secondary mb-1">Difficulty</label>
  <select 
  {...register('difficulty')}
- className="w-full border border-[var(--library-border)] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--library-bg-input)] text-[var(--library-text-primary)]"
+ className="w-full border border-border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-warning bg-input text-foreground"
  >
  {DIFFICULTIES.map(d => <option key={d} value={d}>{d}</option>)}
  </select>
@@ -97,7 +97,7 @@ export default function ExerciseModal() {
  <button 
  type="button" 
  onClick={() => setShowExModal(false)} 
- className="flex-1 py-2.5 border border-[var(--library-border)] rounded-xl text-sm font-medium text-[var(--library-text-primary)] hover:bg-[var(--primary-subtle)] transition-colors"
+ className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-foreground hover:bg-primary-subtle transition-colors"
  >
  Cancel
  </button>

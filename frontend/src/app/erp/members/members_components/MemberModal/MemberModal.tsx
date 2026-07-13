@@ -44,10 +44,10 @@ export default function MemberModal() {
 
  return (
  <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
- <div className="bg-[var(--members-bg-card)] rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
- <div className="sticky top-0 bg-[var(--members-bg-card)] px-6 py-4 border-b border-[var(--members-border)] flex items-center justify-between">
- <h3 className="text-lg font-bold text-[var(--members-text-primary)]">{editId ? 'Edit Member' : 'Add New Member'}</h3>
- <button onClick={() => setShowAddModal(false)} className="p-2 rounded-lg hover:bg-[var(--members-hover-bg)] text-[var(--members-text-secondary)]">
+ <div className="bg-card rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+ <div className="sticky top-0 bg-card px-6 py-4 border-b border-border flex items-center justify-between">
+ <h3 className="text-lg font-bold text-foreground">{editId ? 'Edit Member' : 'Add New Member'}</h3>
+ <button onClick={() => setShowAddModal(false)} className="p-2 rounded-lg hover:bg-accent text-secondary">
  <X size={18} />
  </button>
  </div>
@@ -59,26 +59,26 @@ export default function MemberModal() {
  { label: 'Address', key: 'address', type: 'text', placeholder: 'Andheri, Mumbai' },
  ].map(f => (
  <div key={f.key}>
- <label className="block text-sm font-medium text-[var(--members-text-secondary)] mb-1">{f.label}</label>
+ <label className="block text-sm font-medium text-secondary mb-1">{f.label}</label>
  <input 
  type={f.type} 
  placeholder={f.placeholder}
  {...register(f.key as keyof MemberFormValues)}
- className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 bg-[var(--members-bg-input)] text-[var(--members-text-primary)] ${
-   errors[f.key as keyof MemberFormValues] ? 'border-[var(--danger)] focus:ring-[var(--danger)]' : 'border-[var(--members-border)] focus:ring-[var(--warning)]'
+ className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 bg-input text-foreground ${
+   errors[f.key as keyof MemberFormValues] ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-warning'
  }`}
  />
  {errors[f.key as keyof MemberFormValues] && (
-   <p className="text-[var(--danger)] text-xs mt-1">{errors[f.key as keyof MemberFormValues]?.message}</p>
+   <p className="text-destructive text-xs mt-1">{errors[f.key as keyof MemberFormValues]?.message}</p>
  )}
  </div>
  ))}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  <div>
- <label className="block text-sm font-medium text-[var(--members-text-secondary)] mb-1">Gender</label>
+ <label className="block text-sm font-medium text-secondary mb-1">Gender</label>
  <select 
  {...register('gender')}
- className="w-full border border-[var(--members-border)] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--members-bg-input)] text-[var(--members-text-primary)]"
+ className="w-full border border-border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-warning bg-input text-foreground"
  >
  <option value="MALE">Male</option>
  <option value="FEMALE">Female</option>
@@ -86,7 +86,7 @@ export default function MemberModal() {
  </select>
  </div>
  <div>
- <label className="block text-sm font-medium text-[var(--members-text-secondary)] mb-1">Plan</label>
+ <label className="block text-sm font-medium text-secondary mb-1">Plan</label>
  <Controller
    name="planId"
    control={useFormReturn.control}
@@ -103,41 +103,41 @@ export default function MemberModal() {
  </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  <div>
- <label className="block text-sm font-medium text-[var(--members-text-secondary)] mb-1">Billing Cycle</label>
+ <label className="block text-sm font-medium text-secondary mb-1">Billing Cycle</label>
  <select 
  {...register('billingCycle')}
- className="w-full border border-[var(--members-border)] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--members-bg-input)] text-[var(--members-text-primary)]"
+ className="w-full border border-border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-warning bg-input text-foreground"
  >
  {Object.entries(MEMBERS_CYCLE_LABELS).map(([val, label]) => <option key={val} value={val}>{label}</option>)}
  </select>
  </div>
  {watchBillingCycle === 'CUSTOM' && (
  <div>
- <label className="block text-sm font-medium text-[var(--members-text-secondary)] mb-1">Custom Days</label>
+ <label className="block text-sm font-medium text-secondary mb-1">Custom Days</label>
  <input 
  type="number"
  {...register('customDays')}
  placeholder="e.g. 15"
- className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 bg-[var(--members-bg-input)] text-[var(--members-text-primary)] ${
-   errors.customDays ? 'border-[var(--danger)] focus:ring-[var(--danger)]' : 'border-[var(--members-border)] focus:ring-[var(--warning)]'
+ className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 bg-input text-foreground ${
+   errors.customDays ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-warning'
  }`}
  />
  {errors.customDays && (
-   <p className="text-[var(--danger)] text-xs mt-1">{errors.customDays?.message}</p>
+   <p className="text-destructive text-xs mt-1">{errors.customDays?.message}</p>
  )}
  </div>
  )}
  </div>
  {watchPlanId && (
-            <div className="bg-[var(--warning-bg)] rounded-xl p-3 text-sm border border-[var(--warning)]/30 flex justify-between items-center">
+            <div className="bg-warning-bg rounded-xl p-3 text-sm border border-warning/30 flex justify-between items-center">
               <div>
-                <span className="font-semibold text-[var(--warning)]">Calculated Price:</span> 
-                <span className="text-[var(--warning)] ml-1 font-bold">
+                <span className="font-semibold text-warning">Calculated Price:</span> 
+                <span className="text-warning ml-1 font-bold">
  {formatCurrency(getPriceForCycle(plans.find(p => p.id.toString() === watchPlanId.toString()), watchBillingCycle, Number(watchCustomDays) || 0))}
  </span>
               </div>
               {watchBillingCycle === 'CUSTOM' && (
-                <div className="text-[var(--warning)] text-xs opacity-80">
+                <div className="text-warning text-xs opacity-80">
                   (Per Day: {formatCurrency((plans.find(p => p.id.toString() === watchPlanId.toString()) as any)?.priceCustom || 0)} × {watchCustomDays || 0} days)
                 </div>
               )}
@@ -147,7 +147,7 @@ export default function MemberModal() {
  <button 
  type="button" 
  onClick={() => setShowAddModal(false)} 
- className="flex-1 py-2.5 border border-[var(--members-border)] rounded-xl text-sm font-medium text-[var(--members-text-primary)] hover:bg-[var(--members-hover-bg)]"
+ className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-foreground hover:bg-accent"
  >
  Cancel
  </button>

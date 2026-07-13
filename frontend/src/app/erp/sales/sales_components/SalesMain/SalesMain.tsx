@@ -16,12 +16,12 @@ function SalesContent() {
  const { tab, toast, showToast } = useSalesContext();
 
  return (
- <div className="min-h-full pb-10 sales-module bg-[var(--bg-page)] text-[var(--sales-text-primary)]">
+ <div className="min-h-full pb-10 sales-module bg-background text-foreground">
  <ErpHeader title="Sales & Reports" subtitle="Monitor membership revenue, track payments and analyze performance" />
  <div className="p-6 space-y-5">
  <SalesToolbar />
 
- <div className="bg-[var(--sales-bg-card)] rounded-xl shadow-sm border border-[var(--sales-border)] overflow-hidden">
+ <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
  <SalesTabs />
 
  <div className="p-5">

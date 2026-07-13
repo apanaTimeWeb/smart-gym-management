@@ -49,20 +49,20 @@ export default function ErpSidebar({ isCollapsed, setIsCollapsed }: ErpSidebarPr
  />
  )}
 
- <aside className={`fixed left-0 top-0 h-full bg-[var(--bg-sidebar)] border-r border-[var(--border)] z-50 flex flex-col transition-all duration-300 ${
+ <aside className={`fixed left-0 top-0 h-full bg-sidebar border-r border-border z-50 flex flex-col transition-all duration-300 ${
  isCollapsed ? 'lg:w-[92px]' : 'lg:w-64'
  } ${
  isMobileOpen ? 'w-64 translate-x-0' : 'w-64 -translate-x-full lg:translate-x-0'
  }`}>
  
  {/* Logo & Toggle */}
- <div className="flex items-center justify-center px-4 py-5 border-b border-[var(--border)]">
+ <div className="flex items-center justify-center px-4 py-5 border-b border-border">
  <div className="flex items-center gap-3 overflow-hidden">
  <Image src="/logo.png" alt="GymSmart ERP" width={44} height={44} className="object-contain min-w-[44px] rounded-lg" />
  {(!isCollapsed || isMobileOpen) && (
  <div className="whitespace-nowrap transition-opacity duration-300 flex flex-col">
- <span className="text-[var(--text-primary)] font-bold text-lg leading-tight tracking-tight">GymSmart</span>
- <span className="text-[10px] text-[var(--warning)] font-bold uppercase tracking-wider -mt-0.5">ERP System</span>
+ <span className="text-foreground font-bold text-lg leading-tight tracking-tight">GymSmart</span>
+ <span className="text-[10px] text-warning font-bold uppercase tracking-wider -mt-0.5">ERP System</span>
  </div>
  )}
  </div>
@@ -83,9 +83,9 @@ export default function ErpSidebar({ isCollapsed, setIsCollapsed }: ErpSidebarPr
  } ${
  active
  ? 'text-white border border-transparent shadow-lg'
- : 'text-[var(--text-secondary)] hover:text-[var(--primary)] hover:bg-[var(--primary-subtle)]'
+ : 'text-secondary hover:text-primary hover:bg-primary-subtle'
  }`} style={active ? { background: 'var(--primary)' } : {}}>
- <Icon size={22} className={active ? 'text-white' : 'text-[var(--text-secondary)] group-hover:text-[var(--primary)] transition-colors'} />
+ <Icon size={22} className={active ? 'text-white' : 'text-secondary group-hover:text-primary transition-colors'} />
  {showLabel && <span className="text-sm whitespace-nowrap">{item.label}</span>}
  </Link>
  );
@@ -93,14 +93,14 @@ export default function ErpSidebar({ isCollapsed, setIsCollapsed }: ErpSidebarPr
  </nav>
 
  {/* User */}
- <div className={`px-4 py-4 border-t border-[var(--border)] bg-[var(--bg-header)] flex items-center ${(!isCollapsed || isMobileOpen) ? 'gap-3' : 'justify-center'}`}>
+ <div className={`px-4 py-4 border-t border-border bg-header flex items-center ${(!isCollapsed || isMobileOpen) ? 'gap-3' : 'justify-center'}`}>
         <div className="w-10 h-10 min-w-[40px] rounded-full flex items-center justify-center text-white text-sm font-bold border border-white/10" style={{ background: 'var(--primary)' }}>
           {mounted ? (user?.name?.charAt(0)?.toUpperCase() || 'A') : 'A'}
         </div>
         {(!isCollapsed || isMobileOpen) && (
           <div className="whitespace-nowrap overflow-hidden flex-1">
-            <div className="text-[var(--text-primary)] text-sm font-bold truncate">{mounted ? (user?.name || 'Admin User') : 'Admin User'}</div>
-            <div className="text-[var(--text-secondary)] text-xs truncate">{mounted ? (user?.role || 'Super Admin') : 'Super Admin'}</div>
+            <div className="text-foreground text-sm font-bold truncate">{mounted ? (user?.name || 'Admin User') : 'Admin User'}</div>
+            <div className="text-secondary text-xs truncate">{mounted ? (user?.role || 'Super Admin') : 'Super Admin'}</div>
           </div>
         )}
  </div>

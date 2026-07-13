@@ -20,7 +20,7 @@ export default function DietGrid() {
   if (loading) {
     return (
       <div className="flex justify-center py-10">
-        <div className="w-8 h-8 border-4 border-[var(--warning)] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-warning border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -31,46 +31,46 @@ export default function DietGrid() {
         {currentData.map(d => (
           <div 
             key={d.id} 
-            className="border border-[var(--library-border)] rounded-xl p-4 hover:shadow-md transition-shadow bg-[var(--library-bg-card)]"
+            className="border border-border rounded-xl p-4 hover:shadow-md transition-shadow bg-card"
           >
             <div className="flex justify-between items-start mb-2">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <Utensils size={16} className="text-[var(--success)]" />
-                  <p className="font-semibold text-[var(--library-text-primary)]">{d.name}</p>
+                  <Utensils size={16} className="text-success" />
+                  <p className="font-semibold text-foreground">{d.name}</p>
                 </div>
-                <span className="text-xs bg-[var(--success-bg)] text-[var(--success)] dark:bg-[var(--success-bg)] dark:text-[var(--success)] px-2 py-0.5 rounded-full">
+                <span className="text-xs bg-success-bg text-success dark:bg-success-bg dark:text-success px-2 py-0.5 rounded-full">
                   {d.goal}
                 </span>
               </div>
               <div className="flex gap-1">
                 <button 
                   onClick={() => openEditDiet(d)} 
-                  className="p-1.5 rounded-lg bg-[var(--bg-input)] text-[var(--library-text-secondary)] hover:bg-[var(--primary-subtle)] transition-colors"
+                  className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle transition-colors"
                 >
                   <Edit2 size={13} />
                 </button>
                 <button 
                   onClick={() => deleteDietPlan(d.id)} 
-                  className="p-1.5 rounded-lg bg-[var(--danger-bg)] dark:bg-[var(--danger-bg)] text-[var(--danger)] hover:bg-[var(--danger-bg)] dark:hover:bg-[var(--danger-bg)] transition-colors"
+                  className="p-1.5 rounded-lg bg-danger-bg dark:bg-danger-bg text-destructive hover:bg-danger-bg dark:hover:bg-danger-bg transition-colors"
                 >
                   <Trash2 size={13} />
                 </button>
               </div>
             </div>
-            <div className="text-xs text-[var(--library-text-secondary)] space-y-0.5 mt-2">
+            <div className="text-xs text-secondary space-y-0.5 mt-2">
               {d.calories && <p>🔥 {d.calories} kcal/day</p>}
               {d.protein && <p>🥩 Protein: {d.protein}g · Carbs: {d.carbs}g · Fats: {d.fats}g</p>}
-              <div className="mt-2 space-y-0.5 border-t border-[var(--library-border)] pt-2">
+              <div className="mt-2 space-y-0.5 border-t border-border pt-2">
                 {d.meals.map((m, i) => (
-                  <p key={i} className="text-xs text-[var(--library-text-secondary)]">• {m}</p>
+                  <p key={i} className="text-xs text-secondary">• {m}</p>
                 ))}
               </div>
             </div>
           </div>
         ))}
         {filtered.length === 0 && (
-          <div className="col-span-1 sm:col-span-2 xl:col-span-3 text-center py-10 text-[var(--library-text-secondary)]">
+          <div className="col-span-1 sm:col-span-2 xl:col-span-3 text-center py-10 text-secondary">
             No diet plans found matching "{search}".
           </div>
         )}

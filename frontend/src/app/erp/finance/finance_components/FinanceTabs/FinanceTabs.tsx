@@ -32,7 +32,7 @@ export default function FinanceTabs() {
  </div>
   <div className="px-4 flex flex-wrap gap-3 items-center">
     <div className="relative">
-      <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--finance-text-secondary)]" />
+      <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
       <input 
         value={search} 
         onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} 

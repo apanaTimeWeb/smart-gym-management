@@ -15,12 +15,12 @@ function AttendanceContent() {
  const { toast, hideToast } = useAttendanceContext();
 
  return (
- <div className="min-h-full pb-10 attendance-module bg-[var(--bg-page)] text-[var(--attendance-text-primary)]">
+ <div className="min-h-full pb-10 attendance-module bg-background text-foreground">
  <ErpHeader title="Attendance" subtitle="Track daily member and staff check-ins" />
  <div className="p-6 space-y-5">
  <AttendanceKPIs />
  
- <div className="bg-[var(--attendance-bg-card)] rounded-xl shadow-sm border border-[var(--attendance-border)] overflow-hidden">
+ <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
  <AttendanceToolbar />
  <AttendanceTable />
  </div>

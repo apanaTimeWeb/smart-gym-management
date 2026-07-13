@@ -40,7 +40,7 @@ export default function PayrollModal() {
           <h2 className="text-xl font-bold" style={{ color: 'var(--hr-text-primary)' }}>
             Disburse Payroll
           </h2>
-          <button onClick={() => setShowPayrollModal(false)} className="p-2 rounded-full hover:bg-[rgba(99,102,241,0.1)] transition-colors text-[var(--hr-text-secondary)] hover:text-[var(--hr-text-primary)]">
+          <button onClick={() => setShowPayrollModal(false)} className="p-2 rounded-full hover:bg-[rgba(99,102,241,0.1)] transition-colors text-secondary hover:text-foreground">
             <X size={20} />
           </button>
         </div>
@@ -81,7 +81,7 @@ export default function PayrollModal() {
                 type="number"
                 {...register('amount')}
                 readOnly
-                className="w-full px-4 py-2.5 rounded-xl border text-sm bg-[var(--hr-bg-main)] cursor-not-allowed opacity-80"
+                className="w-full px-4 py-2.5 rounded-xl border text-sm bg-background cursor-not-allowed opacity-80"
                 style={{ borderColor: 'var(--hr-border)', color: 'var(--hr-text-primary)' }}
               />
               <p className="text-xs" style={{ color: 'var(--hr-text-secondary)' }}>Amount is automatically set to the staff's base salary.</p>

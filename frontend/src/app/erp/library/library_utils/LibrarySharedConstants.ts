@@ -34,9 +34,9 @@ export const DIFFICULTIES = ['BEGINNER', 'INTERMEDIATE', 'ADVANCED'];
 export const GOALS = ['Weight Loss', 'Muscle Gain', 'Maintenance', 'Endurance', 'Flexibility'];
 
 export const DIFF_COLORS: Record<string, string> = {
- BEGINNER: 'bg-[var(--success-bg)] text-[var(--success)]',
- INTERMEDIATE: 'bg-[var(--warning-bg)] text-[var(--warning)]',
- ADVANCED: 'bg-[var(--danger-bg)] text-[var(--danger)]',
+ BEGINNER: 'bg-success-bg text-success',
+ INTERMEDIATE: 'bg-warning-bg text-warning',
+ ADVANCED: 'bg-danger-bg text-destructive',
 };
 
 export const EMPTY_EXERCISE_FORM = { 

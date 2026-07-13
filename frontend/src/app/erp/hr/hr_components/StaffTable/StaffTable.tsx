@@ -63,7 +63,7 @@ export default function StaffTable() {
                   <div className="flex items-center gap-2">
                     <button 
                       onClick={(e) => { e.stopPropagation(); openEdit(s); }} 
-                      className="p-1.5 rounded-lg transition-colors hover:bg-[var(--primary-subtle)]" 
+                      className="p-1.5 rounded-lg transition-colors hover:bg-primary-subtle" 
                       style={{ color: 'var(--hr-text-secondary)' }}
                       title="Edit"
                     >
@@ -71,7 +71,7 @@ export default function StaffTable() {
                     </button>
                     <button 
                       onClick={(e) => { e.stopPropagation(); deleteStaff(s.id); }} 
-                      className="p-1.5 rounded-lg transition-colors hover:bg-[var(--danger-bg)]" 
+                      className="p-1.5 rounded-lg transition-colors hover:bg-danger-bg" 
                       style={{ color: 'var(--hr-kpi-red-text)', backgroundColor: 'var(--hr-kpi-red-bg)' }}
                       title="Delete"
                     >
@@ -83,7 +83,7 @@ export default function StaffTable() {
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={7} className="text-center py-12 text-[var(--hr-text-secondary)]">
+                <td colSpan={7} className="text-center py-12 text-secondary">
                   {debouncedSearch ? 'No staff match the filter.' : 'No staff members yet. Add your first staff!'}
                 </td>
               </tr>
