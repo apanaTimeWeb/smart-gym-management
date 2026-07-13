@@ -1,6 +1,8 @@
 // RESPONSIBILITY: Server Component that fetches initial SSR data for the dashboard layout.
 import DashboardMain from '@/app/erp/dashboard/dashboard_components/DashboardMain/DashboardMain';
 import { cookies } from 'next/headers';
+import { DashboardStats } from '@/app/erp/dashboard/dashboard_types/dashboard_types';
+import { ApiResponse } from '@/lib/api';
 
 async function getDashboardData() {
   try {
@@ -18,8 +20,8 @@ async function getDashboardData() {
     });
     
     if (!res.ok) return null;
-    const json = await res.json();
-    return json.data;
+    const json = await res.json() as ApiResponse<DashboardStats>;
+    return json.data || null;
   } catch (e) {
     return null;
   }

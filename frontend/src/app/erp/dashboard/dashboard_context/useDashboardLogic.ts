@@ -3,8 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { dashboardApi } from '@/app/erp/dashboard/dashboard_api/dashboard_api';
-import { type DashboardStats } from '@/lib/api';
-import { DashboardContextType, FetchState } from '@/app/erp/dashboard/dashboard_types/dashboard_types';
+import { DashboardContextType, FetchState, DashboardStats } from '@/app/erp/dashboard/dashboard_types/dashboard_types';
 
 /**
  * Hook to manage dashboard data fetching and network state tracking.

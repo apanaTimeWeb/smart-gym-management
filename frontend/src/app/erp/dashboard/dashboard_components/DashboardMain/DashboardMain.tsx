@@ -3,23 +3,25 @@
 
 import ErpHeader from '@/app/erp/erp_components/ErpLayout/ErpHeader';
 import { DashboardProvider, useDashboardContext } from '@/app/erp/dashboard/dashboard_context/DashboardContext';
+import { DashboardStats } from '@/app/erp/dashboard/dashboard_types/dashboard_types';
 import DashboardKPIs from '@/app/erp/dashboard/dashboard_components/DashboardKPIs/DashboardKPIs';
 import RecentMembers from '@/app/erp/dashboard/dashboard_components/RecentMembers/RecentMembers';
 import PendingPayments from '@/app/erp/dashboard/dashboard_components/PendingPayments/PendingPayments';
 import PromoCard from '@/app/erp/dashboard/dashboard_components/PromoCard/PromoCard';
 import MembershipDistribution from '@/app/erp/dashboard/dashboard_components/MembershipDistribution/MembershipDistribution';
+import { Loader2 } from 'lucide-react';
 
 function DashboardContent() {
  const { status, error } = useDashboardContext();
 
- if (status === 'loading') return (
- <div className="min-h-full flex items-center justify-center">
- <div className="text-center">
- <div className="w-12 h-12 border-4 border-t-transparent rounded-full animate-spin mx-auto mb-3 border-primary" />
- <p className="text-sm text-secondary">Loading dashboard...</p>
- </div>
- </div>
- );
+  if (status === 'loading') return (
+    <div className="min-h-full flex items-center justify-center">
+      <div className="text-center flex flex-col items-center">
+        <Loader2 className="w-12 h-12 animate-spin text-primary mb-3" />
+        <p className="text-sm text-secondary">Loading dashboard...</p>
+      </div>
+    </div>
+  );
 
  if (status === 'error') return (
  <div className="min-h-full flex items-center justify-center">
@@ -48,12 +50,12 @@ function DashboardContent() {
  );
 }
 
-export default function DashboardMain({ initialData }: { initialData?: any }) {
- return (
- <DashboardProvider initialData={initialData}>
- <div className="min-h-full">
- <DashboardContent />
- </div>
- </DashboardProvider>
- );
+export default function DashboardMain({ initialData }: { initialData?: DashboardStats | null }) {
+  return (
+    <DashboardProvider initialData={initialData}>
+      <div className="min-h-full">
+        <DashboardContent />
+      </div>
+    </DashboardProvider>
+  );
 }

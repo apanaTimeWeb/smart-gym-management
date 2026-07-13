@@ -16,10 +16,11 @@ export default function RecentMembers() {
   if (!stats) return null;
   const members = stats.recentMembers || [];
 
-  const filtered = members.filter(m =>
-    m.name.toLowerCase().includes(search.toLowerCase()) ||
-    ((m.plan as any)?.name || m.plan || '').toString().toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = members.filter(m => {
+    const planName = typeof m.plan === 'string' ? m.plan : m.plan?.name || '';
+    return m.name.toLowerCase().includes(search.toLowerCase()) ||
+           planName.toLowerCase().includes(search.toLowerCase());
+  });
 
   return (
   <div className="xl:col-span-2 rounded-xl shadow-sm border overflow-hidden bg-card border-border">
@@ -63,7 +64,9 @@ export default function RecentMembers() {
                     <span className="text-sm font-medium text-primary">{m.name}</span>
                   </div>
                 </td>
-                <td className="px-6 py-4 text-sm text-secondary">{(m.plan as any)?.name || m.plan || 'N/A'}</td>
+                <td className="px-6 py-4 text-sm text-secondary">
+                  {typeof m.plan === 'string' ? m.plan : m.plan?.name || 'N/A'}
+                </td>
                 <td className="px-6 py-4">
                   <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusStyle.bg} ${statusStyle.text}`}>
                     {m.status}
