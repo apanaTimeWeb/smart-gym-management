@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Provides dashboard state (statistics, loading status) to the entire dashboard module hierarchy.
 "use client";
 
 import React, { createContext, useContext, useMemo } from 'react';

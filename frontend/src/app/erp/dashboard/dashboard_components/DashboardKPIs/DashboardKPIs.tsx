@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders key performance indicator (KPI) metric cards on the dashboard.
 "use client";
 
 import { useDashboardContext } from '@/app/erp/dashboard/dashboard_context/DashboardContext';
@@ -20,8 +21,8 @@ export default function DashboardKPIs() {
  change="All time" 
  changeType="up" 
  icon={Users} 
- iconBg="dashboard-icon-info-bg" 
- iconColor="dashboard-icon-info-text" 
+ iconBg="bg-info-bg" 
+ iconColor="text-info" 
  />
  <ErpStatCard 
  title="Monthly Revenue" 
@@ -29,8 +30,8 @@ export default function DashboardKPIs() {
  change="This month" 
  changeType="up" 
  icon={DollarSign} 
- iconBg="dashboard-icon-success-bg" 
- iconColor="dashboard-icon-success-text" 
+ iconBg="bg-success-bg" 
+ iconColor="text-success" 
  />
  <ErpStatCard 
  title="Active Members" 
@@ -38,8 +39,8 @@ export default function DashboardKPIs() {
  change={`${s.totalMembers ? Math.round((s.activeMembers / s.totalMembers) * 100) : 0}% of total`} 
  changeType="neutral" 
  icon={UserCheck} 
- iconBg="dashboard-icon-warning-bg" 
- iconColor="dashboard-icon-warning-text" 
+ iconBg="bg-warning-bg" 
+ iconColor="text-warning" 
  />
  <ErpStatCard 
  title="Pending Payments" 
@@ -47,8 +48,8 @@ export default function DashboardKPIs() {
  change={`${s.membersByStatus?.pending || 0} members`} 
  changeType="down" 
  icon={AlertCircle} 
- iconBg="dashboard-icon-danger-bg" 
- iconColor="dashboard-icon-danger-text" 
+ iconBg="bg-danger-bg" 
+ iconColor="text-danger" 
  />
  </div>
 
@@ -59,8 +60,8 @@ export default function DashboardKPIs() {
  change="This month" 
  changeType="up" 
  icon={TrendingUp} 
- iconBg="dashboard-icon-purple-bg" 
- iconColor="dashboard-icon-purple-text" 
+ iconBg="bg-primary/10" 
+ iconColor="text-primary" 
  />
  <ErpStatCard 
  title="Total Staff" 
@@ -68,8 +69,8 @@ export default function DashboardKPIs() {
  change="Active staff" 
  changeType="neutral" 
  icon={Clock} 
- iconBg="dashboard-icon-warning-bg" 
- iconColor="dashboard-icon-warning-text" 
+ iconBg="bg-warning-bg" 
+ iconColor="text-warning" 
  />
  <ErpStatCard 
  title="Store Products" 
@@ -77,8 +78,8 @@ export default function DashboardKPIs() {
  change={s.lowStockCount > 0 ? `${s.lowStockCount} low stock` : 'All stocked'} 
  changeType={s.lowStockCount > 0 ? 'down' : 'up'} 
  icon={ShoppingCart} 
- iconBg="dashboard-icon-info-bg" 
- iconColor="dashboard-icon-info-text" 
+ iconBg="bg-info-bg" 
+ iconColor="text-info" 
  />
  <ErpStatCard 
  title="New Inquiries" 
@@ -86,8 +87,8 @@ export default function DashboardKPIs() {
  change={`${s.totalInquiries} total`} 
  changeType="up" 
  icon={CheckCircle} 
- iconBg="dashboard-icon-success-bg" 
- iconColor="dashboard-icon-success-text" 
+ iconBg="bg-success-bg" 
+ iconColor="text-success" 
  />
  </div>
  </>

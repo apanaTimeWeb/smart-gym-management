@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Main entry point for the dashboard module. Renders layout, handles high-level loading/error states, and sets up Context.
 "use client";
 
 import ErpHeader from '@/app/erp/erp_components/ErpLayout/ErpHeader';
@@ -7,25 +8,24 @@ import RecentMembers from '@/app/erp/dashboard/dashboard_components/RecentMember
 import PendingPayments from '@/app/erp/dashboard/dashboard_components/PendingPayments/PendingPayments';
 import PromoCard from '@/app/erp/dashboard/dashboard_components/PromoCard/PromoCard';
 import MembershipDistribution from '@/app/erp/dashboard/dashboard_components/MembershipDistribution/MembershipDistribution';
-import '@/app/erp/dashboard/dashboard.css';
 
 function DashboardContent() {
- const { loading, error } = useDashboardContext();
+ const { status, error } = useDashboardContext();
 
- if (loading) return (
+ if (status === 'loading') return (
  <div className="min-h-full flex items-center justify-center">
  <div className="text-center">
- <div className="w-12 h-12 border-4 border-t-transparent rounded-full animate-spin mx-auto mb-3" style={{ borderColor: 'var(--primary)', borderTopColor: 'transparent' }} />
- <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Loading dashboard...</p>
+ <div className="w-12 h-12 border-4 border-t-transparent rounded-full animate-spin mx-auto mb-3 border-primary" />
+ <p className="text-sm text-secondary">Loading dashboard...</p>
  </div>
  </div>
  );
 
- if (error) return (
+ if (status === 'error') return (
  <div className="min-h-full flex items-center justify-center">
  <div className="text-center">
- <p className="font-medium" style={{ color: 'var(--danger)' }}>Failed to load dashboard</p>
- <p className="text-sm mt-1" style={{ color: 'var(--danger)' }}>{error}</p>
+ <p className="font-medium text-danger">Failed to load dashboard</p>
+ <p className="text-sm mt-1 text-danger">{error}</p>
  </div>
  </div>
  );
@@ -51,7 +51,7 @@ function DashboardContent() {
 export default function DashboardMain({ initialData }: { initialData?: any }) {
  return (
  <DashboardProvider initialData={initialData}>
- <div className="min-h-full dashboard-module">
+ <div className="min-h-full">
  <DashboardContent />
  </div>
  </DashboardProvider>

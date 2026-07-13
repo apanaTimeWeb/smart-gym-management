@@ -1,4 +1,5 @@
-export interface DashboardContextType { stats: DashboardStats | null; loading: boolean; error: string; }
+export type FetchState = 'idle' | 'loading' | 'success' | 'error';
+export interface DashboardContextType { stats: DashboardStats | null; status: FetchState; error: string; }
 export interface DashboardStats {
   totalMembers: number;
   activeMembers: number;
