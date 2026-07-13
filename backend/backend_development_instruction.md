@@ -117,8 +117,8 @@ Never use fragile, hardcoded relative imports (e.g., `../../../utils/helpers`).
 
 ## 11. Co-located Testing (Unit & E2E - Extreme Isolation)
 Never put tests in a global `tests/` or `pytest_tests/` directory separate from the application code. 
-* **The Rule:** Both Unit and End-to-End (E2E) tests must live directly inside the module they are testing. Create a `tests/` folder inside the module (e.g., `modules/auth/tests/` or `modules/auth/auth_test/`), or keep `.spec.ts` / `test_*.py` files adjacent to the micro-feature they test.
-* **Why?** When an AI is asked to add a feature or fix a bug, providing the corresponding test file in the exact same directory ensures the AI has complete context of the feature's requirements. Running these E2E tests locally proves the AI has written great, working code before the developer even needs to review it manually.
+* **The Rule:** Unit tests (`.spec.ts`) must live directly inside the module they are testing, adjacent to the micro-feature file (e.g., `member-registration.service.spec.ts` next to `member-registration.service.ts`). E2E / black-box API tests are written in Python pytest and live in a separate top-level `e2e/` directory (see Rule 27). Do NOT co-locate pytest files inside the NestJS module folders.
+* **Why?** When an AI is asked to add a feature or fix a bug, providing the co-located `.spec.ts` file gives it complete unit-test context. The pytest E2E suite is decoupled from the Node.js runtime entirely.
 
 
 ## 12. Strict API Documentation (Swagger/OpenAPI)
@@ -129,8 +129,8 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **The Rule:** Never use raw environment variables (e.g., `process.env.XXX` or `os.environ.get()`) directly inside business logic. Always use a centralized, strongly-typed Config Service or Settings class (e.g., `@nestjs/config` in NestJS, `settings.py` with `django-environ` in Django).
 * **Why:** If the AI needs to add a new third-party API key or change a timeout value, it should only modify the central configuration schema, not hunt for raw env calls scattered across 50 different micro-services.
 
-## 14. Standardized Logging & Correlation IDs (Pino & OpenTelemetry)
-* **The Rule:** Never use raw print statements (e.g., `console.log()` or `print()`). Always use a structured, high-performance JSON logger (e.g., `nestjs-pino` / `pino` or winston or in django we have other or other as per backend choicee). 
+## 14. Standardized Logging & Correlation IDs (nestjs-pino & OpenTelemetry)
+* **The Rule:** Never use raw print statements (e.g., `console.log()` or `print()`). The canonical logger for this NestJS project is **`nestjs-pino`** (wrapping `pino`). Do not use Winston or any other logger. 
 * **The Log Structure:** Every log entry must automatically attach the current execution context. A standard log output must include:
   - `req` and `res` objects (for HTTP request tracking)
   - `trace_id` and `span_id` (injected via OpenTelemetry/AsyncLocalStorage)
@@ -194,9 +194,11 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **The Rule:** An enterprise API must never be released without a versioning strategy. Always prefix routes with a version (e.g., `/api/v1/users`). In frameworks like NestJS, enable URI versioning globally.
 * **Why:** If the business scales and requires mobile apps or external integrations, releasing a breaking `v2` API should not crash the legacy mobile apps that still rely on `v1`.
 
-## 27. API Testing Strategy (Strictly Pytest)
-* **The Rule:** ALL API testing (End-to-End / Black-box) MUST be written in Python using `pytest`. Even if the backend is written in Node.js/NestJS, you must NOT use Supertest or Jest for API testing. (Jest is strictly reserved for internal unit tests only).
-* **Why:** Decoupling API tests from the application codebase allows QA engineers, SDETs, and automation pipelines to test the API completely agnostically, simulating true black-box client behavior without being tied to the Node.js runtime.
+## 27. API Testing Strategy (Two-Tier: Jest Unit + Pytest E2E)
+* **The Rule:** This project uses a strict two-tier testing strategy:
+  1. **Jest `.spec.ts` (Unit Tests):** Co-located with source files (see Rule 11). Tests individual service methods, DTOs, and utilities in isolation with mocked dependencies. This is the AI's primary safety net when modifying a micro-file.
+  2. **Python `pytest` (Black-Box E2E / API Tests):** Lives in a top-level `e2e/` directory, completely decoupled from the Node.js runtime. Tests the running API as a true external client — no knowledge of internal implementation. QA engineers and CI pipelines use this tier.
+* **Strict Boundary:** Jest is NEVER used for API/E2E testing. Pytest is NEVER used for unit testing internal service logic. These two tiers must never overlap.
 
 ## Summary Checklist for Developers Providing Context to AI:
 1. Identify the exact layer where the bug/feature resides (Validation? DB Query? Business Logic?).
@@ -311,7 +313,7 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 ---
 
 ## 37. Strict Edge Payload Validation (No Mass Assignment)
-* **The Rule:** It is not enough to just validate that `email` and `password` exist in a DTO. Your payload validator MUST strictly strip or reject any unrecognized properties sent by the client. (e.g., in NestJS: `whitelist: true, forbidNonWhitelisted: true`). Additionally, enforce strict JSON payload size limits globally (e.g., `1mb`).
+* **The Rule:** It is not enough to just validate that `email` and `password` exist in a DTO. Your payload validator MUST strictly strip or reject any unrecognized properties sent by the client. (e.g., in NestJS: `whitelist: true, forbidNonWhitelisted: true`). Additionally, enforce a **default global JSON payload size limit of `1mb`** at the framework middleware level. Individual endpoints that require larger payloads (e.g., file uploads) must explicitly override this limit per-endpoint (see Rule 72).
 * **Why:** If a malicious user sends `{ "email": "test@test.com", "role": "admin" }` to the registration endpoint, and you blindly pass the `req.body` to the ORM's save method, you have a Mass Assignment vulnerability. Stripping unknown keys guarantees this is mathematically impossible.
 
 ---
@@ -428,7 +430,7 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **The Rule:** Relying on TypeScript implicit `any` or inferred returns is forbidden for async operations. Every service method and repository method MUST have an explicitly declared return type (e.g., `Promise<MemberEntity>`).
 
 ## 63. Database Connection Pool Configuration
-* **The Rule:** Default ORM connection pools are forbidden. The `database.config.ts` must explicitly define `max` connections (e.g., 20), `acquireTimeout` (30000ms), and `idleTimeoutMillis` (10000ms) to prevent hanging requests and DB exhaustion in production.
+* **The Rule:** Default ORM connection pools are forbidden. The `database.config.ts` must explicitly define `max` connections (e.g., 20), `acquireTimeout` (30000ms), and `idleTimeoutMillis` (10000ms). **CRITICAL for Multi-Tenancy (Rule 39):** This pool configuration applies to the GLOBAL connection manager, not per-tenant DataSource. With N tenants on the same DB server, the total active connections across all tenant DataSources must be budgeted carefully. Do NOT blindly apply `max: 20` per tenant DataSource or you will exhaust the database server's connection limit.
 
 ## 64. Structured Machine-Readable Error Codes
 * **The Rule:** Error responses must include a machine-readable `errorCode` string following `DOMAIN.ENTITY.REASON` (e.g., `BILLING.SUBSCRIPTION.EXPIRED`). The frontend relies on this code to trigger specific UI logic (e.g., redirecting to a payment page).
@@ -455,7 +457,7 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **The Rule:** ALL dates and times MUST be stored in the database as UTC. The backend must never store local timezones. Any datetime conversion should happen purely on the frontend (Rule 24).
 
 ## 72. Per-Endpoint Payload Size Limits
-* **The Rule:** Implement strict JSON payload size limits per endpoint to prevent memory exhaustion attacks. General endpoints should reject payloads >1MB, while specific file-upload endpoints can accept larger, explicitly defined limits.
+* **The Rule:** The default global `1mb` limit (Rule 37) can be overridden per-endpoint for specific use cases. General endpoints must reject payloads >1MB. File-upload endpoints must explicitly declare their own larger limit (e.g., `10mb` for profile images, `50mb` for bulk import CSVs). These overrides must be declared in the endpoint's controller decorator, not scattered in middleware.
 
 ---
 

@@ -1,7 +1,7 @@
 # 🎨 SMART LIBRARY 360 — GLOBAL DESIGN SYSTEM
 > **Prepend this block to EVERY module you give to Stitch.**
 > This ensures visual consistency across all 109 pages.
-> Stack: Next.js 14 (App Router) · TypeScript · Tailwind CSS (or Vanilla CSS) · shadcn/ui components
+> Stack: Next.js 16 (App Router, Turbopack) · TypeScript · Tailwind CSS · shadcn/ui components
 
 ---
 
@@ -37,7 +37,7 @@
 
 ## 2. TYPOGRAPHY
 
-- **Font Family:** `Inter` — import via `next/font/google`: `import { Inter } from 'next/font/google'`
+- **Font Family:** `Inter` — loaded via `next/font/google` (NOT Google Fonts CDN `@import`): `import { Inter } from 'next/font/google'`
 - **Base font-size:** 14px
 
 | Role | Size | Weight | Color | Usage |
@@ -190,7 +190,7 @@ Badges are small pill-shaped labels: `border-radius: 999px`, `padding: 2px 10px`
 - Header row: `background: rgba(99,102,241,0.08)`, UPPERCASE 12px `--text-secondary`, sortable columns show ↑↓ arrows on hover
 - Data rows: alternating subtle zebra stripe (`--bg-card` / slightly lighter), 48px row height
 - Row hover: `background: rgba(99,102,241,0.06)`, subtle highlight
-- Inline row actions (rightmost column): small icon buttons — ✏️ Edit, 🗑️ Delete — shown on row hover (Note: 'View' is handled by clicking the row)
+- Inline row actions (rightmost column): small icon buttons — ✏️ Edit, 🗑️ Delete — shown on row hover. **There is NO View/Eye button — clicking the entire row opens the detail view (see Frontend Rule 19).**
 - Pagination bar (below table): "Showing 1–25 of 143 results" + Previous / Next buttons + rows-per-page selector (10 / 25 / 50)
 - Empty state (no rows): Centered SVG illustration + "No [items] found" (16px, `--text-secondary`) + optional CTA button
 
@@ -203,8 +203,8 @@ Badges are small pill-shaped labels: `border-radius: 999px`, `padding: 2px 10px`
 - Form footer: Buttons right-aligned — Cancel (ghost) | Save/Submit (primary)
 
 ### 5d. Modal / Dialog
-- Overlay: `backdrop: rgba(0,0,0,0.6)`, centered, `z-index: 40`
-- Modal card: `background: --bg-card`, border-radius: 16px, padding: 28px, max-width: 480px
+- Overlay: `backdrop: rgba(0,0,0,0.6)`, centered, **`z-40`** (Tailwind class — see Section 12 Z-Index Scale)
+- Modal card: `background: var(--bg-card)`, border-radius: 16px, padding: 28px, max-width: 480px
 - Structure: Title (18px bold) + Description text + Content area + Footer buttons
 - **Confirmation/Destructive modal:** Icon = ⚠️ (amber) or 🗑️ (red) · Description explains what will happen · Buttons: "Cancel" (ghost, left) + "Confirm" (danger red, right)
 - **Form modal / Drawer:** Slide-in from right, width 480px, full-height, has its own form + Save/Cancel footer
@@ -335,7 +335,7 @@ Use **Lucide Icons** (tree-shakeable, consistent style). Key icons:
 
 ## 10. CHART STYLE GUIDE (for `reports.tsx`, `financial-reports.tsx`, `dashboard.tsx`)
 
-Use **Recharts** or **Chart.js** library.
+**Canonical chart library: ApexCharts** (`react-apexcharts`). Do NOT use Recharts or Chart.js — the project uses ApexCharts exclusively.
 
 | Chart Type | Colors | Usage |
 |---|---|---|
@@ -354,7 +354,7 @@ This design system intrinsically supports both Dark and Light modes using CSS va
 When building modules or components, **ALWAYS follow these rules** to ensure seamless theme switching:
 
 1. **Never use hardcoded Tailwind colors** for backgrounds or text (e.g., `bg-white`, `bg-gray-900`, `text-black`, `text-white`) unless explicitly required for a specific UI element (like a primary button where text is always white).
-2. **Always use CSS Variables**: Map all colors to the global CSS variables defined in this system (e.g., `bg-[var(--bg-card)]`, `text-[var(--text-primary)]`, `border-[var(--border)]`).
+2. **The One Canonical Pattern for CSS Variables:** Define the variable in `globals.css` → map it as a named token in `tailwind.config.ts` → use the Tailwind class name in JSX (e.g., `bg-card`, `text-primary`). **Never use `bg-[var(--bg-card)]` or `bg-[#1A1A2E]` directly in JSX.** This is the single source of truth that resolves any ambiguity between Rule 4 and Rule 36 of the Frontend Instructions.
 3. **Theme Provider**: Ensure the app is wrapped in a `ThemeProvider` (like `next-themes`) that toggles a `.dark` class on the `<html>` or `<body>` tag.
 4. **CSS Setup**: In your global CSS file (e.g., `globals.css`), define the light mode variables inside `:root { ... }` and the dark mode variables inside `.dark { ... }`.
 5. **Gradients & Shadows**: For gradients and shadows, use variables like `var(--primary)` instead of hardcoded hex/rgba to ensure they adapt naturally when the theme changes.
@@ -428,14 +428,14 @@ Unlike toasts (which auto-dismiss), alert banners are persistent inline messages
 
 ## 17. DATA DENSITY MODES
 Enterprise users have different preferences for how much data fits on a screen.
-- **Compact Mode:** 32px row height, smaller font (12px). For power users managing 500+ records.
+- **Compact Mode:** 32px row height, smaller font (12px). Zebra striping is preserved. For power users managing 500+ records.
 - **Comfortable Mode (Default):** 48px row height, standard 14px font.
-- **Implementation:** A toggle in settings/header switches between these modes. Save preference to `localStorage`.
+- **Implementation:** A toggle in settings/header switches between these modes. Save preference using a `useLocalStorage` hook (never call `window.localStorage` directly — see Frontend Rule 61).
 
 ## 18. RIGHT-CLICK CONTEXT MENU PATTERN
 - **Usage:** On tables and Kanban cards, right-clicking should open a custom context menu.
-- **Actions:** Must mirror the inline action column (e.g., 👁️ View, ✏️ Edit, 🗑️ Delete, 📋 Copy ID).
-- **Styling:** Small dropdown menu with `shadow-2xl` matching the Glassmorphism rules (z-index: 30).
+- **Actions:** Must mirror the inline action column only: ✏️ Edit, 🗑️ Delete, 📋 Copy ID. **Do NOT include a 👁️ View action** — row click already handles navigation (see Frontend Rule 19).
+- **Styling:** Small dropdown menu with `shadow-2xl` matching the Glassmorphism rules (`z-30`).
 
 ## 19. TOOLTIP DESIGN SPECIFICATION
 - **Background:** `var(--bg-card)` with `1px solid var(--border)`.

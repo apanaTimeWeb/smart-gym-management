@@ -20,10 +20,10 @@ Find all hardcoded UI data (dropdown options, filter lists, default preset array
 *Why?* Because tomorrow, this hardcoded data will be replaced by a Backend API call. By keeping it all in one file today, I will only have to change one file tomorrow to integrate the API, without touching the UI components. Derive your TypeScript types directly from these central arrays.
 
 4. **Theme Independence (No Inline Colors)**: 
-Remove all hardcoded Tailwind color utilities (like `text-primary`, `bg-card`) from the JSX. Replace them with custom CSS variables (e.g., `var(--bg-card)`) mapped properly in `tailwind.config.ts`, so you can still use standard Tailwind classes (like `bg-card` or `text-primary`) without arbitrary bracket values like `bg-[#1A1A2E]` (See Rule 36). This ensures that I can copy-paste this entire folder to another project and theme it entirely from one CSS file.
+Remove all hardcoded Tailwind color utilities from the JSX. Map all CSS variables (e.g., `--bg-card`, `--text-primary`) in `tailwind.config.ts` as named tokens so you can use standard Tailwind classes like `bg-card` or `text-primary` **without** arbitrary bracket values. **The one canonical pattern is: define the variable in `globals.css`, map it in `tailwind.config.ts`, and use the Tailwind class name (e.g., `bg-card`) in JSX. Never use `bg-[var(--bg-card)]` or `bg-[#1A1A2E]` directly in JSX.** This ensures that I can copy-paste this entire folder to another project and theme it entirely from one CSS file.
 
 5. **Smart & Isolated State Management (Avoid Excessive Prop Drilling)**: 
-Because the components will be heavily micro-modularized (Rule #1), avoid creating a massive web of prop drilling (passing data through 5 layers of components). If multiple micro-components need to share the same state, create a state store exclusively for this module (e.g., a local React Context `[ModuleName]Context.tsx` or a feature-sliced Zustand/Redux store placed strictly inside this module's folder). Do NOT bloat the global app state; keep the state architecture isolated to this feature. Since components are heavily micro-modularized, if you use React Context, you MUST implement proper memoization (`useMemo`, `useCallback`) to prevent massive re-render chains across the sub-folders.
+Because the components will be heavily micro-modularized (Rule #1), avoid creating a massive web of prop drilling (passing data through 5 layers of components). If multiple micro-components need to share the same state, create a state store exclusively for this module. **See Rule 58 for the strict decision boundary between React Context and Zustand.** Do NOT bloat the global app state; keep the state architecture isolated to this feature. Since components are heavily micro-modularized, if you use React Context, you MUST implement proper memoization (`useMemo`, `useCallback`) to prevent massive re-render chains across the sub-folders.
 
 6. **Separation of Logic and UI (Custom Hooks for Extreme Isolation)**: 
 Do not mix complex React logic (`useEffect`, multi-step state calculations, data transformations) with JSX markup.
@@ -64,7 +64,7 @@ Never hardcode success or error messages (e.g., "User created successfully" or "
 - **Server-Side Pagination & Filtering**: Do not fetch thousands of records and paginate/filter them on the client. Always implement robust server-side pagination, sorting, and filtering. The frontend should only manage page numbers and search states, passing them as query parameters.
 - **Lazy Loading & Suspense**: For heavy components that are not immediately visible on initial load (e.g., complex charts, heavy modals, or detailed tabs), use React's `lazy()` or Next.js `next/dynamic` to code-split them. Wrap them in `<Suspense>` with skeleton loaders. This dramatically reduces the initial JS bundle size.
 - **Strict Memoization for Contexts**: If you are using React Context to avoid prop drilling, ensure that the Context Provider's value object is strictly memoized using `useMemo`, and all functions passed inside it are wrapped in `useCallback`. This prevents the entire module from re-rendering whenever a single context state updates.
-- **Pessimistic UI Updates (Cache Mutation)**: After successfully mutating data on the backend (e.g., editing, deleting, or adding an entity), do NOT trigger a full page refresh or a redundant API `GET` request just to see the changes. Instead, await the successful response from the backend, and then manually mutate the centralized frontend state (Context, Redux, or SWR/React Query cache) using the updated data. This eliminates unnecessary network calls while ensuring the UI is strictly synchronized with the actual backend state (avoiding "fake" optimistic updates that apply before the backend confirms success).
+- **Pessimistic UI Updates (Cache Mutation)**: This rule applies universally to ALL mutations, not just financial ones. After successfully mutating data on the backend (e.g., editing, deleting, or adding an entity), do NOT trigger a full page refresh or a redundant API `GET` request just to see the changes. Instead, await the successful response from the backend, and then manually mutate the centralized Zustand store (see Rule 58) using the updated data. This eliminates unnecessary network calls while ensuring the UI is strictly synchronized with the actual backend state (avoiding "fake" optimistic updates that apply before the backend confirms success).
 
 16. **Robust Form Handling & Validation**:
 For any forms with more than two inputs, strictly avoid using individual `useState` hooks for every field, as this triggers unnecessary re-renders on every keystroke. Use a robust form management library (like **React Hook Form**) paired with a schema validation library (like **Zod** ). Define the validation schema in your `_types` or `_utils` folder to enforce strict frontend validation before making API calls.
@@ -165,7 +165,7 @@ In every Context file and custom hook, document the data flow direction at the t
 Every module must have a tiny markdown file listing what is explicitly NOT allowed in that module (e.g., "Do not add global auth logic here", "Do not import from the billing module"). Telling the AI what NOT to do is as important as telling it what to do.
 
 41. **Strict Pessimistic UI for Financial/Destructive Actions**:
-As a strict enforcement of Rule 15, for any action involving money (payments, refunds, fee collection) or irreversible operations (delete, blacklist, suspend), optimistic UI updates are completely forbidden. The UI must show a disabled loading state and only mutate the cache or refetch after the backend confirms with `2xx`.
+As a strict enforcement of Rule 15 (which applies universally to all mutations), this rule adds an additional constraint specifically for financial and destructive actions: for any action involving money (payments, refunds, fee collection) or irreversible operations (delete, blacklist, suspend), the submit button MUST additionally transition to a disabled loading state (spinner) for the entire duration of the API call. The UI must only mutate the Zustand store after the backend confirms with `2xx`. Optimistic updates are completely forbidden for these action types.
 
 42. **URL as State for Shareable Views**:
 Any filterable, searchable, or paginated list page MUST sync its state (search query, page number, active filters, sort column) to the URL as query parameters using `useSearchParams` / `useRouter`.
@@ -217,8 +217,12 @@ Every `useEffect` must have a comment immediately above it explaining EXACTLY wh
 57. **`key` Prop Rules for Lists**:
 Using `key={index}` is strictly forbidden for any list that can be reordered, filtered, or paginated. Always use stable unique backend IDs (`key={member.id}`). If the backend isn't sending an ID, fix the backend; do not use `Math.random()` on the frontend.
 
-58. **Zustand over Context for Cross-Component Async State**:
-React Context is ONLY for synchronous, rarely-changing state (theme, sidebar open/close). For async data (API responses) and loading states that multiple components share, strictly use a Zustand module-scoped store to prevent re-render hell.
+58. **Zustand over Context for Cross-Component Async State (The Decision Boundary)**:
+This is the canonical rule that resolves all state management decisions referenced in Rules 5 and 15:
+- **React Context:** ONLY for synchronous, rarely-changing UI state (theme, sidebar open/close, locale). Never put API data or loading states in Context.
+- **Zustand (module-scoped store):** For ALL async data (API responses), loading states, and any state shared across more than one component within a module.
+- **Local `useState`:** Only for state that is strictly private to a single component and never needs to be shared.
+This three-tier decision must be applied consistently. An AI must never use Context for API data.
 
 59. **`next/font` for Font Loading**:
 Never use Google Fonts CDN (`@import`) in global CSS as it causes layout shifts and performance drops. Always use `next/font/google` to self-host fonts natively in Next.js.
