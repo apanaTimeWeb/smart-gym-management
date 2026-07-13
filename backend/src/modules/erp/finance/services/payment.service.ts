@@ -36,6 +36,7 @@ export class PaymentService {
       this.eventEmitter.emit('payment.processed', payment);
 
       return {
+        success: true,
         message: FINANCE_MESSAGES.PAYMENT_CREATED_SUCCESS,
         data: payment,
       };
@@ -55,6 +56,7 @@ export class PaymentService {
     const [payments, total] = await this.financeRepository.findPayments(query);
 
     return {
+      success: true,
       message: FINANCE_MESSAGES.PAYMENTS_FETCHED_SUCCESS,
       data: { payments, total, page, limit },
     };
@@ -72,6 +74,7 @@ export class PaymentService {
       await this.financeRepository.findPaymentsByMember(memberId);
 
     return {
+      success: true,
       message: FINANCE_MESSAGES.PAYMENTS_FETCHED_SUCCESS,
       data: payments,
     };

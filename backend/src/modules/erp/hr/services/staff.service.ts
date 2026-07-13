@@ -36,6 +36,7 @@ export class StaffService {
     const staff = await this.hrRepository.createStaff(payload);
 
     return {
+      success: true,
       message: HR_MESSAGES.STAFF_CREATED_SUCCESS,
       data: staff,
     };
@@ -47,6 +48,7 @@ export class StaffService {
     const [staff, total] = await this.hrRepository.findStaff(limit);
 
     return {
+      success: true,
       message: HR_MESSAGES.STAFF_FETCHED_SUCCESS,
       data: { staff, total, page: 1, limit },
     };
@@ -61,6 +63,7 @@ export class StaffService {
     }
 
     return {
+      success: true,
       message: HR_MESSAGES.STAFF_FETCHED_SUCCESS,
       data: staff,
     };
@@ -82,6 +85,7 @@ export class StaffService {
     const updatedStaff = await this.hrRepository.updateStaff(id, payload);
 
     return {
+      success: true,
       message: HR_MESSAGES.STAFF_UPDATED_SUCCESS,
       data: updatedStaff,
     };
@@ -101,6 +105,7 @@ export class StaffService {
     });
 
     return {
+      success: true,
       message: HR_MESSAGES.STAFF_DELETED_SUCCESS,
       data: deactivatedStaff,
     };
