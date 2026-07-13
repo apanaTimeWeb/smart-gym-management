@@ -10,6 +10,8 @@ export enum TicketPriority {
   CRITICAL = 'CRITICAL'
 }
 export interface ISupportTicket {
+}
+export interface ISupportTicket {
   id: string;
   tenantName: string;
   subject: string;
@@ -17,4 +19,10 @@ export interface ISupportTicket {
   priority: TicketPriority;
   createdAt: Date;
   lastUpdated: Date;
+}
+
+export interface TicketResponse {
+  success: boolean;
+  message: string;
+  data: ISupportTicket | ISupportTicket[] | any | null;
 }

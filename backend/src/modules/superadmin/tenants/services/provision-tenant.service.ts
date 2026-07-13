@@ -5,6 +5,7 @@ import { InjectDataSource } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from '@/modules/auth/entities/user.entity';
 import { Role } from '@/modules/auth/utils/auth.enums';
+import { TenantResponse } from '../tenants.interfaces';
 
 @Injectable()
 export class ProvisionTenantService {
@@ -15,7 +16,7 @@ export class ProvisionTenantService {
     @InjectDataSource() private readonly masterDataSource: DataSource, // Injects the default master connection
   ) {}
 
-  async provisionNewTenant(tenantId: string, adminEmail?: string, ownerName?: string, temporaryPassword?: string): Promise<void> {
+  async provisionNewTenant(tenantId: string, adminEmail?: string, ownerName?: string, temporaryPassword?: string): Promise<TenantResponse> {
     const dbName = `tenant_db_${tenantId}`;
     this.logger.log(`Starting provisioning for new tenant database: ${dbName}`);
 
@@ -80,6 +81,12 @@ export class ProvisionTenantService {
         await tenantDataSource.destroy();
       }
     }
+    
+    return {
+      success: true,
+      message: 'Tenant provisioned successfully',
+      data: { tenantId, dbName }
+    };
   }
 }
 
