@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Contains logic, types, or component definition for this module.
 import { renderHook } from '@testing-library/react';
 import { useDashboardLogic } from './useDashboardLogic';
 
@@ -9,3 +10,4 @@ describe('useDashboardLogic', () => {
     expect(result.current.stats).toBeNull();
   });
 });
+

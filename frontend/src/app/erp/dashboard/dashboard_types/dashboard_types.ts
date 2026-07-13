@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Contains logic, types, or component definition for this module.
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 export interface DashboardContextType { stats: DashboardStats | null; status: FetchState; error: string; }
 export interface DashboardStats {
@@ -32,3 +33,4 @@ export interface RecentPayment {
 export interface PendingPayment {
   id: number; name: string; pendingAmount: number; expiryDate: string;
 }
+

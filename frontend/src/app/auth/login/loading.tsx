@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Contains logic, types, or component definition for this module.
 export default function Loading() {
  return (
  <div className="min-h-screen flex bg-[#0F0F1A] items-center justify-center">
@@ -5,3 +6,4 @@ export default function Loading() {
  </div>
  );
 }
+

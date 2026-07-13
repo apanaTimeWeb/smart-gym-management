@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Contains logic, types, or component definition for this module.
 import { type Plan, type Payment } from '@/lib/api';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import type { MessageType, ErpMessageRecipient } from '@/app/erp/erp_components/ErpFeedback/ErpMessageModal';
@@ -82,3 +83,4 @@ export interface Member {
 export interface MemberStats {
   total: number; active: number; pending: number; expired: number;
 }
+

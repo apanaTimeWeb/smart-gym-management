@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Contains logic, types, or component definition for this module.
 export const LoginSharedConstants = {
  PATHS: {
  DASHBOARD: '/erp/dashboard',
@@ -17,3 +18,4 @@ export const LoginSharedConstants = {
  FORM_SUBTITLE: 'Enter your administrative credentials to continue',
  }
 };
+

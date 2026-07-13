@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Contains logic, types, or component definition for this module.
 export const AuthUrlConfig = {
   PAGES: {
     LOGIN: '/auth/login',
@@ -16,3 +17,4 @@ export const AuthUrlConfig = {
     LOGOUT: '/auth/logout',
   }
 };
+

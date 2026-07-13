@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Contains logic, types, or component definition for this module.
 export const DASHBOARD_STATUS_STYLES: Record<string, { bg: string; text: string }> = {
  ACTIVE: { bg: 'bg-success-bg', text: 'text-success' },
  PENDING: { bg: 'bg-warning-bg', text: 'text-warning' },
@@ -11,3 +12,4 @@ export const DASHBOARD_PLAN_BG_COLORS: Record<string, string> = {
 };
 
 export const RECENT_MEMBERS_HEADERS = ['Member', 'Plan', 'Status', 'Joined', 'Amount'];
+

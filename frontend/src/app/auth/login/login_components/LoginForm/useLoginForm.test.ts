@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Contains logic, types, or component definition for this module.
 import { renderHook } from '@testing-library/react';
 import { useLoginForm } from './useLoginForm';
 
@@ -9,3 +10,4 @@ describe('useLoginForm', () => {
     expect(result.current.showPassword).toBe(false);
   });
 });
+

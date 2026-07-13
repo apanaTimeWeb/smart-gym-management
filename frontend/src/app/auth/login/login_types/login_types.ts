@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Contains logic, types, or component definition for this module.
 import { UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -17,3 +18,4 @@ export interface UseLoginFormReturn {
   setShowPassword: (val: boolean) => void;
   onSubmit: (data: LoginFormData) => Promise<void>;
 }
+

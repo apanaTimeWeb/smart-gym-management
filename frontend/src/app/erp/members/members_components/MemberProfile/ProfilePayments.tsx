@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Contains logic, types, or component definition for this module.
 "use client";
 
 import { Printer } from 'lucide-react';
@@ -59,3 +60,4 @@ export default function ProfilePayments() {
  </div>
  );
 }
+

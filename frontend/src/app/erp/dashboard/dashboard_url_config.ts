@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Contains logic, types, or component definition for this module.
 export const DashboardUrlConfig = {
   PAGES: {
     HOME: '/erp/dashboard',
@@ -8,3 +9,4 @@ export const DashboardUrlConfig = {
     RECENT: '/erp/dashboard/recent',
   }
 };
+

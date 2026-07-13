@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Contains logic, types, or component definition for this module.
 import { apiFetch } from '@/lib/api';
 import { DashboardUrlConfig } from '@/app/erp/dashboard/dashboard_url_config';
 import { DashboardStats } from '@/app/erp/dashboard/dashboard_types/dashboard_types';
@@ -19,3 +20,4 @@ export const dashboardApi = {
     };
   },
 };
+

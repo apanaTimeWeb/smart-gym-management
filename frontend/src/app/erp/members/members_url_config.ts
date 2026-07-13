@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Contains logic, types, or component definition for this module.
 export const MembersUrlConfig = {
   PAGES: {
     LIST: '/erp/members',
@@ -12,3 +13,4 @@ export const MembersUrlConfig = {
     DELETE: (id: number) => `/erp/members/${id}`,
   }
 };
+

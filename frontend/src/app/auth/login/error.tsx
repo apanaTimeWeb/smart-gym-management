@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Contains logic, types, or component definition for this module.
 'use client';
 
 import { useEffect } from 'react';
@@ -12,3 +13,4 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
  </div>
  );
 }
+

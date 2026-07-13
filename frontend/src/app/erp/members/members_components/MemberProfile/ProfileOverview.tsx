@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Contains logic, types, or component definition for this module.
 "use client";
 
 import { MessageCircle, Mail } from 'lucide-react';
@@ -46,3 +47,4 @@ export default function ProfileOverview() {
  </div>
  );
 }
+

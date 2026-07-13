@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Contains logic, types, or component definition for this module.
 "use client";
 
 import { useMembersContext } from '@/app/erp/members/members_context/MembersContext';
@@ -49,3 +50,4 @@ export default function ProfileAttendance() {
  </div>
  );
 }
+
