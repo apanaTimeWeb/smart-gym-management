@@ -9,3 +9,9 @@ export interface ISubscriptionPlan {
   features: string[];
   activeTenants: number;
 }
+
+export interface PlanResponse {
+  success: boolean;
+  message: string;
+  data: ISubscriptionPlan | ISubscriptionPlan[] | any | null;
+}

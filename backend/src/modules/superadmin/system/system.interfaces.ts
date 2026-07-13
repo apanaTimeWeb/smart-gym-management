@@ -7,3 +7,9 @@ export interface IReleaseNote {
   date: Date;
   isPublished: boolean;
 }
+
+export interface SystemResponse {
+  success: boolean;
+  message: string;
+  data: IReleaseNote | IReleaseNote[] | any | null;
+}
