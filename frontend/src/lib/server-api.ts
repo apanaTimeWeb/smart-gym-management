@@ -6,6 +6,7 @@ import { StoreUrlConfig } from '@/app/erp/store/store_url_config';
 import { PlansUrlConfig } from '@/app/erp/plans/plans_url_config';
 import { FinanceUrlConfig } from '@/app/erp/finance/finance_url_config';
 import { HrUrlConfig } from '@/app/erp/hr/hr_url_config';
+import { LibraryUrlConfig } from '@/app/erp/library/library_url_config';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 
@@ -67,4 +68,9 @@ export const ssrHrApi = {
   getStaff: () => ssrApiFetch<{ success: boolean; data: any }>(HrUrlConfig.BACKEND_API.STAFF_BASE),
   getPayrolls: () => ssrApiFetch<{ success: boolean; data: any }>(HrUrlConfig.BACKEND_API.PAYROLLS_BASE),
   getSummary: () => ssrApiFetch<{ success: boolean; data: any }>(HrUrlConfig.BACKEND_API.SUMMARY),
+};
+
+export const ssrLibraryApi = {
+  getExercises: () => ssrApiFetch<{ success: boolean; data: any }>(LibraryUrlConfig.BACKEND_API.EXERCISES_BASE),
+  getDietPlans: () => ssrApiFetch<{ success: boolean; data: any }>(LibraryUrlConfig.BACKEND_API.DIET_PLANS_BASE),
 };

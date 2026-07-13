@@ -65,3 +65,4 @@ export const EMPTY_DIET_FORM = {
 
 export const LIBRARY_TABS = ['Exercises', 'Diet Plans'] as const;
 export type LibraryTab = typeof LIBRARY_TABS[number];
+export const ITEMS_PER_PAGE = 12;

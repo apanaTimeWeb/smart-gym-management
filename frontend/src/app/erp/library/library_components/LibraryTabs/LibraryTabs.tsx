@@ -17,10 +17,9 @@ export default function LibraryTabs() {
             onClick={() => setTab(t)}
             className={`px-5 py-3.5 text-sm font-medium transition-colors border-b-2 whitespace-nowrap ${
               tab === t 
-                ? 'text-primary bg-primary-subtle' 
+                ? 'text-primary bg-primary/5 border-primary' 
                 : 'border-transparent text-secondary hover:text-foreground'
             }`}
-            style={tab === t ? { borderBottomColor: 'var(--library-highlight)' } : {}}
           >
             {t}
           </button>
@@ -45,8 +44,7 @@ export default function LibraryTabs() {
  {tab === 'Exercises' && (
  <button 
  onClick={openAddEx} 
- className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white rounded-lg transition-opacity hover:opacity-90" 
- style={{ background: 'var(--library-highlight)' }}
+ className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg transition-colors hover:bg-primary/90" 
  >
  <Plus size={14} /> Add Exercise
  </button>
@@ -54,8 +52,7 @@ export default function LibraryTabs() {
  {tab === 'Diet Plans' && (
  <button 
  onClick={openAddDiet} 
- className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white rounded-lg transition-opacity hover:opacity-90" 
- style={{ background: 'var(--library-highlight)' }}
+ className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg transition-colors hover:bg-primary/90" 
  >
  <Plus size={14} /> Add Diet Plan
  </button>

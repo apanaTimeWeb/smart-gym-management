@@ -4,22 +4,48 @@ import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
 import { libraryApi, type Exercise, type DietPlan } from '@/lib/api';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import { EMPTY_EXERCISE_FORM, EMPTY_DIET_FORM, type LibraryTab } from '@/app/erp/library/library_utils/LibrarySharedConstants';
-import { LibraryContextType } from '@/app/erp/library/library_types/library_types';
+import { LibraryContextType, LibraryInitialData } from '@/app/erp/library/library_types/library_types';
 import { useConfirm } from '@/app/erp/erp_components/ErpFeedback/ErpConfirmProvider';
+import { useRouter, useSearchParams } from 'next/navigation';
 
-export function useLibraryLogic(): LibraryContextType {
+export function useLibraryLogic(initialData?: LibraryInitialData | null): LibraryContextType {
   const { confirm } = useConfirm();
- const [tab, setTab] = useState<LibraryTab>('Exercises');
- const [exercises, setExercises] = useState<Exercise[]>([]);
- const [dietPlans, setDietPlans] = useState<DietPlan[]>([]);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  
+  const tab = (searchParams.get('tab') as LibraryTab) || 'Exercises';
+  
+  const setTab = useCallback((newTab: LibraryTab) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('tab', newTab);
+    params.delete('page');
+    params.delete('search');
+    router.push(`?${params.toString()}`, { scroll: false });
+  }, [router, searchParams]);
+
+  const [exercises, setExercises] = useState<Exercise[]>(initialData?.exercises || []);
+  const [dietPlans, setDietPlans] = useState<DietPlan[]>(initialData?.dietPlans || []);
  
- const [loading, setLoading] = useState(true);
+ const [loading, setLoading] = useState(!initialData);
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
-  const [search, setSearch] = useState('');
+  const search = searchParams.get('search') || '';
   const debouncedSearch = useDebounce(search, 300);
-  const [currentPage, setCurrentPage] = useState(1);
+  const currentPage = Number(searchParams.get('page')) || 1;
+
+  const setSearch = useCallback((val: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (val) { params.set('search', val); params.set('page', '1'); }
+    else { params.delete('search'); params.set('page', '1'); }
+    router.push(`?${params.toString()}`, { scroll: false });
+  }, [router, searchParams]);
+
+  const setCurrentPage = useCallback((page: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('page', page.toString());
+    router.push(`?${params.toString()}`, { scroll: false });
+  }, [router, searchParams]);
 
  const [showExModal, setShowExModal] = useState(false);
  const [editExId, setEditExId] = useState<number | null>(null);
@@ -39,8 +65,8 @@ export function useLibraryLogic(): LibraryContextType {
  libraryApi.getExercises(),
  libraryApi.getDietPlans(),
  ]);
- setExercises(Array.isArray(exRes.data) ? exRes.data : (exRes.data as any).exercises || []);
- setDietPlans(Array.isArray(dietRes.data) ? dietRes.data : (dietRes.data as any).dietPlans || []);
+ setExercises(exRes.data?.exercises || exRes.data || []);
+ setDietPlans(dietRes.data?.dietPlans || dietRes.data || []);
  } catch (e) { 
  showToast((e as Error).message, 'error'); 
  } finally { 
@@ -73,7 +99,7 @@ export function useLibraryLogic(): LibraryContextType {
  setShowExModal(true);
  }, []);
  
- const saveExercise = useCallback(async (data: any) => {
+ const saveExercise = useCallback(async (data: Record<string, any>) => {
  setSaving(true);
  try {
  const payload = { 
@@ -83,11 +109,11 @@ export function useLibraryLogic(): LibraryContextType {
  };
  
  if (editExId) { 
- const res = await libraryApi.updateExercise(editExId, payload); 
- showToast((res as any).message, 'success'); 
+ const res = await libraryApi.updateExercise(editExId, payload) as unknown as { message?: string }; 
+ showToast(res.message || 'Exercise updated successfully', 'success'); 
  } else { 
- const res = await libraryApi.createExercise(payload); 
- showToast((res as any).message, 'success'); 
+ const res = await libraryApi.createExercise(payload) as unknown as { message?: string }; 
+ showToast(res.message || 'Exercise created successfully', 'success'); 
  }
  setShowExModal(false); 
  await loadAll();
@@ -98,12 +124,12 @@ export function useLibraryLogic(): LibraryContextType {
  }
  }, [editExId, loadAll, showToast]);
  
- const deleteExercise = useCallback(async (id: number) => {
-  const isConfirmed = await confirm({ title: 'Delete Exercise', message: 'Delete this exercise?', confirmText: 'Delete', type: 'danger' });
-  if (!isConfirmed) return;
-  try { 
- const res = await libraryApi.removeExercise(id); 
- showToast((res as any).message, 'success'); 
+  const deleteExercise = useCallback(async (id: number) => {
+   const isConfirmed = await confirm({ title: 'Delete Exercise', message: 'Delete this exercise?', confirmText: 'Delete', type: 'danger' });
+   if (!isConfirmed) return;
+   try { 
+ const res = await libraryApi.removeExercise(id) as unknown as { message?: string }; 
+ showToast(res.message || 'Exercise deleted', 'success'); 
  await loadAll(); 
  } catch (err) { 
  showToast((err as Error).message, 'error'); 
@@ -132,7 +158,7 @@ export function useLibraryLogic(): LibraryContextType {
  setShowDietModal(true);
  }, []);
  
- const saveDietPlan = useCallback(async (data: any) => {
+ const saveDietPlan = useCallback(async (data: Record<string, any>) => {
  setSaving(true);
  try {
  const payload = { 
@@ -145,11 +171,11 @@ export function useLibraryLogic(): LibraryContextType {
  };
  
  if (editDietId) { 
- const res = await libraryApi.updateDietPlan(editDietId, payload); 
- showToast((res as any).message, 'success'); 
+ const res = await libraryApi.updateDietPlan(editDietId, payload) as unknown as { message?: string }; 
+ showToast(res.message || 'Diet plan updated', 'success'); 
  } else { 
- const res = await libraryApi.createDietPlan(payload); 
- showToast((res as any).message, 'success'); 
+ const res = await libraryApi.createDietPlan(payload) as unknown as { message?: string }; 
+ showToast(res.message || 'Diet plan created', 'success'); 
  }
  setShowDietModal(false); 
  await loadAll();
@@ -160,12 +186,12 @@ export function useLibraryLogic(): LibraryContextType {
  }
  }, [editDietId, loadAll, showToast]);
  
- const deleteDietPlan = useCallback(async (id: number) => {
-  const isConfirmed = await confirm({ title: 'Delete Diet Plan', message: 'Delete this diet plan?', confirmText: 'Delete', type: 'danger' });
-  if (!isConfirmed) return;
- try { 
- const res = await libraryApi.removeDietPlan(id); 
- showToast((res as any).message, 'success'); 
+  const deleteDietPlan = useCallback(async (id: number) => {
+   const isConfirmed = await confirm({ title: 'Delete Diet Plan', message: 'Delete this diet plan?', confirmText: 'Delete', type: 'danger' });
+   if (!isConfirmed) return;
+  try { 
+ const res = await libraryApi.removeDietPlan(id) as unknown as { message?: string }; 
+ showToast(res.message || 'Diet plan deleted', 'success'); 
  await loadAll(); 
  } catch (err) { 
  showToast((err as Error).message, 'error'); 

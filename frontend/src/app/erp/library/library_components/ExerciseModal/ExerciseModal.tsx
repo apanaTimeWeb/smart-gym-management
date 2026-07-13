@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect } from 'react';
-import { X, Save } from 'lucide-react';
+import { X, Save, Loader2 } from 'lucide-react';
 import { useLibraryContext } from '@/app/erp/library/library_context/LibraryContext';
 import { CATEGORIES, DIFFICULTIES, ExerciseSchema, type ExerciseFormValues, EMPTY_EXERCISE_FORM } from '@/app/erp/library/library_utils/LibrarySharedConstants';
 import { useForm, Controller } from 'react-hook-form';
@@ -117,10 +117,9 @@ export default function ExerciseModal() {
  <button 
  type="submit" 
  disabled={saving} 
- className="flex-1 py-2.5 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 disabled:opacity-70 transition-colors" 
- style={{ background: 'var(--library-highlight)' }}
+ className="flex-1 py-2.5 rounded-xl text-sm font-bold text-primary-foreground bg-primary hover:bg-primary/90 flex items-center justify-center gap-2 disabled:opacity-70 transition-colors" 
  >
- {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><Save size={15} />{editExId ? 'Update' : 'Add'}</>}
+ {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Save size={15} />{editExId ? 'Update' : 'Add'}</>}
  </button>
  </div>
  </form>
