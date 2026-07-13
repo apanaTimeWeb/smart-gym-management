@@ -138,4 +138,16 @@ Strictly segregate public and private environment variables according to the fra
 - **If Angular**: Manage securely through `environment.ts` files.
 Never leak secret backend API keys, database credentials, or secret tokens into the frontend client bundle.
 
+35. **Strict Prohibition of Magic Strings & Numbers**:
+Never use raw strings (e.g., `if (status === 'PENDING')`) or raw numbers (e.g., `setTimeout(..., 5000)`) directly in the logic or UI components. All magic values must be defined as TypeScript `enums` or `const` objects in the module's `_utils` or `_constants` file.
+*Why for AI?* AIs frequently hallucinate string casings. Enforcing enums entirely eliminates this class of bugs because TypeScript will throw an error if the AI guesses the wrong enum key.
+
+36. **No Arbitrary Tailwind Values (Strict Design System)**:
+Never use arbitrary, hardcoded pixel or hex values in Tailwind classes (e.g., `w-[325px]`, `text-[15px]`, `p-[11px]`). You must strictly adhere to the framework's configured design system scales (e.g., `w-80`, `text-sm`, `p-3`).
+*Why?* Arbitrary values destroy UI consistency. Forcing the AI to use the standard Tailwind scale ensures perfect visual rhythm across the entire app.
+
+37. **JSDoc for Complex Logic (AI Context Enhancer)**:
+Every custom hook, utility function, and complex data transformation MUST be prefixed with a short, descriptive JSDoc block (`/** ... */`).
+*Why for AI?* When you feed a 200-line custom hook to an AI, a JSDoc comment instantly tells the AI the *intent* of the function. This prevents the AI from having to reverse-engineer the math, leading to vastly faster and safer code generation.
+
 Think step-by-step. Create a detailed implementation plan first so I can review it, and then execute it perfectly without breaking existing data flows!
