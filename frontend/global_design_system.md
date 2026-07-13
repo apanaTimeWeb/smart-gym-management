@@ -233,6 +233,17 @@ Badges are small pill-shaped labels: `border-radius: 999px`, `padding: 2px 10px`
 - Vertical line on left (2px, `--border`)
 - Each entry: colored dot on line + date (bold, `--text-secondary`) + content card to the right
 - Newest entry at top
+### 5i. Command Palette (Ctrl+K)
+- **Overlay:** `backdrop: rgba(0,0,0,0.6)`
+- **Modal card:** Centered, top-aligned (margin-top: 10vh), max-width 600px.
+- **Content:** Large input field with magnifying glass icon `🔍 Search or jump to...`.
+- **Results:** Grouped by category (e.g., Pages, Recent Members, Actions) with keyboard up/down navigation support.
+- **Trigger:** Global `Ctrl+K` listener on all pages.
+
+### 5j. Confirmation Drawer (Not just Modal)
+- **Usage:** For complex confirmations requiring data context (e.g., "You are about to refund ₹5,000. Here are the transaction details: [...]").
+- **Layout:** Slide-in from the right side, width 480px, full-height.
+- **Footer:** Cancel (ghost) | Confirm Action (danger or primary).
 
 ---
 
@@ -385,6 +396,38 @@ To guarantee stability, safety, and compliance in an ERP environment, these rule
    - **The Problem:** Default browser focus outlines (when users navigate via the `Tab` key) are often inconsistent or invisible in dark mode, failing WCAG accessibility standards.
    - **The Rule:** Never rely on default outlines. All interactive elements (Inputs, Buttons, Links, Dropdown Items) MUST explicitly define a `focus-visible` state that matches the design system.
    - **Snippet:** `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-page)]`
+
+---
+
+## 14. PRINT & EXPORT STYLES
+Enterprise ERP users print receipts, invoices, and reports constantly.
+- **`@media print` rules:** Must hide the sidebar, header, action bars, and toast notifications.
+- **Print typography:** Ensure black text on a pure white background (no dark themes in print mode).
+- **Pattern:** Use a `PrintableWrapper` component for areas of the screen that should survive the print stylesheet.
+
+## 15. GLOBAL KEYBOARD SHORTCUT MAP
+Power users expect keyboard navigation. Respect these shortcuts universally:
+- `Ctrl + K`: Global search/command palette
+- `Esc`: Close any open modal, drawer, or dropdown
+- `Ctrl + S`: Submit the active form
+- `?`: Show a keyboard shortcut help overlay
+
+## 16. NOTIFICATION & ALERT BANNER PATTERNS
+Unlike toasts (which auto-dismiss), alert banners are persistent inline messages.
+- **Placement:** Sits immediately below the top header, pushing page content down.
+- **Usage:** "Your subscription expires in 3 days", "Branch is in maintenance mode".
+- **Styles:** Use the background colors mapped in Section 1 (e.g., `--warning-bg` for expiring warnings) with a clear dismissal `X` icon (if dismissible).
+
+## 17. DATA DENSITY MODES
+Enterprise users have different preferences for how much data fits on a screen.
+- **Compact Mode:** 32px row height, smaller font (12px). For power users managing 500+ records.
+- **Comfortable Mode (Default):** 48px row height, standard 14px font.
+- **Implementation:** A toggle in settings/header switches between these modes. Save preference to `localStorage`.
+
+## 18. RIGHT-CLICK CONTEXT MENU PATTERN
+- **Usage:** On tables and Kanban cards, right-clicking should open a custom context menu.
+- **Actions:** Must mirror the inline action column (e.g., 👁️ View, ✏️ Edit, 🗑️ Delete, 📋 Copy ID).
+- **Styling:** Small dropdown menu with `shadow-2xl` matching the Glassmorphism rules (z-index: 30).
 
 ---
 

@@ -150,4 +150,50 @@ Never use arbitrary, hardcoded pixel or hex values in Tailwind classes (e.g., `w
 Every custom hook, utility function, and complex data transformation MUST be prefixed with a short, descriptive JSDoc block (`/** ... */`).
 *Why for AI?* When you feed a 200-line custom hook to an AI, a JSDoc comment instantly tells the AI the *intent* of the function. This prevents the AI from having to reverse-engineer the math, leading to vastly faster and safer code generation.
 
+38. **Strict Component Responsibility Contract (The "One Reason to Change" Rule)**:
+Every component file must have a single-line comment at the very top (after `"use client"`) declaring its exact responsibility:
+`// RESPONSIBILITY: Renders the read-only member profile header. Receives data via props. No API calls.`
+*Why for AI?* When you feed a file to an AI, it immediately knows the boundary of what it should and shouldn't touch, preventing it from hallucinating API calls inside pure view components.
+
+39. **Explicit Data Flow Direction Comments**:
+In every Context file and custom hook, document the data flow direction at the top:
+`// DATA FLOW: API → useMembersTable.ts → MembersContext → MembersTable → MembersTableRow`
+*Why for AI?* AIs hallucinate circular dependencies. This comment makes the unidirectional flow explicit and machine-readable.
+
+40. **Forbidden Patterns File (`[moduleName]_forbidden.md`)**:
+Every module must have a tiny markdown file listing what is explicitly NOT allowed in that module (e.g., "Do not add global auth logic here", "Do not import from the billing module"). Telling the AI what NOT to do is as important as telling it what to do.
+
+41. **Optimistic Update Prohibition for Financial/Destructive Actions**:
+For any action involving money (payments, refunds, fee collection) or irreversible operations (delete, blacklist, suspend), optimistic UI updates are strictly forbidden. The UI must show a loading state and only update after the backend confirms with `2xx`.
+
+42. **URL as State for Shareable Views**:
+Any filterable, searchable, or paginated list page MUST sync its state (search query, page number, active filters, sort column) to the URL as query parameters using `useSearchParams` / `useRouter`.
+*Why?* Enterprise users share filtered table URLs with colleagues constantly. This means a filtered view is always shareable and the browser back button works correctly.
+
+43. **Typed Error Boundaries per Module**:
+Beyond `error.tsx`, every module must have a typed React Error Boundary component (`[ModuleName]ErrorBoundary.tsx`) that wraps the module's root client component. It must display a module-specific fallback UI (not a generic "Something went wrong") and include a "Retry" button that calls `reset()`.
+
+44. **Network State Enum (No Boolean `isLoading` Flags)**:
+Never use multiple boolean flags (`isLoading`, `isError`, `isSuccess`) to represent async state. This leads to impossible states. Always use a single typed enum defined in the module's `_types.ts`:
+`type FetchState = 'idle' | 'loading' | 'success' | 'error'`
+
+45. **Sensitive Data Masking in UI**:
+Any field displaying sensitive data (phone numbers, email addresses, Aadhaar/ID numbers, bank accounts) must be masked by default in list/table views (e.g., `98****2310`, `j***@gmail.com`). A dedicated `maskSensitiveData()` utility must be used universally. Full data is only shown in the dedicated detail/profile view.
+
+46. **No `console.log` in Production**:
+All `console.log`, `console.error`, and `console.warn` calls are strictly forbidden in committed UI components. Use a centralized logger utility (`src/lib/logger.ts`) that is a no-op in production (`process.env.NODE_ENV === 'production'`) and logs normally in development. 
+
+47. **Co-located Test Files**:
+Every custom hook (`use[X].ts`) and utility function must have a co-located test file (`use[X].test.ts`) in the same folder. UI component tests are optional, but logic layer tests are mandatory. This is the minimum safety net for an AI-driven codebase.
+
+48. **Unsaved Changes Warning**:
+Any form or edit modal that has been modified but not submitted must intercept the browser's `beforeunload` event and Next.js router navigation to warn the user: "You have unsaved changes. Are you sure you want to leave?" Use React Hook Form's `formState.isDirty` to detect this.
+
+49. **Copy-to-Clipboard on Sensitive IDs**:
+Any field displaying a unique ID, reference number, transaction ID, or tracking code must have a small copy icon next to it. Clicking it copies the value to clipboard and shows a brief "Copied!" tooltip.
+
+50. **Consistent Empty State per Entity**:
+Every list/table must have a dedicated empty state component (`[Module]EmptyState.tsx`) — not an inline conditional. It must show a relevant icon, a descriptive message, and a CTA button (if the user has permission to create). Generic "No data found" messages are forbidden.
+
+---
 Think step-by-step. Create a detailed implementation plan first so I can review it, and then execute it perfectly without breaking existing data flows!
