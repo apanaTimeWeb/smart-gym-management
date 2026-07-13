@@ -1,6 +1,8 @@
 export const AUTH_MESSAGES = {
   LOGIN_SUCCESS: 'Login successful',
   USER_FETCHED_SUCCESS: 'User fetched successfully',
+  REFRESH_SUCCESS: 'Tokens refreshed successfully',
+  LOGOUT_SUCCESS: 'Logged out successfully',
 };
 
 export const AUTH_ERRORS = {

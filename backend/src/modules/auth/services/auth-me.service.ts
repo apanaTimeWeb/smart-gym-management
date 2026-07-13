@@ -22,6 +22,7 @@ export class AuthMeService {
     }
 
     return {
+      success: true,
       message: AUTH_MESSAGES.USER_FETCHED_SUCCESS,
       data: user as any,
     };

@@ -5,6 +5,7 @@ export interface JwtPayload {
 }
 
 export interface AuthLoginResponse {
+  success: boolean;
   message: string;
   data: {
     accessToken: string;
@@ -21,6 +22,7 @@ export interface AuthLoginResponse {
 }
 
 export interface AuthMeResponse {
+  success: boolean;
   message: string;
   data: {
     id: string;
@@ -32,4 +34,18 @@ export interface AuthMeResponse {
     isActive: boolean;
     createdAt: Date;
   };
+}
+
+export interface AuthRefreshResponse {
+  success: boolean;
+  message: string;
+  data: {
+    accessToken: string;
+    refreshToken: string;
+  };
+}
+
+export interface AuthLogoutResponse {
+  success: boolean;
+  message: string;
 }
