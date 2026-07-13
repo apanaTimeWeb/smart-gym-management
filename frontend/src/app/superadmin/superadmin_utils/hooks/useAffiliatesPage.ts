@@ -7,7 +7,7 @@ import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadm
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import { useSuperadminMutation } from '@/app/superadmin/superadmin_utils/hooks/useSuperadminMutation';
-import { AffiliateSchema, AffiliateFormData } from '@/app/superadmin/superadmin_utils/SuperadminZodSchemas';
+import { AffiliateSchema, AffiliateFormData } from '@/app/superadmin/affiliates/affiliates_types/affiliates_types';
 import type { Affiliate, AffiliateStatus } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 export const useAffiliatesPage = () => {

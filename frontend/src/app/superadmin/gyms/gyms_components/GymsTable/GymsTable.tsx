@@ -1,13 +1,12 @@
 'use client';
 // RESPONSIBILITY: Renders the table view of Gym tenants. Purely a view component that consumes useGymsTable hook.
 
-import React from 'react';
 import { CheckCircle2, Ban, LogIn, PlayCircle, Edit2, Mail, Trash2, Loader2 } from 'lucide-react';
-
 import { useGymsTable } from '@/app/superadmin/gyms/gyms_components/GymsTable/useGymsTable';
 import GymEditModal from '@/app/superadmin/gyms/gyms_components/GymEditModal/GymEditModal';
 import GymEmailModal from '@/app/superadmin/gyms/gyms_components/GymEmailModal/GymEmailModal';
 import GymDeleteModal from '@/app/superadmin/gyms/gyms_components/GymDeleteModal/GymDeleteModal';
+import GymsEmptyState from '@/app/superadmin/gyms/gyms_components/GymsEmptyState/GymsEmptyState';
 
 export default function GymsTable() {
   const {
@@ -164,15 +163,7 @@ export default function GymsTable() {
           
           {filteredGyms.length === 0 && (
             <tr>
-              <td colSpan={7} className="p-12 text-center">
-                <div className="flex flex-col items-center text-secondary">
-                  <div className="bg-card p-4 rounded-full border border-border mb-3">
-                    <Ban className="w-8 h-8 opacity-50" />
-                  </div>
-                  <h3 className="text-base font-medium text-foreground">No gyms found</h3>
-                  <p className="text-sm mt-1 max-w-sm">We couldn't find any gyms matching your current search. Try adjusting your filters.</p>
-                </div>
-              </td>
+              <td colSpan={7}><GymsEmptyState /></td>
             </tr>
           )}
         </tbody>

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: superadmin_types.ts handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Single source of truth for all TypeScript types, interfaces, and enums used across the entire Superadmin module. No business logic — types only.
 // Removed SaaSPlanTier enum
 export type TenantStatus = 'ACTIVE' | 'SUSPENDED' | 'TRIAL' | 'CANCELLED';
 

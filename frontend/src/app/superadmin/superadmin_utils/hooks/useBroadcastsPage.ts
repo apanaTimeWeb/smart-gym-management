@@ -7,7 +7,7 @@ import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadm
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import { useSuperadminMutation } from '@/app/superadmin/superadmin_utils/hooks/useSuperadminMutation';
-import { BroadcastSchema, BroadcastFormData } from '@/app/superadmin/superadmin_utils/SuperadminZodSchemas';
+import { BroadcastSchema, BroadcastFormData } from '@/app/superadmin/broadcasts/broadcasts_types/broadcasts_types';
 import type { Broadcast, BroadcastAudience, BroadcastStatus } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 export const useBroadcastsPage = () => {

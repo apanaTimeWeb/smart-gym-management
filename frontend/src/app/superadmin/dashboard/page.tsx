@@ -1,5 +1,5 @@
-// RESPONSIBILITY: page.tsx acts as a Server Component entry point.
-import DashboardView from '@/app/superadmin/superadmin_components/DashboardClient/DashboardView';
+// RESPONSIBILITY: Server Component entry point for the Dashboard page. Delegates rendering to DashboardView.
+import DashboardView from '@/app/superadmin/dashboard/dashboard_components/DashboardView/DashboardView';
 
 export default function SaaSDashboardPage() {
   return <DashboardView />;

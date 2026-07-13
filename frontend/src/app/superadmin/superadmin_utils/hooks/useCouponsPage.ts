@@ -8,7 +8,7 @@ import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadm
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import { useSuperadminMutation } from '@/app/superadmin/superadmin_utils/hooks/useSuperadminMutation';
-import { CouponSchema, CouponFormData } from '@/app/superadmin/superadmin_utils/SuperadminZodSchemas';
+import { CouponSchema, CouponFormData } from '@/app/superadmin/coupons/coupons_types/coupons_types';
 import type { Coupon, CouponStatus } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 export const useCouponsPage = () => {

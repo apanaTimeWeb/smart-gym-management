@@ -7,12 +7,12 @@ import { LayoutDashboard, Building2, ServerCog, LogOut, ChevronLeft, ChevronRigh
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { logout } from '@/lib/api';
 
-interface SidebarProps {
+interface SuperadminSidebarProps {
   isCollapsed: boolean;
   setIsCollapsed: (v: boolean) => void;
 }
 
-export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: SidebarProps) {
+export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: SuperadminSidebarProps) {
   const pathname = usePathname();
 
   const navGroups = [

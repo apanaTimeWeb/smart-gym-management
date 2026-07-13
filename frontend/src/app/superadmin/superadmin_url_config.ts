@@ -1,4 +1,4 @@
-// RESPONSIBILITY: superadmin_url_config.ts handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Centralized URL constants for all /superadmin/* page routes and backend API endpoints. Import from here — never hardcode URLs in components.
 export const SuperadminUrlConfig = {
   PAGES: {
     DASHBOARD: '/superadmin/dashboard',

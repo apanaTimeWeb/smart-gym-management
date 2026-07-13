@@ -10,10 +10,7 @@ import { create } from 'zustand';
 import toast from 'react-hot-toast';
 
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
-import { apiFetch } from '@/lib/api';
-import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
-
-import type { Tenant, FetchState } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { Tenant, FetchState, TenantStatus } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 interface GymsState {
   // Data State
@@ -120,7 +117,7 @@ export const useGymsStore = create<GymsState>((set, get) => ({
       
       const { gyms } = get();
       if (gyms) {
-        set({ gyms: gyms.map(gym => gym.id === id ? { ...gym, status: newStatus as import('@/app/superadmin/superadmin_types/superadmin_types').TenantStatus } : gym) });
+        set({ gyms: gyms.map(gym => gym.id === id ? { ...gym, status: newStatus as TenantStatus } : gym) });
       }
     } catch (error: unknown) {
       const errMsg = error instanceof Error ? error.message : String(error) || `Failed to update status for ${name}`;
@@ -171,14 +168,11 @@ export const useGymsStore = create<GymsState>((set, get) => ({
   handleEmailOwner: async (id, data) => {
     set({ actionLoadingId: id });
     try {
-      const response = await apiFetch(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}/${id}/email`, { 
-        method: 'POST',
-        body: JSON.stringify(data)
-      });
-      toast.success((response as { message?: string })?.message || `Email sent successfully.`);
+      const response = await superadminApi.gyms.emailOwner(id, data);
+      toast.success((response as { message?: string })?.message || 'Email sent successfully.');
       get().closeEmailModal();
     } catch (error: unknown) {
-      const errMsg = error instanceof Error ? error.message : String(error) || `Failed to send email.`;
+      const errMsg = error instanceof Error ? error.message : String(error) || 'Failed to send email.';
       toast.error(errMsg);
     } finally {
       set({ actionLoadingId: null });

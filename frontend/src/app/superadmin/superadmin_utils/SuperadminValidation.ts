@@ -1,4 +1,4 @@
-// RESPONSIBILITY: SuperadminValidation.ts handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Zod validation schema for the Gym Onboarding form. Defines field rules and infers the OnboardGymFormValues type. Used by AddGymForm.
 import { z } from 'zod';
 
 export const OnboardGymSchema = z.object({

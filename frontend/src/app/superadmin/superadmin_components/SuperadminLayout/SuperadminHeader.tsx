@@ -14,10 +14,12 @@ export default function SuperadminHeader() {
   const profileRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
 
+  // Sets mounted=true once on client-side hydration to enable ThemeToggle to render safely without SSR mismatch.
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  // Attaches a global mousedown listener once on mount to close the profile dropdown when clicking outside.
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (profileRef.current && !profileRef.current.contains(event.target as Node)) {

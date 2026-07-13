@@ -1,4 +1,4 @@
-// RESPONSIBILITY: superadmin-api.ts handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Modularized API client for the Superadmin module. All methods import apiFetch from src/lib/api.ts and define only superadmin-scoped endpoints. No UI logic.
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { apiFetch } from '@/lib/api';
 
@@ -18,6 +18,7 @@ export const superadminApi = {
     changeStatus: (id: string, status: string) => apiFetch(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) }),
     remove: (id: string) => apiFetch(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}/${id}`, { method: 'DELETE' }),
     getStats: () => apiFetch<{ success: boolean; data: unknown }>(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}/stats`),
+    emailOwner: (id: string, body: unknown) => apiFetch(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}/${id}/email`, { method: 'POST', body: JSON.stringify(body) }),
   },
   plans: {
     getAll: (params?: Record<string, string>) => {
