@@ -6,6 +6,7 @@ import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadm
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { DatabaseZap, AlertTriangle, Play, CheckCircle2, Clock, Search, X, Target } from 'lucide-react';
 import { SchemaMigration, Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
+import toast from 'react-hot-toast';
 
 const StatusIcons = {
   SUCCESS: <CheckCircle2 className="text-success" size={18} />,
@@ -191,7 +192,7 @@ if (loading) return <div className="p-8 text-center text-disabled">Loading...</d
               </button>
               <button 
                 onClick={() => {
-                  alert(`Running pending migrations specifically on ${selectedGym?.name || 'Selected Gym'}...`);
+                  toast.success(`Running pending migrations on ${selectedGym?.name ?? 'Selected Gym'}...`);
                   setShowTargetModal(false);
                 }}
                 disabled={!selectedGymId}

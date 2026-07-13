@@ -1,5 +1,5 @@
-// RESPONSIBILITY: SuperadminSidebar.tsx handles the logic and UI for its corresponding feature.
 'use client';
+// RESPONSIBILITY: SuperadminSidebar.tsx renders the main sidebar navigation for the SaaS Master Control Panel.
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -61,7 +61,7 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Sideb
     >
       <div className="flex h-20 items-center justify-between px-4 border-b border-border">
         {!isCollapsed && (
-          <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500">
+          <span className="text-[22px] font-bold text-primary">
             SaaS Master
           </span>
         )}

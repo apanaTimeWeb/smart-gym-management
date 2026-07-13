@@ -1,5 +1,5 @@
-// RESPONSIBILITY: SuperadminHeader.tsx handles the logic and UI for its corresponding feature.
 'use client';
+// RESPONSIBILITY: SuperadminHeader.tsx renders the top navigation bar for the SaaS module, handling search, theme toggling, and profile actions.
 
 import { useState, useRef, useEffect } from 'react';
 import { Search, LogOut, Settings, User, Menu } from 'lucide-react';
@@ -61,7 +61,7 @@ export default function SuperadminHeader() {
         <div className="relative" ref={profileRef}>
           <div
             onClick={() => setShowProfile(!showProfile)}
-            className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold cursor-pointer transition-transform hover:scale-105 border border-white/10 shadow-lg shadow-purple-500/20 bg-gradient-to-br from-indigo-500 to-purple-600"
+            className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold cursor-pointer transition-transform hover:scale-105 shadow-lg bg-primary"
           >
             SA
           </div>

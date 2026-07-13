@@ -16,7 +16,7 @@ const getStatusBadge = (status: BroadcastStatus) => {
       return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-warning-bg text-warning">SCHEDULED</span>;
     case 'DRAFT':
     default:
-      return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-[#1E1E2E] text-secondary">DRAFT</span>;
+      return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-input text-secondary">DRAFT</span>;
   }
 };
 

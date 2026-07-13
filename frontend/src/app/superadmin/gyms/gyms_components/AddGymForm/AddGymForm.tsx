@@ -149,7 +149,7 @@ export default function AddGymForm() {
               <p className="text-secondary italic">Awaiting submit...</p>
             ) : (
               provisioningLogs.map((log, i) => (
-                <p key={i} className="animate-in fade-in slide-in-from-bottom-1 text-success">
+                <p key={`log-${i}-${log.slice(0, 12)}`} className="animate-in fade-in slide-in-from-bottom-1 text-success">
                   <span className="text-secondary mr-2">{'>'}</span>{log}
                 </p>
               ))

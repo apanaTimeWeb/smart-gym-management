@@ -39,6 +39,16 @@ export interface SaaSDashboardMetrics {
 }
 
 // Phase 2 Types
+export interface RevenueChartData {
+  month: string;
+  mrr: number;
+}
+
+export interface GrowthChartData {
+  month: string;
+  gyms: number;
+}
+
 export interface SubscriptionPlan {
   id: string;
   name: string;

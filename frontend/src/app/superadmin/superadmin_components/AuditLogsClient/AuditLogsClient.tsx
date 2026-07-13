@@ -112,7 +112,7 @@ export default function AuditLogsClient() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse table-fixed">
             <thead>
-              <tr className="bg-[rgba(99,102,241,0.08)] border-b border-border">
+              <tr className="bg-primary/10 border-b border-border">
                 <th className="w-48 px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Timestamp</th>
                 <th className="w-56 px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Actor</th>
                 <th className="w-48 px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Action</th>
@@ -122,7 +122,7 @@ export default function AuditLogsClient() {
             </thead>
             <tbody className="divide-y divide-border">
               {logs.map((log) => (
-                <tr key={log.id} className="hover:bg-[rgba(99,102,241,0.06)] transition-colors group cursor-pointer">
+                <tr key={log.id} className="hover:bg-primary/5 transition-colors group cursor-pointer">
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary truncate">
                     {new Date(log.timestamp).toLocaleString()}
                   </td>
