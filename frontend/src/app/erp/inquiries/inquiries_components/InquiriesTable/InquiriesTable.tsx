@@ -1,18 +1,18 @@
-// RESPONSIBILITY: InquiriesTable.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Renders the paginated, filterable table of inquiries with row actions, status updates, and bulk selection.
 "use client";
 
 import { useInquiriesContext } from '@/app/erp/inquiries/inquiries_context/InquiriesContext';
+import { FetchState } from '@/app/erp/inquiries/inquiries_types/inquiries_types';
 import { INQUIRIES_TABLE_HEADERS, INQUIRIES_STATUS_LABELS, INQUIRIES_STATUS_STYLES } from '@/app/erp/inquiries/inquiries_utils/InquiriesSharedConstants';
-import { MessageCircle, Mail, Edit2, Trash2 } from 'lucide-react';
+import { MessageCircle, Mail, Edit2, Trash2, Loader2 } from 'lucide-react';
 import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
-
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
 
 export default function InquiriesTable() {
-  const { 
-    inquiries, loading, search, debouncedSearch, statusFilter, dateFilter, currentPage, setCurrentPage, 
+  const {
+    inquiries, fetchState, search, statusFilter, currentPage, setCurrentPage,
     openEdit, openMsg, deleteInquiry, updateStatus, totalInquiries,
-    selectedIds, toggleSelectAll, toggleSelectOne
+    selectedIds, toggleSelectAll, toggleSelectOne,
   } = useInquiriesContext();
 
   const allSelected = inquiries.length > 0 && selectedIds.length === inquiries.length;
@@ -21,68 +21,68 @@ export default function InquiriesTable() {
   const ITEMS_PER_PAGE = 10;
   const totalPages = Math.ceil(totalInquiries / ITEMS_PER_PAGE);
 
-  if (loading) {
+  if (fetchState === FetchState.LOADING) {
     return (
-      <div className="rounded-xl shadow-sm border overflow-hidden flex justify-center py-10 inquiries-module" style={{ backgroundColor: 'var(--inquiries-bg-card)', borderColor: 'var(--inquiries-border)' }}>
-        <div className="w-8 h-8 border-4 border-t-transparent rounded-full animate-spin" style={{ borderColor: 'var(--inquiries-highlight)', borderTopColor: 'transparent' }} />
+      <div className="bg-card rounded-xl shadow-sm border border-border flex justify-center py-16">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl shadow-sm border overflow-hidden flex flex-col h-full min-h-96 inquiries-module" style={{ backgroundColor: 'var(--inquiries-bg-card)', borderColor: 'var(--inquiries-border)' }}>
+    <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden flex flex-col h-full min-h-96">
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead style={{ backgroundColor: 'var(--inquiries-bg-input)' }}>
+          <thead className="bg-primary/5">
             <tr>
               <th className="px-5 py-3 w-12 text-left">
-                <input 
-                  type="checkbox" 
-                  checked={allSelected} 
+                <input
+                  type="checkbox"
+                  checked={allSelected}
                   onChange={(e) => toggleSelectAll(e.target.checked)}
-                  className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
+                  className="w-4 h-4 rounded border-border text-primary focus-visible:ring-2 focus-visible:ring-primary cursor-pointer"
                 />
               </th>
               {INQUIRIES_TABLE_HEADERS.map(h => (
-                <th key={h} className="text-left text-xs font-semibold uppercase tracking-wider px-5 py-3" style={{ color: 'var(--inquiries-text-secondary)' }}>
+                <th key={h} className="text-left text-xs font-semibold text-secondary uppercase tracking-wider px-5 py-3">
                   {h}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y" style={{ borderColor: 'var(--inquiries-border)' }}>
+          <tbody className="divide-y divide-border">
             {inquiries.map(inq => {
-              const statusStyle = INQUIRIES_STATUS_STYLES[inq.status] || { bg: 'var(--inquiries-bg-input)', text: 'var(--inquiries-text-primary)' };
+              const statusStyle = INQUIRIES_STATUS_STYLES[inq.status] || { bg: 'bg-input', text: 'text-secondary' };
               const selected = isSelected(inq.id);
-              
+
               return (
-                <tr 
-                  key={inq.id} 
-                  className={`transition-colors cursor-pointer ${selected ? 'bg-[rgba(99,102,241,0.08)]' : 'hover:bg-[rgba(99,102,241,0.04)]'}`} 
+                <tr
+                  key={inq.id}
+                  className={`transition-colors cursor-pointer ${selected ? 'bg-primary/10' : 'hover:bg-primary/5'}`}
                   onClick={() => openEdit(inq)}
                 >
                   <td className="px-5 py-3.5 w-12" onClick={e => e.stopPropagation()}>
-                    <input 
-                      type="checkbox" 
-                      checked={selected} 
+                    <input
+                      type="checkbox"
+                      checked={selected}
                       onChange={() => toggleSelectOne(inq.id)}
-                      className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
+                      className="w-4 h-4 rounded border-border text-primary focus-visible:ring-2 focus-visible:ring-primary cursor-pointer"
                     />
                   </td>
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm" style={{ backgroundColor: 'var(--inquiries-kpi-orange-bg)', color: 'var(--inquiries-kpi-orange-text)' }}>
+                      <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm bg-warning-bg text-warning">
                         {inq.name.charAt(0)}
                       </div>
-                      <p className="text-sm font-semibold" style={{ color: 'var(--inquiries-text-primary)' }}>{inq.name}</p>
+                      <p className="text-sm font-semibold text-primary">{inq.name}</p>
                     </div>
                   </td>
                   <td className="px-5 py-3.5">
-                    <p className="text-sm" style={{ color: 'var(--inquiries-text-primary)' }}>{inq.phone}</p>
-                    <p className="text-xs" style={{ color: 'var(--inquiries-text-secondary)' }}>{inq.email || '—'}</p>
+                    <p className="text-sm text-primary">{inq.phone}</p>
+                    <p className="text-xs text-secondary">{inq.email || '—'}</p>
                   </td>
-                  <td className="px-5 py-3.5 text-sm" style={{ color: 'var(--inquiries-text-primary)' }}>{inq.interest}</td>
-                  <td className="px-5 py-3.5 text-sm" style={{ color: 'var(--inquiries-text-secondary)' }}>{inq.source || '—'}</td>
+                  <td className="px-5 py-3.5 text-sm text-primary">{inq.interest}</td>
+                  <td className="px-5 py-3.5 text-sm text-secondary">{inq.source || '—'}</td>
                   <td className="px-5 py-3.5" onClick={e => e.stopPropagation()}>
                     <div className="w-32">
                       <SearchableDropdown
@@ -92,40 +92,40 @@ export default function InquiriesTable() {
                       />
                     </div>
                   </td>
-                  <td className="px-5 py-3.5 text-sm" style={{ color: 'var(--inquiries-text-secondary)' }}>
+                  <td className="px-5 py-3.5 text-sm text-secondary">
                     {new Date(inq.createdAt).toLocaleDateString('en-IN')}
                   </td>
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-2">
-                      <button 
-                        onClick={(e) => { e.stopPropagation(); openMsg(inq, 'whatsapp'); }} 
-                        className="p-1.5 rounded-lg text-white transition-opacity hover:opacity-80" 
-                        style={{ backgroundColor: '#25D366' }} 
+                      <button
+                        onClick={(e) => { e.stopPropagation(); openMsg(inq, 'whatsapp'); }}
+                        className="p-1.5 rounded-lg bg-success text-white hover:opacity-80 transition-all duration-200"
                         title="WhatsApp"
+                        aria-label={`Message ${inq.name} on WhatsApp`}
                       >
                         <MessageCircle size={13} />
                       </button>
-                      <button 
-                        onClick={(e) => { e.stopPropagation(); openMsg(inq, 'email'); }} 
-                        className="p-1.5 rounded-lg text-white transition-opacity hover:opacity-80" 
-                        style={{ backgroundColor: 'hsl(217 91% 60%)' }} 
+                      <button
+                        onClick={(e) => { e.stopPropagation(); openMsg(inq, 'email'); }}
+                        className="p-1.5 rounded-lg bg-info text-white hover:opacity-80 transition-all duration-200"
                         title="Email"
+                        aria-label={`Email ${inq.name}`}
                       >
                         <Mail size={13} />
                       </button>
-                      <button 
-                        onClick={(e) => { e.stopPropagation(); openEdit(inq); }} 
-                        className="p-1.5 rounded-lg transition-colors hover:bg-primary-subtle" 
-                        style={{ color: 'var(--inquiries-text-secondary)' }}
+                      <button
+                        onClick={(e) => { e.stopPropagation(); openEdit(inq); }}
+                        className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle transition-all duration-200"
                         title="Edit"
+                        aria-label={`Edit ${inq.name}`}
                       >
                         <Edit2 size={13} />
                       </button>
-                      <button 
-                        onClick={(e) => { e.stopPropagation(); deleteInquiry(inq.id); }} 
-                        className="p-1.5 rounded-lg transition-colors hover:bg-danger-bg dark:hover:bg-danger-bg" 
-                        style={{ color: 'var(--inquiries-status-lost-text)', backgroundColor: 'var(--inquiries-status-lost-bg)' }}
+                      <button
+                        onClick={(e) => { e.stopPropagation(); deleteInquiry(inq.id); }}
+                        className="p-1.5 rounded-lg bg-danger-bg text-danger hover:opacity-80 transition-all duration-200"
                         title="Delete"
+                        aria-label={`Delete ${inq.name}`}
                       >
                         <Trash2 size={13} />
                       </button>
@@ -134,23 +134,23 @@ export default function InquiriesTable() {
                 </tr>
               );
             })}
-            {inquiries.length === 0 && (
+            {inquiries.length === 0 && fetchState === FetchState.SUCCESS && (
               <tr>
-                <td colSpan={8} className="text-center py-12 text-sm" style={{ color: 'var(--inquiries-text-secondary)' }}>
-                  No inquiries found.
+                <td colSpan={8} className="text-center py-12 text-sm text-secondary">
+                  {search || statusFilter !== 'All' ? 'No inquiries match the filter.' : 'No inquiries yet. Add your first lead!'}
                 </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
-      <ErpPagination 
-        currentPage={currentPage} 
-        totalPages={totalPages} 
-        totalItems={totalInquiries} 
-        itemsPerPage={ITEMS_PER_PAGE} 
-        onPageChange={setCurrentPage} 
+      <ErpPagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        totalItems={totalInquiries}
+        itemsPerPage={ITEMS_PER_PAGE}
+        onPageChange={setCurrentPage}
       />
     </div>
- );
+  );
 }

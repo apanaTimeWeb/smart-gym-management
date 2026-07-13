@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Provides the implementation for PlansMain.tsx functionality within its module.
+// RESPONSIBILITY: Entry point for the Plans module. Sets up the Context provider and composes PlansToolbar, PlansGrid, and PlanModal.
 "use client";
 
 import ErpHeader from '@/app/erp/erp_components/ErpLayout/ErpHeader';

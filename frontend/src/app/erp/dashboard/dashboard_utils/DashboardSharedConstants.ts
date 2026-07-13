@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Contains logic, types, or component definition for this module.
+// RESPONSIBILITY: Centralized constants and status style maps for the Dashboard module.
 export const DASHBOARD_STATUS_STYLES: Record<string, { bg: string; text: string }> = {
  ACTIVE: { bg: 'bg-success-bg', text: 'text-success' },
  PENDING: { bg: 'bg-warning-bg', text: 'text-warning' },

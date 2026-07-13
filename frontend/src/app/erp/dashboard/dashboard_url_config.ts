@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Contains logic, types, or component definition for this module.
+// RESPONSIBILITY: Centralized URL configuration for all Dashboard module API endpoints and page routes.
 export const DashboardUrlConfig = {
   PAGES: {
     HOME: '/erp/dashboard',

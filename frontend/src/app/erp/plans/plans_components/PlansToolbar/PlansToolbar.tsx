@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Provides the implementation for PlansToolbar.tsx functionality within its module.
+// RESPONSIBILITY: Renders the search input and "Create Plan" CTA button for the Plans module toolbar.
 "use client";
 
 import { RefreshCw, Plus, Search } from 'lucide-react';

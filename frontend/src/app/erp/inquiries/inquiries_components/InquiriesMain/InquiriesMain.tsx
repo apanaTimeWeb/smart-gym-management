@@ -1,4 +1,4 @@
-// RESPONSIBILITY: InquiriesMain.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Entry point for the Inquiries module. Sets up the Context provider and composes all sub-components.
 "use client";
 
 import ErpHeader from '@/app/erp/erp_components/ErpLayout/ErpHeader';
@@ -10,54 +10,51 @@ import InquiriesKPIs from '@/app/erp/inquiries/inquiries_components/InquiriesKPI
 import InquiriesToolbar from '@/app/erp/inquiries/inquiries_components/InquiriesToolbar/InquiriesToolbar';
 import InquiriesTable from '@/app/erp/inquiries/inquiries_components/InquiriesTable/InquiriesTable';
 import InquiryModal from '@/app/erp/inquiries/inquiries_components/InquiryModal/InquiryModal';
-import '@/app/erp/inquiries/inquiries.css';
 
 function InquiriesContent() {
- const { toast, hideToast, msgModal, closeMsg, showToast, bulkMsgModal, closeBulkMsg, clearSelection } = useInquiriesContext();
+  const { toast, hideToast, msgModal, closeMsg, showToast, bulkMsgModal, closeBulkMsg, clearSelection } = useInquiriesContext();
 
- return (
- <div className="min-h-full pb-10 inquiries-module">
- <ErpHeader title="Inquiries & Leads" subtitle="Track, follow up, and convert leads into members" />
- <div className="p-6 space-y-5">
- <InquiriesKPIs />
- <InquiriesToolbar />
- <InquiriesTable />
- </div>
+  return (
+    <div className="min-h-full pb-10">
+      <ErpHeader title="Inquiries & Leads" subtitle="Track, follow up, and convert leads into members" />
+      <div className="p-6 space-y-5">
+        <InquiriesKPIs />
+        <InquiriesToolbar />
+        <InquiriesTable />
+      </div>
 
- <InquiryModal />
- 
-  {msgModal?.open && (
- <ErpMessageModal 
- open={msgModal.open}
- type={msgModal.type}
- recipient={msgModal.recipient}
- message={msgModal.message}
- onClose={closeMsg} 
- onSuccess={msg => { showToast(msg, 'success'); closeMsg(); }} 
- />
- )}
- 
- {bulkMsgModal?.open && (
-  <ErpBulkMessageModal
-    open={bulkMsgModal.open}
-    type={bulkMsgModal.type}
-    recipients={bulkMsgModal.recipients}
-    onClose={closeBulkMsg}
-    onSuccess={msg => { showToast(msg, 'success'); closeBulkMsg(); clearSelection(); }}
-  />
- )}
- 
- {toast && (
- <ErpToast message={toast.message} type={toast.type} onClose={hideToast} />
- )}
- </div>
- );
+      <InquiryModal />
+
+      {msgModal?.open && (
+        <ErpMessageModal
+          open={msgModal.open}
+          type={msgModal.type}
+          recipient={msgModal.recipient}
+          message={msgModal.message}
+          onClose={closeMsg}
+          onSuccess={msg => { showToast(msg, 'success'); closeMsg(); }}
+        />
+      )}
+
+      {bulkMsgModal?.open && (
+        <ErpBulkMessageModal
+          open={bulkMsgModal.open}
+          type={bulkMsgModal.type}
+          recipients={bulkMsgModal.recipients}
+          onClose={closeBulkMsg}
+          onSuccess={msg => { showToast(msg, 'success'); closeBulkMsg(); clearSelection(); }}
+        />
+      )}
+
+      {toast && <ErpToast message={toast.message} type={toast.type} onClose={hideToast} />}
+    </div>
+  );
 }
 
 export default function InquiriesMain() {
- return (
- <InquiriesProvider>
- <InquiriesContent />
- </InquiriesProvider>
- );
+  return (
+    <InquiriesProvider>
+      <InquiriesContent />
+    </InquiriesProvider>
+  );
 }

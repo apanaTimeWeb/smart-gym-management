@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Provides the implementation for PlansSharedConstants.ts functionality within its module.
+// RESPONSIBILITY: Centralized constants, Zod schema, and shared data for the Plans module. Single source of truth for tiers, pricing, and form defaults.
 import { z } from 'zod';
 
 export const TIERS = ['BASIC', 'GOLD', 'PREMIUM'];
