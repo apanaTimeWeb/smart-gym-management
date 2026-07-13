@@ -119,8 +119,7 @@ export function useMembersLogic(initialData?: MembersInitialData | null): Member
         const daysInMonth = 30;
         const realAtt = Array.from({ length: daysInMonth }, (_, i) => {
           const d = i + 1;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const rec = aRes.data.attendance?.find((a: any) => new Date(a.date).getDate() === d);
+          const rec = (aRes.data.attendance as Array<{ date: string }>)?.find(a => new Date(a.date).getDate() === d);
           return { day: d, status: rec ? 'P' : 'A' };
         });
         setAttMap(prev => ({ ...prev, [memberId]: realAtt }));

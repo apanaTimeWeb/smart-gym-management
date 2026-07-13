@@ -47,16 +47,20 @@ export const BRANCH_OPTIONS = ['Main Branch', 'Branch 2', 'Branch 3'] as const;
 
 export const formatCurrency = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');
 
-export function getPriceForCycle(plan: Plan | undefined, cycle: string, customDays: number = 0): number {
- if (!plan) return 0;
- const map: Record<string, number> = {
- ONE_MONTH: plan.price1Month,
- THREE_MONTHS: plan.price3Month,
- SIX_MONTHS: plan.price6Month,
- TWELVE_MONTHS: plan.price12Month,
- CUSTOM: ((plan as any).priceCustom || 0) * (customDays || 0),
- };
- return map[cycle] || 0;
+export interface PlanWithCustom extends Plan {
+  priceCustom?: number;
+}
+
+export function getPriceForCycle(plan: PlanWithCustom | undefined, cycle: string, customDays: number = 0): number {
+  if (!plan) return 0;
+  const map: Record<string, number> = {
+    ONE_MONTH: plan.price1Month,
+    THREE_MONTHS: plan.price3Month,
+    SIX_MONTHS: plan.price6Month,
+    TWELVE_MONTHS: plan.price12Month,
+    CUSTOM: (plan.priceCustom || 0) * (customDays || 0),
+  };
+  return map[cycle] || 0;
 }
 
 export const MSG_TEMPLATES = {

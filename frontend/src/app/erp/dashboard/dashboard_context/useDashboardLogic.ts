@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Custom hook managing the asynchronous fetching of dashboard statistics.
 // DATA FLOW: DashboardContext -> useDashboardLogic.ts (Hook) -> dashboard_api.ts (API)
+"use client";
 
 import { useState, useEffect } from 'react';
 import { dashboardApi } from '@/app/erp/dashboard/dashboard_api/dashboard_api';
