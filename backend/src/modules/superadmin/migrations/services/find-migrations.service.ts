@@ -2,6 +2,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { MigrationsRepository } from '../migrations.repository';
 import { DataSource } from 'typeorm';
 import { InjectDataSource } from '@nestjs/typeorm';
+import { MigrationResponse } from '../migrations.interfaces';
+import { MIGRATIONS_MESSAGES, MIGRATIONS_ERRORS } from '../migrations.constants';
 
 @Injectable()
 export class FindMigrationsService {
@@ -12,21 +14,30 @@ export class FindMigrationsService {
     @InjectDataSource() private readonly dataSource: DataSource,
   ) {}
   
-  async execute(): Promise<any> {
+  async execute(): Promise<MigrationResponse> {
     this.logger.log('Fetching executed migrations history');
     try {
-      const migrations = await this.dataSource.query('SELECT * FROM "migrations" ORDER BY "timestamp" DESC');
-      return { success: true, data: migrations };
+      const data = await this.dataSource.query('SELECT * FROM "migrations" ORDER BY "timestamp" DESC');
+      return { 
+        success: true, 
+        message: MIGRATIONS_MESSAGES.FETCHED,
+        data 
+      };
     } catch (e) {
       this.logger.error('Failed to fetch migrations table', e);
       // Fallback to our custom entity table if TypeORM migrations table is inaccessible
-      return { success: false, data: await this.repository.findAll(), error: 'Query failed' };
+      const data = await this.repository.findAll();
+      return { success: false, message: 'Query failed', data };
     }
   }
 
-  async findOne(id: string): Promise<any> {
-    const entity = await this.repository.findById(id);
-    if (!entity) throw new Error('SchemaMigration not found');
-    return entity;
+  async findOne(id: string): Promise<MigrationResponse> {
+    const data = await this.repository.findById(id);
+    if (!data) throw new Error(MIGRATIONS_ERRORS.NOT_FOUND);
+    return {
+      success: true,
+      message: MIGRATIONS_MESSAGES.FETCHED,
+      data
+    };
   }
 }

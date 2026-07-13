@@ -9,3 +9,9 @@ export interface ISchemaMigration {
   appliedAt: Date | null;
   status: MigrationStatus;
 }
+
+export interface MigrationResponse {
+  success: boolean;
+  message: string;
+  data: ISchemaMigration | ISchemaMigration[] | any | null;
+}

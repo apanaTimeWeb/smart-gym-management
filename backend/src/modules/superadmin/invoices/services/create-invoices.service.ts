@@ -1,10 +1,11 @@
 import { CreateSaaSInvoiceDto } from '../dto/create-invoices.dto';
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InvoicesRepository } from '../invoices.repository';
-import { InvoiceStatus } from '../invoices.interfaces';
+import { InvoiceStatus, InvoiceResponse } from '../invoices.interfaces';
 import { PlansRepository } from '../../plans/plans.repository';
 import { CouponsRepository } from '../../coupons/coupons.repository';
 import { CouponStatus } from '../../coupons/coupons.interfaces';
+import { INVOICES_MESSAGES } from '../invoices.constants';
 
 @Injectable()
 export class CreateInvoicesService {
@@ -14,7 +15,7 @@ export class CreateInvoicesService {
     private readonly couponsRepository: CouponsRepository
   ) {}
   
-  async execute(dto: CreateSaaSInvoiceDto): Promise<any> {
+  async execute(dto: CreateSaaSInvoiceDto): Promise<InvoiceResponse> {
     if (!dto.tenantName) throw new BadRequestException('Tenant name is required');
     
     // Auto-calculate amount if not provided based on plan
@@ -77,7 +78,12 @@ export class CreateInvoicesService {
     if (!dto.status) dto.status = InvoiceStatus.PENDING;
     if (!dto.date) dto.date = new Date();
 
-    return await this.repository.create(dto);
+    const data = await this.repository.create(dto);
+    return {
+      success: true,
+      message: INVOICES_MESSAGES.CREATED,
+      data
+    };
   }
 }
 
