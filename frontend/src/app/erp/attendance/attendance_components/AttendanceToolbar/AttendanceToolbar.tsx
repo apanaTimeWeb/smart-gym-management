@@ -1,4 +1,4 @@
-// RESPONSIBILITY: AttendanceToolbar.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Provides the search, filter tabs, and action buttons for the Attendance module.
 "use client";
 
 import { RefreshCw, Plus, Search } from 'lucide-react';
@@ -17,10 +17,9 @@ export default function AttendanceToolbar() {
  onClick={() => setTab(t)}
  className={`px-5 py-3.5 text-sm font-medium transition-colors border-b-2 ${
  tab === t 
- ? 'text-primary bg-primary-subtle' 
+ ? 'text-primary bg-primary-subtle border-primary' 
  : 'border-transparent text-secondary hover:text-foreground'
  }`}
- style={tab === t ? { borderBottomColor: 'var(--attendance-highlight)' } : {}}
  >
  {t}
  </button>
@@ -33,12 +32,7 @@ export default function AttendanceToolbar() {
         value={search} 
         onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} 
         placeholder={`Search ${tab.toLowerCase()}...`} 
-        className="pl-9 pr-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 w-40 sm:w-64"
-        style={{ 
-          backgroundColor: 'var(--attendance-bg-input)', 
-          borderColor: 'var(--attendance-border)', 
-          color: 'var(--attendance-text-primary)' 
-        }} 
+        className="pl-9 pr-3 py-2 border border-border bg-input text-foreground rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-40 sm:w-64"
       />
     </div>
     <div className="flex gap-2">
@@ -50,8 +44,7 @@ export default function AttendanceToolbar() {
  </button>
  <button 
  onClick={() => setShowModal(true)} 
- className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white rounded-lg transition-opacity hover:opacity-90" 
- style={{ background: 'var(--attendance-highlight)' }}
+ className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-primary rounded-lg transition-opacity hover:opacity-90" 
  >
  <Plus size={14} /> Mark Attendance
  </button>

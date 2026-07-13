@@ -1,4 +1,4 @@
-// RESPONSIBILITY: AttendanceTable.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Renders the attendance data table and pagination controls.
 "use client";
 
 import { Clock } from 'lucide-react';
@@ -80,13 +80,6 @@ export default function AttendanceTable() {
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
-        colors={{
-          text: 'var(--attendance-text-secondary)',
-          textActive: 'white',
-          bgActive: 'var(--attendance-highlight)',
-          border: 'var(--attendance-border)',
-          hoverBg: 'var(--attendance-highlight-subtle)'
-        }}
       />
     </div>
   )}

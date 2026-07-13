@@ -1,4 +1,4 @@
-// RESPONSIBILITY: AttendanceMain.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Entry component for the Attendance module that wraps the UI in the context provider and handles the core page layout.
 "use client";
 
 import ErpHeader from '@/app/erp/erp_components/ErpLayout/ErpHeader';
@@ -9,8 +9,6 @@ import AttendanceKPIs from '@/app/erp/attendance/attendance_components/Attendanc
 import AttendanceToolbar from '@/app/erp/attendance/attendance_components/AttendanceToolbar/AttendanceToolbar';
 import AttendanceTable from '@/app/erp/attendance/attendance_components/AttendanceTable/AttendanceTable';
 import AttendanceModal from '@/app/erp/attendance/attendance_components/AttendanceModal/AttendanceModal';
-
-import '@/app/erp/attendance/attendance.css';
 
 function AttendanceContent() {
  const { toast, hideToast } = useAttendanceContext();

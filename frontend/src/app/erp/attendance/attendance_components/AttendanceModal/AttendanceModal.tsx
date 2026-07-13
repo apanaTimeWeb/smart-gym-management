@@ -1,9 +1,9 @@
-// RESPONSIBILITY: AttendanceModal.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Renders the modal for marking new attendance records for members or staff.
 "use client";
 
 import { useEffect } from 'react';
 import { useAttendanceContext } from '@/app/erp/attendance/attendance_context/AttendanceContext';
-import { X, CheckCircle } from 'lucide-react';
+import { X, CheckCircle, Loader2 } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AttendanceSchema, type AttendanceFormValues, EMPTY_ATTENDANCE_FORM } from '@/app/erp/attendance/attendance_utils/AttendanceSharedConstants';
@@ -145,10 +145,9 @@ export default function AttendanceModal() {
             <button 
               type="submit" 
               disabled={saving}
-              className="px-4 py-2 rounded-lg font-medium text-white flex items-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-70" 
-              style={{ background: 'var(--attendance-highlight)' }}
+              className="px-4 py-2 rounded-lg font-medium text-white bg-primary flex items-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-70" 
             >
-              {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><CheckCircle size={15} /> Check In</>}
+              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <><CheckCircle size={15} /> Check In</>}
             </button>
           </div>
         </form>

@@ -1,17 +1,40 @@
-// RESPONSIBILITY: attendance_types.ts handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Defines strict types and API response interfaces for the Attendance module to ensure type safety.
 import type { Member, Staff } from '@/lib/api';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import type { AttendanceTab, EMPTY_ATTENDANCE_FORM } from '@/app/erp/attendance/attendance_utils/AttendanceSharedConstants';
 
+export interface Attendance {
+  id: number;
+  memberId?: number;
+  staffId?: number;
+  date: string;
+  checkIn?: string;
+  checkOut?: string;
+  type: string;
+  member?: { name: string };
+  staff?: { name: string };
+}
+
+export interface AttendanceStatsResponse {
+  totalCheckIns: number;
+  memberCheckIns: number;
+  staffCheckIns: number;
+}
+
+export interface AttendanceResponse {
+  attendance: Attendance[];
+  total: number;
+}
+
 export interface AttendanceContextType {
- records: Attendance[];
- todayStats: { totalCheckIns: number; memberCheckIns: number; staffCheckIns: number };
- members: Member[];
- staff: Staff[];
- totalRecords: number;
- loading: boolean;
- saving: boolean;
- toast: { message: string; type: ToastType } | null;
+  records: Attendance[];
+  todayStats: AttendanceStatsResponse;
+  members: Member[];
+  staff: Staff[];
+  totalRecords: number;
+  loading: boolean;
+  saving: boolean;
+  toast: { message: string; type: ToastType } | null;
  
   tab: AttendanceTab;
   setTab: (t: AttendanceTab) => void;
@@ -21,21 +44,15 @@ export interface AttendanceContextType {
   currentPage: number;
   setCurrentPage: (p: number) => void;
  
- showModal: boolean;
- setShowModal: (show: boolean) => void;
+  showModal: boolean;
+  setShowModal: (show: boolean) => void;
  
- form: typeof EMPTY_ATTENDANCE_FORM;
- setForm: React.Dispatch<React.SetStateAction<typeof EMPTY_ATTENDANCE_FORM>>;
+  form: typeof EMPTY_ATTENDANCE_FORM;
+  setForm: React.Dispatch<React.SetStateAction<typeof EMPTY_ATTENDANCE_FORM>>;
  
- showToast: (msg: string, t: ToastType) => void;
- hideToast: () => void;
+  showToast: (msg: string, t: ToastType) => void;
+  hideToast: () => void;
  
- loadAll: () => Promise<void>;
- markAttendance: (data: any) => Promise<void>;
-}
-
-export interface Attendance {
-  id: number; memberId?: number; staffId?: number;
-  date: string; checkIn?: string; checkOut?: string; type: string;
-  member?: { name: string }; staff?: { name: string };
+  loadAll: () => Promise<void>;
+  markAttendance: (data: typeof EMPTY_ATTENDANCE_FORM) => Promise<void>;
 }
