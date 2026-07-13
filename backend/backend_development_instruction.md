@@ -347,8 +347,6 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 
 ---
 
----
-
 ## 41. Transaction Locks & Race Condition Prevention
 * **The Rule:** For highly concurrent mutations (e.g., deducting wallet balances, booking limited seats, processing inventory), standard database transactions are not enough to prevent race conditions. You MUST implement **Pessimistic Locking** (e.g., `SELECT ... FOR UPDATE` via `QueryBuilder.setLock('pessimistic_write')` in TypeORM or `select_for_update()` in Django) or **Optimistic Locking** (using a `@VersionColumn`).
 * **Why:** If two concurrent requests try to deduct money at the exact same millisecond, a standard transaction might allow both to succeed based on stale read data, causing negative balances. Enforcing this rule ensures AI always explicitly handles concurrency.
@@ -446,6 +444,18 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 
 ## 68. Health Check Depth Levels
 * **The Rule:** Implement 3 levels of health checks: `/health/live` (Process alive? 200 OK), `/health/ready` (DB/Redis reachable? Traffic ready), and `/health/deep` (Full dependency chain check, not exposed publicly).
+
+## 69. Strict `tsconfig.json` Enforcement
+* **The Rule:** The backend MUST run with `strict: true`. No `implicitAny`, no `implicitThis`. AI must never add `@ts-ignore` or `@ts-nocheck` to bypass type errors.
+
+## 70. No Raw `any` from ORM
+* **The Rule:** Never allow raw `any` types to escape the ORM layer. Query builder results or raw SQL executions must immediately be mapped to a strictly typed DTO or Entity class.
+
+## 71. UTC Datetime Storage Format
+* **The Rule:** ALL dates and times MUST be stored in the database as UTC. The backend must never store local timezones. Any datetime conversion should happen purely on the frontend (Rule 24).
+
+## 72. Per-Endpoint Payload Size Limits
+* **The Rule:** Implement strict JSON payload size limits per endpoint to prevent memory exhaustion attacks. General endpoints should reject payloads >1MB, while specific file-upload endpoints can accept larger, explicitly defined limits.
 
 ---
 

@@ -37,7 +37,7 @@
 
 ## 2. TYPOGRAPHY
 
-- **Font Family:** `Inter` — import via Google Fonts: `@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap')`
+- **Font Family:** `Inter` — import via `next/font/google`: `import { Inter } from 'next/font/google'`
 - **Base font-size:** 14px
 
 | Role | Size | Weight | Color | Usage |
@@ -190,7 +190,7 @@ Badges are small pill-shaped labels: `border-radius: 999px`, `padding: 2px 10px`
 - Header row: `background: rgba(99,102,241,0.08)`, UPPERCASE 12px `--text-secondary`, sortable columns show ↑↓ arrows on hover
 - Data rows: alternating subtle zebra stripe (`--bg-card` / slightly lighter), 48px row height
 - Row hover: `background: rgba(99,102,241,0.06)`, subtle highlight
-- Inline row actions (rightmost column): small icon buttons — 👁️ View, ✏️ Edit, 🗑️ Delete — shown on row hover
+- Inline row actions (rightmost column): small icon buttons — ✏️ Edit, 🗑️ Delete — shown on row hover (Note: 'View' is handled by clicking the row)
 - Pagination bar (below table): "Showing 1–25 of 143 results" + Previous / Next buttons + rows-per-page selector (10 / 25 / 50)
 - Empty state (no rows): Centered SVG illustration + "No [items] found" (16px, `--text-secondary`) + optional CTA button
 
@@ -203,7 +203,7 @@ Badges are small pill-shaped labels: `border-radius: 999px`, `padding: 2px 10px`
 - Form footer: Buttons right-aligned — Cancel (ghost) | Save/Submit (primary)
 
 ### 5d. Modal / Dialog
-- Overlay: `backdrop: rgba(0,0,0,0.6)`, centered, `z-index: 1000`
+- Overlay: `backdrop: rgba(0,0,0,0.6)`, centered, `z-index: 40`
 - Modal card: `background: --bg-card`, border-radius: 16px, padding: 28px, max-width: 480px
 - Structure: Title (18px bold) + Description text + Content area + Footer buttons
 - **Confirmation/Destructive modal:** Icon = ⚠️ (amber) or 🗑️ (red) · Description explains what will happen · Buttons: "Cancel" (ghost, left) + "Confirm" (danger red, right)
@@ -294,7 +294,7 @@ Always show a modal before executing: Delete, Soft-Delete, Blacklist, Suspend, M
 | **Danger Primary** | Solid `--danger` background, white text | Destructive confirm actions (Delete, Blacklist, Exit) |
 | **Ghost / Outlined** | Transparent bg, `--border` border, `--text-primary` text | Secondary actions (Cancel, Export, Back) |
 | **Ghost Danger** | Transparent bg, `--danger` border, `--danger` text | Soft destructive (Mark Lost, Deactivate) |
-| **Icon Button** | 32×32px circle or square, icon only | Inline table row actions (View 👁️, Edit ✏️, Delete 🗑️) |
+| **Icon Button** | 32×32px circle or square, icon only | Inline table row actions (Edit ✏️, Delete 🗑️) |
 | **Text Link** | No bg, no border, `--primary` text, underline on hover | Navigation links, "Forgot Password?", "Add Category" |
 | **Segmented Control** | Joined button group, selected = `--primary` bg | Payment mode selector (Cash/UPI/Card), view toggles |
 
@@ -471,6 +471,15 @@ Enterprise users have different preferences for how much data fits on a screen.
 - **Valid Drop Target:** `border: 2px dashed var(--primary)`, background `rgba(99,102,241,0.08)`.
 - **Invalid Drop Target:** `border: 2px dashed var(--danger)`.
 - **Animation:** After drop, use a smooth snap animation (`transition: transform 200ms ease`).
+
+## 24. LOADING BUTTON STATE
+- **Behavior:** When a button triggers an async action, it must transition to a loading state.
+- **Visuals:** The button retains its width, the text is replaced (or shifted) by a small spinner icon (e.g., `Loader2` from lucide-react with `animate-spin`), and `disabled={true}` is applied.
+
+## 25. MOBILE CARD-STACK TABLE PATTERN
+- **Behavior:** On mobile (<768px), standard data tables must collapse into a vertically stacked list of cards.
+- **Layout:** Each row becomes a card. The primary identifier (Name/ID) becomes the card title. Status badges align top-right. Other columns become `Label: Value` pairs stacked inside the card.
+- **Actions:** Inline actions appear at the bottom of the card or via a `...` dropdown menu.
 
 ---
 

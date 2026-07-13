@@ -20,7 +20,7 @@ Find all hardcoded UI data (dropdown options, filter lists, default preset array
 *Why?* Because tomorrow, this hardcoded data will be replaced by a Backend API call. By keeping it all in one file today, I will only have to change one file tomorrow to integrate the API, without touching the UI components. Derive your TypeScript types directly from these central arrays.
 
 4. **Theme Independence (No Inline Colors)**: 
-Remove all hardcoded Tailwind color utilities (like `text-primary`, `bg-card`) from the JSX. Replace them with custom CSS variables (e.g., `var(--[moduleName]-primary-bg)`) and define all these variables centrally in @[[MODULE_NAME].css]. This ensures that I can copy-paste this entire folder to another project and theme it entirely from one CSS file.
+Remove all hardcoded Tailwind color utilities (like `text-primary`, `bg-card`) from the JSX. Replace them with custom CSS variables (e.g., `var(--bg-card)`) mapped properly in `tailwind.config.ts`, so you can still use standard Tailwind classes (like `bg-card` or `text-primary`) without arbitrary bracket values like `bg-[#1A1A2E]` (See Rule 36). This ensures that I can copy-paste this entire folder to another project and theme it entirely from one CSS file.
 
 5. **Smart & Isolated State Management (Avoid Excessive Prop Drilling)**: 
 Because the components will be heavily micro-modularized (Rule #1), avoid creating a massive web of prop drilling (passing data through 5 layers of components). If multiple micro-components need to share the same state, create a state store exclusively for this module (e.g., a local React Context `[ModuleName]Context.tsx` or a feature-sliced Zustand/Redux store placed strictly inside this module's folder). Do NOT bloat the global app state; keep the state architecture isolated to this feature. Since components are heavily micro-modularized, if you use React Context, you MUST implement proper memoization (`useMemo`, `useCallback`) to prevent massive re-render chains across the sub-folders.
@@ -164,8 +164,8 @@ In every Context file and custom hook, document the data flow direction at the t
 40. **Forbidden Patterns File (`[moduleName]_forbidden.md`)**:
 Every module must have a tiny markdown file listing what is explicitly NOT allowed in that module (e.g., "Do not add global auth logic here", "Do not import from the billing module"). Telling the AI what NOT to do is as important as telling it what to do.
 
-41. **Optimistic Update Prohibition for Financial/Destructive Actions**:
-For any action involving money (payments, refunds, fee collection) or irreversible operations (delete, blacklist, suspend), optimistic UI updates are strictly forbidden. The UI must show a loading state and only update after the backend confirms with `2xx`.
+41. **Strict Pessimistic UI for Financial/Destructive Actions**:
+As a strict enforcement of Rule 15, for any action involving money (payments, refunds, fee collection) or irreversible operations (delete, blacklist, suspend), optimistic UI updates are completely forbidden. The UI must show a disabled loading state and only mutate the cache or refetch after the backend confirms with `2xx`.
 
 42. **URL as State for Shareable Views**:
 Any filterable, searchable, or paginated list page MUST sync its state (search query, page number, active filters, sort column) to the URL as query parameters using `useSearchParams` / `useRouter`.
@@ -222,6 +222,18 @@ React Context is ONLY for synchronous, rarely-changing state (theme, sidebar ope
 
 59. **`next/font` for Font Loading**:
 Never use Google Fonts CDN (`@import`) in global CSS as it causes layout shifts and performance drops. Always use `next/font/google` to self-host fonts natively in Next.js.
+
+60. **Strict `tsconfig.json` Enforcement**:
+The frontend MUST run with `strict: true`. No `implicitAny`, no `implicitThis`. AI must never add `@ts-ignore` or `@ts-nocheck` to bypass type errors.
+
+61. **No Direct `localStorage` in Components**:
+Never call `window.localStorage` directly inside a React component (it causes hydration mismatches in Next.js). Always use a dedicated `useLocalStorage` hook that handles the `typeof window !== 'undefined'` check and hydration sync.
+
+62. **Standardized `ApiResponse<T>` Generic**:
+Every API call must be typed using a global `ApiResponse<T>` generic interface that matches the backend's exact envelope (e.g., `{ success: boolean, data: T, message: string }`).
+
+63. **No Direct `router.push('/login')` in Components**:
+Individual UI components must never contain hardcoded redirection logic for unauthenticated states. This must be handled centrally in a middleware (`middleware.ts`) or an `axios`/`fetch` interceptor that catches `401` errors and redirects globally.
 
 ---
 Think step-by-step. Create a detailed implementation plan first so I can review it, and then execute it perfectly without breaking existing data flows!
