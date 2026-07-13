@@ -33,7 +33,7 @@ export default function GymsTable() {
     );
   }
 
-  if (fetchState === 'error' || error) {
+  if (fetchState === 'error') {
     return <div className="p-8 text-center text-destructive">Error loading data.</div>;
   }
 

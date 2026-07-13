@@ -33,11 +33,10 @@ export function useGymsTable() {
     );
   }, [gyms, search]);
 
-  // We only want to fetch the initial data once on mount, hence the empty dependency array.
+  // Refetch only on mount. fetchGyms is a stable Zustand action reference — safe to include.
   useEffect(() => {
     fetchGyms();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [fetchGyms]);
 
   const handleRowClick = (gymName: string) => {
     toast(`Opening details for ${gymName}`, { icon: 'ℹ️' });
