@@ -24,7 +24,7 @@ export class InfrastructureRepository {
   }
 
   async update(id: string, data: Partial<InfrastructureNode>): Promise<InfrastructureNode | null> {
-    await this.repo.update(id, data);
+    await this.repo.update(id, data as any);
     return this.findById(id);
   }
 

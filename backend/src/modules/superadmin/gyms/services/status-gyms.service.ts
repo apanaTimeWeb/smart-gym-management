@@ -12,7 +12,7 @@ export class StatusGymsService {
     const gym = await this.repository.findOne({ where: { id } });
     if (!gym) throw new NotFoundException('Gym not found');
     
-    gym.status = dto.status;
+    if (dto.status) gym.status = dto.status;
     await this.repository.save(gym);
     
     return { success: true, data: gym };
