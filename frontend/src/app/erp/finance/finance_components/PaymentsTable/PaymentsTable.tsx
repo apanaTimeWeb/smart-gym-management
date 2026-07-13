@@ -6,15 +6,13 @@ import { PAYMENTS_TABLE_HEADERS, FINANCE_METHOD_STYLES, FINANCE_STATUS_STYLES } 
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
 import { Loader2 } from 'lucide-react';
 
-const fmt = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');
-
 export default function PaymentsTable() {
-  const { payments, totalPayments, loading, search, currentPage, setCurrentPage } = useFinanceContext();
+  const { payments, totalPayments, fetchState, search, currentPage, setCurrentPage } = useFinanceContext();
   
   const ITEMS_PER_PAGE = 10;
   const totalPages = Math.ceil(totalPayments / ITEMS_PER_PAGE) || 1;
 
- if (loading) {
+ if (fetchState === 'loading') {
  return (
  <div className="flex justify-center py-10">
  <Loader2 className="w-8 h-8 animate-spin text-primary" />
@@ -42,8 +40,8 @@ export default function PaymentsTable() {
  return (
  <tr key={p.id} className="transition-colors hover:bg-primary/5 bg-card">
  <td className="px-4 py-3 text-sm font-mono text-secondary">{p.invoiceNo}</td>
- <td className="px-4 py-3 text-sm font-medium text-foreground">{p.member?.name || `Member #${p.memberId}`}</td>
- <td className="px-4 py-3 text-sm font-bold text-success">{fmt(p.amount)}</td>
+ <td className="px-4 py-3 text-sm font-medium text-primary">{p.member?.name || `Member #${p.memberId}`}</td>
+ <td className="px-4 py-3 text-sm font-bold text-success">{(p.amount || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
  <td className="px-4 py-3">
  <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${mStyle.bg} ${mStyle.text}`}>
  {p.method}
@@ -70,7 +68,7 @@ export default function PaymentsTable() {
  </tbody>
  </table>
  </div>
- {totalPages > 1 && !loading && (
+ {totalPages > 1 && fetchState !== 'loading' && (
     <div className="mt-4 pt-4 border-t border-border">
       <ErpPagination 
         currentPage={currentPage}

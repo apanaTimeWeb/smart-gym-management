@@ -19,20 +19,20 @@ export default function StaffModal() {
     control,
     formState: { errors }
   } = useForm<StaffFormValues>({
-    resolver: zodResolver(StaffSchema) as any,
-    defaultValues: editData as StaffFormValues || {}
+    resolver: zodResolver(StaffSchema),
+    defaultValues: (editData as StaffFormValues) || {}
   });
 
  useEffect(() => {
    if (showModal && editData) {
-     reset(editData);
+     reset(editData as StaffFormValues);
    }
  }, [showModal, editData, reset]);
 
  if (!showModal) return null;
 
  return (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60">
+ <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60">
  <div className="rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto bg-card border border-border">
  <div className="sticky top-0 px-6 py-4 border-b border-border bg-card flex items-center justify-between z-10">
  <h3 className="text-lg font-bold text-foreground">{editId ? 'Edit Staff' : 'Add Staff Member'}</h3>
@@ -44,7 +44,7 @@ export default function StaffModal() {
  <X size={18} />
  </button>
  </div>
- <form onSubmit={handleSubmit(saveStaff as any)} className="p-6 space-y-4">
+ <form onSubmit={handleSubmit(saveStaff)} className="p-6 space-y-4">
  {STAFF_MODAL_FIELDS.map(f => (
  <div key={f.key}>
  <label className="block text-sm font-medium mb-1 text-secondary">{f.label}</label>
@@ -52,12 +52,12 @@ export default function StaffModal() {
  type={f.type} 
  placeholder={f.placeholder} 
  {...register(f.key as keyof StaffFormValues)}
- className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 ${
-   errors[f.key as keyof StaffFormValues] ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-primary'
+ className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 ${
+   errors[f.key as keyof StaffFormValues] ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
  } bg-input text-foreground`}
  />
  {errors[f.key as keyof StaffFormValues] && (
-   <p className="text-destructive text-xs mt-1">{errors[f.key as keyof StaffFormValues]?.message as string}</p>
+   <p className="text-danger text-xs mt-1">{errors[f.key as keyof StaffFormValues]?.message as string}</p>
  )}
  </div>
  ))}
@@ -96,7 +96,7 @@ export default function StaffModal() {
  <input 
  type="date" 
  {...register('joinDate')}
- className="w-full px-4 py-2 border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary bg-input text-foreground"
+ className="w-full px-4 py-2 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground"
  />
  </div>
  <div className="flex gap-3 pt-2">

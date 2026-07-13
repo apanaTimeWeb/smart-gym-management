@@ -5,6 +5,7 @@ import type { Payment, FinanceSummary } from '@/app/erp/finance/finance_types/fi
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import { FinanceContextType, FinanceInitialData } from '@/app/erp/finance/finance_types/finance_types';
 import { AddPaymentFormValues } from '@/app/erp/finance/finance_utils/FinanceSharedConstants';
+import { FetchState } from '@/app/erp/finance/finance_types/finance_types';
 import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
@@ -12,7 +13,7 @@ export function useFinanceLogic(initialData?: FinanceInitialData | null): Financ
   const [payments, setPayments] = useState<Payment[]>(initialData?.payments || []);
   const [totalPayments, setTotalPayments] = useState<number>(initialData?.totalPayments || 0);
   const [summary, setSummary] = useState<FinanceSummary | null>(initialData?.summary || null);
-  const [loading, setLoading] = useState(!initialData);
+  const [fetchState, setFetchState] = useState<FetchState>(initialData ? 'success' : 'loading');
   const [error, setError] = useState('');
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
   const [showModal, setShowModal] = useState(false);
@@ -42,7 +43,7 @@ export function useFinanceLogic(initialData?: FinanceInitialData | null): Financ
  const hideToast = useCallback(() => setToast(null), []);
 
   const loadAll = useCallback(async () => {
-    setLoading(true);
+    setFetchState('loading');
     setError('');
     try {
       const params: Record<string, string> = { 
@@ -63,7 +64,7 @@ export function useFinanceLogic(initialData?: FinanceInitialData | null): Financ
   setError(msg);
   showToast(msg, 'error');  
  }
- finally { setLoading(false); }
+  finally { setFetchState('success'); }
   }, [showToast, currentPage, debouncedSearch]);
 
   useEffect(() => { 
@@ -75,21 +76,21 @@ export function useFinanceLogic(initialData?: FinanceInitialData | null): Financ
   }, [loadAll, initialData]);
 
   const savePayment = useCallback(async (data: AddPaymentFormValues) => {
-    setLoading(true);
+    setFetchState('loading');
     try {
       const res = await financeApi.createPayment({ 
         memberId: Number(data.memberId), 
         amount: Number(data.amount), 
         method: data.method, 
         notes: data.notes 
-      }) as unknown as { message?: string };
+      }) as { message?: string };
       showToast(res.message || 'Payment created successfully', 'success');
       setShowModal(false);
       await loadAll();
     } catch (err) { 
       showToast((err as Error).message, 'error'); 
     } finally { 
-      setLoading(false); 
+      setFetchState('success'); 
     }
   }, [loadAll, showToast]);
 
@@ -97,7 +98,7 @@ export function useFinanceLogic(initialData?: FinanceInitialData | null): Financ
  payments,
  totalPayments,
  summary,
- loading,
+ fetchState,
  error,
  toast,
  showToast,

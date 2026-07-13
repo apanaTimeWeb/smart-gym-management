@@ -4,6 +4,8 @@ import type { Staff } from '@/app/erp/hr/hr_types/hr_types';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import type { AttendanceTab, EMPTY_ATTENDANCE_FORM } from '@/app/erp/attendance/attendance_utils/AttendanceSharedConstants';
 
+export type FetchState = 'idle' | 'loading' | 'success' | 'error';
+
 export interface Attendance {
   id: number;
   memberId?: number;
@@ -33,7 +35,7 @@ export interface AttendanceContextType {
   members: Member[];
   staff: Staff[];
   totalRecords: number;
-  loading: boolean;
+  fetchState: FetchState;
   saving: boolean;
   toast: { message: string; type: ToastType } | null;
  

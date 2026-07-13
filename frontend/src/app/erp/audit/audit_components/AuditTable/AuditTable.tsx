@@ -24,14 +24,14 @@ export const AuditTable = () => {
   }
 
   if (error) {
-    return <div className="p-4 text-destructive">Error: {error}</div>;
+    return <div className="p-4 text-danger">Error: {error}</div>;
   }
 
   return (
     <div className="w-full text-foreground">
       <div className="overflow-x-auto">
         <table className="w-full text-left whitespace-nowrap">
-          <thead className="bg-muted border-y border-border text-xs uppercase tracking-wider text-secondary">
+          <thead className="bg-input border-y border-border text-xs uppercase tracking-wider text-secondary">
             <tr>
               {AUDIT_TABLE_HEADERS.map((header) => (
                 <th key={header} className="px-6 py-4 font-semibold">
@@ -49,7 +49,7 @@ export const AuditTable = () => {
               </tr>
             ) : (
               logs.map((log) => (
-                <tr key={log.id} className="hover:bg-primary-subtle transition-colors">
+                <tr key={log.id} className="hover:bg-primary/5 transition-colors">
                   <td className="px-6 py-4">{new Date(log.timestamp).toLocaleString()}</td>
                   <td className="px-6 py-4 font-medium">{log.actorId || 'System'}</td>
                   <td className="px-6 py-4">
@@ -59,10 +59,10 @@ export const AuditTable = () => {
                   </td>
                   <td className="px-6 py-4">
                     <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
-                      log.action === 'CREATE' ? 'bg-success-bg text-success dark:bg-success-bg dark:text-success' :
-                      log.action === 'UPDATE' ? 'bg-info-bg text-info dark:bg-info-bg dark:text-info' :
-                      log.action === 'DELETE' ? 'bg-danger-bg text-destructive dark:bg-danger-bg dark:text-destructive' :
-                      'bg-warning-bg text-warning dark:bg-warning-bg dark:text-warning'
+                      log.action === 'CREATE' ? 'bg-success/10 text-success' :
+                      log.action === 'UPDATE' ? 'bg-info/10 text-info' :
+                      log.action === 'DELETE' ? 'bg-danger/10 text-danger' :
+                      'bg-warning/10 text-warning'
                     }`}>
                       {log.action}
                     </span>

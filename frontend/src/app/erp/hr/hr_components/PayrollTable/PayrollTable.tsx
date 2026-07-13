@@ -6,10 +6,8 @@ import { PAYROLL_TABLE_HEADERS } from '@/app/erp/hr/hr_utils/HrSharedConstants';
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
 import { CheckCircle2, Loader2 } from 'lucide-react';
 
-const fmt = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');
-
 export default function PayrollTable() {
-  const { payrolls, search, currentPage, setCurrentPage, markPayrollPaid, loading } = useHrContext();
+  const { payrolls, search, currentPage, setCurrentPage, markPayrollPaid, fetchState } = useHrContext();
 
   const filtered = payrolls.filter(p => {
     const nameMatch = (p.staff?.name || '').toLowerCase().includes(search.toLowerCase());
@@ -22,7 +20,7 @@ export default function PayrollTable() {
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const currentData = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
-  if (loading) {
+  if (fetchState === 'loading') {
     return (
       <div className="flex justify-center py-10">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
@@ -34,7 +32,7 @@ export default function PayrollTable() {
     <div className="flex flex-col h-full">
       <div className="overflow-x-auto flex-1">
         <table className="w-full">
-          <thead className="bg-muted text-muted-foreground">
+          <thead className="bg-input text-secondary">
             <tr>
               {PAYROLL_TABLE_HEADERS.map(h => (
                 <th key={h} className="text-left text-xs font-semibold uppercase tracking-wider px-4 py-3">
@@ -46,27 +44,27 @@ export default function PayrollTable() {
           </thead>
           <tbody className="divide-y divide-border">
             {currentData.map(p => (
-              <tr key={p.id} className="transition-colors hover:bg-muted/50 bg-card">
+              <tr key={p.id} className="transition-colors hover:bg-primary/5 bg-card">
                 <td className="px-4 py-3">
-                  <p className="text-sm font-medium text-foreground">
+                  <p className="text-sm font-medium text-primary">
                     {p.staff?.name || `Staff #${p.staffId}`}
                   </p>
-                  <div className="text-xs text-muted-foreground">
+                  <div className="text-xs text-secondary">
                     {p.staff?.role}
                   </div>
                 </td>
-                <td className="px-4 py-3 text-sm text-foreground">{p.month}</td>
-                <td className="px-4 py-3 text-sm font-bold text-emerald-600">{fmt(p.amount)}</td>
+                <td className="px-4 py-3 text-sm text-primary">{p.month}</td>
+                <td className="px-4 py-3 text-sm font-bold text-success">{(p.amount || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
                 <td className="px-4 py-3">
                   <span 
                     className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                      p.status === 'Paid' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+                      p.status === 'Paid' ? 'bg-success/10 text-success' : 'bg-warning/10 text-warning'
                     }`}
                   >
                     {p.status}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-sm text-muted-foreground">
+                <td className="px-4 py-3 text-sm text-secondary">
                   {p.paidAt ? new Date(p.paidAt).toLocaleDateString('en-IN') : '—'}
                 </td>
                 <td className="px-4 py-3 text-right">
@@ -83,7 +81,7 @@ export default function PayrollTable() {
             ))}
             {currentData.length === 0 && (
               <tr>
-                <td colSpan={6} className="text-center py-10 text-sm text-muted-foreground">
+                <td colSpan={6} className="text-center py-10 text-sm text-secondary">
                   No payroll records found.
                 </td>
               </tr>

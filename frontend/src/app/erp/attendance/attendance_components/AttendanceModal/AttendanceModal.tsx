@@ -38,19 +38,19 @@ export default function AttendanceModal() {
   if (!showModal) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 p-4">
       <div className="bg-card rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-border">
         <div className="flex justify-between items-center p-5 border-b border-border">
           <h3 className="font-bold text-lg text-foreground">Record Attendance</h3>
           <button 
             type="button"
             onClick={() => setShowModal(false)} 
-            className="text-secondary hover:text-foreground hover:bg-primary-subtle p-1 rounded-md transition-colors"
+            className="text-secondary hover:text-foreground hover:bg-primary/10 p-1 rounded-md transition-colors"
           >
             <X size={20} />
           </button>
         </div>
-        <form onSubmit={handleSubmit(markAttendance as any)} className="p-5 space-y-4">
+        <form onSubmit={handleSubmit(markAttendance)} className="p-5 space-y-4">
           <div className="flex gap-4">
             <label className="flex items-center gap-2 text-sm text-foreground cursor-pointer">
               <input 
@@ -105,8 +105,8 @@ export default function AttendanceModal() {
                 )}
               />
             )}
-            {errors.memberId && watchType === 'MEMBER' && <p className="text-destructive text-xs mt-1">{errors.memberId.message}</p>}
-            {errors.staffId && watchType === 'STAFF' && <p className="text-destructive text-xs mt-1">{errors.staffId.message}</p>}
+            {errors.memberId && watchType === 'MEMBER' && <p className="text-danger text-xs mt-1">{errors.memberId.message}</p>}
+            {errors.staffId && watchType === 'STAFF' && <p className="text-danger text-xs mt-1">{errors.staffId.message}</p>}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -115,22 +115,22 @@ export default function AttendanceModal() {
               <input 
                 type="date" 
                 {...register('date')}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
-                  errors.date ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-warning'
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus-visible:ring-2 ${
+                  errors.date ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
                 } bg-input text-foreground`} 
               />
-              {errors.date && <p className="text-destructive text-xs mt-1">{errors.date.message}</p>}
+              {errors.date && <p className="text-danger text-xs mt-1">{errors.date.message}</p>}
             </div>
             <div>
               <label className="block text-sm font-medium text-secondary mb-1">Check In Time</label>
               <input 
                 type="time" 
                 {...register('checkIn')}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
-                  errors.checkIn ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-warning'
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus-visible:ring-2 ${
+                  errors.checkIn ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
                 } bg-input text-foreground`} 
               />
-              {errors.checkIn && <p className="text-destructive text-xs mt-1">{errors.checkIn.message}</p>}
+              {errors.checkIn && <p className="text-danger text-xs mt-1">{errors.checkIn.message}</p>}
             </div>
           </div>
 
@@ -138,7 +138,7 @@ export default function AttendanceModal() {
             <button 
               type="button" 
               onClick={() => setShowModal(false)} 
-              className="px-4 py-2 border border-border rounded-lg font-medium text-secondary hover:text-foreground hover:bg-primary-subtle transition-colors"
+              className="px-4 py-2 border border-border rounded-lg font-medium text-secondary hover:text-foreground hover:bg-primary/10 transition-colors"
             >
               Cancel
             </button>

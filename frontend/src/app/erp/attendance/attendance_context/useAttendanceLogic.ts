@@ -11,7 +11,7 @@ import type { Staff } from '@/app/erp/hr/hr_types/hr_types';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import { EMPTY_ATTENDANCE_FORM, ATTENDANCE_TABS, type AttendanceTab, AttendanceFormValues } from '@/app/erp/attendance/attendance_utils/AttendanceSharedConstants';
 import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
-import { AttendanceContextType, Attendance, AttendanceStatsResponse, AttendanceResponse } from '@/app/erp/attendance/attendance_types/attendance_types';
+import { AttendanceContextType, Attendance, AttendanceStatsResponse, AttendanceResponse, FetchState } from '@/app/erp/attendance/attendance_types/attendance_types';
 
 export function useAttendanceLogic(): AttendanceContextType {
   const router = useRouter();
@@ -35,7 +35,7 @@ export function useAttendanceLogic(): AttendanceContextType {
   const [members, setMembers] = useState<Member[]>([]);
   const [staff, setStaff] = useState<Staff[]>([]);
  
-  const [loading, setLoading] = useState(true);
+  const [fetchState, setFetchState] = useState<FetchState>('loading');
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
  
@@ -71,11 +71,10 @@ export function useAttendanceLogic(): AttendanceContextType {
     if (changed) {
       router.push(`${pathname}?${currentUrlParams.toString()}`);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch, currentPage, tab, pathname, router]);
+  }, [debouncedSearch, currentPage, tab, pathname, router, searchParams]);
 
   const loadAll = useCallback(async () => {
-    setLoading(true);
+    setFetchState('loading');
     try {
       const params: Record<string, string> = {
         limit: '10',
@@ -102,7 +101,7 @@ export function useAttendanceLogic(): AttendanceContextType {
     } catch (e) { 
       showToast((e as Error).message, 'error'); 
     } finally { 
-      setLoading(false); 
+      setFetchState('success'); 
     }
   }, [showToast, currentPage, debouncedSearch, tab]);
 
@@ -140,7 +139,7 @@ export function useAttendanceLogic(): AttendanceContextType {
 
   return {
     records, totalRecords, todayStats, members, staff,
-    loading, saving, toast,
+    fetchState, saving, toast,
     tab, setTab,
     search, setSearch,
     currentPage, setCurrentPage,

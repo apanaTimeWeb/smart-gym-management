@@ -10,7 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 
 export default function AddPaymentModal() {
-  const { showModal, setShowModal, savePayment, loading } = useFinanceContext();
+  const { showModal, setShowModal, savePayment, fetchState } = useFinanceContext();
 
   const {
     register,
@@ -37,7 +37,7 @@ export default function AddPaymentModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60">
+    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60">
       <div className="rounded-2xl shadow-xl w-full max-w-md bg-card border border-border">
         <div className="px-6 py-4 border-b border-border flex items-center justify-between">
           <h3 className="text-lg font-bold text-foreground">Record Payment</h3>
@@ -56,9 +56,9 @@ export default function AddPaymentModal() {
               type="number"
               placeholder="Enter Member ID"
               {...register('memberId')}
-              className={`w-full px-4 py-2 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary bg-input text-foreground ${errors.memberId ? 'border-danger' : 'border-border'}`}
+              className={`w-full px-4 py-2 border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary ${errors.memberId ? 'border-danger' : 'border-border'}`}
             />
-            {errors.memberId && <p className="text-destructive text-xs mt-1">{errors.memberId.message}</p>}
+            {errors.memberId && <p className="text-danger text-xs mt-1">{errors.memberId.message}</p>}
           </div>
           <div>
             <label className="block text-sm font-medium mb-1 text-secondary">Amount (₹)</label>
@@ -66,9 +66,9 @@ export default function AddPaymentModal() {
               type="number"
               placeholder="2500"
               {...register('amount')}
-              className={`w-full px-4 py-2 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary bg-input text-foreground ${errors.amount ? 'border-danger' : 'border-border'}`}
+              className={`w-full px-4 py-2 border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary ${errors.amount ? 'border-danger' : 'border-border'}`}
             />
-            {errors.amount && <p className="text-destructive text-xs mt-1">{errors.amount.message}</p>}
+            {errors.amount && <p className="text-danger text-xs mt-1">{errors.amount.message}</p>}
           </div>
           <div>
             <label className="block text-sm font-medium mb-1 text-secondary">Payment Method</label>
@@ -91,15 +91,15 @@ export default function AddPaymentModal() {
               type="text" 
               placeholder="Any notes..." 
               {...register('notes')}
-              className="w-full px-4 py-2 border border-border rounded-xl text-sm appearance-none bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full px-4 py-2 border border-border rounded-xl text-sm appearance-none bg-input text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             />
           </div>
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={() => setShowModal(false)} className="px-5 py-2.5 text-sm font-semibold rounded-xl border border-border text-secondary hover:bg-primary/5 transition-colors flex-1">
               Cancel
             </button>
-            <button type="submit" disabled={loading} className="px-5 py-2.5 text-sm font-semibold text-primary-foreground bg-primary rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center min-w-[120px] flex-1">
-              {loading ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> : 'Record Payment'}
+            <button type="submit" disabled={fetchState === 'loading'} className="px-5 py-2.5 text-sm font-semibold text-primary-foreground bg-primary rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center min-w-[120px] flex-1">
+              {fetchState === 'loading' ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> : 'Record Payment'}
             </button>
           </div>
         </form>

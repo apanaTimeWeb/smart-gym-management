@@ -12,7 +12,7 @@ import { PayrollSchema, type PayrollFormValues, EMPTY_PAYROLL_FORM } from '@/app
 export default function PayrollModal() {
   const { showPayrollModal, setShowPayrollModal, savePayroll, saving, staff } = useHrContext();
 
-  const { register, handleSubmit, reset, watch, setValue, control, formState: { errors } } = useForm<any>({
+  const { register, handleSubmit, reset, watch, setValue, control, formState: { errors } } = useForm<PayrollFormValues>({
     resolver: zodResolver(PayrollSchema),
     defaultValues: EMPTY_PAYROLL_FORM
   });
@@ -35,7 +35,7 @@ export default function PayrollModal() {
   if (!showPayrollModal) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60">
+    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60">
       <div className="w-full max-w-md rounded-2xl shadow-xl flex flex-col max-h-[90vh] bg-card border border-border">
         
         <div className="flex items-center justify-between px-6 py-4 border-b border-border">
@@ -51,7 +51,7 @@ export default function PayrollModal() {
           <form id="payroll-form" onSubmit={handleSubmit(savePayroll)} className="space-y-4">
             
             <div className="space-y-1.5">
-              <label className="text-sm font-semibold text-foreground">Staff Member <span className="text-destructive">*</span></label>
+              <label className="text-sm font-semibold text-foreground">Staff Member <span className="text-danger">*</span></label>
               <Controller
                 name="staffId"
                 control={control}
@@ -60,34 +60,34 @@ export default function PayrollModal() {
                     value={field.value || ''}
                     onChange={field.onChange}
                     placeholder="Select Staff"
-                    options={staff.map(s => ({ label: `${s.name} (${s.role}) - ₹${s.salary}`, value: s.id }))}
+                    options={staff.map(s => ({ label: `${s.name} (${s.role}) - ₹${s.salary}`, value: String(s.id) }))}
                   />
                 )}
               />
-              {errors.staffId && <p className="text-red-500 text-xs mt-1">{errors.staffId.message as string}</p>}
+              {errors.staffId && <p className="text-danger text-xs mt-1">{errors.staffId.message as string}</p>}
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-sm font-semibold text-foreground">Month <span className="text-destructive">*</span></label>
+              <label className="text-sm font-semibold text-foreground">Month <span className="text-danger">*</span></label>
               <input 
                 type="text"
                 {...register('month')}
-                className="w-full px-4 py-2 border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary bg-input text-foreground"
+                className="w-full px-4 py-2 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground"
                 placeholder="e.g. Jan 2024"
               />
-              {errors.month && <p className="text-red-500 text-xs mt-1">{errors.month.message as string}</p>}
+              {errors.month && <p className="text-danger text-xs mt-1">{errors.month.message as string}</p>}
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-sm font-semibold text-foreground">Amount (₹) <span className="text-destructive">*</span></label>
+              <label className="text-sm font-semibold text-foreground">Amount (₹) <span className="text-danger">*</span></label>
               <input 
                 type="number"
                 {...register('amount', { valueAsNumber: true })}
                 readOnly
-                className="w-full px-4 py-2 border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary bg-input text-foreground cursor-not-allowed opacity-80"
+                className="w-full px-4 py-2 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground cursor-not-allowed opacity-80"
               />
               <p className="text-xs text-secondary mt-1">Amount is automatically set to the staff's base salary.</p>
-              {errors.amount && <p className="text-red-500 text-xs mt-1">{errors.amount.message as string}</p>}
+              {errors.amount && <p className="text-danger text-xs mt-1">{errors.amount.message as string}</p>}
             </div>
             
             <div className="space-y-1.5">
@@ -95,7 +95,7 @@ export default function PayrollModal() {
               <textarea 
                 {...register('notes')}
                 rows={3}
-                className="w-full px-4 py-2.5 rounded-xl border border-border text-sm focus:ring-2 focus:ring-primary focus:outline-none transition-all resize-none bg-input text-foreground"
+                className="w-full px-4 py-2.5 rounded-xl border border-border text-sm focus-visible:ring-2 focus-visible:ring-primary focus:outline-none transition-all resize-none bg-input text-foreground"
                 placeholder="Optional notes..."
               />
             </div>
@@ -115,8 +115,7 @@ export default function PayrollModal() {
             type="submit" 
             form="payroll-form"
             disabled={saving}
-            className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
-            style={{ backgroundColor: 'var(--hr-highlight)' }}
+            className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:opacity-50 bg-primary"
           >
             {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Check size={16} />}
             {saving ? 'Saving...' : 'Disburse Payroll'}

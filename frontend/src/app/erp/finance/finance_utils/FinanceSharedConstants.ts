@@ -2,16 +2,16 @@
 import { z } from 'zod';
 
 export const FINANCE_METHOD_STYLES: Record<string, { bg: string; text: string }> = {
- UPI: { bg: 'var(--finance-method-upi-bg)', text: 'var(--finance-method-upi-text)' },
- Cash: { bg: 'var(--finance-method-cash-bg)', text: 'var(--finance-method-cash-text)' },
- Card: { bg: 'var(--finance-method-card-bg)', text: 'var(--finance-method-card-text)' },
- NetBanking: { bg: 'var(--finance-method-netbanking-bg)', text: 'var(--finance-method-netbanking-text)' },
+ UPI: { bg: 'bg-primary/10', text: 'text-primary' },
+ Cash: { bg: 'bg-success/10', text: 'text-success' },
+ Card: { bg: 'bg-warning/10', text: 'text-warning' },
+ NetBanking: { bg: 'bg-secondary/10', text: 'text-secondary' },
 };
 
 export const FINANCE_STATUS_STYLES: Record<string, { bg: string; text: string }> = {
- PAID: { bg: 'var(--finance-status-paid-bg)', text: 'var(--finance-status-paid-text)' },
- DUE: { bg: 'var(--finance-status-due-bg)', text: 'var(--finance-status-due-text)' },
- REFUNDED: { bg: 'var(--finance-status-refunded-bg)', text: 'var(--finance-status-refunded-text)' },
+ PAID: { bg: 'bg-success/10', text: 'text-success' },
+ DUE: { bg: 'bg-danger/10', text: 'text-danger' },
+ REFUNDED: { bg: 'bg-warning/10', text: 'text-warning' },
 };
 
 export const FINANCE_PAYMENT_METHODS = ['UPI', 'Cash', 'Card', 'NetBanking'];

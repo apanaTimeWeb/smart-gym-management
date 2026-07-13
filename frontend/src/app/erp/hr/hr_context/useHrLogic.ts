@@ -5,7 +5,7 @@ import { hrApi } from '@/app/erp/hr/hr_api/hr_api';
 import type { Staff, Payroll, HrSummary } from '@/app/erp/hr/hr_types/hr_types';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import { EMPTY_STAFF } from '@/app/erp/hr/hr_utils/HrSharedConstants';
-import { HrContextType, HrInitialData } from '@/app/erp/hr/hr_types/hr_types';
+import { HrContextType, HrInitialData, FetchState } from '@/app/erp/hr/hr_types/hr_types';
 import { useConfirm } from '@/app/erp/erp_components/ErpFeedback/ErpConfirmProvider';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -16,7 +16,7 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
  const [staff, setStaff] = useState<Staff[]>(initialData?.staff || []);
  const [payrolls, setPayrolls] = useState<Payroll[]>(initialData?.payrolls || []);
  const [summary, setSummary] = useState<HrSummary | null>(initialData?.summary || null);
- const [loading, setLoading] = useState(!initialData);
+ const [fetchState, setFetchState] = useState<FetchState>(initialData ? 'success' : 'loading');
  const [error, setError] = useState('');
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
@@ -40,14 +40,14 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
  const [showModal, setShowModal] = useState(false);
  const [showPayrollModal, setShowPayrollModal] = useState(false);
  const [editId, setEditId] = useState<number | null>(null);
- const [editData, setEditData] = useState<any>(null);
+ const [editData, setEditData] = useState<unknown>(null);
   const [saving, setSaving] = useState(false);
 
   const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
   const hideToast = useCallback(() => setToast(null), []);
 
   const loadAll = useCallback(async () => {
-  setLoading(true);
+  setFetchState('loading');
   setError('');
   try {
   const [staffRes, payrollRes, summaryRes] = await Promise.all([
@@ -63,7 +63,7 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
   setError(msg);
   showToast(msg, 'error');
   } finally {
-  setLoading(false);
+  setFetchState('success');
   }
   }, [showToast]);
 
@@ -91,15 +91,16 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
  setShowModal(true);
  }, []);
 
- const saveStaff = useCallback(async (data: Record<string, any>) => {
+ const saveStaff = useCallback(async (data: unknown) => {
  setSaving(true);
  try {
- const payload = { ...data, salary: Number(data.salary), joinDate: new Date(data.joinDate).toISOString(), isActive: true };
+ const d = data as Record<string, any>;
+ const payload = { ...d, salary: Number(d.salary), joinDate: new Date(d.joinDate).toISOString(), isActive: true };
  if (editId) { 
- const res = await hrApi.updateStaff(editId, payload) as unknown as { message?: string }; 
+ const res = await hrApi.updateStaff(editId, payload) as { message?: string }; 
  showToast(res.message || 'Staff updated successfully', 'success'); 
  } else { 
- const res = await hrApi.createStaff(payload) as unknown as { message?: string }; 
+ const res = await hrApi.createStaff(payload) as { message?: string }; 
  showToast(res.message || 'Staff created successfully', 'success'); 
  }
  setShowModal(false);
@@ -115,11 +116,12 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
    setShowPayrollModal(true);
  }, []);
 
-   const savePayroll = useCallback(async (data: Record<string, any>) => {
+   const savePayroll = useCallback(async (data: unknown) => {
      setSaving(true);
      try {
-       const payload = { ...data, amount: Number(data.amount), status: 'DUE' };
-       const res = await hrApi.createPayroll(payload) as unknown as { message?: string };
+       const d = data as Record<string, any>;
+       const payload = { ...d, amount: Number(d.amount), status: 'DUE' };
+       const res = await hrApi.createPayroll(payload) as { message?: string };
        showToast(res.message || 'Payroll recorded successfully', 'success');
       setShowPayrollModal(false);
       await loadAll();
@@ -134,17 +136,17 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
   const isConfirmed = await confirm({ title: 'Remove Staff', message: 'Remove this staff member?', confirmText: 'Remove', type: 'danger' });
   if (!isConfirmed) return;
   try { 
- const res = await hrApi.removeStaff(id) as unknown as { message?: string }; 
+ const res = await hrApi.removeStaff(id) as { message?: string }; 
  showToast(res.message || 'Staff removed successfully', 'success'); 
  await loadAll(); 
  } catch (err) { 
  showToast((err as Error).message, 'error'); 
  }
- }, [loadAll, showToast]);
+ }, [loadAll, showToast, confirm]);
 
  const markPayrollPaid = useCallback(async (id: number) => {
   try { 
- const res = await hrApi.updatePayrollStatus(id, 'Paid') as unknown as { message?: string }; 
+ const res = await hrApi.updatePayrollStatus(id, 'Paid') as { message?: string }; 
  showToast(res.message || 'Payroll marked as paid', 'success'); 
  await loadAll(); 
  } catch (err) { 
@@ -153,7 +155,7 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
  }, [loadAll, showToast]);
 
   return {
-    staff, payrolls, summary, loading, error, toast, showToast, hideToast, loadAll,
+    staff, payrolls, summary, fetchState, error, toast, showToast, hideToast, loadAll,
     search, debouncedSearch, setSearch, currentPage, setCurrentPage,
     showModal, setShowModal, showPayrollModal, setShowPayrollModal, editId, editData, saving, openAdd, openEdit, openAddPayroll, saveStaff, savePayroll, deleteStaff, markPayrollPaid
   };

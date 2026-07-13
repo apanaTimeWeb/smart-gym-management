@@ -10,7 +10,22 @@ const HrContext = createContext<HrContextType | undefined>(undefined);
 export function HrProvider({ children, initialData }: { children: React.ReactNode, initialData?: HrInitialData | null }) {
  const logic = useHrLogic(initialData);
 
- const value = useMemo(() => logic, [logic]);
+ const value = useMemo(() => logic, [
+   logic.staff,
+   logic.payrolls,
+   logic.summary,
+   logic.fetchState,
+   logic.error,
+   logic.toast,
+   logic.search,
+   logic.debouncedSearch,
+   logic.currentPage,
+   logic.showModal,
+   logic.showPayrollModal,
+   logic.editId,
+   logic.editData,
+   logic.saving
+ ]);
 
  return (
  <HrContext.Provider value={value}>

@@ -4,11 +4,10 @@
 import { useHrContext } from '@/app/erp/hr/hr_context/HrContext';
 import { STAFF_TABLE_HEADERS } from '@/app/erp/hr/hr_utils/HrSharedConstants';
 import { Edit2, Trash2, Loader2 } from 'lucide-react';
-const fmt = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
 
 export default function StaffTable() {
-  const { staff, loading, debouncedSearch, currentPage, setCurrentPage, openEdit, deleteStaff } = useHrContext();
+  const { staff, fetchState, debouncedSearch, currentPage, setCurrentPage, openEdit, deleteStaff } = useHrContext();
 
   const filtered = staff.filter(s => 
     s.name.toLowerCase().includes(debouncedSearch.toLowerCase()) || 
@@ -21,7 +20,7 @@ export default function StaffTable() {
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const currentData = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
-  if (loading) {
+  if (fetchState === 'loading') {
     return (
       <div className="flex justify-center py-10">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
@@ -64,7 +63,7 @@ export default function StaffTable() {
                 <td className="px-4 py-3 text-sm text-primary">{s.role}</td>
                 <td className="px-4 py-3 text-sm text-secondary">{s.phone}</td>
                 <td className="px-4 py-3 text-sm text-secondary">{s.branch}</td>
-                <td className="px-4 py-3 text-sm font-medium text-green-600">{fmt(s.salary)}</td>
+                <td className="px-4 py-3 text-sm font-medium text-success">{(s.salary || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
                 <td className="px-4 py-3 text-sm text-secondary">
                   {new Date(s.joinDate).toLocaleDateString('en-IN')}
                 </td>
