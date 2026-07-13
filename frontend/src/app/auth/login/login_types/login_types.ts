@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Contains logic, types, or component definition for this module.
+// RESPONSIBILITY: Defines strict Zod schemas, TypeScript interfaces, and API response shapes specifically for the Login module to enforce type safety.
 import { UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -11,6 +11,20 @@ export type LoginFormData = z.infer<typeof loginSchema>;
 
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 
+export interface AuthUser {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  tenantId?: string;
+}
+
+export interface AuthResponse {
+  accessToken: string;
+  refreshToken: string;
+  user: AuthUser;
+}
+
 export interface UseLoginFormReturn {
   form: UseFormReturn<LoginFormData>;
   status: FetchState;
@@ -18,4 +32,3 @@ export interface UseLoginFormReturn {
   setShowPassword: (val: boolean) => void;
   onSubmit: (data: LoginFormData) => Promise<void>;
 }
-

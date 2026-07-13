@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Renders the login form and orchestrates submission. Receives state from useLoginForm hook.
 'use client';
 
-import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useLoginForm } from '@/app/auth/login/login_components/LoginForm/useLoginForm';
 import { LoginSharedConstants } from '@/app/auth/login/login_constants/LoginSharedConstants';
 
@@ -68,7 +68,7 @@ export default function LoginForm() {
           className="w-full py-3.5 rounded-xl font-bold text-white transition-all hover:opacity-90 hover:-translate-y-0.5 shadow-lg flex justify-center items-center gap-2 disabled:opacity-70 disabled:hover:translate-y-0 bg-primary"
         >
           {status === 'loading' ? (
-            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            <Loader2 className="w-5 h-5 animate-spin mx-auto" />
           ) : (
             'Log In'
           )}

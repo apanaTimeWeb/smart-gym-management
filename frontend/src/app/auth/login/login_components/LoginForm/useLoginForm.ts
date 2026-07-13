@@ -13,6 +13,7 @@ import { UseLoginFormReturn, loginSchema, LoginFormData, FetchState } from '@/ap
 /**
  * Hook to manage login form state, validation, and handle the authentication flow.
  * Uses Zod for schema validation and explicitly tracks API network state.
+ * Implements strict pessimistic UI state updates.
  */
 export function useLoginForm(): UseLoginFormReturn {
   const form = useForm<LoginFormData>({
@@ -34,7 +35,7 @@ export function useLoginForm(): UseLoginFormReturn {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
             token: res.data.accessToken, 
-            refreshToken: (res.data as any).refreshToken, 
+            refreshToken: res.data.refreshToken, 
             user: res.data.user 
           }),
         });
@@ -42,7 +43,7 @@ export function useLoginForm(): UseLoginFormReturn {
         if (!cookieRes.ok) throw new Error('Session setup failed');
         
         setStatus('success');
-        toast.success((res as any).message);
+        toast.success(res.message || 'Login successful');
         
         if (res.data.user?.role === 'SUPERADMIN') {
           window.location.replace(SuperadminUrlConfig.PAGES.DASHBOARD);

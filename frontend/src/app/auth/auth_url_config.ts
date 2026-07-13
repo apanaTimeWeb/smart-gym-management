@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Contains logic, types, or component definition for this module.
+// RESPONSIBILITY: Centralized URL configuration for the Auth module containing all internal routes, external API endpoints, and proxy routes to prevent hardcoded magic strings.
 export const AuthUrlConfig = {
   PAGES: {
     LOGIN: '/auth/login',
