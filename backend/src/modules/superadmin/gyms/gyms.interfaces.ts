@@ -1,5 +1,5 @@
-// TenantStatus is the canonical enum — imported from superadmin.constants.ts (single source of truth)
-export { TenantStatus } from '../superadmin.constants';
+import { TenantStatus } from '../superadmin.constants';
+export { TenantStatus };
 
 export interface ITenant {
   id: string;
@@ -7,10 +7,16 @@ export interface ITenant {
   ownerName: string;
   adminEmail: string;
   phone: string;
-  status: string;
+  status: TenantStatus;
   plan: string;
   createdAt: Date;
   memberCount: number;
   monthlyRevenue: number;
   databaseVersion: string;
+}
+
+export interface TenantResponse {
+  success: boolean;
+  message: string;
+  data: ITenant | ITenant[] | any | null;
 }

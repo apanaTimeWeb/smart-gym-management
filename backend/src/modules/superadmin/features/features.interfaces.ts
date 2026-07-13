@@ -6,3 +6,9 @@ export interface IFeatureFlag {
   isGlobalEnabled: boolean;
   enabledTenantIds: string[];
 }
+
+export interface FeatureResponse {
+  success: boolean;
+  message: string;
+  data: IFeatureFlag | IFeatureFlag[] | any | null;
+}

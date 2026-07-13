@@ -1,13 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { GymsRepository } from '../gyms.repository';
-import { TenantStatus } from '../gyms.interfaces';
+import { TenantStatus, TenantResponse } from '../gyms.interfaces';
+import { GYMS_MESSAGES } from '../gyms.constants';
 
 @Injectable()
 export class StatsGymsService {
   private readonly logger = new Logger(StatsGymsService.name);
   constructor(private readonly repository: GymsRepository) {}
 
-  async execute() {
+  async execute(): Promise<TenantResponse> {
     this.logger.log('Fetching gyms stats');
     const total = await this.repository.count();
     const active = await this.repository.count({ where: { status: TenantStatus.ACTIVE } });
@@ -16,7 +17,8 @@ export class StatsGymsService {
     
     return { 
       success: true, 
-      stats: { total, active, suspended, trial } 
+      message: GYMS_MESSAGES.FETCHED,
+      data: { total, active, suspended, trial } 
     };
   }
 }

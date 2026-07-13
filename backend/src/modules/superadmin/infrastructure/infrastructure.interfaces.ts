@@ -17,8 +17,8 @@ export interface IInfrastructureNode {
   createdAt: Date;
 }
 
-export interface IInfrastructureListResponse {
-  data: IInfrastructureNode[];
-  meta: { total: number; page: number; limit: number };
+export interface InfrastructureResponse {
+  success: boolean;
   message: string;
+  data: IInfrastructureNode | IInfrastructureNode[] | any | null;
 }
