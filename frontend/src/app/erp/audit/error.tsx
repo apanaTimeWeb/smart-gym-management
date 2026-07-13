@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Provides the implementation for error.tsx functionality within its module.
-"use client";
+'use client';
 
 import { AlertTriangle, RefreshCcw } from 'lucide-react';
 

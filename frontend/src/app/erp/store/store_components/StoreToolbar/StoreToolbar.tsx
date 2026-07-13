@@ -1,5 +1,5 @@
 // RESPONSIBILITY: StoreToolbar.tsx handles the logic and UI for its corresponding feature.
-"use client";
+'use client';
 
 import { Plus, ShoppingCart, RefreshCw, Search } from 'lucide-react';
 import { useStoreContext } from '@/app/erp/store/store_context/StoreContext';

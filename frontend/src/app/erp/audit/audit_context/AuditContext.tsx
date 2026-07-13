@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Provides the implementation for AuditContext.tsx functionality within its module.
-"use client";
+'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';
 import { useAuditLogic, AuditContextType } from '@/app/erp/audit/audit_context/useAuditLogic';

@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Entry point for the Inquiries module. Sets up the Context provider and composes all sub-components.
-"use client";
+'use client';
 
 import ErpHeader from '@/app/erp/erp_components/ErpLayout/ErpHeader';
 import ErpToast from '@/app/erp/erp_components/ErpFeedback/ErpToast';

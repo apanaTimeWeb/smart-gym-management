@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Renders the modal for marking new attendance records for members or staff.
-"use client";
+'use client';
 
 import { useEffect } from 'react';
 import { useAttendanceContext } from '@/app/erp/attendance/attendance_context/AttendanceContext';

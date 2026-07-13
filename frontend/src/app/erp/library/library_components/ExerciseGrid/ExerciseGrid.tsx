@@ -1,5 +1,5 @@
 // RESPONSIBILITY: ExerciseGrid.tsx handles the logic and UI for its corresponding feature.
-"use client";
+'use client';
 
 import { Dumbbell, Edit2, Trash2, Loader2, Clock } from 'lucide-react';
 import { useLibraryContext } from '@/app/erp/library/library_context/LibraryContext';

@@ -1,5 +1,5 @@
 // RESPONSIBILITY: HrTabs.tsx handles the logic and UI for its corresponding feature.
-"use client";
+'use client';
 
 import { useState } from 'react';
 import { useHrContext } from '@/app/erp/hr/hr_context/HrContext';

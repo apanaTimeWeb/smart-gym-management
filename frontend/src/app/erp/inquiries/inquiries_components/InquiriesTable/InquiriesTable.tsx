@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Renders the paginated, filterable table of inquiries with row actions, status updates, and bulk selection.
-"use client";
+'use client';
 
 import { useInquiriesContext } from '@/app/erp/inquiries/inquiries_context/InquiriesContext';
 import { FetchState } from '@/app/erp/inquiries/inquiries_types/inquiries_types';

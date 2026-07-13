@@ -1,5 +1,5 @@
 // RESPONSIBILITY: WorkoutBanner.tsx handles the logic and UI for its corresponding feature.
-"use client";
+'use client';
 
 import { Dumbbell } from 'lucide-react';
 import { useWorkoutContext } from '@/app/erp/workout/workout_context/WorkoutContext';

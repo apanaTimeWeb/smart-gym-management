@@ -1,5 +1,5 @@
 // RESPONSIBILITY: WorkoutContext.tsx handles the logic and UI for its corresponding feature.
-"use client";
+'use client';
 
 import React, { createContext, useContext } from 'react';
 import { WorkoutContextType } from '@/app/erp/workout/workout_types/workout_types';

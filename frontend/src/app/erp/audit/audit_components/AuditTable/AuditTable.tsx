@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Renders the table of audit logs and standard pagination controls.
-"use client";
+'use client';
 
 import React from 'react';
 import { useAuditContext } from '@/app/erp/audit/audit_context/AuditContext';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Renders the empty state UI for Sales module lists (pending payments, all memberships). Receives entity label via props. No API calls.
+// RESPONSIBILITY: Renders the empty state UI for Sales module lists. Receives a message and optional subtext via props. No API calls.
 'use client';
 
 import { IndianRupee } from 'lucide-react';

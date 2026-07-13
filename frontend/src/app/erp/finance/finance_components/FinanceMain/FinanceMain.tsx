@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Provides the implementation for FinanceMain.tsx functionality within its module.
-"use client";
+'use client';
 
 import ErpHeader from '@/app/erp/erp_components/ErpLayout/ErpHeader';
 import ErpToast from '@/app/erp/erp_components/ErpFeedback/ErpToast';

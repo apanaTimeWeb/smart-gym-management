@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Renders the modal form for creating or editing an inquiry lead. Uses React Hook Form + Zod validation.
-"use client";
+'use client';
 
 import { useEffect } from 'react';
 import { useInquiriesContext } from '@/app/erp/inquiries/inquiries_context/InquiriesContext';

@@ -1,5 +1,5 @@
 // RESPONSIBILITY: StaffModal.tsx handles the logic and UI for its corresponding feature.
-"use client";
+'use client';
 
 import { useEffect } from 'react';
 import { useHrContext } from '@/app/erp/hr/hr_context/HrContext';

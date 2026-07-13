@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Contains logic, types, or component definition for this module.
-"use client";
+'use client';
 
 import { MessageCircle, Mail } from 'lucide-react';
 import { useMembersContext } from '@/app/erp/members/members_context/MembersContext';

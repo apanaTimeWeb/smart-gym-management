@@ -1,5 +1,5 @@
 // RESPONSIBILITY: AttendanceContext.tsx handles the logic and UI for its corresponding feature.
-"use client";
+'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';
 import { AttendanceContextType } from '@/app/erp/attendance/attendance_types/attendance_types';

@@ -1,5 +1,5 @@
 // RESPONSIBILITY: PayrollTable.tsx handles the logic and UI for its corresponding feature.
-"use client";
+'use client';
 
 import { useHrContext } from '@/app/erp/hr/hr_context/HrContext';
 import { PAYROLL_TABLE_HEADERS } from '@/app/erp/hr/hr_utils/HrSharedConstants';

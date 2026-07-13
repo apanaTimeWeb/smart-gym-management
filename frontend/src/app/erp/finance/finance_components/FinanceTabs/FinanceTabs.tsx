@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Provides the implementation for FinanceTabs.tsx functionality within its module.
-"use client";
+'use client';
 
 import { useState } from 'react';
 import { useFinanceContext } from '@/app/erp/finance/finance_context/FinanceContext';

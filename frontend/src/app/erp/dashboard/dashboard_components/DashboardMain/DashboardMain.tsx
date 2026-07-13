@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Main entry point for the dashboard module. Renders layout, handles high-level loading/error states, and sets up Context.
-"use client";
+'use client';
 
 import ErpHeader from '@/app/erp/erp_components/ErpLayout/ErpHeader';
 import { DashboardProvider, useDashboardContext } from '@/app/erp/dashboard/dashboard_context/DashboardContext';

@@ -1,5 +1,5 @@
 // RESPONSIBILITY: LibraryTabs.tsx handles the logic and UI for its corresponding feature.
-"use client";
+'use client';
 
 import { RefreshCw, Plus, Search } from 'lucide-react';
 import { useLibraryContext } from '@/app/erp/library/library_context/LibraryContext';

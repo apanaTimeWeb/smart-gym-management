@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Provides the implementation for SalesMain.tsx functionality within its module.
-"use client";
+'use client';
 
 import ErpHeader from '@/app/erp/erp_components/ErpLayout/ErpHeader';
 import { SalesProvider, useSalesContext } from '@/app/erp/sales/sales_context/SalesContext';

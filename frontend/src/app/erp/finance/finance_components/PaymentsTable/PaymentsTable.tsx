@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Provides the implementation for PaymentsTable.tsx functionality within its module.
-"use client";
+'use client';
 
 import { useFinanceContext } from '@/app/erp/finance/finance_context/FinanceContext';
 import { PAYMENTS_TABLE_HEADERS, FINANCE_METHOD_STYLES, FINANCE_STATUS_STYLES } from '@/app/erp/finance/finance_utils/FinanceSharedConstants';

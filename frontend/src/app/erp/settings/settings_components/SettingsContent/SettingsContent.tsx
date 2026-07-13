@@ -1,5 +1,5 @@
 // RESPONSIBILITY: SettingsContent.tsx handles the logic and UI for its corresponding feature.
-"use client";
+'use client';
 
 import { RefreshCw, Save, Settings } from 'lucide-react';
 import { useSettingsContext } from '@/app/erp/settings/settings_context/SettingsContext';

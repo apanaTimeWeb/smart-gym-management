@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Provides the implementation for FinanceContext.tsx functionality within its module.
-"use client";
+'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';
 import { FinanceContextType, FinanceInitialData } from '@/app/erp/finance/finance_types/finance_types';

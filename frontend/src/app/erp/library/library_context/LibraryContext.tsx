@@ -1,5 +1,5 @@
 // RESPONSIBILITY: LibraryContext.tsx handles the logic and UI for its corresponding feature.
-"use client";
+'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';
 import { LibraryContextType, LibraryInitialData } from '@/app/erp/library/library_types/library_types';

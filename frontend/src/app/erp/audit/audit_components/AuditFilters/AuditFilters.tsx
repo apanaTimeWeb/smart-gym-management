@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Renders the search/filter inputs for Audit logs and syncs them via useAuditFilters.
-"use client";
+'use client';
 
 import React from 'react';
 import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';

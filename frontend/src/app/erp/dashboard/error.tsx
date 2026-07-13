@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Renders the error boundary fallback for the dashboard module.
-"use client";
+'use client';
 
 import { useEffect } from "react";
 

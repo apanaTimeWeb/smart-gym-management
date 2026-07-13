@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Entry component for the Attendance module that wraps the UI in the context provider and handles the core page layout.
-"use client";
+'use client';
 
 import ErpHeader from '@/app/erp/erp_components/ErpLayout/ErpHeader';
 import ErpToast from '@/app/erp/erp_components/ErpFeedback/ErpToast';

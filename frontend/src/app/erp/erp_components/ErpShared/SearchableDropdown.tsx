@@ -1,5 +1,5 @@
 // RESPONSIBILITY: SearchableDropdown.tsx handles the logic and UI for its corresponding feature.
-"use client";
+'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, ChevronDown, Check } from 'lucide-react';

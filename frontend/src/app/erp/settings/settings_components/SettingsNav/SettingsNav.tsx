@@ -1,5 +1,5 @@
 // RESPONSIBILITY: SettingsNav.tsx handles the logic and UI for its corresponding feature.
-"use client";
+'use client';
 
 import { useSettingsContext } from '@/app/erp/settings/settings_context/SettingsContext';
 import { SETTINGS_TABS } from '@/app/erp/settings/settings_utils/SettingsSharedConstants';

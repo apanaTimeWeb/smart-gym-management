@@ -1,5 +1,5 @@
 // RESPONSIBILITY: SettingsMain.tsx handles the logic and UI for its corresponding feature.
-"use client";
+'use client';
 
 import ErpHeader from '@/app/erp/erp_components/ErpLayout/ErpHeader';
 import { SettingsProvider } from '@/app/erp/settings/settings_context/SettingsContext';

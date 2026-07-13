@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Renders the payment history and transaction records for a specific member profile.
-"use client";
+'use client';
 
 import { Printer } from 'lucide-react';
 import { useMembersContext } from '@/app/erp/members/members_context/MembersContext';

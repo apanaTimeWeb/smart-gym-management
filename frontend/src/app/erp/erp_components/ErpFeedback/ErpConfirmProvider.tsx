@@ -1,5 +1,5 @@
-// RESPONSIBILITY: ErpConfirmProvider.tsx handles the logic and UI for its corresponding feature.
-"use client";
+// RESPONSIBILITY: Provides a programmatic confirm() API to all ERP components via React Context. Renders a single shared ErpConfirmModal at the root level. No async data — sync UI state only.
+'use client';
 
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 import ErpConfirmModal from '@/app/erp/erp_components/ErpFeedback/ErpConfirmModal';

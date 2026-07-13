@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Provides the implementation for AddPaymentModal.tsx functionality within its module.
-"use client";
+'use client';
 
 import { useState, useEffect } from 'react';
 import { useFinanceContext } from '@/app/erp/finance/finance_context/FinanceContext';

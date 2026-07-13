@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Entry point component for the members module that sets up context providers and layout.
-"use client";
+'use client';
 
 import ErpHeader from '@/app/erp/erp_components/ErpLayout/ErpHeader';
 import ErpToast from '@/app/erp/erp_components/ErpFeedback/ErpToast';

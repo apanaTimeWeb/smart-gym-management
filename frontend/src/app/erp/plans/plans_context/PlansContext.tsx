@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Provides plans state and actions to the entire plans module hierarchy via React Context.
 // DATA FLOW: usePlansLogic -> PlansContext -> PlansGrid, PlansToolbar, PlanModal
-"use client";
+'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';
 import { PlansContextType, PlansInitialData } from '@/app/erp/plans/plans_types/plans_types';

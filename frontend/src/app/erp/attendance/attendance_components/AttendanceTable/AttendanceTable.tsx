@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Renders the attendance data table and pagination controls.
-"use client";
+'use client';
 
 import { Clock } from 'lucide-react';
 import { useAttendanceContext } from '@/app/erp/attendance/attendance_context/AttendanceContext';

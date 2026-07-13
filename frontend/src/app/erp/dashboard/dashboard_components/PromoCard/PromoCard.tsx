@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Renders a promotional or informational card for the gym on the dashboard.
-"use client";
+'use client';
 
 import { GYM_DETAILS } from '@/app/erp/erp_utils/ErpSharedConstants';
 

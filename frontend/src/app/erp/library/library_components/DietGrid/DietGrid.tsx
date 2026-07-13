@@ -1,5 +1,5 @@
 // RESPONSIBILITY: DietGrid.tsx handles the logic and UI for its corresponding feature.
-"use client";
+'use client';
 
 import { useLibraryContext } from '@/app/erp/library/library_context/LibraryContext';
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';

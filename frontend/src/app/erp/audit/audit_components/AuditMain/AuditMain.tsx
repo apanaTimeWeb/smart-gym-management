@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Entry component for the Audit module. Renders the layout, filters, and table for tracking system activities.
-"use client";
+'use client';
 
 import React from 'react';
 import ErpHeader from '@/app/erp/erp_components/ErpLayout/ErpHeader';

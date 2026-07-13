@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Renders a detailed view of a selected member's profile.
-"use client";
+'use client';
 
 import { Edit, MessageCircle, Mail } from 'lucide-react';
 import ErpHeader from '@/app/erp/erp_components/ErpLayout/ErpHeader';

@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Renders the search/filter toolbar and bulk-action bar for the Inquiries module.
-"use client";
+'use client';
 
 import { useInquiriesContext } from '@/app/erp/inquiries/inquiries_context/InquiriesContext';
 import { INQUIRIES_STATUS_LABELS } from '@/app/erp/inquiries/inquiries_utils/InquiriesSharedConstants';

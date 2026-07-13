@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Provides dashboard stats and fetch state to the entire dashboard module hierarchy via React Context.
-"use client";
+'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';
 import { DashboardContextType, DashboardStats } from '@/app/erp/dashboard/dashboard_types/dashboard_types';

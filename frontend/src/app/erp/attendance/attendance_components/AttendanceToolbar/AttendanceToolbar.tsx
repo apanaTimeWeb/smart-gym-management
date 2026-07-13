@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Provides the search, filter tabs, and action buttons for the Attendance module.
-"use client";
+'use client';
 
 import { RefreshCw, Plus, Search } from 'lucide-react';
 import { useAttendanceContext } from '@/app/erp/attendance/attendance_context/AttendanceContext';

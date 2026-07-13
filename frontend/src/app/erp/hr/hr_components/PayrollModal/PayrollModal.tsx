@@ -1,5 +1,5 @@
 // RESPONSIBILITY: PayrollModal.tsx handles the logic and UI for its corresponding feature.
-"use client";
+'use client';
 
 import React, { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';

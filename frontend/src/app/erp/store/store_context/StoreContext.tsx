@@ -1,5 +1,5 @@
 // RESPONSIBILITY: StoreContext.tsx handles the logic and UI for its corresponding feature.
-"use client";
+'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';
 import { StoreContextType } from '@/app/erp/store/store_types/store_types';

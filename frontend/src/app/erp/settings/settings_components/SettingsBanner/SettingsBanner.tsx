@@ -1,5 +1,5 @@
 // RESPONSIBILITY: SettingsBanner.tsx handles the logic and UI for its corresponding feature.
-"use client";
+'use client';
 import Link from 'next/link';
 
 import { GYM_DETAILS } from '@/app/erp/erp_utils/ErpSharedConstants';

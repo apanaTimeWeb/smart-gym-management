@@ -1,5 +1,5 @@
 // RESPONSIBILITY: HrContext.tsx handles the logic and UI for its corresponding feature.
-"use client";
+'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';
 import { HrContextType, HrInitialData } from '@/app/erp/hr/hr_types/hr_types';

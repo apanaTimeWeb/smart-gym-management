@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Renders the search input and "Create Plan" CTA button for the Plans module toolbar.
-"use client";
+'use client';
 
 import { RefreshCw, Plus, Search } from 'lucide-react';
 import { usePlansContext } from '@/app/erp/plans/plans_context/PlansContext';

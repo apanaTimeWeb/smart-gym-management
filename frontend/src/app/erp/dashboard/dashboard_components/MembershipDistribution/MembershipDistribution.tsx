@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Renders the distribution of members by plan on the dashboard.
-"use client";
+'use client';
 
 import { useDashboardContext } from '@/app/erp/dashboard/dashboard_context/DashboardContext';
 import { DASHBOARD_PLAN_BG_COLORS } from '@/app/erp/dashboard/dashboard_utils/DashboardSharedConstants';

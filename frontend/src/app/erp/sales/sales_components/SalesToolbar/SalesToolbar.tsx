@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Provides the implementation for SalesToolbar.tsx functionality within its module.
-"use client";
+'use client';
 
 import { Download, Filter, Search } from 'lucide-react';
 import { useSalesContext } from '@/app/erp/sales/sales_context/SalesContext';

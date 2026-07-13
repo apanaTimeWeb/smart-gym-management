@@ -1,5 +1,5 @@
 // RESPONSIBILITY: AttendanceKPIs.tsx handles the logic and UI for its corresponding feature.
-"use client";
+'use client';
 
 import { CalendarCheck, Users, UserCog } from 'lucide-react';
 import { useAttendanceContext } from '@/app/erp/attendance/attendance_context/AttendanceContext';

@@ -1,5 +1,5 @@
 // RESPONSIBILITY: ErpConfirmModal.tsx handles the logic and UI for its corresponding feature.
-"use client";
+'use client';
 
 import { AlertTriangle, X } from 'lucide-react';
 

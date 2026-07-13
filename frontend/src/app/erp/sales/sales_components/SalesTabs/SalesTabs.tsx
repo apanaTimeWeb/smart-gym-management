@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Provides the implementation for SalesTabs.tsx functionality within its module.
-"use client";
+'use client';
 
 import { useSalesContext } from '@/app/erp/sales/sales_context/SalesContext';
 import { SALES_TABS } from '@/app/erp/sales/sales_utils/SalesSharedConstants';

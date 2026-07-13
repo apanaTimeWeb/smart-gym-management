@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Provides the implementation for FinanceKPIs.tsx functionality within its module.
-"use client";
+'use client';
 
 import { useFinanceContext } from '@/app/erp/finance/finance_context/FinanceContext';
 import { FileText, TrendingUp, DollarSign } from 'lucide-react';

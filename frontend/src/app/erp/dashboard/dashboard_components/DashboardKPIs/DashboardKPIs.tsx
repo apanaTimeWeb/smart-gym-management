@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Renders the two rows of KPI metric stat cards on the dashboard using live data from DashboardContext.
-"use client";
+'use client';
 
 import { useDashboardContext } from '@/app/erp/dashboard/dashboard_context/DashboardContext';
 import ErpStatCard from '@/app/erp/erp_components/ErpShared/ErpStatCard';

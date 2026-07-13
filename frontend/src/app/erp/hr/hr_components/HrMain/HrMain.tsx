@@ -1,5 +1,5 @@
 // RESPONSIBILITY: HrMain.tsx handles the logic and UI for its corresponding feature.
-"use client";
+'use client';
 
 import ErpHeader from '@/app/erp/erp_components/ErpLayout/ErpHeader';
 import ErpToast from '@/app/erp/erp_components/ErpFeedback/ErpToast';

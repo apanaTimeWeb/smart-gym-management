@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Renders the recent members table on the dashboard with a local search filter.
-"use client";
+'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
