@@ -194,9 +194,9 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **The Rule:** An enterprise API must never be released without a versioning strategy. Always prefix routes with a version (e.g., `/api/v1/users`). In frameworks like NestJS, enable URI versioning globally.
 * **Why:** If the business scales and requires mobile apps or external integrations, releasing a breaking `v2` API should not crash the legacy mobile apps that still rely on `v1`.
 
-## 27. API Testing Strategy (Pytest)
-* **The Rule:** All API (End-to-End) or unit testing must be written in Python using `pytest`, rather than relying on built-in Node.js/NestJS testing frameworks (like Jest/Supertest) for API validation.
-* **Why:** Decoupling API tests from the application codebase allows QA engineers, SDETs, and automation pipelines to test the API completely agnostically, simulating true black-box client behavior.
+## 27. API Testing Strategy (Strictly Pytest)
+* **The Rule:** ALL API testing (End-to-End / Black-box) MUST be written in Python using `pytest`. Even if the backend is written in Node.js/NestJS, you must NOT use Supertest or Jest for API testing. (Jest is strictly reserved for internal unit tests only).
+* **Why:** Decoupling API tests from the application codebase allows QA engineers, SDETs, and automation pipelines to test the API completely agnostically, simulating true black-box client behavior without being tied to the Node.js runtime.
 
 ## Summary Checklist for Developers Providing Context to AI:
 1. Identify the exact layer where the bug/feature resides (Validation? DB Query? Business Logic?).
@@ -413,6 +413,39 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 
 ## 57. Request Context Propagation (AsyncLocalStorage)
 * **The Rule:** Use Node's `AsyncLocalStorage` to store context (tenant_id, user_id, trace_id) at the request boundary. Deep services/repositories must pull from this context rather than prop-drilling parameters through 5 layers of functions.
+
+## 58. Standardized Database Entity Base Class
+* **The Rule:** All database entities MUST extend a common `BaseEntity` class that explicitly defines `id` (UUID), `createdAt` (timestamp with timezone), `updatedAt` (timestamp with timezone), and `deletedAt` (nullable timestamp for soft deletes). AI must never manually define these fields per entity.
+
+## 59. API Response Time SLA Categories
+* **The Rule:** Every endpoint must declare its SLA category in a comment (`// SLA: FAST`). FAST (< 200ms), STANDARD (< 500ms), HEAVY (> 500ms). Heavy tasks must be moved to background jobs (Rule 23). Enforce via monitoring middleware.
+
+## 60. Strict Foreign Key Naming Convention
+* **The Rule:** Database columns must use `snake_case` (e.g., `member_id`). TypeScript entity properties must use `camelCase` (e.g., `memberId`). Explicitly map them using `@Column({ name: 'member_id' })`. Foreign key constraints must follow `FK_[table]_[referenced_table]`.
+
+## 61. Dead Letter Queue (DLQ) for Failed Background Jobs
+* **The Rule:** Every background job queue (BullMQ/Celery) MUST have a configured Dead Letter Queue. If a job fails all retries, it must be moved to the DLQ (not discarded) so admins can manually inspect and retry it.
+
+## 62. Explicit Return Types on ALL Service Methods
+* **The Rule:** Relying on TypeScript implicit `any` or inferred returns is forbidden for async operations. Every service method and repository method MUST have an explicitly declared return type (e.g., `Promise<MemberEntity>`).
+
+## 63. Database Connection Pool Configuration
+* **The Rule:** Default ORM connection pools are forbidden. The `database.config.ts` must explicitly define `max` connections (e.g., 20), `acquireTimeout` (30000ms), and `idleTimeoutMillis` (10000ms) to prevent hanging requests and DB exhaustion in production.
+
+## 64. Structured Machine-Readable Error Codes
+* **The Rule:** Error responses must include a machine-readable `errorCode` string following `DOMAIN.ENTITY.REASON` (e.g., `BILLING.SUBSCRIPTION.EXPIRED`). The frontend relies on this code to trigger specific UI logic (e.g., redirecting to a payment page).
+
+## 65. File Upload Security & Validation
+* **The Rule:** All file uploads must undergo MIME type validation (not just extension checking) and enforce strict size limits. Files must never be saved directly to the server disk; upload to cloud storage (e.g., S3). Original filenames must be discarded and replaced with a UUID.
+
+## 66. Strict Database Table Naming Convention
+* **The Rule:** All table names must be `plural_snake_case` (e.g., `payment_transactions`). Junction tables must combine the two table names alphabetically (e.g., `member_plans`). Never use legacy prefixes like `tbl_`. Enforce explicitly via `@Entity('table_name')`.
+
+## 67. API Contract Freeze Before Frontend Development
+* **The Rule:** The backend developer/AI must first write the DTOs and Swagger spec. This contract must be "frozen" and approved by the frontend layer before any backend implementation code is written. This prevents data shape mismatches.
+
+## 68. Health Check Depth Levels
+* **The Rule:** Implement 3 levels of health checks: `/health/live` (Process alive? 200 OK), `/health/ready` (DB/Redis reachable? Traffic ready), and `/health/deep` (Full dependency chain check, not exposed publicly).
 
 ---
 
