@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import { ShieldAlert, Search } from 'lucide-react';
 import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';

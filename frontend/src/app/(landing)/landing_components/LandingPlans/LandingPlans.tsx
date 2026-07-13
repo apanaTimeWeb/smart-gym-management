@@ -1,3 +1,4 @@
+import Link from 'next/link';
 "use client";
 
 import { CheckCircle } from 'lucide-react';
@@ -45,7 +46,7 @@ export default function LandingPlans() {
  </div>
  ))}
  </div>
- <a 
+ <Link 
  href={LandingUrlConfig.ANCHORS.BOOKING} 
  className="block text-center py-3 rounded-xl text-sm font-bold transition-all hover:scale-105"
  style={p.badge 
@@ -54,7 +55,7 @@ export default function LandingPlans() {
  }
  >
  Buy Membership
- </a>
+ </Link>
  </div>
  ))}
  </div>

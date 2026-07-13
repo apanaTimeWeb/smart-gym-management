@@ -1,5 +1,3 @@
-'use client';
-
 import { Users, Building2, CreditCard, Activity } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';

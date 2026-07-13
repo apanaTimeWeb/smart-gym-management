@@ -1,3 +1,4 @@
+import Link from 'next/link';
 "use client";
 
 import { GYM_DETAILS } from '@/app/erp/erp_utils/ErpSharedConstants';
@@ -12,12 +13,12 @@ export default function SettingsBanner() {
         <p className="text-white/80 text-xs font-medium uppercase tracking-wider mb-1">Call or WhatsApp for FREE Demo</p>
         <p className="text-2xl font-black tracking-tight mb-4">{GYM_DETAILS.phone}</p>
         <div className="flex flex-col sm:flex-row gap-3">
-          <a href={`https://wa.me/${GYM_DETAILS.phone.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="flex-1 bg-card text-primary font-bold py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition-colors shadow-sm">
+          <Link href={`https://wa.me/${GYM_DETAILS.phone.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="flex-1 bg-card text-primary font-bold py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition-colors shadow-sm">
             WhatsApp Demo
-          </a>
-          <a href={`tel:${GYM_DETAILS.phone.replace(/[^0-9+]/g, '')}`} className="flex-1 border border-white/30 text-white font-bold py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 hover:bg-white/10 transition-colors">
+          </Link>
+          <Link href={`tel:${GYM_DETAILS.phone.replace(/[^0-9+]/g, '')}`} className="flex-1 border border-white/30 text-white font-bold py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 hover:bg-white/10 transition-colors">
             Call Now
-          </a>
+          </Link>
         </div>
       </div>
     </div>

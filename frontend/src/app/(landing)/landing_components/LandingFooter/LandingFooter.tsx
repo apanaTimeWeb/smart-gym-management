@@ -22,9 +22,9 @@ export default function LandingFooter() {
  </p>
  <div className="flex gap-4">
  {[FbIcon, InstaIcon, XIcon, YtIcon].map((Icon, i) => (
- <a key={i} href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-secondary hover:bg-warning hover:text-white transition-all">
+ <Link key={i} href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-secondary hover:bg-warning hover:text-white transition-all">
  <Icon />
- </a>
+ </Link>
  ))}
  </div>
  </div>
@@ -32,7 +32,7 @@ export default function LandingFooter() {
  <h4 className="font-bold text-white mb-6 uppercase tracking-wider text-sm">Quick Links</h4>
  <ul className="space-y-3">
  {['About Us', 'Membership Plans', 'Trainers', 'Classes Schedule', 'Gallery', 'Contact Us'].map(l => (
- <li key={l}><a href={`#${l.split(' ')[0].toLowerCase()}`} className="text-secondary hover:text-warning text-sm transition-colors">{l}</a></li>
+ <li key={l}><Link href={`#${l.split(' ')[0].toLowerCase()}`} className="text-secondary hover:text-warning text-sm transition-colors">{l}</Link></li>
  ))}
  </ul>
  </div>
@@ -40,7 +40,7 @@ export default function LandingFooter() {
  <h4 className="font-bold text-white mb-6 uppercase tracking-wider text-sm">Programs</h4>
  <ul className="space-y-3">
  {['Bodybuilding', 'Weight Loss', 'CrossFit', 'Yoga Classes', 'Zumba Dance', 'Personal Training'].map(l => (
- <li key={l}><a href={LandingUrlConfig.ANCHORS.SERVICES} className="text-secondary hover:text-warning text-sm transition-colors">{l}</a></li>
+ <li key={l}><Link href={LandingUrlConfig.ANCHORS.SERVICES} className="text-secondary hover:text-warning text-sm transition-colors">{l}</Link></li>
  ))}
  </ul>
  </div>
@@ -56,8 +56,8 @@ export default function LandingFooter() {
  <div className="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
  <p>© {new Date().getFullYear()} GymSmart. All rights reserved.</p>
  <div className="flex gap-6">
- <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
- <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+ <Link href="#" className="hover:text-white transition-colors">Privacy Policy</Link>
+ <Link href="#" className="hover:text-white transition-colors">Terms of Service</Link>
  <Link href={LandingUrlConfig.PAGES.ERP_LOGIN} className="hover:text-white transition-colors flex items-center gap-1">
  <span className="w-2 h-2 rounded-full bg-warning"></span> ERP Portal
  </Link>

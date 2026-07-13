@@ -24,7 +24,7 @@ export default function LandingNavbar() {
 
         <div className="hidden md:flex items-center gap-6 text-sm font-medium text-secondary">
           {['About', 'Plans', 'Trainers', 'Services', 'Schedule', 'Booking', 'Gallery'].map(item => (
-            <a key={item} href={`#${item.toLowerCase()}`} className="hover:text-warning transition-colors">{item}</a>
+            <Link key={item} href={`#${item.toLowerCase()}`} className="hover:text-warning transition-colors">{item}</Link>
           ))}
         </div>
 
@@ -36,9 +36,9 @@ export default function LandingNavbar() {
           <Link href={LandingUrlConfig.PAGES.ERP_LOGIN} className="text-sm font-medium text-secondary hover:text-white transition-colors px-3 py-1.5">
             ERP Login
           </Link>
-          <a href={LandingUrlConfig.ANCHORS.BOOKING} className="text-sm font-bold px-5 py-2.5 rounded-xl text-white transition-all hover:scale-105" style={{ background: 'var(--landing-highlight-gradient)' }}>
+          <Link href={LandingUrlConfig.ANCHORS.BOOKING} className="text-sm font-bold px-5 py-2.5 rounded-xl text-white transition-all hover:scale-105" style={{ background: 'var(--landing-highlight-gradient)' }}>
             Join Now
-          </a>
+          </Link>
         </div>
 
  <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden p-2 text-secondary">
@@ -49,7 +49,7 @@ export default function LandingNavbar() {
  {menuOpen && (
  <div className="md:hidden bg-black/98 border-t border-white/10 px-4 py-4 space-y-3 h-screen overflow-y-auto">
  {['About', 'Plans', 'Trainers', 'Services', 'Schedule', 'Booking', 'Gallery', 'Contact'].map(item => (
- <a key={item} href={`#${item.toLowerCase()}`} onClick={() => setMenuOpen(false)} className="block text-secondary hover:text-warning py-2 text-sm font-medium">{item}</a>
+ <Link key={item} href={`#${item.toLowerCase()}`} onClick={() => setMenuOpen(false)} className="block text-secondary hover:text-warning py-2 text-sm font-medium">{item}</Link>
  ))}
   <div className="flex gap-3 pt-2 flex-col">
   <Link href={LandingUrlConfig.PAGES.SAAS_LOGIN} className="w-full text-center border border-warning text-warning py-2.5 rounded-xl text-sm font-medium">Superadmin Login</Link>

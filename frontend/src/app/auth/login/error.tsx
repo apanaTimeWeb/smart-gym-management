@@ -4,7 +4,7 @@
 import { useEffect } from 'react';
 
 export default function Error({ error, reset }: { error: Error & { digest?: string }, reset: () => void }) {
- useEffect(() => { // console.error(error); }, [error]);
+ useEffect(() => { /* console.error(error); */ }, [error]);
 
  return (
  <div className="min-h-screen flex flex-col bg-[#0F0F1A] items-center justify-center p-4">
