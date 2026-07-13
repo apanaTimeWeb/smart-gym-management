@@ -1,5 +1,5 @@
-// RESPONSIBILITY: BackupsClient.tsx handles the logic and UI for its corresponding feature.
 'use client';
+// RESPONSIBILITY: BackupsClient.tsx renders the Database Backups page. Purely a view layer — data fetched via useSuperadminData.
 
 import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';

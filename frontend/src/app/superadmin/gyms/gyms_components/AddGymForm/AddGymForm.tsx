@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders the form UI for onboarding a new gym tenant. Receives logic from useAddGymForm hook.
 'use client';
+// RESPONSIBILITY: Renders the form UI for onboarding a new gym tenant. Receives logic from useAddGymForm hook.
 
 import Link from 'next/link';
 import { Controller } from 'react-hook-form';

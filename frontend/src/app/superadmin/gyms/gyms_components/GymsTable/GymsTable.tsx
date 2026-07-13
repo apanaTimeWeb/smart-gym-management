@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders the table view of Gym tenants. Purely a view component that consumes useGymsTable hook.
 'use client';
+// RESPONSIBILITY: Renders the table view of Gym tenants. Purely a view component that consumes useGymsTable hook.
 
 import React from 'react';
 import { CheckCircle2, Ban, LogIn, PlayCircle, Edit2, Mail, Trash2, Loader2 } from 'lucide-react';

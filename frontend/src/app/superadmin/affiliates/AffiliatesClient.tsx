@@ -1,12 +1,11 @@
-// RESPONSIBILITY: AffiliatesClient.tsx handles the logic and UI for its corresponding feature.
 'use client';
+// RESPONSIBILITY: Renders the Affiliates page. Purely a view layer — all logic lives in useAffiliatesPage hook.
 
 import React from 'react';
 import { Users, Plus, Search, IndianRupee, Pencil, Trash2, Power, Check } from 'lucide-react';
 import { AffiliateStatus } from '@/app/superadmin/superadmin_types/superadmin_types';
 import { useAffiliatesPage } from '@/app/superadmin/superadmin_utils/hooks/useAffiliatesPage';
 import { SuperadminAffiliateModal } from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliateModal';
-import { toast } from 'react-hot-toast';
 
 const getStatusBadge = (status: AffiliateStatus) => {
   switch (status) {
@@ -41,7 +40,13 @@ export default function AffiliatesClient() {
     error,
   } = useAffiliatesPage();
 
-  if (fetchState === 'loading') return <div className="p-8 text-center text-disabled animate-pulse">Loading...</div>;
+  if (fetchState === 'loading') return (
+    <div className="space-y-6 animate-pulse">
+      <div className="h-8 bg-card rounded w-48" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">{[...Array(2)].map((_, i) => <div key={i} className="h-24 bg-card rounded-xl border border-border" />)}</div>
+      <div className="h-96 bg-card rounded-xl border border-border" />
+    </div>
+  );
   if (fetchState === 'error' || error) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
 
   return (

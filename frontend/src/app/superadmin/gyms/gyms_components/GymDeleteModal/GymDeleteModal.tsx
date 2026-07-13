@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders the confirmation modal for deleting a gym. Requires the user to type "DELETE".
 'use client';
+// RESPONSIBILITY: Renders the confirmation modal for deleting a gym. Requires the user to type "DELETE".
 
 import React from 'react';
 import { AlertTriangle, X } from 'lucide-react';

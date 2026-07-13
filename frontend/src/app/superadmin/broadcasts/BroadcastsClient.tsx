@@ -1,12 +1,11 @@
-// RESPONSIBILITY: BroadcastsClient.tsx handles the logic and UI for its corresponding feature.
 'use client';
+// RESPONSIBILITY: Renders the Broadcasts page. Purely a view layer — all logic lives in useBroadcastsPage hook.
 
 import React from 'react';
 import { Megaphone, Plus, Search, Edit2, Trash2, Send } from 'lucide-react';
 import { BroadcastStatus } from '@/app/superadmin/superadmin_types/superadmin_types';
 import { useBroadcastsPage } from '@/app/superadmin/superadmin_utils/hooks/useBroadcastsPage';
 import { SuperadminBroadcastModal } from '@/app/superadmin/broadcasts/broadcasts_components/SuperadminBroadcastModal';
-import { toast } from 'react-hot-toast';
 
 const getStatusBadge = (status: BroadcastStatus) => {
   switch (status) {
@@ -38,11 +37,16 @@ export default function BroadcastsClient() {
     error,
   } = useBroadcastsPage();
 
-  if (fetchState === 'loading') return <div className="p-8 text-center text-disabled animate-pulse">Loading...</div>;
+  if (fetchState === 'loading') return (
+    <div className="space-y-6 animate-pulse">
+      <div className="h-8 bg-card rounded w-48" />
+      <div className="h-96 bg-card rounded-xl border border-border" />
+    </div>
+  );
   if (fetchState === 'error' || error) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
 
-  const handleRowClick = (title: string) => {
-    toast(`Clicked on broadcast: ${title}`);
+  const handleRowClick = (_title: string) => {
+    // Row click reserved for future detail view navigation
   };
 
   return (

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: CouponsClient.tsx handles the logic and UI for its corresponding feature.
 'use client';
+// RESPONSIBILITY: Renders the Coupons page. Purely a view layer — all logic lives in useCouponsPage hook.
 
 import React from 'react';
 import { Tag, Plus, Search, Edit2, Trash2, RefreshCw, ToggleLeft, ToggleRight } from 'lucide-react';
@@ -7,7 +7,6 @@ import { CouponStatus } from '@/app/superadmin/superadmin_types/superadmin_types
 import { useCouponsPage } from '@/app/superadmin/superadmin_utils/hooks/useCouponsPage';
 import { SuperadminCouponModal } from '@/app/superadmin/coupons/coupons_components/SuperadminCouponModal';
 import { SuperadminCouponEditModal } from '@/app/superadmin/coupons/coupons_components/SuperadminCouponEditModal';
-import { toast } from 'react-hot-toast';
 
 const getStatusBadge = (status: CouponStatus) => {
   switch (status) {
@@ -47,7 +46,13 @@ export default function CouponsClient() {
     handleToggleStatus
   } = useCouponsPage();
 
-  if (fetchState === 'loading') return <div className="p-8 text-center text-disabled animate-pulse">Loading...</div>;
+  if (fetchState === 'loading') return (
+    <div className="space-y-6 animate-pulse">
+      <div className="h-8 bg-card rounded w-48" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">{[...Array(2)].map((_, i) => <div key={i} className="h-24 bg-card rounded-xl border border-border" />)}</div>
+      <div className="h-96 bg-card rounded-xl border border-border" />
+    </div>
+  );
   if (fetchState === 'error' || error) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
 
   const handleRowClick = (code: string) => {

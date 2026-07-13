@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders the modal UI for editing Gym details. Purely a view component.
 'use client';
+// RESPONSIBILITY: Renders the modal UI for editing Gym details. Purely a view component.
 
 import React from 'react';
 import { Controller } from 'react-hook-form';

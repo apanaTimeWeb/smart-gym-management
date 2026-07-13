@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders the search toolbar for the Gyms table.
 'use client';
+// RESPONSIBILITY: Renders the search toolbar for the Gyms table.
 
 import React from 'react';
 import { Search } from 'lucide-react';
