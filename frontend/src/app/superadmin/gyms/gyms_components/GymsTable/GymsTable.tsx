@@ -1,33 +1,27 @@
-// RESPONSIBILITY: GymsTable.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Renders the table view of Gym tenants. Purely a view component that consumes useGymsTable hook.
 'use client';
 
 import React from 'react';
 import { CheckCircle2, Ban, LogIn, PlayCircle, Edit2, Mail, Trash2 } from 'lucide-react';
-import { useGymsContext } from '@/app/superadmin/gyms/gyms_context/GymsContext';
-import GymEditModal from '@/app/superadmin/gyms/gyms_components/GymEditModal';
-import GymEmailModal from '@/app/superadmin/gyms/gyms_components/GymEmailModal';
-import toast from 'react-hot-toast';
+import { useGymsTable } from './useGymsTable';
+import GymEditModal from '@/app/superadmin/gyms/gyms_components/GymEditModal/GymEditModal';
+import GymEmailModal from '@/app/superadmin/gyms/gyms_components/GymEmailModal/GymEmailModal';
 
 export default function GymsTable() {
-  const { filteredGyms, loading, error, handleGhostLogin, handleSuspend, handleDelete, openEditModal, openEmailModal } = useGymsContext();
+  const {
+    filteredGyms,
+    loading,
+    error,
+    handleRowClick,
+    onGhostLoginClick,
+    onSuspendClick,
+    onDeleteClick,
+    openEditModal,
+    openEmailModal
+  } = useGymsTable();
 
   if (loading) return <div className="p-8 text-center text-disabled">Loading...</div>;
   if (error) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
-
-  const handleRowClick = (gymName: string) => {
-    // This is where we would open a modal or redirect to details
-    toast(`Opening details for ${gymName}`, { icon: 'ℹ️' });
-  };
-
-  const handleGhostLoginClick = (e: React.MouseEvent, gymId: string, gymName: string) => {
-    e.stopPropagation();
-    handleGhostLogin(gymId, gymName);
-  };
-
-  const handleSuspendClick = (e: React.MouseEvent, gymId: string, gymName: string, status: string) => {
-    e.stopPropagation();
-    handleSuspend(gymId, gymName, status);
-  };
 
   return (
     <div className="overflow-x-auto">
@@ -92,14 +86,14 @@ export default function GymsTable() {
               <td className="p-4 text-right">
                 <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button 
-                    onClick={(e) => handleGhostLoginClick(e, gym.id, gym.name)}
+                    onClick={(e) => onGhostLoginClick(e, gym.id, gym.name)}
                     className="p-2 text-primary hover:bg-primary-subtle rounded-lg transition-colors"
                     title="Ghost Login (Login As Admin)"
                   >
                     <LogIn className="w-5 h-5" />
                   </button>
                   <button 
-                    onClick={(e) => handleSuspendClick(e, gym.id, gym.name, gym.status)}
+                    onClick={(e) => onSuspendClick(e, gym.id, gym.name, gym.status)}
                     className={`p-2 rounded-lg transition-colors ${
                       gym.status === 'SUSPENDED' 
                         ? 'text-success hover:bg-success/10' 
@@ -124,7 +118,7 @@ export default function GymsTable() {
                     <Edit2 className="w-5 h-5" />
                   </button>
                   <button 
-                    onClick={(e) => { e.stopPropagation(); handleDelete(gym.id, gym.name); }}
+                    onClick={(e) => onDeleteClick(e, gym.id, gym.name)}
                     className="p-2 text-secondary hover:bg-destructive/10 hover:text-destructive rounded-lg transition-colors"
                     title="Delete Gym"
                   >

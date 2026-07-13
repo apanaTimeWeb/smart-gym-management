@@ -1,12 +1,13 @@
-// RESPONSIBILITY: GymsToolbar.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Renders the search toolbar for the Gyms table.
 'use client';
 
 import React from 'react';
 import { Search } from 'lucide-react';
-import { useGymsContext } from '@/app/superadmin/gyms/gyms_context/GymsContext';
+import { useGymsStore } from '@/app/superadmin/gyms/gyms_store/useGymsStore';
 
 export default function GymsToolbar() {
-  const { search, setSearch } = useGymsContext();
+  const search = useGymsStore(state => state.search);
+  const setSearch = useGymsStore(state => state.setSearch);
 
   return (
     <div className="p-4 border-b border-border flex items-center gap-4">

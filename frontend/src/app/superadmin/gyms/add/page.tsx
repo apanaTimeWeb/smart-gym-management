@@ -1,6 +1,6 @@
-// RESPONSIBILITY: Pure Server Component for the add page. Renders the interactive client component.
-import AddGymClient from './AddGymClient';
+// RESPONSIBILITY: Server Component that acts as the entry point for the Add Gym page.
+import AddGymForm from '@/app/superadmin/gyms/gyms_components/AddGymForm/AddGymForm';
 
-export default function Page() {
-  return <AddGymClient />;
+export default function AddGymPage() {
+  return <AddGymForm />;
 }

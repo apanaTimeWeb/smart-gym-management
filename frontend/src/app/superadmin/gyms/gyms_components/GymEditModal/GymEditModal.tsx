@@ -1,58 +1,28 @@
-// RESPONSIBILITY: GymEditModal.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Renders the modal UI for editing Gym details. Purely a view component.
 'use client';
 
-import React, { useEffect } from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import React from 'react';
+import { Controller } from 'react-hook-form';
 import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
-import { z } from 'zod';
 import { X } from 'lucide-react';
-import { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
-import { useGymsContext } from '@/app/superadmin/gyms/gyms_context/GymsContext';
-import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
-import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
-import { SubscriptionPlan } from '@/app/superadmin/superadmin_types/superadmin_types';
-
-const gymEditSchema = z.object({
-  name: z.string().min(1, 'Gym Name is required'),
-  ownerName: z.string().min(1, 'Owner Name is required'),
-  adminEmail: z.string().email('Invalid email address'),
-  plan: z.string().min(1, 'Please select a plan'),
-});
-
-type GymEditFormValues = z.infer<typeof gymEditSchema>;
+import { useGymEditModal } from './useGymEditModal';
 
 export default function GymEditModal() {
-  const { isEditModalOpen, closeEditModal, selectedGym, handleEditGym } = useGymsContext();
-  const { data: plans, loading: loadingPlans } = useSuperadminData<SubscriptionPlan[]>(SuperadminUrlConfig.BACKEND_API.PLANS_BASE);
-
   const {
+    isEditModalOpen,
+    closeEditModal,
+    selectedGym,
+    plans,
+    loadingPlans,
     register,
     handleSubmit,
-    reset,
+    onSubmit,
     control,
-    formState: { errors, isSubmitting },
-  } = useForm<GymEditFormValues>({
-    resolver: zodResolver(gymEditSchema),
-  });
-
-  // Populate form when modal opens
-  useEffect(() => {
-    if (selectedGym && isEditModalOpen) {
-      reset({
-        name: selectedGym.name,
-        ownerName: selectedGym.ownerName,
-        adminEmail: selectedGym.adminEmail,
-        plan: selectedGym.plan,
-      });
-    }
-  }, [selectedGym, isEditModalOpen, reset]);
+    errors,
+    isSubmitting,
+  } = useGymEditModal();
 
   if (!isEditModalOpen || !selectedGym) return null;
-
-  const onSubmit = async (data: GymEditFormValues) => {
-    await handleEditGym(selectedGym.id, data);
-  };
 
   return (
     <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/60 p-4">

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: GymActionDropdown.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Reusable UI component for the action dropdown menu on a gym row.
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
