@@ -4,6 +4,7 @@ import type { Cache } from 'cache-manager';
 import { SettingsRepository } from '../settings.repository';
 import { UpdateSettingsDto } from '../dto/update-settings.dto';
 import { SETTINGS_CONSTANTS } from '../settings.constants';
+import { SettingsResponse } from '../settings.interfaces';
 
 @Injectable()
 export class UpdateSettingsService {
@@ -14,7 +15,7 @@ export class UpdateSettingsService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
-  async execute(dto: UpdateSettingsDto) {
+  async execute(dto: UpdateSettingsDto): Promise<SettingsResponse> {
     this.logger.log(`Updating settings`);
     
     const dataSource = (this.repository as any).dataSource;
@@ -36,6 +37,6 @@ export class UpdateSettingsService {
     await this.cacheManager.del(cacheKey);
     
     const data = await this.repository.findFirst();
-    return { success: true, data };
+    return { success: true, message: SETTINGS_CONSTANTS.MESSAGES.SETTINGS_UPDATED, data: data as any };
   }
 }

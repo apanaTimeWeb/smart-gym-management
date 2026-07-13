@@ -67,6 +67,7 @@ export class CreateMemberService {
     this.eventEmitter.emit('member.registered', { member, tenantId });
 
     return {
+      success: true,
       message: MEMBER_MESSAGES.CREATED_SUCCESS,
       data: member,
     };

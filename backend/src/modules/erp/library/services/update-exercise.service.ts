@@ -2,6 +2,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { LibraryRepository } from '@/modules/erp/library/library.repository';
 import { UpdateExerciseDto } from '@/modules/erp/library/dto/update-exercise.dto';
 import { ExerciseNotFoundException } from '@/modules/erp/library/library.exceptions';
+import { WORKOUT_CONSTANTS } from '../library.constants';
+import { ExerciseResponse } from '../library.interfaces';
 
 @Injectable()
 export class UpdateExerciseService {
@@ -9,7 +11,7 @@ export class UpdateExerciseService {
 
   constructor(private readonly repository: LibraryRepository) {}
 
-  async execute(id: number, dto: UpdateExerciseDto) {
+  async execute(id: number, dto: UpdateExerciseDto): Promise<ExerciseResponse> {
     this.logger.log(`Updating Exercise ID: ${id}`);
     const existing = await this.repository.libraryRepository.findOne({
       where: { id },
@@ -20,10 +22,10 @@ export class UpdateExerciseService {
     const data = await this.repository.libraryRepository.findOne({
       where: { id },
     });
-    return { success: true, data };
+    return { success: true, message: WORKOUT_CONSTANTS.MESSAGES.EXERCISE_UPDATED, data: data as any };
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<ExerciseResponse> {
     this.logger.log(`Soft removing Exercise ID: ${id}`);
     const existing = await this.repository.libraryRepository.findOne({
       where: { id },
@@ -34,6 +36,6 @@ export class UpdateExerciseService {
     const data = await this.repository.libraryRepository.findOne({
       where: { id },
     });
-    return { success: true, data };
+    return { success: true, message: WORKOUT_CONSTANTS.MESSAGES.EXERCISE_DELETED, data: data as any };
   }
 }

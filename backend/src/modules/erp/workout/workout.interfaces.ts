@@ -19,5 +19,16 @@ export interface WorkoutSession {
 export interface WorkoutResponse {
   success: boolean;
   message?: string;
-  data?: WorkoutSession | WorkoutSession[];
+  data?: any;
+}
+
+export interface WorkoutListResponse {
+  success: boolean;
+  message?: string;
+  data: {
+    workouts: any[];
+    total: number;
+    page: number;
+    limit: number;
+  };
 }

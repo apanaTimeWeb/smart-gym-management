@@ -1,5 +1,6 @@
 import { Product } from '@/modules/erp/store/entities/product.entity';
 import { OrderItem } from '@/modules/erp/store/entities/order-item.entity';
+import { Order } from '@/modules/erp/store/entities/order.entity';
 
 export interface IProduct {
   id: number;
@@ -37,3 +38,9 @@ export interface IStoreSummary {
   totalRevenue: number;
   lowStockProducts: Product[];
 }
+
+export interface OrderResponse { success: boolean; message: string; data: any; }
+export interface OrderListResponse { success: boolean; message: string; data: any; }
+export interface ProductResponse { success: boolean; message: string; data: any; }
+export interface ProductListResponse { success: boolean; message: string; data: any; }
+export interface StoreSummaryResponse { success: boolean; message: string; data: any; }

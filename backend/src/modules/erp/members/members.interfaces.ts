@@ -1,6 +1,7 @@
 import { Member } from '@/modules/erp/members/entities/member.entity';
 
 export interface MemberResponse {
+  success: boolean;
   message: string;
   data: Member | Member[] | any;
 }

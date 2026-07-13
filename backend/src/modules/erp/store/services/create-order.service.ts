@@ -11,6 +11,7 @@ import {
 } from '@/modules/erp/store/store.exceptions';
 import { STORE_CONSTANTS } from '@/modules/erp/store/store.constants';
 import { WhatsappService } from '@/modules/erp/store/services/whatsapp.service';
+import { OrderResponse } from '../store.interfaces';
 
 @Injectable()
 export class CreateOrderService {
@@ -21,7 +22,7 @@ export class CreateOrderService {
     private readonly whatsappService: WhatsappService,
   ) {}
 
-  async execute(dto: CreateOrderDto) {
+  async execute(dto: CreateOrderDto): Promise<OrderResponse> {
     this.logger.log(`Creating order with ${dto.items.length} items`);
     const queryRunner = this.repository.getDataSource().createQueryRunner();
 
@@ -91,7 +92,7 @@ export class CreateOrderService {
         this.whatsappService.sendBill(dto.customerPhone, billMsg);
       }
 
-      return { success: true, data };
+      return { success: true, message: STORE_CONSTANTS.SUCCESS_MESSAGES.ORDER_CREATED, data: data as any };
     } catch (err) {
       this.logger.error(`Failed to create order: ${err.message}`);
       await queryRunner.rollbackTransaction();

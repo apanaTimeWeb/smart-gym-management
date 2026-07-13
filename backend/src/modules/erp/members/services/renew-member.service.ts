@@ -53,6 +53,7 @@ export class RenewMemberService {
     });
 
     return {
+      success: true,
       message: MEMBER_MESSAGES.RENEWED_SUCCESS,
       data: updatedMember,
     };

@@ -18,6 +18,7 @@ export class FindMemberService {
     const [members, total] = await this.membersRepository.findMembers(query);
 
     return {
+      success: true,
       message: MEMBER_MESSAGES.FETCHED_SUCCESS,
       data: { members, total, page, limit },
     };
@@ -32,6 +33,7 @@ export class FindMemberService {
     }
 
     return {
+      success: true,
       message: MEMBER_MESSAGES.FETCHED_SUCCESS,
       data: member,
     };

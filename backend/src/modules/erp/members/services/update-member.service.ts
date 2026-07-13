@@ -22,6 +22,7 @@ export class UpdateMemberService {
     const updatedMember = await this.membersRepository.updateMember(id, dto);
 
     return {
+      success: true,
       message: MEMBER_MESSAGES.UPDATED_SUCCESS,
       data: updatedMember,
     };
@@ -38,6 +39,7 @@ export class UpdateMemberService {
     await this.membersRepository.deleteMember(id);
 
     return {
+      success: true,
       message: MEMBER_MESSAGES.DELETED_SUCCESS,
       data: null,
     };

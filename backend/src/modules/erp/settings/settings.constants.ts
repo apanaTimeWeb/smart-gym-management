@@ -7,6 +7,10 @@ export const SETTINGS_CONSTANTS = {
     city: '',
     gstNumber: '',
   },
+  MESSAGES: {
+    SETTINGS_FETCHED: 'Settings fetched successfully',
+    SETTINGS_UPDATED: 'Settings updated successfully',
+  },
   ERROR_MESSAGES: {
     SETTINGS_NOT_FOUND: 'Settings not found',
   },

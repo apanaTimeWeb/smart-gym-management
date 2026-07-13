@@ -30,6 +30,7 @@ export class CreatePlanService {
     const plan = await this.plansRepository.createPlan(payload);
 
     return {
+      success: true,
       message: PLAN_MESSAGES.CREATED_SUCCESS,
       data: plan,
     };
