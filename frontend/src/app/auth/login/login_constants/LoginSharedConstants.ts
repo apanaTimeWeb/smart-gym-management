@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Contains logic, types, or component definition for this module.
+// RESPONSIBILITY: Centralizes all static text, asset paths, and routing paths for the Login module to avoid magic strings in components.
 export const LoginSharedConstants = {
  PATHS: {
  DASHBOARD: '/erp/dashboard',
