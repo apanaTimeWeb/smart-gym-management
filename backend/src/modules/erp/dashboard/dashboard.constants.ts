@@ -24,4 +24,9 @@ export const DASHBOARD_CONSTANTS = {
     CHARTS: 'dashboard:charts',
     RECENT: 'dashboard:recent',
   },
+  MESSAGES: {
+    KPI_FETCHED: 'KPI stats retrieved successfully',
+    CHARTS_FETCHED: 'Chart stats retrieved successfully',
+    RECENT_FETCHED: 'Recent stats retrieved successfully',
+  },
 };

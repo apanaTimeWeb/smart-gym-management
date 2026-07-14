@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Server Component that acts as the entry point for the Audit module.
 import React from 'react';
 import AuditMain from '@/app/erp/audit/audit_components/AuditMain/AuditMain';
 

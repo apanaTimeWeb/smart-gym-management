@@ -31,3 +31,21 @@ export interface IDashboardRecent {
   recentPayments: any[];
   pendingPaymentsList: any[];
 }
+
+export interface DashboardKpiResponse {
+  success: boolean;
+  message: string;
+  data: IDashboardKpi;
+}
+
+export interface DashboardChartsResponse {
+  success: boolean;
+  message: string;
+  data: IDashboardCharts;
+}
+
+export interface DashboardRecentResponse {
+  success: boolean;
+  message: string;
+  data: IDashboardRecent;
+}

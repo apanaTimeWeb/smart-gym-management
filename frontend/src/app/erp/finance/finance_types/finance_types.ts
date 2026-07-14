@@ -1,12 +1,22 @@
+// RESPONSIBILITY: Provides the implementation for finance_types.ts functionality within its module.
 
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import { AddPaymentFormValues } from '@/app/erp/finance/finance_utils/FinanceSharedConstants';
 
- export interface FinanceContextType {
+export type FetchState = 'idle' | 'loading' | 'success' | 'error';
+
+export interface FinanceInitialData {
   payments: Payment[];
   totalPayments: number;
   summary: FinanceSummary | null;
- loading: boolean;
+}
+
+export interface FinanceContextType {
+  payments: Payment[];
+  totalPayments: number;
+  summary: FinanceSummary | null;
+ fetchState: FetchState;
+ saving: boolean;
  error: string;
  toast: { message: string; type: ToastType } | null;
  showToast: (msg: string, t: ToastType) => void;

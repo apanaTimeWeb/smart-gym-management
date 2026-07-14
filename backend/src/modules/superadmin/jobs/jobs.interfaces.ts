@@ -4,6 +4,7 @@ export enum JobStatus {
   FAILED = 'FAILED',
   DELAYED = 'DELAYED'
 }
+
 export interface IBackgroundJob {
   id: string;
   queueName: string;
@@ -12,4 +13,10 @@ export interface IBackgroundJob {
   attempts: number;
   error: string | null;
   createdAt: Date;
+}
+
+export interface JobResponse {
+  success: boolean;
+  message: string;
+  data: IBackgroundJob | IBackgroundJob[] | any | null;
 }

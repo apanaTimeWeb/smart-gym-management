@@ -1,39 +1,64 @@
+// RESPONSIBILITY: Custom hook encapsulating all business logic, state, and API interactions for the Inquiries module.
+// DATA FLOW: inquiriesApi -> useInquiriesLogic -> InquiriesContext -> Inquiries components
 import { useState, useCallback, useEffect } from 'react';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
-import { inquiriesApi, type Inquiry, type InquiryStats } from '@/lib/api';
+import { inquiriesApi } from '@/app/erp/inquiries/inquiries_api/inquiries_api';
+import type { Inquiry, InquiryStats, InquiriesContextType } from '@/app/erp/inquiries/inquiries_types/inquiries_types';
+import { FetchState } from '@/app/erp/inquiries/inquiries_types/inquiries_types';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import type { MessageType, ErpMessageRecipient } from '@/app/erp/erp_components/ErpFeedback/ErpMessageModal';
-import { EMPTY_INQUIRY_FORM, generateDefaultMessage } from '@/app/erp/inquiries/inquiries_utils/InquiriesSharedConstants';
-import { InquiriesContextType } from '@/app/erp/inquiries/inquiries_types/inquiries_types';
+import { EMPTY_INQUIRY_FORM, generateDefaultMessage, type InquiryFormValues } from '@/app/erp/inquiries/inquiries_utils/InquiriesSharedConstants';
 import { useConfirm } from '@/app/erp/erp_components/ErpFeedback/ErpConfirmProvider';
 
+/**
+ * Hook to manage inquiries data, filtering state, and all CRUD operations.
+ */
 export function useInquiriesLogic(): InquiriesContextType {
   const { confirm } = useConfirm();
- const [inquiries, setInquiries] = useState<Inquiry[]>([]);
- const [stats, setStats] = useState<InquiryStats | null>(null);
- const [loading, setLoading] = useState(true);
- const [error, setError] = useState('');
- 
-  const [search, setSearch] = useState('');
-  const debouncedSearch = useDebounce(search, 300);
-  const [statusFilter, setStatusFilter] = useState('All');
-  const [dateFilter, setDateFilter] = useState('all');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalInquiries, setTotalInquiries] = useState(0);
- 
- const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
- const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
- const hideToast = useCallback(() => setToast(null), []);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
- const [showModal, setShowModal] = useState(false);
- const [editId, setEditId] = useState<number | null>(null);
- const [editData, setEditData] = useState<any>(null);
- const [saving, setSaving] = useState(false);
- 
+  const [inquiries, setInquiries] = useState<Inquiry[]>([]);
+  const [stats, setStats] = useState<InquiryStats | null>(null);
+  const [fetchState, setFetchState] = useState<FetchState>(FetchState.LOADING);
+  const [error, setError] = useState('');
+  const [totalInquiries, setTotalInquiries] = useState(0);
+
+  // Read filter state from URL (Rule 42 — URL as State)
+  const search = searchParams.get('search') || '';
+  const statusFilter = searchParams.get('status') || 'All';
+  const dateFilter = searchParams.get('date') || 'all';
+  const currentPage = parseInt(searchParams.get('page') || '1', 10);
+  const debouncedSearch = useDebounce(search, 300);
+
+  // Sync filter state back to URL
+  const setUrlParam = useCallback((key: string, value: string | null) => {
+    const current = new URLSearchParams(Array.from(searchParams.entries()));
+    if (value) current.set(key, value);
+    else current.delete(key);
+    if (key !== 'page') current.set('page', '1');
+    router.push(`${pathname}?${current.toString()}`);
+  }, [searchParams, pathname, router]);
+
+  const setSearch = useCallback((val: string) => setUrlParam('search', val || null), [setUrlParam]);
+  const setStatusFilter = useCallback((val: string) => setUrlParam('status', val === 'All' ? null : val), [setUrlParam]);
+  const setDateFilter = useCallback((val: string) => setUrlParam('date', val === 'all' ? null : val), [setUrlParam]);
+  const setCurrentPage = useCallback((val: number) => setUrlParam('page', val.toString()), [setUrlParam]);
+
+  const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
+  const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
+  const hideToast = useCallback(() => setToast(null), []);
+
+  const [showModal, setShowModal] = useState(false);
+  const [editId, setEditId] = useState<number | null>(null);
+  const [editData, setEditData] = useState<InquiryFormValues | null>(null);
+  const [saving, setSaving] = useState(false);
+
   const [msgModal, setMsgModal] = useState<{ open: boolean; recipient: ErpMessageRecipient; type: MessageType; message: string; subject?: string } | null>(null);
   const closeMsg = useCallback(() => setMsgModal(null), []);
 
-  // Selection & Bulk Msg
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const toggleSelectAll = useCallback((selectAll: boolean) => {
     setSelectedIds(selectAll ? inquiries.map(i => i.id) : []);
@@ -53,16 +78,12 @@ export function useInquiriesLogic(): InquiriesContextType {
   const closeBulkMsg = useCallback(() => setBulkMsgModal(null), []);
 
   const loadAll = useCallback(async () => {
-    setLoading(true);
+    setFetchState(FetchState.LOADING);
     setError('');
     try {
-      const params: Record<string, string> = {
-        limit: '10',
-        page: currentPage.toString()
-      };
+      const params: Record<string, string> = { limit: '10', page: currentPage.toString() };
       if (debouncedSearch) params.search = debouncedSearch;
       if (statusFilter !== 'All') params.status = statusFilter;
-      // You can add dateFilter passing here if backend supports
 
       const [inqRes, statsRes] = await Promise.all([
         inquiriesApi.getAll(params),
@@ -71,95 +92,91 @@ export function useInquiriesLogic(): InquiriesContextType {
       setInquiries(inqRes.data.inquiries || []);
       setTotalInquiries(inqRes.data.total || 0);
       setStats(statsRes.data);
-      setSelectedIds([]); // Clear selection when data reloads (e.g. page change)
+      setSelectedIds([]);
+      setFetchState(FetchState.SUCCESS);
     } catch (e) {
       const msg = (e as Error).message;
       setError(msg);
       showToast(msg, 'error');
-    } finally {
-      setLoading(false);
+      setFetchState(FetchState.ERROR);
     }
   }, [showToast, currentPage, debouncedSearch, statusFilter]);
 
- useEffect(() => { loadAll(); }, [loadAll]);
+  // Refetch when URL-driven filters change
+  useEffect(() => { loadAll(); }, [loadAll]);
 
- const openAdd = useCallback(() => {
- setEditId(null);
- setEditData(EMPTY_INQUIRY_FORM);
- setShowModal(true);
- }, []);
+  const openAdd = useCallback(() => {
+    setEditId(null);
+    setEditData(EMPTY_INQUIRY_FORM as InquiryFormValues);
+    setShowModal(true);
+  }, []);
 
- const openEdit = useCallback((inq: Inquiry) => {
- setEditId(inq.id);
- setEditData({ 
- name: inq.name, 
- phone: inq.phone, 
- email: inq.email || '', 
- interest: inq.interest, 
- status: inq.status, 
- source: inq.source || 'Walk-in', 
- notes: inq.notes || '' 
- });
- setShowModal(true);
- }, []);
+  const openEdit = useCallback((inq: Inquiry) => {
+    setEditId(inq.id);
+    setEditData({
+      name: inq.name,
+      phone: inq.phone,
+      email: inq.email || '',
+      interest: inq.interest,
+      status: inq.status as InquiryFormValues['status'],
+      source: inq.source || 'Walk-in',
+      notes: inq.notes || '',
+    });
+    setShowModal(true);
+  }, []);
 
- const saveInquiry = useCallback(async (data: any) => {
- setSaving(true);
- try {
- if (editId) { 
- const res = await inquiriesApi.update(editId, data); 
- showToast((res as any).message, 'success'); 
- } else { 
- const res = await inquiriesApi.create(data); 
- showToast((res as any).message, 'success'); 
- }
- setShowModal(false);
- await loadAll();
- } catch (err) { 
- showToast((err as Error).message, 'error'); 
- } finally { 
- setSaving(false); 
- }
- }, [editId, loadAll, showToast]);
+  const saveInquiry = useCallback(async (data: InquiryFormValues) => {
+    setSaving(true);
+    try {
+      if (editId) {
+        const res = await inquiriesApi.update(editId, data);
+        showToast(res.message, 'success');
+      } else {
+        const res = await inquiriesApi.create(data);
+        showToast(res.message, 'success');
+      }
+      setShowModal(false);
+      await loadAll();
+    } catch (err) {
+      showToast((err as Error).message, 'error');
+    } finally {
+      setSaving(false);
+    }
+  }, [editId, loadAll, showToast]);
 
- const deleteInquiry = useCallback(async (id: number) => {
-  const isConfirmed = await confirm({ title: 'Delete Inquiry', message: 'Delete this inquiry?', confirmText: 'Delete', type: 'danger' });
-  if (!isConfirmed) return;
-  try { 
- const res = await inquiriesApi.remove(id); 
- showToast((res as any).message, 'success'); 
- await loadAll(); 
- } catch (err) { 
- showToast((err as Error).message, 'error'); 
- }
- }, [loadAll, showToast]);
- 
- const updateStatus = useCallback(async (id: number, status: string) => {
- try {
- await inquiriesApi.update(id, { status });
- await loadAll();
- } catch (err) {
- showToast((err as Error).message, 'error');
- }
- }, [loadAll, showToast]);
+  const deleteInquiry = useCallback(async (id: number) => {
+    const isConfirmed = await confirm({ title: 'Delete Inquiry', message: 'Delete this inquiry?', confirmText: 'Delete', type: 'danger' });
+    if (!isConfirmed) return;
+    try {
+      const res = await inquiriesApi.remove(id);
+      showToast(res.message, 'success');
+      await loadAll();
+    } catch (err) {
+      showToast((err as Error).message, 'error');
+    }
+  }, [loadAll, showToast, confirm]);
 
- const openMsg = useCallback((inq: Inquiry, type: MessageType) => {
- const msg = generateDefaultMessage(inq.name, inq.interest);
- setMsgModal({ 
- open: true, 
- type, 
- recipient: { name: inq.name, phone: inq.phone, email: inq.email || '' }, 
- message: msg 
- });
- }, []);
+  const updateStatus = useCallback(async (id: number, status: string) => {
+    try {
+      await inquiriesApi.update(id, { status } as Partial<InquiryFormValues>);
+      await loadAll();
+    } catch (err) {
+      showToast((err as Error).message, 'error');
+    }
+  }, [loadAll, showToast]);
+
+  const openMsg = useCallback((inq: Inquiry, type: MessageType) => {
+    const msg = generateDefaultMessage(inq.name, inq.interest);
+    setMsgModal({ open: true, type, recipient: { name: inq.name, phone: inq.phone, email: inq.email || '' }, message: msg });
+  }, []);
 
   return {
-    inquiries, stats, loading, error, toast, showToast, hideToast, loadAll, totalInquiries,
+    inquiries, stats, fetchState, error, toast, showToast, hideToast, loadAll, totalInquiries,
     search, debouncedSearch, setSearch, statusFilter, setStatusFilter, dateFilter, setDateFilter, currentPage, setCurrentPage,
     selectedIds, toggleSelectAll, toggleSelectOne, clearSelection,
     showModal, setShowModal, editId, editData, saving,
     openAdd, openEdit, saveInquiry, deleteInquiry, updateStatus,
     msgModal, openMsg, closeMsg,
-    bulkMsgModal, openBulkMsg, closeBulkMsg
+    bulkMsgModal, openBulkMsg, closeBulkMsg,
   };
 }

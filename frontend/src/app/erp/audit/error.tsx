@@ -1,4 +1,5 @@
-"use client";
+// RESPONSIBILITY: Provides the implementation for error.tsx functionality within its module.
+'use client';
 
 import { AlertTriangle, RefreshCcw } from 'lucide-react';
 
@@ -15,24 +16,24 @@ export default function AuditError({
         <AlertTriangle className="w-8 h-8 text-red-500" />
       </div>
       
-      <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-3">
+      <h2 className="text-2xl font-bold text-foreground mb-3">
         Failed to Load Audit Logs
       </h2>
       
-      <p className="text-[var(--text-secondary)] max-w-md mb-8">
+      <p className="text-secondary max-w-md mb-8">
         {error.message || 'An unexpected error occurred while loading audit records. Please try again or contact support if the issue persists.'}
       </p>
 
       <div className="flex gap-4">
         <button
           onClick={() => window.location.reload()}
-          className="px-6 py-2.5 rounded-xl text-sm font-medium border border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--primary-subtle)] hover:text-[var(--text-primary)] transition-all"
+          className="px-6 py-2.5 rounded-xl text-sm font-medium border border-border text-secondary hover:bg-primary-subtle hover:text-foreground transition-all"
         >
           Go Back
         </button>
         <button
           onClick={() => reset()}
-          className="px-6 py-2.5 rounded-xl text-sm font-bold bg-[var(--primary)] text-white hover:opacity-90 flex items-center gap-2 transition-all shadow-sm"
+          className="px-6 py-2.5 rounded-xl text-sm font-bold bg-primary text-white hover:opacity-90 flex items-center gap-2 transition-all shadow-sm"
         >
           <RefreshCcw size={16} />
           Try Again

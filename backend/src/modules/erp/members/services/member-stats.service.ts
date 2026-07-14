@@ -14,6 +14,7 @@ export class MemberStatsService {
     const stats = await this.membersRepository.getStats();
 
     return {
+      success: true,
       message: MEMBER_MESSAGES.STATS_FETCHED_SUCCESS,
       data: stats,
     };

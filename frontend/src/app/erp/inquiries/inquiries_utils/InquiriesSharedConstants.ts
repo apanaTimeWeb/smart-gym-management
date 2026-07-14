@@ -1,4 +1,6 @@
+// RESPONSIBILITY: Centralized constants, Zod schema, and shared data for the Inquiries module. Single source of truth for all hardcoded values.
 import { z } from 'zod';
+import { ERP_ITEMS_PER_PAGE } from '@/app/erp/erp_utils/ErpSharedConstants';
 
 export const InquirySchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -20,10 +22,10 @@ export const INQUIRIES_STATUS_LABELS: Record<string, string> = {
 };
 
 export const INQUIRIES_STATUS_STYLES: Record<string, { bg: string; text: string }> = {
- NEW: { bg: 'var(--inquiries-status-new-bg)', text: 'var(--inquiries-status-new-text)' },
- FOLLOW_UP: { bg: 'var(--inquiries-status-follow-up-bg)', text: 'var(--inquiries-status-follow-up-text)' },
- CONVERTED: { bg: 'var(--inquiries-status-converted-bg)', text: 'var(--inquiries-status-converted-text)' },
- LOST: { bg: 'var(--inquiries-status-lost-bg)', text: 'var(--inquiries-status-lost-text)' },
+  NEW: { bg: 'bg-info-bg', text: 'text-info' },
+  FOLLOW_UP: { bg: 'bg-warning-bg', text: 'text-warning' },
+  CONVERTED: { bg: 'bg-success-bg', text: 'text-success' },
+  LOST: { bg: 'bg-danger-bg', text: 'text-danger' },
 };
 
 export const EMPTY_INQUIRY_FORM = { 
@@ -39,6 +41,8 @@ export const EMPTY_INQUIRY_FORM = {
 export const INQUIRY_SOURCES = [
  'Walk-in', 'Call', 'Website', 'WhatsApp', 'Referral', 'Facebook', 'Instagram'
 ];
+
+
 
 export const INQUIRIES_TABLE_HEADERS = [
  'Lead', 'Contact', 'Interest', 'Source', 'Status', 'Date', 'Actions'

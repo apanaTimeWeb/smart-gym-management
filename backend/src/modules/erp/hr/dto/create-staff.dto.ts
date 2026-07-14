@@ -40,6 +40,7 @@ export class CreateStaffDto {
   gender: Gender;
 
   @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
   address: string;
 

@@ -1,4 +1,5 @@
-"use client";
+// RESPONSIBILITY: SettingsContent.tsx handles the logic and UI for its corresponding feature.
+'use client';
 
 import { RefreshCw, Save, Settings } from 'lucide-react';
 import { useSettingsContext } from '@/app/erp/settings/settings_context/SettingsContext';
@@ -11,13 +12,13 @@ export default function SettingsContent() {
  } = useSettingsContext();
 
  return (
- <div className="bg-[var(--settings-bg-card)] rounded-xl shadow-sm border border-[var(--settings-border)] mt-6">
- <div className="px-6 py-4 border-b border-[var(--settings-border)] flex items-center justify-between">
- <h2 className="font-bold text-[var(--settings-text-primary)] text-lg">{activeTab}</h2>
+ <div className="bg-card rounded-xl shadow-sm border border-border mt-6">
+ <div className="px-6 py-4 border-b border-border flex items-center justify-between">
+ <h2 className="font-bold text-foreground text-lg">{activeTab}</h2>
  <div className="flex gap-2">
  <button 
  onClick={fetchSettings} 
- className="px-4 py-2 text-sm border border-[var(--settings-border)] rounded-lg hover:bg-[var(--primary-subtle)] text-[var(--settings-text-secondary)] flex items-center gap-2 transition-colors"
+ className="px-4 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary flex items-center gap-2 transition-colors"
  >
  <RefreshCw size={14} /> Reset
  </button>
@@ -44,12 +45,12 @@ export default function SettingsContent() {
  { label: 'GST Number', field: 'gstNumber' },
  ].map((f, i) => (
  <div key={i}>
- <label className="block text-sm font-medium text-[var(--settings-text-secondary)] mb-1">{f.label}</label>
+ <label className="block text-sm font-medium text-secondary mb-1">{f.label}</label>
  <input 
  type="text" 
  value={(form as any)[f.field] || ''} 
  onChange={(e) => handleChange(f.field, e.target.value)}
- className="w-full px-3 py-2.5 text-sm border border-[var(--settings-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--settings-bg-input)] text-[var(--settings-text-primary)]" 
+ className="w-full px-3 py-2.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-warning bg-input text-foreground" 
  />
  </div>
  ))}
@@ -57,7 +58,7 @@ export default function SettingsContent() {
  )}
 
  {activeTab !== 'Gym Profile' && (
- <div className="text-center py-10 text-[var(--settings-text-secondary)]">
+ <div className="text-center py-10 text-secondary">
  <Settings size={48} className="mx-auto mb-3 opacity-30" />
  <p>Settings for <strong>{activeTab}</strong> are currently under development.</p>
  </div>

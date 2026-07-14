@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Provides the implementation for sales_url_config.ts functionality within its module.
 export const SalesUrlConfig = {
   PAGES: {
     SALES: '/erp/sales',

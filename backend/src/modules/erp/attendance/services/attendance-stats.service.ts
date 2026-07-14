@@ -22,6 +22,7 @@ export class AttendanceStatsService {
     );
 
     return {
+      success: true,
       message: ATTENDANCE_MESSAGES.STATS_FETCHED_SUCCESS,
       data: stats,
     };

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: useWorkoutLogic.ts handles the logic and UI for its corresponding feature.
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { 
   EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM, WorkoutFormValues, ExerciseFormValues
@@ -5,8 +6,9 @@ import {
 import { WorkoutContextType, Workout } from '@/app/erp/workout/workout_types/workout_types';
 import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
 import { useConfirm } from '@/app/erp/erp_components/ErpFeedback/ErpConfirmProvider';
-import { workoutApi, libraryApi } from '@/lib/api';
-import type { Exercise } from '@/lib/api';
+import { workoutApi } from '@/app/erp/workout/workout_api/workout_api';
+import { libraryApi } from '@/app/erp/library/library_api/library_api';
+import type { Exercise } from '@/app/erp/library/library_types/library_types';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 
 export function useWorkoutLogic(): WorkoutContextType {

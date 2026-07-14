@@ -1,0 +1,27 @@
+import { DollarSign, AlertCircle } from 'lucide-react';
+
+interface InvoicesStatsBarProps {
+  totalRevenue: number;
+  failedRevenue: number;
+}
+
+export default function InvoicesStatsBar({ totalRevenue, failedRevenue }: InvoicesStatsBarProps) {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="bg-card border border-border rounded-xl p-6 flex items-center gap-4 hover:-translate-y-1 hover:shadow-lg transition-all duration-200 ease-in-out">
+        <div className="p-4 bg-success/10 rounded-xl text-success"><DollarSign size={32} /></div>
+        <div>
+          <p className="text-sm font-medium text-secondary">Total Collected (This Month)</p>
+          <p className="text-3xl font-bold text-foreground">${totalRevenue.toLocaleString()}</p>
+        </div>
+      </div>
+      <div className="bg-card border border-destructive/30 rounded-xl p-6 flex items-center gap-4 hover:-translate-y-1 hover:shadow-lg transition-all duration-200 ease-in-out">
+        <div className="p-4 bg-destructive/10 rounded-xl text-destructive"><AlertCircle size={32} /></div>
+        <div>
+          <p className="text-sm font-medium text-secondary">Failed Payments</p>
+          <p className="text-3xl font-bold text-destructive">${failedRevenue.toLocaleString()}</p>
+        </div>
+      </div>
+    </div>
+  );
+}

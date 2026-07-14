@@ -239,5 +239,8 @@ Every API call must be typed using a global `ApiResponse<T>` generic interface t
 63. **No Direct `router.push('/login')` in Components**:
 Individual UI components must never contain hardcoded redirection logic for unauthenticated states. This must be handled centrally in a middleware (`middleware.ts`) or an `axios`/`fetch` interceptor that catches `401` errors and redirects globally.
 
+64. **No Inline String Type Unions**:
+Never hardcode string type unions or any values as string literals (e.g., `'idle' | 'loading' | 'success' | 'error'`) inline inside interfaces or hook declarations. Always extract these into a named type (e.g., `export type FetchState = 'idle' | 'loading' | 'success' | 'error'`) inside the module's `_constants.ts` or `_types.ts` file, and import that type wherever needed. This ensures consistency and prevents typos across different files.
+
 ---
 Think step-by-step. Create a detailed implementation plan first so I can review it, and then execute it perfectly without breaking existing data flows!

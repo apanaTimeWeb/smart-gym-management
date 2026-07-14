@@ -1,3 +1,4 @@
+// RESPONSIBILITY: route.ts handles the logic and UI for its corresponding feature.
 import { NextRequest, NextResponse } from 'next/server';
 import { StatusCodes } from 'http-status-codes';
 

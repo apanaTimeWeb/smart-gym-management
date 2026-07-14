@@ -1,13 +1,14 @@
-"use client";
+// RESPONSIBILITY: LibraryContext.tsx handles the logic and UI for its corresponding feature.
+'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';
-import { LibraryContextType } from '@/app/erp/library/library_types/library_types';
+import { LibraryContextType, LibraryInitialData } from '@/app/erp/library/library_types/library_types';
 import { useLibraryLogic } from '@/app/erp/library/library_context/useLibraryLogic';
 
 const LibraryContext = createContext<LibraryContextType | undefined>(undefined);
 
-export function LibraryProvider({ children }: { children: React.ReactNode }) {
- const logic = useLibraryLogic();
+export function LibraryProvider({ children, initialData }: { children: React.ReactNode, initialData?: LibraryInitialData | null }) {
+ const logic = useLibraryLogic(initialData);
 
  const value = useMemo(() => logic, [logic]);
 

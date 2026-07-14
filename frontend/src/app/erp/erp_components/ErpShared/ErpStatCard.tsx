@@ -1,3 +1,4 @@
+// RESPONSIBILITY: ErpStatCard.tsx handles the logic and UI for its corresponding feature.
 import { LucideIcon } from 'lucide-react';
 
 interface ErpStatCardProps {
@@ -12,15 +13,15 @@ interface ErpStatCardProps {
 
 export default function ErpStatCard({ title, value, change, changeType = 'neutral', icon: Icon, iconBg, iconColor }: ErpStatCardProps) {
  return (
- <div className="bg-[var(--bg-card)] rounded-xl p-5 shadow-sm border border-[var(--border)] hover:border-[var(--border-focus)] transition-colors">
+ <div className="bg-card rounded-xl p-5 shadow-sm border border-border hover:border-border-focus transition-colors">
  <div className="flex items-center justify-between">
  <div>
- <p className="text-[11px] font-medium text-[var(--text-secondary)] uppercase tracking-wider">{title}</p>
- <p className="text-[28px] font-bold text-[var(--text-primary)] mt-1">{value}</p>
+ <p className="text-xs font-medium text-secondary uppercase tracking-wider">{title}</p>
+ <p className="text-3xl font-bold text-foreground mt-1">{value}</p>
  {change && (
  <p className={`text-xs mt-1 font-medium ${
- changeType === 'up' ? 'text-[var(--success)]' :
- changeType === 'down' ? 'text-[var(--danger)]' : 'text-[var(--text-secondary)]'
+ changeType === 'up' ? 'text-success' :
+ changeType === 'down' ? 'text-destructive' : 'text-secondary'
  }`}>
  {changeType === 'up' ? '↑' : changeType === 'down' ? '↓' : ''} {change}
  </p>

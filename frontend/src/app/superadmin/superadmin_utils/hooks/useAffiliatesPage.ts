@@ -1,90 +1,89 @@
-import { useState, useEffect, useMemo, useCallback  } from 'react';
+// RESPONSIBILITY: useAffiliatesPage.ts encapsulates all state and async logic for the Affiliates page.
+// DATA FLOW: superadminApi → useAffiliatesPage → AffiliatesClient
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSuperadminData } from '../useSuperadminData';
-import { SuperadminUrlConfig } from '../../superadmin_url_config';
-import { Affiliate } from '../../superadmin_types/superadmin_types';
-import { AffiliateSchema, AffiliateFormData } from '../SuperadminZodSchemas';
-import { useSuperadminMutation } from './useSuperadminMutation';
-import { superadminApi } from '@/lib/superadmin-api';
+import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
+import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
+import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
+import { useSuperadminMutation } from '@/app/superadmin/superadmin_utils/hooks/useSuperadminMutation';
+import { AffiliateSchema, AffiliateFormData } from '@/app/superadmin/affiliates/affiliates_types/affiliates_types';
+import type { Affiliate, AffiliateStatus } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 export const useAffiliatesPage = () => {
   const [affiliates, setAffiliates] = useState<Affiliate[]>([]);
-  const { data: fetchedData, loading, error } = useSuperadminData<Affiliate[]>(SuperadminUrlConfig.BACKEND_API.AFFILIATES_BASE);
+  const { data: fetchedData, fetchState, error } = useSuperadminData<Affiliate[]>(
+    SuperadminUrlConfig.BACKEND_API.AFFILIATES_BASE
+  );
 
+  // Sync fetched data into local state for pessimistic mutations
   useEffect(() => {
-    if (fetchedData) {
-      setAffiliates(fetchedData);
-    }
+    if (fetchedData) setAffiliates(fetchedData);
   }, [fetchedData]);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingAffiliate, setEditingAffiliate] = useState<Affiliate | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
   const form = useForm<AffiliateFormData>({
     resolver: zodResolver(AffiliateSchema),
-    defaultValues: {
-      name: '',
-      email: '',
-      referralCode: '',
-    },
+    defaultValues: { name: '', email: '', referralCode: '' },
   });
 
   const { mutate, isMutating } = useSuperadminMutation();
 
   const handleAddAffiliate = useCallback(async (data: AffiliateFormData) => {
-    await mutate(
+    await mutate<Affiliate>(
       () => superadminApi.affiliates.create(data),
       {
         successMessage: 'Affiliate added successfully',
         onSuccess: (res) => {
-          setAffiliates(prev => [res, ...prev]);
+          setAffiliates(prev => [res as Affiliate, ...prev]);
           setIsModalOpen(false);
           form.reset();
-        }
+        },
       }
     );
   }, [form, mutate]);
 
-  const [editingAffiliate, setEditingAffiliate] = useState<Affiliate | null>(null);
-
   const handleEditAffiliate = useCallback(async (data: AffiliateFormData) => {
     if (!editingAffiliate) return;
-    await mutate(
+    await mutate<Affiliate>(
       () => superadminApi.affiliates.update(editingAffiliate.id, data),
       {
         successMessage: 'Affiliate updated successfully',
         onSuccess: (res) => {
-          setAffiliates(prev => prev.map(a => a.id === editingAffiliate.id ? res : a));
+          setAffiliates(prev => prev.map(a => a.id === editingAffiliate.id ? (res as Affiliate) : a));
           setIsModalOpen(false);
           setEditingAffiliate(null);
           form.reset();
-        }
+        },
       }
     );
   }, [editingAffiliate, form, mutate]);
 
   const handleToggleAffiliateStatus = useCallback(async (id: string, currentStatus: AffiliateStatus) => {
     const newStatus: AffiliateStatus = currentStatus === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
-    await mutate(
+    await mutate<Affiliate>(
       () => superadminApi.affiliates.updateStatus(id, newStatus),
       {
-        successMessage: `Affiliate status updated successfully`,
+        successMessage: 'Affiliate status updated successfully',
         onSuccess: () => {
           setAffiliates(prev => prev.map(a => a.id === id ? { ...a, status: newStatus } : a));
-        }
+        },
       }
     );
   }, [mutate]);
 
   const handleDeleteAffiliate = useCallback(async (id: string) => {
-    if (!window.confirm('Are you sure you want to delete this affiliate?')) return;
-    await mutate(
-      () => superadminApi.affiliates.delete(id),
+    // Confirmation is handled by the caller via a modal — not window.confirm
+    await mutate<void>(
+      () => superadminApi.affiliates.remove(id),
       {
         successMessage: 'Affiliate deleted successfully',
         onSuccess: () => {
           setAffiliates(prev => prev.filter(a => a.id !== id));
-        }
+        },
       }
     );
   }, [mutate]);
@@ -99,13 +98,15 @@ export const useAffiliatesPage = () => {
     setIsModalOpen(true);
   }, [form]);
 
-
   const totalAffiliates = affiliates.length;
-  const totalCommission = useMemo(() => affiliates.reduce((sum, a) => sum + a.commissionEarned, 0), [affiliates]);
+  const totalCommission = useMemo(
+    () => affiliates.reduce((sum, a) => sum + a.commissionEarned, 0),
+    [affiliates]
+  );
 
   const filteredAffiliates = useMemo(() => {
     const lowerQuery = searchQuery.toLowerCase();
-    return affiliates.filter(a => 
+    return affiliates.filter(a =>
       a.name.toLowerCase().includes(lowerQuery) ||
       a.referralCode.toLowerCase().includes(lowerQuery) ||
       a.email.toLowerCase().includes(lowerQuery)
@@ -113,7 +114,7 @@ export const useAffiliatesPage = () => {
   }, [affiliates, searchQuery]);
 
   return {
-    loading,
+    fetchState,
     error,
     affiliates: filteredAffiliates,
     searchQuery,

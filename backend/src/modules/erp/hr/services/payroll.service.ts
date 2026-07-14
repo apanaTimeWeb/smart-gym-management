@@ -31,6 +31,7 @@ export class PayrollService {
     const payroll = await this.hrRepository.createPayroll(dto);
 
     return {
+      success: true,
       message: HR_MESSAGES.PAYROLL_CREATED_SUCCESS,
       data: payroll,
     };
@@ -42,6 +43,7 @@ export class PayrollService {
     const [payrolls, total] = await this.hrRepository.findPayrolls(limit);
 
     return {
+      success: true,
       message: HR_MESSAGES.PAYROLL_FETCHED_SUCCESS,
       data: { payrolls, total, page: 1, limit },
     };
@@ -66,6 +68,7 @@ export class PayrollService {
     );
 
     return {
+      success: true,
       message: HR_MESSAGES.PAYROLL_STATUS_UPDATED_SUCCESS,
       data: updatedPayroll,
     };

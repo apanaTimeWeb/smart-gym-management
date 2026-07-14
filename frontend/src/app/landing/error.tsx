@@ -1,0 +1,33 @@
+// RESPONSIBILITY: error.tsx handles the logic and UI for its corresponding feature.
+'use client';
+
+import { useEffect } from 'react';
+
+export default function Error({
+ error,
+ reset,
+}: {
+ error: Error & { digest?: string };
+ reset: () => void;
+}) {
+ useEffect(() => {
+ // console.error('Landing Page Error:', error);
+ }, [error]);
+
+ return (
+ <div className="min-h-screen bg-background flex items-center justify-center p-6">
+ <div className="bg-card border border-destructive/30 p-8 rounded-3xl max-w-md w-full text-center space-y-4 shadow-2xl">
+ <h2 className="text-2xl font-black text-white">Oops! Something went wrong.</h2>
+ <p className="text-secondary text-sm">
+ We couldn&apos;t load the landing page successfully. Please try refreshing.
+ </p>
+ <button
+ onClick={() => reset()}
+ className="mt-4 px-8 py-3 bg-destructive hover:bg-destructive text-white font-bold rounded-xl transition-all"
+ >
+ Try Again
+ </button>
+ </div>
+ </div>
+ );
+}

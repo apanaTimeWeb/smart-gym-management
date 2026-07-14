@@ -1,7 +1,13 @@
+// RESPONSIBILITY: library_types.ts handles the logic and UI for its corresponding feature.
 import type { } from '@/lib/api';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import { EMPTY_EXERCISE_FORM, EMPTY_DIET_FORM, type LibraryTab } from '@/app/erp/library/library_utils/LibrarySharedConstants';
 import React from 'react';
+
+export interface LibraryInitialData {
+  exercises: Exercise[];
+  dietPlans: DietPlan[];
+}
 
 export interface LibraryContextType {
  tab: LibraryTab;
@@ -28,20 +34,20 @@ export interface LibraryContextType {
  showExModal: boolean;
  setShowExModal: (show: boolean) => void;
  editExId: number | null;
- editExData: any;
+ editExData: Record<string, any> | null;
  openAddEx: () => void;
  openEditEx: (ex: Exercise) => void;
- saveExercise: (data: any) => Promise<void>;
+ saveExercise: (data: Record<string, any>) => Promise<void>;
  deleteExercise: (id: number) => Promise<void>;
  
  // Diet Modal State
  showDietModal: boolean;
  setShowDietModal: (show: boolean) => void;
  editDietId: number | null;
- editDietData: any;
+ editDietData: Record<string, any> | null;
  openAddDiet: () => void;
  openEditDiet: (d: DietPlan) => void;
- saveDietPlan: (data: any) => Promise<void>;
+ saveDietPlan: (data: Record<string, any>) => Promise<void>;
  deleteDietPlan: (id: number) => Promise<void>;
 }
 

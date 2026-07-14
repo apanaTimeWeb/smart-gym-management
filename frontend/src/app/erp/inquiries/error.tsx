@@ -1,4 +1,5 @@
-"use client";
+// RESPONSIBILITY: error.tsx handles the logic and UI for its corresponding feature.
+'use client';
 
 import { useEffect } from "react";
 
@@ -10,7 +11,7 @@ export default function InquiriesError({
  reset: () => void;
 }) {
  useEffect(() => {
- console.error(error);
+ // console.error(error);
  }, [error]);
 
  return (

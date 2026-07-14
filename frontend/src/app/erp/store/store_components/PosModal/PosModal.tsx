@@ -1,9 +1,11 @@
-"use client";
+// RESPONSIBILITY: PosModal.tsx handles the logic and UI for its corresponding feature.
+'use client';
 
 import { X, Printer } from 'lucide-react';
 import { useStoreContext } from '@/app/erp/store/store_context/StoreContext';
 import { PAYMENT_METHODS, formatCurrency } from '@/app/erp/store/store_utils/StoreSharedConstants';
 import { useState } from 'react';
+import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 
 export default function PosModal() {
  const { 
@@ -21,12 +23,12 @@ export default function PosModal() {
 
  return (
  <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
- <div className="bg-[var(--store-bg-card)] rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
- <div className="sticky top-0 bg-[var(--store-bg-card)] px-6 py-4 border-b border-[var(--store-border)] flex items-center justify-between">
- <h3 className="text-lg font-bold text-[var(--store-text-primary)]">New Sale — POS</h3>
+ <div className="bg-card rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+ <div className="sticky top-0 bg-card px-6 py-4 border-b border-border flex items-center justify-between">
+ <h3 className="text-lg font-bold text-foreground">New Sale — POS</h3>
  <button 
  onClick={() => setShowOrderModal(false)} 
- className="p-2 rounded-lg hover:bg-[var(--primary-subtle)] text-[var(--store-text-secondary)] transition-colors"
+ className="p-2 rounded-lg hover:bg-primary-subtle text-secondary transition-colors"
  >
  <X size={18} />
  </button>
@@ -36,13 +38,13 @@ export default function PosModal() {
  {/* Product Grid */}
  <div>
  <div className="flex items-center justify-between mb-3">
-   <p className="text-sm font-medium text-[var(--store-text-secondary)]">Select Products</p>
+   <p className="text-sm font-medium text-secondary">Select Products</p>
    <input 
      type="text" 
      placeholder="Search..." 
      value={productSearch}
      onChange={e => setProductSearch(e.target.value)}
-     className="w-1/2 px-3 py-1.5 text-xs rounded-lg border border-[var(--store-border)] bg-[var(--store-bg-input)] text-[var(--store-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--store-highlight)]"
+     className="w-1/2 px-3 py-1.5 text-xs rounded-lg border border-border bg-input text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
    />
  </div>
  <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
@@ -50,10 +52,10 @@ export default function PosModal() {
  <button 
  key={p.id} 
  onClick={() => addToOrder(p)} 
- className="w-full text-left p-3 border border-[var(--store-border)] rounded-xl hover:border-[var(--warning)] dark:hover:border-[var(--warning)] hover:bg-[var(--warning-bg)] dark:hover:bg-[var(--warning-bg)] transition-all bg-[var(--store-bg-card)]"
+ className="w-full text-left p-3 border border-border rounded-xl hover:border-warning dark:hover:border-warning hover:bg-warning-bg dark:hover:bg-warning-bg transition-all bg-card"
  >
- <p className="text-sm font-medium text-[var(--store-text-primary)]">{p.name}</p>
- <p className="text-xs text-[var(--store-text-secondary)]">{formatCurrency(p.price)} · Stock: {p.stock}</p>
+ <p className="text-sm font-medium text-foreground">{p.name}</p>
+ <p className="text-xs text-secondary">{formatCurrency(p.price)} · Stock: {p.stock}</p>
  </button>
  ))}
  </div>
@@ -61,20 +63,20 @@ export default function PosModal() {
  
  {/* Cart */}
  <div>
- <p className="text-sm font-medium text-[var(--store-text-secondary)] mb-3">Cart</p>
- <div className="space-y-2 min-h-[100px]">
+ <p className="text-sm font-medium text-secondary mb-3">Cart</p>
+ <div className="space-y-2 min-h-25">
  {orderItems.length === 0 && (
- <p className="text-sm text-[var(--store-text-secondary)] text-center py-4">No items added</p>
+ <p className="text-sm text-secondary text-center py-4">No items added</p>
  )}
  {orderItems.map(i => (
- <div key={i.productId} className="flex items-center justify-between p-2 bg-[var(--store-bg-input)] rounded-lg border border-[var(--store-border)]">
+ <div key={i.productId} className="flex items-center justify-between p-2 bg-input rounded-lg border border-border">
  <div>
- <p className="text-xs font-medium text-[var(--store-text-primary)]">{i.name}</p>
- <p className="text-xs text-[var(--store-text-secondary)]">x{i.qty} · {formatCurrency(i.price * i.qty)}</p>
+ <p className="text-xs font-medium text-foreground">{i.name}</p>
+ <p className="text-xs text-secondary">x{i.qty} · {formatCurrency(i.price * i.qty)}</p>
  </div>
  <button 
  onClick={() => removeFromOrder(i.productId)} 
- className="p-1 text-[var(--danger)] hover:text-[var(--danger)] dark:hover:text-[var(--danger)] transition-colors"
+ className="p-1 text-destructive hover:text-destructive dark:hover:text-destructive transition-colors"
  >
  <X size={14} />
  </button>
@@ -82,26 +84,25 @@ export default function PosModal() {
  ))}
  </div>
  
- <div className="mt-4 pt-4 border-t border-[var(--store-border)]">
+ <div className="mt-4 pt-4 border-t border-border">
  <div className="flex justify-between mb-3">
- <span className="font-semibold text-[var(--store-text-primary)]">Total</span>
- <span className="font-bold text-lg text-[var(--success)] dark:text-[var(--success)]">{formatCurrency(orderTotal)}</span>
+ <span className="font-semibold text-foreground">Total</span>
+ <span className="font-bold text-lg text-success dark:text-success">{formatCurrency(orderTotal)}</span>
  </div>
  
- <select 
- value={orderMethod} 
- onChange={e => setOrderMethod(e.target.value)} 
- className="w-full border border-[var(--store-border)] rounded-xl px-4 py-2.5 text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--store-bg-input)] text-[var(--store-text-primary)]"
- >
- {PAYMENT_METHODS.map(m => <option key={m}>{m}</option>)}
- </select>
+ <SearchableDropdown
+ value={orderMethod}
+ onChange={(val) => setOrderMethod(String(val))}
+ className="mb-3"
+ options={PAYMENT_METHODS.map(m => ({ label: m, value: m }))}
+ />
 
- <label className="flex items-center gap-2 mb-3 cursor-pointer text-sm text-[var(--store-text-primary)] font-medium">
+ <label className="flex items-center gap-2 mb-3 cursor-pointer text-sm text-foreground font-medium">
    <input 
      type="checkbox" 
      checked={sendViaWhatsapp}
      onChange={e => setSendViaWhatsapp(e.target.checked)}
-     className="w-4 h-4 rounded border-[var(--store-border)] accent-[var(--store-highlight)]"
+     className="w-4 h-4 rounded border-border accent-primary"
    />
    Send bill via WhatsApp
  </label>
@@ -112,7 +113,7 @@ export default function PosModal() {
      placeholder="WhatsApp Number (e.g. +919999999999)"
      value={customerPhone}
      onChange={e => setCustomerPhone(e.target.value)}
-     className="w-full border border-[var(--store-border)] rounded-xl px-4 py-2.5 text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--store-bg-input)] text-[var(--store-text-primary)]"
+     className="w-full border border-border rounded-xl px-4 py-2.5 text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-warning bg-input text-foreground"
    />
  )}
 

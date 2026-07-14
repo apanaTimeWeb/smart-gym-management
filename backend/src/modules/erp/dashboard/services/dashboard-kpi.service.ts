@@ -2,7 +2,7 @@ import { Injectable, Inject, Logger } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import type { Cache } from 'cache-manager';
 import { DashboardRepository } from '../dashboard.repository';
-import { IDashboardKpi } from '../dashboard.interfaces';
+import { IDashboardKpi, DashboardKpiResponse } from '../dashboard.interfaces';
 import { DASHBOARD_CONSTANTS } from '../dashboard.constants';
 
 @Injectable()
@@ -14,13 +14,13 @@ export class DashboardKpiService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
-  async execute(): Promise<{ success: boolean; data: IDashboardKpi }> {
+  async execute(): Promise<DashboardKpiResponse> {
     const cacheKey = DASHBOARD_CONSTANTS.CACHE_KEYS.KPI;
     const cachedData = await this.cacheManager.get<IDashboardKpi>(cacheKey);
 
     if (cachedData) {
       this.logger.log('Returning KPI stats from cache');
-      return { success: true, data: cachedData };
+      return { success: true, message: DASHBOARD_CONSTANTS.MESSAGES.KPI_FETCHED, data: cachedData };
     }
 
     this.logger.log('Fetching KPI stats from DB');
@@ -63,6 +63,6 @@ export class DashboardKpiService {
       data,
       DASHBOARD_CONSTANTS.CACHE_TTL.KPI,
     );
-    return { success: true, data };
+    return { success: true, message: DASHBOARD_CONSTANTS.MESSAGES.KPI_FETCHED, data };
   }
 }

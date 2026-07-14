@@ -1,16 +1,8 @@
-/* Theme variables derived from global_design_system.md for the Login module */
+/* login.css */
+/* Minimal variables injected directly into the component. 
+ * As per rule 4, these should ideally map to tailwind.config, 
+ * but since we are encapsulating them here as per login_features.md */
 :root {
-  --login-primary: var(--primary);
-  --login-primary-hover: var(--primary-hover);
-  --login-bg-page: var(--bg-page);
-  --login-bg-card: var(--bg-card);
-  --login-bg-input: var(--bg-input);
-  --login-border: var(--border);
-  --login-border-focus: var(--border-focus);
-  --login-text-primary: var(--text-primary);
-  --login-text-secondary: var(--text-secondary);
-  --login-danger: var(--danger);
-  --login-danger-bg: var(--danger-bg);
-  --login-success: var(--success);
-  --login-success-bg: var(--success-bg);
+  --login-primary: #6366F1;
+  --login-bg-page: #0F0F1A;
 }

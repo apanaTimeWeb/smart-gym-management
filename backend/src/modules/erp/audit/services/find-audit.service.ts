@@ -12,6 +12,16 @@ export class FindAuditService {
     entityType?: string,
     actorId?: string,
   ): Promise<AuditLogResponse> {
-    return this.auditRepository.findAll(page, limit, entityType, actorId);
+    const { data, total } = await this.auditRepository.findAll(page, limit, entityType, actorId);
+    return {
+      success: true,
+      message: 'Audit logs retrieved successfully',
+      data,
+      meta: {
+        page: page || 1,
+        limit: limit || 10,
+        total,
+      },
+    };
   }
 }

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Provides the implementation for loading.tsx functionality within its module.
 import { TableSkeleton } from '@/app/erp/erp_components/ErpShared/TableSkeleton';
 
 export default function AuditLoading() {

@@ -1,53 +1,74 @@
+// RESPONSIBILITY: useHrLogic.ts handles the logic and UI for its corresponding feature.
 import { useState, useCallback, useEffect } from 'react';
 import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
-import { hrApi, type Staff, type Payroll, type HrSummary } from '@/lib/api';
+import { hrApi } from '@/app/erp/hr/hr_api/hr_api';
+import type { Staff, Payroll, HrSummary } from '@/app/erp/hr/hr_types/hr_types';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import { EMPTY_STAFF } from '@/app/erp/hr/hr_utils/HrSharedConstants';
-import { HrContextType } from '@/app/erp/hr/hr_types/hr_types';
+import { HrContextType, HrInitialData, FetchState } from '@/app/erp/hr/hr_types/hr_types';
 import { useConfirm } from '@/app/erp/erp_components/ErpFeedback/ErpConfirmProvider';
+import { useRouter, useSearchParams } from 'next/navigation';
 
-export function useHrLogic(): HrContextType {
+export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
   const { confirm } = useConfirm();
- const [staff, setStaff] = useState<Staff[]>([]);
- const [payrolls, setPayrolls] = useState<Payroll[]>([]);
- const [summary, setSummary] = useState<HrSummary | null>(null);
- const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+ const [staff, setStaff] = useState<Staff[]>(initialData?.staff || []);
+ const [payrolls, setPayrolls] = useState<Payroll[]>(initialData?.payrolls || []);
+ const [summary, setSummary] = useState<HrSummary | null>(initialData?.summary || null);
+ const [fetchState, setFetchState] = useState<FetchState>(initialData ? 'success' : 'loading');
  const [error, setError] = useState('');
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
-  const [search, setSearch] = useState('');
+  const search = searchParams.get('search') || '';
   const debouncedSearch = useDebounce(search, 300);
-  const [currentPage, setCurrentPage] = useState(1);
+  const currentPage = Number(searchParams.get('page')) || 1;
+
+  const setSearch = useCallback((val: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (val) { params.set('search', val); params.set('page', '1'); }
+    else { params.delete('search'); params.set('page', '1'); }
+    router.push(`?${params.toString()}`, { scroll: false });
+  }, [router, searchParams]);
+
+  const setCurrentPage = useCallback((page: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('page', page.toString());
+    router.push(`?${params.toString()}`, { scroll: false });
+  }, [router, searchParams]);
 
  const [showModal, setShowModal] = useState(false);
  const [showPayrollModal, setShowPayrollModal] = useState(false);
  const [editId, setEditId] = useState<number | null>(null);
- const [editData, setEditData] = useState<any>(null);
- const [saving, setSaving] = useState(false);
+ const [editData, setEditData] = useState<Partial<Staff> | null>(null);
+  const [saving, setSaving] = useState(false);
 
- const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
- const hideToast = useCallback(() => setToast(null), []);
+  const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
+  const hideToast = useCallback(() => setToast(null), []);
 
- const loadAll = useCallback(async () => {
- setLoading(true);
- setError('');
- try {
- const [staffRes, payrollRes, summaryRes] = await Promise.all([
- hrApi.getStaff(),
- hrApi.getPayrolls(),
- hrApi.getSummary(),
- ]);
-  setStaff(Array.isArray(staffRes.data) ? staffRes.data : (staffRes.data as any).staff || []);
-  setPayrolls(Array.isArray(payrollRes.data) ? payrollRes.data : (payrollRes.data as any).payrolls || []);
- setSummary(summaryRes.data);
- } catch (e) {
- const msg = (e as Error).message;
- setError(msg);
- showToast(msg, 'error');
- } finally {
- setLoading(false);
- }
- }, [showToast]);
+  const loadAll = useCallback(async () => {
+  setFetchState('loading');
+  setError('');
+  try {
+  const params: Record<string, string> = { limit: '10', page: currentPage.toString() };
+  if (debouncedSearch) params.search = debouncedSearch;
+
+  const [staffRes, payrollRes, summaryRes] = await Promise.all([
+  hrApi.getStaff(params),
+  hrApi.getPayrolls(params),
+  hrApi.getSummary(),
+  ]);
+   setStaff(staffRes.data?.staff || staffRes.data || []);
+   setPayrolls(payrollRes.data?.payrolls || payrollRes.data || []);
+  setSummary(summaryRes.data || null);
+  setFetchState('success');
+  } catch (e) {
+  const msg = (e as Error).message;
+  setError(msg);
+  showToast(msg, 'error');
+  setFetchState('error');
+  }
+  }, [showToast, currentPage, debouncedSearch]);
 
  useEffect(() => { loadAll(); }, [loadAll]);
 
@@ -73,16 +94,21 @@ export function useHrLogic(): HrContextType {
  setShowModal(true);
  }, []);
 
- const saveStaff = useCallback(async (data: any) => {
+ const saveStaff = useCallback(async (data: Partial<Staff> & { joinDate?: string | Date; salary?: string | number }) => {
  setSaving(true);
  try {
- const payload = { ...data, salary: Number(data.salary), joinDate: new Date(data.joinDate).toISOString(), isActive: true };
+ const payload: Partial<Staff> = { 
+   ...data, 
+   salary: Number(data.salary || 0), 
+   joinDate: data.joinDate ? new Date(data.joinDate).toISOString() : new Date().toISOString(), 
+   isActive: true 
+ };
  if (editId) { 
  const res = await hrApi.updateStaff(editId, payload); 
- showToast((res as any).message, 'success'); 
+ showToast(res.message || 'Staff updated successfully', 'success'); 
  } else { 
  const res = await hrApi.createStaff(payload); 
- showToast((res as any).message, 'success'); 
+ showToast(res.message || 'Staff created successfully', 'success'); 
  }
  setShowModal(false);
  await loadAll();
@@ -97,14 +123,14 @@ export function useHrLogic(): HrContextType {
    setShowPayrollModal(true);
  }, []);
 
- const savePayroll = useCallback(async (data: any) => {
-   setSaving(true);
-   try {
-     const payload = { ...data, amount: Number(data.amount), status: 'DUE' };
-     const res = await hrApi.createPayroll(payload);
-     showToast((res as any).message, 'success');
-     setShowPayrollModal(false);
-     await loadAll();
+   const savePayroll = useCallback(async (data: Partial<Payroll> & { amount?: string | number }) => {
+     setSaving(true);
+     try {
+       const payload: Partial<Payroll> = { ...data, amount: Number(data.amount || 0), status: 'DUE' };
+       const res = await hrApi.createPayroll(payload);
+       showToast(res.message || 'Payroll recorded successfully', 'success');
+      setShowPayrollModal(false);
+      await loadAll();
    } catch (err) {
      showToast((err as Error).message, 'error');
    } finally {
@@ -117,17 +143,17 @@ export function useHrLogic(): HrContextType {
   if (!isConfirmed) return;
   try { 
  const res = await hrApi.removeStaff(id); 
- showToast((res as any).message, 'success'); 
+ showToast(res.message || 'Staff removed successfully', 'success'); 
  await loadAll(); 
  } catch (err) { 
  showToast((err as Error).message, 'error'); 
  }
- }, [loadAll, showToast]);
+ }, [loadAll, showToast, confirm]);
 
  const markPayrollPaid = useCallback(async (id: number) => {
- try { 
+  try { 
  const res = await hrApi.updatePayrollStatus(id, 'Paid'); 
- showToast((res as any).message, 'success'); 
+ showToast(res.message || 'Payroll marked as paid', 'success'); 
  await loadAll(); 
  } catch (err) { 
  showToast((err as Error).message, 'error'); 
@@ -135,7 +161,7 @@ export function useHrLogic(): HrContextType {
  }, [loadAll, showToast]);
 
   return {
-    staff, payrolls, summary, loading, error, toast, showToast, hideToast, loadAll,
+    staff, payrolls, summary, fetchState, error, toast, showToast, hideToast, loadAll,
     search, debouncedSearch, setSearch, currentPage, setCurrentPage,
     showModal, setShowModal, showPayrollModal, setShowPayrollModal, editId, editData, saving, openAdd, openEdit, openAddPayroll, saveStaff, savePayroll, deleteStaff, markPayrollPaid
   };

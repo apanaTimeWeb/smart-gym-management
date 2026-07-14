@@ -1,13 +1,21 @@
-
+// RESPONSIBILITY: Defines the TypeScript types and interfaces for the HR module.
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import { EMPTY_STAFF } from '@/app/erp/hr/hr_utils/HrSharedConstants';
 import React from 'react';
+
+export type FetchState = 'idle' | 'loading' | 'success' | 'error';
+
+export interface HrInitialData {
+  staff: Staff[];
+  payrolls: Payroll[];
+  summary: HrSummary | null;
+}
 
 export interface HrContextType {
  staff: Staff[];
  payrolls: Payroll[];
  summary: HrSummary | null;
- loading: boolean;
+ fetchState: FetchState;
  error: string;
   toast: { message: string; type: ToastType } | null;
   
@@ -27,15 +35,15 @@ export interface HrContextType {
  showPayrollModal: boolean;
  setShowPayrollModal: (show: boolean) => void;
  editId: number | null;
- editData: any;
+ editData: Partial<Staff> | null;
  saving: boolean;
  
  // Actions
  openAdd: () => void;
  openEdit: (s: Staff) => void;
  openAddPayroll: () => void;
- saveStaff: (data: any) => Promise<void>;
- savePayroll: (data: any) => Promise<void>;
+ saveStaff: (data: Partial<Staff> & { joinDate?: string | Date; salary?: string | number }) => Promise<void>;
+ savePayroll: (data: Partial<Payroll> & { amount?: string | number }) => Promise<void>;
  deleteStaff: (id: number) => Promise<void>;
  markPayrollPaid: (id: number) => Promise<void>;
 }

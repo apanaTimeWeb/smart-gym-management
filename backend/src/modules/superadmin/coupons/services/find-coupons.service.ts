@@ -1,17 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { CouponsRepository } from '../coupons.repository';
-import { CouponStatus } from '../coupons.interfaces';
+import { CouponStatus, CouponResponse } from '../coupons.interfaces';
+import { COUPONS_MESSAGES, COUPONS_ERRORS } from '../coupons.constants';
 
 @Injectable()
 export class FindCouponsService {
   constructor(private readonly repository: CouponsRepository) {}
   
-  async execute(): Promise<any[]> {
+  async execute(): Promise<CouponResponse> {
     const coupons = await this.repository.findAll();
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    return coupons.map(c => {
+    const result = coupons.map(c => {
       if (!c.expiryDate) return c;
       const expDate = new Date(c.expiryDate);
       expDate.setHours(0, 0, 0, 0);
@@ -22,10 +23,20 @@ export class FindCouponsService {
       }
       return c;
     });
+
+    return {
+      success: true,
+      message: COUPONS_MESSAGES.FETCHED,
+      data: result
+    };
   }
-  async findOne(id: string): Promise<any> {
-    const entity = await this.repository.findById(id);
-    if (!entity) throw new Error('Coupon not found');
-    return entity;
+  async findOne(id: string): Promise<CouponResponse> {
+    const data = await this.repository.findById(id);
+    if (!data) throw new Error(COUPONS_ERRORS.NOT_FOUND);
+    return {
+      success: true,
+      message: COUPONS_MESSAGES.FETCHED,
+      data
+    };
   }
 }

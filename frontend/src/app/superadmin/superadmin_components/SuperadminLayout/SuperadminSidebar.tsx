@@ -1,4 +1,5 @@
 'use client';
+// RESPONSIBILITY: SuperadminSidebar.tsx renders the main sidebar navigation for the SaaS Master Control Panel.
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -6,12 +7,12 @@ import { LayoutDashboard, Building2, ServerCog, LogOut, ChevronLeft, ChevronRigh
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { logout } from '@/lib/api';
 
-interface SidebarProps {
+interface SuperadminSidebarProps {
   isCollapsed: boolean;
   setIsCollapsed: (v: boolean) => void;
 }
 
-export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: SidebarProps) {
+export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: SuperadminSidebarProps) {
   const pathname = usePathname();
 
   const navGroups = [
@@ -54,25 +55,25 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Sideb
 
   return (
     <aside
-      className={`fixed inset-y-0 left-0 z-50 flex flex-col bg-[var(--bg-page)] border-r border-[var(--border)] transition-all duration-300 ${
-        isCollapsed ? 'w-[80px]' : 'w-64'
+      className={`fixed inset-y-0 left-0 z-20 flex flex-col bg-background border-r border-border transition-all duration-300 ${
+        isCollapsed ? 'w-20' : 'w-64'
       }`}
     >
-      <div className="flex h-20 items-center justify-between px-4 border-b border-[var(--border)]">
+      <div className="flex h-20 items-center justify-between px-4 border-b border-border">
         {!isCollapsed && (
-          <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500">
+          <span className="text-[22px] font-bold text-primary">
             SaaS Master
           </span>
         )}
         {isCollapsed && (
-          <span className="text-xl font-bold text-[var(--primary)] mx-auto">SM</span>
+          <span className="text-xl font-bold text-primary mx-auto">SM</span>
         )}
       </div>
 
       <nav className="flex-1 space-y-4 overflow-y-auto p-4 custom-scrollbar">
         {navGroups.map((group) => (
           <div key={group.group}>
-            {!isCollapsed && <p className="text-xs font-semibold text-[var(--text-disabled)] mb-2 uppercase tracking-wider">{group.group}</p>}
+            {!isCollapsed && <p className="text-xs font-semibold text-disabled mb-2 uppercase tracking-wider">{group.group}</p>}
             <div className="space-y-1">
               {group.items.map((item) => {
                 const isActive = pathname.startsWith(item.href);
@@ -84,11 +85,11 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Sideb
                     title={isCollapsed ? item.name : undefined}
                     className={`flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors ${
                       isActive
-                        ? 'bg-[var(--primary)]/10 text-[var(--primary)] border border-[var(--primary)]/20'
-                        : 'text-[var(--text-secondary)] hover:bg-[var(--bg-card)] hover:text-[var(--text-primary)] border border-transparent'
+                        ? 'bg-primary/10 text-primary border border-primary/20'
+                        : 'text-secondary hover:bg-card hover:text-foreground border border-transparent'
                     } ${isCollapsed ? 'justify-center' : ''}`}
                   >
-                    <Icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-[var(--primary)]' : 'opacity-70'}`} />
+                    <Icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-primary' : 'opacity-70'}`} />
                     {!isCollapsed && <span className="font-medium text-sm">{item.name}</span>}
                   </Link>
                 );
@@ -98,16 +99,16 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Sideb
         ))}
       </nav>
 
-      <div className="p-4 border-t border-[var(--border)]">
+      <div className="p-4 border-t border-border">
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--bg-card)] p-2 text-[var(--text-secondary)] hover:bg-[var(--border)] transition-colors mb-4"
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-card p-2 text-secondary hover:bg-border transition-colors mb-4"
         >
           {isCollapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
         </button>
         
         <button 
-          className={`flex w-full items-center gap-3 rounded-lg px-3 py-3 text-[var(--danger)] hover:bg-[var(--danger)]/10 transition-colors ${isCollapsed ? 'justify-center' : ''}`}
+          className={`flex w-full items-center gap-3 rounded-lg px-3 py-3 text-destructive hover:bg-destructive/10 transition-colors ${isCollapsed ? 'justify-center' : ''}`}
           onClick={async () => { await logout(); }}
         >
           <LogOut className="w-5 h-5 shrink-0" />

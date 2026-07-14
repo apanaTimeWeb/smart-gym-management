@@ -16,15 +16,15 @@ export class CouponsRepository {
   }
 
   async findAll(): Promise<Coupon[]> {
-    return await this.repo.find();
+    return await this.repo.find({ where: { isDeleted: false } });
   }
 
   async findById(id: string): Promise<Coupon | null> {
-    return await this.repo.findOne({ where: { id } });
+    return await this.repo.findOne({ where: { id, isDeleted: false } });
   }
 
   async findByCode(code: string): Promise<Coupon | null> {
-    return await this.repo.findOne({ where: { code } });
+    return await this.repo.findOne({ where: { code, isDeleted: false } });
   }
 
   async update(id: string, data: Partial<Coupon>): Promise<Coupon | null> {
@@ -33,6 +33,6 @@ export class CouponsRepository {
   }
 
   async softDelete(id: string): Promise<void> {
-    await this.repo.update(id, { isDeleted: true } as any);
+    await this.repo.update(id, { isDeleted: true });
   }
 }

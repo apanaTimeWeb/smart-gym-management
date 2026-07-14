@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Provides the implementation for plans_url_config.ts functionality within its module.
 export const PlansUrlConfig = {
   PAGES: {
     LIST: '/erp/plans',

@@ -3,6 +3,7 @@ export enum InvoiceStatus {
   PENDING = 'PENDING',
   FAILED = 'FAILED'
 }
+
 export interface ISaaSInvoice {
   id: string;
   tenantName: string;
@@ -11,4 +12,10 @@ export interface ISaaSInvoice {
   status: InvoiceStatus;
   date: Date;
   planName: string;
+}
+
+export interface InvoiceResponse {
+  success: boolean;
+  message: string;
+  data: ISaaSInvoice | ISaaSInvoice[] | null;
 }

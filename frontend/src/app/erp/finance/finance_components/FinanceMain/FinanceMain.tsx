@@ -1,4 +1,5 @@
-"use client";
+// RESPONSIBILITY: Provides the implementation for FinanceMain.tsx functionality within its module.
+'use client';
 
 import ErpHeader from '@/app/erp/erp_components/ErpLayout/ErpHeader';
 import ErpToast from '@/app/erp/erp_components/ErpFeedback/ErpToast';
@@ -7,14 +8,14 @@ import FinanceKPIs from '@/app/erp/finance/finance_components/FinanceKPIs/Financ
 import RevenueByMethod from '@/app/erp/finance/finance_components/RevenueByMethod/RevenueByMethod';
 import FinanceTabs from '@/app/erp/finance/finance_components/FinanceTabs/FinanceTabs';
 import AddPaymentModal from '@/app/erp/finance/finance_components/AddPaymentModal/AddPaymentModal';
-import '@/app/erp/finance/finance.css';
+import { FinanceInitialData } from '@/app/erp/finance/finance_types/finance_types';
 
-function FinanceContent() {
- const { toast, hideToast } = useFinanceContext();
+ function FinanceContent() {
+  const { toast, hideToast } = useFinanceContext();
 
- return (
- <div className="min-h-full pb-10 finance-module">
- <ErpHeader title="Finance" subtitle="Track revenue, payments and financial overview" />
+  return (
+  <div className="min-h-full pb-10 bg-background text-foreground">
+  <ErpHeader title="Finance" subtitle="Track revenue, payments and financial overview" />
  <div className="p-6 space-y-5">
  <FinanceKPIs />
  <RevenueByMethod />
@@ -30,8 +31,8 @@ function FinanceContent() {
  );
 }
 
-export default function FinanceMain({ initialData }: { initialData?: any }) {
- return (
+export default function FinanceMain({ initialData }: { initialData?: FinanceInitialData | null }) {
+  return (
  <FinanceProvider initialData={initialData}>
  <FinanceContent />
  </FinanceProvider>

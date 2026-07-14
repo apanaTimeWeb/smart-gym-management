@@ -1,4 +1,5 @@
-import './superadmin.css';
+// RESPONSIBILITY: Root layout for all /superadmin/* routes. Wraps pages in the SuperadminLayout shell (Sidebar + Header). Pure Server Component — no client hooks.
+
 import SuperadminLayout from '@/app/superadmin/superadmin_components/SuperadminLayout/SuperadminLayout';
 
 export const metadata = {
@@ -8,7 +9,7 @@ export const metadata = {
 
 export default function SaaSLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="superadmin-module bg-[var(--bg-page)] text-[var(--text-primary)] min-h-screen">
+    <div className="superadmin-module bg-background text-foreground min-h-screen">
       <SuperadminLayout>{children}</SuperadminLayout>
     </div>
   );

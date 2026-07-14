@@ -29,6 +29,6 @@ export class BackupsRepository {
   }
 
   async softDelete(id: string): Promise<void> {
-    await this.repo.update(id, { isDeleted: true } as any);
+    await this.repo.update(id, { isDeleted: true });
   }
 }

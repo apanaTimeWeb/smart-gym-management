@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Provides the implementation for finance_url_config.ts functionality within its module.
 export const FinanceUrlConfig = {
   PAGES: {
     LIST: '/erp/finance',

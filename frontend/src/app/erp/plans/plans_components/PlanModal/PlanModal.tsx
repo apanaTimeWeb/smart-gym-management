@@ -1,125 +1,127 @@
-"use client";
+// RESPONSIBILITY: Renders the modal form for creating or editing a membership plan. Uses React Hook Form + Zod validation.
+'use client';
 
 import { useEffect } from 'react';
-import { X, Save } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { X, Save, Loader2 } from 'lucide-react';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 import { usePlansContext } from '@/app/erp/plans/plans_context/PlansContext';
 import { TIERS, PlanSchema, type PlanFormValues, EMPTY_PLAN_FORM } from '@/app/erp/plans/plans_utils/PlansSharedConstants';
 
 export default function PlanModal() {
-  const { 
-    showModal, setShowModal, 
-    editId, form, 
-    saving, savePlan 
-  } = usePlansContext();
+  const { showModal, setShowModal, editId, form, saving, savePlan } = usePlansContext();
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors }
-  } = useForm<PlanFormValues>({
+  const { register, handleSubmit, reset, control, formState: { errors } } = useForm<PlanFormValues>({
     resolver: zodResolver(PlanSchema),
-    defaultValues: form || EMPTY_PLAN_FORM
+    defaultValues: form || EMPTY_PLAN_FORM,
   });
 
+  // Sync form values when modal opens with new data
   useEffect(() => {
-    if (showModal) {
-      reset(form);
-    }
+    if (showModal) reset(form);
   }, [showModal, form, reset]);
 
   if (!showModal) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-      <div className="bg-[var(--plans-bg-card)] rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-[var(--plans-bg-card)] px-6 py-4 border-b border-[var(--plans-border)] flex items-center justify-between">
-          <h3 className="text-lg font-bold text-[var(--plans-text-primary)]">
+    <div className="fixed inset-0 bg-black/60 z-40 flex items-center justify-center p-4">
+      <div className="bg-card rounded-2xl shadow-2xl shadow-black/50 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-border">
+        <div className="sticky top-0 bg-card px-6 py-4 border-b border-border flex items-center justify-between">
+          <h3 className="text-lg font-bold text-primary">
             {editId ? 'Edit Plan' : 'Create New Plan'}
           </h3>
-          <button 
+          <button
             type="button"
-            onClick={() => setShowModal(false)} 
-            className="p-2 rounded-lg hover:bg-[var(--primary-subtle)] text-[var(--plans-text-secondary)] transition-colors"
+            onClick={() => setShowModal(false)}
+            className="p-2 rounded-lg hover:bg-primary-subtle text-secondary transition-all duration-200"
+            aria-label="Close modal"
           >
             <X size={18} />
           </button>
         </div>
-        <form onSubmit={handleSubmit(savePlan as any)} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit(savePlan)} className="p-6 space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-[var(--plans-text-secondary)] mb-1">Plan Name</label>
-              <input 
-                type="text" 
-                placeholder="e.g. Gold Plan" 
+              <label className="block text-sm font-medium text-secondary mb-1">Plan Name</label>
+              <input
+                type="text"
+                placeholder="e.g. Gold Plan"
                 {...register('name')}
-                className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 ${
-                  errors.name ? 'border-[var(--danger)] focus:ring-[var(--danger)]' : 'border-[var(--plans-border)] focus:ring-[var(--warning)]'
-                } bg-[var(--plans-bg-input)] text-[var(--plans-text-primary)]`} 
+                className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-colors ${
+                  errors.name ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
+                }`}
               />
-              {errors.name && <p className="text-[var(--danger)] text-xs mt-1">{errors.name.message}</p>}
+              {errors.name && <p className="text-danger text-xs mt-1">{errors.name.message}</p>}
             </div>
             <div>
-              <label className="block text-sm font-medium text-[var(--plans-text-secondary)] mb-1">Tier</label>
-              <select 
-                {...register('tier')}
-                className="w-full border border-[var(--plans-border)] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--plans-bg-input)] text-[var(--plans-text-primary)]"
-              >
-                {TIERS.map(t => <option key={t} value={t}>{t}</option>)}
-              </select>
+              <label className="block text-sm font-medium text-secondary mb-1">Tier</label>
+              <Controller
+                name="tier"
+                control={control}
+                render={({ field }) => (
+                  <SearchableDropdown
+                    value={field.value || ''}
+                    onChange={field.onChange}
+                    options={TIERS.map(t => ({ label: t, value: t }))}
+                  />
+                )}
+              />
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[
-              { label: '1 Month Price (₹)', key: 'price1Month' }, 
-              { label: '3 Months Price (₹)', key: 'price3Month' }, 
-              { label: '6 Months Price (₹)', key: 'price6Month' }, 
-              { label: '12 Months Price (₹)', key: 'price12Month' },
-              { label: 'Custom Price / Day (₹)', key: 'priceCustom' }
+              { label: '1 Month Price (₹)',    key: 'price1Month'  },
+              { label: '3 Months Price (₹)',   key: 'price3Month'  },
+              { label: '6 Months Price (₹)',   key: 'price6Month'  },
+              { label: '12 Months Price (₹)',  key: 'price12Month' },
+              { label: 'Custom Price / Day (₹)', key: 'priceCustom' },
             ].map(f => (
               <div key={f.key}>
-                <label className="block text-sm font-medium text-[var(--plans-text-secondary)] mb-1">{f.label}</label>
-                <input 
-                  type="number" 
-                  placeholder="0" 
+                <label className="block text-sm font-medium text-secondary mb-1">{f.label}</label>
+                <input
+                  type="number"
+                  placeholder="0"
                   {...register(f.key as keyof PlanFormValues)}
-                  className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 ${
-                    errors[f.key as keyof PlanFormValues] ? 'border-[var(--danger)] focus:ring-[var(--danger)]' : 'border-[var(--plans-border)] focus:ring-[var(--warning)]'
-                  } bg-[var(--plans-bg-input)] text-[var(--plans-text-primary)]`} 
+                  className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-colors ${
+                    errors[f.key as keyof PlanFormValues] ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
+                  }`}
                 />
-                {errors[f.key as keyof PlanFormValues] && <p className="text-[var(--danger)] text-xs mt-1">{errors[f.key as keyof PlanFormValues]?.message}</p>}
+                {errors[f.key as keyof PlanFormValues] && (
+                  <p className="text-danger text-xs mt-1">{errors[f.key as keyof PlanFormValues]?.message}</p>
+                )}
               </div>
             ))}
           </div>
           <div>
-            <label className="block text-sm font-medium text-[var(--plans-text-secondary)] mb-1">Features (one per line)</label>
-            <textarea 
-              rows={5} 
-              placeholder="Gym Access (6am - 10pm)&#10;Locker Access&#10;Fitness Assessment" 
+            <label className="block text-sm font-medium text-secondary mb-1">Features (one per line)</label>
+            <textarea
+              rows={5}
+              placeholder={"Gym Access (6am - 10pm)\nLocker Access\nFitness Assessment"}
               {...register('features')}
-              className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 resize-none ${
-                errors.features ? 'border-[var(--danger)] focus:ring-[var(--danger)]' : 'border-[var(--plans-border)] focus:ring-[var(--warning)]'
-              } bg-[var(--plans-bg-input)] text-[var(--plans-text-primary)]`} 
+              className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 resize-none bg-input text-primary transition-colors ${
+                errors.features ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
+              }`}
             />
-            {errors.features && <p className="text-[var(--danger)] text-xs mt-1">{errors.features.message}</p>}
+            {errors.features && <p className="text-danger text-xs mt-1">{errors.features.message}</p>}
           </div>
           <div className="flex gap-3 pt-2">
-            <button 
-              type="button" 
-              onClick={() => setShowModal(false)} 
-              className="flex-1 py-2.5 border border-[var(--plans-border)] rounded-xl text-sm font-medium text-[var(--plans-text-primary)] hover:bg-[var(--primary-subtle)] transition-colors"
+            <button
+              type="button"
+              onClick={() => setShowModal(false)}
+              className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-primary hover:bg-primary-subtle transition-all duration-200 active:scale-95"
             >
               Cancel
             </button>
-            <button 
-              type="submit" 
-              disabled={saving} 
-              className="flex-1 py-2.5 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 disabled:opacity-70 transition-colors" 
-              style={{ background: 'var(--plans-highlight)' }}
+            <button
+              type="submit"
+              disabled={saving}
+              className="flex-1 py-2.5 rounded-xl text-sm font-bold text-white bg-primary hover:bg-primary-hover flex items-center justify-center gap-2 disabled:opacity-70 transition-all duration-200 active:scale-95"
             >
-              {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><Save size={15} />{editId ? 'Update' : 'Create Plan'}</>}
+              {saving
+                ? <Loader2 className="w-4 h-4 animate-spin" />
+                : <><Save size={15} />{editId ? 'Update' : 'Create Plan'}</>
+              }
             </button>
           </div>
         </form>

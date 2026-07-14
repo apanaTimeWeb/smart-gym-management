@@ -1,4 +1,5 @@
-"use client";
+// RESPONSIBILITY: Provides the implementation for error.tsx functionality within its module.
+'use client';
 
 import { useEffect } from "react";
 
@@ -10,7 +11,7 @@ export default function FinanceError({
  reset: () => void;
 }) {
  useEffect(() => {
- console.error(error);
+ // console.error(error);
  }, [error]);
 
  return (

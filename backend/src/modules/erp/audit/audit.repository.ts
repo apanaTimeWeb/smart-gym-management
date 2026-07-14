@@ -26,7 +26,7 @@ export class AuditRepository {
     limit: number = 10,
     entityType?: string,
     actorId?: string,
-  ): Promise<AuditLogResponse> {
+  ): Promise<{ data: AuditLog[]; total: number }> {
     const query = this.repository.createQueryBuilder('audit_logs');
     
     if (entityType) {

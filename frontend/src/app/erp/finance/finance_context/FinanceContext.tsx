@@ -1,16 +1,30 @@
-"use client";
+// RESPONSIBILITY: Provides the implementation for FinanceContext.tsx functionality within its module.
+'use client';
 
-import React, { createContext, useContext } from 'react';
-import { FinanceContextType } from '@/app/erp/finance/finance_types/finance_types';
+import React, { createContext, useContext, useMemo } from 'react';
+import { FinanceContextType, FinanceInitialData } from '@/app/erp/finance/finance_types/finance_types';
 import { useFinanceLogic } from '@/app/erp/finance/finance_context/useFinanceLogic';
 
 const FinanceContext = createContext<FinanceContextType | undefined>(undefined);
 
-export function FinanceProvider({ children, initialData }: { children: React.ReactNode, initialData?: any }) {
+export function FinanceProvider({ children, initialData }: { children: React.ReactNode, initialData?: FinanceInitialData | null }) {
  const logic = useFinanceLogic(initialData);
 
+ const memoizedValue = useMemo(() => logic, [
+   logic.payments,
+   logic.totalPayments,
+   logic.summary,
+   logic.fetchState,
+   logic.saving,
+   logic.error,
+   logic.toast,
+   logic.showModal,
+   logic.search,
+   logic.currentPage
+ ]);
+
  return (
- <FinanceContext.Provider value={logic}>
+ <FinanceContext.Provider value={memoizedValue}>
  {children}
  </FinanceContext.Provider>
  );

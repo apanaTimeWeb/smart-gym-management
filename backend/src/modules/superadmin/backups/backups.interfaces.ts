@@ -11,3 +11,9 @@ export interface IBackupRecord {
   status: BackupStatus;
   timestamp: Date;
 }
+
+export interface BackupResponse {
+  success: boolean;
+  message: string;
+  data: IBackupRecord | IBackupRecord[] | null;
+}

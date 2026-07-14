@@ -1,5 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
-import { TenantStatus } from '../gyms.interfaces';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm';
+import { TenantStatus } from '../../superadmin.constants';
 
 @Entity('gyms')
 export class Tenant {
@@ -18,7 +18,7 @@ export class Tenant {
   @Column({ type: 'varchar' })
   phone: string;
 
-  @Column({ type: 'varchar', default: 'TRIAL' })
+  @Column({ type: 'enum', enum: TenantStatus, default: TenantStatus.TRIAL })
   status: TenantStatus;
 
   @Column({ type: 'varchar' })
@@ -35,7 +35,6 @@ export class Tenant {
 
   @Column({ type: 'varchar', default: '1.0.0' })
   databaseVersion: string;
-
 
   @Column({ type: 'boolean', default: false })
   isDeleted: boolean;

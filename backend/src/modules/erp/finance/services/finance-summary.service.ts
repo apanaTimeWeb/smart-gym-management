@@ -96,6 +96,7 @@ export class FinanceSummaryService {
     };
 
     return {
+      success: true,
       message: FINANCE_MESSAGES.SUMMARY_FETCHED_SUCCESS,
       data: summary,
     };

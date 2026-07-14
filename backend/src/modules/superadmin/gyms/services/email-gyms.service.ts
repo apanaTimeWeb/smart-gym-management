@@ -1,6 +1,8 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { EmailTenantDto } from '../dto/email-gyms.dto';
 import { GymsRepository } from '../gyms.repository';
+import { TenantResponse } from '../gyms.interfaces';
+import { GYMS_MESSAGES } from '../gyms.constants';
 
 @Injectable()
 export class EmailGymsService {
@@ -8,7 +10,7 @@ export class EmailGymsService {
 
   constructor(private readonly repository: GymsRepository) {}
   
-  async execute(id: string, dto: EmailTenantDto): Promise<any> {
+  async execute(id: string, dto: EmailTenantDto): Promise<TenantResponse> {
     const gym = await this.repository.findById(id);
     if (!gym) {
       throw new NotFoundException(`Gym with ID ${id} not found`);
@@ -23,7 +25,8 @@ export class EmailGymsService {
     
     return {
       success: true,
-      message: 'Email sent successfully'
+      message: 'Email sent successfully',
+      data: null
     };
   }
 }

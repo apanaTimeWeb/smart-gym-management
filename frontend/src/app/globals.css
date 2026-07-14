@@ -19,6 +19,25 @@
   --color-warning: var(--warning);
   --color-info: var(--info);
   
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-subtle: var(--primary-subtle);
+  --color-bg-page: var(--bg-page);
+  --color-bg-card: var(--bg-card);
+  --color-sidebar: var(--bg-sidebar);
+  --color-header: var(--bg-header);
+  --color-bg-input: var(--bg-input);
+  --color-border-focus: var(--border-focus);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-disabled: var(--text-disabled);
+  --color-success-bg: var(--success-bg);
+  --color-warning-bg: var(--warning-bg);
+  --color-danger: var(--danger);
+  --color-danger-bg: var(--danger-bg);
+  --color-info-bg: var(--info-bg);
+  --color-purple: var(--purple);
+  --color-purple-bg: var(--purple-bg);
+  
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: Menlo, monospace;
@@ -95,7 +114,7 @@
 }
 
 @layer base {
-  * { @apply border-[var(--border)] box-border; }
+  * { @apply border-border box-border; }
   body { 
     @apply font-sans antialiased; 
     background-color: var(--bg-page);

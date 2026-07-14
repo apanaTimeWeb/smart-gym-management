@@ -1,4 +1,5 @@
-"use client";
+// RESPONSIBILITY: ErpPagination.tsx handles the logic and UI for its corresponding feature.
+'use client';
 
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 

@@ -1,15 +1,31 @@
-"use client";
+// RESPONSIBILITY: HrContext.tsx handles the logic and UI for its corresponding feature.
+'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';
-import { HrContextType } from '@/app/erp/hr/hr_types/hr_types';
+import { HrContextType, HrInitialData } from '@/app/erp/hr/hr_types/hr_types';
 import { useHrLogic } from '@/app/erp/hr/hr_context/useHrLogic';
 
 const HrContext = createContext<HrContextType | undefined>(undefined);
 
-export function HrProvider({ children }: { children: React.ReactNode }) {
- const logic = useHrLogic();
+export function HrProvider({ children, initialData }: { children: React.ReactNode, initialData?: HrInitialData | null }) {
+ const logic = useHrLogic(initialData);
 
- const value = useMemo(() => logic, [logic]);
+ const value = useMemo(() => logic, [
+   logic.staff,
+   logic.payrolls,
+   logic.summary,
+   logic.fetchState,
+   logic.error,
+   logic.toast,
+   logic.search,
+   logic.debouncedSearch,
+   logic.currentPage,
+   logic.showModal,
+   logic.showPayrollModal,
+   logic.editId,
+   logic.editData,
+   logic.saving
+ ]);
 
  return (
  <HrContext.Provider value={value}>

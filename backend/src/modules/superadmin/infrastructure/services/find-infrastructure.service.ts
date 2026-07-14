@@ -1,11 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as os from 'os';
+import { InfrastructureResponse } from '../infrastructure.interfaces';
+import { INFRASTRUCTURE_MESSAGES } from '../infrastructure.constants';
 
 @Injectable()
 export class FindInfrastructureService {
   private readonly logger = new Logger(FindInfrastructureService.name);
 
-  async execute() {
+  async execute(): Promise<InfrastructureResponse> {
     this.logger.log('Fetching infrastructure telemetry');
     
     const cpus = os.cpus();
@@ -14,6 +16,7 @@ export class FindInfrastructureService {
     
     return { 
       success: true, 
+      message: INFRASTRUCTURE_MESSAGES.FETCHED_SUCCESS,
       data: {
         cpu: {
           model: cpus[0]?.model,

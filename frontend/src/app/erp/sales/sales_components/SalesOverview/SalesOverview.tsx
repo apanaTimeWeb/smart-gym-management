@@ -1,36 +1,38 @@
-"use client";
+// RESPONSIBILITY: Provides the implementation for SalesOverview.tsx functionality within its module.
+'use client';
 
 import { useSalesContext } from '@/app/erp/sales/sales_context/SalesContext';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   AreaChart, Area
 } from 'recharts';
+import { Loader2 } from 'lucide-react';
 
 export default function SalesOverview() {
-  const { overviewData, loading } = useSalesContext();
+  const { overviewData, fetchState } = useSalesContext();
 
-  if (loading) {
+  if (fetchState === 'loading') {
     return (
       <div className="flex justify-center py-10">
-        <div className="w-8 h-8 border-4 border-t-transparent border-[var(--primary)] rounded-full animate-spin" />
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
   }
 
  return (
  <div className="space-y-6">
- <div className="bg-[var(--sales-bg-card)] p-5 rounded-xl border border-[var(--sales-border)] shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-none">
- <h3 className="font-bold text-[var(--sales-text-primary)] mb-4">Monthly Revenue (₹)</h3>
- <div className="h-[280px] w-full">
+ <div className="bg-card p-5 rounded-xl border border-border shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-none">
+ <h3 className="font-bold text-foreground mb-4">Monthly Revenue (₹)</h3>
+ <div className="h-70 w-full">
   <ResponsiveContainer width="100%" height="100%">
     <BarChart data={overviewData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--sales-border)" />
+      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
       <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} />
       <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} tickFormatter={(val) => `${(val / 1000).toFixed(0)}K`} />
       <Tooltip 
-        cursor={{ fill: 'var(--sales-border)', opacity: 0.2 }}
+        cursor={{ fill: '#f1f5f9', opacity: 0.5 }}
         contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', backgroundColor: 'var(--bg-card)', color: 'var(--text-primary)' }}
-        formatter={(value: number) => [`₹${value.toLocaleString()}`, 'Revenue']}
+        formatter={(value: any) => [`₹${Number(value).toLocaleString()}`, 'Revenue']}
       />
       <Bar dataKey="revenue" fill="#4F46E5" radius={[6, 6, 0, 0]} barSize={40} />
     </BarChart>
@@ -38,9 +40,9 @@ export default function SalesOverview() {
  </div>
  </div>
  
- <div className="bg-[var(--sales-bg-card)] p-5 rounded-xl border border-[var(--sales-border)] shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-none">
- <h3 className="font-bold text-[var(--sales-text-primary)] mb-4">New Members Trend</h3>
- <div className="h-[250px] w-full">
+ <div className="bg-card p-5 rounded-xl border border-border shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-none">
+ <h3 className="font-bold text-foreground mb-4">New Members Trend</h3>
+ <div className="h-64 w-full">
   <ResponsiveContainer width="100%" height="100%">
     <AreaChart data={overviewData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
       <defs>
@@ -49,7 +51,7 @@ export default function SalesOverview() {
           <stop offset="95%" stopColor="#F43F5E" stopOpacity={0}/>
         </linearGradient>
       </defs>
-      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--sales-border)" />
+      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
       <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} />
       <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} />
       <Tooltip 

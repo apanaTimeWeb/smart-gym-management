@@ -1,36 +1,35 @@
-"use client";
+// RESPONSIBILITY: Provides the implementation for AuditContext.tsx functionality within its module.
+'use client';
 
-import React, { createContext, useContext, useState, useMemo, useCallback, ReactNode } from 'react';
-import { AuditFilterState } from '../audit_types/audit_types';
+import React, { createContext, useContext, useMemo } from 'react';
+import { useAuditLogic, AuditContextType } from '@/app/erp/audit/audit_context/useAuditLogic';
 
-interface AuditContextProps {
-  filters: AuditFilterState;
-  setFilters: (filters: Partial<AuditFilterState>) => void;
+const AuditContext = createContext<AuditContextType | undefined>(undefined);
+
+export function AuditProvider({ children }: { children: React.ReactNode }) {
+ const logic = useAuditLogic();
+
+ const value = useMemo(() => logic, [
+   logic.logs,
+   logic.fetchState,
+   logic.error,
+   logic.page,
+   logic.limit,
+   logic.totalCount,
+   logic.filters
+ ]);
+
+ return (
+ <AuditContext.Provider value={value}>
+ {children}
+ </AuditContext.Provider>
+ );
 }
 
-const AuditContext = createContext<AuditContextProps | undefined>(undefined);
-
-export const AuditProvider = ({ children }: { children: ReactNode }) => {
-  const [filters, setFiltersState] = useState<AuditFilterState>({
-    page: 1,
-    limit: 10,
-    entityType: '',
-    actorId: '',
-  });
-
-  const setFilters = useCallback((newFilters: Partial<AuditFilterState>) => {
-    setFiltersState((prev) => ({ ...prev, ...newFilters, page: newFilters.entityType !== undefined ? 1 : (newFilters.page || prev.page) }));
-  }, []);
-
-  const value = useMemo(() => ({ filters, setFilters }), [filters, setFilters]);
-
-  return <AuditContext.Provider value={value}>{children}</AuditContext.Provider>;
-};
-
-export const useAuditContext = () => {
-  const context = useContext(AuditContext);
-  if (!context) {
-    throw new Error('useAuditContext must be used within an AuditProvider');
-  }
-  return context;
-};
+export function useAuditContext() {
+ const context = useContext(AuditContext);
+ if (context === undefined) {
+ throw new Error('useAuditContext must be used within an AuditProvider');
+ }
+ return context;
+}

@@ -19,6 +19,7 @@ export class FindAttendanceService {
     const limit = query.limit || 50;
 
     return {
+      success: true,
       message: ATTENDANCE_MESSAGES.FETCHED_SUCCESS,
       data: {
         attendances,

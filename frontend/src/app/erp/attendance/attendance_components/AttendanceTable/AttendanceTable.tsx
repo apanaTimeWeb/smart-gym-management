@@ -1,69 +1,79 @@
-"use client";
+// RESPONSIBILITY: Renders the attendance data table and pagination controls.
+'use client';
 
 import { Clock } from 'lucide-react';
 import { useAttendanceContext } from '@/app/erp/attendance/attendance_context/AttendanceContext';
 import { ATTENDANCE_TABLE_HEADERS, formatDate, formatTime } from '@/app/erp/attendance/attendance_utils/AttendanceSharedConstants';
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
+import { ERP_ITEMS_PER_PAGE } from '@/app/erp/erp_utils/ErpSharedConstants';
 
 export default function AttendanceTable() {
-  const { records, totalRecords, loading, currentPage, setCurrentPage } = useAttendanceContext();
+  const { records, totalRecords, fetchState, currentPage, setCurrentPage } = useAttendanceContext();
 
-  const ITEMS_PER_PAGE = 10;
-  const totalPages = Math.ceil(totalRecords / ITEMS_PER_PAGE) || 1;
+  
+  const totalPages = Math.ceil(totalRecords / ERP_ITEMS_PER_PAGE) || 1;
 
   return (
  <div className="p-5">
- {loading ? (
- <div className="flex justify-center py-10">
- <div className="w-8 h-8 border-4 border-[var(--warning)] border-t-transparent rounded-full animate-spin" />
- </div>
- ) : (
+  {fetchState === 'loading' ? (
+    <div className="animate-pulse bg-card rounded-xl border border-border mt-4">
+      {[...Array(5)].map((_, i) => (
+        <div key={i} className="h-16 border-b border-border flex items-center px-4 gap-4">
+          <div className="h-8 w-8 bg-muted rounded-full"></div>
+          <div className="h-4 bg-muted rounded w-32"></div>
+          <div className="h-4 bg-muted rounded-full w-16"></div>
+          <div className="h-4 bg-muted rounded w-20"></div>
+          <div className="h-4 bg-muted rounded w-20"></div>
+        </div>
+      ))}
+    </div>
+  ) : (
  <div className="overflow-x-auto">
  <table className="w-full">
- <thead className="bg-[var(--bg-input)]">
+ <thead className="bg-input">
  <tr>
  {ATTENDANCE_TABLE_HEADERS.map(h => (
- <th key={h} className="text-left text-xs font-semibold text-[var(--attendance-text-secondary)] uppercase tracking-wider px-4 py-3">
+ <th key={h} className="text-left text-xs font-semibold text-secondary uppercase tracking-wider px-4 py-3">
  {h}
  </th>
  ))}
  </tr>
  </thead>
- <tbody className="divide-y divide-[var(--attendance-border)]">
+ <tbody className="divide-y divide-border">
  {records.map(r => (
- <tr key={r.id} className="hover:bg-[var(--primary-subtle)] transition-colors">
+ <tr key={r.id} className="hover:bg-primary-subtle transition-colors">
  <td className="px-4 py-3">
  <div className="flex items-center gap-2">
  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold ${
- r.type === 'MEMBER' ? 'bg-[var(--info)]' : 'bg-[var(--success)]'
+ r.type === 'MEMBER' ? 'bg-info' : 'bg-success'
  }`}>
  {(r.member?.name || r.staff?.name || '?').charAt(0)}
  </div>
- <span className="text-sm font-medium text-[var(--attendance-text-primary)]">
+ <span className="text-sm font-medium text-foreground">
  {r.member?.name || r.staff?.name || '—'}
  </span>
  </div>
  </td>
  <td className="px-4 py-3">
- <span className={`inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${
+ <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
  r.type === 'MEMBER' 
- ? 'bg-[var(--info-bg)] text-[var(--info)] dark:bg-[var(--info-bg)] dark:text-[var(--info)]' 
- : 'bg-[var(--success-bg)] text-[var(--success)] dark:bg-[var(--success-bg)] dark:text-[var(--success)]'
+ ? 'bg-info-bg text-info dark:bg-info-bg dark:text-info' 
+ : 'bg-success-bg text-success dark:bg-success-bg dark:text-success'
  }`}>
  {r.type}
  </span>
  </td>
- <td className="px-4 py-3 text-sm text-[var(--attendance-text-secondary)]">{formatDate(r.date)}</td>
- <td className="px-4 py-3 text-sm text-[var(--attendance-text-secondary)] flex items-center gap-1">
+ <td className="px-4 py-3 text-sm text-secondary">{formatDate(r.date)}</td>
+ <td className="px-4 py-3 text-sm text-secondary flex items-center gap-1">
  <Clock size={13} className="opacity-50" />
  {formatTime(r.checkIn)}
  </td>
- <td className="px-4 py-3 text-sm text-[var(--attendance-text-secondary)]">{formatTime(r.checkOut)}</td>
+ <td className="px-4 py-3 text-sm text-secondary">{formatTime(r.checkOut)}</td>
  </tr>
  ))}
- {records.length === 0 && !loading && (
+ {records.length === 0 && (
  <tr>
- <td colSpan={5} className="text-center py-10 text-[var(--attendance-text-secondary)]">
+ <td colSpan={5} className="text-center py-10 text-secondary">
  No attendance records found.
  </td>
  </tr>
@@ -73,19 +83,12 @@ export default function AttendanceTable() {
  </div>
  )}
  
- {!loading && totalPages > 1 && (
-    <div className="border-t border-[var(--attendance-border)] mt-4 pt-4">
+ {totalPages > 1 && (
+    <div className="border-t border-border mt-4 pt-4">
       <ErpPagination 
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
-        colors={{
-          text: 'var(--attendance-text-secondary)',
-          textActive: 'white',
-          bgActive: 'var(--attendance-highlight)',
-          border: 'var(--attendance-border)',
-          hoverBg: 'var(--attendance-highlight-subtle)'
-        }}
       />
     </div>
   )}

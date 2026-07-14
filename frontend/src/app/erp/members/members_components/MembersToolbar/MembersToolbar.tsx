@@ -1,43 +1,47 @@
-"use client";
+// RESPONSIBILITY: Renders the toolbar for searching, filtering, and initiating the "Add Member" action.
+'use client';
 
 import { Search, RefreshCw, Plus } from 'lucide-react';
 import { useMembersContext } from '@/app/erp/members/members_context/MembersContext';
+import { useMembersStore } from '@/app/erp/members/members_store/useMembersStore';
+import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
+import { MEMBER_STATUS_OPTIONS } from '@/app/erp/members/members_utils/MembersSharedConstants';
 
 export default function MembersToolbar() {
-  const { search, setSearch, statusFilter, setStatusFilter, loadAll, openAdd, setCurrentPage } = useMembersContext();
+  const { search, setSearch, statusFilter, setStatusFilter, openAdd, currentPage } = useMembersContext();
+  const loadAll = useMembersStore(s => s.loadAll);
+
+  const handleRefresh = () => {
+    loadAll({ search, status: statusFilter, page: currentPage.toString() });
+  };
 
   return (
-    <div className="bg-[var(--members-bg-card)] rounded-xl shadow-sm border border-[var(--members-border)] p-4 flex flex-wrap gap-3 items-center justify-between">
+    <div className="bg-card rounded-xl shadow-sm border border-border p-4 flex flex-wrap gap-3 items-center justify-between">
       <div className="relative">
-        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]" />
+        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
         <input 
           value={search} 
-          onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} 
+          onChange={e => setSearch(e.target.value)} 
           placeholder="Search by name or phone..." 
-          className="pl-9 pr-3 py-2.5 border border-[var(--members-border)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[var(--warning)] w-64 bg-[var(--members-bg-input)] text-[var(--members-text-primary)]" 
+          className="pl-9 pr-3 py-2.5 border border-border rounded-xl text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page w-64 bg-input text-primary" 
         />
       </div>
       <div className="flex gap-2">
-        <select 
-          value={statusFilter} 
-          onChange={e => { setStatusFilter(e.target.value); setCurrentPage(1); }} 
-          className="border border-[var(--members-border)] rounded-xl text-sm px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[var(--warning)] bg-[var(--members-bg-input)] text-[var(--members-text-primary)]"
-        >
- <option value="All">All Status</option>
- <option value="ACTIVE">Active</option>
- <option value="PENDING">Pending</option>
- <option value="EXPIRED">Expired</option>
- </select>
+        <SearchableDropdown
+          value={statusFilter}
+          onChange={(val) => setStatusFilter(String(val))}
+          className="w-48"
+          options={MEMBER_STATUS_OPTIONS}
+        />
  <button 
- onClick={loadAll} 
- className="flex items-center gap-2 px-3 py-2.5 text-sm border border-[var(--members-border)] rounded-xl hover:opacity-80 text-[var(--members-text-primary)]"
+ onClick={handleRefresh} 
+ className="flex items-center gap-2 px-3 py-2.5 text-sm border border-border rounded-xl hover:opacity-80 text-primary"
  >
  <RefreshCw size={14} /> Refresh
  </button>
  <button 
  onClick={openAdd} 
- className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white rounded-xl hover:opacity-90 transition-opacity" 
- style={{ background: 'var(--members-highlight)' }}
+ className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-primary-foreground bg-primary rounded-xl hover:opacity-90 transition-opacity"
  >
  <Plus size={16} /> Add Member
  </button>

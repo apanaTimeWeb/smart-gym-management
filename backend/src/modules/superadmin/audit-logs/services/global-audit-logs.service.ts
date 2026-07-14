@@ -1,5 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { AuditLogsRepository } from '../audit-logs.repository';
+import { GlobalAuditLogResponse } from '../audit-logs.interfaces';
+import { AUDIT_LOGS_MESSAGES } from '../audit-logs.constants';
 
 @Injectable()
 export class GlobalAuditLogsService {
@@ -7,9 +9,13 @@ export class GlobalAuditLogsService {
   
   constructor(private readonly repository: AuditLogsRepository) {}
 
-  async execute() {
+  async execute(): Promise<GlobalAuditLogResponse> {
     this.logger.log('Fetching global audit logs');
-    const logs = await this.repository.findAll();
-    return { success: true, data: logs };
+    const data = await this.repository.findAll();
+    return { 
+      success: true, 
+      message: AUDIT_LOGS_MESSAGES.FETCHED,
+      data 
+    };
   }
 }

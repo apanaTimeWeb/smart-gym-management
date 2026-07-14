@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders the error boundary fallback for the members module.
 'use client';
 
 import { useEffect } from 'react';
@@ -11,26 +12,26 @@ export default function Error({
  reset: () => void;
 }) {
  useEffect(() => {
- console.error('Members Module Error:', error);
+ // console.error('Members Module Error:', error);
  }, [error]);
 
  return (
- <div className="min-h-[70vh] flex items-center justify-center p-6 bg-[var(--bg-page)]">
- <div className="bg-[var(--bg-card)] border border-[var(--danger)]/20 p-8 rounded-2xl shadow-xl max-w-md w-full text-center space-y-4">
- <div className="w-16 h-16 bg-[var(--danger)]/10 rounded-full flex items-center justify-center mx-auto text-[var(--danger)] mb-2">
+ <div className="min-h-[70vh] flex items-center justify-center p-6 bg-page">
+ <div className="bg-card border border-danger/20 p-8 rounded-2xl shadow-xl max-w-md w-full text-center space-y-4">
+ <div className="w-16 h-16 bg-danger/10 rounded-full flex items-center justify-center mx-auto text-danger mb-2">
  <AlertTriangle size={32} />
  </div>
  
- <h2 className="text-xl font-bold text-[var(--text-primary)]">Something went wrong!</h2>
+ <h2 className="text-xl font-bold text-primary">Something went wrong!</h2>
  
- <p className="text-sm text-[var(--text-secondary)]">
+ <p className="text-sm text-secondary">
  We encountered an issue loading the members dashboard.
  </p>
 
  <div className="pt-4">
  <button
  onClick={() => reset()}
- className="px-6 py-2.5 bg-[var(--danger)] hover:bg-[var(--danger)] text-white font-medium rounded-xl transition-colors shadow-sm shadow-[var(--danger)]/20"
+ className="px-6 py-2.5 bg-danger hover:bg-danger text-white font-medium rounded-xl transition-colors shadow-sm shadow-danger/20"
  >
  Try again
  </button>

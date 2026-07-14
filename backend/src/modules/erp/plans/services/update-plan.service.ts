@@ -22,6 +22,7 @@ export class UpdatePlanService {
     const updatedPlan = await this.plansRepository.updatePlan(id, dto);
 
     return {
+      success: true,
       message: PLAN_MESSAGES.UPDATED_SUCCESS,
       data: updatedPlan,
     };
@@ -40,6 +41,7 @@ export class UpdatePlanService {
     });
 
     return {
+      success: true,
       message: PLAN_MESSAGES.DELETED_SUCCESS,
       data: deactivatedPlan,
     };

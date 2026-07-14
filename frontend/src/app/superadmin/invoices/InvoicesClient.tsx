@@ -1,0 +1,97 @@
+'use client';
+// RESPONSIBILITY: Root orchestrator for the Invoices page. Composes sub-components and passes state from useInvoicesPage. No inline business logic.
+
+import { Search, Filter } from 'lucide-react';
+import { useInvoicesPage } from '@/app/superadmin/invoices/invoices_components/useInvoicesPage';
+import InvoicesHeader from '@/app/superadmin/invoices/invoices_components/InvoicesHeader/InvoicesHeader';
+import InvoicesStatsBar from '@/app/superadmin/invoices/invoices_components/InvoicesStatsBar/InvoicesStatsBar';
+import InvoicesTable from '@/app/superadmin/invoices/invoices_components/InvoicesTable/InvoicesTable';
+import InvoicesEmptyState from '@/app/superadmin/invoices/invoices_components/InvoicesEmptyState/InvoicesEmptyState';
+import InvoicesLogPaymentModal from '@/app/superadmin/invoices/invoices_components/InvoicesLogPaymentModal/InvoicesLogPaymentModal';
+
+export default function InvoicesClient() {
+  const {
+    fetchState,
+    error,
+    filteredInvoices,
+    filteredTenantsForDropdown,
+    selectedGym,
+    totalRevenue,
+    failedRevenue,
+    search,
+    setSearch,
+    showAddModal,
+    setShowAddModal,
+    gymSearchTerm,
+    setGymSearchTerm,
+    isGymDropdownOpen,
+    setIsGymDropdownOpen,
+    paymentMethod,
+    setPaymentMethod,
+    handleSelectGym,
+  } = useInvoicesPage();
+
+  if (fetchState === 'loading') return (
+    <div className="space-y-6 animate-pulse">
+      <div className="h-8 bg-card rounded w-64" />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="h-28 bg-card rounded-xl border border-border" />
+        <div className="h-28 bg-card rounded-xl border border-border" />
+      </div>
+      <div className="bg-card rounded-xl border border-border overflow-hidden">
+        <div className="h-12 bg-border/30" />
+        {[...Array(6)].map((_, i) => <div key={i} className="h-12 border-t border-border" />)}
+      </div>
+    </div>
+  );
+
+  if (error) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
+
+  return (
+    <div className="space-y-6 relative">
+      <InvoicesHeader onLogPaymentClick={() => setShowAddModal(true)} />
+      
+      <InvoicesStatsBar totalRevenue={totalRevenue} failedRevenue={failedRevenue} />
+
+      <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+        <div className="p-4 border-b border-border flex gap-4">
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />
+            <input
+              type="text"
+              placeholder="Search by invoice ID or gym name..."
+              className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+          <button className="flex items-center gap-2 px-4 py-2 bg-input border border-border rounded-lg text-sm font-medium text-secondary hover:text-foreground transition-colors">
+            <Filter size={16} /> Filter Failed
+          </button>
+        </div>
+
+        {filteredInvoices.length === 0 ? (
+          <InvoicesEmptyState onLogPaymentClick={() => setShowAddModal(true)} />
+        ) : (
+          <InvoicesTable invoices={filteredInvoices} />
+        )}
+      </div>
+
+      {showAddModal && (
+        <InvoicesLogPaymentModal
+          onClose={() => setShowAddModal(false)}
+          selectedGym={selectedGym}
+          isGymDropdownOpen={isGymDropdownOpen}
+          setIsGymDropdownOpen={setIsGymDropdownOpen}
+          gymSearchTerm={gymSearchTerm}
+          setGymSearchTerm={setGymSearchTerm}
+          filteredTenantsForDropdown={filteredTenantsForDropdown}
+          handleSelectGym={handleSelectGym}
+          paymentMethod={paymentMethod}
+          setPaymentMethod={setPaymentMethod}
+          onSave={() => setShowAddModal(false)}
+        />
+      )}
+    </div>
+  );
+}

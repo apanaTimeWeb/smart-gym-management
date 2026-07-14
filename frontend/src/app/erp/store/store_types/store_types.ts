@@ -1,8 +1,18 @@
+// RESPONSIBILITY: store_types.ts handles the logic and UI for its corresponding feature.
 
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import type { ErpReceiptData } from '@/app/erp/erp_components/ErpShared/ErpThermalReceipt';
 import { type ProductFormValues } from '@/app/erp/store/store_utils/StoreSharedConstants';
 import React from 'react';
+
+export interface StoreInitialData {
+  products: Product[];
+  orders: Order[];
+  totalOrders: number;
+  summary: StoreSummary | null;
+}
+
+export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 
 export interface OrderItem {
  productId: number;
@@ -19,7 +29,7 @@ export interface StoreContextType {
  orders: Order[];
  totalOrders: number;
  summary: StoreSummary | null;
- loading: boolean;
+ fetchState: FetchState;
  saving: boolean;
  
   toast: { message: string; type: ToastType } | null;

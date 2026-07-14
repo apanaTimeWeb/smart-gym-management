@@ -10,6 +10,12 @@ export interface ITenant {
   name: string;
   ownerName: string;
   adminEmail: string;
+}
+export interface ITenant {
+  id: string;
+  name: string;
+  ownerName: string;
+  adminEmail: string;
   phone: string;
   status: TenantStatus;
   plan: string;
@@ -17,4 +23,10 @@ export interface ITenant {
   memberCount: number;
   monthlyRevenue: number;
   databaseVersion: string;
+}
+
+export interface TenantResponse {
+  success: boolean;
+  message: string;
+  data: ITenant | ITenant[] | any | null;
 }

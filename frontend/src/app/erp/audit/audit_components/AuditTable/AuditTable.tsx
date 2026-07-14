@@ -1,35 +1,50 @@
-"use client";
+// RESPONSIBILITY: Renders the table of audit logs and standard pagination controls.
+'use client';
 
 import React from 'react';
-import { useAuditTable } from './useAuditTable';
-import { AUDIT_TABLE_HEADERS } from '../../audit_utils/AuditSharedConstants';
-import '../../audit.css';
+import { useAuditContext } from '@/app/erp/audit/audit_context/AuditContext';
+import { AUDIT_TABLE_HEADERS } from '@/app/erp/audit/audit_utils/AuditSharedConstants';
+import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';
 
 export const AuditTable = () => {
   const {
     logs,
-    loading,
+    fetchState,
     error,
     page,
     limit,
     totalCount,
-    handleNextPage,
-    handlePrevPage,
-  } = useAuditTable();
+    setCurrentPage,
+  } = useAuditContext();
 
-  if (loading) {
-    return <div className="p-4 text-center">Loading audit logs...</div>;
+  const totalPages = Math.ceil(totalCount / limit) || 1;
+
+  if (fetchState === 'loading') {
+    return (
+      <div className="animate-pulse bg-card rounded-xl border border-border mt-4">
+        {[...Array(5)].map((_, i) => (
+          <div key={i} className="h-16 border-b border-border flex items-center px-6 gap-4">
+            <div className="h-4 bg-muted rounded w-24"></div>
+            <div className="h-4 bg-muted rounded w-16"></div>
+            <div className="h-4 bg-muted rounded w-20"></div>
+            <div className="h-6 bg-muted rounded-full w-24"></div>
+            <div className="h-4 bg-muted rounded w-24"></div>
+            <div className="h-4 bg-muted rounded w-16"></div>
+          </div>
+        ))}
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="p-4 text-[var(--danger)]">Error: {error}</div>;
+    return <div className="p-4 text-danger">Error: {error}</div>;
   }
 
   return (
-    <div className="w-full text-[var(--audit-text-primary)]">
+    <div className="w-full text-foreground">
       <div className="overflow-x-auto">
         <table className="w-full text-left whitespace-nowrap">
-          <thead className="bg-[var(--audit-table-header-bg)] border-y border-[var(--audit-border-color)] text-xs uppercase tracking-wider text-[var(--audit-text-secondary)]">
+          <thead className="bg-input border-y border-border text-xs uppercase tracking-wider text-secondary">
             <tr>
               {AUDIT_TABLE_HEADERS.map((header) => (
                 <th key={header} className="px-6 py-4 font-semibold">
@@ -38,29 +53,29 @@ export const AuditTable = () => {
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-[var(--audit-border-color)] text-sm">
+          <tbody className="divide-y divide-border text-sm">
             {logs.length === 0 ? (
               <tr>
-                <td colSpan={AUDIT_TABLE_HEADERS.length} className="px-6 py-8 text-center text-[var(--audit-text-secondary)]">
+                <td colSpan={AUDIT_TABLE_HEADERS.length} className="px-6 py-8 text-center text-secondary">
                   No audit logs found matching your filters.
                 </td>
               </tr>
             ) : (
               logs.map((log) => (
-                <tr key={log.id} className="hover:bg-[var(--audit-row-hover)] transition-colors">
+                <tr key={log.id} className="hover:bg-primary/5 transition-colors">
                   <td className="px-6 py-4">{new Date(log.timestamp).toLocaleString()}</td>
                   <td className="px-6 py-4 font-medium">{log.actorId || 'System'}</td>
                   <td className="px-6 py-4">
-                    <span className="bg-[var(--audit-bg-input)] px-2.5 py-1 rounded-md text-xs border border-[var(--audit-border-color)]">
+                    <span className="bg-input px-2.5 py-1 rounded-md text-xs border border-border">
                       {log.actorRole || 'System'}
                     </span>
                   </td>
                   <td className="px-6 py-4">
                     <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
-                      log.action === 'CREATE' ? 'bg-[var(--success-bg)] text-[var(--success)] dark:bg-[var(--success-bg)] dark:text-[var(--success)]' :
-                      log.action === 'UPDATE' ? 'bg-[var(--info-bg)] text-[var(--info)] dark:bg-[var(--info-bg)] dark:text-[var(--info)]' :
-                      log.action === 'DELETE' ? 'bg-[var(--danger-bg)] text-[var(--danger)] dark:bg-[var(--danger-bg)] dark:text-[var(--danger)]' :
-                      'bg-[var(--warning-bg)] text-[var(--warning)] dark:bg-[var(--warning-bg)] dark:text-[var(--warning)]'
+                      log.action === 'CREATE' ? 'bg-success-bg text-success dark:bg-success-bg dark:text-success' :
+                      log.action === 'UPDATE' ? 'bg-info-bg text-info dark:bg-info-bg dark:text-info' :
+                      log.action === 'DELETE' ? 'bg-danger-bg text-danger dark:bg-danger-bg dark:text-danger' :
+                      'bg-warning-bg text-warning dark:bg-warning-bg dark:text-warning'
                     }`}>
                       {log.action}
                     </span>
@@ -68,7 +83,7 @@ export const AuditTable = () => {
                   <td className="px-6 py-4 font-medium">{log.entityType}</td>
                   <td className="px-6 py-4">{log.entityId || '-'}</td>
                   <td className="px-6 py-4">
-                    <div className="max-w-xs truncate text-[var(--audit-text-secondary)]" title={JSON.stringify(log.newValue)}>
+                    <div className="max-w-xs truncate text-secondary" title={JSON.stringify(log.newValue)}>
                       {JSON.stringify(log.newValue)}
                     </div>
                   </td>
@@ -79,26 +94,14 @@ export const AuditTable = () => {
         </table>
       </div>
 
-      <div className="flex flex-col sm:flex-row justify-between items-center mt-6 text-sm text-[var(--audit-text-secondary)]">
-        <span className="mb-4 sm:mb-0">
-          Showing <span className="font-medium text-[var(--audit-text-primary)]">{totalCount === 0 ? 0 : (page - 1) * limit + 1}</span> to <span className="font-medium text-[var(--audit-text-primary)]">{Math.min(page * limit, totalCount)}</span> of <span className="font-medium text-[var(--audit-text-primary)]">{totalCount}</span> entries
-        </span>
-        <div className="flex gap-2">
-          <button
-            onClick={handlePrevPage}
-            disabled={page === 1}
-            className="px-4 py-2 rounded-xl border border-[var(--audit-border-color)] bg-[var(--audit-bg-card)] hover:bg-[var(--audit-row-hover)] disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium text-[var(--audit-text-primary)]"
-          >
-            Previous
-          </button>
-          <button
-            onClick={handleNextPage}
-            disabled={page * limit >= totalCount}
-            className="px-4 py-2 rounded-xl border border-[var(--audit-border-color)] bg-[var(--audit-bg-card)] hover:bg-[var(--audit-row-hover)] disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium text-[var(--audit-text-primary)]"
-          >
-            Next
-          </button>
-        </div>
+      <div className="mt-4 border-t border-border pt-4">
+        <ErpPagination
+          currentPage={page}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          totalItems={totalCount}
+          itemsPerPage={limit}
+        />
       </div>
     </div>
   );

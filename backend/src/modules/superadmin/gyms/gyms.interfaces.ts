@@ -1,10 +1,6 @@
-// Removed SaaSPlanTier Enum
-export enum TenantStatus {
-  ACTIVE = 'ACTIVE',
-  SUSPENDED = 'SUSPENDED',
-  TRIAL = 'TRIAL',
-  CANCELLED = 'CANCELLED'
-}
+import { TenantStatus } from '../superadmin.constants';
+export { TenantStatus };
+
 export interface ITenant {
   id: string;
   name: string;
@@ -17,4 +13,10 @@ export interface ITenant {
   memberCount: number;
   monthlyRevenue: number;
   databaseVersion: string;
+}
+
+export interface TenantResponse {
+  success: boolean;
+  message: string;
+  data: ITenant | ITenant[] | any | null;
 }

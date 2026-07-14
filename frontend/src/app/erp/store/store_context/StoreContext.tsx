@@ -1,4 +1,5 @@
-"use client";
+// RESPONSIBILITY: StoreContext.tsx handles the logic and UI for its corresponding feature.
+'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';
 import { StoreContextType } from '@/app/erp/store/store_types/store_types';
@@ -10,7 +11,7 @@ export function StoreProvider({ children, initialData }: { children: React.React
  const logic = useStoreLogic(initialData);
 
  const {
-   tab, products, orders, totalOrders, summary, loading, saving,
+   tab, products, orders, totalOrders, summary, fetchState, saving,
    toast, printData, search, debouncedSearch, currentPage,
    showProductModal, editProductId, editProductData,
    showOrderModal, orderItems, orderMethod, orderTotal,
@@ -20,7 +21,7 @@ export function StoreProvider({ children, initialData }: { children: React.React
 
  // eslint-disable-next-line react-hooks/exhaustive-deps
  const value = useMemo(() => logic, [
-   tab, products, orders, totalOrders, summary, loading, saving,
+   tab, products, orders, totalOrders, summary, fetchState, saving,
    toast, printData, search, debouncedSearch, currentPage,
    showProductModal, editProductId, editProductData,
    showOrderModal, orderItems, orderMethod, orderTotal,

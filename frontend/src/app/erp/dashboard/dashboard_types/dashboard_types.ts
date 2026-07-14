@@ -1,4 +1,32 @@
-export interface DashboardContextType { stats: DashboardStats | null; loading: boolean; error: string; }
+// RESPONSIBILITY: Defines strict types for the Dashboard module, including comprehensive KPI stats and recent activity shapes.
+export type FetchState = 'idle' | 'loading' | 'success' | 'error';
+export interface DashboardContextType { stats: DashboardStats | null; status: FetchState; error: string; }
+
+export interface RecentMember {
+  id: number; 
+  name: string; 
+  plan: string | { name: string }; 
+  status: string;
+  joinDate: string; 
+  paidAmount: number;
+}
+
+export interface RecentPayment {
+  id: number; 
+  invoiceNo: string; 
+  amount: number; 
+  method: string; 
+  paidAt: string;
+  member: { name: string };
+}
+
+export interface PendingPayment {
+  id: number; 
+  name: string; 
+  pendingAmount: number; 
+  expiryDate: string;
+}
+
 export interface DashboardStats {
   totalMembers: number;
   activeMembers: number;
@@ -19,15 +47,4 @@ export interface DashboardStats {
   recentMembers: RecentMember[];
   recentPayments: RecentPayment[];
   pendingPaymentsList: PendingPayment[];
-}
-export interface RecentMember {
-  id: number; name: string; plan: string; status: string;
-  joinDate: string; paidAmount: number;
-}
-export interface RecentPayment {
-  id: number; invoiceNo: string; amount: number; method: string; paidAt: string;
-  member: { name: string };
-}
-export interface PendingPayment {
-  id: number; name: string; pendingAmount: number; expiryDate: string;
 }

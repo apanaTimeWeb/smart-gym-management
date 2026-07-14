@@ -1,6 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DataSource } from 'typeorm';
+import { GlobalAuditLogResponse } from '../audit-logs.interfaces';
+import { AUDIT_LOGS_MESSAGES } from '../audit-logs.constants';
 
 @Injectable()
 export class TenantAuditLogsService {
@@ -8,7 +10,7 @@ export class TenantAuditLogsService {
 
   constructor(private readonly configService: ConfigService) {}
 
-  async execute(tenantId: string) {
+  async execute(tenantId: string): Promise<GlobalAuditLogResponse> {
     this.logger.log(`Fetching audit logs for tenant: ${tenantId}`);
     const dbName = `tenant_db_${tenantId}`;
     const masterUrl = this.configService.get<string>('DATABASE_URL');
@@ -28,12 +30,20 @@ export class TenantAuditLogsService {
     try {
       await tenantDataSource.initialize();
       // Query raw table to avoid needing the full entity setup for this simple log retrieval
-      const logs = await tenantDataSource.query('SELECT * FROM "audit_logs" ORDER BY timestamp DESC LIMIT 100');
-      return { success: true, data: logs };
+      const data = await tenantDataSource.query('SELECT * FROM "audit_logs" ORDER BY timestamp DESC LIMIT 100');
+      return { 
+        success: true, 
+        message: AUDIT_LOGS_MESSAGES.FETCHED,
+        data 
+      };
     } catch (error: any) {
       this.logger.error(`Failed to fetch tenant logs for ${dbName}:`, error.message);
       // Return empty if DB doesn't exist or table missing (e.g. invalid tenant)
-      return { success: true, data: [] };
+      return { 
+        success: true, 
+        message: AUDIT_LOGS_MESSAGES.FETCHED,
+        data: [] 
+      };
     } finally {
       if (tenantDataSource.isInitialized) {
         await tenantDataSource.destroy();

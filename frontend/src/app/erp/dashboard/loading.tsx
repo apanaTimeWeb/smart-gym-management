@@ -1,10 +1,35 @@
+// RESPONSIBILITY: Renders the skeleton loading fallback for the dashboard layout.
 export default function DashboardLoading() {
- return (
- <div className="min-h-full flex items-center justify-center">
- <div className="text-center">
- <div className="w-12 h-12 border-4 border-t-transparent rounded-full animate-spin mx-auto mb-3" style={{ borderColor: 'var(--primary)', borderTopColor: 'transparent' }} />
- <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Loading dashboard module...</p>
- </div>
- </div>
- );
+  return (
+    <div className="min-h-full p-6 space-y-6 bg-page">
+      {/* Header skeleton */}
+      <div className="h-16 bg-card rounded-xl animate-pulse" />
+
+      {/* KPI row 1 */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        {[1, 2, 3, 4].map(i => (
+          <div key={i} className="h-28 bg-card rounded-xl animate-pulse border border-border" />
+        ))}
+      </div>
+
+      {/* KPI row 2 */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        {[1, 2, 3, 4].map(i => (
+          <div key={i} className="h-28 bg-card rounded-xl animate-pulse border border-border" />
+        ))}
+      </div>
+
+      {/* Main content area */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <div className="xl:col-span-2 h-80 bg-card rounded-xl animate-pulse border border-border" />
+        <div className="space-y-4">
+          <div className="h-48 bg-card rounded-xl animate-pulse border border-border" />
+          <div className="h-28 bg-card rounded-xl animate-pulse border border-border" />
+        </div>
+      </div>
+
+      {/* Distribution */}
+      <div className="h-40 bg-card rounded-xl animate-pulse border border-border" />
+    </div>
+  );
 }

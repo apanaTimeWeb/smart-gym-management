@@ -16,5 +16,11 @@ export const STORE_CONSTANTS = {
   },
   SUCCESS_MESSAGES: {
     ORDER_CREATED: 'Order created successfully',
+    ORDER_FETCHED: 'Order fetched successfully',
+    PRODUCT_CREATED: 'Product created successfully',
+    PRODUCT_FETCHED: 'Product fetched successfully',
+    PRODUCT_UPDATED: 'Product updated successfully',
+    PRODUCT_DELETED: 'Product deleted successfully',
+    SUMMARY_FETCHED: 'Store summary fetched successfully',
   },
 };

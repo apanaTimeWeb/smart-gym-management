@@ -8,14 +8,16 @@ export class CreateAuditService {
 
   constructor(private readonly auditRepository: AuditRepository) {}
 
-  async createAuditLog(data: Partial<AuditLog>): Promise<void> {
+  async createAuditLog(data: Partial<AuditLog>): Promise<{ success: boolean; message: string }> {
     try {
       await this.auditRepository.create(data);
+      return { success: true, message: 'Audit log created successfully' };
     } catch (error) {
       this.logger.error(
         `Failed to save audit log: ${error.message}`,
         error.stack,
       );
+      return { success: false, message: 'Failed to save audit log' };
     }
   }
 }

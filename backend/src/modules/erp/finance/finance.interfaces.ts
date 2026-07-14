@@ -1,6 +1,7 @@
 import { Payment } from '@/modules/erp/finance/entities/payment.entity';
 
 export interface FinanceResponse {
+  success: boolean;
   message: string;
   data: Payment | Payment[] | FinanceSummary | any;
 }

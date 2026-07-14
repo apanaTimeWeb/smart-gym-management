@@ -15,6 +15,7 @@ export class FindPlanService {
     const plans = await this.plansRepository.findPlans();
 
     return {
+      success: true,
       message: PLAN_MESSAGES.FETCHED_SUCCESS,
       data: plans,
     };
@@ -29,6 +30,7 @@ export class FindPlanService {
     }
 
     return {
+      success: true,
       message: PLAN_MESSAGES.FETCHED_SUCCESS,
       data: plan,
     };

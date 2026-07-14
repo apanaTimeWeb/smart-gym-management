@@ -1,4 +1,5 @@
-"use client";
+// RESPONSIBILITY: Entry point component for the members module that sets up context providers and layout.
+'use client';
 
 import ErpHeader from '@/app/erp/erp_components/ErpLayout/ErpHeader';
 import ErpToast from '@/app/erp/erp_components/ErpFeedback/ErpToast';
@@ -10,24 +11,23 @@ import MembersKPIs from '@/app/erp/members/members_components/MembersKPIs/Member
 import MembersToolbar from '@/app/erp/members/members_components/MembersToolbar/MembersToolbar';
 import MembersTable from '@/app/erp/members/members_components/MembersTable/MembersTable';
 import MemberProfile from '@/app/erp/members/members_components/MemberProfile/MemberProfile';
+import { MembersInitialData } from '@/app/erp/members/members_types/members_types';
 import dynamic from 'next/dynamic';
 
 const MemberModal = dynamic(() => import('@/app/erp/members/members_components/MemberModal/MemberModal'), { ssr: false });
-
-import '@/app/erp/members/members.css';
 
 function MembersContent() {
   const { toast, hideToast, msgModal, closeMsg, showToast, printData, setPrintData, selectedMember } = useMembersContext();
 
   return (
-    <div className="min-h-full pb-10 members-module">
+    <div className="min-h-full pb-10">
       <div className="print-hide">
         {!selectedMember ? (
           <>
             <ErpHeader title="Members Directory" subtitle="Manage gym members, profiles, and subscriptions" />
             <div className="p-6 space-y-5">
               <MembersKPIs />
-              <div className="bg-[var(--members-bg-card)] rounded-xl shadow-sm border border-[var(--members-border)] overflow-hidden">
+              <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
                 <MembersToolbar />
                 <MembersTable />
               </div>
@@ -60,7 +60,7 @@ function MembersContent() {
   );
 }
 
-export default function MembersMain({ initialData }: { initialData?: any }) {
+export default function MembersMain({ initialData }: { initialData?: MembersInitialData | null }) {
   return (
     <MembersProvider initialData={initialData}>
       <MembersContent />

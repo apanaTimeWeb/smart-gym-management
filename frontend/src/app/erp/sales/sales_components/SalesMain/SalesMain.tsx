@@ -1,4 +1,5 @@
-"use client";
+// RESPONSIBILITY: Provides the implementation for SalesMain.tsx functionality within its module.
+'use client';
 
 import ErpHeader from '@/app/erp/erp_components/ErpLayout/ErpHeader';
 import { SalesProvider, useSalesContext } from '@/app/erp/sales/sales_context/SalesContext';
@@ -9,19 +10,18 @@ import MembershipReport from '@/app/erp/sales/sales_components/MembershipReport/
 import PendingPayments from '@/app/erp/sales/sales_components/PendingPayments/PendingPayments';
 import AllMemberships from '@/app/erp/sales/sales_components/AllMemberships/AllMemberships';
 import ErpToast from '@/app/erp/erp_components/ErpFeedback/ErpToast';
-
-import '@/app/erp/sales/sales.css';
+import { SalesInitialData } from '@/app/erp/sales/sales_types/sales_types';
 
 function SalesContent() {
  const { tab, toast, showToast } = useSalesContext();
 
  return (
- <div className="min-h-full pb-10 sales-module bg-[var(--bg-page)] text-[var(--sales-text-primary)]">
+ <div className="min-h-full pb-10 bg-background text-foreground">
  <ErpHeader title="Sales & Reports" subtitle="Monitor membership revenue, track payments and analyze performance" />
  <div className="p-6 space-y-5">
  <SalesToolbar />
 
- <div className="bg-[var(--sales-bg-card)] rounded-xl shadow-sm border border-[var(--sales-border)] overflow-hidden">
+ <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
  <SalesTabs />
 
  <div className="p-5">
@@ -38,9 +38,9 @@ function SalesContent() {
  );
 }
 
-export default function SalesMain() {
+export default function SalesMain({ initialData }: { initialData?: SalesInitialData | null }) {
  return (
- <SalesProvider>
+ <SalesProvider initialData={initialData}>
  <SalesContent />
  </SalesProvider>
  );

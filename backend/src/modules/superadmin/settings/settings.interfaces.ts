@@ -5,3 +5,9 @@ export interface IGlobalSetting {
   value: string;
   group: string;
 }
+
+export interface SettingResponse {
+  success: boolean;
+  message: string;
+  data: IGlobalSetting | IGlobalSetting[] | any | null;
+}

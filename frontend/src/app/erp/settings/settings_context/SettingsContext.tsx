@@ -1,4 +1,5 @@
-"use client";
+// RESPONSIBILITY: SettingsContext.tsx handles the logic and UI for its corresponding feature.
+'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';
 import { SettingsContextType } from '@/app/erp/settings/settings_types/settings_types';

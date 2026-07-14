@@ -1,4 +1,13 @@
+// RESPONSIBILITY: Single source of truth for all TypeScript types, interfaces, and enums used across the entire Superadmin module. No business logic — types only.
 // Removed SaaSPlanTier enum
+
+export interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  message?: string;
+  meta?: unknown;
+}
+
 export type TenantStatus = 'ACTIVE' | 'SUSPENDED' | 'TRIAL' | 'CANCELLED';
 
 export interface Tenant {
@@ -38,9 +47,19 @@ export interface SaaSDashboardMetrics {
 }
 
 // Phase 2 Types
+export interface RevenueChartData {
+  month: string;
+  mrr: number;
+}
+
+export interface GrowthChartData {
+  month: string;
+  gyms: number;
+}
+
 export interface SubscriptionPlan {
   id: string;
-  name: SaaSPlanTier;
+  name: string;
   priceMonthly: number;
   priceAnnual: number;
   maxMembers: number;
@@ -48,6 +67,11 @@ export interface SubscriptionPlan {
   features: string[];
   activeTenants: number;
 }
+
+export type CreatePlanPayload = Omit<SubscriptionPlan, 'id' | 'activeTenants'>;
+export type UpdatePlanPayload = Partial<CreatePlanPayload>;
+
+export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 
 export type TicketStatus = 'OPEN' | 'IN_PROGRESS' | 'RESOLVED';
 export type TicketPriority = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
@@ -72,6 +96,14 @@ export interface BackgroundJob {
   createdAt: string;
 }
 
+export interface JobsMetrics {
+  activeJobs: number;
+  completed24h: number;
+  failed24h: number;
+  delayed: number;
+}
+
+
 export interface BackupRecord {
   id: string;
   tenantName: string;
@@ -89,7 +121,7 @@ export interface SaaSInvoice {
   currency: string;
   status: 'PAID' | 'PENDING' | 'FAILED';
   date: string;
-  planName: SaaSPlanTier;
+  planName: string;
 }
 
 export interface FeatureFlag {
@@ -165,4 +197,27 @@ export interface Affiliate {
   commissionEarned: number;
   status: AffiliateStatus;
   joinedAt: string;
+}
+
+export interface PlatformSetting {
+  id: string;
+  key: string;
+  value: string;
+  description: string;
+  category: string;
+  dataType: 'string' | 'number' | 'boolean';
+}
+
+export interface InfrastructureNode {
+  id: string;
+  name: string;
+  cpuPercent: number | null;
+  memoryPercent: number | null;
+  diskPercent: number | null;
+  status: string;
+}
+
+export interface MigrationsPageData {
+  migrations: SchemaMigration[];
+  tenants: Tenant[];
 }

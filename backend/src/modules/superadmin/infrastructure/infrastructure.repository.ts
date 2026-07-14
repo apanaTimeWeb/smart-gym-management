@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { InfrastructureNode } from './entities/infrastructure.entity';
 
 @Injectable()
 export class InfrastructureRepository {
-  private repo: Repository<InfrastructureNode>;
-
-  constructor(private readonly dataSource: DataSource) {
-    this.repo = this.dataSource.getRepository(InfrastructureNode);
-  }
+  constructor(
+    @InjectRepository(InfrastructureNode)
+    private readonly repo: Repository<InfrastructureNode>,
+  ) {}
 
   async findAll(): Promise<InfrastructureNode[]> {
     return this.repo.find();

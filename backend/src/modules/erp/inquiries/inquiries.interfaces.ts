@@ -17,3 +17,24 @@ export interface IInquiryStats {
   converted: number;
   lost: number;
 }
+
+export interface InquiryResponse {
+  success: boolean;
+  message: string;
+  data: IInquiry;
+}
+
+export interface InquiriesListResponse {
+  success: boolean;
+  message: string;
+  data: {
+    inquiries: IInquiry[];
+    total: number;
+  };
+}
+
+export interface InquiryStatsResponse {
+  success: boolean;
+  message: string;
+  data: IInquiryStats;
+}

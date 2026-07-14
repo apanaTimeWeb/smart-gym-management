@@ -1,3 +1,4 @@
+// RESPONSIBILITY: routes.ts handles the logic and UI for its corresponding feature.
 export const ROUTES = {
   LOGIN: '/auth/login',
   DASHBOARD: '/erp/dashboard',

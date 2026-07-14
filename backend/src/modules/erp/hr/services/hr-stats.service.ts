@@ -31,6 +31,7 @@ export class HrStatsService {
     });
 
     return {
+      success: true,
       message: HR_MESSAGES.STATS_FETCHED_SUCCESS,
       data: {
         totalStaff,

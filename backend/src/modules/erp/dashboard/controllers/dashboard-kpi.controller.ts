@@ -7,6 +7,7 @@ import {
 } from '@nestjs/swagger';
 import { CustomCacheInterceptor } from '@/modules/core/interceptors/custom-cache.interceptor';
 import { DashboardKpiService } from '../services/dashboard-kpi.service';
+import { DashboardKpiResponse } from '../dashboard.interfaces';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 
 @ApiTags('Dashboard')
@@ -23,7 +24,7 @@ export class DashboardKpiController {
     status: HttpStatus.OK,
     description: 'KPI stats retrieved successfully',
   })
-  execute() {
+  execute(): Promise<DashboardKpiResponse> {
     return this.kpiService.execute();
   }
 }

@@ -1,13 +1,14 @@
 import { UpdateSupportTicketDto } from '../dto/update-tickets.dto';
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { TicketsRepository } from '../tickets.repository';
-import { TicketStatus } from '../tickets.interfaces';
+import { TicketStatus, TicketResponse } from '../tickets.interfaces';
+import { TICKETS_MESSAGES } from '../tickets.constants';
 
 @Injectable()
 export class UpdateTicketsService {
   constructor(private readonly repository: TicketsRepository) {}
   
-  async execute(id: string, dto: UpdateSupportTicketDto): Promise<any> {
+  async execute(id: string, dto: UpdateSupportTicketDto): Promise<TicketResponse> {
     const ticket = await this.repository.findById(id);
     if (!ticket) throw new NotFoundException('Ticket not found');
     
@@ -32,6 +33,11 @@ export class UpdateTicketsService {
       lastUpdated: new Date()
     };
     
-    return await this.repository.update(id, payload);
+    const data = await this.repository.update(id, payload);
+    return {
+      success: true,
+      message: TICKETS_MESSAGES.UPDATED,
+      data
+    };
   }
 }

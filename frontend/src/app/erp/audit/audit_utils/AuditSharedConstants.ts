@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Provides the implementation for AuditSharedConstants.ts functionality within its module.
 export const AUDIT_ENTITY_TYPES = [
   { label: 'All', value: '' },
   { label: 'Member', value: 'MEMBER' },

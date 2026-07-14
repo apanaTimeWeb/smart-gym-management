@@ -1,4 +1,5 @@
-"use client";
+// RESPONSIBILITY: Provides the implementation for AddPaymentModal.tsx functionality within its module.
+'use client';
 
 import { useState, useEffect } from 'react';
 import { useFinanceContext } from '@/app/erp/finance/finance_context/FinanceContext';
@@ -9,7 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
 
 export default function AddPaymentModal() {
-  const { showModal, setShowModal, savePayment, loading } = useFinanceContext();
+  const { showModal, setShowModal, savePayment, saving } = useFinanceContext();
 
   const {
     register,
@@ -36,44 +37,41 @@ export default function AddPaymentModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 finance-module" style={{ backgroundColor: 'rgba(0,0,0,0.6)' }}>
-      <div className="rounded-2xl shadow-xl w-full max-w-md" style={{ backgroundColor: 'var(--finance-bg-card)' }}>
-        <div className="px-6 py-4 border-b flex items-center justify-between" style={{ borderColor: 'var(--finance-border)' }}>
-          <h3 className="text-lg font-bold" style={{ color: 'var(--finance-text-primary)' }}>Record Payment</h3>
+    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60">
+      <div className="rounded-2xl shadow-xl w-full max-w-md bg-card border border-border">
+        <div className="px-6 py-4 border-b border-border flex items-center justify-between">
+          <h3 className="text-lg font-bold text-foreground">Record Payment</h3>
           <button 
             type="button"
             onClick={() => setShowModal(false)} 
-            className="p-2 rounded-lg transition-colors hover:bg-[var(--primary-subtle)]"
-            style={{ color: 'var(--finance-text-secondary)' }}
+            className="p-1.5 rounded-full hover:bg-primary/5 transition-colors text-secondary"
           >
             <X size={18} />
           </button>
         </div>
         <form onSubmit={handleSubmit(handleAddPayment)} className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-1" style={{ color: 'var(--finance-text-secondary)' }}>Member ID</label>
-            <input 
-              type="number" 
-              placeholder="Enter Member ID" 
+            <label className="block text-sm font-medium mb-1 text-secondary">Member ID</label>
+            <input
+              type="number"
+              placeholder="Enter Member ID"
               {...register('memberId')}
-              className="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--finance-highlight)]" 
-              style={{ backgroundColor: 'var(--finance-bg-input)', borderColor: errors.memberId ? 'var(--danger)' : 'var(--finance-border)', color: 'var(--finance-text-primary)' }}
+              className={`w-full px-4 py-2 border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary ${errors.memberId ? 'border-danger' : 'border-border'}`}
             />
-            {errors.memberId && <p className="text-[var(--danger)] text-xs mt-1">{errors.memberId.message}</p>}
+            {errors.memberId && <p className="text-danger text-xs mt-1">{errors.memberId.message}</p>}
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1" style={{ color: 'var(--finance-text-secondary)' }}>Amount (₹)</label>
-            <input 
-              type="number" 
-              placeholder="2500" 
+            <label className="block text-sm font-medium mb-1 text-secondary">Amount (₹)</label>
+            <input
+              type="number"
+              placeholder="2500"
               {...register('amount')}
-              className="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--finance-highlight)]" 
-              style={{ backgroundColor: 'var(--finance-bg-input)', borderColor: errors.amount ? 'var(--danger)' : 'var(--finance-border)', color: 'var(--finance-text-primary)' }}
+              className={`w-full px-4 py-2 border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary ${errors.amount ? 'border-danger' : 'border-border'}`}
             />
-            {errors.amount && <p className="text-[var(--danger)] text-xs mt-1">{errors.amount.message}</p>}
+            {errors.amount && <p className="text-danger text-xs mt-1">{errors.amount.message}</p>}
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1" style={{ color: 'var(--finance-text-secondary)' }}>Payment Method</label>
+            <label className="block text-sm font-medium mb-1 text-secondary">Payment Method</label>
             <Controller
               name="method"
               control={control}
@@ -88,31 +86,20 @@ export default function AddPaymentModal() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1" style={{ color: 'var(--finance-text-secondary)' }}>Notes (optional)</label>
+            <label className="block text-sm font-medium mb-1 text-secondary">Notes (optional)</label>
             <input 
               type="text" 
               placeholder="Any notes..." 
               {...register('notes')}
-              className="w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--finance-highlight)]" 
-              style={{ backgroundColor: 'var(--finance-bg-input)', borderColor: 'var(--finance-border)', color: 'var(--finance-text-primary)' }}
+              className="w-full px-4 py-2 border border-border rounded-xl text-sm appearance-none bg-input text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             />
           </div>
           <div className="flex gap-3 pt-2">
-            <button 
-              type="button" 
-              onClick={() => setShowModal(false)} 
-              className="flex-1 py-2.5 border rounded-xl text-sm font-medium transition-colors hover:bg-[var(--primary-subtle)]"
-              style={{ borderColor: 'var(--finance-border)', color: 'var(--finance-text-primary)' }}
-            >
+            <button type="button" onClick={() => setShowModal(false)} className="px-5 py-2.5 text-sm font-semibold rounded-xl border border-border text-secondary hover:bg-primary/5 transition-colors flex-1">
               Cancel
             </button>
-            <button 
-              type="submit" 
-              disabled={loading} 
-              className="flex-1 py-2.5 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 disabled:opacity-70 transition-opacity" 
-              style={{ backgroundColor: 'var(--finance-highlight)' }}
-            >
-              {loading ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><Save size={15} /> Record Payment</>}
+            <button type="submit" disabled={saving} className="px-5 py-2.5 text-sm font-semibold text-primary-foreground bg-primary rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center min-w-[120px] flex-1">
+              {saving ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> : 'Record Payment'}
             </button>
           </div>
         </form>

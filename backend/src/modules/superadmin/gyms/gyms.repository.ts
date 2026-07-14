@@ -1,26 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { Tenant } from './entities/gyms.entity';
 
 @Injectable()
 export class GymsRepository {
-  async count(options?: any): Promise<number> {
-    const opts = options || {};
-    opts.where = { ...opts.where, isDeleted: false };
-    return this.repo.count(opts);
-  }
-  
-  async findOne(options: any): Promise<any> {
-    const opts = options || {};
-    opts.where = { ...opts.where, isDeleted: false };
-    return this.repo.findOne(opts);
-  }
-  
-  async save(gym: any): Promise<any> {
-    return this.repo.save(gym);
-  }
-
   constructor(
     @InjectRepository(Tenant)
     private readonly repo: Repository<Tenant>,
@@ -31,12 +15,24 @@ export class GymsRepository {
     return await this.repo.save(entity);
   }
 
-  async findAll(): Promise<Tenant[]> {
-    return await this.repo.find({ where: { isDeleted: false } });
+  async findAll(options?: FindManyOptions<Tenant>): Promise<Tenant[]> {
+    return await this.repo.find({ ...options, where: { ...(options?.where as object), isDeleted: false } });
+  }
+
+  async count(options?: FindManyOptions<Tenant>): Promise<number> {
+    return this.repo.count({ ...options, where: { ...(options?.where as object), isDeleted: false } });
   }
 
   async findById(id: string): Promise<Tenant | null> {
     return await this.repo.findOne({ where: { id, isDeleted: false } });
+  }
+
+  async findOne(options: FindManyOptions<Tenant>): Promise<Tenant | null> {
+    return this.repo.findOne({ ...options, where: { ...(options?.where as object), isDeleted: false } });
+  }
+
+  async save(gym: Partial<Tenant>): Promise<Tenant> {
+    return this.repo.save(gym);
   }
 
   async update(id: string, data: Partial<Tenant>): Promise<Tenant | null> {
@@ -48,11 +44,15 @@ export class GymsRepository {
     const entity = await this.findById(id);
     if (entity) {
       const timestamp = new Date().getTime();
-      await this.repo.update(id, { 
+      await this.repo.update(id, {
         isDeleted: true,
         adminEmail: `deleted_${timestamp}_${entity.adminEmail}`,
-        name: `deleted_${timestamp}_${entity.name}`
-      } as any);
+        name: `deleted_${timestamp}_${entity.name}`,
+      });
     }
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.repo.delete(id);
   }
 }

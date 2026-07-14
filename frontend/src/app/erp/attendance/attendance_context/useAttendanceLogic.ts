@@ -1,25 +1,52 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
-import { attendanceApi, membersApi, hrApi, type Attendance, type Member, type Staff } from '@/lib/api';
+// RESPONSIBILITY: Central logic hook for the Attendance module. Manages state, API interactions, and URL synchronization.
+// DATA FLOW: UI Components -> useAttendanceLogic (State + URL) -> API (Backend)
+import { useState, useCallback, useEffect } from 'react';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { ApiResponse } from '@/lib/api';
+import { attendanceApi } from '@/app/erp/attendance/attendance_api/attendance_api';
+import { hrApi } from '@/app/erp/hr/hr_api/hr_api';
+import { membersApi } from '@/app/erp/members/members_api/members_api';
+import type { Member } from '@/app/erp/members/members_types/members_types';
+import type { Staff } from '@/app/erp/hr/hr_types/hr_types';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import { EMPTY_ATTENDANCE_FORM, ATTENDANCE_TABS, type AttendanceTab, AttendanceFormValues } from '@/app/erp/attendance/attendance_utils/AttendanceSharedConstants';
 import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
-import { AttendanceContextType } from '@/app/erp/attendance/attendance_types/attendance_types';
+import { AttendanceContextType, Attendance, AttendanceStatsResponse, AttendanceResponse, FetchState } from '@/app/erp/attendance/attendance_types/attendance_types';
 
 export function useAttendanceLogic(): AttendanceContextType {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const currentPage = parseInt(searchParams.get('page') || '1', 10);
+  const search = searchParams.get('search') || '';
+  const tabParam = searchParams.get('tab') as AttendanceTab | null;
+  const tab: AttendanceTab = tabParam && ATTENDANCE_TABS.includes(tabParam) ? tabParam : ATTENDANCE_TABS[0];
+  const debouncedSearch = useDebounce(search, 300);
+
+  const setUrlParam = useCallback((key: string, value: string | null) => {
+    const current = new URLSearchParams(Array.from(searchParams.entries()));
+    if (value) current.set(key, value);
+    else current.delete(key);
+    if (key !== 'page') current.set('page', '1');
+    router.push(`${pathname}?${current.toString()}`, { scroll: false });
+  }, [searchParams, pathname, router]);
+
+  const setSearch = useCallback((val: string) => setUrlParam('search', val || null), [setUrlParam]);
+  const setCurrentPage = useCallback((val: number) => setUrlParam('page', val.toString()), [setUrlParam]);
+  const setTab = useCallback((val: AttendanceTab) => setUrlParam('tab', val), [setUrlParam]);
+
+  // Local State
   const [records, setRecords] = useState<Attendance[]>([]);
   const [totalRecords, setTotalRecords] = useState(0);
-  const [todayStats, setTodayStats] = useState({ totalCheckIns: 0, memberCheckIns: 0, staffCheckIns: 0 });
+  const [todayStats, setTodayStats] = useState<AttendanceStatsResponse>({ totalCheckIns: 0, memberCheckIns: 0, staffCheckIns: 0 });
   const [members, setMembers] = useState<Member[]>([]);
   const [staff, setStaff] = useState<Staff[]>([]);
  
-  const [loading, setLoading] = useState(true);
+  const [fetchState, setFetchState] = useState<FetchState>('loading');
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
  
-  const [tab, setTab] = useState<AttendanceTab>(ATTENDANCE_TABS[0]);
-  const [search, setSearch] = useState('');
-  const debouncedSearch = useDebounce(search, 300);
-  const [currentPage, setCurrentPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState(EMPTY_ATTENDANCE_FORM);
 
@@ -27,7 +54,7 @@ export function useAttendanceLogic(): AttendanceContextType {
   const hideToast = useCallback(() => setToast(null), []);
 
   const loadAll = useCallback(async () => {
-    setLoading(true);
+    setFetchState('loading');
     try {
       const params: Record<string, string> = {
         limit: '10',
@@ -36,46 +63,55 @@ export function useAttendanceLogic(): AttendanceContextType {
       if (debouncedSearch) params.search = debouncedSearch;
       if (tab !== 'All') params.type = tab === 'Members' ? 'MEMBER' : 'STAFF';
 
+      // We explicitly cast the responses via our strict generic wrapper
       const [attRes, statsRes, memRes, staffRes] = await Promise.all([
-        attendanceApi.getAll(params),
-        attendanceApi.getTodayStats(),
-        membersApi.getAll({ limit: '1000' }),
-        hrApi.getStaff(),
+        attendanceApi.getAll(params) as unknown as Promise<ApiResponse<AttendanceResponse>>,
+        attendanceApi.getTodayStats() as unknown as Promise<ApiResponse<AttendanceStatsResponse>>,
+        membersApi.getAll({ limit: '1000' }) as unknown as Promise<ApiResponse<{ members: Member[] }>>,
+        hrApi.getStaff() as unknown as Promise<ApiResponse<{ staff: Staff[] } | Staff[]>>,
       ]);
+
       setRecords(attRes.data.attendance || []);
       setTotalRecords(attRes.data.total || 0);
       setTodayStats(statsRes.data);
-      setMembers(memRes.data.members);
-      setStaff(Array.isArray(staffRes.data) ? staffRes.data : (staffRes.data as any).staff || []);
+      setMembers(memRes.data.members || []);
+      
+      const staffData = staffRes.data;
+      setStaff(Array.isArray(staffData) ? staffData : (staffData.staff || []));
     } catch (e) { 
       showToast((e as Error).message, 'error'); 
     } finally { 
-      setLoading(false); 
+      setFetchState('success'); 
     }
   }, [showToast, currentPage, debouncedSearch, tab]);
 
+  // Rely on URL changes to drive the fetch (plus initial mount)
   useEffect(() => { loadAll(); }, [loadAll]);
 
   const markAttendance = useCallback(async (data: AttendanceFormValues) => {
     setSaving(true);
     try {
       const dateTime = new Date(`${data.date}T${data.checkIn}:00`);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const payload: any = { type: data.type, date: dateTime.toISOString(), checkIn: dateTime.toISOString() };
+      
+      const payload: { memberId?: number; staffId?: number; date: string; checkIn?: string; type: string } = { 
+        type: data.type, 
+        date: dateTime.toISOString(), 
+        checkIn: dateTime.toISOString() 
+      };
       
       if (data.type === 'MEMBER') {
-        payload.memberId = data.memberId;
+        payload.memberId = data.memberId ? Number(data.memberId) : undefined;
       } else {
-        payload.staffId = data.staffId;
+        payload.staffId = data.staffId ? Number(data.staffId) : undefined;
       }
  
- const res = await attendanceApi.mark(payload);
- showToast((res as any).message, 'success');
- setShowModal(false);
- setForm(EMPTY_ATTENDANCE_FORM);
- await loadAll();
- } catch (err) { 
- showToast((err as Error).message, 'error'); 
+      const res = await attendanceApi.mark(payload) as ApiResponse<{ message: string }>;
+      showToast(res.message || 'Attendance marked successfully', 'success');
+      setShowModal(false);
+      setForm(EMPTY_ATTENDANCE_FORM);
+      await loadAll();
+    } catch (err) { 
+      showToast((err as Error).message, 'error'); 
     } finally { 
       setSaving(false); 
     }
@@ -83,7 +119,7 @@ export function useAttendanceLogic(): AttendanceContextType {
 
   return {
     records, totalRecords, todayStats, members, staff,
-    loading, saving, toast,
+    fetchState, saving, toast,
     tab, setTab,
     search, setSearch,
     currentPage, setCurrentPage,

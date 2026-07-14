@@ -4,9 +4,9 @@ import { GymsRepository } from '../gyms.repository';
 import { ProvisionTenantService } from '../../tenants/services/provision-tenant.service';
 import { CouponsRepository } from '../../coupons/coupons.repository';
 import { AffiliatesRepository } from '../../affiliates/affiliates.repository';
-import { TenantStatus } from '../gyms.interfaces';
+import { TenantStatus, TenantResponse } from '../gyms.interfaces';
 import { TenantAlreadyExistsException } from '../gyms.exceptions';
-import { GYMS_ERRORS } from '../gyms.constants';
+import { GYMS_ERRORS, GYMS_MESSAGES } from '../gyms.constants';
 
 @Injectable()
 export class CreateGymsService {
@@ -19,8 +19,8 @@ export class CreateGymsService {
     private readonly affiliatesRepository: AffiliatesRepository,
   ) {}
   
-  async execute(dto: CreateTenantDto): Promise<any> {
-    this.logger.log('Creating new gym (tenant)...');
+  async execute(dto: CreateTenantDto): Promise<TenantResponse> {
+    this.logger.log(`Creating new tenant for ${dto.adminEmail}`);
 
     // 1. Coupon validation
     if (dto.couponCode) {
@@ -63,6 +63,6 @@ export class CreateGymsService {
       await this.repository.update(gym.id, { status: TenantStatus.SUSPENDED });
     }
     
-    return { success: true, data: gym };
+    return { success: true, message: GYMS_MESSAGES.CREATED, data: gym };
   }
 }

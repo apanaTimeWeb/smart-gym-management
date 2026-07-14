@@ -14,7 +14,7 @@ export class CreateAuditLogController {
   @Post()
   @ApiOperation({ summary: 'Create Audit Log' })
   @ApiResponse({ status: HttpStatus.CREATED })
-  async execute(@Body() dto: Partial<AuditLog>) {
+  async execute(@Body() dto: Partial<AuditLog>): Promise<{ success: boolean; message: string }> {
     return this.service.createAuditLog(dto);
   }
 }

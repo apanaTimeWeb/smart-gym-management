@@ -1,3 +1,4 @@
+// RESPONSIBILITY: settings_types.ts handles the logic and UI for its corresponding feature.
 import { EMPTY_SETTINGS_FORM } from '@/app/erp/settings/settings_utils/SettingsSharedConstants';
 
 export interface SettingsContextType {

@@ -71,54 +71,13 @@ export class AuthLoginService {
     const tenantId = await this.validateTenantStatus(user);
 
     return {
+      success: true,
       message: AUTH_MESSAGES.LOGIN_SUCCESS,
       data: {
         ...tokens,
         user: { ...userWithoutPassword, tenantId },
       },
     };
-  }
-
-  async logout(userId: string): Promise<void> {
-    await this.authRepository.updateUser(userId, { refreshToken: null });
-    this.logger.log(`Logged out user id: ${userId}`);
-  }
-
-  async refreshTokens(
-    refreshToken: string,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
-    if (!refreshToken)
-      throw new UnauthorizedException('No refresh token provided');
-
-    let payload: any;
-    try {
-      payload = this.jwtService.verify(refreshToken, {
-        secret:
-          this.configService.get<string>('JWT_REFRESH_SECRET') ||
-          'gymsmart_refresh_secret',
-      });
-    } catch (e) {
-      throw new UnauthorizedException('Invalid or expired refresh token');
-    }
-
-    const userId = payload.sub;
-    const user = await this.authRepository.findUserById(userId);
-    if (!user || !user.refreshToken || !user.isActive) {
-      throw new UnauthorizedException('Access Denied');
-    }
-
-    // Validate Tenant Status (blocks refresh if gym is suspended/deleted)
-    await this.validateTenantStatus(user);
-
-    const rtMatches = await bcrypt.compare(refreshToken, user.refreshToken);
-    if (!rtMatches) {
-      throw new UnauthorizedException('Access Denied');
-    }
-
-    const tokens = await this.generateTokens(user.id, user.email, user.role);
-    await this.updateRefreshToken(user.id, tokens.refreshToken);
-
-    return tokens;
   }
 
   private async generateTokens(userId: string, email: string, role: string) {

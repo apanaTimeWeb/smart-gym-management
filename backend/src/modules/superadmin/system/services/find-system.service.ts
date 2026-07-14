@@ -2,6 +2,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { SystemRepository } from '../system.repository';
 import { DataSource } from 'typeorm';
 import { InjectDataSource } from '@nestjs/typeorm';
+import { SystemResponse } from '../system.interfaces';
+import { SYSTEM_MESSAGES, SYSTEM_ERRORS } from '../system.constants';
 
 @Injectable()
 export class FindSystemService {
@@ -12,7 +14,7 @@ export class FindSystemService {
     @InjectDataSource() private readonly dataSource: DataSource,
   ) {}
   
-  async getHealth(): Promise<any> {
+  async getHealth(): Promise<SystemResponse> {
     this.logger.log('Performing system health check');
     let dbStatus = 'healthy';
     
@@ -27,6 +29,7 @@ export class FindSystemService {
     
     return {
       success: true,
+      message: 'System health checked successfully',
       data: {
         status: dbStatus === 'healthy' ? 'UP' : 'DOWN',
         database: dbStatus,
@@ -41,13 +44,22 @@ export class FindSystemService {
     };
   }
 
-  async execute(): Promise<any[]> {
-    return await this.repository.findAll();
+  async execute(): Promise<SystemResponse> {
+    const data = await this.repository.findAll();
+    return {
+      success: true,
+      message: SYSTEM_MESSAGES.FETCHED,
+      data
+    };
   }
   
-  async findOne(id: string): Promise<any> {
-    const entity = await this.repository.findById(id);
-    if (!entity) throw new Error('ReleaseNote not found');
-    return entity;
+  async findOne(id: string): Promise<SystemResponse> {
+    const data = await this.repository.findById(id);
+    if (!data) throw new Error(SYSTEM_ERRORS.NOT_FOUND);
+    return {
+      success: true,
+      message: SYSTEM_MESSAGES.FETCHED,
+      data
+    };
   }
 }

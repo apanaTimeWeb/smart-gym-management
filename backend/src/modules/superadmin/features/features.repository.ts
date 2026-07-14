@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { FeatureFlag } from './entities/features.entity';
+import { FeatureFlag } from './entities/feature-flag.entity';
 
 @Injectable()
 export class FeaturesRepository {
@@ -29,6 +29,6 @@ export class FeaturesRepository {
   }
 
   async softDelete(id: string): Promise<void> {
-    await this.repo.update(id, { isDeleted: true } as any);
+    await this.repo.update(id, { isDeleted: true, deletedAt: new Date() });
   }
 }

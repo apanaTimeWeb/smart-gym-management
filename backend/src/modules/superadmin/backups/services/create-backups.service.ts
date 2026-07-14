@@ -3,7 +3,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { BackupsRepository } from '../backups.repository';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
-import { BackupStatus } from '../backups.interfaces';
+import { BackupStatus, BackupResponse } from '../backups.interfaces';
+import { BACKUPS_MESSAGES } from '../backups.constants';
 
 @Injectable()
 export class CreateBackupsService {
@@ -14,7 +15,7 @@ export class CreateBackupsService {
     @InjectQueue('backups') private readonly backupsQueue: Queue,
   ) {}
   
-  async execute(dto: CreateBackupRecordDto): Promise<any> {
+  async execute(dto: CreateBackupRecordDto): Promise<BackupResponse> {
     this.logger.log(`Initiating backup creation for tenant: ${dto.tenantName}`);
     
     // Create initial record in PENDING/IN_PROGRESS state
@@ -35,7 +36,7 @@ export class CreateBackupsService {
 
     return {
       success: true,
-      message: 'Backup process initiated successfully',
+      message: BACKUPS_MESSAGES.CREATED,
       data: record
     };
   }

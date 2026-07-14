@@ -9,3 +9,9 @@ export interface ISettings {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface SettingsResponse {
+  success: boolean;
+  message: string;
+  data: ISettings;
+}

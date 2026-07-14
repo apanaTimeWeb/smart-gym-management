@@ -1,23 +1,32 @@
+// RESPONSIBILITY: Custom hook managing the form state, validation, and API submission for the login page.
+// DATA FLOW: LoginForm (View) -> useLoginForm.ts (Hook) -> auth_api.ts (API)
+
 import { useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
-import { authApi } from '@/lib/api';
+import { authApi } from '@/app/auth/auth_api/auth_api';
 import { AuthUrlConfig } from '@/app/auth/auth_url_config';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
-import { UseLoginFormReturn, loginSchema, LoginFormData } from '@/app/auth/login/login_types/login_types';
+import type { UseLoginFormReturn, LoginFormData, FetchState } from '@/app/auth/login/login_types/login_types';
+import { loginSchema } from '@/app/auth/login/login_types/login_types';
 
+/**
+ * Hook to manage login form state, validation, and handle the authentication flow.
+ * Uses Zod for schema validation and explicitly tracks API network state.
+ * Implements strict pessimistic UI state updates.
+ */
 export function useLoginForm(): UseLoginFormReturn {
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: 'admin@gymsmart.com', password: 'superadmin123' },
   });
 
-  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState<FetchState>('idle');
   const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = useCallback(async (data: LoginFormData) => {
-    setLoading(true);
+    setStatus('loading');
 
     try {
       const res = await authApi.login(data.email, data.password);
@@ -27,14 +36,15 @@ export function useLoginForm(): UseLoginFormReturn {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
             token: res.data.accessToken, 
-            refreshToken: (res.data as any).refreshToken, 
+            refreshToken: res.data.refreshToken, 
             user: res.data.user 
           }),
         });
 
         if (!cookieRes.ok) throw new Error('Session setup failed');
         
-        toast.success((res as any).message);
+        setStatus('success');
+        toast.success(res.message || 'Login successful');
         
         if (res.data.user?.role === 'SUPERADMIN') {
           window.location.replace(SuperadminUrlConfig.PAGES.DASHBOARD);
@@ -45,10 +55,9 @@ export function useLoginForm(): UseLoginFormReturn {
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Login failed. Please try again.';
       toast.error(msg);
-    } finally {
-      setLoading(false);
+      setStatus('error');
     }
   }, []);
 
-  return { form, loading, showPassword, setShowPassword, onSubmit };
+  return { form, status, showPassword, setShowPassword, onSubmit };
 }
