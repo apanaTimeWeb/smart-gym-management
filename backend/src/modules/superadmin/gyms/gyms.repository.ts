@@ -51,4 +51,8 @@ export class GymsRepository {
       });
     }
   }
+
+  async delete(id: string): Promise<void> {
+    await this.repo.delete(id);
+  }
 }

@@ -39,7 +39,8 @@ def admin_token(api_url):
 def test_tenant_id(api_url, admin_token):
     """Fixture to create a completely new test tenant DB for isolated testing."""
     if not admin_token:
-        return "test-tenant-id"
+        yield "test-tenant-id"
+        return
     
     api_client = requests.Session()
     api_client.headers.update({"Authorization": f"Bearer {admin_token}"})
@@ -60,11 +61,15 @@ def test_tenant_id(api_url, admin_token):
         "temporaryPassword": "temp"
     })
     
+    tenant_id = "test-tenant-id"
     if response.status_code == 201:
         tenant_id = response.json().get("data", {}).get("id")
-        return tenant_id
         
-    return "test-tenant-id"
+    yield tenant_id
+    
+    # Teardown logic
+    if tenant_id != "test-tenant-id":
+        api_client.delete(f"{api_url}/superadmin/gyms/{tenant_id}?hardDelete=true")
 
 @pytest.fixture
 def auth_client(api_client, admin_token, test_tenant_id):
