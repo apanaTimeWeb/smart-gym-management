@@ -1,3 +1,4 @@
+from http import HTTPStatus
 import pytest
 
 def test_create_contact_inquiry(api_client, api_url):
@@ -8,7 +9,7 @@ def test_create_contact_inquiry(api_client, api_url):
         "message": "Hello world"
     }
     response = api_client.post(f"{api_url}/landing/contact", json=payload)
-    assert response.status_code == 201
+    assert response.status_code == HTTPStatus.CREATED
     data = response.json()
     assert data.get('success') is True
     assert data['data']['name'] == "Test User"
@@ -24,7 +25,7 @@ def test_create_booking_inquiry(api_client, api_url):
         "type": "TRIAL"
     }
     response = api_client.post(f"{api_url}/landing/booking", json=payload)
-    assert response.status_code == 201
+    assert response.status_code == HTTPStatus.CREATED
     data = response.json()
     assert data.get('success') is True
     assert data['data']['name'] == "Booking User"

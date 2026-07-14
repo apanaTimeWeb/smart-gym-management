@@ -1,3 +1,4 @@
+from http import HTTPStatus
 import uuid
 
 def test_store_lifecycle(auth_client, api_url):
@@ -6,7 +7,7 @@ def test_store_lifecycle(auth_client, api_url):
         "name": "Whey Protein 1kg", "category": "Supplements", "price": 2500,
         "stock": 50, "description": "Premium whey protein isolate"
     })
-    assert create_prod.status_code == 201
+    assert create_prod.status_code == HTTPStatus.CREATED
     prod_id = create_prod.json()["data"]["id"]
 
     # Create Order
@@ -16,14 +17,14 @@ def test_store_lifecycle(auth_client, api_url):
         ],
         "method": "UPI", "notes": "Walk-in customer purchase"
     })
-    assert create_ord.status_code == 201
+    assert create_ord.status_code == HTTPStatus.CREATED
     ord_id = create_ord.json()["data"]["id"]
 
     # Update Product
     update_prod = auth_client.patch(f"{api_url}/erp/store/products/{prod_id}", json={
         "stock": 48
     })
-    assert update_prod.status_code == 200
+    assert update_prod.status_code == HTTPStatus.OK
 
 
     # Delete Product

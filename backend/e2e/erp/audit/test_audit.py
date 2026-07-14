@@ -1,3 +1,4 @@
+from http import HTTPStatus
 import uuid
 
 def test_create_audit(auth_client, api_url):
@@ -7,8 +8,8 @@ def test_create_audit(auth_client, api_url):
         "entityType": "E2E_TEST",
         "actorRole": "SYSTEM",
     })
-    assert create_resp.status_code == 201
+    assert create_resp.status_code == HTTPStatus.CREATED
 
 def test_get_all_audits(auth_client, api_url):
     response = auth_client.get(f"{api_url}/erp/audit?page=1&limit=20")
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK

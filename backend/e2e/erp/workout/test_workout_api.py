@@ -1,3 +1,4 @@
+from http import HTTPStatus
 import uuid
 
 def test_workout_lifecycle(auth_client, api_url):
@@ -7,6 +8,6 @@ def test_workout_lifecycle(auth_client, api_url):
         "exercises": 8, "focus": "Strength", "duration": "45 mins",
         "tags": ["Full Body", "Dumbbells"]
     })
-    assert create_resp.status_code == 201
+    assert create_resp.status_code == HTTPStatus.CREATED
     work_id = create_resp.json()["data"]["id"]
 

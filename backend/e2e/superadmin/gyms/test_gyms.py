@@ -1,3 +1,4 @@
+from http import HTTPStatus
 import pytest
 import uuid
 
@@ -15,14 +16,14 @@ def test_create_gym(auth_client, api_url):
         "status": "ACTIVE",
         "temporaryPassword": "temp"
     })
-    assert response.status_code == 201, f"Failed to create gym: {response.text}"
+    assert response.status_code == HTTPStatus.CREATED, f"Failed to create gym: {response.text}"
     data = response.json()
     assert "data" in data
     assert "id" in data["data"]
 
 def test_get_gyms(auth_client, api_url):
     response = auth_client.get(f"{api_url}/superadmin/gyms")
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     data = response.json()
     assert "data" in data
     assert isinstance(data["data"], list)
@@ -40,11 +41,11 @@ def test_get_gym_by_id(auth_client, api_url):
         "databaseVersion": "1.0",
         "temporaryPassword": "temp"
     })
-    assert create_resp.status_code == 201
+    assert create_resp.status_code == HTTPStatus.CREATED
     gym_id = create_resp.json()["data"]["id"]
     
     response = auth_client.get(f"{api_url}/superadmin/gyms/{gym_id}")
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     assert response.json()["data"]["id"] == gym_id
 
 def test_update_gym(auth_client, api_url):
@@ -60,13 +61,13 @@ def test_update_gym(auth_client, api_url):
         "databaseVersion": "1.0",
         "temporaryPassword": "temp"
     })
-    assert create_resp.status_code == 201
+    assert create_resp.status_code == HTTPStatus.CREATED
     gym_id = create_resp.json()["data"]["id"]
     
     response = auth_client.patch(f"{api_url}/superadmin/gyms/{gym_id}", json={
         "name": "Updated Gym Name"
     })
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     # Refetch to ensure it updated
     fetch_resp = auth_client.get(f"{api_url}/superadmin/gyms/{gym_id}")
     assert fetch_resp.json()["data"]["name"] == "Updated Gym Name"
@@ -84,12 +85,12 @@ def test_delete_gym(auth_client, api_url):
         "databaseVersion": "1.0",
         "temporaryPassword": "temp"
     })
-    assert create_resp.status_code == 201
+    assert create_resp.status_code == HTTPStatus.CREATED
     gym_id = create_resp.json()["data"]["id"]
     
     response = auth_client.delete(f"{api_url}/superadmin/gyms/{gym_id}")
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     
     # Verify it is deleted
     fetch_resp = auth_client.get(f"{api_url}/superadmin/gyms/{gym_id}")
-    assert fetch_resp.status_code == 404
+    assert fetch_resp.status_code == HTTPStatus.NOT_FOUND
