@@ -1,5 +1,6 @@
 'use client';
 // RESPONSIBILITY: Root orchestrator for the Gyms page. Renders the layout, toolbar, and table.
+import '@/app/superadmin/gyms/gyms.css';
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
