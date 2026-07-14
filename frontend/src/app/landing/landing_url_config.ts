@@ -20,4 +20,8 @@ export const LandingUrlConfig = {
     BOOKING:         '#booking',
     TRANSFORMATIONS: '#transformations',
   },
+  BACKEND_API: {
+    BOOKING: '/landing/booking',
+    CONTACT: '/landing/contact',
+  },
 } as const;

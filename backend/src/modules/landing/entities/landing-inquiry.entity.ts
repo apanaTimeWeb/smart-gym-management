@@ -8,7 +8,7 @@ export class LandingInquiry {
   @Column({ type: 'varchar', length: 255 })
   name: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, nullable: true })
   email: string;
 
   @Column({ type: 'varchar', length: 50, nullable: true })
@@ -19,6 +19,12 @@ export class LandingInquiry {
 
   @Column({ type: 'text', nullable: true })
   message: string;
+
+  @Column({ type: 'date', nullable: true })
+  bookingDate: Date;
+
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  bookingType: string;
 
   @Column({ type: 'varchar', length: 50, default: 'NEW' })
   status: 'NEW' | 'CONTACTED' | 'CONVERTED';

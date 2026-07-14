@@ -10,6 +10,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { LandingContextType, BmiResult } from '@/app/landing/landing_types/landing_types';
 import { EMPTY_BOOKING_FORM, EMPTY_CONTACT_FORM } from '@/app/landing/landing_utils/LandingSharedConstants';
+import { landingApi } from '@/app/landing/landing_api/landing_api';
 
 /**
  * Core logic hook for the Landing page. Aggregates all reactive state
@@ -70,32 +71,55 @@ export function useLandingLogic(): LandingContextType {
    * Handles booking form submission. Simulates API call with a 1.5s timeout.
    * Clears the form and shows the success state for 5 seconds on completion.
    */
-  const handleBooking = useCallback((e: React.FormEvent) => {
+  const handleBooking = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!bookingData.name || !bookingData.phone || !bookingData.date) return;
+    if (!bookingData.name || !bookingData.email || !bookingData.phone || !bookingData.date) return;
+    
     setIsBooking(true);
-    setTimeout(() => {
-      setIsBooking(false);
+    try {
+      await landingApi.submitBooking({
+        name: bookingData.name,
+        email: bookingData.email,
+        phone: bookingData.phone,
+        date: bookingData.date,
+        type: bookingData.type,
+      });
+      
       setBookingSuccess(true);
       setBookingData(EMPTY_BOOKING_FORM);
       setTimeout(() => setBookingSuccess(false), 5000);
-    }, 1500);
+    } catch (error) {
+      // apiFetch handles toast.error automatically
+      console.error('Booking failed', error);
+    } finally {
+      setIsBooking(false);
+    }
   }, [bookingData]);
 
   /**
    * Handles contact form submission. Simulates API call with a 1.5s timeout.
    * Clears the form and shows the success state for 5 seconds on completion.
    */
-  const handleContact = useCallback((e: React.FormEvent) => {
+  const handleContact = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     if (!contactData.name || !contactData.email || !contactData.message) return;
+    
     setIsSending(true);
-    setTimeout(() => {
-      setIsSending(false);
+    try {
+      await landingApi.submitContact({
+        name: contactData.name,
+        email: contactData.email,
+        message: contactData.message,
+      });
+      
       setContactSuccess(true);
       setContactData(EMPTY_CONTACT_FORM);
       setTimeout(() => setContactSuccess(false), 5000);
-    }, 1500);
+    } catch (error) {
+      console.error('Contact failed', error);
+    } finally {
+      setIsSending(false);
+    }
   }, [contactData]);
 
   return {

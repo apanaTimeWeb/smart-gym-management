@@ -91,6 +91,7 @@ export const SCHEDULE = [
 // ─── Form Default States ──────────────────────────────────────────────────── //
 export const EMPTY_BOOKING_FORM = {
   name:  '',
+  email: '',
   phone: '',
   date:  '',
   type:  'trial',

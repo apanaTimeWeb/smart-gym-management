@@ -57,20 +57,26 @@ export default function LandingBooking() {
                 ))}
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
                   <label className="text-xs font-medium text-secondary block mb-2">Full Name <span className="text-danger">*</span></label>
                   <input type="text" required value={bookingData.name} onChange={e => setBookingData({ ...bookingData, name: e.target.value })} placeholder="John Doe" className="w-full bg-card border border-border rounded-xl px-4 py-3 text-white placeholder-muted-foreground focus:outline-none focus:border-warning transition-colors" />
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-secondary block mb-2">Phone / WhatsApp <span className="text-danger">*</span></label>
-                  <input type="tel" required value={bookingData.phone} onChange={e => setBookingData({ ...bookingData, phone: e.target.value })} placeholder="+91 XXXXX XXXXX" className="w-full bg-card border border-border rounded-xl px-4 py-3 text-white placeholder-muted-foreground focus:outline-none focus:border-warning transition-colors" />
+                  <label className="text-xs font-medium text-secondary block mb-2">Email Address <span className="text-danger">*</span></label>
+                  <input type="email" required value={bookingData.email} onChange={e => setBookingData({ ...bookingData, email: e.target.value })} placeholder="john@example.com" className="w-full bg-card border border-border rounded-xl px-4 py-3 text-white placeholder-muted-foreground focus:outline-none focus:border-warning transition-colors" />
                 </div>
               </div>
 
-              <div>
-                <label className="text-xs font-medium text-secondary block mb-2">Preferred Date <span className="text-danger">*</span></label>
-                <input type="date" required value={bookingData.date} onChange={e => setBookingData({ ...bookingData, date: e.target.value })} className="w-full bg-card border border-border rounded-xl px-4 py-3 text-white placeholder-muted-foreground focus:outline-none focus:border-warning transition-colors [&::-webkit-calendar-picker-indicator]:filter-invert" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="text-xs font-medium text-secondary block mb-2">Phone / WhatsApp <span className="text-danger">*</span></label>
+                  <input type="tel" required value={bookingData.phone} onChange={e => setBookingData({ ...bookingData, phone: e.target.value })} placeholder="+91 XXXXX XXXXX" className="w-full bg-card border border-border rounded-xl px-4 py-3 text-white placeholder-muted-foreground focus:outline-none focus:border-warning transition-colors" />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-secondary block mb-2">Preferred Date <span className="text-danger">*</span></label>
+                  <input type="date" required value={bookingData.date} onChange={e => setBookingData({ ...bookingData, date: e.target.value })} className="w-full bg-card border border-border rounded-xl px-4 py-3 text-white placeholder-muted-foreground focus:outline-none focus:border-warning transition-colors [&::-webkit-calendar-picker-indicator]:filter-invert" />
+                </div>
               </div>
 
               <button type="submit" disabled={isBooking} className="w-full py-4 rounded-xl font-bold text-white text-lg transition-all hover:scale-105 hover:shadow-2xl mt-4 flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:scale-100 bg-primary hover:bg-primary-hover" style={{ boxShadow: isBooking ? 'none' : '0 0 30px rgba(99,102,241,0.3)' }}>
