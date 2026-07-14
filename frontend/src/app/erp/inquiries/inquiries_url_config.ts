@@ -5,9 +5,9 @@ export const InquiriesUrlConfig = {
   },
   BACKEND_API: {
     BASE: '/erp/inquiries',
-    GET_ONE: (id: number) => `/erp/inquiries/${id}`,
+    GET_ONE: (id: string) => `/erp/inquiries/${id}`,
     STATS: '/erp/inquiries/meta/stats',
-    UPDATE: (id: number) => `/erp/inquiries/${id}`,
-    DELETE: (id: number) => `/erp/inquiries/${id}`,
+    UPDATE: (id: string) => `/erp/inquiries/${id}`,
+    DELETE: (id: string) => `/erp/inquiries/${id}`,
   }
 };

@@ -15,7 +15,7 @@ export interface StoreInitialData {
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 
 export interface OrderItem {
- productId: number;
+ productId: string;
  qty: number;
  name: string;
  price: number;
@@ -50,7 +50,7 @@ export interface StoreContextType {
  
  showProductModal: boolean;
  setShowProductModal: (show: boolean) => void;
- editProductId: number | null;
+ editProductId: string | null;
  editProductData: ProductFormValues | null;
  
  showOrderModal: boolean;
@@ -70,22 +70,22 @@ export interface StoreContextType {
  openAddProduct: () => void;
  openEditProduct: (p: Product) => void;
  saveProduct: (data: ProductFormValues) => Promise<void>;
- deleteProduct: (id: number) => Promise<void>;
+ deleteProduct: (id: string) => Promise<void>;
  
  addToOrder: (p: Product) => void;
- removeFromOrder: (productId: number) => void;
+ removeFromOrder: (productId: string) => void;
  orderTotal: number;
  placeOrder: () => Promise<void>;
 }
 
 export interface Product {
-  id: number; name: string; category: string; price: number;
+  id: string; name: string; category: string; price: number;
   stock: number; description?: string; imageUrl?: string; isActive: boolean;
 }
 export interface Order {
-  id: number; total: number; method: string; status: string;
+  id: string; total: number; method: string; status: string;
   notes?: string; createdAt: string;
-  items?: { id: number; qty: number; price: number; product: { name: string } }[];
+  items?: { id: string; qty: number; price: number; product: { name: string } }[];
 }
 export interface StoreSummary {
   totalProducts: number; totalOrders: number;

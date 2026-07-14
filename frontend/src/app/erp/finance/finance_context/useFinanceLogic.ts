@@ -81,7 +81,7 @@ export function useFinanceLogic(initialData?: FinanceInitialData | null): Financ
     setSaving(true);
     try {
       const res = await financeApi.createPayment({ 
-        memberId: Number(data.memberId), 
+        memberId: data.memberId, 
         amount: Number(data.amount), 
         method: data.method, 
         notes: data.notes 

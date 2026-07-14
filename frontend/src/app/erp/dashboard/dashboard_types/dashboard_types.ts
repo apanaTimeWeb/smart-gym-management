@@ -3,7 +3,7 @@ export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 export interface DashboardContextType { stats: DashboardStats | null; status: FetchState; error: string; }
 
 export interface RecentMember {
-  id: number; 
+  id: string; 
   name: string; 
   plan: string | { name: string }; 
   status: string;
@@ -12,7 +12,7 @@ export interface RecentMember {
 }
 
 export interface RecentPayment {
-  id: number; 
+  id: string; 
   invoiceNo: string; 
   amount: number; 
   method: string; 
@@ -21,7 +21,7 @@ export interface RecentPayment {
 }
 
 export interface PendingPayment {
-  id: number; 
+  id: string; 
   name: string; 
   pendingAmount: number; 
   expiryDate: string;

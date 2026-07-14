@@ -5,8 +5,8 @@ export const PlansUrlConfig = {
   },
   BACKEND_API: {
     BASE: '/erp/plans',
-    GET_ONE: (id: number) => `/erp/plans/${id}`,
-    UPDATE: (id: number) => `/erp/plans/${id}`,
-    DELETE: (id: number) => `/erp/plans/${id}`,
+    GET_ONE: (id: string) => `/erp/plans/${id}`,
+    UPDATE: (id: string) => `/erp/plans/${id}`,
+    DELETE: (id: string) => `/erp/plans/${id}`,
   }
 };

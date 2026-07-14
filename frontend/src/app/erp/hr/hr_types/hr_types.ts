@@ -34,7 +34,7 @@ export interface HrContextType {
  setShowModal: (show: boolean) => void;
  showPayrollModal: boolean;
  setShowPayrollModal: (show: boolean) => void;
- editId: number | null;
+ editId: string | null;
  editData: Partial<Staff> | null;
  saving: boolean;
  
@@ -44,17 +44,17 @@ export interface HrContextType {
  openAddPayroll: () => void;
  saveStaff: (data: Partial<Staff> & { joinDate?: string | Date; salary?: string | number }) => Promise<void>;
  savePayroll: (data: Partial<Payroll> & { amount?: string | number }) => Promise<void>;
- deleteStaff: (id: number) => Promise<void>;
- markPayrollPaid: (id: number) => Promise<void>;
+ deleteStaff: (id: string) => Promise<void>;
+ markPayrollPaid: (id: string) => Promise<void>;
 }
 
 export interface Staff {
-  id: number; name: string; email: string; phone: string;
+  id: string; name: string; email: string; phone: string;
   role: string; salary: number; branch: string; gender: string;
   address?: string; joinDate: string; isActive: boolean;
 }
 export interface Payroll {
-  id: number; staffId: number; month: string; amount: number;
+  id: string; staffId: string; month: string; amount: number;
   status: string; paidAt?: string; notes?: string;
   staff?: { name: string; role: string };
 }

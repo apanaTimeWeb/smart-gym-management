@@ -49,11 +49,11 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
   }, [router, searchParams]);
 
  const [showExModal, setShowExModal] = useState(false);
- const [editExId, setEditExId] = useState<number | null>(null);
+ const [editExId, setEditExId] = useState<string | null>(null);
  const [editExData, setEditExData] = useState<any>(null);
 
  const [showDietModal, setShowDietModal] = useState(false);
- const [editDietId, setEditDietId] = useState<number | null>(null);
+ const [editDietId, setEditDietId] = useState<string | null>(null);
  const [editDietData, setEditDietData] = useState<any>(null);
 
  const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
@@ -125,7 +125,7 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
  }
  }, [editExId, loadAll, showToast]);
  
-  const deleteExercise = useCallback(async (id: number) => {
+  const deleteExercise = useCallback(async (id: string) => {
    const isConfirmed = await confirm({ title: 'Delete Exercise', message: 'Delete this exercise?', confirmText: 'Delete', type: 'danger' });
    if (!isConfirmed) return;
    try { 
@@ -187,7 +187,7 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
  }
  }, [editDietId, loadAll, showToast]);
  
-  const deleteDietPlan = useCallback(async (id: number) => {
+  const deleteDietPlan = useCallback(async (id: string) => {
    const isConfirmed = await confirm({ title: 'Delete Diet Plan', message: 'Delete this diet plan?', confirmText: 'Delete', type: 'danger' });
    if (!isConfirmed) return;
   try { 

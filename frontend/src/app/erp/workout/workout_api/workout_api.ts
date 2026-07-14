@@ -10,7 +10,7 @@ export const workoutApi = {
   },
   createWorkout: (body: Partial<Workout>) =>
     apiFetch<ApiResponse<Workout>>(WorkoutUrlConfig.BACKEND_API.WORKOUTS_BASE, { method: 'POST', body: JSON.stringify(body) }),
-  updateWorkout: (id: number, body: Partial<Workout>) =>
+  updateWorkout: (id: string, body: Partial<Workout>) =>
     apiFetch<ApiResponse<Workout>>(WorkoutUrlConfig.BACKEND_API.WORKOUT_UPDATE(id), { method: 'PATCH', body: JSON.stringify(body) }),
-  removeWorkout: (id: number) => apiFetch<ApiResponse<{ id: number }>>(WorkoutUrlConfig.BACKEND_API.WORKOUT_DELETE(id), { method: 'DELETE' }),
+  removeWorkout: (id: string) => apiFetch<ApiResponse<{ id: string }>>(WorkoutUrlConfig.BACKEND_API.WORKOUT_DELETE(id), { method: 'DELETE' }),
 };

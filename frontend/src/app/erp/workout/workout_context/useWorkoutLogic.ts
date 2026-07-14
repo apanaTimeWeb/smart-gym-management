@@ -28,11 +28,11 @@ export function useWorkoutLogic(): WorkoutContextType {
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
   const [showWkModal, setShowWkModal] = useState(false);
-  const [editWkId, setEditWkId] = useState<number | null>(null);
+  const [editWkId, setEditWkId] = useState<string | null>(null);
   const [wkForm, setWkForm] = useState(EMPTY_WORKOUT_FORM);
 
   const [showExModal, setShowExModal] = useState(false);
-  const [editExId, setEditExId] = useState<number | null>(null);
+  const [editExId, setEditExId] = useState<string | null>(null);
   const [exForm, setExForm] = useState(EMPTY_EXERCISE_FORM);
 
   const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
@@ -113,7 +113,7 @@ export function useWorkoutLogic(): WorkoutContextType {
     }
   }, [editWkId, loadAll, showToast]);
   
-  const deleteWk = useCallback(async (id: number) => { 
+  const deleteWk = useCallback(async (id: string) => { 
     const isConfirmed = await confirm({ title: 'Delete Workout', message: 'Delete this workout plan?', confirmText: 'Delete', type: 'danger' });
     if (!isConfirmed) return;
     try {
@@ -169,7 +169,7 @@ export function useWorkoutLogic(): WorkoutContextType {
     }
   }, [editExId, loadAll, showToast]);
   
-  const deleteEx = useCallback(async (id: number) => { 
+  const deleteEx = useCallback(async (id: string) => { 
     const isConfirmed = await confirm({ title: 'Delete Exercise', message: 'Delete this exercise?', confirmText: 'Delete', type: 'danger' });
     if (!isConfirmed) return;
     try {

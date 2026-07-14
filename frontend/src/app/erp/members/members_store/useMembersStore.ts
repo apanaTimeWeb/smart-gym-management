@@ -21,14 +21,14 @@ interface MembersState {
   fetchState: FetchState;
   saving: boolean;
   totalMembers: number;
-  attMap: Record<number, { day: number; status: string }[]>;
+  attMap: Record<string, { day: number; status: string }[]>;
 
   hydrate: (data: MembersInitialData) => void;
   loadAll: (params: { search?: string; status?: string; page: string }) => Promise<void>;
-  loadMemberProfile: (memberId: number) => Promise<void>;
-  toggleAtt: (memberId: number, day: number) => void;
-  saveMember: (data: MemberFormValues, editId: number | null) => Promise<{ success: boolean; message: string }>;
-  deleteMember: (id: number) => Promise<{ success: boolean; message: string }>;
+  loadMemberProfile: (memberId: string) => Promise<void>;
+  toggleAtt: (memberId: string, day: number) => void;
+  saveMember: (data: MemberFormValues, editId: string | null) => Promise<{ success: boolean; message: string }>;
+  deleteMember: (id: string) => Promise<{ success: boolean; message: string }>;
 }
 
 export const useMembersStore = create<MembersState>((set, get) => ({
@@ -80,7 +80,7 @@ export const useMembersStore = create<MembersState>((set, get) => ({
     }
   },
 
-  loadMemberProfile: async (memberId: number) => {
+  loadMemberProfile: async (memberId: string) => {
     try {
       const pRes = await financeApi.getByMember(memberId);
       set({ payments: pRes.data || [] });
@@ -100,7 +100,7 @@ export const useMembersStore = create<MembersState>((set, get) => ({
     }
   },
 
-  toggleAtt: (memberId: number, day: number) => {
+  toggleAtt: (memberId: string, day: number) => {
     set((state) => {
       const currentAtt = state.attMap[memberId] || [];
       const updatedAtt = currentAtt.map(a => a.day === day ? { ...a, status: a.status === 'P' ? 'A' : a.status === 'A' ? 'L' : 'P' } : a);
@@ -112,10 +112,10 @@ export const useMembersStore = create<MembersState>((set, get) => ({
     set({ saving: true });
     try {
       if (editId) {
-        const res = await membersApi.update(Number(editId), { ...data, planId: Number(data.planId) });
+        const res = await membersApi.update(editId, { ...data, planId: data.planId });
         return { success: true, message: res.message || 'Updated successfully' };
       } else {
-        const res = await membersApi.create({ ...data, planId: Number(data.planId), joinDate: new Date().toISOString() });
+        const res = await membersApi.create({ ...data, planId: data.planId, joinDate: new Date().toISOString() });
         return { success: true, message: res.message || 'Created successfully' };
       }
     } catch (err: unknown) {
@@ -125,7 +125,7 @@ export const useMembersStore = create<MembersState>((set, get) => ({
     }
   },
 
-  deleteMember: async (id: number) => {
+  deleteMember: async (id: string) => {
     try {
       const res = await membersApi.remove(id);
       return { success: true, message: res.message || 'Deleted successfully' };

@@ -9,10 +9,10 @@ export const MembersUrlConfig = {
   BACKEND_API: {
     BASE: '/erp/members',
     STATS: '/erp/members/stats',
-    RENEW: (id: number) => `/erp/members/${id}/renew`,
-    GET_ONE: (id: number) => `/erp/members/${id}`,
-    UPDATE: (id: number) => `/erp/members/${id}`,
-    DELETE: (id: number) => `/erp/members/${id}`,
+    RENEW: (id: string) => `/erp/members/${id}/renew`,
+    GET_ONE: (id: string) => `/erp/members/${id}`,
+    UPDATE: (id: string) => `/erp/members/${id}`,
+    DELETE: (id: string) => `/erp/members/${id}`,
   }
 };
 

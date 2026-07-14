@@ -6,6 +6,6 @@ export const FinanceUrlConfig = {
   BACKEND_API: {
     PAYMENTS_BASE: '/erp/finance/payments',
     SUMMARY: '/erp/finance/summary',
-    PAYMENTS_BY_MEMBER: (memberId: number) => `/erp/finance/payments/member/${memberId}`,
+    PAYMENTS_BY_MEMBER: (memberId: string) => `/erp/finance/payments/member/${memberId}`,
   }
 };

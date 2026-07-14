@@ -48,7 +48,7 @@ export default function PayrollModal() {
         </div>
 
         <div className="p-6 overflow-y-auto flex-1 custom-scrollbar">
-          <form id="payroll-form" onSubmit={handleSubmit((data) => savePayroll({ ...data, staffId: Number(data.staffId) }))} className="space-y-4">
+          <form id="payroll-form" onSubmit={handleSubmit((data) => savePayroll({ ...data, staffId: data.staffId }))} className="space-y-4">
             
             <div className="space-y-1.5">
               <label className="text-sm font-semibold text-foreground">Staff Member <span className="text-danger">*</span></label>

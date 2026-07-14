@@ -23,7 +23,7 @@ export interface PlansContextType {
 
   showModal: boolean;
   setShowModal: (show: boolean) => void;
-  editId: number | null;
+  editId: string | null;
   form: PlanFormValues;
   setForm: React.Dispatch<React.SetStateAction<PlanFormValues>>;
 
@@ -34,11 +34,11 @@ export interface PlansContextType {
   openAdd: () => void;
   openEdit: (p: Plan) => void;
   savePlan: (data: PlanFormValues) => Promise<void>;
-  deletePlan: (id: number) => Promise<void>;
+  deletePlan: (id: string) => Promise<void>;
 }
 
 export interface Plan {
-  id: number; name: string; tier: string;
+  id: string; name: string; tier: string;
   price1Month: number; price3Month: number;
   price6Month: number; price12Month: number;
   features: string[]; isActive: boolean;

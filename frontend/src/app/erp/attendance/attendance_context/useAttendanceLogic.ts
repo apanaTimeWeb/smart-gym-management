@@ -93,16 +93,16 @@ export function useAttendanceLogic(): AttendanceContextType {
     try {
       const dateTime = new Date(`${data.date}T${data.checkIn}:00`);
       
-      const payload: { memberId?: number; staffId?: number; date: string; checkIn?: string; type: string } = { 
+      const payload: { memberId?: string; staffId?: string; date: string; checkIn?: string; type: string } = { 
         type: data.type, 
         date: dateTime.toISOString(), 
         checkIn: dateTime.toISOString() 
       };
       
       if (data.type === 'MEMBER') {
-        payload.memberId = data.memberId ? Number(data.memberId) : undefined;
+        payload.memberId = data.memberId ? data.memberId : undefined;
       } else {
-        payload.staffId = data.staffId ? Number(data.staffId) : undefined;
+        payload.staffId = data.staffId ? data.staffId : undefined;
       }
  
       const res = await attendanceApi.mark(payload) as ApiResponse<{ message: string }>;

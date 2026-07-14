@@ -16,9 +16,9 @@ export interface MembersInitialData {
 }
 
 export interface Member {
-  id: number; name: string; email: string; phone: string;
+  id: string; name: string; email: string; phone: string;
   gender: string; address?: string; branch: string;
-  planId: number; plan?: { id: number; name: string; tier: string };
+  planId: string; plan?: { id: string; name: string; tier: string };
   billingCycle: string; status: string;
   joinDate: string; expiryDate: string;
   paidAmount: number; pendingAmount: number; photo?: string;
@@ -56,14 +56,14 @@ export interface MembersContextType {
   // Add/Edit Modal
   showAddModal: boolean;
   setShowAddModal: (show: boolean) => void;
-  editId: number | null;
+  editId: string | null;
   editData: MemberFormValues | null;
 
   // Actions
   openAdd: () => void;
   openEdit: (m: Member) => void;
   saveMember: (data: MemberFormValues) => Promise<void>;
-  deleteMember: (id: number) => Promise<void>;
+  deleteMember: (id: string) => Promise<void>;
 
   // Message Modal
   msgModal: { open: boolean; recipient: ErpMessageRecipient; type: MessageType; message: string; subject?: string } | null;

@@ -55,7 +55,7 @@ export function useMembersLogic(initialData?: MembersInitialData | null): Member
 
   // UI State
   const [showAddModal, setShowAddModal] = useState(false);
-  const [editId, setEditId] = useState<number | null>(null);
+  const [editId, setEditId] = useState<string | null>(null);
   const [editData, setEditData] = useState<MemberFormValues | null>(null);
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
   const [profileTab, setProfileTab] = useState<'overview' | 'attendance' | 'payments'>('overview');
@@ -111,7 +111,7 @@ export function useMembersLogic(initialData?: MembersInitialData | null): Member
     }
   }, [editId, loadAll, showToast, storeSaveMember, debouncedSearch, statusFilter, currentPage]);
 
-  const deleteMember = useCallback(async (id: number) => {
+  const deleteMember = useCallback(async (id: string) => {
     const isConfirmed = await confirm({ title: 'Delete Member', message: 'Are you sure you want to delete this member? This action cannot be undone.', confirmText: 'Delete', type: 'danger' });
     if (!isConfirmed) return;
     try {
