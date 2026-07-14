@@ -39,5 +39,6 @@ export class CreateTenantDto {
   referralCode?: string;
 
   @IsString()
+  @IsOptional()
   temporaryPassword?: string;
 }
