@@ -25,7 +25,8 @@ export interface AttendanceStatsResponse {
 }
 
 export interface AttendanceResponse {
-  attendance: Attendance[];
+  attendance?: Attendance[];
+  attendances?: Attendance[];
   total: number;
 }
 
