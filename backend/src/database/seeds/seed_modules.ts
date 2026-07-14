@@ -2,20 +2,20 @@ import 'dotenv/config';
 import { DataSource } from 'typeorm';
 
 // Entities
-import { Attendance } from './src/modules/erp/attendance/entities/attendance.entity';
-import { Staff } from './src/modules/erp/hr/entities/staff.entity';
-import { Payroll } from './src/modules/erp/hr/entities/payroll.entity';
-import { Product } from './src/modules/erp/store/entities/product.entity';
-import { Order } from './src/modules/erp/store/entities/order.entity';
-import { OrderItem } from './src/modules/erp/store/entities/order-item.entity';
-import { DietPlan } from './src/modules/erp/library/entities/diet-plan.entity';
-import { Exercise } from './src/modules/erp/library/entities/exercise.entity';
-import { Workout } from './src/modules/erp/workout/entities/workout.entity';
-import { Member } from './src/modules/erp/members/entities/member.entity';
-import { Plan } from './src/modules/erp/plans/entities/plan.entity';
+import { Attendance } from '../../modules/erp/attendance/entities/attendance.entity';
+import { Staff } from '../../modules/erp/hr/entities/staff.entity';
+import { Payroll } from '../../modules/erp/hr/entities/payroll.entity';
+import { Product } from '../../modules/erp/store/entities/product.entity';
+import { Order } from '../../modules/erp/store/entities/order.entity';
+import { OrderItem } from '../../modules/erp/store/entities/order-item.entity';
+import { DietPlan } from '../../modules/erp/library/entities/diet-plan.entity';
+import { Exercise } from '../../modules/erp/library/entities/exercise.entity';
+import { Workout } from '../../modules/erp/workout/entities/workout.entity';
+import { Member } from '../../modules/erp/members/entities/member.entity';
+import { Plan } from '../../modules/erp/plans/entities/plan.entity';
 
 // Enums
-import { AttendanceType, PlanTier, BillingCycle, MemberStatus, Gender } from './src/modules/erp/members/utils/members.enums';
+import { AttendanceType, PlanTier, BillingCycle, MemberStatus, Gender } from '../../modules/erp/members/utils/members.enums';
 
 const AppDataSource = new DataSource({
   type: 'postgres',
