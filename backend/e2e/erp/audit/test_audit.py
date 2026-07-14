@@ -1,4 +1,3 @@
-import pytest
 import uuid
 
 def test_create_audit(auth_client, api_url):
@@ -8,14 +7,8 @@ def test_create_audit(auth_client, api_url):
         "module": "E2E",
         "description": "E2E Test generation",
     })
-    
-    assert create_resp.status_code in [201, 400, 422], f"Unexpected status: {create_resp.status_code} - {create_resp.text}"
+    assert create_resp.status_code == 201
 
-def test_get_audit(auth_client, api_url):
-    response = auth_client.get(f"{api_url}/erp/audit")
-    assert response.status_code in [200, 403]
-    
-    if response.status_code == 200:
-        data = response.json()
-        assert "data" in data
-        assert isinstance(data["data"], list)
+def test_get_all_audits(auth_client, api_url):
+    response = auth_client.get(f"{api_url}/erp/audit?page=1&limit=20")
+    assert response.status_code == 200

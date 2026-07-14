@@ -1,30 +1,25 @@
-def test_get_all_workouts(auth_client, api_url):
-    response = auth_client.get(f"{api_url}/erp/workout/workouts?page=1&limit=20")
-    assert response.status_code in [200, 401]
+import uuid
 
-def test_create_workout(auth_client, api_url):
-    response = auth_client.post(f"{api_url}/erp/workout/workouts", json={
-        "name": "Full Body Blaster",
-        "level": "Beginner",
-        "days": 3,
-        "exercises": 8,
-        "focus": "Strength",
-        "duration": "45 mins",
+def test_workout_lifecycle(auth_client, api_url):
+    # Create
+    create_resp = auth_client.post(f"{api_url}/erp/workout/workouts", json={
+        "name": "Full Body Blaster", "level": "Beginner", "days": 3,
+        "exercises": 8, "focus": "Strength", "duration": "45 mins",
         "tags": ["Full Body", "Dumbbells"]
     })
-    assert response.status_code in [201, 401]
+    assert create_resp.status_code == 201
+    work_id = create_resp.json()["data"]["id"]
 
-def test_update_workout(auth_client, api_url):
-    response = auth_client.patch(f"{api_url}/erp/workout/workouts/1", json={
-        "level": "Advanced",
-        "days": 4
+    # Get
+    get_resp = auth_client.get(f"{api_url}/erp/workout/workouts/{work_id}")
+    assert get_resp.status_code == 200
+
+    # Update
+    update_resp = auth_client.patch(f"{api_url}/erp/workout/workouts/{work_id}", json={
+        "level": "Advanced", "days": 4
     })
-    assert response.status_code in [200, 401, 404]
+    assert update_resp.status_code == 200
 
-def test_get_workout_by_id(auth_client, api_url):
-    response = auth_client.get(f"{api_url}/erp/workout/workouts/1")
-    assert response.status_code in [200, 401, 404]
-
-def test_delete_workout(auth_client, api_url):
-    response = auth_client.delete(f"{api_url}/erp/workout/workouts/1")
-    assert response.status_code in [200, 204, 401, 404]
+    # Delete
+    del_resp = auth_client.delete(f"{api_url}/erp/workout/workouts/{work_id}")
+    assert del_resp.status_code in [200, 204]
