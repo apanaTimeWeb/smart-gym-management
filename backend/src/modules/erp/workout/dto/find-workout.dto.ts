@@ -1,7 +1,7 @@
-import { IsOptional, IsString, IsInt, Min } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsOptional, IsString } from 'class-validator';
+import { PaginationQueryDto } from '@/core/dto/pagination-query.dto';
 
-export class FindWorkoutDto {
+export class FindWorkoutDto extends PaginationQueryDto {
   @IsOptional()
   @IsString()
   memberId?: string;
@@ -9,16 +9,4 @@ export class FindWorkoutDto {
   @IsOptional()
   @IsString()
   date?: string;
-
-  @IsOptional()
-  @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  page?: number = 1;
-
-  @IsOptional()
-  @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  limit?: number = 50;
 }

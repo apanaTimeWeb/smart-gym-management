@@ -36,12 +36,9 @@ def test_get_all_payrolls(auth_client, api_url):
 
 def test_create_payroll(auth_client, api_url):
     response = auth_client.post(f"{api_url}/erp/hr/payrolls", json={
-        "staffId": "staff-00000000-0000-0000-0000-000000000000",
+        "staffId": "00000000-0000-0000-0000-000000000000",
         "month": "July",
-        "year": 2026,
         "amount": 30000,
-        "bonus": 2000,
-        "deductions": 0,
         "status": "Pending"
     })
     assert response.status_code in [201, 401, 404]

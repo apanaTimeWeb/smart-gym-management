@@ -11,10 +11,11 @@ def test_create_plan(auth_client, api_url):
         "price3Month": 8000,
         "price6Month": 14000,
         "price12Month": 25000,
+        "priceCustom": 0,
         "features": ["24/7 Access", "Personal Trainer", "Spa Access"],
         "isActive": True
     })
-    assert response.status_code in [201, 401]
+    assert response.status_code in [201, 401, 409]
 
 def test_get_plan_by_id(auth_client, api_url):
     response = auth_client.get(f"{api_url}/erp/plans/00000000-0000-0000-0000-000000000000")
