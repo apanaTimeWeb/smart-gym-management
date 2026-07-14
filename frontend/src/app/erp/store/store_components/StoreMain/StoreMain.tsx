@@ -16,7 +16,6 @@ import dynamic from 'next/dynamic';
 const ProductModal = dynamic(() => import('@/app/erp/store/store_components/ProductModal/ProductModal'), { ssr: false });
 const PosModal = dynamic(() => import('@/app/erp/store/store_components/PosModal/PosModal'), { ssr: false });
 
-import '@/app/erp/store/store.css';
 
 function StoreContent() {
   const { tab, toast, hideToast, printData, setPrintData } = useStoreContext();

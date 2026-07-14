@@ -3,6 +3,7 @@
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { AuthUrlConfig } from '@/app/auth/auth_url_config';
+import { logger } from '@/lib/logger';
 
 interface Props {
   children: ReactNode;
@@ -23,7 +24,7 @@ export default class LoginErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Login module error:', error, errorInfo);
+    logger.error('Login module error:', error, errorInfo);
   }
 
   public render() {

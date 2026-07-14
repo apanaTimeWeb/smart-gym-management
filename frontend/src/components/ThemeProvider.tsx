@@ -1,4 +1,4 @@
-// RESPONSIBILITY: ThemeProvider.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Client-side wrapper for next-themes. Injected into the root layout to provide theme context (dark/light mode) to all components.
 'use client';
 
 import * as React from 'react';

@@ -10,7 +10,6 @@ import ExerciseTable from '@/app/erp/workout/workout_components/ExerciseTable/Ex
 import WorkoutModal from '@/app/erp/workout/workout_components/WorkoutModal/WorkoutModal';
 import ExerciseModal from '@/app/erp/workout/workout_components/ExerciseModal/ExerciseModal';
 
-import '@/app/erp/workout/workout.css';
 
 function WorkoutContent() {
  const { tab } = useWorkoutContext();

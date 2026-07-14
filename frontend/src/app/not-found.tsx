@@ -1,4 +1,4 @@
-// RESPONSIBILITY: not-found.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Next.js global 404 fallback page. Renders a user-friendly 'Page not found' UI when a requested route does not exist.
 import Link from 'next/link';
 
 export default function NotFound() {

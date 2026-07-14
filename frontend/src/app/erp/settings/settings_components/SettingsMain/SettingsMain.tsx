@@ -7,7 +7,6 @@ import SettingsNav from '@/app/erp/settings/settings_components/SettingsNav/Sett
 import SettingsContent from '@/app/erp/settings/settings_components/SettingsContent/SettingsContent';
 import SettingsBanner from '@/app/erp/settings/settings_components/SettingsBanner/SettingsBanner';
 
-import '@/app/erp/settings/settings.css';
 
 function SettingsMainContent() {
  return (
