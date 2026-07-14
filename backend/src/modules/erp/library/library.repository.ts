@@ -18,8 +18,12 @@ export class LibraryRepository {
   }
 
   async findAllExercises(query: PaginationQueryDto) {
+    const where: any = { isActive: true };
+    if (query.search) {
+      where.name = require('typeorm').ILike(`%${query.search}%`);
+    }
     return this.libraryRepository.findAndCount({
-      where: { isActive: true },
+      where,
       order: { id: WORKOUT_CONSTANTS.SORT.ASC },
       take: query.limit,
       skip: query.offset,
@@ -27,8 +31,12 @@ export class LibraryRepository {
   }
 
   async findAllDietPlans(query: PaginationQueryDto) {
+    const where: any = { isActive: true };
+    if (query.search) {
+      where.name = require('typeorm').ILike(`%${query.search}%`);
+    }
     return this.dietPlanRepository.findAndCount({
-      where: { isActive: true },
+      where,
       order: { id: WORKOUT_CONSTANTS.SORT.ASC },
       take: query.limit,
       skip: query.offset,

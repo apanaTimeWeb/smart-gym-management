@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the Diet Library module.
+// RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the Diet Library module.
 import { useState, useCallback, useEffect } from 'react';
 import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
 import { libraryApi } from '@/app/erp/library/library_api/library_api';
@@ -31,16 +31,21 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
-  const search = searchParams.get('search') || '';
+  const [search, setLocalSearch] = useState(searchParams.get('search') || '');
   const debouncedSearch = useDebounce(search, 300);
   const currentPage = Number(searchParams.get('page')) || 1;
 
-  const setSearch = useCallback((val: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (val) { params.set('search', val); params.set('page', '1'); }
-    else { params.delete('search'); params.set('page', '1'); }
-    router.push(`?${params.toString()}`, { scroll: false });
-  }, [router, searchParams]);
+  useEffect(() => {
+    const currentSearch = searchParams.get('search') || '';
+    if (debouncedSearch !== currentSearch) {
+      const params = new URLSearchParams(searchParams.toString());
+      if (debouncedSearch) { params.set('search', debouncedSearch); params.set('page', '1'); }
+      else { params.delete('search'); params.set('page', '1'); }
+      router.push(`?${params.toString()}`, { scroll: false });
+    }
+  }, [debouncedSearch, searchParams, router]);
+
+  const setSearch = useCallback((val: string) => setLocalSearch(val), []);
 
   const setCurrentPage = useCallback((page: number) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -62,9 +67,16 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
  const loadAll = useCallback(async () => {
  setLoading(true);
  try {
+ const params: Record<string, string> = {
+  page: currentPage.toString(),
+  limit: '10'
+ };
+ if (debouncedSearch) {
+  params.search = debouncedSearch;
+ }
  const [exRes, dietRes] = await Promise.all([
- libraryApi.getExercises(),
- libraryApi.getDietPlans(),
+ libraryApi.getExercises(params),
+ libraryApi.getDietPlans(params),
  ]);
  setExercises(exRes.data?.exercises || exRes.data || []);
  setDietPlans(dietRes.data?.dietPlans || dietRes.data || []);
