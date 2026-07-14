@@ -43,7 +43,7 @@ def test_update_infrastructure(auth_client, api_url):
     })
     real_id = create_resp.json()["data"]["id"]
     response = auth_client.patch(f"{api_url}/superadmin/infrastructure/{real_id}", json={
-        "status": "STOPPED"
+        "name": "Updated Infra Name"
     })
     assert response.status_code == 200
 

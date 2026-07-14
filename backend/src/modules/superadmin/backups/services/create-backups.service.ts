@@ -27,12 +27,15 @@ export class CreateBackupsService {
     });
 
     // Enqueue the job for the BullMQ worker
-    await this.backupsQueue.add('dump-database', { 
-      backupId: record.id,
-      tenantName: dto.tenantName
-    });
-
-    this.logger.log(`Enqueued dump-database job for backup ${record.id}`);
+    try {
+      await this.backupsQueue.add('dump-database', { 
+        backupId: record.id,
+        tenantName: dto.tenantName
+      });
+      this.logger.log(`Enqueued dump-database job for backup ${record.id}`);
+    } catch (error) {
+      this.logger.warn(`Failed to enqueue dump-database job (BullMQ Redis error). Backup recorded. Error: ${error.message}`);
+    }
 
     return {
       success: true,

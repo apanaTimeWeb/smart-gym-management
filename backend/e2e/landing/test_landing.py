@@ -5,7 +5,7 @@ def test_create_contact_inquiry(api_client, api_url):
     payload = {
         "name": "Test User",
         "email": "test@example.com",
-        "message": "Hello world", "date": "2026-07-20", "type": "CONTACT"
+        "message": "Hello world"
     }
     response = api_client.post(f"{api_url}/landing/contact", json=payload)
     assert response.status_code == 201
@@ -28,4 +28,4 @@ def test_create_booking_inquiry(api_client, api_url):
     data = response.json()
     assert data.get('success') is True
     assert data['data']['name'] == "Booking User"
-    assert data['data']['type'] == "TRIAL"
+    assert data['data']['bookingType'] == "TRIAL"

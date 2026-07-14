@@ -20,7 +20,7 @@ export class LandingInquiry {
   @Column({ type: 'text', nullable: true })
   message: string;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ name: 'date', type: 'date', nullable: true })
   bookingDate: Date;
 
   @Column({ type: 'varchar', length: 50, nullable: true })

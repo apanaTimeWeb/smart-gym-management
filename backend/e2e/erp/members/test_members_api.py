@@ -9,7 +9,12 @@ def test_member_lifecycle(auth_client, api_url):
         "name": f"Member Plan {uuid.uuid4().hex[:8]}", "tier": "PREMIUM", "price1Month": 3000, "price3Month": 8000,
         "price6Month": 14000, "price12Month": 25000, "priceCustom": 0, "features": ["24/7 Access"], "isActive": True
     })
-    plan_id = plan_resp.json()["data"]["id"] if plan_resp.status_code == 201 else "1"
+    if plan_resp.status_code == 409:
+        plans = auth_client.get(f"{api_url}/erp/plans").json()
+        plan_id = next((p["id"] for p in plans["data"] if p["tier"] == "PREMIUM"), "1")
+    else:
+        plan_id = plan_resp.json()["data"]["id"] if plan_resp.status_code == 201 else "1"
+
 
     # Create
     create_resp = auth_client.post(f"{api_url}/erp/members", json={

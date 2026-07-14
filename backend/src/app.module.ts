@@ -101,7 +101,7 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
         type: 'postgres',
         url: configService.get<string>('DATABASE_URL'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: false,
+        synchronize: true,
       }),
     }),
 
