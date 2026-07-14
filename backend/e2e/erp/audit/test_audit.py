@@ -4,8 +4,8 @@ def test_create_audit(auth_client, api_url):
     unique_val = f"test_{uuid.uuid4().hex[:8]}"
     create_resp = auth_client.post(f"{api_url}/erp/audit", json={
         "action": f"Test Create {unique_val}",
-        "module": "E2E",
-        "description": "E2E Test generation",
+        "entityType": "E2E_TEST",
+        "actorRole": "SYSTEM",
     })
     assert create_resp.status_code == 201
 
