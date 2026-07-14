@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the HR & Payroll module.
+// RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the HR & Payroll module.
 import { useState, useCallback, useEffect } from 'react';
 import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
 import { hrApi } from '@/app/erp/hr/hr_api/hr_api';
@@ -20,16 +20,28 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
  const [error, setError] = useState('');
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
-  const search = searchParams.get('search') || '';
+  // Local state for immediate typing feedback
+  const [search, setSearch] = useState(searchParams.get('search') || '');
   const debouncedSearch = useDebounce(search, 300);
   const currentPage = Number(searchParams.get('page')) || 1;
 
-  const setSearch = useCallback((val: string) => {
+  // Update URL only when debounced search changes
+  useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
-    if (val) { params.set('search', val); params.set('page', '1'); }
-    else { params.delete('search'); params.set('page', '1'); }
-    router.push(`?${params.toString()}`, { scroll: false });
-  }, [router, searchParams]);
+    if (debouncedSearch) {
+      if (params.get('search') !== debouncedSearch) {
+        params.set('search', debouncedSearch);
+        params.set('page', '1');
+        router.push(`?${params.toString()}`, { scroll: false });
+      }
+    } else {
+      if (params.has('search')) {
+        params.delete('search');
+        params.set('page', '1');
+        router.push(`?${params.toString()}`, { scroll: false });
+      }
+    }
+  }, [debouncedSearch, router, searchParams]);
 
   const setCurrentPage = useCallback((page: number) => {
     const params = new URLSearchParams(searchParams.toString());
