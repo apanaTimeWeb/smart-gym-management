@@ -56,7 +56,7 @@ def test_update_plan(auth_client, api_url):
     if create_resp.status_code == 201:
         real_id = create_resp.json()["data"]["id"]
         response = auth_client.patch(f"{api_url}/superadmin/plans/{real_id}", json={
-            "name": "Updated Name E2E"
+            "name": f"Updated Name {uuid.uuid4().hex[:8]}"
         })
         assert response.status_code == 200
 

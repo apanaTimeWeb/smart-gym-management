@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable , NotFoundException} from '@nestjs/common';
 import { PlansRepository } from '../plans.repository';
 import { PlanResponse } from '../plans.interfaces';
 import { PLANS_MESSAGES, PLANS_ERRORS } from '../plans.constants';
@@ -17,7 +17,7 @@ export class FindPlansService {
   }
   async findOne(id: string): Promise<PlanResponse> {
     const data = await this.repository.findById(id);
-    if (!data) throw new Error(PLANS_ERRORS.NOT_FOUND);
+    if (!data) throw new NotFoundException(PLANS_ERRORS.NOT_FOUND);
     return {
       success: true,
       message: PLANS_MESSAGES.FETCHED,

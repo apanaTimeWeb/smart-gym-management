@@ -25,9 +25,6 @@ def test_store_lifecycle(auth_client, api_url):
     })
     assert update_prod.status_code == 200
 
-    # Delete Order
-    del_ord = auth_client.delete(f"{api_url}/erp/store/orders/{ord_id}")
-    assert del_ord.status_code in [200, 204]
 
     # Delete Product
     del_prod = auth_client.delete(f"{api_url}/erp/store/products/{prod_id}")

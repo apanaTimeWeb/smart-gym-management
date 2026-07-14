@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable , NotFoundException} from '@nestjs/common';
 import { BackupsRepository } from '../backups.repository';
 import { BackupResponse } from '../backups.interfaces';
 import { BACKUPS_MESSAGES, BACKUPS_ERRORS } from '../backups.constants';
@@ -17,7 +17,7 @@ export class FindBackupsService {
   }
   async findOne(id: string): Promise<BackupResponse> {
     const data = await this.repository.findById(id);
-    if (!data) throw new Error(BACKUPS_ERRORS.NOT_FOUND);
+    if (!data) throw new NotFoundException(BACKUPS_ERRORS.NOT_FOUND);
     return {
       success: true,
       message: BACKUPS_MESSAGES.FETCHED,

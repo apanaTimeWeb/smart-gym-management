@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable , NotFoundException} from '@nestjs/common';
 import { TenantsRepository } from '../tenants.repository';
 import { TenantResponse } from '../tenants.interfaces';
 import { TENANTS_MESSAGES, TENANTS_ERRORS } from '../tenants.constants';
@@ -17,7 +17,7 @@ export class FindTenantsService {
   }
   async findOne(id: string): Promise<TenantResponse> {
     const data = await this.repository.findById(id);
-    if (!data) throw new Error(TENANTS_ERRORS.NOT_FOUND);
+    if (!data) throw new NotFoundException(TENANTS_ERRORS.NOT_FOUND);
     return {
       success: true,
       message: TENANTS_MESSAGES.FETCHED,

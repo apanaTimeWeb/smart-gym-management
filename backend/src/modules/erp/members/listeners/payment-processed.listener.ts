@@ -1,12 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
-import { MembersRepository } from '../members.repository';
 
 @Injectable()
 export class PaymentProcessedListener {
   private readonly logger = new Logger(PaymentProcessedListener.name);
 
-  constructor(private readonly membersRepository: MembersRepository) {}
+  constructor() {}
 
   @OnEvent('payment.processed')
   async handlePaymentProcessedEvent(payment: any) {
@@ -14,24 +13,9 @@ export class PaymentProcessedListener {
       `Handling payment.processed event for payment: ${payment.id}`,
     );
 
-    // Member payment fields (paidAmount, pendingAmount) are typically updated here.
-    // Assuming simple logic for this listener:
-    try {
-      const member = await this.membersRepository.findMemberById(
-        payment.memberId,
-      );
-      if (member) {
-        member.paidAmount = Number(member.paidAmount) + Number(payment.amount);
-        await this.membersRepository.updateMember(member.id, {
-          paidAmount: member.paidAmount,
-        });
-        this.logger.log(`Updated paid amount for member: ${member.id}`);
-      }
-    } catch (error: any) {
-      this.logger.error(
-        `Failed to update member after payment processing: ${payment.memberId}`,
-        error.stack,
-      );
-    }
+    // Note: The database balance update (paidAmount/pendingAmount) is already
+    // handled securely inside a transaction within FinanceRepository.processPayment.
+    // This listener should be used for secondary side-effects like sending
+    // email receipts or SMS notifications to the member.
   }
 }

@@ -6,7 +6,8 @@ def test_create_system(auth_client, api_url):
     response = auth_client.post(f"{api_url}/superadmin/system", json={
         "version": "1.0.0",
         "title": f"Test System {unique_val}",
-        "content": "E2E Test"
+        "content": "E2E Test",
+        "date": "2026-07-14"
     })
     assert response.status_code == 201, f"Unexpected status: {response.status_code} - {response.text}"
     
@@ -29,7 +30,8 @@ def test_get_system_by_id(auth_client, api_url):
     create_resp = auth_client.post(f"{api_url}/superadmin/system", json={
         "version": "1.0.0",
         "title": f"Test System {unique_val}",
-        "content": "E2E Test"
+        "content": "E2E Test",
+        "date": "2026-07-14"
     })
     if create_resp.status_code == 201:
         real_id = create_resp.json()["data"]["id"]
@@ -42,12 +44,13 @@ def test_update_system(auth_client, api_url):
     create_resp = auth_client.post(f"{api_url}/superadmin/system", json={
         "version": "1.0.0",
         "title": f"Test System {unique_val}",
-        "content": "E2E Test"
+        "content": "E2E Test",
+        "date": "2026-07-14"
     })
     if create_resp.status_code == 201:
         real_id = create_resp.json()["data"]["id"]
         response = auth_client.patch(f"{api_url}/superadmin/system/{real_id}", json={
-            "name": "Updated Name E2E"
+            "title": "Updated System"
         })
         assert response.status_code == 200
 
@@ -56,7 +59,8 @@ def test_delete_system(auth_client, api_url):
     create_resp = auth_client.post(f"{api_url}/superadmin/system", json={
         "version": "1.0.0",
         "title": f"Test System {unique_val}",
-        "content": "E2E Test"
+        "content": "E2E Test",
+        "date": "2026-07-14"
     })
     if create_resp.status_code == 201:
         real_id = create_resp.json()["data"]["id"]

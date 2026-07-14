@@ -7,7 +7,7 @@ def test_create_backup(auth_client, api_url):
         "tenantName": f"Test Tenant {unique_val}",
         "databaseName": f"db_{unique_val}",
         "sizeMB": 1024,
-        "status": "COMPLETED"
+        "status": "SUCCESS"
     })
     assert response.status_code == 201, f"Unexpected status: {response.status_code} - {response.text}"
     
@@ -31,7 +31,7 @@ def test_get_backup_by_id(auth_client, api_url):
         "tenantName": f"Test Tenant {unique_val}",
         "databaseName": f"db_{unique_val}",
         "sizeMB": 1024,
-        "status": "COMPLETED"
+        "status": "SUCCESS"
     })
     if create_resp.status_code == 201:
         real_id = create_resp.json()["data"]["id"]
@@ -45,7 +45,7 @@ def test_update_backup(auth_client, api_url):
         "tenantName": f"Test Tenant {unique_val}",
         "databaseName": f"db_{unique_val}",
         "sizeMB": 1024,
-        "status": "COMPLETED"
+        "status": "SUCCESS"
     })
     if create_resp.status_code == 201:
         real_id = create_resp.json()["data"]["id"]
@@ -60,7 +60,7 @@ def test_delete_backup(auth_client, api_url):
         "tenantName": f"Test Tenant {unique_val}",
         "databaseName": f"db_{unique_val}",
         "sizeMB": 1024,
-        "status": "COMPLETED"
+        "status": "SUCCESS"
     })
     if create_resp.status_code == 201:
         real_id = create_resp.json()["data"]["id"]

@@ -5,7 +5,7 @@ def test_create_contact_inquiry(api_client, api_url):
     payload = {
         "name": "Test User",
         "email": "test@example.com",
-        "message": "Hello world"
+        "message": "Hello world", "date": "2026-07-20", "type": "CONTACT"
     }
     response = api_client.post(f"{api_url}/landing/contact", json=payload)
     assert response.status_code == 201

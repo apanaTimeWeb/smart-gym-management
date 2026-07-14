@@ -7,7 +7,8 @@ def test_create_invoice(auth_client, api_url):
         "tenantName": f"Test Tenant {unique_val}",
         "amount": 100,
         "currency": "USD",
-        "status": "PAID"
+        "status": "PAID",
+        "planName": "Basic"
     })
     assert response.status_code == 201, f"Unexpected status: {response.status_code} - {response.text}"
     
@@ -31,7 +32,8 @@ def test_get_invoice_by_id(auth_client, api_url):
         "tenantName": f"Test Tenant {unique_val}",
         "amount": 100,
         "currency": "USD",
-        "status": "PAID"
+        "status": "PAID",
+        "planName": "Basic"
     })
     if create_resp.status_code == 201:
         real_id = create_resp.json()["data"]["id"]
@@ -45,12 +47,13 @@ def test_update_invoice(auth_client, api_url):
         "tenantName": f"Test Tenant {unique_val}",
         "amount": 100,
         "currency": "USD",
-        "status": "PAID"
+        "status": "PAID",
+        "planName": "Basic"
     })
     if create_resp.status_code == 201:
         real_id = create_resp.json()["data"]["id"]
         response = auth_client.patch(f"{api_url}/superadmin/invoices/{real_id}", json={
-            "name": "Updated Name E2E"
+            "status": "OVERDUE"
         })
         assert response.status_code == 200
 
@@ -60,7 +63,8 @@ def test_delete_invoice(auth_client, api_url):
         "tenantName": f"Test Tenant {unique_val}",
         "amount": 100,
         "currency": "USD",
-        "status": "PAID"
+        "status": "PAID",
+        "planName": "Basic"
     })
     if create_resp.status_code == 201:
         real_id = create_resp.json()["data"]["id"]

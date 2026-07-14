@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable , NotFoundException} from '@nestjs/common';
 import { CouponsRepository } from '../coupons.repository';
 import { CouponStatus, CouponResponse } from '../coupons.interfaces';
 import { COUPONS_MESSAGES, COUPONS_ERRORS } from '../coupons.constants';
@@ -32,7 +32,7 @@ export class FindCouponsService {
   }
   async findOne(id: string): Promise<CouponResponse> {
     const data = await this.repository.findById(id);
-    if (!data) throw new Error(COUPONS_ERRORS.NOT_FOUND);
+    if (!data) throw new NotFoundException(COUPONS_ERRORS.NOT_FOUND);
     return {
       success: true,
       message: COUPONS_MESSAGES.FETCHED,

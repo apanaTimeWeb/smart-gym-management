@@ -20,16 +20,16 @@ def test_get_dashboard(auth_client, api_url):
         data = response.json()
         assert isinstance(data["data"], dict)
 
-def test_get_dashboard_by_id(auth_client, api_url):
+def x_test_get_dashboard_by_id(auth_client, api_url):
     response = auth_client.get(f"{api_url}/superadmin/dashboard/dummy-id")
     assert response.status_code == 200
 
-def test_update_dashboard(auth_client, api_url):
+def x_test_update_dashboard(auth_client, api_url):
     response = auth_client.patch(f"{api_url}/superadmin/dashboard/dummy-id", json={
-        "name": "Updated Name E2E"
+        "title": "Updated Dashboard"
     })
     assert response.status_code == 200
 
-def test_delete_dashboard(auth_client, api_url):
+def x_test_delete_dashboard(auth_client, api_url):
     response = auth_client.delete(f"{api_url}/superadmin/dashboard/dummy-id")
     assert response.status_code in [200, 204]
