@@ -4,7 +4,7 @@ import os
 
 # Assuming NestJS runs locally on port 5000 during tests
 # For enterprise apps, you might fetch this from environment variables
-BASE_URL = os.getenv("API_BASE_URL", "http://localhost:5000/api")
+BASE_URL = os.getenv("API_BASE_URL", "http://localhost:5000/api/v1")
 
 @pytest.fixture(scope="session")
 def api_url():
@@ -31,7 +31,7 @@ def admin_token(api_url):
     })
     # If the server is not running, this will fail.
     # We gracefully skip or just return None (the test will fail later)
-    if response.status_code == 201:
+    if response.status_code == 200:
         return response.json().get("data", {}).get("accessToken")
     return None
 
@@ -49,12 +49,15 @@ def test_tenant_id(api_url, admin_token):
     unique_val = f"e2e_{uuid.uuid4().hex[:8]}"
     response = api_client.post(f"{api_url}/superadmin/gyms", json={
         "name": f"E2E Test DB {unique_val}",
-        "email": f"{unique_val}@e2e.com",
+        "adminEmail": f"{unique_val}@e2e.com",
         "phone": "+1234567890",
-        "planId": "pro",
+        "plan": "pro",
         "ownerName": "E2E Tester",
-        "ownerEmail": f"{unique_val}@e2e.com",
-        "status": "ACTIVE"
+        "memberCount": 0,
+        "monthlyRevenue": 0,
+        "databaseVersion": "1.0",
+        "status": "ACTIVE",
+        "temporaryPassword": "temp"
     })
     
     if response.status_code == 201:

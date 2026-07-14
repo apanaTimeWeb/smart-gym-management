@@ -5,12 +5,15 @@ def test_create_gym(auth_client, api_url):
     unique_email = f"test_{uuid.uuid4().hex[:8]}@gym.com"
     response = auth_client.post(f"{api_url}/superadmin/gyms", json={
         "name": "Test Gym E2E",
-        "email": unique_email,
+        "adminEmail": unique_email,
         "phone": "+1234567890",
-        "planId": "basic_plan",
+        "plan": "basic_plan",
         "ownerName": "E2E Owner",
-        "ownerEmail": unique_email,
-        "status": "ACTIVE"
+        "memberCount": 0,
+        "monthlyRevenue": 0,
+        "databaseVersion": "1.0",
+        "status": "ACTIVE",
+        "temporaryPassword": "temp"
     })
     assert response.status_code == 201, f"Failed to create gym: {response.text}"
     data = response.json()
@@ -28,7 +31,14 @@ def test_get_gym_by_id(auth_client, api_url):
     unique_email = f"fetch_{uuid.uuid4().hex[:8]}@gym.com"
     create_resp = auth_client.post(f"{api_url}/superadmin/gyms", json={
         "name": "Test Gym E2E Fetch",
-        "email": unique_email,
+        "adminEmail": unique_email,
+        "ownerName": "E2E Owner",
+        "phone": "+1234567890",
+        "plan": "basic",
+        "memberCount": 0,
+        "monthlyRevenue": 0,
+        "databaseVersion": "1.0",
+        "temporaryPassword": "temp"
     })
     assert create_resp.status_code == 201
     gym_id = create_resp.json()["data"]["id"]
@@ -41,7 +51,14 @@ def test_update_gym(auth_client, api_url):
     unique_email = f"update_{uuid.uuid4().hex[:8]}@gym.com"
     create_resp = auth_client.post(f"{api_url}/superadmin/gyms", json={
         "name": "Test Gym E2E Update",
-        "email": unique_email,
+        "adminEmail": unique_email,
+        "ownerName": "E2E Owner",
+        "phone": "+1234567890",
+        "plan": "basic",
+        "memberCount": 0,
+        "monthlyRevenue": 0,
+        "databaseVersion": "1.0",
+        "temporaryPassword": "temp"
     })
     assert create_resp.status_code == 201
     gym_id = create_resp.json()["data"]["id"]
@@ -58,7 +75,14 @@ def test_delete_gym(auth_client, api_url):
     unique_email = f"delete_{uuid.uuid4().hex[:8]}@gym.com"
     create_resp = auth_client.post(f"{api_url}/superadmin/gyms", json={
         "name": "Test Gym E2E Delete",
-        "email": unique_email,
+        "adminEmail": unique_email,
+        "ownerName": "E2E Owner",
+        "phone": "+1234567890",
+        "plan": "basic",
+        "memberCount": 0,
+        "monthlyRevenue": 0,
+        "databaseVersion": "1.0",
+        "temporaryPassword": "temp"
     })
     assert create_resp.status_code == 201
     gym_id = create_resp.json()["data"]["id"]

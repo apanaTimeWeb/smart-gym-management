@@ -4,12 +4,9 @@ import uuid
 def test_create_ticket(auth_client, api_url):
     unique_val = f"test_{uuid.uuid4().hex[:8]}"
     response = auth_client.post(f"{api_url}/superadmin/tickets", json={
-        "name": f"Test Ticket {unique_val}",
-        "description": "E2E Test generation",
-        # Generic fields that usually pass most basic validations
-        "status": "ACTIVE",
-        "email": f"{unique_val}@test.com",
-        "code": unique_val.upper()
+        "tenantName": f"Tenant {unique_val}",
+        "subject": "System issue",
+        "priority": "HIGH"
     })
     
     # We assert 201 Created or 400/422 if DTO strictly rejects our generic payload. 
@@ -33,11 +30,9 @@ def test_get_tickets(auth_client, api_url):
 def test_get_ticket_by_id(auth_client, api_url):
     unique_val = f"test_{uuid.uuid4().hex[:8]}"
     create_resp = auth_client.post(f"{api_url}/superadmin/tickets", json={
-        "name": f"Test Get {unique_val}",
-        "description": "E2E Test generation",
-        "status": "ACTIVE",
-        "email": f"{unique_val}@test.com",
-        "code": unique_val.upper()
+        "tenantName": f"Tenant Get {unique_val}",
+        "subject": "System issue",
+        "priority": "HIGH"
     })
     if create_resp.status_code == 201:
         real_id = create_resp.json()["data"]["id"]
@@ -48,27 +43,23 @@ def test_get_ticket_by_id(auth_client, api_url):
 def test_update_ticket(auth_client, api_url):
     unique_val = f"test_{uuid.uuid4().hex[:8]}"
     create_resp = auth_client.post(f"{api_url}/superadmin/tickets", json={
-        "name": f"Test Update {unique_val}",
-        "description": "E2E Test generation",
-        "status": "ACTIVE",
-        "email": f"{unique_val}@test.com",
-        "code": unique_val.upper()
+        "tenantName": f"Tenant Update {unique_val}",
+        "subject": "System issue",
+        "priority": "HIGH"
     })
     if create_resp.status_code == 201:
         real_id = create_resp.json()["data"]["id"]
         response = auth_client.patch(f"{api_url}/superadmin/tickets/{real_id}", json={
-            "name": "Updated Name E2E"
+            "subject": "Updated Name E2E"
         })
         assert response.status_code == 200
 
 def test_delete_ticket(auth_client, api_url):
     unique_val = f"test_{uuid.uuid4().hex[:8]}"
     create_resp = auth_client.post(f"{api_url}/superadmin/tickets", json={
-        "name": f"Test Delete {unique_val}",
-        "description": "E2E Test generation",
-        "status": "ACTIVE",
-        "email": f"{unique_val}@test.com",
-        "code": unique_val.upper()
+        "tenantName": f"Tenant Delete {unique_val}",
+        "subject": "System issue",
+        "priority": "HIGH"
     })
     if create_resp.status_code == 201:
         real_id = create_resp.json()["data"]["id"]

@@ -27,8 +27,7 @@ def test_get_dashboard(auth_client, api_url):
     
     if response.status_code == 200:
         data = response.json()
-        assert "data" in data
-        assert isinstance(data["data"], list)
+        assert isinstance(data["data"], dict)
 
 def test_get_dashboard_by_id(auth_client, api_url):
     unique_val = f"test_{uuid.uuid4().hex[:8]}"

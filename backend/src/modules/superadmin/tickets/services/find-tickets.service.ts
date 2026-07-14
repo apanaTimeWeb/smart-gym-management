@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { TicketsRepository } from '../tickets.repository';
 import { TicketResponse } from '../tickets.interfaces';
 import { TICKETS_MESSAGES, TICKETS_ERRORS } from '../tickets.constants';
@@ -17,7 +17,7 @@ export class FindTicketsService {
   }
   async findOne(id: string): Promise<TicketResponse> {
     const data = await this.repository.findById(id);
-    if (!data) throw new Error(TICKETS_ERRORS.NOT_FOUND);
+    if (!data) throw new NotFoundException(TICKETS_ERRORS.NOT_FOUND);
     return {
       success: true,
       message: TICKETS_MESSAGES.FETCHED,

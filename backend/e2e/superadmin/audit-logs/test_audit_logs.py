@@ -30,7 +30,7 @@ def test_get_audit_logs(auth_client, api_url):
         assert "data" in data
         assert isinstance(data["data"], list)
 
-def test_get_audit-log_by_id(auth_client, api_url):
+def test_get_audit_log_by_id(auth_client, api_url):
     unique_val = f"test_{uuid.uuid4().hex[:8]}"
     create_resp = auth_client.post(f"{api_url}/superadmin/audit-logs", json={
         "name": f"Test Get {unique_val}",
@@ -45,7 +45,7 @@ def test_get_audit-log_by_id(auth_client, api_url):
         assert response.status_code == 200
         assert response.json()["data"]["id"] == real_id
 
-def test_update_audit-log(auth_client, api_url):
+def test_update_audit_log(auth_client, api_url):
     unique_val = f"test_{uuid.uuid4().hex[:8]}"
     create_resp = auth_client.post(f"{api_url}/superadmin/audit-logs", json={
         "name": f"Test Update {unique_val}",
@@ -61,7 +61,7 @@ def test_update_audit-log(auth_client, api_url):
         })
         assert response.status_code == 200
 
-def test_delete_audit-log(auth_client, api_url):
+def test_delete_audit_log(auth_client, api_url):
     unique_val = f"test_{uuid.uuid4().hex[:8]}"
     create_resp = auth_client.post(f"{api_url}/superadmin/audit-logs", json={
         "name": f"Test Delete {unique_val}",

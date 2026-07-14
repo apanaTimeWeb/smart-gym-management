@@ -1,17 +1,17 @@
 def test_get_all_products(auth_client, api_url):
-    response = auth_client.get(f"{api_url}/v1/store/products?page=1&limit=20")
+    response = auth_client.get(f"{api_url}/erp/store/products?page=1&limit=20")
     assert response.status_code in [200, 401]
 
 def test_get_all_orders(auth_client, api_url):
-    response = auth_client.get(f"{api_url}/v1/store/orders?page=1&limit=20")
+    response = auth_client.get(f"{api_url}/erp/store/orders?page=1&limit=20")
     assert response.status_code in [200, 401]
 
 def test_get_store_summary(auth_client, api_url):
-    response = auth_client.get(f"{api_url}/v1/store/summary")
+    response = auth_client.get(f"{api_url}/erp/store/summary")
     assert response.status_code in [200, 401]
 
 def test_create_product(auth_client, api_url):
-    response = auth_client.post(f"{api_url}/v1/store/products", json={
+    response = auth_client.post(f"{api_url}/erp/store/products", json={
         "name": "Whey Protein 1kg",
         "category": "Supplements",
         "price": 2500,
@@ -21,14 +21,14 @@ def test_create_product(auth_client, api_url):
     assert response.status_code in [201, 401]
 
 def test_update_product(auth_client, api_url):
-    response = auth_client.patch(f"{api_url}/v1/store/products/1", json={
+    response = auth_client.patch(f"{api_url}/erp/store/products/00000000-0000-0000-0000-000000000000", json={
         "price": 2750,
         "stock": 80
     })
     assert response.status_code in [200, 401, 404]
 
 def test_create_order(auth_client, api_url):
-    response = auth_client.post(f"{api_url}/v1/store/orders", json={
+    response = auth_client.post(f"{api_url}/erp/store/orders", json={
         "items": [
             { "productId": 1, "qty": 2 },
             { "productId": 3, "qty": 1 }
@@ -40,13 +40,13 @@ def test_create_order(auth_client, api_url):
 
 
 def test_get_product_by_id(auth_client, api_url):
-    response = auth_client.get(f"{api_url}/v1/store/products/1")
+    response = auth_client.get(f"{api_url}/erp/store/products/00000000-0000-0000-0000-000000000000")
     assert response.status_code in [200, 401, 404]
 
 def test_delete_product(auth_client, api_url):
-    response = auth_client.delete(f"{api_url}/v1/store/products/1")
+    response = auth_client.delete(f"{api_url}/erp/store/products/00000000-0000-0000-0000-000000000000")
     assert response.status_code in [200, 204, 401, 404]
 
 def test_get_order_by_id(auth_client, api_url):
-    response = auth_client.get(f"{api_url}/v1/store/orders/1")
+    response = auth_client.get(f"{api_url}/erp/store/orders/00000000-0000-0000-0000-000000000000")
     assert response.status_code in [200, 401, 404]
