@@ -86,6 +86,7 @@ Strictly ban global `common/` or `shared/` folders. If a utility, enum, or type 
 ## 9. Avoid Hardcoded HTTP Status Codes
 Never hardcode HTTP status code numbers (e.g., `200`, `400`, `500`) in controllers, exceptions, or responses. 
 * **The Rule:** Always use a framework-provided enum or a status code library (e.g., `HttpStatus` in NestJS, `http-status-codes` in Node, `rest_framework.status` in Django).
+* **Testing Rule:** This applies strictly to E2E and Unit testing as well! In Python `pytest` suites, always use `from http import HTTPStatus` (e.g., `HTTPStatus.OK`, `HTTPStatus.CREATED`) rather than hardcoded integers.
 * **Why?** It improves readability, prevents magic numbers, and reduces the risk of typos (e.g., typing `401` when you meant `403`).
 
 ## 10. Dynamic / Absolute Imports (No Hardcoded Relative Paths)
@@ -307,6 +308,9 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
   - **At the Controller layer:** Validate request shape with DTOs/serializers (Rule 3).
   - **At the Service layer:** Assert that objects received from repositories are not null before operating on them. If a `findById` returns `null`, throw the appropriate custom exception immediately (Rule 6) — don't pass `null` to the next function.
   - **At the Database layer:** Enforce data integrity constraints (NOT NULL, UNIQUE, CHECK constraints, foreign keys) at the database level. Never rely solely on application-level validation.
+  - **Critical Operations (Transactions, External APIs, Queues):** Any operation that interacts with unpredictable systems or requires all-or-nothing execution MUST be wrapped in a `try-catch` block.
+    1. **Database Transactions:** If a multi-step mutation (e.g., creating a user and charging their card) fails, the `catch` block MUST explicitly rollback the transaction to prevent corrupted, partial data states.
+    2. **Debugging & Traceability:** The `catch` block MUST log the exact error using the centralized logger (which automatically attaches the `trace_id`) before returning a controlled error to the frontend. This ensures immediate, pinpoint debugging when transactions or external services fail.
 * **Why:** Silent failures are the hardest bugs to find and the most dangerous in production. An AI writing a service method that receives a `null` user and calls `user.email` will produce a `NullPointerException` / `AttributeError` that crashes the request. The Fail-Fast principle ensures errors surface immediately at their origin, with a clear, actionable error message, not silently 10 layers later.
 
 
