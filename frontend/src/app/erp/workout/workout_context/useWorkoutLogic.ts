@@ -1,4 +1,4 @@
-// RESPONSIBILITY: useWorkoutLogic.ts handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the Workout Library module.
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { 
   EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM, WorkoutFormValues, ExerciseFormValues

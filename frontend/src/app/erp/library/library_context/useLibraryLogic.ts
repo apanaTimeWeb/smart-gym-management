@@ -1,4 +1,4 @@
-// RESPONSIBILITY: useLibraryLogic.ts handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the Diet Library module.
 import { useState, useCallback, useEffect } from 'react';
 import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
 import { libraryApi } from '@/app/erp/library/library_api/library_api';

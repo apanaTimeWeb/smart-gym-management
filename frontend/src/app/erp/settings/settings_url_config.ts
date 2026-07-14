@@ -1,4 +1,4 @@
-// RESPONSIBILITY: settings_url_config.ts handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Single source of truth for all backend API endpoints used by the Settings module.
 export const SettingsUrlConfig = {
   PAGES: {
     SETTINGS: '/erp/settings',

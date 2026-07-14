@@ -1,4 +1,4 @@
-// RESPONSIBILITY: AttendanceContext.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Provides UI orchestration state to the attendance module hierarchy. Async data is managed in useAttendanceLogic.
 'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';

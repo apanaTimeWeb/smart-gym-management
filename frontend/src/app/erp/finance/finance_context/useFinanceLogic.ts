@@ -1,4 +1,4 @@
-// RESPONSIBILITY: useFinanceLogic.ts handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the Finance module.
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { financeApi } from '@/app/erp/finance/finance_api/finance_api';
 import type { Payment, FinanceSummary } from '@/app/erp/finance/finance_types/finance_types';

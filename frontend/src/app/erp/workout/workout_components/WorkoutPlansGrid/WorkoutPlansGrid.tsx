@@ -1,4 +1,4 @@
-// RESPONSIBILITY: WorkoutPlansGrid.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Renders the grid of workout plan cards with exercises count and action buttons.
 'use client';
 
 import { Dumbbell, Edit2, Trash2 } from 'lucide-react';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: WorkoutContext.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Provides UI orchestration state to the Workout Library module hierarchy. Async data is managed in useWorkoutLogic.
 'use client';
 
 import React, { createContext, useContext } from 'react';

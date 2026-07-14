@@ -1,4 +1,4 @@
-// RESPONSIBILITY: ErpStatCard.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Renders a single KPI stat card (icon, label, big number, trend). Used in dashboard and module KPI rows.
 import { LucideIcon } from 'lucide-react';
 
 interface ErpStatCardProps {

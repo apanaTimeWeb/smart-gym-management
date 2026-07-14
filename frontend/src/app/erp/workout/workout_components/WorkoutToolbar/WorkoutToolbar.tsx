@@ -1,4 +1,4 @@
-// RESPONSIBILITY: WorkoutToolbar.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Renders the search input, muscle group filter, and Add Plan CTA for the Workout Library.
 'use client';
 
 import { Search, Plus } from 'lucide-react';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: DietModal.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Form modal for creating or editing a diet plan in the Diet Library module.
 'use client';
 
 import { useEffect } from 'react';

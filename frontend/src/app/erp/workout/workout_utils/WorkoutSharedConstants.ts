@@ -1,4 +1,4 @@
-// RESPONSIBILITY: WorkoutSharedConstants.ts handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Centralized constants, schema, and shared utilities for the Workout Library module.
 import { z } from 'zod';
 import type { Exercise } from '@/app/erp/library/library_types/library_types';
 import type { Workout } from '@/app/erp/workout/workout_types/workout_types';

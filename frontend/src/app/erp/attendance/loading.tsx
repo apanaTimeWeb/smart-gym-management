@@ -1,4 +1,4 @@
-// RESPONSIBILITY: loading.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Next.js loading.tsx — renders skeleton loader fallback while Attendance tracking module data loads.
 import { TableSkeleton } from '@/app/erp/erp_components/ErpShared/TableSkeleton';
 export default function Loading() {
  return (

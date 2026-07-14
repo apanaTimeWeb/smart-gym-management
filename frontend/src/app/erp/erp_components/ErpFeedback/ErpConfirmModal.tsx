@@ -1,4 +1,4 @@
-// RESPONSIBILITY: ErpConfirmModal.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Renders the reusable confirmation/destructive action modal used across all ERP modules. Receives config via ErpConfirmProvider. No API calls.
 'use client';
 
 import { AlertTriangle, X } from 'lucide-react';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: SettingsContext.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Provides UI orchestration state to the Settings module hierarchy. Async data is managed in useSettingsLogic.
 'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';

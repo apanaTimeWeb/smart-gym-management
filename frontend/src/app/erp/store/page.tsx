@@ -1,4 +1,4 @@
-// RESPONSIBILITY: page.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Server Component — fetches initial SSR data and renders the Gym Store module entry point.
 import StoreMain from '@/app/erp/store/store_components/StoreMain/StoreMain';
 import { ssrStoreApi } from '@/app/erp/store/store_api/store_server_api';
 

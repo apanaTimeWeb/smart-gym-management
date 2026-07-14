@@ -1,4 +1,4 @@
-// RESPONSIBILITY: PosModal.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Point-of-sale modal for processing a new product sale/order in the Store module.
 'use client';
 
 import { X, Printer } from 'lucide-react';

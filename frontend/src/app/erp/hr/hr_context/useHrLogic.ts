@@ -1,4 +1,4 @@
-// RESPONSIBILITY: useHrLogic.ts handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the HR & Payroll module.
 import { useState, useCallback, useEffect } from 'react';
 import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
 import { hrApi } from '@/app/erp/hr/hr_api/hr_api';

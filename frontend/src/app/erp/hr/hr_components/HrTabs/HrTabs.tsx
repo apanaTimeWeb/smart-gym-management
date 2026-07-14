@@ -1,4 +1,4 @@
-// RESPONSIBILITY: HrTabs.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Renders the tabbed view switching between the Staff and Payroll tables in the HR module.
 'use client';
 
 import { useState } from 'react';

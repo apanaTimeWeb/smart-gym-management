@@ -1,4 +1,4 @@
-// RESPONSIBILITY: workout_url_config.ts handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Single source of truth for all backend API endpoints used by the Workout Library module.
 export const WorkoutUrlConfig = {
   PAGES: {
     WORKOUTS: '/erp/workout',

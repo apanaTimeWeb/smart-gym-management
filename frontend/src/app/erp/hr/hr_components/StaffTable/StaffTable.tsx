@@ -1,4 +1,4 @@
-// RESPONSIBILITY: StaffTable.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Renders the paginated staff members table with sortable columns and inline row actions.
 'use client';
 
 import { useHrContext } from '@/app/erp/hr/hr_context/HrContext';

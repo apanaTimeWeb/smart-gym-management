@@ -1,4 +1,4 @@
-// RESPONSIBILITY: ErpMessageModal.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Renders the send-message modal (WhatsApp/Email) for communicating with a member. Shared across the Members and Finance modules.
 'use client';
 
 import { useState } from 'react';

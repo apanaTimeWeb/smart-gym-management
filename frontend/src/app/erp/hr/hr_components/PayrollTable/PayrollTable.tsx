@@ -1,4 +1,4 @@
-// RESPONSIBILITY: PayrollTable.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Renders the payroll records table with pay status badges and mark-as-paid inline action.
 'use client';
 
 import { useHrContext } from '@/app/erp/hr/hr_context/HrContext';

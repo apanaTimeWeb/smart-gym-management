@@ -1,4 +1,4 @@
-// RESPONSIBILITY: WorkoutBanner.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Renders the top banner/hero section with module title and CTA for the Workout Library.
 'use client';
 
 import { Dumbbell } from 'lucide-react';

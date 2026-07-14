@@ -1,4 +1,4 @@
-// RESPONSIBILITY: HrSharedConstants.ts handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Centralized constants, schema, and shared utilities for the HR module.
 import { z } from 'zod';
 
 export const StaffSchema = z.object({

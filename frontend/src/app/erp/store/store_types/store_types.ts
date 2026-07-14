@@ -1,4 +1,4 @@
-// RESPONSIBILITY: store_types.ts handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Defines all TypeScript types, interfaces, and the FetchState enum for the Store module.
 
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import type { ErpReceiptData } from '@/app/erp/erp_components/ErpShared/ErpThermalReceipt';

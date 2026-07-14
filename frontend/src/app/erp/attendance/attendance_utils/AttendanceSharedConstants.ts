@@ -1,4 +1,4 @@
-// RESPONSIBILITY: AttendanceSharedConstants.ts handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Centralized constants, schema, and shared utilities for the Attendance module.
 import { z } from 'zod';
 
 export const formatDate = (d: string) => 

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: SettingsSharedConstants.ts handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Centralized constants, schema, and shared utilities for the Settings module.
 import { Building, Bell, Shield, Smartphone, Settings as SettingsIcon } from 'lucide-react';
 
 export const SETTINGS_TABS = [

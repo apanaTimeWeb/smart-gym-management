@@ -1,4 +1,4 @@
-// RESPONSIBILITY: workout_types.ts handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Defines all TypeScript types, interfaces, and the FetchState enum for the Workout Library module.
 import { EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM } from '@/app/erp/workout/workout_utils/WorkoutSharedConstants';
 import React from 'react';
 
