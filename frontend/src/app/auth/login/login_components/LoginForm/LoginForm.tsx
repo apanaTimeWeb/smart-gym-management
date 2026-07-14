@@ -8,7 +8,7 @@ import { useLoginForm } from '@/app/auth/login/login_components/LoginForm/useLog
 import { LoginSharedConstants } from '@/app/auth/login/login_constants/LoginSharedConstants';
 
 export default function LoginForm() {
-  const { form, status, showPassword, setShowPassword, onSubmit } = useLoginForm();
+  const { form, status, showPassword, setShowPassword, onSubmit, handleDemoLogin } = useLoginForm();
   const { register, handleSubmit, formState: { errors } } = form;
   const isLoading = status === 'loading';
 
@@ -160,6 +160,26 @@ export default function LoginForm() {
                 <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
               </>
             )}
+          </button>
+
+          {/* Demo Login button */}
+          <div className="relative flex items-center py-2">
+            <div className="flex-grow border-t border-border"></div>
+            <span className="flex-shrink-0 mx-4 text-xs font-semibold text-secondary uppercase">OR</span>
+            <div className="flex-grow border-t border-border"></div>
+          </div>
+          <button
+            type="button"
+            disabled={isLoading}
+            onClick={handleDemoLogin}
+            className={[
+              'w-full py-3.5 rounded-xl font-bold text-sm transition-all duration-200',
+              'flex items-center justify-center gap-2 border border-primary/30',
+              'text-primary hover:bg-primary/5 active:scale-[0.98]',
+              'disabled:opacity-70 disabled:cursor-not-allowed',
+            ].join(' ')}
+          >
+            Login with Demo Account
           </button>
         </form>
       </div>
