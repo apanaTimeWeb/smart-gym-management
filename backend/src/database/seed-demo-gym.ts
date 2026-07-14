@@ -18,33 +18,76 @@ import { Attendance } from '../modules/erp/attendance/entities/attendance.entity
 const logger = new Logger('DemoGymSeed');
 
 async function main() {
-  const args = process.argv.slice(2);
-  const tenantIdArg = args.find((arg) => arg.startsWith('--tenantId='));
-  
-  if (!tenantIdArg) {
-    logger.error('❌ Please provide a tenantId, e.g., --tenantId="your-uuid"');
-    process.exit(1);
-  }
-
-  const tenantId = tenantIdArg.split('=')[1];
-  if (!tenantId) {
-    logger.error('❌ Invalid tenantId provided.');
-    process.exit(1);
-  }
-
-  const connectionKey = `tenant_db_${tenantId}`;
-  logger.log(`🌱 Seeding Demo Gym for Database: ${connectionKey}...`);
-
   const masterUrl = process.env.DATABASE_URL;
   if (!masterUrl) {
     logger.error('❌ DATABASE_URL is missing in environment variables.');
     process.exit(1);
   }
 
+  // 1. Connect to Master to ensure Gym and User exist
+  const MasterDataSource = new DataSource({
+    type: 'postgres',
+    url: masterUrl,
+    entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+    synchronize: false,
+  });
+  await MasterDataSource.initialize();
+  
+  // Create or get the Gym entry in Master DB
+  let tenantId: string;
+  const existingGym = await MasterDataSource.query('SELECT id FROM gyms WHERE "adminEmail" = $1', ['demo_admin@gym.com']);
+  if (existingGym.length > 0) {
+    tenantId = existingGym[0].id;
+    logger.log(`✅ Found existing Demo Gym in Master DB (id: ${tenantId})`);
+  } else {
+    // Insert new gym and get the generated UUID
+    const result = await MasterDataSource.query(
+      `INSERT INTO gyms (name, "ownerName", "adminEmail", phone, status, plan, "isDeleted", "databaseVersion") 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`,
+      ['Demo Gym', 'Demo Admin', 'demo_admin@gym.com', '9876543210', 'ACTIVE', 'PREMIUM', false, '1.0.0']
+    );
+    tenantId = result[0].id;
+    logger.log(`✅ Created new Demo Gym in Master DB (id: ${tenantId})`);
+  }
+
+  const connectionKey = `tenant_db_${tenantId}`;
+  logger.log(`🌱 Seeding Demo Gym for Database: ${connectionKey}...`);
+
+  // Create Database
+  try {
+    await MasterDataSource.query(`CREATE DATABASE "${connectionKey}"`);
+    logger.log(`✅ Created database ${connectionKey}`);
+  } catch (err: any) {
+    if (err.code !== '42P04') throw err; // ignore if already exists
+  }
+
+  // Sync Demo Admin in Master
+  const masterUserRepo = MasterDataSource.getRepository(User);
+  const hashedPassword = await bcrypt.hash('demo123', 10);
+  
+  let masterUser = await masterUserRepo.findOne({ where: { email: 'demo_admin@gym.com' } });
+  if (masterUser) {
+    masterUser.password = hashedPassword;
+    // ensure it's active and has correct role
+    masterUser.isActive = true;
+    masterUser.role = 'ADMIN' as any;
+    await masterUserRepo.save(masterUser);
+  } else {
+    await masterUserRepo.save(masterUserRepo.create({
+      name: 'Demo Admin',
+      email: 'demo_admin@gym.com',
+      password: hashedPassword,
+      role: 'ADMIN' as any,
+      isActive: true,
+    }));
+  }
+  await MasterDataSource.destroy();
+  logger.log('✅ Master Database User Updated (demo_admin@gym.com / demo123).');
+
+  // 2. Now connect to Tenant Database to seed
   const parsedUrl = new URL(masterUrl);
   parsedUrl.pathname = `/${connectionKey}`;
   const tenantUrl = parsedUrl.toString();
-
   const AppDataSource = new DataSource({
     type: 'postgres',
     url: tenantUrl,
@@ -77,34 +120,6 @@ async function main() {
   );
   logger.log('✅ Gym Settings Created.');
 
-  // Connect to Master DB to ensure the Demo Admin exists and has the correct password
-  const MasterDataSource = new DataSource({
-    type: 'postgres',
-    url: masterUrl,
-    entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-    synchronize: false,
-  });
-  await MasterDataSource.initialize();
-  
-  const masterUserRepo = MasterDataSource.getRepository(User);
-  const hashedPassword = await bcrypt.hash('demo123', 10);
-  
-  let masterUser = await masterUserRepo.findOne({ where: { email: 'demo_admin@gym.com' } });
-  if (masterUser) {
-    masterUser.password = hashedPassword;
-    await masterUserRepo.save(masterUser);
-  } else {
-    // Fallback if they didn't create it via Superadmin UI correctly
-    await masterUserRepo.save(masterUserRepo.create({
-      name: 'Demo Admin',
-      email: 'demo_admin@gym.com',
-      password: hashedPassword,
-      role: 'ADMIN' as any,
-      isActive: true,
-    }));
-  }
-  await MasterDataSource.destroy();
-  logger.log('✅ Master Database User Updated (demo_admin@gym.com / demo123).');
 
   // We don't necessarily need to create the admin in the tenant DB if auth is master-only,
   // but keeping it for consistency if any tenant-level user queries exist.
@@ -126,8 +141,6 @@ async function main() {
     { name: 'Basic Monthly', tier: 'BASIC', price1Month: 1500, price3Month: 4000, price6Month: 7500, price12Month: 12000, features: ['Gym Access'] },
     { name: 'Pro Quarterly', tier: 'GOLD', price1Month: 2500, price3Month: 6500, price6Month: 12000, price12Month: 20000, features: ['Gym Access', 'Cardio'] },
     { name: 'Elite Yearly', tier: 'PREMIUM', price1Month: 3500, price3Month: 9000, price6Month: 16000, price12Month: 25000, features: ['24/7 Access', 'PT', 'Diet Plan'] },
-    { name: 'Yoga Masters', tier: 'BASIC', price1Month: 2000, price3Month: 5500, price6Month: 10000, price12Month: 18000, features: ['Yoga Classes'] },
-    { name: 'Zumba Fiesta', tier: 'BASIC', price1Month: 1800, price3Month: 5000, price6Month: 9000, price12Month: 15000, features: ['Zumba Classes'] }
   ];
   
   const savedPlans: Plan[] = [];
@@ -205,7 +218,7 @@ async function main() {
             checkIn: new Date(attendanceDate.setHours(faker.number.int({ min: 6, max: 18 }))),
             checkOut: new Date(attendanceDate.setHours(faker.number.int({ min: 7, max: 20 }))),
             member: member,
-            type: 'PRESENT' as any,
+            type: 'MEMBER' as any,
           })
         );
       }
