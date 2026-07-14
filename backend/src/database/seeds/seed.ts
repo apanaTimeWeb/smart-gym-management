@@ -4,22 +4,22 @@ import * as bcrypt from 'bcrypt';
 import { Logger } from '@nestjs/common';
 
 // Entities
-import { User } from '../modules/auth/entities/user.entity';
-import { Plan } from '../modules/erp/plans/entities/plan.entity';
-import { Staff } from '../modules/erp/hr/entities/staff.entity';
-import { Gender } from '../modules/erp/members/utils/members.enums';
-import { Member } from '../modules/erp/members/entities/member.entity';
-import { Payment } from '../modules/erp/finance/entities/payment.entity';
-import { Product } from '../modules/erp/store/entities/product.entity';
-import { Exercise } from '../modules/erp/library/entities/exercise.entity';
-import { Workout } from '../modules/erp/workout/entities/workout.entity';
-import { DietPlan } from '../modules/erp/library/entities/diet-plan.entity';
-import { Inquiry } from '../modules/erp/inquiries/entities/inquiry.entity';
-import { Settings } from '../modules/erp/settings/entities/setting.entity';
-import { Payroll } from '../modules/erp/hr/entities/payroll.entity';
-import { Attendance } from '../modules/erp/attendance/entities/attendance.entity';
-import { Order } from '../modules/erp/store/entities/order.entity';
-import { OrderItem } from '../modules/erp/store/entities/order-item.entity';
+import { User } from '../../modules/auth/entities/user.entity';
+import { Plan } from '../../modules/erp/plans/entities/plan.entity';
+import { Staff } from '../../modules/erp/hr/entities/staff.entity';
+import { Gender } from '../../modules/erp/members/utils/members.enums';
+import { Member } from '../../modules/erp/members/entities/member.entity';
+import { Payment } from '../../modules/erp/finance/entities/payment.entity';
+import { Product } from '../../modules/erp/store/entities/product.entity';
+import { Exercise } from '../../modules/erp/library/entities/exercise.entity';
+import { Workout } from '../../modules/erp/workout/entities/workout.entity';
+import { DietPlan } from '../../modules/erp/library/entities/diet-plan.entity';
+import { Inquiry } from '../../modules/erp/inquiries/entities/inquiry.entity';
+import { Settings } from '../../modules/erp/settings/entities/setting.entity';
+import { Payroll } from '../../modules/erp/hr/entities/payroll.entity';
+import { Attendance } from '../../modules/erp/attendance/entities/attendance.entity';
+import { Order } from '../../modules/erp/store/entities/order.entity';
+import { OrderItem } from '../../modules/erp/store/entities/order-item.entity';
 
 const logger = new Logger('DatabaseSeed');
 
@@ -95,10 +95,10 @@ async function main() {
       features: ['24/7 Access', 'PT'] as any,
     }),
   ];
-  for (const p of plans) {
+  for (const p of plans as Plan[]) {
     const plan = await planRepo.findOne({ where: { name: p.name } });
     if (!plan) {
-      await planRepo.save(planRepo.create(p));
+      await planRepo.save(planRepo.create(p as any));
     }
   }
   logger.log('✅ Plans created');

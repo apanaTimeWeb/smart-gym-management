@@ -5,23 +5,22 @@ import { Logger } from '@nestjs/common';
 import { faker } from '@faker-js/faker/locale/en_IN'; // Indian locale for realistic demo data
 
 // Entities
-import { User } from '../modules/auth/entities/user.entity';
-import { Plan } from '../modules/erp/plans/entities/plan.entity';
-import { Staff } from '../modules/erp/hr/entities/staff.entity';
-import { Gender } from '../modules/erp/members/utils/members.enums';
-import { Member } from '../modules/erp/members/entities/member.entity';
-import { Payment } from '../modules/erp/finance/entities/payment.entity';
-// removed duplicate
-import { Settings } from '../modules/erp/settings/entities/setting.entity';
-import { Attendance } from '../modules/erp/attendance/entities/attendance.entity';
-import { Product } from '../modules/erp/store/entities/product.entity';
-import { Order } from '../modules/erp/store/entities/order.entity';
-import { OrderItem } from '../modules/erp/store/entities/order-item.entity';
-import { DietPlan } from '../modules/erp/library/entities/diet-plan.entity';
-import { Exercise } from '../modules/erp/library/entities/exercise.entity';
-import { Workout } from '../modules/erp/workout/entities/workout.entity';
-import { Inquiry } from '../modules/erp/inquiries/entities/inquiry.entity';
-import { AuditLog } from '../modules/erp/audit/entities/audit-log.entity';
+import { User } from '../../modules/auth/entities/user.entity';
+import { Plan } from '../../modules/erp/plans/entities/plan.entity';
+import { Staff } from '../../modules/erp/hr/entities/staff.entity';
+import { Gender } from '../../modules/erp/members/utils/members.enums';
+import { Member } from '../../modules/erp/members/entities/member.entity';
+import { Payment } from '../../modules/erp/finance/entities/payment.entity';
+import { Settings } from '../../modules/erp/settings/entities/setting.entity';
+import { Attendance } from '../../modules/erp/attendance/entities/attendance.entity';
+import { Product } from '../../modules/erp/store/entities/product.entity';
+import { Order } from '../../modules/erp/store/entities/order.entity';
+import { OrderItem } from '../../modules/erp/store/entities/order-item.entity';
+import { DietPlan } from '../../modules/erp/library/entities/diet-plan.entity';
+import { Exercise } from '../../modules/erp/library/entities/exercise.entity';
+import { Workout } from '../../modules/erp/workout/entities/workout.entity';
+import { Inquiry } from '../../modules/erp/inquiries/entities/inquiry.entity';
+import { AuditLog } from '../../modules/erp/audit/entities/audit-log.entity';
 
 const logger = new Logger('DemoGymSeed');
 
