@@ -8,10 +8,7 @@ def test_create_ticket(auth_client, api_url):
         "subject": "System issue",
         "priority": "HIGH"
     })
-    
-    # We assert 201 Created or 400/422 if DTO strictly rejects our generic payload. 
-    # For a true E2E, this proves the endpoint is wired and responding properly.
-    assert response.status_code in [201, 400, 422], f"Unexpected status: {response.status_code} - {response.text}"
+    assert response.status_code == 201, f"Unexpected status: {response.status_code} - {response.text}"
     
     if response.status_code == 201:
         data = response.json()
@@ -20,7 +17,7 @@ def test_create_ticket(auth_client, api_url):
 
 def test_get_tickets(auth_client, api_url):
     response = auth_client.get(f"{api_url}/superadmin/tickets")
-    assert response.status_code in [200, 403]
+    assert response.status_code == 200
     
     if response.status_code == 200:
         data = response.json()

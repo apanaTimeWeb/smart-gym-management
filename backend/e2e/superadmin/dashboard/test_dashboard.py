@@ -4,17 +4,9 @@ import uuid
 def test_create_dashboard(auth_client, api_url):
     unique_val = f"test_{uuid.uuid4().hex[:8]}"
     response = auth_client.post(f"{api_url}/superadmin/dashboard", json={
-        "name": f"Test Dashboard {unique_val}",
-        "description": "E2E Test generation",
-        # Generic fields that usually pass most basic validations
-        "status": "ACTIVE",
-        "email": f"{unique_val}@test.com",
-        "code": unique_val.upper()
+        "name": f"Test Dashboard {unique_val}"
     })
-    
-    # We assert 201 Created or 400/422 if DTO strictly rejects our generic payload. 
-    # For a true E2E, this proves the endpoint is wired and responding properly.
-    assert response.status_code in [201, 400, 422], f"Unexpected status: {response.status_code} - {response.text}"
+    assert response.status_code == 201, f"Unexpected status: {response.status_code} - {response.text}"
     
     if response.status_code == 201:
         data = response.json()
@@ -22,7 +14,7 @@ def test_create_dashboard(auth_client, api_url):
 
 def test_get_dashboard(auth_client, api_url):
     response = auth_client.get(f"{api_url}/superadmin/dashboard")
-    assert response.status_code in [200, 403]
+    assert response.status_code == 200
     
     if response.status_code == 200:
         data = response.json()
@@ -30,14 +22,14 @@ def test_get_dashboard(auth_client, api_url):
 
 def test_get_dashboard_by_id(auth_client, api_url):
     response = auth_client.get(f"{api_url}/superadmin/dashboard/dummy-id")
-    assert response.status_code in [200, 404]
+    assert response.status_code == 200
 
 def test_update_dashboard(auth_client, api_url):
     response = auth_client.patch(f"{api_url}/superadmin/dashboard/dummy-id", json={
         "name": "Updated Name E2E"
     })
-    assert response.status_code in [200, 404]
+    assert response.status_code == 200
 
 def test_delete_dashboard(auth_client, api_url):
     response = auth_client.delete(f"{api_url}/superadmin/dashboard/dummy-id")
-    assert response.status_code in [200, 204, 404]
+    assert response.status_code in [200, 204]
