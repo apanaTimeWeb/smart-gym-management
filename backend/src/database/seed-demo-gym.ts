@@ -11,9 +11,17 @@ import { Staff } from '../modules/erp/hr/entities/staff.entity';
 import { Gender } from '../modules/erp/members/utils/members.enums';
 import { Member } from '../modules/erp/members/entities/member.entity';
 import { Payment } from '../modules/erp/finance/entities/payment.entity';
-import { Product } from '../modules/erp/store/entities/product.entity';
+// removed duplicate
 import { Settings } from '../modules/erp/settings/entities/setting.entity';
 import { Attendance } from '../modules/erp/attendance/entities/attendance.entity';
+import { Product } from '../modules/erp/store/entities/product.entity';
+import { Order } from '../modules/erp/store/entities/order.entity';
+import { OrderItem } from '../modules/erp/store/entities/order-item.entity';
+import { DietPlan } from '../modules/erp/library/entities/diet-plan.entity';
+import { Exercise } from '../modules/erp/library/entities/exercise.entity';
+import { Workout } from '../modules/erp/workout/entities/workout.entity';
+import { Inquiry } from '../modules/erp/inquiries/entities/inquiry.entity';
+import { AuditLog } from '../modules/erp/audit/entities/audit-log.entity';
 
 const logger = new Logger('DemoGymSeed');
 
@@ -225,6 +233,58 @@ async function main() {
     }
   }
   logger.log('✅ 50 Members, Payments, and Attendance records created.');
+
+  // 6. Store
+  const productRepo = AppDataSource.getRepository(Product);
+  const orderRepo = AppDataSource.getRepository(Order);
+  const orderItemRepo = AppDataSource.getRepository(OrderItem);
+  
+  const products = await productRepo.save([
+    { name: 'Whey Protein 1kg', category: 'Supplements', price: 2500, stock: 20, isActive: true },
+    { name: 'Gym T-Shirt', category: 'Apparel', price: 500, stock: 50, isActive: true },
+    { name: 'Creatine 500g', category: 'Supplements', price: 1200, stock: 30, isActive: true },
+  ]);
+
+  const order1 = await orderRepo.save({ total: products[0].price, method: 'Card', status: 'COMPLETED' });
+  await orderItemRepo.save([{ orderId: order1.id, productId: products[0].id, qty: 1, price: products[0].price }]);
+  
+  logger.log('✅ Store seeded.');
+
+  // 7. Diet Library
+  const dietRepo = AppDataSource.getRepository(DietPlan);
+  await dietRepo.save([
+    { name: 'Muscle Gain Protocol', goal: 'Muscle Gain', calories: 3000, protein: 180, carbs: 350, fats: 80, meals: ['Oats & Whey', 'Chicken & Rice', 'Beef & Potatoes', 'Cottage Cheese'], isActive: true },
+    { name: 'Keto Shred', goal: 'Weight Loss', calories: 1800, protein: 140, carbs: 20, fats: 130, meals: ['Eggs & Bacon', 'Avocado Chicken Salad', 'Salmon & Asparagus'], isActive: true },
+  ]);
+  logger.log('✅ Diet Library seeded.');
+
+  // 8. Workout Library
+  const exerciseRepo = AppDataSource.getRepository(Exercise);
+  await exerciseRepo.save([
+    { name: 'Barbell Bench Press', category: 'Strength', muscleGroup: ['Chest', 'Triceps'], sets: 4, reps: '8-10', difficulty: 'Intermediate', isActive: true },
+    { name: 'Squats', category: 'Strength', muscleGroup: ['Legs', 'Glutes'], sets: 4, reps: '8-10', difficulty: 'Intermediate', isActive: true },
+  ]);
+  const workoutRepo = AppDataSource.getRepository(Workout);
+  await workoutRepo.save([
+    { name: 'Push Pull Legs - Beginner', level: 'Beginner', days: 3, exercises: 15, focus: 'Hypertrophy', duration: '60 mins', tags: ['PPL', 'Beginner'], isActive: true },
+  ]);
+  logger.log('✅ Workout Library seeded.');
+
+  // 9. Inquiries
+  const inquiryRepo = AppDataSource.getRepository(Inquiry);
+  await inquiryRepo.save([
+    { name: 'Sanjay Kumar', phone: '9876543212', interest: 'Yearly Plan', status: 'NEW' as any, source: 'Instagram' },
+    { name: 'Riya Singh', phone: '9876543213', interest: 'Personal Training', status: 'FOLLOW_UP' as any, source: 'Walk-in' },
+  ]);
+  logger.log('✅ Inquiries seeded.');
+
+  // 10. Audit Logs
+  const auditRepo = AppDataSource.getRepository(AuditLog);
+  await auditRepo.save([
+    { action: 'LOGIN', entityType: 'Auth', ipAddress: '192.168.1.1', actorId: 'system', actorRole: 'SYSTEM' },
+    { action: 'CREATE', entityType: 'Member', entityId: savedPlans[0].id, ipAddress: '192.168.1.1', actorId: 'admin', actorRole: 'ADMIN' }
+  ]);
+  logger.log('✅ Audit Logs seeded.');
 
   logger.log('🎉 Demo Gym Seeding Complete!');
   await AppDataSource.destroy();
