@@ -27,8 +27,8 @@ def admin_token(api_url):
     """Fixture to obtain an admin JWT token for authenticated requests."""
     session = requests.Session()
     response = session.post(f"{api_url}/auth/login", json={
-        "email": "admin@gymsmart.com",
-        "password": "superadmin123"
+        "email": "demo_admin@gym.com",
+        "password": "demo123"
     })
     # If the server is not running, this will fail.
     # We gracefully skip or just return None (the test will fail later)

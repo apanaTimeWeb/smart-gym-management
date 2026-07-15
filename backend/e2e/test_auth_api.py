@@ -18,7 +18,7 @@ def test_login_correct_credentials(api_client, api_url):
     # Using the seed user
     response = api_client.post(f"{api_url}/auth/login", json={
         "email": "admin@gymsmart.com",
-        "password": "superadmin123"
+        "password": "demo123"
     })
     assert response.status_code == HTTPStatus.OK
     data = response.json().get("data", {})
@@ -39,7 +39,7 @@ def test_get_me_valid_token(api_client, api_url):
     # First, login to get a valid token
     login_response = api_client.post(f"{api_url}/auth/login", json={
         "email": "admin@gymsmart.com",
-        "password": "superadmin123"
+        "password": "demo123"
     })
     assert login_response.status_code == HTTPStatus.OK
     token = login_response.json().get("data", {}).get("accessToken")
