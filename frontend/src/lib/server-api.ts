@@ -16,6 +16,18 @@ async function ssrApiFetch<T = unknown>(path: string): Promise<T> {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
+  const userCookie = cookieStore.get('gymsmart_user')?.value;
+  if (userCookie) {
+    try {
+      const user = JSON.parse(decodeURIComponent(userCookie));
+      if (user.tenantId) {
+        headers['x-tenant-id'] = user.tenantId;
+      }
+    } catch (e) {
+      // ignore parsing errors
+    }
+  }
+
   const res = await fetch(`${BASE_URL}${path}`, { headers });
   
   if (!res.ok) {

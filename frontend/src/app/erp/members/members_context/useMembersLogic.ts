@@ -72,7 +72,7 @@ export function useMembersLogic(initialData?: MembersInitialData | null): Member
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
-      return;
+      if (initialData) return;
     }
     loadAll({ search: debouncedSearch, status: statusFilter, page: currentPage.toString() }).catch(() => {
       showToast('Failed to load members', 'error');

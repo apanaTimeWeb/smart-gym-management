@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the gym product Store module.
+// RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the gym product Store module.
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
 import { storeApi } from '@/app/erp/store/store_api/store_api';
@@ -95,9 +95,9 @@ export function useStoreLogic(initialData?: StoreInitialData | null): StoreConte
  }, [showToast, currentPage, debouncedSearch, startDate, endDate, sortOrder]);
 
   useEffect(() => { 
-    if (isFirstRender.current && initialData) {
+    if (isFirstRender.current) {
       isFirstRender.current = false;
-      return;
+      if (initialData) return;
     }
     loadAll(); 
   }, [loadAll, initialData]);

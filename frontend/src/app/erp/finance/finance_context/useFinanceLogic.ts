@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the Finance module.
+// RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the Finance module.
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { financeApi } from '@/app/erp/finance/finance_api/finance_api';
 import type { Payment, FinanceSummary } from '@/app/erp/finance/finance_types/finance_types';
@@ -70,9 +70,9 @@ export function useFinanceLogic(initialData?: FinanceInitialData | null): Financ
   }, [showToast, currentPage, debouncedSearch]);
 
   useEffect(() => { 
-    if (isFirstRender.current && initialData) {
+    if (isFirstRender.current) {
       isFirstRender.current = false;
-      return;
+      if (initialData) return;
     }
     loadAll(); 
   }, [loadAll, initialData]);
