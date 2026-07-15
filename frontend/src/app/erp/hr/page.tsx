@@ -1,4 +1,4 @@
-// RESPONSIBILITY: page.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Server Component — fetches initial SSR data and renders the HR & Payroll module entry point.
 import HrMain from '@/app/erp/hr/hr_components/HrMain/HrMain';
 import { ssrHrApi } from '@/app/erp/hr/hr_api/hr_server_api';
 import { HrInitialData } from '@/app/erp/hr/hr_types/hr_types';

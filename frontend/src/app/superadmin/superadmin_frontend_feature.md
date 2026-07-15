@@ -22,23 +22,26 @@ All pages use `FetchState = 'idle' | 'loading' | 'success' | 'error'` enum (neve
 
 ```
 superadmin/
-├── layout.tsx                          # Server Component shell — wraps SuperadminLayout
+├── layout.tsx                          # Server Component shell — wraps SuperadminLayout, imports superadmin.css
 ├── page.tsx                            # Redirects to /superadmin/dashboard
-├── superadmin.css                      # Module-scoped CSS (custom scrollbar, animations)
+├── superadmin.css                      # Module-scoped CSS (custom scrollbar, keyframe animations, print rules)
 ├── superadmin_url_config.ts            # All page routes + backend API paths
 ├── superadmin_frontend_feature.md      # This file
+├── superadmin_forbidden.md             # Module-level anti-pattern rules
 │
 ├── superadmin_types/
-│   └── superadmin_types.ts             # All TypeScript types: Tenant, SubscriptionPlan, Coupon, Affiliate, Broadcast, etc.
+│   └── superadmin_types.ts             # All TypeScript types: Tenant, SubscriptionPlan, Coupon, Affiliate, Broadcast, GlobalAuditLog, etc.
 │
 ├── superadmin_api/
 │   └── superadmin_api.ts               # Typed API client for all 16 modules (gyms, plans, tickets, invoices, etc.)
 │
 ├── superadmin_utils/
-│   ├── useSuperadminData.ts            # Generic data-fetching hook
-│   ├── useDebounce.ts                  # Debounce utility hook
-│   ├── SuperadminValidation.ts         # Validation helpers
-│   ├── SuperadminZodSchemas.ts         # Zod schemas for forms
+│   ├── useSuperadminData.ts            # Generic data-fetching hook (returns data, fetchState, error, mutate)
+│   ├── useDebounce.ts                  # Debounce utility hook (300ms default) — Frontend Rule 15
+│   ├── AuditLogsConstants.ts           # Fallback/mock data for Global Audit Logs page
+│   ├── SuperadminChartConstants.ts     # ApexCharts color constants (hex) mapped from design system tokens
+│   ├── SuperadminValidation.ts         # Pure-function validation helpers: isValidEmail, isValidSubdomain, isValidPhone, isFutureDate, etc.
+│   ├── SuperadminZodSchemas.ts         # Zod schemas for ALL superadmin forms: addGymSchema, couponSchema, broadcastSchema, affiliateSchema, etc.
 │   └── hooks/
 │       ├── useAffiliatesPage.ts        # Logic hook for Affiliates page
 │       ├── useBroadcastsPage.ts        # Logic hook for Broadcasts page
@@ -46,42 +49,53 @@ superadmin/
 │       └── useSuperadminMutation.ts    # Generic mutation helper with loading state
 │
 ├── superadmin_components/
-│   ├── SuperadminLayout/
-│   │   ├── SuperadminLayout.tsx        # Root layout: sidebar + header + content shell
-│   │   ├── SuperadminSidebar.tsx       # Collapsible sidebar with nav groups
-│   │   └── SuperadminHeader.tsx        # Top header with search, theme toggle, profile dropdown
-│   ├── DashboardClient/
-│   │   └── DashboardView.tsx           # SaaS KPI cards + ApexCharts MRR area chart + recent onboards
-│   ├── JobsClient/
-│   │   └── JobsView.tsx                # BullMQ background jobs table + metrics cards
-│   └── AuditLogsClient/
-│       └── AuditLogsClient.tsx         # Global audit logs table with URL-synced pagination + debounced search
+│   └── SuperadminLayout/
+│       ├── SuperadminLayout.tsx        # Root layout: sidebar + header + content shell (Client Component)
+│       ├── SuperadminSidebar.tsx       # Collapsible sidebar with nav groups + logout
+│       ├── SuperadminHeader.tsx        # Top header with search, theme toggle, profile dropdown
+│       └── SuperadminErrorBoundary.tsx # Typed React Error Boundary with Retry button (Rule 43)
 │
 ├── dashboard/
-│   ├── page.tsx                        # Server Component → renders DashboardClient
+│   ├── page.tsx                        # Server Component → renders DashboardView
 │   ├── loading.tsx                     # Skeleton loader
-│   └── error.tsx                       # Error boundary with Retry
+│   ├── error.tsx                       # Error boundary with Retry
+│   └── dashboard_components/
+│       └── DashboardView/
+│           └── DashboardView.tsx       # SaaS KPI cards + ApexCharts MRR area chart + recent onboards
 │
 ├── gyms/                               # Most complex module — full Zustand store
 │   ├── page.tsx                        # Server Component entry point
-│   ├── gyms.css
+│   ├── loading.tsx                     # Skeleton loader
+│   ├── error.tsx                       # Error boundary
+│   ├── gyms.css                        # Module-scoped CSS (row hover, ghost-login animation, status badges)
+│   ├── GymsClient.tsx                  # Root orchestrator — imports gyms.css, renders Toolbar + Table
+│   ├── gyms_forbidden.md               # Gyms-specific anti-patterns
 │   ├── add/page.tsx                    # Onboard new gym form page
 │   ├── gyms_store/
 │   │   └── useGymsStore.ts             # Zustand store: gyms[], modals, CRUD actions, ghost login, suspend
+│   ├── gyms_utils/
+│   │   └── GymsValidationSchemas.ts    # Gyms-scoped Zod schemas (superseded by SuperadminZodSchemas for new code)
 │   └── gyms_components/
-│       ├── GymsTable/                  # Table + useGymsTable hook (consumes store)
-│       ├── GymsToolbar/                # Search + filter bar
+│       ├── GymsTable/
+│       │   ├── GymsTable.tsx           # Data table with sortable columns + row click
+│       │   └── useGymsTable.ts         # Logic hook: filtering, pagination, modal triggers
+│       ├── GymsToolbar/                # Search + filter + status filter bar
 │       ├── GymEditModal/               # Edit gym details modal
 │       ├── GymEmailModal/              # Email owner modal
-│       ├── GymDeleteModal/             # Type-to-confirm delete modal
-│       └── AddGymForm/                 # Multi-field onboarding form
+│       ├── GymDeleteModal/             # Type-to-confirm delete modal (Rule 13.2)
+│       ├── GymsEmptyState/             # Empty state component (Rule 50)
+│       └── AddGymForm/
+│           ├── AddGymForm.tsx          # Multi-step onboarding form
+│           └── useAddGymForm.ts        # Logic hook for the Add Gym form
 │
 ├── plans/                              # Zustand store (usePlansStore) — Rule 58
 │   ├── page.tsx
-│   ├── PlansClient.tsx
+│   ├── loading.tsx
+│   ├── error.tsx
+│   ├── PlansClient.tsx                 # Root orchestrator for plans page
+│   ├── plans_forbidden.md
 │   ├── plans_store/
 │   │   └── usePlansStore.ts            # Zustand: plans[], fetchState, modal state, CRUD actions
-│   ├── plans_context/                  # Intentionally empty — Zustand used instead (Rule 58)
 │   └── plans_components/
 │       ├── PlansList.tsx               # Grid of plan cards
 │       ├── PlanCreateModal.tsx         # RHF + Zod create form
@@ -89,79 +103,133 @@ superadmin/
 │
 ├── tickets/                            # Local state via useSuperadminData
 │   ├── page.tsx
-│   ├── TicketsClient.tsx
 │   ├── loading.tsx
-│   └── error.tsx
+│   ├── error.tsx
+│   ├── tickets_forbidden.md
+│   └── TicketsClient.tsx
 │
-├── invoices/                           # Local state via useSuperadminData
+├── invoices/                           # Zustand store (useInvoicesStore) + useInvoicesPage hook
 │   ├── page.tsx
-│   ├── InvoicesClient.tsx
 │   ├── loading.tsx
-│   └── error.tsx
+│   ├── error.tsx
+│   ├── invoices_forbidden.md
+│   ├── InvoicesClient.tsx
+│   ├── invoices_store/
+│   │   └── useInvoicesStore.ts
+│   └── invoices_components/
+│       ├── useInvoicesPage.ts          # Local UI state hook: search, modal state, derived stats
+│       ├── InvoicesHeader/             # Page header + CTA button
+│       ├── InvoicesTable/              # Data table
+│       ├── InvoicesStatsBar/           # KPI stat cards (total, paid, failed revenue)
+│       ├── InvoicesEmptyState/         # Empty state component
+│       └── InvoicesLogPaymentModal/    # Log manual payment drawer
 │
 ├── coupons/                            # useCouponsPage hook
 │   ├── page.tsx
-│   ├── CouponsClient.tsx
 │   ├── loading.tsx
 │   ├── error.tsx
+│   ├── coupons_forbidden.md
+│   ├── CouponsClient.tsx
+│   ├── coupons_types/
+│   │   └── coupons_types.ts
 │   └── coupons_components/
-│       ├── SuperadminCouponModal.tsx
+│       ├── CouponsHeader/
+│       ├── CouponsTable/
+│       ├── CouponsStatsBar/
+│       ├── CouponsEmptyState/
+│       ├── CouponsStatusBadge/
+│       ├── SuperadminCouponModal.tsx   # Create coupon modal
 │       └── SuperadminCouponEditModal.tsx
 │
 ├── affiliates/                         # useAffiliatesPage hook
 │   ├── page.tsx
-│   ├── AffiliatesClient.tsx
 │   ├── loading.tsx
 │   ├── error.tsx
+│   ├── affiliates_forbidden.md
+│   ├── AffiliatesClient.tsx
+│   ├── affiliates_types/
+│   │   └── affiliates_types.ts
 │   └── affiliates_components/
+│       ├── AffiliatesHeader/
+│       ├── AffiliatesTable/
+│       ├── AffiliatesStatsBar/
+│       ├── AffiliatesEmptyState/
+│       ├── AffiliateStatusBadge/
 │       └── SuperadminAffiliateModal.tsx
 │
 ├── broadcasts/                         # useBroadcastsPage hook
 │   ├── page.tsx
-│   ├── BroadcastsClient.tsx
 │   ├── loading.tsx
 │   ├── error.tsx
+│   ├── broadcasts_forbidden.md
+│   ├── BroadcastsClient.tsx
+│   ├── broadcasts_types/
+│   │   └── broadcasts_types.ts
 │   └── broadcasts_components/
+│       ├── BroadcastsHeader/
+│       ├── BroadcastsTable/
+│       ├── BroadcastsEmptyState/
+│       ├── BroadcastStatusBadge/
 │       └── SuperadminBroadcastModal.tsx
 │
 ├── features/                           # Feature flags + release notes tabs
 │   ├── page.tsx
-│   ├── FeaturesClient.tsx
 │   ├── loading.tsx
-│   └── error.tsx
+│   ├── error.tsx
+│   ├── features_forbidden.md
+│   └── FeaturesClient.tsx
 │
-├── system/                             # Migration health + global audit log
+├── system/                             # System health dashboard
 │   ├── page.tsx
-│   ├── SystemClient.tsx
 │   ├── loading.tsx
-│   └── error.tsx
+│   ├── error.tsx
+│   ├── system_forbidden.md
+│   └── SystemClient.tsx
 │
 ├── infrastructure/                     # Server node CPU/RAM/Disk metrics
 │   ├── page.tsx
-│   ├── InfrastructureClient.tsx
 │   ├── loading.tsx
-│   └── error.tsx
+│   ├── error.tsx
+│   ├── infrastructure_forbidden.md
+│   └── InfrastructureClient.tsx
 │
 ├── backups/                            # pg_dump backup records
 │   ├── page.tsx
-│   ├── BackupsClient.tsx
 │   ├── loading.tsx
-│   └── error.tsx
+│   ├── error.tsx
+│   ├── backups_forbidden.md
+│   └── BackupsClient.tsx
 │
 ├── migrations/                         # TypeORM schema rollout management
 │   ├── page.tsx
-│   ├── MigrationsClient.tsx
 │   ├── loading.tsx
-│   └── error.tsx
+│   ├── error.tsx
+│   ├── migrations_forbidden.md
+│   └── MigrationsClient.tsx
 │
 ├── settings/                           # Platform-wide key-value settings
 │   ├── page.tsx
-│   ├── SettingsClient.tsx
 │   ├── loading.tsx
-│   └── error.tsx
+│   ├── error.tsx
+│   ├── settings_forbidden.md
+│   └── SettingsClient.tsx
 │
-└── audit-logs/                         # Global audit log (URL-synced pagination)
-    └── page.tsx                        # Renders AuditLogsClient from superadmin_components
+├── jobs/                               # BullMQ background jobs table + metrics
+│   ├── page.tsx
+│   ├── loading.tsx
+│   ├── error.tsx
+│   ├── jobs_forbidden.md
+│   └── jobs_components/
+│       └── JobsView.tsx
+│
+└── audit-logs/                         # Global audit log (URL-synced pagination + debounced search)
+    ├── page.tsx                        # Server Component → renders AuditLogsClient
+    ├── loading.tsx
+    ├── error.tsx
+    ├── audit-logs_forbidden.md
+    └── audit-logs_components/
+        └── AuditLogsClient/
+            └── AuditLogsClient.tsx
 ```
 
 ## Forbidden Patterns (see also `*_forbidden.md` per module)
@@ -171,3 +239,5 @@ superadmin/
 - Do NOT use boolean `isLoading` flags — use `FetchState` enum.
 - Do NOT use Recharts — use ApexCharts exclusively.
 - Do NOT hardcode inline hex colors (`bg-[#1E1E2E]`) — use design token classes (`bg-input`).
+- Do NOT define Zod schemas inline in form components — import from `SuperadminZodSchemas.ts`.
+- Do NOT write validation helpers inline in hooks — import from `SuperadminValidation.ts`.

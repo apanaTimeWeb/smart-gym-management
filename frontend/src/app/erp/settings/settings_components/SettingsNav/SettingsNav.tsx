@@ -1,4 +1,4 @@
-// RESPONSIBILITY: SettingsNav.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Renders the left-side vertical navigation tabs for different settings sections.
 'use client';
 
 import { useSettingsContext } from '@/app/erp/settings/settings_context/SettingsContext';

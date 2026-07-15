@@ -1,4 +1,4 @@
-// RESPONSIBILITY: page.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Server Component — fetches initial SSR data and renders the Diet Library module entry point.
 import LibraryMain from '@/app/erp/library/library_components/LibraryMain/LibraryMain';
 import { ssrLibraryApi } from '@/app/erp/library/library_api/library_server_api';
 import { LibraryInitialData } from '@/app/erp/library/library_types/library_types';

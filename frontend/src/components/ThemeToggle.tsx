@@ -1,4 +1,4 @@
-// RESPONSIBILITY: ThemeToggle.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Client-side button component that allows users to toggle between dark and light themes. Hydration-safe (waits for mount before rendering correct icon).
 'use client';
 
 import * as React from 'react';

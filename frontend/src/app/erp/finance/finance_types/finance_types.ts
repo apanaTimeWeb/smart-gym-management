@@ -32,7 +32,7 @@ export interface FinanceContextType {
 }
 
 export interface Payment {
-  id: number; memberId: number; amount: number; method: string;
+  id: string; memberId: string; amount: number; method: string;
   status: string; notes?: string; invoiceNo: string; paidAt: string;
   member?: { name: string; email: string; phone: string; plan?: { name: string } };
 }

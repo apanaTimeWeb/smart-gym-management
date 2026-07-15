@@ -1,4 +1,4 @@
-// RESPONSIBILITY: ExerciseModal.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Form modal for creating or editing a single exercise entry in the Workout Library module.
 'use client';
 
 import { useEffect } from 'react';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: useStoreLogic.ts handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the gym product Store module.
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
 import { storeApi } from '@/app/erp/store/store_api/store_api';
@@ -53,7 +53,7 @@ export function useStoreLogic(initialData?: StoreInitialData | null): StoreConte
   const [printData, setPrintData] = useState<ErpReceiptData | null>(null);
 
  const [showProductModal, setShowProductModal] = useState(false);
- const [editProductId, setEditProductId] = useState<number | null>(null);
+ const [editProductId, setEditProductId] = useState<string | null>(null);
   const [editProductData, setEditProductData] = useState<ProductFormValues | null>(null);
 
  const [showOrderModal, setShowOrderModal] = useState(false);
@@ -145,7 +145,7 @@ export function useStoreLogic(initialData?: StoreInitialData | null): StoreConte
  }
  }, [editProductId, loadAll, showToast]);
 
- const deleteProduct = useCallback(async (id: number) => {
+ const deleteProduct = useCallback(async (id: string) => {
   const isConfirmed = await confirm({ title: 'Delete Product', message: 'Delete this product?', confirmText: 'Delete', type: 'danger' });
   if (!isConfirmed) return;
   try { 
@@ -167,7 +167,7 @@ export function useStoreLogic(initialData?: StoreInitialData | null): StoreConte
  });
  }, []);
 
- const removeFromOrder = useCallback((productId: number) => {
+ const removeFromOrder = useCallback((productId: string) => {
  setOrderItems(prev => prev.filter(i => i.productId !== productId));
  }, []);
 

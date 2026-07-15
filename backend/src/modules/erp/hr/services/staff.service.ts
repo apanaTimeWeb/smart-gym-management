@@ -43,14 +43,16 @@ export class StaffService {
   }
 
   async findAll(query: FindStaffDto): Promise<HrResponse> {
-    this.logger.log(`Fetching staff with limit: ${query.limit}`);
+    this.logger.log(`Fetching staff with limit: ${query.limit}, page: ${query.page}, search: ${query.search}`);
     const limit = query.limit || 50;
-    const [staff, total] = await this.hrRepository.findStaff(limit);
+    const page = query.page || 1;
+    const search = query.search;
+    const [staff, total] = await this.hrRepository.findStaff(limit, page, search);
 
     return {
       success: true,
       message: HR_MESSAGES.STAFF_FETCHED_SUCCESS,
-      data: { staff, total, page: 1, limit },
+      data: { staff, total, page, limit },
     };
   }
 

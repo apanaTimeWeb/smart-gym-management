@@ -1,4 +1,4 @@
-// RESPONSIBILITY: ProductModal.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Form modal for creating or editing a gym store product in the Store module.
 'use client';
 
 import { useEffect } from 'react';

@@ -22,26 +22,34 @@ export class AttendanceRepository {
   }
 
   async findAllAttendances(query: any): Promise<[Attendance[], number]> {
-    const where: any = {};
-    if (query.memberId) where.memberId = query.memberId;
-    if (query.staffId) where.staffId = query.staffId;
-    if (query.type) where.type = query.type;
-
     const page = query.page || 1;
     const limit = query.limit || 50;
     const skip = (page - 1) * limit;
 
-    return this.attendanceRepo.findAndCount({
-      where,
-      order: { date: 'DESC' },
-      relations: ['member', 'staff'],
-      select: {
-        member: { name: true },
-        staff: { name: true },
-      },
-      take: limit,
-      skip,
-    });
+    const qb = this.attendanceRepo
+      .createQueryBuilder('attendance')
+      .leftJoinAndSelect('attendance.member', 'member')
+      .leftJoinAndSelect('attendance.staff', 'staff');
+
+    if (query.memberId) {
+      qb.andWhere('attendance.memberId = :memberId', { memberId: query.memberId });
+    }
+    if (query.staffId) {
+      qb.andWhere('attendance.staffId = :staffId', { staffId: query.staffId });
+    }
+    if (query.type) {
+      qb.andWhere('attendance.type = :type', { type: query.type });
+    }
+
+    if (query.search) {
+      const searchTerm = `%${query.search}%`;
+      qb.andWhere('(member.name ILIKE :search OR staff.name ILIKE :search)', { search: searchTerm });
+    }
+
+    qb.orderBy('attendance.date', 'DESC');
+    qb.skip(skip).take(limit);
+
+    return qb.getManyAndCount();
   }
 
   async getStatsForDateRange(startDate: Date, endDate: Date) {

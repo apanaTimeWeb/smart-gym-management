@@ -1,4 +1,4 @@
-import { Controller, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Param, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 import { DeleteInfrastructureService } from '../services/delete-infrastructure.service';
@@ -8,10 +8,10 @@ import { DeleteInfrastructureService } from '../services/delete-infrastructure.s
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth('JWT-auth')
 export class DeleteInfrastructureController {
-  constructor(private readonly infrastructureService: DeleteInfrastructureService) {}
+  constructor(private readonly service: DeleteInfrastructureService) {}
   
-  @Delete()
-  async execute() {
-    return this.infrastructureService.execute();
+  @Delete(':id')
+  async execute(@Param('id') id: string) {
+    return this.service.execute(id);
   }
 }

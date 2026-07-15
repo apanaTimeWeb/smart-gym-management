@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable , NotFoundException} from '@nestjs/common';
 import { BroadcastsRepository } from '../broadcasts.repository';
 import { BroadcastResponse } from '../broadcasts.interfaces';
 import { BROADCASTS_MESSAGES, BROADCASTS_ERRORS } from '../broadcasts.constants';
@@ -17,7 +17,7 @@ export class FindBroadcastsService {
   }
   async findOne(id: string): Promise<BroadcastResponse> {
     const data = await this.repository.findById(id);
-    if (!data) throw new Error(BROADCASTS_ERRORS.NOT_FOUND);
+    if (!data) throw new NotFoundException(BROADCASTS_ERRORS.NOT_FOUND);
     return {
       success: true,
       message: BROADCASTS_MESSAGES.FETCHED,

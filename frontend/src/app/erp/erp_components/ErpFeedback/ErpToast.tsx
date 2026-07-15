@@ -1,4 +1,4 @@
-// RESPONSIBILITY: ErpToast.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Renders the fixed bottom-right toast notification. Auto-dismisses after 4 seconds. Shared across all ERP modules.
 'use client';
 
 import { useEffect } from 'react';

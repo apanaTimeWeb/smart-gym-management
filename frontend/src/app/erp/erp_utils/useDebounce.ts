@@ -1,4 +1,6 @@
-// RESPONSIBILITY: useDebounce.ts handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Generic debounce hook shared across all ERP modules.
+// Prevents excessive API calls by delaying a value update until the user stops typing.
+// Use this for all search inputs and filter inputs that trigger backend calls (Rule 15).
 import { useState, useEffect } from 'react';
 
 /**

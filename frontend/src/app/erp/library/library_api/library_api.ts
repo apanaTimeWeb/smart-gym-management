@@ -10,16 +10,16 @@ export const libraryApi = {
   },
   createExercise: (body: Partial<Exercise>) =>
     apiFetch<ApiResponse<Exercise>>(LibraryUrlConfig.BACKEND_API.EXERCISES_BASE, { method: 'POST', body: JSON.stringify(body) }),
-  updateExercise: (id: number, body: Partial<Exercise>) =>
+  updateExercise: (id: string, body: Partial<Exercise>) =>
     apiFetch<ApiResponse<Exercise>>(LibraryUrlConfig.BACKEND_API.EXERCISE_UPDATE(id), { method: 'PATCH', body: JSON.stringify(body) }),
-  removeExercise: (id: number) => apiFetch<ApiResponse<{ id: number }>>(LibraryUrlConfig.BACKEND_API.EXERCISE_DELETE(id), { method: 'DELETE' }),
+  removeExercise: (id: string) => apiFetch<ApiResponse<{ id: string }>>(LibraryUrlConfig.BACKEND_API.EXERCISE_DELETE(id), { method: 'DELETE' }),
   getDietPlans: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
     return apiFetch<ApiResponse<{ dietPlans: DietPlan[]; total: number }>>(`${LibraryUrlConfig.BACKEND_API.DIET_PLANS_BASE}${q}`);
   },
   createDietPlan: (body: Partial<DietPlan>) =>
     apiFetch<ApiResponse<DietPlan>>(LibraryUrlConfig.BACKEND_API.DIET_PLANS_BASE, { method: 'POST', body: JSON.stringify(body) }),
-  updateDietPlan: (id: number, body: Partial<DietPlan>) =>
+  updateDietPlan: (id: string, body: Partial<DietPlan>) =>
     apiFetch<ApiResponse<DietPlan>>(LibraryUrlConfig.BACKEND_API.DIET_PLAN_UPDATE(id), { method: 'PATCH', body: JSON.stringify(body) }),
-  removeDietPlan: (id: number) => apiFetch<ApiResponse<{ id: number }>>(LibraryUrlConfig.BACKEND_API.DIET_PLAN_DELETE(id), { method: 'DELETE' }),
+  removeDietPlan: (id: string) => apiFetch<ApiResponse<{ id: string }>>(LibraryUrlConfig.BACKEND_API.DIET_PLAN_DELETE(id), { method: 'DELETE' }),
 };

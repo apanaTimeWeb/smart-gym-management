@@ -38,14 +38,16 @@ export class PayrollService {
   }
 
   async findAll(query: FindPayrollDto): Promise<HrResponse> {
-    this.logger.log(`Fetching payrolls with limit: ${query.limit}`);
+    this.logger.log(`Fetching payrolls with limit: ${query.limit}, page: ${query.page}, search: ${query.search}`);
     const limit = query.limit || 50;
-    const [payrolls, total] = await this.hrRepository.findPayrolls(limit);
+    const page = query.page || 1;
+    const search = query.search;
+    const [payrolls, total] = await this.hrRepository.findPayrolls(limit, page, search);
 
     return {
       success: true,
       message: HR_MESSAGES.PAYROLL_FETCHED_SUCCESS,
-      data: { payrolls, total, page: 1, limit },
+      data: { payrolls, total, page, limit },
     };
   }
 

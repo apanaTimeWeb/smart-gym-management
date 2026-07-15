@@ -1,4 +1,4 @@
-// RESPONSIBILITY: AttendanceKPIs.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Renders the top KPI stat cards (total check-ins, member check-ins, staff check-ins) for the Attendance module.
 'use client';
 
 import { CalendarCheck, Users, UserCog } from 'lucide-react';

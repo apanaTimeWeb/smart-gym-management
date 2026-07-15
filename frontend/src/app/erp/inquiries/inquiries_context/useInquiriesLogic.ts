@@ -52,18 +52,18 @@ export function useInquiriesLogic(): InquiriesContextType {
   const hideToast = useCallback(() => setToast(null), []);
 
   const [showModal, setShowModal] = useState(false);
-  const [editId, setEditId] = useState<number | null>(null);
+  const [editId, setEditId] = useState<string | null>(null);
   const [editData, setEditData] = useState<InquiryFormValues | null>(null);
   const [saving, setSaving] = useState(false);
 
   const [msgModal, setMsgModal] = useState<{ open: boolean; recipient: ErpMessageRecipient; type: MessageType; message: string; subject?: string } | null>(null);
   const closeMsg = useCallback(() => setMsgModal(null), []);
 
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const toggleSelectAll = useCallback((selectAll: boolean) => {
     setSelectedIds(selectAll ? inquiries.map(i => i.id) : []);
   }, [inquiries]);
-  const toggleSelectOne = useCallback((id: number) => {
+  const toggleSelectOne = useCallback((id: string) => {
     setSelectedIds(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
   }, []);
   const clearSelection = useCallback(() => setSelectedIds([]), []);
@@ -144,7 +144,7 @@ export function useInquiriesLogic(): InquiriesContextType {
     }
   }, [editId, loadAll, showToast]);
 
-  const deleteInquiry = useCallback(async (id: number) => {
+  const deleteInquiry = useCallback(async (id: string) => {
     const isConfirmed = await confirm({ title: 'Delete Inquiry', message: 'Delete this inquiry?', confirmText: 'Delete', type: 'danger' });
     if (!isConfirmed) return;
     try {
@@ -156,7 +156,7 @@ export function useInquiriesLogic(): InquiriesContextType {
     }
   }, [loadAll, showToast, confirm]);
 
-  const updateStatus = useCallback(async (id: number, status: string) => {
+  const updateStatus = useCallback(async (id: string, status: string) => {
     try {
       await inquiriesApi.update(id, { status } as Partial<InquiryFormValues>);
       await loadAll();

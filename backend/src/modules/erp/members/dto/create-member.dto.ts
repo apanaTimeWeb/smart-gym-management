@@ -27,6 +27,7 @@ export class CreateMemberDto {
   gender: Gender;
 
   @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
   address: string;
 

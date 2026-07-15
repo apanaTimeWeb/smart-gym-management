@@ -1,4 +1,4 @@
-// RESPONSIBILITY: StoreContext.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Provides UI orchestration state to the Store module hierarchy. Async data is managed in useStoreLogic.
 'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';

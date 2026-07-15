@@ -1,4 +1,4 @@
-// RESPONSIBILITY: useLibraryLogic.ts handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the Diet Library module.
 import { useState, useCallback, useEffect } from 'react';
 import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
 import { libraryApi } from '@/app/erp/library/library_api/library_api';
@@ -31,16 +31,21 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
-  const search = searchParams.get('search') || '';
+  const [search, setLocalSearch] = useState(searchParams.get('search') || '');
   const debouncedSearch = useDebounce(search, 300);
   const currentPage = Number(searchParams.get('page')) || 1;
 
-  const setSearch = useCallback((val: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (val) { params.set('search', val); params.set('page', '1'); }
-    else { params.delete('search'); params.set('page', '1'); }
-    router.push(`?${params.toString()}`, { scroll: false });
-  }, [router, searchParams]);
+  useEffect(() => {
+    const currentSearch = searchParams.get('search') || '';
+    if (debouncedSearch !== currentSearch) {
+      const params = new URLSearchParams(searchParams.toString());
+      if (debouncedSearch) { params.set('search', debouncedSearch); params.set('page', '1'); }
+      else { params.delete('search'); params.set('page', '1'); }
+      router.push(`?${params.toString()}`, { scroll: false });
+    }
+  }, [debouncedSearch, searchParams, router]);
+
+  const setSearch = useCallback((val: string) => setLocalSearch(val), []);
 
   const setCurrentPage = useCallback((page: number) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -49,11 +54,11 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
   }, [router, searchParams]);
 
  const [showExModal, setShowExModal] = useState(false);
- const [editExId, setEditExId] = useState<number | null>(null);
+ const [editExId, setEditExId] = useState<string | null>(null);
  const [editExData, setEditExData] = useState<any>(null);
 
  const [showDietModal, setShowDietModal] = useState(false);
- const [editDietId, setEditDietId] = useState<number | null>(null);
+ const [editDietId, setEditDietId] = useState<string | null>(null);
  const [editDietData, setEditDietData] = useState<any>(null);
 
  const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
@@ -62,9 +67,16 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
  const loadAll = useCallback(async () => {
  setLoading(true);
  try {
+ const params: Record<string, string> = {
+  page: currentPage.toString(),
+  limit: '10'
+ };
+ if (debouncedSearch) {
+  params.search = debouncedSearch;
+ }
  const [exRes, dietRes] = await Promise.all([
- libraryApi.getExercises(),
- libraryApi.getDietPlans(),
+ libraryApi.getExercises(params),
+ libraryApi.getDietPlans(params),
  ]);
  setExercises(exRes.data?.exercises || exRes.data || []);
  setDietPlans(dietRes.data?.dietPlans || dietRes.data || []);
@@ -125,7 +137,7 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
  }
  }, [editExId, loadAll, showToast]);
  
-  const deleteExercise = useCallback(async (id: number) => {
+  const deleteExercise = useCallback(async (id: string) => {
    const isConfirmed = await confirm({ title: 'Delete Exercise', message: 'Delete this exercise?', confirmText: 'Delete', type: 'danger' });
    if (!isConfirmed) return;
    try { 
@@ -187,7 +199,7 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
  }
  }, [editDietId, loadAll, showToast]);
  
-  const deleteDietPlan = useCallback(async (id: number) => {
+  const deleteDietPlan = useCallback(async (id: string) => {
    const isConfirmed = await confirm({ title: 'Delete Diet Plan', message: 'Delete this diet plan?', confirmText: 'Delete', type: 'danger' });
    if (!isConfirmed) return;
   try { 

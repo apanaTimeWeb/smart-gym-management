@@ -1,4 +1,4 @@
-// RESPONSIBILITY: layout.tsx handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Root layout component that wraps the entire application. Initializes global font (Inter), Next-Themes provider, and Hot-Toast provider.
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import '@/app/globals.css';

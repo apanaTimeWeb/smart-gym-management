@@ -1,4 +1,4 @@
-// RESPONSIBILITY: OrderTable.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Renders the paginated order history table with status badges and customer info.
 'use client';
 
 import { Printer } from 'lucide-react';

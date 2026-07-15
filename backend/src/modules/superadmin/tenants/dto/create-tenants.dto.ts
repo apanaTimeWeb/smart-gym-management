@@ -21,7 +21,6 @@ export class CreateTenantDto {
   @IsString()
   plan: string;
 
-  @IsDateString()
   @IsNumber()
   memberCount: number;
 

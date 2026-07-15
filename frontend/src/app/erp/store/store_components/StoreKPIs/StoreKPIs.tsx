@@ -1,4 +1,4 @@
-// RESPONSIBILITY: StoreKPIs.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Renders the top KPI stat cards (total products, orders, revenue) for the Store module.
 'use client';
 
 import { Package, ShoppingCart, TrendingUp, AlertTriangle } from 'lucide-react';

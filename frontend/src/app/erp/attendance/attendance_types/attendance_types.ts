@@ -7,7 +7,7 @@ import type { AttendanceTab, EMPTY_ATTENDANCE_FORM } from '@/app/erp/attendance/
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 
 export interface Attendance {
-  id: number;
+  id: string;
   memberId?: number;
   staffId?: number;
   date: string;
@@ -25,7 +25,8 @@ export interface AttendanceStatsResponse {
 }
 
 export interface AttendanceResponse {
-  attendance: Attendance[];
+  attendance?: Attendance[];
+  attendances?: Attendance[];
   total: number;
 }
 

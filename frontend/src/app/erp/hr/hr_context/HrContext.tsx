@@ -1,4 +1,4 @@
-// RESPONSIBILITY: HrContext.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Provides UI orchestration state to the HR module hierarchy. Async data is managed in useHrLogic.
 'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';

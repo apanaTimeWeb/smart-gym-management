@@ -1,4 +1,4 @@
-// RESPONSIBILITY: StoreMain.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Entry component for the Store module. Wraps the UI in the context provider and handles page layout.
 'use client';
 
 import ErpHeader from '@/app/erp/erp_components/ErpLayout/ErpHeader';
@@ -16,7 +16,6 @@ import dynamic from 'next/dynamic';
 const ProductModal = dynamic(() => import('@/app/erp/store/store_components/ProductModal/ProductModal'), { ssr: false });
 const PosModal = dynamic(() => import('@/app/erp/store/store_components/PosModal/PosModal'), { ssr: false });
 
-import '@/app/erp/store/store.css';
 
 function StoreContent() {
   const { tab, toast, hideToast, printData, setPrintData } = useStoreContext();

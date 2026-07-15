@@ -38,7 +38,7 @@ export function usePlansLogic(initialData?: PlansInitialData | null): PlansConte
   }, [router, searchParams]);
 
   const [showModal, setShowModal] = useState(false);
-  const [editId, setEditId] = useState<number | null>(null);
+  const [editId, setEditId] = useState<string | null>(null);
   const [form, setForm] = useState<PlanFormValues>(EMPTY_PLAN_FORM);
 
   const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
@@ -115,7 +115,7 @@ export function usePlansLogic(initialData?: PlansInitialData | null): PlansConte
     }
   }, [editId, loadPlans, showToast]);
 
-  const deletePlan = useCallback(async (id: number) => {
+  const deletePlan = useCallback(async (id: string) => {
     const isConfirmed = await confirm({ title: 'Delete Plan', message: 'Are you sure you want to delete this plan?', confirmText: 'Delete', type: 'danger' });
     if (!isConfirmed) return;
     try {

@@ -13,6 +13,11 @@ export class FindAttendanceDto {
   @IsString()
   staffId?: string;
 
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  search?: string;
+
   @ApiProperty({ required: false, enum: ['MEMBER', 'STAFF'] })
   @IsOptional()
   @IsString()

@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger , NotFoundException} from '@nestjs/common';
 import { JobsRepository } from '../jobs.repository';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
@@ -45,7 +45,7 @@ export class FindJobsService {
 
   async findOne(id: string): Promise<JobResponse> {
     const data = await this.repository.findById(id);
-    if (!data) throw new Error(JOBS_ERRORS.NOT_FOUND);
+    if (!data) throw new NotFoundException(JOBS_ERRORS.NOT_FOUND);
     return {
       success: true,
       message: JOBS_MESSAGES.FETCHED,

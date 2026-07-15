@@ -1,4 +1,4 @@
-// RESPONSIBILITY: useHrLogic.ts handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the HR & Payroll module.
 import { useState, useCallback, useEffect } from 'react';
 import { useDebounce } from '@/app/erp/erp_utils/useDebounce';
 import { hrApi } from '@/app/erp/hr/hr_api/hr_api';
@@ -20,16 +20,28 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
  const [error, setError] = useState('');
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
-  const search = searchParams.get('search') || '';
+  // Local state for immediate typing feedback
+  const [search, setSearch] = useState(searchParams.get('search') || '');
   const debouncedSearch = useDebounce(search, 300);
   const currentPage = Number(searchParams.get('page')) || 1;
 
-  const setSearch = useCallback((val: string) => {
+  // Update URL only when debounced search changes
+  useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
-    if (val) { params.set('search', val); params.set('page', '1'); }
-    else { params.delete('search'); params.set('page', '1'); }
-    router.push(`?${params.toString()}`, { scroll: false });
-  }, [router, searchParams]);
+    if (debouncedSearch) {
+      if (params.get('search') !== debouncedSearch) {
+        params.set('search', debouncedSearch);
+        params.set('page', '1');
+        router.push(`?${params.toString()}`, { scroll: false });
+      }
+    } else {
+      if (params.has('search')) {
+        params.delete('search');
+        params.set('page', '1');
+        router.push(`?${params.toString()}`, { scroll: false });
+      }
+    }
+  }, [debouncedSearch, router, searchParams]);
 
   const setCurrentPage = useCallback((page: number) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -39,7 +51,7 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
 
  const [showModal, setShowModal] = useState(false);
  const [showPayrollModal, setShowPayrollModal] = useState(false);
- const [editId, setEditId] = useState<number | null>(null);
+ const [editId, setEditId] = useState<string | null>(null);
  const [editData, setEditData] = useState<Partial<Staff> | null>(null);
   const [saving, setSaving] = useState(false);
 
@@ -138,7 +150,7 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
    }
  }, [loadAll, showToast]);
 
- const deleteStaff = useCallback(async (id: number) => {
+ const deleteStaff = useCallback(async (id: string) => {
   const isConfirmed = await confirm({ title: 'Remove Staff', message: 'Remove this staff member?', confirmText: 'Remove', type: 'danger' });
   if (!isConfirmed) return;
   try { 
@@ -150,7 +162,7 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
  }
  }, [loadAll, showToast, confirm]);
 
- const markPayrollPaid = useCallback(async (id: number) => {
+ const markPayrollPaid = useCallback(async (id: string) => {
   try { 
  const res = await hrApi.updatePayrollStatus(id, 'Paid'); 
  showToast(res.message || 'Payroll marked as paid', 'success'); 

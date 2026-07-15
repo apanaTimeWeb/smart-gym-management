@@ -1,4 +1,4 @@
-// RESPONSIBILITY: StaffModal.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Form modal for creating or editing a staff member profile in the HR module.
 'use client';
 
 import { useEffect } from 'react';

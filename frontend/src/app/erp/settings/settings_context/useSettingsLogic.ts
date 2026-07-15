@@ -1,4 +1,4 @@
-// RESPONSIBILITY: useSettingsLogic.ts handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the Settings module.
 import { useState, useCallback, useEffect } from 'react';
 import { settingsApi } from '@/app/erp/settings/settings_api/settings_api';
 import toast from 'react-hot-toast';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: page.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Server Component — fetches initial SSR data and renders the Attendance tracking module entry point.
 import AttendanceMain from '@/app/erp/attendance/attendance_components/AttendanceMain/AttendanceMain';
 
 export default function AttendancePage() {

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: TableSkeleton.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Renders animated skeleton loader rows that match the data table layout. Used as placeholder while API data loads (Rule 26).
 import React from 'react';
 
 export const TableSkeleton = ({ rows = 6, columns = 5 }: { rows?: number, columns?: number }) => {

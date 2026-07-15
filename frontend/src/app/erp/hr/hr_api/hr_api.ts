@@ -8,19 +8,19 @@ export const hrApi = {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
     return apiFetch<ApiResponse<{ staff: Staff[]; total: number }>>(`${HrUrlConfig.BACKEND_API.STAFF_BASE}${q}`);
   },
-  getOneStaff: (id: number) => apiFetch<ApiResponse<Staff>>(HrUrlConfig.BACKEND_API.STAFF_GET_ONE(id)),
+  getOneStaff: (id: string) => apiFetch<ApiResponse<Staff>>(HrUrlConfig.BACKEND_API.STAFF_GET_ONE(id)),
   createStaff: (body: Partial<Staff>) =>
     apiFetch<ApiResponse<Staff>>(HrUrlConfig.BACKEND_API.STAFF_BASE, { method: 'POST', body: JSON.stringify(body) }),
-  updateStaff: (id: number, body: Partial<Staff>) =>
+  updateStaff: (id: string, body: Partial<Staff>) =>
     apiFetch<ApiResponse<Staff>>(HrUrlConfig.BACKEND_API.STAFF_UPDATE(id), { method: 'PATCH', body: JSON.stringify(body) }),
-  removeStaff: (id: number) => apiFetch<ApiResponse<{ id: number }>>(HrUrlConfig.BACKEND_API.STAFF_DELETE(id), { method: 'DELETE' }),
+  removeStaff: (id: string) => apiFetch<ApiResponse<{ id: string }>>(HrUrlConfig.BACKEND_API.STAFF_DELETE(id), { method: 'DELETE' }),
   getPayrolls: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
     return apiFetch<ApiResponse<{ payrolls: Payroll[]; total: number }>>(`${HrUrlConfig.BACKEND_API.PAYROLLS_BASE}${q}`);
   },
   createPayroll: (body: Partial<Payroll>) =>
     apiFetch<ApiResponse<Payroll>>(HrUrlConfig.BACKEND_API.PAYROLLS_BASE, { method: 'POST', body: JSON.stringify(body) }),
-  updatePayrollStatus: (id: number, status: string) =>
+  updatePayrollStatus: (id: string, status: string) =>
     apiFetch<ApiResponse<Payroll>>(HrUrlConfig.BACKEND_API.PAYROLL_STATUS_UPDATE(id), { method: 'PATCH', body: JSON.stringify({ status }) }),
   getSummary: () => apiFetch<ApiResponse<HrSummary>>(HrUrlConfig.BACKEND_API.SUMMARY),
 };

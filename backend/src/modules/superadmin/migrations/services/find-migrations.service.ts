@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger , NotFoundException} from '@nestjs/common';
 import { MigrationsRepository } from '../migrations.repository';
 import { DataSource } from 'typeorm';
 import { InjectDataSource } from '@nestjs/typeorm';
@@ -33,7 +33,7 @@ export class FindMigrationsService {
 
   async findOne(id: string): Promise<MigrationResponse> {
     const data = await this.repository.findById(id);
-    if (!data) throw new Error(MIGRATIONS_ERRORS.NOT_FOUND);
+    if (!data) throw new NotFoundException(MIGRATIONS_ERRORS.NOT_FOUND);
     return {
       success: true,
       message: MIGRATIONS_MESSAGES.FETCHED,

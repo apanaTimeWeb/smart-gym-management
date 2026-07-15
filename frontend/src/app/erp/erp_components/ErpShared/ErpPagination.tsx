@@ -1,4 +1,4 @@
-// RESPONSIBILITY: ErpPagination.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Renders the pagination bar (Previous/Next + page info + rows-per-page) shared across all ERP table views.
 'use client';
 
 import { ChevronLeft, ChevronRight } from 'lucide-react';

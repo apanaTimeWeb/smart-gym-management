@@ -1,4 +1,4 @@
-// RESPONSIBILITY: workout_types.ts handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Defines all TypeScript types, interfaces, and the FetchState enum for the Workout Library module.
 import { EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM } from '@/app/erp/workout/workout_utils/WorkoutSharedConstants';
 import React from 'react';
 
@@ -27,28 +27,28 @@ export interface WorkoutContextType {
 
  showWkModal: boolean;
  setShowWkModal: (show: boolean) => void;
- editWkId: number | null;
+ editWkId: string | null;
  wkForm: typeof EMPTY_WORKOUT_FORM;
  setWkForm: React.Dispatch<React.SetStateAction<typeof EMPTY_WORKOUT_FORM>>;
  
  showExModal: boolean;
  setShowExModal: (show: boolean) => void;
- editExId: number | null;
+ editExId: string | null;
  exForm: typeof EMPTY_EXERCISE_FORM;
  setExForm: React.Dispatch<React.SetStateAction<typeof EMPTY_EXERCISE_FORM>>;
  
  openAddWk: () => void;
  openEditWk: (w: Workout) => void;
  saveWk: (data: any) => void;
- deleteWk: (id: number) => void;
+ deleteWk: (id: string) => void;
  
  openAddEx: () => void;
  openEditEx: (ex: Exercise) => void;
  saveEx: (data: any) => void;
- deleteEx: (id: number) => void;
+ deleteEx: (id: string) => void;
 }
 
 export interface Workout {
-  id: number; name: string; level: string; days: number;
+  id: string; name: string; level: string; days: number;
   exercises: number; focus: string; duration: string; tags: string[]; isActive?: boolean;
 }

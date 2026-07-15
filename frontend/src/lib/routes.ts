@@ -1,4 +1,6 @@
-// RESPONSIBILITY: routes.ts handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Centralized route constants for the GymSmart frontend.
+// Used by middleware.ts to protect authenticated pages and redirect unauthenticated users.
+// All page navigation in the app must use these constants — never hardcode route strings.
 export const ROUTES = {
   LOGIN: '/auth/login',
   DASHBOARD: '/erp/dashboard',
@@ -15,6 +17,7 @@ export const ROUTES = {
     '/erp/inquiries',
     '/erp/settings',
     '/erp/library',
-    '/erp/sales'
+    '/erp/sales',
+    '/erp/audit',
   ]
 };

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: middleware.ts handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Next.js Edge Middleware. Enforces authentication guards across the application. Redirects unauthenticated users to login and prevents role-based crossover between ERP and Superadmin routes.
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { ROUTES } from '@/lib/routes';

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable , NotFoundException} from '@nestjs/common';
 import { FeaturesRepository } from '../features.repository';
 import { FeatureResponse } from '../features.interfaces';
 import { FEATURES_MESSAGES, FEATURES_ERRORS } from '../features.constants';
@@ -17,7 +17,7 @@ export class FindFeaturesService {
   }
   async findOne(id: string): Promise<FeatureResponse> {
     const data = await this.repository.findById(id);
-    if (!data) throw new Error(FEATURES_ERRORS.NOT_FOUND);
+    if (!data) throw new NotFoundException(FEATURES_ERRORS.NOT_FOUND);
     return {
       success: true,
       message: FEATURES_MESSAGES.FETCHED,

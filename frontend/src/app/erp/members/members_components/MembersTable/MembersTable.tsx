@@ -5,7 +5,7 @@ import { Edit, MessageCircle, Mail, Trash2, Loader2 } from 'lucide-react';
 import { useMembersContext } from '@/app/erp/members/members_context/MembersContext';
 import { useMembersStore } from '@/app/erp/members/members_store/useMembersStore';
 import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS, MEMBERS_TABLE_HEADERS, formatCurrency } from '@/app/erp/members/members_utils/MembersSharedConstants';
-import { maskSensitiveData } from '@/app/erp/erp_utils/ErpSharedConstants';
+import { maskSensitiveData } from '@/lib/formatters';
 import MembersEmptyState from '@/app/erp/members/members_components/MembersEmptyState/MembersEmptyState';
 
 import ErpPagination from '@/app/erp/erp_components/ErpShared/ErpPagination';

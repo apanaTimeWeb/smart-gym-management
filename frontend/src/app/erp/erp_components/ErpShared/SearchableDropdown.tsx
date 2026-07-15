@@ -1,4 +1,4 @@
-// RESPONSIBILITY: SearchableDropdown.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Renders a custom searchable popover dropdown for large datasets (Rule 20). Replaces native <select> for all gyms/plans/user selectors.
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';

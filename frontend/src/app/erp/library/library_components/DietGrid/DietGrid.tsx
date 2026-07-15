@@ -1,4 +1,4 @@
-// RESPONSIBILITY: DietGrid.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Renders the diet plan cards grid with macronutrient info and action buttons.
 'use client';
 
 import { useLibraryContext } from '@/app/erp/library/library_context/LibraryContext';

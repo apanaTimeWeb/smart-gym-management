@@ -1,4 +1,4 @@
-// RESPONSIBILITY: error.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Next.js error.tsx — renders the typed error boundary fallback for the Diet Library module with a Retry button.
 'use client';
 
 import { useEffect } from 'react';

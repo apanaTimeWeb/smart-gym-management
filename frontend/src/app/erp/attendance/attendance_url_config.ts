@@ -4,7 +4,7 @@ export const AttendanceUrlConfig = {
     LIST: '/erp/attendance',
   },
   BACKEND_API: {
-    BASE: '/api/v1/attendance',
-    TODAY_STATS: '/api/v1/attendance/today-stats',
+    BASE: '/erp/attendance',
+    TODAY_STATS: '/erp/attendance/today-stats',
   }
 };

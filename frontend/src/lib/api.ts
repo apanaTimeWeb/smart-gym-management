@@ -1,4 +1,7 @@
-// RESPONSIBILITY: api.ts handles the logic and UI for its corresponding feature.
+// RESPONSIBILITY: Centralized API client and auth utilities for the GymSmart ERP frontend.
+// Provides: apiFetch() (with auto token injection, tenant header, and 401 refresh logic),
+// getUser() (reads user from non-HttpOnly cookie), and logout() (clears session and redirects).
+// Every API call in every module MUST go through apiFetch — never call fetch() directly.
 /**
  * GymSmart API Client
  * Centralised fetch wrapper for all backend API calls.

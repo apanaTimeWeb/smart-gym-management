@@ -33,15 +33,15 @@ export interface InquiriesContextType {
   setCurrentPage: (p: number) => void;
 
   // Selection State
-  selectedIds: number[];
+  selectedIds: string[];
   toggleSelectAll: (selectAll: boolean) => void;
-  toggleSelectOne: (id: number) => void;
+  toggleSelectOne: (id: string) => void;
   clearSelection: () => void;
 
   // Modal State
   showModal: boolean;
   setShowModal: (show: boolean) => void;
-  editId: number | null;
+  editId: string | null;
   editData: InquiryFormValues | null;
   saving: boolean;
 
@@ -49,8 +49,8 @@ export interface InquiriesContextType {
   openAdd: () => void;
   openEdit: (inq: Inquiry) => void;
   saveInquiry: (data: InquiryFormValues) => Promise<void>;
-  deleteInquiry: (id: number) => Promise<void>;
-  updateStatus: (id: number, status: string) => Promise<void>;
+  deleteInquiry: (id: string) => Promise<void>;
+  updateStatus: (id: string, status: string) => Promise<void>;
 
   // Message Modal State
   msgModal: { open: boolean; recipient: ErpMessageRecipient; type: MessageType; message: string; subject?: string } | null;
@@ -64,7 +64,7 @@ export interface InquiriesContextType {
 }
 
 export interface Inquiry {
-  id: number; name: string; phone: string; email?: string;
+  id: string; name: string; phone: string; email?: string;
   interest: string; status: string; source?: string;
   notes?: string; followUpDate?: string; createdAt: string;
 }

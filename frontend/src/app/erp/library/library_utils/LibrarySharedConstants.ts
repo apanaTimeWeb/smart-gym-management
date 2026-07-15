@@ -1,4 +1,4 @@
-// RESPONSIBILITY: LibrarySharedConstants.ts handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Centralized constants, schema, and shared utilities for the Diet Library module.
 import { z } from 'zod';
 import { ERP_ITEMS_PER_PAGE } from '@/app/erp/erp_utils/ErpSharedConstants';
 

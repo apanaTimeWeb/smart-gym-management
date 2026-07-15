@@ -9,11 +9,11 @@ export const inquiriesApi = {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
     return apiFetch<ApiResponse<{ inquiries: Inquiry[]; total: number }>>(`${InquiriesUrlConfig.BACKEND_API.BASE}${q}`);
   },
-  getOne: (id: number) => apiFetch<ApiResponse<Inquiry>>(InquiriesUrlConfig.BACKEND_API.GET_ONE(id)),
+  getOne: (id: string) => apiFetch<ApiResponse<Inquiry>>(InquiriesUrlConfig.BACKEND_API.GET_ONE(id)),
   getStats: () => apiFetch<ApiResponse<InquiryStats>>(InquiriesUrlConfig.BACKEND_API.STATS),
   create: (body: InquiryFormValues) =>
     apiFetch<ApiResponse<Inquiry>>(InquiriesUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body) }),
-  update: (id: number, body: Partial<InquiryFormValues>) =>
+  update: (id: string, body: Partial<InquiryFormValues>) =>
     apiFetch<ApiResponse<Inquiry>>(InquiriesUrlConfig.BACKEND_API.UPDATE(id), { method: 'PATCH', body: JSON.stringify(body) }),
-  remove: (id: number) => apiFetch<ApiResponse<{ id: number }>>(InquiriesUrlConfig.BACKEND_API.DELETE(id), { method: 'DELETE' }),
+  remove: (id: string) => apiFetch<ApiResponse<{ id: string }>>(InquiriesUrlConfig.BACKEND_API.DELETE(id), { method: 'DELETE' }),
 };

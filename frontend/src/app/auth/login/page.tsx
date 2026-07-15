@@ -7,7 +7,6 @@ import LoginErrorBoundary from '@/app/auth/login/login_components/LoginErrorBoun
 import { AuthUrlConfig } from '@/app/auth/auth_url_config';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import './login.css';
 
 // RESPONSIBILITY: Server Component that handles initial auth check and renders the login layout.
 export default async function Login() {

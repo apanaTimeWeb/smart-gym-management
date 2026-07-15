@@ -1,4 +1,4 @@
-// RESPONSIBILITY: library_types.ts handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Defines all TypeScript types, interfaces, and the FetchState enum for the Diet Library module.
 import type { } from '@/lib/api';
 import type { ToastType } from '@/app/erp/erp_components/ErpFeedback/ErpToast';
 import { EMPTY_EXERCISE_FORM, EMPTY_DIET_FORM, type LibraryTab } from '@/app/erp/library/library_utils/LibrarySharedConstants';
@@ -33,31 +33,31 @@ export interface LibraryContextType {
  // Exercise Modal State
  showExModal: boolean;
  setShowExModal: (show: boolean) => void;
- editExId: number | null;
+ editExId: string | null;
  editExData: Record<string, any> | null;
  openAddEx: () => void;
  openEditEx: (ex: Exercise) => void;
  saveExercise: (data: Record<string, any>) => Promise<void>;
- deleteExercise: (id: number) => Promise<void>;
+ deleteExercise: (id: string) => Promise<void>;
  
  // Diet Modal State
  showDietModal: boolean;
  setShowDietModal: (show: boolean) => void;
- editDietId: number | null;
+ editDietId: string | null;
  editDietData: Record<string, any> | null;
  openAddDiet: () => void;
  openEditDiet: (d: DietPlan) => void;
  saveDietPlan: (data: Record<string, any>) => Promise<void>;
- deleteDietPlan: (id: number) => Promise<void>;
+ deleteDietPlan: (id: string) => Promise<void>;
 }
 
 export interface Exercise {
-  id: number; name: string; category: string; muscleGroup: string[];
+  id: string; name: string; category: string; muscleGroup: string[];
   sets?: number; reps?: string; duration?: string;
   difficulty: string; description?: string; videoUrl?: string; imageUrl?: string; isActive: boolean;
 }
 export interface DietPlan {
-  id: number; name: string; goal: string;
+  id: string; name: string; goal: string;
   calories?: number; protein?: number; carbs?: number; fats?: number;
   description?: string; meals: string[]; isActive: boolean;
 }

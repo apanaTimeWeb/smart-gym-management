@@ -1,4 +1,4 @@
-// RESPONSIBILITY: SettingsMain.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Entry component for the Settings module. Wraps the UI in the context provider and handles page layout.
 'use client';
 
 import ErpHeader from '@/app/erp/erp_components/ErpLayout/ErpHeader';
@@ -7,7 +7,6 @@ import SettingsNav from '@/app/erp/settings/settings_components/SettingsNav/Sett
 import SettingsContent from '@/app/erp/settings/settings_components/SettingsContent/SettingsContent';
 import SettingsBanner from '@/app/erp/settings/settings_components/SettingsBanner/SettingsBanner';
 
-import '@/app/erp/settings/settings.css';
 
 function SettingsMainContent() {
  return (

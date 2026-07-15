@@ -1,4 +1,4 @@
-// RESPONSIBILITY: SettingsContent.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Renders the active settings section content based on the selected nav tab.
 'use client';
 
 import { RefreshCw, Save, Settings } from 'lucide-react';

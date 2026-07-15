@@ -1,4 +1,4 @@
-// RESPONSIBILITY: StoreToolbar.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Renders the search input, category filter, and Add Product CTA for the Store module.
 'use client';
 
 import { Plus, ShoppingCart, RefreshCw, Search } from 'lucide-react';

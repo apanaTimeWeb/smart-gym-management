@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable , NotFoundException} from '@nestjs/common';
 import { GymsRepository } from '../gyms.repository';
 import { TenantNotFoundException } from '../gyms.exceptions';
 import { GYMS_MESSAGES, GYMS_ERRORS } from '../gyms.constants';

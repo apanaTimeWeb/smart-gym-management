@@ -16,4 +16,12 @@ export class CreateBookingDto {
   @IsString()
   @IsOptional()
   message?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  date: string;
+
+  @IsString()
+  @IsNotEmpty()
+  type: string;
 }

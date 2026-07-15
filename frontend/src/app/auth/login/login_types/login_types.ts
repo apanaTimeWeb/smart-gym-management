@@ -31,4 +31,5 @@ export interface UseLoginFormReturn {
   showPassword: boolean;
   setShowPassword: (val: boolean) => void;
   onSubmit: (data: LoginFormData) => Promise<void>;
+  handleDemoLogin: () => void;
 }

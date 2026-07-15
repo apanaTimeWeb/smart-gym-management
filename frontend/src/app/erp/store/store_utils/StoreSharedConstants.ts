@@ -1,4 +1,4 @@
-// RESPONSIBILITY: StoreSharedConstants.ts handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Centralized constants, schema, and shared utilities for the Store module.
 import { z } from 'zod';
 
 export const ProductSchema = z.object({

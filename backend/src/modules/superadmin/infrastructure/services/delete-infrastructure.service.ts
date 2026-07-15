@@ -1,8 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InfrastructureRepository } from '../infrastructure.repository';
+import { INFRASTRUCTURE_ERRORS, INFRASTRUCTURE_MESSAGES } from '../infrastructure.constants';
 import { InfrastructureResponse } from '../infrastructure.interfaces';
-import { INFRASTRUCTURE_MESSAGES } from '../infrastructure.constants';
 
 @Injectable()
 export class DeleteInfrastructureService {
-  async execute(): Promise<InfrastructureResponse> { return { success: true, message: INFRASTRUCTURE_MESSAGES.DELETED_SUCCESS, data: { module: 'infrastructure' } }; }
+  constructor(private readonly repository: InfrastructureRepository) {}
+
+  async execute(id: string): Promise<InfrastructureResponse> {
+    const exists = await this.repository.findById(id);
+    if (!exists) throw new NotFoundException(INFRASTRUCTURE_ERRORS.NOT_FOUND);
+    await this.repository.remove(id);
+    return { success: true, message: INFRASTRUCTURE_MESSAGES.DELETED_SUCCESS, data: null };
+  }
 }

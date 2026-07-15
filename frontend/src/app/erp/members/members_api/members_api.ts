@@ -8,13 +8,13 @@ export const membersApi = {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
     return apiFetch<ApiResponse<{ members: Member[]; total: number; page: number; limit: number }>>(`${MembersUrlConfig.BACKEND_API.BASE}${q}`);
   },
-  getOne: (id: number) => apiFetch<ApiResponse<Member>>(MembersUrlConfig.BACKEND_API.GET_ONE(id)),
+  getOne: (id: string) => apiFetch<ApiResponse<Member>>(MembersUrlConfig.BACKEND_API.GET_ONE(id)),
   getStats: () => apiFetch<ApiResponse<MemberStats>>(MembersUrlConfig.BACKEND_API.STATS),
   create: (body: Partial<Member>) =>
     apiFetch<ApiResponse<Member>>(MembersUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body) }),
-  update: (id: number, body: Partial<Member>) =>
+  update: (id: string, body: Partial<Member>) =>
     apiFetch<ApiResponse<Member>>(MembersUrlConfig.BACKEND_API.UPDATE(id), { method: 'PATCH', body: JSON.stringify(body) }),
-  remove: (id: number) => apiFetch<ApiResponse<{ id: number }>>(MembersUrlConfig.BACKEND_API.DELETE(id), { method: 'DELETE' }),
-  renew: (id: number, body: unknown) =>
+  remove: (id: string) => apiFetch<ApiResponse<{ id: string }>>(MembersUrlConfig.BACKEND_API.DELETE(id), { method: 'DELETE' }),
+  renew: (id: string, body: unknown) =>
     apiFetch<ApiResponse<Member>>(MembersUrlConfig.BACKEND_API.RENEW(id), { method: 'POST', body: JSON.stringify(body) }),
 };

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: ExerciseGrid.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Renders the exercise cards grid with category and muscle group info in the Diet Library.
 'use client';
 
 import { Dumbbell, Edit2, Trash2, Loader2, Clock } from 'lucide-react';

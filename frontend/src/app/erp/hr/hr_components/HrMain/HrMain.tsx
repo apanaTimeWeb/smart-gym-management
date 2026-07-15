@@ -1,4 +1,4 @@
-// RESPONSIBILITY: HrMain.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Entry component for the HR module. Wraps the UI in the context provider and handles page layout.
 'use client';
 
 import ErpHeader from '@/app/erp/erp_components/ErpLayout/ErpHeader';

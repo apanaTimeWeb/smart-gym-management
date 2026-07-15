@@ -1,4 +1,4 @@
-// RESPONSIBILITY: LibraryTabs.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Renders the tabbed view switching between Diet Plans and Exercises in the Diet Library.
 'use client';
 
 import { RefreshCw, Plus, Search } from 'lucide-react';

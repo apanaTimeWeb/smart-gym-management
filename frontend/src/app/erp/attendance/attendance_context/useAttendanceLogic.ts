@@ -19,7 +19,7 @@ export function useAttendanceLogic(): AttendanceContextType {
   const searchParams = useSearchParams();
 
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
-  const search = searchParams.get('search') || '';
+  const [search, setLocalSearch] = useState(searchParams.get('search') || '');
   const tabParam = searchParams.get('tab') as AttendanceTab | null;
   const tab: AttendanceTab = tabParam && ATTENDANCE_TABS.includes(tabParam) ? tabParam : ATTENDANCE_TABS[0];
   const debouncedSearch = useDebounce(search, 300);
@@ -32,7 +32,14 @@ export function useAttendanceLogic(): AttendanceContextType {
     router.push(`${pathname}?${current.toString()}`, { scroll: false });
   }, [searchParams, pathname, router]);
 
-  const setSearch = useCallback((val: string) => setUrlParam('search', val || null), [setUrlParam]);
+  useEffect(() => {
+    const currentSearch = searchParams.get('search') || '';
+    if (debouncedSearch !== currentSearch) {
+      setUrlParam('search', debouncedSearch || null);
+    }
+  }, [debouncedSearch, searchParams, setUrlParam]);
+
+  const setSearch = useCallback((val: string) => setLocalSearch(val), []);
   const setCurrentPage = useCallback((val: number) => setUrlParam('page', val.toString()), [setUrlParam]);
   const setTab = useCallback((val: AttendanceTab) => setUrlParam('tab', val), [setUrlParam]);
 
@@ -71,7 +78,7 @@ export function useAttendanceLogic(): AttendanceContextType {
         hrApi.getStaff() as unknown as Promise<ApiResponse<{ staff: Staff[] } | Staff[]>>,
       ]);
 
-      setRecords(attRes.data.attendance || []);
+      setRecords(attRes.data.attendance || (attRes.data as any).attendances || []);
       setTotalRecords(attRes.data.total || 0);
       setTodayStats(statsRes.data);
       setMembers(memRes.data.members || []);
@@ -93,16 +100,16 @@ export function useAttendanceLogic(): AttendanceContextType {
     try {
       const dateTime = new Date(`${data.date}T${data.checkIn}:00`);
       
-      const payload: { memberId?: number; staffId?: number; date: string; checkIn?: string; type: string } = { 
+      const payload: { memberId?: string; staffId?: string; date: string; checkIn?: string; type: string } = { 
         type: data.type, 
         date: dateTime.toISOString(), 
         checkIn: dateTime.toISOString() 
       };
       
       if (data.type === 'MEMBER') {
-        payload.memberId = data.memberId ? Number(data.memberId) : undefined;
+        payload.memberId = data.memberId ? data.memberId : undefined;
       } else {
-        payload.staffId = data.staffId ? Number(data.staffId) : undefined;
+        payload.staffId = data.staffId ? data.staffId : undefined;
       }
  
       const res = await attendanceApi.mark(payload) as ApiResponse<{ message: string }>;

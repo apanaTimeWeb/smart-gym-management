@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger , NotFoundException} from '@nestjs/common';
 import { SystemRepository } from '../system.repository';
 import { DataSource } from 'typeorm';
 import { InjectDataSource } from '@nestjs/typeorm';
@@ -55,7 +55,7 @@ export class FindSystemService {
   
   async findOne(id: string): Promise<SystemResponse> {
     const data = await this.repository.findById(id);
-    if (!data) throw new Error(SYSTEM_ERRORS.NOT_FOUND);
+    if (!data) throw new NotFoundException(SYSTEM_ERRORS.NOT_FOUND);
     return {
       success: true,
       message: SYSTEM_MESSAGES.FETCHED,

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: loading.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Next.js loading.tsx — renders skeleton loader fallback while HR & Payroll module data loads.
 export default function HrLoading() {
  return (
  <div className="min-h-full flex items-center justify-center">

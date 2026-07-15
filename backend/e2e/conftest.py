@@ -1,3 +1,4 @@
+from http import HTTPStatus
 import pytest
 import requests
 import os
@@ -31,7 +32,7 @@ def admin_token(api_url):
     })
     # If the server is not running, this will fail.
     # We gracefully skip or just return None (the test will fail later)
-    if response.status_code == 200:
+    if response.status_code == HTTPStatus.OK:
         return response.json().get("data", {}).get("accessToken")
     return None
 
@@ -62,7 +63,7 @@ def test_tenant_id(api_url, admin_token):
     })
     
     tenant_id = "test-tenant-id"
-    if response.status_code == 201:
+    if response.status_code == HTTPStatus.CREATED:
         tenant_id = response.json().get("data", {}).get("id")
         
     yield tenant_id

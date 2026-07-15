@@ -1,4 +1,4 @@
-// RESPONSIBILITY: HrKPIs.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Renders the top KPI stat cards (total staff, active staff, payroll metrics) for the HR module.
 'use client';
 
 import { useHrContext } from '@/app/erp/hr/hr_context/HrContext';

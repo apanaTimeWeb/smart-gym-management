@@ -59,5 +59,14 @@ export function useLoginForm(): UseLoginFormReturn {
     }
   }, []);
 
-  return { form, status, showPassword, setShowPassword, onSubmit };
+  const handleDemoLogin = useCallback(() => {
+    form.setValue('email', 'demo_admin@gym.com');
+    form.setValue('password', 'demo123');
+    // We delay the submission slightly so the user sees the fields populate
+    setTimeout(() => {
+      form.handleSubmit(onSubmit)();
+    }, 300);
+  }, [form, onSubmit]);
+
+  return { form, status, showPassword, setShowPassword, onSubmit, handleDemoLogin };
 }

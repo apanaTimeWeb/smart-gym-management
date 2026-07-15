@@ -1,52 +1,32 @@
-def test_get_all_products(auth_client, api_url):
-    response = auth_client.get(f"{api_url}/erp/store/products?page=1&limit=20")
-    assert response.status_code in [200, 401]
+from http import HTTPStatus
+import uuid
 
-def test_get_all_orders(auth_client, api_url):
-    response = auth_client.get(f"{api_url}/erp/store/orders?page=1&limit=20")
-    assert response.status_code in [200, 401]
-
-def test_get_store_summary(auth_client, api_url):
-    response = auth_client.get(f"{api_url}/erp/store/summary")
-    assert response.status_code in [200, 401]
-
-def test_create_product(auth_client, api_url):
-    response = auth_client.post(f"{api_url}/erp/store/products", json={
-        "name": "Whey Protein 1kg",
-        "category": "Supplements",
-        "price": 2500,
-        "stock": 50,
-        "description": "Premium whey protein isolate"
+def test_store_lifecycle(auth_client, api_url):
+    # Create Product
+    create_prod = auth_client.post(f"{api_url}/erp/store/products", json={
+        "name": "Whey Protein 1kg", "category": "Supplements", "price": 2500,
+        "stock": 50, "description": "Premium whey protein isolate"
     })
-    assert response.status_code in [201, 401]
+    assert create_prod.status_code == HTTPStatus.CREATED
+    prod_id = create_prod.json()["data"]["id"]
 
-def test_update_product(auth_client, api_url):
-    response = auth_client.patch(f"{api_url}/erp/store/products/1", json={
-        "price": 2750,
-        "stock": 80
-    })
-    assert response.status_code in [200, 401, 404]
-
-def test_create_order(auth_client, api_url):
-    response = auth_client.post(f"{api_url}/erp/store/orders", json={
+    # Create Order
+    create_ord = auth_client.post(f"{api_url}/erp/store/orders", json={
         "items": [
-            { "productId": 1, "qty": 2 },
-            { "productId": 3, "qty": 1 }
+            { "productId": prod_id, "qty": 2 }
         ],
-        "method": "UPI",
-        "notes": "Walk-in customer purchase"
+        "method": "UPI", "notes": "Walk-in customer purchase"
     })
-    assert response.status_code in [201, 401, 404]
+    assert create_ord.status_code == HTTPStatus.CREATED
+    ord_id = create_ord.json()["data"]["id"]
+
+    # Update Product
+    update_prod = auth_client.patch(f"{api_url}/erp/store/products/{prod_id}", json={
+        "stock": 48
+    })
+    assert update_prod.status_code == HTTPStatus.OK
 
 
-def test_get_product_by_id(auth_client, api_url):
-    response = auth_client.get(f"{api_url}/erp/store/products/1")
-    assert response.status_code in [200, 401, 404]
-
-def test_delete_product(auth_client, api_url):
-    response = auth_client.delete(f"{api_url}/erp/store/products/1")
-    assert response.status_code in [200, 204, 401, 404]
-
-def test_get_order_by_id(auth_client, api_url):
-    response = auth_client.get(f"{api_url}/erp/store/orders/1")
-    assert response.status_code in [200, 401, 404]
+    # Delete Product
+    del_prod = auth_client.delete(f"{api_url}/erp/store/products/{prod_id}")
+    assert del_prod.status_code in [200, 204]

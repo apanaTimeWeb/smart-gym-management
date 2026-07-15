@@ -1,4 +1,4 @@
-// RESPONSIBILITY: ExerciseTable.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Renders the exercises data table with muscle group, category, and inline edit/delete actions.
 'use client';
 
 import { Edit2, Trash2 } from 'lucide-react';

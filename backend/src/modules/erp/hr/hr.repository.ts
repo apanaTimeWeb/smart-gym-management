@@ -27,12 +27,22 @@ export class HrRepository {
     return this.staffRepo.save(staff);
   }
 
-  async findStaff(limit: number): Promise<[Staff[], number]> {
-    return this.staffRepo.findAndCount({
-      where: { isActive: true },
-      take: limit,
-      order: { id: 'DESC' },
-    });
+  async findStaff(limit: number, page: number = 1, search?: string): Promise<[Staff[], number]> {
+    const query = this.staffRepo.createQueryBuilder('staff')
+      .where('staff.isActive = :isActive', { isActive: true });
+    
+    if (search) {
+      query.andWhere(
+        '(staff.name ILIKE :search OR staff.email ILIKE :search OR staff.role ILIKE :search)',
+        { search: `%${search}%` }
+      );
+    }
+
+    return query
+      .take(limit)
+      .skip((page - 1) * limit)
+      .orderBy('staff.id', 'DESC')
+      .getManyAndCount();
   }
 
   async findStaffById(id: string): Promise<Staff | null> {
@@ -64,12 +74,22 @@ export class HrRepository {
     return this.payrollRepo.save(payroll);
   }
 
-  async findPayrolls(limit: number): Promise<[Payroll[], number]> {
-    return this.payrollRepo.findAndCount({
-      take: limit,
-      order: { id: 'DESC' },
-      relations: ['staff'],
-    });
+  async findPayrolls(limit: number, page: number = 1, search?: string): Promise<[Payroll[], number]> {
+    const query = this.payrollRepo.createQueryBuilder('payroll')
+      .leftJoinAndSelect('payroll.staff', 'staff');
+      
+    if (search) {
+      query.andWhere(
+        '(staff.name ILIKE :search OR staff.email ILIKE :search OR payroll.status ILIKE :search)',
+        { search: `%${search}%` }
+      );
+    }
+
+    return query
+      .take(limit)
+      .skip((page - 1) * limit)
+      .orderBy('payroll.id', 'DESC')
+      .getManyAndCount();
   }
 
   async findPayrollById(id: string): Promise<Payroll | null> {

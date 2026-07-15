@@ -1,4 +1,4 @@
-// RESPONSIBILITY: ProductGrid.tsx handles the logic and UI for its corresponding feature.
+﻿// RESPONSIBILITY: Renders the product cards grid with stock status, price, and quick-action buttons.
 'use client';
 
 import { Edit2, Trash2 } from 'lucide-react';
