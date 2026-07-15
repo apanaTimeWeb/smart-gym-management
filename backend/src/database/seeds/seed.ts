@@ -20,6 +20,8 @@ import { Payroll } from '../../modules/erp/hr/entities/payroll.entity';
 import { Attendance } from '../../modules/erp/attendance/entities/attendance.entity';
 import { Order } from '../../modules/erp/store/entities/order.entity';
 import { OrderItem } from '../../modules/erp/store/entities/order-item.entity';
+import { Tenant } from '../../modules/superadmin/gyms/entities/gyms.entity';
+import { TenantStatus } from '../../modules/superadmin/superadmin.constants';
 
 const logger = new Logger('DatabaseSeed');
 
@@ -45,6 +47,7 @@ async function main() {
   const dietRepo = AppDataSource.getRepository(DietPlan);
   const inquiryRepo = AppDataSource.getRepository(Inquiry);
   const settingsRepo = AppDataSource.getRepository(Settings);
+  const tenantRepo = AppDataSource.getRepository(Tenant);
 
   // 1. Create SuperAdmin User
   const hashedPassword = await bcrypt.hash('demo123', 10);
@@ -65,7 +68,24 @@ async function main() {
   }
   logger.log('✅ SuperAdmin created');
 
-  // 1.1 Create ERP Admin User
+  // 1.1 Create ERP Gym (Tenant)
+  let gym = await tenantRepo.findOne({
+    where: { adminEmail: 'admin@gymsmart.com' },
+  });
+  if (!gym) {
+    gym = tenantRepo.create({
+      name: 'Main Branch Gym',
+      ownerName: 'Admin',
+      adminEmail: 'admin@gymsmart.com',
+      phone: '+91 98765 43211',
+      status: TenantStatus.ACTIVE,
+      plan: 'Premium',
+    });
+    await tenantRepo.save(gym);
+  }
+  logger.log('✅ ERP Gym created');
+
+  // 1.2 Create ERP Admin User
   let erpAdmin = await userRepo.findOne({
     where: { email: 'admin@gymsmart.com' },
   });
@@ -76,7 +96,7 @@ async function main() {
       password: hashedPassword,
       role: 'ADMIN' as any,
       phone: '+91 98765 43211',
-      branch: 'Main Branch',
+      branch: gym.id,
       isActive: true,
     });
     await userRepo.save(erpAdmin);
@@ -129,7 +149,7 @@ async function main() {
       phone: '+91 91234 56789',
       role: 'Head Trainer',
       salary: 35000,
-      branch: 'Main Branch',
+      branch: gym.id,
       gender: Gender.MALE,
       joinDate: new Date('2025-01-01'),
     },
@@ -139,7 +159,7 @@ async function main() {
       phone: '+91 92345 67890',
       role: 'Receptionist',
       salary: 22000,
-      branch: 'Main Branch',
+      branch: gym.id,
       gender: Gender.FEMALE,
       joinDate: new Date('2025-03-01'),
     },
@@ -160,7 +180,7 @@ async function main() {
       phone: '+91 98765 43210',
       gender: Gender.MALE,
       address: 'Andheri',
-      branch: 'Main Branch',
+      branch: gym.id,
       planName: 'Premium',
       joinDate: new Date('2026-01-15'),
       expiryDate: new Date('2026-02-15'),
