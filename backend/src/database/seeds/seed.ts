@@ -65,6 +65,24 @@ async function main() {
   }
   logger.log('✅ SuperAdmin created');
 
+  // 1.1 Create ERP Admin User
+  let erpAdmin = await userRepo.findOne({
+    where: { email: 'admin@gymsmart.com' },
+  });
+  if (!erpAdmin) {
+    erpAdmin = userRepo.create({
+      name: 'ERP Admin',
+      email: 'admin@gymsmart.com',
+      password: hashedPassword,
+      role: 'ADMIN' as any,
+      phone: '+91 98765 43211',
+      branch: 'Main Branch',
+      isActive: true,
+    });
+    await userRepo.save(erpAdmin);
+  }
+  logger.log('✅ ERP Admin created');
+
   // 2. Plans
   const plans = [
     AppDataSource.manager.create(Plan, {

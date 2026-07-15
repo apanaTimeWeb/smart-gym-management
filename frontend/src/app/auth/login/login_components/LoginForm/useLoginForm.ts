@@ -59,7 +59,7 @@ export function useLoginForm(): UseLoginFormReturn {
     }
   }, []);
 
-  const handleDemoLogin = useCallback(() => {
+  const handleDemoSuperadminLogin = useCallback(() => {
     form.setValue('email', 'demo_admin@gym.com');
     form.setValue('password', 'demo123');
     // We delay the submission slightly so the user sees the fields populate
@@ -68,5 +68,13 @@ export function useLoginForm(): UseLoginFormReturn {
     }, 300);
   }, [form, onSubmit]);
 
-  return { form, status, showPassword, setShowPassword, onSubmit, handleDemoLogin };
+  const handleDemoErpLogin = useCallback(() => {
+    form.setValue('email', 'admin@gymsmart.com');
+    form.setValue('password', 'demo123');
+    setTimeout(() => {
+      form.handleSubmit(onSubmit)();
+    }, 300);
+  }, [form, onSubmit]);
+
+  return { form, status, showPassword, setShowPassword, onSubmit, handleDemoSuperadminLogin, handleDemoErpLogin };
 }

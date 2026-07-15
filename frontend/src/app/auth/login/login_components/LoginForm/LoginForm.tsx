@@ -8,7 +8,7 @@ import { useLoginForm } from '@/app/auth/login/login_components/LoginForm/useLog
 import { LoginSharedConstants } from '@/app/auth/login/login_constants/LoginSharedConstants';
 
 export default function LoginForm() {
-  const { form, status, showPassword, setShowPassword, onSubmit, handleDemoLogin } = useLoginForm();
+  const { form, status, showPassword, setShowPassword, onSubmit, handleDemoSuperadminLogin, handleDemoErpLogin } = useLoginForm();
   const { register, handleSubmit, formState: { errors } } = form;
   const isLoading = status === 'loading';
 
@@ -162,25 +162,40 @@ export default function LoginForm() {
             )}
           </button>
 
-          {/* Demo Login button */}
+          {/* Demo Login buttons */}
           <div className="relative flex items-center py-2">
             <div className="flex-grow border-t border-border"></div>
             <span className="flex-shrink-0 mx-4 text-xs font-semibold text-secondary uppercase">OR</span>
             <div className="flex-grow border-t border-border"></div>
           </div>
-          <button
-            type="button"
-            disabled={isLoading}
-            onClick={handleDemoLogin}
-            className={[
-              'w-full py-3.5 rounded-xl font-bold text-sm transition-all duration-200',
-              'flex items-center justify-center gap-2 border border-primary/30',
-              'text-primary hover:bg-primary/5 active:scale-[0.98]',
-              'disabled:opacity-70 disabled:cursor-not-allowed',
-            ].join(' ')}
-          >
-            Login with Demo Account
-          </button>
+          <div className="flex gap-3">
+            <button
+              type="button"
+              disabled={isLoading}
+              onClick={handleDemoSuperadminLogin}
+              className={[
+                'w-full py-3.5 rounded-xl font-bold text-sm transition-all duration-200',
+                'flex items-center justify-center gap-2 border border-warning/30',
+                'text-warning hover:bg-warning/5 active:scale-[0.98]',
+                'disabled:opacity-70 disabled:cursor-not-allowed',
+              ].join(' ')}
+            >
+              Superadmin Demo
+            </button>
+            <button
+              type="button"
+              disabled={isLoading}
+              onClick={handleDemoErpLogin}
+              className={[
+                'w-full py-3.5 rounded-xl font-bold text-sm transition-all duration-200',
+                'flex items-center justify-center gap-2 border border-primary/30',
+                'text-primary hover:bg-primary/5 active:scale-[0.98]',
+                'disabled:opacity-70 disabled:cursor-not-allowed',
+              ].join(' ')}
+            >
+              ERP Demo
+            </button>
+          </div>
         </form>
       </div>
 
