@@ -1,0 +1,78 @@
+pipeline {
+    agent any
+
+    // Yahan hum explicitly define kar rahe hain ki kaunsi app kis port par chalegi
+    environment {
+        FRONTEND_PORT = '3000'
+        BACKEND_PORT = '5000'
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                echo 'Checking out features branch from Git...'
+                git branch: 'features', url: 'https://github.com/apanaTimeWeb/smart-gym-management.git'
+            }
+        }
+
+        // ==========================================
+        // FRONTEND STAGES (Next.js)
+        // ==========================================
+        stage('Frontend: Install & Build') {
+            steps {
+                dir('frontend') {
+                    echo 'Installing Next.js dependencies...'
+                    sh 'npm install'
+                    
+                    echo 'Building Next.js for production...'
+                    sh 'npm run build' 
+                }
+            }
+        }
+
+        stage('Deploy: Frontend (PM2)') {
+            steps {
+                dir('frontend') {
+                    echo "Deploying Next.js Frontend to PM2 on Port ${FRONTEND_PORT}..."
+                    // PORT variable force karega Next.js ko 3000 par chalne ke liye
+                    sh 'PORT=$FRONTEND_PORT pm2 restart next-frontend || PORT=$FRONTEND_PORT pm2 start npm --name "next-frontend" -- run start'
+                }
+            }
+        }
+
+        // ==========================================
+        // BACKEND STAGES (NestJS)
+        // ==========================================
+        stage('Backend: Install & Build') {
+            steps {
+                dir('backend') {
+                    echo 'Installing NestJS dependencies...'
+                    sh 'npm install'
+                    
+                    echo 'Building NestJS for production...'
+                    sh 'npm run build' 
+                }
+            }
+        }
+
+        stage('Deploy: Backend (PM2)') {
+            steps {
+                dir('backend') {
+                    echo "Deploying NestJS Backend to PM2 on Port ${BACKEND_PORT}..."
+                    // PORT variable force karega NestJS ko 5000 par chalne ke liye
+                    sh 'PORT=$BACKEND_PORT pm2 restart nest-backend || PORT=$BACKEND_PORT pm2 start dist/main.js --name "nest-backend"'
+                }
+            }
+        }
+
+        // ==========================================
+        // SAVE SERVER STATE
+        // ==========================================
+        stage('Save PM2 State') {
+            steps {
+                echo 'Saving PM2 process list so they auto-start on server reboot...'
+                sh 'pm2 save'
+            }
+        }
+    }
+}
