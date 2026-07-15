@@ -5,6 +5,8 @@ pipeline {
     environment {
         FRONTEND_PORT = '3000'
         BACKEND_PORT = '5000'
+        // Ye line Jenkins ko order deti hai ki PM2 ko kill mat karna!
+        JENKINS_NODE_COOKIE = 'dontKillMe' 
     }
 
     stages {

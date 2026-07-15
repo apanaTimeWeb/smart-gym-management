@@ -6,8 +6,8 @@ config();
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
   url: process.env.DATABASE_URL,
-  entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-  migrations: [__dirname + '/migrations/*{.ts,.js}'],
+  entities: ['src/**/*.entity.ts', 'dist/**/*.entity.js'],
+  migrations: ['src/database/migrations/*.ts', 'dist/database/migrations/*.js'],
   synchronize: false,
 };
 

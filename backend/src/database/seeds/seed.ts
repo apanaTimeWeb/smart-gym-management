@@ -28,7 +28,7 @@ const AppDataSource = new DataSource({
   url: process.env.DATABASE_URL,
   synchronize: true, // Auto-create tables for the seed
   dropSchema: true, // Wipe existing schema to avoid conflict
-  entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+  entities: ['src/**/*.entity.ts', 'dist/**/*.entity.js'],
 });
 
 async function main() {
