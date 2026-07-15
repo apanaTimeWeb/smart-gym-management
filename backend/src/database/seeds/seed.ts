@@ -47,14 +47,14 @@ async function main() {
   const settingsRepo = AppDataSource.getRepository(Settings);
 
   // 1. Create SuperAdmin User
-  const hashedPassword = await bcrypt.hash('superadmin123', 10);
+  const hashedPassword = await bcrypt.hash('demo123', 10);
   let admin = await userRepo.findOne({
-    where: { email: 'admin@gymsmart.com' },
+    where: { email: 'demo_admin@gym.com' },
   });
   if (!admin) {
     admin = userRepo.create({
       name: 'Super Admin',
-      email: 'admin@gymsmart.com',
+      email: 'demo_admin@gym.com',
       password: hashedPassword,
       role: 'SUPERADMIN' as any,
       phone: '+91 98765 43210',
