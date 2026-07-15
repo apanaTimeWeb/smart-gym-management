@@ -35,14 +35,14 @@ async function main() {
   const MasterDataSource = new DataSource({
     type: 'postgres',
     url: masterUrl,
-    entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+    entities: ['src/**/*.entity.ts', 'dist/**/*.entity.js'],
     synchronize: false,
   });
   await MasterDataSource.initialize();
   
   // Create or get the Gym entry in Master DB
   let tenantId: string;
-  const existingGym = await MasterDataSource.query('SELECT id FROM gyms WHERE "adminEmail" = $1', ['demo_admin@gym.com']);
+  const existingGym = await MasterDataSource.query('SELECT id FROM gyms WHERE "adminEmail" = $1', ['admin@gymsmart.com']);
   if (existingGym.length > 0) {
     tenantId = existingGym[0].id;
     logger.log(`✅ Found existing Demo Gym in Master DB (id: ${tenantId})`);
@@ -51,7 +51,7 @@ async function main() {
     const result = await MasterDataSource.query(
       `INSERT INTO gyms (name, "ownerName", "adminEmail", phone, status, plan, "isDeleted", "databaseVersion") 
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`,
-      ['Demo Gym', 'Demo Admin', 'demo_admin@gym.com', '9876543210', 'ACTIVE', 'PREMIUM', false, '1.0.0']
+      ['Demo Gym', 'Demo Admin', 'admin@gymsmart.com', '9876543210', 'ACTIVE', 'PREMIUM', false, '1.0.0']
     );
     tenantId = result[0].id;
     logger.log(`✅ Created new Demo Gym in Master DB (id: ${tenantId})`);
@@ -72,7 +72,7 @@ async function main() {
   const masterUserRepo = MasterDataSource.getRepository(User);
   const hashedPassword = await bcrypt.hash('demo123', 10);
   
-  let masterUser = await masterUserRepo.findOne({ where: { email: 'demo_admin@gym.com' } });
+  let masterUser = await masterUserRepo.findOne({ where: { email: 'admin@gymsmart.com' } });
   if (masterUser) {
     masterUser.password = hashedPassword;
     // ensure it's active and has correct role
@@ -82,14 +82,14 @@ async function main() {
   } else {
     await masterUserRepo.save(masterUserRepo.create({
       name: 'Demo Admin',
-      email: 'demo_admin@gym.com',
+      email: 'admin@gymsmart.com',
       password: hashedPassword,
       role: 'ADMIN' as any,
       isActive: true,
     }));
   }
   await MasterDataSource.destroy();
-  logger.log('✅ Master Database User Updated (demo_admin@gym.com / demo123).');
+  logger.log('✅ Master Database User Updated (admin@gymsmart.com / demo123).');
 
   // 2. Now connect to Tenant Database to seed
   const parsedUrl = new URL(masterUrl);
@@ -100,7 +100,7 @@ async function main() {
     url: tenantUrl,
     synchronize: true, // Create tables
     dropSchema: true, // Wipe existing data to ensure a fresh demo
-    entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+    entities: ['src/**/*.entity.ts', 'dist/**/*.entity.js'],
   });
 
   await AppDataSource.initialize();
@@ -120,7 +120,7 @@ async function main() {
       gymName: 'Titan Fitness (Demo)',
       ownerName: 'Admin',
       phone: faker.phone.number({ style: 'national' }),
-      email: 'demo_admin@gym.com',
+      email: 'admin@gymsmart.com',
       city: 'Mumbai',
       gstNumber: '27AABCU9603R1ZX',
     }),
@@ -133,7 +133,7 @@ async function main() {
   await userRepo.save(
     userRepo.create({
       name: 'Demo Admin',
-      email: 'demo_admin@gym.com',
+      email: 'admin@gymsmart.com',
       password: hashedPassword,
       role: 'ADMIN' as any,
       phone: faker.phone.number({ style: 'national' }),
