@@ -5,10 +5,10 @@ export const AuthUrlConfig = {
     DASHBOARD: '/erp/dashboard',
   },
   PROXY_API: {
-    REFRESH: '/api/auth/refresh',
-    LOGOUT: '/api/auth/logout',
-    SET_COOKIE: '/api/auth/set-cookie',
-    TOKEN: '/api/auth/token',
+    REFRESH: '/next-api/auth/refresh',
+    LOGOUT: '/next-api/auth/logout',
+    SET_COOKIE: '/next-api/auth/set-cookie',
+    TOKEN: '/next-api/auth/token',
   },
   BACKEND_API: {
     LOGIN: '/auth/login',
