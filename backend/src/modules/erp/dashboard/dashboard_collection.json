@@ -1,0 +1,98 @@
+{
+  "info": {
+    "name": "Dashboard - Smart Gym API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /)\r\n  @UseInterceptors(CustomCacheInterceptor",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/dashboard/charts/)\r\n  @UseInterceptors(CustomCacheInterceptor",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "dashboard",
+            "charts",
+            ")\r\n  @UseInterceptors(CustomCacheInterceptor"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /)\r\n  @UseInterceptors(CustomCacheInterceptor",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/dashboard/kpi/)\r\n  @UseInterceptors(CustomCacheInterceptor",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "dashboard",
+            "kpi",
+            ")\r\n  @UseInterceptors(CustomCacheInterceptor"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /)\r\n  @UseInterceptors(CustomCacheInterceptor",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/dashboard/recent/)\r\n  @UseInterceptors(CustomCacheInterceptor",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "dashboard",
+            "recent",
+            ")\r\n  @UseInterceptors(CustomCacheInterceptor"
+          ]
+        }
+      }
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{AUTH_TOKEN}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.request.headers.add({key: 'x-tenant-id', value: '{{TENANT_ID}}'});"
+        ]
+      }
+    }
+  ]
+}

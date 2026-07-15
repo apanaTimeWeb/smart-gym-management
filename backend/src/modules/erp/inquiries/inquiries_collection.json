@@ -1,0 +1,178 @@
+{
+  "info": {
+    "name": "Inquiries - Smart Gym API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "POST /",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/inquiries",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "inquiries"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "GET /",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/inquiries",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "inquiries"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /:id",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/inquiries/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "inquiries",
+            "{{id}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/inquiries/meta/stats",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "inquiries",
+            "meta",
+            "stats"
+          ]
+        }
+      }
+    },
+    {
+      "name": "PATCH /:id",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/inquiries/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "inquiries",
+            "{{id}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "DELETE /:id",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/inquiries/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "inquiries",
+            "{{id}}"
+          ]
+        }
+      }
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{AUTH_TOKEN}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.request.headers.add({key: 'x-tenant-id', value: '{{TENANT_ID}}'});"
+        ]
+      }
+    }
+  ]
+}

@@ -1,8 +1,10 @@
+// RESPONSIBILITY: route.ts handles the logic and UI for its corresponding feature.
 import { NextRequest, NextResponse } from 'next/server';
+import { StatusCodes } from 'http-status-codes';
 
 export async function POST(req: NextRequest) {
-  const { token, user } = await req.json();
-  if (!token) return NextResponse.json({ error: 'No token' }, { status: 400 });
+  const { token, refreshToken, user } = await req.json();
+  if (!token) return NextResponse.json({ error: 'No token' }, { status: StatusCodes.BAD_REQUEST });
 
   const res = NextResponse.json({ success: true });
 
@@ -10,17 +12,29 @@ export async function POST(req: NextRequest) {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
-    maxAge: 60 * 60 * 24 * 7,
+    maxAge: 60 * 15, // 15 minutes matching backend access token
     path: '/',
   });
 
-  res.cookies.set('gymsmart_user', JSON.stringify({ name: user?.name, email: user?.email, role: user?.role }), {
-    httpOnly: false,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    maxAge: 60 * 60 * 24 * 7,
-    path: '/',
-  });
+  if (refreshToken) {
+    res.cookies.set('gymsmart_refresh_token', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 60 * 60 * 24 * 7, // 7 days matching backend refresh token
+      path: '/',
+    });
+  }
+
+  if (user) {
+    res.cookies.set('gymsmart_user', JSON.stringify({ name: user?.name, email: user?.email, role: user?.role, tenantId: user?.tenantId }), {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 60 * 60 * 24 * 7,
+      path: '/',
+    });
+  }
 
   return res;
 }

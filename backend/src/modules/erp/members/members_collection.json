@@ -1,0 +1,209 @@
+{
+  "info": {
+    "name": "Members - Smart Gym API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "POST /",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/members",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "members"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "GET /",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/members",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "members"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /:id",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/members/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "members",
+            "{{id}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /stats",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/members/stats",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "members",
+            "stats"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /:id/renew",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/members/{{id}}/renew",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "members",
+            "{{id}}",
+            "renew"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "PATCH /:id",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/members/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "members",
+            "{{id}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "DELETE /:id",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/members/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "members",
+            "{{id}}"
+          ]
+        }
+      }
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{AUTH_TOKEN}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.request.headers.add({key: 'x-tenant-id', value: '{{TENANT_ID}}'});"
+        ]
+      }
+    }
+  ]
+}

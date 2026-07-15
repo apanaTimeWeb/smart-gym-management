@@ -1,0 +1,155 @@
+{
+  "info": {
+    "name": "Plans - Smart Gym API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "POST /",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/plans",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "plans"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "GET /",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/plans",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "plans"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /:id",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/plans/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "plans",
+            "{{id}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "PATCH /:id",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/plans/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "plans",
+            "{{id}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "DELETE /:id",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/plans/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "plans",
+            "{{id}}"
+          ]
+        }
+      }
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{AUTH_TOKEN}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.request.headers.add({key: 'x-tenant-id', value: '{{TENANT_ID}}'});"
+        ]
+      }
+    }
+  ]
+}

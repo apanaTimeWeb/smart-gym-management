@@ -1,0 +1,6 @@
+export const SALES_MESSAGES = {
+  OVERVIEW_FETCHED_SUCCESS: 'Sales overview fetched successfully',
+  MEMBERSHIP_REPORT_FETCHED_SUCCESS: 'Membership report fetched successfully',
+  PENDING_PAYMENTS_FETCHED_SUCCESS: 'Pending payments fetched successfully',
+  ALL_MEMBERSHIPS_FETCHED_SUCCESS: 'All memberships fetched successfully'
+};

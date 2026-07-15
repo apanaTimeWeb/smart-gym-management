@@ -1,0 +1,268 @@
+{
+  "info": {
+    "name": "Hr - Smart Gym API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/hr/summary",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "hr",
+            "summary"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/hr/payrolls",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "hr",
+            "payrolls"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "GET /",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/hr/payrolls",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "hr",
+            "payrolls"
+          ]
+        }
+      }
+    },
+    {
+      "name": "PATCH /:id/status",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/hr/payrolls/{{id}}/status",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "hr",
+            "payrolls",
+            "{{id}}",
+            "status"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "POST /",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/hr/staff",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "hr",
+            "staff"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "GET /",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/hr/staff",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "hr",
+            "staff"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /:id",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/hr/staff/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "hr",
+            "staff",
+            "{{id}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "PATCH /:id",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/hr/staff/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "hr",
+            "staff",
+            "{{id}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "DELETE /:id",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/hr/staff/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "hr",
+            "staff",
+            "{{id}}"
+          ]
+        }
+      }
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{AUTH_TOKEN}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.request.headers.add({key: 'x-tenant-id', value: '{{TENANT_ID}}'});"
+        ]
+      }
+    }
+  ]
+}
