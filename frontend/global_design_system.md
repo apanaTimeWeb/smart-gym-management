@@ -7,31 +7,51 @@
 
 ## 1. COLOR PALETTE
 
-| Token | Hex Value | Usage |
+*Note: For v1, the system defaults to Dark Mode. Light mode values are provided below for future-proofing and consistency.*
+
+### Core Colors
+| Token | Dark Mode (Default) | Light Mode | Usage |
+|---|---|---|---|
+| `--primary` | `#6366F1` (Indigo-500) | `#4F46E5` | Primary buttons, active nav item, links |
+| `--primary-hover` | `#4F46E5` (Indigo-600) | `#4338CA` | Primary button hover state |
+| `--primary-subtle` | `#EEF2FF` (Indigo-50) | `#EEF2FF` | Soft badge backgrounds, selected row highlight |
+| `--bg-page` | `#0F0F1A` | `#F8FAFC` | Main page background |
+| `--bg-card` | `#1A1A2E` | `#FFFFFF` | Card, panel, table background |
+| `--bg-sidebar` | `#12121F` | `#F1F5F9` | Sidebar background |
+| `--bg-header` | `#16162A` | `#FFFFFF` | Top header background |
+| `--bg-input` | `#1E1E32` | `#FFFFFF` | Input field background |
+| `--border` | `#2A2A3E` | `#E2E8F0` | Card borders, table dividers, input borders |
+| `--border-focus` | `#6366F1` | `#4F46E5` | Input border on focus |
+| `--text-primary` | `#F0F0FF` | `#0F172A` | All primary text, headings, table values |
+| `--text-secondary` | `#94A3B8` (Slate-400) | `#64748B` | Labels, captions, placeholder text (improved contrast) |
+| `--text-disabled` | `#44445A` | `#94A3B8` | Disabled states |
+| `--skeleton-base` | `#2A2A3E` | `#E2E8F0` | Loading skeleton base color |
+| `--skeleton-highlight`| `#3F3F5A` | `#F1F5F9` | Loading skeleton shimmer highlight |
+
+### Status Colors (Strictly for statuses)
+| Token | Text Color | Background Color | Usage |
+|---|---|---|---|
+| `--success` | `#34D399` (WCAG pass) | `#064E3B` | Active / Working / Present / Resolved |
+| `--warning` | `#FBBF24` (WCAG pass) | `#451A03` | Pending / Expiring / Held |
+| `--danger` | `#F87171` (WCAG pass) | `#450A0A` | Overdue / Suspended / Broken |
+| `--info` | `#60A5FA` | `#1E3A5F` | New / Neutral |
+
+### Payment Mode Colors (Separated to avoid status collision)
+| Token | Text Color | Background Color | Usage |
+|---|---|---|---|
+| `--pay-cash` | `#5EEAD4` (Teal) | `#134E4A` | Cash payments |
+| `--pay-upi` | `#67E8F9` (Cyan) | `#164E63` | UPI payments |
+| `--pay-card` | `#94A3B8` (Slate)| `#1E293B` | Card payments |
+| `--pay-bank` | `#38BDF8` (Sky) | `#0C4A6E` | Bank Transfers |
+
+### Border Radius Scale
+| Token | Value | Usage |
 |---|---|---|
-| `--primary` | `#6366F1` (Indigo-500) | Primary buttons, active nav item, links, highlights |
-| `--primary-hover` | `#4F46E5` (Indigo-600) | Primary button hover state |
-| `--primary-subtle` | `#EEF2FF` (Indigo-50) | Soft badge backgrounds, selected row highlight |
-| `--bg-page` | `#0F0F1A` | Main page background (dark) |
-| `--bg-card` | `#1A1A2E` | Card, panel, table background |
-| `--bg-sidebar` | `#12121F` | Sidebar background |
-| `--bg-header` | `#16162A` | Top header background |
-| `--bg-input` | `#1E1E32` | Input field background |
-| `--border` | `#2A2A3E` | Card borders, table dividers, input borders |
-| `--border-focus` | `#6366F1` | Input border on focus |
-| `--text-primary` | `#F0F0FF` | All primary text, headings, table values |
-| `--text-secondary` | `#8888AA` | Labels, captions, placeholder text, subtitles |
-| `--text-disabled` | `#44445A` | Disabled states |
-| `--success` | `#10B981` (Emerald-500) | Success state, active/working/present/paid badges |
-| `--success-bg` | `#064E3B` (Emerald-900) | Success badge background |
-| `--warning` | `#F59E0B` (Amber-500) | Warning state, pending/expiring/moderate badges |
-| `--warning-bg` | `#451A03` (Amber-900) | Warning badge background |
-| `--danger` | `#EF4444` (Red-500) | Error state, overdue/suspended/blacklisted/broken badges |
-| `--danger-bg` | `#450A0A` (Red-900/dark) | Danger badge background |
-| `--info` | `#3B82F6` (Blue-500) | Info state, new/neutral/cash mode badges |
-| `--info-bg` | `#1E3A5F` | Info badge background |
-| `--purple` | `#8B5CF6` (Violet-500) | Alumni badge, UPI mode, special callouts |
-| `--purple-bg` | `#2E1065` | Purple badge background |
+| `--radius-sm` | `4px` | Small elements, checkboxes |
+| `--radius-md` | `8px` | Buttons, Inputs, standard elements |
+| `--radius-lg` | `12px` | Cards, Panels, standard containers |
+| `--radius-xl` | `16px` | Modals, large surface areas |
+| `--radius-full`| `999px` | Status badges, circular avatars |
 
 ---
 
@@ -76,8 +96,8 @@ Every authenticated page uses this shell. Auth pages (`login`, `signup`, `forgot
 │  position:     │  [Page Content: table / form / grid / charts]  │
 │  fixed, left:0 │                                                 │
 │  bg: --bg-sidebar                                               │
-│  border-right: │                                                 │
-│  1px --border  │                                                 │
+│  border-right: │  *Note: Sidebar nav items scroll independently  │
+│  1px --border  │  (overflow-y-auto), header/toggle stay pinned.* │
 └────────────────┴─────────────────────────────────────────────────┘
 ```
 
@@ -162,19 +182,21 @@ Each nav item has: [Icon] Label · Active state = Indigo left border + `--primar
 
 ## 4. STATUS BADGE RULES (Universal — Apply to ALL pages)
 
-Badges are small pill-shaped labels: `border-radius: 999px`, `padding: 2px 10px`, `font-size: 11px`, `font-weight: 600`.
+> **CRITICAL ARCHITECTURE RULE:** The status-to-color mapping MUST live in a single constants file (e.g. `src/config/statusBadgeConfig.ts`), never as inline if/else or switch-case statements inside individual components. (Consistent with Frontend Rule 3/35).
+
+Badges are small pill-shaped labels: `border-radius: var(--radius-full)`, `padding: 2px 10px`, `font-size: 11px`, `font-weight: 600`.
 
 | Status Value | Text Color | Background | Icon |
 |---|---|---|---|
-| Active / Working / Present / Sent / Delivered / Resolved / Paid / Fulfilled | `--success` | `--success-bg` | ✅ |
-| Expiring Soon / Pending / In-Progress / Moderate / Maintenance / Held / Late | `--warning` | `--warning-bg` | ⚠️ |
-| Occupied / Suspended / Failed / Low Trust / Overdue / Due / Broken | `--danger` | `--danger-bg` | 🔴 |
-| Exited / Inactive / Expired / Lost / Cancelled / Forfeited / Gray | `--text-secondary` | `#1E1E2E` | — |
-| New / Interested / Visited / Cash (payment mode) | `--info` | `--info-bg` | 🔵 |
-| Alumni / UPI (payment mode) | `--purple` | `--purple-bg` | 🟣 |
-| Blacklisted | `#FCA5A5` (light red) | `#7F1D1D` (dark red) | ⛔ |
-| Card (payment mode) | `#A78BFA` | `#2E1065` | 💳 |
-| Bank Transfer | `#6EE7B7` | `#064E3B` | 🏦 |
+| Active / Working / Present / Sent / Delivered / Resolved / Paid / Fulfilled | `--success text` | `--success bg` | ✅ |
+| Expiring Soon / Pending / In-Progress / Moderate / Maintenance / Held / Late | `--warning text` | `--warning bg` | ⚠️ |
+| Occupied / Suspended / Failed / Low Trust / Overdue / Due / Broken | `--danger text` | `--danger bg` | 🔴 |
+| Exited / Inactive / Expired / Lost / Cancelled / Forfeited | `--text-secondary` | `#1E1E2E` | — |
+| New / Interested / Visited | `--info text` | `--info bg` | 🔵 |
+| Alumni | `--purple` | `--purple-bg` | 🟣 |
+| Blacklisted | `#FCA5A5` | `#7F1D1D` | ⛔ |
+
+*(Note: Payment Modes (Cash, UPI, Card, Bank) use `--pay-*` tokens mapped in Section 1 to avoid visual collision with these statuses).*
 
 ---
 
@@ -183,7 +205,7 @@ Badges are small pill-shaped labels: `border-radius: 999px`, `padding: 2px 10px`
 ### 5a. KPI / Stat Card
 - Size: roughly 200–260px wide, height ~120px
 - Structure: Top-left icon (32px, in a rounded square with subtle color background) + label (UPPERCASE, 11px, `--text-secondary`) · Below: Big number (28px bold, `--text-primary`) · Bottom: Trend line ("↑ 12% vs last month" in green, or "↓ 3%" in red)
-- Background: `--bg-card`, border: `1px solid --border`, border-radius: 12px
+- Background: `--bg-card`, border: `1px solid --border`, border-radius: var(--radius-lg)
 - Arranged in a row of 3–5 cards at the top of dashboard/report pages
 
 ### 5b. Data Table
@@ -199,19 +221,19 @@ Badges are small pill-shaped labels: `border-radius: 999px`, `padding: 2px 10px`
 - **Complex form** (>6 fields): two-column grid inside a full-width card, grouped in labeled sections separated by a horizontal rule
 - Each field: Label above (14px, `--text-secondary`, bold) → Input below → Helper/error text below input (12px)
 - Required fields: Label has red asterisk `*`
-- Input styling: `background: --bg-input`, `border: 1px solid --border`, border-radius: 8px, padding: 10px 14px, focus: `border-color: --border-focus` + subtle indigo glow
+- Input styling: `background: --bg-input`, `border: 1px solid --border`, border-radius: var(--radius-md), padding: 10px 14px, focus: `border-color: --border-focus` + subtle indigo glow
 - Form footer: Buttons right-aligned — Cancel (ghost) | Save/Submit (primary)
 
 ### 5d. Modal / Dialog
 - Overlay: `backdrop: rgba(0,0,0,0.6)`, centered, **`z-40`** (Tailwind class — see Section 12 Z-Index Scale)
-- Modal card: `background: var(--bg-card)`, border-radius: 16px, padding: 28px, max-width: 480px
+- Modal card: `background: var(--bg-card)`, border-radius: var(--radius-xl), padding: 28px, max-width: 480px
 - Structure: Title (18px bold) + Description text + Content area + Footer buttons
 - **Confirmation/Destructive modal:** Icon = ⚠️ (amber) or 🗑️ (red) · Description explains what will happen · Buttons: "Cancel" (ghost, left) + "Confirm" (danger red, right)
 - **Form modal / Drawer:** Slide-in from right, width 480px, full-height, has its own form + Save/Cancel footer
 
 ### 5e. Visual Grid (Seat / Locker Matrix)
 - CSS Grid, auto-fill columns (8–10 per row depending on count)
-- Each cell: 64×64px, rounded 10px, colored by status (see badge rules above)
+- Each cell: 64×64px, rounded: var(--radius-md), colored by status (see badge rules above)
 - Cell content: seat/locker number centered (bold, 13px)
 - Hover: scales up slightly (transform: scale 1.05), shows tooltip popover (student name + shift + expiry)
 - Empty cell (free): click → quick-assign action
@@ -220,7 +242,7 @@ Badges are small pill-shaped labels: `border-radius: 999px`, `padding: 2px 10px`
 ### 5f. Kanban Board
 - Horizontal scrollable columns container
 - Each column = a status lane: header with status badge + count · Cards stacked vertically below
-- Card: `background: --bg-card`, border-radius: 10px, padding: 14px, border-left: 3px solid [status color]
+- Card: `background: --bg-card`, border-radius: var(--radius-lg), padding: 14px, border-left: 3px solid [status color]
 - Card content: Name (bold), Phone (masked: 98****2310), tag/badge for shift or date
 
 ### 5g. Wizard / Stepper
@@ -259,13 +281,13 @@ Badges are small pill-shaped labels: `border-radius: 999px`, `padding: 2px 10px`
 
 ### Toast Notifications
 - Position: Bottom-right corner, fixed
-- Size: 320px wide, padding: 16px, border-radius: 12px
+- Size: 320px wide, padding: 16px, border-radius: var(--radius-lg)
 - ✅ Success: green left border + "✅ [message]"
 - ❌ Error: red left border + "❌ [message]"
 - Auto-dismiss after 4 seconds with slide-out animation
 
 ### Loading State
-- Show skeleton loaders (gray animated shimmer pulse) that match the exact layout of the page content
+- Show skeleton loaders (using `--skeleton-base` and `--skeleton-highlight`) that match the exact layout of the page content
 - Tables: show 5–8 skeleton rows with random widths
 - Stat cards: show shimmer blocks the size of the card
 
@@ -290,8 +312,8 @@ Always show a modal before executing: Delete, Soft-Delete, Blacklist, Suspend, M
 
 | Type | Style | Usage |
 |---|---|---|
-| **Primary** | Solid `--primary` background, white text, border-radius: 8px, padding: 10px 20px | Main CTA per page (one per view) |
-| **Danger Primary** | Solid `--danger` background, white text | Destructive confirm actions (Delete, Blacklist, Exit) |
+| **Primary** | Solid `--primary` background, white text, border-radius: var(--radius-md), padding: 10px 20px | Main CTA per page (one per view) |
+| **Danger Primary** | Solid `--danger` background, off-white text (to pass WCAG contrast) | Destructive confirm actions (Delete, Blacklist, Exit) |
 | **Ghost / Outlined** | Transparent bg, `--border` border, `--text-primary` text | Secondary actions (Cancel, Export, Back) |
 | **Ghost Danger** | Transparent bg, `--danger` border, `--danger` text | Soft destructive (Mark Lost, Deactivate) |
 | **Icon Button** | 32×32px circle or square, icon only | Inline table row actions (Edit ✏️, Delete 🗑️) |
@@ -313,11 +335,13 @@ Always show a modal before executing: Delete, Soft-Delete, Blacklist, Suspend, M
 |---|---|
 | Desktop ≥1280px | Full sidebar (240px) + full content. Tables show all columns. |
 | Tablet 768–1279px | Sidebar collapses to icon-only (60px). Tables scroll horizontally. |
-| Mobile <768px | Sidebar hidden, accessible via hamburger menu drawer. Tables become card-stacks. Forms single-column. |
+| Mobile <768px | Sidebar hidden, accessible via hamburger menu drawer. Tables become card-stacks. Forms single-column. KPI cards use horizontal scroll or 2-col grid. Charts use reduced height & simplified legend. |
 
 ---
 
 ## 9. ICONS
+
+> **CRITICAL RULE:** Emojis used throughout this document (📊, ✅, 🔴, 🎓, etc.) are strictly shorthand for human readability in this documentation. Actual implementation MUST use the corresponding **Lucide icon component**, NEVER a raw emoji character in JSX.
 
 Use **Lucide Icons** (tree-shakeable, consistent style). Key icons:
 - 🧑‍🎓 Students: `Users`, `UserPlus`, `UserCheck`, `UserX`
@@ -357,7 +381,7 @@ When building modules or components, **ALWAYS follow these rules** to ensure sea
 2. **The One Canonical Pattern for CSS Variables:** Define the variable in `globals.css` → map it as a named token in `tailwind.config.ts` → use the Tailwind class name in JSX (e.g., `bg-card`, `text-primary`). **Never use `bg-[var(--bg-card)]` or `bg-[#1A1A2E]` directly in JSX.** This is the single source of truth that resolves any ambiguity between Rule 4 and Rule 36 of the Frontend Instructions.
 3. **Theme Provider**: Ensure the app is wrapped in a `ThemeProvider` (like `next-themes`) that toggles a `.dark` class on the `<html>` or `<body>` tag.
 4. **CSS Setup**: In your global CSS file (e.g., `globals.css`), define the light mode variables inside `:root { ... }` and the dark mode variables inside `.dark { ... }`.
-5. **Gradients & Shadows**: For gradients and shadows, use variables like `var(--primary)` instead of hardcoded hex/rgba to ensure they adapt naturally when the theme changes.
+5. **Gradients & Shadows**: For gradients and shadows, use variables like `var(--primary)` instead of hardcoded hex/rgba. Note that shadows like `shadow-black/50` will need to switch to `shadow-gray-200/50` or similar when implementing Light Mode.
 
 ---
 

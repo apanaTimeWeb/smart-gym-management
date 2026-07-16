@@ -25,11 +25,13 @@ Break down large files into micro-features. Every file must handle only one spec
 
 **IMPORTANT FOLDER NAMING:** Always group these micro-files logically into cohesive sub-folders within the module (e.g., `modules/members/services/`, `modules/members/controllers/`).
 
-## 2. Highly Descriptive, AI-Contextual Filenames
-Rename all controllers, services, and models to be extremely descriptive based on exactly what they do.
-When you tag a file for AI context (e.g., `@[Filename]`), the AI should instantly know what the file does just by its name.
-- ❌ **BAD:** `auth.py`, `utils.js`, `helpers.ts`
-- ✅ **GOOD:** `jwt-token-generator.utils.ts`, `stripe-payment-webhook.controller.ts`, `member-registration-validator.py`
+## 2. Highly Descriptive, AI-Contextual Filenames & Module Prefixing
+Rename all controllers, services, and models to be extremely descriptive based on exactly what they do, AND they must strictly begin with the module name as a prefix.
+When you tag a file for AI context (e.g., `@[Filename]`), the AI should instantly know exactly what module it belongs to and what it does, even without seeing the folder path. Duplicate filename collisions are eliminated.
+- ❌ **BAD:** `auth.py`, `utils.js`, `helpers.ts`, `SearchBar.tsx`
+- ✅ **GOOD:** `billing-jwt-token-generator.utils.ts`, `billing-stripe-payment-webhook.controller.ts`, `attendance-member-registration-validator.py`
+* **The Rule:** Every file name (not just the containing folder) MUST begin with the module name as a prefix. This applies to components, hooks, utils, types, constants, services, controllers — everything.
+* **Component/Class Internal Naming:** The exported component, class, or function name inside the file MUST exactly match the filename (minus the extension) — no mismatches, no default-export-with-different-name. For example, `billing-invoice-generation.service.ts` must export `class BillingInvoiceGenerationService`. This prevents AI hallucination.
 
 ## 3. Strict Validation & DTO Isolation
 Never mix data validation logic (checking if email is valid, password length) with business logic (saving to DB). 
@@ -76,6 +78,7 @@ Create a higher-level "Facade" or "Orchestrator" whose ONLY job is to open a tra
 *Scenario:* Developers dump code into a global `utils/`, `common/`, or `shared/` folder to adhere to the DRY (Don't Repeat Yourself) principle. 
 *Solution:* **WET over DRY for AI (Write Everything Twice).**
 Strictly ban global `common/` or `shared/` folders. If a utility, enum, or type is used by the Finance module, put it in `modules/finance/utils/`. If the HR module needs the exact same utility, **duplicate the code** into `modules/hr/utils/`. 
+* **Crucial Clarification (Domain vs Module):** WET duplication applies strictly at the **module level, not the domain level**. No shared folder is allowed at ANY level. Even if both the `billing` module and `attendance` module live under the same `erp` domain, they MUST get their own independent copies of a shared utility. There is no `erp/_shared/` folder.
 * **Why?** In an AI-driven codebase, code repetition is entirely acceptable because AI writes the code. If we use a global `common/` folder, an AI might modify a shared function to fix a bug in HR, inadvertently breaking the Finance module. Complete module isolation guarantees 0% cross-module side effects.
 
 ### Edge Case D: External Service Adapters (Anti-Corruption Layer)
@@ -183,9 +186,10 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **The Rule:** An HTTP request should respond in under 500ms. If a user triggers a heavy task (e.g., "Send 1,000 promotional emails", "Generate a 50-page PDF report", "Process a video"), DO NOT process it in the main HTTP thread.
 * **Why:** Use a Message Queue or Task Broker (e.g., BullMQ for Node, Celery for Python/Django, or Spring AMQP/RabbitMQ). The controller should immediately return `202 Accepted: Job Started`, and the background worker handles the heavy lifting safely. This prevents server timeouts and crashed requests.
 
-## 24. Database Migrations (No Auto-Syncing)
+## 24. Database Migrations (No Auto-Syncing & Backward Compatibility)
 * **The Rule:** In development, auto-syncing tools (like TypeORM's `synchronize: true` or Hibernate's `update`) are fine. But in an enterprise environment, database schemas must be strictly version-controlled using **Migrations** (e.g., Django `makemigrations`, Flyway/Liquibase for Java, Alembic for Python). 
-* **Why:** If the AI needs to add a new column to a table, it should generate a explicit migration file. This guarantees that production databases can be safely upgraded (or rolled back) without data loss or rogue schema syncing breaking the app.
+* **Backward Compatibility Requirement:** Existing v1 clients must be supported during DB migrations. Migrations must be strictly backward-compatible. Never drop a column in the same migration that adds a `NOT NULL` replacement. Do it in two phases. Avoid single-step destructive migrations.
+* **Why:** If the AI needs to add a new column to a table, it should generate a explicit migration file. This guarantees that production databases can be safely upgraded (or rolled back) without data loss or rogue schema syncing breaking the app, and ensures no downtime for legacy clients.
 
 ## 25. Graceful Shutdown & Health Probes (Kubernetes/Docker Ready)
 * **The Rule:** Enterprise apps are deployed in containers. You must include a `/health` or `/ping` endpoint for Kubernetes/AWS liveness probes. Furthermore, the application must intercept termination signals (`SIGINT`, `SIGTERM`).
@@ -210,27 +214,20 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 ---
 
 ## 28. Standardized Response Envelope (The API Contract)
-* **The Rule:** Every API endpoint — success or failure — must return a response in a single, predictable JSON "envelope" shape. Never return raw objects, raw arrays, or ad-hoc structures directly from controllers.
-* **Recommended shape:**
-  ```json
+* **The Rule:** Every API endpoint — success or failure — must return a response in a single, predictable JSON "envelope" shape. Never return raw objects, raw arrays, or ad-hoc structures directly from controllers. Both Success and Error responses must share the EXACT SAME canonical type definition.
+* **The Shared Canonical Shape (Frontend & Backend):**
+  ```typescript
   {
-    "success": true,
-    "message": "Members fetched successfully",
-    "data": { ... },
-    "meta": { "page": 1, "total": 250, "limit": 20 }
-  }
-  ```
-  For errors:
-  ```json
-  {
-    "success": false,
-    "message": "Member not found",
-    "error": "MemberNotFoundException",
-    "statusCode": 404
+    success: boolean;
+    message: string;
+    data: T | null;
+    meta?: PaginationMeta;
+    error?: string;
+    statusCode?: number;
   }
   ```
 * **Implement via:** A global `ResponseInterceptor` (NestJS), `APIView` / custom `Renderer` (Django), or a `res.success()` helper (Express). The AI should NEVER shape the raw response manually inside a controller or service.
-* **Why:** When an AI frontend agent hits an API, it needs a predictable contract. A raw, inconsistent response from a delete endpoint (`null`, `"ok"`, `{ deleted: true }`) forces the frontend AI to write brittle, guessing-game parsers. A standard envelope eliminates all ambiguity.
+* **Why:** When an AI frontend agent hits an API, it needs a predictable contract. If success and error payloads have totally different shapes, the frontend's generic `ApiResponse<T>` parser becomes brittle. A singular standard envelope eliminates all ambiguity.
 
 ---
 
@@ -326,7 +323,9 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **The Rule:** Just like modern frontend frameworks (e.g., Next.js) use `(group)` folders to isolate UI domains like `(erp)` or `(superadmin)`, the backend MUST group its modules into top-level domain folders before splitting them into specific features.
   - ❌ **BAD:** `src/modules/billing/`, `src/modules/superadmin-stats/`, `src/modules/attendance/` (All dumped into a flat `modules/` directory).
   - ✅ **GOOD:** `src/modules/erp/billing/`, `src/modules/superadmin/stats/`, `src/modules/members-app/attendance/`.
-* **API Route Grouping:** The API endpoint URLs must strictly mirror this domain grouping (e.g., `/api/erp/billing`, `/api/superadmin/stats`). Use the framework's native router grouping feature (e.g., `RouterModule` in NestJS, `include()` in Django `urls.py`, or `express.Router().use('/erp', ...)` in Node) to enforce this prefix globally for the entire domain.
+* **Frontend-First Naming Lock:** Since this project follows a frontend-first workflow (UI built with mock data before backend), the frontend feature folder names are the canonical source of truth. When backend development begins, the backend AI/developer MUST reuse the EXACT same folder/module name as the frontend. Renaming a feature during backend development is strictly forbidden without updating the frontend folder to match first.
+* **Casing Translation Rule:** The semantic name stays identical across frontend/backend; only the casing style changes per language/framework convention (e.g., frontend `auth` folder → backend `auth/` folder with `AuthModule` classes — never changing to a different semantic word like `identity`).
+* **API Route Grouping & Mirroring:** The API endpoint URLs must strictly mirror this domain grouping (e.g., `/api/erp/billing`, `/api/superadmin/stats`). Furthermore, page-to-endpoint naming must mirror exactly: if the frontend `/auth/` module calls an API, the route MUST be `/api/v1/auth/...`, not `/api/v1/session/...`. This ensures the debugging flow from UI page -> Frontend Folder -> Backend Folder -> Backend Route is 100% identically named.
 * **1:1 Mirror Mapping:** The backend folder structure MUST strictly mirror the frontend route structure. If the frontend `(superadmin)` domain has 5 feature folders (e.g., `broadcasts`, `coupons`, `affiliates`), the backend `superadmin` domain MUST have exactly 5 matching modules. 
 * **Why:** This creates a perfect 1:1 mapped architecture. If a bug occurs in the "Coupons" feature, you provide the AI with exactly two things: `frontend/.../superadmin/coupons/` and `backend/.../superadmin/coupons/`. The AI gets the complete vertical slice (Frontend UI + Backend Logic) for that specific feature without seeing the rest of the application. This guarantees zero hallucination, massive token savings, and perfect separation of concerns.
 
@@ -420,6 +419,7 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 
 ## 58. Standardized Database Entity Base Class
 * **The Rule:** All database entities MUST extend a common `BaseEntity` class that explicitly defines `id` (UUID), `createdAt` (timestamp with timezone), `updatedAt` (timestamp with timezone), and `deletedAt` (nullable timestamp for soft deletes). AI must never manually define these fields per entity.
+* **Base Repository Enforcement:** The global query filter for soft deletes (from Rule 29) MUST be implemented as a base repository method that ALL repositories extend from. Never duplicate the soft-delete query scope logic per-repository.
 
 ## 59. API Response Time SLA Categories
 * **The Rule:** Every endpoint must declare its SLA category in a comment (`// SLA: FAST`). FAST (< 200ms), STANDARD (< 500ms), HEAVY (> 500ms). Heavy tasks must be moved to background jobs (Rule 23). Enforce via monitoring middleware.
@@ -462,6 +462,10 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 
 ## 72. Per-Endpoint Payload Size Limits
 * **The Rule:** The default global `1mb` limit (Rule 37) can be overridden per-endpoint for specific use cases. General endpoints must reject payloads >1MB. File-upload endpoints must explicitly declare their own larger limit (e.g., `10mb` for profile images, `50mb` for bulk import CSVs). These overrides must be declared in the endpoint's controller decorator, not scattered in middleware.
+
+## 73. Currency and Number Formatting (Paise/Cents Integer Storage)
+* **The Rule:** All monetary amounts MUST be stored and transmitted over the API as integers in the smallest currency unit (e.g., paise for INR, cents for USD). Never use floating-point types (`float`, `double`) or decimals for API transmission to avoid rounding errors. 
+* **Frontend Responsibility:** The backend transmits `12345600` (paise). It is strictly the frontend's responsibility to divide by 100 and format it as `₹1,23,456.00` for display.
 
 ---
 
