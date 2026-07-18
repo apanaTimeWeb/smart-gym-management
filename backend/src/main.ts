@@ -37,11 +37,17 @@ async function bootstrap() {
 
   // ─── CORS ─────────────────────────────────────────────────────────────────
   const configService = app.get(ConfigService);
-  const frontendUrl =
-    configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
+  const isDev = configService.get<string>('NODE_ENV') !== 'production';
 
   app.enableCors({
-    origin: [frontendUrl], // Strict CORS
+    origin: (origin, callback) => {
+      if (!origin || isDev && /^https?:\/\/localhost(:\d+)?$/.test(origin)) {
+        callback(null, true);
+      } else {
+        const allowed = (configService.get<string>('FRONTEND_URL') || '').split(',').map(u => u.trim());
+        allowed.includes(origin) ? callback(null, true) : callback(new Error(`CORS blocked: ${origin}`));
+      }
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT'],
   });
