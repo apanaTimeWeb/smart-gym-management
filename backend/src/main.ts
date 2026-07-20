@@ -39,13 +39,23 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const isDev = configService.get<string>('NODE_ENV') !== 'production';
 
+  const ALLOWED_ORIGINS = [
+    'https://gym.buildroonix.com',
+    // merge any extra domains from FRONTEND_URL env (comma-separated)
+    ...(configService.get<string>('FRONTEND_URL') || '')
+      .split(',')
+      .map(u => u.trim())
+      .filter(Boolean),
+  ];
+
   app.enableCors({
     origin: (origin, callback) => {
-      if (!origin || isDev && /^https?:\/\/localhost(:\d+)?$/.test(origin)) {
+      if (!origin || (isDev && /^https?:\/\/localhost(:\d+)?$/.test(origin))) {
         callback(null, true);
       } else {
-        const allowed = (configService.get<string>('FRONTEND_URL') || '').split(',').map(u => u.trim());
-        allowed.includes(origin) ? callback(null, true) : callback(new Error(`CORS blocked: ${origin}`));
+        ALLOWED_ORIGINS.includes(origin)
+          ? callback(null, true)
+          : callback(new Error(`CORS blocked: ${origin}`));
       }
     },
     credentials: true,
