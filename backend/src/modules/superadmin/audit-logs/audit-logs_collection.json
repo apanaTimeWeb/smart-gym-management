@@ -1,0 +1,201 @@
+{
+  "info": {
+    "name": "Audit-logs - Smart Gym API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "POST /",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/audit-logs",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "audit-logs"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "DELETE /:id",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/audit-logs/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "audit-logs",
+            "{{id}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /)\r\n  async executeAll() {\r\n    return this.service.execute(",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/audit-logs/)\r\n  async executeAll() {\r\n    return this.service.execute(",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "audit-logs",
+            ")\r\n  async executeAll() {\r\n    return this.service.execute("
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /:id",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/audit-logs/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "audit-logs",
+            "{{id}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /)\n  async execute() { return this.service.execute(",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/audit-logs/global/)\n  async execute() { return this.service.execute(",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "audit-logs",
+            "global",
+            ")\n  async execute() { return this.service.execute("
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/audit-logs/tenant",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "audit-logs",
+            "tenant"
+          ]
+        }
+      }
+    },
+    {
+      "name": "PATCH /:id",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/audit-logs/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "audit-logs",
+            "{{id}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{AUTH_TOKEN}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}

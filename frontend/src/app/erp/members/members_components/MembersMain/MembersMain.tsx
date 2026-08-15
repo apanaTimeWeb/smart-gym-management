@@ -1,0 +1,69 @@
+// RESPONSIBILITY: Entry point component for the members module that sets up context providers and layout.
+'use client';
+
+import ErpHeader from '@/app/erp/erp_components/ErpLayout/ErpHeader';
+import ErpToast from '@/app/erp/erp_components/ErpFeedback/ErpToast';
+import ErpMessageModal from '@/app/erp/erp_components/ErpFeedback/ErpMessageModal';
+import ErpThermalReceipt from '@/app/erp/erp_components/ErpShared/ErpThermalReceipt';
+
+import { MembersProvider, useMembersContext } from '@/app/erp/members/members_context/MembersContext';
+import MembersKPIs from '@/app/erp/members/members_components/MembersKPIs/MembersKPIs';
+import MembersToolbar from '@/app/erp/members/members_components/MembersToolbar/MembersToolbar';
+import MembersTable from '@/app/erp/members/members_components/MembersTable/MembersTable';
+import MemberProfile from '@/app/erp/members/members_components/MemberProfile/MemberProfile';
+import { MembersInitialData } from '@/app/erp/members/members_types/members_types';
+import dynamic from 'next/dynamic';
+
+const MemberModal = dynamic(() => import('@/app/erp/members/members_components/MemberModal/MemberModal'), { ssr: false });
+
+function MembersContent() {
+  const { toast, hideToast, msgModal, closeMsg, showToast, printData, setPrintData, selectedMember } = useMembersContext();
+
+  return (
+    <div className="min-h-full pb-10">
+      <div className="print-hide">
+        {!selectedMember ? (
+          <>
+            <ErpHeader title="Members Directory" subtitle="Manage gym members, profiles, and subscriptions" />
+            <div className="p-6 space-y-5">
+              <MembersKPIs />
+              <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
+                <MembersToolbar />
+                <MembersTable />
+              </div>
+            </div>
+          </>
+        ) : (
+          <MemberProfile />
+        )}
+
+        <MemberModal />
+
+        {msgModal?.open && (
+          <ErpMessageModal 
+            open={msgModal.open}
+            type={msgModal.type}
+            recipient={msgModal.recipient}
+            message={msgModal.message}
+            onClose={closeMsg} 
+            onSuccess={msg => { showToast(msg, 'success'); closeMsg(); }} 
+          />
+        )}
+
+        {toast && <ErpToast message={toast.message} type={toast.type} onClose={hideToast} />}
+      </div>
+
+      {printData && (
+        <ErpThermalReceipt data={printData} />
+      )}
+    </div>
+  );
+}
+
+export default function MembersMain({ initialData }: { initialData?: MembersInitialData | null }) {
+  return (
+    <MembersProvider initialData={initialData}>
+      <MembersContent />
+    </MembersProvider>
+  );
+}

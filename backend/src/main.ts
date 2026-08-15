@@ -1,19 +1,63 @@
+import { otelSDK } from './tracing';
+otelSDK.start();
+
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { AppModule } from '@/app.module';
+import { ValidationPipe, Logger, VersioningType } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ResponseInterceptor } from './common/interceptors/response.interceptor';
-import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { ResponseInterceptor } from '@/modules/core/interceptors/response.interceptor';
+import { HttpExceptionFilter } from '@/modules/core/filters/http-exception.filter';
+import helmet from 'helmet';
+import compression from 'compression';
+import { ConfigService } from '@nestjs/config';
+import { Logger as PinoLogger } from 'nestjs-pino';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { bufferLogs: true });
 
-  // ─── Global Prefix ────────────────────────────────────────────────────────
+  // ─── Observability (Pino Logger) ──────────────────────────────────────────
+  app.useLogger(app.get(PinoLogger));
+  const logger = new Logger('Bootstrap');
+
+  // ─── Graceful Shutdown ────────────────────────────────────────────────────
+  app.enableShutdownHooks();
+
+  // ✨ Global Prefix & Versioning ✨
   app.setGlobalPrefix('api');
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: '1',
+  });
+
+  // ─── Security Headers (Helmet) ────────────────────────────────────────────
+  app.use(helmet());
+
+  // ─── Compression (Gzip) ───────────────────────────────────────────────────
+  app.use(compression());
 
   // ─── CORS ─────────────────────────────────────────────────────────────────
+  const configService = app.get(ConfigService);
+  const isDev = configService.get<string>('NODE_ENV') !== 'production';
+
+  const ALLOWED_ORIGINS = [
+    'https://gym.buildroonix.com',
+    // merge any extra domains from FRONTEND_URL env (comma-separated)
+    ...(configService.get<string>('FRONTEND_URL') || '')
+      .split(',')
+      .map(u => u.trim())
+      .filter(Boolean),
+  ];
+
   app.enableCors({
-    origin: true, // Allow all origins for now to prevent CORS issues
+    origin: (origin, callback) => {
+      if (!origin || (isDev && /^https?:\/\/localhost(:\d+)?$/.test(origin))) {
+        callback(null, true);
+      } else {
+        ALLOWED_ORIGINS.includes(origin)
+          ? callback(null, true)
+          : callback(new Error(`CORS blocked: ${origin}`));
+      }
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT'],
   });
@@ -59,12 +103,12 @@ async function bootstrap() {
     swaggerOptions: { persistAuthorization: true },
   });
 
-  const port = process.env.PORT || 5000;
+  const port = configService.get<number>('PORT') || 5000;
   await app.listen(port);
 
-  console.log(`\n🏋️  GymSmart Backend is running!`);
-  console.log(`🚀  API:     http://localhost:${port}/api`);
-  console.log(`📚  Docs:    http://localhost:${port}/api/docs\n`);
+  logger.log(`\n🏋️  GymSmart Backend is running!`);
+  logger.log(`🚀  API:     http://localhost:${port}/api`);
+  logger.log(`📚  Docs:    http://localhost:${port}/api/docs\n`);
 }
 
 bootstrap();

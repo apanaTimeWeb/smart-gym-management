@@ -1,0 +1,135 @@
+{
+  "info": {
+    "name": "Workout - Smart Gym API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "POST /)\n  async execute(@Body() dto: CreateWorkoutDto) {\n    return this.workoutService.execute(dto",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/workout/)\n  async execute(@Body() dto: CreateWorkoutDto) {\n    return this.workoutService.execute(dto",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "workout",
+            ")\n  async execute(@Body() dto: CreateWorkoutDto) {\n    return this.workoutService.execute(dto"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "DELETE /:id",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/workout/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "workout",
+            "{{id}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /)\n  async execute() {\n    return this.workoutService.execute(",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/workout/)\n  async execute() {\n    return this.workoutService.execute(",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "workout",
+            ")\n  async execute() {\n    return this.workoutService.execute("
+          ]
+        }
+      }
+    },
+    {
+      "name": "PATCH /:id",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/workout/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "workout",
+            "{{id}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{AUTH_TOKEN}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.request.headers.add({key: 'x-tenant-id', value: '{{TENANT_ID}}'});"
+        ]
+      }
+    }
+  ]
+}

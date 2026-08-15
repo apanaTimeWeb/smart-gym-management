@@ -1,7 +1,14 @@
+// RESPONSIBILITY: Root layout component that wraps the entire application. Initializes global font (Inter), Next-Themes provider, and Hot-Toast provider.
 import type { Metadata } from 'next';
-import './globals.css';
+import { Inter } from 'next/font/google';
+import '@/app/globals.css';
+import { ThemeProvider } from '@/components/ThemeProvider';
+import { Toaster } from 'react-hot-toast';
+
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
   title: 'GymSmart ERP – Gym Management Software',
   description: 'Professional Gym Management ERP – Members, Plans, HR, Finance, Store, and more in one powerful platform.',
   keywords: 'gym management, ERP, gym software, member management, fitness center',
@@ -18,14 +25,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" data-scroll-behavior="smooth">
+    <html lang="en" data-scroll-behavior="smooth" className={`${inter.variable}`} suppressHydrationWarning>
       <head>
         <link rel="icon" href="/icon.png" type="image/png" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
       </head>
-      <body>{children}</body>
+      <body suppressHydrationWarning>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+          <Toaster position="top-right" />
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

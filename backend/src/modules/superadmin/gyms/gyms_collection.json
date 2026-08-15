@@ -1,0 +1,210 @@
+{
+  "info": {
+    "name": "Gyms - Smart Gym API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "POST /",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/gyms",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "gyms"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "DELETE /:id",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/gyms/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "gyms",
+            "{{id}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /)\r\n  async executeAll() {\r\n    return this.service.execute(",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/gyms/)\r\n  async executeAll() {\r\n    return this.service.execute(",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "gyms",
+            ")\r\n  async executeAll() {\r\n    return this.service.execute("
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /:id",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/gyms/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "gyms",
+            "{{id}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /stats",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/gyms/stats",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "gyms",
+            "stats"
+          ]
+        }
+      }
+    },
+    {
+      "name": "PATCH /:id/status",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/gyms/{{id}}/status",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "gyms",
+            "{{id}}",
+            "status"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "PATCH /:id",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/gyms/{{id}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "gyms",
+            "{{id}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{AUTH_TOKEN}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}
