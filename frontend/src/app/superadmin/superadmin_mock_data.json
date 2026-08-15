@@ -1,0 +1,13 @@
+{
+  "GET /superadmin/tenants": {
+    "success": true,
+    "message": "Tenants fetched (Demo Mode)",
+    "data": [
+      {
+        "id": "tenant-1",
+        "name": "Demo Gym Branch 1",
+        "status": "active"
+      }
+    ]
+  }
+}

@@ -28,7 +28,21 @@ async function ssrApiFetch<T = unknown>(path: string): Promise<T> {
     }
   }
 
-  const res = await fetch(`${BASE_URL}${path}`, { headers });
+  const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
+  let res: Response;
+
+  try {
+    if (isDemoMode) {
+      throw new Error('DEMO_MODE_ACTIVE');
+    }
+    res = await fetch(`${BASE_URL}${path}`, { headers });
+  } catch (error) {
+    if (error instanceof TypeError || (error as Error).message === 'DEMO_MODE_ACTIVE') {
+      const { routeMockRequest } = await import('./mock_router');
+      return await routeMockRequest<T>(path, 'GET');
+    }
+    throw error;
+  }
   
   if (!res.ok) {
     if (res.status === StatusCodes.UNAUTHORIZED) {

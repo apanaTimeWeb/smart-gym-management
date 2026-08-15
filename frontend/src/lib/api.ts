@@ -78,10 +78,25 @@ export async function apiFetch<T = unknown>(
       if (token) headers['Authorization'] = `Bearer ${token}`;
     }
   }
+  let res: Response;
+  let finalRes: Response;
+  const method = rest.method || 'GET';
+  const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
 
-  const res = await fetch(`${BASE_URL}${path}`, { ...rest, headers });
-  
-  let finalRes = res;
+  try {
+    if (isDemoMode) {
+      throw new Error('DEMO_MODE_ACTIVE');
+    }
+    res = await fetch(`${BASE_URL}${path}`, { ...rest, headers });
+    finalRes = res;
+  } catch (error) {
+    // Intercept network failures or explicit demo mode
+    if (error instanceof TypeError || (error as Error).message === 'DEMO_MODE_ACTIVE') {
+      const { routeMockRequest } = await import('./mock_router');
+      return await routeMockRequest<T>(path, method, rest.body);
+    }
+    throw error;
+  }
   
   if (res.status === StatusCodes.UNAUTHORIZED && auth) {
     // Attempt to refresh the token
