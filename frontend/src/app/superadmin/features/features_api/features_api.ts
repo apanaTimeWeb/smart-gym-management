@@ -1,5 +1,5 @@
-import { apiFetch } from '@/lib/apiFetch';
-import type { ApiResponse } from '@/types/api';
+import { apiFetch } from '@/lib/api';
+import type { ApiResponse } from '@/app/superadmin/superadmin_types/superadmin_types';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import type { FeatureFlag, ReleaseNote } from '@/app/superadmin/features/features_types/features_types';
 

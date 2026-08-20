@@ -1,5 +1,5 @@
-import { apiFetch } from '@/lib/apiFetch';
-import type { ApiResponse } from '@/types/api';
+import { apiFetch } from '@/lib/api';
+import type { ApiResponse } from '@/app/superadmin/superadmin_types/superadmin_types';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import type { BackupRecord } from '@/app/superadmin/backups/backups_types/backups_types';
 

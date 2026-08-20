@@ -21,7 +21,7 @@ export function useFeaturesData() {
             setData(res.data);
             setFetchState('success');
           } else {
-            throw new Error(res.error || 'Failed to fetch features data');
+            throw new Error(res.message || 'Failed to fetch features data');
           }
         }
       } catch (err) {

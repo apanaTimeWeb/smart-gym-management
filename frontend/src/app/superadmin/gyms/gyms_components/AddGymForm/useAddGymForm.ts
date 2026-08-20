@@ -10,8 +10,8 @@ import { OnboardGymSchema, OnboardGymFormValues } from '@/app/superadmin/gyms/gy
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
-import type { SubscriptionPlan, Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
-
+import type { Tenant } from '@/app/superadmin/gyms/gyms_types/gyms_types';
+import type { SubscriptionPlan } from '@/app/superadmin/plans/plans_types/plans_types';
 /** Simulated provisioning step delays (ms) — replace with real SSE/WebSocket events when backend supports it */
 const PROVISIONING_DELAYS = {
   VALIDATE: 800,

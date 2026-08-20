@@ -21,7 +21,7 @@ export function useBackupsData() {
             setData(res.data);
             setFetchState('success');
           } else {
-            throw new Error(res.error || 'Failed to fetch backups data');
+            throw new Error(res.message || 'Failed to fetch backups data');
           }
         }
       } catch (err) {

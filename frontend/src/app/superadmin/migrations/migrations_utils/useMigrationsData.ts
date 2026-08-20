@@ -1,27 +1,26 @@
 import { useState, useEffect } from 'react';
-import { jobsApi } from '@/app/superadmin/jobs/jobs_api/jobs_api';
-import type { BackgroundJob } from '@/app/superadmin/jobs/jobs_types/jobs_types';
+import { migrationsApi } from '@/app/superadmin/migrations/migrations_api/migrations_api';
+import type { MigrationsPageData } from '@/app/superadmin/migrations/migrations_types/migrations_types';
 
 type FetchState = 'idle' | 'loading' | 'success' | 'error';
 
-export function useJobsData() {
-  const [data, setData] = useState<{ jobs: BackgroundJob[], metrics: any } | null>(null);
+export function useMigrationsData() {
+  const [data, setData] = useState<MigrationsPageData | null>(null);
   const [fetchState, setFetchState] = useState<FetchState>('idle');
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     let isMounted = true;
-    
     async function fetchData() {
       try {
         setFetchState('loading');
-        const res = await jobsApi.getAll();
+        const res = await migrationsApi.getAll();
         if (isMounted) {
           if (res.data) {
             setData(res.data);
             setFetchState('success');
           } else {
-            throw new Error(res.message || 'Failed to fetch jobs data');
+            throw new Error(res.message || 'Failed to fetch migrations data');
           }
         }
       } catch (err) {
@@ -31,12 +30,8 @@ export function useJobsData() {
         }
       }
     }
-    
     fetchData();
-    
-    return () => {
-      isMounted = false;
-    };
+    return () => { isMounted = false; };
   }, []);
 
   return { data, fetchState, error, setFetchState, setData };
