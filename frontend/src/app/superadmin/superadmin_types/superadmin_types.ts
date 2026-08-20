@@ -124,18 +124,7 @@ export interface GlobalAuditLog {
   ipAddress: string;
 }
 
-export type BroadcastStatus = 'SENT' | 'SCHEDULED' | 'DRAFT';
-export type BroadcastAudience = 'ALL_TENANTS' | 'PRO_ONLY' | 'SUSPENDED_ONLY';
 
-export interface Broadcast {
-  id: string;
-  title: string;
-  content: string;
-  status: BroadcastStatus;
-  audience: BroadcastAudience;
-  scheduledDate: string | null;
-  sentDate: string | null;
-}
 
 
 

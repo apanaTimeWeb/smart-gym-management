@@ -1,15 +1,15 @@
 // RESPONSIBILITY: Renders the Product Management page — feature flag toggles and release note publishing. Fetches data via useSuperadminData. No mutations wired yet.
 'use client';
 
-import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
+import { useFeaturesData } from '@/app/superadmin/features/features_utils/useFeaturesData';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { ToggleLeft, Send, Search } from 'lucide-react';
 import { useState } from 'react';
-import { FeatureFlag, ReleaseNote } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { FeatureFlag, ReleaseNote } from '@/app/superadmin/features/features_types/features_types';
 
 export default function FeaturesClient() {
   const [activeTab, setActiveTab] = useState<'FLAGS' | 'NOTES'>('FLAGS');
-  const { data, fetchState, error } = useSuperadminData<{ flags: FeatureFlag[], notes: ReleaseNote[] }>(SuperadminUrlConfig.BACKEND_API.FEATURES_BASE);
+  const { data, fetchState, error } = useFeaturesData();
 
   if (fetchState === 'loading') return <div className="p-8 text-center text-disabled">Loading...</div>;
   if (error || !data) return <div className="p-8 text-center text-destructive">Error loading data.</div>;

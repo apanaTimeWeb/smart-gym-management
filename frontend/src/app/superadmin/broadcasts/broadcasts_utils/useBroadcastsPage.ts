@@ -3,12 +3,11 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { broadcastsApi } from '@/app/superadmin/broadcasts/broadcasts_api/broadcasts_api';
+import { useSuperadminMutation } from '@/app/superadmin/superadmin_utils/hooks/useSuperadminMutation';
+import { BroadcastSchema, type BroadcastFormData, type Broadcast, type BroadcastAudience, type BroadcastStatus } from '@/app/superadmin/broadcasts/broadcasts_types/broadcasts_types';
 import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
-import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
-import { useSuperadminMutation } from '@/app/superadmin/superadmin_utils/hooks/useSuperadminMutation';
-import { BroadcastSchema, BroadcastFormData } from '@/app/superadmin/broadcasts/broadcasts_types/broadcasts_types';
-import type { Broadcast, BroadcastAudience, BroadcastStatus } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 export const useBroadcastsPage = () => {
   const [broadcasts, setBroadcasts] = useState<Broadcast[]>([]);
@@ -45,7 +44,7 @@ export const useBroadcastsPage = () => {
 
     if (editingId) {
       await mutate<Broadcast>(
-        () => superadminApi.broadcasts.update(editingId, payload),
+        () => broadcastsApi.update(editingId, payload),
         {
           successMessage: 'Broadcast updated successfully',
           onSuccess: (res) => {
@@ -58,7 +57,7 @@ export const useBroadcastsPage = () => {
       );
     } else {
       await mutate<Broadcast>(
-        () => superadminApi.broadcasts.create(payload),
+        () => broadcastsApi.create(payload),
         {
           successMessage: 'Broadcast created successfully',
           onSuccess: (res) => {
@@ -74,7 +73,7 @@ export const useBroadcastsPage = () => {
   const handleDeleteBroadcast = useCallback(async (id: string) => {
     // Confirmation is handled by the caller via a modal — not window.confirm
     await mutate<void>(
-      () => superadminApi.broadcasts.remove(id),
+      () => broadcastsApi.remove(id),
       {
         successMessage: 'Broadcast deleted successfully',
         onSuccess: () => {
@@ -87,7 +86,7 @@ export const useBroadcastsPage = () => {
   const handleSendBroadcast = useCallback(async (id: string) => {
     // Confirmation is handled by the caller via a modal — not window.confirm
     await mutate<void>(
-      () => superadminApi.broadcasts.send(id),
+      () => broadcastsApi.send(id),
       {
         successMessage: 'Broadcast sent successfully',
         onSuccess: (res) => {

@@ -7,7 +7,6 @@ import type {
   SubscriptionPlan, 
   CreatePlanPayload, 
   UpdatePlanPayload,
-  Broadcast,
   BackgroundJob,
   BackupRecord,
   GlobalAuditLog,
@@ -48,16 +47,7 @@ export const superadminApi = {
 
 
 
-  broadcasts: {
-    getAll: (params?: Record<string, string>) => {
-      const q = params ? '?' + new URLSearchParams(params).toString() : '';
-      return apiFetch<ApiResponse<Broadcast[]>>(`${SuperadminUrlConfig.BACKEND_API.BROADCASTS_BASE}${q}`);
-    },
-    create: (body: Partial<Broadcast>) => apiFetch<ApiResponse<Broadcast>>(SuperadminUrlConfig.BACKEND_API.BROADCASTS_BASE, { method: 'POST', body: JSON.stringify(body) }),
-    update: (id: string, body: Partial<Broadcast>) => apiFetch<ApiResponse<Broadcast>>(`${SuperadminUrlConfig.BACKEND_API.BROADCASTS_BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
-    remove: (id: string) => apiFetch<ApiResponse<void>>(`${SuperadminUrlConfig.BACKEND_API.BROADCASTS_BASE}/${id}`, { method: 'DELETE' }),
-    send: (id: string) => apiFetch<ApiResponse<void>>(`${SuperadminUrlConfig.BACKEND_API.BROADCASTS_BASE}/${id}/send`, { method: 'POST' }),
-  },
+
   jobs: {
     getAll: (params?: Record<string, string>) => {
       const q = params ? '?' + new URLSearchParams(params).toString() : '';
