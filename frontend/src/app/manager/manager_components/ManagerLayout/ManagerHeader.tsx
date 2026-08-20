@@ -108,7 +108,7 @@ export default function ManagerHeader({ title, subtitle }: ManagerHeaderProps) {
           {showProfile && (
             <div className="absolute right-0 mt-2 w-56 bg-card rounded-xl shadow-2xl border border-border overflow-hidden z-50">
               <div className="px-4 py-3 border-b border-border bg-header">
-                <p className="text-sm font-semibold text-foreground">{mounted ? (user?.name || 'Admin') : 'Admin'}</p>
+                <p className="text-sm font-semibold text-foreground">{mounted ? (user?.name || 'Manager') : 'Manager'}</p>
                 <p className="text-xs text-secondary">{mounted ? (user?.email || '') : ''}</p>
                 {(mounted && user?.role) && <p className="text-xs text-warning font-medium mt-0.5">{user.role}</p>}
               </div>

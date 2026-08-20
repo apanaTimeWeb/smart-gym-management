@@ -48,7 +48,7 @@ function DashboardContent() {
 
   return (
     <>
-      <ManagerHeader title="Dashboard" subtitle="Welcome back, Admin! Here's your gym overview." />
+      <ManagerHeader title="Dashboard" subtitle="Welcome back, Manager! Here's your gym overview." />
       <div className="p-6 space-y-6">
         <DashboardKPIs />
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">

@@ -103,8 +103,8 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
           </div>
           {(!isCollapsed || isMobileOpen) && (
             <div className="whitespace-nowrap overflow-hidden flex-1">
-              <div className="text-foreground text-sm font-bold truncate">{mounted ? (user?.name || 'Admin User') : 'Admin User'}</div>
-              <div className="text-secondary text-xs truncate">{mounted ? (user?.role || 'Super Admin') : 'Super Admin'}</div>
+              <div className="text-foreground text-sm font-bold truncate">{mounted ? (user?.name || 'Manager User') : 'Manager User'}</div>
+              <div className="text-secondary text-xs truncate">{mounted ? (user?.role || 'Gym Manager') : 'Gym Manager'}</div>
             </div>
           )}
         </div>
