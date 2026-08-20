@@ -1,0 +1,107 @@
+// RESPONSIBILITY: Provides the implementation for PaymentsTable.tsx functionality within its module.
+'use client';
+
+import { useFinanceContext } from '@/app/manager/finance/finance_context/FinanceContext';
+import { PAYMENTS_TABLE_HEADERS, FINANCE_METHOD_STYLES, FINANCE_STATUS_STYLES } from '@/app/manager/finance/finance_utils/FinanceSharedConstants';
+import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
+import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
+
+export default function PaymentsTable() {
+  const { payments, totalPayments, fetchState, search, currentPage, setCurrentPage } = useFinanceContext();
+  
+    const totalPages = Math.ceil(totalPayments / MANAGER_ITEMS_PER_PAGE) || 1;
+
+ if (fetchState === 'loading') {
+ return (
+ <>
+ <div className="overflow-x-auto">
+ <table className="w-full">
+ <thead className="bg-input text-secondary">
+ <tr>
+ {PAYMENTS_TABLE_HEADERS.map(h => (
+ <th key={h} className="text-left text-xs font-semibold uppercase tracking-wider px-4 py-3">
+ {h}
+ </th>
+ ))}
+ </tr>
+ </thead>
+ <tbody className="divide-y divide-border">
+ {[...Array(5)].map((_, i) => (
+ <tr key={i} className="animate-pulse bg-card">
+ <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
+ <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-32"></div></td>
+ <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-16"></div></td>
+ <td className="px-4 py-4"><div className="h-5 bg-muted rounded-full w-20"></div></td>
+ <td className="px-4 py-4"><div className="h-5 bg-muted rounded-full w-24"></div></td>
+ <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-24"></div></td>
+ </tr>
+ ))}
+ </tbody>
+ </table>
+ </div>
+ </>
+ );
+ }
+
+ return (
+ <>
+ <div className="overflow-x-auto">
+ <table className="w-full">
+ <thead className="bg-input text-secondary">
+ <tr>
+ {PAYMENTS_TABLE_HEADERS.map(h => (
+ <th key={h} className="text-left text-xs font-semibold uppercase tracking-wider px-4 py-3">
+ {h}
+ </th>
+ ))}
+ </tr>
+ </thead>
+ <tbody className="divide-y divide-border">
+ {payments.map(p => {
+ const mStyle = FINANCE_METHOD_STYLES[p.method] || { bg: 'bg-input', text: 'text-secondary' };
+ const sStyle = FINANCE_STATUS_STYLES[p.status] || { bg: 'bg-input', text: 'text-secondary' };
+ return (
+ <tr key={p.id} className="transition-colors hover:bg-primary/5 bg-card">
+ <td className="px-4 py-3 text-sm font-mono text-secondary">{p.invoiceNo}</td>
+ <td className="px-4 py-3 text-sm font-medium text-primary">{p.member?.name || `Member #${p.memberId}`}</td>
+ <td className="px-4 py-3 text-sm font-bold text-success">{(p.amount || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
+ <td className="px-4 py-3">
+ <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${mStyle.bg} ${mStyle.text}`}>
+ {p.method}
+ </span>
+ </td>
+ <td className="px-4 py-3">
+ <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${sStyle.bg} ${sStyle.text}`}>
+ {p.status}
+ </span>
+ </td>
+ <td className="px-4 py-3 text-sm text-secondary">
+ {new Date(p.paidAt).toLocaleDateString('en-IN')}
+ </td>
+ </tr>
+ );
+ })}
+ {payments.length === 0 && (
+ <tr>
+ <td colSpan={6} className="text-center py-10 text-sm text-secondary">
+ No payments recorded yet.
+ </td>
+ </tr>
+ )}
+ </tbody>
+ </table>
+ </div>
+ {totalPages > 1 && (
+    <div className="mt-4 pt-4 border-t border-border">
+      <ManagerPagination 
+        currentPage={currentPage}
+        totalPages={totalPages}
+        totalItems={totalPayments}
+        itemsPerPage={MANAGER_ITEMS_PER_PAGE}
+        onPageChange={setCurrentPage}
+      />
+    </div>
+  )}
+ </>
+ );
+}

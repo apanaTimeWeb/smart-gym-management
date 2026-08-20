@@ -5,7 +5,7 @@ import React from 'react';
 import { X } from 'lucide-react';
 import { UseFormReturn, Controller } from 'react-hook-form';
 import { BroadcastFormData } from '@/app/superadmin/broadcasts/broadcasts_types/broadcasts_types';
-import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
+import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 
 interface SuperadminBroadcastModalProps {
   isOpen: boolean;

@@ -14,8 +14,12 @@ export async function routeMockRequest<T>(
     // Determine which module to load mock data from based on the path
     if (path.includes('/auth')) {
       mockData = (await import('@/app/auth/auth_mock_data.json')).default;
-    } else if (path.includes('/erp')) {
-      mockData = (await import('@/app/erp/erp_mock_data.json')).default;
+    } else if (path.includes('/admin')) {
+      mockData = (await import('@/app/admin/admin_mock_data.json')).default;
+    } else if (path.includes('/manager')) {
+      mockData = (await import('@/app/manager/manager_mock_data.json')).default;
+    } else if (path.includes('/trainer')) {
+      mockData = (await import('@/app/trainer/trainer_mock_data.json')).default;
     } else if (path.includes('/superadmin')) {
       mockData = (await import('@/app/superadmin/superadmin_mock_data.json')).default;
     }
@@ -81,7 +85,7 @@ export async function routeMockRequest<T>(
       } as unknown as ApiResponse<T>;
     }
 
-    if (path.includes('/erp/dashboard') || path.includes('/dashboard')) {
+    if (path.includes('/admin/dashboard') || path.includes('/manager/dashboard') || path.includes('/trainer/dashboard') || path.includes('/dashboard')) {
       return {
         success: true, message: 'Demo Dashboard',
         data: {

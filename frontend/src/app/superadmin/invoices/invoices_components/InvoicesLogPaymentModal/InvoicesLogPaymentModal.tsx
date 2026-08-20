@@ -1,6 +1,6 @@
 import React from 'react';
 import { X, Search, DollarSign } from 'lucide-react';
-import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
+import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 interface InvoicesLogPaymentModalProps {

@@ -16,25 +16,37 @@ export function proxy(request: NextRequest) {
     }
   } catch (e) {}
 
-  const isErp = ROUTES.ERP_PREFIXES.some(p => pathname.startsWith(p));
+  const isAdmin = ROUTES.ADMIN_PREFIXES.some(p => pathname.startsWith(p));
+  const isManager = ROUTES.MANAGER_PREFIXES.some(p => pathname.startsWith(p));
+  const isTrainer = ROUTES.TRAINER_PREFIXES.some(p => pathname.startsWith(p));
   const isSuperadmin = pathname.startsWith('/superadmin');
 
   // Redirect unauthenticated users away from protected routes
-  if ((isErp || isSuperadmin) && !token) {
+  if ((isAdmin || isManager || isTrainer || isSuperadmin) && !token) {
     const url = request.nextUrl.clone();
     url.pathname = ROUTES.LOGIN;
     url.searchParams.set('from', pathname);
     return NextResponse.redirect(url);
   }
 
-  // Prevent SUPERADMIN from accessing ERP routes (they don't have tenantId)
-  if (isErp && role === 'SUPERADMIN') {
-    return NextResponse.redirect(new URL(ROUTES.SUPERADMIN_DASHBOARD, request.url));
-  }
-
-  // Prevent normal users from accessing Superadmin routes
-  if (isSuperadmin && role !== 'SUPERADMIN' && token) {
-    return NextResponse.redirect(new URL(ROUTES.DASHBOARD, request.url));
+  // Role-based Access Control
+  if (token) {
+    if (isAdmin && role !== 'ADMIN') {
+      const fallback = role === 'SUPERADMIN' ? ROUTES.SUPERADMIN_DASHBOARD : (role === 'MANAGER' ? ROUTES.MANAGER_DASHBOARD : ROUTES.TRAINER_DASHBOARD);
+      return NextResponse.redirect(new URL(fallback, request.url));
+    }
+    if (isManager && role !== 'MANAGER') {
+      const fallback = role === 'SUPERADMIN' ? ROUTES.SUPERADMIN_DASHBOARD : (role === 'ADMIN' ? ROUTES.ADMIN_DASHBOARD : ROUTES.TRAINER_DASHBOARD);
+      return NextResponse.redirect(new URL(fallback, request.url));
+    }
+    if (isTrainer && role !== 'TRAINER') {
+      const fallback = role === 'SUPERADMIN' ? ROUTES.SUPERADMIN_DASHBOARD : (role === 'ADMIN' ? ROUTES.ADMIN_DASHBOARD : ROUTES.MANAGER_DASHBOARD);
+      return NextResponse.redirect(new URL(fallback, request.url));
+    }
+    if (isSuperadmin && role !== 'SUPERADMIN') {
+      const fallback = role === 'ADMIN' ? ROUTES.ADMIN_DASHBOARD : (role === 'MANAGER' ? ROUTES.MANAGER_DASHBOARD : ROUTES.TRAINER_DASHBOARD);
+      return NextResponse.redirect(new URL(fallback, request.url));
+    }
   }
 
   // Redirect authenticated users away from login page
@@ -42,7 +54,13 @@ export function proxy(request: NextRequest) {
     if (role === 'SUPERADMIN') {
       return NextResponse.redirect(new URL(ROUTES.SUPERADMIN_DASHBOARD, request.url));
     }
-    return NextResponse.redirect(new URL(ROUTES.DASHBOARD, request.url));
+    if (role === 'ADMIN') {
+      return NextResponse.redirect(new URL(ROUTES.ADMIN_DASHBOARD, request.url));
+    }
+    if (role === 'MANAGER') {
+      return NextResponse.redirect(new URL(ROUTES.MANAGER_DASHBOARD, request.url));
+    }
+    return NextResponse.redirect(new URL(ROUTES.TRAINER_DASHBOARD, request.url));
   }
 
   return NextResponse.next();

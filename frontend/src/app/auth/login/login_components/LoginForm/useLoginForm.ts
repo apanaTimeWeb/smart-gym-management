@@ -48,8 +48,12 @@ export function useLoginForm(): UseLoginFormReturn {
         
         if (res.data.user?.role === 'SUPERADMIN') {
           window.location.replace(SuperadminUrlConfig.PAGES.DASHBOARD);
+        } else if (res.data.user?.role === 'MANAGER') {
+          window.location.replace(AuthUrlConfig.PAGES.MANAGER_DASHBOARD);
+        } else if (res.data.user?.role === 'TRAINER') {
+          window.location.replace(AuthUrlConfig.PAGES.TRAINER_DASHBOARD);
         } else {
-          window.location.replace(AuthUrlConfig.PAGES.DASHBOARD);
+          window.location.replace(AuthUrlConfig.PAGES.ADMIN_DASHBOARD);
         }
       }
     } catch (err: unknown) {
