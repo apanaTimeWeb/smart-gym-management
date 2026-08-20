@@ -1,7 +1,8 @@
-﻿// RESPONSIBILITY: Renders the paginated order history table with status badges and customer info.
+// RESPONSIBILITY: Renders the paginated order history table with status badges and customer info.
 'use client';
 
-import { Printer } from 'lucide-react';
+import { Eye, Printer } from 'lucide-react';
+import type { Order } from '@/app/manager/store/store_types/store_types';
 import { useStoreContext } from '@/app/manager/store/store_context/StoreContext';
 import { formatCurrency } from '@/app/manager/store/store_utils/StoreSharedConstants';
 import { GYM_DETAILS } from '@/app/manager/manager_utils/ManagerSharedConstants';
@@ -14,14 +15,14 @@ export default function OrderTable() {
     orders, totalOrders, fetchState, currentPage, setCurrentPage, setPrintData
   } = useStoreContext();
 
-  const handlePrint = (o: any) => {
+  const handlePrint = (o: Order) => {
     setPrintData({ 
       gymName: GYM_DETAILS.name, 
       gymPhone: GYM_DETAILS.phone, 
       receiptNo: `ORD-${o.id}`, 
       date: new Date(o.createdAt).toLocaleDateString('en-IN'), 
       customerName: 'Customer', 
-      items: (o.items || []).map((i: any) => ({ 
+      items: (o.items || []).map((i) => ({ 
         name: i.product?.name || '', 
         price: i.price, 
         amount: i.price * i.qty 

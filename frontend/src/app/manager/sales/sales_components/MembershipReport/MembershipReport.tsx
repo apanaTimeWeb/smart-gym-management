@@ -6,11 +6,12 @@ import { useSalesContext } from '@/app/manager/sales/sales_context/SalesContext'
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { Loader2 } from 'lucide-react';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
+import type { MembershipReportItem } from '@/app/manager/sales/sales_types/sales_types';
 
 export default function MembershipReport() {
   const { search, currentPage, setCurrentPage, membershipReport, membershipTotals, fetchState } = useSalesContext();
   
-  const filtered = membershipReport.filter((r: any) => 
+  const filtered = membershipReport.filter((r: MembershipReportItem) => 
     (r.plan || '').toLowerCase().includes(search.toLowerCase())
   );
 

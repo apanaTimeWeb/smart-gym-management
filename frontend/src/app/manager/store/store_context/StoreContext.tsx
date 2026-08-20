@@ -1,13 +1,13 @@
-﻿// RESPONSIBILITY: Provides UI orchestration state to the Store module hierarchy. Async data is managed in useStoreLogic.
+// RESPONSIBILITY: Provides UI orchestration state to the Store module hierarchy. Async data is managed in useStoreLogic.
 'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';
-import { StoreContextType } from '@/app/manager/store/store_types/store_types';
+import { StoreContextType, StoreInitialData } from '@/app/manager/store/store_types/store_types';
 import { useStoreLogic } from '@/app/manager/store/store_context/useStoreLogic';
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
 
-export function StoreProvider({ children, initialData }: { children: React.ReactNode, initialData?: any }) {
+export function StoreProvider({ children, initialData }: { children: React.ReactNode, initialData?: StoreInitialData }) {
  const logic = useStoreLogic(initialData);
 
  const {
