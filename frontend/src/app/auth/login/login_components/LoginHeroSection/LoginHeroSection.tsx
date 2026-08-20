@@ -9,7 +9,7 @@ const HERO_ICONS = [TrendingUp, Users, Zap];
 
 export default function LoginHeroSection() {
   return (
-    <div className="hidden lg:flex lg:w-[58%] relative overflow-hidden flex-col justify-between p-12 bg-sidebar">
+    <div className="hidden lg:flex lg:w-3/5 relative overflow-hidden flex-col justify-between p-12 bg-sidebar">
       {/* ── Animated gradient mesh background ── */}
       <div className="absolute inset-0 overflow-hidden">
         <div
@@ -71,7 +71,7 @@ export default function LoginHeroSection() {
         </div>
         <div>
           <p className="text-xl font-black text-primary leading-none">{LoginSharedConstants.TEXT.BRAND}</p>
-          <p className="text-[11px] font-medium text-secondary uppercase tracking-widest mt-0.5">
+          <p className="text-xs font-medium text-secondary uppercase tracking-widest mt-0.5">
             {LoginSharedConstants.TEXT.BRAND_TAGLINE}
           </p>
         </div>
@@ -122,7 +122,7 @@ export default function LoginHeroSection() {
               >
                 <Icon size={16} className="text-primary" />
                 <p className="text-2xl font-black text-primary leading-none">{stat.value}</p>
-                <p className="text-[11px] font-medium text-secondary uppercase tracking-wide leading-tight">{stat.label}</p>
+                <p className="text-xs font-medium text-secondary uppercase tracking-wide leading-tight">{stat.label}</p>
               </div>
             );
           })}

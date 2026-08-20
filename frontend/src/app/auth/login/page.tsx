@@ -15,7 +15,7 @@ export default async function Login() {
   
   if (tokenCookie) {
     const userCookie = cookieStore.get('gymsmart_user');
-    let user: any = null;
+    let user: { role?: string } | null = null;
     try {
       if (userCookie?.value) {
         user = JSON.parse(decodeURIComponent(userCookie.value));

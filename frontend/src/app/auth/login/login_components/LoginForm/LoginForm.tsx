@@ -13,7 +13,7 @@ export default function LoginForm() {
   const isLoading = status === 'loading';
 
   return (
-    <div className="w-full max-w-[420px] flex flex-col gap-8">
+    <div className="w-full max-w-md flex flex-col gap-8">
 
       {/* ── Brand header (mobile shows this; desktop hero panel shows it there) ── */}
       <div className="flex flex-col items-center text-center gap-2">
@@ -227,7 +227,7 @@ export default function LoginForm() {
       </div>
 
       {/* ── Footer ── */}
-      <p className="text-center text-[11px] text-disabled">
+      <p className="text-center text-xs text-disabled">
         {LoginSharedConstants.TEXT.FOOTER}
       </p>
     </div>
