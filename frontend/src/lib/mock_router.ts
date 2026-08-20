@@ -75,7 +75,12 @@ export async function routeMockRequest<T>(
   // Handle explicit dynamic mutations (like Login)
   if (method === 'POST' && path.includes('/auth/login')) {
     const bodyStr = typeof body === 'string' ? body : JSON.stringify(body || {});
-    const isSuperadmin = bodyStr.includes('demo_admin');
+    let role = 'ADMIN';
+    let email = 'admin@gymsmart.com';
+    let name = 'Demo Admin';
+    if (bodyStr.includes('demo_admin')) { role = 'SUPERADMIN'; email = 'demo_admin@gym.com'; name = 'Super Admin'; }
+    else if (bodyStr.includes('manager@')) { role = 'MANAGER'; email = 'manager@gymsmart.com'; name = 'Demo Manager'; }
+    else if (bodyStr.includes('trainer@')) { role = 'TRAINER'; email = 'trainer@gymsmart.com'; name = 'Demo Trainer'; }
     
     return {
       success: true,
@@ -85,9 +90,9 @@ export async function routeMockRequest<T>(
         refreshToken: 'demo-refresh-token',
         user: {
           id: 'demo-user-id',
-          email: isSuperadmin ? 'demo_admin@gym.com' : 'admin@gymsmart.com',
-          name: 'Demo Admin',
-          role: isSuperadmin ? 'SUPERADMIN' : 'ADMIN',
+          email,
+          name,
+          role,
           tenantId: 'demo-tenant-id'
         }
       }
@@ -110,8 +115,9 @@ export async function routeMockRequest<T>(
   }
   if (path.includes('/attendance/today-stats')) return { success: true, message: 'Stats', data: { totalCheckIns: 45, memberCheckIns: 32, staffCheckIns: 13 } } as unknown as ApiResponse<T>;
   if (path.includes('/attendance')) return MockDB.handleCrud('mock_admin_attendance', method, path, body, generate(20, i => { const d = new Date(); d.setHours(8, 0, 0, 0); const d2 = new Date(); d2.setHours(9, 30, 0, 0); return { id: `att-${i}`, type: i % 4 === 0 ? 'STAFF' : 'MEMBER', member: { name: `Active Member ${i}` }, staff: { name: `Trainer ${i}` }, date: new Date().toISOString(), checkIn: d.toISOString(), checkOut: d2.toISOString() }; }), 'attendance') as unknown as ApiResponse<T>;
-  if (path.includes('/hr/staff')) return MockDB.handleCrud('mock_staff', method, path, body, generate(8, i => ({ id: `staff-${i}`, name: `Trainer ${i+1}`, role: i === 0 ? 'Manager' : 'Trainer', email: `trainer${i}@gym.com`, phone: '9988776655', status: 'ACTIVE', joinedDate: '2023-01-01' })), 'staff') as unknown as ApiResponse<T>;
-  if (path.includes('/hr/payrolls')) return MockDB.handleCrud('mock_payrolls', method, path, body, generate(8, i => ({ id: `pay-${i}`, staffName: `Trainer ${i+1}`, amount: 25000 + (i * 2000), status: i === 2 ? 'PENDING' : 'PAID', month: 'October 2023' })), 'payrolls') as unknown as ApiResponse<T>;
+  if (path.includes('/hr/summary')) return { success: true, message: 'Summary', data: { totalStaff: 25, activeStaff: 22, totalPayrollThisMonth: 850000, paidCount: 20, pendingCount: 5 } } as unknown as ApiResponse<T>;
+  if (path.includes('/hr/staff')) return MockDB.handleCrud('mock_admin_staff', method, path, body, generate(8, i => ({ id: `staff-${i}`, name: `Trainer ${i+1}`, role: i === 0 ? 'Manager' : 'Trainer', email: `trainer${i}@gym.com`, phone: '9988776655', isActive: true, joinDate: '2023-01-01', salary: 25000, branch: 'Main', gender: 'Male' })), 'staff') as unknown as ApiResponse<T>;
+  if (path.includes('/hr/payrolls')) return MockDB.handleCrud('mock_admin_payrolls', method, path, body, generate(8, i => ({ id: `pay-${i}`, staffId: `staff-${i}`, staff: { name: `Trainer ${i+1}`, role: i === 0 ? 'Manager' : 'Trainer' }, amount: 25000 + (i * 2000), status: i === 2 ? 'PENDING' : 'PAID', month: 'October 2023', paidAt: i !== 2 ? '2023-10-01' : undefined })), 'payrolls') as unknown as ApiResponse<T>;
   if (path.includes('/exercises')) return MockDB.handleCrud('mock_admin_exercises', method, path, body, generate(10, i => ({ id: `ex-${i}`, name: `Exercise ${i+1}`, category: 'Strength', muscleGroup: ['Chest', 'Triceps'], difficulty: 'Beginner', isActive: true, videoUrl: '' })), 'exercises') as unknown as ApiResponse<T>;
   if (path.includes('/diet-plans')) return MockDB.handleCrud('mock_admin_diet_plans', method, path, body, generate(4, i => ({ id: `diet-${i}`, name: `Keto Diet ${i+1}`, goal: 'Weight Loss', calories: 1500 + (i * 200), meals: ['Breakfast', 'Lunch'], isActive: true })), 'dietPlans') as unknown as ApiResponse<T>;
   if (path.includes('/workouts')) return MockDB.handleCrud('mock_workouts', method, path, body, generate(5, i => ({ id: `wo-${i}`, name: `Workout Plan ${i+1}`, difficulty: 'Medium', durationMins: 45, targetMuscle: 'Full Body' })), 'workouts') as unknown as ApiResponse<T>;
@@ -226,18 +232,18 @@ export async function routeMockRequest<T>(
     // Superadmin Mock Generics removed (now handled by MockDB stateful routing)
 
     // Removed /erp/hr, /erp/workout, /erp/library (now handled by MockDB)
-    if (path.includes('/admin/sales/overview')) {
+    if (path.includes('/sales/overview')) {
       return { success: true, message: 'Demo Sales Overview', data: {
         monthlyRevenue: generate(6, i => ({ month: `Month ${i+1}`, revenue: 300000 + (i * 15000), expenses: 100000 + (i * 5000), newMembers: 20 + i * 5 }))
       }} as unknown as ApiResponse<T>;
     }
-    if (path.includes('/admin/sales/membership-report')) {
+    if (path.includes('/sales/membership-report')) {
       return { success: true, message: 'Demo Membership Report', data: {
         report: generate(5, i => ({ plan: `Plan ${i+1}`, receivable: 50000 * (i+1), received: 40000 * (i+1), remaining: 10000 * (i+1), refund: 0 })),
         totals: { totalReceivable: 750000, totalReceived: 600000, remaining: 150000, refunds: 0 }
       }} as unknown as ApiResponse<T>;
     }
-    if (path.includes('/admin/sales/pending-payments')) {
+    if (path.includes('/sales/pending-payments')) {
       return { success: true, message: 'Demo Pending Payments', data: {
         members: generate(6, i => ({ id: `mem-${i}`, name: `Defaulter ${i+1}`, pendingAmount: 5000, dueDate: '2023-11-01' })),
         total: 6
