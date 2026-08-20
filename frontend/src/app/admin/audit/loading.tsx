@@ -12,7 +12,7 @@ export default function AuditLoading() {
         <div className="h-10 w-32 bg-black/5 dark:bg-white/5 rounded-lg animate-pulse" />
       </div>
 
-      <div className="flex-1 bg-white dark:bg-[#1C1C1E] border border-black/5 dark:border-white/10 rounded-2xl shadow-sm overflow-hidden flex flex-col">
+      <div className="flex-1 bg-white dark:bg-card border border-black/5 dark:border-white/10 rounded-2xl shadow-sm overflow-hidden flex flex-col">
         <TableSkeleton rows={8} columns={5} />
       </div>
     </div>

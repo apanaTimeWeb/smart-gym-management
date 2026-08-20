@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Centralized constants, schema, and shared utilities for the Workout Library module.
+// RESPONSIBILITY: Centralized constants, schema, and shared utilities for the Workout Library module.
 import { z } from 'zod';
 import type { Exercise } from '@/app/admin/library/library_types/library_types';
 import type { Workout } from '@/app/admin/workout/workout_types/workout_types';
@@ -16,7 +16,7 @@ export const EXERCISE_TABLE_HEADERS = ['Exercise', 'Primary Muscle', 'Equipment'
 
 /* ── Initial Mock Data (Backend-Ready) ── */
 
-export const INITIAL_WORKOUTS: any[] = [
+export const INITIAL_WORKOUTS: unknown[] = [
  { id: 1, name: 'Push Pull Legs', level: 'Intermediate', days: 6, exercises: 24, focus: 'Hypertrophy', duration: '75 min', tags: ['PPL', 'Classic'] },
  { id: 2, name: 'Full Body Strength', level: 'Beginner', days: 3, exercises: 12, focus: 'Strength', duration: '45 min', tags: ['Compound', 'Beginner'] },
  { id: 3, name: 'Arnold Split', level: 'Advanced', days: 6, exercises: 30, focus: 'Bodybuilding', duration: '90 min', tags: ['Classic', 'Volume'] },
@@ -25,7 +25,7 @@ export const INITIAL_WORKOUTS: any[] = [
  { id: 6, name: 'Powerlifting Program',level: 'Advanced', days: 4, exercises: 10, focus: 'Strength', duration: '80 min', tags: ['Powerlifting', 'Heavy'] },
 ];
 
-export const INITIAL_EXERCISES: any[] = [
+export const INITIAL_EXERCISES: unknown[] = [
  { id: 1, name: 'Barbell Squat', muscle: 'Quadriceps', equipment: 'Barbell', difficulty: 'Intermediate' },
  { id: 2, name: 'Bench Press', muscle: 'Chest', equipment: 'Barbell', difficulty: 'Beginner' },
  { id: 3, name: 'Deadlift', muscle: 'Posterior Chain', equipment: 'Barbell', difficulty: 'Advanced' },

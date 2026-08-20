@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Entry component for the Store module. Wraps the UI in the context provider and handles page layout.
+// RESPONSIBILITY: Entry component for the Store module. Wraps the UI in the context provider and handles page layout.
 'use client';
 
 import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
@@ -11,6 +11,7 @@ import StoreToolbar from '@/app/admin/store/store_components/StoreToolbar/StoreT
 import StoreFilters from '@/app/admin/store/store_components/StoreFilters/StoreFilters';
 import ProductGrid from '@/app/admin/store/store_components/ProductGrid/ProductGrid';
 import OrderTable from '@/app/admin/store/store_components/OrderTable/OrderTable';
+import { StoreInitialData } from '@/app/admin/store/store_types/store_types';
 import dynamic from 'next/dynamic';
 
 const ProductModal = dynamic(() => import('@/app/admin/store/store_components/ProductModal/ProductModal'), { ssr: false });
@@ -51,7 +52,7 @@ function StoreContent() {
   );
 }
 
-export default function StoreMain({ initialData }: { initialData?: any }) {
+export default function StoreMain({ initialData }: { initialData?: StoreInitialData }) {
   return (
     <StoreProvider initialData={initialData}>
       <StoreContent />
