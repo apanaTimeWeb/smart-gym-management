@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Defines all TypeScript types, interfaces, and the FetchState enum for the Workout Library module.
+// RESPONSIBILITY: Defines all TypeScript types, interfaces, and the FetchState enum for the Workout Library module.
 import { EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM } from '@/app/trainer/workout/workout_utils/WorkoutSharedConstants';
 import React from 'react';
 
@@ -39,12 +39,12 @@ export interface WorkoutContextType {
  
  openAddWk: () => void;
  openEditWk: (w: Workout) => void;
- saveWk: (data: any) => void;
+ saveWk: (data: typeof EMPTY_WORKOUT_FORM) => void;
  deleteWk: (id: string) => void;
  
  openAddEx: () => void;
  openEditEx: (ex: Exercise) => void;
- saveEx: (data: any) => void;
+ saveEx: (data: typeof EMPTY_EXERCISE_FORM) => void;
  deleteEx: (id: string) => void;
 }
 
