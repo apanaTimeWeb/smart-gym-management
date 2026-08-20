@@ -85,12 +85,33 @@ export async function routeMockRequest<T>(
       return {
         success: true, message: 'Demo Dashboard',
         data: {
-          stats: { totalMembers: 1240, activeMembers: 890, monthlyRevenue: 450000, pendingInquiries: 45 },
-          revenueChart: [
-            { name: 'Jan', value: 300000 }, { name: 'Feb', value: 350000 },
-            { name: 'Mar', value: 320000 }, { name: 'Apr', value: 450000 }
+          totalMembers: 1240, 
+          activeMembers: 890, 
+          newMembersThisMonth: 124,
+          totalRevenue: 5400000,
+          monthlyRevenue: 450000, 
+          pendingPayments: 24500,
+          totalStaff: 15,
+          activeStaff: 12,
+          totalProducts: 450,
+          lowStockCount: 3,
+          totalInquiries: 320,
+          newInquiries: 45,
+          membersByStatus: { active: 890, pending: 45, expired: 305 },
+          memberGrowth: [
+            { month: 'Jan', count: 800 }, { month: 'Feb', count: 850 },
+            { month: 'Mar', count: 950 }, { month: 'Apr', count: 1100 }
           ],
-          recentActivities: generate(5, i => ({ id: `act-${i}`, title: `New Member joined`, time: '2 hours ago' }))
+          revenueChart: [
+            { month: 'Jan', revenue: 300000 }, { month: 'Feb', revenue: 350000 },
+            { month: 'Mar', revenue: 320000 }, { month: 'Apr', revenue: 450000 }
+          ],
+          membersByPlan: [
+            { plan: 'Basic', count: 400 }, { plan: 'Pro', count: 600 }, { plan: 'Elite', count: 240 }
+          ],
+          recentMembers: generate(5, (i: number) => ({ id: `mem-${i}`, name: `New Member ${i}`, plan: 'Pro', status: 'ACTIVE', joinDate: '2023-10-01', paidAmount: 5000 })),
+          recentPayments: generate(5, (i: number) => ({ id: `pay-${i}`, invoiceNo: `INV-00${i}`, amount: 3000, method: 'CARD', paidAt: '2023-10-01', member: { name: `Member ${i}` } })),
+          pendingPaymentsList: generate(3, (i: number) => ({ id: `pend-${i}`, name: `Pending ${i}`, pendingAmount: 1500, expiryDate: '2023-09-25' }))
         }
       } as unknown as ApiResponse<T>;
     }
@@ -204,10 +225,13 @@ export async function routeMockRequest<T>(
       }))} as unknown as ApiResponse<T>;
     }
     if (path.includes('/superadmin/jobs')) {
-      return { success: true, message: 'Demo Jobs', data: generate(8, i => ({
-        id: `job-${i}`, queueName: 'billing', jobName: 'process_invoice', status: i === 2 ? 'FAILED' : 'COMPLETED',
-        attempts: 1, createdAt: '2023-11-05'
-      }))} as unknown as ApiResponse<T>;
+      return { success: true, message: 'Demo Jobs', data: {
+        jobs: generate(8, (i: number) => ({
+          id: `job-${i}`, queueName: 'billing', jobName: 'process_invoice', status: i === 2 ? 'FAILED' : 'COMPLETED',
+          attempts: 1, createdAt: '2023-11-05'
+        })),
+        metrics: { activeJobs: 3, completed24h: 120, failed24h: 2, delayed: 0 }
+      }} as unknown as ApiResponse<T>;
     }
     if (path.includes('/superadmin/backups')) {
       return { success: true, message: 'Demo Backups', data: generate(5, i => ({

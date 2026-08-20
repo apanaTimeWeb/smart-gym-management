@@ -38,6 +38,9 @@
   --color-purple: var(--purple);
   --color-purple-bg: var(--purple-bg);
   
+  --color-skeleton-base: var(--skeleton-base);
+  --color-skeleton-highlight: var(--skeleton-highlight);
+  
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: Menlo, monospace;
@@ -73,6 +76,9 @@
   --purple: #8B5CF6;
   --purple-bg: #EDE9FE;
 
+  --skeleton-base: #E2E8F0;
+  --skeleton-highlight: #F1F5F9;
+
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
@@ -107,6 +113,9 @@
   --info-bg: #1E3A5F;
   --purple: #8B5CF6;
   --purple-bg: #2E1065;
+
+  --skeleton-base: #2A2A3E;
+  --skeleton-highlight: #3F3F5A;
 
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
   --shadow: 0 4px 12px 0 rgb(0 0 0 / 0.5);

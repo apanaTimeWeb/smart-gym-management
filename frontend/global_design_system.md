@@ -505,6 +505,18 @@ Enterprise users have different preferences for how much data fits on a screen.
 - **Layout:** Each row becomes a card. The primary identifier (Name/ID) becomes the card title. Status badges align top-right. Other columns become `Label: Value` pairs stacked inside the card.
 - **Actions:** Inline actions appear at the bottom of the card or via a `...` dropdown menu.
 
+## 26. GLOBAL LOADING, EMPTY, & ERROR STATES
+- **Top Routing Progress:** Every Next.js route transition MUST trigger a top progress bar (`nextjs-toploader`) to indicate background navigation. Color: `--primary`.
+- **Skeleton Loading (`loading.tsx`):** All major data-fetching pages MUST have a `loading.tsx` file implementing a Skeleton UI.
+  - Skeletons use `bg-skeleton-base` and a pulsing `bg-skeleton-highlight` gradient.
+  - Never use a generic spinner for full-page loading; always use structural skeletons mimicking the layout (e.g., tables, grids).
+- **Empty States:** When a list or table returns 0 results, do NOT show a blank screen or empty table body. Show an empty state component with:
+  - A subtle relevant icon (e.g., a file icon for missing invoices).
+  - A muted text description (e.g., "No invoices found for this period").
+  - A primary call-to-action button (e.g., "Create Invoice") if the user has permission.
+- **Error Boundaries (`error.tsx`):** Every module must implement an `error.tsx` that catches rendering/fetching crashes. The UI should match the app shell, display a non-technical error summary, and provide a primary "Try Again" button that calls `reset()`.
+- **Not Found States (`not-found.tsx`):** 404 pages must be beautifully branded, offering a clear "Back to Dashboard" button instead of a generic browser error.
+
 ---
 
 *END OF GLOBAL DESIGN SYSTEM — Paste this block before every module you give to Stitch.*

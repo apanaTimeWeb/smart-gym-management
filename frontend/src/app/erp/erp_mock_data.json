@@ -1,11 +1,1 @@
-{
-  "GET /erp/dashboard": {
-    "success": true,
-    "message": "Dashboard data fetched (Demo Mode)",
-    "data": {
-      "totalStudents": 150,
-      "activeSubscriptions": 120,
-      "revenue": 50000
-    }
-  }
-}
+{}
