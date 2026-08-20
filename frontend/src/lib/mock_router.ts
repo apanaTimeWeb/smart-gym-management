@@ -225,10 +225,13 @@ export async function routeMockRequest<T>(
       }))} as unknown as ApiResponse<T>;
     }
     if (path.includes('/superadmin/jobs')) {
-      return { success: true, message: 'Demo Jobs', data: generate(8, i => ({
-        id: `job-${i}`, queueName: 'billing', jobName: 'process_invoice', status: i === 2 ? 'FAILED' : 'COMPLETED',
-        attempts: 1, createdAt: '2023-11-05'
-      }))} as unknown as ApiResponse<T>;
+      return { success: true, message: 'Demo Jobs', data: {
+        jobs: generate(8, (i: number) => ({
+          id: `job-${i}`, queueName: 'billing', jobName: 'process_invoice', status: i === 2 ? 'FAILED' : 'COMPLETED',
+          attempts: 1, createdAt: '2023-11-05'
+        })),
+        metrics: { activeJobs: 3, completed24h: 120, failed24h: 2, delayed: 0 }
+      }} as unknown as ApiResponse<T>;
     }
     if (path.includes('/superadmin/backups')) {
       return { success: true, message: 'Demo Backups', data: generate(5, i => ({
