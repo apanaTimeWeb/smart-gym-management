@@ -4,7 +4,7 @@ import React from 'react';
 export const TableSkeleton = ({ rows = 6, columns = 5 }: { rows?: number, columns?: number }) => {
   return (
     <div className="w-full bg-card border border-border rounded-xl overflow-hidden mt-4">
-      <div className="w-full h-12 bg-[rgba(99,102,241,0.08)] border-b border-border"></div>
+      <div className="w-full h-12 bg-primary/10 border-b border-border"></div>
       <div className="flex flex-col">
         {Array.from({ length: rows }).map((_, i) => (
           <div key={i} className="flex items-center gap-4 px-6 h-15 border-b border-border animate-pulse">

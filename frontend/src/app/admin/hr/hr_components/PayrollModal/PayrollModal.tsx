@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Form modal for creating a new payroll entry for a staff member in the HR module.
+// RESPONSIBILITY: Form modal for creating a new payroll entry for a staff member in the HR module.
 'use client';
 
 import React, { useEffect } from 'react';
@@ -42,7 +42,7 @@ export default function PayrollModal() {
           <h2 className="text-xl font-bold text-foreground">
             Disburse Payroll
           </h2>
-          <button onClick={() => setShowPayrollModal(false)} className="p-2 rounded-full hover:bg-[rgba(99,102,241,0.1)] transition-colors text-secondary hover:text-foreground">
+          <button onClick={() => setShowPayrollModal(false)} className="p-2 rounded-full hover:bg-primary/10 transition-colors text-secondary hover:text-foreground">
             <X size={20} />
           </button>
         </div>
