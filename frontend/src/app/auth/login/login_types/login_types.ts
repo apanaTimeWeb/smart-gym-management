@@ -32,5 +32,7 @@ export interface UseLoginFormReturn {
   setShowPassword: (val: boolean) => void;
   onSubmit: (data: LoginFormData) => Promise<void>;
   handleDemoSuperadminLogin: () => void;
-  handleDemoErpLogin: () => void;
+  handleDemoAdminLogin: () => void;
+  handleDemoManagerLogin: () => void;
+  handleDemoTrainerLogin: () => void;
 }

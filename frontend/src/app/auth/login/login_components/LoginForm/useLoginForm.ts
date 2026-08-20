@@ -72,7 +72,7 @@ export function useLoginForm(): UseLoginFormReturn {
     }, 300);
   }, [form, onSubmit]);
 
-  const handleDemoErpLogin = useCallback(() => {
+  const handleDemoAdminLogin = useCallback(() => {
     form.setValue('email', 'admin@gymsmart.com');
     form.setValue('password', 'demo123');
     setTimeout(() => {
@@ -80,5 +80,24 @@ export function useLoginForm(): UseLoginFormReturn {
     }, 300);
   }, [form, onSubmit]);
 
-  return { form, status, showPassword, setShowPassword, onSubmit, handleDemoSuperadminLogin, handleDemoErpLogin };
+  const handleDemoManagerLogin = useCallback(() => {
+    form.setValue('email', 'manager@gymsmart.com');
+    form.setValue('password', 'demo123');
+    setTimeout(() => {
+      form.handleSubmit(onSubmit)();
+    }, 300);
+  }, [form, onSubmit]);
+
+  const handleDemoTrainerLogin = useCallback(() => {
+    form.setValue('email', 'trainer@gymsmart.com');
+    form.setValue('password', 'demo123');
+    setTimeout(() => {
+      form.handleSubmit(onSubmit)();
+    }, 300);
+  }, [form, onSubmit]);
+
+  return { 
+    form, status, showPassword, setShowPassword, onSubmit, 
+    handleDemoSuperadminLogin, handleDemoAdminLogin, handleDemoManagerLogin, handleDemoTrainerLogin 
+  };
 }
