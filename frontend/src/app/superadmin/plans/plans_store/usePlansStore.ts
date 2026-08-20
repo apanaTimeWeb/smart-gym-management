@@ -6,7 +6,7 @@
  */
 import { create } from 'zustand';
 import toast from 'react-hot-toast';
-import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
+import { plansApi } from '@/app/superadmin/plans/plans_api/plans_api';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { apiFetch } from '@/lib/api';
 import type {
@@ -14,7 +14,7 @@ import type {
   CreatePlanPayload,
   UpdatePlanPayload,
   FetchState,
-} from '@/app/superadmin/superadmin_types/superadmin_types';
+} from '@/app/superadmin/plans/plans_types/plans_types';
 import type { ApiResponse } from '@/lib/api';
 
 interface PlansStoreState {
@@ -61,7 +61,7 @@ export const usePlansStore = create<PlansStoreState>((set, get) => ({
   fetchPlans: async () => {
     set({ fetchState: 'loading', error: null });
     try {
-      const res = await superadminApi.plans.getAll();
+      const res = await plansApi.getAll();
       set({ plans: res.data ?? [], fetchState: 'success' });
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : 'Failed to fetch plans';
@@ -73,10 +73,7 @@ export const usePlansStore = create<PlansStoreState>((set, get) => ({
   handleCreatePlan: async (data) => {
     set({ actionLoadingId: 'create' });
     try {
-      const res = await apiFetch<ApiResponse<SubscriptionPlan>>(
-        SuperadminUrlConfig.BACKEND_API.PLANS_BASE,
-        { method: 'POST', body: JSON.stringify(data) }
-      );
+      const res = await plansApi.create(data);
       set(state => ({ plans: [...state.plans, res.data] }));
       toast.success(res.message || 'Plan created');
       get().closeCreateModal();
@@ -90,10 +87,7 @@ export const usePlansStore = create<PlansStoreState>((set, get) => ({
   handleUpdatePlan: async (id, data) => {
     set({ actionLoadingId: id });
     try {
-      const res = await apiFetch<ApiResponse<SubscriptionPlan>>(
-        `${SuperadminUrlConfig.BACKEND_API.PLANS_BASE}/${id}`,
-        { method: 'PATCH', body: JSON.stringify(data) }
-      );
+      const res = await plansApi.update(id, data);
       set(state => ({
         plans: state.plans.map(p => p.id === id ? { ...p, ...res.data } : p),
       }));
@@ -109,10 +103,7 @@ export const usePlansStore = create<PlansStoreState>((set, get) => ({
   handleDeletePlan: async (id) => {
     set({ actionLoadingId: id });
     try {
-      const res = await apiFetch<ApiResponse<null>>(
-        `${SuperadminUrlConfig.BACKEND_API.PLANS_BASE}/${id}`,
-        { method: 'DELETE' }
-      );
+      const res = await plansApi.remove(id);
       set(state => ({ plans: state.plans.filter(p => p.id !== id) }));
       toast.success(res.message || 'Plan deleted');
     } catch (e: unknown) {

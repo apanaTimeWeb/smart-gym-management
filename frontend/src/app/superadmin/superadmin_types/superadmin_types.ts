@@ -73,18 +73,7 @@ export type UpdatePlanPayload = Partial<CreatePlanPayload>;
 
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 
-export type TicketStatus = 'OPEN' | 'IN_PROGRESS' | 'RESOLVED';
-export type TicketPriority = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 
-export interface SupportTicket {
-  id: string;
-  tenantName: string;
-  subject: string;
-  status: TicketStatus;
-  priority: TicketPriority;
-  createdAt: string;
-  lastUpdated: string;
-}
 
 export interface BackgroundJob {
   id: string;
@@ -113,33 +102,9 @@ export interface BackupRecord {
   timestamp: string;
 }
 
-// Phase 3 Types
-export interface SaaSInvoice {
-  id: string;
-  tenantName: string;
-  amount: number;
-  currency: string;
-  status: 'PAID' | 'PENDING' | 'FAILED';
-  date: string;
-  planName: string;
-}
 
-export interface FeatureFlag {
-  id: string;
-  name: string;
-  description: string;
-  isGlobalEnabled: boolean;
-  enabledTenantIds: string[];
-}
 
-export interface ReleaseNote {
-  id: string;
-  version: string;
-  title: string;
-  content: string;
-  date: string;
-  isPublished: boolean;
-}
+
 
 export interface SchemaMigration {
   id: string;
@@ -172,32 +137,7 @@ export interface Broadcast {
   sentDate: string | null;
 }
 
-export type CouponStatus = 'ACTIVE' | 'INACTIVE' | 'EXPIRED' | 'DEPLETED';
 
-export interface Coupon {
-  id: string;
-  code: string;
-  discountType: 'PERCENTAGE' | 'EXACT';
-  discountValue: number;
-  maxUses: number;
-  currentUses: number;
-  status: CouponStatus;
-  expiryDate: string;
-  isDeleted: boolean;
-}
-
-export type AffiliateStatus = 'ACTIVE' | 'INACTIVE';
-
-export interface Affiliate {
-  id: string;
-  name: string;
-  email: string;
-  referralCode: string;
-  totalReferred: number;
-  commissionEarned: number;
-  status: AffiliateStatus;
-  joinedAt: string;
-}
 
 export interface PlatformSetting {
   id: string;

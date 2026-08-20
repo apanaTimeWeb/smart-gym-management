@@ -1,6 +1,6 @@
 import React from 'react';
 import { Receipt } from 'lucide-react';
-import type { SaaSInvoice } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { SaaSInvoice } from '@/app/superadmin/invoices/invoices_types/invoices_types';
 import InvoicesTableRow from './InvoicesTableRow';
 
 interface InvoicesTableProps {

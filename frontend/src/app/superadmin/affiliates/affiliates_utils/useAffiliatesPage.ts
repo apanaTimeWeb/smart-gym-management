@@ -3,16 +3,16 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
+import { useAffiliatesData } from '@/app/superadmin/affiliates/affiliates_utils/useAffiliatesData';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
-import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
-import { useSuperadminMutation } from '@/app/superadmin/superadmin_utils/hooks/useSuperadminMutation';
+import { affiliatesApi } from '@/app/superadmin/affiliates/affiliates_api/affiliates_api';
+import { useAffiliatesMutation } from '@/app/superadmin/affiliates/affiliates_utils/useAffiliatesMutation';
 import { AffiliateSchema, AffiliateFormData } from '@/app/superadmin/affiliates/affiliates_types/affiliates_types';
-import type { Affiliate, AffiliateStatus } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { Affiliate, AffiliateStatus } from '@/app/superadmin/affiliates/affiliates_types/affiliates_types';
 
 export const useAffiliatesPage = () => {
   const [affiliates, setAffiliates] = useState<Affiliate[]>([]);
-  const { data: fetchedData, fetchState, error } = useSuperadminData<Affiliate[]>(
+  const { data: fetchedData, fetchState, error } = useAffiliatesData<Affiliate[]>(
     SuperadminUrlConfig.BACKEND_API.AFFILIATES_BASE
   );
 
@@ -30,11 +30,11 @@ export const useAffiliatesPage = () => {
     defaultValues: { name: '', email: '', referralCode: '' },
   });
 
-  const { mutate, isMutating } = useSuperadminMutation();
+  const { mutate, isMutating } = useAffiliatesMutation();
 
   const handleAddAffiliate = useCallback(async (data: AffiliateFormData) => {
     await mutate<Affiliate>(
-      () => superadminApi.affiliates.create(data),
+      () => affiliatesApi.create(data),
       {
         successMessage: 'Affiliate added successfully',
         onSuccess: (res) => {
@@ -49,7 +49,7 @@ export const useAffiliatesPage = () => {
   const handleEditAffiliate = useCallback(async (data: AffiliateFormData) => {
     if (!editingAffiliate) return;
     await mutate<Affiliate>(
-      () => superadminApi.affiliates.update(editingAffiliate.id, data),
+      () => affiliatesApi.update(editingAffiliate.id, data),
       {
         successMessage: 'Affiliate updated successfully',
         onSuccess: (res) => {
@@ -65,7 +65,7 @@ export const useAffiliatesPage = () => {
   const handleToggleAffiliateStatus = useCallback(async (id: string, currentStatus: AffiliateStatus) => {
     const newStatus: AffiliateStatus = currentStatus === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
     await mutate<Affiliate>(
-      () => superadminApi.affiliates.updateStatus(id, newStatus),
+      () => affiliatesApi.updateStatus(id, newStatus),
       {
         successMessage: 'Affiliate status updated successfully',
         onSuccess: () => {
@@ -78,7 +78,7 @@ export const useAffiliatesPage = () => {
   const handleDeleteAffiliate = useCallback(async (id: string) => {
     // Confirmation is handled by the caller via a modal — not window.confirm
     await mutate<void>(
-      () => superadminApi.affiliates.remove(id),
+      () => affiliatesApi.remove(id),
       {
         successMessage: 'Affiliate deleted successfully',
         onSuccess: () => {

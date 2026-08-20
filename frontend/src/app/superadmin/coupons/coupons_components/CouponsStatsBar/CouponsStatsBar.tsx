@@ -1,7 +1,10 @@
 'use client';
 // RESPONSIBILITY: Renders the KPI stat cards (Active Coupons, Total Redeemed) for the Coupons page. Purely presentational — receives data via props.
 import { Tag } from 'lucide-react';
-import type { CouponsStatsBarProps } from '@/app/superadmin/coupons/coupons_types/coupons_types';
+interface CouponsStatsBarProps {
+  activeCoupons: number;
+  totalRedeemed: number;
+}
 
 export default function CouponsStatsBar({ activeCoupons, totalRedeemed }: CouponsStatsBarProps) {
   return (

@@ -17,7 +17,7 @@ export async function routeMockRequest<T>(
     } else if (path.includes('/admin')) {
       mockData = (await import('@/app/admin/admin_mock_data.json')).default;
     } else if (path.includes('/manager')) {
-      mockData = (await import('@/app/manager/manager_mock_data.json')).default;
+      mockData = {};
     } else if (path.includes('/trainer')) {
       mockData = (await import('@/app/trainer/trainer_mock_data.json')).default;
     } else if (path.includes('/superadmin')) {

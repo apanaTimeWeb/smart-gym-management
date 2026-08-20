@@ -7,7 +7,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { CouponSchema, CouponFormData } from '@/app/superadmin/coupons/coupons_types/coupons_types';
-import { Coupon } from '@/app/superadmin/superadmin_types/superadmin_types';
+import { Coupon } from '@/app/superadmin/coupons/coupons_types/coupons_types';
 
 interface SuperadminCouponEditModalProps {
   isOpen: boolean;

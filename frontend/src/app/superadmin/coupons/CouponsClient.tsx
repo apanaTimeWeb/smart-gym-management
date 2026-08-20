@@ -1,7 +1,7 @@
 'use client';
 // RESPONSIBILITY: Root orchestrator for the Coupons page. Composes isolated sub-components and passes state from useCouponsPage. No business logic here.
 
-import { useCouponsPage } from '@/app/superadmin/superadmin_utils/hooks/useCouponsPage';
+import { useCouponsPage } from '@/app/superadmin/coupons/coupons_utils/useCouponsPage';
 import CouponsHeader from '@/app/superadmin/coupons/coupons_components/CouponsHeader/CouponsHeader';
 import CouponsStatsBar from '@/app/superadmin/coupons/coupons_components/CouponsStatsBar/CouponsStatsBar';
 import CouponsTable from '@/app/superadmin/coupons/coupons_components/CouponsTable/CouponsTable';

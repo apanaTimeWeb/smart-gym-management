@@ -1,6 +1,10 @@
 'use client';
 // RESPONSIBILITY: Renders the status badge pill for a single affiliate. Purely presentational — maps AffiliateStatus to design system colors.
-import type { AffiliateStatusBadgeProps } from '@/app/superadmin/affiliates/affiliates_types/affiliates_types';
+import type { AffiliateStatus } from '@/app/superadmin/affiliates/affiliates_types/affiliates_types';
+
+interface AffiliateStatusBadgeProps {
+  status: AffiliateStatus;
+}
 
 export default function AffiliateStatusBadge({ status }: AffiliateStatusBadgeProps) {
   switch (status) {

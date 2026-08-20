@@ -3,15 +3,15 @@
 
 import { Users, Building2, CreditCard, Activity } from 'lucide-react';
 import dynamic from 'next/dynamic';
-import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
+import { useDashboardData } from '@/app/superadmin/dashboard/dashboard_utils/useDashboardData';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { CHART_COLORS } from '@/app/superadmin/superadmin_utils/SuperadminChartConstants';
-import { SaaSDashboardMetrics, RevenueChartData, GrowthChartData } from '@/app/superadmin/superadmin_types/superadmin_types';
+import { SaaSDashboardMetrics, RevenueChartData, GrowthChartData } from '@/app/superadmin/dashboard/dashboard_types/dashboard_types';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 export default function DashboardView() {
-  const { data, fetchState, error } = useSuperadminData<{ metrics: SaaSDashboardMetrics, revenue: RevenueChartData[], growth: GrowthChartData[] }>(SuperadminUrlConfig.BACKEND_API.DASHBOARD_BASE);
+  const { data, fetchState, error } = useDashboardData<{ metrics: SaaSDashboardMetrics, revenue: RevenueChartData[], growth: GrowthChartData[] }>(SuperadminUrlConfig.BACKEND_API.DASHBOARD_BASE);
 
   if (fetchState === 'loading') {
     return (

@@ -2,7 +2,15 @@
 // RESPONSIBILITY: Renders a single row in the Coupons data table. Handles row-level action buttons with stopPropagation. Purely presentational.
 import { Edit2, Trash2, RefreshCw, ToggleLeft, ToggleRight } from 'lucide-react';
 import CouponsStatusBadge from '@/app/superadmin/coupons/coupons_components/CouponsStatusBadge/CouponsStatusBadge';
-import type { CouponsTableRowProps } from '@/app/superadmin/coupons/coupons_types/coupons_types';
+import type { Coupon, CouponStatus } from '@/app/superadmin/coupons/coupons_types/coupons_types';
+
+interface CouponsTableRowProps {
+  coupon: Coupon;
+  onToggleStatus: (id: string, currentStatus: CouponStatus) => void;
+  onEdit: (coupon: Coupon) => void;
+  onDelete: (id: string) => void;
+  onRestore: (id: string) => void;
+}
 
 export default function CouponsTableRow({ coupon: cpn, onToggleStatus, onEdit, onDelete, onRestore }: CouponsTableRowProps) {
   return (

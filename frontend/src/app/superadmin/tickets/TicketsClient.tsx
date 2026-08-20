@@ -2,11 +2,10 @@
 'use client';
 
 import { useState } from 'react';
-import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
+import { useTicketsData } from '@/app/superadmin/tickets/tickets_utils/useTicketsData';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { Ticket, Search, Filter, MessageSquare } from 'lucide-react';
-import { TicketStatus, TicketPriority } from '@/app/superadmin/superadmin_types/superadmin_types';
-import { SupportTicket } from '@/app/superadmin/superadmin_types/superadmin_types';
+import { TicketStatus, TicketPriority, SupportTicket } from '@/app/superadmin/tickets/tickets_types/tickets_types';
 
 const PriorityColors: Record<TicketPriority, string> = {
   LOW: 'text-success bg-success/10 border-success/20',
@@ -22,7 +21,7 @@ const StatusColors: Record<TicketStatus, string> = {
 };
 
 export default function TicketsClient() {
-  const { data: DUMMY_SUPPORT_TICKETS, fetchState, error } = useSuperadminData<SupportTicket[]>(SuperadminUrlConfig.BACKEND_API.TICKETS_BASE);
+  const { data: DUMMY_SUPPORT_TICKETS, fetchState, error } = useTicketsData<SupportTicket[]>(SuperadminUrlConfig.BACKEND_API.TICKETS_BASE);
 
     const [search, setSearch] = useState('');
 if (fetchState === 'loading') return (

@@ -112,75 +112,9 @@ export const subscriptionPlanSchema = z.object({
 
 export type SubscriptionPlanFormValues = z.infer<typeof subscriptionPlanSchema>;
 
-// ─── Coupon Schema ────────────────────────────────────────────────────────── //
+// Coupon Schema has been moved to coupons_types.ts
 
-/**
- * Zod v4 schema for creating / editing Promotional Coupons (SuperadminCouponModal, SuperadminCouponEditModal).
- */
-export const couponSchema = z
-  .object({
-    code: z
-      .string()
-      .min(3, 'Coupon code must be at least 3 characters.')
-      .max(20, 'Coupon code cannot exceed 20 characters.')
-      .regex(/^[A-Z0-9-]+$/, 'Code must be uppercase letters, digits, and hyphens only.'),
-
-    discountType: z.enum(['PERCENTAGE', 'EXACT'] as const, {
-      error: 'Select a discount type.',
-    }),
-
-    discountValue: z
-      .number()
-      .positive('Discount value must be greater than zero.'),
-
-    maxUses: z
-      .number()
-      .int('Must be a whole number.')
-      .min(1, 'Must allow at least 1 use.'),
-
-    expiryDate: z
-      .string()
-      .min(1, 'Expiry date is required.')
-      .refine((val) => new Date(val) > new Date(), {
-        message: 'Expiry date must be in the future.',
-      }),
-  })
-  .superRefine(({ discountType, discountValue }, ctx) => {
-    if (discountType === 'PERCENTAGE' && discountValue > 100) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'Percentage discount cannot exceed 100%.',
-        path: ['discountValue'],
-      });
-    }
-  });
-
-export type CouponFormValues = z.infer<typeof couponSchema>;
-
-// ─── Affiliate Schema ─────────────────────────────────────────────────────── //
-
-/**
- * Zod v4 schema for creating a new Affiliate Partner (SuperadminAffiliateModal).
- */
-export const affiliateSchema = z.object({
-  name: z
-    .string()
-    .min(2, 'Name must be at least 2 characters.')
-    .max(80, 'Name cannot exceed 80 characters.'),
-
-  email: z
-    .string()
-    .min(1, 'Email is required.')
-    .email('Enter a valid email address.'),
-
-  referralCode: z
-    .string()
-    .min(4, 'Referral code must be at least 4 characters.')
-    .max(16, 'Referral code cannot exceed 16 characters.')
-    .regex(/^[A-Za-z0-9]+$/, 'Referral code must be alphanumeric only.'),
-});
-
-export type AffiliateFormValues = z.infer<typeof affiliateSchema>;
+// Affiliate Schema has been moved to affiliates_types.ts
 
 // ─── Broadcast Schema ─────────────────────────────────────────────────────── //
 

@@ -4,16 +4,16 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
-import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
+import { useCouponsData } from '@/app/superadmin/coupons/coupons_utils/useCouponsData';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
-import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
-import { useSuperadminMutation } from '@/app/superadmin/superadmin_utils/hooks/useSuperadminMutation';
+import { couponsApi } from '@/app/superadmin/coupons/coupons_api/coupons_api';
+import { useCouponsMutation } from '@/app/superadmin/coupons/coupons_utils/useCouponsMutation';
 import { CouponSchema, CouponFormData } from '@/app/superadmin/coupons/coupons_types/coupons_types';
-import type { Coupon, CouponStatus } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { Coupon, CouponStatus } from '@/app/superadmin/coupons/coupons_types/coupons_types';
 
 export const useCouponsPage = () => {
   const [coupons, setCoupons] = useState<Coupon[]>([]);
-  const { data: fetchedData, fetchState, error } = useSuperadminData<Coupon[]>(
+  const { data: fetchedData, fetchState, error } = useCouponsData<Coupon[]>(
     SuperadminUrlConfig.BACKEND_API.COUPONS_BASE
   );
 
@@ -38,11 +38,11 @@ export const useCouponsPage = () => {
     },
   });
 
-  const { mutate, isMutating } = useSuperadminMutation();
+  const { mutate, isMutating } = useCouponsMutation();
 
   const handleCreateCoupon = useCallback(async (data: CouponFormData) => {
     await mutate<Coupon>(
-      () => superadminApi.coupons.create(data),
+      () => couponsApi.create(data),
       {
         successMessage: 'Coupon created successfully',
         onSuccess: (res) => {
@@ -55,8 +55,9 @@ export const useCouponsPage = () => {
   }, [form, mutate]);
 
   const handleUpdateCoupon = useCallback(async (id: string, data: Partial<CouponFormData>) => {
+    if (!selectedCoupon) return;
     await mutate<Coupon>(
-      () => superadminApi.coupons.update(id, data),
+      () => couponsApi.update(selectedCoupon.id, data),
       {
         successMessage: 'Coupon updated successfully',
         onSuccess: (res) => {
@@ -71,7 +72,7 @@ export const useCouponsPage = () => {
   const handleDeleteCoupon = useCallback(async (id: string) => {
     // Confirmation is handled by the caller via a modal — not window.confirm
     await mutate<void>(
-      () => superadminApi.coupons.remove(id),
+      () => couponsApi.remove(id),
       {
         successMessage: 'Coupon deleted successfully',
         onSuccess: () => {
@@ -83,7 +84,7 @@ export const useCouponsPage = () => {
 
   const handleToggleRestore = useCallback(async (id: string) => {
     await mutate<Coupon>(
-      () => superadminApi.coupons.update(id, { isDeleted: false }),
+      () => couponsApi.update(id, { isDeleted: false }),
       {
         successMessage: 'Coupon restored successfully',
         onSuccess: (res) => {
@@ -100,7 +101,7 @@ export const useCouponsPage = () => {
     }
     const newStatus: CouponStatus = currentStatus === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
     await mutate<Coupon>(
-      () => superadminApi.coupons.update(id, { status: newStatus }),
+      () => couponsApi.update(id, { status: newStatus }),
       {
         successMessage: `Coupon marked as ${newStatus}`,
         onSuccess: (res) => {
