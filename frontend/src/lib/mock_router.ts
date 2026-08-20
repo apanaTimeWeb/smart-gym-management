@@ -72,25 +72,6 @@ export async function routeMockRequest<T>(
   // Simulate network latency
   await new Promise((resolve) => setTimeout(resolve, 500));
 
-  let mockData: Record<string, any> = {};
-
-  try {
-    // Determine which module to load mock data from based on the path
-    if (path.includes('/auth')) {
-      mockData = (await import('@/app/auth/auth_mock_data.json')).default;
-    } else if (path.includes('/admin')) {
-      mockData = (await import('@/app/admin/admin_mock_data.json')).default;
-    } else if (path.includes('/manager')) {
-      mockData = {};
-    } else if (path.includes('/trainer')) {
-      mockData = (await import('@/app/trainer/trainer_mock_data.json')).default;
-    } else if (path.includes('/superadmin')) {
-      mockData = (await import('@/app/superadmin/superadmin_mock_data.json')).default;
-    }
-  } catch (error) {
-    console.warn(`[MockRouter] Could not load mock data for path: ${path}`);
-  }
-
   // Handle explicit dynamic mutations (like Login)
   if (method === 'POST' && path.includes('/auth/login')) {
     const bodyStr = typeof body === 'string' ? body : JSON.stringify(body || {});
@@ -111,15 +92,6 @@ export async function routeMockRequest<T>(
         }
       }
     } as unknown as ApiResponse<T>;
-  }
-
-  // Construct the lookup key, e.g., "GET /auth/login"
-  const key = `${method.toUpperCase()} ${path}`;
-  const response = mockData[key];
-
-  if (response) {
-    console.log(`[MockRouter] Serving mock data for ${key}`);
-    return response as ApiResponse<T>;
   }
 
   // ==========================================
@@ -161,7 +133,14 @@ export async function routeMockRequest<T>(
   if (path.includes('/superadmin/plans')) return MockDB.handleCrud('mock_saas_plans', method, path, body, generate(3, i => ({ id: `saas-plan-${i}`, name: i === 0 ? 'Starter' : i === 1 ? 'Pro' : 'Enterprise', priceMonthly: 1000 * (i + 1), priceAnnual: 10000 * (i + 1), maxMembers: 100 * (i + 1), maxStaff: 5 * (i + 1), features: ['CRM', 'Billing', 'Analytics'], activeTenants: 10 * (i + 1) }))) as unknown as ApiResponse<T>;
   // For features and migrations, which return compound objects in GET, we let GET bypass or handle specifically.
   if (path.includes('/superadmin/features')) return MockDB.handleCrud('mock_features', method, path, body, generate(4, i => ({ id: `flag-${i}`, name: `Beta_Feature_${i}`, description: 'A beta feature', isGlobalEnabled: true, enabledTenantIds: [] })), 'flags') as unknown as ApiResponse<T>;
-  if (path.includes('/superadmin/migrations')) return MockDB.handleCrud('mock_migrations', method, path, body, generate(3, i => ({ id: `mig-${i}`, name: `Add_Stripe_ID_${i}`, appliedAt: '2023-11-01', status: 'SUCCESS' })), 'migrations') as unknown as ApiResponse<T>;
+  if (path.includes('/superadmin/migrations')) {
+    if (method === 'GET') {
+      const migrations = MockDB.getCollection('mock_migrations', generate(3, i => ({ id: `mig-${i}`, name: `Add_Stripe_ID_${i}`, appliedAt: '2023-11-01', status: 'SUCCESS' })));
+      const tenants = MockDB.getCollection('mock_tenants', generate(8, i => ({ id: `tenant-${i}`, name: `Gym Branch ${i + 1}`, ownerName: 'Admin Owner', adminEmail: `admin${i}@gym.com`, phone: `998877665${i}`, status: 'ACTIVE', plan: 'Enterprise', createdAt: '2023-01-01', memberCount: 150 + (i * 20), monthlyRevenue: 50000 + (i * 5000), databaseVersion: 'v1.0' })));
+      return { success: true, message: 'Fetched migrations compound data', data: { migrations, tenants } } as unknown as ApiResponse<T>;
+    }
+    return MockDB.handleCrud('mock_migrations', method, path, body, [], 'migrations') as unknown as ApiResponse<T>;
+  }
 
   // Dynamic Rich Data Generator for Demo Mode
   if (method === 'GET') {
