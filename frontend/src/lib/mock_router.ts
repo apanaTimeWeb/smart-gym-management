@@ -260,7 +260,7 @@ export async function routeMockRequest<T>(
   }
 
   // Generic fallback if no specific mock is found for mutations (POST, PUT, DELETE)
-  console.log(`[MockRouter] No mock found for ${key}, returning safe mutation fallback.`);
+  console.log(`[MockRouter] No mock found for ${path}, returning safe mutation fallback.`);
   
   let parsedBody: any = {};
   if (body) {
