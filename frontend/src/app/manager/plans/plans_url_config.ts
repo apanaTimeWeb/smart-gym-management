@@ -1,12 +1,12 @@
 // RESPONSIBILITY: Provides the implementation for plans_url_config.ts functionality within its module.
 export const PlansUrlConfig = {
   PAGES: {
-    LIST: '/manager/plans',
+    LIST: '/admin/plans',
   },
   BACKEND_API: {
-    BASE: '/manager/plans',
-    GET_ONE: (id: string) => `/manager/plans/${id}`,
-    UPDATE: (id: string) => `/manager/plans/${id}`,
-    DELETE: (id: string) => `/manager/plans/${id}`,
+    BASE: '/admin/plans',
+    GET_ONE: (id: string) => `/admin/plans/${id}`,
+    UPDATE: (id: string) => `/admin/plans/${id}`,
+    DELETE: (id: string) => `/admin/plans/${id}`,
   }
 };

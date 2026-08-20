@@ -1,9 +1,0 @@
-// RESPONSIBILITY: Provides strongly-typed network calls for the settings module.
-import { apiFetch } from '@/lib/api';
-import { SettingsUrlConfig } from '@/app/manager/settings/settings_url_config';
-
-export const settingsApi = {
-  getSettings: () => apiFetch<{ data?: Record<string, unknown>; message?: string }>(SettingsUrlConfig.BACKEND_API.BASE),
-  updateSettings: (body: any) =>
-    apiFetch<{ message?: string }>(SettingsUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body) }),
-};
