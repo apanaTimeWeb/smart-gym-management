@@ -59,11 +59,11 @@ export default function GymsTable() {
                 onClick={() => handleRowClick(gym.name)}
                 className="hover:bg-card/50 transition-all duration-200 ease-in-out group cursor-pointer"
               >
-                <td className="p-4 max-w-[12rem]">
+                <td className="p-4 max-w-48">
                   <p className="font-semibold text-foreground truncate" title={gym.name}>{gym.name}</p>
                   <p className="text-xs text-disabled mt-1 truncate" title={gym.id}>{gym.id}</p>
                 </td>
-                <td className="p-4 max-w-[10rem]">
+                <td className="p-4 max-w-40">
                   <p className="text-secondary truncate" title={gym.ownerName}>{gym.ownerName}</p>
                   <p className="text-xs text-disabled mt-1 truncate" title={gym.adminEmail}>{gym.adminEmail}</p>
                 </td>

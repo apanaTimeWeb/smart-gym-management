@@ -63,7 +63,7 @@ if (fetchState === 'loading') return (
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse min-w-[48rem]">
+          <table className="w-full text-left border-collapse min-w-max">
             <thead>
               <tr className="bg-header border-b border-border text-sm">
                 <th className="p-4 font-semibold text-secondary">Ticket ID</th>

@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { jobsApi } from '@/app/superadmin/jobs/jobs_api/jobs_api';
-import type { BackgroundJob } from '@/app/superadmin/jobs/jobs_types/jobs_types';
+import type { BackgroundJob, JobsMetrics } from '@/app/superadmin/jobs/jobs_types/jobs_types';
 
 type FetchState = 'idle' | 'loading' | 'success' | 'error';
 
 export function useJobsData() {
-  const [data, setData] = useState<{ jobs: BackgroundJob[], metrics: any } | null>(null);
+  const [data, setData] = useState<{ jobs: BackgroundJob[], metrics: JobsMetrics } | null>(null);
   const [fetchState, setFetchState] = useState<FetchState>('idle');
   const [error, setError] = useState<Error | null>(null);
 
