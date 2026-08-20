@@ -93,14 +93,6 @@ export interface JobsMetrics {
 }
 
 
-export interface BackupRecord {
-  id: string;
-  tenantName: string;
-  databaseName: string;
-  sizeMB: number;
-  status: 'SUCCESS' | 'FAILED' | 'IN_PROGRESS';
-  timestamp: string;
-}
 
 
 
@@ -113,16 +105,7 @@ export interface SchemaMigration {
   status: 'PENDING' | 'SUCCESS' | 'FAILED';
 }
 
-// Phase 4 Types
-export interface GlobalAuditLog {
-  id: string;
-  actorName: string;
-  actorRole: 'SUPERADMIN' | 'SUPPORT_AGENT' | 'BILLING_ADMIN';
-  action: string;
-  targetResource: string;
-  timestamp: string;
-  ipAddress: string;
-}
+
 
 
 

@@ -8,8 +8,6 @@ import type {
   CreatePlanPayload, 
   UpdatePlanPayload,
   BackgroundJob,
-  BackupRecord,
-  GlobalAuditLog,
   SaaSDashboardMetrics,
   PlatformSetting,
   MigrationsPageData,
@@ -54,29 +52,14 @@ export const superadminApi = {
       return apiFetch<ApiResponse<BackgroundJob[]>>(`${SuperadminUrlConfig.BACKEND_API.JOBS_BASE}${q}`);
     },
   },
-  backups: {
-    getAll: (params?: Record<string, string>) => {
-      const q = params ? '?' + new URLSearchParams(params).toString() : '';
-      return apiFetch<ApiResponse<BackupRecord[]>>(`${SuperadminUrlConfig.BACKEND_API.BACKUPS_BASE}${q}`);
-    },
-  },
+
   migrations: {
     getAll: (params?: Record<string, string>) => {
       const q = params ? '?' + new URLSearchParams(params).toString() : '';
       return apiFetch<ApiResponse<MigrationsPageData>>(`${SuperadminUrlConfig.BACKEND_API.MIGRATIONS_BASE}${q}`);
     },
   },
-  auditLogs: {
-    getAll: (params?: Record<string, string>) => {
-      const q = params ? '?' + new URLSearchParams(params).toString() : '';
-      return apiFetch<ApiResponse<GlobalAuditLog[]>>(`${SuperadminUrlConfig.BACKEND_API.AUDIT_LOGS_BASE}${q}`);
-    },
-    getTenantLogs: (tenantId?: string) => {
-      const q = tenantId ? `?tenantId=${tenantId}` : '';
-      return apiFetch<ApiResponse<GlobalAuditLog[]>>(`${SuperadminUrlConfig.BACKEND_API.AUDIT_LOGS_BASE}/tenant${q}`);
-    },
-    getGlobalLogs: () => apiFetch<ApiResponse<GlobalAuditLog[]>>(`${SuperadminUrlConfig.BACKEND_API.AUDIT_LOGS_BASE}/global`),
-  },
+
   dashboard: {
     getData: () => apiFetch<ApiResponse<SaaSDashboardMetrics>>(SuperadminUrlConfig.BACKEND_API.DASHBOARD_BASE),
     getMetrics: () => apiFetch<ApiResponse<SaaSDashboardMetrics>>(`${SuperadminUrlConfig.BACKEND_API.DASHBOARD_BASE}/metrics`),

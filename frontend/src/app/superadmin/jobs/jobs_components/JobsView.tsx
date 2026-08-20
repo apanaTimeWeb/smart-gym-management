@@ -1,9 +1,9 @@
 "use client";
 // RESPONSIBILITY: JobsView.tsx renders the BullMQ background jobs table and metrics cards. Reads from useSuperadminData. No direct API calls.
-import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
+import { useJobsData } from '@/app/superadmin/jobs/jobs_utils/useJobsData';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
-import { Activity, Play, RefreshCw, XCircle, AlertTriangle } from 'lucide-react';
-import { BackgroundJob } from '@/app/superadmin/superadmin_types/superadmin_types';
+import { Activity, Play, AlertTriangle, RefreshCw, XCircle } from 'lucide-react';
+import type { BackgroundJob, JobsMetrics } from '@/app/superadmin/jobs/jobs_types/jobs_types';
 
 const StatusColors: Record<BackgroundJob['status'], string> = {
   ACTIVE: 'text-primary bg-primary/10',
@@ -13,8 +13,7 @@ const StatusColors: Record<BackgroundJob['status'], string> = {
 };
 
 export default function JobsView() {
-  const { data: responseData, fetchState, error } = useSuperadminData<{ jobs: BackgroundJob[], metrics: import('@/app/superadmin/superadmin_types/superadmin_types').JobsMetrics }>(SuperadminUrlConfig.BACKEND_API.JOBS_BASE);
-
+  const { data: responseData, fetchState, error } = useJobsData();
   if (fetchState === 'loading') return <div className="p-8 text-center text-disabled">Loading...</div>;
   if (error || !responseData) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
 

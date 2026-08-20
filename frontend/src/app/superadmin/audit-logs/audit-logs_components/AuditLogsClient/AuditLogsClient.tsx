@@ -7,7 +7,7 @@ import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadm
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { useDebounce } from '@/app/superadmin/superadmin_utils/useDebounce';
 import { AUDIT_LOGS_FALLBACK, AUDIT_LOGS_PAGE_SIZE } from '@/app/superadmin/superadmin_utils/AuditLogsConstants';
-import type { GlobalAuditLog } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { GlobalAuditLog } from '@/app/superadmin/audit-logs/audit-logs_types/audit-logs_types';
 
 export default function AuditLogsClient() {
   const router = useRouter();
