@@ -47,8 +47,10 @@ Respect the Next.js App Router architecture. Keep top-level files like `page.tsx
 *Why?* It creates a clean separation of concerns. Data fetching issues are solved in the Server Component; interactivity issues are solved in the Client Component. You will never need to feed an AI both files at the same time.
 
 9. **Leverage Next.js Native Features & Typed Error Boundaries**: 
-Ensure that the module properly utilizes Next.js native routing features for a great user experience. Extract loading states into `loading.tsx` wherever applicable in the module's directory.
-- **Typed Error Boundaries:** Beyond `error.tsx`, every module must have a typed React Error Boundary component (`[ModuleName]ErrorBoundary.tsx`) that wraps the module's root client component. It must display a module-specific fallback UI (not a generic "Something went wrong") and include a "Retry" button that calls `reset()`.
+Ensure that the module properly utilizes Next.js native routing features for a great user experience.
+- **`loading.tsx` (Skeleton UI):** You MUST extract loading states into a `loading.tsx` file wherever applicable in the module's directory. Never use a generic spinning circle for a full page load. Instead, design a premium Skeleton UI that mimics the actual layout of the page (using `bg-skeleton-base` and `bg-skeleton-highlight`).
+- **`error.tsx` (Error Boundaries):** Beyond the global `error.tsx`, every module must have a typed React Error Boundary component (`[ModuleName]ErrorBoundary.tsx` or a standard Next.js `error.tsx`) that wraps the module's root client component. It must display a module-specific fallback UI matching the app shell (not a generic "Something went wrong" browser error) and include a primary "Retry" button that calls `reset()`.
+- **`not-found.tsx` (404 Handling):** Handle missing dynamic routes gracefully by defining a `not-found.tsx` file. It should be beautifully branded and offer a clear "Back to Dashboard" button.
 
 10. **Absolute Imports Only (No Relative Paths)**: 
 Never use relative imports (like `../../` or `./`) for importing components, contexts, utilities, or types. Always use absolute imports starting with `@/` (e.g., `@/app/(erp)/workout/workout_context/WorkoutContext`).
