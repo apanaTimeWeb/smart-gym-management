@@ -1,7 +1,14 @@
 'use client';
 // RESPONSIBILITY: Renders the Affiliates data table shell (header row + rows). Delegates each row to AffiliatesTableRow. No API calls.
 import AffiliatesTableRow from '@/app/superadmin/affiliates/affiliates_components/AffiliatesTable/AffiliatesTableRow';
-import type { AffiliatesTableProps } from '@/app/superadmin/affiliates/affiliates_types/affiliates_types';
+import type { Affiliate, AffiliateStatus } from '@/app/superadmin/affiliates/affiliates_types/affiliates_types';
+
+interface AffiliatesTableProps {
+  affiliates: Affiliate[];
+  onToggleStatus: (id: string, currentStatus: AffiliateStatus) => void;
+  onEdit: (affiliate: Affiliate) => void;
+  onDelete: (id: string) => void;
+}
 
 export default function AffiliatesTable({ affiliates, onToggleStatus, onEdit, onDelete }: AffiliatesTableProps) {
   return (

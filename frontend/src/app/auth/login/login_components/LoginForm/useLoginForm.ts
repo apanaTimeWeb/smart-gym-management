@@ -48,8 +48,12 @@ export function useLoginForm(): UseLoginFormReturn {
         
         if (res.data.user?.role === 'SUPERADMIN') {
           window.location.replace(SuperadminUrlConfig.PAGES.DASHBOARD);
+        } else if (res.data.user?.role === 'MANAGER') {
+          window.location.replace(AuthUrlConfig.PAGES.MANAGER_DASHBOARD);
+        } else if (res.data.user?.role === 'TRAINER') {
+          window.location.replace(AuthUrlConfig.PAGES.TRAINER_DASHBOARD);
         } else {
-          window.location.replace(AuthUrlConfig.PAGES.DASHBOARD);
+          window.location.replace(AuthUrlConfig.PAGES.ADMIN_DASHBOARD);
         }
       }
     } catch (err: unknown) {
@@ -68,7 +72,7 @@ export function useLoginForm(): UseLoginFormReturn {
     }, 300);
   }, [form, onSubmit]);
 
-  const handleDemoErpLogin = useCallback(() => {
+  const handleDemoAdminLogin = useCallback(() => {
     form.setValue('email', 'admin@gymsmart.com');
     form.setValue('password', 'demo123');
     setTimeout(() => {
@@ -76,5 +80,24 @@ export function useLoginForm(): UseLoginFormReturn {
     }, 300);
   }, [form, onSubmit]);
 
-  return { form, status, showPassword, setShowPassword, onSubmit, handleDemoSuperadminLogin, handleDemoErpLogin };
+  const handleDemoManagerLogin = useCallback(() => {
+    form.setValue('email', 'manager@gymsmart.com');
+    form.setValue('password', 'demo123');
+    setTimeout(() => {
+      form.handleSubmit(onSubmit)();
+    }, 300);
+  }, [form, onSubmit]);
+
+  const handleDemoTrainerLogin = useCallback(() => {
+    form.setValue('email', 'trainer@gymsmart.com');
+    form.setValue('password', 'demo123');
+    setTimeout(() => {
+      form.handleSubmit(onSubmit)();
+    }, 300);
+  }, [form, onSubmit]);
+
+  return { 
+    form, status, showPassword, setShowPassword, onSubmit, 
+    handleDemoSuperadminLogin, handleDemoAdminLogin, handleDemoManagerLogin, handleDemoTrainerLogin 
+  };
 }

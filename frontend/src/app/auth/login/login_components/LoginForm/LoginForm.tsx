@@ -8,12 +8,12 @@ import { useLoginForm } from '@/app/auth/login/login_components/LoginForm/useLog
 import { LoginSharedConstants } from '@/app/auth/login/login_constants/LoginSharedConstants';
 
 export default function LoginForm() {
-  const { form, status, showPassword, setShowPassword, onSubmit, handleDemoSuperadminLogin, handleDemoErpLogin } = useLoginForm();
+  const { form, status, showPassword, setShowPassword, onSubmit, handleDemoSuperadminLogin, handleDemoAdminLogin, handleDemoManagerLogin, handleDemoTrainerLogin } = useLoginForm();
   const { register, handleSubmit, formState: { errors } } = form;
   const isLoading = status === 'loading';
 
   return (
-    <div className="w-full max-w-[420px] flex flex-col gap-8">
+    <div className="w-full max-w-md flex flex-col gap-8">
 
       {/* ── Brand header (mobile shows this; desktop hero panel shows it there) ── */}
       <div className="flex flex-col items-center text-center gap-2">
@@ -165,42 +165,69 @@ export default function LoginForm() {
           {/* Demo Login buttons */}
           <div className="relative flex items-center py-2">
             <div className="flex-grow border-t border-border"></div>
-            <span className="flex-shrink-0 mx-4 text-xs font-semibold text-secondary uppercase">OR</span>
+            <span className="flex-shrink-0 mx-4 text-xs font-semibold text-secondary uppercase">Quick Login Demos</span>
             <div className="flex-grow border-t border-border"></div>
           </div>
-          <div className="flex gap-3">
+          
+          <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
               disabled={isLoading}
               onClick={handleDemoSuperadminLogin}
               className={[
-                'w-full py-3.5 rounded-xl font-bold text-sm transition-all duration-200',
+                'w-full py-2.5 rounded-xl font-bold text-xs transition-all duration-200',
                 'flex items-center justify-center gap-2 border border-warning/30',
                 'text-warning hover:bg-warning/5 active:scale-[0.98]',
                 'disabled:opacity-70 disabled:cursor-not-allowed',
               ].join(' ')}
             >
-              Superadmin Demo
+              Superadmin
             </button>
             <button
               type="button"
               disabled={isLoading}
-              onClick={handleDemoErpLogin}
+              onClick={handleDemoAdminLogin}
               className={[
-                'w-full py-3.5 rounded-xl font-bold text-sm transition-all duration-200',
+                'w-full py-2.5 rounded-xl font-bold text-xs transition-all duration-200',
                 'flex items-center justify-center gap-2 border border-primary/30',
                 'text-primary hover:bg-primary/5 active:scale-[0.98]',
                 'disabled:opacity-70 disabled:cursor-not-allowed',
               ].join(' ')}
             >
-              ERP Demo
+              Admin
+            </button>
+            <button
+              type="button"
+              disabled={isLoading}
+              onClick={handleDemoManagerLogin}
+              className={[
+                'w-full py-2.5 rounded-xl font-bold text-xs transition-all duration-200',
+                'flex items-center justify-center gap-2 border border-success/30',
+                'text-success hover:bg-success/5 active:scale-[0.98]',
+                'disabled:opacity-70 disabled:cursor-not-allowed',
+              ].join(' ')}
+            >
+              Manager
+            </button>
+            <button
+              type="button"
+              disabled={isLoading}
+              onClick={handleDemoTrainerLogin}
+              className={[
+                'w-full py-2.5 rounded-xl font-bold text-xs transition-all duration-200',
+                'flex items-center justify-center gap-2 border border-info/30',
+                'text-info hover:bg-info/5 active:scale-[0.98]',
+                'disabled:opacity-70 disabled:cursor-not-allowed',
+              ].join(' ')}
+            >
+              Trainer
             </button>
           </div>
         </form>
       </div>
 
       {/* ── Footer ── */}
-      <p className="text-center text-[11px] text-disabled">
+      <p className="text-center text-xs text-disabled">
         {LoginSharedConstants.TEXT.FOOTER}
       </p>
     </div>

@@ -6,7 +6,7 @@ import { Settings, BellRing, Loader2, Save } from 'lucide-react';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import { useSuperadminMutation } from '@/app/superadmin/superadmin_utils/hooks/useSuperadminMutation';
 import toast from 'react-hot-toast';
-import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
+import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import type { FetchState, PlatformSetting } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 export default function SettingsClient() {

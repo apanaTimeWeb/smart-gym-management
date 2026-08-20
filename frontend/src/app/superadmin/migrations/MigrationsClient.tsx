@@ -2,10 +2,10 @@
 'use client';
 
 import { useState } from 'react';
-import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
+import { useMigrationsData } from '@/app/superadmin/migrations/migrations_utils/useMigrationsData';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { DatabaseZap, AlertTriangle, Play, CheckCircle2, Clock, Search, X, Target } from 'lucide-react';
-import { SchemaMigration, Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { SchemaMigration } from '@/app/superadmin/migrations/migrations_types/migrations_types';
 import toast from 'react-hot-toast';
 
 const StatusIcons = {
@@ -15,7 +15,7 @@ const StatusIcons = {
 };
 
 export default function MigrationsClient() {
-  const { data, fetchState, error } = useSuperadminData<{ migrations: SchemaMigration[], tenants: Tenant[] }>(SuperadminUrlConfig.BACKEND_API.MIGRATIONS_BASE);
+  const { data, fetchState, error } = useMigrationsData();
 
     const [showTargetModal, setShowTargetModal] = useState(false);
   const [gymSearchTerm, setGymSearchTerm] = useState('');

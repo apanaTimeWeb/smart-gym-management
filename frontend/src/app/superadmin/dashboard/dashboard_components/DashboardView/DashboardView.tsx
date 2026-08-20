@@ -3,15 +3,15 @@
 
 import { Users, Building2, CreditCard, Activity } from 'lucide-react';
 import dynamic from 'next/dynamic';
-import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
+import { useDashboardData } from '@/app/superadmin/dashboard/dashboard_utils/useDashboardData';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { CHART_COLORS } from '@/app/superadmin/superadmin_utils/SuperadminChartConstants';
-import { SaaSDashboardMetrics, RevenueChartData, GrowthChartData } from '@/app/superadmin/superadmin_types/superadmin_types';
+import { SaaSDashboardMetrics, RevenueChartData, GrowthChartData } from '@/app/superadmin/dashboard/dashboard_types/dashboard_types';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 export default function DashboardView() {
-  const { data, fetchState, error } = useSuperadminData<{ metrics: SaaSDashboardMetrics, revenue: RevenueChartData[], growth: GrowthChartData[] }>(SuperadminUrlConfig.BACKEND_API.DASHBOARD_BASE);
+  const { data, fetchState, error } = useDashboardData<{ metrics: SaaSDashboardMetrics, revenue: RevenueChartData[], growth: GrowthChartData[] }>(SuperadminUrlConfig.BACKEND_API.DASHBOARD_BASE);
 
   if (fetchState === 'loading') {
     return (
@@ -92,7 +92,7 @@ export default function DashboardView() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-[22px] font-bold text-foreground">
+        <h1 className="text-2xl font-bold text-foreground">
           SaaS Overview
         </h1>
         <p className="text-secondary mt-1 text-sm">Monitor the health and growth of your Multi-Tenant SaaS platform.</p>
@@ -102,10 +102,10 @@ export default function DashboardView() {
         {metrics.map((m) => (
           <div key={m.label} className="bg-card border border-border rounded-xl p-6 shadow-sm hover:-translate-y-1 hover:shadow-lg transition-all duration-200 ease-in-out">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-secondary font-medium text-[11px] uppercase tracking-wider">{m.label}</span>
+              <span className="text-secondary font-medium text-xs uppercase tracking-wider">{m.label}</span>
               <m.icon className={`w-5 h-5 ${m.color}`} />
             </div>
-            <div className="text-[28px] font-bold text-foreground">{m.value}</div>
+            <div className="text-3xl font-bold text-foreground">{m.value}</div>
           </div>
         ))}
       </div>
@@ -124,11 +124,11 @@ export default function DashboardView() {
             {DUMMY_DASHBOARD_METRICS.recentOnboards.map((tenant) => (
               <div key={tenant.id} className="flex items-center justify-between p-4 bg-background rounded-lg border border-border hover:bg-input transition-colors duration-200 cursor-default">
                 <div>
-                  <h3 className="text-sm font-semibold text-foreground truncate max-w-[120px]" title={tenant.name}>{tenant.name}</h3>
-                  <p className="text-[12px] text-secondary mt-1 truncate max-w-[120px]" title={tenant.ownerName}>{tenant.ownerName}</p>
+                  <h3 className="text-sm font-semibold text-foreground truncate max-w-32" title={tenant.name}>{tenant.name}</h3>
+                  <p className="text-xs text-secondary mt-1 truncate max-w-32" title={tenant.ownerName}>{tenant.ownerName}</p>
                 </div>
                 <div className="text-right flex flex-col items-end">
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold
                     ${
                       tenant.plan?.toUpperCase() === 'ENTERPRISE' ? 'bg-purple-bg text-purple border border-purple' : 
                       tenant.plan?.toUpperCase() === 'PRO' ? 'bg-primary-subtle text-primary border border-primary' : 
@@ -138,7 +138,7 @@ export default function DashboardView() {
                   `}>
                     {tenant.plan?.toUpperCase() || 'UNKNOWN'}
                   </span>
-                  <p className="text-[12px] text-disabled mt-2">{tenant.createdAt}</p>
+                  <p className="text-xs text-disabled mt-2">{tenant.createdAt}</p>
                 </div>
               </div>
             ))}

@@ -1,7 +1,11 @@
 'use client';
 // RESPONSIBILITY: Renders the page title, search input, and "Create Coupon" CTA button for the Coupons page. Receives all state via props — no API calls.
 import { Tag, Plus, Search } from 'lucide-react';
-import type { CouponsHeaderProps } from '@/app/superadmin/coupons/coupons_types/coupons_types';
+interface CouponsHeaderProps {
+  searchQuery: string;
+  onSearchChange: (value: string) => void;
+  onCreateClick: () => void;
+}
 
 export default function CouponsHeader({ searchQuery, onSearchChange, onCreateClick }: CouponsHeaderProps) {
   return (

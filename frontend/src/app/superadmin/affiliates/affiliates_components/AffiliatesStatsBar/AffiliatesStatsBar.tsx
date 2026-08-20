@@ -1,7 +1,10 @@
 'use client';
 // RESPONSIBILITY: Renders the KPI stat cards (Total Affiliates, Total Commission Paid) for the Affiliates page. Purely presentational — receives data via props.
 import { Users, IndianRupee } from 'lucide-react';
-import type { AffiliatesStatsBarProps } from '@/app/superadmin/affiliates/affiliates_types/affiliates_types';
+interface AffiliatesStatsBarProps {
+  totalAffiliates: number;
+  totalCommission: number;
+}
 
 export default function AffiliatesStatsBar({ totalAffiliates, totalCommission }: AffiliatesStatsBarProps) {
   return (

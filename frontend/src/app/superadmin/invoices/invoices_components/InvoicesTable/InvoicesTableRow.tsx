@@ -1,6 +1,6 @@
 import React from 'react';
 import { Receipt } from 'lucide-react';
-import type { SaaSInvoice } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { SaaSInvoice } from '@/app/superadmin/invoices/invoices_types/invoices_types';
 
 const STATUS_COLORS: Record<SaaSInvoice['status'], string> = {
   PAID: 'text-success bg-success/10',

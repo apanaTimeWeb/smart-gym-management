@@ -9,8 +9,8 @@
 import { create } from 'zustand';
 import toast from 'react-hot-toast';
 
-import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
-import type { Tenant, FetchState, TenantStatus } from '@/app/superadmin/superadmin_types/superadmin_types';
+import { gymsApi } from '@/app/superadmin/gyms/gyms_api/gyms_api';
+import type { Tenant, FetchState, TenantStatus } from '@/app/superadmin/gyms/gyms_types/gyms_types';
 
 interface GymsState {
   // Data State
@@ -88,7 +88,7 @@ export const useGymsStore = create<GymsState>((set, get) => ({
   fetchGyms: async (searchQuery = '') => {
     set({ fetchState: 'loading', error: null });
     try {
-      const response = await superadminApi.gyms.getAll(searchQuery ? { search: searchQuery } : undefined);
+      const response = await gymsApi.getAll(searchQuery ? { search: searchQuery } : undefined);
       set({ gyms: response.data, fetchState: 'success' });
     } catch (error: unknown) {
       const errMsg = error instanceof Error ? error.message : String(error) || 'Failed to fetch gyms';
@@ -112,7 +112,7 @@ export const useGymsStore = create<GymsState>((set, get) => ({
     const newStatus = currentStatus === 'SUSPENDED' ? 'ACTIVE' : 'SUSPENDED';
     set({ actionLoadingId: id });
     try {
-      const response = await superadminApi.gyms.changeStatus(id, newStatus);
+      const response = await gymsApi.changeStatus(id, newStatus);
       toast.success((response as { message?: string })?.message || `${name} is now ${newStatus}.`);
       
       const { gyms } = get();
@@ -130,7 +130,7 @@ export const useGymsStore = create<GymsState>((set, get) => ({
   handleDelete: async (id) => {
     set({ actionLoadingId: id });
     try {
-      const response = await superadminApi.gyms.remove(id);
+      const response = await gymsApi.remove(id);
       toast.success((response as { message?: string })?.message || `Tenant deleted successfully.`);
       
       const { gyms } = get();
@@ -149,7 +149,7 @@ export const useGymsStore = create<GymsState>((set, get) => ({
   handleEditGym: async (id, data) => {
     set({ actionLoadingId: id });
     try {
-      const response = await superadminApi.gyms.update(id, data);
+      const response = await gymsApi.update(id, data);
       toast.success((response as { message?: string })?.message || `Gym details updated successfully.`);
       
       const { gyms } = get();
@@ -168,7 +168,7 @@ export const useGymsStore = create<GymsState>((set, get) => ({
   handleEmailOwner: async (id, data) => {
     set({ actionLoadingId: id });
     try {
-      const response = await superadminApi.gyms.emailOwner(id, data);
+      const response = await gymsApi.emailOwner(id, data);
       toast.success((response as { message?: string })?.message || 'Email sent successfully.');
       get().closeEmailModal();
     } catch (error: unknown) {

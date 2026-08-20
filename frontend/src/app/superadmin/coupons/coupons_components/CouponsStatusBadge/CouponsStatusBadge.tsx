@@ -1,6 +1,10 @@
 'use client';
 // RESPONSIBILITY: Renders the status badge pill for a single coupon. Purely presentational — maps CouponStatus to design system colors.
-import type { CouponsStatusBadgeProps } from '@/app/superadmin/coupons/coupons_types/coupons_types';
+import type { CouponStatus } from '@/app/superadmin/coupons/coupons_types/coupons_types';
+
+interface CouponsStatusBadgeProps {
+  status: CouponStatus;
+}
 
 export default function CouponsStatusBadge({ status }: CouponsStatusBadgeProps) {
   switch (status) {

@@ -1,46 +1,35 @@
-// RESPONSIBILITY: Defines all TypeScript types, Zod schemas, and form data shapes for the Affiliates module. Single source of truth for affiliate data contracts.
-import { z } from 'zod';
-import type { Affiliate, AffiliateStatus } from '@/app/superadmin/superadmin_types/superadmin_types';
+// RESPONSIBILITY: Defines all TypeScript types and interfaces for the Affiliates module.
+export type AffiliateStatus = 'ACTIVE' | 'INACTIVE';
 
-export type { Affiliate, AffiliateStatus };
+export interface Affiliate {
+  id: string;
+  name: string;
+  email: string;
+  referralCode: string;
+  totalReferred: number;
+  commissionEarned: number;
+  status: AffiliateStatus;
+  joinedAt: string;
+}
+
+import { z } from 'zod';
 
 export const AffiliateSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
-  email: z.string().email('Invalid email address'),
-  referralCode: z.string().min(3, 'Code must be at least 3 characters').regex(/^[A-Z0-9]+$/, 'Only uppercase letters and numbers allowed'),
+  name: z
+    .string()
+    .min(2, 'Name must be at least 2 characters.')
+    .max(80, 'Name cannot exceed 80 characters.'),
+
+  email: z
+    .string()
+    .min(1, 'Email is required.')
+    .email('Enter a valid email address.'),
+
+  referralCode: z
+    .string()
+    .min(4, 'Referral code must be at least 4 characters.')
+    .max(16, 'Referral code cannot exceed 16 characters.')
+    .regex(/^[A-Za-z0-9]+$/, 'Referral code must be alphanumeric only.'),
 });
 
 export type AffiliateFormData = z.infer<typeof AffiliateSchema>;
-
-export interface AffiliatesHeaderProps {
-  searchQuery: string;
-  onSearchChange: (value: string) => void;
-  onAddClick: () => void;
-}
-
-export interface AffiliatesStatsBarProps {
-  totalAffiliates: number;
-  totalCommission: number;
-}
-
-export interface AffiliatesTableProps {
-  affiliates: Affiliate[];
-  onToggleStatus: (id: string, status: AffiliateStatus) => void;
-  onEdit: (affiliate: Affiliate) => void;
-  onDelete: (id: string) => void;
-}
-
-export interface AffiliatesTableRowProps {
-  affiliate: Affiliate;
-  onToggleStatus: (id: string, status: AffiliateStatus) => void;
-  onEdit: (affiliate: Affiliate) => void;
-  onDelete: (id: string) => void;
-}
-
-export interface AffiliateStatusBadgeProps {
-  status: AffiliateStatus;
-}
-
-export interface AffiliatesEmptyStateProps {
-  onAddClick: () => void;
-}

@@ -2,7 +2,15 @@
 // RESPONSIBILITY: Renders the Coupons data table shell (header row + rows). Delegates each row to CouponsTableRow. No API calls.
 
 import CouponsTableRow from '@/app/superadmin/coupons/coupons_components/CouponsTable/CouponsTableRow';
-import type { CouponsTableProps } from '@/app/superadmin/coupons/coupons_types/coupons_types';
+import type { Coupon, CouponStatus } from '@/app/superadmin/coupons/coupons_types/coupons_types';
+
+interface CouponsTableProps {
+  coupons: Coupon[];
+  onToggleStatus: (id: string, currentStatus: CouponStatus) => void;
+  onEdit: (coupon: Coupon) => void;
+  onDelete: (id: string) => void;
+  onRestore: (id: string) => void;
+}
 
 export default function CouponsTable({ coupons, onToggleStatus, onEdit, onDelete, onRestore }: CouponsTableProps) {
   return (

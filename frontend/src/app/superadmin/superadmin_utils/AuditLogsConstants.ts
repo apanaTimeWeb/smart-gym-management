@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Centralized fallback/mock data constants for the Audit Logs module. Extracted from component files per Rule 3 (Backend-Ready Centralized Data).
-import type { GlobalAuditLog } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { GlobalAuditLog } from '@/app/superadmin/audit-logs/audit-logs_types/audit-logs_types';
 
 export const AUDIT_LOGS_PAGE_SIZE = 10;
 

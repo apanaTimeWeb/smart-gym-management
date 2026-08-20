@@ -2,7 +2,14 @@
 // RESPONSIBILITY: Renders a single row in the Affiliates data table. Handles row-level action buttons with stopPropagation. Purely presentational.
 import { Pencil, Trash2, Power, Check } from 'lucide-react';
 import AffiliateStatusBadge from '@/app/superadmin/affiliates/affiliates_components/AffiliateStatusBadge/AffiliateStatusBadge';
-import type { AffiliatesTableRowProps } from '@/app/superadmin/affiliates/affiliates_types/affiliates_types';
+import type { Affiliate, AffiliateStatus } from '@/app/superadmin/affiliates/affiliates_types/affiliates_types';
+
+interface AffiliatesTableRowProps {
+  affiliate: Affiliate;
+  onToggleStatus: (id: string, currentStatus: AffiliateStatus) => void;
+  onEdit: (affiliate: Affiliate) => void;
+  onDelete: (id: string) => void;
+}
 
 export default function AffiliatesTableRow({ affiliate: aff, onToggleStatus, onEdit, onDelete }: AffiliatesTableRowProps) {
   return (

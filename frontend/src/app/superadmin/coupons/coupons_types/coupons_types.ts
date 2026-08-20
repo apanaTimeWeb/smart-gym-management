@@ -1,53 +1,56 @@
-// RESPONSIBILITY: Defines all TypeScript types, Zod schemas, and form data shapes for the Coupons module. Single source of truth for coupon data contracts.
+// RESPONSIBILITY: Defines all TypeScript types and interfaces for the Coupons module.
+export type CouponStatus = 'ACTIVE' | 'INACTIVE' | 'EXPIRED' | 'DEPLETED';
+
+export interface Coupon {
+  id: string;
+  code: string;
+  discountType: 'PERCENTAGE' | 'EXACT';
+  discountValue: number;
+  maxUses: number;
+  currentUses: number;
+  status: CouponStatus;
+  expiryDate: string;
+  isDeleted: boolean;
+}
+
 import { z } from 'zod';
-import type { Coupon, CouponStatus } from '@/app/superadmin/superadmin_types/superadmin_types';
 
-export type { Coupon, CouponStatus };
+export const CouponSchema = z
+  .object({
+    code: z
+      .string()
+      .min(3, 'Coupon code must be at least 3 characters.')
+      .max(20, 'Coupon code cannot exceed 20 characters.')
+      .regex(/^[A-Z0-9-]+$/, 'Code must be uppercase letters, digits, and hyphens only.'),
 
-export const CouponSchema = z.object({
-  code: z.string().optional(),
-  discountType: z.enum(['PERCENTAGE', 'EXACT']),
-  discountValue: z.number().min(1, 'Discount value must be at least 1'),
-  maxUses: z.number().min(1, 'Max uses must be at least 1'),
-  expiryDate: z.string().min(1, 'Expiry date is required'),
-}).refine(data => {
-  if (data.discountType === 'PERCENTAGE' && data.discountValue > 100) return false;
-  return true;
-}, { message: 'Percentage discount cannot exceed 100', path: ['discountValue'] });
+    discountType: z.enum(['PERCENTAGE', 'EXACT'] as const, {
+      error: 'Select a discount type.',
+    }),
+
+    discountValue: z
+      .number()
+      .positive('Discount value must be greater than zero.'),
+
+    maxUses: z
+      .number()
+      .int('Must be a whole number.')
+      .min(1, 'Must allow at least 1 use.'),
+
+    expiryDate: z
+      .string()
+      .min(1, 'Expiry date is required.')
+      .refine((val) => new Date(val) > new Date(), {
+        message: 'Expiry date must be in the future.',
+      }),
+  })
+  .superRefine(({ discountType, discountValue }, ctx) => {
+    if (discountType === 'PERCENTAGE' && discountValue > 100) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Percentage discount cannot exceed 100%.',
+        path: ['discountValue'],
+      });
+    }
+  });
 
 export type CouponFormData = z.infer<typeof CouponSchema>;
-
-export interface CouponsHeaderProps {
-  searchQuery: string;
-  onSearchChange: (value: string) => void;
-  onCreateClick: () => void;
-}
-
-export interface CouponsStatsBarProps {
-  activeCoupons: number;
-  totalRedeemed: number;
-}
-
-export interface CouponsTableProps {
-  coupons: Coupon[];
-  onToggleStatus: (id: string, status: CouponStatus) => void;
-  onEdit: (coupon: Coupon) => void;
-  onDelete: (id: string) => void;
-  onRestore: (id: string) => void;
-}
-
-export interface CouponsTableRowProps {
-  coupon: Coupon;
-  onToggleStatus: (id: string, status: CouponStatus) => void;
-  onEdit: (coupon: Coupon) => void;
-  onDelete: (id: string) => void;
-  onRestore: (id: string) => void;
-}
-
-export interface CouponsStatusBadgeProps {
-  status: CouponStatus;
-}
-
-export interface CouponsEmptyStateProps {
-  onCreateClick: () => void;
-}

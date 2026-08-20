@@ -8,7 +8,7 @@ export default function Loading() {
         <div className="h-8 w-64 bg-border animate-pulse rounded"></div>
         <div className="h-4 w-96 bg-border animate-pulse rounded mt-2"></div>
       </div>
-      <div className="bg-card border border-border rounded-xl shadow-sm min-h-[400px] flex items-center justify-center">
+      <div className="bg-card border border-border rounded-xl shadow-sm min-h-96 flex items-center justify-center">
         <Loader2 className="w-8 h-8 text-secondary animate-spin" />
       </div>
     </div>

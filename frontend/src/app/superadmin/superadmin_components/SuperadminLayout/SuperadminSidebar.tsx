@@ -61,7 +61,7 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
     >
       <div className="flex h-20 items-center justify-between px-4 border-b border-border">
         {!isCollapsed && (
-          <span className="text-[22px] font-bold text-primary">
+          <span className="text-2xl font-bold text-primary">
             SaaS Master
           </span>
         )}

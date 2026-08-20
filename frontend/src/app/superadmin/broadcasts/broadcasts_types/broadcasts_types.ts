@@ -1,8 +1,17 @@
 // RESPONSIBILITY: Defines all TypeScript types, Zod schemas, and form data shapes for the Broadcasts module. Single source of truth for broadcast data contracts.
 import { z } from 'zod';
-import type { Broadcast, BroadcastStatus } from '@/app/superadmin/superadmin_types/superadmin_types';
+export type BroadcastStatus = 'SENT' | 'SCHEDULED' | 'DRAFT';
+export type BroadcastAudience = 'ALL_TENANTS' | 'PRO_ONLY' | 'SUSPENDED_ONLY';
 
-export type { Broadcast, BroadcastStatus };
+export interface Broadcast {
+  id: string;
+  title: string;
+  content: string;
+  status: BroadcastStatus;
+  audience: BroadcastAudience;
+  scheduledDate: string | null;
+  sentDate: string | null;
+}
 
 export const BroadcastSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters'),

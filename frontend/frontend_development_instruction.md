@@ -10,10 +10,13 @@ Break down all large or mixed files. Every file must contain only one React comp
 **File Size Ceiling:** Component files should not exceed ~250-350 lines; if a component's JSX grows beyond that, extract sub-sections into their own child component files inside the same feature folder to force real component-level granularity.
 Next.js App Router uses Server Components by default, so you MUST explicitly include `"use client";` at the top of any file that uses hooks (`useState`, `useEffect`) or event listeners.
 
-2. **Hyper-Descriptive Naming & Mandatory Module Prefix (Length Doesn't Matter)**: 
-Rename all components, files, and folders to be extremely descriptive based on exactly what they do. **It does not matter if a filename becomes exceptionally long** (e.g., `MembersSubscriptionRenewalForm.tsx` instead of `RenewForm.tsx`). Meaningfulness and convenience are the only priorities. Just by reading the filename, a developer or an AI must know exactly what the file does and what module it belongs to. 
-- **Module Name Prefixing (CRITICAL):** Every file name (not just the containing folder) MUST begin with the module name as a prefix, in addition to being hyper-descriptive. This applies to components, hooks, utils, types, constants, services, controllers — everything. Example: `BillingInvoiceSearchBox.tsx` and `useBillingInvoiceSearchBox.ts`.
-- **Component Name Matching:** The exported component/class/function name inside the file MUST exactly match the filename (minus extension) — no mismatches, no default-export-with-different-name.
+2. **Total Role Isolation (No Shared Business Components)**:
+To completely eliminate the risk of cross-role AI hallucinations, there is no unified `/erp` folder. Each role gets a completely isolated root folder (e.g., `/admin`, `/manager`, `/trainer`). Business components (like `MembersTable`) must be duplicated into each role's folder (`AdminMembersTable.tsx`, `ManagerMembersTable.tsx`). Only dumb UI components (like `Button`) are shared in `src/components/ui`.
+
+3. **Hyper-Descriptive Naming & Mandatory Module Prefix**: 
+Rename all components, files, and folders to be extremely descriptive based on exactly what they do. **It does not matter if a filename becomes exceptionally long** (e.g., `AdminMembersSubscriptionRenewalForm.tsx`). Meaningfulness and convenience are the only priorities. 
+- **Module Name Prefixing (CRITICAL):** Every file name (not just the containing folder) MUST begin with the module name as a prefix. Example: `AdminBillingInvoiceSearchBox.tsx`.
+- **Component Name Matching:** The exported component/class/function name inside the file MUST exactly match the filename (minus extension).
 - **No Abbreviations**: Never use `Btn`, `Nav`, `Utils`. Use `Button`, `Navigation`, `Utilities`.
 - **Strict Suffixing**: Component names must end with their exact UI structural type (e.g., `...Modal.tsx`, `...Table.tsx`, `...Form.tsx`, `...Card.tsx`, `...Dropdown.tsx`).
 - **Prop Naming**: Do not export generic `Props` or `Data` interfaces. Always prefix them (e.g., `export interface InquiriesTableProps`).
