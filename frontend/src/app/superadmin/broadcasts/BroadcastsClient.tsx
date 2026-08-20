@@ -1,7 +1,7 @@
 'use client';
 // RESPONSIBILITY: Root orchestrator for the Broadcasts page. Composes isolated sub-components and passes state from useBroadcastsPage. No business logic here.
 
-import { useBroadcastsPage } from '@/app/superadmin/superadmin_utils/hooks/useBroadcastsPage';
+import { useBroadcastsPage } from '@/app/superadmin/broadcasts/broadcasts_utils/useBroadcastsPage';
 import BroadcastsHeader from '@/app/superadmin/broadcasts/broadcasts_components/BroadcastsHeader/BroadcastsHeader';
 import BroadcastsTable from '@/app/superadmin/broadcasts/broadcasts_components/BroadcastsTable/BroadcastsTable';
 import BroadcastsEmptyState from '@/app/superadmin/broadcasts/broadcasts_components/BroadcastsEmptyState/BroadcastsEmptyState';

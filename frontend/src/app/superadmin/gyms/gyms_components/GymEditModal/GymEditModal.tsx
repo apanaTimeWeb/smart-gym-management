@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { Controller } from 'react-hook-form';
-import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
+import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { X } from 'lucide-react';
 import { useGymEditModal } from '@/app/superadmin/gyms/gyms_components/GymEditModal/useGymEditModal';
 

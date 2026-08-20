@@ -5,7 +5,7 @@ import React from 'react';
 import { X } from 'lucide-react';
 import { UseFormReturn, Controller } from 'react-hook-form';
 import { CouponFormData } from '@/app/superadmin/coupons/coupons_types/coupons_types';
-import { SearchableDropdown } from '@/app/erp/erp_components/ErpShared/SearchableDropdown';
+import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 
 interface SuperadminCouponModalProps {
   isOpen: boolean;

@@ -3,10 +3,12 @@
 
 import { useState, useEffect } from 'react';
 import { Database, ShieldAlert, Activity, Filter, RefreshCcw, Search, Loader2 } from 'lucide-react';
-import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
+import { auditLogsApi } from '@/app/superadmin/audit-logs/audit-logs_api/audit-logs_api';
+import { migrationsApi } from '@/app/superadmin/migrations/migrations_api/migrations_api';
 import toast from 'react-hot-toast';
-import type { Tenant, GlobalAuditLog, FetchState } from '@/app/superadmin/superadmin_types/superadmin_types';
-
+import type { Tenant } from '@/app/superadmin/gyms/gyms_types/gyms_types';
+import type { GlobalAuditLog } from '@/app/superadmin/audit-logs/audit-logs_types/audit-logs_types';
+type FetchState = 'idle' | 'loading' | 'success' | 'error';
 const CURRENT_SCHEMA_VERSION = 'v2.4.1';
 
 interface TenantWithVersion extends Tenant {
@@ -25,8 +27,8 @@ export default function SystemClient() {
       setFetchState('loading');
       try {
         const [migrationsRes, auditRes] = await Promise.all([
-          superadminApi.migrations.getAll(),
-          superadminApi.auditLogs.getGlobalLogs()
+          migrationsApi.getAll(),
+          auditLogsApi.getGlobalLogs()
         ]);
 
         setTenants(migrationsRes.data?.tenants ?? []);

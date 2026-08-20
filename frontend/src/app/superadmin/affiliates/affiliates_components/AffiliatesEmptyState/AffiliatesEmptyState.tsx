@@ -1,7 +1,9 @@
 'use client';
 // RESPONSIBILITY: Renders the empty state UI for the Affiliates table when no affiliates exist. Shows icon, message, and CTA to add first affiliate.
 import { Users } from 'lucide-react';
-import type { AffiliatesEmptyStateProps } from '@/app/superadmin/affiliates/affiliates_types/affiliates_types';
+interface AffiliatesEmptyStateProps {
+  onAddClick: () => void;
+}
 
 export default function AffiliatesEmptyState({ onAddClick }: AffiliatesEmptyStateProps) {
   return (

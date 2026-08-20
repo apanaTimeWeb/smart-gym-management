@@ -30,7 +30,7 @@ export default class LoginErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="w-full h-full min-h-[400px] flex flex-col items-center justify-center p-8 text-center bg-card rounded-2xl shadow-lg border border-border">
+        <div className="w-full h-full min-h-96 flex flex-col items-center justify-center p-8 text-center bg-card rounded-2xl shadow-lg border border-border">
           <div className="w-16 h-16 bg-danger/10 text-danger rounded-full flex items-center justify-center mb-4 text-3xl font-black">!</div>
           <h2 className="text-xl font-bold text-primary mb-2">Login Component Failed</h2>
           <p className="text-secondary mb-6 text-sm max-w-sm">We encountered an unexpected error while loading the login interface.</p>

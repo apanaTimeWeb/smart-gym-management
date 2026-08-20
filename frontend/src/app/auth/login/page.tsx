@@ -15,18 +15,21 @@ export default async function Login() {
   
   if (tokenCookie) {
     const userCookie = cookieStore.get('gymsmart_user');
-    let role = '';
+    let user: { role?: string } | null = null;
     try {
       if (userCookie?.value) {
-        const user = JSON.parse(decodeURIComponent(userCookie.value));
-        role = user?.role || '';
+        user = JSON.parse(decodeURIComponent(userCookie.value));
       }
     } catch (e) {}
 
-    if (role === 'SUPERADMIN') {
+    if (user?.role === 'SUPERADMIN') {
       redirect(SuperadminUrlConfig.PAGES.DASHBOARD);
+    } else if (user?.role === 'MANAGER') {
+      redirect(AuthUrlConfig.PAGES.MANAGER_DASHBOARD);
+    } else if (user?.role === 'TRAINER') {
+      redirect(AuthUrlConfig.PAGES.TRAINER_DASHBOARD);
     } else {
-      redirect(AuthUrlConfig.PAGES.DASHBOARD);
+      redirect(AuthUrlConfig.PAGES.ADMIN_DASHBOARD);
     }
   }
 

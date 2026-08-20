@@ -1,0 +1,39 @@
+// RESPONSIBILITY: Centralized constants shared across all ADMIN modules — nav items, placeholder notifications, gym identity (name/phone), sensitive data masking utility, and pagination page size.
+import {
+ LayoutDashboard, Users, ClipboardList, BarChart2,
+ UserCog, ShoppingBag, DollarSign, BookOpen, Dumbbell,
+ MessageSquare, Settings, CalendarCheck, Shield, Building2
+} from 'lucide-react';
+
+export const ADMIN_NAV_ITEMS = [
+ { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+ { href: '/admin/branches', label: 'Branches', icon: Building2 },
+ { href: '/admin/plans', label: 'Plans', icon: ClipboardList },
+ { href: '/admin/members', label: 'Members', icon: Users },
+ { href: '/admin/sales', label: 'Sales & Reports', icon: BarChart2 },
+ { href: '/admin/attendance', label: 'Attendance', icon: CalendarCheck },
+ { href: '/admin/hr', label: 'HR Management', icon: UserCog },
+ { href: '/admin/store', label: 'Store', icon: ShoppingBag },
+ { href: '/admin/finance', label: 'Finance', icon: DollarSign },
+ { href: '/admin/library', label: 'Diet Library', icon: BookOpen },
+ { href: '/admin/workout', label: 'Workout Library', icon: Dumbbell },
+ { href: '/admin/inquiries', label: 'Inquiries & Leads',icon: MessageSquare },
+ { href: '/admin/audit', label: 'Audit Logs', icon: Shield },
+ { href: '/admin/settings', label: 'Settings', icon: Settings },
+];
+
+// TODO: Replace with real API call once Notifications backend module is built.
+export const ADMIN_PLACEHOLDER_NOTIFICATIONS = [
+ { id: 1, text: 'New member Amit registered', time: '5m ago', unread: true },
+ { id: 2, text: 'Payment received from Rahul', time: '1h ago', unread: false },
+ { id: 3, text: 'Pooja requested a trial session', time: '2h ago', unread: false },
+];
+
+export const GYM_DETAILS = {
+  name: process.env.NEXT_PUBLIC_GYM_NAME || 'GymSmart Fitness',
+  phone: process.env.NEXT_PUBLIC_GYM_PHONE || '+91 83479 77566'
+};
+
+
+
+export const ADMIN_ITEMS_PER_PAGE = 10;

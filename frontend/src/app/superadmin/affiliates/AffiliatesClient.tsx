@@ -1,7 +1,7 @@
 'use client';
 // RESPONSIBILITY: Root orchestrator for the Affiliates page. Composes isolated sub-components and passes state from useAffiliatesPage. No business logic here.
 
-import { useAffiliatesPage } from '@/app/superadmin/superadmin_utils/hooks/useAffiliatesPage';
+import { useAffiliatesPage } from '@/app/superadmin/affiliates/affiliates_utils/useAffiliatesPage';
 import AffiliatesHeader from '@/app/superadmin/affiliates/affiliates_components/AffiliatesHeader/AffiliatesHeader';
 import AffiliatesStatsBar from '@/app/superadmin/affiliates/affiliates_components/AffiliatesStatsBar/AffiliatesStatsBar';
 import AffiliatesTable from '@/app/superadmin/affiliates/affiliates_components/AffiliatesTable/AffiliatesTable';

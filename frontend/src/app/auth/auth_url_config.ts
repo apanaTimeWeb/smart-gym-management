@@ -2,13 +2,15 @@
 export const AuthUrlConfig = {
   PAGES: {
     LOGIN: '/auth/login',
-    DASHBOARD: '/erp/dashboard',
+    ADMIN_DASHBOARD: '/admin/dashboard',
+    MANAGER_DASHBOARD: '/manager/dashboard',
+    TRAINER_DASHBOARD: '/trainer/dashboard',
   },
   PROXY_API: {
-    REFRESH: '/next-api/auth/refresh',
-    LOGOUT: '/next-api/auth/logout',
-    SET_COOKIE: '/next-api/auth/set-cookie',
-    TOKEN: '/next-api/auth/token',
+    REFRESH: '/auth/refresh',
+    LOGOUT: '/auth/logout',
+    SET_COOKIE: '/auth/set-cookie',
+    TOKEN: '/auth/token',
   },
   BACKEND_API: {
     LOGIN: '/auth/login',

@@ -1,10 +1,10 @@
 'use client';
 // RESPONSIBILITY: BackupsClient.tsx renders the Database Backups page. Purely a view layer — data fetched via useSuperadminData.
 
-import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
+import { useBackupsData } from '@/app/superadmin/backups/backups_utils/useBackupsData';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { DatabaseBackup, Search, Download, RotateCcw } from 'lucide-react';
-import { BackupRecord } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { BackupRecord } from '@/app/superadmin/backups/backups_types/backups_types';
 import { useState } from 'react';
 
 const StatusColors: Record<BackupRecord['status'], string> = {
@@ -14,7 +14,7 @@ const StatusColors: Record<BackupRecord['status'], string> = {
 };
 
 export default function BackupsClient() {
-  const { data: DUMMY_BACKUPS, fetchState, error } = useSuperadminData<BackupRecord[]>(SuperadminUrlConfig.BACKEND_API.BACKUPS_BASE);
+  const { data: DUMMY_BACKUPS, fetchState, error } = useBackupsData();
 
     const [search, setSearch] = useState('');
 if (fetchState === 'loading') return (

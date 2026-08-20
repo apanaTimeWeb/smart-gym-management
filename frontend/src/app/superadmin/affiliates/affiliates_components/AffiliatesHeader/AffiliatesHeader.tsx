@@ -1,7 +1,11 @@
 'use client';
 // RESPONSIBILITY: Renders the page title, search input, and "Add Affiliate" CTA button for the Affiliates page. Receives all state via props — no API calls.
 import { Users, Plus, Search } from 'lucide-react';
-import type { AffiliatesHeaderProps } from '@/app/superadmin/affiliates/affiliates_types/affiliates_types';
+interface AffiliatesHeaderProps {
+  searchQuery: string;
+  onSearchChange: (value: string) => void;
+  onAddClick: () => void;
+}
 
 export default function AffiliatesHeader({ searchQuery, onSearchChange, onAddClick }: AffiliatesHeaderProps) {
   return (

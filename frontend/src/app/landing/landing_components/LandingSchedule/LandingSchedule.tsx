@@ -22,7 +22,7 @@ export default function LandingSchedule() {
           </p>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[48rem] border-collapse bg-card rounded-2xl overflow-hidden border border-border">
+          <table className="w-full min-w-max border-collapse bg-card rounded-2xl overflow-hidden border border-border">
             <thead>
               <tr className="bg-white/10 text-white">
                 <th className="py-4 px-4 text-left font-semibold">Time</th>

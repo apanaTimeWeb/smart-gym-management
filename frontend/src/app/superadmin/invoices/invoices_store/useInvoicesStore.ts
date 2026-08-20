@@ -5,8 +5,11 @@
 
 import { create } from 'zustand';
 import toast from 'react-hot-toast';
-import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
-import type { SaaSInvoice, Tenant, FetchState } from '@/app/superadmin/superadmin_types/superadmin_types';
+import { invoicesApi } from '@/app/superadmin/invoices/invoices_api/invoices_api';
+import { gymsApi } from '@/app/superadmin/gyms/gyms_api/gyms_api';
+import type { SaaSInvoice } from '@/app/superadmin/invoices/invoices_types/invoices_types';
+import type { Tenant } from '@/app/superadmin/gyms/gyms_types/gyms_types';
+import type { FetchState } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 interface InvoicesState {
   invoices: SaaSInvoice[];
@@ -30,8 +33,8 @@ export const useInvoicesStore = create<InvoicesState>((set, get) => ({
     set({ fetchState: 'loading', error: null });
     try {
       const [invoicesRes, tenantsRes] = await Promise.all([
-        superadminApi.invoices.getAll(),
-        superadminApi.gyms.getAll()
+        invoicesApi.getAll(),
+        gymsApi.getAll()
       ]);
       set({ 
         invoices: invoicesRes.data || [], 

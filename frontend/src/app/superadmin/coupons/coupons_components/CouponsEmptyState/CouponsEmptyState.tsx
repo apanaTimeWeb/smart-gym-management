@@ -1,7 +1,9 @@
 'use client';
 // RESPONSIBILITY: Renders the empty state UI for the Coupons table when no coupons exist. Shows icon, message, and CTA to create first coupon.
 import { Tag } from 'lucide-react';
-import type { CouponsEmptyStateProps } from '@/app/superadmin/coupons/coupons_types/coupons_types';
+interface CouponsEmptyStateProps {
+  onCreateClick: () => void;
+}
 
 export default function CouponsEmptyState({ onCreateClick }: CouponsEmptyStateProps) {
   return (

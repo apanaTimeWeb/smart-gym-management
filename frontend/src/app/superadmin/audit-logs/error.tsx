@@ -10,7 +10,7 @@ export default function ErrorBoundary({ error, reset }: { error: Error & { diges
   }, [error]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[400px] p-8 bg-card border border-border rounded-xl">
+    <div className="flex flex-col items-center justify-center min-h-96 p-8 bg-card border border-border rounded-xl">
       <div className="w-16 h-16 bg-danger-bg rounded-full flex items-center justify-center mb-4">
         <AlertTriangle className="w-8 h-8 text-danger" />
       </div>
