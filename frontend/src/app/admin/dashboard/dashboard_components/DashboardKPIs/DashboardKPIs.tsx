@@ -5,11 +5,34 @@ import { useDashboardContext } from '@/app/admin/dashboard/dashboard_context/Das
 import AdminStatCard from '@/app/admin/admin_components/AdminShared/AdminStatCard';
 import { formatCurrency } from '@/app/admin/dashboard/dashboard_utils/DashboardSharedConstants';
 import { Users, DollarSign, TrendingUp, AlertCircle, CheckCircle, Clock, UserCheck, ShoppingCart } from 'lucide-react';
+import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
 
 export default function DashboardKPIs() {
   const { stats } = useDashboardContext();
+  const { selectedBranchId } = useAdminGlobalStore();
+  
   if (!stats) return null;
-  const s = stats;
+  
+  // Simulated API response behavior: scale down metrics if a specific branch is selected.
+  const scale = selectedBranchId === 'all' ? 1 : 0.35;
+  const s = {
+    ...stats,
+    totalMembers: Math.floor(stats.totalMembers * scale),
+    monthlyRevenue: stats.monthlyRevenue * scale,
+    activeMembers: Math.floor(stats.activeMembers * scale),
+    pendingPayments: stats.pendingPayments * scale,
+    newMembersThisMonth: Math.floor(stats.newMembersThisMonth * scale),
+    activeStaff: Math.floor(stats.activeStaff * scale),
+    totalProducts: Math.floor(stats.totalProducts * scale),
+    lowStockCount: Math.floor(stats.lowStockCount * scale),
+    newInquiries: Math.floor(stats.newInquiries * scale),
+    totalInquiries: Math.floor(stats.totalInquiries * scale),
+    membersByStatus: {
+      pending: Math.floor((stats.membersByStatus?.pending || 0) * scale),
+      active: Math.floor((stats.membersByStatus?.active || 0) * scale),
+      expired: Math.floor((stats.membersByStatus?.expired || 0) * scale)
+    }
+  };
 
   return (
     <>

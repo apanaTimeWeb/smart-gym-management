@@ -11,16 +11,32 @@ import MembersEmptyState from '@/app/admin/members/members_components/MembersEmp
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_utils/AdminSharedConstants';
 
+import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
+import { MOCK_BRANCHES } from '@/app/admin/admin_store/useAdminGlobalStore';
+
 export default function MembersTable() {
   const { 
     search, debouncedSearch, statusFilter, currentPage, setCurrentPage,
     setSelectedMember, openEdit, openMsg, deleteMember
   } = useMembersContext();
 
-  const members = useMembersStore(s => s.members);
+  const rawMembers = useMembersStore(s => s.members);
   const totalMembers = useMembersStore(s => s.totalMembers);
   const fetchState = useMembersStore(s => s.fetchState);
   const loadMemberProfile = useMembersStore(s => s.loadMemberProfile);
+  
+  const { selectedBranchId } = useAdminGlobalStore();
+
+  // Deterministically assign a branch to a member based on charCode for demo purposes
+  const getBranchForMember = (id: string) => {
+    const sum = id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    return MOCK_BRANCHES[sum % MOCK_BRANCHES.length];
+  };
+
+  const members = rawMembers.filter(m => {
+    if (selectedBranchId === 'all') return true;
+    return getBranchForMember(m.id).id === selectedBranchId;
+  });
 
   const totalPages = Math.ceil(totalMembers / ADMIN_ITEMS_PER_PAGE);
 
@@ -37,7 +53,7 @@ export default function MembersTable() {
               <thead className="bg-primary/5">
                 <tr>
                   {MEMBERS_TABLE_HEADERS.map(h => (
-                    <th key={h} className="text-left text-xs font-semibold text-secondary uppercase tracking-wider px-5 py-3">
+                    <th key={h} className="text-left text-xs font-semibold text-secondary uppercase tracking-wider px-5 py-3 whitespace-nowrap">
                       {h}
                     </th>
                   ))}
@@ -46,6 +62,7 @@ export default function MembersTable() {
               <tbody className="divide-y divide-border">
                 {members.map(m => {
                   const statusStyle = MEMBERS_STATUS_COLORS[m.status] || { bg: 'bg-input', text: 'text-secondary' };
+                  const branch = getBranchForMember(m.id);
                   return (
                   <tr 
                     key={m.id} 
@@ -53,8 +70,8 @@ export default function MembersTable() {
                     onClick={() => { setSelectedMember(m); loadMemberProfile(m.id); }}
                   >
                     <td className="px-5 py-3.5">
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm bg-primary/10 text-primary">
+                      <div className="flex items-center gap-3 whitespace-nowrap">
+                        <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm bg-primary/10 text-primary flex-shrink-0">
                           {m.name.charAt(0)}
                         </div>
                         <div>
@@ -63,7 +80,13 @@ export default function MembersTable() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-5 py-3.5 text-sm text-foreground">{m.plan?.name || `Plan #${m.planId}`}</td>
+                    <td className="px-5 py-3.5 text-sm text-foreground whitespace-nowrap">
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-2 h-2 rounded-full bg-primary/40"></span>
+                        {branch.name}
+                      </div>
+                    </td>
+                    <td className="px-5 py-3.5 text-sm text-foreground whitespace-nowrap">{m.plan?.name || `Plan #${m.planId}`}</td>
                     <td className="px-5 py-3.5">
                       <span 
                         className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusStyle.bg} ${statusStyle.text}`}

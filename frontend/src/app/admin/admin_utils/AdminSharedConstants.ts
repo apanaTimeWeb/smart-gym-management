@@ -2,11 +2,12 @@
 import {
  LayoutDashboard, Users, ClipboardList, BarChart2,
  UserCog, ShoppingBag, DollarSign, BookOpen, Dumbbell,
- MessageSquare, Settings, CalendarCheck, Shield
+ MessageSquare, Settings, CalendarCheck, Shield, Building2
 } from 'lucide-react';
 
 export const ADMIN_NAV_ITEMS = [
  { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+ { href: '/admin/branches', label: 'Branches', icon: Building2 },
  { href: '/admin/plans', label: 'Plans', icon: ClipboardList },
  { href: '/admin/members', label: 'Members', icon: Users },
  { href: '/admin/sales', label: 'Sales & Reports', icon: BarChart2 },
