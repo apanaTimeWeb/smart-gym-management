@@ -9,6 +9,10 @@ The Admin module provides comprehensive gym management tools for a single branch
 
 ```
 admin/
+├── layout.tsx             # Module layout wrapper
+├── admin_features.md      # This file
+├── admin_forbidden.md     # Module anti-patterns
+├── admin_theme_contract.md# Theme CSS variables
 ├── admin_components/      # UI components specific to the admin module
 ├── admin_store/           # Zustand state stores for the admin module
 ├── admin_utils/           # Utilities, hooks, constants, and types for the admin module

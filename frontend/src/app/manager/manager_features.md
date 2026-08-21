@@ -9,6 +9,10 @@ The Manager module is designed for the daily operational management of a gym bra
 
 ```
 manager/
+├── layout.tsx           # Module layout wrapper
+├── manager_features.md  # This file
+├── manager_forbidden.md # Module anti-patterns
+├── manager_theme_contract.md # Theme CSS variables
 ├── attendance/          # Member check-ins, barcode/QR scanning, daily logs
 ├── dashboard/           # Daily operational metrics, expiring memberships, recent sales
 ├── finance/             # Daily settlements, petty cash, fee collections

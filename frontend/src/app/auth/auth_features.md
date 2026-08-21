@@ -9,6 +9,10 @@ The Auth module is responsible for the authentication lifecycle of the applicati
 
 ```
 auth/
+├── auth_features.md     # This file
+├── auth_forbidden.md    # Module anti-patterns
+├── auth_theme_contract.md # Theme CSS variables
+├── auth_url_config.ts   # All auth routes
 ├── auth_api/          # Centralized API fetchers and interceptors for auth actions
 ├── login/             # Login page, forms, and authentication state logic
 ├── logout/            # Secure logout routines and state clearing

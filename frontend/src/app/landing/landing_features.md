@@ -37,6 +37,9 @@ landing/
 ├── landing_url_config.ts             # All page routes + anchor IDs (PAGES + ANCHORS)
 ├── landing_forbidden.md              # Forbidden anti-patterns (read before touching this module)
 ├── landing_features.md               # This file
+├── landing_theme_contract.md         # Theme CSS variables
+│
+├── landing_api/                      # Centralized API fetchers
 │
 ├── landing_types/
 │   └── landing_types.ts              # BmiResult, LandingContextType interfaces

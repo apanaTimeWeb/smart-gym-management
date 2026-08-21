@@ -9,6 +9,10 @@ The Trainer module provides an interface exclusively for gym trainers. It focuse
 
 ```
 trainer/
+├── layout.tsx           # Module layout wrapper
+├── trainer_features.md  # This file
+├── trainer_forbidden.md # Module anti-patterns
+├── trainer_theme_contract.md # Theme CSS variables
 ├── attendance/          # Trainer's personal check-ins and client attendance tracking
 ├── dashboard/           # Trainer's daily schedule, assigned clients, and alerts
 ├── library/             # Exercise library and document access for creating routines
