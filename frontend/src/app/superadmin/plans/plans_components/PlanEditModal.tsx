@@ -28,7 +28,7 @@ export default function PlanEditModal() {
   const isSubmitting = selectedPlan ? actionLoadingId === selectedPlan.id : false;
 
   const { register, control, handleSubmit, formState: { errors }, reset } = useForm<PlanFormValues>({
-    resolver: zodResolver(planSchema),
+    resolver: zodResolver(planSchema) as any,
   });
 
   const { fields, append, remove } = useFieldArray({ control, name: 'features' });

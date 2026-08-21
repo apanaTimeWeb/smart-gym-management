@@ -67,7 +67,7 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
         { id: '1', name: 'Alice Admin', email: 'alice@gym.com', phone: '1234567890', role: 'Manager', salary: 6000, branch: 'Main', gender: 'FEMALE', joinDate: new Date().toISOString(), isActive: true }
       ];
       const mockPayrolls: Payroll[] = [];
-      const mockSummary: HrSummary = { totalStaff: 1, activeStaff: 1, pendingPayroll: 0, paidPayroll: 0 };
+      const mockSummary: HrSummary = { totalStaff: 1, activeStaff: 1, totalPayrollThisMonth: 0, paidCount: 0, pendingCount: 0 };
       
       setStaff(mockStaff);
       setPayrolls(mockPayrolls);

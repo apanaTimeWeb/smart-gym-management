@@ -21,7 +21,7 @@ import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
     control,
     formState: { errors }
   } = useForm<StaffFormValues>({
-    resolver: zodResolver(StaffSchema),
+    resolver: zodResolver(StaffSchema) as any,
     defaultValues: (editData as StaffFormValues) || {}
   });
 

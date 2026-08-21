@@ -55,8 +55,8 @@ export const useMembersStore = create<MembersState>((set, get) => ({
     set({ fetchState: 'loading' });
     try {
       const mockMembers: Member[] = [
-        { id: '1', name: 'John Doe', phone: '9876543210', email: 'john@example.com', planId: 'p1', plan: { id: 'p1', name: 'Pro Plan', tier: 'Pro', price1Month: 100, price3Month: 250, price6Month: 450, price12Month: 800, features: [], isActive: true }, status: 'ACTIVE', billingCycle: '1 Month', paidAmount: 100, pendingAmount: 0, expiryDate: new Date(Date.now() + 30 * 86400000).toISOString(), joinDate: new Date().toISOString() },
-        { id: '2', name: 'Jane Smith', phone: '9876543211', email: 'jane@example.com', planId: 'p2', plan: { id: 'p2', name: 'Basic Plan', tier: 'Basic', price1Month: 50, price3Month: 140, price6Month: 250, price12Month: 450, features: [], isActive: true }, status: 'PENDING', billingCycle: '3 Months', paidAmount: 50, pendingAmount: 90, expiryDate: new Date(Date.now() + 90 * 86400000).toISOString(), joinDate: new Date().toISOString() }
+        { id: '1', name: 'John Doe', phone: '9876543210', email: 'john@example.com', planId: 'p1', plan: { id: 'p1', name: 'Pro Plan', tier: 'Pro' }, status: 'ACTIVE', billingCycle: '1 Month', paidAmount: 100, pendingAmount: 0, expiryDate: new Date(Date.now() + 30 * 86400000).toISOString(), joinDate: new Date().toISOString(), gender: 'MALE', branch: 'Main', createdAt: new Date().toISOString() },
+        { id: '2', name: 'Jane Smith', phone: '9876543211', email: 'jane@example.com', planId: 'p2', plan: { id: 'p2', name: 'Basic Plan', tier: 'Basic' }, status: 'PENDING', billingCycle: '3 Months', paidAmount: 50, pendingAmount: 90, expiryDate: new Date(Date.now() + 90 * 86400000).toISOString(), joinDate: new Date().toISOString(), gender: 'FEMALE', branch: 'Main', createdAt: new Date().toISOString() }
       ];
       
       set({

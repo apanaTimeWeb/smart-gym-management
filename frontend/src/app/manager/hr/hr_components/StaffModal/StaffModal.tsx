@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Form modal for creating or editing a staff member profile in the HR module.
+// RESPONSIBILITY: Form modal for creating or editing a staff member profile in the HR module.
 'use client';
 
 import { useEffect } from 'react';
@@ -19,7 +19,7 @@ export default function StaffModal() {
     control,
     formState: { errors }
   } = useForm<StaffFormValues>({
-    resolver: zodResolver(StaffSchema),
+    resolver: zodResolver(StaffSchema) as any,
     defaultValues: (editData as StaffFormValues) || {}
   });
 

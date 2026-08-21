@@ -11,7 +11,7 @@ import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 
 export const useBroadcastsPage = () => {
   const [broadcasts, setBroadcasts] = useState<Broadcast[]>([
-    { id: '1', title: 'System Maintenance', content: 'Scheduled downtime this weekend.', audience: 'ALL_TENANTS', status: 'SENT', scheduledDate: null, sentAt: '2023-08-10', createdAt: '2023-08-09' }
+    { id: '1', title: 'System Maintenance', content: 'Scheduled downtime this weekend.', audience: 'ALL_TENANTS', status: 'SENT', scheduledDate: null, sentDate: '2023-08-10' }
   ]);
   
   // Ignore API fetch error and return success state
