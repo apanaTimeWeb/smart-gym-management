@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Centralized constants, schema, and shared utilities for the HR module.
+// RESPONSIBILITY: Centralized constants, schema, and shared utilities for the HR module.
 import { z } from 'zod';
 
 export const StaffSchema = z.object({
@@ -15,7 +15,7 @@ export const StaffSchema = z.object({
 
 export type StaffFormValues = z.infer<typeof StaffSchema>;
 
-export const HR_TABS = ['Staff', 'Payroll'];
+export const HR_TABS = ['Staff'];
 
 export const EMPTY_STAFF = { 
  name: '', 

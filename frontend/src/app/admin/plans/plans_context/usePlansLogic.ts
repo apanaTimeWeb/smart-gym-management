@@ -45,23 +45,18 @@ export function usePlansLogic(initialData?: PlansInitialData | null): PlansConte
   const hideToast = useCallback(() => setToast(null), []);
 
   const loadPlans = useCallback(async () => {
-    setFetchState('loading');
-    try {
-      const res = await plansApi.getAll();
-      const data = res.data;
-      setPlans(Array.isArray(data) ? data : (data as { plans?: Plan[] })?.plans || []);
-      setFetchState('success');
-    } catch (e) {
-      showToast((e as Error).message, 'error');
-      setFetchState('error');
-    }
+    setFetchState('success');
+    setPlans([
+      { id: '1', name: 'Basic Tier', tier: 'Basic', price1Month: 50, price3Month: 140, price6Month: 250, price12Month: 450, features: ['Gym Access', 'Locker Room'], isActive: true },
+      { id: '2', name: 'Pro Tier', tier: 'Pro', price1Month: 80, price3Month: 220, price6Month: 400, price12Month: 750, features: ['Gym Access', 'Classes', 'Sauna'], isActive: true },
+      { id: '3', name: 'Elite Tier', tier: 'Elite', price1Month: 120, price3Month: 330, price6Month: 600, price12Month: 1100, features: ['All Access', 'Personal Trainer', 'Diet Plan'], isActive: true },
+    ]);
   }, [showToast]);
 
   // Fetch plans on mount; skip if SSR initialData was provided
   useEffect(() => {
-    if (initialData) return;
     loadPlans();
-  }, [loadPlans, initialData]);
+  }, [loadPlans]);
 
   const openAdd = useCallback(() => {
     setEditId(null);

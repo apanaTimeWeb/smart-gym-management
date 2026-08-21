@@ -9,10 +9,10 @@ import { usePlansStore } from '@/app/superadmin/plans/plans_store/usePlansStore'
 
 const planSchema = z.object({
   name: z.string().min(1, 'Plan Name is required'),
-  priceMonthly: z.number().min(0),
-  priceAnnual: z.number().min(0),
-  maxMembers: z.number().min(1),
-  maxStaff: z.number().min(1),
+  priceMonthly: z.coerce.number().min(0),
+  priceAnnual: z.coerce.number().min(0),
+  maxMembers: z.coerce.number().min(1),
+  maxStaff: z.coerce.number().min(1),
   features: z.array(z.object({ value: z.string().min(1, 'Feature cannot be empty') })).min(1),
 });
 

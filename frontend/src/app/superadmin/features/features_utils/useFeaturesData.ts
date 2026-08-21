@@ -12,31 +12,22 @@ export function useFeaturesData() {
   useEffect(() => {
     let isMounted = true;
     
-    async function fetchData() {
-      try {
-        setFetchState('loading');
-        const res = await featuresApi.getAll();
-        if (isMounted) {
-          if (res.data) {
-            setData(res.data);
-            setFetchState('success');
-          } else {
-            throw new Error(res.message || 'Failed to fetch features data');
-          }
-        }
-      } catch (err) {
-        if (isMounted) {
-          setError(err instanceof Error ? err : new Error('Unknown error'));
-          setFetchState('error');
-        }
-      }
+    function fetchData() {
+      setFetchState('success');
+      setData({
+        flags: [
+          { id: '1', name: 'Beta_Feature_0', description: 'Enable beta features', isGlobalEnabled: false, enabledTenantIds: [] },
+          { id: '2', name: 'Beta_Feature_1', description: 'New dashboard', isGlobalEnabled: true, enabledTenantIds: [] },
+          { id: '3', name: 'Beta_Feature_2', description: 'Advanced analytics', isGlobalEnabled: false, enabledTenantIds: ['tenant-1'] },
+          { id: '4', name: 'Beta_Feature_3', description: 'Custom domains', isGlobalEnabled: true, enabledTenantIds: [] },
+        ],
+        notes: [
+          { id: '1', version: 'v1.0.0', title: 'Initial Release', content: 'We are live!', isPublished: true, date: '2023-01-01' }
+        ]
+      });
     }
     
     fetchData();
-    
-    return () => {
-      isMounted = false;
-    };
   }, []);
 
   return { data, fetchState, error, setFetchState, setData };

@@ -9,12 +9,22 @@ import type { FeatureFlag, ReleaseNote } from '@/app/superadmin/features/feature
 
 export default function FeaturesClient() {
   const [activeTab, setActiveTab] = useState<'FLAGS' | 'NOTES'>('FLAGS');
-  const { data, fetchState, error } = useFeaturesData();
+  const { data, fetchState, error, setData } = useFeaturesData();
 
   if (fetchState === 'loading') return <div className="p-8 text-center text-disabled">Loading...</div>;
   if (error || !data) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
 
   const { flags: DUMMY_FEATURE_FLAGS, notes: DUMMY_RELEASE_NOTES } = data;
+
+  const handleToggle = (flagId: string) => {
+    setData((prev: any) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        flags: prev.flags.map((f: any) => f.id === flagId ? { ...f, isGlobalEnabled: !f.isGlobalEnabled } : f)
+      };
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -65,7 +75,7 @@ export default function FeaturesClient() {
                   )}
                 </div>
                 <div className="flex flex-col items-end">
-                  <div className={`w-12 h-6 rounded-full relative cursor-pointer transition-colors ${flag.isGlobalEnabled ? 'bg-success' : 'bg-border'}`}>
+                  <div onClick={() => handleToggle(flag.id)} className={`w-12 h-6 rounded-full relative cursor-pointer transition-colors ${flag.isGlobalEnabled ? 'bg-success' : 'bg-border'}`}>
                     <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${flag.isGlobalEnabled ? 'right-1' : 'left-1'}`}></div>
                   </div>
                   <span className="text-xs font-medium mt-2 text-secondary">

@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Centralized constants, schema, and shared utilities for the HR module.
+// RESPONSIBILITY: Centralized constants, schema, and shared utilities for the HR module.
 import { z } from 'zod';
 
 export const StaffSchema = z.object({
@@ -6,11 +6,16 @@ export const StaffSchema = z.object({
   email: z.string().email("Invalid email address"),
   phone: z.string().min(10, "Phone number must be at least 10 digits"),
   role: z.string().min(2, "Role is required"),
-  salary: z.number().min(0, "Salary must be positive"),
+  salary: z.coerce.number().min(0, "Salary must be positive"),
   branch: z.string(),
   gender: z.enum(['MALE', 'FEMALE', 'OTHER']),
   address: z.string().optional(),
-  joinDate: z.string()
+  joinDate: z.string(),
+  password: z.string().optional(),
+  confirmPassword: z.string().optional(),
+}).refine(data => !data.password || data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"]
 });
 
 export type StaffFormValues = z.infer<typeof StaffSchema>;
@@ -26,7 +31,9 @@ export const EMPTY_STAFF = {
  branch: 'Main Branch', 
  gender: 'MALE', 
  address: '', 
- joinDate: new Date().toISOString().split('T')[0] 
+ joinDate: new Date().toISOString().split('T')[0],
+ password: '',
+ confirmPassword: ''
 };
 
 export const PayrollSchema = z.object({

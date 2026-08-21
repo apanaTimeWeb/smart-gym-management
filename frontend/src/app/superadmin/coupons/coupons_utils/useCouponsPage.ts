@@ -41,58 +41,45 @@ export const useCouponsPage = () => {
   const { mutate, isMutating } = useCouponsMutation();
 
   const handleCreateCoupon = useCallback(async (data: CouponFormData) => {
-    await mutate<Coupon>(
-      () => couponsApi.create(data),
-      {
-        successMessage: 'Coupon created successfully',
-        onSuccess: (res) => {
-          setCoupons(prev => [res as Coupon, ...prev]);
-          setIsModalOpen(false);
-          form.reset();
-        },
-      }
-    );
-  }, [form, mutate]);
+    // Mocking the backend API success as per "fix with all hardcoded data"
+    const newCoupon = {
+      id: `mock-${Date.now()}`,
+      code: data.code || `CODE-${Math.floor(Math.random() * 10000)}`,
+      discountType: data.discountType,
+      discountValue: data.discountValue || 0,
+      maxUses: data.maxUses || 0,
+      currentUses: 0,
+      expiryDate: data.expiryDate,
+      status: 'ACTIVE',
+      isDeleted: false,
+    } as Coupon;
+    
+    setCoupons(prev => [newCoupon, ...prev]);
+    setIsModalOpen(false);
+    form.reset();
+    toast.success('Coupon created successfully');
+  }, [form]);
 
   const handleUpdateCoupon = useCallback(async (id: string, data: Partial<CouponFormData>) => {
     if (!selectedCoupon) return;
-    await mutate<Coupon>(
-      () => couponsApi.update(selectedCoupon.id, data),
-      {
-        successMessage: 'Coupon updated successfully',
-        onSuccess: (res) => {
-          setCoupons(prev => prev.map(c => c.id === id ? { ...c, ...(res as Coupon) } : c));
-          setIsEditModalOpen(false);
-          setSelectedCoupon(null);
-        },
-      }
-    );
-  }, [mutate]);
+    // Mocking update
+    setCoupons(prev => prev.map(c => c.id === id ? { ...c, ...data } as Coupon : c));
+    setIsEditModalOpen(false);
+    setSelectedCoupon(null);
+    toast.success('Coupon updated successfully');
+  }, [selectedCoupon]);
 
   const handleDeleteCoupon = useCallback(async (id: string) => {
-    // Confirmation is handled by the caller via a modal — not window.confirm
-    await mutate<void>(
-      () => couponsApi.remove(id),
-      {
-        successMessage: 'Coupon deleted successfully',
-        onSuccess: () => {
-          setCoupons(prev => prev.filter(c => c.id !== id));
-        },
-      }
-    );
-  }, [mutate]);
+    // Mocking delete
+    setCoupons(prev => prev.filter(c => c.id !== id));
+    toast.success('Coupon deleted successfully');
+  }, []);
 
   const handleToggleRestore = useCallback(async (id: string) => {
-    await mutate<Coupon>(
-      () => couponsApi.update(id, { isDeleted: false }),
-      {
-        successMessage: 'Coupon restored successfully',
-        onSuccess: (res) => {
-          setCoupons(prev => prev.map(c => c.id === id ? { ...c, ...(res as Coupon) } : c));
-        },
-      }
-    );
-  }, [mutate]);
+    // Mocking restore
+    setCoupons(prev => prev.map(c => c.id === id ? { ...c, isDeleted: false } : c));
+    toast.success('Coupon restored successfully');
+  }, []);
 
   const handleToggleStatus = useCallback(async (id: string, currentStatus: CouponStatus) => {
     if (currentStatus !== 'ACTIVE' && currentStatus !== 'INACTIVE') {
@@ -100,16 +87,10 @@ export const useCouponsPage = () => {
       return;
     }
     const newStatus: CouponStatus = currentStatus === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
-    await mutate<Coupon>(
-      () => couponsApi.update(id, { status: newStatus }),
-      {
-        successMessage: `Coupon marked as ${newStatus}`,
-        onSuccess: (res) => {
-          setCoupons(prev => prev.map(c => c.id === id ? { ...c, ...(res as Coupon) } : c));
-        },
-      }
-    );
-  }, [mutate]);
+    // Mocking toggle
+    setCoupons(prev => prev.map(c => c.id === id ? { ...c, status: newStatus } : c));
+    toast.success(`Coupon marked as ${newStatus}`);
+  }, []);
 
   const activeCoupons = useMemo(
     () => coupons.filter(c => c.status === 'ACTIVE' && !c.isDeleted).length,
