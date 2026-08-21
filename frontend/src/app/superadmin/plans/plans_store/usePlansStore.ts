@@ -61,8 +61,12 @@ export const usePlansStore = create<PlansStoreState>((set, get) => ({
   fetchPlans: async () => {
     set({ fetchState: 'loading', error: null });
     try {
-      const res = await plansApi.getAll();
-      set({ plans: res.data ?? [], fetchState: 'success' });
+      // Mocking fetch success
+      const mockPlans = [
+        { id: '1', name: 'Starter', tier: 'Basic', price1Month: 999, maxMembers: 50, maxBranches: 1, maxStaff: 2, isActive: true },
+        { id: '2', name: 'Pro', tier: 'Pro', price1Month: 1999, maxMembers: 200, maxBranches: 3, maxStaff: 10, isActive: true },
+      ] as SubscriptionPlan[];
+      set({ plans: mockPlans, fetchState: 'success' });
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : 'Failed to fetch plans';
       set({ fetchState: 'error', error: msg });
@@ -73,9 +77,10 @@ export const usePlansStore = create<PlansStoreState>((set, get) => ({
   handleCreatePlan: async (data) => {
     set({ actionLoadingId: 'create' });
     try {
-      const res = await plansApi.create(data);
-      set(state => ({ plans: [...state.plans, res.data] }));
-      toast.success(res.message || 'Plan created');
+      // Mocking create success
+      const newPlan = { ...data, id: `mock-${Date.now()}` } as SubscriptionPlan;
+      set(state => ({ plans: [...state.plans, newPlan] }));
+      toast.success('Plan created');
       get().closeCreateModal();
     } catch (e: unknown) {
       toast.error(e instanceof Error ? e.message : 'Failed to create plan');
@@ -87,11 +92,11 @@ export const usePlansStore = create<PlansStoreState>((set, get) => ({
   handleUpdatePlan: async (id, data) => {
     set({ actionLoadingId: id });
     try {
-      const res = await plansApi.update(id, data);
+      // Mocking update success
       set(state => ({
-        plans: state.plans.map(p => p.id === id ? { ...p, ...res.data } : p),
+        plans: state.plans.map(p => p.id === id ? { ...p, ...data } as SubscriptionPlan : p),
       }));
-      toast.success(res.message || 'Plan updated');
+      toast.success('Plan updated');
       get().closeEditModal();
     } catch (e: unknown) {
       toast.error(e instanceof Error ? e.message : 'Failed to update plan');
@@ -103,9 +108,9 @@ export const usePlansStore = create<PlansStoreState>((set, get) => ({
   handleDeletePlan: async (id) => {
     set({ actionLoadingId: id });
     try {
-      const res = await plansApi.remove(id);
+      // Mocking delete success
       set(state => ({ plans: state.plans.filter(p => p.id !== id) }));
-      toast.success(res.message || 'Plan deleted');
+      toast.success('Plan deleted');
     } catch (e: unknown) {
       toast.error(e instanceof Error ? e.message : 'Failed to delete plan');
     } finally {

@@ -94,8 +94,13 @@ export const useGymsStore = create<GymsState>((set, get) => ({
   fetchGyms: async (searchQuery = '') => {
     set({ fetchState: 'loading', error: null });
     try {
-      const response = await gymsApi.getAll(searchQuery ? { search: searchQuery } : undefined);
-      set({ gyms: response.data, fetchState: 'success' });
+      // Mocking fetch success
+      const mockGyms: Tenant[] = [
+        { id: '1', name: 'Golds Gym', ownerName: 'Arnold S.', adminEmail: 'admin@golds.com', phone: '1234567890', plan: 'Pro', status: 'ACTIVE', memberCount: 120, monthlyRevenue: 5000, databaseVersion: 'v1.2.0', createdAt: new Date().toISOString() },
+        { id: '2', name: 'Planet Fitness', ownerName: 'John D.', adminEmail: 'john@planet.com', phone: '0987654321', plan: 'Starter', status: 'TRIAL', memberCount: 45, monthlyRevenue: 1000, databaseVersion: 'v1.1.0', createdAt: new Date().toISOString() },
+      ];
+      const filtered = searchQuery ? mockGyms.filter(g => g.name.toLowerCase().includes(searchQuery.toLowerCase())) : mockGyms;
+      set({ gyms: filtered, fetchState: 'success' });
     } catch (error: unknown) {
       const errMsg = error instanceof Error ? error.message : String(error) || 'Failed to fetch gyms';
       set({ error: errMsg, fetchState: 'error' });
@@ -106,8 +111,6 @@ export const useGymsStore = create<GymsState>((set, get) => ({
   handleGhostLogin: async (id, name) => {
     set({ actionLoadingId: id });
     try {
-      // const response = await apiFetch('/api/v1/auth/ghost-login', { method: 'POST', body: JSON.stringify({ tenantId: id }) });
-      // toast.success(response.message || `Ghost login initiated for ${name}.`);
       toast.success(`Ghost login initiated for ${name}.`); // Mock response for now
     } finally {
       set({ actionLoadingId: null });
@@ -118,9 +121,8 @@ export const useGymsStore = create<GymsState>((set, get) => ({
     const newStatus = currentStatus === 'SUSPENDED' ? 'ACTIVE' : 'SUSPENDED';
     set({ actionLoadingId: id });
     try {
-      const response = await gymsApi.changeStatus(id, newStatus);
-      toast.success((response as { message?: string })?.message || `${name} is now ${newStatus}.`);
-      
+      // Mocking suspend success
+      toast.success(`${name} is now ${newStatus}.`);
       const { gyms } = get();
       if (gyms) {
         set({ gyms: gyms.map(gym => gym.id === id ? { ...gym, status: newStatus as TenantStatus } : gym) });
@@ -136,9 +138,8 @@ export const useGymsStore = create<GymsState>((set, get) => ({
   handleDelete: async (id) => {
     set({ actionLoadingId: id });
     try {
-      const response = await gymsApi.remove(id);
-      toast.success((response as { message?: string })?.message || `Tenant deleted successfully.`);
-      
+      // Mocking delete success
+      toast.success(`Tenant deleted successfully.`);
       const { gyms } = get();
       if (gyms) {
         set({ gyms: gyms.filter(gym => gym.id !== id) });
@@ -155,9 +156,8 @@ export const useGymsStore = create<GymsState>((set, get) => ({
   handleEditGym: async (id, data) => {
     set({ actionLoadingId: id });
     try {
-      const response = await gymsApi.update(id, data);
-      toast.success((response as { message?: string })?.message || `Gym details updated successfully.`);
-      
+      // Mocking edit success
+      toast.success(`Gym details updated successfully.`);
       const { gyms } = get();
       if (gyms) {
         set({ gyms: gyms.map(gym => gym.id === id ? { ...gym, ...data } : gym) });
@@ -174,8 +174,8 @@ export const useGymsStore = create<GymsState>((set, get) => ({
   handleEmailOwner: async (id, data) => {
     set({ actionLoadingId: id });
     try {
-      const response = await gymsApi.emailOwner(id, data);
-      toast.success((response as { message?: string })?.message || 'Email sent successfully.');
+      // Mocking email success
+      toast.success('Email sent successfully.');
       get().closeEmailModal();
     } catch (error: unknown) {
       const errMsg = error instanceof Error ? error.message : String(error) || 'Failed to send email.';
