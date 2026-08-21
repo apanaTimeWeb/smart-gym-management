@@ -15,8 +15,6 @@ export const ADMIN_NAV_ITEMS = [
  { href: '/admin/hr', label: 'HR Management', icon: UserCog },
  { href: '/admin/store', label: 'Store', icon: ShoppingBag },
  { href: '/admin/finance', label: 'Finance', icon: DollarSign },
- { href: '/admin/library', label: 'Diet Library', icon: BookOpen },
- { href: '/admin/workout', label: 'Workout Library', icon: Dumbbell },
  { href: '/admin/inquiries', label: 'Inquiries & Leads',icon: MessageSquare },
  { href: '/admin/audit', label: 'Audit Logs', icon: Shield },
  { href: '/admin/settings', label: 'Settings', icon: Settings },

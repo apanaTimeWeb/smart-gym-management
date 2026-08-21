@@ -43,6 +43,7 @@ interface GymsState {
   handleDelete: (id: string) => Promise<void>;
   handleEditGym: (id: string, data: Partial<Tenant>) => Promise<void>;
   handleEmailOwner: (id: string, data: { subject: string; message: string; [key: string]: unknown }) => Promise<void>;
+  addGym: (gym: Tenant) => void;
 }
 
 export const useGymsStore = create<GymsState>((set, get) => ({
@@ -62,6 +63,11 @@ export const useGymsStore = create<GymsState>((set, get) => ({
     // In a real app, we'd debounce this and call fetchGyms.
     // For now, we'll just update the string. 
     // To strictly follow server-side filtering, we'd fire fetchGyms(search) via a debounced effect in the component.
+  },
+
+  addGym: (gym) => {
+    const { gyms } = get();
+    set({ gyms: [gym, ...(gyms || [])] });
   },
 
   openEditModal: (gym) => set({ selectedGym: gym, isEditModalOpen: true }),

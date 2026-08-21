@@ -1,16 +1,18 @@
-﻿// RESPONSIBILITY: Form modal for creating or editing a staff member profile in the HR module.
+// RESPONSIBILITY: Form modal for creating or editing a staff member profile in the HR module.
 'use client';
 
 import { useEffect } from 'react';
 import { useHrContext } from '@/app/admin/hr/hr_context/HrContext';
 import { STAFF_MODAL_FIELDS, GENDER_OPTIONS, BRANCH_OPTIONS, StaffSchema, type StaffFormValues } from '@/app/admin/hr/hr_utils/HrSharedConstants';
-import { X, Save } from 'lucide-react';
+import { X, Save, Eye, EyeOff } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
+import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 
-export default function StaffModal() {
- const { showModal, setShowModal, editId, editData, saveStaff, saving } = useHrContext();
+ export default function StaffModal() {
+  const { showModal, setShowModal, editId, editData, saveStaff, saving } = useHrContext();
+  const [showPassword, setShowPassword] = useState(false);
 
   const { 
     register, 
@@ -98,6 +100,49 @@ export default function StaffModal() {
  {...register('joinDate')}
  className="w-full px-4 py-2 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground"
  />
+ </div>
+ <div className="grid grid-cols-2 gap-4">
+   <div>
+     <label className="block text-sm font-medium mb-1 text-secondary">
+       Password {!editId && <span className="text-danger">*</span>}
+     </label>
+     <div className="relative">
+       <input 
+         type={showPassword ? 'text' : 'password'} 
+         placeholder="Enter password" 
+         {...register('password')}
+         className={`w-full border rounded-xl px-4 py-2.5 pr-10 text-sm focus:outline-none focus-visible:ring-2 ${
+           errors.password ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
+         } bg-input text-foreground`}
+       />
+       <button
+         type="button"
+         onClick={() => setShowPassword(!showPassword)}
+         className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-primary transition-colors"
+       >
+         {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+       </button>
+     </div>
+     {errors.password && (
+       <p className="text-danger text-xs mt-1">{errors.password.message as string}</p>
+     )}
+   </div>
+   <div>
+     <label className="block text-sm font-medium mb-1 text-secondary">
+       Confirm Password {!editId && <span className="text-danger">*</span>}
+     </label>
+     <input 
+       type={showPassword ? 'text' : 'password'} 
+       placeholder="Confirm password" 
+       {...register('confirmPassword')}
+       className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 ${
+         errors.confirmPassword ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
+       } bg-input text-foreground`}
+     />
+     {errors.confirmPassword && (
+       <p className="text-danger text-xs mt-1">{errors.confirmPassword.message as string}</p>
+     )}
+   </div>
  </div>
  <div className="flex gap-3 pt-2">
  <button 

@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Centralized constants, schema, and shared utilities for the Attendance module.
+// RESPONSIBILITY: Centralized constants, schema, and shared utilities for the Attendance module.
 import { z } from 'zod';
 
 export const formatDate = (d: string) => 
@@ -11,7 +11,7 @@ export const ATTENDANCE_TABLE_HEADERS = [
  'Name', 'Type', 'Date', 'Check In', 'Check Out'
 ];
 
-export const ATTENDANCE_TABS = ['All', 'Members', 'Staff'] as const;
+export const ATTENDANCE_TABS = ['Members'] as const;
 export type AttendanceTab = typeof ATTENDANCE_TABS[number];
 
 export const AttendanceSchema = z.object({

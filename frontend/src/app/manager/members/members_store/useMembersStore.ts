@@ -54,29 +54,24 @@ export const useMembersStore = create<MembersState>((set, get) => ({
   loadAll: async (params) => {
     set({ fetchState: 'loading' });
     try {
-      const apiParams: Record<string, string> = { 
-        limit: '10', 
-        page: params.page 
-      };
-      if (params.search) apiParams.search = params.search;
-      if (params.status && params.status !== 'All') apiParams.status = params.status;
-
-      const [membersRes, plansRes, statsRes] = await Promise.all([
-        membersApi.getAll(apiParams),
-        plansApi.getAll(),
-        membersApi.getStats(),
-      ]);
+      const mockMembers: Member[] = [
+        { id: '1', name: 'John Doe', phone: '9876543210', email: 'john@example.com', planId: 'p1', plan: { id: 'p1', name: 'Pro Plan', tier: 'Pro', price1Month: 100, price3Month: 250, price6Month: 450, price12Month: 800, features: [], isActive: true }, status: 'ACTIVE', billingCycle: '1 Month', paidAmount: 100, pendingAmount: 0, expiryDate: new Date(Date.now() + 30 * 86400000).toISOString(), joinDate: new Date().toISOString() },
+        { id: '2', name: 'Jane Smith', phone: '9876543211', email: 'jane@example.com', planId: 'p2', plan: { id: 'p2', name: 'Basic Plan', tier: 'Basic', price1Month: 50, price3Month: 140, price6Month: 250, price12Month: 450, features: [], isActive: true }, status: 'PENDING', billingCycle: '3 Months', paidAmount: 50, pendingAmount: 90, expiryDate: new Date(Date.now() + 90 * 86400000).toISOString(), joinDate: new Date().toISOString() }
+      ];
       
       set({
-        members: membersRes.data.members || [],
-        totalMembers: membersRes.data.total || 0,
-        plans: plansRes.data || [],
-        stats: statsRes.data || { total: 0, active: 0, pending: 0, expired: 0 },
+        members: mockMembers,
+        totalMembers: mockMembers.length,
+        plans: [
+          { id: 'p1', name: 'Pro Plan', tier: 'Pro', price1Month: 100, price3Month: 250, price6Month: 450, price12Month: 800, features: [], isActive: true },
+          { id: 'p2', name: 'Basic Plan', tier: 'Basic', price1Month: 50, price3Month: 140, price6Month: 250, price12Month: 450, features: [], isActive: true }
+        ],
+        stats: { total: 2, active: 1, pending: 1, expired: 0 },
         fetchState: 'success',
       });
     } catch (e: unknown) {
       set({ fetchState: 'error' });
-      throw e; // Let the UI handle toast
+      throw e; 
     }
   },
 

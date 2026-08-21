@@ -33,19 +33,13 @@ export default function MembersToolbar() {
           className="w-48"
           options={MEMBER_STATUS_OPTIONS}
         />
- <button 
- onClick={handleRefresh} 
- className="flex items-center gap-2 px-3 py-2.5 text-sm border border-border rounded-xl hover:opacity-80 text-primary"
- >
- <RefreshCw size={14} /> Refresh
- </button>
- <button 
- onClick={openAdd} 
- className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-primary-foreground bg-primary rounded-xl hover:opacity-90 transition-opacity"
- >
- <Plus size={16} /> Add Member
- </button>
- </div>
+  <button 
+  onClick={handleRefresh} 
+  className="flex items-center gap-2 px-3 py-2.5 text-sm border border-border rounded-xl hover:opacity-80 text-primary"
+  >
+  <RefreshCw size={14} /> Refresh
+  </button>
+  </div>
  </div>
  );
 }

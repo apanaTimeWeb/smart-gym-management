@@ -41,18 +41,24 @@ export const useCouponsPage = () => {
   const { mutate, isMutating } = useCouponsMutation();
 
   const handleCreateCoupon = useCallback(async (data: CouponFormData) => {
-    await mutate<Coupon>(
-      () => couponsApi.create(data),
-      {
-        successMessage: 'Coupon created successfully',
-        onSuccess: (res) => {
-          setCoupons(prev => [res as Coupon, ...prev]);
-          setIsModalOpen(false);
-          form.reset();
-        },
-      }
-    );
-  }, [form, mutate]);
+    // Mocking the backend API success as per "fix with all hardcoded data"
+    const newCoupon = {
+      id: `mock-${Date.now()}`,
+      code: data.code || `CODE-${Math.floor(Math.random() * 10000)}`,
+      discountType: data.discountType,
+      discountValue: data.discountValue || 0,
+      maxUses: data.maxUses || 0,
+      currentUses: 0,
+      expiryDate: data.expiryDate,
+      status: 'ACTIVE',
+      isDeleted: false,
+    } as Coupon;
+    
+    setCoupons(prev => [newCoupon, ...prev]);
+    setIsModalOpen(false);
+    form.reset();
+    toast.success('Coupon created successfully');
+  }, [form]);
 
   const handleUpdateCoupon = useCallback(async (id: string, data: Partial<CouponFormData>) => {
     if (!selectedCoupon) return;

@@ -76,7 +76,9 @@ export function useAddGymForm() {
 
     try {
       addLog('Sending payload to backend...');
-      const response = await superadminApi.gyms.create({
+      // Mocking the backend API success as per "fix with all hardcoded data"
+      const newGym = {
+        id: `mock-${Date.now()}`,
         name: data.gymName,
         ownerName: data.ownerName,
         adminEmail: data.adminEmail,
@@ -87,12 +89,17 @@ export function useAddGymForm() {
         monthlyRevenue: NEW_TENANT_DEFAULTS.MONTHLY_REVENUE,
         databaseVersion: NEW_TENANT_DEFAULTS.DB_VERSION,
         temporaryPassword: data.temporaryPassword,
-      } as unknown as Partial<Tenant>);
+        createdAt: new Date().toISOString(),
+      } as unknown as Tenant;
+
+      import('@/app/superadmin/gyms/gyms_store/useGymsStore').then(({ useGymsStore }) => {
+        useGymsStore.getState().addGym(newGym);
+      });
 
       addLog('Provisioning complete! Redirecting...');
       await delay(PROVISIONING_DELAYS.REDIRECT);
 
-      toast.success((response as { message: string }).message);
+      toast.success('Gym provisioned successfully');
       router.push(SuperadminUrlConfig.PAGES.GYMS_LIST);
     } catch (e: unknown) {
       const errMsg = e instanceof Error ? e.message : 'An error occurred';
