@@ -1,11 +1,11 @@
-﻿// RESPONSIBILITY: Centralized constants, schema, and shared utilities for the Store module.
+// RESPONSIBILITY: Centralized constants, schema, and shared utilities for the Store module.
 import { z } from 'zod';
 
 export const ProductSchema = z.object({
   name: z.string().min(2, "Name is required"),
   category: z.string(),
-  price: z.coerce.number().min(0, "Price must be positive"),
-  stock: z.coerce.number().min(0, "Stock must be positive"),
+  price: z.string().refine(val => val !== '' && !isNaN(Number(val)) && Number(val) >= 0, "Valid price is required"),
+  stock: z.string().refine(val => val !== '' && !isNaN(Number(val)) && Number(val) >= 0, "Valid stock is required"),
   description: z.string().optional()
 });
 

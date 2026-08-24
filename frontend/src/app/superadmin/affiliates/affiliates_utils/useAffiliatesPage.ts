@@ -12,8 +12,8 @@ import type { Affiliate, AffiliateStatus } from '@/app/superadmin/affiliates/aff
 
 export const useAffiliatesPage = () => {
   const [affiliates, setAffiliates] = useState<Affiliate[]>([
-    { id: '1', name: 'Fitness Influencer', email: 'fit@example.com', referralCode: 'FIT100', commissionEarned: 5000, joinedDate: '2023-01-10', status: 'ACTIVE' },
-    { id: '2', name: 'Local Supplement Store', email: 'store@example.com', referralCode: 'LOCALSUPP', commissionEarned: 12000, joinedDate: '2022-11-20', status: 'ACTIVE' }
+    { id: '1', name: 'Fitness Influencer', email: 'fit@example.com', referralCode: 'FIT100', totalReferred: 10, commissionEarned: 5000, joinedAt: '2023-01-10', status: 'ACTIVE' },
+    { id: '2', name: 'Local Supplement Store', email: 'store@example.com', referralCode: 'LOCALSUPP', totalReferred: 24, commissionEarned: 12000, joinedAt: '2022-11-20', status: 'ACTIVE' }
   ]);
   
   // Ignore API fetch error and return success state

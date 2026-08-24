@@ -67,7 +67,7 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
         { id: '1', name: 'Alice Admin', email: 'alice@gym.com', phone: '1234567890', role: 'Manager', salary: 6000, branch: 'Main', gender: 'FEMALE', joinDate: new Date().toISOString(), isActive: true }
       ];
       const mockPayrolls: Payroll[] = [];
-      const mockSummary: HrSummary = { totalStaff: 1, activeStaff: 1, pendingPayroll: 0, paidPayroll: 0 };
+      const mockSummary: HrSummary = { totalStaff: 1, activeStaff: 1, totalPayrollThisMonth: 0, paidCount: 0, pendingCount: 0 };
       
       setStaff(mockStaff);
       setPayrolls(mockPayrolls);
@@ -115,13 +115,15 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
         isActive: true 
       };
       // Mocking save success
-      if (editId) { 
+      if (editId) {
+        setStaff(prev => prev.map(s => s.id === editId ? { ...s, ...payload } as Staff : s));
         showToast('Staff updated successfully', 'success'); 
-      } else { 
+      } else {
+        const newStaff = { id: `s${Date.now()}`, ...payload } as Staff;
+        setStaff(prev => [newStaff, ...prev]);
         showToast('Staff created successfully', 'success'); 
       }
       setShowModal(false);
-      await loadAll();
     } catch (err) { 
       showToast((err as Error).message, 'error'); 
     } finally { 
@@ -137,9 +139,10 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
     setSaving(true);
     try {
       // Mocking save success
+      const newPayroll = { id: `pr${Date.now()}`, ...data } as Payroll;
+      setPayrolls(prev => [newPayroll, ...prev]);
       showToast('Payroll recorded successfully', 'success');
       setShowPayrollModal(false);
-      await loadAll();
     } catch (err) {
       showToast((err as Error).message, 'error');
     } finally {

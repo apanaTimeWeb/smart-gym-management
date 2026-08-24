@@ -24,6 +24,9 @@ export default function TicketsClient() {
   const { data: DUMMY_SUPPORT_TICKETS, fetchState, error } = useTicketsData<SupportTicket[]>(SuperadminUrlConfig.BACKEND_API.TICKETS_BASE);
 
     const [search, setSearch] = useState('');
+    const [showFilter, setShowFilter] = useState(false);
+    const [statusFilter, setStatusFilter] = useState<TicketStatus | 'ALL'>('ALL');
+    const [priorityFilter, setPriorityFilter] = useState<TicketPriority | 'ALL'>('ALL');
 if (fetchState === 'loading') return (
     <div className="space-y-6 animate-pulse">
       <div className="h-8 bg-card rounded w-48" />
@@ -34,7 +37,12 @@ if (fetchState === 'loading') return (
 
 
 
-  const filtered = DUMMY_SUPPORT_TICKETS.filter(t => t.tenantName.toLowerCase().includes(search.toLowerCase()) || t.subject.toLowerCase().includes(search.toLowerCase()));
+  const filtered = DUMMY_SUPPORT_TICKETS.filter(t => {
+    const matchesSearch = t.tenantName.toLowerCase().includes(search.toLowerCase()) || t.subject.toLowerCase().includes(search.toLowerCase());
+    const matchesStatus = statusFilter === 'ALL' || t.status === statusFilter;
+    const matchesPriority = priorityFilter === 'ALL' || t.priority === priorityFilter;
+    return matchesSearch && matchesStatus && matchesPriority;
+  });
 
   return (
     <div className="space-y-6">
@@ -45,7 +53,7 @@ if (fetchState === 'loading') return (
         </div>
       </div>
 
-      <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+      <div className="bg-card border border-border rounded-xl shadow-sm">
         <div className="p-4 border-b border-border flex gap-4">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />
@@ -57,9 +65,45 @@ if (fetchState === 'loading') return (
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 bg-input border border-border rounded-lg text-sm font-medium text-secondary hover:text-foreground transition-colors">
-            <Filter size={16} /> Filter
-          </button>
+          <div className="relative">
+            <button 
+              onClick={() => setShowFilter(!showFilter)}
+              className="flex items-center gap-2 px-4 py-2 bg-input border border-border rounded-lg text-sm font-medium text-secondary hover:text-foreground transition-colors"
+            >
+              <Filter size={16} /> Filter
+            </button>
+            {showFilter && (
+              <div className="absolute right-0 top-full mt-2 w-64 bg-card border border-border rounded-xl shadow-lg p-4 z-10 flex flex-col gap-4">
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-semibold text-secondary uppercase tracking-wider">Status</label>
+                  <select 
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value as TicketStatus | 'ALL')}
+                    className="w-full px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary"
+                  >
+                    <option value="ALL">All Statuses</option>
+                    <option value="OPEN">Open</option>
+                    <option value="IN_PROGRESS">In Progress</option>
+                    <option value="RESOLVED">Resolved</option>
+                  </select>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-semibold text-secondary uppercase tracking-wider">Priority</label>
+                  <select 
+                    value={priorityFilter}
+                    onChange={(e) => setPriorityFilter(e.target.value as TicketPriority | 'ALL')}
+                    className="w-full px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary"
+                  >
+                    <option value="ALL">All Priorities</option>
+                    <option value="LOW">Low</option>
+                    <option value="MEDIUM">Medium</option>
+                    <option value="HIGH">High</option>
+                    <option value="CRITICAL">Critical</option>
+                  </select>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="overflow-x-auto">

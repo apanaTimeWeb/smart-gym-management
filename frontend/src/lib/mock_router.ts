@@ -3,7 +3,7 @@ import { ApiResponse } from './api';
 class MockDB {
   private static prefix = 'gymsmart_mock_';
   
-  static getCollection(name: string, defaultData: any[] = []): any[] {
+  static getCollection(name: string, defaultData: Record<string, unknown>[] = []): Record<string, unknown>[] {
     if (typeof window === 'undefined') return defaultData;
     const val = localStorage.getItem(this.prefix + name);
     if (val) return JSON.parse(val);
@@ -11,13 +11,13 @@ class MockDB {
     return defaultData;
   }
   
-  static setCollection(name: string, data: any[]) {
+  static setCollection(name: string, data: Record<string, unknown>[]) {
     if (typeof window !== 'undefined') {
       localStorage.setItem(this.prefix + name, JSON.stringify(data));
     }
   }
 
-  static handleCrud(collectionName: string, method: string, path: string, body?: any, defaultData: any[] = [], listKey?: string) {
+  static handleCrud(collectionName: string, method: string, path: string, body?: unknown, defaultData: Record<string, unknown>[] = [], listKey?: string) {
     const coll = this.getCollection(collectionName, defaultData);
     const segments = path.split('?')[0].split('/');
     const possibleId = segments[segments.length - 1];
@@ -38,7 +38,7 @@ class MockDB {
     if (method === 'POST') {
       const newItem = {
         id: `${collectionName.split('_').pop()}-${Date.now()}`,
-        ...body,
+        ...(body as Record<string, unknown>),
         createdAt: new Date().toISOString()
       };
       coll.push(newItem);
@@ -49,7 +49,7 @@ class MockDB {
     if (method === 'PATCH' || method === 'PUT') {
       const idx = coll.findIndex(x => x.id === id);
       if (idx === -1) return { success: false, message: 'Not found', data: null };
-      coll[idx] = { ...coll[idx], ...body, updatedAt: new Date().toISOString() };
+      coll[idx] = { ...coll[idx], ...(body as Record<string, unknown>), updatedAt: new Date().toISOString() };
       this.setCollection(collectionName, coll);
       return { success: true, message: 'Updated successfully', data: coll[idx] };
     }
@@ -67,7 +67,7 @@ class MockDB {
 export async function routeMockRequest<T>(
   path: string,
   method: string = 'GET',
-  body?: any
+  body?: unknown
 ): Promise<ApiResponse<T>> {
   // Simulate network latency
   await new Promise((resolve) => setTimeout(resolve, 500));
@@ -102,16 +102,27 @@ export async function routeMockRequest<T>(
   // ==========================================
   // STATEFUL MOCK DB INTERCEPTIONS (Admin/Manager/Trainer)
   // ==========================================
-  const generate = (count: number, generator: (i: number) => any) => Array.from({ length: count }, (_, i) => generator(i));
+  const generate = (count: number, generator: (i: number) => Record<string, unknown>) => Array.from({ length: count }, (_, i) => generator(i));
 
   if (path.includes('/store/products')) return MockDB.handleCrud('mock_products', method, path, body, generate(15, i => ({ id: `prod-${i}`, name: `Mock Product ${i}`, category: 'Supplements', price: 1500, stock: 50, status: 'IN_STOCK' })), 'products') as unknown as ApiResponse<T>;
-  if (path.includes('/store/orders')) return MockDB.handleCrud('mock_orders', method, path, body, generate(5, i => ({ id: `ord-${i}`, customerName: `Customer ${i}`, totalAmount: 3000, paymentMethod: 'Card', status: 'COMPLETED', date: new Date().toISOString() })), 'orders') as unknown as ApiResponse<T>;
+  if (path.includes('/store/orders')) return MockDB.handleCrud('mock_orders', method, path, body, generate(5, i => ({ id: `ord-${i}`, customerName: `Customer ${i}`, total: 3000, method: 'Card', status: 'COMPLETED', createdAt: new Date().toISOString() })), 'orders') as unknown as ApiResponse<T>;
   if (path.includes('/plans') && !path.includes('/superadmin')) return MockDB.handleCrud('mock_admin_plans', method, path, body, generate(3, i => ({ id: `plan-${i}`, name: i === 0 ? 'Basic Plan' : i === 1 ? 'Pro Plan' : 'VIP Plan', tier: i === 0 ? 'Standard' : i === 1 ? 'Premium' : 'Elite', price1Month: 1000 * (i + 1), price3Month: 2500 * (i + 1), price6Month: 4800 * (i + 1), price12Month: 9000 * (i + 1), features: ['Access to gym', 'Locker facility', 'Cardio section'], isActive: true }))) as unknown as ApiResponse<T>;
+  if (path.includes('/members/stats')) return { success: true, message: 'Stats', data: { total: 150, active: 110, pending: 25, expired: 15 } } as unknown as ApiResponse<T>;
   if (path.includes('/members') && !path.includes('/stats') && !path.includes('/superadmin')) return MockDB.handleCrud('mock_members', method, path, body, generate(15, i => ({ id: `mem-${i}`, name: `Demo Member ${i + 1}`, email: `member${i}@example.com`, phone: `987654321${i % 10}`, status: i % 3 === 0 ? 'expired' : 'active', plan: { name: 'Pro Yearly', tier: 'premium' }, joinDate: '2023-01-15', expiryDate: '2024-01-15' })), 'members') as unknown as ApiResponse<T>;
   if (path.includes('/inquiries') || path.includes('/landing/booking') || path.includes('/landing/contact')) {
     // If it's a landing page POST, we coerce the method to POST for inquiries
     const actualMethod = path.includes('/landing') ? 'POST' : method;
-    return MockDB.handleCrud('mock_inquiries', actualMethod, path, body, generate(10, i => ({ id: `inq-${i}`, name: `Lead ${i + 1}`, phone: `887654321${i % 10}`, status: 'pending', source: 'Instagram', date: '2023-10-15', assignedTo: 'Trainer A' })), 'inquiries') as unknown as ApiResponse<T>;
+    return MockDB.handleCrud('mock_inquiries', actualMethod, path, body, generate(10, i => ({ 
+      id: `inq-${i}`, 
+      name: `Lead ${i + 1}`, 
+      phone: `887654321${i % 10}`, 
+      status: i % 2 === 0 ? 'NEW' : 'FOLLOW_UP', 
+      source: 'Instagram', 
+      interest: 'Basic Membership',
+      date: '2023-10-15', 
+      assignedTo: 'Trainer A',
+      createdAt: new Date().toISOString()
+    })), 'inquiries') as unknown as ApiResponse<T>;
   }
   if (path.includes('/attendance/today-stats')) return { success: true, message: 'Stats', data: { totalCheckIns: 45, memberCheckIns: 32, staffCheckIns: 13 } } as unknown as ApiResponse<T>;
   if (path.includes('/attendance')) return MockDB.handleCrud('mock_admin_attendance', method, path, body, generate(20, i => { const d = new Date(); d.setHours(8, 0, 0, 0); const d2 = new Date(); d2.setHours(9, 30, 0, 0); return { id: `att-${i}`, type: i % 4 === 0 ? 'STAFF' : 'MEMBER', member: { name: `Active Member ${i}` }, staff: { name: `Trainer ${i}` }, date: new Date().toISOString(), checkIn: d.toISOString(), checkOut: d2.toISOString() }; }), 'attendance') as unknown as ApiResponse<T>;
@@ -120,7 +131,16 @@ export async function routeMockRequest<T>(
   if (path.includes('/hr/payrolls')) return MockDB.handleCrud('mock_admin_payrolls', method, path, body, generate(8, i => ({ id: `pay-${i}`, staffId: `staff-${i}`, staff: { name: `Trainer ${i+1}`, role: i === 0 ? 'Manager' : 'Trainer' }, amount: 25000 + (i * 2000), status: i === 2 ? 'PENDING' : 'PAID', month: 'October 2023', paidAt: i !== 2 ? '2023-10-01' : undefined })), 'payrolls') as unknown as ApiResponse<T>;
   if (path.includes('/exercises')) return MockDB.handleCrud('mock_admin_exercises', method, path, body, generate(10, i => ({ id: `ex-${i}`, name: `Exercise ${i+1}`, category: 'Strength', muscleGroup: ['Chest', 'Triceps'], difficulty: 'Beginner', isActive: true, videoUrl: '' })), 'exercises') as unknown as ApiResponse<T>;
   if (path.includes('/diet-plans')) return MockDB.handleCrud('mock_admin_diet_plans', method, path, body, generate(4, i => ({ id: `diet-${i}`, name: `Keto Diet ${i+1}`, goal: 'Weight Loss', calories: 1500 + (i * 200), meals: ['Breakfast', 'Lunch'], isActive: true })), 'dietPlans') as unknown as ApiResponse<T>;
-  if (path.includes('/workouts')) return MockDB.handleCrud('mock_workouts', method, path, body, generate(5, i => ({ id: `wo-${i}`, name: `Workout Plan ${i+1}`, difficulty: 'Medium', durationMins: 45, targetMuscle: 'Full Body' })), 'workouts') as unknown as ApiResponse<T>;
+  if (path.includes('/workouts')) return MockDB.handleCrud('mock_workouts', method, path, body, generate(5, i => ({ 
+    id: `wo-${i}`, 
+    name: `Workout Plan ${i+1}`, 
+    level: i % 2 === 0 ? 'Intermediate' : 'Beginner',
+    days: 4 + (i % 3),
+    exercises: 15 + (i * 2),
+    focus: 'Hypertrophy',
+    duration: '60 min',
+    tags: ['Classic', 'Strength']
+  })), 'workouts') as unknown as ApiResponse<T>;
   if (path.includes('/admin/finance/summary')) return { success: true, message: 'Summary', data: { totalRevenue: 1500000, monthlyRevenue: 250000, pendingAmount: 45000, totalPayments: 345, revenueByMethod: { UPI: 120000, Cash: 50000, Card: 80000, NetBanking: 0 }, monthlyData: generate(6, i => ({ month: `M${i+1}`, revenue: 200000 + (i * 10000) })) } } as unknown as ApiResponse<T>;
   if (path.includes('/finance/payments')) return MockDB.handleCrud('mock_admin_payments', method, path, body, generate(10, i => ({ id: `pay-${i}`, memberId: `mem-${i}`, member: { name: `Payer ${i}`, email: `payer${i}@example.com`, phone: '9988776655', plan: { name: 'Pro Plan' } }, amount: 5000 + (i * 500), status: 'success', paidAt: new Date().toISOString(), method: 'UPI', invoiceNo: `INV-${1000 + i}` })), 'payments') as unknown as ApiResponse<T>;
   if (path.includes('/admin/settings')) {
@@ -128,7 +148,7 @@ export async function routeMockRequest<T>(
       const settings = MockDB.getCollection('mock_admin_settings', [{ gymName: 'Demo Gym Base', ownerName: 'Admin Owner', phone: '9988776655', email: 'admin@gym.com', city: 'Mumbai', gstNumber: '27AAAAA1234A1Z5' }]);
       return { success: true, message: 'Fetched Settings', data: settings[0] } as unknown as ApiResponse<T>;
     } else {
-      let parsed = typeof body === 'string' ? JSON.parse(body) : body;
+      let parsed = typeof body === 'string' ? JSON.parse(body) : (body as Record<string, unknown>);
       MockDB.setCollection('mock_admin_settings', [parsed]);
       return { success: true, message: 'Settings Saved', data: parsed } as unknown as ApiResponse<T>;
     }
@@ -164,7 +184,7 @@ export async function routeMockRequest<T>(
   // Dynamic Rich Data Generator for Demo Mode
   if (method === 'GET') {
     // Helper to generate an array
-    const generate = (count: number, generator: (i: number) => any) => Array.from({ length: count }, (_, i) => generator(i));
+    const generate = (count: number, generator: (i: number) => Record<string, unknown>) => Array.from({ length: count }, (_, i) => generator(i));
 
     if (path.includes('/superadmin/dashboard')) {
       return {
@@ -260,12 +280,12 @@ export async function routeMockRequest<T>(
   }
 
   // Generic fallback if no specific mock is found for mutations (POST, PUT, DELETE)
-  console.log(`[MockRouter] No mock found for ${path}, returning safe mutation fallback.`);
-  
-  let parsedBody: any = {};
+  // Removed console.log per Rule 46
+
+  let parsedBody: Record<string, unknown> = {};
   if (body) {
      try {
-       parsedBody = typeof body === 'string' ? JSON.parse(body) : body;
+       parsedBody = typeof body === 'string' ? JSON.parse(body) : (body as Record<string, unknown>);
      } catch (e) {}
   }
   
@@ -279,6 +299,6 @@ export async function routeMockRequest<T>(
   return {
     success: true,
     message: `Demo Mode: Action ${method} ${path} successful`,
-    data: safeData as any,
+    data: safeData as unknown as T,
   };
 }

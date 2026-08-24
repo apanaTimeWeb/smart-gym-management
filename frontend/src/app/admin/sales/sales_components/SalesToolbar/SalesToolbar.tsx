@@ -4,6 +4,7 @@
 import { Download, Filter, Search } from 'lucide-react';
 import { useSalesContext } from '@/app/admin/sales/sales_context/SalesContext';
 import { DATE_FILTERS } from '@/app/admin/sales/sales_utils/SalesSharedConstants';
+import toast from 'react-hot-toast';
 
 export default function SalesToolbar() {
   const { dateFilter, setDateFilter, search, setSearch, setCurrentPage } = useSalesContext();
@@ -35,7 +36,10 @@ export default function SalesToolbar() {
       className="pl-9 pr-3 py-1.5 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-40 sm:w-64 bg-input text-foreground"
     />
   </div>
- <button className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary transition-colors">
+ <button 
+  onClick={() => toast.success('Exporting sales report to CSV...')}
+  className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary transition-colors"
+ >
  <Download size={13} /> Export
  </button>
  </div>

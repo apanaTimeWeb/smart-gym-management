@@ -28,6 +28,7 @@ superadmin/
 ├── superadmin_url_config.ts            # All page routes + backend API paths
 ├── superadmin_frontend_feature.md      # This file
 ├── superadmin_forbidden.md             # Module-level anti-pattern rules
+├── superadmin_theme_contract.md        # CSS variables and theme dependencies
 │
 ├── superadmin_types/
 │   └── superadmin_types.ts             # All TypeScript types: Tenant, SubscriptionPlan, Coupon, Affiliate, Broadcast, GlobalAuditLog, etc.

@@ -11,7 +11,7 @@ import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 
 export const useBroadcastsPage = () => {
   const [broadcasts, setBroadcasts] = useState<Broadcast[]>([
-    { id: '1', title: 'System Maintenance', content: 'Scheduled downtime this weekend.', audience: 'ALL_TENANTS', status: 'SENT', scheduledDate: null, sentAt: '2023-08-10', createdAt: '2023-08-09' }
+    { id: '1', title: 'System Maintenance', content: 'Scheduled downtime this weekend.', audience: 'ALL_TENANTS', status: 'SENT', scheduledDate: null, sentDate: '2023-08-10' }
   ]);
   
   // Ignore API fetch error and return success state
@@ -87,8 +87,8 @@ export const useBroadcastsPage = () => {
       () => broadcastsApi.send(id),
       {
         successMessage: 'Broadcast sent successfully',
-        onSuccess: (res) => {
-          setBroadcasts(prev => prev.map(b => b.id === id ? (res as Broadcast) : b));
+        onSuccess: () => {
+          setBroadcasts(prev => prev.map(b => b.id === id ? { ...b, status: 'SENT', sentDate: new Date().toISOString() } : b));
         },
       }
     );
@@ -123,8 +123,8 @@ export const useBroadcastsPage = () => {
   const filteredBroadcasts = useMemo(() => {
     const lowerQuery = searchQuery.toLowerCase();
     return broadcasts.filter(b =>
-      b.title.toLowerCase().includes(lowerQuery) ||
-      b.content.toLowerCase().includes(lowerQuery)
+      (b.title || '').toLowerCase().includes(lowerQuery) ||
+      (b.content || '').toLowerCase().includes(lowerQuery)
     );
   }, [broadcasts, searchQuery]);
 

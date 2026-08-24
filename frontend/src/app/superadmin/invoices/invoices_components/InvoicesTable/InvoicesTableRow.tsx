@@ -1,5 +1,6 @@
 import React from 'react';
 import { Receipt } from 'lucide-react';
+import toast from 'react-hot-toast';
 import type { SaaSInvoice } from '@/app/superadmin/invoices/invoices_types/invoices_types';
 
 const STATUS_COLORS: Record<SaaSInvoice['status'], string> = {
@@ -26,7 +27,10 @@ export default function InvoicesTableRow({ invoice: inv }: InvoicesTableRowProps
       </td>
       <td className="p-4 text-sm text-secondary">{new Date(inv.date).toLocaleDateString()}</td>
       <td className="p-4 text-right">
-        <button className="text-sm font-medium text-primary hover:underline flex items-center gap-1 justify-end w-full">
+        <button 
+          onClick={(e) => { e.stopPropagation(); toast.success(`Downloading PDF for invoice ${inv.id}`); }}
+          className="text-sm font-medium text-primary hover:underline flex items-center gap-1 justify-end w-full"
+        >
           <Receipt size={14} /> View
         </button>
       </td>

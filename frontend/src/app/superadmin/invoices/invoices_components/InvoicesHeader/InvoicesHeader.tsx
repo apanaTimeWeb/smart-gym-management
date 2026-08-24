@@ -5,6 +5,18 @@ interface InvoicesHeaderProps {
 }
 
 export default function InvoicesHeader({ onLogPaymentClick }: InvoicesHeaderProps) {
+  const handleExportCSV = () => {
+    // Generate simple CSV payload simulation
+    const blob = new Blob(['InvoiceID,Tenant,Plan,Amount,Status,Date\nINV-001,Test Gym,Pro,299,PAID,2023-10-01'], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'invoices_export.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
   return (
     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
@@ -18,7 +30,10 @@ export default function InvoicesHeader({ onLogPaymentClick }: InvoicesHeaderProp
         >
           <Plus size={18} /> Log Manual Payment
         </button>
-        <button className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-hover transition-all duration-200 ease-in-out flex items-center gap-2">
+        <button 
+          onClick={handleExportCSV}
+          className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-hover transition-all duration-200 ease-in-out flex items-center gap-2"
+        >
           <ArrowUpRight size={18} /> Export CSV
         </button>
       </div>

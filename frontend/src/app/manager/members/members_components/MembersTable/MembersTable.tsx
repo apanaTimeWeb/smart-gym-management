@@ -37,7 +37,7 @@ export default function MembersTable() {
               <thead className="bg-primary/5">
                 <tr>
                   {MEMBERS_TABLE_HEADERS.map(h => (
-                    <th key={h} className="text-left text-xs font-semibold text-secondary uppercase tracking-wider px-5 py-3">
+                    <th key={h} className="text-left text-xs font-semibold text-secondary uppercase tracking-wider px-5 py-3 whitespace-nowrap">
                       {h}
                     </th>
                   ))}
@@ -52,9 +52,9 @@ export default function MembersTable() {
                     className="hover:bg-primary/5 transition-colors cursor-pointer"
                     onClick={() => { setSelectedMember(m); loadMemberProfile(m.id); }}
                   >
-                    <td className="px-5 py-3.5">
+                    <td className="px-5 py-3.5 whitespace-nowrap">
                       <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm bg-primary/10 text-primary">
+                        <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm bg-primary/10 text-primary shrink-0">
                           {m.name?.charAt(0) || '?'}
                         </div>
                         <div>
@@ -63,19 +63,19 @@ export default function MembersTable() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-5 py-3.5 text-sm text-foreground">{m.plan?.name || `Plan #${m.planId}`}</td>
-                    <td className="px-5 py-3.5">
+                    <td className="px-5 py-3.5 text-sm text-foreground whitespace-nowrap">{m.plan?.name || `Plan #${m.planId}`}</td>
+                    <td className="px-5 py-3.5 whitespace-nowrap">
                       <span 
                         className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusStyle.bg} ${statusStyle.text}`}
                       >
                         {m.status}
                       </span>
                     </td>
-                    <td className="px-5 py-3.5 text-sm text-secondary">{MEMBERS_CYCLE_LABELS[m.billingCycle] || m.billingCycle}</td>
-                    <td className="px-5 py-3.5 text-sm font-medium text-success">{formatCurrency(m.paidAmount)}</td>
-                    <td className="px-5 py-3.5 text-sm font-medium text-danger">{m.pendingAmount > 0 ? formatCurrency(m.pendingAmount) : '—'}</td>
-                    <td className="px-5 py-3.5 text-sm text-secondary">{new Date(m.expiryDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
-                    <td className="px-5 py-3.5">
+                    <td className="px-5 py-3.5 text-sm text-secondary whitespace-nowrap">{MEMBERS_CYCLE_LABELS[m.billingCycle] || m.billingCycle}</td>
+                    <td className="px-5 py-3.5 text-sm font-medium text-success whitespace-nowrap">{formatCurrency(m.paidAmount)}</td>
+                    <td className="px-5 py-3.5 text-sm font-medium text-danger whitespace-nowrap">{m.pendingAmount > 0 ? formatCurrency(m.pendingAmount) : '—'}</td>
+                    <td className="px-5 py-3.5 text-sm text-secondary whitespace-nowrap">{new Date(m.expiryDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                    <td className="px-5 py-3.5 whitespace-nowrap">
                       <div className="flex items-center gap-2">
                         <button onClick={(e) => { e.stopPropagation(); openEdit(m); }} className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle transition-all duration-200" title="Edit" aria-label={`Edit ${m.name}`}><Edit size={14} /></button>
                         <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'whatsapp'); }} className="p-1.5 rounded-lg bg-success text-white hover:opacity-80 transition-all duration-200" title="WhatsApp" aria-label={`Message ${m.name} on WhatsApp`}><MessageCircle size={14} /></button>

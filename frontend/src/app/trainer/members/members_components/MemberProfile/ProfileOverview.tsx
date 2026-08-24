@@ -3,7 +3,16 @@
 
 import { MessageCircle, Mail } from 'lucide-react';
 import { useMembersContext } from '@/app/trainer/members/members_context/MembersContext';
-import { formatCurrency } from '@/app/trainer/members/members_utils/MembersSharedConstants';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+
+const progressData = [
+  { month: 'Jan', weight: 82, bodyFat: 24 },
+  { month: 'Feb', weight: 80, bodyFat: 22 },
+  { month: 'Mar', weight: 79, bodyFat: 21 },
+  { month: 'Apr', weight: 77, bodyFat: 19 },
+  { month: 'May', weight: 76, bodyFat: 18 },
+  { month: 'Jun', weight: 75, bodyFat: 17 },
+];
 
 export default function ProfileOverview() {
  const { selectedMember, openMsg } = useMembersContext();
@@ -11,18 +20,24 @@ export default function ProfileOverview() {
  if (!selectedMember) return null;
 
  return (
- <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
- <div>
- <h3 className="font-semibold text-foreground mb-3">Member Summary</h3>
- <div className="space-y-2">
- <div className="flex justify-between p-3 bg-success-bg rounded-lg border border-success/20">
- <span className="text-sm text-success">Total Paid</span>
- <span className="font-bold text-success">{formatCurrency(selectedMember.paidAmount)}</span>
- </div>
- <div className="flex justify-between p-3 bg-danger-bg rounded-lg border border-destructive/20">
- <span className="text-sm text-destructive">Pending Amount</span>
- <span className="font-bold text-destructive">{formatCurrency(selectedMember.pendingAmount)}</span>
- </div>
+ <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
+ <div className="xl:col-span-2">
+ <h3 className="font-semibold text-foreground mb-3">Physical Progress</h3>
+ <div className="bg-card border border-border p-4 rounded-xl h-64">
+   <ResponsiveContainer width="100%" height="100%">
+     <LineChart data={progressData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
+       <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'var(--secondary)' }} dy={10} />
+       <YAxis yAxisId="left" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'var(--secondary)' }} dx={-10} />
+       <YAxis yAxisId="right" orientation="right" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'var(--secondary)' }} dx={10} />
+       <Tooltip 
+         contentStyle={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)', borderRadius: '8px' }}
+         itemStyle={{ fontSize: '14px' }}
+       />
+       <Line yAxisId="left" type="monotone" name="Weight (kg)" dataKey="weight" stroke="var(--primary)" strokeWidth={3} dot={{ r: 4, strokeWidth: 2 }} activeDot={{ r: 6 }} />
+       <Line yAxisId="right" type="monotone" name="Body Fat (%)" dataKey="bodyFat" stroke="var(--warning)" strokeWidth={3} dot={{ r: 4, strokeWidth: 2 }} activeDot={{ r: 6 }} />
+     </LineChart>
+   </ResponsiveContainer>
  </div>
  </div>
  <div>

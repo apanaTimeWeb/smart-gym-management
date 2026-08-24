@@ -26,7 +26,7 @@ export default function PlanCreateModal() {
   const isSubmitting = actionLoadingId === 'create';
 
   const { register, control, handleSubmit, formState: { errors }, reset } = useForm<PlanFormValues>({
-    resolver: zodResolver(planSchema),
+    resolver: zodResolver(planSchema) as any,
     defaultValues: {
       name: '', priceMonthly: 0, priceAnnual: 0, maxMembers: 100, maxStaff: 5,
       features: [{ value: 'Core Gym Management' }],

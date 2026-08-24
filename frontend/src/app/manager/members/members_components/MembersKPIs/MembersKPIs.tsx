@@ -23,7 +23,7 @@ export default function MembersKPIs() {
           </div>
           <div>
             <p className="text-xs text-secondary font-medium">{s.label}</p>
-            <p className="text-xl font-bold text-primary">{stats[s.key]}</p>
+            <p className="text-xl font-bold text-primary">{stats?.[s.key] ?? 0}</p>
           </div>
         </div>
       ))}

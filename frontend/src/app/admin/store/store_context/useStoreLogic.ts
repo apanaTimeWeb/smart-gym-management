@@ -113,8 +113,8 @@ export function useStoreLogic(initialData?: StoreInitialData | null): StoreConte
  setEditProductData({ 
  name: p.name, 
  category: p.category, 
- price: p.price, 
- stock: p.stock, 
+ price: String(p.price), 
+ stock: String(p.stock), 
  description: p.description || '' 
  });
  setShowProductModal(true);

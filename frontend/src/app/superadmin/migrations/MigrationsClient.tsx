@@ -15,7 +15,7 @@ const StatusIcons = {
 };
 
 export default function MigrationsClient() {
-  const { data, fetchState, error } = useMigrationsData();
+  const { data, fetchState, error, setData } = useMigrationsData();
 
     const [showTargetModal, setShowTargetModal] = useState(false);
   const [gymSearchTerm, setGymSearchTerm] = useState('');
@@ -63,7 +63,23 @@ if (fetchState === 'loading') return <div className="p-8 text-center text-disabl
             >
               <Target size={18} /> Targeted Sync
             </button>
-            <button className="flex-1 md:flex-none bg-warning text-black px-6 py-3 rounded-lg font-bold hover:opacity-90 transition-all duration-200 flex items-center justify-center gap-2 whitespace-nowrap shadow-lg shadow-warning/20">
+            <button 
+              onClick={async () => {
+                const loadingToast = toast.loading('Running migrations on all tenants...');
+                await new Promise(res => setTimeout(res, 2000));
+                
+                if (setData && data) {
+                  setData({
+                    ...data,
+                    migrations: data.migrations.map(m => 
+                      m.status === 'PENDING' ? { ...m, status: 'SUCCESS', appliedAt: new Date().toISOString() } : m
+                    )
+                  });
+                }
+                toast.success('All tenants synced successfully!', { id: loadingToast });
+              }}
+              className="flex-1 md:flex-none bg-warning text-black px-6 py-3 rounded-lg font-bold hover:opacity-90 transition-all duration-200 flex items-center justify-center gap-2 whitespace-nowrap shadow-lg shadow-warning/20"
+            >
               <Play size={18} /> Run on All Tenants
             </button>
           </div>

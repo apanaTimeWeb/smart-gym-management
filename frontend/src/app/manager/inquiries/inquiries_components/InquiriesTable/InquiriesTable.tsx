@@ -102,9 +102,9 @@ export default function InquiriesTable() {
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm bg-warning-bg text-warning">
-                        {inq.name.charAt(0)}
+                        {(inq.name || '').charAt(0)}
                       </div>
-                      <p className="text-sm font-semibold text-primary">{inq.name}</p>
+                      <p className="text-sm font-semibold text-primary">{inq.name || 'Unknown'}</p>
                     </div>
                   </td>
                   <td className="px-5 py-3.5">

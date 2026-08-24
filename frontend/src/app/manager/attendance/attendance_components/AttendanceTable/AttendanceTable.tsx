@@ -33,7 +33,7 @@ export default function AttendanceTable() {
  <thead className="bg-input">
  <tr>
  {ATTENDANCE_TABLE_HEADERS.map(h => (
- <th key={h} className="text-left text-xs font-semibold text-secondary uppercase tracking-wider px-4 py-3">
+ <th key={h} className="text-left text-xs font-semibold text-secondary uppercase tracking-wider px-4 py-3 whitespace-nowrap">
  {h}
  </th>
  ))}
@@ -42,7 +42,7 @@ export default function AttendanceTable() {
  <tbody className="divide-y divide-border">
  {records.map(r => (
  <tr key={r.id} className="hover:bg-primary-subtle transition-colors">
- <td className="px-4 py-3">
+ <td className="px-4 py-3 whitespace-nowrap">
  <div className="flex items-center gap-2">
  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold ${
  r.type === 'MEMBER' ? 'bg-info' : 'bg-success'
@@ -54,26 +54,33 @@ export default function AttendanceTable() {
  </span>
  </div>
  </td>
- <td className="px-4 py-3">
- <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
- r.type === 'MEMBER' 
- ? 'bg-info-bg text-info dark:bg-info-bg dark:text-info' 
- : 'bg-success-bg text-success dark:bg-success-bg dark:text-success'
- }`}>
- {r.type}
- </span>
- </td>
- <td className="px-4 py-3 text-sm text-secondary">{formatDate(r.date)}</td>
- <td className="px-4 py-3 text-sm text-secondary flex items-center gap-1">
+ <td className="px-4 py-3 whitespace-nowrap">
+  <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
+  r.type === 'MEMBER' 
+  ? 'bg-info-bg text-info dark:bg-info-bg dark:text-info' 
+  : 'bg-success-bg text-success dark:bg-success-bg dark:text-success'
+  }`}>
+  {r.type}
+  </span>
+  </td>
+  <td className="px-4 py-3 whitespace-nowrap">
+    <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
+      r.checkIn ? 'bg-success-bg text-success' : 'bg-danger-bg text-danger'
+    }`}>
+      {r.checkIn ? 'Present' : 'Absent'}
+    </span>
+  </td>
+ <td className="px-4 py-3 text-sm text-secondary whitespace-nowrap">{formatDate(r.date)}</td>
+ <td className="px-4 py-3 text-sm text-secondary flex items-center gap-1 whitespace-nowrap">
  <Clock size={13} className="opacity-50" />
  {formatTime(r.checkIn)}
  </td>
- <td className="px-4 py-3 text-sm text-secondary">{formatTime(r.checkOut)}</td>
+ <td className="px-4 py-3 text-sm text-secondary whitespace-nowrap">{formatTime(r.checkOut)}</td>
  </tr>
  ))}
  {records.length === 0 && (
  <tr>
- <td colSpan={5} className="text-center py-10 text-secondary">
+ <td colSpan={6} className="text-center py-10 text-secondary">
  No attendance records found.
  </td>
  </tr>

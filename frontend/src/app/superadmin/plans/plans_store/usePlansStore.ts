@@ -62,10 +62,10 @@ export const usePlansStore = create<PlansStoreState>((set, get) => ({
     set({ fetchState: 'loading', error: null });
     try {
       // Mocking fetch success
-      const mockPlans = [
-        { id: '1', name: 'Starter', tier: 'Basic', price1Month: 999, maxMembers: 50, maxBranches: 1, maxStaff: 2, isActive: true },
-        { id: '2', name: 'Pro', tier: 'Pro', price1Month: 1999, maxMembers: 200, maxBranches: 3, maxStaff: 10, isActive: true },
-      ] as SubscriptionPlan[];
+      const mockPlans: SubscriptionPlan[] = [
+        { id: '1', name: 'Starter', priceMonthly: 999, priceAnnual: 10000, maxMembers: 50, maxStaff: 5, features: ['Core features'], activeTenants: 10 },
+        { id: '2', name: 'Pro', priceMonthly: 1999, priceAnnual: 20000, maxMembers: 200, maxStaff: 20, features: ['All features'], activeTenants: 25 }
+      ];
       set({ plans: mockPlans, fetchState: 'success' });
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : 'Failed to fetch plans';

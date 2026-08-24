@@ -6,6 +6,7 @@ import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { DatabaseBackup, Search, Download, RotateCcw } from 'lucide-react';
 import type { BackupRecord } from '@/app/superadmin/backups/backups_types/backups_types';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 const StatusColors: Record<BackupRecord['status'], string> = {
   SUCCESS: 'text-success bg-success/10',
@@ -14,9 +15,46 @@ const StatusColors: Record<BackupRecord['status'], string> = {
 };
 
 export default function BackupsClient() {
-  const { data: DUMMY_BACKUPS, fetchState, error } = useBackupsData();
+  const { data: DUMMY_BACKUPS, fetchState, error, setData } = useBackupsData();
 
     const [search, setSearch] = useState('');
+    const [isTriggering, setIsTriggering] = useState(false);
+
+    const handleTriggerSnapshot = async () => {
+      setIsTriggering(true);
+      const loadingToast = toast.loading('Initiating global pg_dump snapshot...');
+      try {
+        await new Promise(res => setTimeout(res, 2000)); // Simulate API
+        
+        // Add a new mock backup to the top of the list
+        if (setData && DUMMY_BACKUPS) {
+          const newBackup: BackupRecord = {
+            id: `bkp-global-${Date.now()}`,
+            tenantName: 'System (Global)',
+            databaseName: 'all_tenants_db',
+            sizeMB: Math.random() * 500 + 100,
+            status: 'SUCCESS',
+            timestamp: new Date().toISOString()
+          };
+          setData([newBackup, ...DUMMY_BACKUPS]);
+        }
+        
+        toast.success('Global snapshot completed successfully', { id: loadingToast });
+      } catch (err) {
+        toast.error('Failed to trigger snapshot', { id: loadingToast });
+      } finally {
+        setIsTriggering(false);
+      }
+    };
+
+    const handleDownload = (id: string) => {
+      // Simulate Blob URL download trigger
+      toast.success(`Starting download for backup ${id}`);
+    };
+
+    const handleRestore = (id: string) => {
+      toast('Restoring snapshot requires confirmation modal (Simulated)', { icon: '⚠️' });
+    };
 if (fetchState === 'loading') return (
     <div className="space-y-6 animate-pulse">
       <div className="h-8 bg-card rounded w-48" />
@@ -36,8 +74,12 @@ if (fetchState === 'loading') return (
           <h1 className="text-2xl font-bold text-foreground">Tenant Database Backups</h1>
           <p className="text-secondary mt-1">Manage automated pg_dump snapshots for all isolated gym databases.</p>
         </div>
-        <button className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-hover transition-colors flex items-center gap-2">
-          <DatabaseBackup size={18} /> Trigger Global Snapshot
+        <button 
+          onClick={handleTriggerSnapshot}
+          disabled={isTriggering}
+          className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-hover transition-colors flex items-center gap-2 disabled:opacity-50"
+        >
+          <DatabaseBackup size={18} /> {isTriggering ? 'Creating Snapshot...' : 'Trigger Global Snapshot'}
         </button>
       </div>
 
@@ -82,10 +124,20 @@ if (fetchState === 'loading') return (
                   </td>
                   <td className="p-4 text-sm text-secondary">{new Date(backup.timestamp).toLocaleString()}</td>
                   <td className="p-4 text-right flex items-center justify-end gap-2">
-                    <button className="p-2 text-secondary hover:text-primary hover:bg-primary/10 rounded-lg transition-colors" title="Download pg_dump" disabled={backup.status !== 'SUCCESS'}>
+                    <button 
+                      onClick={() => handleDownload(backup.id)}
+                      className="p-2 text-secondary hover:text-primary hover:bg-primary/10 rounded-lg transition-colors disabled:opacity-30" 
+                      title="Download pg_dump" 
+                      disabled={backup.status !== 'SUCCESS'}
+                    >
                       <Download size={16} />
                     </button>
-                    <button className="p-2 text-secondary hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors" title="Restore Snapshot" disabled={backup.status !== 'SUCCESS'}>
+                    <button 
+                      onClick={() => handleRestore(backup.id)}
+                      className="p-2 text-secondary hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors disabled:opacity-30" 
+                      title="Restore Snapshot" 
+                      disabled={backup.status !== 'SUCCESS'}
+                    >
                       <RotateCcw size={16} />
                     </button>
                   </td>

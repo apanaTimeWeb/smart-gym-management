@@ -66,7 +66,7 @@ export function useAttendanceLogic(): AttendanceContextType {
       ];
       const mockStats: AttendanceStatsResponse = { totalCheckIns: 1, memberCheckIns: 1, staffCheckIns: 0 };
       const mockMembers: Member[] = [
-        { id: '1', name: 'John Doe', phone: '123', email: 'john@test.com', status: 'ACTIVE', billingCycle: '1 Month', paidAmount: 0, pendingAmount: 0, expiryDate: new Date().toISOString(), joinDate: new Date().toISOString(), planId: '1' }
+        { id: '1', name: 'John Doe', phone: '123', email: 'john@test.com', status: 'ACTIVE', billingCycle: '1 Month', paidAmount: 100, pendingAmount: 0, expiryDate: new Date().toISOString(), joinDate: new Date().toISOString(), planId: 'p1', gender: 'MALE', branch: 'Main Branch', createdAt: new Date().toISOString() }
       ];
 
       setRecords(mockRecords);
