@@ -6,6 +6,7 @@ import { useTicketsData } from '@/app/superadmin/tickets/tickets_utils/useTicket
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { Ticket, Search, Filter, MessageSquare } from 'lucide-react';
 import { TicketStatus, TicketPriority, SupportTicket } from '@/app/superadmin/tickets/tickets_types/tickets_types';
+import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 
 const PriorityColors: Record<TicketPriority, string> = {
   LOW: 'text-success bg-success/10 border-success/20',
@@ -27,6 +28,9 @@ export default function TicketsClient() {
     const [showFilter, setShowFilter] = useState(false);
     const [statusFilter, setStatusFilter] = useState<TicketStatus | 'ALL'>('ALL');
     const [priorityFilter, setPriorityFilter] = useState<TicketPriority | 'ALL'>('ALL');
+    const [currentPage, setCurrentPage] = useState(1);
+    const ITEMS_PER_PAGE = 10;
+
 if (fetchState === 'loading') return (
     <div className="space-y-6 animate-pulse">
       <div className="h-8 bg-card rounded w-48" />
@@ -44,6 +48,9 @@ if (fetchState === 'loading') return (
     return matchesSearch && matchesStatus && matchesPriority;
   });
 
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;
+  const paginatedTickets = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -53,7 +60,7 @@ if (fetchState === 'loading') return (
         </div>
       </div>
 
-      <div className="bg-card border border-border rounded-xl shadow-sm">
+      <div className="bg-card border border-border rounded-xl shadow-sm flex flex-col min-h-[400px]">
         <div className="p-4 border-b border-border flex gap-4">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />
@@ -62,7 +69,10 @@ if (fetchState === 'loading') return (
               placeholder="Search tickets or gyms..." 
               className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setCurrentPage(1);
+              }}
             />
           </div>
           <div className="relative">
@@ -78,7 +88,10 @@ if (fetchState === 'loading') return (
                   <label className="text-xs font-semibold text-secondary uppercase tracking-wider">Status</label>
                   <select 
                     value={statusFilter}
-                    onChange={(e) => setStatusFilter(e.target.value as TicketStatus | 'ALL')}
+                    onChange={(e) => {
+                      setStatusFilter(e.target.value as TicketStatus | 'ALL');
+                      setCurrentPage(1);
+                    }}
                     className="w-full px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary"
                   >
                     <option value="ALL">All Statuses</option>
@@ -91,7 +104,10 @@ if (fetchState === 'loading') return (
                   <label className="text-xs font-semibold text-secondary uppercase tracking-wider">Priority</label>
                   <select 
                     value={priorityFilter}
-                    onChange={(e) => setPriorityFilter(e.target.value as TicketPriority | 'ALL')}
+                    onChange={(e) => {
+                      setPriorityFilter(e.target.value as TicketPriority | 'ALL');
+                      setCurrentPage(1);
+                    }}
                     className="w-full px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary"
                   >
                     <option value="ALL">All Priorities</option>
@@ -106,7 +122,7 @@ if (fetchState === 'loading') return (
           </div>
         </div>
 
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto flex-1">
           <table className="w-full text-left border-collapse min-w-max">
             <thead>
               <tr className="bg-header border-b border-border text-sm">
@@ -120,7 +136,7 @@ if (fetchState === 'loading') return (
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {filtered.map((ticket) => (
+              {paginatedTickets.map((ticket) => (
                 <tr key={ticket.id} className="hover:bg-input transition-colors">
                   <td className="p-4 text-sm font-medium text-foreground">{ticket.id}</td>
 
@@ -149,6 +165,11 @@ if (fetchState === 'loading') return (
             </tbody>
           </table>
         </div>
+        <SuperadminPagination 
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       </div>
     </div>
   );

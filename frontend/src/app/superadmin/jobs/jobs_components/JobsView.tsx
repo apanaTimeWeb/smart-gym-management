@@ -1,9 +1,11 @@
 "use client";
 // RESPONSIBILITY: JobsView.tsx renders the BullMQ background jobs table and metrics cards. Reads from useSuperadminData. No direct API calls.
+import { useState } from 'react';
 import { useJobsData } from '@/app/superadmin/jobs/jobs_utils/useJobsData';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { Activity, Play, AlertTriangle, RefreshCw, XCircle } from 'lucide-react';
 import type { BackgroundJob, JobsMetrics } from '@/app/superadmin/jobs/jobs_types/jobs_types';
+import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 
 const StatusColors: Record<BackgroundJob['status'], string> = {
   ACTIVE: 'text-primary bg-primary/10',
@@ -12,12 +14,19 @@ const StatusColors: Record<BackgroundJob['status'], string> = {
   DELAYED: 'text-warning bg-warning/10'
 };
 
+const ITEMS_PER_PAGE = 10;
+
 export default function JobsView() {
   const { data: responseData, fetchState, error } = useJobsData();
+  const [currentPage, setCurrentPage] = useState(1);
+
   if (fetchState === 'loading') return <div className="p-8 text-center text-disabled">Loading...</div>;
   if (error || !responseData) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
 
   const { jobs: DUMMY_BACKGROUND_JOBS, metrics } = responseData;
+
+  const totalPages = Math.ceil(DUMMY_BACKGROUND_JOBS.length / ITEMS_PER_PAGE) || 1;
+  const paginatedJobs = DUMMY_BACKGROUND_JOBS.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   return (
     <div className="space-y-6">
@@ -50,8 +59,8 @@ export default function JobsView() {
         ))}
       </div>
 
-      <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
+      <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden flex flex-col min-h-[400px]">
+        <div className="overflow-x-auto flex-1">
           <table className="w-full text-left border-collapse min-w-full">
             <thead>
               <tr className="bg-header border-b border-border text-sm">
@@ -65,7 +74,7 @@ export default function JobsView() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {DUMMY_BACKGROUND_JOBS.map((job) => (
+              {paginatedJobs.map((job) => (
                 <tr key={job.id} className="hover:bg-input transition-colors">
                   <td className="p-4 text-xs font-mono text-secondary">{job.id}</td>
                   <td className="p-4 text-sm font-medium text-primary">{job.queueName}</td>
@@ -93,6 +102,11 @@ export default function JobsView() {
             </tbody>
           </table>
         </div>
+        <SuperadminPagination 
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       </div>
     </div>
   );

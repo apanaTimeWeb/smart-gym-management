@@ -1,7 +1,9 @@
 'use client';
 // RESPONSIBILITY: Renders the Affiliates data table shell (header row + rows). Delegates each row to AffiliatesTableRow. No API calls.
+import { useState } from 'react';
 import AffiliatesTableRow from '@/app/superadmin/affiliates/affiliates_components/AffiliatesTable/AffiliatesTableRow';
 import type { Affiliate, AffiliateStatus } from '@/app/superadmin/affiliates/affiliates_types/affiliates_types';
+import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 
 interface AffiliatesTableProps {
   affiliates: Affiliate[];
@@ -10,10 +12,17 @@ interface AffiliatesTableProps {
   onDelete: (id: string) => void;
 }
 
+const ITEMS_PER_PAGE = 10;
+
 export default function AffiliatesTable({ affiliates, onToggleStatus, onEdit, onDelete }: AffiliatesTableProps) {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.ceil(affiliates.length / ITEMS_PER_PAGE) || 1;
+  const paginatedAffiliates = affiliates.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
   return (
-    <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm">
-      <div className="overflow-x-auto">
+    <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm flex flex-col min-h-[400px]">
+      <div className="overflow-x-auto flex-1">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-primary/5 border-b border-border">
@@ -26,7 +35,7 @@ export default function AffiliatesTable({ affiliates, onToggleStatus, onEdit, on
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {affiliates.map((aff) => (
+            {paginatedAffiliates.map((aff) => (
               <AffiliatesTableRow
                 key={aff.id}
                 affiliate={aff}
@@ -38,6 +47,11 @@ export default function AffiliatesTable({ affiliates, onToggleStatus, onEdit, on
           </tbody>
         </table>
       </div>
+      <SuperadminPagination 
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
     </div>
   );
 }

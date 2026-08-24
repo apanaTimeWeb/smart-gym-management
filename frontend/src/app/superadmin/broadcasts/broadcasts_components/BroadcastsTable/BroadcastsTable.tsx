@@ -1,13 +1,22 @@
 'use client';
 // RESPONSIBILITY: Renders the Broadcasts data table shell (header + rows). Delegates row rendering to BroadcastsTableRow. No API calls.
+import { useState } from 'react';
 import BroadcastStatusBadge from '@/app/superadmin/broadcasts/broadcasts_components/BroadcastStatusBadge/BroadcastStatusBadge';
 import { Send, Edit2, Trash2 } from 'lucide-react';
 import type { BroadcastsTableProps } from '@/app/superadmin/broadcasts/broadcasts_types/broadcasts_types';
+import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
+
+const ITEMS_PER_PAGE = 10;
 
 export default function BroadcastsTable({ broadcasts, onSend, onEdit, onDelete }: BroadcastsTableProps) {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.ceil(broadcasts.length / ITEMS_PER_PAGE) || 1;
+  const paginatedBroadcasts = broadcasts.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
   return (
-    <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm">
-      <div className="overflow-x-auto">
+    <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm flex flex-col min-h-[400px]">
+      <div className="overflow-x-auto flex-1">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-primary/5 border-b border-border">
@@ -19,7 +28,7 @@ export default function BroadcastsTable({ broadcasts, onSend, onEdit, onDelete }
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {broadcasts.map((bc) => (
+            {paginatedBroadcasts.map((bc) => (
               <tr key={bc.id} className="hover:bg-primary/5 transition-all duration-200 ease-in-out group cursor-pointer">
                 <td className="px-6 py-4">
                   <div className="flex flex-col">
@@ -75,6 +84,11 @@ export default function BroadcastsTable({ broadcasts, onSend, onEdit, onDelete }
           </tbody>
         </table>
       </div>
+      <SuperadminPagination 
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
     </div>
   );
 }

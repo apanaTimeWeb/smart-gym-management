@@ -8,6 +8,7 @@ import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { useDebounce } from '@/app/superadmin/superadmin_utils/useDebounce';
 import { AUDIT_LOGS_FALLBACK, AUDIT_LOGS_PAGE_SIZE } from '@/app/superadmin/superadmin_utils/AuditLogsConstants';
 import type { GlobalAuditLog } from '@/app/superadmin/audit-logs/audit-logs_types/audit-logs_types';
+import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 
 export default function AuditLogsClient() {
   const router = useRouter();
@@ -154,29 +155,13 @@ export default function AuditLogsClient() {
         </div>
         
         {/* Pagination Bar */}
-        {logs.length > 0 && (
-          <div className="flex items-center justify-between px-6 py-3 border-t border-border bg-card">
-            <span className="text-sm text-secondary">
-              Showing {(currentPage - 1) * AUDIT_LOGS_PAGE_SIZE + 1} to {Math.min(currentPage * AUDIT_LOGS_PAGE_SIZE, totalLogs)} of {totalLogs} results
-            </span>
-            <div className="flex gap-2">
-              <button 
-                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                disabled={currentPage === 1}
-                className="px-3 py-1 border border-border rounded text-sm text-secondary hover:text-foreground disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 transition-colors"
-              >
-                <ChevronLeft className="w-4 h-4" /> Prev
-              </button>
-              <button 
-                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                disabled={currentPage >= totalPages}
-                className="px-3 py-1 border border-border rounded text-sm text-secondary hover:text-foreground disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 transition-colors"
-              >
-                Next <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-        )}
+        <SuperadminPagination 
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          totalItems={totalLogs}
+          itemsPerPage={AUDIT_LOGS_PAGE_SIZE}
+        />
       </div>
     </div>
   );

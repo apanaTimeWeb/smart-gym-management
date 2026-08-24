@@ -7,6 +7,7 @@ import { DatabaseBackup, Search, Download, RotateCcw } from 'lucide-react';
 import type { BackupRecord } from '@/app/superadmin/backups/backups_types/backups_types';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 
 const StatusColors: Record<BackupRecord['status'], string> = {
   SUCCESS: 'text-success bg-success/10',
@@ -19,6 +20,8 @@ export default function BackupsClient() {
 
     const [search, setSearch] = useState('');
     const [isTriggering, setIsTriggering] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const ITEMS_PER_PAGE = 10;
 
     const handleTriggerSnapshot = async () => {
       setIsTriggering(true);
@@ -67,6 +70,9 @@ if (fetchState === 'loading') return (
 
   const filtered = DUMMY_BACKUPS.filter(b => b.tenantName.toLowerCase().includes(search.toLowerCase()) || b.databaseName.toLowerCase().includes(search.toLowerCase()));
 
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;
+  const paginatedBackups = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -83,7 +89,7 @@ if (fetchState === 'loading') return (
         </button>
       </div>
 
-      <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+      <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden flex flex-col min-h-[400px]">
         <div className="p-4 border-b border-border">
           <div className="relative max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />
@@ -92,12 +98,15 @@ if (fetchState === 'loading') return (
               placeholder="Search by gym name or database..." 
               className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setCurrentPage(1);
+              }}
             />
           </div>
         </div>
 
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto flex-1">
           <table className="w-full text-left border-collapse min-w-full">
             <thead>
               <tr className="bg-header border-b border-border text-sm">
@@ -111,7 +120,7 @@ if (fetchState === 'loading') return (
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {filtered.map((backup) => (
+              {paginatedBackups.map((backup) => (
                 <tr key={backup.id} className="hover:bg-input transition-colors">
                   <td className="p-4 text-xs font-mono text-secondary">{backup.id}</td>
                   <td className="p-4 text-sm font-medium text-foreground">{backup.tenantName}</td>
@@ -153,6 +162,11 @@ if (fetchState === 'loading') return (
             </tbody>
           </table>
         </div>
+        <SuperadminPagination 
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       </div>
     </div>
   );
