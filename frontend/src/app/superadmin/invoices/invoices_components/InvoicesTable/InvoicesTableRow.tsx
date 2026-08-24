@@ -28,7 +28,7 @@ export default function InvoicesTableRow({ invoice: inv }: InvoicesTableRowProps
       <td className="p-4 text-sm text-secondary">{new Date(inv.date).toLocaleDateString()}</td>
       <td className="p-4 text-right">
         <button 
-          onClick={() => toast.success(`Opening PDF preview for ${inv.id}`)}
+          onClick={(e) => { e.stopPropagation(); toast.success(`Downloading PDF for invoice ${inv.id}`); }}
           className="text-sm font-medium text-primary hover:underline flex items-center gap-1 justify-end w-full"
         >
           <Receipt size={14} /> View

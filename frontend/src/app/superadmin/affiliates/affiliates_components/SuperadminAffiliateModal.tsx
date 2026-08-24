@@ -12,6 +12,7 @@ interface SuperadminAffiliateModalProps {
   form: UseFormReturn<AffiliateFormData>;
   onSubmit: (data: AffiliateFormData) => void;
   isEdit?: boolean;
+  isMutating?: boolean;
 }
 
 export const SuperadminAffiliateModal: React.FC<SuperadminAffiliateModalProps> = ({
@@ -20,6 +21,7 @@ export const SuperadminAffiliateModal: React.FC<SuperadminAffiliateModalProps> =
   form,
   onSubmit,
   isEdit = false,
+  isMutating = false,
 }) => {
   if (!isOpen) return null;
 
@@ -80,9 +82,10 @@ export const SuperadminAffiliateModal: React.FC<SuperadminAffiliateModalProps> =
             </button>
             <button 
               type="submit" 
-              className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-white font-medium rounded-lg transition-colors text-sm"
+              disabled={isMutating}
+              className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-white font-medium rounded-lg transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isEdit ? 'Save Changes' : 'Save Partner'}
+              {isMutating ? 'Saving...' : (isEdit ? 'Save Changes' : 'Save Partner')}
             </button>
           </div>
         </form>

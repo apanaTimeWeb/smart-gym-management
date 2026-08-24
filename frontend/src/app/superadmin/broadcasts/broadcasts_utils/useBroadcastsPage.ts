@@ -87,8 +87,8 @@ export const useBroadcastsPage = () => {
       () => broadcastsApi.send(id),
       {
         successMessage: 'Broadcast sent successfully',
-        onSuccess: (res) => {
-          setBroadcasts(prev => prev.map(b => b.id === id ? (res as Broadcast) : b));
+        onSuccess: () => {
+          setBroadcasts(prev => prev.map(b => b.id === id ? { ...b, status: 'SENT', sentDate: new Date().toISOString() } : b));
         },
       }
     );

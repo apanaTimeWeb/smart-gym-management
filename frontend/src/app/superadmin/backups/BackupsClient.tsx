@@ -15,7 +15,7 @@ const StatusColors: Record<BackupRecord['status'], string> = {
 };
 
 export default function BackupsClient() {
-  const { data: DUMMY_BACKUPS, fetchState, error } = useBackupsData();
+  const { data: DUMMY_BACKUPS, fetchState, error, setData } = useBackupsData();
 
     const [search, setSearch] = useState('');
     const [isTriggering, setIsTriggering] = useState(false);
@@ -25,6 +25,20 @@ export default function BackupsClient() {
       const loadingToast = toast.loading('Initiating global pg_dump snapshot...');
       try {
         await new Promise(res => setTimeout(res, 2000)); // Simulate API
+        
+        // Add a new mock backup to the top of the list
+        if (setData && DUMMY_BACKUPS) {
+          const newBackup: BackupRecord = {
+            id: `bkp-global-${Date.now()}`,
+            tenantName: 'System (Global)',
+            databaseName: 'all_tenants_db',
+            sizeMB: Math.random() * 500 + 100,
+            status: 'SUCCESS',
+            timestamp: new Date().toISOString()
+          };
+          setData([newBackup, ...DUMMY_BACKUPS]);
+        }
+        
         toast.success('Global snapshot completed successfully', { id: loadingToast });
       } catch (err) {
         toast.error('Failed to trigger snapshot', { id: loadingToast });

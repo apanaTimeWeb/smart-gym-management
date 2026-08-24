@@ -53,7 +53,7 @@ if (fetchState === 'loading') return (
         </div>
       </div>
 
-      <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+      <div className="bg-card border border-border rounded-xl shadow-sm">
         <div className="p-4 border-b border-border flex gap-4">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />

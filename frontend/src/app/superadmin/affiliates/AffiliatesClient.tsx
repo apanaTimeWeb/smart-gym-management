@@ -27,6 +27,7 @@ export default function AffiliatesClient() {
     totalCommission,
     fetchState,
     error,
+    isMutating,
   } = useAffiliatesPage();
 
   if (fetchState === 'loading') return (
@@ -74,6 +75,7 @@ export default function AffiliatesClient() {
         form={form}
         onSubmit={editingAffiliate ? handleEditAffiliate : handleAddAffiliate}
         isEdit={!!editingAffiliate}
+        isMutating={isMutating}
       />
     </div>
   );

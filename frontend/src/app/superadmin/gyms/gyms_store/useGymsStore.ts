@@ -94,12 +94,12 @@ export const useGymsStore = create<GymsState>((set, get) => ({
   fetchGyms: async (searchQuery = '') => {
     set({ fetchState: 'loading', error: null });
     try {
-      // Mocking fetch success
-      const mockGyms: Tenant[] = [
+      const currentGyms = get().gyms;
+      const baseGyms = currentGyms || [
         { id: '1', name: 'Golds Gym', ownerName: 'Arnold S.', adminEmail: 'admin@golds.com', phone: '1234567890', plan: 'Pro', status: 'ACTIVE', memberCount: 120, monthlyRevenue: 5000, databaseVersion: 'v1.2.0', createdAt: new Date().toISOString() },
         { id: '2', name: 'Planet Fitness', ownerName: 'John D.', adminEmail: 'john@planet.com', phone: '0987654321', plan: 'Starter', status: 'TRIAL', memberCount: 45, monthlyRevenue: 1000, databaseVersion: 'v1.1.0', createdAt: new Date().toISOString() },
       ];
-      const filtered = searchQuery ? mockGyms.filter(g => g.name.toLowerCase().includes(searchQuery.toLowerCase())) : mockGyms;
+      const filtered = searchQuery ? baseGyms.filter(g => g.name.toLowerCase().includes(searchQuery.toLowerCase())) : baseGyms;
       set({ gyms: filtered, fetchState: 'success' });
     } catch (error: unknown) {
       const errMsg = error instanceof Error ? error.message : String(error) || 'Failed to fetch gyms';
