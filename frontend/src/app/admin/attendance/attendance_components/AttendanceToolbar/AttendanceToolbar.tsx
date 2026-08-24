@@ -9,13 +9,13 @@ export default function AttendanceToolbar() {
   const { tab, setTab, loadAll, setShowModal, search, setSearch, setCurrentPage } = useAttendanceContext();
 
  return (
- <div className="border-b border-border flex justify-between items-center">
- <div className="flex">
+ <div className="border-b border-border flex flex-col lg:flex-row justify-between items-start lg:items-center">
+ <div className="flex w-full lg:w-auto overflow-x-auto no-scrollbar">
  {ATTENDANCE_TABS.map(t => (
  <button 
  key={t} 
  onClick={() => setTab(t)}
- className={`px-5 py-3.5 text-sm font-medium transition-colors border-b-2 ${
+ className={`whitespace-nowrap px-5 py-3.5 text-sm font-medium transition-colors border-b-2 ${
  tab === t 
  ? 'text-primary bg-primary-subtle border-primary' 
  : 'border-transparent text-secondary hover:text-foreground'
@@ -25,26 +25,26 @@ export default function AttendanceToolbar() {
  </button>
  ))}
  </div>
-  <div className="px-4 flex flex-wrap gap-3 items-center">
-    <div className="relative">
+  <div className="p-4 flex flex-col sm:flex-row gap-3 items-center w-full lg:w-auto border-t lg:border-t-0 border-border">
+    <div className="relative w-full sm:w-auto">
       <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
       <input 
         value={search} 
         onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} 
         placeholder={`Search ${tab.toLowerCase()}...`} 
-        className="pl-9 pr-3 py-2 border border-border bg-input text-foreground rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-40 sm:w-64"
+        className="pl-9 pr-3 py-2 border border-border bg-input text-foreground rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-full sm:w-64"
       />
     </div>
-    <div className="flex gap-2">
+    <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
  <button 
  onClick={loadAll} 
- className="flex items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary transition-colors"
+ className="flex justify-center items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary transition-colors w-full sm:w-auto"
  >
  <RefreshCw size={14} />
  </button>
  <button 
  onClick={() => setShowModal(true)} 
- className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-primary rounded-lg transition-opacity hover:opacity-90" 
+ className="flex justify-center items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-primary rounded-lg transition-opacity hover:opacity-90 w-full sm:w-auto" 
  >
  <Plus size={14} /> Mark Attendance
  </button>
