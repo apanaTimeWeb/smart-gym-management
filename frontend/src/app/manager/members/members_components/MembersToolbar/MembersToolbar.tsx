@@ -26,11 +26,11 @@ export default function MembersToolbar() {
           className="pl-9 pr-3 py-2.5 border border-border rounded-xl text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page w-full lg:w-64 bg-input text-primary" 
         />
       </div>
-      <div className="flex flex-col sm:flex-row gap-2 w-full lg:w-auto">
+      <div className="flex flex-col sm:flex-row flex-wrap gap-2 w-full lg:w-auto">
         <SearchableDropdown
           value={statusFilter}
           onChange={(val) => setStatusFilter(String(val))}
-          className="w-48"
+          className="w-full sm:w-48"
           options={MEMBER_STATUS_OPTIONS}
         />
  <button 
