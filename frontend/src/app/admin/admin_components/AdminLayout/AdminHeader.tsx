@@ -8,6 +8,7 @@ import { getUser, logout } from '@/lib/api';
 import { ADMIN_PLACEHOLDER_NOTIFICATIONS } from '@/app/admin/admin_utils/AdminSharedConstants';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
+import { SearchableDropdown } from '@/app/admin/admin_components/AdminShared/SearchableDropdown';
 
 import type { AdminHeaderProps } from '@/app/admin/admin_components/AdminLayout/AdminLayoutTypes';
 
@@ -57,17 +58,15 @@ export default function AdminHeader({ title, subtitle }: AdminHeaderProps) {
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2 mr-4 bg-background border border-border rounded-lg px-3 py-1.5 hidden lg:flex">
           <Building2 size={16} className="text-primary" />
-          <select 
+          <SearchableDropdown 
+            options={[
+              { value: 'all', label: 'All Branches (Aggregate)' },
+              ...branches.map(b => ({ value: b.id, label: b.name }))
+            ]}
             value={selectedBranchId}
-            onChange={(e) => setSelectedBranchId(e.target.value)}
-            className="bg-transparent border-none text-sm font-medium focus:ring-0 focus:outline-none cursor-pointer text-foreground appearance-none pr-6"
-            style={{ backgroundImage: 'url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3e%3cpolyline points=\'6 9 12 15 18 9\'%3e%3c/polyline%3e%3c/svg%3e")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right center', backgroundSize: '1em' }}
-          >
-            <option value="all">All Branches (Aggregate)</option>
-            {branches.map(b => (
-              <option key={b.id} value={b.id}>{b.name}</option>
-            ))}
-          </select>
+            onChange={(val) => setSelectedBranchId(val as string)}
+            className="w-56"
+          />
         </div>
 
         <div className="relative hidden sm:block">

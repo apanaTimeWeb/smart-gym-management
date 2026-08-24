@@ -96,13 +96,15 @@ export function usePlansLogic(initialData?: PlansInitialData | null): PlansConte
 
       if (editId) {
         const res = await plansApi.update(editId, payload);
+        setPlans(prev => prev.map(p => p.id === editId ? { ...p, ...payload } as Plan : p));
         showToast(res.message || 'Plan updated', 'success');
       } else {
         const res = await plansApi.create(payload);
+        const newPlan = { id: `p${Date.now()}`, ...payload } as Plan;
+        setPlans(prev => [newPlan, ...prev]);
         showToast(res.message || 'Plan created', 'success');
       }
       setShowModal(false);
-      await loadPlans();
     } catch (err) {
       showToast((err as Error).message, 'error');
     } finally {

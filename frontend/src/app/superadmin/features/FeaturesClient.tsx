@@ -17,11 +17,11 @@ export default function FeaturesClient() {
   const { flags: DUMMY_FEATURE_FLAGS, notes: DUMMY_RELEASE_NOTES } = data;
 
   const handleToggle = (flagId: string) => {
-    setData((prev: any) => {
+    setData((prev: { flags: FeatureFlag[], notes: ReleaseNote[] } | null) => {
       if (!prev) return prev;
       return {
         ...prev,
-        flags: prev.flags.map((f: any) => f.id === flagId ? { ...f, isGlobalEnabled: !f.isGlobalEnabled } : f)
+        flags: prev.flags.map((f: FeatureFlag) => f.id === flagId ? { ...f, isGlobalEnabled: !f.isGlobalEnabled } : f)
       };
     });
   };

@@ -63,6 +63,13 @@ export default function AttendanceTable() {
  {r.type}
  </span>
  </td>
+ <td className="px-4 py-3 whitespace-nowrap">
+   <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
+     r.checkIn ? 'bg-success-bg text-success' : 'bg-danger-bg text-danger'
+   }`}>
+     {r.checkIn ? 'Present' : 'Absent'}
+   </span>
+ </td>
  <td className="px-4 py-3 text-sm text-secondary whitespace-nowrap">{formatDate(r.date)}</td>
  <td className="px-4 py-3 text-sm text-secondary flex items-center gap-1 whitespace-nowrap">
  <Clock size={13} className="opacity-50" />

@@ -20,6 +20,7 @@ export default function SystemClient() {
   const [tenants, setTenants] = useState<TenantWithVersion[]>([]);
   const [auditLogs, setAuditLogs] = useState<GlobalAuditLog[]>([]);
   const [fetchState, setFetchState] = useState<FetchState>('idle');
+  const [migratingTenants, setMigratingTenants] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     // Refetch on mount to load migration health and global audit logs
@@ -42,6 +43,23 @@ export default function SystemClient() {
     }
     fetchData();
   }, []);
+
+  const handleRunMigration = async (tenantId: string) => {
+    setMigratingTenants(prev => ({ ...prev, [tenantId]: true }));
+    try {
+      // Simulate API call for migration
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      setTenants(prev => prev.map(t => 
+        t.id === tenantId ? { ...t, databaseVersion: CURRENT_SCHEMA_VERSION } : t
+      ));
+      toast.success(`Successfully migrated database for tenant ${tenantId}`);
+    } catch (error) {
+      toast.error('Migration failed. Please check logs.');
+    } finally {
+      setMigratingTenants(prev => ({ ...prev, [tenantId]: false }));
+    }
+  };
 
   const filteredLogs = auditLogs.filter(log =>
     log.targetResource?.toLowerCase().includes(logSearch.toLowerCase()) ||
@@ -83,8 +101,17 @@ export default function SystemClient() {
                 </div>
 
                 {isOutdated ? (
-                  <button className="w-full flex justify-center items-center gap-2 bg-warning hover:bg-warning text-black py-2 rounded-lg text-sm font-medium transition-colors">
-                    <RefreshCcw className="w-4 h-4" /> Run Migrations
+                  <button 
+                    onClick={() => handleRunMigration(tenant.id)}
+                    disabled={migratingTenants[tenant.id]}
+                    className="w-full flex justify-center items-center gap-2 bg-warning hover:bg-warning text-black py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
+                  >
+                    {migratingTenants[tenant.id] ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <RefreshCcw className="w-4 h-4" />
+                    )}
+                    {migratingTenants[tenant.id] ? 'Migrating...' : 'Run Migrations'}
                   </button>
                 ) : (
                   <button disabled className="w-full flex justify-center items-center gap-2 bg-border text-disabled py-2 rounded-lg text-sm font-medium cursor-not-allowed">

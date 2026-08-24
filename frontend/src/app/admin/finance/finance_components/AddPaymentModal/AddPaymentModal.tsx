@@ -53,8 +53,8 @@ export default function AddPaymentModal() {
           <div>
             <label className="block text-sm font-medium mb-1 text-secondary">Member ID</label>
             <input
-              type="number"
-              placeholder="Enter Member ID"
+              type="text"
+              placeholder="Enter Member ID (e.g. m123)"
               {...register('memberId')}
               className={`w-full px-4 py-2 border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary ${errors.memberId ? 'border-danger' : 'border-border'}`}
             />

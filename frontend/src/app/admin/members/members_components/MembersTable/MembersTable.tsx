@@ -72,10 +72,10 @@ export default function MembersTable() {
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-3 whitespace-nowrap">
                         <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm bg-primary/10 text-primary flex-shrink-0">
-                          {m.name.charAt(0)}
+                          {(m.name || '').charAt(0)}
                         </div>
                         <div>
-                          <p className="text-sm font-semibold text-foreground">{m.name}</p>
+                          <p className="text-sm font-semibold text-foreground">{m.name || 'Unknown'}</p>
                           <p className="text-xs text-secondary">{maskSensitiveData(m.phone, 'phone')}</p>
                         </div>
                       </div>

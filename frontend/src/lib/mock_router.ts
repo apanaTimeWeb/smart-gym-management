@@ -3,7 +3,7 @@ import { ApiResponse } from './api';
 class MockDB {
   private static prefix = 'gymsmart_mock_';
   
-  static getCollection(name: string, defaultData: any[] = []): any[] {
+  static getCollection(name: string, defaultData: Record<string, unknown>[] = []): Record<string, unknown>[] {
     if (typeof window === 'undefined') return defaultData;
     const val = localStorage.getItem(this.prefix + name);
     if (val) return JSON.parse(val);
@@ -11,13 +11,13 @@ class MockDB {
     return defaultData;
   }
   
-  static setCollection(name: string, data: any[]) {
+  static setCollection(name: string, data: Record<string, unknown>[]) {
     if (typeof window !== 'undefined') {
       localStorage.setItem(this.prefix + name, JSON.stringify(data));
     }
   }
 
-  static handleCrud(collectionName: string, method: string, path: string, body?: any, defaultData: any[] = [], listKey?: string) {
+  static handleCrud(collectionName: string, method: string, path: string, body?: unknown, defaultData: Record<string, unknown>[] = [], listKey?: string) {
     const coll = this.getCollection(collectionName, defaultData);
     const segments = path.split('?')[0].split('/');
     const possibleId = segments[segments.length - 1];
@@ -38,7 +38,7 @@ class MockDB {
     if (method === 'POST') {
       const newItem = {
         id: `${collectionName.split('_').pop()}-${Date.now()}`,
-        ...body,
+        ...(body as Record<string, unknown>),
         createdAt: new Date().toISOString()
       };
       coll.push(newItem);
@@ -49,7 +49,7 @@ class MockDB {
     if (method === 'PATCH' || method === 'PUT') {
       const idx = coll.findIndex(x => x.id === id);
       if (idx === -1) return { success: false, message: 'Not found', data: null };
-      coll[idx] = { ...coll[idx], ...body, updatedAt: new Date().toISOString() };
+      coll[idx] = { ...coll[idx], ...(body as Record<string, unknown>), updatedAt: new Date().toISOString() };
       this.setCollection(collectionName, coll);
       return { success: true, message: 'Updated successfully', data: coll[idx] };
     }
@@ -67,7 +67,7 @@ class MockDB {
 export async function routeMockRequest<T>(
   path: string,
   method: string = 'GET',
-  body?: any
+  body?: unknown
 ): Promise<ApiResponse<T>> {
   // Simulate network latency
   await new Promise((resolve) => setTimeout(resolve, 500));
@@ -102,7 +102,7 @@ export async function routeMockRequest<T>(
   // ==========================================
   // STATEFUL MOCK DB INTERCEPTIONS (Admin/Manager/Trainer)
   // ==========================================
-  const generate = (count: number, generator: (i: number) => any) => Array.from({ length: count }, (_, i) => generator(i));
+  const generate = (count: number, generator: (i: number) => Record<string, unknown>) => Array.from({ length: count }, (_, i) => generator(i));
 
   if (path.includes('/store/products')) return MockDB.handleCrud('mock_products', method, path, body, generate(15, i => ({ id: `prod-${i}`, name: `Mock Product ${i}`, category: 'Supplements', price: 1500, stock: 50, status: 'IN_STOCK' })), 'products') as unknown as ApiResponse<T>;
   if (path.includes('/store/orders')) return MockDB.handleCrud('mock_orders', method, path, body, generate(5, i => ({ id: `ord-${i}`, customerName: `Customer ${i}`, totalAmount: 3000, paymentMethod: 'Card', status: 'COMPLETED', date: new Date().toISOString() })), 'orders') as unknown as ApiResponse<T>;
@@ -128,7 +128,7 @@ export async function routeMockRequest<T>(
       const settings = MockDB.getCollection('mock_admin_settings', [{ gymName: 'Demo Gym Base', ownerName: 'Admin Owner', phone: '9988776655', email: 'admin@gym.com', city: 'Mumbai', gstNumber: '27AAAAA1234A1Z5' }]);
       return { success: true, message: 'Fetched Settings', data: settings[0] } as unknown as ApiResponse<T>;
     } else {
-      let parsed = typeof body === 'string' ? JSON.parse(body) : body;
+      let parsed = typeof body === 'string' ? JSON.parse(body) : (body as Record<string, unknown>);
       MockDB.setCollection('mock_admin_settings', [parsed]);
       return { success: true, message: 'Settings Saved', data: parsed } as unknown as ApiResponse<T>;
     }
@@ -164,7 +164,7 @@ export async function routeMockRequest<T>(
   // Dynamic Rich Data Generator for Demo Mode
   if (method === 'GET') {
     // Helper to generate an array
-    const generate = (count: number, generator: (i: number) => any) => Array.from({ length: count }, (_, i) => generator(i));
+    const generate = (count: number, generator: (i: number) => Record<string, unknown>) => Array.from({ length: count }, (_, i) => generator(i));
 
     if (path.includes('/superadmin/dashboard')) {
       return {
@@ -260,12 +260,12 @@ export async function routeMockRequest<T>(
   }
 
   // Generic fallback if no specific mock is found for mutations (POST, PUT, DELETE)
-  console.log(`[MockRouter] No mock found for ${path}, returning safe mutation fallback.`);
-  
-  let parsedBody: any = {};
+  // Removed console.log per Rule 46
+
+  let parsedBody: Record<string, unknown> = {};
   if (body) {
      try {
-       parsedBody = typeof body === 'string' ? JSON.parse(body) : body;
+       parsedBody = typeof body === 'string' ? JSON.parse(body) : (body as Record<string, unknown>);
      } catch (e) {}
   }
   
@@ -279,6 +279,6 @@ export async function routeMockRequest<T>(
   return {
     success: true,
     message: `Demo Mode: Action ${method} ${path} successful`,
-    data: safeData as any,
+    data: safeData as unknown as T,
   };
 }

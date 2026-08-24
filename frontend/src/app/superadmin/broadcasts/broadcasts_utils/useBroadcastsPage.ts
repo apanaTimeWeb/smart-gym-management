@@ -123,8 +123,8 @@ export const useBroadcastsPage = () => {
   const filteredBroadcasts = useMemo(() => {
     const lowerQuery = searchQuery.toLowerCase();
     return broadcasts.filter(b =>
-      b.title.toLowerCase().includes(lowerQuery) ||
-      b.content.toLowerCase().includes(lowerQuery)
+      (b.title || '').toLowerCase().includes(lowerQuery) ||
+      (b.content || '').toLowerCase().includes(lowerQuery)
     );
   }, [broadcasts, searchQuery]);
 

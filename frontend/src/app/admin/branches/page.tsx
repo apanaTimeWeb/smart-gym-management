@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 import { Building2, Plus, Edit, Trash2 } from 'lucide-react';
-import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
+import { useAdminGlobalStore, Branch } from '@/app/admin/admin_store/useAdminGlobalStore';
 import toast from 'react-hot-toast';
 
 export default function AdminBranchesPage() {
@@ -11,23 +11,42 @@ export default function AdminBranchesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newBranchName, setNewBranchName] = useState('');
   const [newBranchLocation, setNewBranchLocation] = useState('');
+  const [editingBranchId, setEditingBranchId] = useState<string | null>(null);
 
   const handleAddBranch = () => {
     if (!newBranchName || !newBranchLocation) {
       toast.error('Name and location are required');
       return;
     }
-    const newBranch = {
-      id: `b${Date.now()}`,
-      name: newBranchName,
-      location: newBranchLocation,
-      status: 'active' as const,
-    };
-    setBranches([...branches, newBranch]);
+    if (editingBranchId) {
+      setBranches(branches.map(b => b.id === editingBranchId ? { ...b, name: newBranchName, location: newBranchLocation } : b));
+      toast.success('Branch updated successfully!');
+      setEditingBranchId(null);
+    } else {
+      const newBranch = {
+        id: `b${Date.now()}`,
+        name: newBranchName,
+        location: newBranchLocation,
+        status: 'active' as const,
+      };
+      setBranches([...branches, newBranch]);
+      toast.success('Branch created successfully!');
+    }
     setIsModalOpen(false);
     setNewBranchName('');
     setNewBranchLocation('');
-    toast.success('Branch created successfully!');
+  };
+
+  const handleEdit = (branch: Branch) => {
+    setEditingBranchId(branch.id);
+    setNewBranchName(branch.name);
+    setNewBranchLocation(branch.location);
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = (id: string) => {
+    setBranches(branches.filter(b => b.id !== id));
+    toast.success('Branch deleted');
   };
 
   return (
@@ -53,10 +72,16 @@ export default function AdminBranchesPage() {
           {branches.map(branch => (
             <div key={branch.id} className="bg-card border border-border rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow relative group">
               <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button className="p-1.5 text-secondary hover:text-primary bg-background rounded-lg border border-border shadow-sm">
+                <button 
+                  onClick={() => handleEdit(branch)}
+                  className="p-1.5 text-secondary hover:text-primary bg-background rounded-lg border border-border shadow-sm"
+                >
                   <Edit size={14} />
                 </button>
-                <button className="p-1.5 text-secondary hover:text-danger bg-background rounded-lg border border-border shadow-sm">
+                <button 
+                  onClick={() => handleDelete(branch.id)}
+                  className="p-1.5 text-secondary hover:text-danger bg-background rounded-lg border border-border shadow-sm"
+                >
                   <Trash2 size={14} />
                 </button>
               </div>
@@ -88,7 +113,7 @@ export default function AdminBranchesPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsModalOpen(false)}></div>
           <div className="relative bg-card border border-border rounded-2xl shadow-2xl w-full max-w-md overflow-hidden p-6">
-            <h2 className="text-xl font-bold text-foreground mb-4">Add New Branch</h2>
+            <h2 className="text-xl font-bold text-foreground mb-4">{editingBranchId ? 'Edit Branch' : 'Add New Branch'}</h2>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-secondary mb-1">Branch Name</label>
@@ -113,7 +138,12 @@ export default function AdminBranchesPage() {
             </div>
             <div className="mt-6 flex gap-3 justify-end">
               <button 
-                onClick={() => setIsModalOpen(false)}
+                onClick={() => {
+                  setIsModalOpen(false);
+                  setEditingBranchId(null);
+                  setNewBranchName('');
+                  setNewBranchLocation('');
+                }}
                 className="px-4 py-2 bg-input border border-border text-foreground rounded-lg text-sm font-medium hover:bg-border transition-colors"
               >
                 Cancel
@@ -122,7 +152,7 @@ export default function AdminBranchesPage() {
                 onClick={handleAddBranch}
                 className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:opacity-90 transition-opacity"
               >
-                Create Branch
+                {editingBranchId ? 'Save Changes' : 'Create Branch'}
               </button>
             </div>
           </div>
