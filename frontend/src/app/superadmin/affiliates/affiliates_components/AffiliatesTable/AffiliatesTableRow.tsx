@@ -13,7 +13,10 @@ interface AffiliatesTableRowProps {
 
 export default function AffiliatesTableRow({ affiliate: aff, onToggleStatus, onEdit, onDelete }: AffiliatesTableRowProps) {
   return (
-    <tr className="hover:bg-primary/5 transition-all duration-200 ease-in-out group cursor-pointer">
+    <tr 
+      className="hover:bg-primary/5 transition-all duration-200 ease-in-out group cursor-pointer"
+      onClick={() => onEdit(aff)}
+    >
       <td className="px-6 py-4">
         <div className="flex flex-col">
           <span className="text-sm font-medium text-foreground truncate" title={aff.name}>{aff.name}</span>

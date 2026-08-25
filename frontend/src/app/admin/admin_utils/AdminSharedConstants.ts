@@ -5,20 +5,16 @@ import {
  MessageSquare, Settings, CalendarCheck, Shield, Building2
 } from 'lucide-react';
 
-export const ADMIN_NAV_ITEMS = [
- { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
- { href: '/admin/branches', label: 'Branches', icon: Building2 },
- { href: '/admin/plans', label: 'Plans', icon: ClipboardList },
- { href: '/admin/members', label: 'Members', icon: Users },
- { href: '/admin/sales', label: 'Sales & Reports', icon: BarChart2 },
- { href: '/admin/attendance', label: 'Attendance', icon: CalendarCheck },
- { href: '/admin/hr', label: 'HR Management', icon: UserCog },
- { href: '/admin/store', label: 'Store', icon: ShoppingBag },
- { href: '/admin/finance', label: 'Finance', icon: DollarSign },
- { href: '/admin/inquiries', label: 'Inquiries & Leads',icon: MessageSquare },
- { href: '/admin/audit', label: 'Audit Logs', icon: Shield },
- { href: '/admin/settings', label: 'Settings', icon: Settings },
-];
+ export const ADMIN_NAV_ITEMS = [
+  { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/admin/branches', label: 'Branches', icon: Building2 },
+  { href: '/admin/plans', label: 'Plans', icon: ClipboardList },
+  { href: '/admin/members', label: 'Members', icon: Users },
+  { href: '/admin/sales', label: 'Sales & Reports', icon: BarChart2 },
+  { href: '/admin/finance', label: 'Finance', icon: DollarSign },
+  { href: '/admin/audit', label: 'Audit Logs', icon: Shield },
+  { href: '/admin/settings', label: 'Settings', icon: Settings },
+ ];
 
 // TODO: Replace with real API call once Notifications backend module is built.
 export const ADMIN_PLACEHOLDER_NOTIFICATIONS = [

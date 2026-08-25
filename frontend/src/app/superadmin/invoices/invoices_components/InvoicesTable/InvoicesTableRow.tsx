@@ -15,7 +15,7 @@ interface InvoicesTableRowProps {
 
 export default function InvoicesTableRow({ invoice: inv }: InvoicesTableRowProps) {
   return (
-    <tr className="hover:bg-input transition-colors cursor-pointer">
+    <tr className="hover:bg-input transition-colors">
       <td className="p-4 text-sm font-mono text-secondary">{inv.id}</td>
       <td className="p-4 text-sm font-bold text-foreground">{inv.tenantName}</td>
       <td className="p-4 text-sm text-secondary">{inv.planName}</td>

@@ -29,7 +29,11 @@ export default function BroadcastsTable({ broadcasts, onSend, onEdit, onDelete }
           </thead>
           <tbody className="divide-y divide-border">
             {paginatedBroadcasts.map((bc) => (
-              <tr key={bc.id} className="hover:bg-primary/5 transition-all duration-200 ease-in-out group cursor-pointer">
+              <tr 
+                key={bc.id} 
+                className="hover:bg-primary/5 transition-all duration-200 ease-in-out group cursor-pointer"
+                onClick={() => onEdit(bc)}
+              >
                 <td className="px-6 py-4">
                   <div className="flex flex-col">
                     <span className="text-sm font-medium text-foreground">{bc.title}</span>
