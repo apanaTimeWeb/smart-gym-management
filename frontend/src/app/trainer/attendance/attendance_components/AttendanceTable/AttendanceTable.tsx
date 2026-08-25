@@ -84,15 +84,13 @@ export default function AttendanceTable() {
  </div>
  )}
  
- {totalPages > 1 && (
-    <div className="border-t border-border mt-4 pt-4">
+ <div className="border-t border-border mt-4 pt-4">
       <TrainerPagination 
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
       />
     </div>
-  )}
   </div>
   );
 }

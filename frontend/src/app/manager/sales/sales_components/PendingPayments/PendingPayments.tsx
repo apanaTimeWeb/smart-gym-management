@@ -72,15 +72,13 @@ export default function PendingPayments() {
           <SalesEmptyState message="No pending payments" subtext="All members are up to date." />
         )}
       </div>
-      {totalPages > 1 && (
-        <div className="mt-4 pt-4 border-t border-border">
+      <div className="mt-4 pt-4 border-t border-border">
           <ManagerPagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={setCurrentPage}
           />
         </div>
-      )}
     </div>
   );
 }

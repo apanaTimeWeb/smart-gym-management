@@ -80,8 +80,7 @@ export default function DietGrid() {
         )}
       </div>
 
-      {totalPages > 1 && (
-        <div className="mt-6">
+      <div className="mt-6">
           <ManagerPagination 
             currentPage={currentPage} 
             totalPages={totalPages} 
@@ -90,7 +89,6 @@ export default function DietGrid() {
             onPageChange={setCurrentPage} 
           />
         </div>
-      )}
     </div>
   );
 }

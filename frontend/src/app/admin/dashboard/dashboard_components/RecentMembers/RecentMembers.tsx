@@ -93,15 +93,13 @@ export default function RecentMembers() {
         </table>
       </div>
       
-      {totalPages > 1 && (
-        <div className="border-t border-border mt-2 p-2">
+      <div className="border-t border-border mt-2 p-2">
           <AdminPagination 
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={setCurrentPage}
           />
         </div>
-      )}
     </div>
   );
 }
