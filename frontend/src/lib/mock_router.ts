@@ -171,7 +171,16 @@ export async function routeMockRequest<T>(
   if (path.includes('/tenants') || path.includes('/gyms') || path.includes('/superadmin/gyms')) return MockDB.handleCrud('mock_tenants', method, path, body, generate(8, i => ({ id: `tenant-${i}`, name: `Gym Branch ${i + 1}`, ownerName: 'Admin Owner', adminEmail: `admin${i}@gym.com`, phone: `998877665${i}`, status: 'ACTIVE', plan: 'Enterprise', createdAt: '2023-01-01', memberCount: 150 + (i * 20), monthlyRevenue: 50000 + (i * 5000), databaseVersion: 'v1.0' }))) as unknown as ApiResponse<T>;
   if (path.includes('/superadmin/plans')) return MockDB.handleCrud('mock_saas_plans', method, path, body, generate(3, i => ({ id: `saas-plan-${i}`, name: i === 0 ? 'Starter' : i === 1 ? 'Pro' : 'Enterprise', priceMonthly: 1000 * (i + 1), priceAnnual: 10000 * (i + 1), maxMembers: 100 * (i + 1), maxStaff: 5 * (i + 1), features: ['CRM', 'Billing', 'Analytics'], activeTenants: 10 * (i + 1) }))) as unknown as ApiResponse<T>;
   // For features and migrations, which return compound objects in GET, we let GET bypass or handle specifically.
-  if (path.includes('/superadmin/features')) return MockDB.handleCrud('mock_features', method, path, body, generate(4, i => ({ id: `flag-${i}`, name: `Beta_Feature_${i}`, description: 'A beta feature', isGlobalEnabled: true, enabledTenantIds: [] })), 'flags') as unknown as ApiResponse<T>;
+  if (path.includes('/superadmin/features')) {
+    if (method === 'GET') {
+      const flags = MockDB.getCollection('mock_flags', generate(4, i => ({ id: lag-, name: Beta_Feature_, description: 'A beta feature', isGlobalEnabled: true, enabledTenantIds: [] })));
+      const notes = MockDB.getCollection('mock_notes', generate(3, i => ({ id: 
+ote-, version: 1., title: Update , content: 'Feature update.', isPublished: true, date: '2023-11-01' })));
+      return { success: true, message: 'Fetched features compound data', data: { flags, notes } } as unknown as ApiResponse<T>;
+    }
+    if (path.includes('/notes')) return MockDB.handleCrud('mock_notes', method, path, body, []) as unknown as ApiResponse<T>;
+    return MockDB.handleCrud('mock_flags', method, path, body, []) as unknown as ApiResponse<T>;
+  }
   if (path.includes('/superadmin/migrations')) {
     if (method === 'GET') {
       const migrations = MockDB.getCollection('mock_migrations', generate(3, i => ({ id: `mig-${i}`, name: `Add_Stripe_ID_${i}`, appliedAt: '2023-11-01', status: 'SUCCESS' })));
