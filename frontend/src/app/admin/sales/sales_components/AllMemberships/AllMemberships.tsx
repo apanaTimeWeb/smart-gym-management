@@ -96,15 +96,13 @@ export default function AllMemberships() {
         <SalesEmptyState message="No memberships found" subtext="Try adjusting your filters." />
       )}
 
-      {totalPages > 1 && (
-        <div className="mt-4 pt-4 border-t border-border">
+      <div className="mt-4 pt-4 border-t border-border">
           <AdminPagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={setCurrentPage}
           />
         </div>
-      )}
     </div>
   );
 }

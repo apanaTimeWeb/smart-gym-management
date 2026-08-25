@@ -28,7 +28,6 @@ export default function AdminPagination({
   itemsPerPage,
   colors,
 }: AdminPaginationProps) {
-  if (totalPages <= 1) return null;
 
   const startItem = totalItems && itemsPerPage ? (currentPage - 1) * itemsPerPage + 1 : null;
   const endItem = totalItems && itemsPerPage ? Math.min(currentPage * itemsPerPage, totalItems) : null;

@@ -60,15 +60,13 @@ export default function MembershipReport() {
   </tbody>
   </table>
   </div>
-  {totalPages > 1 && (
-    <div className="mt-4 pt-4 border-t border-border">
+  <div className="mt-4 pt-4 border-t border-border">
       <AdminPagination 
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
       />
     </div>
-  )}
   </>
   );
 }
