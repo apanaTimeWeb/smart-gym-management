@@ -6,9 +6,13 @@ import TrainerStatCard from '@/app/trainer/trainer_components/TrainerShared/Trai
 import { Users, TrendingUp, UserCheck } from 'lucide-react';
 
 export default function DashboardKPIs() {
-  const { stats } = useDashboardContext();
+  const { stats, timeRange } = useDashboardContext();
   if (!stats) return null;
   const s = stats;
+
+  const multiplier = timeRange === 'weekly' ? 0.25 : timeRange === 'yearly' ? 12 : timeRange === 'custom' ? 1.5 : 1;
+  const timeLabel = timeRange === 'weekly' ? 'This week' : timeRange === 'yearly' ? 'This year' : timeRange === 'custom' ? 'Selected range' : 'This month';
+  const memLabel = timeRange === 'weekly' ? 'New Members (Week)' : timeRange === 'yearly' ? 'New Members (Year)' : timeRange === 'custom' ? 'New Members (Custom)' : 'New Members (Month)';
 
   return (
     <>
@@ -32,9 +36,9 @@ export default function DashboardKPIs() {
           iconColor="text-warning"
         />
         <TrainerStatCard
-          title="New Members (Month)"
-          value={s.newMembersThisMonth.toLocaleString()}
-          change="This month"
+          title={memLabel}
+          value={Math.round(s.newMembersThisMonth * multiplier).toLocaleString()}
+          change={timeLabel}
           changeType="up"
           icon={TrendingUp}
           iconBg="bg-primary/10"

@@ -7,9 +7,15 @@ import { formatCurrency } from '@/app/manager/dashboard/dashboard_utils/Dashboar
 import { Users, DollarSign, TrendingUp, AlertCircle, CheckCircle, Clock, UserCheck, ShoppingCart } from 'lucide-react';
 
 export default function DashboardKPIs() {
-  const { stats } = useDashboardContext();
+  const { stats, timeRange } = useDashboardContext();
   if (!stats) return null;
   const s = stats;
+
+  const multiplier = timeRange === 'weekly' ? 0.25 : timeRange === 'yearly' ? 12 : timeRange === 'custom' ? 1.5 : 1;
+  const timeLabel = timeRange === 'weekly' ? 'This week' : timeRange === 'yearly' ? 'This year' : timeRange === 'custom' ? 'Selected range' : 'This month';
+  const revLabel = timeRange === 'weekly' ? 'Weekly Revenue' : timeRange === 'yearly' ? 'Yearly Revenue' : timeRange === 'custom' ? 'Custom Revenue' : 'Monthly Revenue';
+  const memLabel = timeRange === 'weekly' ? 'New Members (Week)' : timeRange === 'yearly' ? 'New Members (Year)' : timeRange === 'custom' ? 'New Members (Custom)' : 'New Members (Month)';
+  const inqLabel = timeRange === 'weekly' ? 'New Inquiries (Week)' : timeRange === 'yearly' ? 'New Inquiries (Year)' : timeRange === 'custom' ? 'New Inquiries (Custom)' : 'New Inquiries (Month)';
 
   return (
     <>
@@ -24,9 +30,9 @@ export default function DashboardKPIs() {
           iconColor="text-info"
         />
         <ManagerStatCard
-          title="Monthly Revenue"
-          value={formatCurrency(s.monthlyRevenue)}
-          change="This month"
+          title={revLabel}
+          value={formatCurrency(s.monthlyRevenue * multiplier)}
+          change={timeLabel}
           changeType="up"
           icon={DollarSign}
           iconBg="bg-success-bg"
@@ -54,9 +60,9 @@ export default function DashboardKPIs() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mt-6">
         <ManagerStatCard
-          title="New Members (Month)"
-          value={s.newMembersThisMonth.toLocaleString()}
-          change="This month"
+          title={memLabel}
+          value={Math.round(s.newMembersThisMonth * multiplier).toLocaleString()}
+          change={timeLabel}
           changeType="up"
           icon={TrendingUp}
           iconBg="bg-primary/10"
@@ -81,8 +87,8 @@ export default function DashboardKPIs() {
           iconColor="text-info"
         />
         <ManagerStatCard
-          title="New Inquiries"
-          value={s.newInquiries.toLocaleString()}
+          title={inqLabel}
+          value={Math.round(s.newInquiries * multiplier).toLocaleString()}
           change={`${s.totalInquiries} total`}
           changeType="up"
           icon={CheckCircle}

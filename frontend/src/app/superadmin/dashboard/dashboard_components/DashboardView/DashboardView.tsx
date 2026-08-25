@@ -3,14 +3,16 @@
 
 import { Users, Building2, CreditCard, Activity } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import { useState } from 'react';
 import { useDashboardData } from '@/app/superadmin/dashboard/dashboard_utils/useDashboardData';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { CHART_COLORS } from '@/app/superadmin/superadmin_utils/SuperadminChartConstants';
-import { SaaSDashboardMetrics, RevenueChartData, GrowthChartData } from '@/app/superadmin/dashboard/dashboard_types/dashboard_types';
+import { SaaSDashboardMetrics, RevenueChartData, GrowthChartData, TimeRange } from '@/app/superadmin/dashboard/dashboard_types/dashboard_types';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 export default function DashboardView() {
+  const [timeRange, setTimeRange] = useState<TimeRange>('monthly');
   const { data, fetchState, error } = useDashboardData<{ metrics: SaaSDashboardMetrics, revenue: RevenueChartData[], growth: GrowthChartData[] }>(SuperadminUrlConfig.BACKEND_API.DASHBOARD_BASE);
 
   if (fetchState === 'loading') {
@@ -37,8 +39,11 @@ export default function DashboardView() {
 
   const { metrics: DUMMY_DASHBOARD_METRICS, revenue: REVENUE_CHART_DATA } = data;
 
+  const timeMultiplier = timeRange === 'weekly' ? 0.25 : timeRange === 'yearly' ? 12 : timeRange === 'custom' ? 1.5 : 1;
+  const mrrLabel = timeRange === 'weekly' ? 'WEEKLY RR' : timeRange === 'yearly' ? 'YEARLY RR' : timeRange === 'custom' ? 'CUSTOM RR' : 'TOTAL MRR';
+
   const metrics = [
-    { label: 'TOTAL MRR', value: `₹${(DUMMY_DASHBOARD_METRICS.monthlyRecurringRevenue || 0).toLocaleString('en-IN')}`, icon: CreditCard, color: 'text-success' },
+    { label: mrrLabel, value: `₹${(Math.round((DUMMY_DASHBOARD_METRICS.monthlyRecurringRevenue || 0) * timeMultiplier)).toLocaleString('en-IN')}`, icon: CreditCard, color: 'text-success' },
     { label: 'TOTAL GYMS (TENANTS)', value: DUMMY_DASHBOARD_METRICS.totalGyms, icon: Building2, color: 'text-primary' },
     { label: 'ACTIVE GYMS', value: DUMMY_DASHBOARD_METRICS.activeGyms, icon: Activity, color: 'text-primary' },
     { label: 'TOTAL END USERS', value: (DUMMY_DASHBOARD_METRICS.totalEndUsers || 0).toLocaleString('en-IN'), icon: Users, color: 'text-purple' },
@@ -85,17 +90,31 @@ export default function DashboardView() {
   };
 
   const chartSeries = [{
-    name: 'MRR',
-    data: REVENUE_CHART_DATA.map(d => d.mrr)
+    name: mrrLabel,
+    data: REVENUE_CHART_DATA.map(d => Math.round(d.mrr * timeMultiplier))
   }];
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">
-          SaaS Overview
-        </h1>
-        <p className="text-secondary mt-1 text-sm">Monitor the health and growth of your Multi-Tenant SaaS platform.</p>
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">
+              SaaS Overview
+            </h1>
+            <p className="text-secondary mt-1 text-sm">Monitor the health and growth of your Multi-Tenant SaaS platform.</p>
+          </div>
+          <select 
+            value={timeRange} 
+            onChange={(e) => setTimeRange(e.target.value as any)}
+            className="bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-primary"
+          >
+            <option value="weekly">This Week</option>
+            <option value="monthly">This Month</option>
+            <option value="yearly">This Year</option>
+            <option value="custom">Custom Range</option>
+          </select>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -112,7 +131,7 @@ export default function DashboardView() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 bg-card border border-border rounded-xl p-6 shadow-sm">
-          <h2 className="text-base font-semibold text-foreground mb-6">MRR Growth (Monthly Recurring Revenue)</h2>
+          <h2 className="text-base font-semibold text-foreground mb-6">{mrrLabel} Growth</h2>
           <div className="h-80 w-full">
             <Chart options={chartOptions} series={chartSeries} type="area" height="100%" />
           </div>

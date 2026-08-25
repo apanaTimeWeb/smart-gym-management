@@ -1,6 +1,17 @@
 // RESPONSIBILITY: Defines all TypeScript types and interfaces for the Dashboard module.
 export type TenantStatus = 'ACTIVE' | 'SUSPENDED' | 'TRIAL' | 'CANCELLED';
 
+export type FetchState = 'idle' | 'loading' | 'success' | 'error';
+export type TimeRange = 'weekly' | 'monthly' | 'yearly' | 'custom';
+
+export interface DashboardContextType { 
+  stats: any | null; 
+  status: FetchState; 
+  error: string;
+  timeRange: TimeRange;
+  setTimeRange: (range: TimeRange) => void;
+}
+
 export interface Tenant {
   id: string;
   name: string;

@@ -32,7 +32,7 @@ function DashboardSkeleton() {
 }
 
 function DashboardContent() {
-  const { status, error } = useDashboardContext();
+  const { status, error, timeRange, setTimeRange } = useDashboardContext();
 
   if (status === 'loading') return <DashboardSkeleton />;
 
@@ -49,6 +49,18 @@ function DashboardContent() {
     <>
       <TrainerHeader title="Dashboard" subtitle="Welcome back, Trainer! Here's your gym overview." />
       <div className="p-6 space-y-6">
+        <div className="flex justify-end mb-2">
+          <select 
+            value={timeRange} 
+            onChange={(e) => setTimeRange(e.target.value as any)}
+            className="bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-primary"
+          >
+            <option value="weekly">This Week</option>
+            <option value="monthly">This Month</option>
+            <option value="yearly">This Year</option>
+            <option value="custom">Custom Range</option>
+          </select>
+        </div>
         <DashboardKPIs />
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
           <RecentMembers />
