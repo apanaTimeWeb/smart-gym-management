@@ -1,12 +1,16 @@
 'use client';
 // RESPONSIBILITY: Renders the table view of Gym tenants. Purely a view component that consumes useGymsTable hook.
 
+import { useState } from 'react';
 import { CheckCircle2, Ban, LogIn, PlayCircle, Edit2, Mail, Trash2, Loader2 } from 'lucide-react';
 import { useGymsTable } from '@/app/superadmin/gyms/gyms_components/GymsTable/useGymsTable';
 import GymEditModal from '@/app/superadmin/gyms/gyms_components/GymEditModal/GymEditModal';
 import GymEmailModal from '@/app/superadmin/gyms/gyms_components/GymEmailModal/GymEmailModal';
 import GymDeleteModal from '@/app/superadmin/gyms/gyms_components/GymDeleteModal/GymDeleteModal';
 import GymsEmptyState from '@/app/superadmin/gyms/gyms_components/GymsEmptyState/GymsEmptyState';
+import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
+
+const ITEMS_PER_PAGE = 10;
 
 export default function GymsTable() {
   const {
@@ -20,6 +24,8 @@ export default function GymsTable() {
     openEditModal,
     openEmailModal
   } = useGymsTable();
+
+  const [currentPage, setCurrentPage] = useState(1);
 
   if (fetchState === 'loading') {
     return (
@@ -35,9 +41,12 @@ export default function GymsTable() {
     return <div className="p-8 text-center text-destructive">Error loading gyms. Please try again.</div>;
   }
 
+  const totalPages = Math.ceil(filteredGyms.length / ITEMS_PER_PAGE) || 1;
+  const paginatedGyms = filteredGyms.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-left border-collapse">
+    <div className="overflow-x-auto flex flex-col min-h-[400px]">
+      <table className="w-full text-left border-collapse flex-1">
         <thead>
           <tr className="bg-primary/10 border-b border-border text-secondary text-sm">
             <th className="p-4 font-semibold uppercase text-xs tracking-wider w-48">Gym Name</th>
@@ -50,7 +59,7 @@ export default function GymsTable() {
           </tr>
         </thead>
         <tbody className="divide-y divide-border">
-          {filteredGyms.map(gym => {
+          {paginatedGyms.map(gym => {
             const isActionLoading = actionLoadingId === gym.id;
             
             return (
@@ -167,6 +176,13 @@ export default function GymsTable() {
           )}
         </tbody>
       </table>
+      
+      <SuperadminPagination 
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
+      
       <GymEditModal />
       <GymEmailModal />
       <GymDeleteModal />

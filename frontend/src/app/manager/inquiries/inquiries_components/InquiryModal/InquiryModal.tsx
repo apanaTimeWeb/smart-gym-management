@@ -22,6 +22,14 @@ export default function InquiryModal() {
     if (showModal && editData) reset(editData);
   }, [showModal, editData, reset]);
 
+
+  const onSubmit = (data: InquiryFormValues) => {
+    const payload = { ...data };
+    if (!payload.email) delete payload.email;
+    if (!payload.notes) delete payload.notes;
+    saveInquiry(payload);
+  };
+  
   if (!showModal) return null;
 
   return (
@@ -37,7 +45,7 @@ export default function InquiryModal() {
             <X size={18} />
           </button>
         </div>
-        <form onSubmit={handleSubmit(saveInquiry)} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4">
           {INQUIRY_MODAL_FIELDS.map(f => (
             <div key={f.key}>
               <label className="block text-sm font-medium text-secondary mb-1">{f.label}</label>

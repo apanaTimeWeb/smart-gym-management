@@ -14,6 +14,14 @@ export function useInvoicesPage() {
   const [search, setSearch] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
   const [gymSearchTerm, setGymSearchTerm] = useState('');
+
+  // Bug 2 Fix: Trigger fetch when modal opens if tenants are missing or just fetch to ensure fresh data
+  useEffect(() => {
+    if (showAddModal) {
+      fetchData();
+    }
+  }, [showAddModal, fetchData]);
+
   const [isGymDropdownOpen, setIsGymDropdownOpen] = useState(false);
   const [selectedGymId, setSelectedGymId] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('UPI');

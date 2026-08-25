@@ -1,8 +1,10 @@
 'use client';
 // RESPONSIBILITY: Renders the Coupons data table shell (header row + rows). Delegates each row to CouponsTableRow. No API calls.
 
+import { useState } from 'react';
 import CouponsTableRow from '@/app/superadmin/coupons/coupons_components/CouponsTable/CouponsTableRow';
 import type { Coupon, CouponStatus } from '@/app/superadmin/coupons/coupons_types/coupons_types';
+import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 
 interface CouponsTableProps {
   coupons: Coupon[];
@@ -12,10 +14,17 @@ interface CouponsTableProps {
   onRestore: (id: string) => void;
 }
 
+const ITEMS_PER_PAGE = 10;
+
 export default function CouponsTable({ coupons, onToggleStatus, onEdit, onDelete, onRestore }: CouponsTableProps) {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.ceil(coupons.length / ITEMS_PER_PAGE) || 1;
+  const paginatedCoupons = coupons.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
   return (
-    <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm">
-      <div className="overflow-x-auto">
+    <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm flex flex-col min-h-[400px]">
+      <div className="overflow-x-auto flex-1">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-primary/5 border-b border-border">
@@ -28,7 +37,7 @@ export default function CouponsTable({ coupons, onToggleStatus, onEdit, onDelete
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {coupons.map((cpn) => (
+            {paginatedCoupons.map((cpn) => (
               <CouponsTableRow
                 key={cpn.id}
                 coupon={cpn}
@@ -41,6 +50,11 @@ export default function CouponsTable({ coupons, onToggleStatus, onEdit, onDelete
           </tbody>
         </table>
       </div>
+      <SuperadminPagination 
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
     </div>
   );
 }

@@ -11,6 +11,8 @@ export const MemberSchema = z.object({
   billingCycle: z.string(),
   customDays: z.number().min(1, "Please enter valid days").optional(),
   planId: z.string().min(1, "Please select a plan"),
+  amount: z.number().min(0, "Amount must be valid").optional(),
+  joinDate: z.string().optional(),
 });
 
 export type MemberFormValues = z.infer<typeof MemberSchema>;

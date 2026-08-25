@@ -7,6 +7,7 @@ import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { DatabaseZap, AlertTriangle, Play, CheckCircle2, Clock, Search, X, Target } from 'lucide-react';
 import type { SchemaMigration } from '@/app/superadmin/migrations/migrations_types/migrations_types';
 import toast from 'react-hot-toast';
+import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 
 const StatusIcons = {
   SUCCESS: <CheckCircle2 className="text-success" size={18} />,
@@ -17,20 +18,22 @@ const StatusIcons = {
 export default function MigrationsClient() {
   const { data, fetchState, error, setData } = useMigrationsData();
 
-    const [showTargetModal, setShowTargetModal] = useState(false);
+  const [showTargetModal, setShowTargetModal] = useState(false);
   const [gymSearchTerm, setGymSearchTerm] = useState('');
   const [isGymDropdownOpen, setIsGymDropdownOpen] = useState(false);
   const [selectedGymId, setSelectedGymId] = useState('');
-if (fetchState === 'loading') return <div className="p-8 text-center text-disabled">Loading...</div>;
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
+
+  if (fetchState === 'loading') return <div className="p-8 text-center text-disabled">Loading...</div>;
   if (error || !data) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
 
   const { migrations: DUMMY_MIGRATIONS, tenants: DUMMY_TENANTS } = data;
 
   const pendingCount = DUMMY_MIGRATIONS.filter(m => m.status === 'PENDING').length;
 
-
-
-
+  const totalPages = Math.ceil(DUMMY_MIGRATIONS.length / ITEMS_PER_PAGE) || 1;
+  const paginatedMigrations = DUMMY_MIGRATIONS.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   
   const filteredGymsForDropdown = DUMMY_TENANTS.filter(t => t.name.toLowerCase().includes(gymSearchTerm.toLowerCase()));
@@ -86,12 +89,12 @@ if (fetchState === 'loading') return <div className="p-8 text-center text-disabl
         </div>
       )}
 
-      <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+      <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden flex flex-col min-h-[400px]">
         <div className="p-6 border-b border-border">
           <h2 className="text-lg font-bold text-foreground">Migration History</h2>
         </div>
         
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto flex-1">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-header border-b border-border text-sm">
@@ -102,7 +105,7 @@ if (fetchState === 'loading') return <div className="p-8 text-center text-disabl
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {DUMMY_MIGRATIONS.map((mig) => (
+              {paginatedMigrations.map((mig) => (
                 <tr key={mig.id} className="hover:bg-input transition-colors">
                   <td className="p-4 text-center">
                     {StatusIcons[mig.status]}
@@ -127,6 +130,11 @@ if (fetchState === 'loading') return <div className="p-8 text-center text-disabl
             </tbody>
           </table>
         </div>
+        <SuperadminPagination 
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       </div>
 
       {/* Target Specific Tenant Modal */}

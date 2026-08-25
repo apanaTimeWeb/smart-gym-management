@@ -106,9 +106,9 @@ export const useAffiliatesPage = () => {
   const filteredAffiliates = useMemo(() => {
     const lowerQuery = searchQuery.toLowerCase();
     return affiliates.filter(a =>
-      a.name.toLowerCase().includes(lowerQuery) ||
-      a.referralCode.toLowerCase().includes(lowerQuery) ||
-      a.email.toLowerCase().includes(lowerQuery)
+      (a?.name || '').toLowerCase().includes(lowerQuery) ||
+      (a?.referralCode || '').toLowerCase().includes(lowerQuery) ||
+      (a?.email || '').toLowerCase().includes(lowerQuery)
     );
   }, [affiliates, searchQuery]);
 

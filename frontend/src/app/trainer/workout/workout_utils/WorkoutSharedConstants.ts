@@ -37,8 +37,8 @@ export const INITIAL_EXERCISES: unknown[] = [
 export const WorkoutSchema = z.object({
   name: z.string().min(2, 'Name is required'),
   level: z.string(),
-  days: z.string().refine(val => !isNaN(Number(val)) && Number(val) > 0, { message: 'Must be a valid number > 0' }),
-  exercises: z.string().refine(val => !isNaN(Number(val)) && Number(val) > 0, { message: 'Must be a valid number > 0' }),
+  days: z.number().min(1, 'Must be a valid number > 0'),
+  exercises: z.number().min(1, 'Must be a valid number > 0'),
   focus: z.string().min(2, 'Focus area is required'),
   duration: z.string().min(2, 'Duration is required'),
   tags: z.string()
@@ -48,8 +48,8 @@ export type WorkoutFormValues = z.infer<typeof WorkoutSchema>;
 export const EMPTY_WORKOUT_FORM: WorkoutFormValues = { 
   name: '', 
   level: 'Beginner', 
-  days: '', 
-  exercises: '', 
+  days: 0 as any, 
+  exercises: 0 as any, 
   focus: '', 
   duration: '', 
   tags: '' 

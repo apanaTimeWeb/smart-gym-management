@@ -8,6 +8,7 @@ import { migrationsApi } from '@/app/superadmin/migrations/migrations_api/migrat
 import toast from 'react-hot-toast';
 import type { Tenant } from '@/app/superadmin/gyms/gyms_types/gyms_types';
 import type { GlobalAuditLog } from '@/app/superadmin/audit-logs/audit-logs_types/audit-logs_types';
+import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 type FetchState = 'idle' | 'loading' | 'success' | 'error';
 const CURRENT_SCHEMA_VERSION = 'v2.4.1';
 
@@ -21,6 +22,8 @@ export default function SystemClient() {
   const [auditLogs, setAuditLogs] = useState<GlobalAuditLog[]>([]);
   const [fetchState, setFetchState] = useState<FetchState>('idle');
   const [migratingTenants, setMigratingTenants] = useState<Record<string, boolean>>({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
 
   useEffect(() => {
     // Refetch on mount to load migration health and global audit logs
@@ -66,6 +69,9 @@ export default function SystemClient() {
     log.action?.toLowerCase().includes(logSearch.toLowerCase()) ||
     log.actorName?.toLowerCase().includes(logSearch.toLowerCase())
   );
+
+  const totalPages = Math.ceil(filteredLogs.length / ITEMS_PER_PAGE) || 1;
+  const paginatedLogs = filteredLogs.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   if (fetchState === 'loading' || fetchState === 'idle') {
     return <div className="flex h-96 items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
@@ -139,7 +145,10 @@ export default function SystemClient() {
                 type="text"
                 placeholder="Search logs..."
                 value={logSearch}
-                onChange={(e) => setLogSearch(e.target.value)}
+                onChange={(e) => {
+                  setLogSearch(e.target.value);
+                  setCurrentPage(1); // Reset page on search
+                }}
                 className="bg-card border border-border text-foreground text-sm rounded-lg pl-9 pr-4 py-2 focus:outline-none focus:border-border-focus"
               />
             </div>
@@ -149,45 +158,52 @@ export default function SystemClient() {
           </div>
         </div>
 
-        <div className="bg-card border border-border rounded-xl overflow-hidden">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-card border-b border-border text-secondary text-sm">
-                <th className="p-4 font-medium">Timestamp</th>
-                <th className="p-4 font-medium">Target</th>
-                <th className="p-4 font-medium">Actor</th>
-                <th className="p-4 font-medium">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {filteredLogs.map(log => (
-                <tr key={log.id} className="hover:bg-input transition-colors text-sm">
-                  <td className="p-4 text-secondary whitespace-nowrap">
-                    {new Date(log.timestamp).toLocaleString()}
-                  </td>
-                  <td className="p-4 text-primary font-medium">
-                    {log.targetResource}
-                  </td>
-                  <td className="p-4">
-                    <p className="text-foreground">{log.actorName}</p>
-                    <span className="text-xs text-disabled bg-border px-2 py-0.5 rounded mt-1 inline-block">{log.actorRole}</span>
-                  </td>
-                  <td className="p-4">
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-info-bg text-info font-mono">
-                      {log.action}
-                    </span>
-                  </td>
+        <div className="bg-card border border-border rounded-xl overflow-hidden flex flex-col min-h-[400px]">
+          <div className="overflow-x-auto flex-1">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-card border-b border-border text-secondary text-sm">
+                  <th className="p-4 font-medium">Timestamp</th>
+                  <th className="p-4 font-medium">Target</th>
+                  <th className="p-4 font-medium">Actor</th>
+                  <th className="p-4 font-medium">Action</th>
                 </tr>
-              ))}
-              {filteredLogs.length === 0 && (
-                <tr>
-                  <td colSpan={4} className="p-8 text-center text-disabled">
-                    No logs found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {paginatedLogs.map(log => (
+                  <tr key={log.id} className="hover:bg-input transition-colors text-sm">
+                    <td className="p-4 text-secondary whitespace-nowrap">
+                      {new Date(log.timestamp).toLocaleString()}
+                    </td>
+                    <td className="p-4 text-primary font-medium">
+                      {log.targetResource}
+                    </td>
+                    <td className="p-4">
+                      <p className="text-foreground">{log.actorName}</p>
+                      <span className="text-xs text-disabled bg-border px-2 py-0.5 rounded mt-1 inline-block">{log.actorRole}</span>
+                    </td>
+                    <td className="p-4">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-info-bg text-info font-mono">
+                        {log.action}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+                {filteredLogs.length === 0 && (
+                  <tr>
+                    <td colSpan={4} className="p-8 text-center text-disabled">
+                      No logs found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+          <SuperadminPagination 
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
         </div>
       </div>
     </div>

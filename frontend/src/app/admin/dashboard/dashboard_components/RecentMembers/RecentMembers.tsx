@@ -6,10 +6,14 @@ import Link from 'next/link';
 import { Search } from 'lucide-react';
 import { useDashboardContext } from '@/app/admin/dashboard/dashboard_context/DashboardContext';
 import { RECENT_MEMBERS_HEADERS, DASHBOARD_STATUS_STYLES, formatCurrency } from '@/app/admin/dashboard/dashboard_utils/DashboardSharedConstants';
+import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
+
+const ITEMS_PER_PAGE = 5;
 
 export default function RecentMembers() {
   const { stats } = useDashboardContext();
   const [search, setSearch] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
 
   if (!stats) return null;
   const members = stats.recentMembers || [];
@@ -20,6 +24,9 @@ export default function RecentMembers() {
            planName.toLowerCase().includes(search.toLowerCase());
   });
 
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;
+  const paginated = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
   return (
     <div className="xl:col-span-2 rounded-xl shadow-sm border overflow-hidden bg-card border-border">
       <div className="px-6 py-4 flex flex-wrap items-center justify-between gap-3 border-b border-border">
@@ -29,7 +36,7 @@ export default function RecentMembers() {
             <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-secondary" />
             <input
               value={search}
-              onChange={e => setSearch(e.target.value)}
+              onChange={e => { setSearch(e.target.value); setCurrentPage(1); }}
               placeholder="Search members..."
               className="pl-8 pr-3 py-1.5 text-sm border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page w-40 sm:w-52 bg-input text-primary"
             />
@@ -48,7 +55,7 @@ export default function RecentMembers() {
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {filtered.map(m => {
+            {paginated.map(m => {
               const statusStyle = DASHBOARD_STATUS_STYLES[m.status] || { bg: 'bg-input', text: 'text-secondary' };
               return (
                 <tr key={m.id} className="transition-colors hover:bg-primary/5 bg-card">
@@ -85,6 +92,16 @@ export default function RecentMembers() {
           </tbody>
         </table>
       </div>
+      
+      {totalPages > 1 && (
+        <div className="border-t border-border mt-2 p-2">
+          <AdminPagination 
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </div>
+      )}
     </div>
   );
 }

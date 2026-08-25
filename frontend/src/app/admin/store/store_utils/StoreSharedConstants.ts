@@ -4,8 +4,8 @@ import { z } from 'zod';
 export const ProductSchema = z.object({
   name: z.string().min(2, "Name is required"),
   category: z.string(),
-  price: z.string().refine(val => val !== '' && !isNaN(Number(val)) && Number(val) >= 0, "Valid price is required"),
-  stock: z.string().refine(val => val !== '' && !isNaN(Number(val)) && Number(val) >= 0, "Valid stock is required"),
+  price: z.number().min(0, "Valid price is required"),
+  stock: z.number().min(0, "Valid stock is required"),
   description: z.string().optional()
 });
 
@@ -19,9 +19,9 @@ export const PAYMENT_METHODS = ['UPI', 'Cash', 'Card'];
 export const EMPTY_PRODUCT_FORM = { 
  name: '', 
  category: 'Supplements', 
- price: '' as unknown as number, 
- stock: '' as unknown as number, 
+ price: 0, 
+ stock: 0, 
  description: '' 
-} as unknown as ProductFormValues;
+};
 
 export const ERR_EMPTY_ORDER = 'Add items to order first';

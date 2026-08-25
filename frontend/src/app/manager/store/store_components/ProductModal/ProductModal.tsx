@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Form modal for creating or editing a gym store product in the Store module.
+// RESPONSIBILITY: Form modal for creating or editing a gym store product in the Store module.
 'use client';
 
 import { useEffect } from 'react';
@@ -28,8 +28,8 @@ export default function ProductModal() {
  });
 
  useEffect(() => {
-   if (showProductModal && editProductData) {
-     reset(editProductData);
+   if (showProductModal) {
+     reset({ ...EMPTY_PRODUCT_FORM, ...(editProductData || {}) });
    }
  }, [showProductModal, editProductData, reset]);
 
@@ -62,7 +62,7 @@ export default function ProductModal() {
  </label>
  <input 
  type={f.type} 
- {...register(f.key as keyof ProductFormValues)}
+ {...register(f.key as keyof ProductFormValues, f.type === 'number' ? { valueAsNumber: true } : {})}
  className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 ${
    errors[f.key as keyof ProductFormValues] ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-warning'
  } bg-input text-foreground`}
