@@ -33,8 +33,8 @@ export default function MemberModal() {
 
   // Refetch editData into form whenever modal opens for edit
   useEffect(() => {
-    if (showAddModal && editData) {
-      reset(editData);
+    if (showAddModal) {
+      reset({ ...EMPTY_MEMBER_FORM, ...(editData || {}) });
     }
   }, [showAddModal, editData, reset]);
 
