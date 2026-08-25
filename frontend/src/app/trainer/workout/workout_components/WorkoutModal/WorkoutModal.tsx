@@ -85,7 +85,7 @@ export default function WorkoutModal() {
                 type="number" 
                 min="1" 
                 max="7" 
-                {...register('days')}
+                {...register('days', { valueAsNumber: true })}
                 className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
                   errors.days ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-warning'
                 } bg-input text-foreground`} 
@@ -127,7 +127,7 @@ export default function WorkoutModal() {
               <input 
                 type="number" 
                 min="1" 
-                {...register('exercises')}
+                {...register('exercises', { valueAsNumber: true })}
                 className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
                   errors.exercises ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-warning'
                 } bg-input text-foreground`} 

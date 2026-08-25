@@ -101,7 +101,7 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
  setEditExData({ 
  name: ex.name, 
  category: ex.category, 
- muscleGroup: ex.muscleGroup.join(', '), 
+ muscleGroup: ex.muscleGroup?.join(', '), 
  sets: ex.sets ? String(ex.sets) : '', 
  reps: ex.reps || '', 
  duration: ex.duration || '', 
@@ -166,7 +166,7 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
  carbs: d.carbs ? String(d.carbs) : '', 
  fats: d.fats ? String(d.fats) : '', 
  description: d.description || '', 
- meals: d.meals.join('\n') 
+ meals: d.meals?.join('\n') 
  });
  setShowDietModal(true);
  }, []);

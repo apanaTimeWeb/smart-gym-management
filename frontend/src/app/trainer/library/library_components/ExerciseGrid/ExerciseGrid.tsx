@@ -66,7 +66,7 @@ export default function ExerciseGrid() {
             </div>
             
             <div className="text-xs text-secondary space-y-1 mt-auto">
-              <p>💪 {ex.muscleGroup.join(', ')}</p>
+              <p>💪 {ex.muscleGroup?.join(', ')}</p>
               {ex.sets && <p>📊 {ex.sets} sets × {ex.reps} reps</p>}
               {ex.duration && <p className="flex items-center gap-1"><Clock size={12} /> {ex.duration}</p>}
             </div>

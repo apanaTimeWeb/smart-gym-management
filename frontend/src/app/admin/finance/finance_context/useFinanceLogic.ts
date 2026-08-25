@@ -84,7 +84,10 @@ export function useFinanceLogic(initialData?: FinanceInitialData | null): Financ
         memberId: data.memberId, 
         amount: Number(data.amount), 
         method: data.method, 
-        notes: data.notes 
+        notes: data.notes,
+        paidAt: new Date().toISOString(),
+        status: 'PAID',
+        invoiceNo: 'INV-' + Math.floor(Math.random() * 10000)
       }) as { message?: string };
       showToast(res.message || 'Payment created successfully', 'success');
       setShowModal(false);

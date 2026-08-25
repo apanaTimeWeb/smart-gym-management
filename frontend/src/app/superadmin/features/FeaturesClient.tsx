@@ -6,10 +6,31 @@ import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { ToggleLeft, Send, Search } from 'lucide-react';
 import { useState } from 'react';
 import type { FeatureFlag, ReleaseNote } from '@/app/superadmin/features/features_types/features_types';
+import { featuresApi } from '@/app/superadmin/features/features_api/features_api';
+import toast from 'react-hot-toast';
 
 export default function FeaturesClient() {
   const [activeTab, setActiveTab] = useState<'FLAGS' | 'NOTES'>('FLAGS');
+  const [noteForm, setNoteForm] = useState({ version: '', title: '', content: '' });
+  const [isPublishing, setIsPublishing] = useState(false);
   const { data, fetchState, error, setData } = useFeaturesData();
+
+  const handlePublishNote = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsPublishing(true);
+    try {
+      const res = await featuresApi.createNote({ ...noteForm, isPublished: true, date: new Date().toISOString() });
+      if (res.data) {
+        setData((prev: any) => prev ? { ...prev, notes: [res.data, ...prev.notes] } : prev);
+        setNoteForm({ version: '', title: '', content: '' });
+        toast.success('Release note published successfully');
+      }
+    } catch (err: any) {
+      toast.error('Failed to publish release note');
+    } finally {
+      setIsPublishing(false);
+    }
+  };
 
   if (fetchState === 'loading') return <div className="p-8 text-center text-disabled">Loading...</div>;
   if (error || !data) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
@@ -113,28 +134,28 @@ export default function FeaturesClient() {
           </div>
           
           <div>
-            <div className="bg-card border border-border rounded-xl p-6 sticky top-24">
+            <form onSubmit={handlePublishNote} className="bg-card border border-border rounded-xl p-6 sticky top-24">
               <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
                 <Send size={18} className="text-primary" /> Compose Release Note
               </h3>
               <div className="space-y-4">
                 <div>
                   <label className="text-xs font-medium text-secondary mb-1 block">Version Tag</label>
-                  <input type="text" placeholder="e.g. v2.6.1" className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground" />
+                  <input type="text" placeholder="e.g. v2.6.1" required value={noteForm.version} onChange={e => setNoteForm({...noteForm, version: e.target.value})} className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground" />
                 </div>
                 <div>
                   <label className="text-xs font-medium text-secondary mb-1 block">Title</label>
-                  <input type="text" placeholder="Feature announcement..." className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground" />
+                  <input type="text" placeholder="Feature announcement..." required value={noteForm.title} onChange={e => setNoteForm({...noteForm, title: e.target.value})} className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground" />
                 </div>
                 <div>
                   <label className="text-xs font-medium text-secondary mb-1 block">Content (Markdown supported)</label>
-                  <textarea rows={5} className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground resize-none" placeholder="We just shipped..."></textarea>
+                  <textarea rows={5} required value={noteForm.content} onChange={e => setNoteForm({...noteForm, content: e.target.value})} className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground resize-none" placeholder="We just shipped..."></textarea>
                 </div>
-                <button className="w-full bg-primary text-white py-2.5 rounded-lg font-medium hover:bg-primary-hover transition-colors">
-                  Publish to All Gyms
+                <button type="submit" disabled={isPublishing} className="w-full bg-primary text-white py-2.5 rounded-lg font-medium hover:bg-primary-hover transition-colors disabled:opacity-70">
+                  {isPublishing ? 'Publishing...' : 'Publish to All Gyms'}
                 </button>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       )}

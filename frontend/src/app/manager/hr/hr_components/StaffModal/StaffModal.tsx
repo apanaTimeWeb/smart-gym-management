@@ -3,7 +3,7 @@
 
 import { useEffect } from 'react';
 import { useHrContext } from '@/app/manager/hr/hr_context/HrContext';
-import { STAFF_MODAL_FIELDS, GENDER_OPTIONS, BRANCH_OPTIONS, StaffSchema, type StaffFormValues } from '@/app/manager/hr/hr_utils/HrSharedConstants';
+import { STAFF_MODAL_FIELDS, EMPTY_STAFF, GENDER_OPTIONS, BRANCH_OPTIONS, StaffSchema, type StaffFormValues } from '@/app/manager/hr/hr_utils/HrSharedConstants';
 import { X, Save } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -25,7 +25,7 @@ export default function StaffModal() {
 
  useEffect(() => {
    if (showModal && editData) {
-     reset(editData as StaffFormValues);
+     reset({ ...EMPTY_STAFF, ...(editData || {}) } as StaffFormValues);
    }
  }, [showModal, editData, reset]);
 

@@ -38,7 +38,7 @@ export default function BroadcastsTable({ broadcasts, onSend, onEdit, onDelete }
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-primary-subtle text-primary border border-primary/20">
-                    {bc.audience.replace('_', ' ')}
+                    {(bc.audience || '').replace('_', ' ')}
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">

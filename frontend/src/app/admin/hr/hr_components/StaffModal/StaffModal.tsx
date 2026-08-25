@@ -3,7 +3,7 @@
 
 import { useEffect } from 'react';
 import { useHrContext } from '@/app/admin/hr/hr_context/HrContext';
-import { STAFF_MODAL_FIELDS, GENDER_OPTIONS, BRANCH_OPTIONS, StaffSchema, type StaffFormValues } from '@/app/admin/hr/hr_utils/HrSharedConstants';
+import { STAFF_MODAL_FIELDS, EMPTY_STAFF, GENDER_OPTIONS, BRANCH_OPTIONS, StaffSchema, type StaffFormValues } from '@/app/admin/hr/hr_utils/HrSharedConstants';
 import { X, Save, Eye, EyeOff } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { useState } from 'react';
@@ -27,7 +27,7 @@ import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 
  useEffect(() => {
    if (showModal && editData) {
-     reset(editData as StaffFormValues);
+     reset({ ...EMPTY_STAFF, ...(editData || {}) } as StaffFormValues);
    }
  }, [showModal, editData, reset]);
 

@@ -19,9 +19,9 @@ export const PAYMENT_METHODS = ['UPI', 'Cash', 'Card'];
 export const EMPTY_PRODUCT_FORM = { 
  name: '', 
  category: 'Supplements', 
- price: '' as unknown as number, 
- stock: '' as unknown as number, 
+ price: 0, 
+ stock: 0, 
  description: '' 
-} as unknown as ProductFormValues;
+};
 
 export const ERR_EMPTY_ORDER = 'Add items to order first';

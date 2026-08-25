@@ -8,6 +8,9 @@ export const MemberSchema = z.object({
   phone: z.string().min(10, "Phone number must be at least 10 digits"),
   address: z.string().optional(),
   gender: z.enum(['MALE', 'FEMALE', 'OTHER']),
+  planId: z.string().min(1, "Please select a plan").optional(),
+  amount: z.number().min(0, "Amount must be valid").optional(),
+  joinDate: z.string().optional(),
 });
 
 export type MemberFormValues = z.infer<typeof MemberSchema>;

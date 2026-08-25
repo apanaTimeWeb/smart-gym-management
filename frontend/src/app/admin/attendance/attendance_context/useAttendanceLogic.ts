@@ -74,7 +74,7 @@ export function useAttendanceLogic(): AttendanceContextType {
       const [attRes, statsRes, memRes, staffRes] = await Promise.all([
         attendanceApi.getAll(params) as unknown as Promise<ApiResponse<AttendanceResponse>>,
         attendanceApi.getTodayStats() as unknown as Promise<ApiResponse<AttendanceStatsResponse>>,
-        membersApi.getAll({ limit: '1000' }) as unknown as Promise<ApiResponse<{ members: Member[] }>>,
+        membersApi.getAll({ limit: '1000', status: 'ACTIVE' }) as unknown as Promise<ApiResponse<{ members: Member[] }>>,
         hrApi.getStaff() as unknown as Promise<ApiResponse<{ staff: Staff[] } | Staff[]>>,
       ]);
 
@@ -100,10 +100,11 @@ export function useAttendanceLogic(): AttendanceContextType {
     try {
       const dateTime = new Date(`${data.date}T${data.checkIn}:00`);
       
-      const payload: { memberId?: string; staffId?: string; date: string; checkIn?: string; type: string } = { 
+            const payload: any = { 
         type: data.type, 
-        date: dateTime.toISOString(), 
-        checkIn: dateTime.toISOString() 
+        date: dateTime.toISOString().split('T')[0], 
+        status: 'PRESENT',
+        checkIn: dateTime.toISOString(),
       };
       
       if (data.type === 'MEMBER') {
