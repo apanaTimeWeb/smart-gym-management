@@ -173,9 +173,8 @@ export async function routeMockRequest<T>(
   // For features and migrations, which return compound objects in GET, we let GET bypass or handle specifically.
   if (path.includes('/superadmin/features')) {
     if (method === 'GET') {
-      const flags = MockDB.getCollection('mock_flags', generate(4, i => ({ id: lag-, name: Beta_Feature_, description: 'A beta feature', isGlobalEnabled: true, enabledTenantIds: [] })));
-      const notes = MockDB.getCollection('mock_notes', generate(3, i => ({ id: 
-ote-, version: 1., title: Update , content: 'Feature update.', isPublished: true, date: '2023-11-01' })));
+      const flags = MockDB.getCollection('mock_flags', generate(4, i => ({ id: `flag-${i}`, name: `Beta_Feature_${i}`, description: 'A beta feature', isGlobalEnabled: true, enabledTenantIds: [] })));
+      const notes = MockDB.getCollection('mock_notes', generate(3, i => ({ id: `note-${i}`, version: `v1.${i}`, title: `Update ${i}`, content: 'Feature update.', isPublished: true, date: '2023-11-01' })));
       return { success: true, message: 'Fetched features compound data', data: { flags, notes } } as unknown as ApiResponse<T>;
     }
     if (path.includes('/notes')) return MockDB.handleCrud('mock_notes', method, path, body, []) as unknown as ApiResponse<T>;

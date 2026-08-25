@@ -174,7 +174,7 @@ export default function MemberModal() {
               <input
                 type="date"
                 {...register('joinDate')}
-                className={w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-colors }
+                className="w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-colors"
               />
             </div>
             <div>
@@ -182,7 +182,7 @@ export default function MemberModal() {
               <input
                 type="number"
                 {...register('amount', { valueAsNumber: true })}
-                className={w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-colors }
+                className="w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-colors"
               />
             </div>
           </div>

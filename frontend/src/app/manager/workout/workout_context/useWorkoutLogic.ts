@@ -78,8 +78,8 @@ export function useWorkoutLogic(): WorkoutContextType {
     setWkForm({ 
       name: w.name, 
       level: w.level, 
-      days: String(w.days), 
-      exercises: String(w.exercises), 
+      days: w.days, 
+      exercises: w.exercises, 
       focus: w.focus, 
       duration: w.duration, 
       tags: w.tags.join(', ') 
