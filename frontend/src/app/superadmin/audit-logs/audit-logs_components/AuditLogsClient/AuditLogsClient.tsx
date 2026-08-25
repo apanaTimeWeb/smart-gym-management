@@ -118,7 +118,7 @@ export default function AuditLogsClient() {
             </thead>
             <tbody className="divide-y divide-border">
               {logs.map((log) => (
-                <tr key={log.id} className="hover:bg-primary/5 transition-colors group cursor-pointer">
+                <tr key={log.id} className="hover:bg-primary/5 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary truncate">
                     {new Date(log.timestamp).toLocaleString()}
                   </td>

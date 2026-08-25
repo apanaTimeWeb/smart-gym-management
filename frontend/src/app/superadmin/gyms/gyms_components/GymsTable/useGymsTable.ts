@@ -38,8 +38,8 @@ export function useGymsTable() {
     fetchGyms();
   }, [fetchGyms]);
 
-  const handleRowClick = (gymName: string) => {
-    toast(`Opening details for ${gymName}`, { icon: 'ℹ️' });
+  const handleRowClick = (gym: Tenant) => {
+    openEditModal(gym);
   };
 
   const onGhostLoginClick = (e: React.MouseEvent, gymId: string, gymName: string) => {

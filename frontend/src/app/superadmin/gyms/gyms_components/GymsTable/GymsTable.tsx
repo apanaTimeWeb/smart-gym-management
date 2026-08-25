@@ -65,7 +65,7 @@ export default function GymsTable() {
             return (
               <tr 
                 key={gym.id} 
-                onClick={() => handleRowClick(gym.name)}
+                onClick={() => handleRowClick(gym)}
                 className="hover:bg-card/50 transition-all duration-200 ease-in-out group cursor-pointer"
               >
                 <td className="p-4 max-w-48">

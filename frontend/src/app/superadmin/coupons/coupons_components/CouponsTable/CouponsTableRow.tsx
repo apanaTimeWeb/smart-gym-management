@@ -14,7 +14,10 @@ interface CouponsTableRowProps {
 
 export default function CouponsTableRow({ coupon: cpn, onToggleStatus, onEdit, onDelete, onRestore }: CouponsTableRowProps) {
   return (
-    <tr className={`hover:bg-primary/5 transition-all duration-200 ease-in-out group cursor-pointer ${cpn.isDeleted ? 'opacity-50 grayscale' : ''}`}>
+    <tr 
+      className={`hover:bg-primary/5 transition-all duration-200 ease-in-out group cursor-pointer ${cpn.isDeleted ? 'opacity-50 grayscale' : ''}`}
+      onClick={() => { if (!cpn.isDeleted) onEdit(cpn); }}
+    >
       <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-foreground tracking-wide">
         {cpn.code}
         {cpn.isDeleted && <span className="ml-2 text-xs bg-destructive/20 text-destructive px-2 py-0.5 rounded-full">DELETED</span>}
