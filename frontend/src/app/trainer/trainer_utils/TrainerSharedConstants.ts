@@ -1,8 +1,6 @@
 // RESPONSIBILITY: Centralized constants shared across all TRAINER modules — nav items, placeholder notifications, gym identity (name/phone), sensitive data masking utility, and pagination page size.
 import {
- LayoutDashboard, Users, ClipboardList, BarChart2,
- UserCog, ShoppingBag, DollarSign, Utensils, Dumbbell,
- MessageSquare, Settings, CalendarCheck, Shield
+  LayoutDashboard, Users, Utensils, Dumbbell, CalendarCheck
 } from 'lucide-react';
 
 export const TRAINER_NAV_ITEMS = [

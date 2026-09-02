@@ -337,21 +337,45 @@ Always show a modal before executing: Delete, Soft-Delete, Blacklist, Suspend, M
 
 ---
 
-## 9. ICONS
+## 9. ICON DICTIONARY & STYLING (Elite SaaS Standard)
 
-> **CRITICAL RULE:** Emojis used throughout this document (📊, ✅, 🔴, 🎓, etc.) are strictly shorthand for human readability in this documentation. Actual implementation MUST use the corresponding **Lucide icon component**, NEVER a raw emoji character in JSX.
+> **CRITICAL RULE:** Emojis used in this document (📊, ✅, 🔴, 🎓, etc.) are strictly shorthand for human readability. Actual implementation MUST use the **exact Lucide icon component** specified below. NEVER mix icon families.
 
-Use **Lucide Icons** (tree-shakeable, consistent style). Key icons:
-- 🏋️ Members: `Users`, `UserPlus`, `UserCheck`, `UserX`
-- 🏋️‍♂️ Equipment & Lockers: `Dumbbell`, `BicepsFlexed`, `Activity`, `Lock`
-- 💰 Finance: `IndianRupee`, `Receipt`, `CreditCard`, `Wallet`
-- 📅 Dates & Classes: `Calendar`, `CalendarDays`, `Clock`
-- 🔔 Alerts: `Bell`, `BellRing`, `AlertTriangle`
-- 📊 Reports: `BarChart2`, `LineChart`, `PieChart`, `TrendingUp`
-- ⚙️ Admin: `Settings`, `Shield`, `Key`, `Sliders`
-- 📤 Actions: `Upload`, `Download`, `FileText`, `Printer`
-- 💬 Comms: `MessageSquare`, `Phone`, `Mail`, `Smartphone`
-- ✅ Status: `CheckCircle`, `XCircle`, `Clock`, `AlertCircle`
+### 9a. Icon Styling Rules
+To achieve Linear/Stripe-level premium feel, icons must be uniform:
+- **Size:** `size={18}` (18px is the sweet spot; do not use 16px or 24px).
+- **Weight:** `strokeWidth={2}` (Never mix 1.5 and 2).
+- **Default State:** `text-zinc-400`
+- **Hover State:** `text-white`
+- **Active State:** `text-yellow-400` (Gold)
+
+### 9b. The Fixed Page-by-Page Dictionary
+Never guess the icon. Use this exact mapping:
+
+| Module / Page | Lucide Icon | Rationale |
+|---|---|---|
+| **Dashboard** | `LayoutDashboard` | Instantly recognizable structure |
+| **Reports** | `FileBarChart` | Better than generic charts |
+| **All Members** | `Users` | Standard |
+| **New Membership** | `UserPlus` | Standard |
+| **Ex-Members** | `UserMinus` | `UserX` implies a ban/error |
+| **Referral Bonus** | `Gift` | Psychologically rewarding |
+| **Lockers** | `Lock` | Standard |
+| **Locker Matrix** | `Grid3X3` | Matrix = visualization |
+| **Batches** | `Clock` | Time-based groups |
+| **Batch Migration** | `ArrowRightLeft` | Indicates movement |
+| **Attendance** | `CalendarCheck` | Better than generic calendar |
+| **QR Scanner** | `ScanLine` | Modern physical feel |
+| **Collect Fee** | `IndianRupee` | Currency specific |
+| **Payments** | `Wallet` | Standard |
+| **Refunds** | `Undo2` | Clear reversal |
+| **Trust Scores** | `ShieldCheck` | Trust = Security, not trophies |
+| **Complaints** | `MessageSquareWarning` / `TriangleAlert` | Clear escalation |
+| **Audit Logs** | `History` | Enterprise tracking |
+| **Backups** | `DatabaseBackup` | Data safety |
+| **Settings** | `Settings` | Standard |
+
+> 🚫 **DO NOT ABUSE THE DUMBBELL ICON:** Use `Dumbbell` ONLY for Workout/Equipment specific modules. Using it for members or CRM looks amateur.
 
 ---
 
