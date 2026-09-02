@@ -35,6 +35,7 @@
 | `--warning` | `#FBBF24` (WCAG pass) | `#451A03` | Pending / Expiring / Held |
 | `--danger` | `#F87171` (WCAG pass) | `#450A0A` | Overdue / Suspended / Broken |
 | `--info` | `#60A5FA` | `#1E3A5F` | New / Neutral |
+| `--purple` | `#C084FC` | `#3B0764` | Ex-Members / Alumni / Custom Tags |
 
 ### Payment Mode Colors (Separated to avoid status collision)
 | Token | Text Color | Background Color | Usage |
@@ -514,7 +515,7 @@ Enterprise users have different preferences for how much data fits on a screen.
 ## 23. DRAG & DROP INTERACTION PATTERN
 - **Library:** Use `@dnd-kit/core`.
 - **Dragging Item State:** `opacity: 0.5`, `cursor: grabbing`, subtle scale up `scale-105`.
-- **Valid Drop Target:** `border: 2px dashed var(--primary)`, background `rgba(99,102,241,0.08)`.
+- **Valid Drop Target:** `border: 2px dashed var(--primary)`, background `rgba(250,204,21,0.08)`.
 - **Invalid Drop Target:** `border: 2px dashed var(--danger)`.
 - **Animation:** After drop, use a smooth snap animation (`transition: transform 200ms ease`).
 
