@@ -52,6 +52,9 @@ export default function MembersTable() {
                     className="hover:bg-primary/5 transition-colors cursor-pointer"
                     onClick={() => { setSelectedMember(m); loadMemberProfile(m.id); }}
                   >
+                    <td className="px-5 py-3.5 text-sm text-secondary font-medium whitespace-nowrap">
+                      #{m.id.split('-').pop()?.substring(0, 5) || m.id.substring(0, 5)}
+                    </td>
                     <td className="px-5 py-3.5 whitespace-nowrap">
                       <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm bg-primary/10 text-primary shrink-0">
@@ -87,7 +90,7 @@ export default function MembersTable() {
                 )})}
                 {members.length === 0 && fetchState === 'success' && (
                   <tr>
-                    <td colSpan={8} className="p-0 border-b-0">
+                    <td colSpan={9} className="p-0 border-b-0">
                       <MembersEmptyState isFiltered={Boolean(search || statusFilter !== 'All')} />
                     </td>
                   </tr>

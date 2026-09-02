@@ -110,8 +110,8 @@ export default function MembersTable() {
                 )})}
                 {members.length === 0 && fetchState === 'success' && (
                   <tr>
-                    <td colSpan={8} className="p-0 border-b-0">
-                      <MembersEmptyState isFiltered={Boolean(search || statusFilter !== 'All')} />
+                    <td colSpan={9} className="p-0 border-b-0">
+                      <MembersEmptyState isFiltered={Boolean(search || statusFilter !== 'All' || selectedBranchId !== 'all')} />
                     </td>
                   </tr>
                 )}
