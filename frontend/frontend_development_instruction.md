@@ -244,5 +244,14 @@ Tailwind does not automatically make things responsive. Every component must be 
 - No component is considered complete unless explicitly checked at all three breakpoints (375px, 768px, 1280px+). 
 - Specific Mobile Patterns: KPI card rows must switch to horizontal scrolling or a 2-column grid on mobile. Charts must have reduced height and simplified/collapsed legends on mobile.
 
+69. **Hardened Numeric Inputs (Prevent Negative/Invalid Inputs)**:
+Never use a naked `<input type="number">` for quantities, prices, or ages without explicit validation. You MUST add a `min="0"` (or appropriate lower bound) AND an `onKeyDown` handler to mechanically block invalid characters like `-`, `e`, and `+` if they don't make business sense (e.g., `onKeyDown={(e) => { if (e.key === '-' || e.key === 'e') e.preventDefault(); }}`).
+
+70. **Strict Optimistic UI Data Replacement (No Undefined Rows)**:
+When implementing optimistic UI updates (adding a new row to a table before the API returns), you MUST use the backend's response (`res.data`) to finalize the state. Never permanently rely on the raw frontend form data for the new row, as it lacks backend-generated IDs, timestamps, and default fields. Failing to replace the optimistic row with `res.data` upon success will result in "undefined" columns and broken subsequent edit/delete actions.
+
+71. **Explicit API Parameter Propagation (Filters & Pagination)**:
+Never assume UI state magically filters backend data. Custom hooks (`use[Module]Logic`) MUST explicitly extract all relevant values (e.g., `debouncedSearch`, `page`, `limit`, `statusFilter`) from state or URL query parameters, construct a `params` object, and pass it directly to the API wrapper. If you forget to pass `params` to the API call, the UI search box will appear broken to the user.
+
 ---
 Think step-by-step. Create a detailed implementation plan first so I can review it, and then execute it perfectly without breaking existing data flows!
