@@ -100,14 +100,14 @@ export const useMembersStore = create<MembersState>((set, get) => ({
     try {
       if (editId) {
         const res = await membersApi.update(editId, data);
+        const updatedMem = res.data || data;
         set((state) => ({
-          members: state.members.map(m => String(m.id) === String(editId) ? { ...m, ...data } as unknown as Member : m)
+          members: state.members.map(m => String(m.id) === String(editId) ? { ...m, ...updatedMem } as unknown as Member : m)
         }));
         return { success: true, message: res.message || 'Updated successfully' };
       } else {
-        const newId = Math.random().toString();
         const res = await membersApi.create({ ...data, joinDate: new Date().toISOString() });
-        const newMember = { ...data, id: newId, status: 'ACTIVE', joinDate: new Date().toISOString(), planName: 'Basic', pendingAmount: 0 } as unknown as Member;
+        const newMember = res.data ? res.data : { ...data, id: Math.random().toString(), status: 'ACTIVE', joinDate: new Date().toISOString(), planName: 'Basic', pendingAmount: 0 } as unknown as Member;
         set((state) => ({
           members: [newMember, ...state.members],
           totalMembers: state.totalMembers + 1

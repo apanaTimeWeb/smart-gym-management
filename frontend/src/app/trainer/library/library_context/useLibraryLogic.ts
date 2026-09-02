@@ -122,12 +122,13 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
  };
  
  if (editExId) { 
- const res = await libraryApi.updateExercise(editExId, payload) as unknown as { message?: string }; 
- setExercises(prev => prev.map(e => String(e.id) === String(editExId) ? { ...e, ...payload } as unknown as Exercise : e));
+ const res = await libraryApi.updateExercise(editExId, payload as unknown as Partial<Exercise>) as any; 
+ const updatedEx = res.data || payload;
+ setExercises(prev => prev.map(e => String(e.id) === String(editExId) ? { ...e, ...updatedEx } as unknown as Exercise : e));
  showToast(res.message || 'Exercise updated successfully', 'success'); 
  } else { 
- const res = await libraryApi.createExercise(payload) as unknown as { message?: string }; 
- const newEx = { ...payload, id: Math.random().toString(), isActive: true } as unknown as Exercise;
+ const res = await libraryApi.createExercise(payload as unknown as Partial<Exercise>) as any; 
+ const newEx = res.data ? res.data : { ...payload, id: Math.random().toString(), isActive: true } as unknown as Exercise;
  setExercises(prev => [newEx, ...prev]);
  showToast(res.message || 'Exercise created successfully', 'success'); 
  }
@@ -185,16 +186,17 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
  meals: data.meals ? data.meals.split('\n').map((s: string) => s.trim()).filter(Boolean) : [] 
  };
  
- if (editDietId) { 
- const res = await libraryApi.updateDietPlan(editDietId, payload) as unknown as { message?: string }; 
- setDietPlans(prev => prev.map(d => String(d.id) === String(editDietId) ? { ...d, ...payload } as unknown as DietPlan : d));
- showToast(res.message || 'Diet plan updated', 'success'); 
- } else { 
- const res = await libraryApi.createDietPlan(payload) as unknown as { message?: string }; 
- const newDiet = { ...payload, id: Math.random().toString(), isActive: true } as unknown as DietPlan;
- setDietPlans(prev => [newDiet, ...prev]);
- showToast(res.message || 'Diet plan created', 'success'); 
- }
+  if (editDietId) { 
+  const res = await libraryApi.updateDietPlan(editDietId, payload as unknown as Partial<DietPlan>) as any; 
+  const updatedDiet = res.data || payload;
+  setDietPlans(prev => prev.map(d => String(d.id) === String(editDietId) ? { ...d, ...updatedDiet } as unknown as DietPlan : d));
+  showToast(res.message || 'Diet plan updated', 'success'); 
+  } else { 
+  const res = await libraryApi.createDietPlan(payload as unknown as Partial<DietPlan>) as any; 
+  const newDiet = res.data ? res.data : { ...payload, id: Math.random().toString(), isActive: true } as unknown as DietPlan;
+  setDietPlans(prev => [newDiet, ...prev]);
+  showToast(res.message || 'Diet plan created', 'success'); 
+  }
  setShowDietModal(false);
  } catch (err) { 
  showToast((err as Error).message, 'error'); 
