@@ -61,6 +61,7 @@ export const useCouponsPage = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeKpi, setActiveKpi] = useState<'ALL' | 'ACTIVE' | 'REDEEMED'>('ALL');
 
   const form = useForm<CouponFormData>({
     resolver: zodResolver(CouponSchema),
@@ -135,17 +136,23 @@ export const useCouponsPage = () => {
     () => coupons.reduce((sum, c) => sum + c.currentUses, 0),
     [coupons]
   );
+  const totalCoupons = useMemo(() => coupons.length, [coupons]);
 
   const filteredCoupons = useMemo(() => {
     const lowerQuery = searchQuery.toLowerCase();
     return [...coupons]
+      .filter(c => {
+        if (activeKpi === 'ACTIVE') return c.status === 'ACTIVE' && !c.isDeleted;
+        if (activeKpi === 'REDEEMED') return c.currentUses > 0;
+        return true;
+      })
       .sort((a, b) => {
         if (a.isDeleted && !b.isDeleted) return 1;
         if (!a.isDeleted && b.isDeleted) return -1;
         return 0;
       })
       .filter(c => c.code.toLowerCase().includes(lowerQuery));
-  }, [coupons, searchQuery]);
+  }, [coupons, searchQuery, activeKpi]);
 
   return {
     fetchState,
@@ -168,5 +175,8 @@ export const useCouponsPage = () => {
     handleDeleteCoupon,
     handleToggleRestore,
     handleToggleStatus,
+    activeKpi,
+    setActiveKpi,
+    totalCoupons,
   };
 };

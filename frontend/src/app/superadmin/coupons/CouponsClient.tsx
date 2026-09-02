@@ -30,6 +30,9 @@ export default function CouponsClient() {
     handleDeleteCoupon,
     handleToggleRestore,
     handleToggleStatus,
+    activeKpi,
+    setActiveKpi,
+    totalCoupons,
   } = useCouponsPage();
 
   if (fetchState === 'loading') return (
@@ -54,6 +57,9 @@ export default function CouponsClient() {
       <CouponsStatsBar
         activeCoupons={activeCoupons}
         totalRedeemed={totalRedeemed}
+        totalCoupons={totalCoupons}
+        activeKpi={activeKpi}
+        onKpiClick={setActiveKpi}
       />
 
       {coupons.length === 0 ? (
