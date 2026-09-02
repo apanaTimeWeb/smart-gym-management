@@ -112,6 +112,7 @@ export default function MemberModal() {
               <label className="block text-sm font-medium text-secondary mb-1">Amount Paid (?)</label>
               <input
                 type="number"
+                min="0"
                 {...register('amount', { valueAsNumber: true })}
                 className="w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-colors"
               />

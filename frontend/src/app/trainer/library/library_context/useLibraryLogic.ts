@@ -123,13 +123,15 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
  
  if (editExId) { 
  const res = await libraryApi.updateExercise(editExId, payload) as unknown as { message?: string }; 
+ setExercises(prev => prev.map(e => String(e.id) === String(editExId) ? { ...e, ...payload } as unknown as Exercise : e));
  showToast(res.message || 'Exercise updated successfully', 'success'); 
  } else { 
  const res = await libraryApi.createExercise(payload) as unknown as { message?: string }; 
+ const newEx = { ...payload, id: Math.random().toString(), isActive: true } as unknown as Exercise;
+ setExercises(prev => [newEx, ...prev]);
  showToast(res.message || 'Exercise created successfully', 'success'); 
  }
- setShowExModal(false); 
- await loadAll();
+ setShowExModal(false);
  } catch (err) { 
  showToast((err as Error).message, 'error'); 
  } finally { 
@@ -142,8 +144,8 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
    if (!isConfirmed) return;
    try { 
  const res = await libraryApi.removeExercise(id) as unknown as { message?: string }; 
+ setExercises(prev => prev.filter(e => String(e.id) !== String(id)));
  showToast(res.message || 'Exercise deleted', 'success'); 
- await loadAll(); 
  } catch (err) { 
  showToast((err as Error).message, 'error'); 
  }
@@ -185,13 +187,15 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
  
  if (editDietId) { 
  const res = await libraryApi.updateDietPlan(editDietId, payload) as unknown as { message?: string }; 
+ setDietPlans(prev => prev.map(d => String(d.id) === String(editDietId) ? { ...d, ...payload } as unknown as DietPlan : d));
  showToast(res.message || 'Diet plan updated', 'success'); 
  } else { 
  const res = await libraryApi.createDietPlan(payload) as unknown as { message?: string }; 
+ const newDiet = { ...payload, id: Math.random().toString(), isActive: true } as unknown as DietPlan;
+ setDietPlans(prev => [newDiet, ...prev]);
  showToast(res.message || 'Diet plan created', 'success'); 
  }
- setShowDietModal(false); 
- await loadAll();
+ setShowDietModal(false);
  } catch (err) { 
  showToast((err as Error).message, 'error'); 
  } finally { 
@@ -204,8 +208,8 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
    if (!isConfirmed) return;
   try { 
  const res = await libraryApi.removeDietPlan(id) as unknown as { message?: string }; 
+ setDietPlans(prev => prev.filter(d => String(d.id) !== String(id)));
  showToast(res.message || 'Diet plan deleted', 'success'); 
- await loadAll(); 
  } catch (err) { 
  showToast((err as Error).message, 'error'); 
  }

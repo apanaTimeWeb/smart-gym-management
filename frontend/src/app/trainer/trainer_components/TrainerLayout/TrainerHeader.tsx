@@ -12,6 +12,7 @@ import type { TrainerHeaderProps } from '@/app/trainer/trainer_components/Traine
 
 export default function TrainerHeader({ title, subtitle }: TrainerHeaderProps) {
   const [showNotifications, setShowNotifications] = useState(false);
+  const [notifications, setNotifications] = useState(TRAINER_PLACEHOLDER_NOTIFICATIONS);
   const [showProfile, setShowProfile] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
@@ -82,15 +83,31 @@ export default function TrainerHeader({ title, subtitle }: TrainerHeaderProps) {
                 <button onClick={() => setShowNotifications(false)} className="text-secondary hover:text-foreground"><X size={16} /></button>
               </div>
               <div className="max-h-75 overflow-y-auto">
-                {TRAINER_PLACEHOLDER_NOTIFICATIONS.map(n => (
-                  <div key={n.id} className={`px-4 py-3 border-b border-border hover:bg-input transition-colors cursor-pointer ${n.unread ? 'bg-primary-subtle' : ''}`}>
-                    <p className={`text-sm ${n.unread ? 'text-foreground font-medium' : 'text-secondary'}`}>{n.text}</p>
-                    <span className="text-xs text-secondary mt-1 block">{n.time}</span>
+                {notifications.length > 0 ? (
+                  notifications.map(n => (
+                    <div key={n.id} className={`group px-4 py-3 border-b border-border hover:bg-input transition-colors ${n.unread ? 'bg-primary-subtle' : ''}`}>
+                      <div className="flex justify-between items-start">
+                        <div className="cursor-pointer flex-1">
+                          <p className={`text-sm ${n.unread ? 'text-foreground font-medium' : 'text-secondary'}`}>{n.text}</p>
+                          <span className="text-xs text-secondary mt-1 block">{n.time}</span>
+                        </div>
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); setNotifications(prev => prev.filter(notif => notif.id !== n.id)); }}
+                          className="text-secondary hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity p-1"
+                        >
+                          <X size={14} />
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="px-4 py-6 text-center text-sm text-secondary">
+                    No new notifications
                   </div>
-                ))}
+                )}
               </div>
               <div className="p-3 text-center border-t border-border bg-header">
-                <button className="text-sm font-medium text-primary hover:underline">View All Notifications</button>
+                <button onClick={() => setShowNotifications(false)} className="text-sm font-medium text-primary hover:underline">View All Notifications</button>
               </div>
             </div>
           )}
