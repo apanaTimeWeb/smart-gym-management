@@ -121,12 +121,12 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
       };
       
       if (editExId) {
-        const res = await libraryApi.updateExercise(editExId, formattedData);
+        const res = await libraryApi.updateExercise(editExId, formattedData as unknown as Partial<Exercise>);
         const updatedEx = res.data || formattedData;
         setExercises(prev => prev.map(e => String(e.id) === String(editExId) ? { ...e, ...updatedEx } as unknown as Exercise : e));
         showToast(res.message || 'Exercise updated successfully', 'success');
       } else {
-        const res = await libraryApi.createExercise(formattedData);
+        const res = await libraryApi.createExercise(formattedData as unknown as Partial<Exercise>);
         const newEx = res.data ? res.data : { ...formattedData, id: `ex-${Date.now()}` } as unknown as Exercise;
         setExercises(prev => [newEx, ...prev]);
         showToast(res.message || 'Exercise created successfully', 'success');

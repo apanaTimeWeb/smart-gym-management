@@ -83,7 +83,6 @@ export default function WorkoutModal() {
               <label className="block text-sm font-medium text-secondary mb-1">Days per week</label>
               <input 
                 type="number"
-                min="0"
                 onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }}
                 min="1" 
                 max="7" 
@@ -128,7 +127,6 @@ export default function WorkoutModal() {
               <label className="block text-sm font-medium text-secondary mb-1">No. of Exercises</label>
               <input 
                 type="number"
-                min="0"
                 onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }}
                 min="1" 
                 {...register('exercises', { valueAsNumber: true })}

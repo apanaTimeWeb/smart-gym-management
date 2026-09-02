@@ -60,13 +60,13 @@ export default function SalesToolbar() {
       let filename = 'sales_report.csv';
       
       if (tab === 'Overview') {
-        csv = 'Month,Revenue\n' + overviewData.map(d => `${d.month},${d.revenue}`).join('\n');
+        csv = 'Date,Revenue\n' + overviewData.map(d => `${d.date},${d.revenue}`).join('\n');
         filename = 'overview.csv';
       } else if (tab === 'Membership Report') {
         csv = 'Plan,Receivable,Received,Remaining,Refund\n' + membershipReport.map(r => `${r.plan},${r.receivable},${r.received},${r.remaining},${r.refund}`).join('\n');
         filename = 'membership_report.csv';
       } else if (tab === 'Pending Payments') {
-        csv = 'Name,Phone,Due Amount,Due Date\n' + pendingPayments.map(p => `${p.name},${p.phone},${p.dueAmount},${p.dueDate}`).join('\n');
+        csv = 'Name,Phone,Pending Amount,Days Overdue\n' + pendingPayments.map(p => `${p.name},${p.phone},${p.pendingAmount},${p.daysOverdue}`).join('\n');
         filename = 'pending_payments.csv';
       } else if (tab === 'All Memberships') {
         csv = 'Name,Phone,Plan,Join Date\n' + allMemberships.map(m => `${m.name},${m.phone},${m.planId},${m.joinDate}`).join('\n');
