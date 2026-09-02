@@ -8,6 +8,7 @@ import InvoicesStatsBar from '@/app/superadmin/invoices/invoices_components/Invo
 import InvoicesTable from '@/app/superadmin/invoices/invoices_components/InvoicesTable/InvoicesTable';
 import InvoicesEmptyState from '@/app/superadmin/invoices/invoices_components/InvoicesEmptyState/InvoicesEmptyState';
 import InvoicesLogPaymentModal from '@/app/superadmin/invoices/invoices_components/InvoicesLogPaymentModal/InvoicesLogPaymentModal';
+import toast from 'react-hot-toast';
 
 export default function InvoicesClient() {
   const handleDownloadInvoice = (id: string) => {

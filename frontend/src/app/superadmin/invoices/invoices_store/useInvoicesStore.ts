@@ -54,14 +54,12 @@ export const useInvoicesStore = create<InvoicesState>((set, get) => ({
       // Simulate API call and locally append data to list (TC-25 fix)
       const newInvoice: SaaSInvoice = {
         id: `INV-${Math.floor(Math.random() * 100000)}`,
-        tenantId: data.gymId || 't-1',
         tenantName: get().tenants.find(t => t.id === data.gymId)?.name || 'Unknown Gym',
         amount: data.amount || 0,
+        currency: 'INR',
         status: 'PAID',
-        dueDate: new Date().toISOString(),
-        paidAt: new Date().toISOString(),
-        paymentMethod: data.paymentMethod || 'UPI',
-        invoiceUrl: '#'
+        date: new Date().toISOString(),
+        planName: data.planName || 'Custom Plan'
       };
 
       set(state => ({
