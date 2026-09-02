@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Centralized constants shared across all ADMIN modules — nav items, placeholder notifications, gym identity (name/phone), sensitive data masking utility, and pagination page size.
 import {
-  LayoutDashboard, Users, ClipboardList, FileBarChart,
+  LayoutDashboard, ClipboardList, FileBarChart,
   IndianRupee, History, Settings, Building2
 } from 'lucide-react';
 
@@ -8,7 +8,6 @@ import {
   { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/branches', label: 'Branches', icon: Building2 },
   { href: '/admin/plans', label: 'Plans', icon: ClipboardList },
-  { href: '/admin/members', label: 'Members', icon: Users },
   { href: '/admin/sales', label: 'Sales & Reports', icon: FileBarChart },
   { href: '/admin/finance', label: 'Finance', icon: IndianRupee },
   { href: '/admin/audit', label: 'Audit Logs', icon: History },

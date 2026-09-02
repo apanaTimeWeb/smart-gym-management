@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useSalesContext } from '@/app/admin/sales/sales_context/SalesContext';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 import SalesEmptyState from '@/app/admin/sales/sales_components/SalesEmptyState/SalesEmptyState';
-import type { Member } from '@/app/admin/members/members_types/members_types';
+import type { Member } from '@/app/admin/sales/sales_types/sales_types';
 import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_utils/AdminSharedConstants';
 
 const MEMBERSHIP_FILTERS = ['All', 'Active', 'Expiring Soon', 'Expired'] as const;

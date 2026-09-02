@@ -1,8 +1,15 @@
 // RESPONSIBILITY: Provides the implementation for sales_types.ts functionality within its module.
 import { type SalesTab, type DateFilter } from '@/app/admin/sales/sales_utils/SalesSharedConstants';
 import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
-import type { Member } from '@/app/admin/members/members_types/members_types';
-
+export interface Member {
+  id: string; name: string; email: string; phone: string;
+  gender: string; address?: string; branch: string;
+  planId: string; plan?: { id: string; name: string; tier: string };
+  billingCycle: string; status: string;
+  joinDate: string; expiryDate: string;
+  paidAmount: number; pendingAmount: number; photo?: string;
+  createdAt: string;
+}
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 
 export type PendingPaymentMember = Omit<Member, 'plan'> & {
