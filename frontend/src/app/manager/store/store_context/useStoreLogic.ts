@@ -124,10 +124,10 @@ export function useStoreLogic(initialData?: StoreInitialData | null): StoreConte
     setSaving(true);
     try {
       if (editProductId) {
-        setProducts(prev => prev.map(p => String(p.id) === String(editProductId) ? { ...p, ...data } as ProductFormValues : p));
+        setProducts(prev => prev.map(p => String(p.id) === String(editProductId) ? { ...p, ...data } as unknown as Product : p));
         showToast('Product updated successfully', 'success');
       } else {
-        const newProduct = { ...data, id: Math.random().toString(), sales: 0 } as ProductFormValues;
+        const newProduct = { ...data, id: Math.random().toString() } as unknown as Product;
         setProducts(prev => [newProduct, ...prev]);
         setSummary(prev => prev ? { ...prev, totalProducts: prev.totalProducts + 1 } : null);
         showToast('Product added successfully', 'success');
@@ -193,8 +193,7 @@ export function useStoreLogic(initialData?: StoreInitialData | null): StoreConte
           if (productIndex > -1) {
             nextProducts[productIndex] = {
               ...nextProducts[productIndex],
-              stock: Math.max(0, nextProducts[productIndex].stock - item.qty),
-              sales: (nextProducts[productIndex].sales || 0) + item.qty
+              stock: Math.max(0, nextProducts[productIndex].stock - item.qty)
             };
           }
         });
@@ -203,8 +202,7 @@ export function useStoreLogic(initialData?: StoreInitialData | null): StoreConte
 
       setSummary(prev => prev ? {
         ...prev,
-        todaySales: prev.todaySales + orderTotal,
-        monthlyRevenue: prev.monthlyRevenue + orderTotal,
+        totalRevenue: prev.totalRevenue + orderTotal,
         totalOrders: prev.totalOrders + 1
       } : null);
 

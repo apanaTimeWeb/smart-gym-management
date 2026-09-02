@@ -121,7 +121,6 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
       } else {
         const newEx = { ...data, id: Math.random().toString() } as unknown as Exercise;
         setExercises(prev => [newEx, ...prev]);
-        setSummary(prev => prev ? { ...prev, totalExercises: prev.totalExercises + 1 } : null);
         showToast('Exercise created successfully', 'success');
       }
       setShowExModal(false);
@@ -137,7 +136,6 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
     if (!isConfirmed) return;
     try {
       setExercises(prev => prev.filter(e => String(e.id) !== String(id)));
-      setSummary(prev => prev ? { ...prev, totalExercises: Math.max(0, prev.totalExercises - 1) } : null);
       showToast('Exercise deleted', 'success');
     } catch (err) {
       showToast((err as Error).message, 'error');
@@ -175,7 +173,6 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
       } else {
         const newDiet = { ...data, id: Math.random().toString() } as unknown as DietPlan;
         setDietPlans(prev => [newDiet, ...prev]);
-        setSummary(prev => prev ? { ...prev, totalDietPlans: prev.totalDietPlans + 1 } : null);
         showToast('Diet plan created successfully', 'success');
       }
       setShowDietModal(false);
@@ -191,7 +188,6 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
     if (!isConfirmed) return;
     try {
       setDietPlans(prev => prev.filter(d => String(d.id) !== String(id)));
-      setSummary(prev => prev ? { ...prev, totalDietPlans: Math.max(0, prev.totalDietPlans - 1) } : null);
       showToast('Diet plan deleted', 'success');
     } catch (err) {
       showToast((err as Error).message, 'error');
