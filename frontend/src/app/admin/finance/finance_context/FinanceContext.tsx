@@ -20,7 +20,8 @@ export function FinanceProvider({ children, initialData }: { children: React.Rea
    logic.toast,
    logic.showModal,
    logic.search,
-   logic.currentPage
+   logic.currentPage,
+   logic.methodFilter
  ]);
 
  return (

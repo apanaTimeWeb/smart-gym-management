@@ -1,8 +1,7 @@
 // RESPONSIBILITY: Provides strongly-typed network calls for the sales module.
 import { apiFetch, ApiResponse } from '@/lib/api';
 import { SalesUrlConfig } from '@/app/admin/sales/sales_url_config';
-import type { OverviewDataPoint, MembershipReportItem, MembershipTotals, PendingPaymentMember } from '@/app/admin/sales/sales_types/sales_types';
-import type { Member } from '@/app/admin/members/members_types/members_types';
+import type { OverviewDataPoint, MembershipReportItem, MembershipTotals, PendingPaymentMember, Member } from '@/app/admin/sales/sales_types/sales_types';
 
 export const salesApi = {
   getOverview: () => apiFetch<ApiResponse<{ monthlyRevenue: OverviewDataPoint[] }>>(SalesUrlConfig.BACKEND_API.OVERVIEW),

@@ -41,7 +41,7 @@ export default function RecentMembers() {
               className="pl-8 pr-3 py-1.5 text-sm border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page w-40 sm:w-52 bg-input text-primary"
             />
           </div>
-          <Link href="/admin/members" className="text-sm font-medium hover:underline whitespace-nowrap text-primary">View all</Link>
+          <span className="text-sm font-medium text-secondary whitespace-nowrap">Recent Joins</span>
         </div>
       </div>
 

@@ -3,8 +3,8 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useDebounce } from '@/app/admin/admin_utils/useDebounce';
 import { type SalesTab, type DateFilter } from '@/app/admin/sales/sales_utils/SalesSharedConstants';
-import { SalesContextType, SalesInitialData, FetchState, OverviewDataPoint, MembershipReportItem, MembershipTotals, PendingPaymentMember } from '@/app/admin/sales/sales_types/sales_types';
-import type { Member } from '@/app/admin/members/members_types/members_types';
+import { SalesContextType, SalesInitialData, FetchState, OverviewDataPoint, MembershipReportItem, MembershipTotals, PendingPaymentMember, StoreOrder, StoreSummary } from '@/app/admin/sales/sales_types/sales_types';
+import type { Member } from '@/app/admin/sales/sales_types/sales_types';
 import { salesApi } from '@/app/admin/sales/sales_api/sales_api';
 import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -47,6 +47,9 @@ export function useSalesLogic(initialData?: SalesInitialData | null): SalesConte
   const [pendingTotal, setPendingTotal] = useState(initialData?.pendingTotal || 0);
   const [allMemberships, setAllMemberships] = useState<Member[]>(initialData?.allMemberships || []);
   const [allMembershipsTotal, setAllMembershipsTotal] = useState(initialData?.allMembershipsTotal || 0);
+  const [storeOrders, setStoreOrders] = useState<StoreOrder[]>(initialData?.storeOrders || []);
+  const [storeOrdersTotal, setStoreOrdersTotal] = useState(initialData?.storeOrdersTotal || 0);
+  const [storeSummary, setStoreSummary] = useState<StoreSummary | null>(initialData?.storeSummary || null);
 
 
 
@@ -73,6 +76,15 @@ export function useSalesLogic(initialData?: SalesInitialData | null): SalesConte
       setAllMemberships(allRes.data?.members || []);
       setAllMembershipsTotal(allRes.data?.total || 0);
       
+      // Store sales - mock data until store API is connected
+      setStoreOrders([
+        { id: 'so1', total: 850, method: 'Cash', status: 'completed', createdAt: new Date().toISOString(), items: [{ id: 'i1', qty: 2, price: 350, product: { name: 'Protein Powder' } }, { id: 'i2', qty: 1, price: 150, product: { name: 'Gym Gloves' } }] },
+        { id: 'so2', total: 1200, method: 'UPI', status: 'completed', createdAt: new Date().toISOString(), items: [{ id: 'i3', qty: 1, price: 1200, product: { name: 'Resistance Bands Set' } }] },
+        { id: 'so3', total: 450, method: 'Card', status: 'completed', createdAt: new Date(Date.now() - 86400000).toISOString(), items: [{ id: 'i4', qty: 3, price: 150, product: { name: 'Gym Gloves' } }] },
+      ]);
+      setStoreOrdersTotal(3);
+      setStoreSummary({ totalProducts: 18, totalOrders: 142, totalRevenue: 89500, lowStockProducts: [] });
+      
       setFetchState('success');
     } catch (e: unknown) {
       showToast(e instanceof Error ? e.message : 'Failed to fetch sales data', 'error');
@@ -96,6 +108,9 @@ export function useSalesLogic(initialData?: SalesInitialData | null): SalesConte
     pendingTotal,
     allMemberships,
     allMembershipsTotal,
+    storeOrders,
+    storeOrdersTotal,
+    storeSummary,
     fetchState,
     loadAll,
     toast,

@@ -14,7 +14,7 @@ export function DashboardProvider({ children, initialData }: { children: React.R
   const value = useMemo<DashboardContextType>(
     () => logic,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [logic.stats, logic.status, logic.error, logic.timeRange]
+    [logic.stats, logic.status, logic.error, logic.timeRange, logic.startDate, logic.endDate]
   );
 
   return (

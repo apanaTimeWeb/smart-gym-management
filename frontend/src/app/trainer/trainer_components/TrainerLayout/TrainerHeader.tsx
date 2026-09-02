@@ -100,7 +100,13 @@ export default function TrainerHeader({ title, subtitle }: TrainerHeaderProps) {
                 )}
               </div>
               <div className="p-3 text-center border-t border-border bg-header">
-                <button onClick={() => setShowNotifications(false)} className="text-sm font-medium text-primary hover:underline">View All Notifications</button>
+                <Link 
+                  href="/trainer/notifications"
+                  onClick={() => setShowNotifications(false)} 
+                  className="text-sm font-medium text-primary hover:underline"
+                >
+                  View All Notifications
+                </Link>
               </div>
             </div>
           )}
