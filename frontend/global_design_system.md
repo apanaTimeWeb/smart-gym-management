@@ -9,29 +9,29 @@
 
 *Note: For v1, the system defaults to Dark Mode. Light mode values are provided below for future-proofing and consistency.*
 
-### Core Colors (The "Championship Gold" Theme)
+### Core Colors (The "Luxury Premium Gold" Theme)
 | Token | Dark Mode (Default) | Light Mode | Usage |
 |---|---|---|---|
-| `--primary` | `#FFEC00` (Classic Gold) | `#EAB308` | Primary buttons, active nav item, links |
+| `--primary` | `#FACC15` (Premium Gold) | `#EAB308` | Primary buttons, active nav item, links |
 | `--primary-hover` | `#EAB308` (Yellow-500) | `#CA8A04` | Primary button hover state |
-| `--primary-subtle` | `rgba(255, 236, 0, 0.15)` | `#FEF9C3` | Soft badge backgrounds, selected row highlight |
-| `--bg-page` | `#000000` (True Black) | `#F4F4F5` | Main page background |
-| `--bg-card` | `#09090B` (Zinc-950) | `#FFFFFF` | Card, panel, table background |
-| `--bg-sidebar` | `#000000` (True Black) | `#FAFAFA` | Sidebar background |
-| `--bg-header` | `#09090B` (Zinc-950) | `#FFFFFF` | Top header background |
-| `--bg-input` | `#18181B` (Zinc-900) | `#FFFFFF` | Input field background |
+| `--primary-subtle` | `rgba(250, 204, 21, 0.15)` | `#FEF9C3` | Soft badge backgrounds, selected row highlight |
+| `--bg-page` | `#050505` (Soft Black) | `#F4F4F5` | Main page background |
+| `--bg-card` | `#111111` (Elevated Dark) | `#FFFFFF` | Card, panel, table background |
+| `--bg-sidebar` | `#050505` (Soft Black) | `#FAFAFA` | Sidebar background |
+| `--bg-header` | `#111111` (Elevated Dark) | `#FFFFFF` | Top header background |
+| `--bg-input` | `#1A1A1A` (Deep Gray) | `#FFFFFF` | Input field background |
 | `--border` | `#27272A` (Zinc-800) | `#E4E4E7` | Card borders, table dividers, input borders |
-| `--border-focus` | `#FFEC00` | `#EAB308` | Input border on focus |
+| `--border-focus` | `#FACC15` | `#EAB308` | Input border on focus |
 | `--text-primary` | `#FFFFFF` | `#000000` | All primary text, headings, table values |
 | `--text-secondary` | `#A1A1AA` | `#52525B` | Labels, captions, placeholder text |
 | `--text-disabled` | `#52525B` | `#A1A1AA` | Disabled states |
-| `--skeleton-base` | `#18181B` | `#E4E4E7` | Loading skeleton base color |
-| `--skeleton-highlight`| `#27272A` | `#F4F4F5` | Loading skeleton shimmer highlight |
+| `--skeleton-base` | `#111111` | `#E4E4E7` | Loading skeleton base color |
+| `--skeleton-highlight`| `#1A1A1A` | `#F4F4F5` | Loading skeleton shimmer highlight |
 
 ### Status Colors (Strictly for statuses)
 | Token | Text Color | Background Color | Usage |
 |---|---|---|---|
-| `--success` | `#34D399` (WCAG pass) | `#064E3B` | Active / Working / Present / Resolved |
+| `--success` | `#22C55E` (Stronger Fitness Green) | `#064E3B` | Active / Working / Present / Resolved |
 | `--warning` | `#FBBF24` (WCAG pass) | `#451A03` | Pending / Expiring / Held |
 | `--danger` | `#F87171` (WCAG pass) | `#450A0A` | Overdue / Suspended / Broken |
 | `--info` | `#60A5FA` | `#1E3A5F` | New / Neutral |
@@ -102,7 +102,7 @@ Every authenticated page uses this shell. Auth pages (`login`, `signup`, `forgot
 ```
 
 ### Sidebar Nav Groups & Items (in order)
-Each nav item has: [Icon] Label · Active state = Indigo left border + `--primary-subtle` background
+Each nav item has: [Icon] Label · Active state = Gold left border + `--primary-subtle` background + subtle gold glow (`box-shadow: 0 0 15px rgba(250,204,21,.15)`)
 
 ```
 📊  Dashboard
@@ -205,13 +205,13 @@ Badges are small pill-shaped labels: `border-radius: var(--radius-full)`, `paddi
 ### 5a. KPI / Stat Card
 - Size: roughly 200–260px wide, height ~120px
 - Structure: Top-left icon (32px, in a rounded square with subtle color background) + label (UPPERCASE, 11px, `--text-secondary`) · Below: Big number (28px bold, `--text-primary`) · Bottom: Trend line ("↑ 12% vs last month" in green, or "↓ 3%" in red)
-- Background: `--bg-card`, border: `1px solid --border`, border-radius: var(--radius-lg)
+- Background: Subtle premium gold gradient `linear-gradient(180deg, rgba(250,204,21,0.08), rgba(255,255,255,0.02))` over `--bg-card`, border: `1px solid --border`, border-radius: var(--radius-lg)
 - Arranged in a row of 3–5 cards at the top of dashboard/report pages
 
 ### 5b. Data Table
-- Header row: `background: rgba(99,102,241,0.08)`, UPPERCASE 12px `--text-secondary`, sortable columns show ↑↓ arrows on hover
+- Header row: `background: rgba(250,204,21,0.05)`, UPPERCASE 12px `--text-secondary`, sortable columns show ↑↓ arrows on hover
 - Data rows: alternating subtle zebra stripe (`--bg-card` / slightly lighter), 48px row height
-- Row hover: `background: rgba(99,102,241,0.06)`, subtle highlight
+- Row hover: `background: rgba(250,204,21,0.08)`, subtle highlight
 - Inline row actions (rightmost column): small icon buttons — ✏️ Edit, 🗑️ Delete — shown on row hover. **There is NO View/Eye button — clicking the entire row opens the detail view (see Frontend Rule 19).**
 - Pagination bar (below table): "Showing 1–25 of 143 results" + Previous / Next buttons + rows-per-page selector (10 / 25 / 50)
 - Empty state (no rows): Centered SVG illustration + "No [items] found" (16px, `--text-secondary`) + optional CTA button
@@ -221,7 +221,7 @@ Badges are small pill-shaped labels: `border-radius: var(--radius-full)`, `paddi
 - **Complex form** (>6 fields): two-column grid inside a full-width card, grouped in labeled sections separated by a horizontal rule
 - Each field: Label above (14px, `--text-secondary`, bold) → Input below → Helper/error text below input (12px)
 - Required fields: Label has red asterisk `*`
-- Input styling: `background: --bg-input`, `border: 1px solid --border`, border-radius: var(--radius-md), padding: 10px 14px, focus: `border-color: --border-focus` + subtle indigo glow
+- Input styling: `background: --bg-input`, `border: 1px solid --border`, border-radius: var(--radius-md), padding: 10px 14px, focus: `border-color: --border-focus` + subtle gold glow
 - Form footer: Buttons right-aligned — Cancel (ghost) | Save/Submit (primary)
 
 ### 5d. Modal / Dialog
