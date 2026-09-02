@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Centralized constants shared across all MANAGER modules — nav items, placeholder notifications, gym identity (name/phone), sensitive data masking utility, and pagination page size.
 import {
  LayoutDashboard, Users, ClipboardList, BarChart2,
- UserCog, ShoppingBag, DollarSign, BookOpen, Dumbbell,
+ UserCog, ShoppingBag, DollarSign, Utensils, Dumbbell,
  MessageSquare, Settings, CalendarCheck, Shield
 } from 'lucide-react';
 
@@ -12,7 +12,7 @@ export const MANAGER_NAV_ITEMS = [
  { href: '/manager/attendance', label: 'Attendance', icon: CalendarCheck },
  { href: '/manager/hr', label: 'HR Management', icon: UserCog },
  { href: '/manager/store', label: 'Store', icon: ShoppingBag },
- { href: '/manager/library', label: 'Diet Library', icon: BookOpen },
+ { href: '/manager/library', label: 'Diet Library', icon: Utensils },
  { href: '/manager/workout', label: 'Workout Library', icon: Dumbbell },
  { href: '/manager/inquiries', label: 'Inquiries & Leads',icon: MessageSquare }
 ];

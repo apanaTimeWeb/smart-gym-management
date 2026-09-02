@@ -109,22 +109,20 @@ Each nav item has: [Icon] Label · Active state = Gold left border + `--primary-
 📈  Reports
 ── CRM ──────────────────────
 📞  Enquiries
-── Students ─────────────────
-🎓  All Students
-➕  New Admission
-👥  Group Admission
-🎓  Alumni
+── Members ──────────────────
+🏋️  All Members
+➕  New Membership
+👥  Group Membership
+🛑  Ex-Members
 🗄️  Document Vault
 🏅  Referral Bonus
-── Seats & Shifts ───────────
-🗺️  Seat Matrix
-🪑  Seats
-🔄  Shifts
-↔️  Shift Migration
-📋  Allocations
-📜  Seat History
-🔒  Lockers
+── Lockers & Batches ────────
 🗺️  Locker Matrix
+🔒  Lockers
+🔄  Batches
+↔️  Batch Migration
+📋  Allocations
+📜  Locker History
 ── Finance ──────────────────
 💰  Collect Fee
 📋  Subscriptions
@@ -148,8 +146,8 @@ Each nav item has: [Icon] Label · Active state = Gold left border + `--primary-
 💸  Expenses
 📊  Financial Reports
 📊  Daily Settlement
-🪑  Seat Gap Report
-🔍  Shift Gap Analyzer
+🔒  Locker Gap Report
+🔍  Batch Gap Analyzer
 🏭  Assets
 🔧  Asset Maintenance
 ── Communication ─────────────
@@ -231,19 +229,19 @@ Badges are small pill-shaped labels: `border-radius: var(--radius-full)`, `paddi
 - **Confirmation/Destructive modal:** Icon = ⚠️ (amber) or 🗑️ (red) · Description explains what will happen · Buttons: "Cancel" (ghost, left) + "Confirm" (danger red, right)
 - **Form modal / Drawer:** Slide-in from right, width 480px, full-height, has its own form + Save/Cancel footer
 
-### 5e. Visual Grid (Seat / Locker Matrix)
+### 5e. Visual Grid (Locker / Equipment Matrix)
 - CSS Grid, auto-fill columns (8–10 per row depending on count)
 - Each cell: 64×64px, rounded: var(--radius-md), colored by status (see badge rules above)
-- Cell content: seat/locker number centered (bold, 13px)
-- Hover: scales up slightly (transform: scale 1.05), shows tooltip popover (student name + shift + expiry)
+- Cell content: locker/equipment number centered (bold, 13px)
+- Hover: scales up slightly (transform: scale 1.05), shows tooltip popover (member name + batch + expiry)
 - Empty cell (free): click → quick-assign action
-- Occupied cell (red): click → navigates to `student-profile.tsx`
+- Occupied cell (red): click → navigates to `member-profile.tsx`
 
 ### 5f. Kanban Board
 - Horizontal scrollable columns container
 - Each column = a status lane: header with status badge + count · Cards stacked vertically below
 - Card: `background: --bg-card`, border-radius: var(--radius-lg), padding: 14px, border-left: 3px solid [status color]
-- Card content: Name (bold), Phone (masked: 98****2310), tag/badge for shift or date
+- Card content: Name (bold), Phone (masked: 98****2310), tag/badge for batch or date
 
 ### 5g. Wizard / Stepper
 - Left panel: vertical step list numbered 01–05, active step in `--primary`, completed steps with ✅ checkmark
@@ -344,15 +342,15 @@ Always show a modal before executing: Delete, Soft-Delete, Blacklist, Suspend, M
 > **CRITICAL RULE:** Emojis used throughout this document (📊, ✅, 🔴, 🎓, etc.) are strictly shorthand for human readability in this documentation. Actual implementation MUST use the corresponding **Lucide icon component**, NEVER a raw emoji character in JSX.
 
 Use **Lucide Icons** (tree-shakeable, consistent style). Key icons:
-- 🧑‍🎓 Students: `Users`, `UserPlus`, `UserCheck`, `UserX`
-- 🪑 Seats: `Armchair`, `Grid`, `LayoutGrid`
+- 🏋️ Members: `Users`, `UserPlus`, `UserCheck`, `UserX`
+- 🏋️‍♂️ Equipment & Lockers: `Dumbbell`, `BicepsFlexed`, `Activity`, `Lock`
 - 💰 Finance: `IndianRupee`, `Receipt`, `CreditCard`, `Wallet`
-- 📅 Dates: `Calendar`, `CalendarDays`, `Clock`
+- 📅 Dates & Classes: `Calendar`, `CalendarDays`, `Clock`
 - 🔔 Alerts: `Bell`, `BellRing`, `AlertTriangle`
 - 📊 Reports: `BarChart2`, `LineChart`, `PieChart`, `TrendingUp`
-- ⚙️ Admin: `Settings`, `Shield`, `Lock`, `Key`
+- ⚙️ Admin: `Settings`, `Shield`, `Key`, `Sliders`
 - 📤 Actions: `Upload`, `Download`, `FileText`, `Printer`
-- 💬 Comms: `MessageSquare`, `Phone`, `Mail`
+- 💬 Comms: `MessageSquare`, `Phone`, `Mail`, `Smartphone`
 - ✅ Status: `CheckCircle`, `XCircle`, `Clock`, `AlertCircle`
 
 ---
@@ -363,10 +361,10 @@ Use **Lucide Icons** (tree-shakeable, consistent style). Key icons:
 
 | Chart Type | Colors | Usage |
 |---|---|---|
-| Bar Chart (grouped) | Income bars: `#6366F1` (Indigo) · Expense bars: `#EF4444` (Red) | Income vs Expense monthly comparison |
-| Line Chart | Line: `#10B981` (Green) · Area fill: `rgba(16,185,129,0.15)` | Revenue trend over months |
-| Pie / Donut Chart | Slice colors: Indigo, Emerald, Amber, Blue, Purple, Red (in that order) | Shift occupancy, expense category breakdown |
-| Horizontal Bar | Single color: `#6366F1` | Seat utilization, student growth |
+| Bar Chart (grouped) | Income bars: `#FACC15` (Gold) · Expense bars: `#EF4444` (Red) | Income vs Expense monthly comparison |
+| Line Chart | Line: `#22C55E` (Green) · Area fill: `rgba(34,197,94,0.15)` | Revenue trend over months |
+| Pie / Donut Chart | Slice colors: Gold, Emerald, Amber, Blue, Purple, Red (in that order) | Shift occupancy, expense category breakdown |
+| Horizontal Bar | Single color: `#FACC15` | Equipment utilization, member growth |
 
 All charts: dark background (`--bg-card`), `--text-secondary` axis labels, gridlines `rgba(255,255,255,0.05)`, tooltips with dark card style matching the design system.
 
