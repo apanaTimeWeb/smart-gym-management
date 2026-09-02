@@ -47,23 +47,23 @@
 }
 
 :root {
-  /* LIGHT MODE VARIABLES */
-  --primary: #6366F1;
-  --primary-hover: #4F46E5;
-  --primary-subtle: #EEF2FF;
+  /* LIGHT MODE VARIABLES (Championship Gold) */
+  --primary: #EAB308; /* yellow-500 (Gold) */
+  --primary-hover: #CA8A04; /* yellow-600 */
+  --primary-subtle: #FEF9C3; /* yellow-100 */
   
-  --bg-page: #F8FAFC;
-  --bg-card: #FFFFFF;
-  --bg-sidebar: #F1F5F9;
+  --bg-page: #F4F4F5; /* zinc-100 */
+  --bg-card: #FFFFFF; /* white */
+  --bg-sidebar: #FAFAFA; /* zinc-50 */
   --bg-header: #FFFFFF;
   --bg-input: #FFFFFF;
   
-  --border: #E2E8F0;
-  --border-focus: #6366F1;
+  --border: #E4E4E7; /* zinc-200 */
+  --border-focus: #EAB308;
   
-  --text-primary: #0F172A;
-  --text-secondary: #64748B;
-  --text-disabled: #94A3B8;
+  --text-primary: #000000; /* true black */
+  --text-secondary: #52525B; /* zinc-600 */
+  --text-disabled: #A1A1AA; /* zinc-400 */
   
   --success: #10B981;
   --success-bg: #D1FAE5;
@@ -76,8 +76,8 @@
   --purple: #8B5CF6;
   --purple-bg: #EDE9FE;
 
-  --skeleton-base: #E2E8F0;
-  --skeleton-highlight: #F1F5F9;
+  --skeleton-base: #E4E4E7;
+  --skeleton-highlight: #F4F4F5;
 
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
@@ -85,41 +85,41 @@
 }
 
 .dark {
-  /* DARK MODE VARIABLES (From Design System) */
-  --primary: #6366F1;
-  --primary-hover: #4F46E5;
-  --primary-subtle: rgba(99, 102, 241, 0.15);
+  /* DARK MODE VARIABLES (Luxury Premium Gold) */
+  --primary: #FACC15; /* Premium Gold (yellow-400) */
+  --primary-hover: #EAB308; /* yellow-500 */
+  --primary-subtle: rgba(250, 204, 21, 0.15); /* Soft Glow */
   
-  --bg-page: #0F0F1A;
-  --bg-card: #1A1A2E;
-  --bg-sidebar: #12121F;
-  --bg-header: #16162A;
-  --bg-input: #1E1E32;
+  --bg-page: #050505; /* Softened Black */
+  --bg-card: #111111; /* Elevated Dark */
+  --bg-sidebar: #050505; 
+  --bg-header: #111111; 
+  --bg-input: #1A1A1A; 
   
-  --border: #2A2A3E;
-  --border-focus: #6366F1;
+  --border: #27272A; /* zinc-800 */
+  --border-focus: #FACC15;
   
-  --text-primary: #F0F0FF;
-  --text-secondary: #8888AA;
-  --text-disabled: #44445A;
+  --text-primary: #FFFFFF; /* True White */
+  --text-secondary: #A1A1AA; /* zinc-400 */
+  --text-disabled: #52525B; /* zinc-600 */
   
-  --success: #10B981;
+  --success: #22C55E; /* Stronger Fitness Green */
   --success-bg: #064E3B;
-  --warning: #F59E0B;
+  --warning: #F59E0B; /* Amber */
   --warning-bg: #451A03;
-  --danger: #EF4444;
+  --danger: #EF4444; /* Red */
   --danger-bg: #450A0A;
   --info: #3B82F6;
   --info-bg: #1E3A5F;
   --purple: #8B5CF6;
   --purple-bg: #2E1065;
 
-  --skeleton-base: #2A2A3E;
-  --skeleton-highlight: #3F3F5A;
+  --skeleton-base: #111111;
+  --skeleton-highlight: #1A1A1A;
 
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
-  --shadow: 0 4px 12px 0 rgb(0 0 0 / 0.5);
-  --shadow-md: 0 8px 24px 0 rgb(0 0 0 / 0.6);
+  --shadow: 0 4px 12px 0 rgb(0 0 0 / 0.8);
+  --shadow-md: 0 8px 24px 0 rgba(250, 204, 21, 0.05); /* Very subtle gold ambient shadow */
 }
 
 @layer base {
