@@ -47,22 +47,7 @@ export default function SuperadminHeader() {
       </div>
       
       <div className="flex items-center gap-4">
-        <div className="relative hidden sm:block">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
-          <input
-            type="text"
-            placeholder="Search Tenants..."
-            className="pl-9 pr-4 py-2 text-sm bg-input border border-border rounded-lg focus:outline-none focus:border-border-focus text-foreground w-52 transition-colors"
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                const val = e.currentTarget.value;
-                if (val.trim()) {
-                  window.location.href = `${SuperadminUrlConfig.PAGES.GYMS_LIST}?search=${encodeURIComponent(val)}`;
-                }
-              }
-            }}
-          />
-        </div>
+
 
         {/* Theme Toggle - This ensures Dark/Light Mode is accessible! */}
         <ThemeToggle />
