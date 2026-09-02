@@ -36,7 +36,11 @@ export const SuperadminCouponModal: React.FC<SuperadminCouponModalProps> = ({
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-bold text-secondary">Coupon Code <span className="text-disabled font-normal ml-1">(Optional)</span></label>
             <input 
-              {...form.register('code')}
+              {...form.register('code', {
+                onChange: (e) => {
+                  e.target.value = e.target.value.toUpperCase();
+                }
+              })}
               className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground font-mono uppercase focus:outline-none focus:border-border-focus transition-colors"
               placeholder="Leave blank to auto-generate"
             />
@@ -100,6 +104,7 @@ export const SuperadminCouponModal: React.FC<SuperadminCouponModalProps> = ({
               <label className="text-sm font-bold text-secondary">Expiry Date <span className="text-destructive">*</span></label>
               <input 
                 type="date" 
+                min={new Date().toISOString().split('T')[0]}
                 {...form.register('expiryDate')}
                 className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus transition-colors"
               />

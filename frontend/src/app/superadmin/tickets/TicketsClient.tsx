@@ -42,7 +42,9 @@ if (fetchState === 'loading') return (
 
 
   const filtered = DUMMY_SUPPORT_TICKETS.filter(t => {
-    const matchesSearch = t.tenantName.toLowerCase().includes(search.toLowerCase()) || t.subject.toLowerCase().includes(search.toLowerCase());
+    const matchesSearch = t.tenantName.toLowerCase().includes(search.toLowerCase()) || 
+                          t.subject.toLowerCase().includes(search.toLowerCase()) ||
+                          t.id.toLowerCase().includes(search.toLowerCase());
     const matchesStatus = statusFilter === 'ALL' || t.status === statusFilter;
     const matchesPriority = priorityFilter === 'ALL' || t.priority === priorityFilter;
     return matchesSearch && matchesStatus && matchesPriority;
@@ -154,6 +156,7 @@ if (fetchState === 'loading') return (
                   <td className="p-4 text-sm text-secondary">{new Date(ticket.lastUpdated).toLocaleString()}</td>
                   <td className="p-4 text-sm text-right">
                     <button 
+                      onClick={() => alert(`Open reply modal for ticket ${ticket.id}`)}
                       className="p-2 text-primary hover:bg-primary/10 rounded-lg transition-colors inline-flex items-center justify-center font-medium"
                       title="Reply"
                     >
