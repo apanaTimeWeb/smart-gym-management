@@ -97,6 +97,7 @@ export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps>
                 )}
                 <input 
                   type="number" 
+                  onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }}
                   min="0"
                   {...register('discountValue', { valueAsNumber: true })}
                   className={`w-full ${watch('discountType') === 'EXACT' ? 'pl-9 pr-4' : 'px-4'} py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus transition-colors`}
@@ -110,6 +111,7 @@ export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps>
               <label className="text-sm font-bold text-secondary">Max Uses <span className="text-destructive">*</span></label>
               <input 
                 type="number" 
+                onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }}
                 min="0"
                 {...register('maxUses', { valueAsNumber: true })}
                 className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus transition-colors"

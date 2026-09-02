@@ -153,6 +153,7 @@ export default function MemberModal() {
                 <input
                   type="number"
                   min="0"
+                  onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }}
                   {...register('customDays', { valueAsNumber: true })}
                   placeholder="e.g. 15"
                   className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-colors ${
@@ -197,6 +198,7 @@ export default function MemberModal() {
               <input
                 type="number"
                 min="0"
+                onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }}
                 {...register('amount', { valueAsNumber: true })}
                 className="w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-colors"
               />
