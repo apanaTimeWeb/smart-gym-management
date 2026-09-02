@@ -66,6 +66,7 @@ export default function DietModal() {
  type={f.type} 
  placeholder={f.placeholder} 
  min={f.type === 'number' ? '0' : undefined}
+ onKeyDown={f.type === 'number' ? (e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); } : undefined}
  {...register(f.key as keyof DietFormValues)}
  className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 ${
    errors[f.key as keyof DietFormValues] ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-warning'

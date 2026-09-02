@@ -86,6 +86,7 @@ export default function PlanModal() {
                   type="number"
                   placeholder="0"
                   min="0"
+                  onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }}
                   {...register(f.key as keyof PlanFormValues)}
                   className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-colors ${
                     errors[f.key as keyof PlanFormValues] ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
