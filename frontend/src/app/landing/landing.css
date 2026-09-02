@@ -30,7 +30,7 @@
   /* Borders */
   --landing-border: rgba(255, 255, 255, 0.1);
 
-  /* Highlights mapped to Global Design System (Indigo) */
+  /* Highlights mapped to Global Design System (Gold) */
   --landing-highlight-orange: var(--primary);
   --landing-highlight-gradient: linear-gradient(135deg, var(--primary), var(--primary-hover));
   --landing-text-gradient: linear-gradient(135deg, var(--primary), var(--primary-hover));

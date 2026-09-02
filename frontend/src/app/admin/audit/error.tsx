@@ -12,8 +12,8 @@ export default function AuditError({
 }) {
   return (
     <div className="h-full flex flex-col items-center justify-center p-6 text-center animate-fade-in">
-      <div className="w-16 h-16 bg-red-100 dark:bg-red-500/10 rounded-full flex items-center justify-center mb-6">
-        <AlertTriangle className="w-8 h-8 text-red-500" />
+      <div className="w-16 h-16 bg-danger/10 rounded-full flex items-center justify-center mb-6">
+        <AlertTriangle className="w-8 h-8 text-danger" />
       </div>
       
       <h2 className="text-2xl font-bold text-foreground mb-3">

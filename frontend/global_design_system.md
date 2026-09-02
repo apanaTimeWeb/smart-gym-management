@@ -3,6 +3,11 @@
 > This ensures visual consistency across all 109 pages.
 > Stack: Next.js 16 (App Router, Turbopack) · TypeScript · Tailwind CSS · shadcn/ui components
 
+### Specific Restrictions (The ERP Context)
+- **Dashboard Consistency:** The ERP relies on the 5-color core architecture (Gold Primary, Blue Info, Green Success, Amber Warning, Red Danger).
+- **CTA Gradients (Restricted):** Aggressive gradients (e.g., `#F97316` to `#EF4444`) are **strictly restricted** to Landing Page hero CTAs. They must NEVER be used inside the authenticated ERP dashboard.
+- **Social Media Brands:** Official brand colors for social integrations (WhatsApp `#25D366`, Facebook `#1877F2`, YouTube `#FF0000`, Instagram `#E1306C`) MUST be preserved in their native colors. Do not tint or re-color them to match the ERP theme.
+
 ---
 
 ## 1. COLOR PALETTE
@@ -32,9 +37,10 @@
 | Token | Text Color | Background Color | Usage |
 |---|---|---|---|
 | `--success` | `#22C55E` (Stronger Fitness Green) | `#064E3B` | Active / Working / Present / Resolved |
-| `--warning` | `#FBBF24` (WCAG pass) | `#451A03` | Pending / Expiring / Held |
-| `--danger` | `#F87171` (WCAG pass) | `#450A0A` | Overdue / Suspended / Broken |
-| `--info` | `#60A5FA` | `#1E3A5F` | New / Neutral |
+| `--warning` | `#F59E0B` (Amber) | `#451A03` | Pending / Expiring / Held |
+| `--danger` | `#EF4444` (Red) | `#450A0A` | Overdue / Suspended / Broken |
+| `--info` | `#3B82F6` (Blue) | `#1E3A5F` | New / Neutral |
+| `--purple` | `#C084FC` | `#3B0764` | Ex-Members / Alumni / Custom Tags |
 
 ### Payment Mode Colors (Separated to avoid status collision)
 | Token | Text Color | Background Color | Usage |
@@ -109,22 +115,20 @@ Each nav item has: [Icon] Label · Active state = Gold left border + `--primary-
 📈  Reports
 ── CRM ──────────────────────
 📞  Enquiries
-── Students ─────────────────
-🎓  All Students
-➕  New Admission
-👥  Group Admission
-🎓  Alumni
+── Members ──────────────────
+🏋️  All Members
+➕  New Membership
+👥  Group Membership
+🛑  Ex-Members
 🗄️  Document Vault
 🏅  Referral Bonus
-── Seats & Shifts ───────────
-🗺️  Seat Matrix
-🪑  Seats
-🔄  Shifts
-↔️  Shift Migration
-📋  Allocations
-📜  Seat History
-🔒  Lockers
+── Lockers & Batches ────────
 🗺️  Locker Matrix
+🔒  Lockers
+🔄  Batches
+↔️  Batch Migration
+📋  Allocations
+📜  Locker History
 ── Finance ──────────────────
 💰  Collect Fee
 📋  Subscriptions
@@ -148,8 +152,8 @@ Each nav item has: [Icon] Label · Active state = Gold left border + `--primary-
 💸  Expenses
 📊  Financial Reports
 📊  Daily Settlement
-🪑  Seat Gap Report
-🔍  Shift Gap Analyzer
+🔒  Locker Gap Report
+🔍  Batch Gap Analyzer
 🏭  Assets
 🔧  Asset Maintenance
 ── Communication ─────────────
@@ -231,19 +235,19 @@ Badges are small pill-shaped labels: `border-radius: var(--radius-full)`, `paddi
 - **Confirmation/Destructive modal:** Icon = ⚠️ (amber) or 🗑️ (red) · Description explains what will happen · Buttons: "Cancel" (ghost, left) + "Confirm" (danger red, right)
 - **Form modal / Drawer:** Slide-in from right, width 480px, full-height, has its own form + Save/Cancel footer
 
-### 5e. Visual Grid (Seat / Locker Matrix)
+### 5e. Visual Grid (Locker / Equipment Matrix)
 - CSS Grid, auto-fill columns (8–10 per row depending on count)
 - Each cell: 64×64px, rounded: var(--radius-md), colored by status (see badge rules above)
-- Cell content: seat/locker number centered (bold, 13px)
-- Hover: scales up slightly (transform: scale 1.05), shows tooltip popover (student name + shift + expiry)
+- Cell content: locker/equipment number centered (bold, 13px)
+- Hover: scales up slightly (transform: scale 1.05), shows tooltip popover (member name + batch + expiry)
 - Empty cell (free): click → quick-assign action
-- Occupied cell (red): click → navigates to `student-profile.tsx`
+- Occupied cell (red): click → navigates to `member-profile.tsx`
 
 ### 5f. Kanban Board
 - Horizontal scrollable columns container
 - Each column = a status lane: header with status badge + count · Cards stacked vertically below
 - Card: `background: --bg-card`, border-radius: var(--radius-lg), padding: 14px, border-left: 3px solid [status color]
-- Card content: Name (bold), Phone (masked: 98****2310), tag/badge for shift or date
+- Card content: Name (bold), Phone (masked: 98****2310), tag/badge for batch or date
 
 ### 5g. Wizard / Stepper
 - Left panel: vertical step list numbered 01–05, active step in `--primary`, completed steps with ✅ checkmark
@@ -339,21 +343,45 @@ Always show a modal before executing: Delete, Soft-Delete, Blacklist, Suspend, M
 
 ---
 
-## 9. ICONS
+## 9. ICON DICTIONARY & STYLING (Elite SaaS Standard)
 
-> **CRITICAL RULE:** Emojis used throughout this document (📊, ✅, 🔴, 🎓, etc.) are strictly shorthand for human readability in this documentation. Actual implementation MUST use the corresponding **Lucide icon component**, NEVER a raw emoji character in JSX.
+> **CRITICAL RULE:** Emojis used in this document (📊, ✅, 🔴, 🎓, etc.) are strictly shorthand for human readability. Actual implementation MUST use the **exact Lucide icon component** specified below. NEVER mix icon families.
 
-Use **Lucide Icons** (tree-shakeable, consistent style). Key icons:
-- 🧑‍🎓 Students: `Users`, `UserPlus`, `UserCheck`, `UserX`
-- 🪑 Seats: `Armchair`, `Grid`, `LayoutGrid`
-- 💰 Finance: `IndianRupee`, `Receipt`, `CreditCard`, `Wallet`
-- 📅 Dates: `Calendar`, `CalendarDays`, `Clock`
-- 🔔 Alerts: `Bell`, `BellRing`, `AlertTriangle`
-- 📊 Reports: `BarChart2`, `LineChart`, `PieChart`, `TrendingUp`
-- ⚙️ Admin: `Settings`, `Shield`, `Lock`, `Key`
-- 📤 Actions: `Upload`, `Download`, `FileText`, `Printer`
-- 💬 Comms: `MessageSquare`, `Phone`, `Mail`
-- ✅ Status: `CheckCircle`, `XCircle`, `Clock`, `AlertCircle`
+### 9a. Icon Styling Rules
+To achieve Linear/Stripe-level premium feel, icons must be uniform:
+- **Size:** `size={18}` (18px is the sweet spot; do not use 16px or 24px).
+- **Weight:** `strokeWidth={2}` (Never mix 1.5 and 2).
+- **Default State:** `text-zinc-400`
+- **Hover State:** `text-white`
+- **Active State:** `text-yellow-400` (Gold)
+
+### 9b. The Fixed Page-by-Page Dictionary
+Never guess the icon. Use this exact mapping:
+
+| Module / Page | Lucide Icon | Rationale |
+|---|---|---|
+| **Dashboard** | `LayoutDashboard` | Instantly recognizable structure |
+| **Reports** | `FileBarChart` | Better than generic charts |
+| **All Members** | `Users` | Standard |
+| **New Membership** | `UserPlus` | Standard |
+| **Ex-Members** | `UserMinus` | `UserX` implies a ban/error |
+| **Referral Bonus** | `Gift` | Psychologically rewarding |
+| **Lockers** | `Lock` | Standard |
+| **Locker Matrix** | `Grid3X3` | Matrix = visualization |
+| **Batches** | `Clock` | Time-based groups |
+| **Batch Migration** | `ArrowRightLeft` | Indicates movement |
+| **Attendance** | `CalendarCheck` | Better than generic calendar |
+| **QR Scanner** | `ScanLine` | Modern physical feel |
+| **Collect Fee** | `IndianRupee` | Currency specific |
+| **Payments** | `Wallet` | Standard |
+| **Refunds** | `Undo2` | Clear reversal |
+| **Trust Scores** | `ShieldCheck` | Trust = Security, not trophies |
+| **Complaints** | `MessageSquareWarning` / `TriangleAlert` | Clear escalation |
+| **Audit Logs** | `History` | Enterprise tracking |
+| **Backups** | `DatabaseBackup` | Data safety |
+| **Settings** | `Settings` | Standard |
+
+> 🚫 **DO NOT ABUSE THE DUMBBELL ICON:** Use `Dumbbell` ONLY for Workout/Equipment specific modules. Using it for members or CRM looks amateur.
 
 ---
 
@@ -363,10 +391,10 @@ Use **Lucide Icons** (tree-shakeable, consistent style). Key icons:
 
 | Chart Type | Colors | Usage |
 |---|---|---|
-| Bar Chart (grouped) | Income bars: `#6366F1` (Indigo) · Expense bars: `#EF4444` (Red) | Income vs Expense monthly comparison |
-| Line Chart | Line: `#10B981` (Green) · Area fill: `rgba(16,185,129,0.15)` | Revenue trend over months |
-| Pie / Donut Chart | Slice colors: Indigo, Emerald, Amber, Blue, Purple, Red (in that order) | Shift occupancy, expense category breakdown |
-| Horizontal Bar | Single color: `#6366F1` | Seat utilization, student growth |
+| Bar Chart (grouped) | Income bars: `#FACC15` (Gold) · Expense bars: `#EF4444` (Red) | Income vs Expense monthly comparison |
+| Line Chart | Line: `#22C55E` (Green) · Area fill: `rgba(34,197,94,0.15)` | Revenue trend over months |
+| Pie / Donut Chart | Slice colors: Gold, Emerald, Amber, Blue, Purple, Red (in that order) | Shift occupancy, expense category breakdown |
+| Horizontal Bar | Single color: `#FACC15` | Equipment utilization, member growth |
 
 All charts: dark background (`--bg-card`), `--text-secondary` axis labels, gridlines `rgba(255,255,255,0.05)`, tooltips with dark card style matching the design system.
 
@@ -492,7 +520,7 @@ Enterprise users have different preferences for how much data fits on a screen.
 ## 23. DRAG & DROP INTERACTION PATTERN
 - **Library:** Use `@dnd-kit/core`.
 - **Dragging Item State:** `opacity: 0.5`, `cursor: grabbing`, subtle scale up `scale-105`.
-- **Valid Drop Target:** `border: 2px dashed var(--primary)`, background `rgba(99,102,241,0.08)`.
+- **Valid Drop Target:** `border: 2px dashed var(--primary)`, background `rgba(250,204,21,0.08)`.
 - **Invalid Drop Target:** `border: 2px dashed var(--danger)`.
 - **Animation:** After drop, use a smooth snap animation (`transition: transform 200ms ease`).
 

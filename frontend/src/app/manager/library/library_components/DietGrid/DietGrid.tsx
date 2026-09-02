@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Renders the diet plan cards grid with macronutrient info and action buttons.
+// RESPONSIBILITY: Renders the diet plan cards grid with macronutrient info and action buttons.
 'use client';
 
 import { useLibraryContext } from '@/app/manager/library/library_context/LibraryContext';
@@ -63,7 +63,7 @@ export default function DietGrid() {
             <div className="mt-auto pt-3 border-t border-border space-y-1">
               {dp.calories && (
                 <div className="flex items-center gap-2 text-xs text-secondary">
-                  <Flame size={14} className="text-orange-500" />
+                  <Flame size={14} className="text-warning" />
                   <span>{dp.calories} kcal/day</span>
                 </div>
               )}
