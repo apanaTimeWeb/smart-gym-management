@@ -1,6 +1,10 @@
-// RESPONSIBILITY: Provides the implementation for sales_types.ts functionality within its module.
+// RESPONSIBILITY: Defines all types for the Admin Sales & Reports module — membership, payments, store sales.
 import { type SalesTab, type DateFilter } from '@/app/admin/sales/sales_utils/SalesSharedConstants';
 import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
+
+export type FetchState = 'idle' | 'loading' | 'success' | 'error';
+
+// ------- Membership Types -------
 export interface Member {
   id: string; name: string; email: string; phone: string;
   gender: string; address?: string; branch: string;
@@ -10,7 +14,6 @@ export interface Member {
   paidAmount: number; pendingAmount: number; photo?: string;
   createdAt: string;
 }
-export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 
 export type PendingPaymentMember = Omit<Member, 'plan'> & {
   plan?: string;
@@ -45,6 +48,26 @@ export interface MembershipTotals {
   refunds?: number;
 }
 
+// ------- Store Types (self-contained copy for Rule 67 compliance) -------
+export interface StoreProduct {
+  id: string; name: string; category: string; price: number;
+  stock: number; description?: string; imageUrl?: string; isActive: boolean;
+}
+export interface StoreOrderItem {
+  id: string; qty: number; price: number;
+  product: { name: string };
+}
+export interface StoreOrder {
+  id: string; total: number; method: string; status: string;
+  notes?: string; createdAt: string;
+  items?: StoreOrderItem[];
+}
+export interface StoreSummary {
+  totalProducts: number; totalOrders: number;
+  totalRevenue: number; lowStockProducts: StoreProduct[];
+}
+
+// ------- Aggregate Data Shapes -------
 export interface SalesInitialData {
   overviewData?: OverviewDataPoint[];
   membershipReport?: MembershipReportItem[];
@@ -53,6 +76,9 @@ export interface SalesInitialData {
   pendingTotal?: number;
   allMemberships?: Member[];
   allMembershipsTotal?: number;
+  storeOrders?: StoreOrder[];
+  storeOrdersTotal?: number;
+  storeSummary?: StoreSummary | null;
 }
 
 export interface SalesContextType {
@@ -64,7 +90,7 @@ export interface SalesContextType {
   setSearch: (search: string) => void;
   currentPage: number;
   setCurrentPage: (page: number) => void;
-  
+
   overviewData: OverviewDataPoint[];
   membershipReport: MembershipReportItem[];
   membershipTotals: MembershipTotals;
@@ -72,10 +98,13 @@ export interface SalesContextType {
   pendingTotal: number;
   allMemberships: Member[];
   allMembershipsTotal: number;
-  
+  storeOrders: StoreOrder[];
+  storeOrdersTotal: number;
+  storeSummary: StoreSummary | null;
+
   fetchState: FetchState;
   loadAll: () => Promise<void>;
-  
+
   toast: { message: string; type: ToastType } | null;
   showToast: (message: string, type: ToastType) => void;
 }

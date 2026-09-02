@@ -9,6 +9,7 @@ import SalesOverview from '@/app/admin/sales/sales_components/SalesOverview/Sale
 import MembershipReport from '@/app/admin/sales/sales_components/MembershipReport/MembershipReport';
 import PendingPayments from '@/app/admin/sales/sales_components/PendingPayments/PendingPayments';
 import AllMemberships from '@/app/admin/sales/sales_components/AllMemberships/AllMemberships';
+import StoreSales from '@/app/admin/sales/sales_components/StoreSales/StoreSales';
 import AdminToast from '@/app/admin/admin_components/AdminFeedback/AdminToast';
 import { SalesInitialData } from '@/app/admin/sales/sales_types/sales_types';
 
@@ -29,6 +30,7 @@ function SalesContent() {
  {tab === 'Membership Report' && <MembershipReport />}
  {tab === 'Pending Payments' && <PendingPayments />}
  {tab === 'All Memberships' && <AllMemberships />}
+ {tab === 'Store Sales' && <StoreSales />}
  </div>
  </div>
  </div>
