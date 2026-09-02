@@ -175,7 +175,7 @@ export function useStoreLogic(initialData?: StoreInitialData | null): StoreConte
     setSaving(true);
     try {
       const newOrder = {
-        id: Math.random().toString(),
+        id: `ord-${Date.now()}`,
         date: new Date().toISOString(),
         customer: customerPhone || 'Walk-in',
         total: orderTotal,

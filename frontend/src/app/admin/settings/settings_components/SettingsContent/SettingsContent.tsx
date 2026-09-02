@@ -39,7 +39,7 @@ export default function SettingsContent() {
           {[
             { label: 'Gym Name', field: 'gymName', type: 'text' },
             { label: 'Owner Name', field: 'ownerName', type: 'text' },
-            { label: 'Phone Number', field: 'phone', type: 'number', min: '0' },
+            { label: 'Phone Number', field: 'phone', type: 'tel', min: '0' },
             { label: 'Email', field: 'email', type: 'email' },
             { label: 'City', field: 'city', type: 'text' },
             { label: 'GST Number', field: 'gstNumber', type: 'text' },

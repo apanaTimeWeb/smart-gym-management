@@ -22,7 +22,7 @@ export const FINANCE_TABS = ['Payments', 'Summary'];
 
 export const AddPaymentSchema = z.object({
   memberId: z.string().min(1, 'Valid Member ID required'),
-  amount: z.string().refine(val => !isNaN(Number(val)) && Number(val) > 0, 'Valid amount required'),
+  amount: z.string().refine(val => !isNaN(Number(val)) && Number(val) >= 0, 'Valid positive amount required'),
   method: z.string(),
   notes: z.string().optional()
 });

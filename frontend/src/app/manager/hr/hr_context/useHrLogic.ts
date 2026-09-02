@@ -119,7 +119,7 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
         setStaff(prev => prev.map(s => String(s.id) === String(editId) ? { ...s, ...payload } as Staff : s));
         showToast('Staff updated successfully', 'success'); 
       } else { 
-        const newStaff = { ...payload, id: Math.random().toString() } as Staff;
+        const newStaff = { ...payload, id: `staff-${Date.now()}` } as Staff;
         setStaff(prev => [newStaff, ...prev]);
         setSummary(prev => prev ? { ...prev, totalStaff: prev.totalStaff + 1, activeStaff: prev.activeStaff + 1 } : null);
         showToast('Staff created successfully', 'success'); 

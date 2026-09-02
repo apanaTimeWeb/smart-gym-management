@@ -60,10 +60,21 @@ export function useAuditLogic() {
       const responseData = data.data as unknown as { data: AuditLog[], meta: { total: number } } | AuditLogResponse;
       
       if ('logs' in responseData) {
-        setLogs(responseData.logs || []);
+        let fetchedLogs = responseData.logs || [];
+        // Local filtering since mock backend might ignore query params
+        if (debouncedActorId) fetchedLogs = fetchedLogs.filter(l => l.actorId?.toLowerCase().includes(debouncedActorId.toLowerCase()));
+        if (actionType) fetchedLogs = fetchedLogs.filter(l => l.action === actionType);
+        if (entityType) fetchedLogs = fetchedLogs.filter(l => l.entityType === entityType);
+        
+        setLogs(fetchedLogs);
         setTotalCount(responseData.total || 0);
       } else {
-        setLogs(responseData.data || []);
+        let fetchedLogs = responseData.data || [];
+        if (debouncedActorId) fetchedLogs = fetchedLogs.filter(l => l.actorId?.toLowerCase().includes(debouncedActorId.toLowerCase()));
+        if (actionType) fetchedLogs = fetchedLogs.filter(l => l.action === actionType);
+        if (entityType) fetchedLogs = fetchedLogs.filter(l => l.entityType === entityType);
+
+        setLogs(fetchedLogs);
         setTotalCount(responseData.meta?.total || 0);
       }
       setFetchState('success');
