@@ -65,6 +65,7 @@ export default function AddPaymentModal() {
             <input
               type="number"
               placeholder="2500"
+              min="0"
               {...register('amount')}
               className={`w-full px-4 py-2 border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary ${errors.amount ? 'border-danger' : 'border-border'}`}
             />

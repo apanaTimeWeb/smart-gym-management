@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Renders the active settings section content based on the selected nav tab.
+// RESPONSIBILITY: Renders the active settings section content based on the selected nav tab.
 'use client';
 
 import { RefreshCw, Save, Settings } from 'lucide-react';
@@ -36,24 +36,25 @@ export default function SettingsContent() {
  <div className="p-6">
  {activeTab === 'Gym Profile' && (
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
- {[
- { label: 'Gym Name', field: 'gymName' },
- { label: 'Owner Name', field: 'ownerName' },
- { label: 'Phone Number', field: 'phone' },
- { label: 'Email', field: 'email' },
- { label: 'City', field: 'city' },
- { label: 'GST Number', field: 'gstNumber' },
- ].map((f, i) => (
- <div key={i}>
- <label className="block text-sm font-medium text-secondary mb-1">{f.label}</label>
- <input 
- type="text" 
- value={(form as any)[f.field] || ''} 
- onChange={(e) => handleChange(f.field, e.target.value)}
- className="w-full px-3 py-2.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-warning bg-input text-foreground" 
- />
- </div>
- ))}
+          {[
+            { label: 'Gym Name', field: 'gymName', type: 'text' },
+            { label: 'Owner Name', field: 'ownerName', type: 'text' },
+            { label: 'Phone Number', field: 'phone', type: 'number', min: '0' },
+            { label: 'Email', field: 'email', type: 'email' },
+            { label: 'City', field: 'city', type: 'text' },
+            { label: 'GST Number', field: 'gstNumber', type: 'text' },
+          ].map((f, i) => (
+            <div key={i}>
+              <label className="block text-sm font-medium text-secondary mb-1">{f.label}</label>
+              <input 
+                type={f.type} 
+                min={f.min}
+                value={(form as any)[f.field] || ''} 
+                onChange={(e) => handleChange(f.field, e.target.value)}
+                className="w-full px-3 py-2.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-warning bg-input text-foreground" 
+              />
+            </div>
+          ))}
  </div>
  )}
 

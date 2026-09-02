@@ -60,11 +60,14 @@ export default function PlanModal() {
                 name="tier"
                 control={control}
                 render={({ field }) => (
-                  <SearchableDropdown
-                    value={field.value || ''}
-                    onChange={field.onChange}
-                    options={TIERS.map(t => ({ label: t, value: t }))}
-                  />
+                  <div className={editId ? 'opacity-70 pointer-events-none' : ''}>
+                    <SearchableDropdown
+                      value={field.value || ''}
+                      onChange={field.onChange}
+                      options={TIERS.map(t => ({ label: t, value: t }))}
+                      placeholder={editId ? 'Tier (Fixed)' : undefined}
+                    />
+                  </div>
                 )}
               />
             </div>
@@ -82,6 +85,7 @@ export default function PlanModal() {
                 <input
                   type="number"
                   placeholder="0"
+                  min="0"
                   {...register(f.key as keyof PlanFormValues)}
                   className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-colors ${
                     errors[f.key as keyof PlanFormValues] ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'

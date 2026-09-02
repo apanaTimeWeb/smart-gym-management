@@ -80,7 +80,7 @@ export function useFinanceLogic(initialData?: FinanceInitialData | null): Financ
   const savePayment = useCallback(async (data: AddPaymentFormValues) => {
     setSaving(true);
     try {
-      const res = await financeApi.createPayment({ 
+      const newPayment = {
         memberId: data.memberId, 
         amount: Number(data.amount), 
         method: data.method, 
@@ -88,11 +88,12 @@ export function useFinanceLogic(initialData?: FinanceInitialData | null): Financ
         paidAt: new Date().toISOString(),
         status: 'PAID',
         invoiceNo: 'INV-' + Math.floor(Math.random() * 10000)
-      }) as { message?: string };
+      };
+      const res = await financeApi.createPayment(newPayment) as { message?: string, data?: Payment };
       showToast(res.message || 'Payment created successfully', 'success');
       setShowModal(false);
-      await loadAll();
-    } catch (err) { 
+      setPayments(prev => [{ id: `pay-${Date.now()}`, ...newPayment } as Payment, ...prev]);
+    } catch (err) {  
       showToast((err as Error).message, 'error'); 
     } finally { 
       setSaving(false); 
