@@ -114,20 +114,23 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
         joinDate: data.joinDate ? new Date(data.joinDate).toISOString() : new Date().toISOString(), 
         isActive: true 
       };
-      // Mocking save success
+      
       if (editId) { 
+        setStaff(prev => prev.map(s => String(s.id) === String(editId) ? { ...s, ...payload } as Staff : s));
         showToast('Staff updated successfully', 'success'); 
       } else { 
+        const newStaff = { ...payload, id: Math.random().toString() } as Staff;
+        setStaff(prev => [newStaff, ...prev]);
+        setSummary(prev => prev ? { ...prev, totalStaff: prev.totalStaff + 1, activeStaff: prev.activeStaff + 1 } : null);
         showToast('Staff created successfully', 'success'); 
       }
       setShowModal(false);
-      await loadAll();
     } catch (err) { 
       showToast((err as Error).message, 'error'); 
     } finally { 
       setSaving(false); 
     }
-  }, [editId, loadAll, showToast]);
+  }, [editId, showToast]);
 
   const openAddPayroll = useCallback(() => {
     setShowPayrollModal(true);
@@ -136,38 +139,49 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
   const savePayroll = useCallback(async (data: Partial<Payroll> & { amount?: string | number }) => {
     setSaving(true);
     try {
-      // Mocking save success
+      const newPayroll = {
+        ...data,
+        id: Math.random().toString(),
+        amount: Number(data.amount || 0),
+        status: 'Paid',
+        date: new Date().toISOString(),
+      } as Payroll;
+      setPayrolls(prev => [newPayroll, ...prev]);
+      setSummary(prev => prev ? { 
+        ...prev, 
+        totalPayrollThisMonth: prev.totalPayrollThisMonth + (newPayroll.amount || 0),
+        paidCount: prev.paidCount + 1 
+      } : null);
       showToast('Payroll recorded successfully', 'success');
       setShowPayrollModal(false);
-      await loadAll();
     } catch (err) {
       showToast((err as Error).message, 'error');
     } finally {
       setSaving(false);
     }
-  }, [loadAll, showToast]);
+  }, [showToast]);
 
   const deleteStaff = useCallback(async (id: string) => {
     const isConfirmed = await confirm({ title: 'Remove Staff', message: 'Remove this staff member?', confirmText: 'Remove', type: 'danger' });
     if (!isConfirmed) return;
     try { 
-      // Mocking delete success
+      setStaff(prev => prev.filter(s => String(s.id) !== String(id)));
+      setSummary(prev => prev ? { ...prev, totalStaff: Math.max(0, prev.totalStaff - 1), activeStaff: Math.max(0, prev.activeStaff - 1) } : null);
       showToast('Staff removed successfully', 'success'); 
-      await loadAll(); 
     } catch (err) { 
       showToast((err as Error).message, 'error'); 
     }
-  }, [loadAll, showToast, confirm]);
+  }, [showToast, confirm]);
 
   const markPayrollPaid = useCallback(async (id: string) => {
     try { 
-      // Mocking mark paid success
+      setPayrolls(prev => prev.map(p => String(p.id) === String(id) ? { ...p, status: 'Paid' } : p));
+      setSummary(prev => prev ? { ...prev, paidCount: prev.paidCount + 1, pendingCount: Math.max(0, prev.pendingCount - 1) } : null);
       showToast('Payroll marked as paid', 'success'); 
-      await loadAll(); 
     } catch (err) { 
       showToast((err as Error).message, 'error'); 
     }
-  }, [loadAll, showToast]);
+  }, [showToast]);
 
   return {
     staff, payrolls, summary, fetchState, error, toast, showToast, hideToast, loadAll,

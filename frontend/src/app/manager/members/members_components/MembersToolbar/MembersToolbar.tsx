@@ -1,6 +1,7 @@
 // RESPONSIBILITY: Renders the toolbar for searching, filtering, and initiating the "Add Member" action.
 'use client';
 
+import { useState, useEffect } from 'react';
 import { Search, RefreshCw, Plus } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/MembersContext';
 import { useMembersStore } from '@/app/manager/members/members_store/useMembersStore';
@@ -8,8 +9,23 @@ import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { MEMBER_STATUS_OPTIONS } from '@/app/manager/members/members_utils/MembersSharedConstants';
 
 export default function MembersToolbar() {
-  const { search, setSearch, statusFilter, setStatusFilter, openAdd, currentPage } = useMembersContext();
+  const { search, setSearch, statusFilter, setStatusFilter, openAdd, currentPage, setCurrentPage } = useMembersContext();
   const loadAll = useMembersStore(s => s.loadAll);
+  const [localSearch, setLocalSearch] = useState(search);
+
+  useEffect(() => {
+    setLocalSearch(search);
+  }, [search]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (localSearch !== search) {
+        setSearch(localSearch);
+        if (typeof setCurrentPage === 'function') setCurrentPage(1);
+      }
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [localSearch, search, setSearch, setCurrentPage]);
 
   const handleRefresh = () => {
     loadAll({ search, status: statusFilter, page: currentPage.toString() });
@@ -20,8 +36,8 @@ export default function MembersToolbar() {
       <div className="relative w-full lg:w-auto">
         <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
         <input 
-          value={search} 
-          onChange={e => setSearch(e.target.value)} 
+          value={localSearch} 
+          onChange={e => setLocalSearch(e.target.value)} 
           placeholder="Search by name or phone..." 
           className="pl-9 pr-3 py-2.5 border border-border rounded-xl text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page w-full lg:w-64 bg-input text-primary" 
         />

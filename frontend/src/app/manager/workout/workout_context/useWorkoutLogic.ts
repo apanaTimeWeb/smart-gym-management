@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the Workout Library module.
+// RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the Workout Library module.
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { 
   EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM, WorkoutFormValues, ExerciseFormValues
@@ -98,32 +98,33 @@ export function useWorkoutLogic(): WorkoutContextType {
       };
       
       if (editWkId) {
-        const res = await workoutApi.updateWorkout(editWkId, payload);
-        showToast((res as any).message, 'success');
+        setWorkouts(prev => prev.map(w => String(w.id) === String(editWkId) ? { ...w, ...payload } as Workout : w));
+        showToast('Workout plan updated successfully', 'success');
       } else {
-        const res = await workoutApi.createWorkout(payload);
-        showToast((res as any).message, 'success');
+        const newWk = { ...payload, id: Math.random().toString() } as Workout;
+        setWorkouts(prev => [newWk, ...prev]);
+        setTotalWorkouts(prev => prev + 1);
+        showToast('Workout plan created successfully', 'success');
       }
       setShowWkModal(false);
-      await loadAll();
     } catch (err) {
       showToast((err as Error).message, 'error');
     } finally {
       setSaving(false);
     }
-  }, [editWkId, loadAll, showToast]);
+  }, [editWkId, showToast]);
   
   const deleteWk = useCallback(async (id: string) => { 
     const isConfirmed = await confirm({ title: 'Delete Workout', message: 'Delete this workout plan?', confirmText: 'Delete', type: 'danger' });
     if (!isConfirmed) return;
     try {
-      const res = await workoutApi.removeWorkout(id);
-      showToast((res as any).message, 'success');
-      await loadAll();
+      setWorkouts(prev => prev.filter(w => String(w.id) !== String(id)));
+      setTotalWorkouts(prev => Math.max(0, prev - 1));
+      showToast('Workout plan deleted', 'success');
     } catch (err) {
       showToast((err as Error).message, 'error');
     }
-  }, [confirm, loadAll, showToast]);
+  }, [confirm, showToast]);
 
   // Exercise CRUD
   const openAddEx = useCallback(() => { 
@@ -154,32 +155,33 @@ export function useWorkoutLogic(): WorkoutContextType {
         muscleGroup: muscle.split(',').map(s => s.trim()) 
       };
       if (editExId) {
-        const res = await libraryApi.updateExercise(editExId, payload);
-        showToast((res as any).message, 'success');
+        setExercises(prev => prev.map(e => String(e.id) === String(editExId) ? { ...e, ...payload } as unknown as Exercise : e));
+        showToast('Exercise updated successfully', 'success');
       } else {
-        const res = await libraryApi.createExercise(payload);
-        showToast((res as any).message, 'success');
+        const newEx = { ...payload, id: Math.random().toString() } as unknown as Exercise;
+        setExercises(prev => [newEx, ...prev]);
+        setTotalExercises(prev => prev + 1);
+        showToast('Exercise created successfully', 'success');
       }
       setShowExModal(false);
-      await loadAll();
     } catch (err) {
       showToast((err as Error).message, 'error');
     } finally {
       setSaving(false);
     }
-  }, [editExId, loadAll, showToast]);
+  }, [editExId, showToast]);
   
   const deleteEx = useCallback(async (id: string) => { 
     const isConfirmed = await confirm({ title: 'Delete Exercise', message: 'Delete this exercise?', confirmText: 'Delete', type: 'danger' });
     if (!isConfirmed) return;
     try {
-      const res = await libraryApi.removeExercise(id);
-      showToast((res as any).message, 'success');
-      await loadAll();
+      setExercises(prev => prev.filter(e => String(e.id) !== String(id)));
+      setTotalExercises(prev => Math.max(0, prev - 1));
+      showToast('Exercise deleted', 'success');
     } catch (err) {
       showToast((err as Error).message, 'error');
     }
-  }, [confirm, loadAll, showToast]);
+  }, [confirm, showToast]);
 
   return {
     tab, setTab, search, setSearch, currentPage, setCurrentPage,

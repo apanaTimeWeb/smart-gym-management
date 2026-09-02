@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Form modal for creating or editing a single exercise entry in the Workout Library module.
+// RESPONSIBILITY: Form modal for creating or editing a single exercise entry in the Workout Library module.
 'use client';
 
 import { useEffect } from 'react';
@@ -66,6 +66,7 @@ export default function ExerciseModal() {
  <input 
  type={f.type} 
  placeholder={f.placeholder} 
+ min={f.type === 'number' ? '0' : undefined}
  {...register(f.key as keyof ExerciseFormValues)}
  className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 ${
    errors[f.key as keyof ExerciseFormValues] ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-warning'
