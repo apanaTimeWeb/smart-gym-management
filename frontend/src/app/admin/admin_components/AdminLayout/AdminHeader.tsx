@@ -75,14 +75,7 @@ export default function AdminHeader({ title, subtitle }: AdminHeaderProps) {
           />
         </div>
 
-        <div className="relative hidden sm:block">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
-          <input
-            type="text"
-            placeholder="Search..."
-            className="pl-9 pr-4 py-2 text-sm bg-input border border-border rounded-lg focus:outline-none focus:border-border-focus text-foreground w-52 transition-colors"
-          />
-        </div>
+
 
         {/* Theme Toggle */}
         <ThemeToggle />
