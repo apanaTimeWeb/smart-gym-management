@@ -1,4 +1,4 @@
-# 🎨 SMART LIBRARY 360 — GLOBAL DESIGN SYSTEM
+# 🎨 SMART GYM 360 — GLOBAL DESIGN SYSTEM
 > **Prepend this block to EVERY module you give to Stitch.**
 > This ensures visual consistency across all 109 pages.
 > Stack: Next.js 16 (App Router, Turbopack) · TypeScript · Tailwind CSS · shadcn/ui components
@@ -9,24 +9,24 @@
 
 *Note: For v1, the system defaults to Dark Mode. Light mode values are provided below for future-proofing and consistency.*
 
-### Core Colors
+### Core Colors (The "Championship Gold" Theme)
 | Token | Dark Mode (Default) | Light Mode | Usage |
 |---|---|---|---|
-| `--primary` | `#6366F1` (Indigo-500) | `#4F46E5` | Primary buttons, active nav item, links |
-| `--primary-hover` | `#4F46E5` (Indigo-600) | `#4338CA` | Primary button hover state |
-| `--primary-subtle` | `#EEF2FF` (Indigo-50) | `#EEF2FF` | Soft badge backgrounds, selected row highlight |
-| `--bg-page` | `#0F0F1A` | `#F8FAFC` | Main page background |
-| `--bg-card` | `#1A1A2E` | `#FFFFFF` | Card, panel, table background |
-| `--bg-sidebar` | `#12121F` | `#F1F5F9` | Sidebar background |
-| `--bg-header` | `#16162A` | `#FFFFFF` | Top header background |
-| `--bg-input` | `#1E1E32` | `#FFFFFF` | Input field background |
-| `--border` | `#2A2A3E` | `#E2E8F0` | Card borders, table dividers, input borders |
-| `--border-focus` | `#6366F1` | `#4F46E5` | Input border on focus |
-| `--text-primary` | `#F0F0FF` | `#0F172A` | All primary text, headings, table values |
-| `--text-secondary` | `#94A3B8` (Slate-400) | `#64748B` | Labels, captions, placeholder text (improved contrast) |
-| `--text-disabled` | `#44445A` | `#94A3B8` | Disabled states |
-| `--skeleton-base` | `#2A2A3E` | `#E2E8F0` | Loading skeleton base color |
-| `--skeleton-highlight`| `#3F3F5A` | `#F1F5F9` | Loading skeleton shimmer highlight |
+| `--primary` | `#FFEC00` (Classic Gold) | `#EAB308` | Primary buttons, active nav item, links |
+| `--primary-hover` | `#EAB308` (Yellow-500) | `#CA8A04` | Primary button hover state |
+| `--primary-subtle` | `rgba(255, 236, 0, 0.15)` | `#FEF9C3` | Soft badge backgrounds, selected row highlight |
+| `--bg-page` | `#000000` (True Black) | `#F4F4F5` | Main page background |
+| `--bg-card` | `#09090B` (Zinc-950) | `#FFFFFF` | Card, panel, table background |
+| `--bg-sidebar` | `#000000` (True Black) | `#FAFAFA` | Sidebar background |
+| `--bg-header` | `#09090B` (Zinc-950) | `#FFFFFF` | Top header background |
+| `--bg-input` | `#18181B` (Zinc-900) | `#FFFFFF` | Input field background |
+| `--border` | `#27272A` (Zinc-800) | `#E4E4E7` | Card borders, table dividers, input borders |
+| `--border-focus` | `#FFEC00` | `#EAB308` | Input border on focus |
+| `--text-primary` | `#FFFFFF` | `#000000` | All primary text, headings, table values |
+| `--text-secondary` | `#A1A1AA` | `#52525B` | Labels, captions, placeholder text |
+| `--text-disabled` | `#52525B` | `#A1A1AA` | Disabled states |
+| `--skeleton-base` | `#18181B` | `#E4E4E7` | Loading skeleton base color |
+| `--skeleton-highlight`| `#27272A` | `#F4F4F5` | Loading skeleton shimmer highlight |
 
 ### Status Colors (Strictly for statuses)
 | Token | Text Color | Background Color | Usage |
@@ -83,7 +83,7 @@ Every authenticated page uses this shell. Auth pages (`login`, `signup`, `forgot
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │  TOP HEADER (height: 64px, position: fixed, top: 0, full-width)  │
-│  [☰ Collapse] [📚 Smart Library 360 Logo]  ··· [🏢 Branch Name ▼] [🔔 Bell (badge count)] [👤 Avatar + Name ▼]  │
+│  [☰ Collapse] [📚 Smart Gym 360 Logo]  ··· [🏢 Branch Name ▼] [🔔 Bell (badge count)] [👤 Avatar + Name ▼]  │
 ├────────────────┬─────────────────────────────────────────────────┤
 │  SIDEBAR       │  MAIN CONTENT AREA                              │
 │  width: 240px  │  margin-left: 240px                            │
