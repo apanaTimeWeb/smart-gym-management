@@ -132,7 +132,7 @@ export function useInquiriesLogic(): InquiriesContextType {
         setInquiries(prev => prev.map(i => String(i.id) === String(editId) ? { ...i, ...data } as unknown as Inquiry : i));
         showToast('Inquiry updated successfully', 'success');
       } else {
-        const newInq = { ...data, id: Math.random().toString(), date: new Date().toISOString() } as unknown as Inquiry;
+        const newInq = { ...data, id: `inq-${Date.now()}`, createdAt: new Date().toISOString() } as unknown as Inquiry;
         setInquiries(prev => [newInq, ...prev]);
         setStats(prev => prev ? { ...prev, total: prev.total + 1, new: prev.new + 1 } : null);
         showToast('Inquiry added successfully', 'success');
