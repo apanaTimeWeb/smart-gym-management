@@ -129,13 +129,16 @@ export function useInquiriesLogic(): InquiriesContextType {
     setSaving(true);
     try {
       if (editId) {
-        setInquiries(prev => prev.map(i => String(i.id) === String(editId) ? { ...i, ...data } as unknown as Inquiry : i));
-        showToast('Inquiry updated successfully', 'success');
+        const res = await inquiriesApi.update(editId, data);
+        const updatedInq = res.data || data;
+        setInquiries(prev => prev.map(i => String(i.id) === String(editId) ? { ...i, ...updatedInq } as unknown as Inquiry : i));
+        showToast(res.message || 'Inquiry updated successfully', 'success');
       } else {
-        const newInq = { ...data, id: `inq-${Date.now()}`, createdAt: new Date().toISOString() } as unknown as Inquiry;
+        const res = await inquiriesApi.create(data);
+        const newInq = res.data ? res.data : { ...data, id: `inq-${Date.now()}`, createdAt: new Date().toISOString() } as unknown as Inquiry;
         setInquiries(prev => [newInq, ...prev]);
         setStats(prev => prev ? { ...prev, total: prev.total + 1, new: prev.new + 1 } : null);
-        showToast('Inquiry added successfully', 'success');
+        showToast(res.message || 'Inquiry added successfully', 'success');
       }
       setShowModal(false);
     } catch (err) {
@@ -149,9 +152,10 @@ export function useInquiriesLogic(): InquiriesContextType {
     const isConfirmed = await confirm({ title: 'Delete Inquiry', message: 'Delete this inquiry?', confirmText: 'Delete', type: 'danger' });
     if (!isConfirmed) return;
     try {
+      const res = await inquiriesApi.remove(id);
       setInquiries(prev => prev.filter(i => String(i.id) !== String(id)));
       setStats(prev => prev ? { ...prev, total: Math.max(0, prev.total - 1) } : null);
-      showToast('Inquiry deleted', 'success');
+      showToast(res.message || 'Inquiry deleted', 'success');
     } catch (err) {
       showToast((err as Error).message, 'error');
     }

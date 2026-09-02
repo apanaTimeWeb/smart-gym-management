@@ -120,8 +120,11 @@ export function useAttendanceLogic(): AttendanceContextType {
           payload.staff = { name: s?.name || 'Unknown Staff' };
         }
       }
- 
-      const res = await attendanceApi.mark(payload) as ApiResponse<{ message: string }>;
+
+      const res = await attendanceApi.mark(payload) as ApiResponse<any>;
+      const newRecord = res.data?.id ? res.data : { ...payload, id: `att-${Date.now()}` };
+      setRecords(prev => [newRecord, ...prev]);
+      setTotalRecords(prev => prev + 1);
       showToast(res.message || 'Attendance marked successfully', 'success');
       setShowModal(false);
       setForm(EMPTY_ATTENDANCE_FORM);
@@ -131,7 +134,7 @@ export function useAttendanceLogic(): AttendanceContextType {
     } finally { 
       setSaving(false); 
     }
-  }, [loadAll, showToast]);
+  }, [loadAll, showToast, members, staff]);
 
   return {
     records, totalRecords, todayStats, members, staff,

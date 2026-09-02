@@ -78,7 +78,7 @@ export function useStoreLogic(initialData?: StoreInitialData | null): StoreConte
       if (endDate) params.endDate = endDate;
 
       const [productsRes, ordersRes, summaryRes] = await Promise.all([
-        storeApi.getProducts(),
+        storeApi.getProducts(params),
         storeApi.getOrders(params),
         storeApi.getStoreSummary(),
       ]);
@@ -124,13 +124,17 @@ export function useStoreLogic(initialData?: StoreInitialData | null): StoreConte
     setSaving(true);
     try {
       if (editProductId) {
-        setProducts(prev => prev.map(p => String(p.id) === String(editProductId) ? { ...p, ...data } as unknown as Product : p));
-        showToast('Product updated successfully', 'success');
+        const res = await storeApi.updateProduct(editProductId, data);
+        const updatedProduct = res.data || data;
+        setProducts(prev => prev.map(p => String(p.id) === String(editProductId) ? { ...p, ...updatedProduct } as unknown as Product : p));
+        showToast(res.message || 'Product updated successfully', 'success');
       } else {
-        const newProduct = { ...data, id: `prod-${Date.now()}`, sales: 0, status: data.stock && data.stock > 0 ? 'In Stock' : 'Out of Stock' } as unknown as Product;
+        const payload = { ...data, status: data.stock && data.stock > 0 ? 'In Stock' : 'Out of Stock' } as Partial<Product>;
+        const res = await storeApi.createProduct(payload);
+        const newProduct = res.data ? res.data : { ...payload, id: `prod-${Date.now()}`, sales: 0 } as unknown as Product;
         setProducts(prev => [newProduct, ...prev]);
         setSummary(prev => prev ? { ...prev, totalProducts: prev.totalProducts + 1 } : null);
-        showToast('Product added successfully', 'success');
+        showToast(res.message || 'Product added successfully', 'success');
       }
       setShowProductModal(false);
     } catch (err) {
@@ -144,9 +148,10 @@ export function useStoreLogic(initialData?: StoreInitialData | null): StoreConte
     const isConfirmed = await confirm({ title: 'Remove Product', message: 'Delete this product?', confirmText: 'Delete', type: 'danger' });
     if (!isConfirmed) return;
     try {
+      const res = await storeApi.removeProduct(id);
       setProducts(prev => prev.filter(p => String(p.id) !== String(id)));
       setSummary(prev => prev ? { ...prev, totalProducts: Math.max(0, prev.totalProducts - 1) } : null);
-      showToast('Product deleted', 'success');
+      showToast(res.message || 'Product deleted', 'success');
     } catch (err) {
       showToast((err as Error).message, 'error');
     }

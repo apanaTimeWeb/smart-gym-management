@@ -8,10 +8,15 @@ import ManagerPagination from '@/app/manager/manager_components/ManagerShared/Ma
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 
 export default function AttendanceTable() {
-  const { records, totalRecords, fetchState, currentPage, setCurrentPage } = useAttendanceContext();
+  const { records, totalRecords, fetchState, tab, currentPage, setCurrentPage } = useAttendanceContext();
 
+  const filteredRecords = records.filter(r => 
+    tab === 'All' || 
+    (tab === 'Members' && r.type === 'MEMBER') || 
+    (tab === 'Staff' && r.type === 'STAFF')
+  );
   
-  const totalPages = Math.ceil(totalRecords / MANAGER_ITEMS_PER_PAGE) || 1;
+  const totalPages = Math.ceil((tab === 'All' ? totalRecords : filteredRecords.length) / MANAGER_ITEMS_PER_PAGE) || 1;
 
   return (
  <div className="p-5">
@@ -39,8 +44,8 @@ export default function AttendanceTable() {
  ))}
  </tr>
  </thead>
- <tbody className="divide-y divide-border">
- {records.map(r => (
+  <tbody className="divide-y divide-border">
+  {filteredRecords.map(r => (
  <tr key={r.id} className="hover:bg-primary-subtle transition-colors">
  <td className="px-4 py-3 whitespace-nowrap">
  <div className="flex items-center gap-2">

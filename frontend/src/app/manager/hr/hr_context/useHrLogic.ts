@@ -62,16 +62,15 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
     setFetchState('loading');
     setError('');
     try {
-      // Mocking fetch success
-      const mockStaff: Staff[] = [
-        { id: '1', name: 'John Doe', email: 'john@gym.com', phone: '1234567890', role: 'Trainer', salary: 5000, branch: 'Main', gender: 'MALE', joinDate: new Date().toISOString(), isActive: true }
-      ];
-      const mockPayrolls: Payroll[] = [];
-      const mockSummary: HrSummary = { totalStaff: 1, activeStaff: 1, totalPayrollThisMonth: 0, paidCount: 0, pendingCount: 0 };
+      const [staffRes, payrollsRes, summaryRes] = await Promise.all([
+        hrApi.getStaff({ search: debouncedSearch, page: String(currentPage) }),
+        hrApi.getPayrolls({ search: debouncedSearch, page: String(currentPage) }),
+        hrApi.getSummary()
+      ]);
       
-      setStaff(mockStaff);
-      setPayrolls(mockPayrolls);
-      setSummary(mockSummary);
+      setStaff(staffRes.data.staff || []);
+      setPayrolls(payrollsRes.data.payrolls || []);
+      setSummary(summaryRes.data || { totalStaff: 0, activeStaff: 0, totalPayrollThisMonth: 0, paidCount: 0, pendingCount: 0 });
       setFetchState('success');
     } catch (e) {
       const msg = (e as Error).message;
@@ -79,7 +78,7 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
       showToast(msg, 'error');
       setFetchState('error');
     }
-  }, [showToast]);
+  }, [showToast, debouncedSearch, currentPage]);
 
   useEffect(() => { loadAll(); }, [loadAll]);
 
@@ -115,14 +114,17 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
         isActive: true 
       };
       
-      if (editId) { 
-        setStaff(prev => prev.map(s => String(s.id) === String(editId) ? { ...s, ...payload } as Staff : s));
-        showToast('Staff updated successfully', 'success'); 
+      if (editId) {
+        const res = await hrApi.updateStaff(editId, payload);
+        const updatedStaff = res.data || payload;
+        setStaff(prev => prev.map(s => String(s.id) === String(editId) ? { ...s, ...updatedStaff } as Staff : s));
+        showToast(res.message || 'Staff updated successfully', 'success'); 
       } else { 
-        const newStaff = { ...payload, id: `staff-${Date.now()}` } as Staff;
+        const res = await hrApi.createStaff(payload);
+        const newStaff = res.data ? res.data : { ...payload, id: `staff-${Date.now()}` } as Staff;
         setStaff(prev => [newStaff, ...prev]);
         setSummary(prev => prev ? { ...prev, totalStaff: prev.totalStaff + 1, activeStaff: prev.activeStaff + 1 } : null);
-        showToast('Staff created successfully', 'success'); 
+        showToast(res.message || 'Staff created successfully', 'success'); 
       }
       setShowModal(false);
     } catch (err) { 
@@ -167,9 +169,10 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
     const isConfirmed = await confirm({ title: 'Remove Staff', message: 'Remove this staff member?', confirmText: 'Remove', type: 'danger' });
     if (!isConfirmed) return;
     try { 
+      const res = await hrApi.removeStaff(id);
       setStaff(prev => prev.filter(s => String(s.id) !== String(id)));
       setSummary(prev => prev ? { ...prev, totalStaff: Math.max(0, prev.totalStaff - 1), activeStaff: Math.max(0, prev.activeStaff - 1) } : null);
-      showToast('Staff removed successfully', 'success'); 
+      showToast(res.message || 'Staff removed successfully', 'success'); 
     } catch (err) { 
       showToast((err as Error).message, 'error'); 
     }

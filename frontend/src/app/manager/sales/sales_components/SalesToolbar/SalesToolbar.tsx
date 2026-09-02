@@ -7,7 +7,10 @@ import { useSalesContext } from '@/app/manager/sales/sales_context/SalesContext'
 import { DATE_FILTERS } from '@/app/manager/sales/sales_utils/SalesSharedConstants';
 
 export default function SalesToolbar() {
-  const { dateFilter, setDateFilter, search, setSearch, setCurrentPage } = useSalesContext();
+  const { 
+    tab, dateFilter, setDateFilter, search, setSearch, setCurrentPage,
+    overviewData, membershipReport, pendingPayments, allMemberships
+  } = useSalesContext();
   const [localSearch, setLocalSearch] = useState(search);
 
   useEffect(() => {
@@ -53,13 +56,35 @@ export default function SalesToolbar() {
   </div>
   <button 
     onClick={() => {
-      const csv = 'Data,Amount\nTest,100';
+      let csv = '';
+      let filename = 'sales_report.csv';
+      
+      if (tab === 'Overview') {
+        csv = 'Month,Revenue\n' + overviewData.map(d => `${d.month},${d.revenue}`).join('\n');
+        filename = 'overview.csv';
+      } else if (tab === 'Membership Report') {
+        csv = 'Plan,Receivable,Received,Remaining,Refund\n' + membershipReport.map(r => `${r.plan},${r.receivable},${r.received},${r.remaining},${r.refund}`).join('\n');
+        filename = 'membership_report.csv';
+      } else if (tab === 'Pending Payments') {
+        csv = 'Name,Phone,Due Amount,Due Date\n' + pendingPayments.map(p => `${p.name},${p.phone},${p.dueAmount},${p.dueDate}`).join('\n');
+        filename = 'pending_payments.csv';
+      } else if (tab === 'All Memberships') {
+        csv = 'Name,Phone,Plan,Join Date\n' + allMemberships.map(m => `${m.name},${m.phone},${m.planId},${m.joinDate}`).join('\n');
+        filename = 'all_memberships.csv';
+      }
+
+      if (!csv) {
+        alert('No data to export.');
+        return;
+      }
+
       const blob = new Blob([csv], { type: 'text/csv' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'sales_report.csv';
+      a.download = filename;
       a.click();
+      window.URL.revokeObjectURL(url);
     }}
     className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary transition-colors"
   >
