@@ -115,11 +115,16 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
   const saveExercise = useCallback(async (data: Partial<ExerciseFormValues>) => {
     setSaving(true);
     try {
+      const formattedData = {
+        ...data,
+        muscleGroup: typeof data.muscleGroup === 'string' ? data.muscleGroup.split(',').map(s => s.trim()) : data.muscleGroup
+      };
+      
       if (editExId) {
-        setExercises(prev => prev.map(e => String(e.id) === String(editExId) ? { ...e, ...data } as unknown as Exercise : e));
+        setExercises(prev => prev.map(e => String(e.id) === String(editExId) ? { ...e, ...formattedData } as unknown as Exercise : e));
         showToast('Exercise updated successfully', 'success');
       } else {
-        const newEx = { ...data, id: Math.random().toString() } as unknown as Exercise;
+        const newEx = { ...formattedData, id: `ex-${Date.now()}` } as unknown as Exercise;
         setExercises(prev => [newEx, ...prev]);
         showToast('Exercise created successfully', 'success');
       }
@@ -167,11 +172,15 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
   const saveDietPlan = useCallback(async (data: Partial<DietFormValues>) => {
     setSaving(true);
     try {
+      const formattedData = {
+        ...data,
+        meals: typeof data.meals === 'string' ? data.meals.split('\n').map(s => s.trim()).filter(Boolean) : data.meals
+      };
       if (editDietId) {
-        setDietPlans(prev => prev.map(d => String(d.id) === String(editDietId) ? { ...d, ...data } as unknown as DietPlan : d));
+        setDietPlans(prev => prev.map(d => String(d.id) === String(editDietId) ? { ...d, ...formattedData } as unknown as DietPlan : d));
         showToast('Diet plan updated successfully', 'success');
       } else {
-        const newDiet = { ...data, id: Math.random().toString() } as unknown as DietPlan;
+        const newDiet = { ...formattedData, id: `diet-${Date.now()}` } as unknown as DietPlan;
         setDietPlans(prev => [newDiet, ...prev]);
         showToast('Diet plan created successfully', 'success');
       }

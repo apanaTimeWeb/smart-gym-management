@@ -127,7 +127,7 @@ export function useStoreLogic(initialData?: StoreInitialData | null): StoreConte
         setProducts(prev => prev.map(p => String(p.id) === String(editProductId) ? { ...p, ...data } as unknown as Product : p));
         showToast('Product updated successfully', 'success');
       } else {
-        const newProduct = { ...data, id: Math.random().toString() } as unknown as Product;
+        const newProduct = { ...data, id: `prod-${Date.now()}`, sales: 0, status: data.stock && data.stock > 0 ? 'In Stock' : 'Out of Stock' } as unknown as Product;
         setProducts(prev => [newProduct, ...prev]);
         setSummary(prev => prev ? { ...prev, totalProducts: prev.totalProducts + 1 } : null);
         showToast('Product added successfully', 'success');

@@ -139,12 +139,14 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
   const savePayroll = useCallback(async (data: Partial<Payroll> & { amount?: string | number }) => {
     setSaving(true);
     try {
+      const staffMember = staff.find(s => String(s.id) === String(data.staffId));
       const newPayroll = {
         ...data,
-        id: Math.random().toString(),
+        id: `pay-${Date.now()}`,
         amount: Number(data.amount || 0),
         status: 'Paid',
         date: new Date().toISOString(),
+        staff: staffMember ? { name: staffMember.name, role: staffMember.role } : undefined
       } as Payroll;
       setPayrolls(prev => [newPayroll, ...prev]);
       setSummary(prev => prev ? { 

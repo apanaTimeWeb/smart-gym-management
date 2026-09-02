@@ -99,12 +99,12 @@ export function useWorkoutLogic(): WorkoutContextType {
       
       if (editWkId) {
         setWorkouts(prev => prev.map(w => String(w.id) === String(editWkId) ? { ...w, ...payload } as Workout : w));
-        showToast('Workout plan updated successfully', 'success');
+        showToast('Workout updated successfully', 'success');
       } else {
-        const newWk = { ...payload, id: Math.random().toString() } as Workout;
+        const newWk = { ...payload, id: `wk-${Date.now()}` } as Workout;
         setWorkouts(prev => [newWk, ...prev]);
         setTotalWorkouts(prev => prev + 1);
-        showToast('Workout plan created successfully', 'success');
+        showToast('Workout created successfully', 'success');
       }
       setShowWkModal(false);
     } catch (err) {
@@ -158,7 +158,7 @@ export function useWorkoutLogic(): WorkoutContextType {
         setExercises(prev => prev.map(e => String(e.id) === String(editExId) ? { ...e, ...payload } as unknown as Exercise : e));
         showToast('Exercise updated successfully', 'success');
       } else {
-        const newEx = { ...payload, id: Math.random().toString() } as unknown as Exercise;
+        const newEx = { ...payload, id: `ex-${Date.now()}` } as unknown as Exercise;
         setExercises(prev => [newEx, ...prev]);
         setTotalExercises(prev => prev + 1);
         showToast('Exercise created successfully', 'success');
