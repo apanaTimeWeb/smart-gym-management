@@ -53,12 +53,12 @@ export function useSalesLogic(initialData?: SalesInitialData | null): SalesConte
   const loadAll = useCallback(async () => {
     setFetchState('loading');
     try {
-      const params: Record<string, string> = { limit: '10', page: currentPage.toString() };
+      const params: Record<string, string> = { limit: '10', page: currentPage.toString(), period: dateFilter.toLowerCase() };
       if (debouncedSearch) params.search = debouncedSearch;
 
       const [overviewRes, reportRes, pendingRes, allRes] = await Promise.all([
-        salesApi.getOverview(),
-        salesApi.getMembershipReport(),
+        salesApi.getOverview(params),
+        salesApi.getMembershipReport(params),
         salesApi.getPendingPayments(params),
         salesApi.getAllMemberships(params)
       ]);

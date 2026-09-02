@@ -52,6 +52,8 @@ export default function InquiryModal() {
               <input
                 type={f.type}
                 placeholder={'placeholder' in f ? f.placeholder : undefined}
+                maxLength={f.type === 'tel' ? 10 : undefined}
+                onKeyDown={f.type === 'tel' ? (e) => { if (['e', 'E', '-', '+', '.'].includes(e.key)) e.preventDefault(); } : undefined}
                 {...register(f.key as keyof InquiryFormValues)}
                 className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-colors ${
                   errors[f.key as keyof InquiryFormValues] ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'

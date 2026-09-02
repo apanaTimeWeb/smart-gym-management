@@ -77,33 +77,33 @@ export default function AttendanceModal() {
               {watchType === 'MEMBER' ? 'Select Member' : 'Select Staff'}
             </label>
             {watchType === 'MEMBER' ? (
-              <Controller
-                name="memberId"
-                control={control}
-                render={({ field }) => (
-                  <SearchableDropdown
-                    options={members.filter(m => !(m as any).role || (m as any).planId !== undefined).map(m => ({ label: `${m.name} (${m.phone})`, value: String(m.id) }))}
-                    value={field.value || ''}
-                    onChange={field.onChange}
-                    placeholder="Search Member..."
-                    containerStyle={{ zIndex: 60 }}
-                  />
-                )}
-              />
+                <Controller
+                  name="memberId"
+                  control={control}
+                  render={({ field }) => (
+                    <SearchableDropdown
+                      options={members.filter(m => !('role' in m) && !('salary' in m)).map(m => ({ label: `${m.name} (${m.phone})`, value: String(m.id) }))}
+                      value={field.value || ''}
+                      onChange={field.onChange}
+                      placeholder="Search Member..."
+                      containerStyle={{ zIndex: 60 }}
+                    />
+                  )}
+                />
             ) : (
-              <Controller
-                name="staffId"
-                control={control}
-                render={({ field }) => (
-                  <SearchableDropdown
-                    options={staff.filter(s => (s as any).role || (s as any).salary !== undefined).map(s => ({ label: `${s.name} - ${(s as any).role || 'Staff'}`, value: String(s.id) }))}
-                    value={field.value || ''}
-                    onChange={field.onChange}
-                    placeholder="Search Staff..."
-                    containerStyle={{ zIndex: 60 }}
-                  />
-                )}
-              />
+                <Controller
+                  name="staffId"
+                  control={control}
+                  render={({ field }) => (
+                    <SearchableDropdown
+                      options={staff.filter(s => ('role' in s) || ('salary' in s) || !('planId' in s)).map(s => ({ label: `${s.name} - ${(s as any).role || 'Staff'}`, value: String(s.id) }))}
+                      value={field.value || ''}
+                      onChange={field.onChange}
+                      placeholder="Search Staff..."
+                      containerStyle={{ zIndex: 60 }}
+                    />
+                  )}
+                />
             )}
             {errors.memberId && watchType === 'MEMBER' && <p className="text-danger text-xs mt-1">{errors.memberId.message}</p>}
             {errors.staffId && watchType === 'STAFF' && <p className="text-danger text-xs mt-1">{errors.staffId.message}</p>}

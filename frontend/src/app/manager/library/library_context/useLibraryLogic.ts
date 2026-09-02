@@ -85,7 +85,7 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
  } finally { 
  setLoading(false); 
  }
- }, [showToast]);
+  }, [showToast, currentPage, debouncedSearch]);
 
  useEffect(() => { loadAll(); }, [loadAll]);
 
@@ -121,12 +121,15 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
       };
       
       if (editExId) {
-        setExercises(prev => prev.map(e => String(e.id) === String(editExId) ? { ...e, ...formattedData } as unknown as Exercise : e));
-        showToast('Exercise updated successfully', 'success');
+        const res = await libraryApi.updateExercise(editExId, formattedData as unknown as Partial<Exercise>);
+        const updatedEx = res.data || formattedData;
+        setExercises(prev => prev.map(e => String(e.id) === String(editExId) ? { ...e, ...updatedEx } as unknown as Exercise : e));
+        showToast(res.message || 'Exercise updated successfully', 'success');
       } else {
-        const newEx = { ...formattedData, id: `ex-${Date.now()}` } as unknown as Exercise;
+        const res = await libraryApi.createExercise(formattedData as unknown as Partial<Exercise>);
+        const newEx = res.data ? res.data : { ...formattedData, id: `ex-${Date.now()}` } as unknown as Exercise;
         setExercises(prev => [newEx, ...prev]);
-        showToast('Exercise created successfully', 'success');
+        showToast(res.message || 'Exercise created successfully', 'success');
       }
       setShowExModal(false);
     } catch (err) {
@@ -140,8 +143,9 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
     const isConfirmed = await confirm({ title: 'Remove Exercise', message: 'Delete this exercise from library?', confirmText: 'Delete', type: 'danger' });
     if (!isConfirmed) return;
     try {
+      const res = await libraryApi.removeExercise(id);
       setExercises(prev => prev.filter(e => String(e.id) !== String(id)));
-      showToast('Exercise deleted', 'success');
+      showToast(res.message || 'Exercise deleted', 'success');
     } catch (err) {
       showToast((err as Error).message, 'error');
     }
@@ -177,12 +181,15 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
         meals: typeof data.meals === 'string' ? data.meals.split('\n').map(s => s.trim()).filter(Boolean) : data.meals
       };
       if (editDietId) {
-        setDietPlans(prev => prev.map(d => String(d.id) === String(editDietId) ? { ...d, ...formattedData } as unknown as DietPlan : d));
-        showToast('Diet plan updated successfully', 'success');
+        const res = await libraryApi.updateDietPlan(editDietId, formattedData);
+        const updatedDiet = res.data || formattedData;
+        setDietPlans(prev => prev.map(d => String(d.id) === String(editDietId) ? { ...d, ...updatedDiet } as unknown as DietPlan : d));
+        showToast(res.message || 'Diet plan updated successfully', 'success');
       } else {
-        const newDiet = { ...formattedData, id: `diet-${Date.now()}` } as unknown as DietPlan;
+        const res = await libraryApi.createDietPlan(formattedData);
+        const newDiet = res.data ? res.data : { ...formattedData, id: `diet-${Date.now()}` } as unknown as DietPlan;
         setDietPlans(prev => [newDiet, ...prev]);
-        showToast('Diet plan created successfully', 'success');
+        showToast(res.message || 'Diet plan created successfully', 'success');
       }
       setShowDietModal(false);
     } catch (err) {
@@ -196,8 +203,9 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
     const isConfirmed = await confirm({ title: 'Remove Diet Plan', message: 'Delete this diet plan?', confirmText: 'Delete', type: 'danger' });
     if (!isConfirmed) return;
     try {
+      const res = await libraryApi.removeDietPlan(id);
       setDietPlans(prev => prev.filter(d => String(d.id) !== String(id)));
-      showToast('Diet plan deleted', 'success');
+      showToast(res.message || 'Diet plan deleted', 'success');
     } catch (err) {
       showToast((err as Error).message, 'error');
     }

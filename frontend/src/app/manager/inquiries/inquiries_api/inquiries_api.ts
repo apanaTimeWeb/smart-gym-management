@@ -11,7 +11,7 @@ export const inquiriesApi = {
   },
   getOne: (id: string) => apiFetch<ApiResponse<Inquiry>>(InquiriesUrlConfig.BACKEND_API.GET_ONE(id)),
   getStats: () => apiFetch<ApiResponse<InquiryStats>>(InquiriesUrlConfig.BACKEND_API.STATS),
-  create: (body: InquiryFormValues) =>
+  create: (body: Partial<InquiryFormValues>) =>
     apiFetch<ApiResponse<Inquiry>>(InquiriesUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body) }),
   update: (id: string, body: Partial<InquiryFormValues>) =>
     apiFetch<ApiResponse<Inquiry>>(InquiriesUrlConfig.BACKEND_API.UPDATE(id), { method: 'PATCH', body: JSON.stringify(body) }),

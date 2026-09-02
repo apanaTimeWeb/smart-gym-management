@@ -108,8 +108,9 @@ export const useMembersStore = create<MembersState>((set, get) => ({
         const res = await membersApi.update(editId, { ...data, planId: data.planId });
         set(state => {
           const plan = state.plans.find(p => String(p.id) === String(data.planId));
+          const updatedMember = res.data ? { ...res.data, plan } : { ...state.members.find(m => m.id === editId), ...data, planId: data.planId, plan };
           return {
-            members: state.members.map(m => m.id === editId ? { ...m, ...data, planId: data.planId, plan } as Member : m)
+            members: state.members.map(m => m.id === editId ? updatedMember as Member : m)
           };
         });
         return { success: true, message: res.message || 'Updated successfully' };
@@ -118,15 +119,16 @@ export const useMembersStore = create<MembersState>((set, get) => ({
         const res = await membersApi.create(newMember);
         set(state => {
           const plan = state.plans.find(p => String(p.id) === String(data.planId));
-          const fullNewMember = { 
+          // Use API response or fallback to mock
+          const fullNewMember = res.data ? { ...res.data, plan, pendingAmount: res.data.pendingAmount || 0, status: res.data.status || 'ACTIVE' } : { 
             id: `m-${Date.now()}`, 
             ...newMember, 
             status: 'ACTIVE',
             plan,
             pendingAmount: 0 
-          } as unknown as Member;
+          };
           return {
-            members: [fullNewMember, ...state.members],
+            members: [fullNewMember as unknown as Member, ...state.members],
             totalMembers: state.totalMembers + 1
           };
         });

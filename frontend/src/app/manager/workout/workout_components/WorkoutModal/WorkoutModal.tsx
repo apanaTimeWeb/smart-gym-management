@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Form modal for creating or editing a workout plan in the Workout Library module.
+// RESPONSIBILITY: Form modal for creating or editing a workout plan in the Workout Library module.
 'use client';
 
 import { useEffect } from 'react';
@@ -82,7 +82,8 @@ export default function WorkoutModal() {
             <div>
               <label className="block text-sm font-medium text-secondary mb-1">Days per week</label>
               <input 
-                type="number" 
+                type="number"
+                onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }}
                 min="1" 
                 max="7" 
                 {...register('days', { valueAsNumber: true })}
@@ -125,7 +126,8 @@ export default function WorkoutModal() {
             <div>
               <label className="block text-sm font-medium text-secondary mb-1">No. of Exercises</label>
               <input 
-                type="number" 
+                type="number"
+                onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }}
                 min="1" 
                 {...register('exercises', { valueAsNumber: true })}
                 className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${

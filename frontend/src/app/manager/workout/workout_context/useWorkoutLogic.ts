@@ -98,13 +98,16 @@ export function useWorkoutLogic(): WorkoutContextType {
       };
       
       if (editWkId) {
-        setWorkouts(prev => prev.map(w => String(w.id) === String(editWkId) ? { ...w, ...payload } as Workout : w));
-        showToast('Workout updated successfully', 'success');
+        const res = await workoutApi.updateWorkout(editWkId, payload);
+        const updatedWk = res.data || payload;
+        setWorkouts(prev => prev.map(w => String(w.id) === String(editWkId) ? { ...w, ...updatedWk } as Workout : w));
+        showToast(res.message || 'Workout updated successfully', 'success');
       } else {
-        const newWk = { ...payload, id: `wk-${Date.now()}` } as Workout;
+        const res = await workoutApi.createWorkout(payload);
+        const newWk = res.data ? res.data : { ...payload, id: `wk-${Date.now()}` } as Workout;
         setWorkouts(prev => [newWk, ...prev]);
         setTotalWorkouts(prev => prev + 1);
-        showToast('Workout created successfully', 'success');
+        showToast(res.message || 'Workout created successfully', 'success');
       }
       setShowWkModal(false);
     } catch (err) {
@@ -118,9 +121,10 @@ export function useWorkoutLogic(): WorkoutContextType {
     const isConfirmed = await confirm({ title: 'Delete Workout', message: 'Delete this workout plan?', confirmText: 'Delete', type: 'danger' });
     if (!isConfirmed) return;
     try {
+      const res = await workoutApi.removeWorkout(id);
       setWorkouts(prev => prev.filter(w => String(w.id) !== String(id)));
       setTotalWorkouts(prev => Math.max(0, prev - 1));
-      showToast('Workout plan deleted', 'success');
+      showToast(res.message || 'Workout plan deleted', 'success');
     } catch (err) {
       showToast((err as Error).message, 'error');
     }
@@ -155,13 +159,16 @@ export function useWorkoutLogic(): WorkoutContextType {
         muscleGroup: muscle.split(',').map(s => s.trim()) 
       };
       if (editExId) {
-        setExercises(prev => prev.map(e => String(e.id) === String(editExId) ? { ...e, ...payload } as unknown as Exercise : e));
-        showToast('Exercise updated successfully', 'success');
+        const res = await libraryApi.updateExercise(editExId, payload as unknown as Partial<Exercise>);
+        const updatedEx = res.data || payload;
+        setExercises(prev => prev.map(e => String(e.id) === String(editExId) ? { ...e, ...updatedEx } as unknown as Exercise : e));
+        showToast(res.message || 'Exercise updated successfully', 'success');
       } else {
-        const newEx = { ...payload, id: `ex-${Date.now()}` } as unknown as Exercise;
+        const res = await libraryApi.createExercise(payload as unknown as Partial<Exercise>);
+        const newEx = res.data ? res.data : { ...payload, id: `ex-${Date.now()}` } as unknown as Exercise;
         setExercises(prev => [newEx, ...prev]);
         setTotalExercises(prev => prev + 1);
-        showToast('Exercise created successfully', 'success');
+        showToast(res.message || 'Exercise created successfully', 'success');
       }
       setShowExModal(false);
     } catch (err) {
@@ -175,9 +182,10 @@ export function useWorkoutLogic(): WorkoutContextType {
     const isConfirmed = await confirm({ title: 'Delete Exercise', message: 'Delete this exercise?', confirmText: 'Delete', type: 'danger' });
     if (!isConfirmed) return;
     try {
+      const res = await libraryApi.removeExercise(id);
       setExercises(prev => prev.filter(e => String(e.id) !== String(id)));
       setTotalExercises(prev => Math.max(0, prev - 1));
-      showToast('Exercise deleted', 'success');
+      showToast(res.message || 'Exercise deleted', 'success');
     } catch (err) {
       showToast((err as Error).message, 'error');
     }
