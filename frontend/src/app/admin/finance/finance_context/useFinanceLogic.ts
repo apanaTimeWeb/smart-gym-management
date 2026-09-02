@@ -18,6 +18,7 @@ export function useFinanceLogic(initialData?: FinanceInitialData | null): Financ
   const [error, setError] = useState('');
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [methodFilter, setMethodFilter] = useState('All');
   const isFirstRender = useRef(true);
 
   const router = useRouter();
@@ -127,6 +128,8 @@ export function useFinanceLogic(initialData?: FinanceInitialData | null): Financ
   setSearch,
   currentPage,
   setCurrentPage,
-  savePayment
+  savePayment,
+  methodFilter,
+  setMethodFilter
   };
 }

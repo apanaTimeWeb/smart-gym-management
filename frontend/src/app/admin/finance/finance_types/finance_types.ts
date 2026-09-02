@@ -29,6 +29,8 @@ export interface FinanceContextType {
   currentPage: number;
   setCurrentPage: (p: number) => void;
   savePayment: (data: AddPaymentFormValues) => Promise<void>;
+  methodFilter: string;
+  setMethodFilter: (method: string) => void;
 }
 
 export interface Payment {

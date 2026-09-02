@@ -7,9 +7,14 @@ import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagin
 import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_utils/AdminSharedConstants';
 
 export default function PaymentsTable() {
-  const { payments, totalPayments, fetchState, search, currentPage, setCurrentPage } = useFinanceContext();
-  
-    const totalPages = Math.ceil(totalPayments / ADMIN_ITEMS_PER_PAGE) || 1;
+  const { payments, totalPayments, fetchState, currentPage, setCurrentPage, methodFilter } = useFinanceContext();
+
+  // Apply client-side filter by payment status (DUE = Pending Amount KPI card)
+  const filteredPayments = methodFilter === 'All'
+    ? payments
+    : payments.filter(p => p.status === methodFilter);
+
+  const totalPages = Math.ceil((methodFilter === 'All' ? totalPayments : filteredPayments.length) / ADMIN_ITEMS_PER_PAGE) || 1;
 
  if (fetchState === 'loading') {
  return (
@@ -57,7 +62,7 @@ export default function PaymentsTable() {
  </tr>
  </thead>
  <tbody className="divide-y divide-border">
- {payments.map(p => {
+ {filteredPayments.map(p => {
  const mStyle = FINANCE_METHOD_STYLES[p.method] || { bg: 'bg-input', text: 'text-secondary' };
  const sStyle = FINANCE_STATUS_STYLES[p.status] || { bg: 'bg-input', text: 'text-secondary' };
  return (
@@ -81,7 +86,7 @@ export default function PaymentsTable() {
  </tr>
  );
  })}
- {payments.length === 0 && (
+ {filteredPayments.length === 0 && (
  <tr>
  <td colSpan={6} className="text-center py-10 text-sm text-secondary">
  No payments recorded yet.
