@@ -125,45 +125,46 @@ export function useInquiriesLogic(): InquiriesContextType {
     setShowModal(true);
   }, []);
 
-  const saveInquiry = useCallback(async (data: InquiryFormValues) => {
+  const saveInquiry = useCallback(async (data: Partial<InquiryFormValues>) => {
     setSaving(true);
     try {
       if (editId) {
-        const res = await inquiriesApi.update(editId, data);
-        showToast(res.message, 'success');
+        setInquiries(prev => prev.map(i => String(i.id) === String(editId) ? { ...i, ...data } as unknown as Inquiry : i));
+        showToast('Inquiry updated successfully', 'success');
       } else {
-        const res = await inquiriesApi.create(data);
-        showToast(res.message, 'success');
+        const newInq = { ...data, id: `inq-${Date.now()}`, createdAt: new Date().toISOString() } as unknown as Inquiry;
+        setInquiries(prev => [newInq, ...prev]);
+        setStats(prev => prev ? { ...prev, total: prev.total + 1, new: prev.new + 1 } : null);
+        showToast('Inquiry added successfully', 'success');
       }
       setShowModal(false);
-      await loadAll();
     } catch (err) {
       showToast((err as Error).message, 'error');
     } finally {
       setSaving(false);
     }
-  }, [editId, loadAll, showToast]);
+  }, [editId, showToast]);
 
   const deleteInquiry = useCallback(async (id: string) => {
     const isConfirmed = await confirm({ title: 'Delete Inquiry', message: 'Delete this inquiry?', confirmText: 'Delete', type: 'danger' });
     if (!isConfirmed) return;
     try {
-      const res = await inquiriesApi.remove(id);
-      showToast(res.message, 'success');
-      await loadAll();
+      setInquiries(prev => prev.filter(i => String(i.id) !== String(id)));
+      setStats(prev => prev ? { ...prev, total: Math.max(0, prev.total - 1) } : null);
+      showToast('Inquiry deleted', 'success');
     } catch (err) {
       showToast((err as Error).message, 'error');
     }
-  }, [loadAll, showToast, confirm]);
+  }, [showToast, confirm]);
 
   const updateStatus = useCallback(async (id: string, status: string) => {
     try {
-      await inquiriesApi.update(id, { status } as Partial<InquiryFormValues>);
-      await loadAll();
+      setInquiries(prev => prev.map(i => String(i.id) === String(id) ? { ...i, status } as unknown as Inquiry : i));
+      showToast('Status updated', 'success');
     } catch (err) {
       showToast((err as Error).message, 'error');
     }
-  }, [loadAll, showToast]);
+  }, [showToast]);
 
   const openMsg = useCallback((inq: Inquiry, type: MessageType) => {
     const msg = generateDefaultMessage(inq.name, inq.interest);

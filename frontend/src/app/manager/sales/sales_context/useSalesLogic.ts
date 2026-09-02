@@ -63,7 +63,7 @@ export function useSalesLogic(initialData?: SalesInitialData | null): SalesConte
         salesApi.getAllMemberships(params)
       ]);
 
-      setOverviewData(overviewRes.data?.monthlyRevenue || []);
+      setOverviewData(Array.isArray(overviewRes.data) ? overviewRes.data : overviewRes.data?.monthlyRevenue || []);
       setMembershipReport(reportRes.data?.report || []);
       setMembershipTotals(reportRes.data?.totals || { activeCount: 0, revenue: 0 });
       

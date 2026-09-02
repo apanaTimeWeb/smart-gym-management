@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Renders the search/filter inputs for Audit logs and syncs them via useAuditFilters.
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { useAuditContext } from '@/app/admin/audit/audit_context/AuditContext';
 
@@ -9,6 +9,21 @@ export const AuditFilters = () => {
   const { 
     filters, handleEntityTypeChange, handleActorIdChange, handleActionTypeChange, handleStartDateChange, handleEndDateChange, entityTypes 
   } = useAuditContext();
+
+  const [localActorId, setLocalActorId] = useState(filters.actorId || '');
+
+  useEffect(() => {
+    setLocalActorId(filters.actorId || '');
+  }, [filters.actorId]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (localActorId !== (filters.actorId || '')) {
+        handleActorIdChange(localActorId);
+      }
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [localActorId, filters.actorId, handleActorIdChange]);
 
   return (
     <div className="flex flex-col md:flex-row gap-4 p-6 bg-card">
@@ -31,8 +46,8 @@ export const AuditFilters = () => {
           id="actorId"
           type="text"
           placeholder="Filter by Actor ID (e.g. 1)"
-          value={filters.actorId || ''}
-          onChange={(e) => handleActorIdChange(e.target.value)}
+          value={localActorId}
+          onChange={(e) => setLocalActorId(e.target.value)}
           className="p-2.5 rounded-xl border border-border bg-input text-primary outline-none focus:border-primary focus-visible:ring-1 focus-visible:ring-primary transition-all shadow-sm placeholder:text-secondary"
         />
       </div>

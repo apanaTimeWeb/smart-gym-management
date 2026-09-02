@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Provides the implementation for FinanceTabs.tsx functionality within its module.
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useFinanceContext } from '@/app/admin/finance/finance_context/FinanceContext';
 import { FINANCE_TABS } from '@/app/admin/finance/finance_utils/FinanceSharedConstants';
 import { RefreshCw, Plus, Search } from 'lucide-react';
@@ -11,6 +11,22 @@ import RevenueSummary from '@/app/admin/finance/finance_components/RevenueSummar
 export default function FinanceTabs() {
   const [tab, setTab] = useState(FINANCE_TABS[0]);
   const { loadAll, setShowModal, search, setSearch, setCurrentPage } = useFinanceContext();
+
+  const [localSearch, setLocalSearch] = useState(search);
+
+  useEffect(() => {
+    setLocalSearch(search);
+  }, [search]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (localSearch !== search) {
+        setSearch(localSearch);
+        setCurrentPage(1);
+      }
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [localSearch, search, setSearch, setCurrentPage]);
 
  return (
  <div className="rounded-xl shadow-sm border overflow-hidden bg-card border-border">
@@ -30,8 +46,8 @@ export default function FinanceTabs() {
     <div className="relative">
       <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
       <input 
-        value={search} 
-        onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} 
+        value={localSearch} 
+        onChange={e => setLocalSearch(e.target.value)} 
         placeholder="Search payments..." 
         className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-card text-primary w-40 sm:w-64"
       />

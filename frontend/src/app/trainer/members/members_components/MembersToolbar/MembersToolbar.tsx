@@ -1,6 +1,7 @@
 // RESPONSIBILITY: Renders the toolbar for searching, filtering, and initiating the "Add Member" action.
 'use client';
 
+import { useState, useEffect } from 'react';
 import { Search, RefreshCw, Plus } from 'lucide-react';
 import { useMembersContext } from '@/app/trainer/members/members_context/MembersContext';
 import { useMembersStore } from '@/app/trainer/members/members_store/useMembersStore';
@@ -9,6 +10,18 @@ import { MEMBER_STATUS_OPTIONS } from '@/app/trainer/members/members_utils/Membe
 
 export default function MembersToolbar() {
   const { search, setSearch, statusFilter, setStatusFilter, openAdd, currentPage } = useMembersContext();
+  const [localSearch, setLocalSearch] = useState(search);
+
+  useEffect(() => { setLocalSearch(search); }, [search]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (localSearch !== search) {
+        setSearch(localSearch);
+      }
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [localSearch, search, setSearch]);
   const loadAll = useMembersStore(s => s.loadAll);
 
   const handleRefresh = () => {
@@ -20,8 +33,8 @@ export default function MembersToolbar() {
       <div className="relative">
         <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
         <input 
-          value={search} 
-          onChange={e => setSearch(e.target.value)} 
+          value={localSearch} 
+          onChange={e => setLocalSearch(e.target.value)} 
           placeholder="Search by name or phone..." 
           className="pl-9 pr-3 py-2.5 border border-border rounded-xl text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page w-64 bg-input text-primary" 
         />

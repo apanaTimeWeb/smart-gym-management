@@ -11,16 +11,51 @@ import { useCouponsMutation } from '@/app/superadmin/coupons/coupons_utils/useCo
 import { CouponSchema, CouponFormData } from '@/app/superadmin/coupons/coupons_types/coupons_types';
 import type { Coupon, CouponStatus } from '@/app/superadmin/coupons/coupons_types/coupons_types';
 
+/** LocalStorage key for persisting coupon mutations across refreshes (TC-17/18 fix) */
+const COUPONS_STORAGE_KEY = 'superadmin_coupons_v1';
+
+function loadPersistedCoupons(): Coupon[] | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = localStorage.getItem(COUPONS_STORAGE_KEY);
+    return raw ? (JSON.parse(raw) as Coupon[]) : null;
+  } catch {
+    return null;
+  }
+}
+
+function persistCoupons(coupons: Coupon[]): void {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(COUPONS_STORAGE_KEY, JSON.stringify(coupons));
+  } catch {
+    // quota exceeded — ignore
+  }
+}
+
 export const useCouponsPage = () => {
   const [coupons, setCoupons] = useState<Coupon[]>([]);
   const { data: fetchedData, fetchState, error } = useCouponsData<Coupon[]>(
     SuperadminUrlConfig.BACKEND_API.COUPONS_BASE
   );
 
-  // Sync fetched data into local state for pessimistic mutations
+  // Sync fetched data into local state for pessimistic mutations, but respect localStorage
   useEffect(() => {
-    if (fetchedData) setCoupons(fetchedData);
+    if (fetchedData) {
+      const persisted = loadPersistedCoupons();
+      const finalCoupons = persisted ?? fetchedData;
+      if (!persisted) persistCoupons(finalCoupons);
+      setCoupons(finalCoupons);
+    }
   }, [fetchedData]);
+
+  const updateCoupons = useCallback((newCoupons: Coupon[] | ((prev: Coupon[]) => Coupon[])) => {
+    setCoupons(prev => {
+      const updated = typeof newCoupons === 'function' ? newCoupons(prev) : newCoupons;
+      persistCoupons(updated);
+      return updated;
+    });
+  }, []);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -44,7 +79,7 @@ export const useCouponsPage = () => {
     // Mocking the backend API success as per "fix with all hardcoded data"
     const newCoupon = {
       id: `mock-${Date.now()}`,
-      code: data.code || `CODE-${Math.floor(Math.random() * 10000)}`,
+      code: (data.code || `CODE-${Math.floor(Math.random() * 10000)}`).toUpperCase(),
       discountType: data.discountType,
       discountValue: data.discountValue || 0,
       maxUses: data.maxUses || 0,
@@ -54,32 +89,32 @@ export const useCouponsPage = () => {
       isDeleted: false,
     } as Coupon;
     
-    setCoupons(prev => [newCoupon, ...prev]);
+    updateCoupons(prev => [newCoupon, ...prev]);
     setIsModalOpen(false);
     form.reset();
     toast.success('Coupon created successfully');
-  }, [form]);
+  }, [form, updateCoupons]);
 
   const handleUpdateCoupon = useCallback(async (id: string, data: Partial<CouponFormData>) => {
     if (!selectedCoupon) return;
     // Mocking update
-    setCoupons(prev => prev.map(c => c.id === id ? { ...c, ...data } as Coupon : c));
+    updateCoupons(prev => prev.map(c => c.id === id ? { ...c, ...data } as Coupon : c));
     setIsEditModalOpen(false);
     setSelectedCoupon(null);
     toast.success('Coupon updated successfully');
-  }, [selectedCoupon]);
+  }, [selectedCoupon, updateCoupons]);
 
   const handleDeleteCoupon = useCallback(async (id: string) => {
     // Mocking delete
-    setCoupons(prev => prev.filter(c => c.id !== id));
+    updateCoupons(prev => prev.filter(c => c.id !== id));
     toast.success('Coupon deleted successfully');
-  }, []);
+  }, [updateCoupons]);
 
   const handleToggleRestore = useCallback(async (id: string) => {
     // Mocking restore
-    setCoupons(prev => prev.map(c => c.id === id ? { ...c, isDeleted: false } : c));
+    updateCoupons(prev => prev.map(c => c.id === id ? { ...c, isDeleted: false } : c));
     toast.success('Coupon restored successfully');
-  }, []);
+  }, [updateCoupons]);
 
   const handleToggleStatus = useCallback(async (id: string, currentStatus: CouponStatus) => {
     if (currentStatus !== 'ACTIVE' && currentStatus !== 'INACTIVE') {
@@ -88,9 +123,9 @@ export const useCouponsPage = () => {
     }
     const newStatus: CouponStatus = currentStatus === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
     // Mocking toggle
-    setCoupons(prev => prev.map(c => c.id === id ? { ...c, status: newStatus } : c));
+    updateCoupons(prev => prev.map(c => c.id === id ? { ...c, status: newStatus } : c));
     toast.success(`Coupon marked as ${newStatus}`);
-  }, []);
+  }, [updateCoupons]);
 
   const activeCoupons = useMemo(
     () => coupons.filter(c => c.status === 'ACTIVE' && !c.isDeleted).length,

@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Centralized constants, schema, and shared utilities for the Diet Library module.
+// RESPONSIBILITY: Centralized constants, schema, and shared utilities for the Diet Library module.
 import { z } from 'zod';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 
@@ -6,9 +6,9 @@ export const ExerciseSchema = z.object({
   name: z.string().min(2, "Name is required"),
   category: z.string(),
   muscleGroup: z.string().optional(),
-  sets: z.coerce.number().optional(),
-  reps: z.coerce.number().optional(),
-  duration: z.coerce.number().optional(),
+  sets: z.coerce.number().min(0, "Cannot be negative").optional(),
+  reps: z.coerce.number().min(0, "Cannot be negative").optional(),
+  duration: z.coerce.number().min(0, "Cannot be negative").optional(),
   difficulty: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']),
   description: z.string().optional(),
   videoUrl: z.string().url("Invalid URL").optional().or(z.literal(''))

@@ -4,7 +4,7 @@
 
 import { useState, useEffect } from 'react';
 import { dashboardApi } from '@/app/manager/dashboard/dashboard_api/dashboard_api';
-import { DashboardContextType, FetchState, DashboardStats } from '@/app/manager/dashboard/dashboard_types/dashboard_types';
+import { DashboardContextType, FetchState, DashboardStats, TimeRange } from '@/app/manager/dashboard/dashboard_types/dashboard_types';
 
 /**
  * Hook to manage dashboard data fetching and network state tracking.
@@ -13,6 +13,7 @@ export function useDashboardLogic(initialData?: DashboardStats | null): Dashboar
   const [stats, setStats] = useState<DashboardStats | null>(initialData || null);
   const [status, setStatus] = useState<FetchState>(initialData ? 'success' : 'loading');
   const [error, setError] = useState('');
+  const [timeRange, setTimeRange] = useState<TimeRange>('monthly');
 
   // Fetch only when no SSR initialData was passed from page.tsx; initialData in deps prevents re-fetch on SSR hydration
   useEffect(() => {
@@ -33,6 +34,8 @@ export function useDashboardLogic(initialData?: DashboardStats | null): Dashboar
   return {
     stats,
     status,
-    error
+    error,
+    timeRange,
+    setTimeRange
   };
 }

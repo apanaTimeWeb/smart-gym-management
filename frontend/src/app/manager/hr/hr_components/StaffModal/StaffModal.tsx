@@ -51,6 +51,8 @@ export default function StaffModal() {
  <input 
  type={f.type} 
  placeholder={f.placeholder} 
+ min={f.type === 'number' ? '0' : undefined}
+ onKeyDown={f.type === 'number' ? (e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); } : undefined}
  {...register(f.key as keyof StaffFormValues, f.type === 'number' ? { valueAsNumber: true } : {})}
  className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 ${
    errors[f.key as keyof StaffFormValues] ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'

@@ -30,6 +30,7 @@ export default function MemberModal() {
     handleSubmit,
     watch,
     reset,
+    setValue,
     formState: { errors }
   } = useFormReturn;
 
@@ -44,11 +45,24 @@ export default function MemberModal() {
   const watchBillingCycle = watch('billingCycle') as string;
   const watchCustomDays = watch('customDays') as number;
 
-  const onSubmit = (data: MemberFormValues) => saveMember(data);
+  const selectedPlan = plans.find(p => p.id.toString() === watchPlanId?.toString()) as PlanWithCustom | undefined;
+
+  // Auto-fill amount based on selected plan and cycle
+  useEffect(() => {
+    if (selectedPlan && watchBillingCycle) {
+      const price = getPriceForCycle(selectedPlan, watchBillingCycle, Number(watchCustomDays) || 0);
+      setValue('amount', price);
+    }
+  }, [selectedPlan, watchBillingCycle, watchCustomDays, setValue]);
+
+  const loadAll = useMembersStore(s => s.loadAll);
+  
+  const onSubmit = async (data: MemberFormValues) => {
+    await saveMember(data);
+  };
 
   if (!showAddModal) return null;
 
-  const selectedPlan = plans.find(p => p.id.toString() === watchPlanId?.toString()) as PlanWithCustom | undefined;
 
   return (
     <div className="fixed inset-0 bg-black/60 z-40 flex items-center justify-center p-4">
@@ -138,7 +152,8 @@ export default function MemberModal() {
                 <label className="block text-sm font-medium text-secondary mb-1">Custom Days</label>
                 <input
                   type="number"
-                  {...register('customDays')}
+                  min="0"
+                  {...register('customDays', { valueAsNumber: true })}
                   placeholder="e.g. 15"
                   className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-colors ${
                     errors.customDays ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
@@ -178,9 +193,10 @@ export default function MemberModal() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-secondary mb-1">Amount Paid (?)</label>
+              <label className="block text-sm font-medium text-secondary mb-1">Amount Paid (₹)</label>
               <input
                 type="number"
+                min="0"
                 {...register('amount', { valueAsNumber: true })}
                 className="w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-colors"
               />

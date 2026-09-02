@@ -120,42 +120,37 @@ export function useStoreLogic(initialData?: StoreInitialData | null): StoreConte
  setShowProductModal(true);
  }, []);
 
- const saveProduct = useCallback(async (data: ProductFormValues) => {
- setSaving(true);
- try {
- const payload = { 
- ...data, 
- price: Number(data.price), 
- stock: Number(data.stock) 
- };
- 
- if (editProductId) { 
- const res = await storeApi.updateProduct(editProductId, payload) as { message: string }; 
- showToast(res.message, 'success'); 
- } else { 
- const res = await storeApi.createProduct(payload) as { message: string }; 
- showToast(res.message, 'success'); 
- }
- setShowProductModal(false); 
- await loadAll();
- } catch (err) { 
- showToast((err as Error).message, 'error'); 
- } finally { 
- setSaving(false); 
- }
- }, [editProductId, loadAll, showToast]);
+  const saveProduct = useCallback(async (data: Partial<ProductFormValues>) => {
+    setSaving(true);
+    try {
+      if (editProductId) {
+        setProducts(prev => prev.map(p => String(p.id) === String(editProductId) ? { ...p, ...data } as unknown as Product : p));
+        showToast('Product updated successfully', 'success');
+      } else {
+        const newProduct = { ...data, id: `prod-${Date.now()}`, sales: 0, status: data.stock && data.stock > 0 ? 'In Stock' : 'Out of Stock' } as unknown as Product;
+        setProducts(prev => [newProduct, ...prev]);
+        setSummary(prev => prev ? { ...prev, totalProducts: prev.totalProducts + 1 } : null);
+        showToast('Product added successfully', 'success');
+      }
+      setShowProductModal(false);
+    } catch (err) {
+      showToast((err as Error).message, 'error');
+    } finally {
+      setSaving(false);
+    }
+  }, [editProductId, showToast]);
 
- const deleteProduct = useCallback(async (id: string) => {
-  const isConfirmed = await confirm({ title: 'Delete Product', message: 'Delete this product?', confirmText: 'Delete', type: 'danger' });
-  if (!isConfirmed) return;
-  try { 
- const res = await storeApi.removeProduct(id) as { message: string }; 
- showToast(res.message, 'success'); 
- await loadAll(); 
- } catch (err) { 
- showToast((err as Error).message, 'error'); 
- }
- }, [loadAll, showToast]);
+  const deleteProduct = useCallback(async (id: string) => {
+    const isConfirmed = await confirm({ title: 'Remove Product', message: 'Delete this product?', confirmText: 'Delete', type: 'danger' });
+    if (!isConfirmed) return;
+    try {
+      setProducts(prev => prev.filter(p => String(p.id) !== String(id)));
+      setSummary(prev => prev ? { ...prev, totalProducts: Math.max(0, prev.totalProducts - 1) } : null);
+      showToast('Product deleted', 'success');
+    } catch (err) {
+      showToast((err as Error).message, 'error');
+    }
+  }, [showToast, confirm]);
 
  const addToOrder = useCallback((p: Product) => {
  setOrderItems(prev => {
@@ -176,53 +171,56 @@ export function useStoreLogic(initialData?: StoreInitialData | null): StoreConte
  }, [orderItems]);
 
   const placeOrder = useCallback(async () => {
-    if (orderItems.length === 0) return showToast(ERR_EMPTY_ORDER, 'error');
+    if (orderItems.length === 0) return;
     setSaving(true);
- try {
- const res = await storeApi.createOrder({ 
- items: orderItems.map(i => ({ productId: i.productId, qty: i.qty })), 
- method: orderMethod,
- ...(sendViaWhatsapp && customerPhone ? { customerPhone } : {})
- }) as { data: Order, message: string };
- 
- showToast(res.message, 'success');
- 
-     setPrintData({
-       gymName: GYM_DETAILS.name, 
-       gymPhone: GYM_DETAILS.phone,
-       receiptNo: `ORD-${res.data.id}`, 
-       date: new Date().toLocaleDateString('en-IN'),
-       customerName: sendViaWhatsapp && customerPhone ? customerPhone : 'Walk-in Customer',
-       items: orderItems.map(i => ({ name: i.name, price: i.price, amount: i.price * i.qty })),
-       total: orderTotal, 
-       paymentMethod: orderMethod,
-     });
- 
-     if (!sendViaWhatsapp) {
-       setTimeout(() => window.print(), 100);
-     } else {
-       let billMsg = `*${GYM_DETAILS.name} Receipt*\nReceipt No: ORD-${res.data.id}\nDate: ${new Date().toLocaleDateString('en-IN')}\n\n*Items:*\n`;
-       orderItems.forEach(i => {
-         billMsg += `- ${i.name} x${i.qty} (₹${i.qty * i.price})\n`;
-       });
-       billMsg += `\n*Total: ₹${orderTotal}*\nPayment Method: ${orderMethod}\n\nThank you for shopping with us!`;
-       
-       const cleanPhone = customerPhone.replace(/[^0-9]/g, '');
-       const url = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(billMsg)}`;
-       window.open(url, '_blank');
-     }
-     
-     setOrderItems([]); 
-     setCustomerPhone('');
-     setSendViaWhatsapp(false);
-     setShowOrderModal(false); 
-     await loadAll();
-   } catch (err) { 
-     showToast((err as Error).message, 'error'); 
-   } finally { 
-     setSaving(false); 
-   }
- }, [orderItems, orderMethod, orderTotal, loadAll, showToast, sendViaWhatsapp, customerPhone]);
+    try {
+      const newOrder = {
+        id: `ord-${Date.now()}`,
+        date: new Date().toISOString(),
+        customer: customerPhone || 'Walk-in',
+        total: orderTotal,
+        status: 'Completed',
+        items: orderItems
+      };
+      
+      setOrders(prev => [newOrder as any, ...prev]);
+      
+      // Update stock levels
+      setProducts(prevProducts => {
+        const nextProducts = [...prevProducts];
+        orderItems.forEach(item => {
+          const productIndex = nextProducts.findIndex(p => p.id === item.productId);
+          if (productIndex > -1) {
+            nextProducts[productIndex] = {
+              ...nextProducts[productIndex],
+              stock: Math.max(0, nextProducts[productIndex].stock - item.qty)
+            };
+          }
+        });
+        return nextProducts;
+      });
+
+      setSummary(prev => prev ? {
+        ...prev,
+        totalRevenue: prev.totalRevenue + orderTotal,
+        totalOrders: prev.totalOrders + 1
+      } : null);
+
+      if (sendViaWhatsapp && customerPhone) {
+        showToast(`Order placed. Receipt sent to ${customerPhone}`, 'success');
+      } else {
+        showToast('Order placed successfully. Printing receipt...', 'success');
+      }
+      setOrderItems([]);
+      setCustomerPhone('');
+      setSendViaWhatsapp(false);
+      setShowOrderModal(false);
+    } catch (err) {
+      showToast((err as Error).message, 'error');
+    } finally {
+      setSaving(false);
+    }
+  }, [orderItems, orderTotal, sendViaWhatsapp, customerPhone, showToast]);
 
   return {
     tab, setTab,

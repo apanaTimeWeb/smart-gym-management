@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the Workout Library module.
+// RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the Workout Library module.
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { 
   EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM, WorkoutFormValues, ExerciseFormValues
@@ -99,13 +99,15 @@ export function useWorkoutLogic(): WorkoutContextType {
       
       if (editWkId) {
         const res = await workoutApi.updateWorkout(editWkId, payload);
+        setWorkouts(prev => prev.map(w => String(w.id) === String(editWkId) ? { ...w, ...payload } as unknown as Workout : w));
         showToast((res as any).message, 'success');
       } else {
         const res = await workoutApi.createWorkout(payload);
+        const newWk = { ...payload, id: Math.random().toString(), isActive: true } as unknown as Workout;
+        setWorkouts(prev => [newWk, ...prev]);
         showToast((res as any).message, 'success');
       }
       setShowWkModal(false);
-      await loadAll();
     } catch (err) {
       showToast((err as Error).message, 'error');
     } finally {
@@ -118,8 +120,8 @@ export function useWorkoutLogic(): WorkoutContextType {
     if (!isConfirmed) return;
     try {
       const res = await workoutApi.removeWorkout(id);
+      setWorkouts(prev => prev.filter(w => String(w.id) !== String(id)));
       showToast((res as any).message, 'success');
-      await loadAll();
     } catch (err) {
       showToast((err as Error).message, 'error');
     }
@@ -155,13 +157,15 @@ export function useWorkoutLogic(): WorkoutContextType {
       };
       if (editExId) {
         const res = await libraryApi.updateExercise(editExId, payload);
+        setExercises(prev => prev.map(e => String(e.id) === String(editExId) ? { ...e, ...payload } as unknown as Exercise : e));
         showToast((res as any).message, 'success');
       } else {
         const res = await libraryApi.createExercise(payload);
+        const newEx = { ...payload, id: Math.random().toString(), isActive: true } as unknown as Exercise;
+        setExercises(prev => [newEx, ...prev]);
         showToast((res as any).message, 'success');
       }
       setShowExModal(false);
-      await loadAll();
     } catch (err) {
       showToast((err as Error).message, 'error');
     } finally {
@@ -174,8 +178,8 @@ export function useWorkoutLogic(): WorkoutContextType {
     if (!isConfirmed) return;
     try {
       const res = await libraryApi.removeExercise(id);
+      setExercises(prev => prev.filter(e => String(e.id) !== String(id)));
       showToast((res as any).message, 'success');
-      await loadAll();
     } catch (err) {
       showToast((err as Error).message, 'error');
     }

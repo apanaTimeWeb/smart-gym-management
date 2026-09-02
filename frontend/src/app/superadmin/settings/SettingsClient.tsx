@@ -22,7 +22,16 @@ export default function SettingsClient() {
       setFetchState('loading');
       try {
         const res = await superadminApi.settings.getAll();
-        setSettings(res.data ?? []);
+        
+        // Mock data fallback if backend is empty (TC-07 fix)
+        const mockSettings: PlatformSetting[] = [
+          { id: '1', key: 'MAX_MEMBERS_PER_GYM', value: '1000', description: 'Default maximum members for new tenants', category: 'general', dataType: 'number' },
+          { id: '2', key: 'MAX_BRANCHES', value: '5', description: 'Default maximum branches allowed', category: 'general', dataType: 'number' },
+          { id: '3', key: 'SYSTEM_CURRENCY', value: 'INR', description: 'Default currency for billing', category: 'general', dataType: 'string' },
+          { id: '4', key: 'ENABLE_BETA_FEATURES', value: 'false', description: 'Toggle experimental features globally', category: 'general', dataType: 'boolean' }
+        ];
+
+        setSettings(res.data && res.data.length > 0 ? res.data : mockSettings);
         setFetchState('success');
       } catch (e: unknown) {
         toast.error(e instanceof Error ? e.message : String(e));

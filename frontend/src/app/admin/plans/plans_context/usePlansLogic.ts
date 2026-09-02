@@ -117,8 +117,8 @@ export function usePlansLogic(initialData?: PlansInitialData | null): PlansConte
     if (!isConfirmed) return;
     try {
       const res = await plansApi.remove(id);
+      setPlans(prev => prev.filter(p => p.id !== id));
       showToast(res.message || 'Plan deleted', 'success');
-      await loadPlans();
     } catch (err) {
       showToast((err as Error).message, 'error');
     }

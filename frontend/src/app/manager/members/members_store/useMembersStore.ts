@@ -106,9 +106,30 @@ export const useMembersStore = create<MembersState>((set, get) => ({
     try {
       if (editId) {
         const res = await membersApi.update(editId, { ...data, planId: data.planId });
+        set(state => {
+          const plan = state.plans.find(p => String(p.id) === String(data.planId));
+          return {
+            members: state.members.map(m => m.id === editId ? { ...m, ...data, planId: data.planId, plan } as Member : m)
+          };
+        });
         return { success: true, message: res.message || 'Updated successfully' };
       } else {
-        const res = await membersApi.create({ ...data, planId: data.planId, joinDate: new Date().toISOString() });
+        const newMember = { ...data, planId: data.planId, joinDate: new Date().toISOString() };
+        const res = await membersApi.create(newMember);
+        set(state => {
+          const plan = state.plans.find(p => String(p.id) === String(data.planId));
+          const fullNewMember = { 
+            id: `m-${Date.now()}`, 
+            ...newMember, 
+            status: 'ACTIVE',
+            plan,
+            pendingAmount: 0 
+          } as unknown as Member;
+          return {
+            members: [fullNewMember, ...state.members],
+            totalMembers: state.totalMembers + 1
+          };
+        });
         return { success: true, message: res.message || 'Created successfully' };
       }
     } catch (err: unknown) {
@@ -121,6 +142,10 @@ export const useMembersStore = create<MembersState>((set, get) => ({
   deleteMember: async (id: string) => {
     try {
       const res = await membersApi.remove(id);
+      set(state => ({
+        members: state.members.filter(m => m.id !== id),
+        totalMembers: state.totalMembers - 1
+      }));
       return { success: true, message: res.message || 'Deleted successfully' };
     } catch (err: unknown) {
       throw err;

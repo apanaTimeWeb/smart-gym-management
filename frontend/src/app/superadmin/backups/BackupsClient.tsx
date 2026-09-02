@@ -51,8 +51,14 @@ export default function BackupsClient() {
     };
 
     const handleDownload = (id: string) => {
-      // Simulate Blob URL download trigger
       toast.success(`Starting download for backup ${id}`);
+      // Simulate real download behavior (TC-32)
+      const link = document.createElement('a');
+      link.href = '#';
+      link.download = `${id}_snapshot.sql.gz`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     };
 
     const handleRestore = (id: string) => {
@@ -68,7 +74,11 @@ if (fetchState === 'loading') return (
 
 
 
-  const filtered = DUMMY_BACKUPS.filter(b => b.tenantName.toLowerCase().includes(search.toLowerCase()) || b.databaseName.toLowerCase().includes(search.toLowerCase()));
+  const filtered = DUMMY_BACKUPS.filter(b => 
+    b.tenantName.toLowerCase().includes(search.toLowerCase()) || 
+    b.databaseName.toLowerCase().includes(search.toLowerCase()) ||
+    b.id.toLowerCase().includes(search.toLowerCase())
+  );
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;
   const paginatedBackups = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);

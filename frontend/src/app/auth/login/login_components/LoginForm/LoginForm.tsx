@@ -3,7 +3,8 @@
 'use client';
 
 import Image from 'next/image';
-import { Mail, Lock, Eye, EyeOff, Loader2, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
+import { Mail, Lock, Eye, EyeOff, Loader2, ArrowRight, ChevronLeft } from 'lucide-react';
 import { useLoginForm } from '@/app/auth/login/login_components/LoginForm/useLoginForm';
 import { LoginSharedConstants } from '@/app/auth/login/login_constants/LoginSharedConstants';
 
@@ -14,6 +15,16 @@ export default function LoginForm() {
 
   return (
     <div className="w-full max-w-md flex flex-col gap-8">
+
+      {/* ── Back to Home (TC-01 fix) ── */}
+      <Link
+        href="/landing"
+        className="flex items-center gap-1.5 text-sm text-secondary hover:text-primary transition-colors self-start"
+        aria-label="Back to landing page"
+      >
+        <ChevronLeft size={16} />
+        Back to Home
+      </Link>
 
       {/* ── Brand header (mobile shows this; desktop hero panel shows it there) ── */}
       <div className="flex flex-col items-center text-center gap-2">

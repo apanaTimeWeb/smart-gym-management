@@ -1,13 +1,29 @@
 // RESPONSIBILITY: Renders the search/filter toolbar and bulk-action bar for the Inquiries module.
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useInquiriesContext } from '@/app/manager/inquiries/inquiries_context/InquiriesContext';
 import { INQUIRIES_STATUS_LABELS } from '@/app/manager/inquiries/inquiries_utils/InquiriesSharedConstants';
 import { RefreshCw, Plus, MessageCircle, Mail } from 'lucide-react';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 
 export default function InquiriesToolbar() {
-  const { search, setSearch, statusFilter, setStatusFilter, loadAll, openAdd, selectedIds, clearSelection, openBulkMsg } = useInquiriesContext();
+  const { search, setSearch, statusFilter, setStatusFilter, loadAll, openAdd, selectedIds, clearSelection, openBulkMsg, setCurrentPage } = useInquiriesContext();
+  const [localSearch, setLocalSearch] = useState(search);
+
+  useEffect(() => {
+    setLocalSearch(search);
+  }, [search]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (localSearch !== search) {
+        setSearch(localSearch);
+        if (typeof setCurrentPage === 'function') setCurrentPage(1);
+      }
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [localSearch, search, setSearch, setCurrentPage]);
 
   if (selectedIds.length > 0) {
     return (
@@ -41,8 +57,8 @@ export default function InquiriesToolbar() {
   return (
     <div className="bg-card rounded-xl shadow-sm border border-border p-4 flex flex-wrap gap-3 items-center justify-between">
       <input
-        value={search}
-        onChange={e => setSearch(e.target.value)}
+        value={localSearch}
+        onChange={e => setLocalSearch(e.target.value)}
         placeholder="Search name or phone..."
         className="border border-border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page w-64 bg-input text-primary"
       />

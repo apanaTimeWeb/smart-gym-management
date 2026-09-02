@@ -109,9 +109,17 @@ export const useMembersStore = create<MembersState>((set, get) => ({
     try {
       if (editId) {
         const res = await membersApi.update(editId, { ...data, planId: data.planId });
+        set(state => ({
+          members: state.members.map(m => m.id === editId ? { ...m, ...data, planId: data.planId } as Member : m)
+        }));
         return { success: true, message: res.message || 'Updated successfully' };
       } else {
-        const res = await membersApi.create({ ...data, planId: data.planId, joinDate: new Date().toISOString() });
+        const newMember = { ...data, planId: data.planId, joinDate: new Date().toISOString() };
+        const res = await membersApi.create(newMember);
+        set(state => ({
+          members: [{ id: `m-${Date.now()}`, ...newMember } as unknown as Member, ...state.members],
+          totalMembers: state.totalMembers + 1
+        }));
         return { success: true, message: res.message || 'Created successfully' };
       }
     } catch (err: unknown) {
@@ -124,6 +132,10 @@ export const useMembersStore = create<MembersState>((set, get) => ({
   deleteMember: async (id: string) => {
     try {
       const res = await membersApi.remove(id);
+      set(state => ({
+        members: state.members.filter(m => m.id !== id),
+        totalMembers: state.totalMembers - 1
+      }));
       return { success: true, message: res.message || 'Deleted successfully' };
     } catch (err: unknown) {
       throw err;

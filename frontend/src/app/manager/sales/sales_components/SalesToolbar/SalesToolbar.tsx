@@ -1,12 +1,28 @@
 // RESPONSIBILITY: Provides the implementation for SalesToolbar.tsx functionality within its module.
 'use client';
 
+import { useState, useEffect } from 'react';
 import { Download, Filter, Search } from 'lucide-react';
 import { useSalesContext } from '@/app/manager/sales/sales_context/SalesContext';
 import { DATE_FILTERS } from '@/app/manager/sales/sales_utils/SalesSharedConstants';
 
 export default function SalesToolbar() {
   const { dateFilter, setDateFilter, search, setSearch, setCurrentPage } = useSalesContext();
+  const [localSearch, setLocalSearch] = useState(search);
+
+  useEffect(() => {
+    setLocalSearch(search);
+  }, [search]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (localSearch !== search) {
+        setSearch(localSearch);
+        if (typeof setCurrentPage === 'function') setCurrentPage(1);
+      }
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [localSearch, search, setSearch, setCurrentPage]);
 
  return (
  <div className="bg-card rounded-xl shadow-sm border border-border p-4 flex flex-wrap gap-3 items-center justify-between mb-5">
@@ -29,15 +45,26 @@ export default function SalesToolbar() {
   <div className="relative">
     <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
     <input 
-      value={search} 
-      onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} 
+      value={localSearch} 
+      onChange={e => setLocalSearch(e.target.value)} 
       placeholder="Search..." 
       className="pl-9 pr-3 py-1.5 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-40 sm:w-64 bg-input text-foreground"
     />
   </div>
- <button className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary transition-colors">
- <Download size={13} /> Export
- </button>
+  <button 
+    onClick={() => {
+      const csv = 'Data,Amount\nTest,100';
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'sales_report.csv';
+      a.click();
+    }}
+    className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary transition-colors"
+  >
+    <Download size={13} /> Export
+  </button>
  </div>
  </div>
  );

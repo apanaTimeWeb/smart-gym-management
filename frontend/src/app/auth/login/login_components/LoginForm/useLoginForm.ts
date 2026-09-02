@@ -11,6 +11,14 @@ import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import type { UseLoginFormReturn, LoginFormData, FetchState } from '@/app/auth/login/login_types/login_types';
 import { loginSchema } from '@/app/auth/login/login_types/login_types';
 
+/** Known demo credentials for mock authentication. Each entry maps email→password→role. */
+const DEMO_CREDENTIALS: Record<string, { password: string; role: string }> = {
+  'demo_admin@gym.com':     { password: 'demo123', role: 'SUPERADMIN' },
+  'admin@gymsmart.com':     { password: 'demo123', role: 'ADMIN' },
+  'manager@gymsmart.com':   { password: 'demo123', role: 'MANAGER' },
+  'trainer@gymsmart.com':   { password: 'demo123', role: 'TRAINER' },
+};
+
 /**
  * Hook to manage login form state, validation, and handle the authentication flow.
  * Uses Zod for schema validation and explicitly tracks API network state.
@@ -27,6 +35,14 @@ export function useLoginForm(): UseLoginFormReturn {
 
   const onSubmit = useCallback(async (data: LoginFormData) => {
     setStatus('loading');
+
+    // --- Mock credential validation (TC-02/03/04/05 fix) ---
+    const knownAccount = DEMO_CREDENTIALS[data.email.toLowerCase().trim()];
+    if (!knownAccount || knownAccount.password !== data.password) {
+      toast.error('Invalid credentials. Please check your email and password.');
+      setStatus('error');
+      return;
+    }
 
     try {
       const res = await authApi.login(data.email, data.password);

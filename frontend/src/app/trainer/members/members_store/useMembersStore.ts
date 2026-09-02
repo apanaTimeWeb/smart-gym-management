@@ -100,9 +100,18 @@ export const useMembersStore = create<MembersState>((set, get) => ({
     try {
       if (editId) {
         const res = await membersApi.update(editId, data);
+        set((state) => ({
+          members: state.members.map(m => String(m.id) === String(editId) ? { ...m, ...data } as unknown as Member : m)
+        }));
         return { success: true, message: res.message || 'Updated successfully' };
       } else {
+        const newId = Math.random().toString();
         const res = await membersApi.create({ ...data, joinDate: new Date().toISOString() });
+        const newMember = { ...data, id: newId, status: 'ACTIVE', joinDate: new Date().toISOString(), planName: 'Basic', pendingAmount: 0 } as unknown as Member;
+        set((state) => ({
+          members: [newMember, ...state.members],
+          totalMembers: state.totalMembers + 1
+        }));
         return { success: true, message: res.message || 'Created successfully' };
       }
     } catch (err: unknown) {
@@ -115,6 +124,10 @@ export const useMembersStore = create<MembersState>((set, get) => ({
   deleteMember: async (id: string) => {
     try {
       const res = await membersApi.remove(id);
+      set((state) => ({
+        members: state.members.filter(m => String(m.id) !== String(id)),
+        totalMembers: Math.max(0, state.totalMembers - 1)
+      }));
       return { success: true, message: res.message || 'Deleted successfully' };
     } catch (err: unknown) {
       throw err;

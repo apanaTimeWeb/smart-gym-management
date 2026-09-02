@@ -15,11 +15,17 @@ import type { AdminHeaderProps } from '@/app/admin/admin_components/AdminLayout/
 export default function AdminHeader({ title, subtitle }: AdminHeaderProps) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [notifications, setNotifications] = useState(ADMIN_PLACEHOLDER_NOTIFICATIONS);
   const notifRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
   const user = getUser();
   const { selectedBranchId, setSelectedBranchId, branches } = useAdminGlobalStore();
+
+  const removeNotification = (id: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setNotifications(prev => prev.filter(n => n.id !== id));
+  };
 
   // Sets mounted=true once on client-side hydration to safely read user data (avoids SSR mismatch).
   useEffect(() => {
@@ -98,15 +104,26 @@ export default function AdminHeader({ title, subtitle }: AdminHeaderProps) {
                 <button onClick={() => setShowNotifications(false)} className="text-secondary hover:text-foreground"><X size={16} /></button>
               </div>
               <div className="max-h-75 overflow-y-auto">
-                {ADMIN_PLACEHOLDER_NOTIFICATIONS.map(n => (
-                  <div key={n.id} className={`px-4 py-3 border-b border-border hover:bg-input transition-colors cursor-pointer ${n.unread ? 'bg-primary-subtle' : ''}`}>
-                    <p className={`text-sm ${n.unread ? 'text-foreground font-medium' : 'text-secondary'}`}>{n.text}</p>
-                    <span className="text-xs text-secondary mt-1 block">{n.time}</span>
-                  </div>
-                ))}
+                {notifications.length === 0 ? (
+                  <div className="p-4 text-center text-sm text-secondary">No new notifications</div>
+                ) : (
+                  notifications.map(n => (
+                    <div key={n.id} className={`px-4 py-3 border-b border-border hover:bg-input transition-colors cursor-pointer relative group ${n.unread ? 'bg-primary-subtle' : ''}`}>
+                      <p className={`text-sm pr-6 ${n.unread ? 'text-foreground font-medium' : 'text-secondary'}`}>{n.text}</p>
+                      <span className="text-xs text-secondary mt-1 block">{n.time}</span>
+                      <button 
+                        onClick={(e) => removeNotification(n.id, e)} 
+                        className="absolute right-3 top-3 text-secondary hover:text-danger opacity-0 group-hover:opacity-100 transition-opacity"
+                        aria-label="Remove notification"
+                      >
+                        <X size={14} />
+                      </button>
+                    </div>
+                  ))
+                )}
               </div>
               <div className="p-3 text-center border-t border-border bg-header">
-                <button className="text-sm font-medium text-primary hover:underline">View All Notifications</button>
+                <button onClick={() => setShowNotifications(false)} className="text-sm font-medium text-primary hover:underline">View All Notifications</button>
               </div>
             </div>
           )}

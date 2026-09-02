@@ -65,7 +65,7 @@ export default function PlanCreateModal() {
             {(['priceMonthly', 'priceAnnual'] as const).map(field => (
               <div key={field} className="space-y-2">
                 <label className="block text-sm font-medium text-secondary">{field === 'priceMonthly' ? 'Monthly Price ($)' : 'Annual Price ($)'} <span className="text-danger">*</span></label>
-                <input type="number" step="0.01" {...register(field, { valueAsNumber: true })} className="w-full bg-input border border-border rounded-xl px-4 py-3 text-foreground focus:border-primary outline-none transition-colors" />
+                <input type="number" min="0" step="0.01" {...register(field, { valueAsNumber: true })} className="w-full bg-input border border-border rounded-xl px-4 py-3 text-foreground focus:border-primary outline-none transition-colors" />
                 {errors[field] && <p className="text-danger text-xs">{errors[field]?.message}</p>}
               </div>
             ))}
@@ -75,7 +75,7 @@ export default function PlanCreateModal() {
             {(['maxMembers', 'maxStaff'] as const).map(field => (
               <div key={field} className="space-y-2">
                 <label className="block text-sm font-medium text-secondary">{field === 'maxMembers' ? 'Max Members' : 'Max Staff'} <span className="text-danger">*</span></label>
-                <input type="number" {...register(field, { valueAsNumber: true })} className="w-full bg-input border border-border rounded-xl px-4 py-3 text-foreground focus:border-primary outline-none transition-colors" />
+                <input type="number" min="0" {...register(field, { valueAsNumber: true })} className="w-full bg-input border border-border rounded-xl px-4 py-3 text-foreground focus:border-primary outline-none transition-colors" />
                 {errors[field] && <p className="text-danger text-xs">{errors[field]?.message}</p>}
               </div>
             ))}

@@ -82,7 +82,7 @@ export default function AttendanceModal() {
                 control={control}
                 render={({ field }) => (
                   <SearchableDropdown
-                    options={members.map(m => ({ label: `${m.name} (${m.phone})`, value: String(m.id) }))}
+                    options={members.filter(m => !(m as any).role || (m as any).planId !== undefined).map(m => ({ label: `${m.name} (${m.phone})`, value: String(m.id) }))}
                     value={field.value || ''}
                     onChange={field.onChange}
                     placeholder="Search Member..."
@@ -96,7 +96,7 @@ export default function AttendanceModal() {
                 control={control}
                 render={({ field }) => (
                   <SearchableDropdown
-                    options={staff.map(s => ({ label: `${s.name} - ${s.role}`, value: String(s.id) }))}
+                    options={staff.filter(s => (s as any).role || (s as any).salary !== undefined).map(s => ({ label: `${s.name} - ${(s as any).role || 'Staff'}`, value: String(s.id) }))}
                     value={field.value || ''}
                     onChange={field.onChange}
                     placeholder="Search Staff..."

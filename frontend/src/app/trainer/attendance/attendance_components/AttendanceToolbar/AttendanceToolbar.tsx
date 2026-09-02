@@ -1,12 +1,26 @@
 // RESPONSIBILITY: Provides the search, filter tabs, and action buttons for the Attendance module.
 'use client';
 
+import { useState, useEffect } from 'react';
 import { RefreshCw, Plus, Search } from 'lucide-react';
 import { useAttendanceContext } from '@/app/trainer/attendance/attendance_context/AttendanceContext';
 import { ATTENDANCE_TABS } from '@/app/trainer/attendance/attendance_utils/AttendanceSharedConstants';
 
 export default function AttendanceToolbar() {
   const { tab, setTab, loadAll, setShowModal, search, setSearch, setCurrentPage } = useAttendanceContext();
+  const [localSearch, setLocalSearch] = useState(search);
+
+  useEffect(() => { setLocalSearch(search); }, [search]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (localSearch !== search) {
+        setSearch(localSearch);
+        setCurrentPage(1);
+      }
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [localSearch, search, setSearch, setCurrentPage]);
 
  return (
  <div className="border-b border-border flex justify-between items-center">
@@ -29,8 +43,8 @@ export default function AttendanceToolbar() {
     <div className="relative">
       <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
       <input 
-        value={search} 
-        onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} 
+        value={localSearch} 
+        onChange={e => setLocalSearch(e.target.value)} 
         placeholder={`Search ${tab.toLowerCase()}...`} 
         className="pl-9 pr-3 py-2 border border-border bg-input text-foreground rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-40 sm:w-64"
       />

@@ -105,11 +105,10 @@ export function useMembersLogic(initialData?: MembersInitialData | null): Member
       const res = await storeSaveMember(data, editId);
       showToast(res.message, 'success');
       setShowAddModal(false);
-      await loadAll({ search: debouncedSearch, status: statusFilter, page: currentPage.toString() });
     } catch (err: unknown) { 
       showToast(err instanceof Error ? err.message : 'Save failed', 'error'); 
     }
-  }, [editId, loadAll, showToast, storeSaveMember, debouncedSearch, statusFilter, currentPage]);
+  }, [editId, showToast, storeSaveMember]);
 
   const deleteMember = useCallback(async (id: string) => {
     const isConfirmed = await confirm({ title: 'Delete Member', message: 'Are you sure you want to delete this member? This action cannot be undone.', confirmText: 'Delete', type: 'danger' });
@@ -118,11 +117,10 @@ export function useMembersLogic(initialData?: MembersInitialData | null): Member
       const res = await storeDeleteMember(id);
       showToast(res.message, 'success');
       if (selectedMember?.id === id) setSelectedMember(null);
-      await loadAll({ search: debouncedSearch, status: statusFilter, page: currentPage.toString() });
     } catch (err: unknown) { 
       showToast(err instanceof Error ? err.message : 'Delete failed', 'error'); 
     }
-  }, [loadAll, showToast, selectedMember, confirm, storeDeleteMember, debouncedSearch, statusFilter, currentPage]);
+  }, [showToast, selectedMember, confirm, storeDeleteMember]);
 
   const openMsg = useCallback((m: Member, type: MessageType) => {
     const tpl = m.status === 'EXPIRED'

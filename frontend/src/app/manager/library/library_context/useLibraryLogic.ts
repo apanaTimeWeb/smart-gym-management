@@ -4,7 +4,7 @@ import { useDebounce } from '@/app/manager/manager_utils/useDebounce';
 import { libraryApi } from '@/app/manager/library/library_api/library_api';
 import type { Exercise, DietPlan } from '@/app/manager/library/library_types/library_types';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import { EMPTY_EXERCISE_FORM, EMPTY_DIET_FORM, type LibraryTab } from '@/app/manager/library/library_utils/LibrarySharedConstants';
+import { EMPTY_EXERCISE_FORM, EMPTY_DIET_FORM, type LibraryTab, type ExerciseFormValues, type DietFormValues } from '@/app/manager/library/library_utils/LibrarySharedConstants';
 import { LibraryContextType, LibraryInitialData } from '@/app/manager/library/library_types/library_types';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -112,42 +112,40 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
  setShowExModal(true);
  }, []);
  
- const saveExercise = useCallback(async (data: Record<string, any>) => {
- setSaving(true);
- try {
- const payload = { 
- ...data, 
- muscleGroup: data.muscleGroup ? data.muscleGroup.split(',').map((s: string) => s.trim()) : [], 
- sets: data.sets ? Number(data.sets) : undefined 
- };
- 
- if (editExId) { 
- const res = await libraryApi.updateExercise(editExId, payload) as unknown as { message?: string }; 
- showToast(res.message || 'Exercise updated successfully', 'success'); 
- } else { 
- const res = await libraryApi.createExercise(payload) as unknown as { message?: string }; 
- showToast(res.message || 'Exercise created successfully', 'success'); 
- }
- setShowExModal(false); 
- await loadAll();
- } catch (err) { 
- showToast((err as Error).message, 'error'); 
- } finally { 
- setSaving(false); 
- }
- }, [editExId, loadAll, showToast]);
+  const saveExercise = useCallback(async (data: Partial<ExerciseFormValues>) => {
+    setSaving(true);
+    try {
+      const formattedData = {
+        ...data,
+        muscleGroup: typeof data.muscleGroup === 'string' ? data.muscleGroup.split(',').map(s => s.trim()) : data.muscleGroup
+      };
+      
+      if (editExId) {
+        setExercises(prev => prev.map(e => String(e.id) === String(editExId) ? { ...e, ...formattedData } as unknown as Exercise : e));
+        showToast('Exercise updated successfully', 'success');
+      } else {
+        const newEx = { ...formattedData, id: `ex-${Date.now()}` } as unknown as Exercise;
+        setExercises(prev => [newEx, ...prev]);
+        showToast('Exercise created successfully', 'success');
+      }
+      setShowExModal(false);
+    } catch (err) {
+      showToast((err as Error).message, 'error');
+    } finally {
+      setSaving(false);
+    }
+  }, [editExId, showToast]);
  
   const deleteExercise = useCallback(async (id: string) => {
-   const isConfirmed = await confirm({ title: 'Delete Exercise', message: 'Delete this exercise?', confirmText: 'Delete', type: 'danger' });
-   if (!isConfirmed) return;
-   try { 
- const res = await libraryApi.removeExercise(id) as unknown as { message?: string }; 
- showToast(res.message || 'Exercise deleted', 'success'); 
- await loadAll(); 
- } catch (err) { 
- showToast((err as Error).message, 'error'); 
- }
- }, [loadAll, showToast]);
+    const isConfirmed = await confirm({ title: 'Remove Exercise', message: 'Delete this exercise from library?', confirmText: 'Delete', type: 'danger' });
+    if (!isConfirmed) return;
+    try {
+      setExercises(prev => prev.filter(e => String(e.id) !== String(id)));
+      showToast('Exercise deleted', 'success');
+    } catch (err) {
+      showToast((err as Error).message, 'error');
+    }
+  }, [showToast, confirm]);
 
  // Diet CRUD
  const openAddDiet = useCallback(() => { 
@@ -171,45 +169,39 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
  setShowDietModal(true);
  }, []);
  
- const saveDietPlan = useCallback(async (data: Record<string, any>) => {
- setSaving(true);
- try {
- const payload = { 
- ...data, 
- calories: data.calories ? Number(data.calories) : undefined, 
- protein: data.protein ? Number(data.protein) : undefined, 
- carbs: data.carbs ? Number(data.carbs) : undefined, 
- fats: data.fats ? Number(data.fats) : undefined, 
- meals: data.meals ? data.meals.split('\n').map((s: string) => s.trim()).filter(Boolean) : [] 
- };
- 
- if (editDietId) { 
- const res = await libraryApi.updateDietPlan(editDietId, payload) as unknown as { message?: string }; 
- showToast(res.message || 'Diet plan updated', 'success'); 
- } else { 
- const res = await libraryApi.createDietPlan(payload) as unknown as { message?: string }; 
- showToast(res.message || 'Diet plan created', 'success'); 
- }
- setShowDietModal(false); 
- await loadAll();
- } catch (err) { 
- showToast((err as Error).message, 'error'); 
- } finally { 
- setSaving(false); 
- }
- }, [editDietId, loadAll, showToast]);
+  const saveDietPlan = useCallback(async (data: Partial<DietFormValues>) => {
+    setSaving(true);
+    try {
+      const formattedData = {
+        ...data,
+        meals: typeof data.meals === 'string' ? data.meals.split('\n').map(s => s.trim()).filter(Boolean) : data.meals
+      };
+      if (editDietId) {
+        setDietPlans(prev => prev.map(d => String(d.id) === String(editDietId) ? { ...d, ...formattedData } as unknown as DietPlan : d));
+        showToast('Diet plan updated successfully', 'success');
+      } else {
+        const newDiet = { ...formattedData, id: `diet-${Date.now()}` } as unknown as DietPlan;
+        setDietPlans(prev => [newDiet, ...prev]);
+        showToast('Diet plan created successfully', 'success');
+      }
+      setShowDietModal(false);
+    } catch (err) {
+      showToast((err as Error).message, 'error');
+    } finally {
+      setSaving(false);
+    }
+  }, [editDietId, showToast]);
  
   const deleteDietPlan = useCallback(async (id: string) => {
-   const isConfirmed = await confirm({ title: 'Delete Diet Plan', message: 'Delete this diet plan?', confirmText: 'Delete', type: 'danger' });
-   if (!isConfirmed) return;
-  try { 
- const res = await libraryApi.removeDietPlan(id) as unknown as { message?: string }; 
- showToast(res.message || 'Diet plan deleted', 'success'); 
- await loadAll(); 
- } catch (err) { 
- showToast((err as Error).message, 'error'); 
- }
- }, [loadAll, showToast]);
+    const isConfirmed = await confirm({ title: 'Remove Diet Plan', message: 'Delete this diet plan?', confirmText: 'Delete', type: 'danger' });
+    if (!isConfirmed) return;
+    try {
+      setDietPlans(prev => prev.filter(d => String(d.id) !== String(id)));
+      showToast('Diet plan deleted', 'success');
+    } catch (err) {
+      showToast((err as Error).message, 'error');
+    }
+  }, [showToast, confirm]);
 
   return {
     tab, setTab,

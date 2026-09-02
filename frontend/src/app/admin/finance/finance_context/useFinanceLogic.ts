@@ -57,7 +57,15 @@ export function useFinanceLogic(initialData?: FinanceInitialData | null): Financ
         financeApi.getPayments(params),
         financeApi.getSummary(),
       ]);
-      setPayments(paymentsRes.data?.payments || []);
+      let fetchedPayments = paymentsRes.data?.payments || [];
+      if (debouncedSearch) {
+        fetchedPayments = fetchedPayments.filter(p => 
+          p.member?.name.toLowerCase().includes(debouncedSearch.toLowerCase()) || 
+          p.memberId.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+          p.invoiceNo.toLowerCase().includes(debouncedSearch.toLowerCase())
+        );
+      }
+      setPayments(fetchedPayments);
       setTotalPayments(paymentsRes.data?.total || 0);
       setSummary(summaryRes.data || null);
       setFetchState('success');
@@ -80,19 +88,21 @@ export function useFinanceLogic(initialData?: FinanceInitialData | null): Financ
   const savePayment = useCallback(async (data: AddPaymentFormValues) => {
     setSaving(true);
     try {
-      const res = await financeApi.createPayment({ 
+      const newPayment = {
         memberId: data.memberId, 
         amount: Number(data.amount), 
         method: data.method, 
         notes: data.notes,
         paidAt: new Date().toISOString(),
         status: 'PAID',
-        invoiceNo: 'INV-' + Math.floor(Math.random() * 10000)
-      }) as { message?: string };
+        invoiceNo: 'INV-' + Math.floor(Math.random() * 10000),
+        member: { name: 'Unknown Member', email: 'unknown@example.com', phone: '0000000000', plan: { name: 'Basic' } }
+      };
+      const res = await financeApi.createPayment(newPayment) as { message?: string, data?: Payment };
       showToast(res.message || 'Payment created successfully', 'success');
       setShowModal(false);
-      await loadAll();
-    } catch (err) { 
+      setPayments(prev => [{ id: `pay-${Date.now()}`, ...newPayment } as Payment, ...prev]);
+    } catch (err) {  
       showToast((err as Error).message, 'error'); 
     } finally { 
       setSaving(false); 
