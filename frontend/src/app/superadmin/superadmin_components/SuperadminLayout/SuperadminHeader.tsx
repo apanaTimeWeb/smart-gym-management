@@ -57,7 +57,7 @@ export default function SuperadminHeader() {
               if (e.key === 'Enter') {
                 const val = e.currentTarget.value;
                 if (val.trim()) {
-                  window.location.href = `${SuperadminUrlConfig.PAGES.GYMS}?search=${encodeURIComponent(val)}`;
+                  window.location.href = `${SuperadminUrlConfig.PAGES.GYMS_LIST}?search=${encodeURIComponent(val)}`;
                 }
               }
             }}
