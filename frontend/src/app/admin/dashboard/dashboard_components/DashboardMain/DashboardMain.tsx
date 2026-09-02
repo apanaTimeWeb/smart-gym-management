@@ -33,7 +33,7 @@ function DashboardSkeleton() {
 }
 
 function DashboardContent() {
-  const { status, error, timeRange, setTimeRange } = useDashboardContext();
+  const { status, error, timeRange, setTimeRange, startDate, endDate, setCustomDateRange } = useDashboardContext();
 
   if (status === 'loading') return <DashboardSkeleton />;
 
@@ -50,10 +50,35 @@ function DashboardContent() {
     <>
       <AdminHeader title="Dashboard" subtitle="Welcome back, Admin! Here's your gym overview." />
       <div className="p-6 space-y-6">
-        <div className="flex justify-end mb-2">
+        <div className="flex justify-end mb-2 gap-3 items-center">
+          {timeRange === 'custom' && (
+            <div className="flex items-center gap-2 mr-2">
+              <label className="text-sm font-medium text-secondary">From:</label>
+              <input
+                type="date"
+                className="bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-primary"
+                value={startDate}
+                onChange={(e) => setCustomDateRange(e.target.value, endDate)}
+                aria-label="Start Date"
+              />
+              <label className="text-sm font-medium text-secondary ml-1">To:</label>
+              <input
+                type="date"
+                className="bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-primary"
+                value={endDate}
+                onChange={(e) => setCustomDateRange(startDate, e.target.value)}
+                aria-label="End Date"
+              />
+            </div>
+          )}
           <select 
             value={timeRange} 
-            onChange={(e) => setTimeRange(e.target.value as any)}
+            onChange={(e) => {
+              setTimeRange(e.target.value as any);
+              if (e.target.value !== 'custom') {
+                setCustomDateRange('', '');
+              }
+            }}
             className="bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-primary"
           >
             <option value="weekly">This Week</option>
