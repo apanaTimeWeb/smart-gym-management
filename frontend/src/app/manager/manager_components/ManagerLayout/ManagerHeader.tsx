@@ -102,12 +102,13 @@ export default function ManagerHeader({ title, subtitle }: ManagerHeaderProps) {
                 )}
               </div>
               <div className="p-3 text-center border-t border-border bg-header">
-                <button 
+                <Link 
+                  href="/manager/notifications"
                   onClick={() => setShowNotifications(false)}
                   className="text-sm font-medium text-primary hover:underline"
                 >
                   View All Notifications
-                </button>
+                </Link>
               </div>
             </div>
           )}
