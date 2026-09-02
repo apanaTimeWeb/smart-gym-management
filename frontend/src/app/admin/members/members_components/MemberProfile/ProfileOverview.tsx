@@ -30,15 +30,13 @@ export default function ProfileOverview() {
  <div className="flex flex-col gap-2">
  <button 
  onClick={() => openMsg(selectedMember, 'whatsapp')} 
- className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white rounded-xl justify-center transition-opacity hover:opacity-90" 
- style={{ background: 'var(--members-whatsapp)' }}
+ className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white rounded-xl justify-center transition-opacity hover:opacity-90 bg-[#25D366]" 
  >
  <MessageCircle size={14} /> Send WhatsApp
  </button>
  <button 
  onClick={() => openMsg(selectedMember, 'email')} 
- className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white rounded-xl justify-center transition-opacity hover:opacity-90" 
- style={{ background: 'var(--members-email)' }}
+ className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white rounded-xl justify-center transition-opacity hover:opacity-90 bg-[#3B82F6]" 
  >
  <Mail size={14} /> Send Email
  </button>

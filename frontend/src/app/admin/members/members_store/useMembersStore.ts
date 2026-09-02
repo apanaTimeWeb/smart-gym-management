@@ -109,15 +109,17 @@ export const useMembersStore = create<MembersState>((set, get) => ({
     try {
       if (editId) {
         const res = await membersApi.update(editId, { ...data, planId: data.planId });
+        const updatedMem = res.data || { ...data, planId: data.planId };
         set(state => ({
-          members: state.members.map(m => m.id === editId ? { ...m, ...data, planId: data.planId } as Member : m)
+          members: state.members.map(m => m.id === editId ? { ...m, ...updatedMem } as Member : m)
         }));
         return { success: true, message: res.message || 'Updated successfully' };
       } else {
         const newMember = { ...data, planId: data.planId, joinDate: new Date().toISOString() };
         const res = await membersApi.create(newMember);
+        const savedMem = res.data ? res.data : { id: `m-${Date.now()}`, ...newMember };
         set(state => ({
-          members: [{ id: `m-${Date.now()}`, ...newMember } as unknown as Member, ...state.members],
+          members: [savedMem as unknown as Member, ...state.members],
           totalMembers: state.totalMembers + 1
         }));
         return { success: true, message: res.message || 'Created successfully' };

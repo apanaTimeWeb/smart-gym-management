@@ -101,7 +101,8 @@ export function useFinanceLogic(initialData?: FinanceInitialData | null): Financ
       const res = await financeApi.createPayment(newPayment) as { message?: string, data?: Payment };
       showToast(res.message || 'Payment created successfully', 'success');
       setShowModal(false);
-      setPayments(prev => [{ id: `pay-${Date.now()}`, ...newPayment } as Payment, ...prev]);
+      const savedPay = res.data ? res.data : { id: `pay-${Date.now()}`, ...newPayment };
+      setPayments(prev => [savedPay as Payment, ...prev]);
     } catch (err) {  
       showToast((err as Error).message, 'error'); 
     } finally { 
