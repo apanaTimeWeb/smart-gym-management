@@ -3,6 +3,11 @@
 > This ensures visual consistency across all 109 pages.
 > Stack: Next.js 16 (App Router, Turbopack) · TypeScript · Tailwind CSS · shadcn/ui components
 
+### Specific Restrictions (The ERP Context)
+- **Dashboard Consistency:** The ERP relies on the 5-color core architecture (Gold Primary, Blue Info, Green Success, Amber Warning, Red Danger).
+- **CTA Gradients (Restricted):** Aggressive gradients (e.g., `#F97316` to `#EF4444`) are **strictly restricted** to Landing Page hero CTAs. They must NEVER be used inside the authenticated ERP dashboard.
+- **Social Media Brands:** Official brand colors for social integrations (WhatsApp `#25D366`, Facebook `#1877F2`, YouTube `#FF0000`, Instagram `#E1306C`) MUST be preserved in their native colors. Do not tint or re-color them to match the ERP theme.
+
 ---
 
 ## 1. COLOR PALETTE
@@ -32,9 +37,9 @@
 | Token | Text Color | Background Color | Usage |
 |---|---|---|---|
 | `--success` | `#22C55E` (Stronger Fitness Green) | `#064E3B` | Active / Working / Present / Resolved |
-| `--warning` | `#FBBF24` (WCAG pass) | `#451A03` | Pending / Expiring / Held |
-| `--danger` | `#F87171` (WCAG pass) | `#450A0A` | Overdue / Suspended / Broken |
-| `--info` | `#60A5FA` | `#1E3A5F` | New / Neutral |
+| `--warning` | `#F59E0B` (Amber) | `#451A03` | Pending / Expiring / Held |
+| `--danger` | `#EF4444` (Red) | `#450A0A` | Overdue / Suspended / Broken |
+| `--info` | `#3B82F6` (Blue) | `#1E3A5F` | New / Neutral |
 | `--purple` | `#C084FC` | `#3B0764` | Ex-Members / Alumni / Custom Tags |
 
 ### Payment Mode Colors (Separated to avoid status collision)
