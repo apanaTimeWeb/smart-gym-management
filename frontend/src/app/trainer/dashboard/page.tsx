@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Server Component that fetches initial SSR data for the dashboard layout.
-import DashboardMain from '@/app/trainer/dashboard/dashboard_components/DashboardMain/DashboardMain';
+import TrainerDashboardMain from '@/app/trainer/dashboard/dashboard_components/TrainerDashboardMain/TrainerDashboardMain';
 import { cookies } from 'next/headers';
 import { DashboardStats } from '@/app/trainer/dashboard/dashboard_types/dashboard_types';
 import { ApiResponse } from '@/lib/api';
@@ -29,5 +29,5 @@ async function getDashboardData() {
 
 export default async function DashboardPage() {
  const initialData = await getDashboardData();
- return <DashboardMain initialData={initialData} />;
+ return <TrainerDashboardMain initialData={initialData} />;
 }

@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Server component that handles initial SSR data fetching for the members module.
-import MembersMain from '@/app/trainer/members/members_components/MembersMain/MembersMain';
+import TrainerMembersMain from '@/app/trainer/members/members_components/TrainerMembersMain/TrainerMembersMain';
 import { ssrMembersApi } from '@/app/trainer/members/members_api/members_server_api';
 import { MembersInitialData } from '@/app/trainer/members/members_types/members_types';
 
@@ -24,5 +24,5 @@ export default async function MembersPage() {
     console.error('[MembersPage SSR] Failed to fetch initial data:', e);
   }
 
-  return <MembersMain initialData={initialData} />;
+  return <TrainerMembersMain initialData={initialData} />;
 }
