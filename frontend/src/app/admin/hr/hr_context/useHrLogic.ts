@@ -206,6 +206,8 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
   }, [showToast, confirm]);
 
   const markPayrollPaid = useCallback(async (id: string) => {
+    const isConfirmed = await confirm({ title: 'Mark as Paid', message: 'Are you sure you want to mark this payroll as paid?', confirmText: 'Yes, Mark Paid', type: 'info' });
+    if (!isConfirmed) return;
     try { 
       setPayrolls(prev => prev.map(p => String(p.id) === String(id) ? { ...p, status: 'Paid' } : p));
       setSummary(prev => prev ? { ...prev, paidCount: prev.paidCount + 1, pendingCount: Math.max(0, prev.pendingCount - 1) } : null);
@@ -213,7 +215,7 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
     } catch (err) { 
       showToast((err as Error).message, 'error'); 
     }
-  }, [showToast]);
+  }, [showToast, confirm]);
 
   const [payrollMonth, setPayrollMonth] = useState(new Date().toISOString().slice(0, 7));
 

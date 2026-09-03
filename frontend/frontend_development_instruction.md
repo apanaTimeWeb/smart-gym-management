@@ -262,5 +262,8 @@ Never use undefined CSS variables (e.g., `var(--members-whatsapp)`) for standard
 74. **Interactive KPI Cards as Filters**:
 Whenever displaying KPI cards (like "Active Coupons" or "Total Redeemed") directly above a data table, they MUST function as interactive filters. Clicking a KPI card should filter the table below to show only the relevant rows. Include a visual indicator (e.g., a primary colored border or ring) to show which KPI filter is currently active, and always ensure there is a clear way to reset the filter (such as a "Total" card or toggling off).
 
+75. **Double Verification for Critical Actions (Destructive/Financial)**:
+Whenever presenting an action button that triggers a destructive or critical financial mutation (e.g., deleting a record, suspending a user, or marking an invoice/payroll as paid), you MUST implement a double verification confirmation dialog. Never execute these actions instantly on a single click. Utilize a global `useConfirm` hook or a similar custom modal to explicitly ask the user (e.g., "Are you sure you want to mark this as paid?").
+
 ---
 Think step-by-step. Create a detailed implementation plan first so I can review it, and then execute it perfectly without breaking existing data flows!
