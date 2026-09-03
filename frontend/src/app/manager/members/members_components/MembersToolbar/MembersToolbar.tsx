@@ -11,11 +11,13 @@ import { MEMBER_STATUS_OPTIONS } from '@/app/manager/members/members_utils/Membe
 export default function MembersToolbar() {
   const { search, setSearch, statusFilter, setStatusFilter, openAdd, currentPage, setCurrentPage } = useMembersContext();
   const loadAll = useMembersStore(s => s.loadAll);
+  const [prevSearch, setPrevSearch] = useState(search);
   const [localSearch, setLocalSearch] = useState(search);
 
-  useEffect(() => {
+  if (search !== prevSearch) {
+    setPrevSearch(search);
     setLocalSearch(search);
-  }, [search]);
+  }
 
   useEffect(() => {
     const timer = setTimeout(() => {

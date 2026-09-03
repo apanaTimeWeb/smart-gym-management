@@ -1,8 +1,7 @@
-﻿// RESPONSIBILITY: Defines all TypeScript types, interfaces, and the FetchState enum for the Diet Library module.
+// RESPONSIBILITY: Defines all TypeScript types, interfaces, and the FetchState enum for the Diet Library module.
 import type { } from '@/lib/api';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import { EMPTY_EXERCISE_FORM, EMPTY_DIET_FORM, type LibraryTab } from '@/app/manager/library/library_utils/LibrarySharedConstants';
-import React from 'react';
+import type { LibraryTab } from '@/app/manager/library/library_utils/LibrarySharedConstants';
 
 export interface LibraryInitialData {
   exercises: Exercise[];
@@ -34,20 +33,20 @@ export interface LibraryContextType {
  showExModal: boolean;
  setShowExModal: (show: boolean) => void;
  editExId: string | null;
- editExData: Record<string, any> | null;
+ editExData: Record<string, unknown> | null;
  openAddEx: () => void;
  openEditEx: (ex: Exercise) => void;
- saveExercise: (data: Record<string, any>) => Promise<void>;
+ saveExercise: (data: Record<string, unknown>) => Promise<void>;
  deleteExercise: (id: string) => Promise<void>;
  
  // Diet Modal State
  showDietModal: boolean;
  setShowDietModal: (show: boolean) => void;
  editDietId: string | null;
- editDietData: Record<string, any> | null;
+ editDietData: Record<string, unknown> | null;
  openAddDiet: () => void;
  openEditDiet: (d: DietPlan) => void;
- saveDietPlan: (data: Record<string, any>) => Promise<void>;
+ saveDietPlan: (data: Record<string, unknown>) => Promise<void>;
  deleteDietPlan: (id: string) => Promise<void>;
 }
 

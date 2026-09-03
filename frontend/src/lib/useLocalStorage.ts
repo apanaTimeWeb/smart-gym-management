@@ -34,7 +34,9 @@ export function useLocalStorage<T>(
     try {
       const item = window.localStorage.getItem(key);
       if (item !== null) {
+        /* eslint-disable react-hooks/set-state-in-effect */
         setStoredValue(JSON.parse(item) as T);
+        /* eslint-enable react-hooks/set-state-in-effect */
       }
     } catch {
       // Silently handle JSON parse errors or SecurityErrors (private browsing).

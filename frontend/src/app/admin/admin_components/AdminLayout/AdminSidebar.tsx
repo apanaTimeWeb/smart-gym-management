@@ -17,9 +17,11 @@ export default function AdminSidebar({ isCollapsed, setIsCollapsed }: AdminSideb
   const user = getUser();
 
   // Sets mounted=true once on client-side hydration to safely read user data (avoids SSR mismatch).
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     setMounted(true);
   }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // Listens for the global 'toggle-sidebar' event dispatched by AdminHeader's hamburger button.
   // On mobile (<1024px) toggles the drawer; on desktop toggles the collapsed icon-only mode.
@@ -36,9 +38,11 @@ export default function AdminSidebar({ isCollapsed, setIsCollapsed }: AdminSideb
   }, [isCollapsed, setIsCollapsed]);
 
   // Closes the mobile drawer whenever the route changes (user navigated to a new page).
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     setIsMobileOpen(false);
   }, [pathname]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   return (
     <>

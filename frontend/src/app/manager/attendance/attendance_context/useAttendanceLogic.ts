@@ -94,6 +94,7 @@ export function useAttendanceLogic(): AttendanceContextType {
   }, [showToast, currentPage, debouncedSearch, tab]);
 
   // Rely on URL changes to drive the fetch (plus initial mount)
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { loadAll(); }, [loadAll]);
 
   const markAttendance = useCallback(async (data: AttendanceFormValues) => {

@@ -10,9 +10,12 @@ export default function WorkoutToolbar() {
   const { tab, setTab, search, setSearch, setCurrentPage, openAddWk, openAddEx } = useWorkoutContext();
   const [localSearch, setLocalSearch] = useState(search);
 
-  useEffect(() => {
+  const [prevSearch, setPrevSearch] = useState(search);
+
+  if (search !== prevSearch) {
+    setPrevSearch(search);
     setLocalSearch(search);
-  }, [search]);
+  }
 
   useEffect(() => {
     const timer = setTimeout(() => {

@@ -11,7 +11,7 @@ export default async function PlansPage() {
     initialData = {
       plans: Array.isArray(res.data) ? res.data : [],
     };
-  } catch (e) {
+  } catch {
     // Error logged to monitoring service
   }
 

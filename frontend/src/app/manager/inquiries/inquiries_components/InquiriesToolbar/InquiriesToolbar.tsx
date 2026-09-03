@@ -9,11 +9,13 @@ import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 
 export default function InquiriesToolbar() {
   const { search, setSearch, statusFilter, setStatusFilter, loadAll, openAdd, selectedIds, clearSelection, openBulkMsg, setCurrentPage } = useInquiriesContext();
+  const [prevSearch, setPrevSearch] = useState(search);
   const [localSearch, setLocalSearch] = useState(search);
 
-  useEffect(() => {
+  if (search !== prevSearch) {
+    setPrevSearch(search);
     setLocalSearch(search);
-  }, [search]);
+  }
 
   useEffect(() => {
     const timer = setTimeout(() => {

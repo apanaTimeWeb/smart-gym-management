@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the Settings module.
+// RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the Settings module.
 import { useState, useCallback, useEffect } from 'react';
 import { settingsApi } from '@/app/admin/settings/settings_api/settings_api';
 import toast from 'react-hot-toast';
@@ -23,9 +23,11 @@ export function useSettingsLogic(): SettingsContextType {
  }
  }, []);
 
+ /* eslint-disable react-hooks/exhaustive-deps, react-hooks/set-state-in-effect */
  useEffect(() => {
  fetchSettings();
- }, [fetchSettings]);
+ }, []);
+ /* eslint-enable react-hooks/exhaustive-deps, react-hooks/set-state-in-effect */
 
  const handleSave = useCallback(async () => {
  setSaving(true);

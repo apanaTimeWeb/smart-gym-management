@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Renders the exercises data table with muscle group, category, and inline edit/delete actions.
+// RESPONSIBILITY: Renders the exercises data table with muscle group, category, and inline edit/delete actions.
 'use client';
 
 import { Edit2, Trash2 } from 'lucide-react';
@@ -69,7 +69,7 @@ export default function ExerciseTable() {
             {exercises.length === 0 && (
               <tr>
                 <td colSpan={5} className="text-center py-8 text-secondary">
-                  No exercises found matching "{search}".
+                  No exercises found matching &quot;{search}&quot;.
                 </td>
               </tr>
             )}

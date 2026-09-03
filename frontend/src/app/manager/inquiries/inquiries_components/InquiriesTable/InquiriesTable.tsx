@@ -82,7 +82,7 @@ export default function InquiriesTable() {
           </thead>
           <tbody className="divide-y divide-border">
             {inquiries.map(inq => {
-              const statusStyle = INQUIRIES_STATUS_STYLES[inq.status] || { bg: 'bg-input', text: 'text-secondary' };
+              // const statusStyle = INQUIRIES_STATUS_STYLES[inq.status] || { bg: 'bg-input', text: 'text-secondary' };
               const selected = isSelected(inq.id);
 
               return (

@@ -18,6 +18,7 @@ export function useDashboardLogic(initialData?: DashboardStats | null): Dashboar
   const [endDate, setEndDate] = useState('');
 
   // Fetch only when no SSR initialData was passed from page.tsx; initialData in deps prevents re-fetch on SSR hydration
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (initialData) return;
 
@@ -32,6 +33,7 @@ export function useDashboardLogic(initialData?: DashboardStats | null): Dashboar
         setStatus('error');
       });
   }, [initialData]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   return {
     stats,

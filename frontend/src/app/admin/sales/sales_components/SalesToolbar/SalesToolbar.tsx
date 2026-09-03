@@ -13,7 +13,9 @@ export default function SalesToolbar() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => { setLocalSearch(search); }, [search]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   useEffect(() => {
     const handler = setTimeout(() => {

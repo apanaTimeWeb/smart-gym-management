@@ -37,7 +37,7 @@ export default function ProductModal() {
 
  return (
  <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
- <div className="bg-card rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto border-2 border-warning">
+ <div className="bg-card rounded-2xl shadow-xl w-full max-w-md max-h-full overflow-y-auto border-2 border-warning">
  <div className="sticky top-0 bg-card px-6 py-4 border-b border-border flex items-center justify-between">
  <h3 className="text-lg font-bold text-foreground">
  {editProductId ? 'Edit Product' : 'Add Product'}
@@ -49,7 +49,7 @@ export default function ProductModal() {
  <X size={18} />
  </button>
  </div>
- <form onSubmit={handleSubmit(saveProduct as any)} className="p-6 space-y-4">
+ <form onSubmit={handleSubmit((data) => saveProduct(data))} className="p-6 space-y-4">
  {[
  { label: 'Product Name', key: 'name', type: 'text' }, 
  { label: 'Price (₹)', key: 'price', type: 'number' }, 

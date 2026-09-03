@@ -51,7 +51,7 @@ export default function ConvertLeadModal() {
     }
   }, [convertLead, reset]);
 
-  const watchPlanId = watch('planId') as string;
+  const watchPlanId = watch('planId') as string | undefined;
   const watchBillingCycle = watch('billingCycle') as string;
   const watchCustomDays = watch('customDays') as number;
   const watchJoinDate = watch('joinDate') as string;
@@ -107,7 +107,7 @@ export default function ConvertLeadModal() {
 
   return (
     <div className="fixed inset-0 bg-black/60 z-40 flex items-center justify-center p-4">
-      <div className="bg-card rounded-2xl shadow-2xl shadow-black/50 w-full max-w-2xl max-h-[90vh] overflow-y-auto border-2 border-warning">
+      <div className="bg-card rounded-2xl shadow-2xl shadow-black/50 w-full max-w-2xl max-h-full overflow-y-auto border-2 border-warning">
         <div className="sticky top-0 px-8 py-5 border-b border-border bg-card flex items-center justify-between z-10">
           <h3 className="text-xl font-bold text-foreground">Convert Lead to Member</h3>
           <button

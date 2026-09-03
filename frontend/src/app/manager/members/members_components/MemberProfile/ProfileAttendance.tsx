@@ -46,9 +46,9 @@ export default function ProfileAttendance() {
             key={day} 
             onClick={() => toggleAtt(selectedMember.id, day)}
             className={`h-10 w-full rounded-lg flex items-center justify-center text-xs font-bold transition-all hover:scale-110 border-none ${
-              status === 'P' ? 'bg-[var(--success)] text-white' 
-              : status === 'A' ? 'bg-[var(--danger)] text-white' 
-              : 'bg-[var(--bg-input)] text-[var(--text-secondary)] border border-[var(--border)]'
+              status === 'P' ? 'bg-success text-white' 
+              : status === 'A' ? 'bg-destructive text-white' 
+              : 'bg-input text-secondary border border-border'
             }`}
           >
             {day}

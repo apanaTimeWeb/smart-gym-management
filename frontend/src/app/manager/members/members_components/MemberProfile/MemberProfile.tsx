@@ -107,7 +107,7 @@ export default function MemberProfile() {
             {PROFILE_TABS.map(({ id: t, label }) => (
               <button
                 key={t}
-                onClick={() => { setProfileTab(t as any); if (t === 'payments') loadMemberProfile(selectedMember.id); }}
+                onClick={() => { setProfileTab(t as "overview" | "attendance" | "payments" | "workout" | "diet"); if (t === 'payments') loadMemberProfile(selectedMember.id); }}
                 className={`px-5 py-3.5 text-sm font-medium transition-all duration-200 border-b-2 ${
                   profileTab === t
                     ? 'text-primary bg-primary-subtle border-primary'

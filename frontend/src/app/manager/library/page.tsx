@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Server Component — fetches initial SSR data and renders the Diet Library module entry point.
+// RESPONSIBILITY: Server Component — fetches initial SSR data and renders the Diet Library module entry point.
 import LibraryMain from '@/app/manager/library/library_components/LibraryMain/LibraryMain';
 import { ssrLibraryApi } from '@/app/manager/library/library_api/library_server_api';
 import { LibraryInitialData } from '@/app/manager/library/library_types/library_types';
@@ -15,7 +15,7 @@ export default async function LibraryPage() {
       exercises: exRes.data?.exercises || exRes.data || [],
       dietPlans: dietRes.data?.dietPlans || dietRes.data || [],
     };
-  } catch (e) {
+  } catch {
     // console.error('Failed to fetch library initial data:', e);
   }
 

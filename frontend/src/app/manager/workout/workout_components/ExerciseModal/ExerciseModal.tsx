@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Form modal for creating or editing a single exercise entry in the Workout Library module.
+// RESPONSIBILITY: Form modal for creating or editing a single exercise entry in the Workout Library module.
 'use client';
 
 import { useEffect } from 'react';
@@ -50,7 +50,7 @@ export default function ExerciseModal() {
             <X size={20} />
           </button>
         </div>
-        <form onSubmit={handleSubmit(saveEx as any)} className="p-5 space-y-4">
+        <form onSubmit={handleSubmit((data) => saveEx(data))} className="p-5 space-y-4">
           <div>
             <label className="block text-sm font-medium text-secondary mb-1">Exercise Name *</label>
             <input 

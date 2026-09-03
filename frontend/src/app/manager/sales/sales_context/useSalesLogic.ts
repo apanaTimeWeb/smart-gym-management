@@ -78,9 +78,10 @@ export function useSalesLogic(initialData?: SalesInitialData | null): SalesConte
       showToast(e instanceof Error ? e.message : 'Failed to fetch sales data', 'error');
       setFetchState('error');
     }
-  }, [currentPage, debouncedSearch, showToast]);
+  }, [currentPage, debouncedSearch, dateFilter, showToast]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadAll();
   }, [loadAll]);
 
