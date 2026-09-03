@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Renders the paginated staff members table with sortable columns and inline row actions.
+// RESPONSIBILITY: Renders the paginated staff members table with sortable columns and inline row actions.
 'use client';
 
 import { useHrContext } from '@/app/manager/hr/hr_context/HrContext';
@@ -36,7 +36,6 @@ export default function StaffTable() {
                   </td>
                   <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
                   <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-24"></div></td>
-                  <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-16"></div></td>
                   <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
                   <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-24"></div></td>
                   <td className="px-4 py-4"><div className="h-6 bg-muted rounded w-16 ml-auto"></div></td>
@@ -73,17 +72,16 @@ export default function StaffTable() {
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm bg-primary/10 text-primary">
-                      {s.name.charAt(0)}
+                      {(s.name || '?').charAt(0).toUpperCase()}
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-primary">{s.name}</p>
-                      <p className="text-xs text-secondary">{s.email}</p>
+                      <p className="text-sm font-medium text-primary">{s.name || 'Unknown Staff'}</p>
+                      <p className="text-xs text-secondary">{s.email || 'No email'}</p>
                     </div>
                   </div>
                 </td>
                 <td className="px-4 py-3 text-sm text-primary">{s.role}</td>
                 <td className="px-4 py-3 text-sm text-secondary">{s.phone}</td>
-                <td className="px-4 py-3 text-sm text-secondary">{s.branch}</td>
                 <td className="px-4 py-3 text-sm font-medium text-success">{(s.salary || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
                 <td className="px-4 py-3 text-sm text-secondary">
                   {new Date(s.joinDate).toLocaleDateString('en-IN')}
@@ -110,7 +108,7 @@ export default function StaffTable() {
             ))}
             {staff.length === 0 && (
               <tr>
-                <td colSpan={7} className="text-center py-12 text-secondary">
+                <td colSpan={6} className="text-center py-12 text-secondary">
                   {debouncedSearch ? 'No staff match the filter.' : 'No staff members yet. Add your first staff!'}
                 </td>
               </tr>

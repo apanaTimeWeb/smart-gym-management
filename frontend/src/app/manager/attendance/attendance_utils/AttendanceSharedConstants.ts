@@ -8,7 +8,7 @@ export const formatTime = (d?: string) =>
  d ? new Date(d).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : '—';
 
 export const ATTENDANCE_TABLE_HEADERS = [
-  'Name', 'Type', 'Status', 'Date', 'Check In', 'Check Out'
+  'Name', 'Type', 'Status', 'Date', 'Check In', 'Check Out', 'Actions'
 ];
 
 export const ATTENDANCE_TABS = ['All', 'Members', 'Staff'] as const;

@@ -161,7 +161,7 @@ export function useStoreLogic(initialData?: StoreInitialData | null): StoreConte
  setOrderItems(prev => {
  const existing = prev.find(i => i.productId === p.id);
  if (existing) {
- return prev.map(i => i.productId === p.id ? { ...i, qty: i.qty + 1 } : i);
+ return prev;
  }
  return [...prev, { productId: p.id, qty: 1, name: p.name, price: p.price }];
  });
@@ -171,6 +171,14 @@ export function useStoreLogic(initialData?: StoreInitialData | null): StoreConte
  setOrderItems(prev => prev.filter(i => i.productId !== productId));
  }, []);
 
+ const updateOrderQty = useCallback((productId: string, qty: number) => {
+ if (qty <= 0) {
+ removeFromOrder(productId);
+ return;
+ }
+ setOrderItems(prev => prev.map(i => i.productId === productId ? { ...i, qty } : i));
+ }, [removeFromOrder]);
+
  const orderTotal = useMemo(() => {
  return orderItems.reduce((s, i) => s + i.price * i.qty, 0);
  }, [orderItems]);
@@ -179,42 +187,39 @@ export function useStoreLogic(initialData?: StoreInitialData | null): StoreConte
     if (orderItems.length === 0) return;
     setSaving(true);
     try {
-      const newOrder = {
-        id: `ord-${Date.now()}`,
-        date: new Date().toISOString(),
-        customer: customerPhone || 'Walk-in',
+      const res = await storeApi.createOrder({
+        items: orderItems.map(i => ({ productId: i.productId, qty: i.qty, price: i.price })),
+        method: orderMethod,
+        notes: sendViaWhatsapp && customerPhone ? `WhatsApp: ${customerPhone}` : undefined,
+        customerName: customerPhone || 'Walk-in',
         total: orderTotal,
-        status: 'Completed',
-        items: orderItems
-      };
-      
-      setOrders(prev => [newOrder as any, ...prev]);
-      
-      // Update stock levels
-      setProducts(prevProducts => {
-        const nextProducts = [...prevProducts];
-        orderItems.forEach(item => {
-          const productIndex = nextProducts.findIndex(p => p.id === item.productId);
-          if (productIndex > -1) {
-            nextProducts[productIndex] = {
-              ...nextProducts[productIndex],
-              stock: Math.max(0, nextProducts[productIndex].stock - item.qty)
-            };
-          }
-        });
-        return nextProducts;
+        status: 'Completed'
       });
 
-      setSummary(prev => prev ? {
-        ...prev,
-        totalRevenue: prev.totalRevenue + orderTotal,
-        totalOrders: prev.totalOrders + 1
-      } : null);
+      await loadAll();
+      setTab('Orders');
 
       if (sendViaWhatsapp && customerPhone) {
         showToast(`Order placed. Receipt sent to ${customerPhone}`, 'success');
+        const text = `Hi, your bill from ${GYM_DETAILS.name} for ₹${orderTotal} is completed. Thank you!`;
+        window.open(`https://wa.me/91${customerPhone}?text=${encodeURIComponent(text)}`, '_blank');
       } else {
         showToast('Order placed successfully. Printing receipt...', 'success');
+        setPrintData({ 
+          gymName: GYM_DETAILS.name, 
+          gymPhone: GYM_DETAILS.phone, 
+          receiptNo: `ORD-${res.data?.id || Date.now()}`, 
+          date: new Date().toLocaleDateString('en-IN'), 
+          customerName: customerPhone || 'Walk-in', 
+          items: orderItems.map((i) => ({ 
+            name: i.name, 
+            price: i.price, 
+            amount: i.price * i.qty 
+          })), 
+          total: orderTotal, 
+          paymentMethod: orderMethod 
+        });
+        setTimeout(() => window.print(), 100);
       }
       setOrderItems([]);
       setCustomerPhone('');
@@ -225,7 +230,7 @@ export function useStoreLogic(initialData?: StoreInitialData | null): StoreConte
     } finally {
       setSaving(false);
     }
-  }, [orderItems, orderTotal, sendViaWhatsapp, customerPhone, showToast]);
+  }, [orderItems, orderMethod, sendViaWhatsapp, customerPhone, loadAll, showToast, setTab]);
 
   return {
     tab, setTab,
@@ -238,6 +243,6 @@ export function useStoreLogic(initialData?: StoreInitialData | null): StoreConte
     customerPhone, setCustomerPhone, sendViaWhatsapp, setSendViaWhatsapp,
     hideToast, setPrintData, loadAll,
  openAddProduct, openEditProduct, saveProduct, deleteProduct,
- addToOrder, removeFromOrder, orderTotal, placeOrder
+ addToOrder, removeFromOrder, updateOrderQty, orderTotal, placeOrder
  };
 }

@@ -46,6 +46,8 @@ export interface HrContextType {
  savePayroll: (data: Partial<Payroll> & { amount?: string | number }) => Promise<void>;
  deleteStaff: (id: string) => Promise<void>;
  markPayrollPaid: (id: string) => Promise<void>;
+ payrollMonth: string;
+ setPayrollMonth: (m: string) => void;
 }
 
 export interface Staff {

@@ -60,10 +60,18 @@ export const useMembersStore = create<MembersState>((set, get) => ({
         membersApi.getStats()
       ]);
       
+      const plans = plansRes.data || [];
+      const members = (membersRes.data?.members || []).map((m: any) => {
+        if (!m.plan && m.planId) {
+          m.plan = plans.find((p: any) => String(p.id) === String(m.planId));
+        }
+        return m as Member;
+      });
+      
       set({
-        members: membersRes.data?.members || [],
+        members,
         totalMembers: membersRes.data?.total || 0,
-        plans: plansRes.data || [],
+        plans,
         stats: statsRes.data || { total: 0, active: 0, pending: 0, expired: 0 },
         fetchState: 'success',
       });
@@ -83,8 +91,8 @@ export const useMembersStore = create<MembersState>((set, get) => ({
       if (aRes.success) {
         const realAtt = Array.from({ length: ATTENDANCE_CALENDAR_DAYS }, (_, i) => {
           const d = i + 1;
-          const rec = (aRes.data.attendance as Array<{ date: string }>)?.find(a => new Date(a.date).getDate() === d);
-          return { day: d, status: rec ? 'P' : 'A' };
+          const rec = (aRes.data.attendance as Array<{ date: string, status?: string }>)?.find(a => new Date(a.date).getDate() === d);
+          return { day: d, status: rec ? (rec.status === 'LEAVE' ? 'L' : 'P') : 'NONE' };
         });
         set((state) => ({ attMap: { ...state.attMap, [memberId]: realAtt } }));
       }
@@ -96,7 +104,7 @@ export const useMembersStore = create<MembersState>((set, get) => ({
   toggleAtt: (memberId: string, day: number) => {
     set((state) => {
       const currentAtt = state.attMap[memberId] || [];
-      const updatedAtt = currentAtt.map(a => a.day === day ? { ...a, status: a.status === 'P' ? 'A' : a.status === 'A' ? 'L' : 'P' } : a);
+      const updatedAtt = currentAtt.map(a => a.day === day ? { ...a, status: a.status === 'NONE' ? 'P' : a.status === 'P' ? 'A' : 'NONE' } : a);
       return { attMap: { ...state.attMap, [memberId]: updatedAtt } };
     });
   },

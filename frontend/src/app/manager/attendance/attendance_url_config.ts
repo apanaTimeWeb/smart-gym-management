@@ -6,5 +6,6 @@ export const AttendanceUrlConfig = {
   BACKEND_API: {
     BASE: '/manager/attendance',
     TODAY_STATS: '/manager/attendance/today-stats',
+    HISTORY: '/manager/attendance/history',
   }
 };

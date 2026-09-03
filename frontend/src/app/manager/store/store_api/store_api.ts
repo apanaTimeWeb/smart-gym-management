@@ -17,7 +17,7 @@ export const storeApi = {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
     return apiFetch<ApiResponse<{ orders: Order[]; total: number }>>(`${StoreUrlConfig.BACKEND_API.ORDERS_BASE}${q}`);
   },
-  createOrder: (body: { items: { productId: string; qty: number }[]; method: string; notes?: string }) =>
+  createOrder: (body: { items: { productId: string; qty: number; price?: number }[]; method: string; notes?: string; customerName?: string; total?: number; status?: string; }) =>
     apiFetch<ApiResponse<Order>>(StoreUrlConfig.BACKEND_API.ORDERS_BASE, { method: 'POST', body: JSON.stringify(body) }),
   getStoreSummary: () => apiFetch<ApiResponse<StoreSummary>>(StoreUrlConfig.BACKEND_API.SUMMARY),
 };

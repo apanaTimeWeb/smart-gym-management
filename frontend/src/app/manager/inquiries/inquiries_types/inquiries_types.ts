@@ -61,6 +61,10 @@ export interface InquiriesContextType {
   bulkMsgModal: { open: boolean; type: MessageType; recipients: ManagerMessageRecipient[] } | null;
   openBulkMsg: (type: MessageType) => void;
   closeBulkMsg: () => void;
+
+  convertLead: Inquiry | null;
+  openConvert: (inq: Inquiry) => void;
+  closeConvert: () => void;
 }
 
 export interface Inquiry {

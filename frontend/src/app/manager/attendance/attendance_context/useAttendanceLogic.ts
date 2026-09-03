@@ -55,6 +55,7 @@ export function useAttendanceLogic(): AttendanceContextType {
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
  
   const [showModal, setShowModal] = useState(false);
+  const [calendarUser, setCalendarUser] = useState<{ id: string; name: string; type: 'MEMBER' | 'STAFF' } | null>(null);
   const [form, setForm] = useState(EMPTY_ATTENDANCE_FORM);
 
   const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
@@ -143,6 +144,7 @@ export function useAttendanceLogic(): AttendanceContextType {
     search, setSearch,
     currentPage, setCurrentPage,
     showModal, setShowModal,
+    calendarUser, setCalendarUser,
     form, setForm,
     showToast, hideToast,
     loadAll, markAttendance

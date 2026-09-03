@@ -14,6 +14,7 @@ export interface Attendance {
   checkIn?: string;
   checkOut?: string;
   type: string;
+  status?: string;
   member?: { name: string };
   staff?: { name: string };
 }
@@ -50,6 +51,9 @@ export interface AttendanceContextType {
  
   showModal: boolean;
   setShowModal: (show: boolean) => void;
+  
+  calendarUser: { id: string; name: string; type: 'MEMBER' | 'STAFF' } | null;
+  setCalendarUser: (user: { id: string; name: string; type: 'MEMBER' | 'STAFF' } | null) => void;
  
   form: typeof EMPTY_ATTENDANCE_FORM;
   setForm: React.Dispatch<React.SetStateAction<typeof EMPTY_ATTENDANCE_FORM>>;

@@ -53,7 +53,7 @@ export default function MembersTable() {
                     onClick={() => { setSelectedMember(m); loadMemberProfile(m.id); }}
                   >
                     <td className="px-5 py-3.5 text-sm text-secondary font-medium whitespace-nowrap">
-                      #{m.id.split('-').pop()?.substring(0, 5) || m.id.substring(0, 5)}
+                      <span className="font-bold text-primary">{m.id}</span>
                     </td>
                     <td className="px-5 py-3.5 whitespace-nowrap">
                       <div className="flex items-center gap-3">

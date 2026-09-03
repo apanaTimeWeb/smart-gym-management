@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Renders the payroll records table with pay status badges and mark-as-paid inline action.
+// RESPONSIBILITY: Renders the payroll records table with pay status badges and mark-as-paid inline action.
 'use client';
 
 import { useHrContext } from '@/app/manager/hr/hr_context/HrContext';
@@ -8,13 +8,22 @@ import { CheckCircle2 } from 'lucide-react';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 
 export default function PayrollTable() {
-  const { payrolls, search, currentPage, setCurrentPage, markPayrollPaid, fetchState } = useHrContext();
+  const { payrolls, search, currentPage, setCurrentPage, markPayrollPaid, fetchState, payrollMonth } = useHrContext();
 
   const filtered = payrolls.filter(p => {
     const nameMatch = (p.staff?.name || '').toLowerCase().includes(search.toLowerCase());
     const roleMatch = (p.staff?.role || '').toLowerCase().includes(search.toLowerCase());
-    const monthMatch = p.month.toLowerCase().includes(search.toLowerCase());
-    return nameMatch || roleMatch || monthMatch;
+    
+    // payrollMonth is YYYY-MM
+    let isTargetMonth = true;
+    if (payrollMonth) {
+      const [y, m] = payrollMonth.split('-');
+      const d = new Date(Number(y), Number(m) - 1, 1);
+      const targetStr = d.toLocaleString('en-US', { month: 'long', year: 'numeric' });
+      isTargetMonth = (p.month === targetStr) || (p.month === payrollMonth);
+    }
+    
+    return (nameMatch || roleMatch) && isTargetMonth;
   });
 
     const totalPages = Math.ceil(filtered.length / MANAGER_ITEMS_PER_PAGE);

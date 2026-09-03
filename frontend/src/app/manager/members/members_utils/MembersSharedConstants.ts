@@ -3,16 +3,19 @@ import type { PlanWithCustom } from '@/app/manager/members/members_types/members
 import { z } from 'zod';
 
 export const MemberSchema = z.object({
-  name: z.string().min(2, "Name is required"),
+  name: z.string().min(2, "Name is required").regex(/^[A-Za-z\s]+$/, "Only alphabets allowed"),
   email: z.string().email("Invalid email address").optional().or(z.literal('')),
-  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  phone: z.string().regex(/^\d{10}$/, "Phone number must be exactly 10 digits"),
   address: z.string().optional(),
   gender: z.enum(['MALE', 'FEMALE', 'OTHER']),
   billingCycle: z.string(),
   customDays: z.number().min(1, "Please enter valid days").optional(),
   planId: z.string().min(1, "Please select a plan"),
-  amount: z.number().min(0, "Amount must be valid").optional(),
+  totalAmount: z.number().min(0).optional(),
+  paidAmount: z.number().min(0, "Amount must be valid").optional(),
+  pendingAmount: z.number().optional(),
   joinDate: z.string().optional(),
+  expiryDate: z.string().optional(),
 });
 
 export type MemberFormValues = z.infer<typeof MemberSchema>;
@@ -44,6 +47,10 @@ export const GENDER_OPTIONS = [
   { label: 'Other', value: 'OTHER' }
 ];
 
+const today = new Date();
+const nextMonth = new Date(today);
+nextMonth.setMonth(nextMonth.getMonth() + 1);
+
 export const EMPTY_MEMBER_FORM: MemberFormValues = {
   name: '',
   email: '',
@@ -52,6 +59,8 @@ export const EMPTY_MEMBER_FORM: MemberFormValues = {
   gender: 'MALE',
   billingCycle: 'ONE_MONTH',
   planId: '',
+  joinDate: today.toISOString().split('T')[0],
+  expiryDate: nextMonth.toISOString().split('T')[0],
 };
 
 export const formatCurrency = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');
@@ -81,5 +90,7 @@ export const MEMBERS_TABLE_HEADERS = ['ID', 'MEMBER', 'PLAN', 'STATUS', 'CYCLE',
 export const PROFILE_TABS = [
   { id: 'overview', label: 'Overview' },
   { id: 'attendance', label: 'Attendance' },
-  { id: 'payments', label: 'Payments' }
+  { id: 'payments', label: 'Payments' },
+  { id: 'workout', label: 'Workout Plan' },
+  { id: 'diet', label: 'Diet Plan' }
 ];

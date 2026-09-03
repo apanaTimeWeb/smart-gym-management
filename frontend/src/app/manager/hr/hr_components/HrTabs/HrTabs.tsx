@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Renders the tabbed view switching between the Staff and Payroll tables in the HR module.
+// RESPONSIBILITY: Renders the tabbed view switching between the Staff and Payroll tables in the HR module.
 'use client';
 
 import { useState } from 'react';
@@ -10,7 +10,7 @@ import PayrollTable from '@/app/manager/hr/hr_components/PayrollTable/PayrollTab
 
 export default function HrTabs() {
   const [activeTab, setActiveTab] = useState(HR_TABS[0]);
-  const { loadAll, openAdd, openAddPayroll, fetchState, search, setSearch, setCurrentPage } = useHrContext();
+  const { loadAll, openAdd, openAddPayroll, fetchState, search, setSearch, setCurrentPage, payrollMonth, setPayrollMonth } = useHrContext();
 
   return (
     <div className="rounded-xl shadow-sm border overflow-hidden bg-card border-border">
@@ -36,6 +36,14 @@ export default function HrTabs() {
               className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 w-40 sm:w-64 bg-card text-foreground"
             />
           </div>
+          {activeTab === 'Payroll' && (
+            <input 
+              type="month"
+              value={payrollMonth}
+              onChange={e => { setPayrollMonth(e.target.value); setCurrentPage(1); }}
+              className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 bg-card text-foreground"
+            />
+          )}
   <div className="px-4 flex gap-2">
     <button 
       onClick={loadAll} 
@@ -46,8 +54,7 @@ export default function HrTabs() {
     {activeTab === 'Staff' && (
       <button 
         onClick={openAdd} 
-        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white rounded-lg hover:opacity-90 transition-opacity" 
-        style={{ backgroundColor: 'var(--hr-highlight)' }}
+        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:opacity-90 transition-opacity" 
       >
         <Plus size={14} /> Add Staff
       </button>
@@ -55,8 +62,7 @@ export default function HrTabs() {
     {activeTab === 'Payroll' && (
       <button 
         onClick={openAddPayroll} 
-        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white rounded-lg hover:opacity-90 transition-opacity" 
-        style={{ backgroundColor: 'var(--hr-highlight)' }}
+        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:opacity-90 transition-opacity" 
       >
         <Plus size={14} /> Add Payroll
       </button>

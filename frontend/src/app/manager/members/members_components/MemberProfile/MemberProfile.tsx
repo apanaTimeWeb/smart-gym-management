@@ -9,6 +9,8 @@ import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS, formatCurrency, PROFILE_TA
 import ProfileOverview from '@/app/manager/members/members_components/MemberProfile/ProfileOverview';
 import ProfileAttendance from '@/app/manager/members/members_components/MemberProfile/ProfileAttendance';
 import ProfilePayments from '@/app/manager/members/members_components/MemberProfile/ProfilePayments';
+import ProfileWorkout from '@/app/manager/members/members_components/MemberProfile/ProfileWorkout';
+import ProfileDiet from '@/app/manager/members/members_components/MemberProfile/ProfileDiet';
 
 export default function MemberProfile() {
   const { selectedMember, setSelectedMember, profileTab, setProfileTab, openEdit, openMsg } = useMembersContext();
@@ -33,11 +35,11 @@ export default function MemberProfile() {
         <div className="bg-card rounded-xl shadow-sm border border-border p-6">
           <div className="flex flex-wrap items-center justify-between gap-5 mb-6">
             <div className="flex items-center gap-5">
-              <div className="w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold text-primary bg-primary-subtle">
-                {selectedMember.name.charAt(0)}
+              <div className="w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold text-primary bg-primary-subtle shrink-0">
+                {(selectedMember.name || '?').charAt(0).toUpperCase()}
               </div>
               <div>
-                <h2 className="text-xl font-bold text-primary">{selectedMember.name}</h2>
+                <h2 className="text-xl font-bold text-primary">{selectedMember.name || 'Unknown Member'}</h2>
                 <p className="text-secondary text-sm">{selectedMember.email} · {selectedMember.phone}</p>
                 <div className="flex gap-2 mt-2 flex-wrap">
                   <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusStyle.bg} ${statusStyle.text}`}>
@@ -60,6 +62,12 @@ export default function MemberProfile() {
                 <Edit size={14} /> Edit
               </button>
               <button
+                onClick={() => openEdit({ ...selectedMember, status: 'ACTIVE' })}
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border border-border rounded-xl hover:bg-primary/10 text-primary transition-all duration-200 active:scale-95 bg-primary/5"
+              >
+                Renew Plan
+              </button>
+              <button
                 onClick={() => openMsg(selectedMember, 'whatsapp')}
                 className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-success text-white rounded-xl hover:opacity-90 transition-all duration-200 active:scale-95"
               >
@@ -76,7 +84,7 @@ export default function MemberProfile() {
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {[
-              { label: 'Member ID', value: `GS${String(selectedMember.id).padStart(4, '0')}` },
+              { label: 'Member ID', value: selectedMember.id },
               { label: 'Branch', value: selectedMember.branch },
               { label: 'Gender', value: selectedMember.gender },
               { label: 'Join Date', value: new Date(selectedMember.joinDate).toLocaleDateString('en-IN') },
@@ -99,7 +107,7 @@ export default function MemberProfile() {
             {PROFILE_TABS.map(({ id: t, label }) => (
               <button
                 key={t}
-                onClick={() => { setProfileTab(t as 'overview' | 'attendance' | 'payments'); if (t === 'payments') loadMemberProfile(selectedMember.id); }}
+                onClick={() => { setProfileTab(t as any); if (t === 'payments') loadMemberProfile(selectedMember.id); }}
                 className={`px-5 py-3.5 text-sm font-medium transition-all duration-200 border-b-2 ${
                   profileTab === t
                     ? 'text-primary bg-primary-subtle border-primary'
@@ -115,6 +123,8 @@ export default function MemberProfile() {
             {profileTab === 'overview' && <ProfileOverview />}
             {profileTab === 'attendance' && <ProfileAttendance />}
             {profileTab === 'payments' && <ProfilePayments />}
+            {profileTab === 'workout' && <ProfileWorkout />}
+            {profileTab === 'diet' && <ProfileDiet />}
           </div>
         </div>
       </div>

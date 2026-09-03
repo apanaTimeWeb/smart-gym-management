@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Provides UI orchestration state to the attendance module hierarchy. Async data is managed in useAttendanceLogic.
+// RESPONSIBILITY: Provides UI orchestration state to the attendance module hierarchy. Async data is managed in useAttendanceLogic.
 'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';
@@ -23,6 +23,7 @@ export function AttendanceProvider({ children }: { children: React.ReactNode }) 
    logic.search,
    logic.currentPage,
    logic.showModal,
+   logic.calendarUser,
    logic.form
  ]);
 
