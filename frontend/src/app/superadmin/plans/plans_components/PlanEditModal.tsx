@@ -100,7 +100,7 @@ export default function PlanEditModal() {
               </button>
             </div>
             {fields.map((field, index) => (
-              <div key={field.id} className="flex items-center gap-2">
+              <div key={field.id} className="flex flex-wrap items-center gap-2">
                 <input {...register(`features.${index}.value`)} placeholder="e.g. Advanced Analytics" className="flex-1 bg-input border border-border rounded-xl px-4 py-2.5 text-foreground focus:border-primary outline-none transition-colors" />
                 {fields.length > 1 && (
                   <button type="button" onClick={() => remove(index)} className="p-2.5 text-secondary hover:text-danger hover:bg-danger/10 rounded-xl transition-colors" aria-label="Remove feature">
@@ -115,7 +115,7 @@ export default function PlanEditModal() {
         <div className="p-6 border-t border-border bg-sidebar flex justify-end gap-3">
           <button type="button" onClick={closeEditModal} className="px-6 py-2.5 rounded-xl font-medium text-secondary hover:bg-input transition-colors">Cancel</button>
           <button onClick={handleSubmit(onSubmit)} disabled={isSubmitting} className="px-6 py-2.5 rounded-xl font-medium bg-primary text-white hover:bg-primary-hover transition-colors disabled:opacity-50 flex items-center gap-2 active:scale-95">
-            {isSubmitting ? <><Loader2 size={16} className="animate-spin" /> Saving...</> : 'Save Changes'}
+            {isSubmitting ? <><Loader2 size={16} className="motion-safe:animate-spin" /> Saving...</> : 'Save Changes'}
           </button>
         </div>
       </div>

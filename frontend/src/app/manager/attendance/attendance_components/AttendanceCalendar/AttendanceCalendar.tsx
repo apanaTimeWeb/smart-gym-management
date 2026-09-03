@@ -68,7 +68,7 @@ export default function AttendanceCalendar() {
   });
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 motion-safe:animate-in fade-in duration-200">
       <div className="w-full max-w-md bg-[var(--bg-card)] shadow-xl flex flex-col max-h-[90vh] rounded-2xl border-2 border-[var(--primary)] overflow-hidden">
         
         {/* Header */}
@@ -113,7 +113,7 @@ export default function AttendanceCalendar() {
         <div className="p-4 overflow-y-auto">
           {loading ? (
             <div className="flex justify-center items-center py-12">
-              <Loader2 className="animate-spin text-[var(--text-secondary)]" size={32} />
+              <Loader2 className="motion-safe:animate-spin text-[var(--text-secondary)]" size={32} />
             </div>
           ) : (
             <div>

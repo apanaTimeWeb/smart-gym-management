@@ -61,7 +61,7 @@ function BranchDetailDrawer({
         onClick={onClose}
       />
       {/* Drawer */}
-      <div className="fixed right-0 top-0 h-full w-full max-w-lg bg-card border-l border-border z-50 flex flex-col shadow-2xl animate-slide-in-right">
+      <div className="fixed right-0 top-0 h-full w-full max-w-lg bg-card border-l border-border z-50 flex flex-col shadow-2xl motion-safe:animate-slide-in-right">
         {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-border">
           <div>
@@ -98,7 +98,7 @@ function BranchDetailDrawer({
                     <p className="text-sm font-medium text-foreground">{item.label}</p>
                     <p className="text-xs text-secondary mt-0.5">{new Date(item.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}</p>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${methodColor[item.method] || 'bg-input text-secondary'}`}>{item.method}</span>
                     <span className="font-bold text-success text-sm">{formatCurrency(item.amount)}</span>
                   </div>
@@ -124,7 +124,7 @@ function BranchDetailDrawer({
                     <p className="text-sm font-medium text-foreground">{item.label}</p>
                     <p className="text-xs text-secondary mt-0.5">{new Date(item.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}</p>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${categoryColor[item.category] || 'bg-input text-secondary'}`}>{item.category}</span>
                     <span className="font-bold text-danger text-sm">{formatCurrency(item.amount)}</span>
                   </div>
@@ -146,7 +146,7 @@ function BranchDetailDrawer({
               </div>
               {(branch.staffList || []).map(s => (
                 <div key={s.id} className="flex items-center justify-between p-3.5 bg-input/40 rounded-xl border border-border">
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-wrap items-center gap-3">
                     <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">
                       {s.name.charAt(0)}
                     </div>
@@ -178,7 +178,7 @@ function BranchDetailDrawer({
               </div>
               {(branch.studentList || []).map(s => (
                 <div key={s.id} className="flex items-center justify-between p-3.5 bg-input/40 rounded-xl border border-border">
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-wrap items-center gap-3">
                     <div className="w-9 h-9 rounded-full bg-warning/10 flex items-center justify-center text-warning font-bold text-sm flex-shrink-0">
                       {s.name.charAt(0)}
                     </div>
@@ -227,7 +227,7 @@ export default function AdminBranchesPage() {
       <div className="p-6 max-w-6xl mx-auto space-y-6">
         {/* Filter Bar */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-card p-4 border border-border rounded-xl">
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
               <Calendar className="w-5 h-5 text-primary" />
             </div>
@@ -241,7 +241,7 @@ export default function AdminBranchesPage() {
 
           <div className="flex justify-end gap-3 items-center flex-wrap">
             {timeRange === 'custom' && (
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <label className="text-sm font-medium text-secondary">From:</label>
                 <input type="date" className="bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-primary" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
                 <label className="text-sm font-medium text-secondary">To:</label>

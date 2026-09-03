@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Next.js loading.tsx � renders skeleton loader fallback while Settings module data loads.
+// RESPONSIBILITY: Next.js loading.tsx � renders skeleton loader fallback while Settings module data loads.
 export default function Loading() {
  return (
  <div className="min-h-screen flex flex-col p-6 space-y-5 bg-background">

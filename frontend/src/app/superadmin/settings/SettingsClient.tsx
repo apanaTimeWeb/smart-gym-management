@@ -62,7 +62,7 @@ export default function SettingsClient() {
   };
 
   if (fetchState === 'loading' || fetchState === 'idle') {
-    return <div className="flex h-96 items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
+    return <div className="flex h-96 items-center justify-center"><Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" /></div>;
   }
 
   const groupedSettings = settings.reduce<Record<string, PlatformSetting[]>>((acc, curr) => {
@@ -99,7 +99,7 @@ export default function SettingsClient() {
                         <h3 className="font-medium text-foreground">{setting.key}</h3>
                         <p className="text-xs text-secondary mt-1">{setting.description}</p>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
                         {setting.dataType === 'boolean' ? (
                           <SearchableDropdown
                             value={String(currentValue)}

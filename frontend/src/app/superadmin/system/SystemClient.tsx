@@ -83,7 +83,7 @@ export default function SystemClient() {
   const paginatedLogs = filteredLogs.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   if (fetchState === 'loading' || fetchState === 'idle') {
-    return <div className="flex h-96 items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
+    return <div className="flex h-96 items-center justify-center"><Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" /></div>;
   }
 
   return (
@@ -122,7 +122,7 @@ export default function SystemClient() {
                     className="w-full flex justify-center items-center gap-2 bg-warning hover:bg-warning text-black py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
                   >
                     {migratingTenants[tenant.id] ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <Loader2 className="w-4 h-4 motion-safe:animate-spin" />
                     ) : (
                       <RefreshCcw className="w-4 h-4" />
                     )}
@@ -142,12 +142,12 @@ export default function SystemClient() {
       {/* Master Audit Log */}
       <div className="pt-8 border-t border-border">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <ShieldAlert className="w-5 h-5 text-primary" />
             <h2 className="text-xl font-bold text-foreground">Global Audit Log</h2>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-disabled" />
               <input

@@ -102,7 +102,7 @@ export default function ManagerStoreProductModal() {
  className="flex-1 py-2.5 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 disabled:opacity-70 transition-colors" 
  style={{ background: 'var(--store-highlight)' }}
  >
- {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><Save size={15} />{editProductId ? 'Update' : 'Add Product'}</>}
+ {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" /> : <><Save size={15} />{editProductId ? 'Update' : 'Add Product'}</>}
  </button>
  </div>
  </form>

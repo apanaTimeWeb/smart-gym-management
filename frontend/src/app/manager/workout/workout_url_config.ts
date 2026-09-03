@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Single source of truth for all backend API endpoints used by the Workout Library module.
+// RESPONSIBILITY: Single source of truth for all backend API endpoints used by the Workout Library module.
 export const WorkoutUrlConfig = {
   PAGES: {
     WORKOUTS: '/manager/workout',

@@ -56,7 +56,7 @@ export default function SuperadminTicketsHeader({
             <Filter size={16} /> Filter
           </button>
           {showFilter && (
-            <div className="absolute right-0 top-full mt-2 w-64 bg-card border border-border rounded-xl shadow-lg p-4 z-10 flex flex-col gap-4">
+            <div className="absolute right-0 top-full mt-2  w-full sm:w-64  bg-card border border-border rounded-xl shadow-lg p-4 z-10 flex flex-col gap-4">
               <div className="flex flex-col gap-2">
                 <label className="text-xs font-semibold text-secondary uppercase tracking-wider">Status</label>
                 <select 

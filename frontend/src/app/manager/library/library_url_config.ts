@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Single source of truth for all backend API endpoints used by the Diet Library module.
+// RESPONSIBILITY: Single source of truth for all backend API endpoints used by the Diet Library module.
 export const LibraryUrlConfig = {
   PAGES: {
     LIBRARY: '/manager/library',

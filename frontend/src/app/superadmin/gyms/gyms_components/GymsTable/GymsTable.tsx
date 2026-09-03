@@ -112,7 +112,7 @@ export default function GymsTable() {
                   <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     {isActionLoading ? (
                       <div className="p-2 text-primary">
-                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <Loader2 className="w-4 h-4 motion-safe:animate-spin" />
                       </div>
                     ) : (
                       <>

@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Renders the top banner with module title and save status indicator for the Settings page.
+// RESPONSIBILITY: Renders the top banner with module title and save status indicator for the Settings page.
 'use client';
 import Link from 'next/link';
 

@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Next.js error.tsx — renders the typed error boundary fallback for the Inquiries & Leads module with a Retry button.
+// RESPONSIBILITY: Next.js error.tsx — renders the typed error boundary fallback for the Inquiries & Leads module with a Retry button.
 'use client';
 
 import { useEffect } from "react";

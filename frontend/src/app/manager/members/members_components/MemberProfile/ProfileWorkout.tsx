@@ -13,7 +13,7 @@ export default function ProfileWorkout() {
   const hasWorkoutPlan = false; // Mock data
 
   return (
-    <div className="space-y-6 animate-in fade-in zoom-in-95 duration-300">
+    <div className="space-y-6 motion-safe:animate-in fade-in zoom-in-95 duration-300">
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-lg font-bold text-primary">Workout Plan</h3>

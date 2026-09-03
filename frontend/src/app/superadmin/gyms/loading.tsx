@@ -9,7 +9,7 @@ export default function Loading() {
         <div className="h-4 w-96 bg-border motion-safe:animate-pulse rounded mt-2"></div>
       </div>
       <div className="bg-card border border-border rounded-xl shadow-sm min-h-96 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-secondary animate-spin" />
+        <Loader2 className="w-8 h-8 text-secondary motion-safe:animate-spin" />
       </div>
     </div>
   );

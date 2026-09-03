@@ -60,7 +60,7 @@ export default function LandingContact() {
           <div className="bg-card border border-border rounded-3xl p-8 shadow-xl">
             <h3 className="text-xl font-bold text-white mb-6">Send a Message</h3>
             {contactSuccess ? (
-              <div className="flex flex-col items-center justify-center py-10 text-center animate-in fade-in">
+              <div className="flex flex-col items-center justify-center py-10 text-center motion-safe:animate-in fade-in">
                 <div className="w-16 h-16 bg-success/20 rounded-full flex items-center justify-center mb-4">
                   <CheckCircle className="text-success" size={32} />
                 </div>

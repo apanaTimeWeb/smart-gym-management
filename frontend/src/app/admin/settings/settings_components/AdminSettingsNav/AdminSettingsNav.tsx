@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Renders the left-side vertical navigation tabs for different settings sections.
+// RESPONSIBILITY: Renders the left-side vertical navigation tabs for different settings sections.
 'use client';
 
 import { useSettingsContext } from '@/app/admin/settings/settings_context/SettingsContext';

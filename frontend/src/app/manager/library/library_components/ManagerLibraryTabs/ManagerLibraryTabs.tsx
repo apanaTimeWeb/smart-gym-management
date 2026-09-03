@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Renders the tabbed view switching between Diet Plans and Exercises in the Diet Library.
+// RESPONSIBILITY: Renders the tabbed view switching between Diet Plans and Exercises in the Diet Library.
 'use client';
 
 import { RefreshCw, Plus, Search } from 'lucide-react';
@@ -32,7 +32,7 @@ export default function ManagerLibraryTabs() {
             value={search} 
             onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} 
             placeholder={`Search ${tab.toLowerCase()}...`} 
-            className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-40 sm:w-64 bg-input text-foreground" 
+            className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-40 sm: w-full sm:w-64  bg-input text-foreground" 
           />
         </div>
  <button 

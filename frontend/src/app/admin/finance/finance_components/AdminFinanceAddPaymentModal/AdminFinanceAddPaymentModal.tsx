@@ -101,7 +101,7 @@ export default function AdminFinanceAddPaymentModal() {
               Cancel
             </button>
             <button type="submit" disabled={saving} className="px-5 py-2.5 text-sm font-semibold text-primary-foreground bg-primary rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center min-w-32 flex-1">
-              {saving ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> : 'Record Payment'}
+              {saving ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full motion-safe:animate-spin" /> : 'Record Payment'}
             </button>
           </div>
         </form>

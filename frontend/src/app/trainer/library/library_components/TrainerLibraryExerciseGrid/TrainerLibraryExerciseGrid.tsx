@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Renders the exercise cards grid with category and muscle group info in the Diet Library.
+// RESPONSIBILITY: Renders the exercise cards grid with category and muscle group info in the Diet Library.
 'use client';
 
 import { Dumbbell, Edit2, Trash2, Loader2, Clock } from 'lucide-react';
@@ -21,7 +21,7 @@ export default function TrainerLibraryExerciseGrid() {
   if (loading) {
     return (
       <div className="flex justify-center py-10">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
       </div>
     );
   }
@@ -66,8 +66,8 @@ export default function TrainerLibraryExerciseGrid() {
             </div>
             
             <div className="text-xs text-secondary space-y-1 mt-auto">
-              <p>💪 {ex.muscleGroup?.join(', ')}</p>
-              {ex.sets && <p>📊 {ex.sets} sets × {ex.reps} reps</p>}
+              <p>?? {ex.muscleGroup?.join(', ')}</p>
+              {ex.sets && <p>?? {ex.sets} sets � {ex.reps} reps</p>}
               {ex.duration && <p className="flex items-center gap-1"><Clock size={12} /> {ex.duration}</p>}
             </div>
           </div>

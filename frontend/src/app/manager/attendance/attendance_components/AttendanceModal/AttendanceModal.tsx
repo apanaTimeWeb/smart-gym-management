@@ -147,7 +147,7 @@ export default function AttendanceModal() {
               disabled={saving}
               className="px-4 py-2 rounded-lg font-medium text-white bg-primary flex items-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-70" 
             >
-              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <><CheckCircle size={15} /> Check In</>}
+              {saving ? <Loader2 className="w-4 h-4 motion-safe:animate-spin" /> : <><CheckCircle size={15} /> Check In</>}
             </button>
           </div>
         </form>

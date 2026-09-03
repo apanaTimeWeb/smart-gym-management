@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Server Component � fetches initial SSR data and renders the HR & Payroll module entry point.
+// RESPONSIBILITY: Server Component � fetches initial SSR data and renders the HR & Payroll module entry point.
 import AdminHrMain from '@/app/admin/hr/hr_components/AdminHrMain/AdminHrMain';
 import { ssrHrApi } from '@/app/admin/hr/hr_api/hr_server_api';
 import type { HrInitialData } from '@/app/admin/hr/hr_types/hr_types';

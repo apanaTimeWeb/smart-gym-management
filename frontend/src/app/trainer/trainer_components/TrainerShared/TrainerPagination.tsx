@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Renders the pagination bar (Previous/Next + page info + rows-per-page) shared across all TRAINER table views.
+// RESPONSIBILITY: Renders the pagination bar (Previous/Next + page info + rows-per-page) shared across all TRAINER table views.
 'use client';
 
 import { ChevronLeft, ChevronRight } from 'lucide-react';

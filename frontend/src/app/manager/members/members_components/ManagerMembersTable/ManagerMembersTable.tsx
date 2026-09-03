@@ -28,7 +28,7 @@ export default function ManagerMembersTable() {
     <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden flex flex-col h-full min-h-96">
       {fetchState === 'loading' ? (
         <div className="flex items-center justify-center py-16 flex-1">
-          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+          <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
         </div>
       ) : (
         <>

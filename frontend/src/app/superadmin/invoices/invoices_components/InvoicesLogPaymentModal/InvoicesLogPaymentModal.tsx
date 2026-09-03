@@ -33,7 +33,7 @@ export default function InvoicesLogPaymentModal({
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-card border border-border rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative bg-card border border-border rounded-2xl shadow-2xl w-full max-w-md overflow-hidden motion-safe:animate-in fade-in zoom-in-95 duration-200">
         <div className="flex items-center justify-between p-5 border-b border-border">
           <h2 className="text-xl font-bold text-foreground">Log Manual Payment</h2>
           <button onClick={onClose} className="text-secondary hover:text-foreground transition-colors" aria-label="Close modal">
@@ -55,7 +55,7 @@ export default function InvoicesLogPaymentModal({
               <span className="text-secondary text-xs">▼</span>
             </div>
             {isGymDropdownOpen && (
-              <div className="absolute z-30 top-[calc(100%+4px)] left-0 right-0 bg-card border border-border rounded-lg shadow-2xl overflow-hidden max-h-64 flex flex-col animate-in fade-in zoom-in-95 duration-100">
+              <div className="absolute z-30 top-[calc(100%+4px)] left-0 right-0 bg-card border border-border rounded-lg shadow-2xl overflow-hidden max-h-64 flex flex-col motion-safe:animate-in fade-in zoom-in-95 duration-100">
                 <div className="p-2 border-b border-border bg-header">
                   <div className="relative">
                     <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-secondary" />

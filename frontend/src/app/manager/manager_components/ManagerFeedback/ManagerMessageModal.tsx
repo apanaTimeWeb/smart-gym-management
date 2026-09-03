@@ -89,7 +89,7 @@ export default function ManagerMessageModal({
  className="px-6 py-4 flex items-center justify-between"
  style={{ background: type === 'whatsapp' ? WA_GREEN : 'var(--info)' }}
  >
- <div className="flex items-center gap-3">
+ <div className="flex flex-wrap items-center gap-3">
  <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center">
  <Icon size={18} color="white" />
  </div>
@@ -181,7 +181,7 @@ export default function ManagerMessageModal({
  </>
  ) : sending ? (
  <>
- <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+ <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full motion-safe:animate-spin" />
  Sending...
  </>
  ) : (

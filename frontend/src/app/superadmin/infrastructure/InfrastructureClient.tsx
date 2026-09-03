@@ -38,7 +38,7 @@ export default function InfrastructureClient() {
   const avgDisk = withDisk.length ? Math.round(withDisk.reduce((acc, n) => acc + (n.diskPercent ?? 0), 0) / withDisk.length) : 0;
 
   if ((fetchState === 'loading' || fetchState === 'idle') && nodes.length === 0) {
-    return <div className="flex h-96 items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
+    return <div className="flex h-96 items-center justify-center"><Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" /></div>;
   }
 
   return (
@@ -53,7 +53,7 @@ export default function InfrastructureClient() {
           disabled={fetchState === 'loading'}
           className="bg-input text-secondary px-4 py-2 rounded-lg font-medium hover:bg-card transition-colors flex items-center gap-2 border border-border disabled:opacity-50"
         >
-          <RefreshCcw size={16} className={fetchState === 'loading' ? 'animate-spin' : ''} /> Force Sync Metrics
+          <RefreshCcw size={16} className={fetchState === 'loading' ? 'motion-safe:animate-spin' : ''} /> Force Sync Metrics
         </button>
       </div>
 
