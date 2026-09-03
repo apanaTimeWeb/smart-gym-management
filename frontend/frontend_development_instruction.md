@@ -265,5 +265,45 @@ Whenever displaying KPI cards (like "Active Coupons" or "Total Redeemed") direct
 75. **Double Verification for Critical Actions (Destructive/Financial)**:
 Whenever presenting an action button that triggers a destructive or critical financial mutation (e.g., deleting a record, suspending a user, or marking an invoice/payroll as paid), you MUST implement a double verification confirmation dialog. Never execute these actions instantly on a single click. Utilize a global `useConfirm` hook or a similar custom modal to explicitly ask the user (e.g., "Are you sure you want to mark this as paid?").
 
+76. **Strict API Client Function Naming Convention (The Verb Contract)**:
+Every function defined inside a module's `[moduleName]_api.ts` file MUST follow a strict, predictable verb-based naming convention. AI agents must never invent arbitrary function names like `loadMembers()`, `getData()`, or `handleFetch()`. The standard is:
+- `fetch[Entities](params)` — For fetching a list (e.g., `fetchMembers(params)`)
+- `fetch[Entity]ById(id)` — For fetching a single entity (e.g., `fetchMemberById(id)`)
+- `create[Entity](dto)` — For POST creation (e.g., `createMember(dto)`)
+- `update[Entity](id, dto)` — For PATCH/PUT updates (e.g., `updateMember(id, dto)`)
+- `delete[Entity](id)` — For DELETE (e.g., `deleteMember(id)`)
+- `export[Entity]Report(params)` — For report/export generation
+- This naming MUST exactly mirror Backend Rule 86's method naming table. When a backend AI agent writes `createMember()` on the service, the frontend AI agent must write `createMember()` in the API client — **1:1 verb symmetry, zero ambiguity**.
+
+77. **`import type` Mandate for Type-Only Imports**:
+Whenever importing a TypeScript type, interface, or enum that is used purely for type-checking (not as a runtime value), you MUST use the `import type` syntax. Never use a regular `import` for type-only constructs.
+- ❌ **BAD:** `import { MemberTableProps } from '@/app/admin/members/members_types/member.types'`
+- ✅ **GOOD:** `import type { MemberTableProps } from '@/app/admin/members/members_types/member.types'`
+- **Why:** `import type` statements are completely erased at compile time, reducing bundle size, preventing accidental runtime usage of type definitions, and eliminating a major category of circular dependency errors. TypeScript's `verbatimModuleSyntax` compiler option can mechanically enforce this. This mirrors Backend Rule 88's `import type` mandate for the backend.
+
+78. **Security Scanning in Frontend CI/CD Tooling Gates (Extending Rule 65)**:
+Rule 65 mandates ESLint, `tsc --noEmit`, and pre-commit hooks. This rule adds mandatory **security gates** to the frontend CI/CD pipeline, mirroring Backend Rules 90 & 91:
+- **Gate 1 — SCA (Dependency Vulnerability Scan):** Run `npm audit --audit-level=high` on every PR. Any `Critical` or `High` severity CVE in a frontend dependency MUST block the merge. Frontend packages (including `react`, `axios`, `next`) have real CVEs that AI agents will never proactively check for.
+- **Gate 2 — Secrets Detection:** Run `gitleaks detect` on every PR diff. Frontend code frequently contains accidentally committed API keys, Stripe public keys, or environment variables. This gate is non-negotiable.
+- **Gate 3 — Pre-Commit Secret Scan:** Add `gitleaks detect --no-git` (staged files only) to the existing `husky + lint-staged` pre-commit hook so secrets are caught locally before pushing.
+- **Why:** An AI agent configuring a new third-party SDK (e.g., a payment widget) may accidentally commit a test API key directly into a component file. Automated scanning catches this before it enters source control history.
+
+79. **MSW (Mock Service Worker) for Stub-First Frontend Development**:
+When a backend API endpoint does not yet exist (the stub-first phase of Backend Rule 81), the frontend MUST use **MSW (Mock Service Worker)** to intercept HTTP requests and return realistic mock responses. It is strictly forbidden to hardcode fake data directly inside hooks, components, or constants.
+- ❌ **BAD:** `const members = [{ id: '1', name: 'Test User' }]; // TODO: replace with API`
+- ✅ **GOOD:** An MSW handler in `src/mocks/handlers/members.handlers.ts` that intercepts `GET /api/v1/members` and returns a realistic typed payload matching the `ApiResponse<Member[]>` envelope.
+- **Required Structure:** All mock handlers must live in `src/mocks/handlers/[moduleName].handlers.ts`. A central `src/mocks/browser.ts` file registers all handlers. MSW is enabled only in `development` and `test` environments — never in production builds.
+- **Why:** Hardcoded fake data scattered in hooks creates a massive cleanup burden. An AI agent can forget to remove it, or worse, the fake data can shadow the real API call silently. MSW intercepts at the network level, meaning the same `useEffect`/`fetch` code runs in both development and production — only the response source changes. The transition from mock to real API is a one-line change in the MSW handler, not a hunt across 10 component files.
+
+80. **`CODEOWNERS` Human Review Gate for Security-Critical Frontend Code**:
+Just as Backend Rule 93 mandates human review for `auth/`, `billing/`, and `permissions/` backend modules, the frontend MUST implement a `CODEOWNERS` file requiring mandatory human reviewer approval on PRs that touch security-critical frontend paths. AI agents cannot self-certify security-critical UI changes.
+- **Mandatory Human Review Required For:**
+  1. **Auth UI** — Any changes to `src/app/auth/` (login form, logout, refresh logic).
+  2. **API Interceptor & Token Logic** — Any changes to the centralized `api.ts` wrapper, the token refresh interceptor, or `middleware.ts`.
+  3. **Permission Hooks** — Any changes to `usePermissions()` or any hook that conditionally hides/shows restricted UI elements.
+  4. **Payment UI** — Any component that triggers a payment, displays financial data, or handles billing actions.
+- **PR Description Mandate:** Any PR touching these paths MUST include a `## Security Impact Analysis` section explaining what changed and why it's safe.
+- **Why:** A subtle bug in the frontend's token refresh logic or a missing `usePermissions()` check can expose restricted data to unauthorized users — purely a client-side authorization bypass. Automated ESLint and TypeScript checks cannot catch semantic security flaws. A human review is the final gate.
+
 ---
 Think step-by-step. Create a detailed implementation plan first so I can review it, and then execute it perfectly without breaking existing data flows!
