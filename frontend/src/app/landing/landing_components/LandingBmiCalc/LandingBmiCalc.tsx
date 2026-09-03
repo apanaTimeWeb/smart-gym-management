@@ -64,7 +64,7 @@ export default function LandingBmiCalc() {
           {/* Right: result panel */}
           <div className="bg-input border border-border rounded-2xl p-8 text-center h-full flex flex-col justify-center items-center">
             {bmiResult ? (
-              <div className="animate-in fade-in zoom-in duration-300">
+              <div className="motion-safe:animate-in fade-in zoom-in duration-300">
                 <h3 className="text-lg font-bold text-secondary mb-2">Your BMI is</h3>
                 {/* colorClass maps to .bmi-result--* in landing.css (Violation 6 fix — no inline CSS vars) */}
                 <div className={`text-6xl font-black mb-4 ${bmiResult.colorClass}`}>{bmiResult.value}</div>

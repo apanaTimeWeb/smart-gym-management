@@ -164,7 +164,7 @@ export default function LoginForm() {
             }
           >
             {isLoading ? (
-              <Loader2 size={18} className="animate-spin" />
+              <Loader2 size={18} className="motion-safe:animate-spin" />
             ) : (
               <>
                 {LoginSharedConstants.TEXT.FORM_SUBMIT}

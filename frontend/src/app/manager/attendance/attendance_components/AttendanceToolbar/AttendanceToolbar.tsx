@@ -50,7 +50,7 @@ export default function AttendanceToolbar() {
         value={localSearch} 
         onChange={e => setLocalSearch(e.target.value)} 
         placeholder={`Search ${tab.toLowerCase()}...`} 
-        className="pl-9 pr-3 py-2 border border-border bg-input text-foreground rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-full sm:w-64"
+        className="pl-9 pr-3 py-2 border border-border bg-input text-foreground rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-full sm: w-full sm:w-64 "
       />
     </div>
     <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">

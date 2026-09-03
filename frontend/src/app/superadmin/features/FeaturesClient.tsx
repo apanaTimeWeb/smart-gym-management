@@ -115,7 +115,7 @@ export default function FeaturesClient() {
             {DUMMY_RELEASE_NOTES.map(note => (
               <div key={note.id} className="bg-card border border-border rounded-xl p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-wrap items-center gap-3">
                     <span className="bg-primary/10 text-primary px-2.5 py-1 rounded-md text-xs font-bold border border-primary/20">
                       {note.version}
                     </span>

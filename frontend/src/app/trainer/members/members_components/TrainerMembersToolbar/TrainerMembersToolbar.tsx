@@ -36,7 +36,7 @@ export default function TrainerMembersToolbar() {
           value={localSearch} 
           onChange={e => setLocalSearch(e.target.value)} 
           placeholder="Search by name or phone..." 
-          className="pl-9 pr-3 py-2.5 border border-border rounded-xl text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page w-64 bg-input text-primary" 
+          className="pl-9 pr-3 py-2.5 border border-border rounded-xl text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page  w-full sm:w-64  bg-input text-primary" 
         />
       </div>
       <div className="flex gap-2">

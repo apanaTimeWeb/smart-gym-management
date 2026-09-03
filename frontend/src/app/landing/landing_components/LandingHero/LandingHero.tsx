@@ -63,7 +63,7 @@ export default function LandingHero() {
       </div>
 
       {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce z-10">
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 motion-safe:animate-bounce z-10">
         <ChevronDown size={28} className="text-white/50" />
       </div>
     </section>

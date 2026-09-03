@@ -23,7 +23,7 @@ export default function InvoicesHeader({ onLogPaymentClick }: InvoicesHeaderProp
         <h1 className="text-3xl font-bold text-foreground">SaaS Revenue & Invoices</h1>
         <p className="text-secondary mt-1">Track actual payments from gym owners via Stripe/Razorpay.</p>
       </div>
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         <button
           onClick={onLogPaymentClick}
           className="bg-input text-foreground border border-border px-4 py-2 rounded-lg font-medium hover:bg-border transition-all duration-200 ease-in-out flex items-center gap-2"

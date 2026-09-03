@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Renders the printable 80mm thermal receipt layout. Triggered by window.print() — hidden except on @media print.
+// RESPONSIBILITY: Renders the printable 80mm thermal receipt layout. Triggered by window.print() — hidden except on @media print.
 import React from 'react';
 
 export interface AdminReceiptData {

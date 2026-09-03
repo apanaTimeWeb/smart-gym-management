@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Single source of truth for all backend API endpoints used by the Store module.
+// RESPONSIBILITY: Single source of truth for all backend API endpoints used by the Store module.
 export const StoreUrlConfig = {
   PAGES: {
     PRODUCTS: '/manager/store',

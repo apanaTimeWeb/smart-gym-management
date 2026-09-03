@@ -78,7 +78,7 @@ export default function PlansList() {
                 aria-label={`Delete ${plan.name}`}
                 className="flex-1 py-2.5 flex items-center justify-center bg-input hover:bg-danger hover:text-white text-secondary rounded-xl transition-colors border border-border disabled:opacity-50"
               >
-                {isDeleting ? <Loader2 size={18} className="animate-spin" /> : <Trash2 size={18} />}
+                {isDeleting ? <Loader2 size={18} className="motion-safe:animate-spin" /> : <Trash2 size={18} />}
               </button>
             </div>
           </div>

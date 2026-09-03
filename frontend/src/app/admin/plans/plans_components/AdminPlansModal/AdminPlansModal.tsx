@@ -124,7 +124,7 @@ export default function AdminPlansModal() {
               className="flex-1 py-2.5 rounded-xl text-sm font-bold text-white bg-primary hover:bg-primary-hover flex items-center justify-center gap-2 disabled:opacity-70 transition-all duration-200 active:scale-95"
             >
               {saving
-                ? <Loader2 className="w-4 h-4 animate-spin" />
+                ? <Loader2 className="w-4 h-4 motion-safe:animate-spin" />
                 : <><Save size={15} />{editId ? 'Update' : 'Create Plan'}</>
               }
             </button>

@@ -51,7 +51,7 @@ export default function AdminFinanceTabs() {
         value={localSearch} 
         onChange={e => setLocalSearch(e.target.value)} 
         placeholder="Search payments..." 
-        className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-card text-primary w-40 sm:w-64"
+        className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-card text-primary w-40 sm: w-full sm:w-64 "
       />
     </div>
     <div className="flex gap-2">

@@ -74,7 +74,7 @@ export default function ManagerStorePosModal() {
  <p className="text-xs font-medium text-foreground">{i.name}</p>
  <p className="text-xs text-secondary">{formatCurrency(i.price)} each</p>
  </div>
- <div className="flex items-center gap-2">
+ <div className="flex flex-wrap items-center gap-2">
    <div className="flex items-center bg-card rounded border border-border">
      <button 
        onClick={() => updateOrderQty(i.productId, i.qty - 1)}
@@ -146,7 +146,7 @@ export default function ManagerStorePosModal() {
  disabled={saving || orderItems.length === 0 || (sendViaWhatsapp && customerPhone.length !== 10)} 
  className="w-full py-3 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 disabled:opacity-70 transition-colors bg-primary hover:bg-primary-hover" 
  >
- {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : (sendViaWhatsapp ? <><Send size={15} /> Send WhatsApp</> : <><Printer size={15} /> Print Bill</>)}
+ {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" /> : (sendViaWhatsapp ? <><Send size={15} /> Send WhatsApp</> : <><Printer size={15} /> Print Bill</>)}
  </button>
  </div>
  </div>

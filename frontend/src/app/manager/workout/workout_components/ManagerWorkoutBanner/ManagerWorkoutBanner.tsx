@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Renders the top banner/hero section with module title and CTA for the Workout Library.
+// RESPONSIBILITY: Renders the top banner/hero section with module title and CTA for the Workout Library.
 'use client';
 
 import { Dumbbell } from 'lucide-react';

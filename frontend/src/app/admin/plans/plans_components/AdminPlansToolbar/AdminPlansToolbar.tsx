@@ -28,7 +28,7 @@ export default function AdminPlansToolbar() {
 
   return (
     <div className="bg-card rounded-xl shadow-sm border border-border p-4 flex flex-wrap gap-3 justify-between items-center mb-6">
-      <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center gap-4">
         <p className="text-sm text-secondary hidden sm:block">
           Active Plans: <span className="font-bold text-primary">{plans.length}</span>
         </p>
@@ -38,7 +38,7 @@ export default function AdminPlansToolbar() {
             value={localSearch} 
             onChange={e => setLocalSearch(e.target.value)} 
             placeholder="Search plans..." 
-            className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page w-48 sm:w-64 bg-input text-primary" 
+            className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page w-48 sm: w-full sm:w-64  bg-input text-primary" 
           />
         </div>
       </div>

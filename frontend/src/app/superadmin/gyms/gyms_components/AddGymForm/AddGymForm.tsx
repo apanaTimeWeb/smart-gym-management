@@ -129,7 +129,7 @@ export default function AddGymForm() {
                 className="flex items-center gap-2 bg-primary hover:bg-primary-hover disabled:bg-primary/50 text-white px-6 py-2.5 rounded-lg font-medium transition-colors"
               >
                 {isProvisioning ? (
-                  <><Loader2 className="w-5 h-5 animate-spin" /> Provisioning DB...</>
+                  <><Loader2 className="w-5 h-5 motion-safe:animate-spin" /> Provisioning DB...</>
                 ) : (
                   <><Save className="w-5 h-5" /> Provision Tenant</>
                 )}
@@ -149,7 +149,7 @@ export default function AddGymForm() {
               <p className="text-secondary italic">Awaiting submit...</p>
             ) : (
               provisioningLogs.map((log, i) => (
-                <p key={`log-${i}-${log.slice(0, 12)}`} className="animate-in fade-in slide-in-from-bottom-1 text-success">
+                <p key={`log-${i}-${log.slice(0, 12)}`} className="motion-safe:animate-in fade-in slide-in-from-bottom-1 text-success">
                   <span className="text-secondary mr-2">{'>'}</span>{log}
                 </p>
               ))

@@ -12,7 +12,7 @@ export default function TrainerNotificationsClient() {
   return (
     <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
       <div className="flex items-center justify-between p-4 border-b border-border bg-header">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <span className="font-semibold text-foreground">All Notifications</span>
           {unreadCount > 0 && (
             <span className="bg-primary text-primary-foreground text-xs font-bold px-2 py-0.5 rounded-full">
@@ -20,7 +20,7 @@ export default function TrainerNotificationsClient() {
             </span>
           )}
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <button 
             onClick={markAllAsRead}
             disabled={unreadCount === 0}

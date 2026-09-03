@@ -50,7 +50,7 @@ export default function MigrationsClient() {
 
       {pendingCount > 0 && (
         <div className="bg-warning/10 border border-warning/30 rounded-xl p-6 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-4">
             <div className="p-3 bg-warning/20 rounded-full text-warning">
               <DatabaseZap size={24} />
             </div>
@@ -141,7 +141,7 @@ export default function MigrationsClient() {
       {showTargetModal && (
         <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowTargetModal(false)}></div>
-          <div className="relative bg-card border border-border rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+          <div className="relative bg-card border border-border rounded-2xl shadow-2xl w-full max-w-md overflow-hidden motion-safe:animate-in fade-in zoom-in-95 duration-200">
             <div className="flex items-center justify-between p-5 border-b border-border">
               <h2 className="text-xl font-bold text-foreground">Targeted Migration</h2>
               <button onClick={() => setShowTargetModal(false)} className="text-secondary hover:text-foreground transition-colors">
@@ -169,7 +169,7 @@ export default function MigrationsClient() {
                 </div>
 
                 {isGymDropdownOpen && (
-                  <div className="absolute z-10 top-[calc(100%+4px)] left-0 right-0 bg-card border border-border rounded-lg shadow-xl overflow-hidden max-h-64 flex flex-col animate-in fade-in zoom-in-95 duration-100">
+                  <div className="absolute z-10 top-[calc(100%+4px)] left-0 right-0 bg-card border border-border rounded-lg shadow-xl overflow-hidden max-h-64 flex flex-col motion-safe:animate-in fade-in zoom-in-95 duration-100">
                     <div className="p-2 border-b border-border bg-header">
                       <div className="relative">
                         <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-secondary" />

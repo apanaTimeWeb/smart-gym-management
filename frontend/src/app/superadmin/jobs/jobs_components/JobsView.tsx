@@ -58,7 +58,7 @@ export default function JobsView() {
           disabled={isRetrying}
           className="bg-danger-bg/10 text-danger px-4 py-2 rounded-lg font-medium hover:bg-danger-bg hover:text-white transition-colors flex items-center gap-2 border border-destructive/20 hover:border-transparent disabled:opacity-50"
         >
-          <RefreshCw size={16} className={isRetrying ? "animate-spin" : ""} /> Retry All Failed
+          <RefreshCw size={16} className={isRetrying ? "motion-safe:animate-spin" : ""} /> Retry All Failed
         </button>
       </div>
 

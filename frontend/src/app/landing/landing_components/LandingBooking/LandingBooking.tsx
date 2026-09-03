@@ -29,7 +29,7 @@ export default function LandingBooking() {
 
         <div className="bg-black border border-border rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
           {bookingSuccess ? (
-            <div className="flex flex-col items-center justify-center py-12 text-center animate-in fade-in zoom-in duration-500">
+            <div className="flex flex-col items-center justify-center py-12 text-center motion-safe:animate-in fade-in zoom-in duration-500">
               <div className="w-20 h-20 bg-success/20 rounded-full flex items-center justify-center mb-6">
                 <CheckCircle className="text-success" size={40} />
               </div>

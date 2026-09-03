@@ -114,7 +114,7 @@ export default function TrainerLibraryDietModal() {
  disabled={saving} 
  className="flex-1 py-2.5 rounded-xl text-sm font-bold text-primary-foreground bg-primary hover:bg-primary/90 flex items-center justify-center gap-2 disabled:opacity-70 transition-colors" 
  >
- {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Save size={15} />{editDietId ? 'Update' : 'Add'}</>}
+ {saving ? <Loader2 className="w-4 h-4 motion-safe:animate-spin" /> : <><Save size={15} />{editDietId ? 'Update' : 'Add'}</>}
  </button>
  </div>
  </form>

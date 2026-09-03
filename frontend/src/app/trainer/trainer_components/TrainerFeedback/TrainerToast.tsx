@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Renders the fixed bottom-right toast notification. Auto-dismisses after 4 seconds. Shared across all TRAINER modules.
+// RESPONSIBILITY: Renders the fixed bottom-right toast notification. Auto-dismisses after 4 seconds. Shared across all TRAINER modules.
 'use client';
 
 import { useEffect } from 'react';

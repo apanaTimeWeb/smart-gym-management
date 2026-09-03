@@ -89,7 +89,7 @@ export default function AuditLogsClient() {
             Immutable record of all superadmin and system-level actions.
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <div className="relative">
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
             <input 
@@ -97,7 +97,7 @@ export default function AuditLogsClient() {
               placeholder="Search logs..." 
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              className="pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus transition-colors w-64"
+              className="pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus transition-colors  w-full sm:w-64 "
             />
           </div>
         </div>

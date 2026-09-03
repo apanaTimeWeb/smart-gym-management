@@ -45,7 +45,7 @@ export default function InvoicesClient() {
 
   if (fetchState === 'loading') return (
     <div className="space-y-6 motion-safe:animate-pulse">
-      <div className="h-8 bg-card rounded w-64" />
+      <div className="h-8 bg-card rounded  w-full sm:w-64 " />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="h-28 bg-card rounded-xl border border-border" />
         <div className="h-28 bg-card rounded-xl border border-border" />

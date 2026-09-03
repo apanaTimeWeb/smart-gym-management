@@ -33,7 +33,7 @@ export default function ManagerHrTabs() {
               value={search} 
               onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} 
               placeholder={`Search ${activeTab.toLowerCase()}...`} 
-              className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 w-40 sm:w-64 bg-card text-foreground"
+              className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 w-40 sm: w-full sm:w-64  bg-card text-foreground"
             />
           </div>
           {activeTab === 'Staff' && (
@@ -85,7 +85,7 @@ export default function ManagerHrTabs() {
  <div className="p-5">
  {fetchState === 'loading' ? (
  <div className="flex justify-center py-10">
- <div className="w-8 h-8 border-4 border-t-transparent rounded-full animate-spin" style={{ borderColor: 'var(--hr-highlight)', borderTopColor: 'transparent' }} />
+ <div className="w-8 h-8 border-4 border-t-transparent rounded-full motion-safe:animate-spin" style={{ borderColor: 'var(--hr-highlight)', borderTopColor: 'transparent' }} />
  </div>
  ) : activeTab === 'Staff' ? (
  <ManagerHrStaffTable />

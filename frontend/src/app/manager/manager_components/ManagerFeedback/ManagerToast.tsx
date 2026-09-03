@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Renders the fixed bottom-right toast notification. Auto-dismisses after 4 seconds. Shared across all MANAGER modules.
+// RESPONSIBILITY: Renders the fixed bottom-right toast notification. Auto-dismisses after 4 seconds. Shared across all MANAGER modules.
 'use client';
 
 import { useEffect } from 'react';

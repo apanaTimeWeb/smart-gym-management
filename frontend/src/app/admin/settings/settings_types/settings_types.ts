@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Defines all TypeScript types, interfaces, and the FetchState enum for the Settings module.
+// RESPONSIBILITY: Defines all TypeScript types, interfaces, and the FetchState enum for the Settings module.
 import { EMPTY_SETTINGS_FORM } from '@/app/admin/settings/settings_utils/SettingsSharedConstants';
 
 export interface SettingsContextType {
