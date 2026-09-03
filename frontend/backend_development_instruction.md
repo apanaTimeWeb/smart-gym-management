@@ -467,6 +467,21 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **The Rule:** All monetary amounts MUST be stored and transmitted over the API as integers in the smallest currency unit (e.g., paise for INR, cents for USD). Never use floating-point types (`float`, `double`) or decimals for API transmission to avoid rounding errors. 
 * **Frontend Responsibility:** The backend transmits `12345600` (paise). It is strictly the frontend's responsibility to divide by 100 and format it as `₹1,23,456.00` for display.
 
+## 74. Mechanical Enforcement of Isolation (The "Tooling Gate")
+* **The Rule:** The backend must explicitly enforce architectural boundaries mechanically. If using Node.js, mandate `eslint-plugin-boundaries` or `no-restricted-imports`. If using Python, mandate `import-linter`. This guarantees that an AI cannot accidentally import an `attendance` repository into a `billing` service. Trust is not enough; the pipeline must block cross-module violations.
+
+## 75. Hard File-Size Ceilings
+* **The Rule:** Services and controllers have a strict file size ceiling of ~300 lines maximum. If a backend file exceeds this, the AI must explicitly pause and refactor it by splitting the logic into an Orchestrator/Facade and smaller micro-services. This strictly prevents token explosion and hallucination.
+
+## 76. Strict File Responsibility Contract
+* **The Rule:** Every backend controller, service, or repository MUST start with a single-line comment at the very top of the file explicitly defining its boundary. (e.g., `// RESPONSIBILITY: Processes incoming Stripe webhooks and emits EVENT_PAYMENT_SUCCESS. No direct DB writes.`). This instantly grounds the AI's context when reading the file.
+
+## 77. Dependency-Addition Guardrail
+* **The Rule:** An AI agent cannot blindly add new dependencies (`npm install` or `pip install`) without human approval. Before proposing a new library, the AI must check the `package.json` or `requirements.txt` to verify if an existing approved library (e.g., `date-fns` instead of adding `moment`, or a native ORM feature) can suffice for the task.
+
+## 78. Forbidden Patterns File (`[moduleName]_forbidden.md`)
+* **The Rule:** Every backend module must have a tiny markdown file listing what is explicitly NOT allowed in that specific module. For example, `billing_forbidden.md` might state: "Never bypass the Orchestrator for payments. Never mutate the DB without pessimistic locking." This acts as the ultimate localized guardrail for AI agents.
+
 ---
 
 ## Updated Summary Checklist (v2):
