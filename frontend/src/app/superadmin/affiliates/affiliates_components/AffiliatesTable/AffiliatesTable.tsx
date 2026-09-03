@@ -11,11 +11,12 @@ interface AffiliatesTableProps {
   onToggleStatus: (id: string, currentStatus: AffiliateStatus) => void;
   onEdit: (affiliate: Affiliate) => void;
   onDelete: (id: string) => void;
+  onAddClick: () => void;
 }
 
 const ITEMS_PER_PAGE = 10;
 
-export default function AffiliatesTable({ affiliates, onToggleStatus, onEdit, onDelete }: AffiliatesTableProps) {
+export default function AffiliatesTable({ affiliates, onToggleStatus, onEdit, onDelete, onAddClick }: AffiliatesTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
 
   const totalPages = Math.ceil(affiliates.length / ITEMS_PER_PAGE) || 1;
@@ -38,7 +39,7 @@ export default function AffiliatesTable({ affiliates, onToggleStatus, onEdit, on
           <tbody className="divide-y divide-border">
             {paginatedAffiliates.length === 0 ? (
               <tr>
-                <td colSpan={6}><AffiliatesEmptyState /></td>
+                <td colSpan={6}><AffiliatesEmptyState onAddClick={onAddClick} /></td>
               </tr>
             ) : (
               paginatedAffiliates.map((aff) => (

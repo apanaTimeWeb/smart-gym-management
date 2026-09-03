@@ -13,11 +13,12 @@ interface CouponsTableProps {
   onEdit: (coupon: Coupon) => void;
   onDelete: (id: string) => void;
   onRestore: (id: string) => void;
+  onCreateClick: () => void;
 }
 
 const ITEMS_PER_PAGE = 10;
 
-export default function SuperadminCouponsTable({ coupons, onToggleStatus, onEdit, onDelete, onRestore }: CouponsTableProps) {
+export default function SuperadminCouponsTable({ coupons, onToggleStatus, onEdit, onDelete, onRestore, onCreateClick }: CouponsTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
 
   const totalPages = Math.ceil(coupons.length / ITEMS_PER_PAGE) || 1;
@@ -40,7 +41,7 @@ export default function SuperadminCouponsTable({ coupons, onToggleStatus, onEdit
           <tbody className="divide-y divide-border">
             {paginatedCoupons.length === 0 ? (
               <tr>
-                <td colSpan={6}><SuperadminCouponsEmptyState /></td>
+                <td colSpan={6}><SuperadminCouponsEmptyState onCreateClick={onCreateClick} /></td>
               </tr>
             ) : (
               paginatedCoupons.map((cpn) => (

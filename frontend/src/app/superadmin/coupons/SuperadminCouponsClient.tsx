@@ -66,6 +66,7 @@ export default function SuperadminCouponsClient() {
         <SuperadminCouponsEmptyState onCreateClick={() => setIsModalOpen(true)} />
       ) : (
         <SuperadminCouponsTable
+          onCreateClick={() => setIsModalOpen(true)}
           coupons={coupons}
           onToggleStatus={handleToggleStatus}
           onEdit={(cpn) => { setSelectedCoupon(cpn); setIsEditModalOpen(true); }}

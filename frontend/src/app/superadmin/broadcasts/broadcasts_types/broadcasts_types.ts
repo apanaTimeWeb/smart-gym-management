@@ -37,6 +37,7 @@ export interface BroadcastsTableProps {
   onSend: (id: string) => void;
   onEdit: (broadcast: Broadcast) => void;
   onDelete: (id: string) => void;
+  onCreateClick: () => void;
 }
 
 export interface BroadcastStatusBadgeProps {

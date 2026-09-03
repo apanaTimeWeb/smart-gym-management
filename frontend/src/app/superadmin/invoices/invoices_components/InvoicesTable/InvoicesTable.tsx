@@ -7,11 +7,12 @@ import SuperadminPagination from '@/app/superadmin/superadmin_components/Superad
 
 interface InvoicesTableProps {
   invoices: SaaSInvoice[];
+  onLogPaymentClick: () => void;
 }
 
 const ITEMS_PER_PAGE = 10;
 
-export default function InvoicesTable({ invoices }: InvoicesTableProps) {
+export default function InvoicesTable({ invoices, onLogPaymentClick }: InvoicesTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
 
   const totalPages = Math.ceil(invoices.length / ITEMS_PER_PAGE) || 1;
@@ -35,7 +36,7 @@ export default function InvoicesTable({ invoices }: InvoicesTableProps) {
           <tbody className="divide-y divide-border">
             {paginatedInvoices.length === 0 ? (
               <tr>
-                <td colSpan={7}><InvoicesEmptyState /></td>
+                <td colSpan={7}><InvoicesEmptyState onLogPaymentClick={onLogPaymentClick} /></td>
               </tr>
             ) : (
               paginatedInvoices.map((inv) => (

@@ -85,7 +85,10 @@ export default function InvoicesClient() {
         {filteredInvoices.length === 0 ? (
           <InvoicesEmptyState onLogPaymentClick={() => setShowAddModal(true)} />
         ) : (
-          <InvoicesTable invoices={filteredInvoices} />
+          <InvoicesTable 
+            onLogPaymentClick={() => setShowAddModal(true)}
+            invoices={filteredInvoices} 
+          />
         )}
       </div>
 

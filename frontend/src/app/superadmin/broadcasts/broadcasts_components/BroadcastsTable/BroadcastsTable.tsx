@@ -9,7 +9,7 @@ import SuperadminPagination from '@/app/superadmin/superadmin_components/Superad
 
 const ITEMS_PER_PAGE = 10;
 
-export default function BroadcastsTable({ broadcasts, onSend, onEdit, onDelete }: BroadcastsTableProps) {
+export default function BroadcastsTable({ broadcasts, onSend, onEdit, onDelete, onCreateClick }: BroadcastsTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
 
   const totalPages = Math.ceil(broadcasts.length / ITEMS_PER_PAGE) || 1;
@@ -31,7 +31,7 @@ export default function BroadcastsTable({ broadcasts, onSend, onEdit, onDelete }
           <tbody className="divide-y divide-border">
             {paginatedBroadcasts.length === 0 ? (
               <tr>
-                <td colSpan={5}><BroadcastsEmptyState /></td>
+                <td colSpan={5}><BroadcastsEmptyState onCreateClick={onCreateClick} /></td>
               </tr>
             ) : (
               paginatedBroadcasts.map((bc) => (
@@ -95,7 +95,8 @@ export default function BroadcastsTable({ broadcasts, onSend, onEdit, onDelete }
                   </div>
                 </td>
               </tr>
-            ))}
+              ))
+            )}
           </tbody>
         </table>
       </div>

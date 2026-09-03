@@ -42,7 +42,12 @@ export default function TrainerWorkoutPlansGrid() {
                   <Edit2 size={13} />
                 </button>
                 <button 
-                  onClick={() => deleteWk(w.id)} 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (window.confirm(`Are you sure you want to delete workout plan "${w.name}"?`)) {
+                      deleteWk(w.id);
+                    }
+                  }}
                   className="p-1.5 text-danger hover:text-danger hover:bg-danger-bg dark:hover:bg-danger-bg rounded-lg transition-colors"
                 >
                   <Trash2 size={13} />
