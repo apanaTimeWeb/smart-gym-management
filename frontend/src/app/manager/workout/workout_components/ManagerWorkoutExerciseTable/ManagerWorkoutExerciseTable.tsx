@@ -57,7 +57,12 @@ export default function ManagerWorkoutExerciseTable() {
                       <Edit2 size={15} />
                     </button>
                     <button 
-                      onClick={(e) => { e.stopPropagation(); deleteEx(ex.id); }} 
+                      onClick={(e) => { 
+                        e.stopPropagation(); 
+                        if (window.confirm(`Are you sure you want to delete exercise "${ex.name}"?`)) {
+                          deleteEx(ex.id); 
+                        }
+                      }}
                       className="text-danger hover:text-danger dark:hover:text-danger p-1 rounded-md hover:bg-danger-bg dark:hover:bg-danger-bg transition-colors"
                     >
                       <Trash2 size={15} />

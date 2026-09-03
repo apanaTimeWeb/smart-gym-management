@@ -38,7 +38,7 @@ export default function ManagerInquiriesToolbar() {
             Clear Selection
           </button>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
           <button
             onClick={() => openBulkMsg('whatsapp')}
             className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white rounded-xl bg-success hover:opacity-90 transition-opacity"
@@ -64,7 +64,7 @@ export default function ManagerInquiriesToolbar() {
         placeholder="Search name or phone..."
         className="border border-border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page  w-full sm:w-64  bg-input text-primary"
       />
-      <div className="flex gap-2">
+      <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
         <div className="w-48">
           <SearchableDropdown
             value={statusFilter}
