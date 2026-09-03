@@ -3,7 +3,7 @@
 
 import { useHrContext } from '@/app/manager/hr/hr_context/HrContext';
 import { STAFF_TABLE_HEADERS } from '@/app/manager/hr/hr_utils/HrSharedConstants';
-import { Edit2, Trash2 } from 'lucide-react';
+import { Edit2, Trash2, CheckCircle2, Ban } from 'lucide-react';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 
@@ -84,9 +84,13 @@ export default function StaffTable() {
                 <td className="px-4 py-3 text-sm text-primary">{s.role}</td>
                 <td className="px-4 py-3">
                   {s.isActive === false ? (
-                    <span className="inline-flex items-center px-2 py-1 rounded text-xs font-semibold bg-danger/10 text-danger border border-danger/20">Suspended</span>
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-danger/10 text-danger border border-danger/20">
+                      <Ban className="w-3 h-3" /> Suspended
+                    </span>
                   ) : (
-                    <span className="inline-flex items-center px-2 py-1 rounded text-xs font-semibold bg-success/10 text-success border border-success/20">Active</span>
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-success/10 text-success border border-success/20">
+                      <CheckCircle2 className="w-3 h-3" /> Active
+                    </span>
                   )}
                 </td>
                 <td className="px-4 py-3 text-sm text-secondary">{s.phone}</td>
