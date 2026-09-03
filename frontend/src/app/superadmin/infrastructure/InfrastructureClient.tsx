@@ -136,7 +136,7 @@ export default function InfrastructureClient() {
         <p className="text-sm text-secondary mb-6">
           The SaaS platform uses Redis to cache massive multi-tenant API responses. If gyms are reporting stale data, you can forcefully flush the global cache across all tenants here.
         </p>
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-4">
           <button 
             onClick={handleFlushAll}
             disabled={isFlushingAll}
