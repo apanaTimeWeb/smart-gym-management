@@ -7,6 +7,7 @@ import { broadcastsApi } from '@/app/superadmin/broadcasts/broadcasts_api/broadc
 import { useSuperadminMutation } from '@/app/superadmin/superadmin_utils/hooks/useSuperadminMutation';
 import { BroadcastSchema, type BroadcastFormData, type Broadcast, type BroadcastAudience, type BroadcastStatus } from '@/app/superadmin/broadcasts/broadcasts_types/broadcasts_types';
 import toast from 'react-hot-toast';
+import { useLocalStorage } from '@/lib/useLocalStorage';
 
 /** LocalStorage key for persisting broadcasts across refreshes (TC-28/29 fix) */
 const BROADCASTS_STORAGE_KEY = 'superadmin_broadcasts_v1';
@@ -15,42 +16,26 @@ const DEFAULT_BROADCASTS: Broadcast[] = [
   { id: '1', title: 'System Maintenance', content: 'Scheduled downtime this weekend.', audience: 'ALL_TENANTS', status: 'SENT', scheduledDate: null, sentDate: '2023-08-10' }
 ];
 
-function loadPersistedBroadcasts(): Broadcast[] | null {
-  if (typeof window === 'undefined') return null;
-  try {
-    const raw = localStorage.getItem(BROADCASTS_STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as Broadcast[]) : null;
-  } catch {
-    return null;
-  }
-}
-
-function persistBroadcasts(broadcasts: Broadcast[]): void {
-  if (typeof window === 'undefined') return;
-  try {
-    localStorage.setItem(BROADCASTS_STORAGE_KEY, JSON.stringify(broadcasts));
-  } catch {
-    // ignore
-  }
-}
-
 export const useBroadcastsPage = () => {
+  const [persistedBroadcasts, setPersistedBroadcasts] = useLocalStorage<Broadcast[] | null>(BROADCASTS_STORAGE_KEY, null);
   const [broadcasts, setBroadcasts] = useState<Broadcast[]>([]);
   
   useEffect(() => {
-    const persisted = loadPersistedBroadcasts();
-    const finalBroadcasts = persisted ?? DEFAULT_BROADCASTS;
-    if (!persisted) persistBroadcasts(finalBroadcasts);
-    setBroadcasts(finalBroadcasts);
-  }, []);
+    if (!persistedBroadcasts) {
+      setPersistedBroadcasts(DEFAULT_BROADCASTS);
+      setBroadcasts(DEFAULT_BROADCASTS);
+    } else {
+      setBroadcasts(persistedBroadcasts);
+    }
+  }, [persistedBroadcasts, setPersistedBroadcasts]);
 
   const updateBroadcasts = useCallback((newBroadcasts: Broadcast[] | ((prev: Broadcast[]) => Broadcast[])) => {
     setBroadcasts(prev => {
       const updated = typeof newBroadcasts === 'function' ? newBroadcasts(prev) : newBroadcasts;
-      persistBroadcasts(updated);
+      setPersistedBroadcasts(updated);
       return updated;
     });
-  }, []);
+  }, [setPersistedBroadcasts]);
 
   const fetchState = 'success';
   const error = null;

@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Generic fetch hook for Tickets read-only data.
 import { useState, useEffect, useCallback } from 'react';
-import { apiFetch } from '@/lib/api';
+import { apiFetch, ApiResponse } from '@/lib/api';
 
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 
@@ -14,7 +14,7 @@ export function useTicketsData<T>(endpoint: string) {
     setFetchState('loading');
     setError(null);
 
-    apiFetch<{ success: boolean; data: T }>(endpoint)
+    apiFetch<ApiResponse<T>>(endpoint)
       .then(res => {
         if (isMounted) {
           const responseData = ('data' in res) ? res.data : (res as unknown as T);

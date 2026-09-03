@@ -10,52 +10,38 @@ import { couponsApi } from '@/app/superadmin/coupons/coupons_api/coupons_api';
 import { useCouponsMutation } from '@/app/superadmin/coupons/coupons_utils/useCouponsMutation';
 import { CouponSchema, CouponFormData } from '@/app/superadmin/coupons/coupons_types/coupons_types';
 import type { Coupon, CouponStatus } from '@/app/superadmin/coupons/coupons_types/coupons_types';
+import { useLocalStorage } from '@/lib/useLocalStorage';
 
 /** LocalStorage key for persisting coupon mutations across refreshes (TC-17/18 fix) */
 const COUPONS_STORAGE_KEY = 'superadmin_coupons_v1';
 
-function loadPersistedCoupons(): Coupon[] | null {
-  if (typeof window === 'undefined') return null;
-  try {
-    const raw = localStorage.getItem(COUPONS_STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as Coupon[]) : null;
-  } catch {
-    return null;
-  }
-}
-
-function persistCoupons(coupons: Coupon[]): void {
-  if (typeof window === 'undefined') return;
-  try {
-    localStorage.setItem(COUPONS_STORAGE_KEY, JSON.stringify(coupons));
-  } catch {
-    // quota exceeded — ignore
-  }
-}
-
 export const useCouponsPage = () => {
-  const [coupons, setCoupons] = useState<Coupon[]>([]);
   const { data: fetchedData, fetchState, error } = useCouponsData<Coupon[]>(
     SuperadminUrlConfig.BACKEND_API.COUPONS_BASE
   );
 
+  const [persistedCoupons, setPersistedCoupons] = useLocalStorage<Coupon[] | null>(COUPONS_STORAGE_KEY, null);
+  const [coupons, setCoupons] = useState<Coupon[]>([]);
+
   // Sync fetched data into local state for pessimistic mutations, but respect localStorage
   useEffect(() => {
     if (fetchedData) {
-      const persisted = loadPersistedCoupons();
-      const finalCoupons = persisted ?? fetchedData;
-      if (!persisted) persistCoupons(finalCoupons);
-      setCoupons(finalCoupons);
+      if (!persistedCoupons) {
+        setPersistedCoupons(fetchedData);
+        setCoupons(fetchedData);
+      } else {
+        setCoupons(persistedCoupons);
+      }
     }
-  }, [fetchedData]);
+  }, [fetchedData, persistedCoupons, setPersistedCoupons]);
 
   const updateCoupons = useCallback((newCoupons: Coupon[] | ((prev: Coupon[]) => Coupon[])) => {
     setCoupons(prev => {
       const updated = typeof newCoupons === 'function' ? newCoupons(prev) : newCoupons;
-      persistCoupons(updated);
+      setPersistedCoupons(updated);
       return updated;
     });
-  }, []);
+  }, [setPersistedCoupons]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
