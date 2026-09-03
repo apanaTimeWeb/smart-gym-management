@@ -1,6 +1,7 @@
 'use client';
 // RESPONSIBILITY: SuperadminSidebar.tsx renders the main sidebar navigation for the SaaS Master Control Panel.
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LayoutDashboard, Building2, ServerCog, LogOut, ChevronLeft, ChevronRight, CreditCard, Ticket, Activity, HardDrive, DatabaseBackup, Receipt, ToggleLeft, DatabaseZap, ShieldAlert, Megaphone, Tag, Users } from 'lucide-react';
@@ -14,6 +15,25 @@ interface SuperadminSidebarProps {
 
 export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: SuperadminSidebarProps) {
   const pathname = usePathname();
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+
+  // Listens for the global 'toggle-sidebar' event dispatched by SuperadminHeader's hamburger button.
+  useEffect(() => {
+    const handleToggle = () => {
+      if (window.innerWidth < 1024) {
+        setIsMobileOpen(v => !v);
+      } else {
+        setIsCollapsed(!isCollapsed);
+      }
+    };
+    window.addEventListener('toggle-sidebar', handleToggle);
+    return () => window.removeEventListener('toggle-sidebar', handleToggle);
+  }, [isCollapsed, setIsCollapsed]);
+
+  // Closes the mobile drawer whenever the route changes
+  useEffect(() => {
+    setIsMobileOpen(false);
+  }, [pathname]);
 
   const navGroups = [
     {
@@ -54,11 +74,21 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
   ];
 
   return (
-    <aside
-      className={`fixed inset-y-0 left-0 z-20 flex flex-col bg-background border-r border-border transition-all duration-300 ${
-        isCollapsed ? 'w-20' : 'w-64'
-      }`}
-    >
+    <>
+      {/* Mobile Backdrop */}
+      {isMobileOpen && (
+        <div
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 lg:hidden transition-opacity"
+          onClick={() => setIsMobileOpen(false)}
+        />
+      )}
+      <aside
+        className={`fixed inset-y-0 left-0 z-50 flex flex-col bg-background border-r border-border transition-all duration-300 ${
+          isCollapsed ? 'lg:w-20' : 'lg:w-64'
+        } ${
+          isMobileOpen ? 'w-64 translate-x-0' : 'w-64 -translate-x-full lg:translate-x-0'
+        }`}
+      >
       <div className="flex h-20 items-center justify-between px-4 border-b border-border">
         {!isCollapsed && (
           <span className="text-2xl font-bold text-primary">
@@ -99,23 +129,8 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
         ))}
       </nav>
 
-      <div className="p-4 border-t border-border">
-        <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-card p-2 text-secondary hover:bg-border transition-colors mb-4"
-        >
-          {isCollapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
-        </button>
-        
-        <button 
-          className={`flex w-full items-center gap-3 rounded-lg px-3 py-3 text-danger hover:bg-danger-bg/10 transition-colors ${isCollapsed ? 'justify-center' : ''}`}
-          onClick={async () => { await logout(); }}
-        >
-          <LogOut className="w-5 h-5 shrink-0" />
-          {!isCollapsed && <span className="font-medium text-sm">Exit to ERP</span>}
-        </button>
-      </div>
-    </aside>
+      </aside>
+    </>
   );
 }
 
