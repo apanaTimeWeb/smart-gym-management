@@ -10,7 +10,7 @@ import ManagerSalesMembershipReport from '@/app/manager/sales/sales_components/M
 import ManagerSalesPendingPayments from '@/app/manager/sales/sales_components/ManagerSalesPendingPayments/ManagerSalesPendingPayments';
 import ManagerSalesAllMemberships from '@/app/manager/sales/sales_components/ManagerSalesAllMemberships/ManagerSalesAllMemberships';
 import ManagerToast from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import { SalesInitialData } from '@/app/manager/sales/sales_types/sales_types';
+import type { SalesInitialData } from '@/app/manager/sales/sales_types/sales_types';
 
 function SalesContent() {
  const { tab, toast, showToast } = useSalesContext();

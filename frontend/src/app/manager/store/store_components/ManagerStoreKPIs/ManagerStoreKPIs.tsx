@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Renders the top KPI stat cards (total products, orders, revenue) for the Store module.
+// RESPONSIBILITY: Renders the top KPI stat cards (total products, orders, revenue) for the Store module.
 'use client';
 
 import { Package, ShoppingCart, TrendingUp, AlertTriangle } from 'lucide-react';
@@ -12,7 +12,7 @@ export default function ManagerStoreKPIs() {
  { label: 'Total Products', value: summary?.totalProducts || 0, icon: Package, color: 'text-info', bg: 'bg-info-bg dark:bg-info-bg' },
  { label: 'Total Orders', value: summary?.totalOrders || 0, icon: ShoppingCart, color: 'text-success', bg: 'bg-success-bg dark:bg-success-bg' },
  { label: 'Store Revenue', value: formatCurrency(summary?.totalRevenue || 0), icon: TrendingUp, color: 'text-warning', bg: 'bg-warning-bg dark:bg-warning-bg' },
- { label: 'Low Stock', value: summary?.lowStockProducts?.length || 0, icon: AlertTriangle, color: 'text-destructive', bg: 'bg-danger-bg dark:bg-danger-bg' },
+ { label: 'Low Stock', value: summary?.lowStockProducts?.length || 0, icon: AlertTriangle, color: 'text-danger', bg: 'bg-danger-bg dark:bg-danger-bg' },
  ];
 
  return (
@@ -33,8 +33,8 @@ export default function ManagerStoreKPIs() {
 
  {(summary?.lowStockProducts?.length ?? 0) > 0 && (
  <div className="bg-danger-bg dark:bg-danger-bg border border-destructive rounded-xl p-4 flex items-center gap-3">
- <AlertTriangle size={18} className="text-destructive flex-shrink-0" />
- <p className="text-sm text-destructive dark:text-destructive font-medium">
+ <AlertTriangle size={18} className="text-danger flex-shrink-0" />
+ <p className="text-sm text-danger dark:text-danger font-medium">
  Low stock alert: {summary!.lowStockProducts.map(p => p.name).join(', ')}
  </p>
  </div>

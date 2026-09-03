@@ -19,7 +19,7 @@ export default function ManagerStoreProductGrid() {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {[...Array(8)].map((_, i) => (
-          <div key={i} className="animate-pulse bg-card rounded-xl border border-border p-4 h-64">
+          <div key={i} className="motion-safe:animate-pulse bg-card rounded-xl border border-border p-4 h-64">
             <div className="h-32 bg-muted rounded-lg mb-4"></div>
             <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
             <div className="h-4 bg-muted rounded w-1/2 mb-4"></div>
@@ -66,7 +66,7 @@ export default function ManagerStoreProductGrid() {
                 </button>
                 <button 
                   onClick={() => deleteProduct(p.id)} 
-                  className="p-1.5 rounded-lg bg-danger-bg dark:bg-danger-bg text-destructive hover:bg-danger-bg dark:hover:bg-danger-bg transition-colors"
+                  className="p-1.5 rounded-lg bg-danger-bg dark:bg-danger-bg text-danger hover:bg-danger-bg dark:hover:bg-danger-bg transition-colors"
                   aria-label={`Delete ${p.name}`}
                 >
                   <Trash2 size={13} />
@@ -79,7 +79,7 @@ export default function ManagerStoreProductGrid() {
               </span>
               <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${
                 p.stock <= 5 
-                  ? 'bg-danger-bg text-destructive dark:bg-danger-bg dark:text-destructive' 
+                  ? 'bg-danger-bg text-danger dark:bg-danger-bg dark:text-danger' 
                   : p.stock <= 20 
                   ? 'bg-warning-bg text-warning dark:bg-warning-bg dark:text-warning' 
                   : 'bg-success-bg text-success dark:bg-success-bg dark:text-success'

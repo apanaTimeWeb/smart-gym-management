@@ -5,10 +5,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Search } from 'lucide-react';
 import { useDashboardContext } from '@/app/admin/dashboard/dashboard_context/DashboardContext';
-import { RECENT_MEMBERS_HEADERS, DASHBOARD_STATUS_STYLES, formatCurrency } from '@/app/admin/dashboard/dashboard_utils/DashboardSharedConstants';
+import { DASHBOARD_RECENT_MEMBERS_PAGE_SIZE, RECENT_MEMBERS_HEADERS, DASHBOARD_STATUS_STYLES, formatCurrency } from '@/app/admin/dashboard/dashboard_utils/DashboardSharedConstants';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
-
-const ITEMS_PER_PAGE = 5;
 
 export default function AdminDashboardRecentMembers() {
   const { stats } = useDashboardContext();
@@ -24,8 +22,8 @@ export default function AdminDashboardRecentMembers() {
            planName.toLowerCase().includes(search.toLowerCase());
   });
 
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;
-  const paginated = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(filtered.length / DASHBOARD_RECENT_MEMBERS_PAGE_SIZE) || 1;
+  const paginated = filtered.slice((currentPage - 1) * DASHBOARD_RECENT_MEMBERS_PAGE_SIZE, currentPage * DASHBOARD_RECENT_MEMBERS_PAGE_SIZE);
 
   return (
     <div className="xl:col-span-2 rounded-xl shadow-sm border overflow-hidden bg-card border-border">

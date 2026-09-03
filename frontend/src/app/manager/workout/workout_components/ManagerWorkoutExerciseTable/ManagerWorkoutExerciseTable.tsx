@@ -43,7 +43,7 @@ export default function ManagerWorkoutExerciseTable() {
                     ? 'bg-success-bg text-success dark:bg-success-bg dark:text-success' 
                     : ex.difficulty === 'Intermediate' 
                     ? 'bg-warning-bg text-warning dark:bg-warning-bg dark:text-warning' 
-                    : 'bg-danger-bg text-destructive dark:bg-danger-bg dark:text-destructive'
+                    : 'bg-danger-bg text-danger dark:bg-danger-bg dark:text-danger'
                   }`}>
                     {ex.difficulty}
                   </span>
@@ -58,7 +58,7 @@ export default function ManagerWorkoutExerciseTable() {
                     </button>
                     <button 
                       onClick={(e) => { e.stopPropagation(); deleteEx(ex.id); }} 
-                      className="text-destructive hover:text-destructive dark:hover:text-destructive p-1 rounded-md hover:bg-danger-bg dark:hover:bg-danger-bg transition-colors"
+                      className="text-danger hover:text-danger dark:hover:text-danger p-1 rounded-md hover:bg-danger-bg dark:hover:bg-danger-bg transition-colors"
                     >
                       <Trash2 size={15} />
                     </button>

@@ -5,7 +5,7 @@ import { libraryApi } from '@/app/manager/library/library_api/library_api';
 import type { Exercise, DietPlan } from '@/app/manager/library/library_types/library_types';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import { EMPTY_EXERCISE_FORM, EMPTY_DIET_FORM, type LibraryTab, type ExerciseFormValues, type DietFormValues } from '@/app/manager/library/library_utils/LibrarySharedConstants';
-import { LibraryContextType, LibraryInitialData } from '@/app/manager/library/library_types/library_types';
+import type { LibraryContextType, LibraryInitialData } from '@/app/manager/library/library_types/library_types';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { useRouter, useSearchParams } from 'next/navigation';
 

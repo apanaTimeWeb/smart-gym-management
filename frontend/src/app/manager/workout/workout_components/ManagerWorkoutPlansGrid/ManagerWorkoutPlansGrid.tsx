@@ -31,7 +31,7 @@ export default function ManagerWorkoutPlansGrid() {
                     ? 'bg-success-bg text-success dark:bg-success-bg dark:text-success' 
                     : w.level === 'Intermediate' 
                     ? 'bg-warning-bg text-warning dark:bg-warning-bg dark:text-warning' 
-                    : 'bg-danger-bg text-destructive dark:bg-danger-bg dark:text-destructive'
+                    : 'bg-danger-bg text-danger dark:bg-danger-bg dark:text-danger'
                 }`}>
                   {w.level}
                 </span>
@@ -43,7 +43,7 @@ export default function ManagerWorkoutPlansGrid() {
                 </button>
                 <button 
                   onClick={() => deleteWk(w.id)} 
-                  className="p-1.5 text-destructive hover:text-destructive hover:bg-danger-bg dark:hover:bg-danger-bg rounded-lg transition-colors"
+                  className="p-1.5 text-danger hover:text-danger hover:bg-danger-bg dark:hover:bg-danger-bg rounded-lg transition-colors"
                 >
                   <Trash2 size={13} />
                 </button>

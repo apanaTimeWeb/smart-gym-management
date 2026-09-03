@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Server Component that fetches initial SSR data for the dashboard layout.
 import ManagerDashboardMain from '@/app/manager/dashboard/dashboard_components/ManagerDashboardMain/ManagerDashboardMain';
 import { cookies } from 'next/headers';
-import { DashboardStats } from '@/app/manager/dashboard/dashboard_types/dashboard_types';
+import type { DashboardStats } from '@/app/manager/dashboard/dashboard_types/dashboard_types';
 import { ApiResponse } from '@/lib/api';
 
 async function getDashboardData() {

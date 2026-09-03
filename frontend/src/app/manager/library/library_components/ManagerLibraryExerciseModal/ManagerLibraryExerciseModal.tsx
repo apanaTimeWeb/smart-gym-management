@@ -74,7 +74,7 @@ export default function ManagerLibraryExerciseModal() {
  } bg-input text-foreground`}
  />
  {errors[f.key as keyof ExerciseFormValues] && (
-   <p className="text-destructive text-xs mt-1">{errors[f.key as keyof ExerciseFormValues]?.message}</p>
+   <p className="text-danger text-xs mt-1">{errors[f.key as keyof ExerciseFormValues]?.message}</p>
  )}
  </div>
  ))}

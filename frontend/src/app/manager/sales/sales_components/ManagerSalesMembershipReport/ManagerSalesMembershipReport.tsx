@@ -47,7 +47,7 @@ export default function ManagerSalesMembershipReport() {
   <td className="px-4 py-3 text-sm text-secondary">₹{(r.receivable || 0).toLocaleString()}</td>
   <td className="px-4 py-3 text-sm font-medium text-success dark:text-success">₹{(r.received || 0).toLocaleString()}</td>
   <td className="px-4 py-3 text-sm font-medium text-warning dark:text-warning">₹{(r.remaining || 0).toLocaleString()}</td>
-  <td className="px-4 py-3 text-sm text-destructive">₹{(r.refund || 0).toLocaleString()}</td>
+  <td className="px-4 py-3 text-sm text-danger">₹{(r.refund || 0).toLocaleString()}</td>
   </tr>
   ))}
  <tr className="bg-input font-semibold border-t-2 border-border">
@@ -55,7 +55,7 @@ export default function ManagerSalesMembershipReport() {
  <td className="px-4 py-3 text-sm text-foreground">₹{(membershipTotals.totalReceivable || 0).toLocaleString()}</td>
  <td className="px-4 py-3 text-sm text-success dark:text-success">₹{(membershipTotals.totalReceived || 0).toLocaleString()}</td>
  <td className="px-4 py-3 text-sm text-warning dark:text-warning">₹{(membershipTotals.remaining || 0).toLocaleString()}</td>
- <td className="px-4 py-3 text-sm text-destructive dark:text-destructive">₹{(membershipTotals.refunds || 0).toLocaleString()}</td>
+ <td className="px-4 py-3 text-sm text-danger dark:text-danger">₹{(membershipTotals.refunds || 0).toLocaleString()}</td>
  </tr>
   </tbody>
   </table>

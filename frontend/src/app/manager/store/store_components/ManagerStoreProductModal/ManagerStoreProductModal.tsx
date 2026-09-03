@@ -70,7 +70,7 @@ export default function ManagerStoreProductModal() {
  } bg-input text-foreground`}
  />
  {errors[f.key as keyof ProductFormValues] && (
-   <p className="text-destructive text-xs mt-1">{errors[f.key as keyof ProductFormValues]?.message}</p>
+   <p className="text-danger text-xs mt-1">{errors[f.key as keyof ProductFormValues]?.message}</p>
  )}
  </div>
  ))}

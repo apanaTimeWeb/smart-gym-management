@@ -30,7 +30,7 @@ export default function ManagerHrStaffTable() {
             </thead>
             <tbody className="divide-y divide-border">
               {[...Array(5)].map((_, i) => (
-                <tr key={i} className="animate-pulse">
+                <tr key={i} className="motion-safe:animate-pulse">
                   <td className="px-4 py-4 flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-muted"></div>
                     <div><div className="h-4 bg-muted rounded w-24 mb-1"></div><div className="h-3 bg-muted rounded w-32"></div></div>

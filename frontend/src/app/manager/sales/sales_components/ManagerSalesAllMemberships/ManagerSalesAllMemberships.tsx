@@ -30,7 +30,7 @@ export default function ManagerSalesAllMemberships() {
     return (
       <div className="space-y-2">
         {[...Array(6)].map((_, i) => (
-          <div key={i} className="animate-pulse h-12 bg-card rounded border border-border" />
+          <div key={i} className="motion-safe:animate-pulse h-12 bg-card rounded border border-border" />
         ))}
       </div>
     );

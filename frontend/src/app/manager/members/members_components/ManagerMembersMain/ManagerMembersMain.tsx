@@ -11,7 +11,7 @@ import MembersKPIs from '@/app/manager/members/members_components/MembersKPIs/Me
 import MembersToolbar from '@/app/manager/members/members_components/MembersToolbar/MembersToolbar';
 import ManagerMembersTable from '@/app/manager/members/members_components/ManagerMembersTable/ManagerMembersTable';
 import MemberProfile from '@/app/manager/members/members_components/MemberProfile/MemberProfile';
-import { MembersInitialData } from '@/app/manager/members/members_types/members_types';
+import type { MembersInitialData } from '@/app/manager/members/members_types/members_types';
 import dynamic from 'next/dynamic';
 
 const ManagerMembersModal = dynamic(() => import('@/app/manager/members/members_components/ManagerMembersModal/ManagerMembersModal'), { ssr: false });

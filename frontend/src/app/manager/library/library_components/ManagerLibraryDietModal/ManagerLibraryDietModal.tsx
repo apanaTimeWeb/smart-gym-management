@@ -77,7 +77,7 @@ export default function ManagerLibraryDietModal() {
  } bg-input text-foreground`}
  />
  {errors[f.key as keyof DietFormValues] && (
-   <p className="text-destructive text-xs mt-1">{(errors[f.key as keyof DietFormValues] as any)?.message}</p>
+   <p className="text-danger text-xs mt-1">{(errors[f.key as keyof DietFormValues] as any)?.message}</p>
  )}
  </div>
  ))}

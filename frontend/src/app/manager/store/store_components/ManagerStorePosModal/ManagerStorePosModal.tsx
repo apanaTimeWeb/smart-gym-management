@@ -99,7 +99,7 @@ export default function ManagerStorePosModal() {
    <p className="text-xs font-bold text-foreground w-16 text-right">{formatCurrency(i.price * i.qty)}</p>
    <button 
      onClick={() => removeFromOrder(i.productId)} 
-     className="p-1 text-destructive hover:text-destructive dark:hover:text-destructive transition-colors ml-1"
+     className="p-1 text-danger hover:text-danger dark:hover:text-danger transition-colors ml-1"
    >
      <X size={14} />
    </button>

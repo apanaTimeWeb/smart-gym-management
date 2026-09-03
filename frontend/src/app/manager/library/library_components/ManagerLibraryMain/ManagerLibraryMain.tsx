@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Entry component for the Diet Library module. Wraps the UI in the context provider and handles page layout.
+// RESPONSIBILITY: Entry component for the Diet Library module. Wraps the UI in the context provider and handles page layout.
 'use client';
 
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
@@ -9,7 +9,7 @@ import ManagerLibraryExerciseModal from '@/app/manager/library/library_component
 import ManagerLibraryDietModal from '@/app/manager/library/library_components/ManagerLibraryDietModal/ManagerLibraryDietModal';
 import ManagerLibraryExerciseGrid from '@/app/manager/library/library_components/ManagerLibraryExerciseGrid/ManagerLibraryExerciseGrid';
 import ManagerLibraryDietGrid from '@/app/manager/library/library_components/ManagerLibraryDietGrid/ManagerLibraryDietGrid';
-import { LibraryInitialData } from '@/app/manager/library/library_types/library_types';
+import type { LibraryInitialData } from '@/app/manager/library/library_types/library_types';
 
 function LibraryContent() {
  const { toast, hideToast, tab } = useLibraryContext();

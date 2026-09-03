@@ -60,7 +60,7 @@ export default function ManagerWorkoutExerciseModal() {
                 errors.name ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-warning'
               } bg-input text-foreground`} 
             />
-            {errors.name && <p className="text-destructive text-xs mt-1">{errors.name.message}</p>}
+            {errors.name && <p className="text-danger text-xs mt-1">{errors.name.message}</p>}
           </div>
           <div>
             <label className="block text-sm font-medium text-secondary mb-1">Primary Muscle *</label>
@@ -72,7 +72,7 @@ export default function ManagerWorkoutExerciseModal() {
                 errors.muscle ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-warning'
               } bg-input text-foreground`} 
             />
-            {errors.muscle && <p className="text-destructive text-xs mt-1">{errors.muscle.message}</p>}
+            {errors.muscle && <p className="text-danger text-xs mt-1">{errors.muscle.message}</p>}
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>

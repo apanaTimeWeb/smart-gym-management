@@ -11,7 +11,7 @@ import ManagerStoreToolbar from '@/app/manager/store/store_components/ManagerSto
 import ManagerStoreFilters from '@/app/manager/store/store_components/ManagerStoreFilters/ManagerStoreFilters';
 import ManagerStoreProductGrid from '@/app/manager/store/store_components/ManagerStoreProductGrid/ManagerStoreProductGrid';
 import ManagerStoreOrderTable from '@/app/manager/store/store_components/ManagerStoreOrderTable/ManagerStoreOrderTable';
-import { StoreInitialData } from '@/app/manager/store/store_types/store_types';
+import type { StoreInitialData } from '@/app/manager/store/store_types/store_types';
 import dynamic from 'next/dynamic';
 
 const ManagerStoreProductModal = dynamic(() => import('@/app/manager/store/store_components/ManagerStoreProductModal/ManagerStoreProductModal'), { ssr: false });

@@ -3,7 +3,7 @@
 'use client';
 
 import React, { createContext, useContext } from 'react';
-import { SalesContextType, SalesInitialData } from '@/app/manager/sales/sales_types/sales_types';
+import type { SalesContextType, SalesInitialData } from '@/app/manager/sales/sales_types/sales_types';
 import { useSalesLogic } from '@/app/manager/sales/sales_context/useSalesLogic';
 
 const SalesContext = createContext<SalesContextType | undefined>(undefined);

@@ -29,8 +29,8 @@ export default function ProfileOverview() {
           </div>
           {dues > 0 && (
             <div className="flex justify-between p-3 bg-danger-bg rounded-lg border border-destructive/20">
-              <span className="text-sm text-destructive">Pending Dues</span>
-              <span className="font-bold text-destructive">{formatCurrency(dues)}</span>
+              <span className="text-sm text-danger">Pending Dues</span>
+              <span className="font-bold text-danger">{formatCurrency(dues)}</span>
             </div>
           )}
           {advance > 0 && (

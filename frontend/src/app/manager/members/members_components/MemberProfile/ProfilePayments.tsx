@@ -21,8 +21,8 @@ export default function ProfilePayments() {
  <p className="text-xl font-bold text-success">{formatCurrency(totalPaid)}</p>
  </div>
  <div className="bg-danger-bg rounded-xl p-4 border border-destructive/20">
- <p className="text-xs text-destructive">Total Due</p>
- <p className="text-xl font-bold text-destructive">{formatCurrency(totalDue)}</p>
+ <p className="text-xs text-danger">Total Due</p>
+ <p className="text-xl font-bold text-danger">{formatCurrency(totalDue)}</p>
  </div>
  <div className="bg-info-bg rounded-xl p-4 border border-info/20">
  <p className="text-xs text-info">Transactions</p>
@@ -44,7 +44,7 @@ export default function ProfilePayments() {
  <p className="text-sm font-bold text-success">{formatCurrency(p.amount)}</p>
  <span className={`text-xs px-2 py-0.5 rounded-full ${
  p.status === 'PAID' ? 'bg-success-bg text-success' 
- : 'bg-danger-bg text-destructive'
+ : 'bg-danger-bg text-danger'
  }`}>
  {p.status}
  </span>

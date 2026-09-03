@@ -3,7 +3,7 @@
 'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';
-import { InquiriesContextType } from '@/app/manager/inquiries/inquiries_types/inquiries_types';
+import type { InquiriesContextType } from '@/app/manager/inquiries/inquiries_types/inquiries_types';
 import { useInquiriesLogic } from '@/app/manager/inquiries/inquiries_context/useInquiriesLogic';
 
 const InquiriesContext = createContext<InquiriesContextType | undefined>(undefined);

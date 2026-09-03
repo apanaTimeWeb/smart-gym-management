@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Entry component for the HR module. Wraps the UI in the context provider and handles page layout.
+// RESPONSIBILITY: Entry component for the HR module. Wraps the UI in the context provider and handles page layout.
 'use client';
 
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
@@ -8,7 +8,7 @@ import ManagerHrKPIs from '@/app/manager/hr/hr_components/ManagerHrKPIs/ManagerH
 import ManagerHrTabs from '@/app/manager/hr/hr_components/ManagerHrTabs/ManagerHrTabs';
 import ManagerHrStaffModal from '@/app/manager/hr/hr_components/ManagerHrStaffModal/ManagerHrStaffModal';
 import ManagerHrPayrollModal from '@/app/manager/hr/hr_components/ManagerHrPayrollModal/ManagerHrPayrollModal';
-import { HrInitialData } from '@/app/manager/hr/hr_types/hr_types';
+import type { HrInitialData } from '@/app/manager/hr/hr_types/hr_types';
 
 function HrContent() {
  const { toast, hideToast } = useHrContext();

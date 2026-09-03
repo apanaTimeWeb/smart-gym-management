@@ -16,7 +16,7 @@ export default function PendingPayments() {
     return (
       <div className="space-y-3">
         {[...Array(5)].map((_, i) => (
-          <div key={i} className="animate-pulse flex items-center justify-between p-4 border border-border rounded-xl bg-card">
+          <div key={i} className="motion-safe:animate-pulse flex items-center justify-between p-4 border border-border rounded-xl bg-card">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 bg-input rounded-full"></div>
               <div>
@@ -44,7 +44,7 @@ export default function PendingPayments() {
       </p>
       <div className="space-y-3">
         {pendingPayments.map((p: PendingPaymentMember) => (
-          <div key={p.id} className="flex items-center justify-between p-4 border border-border rounded-xl hover:border-warning transition-all duration-200 ease-in-out hover:-translate-y-1 hover:shadow-lg bg-card">
+          <div key={p.id} className="flex items-center justify-between p-4 border border-border rounded-xl hover:border-warning transition-all duration-200 ease-in-out motion-safe:hover:-translate-y-1 hover:shadow-lg bg-card">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 bg-danger-bg rounded-full flex items-center justify-center text-danger font-semibold text-sm">
                 {p.name.charAt(0)}

@@ -3,7 +3,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { 
   EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM, WorkoutFormValues, ExerciseFormValues
 } from '@/app/manager/workout/workout_utils/WorkoutSharedConstants';
-import { WorkoutContextType, Workout } from '@/app/manager/workout/workout_types/workout_types';
+import type { WorkoutContextType, Workout } from '@/app/manager/workout/workout_types/workout_types';
 import { useDebounce } from '@/app/manager/manager_utils/useDebounce';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { workoutApi } from '@/app/manager/workout/workout_api/workout_api';

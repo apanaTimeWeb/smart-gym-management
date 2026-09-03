@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Server Component — fetches initial SSR data and renders the Diet Library module entry point.
 import ManagerLibraryMain from '@/app/manager/library/library_components/ManagerLibraryMain/ManagerLibraryMain';
 import { ssrLibraryApi } from '@/app/manager/library/library_api/library_server_api';
-import { LibraryInitialData } from '@/app/manager/library/library_types/library_types';
+import type { LibraryInitialData } from '@/app/manager/library/library_types/library_types';
 
 export default async function LibraryPage() {
   let initialData: LibraryInitialData | null = null;

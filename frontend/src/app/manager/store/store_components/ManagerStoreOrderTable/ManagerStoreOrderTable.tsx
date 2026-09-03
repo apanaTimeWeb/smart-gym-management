@@ -38,7 +38,7 @@ export default function ManagerStoreOrderTable() {
 
   if (fetchState === 'loading') {
     return (
-      <div className="animate-pulse bg-card rounded-xl border border-border mt-4">
+      <div className="motion-safe:animate-pulse bg-card rounded-xl border border-border mt-4">
         {[...Array(5)].map((_, i) => (
           <div key={i} className="h-16 border-b border-border flex items-center px-4 gap-4">
             <div className="h-4 bg-muted rounded w-16"></div>
