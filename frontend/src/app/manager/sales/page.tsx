@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Server Component that fetches initial data and acts as the entry point for the Sales module.
-import SalesMain from '@/app/manager/sales/sales_components/SalesMain/SalesMain';
+import ManagerSalesMain from '@/app/manager/sales/sales_components/ManagerSalesMain/ManagerSalesMain';
 import { ssrSalesApi } from '@/app/manager/sales/sales_api/sales_server_api';
 import { SalesInitialData } from '@/app/manager/sales/sales_types/sales_types';
 
@@ -27,5 +27,5 @@ export default async function SalesPage() {
     console.error('[SalesPage SSR] Failed to fetch initial data:', e);
   }
 
-  return <SalesMain initialData={initialData} />;
+  return <ManagerSalesMain initialData={initialData} />;
 }

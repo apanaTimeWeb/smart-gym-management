@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Provides inquiries state and actions to the entire inquiries module hierarchy via React Context.
-// DATA FLOW: useInquiriesLogic -> InquiriesContext -> InquiriesKPIs, InquiriesTable, InquiriesToolbar, InquiryModal
+// DATA FLOW: useInquiriesLogic -> InquiriesContext -> ManagerInquiriesKPIs, InquiriesTable, ManagerInquiriesToolbar, ManagerInquiriesModal
 'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';

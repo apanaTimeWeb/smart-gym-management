@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Custom hook managing the asynchronous fetching of dashboard statistics.
-// DATA FLOW: page.tsx (SSR) → DashboardMain → useDashboardLogic → DashboardContext → KPI/Chart components
+// DATA FLOW: page.tsx (SSR) → ManagerDashboardMain → useDashboardLogic → DashboardContext → KPI/Chart components
 'use client';
 
 import { useState, useEffect } from 'react';
