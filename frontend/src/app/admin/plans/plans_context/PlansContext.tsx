@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Provides plans state and actions to the entire plans module hierarchy via React Context.
-// DATA FLOW: usePlansLogic -> PlansContext -> PlansGrid, PlansToolbar, PlanModal
+// DATA FLOW: usePlansLogic -> PlansContext -> AdminPlansGrid, AdminPlansToolbar, AdminPlansModal
 'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';
