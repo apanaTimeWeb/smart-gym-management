@@ -547,4 +547,91 @@ Enterprise users have different preferences for how much data fits on a screen.
 
 ---
 
+## 27. MOTION ACCESSIBILITY — `prefers-reduced-motion` Compliance (WCAG 2.2 Mandatory)
+Users with vestibular disorders, epilepsy, or motion sensitivity configure their OS to signal `prefers-reduced-motion: reduce`. Ignoring this setting in an enterprise SaaS causes legal exposure under the European Accessibility Act and ADA regulations. **All animations and transitions in this design system MUST respect this preference.**
+
+### The Rule
+- **Never hardcode `transition`, `animation`, or `transform` directly in Tailwind utility classes or CSS without a motion-safe guard.**
+- Use Tailwind's `motion-safe:` and `motion-reduce:` variants to conditionally apply motion:
+  ```html
+  <!-- ✅ CORRECT — Animation only plays if user hasn't requested reduced motion -->
+  <div class="motion-safe:transition-all motion-safe:duration-200 motion-safe:hover:-translate-y-1">
+    Card
+  </div>
+
+  <!-- ✅ CORRECT — Provide a static alternative for reduced-motion users -->
+  <div class="motion-safe:animate-spin motion-reduce:hidden">
+    <Loader2 />
+  </div>
+  ```
+
+### Global CSS Implementation
+Add this to `globals.css` as a global override that instantly disables all motion for users who request it:
+```css
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+```
+
+### Motion Token Scale
+All animation durations MUST use these defined tokens — never arbitrary `duration-[350ms]` values:
+| Token | Duration | Usage |
+|---|---|---|
+| `duration-fast` | `150ms` | Micro-interactions: button press, checkbox toggle |
+| `duration-base` | `200ms` | Standard transitions: hover states, dropdown open |
+| `duration-slow` | `300ms` | Page-level transitions: modal open, drawer slide |
+| `duration-xslow` | `500ms` | Complex layout shifts: skeleton → content swap |
+
+### What Must Be Motion-Safe Guarded
+Every instance of the following in JSX/CSS MUST have a `motion-safe:` prefix:
+- `hover:-translate-y-1` → `motion-safe:hover:-translate-y-1`
+- `animate-pulse` (skeletons) → `motion-safe:animate-pulse`
+- `animate-spin` (spinners) → `motion-safe:animate-spin`
+- `transition-all duration-200` → `motion-safe:transition-all motion-safe:duration-200`
+- CSS `@keyframes` animations in `globals.css` → wrap in `@media (prefers-reduced-motion: no-preference) { ... }`
+
+---
+
+## 28. DARK MODE SURFACE ELEVATION SCALE (Depth Without Shadows)
+In light mode, `box-shadow` is the primary tool for conveying visual depth (cards elevated above the page, modals elevated above cards). In dark mode, **shadows become nearly invisible against dark backgrounds** and can create a "muddy" visual. The industry-standard solution (used by Material Design 3, Linear, Vercel) is **Surface Elevation** — using subtle brightness steps to convey depth.
+
+### The Problem
+Using `shadow-2xl` in dark mode produces little to no visible depth cue. An AI generating a modal with `shadow-2xl` in dark mode will create a flat, undifferentiated UI where cards, modals, and dropdowns all look like they're on the same plane.
+
+### The Solution — Elevation Layer Scale
+Each layer of depth gets a slightly brighter background. The base page is the darkest; overlays get progressively lighter:
+
+| Layer | Token | Dark Value | Light Value | Used For |
+|---|---|---|---|---|
+| **0 — Page** | `--bg-page` | `#050505` | `#F4F4F5` | Root page background |
+| **1 — Raised** | `--bg-card` | `#111111` | `#FFFFFF` | Cards, table, panels |
+| **2 — Floating** | `--bg-floating` | `#1A1A1A` | `#FFFFFF` | Inputs, code blocks |
+| **3 — Overlay** | `--bg-overlay` | `#242424` | `#FAFAFA` | Modals, dialogs, drawers |
+| **4 — Popover** | `--bg-popover` | `#2E2E2E` | `#F4F4F5` | Dropdowns, tooltips, command palette |
+
+### Implementation Rules
+1. **Add `--bg-floating`, `--bg-overlay`, and `--bg-popover`** to your `globals.css` `:root` (light) and `.dark` blocks alongside the existing tokens.
+2. **Map them in `tailwind.config.ts`** as `bg-floating`, `bg-overlay`, `bg-popover` tokens.
+3. **Modals and Dialogs** must use `bg-overlay` (not `bg-card`) so they visually lift above the card layer behind them.
+4. **Dropdowns and Tooltips** must use `bg-popover` so they lift above modals in the stacking context.
+5. **Combine with subtle borders:** In dark mode, elevation alone is often not enough. Always add `border border-[var(--border)]` to floating elements to provide a crisp edge definition, especially on lower-brightness monitors.
+6. **Shadow is still used for Light Mode** — In light mode where shadows work, modals should still use `shadow-2xl shadow-black/10`. This is the dual strategy: elevation for dark, shadow for light.
+
+### Updated Z-Index Scale (Cross-Referenced with Section 12)
+The elevation scale maps 1:1 with the z-index scale from Section 12:
+| Z-Index | Elevation Layer | Background Token |
+|---|---|---|
+| `z-10` | Sticky headers | `bg-card` (Layer 1) |
+| `z-20` | App header | `bg-card` (Layer 1) |
+| `z-30` | Dropdowns, Tooltips | `bg-popover` (Layer 4) |
+| `z-40` | Modals, Dialogs, Drawers | `bg-overlay` (Layer 3) |
+| `z-50` | Toast notifications | `bg-overlay` (Layer 3) |
+
+---
+
 *END OF GLOBAL DESIGN SYSTEM — Paste this block before every module you give to Stitch.*
