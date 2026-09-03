@@ -73,7 +73,11 @@ export default function PlansList() {
                 <Edit2 size={18} />
               </button>
               <button
-                onClick={() => handleDeletePlan(plan.id)}
+                onClick={() => {
+                  if (window.confirm(`Are you sure you want to delete the plan "${plan.name}"? This action cannot be undone.`)) {
+                    handleDeletePlan(plan.id);
+                  }
+                }}
                 disabled={isDeleting}
                 aria-label={`Delete ${plan.name}`}
                 className="flex-1 py-2.5 flex items-center justify-center bg-input hover:bg-danger hover:text-white text-secondary rounded-xl transition-colors border border-border disabled:opacity-50"
