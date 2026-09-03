@@ -59,12 +59,12 @@ export default function MigrationsClient() {
               <p className="text-sm text-secondary mt-1">Backend codebase updated. The tenant databases require schema sync.</p>
             </div>
           </div>
-          <div className="flex items-center gap-3 w-full md:w-auto">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full md:w-auto mt-4 md:mt-0">
             <button 
               onClick={() => setShowTargetModal(true)}
               className="flex-1 md:flex-none bg-input text-foreground px-4 py-3 rounded-lg font-bold hover:bg-border transition-colors flex items-center justify-center gap-2 border border-border"
             >
-              <Target size={18} /> Targeted Sync
+              <Target size={18} className="shrink-0" /> Targeted Sync
             </button>
             <button 
               onClick={async () => {
@@ -83,7 +83,7 @@ export default function MigrationsClient() {
               }}
               className="flex-1 md:flex-none bg-warning text-black px-6 py-3 rounded-lg font-bold hover:opacity-90 transition-all duration-200 flex items-center justify-center gap-2 whitespace-nowrap shadow-lg shadow-warning/20"
             >
-              <Play size={18} /> Run on All Tenants
+              <Play size={18} className="shrink-0" /> <span className="whitespace-nowrap sm:whitespace-normal">Run on All Tenants</span>
             </button>
           </div>
         </div>

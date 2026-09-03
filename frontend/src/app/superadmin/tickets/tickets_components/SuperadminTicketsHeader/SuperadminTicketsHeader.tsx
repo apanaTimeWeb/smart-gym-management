@@ -63,6 +63,7 @@ export default function SuperadminTicketsHeader({
                   value={statusFilter}
                   onChange={(e) => {
                     setStatusFilter(e.target.value as TicketStatus | 'ALL');
+                    setShowFilter(false);
                     onFilterChange();
                   }}
                   className="w-full px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary"
@@ -79,6 +80,7 @@ export default function SuperadminTicketsHeader({
                   value={priorityFilter}
                   onChange={(e) => {
                     setPriorityFilter(e.target.value as TicketPriority | 'ALL');
+                    setShowFilter(false);
                     onFilterChange();
                   }}
                   className="w-full px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary"

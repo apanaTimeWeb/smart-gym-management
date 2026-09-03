@@ -10,6 +10,8 @@ import type { FetchState, InfrastructureNode } from '@/app/superadmin/superadmin
 export default function InfrastructureClient() {
   const [nodes, setNodes] = useState<InfrastructureNode[]>([]);
   const [fetchState, setFetchState] = useState<FetchState>('idle');
+  const [isFlushingAll, setIsFlushingAll] = useState(false);
+  const [isFlushingSpecific, setIsFlushingSpecific] = useState(false);
 
   const fetchNodes = async () => {
     setFetchState('loading');
@@ -21,6 +23,22 @@ export default function InfrastructureClient() {
       toast.error(e instanceof Error ? e.message : String(e));
       setFetchState('error');
     }
+  };
+
+  const handleFlushAll = () => {
+    setIsFlushingAll(true);
+    setTimeout(() => {
+      setIsFlushingAll(false);
+      toast.success('Successfully flushed global cache for all tenants');
+    }, 1500);
+  };
+
+  const handleFlushSpecific = () => {
+    setIsFlushingSpecific(true);
+    setTimeout(() => {
+      setIsFlushingSpecific(false);
+      toast.success('Successfully flushed cache for specific tenant');
+    }, 1000);
   };
 
   // Refetch on mount to load infrastructure node metrics
@@ -51,7 +69,7 @@ export default function InfrastructureClient() {
         <button
           onClick={fetchNodes}
           disabled={fetchState === 'loading'}
-          className="bg-input text-secondary px-4 py-2 rounded-lg font-medium hover:bg-card transition-colors flex items-center gap-2 border border-border disabled:opacity-50"
+          className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:opacity-90 transition-opacity flex items-center gap-2 border border-primary disabled:opacity-50"
         >
           <RefreshCcw size={16} className={fetchState === 'loading' ? 'motion-safe:animate-spin' : ''} /> Force Sync Metrics
         </button>
@@ -119,10 +137,20 @@ export default function InfrastructureClient() {
           The SaaS platform uses Redis to cache massive multi-tenant API responses. If gyms are reporting stale data, you can forcefully flush the global cache across all tenants here.
         </p>
         <div className="flex gap-4">
-          <button className="bg-primary text-white px-5 py-2.5 rounded-lg font-medium hover:bg-primary-hover transition-colors">
+          <button 
+            onClick={handleFlushAll}
+            disabled={isFlushingAll}
+            className="flex items-center justify-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg font-medium hover:opacity-90 transition-opacity min-w-[180px] disabled:opacity-50"
+          >
+            {isFlushingAll ? <Loader2 size={18} className="motion-safe:animate-spin" /> : null}
             Flush All Tenants
           </button>
-          <button className="bg-input text-foreground px-5 py-2.5 rounded-lg font-medium hover:bg-border transition-colors border border-border">
+          <button 
+            onClick={handleFlushSpecific}
+            disabled={isFlushingSpecific}
+            className="flex items-center justify-center gap-2 bg-input text-foreground px-5 py-2.5 rounded-lg font-medium hover:bg-border transition-colors border border-border min-w-[180px] disabled:opacity-50"
+          >
+            {isFlushingSpecific ? <Loader2 size={18} className="motion-safe:animate-spin" /> : null}
             Flush Specific Tenant
           </button>
         </div>

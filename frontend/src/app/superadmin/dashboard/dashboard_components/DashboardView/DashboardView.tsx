@@ -104,16 +104,16 @@ export default function DashboardView() {
   return (
     <div className="space-y-6">
       <div>
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
           <div>
             <h1 className="text-2xl font-bold text-foreground">
               SaaS Overview
             </h1>
             <p className="text-secondary mt-1 text-sm">Monitor the health and growth of your Multi-Tenant SaaS platform.</p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
             {timeRange === 'custom' && (
-              <div className="flex items-center gap-2 mr-2">
+              <div className="flex flex-wrap items-center gap-2 mr-2">
                 <label className="text-sm font-medium text-secondary">From:</label>
                 <input
                   type="date"
