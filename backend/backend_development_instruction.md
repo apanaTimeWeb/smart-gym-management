@@ -467,13 +467,296 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **The Rule:** All monetary amounts MUST be stored and transmitted over the API as integers in the smallest currency unit (e.g., paise for INR, cents for USD). Never use floating-point types (`float`, `double`) or decimals for API transmission to avoid rounding errors. 
 * **Frontend Responsibility:** The backend transmits `12345600` (paise). It is strictly the frontend's responsibility to divide by 100 and format it as `₹1,23,456.00` for display.
 
+## 74. Mechanical Enforcement of Isolation (The "Tooling Gate")
+* **The Rule:** The backend must explicitly enforce architectural boundaries mechanically. If using Node.js, mandate `eslint-plugin-boundaries` or `no-restricted-imports`. If using Python, mandate `import-linter`. This guarantees that an AI cannot accidentally import an `attendance` repository into a `billing` service. Trust is not enough; the pipeline must block cross-module violations.
+
+## 75. Hard File-Size Ceilings
+* **The Rule:** Services and controllers have a strict file size ceiling of ~300 lines maximum. If a backend file exceeds this, the AI must explicitly pause and refactor it by splitting the logic into an Orchestrator/Facade and smaller micro-services. This strictly prevents token explosion and hallucination.
+
+## 76. Strict File Responsibility Contract
+* **The Rule:** Every backend controller, service, or repository MUST start with a single-line comment at the very top of the file explicitly defining its boundary. (e.g., `// RESPONSIBILITY: Processes incoming Stripe webhooks and emits EVENT_PAYMENT_SUCCESS. No direct DB writes.`). This instantly grounds the AI's context when reading the file.
+
+## 77. Dependency-Addition Guardrail
+* **The Rule:** An AI agent cannot blindly add new dependencies (`npm install` or `pip install`) without human approval. Before proposing a new library, the AI must check the `package.json` or `requirements.txt` to verify if an existing approved library (e.g., `date-fns` instead of adding `moment`, or a native ORM feature) can suffice for the task.
+
+## 78. Forbidden Patterns File (`[moduleName]_forbidden.md`)
+* **The Rule:** Every backend module must have a tiny markdown file listing what is explicitly NOT allowed in that specific module. For example, `billing_forbidden.md` might state: "Never bypass the Orchestrator for payments. Never mutate the DB without pessimistic locking." This acts as the ultimate localized guardrail for AI agents.
+
 ---
 
-## Updated Summary Checklist (v2):
-1. Identify the exact layer (Validation? Query? Business Logic? External Adapter?).
+## 79. Explicit Data Flow Direction Comment (AI Context Chain)
+* **The Rule:** Just as the frontend mandates `// DATA FLOW: API → hook → Context → Component` on every hook file (Frontend Rule 39), every backend **service, controller, and repository** file MUST begin with an explicit data flow annotation comment below the responsibility comment.
+* **Format:**
+  ```
+  // RESPONSIBILITY: Handles member suspension logic. No direct DB writes — emits events only.
+  // FLOW: MemberCommandController → MemberSuspensionService → MemberRepository → EventBus.emit('MEMBER.SUSPENDED')
+  ```
+* **Why:** When an AI agent is given a single file to fix a bug, the `// FLOW:` comment instantly tells it the full chain of execution — what came before this file, and what happens after — without the AI needing to read any other file. This eliminates the single biggest cause of AI hallucination: not knowing what calls what.
+
+---
+
+## 80. Mandatory JSDoc on All Service Methods, Repositories & Utilities
+* **The Rule:** Every service method, repository method, adapter method, and utility function MUST be prefixed with a JSDoc block. This mirrors Frontend Rule 37 which mandates JSDoc on all hooks and utilities.
+* **What the JSDoc must include:**
+  1. A one-line `@description` of what the method does.
+  2. `@param` for every non-trivial argument.
+  3. `@returns` with the exact type.
+  4. `@throws` with the exact custom exception(s) it can throw (from Rule 6).
+  5. For complex business logic: a `@remarks` note explaining the *why* behind a design decision (e.g., "Uses pessimistic lock because concurrent wallet deductions caused negative balances in load testing").
+* **Example:**
+  ```typescript
+  /**
+   * @description Suspends a member by setting their status to SUSPENDED and emitting the lifecycle event.
+   * @param memberId - The UUID of the member to suspend.
+   * @param actorId - The UUID of the staff member performing the action (for audit log).
+   * @returns The updated MemberEntity with status SUSPENDED.
+   * @throws MemberNotFoundException if the memberId does not exist.
+   * @throws MemberAlreadySuspendedException if the member is already suspended.
+   * @remarks Uses a database transaction to ensure the audit log write and status update are atomic.
+   */
+  async suspendMember(memberId: string, actorId: string): Promise<MemberEntity> { ... }
+  ```
+* **Why:** An AI fixing a bug in a billing service shouldn't need to read 300 lines to understand what `chargeWallet()` can throw. The JSDoc block is the file's self-contained API contract, drastically reducing token usage and hallucination risk.
+
+---
+
+## 81. Mock-First / Stub-First Development (Parallel Workflow Safety)
+* **The Rule:** Just as the frontend is built with mock data before the backend exists, the backend MUST follow the reciprocal workflow: **every new endpoint must first be created as a fully-documented, working stub** before real business logic is written.
+* **A "stub" means:**
+  1. The controller and route exist and are registered.
+  2. The Swagger/OpenAPI documentation for that endpoint is complete and accurate.
+  3. The endpoint returns a hardcoded, realistic mock payload that exactly matches the final `ApiResponse<T>` envelope (Rule 28).
+  4. The endpoint has `// TODO: Replace with real service call` comments.
+* **Why this matters for parallel AI development:** If two AI agents are working simultaneously — one on the frontend UI, one on the backend logic — the frontend agent cannot make progress if the endpoint doesn't exist at all. A working stub with realistic mock data allows the frontend to be fully built and tested against the API contract before the backend implementation is written. This prevents entire feature branches from being blocked.
+* **Enforcement:** A stub endpoint MUST never be merged to `main` without either: (a) having its real implementation, OR (b) having a GitHub issue linked in a `// STUB: [link]` comment.
+
+---
+
+## 82. Strict Discriminated Union Response Rule (No Ambiguous `data` Shapes)
+* **The Rule:** The `data` field in the standardized API envelope (Rule 28) MUST always be a **single, explicitly typed value** — never a polymorphic bag of mixed objects. The shape of `data` on success MUST be identical in structure regardless of the execution path.
+  - ❌ **BAD (Ambiguous):** `data: { member: MemberEntity, invoice: InvoiceEntity }` — the frontend `ApiResponse<T>` generic breaks because `T` is not a single entity.
+  - ✅ **GOOD:** `data: MemberWithInvoiceDTO` — a single, explicitly defined DTO that contains both.
+  - ❌ **BAD (Inconsistent):** One code path returns `data: MemberEntity`, another returns `data: { member: MemberEntity }`.
+  - ✅ **GOOD:** Always `data: MemberEntity` — one shape, all paths.
+* **The Discriminated Union Rule for Errors:** Never put different error shapes inside `data`. All error information belongs strictly in the `error` and `errorCode` fields of the envelope (Rule 64). The `data` field must always be `null` on error responses. No exceptions.
+* **Why:** The frontend AI agent generating the type-safe API call relies on `ApiResponse<MemberEntity>` mapping exactly. If the backend AI returns `data: { member: MemberEntity }` instead of `data: MemberEntity`, the TypeScript type system on the frontend will silently pass (because of structural typing) but every `res.data.name` call will return `undefined`, creating bugs that are extremely hard to trace.
+
+---
+
+## 83. Centralized RBAC / Permission Guards (Role-Based Access Control)
+* **The Rule:** Role and permission checks must NEVER be done inline inside service methods or repository layers (e.g., `if (user.role === 'admin')`). Permission enforcement is strictly a **controller-layer concern** and must be implemented using centralized, declarative guards or decorators.
+* **How to implement per framework:**
+  - **NestJS:** Use a `@Roles(...)` custom decorator paired with a global `RolesGuard` that reads the JWT payload. Never check `req.user.role` inside a service.
+  - **Django:** Use Django REST Framework's `IsAuthenticated` + custom `Permission` classes (e.g., `IsAdminOrManager`). Never check `request.user.is_staff` inside a view's business logic.
+  - **Express:** Implement a `requireRoles(...roles)` middleware factory that is mounted per-route. Never check roles inside a controller handler.
+* **Fine-Grained Resource Permissions:** For resource-level checks (e.g., "Can this manager see only their branch's members?"), create a dedicated `[module]-authorization.service.ts`. This service receives the actor and the resource and returns a boolean. The controller calls this service before delegating to the business service.
+* **Centralized Role Registry:** All role names and permission strings MUST be defined as enums in a central `auth.roles.constants.ts` file. Never use raw strings like `'admin'` or `'manager'` directly in guards or decorators.
+  - ❌ **BAD:** `@Roles('admin', 'superadmin')`
+  - ✅ **GOOD:** `@Roles(UserRole.ADMIN, UserRole.SUPERADMIN)`
+* **Why:** Just as the frontend mandates `usePermissions()` for hiding restricted UI elements (Frontend Rule 25), the backend must enforce the same contract at the API layer. An AI writing a new endpoint will forget to add auth checks if there is no standard, centralized pattern to follow. A declarative decorator is impossible to forget because it's visible at the route definition.
+
+---
+
+## 84. No Barrel File / Re-Export Index Rule
+* **The Rule:** Strictly avoid using `index.ts` or `index.js` files to re-export modules (barrel files). This mirrors Frontend Rule 32. Always import directly from the explicitly named source file.
+  - ❌ **BAD:** `import { MemberService } from '@/modules/members'` (where `members/index.ts` re-exports everything)
+  - ✅ **GOOD:** `import { MemberRegistrationService } from '@/modules/members/services/member-registration.service'`
+* **Why barrel files are dangerous in AI-driven codebases:**
+  1. **Circular Dependencies:** Barrel files are the #1 cause of circular dependency errors in NestJS and Express projects. An AI adding a new export to a barrel file can silently create a circular import cycle that causes runtime crashes.
+  2. **AI Context Pollution:** When an AI imports `from '@/modules/members'`, it loads the entire barrel into context — all services, all DTOs, all repositories. With direct imports, the AI only loads exactly what it needs, drastically reducing hallucination risk.
+  3. **Dead Code Masking:** Barrel files make tree-shaking and unused-code detection nearly impossible, hiding dead code from AI and human reviewers alike.
+* **Enforcement:** Mechanically enforce via ESLint `no-restricted-imports` or a custom rule that flags imports from `index.ts` paths.
+
+---
+
+## 85. Guard Clause / Early Return Pattern (No Nested Conditional Hell)
+* **The Rule:** Deeply nested `if/else` blocks inside service methods are strictly forbidden. This mirrors Frontend Rule 53 which bans ternary hell. All service methods MUST use the **Guard Clause** (Early Return) pattern: validate inputs and exit early at the top of the function, keeping the happy path flat and readable.
+  - ❌ **BAD (Nested):**
+    ```typescript
+    async suspendMember(id: string) {
+      const member = await this.repo.findById(id);
+      if (member) {
+        if (member.status !== 'SUSPENDED') {
+          if (member.hasActiveSubscription) {
+            // ... actual logic buried 3 levels deep
+          } else { throw new Error('No subscription'); }
+        } else { throw new Error('Already suspended'); }
+      } else { throw new Error('Not found'); }
+    }
+    ```
+  - ✅ **GOOD (Guard Clauses):**
+    ```typescript
+    async suspendMember(id: string) {
+      const member = await this.repo.findByIdOrThrow(id); // throws MemberNotFoundException
+      if (member.status === 'SUSPENDED') throw new MemberAlreadySuspendedException(id);
+      if (!member.hasActiveSubscription) throw new NoActiveSubscriptionException(id);
+      // happy path — completely flat, no nesting
+      member.status = 'SUSPENDED';
+      return this.repo.save(member);
+    }
+    ```
+* **Maximum Nesting Depth:** No function body may have more than **2 levels of indentation** for conditional logic. If a third level is needed, extract it into a private helper method.
+* **Why:** An AI given a deeply nested 80-line service method will frequently misread the logic branches and introduce bugs at the wrong `else` block. A flat, guard-clause-driven function is scannable in 5 seconds, making AI edits surgical and safe.
+
+---
+
+## 86. Strict Method Naming Convention (The Verb Contract)
+* **The Rule:** All service and repository method names MUST follow a strict, predictable verb-based naming convention. AI agents must never invent arbitrary method names. The convention is:
+
+  | Operation | Service Layer Verb | Repository Layer Verb |
+  |---|---|---|
+  | Create | `create[Entity](dto)` | `save(entity)` |
+  | Read single | `find[Entity]ById(id)` | `findById(id)` |
+  | Read single (throws) | `find[Entity]ByIdOrThrow(id)` | `findByIdOrThrow(id)` |
+  | Read list | `findAll[Entities](filters)` | `findAll(filters)` |
+  | Update | `update[Entity](id, dto)` | `save(entity)` |
+  | Soft Delete | `delete[Entity](id)` | `softDelete(id)` |
+  | Check existence | `does[Entity]Exist(id)` | `existsById(id)` |
+  | Count | `count[Entities](filters)` | `count(filters)` |
+
+* **The `OrThrow` Pattern:** Repository methods that return a single entity MUST have two variants: `findById(id): Entity | null` (returns null if not found) and `findByIdOrThrow(id): Entity` (throws `EntityNotFoundException` if not found). Services must choose explicitly — never let a `null` propagate silently.
+* **Why:** When two different AI agents work on two different modules, they will produce consistent, predictable method signatures. Any AI reading a repository interface instantly knows what methods are available without having to read the implementation. This eliminates the most common AI mistake: calling a method that doesn't exist (hallucinated method names).
+
+---
+
+## 87. Single Responsibility at Method Level (The 20-Line Rule)
+* **The Rule:** Just as the frontend mandates hook separation to split logic from UI (Frontend Rule 6), the backend mandates that **every service method must do exactly ONE thing**. If a method is doing more than one distinct business operation, it must be split into private helper methods or separate micro-services.
+* **The 20-Line Soft Ceiling:** A service method body (excluding JSDoc) should rarely exceed ~20 lines. If a method grows beyond this, it is a signal that it is doing too much and must be decomposed.
+* **Decomposition Pattern:**
+  - ❌ **BAD:** A single `registerMember()` method that validates, saves the member, creates a subscription, charges the card, sends a welcome email, and writes an audit log — all in one 80-line function.
+  - ✅ **GOOD:** `registerMember()` is an Orchestrator (Rule 8B) that calls: `this.memberRepo.save(member)`, then emits `EventBus.emit('MEMBER.REGISTERED', ...)`. The subscription creation, payment charging, and email are handled by separate listeners.
+* **Private Helper Rule:** If a method needs a private helper for a sub-calculation (e.g., calculating a pro-rated amount), the helper must be a `private` method with its own JSDoc (Rule 80) clearly named for its specific task (e.g., `private calculateProRatedAmount()`).
+* **Why:** An AI asked to "add audit logging to member registration" should be able to do so by touching exactly ONE file and ONE method — the event listener for `MEMBER.REGISTERED`. If the entire registration flow is monolithic, the AI must read and modify a 200-line method, risking collateral damage.
+
+---
+
+## 88. Strict Import Order Convention (Mechanical ESLint Enforcement)
+* **The Rule:** All backend TypeScript/JavaScript files MUST enforce a strict, consistent import order. This mirrors Frontend Rule 51. Configure ESLint's `import/order` rule to enforce the following groups in this exact sequence:
+  1. **Node.js built-ins** (e.g., `node:fs`, `node:path`)
+  2. **Framework core** (e.g., `@nestjs/common`, `express`, `django`)
+  3. **Third-party packages** (e.g., `typeorm`, `class-validator`, `bcrypt`)
+  4. **Internal absolute imports — Infrastructure** (e.g., `@/config/`, `@/database/`)
+  5. **Internal absolute imports — Module-specific** (e.g., `@/modules/billing/...`)
+  6. **Relative imports** (strictly forbidden per Rule 10 — this group must always be empty)
+  7. **Type-only imports** (`import type { ... }`) must always be last
+* **Blank line separation:** Each group must be separated by a blank line. No mixing of groups.
+* **Example:**
+  ```typescript
+  import * as crypto from 'node:crypto';
+
+  import { Injectable } from '@nestjs/common';
+
+  import { Repository } from 'typeorm';
+  import * as bcrypt from 'bcrypt';
+
+  import { DatabaseConfig } from '@/config/database.config';
+
+  import { MemberEntity } from '@/modules/members/entities/member.entity';
+  import { MemberNotFoundException } from '@/modules/members/exceptions/member.exceptions';
+
+  import type { CreateMemberDto } from '@/modules/members/dtos/member-create.dto';
+  ```
+* **Why:** Chaotic import ordering in AI-generated code causes two specific problems: (1) Merge conflicts explode because every AI agent adds imports in a different location, (2) Circular dependency detection becomes nearly impossible because the import graph is visually unreadable. A strict, mechanical ESLint rule makes import diffs surgical and circular deps immediately obvious.
+
+---
+
+## 89. Domain Object vs. ORM Entity Separation (Anti-Persistence-Leakage Rule)
+* **The Rule:** Never use ORM Entity classes (e.g., TypeORM `@Entity()` classes, Django ORM models) directly inside business logic services. ORM entities are a **persistence infrastructure concern** — they contain database annotations, lazy-loading relations, and schema metadata that have no place in pure business logic.
+* **The Pattern — Two Distinct Objects + Mapper:**
+  1. **ORM Entity** (`member.entity.ts`): Contains only database schema definition — `@Column`, `@ManyToOne`, `@Index` decorators. Lives in the repository layer only.
+  2. **Domain Object / DTO** (`member.domain.ts` or `member.dto.ts`): A plain TypeScript class/interface with pure business properties and zero ORM imports. This is what services, controllers, and event handlers receive and return.
+  3. **Mapper** (`member.mapper.ts`): A dedicated class with `toDomain(entity)` and `toEntity(domain)` static methods that translate between the two. Only the repository layer calls the mapper.
+* **When it's acceptable to use a unified model:** For simple CRUD-only modules with no complex business rules, a unified ORM entity may be used provided: (a) it has no business logic methods on the class itself, and (b) you acknowledge the tradeoff in the module's `_backend_feature.md`.
+* **Why:** AI agents default to using ORM entities everywhere — passing `MemberEntity` into services, emitting it over the EventBus, returning it from controllers. This "persistence leakage" means a database schema change (e.g., renaming a column) breaks business logic files that should be completely unaware of the database. A Mapper is the single controlled translation point, and it is the only file the AI needs to touch when the schema changes.
+
+---
+
+## 90. Automated Security Gates in CI/CD Pipeline (Shift-Left Security)
+* **The Rule:** All backend AI-generated code is **untrusted input** until proven otherwise. Research shows ~45% of AI code suggestions can introduce security vulnerabilities. The CI/CD pipeline MUST implement non-bypassable automated security gates on every Pull Request before any merge is allowed.
+* **Mandatory Gate 1 — SAST (Static Application Security Testing):** Run a SAST scanner (e.g., `Semgrep`, `SonarQube`, `CodeQL`) on every PR. Any `Critical` or `High` severity finding MUST block the merge. AI agents cannot self-certify their own code as secure.
+* **Mandatory Gate 2 — SCA (Software Composition Analysis):** Run a dependency vulnerability scanner (e.g., `npm audit`, `safety` for Python, `Snyk`) on every PR. Any new dependency with a known `Critical` CVE must block the merge.
+* **Mandatory Gate 3 — Secrets Detection:** Run a secrets scanner (e.g., `GitLeaks`, `Trufflehog`) on every PR diff. A single hardcoded API key or database password in a commit is a catastrophic security breach. This gate must never be skipped.
+* **Mandatory Gate 4 — TypeScript Strict Compile Check:** Run `tsc --noEmit` on every PR. The build must pass with zero type errors — no `@ts-ignore` bypasses allowed (Rule 69).
+* **Why:** Frontend Rule 65 mandates mechanical tooling gates for the frontend. The backend requires the exact same discipline but with an added focus on security. An AI writing authentication or payment code must have its output automatically vetted before it reaches production.
+
+---
+
+## 91. Mandatory Backend Pre-Commit Hooks (Blocking Gates Before Push)
+* **The Rule:** This mirrors Frontend Rule 65's `husky + lint-staged` mandate. The backend repository MUST configure pre-commit hooks using `husky` (Node.js) or `pre-commit` framework (Python) to run fast, blocking checks before every `git push`. These hooks run locally on the developer/AI agent's machine — they are the first line of defense before code reaches CI.
+* **Required Pre-Commit Checks (must all pass):**
+  1. `tsc --noEmit` — TypeScript type check. Zero errors required.
+  2. `eslint --fix` — Auto-fix lint violations; fail if unfixable violations remain.
+  3. `prettier --check` — Code format verification.
+  4. `gitleaks detect --no-git` — Secret scanning on staged files only (fast).
+* **Staged Files Only:** Use `lint-staged` to run checks only on the files in the current commit. Running checks on the entire codebase on every commit is too slow and will cause developers/AI agents to bypass the hooks.
+* **Why:** CI/CD gates (Rule 90) catch issues at the PR stage, which means an AI agent can push broken/insecure code to the remote branch. Pre-commit hooks catch the same issues before the push ever happens, providing instant feedback and preventing noise in the PR history.
+
+---
+
+## 92. ORM Raw Input Injection Prevention (The TypeORM Safety Rule)
+* **The Rule:** Never interpolate user-controlled input directly into ORM query methods. This is a critical AI-specific risk because AI agents frequently generate "convenient" but insecure query patterns, especially in TypeORM's QueryBuilder.
+* **The Specific Patterns to BAN:**
+  - ❌ **BAD (SQL Injection via `orderBy`):**
+    ```typescript
+    // NEVER do this — sortField comes from req.query and is unvalidated
+    queryBuilder.orderBy(`member.${req.query.sortField}`, 'ASC');
+    ```
+  - ✅ **GOOD (Allowlist Pattern):**
+    ```typescript
+    const ALLOWED_SORT_FIELDS = ['name', 'createdAt', 'status'] as const;
+    type SortField = typeof ALLOWED_SORT_FIELDS[number];
+    const sortField = ALLOWED_SORT_FIELDS.includes(req.query.sortField as SortField)
+      ? req.query.sortField as SortField
+      : 'createdAt'; // safe default
+    queryBuilder.orderBy(`member.${sortField}`, 'ASC');
+    ```
+  - ❌ **BAD (Raw SQL with template literals):**
+    ```typescript
+    // NEVER — classic SQL injection
+    queryBuilder.where(`member.name = '${req.query.name}'`);
+    ```
+  - ✅ **GOOD (Parameterized query):**
+    ```typescript
+    queryBuilder.where('member.name = :name', { name: req.query.name });
+    ```
+* **Allowlist-First Mandate:** Any query that uses a user-supplied column name, sort field, or filter key MUST validate it against a strict allowlist defined in the module's constants file before passing it to the ORM.
+* **Why:** TypeORM's query builder accepts raw column name strings in `orderBy`, `select`, and `where` which are NOT automatically parameterized. An AI will generate `orderBy(`member.${sortColumn}`)` as a clean, "logical" pattern without realizing it's an injection vulnerability. This rule makes the safe pattern the only acceptable pattern.
+
+---
+
+## 93. Human-in-the-Loop Gate for Security-Critical AI Code
+* **The Rule:** Certain backend modules and functions are so security-critical that AI-generated code for them requires mandatory human review before merging — no exceptions, even if all automated gates pass. These are modules where a single bug can cause financial loss, data breach, or unauthorized access.
+* **Mandatory Human Review Required For:**
+  1. **Authentication & Token Logic** — Any code in `auth/` modules, JWT generation/validation, refresh token rotation (Rule 52), session management.
+  2. **Authorization & Permission Guards** — Any new `@Roles()` decorator usage, `RolesGuard` modifications, resource-level authorization services (Rule 83).
+  3. **Payment & Financial Mutations** — Any code that triggers charges, refunds, wallet deductions, or invoice generation.
+  4. **Database Migration Files** — Any migration that adds `NOT NULL`, drops a column, or modifies a primary key. (Rule 24).
+  5. **Multi-Tenancy Connection Routing** — Any modification to the tenant DataSource factory or request-scoped connection resolver (Rule 39).
+* **Implementation:** In GitHub/GitLab, create a `CODEOWNERS` file mapping these folders to specific human reviewers. PRs touching these paths cannot be merged without a human approval even if all CI gates pass.
+* **PR Description Mandate:** Any PR touching these modules MUST include a section titled `## Security Impact Analysis` explaining what changed, what the risk surface is, and why the change is safe.
+* **Why:** Industry research confirms that ~45% of AI-generated code can introduce vulnerabilities, and the risk is highest in security-critical paths. An AI agent might generate a logically correct but cryptographically weak JWT validation, or a permission guard with a subtle bypass. Automated tools cannot catch all semantic security flaws — a human security review is the final, non-negotiable gate.
+
+---
+
+## Updated Summary Checklist (v5 — Final):
+1. Identify the exact layer (Validation? Query? Business Logic? External Adapter? Permission Guard? Mapper?).
 2. Select the **one or two** micro-files associated with that layer.
 3. Check the module's `_backend_feature.md` for context before giving the AI any files.
 4. Pass ONLY those files to the AI along with the feature doc.
-5. After the AI writes code, verify: Is there N+1? Is there a missing null check? Is a secret hardcoded? Is the response wrapped in the standard envelope?
-6. Run `pytest` against the live API to confirm contract compliance.
-7. Review the AI's isolated changes.
+5. After the AI writes code, verify:
+   - Is there an N+1 query?
+   - Is there a missing null check (use `findByIdOrThrow` where needed)?
+   - Is a secret hardcoded? (Auto-blocked by pre-commit hook — Rule 91)
+   - Is the response wrapped in the standard envelope with a single consistent `data` shape?
+   - Is the permission guard at the controller layer using typed enums? (Rule 83)
+   - Is any ORM `orderBy` or `where` using user input without an allowlist? (Rule 92)
+   - Are there any barrel file imports or relative path imports?
+   - Does every new method follow the verb naming convention with `OrThrow` where needed? (Rule 86)
+   - Is every new method ≤ 20 lines using Guard Clauses? (Rule 85/87)
+   - Does every new file have `// RESPONSIBILITY:` + `// FLOW:` + JSDoc on every method? (Rules 76/79/80)
+   - Is a Mapper used to translate between ORM entities and domain objects? (Rule 89)
+   - If the change touches `auth/`, `billing/`, or `permissions/`, has a human reviewed it? (Rule 93)
+6. Run automated CI gates: SAST, SCA, secrets scan, `tsc --noEmit`. (Rule 90)
+7. Run `pytest` against the live API to confirm contract compliance.
+8. For security-critical modules, ensure `CODEOWNERS` human approval is obtained. (Rule 93)
+9. Review the AI's isolated changes one final time.
