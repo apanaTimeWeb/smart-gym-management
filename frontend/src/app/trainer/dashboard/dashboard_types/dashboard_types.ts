@@ -7,6 +7,9 @@ export interface DashboardContextType {
   error: string;
   timeRange: TimeRange;
   setTimeRange: (range: TimeRange) => void;
+  startDate: string;
+  endDate: string;
+  setCustomDateRange: (start: string, end: string) => void;
 }
 
 export interface RecentMember {

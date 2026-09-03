@@ -13,6 +13,13 @@ const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 export default function DashboardView() {
   const [timeRange, setTimeRange] = useState<TimeRange>('monthly');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+
+  const setCustomDateRange = (start: string, end: string) => {
+    setStartDate(start);
+    setEndDate(end);
+  };
   const { data, fetchState, error } = useDashboardData<{ metrics: SaaSDashboardMetrics, revenue: RevenueChartData[], growth: GrowthChartData[] }>(SuperadminUrlConfig.BACKEND_API.DASHBOARD_BASE);
 
   if (fetchState === 'loading') {
@@ -104,16 +111,43 @@ export default function DashboardView() {
             </h1>
             <p className="text-secondary mt-1 text-sm">Monitor the health and growth of your Multi-Tenant SaaS platform.</p>
           </div>
-          <select 
-            value={timeRange} 
-            onChange={(e) => setTimeRange(e.target.value as TimeRange)}
-            className="bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-primary"
-          >
-            <option value="weekly">This Week</option>
-            <option value="monthly">This Month</option>
-            <option value="yearly">This Year</option>
-            <option value="custom">Custom Range</option>
-          </select>
+          <div className="flex items-center gap-3">
+            {timeRange === 'custom' && (
+              <div className="flex items-center gap-2 mr-2">
+                <label className="text-sm font-medium text-secondary">From:</label>
+                <input
+                  type="date"
+                  className="bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-primary"
+                  value={startDate}
+                  onChange={(e) => setCustomDateRange(e.target.value, endDate)}
+                  aria-label="Start Date"
+                />
+                <label className="text-sm font-medium text-secondary ml-1">To:</label>
+                <input
+                  type="date"
+                  className="bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-primary"
+                  value={endDate}
+                  onChange={(e) => setCustomDateRange(startDate, e.target.value)}
+                  aria-label="End Date"
+                />
+              </div>
+            )}
+            <select 
+              value={timeRange} 
+              onChange={(e) => {
+                setTimeRange(e.target.value as TimeRange);
+                if (e.target.value !== 'custom') {
+                  setCustomDateRange('', '');
+                }
+              }}
+              className="bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-primary"
+            >
+              <option value="weekly">This Week</option>
+              <option value="monthly">This Month</option>
+              <option value="yearly">This Year</option>
+              <option value="custom">Custom Range</option>
+            </select>
+          </div>
         </div>
       </div>
 

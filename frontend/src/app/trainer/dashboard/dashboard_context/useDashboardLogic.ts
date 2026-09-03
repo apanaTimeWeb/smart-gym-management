@@ -14,6 +14,13 @@ export function useDashboardLogic(initialData?: DashboardStats | null): Dashboar
   const [status, setStatus] = useState<FetchState>(initialData ? 'success' : 'loading');
   const [error, setError] = useState('');
   const [timeRange, setTimeRange] = useState<TimeRange>('monthly');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+
+  const setCustomDateRange = (start: string, end: string) => {
+    setStartDate(start);
+    setEndDate(end);
+  };
 
   // Fetch only when no SSR initialData was passed from page.tsx; initialData in deps prevents re-fetch on SSR hydration
   useEffect(() => {
@@ -36,6 +43,9 @@ export function useDashboardLogic(initialData?: DashboardStats | null): Dashboar
     status,
     error,
     timeRange,
-    setTimeRange
+    setTimeRange,
+    startDate,
+    endDate,
+    setCustomDateRange
   };
 }
