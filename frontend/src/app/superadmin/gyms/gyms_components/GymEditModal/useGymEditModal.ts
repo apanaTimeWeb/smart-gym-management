@@ -15,6 +15,9 @@ const gymEditSchema = z.object({
   ownerName: z.string().min(1, 'Owner Name is required'),
   adminEmail: z.string().email('Invalid email address'),
   plan: z.string().min(1, 'Please select a plan'),
+  temporaryPassword: z.string().optional().refine(val => !val || val.length >= 8, {
+    message: "Password must be at least 8 characters",
+  }),
 });
 
 type GymEditFormValues = z.infer<typeof gymEditSchema>;
@@ -45,6 +48,7 @@ export function useGymEditModal() {
         ownerName: selectedGym.ownerName,
         adminEmail: selectedGym.adminEmail,
         plan: selectedGym.plan,
+        temporaryPassword: '',
       });
     }
   }, [selectedGym, isEditModalOpen, reset]);

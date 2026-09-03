@@ -2,8 +2,8 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useHrContext } from '@/app/manager/hr/hr_context/HrContext';
-import { STAFF_MODAL_FIELDS, EMPTY_STAFF, GENDER_OPTIONS, BRANCH_OPTIONS, StaffSchema, type StaffFormValues, STAFF_ROLE_OPTIONS } from '@/app/manager/hr/hr_utils/HrSharedConstants';
+import { useHrContext } from '@/app/admin/hr/hr_context/HrContext';
+import { STAFF_MODAL_FIELDS, EMPTY_STAFF, GENDER_OPTIONS, BRANCH_OPTIONS, StaffSchema, type StaffFormValues, STAFF_ROLE_OPTIONS } from '@/app/admin/hr/hr_utils/HrSharedConstants';
 import { X, Save } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

@@ -1,18 +1,18 @@
 // RESPONSIBILITY: Renders the paginated staff members table with sortable columns and inline row actions.
 'use client';
 
-import { useHrContext } from '@/app/manager/hr/hr_context/HrContext';
-import { STAFF_TABLE_HEADERS } from '@/app/manager/hr/hr_utils/HrSharedConstants';
+import { useHrContext } from '@/app/admin/hr/hr_context/HrContext';
+import { STAFF_TABLE_HEADERS } from '@/app/admin/hr/hr_utils/HrSharedConstants';
 import { Edit2, Trash2 } from 'lucide-react';
-import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
-import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
+import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
+import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_utils/AdminSharedConstants';
 
 export default function StaffTable() {
   const { staff, summary, fetchState, debouncedSearch, currentPage, setCurrentPage, openEdit, deleteStaff } = useHrContext();
 
   // Remove client-side filtering; API handles it now.
     const totalStaff = summary?.totalStaff || staff.length;
-  const totalPages = Math.ceil(totalStaff / MANAGER_ITEMS_PER_PAGE) || 1;
+  const totalPages = Math.ceil(totalStaff / ADMIN_ITEMS_PER_PAGE) || 1;
 
   if (fetchState === 'loading') {
     return (
@@ -124,11 +124,11 @@ export default function StaffTable() {
           </tbody>
         </table>
       </div>
-      <ManagerPagination 
+      <AdminPagination 
         currentPage={currentPage} 
         totalPages={totalPages} 
         totalItems={totalStaff} 
-        itemsPerPage={MANAGER_ITEMS_PER_PAGE} 
+        itemsPerPage={ADMIN_ITEMS_PER_PAGE} 
         onPageChange={setCurrentPage} 
       />
     </div>

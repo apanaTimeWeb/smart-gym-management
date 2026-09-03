@@ -4,7 +4,7 @@
 import React from 'react';
 import { Controller } from 'react-hook-form';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import { X } from 'lucide-react';
+import { X, Eye, EyeOff } from 'lucide-react';
 import { useGymEditModal } from '@/app/superadmin/gyms/gyms_components/GymEditModal/useGymEditModal';
 
 export default function GymEditModal() {
@@ -21,6 +21,8 @@ export default function GymEditModal() {
     errors,
     isSubmitting,
   } = useGymEditModal();
+
+  const [showPassword, setShowPassword] = React.useState(false);
 
   if (!isEditModalOpen || !selectedGym) return null;
 
@@ -66,6 +68,27 @@ export default function GymEditModal() {
               className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-border-focus focus:outline-none transition-colors"
             />
             {errors.adminEmail && <p className="text-xs text-destructive mt-1">{errors.adminEmail.message}</p>}
+          </div>
+
+          <div>
+            <label className="block text-sm font-bold text-secondary mb-1">Reset Password <span className="font-normal">(Optional)</span></label>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                {...register('temporaryPassword')}
+                className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-border-focus focus:outline-none transition-colors pr-10"
+                placeholder="Leave blank to keep current"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-foreground transition-colors"
+                aria-label="Toggle password visibility"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+            {errors.temporaryPassword && <p className="text-xs text-destructive mt-1">{errors.temporaryPassword.message}</p>}
           </div>
 
           <div>
