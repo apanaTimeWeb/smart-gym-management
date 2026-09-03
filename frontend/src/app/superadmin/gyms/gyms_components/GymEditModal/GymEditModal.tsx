@@ -41,33 +41,33 @@ export default function GymEditModal() {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="block text-sm font-bold text-secondary mb-1">Gym Name <span className="text-destructive">*</span></label>
+            <label className="block text-sm font-bold text-secondary mb-1">Gym Name <span className="text-danger">*</span></label>
             <input
               type="text"
               {...register('name')}
               className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-border-focus focus:outline-none transition-colors"
             />
-            {errors.name && <p className="text-xs text-destructive mt-1">{errors.name.message}</p>}
+            {errors.name && <p className="text-xs text-danger mt-1">{errors.name.message}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-secondary mb-1">Owner Name <span className="text-destructive">*</span></label>
+            <label className="block text-sm font-bold text-secondary mb-1">Owner Name <span className="text-danger">*</span></label>
             <input
               type="text"
               {...register('ownerName')}
               className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-border-focus focus:outline-none transition-colors"
             />
-            {errors.ownerName && <p className="text-xs text-destructive mt-1">{errors.ownerName.message}</p>}
+            {errors.ownerName && <p className="text-xs text-danger mt-1">{errors.ownerName.message}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-secondary mb-1">Admin Email <span className="text-destructive">*</span></label>
+            <label className="block text-sm font-bold text-secondary mb-1">Admin Email <span className="text-danger">*</span></label>
             <input
               type="email"
               {...register('adminEmail')}
               className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-border-focus focus:outline-none transition-colors"
             />
-            {errors.adminEmail && <p className="text-xs text-destructive mt-1">{errors.adminEmail.message}</p>}
+            {errors.adminEmail && <p className="text-xs text-danger mt-1">{errors.adminEmail.message}</p>}
           </div>
 
           <div>
@@ -88,11 +88,11 @@ export default function GymEditModal() {
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
-            {errors.temporaryPassword && <p className="text-xs text-destructive mt-1">{errors.temporaryPassword.message}</p>}
+            {errors.temporaryPassword && <p className="text-xs text-danger mt-1">{errors.temporaryPassword.message}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-secondary mb-1">Subscription Plan <span className="text-destructive">*</span></label>
+            <label className="block text-sm font-bold text-secondary mb-1">Subscription Plan <span className="text-danger">*</span></label>
             <Controller
               name="plan"
               control={control}
@@ -106,7 +106,7 @@ export default function GymEditModal() {
                 />
               )}
             />
-            {errors.plan && <p className="text-xs text-destructive mt-1">{errors.plan.message}</p>}
+            {errors.plan && <p className="text-xs text-danger mt-1">{errors.plan.message}</p>}
           </div>
 
           <div className="flex justify-end gap-3 pt-4 mt-6">

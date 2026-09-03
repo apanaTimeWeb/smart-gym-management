@@ -34,7 +34,7 @@ export default function GymDeleteModal() {
 
         <div className="flex items-center gap-3 mb-4">
           <div className="bg-danger-bg p-2 rounded-full">
-            <AlertTriangle className="w-6 h-6 text-destructive" />
+            <AlertTriangle className="w-6 h-6 text-danger" />
           </div>
           <h2 className="text-lg font-bold text-foreground">Delete Tenant</h2>
         </div>
@@ -69,7 +69,7 @@ export default function GymDeleteModal() {
           <button
             type="button"
             onClick={handleConfirmDelete}
-            className="px-5 py-2.5 rounded-lg text-sm font-medium text-white bg-destructive hover:bg-destructive/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-5 py-2.5 rounded-lg text-sm font-medium text-white bg-danger-bg hover:bg-danger-bg/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={!isDeleteEnabled}
           >
             {isDeleting ? 'Deleting...' : 'Confirm Delete'}

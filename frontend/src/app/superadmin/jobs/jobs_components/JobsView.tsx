@@ -11,7 +11,7 @@ import SuperadminPagination from '@/app/superadmin/superadmin_components/Superad
 const StatusColors: Record<BackgroundJob['status'], string> = {
   ACTIVE: 'text-primary bg-primary/10',
   COMPLETED: 'text-success bg-success/10',
-  FAILED: 'text-destructive bg-destructive/10',
+  FAILED: 'text-danger bg-danger-bg/10',
   DELAYED: 'text-warning bg-warning/10'
 };
 
@@ -39,7 +39,7 @@ export default function JobsView() {
   };
 
   if (fetchState === 'loading') return <div className="p-8 text-center text-disabled">Loading...</div>;
-  if (error || !responseData) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
+  if (error || !responseData) return <div className="p-8 text-center text-danger">Error loading data.</div>;
 
   const { jobs: DUMMY_BACKGROUND_JOBS, metrics } = responseData;
 
@@ -56,7 +56,7 @@ export default function JobsView() {
         <button 
           onClick={handleRetryAll}
           disabled={isRetrying}
-          className="bg-destructive/10 text-destructive px-4 py-2 rounded-lg font-medium hover:bg-destructive hover:text-white transition-colors flex items-center gap-2 border border-destructive/20 hover:border-transparent disabled:opacity-50"
+          className="bg-danger-bg/10 text-danger px-4 py-2 rounded-lg font-medium hover:bg-danger-bg hover:text-white transition-colors flex items-center gap-2 border border-destructive/20 hover:border-transparent disabled:opacity-50"
         >
           <RefreshCw size={16} className={isRetrying ? "animate-spin" : ""} /> Retry All Failed
         </button>
@@ -66,7 +66,7 @@ export default function JobsView() {
         {[
           { label: 'Active Jobs', value: metrics?.activeJobs || 0, icon: Play, color: 'text-primary' },
           { label: 'Completed (24h)', value: metrics?.completed24h || 0, icon: Activity, color: 'text-success' },
-          { label: 'Failed (24h)', value: metrics?.failed24h || 0, icon: XCircle, color: 'text-destructive' },
+          { label: 'Failed (24h)', value: metrics?.failed24h || 0, icon: XCircle, color: 'text-danger' },
           { label: 'Delayed', value: metrics?.delayed || 0, icon: AlertTriangle, color: 'text-warning' }
         ].map(stat => (
           <div key={stat.label} className="bg-card border border-border rounded-xl p-4 flex items-center gap-4">
@@ -107,7 +107,7 @@ export default function JobsView() {
                     </span>
                   </td>
                   <td className="p-4 text-sm text-secondary font-mono">{job.attempts}</td>
-                  <td className="p-4 text-xs text-destructive max-w-xs truncate" title={job.error}>
+                  <td className="p-4 text-xs text-danger max-w-xs truncate" title={job.error}>
                     {job.error || '-'}
                   </td>
                   <td className="p-4 text-right">

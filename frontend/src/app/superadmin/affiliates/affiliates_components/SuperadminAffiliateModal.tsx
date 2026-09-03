@@ -41,34 +41,34 @@ export const SuperadminAffiliateModal: React.FC<SuperadminAffiliateModalProps> =
         
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col p-7 gap-5 overflow-y-auto max-h-[70vh] custom-scrollbar">
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-bold text-secondary">Partner Name <span className="text-destructive">*</span></label>
+            <label className="text-sm font-bold text-secondary">Partner Name <span className="text-danger">*</span></label>
             <input 
               {...register('name')}
               className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus transition-colors"
               placeholder="e.g. Fitness Gurus LLC"
             />
-            {errors.name && <span className="text-xs text-destructive">{errors.name.message}</span>}
+            {errors.name && <span className="text-xs text-danger">{errors.name.message}</span>}
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-bold text-secondary">Email Address <span className="text-destructive">*</span></label>
+            <label className="text-sm font-bold text-secondary">Email Address <span className="text-danger">*</span></label>
             <input 
               type="email" 
               {...register('email')}
               className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus transition-colors"
               placeholder="partner@example.com"
             />
-            {errors.email && <span className="text-xs text-destructive">{errors.email.message}</span>}
+            {errors.email && <span className="text-xs text-danger">{errors.email.message}</span>}
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-bold text-secondary">Custom Referral Code <span className="text-destructive">*</span></label>
+            <label className="text-sm font-bold text-secondary">Custom Referral Code <span className="text-danger">*</span></label>
             <input 
               {...register('referralCode')}
               className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground font-mono uppercase focus:outline-none focus:border-border-focus transition-colors"
               placeholder="e.g. PARTNER2026"
             />
-            {errors.referralCode && <span className="text-xs text-destructive">{errors.referralCode.message}</span>}
+            {errors.referralCode && <span className="text-xs text-danger">{errors.referralCode.message}</span>}
             <p className="text-xs text-secondary">Gyms using this code at checkout will be tracked to this partner.</p>
           </div>
 

@@ -100,7 +100,7 @@ export default function GymsTable() {
                         <CheckCircle2 className="w-3 h-3" /> Active
                       </span>
                     ) : gym.status === 'SUSPENDED' ? (
-                      <span className="flex items-center gap-1 text-destructive text-xs font-semibold bg-danger-bg px-2.5 py-1 rounded-full border border-destructive/20">
+                      <span className="flex items-center gap-1 text-danger text-xs font-semibold bg-danger-bg px-2.5 py-1 rounded-full border border-destructive/20">
                         <Ban className="w-3 h-3" /> Suspended
                       </span>
                     ) : (
@@ -129,7 +129,7 @@ export default function GymsTable() {
                           className={`p-1.5 rounded-lg transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page ${
                             gym.status === 'SUSPENDED' 
                               ? 'text-success hover:bg-success/10' 
-                              : 'text-destructive hover:bg-destructive/10'
+                              : 'text-danger hover:bg-danger-bg/10'
                           }`}
                           title={gym.status === 'SUSPENDED' ? 'Activate Tenant' : 'Suspend Tenant'}
                           aria-label={gym.status === 'SUSPENDED' ? `Activate ${gym.name}` : `Suspend ${gym.name}`}
@@ -154,7 +154,7 @@ export default function GymsTable() {
                         </button>
                         <button 
                           onClick={(e) => onDeleteClick(e, gym)}
-                          className="p-1.5 text-secondary hover:bg-destructive/10 hover:text-destructive rounded-lg transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
+                          className="p-1.5 text-secondary hover:bg-danger-bg/10 hover:text-danger rounded-lg transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
                           title="Delete Gym"
                           aria-label={`Delete ${gym.name}`}
                         >

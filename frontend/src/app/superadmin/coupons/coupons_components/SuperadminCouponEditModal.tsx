@@ -7,7 +7,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { CouponSchema, CouponFormData } from '@/app/superadmin/coupons/coupons_types/coupons_types';
-import { Coupon } from '@/app/superadmin/coupons/coupons_types/coupons_types';
+import type { Coupon } from '@/app/superadmin/coupons/coupons_types/coupons_types';
 
 interface SuperadminCouponEditModalProps {
   isOpen: boolean;
@@ -58,18 +58,18 @@ export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps>
         
         <form onSubmit={handleSubmit(onFormSubmit)} className="flex flex-col p-7 gap-5 overflow-y-auto max-h-[70vh] custom-scrollbar">
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-bold text-secondary">Coupon Code <span className="text-destructive">*</span></label>
+            <label className="text-sm font-bold text-secondary">Coupon Code <span className="text-danger">*</span></label>
             <input 
               {...register('code')}
               className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground font-mono uppercase focus:outline-none focus:border-border-focus transition-colors"
               placeholder="e.g. SUMMER2026"
             />
-            {errors.code && <span className="text-xs text-destructive">{errors.code.message}</span>}
+            {errors.code && <span className="text-xs text-danger">{errors.code.message}</span>}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-bold text-secondary">Discount Type <span className="text-destructive">*</span></label>
+              <label className="text-sm font-bold text-secondary">Discount Type <span className="text-danger">*</span></label>
               <Controller
                 name="discountType"
                 control={control}
@@ -84,12 +84,12 @@ export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps>
                   />
                 )}
               />
-              {errors.discountType && <span className="text-xs text-destructive">{errors.discountType.message}</span>}
+              {errors.discountType && <span className="text-xs text-danger">{errors.discountType.message}</span>}
             </div>
 
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-bold text-secondary">
-                {watch('discountType') === 'PERCENTAGE' ? 'Discount %' : 'Discount Amount'} <span className="text-destructive">*</span>
+                {watch('discountType') === 'PERCENTAGE' ? 'Discount %' : 'Discount Amount'} <span className="text-danger">*</span>
               </label>
               <div className="relative">
                 {watch('discountType') === 'EXACT' && (
@@ -104,11 +104,11 @@ export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps>
                   placeholder={watch('discountType') === 'PERCENTAGE' ? '25' : '500'}
                 />
               </div>
-              {errors.discountValue && <span className="text-xs text-destructive">{errors.discountValue.message}</span>}
+              {errors.discountValue && <span className="text-xs text-danger">{errors.discountValue.message}</span>}
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-bold text-secondary">Max Uses <span className="text-destructive">*</span></label>
+              <label className="text-sm font-bold text-secondary">Max Uses <span className="text-danger">*</span></label>
               <input 
                 type="number" 
                 onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }}
@@ -117,18 +117,18 @@ export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps>
                 className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus transition-colors"
                 placeholder="100"
               />
-              {errors.maxUses && <span className="text-xs text-destructive">{errors.maxUses.message}</span>}
+              {errors.maxUses && <span className="text-xs text-danger">{errors.maxUses.message}</span>}
             </div>
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-bold text-secondary">Expiry Date <span className="text-destructive">*</span></label>
+            <label className="text-sm font-bold text-secondary">Expiry Date <span className="text-danger">*</span></label>
             <input 
               type="date" 
               {...register('expiryDate')}
               className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus transition-colors"
             />
-            {errors.expiryDate && <span className="text-xs text-destructive">{errors.expiryDate.message}</span>}
+            {errors.expiryDate && <span className="text-xs text-danger">{errors.expiryDate.message}</span>}
           </div>
 
           <div className="flex justify-end gap-3 mt-2 pt-5 border-t border-border">

@@ -21,7 +21,7 @@ export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEd
     >
       <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-foreground tracking-wide">
         {cpn.code}
-        {cpn.isDeleted && <span className="ml-2 text-xs bg-destructive/20 text-destructive px-2 py-0.5 rounded-full">DELETED</span>}
+        {cpn.isDeleted && <span className="ml-2 text-xs bg-danger-bg/20 text-danger px-2 py-0.5 rounded-full">DELETED</span>}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary">
         {cpn.discountType === 'PERCENTAGE'
@@ -71,7 +71,7 @@ export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEd
               title="Delete Coupon"
               aria-label="Delete Coupon"
               onClick={(e) => { e.stopPropagation(); onDelete(cpn.id); }}
-              className="text-secondary hover:text-destructive transition-colors p-1.5 bg-input hover:bg-destructive/10 rounded-md border border-border"
+              className="text-secondary hover:text-danger transition-colors p-1.5 bg-input hover:bg-danger-bg/10 rounded-md border border-border"
             >
               <Trash2 className="w-4 h-4" />
             </button>

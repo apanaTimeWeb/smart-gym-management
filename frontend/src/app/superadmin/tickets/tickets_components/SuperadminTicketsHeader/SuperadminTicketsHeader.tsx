@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Renders the header and filter/search controls for Support Tickets
 import { Search, Filter } from 'lucide-react';
-import { TicketStatus, TicketPriority } from '@/app/superadmin/tickets/tickets_types/tickets_types';
+import type { TicketStatus, TicketPriority } from '@/app/superadmin/tickets/tickets_types/tickets_types';
 
 interface SuperadminTicketsHeaderProps {
   search: string;

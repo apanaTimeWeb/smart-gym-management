@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { useGymsStore } from '@/app/superadmin/gyms/gyms_store/useGymsStore';
 import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
-import { SubscriptionPlan } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { SubscriptionPlan } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 const gymEditSchema = z.object({
   name: z.string().min(1, 'Gym Name is required'),

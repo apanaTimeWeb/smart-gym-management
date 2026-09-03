@@ -6,7 +6,7 @@ import type { SaaSInvoice } from '@/app/superadmin/invoices/invoices_types/invoi
 const STATUS_COLORS: Record<SaaSInvoice['status'], string> = {
   PAID: 'text-success bg-success/10',
   PENDING: 'text-warning bg-warning/10',
-  FAILED: 'text-destructive bg-destructive/10',
+  FAILED: 'text-danger bg-danger-bg/10',
 };
 
 interface InvoicesTableRowProps {

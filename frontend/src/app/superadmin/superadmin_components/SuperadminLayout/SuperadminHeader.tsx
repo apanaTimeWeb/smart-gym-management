@@ -75,7 +75,7 @@ export default function SuperadminHeader() {
               </div>
               <div className="border-t border-border py-1 bg-header">
                 <button
-                  className="w-full flex items-center gap-2 px-4 py-2 text-sm text-destructive hover:bg-danger-bg font-medium transition-colors"
+                  className="w-full flex items-center gap-2 px-4 py-2 text-sm text-danger hover:bg-danger-bg font-medium transition-colors"
                   onClick={async () => {
                     setShowProfile(false);
                     await logout();

@@ -34,25 +34,25 @@ export default function GymEmailModal() {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="block text-sm font-bold text-secondary mb-1">Subject <span className="text-destructive">*</span></label>
+            <label className="block text-sm font-bold text-secondary mb-1">Subject <span className="text-danger">*</span></label>
             <input
               type="text"
               {...register('subject')}
               className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-border-focus focus:outline-none transition-colors"
               placeholder="e.g., Important update about your subscription"
             />
-            {errors.subject && <p className="text-xs text-destructive mt-1">{errors.subject.message}</p>}
+            {errors.subject && <p className="text-xs text-danger mt-1">{errors.subject.message}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-secondary mb-1">Message <span className="text-destructive">*</span></label>
+            <label className="block text-sm font-bold text-secondary mb-1">Message <span className="text-danger">*</span></label>
             <textarea
               {...register('message')}
               rows={5}
               className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-border-focus focus:outline-none transition-colors resize-none"
               placeholder="Type your message here..."
             />
-            {errors.message && <p className="text-xs text-destructive mt-1">{errors.message.message}</p>}
+            {errors.message && <p className="text-xs text-danger mt-1">{errors.message.message}</p>}
           </div>
 
           <div className="flex justify-end gap-3 pt-4 mt-6">

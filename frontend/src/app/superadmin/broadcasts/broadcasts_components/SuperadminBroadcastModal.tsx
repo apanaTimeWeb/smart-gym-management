@@ -4,7 +4,7 @@
 import React from 'react';
 import { X } from 'lucide-react';
 import { UseFormReturn, Controller } from 'react-hook-form';
-import { BroadcastFormData } from '@/app/superadmin/broadcasts/broadcasts_types/broadcasts_types';
+import type { BroadcastFormData } from '@/app/superadmin/broadcasts/broadcasts_types/broadcasts_types';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 
 interface SuperadminBroadcastModalProps {
@@ -39,29 +39,29 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
         
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col p-7 gap-5 overflow-y-auto max-h-[70vh] custom-scrollbar">
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-bold text-secondary">Broadcast Title <span className="text-destructive">*</span></label>
+            <label className="text-sm font-bold text-secondary">Broadcast Title <span className="text-danger">*</span></label>
             <input 
               {...register('title')}
               className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus transition-colors"
               placeholder="e.g. Scheduled Maintenance"
             />
-            {errors.title && <span className="text-xs text-destructive">{errors.title.message}</span>}
+            {errors.title && <span className="text-xs text-danger">{errors.title.message}</span>}
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-bold text-secondary">Message Content <span className="text-destructive">*</span></label>
+            <label className="text-sm font-bold text-secondary">Message Content <span className="text-danger">*</span></label>
             <textarea 
               {...register('content')}
               rows={4}
               className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus transition-colors resize-none"
               placeholder="Write your announcement here..."
             />
-            {errors.content && <span className="text-xs text-destructive">{errors.content.message}</span>}
+            {errors.content && <span className="text-xs text-danger">{errors.content.message}</span>}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-bold text-secondary">Audience <span className="text-destructive">*</span></label>
+              <label className="text-sm font-bold text-secondary">Audience <span className="text-danger">*</span></label>
               <Controller
                 name="audience"
                 control={form.control}
@@ -77,11 +77,11 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
                   />
                 )}
               />
-              {errors.audience && <span className="text-xs text-destructive">{errors.audience.message}</span>}
+              {errors.audience && <span className="text-xs text-danger">{errors.audience.message}</span>}
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-bold text-secondary">Status <span className="text-destructive">*</span></label>
+              <label className="text-sm font-bold text-secondary">Status <span className="text-danger">*</span></label>
               <Controller
                 name="status"
                 control={form.control}
@@ -97,19 +97,19 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
                   />
                 )}
               />
-              {errors.status && <span className="text-xs text-destructive">{errors.status.message}</span>}
+              {errors.status && <span className="text-xs text-danger">{errors.status.message}</span>}
             </div>
           </div>
 
           {status === 'SCHEDULED' && (
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-bold text-secondary">Scheduled Date & Time <span className="text-destructive">*</span></label>
+              <label className="text-sm font-bold text-secondary">Scheduled Date & Time <span className="text-danger">*</span></label>
               <input 
                 type="datetime-local" 
                 {...register('scheduledDate')}
                 className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus transition-colors"
               />
-              {errors.scheduledDate && <span className="text-xs text-destructive">{errors.scheduledDate.message}</span>}
+              {errors.scheduledDate && <span className="text-xs text-danger">{errors.scheduledDate.message}</span>}
             </div>
           )}
 

@@ -49,7 +49,7 @@ export default function AddGymForm() {
                   className="w-full bg-card border border-border text-foreground rounded-lg px-4 py-2 focus:outline-none focus:border-border-focus transition-colors"
                   placeholder="e.g. Titan Fitness"
                 />
-                {errors.gymName && <p className="text-destructive text-xs">{errors.gymName.message}</p>}
+                {errors.gymName && <p className="text-danger text-xs">{errors.gymName.message}</p>}
               </div>
 
               <div className="space-y-2">
@@ -59,7 +59,7 @@ export default function AddGymForm() {
                   className="w-full bg-card border border-border text-foreground rounded-lg px-4 py-2 focus:outline-none focus:border-border-focus transition-colors"
                   placeholder="e.g. John Doe"
                 />
-                {errors.ownerName && <p className="text-destructive text-xs">{errors.ownerName.message}</p>}
+                {errors.ownerName && <p className="text-danger text-xs">{errors.ownerName.message}</p>}
               </div>
 
               <div className="space-y-2">
@@ -70,7 +70,7 @@ export default function AddGymForm() {
                   className="w-full bg-card border border-border text-foreground rounded-lg px-4 py-2 focus:outline-none focus:border-border-focus transition-colors"
                   placeholder="admin@titanfitness.com"
                 />
-                {errors.adminEmail && <p className="text-destructive text-xs">{errors.adminEmail.message}</p>}
+                {errors.adminEmail && <p className="text-danger text-xs">{errors.adminEmail.message}</p>}
               </div>
 
               <div className="space-y-2">
@@ -80,7 +80,7 @@ export default function AddGymForm() {
                   className="w-full bg-card border border-border text-foreground rounded-lg px-4 py-2 focus:outline-none focus:border-border-focus transition-colors"
                   placeholder="+1 555-0000"
                 />
-                {errors.phone && <p className="text-destructive text-xs">{errors.phone.message}</p>}
+                {errors.phone && <p className="text-danger text-xs">{errors.phone.message}</p>}
               </div>
               
               <div className="space-y-2">
@@ -100,7 +100,7 @@ export default function AddGymForm() {
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
-                {errors.temporaryPassword && <p className="text-destructive text-xs">{errors.temporaryPassword.message}</p>}
+                {errors.temporaryPassword && <p className="text-danger text-xs">{errors.temporaryPassword.message}</p>}
               </div>
 
               <div className="space-y-2">
@@ -118,7 +118,7 @@ export default function AddGymForm() {
                     />
                   )}
                 />
-                {errors.plan && <p className="text-destructive text-xs">{errors.plan.message}</p>}
+                {errors.plan && <p className="text-danger text-xs">{errors.plan.message}</p>}
               </div>
             </div>
 

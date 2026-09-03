@@ -4,7 +4,7 @@
 import React from 'react';
 import { X } from 'lucide-react';
 import { UseFormReturn, Controller } from 'react-hook-form';
-import { CouponFormData } from '@/app/superadmin/coupons/coupons_types/coupons_types';
+import type { CouponFormData } from '@/app/superadmin/coupons/coupons_types/coupons_types';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 
 interface SuperadminCouponModalProps {
@@ -44,12 +44,12 @@ export const SuperadminCouponModal: React.FC<SuperadminCouponModalProps> = ({
               className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground font-mono uppercase focus:outline-none focus:border-border-focus transition-colors"
               placeholder="Leave blank to auto-generate"
             />
-            {form.formState.errors.code && <span className="text-xs text-destructive">{form.formState.errors.code.message}</span>}
+            {form.formState.errors.code && <span className="text-xs text-danger">{form.formState.errors.code.message}</span>}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-bold text-secondary">Discount Type <span className="text-destructive">*</span></label>
+              <label className="text-sm font-bold text-secondary">Discount Type <span className="text-danger">*</span></label>
               <Controller
                 name="discountType"
                 control={form.control}
@@ -64,12 +64,12 @@ export const SuperadminCouponModal: React.FC<SuperadminCouponModalProps> = ({
                   />
                 )}
               />
-              {form.formState.errors.discountType && <span className="text-xs text-destructive">{form.formState.errors.discountType.message}</span>}
+              {form.formState.errors.discountType && <span className="text-xs text-danger">{form.formState.errors.discountType.message}</span>}
             </div>
 
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-bold text-secondary">
-                {form.watch('discountType') === 'PERCENTAGE' ? 'Discount %' : 'Discount Amount'} <span className="text-destructive">*</span>
+                {form.watch('discountType') === 'PERCENTAGE' ? 'Discount %' : 'Discount Amount'} <span className="text-danger">*</span>
               </label>
               <div className="relative">
                 {form.watch('discountType') === 'EXACT' && (
@@ -84,13 +84,13 @@ export const SuperadminCouponModal: React.FC<SuperadminCouponModalProps> = ({
                   placeholder={form.watch('discountType') === 'PERCENTAGE' ? '25' : '500'}
                 />
               </div>
-              {form.formState.errors.discountValue && <span className="text-xs text-destructive">{form.formState.errors.discountValue.message}</span>}
+              {form.formState.errors.discountValue && <span className="text-xs text-danger">{form.formState.errors.discountValue.message}</span>}
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-bold text-secondary">Max Uses <span className="text-destructive">*</span></label>
+              <label className="text-sm font-bold text-secondary">Max Uses <span className="text-danger">*</span></label>
               <input 
                 type="number" 
                 onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }}
@@ -99,18 +99,18 @@ export const SuperadminCouponModal: React.FC<SuperadminCouponModalProps> = ({
                 className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus transition-colors"
                 placeholder="100"
               />
-              {form.formState.errors.maxUses && <span className="text-xs text-destructive">{form.formState.errors.maxUses.message}</span>}
+              {form.formState.errors.maxUses && <span className="text-xs text-danger">{form.formState.errors.maxUses.message}</span>}
             </div>
             
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-bold text-secondary">Expiry Date <span className="text-destructive">*</span></label>
+              <label className="text-sm font-bold text-secondary">Expiry Date <span className="text-danger">*</span></label>
               <input 
                 type="date" 
                 min={new Date().toISOString().split('T')[0]}
                 {...form.register('expiryDate')}
                 className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus transition-colors"
               />
-              {form.formState.errors.expiryDate && <span className="text-xs text-destructive">{form.formState.errors.expiryDate.message}</span>}
+              {form.formState.errors.expiryDate && <span className="text-xs text-danger">{form.formState.errors.expiryDate.message}</span>}
             </div>
           </div>
 

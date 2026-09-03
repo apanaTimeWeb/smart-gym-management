@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { useTicketsData } from '@/app/superadmin/tickets/tickets_utils/useTicketsData';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
-import { SupportTicket, TicketStatus, TicketPriority } from '@/app/superadmin/tickets/tickets_types/tickets_types';
+import type { SupportTicket, TicketStatus, TicketPriority } from '@/app/superadmin/tickets/tickets_types/tickets_types';
 
 export function useSuperadminTickets() {
   const { data: DUMMY_SUPPORT_TICKETS, fetchState, error } = useTicketsData<SupportTicket[]>(SuperadminUrlConfig.BACKEND_API.TICKETS_BASE);
