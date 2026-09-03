@@ -2,12 +2,11 @@
 import { z } from 'zod';
 
 export const StaffSchema = z.object({
-  name: z.string().min(2, "Name is required"),
+  name: z.string().min(2, "Name is required").regex(/^[A-Za-z\s]+$/, "Only alphabets allowed"),
   email: z.string().email("Invalid email address"),
-  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  phone: z.string().regex(/^\d{10}$/, "Phone number must be exactly 10 digits"),
   role: z.string().min(2, "Role is required"),
   salary: z.number().min(0, "Salary must be positive"),
-  branch: z.string(),
   gender: z.enum(['MALE', 'FEMALE', 'OTHER']),
   address: z.string().optional(),
   joinDate: z.string()
@@ -15,7 +14,7 @@ export const StaffSchema = z.object({
 
 export type StaffFormValues = z.infer<typeof StaffSchema>;
 
-export const HR_TABS = ['Staff'];
+export const HR_TABS = ['Staff', 'Payroll'];
 
 export const EMPTY_STAFF = { 
  name: '', 
@@ -23,7 +22,6 @@ export const EMPTY_STAFF = {
  phone: '', 
  role: '', 
  salary: 0, 
- branch: 'Main Branch', 
  gender: 'MALE', 
  address: '', 
  joinDate: new Date().toISOString().split('T')[0] 
@@ -40,14 +38,14 @@ export type PayrollFormValues = z.infer<typeof PayrollSchema>;
 
 export const EMPTY_PAYROLL_FORM = {
   staffId: '',
-  month: new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
+  month: new Date().toISOString().slice(0, 7),
   amount: 0,
   notes: ''
 } as unknown as PayrollFormValues;
 
-export const STAFF_TABLE_HEADERS = ['Name', 'Role', 'Phone', 'Branch', 'Salary', 'Joined', 'Actions'];
+export const STAFF_TABLE_HEADERS = ['Name', 'Role', 'Phone', 'Salary', 'Joined'];
 
-export const PAYROLL_TABLE_HEADERS = ['Staff', 'Month', 'Amount', 'Status', 'Paid On', 'Actions'];
+export const PAYROLL_TABLE_HEADERS = ['Staff', 'Month', 'Amount', 'Status', 'Paid On'];
 
 export const GENDER_OPTIONS = [
  { label: 'Male', value: 'MALE' },
@@ -57,10 +55,23 @@ export const GENDER_OPTIONS = [
 
 export const BRANCH_OPTIONS = ['Main Branch', 'Branch 2', 'Branch 3'];
 
+export const STAFF_ROLE_OPTIONS = [
+  { label: 'General Trainer', value: 'General Trainer' },
+  { label: 'Personal Trainer (PT)', value: 'Personal Trainer' },
+  { label: 'Gym Manager', value: 'Gym Manager' },
+  { label: 'Receptionist', value: 'Receptionist' },
+  { label: 'Sales Executive', value: 'Sales Executive' },
+  { label: 'Dietitian / Nutritionist', value: 'Nutritionist' },
+  { label: 'Group Class Instructor', value: 'Group Class Instructor' },
+  { label: 'Housekeeping / Helper', value: 'Housekeeping' },
+  { label: 'Maintenance Technician', value: 'Maintenance Technician' },
+  { label: 'Cafeteria Staff', value: 'Cafeteria Staff' },
+  { label: 'Other', value: 'Other' },
+];
+
 export const STAFF_MODAL_FIELDS = [
  { label: 'Full Name', key: 'name', type: 'text', placeholder: '' },
  { label: 'Email', key: 'email', type: 'email', placeholder: '' },
  { label: 'Phone', key: 'phone', type: 'tel', placeholder: '' },
- { label: 'Role', key: 'role', type: 'text', placeholder: 'Trainer, Receptionist, Manager...' },
  { label: 'Monthly Salary (₹)', key: 'salary', type: 'number', placeholder: '' },
 ];

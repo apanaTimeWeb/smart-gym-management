@@ -188,9 +188,11 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
     }
   }, [showToast]);
 
+  const [payrollMonth, setPayrollMonth] = useState(new Date().toISOString().slice(0, 7));
+
   return {
     staff, payrolls, summary, fetchState, error, toast, showToast, hideToast, loadAll,
     search, debouncedSearch, setSearch, currentPage, setCurrentPage,
-    showModal, setShowModal, showPayrollModal, setShowPayrollModal, editId, editData, saving, openAdd, openEdit, openAddPayroll, saveStaff, savePayroll, deleteStaff, markPayrollPaid
+    showModal, setShowModal, showPayrollModal, setShowPayrollModal, editId, editData, saving, openAdd, openEdit, openAddPayroll, saveStaff, savePayroll, deleteStaff, markPayrollPaid, payrollMonth, setPayrollMonth
   };
 }

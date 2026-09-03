@@ -15,7 +15,7 @@ export function InquiriesProvider({ children }: { children: React.ReactNode }) {
     inquiries, stats, fetchState, error, toast, totalInquiries,
     search, debouncedSearch, statusFilter, dateFilter, currentPage,
     showModal, editId, editData, saving, msgModal,
-    selectedIds, bulkMsgModal,
+    selectedIds, bulkMsgModal, convertLead,
   } = logic;
 
   // Memoize with explicit primitive deps to prevent re-render chains across micro-components
@@ -24,7 +24,7 @@ export function InquiriesProvider({ children }: { children: React.ReactNode }) {
     inquiries, stats, fetchState, error, toast, totalInquiries,
     search, debouncedSearch, statusFilter, dateFilter, currentPage,
     showModal, editId, editData, saving, msgModal,
-    selectedIds, bulkMsgModal,
+    selectedIds, bulkMsgModal, convertLead,
   ]);
 
   return (

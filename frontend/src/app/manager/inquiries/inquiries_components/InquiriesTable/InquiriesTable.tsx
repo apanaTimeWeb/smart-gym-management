@@ -144,6 +144,14 @@ export default function InquiriesTable() {
                         <Mail size={13} />
                       </button>
                       <button
+                        onClick={(e) => { e.stopPropagation(); updateStatus(inq.id, 'CONVERTED'); }}
+                        className="p-1.5 rounded-lg bg-primary-subtle text-primary hover:opacity-80 transition-all duration-200"
+                        title="Convert to Member"
+                        aria-label={`Convert ${inq.name} to Member`}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>
+                      </button>
+                      <button
                         onClick={(e) => { e.stopPropagation(); openEdit(inq); }}
                         className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle transition-all duration-200"
                         title="Edit"

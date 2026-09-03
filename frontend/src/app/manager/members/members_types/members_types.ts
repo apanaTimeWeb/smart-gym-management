@@ -50,8 +50,8 @@ export interface MembersContextType {
   // Member Profile
   selectedMember: Member | null;
   setSelectedMember: (m: Member | null) => void;
-  profileTab: 'overview' | 'attendance' | 'payments';
-  setProfileTab: (tab: 'overview' | 'attendance' | 'payments') => void;
+  profileTab: 'overview' | 'attendance' | 'payments' | 'workout' | 'diet';
+  setProfileTab: (tab: 'overview' | 'attendance' | 'payments' | 'workout' | 'diet') => void;
 
   // Add/Edit Modal
   showAddModal: boolean;

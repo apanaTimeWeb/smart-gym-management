@@ -1,28 +1,35 @@
-// RESPONSIBILITY: Renders a modal for creating or editing a member.
+// RESPONSIBILITY: Renders the Add Member form specifically for converting a lead within the Inquiries page.
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { X, Save } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import { useMembersContext } from '@/app/manager/members/members_context/MembersContext';
+import { useInquiriesContext } from '@/app/manager/inquiries/inquiries_context/InquiriesContext';
 import { useMembersStore } from '@/app/manager/members/members_store/useMembersStore';
 import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency, MemberSchema, type MemberFormValues, EMPTY_MEMBER_FORM, GENDER_OPTIONS } from '@/app/manager/members/members_utils/MembersSharedConstants';
 import type { PlanWithCustom } from '@/app/manager/members/members_types/members_types';
 
-export default function MemberModal() {
-  const {
-    showAddModal, setShowAddModal, editId, editData,
-    saveMember
-  } = useMembersContext();
-
+export default function ConvertLeadModal() {
+  const { convertLead, closeConvert, updateStatus } = useInquiriesContext();
+  
+  const loadAll = useMembersStore(s => s.loadAll);
+  const saveMember = useMembersStore(s => s.saveMember);
   const plans = useMembersStore(s => s.plans);
-  const saving = useMembersStore(s => s.saving);
+  const fetchState = useMembersStore(s => s.fetchState);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    // We only need plans to render the dropdown properly
+    if (convertLead && plans.length === 0 && fetchState !== 'loading') {
+      loadAll({ page: '1' }).catch(console.error);
+    }
+  }, [convertLead, plans.length, fetchState, loadAll]);
 
   const useFormReturn = useForm<MemberFormValues>({
     resolver: zodResolver(MemberSchema),
-    defaultValues: editData || EMPTY_MEMBER_FORM
+    defaultValues: EMPTY_MEMBER_FORM
   });
 
   const {
@@ -33,12 +40,16 @@ export default function MemberModal() {
     formState: { errors }
   } = useFormReturn;
 
-  // Refetch editData into form whenever modal opens for edit
   useEffect(() => {
-    if (showAddModal) {
-      reset({ ...EMPTY_MEMBER_FORM, ...(editData || {}) });
+    if (convertLead) {
+      reset({
+        ...EMPTY_MEMBER_FORM,
+        name: convertLead.name,
+        phone: convertLead.phone,
+        email: convertLead.email || '',
+      });
     }
-  }, [showAddModal, editData, reset]);
+  }, [convertLead, reset]);
 
   const watchPlanId = watch('planId') as string;
   const watchBillingCycle = watch('billingCycle') as string;
@@ -50,7 +61,7 @@ export default function MemberModal() {
       const selectedPlan = plans.find(p => p.id.toString() === watchPlanId.toString()) as PlanWithCustom | undefined;
       const price = getPriceForCycle(selectedPlan, watchBillingCycle, Number(watchCustomDays) || 0);
       useFormReturn.setValue('totalAmount', price, { shouldValidate: true });
-      useFormReturn.setValue('paidAmount', price, { shouldValidate: true }); // Default to fully paid
+      useFormReturn.setValue('paidAmount', price, { shouldValidate: true });
     }
   }, [watchPlanId, watchBillingCycle, watchCustomDays, plans, useFormReturn]);
 
@@ -70,14 +81,27 @@ export default function MemberModal() {
     }
   }, [watchJoinDate, watchBillingCycle, watchCustomDays, useFormReturn]);
 
-  const onSubmit = (data: MemberFormValues) => {
-    const total = data.totalAmount || 0;
-    const paid = data.paidAmount || 0;
-    const pendingAmount = total - paid;
-    saveMember({ ...data, pendingAmount });
+  const onSubmit = async (data: MemberFormValues) => {
+    setSaving(true);
+    try {
+      const total = data.totalAmount || 0;
+      const paid = data.paidAmount || 0;
+      const pendingAmount = total - paid;
+      await saveMember({ ...data, pendingAmount }, null);
+      
+      // Update the inquiry status to CONVERTED locally and via API
+      if (convertLead) {
+        await updateStatus(convertLead.id, 'CONVERTED');
+      }
+      closeConvert();
+    } catch (e) {
+      console.error('Failed to convert', e);
+    } finally {
+      setSaving(false);
+    }
   };
 
-  if (!showAddModal) return null;
+  if (!convertLead) return null;
 
   const selectedPlan = plans.find(p => p.id.toString() === watchPlanId?.toString()) as PlanWithCustom | undefined;
 
@@ -85,10 +109,10 @@ export default function MemberModal() {
     <div className="fixed inset-0 bg-black/60 z-40 flex items-center justify-center p-4">
       <div className="bg-card rounded-2xl shadow-2xl shadow-black/50 w-full max-w-2xl max-h-[90vh] overflow-y-auto border-2 border-warning">
         <div className="sticky top-0 px-8 py-5 border-b border-border bg-card flex items-center justify-between z-10">
-          <h3 className="text-xl font-bold text-foreground">{editId ? 'Edit Member' : 'Add New Member'}</h3>
+          <h3 className="text-xl font-bold text-foreground">Convert Lead to Member</h3>
           <button
             type="button"
-            onClick={() => setShowAddModal(false)}
+            onClick={closeConvert}
             className="p-2 rounded-full hover:bg-primary/10 transition-colors text-secondary hover:text-primary"
             aria-label="Close modal"
           >
@@ -149,6 +173,9 @@ export default function MemberModal() {
                   />
                 )}
               />
+              {errors.planId && (
+                <p className="text-danger text-xs mt-1.5">{errors.planId?.message as string}</p>
+              )}
             </div>
 
             <div>
@@ -241,7 +268,7 @@ export default function MemberModal() {
           <div className="flex justify-end gap-3 mt-8 pt-6 border-t border-border">
             <button
               type="button"
-              onClick={() => setShowAddModal(false)}
+              onClick={closeConvert}
               className="px-6 py-2.5 text-sm font-semibold rounded-xl border border-border text-secondary hover:bg-primary/5 hover:text-primary transition-colors"
             >
               Cancel
@@ -254,7 +281,7 @@ export default function MemberModal() {
               {saving ? (
                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               ) : (
-                <><Save size={16} /> {editId ? 'Update' : 'Add Member'}</>
+                <><Save size={16} /> Convert to Member</>
               )}
             </button>
           </div>

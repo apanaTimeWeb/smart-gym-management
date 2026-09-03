@@ -9,25 +9,27 @@ import AttendanceKPIs from '@/app/manager/attendance/attendance_components/Atten
 import AttendanceToolbar from '@/app/manager/attendance/attendance_components/AttendanceToolbar/AttendanceToolbar';
 import AttendanceTable from '@/app/manager/attendance/attendance_components/AttendanceTable/AttendanceTable';
 import AttendanceModal from '@/app/manager/attendance/attendance_components/AttendanceModal/AttendanceModal';
+import AttendanceCalendar from '@/app/manager/attendance/attendance_components/AttendanceCalendar/AttendanceCalendar';
 
 function AttendanceContent() {
- const { toast, hideToast } = useAttendanceContext();
+  const { toast, hideToast } = useAttendanceContext();
 
- return (
- <div className="min-h-full pb-10 attendance-module bg-background text-foreground">
- <ManagerHeader title="Attendance" subtitle="Track daily member and staff check-ins" />
- <div className="p-6 space-y-5">
- <AttendanceKPIs />
- 
- <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
- <AttendanceToolbar />
- <AttendanceTable />
- </div>
- </div>
+  return (
+  <div className="min-h-full pb-10 attendance-module bg-background text-foreground">
+  <ManagerHeader title="Attendance" subtitle="Track daily member and staff check-ins" />
+  <div className="p-6 space-y-5">
+  <AttendanceKPIs />
+  
+  <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
+  <AttendanceToolbar />
+  <AttendanceTable />
+  </div>
+  </div>
 
- <AttendanceModal />
+  <AttendanceModal />
+  <AttendanceCalendar />
 
- {toast && (
+  {toast && (
  <ManagerToast message={toast.message} type={toast.type} onClose={hideToast} />
  )}
  </div>

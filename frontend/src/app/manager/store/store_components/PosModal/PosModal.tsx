@@ -1,7 +1,7 @@
-﻿// RESPONSIBILITY: Point-of-sale modal for processing a new product sale/order in the Store module.
+// RESPONSIBILITY: Point-of-sale modal for processing a new product sale/order in the Store module.
 'use client';
 
-import { X, Printer } from 'lucide-react';
+import { X, Printer, Plus, Minus, Send } from 'lucide-react';
 import { useStoreContext } from '@/app/manager/store/store_context/StoreContext';
 import { PAYMENT_METHODS, formatCurrency } from '@/app/manager/store/store_utils/StoreSharedConstants';
 import { useState } from 'react';
@@ -11,7 +11,7 @@ export default function PosModal() {
  const { 
  showOrderModal, setShowOrderModal, 
  products, 
- orderItems, addToOrder, removeFromOrder, orderTotal, 
+ orderItems, addToOrder, removeFromOrder, updateOrderQty, orderTotal, 
  orderMethod, setOrderMethod, 
  customerPhone, setCustomerPhone, sendViaWhatsapp, setSendViaWhatsapp,
  saving, placeOrder 
@@ -23,7 +23,7 @@ export default function PosModal() {
 
  return (
  <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
- <div className="bg-card rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+ <div className="bg-card rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border-2 border-warning">
  <div className="sticky top-0 bg-card px-6 py-4 border-b border-border flex items-center justify-between">
  <h3 className="text-lg font-bold text-foreground">New Sale — POS</h3>
  <button 
@@ -70,16 +70,40 @@ export default function PosModal() {
  )}
  {orderItems.map(i => (
  <div key={i.productId} className="flex items-center justify-between p-2 bg-input rounded-lg border border-border">
- <div>
+ <div className="flex-1">
  <p className="text-xs font-medium text-foreground">{i.name}</p>
- <p className="text-xs text-secondary">x{i.qty} · {formatCurrency(i.price * i.qty)}</p>
+ <p className="text-xs text-secondary">{formatCurrency(i.price)} each</p>
  </div>
- <button 
- onClick={() => removeFromOrder(i.productId)} 
- className="p-1 text-destructive hover:text-destructive dark:hover:text-destructive transition-colors"
- >
- <X size={14} />
- </button>
+ <div className="flex items-center gap-2">
+   <div className="flex items-center bg-card rounded border border-border">
+     <button 
+       onClick={() => updateOrderQty(i.productId, i.qty - 1)}
+       className="p-1 text-secondary hover:text-foreground transition-colors"
+     >
+       <Minus size={12} />
+     </button>
+     <span className="text-xs font-medium w-6 text-center">{i.qty}</span>
+     <button 
+       onClick={() => {
+         const product = products.find(p => p.id === i.productId);
+         if (product && i.qty < product.stock) {
+           updateOrderQty(i.productId, i.qty + 1);
+         }
+       }}
+       disabled={!products.find(p => p.id === i.productId) || i.qty >= (products.find(p => p.id === i.productId)?.stock || 0)}
+       className="p-1 text-secondary hover:text-foreground disabled:opacity-50 transition-colors"
+     >
+       <Plus size={12} />
+     </button>
+   </div>
+   <p className="text-xs font-bold text-foreground w-16 text-right">{formatCurrency(i.price * i.qty)}</p>
+   <button 
+     onClick={() => removeFromOrder(i.productId)} 
+     className="p-1 text-destructive hover:text-destructive dark:hover:text-destructive transition-colors ml-1"
+   >
+     <X size={14} />
+   </button>
+ </div>
  </div>
  ))}
  </div>
@@ -104,26 +128,25 @@ export default function PosModal() {
      onChange={e => setSendViaWhatsapp(e.target.checked)}
      className="w-4 h-4 rounded border-border accent-primary"
    />
-   Send bill via WhatsApp
+   WhatsApp Bill
  </label>
 
  {sendViaWhatsapp && (
    <input 
-     type="tel"
-     placeholder="WhatsApp Number (e.g. +919999999999)"
+     type="tel" maxLength={10} onKeyDown={(e) => { if (!/[0-9]|Backspace|Tab|Enter|Delete|Arrow/.test(e.key)) e.preventDefault(); }}
+     placeholder="10-digit WhatsApp Number"
      value={customerPhone}
-     onChange={e => setCustomerPhone(e.target.value)}
+     onChange={e => setCustomerPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
      className="w-full border border-border rounded-xl px-4 py-2.5 text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-warning bg-input text-foreground"
    />
  )}
 
  <button 
  onClick={placeOrder} 
- disabled={saving || orderItems.length === 0 || (sendViaWhatsapp && !customerPhone)} 
- className="w-full py-3 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 disabled:opacity-70 transition-colors" 
- style={{ background: 'var(--store-highlight)' }}
+ disabled={saving || orderItems.length === 0 || (sendViaWhatsapp && customerPhone.length !== 10)} 
+ className="w-full py-3 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 disabled:opacity-70 transition-colors bg-primary hover:bg-primary-hover" 
  >
- {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : (sendViaWhatsapp ? 'Complete & Send WhatsApp' : <><Printer size={15} /> Complete & Print</>)}
+ {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : (sendViaWhatsapp ? <><Send size={15} /> Send WhatsApp</> : <><Printer size={15} /> Print Bill</>)}
  </button>
  </div>
  </div>

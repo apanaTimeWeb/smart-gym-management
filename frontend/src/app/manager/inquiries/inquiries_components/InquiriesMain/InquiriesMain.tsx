@@ -10,6 +10,7 @@ import InquiriesKPIs from '@/app/manager/inquiries/inquiries_components/Inquirie
 import InquiriesToolbar from '@/app/manager/inquiries/inquiries_components/InquiriesToolbar/InquiriesToolbar';
 import InquiriesTable from '@/app/manager/inquiries/inquiries_components/InquiriesTable/InquiriesTable';
 import InquiryModal from '@/app/manager/inquiries/inquiries_components/InquiryModal/InquiryModal';
+import ConvertLeadModal from '@/app/manager/inquiries/inquiries_components/ConvertLeadModal/ConvertLeadModal';
 
 function InquiriesContent() {
   const { toast, hideToast, msgModal, closeMsg, showToast, bulkMsgModal, closeBulkMsg, clearSelection } = useInquiriesContext();
@@ -19,11 +20,14 @@ function InquiriesContent() {
       <ManagerHeader title="Inquiries & Leads" subtitle="Track, follow up, and convert leads into members" />
       <div className="p-6 space-y-5">
         <InquiriesKPIs />
-        <InquiriesToolbar />
-        <InquiriesTable />
+        <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
+          <InquiriesToolbar />
+          <InquiriesTable />
+        </div>
       </div>
 
       <InquiryModal />
+      <ConvertLeadModal />
 
       {msgModal?.open && (
         <ManagerMessageModal

@@ -58,7 +58,7 @@ export function useMembersLogic(initialData?: MembersInitialData | null): Member
   const [editId, setEditId] = useState<string | null>(null);
   const [editData, setEditData] = useState<MemberFormValues | null>(null);
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
-  const [profileTab, setProfileTab] = useState<'overview' | 'attendance' | 'payments'>('overview');
+  const [profileTab, setProfileTab] = useState<'overview' | 'attendance' | 'payments' | 'workout' | 'diet'>('overview');
   const [msgModal, setMsgModal] = useState<{ open: boolean; recipient: ManagerMessageRecipient; type: MessageType; message: string; subject?: string } | null>(null);
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
   const [printData, setPrintData] = useState<ManagerReceiptData | null>(null);
@@ -68,7 +68,6 @@ export function useMembersLogic(initialData?: MembersInitialData | null): Member
   const closeMsg = useCallback(() => setMsgModal(null), []);
 
   // Refetch when URL params change after initial SSR hydration.
-  // showToast is defined above so the closure captures the correct reference.
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
@@ -78,6 +77,28 @@ export function useMembersLogic(initialData?: MembersInitialData | null): Member
       showToast('Failed to load members', 'error');
     });
   }, [loadAll, debouncedSearch, statusFilter, currentPage, showToast]);
+
+  // Handle auto-open add member modal (e.g. from Lead Conversion)
+  useEffect(() => {
+    if (searchParams.get('action') === 'add_member') {
+      const name = searchParams.get('name') || '';
+      const phone = searchParams.get('phone') || '';
+      const email = searchParams.get('email') || '';
+      
+      setEditId(null);
+      setEditData({
+        ...EMPTY_MEMBER_FORM,
+        name, phone, email
+      });
+      setShowAddModal(true);
+      
+      // Clean up URL so it doesn't reopen on refresh
+      setUrlParam('action', null);
+      setUrlParam('name', null);
+      setUrlParam('phone', null);
+      setUrlParam('email', null);
+    }
+  }, [searchParams, setUrlParam]);
 
   const openAdd = useCallback(() => { 
     setEditId(null); 

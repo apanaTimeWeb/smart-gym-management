@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Defines all TypeScript types, interfaces, and the FetchState enum for the Store module.
+// RESPONSIBILITY: Defines all TypeScript types, interfaces, and the FetchState enum for the Store module.
 
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import type { ManagerReceiptData } from '@/app/manager/manager_components/ManagerShared/ManagerThermalReceipt';
@@ -74,6 +74,7 @@ export interface StoreContextType {
  
  addToOrder: (p: Product) => void;
  removeFromOrder: (productId: string) => void;
+ updateOrderQty: (productId: string, qty: number) => void;
  orderTotal: number;
  placeOrder: () => Promise<void>;
 }

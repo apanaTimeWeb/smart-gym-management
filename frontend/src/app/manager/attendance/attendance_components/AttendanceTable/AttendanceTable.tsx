@@ -1,14 +1,14 @@
 // RESPONSIBILITY: Renders the attendance data table and pagination controls.
 'use client';
 
-import { Clock } from 'lucide-react';
+import { Clock, Calendar } from 'lucide-react';
 import { useAttendanceContext } from '@/app/manager/attendance/attendance_context/AttendanceContext';
 import { ATTENDANCE_TABLE_HEADERS, formatDate, formatTime } from '@/app/manager/attendance/attendance_utils/AttendanceSharedConstants';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 
 export default function AttendanceTable() {
-  const { records, totalRecords, fetchState, tab, currentPage, setCurrentPage } = useAttendanceContext();
+  const { records, totalRecords, fetchState, tab, currentPage, setCurrentPage, setCalendarUser } = useAttendanceContext();
 
   const filteredRecords = records.filter(r => 
     tab === 'All' || 
@@ -81,11 +81,21 @@ export default function AttendanceTable() {
  {formatTime(r.checkIn)}
  </td>
  <td className="px-4 py-3 text-sm text-secondary whitespace-nowrap">{formatTime(r.checkOut)}</td>
+ <td className="px-4 py-3 text-sm whitespace-nowrap">
+  <button 
+    onClick={() => setCalendarUser({ id: String(r.memberId || r.staffId || r.id), name: String(r.member?.name || r.staff?.name), type: r.type as 'MEMBER'|'STAFF' })}
+    className="p-1.5 rounded-md hover:bg-primary-subtle text-primary transition-colors flex items-center gap-1 border border-transparent hover:border-border"
+    title="View Monthly Calendar"
+  >
+    <Calendar size={14} />
+    <span className="text-xs font-medium">History</span>
+  </button>
+ </td>
  </tr>
  ))}
  {records.length === 0 && (
  <tr>
- <td colSpan={6} className="text-center py-10 text-secondary">
+ <td colSpan={7} className="text-center py-10 text-secondary">
  No attendance records found.
  </td>
  </tr>

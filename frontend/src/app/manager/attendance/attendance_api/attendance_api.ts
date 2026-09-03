@@ -14,4 +14,8 @@ export const attendanceApi = {
     apiFetch<ApiResponse<{ totalCheckIns: number; memberCheckIns: number; staffCheckIns: number }>>(
       AttendanceUrlConfig.BACKEND_API.TODAY_STATS
     ),
+  getHistory: (userId: string, type: 'MEMBER' | 'STAFF', month: string) => 
+    apiFetch<ApiResponse<Attendance[]>>(
+      `${AttendanceUrlConfig.BACKEND_API.HISTORY}?userId=${userId}&type=${type}&month=${month}`
+    ),
 };

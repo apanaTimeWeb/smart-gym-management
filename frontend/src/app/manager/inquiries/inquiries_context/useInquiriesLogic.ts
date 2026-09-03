@@ -59,6 +59,10 @@ export function useInquiriesLogic(): InquiriesContextType {
   const [msgModal, setMsgModal] = useState<{ open: boolean; recipient: ManagerMessageRecipient; type: MessageType; message: string; subject?: string } | null>(null);
   const closeMsg = useCallback(() => setMsgModal(null), []);
 
+  const [convertLead, setConvertLead] = useState<Inquiry | null>(null);
+  const openConvert = useCallback((inq: Inquiry) => setConvertLead(inq), []);
+  const closeConvert = useCallback(() => setConvertLead(null), []);
+
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const toggleSelectAll = useCallback((selectAll: boolean) => {
     setSelectedIds(selectAll ? inquiries.map(i => i.id) : []);
@@ -162,13 +166,21 @@ export function useInquiriesLogic(): InquiriesContextType {
   }, [showToast, confirm]);
 
   const updateStatus = useCallback(async (id: string, status: string) => {
+    if (status === 'CONVERTED') {
+      const inq = inquiries.find(i => String(i.id) === String(id));
+      if (inq) {
+        setConvertLead(inq);
+        return; // Wait for member creation to actually update status
+      }
+    }
+
     try {
       setInquiries(prev => prev.map(i => String(i.id) === String(id) ? { ...i, status } as unknown as Inquiry : i));
       showToast('Status updated', 'success');
     } catch (err) {
       showToast((err as Error).message, 'error');
     }
-  }, [showToast]);
+  }, [showToast, inquiries]);
 
   const openMsg = useCallback((inq: Inquiry, type: MessageType) => {
     const msg = generateDefaultMessage(inq.name, inq.interest);
@@ -183,5 +195,6 @@ export function useInquiriesLogic(): InquiriesContextType {
     openAdd, openEdit, saveInquiry, deleteInquiry, updateStatus,
     msgModal, openMsg, closeMsg,
     bulkMsgModal, openBulkMsg, closeBulkMsg,
+    convertLead, openConvert, closeConvert,
   };
 }
