@@ -10,7 +10,7 @@ import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_utils/AdminSharedConstan
 export default function StaffTable() {
   const { staff, summary, fetchState, debouncedSearch, roleFilter, currentPage, setCurrentPage, openEdit, deleteStaff, toggleStaffStatus } = useHrContext();
 
-  const filteredStaff = staff.filter(s => roleFilter === 'All' || s.role === roleFilter);
+  const filteredStaff = staff.filter(s => roleFilter === 'All' || (s.role || '').toLowerCase().includes(roleFilter.toLowerCase()));
 
   const totalStaff = summary?.totalStaff || filteredStaff.length;
   const totalPages = Math.ceil(totalStaff / ADMIN_ITEMS_PER_PAGE) || 1;

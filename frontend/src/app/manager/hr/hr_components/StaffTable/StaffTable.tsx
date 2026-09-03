@@ -10,7 +10,7 @@ import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerShare
 export default function StaffTable() {
   const { staff, summary, fetchState, debouncedSearch, roleFilter, currentPage, setCurrentPage, openEdit, deleteStaff, toggleStaffStatus } = useHrContext();
 
-  const filteredStaff = staff.filter(s => roleFilter === 'All' || s.role === roleFilter);
+  const filteredStaff = staff.filter(s => roleFilter === 'All' || (s.role || '').toLowerCase().includes(roleFilter.toLowerCase()));
 
   const totalStaff = summary?.totalStaff || filteredStaff.length;
   const totalPages = Math.ceil(totalStaff / MANAGER_ITEMS_PER_PAGE) || 1;
