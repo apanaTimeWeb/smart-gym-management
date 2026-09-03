@@ -484,11 +484,71 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 
 ---
 
-## Updated Summary Checklist (v2):
+## 79. Explicit Data Flow Direction Comment (AI Context Chain)
+* **The Rule:** Just as the frontend mandates `// DATA FLOW: API → hook → Context → Component` on every hook file (Frontend Rule 39), every backend **service, controller, and repository** file MUST begin with an explicit data flow annotation comment below the responsibility comment.
+* **Format:**
+  ```
+  // RESPONSIBILITY: Handles member suspension logic. No direct DB writes — emits events only.
+  // FLOW: MemberCommandController → MemberSuspensionService → MemberRepository → EventBus.emit('MEMBER.SUSPENDED')
+  ```
+* **Why:** When an AI agent is given a single file to fix a bug, the `// FLOW:` comment instantly tells it the full chain of execution — what came before this file, and what happens after — without the AI needing to read any other file. This eliminates the single biggest cause of AI hallucination: not knowing what calls what.
+
+---
+
+## 80. Mandatory JSDoc on All Service Methods, Repositories & Utilities
+* **The Rule:** Every service method, repository method, adapter method, and utility function MUST be prefixed with a JSDoc block. This mirrors Frontend Rule 37 which mandates JSDoc on all hooks and utilities.
+* **What the JSDoc must include:**
+  1. A one-line `@description` of what the method does.
+  2. `@param` for every non-trivial argument.
+  3. `@returns` with the exact type.
+  4. `@throws` with the exact custom exception(s) it can throw (from Rule 6).
+  5. For complex business logic: a `@remarks` note explaining the *why* behind a design decision (e.g., "Uses pessimistic lock because concurrent wallet deductions caused negative balances in load testing").
+* **Example:**
+  ```typescript
+  /**
+   * @description Suspends a member by setting their status to SUSPENDED and emitting the lifecycle event.
+   * @param memberId - The UUID of the member to suspend.
+   * @param actorId - The UUID of the staff member performing the action (for audit log).
+   * @returns The updated MemberEntity with status SUSPENDED.
+   * @throws MemberNotFoundException if the memberId does not exist.
+   * @throws MemberAlreadySuspendedException if the member is already suspended.
+   * @remarks Uses a database transaction to ensure the audit log write and status update are atomic.
+   */
+  async suspendMember(memberId: string, actorId: string): Promise<MemberEntity> { ... }
+  ```
+* **Why:** An AI fixing a bug in a billing service shouldn't need to read 300 lines to understand what `chargeWallet()` can throw. The JSDoc block is the file's self-contained API contract, drastically reducing token usage and hallucination risk.
+
+---
+
+## 81. Mock-First / Stub-First Development (Parallel Workflow Safety)
+* **The Rule:** Just as the frontend is built with mock data before the backend exists, the backend MUST follow the reciprocal workflow: **every new endpoint must first be created as a fully-documented, working stub** before real business logic is written.
+* **A "stub" means:**
+  1. The controller and route exist and are registered.
+  2. The Swagger/OpenAPI documentation for that endpoint is complete and accurate.
+  3. The endpoint returns a hardcoded, realistic mock payload that exactly matches the final `ApiResponse<T>` envelope (Rule 28).
+  4. The endpoint has `// TODO: Replace with real service call` comments.
+* **Why this matters for parallel AI development:** If two AI agents are working simultaneously — one on the frontend UI, one on the backend logic — the frontend agent cannot make progress if the endpoint doesn't exist at all. A working stub with realistic mock data allows the frontend to be fully built and tested against the API contract before the backend implementation is written. This prevents entire feature branches from being blocked.
+* **Enforcement:** A stub endpoint MUST never be merged to `main` without either: (a) having its real implementation, OR (b) having a GitHub issue linked in a `// STUB: [link]` comment.
+
+---
+
+## 82. Strict Discriminated Union Response Rule (No Ambiguous `data` Shapes)
+* **The Rule:** The `data` field in the standardized API envelope (Rule 28) MUST always be a **single, explicitly typed value** — never a polymorphic bag of mixed objects. The shape of `data` on success MUST be identical in structure regardless of the execution path.
+  - ❌ **BAD (Ambiguous):** `data: { member: MemberEntity, invoice: InvoiceEntity }` — the frontend `ApiResponse<T>` generic breaks because `T` is not a single entity.
+  - ✅ **GOOD:** `data: MemberWithInvoiceDTO` — a single, explicitly defined DTO that contains both.
+  - ❌ **BAD (Inconsistent):** One code path returns `data: MemberEntity`, another returns `data: { member: MemberEntity }`.
+  - ✅ **GOOD:** Always `data: MemberEntity` — one shape, all paths.
+* **The Discriminated Union Rule for Errors:** Never put different error shapes inside `data`. All error information belongs strictly in the `error` and `errorCode` fields of the envelope (Rule 64). The `data` field must always be `null` on error responses. No exceptions.
+* **Why:** The frontend AI agent generating the type-safe API call relies on `ApiResponse<MemberEntity>` mapping exactly. If the backend AI returns `data: { member: MemberEntity }` instead of `data: MemberEntity`, the TypeScript type system on the frontend will silently pass (because of structural typing) but every `res.data.name` call will return `undefined`, creating bugs that are extremely hard to trace.
+
+---
+
+## Updated Summary Checklist (v3):
 1. Identify the exact layer (Validation? Query? Business Logic? External Adapter?).
 2. Select the **one or two** micro-files associated with that layer.
 3. Check the module's `_backend_feature.md` for context before giving the AI any files.
 4. Pass ONLY those files to the AI along with the feature doc.
-5. After the AI writes code, verify: Is there N+1? Is there a missing null check? Is a secret hardcoded? Is the response wrapped in the standard envelope?
-6. Run `pytest` against the live API to confirm contract compliance.
-7. Review the AI's isolated changes.
+5. After the AI writes code, verify: Is there N+1? Is there a missing null check? Is a secret hardcoded? Is the response wrapped in the standard envelope? Is the `data` shape consistent across all code paths?
+6. Verify that every new method has a JSDoc block and every new file has both a `// RESPONSIBILITY:` and `// FLOW:` comment.
+7. Run `pytest` against the live API to confirm contract compliance.
+8. Review the AI's isolated changes.
