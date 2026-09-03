@@ -34,7 +34,7 @@ export default function InquiryModal() {
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60">
-      <div className="bg-card rounded-2xl shadow-2xl shadow-black/50 w-full max-w-md max-h-[90vh] overflow-y-auto border-2 border-warning">
+      <div className="bg-card rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-border max-h-full flex flex-col">
         <div className="sticky top-0 bg-card px-6 py-4 border-b border-border flex items-center justify-between">
           <h3 className="text-lg font-bold text-primary">{editId ? 'Edit Inquiry' : 'New Inquiry'}</h3>
           <button

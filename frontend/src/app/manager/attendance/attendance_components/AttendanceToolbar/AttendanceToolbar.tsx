@@ -8,11 +8,13 @@ import { ATTENDANCE_TABS } from '@/app/manager/attendance/attendance_utils/Atten
 
 export default function AttendanceToolbar() {
   const { tab, setTab, loadAll, setShowModal, search, setSearch, setCurrentPage } = useAttendanceContext();
+  const [prevSearch, setPrevSearch] = useState(search);
   const [localSearch, setLocalSearch] = useState(search);
 
-  useEffect(() => {
+  if (search !== prevSearch) {
+    setPrevSearch(search);
     setLocalSearch(search);
-  }, [search]);
+  }
 
   useEffect(() => {
     const timer = setTimeout(() => {

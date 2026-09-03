@@ -17,7 +17,7 @@ export default async function HrPage() {
       payrolls: payrollRes.data?.payrolls || payrollRes.data || [],
       summary: summaryRes.data || null
     };
-  } catch (e) {
+  } catch {
     // console.error('Failed to fetch hr initial data:', e);
   }
 

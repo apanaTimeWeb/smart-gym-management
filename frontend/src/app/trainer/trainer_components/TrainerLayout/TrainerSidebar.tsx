@@ -17,9 +17,11 @@ export default function TrainerSidebar({ isCollapsed, setIsCollapsed }: TrainerS
   const user = getUser();
 
   // Sets mounted=true once on client-side hydration to safely read user data (avoids SSR mismatch).
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     setMounted(true);
   }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // Listens for the global 'toggle-sidebar' event dispatched by TrainerHeader's hamburger button.
   // On mobile (<1024px) toggles the drawer; on desktop toggles the collapsed icon-only mode.
@@ -35,9 +37,11 @@ export default function TrainerSidebar({ isCollapsed, setIsCollapsed }: TrainerS
     return () => window.removeEventListener('toggle-sidebar', handleToggle);
   }, [isCollapsed, setIsCollapsed]);
 
+  /* eslint-disable react-hooks/set-state-in-effect */
   // Closes the mobile drawer whenever the route changes (user navigated to a new page).
   useEffect(() => {
     setIsMobileOpen(false);
+  /* eslint-enable react-hooks/set-state-in-effect */
   }, [pathname]);
 
   return (

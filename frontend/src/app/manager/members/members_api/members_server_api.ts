@@ -6,7 +6,7 @@ import { MembersUrlConfig } from '@/app/manager/members/members_url_config';
 export const ssrMembersApi = {
   getAll: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return ssrApiFetch<ApiResponse<any>>(`${MembersUrlConfig.BACKEND_API.BASE}${q}`);
+    return ssrApiFetch<ApiResponse<Record<string, unknown>>>(`${MembersUrlConfig.BACKEND_API.BASE}${q}`);
   },
-  getStats: () => ssrApiFetch<ApiResponse<any>>(MembersUrlConfig.BACKEND_API.STATS),
+  getStats: () => ssrApiFetch<ApiResponse<Record<string, unknown>>>(MembersUrlConfig.BACKEND_API.STATS),
 };

@@ -27,6 +27,10 @@ export default function DietModal() {
    defaultValues: (editDietData as DietFormValues) || (EMPTY_DIET_FORM as unknown as DietFormValues)
  });
 
+ const onSubmit = async (data: any) => {
+   await saveDietPlan(data);
+ };
+
  useEffect(() => {
    if (showDietModal && editDietData) {
      reset(editDietData);
@@ -37,7 +41,7 @@ export default function DietModal() {
 
  return (
  <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
- <div className="bg-card rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto border-2 border-warning">
+ <div className="bg-card rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden border-2 border-primary max-h-full flex flex-col">
  <div className="sticky top-0 bg-card px-6 py-4 border-b border-border flex items-center justify-between">
  <h3 className="text-lg font-bold text-foreground">
  {editDietId ? 'Edit Diet Plan' : 'Add Diet Plan'}
@@ -67,13 +71,13 @@ export default function DietModal() {
  placeholder={f.placeholder} 
  min={f.type === 'number' ? '0' : undefined}
  onKeyDown={f.type === 'number' ? (e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); } : undefined}
- {...register(f.key as keyof DietFormValues)}
+ {...register(f.key as "name" | "calories" | "protein" | "carbs" | "fats" | "description")}
  className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 ${
    errors[f.key as keyof DietFormValues] ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-warning'
  } bg-input text-foreground`}
  />
  {errors[f.key as keyof DietFormValues] && (
-   <p className="text-destructive text-xs mt-1">{errors[f.key as keyof DietFormValues]?.message}</p>
+   <p className="text-destructive text-xs mt-1">{(errors[f.key as keyof DietFormValues] as any)?.message}</p>
  )}
  </div>
  ))}

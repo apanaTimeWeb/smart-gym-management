@@ -107,6 +107,7 @@ export function useInquiriesLogic(): InquiriesContextType {
   }, [showToast, currentPage, debouncedSearch, statusFilter]);
 
   // Refetch when URL-driven filters change
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { loadAll(); }, [loadAll]);
 
   const openAdd = useCallback(() => {

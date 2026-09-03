@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Renders the product cards grid with stock status, price, and quick-action buttons.
+// RESPONSIBILITY: Renders the product cards grid with stock status, price, and quick-action buttons.
 'use client';
 
 import { Edit2, Trash2 } from 'lucide-react';
@@ -9,7 +9,7 @@ import ManagerPagination from '@/app/manager/manager_components/ManagerShared/Ma
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 
 export default function ProductGrid() {
-  const { products, summary, fetchState, debouncedSearch, currentPage, setCurrentPage, openEditProduct, deleteProduct, addToOrder } = useStoreContext();
+  const { products, summary, fetchState, debouncedSearch, currentPage, setCurrentPage, openEditProduct, deleteProduct } = useStoreContext();
 
   
   const totalProducts = summary?.totalProducts || products.length;
@@ -91,7 +91,7 @@ export default function ProductGrid() {
         ))}
         {products.length === 0 && (
           <div className="col-span-full text-center py-10 text-secondary">
-            No products found matching "{debouncedSearch}".
+            No products found matching &quot;{debouncedSearch}&quot;.
           </div>
         )}
       </div>

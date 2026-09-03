@@ -23,7 +23,7 @@ async function ssrApiFetch<T = unknown>(path: string): Promise<T> {
       if (user.tenantId) {
         headers['x-tenant-id'] = user.tenantId;
       }
-    } catch (e) {
+    } catch (_e) {
       // ignore parsing errors
     }
   }

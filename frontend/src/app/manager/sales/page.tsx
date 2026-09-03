@@ -22,7 +22,7 @@ export default async function SalesPage() {
       pendingTotal: pendingRes.data?.total || 0,
       allMemberships: allRes.data?.members || [],
       allMembershipsTotal: allRes.data?.total || 0
-    };
+    } as unknown as SalesInitialData;
   } catch (e: unknown) {
     console.error('[SalesPage SSR] Failed to fetch initial data:', e);
   }

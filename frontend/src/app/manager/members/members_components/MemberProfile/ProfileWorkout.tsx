@@ -17,7 +17,7 @@ export default function ProfileWorkout() {
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-lg font-bold text-primary">Workout Plan</h3>
-          <p className="text-sm text-secondary">Manage and track {selectedMember.name}'s daily workouts.</p>
+          <p className="text-sm text-secondary">Manage and track {selectedMember.name}&apos;s daily workouts.</p>
         </div>
         <button className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all active:scale-95">
           <Plus size={16} /> Assign Workout

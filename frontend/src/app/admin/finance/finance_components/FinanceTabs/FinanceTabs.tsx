@@ -14,9 +14,11 @@ export default function FinanceTabs() {
 
   const [localSearch, setLocalSearch] = useState(search);
 
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     setLocalSearch(search);
   }, [search]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   useEffect(() => {
     const timer = setTimeout(() => {

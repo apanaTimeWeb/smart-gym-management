@@ -19,6 +19,7 @@ export function useDashboardLogic(initialData?: DashboardStats | null): Dashboar
   useEffect(() => {
     if (initialData) return;
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setStatus('loading');
     dashboardApi.getStats()
       .then(res => {

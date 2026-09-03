@@ -7,7 +7,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { useWorkoutContext } from '@/app/manager/workout/workout_context/WorkoutContext';
-import { WORKOUT_LEVEL_OPTIONS, WorkoutSchema, type WorkoutFormValues, EMPTY_WORKOUT_FORM } from '@/app/manager/workout/workout_utils/WorkoutSharedConstants';
+import { WorkoutSchema, type WorkoutFormValues, EMPTY_WORKOUT_FORM } from '@/app/manager/workout/workout_utils/WorkoutSharedConstants';
 
 export default function WorkoutModal() {
   const { 
@@ -50,7 +50,7 @@ export default function WorkoutModal() {
             <X size={20} />
           </button>
         </div>
-        <form onSubmit={handleSubmit(saveWk as any)} className="p-5 space-y-4">
+        <form onSubmit={handleSubmit((data) => saveWk(data))} className="p-5 space-y-4">
           <div>
             <label className="block text-sm font-medium text-secondary mb-1">Plan Name *</label>
             <input 

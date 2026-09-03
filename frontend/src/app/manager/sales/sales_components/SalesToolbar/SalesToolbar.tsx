@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Download, Filter, Search } from 'lucide-react';
+import { Download, Search } from 'lucide-react';
 import { useSalesContext } from '@/app/manager/sales/sales_context/SalesContext';
 import { DATE_FILTERS } from '@/app/manager/sales/sales_utils/SalesSharedConstants';
 
@@ -11,11 +11,13 @@ export default function SalesToolbar() {
     tab, dateFilter, setDateFilter, search, setSearch, setCurrentPage,
     overviewData, membershipReport, pendingPayments, allMemberships
   } = useSalesContext();
+  const [prevSearch, setPrevSearch] = useState(search);
   const [localSearch, setLocalSearch] = useState(search);
 
-  useEffect(() => {
+  if (search !== prevSearch) {
+    setPrevSearch(search);
     setLocalSearch(search);
-  }, [search]);
+  }
 
   useEffect(() => {
     const timer = setTimeout(() => {

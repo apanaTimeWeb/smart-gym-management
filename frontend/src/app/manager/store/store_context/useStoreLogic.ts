@@ -5,7 +5,7 @@ import { storeApi } from '@/app/manager/store/store_api/store_api';
 import type { Product, Order, StoreSummary } from '@/app/manager/store/store_types/store_types';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import type { ManagerReceiptData } from '@/app/manager/manager_components/ManagerShared/ManagerThermalReceipt';
-import { EMPTY_PRODUCT_FORM, ERR_EMPTY_ORDER, ProductFormValues } from '@/app/manager/store/store_utils/StoreSharedConstants';
+import { EMPTY_PRODUCT_FORM, ProductFormValues } from '@/app/manager/store/store_utils/StoreSharedConstants';
 import { GYM_DETAILS } from '@/app/manager/manager_utils/ManagerSharedConstants';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { StoreContextType, OrderItem, StoreInitialData, FetchState } from '@/app/manager/store/store_types/store_types';
@@ -82,7 +82,7 @@ export function useStoreLogic(initialData?: StoreInitialData | null): StoreConte
         storeApi.getOrders(params),
         storeApi.getStoreSummary(),
       ]);
-      setProducts(Array.isArray(productsRes.data) ? productsRes.data : (productsRes.data as any).products || []);
+      setProducts(Array.isArray(productsRes.data) ? productsRes.data : (productsRes.data as { products?: unknown[] }).products as Product[] || []);
       setOrders(ordersRes.data.orders || []);
       setTotalOrders(ordersRes.data.total || 0);
       setSummary(summaryRes.data);
@@ -230,7 +230,7 @@ export function useStoreLogic(initialData?: StoreInitialData | null): StoreConte
     } finally {
       setSaving(false);
     }
-  }, [orderItems, orderMethod, sendViaWhatsapp, customerPhone, loadAll, showToast, setTab]);
+  }, [orderItems, orderMethod, sendViaWhatsapp, customerPhone, loadAll, showToast, setTab, orderTotal]);
 
   return {
     tab, setTab,

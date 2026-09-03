@@ -17,7 +17,7 @@ import dynamic from 'next/dynamic';
 const MemberModal = dynamic(() => import('@/app/manager/members/members_components/MemberModal/MemberModal'), { ssr: false });
 
 function MembersContent() {
-  const { toast, hideToast, msgModal, closeMsg, showToast, printData, setPrintData, selectedMember } = useMembersContext();
+  const { toast, hideToast, msgModal, closeMsg, showToast, printData, selectedMember } = useMembersContext();
 
   return (
     <div className="min-h-full pb-10">

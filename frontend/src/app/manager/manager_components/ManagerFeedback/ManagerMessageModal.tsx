@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Renders the send-message modal (WhatsApp/Email) for communicating with a member. Shared across the Members and Finance modules.
+// RESPONSIBILITY: Renders the send-message modal (WhatsApp/Email) for communicating with a member. Shared across the Members and Finance modules.
 'use client';
 
 import { useState } from 'react';
@@ -45,7 +45,6 @@ export default function ManagerMessageModal({
 
  if (!(isOpen || open)) return null;
 
- const accentColor = type === 'whatsapp' ? WA_GREEN : EMAIL_BLUE;
  const Icon = type === 'whatsapp' ? MessageCircle : Mail;
  const label = type === 'whatsapp' ? 'WhatsApp' : 'Email';
  const contactInfo = type === 'whatsapp' ? recipient.phone : recipient.email;

@@ -21,7 +21,7 @@ export default function SalesOverview() {
 
  return (
  <div className="space-y-6">
- <div className="bg-card p-5 rounded-xl border border-border shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-none">
+ <div className="bg-card p-5 rounded-xl border border-border shadow-lg dark:shadow-none">
  <h3 className="font-bold text-foreground mb-4">Monthly Revenue (₹)</h3>
  <div className="h-72 w-full">
   <ResponsiveContainer width="100%" height="100%">
@@ -40,7 +40,7 @@ export default function SalesOverview() {
  </div>
  </div>
  
- <div className="bg-card p-5 rounded-xl border border-border shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-none">
+ <div className="bg-card p-5 rounded-xl border border-border shadow-lg dark:shadow-none">
  <h3 className="font-bold text-foreground mb-4">New Members Trend</h3>
  <div className="h-64 w-full">
   <ResponsiveContainer width="100%" height="100%">

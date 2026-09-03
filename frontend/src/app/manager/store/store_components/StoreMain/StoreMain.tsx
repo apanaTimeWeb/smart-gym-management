@@ -19,7 +19,7 @@ const PosModal = dynamic(() => import('@/app/manager/store/store_components/PosM
 
 
 function StoreContent() {
-  const { tab, toast, hideToast, printData, setPrintData } = useStoreContext();
+  const { tab, toast, hideToast, printData } = useStoreContext();
 
   return (
     <div className="min-h-full pb-10 store-module bg-background text-foreground">

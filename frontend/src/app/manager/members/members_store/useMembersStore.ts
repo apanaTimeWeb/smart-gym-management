@@ -31,7 +31,7 @@ interface MembersState {
   deleteMember: (id: string) => Promise<{ success: boolean; message: string }>;
 }
 
-export const useMembersStore = create<MembersState>((set, get) => ({
+export const useMembersStore = create<MembersState>((set) => ({
   members: [],
   plans: [],
   payments: [],
@@ -61,11 +61,11 @@ export const useMembersStore = create<MembersState>((set, get) => ({
       ]);
       
       const plans = plansRes.data || [];
-      const members = (membersRes.data?.members || []).map((m: any) => {
+      const members = (membersRes.data?.members || []).map((m: Member & { planId?: string }) => {
         if (!m.plan && m.planId) {
-          m.plan = plans.find((p: any) => String(p.id) === String(m.planId));
+          m.plan = plans.find((p: Plan) => String(p.id) === String(m.planId));
         }
-        return m as Member;
+        return m;
       });
       
       set({

@@ -1,7 +1,5 @@
 // RESPONSIBILITY: Centralized constants, schema, and shared utilities for the Workout Library module.
 import { z } from 'zod';
-import type { Exercise } from '@/app/manager/library/library_types/library_types';
-import type { Workout } from '@/app/manager/workout/workout_types/workout_types';
 /* ── Dropdown / Filter Options (Rule 3: Backend-Ready Constants) ── */
 
 export const WORKOUT_LEVEL_OPTIONS = ['Beginner', 'Intermediate', 'Advanced', 'All Levels'] as const;
@@ -48,8 +46,8 @@ export type WorkoutFormValues = z.infer<typeof WorkoutSchema>;
 export const EMPTY_WORKOUT_FORM: WorkoutFormValues = { 
   name: '', 
   level: 'Beginner', 
-  days: 0 as any, 
-  exercises: 0 as any, 
+  days: 0, 
+  exercises: 0, 
   focus: '', 
   duration: '', 
   tags: '' 

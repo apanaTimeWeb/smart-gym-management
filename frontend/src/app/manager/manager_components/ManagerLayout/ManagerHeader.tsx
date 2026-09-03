@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Bell, Search, LogOut, Settings, User, X, Menu } from 'lucide-react';
+import { Bell, LogOut, Settings, User, X, Menu } from 'lucide-react';
 import Link from 'next/link';
 import { getUser, logout } from '@/lib/api';
 import { MANAGER_PLACEHOLDER_NOTIFICATIONS } from '@/app/manager/manager_utils/ManagerSharedConstants';
@@ -21,6 +21,7 @@ export default function ManagerHeader({ title, subtitle }: ManagerHeaderProps) {
 
   // Sets mounted=true once on client-side hydration to safely read user data (avoids SSR mismatch).
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 

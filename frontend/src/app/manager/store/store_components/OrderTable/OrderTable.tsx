@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Renders the paginated order history table with status badges and customer info.
 'use client';
 
-import { Eye, Printer } from 'lucide-react';
+import { Printer } from 'lucide-react';
 import type { Order } from '@/app/manager/store/store_types/store_types';
 import { useStoreContext } from '@/app/manager/store/store_context/StoreContext';
 import { formatCurrency } from '@/app/manager/store/store_utils/StoreSharedConstants';

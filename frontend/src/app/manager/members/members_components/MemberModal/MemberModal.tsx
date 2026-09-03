@@ -3,7 +3,7 @@
 
 import { useEffect } from 'react';
 import { X, Save } from 'lucide-react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { useMembersContext } from '@/app/manager/members/members_context/MembersContext';
@@ -28,7 +28,6 @@ export default function MemberModal() {
   const {
     register,
     handleSubmit,
-    watch,
     reset,
     formState: { errors }
   } = useFormReturn;
@@ -40,10 +39,10 @@ export default function MemberModal() {
     }
   }, [showAddModal, editData, reset]);
 
-  const watchPlanId = watch('planId') as string;
-  const watchBillingCycle = watch('billingCycle') as string;
-  const watchCustomDays = watch('customDays') as number;
-  const watchJoinDate = watch('joinDate') as string;
+  const watchPlanId = useWatch({ control: useFormReturn.control, name: 'planId' }) as string;
+  const watchBillingCycle = useWatch({ control: useFormReturn.control, name: 'billingCycle' }) as string;
+  const watchCustomDays = useWatch({ control: useFormReturn.control, name: 'customDays' }) as number;
+  const watchJoinDate = useWatch({ control: useFormReturn.control, name: 'joinDate' }) as string;
 
   useEffect(() => {
     if (watchPlanId && watchBillingCycle) {
@@ -83,7 +82,7 @@ export default function MemberModal() {
 
   return (
     <div className="fixed inset-0 bg-black/60 z-40 flex items-center justify-center p-4">
-      <div className="bg-card rounded-2xl shadow-2xl shadow-black/50 w-full max-w-2xl max-h-[90vh] overflow-y-auto border-2 border-warning">
+      <div className="bg-card rounded-2xl shadow-2xl shadow-black/50 w-full max-w-2xl max-h-full overflow-y-auto border-2 border-warning">
         <div className="sticky top-0 px-8 py-5 border-b border-border bg-card flex items-center justify-between z-10">
           <h3 className="text-xl font-bold text-foreground">{editId ? 'Edit Member' : 'Add New Member'}</h3>
           <button

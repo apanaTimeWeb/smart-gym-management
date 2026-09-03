@@ -3,7 +3,7 @@
 
 import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 import { DashboardProvider, useDashboardContext } from '@/app/admin/dashboard/dashboard_context/DashboardContext';
-import { DashboardStats } from '@/app/admin/dashboard/dashboard_types/dashboard_types';
+import { DashboardStats, TimeRange } from '@/app/admin/dashboard/dashboard_types/dashboard_types';
 import DashboardKPIs from '@/app/admin/dashboard/dashboard_components/DashboardKPIs/DashboardKPIs';
 import RecentMembers from '@/app/admin/dashboard/dashboard_components/RecentMembers/RecentMembers';
 import PendingPayments from '@/app/admin/dashboard/dashboard_components/PendingPayments/PendingPayments';
@@ -74,7 +74,7 @@ function DashboardContent() {
           <select 
             value={timeRange} 
             onChange={(e) => {
-              setTimeRange(e.target.value as any);
+              setTimeRange(e.target.value as TimeRange);
               if (e.target.value !== 'custom') {
                 setCustomDateRange('', '');
               }

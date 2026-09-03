@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Renders the grid of workout plan cards with exercises count and action buttons.
+// RESPONSIBILITY: Renders the grid of workout plan cards with exercises count and action buttons.
 'use client';
 
 import { Dumbbell, Edit2, Trash2 } from 'lucide-react';
@@ -80,7 +80,7 @@ export default function WorkoutPlansGrid() {
         ))}
         {workouts.length === 0 && (
           <div className="col-span-full text-center py-10 text-secondary">
-            No workout plans found matching "{search}".
+            No workout plans found matching &quot;{search}&quot;.
           </div>
         )}
       </div>

@@ -17,7 +17,7 @@ export default function ProfileDiet() {
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-lg font-bold text-primary">Diet Plan</h3>
-          <p className="text-sm text-secondary">Manage and track {selectedMember.name}'s nutritional goals.</p>
+          <p className="text-sm text-secondary">Manage and track {selectedMember.name}&apos;s nutritional goals.</p>
         </div>
         <button className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all active:scale-95">
           <Plus size={16} /> Assign Diet
@@ -66,14 +66,14 @@ export default function ProfileDiet() {
                   <span className="text-xs font-normal text-secondary bg-input px-2 py-1 rounded">~600 kcal</span>
                 </h5>
                 <ul className="space-y-2 text-sm text-secondary">
-                  <li className="flex items-center gap-2 before:content-['•'] before:text-primary">
-                    Oats with Whey Protein
+                  <li className="flex items-center gap-2">
+                    <span className="text-primary">•</span> Oats with Whey Protein
                   </li>
-                  <li className="flex items-center gap-2 before:content-['•'] before:text-primary">
-                    2 Whole Eggs, 3 Egg Whites
+                  <li className="flex items-center gap-2">
+                    <span className="text-primary">•</span> 2 Whole Eggs, 3 Egg Whites
                   </li>
-                  <li className="flex items-center gap-2 before:content-['•'] before:text-primary">
-                    1 Banana
+                  <li className="flex items-center gap-2">
+                    <span className="text-primary">•</span> 1 Banana
                   </li>
                 </ul>
               </div>

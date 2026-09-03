@@ -3,7 +3,7 @@
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import type { ManagerReceiptData } from '@/app/manager/manager_components/ManagerShared/ManagerThermalReceipt';
 import { type ProductFormValues } from '@/app/manager/store/store_utils/StoreSharedConstants';
-import React from 'react';
+
 
 export interface StoreInitialData {
   products: Product[];

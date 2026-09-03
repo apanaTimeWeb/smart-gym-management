@@ -18,6 +18,7 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
 
   // Sets mounted=true once on client-side hydration to safely read user data (avoids SSR mismatch).
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
@@ -37,6 +38,7 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
 
   // Closes the mobile drawer whenever the route changes (user navigated to a new page).
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMobileOpen(false);
   }, [pathname]);
 

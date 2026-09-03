@@ -76,7 +76,7 @@ export function useMembersLogic(initialData?: MembersInitialData | null): Member
     loadAll({ search: debouncedSearch, status: statusFilter, page: currentPage.toString() }).catch(() => {
       showToast('Failed to load members', 'error');
     });
-  }, [loadAll, debouncedSearch, statusFilter, currentPage, showToast]);
+  }, [loadAll, debouncedSearch, statusFilter, currentPage, showToast, initialData]);
 
   // Handle auto-open add member modal (e.g. from Lead Conversion)
   useEffect(() => {
@@ -85,6 +85,7 @@ export function useMembersLogic(initialData?: MembersInitialData | null): Member
       const phone = searchParams.get('phone') || '';
       const email = searchParams.get('email') || '';
       
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setEditId(null);
       setEditData({
         ...EMPTY_MEMBER_FORM,

@@ -13,7 +13,7 @@ import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerShare
 
 export default function MembersTable() {
   const { 
-    search, debouncedSearch, statusFilter, currentPage, setCurrentPage,
+    search, statusFilter, currentPage, setCurrentPage,
     setSelectedMember, openEdit, openMsg, deleteMember
   } = useMembersContext();
 

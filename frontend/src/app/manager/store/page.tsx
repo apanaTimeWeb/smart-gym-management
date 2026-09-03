@@ -1,9 +1,10 @@
-﻿// RESPONSIBILITY: Server Component — fetches initial SSR data and renders the Gym Store module entry point.
+// RESPONSIBILITY: Server Component — fetches initial SSR data and renders the Gym Store module entry point.
 import StoreMain from '@/app/manager/store/store_components/StoreMain/StoreMain';
 import { ssrStoreApi } from '@/app/manager/store/store_api/store_server_api';
+import { StoreInitialData } from '@/app/manager/store/store_types/store_types';
 
 export default async function StorePage() {
-  let initialData = undefined;
+  let initialData: StoreInitialData | undefined = undefined;
   
   try {
     const [productsRes, ordersRes, summaryRes] = await Promise.all([
@@ -12,11 +13,11 @@ export default async function StorePage() {
       ssrStoreApi.getStoreSummary(),
     ]);
     initialData = {
-      products: Array.isArray(productsRes.data) ? productsRes.data : (productsRes.data as any).products || [],
-      orders: ordersRes.data.orders || [],
-      totalOrders: ordersRes.data.total || 0,
-      summary: summaryRes.data || null
-    };
+      products: productsRes.data?.products || productsRes.data || [],
+      orders: ordersRes.data?.orders || [],
+      totalOrders: ordersRes.data?.total || 0,
+      summary: summaryRes.data || { revenue: 0, lowStock: 0 }
+    } as unknown as StoreInitialData;
   } catch (e) {
     // console.error('Failed to fetch store initial data:', e);
   }

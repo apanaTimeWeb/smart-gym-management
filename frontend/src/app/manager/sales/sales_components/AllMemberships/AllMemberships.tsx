@@ -22,6 +22,7 @@ function getDaysLeftColorClass(daysLeft: number): string {
 export default function AllMemberships() {
   const [filter, setFilter] = useState('All');
   const { currentPage, setCurrentPage, allMemberships, allMembershipsTotal, fetchState } = useSalesContext();
+  const [now] = useState(() => Date.now());
 
   const totalPages = Math.ceil(allMembershipsTotal / MANAGER_ITEMS_PER_PAGE) || 1;
 
@@ -82,9 +83,9 @@ export default function AllMemberships() {
                 </td>
                 <td className="px-4 py-3 text-sm font-medium text-foreground">₹{r.paidAmount?.toLocaleString('en-IN') || 0}</td>
                 <td className={`px-4 py-3 text-sm font-medium ${getDaysLeftColorClass(
-                  Math.max(0, Math.floor((new Date(r.expiryDate).getTime() - Date.now()) / 86400000))
+                  Math.max(0, Math.floor((new Date(r.expiryDate).getTime() - now) / 86400000))
                 )}`}>
-                  {new Date(r.expiryDate) < new Date() ? 'Expired' : `${Math.floor((new Date(r.expiryDate).getTime() - Date.now()) / 86400000)} days`}
+                  {new Date(r.expiryDate).getTime() < now ? 'Expired' : `${Math.floor((new Date(r.expiryDate).getTime() - now) / 86400000)} days`}
                 </td>
               </tr>
             ))}

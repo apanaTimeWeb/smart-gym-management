@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the Workout Library module.
-import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { 
   EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM, WorkoutFormValues, ExerciseFormValues
 } from '@/app/manager/workout/workout_utils/WorkoutSharedConstants';
@@ -62,6 +62,7 @@ export function useWorkoutLogic(): WorkoutContextType {
     }
   }, [showToast, currentPage, debouncedSearch]);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { loadAll(); }, [loadAll]);
 
   // Derived state

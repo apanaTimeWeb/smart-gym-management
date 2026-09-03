@@ -51,12 +51,14 @@ export function usePlansLogic(initialData?: PlansInitialData | null): PlansConte
       { id: '2', name: 'Pro Tier', tier: 'Pro', price1Month: 80, price3Month: 220, price6Month: 400, price12Month: 750, features: ['Gym Access', 'Classes', 'Sauna'], isActive: true },
       { id: '3', name: 'Elite Tier', tier: 'Elite', price1Month: 120, price3Month: 330, price6Month: 600, price12Month: 1100, features: ['All Access', 'Personal Trainer', 'Diet Plan'], isActive: true },
     ]);
-  }, [showToast]);
+  }, []);
 
   // Fetch plans on mount; skip if SSR initialData was provided
+  /* eslint-disable react-hooks/exhaustive-deps, react-hooks/set-state-in-effect */
   useEffect(() => {
     loadPlans();
-  }, [loadPlans]);
+  }, []);
+  /* eslint-enable react-hooks/exhaustive-deps, react-hooks/set-state-in-effect */
 
   const openAdd = useCallback(() => {
     setEditId(null);
@@ -111,7 +113,7 @@ export function usePlansLogic(initialData?: PlansInitialData | null): PlansConte
     } finally {
       setSaving(false);
     }
-  }, [editId, loadPlans, showToast]);
+  }, [editId, showToast]);
 
   const deletePlan = useCallback(async (id: string) => {
     const isConfirmed = await confirm({ title: 'Delete Plan', message: 'Are you sure you want to delete this plan?', confirmText: 'Delete', type: 'danger' });
@@ -123,7 +125,7 @@ export function usePlansLogic(initialData?: PlansInitialData | null): PlansConte
     } catch (err) {
       showToast((err as Error).message, 'error');
     }
-  }, [loadPlans, showToast, confirm]);
+  }, [showToast, confirm]);
 
   return {
     plans, fetchState, saving, toast,
