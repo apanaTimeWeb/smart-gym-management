@@ -660,21 +660,103 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 
 ---
 
-## Updated Summary Checklist (v4):
-1. Identify the exact layer (Validation? Query? Business Logic? External Adapter? Permission Guard?).
+## 89. Domain Object vs. ORM Entity Separation (Anti-Persistence-Leakage Rule)
+* **The Rule:** Never use ORM Entity classes (e.g., TypeORM `@Entity()` classes, Django ORM models) directly inside business logic services. ORM entities are a **persistence infrastructure concern** — they contain database annotations, lazy-loading relations, and schema metadata that have no place in pure business logic.
+* **The Pattern — Two Distinct Objects + Mapper:**
+  1. **ORM Entity** (`member.entity.ts`): Contains only database schema definition — `@Column`, `@ManyToOne`, `@Index` decorators. Lives in the repository layer only.
+  2. **Domain Object / DTO** (`member.domain.ts` or `member.dto.ts`): A plain TypeScript class/interface with pure business properties and zero ORM imports. This is what services, controllers, and event handlers receive and return.
+  3. **Mapper** (`member.mapper.ts`): A dedicated class with `toDomain(entity)` and `toEntity(domain)` static methods that translate between the two. Only the repository layer calls the mapper.
+* **When it's acceptable to use a unified model:** For simple CRUD-only modules with no complex business rules, a unified ORM entity may be used provided: (a) it has no business logic methods on the class itself, and (b) you acknowledge the tradeoff in the module's `_backend_feature.md`.
+* **Why:** AI agents default to using ORM entities everywhere — passing `MemberEntity` into services, emitting it over the EventBus, returning it from controllers. This "persistence leakage" means a database schema change (e.g., renaming a column) breaks business logic files that should be completely unaware of the database. A Mapper is the single controlled translation point, and it is the only file the AI needs to touch when the schema changes.
+
+---
+
+## 90. Automated Security Gates in CI/CD Pipeline (Shift-Left Security)
+* **The Rule:** All backend AI-generated code is **untrusted input** until proven otherwise. Research shows ~45% of AI code suggestions can introduce security vulnerabilities. The CI/CD pipeline MUST implement non-bypassable automated security gates on every Pull Request before any merge is allowed.
+* **Mandatory Gate 1 — SAST (Static Application Security Testing):** Run a SAST scanner (e.g., `Semgrep`, `SonarQube`, `CodeQL`) on every PR. Any `Critical` or `High` severity finding MUST block the merge. AI agents cannot self-certify their own code as secure.
+* **Mandatory Gate 2 — SCA (Software Composition Analysis):** Run a dependency vulnerability scanner (e.g., `npm audit`, `safety` for Python, `Snyk`) on every PR. Any new dependency with a known `Critical` CVE must block the merge.
+* **Mandatory Gate 3 — Secrets Detection:** Run a secrets scanner (e.g., `GitLeaks`, `Trufflehog`) on every PR diff. A single hardcoded API key or database password in a commit is a catastrophic security breach. This gate must never be skipped.
+* **Mandatory Gate 4 — TypeScript Strict Compile Check:** Run `tsc --noEmit` on every PR. The build must pass with zero type errors — no `@ts-ignore` bypasses allowed (Rule 69).
+* **Why:** Frontend Rule 65 mandates mechanical tooling gates for the frontend. The backend requires the exact same discipline but with an added focus on security. An AI writing authentication or payment code must have its output automatically vetted before it reaches production.
+
+---
+
+## 91. Mandatory Backend Pre-Commit Hooks (Blocking Gates Before Push)
+* **The Rule:** This mirrors Frontend Rule 65's `husky + lint-staged` mandate. The backend repository MUST configure pre-commit hooks using `husky` (Node.js) or `pre-commit` framework (Python) to run fast, blocking checks before every `git push`. These hooks run locally on the developer/AI agent's machine — they are the first line of defense before code reaches CI.
+* **Required Pre-Commit Checks (must all pass):**
+  1. `tsc --noEmit` — TypeScript type check. Zero errors required.
+  2. `eslint --fix` — Auto-fix lint violations; fail if unfixable violations remain.
+  3. `prettier --check` — Code format verification.
+  4. `gitleaks detect --no-git` — Secret scanning on staged files only (fast).
+* **Staged Files Only:** Use `lint-staged` to run checks only on the files in the current commit. Running checks on the entire codebase on every commit is too slow and will cause developers/AI agents to bypass the hooks.
+* **Why:** CI/CD gates (Rule 90) catch issues at the PR stage, which means an AI agent can push broken/insecure code to the remote branch. Pre-commit hooks catch the same issues before the push ever happens, providing instant feedback and preventing noise in the PR history.
+
+---
+
+## 92. ORM Raw Input Injection Prevention (The TypeORM Safety Rule)
+* **The Rule:** Never interpolate user-controlled input directly into ORM query methods. This is a critical AI-specific risk because AI agents frequently generate "convenient" but insecure query patterns, especially in TypeORM's QueryBuilder.
+* **The Specific Patterns to BAN:**
+  - ❌ **BAD (SQL Injection via `orderBy`):**
+    ```typescript
+    // NEVER do this — sortField comes from req.query and is unvalidated
+    queryBuilder.orderBy(`member.${req.query.sortField}`, 'ASC');
+    ```
+  - ✅ **GOOD (Allowlist Pattern):**
+    ```typescript
+    const ALLOWED_SORT_FIELDS = ['name', 'createdAt', 'status'] as const;
+    type SortField = typeof ALLOWED_SORT_FIELDS[number];
+    const sortField = ALLOWED_SORT_FIELDS.includes(req.query.sortField as SortField)
+      ? req.query.sortField as SortField
+      : 'createdAt'; // safe default
+    queryBuilder.orderBy(`member.${sortField}`, 'ASC');
+    ```
+  - ❌ **BAD (Raw SQL with template literals):**
+    ```typescript
+    // NEVER — classic SQL injection
+    queryBuilder.where(`member.name = '${req.query.name}'`);
+    ```
+  - ✅ **GOOD (Parameterized query):**
+    ```typescript
+    queryBuilder.where('member.name = :name', { name: req.query.name });
+    ```
+* **Allowlist-First Mandate:** Any query that uses a user-supplied column name, sort field, or filter key MUST validate it against a strict allowlist defined in the module's constants file before passing it to the ORM.
+* **Why:** TypeORM's query builder accepts raw column name strings in `orderBy`, `select`, and `where` which are NOT automatically parameterized. An AI will generate `orderBy(`member.${sortColumn}`)` as a clean, "logical" pattern without realizing it's an injection vulnerability. This rule makes the safe pattern the only acceptable pattern.
+
+---
+
+## 93. Human-in-the-Loop Gate for Security-Critical AI Code
+* **The Rule:** Certain backend modules and functions are so security-critical that AI-generated code for them requires mandatory human review before merging — no exceptions, even if all automated gates pass. These are modules where a single bug can cause financial loss, data breach, or unauthorized access.
+* **Mandatory Human Review Required For:**
+  1. **Authentication & Token Logic** — Any code in `auth/` modules, JWT generation/validation, refresh token rotation (Rule 52), session management.
+  2. **Authorization & Permission Guards** — Any new `@Roles()` decorator usage, `RolesGuard` modifications, resource-level authorization services (Rule 83).
+  3. **Payment & Financial Mutations** — Any code that triggers charges, refunds, wallet deductions, or invoice generation.
+  4. **Database Migration Files** — Any migration that adds `NOT NULL`, drops a column, or modifies a primary key. (Rule 24).
+  5. **Multi-Tenancy Connection Routing** — Any modification to the tenant DataSource factory or request-scoped connection resolver (Rule 39).
+* **Implementation:** In GitHub/GitLab, create a `CODEOWNERS` file mapping these folders to specific human reviewers. PRs touching these paths cannot be merged without a human approval even if all CI gates pass.
+* **PR Description Mandate:** Any PR touching these modules MUST include a section titled `## Security Impact Analysis` explaining what changed, what the risk surface is, and why the change is safe.
+* **Why:** Industry research confirms that ~45% of AI-generated code can introduce vulnerabilities, and the risk is highest in security-critical paths. An AI agent might generate a logically correct but cryptographically weak JWT validation, or a permission guard with a subtle bypass. Automated tools cannot catch all semantic security flaws — a human security review is the final, non-negotiable gate.
+
+---
+
+## Updated Summary Checklist (v5 — Final):
+1. Identify the exact layer (Validation? Query? Business Logic? External Adapter? Permission Guard? Mapper?).
 2. Select the **one or two** micro-files associated with that layer.
 3. Check the module's `_backend_feature.md` for context before giving the AI any files.
 4. Pass ONLY those files to the AI along with the feature doc.
 5. After the AI writes code, verify:
    - Is there an N+1 query?
    - Is there a missing null check (use `findByIdOrThrow` where needed)?
-   - Is a secret hardcoded?
-   - Is the response wrapped in the standard envelope?
-   - Is the `data` shape consistent across all code paths?
-   - Is the permission guard declared at the controller layer, not the service?
-   - Are there any barrel file imports (`from '.../index'`)?
-   - Does every new method follow the verb naming convention (Rule 86)?
-   - Is every new method ≤ 20 lines with Guard Clauses?
-   - Does every new file have `// RESPONSIBILITY:` + `// FLOW:` + JSDoc on every method?
-6. Run `pytest` against the live API to confirm contract compliance.
-7. Review the AI's isolated changes.
+   - Is a secret hardcoded? (Auto-blocked by pre-commit hook — Rule 91)
+   - Is the response wrapped in the standard envelope with a single consistent `data` shape?
+   - Is the permission guard at the controller layer using typed enums? (Rule 83)
+   - Is any ORM `orderBy` or `where` using user input without an allowlist? (Rule 92)
+   - Are there any barrel file imports or relative path imports?
+   - Does every new method follow the verb naming convention with `OrThrow` where needed? (Rule 86)
+   - Is every new method ≤ 20 lines using Guard Clauses? (Rule 85/87)
+   - Does every new file have `// RESPONSIBILITY:` + `// FLOW:` + JSDoc on every method? (Rules 76/79/80)
+   - Is a Mapper used to translate between ORM entities and domain objects? (Rule 89)
+   - If the change touches `auth/`, `billing/`, or `permissions/`, has a human reviewed it? (Rule 93)
+6. Run automated CI gates: SAST, SCA, secrets scan, `tsc --noEmit`. (Rule 90)
+7. Run `pytest` against the live API to confirm contract compliance.
+8. For security-critical modules, ensure `CODEOWNERS` human approval is obtained. (Rule 93)
+9. Review the AI's isolated changes one final time.
