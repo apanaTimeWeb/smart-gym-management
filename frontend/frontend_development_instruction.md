@@ -243,6 +243,9 @@ AI agents frequently install redundant packages. **An AI cannot add a new depend
 Tailwind does not automatically make things responsive. Every component must be built **mobile-first**: base Tailwind classes must target mobile (`<768px`), then overridden with `md:` (tablet) and `lg:/xl:` (desktop) prefixes as needed.
 - No component is considered complete unless explicitly checked at all three breakpoints (375px, 768px, 1280px+). 
 - Specific Mobile Patterns: KPI card rows must switch to horizontal scrolling or a 2-column grid on mobile. Charts must have reduced height and simplified/collapsed legends on mobile.
+- **Button Containers & Filters**: Any flex container holding multiple buttons or filter inputs (like date ranges) MUST use `flex-col sm:flex-row` or `flex-wrap` so they stack natively on mobile rather than bleeding off the edge of the card.
+- **Persistent Mobile Table Actions**: Table action buttons (Edit, Delete, etc.) MUST NOT use `opacity-0` globally to hide behind hover states, as mobile devices have no mouse hover. You must use `opacity-100 lg:opacity-0 lg:group-hover:opacity-100` so actions are permanently visible on touch devices.
+- **Dropdown Auto-Close**: Any custom filter dropdown menu MUST automatically close (`setShowFilter(false)`) immediately after the user makes a selection.
 
 69. **Hardened Numeric Inputs (Prevent Negative/Invalid Inputs)**:
 Never use a naked `<input type="number">` for quantities, prices, or ages without explicit validation. You MUST add a `min="0"` (or appropriate lower bound) AND an `onKeyDown` handler to mechanically block invalid characters like `-`, `e`, and `+` if they don't make business sense (e.g., `onKeyDown={(e) => { if (e.key === '-' || e.key === 'e') e.preventDefault(); }}`).

@@ -50,9 +50,9 @@ function DashboardContent() {
     <>
       <ManagerHeader title="Dashboard" subtitle="Welcome back, Manager! Here's your gym overview." />
       <div className="p-6 space-y-6">
-        <div className="flex justify-end mb-2 gap-3 items-center">
+        <div className="flex flex-col sm:flex-row justify-end mb-2 gap-3 items-center w-full">
           {timeRange === 'custom' && (
-            <div className="flex items-center gap-2 mr-2">
+            <div className="flex flex-wrap items-center gap-2 sm:mr-2 justify-center sm:justify-start w-full sm:w-auto">
               <label className="text-sm font-medium text-secondary">From:</label>
               <input
                 type="date"
@@ -79,7 +79,7 @@ function DashboardContent() {
                 setCustomDateRange('', '');
               }
             }}
-            className="bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-primary"
+            className="bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-primary w-full sm:w-auto"
           >
             <option value="weekly">This Week</option>
             <option value="monthly">This Month</option>
