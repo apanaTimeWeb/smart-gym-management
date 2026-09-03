@@ -2,7 +2,7 @@
 'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';
-import { AttendanceContextType } from '@/app/trainer/attendance/attendance_types/attendance_types';
+import type { AttendanceContextType } from '@/app/trainer/attendance/attendance_types/attendance_types';
 import { useAttendanceLogic } from '@/app/trainer/attendance/attendance_context/useAttendanceLogic';
 
 const AttendanceContext = createContext<AttendanceContextType | undefined>(undefined);

@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Form modal for creating or editing a workout plan in the Workout Library module.
+// RESPONSIBILITY: Form modal for creating or editing a workout plan in the Workout Library module.
 'use client';
 
 import { useEffect } from 'react';
@@ -60,7 +60,7 @@ export default function TrainerWorkoutModal() {
                 errors.name ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-warning'
               } bg-input text-foreground`} 
             />
-            {errors.name && <p className="text-destructive text-xs mt-1">{errors.name.message}</p>}
+            {errors.name && <p className="text-danger text-xs mt-1">{errors.name.message}</p>}
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -90,7 +90,7 @@ export default function TrainerWorkoutModal() {
                   errors.days ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-warning'
                 } bg-input text-foreground`} 
               />
-              {errors.days && <p className="text-destructive text-xs mt-1">{errors.days.message}</p>}
+              {errors.days && <p className="text-danger text-xs mt-1">{errors.days.message}</p>}
             </div>
           </div>
           
@@ -105,7 +105,7 @@ export default function TrainerWorkoutModal() {
                   errors.focus ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-warning'
                 } bg-input text-foreground`} 
               />
-              {errors.focus && <p className="text-destructive text-xs mt-1">{errors.focus.message}</p>}
+              {errors.focus && <p className="text-danger text-xs mt-1">{errors.focus.message}</p>}
             </div>
             <div>
               <label className="block text-sm font-medium text-secondary mb-1">Duration</label>
@@ -117,7 +117,7 @@ export default function TrainerWorkoutModal() {
                   errors.duration ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-warning'
                 } bg-input text-foreground`} 
               />
-              {errors.duration && <p className="text-destructive text-xs mt-1">{errors.duration.message}</p>}
+              {errors.duration && <p className="text-danger text-xs mt-1">{errors.duration.message}</p>}
             </div>
           </div>
           
@@ -132,7 +132,7 @@ export default function TrainerWorkoutModal() {
                   errors.exercises ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-warning'
                 } bg-input text-foreground`} 
               />
-              {errors.exercises && <p className="text-destructive text-xs mt-1">{errors.exercises.message}</p>}
+              {errors.exercises && <p className="text-danger text-xs mt-1">{errors.exercises.message}</p>}
             </div>
             <div>
               <label className="block text-sm font-medium text-secondary mb-1">Tags (comma separated)</label>

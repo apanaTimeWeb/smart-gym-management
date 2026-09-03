@@ -3,7 +3,7 @@
 'use client';
 
 import React, { createContext, useContext } from 'react';
-import { MembersContextType, MembersInitialData } from '@/app/trainer/members/members_types/members_types';
+import type { MembersContextType, MembersInitialData } from '@/app/trainer/members/members_types/members_types';
 import { useMembersLogic } from '@/app/trainer/members/members_context/useMembersLogic';
 
 const MembersContext = createContext<MembersContextType | undefined>(undefined);

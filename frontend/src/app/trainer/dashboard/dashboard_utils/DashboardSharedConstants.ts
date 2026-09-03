@@ -11,6 +11,7 @@ export const DASHBOARD_PLAN_BG_COLORS: Record<string, string> = {
  PREMIUM: 'bg-primary',
 };
 
+export const DASHBOARD_RECENT_MEMBERS_PAGE_SIZE = 5;
 export const RECENT_MEMBERS_HEADERS = ['Member', 'Plan', 'Status', 'Joined', 'Amount'];
 
 export const formatCurrency = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');

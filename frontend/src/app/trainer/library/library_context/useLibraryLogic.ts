@@ -5,7 +5,7 @@ import { libraryApi } from '@/app/trainer/library/library_api/library_api';
 import type { Exercise, DietPlan } from '@/app/trainer/library/library_types/library_types';
 import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
 import { EMPTY_EXERCISE_FORM, EMPTY_DIET_FORM, type LibraryTab } from '@/app/trainer/library/library_utils/LibrarySharedConstants';
-import { LibraryContextType, LibraryInitialData } from '@/app/trainer/library/library_types/library_types';
+import type { LibraryContextType, LibraryInitialData } from '@/app/trainer/library/library_types/library_types';
 import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 

@@ -10,7 +10,7 @@ import TrainerMembersKPIs from '@/app/trainer/members/members_components/Trainer
 import TrainerMembersToolbar from '@/app/trainer/members/members_components/TrainerMembersToolbar/TrainerMembersToolbar';
 import TrainerMembersTable from '@/app/trainer/members/members_components/TrainerMembersTable/TrainerMembersTable';
 import TrainerMembersProfile from '@/app/trainer/members/members_components/TrainerMembersProfile/TrainerMembersProfile';
-import { MembersInitialData } from '@/app/trainer/members/members_types/members_types';
+import type { MembersInitialData } from '@/app/trainer/members/members_types/members_types';
 import dynamic from 'next/dynamic';
 
 const TrainerMembersModal = dynamic(() => import('@/app/trainer/members/members_components/TrainerMembersModal/TrainerMembersModal'), { ssr: false });

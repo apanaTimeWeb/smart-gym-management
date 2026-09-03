@@ -9,7 +9,7 @@ import type { Member } from '@/app/trainer/members/members_types/members_types';
 import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
 import { EMPTY_ATTENDANCE_FORM, ATTENDANCE_TABS, type AttendanceTab, AttendanceFormValues } from '@/app/trainer/attendance/attendance_utils/AttendanceSharedConstants';
 import { useDebounce } from '@/app/trainer/trainer_utils/useDebounce';
-import { AttendanceContextType, Attendance, AttendanceStatsResponse, AttendanceResponse, FetchState } from '@/app/trainer/attendance/attendance_types/attendance_types';
+import type { AttendanceContextType, Attendance, AttendanceStatsResponse, AttendanceResponse, FetchState } from '@/app/trainer/attendance/attendance_types/attendance_types';
 
 export function useAttendanceLogic(): AttendanceContextType {
   const router = useRouter();

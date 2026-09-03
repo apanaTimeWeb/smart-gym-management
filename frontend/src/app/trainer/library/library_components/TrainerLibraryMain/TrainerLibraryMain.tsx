@@ -9,7 +9,7 @@ import TrainerLibraryExerciseModal from '@/app/trainer/library/library_component
 import TrainerLibraryDietModal from '@/app/trainer/library/library_components/TrainerLibraryDietModal/TrainerLibraryDietModal';
 import TrainerLibraryExerciseGrid from '@/app/trainer/library/library_components/TrainerLibraryExerciseGrid/TrainerLibraryExerciseGrid';
 import TrainerLibraryDietGrid from '@/app/trainer/library/library_components/TrainerLibraryDietGrid/TrainerLibraryDietGrid';
-import { LibraryInitialData } from '@/app/trainer/library/library_types/library_types';
+import type { LibraryInitialData } from '@/app/trainer/library/library_types/library_types';
 
 function LibraryContent() {
  const { toast, hideToast, tab } = useLibraryContext();
