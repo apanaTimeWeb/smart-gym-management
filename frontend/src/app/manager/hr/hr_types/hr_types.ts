@@ -22,6 +22,8 @@ export interface HrContextType {
   search: string;
   debouncedSearch: string;
   setSearch: (s: string) => void;
+  roleFilter: string;
+  setRoleFilter: (s: string) => void;
   currentPage: number;
   setCurrentPage: (p: number) => void;
   
@@ -41,11 +43,12 @@ export interface HrContextType {
  // Actions
  openAdd: () => void;
  openEdit: (s: Staff) => void;
- openAddPayroll: () => void;
- saveStaff: (data: Partial<Staff> & { joinDate?: string | Date; salary?: string | number }) => Promise<void>;
- savePayroll: (data: Partial<Payroll> & { amount?: string | number }) => Promise<void>;
- deleteStaff: (id: string) => Promise<void>;
- markPayrollPaid: (id: string) => Promise<void>;
+  openAddPayroll: () => void;
+  saveStaff: (data: Partial<Staff> & { joinDate?: string | Date; salary?: string | number }) => Promise<void>;
+  savePayroll: (data: Partial<Payroll> & { amount?: string | number }) => Promise<void>;
+  deleteStaff: (id: string) => Promise<void>;
+  toggleStaffStatus: (staff: Staff) => Promise<void>;
+  markPayrollPaid: (id: string) => Promise<void>;
  payrollMonth: string;
  setPayrollMonth: (m: string) => void;
 }

@@ -21,8 +21,8 @@ export default function ProfileAttendance() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
         {[
           { label: 'Present', value: presentDays, color: 'text-success dark:text-success', bg: 'bg-success-bg ' },
-          { label: 'Absent', value: absentDays, color: 'text-destructive dark:text-destructive', bg: 'bg-danger-bg dark:bg-danger-bg' },
-          { label: 'Attendance %', value: `${attPct}%`, color: attPct >= 75 ? 'text-success dark:text-success' : 'text-destructive dark:text-destructive', bg: 'bg-input' },
+          { label: 'Absent', value: absentDays, color: 'text-danger dark:text-danger', bg: 'bg-danger-bg dark:bg-danger-bg' },
+          { label: 'Attendance %', value: `${attPct}%`, color: attPct >= 75 ? 'text-success dark:text-success' : 'text-danger dark:text-danger', bg: 'bg-input' },
         ].map((s, i) => (
           <div key={i} className={`${s.bg} rounded-xl p-4 border border-border`}>
             <p className="text-xs text-secondary mb-1">{s.label}</p>
@@ -47,7 +47,7 @@ export default function ProfileAttendance() {
             onClick={() => toggleAtt(selectedMember.id, day)}
             className={`h-10 w-full rounded-lg flex items-center justify-center text-xs font-bold transition-all hover:scale-110 border-none ${
               status === 'P' ? 'bg-success text-white' 
-              : status === 'A' ? 'bg-destructive text-white' 
+              : status === 'A' ? 'bg-danger-bg text-white' 
               : 'bg-input text-secondary border border-border'
             }`}
           >

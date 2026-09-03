@@ -2,7 +2,7 @@
 'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';
-import { StoreContextType, StoreInitialData } from '@/app/manager/store/store_types/store_types';
+import type { StoreContextType, StoreInitialData } from '@/app/manager/store/store_types/store_types';
 import { useStoreLogic } from '@/app/manager/store/store_context/useStoreLogic';
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);

@@ -12,7 +12,7 @@ import SuperadminPagination from '@/app/superadmin/superadmin_components/Superad
 const StatusColors: Record<BackupRecord['status'], string> = {
   SUCCESS: 'text-success bg-success/10',
   IN_PROGRESS: 'text-primary bg-primary/10',
-  FAILED: 'text-destructive bg-destructive/10',
+  FAILED: 'text-danger bg-danger-bg/10',
 };
 
 export default function BackupsClient() {
@@ -65,12 +65,12 @@ export default function BackupsClient() {
       toast('Restoring snapshot requires confirmation modal (Simulated)', { icon: '⚠️' });
     };
 if (fetchState === 'loading') return (
-    <div className="space-y-6 animate-pulse">
+    <div className="space-y-6 motion-safe:animate-pulse">
       <div className="h-8 bg-card rounded w-48" />
       <div className="h-96 bg-card rounded-xl border border-border" />
     </div>
   );
-  if (error || !DUMMY_BACKUPS) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
+  if (error || !DUMMY_BACKUPS) return <div className="p-8 text-center text-danger">Error loading data.</div>;
 
 
 
@@ -153,7 +153,7 @@ if (fetchState === 'loading') return (
                     </button>
                     <button 
                       onClick={() => handleRestore(backup.id)}
-                      className="p-2 text-secondary hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors disabled:opacity-30" 
+                      className="p-2 text-secondary hover:text-danger hover:bg-danger-bg/10 rounded-lg transition-colors disabled:opacity-30" 
                       title="Restore Snapshot" 
                       disabled={backup.status !== 'SUCCESS'}
                     >

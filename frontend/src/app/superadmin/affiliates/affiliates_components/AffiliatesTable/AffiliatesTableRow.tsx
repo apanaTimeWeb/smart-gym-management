@@ -55,7 +55,7 @@ export default function AffiliatesTableRow({ affiliate: aff, onToggleStatus, onE
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); onDelete(aff.id); }}
-            className="p-1.5 text-secondary hover:text-destructive transition-colors"
+            className="p-1.5 text-secondary hover:text-danger transition-colors"
             title="Delete Affiliate"
             aria-label={`Delete ${aff.name}`}
           >

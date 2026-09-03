@@ -75,7 +75,7 @@ export default function BroadcastsTable({ broadcasts, onSend, onEdit, onDelete }
                     </button>
                     <button
                       onClick={(e) => { e.stopPropagation(); onDelete(bc.id); }}
-                      className="p-1.5 text-secondary hover:text-destructive hover:bg-destructive/10 rounded-lg transition-all duration-200 ease-in-out"
+                      className="p-1.5 text-secondary hover:text-danger hover:bg-danger-bg/10 rounded-lg transition-all duration-200 ease-in-out"
                       title="Delete Broadcast"
                       aria-label={`Delete broadcast: ${bc.title}`}
                     >

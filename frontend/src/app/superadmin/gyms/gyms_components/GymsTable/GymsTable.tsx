@@ -9,8 +9,7 @@ import GymEmailModal from '@/app/superadmin/gyms/gyms_components/GymEmailModal/G
 import GymDeleteModal from '@/app/superadmin/gyms/gyms_components/GymDeleteModal/GymDeleteModal';
 import GymsEmptyState from '@/app/superadmin/gyms/gyms_components/GymsEmptyState/GymsEmptyState';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
-
-const ITEMS_PER_PAGE = 10;
+import { GYMS_TABLE_PAGE_SIZE } from '@/app/superadmin/gyms/gyms_utils/GymsConstants';
 
 export default function GymsTable() {
   const {
@@ -31,18 +30,18 @@ export default function GymsTable() {
     return (
       <div className="p-4 space-y-4">
         {[...Array(5)].map((_, i) => (
-          <div key={i} className="h-12 bg-card animate-pulse rounded-lg border border-border" />
+          <div key={i} className="h-12 bg-card motion-safe:animate-pulse rounded-lg border border-border" />
         ))}
       </div>
     );
   }
 
   if (fetchState === 'error') {
-    return <div className="p-8 text-center text-destructive">Error loading gyms. Please try again.</div>;
+    return <div className="p-8 text-center text-danger">Error loading gyms. Please try again.</div>;
   }
 
-  const totalPages = Math.ceil(filteredGyms.length / ITEMS_PER_PAGE) || 1;
-  const paginatedGyms = filteredGyms.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(filteredGyms.length / GYMS_TABLE_PAGE_SIZE) || 1;
+  const paginatedGyms = filteredGyms.slice((currentPage - 1) * GYMS_TABLE_PAGE_SIZE, currentPage * GYMS_TABLE_PAGE_SIZE);
 
   return (
     <div className="overflow-x-auto flex flex-col min-h-[400px]">
@@ -101,7 +100,7 @@ export default function GymsTable() {
                         <CheckCircle2 className="w-3 h-3" /> Active
                       </span>
                     ) : gym.status === 'SUSPENDED' ? (
-                      <span className="flex items-center gap-1 text-destructive text-xs font-semibold bg-danger-bg px-2.5 py-1 rounded-full border border-destructive/20">
+                      <span className="flex items-center gap-1 text-danger text-xs font-semibold bg-danger-bg px-2.5 py-1 rounded-full border border-destructive/20">
                         <Ban className="w-3 h-3" /> Suspended
                       </span>
                     ) : (
@@ -130,7 +129,7 @@ export default function GymsTable() {
                           className={`p-1.5 rounded-lg transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page ${
                             gym.status === 'SUSPENDED' 
                               ? 'text-success hover:bg-success/10' 
-                              : 'text-destructive hover:bg-destructive/10'
+                              : 'text-danger hover:bg-danger-bg/10'
                           }`}
                           title={gym.status === 'SUSPENDED' ? 'Activate Tenant' : 'Suspend Tenant'}
                           aria-label={gym.status === 'SUSPENDED' ? `Activate ${gym.name}` : `Suspend ${gym.name}`}
@@ -155,7 +154,7 @@ export default function GymsTable() {
                         </button>
                         <button 
                           onClick={(e) => onDeleteClick(e, gym)}
-                          className="p-1.5 text-secondary hover:bg-destructive/10 hover:text-destructive rounded-lg transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
+                          className="p-1.5 text-secondary hover:bg-danger-bg/10 hover:text-danger rounded-lg transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
                           title="Delete Gym"
                           aria-label={`Delete ${gym.name}`}
                         >

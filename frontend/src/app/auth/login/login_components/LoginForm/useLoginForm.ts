@@ -8,8 +8,7 @@ import toast from 'react-hot-toast';
 import { authApi } from '@/app/auth/auth_api/auth_api';
 import { AuthUrlConfig } from '@/app/auth/auth_url_config';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
-import type { UseLoginFormReturn, LoginFormData, FetchState } from '@/app/auth/login/login_types/login_types';
-import { loginSchema } from '@/app/auth/login/login_types/login_types';
+import { UseLoginFormReturn, LoginFormData, FetchState, loginSchema } from '@/app/auth/login/login_types/login_types';
 
 /** Known demo credentials for mock authentication. Each entry maps email→password→role. */
 const DEMO_CREDENTIALS: Record<string, { password: string; role: string }> = {

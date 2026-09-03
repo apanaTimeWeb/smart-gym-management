@@ -8,13 +8,16 @@ import { z } from 'zod';
 import { useGymsStore } from '@/app/superadmin/gyms/gyms_store/useGymsStore';
 import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
-import { SubscriptionPlan } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { SubscriptionPlan } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 const gymEditSchema = z.object({
   name: z.string().min(1, 'Gym Name is required'),
   ownerName: z.string().min(1, 'Owner Name is required'),
   adminEmail: z.string().email('Invalid email address'),
   plan: z.string().min(1, 'Please select a plan'),
+  temporaryPassword: z.string().optional().refine(val => !val || val.length >= 8, {
+    message: "Password must be at least 8 characters",
+  }),
 });
 
 type GymEditFormValues = z.infer<typeof gymEditSchema>;
@@ -45,6 +48,7 @@ export function useGymEditModal() {
         ownerName: selectedGym.ownerName,
         adminEmail: selectedGym.adminEmail,
         plan: selectedGym.plan,
+        temporaryPassword: '',
       });
     }
   }, [selectedGym, isEditModalOpen, reset]);

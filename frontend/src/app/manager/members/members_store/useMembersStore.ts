@@ -8,7 +8,7 @@ import { membersApi } from '@/app/manager/members/members_api/members_api';
 import { plansApi } from '@/app/manager/plans/plans_api/plans_api';
 import { financeApi } from '@/app/manager/finance/finance_api/finance_api';
 import { attendanceApi } from '@/app/manager/attendance/attendance_api/attendance_api';
-import type { Member, MembersInitialData, FetchState } from '@/app/manager/members/members_types/members_types';
+import { Member, MembersInitialData, FetchState } from '@/app/manager/members/members_types/members_types';
 import type { Plan } from '@/app/manager/plans/plans_types/plans_types';
 import type { Payment } from '@/app/manager/finance/finance_types/finance_types';
 import { MemberFormValues, ATTENDANCE_CALENDAR_DAYS } from '@/app/manager/members/members_utils/MembersSharedConstants';

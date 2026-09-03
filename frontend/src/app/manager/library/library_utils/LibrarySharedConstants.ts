@@ -38,7 +38,7 @@ export const GOALS = ['Weight Loss', 'Muscle Gain', 'Maintenance', 'Endurance', 
 export const DIFF_COLORS: Record<string, string> = {
  BEGINNER: 'bg-success-bg text-success',
  INTERMEDIATE: 'bg-warning-bg text-warning',
- ADVANCED: 'bg-danger-bg text-destructive',
+ ADVANCED: 'bg-danger-bg text-danger',
 };
 
 export const EMPTY_EXERCISE_FORM = { 

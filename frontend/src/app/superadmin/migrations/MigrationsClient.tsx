@@ -12,7 +12,7 @@ import SuperadminPagination from '@/app/superadmin/superadmin_components/Superad
 const StatusIcons = {
   SUCCESS: <CheckCircle2 className="text-success" size={18} />,
   PENDING: <Clock className="text-warning" size={18} />,
-  FAILED: <AlertTriangle className="text-destructive" size={18} />
+  FAILED: <AlertTriangle className="text-danger" size={18} />
 };
 
 export default function MigrationsClient() {
@@ -26,7 +26,7 @@ export default function MigrationsClient() {
   const ITEMS_PER_PAGE = 10;
 
   if (fetchState === 'loading') return <div className="p-8 text-center text-disabled">Loading...</div>;
-  if (error || !data) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
+  if (error || !data) return <div className="p-8 text-center text-danger">Error loading data.</div>;
 
   const { migrations: DUMMY_MIGRATIONS, tenants: DUMMY_TENANTS } = data;
 
@@ -117,7 +117,7 @@ export default function MigrationsClient() {
                     <span className={`px-2.5 py-1 rounded-md text-xs font-bold border ${
                       mig.status === 'SUCCESS' ? 'text-success bg-success/10 border-success/20' :
                       mig.status === 'PENDING' ? 'text-warning bg-warning/10 border-warning/20' :
-                      'text-destructive bg-destructive/10 border-destructive/20'
+                      'text-danger bg-danger-bg/10 border-destructive/20'
                     }`}>
                       {mig.status}
                     </span>

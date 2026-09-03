@@ -38,7 +38,7 @@ export default function InquiriesTable() {
             </thead>
             <tbody className="divide-y divide-border">
               {[...Array(5)].map((_, i) => (
-                <tr key={i} className="animate-pulse">
+                <tr key={i} className="motion-safe:animate-pulse">
                   <td className="px-5 py-4"><div className="h-4 bg-muted rounded w-4"></div></td>
                   <td className="px-5 py-4 flex items-center gap-3">
                     <div className="w-9 h-9 rounded-full bg-muted"></div>

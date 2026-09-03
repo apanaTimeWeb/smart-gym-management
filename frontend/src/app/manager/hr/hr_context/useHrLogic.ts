@@ -7,12 +7,13 @@ import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback
 import { EMPTY_STAFF } from '@/app/manager/hr/hr_utils/HrSharedConstants';
 import { HrContextType, HrInitialData, FetchState } from '@/app/manager/hr/hr_types/hr_types';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 
 export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
   const { confirm } = useConfirm();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
  const [staff, setStaff] = useState<Staff[]>(initialData?.staff || []);
  const [payrolls, setPayrolls] = useState<Payroll[]>(initialData?.payrolls || []);
  const [summary, setSummary] = useState<HrSummary | null>(initialData?.summary || null);
@@ -20,34 +21,33 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
  const [error, setError] = useState('');
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
-  // Local state for immediate typing feedback
-  const [search, setSearch] = useState(searchParams.get('search') || '');
+  // Read URL parameters directly instead of using useState
+  const search = searchParams.get('search') || '';
+  const roleFilter = searchParams.get('role') || 'All';
+  const payrollMonth = searchParams.get('month') || new Date().toISOString().slice(0, 7);
   const debouncedSearch = useDebounce(search, 300);
   const currentPage = Number(searchParams.get('page')) || 1;
 
   // Update URL only when debounced search changes
-  useEffect(() => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (debouncedSearch) {
-      if (params.get('search') !== debouncedSearch) {
-        params.set('search', debouncedSearch);
-        params.set('page', '1');
-        router.push(`?${params.toString()}`, { scroll: false });
-      }
-    } else {
-      if (params.has('search')) {
-        params.delete('search');
-        params.set('page', '1');
-        router.push(`?${params.toString()}`, { scroll: false });
-      }
-    }
-  }, [debouncedSearch, router, searchParams]);
+  const setUrlParam = useCallback((key: string, value: string | null) => {
+    const current = new URLSearchParams(Array.from(searchParams.entries()));
+    if (value) current.set(key, value);
+    else current.delete(key);
+    if (key !== 'page') current.set('page', '1');
+    router.push(`${pathname}?${current.toString()}`, { scroll: false });
+  }, [searchParams, pathname, router]);
 
-  const setCurrentPage = useCallback((page: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('page', page.toString());
-    router.push(`?${params.toString()}`, { scroll: false });
-  }, [router, searchParams]);
+  useEffect(() => {
+    const currentSearch = searchParams.get('search') || '';
+    if (debouncedSearch !== currentSearch) {
+      setUrlParam('search', debouncedSearch || null);
+    }
+  }, [debouncedSearch, searchParams, setUrlParam]);
+
+  const setSearch = useCallback((val: string) => setUrlParam('search', val || null), [setUrlParam]);
+  const setCurrentPage = useCallback((val: number) => setUrlParam('page', val.toString()), [setUrlParam]);
+  const setRoleFilter = useCallback((val: string) => setUrlParam('role', val === 'All' ? null : val), [setUrlParam]);
+  const setPayrollMonth = useCallback((val: string) => setUrlParam('month', val), [setUrlParam]);
 
  const [showModal, setShowModal] = useState(false);
  const [showPayrollModal, setShowPayrollModal] = useState(false);
@@ -62,9 +62,12 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
     setFetchState('loading');
     setError('');
     try {
+      const staffParams: Record<string, string> = { search: debouncedSearch, page: String(currentPage) };
+      if (roleFilter !== 'All') staffParams.role = roleFilter;
+      
       const [staffRes, payrollsRes, summaryRes] = await Promise.all([
-        hrApi.getStaff({ search: debouncedSearch, page: String(currentPage) }),
-        hrApi.getPayrolls({ search: debouncedSearch, page: String(currentPage) }),
+        hrApi.getStaff(staffParams),
+        hrApi.getPayrolls({ search: debouncedSearch, page: String(currentPage), month: payrollMonth }),
         hrApi.getSummary()
       ]);
       
@@ -78,7 +81,7 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
       showToast(msg, 'error');
       setFetchState('error');
     }
-  }, [showToast, debouncedSearch, currentPage]);
+  }, [showToast, debouncedSearch, currentPage, roleFilter, payrollMonth]);
 
   // Rely on URL changes to drive the fetch (plus initial mount)
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -180,7 +183,33 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
     }
   }, [showToast, confirm]);
 
+  const toggleStaffStatus = useCallback(async (s: Staff) => {
+    const newStatus = !s.isActive;
+    const actionName = newStatus ? 'Activate' : 'Suspend';
+    const isConfirmed = await confirm({ 
+      title: `${actionName} Staff`, 
+      message: `Are you sure you want to ${actionName.toLowerCase()} ${s.name}?`, 
+      confirmText: actionName, 
+      type: newStatus ? 'info' : 'danger' 
+    });
+    if (!isConfirmed) return;
+    setSaving(true);
+    try {
+      const payload: Partial<Staff> = { isActive: newStatus };
+      const res = await hrApi.updateStaff(s.id, payload);
+      setStaff(prev => prev.map(staff => String(staff.id) === String(s.id) ? { ...staff, isActive: newStatus } as Staff : staff));
+      setSummary(prev => prev ? { ...prev, activeStaff: newStatus ? prev.activeStaff + 1 : Math.max(0, prev.activeStaff - 1) } : null);
+      showToast(res.message || `Staff ${newStatus ? 'activated' : 'suspended'} successfully`, 'success');
+    } catch (err) {
+      showToast((err as Error).message, 'error');
+    } finally {
+      setSaving(false);
+    }
+  }, [showToast, confirm]);
+
   const markPayrollPaid = useCallback(async (id: string) => {
+    const isConfirmed = await confirm({ title: 'Mark as Paid', message: 'Are you sure you want to mark this payroll as paid?', confirmText: 'Yes, Mark Paid', type: 'info' });
+    if (!isConfirmed) return;
     try { 
       setPayrolls(prev => prev.map(p => String(p.id) === String(id) ? { ...p, status: 'Paid' } : p));
       setSummary(prev => prev ? { ...prev, paidCount: prev.paidCount + 1, pendingCount: Math.max(0, prev.pendingCount - 1) } : null);
@@ -188,13 +217,11 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
     } catch (err) { 
       showToast((err as Error).message, 'error'); 
     }
-  }, [showToast]);
-
-  const [payrollMonth, setPayrollMonth] = useState(new Date().toISOString().slice(0, 7));
+  }, [showToast, confirm]);
 
   return {
     staff, payrolls, summary, fetchState, error, toast, showToast, hideToast, loadAll,
-    search, debouncedSearch, setSearch, currentPage, setCurrentPage,
-    showModal, setShowModal, showPayrollModal, setShowPayrollModal, editId, editData, saving, openAdd, openEdit, openAddPayroll, saveStaff, savePayroll, deleteStaff, markPayrollPaid, payrollMonth, setPayrollMonth
+    search, debouncedSearch, setSearch, roleFilter, setRoleFilter, currentPage, setCurrentPage,
+    showModal, setShowModal, showPayrollModal, setShowPayrollModal, editId, editData, saving, openAdd, openEdit, openAddPayroll, saveStaff, savePayroll, deleteStaff, toggleStaffStatus, markPayrollPaid, payrollMonth, setPayrollMonth
   };
 }

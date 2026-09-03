@@ -108,7 +108,7 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
         </button>
         
         <button 
-          className={`flex w-full items-center gap-3 rounded-lg px-3 py-3 text-destructive hover:bg-destructive/10 transition-colors ${isCollapsed ? 'justify-center' : ''}`}
+          className={`flex w-full items-center gap-3 rounded-lg px-3 py-3 text-danger hover:bg-danger-bg/10 transition-colors ${isCollapsed ? 'justify-center' : ''}`}
           onClick={async () => { await logout(); }}
         >
           <LogOut className="w-5 h-5 shrink-0" />

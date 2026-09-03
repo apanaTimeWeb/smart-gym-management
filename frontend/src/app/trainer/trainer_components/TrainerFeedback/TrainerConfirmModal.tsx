@@ -32,7 +32,7 @@ export default function TrainerConfirmModal({
         <div className="p-6">
           <div className="flex items-center gap-4 mb-4">
             <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${
-              type === 'danger' ? 'bg-danger-bg text-destructive' :
+              type === 'danger' ? 'bg-danger-bg text-danger' :
               type === 'warning' ? 'bg-warning-bg text-warning' :
               'bg-info-bg text-info'
             }`}>
@@ -59,7 +59,7 @@ export default function TrainerConfirmModal({
                 onCancel();
               }}
               className={`flex-1 py-2.5 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90 ${
-                type === 'danger' ? 'bg-destructive' :
+                type === 'danger' ? 'bg-danger-bg' :
                 type === 'warning' ? 'bg-warning' :
                 'bg-info'
               }`}

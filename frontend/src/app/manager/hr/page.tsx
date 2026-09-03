@@ -1,7 +1,7 @@
-﻿// RESPONSIBILITY: Server Component — fetches initial SSR data and renders the HR & Payroll module entry point.
-import HrMain from '@/app/manager/hr/hr_components/HrMain/HrMain';
+// RESPONSIBILITY: Server Component � fetches initial SSR data and renders the HR & Payroll module entry point.
+import ManagerHrMain from '@/app/manager/hr/hr_components/ManagerHrMain/ManagerHrMain';
 import { ssrHrApi } from '@/app/manager/hr/hr_api/hr_server_api';
-import { HrInitialData } from '@/app/manager/hr/hr_types/hr_types';
+import type { HrInitialData } from '@/app/manager/hr/hr_types/hr_types';
 
 export default async function HrPage() {
   let initialData: HrInitialData | null = null;
@@ -21,5 +21,5 @@ export default async function HrPage() {
     // console.error('Failed to fetch hr initial data:', e);
   }
 
-  return <HrMain initialData={initialData} />;
+  return <ManagerHrMain initialData={initialData} />;
 }

@@ -1,8 +1,8 @@
-﻿// RESPONSIBILITY: Provides UI orchestration state to the Settings module hierarchy. Async data is managed in useSettingsLogic.
+// RESPONSIBILITY: Provides UI orchestration state to the Settings module hierarchy. Async data is managed in useSettingsLogic.
 'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';
-import { SettingsContextType } from '@/app/admin/settings/settings_types/settings_types';
+import type { SettingsContextType } from '@/app/admin/settings/settings_types/settings_types';
 import { useSettingsLogic } from '@/app/admin/settings/settings_context/useSettingsLogic';
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);

@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAttendanceContext } from '@/app/manager/attendance/attendance_context/AttendanceContext';
 import { attendanceApi } from '@/app/manager/attendance/attendance_api/attendance_api';
-import { Attendance } from '@/app/manager/attendance/attendance_types/attendance_types';
+import type { Attendance } from '@/app/manager/attendance/attendance_types/attendance_types';
 import { X, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 
 export default function AttendanceCalendar() {

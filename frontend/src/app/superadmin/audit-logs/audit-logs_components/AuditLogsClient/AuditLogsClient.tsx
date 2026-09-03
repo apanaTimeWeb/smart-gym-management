@@ -63,14 +63,14 @@ export default function AuditLogsClient() {
 
   if (fetchState === 'loading') {
     return (
-      <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto animate-pulse">
+      <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto motion-safe:animate-pulse">
         <div className="h-10 bg-card rounded w-1/4"></div>
         <div className="h-64 bg-card rounded-xl w-full"></div>
       </div>
     );
   }
 
-  if (error) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
+  if (error) return <div className="p-8 text-center text-danger">Error loading data.</div>;
 
   const logs = data?.logs || AUDIT_LOGS_FALLBACK;
   const totalLogs = data?.total || AUDIT_LOGS_FALLBACK.length;

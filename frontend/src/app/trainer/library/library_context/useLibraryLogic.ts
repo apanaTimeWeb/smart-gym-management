@@ -5,14 +5,15 @@ import { libraryApi } from '@/app/trainer/library/library_api/library_api';
 import type { Exercise, DietPlan } from '@/app/trainer/library/library_types/library_types';
 import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
 import { EMPTY_EXERCISE_FORM, EMPTY_DIET_FORM, type LibraryTab } from '@/app/trainer/library/library_utils/LibrarySharedConstants';
-import { LibraryContextType, LibraryInitialData } from '@/app/trainer/library/library_types/library_types';
+import type { LibraryContextType, LibraryInitialData } from '@/app/trainer/library/library_types/library_types';
 import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 
 export function useLibraryLogic(initialData?: LibraryInitialData | null): LibraryContextType {
   const { confirm } = useConfirm();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   
   const tab = (searchParams.get('tab') as LibraryTab) || 'Exercises';
   
@@ -21,8 +22,8 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
     params.set('tab', newTab);
     params.delete('page');
     params.delete('search');
-    router.push(`?${params.toString()}`, { scroll: false });
-  }, [router, searchParams]);
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [router, searchParams, pathname]);
 
   const [exercises, setExercises] = useState<Exercise[]>(initialData?.exercises || []);
   const [dietPlans, setDietPlans] = useState<DietPlan[]>(initialData?.dietPlans || []);
@@ -41,17 +42,17 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
       const params = new URLSearchParams(searchParams.toString());
       if (debouncedSearch) { params.set('search', debouncedSearch); params.set('page', '1'); }
       else { params.delete('search'); params.set('page', '1'); }
-      router.push(`?${params.toString()}`, { scroll: false });
+      router.push(`${pathname}?${params.toString()}`, { scroll: false });
     }
-  }, [debouncedSearch, searchParams, router]);
+  }, [debouncedSearch, searchParams, router, pathname]);
 
   const setSearch = useCallback((val: string) => setLocalSearch(val), []);
 
   const setCurrentPage = useCallback((page: number) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set('page', page.toString());
-    router.push(`?${params.toString()}`, { scroll: false });
-  }, [router, searchParams]);
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [router, searchParams, pathname]);
 
  const [showExModal, setShowExModal] = useState(false);
  const [editExId, setEditExId] = useState<string | null>(null);

@@ -3,9 +3,9 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { financeApi } from '@/app/admin/finance/finance_api/finance_api';
 import type { Payment, FinanceSummary } from '@/app/admin/finance/finance_types/finance_types';
 import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
-import { FinanceContextType, FinanceInitialData } from '@/app/admin/finance/finance_types/finance_types';
+import type { FinanceContextType, FinanceInitialData } from '@/app/admin/finance/finance_types/finance_types';
 import { AddPaymentFormValues } from '@/app/admin/finance/finance_utils/FinanceSharedConstants';
-import { FetchState } from '@/app/admin/finance/finance_types/finance_types';
+import type { FetchState } from '@/app/admin/finance/finance_types/finance_types';
 import { useDebounce } from '@/app/admin/admin_utils/useDebounce';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
@@ -18,7 +18,6 @@ export function useFinanceLogic(initialData?: FinanceInitialData | null): Financ
   const [error, setError] = useState('');
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
   const [showModal, setShowModal] = useState(false);
-  const [methodFilter, setMethodFilter] = useState('All');
   const isFirstRender = useRef(true);
 
   const router = useRouter();
@@ -27,6 +26,7 @@ export function useFinanceLogic(initialData?: FinanceInitialData | null): Financ
 
   // URL State
   const search = searchParams.get('search') || '';
+  const methodFilter = searchParams.get('method') || 'All';
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
   const debouncedSearch = useDebounce(search, 300);
 
@@ -40,6 +40,7 @@ export function useFinanceLogic(initialData?: FinanceInitialData | null): Financ
 
   const setSearch = useCallback((val: string) => setUrlParam('search', val || null), [setUrlParam]);
   const setCurrentPage = useCallback((val: number) => setUrlParam('page', val.toString()), [setUrlParam]);
+  const setMethodFilter = useCallback((val: string) => setUrlParam('method', val === 'All' ? null : val), [setUrlParam]);
 
  const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
  const hideToast = useCallback(() => setToast(null), []);

@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Server Component — fetches initial SSR data and renders the Gym Store module entry point.
-import StoreMain from '@/app/manager/store/store_components/StoreMain/StoreMain';
+import ManagerStoreMain from '@/app/manager/store/store_components/ManagerStoreMain/ManagerStoreMain';
 import { ssrStoreApi } from '@/app/manager/store/store_api/store_server_api';
-import { StoreInitialData } from '@/app/manager/store/store_types/store_types';
+import type { StoreInitialData } from '@/app/manager/store/store_types/store_types';
 
 export default async function StorePage() {
   let initialData: StoreInitialData | undefined = undefined;
@@ -22,5 +22,5 @@ export default async function StorePage() {
     // console.error('Failed to fetch store initial data:', e);
   }
 
-  return <StoreMain initialData={initialData} />;
+  return <ManagerStoreMain initialData={initialData} />;
 }

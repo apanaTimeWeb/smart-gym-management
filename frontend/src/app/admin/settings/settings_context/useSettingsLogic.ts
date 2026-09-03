@@ -3,7 +3,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { settingsApi } from '@/app/admin/settings/settings_api/settings_api';
 import toast from 'react-hot-toast';
 import { EMPTY_SETTINGS_FORM } from '@/app/admin/settings/settings_utils/SettingsSharedConstants';
-import { SettingsContextType } from '@/app/admin/settings/settings_types/settings_types';
+import type { SettingsContextType } from '@/app/admin/settings/settings_types/settings_types';
 
 export function useSettingsLogic(): SettingsContextType {
  const [activeTab, setActiveTab] = useState('Gym Profile');

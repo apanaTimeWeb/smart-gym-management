@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Custom hook encapsulating all business logic, state, and API interactions for the Plans module.
-// DATA FLOW: plansApi -> usePlansLogic -> PlansContext -> PlansGrid, PlanModal, PlansToolbar
+// DATA FLOW: plansApi -> usePlansLogic -> PlansContext -> AdminPlansGrid, AdminPlansModal, AdminPlansToolbar
 import { useState, useCallback, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { plansApi } from '@/app/admin/plans/plans_api/plans_api';

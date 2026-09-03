@@ -33,7 +33,7 @@ export default function FeaturesClient() {
   };
 
   if (fetchState === 'loading') return <div className="p-8 text-center text-disabled">Loading...</div>;
-  if (error || !data) return <div className="p-8 text-center text-destructive">Error loading data.</div>;
+  if (error || !data) return <div className="p-8 text-center text-danger">Error loading data.</div>;
 
   const { flags: DUMMY_FEATURE_FLAGS, notes: DUMMY_RELEASE_NOTES } = data;
 

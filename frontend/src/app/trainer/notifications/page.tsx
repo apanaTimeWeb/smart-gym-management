@@ -1,4 +1,4 @@
-import NotificationsClient from '@/app/trainer/notifications/NotificationsClient';
+import TrainerNotificationsClient from '@/app/trainer/notifications/TrainerNotificationsClient';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -15,7 +15,7 @@ export default function NotificationsPage() {
           <p className="text-secondary mt-1">Manage your alerts and schedule updates.</p>
         </div>
         
-        <NotificationsClient />
+        <TrainerNotificationsClient />
       </div>
     </main>
   );

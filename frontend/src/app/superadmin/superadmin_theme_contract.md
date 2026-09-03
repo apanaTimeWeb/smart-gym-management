@@ -29,3 +29,16 @@ To ensure this module can be safely ported or re-themed without breaking, it str
 ## Skeletons
 - `--skeleton-base`: Loading skeleton base.
 - `--skeleton-highlight`: Loading skeleton shimmer.
+
+## Surface Elevation (Design System §28 — Dark Mode Depth)
+Used to convey visual depth in dark mode where shadows are invisible.
+- `--bg-floating` (`bg-floating`): Inputs, code blocks — Layer 2.
+- `--bg-overlay` (`bg-overlay`): Modals, dialogs, drawers — Layer 3.
+- `--bg-popover` (`bg-popover`): Dropdowns, tooltips, command palette — Layer 4.
+
+**Rule:** Modals use `bg-overlay`, dropdowns use `bg-popover`. In light mode, combine with `shadow-2xl`. In dark mode, elevation + `border border-border` provides depth.
+
+## Accent — Purple (Plans & Enterprise Badges)
+Used for Enterprise plan badges and end-user count metrics.
+- `--purple`: Text color for purple accent elements (e.g., `text-purple`).
+- `--purple-bg` / `bg-purple-bg`: Background for purple badge chips.

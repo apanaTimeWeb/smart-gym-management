@@ -1,6 +1,6 @@
 ﻿// RESPONSIBILITY: Server Component — fetches initial SSR data and renders the Attendance tracking module entry point.
-import AttendanceMain from '@/app/manager/attendance/attendance_components/AttendanceMain/AttendanceMain';
+import ManagerAttendanceMain from '@/app/manager/attendance/attendance_components/ManagerAttendanceMain/ManagerAttendanceMain';
 
 export default function AttendancePage() {
- return <AttendanceMain />;
+ return <ManagerAttendanceMain />;
 }

@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { useDashboardData } from '@/app/superadmin/dashboard/dashboard_utils/useDashboardData';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { CHART_COLORS } from '@/app/superadmin/superadmin_utils/SuperadminChartConstants';
-import { SaaSDashboardMetrics, RevenueChartData, GrowthChartData, TimeRange } from '@/app/superadmin/dashboard/dashboard_types/dashboard_types';
+import type { SaaSDashboardMetrics, RevenueChartData, GrowthChartData, TimeRange } from '@/app/superadmin/dashboard/dashboard_types/dashboard_types';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -19,17 +19,17 @@ export default function DashboardView() {
     return (
       <div className="space-y-6">
         <div>
-          <div className="h-8 w-48 bg-border animate-pulse rounded"></div>
-          <div className="h-4 w-96 bg-border animate-pulse rounded mt-2"></div>
+          <div className="h-8 w-48 bg-border motion-safe:animate-pulse rounded"></div>
+          <div className="h-4 w-96 bg-border motion-safe:animate-pulse rounded mt-2"></div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-background border border-border rounded-xl p-6 h-32 animate-pulse"></div>
+            <div key={i} className="bg-background border border-border rounded-xl p-6 h-32 motion-safe:animate-pulse"></div>
           ))}
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 bg-background border border-border rounded-xl p-6 h-80 animate-pulse"></div>
-          <div className="bg-background border border-border rounded-xl p-6 h-80 animate-pulse"></div>
+          <div className="lg:col-span-2 bg-background border border-border rounded-xl p-6 h-80 motion-safe:animate-pulse"></div>
+          <div className="bg-background border border-border rounded-xl p-6 h-80 motion-safe:animate-pulse"></div>
         </div>
       </div>
     );
@@ -106,7 +106,7 @@ export default function DashboardView() {
           </div>
           <select 
             value={timeRange} 
-            onChange={(e) => setTimeRange(e.target.value as any)}
+            onChange={(e) => setTimeRange(e.target.value as TimeRange)}
             className="bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-primary"
           >
             <option value="weekly">This Week</option>
@@ -119,7 +119,7 @@ export default function DashboardView() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {metrics.map((m) => (
-          <div key={m.label} className="bg-card border border-border rounded-xl p-6 shadow-sm hover:-translate-y-1 hover:shadow-lg transition-all duration-200 ease-in-out">
+          <div key={m.label} className="bg-card border border-border rounded-xl p-6 shadow-sm motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-lg motion-safe:transition-all motion-safe:duration-200 ease-in-out">
             <div className="flex items-center justify-between mb-4">
               <span className="text-secondary font-medium text-xs uppercase tracking-wider">{m.label}</span>
               <m.icon className={`w-5 h-5 ${m.color}`} />

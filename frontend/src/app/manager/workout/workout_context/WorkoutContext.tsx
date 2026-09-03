@@ -1,8 +1,8 @@
-﻿// RESPONSIBILITY: Provides UI orchestration state to the Workout Library module hierarchy. Async data is managed in useWorkoutLogic.
+// RESPONSIBILITY: Provides UI orchestration state to the Workout Library module hierarchy. Async data is managed in useWorkoutLogic.
 'use client';
 
 import React, { createContext, useContext } from 'react';
-import { WorkoutContextType } from '@/app/manager/workout/workout_types/workout_types';
+import type { WorkoutContextType } from '@/app/manager/workout/workout_types/workout_types';
 import { useWorkoutLogic } from '@/app/manager/workout/workout_context/useWorkoutLogic';
 
 const WorkoutContext = createContext<WorkoutContextType | undefined>(undefined);
