@@ -18,7 +18,6 @@ export function useFinanceLogic(initialData?: FinanceInitialData | null): Financ
   const [error, setError] = useState('');
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
   const [showModal, setShowModal] = useState(false);
-  const [methodFilter, setMethodFilter] = useState('All');
   const isFirstRender = useRef(true);
 
   const router = useRouter();
@@ -27,6 +26,7 @@ export function useFinanceLogic(initialData?: FinanceInitialData | null): Financ
 
   // URL State
   const search = searchParams.get('search') || '';
+  const methodFilter = searchParams.get('method') || 'All';
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
   const debouncedSearch = useDebounce(search, 300);
 
@@ -40,6 +40,7 @@ export function useFinanceLogic(initialData?: FinanceInitialData | null): Financ
 
   const setSearch = useCallback((val: string) => setUrlParam('search', val || null), [setUrlParam]);
   const setCurrentPage = useCallback((val: number) => setUrlParam('page', val.toString()), [setUrlParam]);
+  const setMethodFilter = useCallback((val: string) => setUrlParam('method', val === 'All' ? null : val), [setUrlParam]);
 
  const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
  const hideToast = useCallback(() => setToast(null), []);

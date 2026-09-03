@@ -10,13 +10,30 @@ import { workoutApi } from '@/app/trainer/workout/workout_api/workout_api';
 import { libraryApi } from '@/app/trainer/library/library_api/library_api';
 import type { Exercise } from '@/app/trainer/library/library_types/library_types';
 import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 
 export function useWorkoutLogic(): WorkoutContextType {
   const { confirm } = useConfirm();
-  const [tab, setTab] = useState('Workout Plans');
-  const [search, setSearch] = useState('');
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  const tab = searchParams.get('tab') || 'Workout Plans';
+  const search = searchParams.get('search') || '';
+  const currentPage = Number(searchParams.get('page')) || 1;
   const debouncedSearch = useDebounce(search, 300);
-  const [currentPage, setCurrentPage] = useState(1);
+
+  const setUrlParam = useCallback((key: string, value: string | null) => {
+    const current = new URLSearchParams(Array.from(searchParams.entries()));
+    if (value) current.set(key, value);
+    else current.delete(key);
+    if (key !== 'page' && key !== 'tab') current.set('page', '1');
+    router.push(`${pathname}?${current.toString()}`, { scroll: false });
+  }, [searchParams, pathname, router]);
+
+  const setTab = useCallback((val: string) => setUrlParam('tab', val), [setUrlParam]);
+  const setSearch = useCallback((val: string) => setUrlParam('search', val || null), [setUrlParam]);
+  const setCurrentPage = useCallback((val: number) => setUrlParam('page', val.toString()), [setUrlParam]);
   
   const [workouts, setWorkouts] = useState<Workout[]>([]);
   const [totalWorkouts, setTotalWorkouts] = useState(0);

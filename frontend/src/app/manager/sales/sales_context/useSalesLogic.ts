@@ -7,14 +7,15 @@ import { SalesContextType, SalesInitialData, FetchState, OverviewDataPoint, Memb
 import type { Member } from '@/app/manager/members/members_types/members_types';
 import { salesApi } from '@/app/manager/sales/sales_api/sales_api';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 
 export function useSalesLogic(initialData?: SalesInitialData | null): SalesContextType {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
 
-  const [tab, setTab] = useState<SalesTab>('Overview');
-  const [dateFilter, setDateFilter] = useState<DateFilter>('This Month');
+  const tab = (searchParams.get('tab') || 'Overview') as SalesTab;
+  const dateFilter = (searchParams.get('dateFilter') || 'This Month') as DateFilter;
   const [fetchState, setFetchState] = useState<FetchState>(initialData ? 'success' : 'loading');
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
@@ -26,14 +27,27 @@ export function useSalesLogic(initialData?: SalesInitialData | null): SalesConte
     const params = new URLSearchParams(searchParams.toString());
     if (val) { params.set('search', val); params.set('page', '1'); }
     else { params.delete('search'); params.set('page', '1'); }
-    router.push(`?${params.toString()}`, { scroll: false });
-  }, [router, searchParams]);
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [router, searchParams, pathname]);
+
+  const setTab = useCallback((val: SalesTab) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('tab', val);
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [router, searchParams, pathname]);
+
+  const setDateFilter = useCallback((val: DateFilter) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('dateFilter', val);
+    params.set('page', '1');
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [router, searchParams, pathname]);
 
   const setCurrentPage = useCallback((page: number) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set('page', page.toString());
-    router.push(`?${params.toString()}`, { scroll: false });
-  }, [router, searchParams]);
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [router, searchParams, pathname]);
 
   const showToast = useCallback((message: string, type: ToastType) => {
     setToast({ message, type });
