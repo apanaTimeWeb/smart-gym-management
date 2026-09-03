@@ -3,7 +3,7 @@
 
 import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 import { DashboardProvider, useDashboardContext } from '@/app/admin/dashboard/dashboard_context/DashboardContext';
-import { DashboardStats, TimeRange } from '@/app/admin/dashboard/dashboard_types/dashboard_types';
+import type { DashboardStats, TimeRange } from '@/app/admin/dashboard/dashboard_types/dashboard_types';
 import AdminDashboardKPIs from '@/app/admin/dashboard/dashboard_components/AdminDashboardKPIs/AdminDashboardKPIs';
 import AdminDashboardRecentMembers from '@/app/admin/dashboard/dashboard_components/AdminDashboardRecentMembers/AdminDashboardRecentMembers';
 import AdminDashboardPendingPayments from '@/app/admin/dashboard/dashboard_components/AdminDashboardPendingPayments/AdminDashboardPendingPayments';
@@ -15,19 +15,19 @@ function DashboardSkeleton() {
   return (
     <div className="p-6 space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        {[1, 2, 3, 4].map(i => <div key={i} className="h-28 bg-card rounded-xl animate-pulse border border-border" />)}
+        {[1, 2, 3, 4].map(i => <div key={i} className="h-28 bg-card rounded-xl motion-safe:animate-pulse border border-border" />)}
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        {[1, 2, 3, 4].map(i => <div key={i} className="h-28 bg-card rounded-xl animate-pulse border border-border" />)}
+        {[1, 2, 3, 4].map(i => <div key={i} className="h-28 bg-card rounded-xl motion-safe:animate-pulse border border-border" />)}
       </div>
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        <div className="xl:col-span-2 h-80 bg-card rounded-xl animate-pulse border border-border" />
+        <div className="xl:col-span-2 h-80 bg-card rounded-xl motion-safe:animate-pulse border border-border" />
         <div className="space-y-4">
-          <div className="h-48 bg-card rounded-xl animate-pulse border border-border" />
-          <div className="h-28 bg-card rounded-xl animate-pulse border border-border" />
+          <div className="h-48 bg-card rounded-xl motion-safe:animate-pulse border border-border" />
+          <div className="h-28 bg-card rounded-xl motion-safe:animate-pulse border border-border" />
         </div>
       </div>
-      <div className="h-40 bg-card rounded-xl animate-pulse border border-border" />
+      <div className="h-40 bg-card rounded-xl motion-safe:animate-pulse border border-border" />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Renders a single KPI stat card (icon, label, big number, trend). Used in dashboard and module KPI rows.
+// RESPONSIBILITY: Renders a single KPI stat card (icon, label, big number, trend). Used in dashboard and module KPI rows.
 import { LucideIcon } from 'lucide-react';
 
 interface AdminStatCardProps {
@@ -21,9 +21,9 @@ export default function AdminStatCard({ title, value, change, changeType = 'neut
  {change && (
  <p className={`text-xs mt-1 font-medium ${
  changeType === 'up' ? 'text-success' :
- changeType === 'down' ? 'text-destructive' : 'text-secondary'
+ changeType === 'down' ? 'text-danger' : 'text-secondary'
  }`}>
- {changeType === 'up' ? '↑' : changeType === 'down' ? '↓' : ''} {change}
+ {changeType === 'up' ? '?' : changeType === 'down' ? '?' : ''} {change}
  </p>
  )}
  </div>

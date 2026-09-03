@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Server Component that fetches initial data and acts as the entry point for the Finance module.
 import AdminFinanceMain from '@/app/admin/finance/finance_components/AdminFinanceMain/AdminFinanceMain';
 import { ssrFinanceApi } from '@/app/admin/finance/finance_api/finance_server_api';
-import { FinanceInitialData } from '@/app/admin/finance/finance_types/finance_types';
+import type { FinanceInitialData } from '@/app/admin/finance/finance_types/finance_types';
 
 export default async function FinancePage() {
   let initialData: FinanceInitialData | null = null;

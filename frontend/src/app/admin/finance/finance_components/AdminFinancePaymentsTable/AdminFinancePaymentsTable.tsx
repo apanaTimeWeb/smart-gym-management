@@ -32,7 +32,7 @@ export default function AdminFinancePaymentsTable() {
  </thead>
  <tbody className="divide-y divide-border">
  {[...Array(5)].map((_, i) => (
- <tr key={i} className="animate-pulse bg-card">
+ <tr key={i} className="motion-safe:animate-pulse bg-card">
  <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
  <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-32"></div></td>
  <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-16"></div></td>

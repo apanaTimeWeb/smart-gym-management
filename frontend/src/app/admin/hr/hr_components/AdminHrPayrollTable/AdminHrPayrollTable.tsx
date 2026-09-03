@@ -44,7 +44,7 @@ export default function AdminHrPayrollTable() {
             </thead>
             <tbody className="divide-y divide-border">
               {[...Array(5)].map((_, i) => (
-                <tr key={i} className="animate-pulse bg-card">
+                <tr key={i} className="motion-safe:animate-pulse bg-card">
                   <td className="px-4 py-4">
                     <div className="h-4 bg-muted rounded w-32 mb-2"></div>
                     <div className="h-3 bg-muted rounded w-20"></div>

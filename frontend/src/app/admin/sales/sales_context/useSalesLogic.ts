@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useDebounce } from '@/app/admin/admin_utils/useDebounce';
 import { type SalesTab, type DateFilter } from '@/app/admin/sales/sales_utils/SalesSharedConstants';
-import { SalesContextType, SalesInitialData, FetchState, OverviewDataPoint, MembershipReportItem, MembershipTotals, PendingPaymentMember, StoreOrder, StoreSummary } from '@/app/admin/sales/sales_types/sales_types';
+import type { SalesContextType, SalesInitialData, FetchState, OverviewDataPoint, MembershipReportItem, MembershipTotals, PendingPaymentMember, StoreOrder, StoreSummary } from '@/app/admin/sales/sales_types/sales_types';
 import type { Member } from '@/app/admin/sales/sales_types/sales_types';
 import { salesApi } from '@/app/admin/sales/sales_api/sales_api';
 import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';

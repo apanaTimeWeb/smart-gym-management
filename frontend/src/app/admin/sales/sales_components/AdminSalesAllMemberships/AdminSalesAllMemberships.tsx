@@ -64,11 +64,11 @@ export default function AdminSalesAllMemberships() {
     return (
       <div className="space-y-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {[1,2,3,4].map(i => <div key={i} className="animate-pulse h-20 bg-input rounded-xl border border-border" />)}
+          {[1,2,3,4].map(i => <div key={i} className="motion-safe:animate-pulse h-20 bg-input rounded-xl border border-border" />)}
         </div>
         <div className="space-y-2">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="animate-pulse h-12 bg-card rounded border border-border" />
+            <div key={i} className="motion-safe:animate-pulse h-12 bg-card rounded border border-border" />
           ))}
         </div>
       </div>

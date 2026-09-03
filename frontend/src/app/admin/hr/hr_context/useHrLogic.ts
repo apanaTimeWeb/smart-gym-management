@@ -5,7 +5,7 @@ import { hrApi } from '@/app/admin/hr/hr_api/hr_api';
 import type { Staff, Payroll, HrSummary } from '@/app/admin/hr/hr_types/hr_types';
 import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
 import { EMPTY_STAFF } from '@/app/admin/hr/hr_utils/HrSharedConstants';
-import { HrContextType, HrInitialData, FetchState } from '@/app/admin/hr/hr_types/hr_types';
+import type { HrContextType, HrInitialData, FetchState } from '@/app/admin/hr/hr_types/hr_types';
 import { useConfirm } from '@/app/admin/admin_components/AdminFeedback/AdminConfirmProvider';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 

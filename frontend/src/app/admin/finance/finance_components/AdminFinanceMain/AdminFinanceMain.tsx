@@ -8,7 +8,7 @@ import AdminFinanceKPIs from '@/app/admin/finance/finance_components/AdminFinanc
 import AdminFinanceRevenueByMethod from '@/app/admin/finance/finance_components/AdminFinanceRevenueByMethod/AdminFinanceRevenueByMethod';
 import AdminFinanceTabs from '@/app/admin/finance/finance_components/AdminFinanceTabs/AdminFinanceTabs';
 import AdminFinanceAddPaymentModal from '@/app/admin/finance/finance_components/AdminFinanceAddPaymentModal/AdminFinanceAddPaymentModal';
-import { FinanceInitialData } from '@/app/admin/finance/finance_types/finance_types';
+import type { FinanceInitialData } from '@/app/admin/finance/finance_types/finance_types';
 
  function FinanceContent() {
   const { toast, hideToast } = useFinanceContext();

@@ -3,9 +3,9 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { financeApi } from '@/app/admin/finance/finance_api/finance_api';
 import type { Payment, FinanceSummary } from '@/app/admin/finance/finance_types/finance_types';
 import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
-import { FinanceContextType, FinanceInitialData } from '@/app/admin/finance/finance_types/finance_types';
+import type { FinanceContextType, FinanceInitialData } from '@/app/admin/finance/finance_types/finance_types';
 import { AddPaymentFormValues } from '@/app/admin/finance/finance_utils/FinanceSharedConstants';
-import { FetchState } from '@/app/admin/finance/finance_types/finance_types';
+import type { FetchState } from '@/app/admin/finance/finance_types/finance_types';
 import { useDebounce } from '@/app/admin/admin_utils/useDebounce';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 

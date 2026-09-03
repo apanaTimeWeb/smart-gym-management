@@ -38,7 +38,7 @@ export default function AdminPlansGrid() {
         {currentData.map((p, i) => (
           <div
             key={p.id}
-            className={`bg-card border-2 rounded-2xl p-6 relative transition-all hover:scale-105 hover:-translate-y-1 ${
+            className={`bg-card border-2 rounded-2xl p-6 relative transition-all hover:scale-105 motion-safe:hover:-translate-y-1 ${
               i === 1 ? 'border-warning shadow-lg shadow-warning/20' : 'border-border'
             }`}
           >

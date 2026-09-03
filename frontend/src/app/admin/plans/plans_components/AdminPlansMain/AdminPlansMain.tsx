@@ -8,7 +8,7 @@ import { PlansProvider, usePlansContext } from '@/app/admin/plans/plans_context/
 import AdminPlansToolbar from '@/app/admin/plans/plans_components/AdminPlansToolbar/AdminPlansToolbar';
 import AdminPlansGrid from '@/app/admin/plans/plans_components/AdminPlansGrid/AdminPlansGrid';
 import AdminPlansModal from '@/app/admin/plans/plans_components/AdminPlansModal/AdminPlansModal';
-import { PlansInitialData } from '@/app/admin/plans/plans_types/plans_types';
+import type { PlansInitialData } from '@/app/admin/plans/plans_types/plans_types';
 
 function PlansContent() {
  const { toast, hideToast } = usePlansContext();

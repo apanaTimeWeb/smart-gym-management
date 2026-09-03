@@ -11,7 +11,7 @@ import AdminSalesPendingPayments from '@/app/admin/sales/sales_components/AdminS
 import AdminSalesAllMemberships from '@/app/admin/sales/sales_components/AdminSalesAllMemberships/AdminSalesAllMemberships';
 import AdminSalesStoreSales from '@/app/admin/sales/sales_components/AdminSalesStoreSales/AdminSalesStoreSales';
 import AdminToast from '@/app/admin/admin_components/AdminFeedback/AdminToast';
-import { SalesInitialData } from '@/app/admin/sales/sales_types/sales_types';
+import type { SalesInitialData } from '@/app/admin/sales/sales_types/sales_types';
 
 function SalesContent() {
  const { tab, toast, showToast } = useSalesContext();

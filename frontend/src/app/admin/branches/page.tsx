@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
 import type { Branch } from '@/app/admin/admin_store/useAdminGlobalStore';
-import { TimeRange } from '@/app/admin/dashboard/dashboard_types/dashboard_types';
+import type { TimeRange } from '@/app/admin/dashboard/dashboard_types/dashboard_types';
 
 type DetailView = 'revenue' | 'expenses' | 'staff' | 'students';
 

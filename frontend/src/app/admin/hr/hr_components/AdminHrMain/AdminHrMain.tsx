@@ -8,7 +8,7 @@ import AdminHrKPIs from '@/app/admin/hr/hr_components/AdminHrKPIs/AdminHrKPIs';
 import AdminHrTabs from '@/app/admin/hr/hr_components/AdminHrTabs/AdminHrTabs';
 import AdminHrStaffModal from '@/app/admin/hr/hr_components/AdminHrStaffModal/AdminHrStaffModal';
 import AdminHrPayrollModal from '@/app/admin/hr/hr_components/AdminHrPayrollModal/AdminHrPayrollModal';
-import { HrInitialData } from '@/app/admin/hr/hr_types/hr_types';
+import type { HrInitialData } from '@/app/admin/hr/hr_types/hr_types';
 
 function HrContent() {
  const { toast, hideToast } = useHrContext();
