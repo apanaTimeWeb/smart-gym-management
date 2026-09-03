@@ -543,12 +543,138 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 
 ---
 
-## Updated Summary Checklist (v3):
-1. Identify the exact layer (Validation? Query? Business Logic? External Adapter?).
+## 83. Centralized RBAC / Permission Guards (Role-Based Access Control)
+* **The Rule:** Role and permission checks must NEVER be done inline inside service methods or repository layers (e.g., `if (user.role === 'admin')`). Permission enforcement is strictly a **controller-layer concern** and must be implemented using centralized, declarative guards or decorators.
+* **How to implement per framework:**
+  - **NestJS:** Use a `@Roles(...)` custom decorator paired with a global `RolesGuard` that reads the JWT payload. Never check `req.user.role` inside a service.
+  - **Django:** Use Django REST Framework's `IsAuthenticated` + custom `Permission` classes (e.g., `IsAdminOrManager`). Never check `request.user.is_staff` inside a view's business logic.
+  - **Express:** Implement a `requireRoles(...roles)` middleware factory that is mounted per-route. Never check roles inside a controller handler.
+* **Fine-Grained Resource Permissions:** For resource-level checks (e.g., "Can this manager see only their branch's members?"), create a dedicated `[module]-authorization.service.ts`. This service receives the actor and the resource and returns a boolean. The controller calls this service before delegating to the business service.
+* **Centralized Role Registry:** All role names and permission strings MUST be defined as enums in a central `auth.roles.constants.ts` file. Never use raw strings like `'admin'` or `'manager'` directly in guards or decorators.
+  - ❌ **BAD:** `@Roles('admin', 'superadmin')`
+  - ✅ **GOOD:** `@Roles(UserRole.ADMIN, UserRole.SUPERADMIN)`
+* **Why:** Just as the frontend mandates `usePermissions()` for hiding restricted UI elements (Frontend Rule 25), the backend must enforce the same contract at the API layer. An AI writing a new endpoint will forget to add auth checks if there is no standard, centralized pattern to follow. A declarative decorator is impossible to forget because it's visible at the route definition.
+
+---
+
+## 84. No Barrel File / Re-Export Index Rule
+* **The Rule:** Strictly avoid using `index.ts` or `index.js` files to re-export modules (barrel files). This mirrors Frontend Rule 32. Always import directly from the explicitly named source file.
+  - ❌ **BAD:** `import { MemberService } from '@/modules/members'` (where `members/index.ts` re-exports everything)
+  - ✅ **GOOD:** `import { MemberRegistrationService } from '@/modules/members/services/member-registration.service'`
+* **Why barrel files are dangerous in AI-driven codebases:**
+  1. **Circular Dependencies:** Barrel files are the #1 cause of circular dependency errors in NestJS and Express projects. An AI adding a new export to a barrel file can silently create a circular import cycle that causes runtime crashes.
+  2. **AI Context Pollution:** When an AI imports `from '@/modules/members'`, it loads the entire barrel into context — all services, all DTOs, all repositories. With direct imports, the AI only loads exactly what it needs, drastically reducing hallucination risk.
+  3. **Dead Code Masking:** Barrel files make tree-shaking and unused-code detection nearly impossible, hiding dead code from AI and human reviewers alike.
+* **Enforcement:** Mechanically enforce via ESLint `no-restricted-imports` or a custom rule that flags imports from `index.ts` paths.
+
+---
+
+## 85. Guard Clause / Early Return Pattern (No Nested Conditional Hell)
+* **The Rule:** Deeply nested `if/else` blocks inside service methods are strictly forbidden. This mirrors Frontend Rule 53 which bans ternary hell. All service methods MUST use the **Guard Clause** (Early Return) pattern: validate inputs and exit early at the top of the function, keeping the happy path flat and readable.
+  - ❌ **BAD (Nested):**
+    ```typescript
+    async suspendMember(id: string) {
+      const member = await this.repo.findById(id);
+      if (member) {
+        if (member.status !== 'SUSPENDED') {
+          if (member.hasActiveSubscription) {
+            // ... actual logic buried 3 levels deep
+          } else { throw new Error('No subscription'); }
+        } else { throw new Error('Already suspended'); }
+      } else { throw new Error('Not found'); }
+    }
+    ```
+  - ✅ **GOOD (Guard Clauses):**
+    ```typescript
+    async suspendMember(id: string) {
+      const member = await this.repo.findByIdOrThrow(id); // throws MemberNotFoundException
+      if (member.status === 'SUSPENDED') throw new MemberAlreadySuspendedException(id);
+      if (!member.hasActiveSubscription) throw new NoActiveSubscriptionException(id);
+      // happy path — completely flat, no nesting
+      member.status = 'SUSPENDED';
+      return this.repo.save(member);
+    }
+    ```
+* **Maximum Nesting Depth:** No function body may have more than **2 levels of indentation** for conditional logic. If a third level is needed, extract it into a private helper method.
+* **Why:** An AI given a deeply nested 80-line service method will frequently misread the logic branches and introduce bugs at the wrong `else` block. A flat, guard-clause-driven function is scannable in 5 seconds, making AI edits surgical and safe.
+
+---
+
+## 86. Strict Method Naming Convention (The Verb Contract)
+* **The Rule:** All service and repository method names MUST follow a strict, predictable verb-based naming convention. AI agents must never invent arbitrary method names. The convention is:
+
+  | Operation | Service Layer Verb | Repository Layer Verb |
+  |---|---|---|
+  | Create | `create[Entity](dto)` | `save(entity)` |
+  | Read single | `find[Entity]ById(id)` | `findById(id)` |
+  | Read single (throws) | `find[Entity]ByIdOrThrow(id)` | `findByIdOrThrow(id)` |
+  | Read list | `findAll[Entities](filters)` | `findAll(filters)` |
+  | Update | `update[Entity](id, dto)` | `save(entity)` |
+  | Soft Delete | `delete[Entity](id)` | `softDelete(id)` |
+  | Check existence | `does[Entity]Exist(id)` | `existsById(id)` |
+  | Count | `count[Entities](filters)` | `count(filters)` |
+
+* **The `OrThrow` Pattern:** Repository methods that return a single entity MUST have two variants: `findById(id): Entity | null` (returns null if not found) and `findByIdOrThrow(id): Entity` (throws `EntityNotFoundException` if not found). Services must choose explicitly — never let a `null` propagate silently.
+* **Why:** When two different AI agents work on two different modules, they will produce consistent, predictable method signatures. Any AI reading a repository interface instantly knows what methods are available without having to read the implementation. This eliminates the most common AI mistake: calling a method that doesn't exist (hallucinated method names).
+
+---
+
+## 87. Single Responsibility at Method Level (The 20-Line Rule)
+* **The Rule:** Just as the frontend mandates hook separation to split logic from UI (Frontend Rule 6), the backend mandates that **every service method must do exactly ONE thing**. If a method is doing more than one distinct business operation, it must be split into private helper methods or separate micro-services.
+* **The 20-Line Soft Ceiling:** A service method body (excluding JSDoc) should rarely exceed ~20 lines. If a method grows beyond this, it is a signal that it is doing too much and must be decomposed.
+* **Decomposition Pattern:**
+  - ❌ **BAD:** A single `registerMember()` method that validates, saves the member, creates a subscription, charges the card, sends a welcome email, and writes an audit log — all in one 80-line function.
+  - ✅ **GOOD:** `registerMember()` is an Orchestrator (Rule 8B) that calls: `this.memberRepo.save(member)`, then emits `EventBus.emit('MEMBER.REGISTERED', ...)`. The subscription creation, payment charging, and email are handled by separate listeners.
+* **Private Helper Rule:** If a method needs a private helper for a sub-calculation (e.g., calculating a pro-rated amount), the helper must be a `private` method with its own JSDoc (Rule 80) clearly named for its specific task (e.g., `private calculateProRatedAmount()`).
+* **Why:** An AI asked to "add audit logging to member registration" should be able to do so by touching exactly ONE file and ONE method — the event listener for `MEMBER.REGISTERED`. If the entire registration flow is monolithic, the AI must read and modify a 200-line method, risking collateral damage.
+
+---
+
+## 88. Strict Import Order Convention (Mechanical ESLint Enforcement)
+* **The Rule:** All backend TypeScript/JavaScript files MUST enforce a strict, consistent import order. This mirrors Frontend Rule 51. Configure ESLint's `import/order` rule to enforce the following groups in this exact sequence:
+  1. **Node.js built-ins** (e.g., `node:fs`, `node:path`)
+  2. **Framework core** (e.g., `@nestjs/common`, `express`, `django`)
+  3. **Third-party packages** (e.g., `typeorm`, `class-validator`, `bcrypt`)
+  4. **Internal absolute imports — Infrastructure** (e.g., `@/config/`, `@/database/`)
+  5. **Internal absolute imports — Module-specific** (e.g., `@/modules/billing/...`)
+  6. **Relative imports** (strictly forbidden per Rule 10 — this group must always be empty)
+  7. **Type-only imports** (`import type { ... }`) must always be last
+* **Blank line separation:** Each group must be separated by a blank line. No mixing of groups.
+* **Example:**
+  ```typescript
+  import * as crypto from 'node:crypto';
+
+  import { Injectable } from '@nestjs/common';
+
+  import { Repository } from 'typeorm';
+  import * as bcrypt from 'bcrypt';
+
+  import { DatabaseConfig } from '@/config/database.config';
+
+  import { MemberEntity } from '@/modules/members/entities/member.entity';
+  import { MemberNotFoundException } from '@/modules/members/exceptions/member.exceptions';
+
+  import type { CreateMemberDto } from '@/modules/members/dtos/member-create.dto';
+  ```
+* **Why:** Chaotic import ordering in AI-generated code causes two specific problems: (1) Merge conflicts explode because every AI agent adds imports in a different location, (2) Circular dependency detection becomes nearly impossible because the import graph is visually unreadable. A strict, mechanical ESLint rule makes import diffs surgical and circular deps immediately obvious.
+
+---
+
+## Updated Summary Checklist (v4):
+1. Identify the exact layer (Validation? Query? Business Logic? External Adapter? Permission Guard?).
 2. Select the **one or two** micro-files associated with that layer.
 3. Check the module's `_backend_feature.md` for context before giving the AI any files.
 4. Pass ONLY those files to the AI along with the feature doc.
-5. After the AI writes code, verify: Is there N+1? Is there a missing null check? Is a secret hardcoded? Is the response wrapped in the standard envelope? Is the `data` shape consistent across all code paths?
-6. Verify that every new method has a JSDoc block and every new file has both a `// RESPONSIBILITY:` and `// FLOW:` comment.
-7. Run `pytest` against the live API to confirm contract compliance.
-8. Review the AI's isolated changes.
+5. After the AI writes code, verify:
+   - Is there an N+1 query?
+   - Is there a missing null check (use `findByIdOrThrow` where needed)?
+   - Is a secret hardcoded?
+   - Is the response wrapped in the standard envelope?
+   - Is the `data` shape consistent across all code paths?
+   - Is the permission guard declared at the controller layer, not the service?
+   - Are there any barrel file imports (`from '.../index'`)?
+   - Does every new method follow the verb naming convention (Rule 86)?
+   - Is every new method ≤ 20 lines with Guard Clauses?
+   - Does every new file have `// RESPONSIBILITY:` + `// FLOW:` + JSDoc on every method?
+6. Run `pytest` against the live API to confirm contract compliance.
+7. Review the AI's isolated changes.
