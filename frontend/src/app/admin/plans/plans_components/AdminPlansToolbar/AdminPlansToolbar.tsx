@@ -42,7 +42,7 @@ export default function AdminPlansToolbar() {
           />
         </div>
       </div>
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
  <button 
  onClick={loadPlans} 
  className="flex items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary transition-colors"

@@ -65,7 +65,12 @@ export default function AdminPlansGrid() {
                     <Edit2 size={16} />
                   </button>
                   <button
-                    onClick={() => deletePlan(p.id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (window.confirm(`Are you sure you want to delete plan "${p.name}"?`)) {
+                      deletePlan(p.id);
+                    }
+                  }}
                     className="p-1.5 rounded-lg text-danger hover:bg-danger-bg transition-all duration-200"
                     title="Delete Plan"
                     aria-label={`Delete ${p.name}`}

@@ -36,8 +36,12 @@ export default function AdminNotificationsList({ notifications, onMarkAsRead, on
             </div>
           </div>
           <button 
-            onClick={() => onDelete(n.id)}
-            className="text-secondary hover:text-danger p-2 rounded-md hover:bg-danger-bg opacity-0 group-hover:opacity-100 transition-all focus:opacity-100"
+            onClick={() => {
+              if (window.confirm("Delete this notification?")) {
+                onDelete(n.id);
+              }
+            }}
+            className="text-secondary hover:text-danger p-2 rounded-md hover:bg-danger-bg opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all focus:opacity-100"
             aria-label="Delete notification"
           >
             <X size={18} />
