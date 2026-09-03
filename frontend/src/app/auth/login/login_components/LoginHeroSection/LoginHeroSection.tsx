@@ -132,7 +132,7 @@ export default function LoginHeroSection() {
       {/* ── BOTTOM: Trust badge ── */}
       <div className="relative z-10">
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-success/30 bg-success-bg/40 backdrop-blur-sm">
-          <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
+          <span className="w-2 h-2 rounded-full bg-success motion-safe:animate-pulse" />
           <span className="text-xs font-semibold text-success">{LoginSharedConstants.TEXT.SECURE_BADGE}</span>
         </div>
       </div>
