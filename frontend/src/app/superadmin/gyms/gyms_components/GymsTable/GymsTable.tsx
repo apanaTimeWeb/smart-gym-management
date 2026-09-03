@@ -9,8 +9,7 @@ import GymEmailModal from '@/app/superadmin/gyms/gyms_components/GymEmailModal/G
 import GymDeleteModal from '@/app/superadmin/gyms/gyms_components/GymDeleteModal/GymDeleteModal';
 import GymsEmptyState from '@/app/superadmin/gyms/gyms_components/GymsEmptyState/GymsEmptyState';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
-
-const ITEMS_PER_PAGE = 10;
+import { GYMS_TABLE_PAGE_SIZE } from '@/app/superadmin/gyms/gyms_utils/GymsConstants';
 
 export default function GymsTable() {
   const {
@@ -31,18 +30,18 @@ export default function GymsTable() {
     return (
       <div className="p-4 space-y-4">
         {[...Array(5)].map((_, i) => (
-          <div key={i} className="h-12 bg-card animate-pulse rounded-lg border border-border" />
+          <div key={i} className="h-12 bg-card motion-safe:animate-pulse rounded-lg border border-border" />
         ))}
       </div>
     );
   }
 
   if (fetchState === 'error') {
-    return <div className="p-8 text-center text-destructive">Error loading gyms. Please try again.</div>;
+    return <div className="p-8 text-center text-danger">Error loading gyms. Please try again.</div>;
   }
 
-  const totalPages = Math.ceil(filteredGyms.length / ITEMS_PER_PAGE) || 1;
-  const paginatedGyms = filteredGyms.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(filteredGyms.length / GYMS_TABLE_PAGE_SIZE) || 1;
+  const paginatedGyms = filteredGyms.slice((currentPage - 1) * GYMS_TABLE_PAGE_SIZE, currentPage * GYMS_TABLE_PAGE_SIZE);
 
   return (
     <div className="overflow-x-auto flex flex-col min-h-[400px]">
