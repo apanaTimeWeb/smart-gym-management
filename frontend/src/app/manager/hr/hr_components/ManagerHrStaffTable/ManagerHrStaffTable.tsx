@@ -120,7 +120,12 @@ export default function ManagerHrStaffTable() {
                       <Edit2 size={16} />
                     </button>
                     <button 
-                      onClick={(e) => { e.stopPropagation(); deleteStaff(s.id); }} 
+                      onClick={(e) => { 
+                        e.stopPropagation(); 
+                        if (window.confirm(`Are you sure you want to delete staff member "${s.name}"? This action cannot be undone.`)) {
+                          deleteStaff(s.id); 
+                        }
+                      }}
                       className="p-1.5 rounded transition-colors text-danger hover:bg-danger/10"
                       title="Delete"
                     >

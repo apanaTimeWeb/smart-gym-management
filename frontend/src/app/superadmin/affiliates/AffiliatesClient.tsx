@@ -58,6 +58,7 @@ export default function AffiliatesClient() {
         <AffiliatesEmptyState onAddClick={() => setIsModalOpen(true)} />
       ) : (
         <AffiliatesTable
+          onAddClick={() => setIsModalOpen(true)}
           affiliates={affiliates}
           onToggleStatus={handleToggleAffiliateStatus}
           onEdit={openEditModal}

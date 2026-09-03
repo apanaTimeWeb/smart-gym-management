@@ -2,6 +2,7 @@
 // RESPONSIBILITY: Renders the Affiliates data table shell (header row + rows). Delegates each row to AffiliatesTableRow. No API calls.
 import { useState } from 'react';
 import AffiliatesTableRow from '@/app/superadmin/affiliates/affiliates_components/AffiliatesTable/AffiliatesTableRow';
+import AffiliatesEmptyState from '@/app/superadmin/affiliates/affiliates_components/AffiliatesEmptyState/AffiliatesEmptyState';
 import type { Affiliate, AffiliateStatus } from '@/app/superadmin/affiliates/affiliates_types/affiliates_types';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 
@@ -10,11 +11,12 @@ interface AffiliatesTableProps {
   onToggleStatus: (id: string, currentStatus: AffiliateStatus) => void;
   onEdit: (affiliate: Affiliate) => void;
   onDelete: (id: string) => void;
+  onAddClick: () => void;
 }
 
 const ITEMS_PER_PAGE = 10;
 
-export default function AffiliatesTable({ affiliates, onToggleStatus, onEdit, onDelete }: AffiliatesTableProps) {
+export default function AffiliatesTable({ affiliates, onToggleStatus, onEdit, onDelete, onAddClick }: AffiliatesTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
 
   const totalPages = Math.ceil(affiliates.length / ITEMS_PER_PAGE) || 1;
@@ -35,15 +37,21 @@ export default function AffiliatesTable({ affiliates, onToggleStatus, onEdit, on
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {paginatedAffiliates.map((aff) => (
-              <AffiliatesTableRow
-                key={aff.id}
-                affiliate={aff}
-                onToggleStatus={onToggleStatus}
-                onEdit={onEdit}
-                onDelete={onDelete}
-              />
-            ))}
+            {paginatedAffiliates.length === 0 ? (
+              <tr>
+                <td colSpan={6}><AffiliatesEmptyState onAddClick={onAddClick} /></td>
+              </tr>
+            ) : (
+              paginatedAffiliates.map((aff) => (
+                <AffiliatesTableRow
+                  key={aff.id}
+                  affiliate={aff}
+                  onToggleStatus={onToggleStatus}
+                  onEdit={onEdit}
+                  onDelete={onDelete}
+                />
+              ))
+            )}
           </tbody>
         </table>
       </div>

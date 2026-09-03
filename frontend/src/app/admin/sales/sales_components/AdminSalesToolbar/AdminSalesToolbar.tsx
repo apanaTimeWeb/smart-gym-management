@@ -79,7 +79,7 @@ export default function AdminSalesToolbar() {
         </div>
 
         {/* Search + Export */}
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
           <div className="relative">
             <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
             <input

@@ -29,7 +29,11 @@ export default function AdminNotificationsClient() {
             <CheckCheck size={16} /> Mark all read
           </button>
           <button 
-            onClick={clearAll}
+            onClick={() => {
+              if (window.confirm("Are you sure you want to clear all notifications?")) {
+                clearAll();
+              }
+            }}
             disabled={notifications.length === 0}
             className="flex items-center gap-2 text-sm text-secondary hover:text-danger transition-colors disabled:opacity-50 disabled:hover:text-secondary"
           >

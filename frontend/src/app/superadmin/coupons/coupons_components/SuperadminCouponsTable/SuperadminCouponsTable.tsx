@@ -3,6 +3,7 @@
 
 import { useState } from 'react';
 import SuperadminCouponsTableRow from '@/app/superadmin/coupons/coupons_components/SuperadminCouponsTable/SuperadminCouponsTableRow';
+import SuperadminCouponsEmptyState from '@/app/superadmin/coupons/coupons_components/SuperadminCouponsEmptyState/SuperadminCouponsEmptyState';
 import type { Coupon, CouponStatus } from '@/app/superadmin/coupons/coupons_types/coupons_types';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 
@@ -12,11 +13,12 @@ interface CouponsTableProps {
   onEdit: (coupon: Coupon) => void;
   onDelete: (id: string) => void;
   onRestore: (id: string) => void;
+  onCreateClick: () => void;
 }
 
 const ITEMS_PER_PAGE = 10;
 
-export default function SuperadminCouponsTable({ coupons, onToggleStatus, onEdit, onDelete, onRestore }: CouponsTableProps) {
+export default function SuperadminCouponsTable({ coupons, onToggleStatus, onEdit, onDelete, onRestore, onCreateClick }: CouponsTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
 
   const totalPages = Math.ceil(coupons.length / ITEMS_PER_PAGE) || 1;
@@ -37,16 +39,22 @@ export default function SuperadminCouponsTable({ coupons, onToggleStatus, onEdit
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {paginatedCoupons.map((cpn) => (
-              <SuperadminCouponsTableRow
-                key={cpn.id}
-                coupon={cpn}
-                onToggleStatus={onToggleStatus}
-                onEdit={onEdit}
-                onDelete={onDelete}
-                onRestore={onRestore}
-              />
-            ))}
+            {paginatedCoupons.length === 0 ? (
+              <tr>
+                <td colSpan={6}><SuperadminCouponsEmptyState onCreateClick={onCreateClick} /></td>
+              </tr>
+            ) : (
+              paginatedCoupons.map((cpn) => (
+                <SuperadminCouponsTableRow
+                  key={cpn.id}
+                  coupon={cpn}
+                  onToggleStatus={onToggleStatus}
+                  onEdit={onEdit}
+                  onDelete={onDelete}
+                  onRestore={onRestore}
+                />
+              ))
+            )}
           </tbody>
         </table>
       </div>

@@ -54,7 +54,7 @@ export default function AdminFinanceTabs() {
         className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-card text-primary w-40 sm: w-full sm:w-64 "
       />
     </div>
-    <div className="flex gap-2">
+    <div className="flex flex-wrap gap-2">
  <button 
  onClick={loadAll} 
  className="flex items-center gap-2 px-3 py-2 text-sm border border-border text-secondary rounded-lg hover:opacity-80 transition-opacity"

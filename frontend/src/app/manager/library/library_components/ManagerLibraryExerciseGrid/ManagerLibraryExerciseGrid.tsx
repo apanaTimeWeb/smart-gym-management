@@ -48,7 +48,12 @@ export default function ManagerLibraryExerciseGrid() {
                   <Edit2 size={16} />
                 </button>
                 <button 
-                  onClick={(e) => { e.stopPropagation(); deleteExercise(ex.id); }}
+                  onClick={(e) => { 
+                    e.stopPropagation(); 
+                    if (window.confirm(`Are you sure you want to delete library exercise "${ex.name}"?`)) {
+                      deleteExercise(ex.id); 
+                    }
+                  }}
                   className="p-1.5 rounded transition-colors text-danger hover:bg-danger/10"
                   title="Delete"
                 >

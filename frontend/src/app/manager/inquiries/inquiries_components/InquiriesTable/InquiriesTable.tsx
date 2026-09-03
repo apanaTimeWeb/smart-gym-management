@@ -160,7 +160,12 @@ export default function InquiriesTable() {
                         <Edit2 size={13} />
                       </button>
                       <button
-                        onClick={(e) => { e.stopPropagation(); deleteInquiry(inq.id); }}
+                        onClick={(e) => { 
+                          e.stopPropagation(); 
+                          if (window.confirm(`Are you sure you want to delete inquiry from "${inq.name}"? This action cannot be undone.`)) {
+                            deleteInquiry(inq.id); 
+                          }
+                        }}
                         className="p-1.5 rounded-lg bg-danger-bg text-danger hover:opacity-80 transition-all duration-200"
                         title="Delete"
                         aria-label={`Delete ${inq.name}`}

@@ -55,7 +55,7 @@ export default function ManagerHrTabs() {
               className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 bg-card text-foreground"
             />
           )}
-  <div className="px-4 flex gap-2">
+  <div className="px-4 flex flex-wrap gap-2">
     <button 
       onClick={loadAll} 
       className="flex items-center gap-2 px-3 py-2 text-sm border border-border text-secondary rounded-lg hover:opacity-80 transition-opacity"

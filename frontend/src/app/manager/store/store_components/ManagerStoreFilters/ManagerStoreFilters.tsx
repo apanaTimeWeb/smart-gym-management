@@ -8,7 +8,7 @@ export default function ManagerStoreFilters() {
 
   return (
     <div className="flex flex-col sm:flex-row gap-4 justify-between items-center bg-card p-4 border-b border-border">
-      <div className="flex items-center gap-3 w-full sm:w-auto">
+      <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
         <div className="flex flex-col">
           <label className="text-xs text-secondary uppercase font-semibold mb-1">Start Date</label>
           <input 

@@ -65,7 +65,12 @@ export default function ManagerStoreProductGrid() {
                   <Edit2 size={13} />
                 </button>
                 <button 
-                  onClick={() => deleteProduct(p.id)} 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (window.confirm(`Are you sure you want to delete product "${p.name}"?`)) {
+                      deleteProduct(p.id);
+                    }
+                  }}
                   className="p-1.5 rounded-lg bg-danger-bg dark:bg-danger-bg text-danger hover:bg-danger-bg dark:hover:bg-danger-bg transition-colors"
                   aria-label={`Delete ${p.name}`}
                 >

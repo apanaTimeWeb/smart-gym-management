@@ -45,6 +45,7 @@ export default function BroadcastsClient() {
         <BroadcastsEmptyState onCreateClick={openCreateModal} />
       ) : (
         <BroadcastsTable
+          onCreateClick={openCreateModal}
           broadcasts={broadcasts}
           onSend={handleSendBroadcast}
           onEdit={openEditModal}
