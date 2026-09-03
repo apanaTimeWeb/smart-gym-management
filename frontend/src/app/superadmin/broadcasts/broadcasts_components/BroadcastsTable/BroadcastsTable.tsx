@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import BroadcastStatusBadge from '@/app/superadmin/broadcasts/broadcasts_components/BroadcastStatusBadge/BroadcastStatusBadge';
 import { Send, Edit2, Trash2 } from 'lucide-react';
+import BroadcastsEmptyState from '@/app/superadmin/broadcasts/broadcasts_components/BroadcastsEmptyState/BroadcastsEmptyState';
 import type { BroadcastsTableProps } from '@/app/superadmin/broadcasts/broadcasts_types/broadcasts_types';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 
@@ -28,18 +29,23 @@ export default function BroadcastsTable({ broadcasts, onSend, onEdit, onDelete }
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {paginatedBroadcasts.map((bc) => (
-              <tr 
-                key={bc.id} 
-                className="hover:bg-primary/5 transition-all duration-200 ease-in-out group cursor-pointer"
-                onClick={() => onEdit(bc)}
-              >
-                <td className="px-6 py-4">
-                  <div className="flex flex-col">
-                    <span className="text-sm font-medium text-foreground">{bc.title}</span>
-                    <span className="text-xs text-secondary truncate max-w-xs">{bc.content}</span>
-                  </div>
-                </td>
+            {paginatedBroadcasts.length === 0 ? (
+              <tr>
+                <td colSpan={5}><BroadcastsEmptyState /></td>
+              </tr>
+            ) : (
+              paginatedBroadcasts.map((bc) => (
+                <tr 
+                  key={bc.id} 
+                  className="hover:bg-primary/5 transition-all duration-200 ease-in-out group cursor-pointer"
+                  onClick={() => onEdit(bc)}
+                >
+                  <td className="px-6 py-4">
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium text-foreground">{bc.title}</span>
+                      <span className="text-xs text-secondary truncate max-w-xs">{bc.content}</span>
+                    </div>
+                  </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-primary-subtle text-primary border border-primary/20">
                     {(bc.audience || '').replace('_', ' ')}
@@ -74,7 +80,12 @@ export default function BroadcastsTable({ broadcasts, onSend, onEdit, onDelete }
                       <Edit2 className="w-4 h-4" />
                     </button>
                     <button
-                      onClick={(e) => { e.stopPropagation(); onDelete(bc.id); }}
+                      onClick={(e) => { 
+                        e.stopPropagation(); 
+                        if (window.confirm(`Are you sure you want to delete broadcast "${bc.title}"? This action cannot be undone.`)) {
+                          onDelete(bc.id); 
+                        }
+                      }}
                       className="p-1.5 text-secondary hover:text-danger hover:bg-danger-bg/10 rounded-lg transition-all duration-200 ease-in-out"
                       title="Delete Broadcast"
                       aria-label={`Delete broadcast: ${bc.title}`}

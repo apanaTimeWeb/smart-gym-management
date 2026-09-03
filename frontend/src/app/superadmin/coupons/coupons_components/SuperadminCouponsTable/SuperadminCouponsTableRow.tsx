@@ -70,7 +70,12 @@ export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEd
             <button
               title="Delete Coupon"
               aria-label="Delete Coupon"
-              onClick={(e) => { e.stopPropagation(); onDelete(cpn.id); }}
+              onClick={(e) => { 
+                e.stopPropagation(); 
+                if (window.confirm(`Are you sure you want to delete coupon "${cpn.code}"? This action cannot be undone.`)) {
+                  onDelete(cpn.id); 
+                }
+              }}
               className="text-secondary hover:text-danger transition-colors p-1.5 bg-input hover:bg-danger-bg/10 rounded-md border border-border"
             >
               <Trash2 className="w-4 h-4" />

@@ -54,7 +54,12 @@ export default function AffiliatesTableRow({ affiliate: aff, onToggleStatus, onE
             <Pencil className="w-4 h-4" />
           </button>
           <button
-            onClick={(e) => { e.stopPropagation(); onDelete(aff.id); }}
+            onClick={(e) => { 
+              e.stopPropagation(); 
+              if (window.confirm(`Are you sure you want to delete affiliate "${aff.name}"? This action cannot be undone.`)) {
+                onDelete(aff.id); 
+              }
+            }}
             className="p-1.5 text-secondary hover:text-danger transition-colors"
             title="Delete Affiliate"
             aria-label={`Delete ${aff.name}`}

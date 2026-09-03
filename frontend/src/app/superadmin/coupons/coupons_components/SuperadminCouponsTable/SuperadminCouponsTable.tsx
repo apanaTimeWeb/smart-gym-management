@@ -3,6 +3,7 @@
 
 import { useState } from 'react';
 import SuperadminCouponsTableRow from '@/app/superadmin/coupons/coupons_components/SuperadminCouponsTable/SuperadminCouponsTableRow';
+import SuperadminCouponsEmptyState from '@/app/superadmin/coupons/coupons_components/SuperadminCouponsEmptyState/SuperadminCouponsEmptyState';
 import type { Coupon, CouponStatus } from '@/app/superadmin/coupons/coupons_types/coupons_types';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 
@@ -37,16 +38,22 @@ export default function SuperadminCouponsTable({ coupons, onToggleStatus, onEdit
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {paginatedCoupons.map((cpn) => (
-              <SuperadminCouponsTableRow
-                key={cpn.id}
-                coupon={cpn}
-                onToggleStatus={onToggleStatus}
-                onEdit={onEdit}
-                onDelete={onDelete}
-                onRestore={onRestore}
-              />
-            ))}
+            {paginatedCoupons.length === 0 ? (
+              <tr>
+                <td colSpan={6}><SuperadminCouponsEmptyState /></td>
+              </tr>
+            ) : (
+              paginatedCoupons.map((cpn) => (
+                <SuperadminCouponsTableRow
+                  key={cpn.id}
+                  coupon={cpn}
+                  onToggleStatus={onToggleStatus}
+                  onEdit={onEdit}
+                  onDelete={onDelete}
+                  onRestore={onRestore}
+                />
+              ))
+            )}
           </tbody>
         </table>
       </div>

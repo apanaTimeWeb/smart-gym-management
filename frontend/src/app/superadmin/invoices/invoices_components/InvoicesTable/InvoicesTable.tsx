@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Receipt } from 'lucide-react';
 import type { SaaSInvoice } from '@/app/superadmin/invoices/invoices_types/invoices_types';
 import InvoicesTableRow from './InvoicesTableRow';
+import InvoicesEmptyState from '@/app/superadmin/invoices/invoices_components/InvoicesEmptyState/InvoicesEmptyState';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 
 interface InvoicesTableProps {
@@ -32,9 +33,15 @@ export default function InvoicesTable({ invoices }: InvoicesTableProps) {
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {paginatedInvoices.map((inv) => (
-              <InvoicesTableRow key={inv.id} invoice={inv} />
-            ))}
+            {paginatedInvoices.length === 0 ? (
+              <tr>
+                <td colSpan={7}><InvoicesEmptyState /></td>
+              </tr>
+            ) : (
+              paginatedInvoices.map((inv) => (
+                <InvoicesTableRow key={inv.id} invoice={inv} />
+              ))
+            )}
           </tbody>
         </table>
       </div>
