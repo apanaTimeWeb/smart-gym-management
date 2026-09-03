@@ -1,7 +1,7 @@
 'use client';
 // RESPONSIBILITY: Renders a single row in the Coupons data table. Handles row-level action buttons with stopPropagation. Purely presentational.
 import { Edit2, Trash2, RefreshCw, ToggleLeft, ToggleRight } from 'lucide-react';
-import CouponsStatusBadge from '@/app/superadmin/coupons/coupons_components/CouponsStatusBadge/CouponsStatusBadge';
+import SuperadminCouponsStatusBadge from '@/app/superadmin/coupons/coupons_components/SuperadminCouponsStatusBadge/SuperadminCouponsStatusBadge';
 import type { Coupon, CouponStatus } from '@/app/superadmin/coupons/coupons_types/coupons_types';
 
 interface CouponsTableRowProps {
@@ -12,7 +12,8 @@ interface CouponsTableRowProps {
   onRestore: (id: string) => void;
 }
 
-export default function CouponsTableRow({ coupon: cpn, onToggleStatus, onEdit, onDelete, onRestore }: CouponsTableRowProps) {
+export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEdit, onDelete, onRestore }: CouponsTableRowProps) {
+  const cpn = coupon;
   return (
     <tr 
       className={`hover:bg-primary/5 transition-all duration-200 ease-in-out group cursor-pointer ${cpn.isDeleted ? 'opacity-50 grayscale' : ''}`}
@@ -29,7 +30,7 @@ export default function CouponsTableRow({ coupon: cpn, onToggleStatus, onEdit, o
         }
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary">{cpn.currentUses} / {cpn.maxUses}</td>
-      <td className="px-6 py-4 whitespace-nowrap"><CouponsStatusBadge status={cpn.status} /></td>
+      <td className="px-6 py-4 whitespace-nowrap"><SuperadminCouponsStatusBadge status={coupon.status} /></td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary">{new Date(cpn.expiryDate).toLocaleDateString()}</td>
       <td className="px-6 py-4 whitespace-nowrap text-right flex items-center justify-end gap-2">
         {cpn.isDeleted ? (

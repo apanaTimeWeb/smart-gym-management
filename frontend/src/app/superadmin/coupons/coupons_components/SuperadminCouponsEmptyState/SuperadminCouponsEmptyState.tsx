@@ -5,7 +5,7 @@ interface CouponsEmptyStateProps {
   onCreateClick: () => void;
 }
 
-export default function CouponsEmptyState({ onCreateClick }: CouponsEmptyStateProps) {
+export default function SuperadminCouponsEmptyState({ onCreateClick }: CouponsEmptyStateProps) {
   return (
     <div className="flex flex-col items-center justify-center py-16 text-center">
       <div className="w-16 h-16 rounded-full bg-card border border-border flex items-center justify-center mb-4">

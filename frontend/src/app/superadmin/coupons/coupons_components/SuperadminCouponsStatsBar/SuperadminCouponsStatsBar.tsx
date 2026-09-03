@@ -9,7 +9,7 @@ interface CouponsStatsBarProps {
   onKpiClick: (kpi: 'ALL' | 'ACTIVE' | 'REDEEMED') => void;
 }
 
-export default function CouponsStatsBar({ 
+export default function SuperadminCouponsStatsBar({ 
   activeCoupons, 
   totalRedeemed, 
   totalCoupons,

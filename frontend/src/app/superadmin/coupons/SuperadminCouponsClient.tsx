@@ -1,15 +1,15 @@
 'use client';
-// RESPONSIBILITY: Root orchestrator for the Coupons page. Composes isolated sub-components and passes state from useCouponsPage. No business logic here.
+// RESPONSIBILITY: Root orchestrator for the Coupons page. Composes isolated sub-components and passes state from useSuperadminCoupons. No business logic here.
 
-import { useCouponsPage } from '@/app/superadmin/coupons/coupons_utils/useCouponsPage';
-import CouponsHeader from '@/app/superadmin/coupons/coupons_components/CouponsHeader/CouponsHeader';
-import CouponsStatsBar from '@/app/superadmin/coupons/coupons_components/CouponsStatsBar/CouponsStatsBar';
-import CouponsTable from '@/app/superadmin/coupons/coupons_components/CouponsTable/CouponsTable';
-import CouponsEmptyState from '@/app/superadmin/coupons/coupons_components/CouponsEmptyState/CouponsEmptyState';
+import { useSuperadminCoupons } from '@/app/superadmin/coupons/coupons_utils/useSuperadminCoupons';
+import SuperadminCouponsHeader from '@/app/superadmin/coupons/coupons_components/SuperadminCouponsHeader/SuperadminCouponsHeader';
+import SuperadminCouponsStatsBar from '@/app/superadmin/coupons/coupons_components/SuperadminCouponsStatsBar/SuperadminCouponsStatsBar';
+import SuperadminCouponsTable from '@/app/superadmin/coupons/coupons_components/SuperadminCouponsTable/SuperadminCouponsTable';
+import SuperadminCouponsEmptyState from '@/app/superadmin/coupons/coupons_components/SuperadminCouponsEmptyState/SuperadminCouponsEmptyState';
 import { SuperadminCouponModal } from '@/app/superadmin/coupons/coupons_components/SuperadminCouponModal';
 import { SuperadminCouponEditModal } from '@/app/superadmin/coupons/coupons_components/SuperadminCouponEditModal';
 
-export default function CouponsClient() {
+export default function SuperadminCouponsClient() {
   const {
     coupons,
     searchQuery,
@@ -33,7 +33,7 @@ export default function CouponsClient() {
     activeKpi,
     setActiveKpi,
     totalCoupons,
-  } = useCouponsPage();
+  } = useSuperadminCoupons();
 
   if (fetchState === 'loading') return (
     <div className="space-y-6 animate-pulse">
@@ -48,13 +48,13 @@ export default function CouponsClient() {
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto">
-      <CouponsHeader
+      <SuperadminCouponsHeader
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         onCreateClick={() => setIsModalOpen(true)}
       />
 
-      <CouponsStatsBar
+      <SuperadminCouponsStatsBar
         activeCoupons={activeCoupons}
         totalRedeemed={totalRedeemed}
         totalCoupons={totalCoupons}
@@ -63,9 +63,9 @@ export default function CouponsClient() {
       />
 
       {coupons.length === 0 ? (
-        <CouponsEmptyState onCreateClick={() => setIsModalOpen(true)} />
+        <SuperadminCouponsEmptyState onCreateClick={() => setIsModalOpen(true)} />
       ) : (
-        <CouponsTable
+        <SuperadminCouponsTable
           coupons={coupons}
           onToggleStatus={handleToggleStatus}
           onEdit={(cpn) => { setSelectedCoupon(cpn); setIsEditModalOpen(true); }}

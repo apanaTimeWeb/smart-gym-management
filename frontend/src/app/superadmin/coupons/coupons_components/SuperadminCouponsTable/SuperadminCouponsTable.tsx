@@ -2,7 +2,7 @@
 // RESPONSIBILITY: Renders the Coupons data table shell (header row + rows). Delegates each row to CouponsTableRow. No API calls.
 
 import { useState } from 'react';
-import CouponsTableRow from '@/app/superadmin/coupons/coupons_components/CouponsTable/CouponsTableRow';
+import SuperadminCouponsTableRow from '@/app/superadmin/coupons/coupons_components/SuperadminCouponsTable/SuperadminCouponsTableRow';
 import type { Coupon, CouponStatus } from '@/app/superadmin/coupons/coupons_types/coupons_types';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 
@@ -16,7 +16,7 @@ interface CouponsTableProps {
 
 const ITEMS_PER_PAGE = 10;
 
-export default function CouponsTable({ coupons, onToggleStatus, onEdit, onDelete, onRestore }: CouponsTableProps) {
+export default function SuperadminCouponsTable({ coupons, onToggleStatus, onEdit, onDelete, onRestore }: CouponsTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
 
   const totalPages = Math.ceil(coupons.length / ITEMS_PER_PAGE) || 1;
@@ -38,7 +38,7 @@ export default function CouponsTable({ coupons, onToggleStatus, onEdit, onDelete
           </thead>
           <tbody className="divide-y divide-border">
             {paginatedCoupons.map((cpn) => (
-              <CouponsTableRow
+              <SuperadminCouponsTableRow
                 key={cpn.id}
                 coupon={cpn}
                 onToggleStatus={onToggleStatus}

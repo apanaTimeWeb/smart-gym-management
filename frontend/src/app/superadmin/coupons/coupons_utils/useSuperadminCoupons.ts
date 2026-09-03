@@ -15,7 +15,7 @@ import { useLocalStorage } from '@/lib/useLocalStorage';
 /** LocalStorage key for persisting coupon mutations across refreshes (TC-17/18 fix) */
 const COUPONS_STORAGE_KEY = 'superadmin_coupons_v1';
 
-export const useCouponsPage = () => {
+export const useSuperadminCoupons = () => {
   const { data: fetchedData, fetchState, error } = useCouponsData<Coupon[]>(
     SuperadminUrlConfig.BACKEND_API.COUPONS_BASE
   );

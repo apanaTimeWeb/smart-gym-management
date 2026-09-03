@@ -6,7 +6,7 @@ interface CouponsStatusBadgeProps {
   status: CouponStatus;
 }
 
-export default function CouponsStatusBadge({ status }: CouponsStatusBadgeProps) {
+export default function SuperadminCouponsStatusBadge({ status }: CouponsStatusBadgeProps) {
   switch (status) {
     case 'ACTIVE':
       return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success-bg text-success">ACTIVE</span>;

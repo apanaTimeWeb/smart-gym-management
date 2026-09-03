@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Pure Server Component for the coupons page. Renders the interactive client component.
-import CouponsClient from '@/app/superadmin/coupons/CouponsClient';
+import SuperadminCouponsClient from '@/app/superadmin/coupons/SuperadminCouponsClient';
 
 export default function Page() {
-  return <CouponsClient />;
+  return <SuperadminCouponsClient />;
 }

@@ -7,7 +7,7 @@ interface CouponsHeaderProps {
   onCreateClick: () => void;
 }
 
-export default function CouponsHeader({ searchQuery, onSearchChange, onCreateClick }: CouponsHeaderProps) {
+export default function SuperadminCouponsHeader({ searchQuery, onSearchChange, onCreateClick }: CouponsHeaderProps) {
   return (
     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
