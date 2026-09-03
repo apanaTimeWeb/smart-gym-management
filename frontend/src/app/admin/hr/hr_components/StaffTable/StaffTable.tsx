@@ -3,15 +3,16 @@
 
 import { useHrContext } from '@/app/admin/hr/hr_context/HrContext';
 import { STAFF_TABLE_HEADERS } from '@/app/admin/hr/hr_utils/HrSharedConstants';
-import { Edit2, Trash2, CheckCircle2, Ban } from 'lucide-react';
+import { Edit2, Trash2, CheckCircle2, Ban, PlayCircle } from 'lucide-react';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_utils/AdminSharedConstants';
 
 export default function StaffTable() {
-  const { staff, summary, fetchState, debouncedSearch, currentPage, setCurrentPage, openEdit, deleteStaff } = useHrContext();
+  const { staff, summary, fetchState, debouncedSearch, roleFilter, currentPage, setCurrentPage, openEdit, deleteStaff, toggleStaffStatus } = useHrContext();
 
-  // Remove client-side filtering; API handles it now.
-    const totalStaff = summary?.totalStaff || staff.length;
+  const filteredStaff = staff.filter(s => roleFilter === 'All' || s.role === roleFilter);
+
+  const totalStaff = summary?.totalStaff || filteredStaff.length;
   const totalPages = Math.ceil(totalStaff / ADMIN_ITEMS_PER_PAGE) || 1;
 
   if (fetchState === 'loading') {
@@ -64,7 +65,7 @@ export default function StaffTable() {
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {staff.map(s => (
+            {filteredStaff.map(s => (
               <tr 
                 key={s.id} 
                 className="transition-colors hover:bg-primary/5 cursor-pointer" 
@@ -101,6 +102,17 @@ export default function StaffTable() {
                 <td className="px-4 py-3 text-right">
                   <div className="flex items-center justify-end gap-2">
                     <button 
+                      onClick={(e) => { e.stopPropagation(); toggleStaffStatus(s); }}
+                      className={`p-1.5 rounded-lg transition-all duration-200 ease-in-out ${
+                        s.isActive === false 
+                          ? 'text-success hover:bg-success/10' 
+                          : 'text-danger hover:bg-danger/10'
+                      }`}
+                      title={s.isActive === false ? 'Activate Staff' : 'Suspend Staff'}
+                    >
+                      {s.isActive === false ? <PlayCircle size={16} /> : <Ban size={16} />}
+                    </button>
+                    <button 
                       onClick={(e) => { e.stopPropagation(); openEdit(s); }} 
                       className="p-1.5 rounded hover:bg-primary/10 transition-colors text-secondary hover:text-primary"
                       title="Edit"
@@ -118,7 +130,7 @@ export default function StaffTable() {
                 </td>
               </tr>
             ))}
-            {staff.length === 0 && (
+            {filteredStaff.length === 0 && (
               <tr>
                 <td colSpan={7} className="text-center py-12 text-secondary">
                   {debouncedSearch ? 'No staff match the filter.' : 'No staff members yet. Add your first staff!'}

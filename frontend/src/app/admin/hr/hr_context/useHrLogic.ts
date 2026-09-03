@@ -22,6 +22,7 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
 
   // Local state for immediate typing feedback
   const [search, setSearch] = useState(searchParams.get('search') || '');
+  const [roleFilter, setRoleFilter] = useState(searchParams.get('role') || 'All');
   const debouncedSearch = useDebounce(search, 300);
   const currentPage = Number(searchParams.get('page')) || 1;
 
@@ -180,6 +181,30 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
     }
   }, [showToast, confirm]);
 
+  const toggleStaffStatus = useCallback(async (s: Staff) => {
+    const newStatus = !s.isActive;
+    const actionName = newStatus ? 'Activate' : 'Suspend';
+    const isConfirmed = await confirm({ 
+      title: `${actionName} Staff`, 
+      message: `Are you sure you want to ${actionName.toLowerCase()} ${s.name}?`, 
+      confirmText: actionName, 
+      type: newStatus ? 'info' : 'danger' 
+    });
+    if (!isConfirmed) return;
+    setSaving(true);
+    try {
+      const payload: Partial<Staff> = { isActive: newStatus };
+      const res = await hrApi.updateStaff(s.id, payload);
+      setStaff(prev => prev.map(staff => String(staff.id) === String(s.id) ? { ...staff, isActive: newStatus } as Staff : staff));
+      setSummary(prev => prev ? { ...prev, activeStaff: newStatus ? prev.activeStaff + 1 : Math.max(0, prev.activeStaff - 1) } : null);
+      showToast(res.message || `Staff ${newStatus ? 'activated' : 'suspended'} successfully`, 'success');
+    } catch (err) {
+      showToast((err as Error).message, 'error');
+    } finally {
+      setSaving(false);
+    }
+  }, [showToast, confirm]);
+
   const markPayrollPaid = useCallback(async (id: string) => {
     try { 
       setPayrolls(prev => prev.map(p => String(p.id) === String(id) ? { ...p, status: 'Paid' } : p));
@@ -194,7 +219,7 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
 
   return {
     staff, payrolls, summary, fetchState, error, toast, showToast, hideToast, loadAll,
-    search, debouncedSearch, setSearch, currentPage, setCurrentPage,
-    showModal, setShowModal, showPayrollModal, setShowPayrollModal, editId, editData, saving, openAdd, openEdit, openAddPayroll, saveStaff, savePayroll, deleteStaff, markPayrollPaid, payrollMonth, setPayrollMonth
+    search, debouncedSearch, setSearch, roleFilter, setRoleFilter, currentPage, setCurrentPage,
+    showModal, setShowModal, showPayrollModal, setShowPayrollModal, editId, editData, saving, openAdd, openEdit, openAddPayroll, saveStaff, savePayroll, deleteStaff, toggleStaffStatus, markPayrollPaid, payrollMonth, setPayrollMonth
   };
 }

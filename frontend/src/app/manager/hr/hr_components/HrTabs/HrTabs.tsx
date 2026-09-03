@@ -10,7 +10,7 @@ import PayrollTable from '@/app/manager/hr/hr_components/PayrollTable/PayrollTab
 
 export default function HrTabs() {
   const [activeTab, setActiveTab] = useState(HR_TABS[0]);
-  const { loadAll, openAdd, openAddPayroll, fetchState, search, setSearch, setCurrentPage, payrollMonth, setPayrollMonth } = useHrContext();
+  const { loadAll, openAdd, openAddPayroll, fetchState, search, setSearch, roleFilter, setRoleFilter, setCurrentPage, payrollMonth, setPayrollMonth } = useHrContext();
 
   return (
     <div className="rounded-xl shadow-sm border overflow-hidden bg-card border-border">
@@ -36,6 +36,17 @@ export default function HrTabs() {
               className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 w-40 sm:w-64 bg-card text-foreground"
             />
           </div>
+          {activeTab === 'Staff' && (
+            <select
+              value={roleFilter}
+              onChange={e => { setRoleFilter(e.target.value); setCurrentPage(1); }}
+              className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 bg-card text-foreground"
+            >
+              <option value="All">All Roles</option>
+              <option value="Manager">Manager</option>
+              <option value="Trainer">Trainer</option>
+            </select>
+          )}
           {activeTab === 'Payroll' && (
             <input 
               type="month"
