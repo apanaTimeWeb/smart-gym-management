@@ -54,7 +54,7 @@ export default function SystemClient() {
       // Simulate API call for migration
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      queryClient.setQueryData(['superadmin', 'migrations'], (old: unknown) => {
+      queryClient.setQueryData(['superadmin', 'migrations'], (old: { data?: any[] } | undefined) => {
         if (!old?.data?.tenants) return old;
         return {
           ...old,
@@ -74,7 +74,7 @@ export default function SystemClient() {
     }
   };
 
-  const filteredLogs = finalLogs.filter((log: GlobalAuditLog) =>
+  const filteredLogs = finalLogs.filter((log: any) =>
     log.targetResource?.toLowerCase().includes(logSearch.toLowerCase()) ||
     log.action?.toLowerCase().includes(logSearch.toLowerCase()) ||
     log.actorName?.toLowerCase().includes(logSearch.toLowerCase())
@@ -184,7 +184,7 @@ export default function SystemClient() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                {paginatedLogs.map((log: GlobalAuditLog) => (
+                {paginatedLogs.map((log: any) => (
                   <tr key={log.id} className="hover:bg-input motion-safe:transition-colors text-sm">
                     <td className="p-4 text-secondary whitespace-nowrap">
                       {new Date(log.timestamp).toLocaleString()}
@@ -223,4 +223,5 @@ export default function SystemClient() {
     </div>
   );
 }
+
 

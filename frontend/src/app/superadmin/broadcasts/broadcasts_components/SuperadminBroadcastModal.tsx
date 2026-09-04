@@ -36,9 +36,9 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
     enabled: isOpen,
   });
 
-  const gyms = (fetchRes?.data as unknown) ?? [];
+  const gyms = (fetchRes?.data as Tenant[]) ?? [];
 
-  const allGymIds = gyms?.map((g: Tenant) => g.id) || [];
+  const allGymIds = gyms.map((g: Tenant) => g.id) || [];
   const isAllSelected = allGymIds.length > 0 && targetGymIds.length === allGymIds.length;
 
   if (!isOpen) return null;

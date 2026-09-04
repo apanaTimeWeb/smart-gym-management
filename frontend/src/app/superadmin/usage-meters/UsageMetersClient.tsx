@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 /**
  * RESPONSIBILITY: Renders the Usage Meters dashboard for superadmins to monitor tenant resource limits.
  * DATA FLOW: usageMetersApi -> UsageMetersClient -> UI
@@ -92,7 +92,7 @@ export default function UsageMetersClient() {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {meters.map(meter => {
           const dbGb = meter.databaseGb || 0;
-          const mediaGb = meter.mediaGb || ((meter as Record<string, unknown>).storageGb as number) || 0;
+          const mediaGb = meter.mediaGb || ((meter as unknown as Record<string, unknown>).storageGb as number) || 0;
           const totalStorage = dbGb + mediaGb;
 
           return (
@@ -172,3 +172,5 @@ export default function UsageMetersClient() {
     </div>
   );
 }
+
+

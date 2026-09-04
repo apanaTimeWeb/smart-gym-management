@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Renders the Platform Settings page. Fetches settings from API and allows inline editing per setting using TanStack Query.
+﻿// RESPONSIBILITY: Renders the Platform Settings page. Fetches settings from API and allows inline editing per setting using TanStack Query.
 'use client';
 
 import { useState } from 'react';
@@ -32,7 +32,7 @@ export default function SettingsClient() {
     mutationFn: ({ id, value }: { id: string, value: string }) => superadminApi.settings.updateSetting(id, { value }),
     onSuccess: (res, variables) => {
       toast.success(res.message || 'Setting updated successfully');
-      queryClient.setQueryData(['superadmin', 'settings'], (old: unknown) => {
+      queryClient.setQueryData(['superadmin', 'settings'], (old: { data?: PlatformSetting[] } | undefined) => {
         if (!old?.data) return old;
         return {
           ...old,
@@ -156,3 +156,4 @@ export default function SettingsClient() {
     </div>
   );
 }
+

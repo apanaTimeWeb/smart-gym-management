@@ -2,7 +2,7 @@
 // RESPONSIBILITY: Renders the modal form for editing an existing subscription plan. Reads/writes via usePlansStore.
 
 import { useEffect } from 'react';
-import { useForm, useFieldArray } from 'react-hook-form';
+import { useForm, useFieldArray, SubmitHandler, Resolver } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { X, Plus, Trash2, Loader2 } from 'lucide-react';
@@ -30,8 +30,7 @@ export default function PlanEditModal() {
   const queryClient = useQueryClient();
 
   const { register, control, handleSubmit, formState: { errors }, reset } = useForm<PlanFormValues>({
-    // @ts-expect-error Zod resolver mismatch
-    resolver: zodResolver(planSchema),
+    resolver: zodResolver(planSchema) as unknown as Resolver<PlanFormValues>,
   });
 
   const { fields, append, remove } = useFieldArray({ control, name: 'features' });
@@ -68,8 +67,7 @@ export default function PlanEditModal() {
 
   if (!isOpen || !selectedPlan) return null;
 
-  // @ts-expect-error React hook form type mismatch
-  const onSubmit = async (data: PlanFormValues) => {
+  const onSubmit: SubmitHandler<PlanFormValues> = async (data) => {
     editMutation.mutate({ ...data, features: data.features.map(f => f.value) });
   };
 
@@ -140,5 +138,7 @@ export default function PlanEditModal() {
     </div>
   );
 }
+
+
 
 

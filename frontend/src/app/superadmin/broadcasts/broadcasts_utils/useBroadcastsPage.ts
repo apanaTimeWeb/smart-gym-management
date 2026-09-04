@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: useBroadcastsPage.ts encapsulates all state and async logic for the Broadcasts page.
+// RESPONSIBILITY: useBroadcastsPage.ts encapsulates all state and async logic for the Broadcasts page.
 // DATA FLOW: superadminApi Ã¢â€ â€™ useBroadcastsPage Ã¢â€ â€™ BroadcastsClient
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
@@ -58,7 +58,7 @@ export const useBroadcastsPage = () => {
     queryFn: () => superadminApi.gyms.fetchGyms(),
   });
 
-  const gyms = (fetchRes?.data as unknown) ?? [];
+  const gyms = (fetchRes?.data as Tenant[]) ?? [];
 
   const form = useForm<BroadcastFormData>({
     resolver: zodResolver(BroadcastSchema),

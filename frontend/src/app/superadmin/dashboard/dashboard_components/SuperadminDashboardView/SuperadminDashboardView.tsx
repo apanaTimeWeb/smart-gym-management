@@ -27,7 +27,7 @@ export default function SuperadminDashboardView() {
     queryFn: () => superadminApi.dashboard.fetchDashboardData(),
   });
 
-  const data = fetchRes?.data as unknown; // Cast as unknown because the type from api is slightly different in the dummy response
+  const data = fetchRes?.data as unknown as { metrics: any, revenue: any }; // Cast as unknown because the type from api is slightly different in the dummy response
 
   if (isLoading) {
     return (
@@ -57,7 +57,7 @@ export default function SuperadminDashboardView() {
   const mrrLabel = timeRange === 'weekly' ? 'WEEKLY RR' : timeRange === 'yearly' ? 'YEARLY RR' : timeRange === 'custom' ? 'CUSTOM RR' : 'TOTAL MRR';
 
   const metrics = [
-    { label: mrrLabel, value: `₹${(Math.round((DUMMY_DASHBOARD_METRICS.monthlyRecurringRevenue || 0) * timeMultiplier)).toLocaleString('en-IN')}`, icon: CreditCard, color: 'text-success' },
+    { label: mrrLabel, value: `â‚¹${(Math.round((DUMMY_DASHBOARD_METRICS.monthlyRecurringRevenue || 0) * timeMultiplier)).toLocaleString('en-IN')}`, icon: CreditCard, color: 'text-success' },
     { label: 'TOTAL GYMS (TENANTS)', value: DUMMY_DASHBOARD_METRICS.totalGyms, icon: Building2, color: 'text-primary' },
     { label: 'ACTIVE GYMS', value: DUMMY_DASHBOARD_METRICS.activeGyms, icon: Activity, color: 'text-primary' },
     { label: 'TOTAL END USERS', value: (DUMMY_DASHBOARD_METRICS.totalEndUsers || 0).toLocaleString('en-IN'), icon: Users, color: 'text-purple' },
@@ -90,7 +90,7 @@ export default function SuperadminDashboardView() {
     yaxis: {
       labels: {
         style: { colors: CHART_COLORS.TEXT_SECONDARY },
-        formatter: (val: number) => `₹${(val / 1000)}k`
+        formatter: (val: number) => `â‚¹${(val / 1000)}k`
       }
     },
     grid: {
@@ -181,7 +181,7 @@ export default function SuperadminDashboardView() {
         <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
           <h2 className="text-base font-semibold text-foreground mb-6">Recent Onboards</h2>
           <div className="space-y-4">
-            {DUMMY_DASHBOARD_METRICS.recentOnboards.map((tenant: unknown) => (
+            {DUMMY_DASHBOARD_METRICS.recentOnboards.map((tenant: { id: string, name: string, ownerName: string, plan: string, createdAt: string }) => (
               <div key={tenant.id} className="flex items-center justify-between p-4 bg-background rounded-lg border border-border hover:bg-input motion-safe:transition-colors motion-safe:duration-200 cursor-default">
                 <div>
                   <h3 className="text-sm font-semibold text-foreground truncate max-w-32" title={tenant.name}>{tenant.name}</h3>
@@ -208,3 +208,4 @@ export default function SuperadminDashboardView() {
     </div>
   );
 }
+

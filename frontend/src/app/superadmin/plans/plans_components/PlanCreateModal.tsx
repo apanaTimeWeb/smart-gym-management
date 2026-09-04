@@ -1,7 +1,7 @@
 ﻿// RESPONSIBILITY: Renders the modal form for creating a new subscription plan. Reads/writes via usePlansStore.
 'use client';
 
-import { useForm, useFieldArray } from 'react-hook-form';
+import { useForm, useFieldArray, SubmitHandler, Resolver } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { X, Plus, Trash2, Loader2 } from 'lucide-react';
@@ -28,8 +28,7 @@ export default function PlanCreateModal() {
   const queryClient = useQueryClient();
 
   const { register, control, handleSubmit, formState: { errors }, reset } = useForm<PlanFormValues>({
-    // @ts-expect-error Zod resolver mismatch
-    resolver: zodResolver(planSchema),
+    resolver: zodResolver(planSchema) as unknown as Resolver<PlanFormValues>,
     defaultValues: {
       name: '', priceMonthly: 0, priceAnnual: 0, maxMembers: 100, maxStaff: 5,
       features: [{ value: 'Core Gym Management' }],
@@ -57,8 +56,7 @@ export default function PlanCreateModal() {
 
   const handleClose = () => { reset(); closeCreateModal(); };
 
-  // @ts-expect-error React hook form type mismatch
-  const onSubmit = async (data: PlanFormValues) => {
+  const onSubmit: SubmitHandler<PlanFormValues> = async (data) => {
     createMutation.mutate({ ...data, features: data.features.map(f => f.value) });
   };
 
@@ -129,5 +127,7 @@ export default function PlanCreateModal() {
     </div>
   );
 }
+
+
 
 

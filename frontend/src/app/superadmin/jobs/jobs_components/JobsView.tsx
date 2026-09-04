@@ -345,7 +345,7 @@ export default function JobsView() {
                   <div><p className="text-xs text-secondary mb-1">Status</p><p className={`text-sm font-bold ${StatusColors[inspectJob.status as BackgroundJob['status']].split(' ')[0]}`}>{inspectJob.status}</p></div>
                   <div><p className="text-xs text-secondary mb-1">Attempts</p><p className="text-sm font-medium text-foreground">{inspectJob.attempts}</p></div>
                   <div><p className="text-xs text-secondary mb-1">Created At</p><p className="text-sm text-foreground">{new Date(inspectJob.createdAt).toLocaleString()}</p></div>
-                  <div><p className="text-xs text-secondary mb-1">Duration</p><p className="text-sm text-foreground font-mono">{formatDuration(inspectJob.durationMs)}</p></div>
+                  <div><p className="text-xs text-secondary mb-1">Duration</p><p className="text-sm text-foreground font-mono">{formatDuration((inspectJob as unknown as Record<string, number>).durationMs)}</p></div>
                 </div>
               </div>
 
@@ -362,7 +362,7 @@ export default function JobsView() {
                 <h3 className="text-sm font-semibold text-primary mb-2 uppercase tracking-wider">Job Payload</h3>
                 <div className="bg-sidebar border border-border p-4 rounded-lg overflow-x-auto">
                   <pre className="text-xs font-mono text-foreground">
-                    {JSON.stringify(inspectJob.payload || { message: "No payload attached." }, null, 2)}
+                    {JSON.stringify((inspectJob as unknown as Record<string, unknown>).payload || { message: "No payload attached." }, null, 2)}
                   </pre>
                 </div>
               </div>
@@ -374,4 +374,6 @@ export default function JobsView() {
     </div>
   );
 }
+
+
 

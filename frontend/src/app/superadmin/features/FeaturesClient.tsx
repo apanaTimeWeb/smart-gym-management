@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Renders the Product Management page — feature flag toggles and release note publishing. Fetches data via useSuperadminData. No mutations wired yet.
+﻿// RESPONSIBILITY: Renders the Product Management page â€” feature flag toggles and release note publishing. Fetches data via useSuperadminData. No mutations wired yet.
 'use client';
 
 import { useFeaturesData } from '@/app/superadmin/features/features_utils/useFeaturesData';
@@ -21,7 +21,7 @@ export default function FeaturesClient() {
     try {
       const res = await featuresApi.createNote({ ...noteForm, isPublished: true, date: new Date().toISOString() });
       if (res.data) {
-        setData((prev: unknown) => prev ? { ...prev, notes: [res.data, ...prev.notes] } : prev);
+        setData((prev: { flags: FeatureFlag[]; notes: ReleaseNote[]; } | null) => prev ? { ...prev, notes: [res.data, ...prev.notes] } : prev);
         setNoteForm({ version: '', title: '', content: '' });
         toast.success('Release note published successfully');
       }
@@ -162,3 +162,5 @@ export default function FeaturesClient() {
     </div>
   );
 }
+
+
