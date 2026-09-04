@@ -109,6 +109,15 @@ export async function routeMockRequest<T>(
     } as unknown as ApiResponse<T>;
   }
 
+  // Handle explicit dynamic mutations (like Login)
+  if (method === 'POST' && path.includes('/impersonate')) {
+    return {
+      success: true,
+      message: 'Impersonation successful',
+      data: { token: 'mock-impersonation-token-123' }
+    } as unknown as ApiResponse<T>;
+  }
+
   // ==========================================
   // STATEFUL MOCK DB INTERCEPTIONS (Admin/Manager/Trainer)
   // ==========================================
@@ -307,7 +316,7 @@ export async function routeMockRequest<T>(
   if (path.includes('/exercises')) return MockDB.handleCrud('mock_admin_exercises', method, path, parsedBody, generate(10, i => ({ id: `ex-${i}`, name: `Exercise ${i+1}`, category: 'Strength', muscleGroup: ['Chest', 'Triceps'], difficulty: 'Beginner', isActive: true, videoUrl: '' })), 'exercises') as unknown as ApiResponse<T>;
   
   const existingDiets = MockDB.getCollection('mock_admin_diet_plans', []);
-  if (existingDiets.length > 0 && typeof existingDiets[0].meals?.[0] === 'string') {
+  if (existingDiets.length > 0 && typeof (existingDiets[0] as any).meals?.[0] === 'string') {
     MockDB.setCollection('mock_admin_diet_plans', []); // Force purge old format
   }
   
@@ -327,6 +336,10 @@ export async function routeMockRequest<T>(
     isActive: true 
   })), 'dietPlans') as unknown as ApiResponse<T>;
   
+  const existingWorkouts = MockDB.getCollection('mock_workouts', []);
+  if (existingWorkouts.length > 0 && typeof (existingWorkouts[0] as any).days === 'number') {
+    MockDB.setCollection('mock_workouts', []); // Force purge old format
+  }
   if (path.includes('/workouts')) return MockDB.handleCrud('mock_workouts', method, path, parsedBody, generate(5, i => ({ 
     id: `wo-${i}`, 
     name: `Hypertrophy Plan ${i+1}`, 
@@ -388,7 +401,38 @@ export async function routeMockRequest<T>(
   if (path.includes('/superadmin/affiliates')) return MockDB.handleCrud('mock_affiliates', method, path, parsedBody, generate(6, i => ({ id: `aff-${i}`, name: `Partner ${i + 1}`, email: `partner${i}@example.com`, referralCode: `REF${i}00`, totalReferred: 5 * i, commissionEarned: 1000 * i, status: 'ACTIVE', joinedAt: '2023-05-01' }))) as unknown as ApiResponse<T>;
   if (path.includes('/superadmin/broadcasts')) return MockDB.handleCrud('mock_broadcasts', method, path, parsedBody, generate(4, i => ({ id: `bc-${i}`, title: `System Update v${i}.0`, content: 'Important update details.', status: i === 0 ? 'DRAFT' : 'SENT', audience: 'ALL_TENANTS', scheduledDate: null, sentDate: '2023-10-01' }))) as unknown as ApiResponse<T>;
   if (path.includes('/superadmin/system') || path.includes('/superadmin/infrastructure')) return MockDB.handleCrud('mock_infrastructure', method, path, parsedBody, generate(3, i => ({ id: `node-${i}`, name: `Production Node ${i + 1}`, cpuPercent: 30 + (i * 15), memoryPercent: 45 + (i * 10), diskPercent: 60 - (i * 5), status: 'Healthy' }))) as unknown as ApiResponse<T>;
-  if (path.includes('/superadmin/jobs')) return MockDB.handleCrud('mock_jobs', method, path, parsedBody, generate(8, (i: number) => ({ id: `job-${i}`, queueName: 'billing', jobName: 'process_invoice', status: i === 2 ? 'FAILED' : 'COMPLETED', attempts: 1, createdAt: '2023-11-05' })), 'jobs') as unknown as ApiResponse<T>;
+  if (path.includes('/superadmin/jobs')) return MockDB.handleCrud('mock_jobs', method, path, parsedBody, generate(12, (i: number) => {
+    const statuses = ['COMPLETED', 'ACTIVE', 'FAILED', 'DELAYED'];
+    const status = statuses[i % statuses.length];
+    const isFailed = status === 'FAILED';
+    const isCompleted = status === 'COMPLETED';
+    const queues = ['billing', 'email', 'webhook', 'database'];
+    const queueName = queues[i % queues.length];
+    const jobNames: Record<string, string[]> = {
+      'billing': ['process_invoice', 'renew_subscription', 'charge_card'],
+      'email': ['send_welcome', 'send_receipt', 'send_newsletter'],
+      'webhook': ['trigger_zapier', 'sync_crm'],
+      'database': ['backup', 'cleanup_logs']
+    };
+    const jobName = jobNames[queueName][i % jobNames[queueName].length];
+    
+    return { 
+      id: `job-${1000 + i}`, 
+      queueName, 
+      jobName, 
+      status, 
+      attempts: isFailed ? 3 : 1, 
+      createdAt: '2023-11-05T08:00:00Z',
+      finishedAt: (isCompleted || isFailed) ? '2023-11-05T08:05:00Z' : undefined,
+      durationMs: (isCompleted || isFailed) ? (1500 + i * 200) : undefined,
+      error: isFailed ? 'ConnectionTimeoutError: Failed to reach external API endpoint after 30000ms.' : undefined,
+      payload: {
+        tenantId: `tenant-${i}`,
+        action: jobName,
+        metadata: { retryCount: i, source: 'cron' }
+      }
+    };
+  }), 'jobs') as unknown as ApiResponse<T>;
   if (path.includes('/superadmin/backups')) return MockDB.handleCrud('mock_backups', method, path, parsedBody, generate(5, i => ({ id: `bup-${i}`, tenantName: `Gym Branch ${i + 1}`, databaseName: `db_gym_${i}`, sizeMB: 150 + (i * 50), status: 'SUCCESS', timestamp: '2023-11-05' }))) as unknown as ApiResponse<T>;
   if (path.includes('/superadmin/audit-logs')) return MockDB.handleCrud('mock_audit_logs', method, path, parsedBody, generate(15, i => ({ id: `log-${i}`, actorName: 'Demo Admin', actorRole: 'SUPERADMIN', action: 'UPDATE_TENANT', targetResource: `tenant-${i}`, timestamp: '2023-11-05', ipAddress: '192.168.1.1' }))) as unknown as ApiResponse<T>;
   if (path.includes('/admin/audit')) return MockDB.handleCrud('mock_admin_audit', method, path, parsedBody, generate(12, i => ({ id: `audit-${i}`, actorId: `admin-${i}`, actorRole: 'ADMIN', action: i % 2 === 0 ? 'CREATE' : 'UPDATE', entityType: i % 3 === 0 ? 'MEMBER' : 'PAYMENT', entityId: `entity-${i}`, oldValue: null, newValue: { foo: 'bar' }, ipAddress: '127.0.0.1', timestamp: new Date().toISOString() })), 'logs') as unknown as ApiResponse<T>;
@@ -412,6 +456,37 @@ export async function routeMockRequest<T>(
       return { success: true, message: 'Fetched migrations compound data', data: { migrations, tenants } } as unknown as ApiResponse<T>;
     }
     return MockDB.handleCrud('mock_migrations', method, path, parsedBody, [], 'migrations') as unknown as ApiResponse<T>;
+  }
+
+  if (path.includes('/superadmin/usage-meters')) {
+    return MockDB.handleCrud('mock_usage_meters', method, path, parsedBody, generate(5, i => ({
+      id: `meter-${i}`,
+      tenantId: `tenant-${i}`,
+      tenantName: `Gym Branch ${i + 1}`,
+      smsSent: 850 + (i * 45),
+      smsLimit: 1000,
+      databaseGb: parseFloat((0.5 + (i * 0.15)).toFixed(2)),
+      mediaGb: parseFloat((4.0 + (i * 1.05)).toFixed(2)),
+      storageLimitGb: 10,
+      activeMembers: 95 + (i * 20),
+      memberLimit: 100 + (i * 30),
+      billingCycleEnd: '2023-11-30'
+    }))) as unknown as ApiResponse<T>;
+  }
+
+  if (path.includes('/superadmin/analytics/revenue')) {
+    return {
+      success: true,
+      message: 'Fetched revenue analytics',
+      data: {
+        mrr: 125000,
+        arr: 1500000,
+        churnRate: 1.5,
+        ltv: 4500,
+        cac: 120,
+        activeTenants: 145
+      }
+    } as unknown as ApiResponse<T>;
   }
 
   // Dynamic Rich Data Generator for Demo Mode

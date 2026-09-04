@@ -45,7 +45,7 @@ export default function ProfileDiet() {
           <div className="flex items-center gap-2">
             <button 
               onClick={() => {
-                const text = `*DIET PLAN: ${diet?.name || 'Assigned'}*\n\n*Macros:*\nCalories: ${diet?.totalCalories || 0} kcal\nProtein: ${diet?.protein || 0}g\nCarbs: ${diet?.carbs || 0}g\nFats: ${diet?.fats || 0}g\n\n*Meals:*\n${diet?.meals?.map((m: any) => `*${m.time} - ${m.name}* (${m.calories} kcal)\n${m.foods?.map((f: string) => `- ${f}`).join('\n')}`).join('\n\n')}`;
+                const text = `*DIET PLAN: ${diet?.name || 'Assigned'}*\n\n*Macros:*\nCalories: ${diet?.calories || 0} kcal\nProtein: ${diet?.protein || 0}g\nCarbs: ${diet?.carbs || 0}g\nFats: ${diet?.fats || 0}g\n\n*Meals:*\n${diet?.meals?.map((m: any) => `*${m.time} - ${m.name}* (${m.calories} kcal)\n${m.foods?.map((f: string) => `- ${f}`).join('\n')}`).join('\n\n')}`;
                 window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
               }}
               className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-green-500/30 transition-all active:scale-95"
