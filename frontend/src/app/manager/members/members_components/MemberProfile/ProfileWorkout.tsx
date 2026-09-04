@@ -155,26 +155,7 @@ export default function ProfileWorkout() {
                   </li>
                 </ul>
               </div>
-            )) : Array.isArray(workout.days) && workout.days.length > 0 ? workout.days.map((day: any, idx: number) => (
-              <div key={idx} className="bg-card border border-border p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-                <h5 className="font-semibold text-primary mb-3 pb-2 border-b border-border text-sm">Day {day.day || idx + 1}: {day.focus}</h5>
-                {day.isRest ? (
-                  <p className="text-sm text-secondary italic">Rest Day - No workout assigned.</p>
-                ) : (
-                  <ul className="space-y-2 text-sm text-secondary">
-                    <li className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
-                      <span>Main Compound Movement</span> <span className="font-medium text-primary text-xs">3x10</span>
-                    </li>
-                    <li className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
-                      <span>Accessory Movement 1</span> <span className="font-medium text-primary text-xs">3x12</span>
-                    </li>
-                    <li className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
-                      <span>Accessory Movement 2</span> <span className="font-medium text-primary text-xs">4x8</span>
-                    </li>
-                  </ul>
-                </div>
-              ))
-            ) : Array.isArray(workout.days) && workout.days.length > 0 ? (
+            )) : Array.isArray(workout.days) && workout.days.length > 0 ? (
               workout.days.map((day: any, idx: number) => (
                 <div key={idx} className="bg-card border border-border p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
                   <h5 className="font-semibold text-primary mb-3 pb-2 border-b border-border text-sm">Day {day.day || idx + 1}: {day.focus}</h5>

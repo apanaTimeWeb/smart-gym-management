@@ -5,8 +5,8 @@
  */
 
 import { useState, useEffect } from 'react';
-import { usageMetersApi } from './usage-meters_api/usage-meters_api';
-import type { UsageMeter } from './usage-meters_types/usage-meters_types';
+import { usageMetersApi } from '@/app/superadmin/usage-meters/usage-meters_api/usage-meters_api';
+import type { UsageMeter } from '@/app/superadmin/usage-meters/usage-meters_types/usage-meters_types';
 import { BarChart2, HardDrive, MessageSquare, Users, Calendar } from 'lucide-react';
 
 export default function UsageMetersClient() {
