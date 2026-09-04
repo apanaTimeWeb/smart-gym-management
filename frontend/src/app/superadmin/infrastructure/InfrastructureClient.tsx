@@ -34,10 +34,10 @@ export default function InfrastructureClient() {
     }, 1500);
   };
 
-  const handleFlushSpecific = async (tenantId: string) => {
-    // In a real app, you would await an API call to superadminApi.infrastructure.flushTenant(tenantId)
+  const handleFlushSpecific = async (tenantIds: string[]) => {
+    // In a real app, you would await an API call to superadminApi.infrastructure.flushTenants(tenantIds)
     await new Promise(resolve => setTimeout(resolve, 1000));
-    toast.success(`Successfully flushed cache for tenant: ${tenantId}`);
+    toast.success(`Successfully flushed cache for ${tenantIds.length} tenant(s)`);
   };
 
   // Refetch on mount to load infrastructure node metrics

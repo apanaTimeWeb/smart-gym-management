@@ -6,13 +6,13 @@ import { useGymsStore } from '@/app/superadmin/gyms/gyms_store/useGymsStore';
 interface FlushTenantModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onFlush: (tenantId: string) => Promise<void>;
+  onFlush: (tenantIds: string[]) => Promise<void>;
 }
 
 export default function FlushTenantModal({ isOpen, onClose, onFlush }: FlushTenantModalProps) {
   const { gyms, fetchState, fetchGyms } = useGymsStore();
   const [search, setSearch] = useState('');
-  const [selectedTenantId, setSelectedTenantId] = useState<string>('');
+  const [selectedTenantIds, setSelectedTenantIds] = useState<string[]>([]);
   const [isFlushing, setIsFlushing] = useState(false);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export default function FlushTenantModal({ isOpen, onClose, onFlush }: FlushTena
   useEffect(() => {
     if (!isOpen) {
       setSearch('');
-      setSelectedTenantId('');
+      setSelectedTenantIds([]);
     }
   }, [isOpen]);
 
@@ -33,10 +33,10 @@ export default function FlushTenantModal({ isOpen, onClose, onFlush }: FlushTena
   const filteredGyms = gyms?.filter(g => g.name.toLowerCase().includes(search.toLowerCase()) || g.id.includes(search)) || [];
 
   const handleFlush = async () => {
-    if (!selectedTenantId) return;
+    if (selectedTenantIds.length === 0) return;
     setIsFlushing(true);
     try {
-      await onFlush(selectedTenantId);
+      await onFlush(selectedTenantIds);
       onClose();
     } finally {
       setIsFlushing(false);
@@ -71,6 +71,24 @@ export default function FlushTenantModal({ isOpen, onClose, onFlush }: FlushTena
             />
           </div>
 
+          <div className="flex justify-between items-center px-1">
+            <span className="text-sm font-semibold text-secondary">Found {filteredGyms.length} tenants</span>
+            <div className="space-x-3">
+              <button 
+                onClick={() => setSelectedTenantIds(filteredGyms.map(g => g.id))}
+                className="text-xs font-semibold text-primary hover:underline"
+              >
+                Select All
+              </button>
+              <button 
+                onClick={() => setSelectedTenantIds([])}
+                className="text-xs font-semibold text-secondary hover:underline"
+              >
+                Clear
+              </button>
+            </div>
+          </div>
+
           <div className="border border-border rounded-lg overflow-hidden flex flex-col h-64 bg-background">
             {fetchState === 'loading' ? (
               <div className="flex-1 flex items-center justify-center">
@@ -82,16 +100,28 @@ export default function FlushTenantModal({ isOpen, onClose, onFlush }: FlushTena
               </div>
             ) : (
               <div className="flex-1 overflow-y-auto custom-scrollbar p-2 space-y-1">
-                {filteredGyms.map(gym => (
-                  <button
-                    key={gym.id}
-                    onClick={() => setSelectedTenantId(gym.id)}
-                    className={`w-full text-left px-4 py-3 rounded-md text-sm transition-colors flex items-center justify-between ${selectedTenantId === gym.id ? 'bg-primary/10 border-primary text-primary font-semibold' : 'hover:bg-input text-foreground border-transparent'} border`}
-                  >
-                    <span>{gym.name}</span>
-                    <span className={`text-xs ${selectedTenantId === gym.id ? 'text-primary' : 'text-secondary'}`}>ID: {gym.id}</span>
-                  </button>
-                ))}
+                {filteredGyms.map(gym => {
+                  const isSelected = selectedTenantIds.includes(gym.id);
+                  return (
+                    <button
+                      key={gym.id}
+                      onClick={() => {
+                        setSelectedTenantIds(prev => 
+                          prev.includes(gym.id) ? prev.filter(id => id !== gym.id) : [...prev, gym.id]
+                        )
+                      }}
+                      className={`w-full text-left px-4 py-3 rounded-md text-sm transition-colors flex items-center justify-between ${isSelected ? 'bg-primary/10 border-primary text-primary font-semibold' : 'hover:bg-input text-foreground border-transparent'} border`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={`w-4 h-4 rounded border flex items-center justify-center ${isSelected ? 'bg-primary border-primary text-white' : 'border-border bg-input'}`}>
+                          {isSelected && <X className="w-3 h-3" />}
+                        </div>
+                        <span>{gym.name}</span>
+                      </div>
+                      <span className={`text-xs ${isSelected ? 'text-primary' : 'text-secondary'}`}>ID: {gym.id}</span>
+                    </button>
+                  );
+                })}
               </div>
             )}
           </div>
@@ -106,11 +136,11 @@ export default function FlushTenantModal({ isOpen, onClose, onFlush }: FlushTena
           </button>
           <button 
             onClick={handleFlush}
-            disabled={!selectedTenantId || isFlushing}
+            disabled={selectedTenantIds.length === 0 || isFlushing}
             className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover disabled:bg-primary/50 text-white font-medium rounded-lg transition-colors text-sm disabled:cursor-not-allowed"
           >
             {isFlushing && <Loader2 className="w-4 h-4 motion-safe:animate-spin" />}
-            Flush Tenant Cache
+            Flush {selectedTenantIds.length > 0 ? selectedTenantIds.length : ''} {selectedTenantIds.length === 1 ? 'Tenant' : 'Tenants'}
           </button>
         </div>
       </div>
