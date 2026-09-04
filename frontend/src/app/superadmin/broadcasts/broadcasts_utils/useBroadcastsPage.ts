@@ -8,12 +8,13 @@ import { useSuperadminMutation } from '@/app/superadmin/superadmin_utils/hooks/u
 import { BroadcastSchema, type BroadcastFormData, type Broadcast, type BroadcastAudience, type BroadcastStatus } from '@/app/superadmin/broadcasts/broadcasts_types/broadcasts_types';
 import toast from 'react-hot-toast';
 import { useLocalStorage } from '@/lib/useLocalStorage';
+import { useGymsStore } from '@/app/superadmin/gyms/gyms_store/useGymsStore';
 
 /** LocalStorage key for persisting broadcasts across refreshes (TC-28/29 fix) */
 const BROADCASTS_STORAGE_KEY = 'superadmin_broadcasts_v1';
 
 const DEFAULT_BROADCASTS: Broadcast[] = [
-  { id: '1', title: 'System Maintenance', content: 'Scheduled downtime this weekend.', audience: 'ALL_TENANTS', status: 'SENT', scheduledDate: null, sentDate: '2023-08-10' }
+  { id: '1', title: 'System Maintenance', content: 'Scheduled downtime this weekend.', targetGymIds: ['1', '2'], status: 'SENT', scheduledDate: null, sentDate: '2023-08-10' }
 ];
 
 export const useBroadcastsPage = () => {
@@ -44,12 +45,22 @@ export const useBroadcastsPage = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
+  const [queueModalOpen, setQueueModalOpen] = useState(false);
+  const [queueRecipients, setQueueRecipients] = useState<{id: string; name: string; phone: string}[]>([]);
+  const [queueTitle, setQueueTitle] = useState('');
+
+  const { gyms, fetchGyms } = useGymsStore();
+  
+  useEffect(() => {
+    if (!gyms) fetchGyms();
+  }, [gyms, fetchGyms]);
+
   const form = useForm<BroadcastFormData>({
     resolver: zodResolver(BroadcastSchema),
     defaultValues: {
       title: '',
       content: '',
-      audience: 'ALL_TENANTS',
+      targetGymIds: [],
       status: 'DRAFT',
       scheduledDate: '',
     },
@@ -62,34 +73,30 @@ export const useBroadcastsPage = () => {
     const payload = scheduledDate ? { ...rest, scheduledDate } : rest;
     const isSendingNow = payload.status === 'SENT';
 
-    if (isSendingNow) {
-      toast.loading('Sending broadcast to all gyms via WhatsApp API...', { id: 'bulk-create' });
+    let newB: Broadcast | null = null;
+    
+    if (editingId) {
+      updateBroadcasts(prev => prev.map(b => b.id === editingId ? { ...b, ...payload } as Broadcast : b));
+      setIsModalOpen(false);
+      setEditingId(null);
+      form.reset();
+      if (!isSendingNow) toast.success('Broadcast updated successfully');
+    } else {
+      newB = { ...payload, id: `b-${Date.now()}`, sentDate: isSendingNow ? new Date().toISOString() : undefined } as Broadcast;
+      updateBroadcasts(prev => [newB!, ...prev]);
+      setIsModalOpen(false);
+      form.reset();
+      if (!isSendingNow) toast.success('Broadcast created successfully');
     }
 
-    setTimeout(() => {
-      if (editingId) {
-        updateBroadcasts(prev => prev.map(b => b.id === editingId ? { ...b, ...payload } as Broadcast : b));
-        setIsModalOpen(false);
-        setEditingId(null);
-        form.reset();
-        if (isSendingNow) {
-          toast.success('Broadcast updated & sent directly via WhatsApp to all gyms!', { id: 'bulk-create' });
-        } else {
-          toast.success('Broadcast updated successfully');
-        }
-      } else {
-        const newB: Broadcast = { ...payload, id: `b-${Date.now()}`, sentDate: isSendingNow ? new Date().toISOString() : undefined } as Broadcast;
-        updateBroadcasts(prev => [newB, ...prev]);
-        setIsModalOpen(false);
-        form.reset();
-        if (isSendingNow) {
-          toast.success('Broadcast created & sent directly via WhatsApp to all gyms!', { id: 'bulk-create' });
-        } else {
-          toast.success('Broadcast created successfully');
-        }
-      }
-    }, isSendingNow ? 1500 : 0);
-  }, [form, editingId, updateBroadcasts]);
+    if (isSendingNow) {
+      const selectedGyms = gyms?.filter(g => payload.targetGymIds.includes(g.id)) || [];
+      const recipients = selectedGyms.map(g => ({ id: g.id, name: g.name, phone: g.phone }));
+      setQueueRecipients(recipients);
+      setQueueTitle(payload.title);
+      setQueueModalOpen(true);
+    }
+  }, [form, editingId, updateBroadcasts, gyms]);
 
   const handleDeleteBroadcast = useCallback(async (id: string) => {
     updateBroadcasts(prev => prev.filter(b => b.id !== id));
@@ -97,19 +104,29 @@ export const useBroadcastsPage = () => {
   }, [updateBroadcasts]);
 
   const handleSendBroadcast = useCallback(async (id: string) => {
-    toast.loading('Sending broadcast to all gyms via WhatsApp API...', { id: 'bulk-send' });
-    setTimeout(() => {
-      updateBroadcasts(prev => prev.map(b => b.id === id ? { ...b, status: 'SENT', sentDate: new Date().toISOString() } : b));
-      toast.success('Broadcast sent directly via WhatsApp to all gyms!', { id: 'bulk-send' });
-    }, 1500);
-  }, [updateBroadcasts]);
+    const b = broadcasts.find(b => b.id === id);
+    if (!b) return;
+
+    updateBroadcasts(prev => prev.map(item => item.id === id ? { ...item, status: 'SENT', sentDate: new Date().toISOString() } : item));
+    
+    const selectedGyms = gyms?.filter(g => b.targetGymIds.includes(g.id)) || [];
+    const recipients = selectedGyms.map(g => ({ id: g.id, name: g.name, phone: g.phone }));
+    setQueueRecipients(recipients);
+    setQueueTitle(b.title);
+    setQueueModalOpen(true);
+  }, [updateBroadcasts, broadcasts, gyms]);
+
+  const onQueueComplete = useCallback(() => {
+    setQueueModalOpen(false);
+    toast.success('Automated broadcast finished successfully!');
+  }, []);
 
   const openEditModal = useCallback((broadcast: Broadcast) => {
     setEditingId(broadcast.id);
     form.reset({
       title: broadcast.title,
       content: broadcast.content,
-      audience: broadcast.audience as BroadcastAudience,
+      targetGymIds: broadcast.targetGymIds || [],
       status: broadcast.status as BroadcastStatus,
       scheduledDate: broadcast.scheduledDate
         ? new Date(broadcast.scheduledDate).toISOString().slice(0, 16)
@@ -123,7 +140,7 @@ export const useBroadcastsPage = () => {
     form.reset({
       title: '',
       content: '',
-      audience: 'ALL_TENANTS',
+      targetGymIds: [],
       status: 'DRAFT',
       scheduledDate: '',
     });
@@ -154,5 +171,9 @@ export const useBroadcastsPage = () => {
     openCreateModal,
     editingId,
     isMutating,
+    queueModalOpen,
+    queueRecipients,
+    queueTitle,
+    onQueueComplete
   };
 };
