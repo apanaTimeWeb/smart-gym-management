@@ -109,6 +109,15 @@ export async function routeMockRequest<T>(
     } as unknown as ApiResponse<T>;
   }
 
+  // Handle explicit dynamic mutations (like Login)
+  if (method === 'POST' && path.includes('/impersonate')) {
+    return {
+      success: true,
+      message: 'Impersonation successful',
+      data: { token: 'mock-impersonation-token-123' }
+    } as unknown as ApiResponse<T>;
+  }
+
   // ==========================================
   // STATEFUL MOCK DB INTERCEPTIONS (Admin/Manager/Trainer)
   // ==========================================
@@ -429,6 +438,21 @@ export async function routeMockRequest<T>(
       return { success: true, message: 'Fetched migrations compound data', data: { migrations, tenants } } as unknown as ApiResponse<T>;
     }
     return MockDB.handleCrud('mock_migrations', method, path, parsedBody, [], 'migrations') as unknown as ApiResponse<T>;
+  }
+
+  if (path.includes('/superadmin/usage-meters')) {
+    return MockDB.handleCrud('mock_usage_meters', method, path, parsedBody, generate(5, i => ({
+      id: `meter-${i}`,
+      tenantId: `tenant-${i}`,
+      tenantName: `Gym Branch ${i + 1}`,
+      smsSent: 850 + (i * 45),
+      smsLimit: 1000,
+      storageGb: 4.5 + (i * 1.2),
+      storageLimitGb: 5,
+      activeMembers: 95 + (i * 20),
+      memberLimit: 100 + (i * 30),
+      billingCycleEnd: '2023-11-30'
+    })), 'usageMeters') as unknown as ApiResponse<T>;
   }
 
   // Dynamic Rich Data Generator for Demo Mode

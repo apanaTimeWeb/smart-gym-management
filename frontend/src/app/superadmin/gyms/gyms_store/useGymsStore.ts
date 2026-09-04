@@ -112,7 +112,19 @@ export const useGymsStore = create<GymsState>((set, get) => ({
   handleGhostLogin: async (id, name) => {
     set({ actionLoadingId: id });
     try {
-      toast.success(`Ghost login initiated for ${name}.`); // Mock response for now
+      const res = await gymsApi.impersonateTenant(id);
+      if (res.success) {
+        toast.success(`Impersonating ${name}...`);
+        if (res.data?.token) {
+          localStorage.setItem('gymsmart_impersonate_token', res.data.token);
+        }
+        window.location.href = '/admin/dashboard';
+      } else {
+        toast.error(res.message || 'Failed to impersonate tenant');
+      }
+    } catch (error: unknown) {
+      const errMsg = error instanceof Error ? error.message : String(error) || 'Failed to impersonate tenant';
+      toast.error(errMsg);
     } finally {
       set({ actionLoadingId: null });
     }
