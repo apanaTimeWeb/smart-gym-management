@@ -187,6 +187,7 @@ export async function routeMockRequest<T>(
     const staffCheckIns = todayRecords.filter(r => r.type === 'STAFF').length;
     return { success: true, message: 'Stats', data: { totalCheckIns: todayRecords.length, memberCheckIns, staffCheckIns } } as unknown as ApiResponse<T>;
   }
+  if (path.includes('/attendance')) {
     const existing = MockDB.getCollection('mock_admin_attendance', []);
     if (existing.length > 0 && existing.some((r: any) => r.member?.name?.includes('Active Member'))) {
       localStorage.removeItem('mock_admin_attendance');
