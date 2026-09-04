@@ -54,7 +54,7 @@ export default function ManagerStorePosModal() {
  onClick={() => addToOrder(p)} 
  className="w-full text-left p-3 border border-border rounded-xl hover:border-warning dark:hover:border-warning hover:bg-warning-bg dark:hover:bg-warning-bg transition-all bg-card"
  >
- <p className="text-sm font-medium text-foreground">{p.name}</p>
+ <p className="text-sm font-medium text-foreground">{p.name} {p.unit && <span className="text-secondary font-normal">({p.unit})</span>}</p>
  <p className="text-xs text-secondary">{formatCurrency(p.price)} · Stock: {p.stock}</p>
  </button>
  ))}
@@ -71,7 +71,7 @@ export default function ManagerStorePosModal() {
  {orderItems.map(i => (
  <div key={i.productId} className="flex items-center justify-between p-2 bg-input rounded-lg border border-border">
  <div className="flex-1">
- <p className="text-xs font-medium text-foreground">{i.name}</p>
+ <p className="text-xs font-medium text-foreground">{i.name} {i.unit && <span className="text-secondary font-normal">({i.unit})</span>}</p>
  <p className="text-xs text-secondary">{formatCurrency(i.price)} each</p>
  </div>
  <div className="flex flex-wrap items-center gap-2">

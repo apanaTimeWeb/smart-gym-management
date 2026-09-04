@@ -52,6 +52,7 @@ export default function ManagerStoreProductModal() {
  <form onSubmit={handleSubmit((data) => saveProduct(data))} className="p-6 space-y-4">
  {[
  { label: 'Product Name', key: 'name', type: 'text' }, 
+ { label: 'Unit/Variant (e.g. 1 KG, 500 ML)', key: 'unit', type: 'text' },
  { label: 'Price (₹)', key: 'price', type: 'number' }, 
  { label: 'Stock Quantity', key: 'stock', type: 'number' }, 
  { label: 'Description', key: 'description', type: 'text' }

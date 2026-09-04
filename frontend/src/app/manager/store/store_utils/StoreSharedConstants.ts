@@ -6,7 +6,8 @@ export const ProductSchema = z.object({
   category: z.string(),
   price: z.coerce.number().min(0, "Price must be positive"),
   stock: z.coerce.number().min(0, "Stock must be positive"),
-  description: z.string().optional()
+  description: z.string().optional(),
+  unit: z.string().optional()
 });
 
 export type ProductFormValues = z.infer<typeof ProductSchema>;
@@ -21,7 +22,8 @@ export const EMPTY_PRODUCT_FORM = {
  category: 'Supplements', 
  price: 0, 
  stock: 0, 
- description: '' 
+ description: '',
+ unit: ''
 };
 
 export const ERR_EMPTY_ORDER = 'Add items to order first';

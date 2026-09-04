@@ -308,6 +308,40 @@ export async function routeMockRequest<T>(
   }
   if (path.includes('/settings')) return MockDB.handleCrud('mock_settings', method, path, parsedBody, generate(1, i => ({ id: `setting-${i}`, gymName: 'Demo Gym Base', currency: 'INR', timezone: 'Asia/Kolkata', emailNotifications: true }))) as unknown as ApiResponse<T>;
 
+  if (path.includes('/store/summary')) {
+    const products = MockDB.getCollection('mock_store_products', []);
+    const orders = MockDB.getCollection('mock_orders_v2', []);
+    return { success: true, message: 'Store Summary', data: { totalProducts: products.length, totalOrders: orders.length, totalRevenue: orders.reduce((sum: number, o: any) => sum + (o.total || 0), 0), lowStockProducts: products.filter((p: any) => p.stock <= 5) } } as unknown as ApiResponse<T>;
+  }
+
+  if (path.includes('/store/products')) {
+    const defaultProducts = [
+      { id: 'prod-1', name: 'Optimum Nutrition Whey Protein', category: 'Supplements', price: 6500, stock: 12, description: 'Gold standard whey protein isolate', isActive: true, unit: '2 KG' },
+      { id: 'prod-2', name: 'Creatine Monohydrate', category: 'Supplements', price: 1200, stock: 45, description: 'Pure creatine monohydrate powder', isActive: true, unit: '300g' },
+      { id: 'prod-3', name: 'Gym T-Shirt (Black)', category: 'Merchandise', price: 899, stock: 3, description: 'Breathable dry-fit gym apparel', isActive: true, unit: 'L' },
+      { id: 'prod-4', name: 'BCAA Energy Drink', category: 'Supplements', price: 150, stock: 50, description: 'Pre-workout amino acid drink', isActive: true, unit: '500 ML' },
+      { id: 'prod-5', name: 'Premium Lifting Belt', category: 'Accessories', price: 2500, stock: 8, description: 'Leather weightlifting belt', isActive: true, unit: '1 Piece' }
+    ];
+    return MockDB.handleCrud('mock_store_products', method, path, parsedBody, defaultProducts, 'products') as unknown as ApiResponse<T>;
+  }
+
+  if (path.includes('/store/orders')) {
+    const defaultOrders = [
+      { 
+        id: 'ord-1', 
+        customerName: 'Customer 1', 
+        total: 1200, 
+        method: 'UPI', 
+        status: 'COMPLETED', 
+        createdAt: new Date(Date.now() - 86400000).toISOString(),
+        items: [
+          { productId: 'prod-2', qty: 1, price: 1200, product: { name: 'Creatine Monohydrate', unit: '300g' } }
+        ]
+      }
+    ];
+    return MockDB.handleCrud('mock_orders_v2', method, path, parsedBody, defaultOrders, 'orders') as unknown as ApiResponse<T>;
+  }
+
 
   // SUPERADMIN Stateful Interceptions
   if (path.includes('/superadmin/tickets')) return MockDB.handleCrud('mock_tickets', method, path, parsedBody, generate(10, i => ({ id: `tkt-${i}`, tenantName: `Gym Branch ${i + 1}`, subject: `Billing Issue ${i}`, status: i % 3 === 0 ? 'RESOLVED' : 'OPEN', priority: i % 4 === 0 ? 'HIGH' : 'LOW', createdAt: '2023-10-10', lastUpdated: '2023-10-12' }))) as unknown as ApiResponse<T>;

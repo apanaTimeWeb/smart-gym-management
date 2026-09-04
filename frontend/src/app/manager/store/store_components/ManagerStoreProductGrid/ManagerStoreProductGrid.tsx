@@ -51,7 +51,9 @@ export default function ManagerStoreProductGrid() {
           >
             <div className="flex justify-between items-start mb-3">
               <div>
-                <p className="font-semibold text-foreground">{p.name}</p>
+                <p className="font-semibold text-foreground">
+                  {p.name} {p.unit && <span className="text-sm font-normal text-secondary ml-1">({p.unit})</span>}
+                </p>
                 <span className="text-xs bg-info-bg text-info dark:bg-info-bg dark:text-info px-2 py-0.5 rounded-full">
                   {p.category}
                 </span>

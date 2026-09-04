@@ -19,6 +19,7 @@ export interface OrderItem {
  qty: number;
  name: string;
  price: number;
+ unit?: string;
 }
 
 export interface StoreContextType {
@@ -82,11 +83,12 @@ export interface StoreContextType {
 export interface Product {
   id: string; name: string; category: string; price: number;
   stock: number; description?: string; imageUrl?: string; isActive: boolean;
+  unit?: string;
 }
 export interface Order {
   id: string; total: number; method: string; status: string;
   notes?: string; createdAt: string;
-  items?: { id: string; qty: number; price: number; product: { name: string } }[];
+  items?: { id: string; qty: number; price: number; product: { name: string; unit?: string } }[];
 }
 export interface StoreSummary {
   totalProducts: number; totalOrders: number;
