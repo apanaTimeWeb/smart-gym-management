@@ -2,8 +2,8 @@
 'use client';
 
 import { Edit2, Trash2 } from 'lucide-react';
-import { useStoreContext } from '@/app/manager/store/store_context/StoreContext';
-import { formatCurrency } from '@/app/manager/store/store_utils/StoreSharedConstants';
+import { useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';
+import { formatCurrency } from '@/app/manager/store/store_utils/ManagerStoreSharedConstants';
 
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';

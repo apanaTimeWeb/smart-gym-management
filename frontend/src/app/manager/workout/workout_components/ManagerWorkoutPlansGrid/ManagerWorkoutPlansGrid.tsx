@@ -2,7 +2,7 @@
 'use client';
 
 import { Dumbbell, Edit2, Trash2 } from 'lucide-react';
-import { useWorkoutContext } from '@/app/manager/workout/workout_context/WorkoutContext';
+import { useWorkoutContext } from '@/app/manager/workout/workout_context/ManagerWorkoutContext';
 
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';

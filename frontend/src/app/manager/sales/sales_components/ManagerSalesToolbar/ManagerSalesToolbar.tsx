@@ -3,8 +3,8 @@
 
 import { useState, useEffect } from 'react';
 import { Download, Search } from 'lucide-react';
-import { useSalesContext } from '@/app/manager/sales/sales_context/SalesContext';
-import { DATE_FILTERS } from '@/app/manager/sales/sales_utils/SalesSharedConstants';
+import { useSalesContext } from '@/app/manager/sales/sales_context/ManagerSalesContext';
+import { DATE_FILTERS } from '@/app/manager/sales/sales_utils/ManagerSalesSharedConstants';
 
 export default function ManagerSalesToolbar() {
   const { 

@@ -2,8 +2,8 @@
 'use client';
 
 import { X, Printer, Plus, Minus, Send } from 'lucide-react';
-import { useStoreContext } from '@/app/manager/store/store_context/StoreContext';
-import { PAYMENT_METHODS, formatCurrency } from '@/app/manager/store/store_utils/StoreSharedConstants';
+import { useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';
+import { PAYMENT_METHODS, formatCurrency } from '@/app/manager/store/store_utils/ManagerStoreSharedConstants';
 import { useState } from 'react';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 

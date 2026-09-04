@@ -2,8 +2,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useInquiriesContext } from '@/app/manager/inquiries/inquiries_context/InquiriesContext';
-import { INQUIRY_MODAL_FIELDS, INQUIRIES_STATUS_LABELS, INQUIRY_SOURCES, InquirySchema, type InquiryFormValues } from '@/app/manager/inquiries/inquiries_utils/InquiriesSharedConstants';
+import { useInquiriesContext } from '@/app/manager/inquiries/inquiries_context/ManagerInquiriesContext';
+import { INQUIRY_MODAL_FIELDS, INQUIRIES_STATUS_LABELS, INQUIRY_SOURCES, InquirySchema, type InquiryFormValues } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesSharedConstants';
 import { X, Save } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -20,7 +20,7 @@ export default function ManagerInquiriesModal() {
   const [plans, setPlans] = useState<{ label: string, value: string }[]>([]);
   useEffect(() => {
     if (showModal) {
-      import('@/app/manager/plans/plans_api/plans_api').then(m => {
+      import('@/app/manager/plans/plans_api/ManagerPlansApi').then(m => {
         m.plansApi.getAll().then(res => {
           if (res.data) {
             setPlans(res.data.map((p: any) => ({ label: p.name, value: p.name })));

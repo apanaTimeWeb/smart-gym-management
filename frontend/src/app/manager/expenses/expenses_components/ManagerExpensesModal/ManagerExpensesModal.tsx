@@ -2,8 +2,8 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useExpensesContext } from '@/app/manager/expenses/expenses_context/ExpensesContext';
-import { ExpenseSchema, EXPENSE_CATEGORIES, EXPENSE_STATUS_LABELS, type ExpenseFormValues } from '@/app/manager/expenses/expenses_utils/ExpensesSharedConstants';
+import { useExpensesContext } from '@/app/manager/expenses/expenses_context/ManagerExpensesContext';
+import { ExpenseSchema, EXPENSE_CATEGORIES, EXPENSE_STATUS_LABELS, type ExpenseFormValues } from '@/app/manager/expenses/expenses_utils/ManagerExpensesSharedConstants';
 import { X, Save } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

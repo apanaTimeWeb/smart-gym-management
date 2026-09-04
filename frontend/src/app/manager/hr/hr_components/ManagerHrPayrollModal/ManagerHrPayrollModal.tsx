@@ -6,9 +6,9 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { X, Check } from 'lucide-react';
-import { useHrContext } from '@/app/manager/hr/hr_context/HrContext';
-import { PayrollSchema, type PayrollFormValues, EMPTY_PAYROLL_FORM } from '@/app/manager/hr/hr_utils/HrSharedConstants';
-import { attendanceApi } from '@/app/manager/attendance/attendance_api/attendance_api';
+import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
+import { PayrollSchema, type PayrollFormValues, EMPTY_PAYROLL_FORM } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
+import { attendanceApi } from '@/app/manager/attendance/attendance_api/ManagerAttendanceApi';
 
 export default function ManagerHrPayrollModal() {
   const { showPayrollModal, setShowPayrollModal, savePayroll, saving, staff } = useHrContext();

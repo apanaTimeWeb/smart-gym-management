@@ -1,10 +1,10 @@
-// RESPONSIBILITY: Renders the list of members with pending payments, including skeleton loader, pagination, and overdue details. Receives data via SalesContext.
+// RESPONSIBILITY: Renders the list of members with pending payments, including skeleton loader, pagination, and overdue details. Receives data via ManagerSalesContext.
 'use client';
 
-import { useSalesContext } from '@/app/manager/sales/sales_context/SalesContext';
+import { useSalesContext } from '@/app/manager/sales/sales_context/ManagerSalesContext';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import ManagerSalesEmptyState from '@/app/manager/sales/sales_components/ManagerSalesEmptyState/ManagerSalesEmptyState';
-import type { PendingPaymentMember } from '@/app/manager/sales/sales_types/sales_types';
+import type { PendingPaymentMember } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
 import { MANAGER_ITEMS_PER_PAGE, GYM_DETAILS } from '@/app/manager/manager_utils/ManagerSharedConstants';
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
 

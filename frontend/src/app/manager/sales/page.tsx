@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Server Component that fetches initial data and acts as the entry point for the Sales module.
 import ManagerSalesMain from '@/app/manager/sales/sales_components/ManagerSalesMain/ManagerSalesMain';
-import { ssrSalesApi } from '@/app/manager/sales/sales_api/sales_server_api';
-import type { SalesInitialData } from '@/app/manager/sales/sales_types/sales_types';
+import { ssrSalesApi } from '@/app/manager/sales/sales_api/ManagerSalesServerApi';
+import type { SalesInitialData } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
 
 export default async function SalesPage() {
   let initialData: SalesInitialData | null = null;

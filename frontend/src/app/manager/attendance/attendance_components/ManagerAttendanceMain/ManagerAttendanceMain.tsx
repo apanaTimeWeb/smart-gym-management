@@ -4,12 +4,12 @@
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
 import ManagerToast from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 
-import { AttendanceProvider, useAttendanceContext } from '@/app/manager/attendance/attendance_context/AttendanceContext';
+import { AttendanceProvider, useAttendanceContext } from '@/app/manager/attendance/attendance_context/ManagerAttendanceContext';
 import ManagerAttendanceKPIs from '@/app/manager/attendance/attendance_components/ManagerAttendanceKPIs/ManagerAttendanceKPIs';
-import AttendanceToolbar from '@/app/manager/attendance/attendance_components/AttendanceToolbar/AttendanceToolbar';
-import AttendanceTable from '@/app/manager/attendance/attendance_components/AttendanceTable/AttendanceTable';
-import AttendanceModal from '@/app/manager/attendance/attendance_components/AttendanceModal/AttendanceModal';
-import AttendanceCalendar from '@/app/manager/attendance/attendance_components/AttendanceCalendar/AttendanceCalendar';
+import AttendanceToolbar from '@/app/manager/attendance/attendance_components/AttendanceToolbar/ManagerAttendanceToolbar';
+import AttendanceTable from '@/app/manager/attendance/attendance_components/AttendanceTable/ManagerAttendanceTable';
+import AttendanceModal from '@/app/manager/attendance/attendance_components/AttendanceModal/ManagerAttendanceModal';
+import AttendanceCalendar from '@/app/manager/attendance/attendance_components/AttendanceCalendar/ManagerAttendanceCalendar';
 
 function AttendanceContent() {
   const { toast, hideToast } = useAttendanceContext();

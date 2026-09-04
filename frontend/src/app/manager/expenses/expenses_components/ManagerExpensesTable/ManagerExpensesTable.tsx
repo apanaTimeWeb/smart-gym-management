@@ -2,18 +2,18 @@
 'use client';
 
 import { Edit, Trash2, Loader2 } from 'lucide-react';
-import { useExpensesContext } from '@/app/manager/expenses/expenses_context/ExpensesContext';
-import { useExpensesStore } from '@/app/manager/expenses/expenses_store/useExpensesStore';
-import { EXPENSES_TABLE_HEADERS, EXPENSE_STATUS_STYLES } from '@/app/manager/expenses/expenses_utils/ExpensesSharedConstants';
-import { formatCurrency } from '@/app/manager/members/members_utils/MembersSharedConstants';
+import { useExpensesContext } from '@/app/manager/expenses/expenses_context/ManagerExpensesContext';
+import { useManagerExpensesStore } from '@/app/manager/expenses/expenses_store/useManagerExpensesStore';
+import { EXPENSES_TABLE_HEADERS, EXPENSE_STATUS_STYLES } from '@/app/manager/expenses/expenses_utils/ManagerExpensesSharedConstants';
+import { formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 
 export default function ManagerExpensesTable() {
   const { currentPage, setCurrentPage, openEdit, deleteExpense } = useExpensesContext();
-  const expenses = useExpensesStore(s => s.expenses);
-  const totalExpenses = useExpensesStore(s => s.totalExpenses);
-  const fetchState = useExpensesStore(s => s.fetchState);
+  const expenses = useManagerExpensesStore(s => s.expenses);
+  const totalExpenses = useManagerExpensesStore(s => s.totalExpenses);
+  const fetchState = useManagerExpensesStore(s => s.fetchState);
 
   const totalPages = Math.ceil(totalExpenses / MANAGER_ITEMS_PER_PAGE);
 

@@ -2,7 +2,7 @@
 'use client';
 
 import { CalendarCheck, Users, UserCog } from 'lucide-react';
-import { useAttendanceContext } from '@/app/manager/attendance/attendance_context/AttendanceContext';
+import { useAttendanceContext } from '@/app/manager/attendance/attendance_context/ManagerAttendanceContext';
 
 export default function ManagerAttendanceKPIs() {
  const { todayStats } = useAttendanceContext();

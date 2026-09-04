@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { X } from 'lucide-react';
-import { useMembersContext } from '@/app/manager/members/members_context/MembersContext';
+import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
 
 export default function ManagerAddPaymentModal() {
   const { showPaymentModal, setShowPaymentModal, recordPayment, selectedMember } = useMembersContext();

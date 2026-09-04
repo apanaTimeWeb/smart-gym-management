@@ -2,7 +2,7 @@
 'use client';
 
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
-import { WorkoutProvider, useWorkoutContext } from '@/app/manager/workout/workout_context/WorkoutContext';
+import { WorkoutProvider, useWorkoutContext } from '@/app/manager/workout/workout_context/ManagerWorkoutContext';
 import ManagerWorkoutBanner from '@/app/manager/workout/workout_components/ManagerWorkoutBanner/ManagerWorkoutBanner';
 import ManagerWorkoutToolbar from '@/app/manager/workout/workout_components/ManagerWorkoutToolbar/ManagerWorkoutToolbar';
 import ManagerWorkoutPlansGrid from '@/app/manager/workout/workout_components/ManagerWorkoutPlansGrid/ManagerWorkoutPlansGrid';

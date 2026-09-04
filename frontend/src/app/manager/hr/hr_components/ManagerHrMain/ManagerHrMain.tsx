@@ -3,12 +3,12 @@
 
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
 import ManagerToast from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import { HrProvider, useHrContext } from '@/app/manager/hr/hr_context/HrContext';
+import { HrProvider, useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
 import ManagerHrKPIs from '@/app/manager/hr/hr_components/ManagerHrKPIs/ManagerHrKPIs';
 import ManagerHrTabs from '@/app/manager/hr/hr_components/ManagerHrTabs/ManagerHrTabs';
 import ManagerHrStaffModal from '@/app/manager/hr/hr_components/ManagerHrStaffModal/ManagerHrStaffModal';
 import ManagerHrPayrollModal from '@/app/manager/hr/hr_components/ManagerHrPayrollModal/ManagerHrPayrollModal';
-import type { HrInitialData } from '@/app/manager/hr/hr_types/hr_types';
+import type { HrInitialData } from '@/app/manager/hr/hr_types/ManagerHrTypes';
 
 function HrContent() {
  const { toast, hideToast } = useHrContext();

@@ -1,13 +1,13 @@
 // RESPONSIBILITY: Renders high-level KPIs for the Expenses module.
 'use client';
 
-import { useExpensesStore } from '@/app/manager/expenses/expenses_store/useExpensesStore';
+import { useManagerExpensesStore } from '@/app/manager/expenses/expenses_store/useManagerExpensesStore';
 import { IndianRupee, TrendingDown, Clock, CheckCircle } from 'lucide-react';
-import { formatCurrency } from '@/app/manager/members/members_utils/MembersSharedConstants'; // Reusing formatCurrency
+import { formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants'; // Reusing formatCurrency
 
 export default function ManagerExpensesKPIs() {
-  const stats = useExpensesStore(s => s.stats);
-  const fetchState = useExpensesStore(s => s.fetchState);
+  const stats = useManagerExpensesStore(s => s.stats);
+  const fetchState = useManagerExpensesStore(s => s.fetchState);
 
   if (fetchState === 'loading' || fetchState === 'error') return null; // Let Suspense/Main handle it
 

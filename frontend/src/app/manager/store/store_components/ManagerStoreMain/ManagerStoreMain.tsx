@@ -5,13 +5,13 @@ import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/Manage
 import ManagerToast from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import ManagerThermalReceipt from '@/app/manager/manager_components/ManagerShared/ManagerThermalReceipt';
 
-import { StoreProvider, useStoreContext } from '@/app/manager/store/store_context/StoreContext';
+import { StoreProvider, useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';
 import ManagerStoreKPIs from '@/app/manager/store/store_components/ManagerStoreKPIs/ManagerStoreKPIs';
 import ManagerStoreToolbar from '@/app/manager/store/store_components/ManagerStoreToolbar/ManagerStoreToolbar';
 import ManagerStoreFilters from '@/app/manager/store/store_components/ManagerStoreFilters/ManagerStoreFilters';
 import ManagerStoreProductGrid from '@/app/manager/store/store_components/ManagerStoreProductGrid/ManagerStoreProductGrid';
 import ManagerStoreOrderTable from '@/app/manager/store/store_components/ManagerStoreOrderTable/ManagerStoreOrderTable';
-import type { StoreInitialData } from '@/app/manager/store/store_types/store_types';
+import type { StoreInitialData } from '@/app/manager/store/store_types/ManagerStoreTypes';
 import dynamic from 'next/dynamic';
 
 const ManagerStoreProductModal = dynamic(() => import('@/app/manager/store/store_components/ManagerStoreProductModal/ManagerStoreProductModal'), { ssr: false });

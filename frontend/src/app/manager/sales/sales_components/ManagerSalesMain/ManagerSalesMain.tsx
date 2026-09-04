@@ -2,7 +2,7 @@
 'use client';
 
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
-import { SalesProvider, useSalesContext } from '@/app/manager/sales/sales_context/SalesContext';
+import { SalesProvider, useSalesContext } from '@/app/manager/sales/sales_context/ManagerSalesContext';
 import ManagerSalesToolbar from '@/app/manager/sales/sales_components/ManagerSalesToolbar/ManagerSalesToolbar';
 import ManagerSalesTabs from '@/app/manager/sales/sales_components/ManagerSalesTabs/ManagerSalesTabs';
 import ManagerSalesOverview from '@/app/manager/sales/sales_components/ManagerSalesOverview/ManagerSalesOverview';
@@ -10,7 +10,7 @@ import ManagerSalesMembershipReport from '@/app/manager/sales/sales_components/M
 import ManagerSalesPendingPayments from '@/app/manager/sales/sales_components/ManagerSalesPendingPayments/ManagerSalesPendingPayments';
 import ManagerSalesAllMemberships from '@/app/manager/sales/sales_components/ManagerSalesAllMemberships/ManagerSalesAllMemberships';
 import ManagerToast from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import type { SalesInitialData } from '@/app/manager/sales/sales_types/sales_types';
+import type { SalesInitialData } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
 
 function SalesContent() {
  const { tab, toast, showToast } = useSalesContext();

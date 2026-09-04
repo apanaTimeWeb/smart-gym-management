@@ -6,10 +6,10 @@ import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import { useMembersContext } from '@/app/manager/members/members_context/MembersContext';
-import { useMembersStore } from '@/app/manager/members/members_store/useMembersStore';
-import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency } from '@/app/manager/members/members_utils/MembersSharedConstants';
-import type { PlanWithCustom } from '@/app/manager/members/members_types/members_types';
+import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
+import { useManagerMembersStore } from '@/app/manager/members/members_store/useManagerMembersStore';
+import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
+import type { PlanWithCustom } from '@/app/manager/members/members_types/ManagerMembersTypes';
 
 const RenewSchema = z.object({
   planId: z.string().min(1, "Please select a plan"),
@@ -35,8 +35,8 @@ export default function ManagerRenewModal() {
     showRenewModal, setShowRenewModal, selectedMember, renewMember
   } = useMembersContext();
 
-  const plans = useMembersStore(s => s.plans);
-  const saving = useMembersStore(s => s.saving);
+  const plans = useManagerMembersStore(s => s.plans);
+  const saving = useManagerMembersStore(s => s.saving);
 
   const useFormReturn = useForm<RenewFormValues>({
     resolver: zodResolver(RenewSchema),

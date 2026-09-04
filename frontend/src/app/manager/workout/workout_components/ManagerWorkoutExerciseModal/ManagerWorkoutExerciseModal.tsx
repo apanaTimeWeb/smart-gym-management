@@ -6,8 +6,8 @@ import { X, Save } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import { useWorkoutContext } from '@/app/manager/workout/workout_context/WorkoutContext';
-import { EQUIPMENT_OPTIONS, EXERCISE_DIFFICULTY_OPTIONS, ExerciseSchema, type ExerciseFormValues, EMPTY_EXERCISE_FORM } from '@/app/manager/workout/workout_utils/WorkoutSharedConstants';
+import { useWorkoutContext } from '@/app/manager/workout/workout_context/ManagerWorkoutContext';
+import { EQUIPMENT_OPTIONS, EXERCISE_DIFFICULTY_OPTIONS, ExerciseSchema, type ExerciseFormValues, EMPTY_EXERCISE_FORM } from '@/app/manager/workout/workout_utils/ManagerWorkoutSharedConstants';
 
 export default function ManagerWorkoutExerciseModal() {
   const { 
