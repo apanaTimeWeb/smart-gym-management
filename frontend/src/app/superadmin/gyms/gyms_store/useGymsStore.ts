@@ -11,6 +11,7 @@ import toast from 'react-hot-toast';
 
 import { gymsApi } from '@/app/superadmin/gyms/gyms_api/gyms_api';
 import type { Tenant, FetchState, TenantStatus } from '@/app/superadmin/gyms/gyms_types/gyms_types';
+import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
 
 interface GymsState {
   // Data State
@@ -23,7 +24,7 @@ interface GymsState {
   search: string;
   selectedGym: Tenant | null;
   isEditModalOpen: boolean;
-  isEmailModalOpen: boolean;
+  isWhatsappModalOpen: boolean;
   isDeleteModalOpen: boolean;
   gymToDelete: Tenant | null;
 
@@ -31,8 +32,8 @@ interface GymsState {
   setSearch: (search: string) => void;
   openEditModal: (gym: Tenant) => void;
   closeEditModal: () => void;
-  openEmailModal: (gym: Tenant) => void;
-  closeEmailModal: () => void;
+  openWhatsappModal: (gym: Tenant) => void;
+  closeWhatsappModal: () => void;
   openDeleteModal: (gym: Tenant) => void;
   closeDeleteModal: () => void;
   
@@ -42,7 +43,7 @@ interface GymsState {
   handleSuspend: (id: string, name: string, currentStatus: string) => Promise<void>;
   handleDelete: (id: string) => Promise<void>;
   handleEditGym: (id: string, data: Partial<Tenant>) => Promise<void>;
-  handleEmailOwner: (id: string, data: { subject: string; message: string; [key: string]: unknown }) => Promise<void>;
+  handleWhatsappOwner: (id: string, data: { subject: string; message: string; [key: string]: unknown }) => Promise<void>;
   addGym: (gym: Tenant) => void;
 }
 
@@ -54,7 +55,7 @@ export const useGymsStore = create<GymsState>((set, get) => ({
   search: '',
   selectedGym: null,
   isEditModalOpen: false,
-  isEmailModalOpen: false,
+  isWhatsappModalOpen: false,
   isDeleteModalOpen: false,
   gymToDelete: null,
 
@@ -77,10 +78,10 @@ export const useGymsStore = create<GymsState>((set, get) => ({
     setTimeout(() => set({ selectedGym: null }), 200);
   },
 
-  openEmailModal: (gym) => set({ selectedGym: gym, isEmailModalOpen: true }),
+  openWhatsappModal: (gym) => set({ selectedGym: gym, isWhatsappModalOpen: true }),
   
-  closeEmailModal: () => {
-    set({ isEmailModalOpen: false });
+  closeWhatsappModal: () => {
+    set({ isWhatsappModalOpen: false });
     setTimeout(() => set({ selectedGym: null }), 200);
   },
 
@@ -96,8 +97,8 @@ export const useGymsStore = create<GymsState>((set, get) => ({
     try {
       const currentGyms = get().gyms;
       const baseGyms = currentGyms || [
-        { id: '1', name: 'Golds Gym', ownerName: 'Arnold S.', adminEmail: 'admin@golds.com', phone: '1234567890', plan: 'Pro', status: 'ACTIVE', memberCount: 120, monthlyRevenue: 5000, databaseVersion: 'v1.2.0', createdAt: new Date().toISOString() },
-        { id: '2', name: 'Planet Fitness', ownerName: 'John D.', adminEmail: 'john@planet.com', phone: '0987654321', plan: 'Starter', status: 'TRIAL', memberCount: 45, monthlyRevenue: 1000, databaseVersion: 'v1.1.0', createdAt: new Date().toISOString() },
+        { id: '1', name: 'Golds Gym', ownerName: 'Arnold S.', adminEmail: 'admin@golds.com', phone: '7870009099', plan: 'Pro', status: 'ACTIVE', memberCount: 120, monthlyRevenue: 5000, databaseVersion: 'v1.2.0', createdAt: new Date().toISOString() },
+        { id: '2', name: 'Planet Fitness', ownerName: 'John D.', adminEmail: 'john@planet.com', phone: '7870009099', plan: 'Starter', status: 'TRIAL', memberCount: 45, monthlyRevenue: 1000, databaseVersion: 'v1.1.0', createdAt: new Date().toISOString() },
       ];
       const filtered = searchQuery ? baseGyms.filter(g => g.name.toLowerCase().includes(searchQuery.toLowerCase())) : baseGyms;
       set({ gyms: filtered, fetchState: 'success' });
@@ -171,14 +172,42 @@ export const useGymsStore = create<GymsState>((set, get) => ({
     }
   },
 
-  handleEmailOwner: async (id, data) => {
+  handleWhatsappOwner: async (id, data) => {
     set({ actionLoadingId: id });
     try {
-      // Mocking email success
-      toast.success('Email sent successfully.');
-      get().closeEmailModal();
+      if (data.phone) {
+        const cleanPhone = String(data.phone).replace(/\D/g, '');
+        const dateStr = new Intl.DateTimeFormat('en-IN', {
+          day: '2-digit', month: 'short', year: 'numeric',
+          hour: '2-digit', minute: '2-digit', hour12: true
+        }).format(new Date());
+
+        const waText = WhatsAppFormatter.formatReceipt({
+          title: 'Smart Gym 360',
+          subtitle: String(data.subject),
+          date: dateStr,
+          customerInfo: {
+            Owner: String(data.ownerName || 'Gym Owner'),
+            Gym: String(data.gymName || 'Gym')
+          },
+          sections: [
+            {
+              title: 'Message',
+              items: {
+                'Content': String(data.message)
+              }
+            }
+          ],
+          footer: 'Powered by Smart Gym 360'
+        });
+        
+        window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(waText)}`, '_blank');
+      }
+
+      toast.success('WhatsApp opened successfully.');
+      get().closeWhatsappModal();
     } catch (error: unknown) {
-      const errMsg = error instanceof Error ? error.message : String(error) || 'Failed to send email.';
+      const errMsg = error instanceof Error ? error.message : String(error) || 'Failed to send WhatsApp message.';
       toast.error(errMsg);
     } finally {
       set({ actionLoadingId: null });

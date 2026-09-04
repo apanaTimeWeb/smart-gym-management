@@ -64,7 +64,7 @@ export default function PlanCreateModal() {
           <div className="grid grid-cols-2 gap-4">
             {(['priceMonthly', 'priceAnnual'] as const).map(field => (
               <div key={field} className="space-y-2">
-                <label className="block text-sm font-medium text-secondary">{field === 'priceMonthly' ? 'Monthly Price ($)' : 'Annual Price ($)'} <span className="text-danger">*</span></label>
+                <label className="block text-sm font-medium text-secondary">{field === 'priceMonthly' ? 'Monthly Price (₹)' : 'Annual Price (₹)'} <span className="text-danger">*</span></label>
                 <input type="number" min="0" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }} step="0.01" {...register(field, { valueAsNumber: true })} className="w-full bg-input border border-border rounded-xl px-4 py-3 text-foreground focus:border-primary outline-none transition-colors" />
                 {errors[field] && <p className="text-danger text-xs">{errors[field]?.message}</p>}
               </div>

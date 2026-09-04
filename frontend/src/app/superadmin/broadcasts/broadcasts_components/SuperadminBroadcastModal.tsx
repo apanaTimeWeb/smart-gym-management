@@ -6,6 +6,8 @@ import { X } from 'lucide-react';
 import { UseFormReturn, Controller } from 'react-hook-form';
 import type { BroadcastFormData } from '@/app/superadmin/broadcasts/broadcasts_types/broadcasts_types';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
+import { useGymsStore } from '@/app/superadmin/gyms/gyms_store/useGymsStore';
+import { useEffect } from 'react';
 
 interface SuperadminBroadcastModalProps {
   isOpen: boolean;
@@ -24,8 +26,35 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
 }) => {
   if (!isOpen) return null;
 
-  const { register, handleSubmit, watch, formState: { errors } } = form;
+  const { register, handleSubmit, watch, setValue, formState: { errors } } = form;
   const status = watch('status');
+  const targetGymIds = watch('targetGymIds') || [];
+
+  const gyms = useGymsStore(state => state.gyms);
+  const fetchGyms = useGymsStore(state => state.fetchGyms);
+
+  useEffect(() => {
+    if (!gyms) fetchGyms();
+  }, [gyms, fetchGyms]);
+
+  const allGymIds = gyms?.map(g => g.id) || [];
+  const isAllSelected = allGymIds.length > 0 && targetGymIds.length === allGymIds.length;
+
+  const handleSelectAll = () => {
+    if (isAllSelected) {
+      setValue('targetGymIds', [], { shouldValidate: true });
+    } else {
+      setValue('targetGymIds', allGymIds, { shouldValidate: true });
+    }
+  };
+
+  const handleToggleGym = (id: string) => {
+    if (targetGymIds.includes(id)) {
+      setValue('targetGymIds', targetGymIds.filter(g => g !== id), { shouldValidate: true });
+    } else {
+      setValue('targetGymIds', [...targetGymIds, id], { shouldValidate: true });
+    }
+  };
 
   return (
     <div className="fixed inset-0 bg-black/60 z-40 flex items-center justify-center p-4 backdrop-blur-sm">
@@ -60,27 +89,37 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-bold text-secondary">Audience <span className="text-danger">*</span></label>
-              <Controller
-                name="audience"
-                control={form.control}
-                render={({ field }) => (
-                  <SearchableDropdown
-                    value={field.value || ''}
-                    onChange={field.onChange}
-                    options={[
-                      { label: 'All Tenants', value: 'ALL_TENANTS' },
-                      { label: 'Pro Plan Only', value: 'PRO_ONLY' },
-                      { label: 'Suspended Only', value: 'SUSPENDED_ONLY' }
-                    ]}
-                  />
-                )}
-              />
-              {errors.audience && <span className="text-xs text-danger">{errors.audience.message}</span>}
+            <div className="flex flex-col gap-1.5 col-span-2">
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-bold text-secondary">Select Target Gyms <span className="text-danger">*</span></label>
+                <button 
+                  type="button" 
+                  onClick={handleSelectAll}
+                  className="text-xs font-semibold text-primary hover:underline"
+                >
+                  {isAllSelected ? 'Deselect All' : 'Select All Gyms'}
+                </button>
+              </div>
+              <div className="bg-input border border-border rounded-xl max-h-40 overflow-y-auto custom-scrollbar p-2 grid grid-cols-2 gap-2">
+                {gyms?.map(gym => (
+                  <label key={gym.id} className="flex items-center gap-2 cursor-pointer p-2 hover:bg-card rounded-lg transition-colors border border-transparent hover:border-border">
+                    <input 
+                      type="checkbox" 
+                      checked={targetGymIds.includes(gym.id)}
+                      onChange={() => handleToggleGym(gym.id)}
+                      className="w-4 h-4 rounded text-primary focus:ring-primary accent-primary"
+                    />
+                    <div className="flex flex-col overflow-hidden">
+                      <span className="text-sm font-medium text-foreground truncate">{gym.name}</span>
+                      <span className="text-xs text-secondary truncate">{gym.ownerName}</span>
+                    </div>
+                  </label>
+                ))}
+              </div>
+              {errors.targetGymIds && <span className="text-xs text-danger">{errors.targetGymIds.message}</span>}
             </div>
 
-            <div className="flex flex-col gap-1.5">
+            <div className="flex flex-col gap-1.5 col-span-2">
               <label className="text-sm font-bold text-secondary">Status <span className="text-danger">*</span></label>
               <Controller
                 name="status"
