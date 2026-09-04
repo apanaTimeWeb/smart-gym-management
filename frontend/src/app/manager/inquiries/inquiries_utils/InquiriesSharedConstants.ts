@@ -52,7 +52,6 @@ export const INQUIRY_MODAL_FIELDS = [
  { label: 'Full Name', key: 'name', type: 'text', req: true },
  { label: 'Phone', key: 'phone', type: 'tel', req: true },
  { label: 'Email (optional)', key: 'email', type: 'email', req: false },
- { label: 'Interest (Plan)', key: 'interest', type: 'text', placeholder: 'Basic Membership, Personal Training...', req: true },
  { label: 'Notes', key: 'notes', type: 'text', req: false },
 ];
 
