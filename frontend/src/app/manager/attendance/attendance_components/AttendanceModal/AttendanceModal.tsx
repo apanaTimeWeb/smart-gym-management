@@ -12,7 +12,8 @@ import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 export default function AttendanceModal() {
   const { 
     showModal, setShowModal,
-    members, staff, saving, markAttendance
+    members, staff, saving, markAttendance,
+    tab
   } = useAttendanceContext();
 
   const {
@@ -31,9 +32,12 @@ export default function AttendanceModal() {
 
   useEffect(() => {
     if (showModal) {
-      reset(EMPTY_ATTENDANCE_FORM);
+      reset({
+        ...EMPTY_ATTENDANCE_FORM,
+        type: tab === 'Staff' ? 'STAFF' : 'MEMBER'
+      });
     }
-  }, [showModal, reset]);
+  }, [showModal, reset, tab]);
 
   if (!showModal) return null;
 
@@ -51,27 +55,7 @@ export default function AttendanceModal() {
           </button>
         </div>
         <form onSubmit={handleSubmit(markAttendance)} className="p-5 space-y-4">
-          <div className="flex gap-4">
-            <label className="flex items-center gap-2 text-sm text-foreground cursor-pointer">
-              <input 
-                type="radio" 
-                value="MEMBER" 
-                {...register('type')}
-                className="text-primary focus:ring-primary" 
-              />
-              Member
-            </label>
-            <label className="flex items-center gap-2 text-sm text-foreground cursor-pointer">
-              <input 
-                type="radio" 
-                value="STAFF" 
-                {...register('type')}
-                className="text-primary focus:ring-primary" 
-              />
-              Staff
-            </label>
-          </div>
-
+          {/* Type is now automatically inferred from the active tab */}
           <div>
             <label className="block text-sm font-medium text-secondary mb-1">
               {watchType === 'MEMBER' ? 'Select Member' : 'Select Staff'}

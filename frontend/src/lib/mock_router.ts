@@ -186,7 +186,7 @@ export async function routeMockRequest<T>(
             checkOut: `${month}-${i.toString().padStart(2, '0')}T17:00:00.000Z`,
             status: 'PRESENT'
           });
-        } else if (rand > 0.1) {
+        } else if (rand > 0.1 && type === 'STAFF') {
           history.push({
             id: `att-hist-${i}`,
             type,
@@ -207,7 +207,14 @@ export async function routeMockRequest<T>(
     }
     return { success: true, message: 'History fetched', data: history } as unknown as ApiResponse<T>;
   }
-  if (path.includes('/attendance/today-stats')) return { success: true, message: 'Stats', data: { totalCheckIns: 45, memberCheckIns: 32, staffCheckIns: 13 } } as unknown as ApiResponse<T>;
+  if (path.includes('/attendance/today-stats')) {
+    const records = MockDB.getCollection('mock_admin_attendance', generate(20, i => { const d = new Date(); d.setHours(8, 0, 0, 0); const d2 = new Date(); d2.setHours(9, 30, 0, 0); return { id: `att-${i}`, type: i % 4 === 0 ? 'STAFF' : 'MEMBER', member: { name: `Active Member ${i}` }, staff: { name: `Trainer ${i}` }, date: new Date().toISOString(), checkIn: d.toISOString(), checkOut: d2.toISOString() }; }));
+    const todayStr = new Date().toISOString().split('T')[0];
+    const todayRecords = records.filter(r => (r.date as string)?.startsWith(todayStr));
+    const memberCheckIns = todayRecords.filter(r => r.type === 'MEMBER').length;
+    const staffCheckIns = todayRecords.filter(r => r.type === 'STAFF').length;
+    return { success: true, message: 'Stats', data: { totalCheckIns: todayRecords.length, memberCheckIns, staffCheckIns } } as unknown as ApiResponse<T>;
+  }
   if (path.includes('/attendance')) return MockDB.handleCrud('mock_admin_attendance', method, path, parsedBody, generate(20, i => { const d = new Date(); d.setHours(8, 0, 0, 0); const d2 = new Date(); d2.setHours(9, 30, 0, 0); return { id: `att-${i}`, type: i % 4 === 0 ? 'STAFF' : 'MEMBER', member: { name: `Active Member ${i}` }, staff: { name: `Trainer ${i}` }, date: new Date().toISOString(), checkIn: d.toISOString(), checkOut: d2.toISOString() }; }), 'attendance') as unknown as ApiResponse<T>;
   if (path.includes('/hr/summary')) return { success: true, message: 'Summary', data: { totalStaff: 25, activeStaff: 22, totalPayrollThisMonth: 850000, paidCount: 20, pendingCount: 5 } } as unknown as ApiResponse<T>;
   if (path.includes('/hr/staff')) return MockDB.handleCrud('mock_admin_staff', method, path, parsedBody, generate(8, i => ({ id: `staff-${i}`, name: `Trainer ${i+1}`, role: i === 0 ? 'Manager' : 'Trainer', email: `trainer${i}@gym.com`, phone: '9988776655', isActive: true, joinDate: '2023-01-01', salary: 25000, branch: 'Main', gender: 'Male' })), 'staff') as unknown as ApiResponse<T>;

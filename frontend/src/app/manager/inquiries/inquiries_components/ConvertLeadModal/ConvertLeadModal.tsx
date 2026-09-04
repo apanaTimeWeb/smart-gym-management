@@ -28,6 +28,7 @@ export default function ConvertLeadModal() {
     expiryDate: string;
     paidAmount: number;
     pendingAmount: number;
+    aadhaar?: string;
   } | null>(null);
 
   useEffect(() => {
@@ -113,6 +114,7 @@ export default function ConvertLeadModal() {
           expiryDate: data.expiryDate,
           paidAmount: paid,
           pendingAmount: pendingAmount,
+          aadhaar: data.aadhaar,
         });
       } else {
         closeConvert();
@@ -128,8 +130,8 @@ export default function ConvertLeadModal() {
     if (!successData || !successData.phone) return;
     const phone = successData.phone.replace(/\D/g, '');
     const finalPhone = phone.length === 10 ? `91${phone}` : phone;
-    
-    const message = `🎉 *Congratulations ${successData.name}!* 🎉\n\nYour admission at GymSmart is confirmed. Welcome to the fitness family! 💪\n\n*📝 ADMISSION DETAILS*\n• *Gym ID:* ${successData.gymId}\n• *Plan:* ${successData.planName}\n• *Join Date:* ${new Date(successData.joinDate).toLocaleDateString('en-IN')}\n• *Expiry Date:* ${new Date(successData.expiryDate).toLocaleDateString('en-IN')}\n\n*💰 PAYMENT DETAILS*\n• *Paid:* ₹${successData.paidAmount}\n• *Pending:* ₹${successData.pendingAmount}\n\nLet's crush those goals! 🔥`;
+    const aadhaarLine = successData.aadhaar ? `\n• *Aadhaar No:* ${successData.aadhaar}` : '';
+    const message = `🎉 *Congratulations ${successData.name}!* 🎉\n\nYour admission at GymSmart is confirmed. Welcome to the fitness family! 💪\n\n*📝 ADMISSION DETAILS*\n• *Gym ID:* ${successData.gymId}\n• *Plan:* ${successData.planName}${aadhaarLine}\n• *Join Date:* ${new Date(successData.joinDate).toLocaleDateString('en-IN')}\n• *Expiry Date:* ${new Date(successData.expiryDate).toLocaleDateString('en-IN')}\n\n*💰 PAYMENT DETAILS*\n• *Paid:* ₹${successData.paidAmount}\n• *Pending:* ₹${successData.pendingAmount}\n\nLet's crush those goals! 🔥`;
     
     const url = `https://wa.me/${finalPhone}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
@@ -196,16 +198,21 @@ export default function ConvertLeadModal() {
             {[
               { label: 'Full Name', key: 'name', type: 'text', placeholder: 'Rahul Sharma', fullWidth: true },
               { label: 'Email', key: 'email', type: 'email', placeholder: 'rahul@gmail.com' },
-              { label: 'Phone', key: 'phone', type: 'tel', placeholder: '+91 98765 43210' },
-              { label: 'Address', key: 'address', type: 'text', placeholder: 'Andheri, Mumbai', fullWidth: true },
+              { label: 'Phone', key: 'phone', type: 'tel', placeholder: '9876543210' },
+              { label: 'Address', key: 'address', type: 'text', placeholder: 'Andheri, Mumbai' },
+              { label: 'Aadhaar Card', key: 'aadhaar', type: 'text', placeholder: '12-digit Aadhaar (Optional)' },
             ].map(f => (
               <div key={f.key} className={f.fullWidth ? 'sm:col-span-2' : ''}>
                 <label className="block text-sm font-medium text-secondary mb-1.5">{f.label}</label>
                 <input
                   type={f.type}
                   placeholder={f.placeholder}
-                  maxLength={f.type === 'tel' ? 10 : undefined}
-                  onKeyDown={f.type === 'tel' ? (e) => { if (['e', 'E', '-', '+', '.'].includes(e.key)) e.preventDefault(); } : undefined}
+                  maxLength={f.key === 'phone' ? 10 : f.key === 'aadhaar' ? 12 : undefined}
+                  onKeyDown={(e) => {
+                    if ((f.key === 'phone' || f.key === 'aadhaar') && ['e', 'E', '-', '+', '.'].includes(e.key)) {
+                      e.preventDefault();
+                    }
+                  }}
                   {...register(f.key as keyof MemberFormValues)}
                   className={`w-full border rounded-xl px-4 py-3 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-all duration-200 ${
                     errors[f.key as keyof MemberFormValues] ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'

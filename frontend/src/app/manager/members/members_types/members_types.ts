@@ -17,7 +17,7 @@ export interface MembersInitialData {
 
 export interface Member {
   id: string; name: string; email: string; phone: string;
-  gender: string; address?: string; branch: string;
+  gender: string; address?: string; aadhaar?: string; branch: string;
   planId: string; plan?: { id: string; name: string; tier: string };
   billingCycle: string; status: string;
   joinDate: string; expiryDate: string;
