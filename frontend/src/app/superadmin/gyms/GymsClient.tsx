@@ -18,7 +18,7 @@ export default function GymsClient() {
         </div>
         <Link 
           href={SuperadminUrlConfig.PAGES.GYM_ADD}
-          className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-lg shadow-primary/20"
+          className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg font-medium motion-safe:transition-colors shadow-lg shadow-primary/20"
         >
           <Plus className="w-5 h-5" />
           Onboard New Gym

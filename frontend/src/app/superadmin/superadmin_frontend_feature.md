@@ -57,12 +57,12 @@ superadmin/
 │       └── SuperadminErrorBoundary.tsx # Typed React Error Boundary with Retry button (Rule 43)
 │
 ├── dashboard/
-│   ├── page.tsx                        # Server Component → renders DashboardView
+│   ├── page.tsx                        # Server Component → renders SuperadminDashboardView
 │   ├── loading.tsx                     # Skeleton loader
 │   ├── error.tsx                       # Error boundary with Retry
 │   └── dashboard_components/
-│       └── DashboardView/
-│           └── DashboardView.tsx       # SaaS KPI cards + ApexCharts MRR area chart + recent onboards
+│       └── SuperadminDashboardView/
+│           └── SuperadminDashboardView.tsx       # SaaS KPI cards + ApexCharts MRR area chart + recent onboards
 │
 ├── gyms/                               # Most complex module — full Zustand store
 │   ├── page.tsx                        # Server Component entry point

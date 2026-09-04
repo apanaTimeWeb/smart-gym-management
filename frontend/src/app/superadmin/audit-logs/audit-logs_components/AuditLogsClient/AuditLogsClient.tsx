@@ -97,7 +97,7 @@ export default function AuditLogsClient() {
               placeholder="Search logs..." 
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              className="pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus transition-colors  w-full sm:w-64 "
+              className="pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus motion-safe:transition-colors  w-full sm:w-64 "
             />
           </div>
         </div>
@@ -118,7 +118,7 @@ export default function AuditLogsClient() {
             </thead>
             <tbody className="divide-y divide-border">
               {logs.map((log) => (
-                <tr key={log.id} className="hover:bg-primary/5 transition-colors">
+                <tr key={log.id} className="hover:bg-primary/5 motion-safe:transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary truncate">
                     {new Date(log.timestamp).toLocaleString()}
                   </td>

@@ -53,7 +53,7 @@ export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEd
 
   return (
     <tr 
-      className={`hover:bg-primary/5 transition-all duration-200 ease-in-out group cursor-pointer ${cpn.isDeleted ? 'opacity-50 grayscale' : ''}`}
+      className={`hover:bg-primary/5 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out group cursor-pointer ${cpn.isDeleted ? 'opacity-50 grayscale' : ''}`}
       onClick={() => { if (!cpn.isDeleted) onEdit(cpn); }}
     >
       <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-foreground tracking-wide">
@@ -75,7 +75,7 @@ export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEd
             title="Restore Coupon"
             aria-label="Restore Coupon"
             onClick={(e) => { e.stopPropagation(); onRestore(cpn.id); }}
-            className="text-secondary hover:text-success transition-colors p-1.5 bg-input hover:bg-success/10 rounded-md border border-border"
+            className="text-secondary hover:text-success motion-safe:transition-colors p-1.5 bg-input hover:bg-success/10 rounded-md border border-border"
           >
             <RefreshCw className="w-4 h-4" />
           </button>
@@ -85,7 +85,7 @@ export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEd
               title="Share Coupon"
               aria-label="Share Coupon"
               onClick={(e) => handleShareWhatsApp(e, cpn)}
-              className="text-secondary hover:text-[#25D366] transition-colors p-1.5 bg-input hover:bg-[#25D366]/10 rounded-md border border-border"
+              className="text-secondary hover:text-[#25D366] motion-safe:transition-colors p-1.5 bg-input hover:bg-[#25D366]/10 rounded-md border border-border"
             >
               <MessageCircle className="w-4 h-4" />
             </button>
@@ -94,7 +94,7 @@ export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEd
               aria-label={cpn.status === 'ACTIVE' ? 'Deactivate Coupon' : 'Activate Coupon'}
               onClick={(e) => { e.stopPropagation(); onToggleStatus(cpn.id, cpn.status); }}
               disabled={cpn.status === 'EXPIRED' || cpn.status === 'DEPLETED'}
-              className={`p-1.5 rounded-md border border-border transition-all duration-200 ease-in-out ${
+              className={`p-1.5 rounded-md border border-border motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out ${
                 cpn.status === 'EXPIRED' || cpn.status === 'DEPLETED'
                   ? 'opacity-30 cursor-not-allowed bg-input'
                   : cpn.status === 'ACTIVE'
@@ -108,7 +108,7 @@ export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEd
               title="Edit Coupon"
               aria-label="Edit Coupon"
               onClick={(e) => { e.stopPropagation(); onEdit(cpn); }}
-              className="text-secondary hover:text-primary transition-colors p-1.5 bg-input hover:bg-primary/10 rounded-md border border-border"
+              className="text-secondary hover:text-primary motion-safe:transition-colors p-1.5 bg-input hover:bg-primary/10 rounded-md border border-border"
             >
               <Edit2 className="w-4 h-4" />
             </button>
@@ -121,7 +121,7 @@ export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEd
                   onDelete(cpn.id); 
                 }
               }}
-              className="text-secondary hover:text-danger transition-colors p-1.5 bg-input hover:bg-danger-bg/10 rounded-md border border-border"
+              className="text-secondary hover:text-danger motion-safe:transition-colors p-1.5 bg-input hover:bg-danger-bg/10 rounded-md border border-border"
             >
               <Trash2 className="w-4 h-4" />
             </button>

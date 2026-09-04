@@ -25,7 +25,7 @@ export default function PlansClient() {
         </div>
         <button
           onClick={openCreateModal}
-          className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-hover transition-colors active:scale-95"
+          className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-hover motion-safe:transition-colors motion-safe:active:scale-95"
         >
           Create New Plan
         </button>

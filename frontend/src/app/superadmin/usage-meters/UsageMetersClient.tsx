@@ -4,6 +4,7 @@
  * DATA FLOW: usageMetersApi -> UsageMetersClient -> UI
  */
 
+// RESPONSIBILITY: Renders the UsageMetersClient component.
 import { useState, useEffect } from 'react';
 import { usageMetersApi } from '@/app/superadmin/usage-meters/usage-meters_api/usage-meters_api';
 import type { UsageMeter } from '@/app/superadmin/usage-meters/usage-meters_types/usage-meters_types';
@@ -40,7 +41,7 @@ export default function UsageMetersClient() {
     return (
       <div className="p-6 space-y-4">
         {[1, 2, 3].map(i => (
-          <div key={i} className="h-32 bg-card motion-safe:animate-pulse rounded-xl" />
+          <div key={`skeleton-${i}`} className="h-32 bg-card motion-safe:animate-pulse rounded-xl" />
         ))}
       </div>
     );
@@ -95,7 +96,7 @@ export default function UsageMetersClient() {
           const totalStorage = dbGb + mediaGb;
 
           return (
-          <div key={meter.id} className="bg-card border border-border rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+          <div key={meter.id} className="bg-card border border-border rounded-xl p-6 shadow-sm hover:shadow-md motion-safe:transition-shadow">
             <h3 className="text-lg font-bold text-primary mb-4 truncate" title={meter.tenantName}>{meter.tenantName}</h3>
             
             <div className="space-y-5">

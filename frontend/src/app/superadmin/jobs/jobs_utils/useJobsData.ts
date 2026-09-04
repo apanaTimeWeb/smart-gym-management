@@ -1,3 +1,4 @@
+// DATA FLOW: Component -> useJobsData.ts -> API/Store
 import { useState, useEffect } from 'react';
 import { jobsApi } from '@/app/superadmin/jobs/jobs_api/jobs_api';
 import type { BackgroundJob, JobsMetrics } from '@/app/superadmin/jobs/jobs_types/jobs_types';

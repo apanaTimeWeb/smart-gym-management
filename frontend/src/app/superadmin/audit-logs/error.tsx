@@ -3,10 +3,11 @@
 
 import { useEffect } from 'react';
 import { AlertTriangle, RefreshCcw } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
 export default function ErrorBoundary({ error, reset }: { error: Error & { digest?: string }, reset: () => void }) {
   useEffect(() => {
-    console.error('Module Error:', error);
+    logger.error('Module Error:', error);
   }, [error]);
 
   return (
@@ -20,7 +21,7 @@ export default function ErrorBoundary({ error, reset }: { error: Error & { diges
       </p>
       <button
         onClick={reset}
-        className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-6 py-2.5 rounded-lg font-medium transition-colors shadow-lg"
+        className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-6 py-2.5 rounded-lg font-medium motion-safe:transition-colors shadow-lg"
       >
         <RefreshCcw className="w-4 h-4" />
         Try Again

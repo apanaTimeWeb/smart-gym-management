@@ -93,7 +93,7 @@ if (fetchState === 'loading') return (
         <button 
           onClick={handleTriggerSnapshot}
           disabled={isTriggering}
-          className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-hover transition-colors flex items-center gap-2 disabled:opacity-50"
+          className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-hover motion-safe:transition-colors flex items-center gap-2 disabled:opacity-50"
         >
           <DatabaseBackup size={18} /> {isTriggering ? 'Creating Snapshot...' : 'Trigger Global Snapshot'}
         </button>
@@ -131,7 +131,7 @@ if (fetchState === 'loading') return (
             </thead>
             <tbody className="divide-y divide-border">
               {paginatedBackups.map((backup) => (
-                <tr key={backup.id} className="hover:bg-input transition-colors">
+                <tr key={backup.id} className="hover:bg-input motion-safe:transition-colors">
                   <td className="p-4 text-xs font-mono text-secondary">{backup.id}</td>
                   <td className="p-4 text-sm font-medium text-foreground">{backup.tenantName}</td>
                   <td className="p-4 text-sm font-mono text-primary">{backup.databaseName}</td>
@@ -145,7 +145,7 @@ if (fetchState === 'loading') return (
                   <td className="p-4 text-right flex items-center justify-end gap-2">
                     <button 
                       onClick={() => handleDownload(backup.id)}
-                      className="p-2 text-secondary hover:text-primary hover:bg-primary/10 rounded-lg transition-colors disabled:opacity-30" 
+                      className="p-2 text-secondary hover:text-primary hover:bg-primary/10 rounded-lg motion-safe:transition-colors disabled:opacity-30" 
                       title="Download pg_dump" 
                       disabled={backup.status !== 'SUCCESS'}
                     >
@@ -153,7 +153,7 @@ if (fetchState === 'loading') return (
                     </button>
                     <button 
                       onClick={() => handleRestore(backup.id)}
-                      className="p-2 text-secondary hover:text-danger hover:bg-danger-bg/10 rounded-lg transition-colors disabled:opacity-30" 
+                      className="p-2 text-secondary hover:text-danger hover:bg-danger-bg/10 rounded-lg motion-safe:transition-colors disabled:opacity-30" 
                       title="Restore Snapshot" 
                       disabled={backup.status !== 'SUCCESS'}
                     >

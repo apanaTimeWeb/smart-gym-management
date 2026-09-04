@@ -3,6 +3,7 @@
  * DATA FLOW: GymsToolbar -> useGymsToolbar -> useGymsStore -> API
  */
 
+// DATA FLOW: Component -> useGymsToolbar.ts -> API/Store
 import { useEffect, useState, useMemo } from 'react';
 import debounce from 'lodash.debounce';
 

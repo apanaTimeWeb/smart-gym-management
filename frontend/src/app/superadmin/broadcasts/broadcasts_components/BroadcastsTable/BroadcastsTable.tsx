@@ -37,7 +37,7 @@ export default function BroadcastsTable({ broadcasts, onSend, onEdit, onDelete, 
               paginatedBroadcasts.map((bc) => (
                 <tr 
                   key={bc.id} 
-                  className="hover:bg-primary/5 transition-all duration-200 ease-in-out group cursor-pointer"
+                  className="hover:bg-primary/5 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out group cursor-pointer"
                   onClick={() => onEdit(bc)}
                 >
                   <td className="px-6 py-4">
@@ -64,7 +64,7 @@ export default function BroadcastsTable({ broadcasts, onSend, onEdit, onDelete, 
                     {bc.status === 'DRAFT' && (
                       <button
                         onClick={(e) => { e.stopPropagation(); onSend(bc.id); }}
-                        className="p-1.5 text-secondary hover:text-primary hover:bg-primary-subtle rounded-lg transition-all duration-200 ease-in-out"
+                        className="p-1.5 text-secondary hover:text-primary hover:bg-primary-subtle rounded-lg motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out"
                         title="Send Now"
                         aria-label={`Send broadcast: ${bc.title}`}
                       >
@@ -73,7 +73,7 @@ export default function BroadcastsTable({ broadcasts, onSend, onEdit, onDelete, 
                     )}
                     <button
                       onClick={(e) => { e.stopPropagation(); onEdit(bc); }}
-                      className="p-1.5 text-secondary hover:text-primary hover:bg-primary-subtle rounded-lg transition-all duration-200 ease-in-out"
+                      className="p-1.5 text-secondary hover:text-primary hover:bg-primary-subtle rounded-lg motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out"
                       title="Edit Broadcast"
                       aria-label={`Edit broadcast: ${bc.title}`}
                     >
@@ -86,7 +86,7 @@ export default function BroadcastsTable({ broadcasts, onSend, onEdit, onDelete, 
                           onDelete(bc.id); 
                         }
                       }}
-                      className="p-1.5 text-secondary hover:text-danger hover:bg-danger-bg/10 rounded-lg transition-all duration-200 ease-in-out"
+                      className="p-1.5 text-secondary hover:text-danger hover:bg-danger-bg/10 rounded-lg motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out"
                       title="Delete Broadcast"
                       aria-label={`Delete broadcast: ${bc.title}`}
                     >

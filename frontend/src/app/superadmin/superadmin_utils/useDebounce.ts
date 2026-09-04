@@ -1,4 +1,5 @@
 // RESPONSIBILITY: Provides a custom hook to debounce rapidly changing values (like search inputs).
+// DATA FLOW: Component -> useDebounce.ts -> API/Store
 import { useState, useEffect } from 'react';
 
 /**

@@ -28,7 +28,7 @@ export default function AddGymForm() {
       <div className="flex items-center gap-4">
         <Link 
           href={SuperadminUrlConfig.PAGES.GYMS_LIST}
-          className="p-2 bg-card border border-border rounded-lg text-secondary hover:text-white transition-colors"
+          className="p-2 bg-card border border-border rounded-lg text-secondary hover:text-white motion-safe:transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
         </Link>
@@ -46,7 +46,7 @@ export default function AddGymForm() {
                 <label className="text-sm font-bold text-secondary">Gym Name</label>
                 <input 
                   {...register('gymName')}
-                  className="w-full bg-card border border-border text-foreground rounded-lg px-4 py-2 focus:outline-none focus:border-border-focus transition-colors"
+                  className="w-full bg-card border border-border text-foreground rounded-lg px-4 py-2 focus:outline-none focus:border-border-focus motion-safe:transition-colors"
                   placeholder="e.g. Titan Fitness"
                 />
                 {errors.gymName && <p className="text-danger text-xs">{errors.gymName.message}</p>}
@@ -56,7 +56,7 @@ export default function AddGymForm() {
                 <label className="text-sm font-bold text-secondary">Owner Name</label>
                 <input 
                   {...register('ownerName')}
-                  className="w-full bg-card border border-border text-foreground rounded-lg px-4 py-2 focus:outline-none focus:border-border-focus transition-colors"
+                  className="w-full bg-card border border-border text-foreground rounded-lg px-4 py-2 focus:outline-none focus:border-border-focus motion-safe:transition-colors"
                   placeholder="e.g. John Doe"
                 />
                 {errors.ownerName && <p className="text-danger text-xs">{errors.ownerName.message}</p>}
@@ -67,7 +67,7 @@ export default function AddGymForm() {
                 <input 
                   type="email"
                   {...register('adminEmail')}
-                  className="w-full bg-card border border-border text-foreground rounded-lg px-4 py-2 focus:outline-none focus:border-border-focus transition-colors"
+                  className="w-full bg-card border border-border text-foreground rounded-lg px-4 py-2 focus:outline-none focus:border-border-focus motion-safe:transition-colors"
                   placeholder="admin@titanfitness.com"
                 />
                 {errors.adminEmail && <p className="text-danger text-xs">{errors.adminEmail.message}</p>}
@@ -77,7 +77,7 @@ export default function AddGymForm() {
                 <label className="text-sm font-bold text-secondary">Phone Number</label>
                 <input 
                   {...register('phone')}
-                  className="w-full bg-card border border-border text-foreground rounded-lg px-4 py-2 focus:outline-none focus:border-border-focus transition-colors"
+                  className="w-full bg-card border border-border text-foreground rounded-lg px-4 py-2 focus:outline-none focus:border-border-focus motion-safe:transition-colors"
                   placeholder="+1 555-0000"
                 />
                 {errors.phone && <p className="text-danger text-xs">{errors.phone.message}</p>}
@@ -89,13 +89,13 @@ export default function AddGymForm() {
                   <input 
                     type={showPassword ? "text" : "password"}
                     {...register('temporaryPassword')}
-                    className="w-full bg-card border border-border text-foreground rounded-lg px-4 py-2 pr-10 focus:outline-none focus:border-border-focus transition-colors"
+                    className="w-full bg-card border border-border text-foreground rounded-lg px-4 py-2 pr-10 focus:outline-none focus:border-border-focus motion-safe:transition-colors"
                     placeholder="Min 8 characters"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-foreground transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-foreground motion-safe:transition-colors"
                   >
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
@@ -126,7 +126,7 @@ export default function AddGymForm() {
               <button 
                 type="submit"
                 disabled={isProvisioning}
-                className="flex items-center gap-2 bg-primary hover:bg-primary-hover disabled:bg-primary/50 text-white px-6 py-2.5 rounded-lg font-medium transition-colors"
+                className="flex items-center gap-2 bg-primary hover:bg-primary-hover disabled:bg-primary/50 text-white px-6 py-2.5 rounded-lg font-medium motion-safe:transition-colors"
               >
                 {isProvisioning ? (
                   <><Loader2 className="w-5 h-5 motion-safe:animate-spin" /> Provisioning DB...</>
@@ -149,7 +149,7 @@ export default function AddGymForm() {
               <p className="text-secondary italic">Awaiting submit...</p>
             ) : (
               provisioningLogs.map((log, i) => (
-                <p key={`log-${i}-${log.slice(0, 12)}`} className="motion-safe:animate-in fade-in slide-in-from-bottom-1 text-success">
+                <p key={`log-${i}-${log.slice(0, 12)}`} className="motion-safe:animate-in motion-safe:fade-in slide-in-from-bottom-1 text-success">
                   <span className="text-secondary mr-2">{'>'}</span>{log}
                 </p>
               ))

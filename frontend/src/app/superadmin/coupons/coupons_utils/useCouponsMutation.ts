@@ -1,4 +1,5 @@
 // RESPONSIBILITY: Generic mutation hook for all Superadmin write operations (POST/PATCH/DELETE). Manages isMutating state, shows toasts from backend message, and calls onSuccess/onError callbacks.
+// DATA FLOW: Component -> useCouponsMutation.ts -> API/Store
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 

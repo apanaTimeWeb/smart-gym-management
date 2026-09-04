@@ -68,7 +68,7 @@ export default function InfrastructureClient() {
         <button
           onClick={fetchNodes}
           disabled={fetchState === 'loading'}
-          className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:opacity-90 transition-opacity flex items-center gap-2 border border-primary disabled:opacity-50"
+          className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:opacity-90 motion-safe:transition-opacity flex items-center gap-2 border border-primary disabled:opacity-50"
         >
           <RefreshCcw size={16} className={fetchState === 'loading' ? 'motion-safe:animate-spin' : ''} /> Force Sync Metrics
         </button>
@@ -77,7 +77,7 @@ export default function InfrastructureClient() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* CPU */}
         <div className="bg-card border border-border rounded-xl p-6 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full -z-10 group-hover:bg-primary/10 transition-colors" />
+          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full -z-10 group-hover:bg-primary/10 motion-safe:transition-colors" />
           <div className="flex items-center gap-3 mb-6">
             <div className="p-2 bg-primary/10 rounded-lg text-primary"><Cpu size={24} /></div>
             <h2 className="text-lg font-bold text-foreground">CPU Usage</h2>
@@ -87,14 +87,14 @@ export default function InfrastructureClient() {
             <span className="text-xl font-medium text-secondary">%</span>
           </div>
           <div className="w-full h-2 bg-input rounded-full overflow-hidden">
-            <div className="h-full bg-primary rounded-full transition-all duration-500" style={{ width: `${avgCpu}%` }} />
+            <div className="h-full bg-primary rounded-full motion-safe:transition-all motion-safe:duration-500" style={{ width: `${avgCpu}%` }} />
           </div>
           <p className="text-xs text-secondary mt-3">Avg load across {withCpu.length} compute nodes</p>
         </div>
 
         {/* RAM */}
         <div className="bg-card border border-border rounded-xl p-6 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-warning/5 rounded-bl-full -z-10 group-hover:bg-warning/10 transition-colors" />
+          <div className="absolute top-0 right-0 w-32 h-32 bg-warning/5 rounded-bl-full -z-10 group-hover:bg-warning/10 motion-safe:transition-colors" />
           <div className="flex items-center gap-3 mb-6">
             <div className="p-2 bg-warning/10 rounded-lg text-warning"><Server size={24} /></div>
             <h2 className="text-lg font-bold text-foreground">Memory (RAM)</h2>
@@ -104,14 +104,14 @@ export default function InfrastructureClient() {
             <span className="text-xl font-medium text-secondary">%</span>
           </div>
           <div className="w-full h-2 bg-input rounded-full overflow-hidden">
-            <div className={`h-full rounded-full transition-all duration-500 ${avgMem > 80 ? 'bg-warning' : 'bg-primary'}`} style={{ width: `${avgMem}%` }} />
+            <div className={`h-full rounded-full motion-safe:transition-all motion-safe:duration-500 ${avgMem > 80 ? 'bg-warning' : 'bg-primary'}`} style={{ width: `${avgMem}%` }} />
           </div>
           <p className="text-xs text-secondary mt-3">Avg memory across {withMem.length} nodes {avgMem > 80 ? '• HIGH LOAD' : ''}</p>
         </div>
 
         {/* STORAGE */}
         <div className="bg-card border border-border rounded-xl p-6 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-success/5 rounded-bl-full -z-10 group-hover:bg-success/10 transition-colors" />
+          <div className="absolute top-0 right-0 w-32 h-32 bg-success/5 rounded-bl-full -z-10 group-hover:bg-success/10 motion-safe:transition-colors" />
           <div className="flex items-center gap-3 mb-6">
             <div className="p-2 bg-success/10 rounded-lg text-success"><HardDrive size={24} /></div>
             <h2 className="text-lg font-bold text-foreground">Storage (SSD)</h2>
@@ -121,7 +121,7 @@ export default function InfrastructureClient() {
             <span className="text-xl font-medium text-secondary">%</span>
           </div>
           <div className="w-full h-2 bg-input rounded-full overflow-hidden">
-            <div className="h-full bg-success rounded-full transition-all duration-500" style={{ width: `${avgDisk}%` }} />
+            <div className="h-full bg-success rounded-full motion-safe:transition-all motion-safe:duration-500" style={{ width: `${avgDisk}%` }} />
           </div>
           <p className="text-xs text-secondary mt-3">Avg across {withDisk.length} storage volumes</p>
         </div>
@@ -139,14 +139,14 @@ export default function InfrastructureClient() {
           <button 
             onClick={handleFlushAll}
             disabled={isFlushingAll}
-            className="flex items-center justify-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg font-medium hover:opacity-90 transition-opacity min-w-[180px] disabled:opacity-50"
+            className="flex items-center justify-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg font-medium hover:opacity-90 motion-safe:transition-opacity min-w-[180px] disabled:opacity-50"
           >
             {isFlushingAll ? <Loader2 size={18} className="motion-safe:animate-spin" /> : null}
             Flush All Tenants
           </button>
           <button 
             onClick={() => setIsFlushModalOpen(true)}
-            className="flex items-center justify-center gap-2 bg-input text-foreground px-5 py-2.5 rounded-lg font-medium hover:bg-border transition-colors border border-border min-w-[180px] disabled:opacity-50"
+            className="flex items-center justify-center gap-2 bg-input text-foreground px-5 py-2.5 rounded-lg font-medium hover:bg-border motion-safe:transition-colors border border-border min-w-[180px] disabled:opacity-50"
           >
             Flush Specific Tenant
           </button>

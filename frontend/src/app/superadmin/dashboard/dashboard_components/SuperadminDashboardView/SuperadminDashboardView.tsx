@@ -1,5 +1,5 @@
 'use client';
-// RESPONSIBILITY: DashboardView.tsx renders the main SaaS metrics dashboard and charts. It receives data from the useSuperadminData hook.
+// RESPONSIBILITY: SuperadminDashboardView.tsx renders the main SaaS metrics dashboard and charts. It receives data from the useSuperadminData hook.
 
 import { Users, Building2, CreditCard, Activity } from 'lucide-react';
 import dynamic from 'next/dynamic';
@@ -11,7 +11,7 @@ import type { SaaSDashboardMetrics, RevenueChartData, GrowthChartData, TimeRange
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
-export default function DashboardView() {
+export default function SuperadminDashboardView() {
   const [timeRange, setTimeRange] = useState<TimeRange>('monthly');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -31,7 +31,7 @@ export default function DashboardView() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-background border border-border rounded-xl p-6 h-32 motion-safe:animate-pulse"></div>
+            <div key={`skeleton-${i}`} className="bg-background border border-border rounded-xl p-6 h-32 motion-safe:animate-pulse"></div>
           ))}
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -153,7 +153,7 @@ export default function DashboardView() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {metrics.map((m) => (
-          <div key={m.label} className="bg-card border border-border rounded-xl p-6 shadow-sm motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-lg motion-safe:transition-all motion-safe:duration-200 ease-in-out">
+          <div key={m.label} className="bg-card border border-border rounded-xl p-6 shadow-sm motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-lg motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out">
             <div className="flex items-center justify-between mb-4">
               <span className="text-secondary font-medium text-xs uppercase tracking-wider">{m.label}</span>
               <m.icon className={`w-5 h-5 ${m.color}`} />
@@ -175,7 +175,7 @@ export default function DashboardView() {
           <h2 className="text-base font-semibold text-foreground mb-6">Recent Onboards</h2>
           <div className="space-y-4">
             {DUMMY_DASHBOARD_METRICS.recentOnboards.map((tenant) => (
-              <div key={tenant.id} className="flex items-center justify-between p-4 bg-background rounded-lg border border-border hover:bg-input transition-colors duration-200 cursor-default">
+              <div key={tenant.id} className="flex items-center justify-between p-4 bg-background rounded-lg border border-border hover:bg-input motion-safe:transition-colors motion-safe:duration-200 cursor-default">
                 <div>
                   <h3 className="text-sm font-semibold text-foreground truncate max-w-32" title={tenant.name}>{tenant.name}</h3>
                   <p className="text-xs text-secondary mt-1 truncate max-w-32" title={tenant.ownerName}>{tenant.ownerName}</p>

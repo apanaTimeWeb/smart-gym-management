@@ -3,6 +3,7 @@
  * DATA FLOW: useGymsStore -> useGymsTable -> GymsTable
  */
 
+// DATA FLOW: Component -> useGymsTable.ts -> API/Store
 import { useEffect, useMemo } from 'react';
 import toast from 'react-hot-toast';
 

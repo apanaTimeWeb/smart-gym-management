@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Generic fetch hook for Dashboard read-only data. Manages loading/error state for a single API endpoint.
-// DATA FLOW: API -> useDashboardData -> DashboardView
+// DATA FLOW: API -> useDashboardData -> SuperadminDashboardView
 
 import { useState, useEffect, useCallback } from 'react';
 import { apiFetch, ApiResponse } from '@/lib/api';

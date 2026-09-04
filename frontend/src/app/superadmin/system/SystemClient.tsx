@@ -119,7 +119,7 @@ export default function SystemClient() {
                   <button 
                     onClick={() => handleRunMigration(tenant.id)}
                     disabled={migratingTenants[tenant.id]}
-                    className="w-full flex justify-center items-center gap-2 bg-warning hover:bg-warning text-black py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
+                    className="w-full flex justify-center items-center gap-2 bg-warning hover:bg-warning text-black py-2 rounded-lg text-sm font-medium motion-safe:transition-colors disabled:opacity-50"
                   >
                     {migratingTenants[tenant.id] ? (
                       <Loader2 className="w-4 h-4 motion-safe:animate-spin" />
@@ -161,7 +161,7 @@ export default function SystemClient() {
                 className="bg-card border border-border text-foreground text-sm rounded-lg pl-9 pr-4 py-2 focus:outline-none focus:border-border-focus"
               />
             </div>
-            <button className="p-2 bg-card border border-border rounded-lg text-secondary hover:text-foreground transition-colors">
+            <button className="p-2 bg-card border border-border rounded-lg text-secondary hover:text-foreground motion-safe:transition-colors">
               <Filter className="w-4 h-4" />
             </button>
           </div>
@@ -180,7 +180,7 @@ export default function SystemClient() {
               </thead>
               <tbody className="divide-y divide-border">
                 {paginatedLogs.map(log => (
-                  <tr key={log.id} className="hover:bg-input transition-colors text-sm">
+                  <tr key={log.id} className="hover:bg-input motion-safe:transition-colors text-sm">
                     <td className="p-4 text-secondary whitespace-nowrap">
                       {new Date(log.timestamp).toLocaleString()}
                     </td>

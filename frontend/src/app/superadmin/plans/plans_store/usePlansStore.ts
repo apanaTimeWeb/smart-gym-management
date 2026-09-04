@@ -4,6 +4,7 @@
  *
  * Rule 58: Async API data (plans[], fetchState) MUST live in Zustand, never in React Context.
  */
+// DATA FLOW: Component -> usePlansStore.ts -> API/Store
 import { create } from 'zustand';
 import toast from 'react-hot-toast';
 import { plansApi } from '@/app/superadmin/plans/plans_api/plans_api';

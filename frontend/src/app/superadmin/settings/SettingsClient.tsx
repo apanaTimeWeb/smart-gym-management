@@ -122,7 +122,7 @@ export default function SettingsClient() {
                           <button
                             onClick={() => handleSave(setting.id)}
                             disabled={isMutating}
-                            className="p-1.5 bg-primary/10 text-primary hover:bg-primary hover:text-white rounded-lg transition-colors"
+                            className="p-1.5 bg-primary/10 text-primary hover:bg-primary hover:text-white rounded-lg motion-safe:transition-colors"
                           >
                             <Save className="w-4 h-4" />
                           </button>

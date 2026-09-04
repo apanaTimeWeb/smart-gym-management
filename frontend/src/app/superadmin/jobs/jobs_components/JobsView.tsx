@@ -127,7 +127,7 @@ export default function JobsView() {
   };
 
   return (
-    <div className="space-y-6 motion-safe:animate-in fade-in">
+    <div className="space-y-6 motion-safe:animate-in motion-safe:fade-in">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Background Jobs</h1>
@@ -136,14 +136,14 @@ export default function JobsView() {
         <div className="flex gap-3">
           <button 
             onClick={handleClearCompleted}
-            className="bg-input text-foreground px-4 py-2 rounded-lg font-medium hover:bg-border transition-colors border border-border"
+            className="bg-input text-foreground px-4 py-2 rounded-lg font-medium hover:bg-border motion-safe:transition-colors border border-border"
           >
             Clear Completed
           </button>
           <button 
             onClick={handleRetryAll}
             disabled={isRetrying}
-            className="bg-danger-bg/10 text-danger px-4 py-2 rounded-lg font-medium hover:bg-danger-bg hover:text-white transition-colors flex items-center gap-2 border border-destructive/20 hover:border-transparent disabled:opacity-50"
+            className="bg-danger-bg/10 text-danger px-4 py-2 rounded-lg font-medium hover:bg-danger-bg hover:text-white motion-safe:transition-colors flex items-center gap-2 border border-destructive/20 hover:border-transparent disabled:opacity-50"
           >
             <RefreshCw size={16} className={isRetrying ? "motion-safe:animate-spin" : ""} /> Retry All Failed
           </button>
@@ -200,17 +200,17 @@ export default function JobsView() {
         </div>
 
         {selectedJobIds.size > 0 && (
-          <div className="flex items-center gap-3 animate-in slide-in-from-right-4">
+          <div className="flex items-center gap-3 motion-safe:animate-in slide-in-from-right-4">
             <span className="text-sm font-medium text-primary mr-2">{selectedJobIds.size} selected</span>
             <button 
               onClick={handleBulkRetry}
-              className="flex items-center gap-1.5 bg-primary text-white px-3 py-1.5 rounded-md text-sm hover:bg-primary-hover transition-colors"
+              className="flex items-center gap-1.5 bg-primary text-white px-3 py-1.5 rounded-md text-sm hover:bg-primary-hover motion-safe:transition-colors"
             >
               <RefreshCw size={14} /> Retry
             </button>
             <button 
               onClick={handleBulkDelete}
-              className="flex items-center gap-1.5 bg-danger-bg text-white px-3 py-1.5 rounded-md text-sm hover:opacity-90 transition-opacity"
+              className="flex items-center gap-1.5 bg-danger-bg text-white px-3 py-1.5 rounded-md text-sm hover:opacity-90 motion-safe:transition-opacity"
             >
               <Trash2 size={14} /> Delete
             </button>
@@ -245,7 +245,7 @@ export default function JobsView() {
                   <td colSpan={7} className="p-8 text-center text-secondary">No jobs found matching the criteria.</td>
                 </tr>
               ) : paginatedJobs.map((job) => (
-                <tr key={job.id} className="hover:bg-input transition-colors group">
+                <tr key={job.id} onClick={() => setInspectJob(job)} className="hover:bg-input motion-safe:transition-colors group cursor-pointer">
                   <td className="p-4 text-center">
                     <input 
                       type="checkbox" 
@@ -274,19 +274,12 @@ export default function JobsView() {
                     <div className="font-mono mt-1 text-foreground">Duration: {formatDuration(job.durationMs)}</div>
                   </td>
                   <td className="p-4 text-right">
-                    <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button 
-                        onClick={() => setInspectJob(job)}
-                        className="p-1.5 text-secondary hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
-                        title="Inspect Payload"
-                      >
-                        <Eye size={16} />
-                      </button>
+                    <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 motion-safe:transition-opacity">
                       
                       {job.status === 'FAILED' && (
                         <button 
-                          onClick={() => handleRetryJob(job.id)}
-                          className="p-1.5 text-secondary hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
+                          onClick={(e) => { e.stopPropagation(); handleRetryJob(job.id); }}
+                          className="p-1.5 text-secondary hover:text-primary hover:bg-primary/10 rounded-lg motion-safe:transition-colors"
                           title="Retry Job"
                         >
                           <RefreshCw size={16} />
@@ -295,8 +288,8 @@ export default function JobsView() {
 
                       {(job.status === 'ACTIVE' || job.status === 'DELAYED') && (
                         <button 
-                          onClick={() => handleCancelJob(job.id)}
-                          className="p-1.5 text-secondary hover:text-warning hover:bg-warning/10 rounded-lg transition-colors"
+                          onClick={(e) => { e.stopPropagation(); handleCancelJob(job.id); }}
+                          className="p-1.5 text-secondary hover:text-warning hover:bg-warning/10 rounded-lg motion-safe:transition-colors"
                           title="Cancel Job"
                         >
                           <XCircle size={16} />
@@ -304,8 +297,8 @@ export default function JobsView() {
                       )}
 
                       <button 
-                        onClick={() => handleDeleteJob(job.id)}
-                        className="p-1.5 text-secondary hover:text-danger hover:bg-danger-bg/10 rounded-lg transition-colors"
+                        onClick={(e) => { e.stopPropagation(); handleDeleteJob(job.id); }}
+                        className="p-1.5 text-secondary hover:text-danger hover:bg-danger-bg/10 rounded-lg motion-safe:transition-colors"
                         title="Delete Job"
                       >
                         <Trash2 size={16} />
@@ -326,7 +319,7 @@ export default function JobsView() {
 
       {/* Payload Inspect Modal */}
       {inspectJob && (
-        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm motion-safe:animate-in fade-in">
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm motion-safe:animate-in motion-safe:fade-in">
           <div className="bg-card border border-border rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
             <div className="flex items-center justify-between px-6 py-5 border-b border-border bg-sidebar/30">
               <div>
@@ -335,7 +328,7 @@ export default function JobsView() {
                 </h2>
                 <p className="text-sm text-secondary mt-1">Queue: {inspectJob.queueName} | Task: {inspectJob.jobName}</p>
               </div>
-              <button onClick={() => setInspectJob(null)} className="p-2 text-secondary hover:text-foreground hover:bg-input rounded-full transition-colors">
+              <button onClick={() => setInspectJob(null)} className="p-2 text-secondary hover:text-foreground hover:bg-input rounded-full motion-safe:transition-colors">
                 <XIcon className="w-5 h-5" />
               </button>
             </div>

@@ -2,6 +2,7 @@
  * RESPONSIBILITY: Hook to manage the state and logic of the GymDeleteModal.
  * DATA FLOW: GymDeleteModal -> useGymDeleteModal -> useGymsStore -> API
  */
+// DATA FLOW: Component -> useGymDeleteModal.ts -> API/Store
 import { useState, useEffect } from 'react';
 import { useGymsStore } from '@/app/superadmin/gyms/gyms_store/useGymsStore';
 

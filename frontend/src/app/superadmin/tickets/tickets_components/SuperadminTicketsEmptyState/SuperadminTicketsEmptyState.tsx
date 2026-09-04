@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders the SuperadminTicketsEmptyState component.
 import { MessageSquare } from 'lucide-react';
 
 export default function SuperadminTicketsEmptyState() {

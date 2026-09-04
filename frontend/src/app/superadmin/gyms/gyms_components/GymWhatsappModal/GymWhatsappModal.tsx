@@ -3,6 +3,7 @@
 
 import React from 'react';
 import { X } from 'lucide-react';
+import { maskSensitiveData } from '@/lib/formatters';
 import { useGymWhatsappModal } from '@/app/superadmin/gyms/gyms_components/GymWhatsappModal/useGymWhatsappModal';
 
 export default function GymWhatsappModal() {
@@ -21,16 +22,16 @@ export default function GymWhatsappModal() {
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 p-4">
-      <div className="bg-card rounded-2xl p-7 max-w-md w-full border border-border shadow-2xl relative">
+      <div className="bg-overlay rounded-2xl p-7 max-w-md w-full border border-border shadow-2xl relative">
         <button
           onClick={closeWhatsappModal}
-          className="absolute top-5 right-5 text-secondary hover:text-foreground transition-colors"
+          className="absolute top-5 right-5 text-secondary hover:text-foreground motion-safe:transition-colors"
         >
           <X className="w-5 h-5" />
         </button>
 
         <h2 className="text-lg font-bold text-foreground mb-1">WhatsApp Gym Owner</h2>
-        <p className="text-sm text-secondary mb-6">Send a WhatsApp message to {selectedGym.ownerName} ({selectedGym.phone}).</p>
+        <p className="text-sm text-secondary mb-6">Send a WhatsApp message to {selectedGym.ownerName} ({maskSensitiveData(selectedGym.phone, 'phone')}).</p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
@@ -38,7 +39,7 @@ export default function GymWhatsappModal() {
             <input
               type="text"
               {...register('subject')}
-              className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-border-focus focus:outline-none transition-colors"
+              className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-border-focus focus:outline-none motion-safe:transition-colors"
               placeholder="e.g., Important update about your subscription"
             />
             {errors.subject && <p className="text-xs text-danger mt-1">{errors.subject.message}</p>}
@@ -49,7 +50,7 @@ export default function GymWhatsappModal() {
             <textarea
               {...register('message')}
               rows={5}
-              className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-border-focus focus:outline-none transition-colors resize-none"
+              className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-border-focus focus:outline-none motion-safe:transition-colors resize-none"
               placeholder="Type your message here..."
             />
             {errors.message && <p className="text-xs text-danger mt-1">{errors.message.message}</p>}
@@ -59,14 +60,14 @@ export default function GymWhatsappModal() {
             <button
               type="button"
               onClick={closeWhatsappModal}
-              className="px-5 py-2.5 rounded-lg text-sm font-medium text-foreground border border-border hover:bg-background transition-colors"
+              className="px-5 py-2.5 rounded-lg text-sm font-medium text-foreground border border-border hover:bg-background motion-safe:transition-colors"
               disabled={isSubmitting}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-5 py-2.5 rounded-lg text-sm font-medium text-white bg-[#25D366] hover:bg-[#20b957] transition-colors disabled:opacity-50"
+              className="px-5 py-2.5 rounded-lg text-sm font-medium text-white bg-[#25D366] hover:bg-[#20b957] motion-safe:transition-colors disabled:opacity-50"
               disabled={isSubmitting}
             >
               {isSubmitting ? 'Sending...' : 'Send WhatsApp'}

@@ -15,7 +15,7 @@ export default function SuperadminCouponsEmptyState({ onCreateClick }: CouponsEm
       <p className="text-sm text-secondary mt-1 max-w-xs">Create your first promotional coupon to offer discounts on new SaaS subscriptions.</p>
       <button
         onClick={onCreateClick}
-        className="mt-4 px-4 py-2 bg-primary hover:bg-primary-hover text-white text-sm font-medium rounded-lg transition-all duration-200 ease-in-out active:scale-95"
+        className="mt-4 px-4 py-2 bg-primary hover:bg-primary-hover text-white text-sm font-medium rounded-lg motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out motion-safe:active:scale-95"
       >
         Create First Coupon
       </button>

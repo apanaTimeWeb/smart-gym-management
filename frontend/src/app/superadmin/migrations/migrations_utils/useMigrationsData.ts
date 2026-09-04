@@ -1,3 +1,4 @@
+// DATA FLOW: Component -> useMigrationsData.ts -> API/Store
 import { useState, useEffect } from 'react';
 import { migrationsApi } from '@/app/superadmin/migrations/migrations_api/migrations_api';
 import type { MigrationsPageData } from '@/app/superadmin/migrations/migrations_types/migrations_types';

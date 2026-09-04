@@ -1,7 +1,8 @@
+// RESPONSIBILITY: Renders the InvoicesTable component.
 import React, { useState } from 'react';
 import { Receipt } from 'lucide-react';
 import type { SaaSInvoice } from '@/app/superadmin/invoices/invoices_types/invoices_types';
-import InvoicesTableRow from './InvoicesTableRow';
+import InvoicesTableRow from '@/app/superadmin/invoices/invoices_components/InvoicesTable/InvoicesTableRow';
 import InvoicesEmptyState from '@/app/superadmin/invoices/invoices_components/InvoicesEmptyState/InvoicesEmptyState';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 

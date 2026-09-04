@@ -3,6 +3,8 @@
 
 import { useEffect, useState } from 'react';
 import { X, CheckCircle, Phone, Bell, Loader2 } from 'lucide-react';
+import { maskSensitiveData } from '@/lib/formatters';
+import { logger } from '@/lib/logger';
 
 export interface BroadcastRecipient {
   id: string;
@@ -53,7 +55,7 @@ export default function SuperadminBroadcastQueueModal({
           });
           localStorage.setItem(key, JSON.stringify(notifs));
         } catch (e) {
-          console.error(e);
+          logger.error(e);
         }
 
         // We simulate the WhatsApp open without actually opening tabs to prevent popup blocker chaos for bulk sending
@@ -76,31 +78,31 @@ export default function SuperadminBroadcastQueueModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="bg-card rounded-2xl shadow-2xl w-full max-w-lg border border-border flex flex-col motion-safe:animate-in zoom-in-95 duration-200 overflow-hidden">
+      <div className="bg-overlay rounded-2xl shadow-2xl w-full max-w-lg border border-border flex flex-col motion-safe:animate-in motion-safe:zoom-in-95 motion-safe:duration-200 overflow-hidden">
         <div className="px-6 py-4 bg-primary flex items-center justify-between">
           <div>
             <h2 className="text-white font-bold text-lg">Automated Broadcast</h2>
             <p className="text-white/80 text-xs">Sending to {recipients.length} Gyms directly...</p>
           </div>
-          <button onClick={onClose} className="text-white/80 hover:text-white transition-colors p-1 bg-white/10 rounded-full hover:bg-white/20">
+          <button onClick={onClose} className="text-white/80 hover:text-white motion-safe:transition-colors p-1 bg-white/10 rounded-full hover:bg-white/20">
             <X size={18} />
           </button>
         </div>
 
-        <div className="p-6 max-h-96 overflow-y-auto space-y-3 bg-card custom-scrollbar">
+        <div className="p-6 max-h-96 overflow-y-auto space-y-3 bg-overlay custom-scrollbar">
           {recipients.map((rec, idx) => {
             const isProcessing = currentIndex === idx;
             const isDone = completed.has(rec.id);
             const isPending = !isProcessing && !isDone;
 
             return (
-              <div key={rec.id} className={`p-4 rounded-xl border flex items-center justify-between transition-colors ${
+              <div key={rec.id} className={`p-4 rounded-xl border flex items-center justify-between motion-safe:transition-colors ${
                 isProcessing ? 'border-primary bg-primary-subtle' : 
                 isDone ? 'border-success/30 bg-success-bg/30' : 'border-border bg-input'
               }`}>
                 <div>
                   <p className="font-bold text-foreground text-sm">{rec.name}</p>
-                  <p className="text-xs text-secondary mt-0.5 font-mono">{rec.phone}</p>
+                  <p className="text-xs text-secondary mt-0.5 font-mono">{maskSensitiveData(rec.phone, 'phone')}</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className={`flex flex-col items-center gap-1 ${isDone || isProcessing ? 'text-success' : 'text-secondary/30'}`}>

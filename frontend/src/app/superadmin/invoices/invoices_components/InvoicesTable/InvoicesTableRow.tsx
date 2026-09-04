@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders the InvoicesTableRow component.
 import React from 'react';
 import { Receipt, MessageCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -45,7 +46,7 @@ export default function InvoicesTableRow({ invoice: inv }: InvoicesTableRowProps
   };
 
   return (
-    <tr className="hover:bg-input transition-colors">
+    <tr className="hover:bg-input motion-safe:transition-colors">
       <td className="p-4 text-sm font-mono text-secondary">{inv.id}</td>
       <td className="p-4 text-sm font-bold text-foreground">{inv.tenantName}</td>
       <td className="p-4 text-sm text-secondary">{inv.planName}</td>
@@ -60,7 +61,7 @@ export default function InvoicesTableRow({ invoice: inv }: InvoicesTableRowProps
         <button 
           title="Share via WhatsApp"
           onClick={(e) => handleShareWhatsApp(e, inv)}
-          className="text-secondary hover:text-[#25D366] transition-colors p-1.5 bg-input hover:bg-[#25D366]/10 rounded-md border border-border"
+          className="text-secondary hover:text-[#25D366] motion-safe:transition-colors p-1.5 bg-input hover:bg-[#25D366]/10 rounded-md border border-border"
         >
           <MessageCircle className="w-4 h-4" />
         </button>

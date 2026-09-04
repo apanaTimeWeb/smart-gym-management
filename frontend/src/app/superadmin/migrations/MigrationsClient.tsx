@@ -62,7 +62,7 @@ export default function MigrationsClient() {
           <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full md:w-auto mt-4 md:mt-0">
             <button 
               onClick={() => setShowTargetModal(true)}
-              className="flex-1 md:flex-none bg-input text-foreground px-4 py-3 rounded-lg font-bold hover:bg-border transition-colors flex items-center justify-center gap-2 border border-border"
+              className="flex-1 md:flex-none bg-input text-foreground px-4 py-3 rounded-lg font-bold hover:bg-border motion-safe:transition-colors flex items-center justify-center gap-2 border border-border"
             >
               <Target size={18} className="shrink-0" /> Targeted Sync
             </button>
@@ -81,7 +81,7 @@ export default function MigrationsClient() {
                 }
                 toast.success('All tenants synced successfully!', { id: loadingToast });
               }}
-              className="flex-1 md:flex-none bg-warning text-black px-6 py-3 rounded-lg font-bold hover:opacity-90 transition-all duration-200 flex items-center justify-center gap-2 whitespace-nowrap shadow-lg shadow-warning/20"
+              className="flex-1 md:flex-none bg-warning text-black px-6 py-3 rounded-lg font-bold hover:opacity-90 motion-safe:transition-all motion-safe:duration-200 flex items-center justify-center gap-2 whitespace-nowrap shadow-lg shadow-warning/20"
             >
               <Play size={18} className="shrink-0" /> <span className="whitespace-nowrap sm:whitespace-normal">Run on All Tenants</span>
             </button>
@@ -106,7 +106,7 @@ export default function MigrationsClient() {
             </thead>
             <tbody className="divide-y divide-border">
               {paginatedMigrations.map((mig) => (
-                <tr key={mig.id} className="hover:bg-input transition-colors">
+                <tr key={mig.id} className="hover:bg-input motion-safe:transition-colors">
                   <td className="p-4 text-center">
                     {StatusIcons[mig.status]}
                   </td>
@@ -141,10 +141,10 @@ export default function MigrationsClient() {
       {showTargetModal && (
         <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowTargetModal(false)}></div>
-          <div className="relative bg-card border border-border rounded-2xl shadow-2xl w-full max-w-md overflow-hidden motion-safe:animate-in fade-in zoom-in-95 duration-200">
+          <div className="relative bg-card border border-border rounded-2xl shadow-2xl w-full max-w-md overflow-hidden motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-200">
             <div className="flex items-center justify-between p-5 border-b border-border">
               <h2 className="text-xl font-bold text-foreground">Targeted Migration</h2>
-              <button onClick={() => setShowTargetModal(false)} className="text-secondary hover:text-foreground transition-colors">
+              <button onClick={() => setShowTargetModal(false)} className="text-secondary hover:text-foreground motion-safe:transition-colors">
                 <X size={20} />
               </button>
             </div>
@@ -159,7 +159,7 @@ export default function MigrationsClient() {
                 
                 {/* Custom Searchable Dropdown */}
                 <div 
-                  className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground cursor-pointer flex justify-between items-center hover:border-primary transition-colors"
+                  className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground cursor-pointer flex justify-between items-center hover:border-primary motion-safe:transition-colors"
                   onClick={() => setIsGymDropdownOpen(!isGymDropdownOpen)}
                 >
                   <span className={selectedGym ? 'text-foreground' : 'text-secondary'}>
@@ -169,7 +169,7 @@ export default function MigrationsClient() {
                 </div>
 
                 {isGymDropdownOpen && (
-                  <div className="absolute z-10 top-[calc(100%+4px)] left-0 right-0 bg-card border border-border rounded-lg shadow-xl overflow-hidden max-h-64 flex flex-col motion-safe:animate-in fade-in zoom-in-95 duration-100">
+                  <div className="absolute z-10 top-[calc(100%+4px)] left-0 right-0 bg-card border border-border rounded-lg shadow-xl overflow-hidden max-h-64 flex flex-col motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-100">
                     <div className="p-2 border-b border-border bg-header">
                       <div className="relative">
                         <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-secondary" />
@@ -188,7 +188,7 @@ export default function MigrationsClient() {
                       {filteredGymsForDropdown.map(t => (
                         <div 
                           key={t.id} 
-                          className="px-3 py-2.5 text-sm text-foreground hover:bg-input hover:text-primary cursor-pointer rounded-md transition-colors"
+                          className="px-3 py-2.5 text-sm text-foreground hover:bg-input hover:text-primary cursor-pointer rounded-md motion-safe:transition-colors"
                           onClick={() => {
                             setSelectedGymId(t.id);
                             setIsGymDropdownOpen(false);
@@ -210,7 +210,7 @@ export default function MigrationsClient() {
             <div className="p-5 border-t border-border bg-header flex justify-end gap-3">
               <button 
                 onClick={() => setShowTargetModal(false)}
-                className="px-4 py-2 bg-input border border-border text-foreground rounded-lg text-sm font-medium hover:bg-border transition-colors"
+                className="px-4 py-2 bg-input border border-border text-foreground rounded-lg text-sm font-medium hover:bg-border motion-safe:transition-colors"
               >
                 Cancel
               </button>
@@ -220,7 +220,7 @@ export default function MigrationsClient() {
                   setShowTargetModal(false);
                 }}
                 disabled={!selectedGymId}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
+                className={`px-4 py-2 rounded-lg text-sm font-medium motion-safe:transition-all motion-safe:duration-200 flex items-center gap-2 ${
                   selectedGymId ? 'bg-warning text-black hover:opacity-90' : 'bg-input text-disabled cursor-not-allowed border border-border'
                 }`}
               >

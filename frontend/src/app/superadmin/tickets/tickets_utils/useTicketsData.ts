@@ -1,4 +1,5 @@
 // RESPONSIBILITY: Generic fetch hook for Tickets read-only data.
+// DATA FLOW: Component -> useTicketsData.ts -> API/Store
 import { useState, useEffect, useCallback } from 'react';
 import { apiFetch, ApiResponse } from '@/lib/api';
 

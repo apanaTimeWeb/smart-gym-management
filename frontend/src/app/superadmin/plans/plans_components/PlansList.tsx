@@ -15,7 +15,7 @@ export default function PlansList() {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[...Array(3)].map((_, i) => (
-          <div key={i} className="h-64 bg-card border border-border rounded-2xl motion-safe:animate-pulse" />
+          <div key={`skeleton-${i}`} className="h-64 bg-card border border-border rounded-2xl motion-safe:animate-pulse" />
         ))}
       </div>
     );
@@ -32,7 +32,7 @@ export default function PlansList() {
         return (
           <div
             key={plan.id}
-            className="bg-card border border-border rounded-2xl p-6 flex flex-col relative overflow-hidden group hover:border-primary transition-colors duration-200"
+            className="bg-card border border-border rounded-2xl p-6 flex flex-col relative overflow-hidden group hover:border-primary motion-safe:transition-colors motion-safe:duration-200"
           >
             <div className="absolute top-0 right-0 bg-primary/10 text-primary px-3 py-1 text-xs font-bold rounded-bl-lg">
               {plan.activeTenants ?? 0} Gyms Active
@@ -68,7 +68,7 @@ export default function PlansList() {
                 onClick={() => openEditModal(plan)}
                 disabled={isDeleting}
                 aria-label={`Edit ${plan.name}`}
-                className="flex-1 py-2.5 flex items-center justify-center bg-input hover:bg-primary hover:text-white text-foreground rounded-xl transition-colors border border-border disabled:opacity-50"
+                className="flex-1 py-2.5 flex items-center justify-center bg-input hover:bg-primary hover:text-white text-foreground rounded-xl motion-safe:transition-colors border border-border disabled:opacity-50"
               >
                 <Edit2 size={18} />
               </button>
@@ -80,7 +80,7 @@ export default function PlansList() {
                 }}
                 disabled={isDeleting}
                 aria-label={`Delete ${plan.name}`}
-                className="flex-1 py-2.5 flex items-center justify-center bg-input hover:bg-danger hover:text-white text-secondary rounded-xl transition-colors border border-border disabled:opacity-50"
+                className="flex-1 py-2.5 flex items-center justify-center bg-input hover:bg-danger hover:text-white text-secondary rounded-xl motion-safe:transition-colors border border-border disabled:opacity-50"
               >
                 {isDeleting ? <Loader2 size={18} className="motion-safe:animate-spin" /> : <Trash2 size={18} />}
               </button>
