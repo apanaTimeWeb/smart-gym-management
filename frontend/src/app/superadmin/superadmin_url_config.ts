@@ -18,7 +18,8 @@ export const SuperadminUrlConfig = {
     AUDIT_LOGS: '/superadmin/audit-logs',
     FEATURES: '/superadmin/features',
     SETTINGS: '/superadmin/settings',
-    USAGE_METERS: '/superadmin/usage-meters'
+    USAGE_METERS: '/superadmin/usage-meters',
+    ANALYTICS: '/superadmin/analytics'
   },
   BACKEND_API: {
     DASHBOARD_BASE: '/superadmin/dashboard',

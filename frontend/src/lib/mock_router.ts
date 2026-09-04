@@ -455,6 +455,21 @@ export async function routeMockRequest<T>(
     })), 'usageMeters') as unknown as ApiResponse<T>;
   }
 
+  if (path.includes('/superadmin/analytics/revenue')) {
+    return {
+      success: true,
+      message: 'Fetched revenue analytics',
+      data: {
+        mrr: 125000,
+        arr: 1500000,
+        churnRate: 1.5,
+        ltv: 4500,
+        cac: 120,
+        activeTenants: 145
+      }
+    } as unknown as ApiResponse<T>;
+  }
+
   // Dynamic Rich Data Generator for Demo Mode
   if (method === 'GET') {
     // Helper to generate an array
