@@ -71,6 +71,11 @@ export const useMembersStore = create<MembersState>((set) => ({
         if (!m.plan && m.planId) {
           m.plan = plans.find((p: Plan) => String(p.id) === String(m.planId));
         }
+        if (!m.status) {
+          m.status = 'ACTIVE';
+        } else {
+          m.status = m.status.toUpperCase();
+        }
         return m;
       });
       
