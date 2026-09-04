@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Utensils, Plus, Check } from 'lucide-react';
+import { Utensils, Plus, Check, MessageCircle, Edit2 } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/MembersContext';
 import { libraryApi } from '@/app/manager/library/library_api/library_api';
 import type { DietPlan } from '@/app/manager/library/library_types/library_types';
@@ -41,7 +41,25 @@ export default function ProfileDiet() {
           <h3 className="text-lg font-bold text-primary">Diet Plan</h3>
           <p className="text-sm text-secondary">Manage and track {selectedMember.name}&apos;s nutritional goals.</p>
         </div>
-        {!hasDietPlan && !isAssigning && (
+        {hasDietPlan ? (
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={() => {
+                const text = `*DIET PLAN: ${diet?.name || 'Assigned'}*\n\n*Macros:*\nCalories: ${diet?.totalCalories || 0} kcal\nProtein: ${diet?.protein || 0}g\nCarbs: ${diet?.carbs || 0}g\nFats: ${diet?.fats || 0}g\n\n*Meals:*\n${diet?.meals?.map((m: any) => `*${m.time} - ${m.name}* (${m.calories} kcal)\n${m.foods?.map((f: string) => `- ${f}`).join('\n')}`).join('\n\n')}`;
+                window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+              }}
+              className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-green-500/30 transition-all active:scale-95"
+            >
+              <MessageCircle size={16} /> Send via WhatsApp
+            </button>
+            <button 
+              onClick={() => setIsAssigning(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-input text-foreground border border-border rounded-xl text-sm font-semibold hover:bg-primary-subtle transition-all active:scale-95"
+            >
+              <Edit2 size={16} /> Change
+            </button>
+          </div>
+        ) : !isAssigning && (
           <button 
             onClick={() => setIsAssigning(true)}
             className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all active:scale-95"

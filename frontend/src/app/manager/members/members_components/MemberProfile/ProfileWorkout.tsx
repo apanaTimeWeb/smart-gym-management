@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Dumbbell, Plus, Check } from 'lucide-react';
+import { Dumbbell, Plus, Check, MessageCircle, Edit2 } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/MembersContext';
 import { workoutApi } from '@/app/manager/workout/workout_api/workout_api';
 import type { Workout } from '@/app/manager/workout/workout_types/workout_types';
@@ -41,7 +41,25 @@ export default function ProfileWorkout() {
           <h3 className="text-lg font-bold text-primary">Workout Plan</h3>
           <p className="text-sm text-secondary">Manage and track {selectedMember.name}&apos;s daily workouts.</p>
         </div>
-        {!hasWorkoutPlan && !isAssigning && (
+        {hasWorkoutPlan ? (
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={() => {
+                const text = `*WORKOUT PLAN: ${workout?.name || 'Assigned'}*\nLevel: ${workout?.level || 'N/A'}\n\n*Routine:*\n${workout?.days?.map((d: any) => `*Day ${d.day}: ${d.focus}*\n${d.isRest ? 'Rest Day' : d.exercises?.map((e: any) => `- ${e.name} (${e.sets}x${e.reps})`).join('\n')}`).join('\n\n')}`;
+                window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+              }}
+              className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-green-500/30 transition-all active:scale-95"
+            >
+              <MessageCircle size={16} /> Send via WhatsApp
+            </button>
+            <button 
+              onClick={() => setIsAssigning(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-input text-foreground border border-border rounded-xl text-sm font-semibold hover:bg-primary-subtle transition-all active:scale-95"
+            >
+              <Edit2 size={16} /> Change
+            </button>
+          </div>
+        ) : !isAssigning && (
           <button 
             onClick={() => setIsAssigning(true)}
             className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all active:scale-95"
