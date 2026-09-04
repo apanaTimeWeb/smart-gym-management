@@ -78,6 +78,20 @@ export default function ManagerMembersTable() {
                     <td className="px-5 py-3.5 text-sm font-medium text-success whitespace-nowrap">{formatCurrency(m.paidAmount)}</td>
                     <td className="px-5 py-3.5 text-sm font-medium text-danger whitespace-nowrap">{m.pendingAmount > 0 ? formatCurrency(m.pendingAmount) : '—'}</td>
                     <td className="px-5 py-3.5 text-sm text-secondary whitespace-nowrap">{new Date(m.expiryDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                    <td className="px-5 py-3.5 text-sm whitespace-nowrap">
+                      {m.assignedDiet?.name ? (
+                        <span className="bg-primary/10 text-primary px-2 py-1 rounded-md text-xs font-semibold" title={m.assignedDiet.name}>
+                          {m.assignedDiet.name.length > 15 ? m.assignedDiet.name.substring(0, 15) + '...' : m.assignedDiet.name}
+                        </span>
+                      ) : <span className="text-secondary">—</span>}
+                    </td>
+                    <td className="px-5 py-3.5 text-sm whitespace-nowrap">
+                      {m.assignedWorkout?.name ? (
+                        <span className="bg-primary/10 text-primary px-2 py-1 rounded-md text-xs font-semibold" title={m.assignedWorkout.name}>
+                          {m.assignedWorkout.name.length > 15 ? m.assignedWorkout.name.substring(0, 15) + '...' : m.assignedWorkout.name}
+                        </span>
+                      ) : <span className="text-secondary">—</span>}
+                    </td>
                     <td className="px-5 py-3.5 whitespace-nowrap">
                       <div className="flex items-center gap-2">
                         <button onClick={(e) => { e.stopPropagation(); openEdit(m); }} className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle transition-all duration-200" title="Edit" aria-label={`Edit ${m.name}`}><Edit size={14} /></button>
@@ -95,7 +109,7 @@ export default function ManagerMembersTable() {
                 )})}
                 {members.length === 0 && fetchState === 'success' && (
                   <tr>
-                    <td colSpan={9} className="p-0 border-b-0">
+                    <td colSpan={11} className="p-0 border-b-0">
                       <MembersEmptyState isFiltered={Boolean(search || statusFilter !== 'All')} />
                     </td>
                   </tr>

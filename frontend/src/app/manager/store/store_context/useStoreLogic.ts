@@ -164,7 +164,7 @@ export function useStoreLogic(initialData?: StoreInitialData | null): StoreConte
  if (existing) {
  return prev;
  }
- return [...prev, { productId: p.id, qty: 1, name: p.name, price: p.price }];
+ return [...prev, { productId: p.id, qty: 1, name: p.name, price: p.price, unit: p.unit }];
  });
  }, []);
 
@@ -189,7 +189,7 @@ export function useStoreLogic(initialData?: StoreInitialData | null): StoreConte
     setSaving(true);
     try {
       const res = await storeApi.createOrder({
-        items: orderItems.map(i => ({ productId: i.productId, qty: i.qty, price: i.price })),
+        items: orderItems.map(i => ({ productId: i.productId, qty: i.qty, price: i.price, product: { name: i.name, unit: i.unit } })),
         method: orderMethod,
         notes: sendViaWhatsapp && customerPhone ? `WhatsApp: ${customerPhone}` : undefined,
         customerName: customerPhone || 'Walk-in',
@@ -241,7 +241,7 @@ export function useStoreLogic(initialData?: StoreInitialData | null): StoreConte
           date: new Date().toLocaleDateString('en-IN'), 
           customerName: customerPhone || 'Walk-in', 
           items: orderItems.map((i) => ({ 
-            name: i.name, 
+            name: i.unit ? `${i.name} (${i.unit})` : i.name, 
             price: i.price, 
             amount: i.price * i.qty 
           })), 

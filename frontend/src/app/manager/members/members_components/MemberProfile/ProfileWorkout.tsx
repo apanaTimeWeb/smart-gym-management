@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Dumbbell, Plus, Check } from 'lucide-react';
+import { Dumbbell, Plus, Check, MessageCircle, Edit2 } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/MembersContext';
 import { workoutApi } from '@/app/manager/workout/workout_api/workout_api';
 import type { Workout } from '@/app/manager/workout/workout_types/workout_types';
@@ -41,7 +41,25 @@ export default function ProfileWorkout() {
           <h3 className="text-lg font-bold text-primary">Workout Plan</h3>
           <p className="text-sm text-secondary">Manage and track {selectedMember.name}&apos;s daily workouts.</p>
         </div>
-        {!hasWorkoutPlan && !isAssigning && (
+        {hasWorkoutPlan ? (
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={() => {
+                const text = `*WORKOUT PLAN: ${workout?.name || 'Assigned'}*\nLevel: ${workout?.level || 'N/A'}\n\n*Routine:*\n${workout?.days?.map((d: any) => `*Day ${d.day}: ${d.focus}*\n${d.isRest ? 'Rest Day' : d.exercises?.map((e: any) => `- ${e.name} (${e.sets}x${e.reps})`).join('\n')}`).join('\n\n')}`;
+                window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+              }}
+              className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-green-500/30 transition-all active:scale-95"
+            >
+              <MessageCircle size={16} /> Send via WhatsApp
+            </button>
+            <button 
+              onClick={() => setIsAssigning(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-input text-foreground border border-border rounded-xl text-sm font-semibold hover:bg-primary-subtle transition-all active:scale-95"
+            >
+              <Edit2 size={16} /> Change
+            </button>
+          </div>
+        ) : !isAssigning && (
           <button 
             onClick={() => setIsAssigning(true)}
             className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all active:scale-95"
@@ -121,9 +139,46 @@ export default function ProfileWorkout() {
                 </li>
               </ul>
             </div>
-          )) : (
-            <div className="col-span-full text-center py-4 text-secondary text-sm">No specific days mapped for this workout plan.</div>
-          )}
+            <div className="bg-card border border-border rounded-xl p-4 text-center shadow-sm">
+              <p className="text-xs text-secondary font-semibold uppercase tracking-wider mb-1">Days</p>
+              <p className="text-lg font-bold text-primary">{Array.isArray(workout.days) ? workout.days.length : (workout.days || 0)}</p>
+            </div>
+            <div className="bg-card border border-border rounded-xl p-4 text-center shadow-sm">
+              <p className="text-xs text-secondary font-semibold uppercase tracking-wider mb-1">Focus</p>
+              <p className="text-lg font-bold text-primary">{workout.focus || 'General'}</p>
+            </div>
+            <div className="bg-card border border-border rounded-xl p-4 text-center shadow-sm">
+              <p className="text-xs text-secondary font-semibold uppercase tracking-wider mb-1">Exercises</p>
+              <p className="text-lg font-bold text-primary">{workout.exercises || 'Varied'}</p>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {Array.isArray(workout.days) && workout.days.length > 0 ? workout.days.map((day: any, idx: number) => (
+              <div key={idx} className="bg-card border border-border p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                <h5 className="font-semibold text-primary mb-3 pb-2 border-b border-border text-sm">Day {day.day || idx + 1}: {day.focus}</h5>
+                {day.isRest ? (
+                  <p className="text-sm text-secondary italic">Rest Day - No workout assigned.</p>
+                ) : (
+                  <ul className="space-y-2 text-sm text-secondary">
+                    {day.exercises?.map((ex: any, i: number) => (
+                      <li key={i} className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
+                        <span>{ex.name}</span> <span className="font-medium text-primary text-xs">{ex.sets}x{ex.reps}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            )) : (
+              <div className="col-span-full bg-input border border-border rounded-xl p-6 text-center">
+                <Dumbbell className="mx-auto text-primary/40 mb-3" size={32} />
+                <p className="text-lg text-primary font-bold">{workout.name}</p>
+                <p className="text-secondary text-sm mt-2 max-w-md mx-auto">
+                  This plan is a {workout.level} level routine focused on {workout.focus}, spanning {workout.days} days per cycle.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       ) : null}
     </div>

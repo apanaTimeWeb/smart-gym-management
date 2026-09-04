@@ -119,26 +119,53 @@ export async function routeMockRequest<T>(
 
   const generate = (count: number, generator: (i: number) => Record<string, unknown>) => Array.from({ length: count }, (_, i) => generator(i));
 
-  if (path.includes('/store/products')) return MockDB.handleCrud('mock_products', method, path, parsedBody, generate(15, i => ({ id: `prod-${i}`, name: `Mock Product ${i}`, category: 'Supplements', price: 1500, stock: 50, status: 'IN_STOCK' })), 'products') as unknown as ApiResponse<T>;
+  if (path.includes('/store/products')) {
+    const existing = MockDB.getCollection('mock_products', []);
+    if (existing.length > 0 && existing.some((r: any) => r.name?.includes('Mock Product'))) {
+      MockDB.setCollection('mock_products', []);
+    }
+    const defaultProducts = [
+      { id: 'prod-1', name: 'Optimum Nutrition Gold Standard Whey', category: 'Supplements', price: 6500, stock: 15, description: '100% Whey Protein Isolate', isActive: true, unit: '2.27 KG' },
+      { id: 'prod-2', name: 'MuscleBlaze Biozyme Performance Whey', category: 'Supplements', price: 2399, stock: 20, description: 'Enhanced absorption whey', isActive: true, unit: '1 KG' },
+      { id: 'prod-3', name: 'Cellucor C4 Original Pre-Workout', category: 'Supplements', price: 1800, stock: 45, description: 'Explosive energy pre-workout', isActive: true, unit: '195g' },
+      { id: 'prod-4', name: 'ON Micronized Creatine Monohydrate', category: 'Supplements', price: 1200, stock: 35, description: 'Pure unflavored creatine', isActive: true, unit: '300g' },
+      { id: 'prod-5', name: 'Scivation Xtend BCAA', category: 'Supplements', price: 2100, stock: 25, description: 'Intra-workout recovery drink', isActive: true, unit: '420g' },
+      { id: 'prod-6', name: 'Monster Energy Drink Zero Ultra', category: 'Supplements', price: 150, stock: 50, description: 'Sugar-free energy drink', isActive: true, unit: '500 ML' },
+      { id: 'prod-7', name: 'Under Armour Tech 2.0 T-Shirt', category: 'Merchandise', price: 1499, stock: 12, description: 'Breathable dry-fit training tee', isActive: true, unit: 'Large' },
+      { id: 'prod-8', name: 'BlenderBottle Classic Shaker', category: 'Accessories', price: 699, stock: 30, description: 'Spill-proof shaker bottle', isActive: true, unit: '800 ML' },
+      { id: 'prod-9', name: 'Nivia Python Gym Gloves', category: 'Accessories', price: 450, stock: 18, description: 'Weightlifting gloves with wrist support', isActive: true, unit: 'Medium' },
+      { id: 'prod-10', name: 'Rogue Heavy Duty Lifting Belt', category: 'Accessories', price: 3500, stock: 8, description: 'Leather powerlifting belt', isActive: true, unit: '1 Piece' }
+    ];
+    return MockDB.handleCrud('mock_products', method, path, parsedBody, defaultProducts, 'products') as unknown as ApiResponse<T>;
+  }
+
   if (path.includes('/store/summary')) {
     const products = MockDB.getCollection('mock_products', []);
-    const orders = MockDB.getCollection('mock_orders_v2', []);
-    const revenue = orders.reduce((acc, o) => acc + (Number(o.total) || 0), 0);
-    return { success: true, message: 'Summary', data: { totalProducts: products.length, totalOrders: orders.length, totalRevenue: revenue, lowStockProducts: products.filter(p => Number(p.stock) < 10) } } as unknown as ApiResponse<T>;
+    const orders = MockDB.getCollection('mock_orders', []);
+    const revenue = orders.reduce((acc: number, o: any) => acc + (Number(o.total) || 0), 0);
+    return { success: true, message: 'Summary', data: { totalProducts: products.length, totalOrders: orders.length, totalRevenue: revenue, lowStockProducts: products.filter((p: any) => Number(p.stock) <= 10) } } as unknown as ApiResponse<T>;
   }
+
   if (path.includes('/store/orders')) {
+    const existing = MockDB.getCollection('mock_orders', []);
+    if (existing.length > 0 && existing.some((r: any) => !r.items)) {
+       MockDB.setCollection('mock_orders', []);
+    }
     if (method === 'POST') {
        const products = MockDB.getCollection('mock_products', []);
        const items = (parsedBody.items || []) as any[];
        items.forEach(item => {
-         const prodIdx = products.findIndex(p => p.id === item.productId);
+         const prodIdx = products.findIndex(p => String(p.id) === String(item.productId));
          if (prodIdx > -1) {
            products[prodIdx].stock = Math.max(0, Number(products[prodIdx].stock) - Number(item.qty));
          }
        });
        MockDB.setCollection('mock_products', products);
     }
-    return MockDB.handleCrud('mock_orders_v2', method, path, parsedBody, generate(2, i => ({ id: `ord-${i}`, customerName: `Customer ${i}`, total: 3000, method: 'UPI', status: 'COMPLETED', createdAt: new Date().toISOString() })), 'orders') as unknown as ApiResponse<T>;
+    const defaultOrders = [
+      { id: 'ord-1', customerName: 'Demo Customer', total: 1200, method: 'UPI', status: 'COMPLETED', createdAt: new Date().toISOString(), items: [{ productId: 'prod-2', qty: 1, price: 1200, product: { name: 'Creatine Monohydrate', unit: '300g' } }] }
+    ];
+    return MockDB.handleCrud('mock_orders', method, path, parsedBody, defaultOrders, 'orders') as unknown as ApiResponse<T>;
   }
   if (path.includes('/plans') && !path.includes('/superadmin')) return MockDB.handleCrud('mock_admin_plans', method, path, parsedBody, generate(3, i => ({ id: `plan-${i}`, name: i === 0 ? 'Basic Plan' : i === 1 ? 'Pro Plan' : 'VIP Plan', tier: i === 0 ? 'Standard' : i === 1 ? 'Premium' : 'Elite', price1Month: 1000 * (i + 1), price3Month: 2500 * (i + 1), price6Month: 4800 * (i + 1), price12Month: 9000 * (i + 1), features: ['Access to gym', 'Locker facility', 'Cardio section'], isActive: true }))) as unknown as ApiResponse<T>;
   if (path.includes('/members/stats')) return { success: true, message: 'Stats', data: { total: 150, active: 110, pending: 25, expired: 15 } } as unknown as ApiResponse<T>;
@@ -283,16 +310,44 @@ export async function routeMockRequest<T>(
     return MockDB.handleCrud('mock_admin_payrolls', method, path, parsedBody, [], 'payrolls') as unknown as ApiResponse<T>;
   }
   if (path.includes('/exercises')) return MockDB.handleCrud('mock_admin_exercises', method, path, parsedBody, generate(10, i => ({ id: `ex-${i}`, name: `Exercise ${i+1}`, category: 'Strength', muscleGroup: ['Chest', 'Triceps'], difficulty: 'Beginner', isActive: true, videoUrl: '' })), 'exercises') as unknown as ApiResponse<T>;
-  if (path.includes('/diet-plans')) return MockDB.handleCrud('mock_admin_diet_plans', method, path, parsedBody, generate(4, i => ({ id: `diet-${i}`, name: `Keto Diet ${i+1}`, goal: 'Weight Loss', calories: 1500 + (i * 200), meals: ['Breakfast', 'Lunch'], isActive: true })), 'dietPlans') as unknown as ApiResponse<T>;
+  
+  const existingDiets = MockDB.getCollection('mock_admin_diet_plans', []);
+  if (existingDiets.length > 0 && typeof existingDiets[0].meals?.[0] === 'string') {
+    MockDB.setCollection('mock_admin_diet_plans', []); // Force purge old format
+  }
+  
+  if (path.includes('/diet-plans')) return MockDB.handleCrud('mock_admin_diet_plans', method, path, parsedBody, generate(4, i => ({ 
+    id: `diet-${i}`, 
+    name: `Pro Diet ${i+1}`, 
+    goal: 'Weight Loss', 
+    totalCalories: 1500 + (i * 200),
+    protein: 120 + i * 10,
+    carbs: 150 + i * 20,
+    fats: 50 + i * 5,
+    meals: [
+      { time: '08:00 AM', name: 'Breakfast', calories: 400, foods: ['Oats', 'Eggs', 'Banana'] },
+      { time: '01:00 PM', name: 'Lunch', calories: 600, foods: ['Chicken Breast', 'Rice', 'Broccoli'] },
+      { time: '07:00 PM', name: 'Dinner', calories: 500, foods: ['Salmon', 'Sweet Potato', 'Asparagus'] }
+    ], 
+    isActive: true 
+  })), 'dietPlans') as unknown as ApiResponse<T>;
+  
+  const existingWorkouts = MockDB.getCollection('mock_workouts', []);
+  if (existingWorkouts.length > 0 && typeof existingWorkouts[0].days === 'number') {
+    MockDB.setCollection('mock_workouts', []); // Force purge old format
+  }
+  
   if (path.includes('/workouts')) return MockDB.handleCrud('mock_workouts', method, path, parsedBody, generate(5, i => ({ 
     id: `wo-${i}`, 
-    name: `Workout Plan ${i+1}`, 
+    name: `Hypertrophy Plan ${i+1}`, 
     level: i % 2 === 0 ? 'Intermediate' : 'Beginner',
-    days: 4 + (i % 3),
-    exercises: 15 + (i * 2),
     focus: 'Hypertrophy',
-    duration: '60 min',
-    tags: ['Classic', 'Strength']
+    days: [
+      { day: 1, focus: 'Chest & Triceps', isRest: false, exercises: [{ name: 'Bench Press', sets: 4, reps: 10 }, { name: 'Triceps Extension', sets: 3, reps: 12 }] },
+      { day: 2, focus: 'Back & Biceps', isRest: false, exercises: [{ name: 'Pull-ups', sets: 4, reps: 8 }, { name: 'Bicep Curls', sets: 3, reps: 15 }] },
+      { day: 3, focus: 'Rest', isRest: true, exercises: [] },
+      { day: 4, focus: 'Legs', isRest: false, exercises: [{ name: 'Squats', sets: 4, reps: 12 }, { name: 'Leg Press', sets: 3, reps: 15 }] }
+    ]
   })), 'workouts') as unknown as ApiResponse<T>;
   if (path.includes('/admin/finance/summary')) return { success: true, message: 'Summary', data: { totalRevenue: 1500000, monthlyRevenue: 250000, pendingAmount: 45000, totalPayments: 345, revenueByMethod: { UPI: 120000, Cash: 50000, Card: 80000, NetBanking: 0 }, monthlyData: generate(6, i => ({ month: `M${i+1}`, revenue: 200000 + (i * 10000) })) } } as unknown as ApiResponse<T>;
   if (path.includes('/finance/payments')) return MockDB.handleCrud('mock_admin_payments', method, path, parsedBody, generate(10, i => ({ id: `pay-${i}`, memberId: `mem-${i}`, member: { name: `Payer ${i}`, email: `payer${i}@example.com`, phone: '9988776655', plan: { name: 'Pro Plan' } }, amount: 5000 + (i * 500), status: 'success', paidAt: new Date().toISOString(), method: 'UPI', invoiceNo: `INV-${1000 + i}` })), 'payments') as unknown as ApiResponse<T>;
@@ -307,6 +362,12 @@ export async function routeMockRequest<T>(
     }
   }
   if (path.includes('/settings')) return MockDB.handleCrud('mock_settings', method, path, parsedBody, generate(1, i => ({ id: `setting-${i}`, gymName: 'Demo Gym Base', currency: 'INR', timezone: 'Asia/Kolkata', emailNotifications: true }))) as unknown as ApiResponse<T>;
+
+  if (path.includes('/store/summary')) {
+    const products = MockDB.getCollection('mock_store_products', []);
+    const orders = MockDB.getCollection('mock_orders_v2', []);
+    return { success: true, message: 'Store Summary', data: { totalProducts: products.length, totalOrders: orders.length, totalRevenue: orders.reduce((sum: number, o: any) => sum + (o.total || 0), 0), lowStockProducts: products.filter((p: any) => p.stock <= 5) } } as unknown as ApiResponse<T>;
+  }
 
 
   // SUPERADMIN Stateful Interceptions

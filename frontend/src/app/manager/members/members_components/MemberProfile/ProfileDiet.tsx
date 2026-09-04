@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Utensils, Plus, Check } from 'lucide-react';
+import { Utensils, Plus, Check, MessageCircle, Edit2 } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/MembersContext';
 import { libraryApi } from '@/app/manager/library/library_api/library_api';
 import type { DietPlan } from '@/app/manager/library/library_types/library_types';
@@ -41,7 +41,25 @@ export default function ProfileDiet() {
           <h3 className="text-lg font-bold text-primary">Diet Plan</h3>
           <p className="text-sm text-secondary">Manage and track {selectedMember.name}&apos;s nutritional goals.</p>
         </div>
-        {!hasDietPlan && !isAssigning && (
+        {hasDietPlan ? (
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={() => {
+                const text = `*DIET PLAN: ${diet?.name || 'Assigned'}*\n\n*Macros:*\nCalories: ${diet?.totalCalories || 0} kcal\nProtein: ${diet?.protein || 0}g\nCarbs: ${diet?.carbs || 0}g\nFats: ${diet?.fats || 0}g\n\n*Meals:*\n${diet?.meals?.map((m: any) => `*${m.time} - ${m.name}* (${m.calories} kcal)\n${m.foods?.map((f: string) => `- ${f}`).join('\n')}`).join('\n\n')}`;
+                window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+              }}
+              className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-green-500/30 transition-all active:scale-95"
+            >
+              <MessageCircle size={16} /> Send via WhatsApp
+            </button>
+            <button 
+              onClick={() => setIsAssigning(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-input text-foreground border border-border rounded-xl text-sm font-semibold hover:bg-primary-subtle transition-all active:scale-95"
+            >
+              <Edit2 size={16} /> Change
+            </button>
+          </div>
+        ) : !isAssigning && (
           <button 
             onClick={() => setIsAssigning(true)}
             className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all active:scale-95"
@@ -126,21 +144,31 @@ export default function ProfileDiet() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {diet.meals && diet.meals.length > 0 ? diet.meals.map((meal: any, idx: number) => (
-              <div key={idx} className="bg-card border border-border p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-                <h5 className="font-semibold text-primary mb-3 pb-2 border-b border-border text-sm flex items-center justify-between">
-                  {meal.time} - {meal.name}
-                  <span className="text-xs font-normal text-secondary bg-input px-2 py-1 rounded">~{meal.calories} kcal</span>
-                </h5>
-                <ul className="space-y-2 text-sm text-secondary">
-                  {meal.foods?.map((f: string, i: number) => (
-                    <li key={i} className="flex items-center gap-2">
-                      <span className="text-primary">•</span> {f}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )) : (
+            {diet.meals && diet.meals.length > 0 ? diet.meals.map((meal: any, idx: number) => {
+              if (typeof meal === 'string') {
+                return (
+                  <div key={idx} className="bg-card border border-border p-4 rounded-xl shadow-sm">
+                    <h5 className="font-semibold text-primary mb-2 text-sm">Meal {idx + 1}</h5>
+                    <p className="text-sm text-secondary">{meal}</p>
+                  </div>
+                );
+              }
+              return (
+                <div key={idx} className="bg-card border border-border p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                  <h5 className="font-semibold text-primary mb-3 pb-2 border-b border-border text-sm flex items-center justify-between">
+                    {meal.time} - {meal.name}
+                    <span className="text-xs font-normal text-secondary bg-input px-2 py-1 rounded">~{meal.calories} kcal</span>
+                  </h5>
+                  <ul className="space-y-2 text-sm text-secondary">
+                    {meal.foods?.map((f: string, i: number) => (
+                      <li key={i} className="flex items-center gap-2">
+                        <span className="text-primary">•</span> {f}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            }) : (
               <div className="col-span-full text-center py-4 text-secondary text-sm">No specific meals mapped for this diet plan.</div>
             )}
           </div>
