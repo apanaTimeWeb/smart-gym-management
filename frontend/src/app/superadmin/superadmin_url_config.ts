@@ -17,7 +17,9 @@ export const SuperadminUrlConfig = {
     MIGRATIONS: '/superadmin/migrations',
     AUDIT_LOGS: '/superadmin/audit-logs',
     FEATURES: '/superadmin/features',
-    SETTINGS: '/superadmin/settings'
+    SETTINGS: '/superadmin/settings',
+    USAGE_METERS: '/superadmin/usage-meters',
+    ANALYTICS: '/superadmin/analytics'
   },
   BACKEND_API: {
     DASHBOARD_BASE: '/superadmin/dashboard',

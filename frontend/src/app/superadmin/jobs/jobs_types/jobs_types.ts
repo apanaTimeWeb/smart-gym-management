@@ -6,6 +6,9 @@ export interface BackgroundJob {
   attempts: number;
   error?: string;
   createdAt: string;
+  finishedAt?: string;
+  durationMs?: number;
+  payload?: Record<string, unknown>;
 }
 
 export interface JobsMetrics {
