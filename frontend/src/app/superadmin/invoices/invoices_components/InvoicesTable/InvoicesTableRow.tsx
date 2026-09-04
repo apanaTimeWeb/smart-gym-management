@@ -33,7 +33,7 @@ export default function InvoicesTableRow({ invoice: inv }: InvoicesTableRowProps
         {
           items: {
             'Plan': inv.planName,
-            'Amount': `$${inv.amount.toFixed(2)} ${inv.currency}`,
+            'Amount': `₹${inv.amount.toFixed(2)}`,
             'Status': inv.status
           }
         }
@@ -49,7 +49,7 @@ export default function InvoicesTableRow({ invoice: inv }: InvoicesTableRowProps
       <td className="p-4 text-sm font-mono text-secondary">{inv.id}</td>
       <td className="p-4 text-sm font-bold text-foreground">{inv.tenantName}</td>
       <td className="p-4 text-sm text-secondary">{inv.planName}</td>
-      <td className="p-4 text-sm font-bold text-foreground">${inv.amount.toFixed(2)} {inv.currency}</td>
+      <td className="p-4 text-sm font-bold text-foreground">₹{inv.amount.toFixed(2)}</td>
       <td className="p-4">
         <span className={`px-2.5 py-1 rounded-md text-xs font-bold ${STATUS_COLORS[inv.status]}`}>
           {inv.status}
