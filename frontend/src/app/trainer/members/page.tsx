@@ -16,9 +16,9 @@ export default async function MembersPage() {
       ssrMembersApi.getStats(),
     ]);
     initialData = {
-      members: membersRes.data.members || [],
-      totalMembers: membersRes.data.total || 0,
-      stats: statsRes.data || { total: 0, active: 0, pending: 0, expired: 0 }
+      members: (membersRes.data as any).members || [],
+      totalMembers: (membersRes.data as any).total || 0,
+      stats: (statsRes.data as any) || { total: 0, active: 0, pending: 0, expired: 0 }
     };
   } catch (e: unknown) {
     console.error('[MembersPage SSR] Failed to fetch initial data:', e);

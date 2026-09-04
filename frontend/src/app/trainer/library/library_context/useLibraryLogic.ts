@@ -56,11 +56,11 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
 
  const [showExModal, setShowExModal] = useState(false);
  const [editExId, setEditExId] = useState<string | null>(null);
- const [editExData, setEditExData] = useState<unknown>(null);
+ const [editExData, setEditExData] = useState<Record<string, any> | null>(null);
 
  const [showDietModal, setShowDietModal] = useState(false);
  const [editDietId, setEditDietId] = useState<string | null>(null);
- const [editDietData, setEditDietData] = useState<unknown>(null);
+ const [editDietData, setEditDietData] = useState<Record<string, any> | null>(null);
 
  const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
  const hideToast = useCallback(() => setToast(null), []);

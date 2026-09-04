@@ -3,7 +3,7 @@
 
 import TrainerHeader from '@/app/trainer/trainer_components/TrainerLayout/TrainerHeader';
 import { DashboardProvider, useDashboardContext } from '@/app/trainer/dashboard/dashboard_context/DashboardContext';
-import type { DashboardStats } from '@/app/trainer/dashboard/dashboard_types/dashboard_types';
+import type { DashboardStats, TimeRange } from '@/app/trainer/dashboard/dashboard_types/dashboard_types';
 import TrainerDashboardKPIs from '@/app/trainer/dashboard/dashboard_components/TrainerDashboardKPIs/TrainerDashboardKPIs';
 import TrainerDashboardRecentMembers from '@/app/trainer/dashboard/dashboard_components/TrainerDashboardRecentMembers/TrainerDashboardRecentMembers';
 import TrainerDashboardPromoCard from '@/app/trainer/dashboard/dashboard_components/TrainerDashboardPromoCard/TrainerDashboardPromoCard';
@@ -73,7 +73,7 @@ function DashboardContent() {
           <select 
             value={timeRange} 
             onChange={(e) => {
-              setTimeRange(e.target.value as unknown);
+              setTimeRange(e.target.value as TimeRange);
               if (e.target.value !== 'custom') {
                 setCustomDateRange('', '');
               }

@@ -10,6 +10,7 @@ import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback
 import type { MessageType, ManagerMessageRecipient } from '@/app/manager/manager_components/ManagerFeedback/ManagerMessageModal';
 import { EMPTY_INQUIRY_FORM, generateDefaultMessage, type InquiryFormValues } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesSharedConstants';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
+import { useManagerInquiriesMutations } from './useManagerInquiriesMutations';
 
 /**
  * Hook to manage inquiries data, filtering state, and all CRUD operations.
@@ -125,7 +126,7 @@ export function useManagerInquiriesLogic(): InquiriesContextType {
 
   // Refetch when URL-driven filters change
   // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => { loadAll(); }, [loadAll]);
+  useEffect(() => { setTimeout(() => loadAll(), 0); }, [loadAll]);
 
   const openAdd = useCallback(() => {
     setEditId(null);

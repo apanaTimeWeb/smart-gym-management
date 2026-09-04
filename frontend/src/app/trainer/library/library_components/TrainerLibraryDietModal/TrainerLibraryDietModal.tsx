@@ -49,7 +49,7 @@ export default function TrainerLibraryDietModal() {
  <X size={18} />
  </button>
  </div>
- <form onSubmit={handleSubmit(saveDietPlan as unknown)} className="p-6 space-y-4">
+ <form onSubmit={handleSubmit(saveDietPlan as any)} className="p-6 space-y-4">
  {[
  { label: 'Plan Name', key: 'name', type: 'text' }, 
  { label: 'Calories', key: 'calories', type: 'number', placeholder: '2500' }, 

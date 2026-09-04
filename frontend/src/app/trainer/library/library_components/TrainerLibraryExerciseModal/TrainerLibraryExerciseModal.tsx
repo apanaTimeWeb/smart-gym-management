@@ -49,7 +49,7 @@ export default function ExerciseModal() {
  <X size={18} />
  </button>
  </div>
- <form onSubmit={handleSubmit(saveExercise as unknown)} className="p-6 space-y-4">
+ <form onSubmit={handleSubmit(saveExercise as any)} className="p-6 space-y-4">
  {[
  { label: 'Exercise Name', key: 'name', type: 'text' }, 
  { label: 'Muscle Groups (comma separated)', key: 'muscleGroup', type: 'text', placeholder: 'Chest, Triceps' }, 

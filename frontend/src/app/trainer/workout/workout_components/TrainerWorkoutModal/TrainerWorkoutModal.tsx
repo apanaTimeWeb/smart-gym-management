@@ -50,7 +50,7 @@ export default function TrainerWorkoutModal() {
             <X size={20} />
           </button>
         </div>
-        <form onSubmit={handleSubmit(saveWk as unknown)} className="p-5 space-y-4">
+        <form onSubmit={handleSubmit(saveWk as any)} className="p-5 space-y-4">
           <div>
             <label className="block text-sm font-medium text-secondary mb-1">Plan Name *</label>
             <input 
