@@ -23,7 +23,7 @@ export default function ManagerStoreOrderTable() {
       date: new Date(o.createdAt).toLocaleDateString('en-IN'), 
       customerName: 'Customer', 
       items: (o.items || []).map((i) => ({ 
-        name: i.product?.name || '', 
+        name: i.product?.name ? (i.product?.unit ? `${i.product.name} (${i.product.unit})` : i.product.name) : '', 
         price: i.price, 
         amount: i.price * i.qty 
       })), 
