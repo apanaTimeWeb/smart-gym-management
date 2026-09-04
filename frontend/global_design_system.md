@@ -220,6 +220,17 @@ Badges are small pill-shaped labels: `border-radius: var(--radius-full)`, `paddi
 - Pagination bar (below table): "Showing 1–25 of 143 results" + Previous / Next buttons + rows-per-page selector (10 / 25 / 50)
 - Empty state (no rows): Centered SVG illustration + "No [items] found" (16px, `--text-secondary`) + optional CTA button
 
+### Table Accessibility and Interaction Rules
+
+- Tables must preserve semantic HTML structure: `table`, `thead`, `tbody`, `th`, `td`.
+- Sortable headers must expose current sorting state through accessible labels.
+- Row-click navigation must not prevent keyboard users from reaching inline actions.
+- Row actions must be keyboard accessible.
+- On mobile, choose one documented pattern:
+  1. Horizontal scroll with frozen primary identifier, or
+  2. Convert each record into an accessible card layout.
+- Never hide essential financial, status, or permission information solely because of viewport size.
+
 ### 5c. Form Layout
 - **Simple form** (≤6 fields): single column, centered card, max-width 560px
 - **Complex form** (>6 fields): two-column grid inside a full-width card, grouped in labeled sections separated by a horizontal rule
@@ -227,6 +238,26 @@ Badges are small pill-shaped labels: `border-radius: var(--radius-full)`, `paddi
 - Required fields: Label has red asterisk `*`
 - Input styling: `background: --bg-input`, `border: 1px solid --border`, border-radius: var(--radius-md), padding: 10px 14px, focus: `border-color: --border-focus` + subtle gold glow
 - Form footer: Buttons right-aligned — Cancel (ghost) | Save/Submit (primary)
+
+### Form Interaction States
+
+Every form field must explicitly support:
+- Default
+- Hover
+- Focus-visible
+- Filled
+- Validation error
+- Validation success where meaningful
+- Disabled
+- Read-only
+- Loading/submitting
+
+Accessibility requirements:
+- Every input must have a programmatically associated `<label>`.
+- Error text must be connected through `aria-describedby`.
+- Invalid fields must expose `aria-invalid="true"`.
+- Required fields must be marked semantically, not only through color.
+- Error messages must be announced accessibly where appropriate.
 
 ### 5d. Modal / Dialog
 - Overlay: `backdrop: rgba(0,0,0,0.6)`, centered, **`z-40`** (Tailwind class — see Section 12 Z-Index Scale)
@@ -457,6 +488,15 @@ To guarantee stability, safety, and compliance in an ERP environment, these rule
    - **The Rule:** Never rely on default outlines. All interactive elements (Inputs, Buttons, Links, Dropdown Items) MUST explicitly define a `focus-visible` state that matches the design system.
    - **Snippet:** `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-page)]`
 
+4. **Keyboard Navigation and Screen Reader Requirements:**
+   - All interactive UI must be usable using keyboard only.
+   - Dialogs must trap focus, autofocus an appropriate element, and restore focus to the trigger on close.
+   - Escape must close dismissible dialogs, popovers, and menus.
+   - Icon-only buttons must have accessible labels.
+   - Status colors must never be the only way to communicate meaning.
+   - Respect `prefers-reduced-motion` for non-essential animation.
+   - Minimum contrast must meet WCAG AA requirements.
+
 ---
 
 ## 14. PRINT & EXPORT STYLES
@@ -517,23 +557,57 @@ Enterprise users have different preferences for how much data fits on a screen.
 - **Amount/Number Columns:** Fixed width, right-aligned (standard accounting convention).
 - **Action Columns:** Fixed narrow width (`w-20`), right-aligned, never truncated.
 
-## 23. DRAG & DROP INTERACTION PATTERN
+## 23. RESPONSIVE AND MOBILE INTERACTION POLICY
+- Define standard breakpoints centrally and do not introduce arbitrary one-off breakpoints.
+- Desktop-first ERP layouts must remain fully usable at tablet widths.
+- Sidebars must collapse into a controlled drawer on smaller screens.
+- Minimum interactive touch target: 44 × 44px where practical.
+- Dense data tables must use the approved mobile table strategy.
+- Sticky action bars must not obscure form fields or mobile browser controls.
+- Test core workflows at mobile, tablet, and desktop widths before merge.
+
+## 24. ASYNC UI STATE SYSTEM
+
+Every data-driven feature must define all of the following:
+
+1. Loading State
+   - Use layout-matching skeletons.
+   - Avoid full-page spinners except for very short transitional actions.
+
+2. Empty State
+   - Explain why the list is empty.
+   - Offer a contextual action where the user has permission to create/import data.
+
+3. Error State
+   - Use a concise user-safe explanation.
+   - Provide Retry when appropriate.
+   - Never expose raw technical errors.
+
+4. Permission-Denied State
+   - Explain that access is restricted.
+   - Do not show disabled destructive controls without explanation.
+   - Provide a clear next step, such as contacting an administrator, where suitable.
+
+5. Offline/Connection State
+   - Show a non-blocking connection indicator for realtime/network-dependent features.
+
+## 25. DRAG & DROP INTERACTION PATTERN
 - **Library:** Use `@dnd-kit/core`.
 - **Dragging Item State:** `opacity: 0.5`, `cursor: grabbing`, subtle scale up `scale-105`.
 - **Valid Drop Target:** `border: 2px dashed var(--primary)`, background `rgba(250,204,21,0.08)`.
 - **Invalid Drop Target:** `border: 2px dashed var(--danger)`.
 - **Animation:** After drop, use a smooth snap animation (`transition: transform 200ms ease`).
 
-## 24. LOADING BUTTON STATE
+## 26. LOADING BUTTON STATE
 - **Behavior:** When a button triggers an async action, it must transition to a loading state.
 - **Visuals:** The button retains its width, the text is replaced (or shifted) by a small spinner icon (e.g., `Loader2` from lucide-react with `animate-spin`), and `disabled={true}` is applied.
 
-## 25. MOBILE CARD-STACK TABLE PATTERN
+## 27. MOBILE CARD-STACK TABLE PATTERN
 - **Behavior:** On mobile (<768px), standard data tables must collapse into a vertically stacked list of cards.
 - **Layout:** Each row becomes a card. The primary identifier (Name/ID) becomes the card title. Status badges align top-right. Other columns become `Label: Value` pairs stacked inside the card.
 - **Actions:** Inline actions appear at the bottom of the card or via a `...` dropdown menu.
 
-## 26. GLOBAL LOADING, EMPTY, & ERROR STATES
+## 28. GLOBAL LOADING, EMPTY, & ERROR STATES
 - **Top Routing Progress:** Every Next.js route transition MUST trigger a top progress bar (`nextjs-toploader`) to indicate background navigation. Color: `--primary`.
 - **Skeleton Loading (`loading.tsx`):** All major data-fetching pages MUST have a `loading.tsx` file implementing a Skeleton UI.
   - Skeletons use `bg-skeleton-base` and a pulsing `bg-skeleton-highlight` gradient.
@@ -547,7 +621,7 @@ Enterprise users have different preferences for how much data fits on a screen.
 
 ---
 
-## 27. MOTION ACCESSIBILITY — `prefers-reduced-motion` Compliance (WCAG 2.2 Mandatory)
+## 29. MOTION ACCESSIBILITY — `prefers-reduced-motion` Compliance (WCAG 2.2 Mandatory)
 Users with vestibular disorders, epilepsy, or motion sensitivity configure their OS to signal `prefers-reduced-motion: reduce`. Ignoring this setting in an enterprise SaaS causes legal exposure under the European Accessibility Act and ADA regulations. **All animations and transitions in this design system MUST respect this preference.**
 
 ### The Rule
@@ -597,7 +671,7 @@ Every instance of the following in JSX/CSS MUST have a `motion-safe:` prefix:
 
 ---
 
-## 28. DARK MODE SURFACE ELEVATION SCALE (Depth Without Shadows)
+## 30. DARK MODE SURFACE ELEVATION SCALE (Depth Without Shadows)
 In light mode, `box-shadow` is the primary tool for conveying visual depth (cards elevated above the page, modals elevated above cards). In dark mode, **shadows become nearly invisible against dark backgrounds** and can create a "muddy" visual. The industry-standard solution (used by Material Design 3, Linear, Vercel) is **Surface Elevation** — using subtle brightness steps to convey depth.
 
 ### The Problem
