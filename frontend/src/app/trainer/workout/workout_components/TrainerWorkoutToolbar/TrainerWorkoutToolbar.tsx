@@ -13,7 +13,7 @@ export default function TrainerWorkoutToolbar() {
    
    
    
-  useEffect(() => { setLocalSearch(search); }, [search]);
+  useEffect(() => { setTimeout(() => setLocalSearch(search), 0); }, [search]);
    
 
   useEffect(() => {

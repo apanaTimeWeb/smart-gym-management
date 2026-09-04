@@ -12,7 +12,7 @@ export default function TrainerMembersToolbar() {
   const { search, setSearch, statusFilter, setStatusFilter, openAdd, currentPage } = useMembersContext();
   const [localSearch, setLocalSearch] = useState(search);
 
-  useEffect(() => { setLocalSearch(search); }, [search]);
+  useEffect(() => { setTimeout(() => setLocalSearch(search), 0); }, [search]);
 
   useEffect(() => {
     const handler = setTimeout(() => {

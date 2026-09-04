@@ -81,7 +81,7 @@ export function useAttendanceLogic(): AttendanceContextType {
   }, [showToast, currentPage, debouncedSearch, tab]);
 
   // Rely on URL changes to drive the fetch (plus initial mount)
-  useEffect(() => { loadAll(); }, [loadAll]);
+  useEffect(() => { setTimeout(() => loadAll(), 0); }, [loadAll]);
 
   const markAttendance = useCallback(async (data: AttendanceFormValues) => {
     setSaving(true);

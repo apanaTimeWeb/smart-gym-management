@@ -8,7 +8,7 @@ export default function Loading() {
  <div className="h-32 bg-card rounded-xl motion-safe:animate-pulse"></div>
 
  {/* Main Content Skeleton */}
- <div className="h-full min-h-[500px] bg-card rounded-xl motion-safe:animate-pulse mt-6"></div>
+ <div className="h-full min-h-full bg-card rounded-xl motion-safe:animate-pulse mt-6"></div>
  </div>
  );
 }

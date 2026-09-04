@@ -37,7 +37,7 @@ export default function ExerciseModal() {
 
  return (
  <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
- <div className="bg-card rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+ <div className="bg-card rounded-2xl shadow-xl w-full max-w-lg max-h-full overflow-y-auto">
  <div className="sticky top-0 bg-card px-6 py-4 border-b border-border flex items-center justify-between">
  <h3 className="text-lg font-bold text-foreground">
  {editExId ? 'Edit Exercise' : 'Add Exercise'}
@@ -49,7 +49,7 @@ export default function ExerciseModal() {
  <X size={18} />
  </button>
  </div>
- <form onSubmit={handleSubmit(saveExercise as any)} className="p-6 space-y-4">
+ <form onSubmit={handleSubmit(saveExercise as unknown)} className="p-6 space-y-4">
  {[
  { label: 'Exercise Name', key: 'name', type: 'text' }, 
  { label: 'Muscle Groups (comma separated)', key: 'muscleGroup', type: 'text', placeholder: 'Chest, Triceps' }, 
