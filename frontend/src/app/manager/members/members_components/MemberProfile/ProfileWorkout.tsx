@@ -45,7 +45,7 @@ export default function ProfileWorkout() {
           <div className="flex items-center gap-2">
             <button 
               onClick={() => {
-                const text = `*WORKOUT PLAN: ${workout?.name || 'Assigned'}*\nLevel: ${workout?.level || 'N/A'}\n\n*Routine:*\n${workout?.days?.map((d: any) => `*Day ${d.day}: ${d.focus}*\n${d.isRest ? 'Rest Day' : d.exercises?.map((e: any) => `- ${e.name} (${e.sets}x${e.reps})`).join('\n')}`).join('\n\n')}`;
+                const text = `*WORKOUT PLAN: ${workout?.name || 'Assigned'}*\nLevel: ${workout?.level || 'N/A'}\n\n*Routine:*\n${Array.isArray(workout?.days) ? workout.days.map((d: any) => `*Day ${d.day}: ${d.focus}*\n${d.isRest ? 'Rest Day' : d.exercises?.map((e: any) => `- ${e.name} (${e.sets}x${e.reps})`).join('\n')}`).join('\n\n') : `Number of days: ${workout?.days}`}`;
                 window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
               }}
               className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-green-500/30 transition-all active:scale-95"
@@ -123,22 +123,8 @@ export default function ProfileWorkout() {
           </button>
         </div>
       ) : workout ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {typeof workout.days === 'number' && workout.days > 0 ? Array.from({ length: workout.days }).map((_, idx) => (
-            <div key={idx} className="bg-card border border-border p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-              <h5 className="font-semibold text-primary mb-3 pb-2 border-b border-border text-sm">Day {idx + 1}: {workout.focus}</h5>
-              <ul className="space-y-2 text-sm text-secondary">
-                <li className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
-                  <span>Main Compound Movement</span> <span className="font-medium text-primary text-xs">3x10</span>
-                </li>
-                <li className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
-                  <span>Accessory Movement 1</span> <span className="font-medium text-primary text-xs">3x12</span>
-                </li>
-                <li className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
-                  <span>Accessory Movement 2</span> <span className="font-medium text-primary text-xs">4x8</span>
-                </li>
-              </ul>
-            </div>
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-card border border-border rounded-xl p-4 text-center shadow-sm">
               <p className="text-xs text-secondary font-semibold uppercase tracking-wider mb-1">Days</p>
               <p className="text-lg font-bold text-primary">{Array.isArray(workout.days) ? workout.days.length : (workout.days || 0)}</p>
@@ -154,7 +140,22 @@ export default function ProfileWorkout() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {Array.isArray(workout.days) && workout.days.length > 0 ? workout.days.map((day: any, idx: number) => (
+            {typeof workout.days === 'number' && workout.days > 0 ? Array.from({ length: workout.days }).map((_, idx) => (
+              <div key={idx} className="bg-card border border-border p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                <h5 className="font-semibold text-primary mb-3 pb-2 border-b border-border text-sm">Day {idx + 1}: {workout.focus}</h5>
+                <ul className="space-y-2 text-sm text-secondary">
+                  <li className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
+                    <span>Main Compound Movement</span> <span className="font-medium text-primary text-xs">3x10</span>
+                  </li>
+                  <li className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
+                    <span>Accessory Movement 1</span> <span className="font-medium text-primary text-xs">3x12</span>
+                  </li>
+                  <li className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
+                    <span>Accessory Movement 2</span> <span className="font-medium text-primary text-xs">4x8</span>
+                  </li>
+                </ul>
+              </div>
+            )) : Array.isArray(workout.days) && workout.days.length > 0 ? workout.days.map((day: any, idx: number) => (
               <div key={idx} className="bg-card border border-border p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
                 <h5 className="font-semibold text-primary mb-3 pb-2 border-b border-border text-sm">Day {day.day || idx + 1}: {day.focus}</h5>
                 {day.isRest ? (
