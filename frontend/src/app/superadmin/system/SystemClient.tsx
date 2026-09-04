@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Renders the System & Audit page showing migration health and global audit logs. Fetches data directly using TanStack Query.
+// RESPONSIBILITY: Renders the System & Audit page showing migration health and global audit logs. Fetches data directly using TanStack Query.
 'use client';
 
 import { useState, useMemo } from 'react';
@@ -6,7 +6,7 @@ import { Database, ShieldAlert, Activity, Filter, RefreshCcw, Search, Loader2 } 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import toast from 'react-hot-toast';
-import type { Tenant, GlobalAuditLog } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { Tenant, GlobalAuditLog, MigrationsPageData } from '@/app/superadmin/superadmin_types/superadmin_types';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 
 const CURRENT_SCHEMA_VERSION = 'v2.4.1';
@@ -54,7 +54,7 @@ export default function SystemClient() {
       // Simulate API call for migration
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      queryClient.setQueryData(['superadmin', 'migrations'], (old: { data?: any[] } | undefined) => {
+      queryClient.setQueryData(['superadmin', 'migrations'], (old: { data?: MigrationsPageData } | undefined) => {
         if (!old?.data?.tenants) return old;
         return {
           ...old,

@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 // RESPONSIBILITY: Renders the modal form for editing an existing subscription plan. Reads/writes via usePlansStore.
 
 import { useEffect } from 'react';
@@ -10,6 +10,7 @@ import toast from 'react-hot-toast';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { usePlansStore } from '@/app/superadmin/plans/plans_store/usePlansStore';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
+import type { CreatePlanPayload, UpdatePlanPayload } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 const planSchema = z.object({
   name: z.string().min(1, 'Plan Name is required'),
@@ -52,7 +53,7 @@ export default function PlanEditModal() {
   }, [selectedPlan, isOpen, reset]);
 
   const editMutation = useMutation({
-    mutationFn: (data: unknown) => superadminApi.plans.updatePlan(selectedPlan!.id, data),
+    mutationFn: (data: UpdatePlanPayload) => superadminApi.plans.updatePlan(selectedPlan!.id, data),
     onSuccess: (res) => {
       toast.success(res.message || 'Plan updated successfully');
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'plans'] });
@@ -138,6 +139,7 @@ export default function PlanEditModal() {
     </div>
   );
 }
+
 
 
 

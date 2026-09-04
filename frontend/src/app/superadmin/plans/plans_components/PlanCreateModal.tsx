@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { usePlansStore } from '@/app/superadmin/plans/plans_store/usePlansStore';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
+import type { CreatePlanPayload, UpdatePlanPayload } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 const planSchema = z.object({
   name: z.string().min(1, 'Plan Name is required'),
@@ -38,7 +39,7 @@ export default function PlanCreateModal() {
   const { fields, append, remove } = useFieldArray({ control, name: 'features' });
 
   const createMutation = useMutation({
-    mutationFn: (data: unknown) => superadminApi.plans.createPlan(data),
+    mutationFn: (data: CreatePlanPayload) => superadminApi.plans.createPlan(data),
     onSuccess: (res) => {
       toast.success(res.message || 'Plan created successfully');
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'plans'] });
@@ -127,6 +128,7 @@ export default function PlanCreateModal() {
     </div>
   );
 }
+
 
 
 
