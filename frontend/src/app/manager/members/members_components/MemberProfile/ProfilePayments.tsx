@@ -7,37 +7,48 @@ import { useMembersStore } from '@/app/manager/members/members_store/useMembersS
 import { formatCurrency } from '@/app/manager/members/members_utils/MembersSharedConstants';
 
 export default function ProfilePayments() {
- const { handlePrint, handleSharePaymentWhatsApp } = useMembersContext();
+  const { handlePrint, handleSharePaymentWhatsApp, setShowRenewModal, setShowPaymentModal } = useMembersContext();
  const payments = useMembersStore(s => s.payments);
 
- const totalPaid = payments.filter(p => p.status === 'PAID').reduce((s, p) => s + p.amount, 0);
- const totalDue = payments.filter(p => p.status === 'DUE').reduce((s, p) => s + p.amount, 0);
+  const totalPaid = payments.filter(p => p.status === 'PAID').reduce((s, p) => s + p.amount, 0);
+  const totalDue = payments.filter(p => p.status === 'DUE').reduce((s, p) => s + p.amount, 0);
 
- return (
- <div>
- <div className="grid grid-cols-3 gap-4 mb-5">
- <div className="bg-success-bg rounded-xl p-4 border border-success/20">
- <p className="text-xs text-success">Total Paid</p>
- <p className="text-xl font-bold text-success">{formatCurrency(totalPaid)}</p>
- </div>
- <div className="bg-danger-bg rounded-xl p-4 border border-destructive/20">
- <p className="text-xs text-danger">Total Due</p>
- <p className="text-xl font-bold text-danger">{formatCurrency(totalDue)}</p>
- </div>
- <div className="bg-info-bg rounded-xl p-4 border border-info/20">
- <p className="text-xs text-info">Transactions</p>
- <p className="text-xl font-bold text-info">{payments.length}</p>
- </div>
- </div>
- <div className="space-y-3">
- {payments.length === 0 && (
- <p className="text-center text-secondary text-sm py-4">No payment records found.</p>
- )}
- {payments.map(p => (
- <div key={p.id} className="flex items-center justify-between p-3 border border-border rounded-lg bg-card">
- <div>
- <p className="text-sm font-medium text-foreground">{p.invoiceNo}</p>
- <p className="text-xs text-secondary">{p.method} · {new Date(p.paidAt).toLocaleDateString('en-IN')}</p>
+  // Sort payments chronologically (newest first)
+  const sortedPayments = [...payments].sort((a, b) => new Date(b.paidAt).getTime() - new Date(a.paidAt).getTime());
+
+  return (
+  <div>
+  <div className="grid grid-cols-3 gap-4 mb-5">
+  <div className="bg-success-bg rounded-xl p-4 border border-success/20">
+  <p className="text-xs text-success">Total Paid</p>
+  <p className="text-xl font-bold text-success">{formatCurrency(totalPaid)}</p>
+  </div>
+  <div className="bg-danger-bg rounded-xl p-4 border border-destructive/20">
+  <p className="text-xs text-danger">Total Due</p>
+  <p className="text-xl font-bold text-danger">{formatCurrency(totalDue)}</p>
+  </div>
+  <div className="bg-info-bg rounded-xl p-4 border border-info/20">
+  <p className="text-xs text-info">Transactions</p>
+  <p className="text-xl font-bold text-info">{payments.length}</p>
+  </div>
+  </div>
+  <div className="flex justify-end mb-4 gap-3">
+    <button onClick={() => setShowPaymentModal(true)} className="px-4 py-2 border border-primary text-primary rounded-lg text-sm font-semibold hover:bg-primary/5 transition-colors shadow-sm">
+      Record Payment
+    </button>
+    <button onClick={() => setShowRenewModal(true)} className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors shadow-sm">
+      Renew Membership
+    </button>
+  </div>
+  <div className="space-y-3">
+  {sortedPayments.length === 0 && (
+  <p className="text-center text-secondary text-sm py-4">No payment records found.</p>
+  )}
+  {sortedPayments.map(p => (
+  <div key={p.id} className="flex items-center justify-between p-3 border border-border rounded-lg bg-card">
+  <div>
+  <p className="text-sm font-medium text-foreground">{p.invoiceNo}</p>
+  <p className="text-xs text-secondary">{p.method} · {new Date(p.paidAt).toLocaleDateString('en-IN')}</p>
  </div>
  <div className="flex items-center gap-3">
  <div className="text-right">

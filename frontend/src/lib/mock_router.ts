@@ -356,7 +356,30 @@ export async function routeMockRequest<T>(
     tags: ['Muscle', 'Strength']
   })), 'workouts') as unknown as ApiResponse<T>;
   if (path.includes('/admin/finance/summary')) return { success: true, message: 'Summary', data: { totalRevenue: 1500000, monthlyRevenue: 250000, pendingAmount: 45000, totalPayments: 345, revenueByMethod: { UPI: 120000, Cash: 50000, Card: 80000, NetBanking: 0 }, monthlyData: generate(6, i => ({ month: `M${i+1}`, revenue: 200000 + (i * 10000) })) } } as unknown as ApiResponse<T>;
-  if (path.includes('/finance/payments')) return MockDB.handleCrud('mock_admin_payments', method, path, parsedBody, generate(10, i => ({ id: `pay-${i}`, memberId: `mem-${i}`, member: { name: `Payer ${i}`, email: `payer${i}@example.com`, phone: '9988776655', plan: { name: 'Pro Plan' } }, amount: 5000 + (i * 500), status: 'success', paidAt: new Date().toISOString(), method: 'UPI', invoiceNo: `INV-${1000 + i}` })), 'payments') as unknown as ApiResponse<T>;
+  if (method === 'GET' && path.includes('/finance/payments/member/')) {
+    const segments = path.split('?')[0].split('/');
+    const memberId = segments[segments.length - 1];
+    let allPayments = MockDB.getCollection('mock_admin_payments', []);
+    let memberPayments = allPayments.filter((p: any) => String(p.memberId) === String(memberId));
+    
+    if (memberPayments.length === 0) {
+       const newPayment = {
+         id: `pay-mock-${Date.now()}`,
+         memberId: memberId,
+         amount: 3000,
+         method: 'UPI',
+         status: 'PAID',
+         paidAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+         invoiceNo: `INV-MOCK-${Date.now().toString().slice(-6)}`
+       };
+       allPayments.push(newPayment);
+       MockDB.setCollection('mock_admin_payments', allPayments);
+       memberPayments = [newPayment];
+    }
+
+    return { success: true, message: 'Fetched member payments', data: memberPayments } as unknown as ApiResponse<T>;
+  }
+  if (path.includes('/finance/payments')) return MockDB.handleCrud('mock_admin_payments', method, path, parsedBody, generate(10, i => ({ id: `pay-${i}`, memberId: `mem-${i}`, member: { name: `Payer ${i}`, email: `payer${i}@example.com`, phone: '9988776655', plan: { name: 'Pro Plan' } }, amount: 5000 + (i * 500), status: 'PAID', paidAt: new Date().toISOString(), method: 'UPI', invoiceNo: `INV-${1000 + i}` })), 'payments') as unknown as ApiResponse<T>;
   if (path.includes('/admin/settings')) {
     if (method === 'GET') {
       const settings = MockDB.getCollection('mock_admin_settings', [{ gymName: 'Demo Gym Base', ownerName: 'Admin Owner', phone: '9988776655', email: 'admin@gym.com', city: 'Mumbai', gstNumber: '27AAAAA1234A1Z5' }]);
@@ -499,36 +522,110 @@ export async function routeMockRequest<T>(
     }
 
     if (path.includes('/admin/dashboard') || path.includes('/manager/dashboard') || path.includes('/trainer/dashboard') || path.includes('/dashboard')) {
+      let rawMembers = MockDB.getCollection('mock_members', []);
+      let payments = MockDB.getCollection('mock_admin_payments', []);
+      let staff = MockDB.getCollection('mock_admin_staff', []);
+      let plans = MockDB.getCollection('mock_admin_plans', []);
+      
+      if (rawMembers.length === 0) {
+        rawMembers = generate(15, (i: number) => ({ id: `GS-${15102023000 + i}`, name: `Member ${i + 1}`, email: `member${i + 1}@example.com`, phone: `987654321${i}`, status: i % 4 === 0 ? 'PENDING' : i % 5 === 0 ? 'EXPIRED' : 'ACTIVE', planId: i % 3 === 0 ? 'p1' : i % 2 === 0 ? 'p2' : 'p3', plan: { id: i % 3 === 0 ? 'p1' : i % 2 === 0 ? 'p2' : 'p3', name: i % 3 === 0 ? 'Pro Plan' : i % 2 === 0 ? 'Basic Plan' : 'Elite Plan' }, joinDate: '2023-10-01', expiryDate: '2024-10-01', paidAmount: 5000, pendingAmount: i % 4 === 0 ? 1500 : 0 }));
+        MockDB.setCollection('mock_members', rawMembers);
+      }
+      
+      if (payments.length === 0) {
+        payments = generate(10, (i: number) => ({ id: `pay-${i}`, memberId: `GS-${15102023000 + i}`, member: { name: `Member ${i + 1}` }, amount: 5000, status: 'PAID', paidAt: new Date().toISOString(), method: 'UPI', invoiceNo: `INV-${1000 + i}` }));
+        MockDB.setCollection('mock_admin_payments', payments);
+      }
+      
+      if (staff.length === 0) {
+        staff = generate(8, (i: number) => ({ id: `staff-${i}`, name: `Staff ${i + 1}`, role: 'Trainer', status: 'ACTIVE', isActive: true, salary: 25000 }));
+        MockDB.setCollection('mock_admin_staff', staff);
+      }
+      
+      // Apply fallbacks because form submission might miss 'status' or 'plan' object
+      const members = rawMembers.map((m: any) => {
+        const p = m.plan || plans.find((x: any) => String(x.id) === String(m.planId)) || { name: 'Unknown Plan' };
+        return {
+          ...m,
+          status: m.status ? m.status.toUpperCase() : 'ACTIVE',
+          plan: p
+        };
+      });
+
+      const now = new Date();
+      const currentMonth = now.getMonth();
+      const currentYear = now.getFullYear();
+
+      // Members stats
+      const totalMembers = members.length;
+      const activeMembers = members.filter((m: any) => m.status === 'ACTIVE').length;
+      const pendingMembers = members.filter((m: any) => m.status === 'PENDING').length;
+      const expiredMembers = members.filter((m: any) => m.status === 'EXPIRED').length;
+      const newMembersThisMonth = members.filter((m: any) => {
+        const d = new Date(m.joinDate || m.createdAt || now);
+        return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+      }).length;
+
+      // Revenue stats
+      const validPayments = payments.filter((p: any) => p.status === 'PAID');
+      const totalRevenue = validPayments.reduce((sum: number, p: any) => sum + (Number(p.amount) || 0), 0);
+      const monthlyRevenue = validPayments.filter((p: any) => {
+        const d = new Date(p.paidAt || p.createdAt || now);
+        return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+      }).reduce((sum: number, p: any) => sum + (Number(p.amount) || 0), 0);
+
+      // Pending payments (sum of all pendingAmount across members)
+      const pendingPayments = members.reduce((sum: number, m: any) => sum + (Number(m.pendingAmount) || 0), 0);
+
+      // Staff stats
+      const totalStaff = staff.length;
+      const activeStaff = staff.filter((s: any) => s.status === 'ACTIVE').length;
+
+      // Plan groupings
+      const membersByPlanMap: Record<string, number> = {};
+      members.forEach((m: any) => {
+        const planName = m.plan?.name || 'Unknown';
+        membersByPlanMap[planName] = (membersByPlanMap[planName] || 0) + 1;
+      });
+      const membersByPlan = Object.entries(membersByPlanMap).map(([plan, count]) => ({ plan, count }));
+
+      // Recent items
+      const recentMembers = [...members].sort((a: any, b: any) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()).slice(0, 5);
+      const recentPayments = [...validPayments].sort((a: any, b: any) => new Date(b.paidAt || 0).getTime() - new Date(a.paidAt || 0).getTime()).slice(0, 5);
+      const pendingPaymentsList = members.filter((m: any) => m.pendingAmount > 0).sort((a: any, b: any) => b.pendingAmount - a.pendingAmount).slice(0, 5);
+
       return {
-        success: true, message: 'Demo Dashboard',
+        success: true, message: 'Demo Dashboard (Live Mock)',
         data: {
-          totalMembers: 1240, 
-          activeMembers: 890, 
-          newMembersThisMonth: 124,
-          totalRevenue: 5400000,
-          monthlyRevenue: 450000, 
-          pendingPayments: 24500,
-          totalStaff: 15,
-          activeStaff: 12,
-          totalProducts: 450,
-          lowStockCount: 3,
-          totalInquiries: 320,
-          newInquiries: 45,
-          membersByStatus: { active: 890, pending: 45, expired: 305 },
+          totalMembers, 
+          activeMembers, 
+          newMembersThisMonth,
+          totalRevenue,
+          monthlyRevenue, 
+          pendingPayments,
+          totalStaff,
+          activeStaff,
+          totalProducts: 120, // Mocked for now
+          lowStockCount: 5,   // Mocked for now
+          totalInquiries: 45, // Mocked for now
+          newInquiries: 12,   // Mocked for now
+          membersByStatus: { active: activeMembers, pending: pendingMembers, expired: expiredMembers },
           memberGrowth: [
-            { month: 'Jan', count: 800 }, { month: 'Feb', count: 850 },
-            { month: 'Mar', count: 950 }, { month: 'Apr', count: 1100 }
+            { month: 'Jan', count: Math.max(0, totalMembers - 30) },
+            { month: 'Feb', count: Math.max(0, totalMembers - 20) },
+            { month: 'Mar', count: Math.max(0, totalMembers - 10) },
+            { month: 'Apr', count: totalMembers }
           ],
           revenueChart: [
-            { month: 'Jan', revenue: 300000 }, { month: 'Feb', revenue: 350000 },
-            { month: 'Mar', revenue: 320000 }, { month: 'Apr', revenue: 450000 }
+            { month: 'Jan', revenue: Math.max(0, monthlyRevenue - 50000) },
+            { month: 'Feb', revenue: Math.max(0, monthlyRevenue - 30000) },
+            { month: 'Mar', revenue: Math.max(0, monthlyRevenue - 10000) },
+            { month: 'Apr', revenue: monthlyRevenue }
           ],
-          membersByPlan: [
-            { plan: 'Basic', count: 400 }, { plan: 'Pro', count: 600 }, { plan: 'Elite', count: 240 }
-          ],
-          recentMembers: generate(5, (i: number) => ({ id: `mem-${i}`, name: `New Member ${i}`, plan: 'Pro', status: 'ACTIVE', joinDate: '2023-10-01', paidAmount: 5000 })),
-          recentPayments: generate(5, (i: number) => ({ id: `pay-${i}`, invoiceNo: `INV-00${i}`, amount: 3000, method: 'CARD', paidAt: '2023-10-01', member: { name: `Member ${i}` } })),
-          pendingPaymentsList: generate(3, (i: number) => ({ id: `pend-${i}`, name: `Pending ${i}`, pendingAmount: 1500, expiryDate: '2023-09-25' }))
+          membersByPlan: membersByPlan.length > 0 ? membersByPlan : [{ plan: 'Basic', count: 0 }],
+          recentMembers,
+          recentPayments,
+          pendingPaymentsList
         }
       } as unknown as ApiResponse<T>;
     }

@@ -27,6 +27,8 @@ export function useMembersLogic(initialData?: MembersInitialData | null): Member
   const storeDeleteMember = useMembersStore((s) => s.deleteMember);
   const storeAssignDiet = useMembersStore((s) => s.assignDiet);
   const storeAssignWorkout = useMembersStore((s) => s.assignWorkout);
+  const storeRenewMember = useMembersStore((s) => s.renewMember);
+  const storeRecordPayment = useMembersStore((s) => s.recordPayment);
 
   const isFirstRender = React.useRef(true);
 
@@ -58,6 +60,8 @@ export function useMembersLogic(initialData?: MembersInitialData | null): Member
 
   // UI State
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showRenewModal, setShowRenewModal] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [editData, setEditData] = useState<MemberFormValues | null>(null);
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
@@ -171,6 +175,28 @@ export function useMembersLogic(initialData?: MembersInitialData | null): Member
     }
   }, [storeAssignWorkout, showToast, selectedMember]);
 
+  const renewMember = useCallback(async (data: { planId: string; newExpiryDate: string; amountPaid: number; paymentMethod: string; billingCycle: string; customDays?: number }) => {
+    if (!selectedMember) return;
+    try {
+      const res = await storeRenewMember(selectedMember.id, data);
+      showToast(res.message, 'success');
+      setShowRenewModal(false);
+    } catch (err: unknown) {
+      showToast(err instanceof Error ? err.message : 'Renewal failed', 'error');
+    }
+  }, [selectedMember, showToast, storeRenewMember]);
+
+  const recordPayment = useCallback(async (data: { amount: number; method: string }) => {
+    if (!selectedMember) return;
+    try {
+      const res = await storeRecordPayment(selectedMember.id, data);
+      showToast(res.message, 'success');
+      setShowPaymentModal(false);
+    } catch (err: unknown) {
+      showToast(err instanceof Error ? err.message : 'Payment recording failed', 'error');
+    }
+  }, [selectedMember, showToast, storeRecordPayment]);
+
   const openMsg = useCallback((m: Member, type: MessageType) => {
     const tpl = m.status === 'EXPIRED'
       ? MSG_TEMPLATES.EXPIRED(m.name)
@@ -232,7 +258,9 @@ export function useMembersLogic(initialData?: MembersInitialData | null): Member
     toast, showToast, hideToast,
     selectedMember, setSelectedMember, profileTab, setProfileTab,
     showAddModal, setShowAddModal, editId, editData,
-    openAdd, openEdit, saveMember, deleteMember, assignDiet, assignWorkout,
+    showRenewModal, setShowRenewModal,
+    showPaymentModal, setShowPaymentModal,
+    openAdd, openEdit, saveMember, deleteMember, assignDiet, assignWorkout, renewMember, recordPayment,
     msgModal, openMsg, closeMsg,
     printData, handlePrint, handleSharePaymentWhatsApp, setPrintData
   };
