@@ -6,6 +6,7 @@ import BroadcastsHeader from '@/app/superadmin/broadcasts/broadcasts_components/
 import BroadcastsTable from '@/app/superadmin/broadcasts/broadcasts_components/BroadcastsTable/BroadcastsTable';
 import BroadcastsEmptyState from '@/app/superadmin/broadcasts/broadcasts_components/BroadcastsEmptyState/BroadcastsEmptyState';
 import { SuperadminBroadcastModal } from '@/app/superadmin/broadcasts/broadcasts_components/SuperadminBroadcastModal';
+import SuperadminBroadcastQueueModal from '@/app/superadmin/broadcasts/broadcasts_components/SuperadminBroadcastQueueModal';
 
 export default function BroadcastsClient() {
   const {
@@ -23,6 +24,10 @@ export default function BroadcastsClient() {
     editingId,
     fetchState,
     error,
+    queueModalOpen,
+    queueRecipients,
+    queueTitle,
+    onQueueComplete
   } = useBroadcastsPage();
 
   if (fetchState === 'loading') return (
@@ -59,6 +64,14 @@ export default function BroadcastsClient() {
         form={form}
         onSubmit={handleCreateBroadcast}
         isEditMode={!!editingId}
+      />
+
+      <SuperadminBroadcastQueueModal 
+        isOpen={queueModalOpen}
+        onClose={() => {}}
+        recipients={queueRecipients}
+        broadcastTitle={queueTitle}
+        onComplete={onQueueComplete}
       />
     </div>
   );

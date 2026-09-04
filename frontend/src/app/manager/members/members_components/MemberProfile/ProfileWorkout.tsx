@@ -123,11 +123,21 @@ export default function ProfileWorkout() {
           </button>
         </div>
       ) : workout ? (
-        <div className="space-y-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-card border border-border rounded-xl p-4 text-center shadow-sm">
-              <p className="text-xs text-secondary font-semibold uppercase tracking-wider mb-1">Level</p>
-              <p className="text-lg font-bold text-primary">{workout.level || 'N/A'}</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {typeof workout.days === 'number' && workout.days > 0 ? Array.from({ length: workout.days }).map((_, idx) => (
+            <div key={idx} className="bg-card border border-border p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+              <h5 className="font-semibold text-primary mb-3 pb-2 border-b border-border text-sm">Day {idx + 1}: {workout.focus}</h5>
+              <ul className="space-y-2 text-sm text-secondary">
+                <li className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
+                  <span>Main Compound Movement</span> <span className="font-medium text-primary text-xs">3x10</span>
+                </li>
+                <li className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
+                  <span>Accessory Movement 1</span> <span className="font-medium text-primary text-xs">3x12</span>
+                </li>
+                <li className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
+                  <span>Accessory Movement 2</span> <span className="font-medium text-primary text-xs">4x8</span>
+                </li>
+              </ul>
             </div>
             <div className="bg-card border border-border rounded-xl p-4 text-center shadow-sm">
               <p className="text-xs text-secondary font-semibold uppercase tracking-wider mb-1">Days</p>

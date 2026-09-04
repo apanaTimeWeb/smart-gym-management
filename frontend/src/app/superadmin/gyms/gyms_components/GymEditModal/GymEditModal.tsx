@@ -71,6 +71,17 @@ export default function GymEditModal() {
           </div>
 
           <div>
+            <label className="block text-sm font-bold text-secondary mb-1">Phone Number <span className="text-danger">*</span></label>
+            <input
+              type="text"
+              {...register('phone')}
+              className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-border-focus focus:outline-none transition-colors"
+              placeholder="+1 555-0000"
+            />
+            {errors.phone && <p className="text-xs text-danger mt-1">{errors.phone.message}</p>}
+          </div>
+
+          <div>
             <label className="block text-sm font-bold text-secondary mb-1">Reset Password <span className="font-normal">(Optional)</span></label>
             <div className="relative">
               <input
