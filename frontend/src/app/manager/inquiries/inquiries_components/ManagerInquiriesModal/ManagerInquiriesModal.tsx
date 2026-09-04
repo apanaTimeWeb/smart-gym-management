@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Renders the modal form for creating or editing an inquiry lead. Uses React Hook Form + Zod validation.
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useInquiriesContext } from '@/app/manager/inquiries/inquiries_context/InquiriesContext';
 import { INQUIRY_MODAL_FIELDS, INQUIRIES_STATUS_LABELS, INQUIRY_SOURCES, InquirySchema, type InquiryFormValues } from '@/app/manager/inquiries/inquiries_utils/InquiriesSharedConstants';
 import { X, Save } from 'lucide-react';
@@ -17,11 +17,23 @@ export default function ManagerInquiriesModal() {
     defaultValues: editData || {},
   });
 
+  const [plans, setPlans] = useState<{ label: string, value: string }[]>([]);
+  useEffect(() => {
+    if (showModal) {
+      import('@/app/manager/plans/plans_api/plans_api').then(m => {
+        m.plansApi.getAll().then(res => {
+          if (res.data) {
+            setPlans(res.data.map((p: any) => ({ label: p.name, value: p.name })));
+          }
+        });
+      });
+    }
+  }, [showModal]);
+
   // Sync form values when modal opens with new editData
   useEffect(() => {
     if (showModal && editData) reset(editData);
   }, [showModal, editData, reset]);
-
 
   const onSubmit = (data: InquiryFormValues) => {
     const payload = { ...data };
@@ -34,10 +46,11 @@ export default function ManagerInquiriesModal() {
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60">
-      <div className="bg-card rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-border max-h-full flex flex-col">
-        <div className="sticky top-0 bg-card px-6 py-4 border-b border-border flex items-center justify-between">
+      <div className="bg-card rounded-2xl shadow-xl w-full max-w-md overflow-visible border border-border max-h-full flex flex-col">
+        <div className="sticky top-0 bg-card px-6 py-4 border-b border-border flex items-center justify-between z-10 rounded-t-2xl">
           <h3 className="text-lg font-bold text-primary">{editId ? 'Edit Inquiry' : 'New Inquiry'}</h3>
           <button
+            type="button"
             onClick={() => setShowModal(false)}
             className="p-2 rounded-lg transition-colors hover:bg-primary-subtle text-secondary"
             aria-label="Close modal"
@@ -45,8 +58,9 @@ export default function ManagerInquiriesModal() {
             <X size={18} />
           </button>
         </div>
-        <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4">
-          {INQUIRY_MODAL_FIELDS.map(f => (
+        <div className="overflow-y-auto flex-1">
+          <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4 pb-32">
+            {INQUIRY_MODAL_FIELDS.map(f => (
             <div key={f.key}>
               <label className="block text-sm font-medium text-secondary mb-1">{f.label}</label>
               <input
@@ -64,6 +78,24 @@ export default function ManagerInquiriesModal() {
               )}
             </div>
           ))}
+          <div>
+            <label className="block text-sm font-medium text-secondary mb-1">Interest (Plan)</label>
+            <Controller
+              name="interest"
+              control={control}
+              render={({ field }) => (
+                <SearchableDropdown
+                  value={field.value || ''}
+                  onChange={field.onChange}
+                  options={[...plans, { label: 'Other', value: 'Other' }]}
+                  placeholder="Select Plan..."
+                />
+              )}
+            />
+            {errors.interest && (
+              <p className="text-danger text-xs mt-1">{errors.interest.message}</p>
+            )}
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-secondary mb-1">Status</label>
@@ -114,6 +146,7 @@ export default function ManagerInquiriesModal() {
             </button>
           </div>
         </form>
+        </div>
       </div>
     </div>
   );
