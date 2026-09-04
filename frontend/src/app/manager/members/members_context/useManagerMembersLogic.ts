@@ -3,19 +3,15 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import type { Member, MembersContextType, MembersInitialData } from '@/app/manager/members/members_types/ManagerMembersTypes';
-import type { Payment } from '@/app/manager/finance/finance_types/ManagerFinanceTypes';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import type { MessageType, ManagerMessageRecipient } from '@/app/manager/manager_components/ManagerFeedback/ManagerMessageModal';
-import type { ManagerReceiptData } from '@/app/manager/manager_components/ManagerShared/ManagerThermalReceipt';
-import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { EMPTY_MEMBER_FORM, formatCurrency, MSG_TEMPLATES, MemberFormValues } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
-import { GYM_DETAILS } from '@/app/manager/manager_utils/ManagerSharedConstants';
 import { useDebounce } from '@/app/manager/manager_utils/useDebounce';
 import { useManagerMembersStore } from '@/app/manager/members/members_store/useManagerMembersStore';
-import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
+import { useManagerMembersMutations } from './useManagerMembersMutations';
+import { useManagerMembersPrintLogic } from './useManagerMembersPrintLogic';
 
 export function useManagerMembersLogic(initialData?: MembersInitialData | null): MembersContextType {
-  const { confirm } = useConfirm();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -23,22 +19,14 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
   // Zustand Store
   const hydrate = useManagerMembersStore((s) => s.hydrate);
   const loadAll = useManagerMembersStore((s) => s.loadAll);
-  const storeSaveMember = useManagerMembersStore((s) => s.saveMember);
-  const storeDeleteMember = useManagerMembersStore((s) => s.deleteMember);
-  const storeAssignDiet = useManagerMembersStore((s) => s.assignDiet);
-  const storeAssignWorkout = useManagerMembersStore((s) => s.assignWorkout);
-  const storeRenewMember = useManagerMembersStore((s) => s.renewMember);
-  const storeRecordPayment = useManagerMembersStore((s) => s.recordPayment);
 
   const isFirstRender = React.useRef(true);
 
-  // Hydrate Zustand with SSR data exactly once on mount.
-  // useEffect: SSR hydration runs once on mount only.
   useEffect(() => {
     if (initialData) {
       hydrate(initialData);
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps -- intentionally empty: SSR hydration runs once on mount only
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // URL State
   const search = searchParams.get('search') || '';
@@ -68,13 +56,11 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
   const [profileTab, setProfileTab] = useState<'overview' | 'attendance' | 'payments' | 'workout' | 'diet'>('overview');
   const [msgModal, setMsgModal] = useState<{ open: boolean; recipient: ManagerMessageRecipient; type: MessageType; message: string; subject?: string } | null>(null);
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
-  const [printData, setPrintData] = useState<ManagerReceiptData | null>(null);
 
   const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
   const hideToast = useCallback(() => setToast(null), []);
   const closeMsg = useCallback(() => setMsgModal(null), []);
 
-  // Refetch when URL params change after initial SSR hydration.
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
@@ -85,14 +71,12 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
     });
   }, [loadAll, debouncedSearch, statusFilter, currentPage, showToast, initialData]);
 
-  // Handle auto-open add member modal (e.g. from Lead Conversion)
   useEffect(() => {
     if (searchParams.get('action') === 'add_member') {
       const name = searchParams.get('name') || '';
       const phone = searchParams.get('phone') || '';
       const email = searchParams.get('email') || '';
       
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setEditId(null);
       setEditData({
         ...EMPTY_MEMBER_FORM,
@@ -100,7 +84,6 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
       });
       setShowAddModal(true);
       
-      // Clean up URL so it doesn't reopen on refresh
       setUrlParam('action', null);
       setUrlParam('name', null);
       setUrlParam('phone', null);
@@ -129,73 +112,13 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
     setShowAddModal(true);
   }, []);
 
-  const saveMember = useCallback(async (data: MemberFormValues) => {
-    try {
-      const res = await storeSaveMember(data, editId);
-      showToast(res.message, 'success');
-      setShowAddModal(false);
-    } catch (err: unknown) { 
-      showToast(err instanceof Error ? err.message : 'Save failed', 'error'); 
-    }
-  }, [editId, showToast, storeSaveMember]);
+  const { saveMember, deleteMember, assignDiet, assignWorkout, renewMember, recordPayment } = useManagerMembersMutations(
+    showToast, selectedMember, setSelectedMember, editId, setShowAddModal, setShowRenewModal, setShowPaymentModal
+  );
 
-  const deleteMember = useCallback(async (id: string) => {
-    const isConfirmed = await confirm({ title: 'Delete Member', message: 'Are you sure you want to delete this member? This action cannot be undone.', confirmText: 'Delete', type: 'danger' });
-    if (!isConfirmed) return;
-    try {
-      const res = await storeDeleteMember(id);
-      showToast(res.message, 'success');
-      if (selectedMember?.id === id) setSelectedMember(null);
-    } catch (err: unknown) { 
-      showToast(err instanceof Error ? err.message : 'Delete failed', 'error'); 
-    }
-  }, [showToast, selectedMember, confirm, storeDeleteMember]);
-
-  const assignDiet = useCallback(async (memberId: string, diet: any) => {
-    try {
-      await storeAssignDiet(memberId, diet);
-      showToast('Diet plan assigned successfully', 'success');
-      if (selectedMember?.id === memberId) {
-        setSelectedMember(prev => prev ? { ...prev, assignedDietId: diet?.id || '', assignedDiet: diet || undefined } : null);
-      }
-    } catch (err: unknown) {
-      showToast(err instanceof Error ? err.message : 'Failed to assign diet', 'error');
-    }
-  }, [storeAssignDiet, showToast, selectedMember]);
-
-  const assignWorkout = useCallback(async (memberId: string, workout: any) => {
-    try {
-      await storeAssignWorkout(memberId, workout);
-      showToast('Workout plan assigned successfully', 'success');
-      if (selectedMember?.id === memberId) {
-        setSelectedMember(prev => prev ? { ...prev, assignedWorkoutId: workout?.id || '', assignedWorkout: workout || undefined } : null);
-      }
-    } catch (err: unknown) {
-      showToast(err instanceof Error ? err.message : 'Failed to assign workout', 'error');
-    }
-  }, [storeAssignWorkout, showToast, selectedMember]);
-
-  const renewMember = useCallback(async (data: { planId: string; newExpiryDate: string; amountPaid: number; paymentMethod: string; billingCycle: string; customDays?: number }) => {
-    if (!selectedMember) return;
-    try {
-      const res = await storeRenewMember(selectedMember.id, data);
-      showToast(res.message, 'success');
-      setShowRenewModal(false);
-    } catch (err: unknown) {
-      showToast(err instanceof Error ? err.message : 'Renewal failed', 'error');
-    }
-  }, [selectedMember, showToast, storeRenewMember]);
-
-  const recordPayment = useCallback(async (data: { amount: number; method: string }) => {
-    if (!selectedMember) return;
-    try {
-      const res = await storeRecordPayment(selectedMember.id, data);
-      showToast(res.message, 'success');
-      setShowPaymentModal(false);
-    } catch (err: unknown) {
-      showToast(err instanceof Error ? err.message : 'Payment recording failed', 'error');
-    }
-  }, [selectedMember, showToast, storeRecordPayment]);
+  const { printData, setPrintData, handlePrint, handleSharePaymentWhatsApp } = useManagerMembersPrintLogic(
+    selectedMember, showToast
+  );
 
   const openMsg = useCallback((m: Member, type: MessageType) => {
     const tpl = m.status === 'EXPIRED'
@@ -205,53 +128,6 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
       : MSG_TEMPLATES.DEFAULT(m.name);
     setMsgModal({ open: true, type, recipient: { name: m.name, phone: m.phone, email: m.email }, message: tpl });
   }, []);
-
-  const handlePrint = useCallback((p: Payment) => {
-    if (!selectedMember) return;
-    const m = selectedMember;
-    setPrintData({
-      gymName: GYM_DETAILS.name, gymPhone: GYM_DETAILS.phone,
-      receiptNo: p.invoiceNo,
-      date: new Date(p.paidAt).toLocaleDateString('en-IN'),
-      customerName: m.name,
-      items: [{ name: `Membership - ${m.plan?.name || ''}`, price: p.amount, amount: p.amount }],
-      total: p.amount, paymentMethod: p.method,
-    });
-    if (typeof window !== 'undefined') setTimeout(() => window.print(), 100);
-  }, [selectedMember]);
-
-  const handleSharePaymentWhatsApp = useCallback((p: Payment) => {
-    if (!selectedMember) return;
-    const m = selectedMember;
-    
-    const waText = WhatsAppFormatter.formatReceipt({
-      title: GYM_DETAILS.name,
-      subtitle: 'Payment Receipt',
-      date: new Date(p.paidAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
-      customerInfo: {
-        'Member': m.name,
-        'Invoice': p.invoiceNo,
-      },
-      sections: [
-        {
-          items: {
-            'Membership': m.plan?.name || 'Standard',
-            'Amount': formatCurrency(p.amount),
-            'Method': p.method
-          }
-        },
-        {
-          items: {
-            'Status': p.status
-          }
-        }
-      ],
-      footer: 'Thank you for your payment!'
-    });
-
-    window.open(`https://wa.me/91${m.phone?.replace(/\D/g, '') || ''}?text=${encodeURIComponent(waText)}`, '_blank');
-    showToast('Receipt opened in WhatsApp', 'success');
-  }, [selectedMember, showToast]);
 
   return {
     search, debouncedSearch, setSearch, statusFilter, setStatusFilter, currentPage, setCurrentPage,

@@ -45,7 +45,7 @@ export default function ManagerProfileWorkout() {
           <div className="flex items-center gap-2">
             <button 
               onClick={() => {
-                const text = `*WORKOUT PLAN: ${workout?.name || 'Assigned'}*\nLevel: ${workout?.level || 'N/A'}\n\n*Routine:*\n${Array.isArray(workout?.days) ? workout.days.map((d: any) => `*Day ${d.day}: ${d.focus}*\n${d.isRest ? 'Rest Day' : d.exercises?.map((e: any) => `- ${e.name} (${e.sets}x${e.reps})`).join('\n')}`).join('\n\n') : `Number of days: ${workout?.days}`}`;
+                const text = `*WORKOUT PLAN: ${workout?.name || 'Assigned'}*\nLevel: ${workout?.level || 'N/A'}\n\n*Routine:*\n${Array.isArray(workout?.days) ? workout.days.map((d: import("@/app/manager/workout/workout_types/ManagerWorkoutTypes").WorkoutDay | number) => `*Day ${typeof d === 'number' ? d : d.day}: ${typeof d === 'number' ? '' : d.focus}*\n${typeof d === 'number' ? false : d.isRest ? 'Rest Day' : (typeof d === 'number' ? [] : d.exercises || []).map((e: import("@/app/manager/workout/workout_types/ManagerWorkoutTypes").WorkoutExercise) => `- ${e.name} (${e.sets}x${e.reps})`).join('\n')}`).join('\n\n') : `Number of days: ${workout?.days}`}`;
                 window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
               }}
               className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-green-500/30 transition-all active:scale-95"
@@ -156,14 +156,14 @@ export default function ManagerProfileWorkout() {
                 </ul>
               </div>
             )) : Array.isArray(workout.days) && workout.days.length > 0 ? (
-              workout.days.map((day: any, idx: number) => (
+              workout.days.map((day: import("@/app/manager/workout/workout_types/ManagerWorkoutTypes").WorkoutDay | number, idx: number) => (
                 <div key={idx} className="bg-card border border-border p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-                  <h5 className="font-semibold text-primary mb-3 pb-2 border-b border-border text-sm">Day {day.day || idx + 1}: {day.focus}</h5>
-                  {day.isRest ? (
+                  <h5 className="font-semibold text-primary mb-3 pb-2 border-b border-border text-sm">Day {typeof day === 'number' ? day : day.day || idx + 1}: {typeof day === 'number' ? '' : day.focus}</h5>
+                  {typeof day === 'number' ? false : day.isRest ? (
                     <p className="text-sm text-secondary italic">Rest Day - No workout assigned.</p>
                   ) : (
                     <ul className="space-y-2 text-sm text-secondary">
-                      {day.exercises?.map((ex: any, i: number) => (
+                      {(typeof day === 'number' ? [] : day.exercises || []).map((ex: import("@/app/manager/workout/workout_types/ManagerWorkoutTypes").WorkoutExercise, i: number) => (
                         <li key={i} className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
                           <span>{ex.name}</span> <span className="font-medium text-primary text-xs">{ex.sets}x{ex.reps}</span>
                         </li>
@@ -177,7 +177,7 @@ export default function ManagerProfileWorkout() {
                 <Dumbbell className="mx-auto text-primary/40 mb-3" size={32} />
                 <p className="text-lg text-primary font-bold">{workout.name}</p>
                 <p className="text-secondary text-sm mt-2 max-w-md mx-auto">
-                  This plan is a {workout.level} level routine focused on {workout.focus}, spanning {workout.days} days per cycle.
+                  This plan is a {workout.level} level routine focused on {workout.focus}, spanning {Array.isArray(workout.days) ? workout.days.length : workout.days} days per cycle.
                 </p>
               </div>
             )}

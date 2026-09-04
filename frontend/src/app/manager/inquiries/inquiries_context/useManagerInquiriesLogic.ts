@@ -147,63 +147,10 @@ export function useManagerInquiriesLogic(): InquiriesContextType {
     setShowModal(true);
   }, []);
 
-  const saveInquiry = useCallback(async (data: Partial<InquiryFormValues>) => {
-    setSaving(true);
-    try {
-      if (editId) {
-        const res = await inquiriesApi.update(editId, data);
-        const updatedInq = res.data || data;
-        setInquiries(prev => prev.map(i => String(i.id) === String(editId) ? { ...i, ...updatedInq } as unknown as Inquiry : i));
-        showToast(res.message || 'Inquiry updated successfully', 'success');
-      } else {
-        const res = await inquiriesApi.create(data);
-        const newInq = res.data ? res.data : { ...data, id: `inq-${Date.now()}`, createdAt: new Date().toISOString() } as unknown as Inquiry;
-        setInquiries(prev => [newInq, ...prev]);
-        setStats(prev => prev ? { ...prev, total: prev.total + 1, new: prev.new + 1 } : null);
-        showToast(res.message || 'Inquiry added successfully', 'success');
-      }
-      setShowModal(false);
-    } catch (err) {
-      showToast((err as Error).message, 'error');
-    } finally {
-      setSaving(false);
-    }
-  }, [editId, showToast]);
 
-  const deleteInquiry = useCallback(async (id: string) => {
-    const isConfirmed = await confirm({ title: 'Delete Inquiry', message: 'Delete this inquiry?', confirmText: 'Delete', type: 'danger' });
-    if (!isConfirmed) return;
-    try {
-      const res = await inquiriesApi.remove(id);
-      setInquiries(prev => prev.filter(i => String(i.id) !== String(id)));
-      setStats(prev => prev ? { ...prev, total: Math.max(0, prev.total - 1) } : null);
-      showToast(res.message || 'Inquiry deleted', 'success');
-    } catch (err) {
-      showToast((err as Error).message, 'error');
-    }
-  }, [showToast, confirm]);
-
-  const updateStatus = useCallback(async (id: string, status: string) => {
-    if (status === 'CONVERTED' && !convertLead) {
-      const inq = inquiries.find(i => String(i.id) === String(id));
-      if (inq) {
-        setConvertLead(inq);
-        return; // Wait for member creation to actually update status
-      }
-    }
-
-    try {
-      if (status === 'CONVERTED' && statusFilter === 'All') {
-        // If status becomes CONVERTED, remove it from the 'All' list immediately
-        setInquiries(prev => prev.filter(i => String(i.id) !== String(id)));
-      } else {
-        setInquiries(prev => prev.map(i => String(i.id) === String(id) ? { ...i, status } as unknown as Inquiry : i));
-      }
-      showToast('Status updated', 'success');
-    } catch (err) {
-      showToast((err as Error).message, 'error');
-    }
-  }, [showToast, inquiries, statusFilter, convertLead]);
+  const { saveInquiry, deleteInquiry, updateStatus } = useManagerInquiriesMutations(
+    inquiries, setInquiries, setStats, editId, setShowModal, setSaving, showToast, statusFilter, convertLead, setConvertLead
+  );
 
   const openMsg = useCallback((inq: Inquiry, type: MessageType) => {
     const msg = generateDefaultMessage(inq.name, inq.interest);

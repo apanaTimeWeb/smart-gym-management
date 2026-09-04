@@ -3,12 +3,12 @@
 
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
 import ManagerToast from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import { LibraryProvider, useLibraryContext } from '@/app/manager/library/library_context/LibraryContext';
+import { LibraryProvider, useLibraryContext } from '@/app/manager/library/library_context/ManagerLibraryContext';
 import ManagerLibraryTabs from '@/app/manager/library/library_components/ManagerLibraryTabs/ManagerLibraryTabs';
 
 import ManagerLibraryDietGrid from '@/app/manager/library/library_components/ManagerLibraryDietGrid/ManagerLibraryDietGrid';
 import ManagerLibraryDietModal from '@/app/manager/library/library_components/ManagerLibraryDietModal/ManagerLibraryDietModal';
-import type { LibraryInitialData } from '@/app/manager/library/library_types/library_types';
+import type { LibraryInitialData } from '@/app/manager/library/library_types/ManagerLibraryTypes';
 
 function LibraryContent() {
  const { toast, hideToast } = useLibraryContext();

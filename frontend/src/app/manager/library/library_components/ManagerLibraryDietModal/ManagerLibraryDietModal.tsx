@@ -3,8 +3,8 @@
 
 import { useEffect } from 'react';
 import { X, Save, Loader2 } from 'lucide-react';
-import { useLibraryContext } from '@/app/manager/library/library_context/LibraryContext';
-import { GOALS, DietSchema, type DietFormValues, EMPTY_DIET_FORM } from '@/app/manager/library/library_utils/LibrarySharedConstants';
+import { useLibraryContext } from '@/app/manager/library/library_context/ManagerLibraryContext';
+import { GOALS, DietSchema, type DietFormValues, EMPTY_DIET_FORM } from '@/app/manager/library/library_utils/ManagerLibrarySharedConstants';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
@@ -24,18 +24,20 @@ export default function ManagerLibraryDietModal() {
    formState: { errors } 
  } = useForm({
    resolver: zodResolver(DietSchema),
-   defaultValues: (editDietData as DietFormValues) || (EMPTY_DIET_FORM as unknown as DietFormValues)
+    defaultValues: (editDietData as unknown as DietFormValues) || (EMPTY_DIET_FORM as unknown as DietFormValues)
  });
 
- const onSubmit = async (data: any) => {
+ const onSubmit = async (data: Record<string, unknown>) => {
    await saveDietPlan(data);
  };
 
  useEffect(() => {
-   if (showDietModal && editDietData) {
-     reset(editDietData);
+   if (editDietId && editDietData) {
+     reset(editDietData as unknown as Partial<DietFormValues>);
+   } else {
+     reset(EMPTY_DIET_FORM as unknown as DietFormValues);
    }
- }, [showDietModal, editDietData, reset]);
+ }, [showDietModal, editDietId, editDietData, reset]);
 
  if (!showDietModal) return null;
 
@@ -76,7 +78,7 @@ export default function ManagerLibraryDietModal() {
  <div key={f.key}>
  <label className="block text-sm font-medium text-secondary mb-1">{f.label}</label>
  <input type="number" placeholder={f.placeholder} min="0" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }} {...register(f.key as "calories" | "protein" | "carbs" | "fats")} className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 ${errors[f.key as keyof DietFormValues] ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-warning'} bg-input text-foreground`} />
- {errors[f.key as keyof DietFormValues] && <p className="text-danger text-xs mt-1">{(errors[f.key as keyof DietFormValues] as any)?.message}</p>}
+ {errors[f.key as keyof DietFormValues] && <p className="text-danger text-xs mt-1">{(errors[f.key as keyof DietFormValues] as {message?: string})?.message}</p>}
  </div>
  ))}
  </div>

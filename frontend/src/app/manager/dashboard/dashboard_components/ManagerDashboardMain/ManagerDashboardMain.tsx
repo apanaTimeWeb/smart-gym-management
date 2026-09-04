@@ -74,7 +74,7 @@ function DashboardContent() {
           <select 
             value={timeRange} 
             onChange={(e) => {
-              setTimeRange(e.target.value as any);
+              setTimeRange(e.target.value as "weekly" | "monthly" | "yearly");
               if (e.target.value !== 'custom') {
                 setCustomDateRange('', '');
               }

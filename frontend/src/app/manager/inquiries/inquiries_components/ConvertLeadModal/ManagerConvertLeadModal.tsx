@@ -10,6 +10,8 @@ import { useInquiriesContext } from '@/app/manager/inquiries/inquiries_context/M
 import { useManagerMembersStore } from '@/app/manager/members/members_store/useManagerMembersStore';
 import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency, MemberSchema, type MemberFormValues, EMPTY_MEMBER_FORM, GENDER_OPTIONS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import type { PlanWithCustom } from '@/app/manager/members/members_types/ManagerMembersTypes';
+import ManagerConvertLeadSuccess from './ManagerConvertLeadSuccess';
+
 
 export default function ManagerConvertLeadModal() {
   const { convertLead, closeConvert, updateStatus } = useInquiriesContext();

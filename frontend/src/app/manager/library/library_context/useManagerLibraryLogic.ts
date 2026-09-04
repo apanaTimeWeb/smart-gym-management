@@ -1,15 +1,15 @@
 // RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the Diet Library module.
 import { useState, useCallback, useEffect } from 'react';
 import { useDebounce } from '@/app/manager/manager_utils/useDebounce';
-import { libraryApi } from '@/app/manager/library/library_api/library_api';
-import type { DietPlan } from '@/app/manager/library/library_types/library_types';
+import { libraryApi } from '@/app/manager/library/library_api/ManagerLibraryApi';
+import type { DietPlan } from '@/app/manager/library/library_types/ManagerLibraryTypes';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import { EMPTY_DIET_FORM, type DietFormValues } from '@/app/manager/library/library_utils/LibrarySharedConstants';
-import type { LibraryContextType, LibraryInitialData } from '@/app/manager/library/library_types/library_types';
+import { EMPTY_DIET_FORM, type DietFormValues } from '@/app/manager/library/library_utils/ManagerLibrarySharedConstants';
+import type { LibraryContextType, LibraryInitialData } from '@/app/manager/library/library_types/ManagerLibraryTypes';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export function useLibraryLogic(initialData?: LibraryInitialData | null): LibraryContextType {
+export function useManagerLibraryLogic(initialData?: LibraryInitialData | null): LibraryContextType {
   const { confirm } = useConfirm();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -47,7 +47,7 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
 
  const [showDietModal, setShowDietModal] = useState(false);
  const [editDietId, setEditDietId] = useState<string | null>(null);
- const [editDietData, setEditDietData] = useState<any>(null);
+ const [editDietData, setEditDietData] = useState<import("@/app/manager/library/library_types/ManagerLibraryTypes").DietPlan | null>(null);
 
  const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
  const hideToast = useCallback(() => setToast(null), []);
@@ -74,33 +74,24 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
  useEffect(() => { loadAll(); }, [loadAll]);
 
  // Diet CRUD
- const openAddDiet = useCallback(() => { 
- setEditDietId(null); 
- setEditDietData(EMPTY_DIET_FORM); 
- setShowDietModal(true); 
- }, []);
+  const openAddDiet = useCallback(() => {
+    setEditDietId(null);
+    setEditDietData(null);
+    setShowDietModal(true);
+  }, []);
  
  const openEditDiet = useCallback((d: DietPlan) => {
  setEditDietId(d.id);
- setEditDietData({ 
- name: d.name, 
- goal: d.goal, 
- calories: d.calories ? String(d.calories) : '', 
- protein: d.protein ? String(d.protein) : '', 
- carbs: d.carbs ? String(d.carbs) : '', 
- fats: d.fats ? String(d.fats) : '', 
- description: d.description || '', 
- meals: d.meals?.map((m: any) => typeof m === 'string' ? m : `${m.time || ''} - ${m.name || 'Meal'}: ${m.foods?.join(', ') || ''}`).join('\n') 
- });
+    setEditDietData(d);
  setShowDietModal(true);
  }, []);
  
-  const saveDietPlan = useCallback(async (data: Partial<DietFormValues>) => {
+  const saveDietPlan = useCallback(async (data: Partial<DietPlan>) => {
     setSaving(true);
     try {
       const formattedData = {
         ...data,
-        meals: typeof data.meals === 'string' ? data.meals.split('\n').map(s => s.trim()).filter(Boolean) : data.meals
+        meals: typeof (data.meals as unknown) === 'string' ? (data.meals as unknown as string).split('\n').map(s => s.trim()).filter(Boolean) : data.meals
       };
       if (editDietId) {
         const res = await libraryApi.updateDietPlan(editDietId, formattedData);

@@ -7,8 +7,8 @@ import type { WorkoutContextType, Workout } from '@/app/manager/workout/workout_
 import { useDebounce } from '@/app/manager/manager_utils/useDebounce';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { workoutApi } from '@/app/manager/workout/workout_api/ManagerWorkoutApi';
-import { libraryApi } from '@/app/manager/library/library_api/library_api';
-import type { Exercise } from '@/app/manager/library/library_types/library_types';
+import { libraryApi } from '@/app/manager/library/library_api/ManagerLibraryApi';
+import type { Exercise } from '@/app/manager/library/library_types/ManagerLibraryTypes';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 
 export function useManagerWorkoutLogic(): WorkoutContextType {
@@ -79,7 +79,7 @@ export function useManagerWorkoutLogic(): WorkoutContextType {
     setWkForm({ 
       name: w.name, 
       level: w.level, 
-      days: w.days, 
+      days: Array.isArray(w.days) ? w.days.length : w.days, 
       exercises: w.exercises, 
       focus: w.focus, 
       duration: w.duration, 

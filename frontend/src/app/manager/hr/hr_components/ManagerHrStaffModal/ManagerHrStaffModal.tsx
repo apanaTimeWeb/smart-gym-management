@@ -22,7 +22,7 @@ export default function ManagerHrStaffModal() {
     control,
     formState: { errors }
   } = useForm<StaffFormValues>({
-    resolver: zodResolver(StaffSchema) as any,
+    resolver: zodResolver(StaffSchema) as unknown as import("react-hook-form").Resolver<StaffFormValues>,
     defaultValues: (editData as StaffFormValues) || {}
   });
 

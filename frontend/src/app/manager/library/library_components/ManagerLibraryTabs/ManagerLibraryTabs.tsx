@@ -2,7 +2,7 @@
 'use client';
 
 import { RefreshCw, Plus, Search } from 'lucide-react';
-import { useLibraryContext } from '@/app/manager/library/library_context/LibraryContext';
+import { useLibraryContext } from '@/app/manager/library/library_context/ManagerLibraryContext';
 export default function ManagerLibraryTabs() {
   const { loadAll, openAddDiet, search, setSearch, setCurrentPage } = useLibraryContext();
 

@@ -12,10 +12,11 @@ import { Member, MembersInitialData, FetchState } from '@/app/manager/members/me
 import type { Plan } from '@/app/manager/plans/plans_types/ManagerPlansTypes';
 import type { Payment } from '@/app/manager/finance/finance_types/ManagerFinanceTypes';
 import { MemberFormValues, ATTENDANCE_CALENDAR_DAYS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
-import type { DietPlan } from '@/app/manager/library/library_types/library_types';
+import type { DietPlan } from '@/app/manager/library/library_types/ManagerLibraryTypes';
 import type { Workout } from '@/app/manager/workout/workout_types/ManagerWorkoutTypes';
+import { createMembersMutations } from './ManagerMembersStoreActions';
 
-interface MembersState {
+export interface MembersState {
   members: Member[];
   plans: Plan[];
   payments: Payment[];
@@ -37,7 +38,7 @@ interface MembersState {
   recordPayment: (memberId: string, data: { amount: number; method: string }) => Promise<{ success: boolean; message: string }>;
 }
 
-export const useManagerMembersStore = create<MembersState>((set) => ({
+export const useManagerMembersStore = create<MembersState>((set, get) => ({
   members: [],
   plans: [],
   payments: [],
@@ -120,184 +121,5 @@ export const useManagerMembersStore = create<MembersState>((set) => ({
     });
   },
 
-  saveMember: async (data, editId) => {
-    set({ saving: true });
-    try {
-      if (editId) {
-        const res = await membersApi.update(editId, { ...data, planId: data.planId });
-        set(state => {
-          const plan = state.plans.find(p => String(p.id) === String(data.planId));
-          const updatedMember = res.data ? { ...res.data, plan } : { ...state.members.find(m => m.id === editId), ...data, planId: data.planId, plan };
-          return {
-            members: state.members.map(m => m.id === editId ? updatedMember as Member : m)
-          };
-        });
-        return { success: true, message: res.message || 'Updated successfully', memberId: editId };
-      } else {
-        const newMember = { ...data, planId: data.planId, joinDate: new Date().toISOString() };
-        const res = await membersApi.create(newMember);
-        let newId = '';
-        set(state => {
-          const plan = state.plans.find(p => String(p.id) === String(data.planId));
-          // Use API response or fallback to mock
-          const fullNewMember = res.data ? { ...res.data, plan, pendingAmount: res.data.pendingAmount || 0, status: res.data.status || 'ACTIVE' } : { 
-            id: `m-${Date.now()}`, 
-            ...newMember, 
-            status: 'ACTIVE',
-            plan,
-            pendingAmount: 0 
-          };
-          newId = fullNewMember.id;
-          return {
-            members: [fullNewMember as unknown as Member, ...state.members],
-            totalMembers: state.totalMembers + 1
-          };
-        });
-
-        if (data.paidAmount && data.paidAmount > 0) {
-           try {
-             await financeApi.createPayment({
-               memberId: newId,
-               amount: data.paidAmount,
-               method: 'UPI',
-               status: 'PAID',
-               paidAt: new Date().toISOString(),
-               invoiceNo: `INV-${Date.now().toString().slice(-6)}`
-             });
-           } catch(e) { console.error('Failed to create payment record', e); }
-        }
-
-        return { success: true, message: res.message || 'Created successfully', memberId: newId };
-      }
-    } catch (err: unknown) {
-      throw err;
-    } finally {
-      set({ saving: false });
-    }
-  },
-
-  deleteMember: async (id: string) => {
-    try {
-      const res = await membersApi.remove(id);
-      set(state => ({
-        members: state.members.filter(m => m.id !== id),
-        totalMembers: state.totalMembers - 1
-      }));
-      return { success: true, message: res.message || 'Deleted successfully' };
-    } catch (err: unknown) {
-      throw err;
-    }
-  },
-
-  assignDiet: async (memberId: string, diet: DietPlan | null) => {
-    try {
-      const payload = { 
-        assignedDietId: diet?.id || '', 
-        assignedDiet: diet || undefined 
-      };
-      await membersApi.update(memberId, payload);
-      set(state => ({
-        members: state.members.map(m => m.id === memberId ? { ...m, ...payload } : m)
-      }));
-    } catch (err: unknown) {
-      throw err;
-    }
-  },
-
-  assignWorkout: async (memberId: string, workout: Workout | null) => {
-    try {
-      const payload = { 
-        assignedWorkoutId: workout?.id || '', 
-        assignedWorkout: workout || undefined 
-      };
-      await membersApi.update(memberId, payload);
-      set(state => ({
-        members: state.members.map(m => m.id === memberId ? { ...m, ...payload } : m)
-      }));
-    } catch (err: unknown) {
-      throw err;
-    }
-  },
-
-  renewMember: async (memberId: string, data: { planId: string; newExpiryDate: string; amountPaid: number; paymentMethod: string; billingCycle: string; customDays?: number }) => {
-    set({ saving: true });
-    try {
-      const state = useManagerMembersStore.getState();
-      const member = state.members.find(m => m.id === memberId);
-      const currentPaid = member?.paidAmount || 0;
-
-      const payload = {
-         planId: data.planId,
-         expiryDate: data.newExpiryDate,
-         billingCycle: data.billingCycle,
-         customDays: data.customDays,
-         status: 'ACTIVE',
-         paidAmount: currentPaid + data.amountPaid
-      };
-      await membersApi.update(memberId, payload);
-      
-      const pRes = await financeApi.createPayment({
-         memberId,
-         amount: data.amountPaid,
-         method: data.paymentMethod,
-         status: 'PAID',
-         paidAt: new Date().toISOString(),
-         invoiceNo: `INV-REN-${Date.now().toString().slice(-6)}`
-      });
-
-      set(state => {
-         const plan = state.plans.find(p => String(p.id) === String(data.planId));
-         const updatedMembers = state.members.map(m => m.id === memberId ? { ...m, ...payload, plan } as Member : m);
-         const newPayment = pRes.data;
-         const payments = state.payments ? [newPayment, ...state.payments] : [newPayment];
-         return {
-            members: updatedMembers,
-            payments
-         };
-      });
-      return { success: true, message: 'Membership renewed successfully' };
-    } catch (err: unknown) {
-      throw err;
-    } finally {
-      set({ saving: false });
-    }
-  },
-
-  recordPayment: async (memberId: string, data: { amount: number; method: string }) => {
-    set({ saving: true });
-    try {
-      const state = useManagerMembersStore.getState();
-      const member = state.members.find(m => m.id === memberId);
-      const currentPaid = member?.paidAmount || 0;
-
-      const payload = {
-         paidAmount: currentPaid + data.amount
-      };
-      await membersApi.update(memberId, payload);
-      
-      const pRes = await financeApi.createPayment({
-         memberId,
-         amount: data.amount,
-         method: data.method,
-         status: 'PAID',
-         paidAt: new Date().toISOString(),
-         invoiceNo: `INV-REC-${Date.now().toString().slice(-6)}`
-      });
-
-      set(state => {
-         const updatedMembers = state.members.map(m => m.id === memberId ? { ...m, ...payload } as Member : m);
-         const newPayment = pRes.data;
-         const payments = state.payments ? [newPayment, ...state.payments] : [newPayment];
-         return {
-            members: updatedMembers,
-            payments
-         };
-      });
-      return { success: true, message: 'Payment recorded successfully' };
-    } catch (err: unknown) {
-      throw err;
-    } finally {
-      set({ saving: false });
-    }
-  }
+  ...createMembersMutations(set, get)
 }));

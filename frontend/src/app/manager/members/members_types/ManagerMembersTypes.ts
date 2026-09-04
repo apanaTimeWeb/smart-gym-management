@@ -5,7 +5,7 @@ import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback
 import type { MessageType, ManagerMessageRecipient } from '@/app/manager/manager_components/ManagerFeedback/ManagerMessageModal';
 import type { ManagerReceiptData } from '@/app/manager/manager_components/ManagerShared/ManagerThermalReceipt';
 import type { MemberFormValues } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
-import type { DietPlan } from '@/app/manager/library/library_types/library_types';
+import type { DietPlan } from '@/app/manager/library/library_types/ManagerLibraryTypes';
 import type { Workout } from '@/app/manager/workout/workout_types/ManagerWorkoutTypes';
 
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';

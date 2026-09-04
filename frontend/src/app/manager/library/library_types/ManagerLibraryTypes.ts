@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Defines all TypeScript types, interfaces, and the FetchState enum for the Diet Library module.
 import type { } from '@/lib/api';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import { EMPTY_DIET_FORM } from '@/app/manager/library/library_utils/LibrarySharedConstants';
+import { EMPTY_DIET_FORM } from '@/app/manager/library/library_utils/ManagerLibrarySharedConstants';
 
 export interface LibraryInitialData {
 
@@ -31,18 +31,25 @@ export interface LibraryContextType {
  showDietModal: boolean;
  setShowDietModal: (show: boolean) => void;
  editDietId: string | null;
- editDietData: Record<string, unknown> | null;
+ editDietData: DietPlan | null;
  openAddDiet: () => void;
  openEditDiet: (d: DietPlan) => void;
- saveDietPlan: (data: Record<string, unknown>) => Promise<void>;
+ saveDietPlan: (data: Partial<DietPlan>) => Promise<void>;
  deleteDietPlan: (id: string) => Promise<void>;
 }
 
 
+export interface DietMeal {
+  time?: string;
+  name?: string;
+  calories?: number;
+  foods?: string[];
+}
+
 export interface DietPlan {
   id: string; name: string; goal: string;
   calories?: number; protein?: number; carbs?: number; fats?: number;
-  description?: string; meals: string[]; isActive: boolean;
+  description?: string; meals: (string | DietMeal)[]; isActive: boolean;
 }
 
 export interface Exercise {

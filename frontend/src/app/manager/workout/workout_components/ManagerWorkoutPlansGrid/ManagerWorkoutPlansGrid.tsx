@@ -64,7 +64,7 @@ export default function ManagerWorkoutPlansGrid() {
                 { l: 'Duration', v: w.duration }
               ].map(s => (
                 <div key={s.l} className="bg-input rounded-lg p-2 text-center border border-border">
-                  <p className="text-sm font-bold text-foreground">{s.v}</p>
+                  <p className="text-sm font-bold text-foreground">{Array.isArray(s.v) ? s.v.length : s.v}</p>
                   <p className="text-xs text-secondary">{s.l}</p>
                 </div>
               ))}

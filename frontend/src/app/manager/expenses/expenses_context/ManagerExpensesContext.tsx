@@ -71,8 +71,8 @@ export function ExpensesProvider({ children }: { children: ReactNode }) {
       await storeSave({ ...data, id: editId || undefined });
       toast.success(`Expense ${editId ? 'updated' : 'added'} successfully.`);
       setShowModal(false);
-    } catch (e: any) {
-      toast.error(e.message || 'Failed to save expense');
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : 'Failed to save expense');
     }
   };
 
@@ -80,8 +80,8 @@ export function ExpensesProvider({ children }: { children: ReactNode }) {
     try {
       await storeDelete(id);
       toast.success('Expense deleted successfully.');
-    } catch (e: any) {
-      toast.error(e.message || 'Failed to delete expense');
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : 'Failed to delete expense');
     }
   };
 

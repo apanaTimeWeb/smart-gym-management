@@ -71,21 +71,21 @@ export default function AttendanceCalendar() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 motion-safe:animate-in fade-in duration-200">
-      <div className="w-full max-w-md bg-[var(--bg-card)] shadow-xl flex flex-col max-h-[90vh] rounded-2xl border-2 border-[var(--primary)] overflow-hidden">
+      <div className="w-full max-w-md bg-card shadow-xl flex flex-col max-h-[90vh] rounded-2xl border-2 border-primary overflow-hidden">
         
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-[var(--border)]">
+        <div className="flex items-center justify-between p-4 border-b border-border">
           <div>
-            <h2 className="text-lg font-semibold text-[var(--text-primary)]">
+            <h2 className="text-lg font-semibold text-foreground">
               Attendance History
             </h2>
-            <p className="text-sm text-[var(--text-secondary)]">
+            <p className="text-sm text-secondary">
               {calendarUser.name} ({calendarUser.type})
             </p>
           </div>
           <button
             onClick={() => setCalendarUser(null)}
-            className="p-2 rounded-md hover:bg-[var(--bg-page)] text-[var(--text-secondary)] transition-colors"
+            className="p-2 rounded-md hover:bg-background text-secondary transition-colors"
           >
             <X size={20} />
           </button>
@@ -93,23 +93,23 @@ export default function AttendanceCalendar() {
 
         {/* Controls */}
         <div className="p-4 pb-2 flex items-center justify-between">
-          <button onClick={prevMonth} className="p-2 rounded-md hover:bg-[var(--bg-page)] border border-[var(--border)]">
+          <button onClick={prevMonth} className="p-2 rounded-md hover:bg-background border border-border">
             <ChevronLeft size={16} />
           </button>
-          <span className="text-xl font-bold text-[var(--text-primary)]">
+          <span className="text-xl font-bold text-foreground">
             {currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
           </span>
-          <button onClick={nextMonth} className="p-2 rounded-md hover:bg-[var(--bg-page)] border border-[var(--border)]">
+          <button onClick={nextMonth} className="p-2 rounded-md hover:bg-background border border-border">
             <ChevronRight size={16} />
           </button>
         </div>
         
         {/* Stats */}
-        <div className={`px-4 pb-2 grid ${calendarUser.type === 'STAFF' ? 'grid-cols-3' : 'grid-cols-2 gap-4 max-w-[75%]'} text-xs font-bold text-[var(--text-secondary)]`}>
-          <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-[var(--success)]"></div> Present: {totalP}</div>
-          <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-[var(--danger)]"></div> Absent: {totalA}</div>
+        <div className={`px-4 pb-2 grid ${calendarUser.type === 'STAFF' ? 'grid-cols-3' : 'grid-cols-2 gap-4 max-w-[75%]'} text-xs font-bold text-secondary`}>
+          <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-success"></div> Present: {totalP}</div>
+          <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-danger"></div> Absent: {totalA}</div>
           {calendarUser.type === 'STAFF' && (
-            <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-[var(--primary)]"></div> Leave: {totalL}</div>
+            <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-primary"></div> Leave: {totalL}</div>
           )}
         </div>
 
@@ -117,16 +117,16 @@ export default function AttendanceCalendar() {
         <div className="p-4 overflow-y-auto">
           {loading ? (
             <div className="flex justify-center items-center py-12">
-              <Loader2 className="motion-safe:animate-spin text-[var(--text-secondary)]" size={32} />
+              <Loader2 className="motion-safe:animate-spin text-secondary" size={32} />
             </div>
           ) : (
             <div>
-              <div className="grid grid-cols-7 gap-1.5 mb-2 text-center text-xs font-bold text-[var(--text-secondary)]">
+              <div className="grid grid-cols-7 gap-1.5 mb-2 text-center text-xs font-bold text-secondary">
                 {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => <div key={d}>{d}</div>)}
               </div>
               <div className="grid grid-cols-7 gap-1.5">
                 {blanks.map(b => (
-                  <div key={`blank-${b}`} className="aspect-square rounded-md bg-[var(--bg-page)]/30" />
+                  <div key={`blank-${b}`} className="aspect-square rounded-md bg-background/30" />
                 ))}
                 {days.map(day => {
                   const status = getStatusForDay(day);
@@ -138,10 +138,10 @@ export default function AttendanceCalendar() {
                       key={day}
                       className={`
                         aspect-square flex items-center justify-center rounded-md border-none text-xs font-bold transition-all
-                        ${isPresent ? 'bg-[var(--success)] text-white hover:scale-110' : ''}
-                        ${isAbsent ? 'bg-[var(--danger)] text-white hover:scale-110' : ''}
-                        ${isLeave ? 'bg-[var(--primary)] text-black hover:scale-110' : ''}
-                        ${status === 'NONE' ? 'bg-[var(--bg-page)] border border-[var(--border)] text-[var(--text-secondary)]' : ''}
+                        ${isPresent ? 'bg-success text-white hover:scale-110' : ''}
+                        ${isAbsent ? 'bg-danger text-white hover:scale-110' : ''}
+                        ${isLeave ? 'bg-primary text-black hover:scale-110' : ''}
+                        ${status === 'NONE' ? 'bg-background border border-border text-secondary' : ''}
                       `}
                     >
                       {day}

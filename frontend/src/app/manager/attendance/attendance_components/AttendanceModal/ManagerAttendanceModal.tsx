@@ -84,7 +84,7 @@ export default function AttendanceModal() {
                   control={control}
                   render={({ field }) => (
                     <SearchableDropdown
-                      options={staff.filter(s => ('role' in s) || ('salary' in s) || !('planId' in s)).map(s => ({ label: `${s.name} - ${(s as any).role || 'Staff'}`, value: String(s.id) }))}
+                      options={staff.filter(s => ('role' in s) || ('salary' in s) || !('planId' in s)).map(s => ({ label: `${s.name} - ${((s as unknown) as { role?: string }).role || 'Staff'}`, value: String(s.id) }))}
                       value={field.value || ''}
                       onChange={field.onChange}
                       placeholder="Search Staff..."
