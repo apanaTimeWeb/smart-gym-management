@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Defines the TypeScript types and interfaces for the HR module.
-import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
+import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
 import { EMPTY_STAFF } from '@/app/admin/hr/hr_utils/HrSharedConstants';
 import React from 'react';
 

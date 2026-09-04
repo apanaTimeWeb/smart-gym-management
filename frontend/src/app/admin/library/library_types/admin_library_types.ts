@@ -1,0 +1,2 @@
+export interface AdminDietPlan { id: string; name: string; goal: "Weight Loss" | "Muscle Gain" | "Maintenance"; calories: number; protein: number; carbs: number; fat: number; meals: string[]; description?: string; }
+export interface AdminLibraryExercise { id: string; name: string; category: string; difficulty: "Easy" | "Medium" | "Hard"; muscle: string; equipment: string; description?: string; videoUrl?: string; }

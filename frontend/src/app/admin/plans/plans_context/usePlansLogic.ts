@@ -6,13 +6,13 @@ import { plansApi } from '@/app/admin/plans/plans_api/plans_api';
 import type { Plan, PlansContextType, PlansInitialData, FetchState } from '@/app/admin/plans/plans_types/plans_types';
 import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
 import { EMPTY_PLAN_FORM, type PlanFormValues } from '@/app/admin/plans/plans_utils/PlansSharedConstants';
-import { useConfirm } from '@/app/admin/admin_components/AdminFeedback/AdminConfirmProvider';
+import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/AdminConfirmProvider';
 
 /**
  * Hook to manage plans data, pagination state, and all CRUD operations.
  */
 export function usePlansLogic(initialData?: PlansInitialData | null): PlansContextType {
-  const { confirm } = useConfirm();
+  const { confirm } = useAdminConfirm();
   const router = useRouter();
   const searchParams = useSearchParams();
 

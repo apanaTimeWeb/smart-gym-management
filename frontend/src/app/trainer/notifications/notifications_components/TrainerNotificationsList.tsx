@@ -14,7 +14,7 @@ export default function TrainerNotificationsList({ notifications, onMarkAsRead, 
         <div className="w-16 h-16 bg-input rounded-full flex items-center justify-center mb-4">
           <Bell className="w-8 h-8 text-secondary" />
         </div>
-        <h3 className="text-lg font-medium text-foreground">You're all caught up!</h3>
+        <h3 className="text-lg font-medium text-foreground">You&apos;re all caught up!</h3>
         <p className="text-sm text-secondary mt-1">No new notifications to show right now.</p>
       </div>
     );

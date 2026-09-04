@@ -85,7 +85,7 @@ export default function TrainerWorkoutPlansGrid() {
         ))}
         {workouts.length === 0 && (
           <div className="col-span-full text-center py-10 text-secondary">
-            No workout plans found matching "{search}".
+            No workout plans found matching &quot;{search}&quot;.
           </div>
         )}
       </div>

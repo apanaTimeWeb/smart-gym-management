@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Provides a programmatic confirm() API to all ADMIN components via React Context. Renders a single shared AdminConfirmModal at the root level. No async data — sync UI state only.
 'use client';
 
-import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
 import AdminConfirmModal from '@/app/admin/admin_components/AdminFeedback/AdminConfirmModal';
 
 interface ConfirmOptions {
@@ -60,8 +60,8 @@ export function AdminConfirmProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export const useConfirm = () => {
+export const useAdminConfirm = () => {
   const context = useContext(ConfirmContext);
-  if (!context) throw new Error("useConfirm must be used within AdminConfirmProvider");
+  if (!context) throw new Error("useAdminConfirm must be used within AdminConfirmProvider");
   return context;
 };

@@ -6,11 +6,11 @@ import type { Staff, Payroll, HrSummary } from '@/app/admin/hr/hr_types/hr_types
 import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
 import { EMPTY_STAFF } from '@/app/admin/hr/hr_utils/HrSharedConstants';
 import type { HrContextType, HrInitialData, FetchState } from '@/app/admin/hr/hr_types/hr_types';
-import { useConfirm } from '@/app/admin/admin_components/AdminFeedback/AdminConfirmProvider';
+import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/AdminConfirmProvider';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 
 export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
-  const { confirm } = useConfirm();
+  const { confirm } = useAdminConfirm();
   const router = useRouter();
   const searchParams = useSearchParams();
  const [staff, setStaff] = useState<Staff[]>(initialData?.staff || []);
@@ -84,7 +84,7 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
   }, [showToast, debouncedSearch, currentPage, roleFilter, payrollMonth]);
 
   // Rely on URL changes to drive the fetch (plus initial mount)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   useEffect(() => { loadAll(); }, [loadAll]);
 
   const openAdd = useCallback(() => {

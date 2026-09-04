@@ -1,12 +1,15 @@
 'use client';
-// RESPONSIBILITY: error.tsx handles module-level rendering errors.
+// RESPONSIBILITY: error.tsx handles module-level rendering errors for the Analytics module.
+// DATA FLOW: Next.js catches error → this boundary renders → user clicks reset() to retry.
 
 import { useEffect } from 'react';
 import { AlertTriangle, RefreshCcw } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
 export default function ErrorBoundary({ error, reset }: { error: Error & { digest?: string }, reset: () => void }) {
   useEffect(() => {
-    console.error('Module Error:', error);
+    // Dependency: [error] — re-log whenever a new error object is caught by the boundary
+    logger.error('[Analytics] Module Error:', error);
   }, [error]);
 
   return (

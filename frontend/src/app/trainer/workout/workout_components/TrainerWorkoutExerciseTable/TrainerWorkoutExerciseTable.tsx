@@ -74,7 +74,7 @@ export default function TrainerWorkoutExerciseTable() {
             {exercises.length === 0 && (
               <tr>
                 <td colSpan={5} className="text-center py-8 text-secondary">
-                  No exercises found matching "{search}".
+                  No exercises found matching &quot;{search}&quot;.
                 </td>
               </tr>
             )}

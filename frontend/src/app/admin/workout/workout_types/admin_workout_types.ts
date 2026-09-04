@@ -1,0 +1,2 @@
+export interface AdminWorkout { id: string; name: string; description?: string; level: "Beginner" | "Intermediate" | "Advanced"; duration: number; tags: string[]; exercises: string[]; category: string; }
+export interface AdminExercise { id: string; name: string; muscle: string; equipment: string; difficulty: "Easy" | "Medium" | "Hard"; videoUrl?: string; description?: string; sets?: number; reps?: number; }

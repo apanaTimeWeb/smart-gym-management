@@ -354,7 +354,7 @@ export async function routeMockRequest<T>(
   if (method === 'GET' && path.includes('/finance/payments/member/')) {
     const segments = path.split('?')[0].split('/');
     const memberId = segments[segments.length - 1];
-    let allPayments = MockDB.getCollection('mock_admin_payments', []);
+    const allPayments = MockDB.getCollection('mock_admin_payments', []);
     let memberPayments = allPayments.filter((p: any) => String(p.memberId) === String(memberId));
     
     if (memberPayments.length === 0) {
@@ -380,7 +380,7 @@ export async function routeMockRequest<T>(
       const settings = MockDB.getCollection('mock_admin_settings', [{ gymName: 'Demo Gym Base', ownerName: 'Admin Owner', phone: '9988776655', email: 'admin@gym.com', city: 'Mumbai', gstNumber: '27AAAAA1234A1Z5' }]);
       return { success: true, message: 'Fetched Settings', data: settings[0] } as unknown as ApiResponse<T>;
     } else {
-      let parsed = typeof body === 'string' ? JSON.parse(body) : (body as Record<string, unknown>);
+      const parsed = typeof body === 'string' ? JSON.parse(body) : (body as Record<string, unknown>);
       MockDB.setCollection('mock_admin_settings', [parsed]);
       return { success: true, message: 'Settings Saved', data: parsed } as unknown as ApiResponse<T>;
     }
@@ -520,8 +520,8 @@ export async function routeMockRequest<T>(
       let rawMembers = MockDB.getCollection('mock_members', []);
       let payments = MockDB.getCollection('mock_admin_payments', []);
       let staff = MockDB.getCollection('mock_admin_staff', []);
-      let plans = MockDB.getCollection('mock_admin_plans', []);
-      let inquiries = MockDB.getCollection('mock_inquiries', []);
+      const plans = MockDB.getCollection('mock_admin_plans', []);
+      const inquiries = MockDB.getCollection('mock_inquiries', []);
       
       if (rawMembers.length === 0) {
         rawMembers = generate(15, (i: number) => ({ id: `GS-${15102023000 + i}`, name: `Member ${i + 1}`, email: `member${i + 1}@example.com`, phone: `987654321${i}`, status: i % 4 === 0 ? 'PENDING' : i % 5 === 0 ? 'EXPIRED' : 'ACTIVE', planId: i % 3 === 0 ? 'p1' : i % 2 === 0 ? 'p2' : 'p3', plan: { id: i % 3 === 0 ? 'p1' : i % 2 === 0 ? 'p2' : 'p3', name: i % 3 === 0 ? 'Pro Plan' : i % 2 === 0 ? 'Basic Plan' : 'Elite Plan' }, joinDate: '2023-10-01', expiryDate: '2024-10-01', paidAmount: 5000, pendingAmount: i % 4 === 0 ? 1500 : 0 }));

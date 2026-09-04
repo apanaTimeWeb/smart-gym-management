@@ -10,7 +10,7 @@ export function useFeaturesData() {
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    let isMounted = true;
+    const isMounted = true;
     
     function fetchData() {
       setFetchState('success');

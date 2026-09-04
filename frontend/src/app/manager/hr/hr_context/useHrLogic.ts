@@ -84,7 +84,7 @@ export function useHrLogic(initialData?: HrInitialData | null): HrContextType {
   }, [showToast, debouncedSearch, currentPage, roleFilter, payrollMonth]);
 
   // Rely on URL changes to drive the fetch (plus initial mount)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   useEffect(() => { loadAll(); }, [loadAll]);
 
   const openAdd = useCallback(() => {

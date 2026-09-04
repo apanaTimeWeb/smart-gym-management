@@ -1,0 +1,7 @@
+* @frontend-team
+/src/app/admin/ @frontend-admin-team
+/src/app/superadmin/ @frontend-superadmin-team
+/src/app/manager/ @frontend-manager-team
+/src/app/trainer/ @frontend-trainer-team
+/src/app/member/ @frontend-member-team
+/src/app/auth/ @security-team
