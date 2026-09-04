@@ -2,7 +2,8 @@
 // DATA FLOW: page.tsx (SSR) → AdminDashboardMain → useDashboardLogic → DashboardContext → KPI/Chart components
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { dashboardApi } from '@/app/admin/dashboard/dashboard_api/dashboard_api';
 import type { DashboardContextType, FetchState, DashboardStats, TimeRange } from '@/app/admin/dashboard/dashboard_types/dashboard_types';
 
@@ -10,35 +11,25 @@ import type { DashboardContextType, FetchState, DashboardStats, TimeRange } from
  * Hook to manage dashboard data fetching and network state tracking.
  */
 export function useDashboardLogic(initialData?: DashboardStats | null): DashboardContextType {
-  const [stats, setStats] = useState<DashboardStats | null>(initialData || null);
-  const [status, setStatus] = useState<FetchState>(initialData ? 'success' : 'loading');
-  const [error, setError] = useState('');
   const [timeRange, setTimeRange] = useState<TimeRange>('monthly');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
-  // Fetch only when no SSR initialData was passed from page.tsx; initialData in deps prevents re-fetch on SSR hydration
-  /* eslint-disable react-hooks/set-state-in-effect */
-  useEffect(() => {
-    if (initialData) return;
+  const { data, isLoading, isError, error: queryError } = useQuery({
+    queryKey: ['adminDashboardStats', timeRange, startDate, endDate],
+    queryFn: async () => {
+      const res = await dashboardApi.fetchDashboardStats();
+      return res.data;
+    },
+    initialData: initialData || undefined,
+  });
 
-    setStatus('loading');
-    dashboardApi.getStats()
-      .then(res => {
-        setStats(res.data);
-        setStatus('success');
-      })
-      .catch(e => {
-        setError(e.message);
-        setStatus('error');
-      });
-  }, [initialData]);
-  /* eslint-enable react-hooks/set-state-in-effect */
+  const status: FetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
 
   return {
-    stats,
+    stats: data || null,
     status,
-    error,
+    error: isError ? (queryError as Error).message : '',
     timeRange,
     setTimeRange,
     startDate,

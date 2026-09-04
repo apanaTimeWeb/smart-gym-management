@@ -44,10 +44,16 @@ admin/
 
 ---
 
-## Deleted Modules (Intentionally Removed)
+## Deleted Modules (Intentionally Removed - Enforced)
 The following were removed to enforce proper role boundaries:
-- ~~`/admin/members`~~ → Delegated to **Manager** (`/manager/members`)
-- ~~`/admin/audit`~~ → Delegated to **Superadmin** (`/superadmin/audit-logs`)
+- `/admin/members` → Delegated to **Manager**
+- `/admin/audit` → Delegated to **Superadmin**
+- `/admin/attendance` → Delegated to **Manager**
+- `/admin/hr` → Delegated to **Manager**
+- `/admin/inquiries` → Delegated to **Manager**
+- `/admin/library` → Delegated to **Manager**
+- `/admin/store` → Delegated to **Manager**
+- `/admin/workout` → Delegated to **Manager**
 
 ---
 

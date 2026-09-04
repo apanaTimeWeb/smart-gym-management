@@ -4,7 +4,7 @@ import { DashboardUrlConfig } from '@/app/admin/dashboard/dashboard_url_config';
 import type { DashboardStats } from '@/app/admin/dashboard/dashboard_types/dashboard_types';
 
 export const dashboardApi = {
-  getStats: async (): Promise<ApiResponse<DashboardStats>> => {
+  fetchDashboardStats: async (): Promise<ApiResponse<DashboardStats>> => {
     const [kpiRes, chartsRes, recentRes] = await Promise.all([
       apiFetch<ApiResponse<Partial<DashboardStats>>>(DashboardUrlConfig.BACKEND_API.STATS),
       apiFetch<ApiResponse<Partial<DashboardStats>>>(DashboardUrlConfig.BACKEND_API.CHARTS),

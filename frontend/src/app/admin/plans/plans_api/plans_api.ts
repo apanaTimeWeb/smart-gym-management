@@ -4,11 +4,11 @@ import { PlansUrlConfig } from '@/app/admin/plans/plans_url_config';
 import type { Plan } from '@/app/admin/plans/plans_types/plans_types';
 
 export const plansApi = {
-  getAll: () => apiFetch<ApiResponse<Plan[]>>(PlansUrlConfig.BACKEND_API.BASE),
-  getOne: (id: string) => apiFetch<ApiResponse<Plan>>(PlansUrlConfig.BACKEND_API.GET_ONE(id)),
-  create: (body: Partial<Plan>) =>
+  fetchAllPlans: () => apiFetch<ApiResponse<Plan[]>>(PlansUrlConfig.BACKEND_API.BASE),
+  fetchPlanById: (id: string) => apiFetch<ApiResponse<Plan>>(PlansUrlConfig.BACKEND_API.GET_ONE(id)),
+  createPlan: (body: Partial<Plan>) =>
     apiFetch<ApiResponse<Plan>>(PlansUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body) }),
-  update: (id: string, body: Partial<Plan>) =>
+  updatePlan: (id: string, body: Partial<Plan>) =>
     apiFetch<ApiResponse<Plan>>(PlansUrlConfig.BACKEND_API.UPDATE(id), { method: 'PATCH', body: JSON.stringify(body) }),
-  remove: (id: string) => apiFetch<ApiResponse<{ id: string }>>(PlansUrlConfig.BACKEND_API.DELETE(id), { method: 'DELETE' }),
+  deletePlan: (id: string) => apiFetch<ApiResponse<{ id: string }>>(PlansUrlConfig.BACKEND_API.DELETE(id), { method: 'DELETE' }),
 };
