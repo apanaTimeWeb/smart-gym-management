@@ -343,7 +343,30 @@ export async function routeMockRequest<T>(
     tags: ['Muscle', 'Strength']
   })), 'workouts') as unknown as ApiResponse<T>;
   if (path.includes('/admin/finance/summary')) return { success: true, message: 'Summary', data: { totalRevenue: 1500000, monthlyRevenue: 250000, pendingAmount: 45000, totalPayments: 345, revenueByMethod: { UPI: 120000, Cash: 50000, Card: 80000, NetBanking: 0 }, monthlyData: generate(6, i => ({ month: `M${i+1}`, revenue: 200000 + (i * 10000) })) } } as unknown as ApiResponse<T>;
-  if (path.includes('/finance/payments')) return MockDB.handleCrud('mock_admin_payments', method, path, parsedBody, generate(10, i => ({ id: `pay-${i}`, memberId: `mem-${i}`, member: { name: `Payer ${i}`, email: `payer${i}@example.com`, phone: '9988776655', plan: { name: 'Pro Plan' } }, amount: 5000 + (i * 500), status: 'success', paidAt: new Date().toISOString(), method: 'UPI', invoiceNo: `INV-${1000 + i}` })), 'payments') as unknown as ApiResponse<T>;
+  if (method === 'GET' && path.includes('/finance/payments/member/')) {
+    const segments = path.split('?')[0].split('/');
+    const memberId = segments[segments.length - 1];
+    let allPayments = MockDB.getCollection('mock_admin_payments', []);
+    let memberPayments = allPayments.filter((p: any) => String(p.memberId) === String(memberId));
+    
+    if (memberPayments.length === 0) {
+       const newPayment = {
+         id: `pay-mock-${Date.now()}`,
+         memberId: memberId,
+         amount: 3000,
+         method: 'UPI',
+         status: 'PAID',
+         paidAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+         invoiceNo: `INV-MOCK-${Date.now().toString().slice(-6)}`
+       };
+       allPayments.push(newPayment);
+       MockDB.setCollection('mock_admin_payments', allPayments);
+       memberPayments = [newPayment];
+    }
+
+    return { success: true, message: 'Fetched member payments', data: memberPayments } as unknown as ApiResponse<T>;
+  }
+  if (path.includes('/finance/payments')) return MockDB.handleCrud('mock_admin_payments', method, path, parsedBody, generate(10, i => ({ id: `pay-${i}`, memberId: `mem-${i}`, member: { name: `Payer ${i}`, email: `payer${i}@example.com`, phone: '9988776655', plan: { name: 'Pro Plan' } }, amount: 5000 + (i * 500), status: 'PAID', paidAt: new Date().toISOString(), method: 'UPI', invoiceNo: `INV-${1000 + i}` })), 'payments') as unknown as ApiResponse<T>;
   if (path.includes('/admin/settings')) {
     if (method === 'GET') {
       const settings = MockDB.getCollection('mock_admin_settings', [{ gymName: 'Demo Gym Base', ownerName: 'Admin Owner', phone: '9988776655', email: 'admin@gym.com', city: 'Mumbai', gstNumber: '27AAAAA1234A1Z5' }]);

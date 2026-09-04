@@ -65,6 +65,14 @@ export interface MembersContextType {
   editId: string | null;
   editData: MemberFormValues | null;
 
+  // Renew Modal
+  showRenewModal: boolean;
+  setShowRenewModal: (show: boolean) => void;
+
+  // Add Payment Modal
+  showPaymentModal: boolean;
+  setShowPaymentModal: (show: boolean) => void;
+
   // Actions
   openAdd: () => void;
   openEdit: (m: Member) => void;
@@ -72,6 +80,8 @@ export interface MembersContextType {
   deleteMember: (id: string) => Promise<void>;
   assignDiet: (memberId: string, diet: DietPlan | null) => Promise<void>;
   assignWorkout: (memberId: string, workout: Workout | null) => Promise<void>;
+  renewMember: (data: { planId: string; newExpiryDate: string; amountPaid: number; paymentMethod: string; billingCycle: string; customDays?: number }) => Promise<void>;
+  recordPayment: (data: { amount: number; method: string }) => Promise<void>;
 
   // Message Modal
   msgModal: { open: boolean; recipient: ManagerMessageRecipient; type: MessageType; message: string; subject?: string } | null;

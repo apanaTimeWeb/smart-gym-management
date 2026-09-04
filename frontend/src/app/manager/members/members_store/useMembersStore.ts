@@ -33,6 +33,8 @@ interface MembersState {
   deleteMember: (id: string) => Promise<{ success: boolean; message: string }>;
   assignDiet: (memberId: string, diet: DietPlan | null) => Promise<void>;
   assignWorkout: (memberId: string, workout: Workout | null) => Promise<void>;
+  renewMember: (memberId: string, data: { planId: string; newExpiryDate: string; amountPaid: number; paymentMethod: string; billingCycle: string; customDays?: number }) => Promise<{ success: boolean; message: string }>;
+  recordPayment: (memberId: string, data: { amount: number; method: string }) => Promise<{ success: boolean; message: string }>;
 }
 
 export const useMembersStore = create<MembersState>((set) => ({
@@ -146,6 +148,20 @@ export const useMembersStore = create<MembersState>((set) => ({
             totalMembers: state.totalMembers + 1
           };
         });
+
+        if (data.paidAmount && data.paidAmount > 0) {
+           try {
+             await financeApi.createPayment({
+               memberId: newId,
+               amount: data.paidAmount,
+               method: 'UPI',
+               status: 'PAID',
+               paidAt: new Date().toISOString(),
+               invoiceNo: `INV-${Date.now().toString().slice(-6)}`
+             });
+           } catch(e) { console.error('Failed to create payment record', e); }
+        }
+
         return { success: true, message: res.message || 'Created successfully', memberId: newId };
       }
     } catch (err: unknown) {
@@ -195,6 +211,88 @@ export const useMembersStore = create<MembersState>((set) => ({
       }));
     } catch (err: unknown) {
       throw err;
+    }
+  },
+
+  renewMember: async (memberId: string, data: { planId: string; newExpiryDate: string; amountPaid: number; paymentMethod: string; billingCycle: string; customDays?: number }) => {
+    set({ saving: true });
+    try {
+      const state = useMembersStore.getState();
+      const member = state.members.find(m => m.id === memberId);
+      const currentPaid = member?.paidAmount || 0;
+
+      const payload = {
+         planId: data.planId,
+         expiryDate: data.newExpiryDate,
+         billingCycle: data.billingCycle,
+         customDays: data.customDays,
+         status: 'ACTIVE',
+         paidAmount: currentPaid + data.amountPaid
+      };
+      await membersApi.update(memberId, payload);
+      
+      const pRes = await financeApi.createPayment({
+         memberId,
+         amount: data.amountPaid,
+         method: data.paymentMethod,
+         status: 'PAID',
+         paidAt: new Date().toISOString(),
+         invoiceNo: `INV-REN-${Date.now().toString().slice(-6)}`
+      });
+
+      set(state => {
+         const plan = state.plans.find(p => String(p.id) === String(data.planId));
+         const updatedMembers = state.members.map(m => m.id === memberId ? { ...m, ...payload, plan } as Member : m);
+         const newPayment = pRes.data;
+         const payments = state.payments ? [newPayment, ...state.payments] : [newPayment];
+         return {
+            members: updatedMembers,
+            payments
+         };
+      });
+      return { success: true, message: 'Membership renewed successfully' };
+    } catch (err: unknown) {
+      throw err;
+    } finally {
+      set({ saving: false });
+    }
+  },
+
+  recordPayment: async (memberId: string, data: { amount: number; method: string }) => {
+    set({ saving: true });
+    try {
+      const state = useMembersStore.getState();
+      const member = state.members.find(m => m.id === memberId);
+      const currentPaid = member?.paidAmount || 0;
+
+      const payload = {
+         paidAmount: currentPaid + data.amount
+      };
+      await membersApi.update(memberId, payload);
+      
+      const pRes = await financeApi.createPayment({
+         memberId,
+         amount: data.amount,
+         method: data.method,
+         status: 'PAID',
+         paidAt: new Date().toISOString(),
+         invoiceNo: `INV-REC-${Date.now().toString().slice(-6)}`
+      });
+
+      set(state => {
+         const updatedMembers = state.members.map(m => m.id === memberId ? { ...m, ...payload } as Member : m);
+         const newPayment = pRes.data;
+         const payments = state.payments ? [newPayment, ...state.payments] : [newPayment];
+         return {
+            members: updatedMembers,
+            payments
+         };
+      });
+      return { success: true, message: 'Payment recorded successfully' };
+    } catch (err: unknown) {
+      throw err;
+    } finally {
+      set({ saving: false });
     }
   }
 }));
