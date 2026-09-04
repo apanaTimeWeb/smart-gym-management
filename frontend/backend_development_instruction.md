@@ -164,11 +164,47 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 ## 19. Module-Level Feature Documentation
 *(Crucial for AI Context & Onboarding)*
 * **The Rule:** Every single module must contain a `[module_name]_backend_feature.md` file at its root (e.g., `modules/auth/auth_backend_feature.md`). 
-* **What it must contain:**
-  1. A high-level explanation of what the module does.
-  2. A breakdown of the folder structure and what exactly each file is responsible for.
-  3. Explanations of core business logic or complex workflows within the module.
 * **Why:** Before an AI or a new human developer makes any changes to a module, they will read this file first. It acts as the ultimate localized context guide, instantly explaining the routing, file responsibilities, and logic, drastically reducing the risk of hallucination or breaking existing architecture.
+
+### Mandatory `[module_name]_backend_feature.md` Template
+Every backend module MUST use this minimum structure:
+
+```markdown
+# [Module Name] Backend Feature Map
+
+## Module Purpose
+Brief business explanation of what this module does.
+
+## Directory Structure
+Explain each folder and its responsibility.
+
+## Feature Inventory
+| Controller/Endpoint | Path | Purpose | DTOs |
+|---|---|---|---|
+
+## Data and State Architecture
+- DB Entities:
+- Redis Caching Keys:
+- Event Emitters:
+- Background Jobs:
+
+## Permissions and Security
+Document protected actions, RBAC roles, and CODEOWNERS paths.
+
+## Edge Cases / AI Warnings
+List known constraints, transaction locking needs, and common regression risks.
+
+## Rule Compliance Checklist
+- [ ] Rule 23: Heavy tasks moved to Background Jobs
+- [ ] Rule 28: Response wrapped in canonical envelope
+- [ ] Rule 34: N+1 queries prevented (eager loading)
+- [ ] Rule 36: Fail-Fast & Input Validation applied
+- [ ] Rule 80: JSDoc on all service methods
+- [ ] Rule 85/87: Guard clauses used, <=20 lines per method
+- [ ] Rule 86: Verb contract naming applied
+- [ ] Rule 89: Domain vs ORM mapping used
+- [ ] Rule 92: TypeORM SQL injection prevention applied
+```
 
 ## 20. Performance & Network Optimization (Compression, Rate Limiting & Caching)
 * **The Rule:** Enterprise APIs must protect their bandwidth and server load. 
@@ -471,8 +507,17 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 ## 74. Mechanical Enforcement of Isolation (The "Tooling Gate")
 * **The Rule:** The backend must explicitly enforce architectural boundaries mechanically. If using Node.js, mandate `eslint-plugin-boundaries` or `no-restricted-imports`. If using Python, mandate `import-linter`. This guarantees that an AI cannot accidentally import an `attendance` repository into a `billing` service. Trust is not enough; the pipeline must block cross-module violations.
 
-## 75. Hard File-Size Ceilings
-* **The Rule:** Services and controllers have a strict file size ceiling of ~300 lines maximum. If a backend file exceeds this, the AI must explicitly pause and refactor it by splitting the logic into an Orchestrator/Facade and smaller micro-services. This strictly prevents token explosion and hallucination.
+## 75. Hard File-Size Ceilings (AI Context Limits)
+* **The Rule:** To prevent token explosion and hallucination, backend files must strictly adhere to size limits. If a backend file exceeds its ceiling, the AI must explicitly pause and refactor it by splitting the logic into an Orchestrator/Facade and smaller micro-services.
+
+| File Type | Maximum Lines |
+|---|---|
+| Controller (`*.controller.ts`) | **200 lines** |
+| Service (`*.service.ts`) | **300 lines** |
+| Repository (`*.repository.ts`) | **200 lines** |
+| Entity/DTO (`*.entity.ts`, `*.dto.ts`) | **150 lines** |
+| Module Config (`*.module.ts`) | **100 lines** |
+| Utilities/Mappers | **120 lines** |
 
 ## 76. Strict File Responsibility Contract
 * **The Rule:** Every backend controller, service, or repository MUST start with a single-line comment at the very top of the file explicitly defining its boundary. (e.g., `// RESPONSIBILITY: Processes incoming Stripe webhooks and emits EVENT_PAYMENT_SUCCESS. No direct DB writes.`). This instantly grounds the AI's context when reading the file.
