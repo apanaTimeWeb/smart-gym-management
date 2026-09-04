@@ -57,6 +57,12 @@ export function useAddGymForm() {
   const delay = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms));
 
   const onSubmit = async (data: OnboardGymFormValues) => {
+    const cleanPhone = data.phone.replace(/\D/g, '');
+    let waWindow: Window | null = null;
+    if (cleanPhone) {
+      waWindow = window.open('about:blank', '_blank');
+    }
+
     setIsProvisioning(true);
     setProvisioningLogs([]);
 
@@ -106,8 +112,10 @@ export function useAddGymForm() {
         footer: 'Please login to continue'
       });
 
-      const cleanPhone = data.phone.replace(/\D/g, '');
-      if (cleanPhone) {
+      if (cleanPhone && waWindow) {
+        waWindow.location.href = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(waText)}`;
+      } else if (cleanPhone && !waWindow) {
+        // Fallback if blocked
         window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(waText)}`, '_blank');
       }
 
@@ -138,6 +146,7 @@ export function useAddGymForm() {
       toast.success('Gym provisioned successfully');
       router.push(SuperadminUrlConfig.PAGES.GYMS_LIST);
     } catch (e: unknown) {
+      if (waWindow) waWindow.close();
       const errMsg = e instanceof Error ? e.message : 'An error occurred';
       addLog(`Error: ${errMsg}`);
     } finally {

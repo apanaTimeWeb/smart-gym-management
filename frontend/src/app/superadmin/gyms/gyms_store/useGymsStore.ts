@@ -11,6 +11,7 @@ import toast from 'react-hot-toast';
 
 import { gymsApi } from '@/app/superadmin/gyms/gyms_api/gyms_api';
 import type { Tenant, FetchState, TenantStatus } from '@/app/superadmin/gyms/gyms_types/gyms_types';
+import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
 
 interface GymsState {
   // Data State
@@ -176,7 +177,30 @@ export const useGymsStore = create<GymsState>((set, get) => ({
     try {
       if (data.phone) {
         const cleanPhone = String(data.phone).replace(/\D/g, '');
-        const waText = `*${data.subject}*\n\n${data.message}`;
+        const dateStr = new Intl.DateTimeFormat('en-IN', {
+          day: '2-digit', month: 'short', year: 'numeric',
+          hour: '2-digit', minute: '2-digit', hour12: true
+        }).format(new Date());
+
+        const waText = WhatsAppFormatter.formatReceipt({
+          title: 'Smart Gym 360',
+          subtitle: String(data.subject),
+          date: dateStr,
+          customerInfo: {
+            Owner: String(data.ownerName || 'Gym Owner'),
+            Gym: String(data.gymName || 'Gym')
+          },
+          sections: [
+            {
+              title: 'Message',
+              items: {
+                'Content': String(data.message)
+              }
+            }
+          ],
+          footer: 'Powered by Smart Gym 360'
+        });
+        
         window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(waText)}`, '_blank');
       }
 

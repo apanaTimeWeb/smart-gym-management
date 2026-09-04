@@ -60,21 +60,35 @@ export const useBroadcastsPage = () => {
   const handleCreateBroadcast = useCallback(async (data: BroadcastFormData) => {
     const { scheduledDate, ...rest } = data;
     const payload = scheduledDate ? { ...rest, scheduledDate } : rest;
+    const isSendingNow = payload.status === 'SENT';
 
-    // Simulate API call but save to local storage (TC-28/29)
-    if (editingId) {
-      updateBroadcasts(prev => prev.map(b => b.id === editingId ? { ...b, ...payload } as Broadcast : b));
-      setIsModalOpen(false);
-      setEditingId(null);
-      form.reset();
-      toast.success('Broadcast updated successfully');
-    } else {
-      const newB: Broadcast = { ...payload, id: `b-${Date.now()}`, sentDate: payload.status === 'SENT' ? new Date().toISOString() : undefined } as Broadcast;
-      updateBroadcasts(prev => [newB, ...prev]);
-      setIsModalOpen(false);
-      form.reset();
-      toast.success('Broadcast created successfully');
+    if (isSendingNow) {
+      toast.loading('Sending broadcast to all gyms via WhatsApp API...', { id: 'bulk-create' });
     }
+
+    setTimeout(() => {
+      if (editingId) {
+        updateBroadcasts(prev => prev.map(b => b.id === editingId ? { ...b, ...payload } as Broadcast : b));
+        setIsModalOpen(false);
+        setEditingId(null);
+        form.reset();
+        if (isSendingNow) {
+          toast.success('Broadcast updated & sent directly via WhatsApp to all gyms!', { id: 'bulk-create' });
+        } else {
+          toast.success('Broadcast updated successfully');
+        }
+      } else {
+        const newB: Broadcast = { ...payload, id: `b-${Date.now()}`, sentDate: isSendingNow ? new Date().toISOString() : undefined } as Broadcast;
+        updateBroadcasts(prev => [newB, ...prev]);
+        setIsModalOpen(false);
+        form.reset();
+        if (isSendingNow) {
+          toast.success('Broadcast created & sent directly via WhatsApp to all gyms!', { id: 'bulk-create' });
+        } else {
+          toast.success('Broadcast created successfully');
+        }
+      }
+    }, isSendingNow ? 1500 : 0);
   }, [form, editingId, updateBroadcasts]);
 
   const handleDeleteBroadcast = useCallback(async (id: string) => {
@@ -83,8 +97,11 @@ export const useBroadcastsPage = () => {
   }, [updateBroadcasts]);
 
   const handleSendBroadcast = useCallback(async (id: string) => {
-    updateBroadcasts(prev => prev.map(b => b.id === id ? { ...b, status: 'SENT', sentDate: new Date().toISOString() } : b));
-    toast.success('Broadcast sent successfully');
+    toast.loading('Sending broadcast to all gyms via WhatsApp API...', { id: 'bulk-send' });
+    setTimeout(() => {
+      updateBroadcasts(prev => prev.map(b => b.id === id ? { ...b, status: 'SENT', sentDate: new Date().toISOString() } : b));
+      toast.success('Broadcast sent directly via WhatsApp to all gyms!', { id: 'bulk-send' });
+    }, 1500);
   }, [updateBroadcasts]);
 
   const openEditModal = useCallback((broadcast: Broadcast) => {

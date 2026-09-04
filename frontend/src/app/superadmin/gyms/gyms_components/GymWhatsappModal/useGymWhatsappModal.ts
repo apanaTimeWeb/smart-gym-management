@@ -37,7 +37,12 @@ export function useGymWhatsappModal() {
 
   const onSubmit = async (data: GymWhatsappFormValues) => {
     if (selectedGym) {
-      await handleWhatsappOwner(selectedGym.id, { ...data, phone: selectedGym.phone });
+      await handleWhatsappOwner(selectedGym.id, { 
+        ...data, 
+        phone: selectedGym.phone,
+        ownerName: selectedGym.ownerName,
+        gymName: selectedGym.name
+      });
     }
   };
 
