@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Provides the implementation for ManagerSalesOverview.tsx functionality within its module.
 'use client';
 
-import { useSalesContext } from '@/app/manager/sales/sales_context/SalesContext';
+import { useSalesContext } from '@/app/manager/sales/sales_context/ManagerSalesContext';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   AreaChart, Area

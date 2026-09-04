@@ -2,9 +2,9 @@
 'use client';
 
 import { Printer, MessageCircle } from 'lucide-react';
-import type { Order } from '@/app/manager/store/store_types/store_types';
-import { useStoreContext } from '@/app/manager/store/store_context/StoreContext';
-import { formatCurrency } from '@/app/manager/store/store_utils/StoreSharedConstants';
+import type { Order } from '@/app/manager/store/store_types/ManagerStoreTypes';
+import { useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';
+import { formatCurrency } from '@/app/manager/store/store_utils/ManagerStoreSharedConstants';
 import { GYM_DETAILS } from '@/app/manager/manager_utils/ManagerSharedConstants';
 
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';

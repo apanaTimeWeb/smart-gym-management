@@ -22,20 +22,21 @@ export function useDashboardLogic(initialData?: DashboardStats | null): Dashboar
     setEndDate(end);
   };
 
-  // Fetch only when no SSR initialData was passed from page.tsx; initialData in deps prevents re-fetch on SSR hydration
   useEffect(() => {
     if (initialData) return;
 
-    setStatus('loading');
-    dashboardApi.getStats()
-      .then(res => {
-        setStats(res.data);
-        setStatus('success');
-      })
-      .catch(e => {
-        setError(e.message);
-        setStatus('error');
-      });
+    setTimeout(() => {
+      setStatus('loading');
+      dashboardApi.getStats()
+        .then(res => {
+          setStats(res.data);
+          setStatus('success');
+        })
+        .catch(e => {
+          setError(e.message);
+          setStatus('error');
+        });
+    }, 0);
   }, [initialData]);
 
   return {

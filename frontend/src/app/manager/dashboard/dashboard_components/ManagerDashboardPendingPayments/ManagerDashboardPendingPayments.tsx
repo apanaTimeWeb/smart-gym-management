@@ -4,8 +4,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Search } from 'lucide-react';
-import { useDashboardContext } from '@/app/manager/dashboard/dashboard_context/DashboardContext';
-import { formatCurrency } from '@/app/manager/dashboard/dashboard_utils/DashboardSharedConstants';
+import { useDashboardContext } from '@/app/manager/dashboard/dashboard_context/ManagerDashboardContext';
+import { formatCurrency } from '@/app/manager/dashboard/dashboard_utils/ManagerDashboardSharedConstants';
 
 export default function PendingPayments() {
   const { stats } = useDashboardContext();

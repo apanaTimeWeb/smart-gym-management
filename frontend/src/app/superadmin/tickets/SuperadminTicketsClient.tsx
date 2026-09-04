@@ -46,7 +46,7 @@ export default function SuperadminTicketsClient() {
         onFilterChange={() => setCurrentPage(1)}
       />
 
-      <div className="bg-card border border-border rounded-xl shadow-sm flex flex-col min-h-[400px]">
+      <div className="bg-card border border-border rounded-xl shadow-sm flex flex-col min-h-96">
         <SuperadminTicketsTable 
           tickets={paginatedTickets}
           onReply={(ticketId) => alert(`Open reply modal for ticket ${ticketId}`)}

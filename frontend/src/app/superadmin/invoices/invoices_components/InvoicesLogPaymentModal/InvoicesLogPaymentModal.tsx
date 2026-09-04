@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders the InvoicesLogPaymentModal component.
 import React from 'react';
 import { X, Search, DollarSign } from 'lucide-react';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
@@ -33,10 +34,10 @@ export default function InvoicesLogPaymentModal({
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-card border border-border rounded-2xl shadow-2xl w-full max-w-md overflow-hidden motion-safe:animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative bg-overlay border border-border rounded-2xl shadow-2xl w-full max-w-md overflow-hidden motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-200">
         <div className="flex items-center justify-between p-5 border-b border-border">
           <h2 className="text-xl font-bold text-foreground">Log Manual Payment</h2>
-          <button onClick={onClose} className="text-secondary hover:text-foreground transition-colors" aria-label="Close modal">
+          <button onClick={onClose} className="text-secondary hover:text-foreground motion-safe:transition-colors" aria-label="Close modal">
             <X size={20} />
           </button>
         </div>
@@ -46,7 +47,7 @@ export default function InvoicesLogPaymentModal({
           <div className="relative">
             <label className="block text-sm font-medium text-secondary mb-1.5">Select Gym (Tenant)</label>
             <div
-              className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground cursor-pointer flex justify-between items-center hover:border-primary transition-colors"
+              className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground cursor-pointer flex justify-between items-center hover:border-primary motion-safe:transition-colors"
               onClick={() => setIsGymDropdownOpen(!isGymDropdownOpen)}
             >
               <span className={selectedGym ? 'text-foreground' : 'text-secondary'}>
@@ -55,7 +56,7 @@ export default function InvoicesLogPaymentModal({
               <span className="text-secondary text-xs">▼</span>
             </div>
             {isGymDropdownOpen && (
-              <div className="absolute z-30 top-[calc(100%+4px)] left-0 right-0 bg-card border border-border rounded-lg shadow-2xl overflow-hidden max-h-64 flex flex-col motion-safe:animate-in fade-in zoom-in-95 duration-100">
+              <div className="absolute z-30 top-[calc(100%+4px)] left-0 right-0 bg-overlay border border-border rounded-lg shadow-2xl overflow-hidden max-h-64 flex flex-col motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-100">
                 <div className="p-2 border-b border-border bg-header">
                   <div className="relative">
                     <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-secondary" />
@@ -74,7 +75,7 @@ export default function InvoicesLogPaymentModal({
                   {filteredTenantsForDropdown.map((t) => (
                     <div
                       key={t.id}
-                      className="px-3 py-2.5 text-sm text-foreground hover:bg-input hover:text-primary cursor-pointer rounded-md transition-colors"
+                      className="px-3 py-2.5 text-sm text-foreground hover:bg-input hover:text-primary cursor-pointer rounded-md motion-safe:transition-colors"
                       onClick={() => handleSelectGym(t.id)}
                     >
                       <span className="font-bold">{t.name}</span>
@@ -126,13 +127,13 @@ export default function InvoicesLogPaymentModal({
         <div className="p-5 border-t border-border bg-header flex justify-end gap-3">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-input border border-border text-foreground rounded-lg text-sm font-medium hover:bg-border transition-colors"
+            className="px-4 py-2 bg-input border border-border text-foreground rounded-lg text-sm font-medium hover:bg-border motion-safe:transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={onSave}
-            className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-hover transition-all duration-200 ease-in-out active:scale-95"
+            className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-hover motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out motion-safe:active:scale-95"
           >
             Save Payment
           </button>

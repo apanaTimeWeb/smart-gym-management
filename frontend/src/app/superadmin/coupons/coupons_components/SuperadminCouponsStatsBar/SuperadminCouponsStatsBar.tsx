@@ -20,7 +20,7 @@ export default function SuperadminCouponsStatsBar({
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       <div 
         onClick={() => onKpiClick(activeKpi === 'ALL' ? 'ALL' : 'ALL')} // Clicking "Total" always clears to ALL
-        className={`bg-card border rounded-xl p-5 flex flex-col justify-center cursor-pointer transition-all duration-200 ease-in-out motion-safe:hover:-translate-y-1 hover:shadow-lg ${activeKpi === 'ALL' ? 'border-primary ring-2 ring-primary/20' : 'border-border'}`}
+        className={`bg-card border rounded-xl p-5 flex flex-col justify-center cursor-pointer motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out motion-safe:hover:-translate-y-1 hover:shadow-lg ${activeKpi === 'ALL' ? 'border-primary ring-2 ring-primary/20' : 'border-border'}`}
       >
         <div className="flex items-center gap-3 mb-2">
           <div className="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center">
@@ -33,7 +33,7 @@ export default function SuperadminCouponsStatsBar({
 
       <div 
         onClick={() => onKpiClick(activeKpi === 'ACTIVE' ? 'ALL' : 'ACTIVE')}
-        className={`bg-card border rounded-xl p-5 flex flex-col justify-center cursor-pointer transition-all duration-200 ease-in-out motion-safe:hover:-translate-y-1 hover:shadow-lg ${activeKpi === 'ACTIVE' ? 'border-primary ring-2 ring-primary/20' : 'border-border'}`}
+        className={`bg-card border rounded-xl p-5 flex flex-col justify-center cursor-pointer motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out motion-safe:hover:-translate-y-1 hover:shadow-lg ${activeKpi === 'ACTIVE' ? 'border-primary ring-2 ring-primary/20' : 'border-border'}`}
       >
         <div className="flex items-center gap-3 mb-2">
           <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -46,7 +46,7 @@ export default function SuperadminCouponsStatsBar({
 
       <div 
         onClick={() => onKpiClick(activeKpi === 'REDEEMED' ? 'ALL' : 'REDEEMED')}
-        className={`bg-card border rounded-xl p-5 flex flex-col justify-center cursor-pointer transition-all duration-200 ease-in-out motion-safe:hover:-translate-y-1 hover:shadow-lg ${activeKpi === 'REDEEMED' ? 'border-success ring-2 ring-success/20' : 'border-border'}`}
+        className={`bg-card border rounded-xl p-5 flex flex-col justify-center cursor-pointer motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out motion-safe:hover:-translate-y-1 hover:shadow-lg ${activeKpi === 'REDEEMED' ? 'border-success ring-2 ring-success/20' : 'border-border'}`}
       >
         <div className="flex items-center gap-3 mb-2">
           <div className="w-10 h-10 rounded-lg bg-success-bg/30 flex items-center justify-center">

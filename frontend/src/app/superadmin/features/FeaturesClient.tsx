@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Renders the Product Management page — feature flag toggles and release note publishing. Fetches data via useSuperadminData. No mutations wired yet.
+﻿// RESPONSIBILITY: Renders the Product Management page â€” feature flag toggles and release note publishing. Fetches data via useSuperadminData. No mutations wired yet.
 'use client';
 
 import { useFeaturesData } from '@/app/superadmin/features/features_utils/useFeaturesData';
@@ -21,11 +21,11 @@ export default function FeaturesClient() {
     try {
       const res = await featuresApi.createNote({ ...noteForm, isPublished: true, date: new Date().toISOString() });
       if (res.data) {
-        setData((prev: any) => prev ? { ...prev, notes: [res.data, ...prev.notes] } : prev);
+        setData((prev: { flags: FeatureFlag[]; notes: ReleaseNote[]; } | null) => prev ? { ...prev, notes: [res.data, ...prev.notes] } : prev);
         setNoteForm({ version: '', title: '', content: '' });
         toast.success('Release note published successfully');
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast.error('Failed to publish release note');
     } finally {
       setIsPublishing(false);
@@ -57,13 +57,13 @@ export default function FeaturesClient() {
         <div className="flex bg-input p-1 rounded-lg border border-border">
           <button 
             onClick={() => setActiveTab('FLAGS')}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === 'FLAGS' ? 'bg-card text-foreground shadow-sm' : 'text-secondary hover:text-foreground'}`}
+            className={`px-4 py-2 rounded-md text-sm font-medium motion-safe:transition-colors ${activeTab === 'FLAGS' ? 'bg-card text-foreground shadow-sm' : 'text-secondary hover:text-foreground'}`}
           >
             Feature Flags
           </button>
           <button 
             onClick={() => setActiveTab('NOTES')}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === 'NOTES' ? 'bg-card text-foreground shadow-sm' : 'text-secondary hover:text-foreground'}`}
+            className={`px-4 py-2 rounded-md text-sm font-medium motion-safe:transition-colors ${activeTab === 'NOTES' ? 'bg-card text-foreground shadow-sm' : 'text-secondary hover:text-foreground'}`}
           >
             Release Notes
           </button>
@@ -83,7 +83,7 @@ export default function FeaturesClient() {
           </div>
           <div className="divide-y divide-border">
             {DUMMY_FEATURE_FLAGS.map(flag => (
-              <div key={flag.id} className="p-6 flex items-center justify-between hover:bg-input transition-colors">
+              <div key={flag.id} className="p-6 flex items-center justify-between hover:bg-input motion-safe:transition-colors">
                 <div>
                   <h3 className="text-foreground font-bold mb-1">{flag.name}</h3>
                   <p className="text-sm text-secondary">{flag.description}</p>
@@ -96,8 +96,8 @@ export default function FeaturesClient() {
                   )}
                 </div>
                 <div className="flex flex-col items-end">
-                  <div onClick={() => handleToggle(flag.id)} className={`w-12 h-6 rounded-full relative cursor-pointer transition-colors ${flag.isGlobalEnabled ? 'bg-success' : 'bg-border'}`}>
-                    <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${flag.isGlobalEnabled ? 'right-1' : 'left-1'}`}></div>
+                  <div onClick={() => handleToggle(flag.id)} className={`w-12 h-6 rounded-full relative cursor-pointer motion-safe:transition-colors ${flag.isGlobalEnabled ? 'bg-success' : 'bg-border'}`}>
+                    <div className={`absolute top-1 w-4 h-4 bg-white rounded-full motion-safe:transition-all ${flag.isGlobalEnabled ? 'right-1' : 'left-1'}`}></div>
                   </div>
                   <span className="text-xs font-medium mt-2 text-secondary">
                     {flag.isGlobalEnabled ? 'Globally Enabled' : 'Globally Disabled'}
@@ -151,7 +151,7 @@ export default function FeaturesClient() {
                   <label className="text-xs font-medium text-secondary mb-1 block">Content (Markdown supported)</label>
                   <textarea rows={5} required value={noteForm.content} onChange={e => setNoteForm({...noteForm, content: e.target.value})} className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground resize-none" placeholder="We just shipped..."></textarea>
                 </div>
-                <button type="submit" disabled={isPublishing} className="w-full bg-primary text-white py-2.5 rounded-lg font-medium hover:bg-primary-hover transition-colors disabled:opacity-70">
+                <button type="submit" disabled={isPublishing} className="w-full bg-primary text-white py-2.5 rounded-lg font-medium hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-70">
                   {isPublishing ? 'Publishing...' : 'Publish to All Gyms'}
                 </button>
               </div>
@@ -162,3 +162,5 @@ export default function FeaturesClient() {
     </div>
   );
 }
+
+

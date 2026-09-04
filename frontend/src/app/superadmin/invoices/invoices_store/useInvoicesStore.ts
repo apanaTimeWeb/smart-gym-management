@@ -3,6 +3,7 @@
  * DATA FLOW: API (superadminApi) <-> useInvoicesStore.ts <-> UI Components
  */
 
+// DATA FLOW: Component -> useInvoicesStore.ts -> API/Store
 import { create } from 'zustand';
 import toast from 'react-hot-toast';
 import { invoicesApi } from '@/app/superadmin/invoices/invoices_api/invoices_api';
@@ -19,7 +20,7 @@ interface InvoicesState {
   actionLoading: boolean;
 
   fetchData: () => Promise<void>;
-  logManualPayment: (data: unknown) => Promise<void>;
+  logManualPayment: (data: { gymId: string, amount: number, planName: string }) => Promise<void>;
 }
 
 export const useInvoicesStore = create<InvoicesState>((set, get) => ({
@@ -48,7 +49,7 @@ export const useInvoicesStore = create<InvoicesState>((set, get) => ({
     }
   },
 
-  logManualPayment: async (data: any) => {
+  logManualPayment: async (data: { gymId: string, amount: number, planName: string }) => {
     set({ actionLoading: true });
     try {
       // Simulate API call and locally append data to list (TC-25 fix)

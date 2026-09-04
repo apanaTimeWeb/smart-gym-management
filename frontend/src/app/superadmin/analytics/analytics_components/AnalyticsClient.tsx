@@ -4,6 +4,7 @@
  * DATA FLOW: analyticsApi -> AnalyticsClient -> UI
  */
 
+// RESPONSIBILITY: Renders the AnalyticsClient component.
 import { useState, useEffect } from 'react';
 import { analyticsApi } from '@/app/superadmin/analytics/analytics_api/analytics_api';
 import type { RevenueMetrics } from '@/app/superadmin/analytics/analytics_types/analytics_types';
@@ -26,7 +27,7 @@ export default function AnalyticsClient() {
     return (
       <div className="p-6 space-y-4">
         {[1, 2, 3, 4].map(i => (
-          <div key={i} className="h-32 bg-card motion-safe:animate-pulse rounded-xl" />
+          <div key={`skeleton-${i}`} className="h-32 bg-card motion-safe:animate-pulse rounded-xl" />
         ))}
       </div>
     );
@@ -42,7 +43,7 @@ export default function AnalyticsClient() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-card border border-border p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+        <div className="bg-card border border-border p-6 rounded-xl shadow-sm hover:shadow-md motion-safe:transition-shadow">
           <div className="flex items-center justify-between mb-4">
             <span className="text-secondary font-medium">MRR</span>
             <div className="p-2 bg-success/10 rounded-lg text-success"><DollarSign size={18} /></div>
@@ -51,7 +52,7 @@ export default function AnalyticsClient() {
           <p className="text-sm text-success mt-2 font-medium">+12% from last month</p>
         </div>
 
-        <div className="bg-card border border-border p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+        <div className="bg-card border border-border p-6 rounded-xl shadow-sm hover:shadow-md motion-safe:transition-shadow">
           <div className="flex items-center justify-between mb-4">
             <span className="text-secondary font-medium">ARR</span>
             <div className="p-2 bg-primary/10 rounded-lg text-primary"><TrendingUp size={18} /></div>
@@ -60,7 +61,7 @@ export default function AnalyticsClient() {
           <p className="text-sm text-success mt-2 font-medium">+15% from last year</p>
         </div>
 
-        <div className="bg-card border border-border p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+        <div className="bg-card border border-border p-6 rounded-xl shadow-sm hover:shadow-md motion-safe:transition-shadow">
           <div className="flex items-center justify-between mb-4">
             <span className="text-secondary font-medium">Churn Rate</span>
             <div className="p-2 bg-danger-bg/10 rounded-lg text-danger"><Activity size={18} /></div>
@@ -69,7 +70,7 @@ export default function AnalyticsClient() {
           <p className="text-sm text-secondary mt-2">Target: &lt; 2%</p>
         </div>
 
-        <div className="bg-card border border-border p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+        <div className="bg-card border border-border p-6 rounded-xl shadow-sm hover:shadow-md motion-safe:transition-shadow">
           <div className="flex items-center justify-between mb-4">
             <span className="text-secondary font-medium">Active Tenants</span>
             <div className="p-2 bg-warning/10 rounded-lg text-warning"><Users size={18} /></div>

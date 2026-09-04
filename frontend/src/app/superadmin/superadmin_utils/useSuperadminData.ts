@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Generic fetch hook for Superadmin read-only data. Manages loading/error state for a single API endpoint. For mutations, use useSuperadminMutation instead.
-// DATA FLOW: API -> useSuperadminData -> Superadmin page components (FeaturesClient, BackupsClient, MigrationsClient, DashboardView)
+// DATA FLOW: API -> useSuperadminData -> Superadmin page components (FeaturesClient, BackupsClient, MigrationsClient, SuperadminDashboardView)
 
 import { useState, useEffect, useCallback } from 'react';
 import { apiFetch } from '@/lib/api';
@@ -19,8 +19,10 @@ export function useSuperadminData<T>(endpoint: string) {
   // Refetch when endpoint changes (navigating between superadmin pages).
   useEffect(() => {
     let isMounted = true;
-    setFetchState('loading');
-    setError(null);
+    Promise.resolve().then(() => {
+      setFetchState('loading');
+      Promise.resolve().then(() => setError(null));
+    });
 
     apiFetch<{ success: boolean; data: T }>(endpoint)
       .then(res => {
@@ -32,7 +34,7 @@ export function useSuperadminData<T>(endpoint: string) {
       })
       .catch((err: Error) => {
         if (isMounted) {
-          setError(err.message);
+          setError((err as Error).message);
           setFetchState('error');
         }
       });

@@ -2,7 +2,7 @@
 'use client';
 
 import { Dumbbell, Edit2, Trash2 } from 'lucide-react';
-import { useWorkoutContext } from '@/app/manager/workout/workout_context/WorkoutContext';
+import { useWorkoutContext } from '@/app/manager/workout/workout_context/ManagerWorkoutContext';
 
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
@@ -64,7 +64,7 @@ export default function ManagerWorkoutPlansGrid() {
                 { l: 'Duration', v: w.duration }
               ].map(s => (
                 <div key={s.l} className="bg-input rounded-lg p-2 text-center border border-border">
-                  <p className="text-sm font-bold text-foreground">{s.v}</p>
+                  <p className="text-sm font-bold text-foreground">{Array.isArray(s.v) ? s.v.length : s.v}</p>
                   <p className="text-xs text-secondary">{s.l}</p>
                 </div>
               ))}

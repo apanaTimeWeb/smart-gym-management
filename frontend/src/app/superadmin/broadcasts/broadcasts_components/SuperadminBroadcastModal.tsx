@@ -2,12 +2,13 @@
 'use client';
 
 import React from 'react';
-import { X } from 'lucide-react';
+import { X, Loader2 } from 'lucide-react';
 import { UseFormReturn, Controller } from 'react-hook-form';
 import type { BroadcastFormData } from '@/app/superadmin/broadcasts/broadcasts_types/broadcasts_types';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import { useGymsStore } from '@/app/superadmin/gyms/gyms_store/useGymsStore';
-import { useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
+import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 interface SuperadminBroadcastModalProps {
   isOpen: boolean;
@@ -25,19 +26,19 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
   isEditMode = false,
 }) => {
 
-
   const { register, handleSubmit, watch, setValue, formState: { errors } } = form;
   const status = watch('status');
   const targetGymIds = watch('targetGymIds') || [];
 
-  const gyms = useGymsStore(state => state.gyms);
-  const fetchGyms = useGymsStore(state => state.fetchGyms);
+  const { data: fetchRes, isLoading } = useQuery({
+    queryKey: ['superadmin', 'gyms'],
+    queryFn: () => superadminApi.gyms.fetchGyms(),
+    enabled: isOpen,
+  });
 
-  useEffect(() => {
-    if (!gyms) fetchGyms();
-  }, [gyms, fetchGyms]);
+  const gyms = (fetchRes?.data as Tenant[]) ?? [];
 
-  const allGymIds = gyms?.map(g => g.id) || [];
+  const allGymIds = gyms.map((g: Tenant) => g.id) || [];
   const isAllSelected = allGymIds.length > 0 && targetGymIds.length === allGymIds.length;
 
   if (!isOpen) return null;
@@ -52,7 +53,7 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
 
   const handleToggleGym = (id: string) => {
     if (targetGymIds.includes(id)) {
-      setValue('targetGymIds', targetGymIds.filter(g => g !== id), { shouldValidate: true });
+      setValue('targetGymIds', targetGymIds.filter((g: string) => g !== id), { shouldValidate: true });
     } else {
       setValue('targetGymIds', [...targetGymIds, id], { shouldValidate: true });
     }
@@ -60,10 +61,10 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
 
   return (
     <div className="fixed inset-0 bg-black/60 z-40 flex items-center justify-center p-4 backdrop-blur-sm">
-      <div className="bg-card border border-border rounded-2xl w-full max-w-md shadow-xl overflow-hidden flex flex-col">
+      <div className="bg-overlay border border-border rounded-2xl w-full max-w-md shadow-xl overflow-hidden flex flex-col">
         <div className="flex items-center justify-between px-7 py-5 border-b border-border">
           <h2 className="text-lg font-bold text-foreground">{isEditMode ? 'Edit Broadcast' : 'New Broadcast'}</h2>
-          <button onClick={onClose} className="text-secondary hover:text-foreground transition-colors">
+          <button onClick={onClose} className="text-secondary hover:text-foreground motion-safe:transition-colors">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -73,7 +74,7 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
             <label className="text-sm font-bold text-secondary">Broadcast Title <span className="text-danger">*</span></label>
             <input 
               {...register('title')}
-              className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus transition-colors"
+              className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus motion-safe:transition-colors"
               placeholder="e.g. Scheduled Maintenance"
             />
             {errors.title && <span className="text-xs text-danger">{errors.title.message}</span>}
@@ -84,7 +85,7 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
             <textarea 
               {...register('content')}
               rows={4}
-              className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus transition-colors resize-none"
+              className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus motion-safe:transition-colors resize-none"
               placeholder="Write your announcement here..."
             />
             {errors.content && <span className="text-xs text-danger">{errors.content.message}</span>}
@@ -103,8 +104,10 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
                 </button>
               </div>
               <div className="bg-input border border-border rounded-xl max-h-40 overflow-y-auto custom-scrollbar p-2 grid grid-cols-2 gap-2">
-                {gyms?.map(gym => (
-                  <label key={gym.id} className="flex items-center gap-2 cursor-pointer p-2 hover:bg-card rounded-lg transition-colors border border-transparent hover:border-border">
+                {isLoading ? (
+                  <div className="col-span-2 flex justify-center py-4 text-primary"><Loader2 className="w-5 h-5 motion-safe:animate-spin" /></div>
+                ) : gyms?.map((gym: Tenant) => (
+                  <label key={gym.id} className="flex items-center gap-2 cursor-pointer p-2 hover:bg-overlay rounded-lg motion-safe:transition-colors border border-transparent hover:border-border">
                     <input 
                       type="checkbox" 
                       checked={targetGymIds.includes(gym.id)}
@@ -148,7 +151,7 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
               <input 
                 type="datetime-local" 
                 {...register('scheduledDate')}
-                className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus transition-colors"
+                className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus motion-safe:transition-colors"
               />
               {errors.scheduledDate && <span className="text-xs text-danger">{errors.scheduledDate.message}</span>}
             </div>
@@ -158,13 +161,13 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
             <button 
               type="button" 
               onClick={onClose}
-              className="px-5 py-2.5 bg-transparent border border-border hover:bg-border text-foreground font-medium rounded-lg transition-colors text-sm"
+              className="px-5 py-2.5 bg-transparent border border-border hover:bg-border text-foreground font-medium rounded-lg motion-safe:transition-colors text-sm"
             >
               Cancel
             </button>
             <button 
               type="submit" 
-              className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-white font-medium rounded-lg transition-colors text-sm"
+              className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-white font-medium rounded-lg motion-safe:transition-colors text-sm"
             >
               Save Broadcast
             </button>

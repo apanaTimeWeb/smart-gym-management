@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Renders the four KPI stat cards (Total, New, Follow Up, Converted) for the Inquiries module.
 'use client';
 
-import { useInquiriesContext } from '@/app/manager/inquiries/inquiries_context/InquiriesContext';
+import { useInquiriesContext } from '@/app/manager/inquiries/inquiries_context/ManagerInquiriesContext';
 import { MessageSquare, Plus, Clock, CheckCircle } from 'lucide-react';
 
 const KPI_CONFIG = [

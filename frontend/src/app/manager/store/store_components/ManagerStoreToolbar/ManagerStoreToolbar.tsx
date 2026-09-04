@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { Plus, ShoppingCart, RefreshCw, Search } from 'lucide-react';
-import { useStoreContext } from '@/app/manager/store/store_context/StoreContext';
+import { useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';
 
 export default function ManagerStoreToolbar() {
   const { tab, setTab, loadAll, openAddProduct, setShowOrderModal, search, setSearch, setCurrentPage } = useStoreContext();

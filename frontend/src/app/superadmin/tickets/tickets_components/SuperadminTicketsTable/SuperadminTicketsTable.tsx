@@ -31,7 +31,7 @@ export default function SuperadminTicketsTable({ tickets, onReply }: SuperadminT
             </tr>
           ) : (
             tickets.map((ticket) => (
-              <tr key={ticket.id} className="hover:bg-input transition-colors">
+              <tr key={ticket.id} className="hover:bg-input motion-safe:transition-colors">
                 <td className="p-4 text-sm font-medium text-foreground">{ticket.id}</td>
                 <td className="p-4 text-sm text-secondary">{ticket.tenantName}</td>
                 <td className="p-4 text-sm text-foreground font-medium">{ticket.subject}</td>
@@ -50,7 +50,7 @@ export default function SuperadminTicketsTable({ tickets, onReply }: SuperadminT
                       e.stopPropagation();
                       onReply(ticket.id);
                     }}
-                    className="p-2 text-primary hover:bg-primary/10 rounded-lg transition-colors inline-flex items-center justify-center font-medium"
+                    className="p-2 text-primary hover:bg-primary/10 rounded-lg motion-safe:transition-colors inline-flex items-center justify-center font-medium"
                     title="Reply"
                   >
                     <MessageSquare size={18} />

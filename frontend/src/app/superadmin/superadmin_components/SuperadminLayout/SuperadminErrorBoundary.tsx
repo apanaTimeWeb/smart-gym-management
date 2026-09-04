@@ -45,7 +45,7 @@ export class SuperadminErrorBoundary extends React.Component<ErrorBoundaryProps,
           </p>
           <button
             onClick={this.resetErrorBoundary}
-            className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-6 py-2.5 rounded-lg font-medium transition-colors shadow-lg"
+            className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-6 py-2.5 rounded-lg font-medium motion-safe:transition-colors shadow-lg"
           >
             <RefreshCcw className="w-4 h-4" />
             Try Again

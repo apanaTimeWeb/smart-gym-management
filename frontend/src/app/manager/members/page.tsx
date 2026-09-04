@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Server component that handles initial SSR data fetching for the members module.
 import ManagerMembersMain from '@/app/manager/members/members_components/ManagerMembersMain/ManagerMembersMain';
-import { ssrMembersApi } from '@/app/manager/members/members_api/members_server_api';
-import { ssrPlansApi } from '@/app/manager/plans/plans_api/plans_server_api';
-import type { MembersInitialData } from '@/app/manager/members/members_types/members_types';
+import { ssrMembersApi } from '@/app/manager/members/members_api/ManagerMembersServerApi';
+import { ssrPlansApi } from '@/app/manager/plans/plans_api/ManagerPlansServerApi';
+import type { MembersInitialData } from '@/app/manager/members/members_types/ManagerMembersTypes';
 
 export default async function MembersPage() {
   let initialData: MembersInitialData | null = null;

@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Renders the payroll records table with pay status badges and mark-as-paid inline action.
 'use client';
 
-import { useHrContext } from '@/app/manager/hr/hr_context/HrContext';
-import { PAYROLL_TABLE_HEADERS } from '@/app/manager/hr/hr_utils/HrSharedConstants';
+import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
+import { PAYROLL_TABLE_HEADERS } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { CheckCircle2 } from 'lucide-react';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';

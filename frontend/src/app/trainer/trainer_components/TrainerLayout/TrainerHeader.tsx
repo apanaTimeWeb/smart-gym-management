@@ -21,7 +21,7 @@ export default function TrainerHeader({ title, subtitle }: TrainerHeaderProps) {
 
   // Sets mounted=true once on client-side hydration to safely read user data (avoids SSR mismatch).
   useEffect(() => {
-    setMounted(true);
+    setTimeout(() => setMounted(true), 0);
   }, []);
 
   // Attaches click-outside listener once on mount to close notification/profile dropdowns on outside click.

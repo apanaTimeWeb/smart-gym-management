@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Renders the paginated staff members table with sortable columns and inline row actions.
 'use client';
 
-import { useHrContext } from '@/app/manager/hr/hr_context/HrContext';
-import { STAFF_TABLE_HEADERS } from '@/app/manager/hr/hr_utils/HrSharedConstants';
+import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
+import { STAFF_TABLE_HEADERS } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
 import { Edit2, Trash2, CheckCircle2, Ban, PlayCircle } from 'lucide-react';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';

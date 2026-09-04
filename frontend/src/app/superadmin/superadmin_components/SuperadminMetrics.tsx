@@ -23,7 +23,7 @@ export default function SuperadminMetrics({ label, value, type = "number", icon:
   const displayValue = type === "currency" ? formatKPI(value) : value.toLocaleString("en-IN");
 
   return (
-    <div className="bg-card border border-border rounded-xl p-5 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow">
+    <div className="bg-card border border-border rounded-xl p-5 flex items-center gap-4 shadow-sm hover:shadow-md motion-safe:transition-shadow">
       <div className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 ${c.split(" ")[1]}`}>
         <Icon className={`w-5 h-5 ${c.split(" ")[0]}`} />
       </div>

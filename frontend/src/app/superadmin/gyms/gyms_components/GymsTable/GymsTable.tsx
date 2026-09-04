@@ -30,7 +30,7 @@ export default function GymsTable() {
     return (
       <div className="p-4 space-y-4">
         {[...Array(5)].map((_, i) => (
-          <div key={i} className="h-12 bg-card motion-safe:animate-pulse rounded-lg border border-border" />
+          <div key={`skeleton-${i}`} className="h-12 bg-card motion-safe:animate-pulse rounded-lg border border-border" />
         ))}
       </div>
     );
@@ -44,7 +44,7 @@ export default function GymsTable() {
   const paginatedGyms = filteredGyms.slice((currentPage - 1) * GYMS_TABLE_PAGE_SIZE, currentPage * GYMS_TABLE_PAGE_SIZE);
 
   return (
-    <div className="overflow-x-auto flex flex-col min-h-[400px]">
+    <div className="overflow-x-auto flex flex-col min-h-96">
       <table className="w-full text-left border-collapse flex-1">
         <thead>
           <tr className="bg-primary/10 border-b border-border text-secondary text-sm">
@@ -65,7 +65,7 @@ export default function GymsTable() {
               <tr 
                 key={gym.id} 
                 onClick={() => handleRowClick(gym)}
-                className="hover:bg-card/50 transition-all duration-200 ease-in-out group cursor-pointer"
+                className="hover:bg-card/50 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out group cursor-pointer"
               >
                 <td className="p-4 max-w-48">
                   <p className="font-semibold text-foreground truncate" title={gym.name}>{gym.name}</p>
@@ -109,7 +109,7 @@ export default function GymsTable() {
                   </div>
                 </td>
                 <td className="p-4 text-right">
-                  <div className="flex items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
+                  <div className="flex items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity">
                     {isActionLoading ? (
                       <div className="p-2 text-primary">
                         <Loader2 className="w-4 h-4 motion-safe:animate-spin" />
@@ -118,7 +118,7 @@ export default function GymsTable() {
                       <>
                         <button 
                           onClick={(e) => onGhostLoginClick(e, gym.id, gym.name)}
-                          className="p-1.5 text-primary hover:bg-primary-subtle rounded-lg transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
+                          className="p-1.5 text-primary hover:bg-primary-subtle rounded-lg motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
                           title="Ghost Login (Login As Admin)"
                           aria-label={`Ghost Login to ${gym.name}`}
                         >
@@ -126,7 +126,7 @@ export default function GymsTable() {
                         </button>
                         <button 
                           onClick={(e) => onSuspendClick(e, gym.id, gym.name, gym.status)}
-                          className={`p-1.5 rounded-lg transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page ${
+                          className={`p-1.5 rounded-lg motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page ${
                             gym.status === 'SUSPENDED' 
                               ? 'text-success hover:bg-success/10' 
                               : 'text-danger hover:bg-danger-bg/10'
@@ -138,7 +138,7 @@ export default function GymsTable() {
                         </button>
                         <button 
                           onClick={(e) => { e.stopPropagation(); openWhatsappModal(gym); }}
-                          className="p-1.5 text-secondary hover:bg-[#25D366]/10 hover:text-[#25D366] rounded-lg transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
+                          className="p-1.5 text-secondary hover:bg-[#25D366]/10 hover:text-[#25D366] rounded-lg motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
                           title="WhatsApp Owner"
                           aria-label={`WhatsApp owner of ${gym.name}`}
                         >
@@ -146,7 +146,7 @@ export default function GymsTable() {
                         </button>
                         <button 
                           onClick={(e) => { e.stopPropagation(); openEditModal(gym); }}
-                          className="p-1.5 text-secondary hover:bg-primary-subtle hover:text-primary rounded-lg transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
+                          className="p-1.5 text-secondary hover:bg-primary-subtle hover:text-primary rounded-lg motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
                           title="Edit Gym"
                           aria-label={`Edit ${gym.name}`}
                         >
@@ -154,7 +154,7 @@ export default function GymsTable() {
                         </button>
                         <button 
                           onClick={(e) => onDeleteClick(e, gym)}
-                          className="p-1.5 text-secondary hover:bg-danger-bg/10 hover:text-danger rounded-lg transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
+                          className="p-1.5 text-secondary hover:bg-danger-bg/10 hover:text-danger rounded-lg motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
                           title="Delete Gym"
                           aria-label={`Delete ${gym.name}`}
                         >

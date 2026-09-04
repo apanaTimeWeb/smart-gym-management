@@ -2,8 +2,8 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useExpensesContext } from '@/app/manager/expenses/expenses_context/ExpensesContext';
-import { ExpenseSchema, EXPENSE_CATEGORIES, EXPENSE_STATUS_LABELS, type ExpenseFormValues } from '@/app/manager/expenses/expenses_utils/ExpensesSharedConstants';
+import { useExpensesContext } from '@/app/manager/expenses/expenses_context/ManagerExpensesContext';
+import { ExpenseSchema, EXPENSE_CATEGORIES, EXPENSE_STATUS_LABELS, type ExpenseFormValues } from '@/app/manager/expenses/expenses_utils/ManagerExpensesSharedConstants';
 import { X, Save } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -78,7 +78,7 @@ export default function ManagerExpensesModal() {
                   type="number"
                   step="0.01"
                   placeholder="0.00"
-                  {...register('amount')}
+                  {...register('amount', { valueAsNumber: true })}
                   className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-colors ${
                     errors.amount ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
                   }`}

@@ -1,4 +1,5 @@
 "use client";
+// RESPONSIBILITY: Renders the SuperadminDateRangePicker component.
 import { useState } from "react";
 import { Calendar } from "lucide-react";
 

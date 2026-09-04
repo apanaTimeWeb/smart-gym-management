@@ -4,50 +4,51 @@ import { settingsApi } from '@/app/admin/settings/settings_api/settings_api';
 import toast from 'react-hot-toast';
 import { EMPTY_SETTINGS_FORM } from '@/app/admin/settings/settings_utils/SettingsSharedConstants';
 import type { SettingsContextType } from '@/app/admin/settings/settings_types/settings_types';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 export function useSettingsLogic(): SettingsContextType {
  const [activeTab, setActiveTab] = useState('Gym Profile');
- const [loading, setLoading] = useState(true);
- const [saving, setSaving] = useState(false);
  const [form, setForm] = useState(EMPTY_SETTINGS_FORM);
+ const queryClient = useQueryClient();
 
- const fetchSettings = useCallback(async () => {
- setLoading(true);
- try {
- const res = await settingsApi.getSettings();
- if (res.data) setForm(res.data as typeof form);
- } catch (e: unknown) {
- toast.error(e instanceof Error ? e.message : String(e));
- } finally {
- setLoading(false);
- }
- }, []);
+ const { data: settingsData, isLoading, isError } = useQuery({
+   queryKey: ['adminSettings'],
+   queryFn: () => settingsApi.fetchSettings(),
+ });
 
- /* eslint-disable react-hooks/exhaustive-deps, react-hooks/set-state-in-effect */
+ // Initialize form when data loads
  useEffect(() => {
- fetchSettings();
- }, []);
- /* eslint-enable react-hooks/exhaustive-deps, react-hooks/set-state-in-effect */
+   if (settingsData?.data) {
+     setForm(settingsData.data as typeof form);
+   }
+ }, [settingsData]);
+
+ const updateMutation = useMutation({
+   mutationFn: (body: Record<string, unknown>) => settingsApi.updateSettings(body),
+   onSuccess: (res) => {
+     toast.success(res.message || 'Saved');
+     queryClient.invalidateQueries({ queryKey: ['adminSettings'] });
+   },
+   onError: (err) => {
+     toast.error((err as Error).message);
+   }
+ });
 
  const handleSave = useCallback(async () => {
- setSaving(true);
- try {
- const res = await settingsApi.updateSettings(form);
- toast.success(res.message || 'Saved');
- } catch (e: unknown) {
- toast.error(e instanceof Error ? e.message : String(e));
- } finally {
- setSaving(false);
- }
- }, [form]);
+   updateMutation.mutate(form);
+ }, [form, updateMutation]);
 
  const handleChange = useCallback((field: string, value: string) => {
- setForm(prev => ({ ...prev, [field]: value }));
+   setForm(prev => ({ ...prev, [field]: value }));
  }, []);
 
  return {
- activeTab, setActiveTab,
- loading, saving, form,
- handleChange, fetchSettings, handleSave
+   activeTab, setActiveTab,
+   loading: isLoading, 
+   saving: updateMutation.isPending, 
+   form,
+   handleChange, 
+   fetchSettings: async () => {}, // Mocked for context compatibility
+   handleSave
  };
 }

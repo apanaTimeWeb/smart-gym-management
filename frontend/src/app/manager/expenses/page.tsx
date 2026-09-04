@@ -1,4 +1,4 @@
-import { ExpensesProvider } from '@/app/manager/expenses/expenses_context/ExpensesContext';
+import { ExpensesProvider } from '@/app/manager/expenses/expenses_context/ManagerExpensesContext';
 import ManagerExpensesMain from '@/app/manager/expenses/expenses_components/ManagerExpensesMain/ManagerExpensesMain';
 
 export const metadata = {

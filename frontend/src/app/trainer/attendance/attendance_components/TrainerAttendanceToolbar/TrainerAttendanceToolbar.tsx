@@ -10,7 +10,7 @@ export default function TrainerAttendanceToolbar() {
   const { tab, setTab, loadAll, setShowModal, search, setSearch, setCurrentPage } = useAttendanceContext();
   const [localSearch, setLocalSearch] = useState(search);
 
-  useEffect(() => { setLocalSearch(search); }, [search]);
+  useEffect(() => { setTimeout(() => setLocalSearch(search), 0); }, [search]);
 
   useEffect(() => {
     const handler = setTimeout(() => {

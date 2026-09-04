@@ -4,16 +4,16 @@ import { SalesUrlConfig } from '@/app/admin/sales/sales_url_config';
 import type { ApiResponse } from '@/lib/api';
 
 export const ssrSalesApi = {
-  getOverview: () => ssrApiFetch<ApiResponse<Record<string, unknown>>>(SalesUrlConfig.BACKEND_API.OVERVIEW),
-  getMembershipReport: (params?: Record<string, string>) => {
+  fetchOverview: () => ssrApiFetch<ApiResponse<Record<string, unknown>>>(SalesUrlConfig.BACKEND_API.OVERVIEW),
+  fetchMembershipReport: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
     return ssrApiFetch<ApiResponse<Record<string, unknown>>>(`${SalesUrlConfig.BACKEND_API.MEMBERSHIP_REPORT}${q}`);
   },
-  getPendingPayments: (params?: Record<string, string>) => {
+  fetchPendingPayments: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
     return ssrApiFetch<ApiResponse<Record<string, unknown>>>(`${SalesUrlConfig.BACKEND_API.PENDING_PAYMENTS}${q}`);
   },
-  getAllMemberships: (params?: Record<string, string>) => {
+  fetchAllMemberships: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
     return ssrApiFetch<ApiResponse<Record<string, unknown>>>(`${SalesUrlConfig.BACKEND_API.ALL_MEMBERSHIPS}${q}`);
   },

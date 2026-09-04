@@ -9,10 +9,10 @@ export default async function SalesPage() {
   try {
     const params = { limit: '10', page: '1' };
     const [overviewRes, reportRes, pendingRes, allRes] = await Promise.all([
-      ssrSalesApi.getOverview(),
-      ssrSalesApi.getMembershipReport(),
-      ssrSalesApi.getPendingPayments(params),
-      ssrSalesApi.getAllMemberships(params)
+      ssrSalesApi.fetchOverview(),
+      ssrSalesApi.fetchMembershipReport(),
+      ssrSalesApi.fetchPendingPayments(params),
+      ssrSalesApi.fetchAllMemberships(params)
     ]);
     initialData = {
       overviewData: (overviewRes.data?.monthlyRevenue as any) || [],

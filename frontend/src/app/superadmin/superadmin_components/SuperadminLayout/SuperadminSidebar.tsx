@@ -32,7 +32,7 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
 
   // Closes the mobile drawer whenever the route changes
   useEffect(() => {
-    setIsMobileOpen(false);
+    Promise.resolve().then(() => setIsMobileOpen(false));
   }, [pathname]);
 
   const navGroups = [
@@ -80,12 +80,12 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
       {/* Mobile Backdrop */}
       {isMobileOpen && (
         <div
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 lg:hidden transition-opacity"
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 lg:hidden motion-safe:transition-opacity"
           onClick={() => setIsMobileOpen(false)}
         />
       )}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex flex-col bg-background border-r border-border transition-all duration-300 ${
+        className={`fixed inset-y-0 left-0 z-50 flex flex-col bg-background border-r border-border motion-safe:transition-all motion-safe:duration-300 ${
           isCollapsed ? 'lg:w-20' : 'lg:w-64'
         } ${
           isMobileOpen ? 'w-64 translate-x-0' : 'w-64 -translate-x-full lg:translate-x-0'
@@ -115,7 +115,7 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
                     key={item.name}
                     href={item.href}
                     title={isCollapsed ? item.name : undefined}
-                    className={`flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors ${
+                    className={`flex items-center gap-3 rounded-lg px-3 py-2.5 motion-safe:transition-colors ${
                       isActive
                         ? 'bg-primary/10 text-primary border border-primary/20'
                         : 'text-secondary hover:bg-card hover:text-foreground border border-transparent'

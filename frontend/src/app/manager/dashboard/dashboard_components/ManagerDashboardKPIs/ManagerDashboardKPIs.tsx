@@ -1,9 +1,9 @@
 // RESPONSIBILITY: Renders the two rows of KPI metric stat cards on the dashboard using live data from DashboardContext.
 'use client';
 
-import { useDashboardContext } from '@/app/manager/dashboard/dashboard_context/DashboardContext';
+import { useDashboardContext } from '@/app/manager/dashboard/dashboard_context/ManagerDashboardContext';
 import ManagerStatCard from '@/app/manager/manager_components/ManagerShared/ManagerStatCard';
-import { formatCurrency } from '@/app/manager/dashboard/dashboard_utils/DashboardSharedConstants';
+import { formatCurrency } from '@/app/manager/dashboard/dashboard_utils/ManagerDashboardSharedConstants';
 import { Users, DollarSign, TrendingUp, AlertCircle, CheckCircle, Clock, UserCheck, ShoppingCart } from 'lucide-react';
 
 export default function ManagerDashboardKPIs() {

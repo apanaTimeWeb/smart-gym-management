@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Provides the implementation for ManagerSalesTabs.tsx functionality within its module.
 'use client';
 
-import { useSalesContext } from '@/app/manager/sales/sales_context/SalesContext';
-import { SALES_TABS } from '@/app/manager/sales/sales_utils/SalesSharedConstants';
+import { useSalesContext } from '@/app/manager/sales/sales_context/ManagerSalesContext';
+import { SALES_TABS } from '@/app/manager/sales/sales_utils/ManagerSalesSharedConstants';
 
 export default function ManagerSalesTabs() {
  const { tab, setTab } = useSalesContext();

@@ -5,7 +5,7 @@ export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 export type TimeRange = 'weekly' | 'monthly' | 'yearly' | 'custom';
 
 export interface DashboardContextType { 
-  stats: any | null; 
+  stats: unknown | null; 
   status: FetchState; 
   error: string;
   timeRange: TimeRange;

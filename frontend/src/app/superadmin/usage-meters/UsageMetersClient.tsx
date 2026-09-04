@@ -1,13 +1,14 @@
-'use client';
+﻿'use client';
 /**
  * RESPONSIBILITY: Renders the Usage Meters dashboard for superadmins to monitor tenant resource limits.
  * DATA FLOW: usageMetersApi -> UsageMetersClient -> UI
  */
 
+// RESPONSIBILITY: Renders the UsageMetersClient component.
 import { useState, useEffect } from 'react';
 import { usageMetersApi } from '@/app/superadmin/usage-meters/usage-meters_api/usage-meters_api';
 import type { UsageMeter } from '@/app/superadmin/usage-meters/usage-meters_types/usage-meters_types';
-import { BarChart2, HardDrive, MessageSquare, Users, Calendar } from 'lucide-react';
+import { HardDrive, MessageSquare, Users, Calendar } from 'lucide-react';
 
 export default function UsageMetersClient() {
   const [meters, setMeters] = useState<UsageMeter[]>([]);
@@ -40,7 +41,7 @@ export default function UsageMetersClient() {
     return (
       <div className="p-6 space-y-4">
         {[1, 2, 3].map(i => (
-          <div key={i} className="h-32 bg-card motion-safe:animate-pulse rounded-xl" />
+          <div key={`skeleton-${i}`} className="h-32 bg-card motion-safe:animate-pulse rounded-xl" />
         ))}
       </div>
     );
@@ -91,11 +92,11 @@ export default function UsageMetersClient() {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {meters.map(meter => {
           const dbGb = meter.databaseGb || 0;
-          const mediaGb = meter.mediaGb || (meter as any).storageGb || 0;
+          const mediaGb = meter.mediaGb || ((meter as unknown as Record<string, unknown>).storageGb as number) || 0;
           const totalStorage = dbGb + mediaGb;
 
           return (
-          <div key={meter.id} className="bg-card border border-border rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+          <div key={meter.id} className="bg-card border border-border rounded-xl p-6 shadow-sm hover:shadow-md motion-safe:transition-shadow">
             <h3 className="text-lg font-bold text-primary mb-4 truncate" title={meter.tenantName}>{meter.tenantName}</h3>
             
             <div className="space-y-5">
@@ -171,3 +172,5 @@ export default function UsageMetersClient() {
     </div>
   );
 }
+
+

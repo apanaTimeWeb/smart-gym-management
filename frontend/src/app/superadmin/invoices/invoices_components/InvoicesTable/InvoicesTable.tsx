@@ -1,7 +1,8 @@
+// RESPONSIBILITY: Renders the InvoicesTable component.
 import React, { useState } from 'react';
 import { Receipt } from 'lucide-react';
 import type { SaaSInvoice } from '@/app/superadmin/invoices/invoices_types/invoices_types';
-import InvoicesTableRow from './InvoicesTableRow';
+import InvoicesTableRow from '@/app/superadmin/invoices/invoices_components/InvoicesTable/InvoicesTableRow';
 import InvoicesEmptyState from '@/app/superadmin/invoices/invoices_components/InvoicesEmptyState/InvoicesEmptyState';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 
@@ -19,7 +20,7 @@ export default function InvoicesTable({ invoices, onLogPaymentClick }: InvoicesT
   const paginatedInvoices = invoices.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   return (
-    <div className="flex flex-col min-h-[400px]">
+    <div className="flex flex-col min-h-96">
       <div className="overflow-x-auto flex-1">
         <table className="w-full text-left border-collapse min-w-full">
           <thead>

@@ -8,13 +8,7 @@ import PlanCreateModal from '@/app/superadmin/plans/plans_components/PlanCreateM
 import PlanEditModal from '@/app/superadmin/plans/plans_components/PlanEditModal';
 
 export default function PlansClient() {
-  const fetchPlans = usePlansStore(state => state.fetchPlans);
   const openCreateModal = usePlansStore(state => state.openCreateModal);
-
-  // Fetch plans on mount
-  useEffect(() => {
-    fetchPlans();
-  }, [fetchPlans]);
 
   return (
     <div className="space-y-8">
@@ -25,7 +19,7 @@ export default function PlansClient() {
         </div>
         <button
           onClick={openCreateModal}
-          className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-hover transition-colors active:scale-95"
+          className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-hover motion-safe:transition-colors motion-safe:active:scale-95"
         >
           Create New Plan
         </button>

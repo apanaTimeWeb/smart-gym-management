@@ -1,3 +1,4 @@
+// DATA FLOW: Component -> useFeaturesData.ts -> API/Store
 import { useState, useEffect } from 'react';
 import { featuresApi } from '@/app/superadmin/features/features_api/features_api';
 import type { FeatureFlag, ReleaseNote } from '@/app/superadmin/features/features_types/features_types';

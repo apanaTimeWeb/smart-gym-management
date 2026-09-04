@@ -52,7 +52,7 @@ export default function InvoicesClient() {
       </div>
       <div className="bg-card rounded-xl border border-border overflow-hidden">
         <div className="h-12 bg-border/30" />
-        {[...Array(6)].map((_, i) => <div key={i} className="h-12 border-t border-border" />)}
+        {[...Array(6)].map((_, i) => <div key={`skeleton-${i}`} className="h-12 border-t border-border" />)}
       </div>
     </div>
   );
@@ -77,7 +77,7 @@ export default function InvoicesClient() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 bg-input border border-border rounded-lg text-sm font-medium text-secondary hover:text-foreground transition-colors">
+          <button className="flex items-center gap-2 px-4 py-2 bg-input border border-border rounded-lg text-sm font-medium text-secondary hover:text-foreground motion-safe:transition-colors">
             <Filter size={16} /> Filter Failed
           </button>
         </div>

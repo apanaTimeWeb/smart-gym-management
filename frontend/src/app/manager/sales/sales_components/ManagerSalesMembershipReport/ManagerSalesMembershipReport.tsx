@@ -2,11 +2,11 @@
 'use client';
 
 
-import { useSalesContext } from '@/app/manager/sales/sales_context/SalesContext';
+import { useSalesContext } from '@/app/manager/sales/sales_context/ManagerSalesContext';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { Loader2 } from 'lucide-react';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
-import type { MembershipReportItem } from '@/app/manager/sales/sales_types/sales_types';
+import type { MembershipReportItem } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
 
 export default function ManagerSalesMembershipReport() {
   const { search, currentPage, setCurrentPage, membershipReport, membershipTotals, fetchState } = useSalesContext();

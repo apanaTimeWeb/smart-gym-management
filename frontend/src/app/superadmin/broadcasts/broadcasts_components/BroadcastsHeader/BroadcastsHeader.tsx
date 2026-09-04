@@ -21,12 +21,12 @@ export default function BroadcastsHeader({ searchQuery, onSearchChange, onCreate
             placeholder="Search broadcasts..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus transition-colors  w-full sm:w-64 "
+            className="pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus motion-safe:transition-colors  w-full sm:w-64 "
           />
         </div>
         <button
           onClick={onCreateClick}
-          className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-white font-medium rounded-lg transition-all duration-200 ease-in-out active:scale-95 text-sm"
+          className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-white font-medium rounded-lg motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out motion-safe:active:scale-95 text-sm"
         >
           <Plus className="w-4 h-4" />
           New Broadcast

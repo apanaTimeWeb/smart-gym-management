@@ -1,6 +1,6 @@
 'use client';
 
-import { useStoreContext } from '@/app/manager/store/store_context/StoreContext';
+import { useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 
 export default function ManagerStoreFilters() {

@@ -6,10 +6,10 @@ import { X, Save } from 'lucide-react';
 import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import { useMembersContext } from '@/app/manager/members/members_context/MembersContext';
-import { useMembersStore } from '@/app/manager/members/members_store/useMembersStore';
-import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency, MemberSchema, type MemberFormValues, EMPTY_MEMBER_FORM, GENDER_OPTIONS } from '@/app/manager/members/members_utils/MembersSharedConstants';
-import type { PlanWithCustom } from '@/app/manager/members/members_types/members_types';
+import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
+import { useManagerMembersStore } from '@/app/manager/members/members_store/useManagerMembersStore';
+import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency, MemberSchema, type MemberFormValues, EMPTY_MEMBER_FORM, GENDER_OPTIONS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
+import type { PlanWithCustom } from '@/app/manager/members/members_types/ManagerMembersTypes';
 
 export default function ManagerMembersModal() {
   const {
@@ -17,8 +17,8 @@ export default function ManagerMembersModal() {
     saveMember
   } = useMembersContext();
 
-  const plans = useMembersStore(s => s.plans);
-  const saving = useMembersStore(s => s.saving);
+  const plans = useManagerMembersStore(s => s.plans);
+  const saving = useManagerMembersStore(s => s.saving);
 
   const useFormReturn = useForm<MemberFormValues>({
     resolver: zodResolver(MemberSchema),

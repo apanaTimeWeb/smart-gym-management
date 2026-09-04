@@ -23,10 +23,10 @@ export default function GymDeleteModal() {
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 p-4">
-      <div className="bg-card rounded-2xl p-7 max-w-md w-full border border-destructive shadow-2xl relative">
+      <div className="bg-overlay rounded-2xl p-7 max-w-md w-full border border-destructive shadow-2xl relative">
         <button
           onClick={closeDeleteModal}
-          className="absolute top-5 right-5 text-secondary hover:text-foreground transition-colors"
+          className="absolute top-5 right-5 text-secondary hover:text-foreground motion-safe:transition-colors"
           disabled={isDeleting}
         >
           <X className="w-5 h-5" />
@@ -51,7 +51,7 @@ export default function GymDeleteModal() {
             type="text"
             value={confirmText}
             onChange={(e) => setConfirmText(e.target.value)}
-            className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-destructive focus:outline-none transition-colors"
+            className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-destructive focus:outline-none motion-safe:transition-colors"
             placeholder="Type DELETE"
             disabled={isDeleting}
           />
@@ -61,7 +61,7 @@ export default function GymDeleteModal() {
           <button
             type="button"
             onClick={closeDeleteModal}
-            className="px-5 py-2.5 rounded-lg text-sm font-medium text-foreground border border-border hover:bg-background transition-colors"
+            className="px-5 py-2.5 rounded-lg text-sm font-medium text-foreground border border-border hover:bg-background motion-safe:transition-colors"
             disabled={isDeleting}
           >
             Cancel
@@ -69,7 +69,7 @@ export default function GymDeleteModal() {
           <button
             type="button"
             onClick={handleConfirmDelete}
-            className="px-5 py-2.5 rounded-lg text-sm font-medium text-white bg-danger-bg hover:bg-danger-bg/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-5 py-2.5 rounded-lg text-sm font-medium text-white bg-danger-bg hover:bg-danger-bg/90 motion-safe:transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={!isDeleteEnabled}
           >
             {isDeleting ? 'Deleting...' : 'Confirm Delete'}

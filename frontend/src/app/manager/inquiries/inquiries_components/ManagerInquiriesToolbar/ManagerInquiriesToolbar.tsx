@@ -2,8 +2,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useInquiriesContext } from '@/app/manager/inquiries/inquiries_context/InquiriesContext';
-import { INQUIRIES_STATUS_LABELS } from '@/app/manager/inquiries/inquiries_utils/InquiriesSharedConstants';
+import { useInquiriesContext } from '@/app/manager/inquiries/inquiries_context/ManagerInquiriesContext';
+import { INQUIRIES_STATUS_LABELS } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesSharedConstants';
 import { RefreshCw, Plus, MessageCircle, Mail } from 'lucide-react';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 

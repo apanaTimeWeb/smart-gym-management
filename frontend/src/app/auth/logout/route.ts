@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` }
       });
-    } catch (e) {
+    } catch {
       // Ignore backend logout errors, just clear local cookies
     }
   }

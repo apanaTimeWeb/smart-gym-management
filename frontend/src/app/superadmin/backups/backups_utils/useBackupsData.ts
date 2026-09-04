@@ -1,3 +1,4 @@
+// DATA FLOW: Component -> useBackupsData.ts -> API/Store
 import { useState, useEffect } from 'react';
 import { backupsApi } from '@/app/superadmin/backups/backups_api/backups_api';
 import type { BackupRecord } from '@/app/superadmin/backups/backups_types/backups_types';
@@ -14,7 +15,7 @@ export function useBackupsData() {
     
     async function fetchData() {
       try {
-        setFetchState('loading');
+        Promise.resolve().then(() => setFetchState('loading'));
         const res = await backupsApi.getAll();
         if (isMounted) {
           if (res.data) {

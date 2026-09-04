@@ -2,9 +2,8 @@
 'use client';
 
 import { X, Printer, Plus, Minus, Send } from 'lucide-react';
-import { useStoreContext } from '@/app/manager/store/store_context/StoreContext';
-import { PAYMENT_METHODS, formatCurrency } from '@/app/manager/store/store_utils/StoreSharedConstants';
-import { useState } from 'react';
+import { useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';
+import { PAYMENT_METHODS, formatCurrency } from '@/app/manager/store/store_utils/ManagerStoreSharedConstants';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 
 export default function ManagerStorePosModal() {

@@ -2,8 +2,8 @@
 'use client';
 
 import { Edit2, Trash2 } from 'lucide-react';
-import { useWorkoutContext } from '@/app/manager/workout/workout_context/WorkoutContext';
-import { EXERCISE_TABLE_HEADERS } from '@/app/manager/workout/workout_utils/WorkoutSharedConstants';
+import { useWorkoutContext } from '@/app/manager/workout/workout_context/ManagerWorkoutContext';
+import { EXERCISE_TABLE_HEADERS } from '@/app/manager/workout/workout_utils/ManagerWorkoutSharedConstants';
 
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';

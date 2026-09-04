@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { X } from 'lucide-react';
-import { useMembersContext } from '@/app/manager/members/members_context/MembersContext';
+import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
 
 export default function ManagerAddPaymentModal() {
   const { showPaymentModal, setShowPaymentModal, recordPayment, selectedMember } = useMembersContext();
@@ -25,7 +25,7 @@ export default function ManagerAddPaymentModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
       <div className="bg-card w-full max-w-md rounded-2xl shadow-xl overflow-hidden flex flex-col">
         <div className="px-6 py-4 border-b border-border flex items-center justify-between">
           <h2 className="text-xl font-bold text-foreground">Record Payment</h2>

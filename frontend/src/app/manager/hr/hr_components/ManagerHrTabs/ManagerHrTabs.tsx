@@ -2,8 +2,8 @@
 'use client';
 
 import { useState } from 'react';
-import { useHrContext } from '@/app/manager/hr/hr_context/HrContext';
-import { HR_TABS } from '@/app/manager/hr/hr_utils/HrSharedConstants';
+import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
+import { HR_TABS } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
 import { RefreshCw, Plus, Search } from 'lucide-react';
 import ManagerHrStaffTable from '@/app/manager/hr/hr_components/ManagerHrStaffTable/ManagerHrStaffTable';
 import ManagerHrPayrollTable from '@/app/manager/hr/hr_components/ManagerHrPayrollTable/ManagerHrPayrollTable';

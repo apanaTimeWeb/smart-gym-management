@@ -5,12 +5,12 @@ import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/Manage
 import ManagerToast from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import ManagerMessageModal from '@/app/manager/manager_components/ManagerFeedback/ManagerMessageModal';
 import ManagerBulkMessageModal from '@/app/manager/manager_components/ManagerFeedback/ManagerBulkMessageModal';
-import { InquiriesProvider, useInquiriesContext } from '@/app/manager/inquiries/inquiries_context/InquiriesContext';
+import { InquiriesProvider, useInquiriesContext } from '@/app/manager/inquiries/inquiries_context/ManagerInquiriesContext';
 import ManagerInquiriesKPIs from '@/app/manager/inquiries/inquiries_components/ManagerInquiriesKPIs/ManagerInquiriesKPIs';
 import ManagerInquiriesToolbar from '@/app/manager/inquiries/inquiries_components/ManagerInquiriesToolbar/ManagerInquiriesToolbar';
-import InquiriesTable from '@/app/manager/inquiries/inquiries_components/InquiriesTable/InquiriesTable';
+import ManagerInquiriesTable from '@/app/manager/inquiries/inquiries_components/InquiriesTable/ManagerInquiriesTable';
 import ManagerInquiriesModal from '@/app/manager/inquiries/inquiries_components/ManagerInquiriesModal/ManagerInquiriesModal';
-import ConvertLeadModal from '@/app/manager/inquiries/inquiries_components/ConvertLeadModal/ConvertLeadModal';
+import ManagerConvertLeadModal from '@/app/manager/inquiries/inquiries_components/ConvertLeadModal/ManagerConvertLeadModal';
 
 function InquiriesContent() {
   const { toast, hideToast, msgModal, closeMsg, showToast, bulkMsgModal, closeBulkMsg, clearSelection } = useInquiriesContext();
@@ -22,12 +22,12 @@ function InquiriesContent() {
         <ManagerInquiriesKPIs />
         <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
           <ManagerInquiriesToolbar />
-          <InquiriesTable />
+          <ManagerInquiriesTable />
         </div>
       </div>
 
       <ManagerInquiriesModal />
-      <ConvertLeadModal />
+      <ManagerConvertLeadModal />
 
       {msgModal?.open && (
         <ManagerMessageModal

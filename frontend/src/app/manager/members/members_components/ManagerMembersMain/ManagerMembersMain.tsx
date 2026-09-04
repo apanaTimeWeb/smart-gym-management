@@ -6,12 +6,12 @@ import ManagerToast from '@/app/manager/manager_components/ManagerFeedback/Manag
 import ManagerMessageModal from '@/app/manager/manager_components/ManagerFeedback/ManagerMessageModal';
 import ManagerThermalReceipt from '@/app/manager/manager_components/ManagerShared/ManagerThermalReceipt';
 
-import { MembersProvider, useMembersContext } from '@/app/manager/members/members_context/MembersContext';
-import MembersKPIs from '@/app/manager/members/members_components/MembersKPIs/MembersKPIs';
-import MembersToolbar from '@/app/manager/members/members_components/MembersToolbar/MembersToolbar';
+import { MembersProvider, useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
+import ManagerMembersKPIs from '@/app/manager/members/members_components/MembersKPIs/ManagerMembersKPIs';
+import ManagerMembersToolbar from '@/app/manager/members/members_components/MembersToolbar/ManagerMembersToolbar';
 import ManagerMembersTable from '@/app/manager/members/members_components/ManagerMembersTable/ManagerMembersTable';
-import MemberProfile from '@/app/manager/members/members_components/MemberProfile/MemberProfile';
-import type { MembersInitialData } from '@/app/manager/members/members_types/members_types';
+import ManagerMemberProfile from '@/app/manager/members/members_components/MemberProfile/ManagerMemberProfile';
+import type { MembersInitialData } from '@/app/manager/members/members_types/ManagerMembersTypes';
 import dynamic from 'next/dynamic';
 
 const ManagerMembersModal = dynamic(() => import('@/app/manager/members/members_components/ManagerMembersModal/ManagerMembersModal'), { ssr: false });
@@ -28,15 +28,15 @@ function MembersContent() {
           <>
             <ManagerHeader title="Members Directory" subtitle="Manage gym members, profiles, and subscriptions" />
             <div className="p-6 space-y-5">
-              <MembersKPIs />
+              <ManagerMembersKPIs />
               <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
-                <MembersToolbar />
+                <ManagerMembersToolbar />
                 <ManagerMembersTable />
               </div>
             </div>
           </>
         ) : (
-          <MemberProfile />
+          <ManagerMemberProfile />
         )}
 
         <ManagerMembersModal />

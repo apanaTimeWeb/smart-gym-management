@@ -18,7 +18,7 @@ export default function GymsToolbar() {
           placeholder="Search gyms by name or owner..." 
           value={search}
           onChange={(e) => handleSearchChange(e.target.value)}
-          className="w-full bg-card border border-border text-foreground rounded-lg pl-10 pr-4 py-2 transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
+          className="w-full bg-card border border-border text-foreground rounded-lg pl-10 pr-4 py-2 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
           aria-label="Search gyms"
         />
       </div>

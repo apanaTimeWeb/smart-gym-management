@@ -3,8 +3,8 @@
 
 import { useState, useEffect } from 'react';
 import { Search, Plus } from 'lucide-react';
-import { useWorkoutContext } from '@/app/manager/workout/workout_context/WorkoutContext';
-import { WORKOUT_TAB_OPTIONS } from '@/app/manager/workout/workout_utils/WorkoutSharedConstants';
+import { useWorkoutContext } from '@/app/manager/workout/workout_context/ManagerWorkoutContext';
+import { WORKOUT_TAB_OPTIONS } from '@/app/manager/workout/workout_utils/ManagerWorkoutSharedConstants';
 
 export default function ManagerWorkoutToolbar() {
   const { tab, setTab, search, setSearch, setCurrentPage, openAddWk, openAddEx } = useWorkoutContext();

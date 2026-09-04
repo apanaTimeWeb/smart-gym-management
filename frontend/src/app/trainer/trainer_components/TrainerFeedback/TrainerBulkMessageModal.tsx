@@ -35,8 +35,10 @@ export default function TrainerBulkMessageModal({
   // Reset send state and message whenever the modal opens with new data.
   useEffect(() => {
     if (open) {
-      setSentIndexes(new Set());
-      setMessage(defaultMessage);
+      setTimeout(() => {
+        setSentIndexes(new Set());
+        setMessage(defaultMessage);
+      }, 0);
     }
   }, [open, defaultMessage]);
 
@@ -81,7 +83,7 @@ export default function TrainerBulkMessageModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="bg-card rounded-2xl shadow-2xl w-full max-w-2xl relative overflow-hidden border border-border max-h-[90vh] flex flex-col motion-safe:animate-in zoom-in-95 duration-200">
+      <div className="bg-card rounded-2xl shadow-2xl w-full max-w-2xl relative overflow-hidden border border-border max-h-full flex flex-col motion-safe:animate-in zoom-in-95 duration-200">
         <div
           className="px-6 py-4 flex items-center justify-between shrink-0"
           style={{ background: accentColor }}

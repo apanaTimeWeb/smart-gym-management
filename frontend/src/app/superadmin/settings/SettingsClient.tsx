@@ -1,68 +1,67 @@
-// RESPONSIBILITY: Renders the Platform Settings page. Fetches settings from API and allows inline editing per setting.
+﻿// RESPONSIBILITY: Renders the Platform Settings page. Fetches settings from API and allows inline editing per setting using TanStack Query.
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Settings, BellRing, Loader2, Save } from 'lucide-react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
-import { useSuperadminMutation } from '@/app/superadmin/superadmin_utils/hooks/useSuperadminMutation';
 import toast from 'react-hot-toast';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import type { FetchState, PlatformSetting } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { PlatformSetting } from '@/app/superadmin/superadmin_types/superadmin_types';
+
+const mockSettings: PlatformSetting[] = [
+  { id: '1', key: 'MAX_MEMBERS_PER_GYM', value: '1000', description: 'Default maximum members for new tenants', category: 'general', dataType: 'number' },
+  { id: '2', key: 'MAX_BRANCHES', value: '5', description: 'Default maximum branches allowed', category: 'general', dataType: 'number' },
+  { id: '3', key: 'SYSTEM_CURRENCY', value: 'INR', description: 'Default currency for billing', category: 'general', dataType: 'string' },
+  { id: '4', key: 'ENABLE_BETA_FEATURES', value: 'false', description: 'Toggle experimental features globally', category: 'general', dataType: 'boolean' }
+];
 
 export default function SettingsClient() {
-  const [settings, setSettings] = useState<PlatformSetting[]>([]);
-  const [fetchState, setFetchState] = useState<FetchState>('idle');
   const [editedValues, setEditedValues] = useState<Record<string, string>>({});
+  const queryClient = useQueryClient();
 
-  const { mutate, isMutating } = useSuperadminMutation();
+  const { data: fetchRes, isLoading, isError } = useQuery({
+    queryKey: ['superadmin', 'settings'],
+    queryFn: () => superadminApi.settings.fetchSettings(),
+  });
 
-  // Refetch on mount to load platform settings
-  useEffect(() => {
-    async function fetchSettings() {
-      setFetchState('loading');
-      try {
-        const res = await superadminApi.settings.getAll();
-        
-        // Mock data fallback if backend is empty (TC-07 fix)
-        const mockSettings: PlatformSetting[] = [
-          { id: '1', key: 'MAX_MEMBERS_PER_GYM', value: '1000', description: 'Default maximum members for new tenants', category: 'general', dataType: 'number' },
-          { id: '2', key: 'MAX_BRANCHES', value: '5', description: 'Default maximum branches allowed', category: 'general', dataType: 'number' },
-          { id: '3', key: 'SYSTEM_CURRENCY', value: 'INR', description: 'Default currency for billing', category: 'general', dataType: 'string' },
-          { id: '4', key: 'ENABLE_BETA_FEATURES', value: 'false', description: 'Toggle experimental features globally', category: 'general', dataType: 'boolean' }
-        ];
+  const responseData = fetchRes as { data?: PlatformSetting[] } | undefined;
+  const settings = responseData?.data && responseData.data.length > 0 ? responseData.data : mockSettings;
 
-        setSettings(res.data && res.data.length > 0 ? res.data : mockSettings);
-        setFetchState('success');
-      } catch (e: unknown) {
-        toast.error(e instanceof Error ? e.message : String(e));
-        setFetchState('error');
-      }
+  const updateMutation = useMutation({
+    mutationFn: ({ id, value }: { id: string, value: string }) => superadminApi.settings.updateSetting(id, { value }),
+    onSuccess: (res, variables) => {
+      toast.success(res.message || 'Setting updated successfully');
+      queryClient.setQueryData(['superadmin', 'settings'], (old: { data?: PlatformSetting[] } | undefined) => {
+        if (!old?.data) return old;
+        return {
+          ...old,
+          data: old.data.map((s: PlatformSetting) => s.id === variables.id ? { ...s, value: variables.value } : s)
+        };
+      });
+      setEditedValues(prev => {
+        const next = { ...prev };
+        delete next[variables.id];
+        return next;
+      });
+    },
+    onError: (err: unknown) => {
+      toast.error((err as Error).message || 'Failed to update setting');
     }
-    fetchSettings();
-  }, []);
+  });
 
-  const handleSave = async (id: string) => {
+  const handleSave = (id: string) => {
     const newValue = editedValues[id];
     if (newValue === undefined) return;
-
-    await mutate(
-      (() => superadminApi.settings.update(id, { value: newValue })) as Parameters<typeof mutate>[0],
-      {
-        successMessage: 'Setting updated successfully',
-        onSuccess: () => {
-          setSettings(prev => prev.map(s => s.id === id ? { ...s, value: newValue } : s));
-          setEditedValues(prev => {
-            const next = { ...prev };
-            delete next[id];
-            return next;
-          });
-        }
-      }
-    );
+    updateMutation.mutate({ id, value: newValue });
   };
 
-  if (fetchState === 'loading' || fetchState === 'idle') {
+  if (isLoading) {
     return <div className="flex h-96 items-center justify-center"><Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" /></div>;
+  }
+  
+  if (isError) {
+    return <div className="flex h-96 items-center justify-center text-danger font-medium">Error loading settings.</div>;
   }
 
   const groupedSettings = settings.reduce<Record<string, PlatformSetting[]>>((acc, curr) => {
@@ -121,8 +120,8 @@ export default function SettingsClient() {
                         {hasChanges && (
                           <button
                             onClick={() => handleSave(setting.id)}
-                            disabled={isMutating}
-                            className="p-1.5 bg-primary/10 text-primary hover:bg-primary hover:text-white rounded-lg transition-colors"
+                            disabled={updateMutation.isPending && updateMutation.variables?.id === setting.id}
+                            className="p-1.5 bg-primary/10 text-primary hover:bg-primary hover:text-white rounded-lg motion-safe:transition-colors"
                           >
                             <Save className="w-4 h-4" />
                           </button>
@@ -157,3 +156,4 @@ export default function SettingsClient() {
     </div>
   );
 }
+

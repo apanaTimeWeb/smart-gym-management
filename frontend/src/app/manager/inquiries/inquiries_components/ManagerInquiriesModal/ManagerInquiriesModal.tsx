@@ -2,8 +2,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useInquiriesContext } from '@/app/manager/inquiries/inquiries_context/InquiriesContext';
-import { INQUIRY_MODAL_FIELDS, INQUIRIES_STATUS_LABELS, INQUIRY_SOURCES, InquirySchema, type InquiryFormValues } from '@/app/manager/inquiries/inquiries_utils/InquiriesSharedConstants';
+import { useInquiriesContext } from '@/app/manager/inquiries/inquiries_context/ManagerInquiriesContext';
+import { INQUIRY_MODAL_FIELDS, INQUIRIES_STATUS_LABELS, INQUIRY_SOURCES, InquirySchema, type InquiryFormValues } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesSharedConstants';
 import { X, Save } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -20,10 +20,10 @@ export default function ManagerInquiriesModal() {
   const [plans, setPlans] = useState<{ label: string, value: string }[]>([]);
   useEffect(() => {
     if (showModal) {
-      import('@/app/manager/plans/plans_api/plans_api').then(m => {
+      import('@/app/manager/plans/plans_api/ManagerPlansApi').then(m => {
         m.plansApi.getAll().then(res => {
           if (res.data) {
-            setPlans(res.data.map((p: any) => ({ label: p.name, value: p.name })));
+            setPlans(res.data.map((p: { name: string }) => ({ label: p.name, value: p.name })));
           }
         });
       });
@@ -65,7 +65,7 @@ export default function ManagerInquiriesModal() {
               <label className="block text-sm font-medium text-secondary mb-1">{f.label}</label>
               <input
                 type={f.type}
-                placeholder={'placeholder' in f ? (f as any).placeholder : undefined}
+                placeholder={'placeholder' in f ? (f as {placeholder?: string}).placeholder : undefined}
                 maxLength={f.type === 'tel' ? 10 : undefined}
                 onKeyDown={f.type === 'tel' ? (e) => { if (['e', 'E', '-', '+', '.'].includes(e.key)) e.preventDefault(); } : undefined}
                 {...register(f.key as keyof InquiryFormValues)}

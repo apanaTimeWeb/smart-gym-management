@@ -39,8 +39,9 @@ export default function LoginHeroSection() {
         />
         {/* Grid lines overlay */}
         <div
-          className="absolute inset-0 opacity-[0.04]"
+          className="absolute inset-0"
           style={{
+            opacity: 0.04,
             backgroundImage: 'linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px)',
             backgroundSize: '48px 48px',
           }}
@@ -53,7 +54,7 @@ export default function LoginHeroSection() {
           src={LoginSharedConstants.ASSETS.HERO_IMAGE}
           alt="Gym"
           fill
-          className="object-cover opacity-[0.08]"
+          className="object-cover opacity-10"
           priority
         />
       </div>
@@ -81,7 +82,7 @@ export default function LoginHeroSection() {
       <div className="relative z-10 space-y-8">
         {/* Headline */}
         <div>
-          <h2 className="text-5xl font-black text-primary leading-[1.1] tracking-tight">
+          <h2 className="text-5xl font-black text-primary leading-tight tracking-tight">
             {LoginSharedConstants.TEXT.TITLE}
             <br />
             <span

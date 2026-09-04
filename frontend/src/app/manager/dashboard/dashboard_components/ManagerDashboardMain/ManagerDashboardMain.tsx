@@ -2,8 +2,8 @@
 'use client';
 
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
-import { DashboardProvider, useDashboardContext } from '@/app/manager/dashboard/dashboard_context/DashboardContext';
-import type { DashboardStats } from '@/app/manager/dashboard/dashboard_types/dashboard_types';
+import { DashboardProvider, useDashboardContext } from '@/app/manager/dashboard/dashboard_context/ManagerDashboardContext';
+import type { DashboardStats } from '@/app/manager/dashboard/dashboard_types/ManagerDashboardTypes';
 import ManagerDashboardKPIs from '@/app/manager/dashboard/dashboard_components/ManagerDashboardKPIs/ManagerDashboardKPIs';
 import ManagerDashboardRecentMembers from '@/app/manager/dashboard/dashboard_components/ManagerDashboardRecentMembers/ManagerDashboardRecentMembers';
 import ManagerDashboardPendingPayments from '@/app/manager/dashboard/dashboard_components/ManagerDashboardPendingPayments/ManagerDashboardPendingPayments';
@@ -74,7 +74,7 @@ function DashboardContent() {
           <select 
             value={timeRange} 
             onChange={(e) => {
-              setTimeRange(e.target.value as any);
+              setTimeRange(e.target.value as "weekly" | "monthly" | "yearly");
               if (e.target.value !== 'custom') {
                 setCustomDateRange('', '');
               }

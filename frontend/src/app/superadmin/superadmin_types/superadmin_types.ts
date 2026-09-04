@@ -129,6 +129,16 @@ export interface InfrastructureNode {
   status: string;
 }
 
+export interface GlobalAuditLog {
+  id: string;
+  timestamp: string;
+  targetResource: string;
+  actorName: string;
+  actorRole: string;
+  action: string;
+  ipAddress?: string;
+}
+
 export interface MigrationsPageData {
   migrations: SchemaMigration[];
   tenants: Tenant[];

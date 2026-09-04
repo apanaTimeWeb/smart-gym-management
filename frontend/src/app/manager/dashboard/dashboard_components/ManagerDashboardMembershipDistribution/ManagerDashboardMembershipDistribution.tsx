@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Renders the distribution of members by plan on the dashboard.
 'use client';
 
-import { useDashboardContext } from '@/app/manager/dashboard/dashboard_context/DashboardContext';
-import { DASHBOARD_PLAN_BG_COLORS } from '@/app/manager/dashboard/dashboard_utils/DashboardSharedConstants';
+import { useDashboardContext } from '@/app/manager/dashboard/dashboard_context/ManagerDashboardContext';
+import { DASHBOARD_PLAN_BG_COLORS } from '@/app/manager/dashboard/dashboard_utils/ManagerDashboardSharedConstants';
 
 export default function ManagerDashboardMembershipDistribution() {
  const { stats, timeRange } = useDashboardContext();

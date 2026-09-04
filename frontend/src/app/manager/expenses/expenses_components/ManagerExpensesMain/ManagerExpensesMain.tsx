@@ -2,14 +2,14 @@
 'use client';
 
 import { Suspense } from 'react';
-import { useExpensesStore } from '@/app/manager/expenses/expenses_store/useExpensesStore';
+import { useManagerExpensesStore } from '@/app/manager/expenses/expenses_store/useManagerExpensesStore';
 import ManagerExpensesToolbar from '@/app/manager/expenses/expenses_components/ManagerExpensesToolbar/ManagerExpensesToolbar';
 import ManagerExpensesKPIs from '@/app/manager/expenses/expenses_components/ManagerExpensesKPIs/ManagerExpensesKPIs';
 import ManagerExpensesTable from '@/app/manager/expenses/expenses_components/ManagerExpensesTable/ManagerExpensesTable';
 import ManagerExpensesModal from '@/app/manager/expenses/expenses_components/ManagerExpensesModal/ManagerExpensesModal';
 
 export default function ManagerExpensesMain() {
-  const fetchState = useExpensesStore(s => s.fetchState);
+  const fetchState = useManagerExpensesStore(s => s.fetchState);
 
   if (fetchState === 'error') {
     return (

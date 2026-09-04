@@ -3,8 +3,8 @@
 
 import { useEffect } from 'react';
 import { X, Save } from 'lucide-react';
-import { useStoreContext } from '@/app/manager/store/store_context/StoreContext';
-import { CATEGORIES, ProductSchema, type ProductFormValues, EMPTY_PRODUCT_FORM } from '@/app/manager/store/store_utils/StoreSharedConstants';
+import { useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';
+import { CATEGORIES, ProductSchema, type ProductFormValues, EMPTY_PRODUCT_FORM } from '@/app/manager/store/store_utils/ManagerStoreSharedConstants';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
