@@ -29,6 +29,7 @@ export default function AttendanceModal() {
   });
 
   const watchType = watch('type');
+  const watchStatus = watch('status');
 
   useEffect(() => {
     if (showModal) {
@@ -93,9 +94,26 @@ export default function AttendanceModal() {
             {errors.staffId && watchType === 'STAFF' && <p className="text-danger text-xs mt-1">{errors.staffId.message}</p>}
           </div>
 
+          {watchType === 'STAFF' && (
+            <div>
+              <label className="block text-sm font-medium text-secondary mb-2">Status</label>
+              <div className="flex gap-4">
+                <label className="flex items-center gap-2 text-sm text-foreground cursor-pointer">
+                  <input type="radio" value="PRESENT" {...register('status')} className="text-primary focus:ring-primary" /> Present
+                </label>
+                <label className="flex items-center gap-2 text-sm text-foreground cursor-pointer">
+                  <input type="radio" value="LEAVE" {...register('status')} className="text-primary focus:ring-primary" /> Leave
+                </label>
+              </div>
+              {errors.status && <p className="text-danger text-xs mt-1">{errors.status.message}</p>}
+            </div>
+          )}
+
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-secondary mb-1">Date</label>
+              <label className="block text-sm font-medium text-secondary mb-1">
+                {watchStatus === 'LEAVE' ? 'Start Date' : 'Date'}
+              </label>
               <input 
                 type="date" 
                 {...register('date')}
@@ -105,17 +123,32 @@ export default function AttendanceModal() {
               />
               {errors.date && <p className="text-danger text-xs mt-1">{errors.date.message}</p>}
             </div>
-            <div>
-              <label className="block text-sm font-medium text-secondary mb-1">Check In Time</label>
-              <input 
-                type="time" 
-                {...register('checkIn')}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus-visible:ring-2 ${
-                  errors.checkIn ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
-                } bg-input text-foreground`} 
-              />
-              {errors.checkIn && <p className="text-danger text-xs mt-1">{errors.checkIn.message}</p>}
-            </div>
+            {watchStatus === 'LEAVE' && (
+              <div>
+                <label className="block text-sm font-medium text-secondary mb-1">End Date (Optional)</label>
+                <input 
+                  type="date" 
+                  {...register('endDate')}
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus-visible:ring-2 ${
+                    errors.endDate ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
+                  } bg-input text-foreground`} 
+                />
+                {errors.endDate && <p className="text-danger text-xs mt-1">{errors.endDate.message}</p>}
+              </div>
+            )}
+            {watchStatus === 'PRESENT' && (
+              <div>
+                <label className="block text-sm font-medium text-secondary mb-1">Check In Time</label>
+                <input 
+                  type="time" 
+                  {...register('checkIn')}
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus-visible:ring-2 ${
+                    errors.checkIn ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
+                  } bg-input text-foreground`} 
+                />
+                {errors.checkIn && <p className="text-danger text-xs mt-1">{errors.checkIn.message}</p>}
+              </div>
+            )}
           </div>
 
           <div className="pt-2 flex justify-end gap-3">

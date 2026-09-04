@@ -142,11 +142,14 @@ export async function routeMockRequest<T>(
   }
   if (path.includes('/plans') && !path.includes('/superadmin')) return MockDB.handleCrud('mock_admin_plans', method, path, parsedBody, generate(3, i => ({ id: `plan-${i}`, name: i === 0 ? 'Basic Plan' : i === 1 ? 'Pro Plan' : 'VIP Plan', tier: i === 0 ? 'Standard' : i === 1 ? 'Premium' : 'Elite', price1Month: 1000 * (i + 1), price3Month: 2500 * (i + 1), price6Month: 4800 * (i + 1), price12Month: 9000 * (i + 1), features: ['Access to gym', 'Locker facility', 'Cardio section'], isActive: true }))) as unknown as ApiResponse<T>;
   if (path.includes('/members/stats')) return { success: true, message: 'Stats', data: { total: 150, active: 110, pending: 25, expired: 15 } } as unknown as ApiResponse<T>;
-  if (path.includes('/members') && !path.includes('/stats') && !path.includes('/superadmin')) return MockDB.handleCrud('mock_members', method, path, parsedBody, generate(15, i => {
-    const today = new Date();
-    const dateStr = String(today.getDate()).padStart(2, '0') + String(today.getMonth() + 1).padStart(2, '0') + today.getFullYear();
-    return { id: `GS-${dateStr}-${String(i + 1).padStart(3, '0')}`, name: `Demo Member ${i + 1}`, email: `member${i}@example.com`, phone: `987654321${i % 10}`, status: i % 3 === 0 ? 'expired' : 'active', plan: { name: 'Pro Yearly', tier: 'premium' }, joinDate: '2023-01-15', expiryDate: '2024-01-15', paidAmount: 1500 + i * 100, pendingAmount: i % 3 === 0 ? 500 : (i % 2 === 0 ? -200 : 0) };
-  }), 'members') as unknown as ApiResponse<T>;
+  if (path.includes('/members') && !path.includes('/stats') && !path.includes('/superadmin')) {
+    const existing = MockDB.getCollection('mock_members', []);
+    if (existing.length > 0 && existing.some((r: any) => r.name?.includes('Demo Member'))) {
+      const filtered = existing.filter((r: any) => !r.name?.includes('Demo Member'));
+      MockDB.setCollection('mock_members', filtered);
+    }
+    return MockDB.handleCrud('mock_members', method, path, parsedBody, [], 'members') as unknown as ApiResponse<T>;
+  }
   if (path.includes('/inquiries') || path.includes('/landing/booking') || path.includes('/landing/contact')) {
     // If it's a landing page POST, we coerce the method to POST for inquiries
     const actualMethod = path.includes('/landing') ? 'POST' : method;
@@ -189,15 +192,93 @@ export async function routeMockRequest<T>(
   }
   if (path.includes('/attendance')) {
     const existing = MockDB.getCollection('mock_admin_attendance', []);
-    if (existing.length > 0 && existing.some((r: any) => r.member?.name?.includes('Active Member'))) {
-      localStorage.removeItem('mock_admin_attendance');
+    if (existing.length > 0 && existing.some((r: any) => r.member?.name?.includes('Active Member') || r.staff?.name?.includes('Trainer '))) {
+      const filtered = existing.filter((r: any) => !r.member?.name?.includes('Active Member') && !r.staff?.name?.includes('Trainer '));
+      MockDB.setCollection('mock_admin_attendance', filtered);
     }
     // Return empty by default so it starts blank until manually checked in
     return MockDB.handleCrud('mock_admin_attendance', method, path, parsedBody, [], 'attendance') as unknown as ApiResponse<T>;
   }
-  if (path.includes('/hr/summary')) return { success: true, message: 'Summary', data: { totalStaff: 25, activeStaff: 22, totalPayrollThisMonth: 850000, paidCount: 20, pendingCount: 5 } } as unknown as ApiResponse<T>;
-  if (path.includes('/hr/staff')) return MockDB.handleCrud('mock_admin_staff', method, path, parsedBody, generate(8, i => ({ id: `staff-${i}`, name: `Trainer ${i+1}`, role: i === 0 ? 'Manager' : 'Trainer', email: `trainer${i}@gym.com`, phone: '9988776655', isActive: true, joinDate: '2023-01-01', salary: 25000, branch: 'Main', gender: 'Male' })), 'staff') as unknown as ApiResponse<T>;
-  if (path.includes('/hr/payrolls')) return MockDB.handleCrud('mock_admin_payrolls', method, path, parsedBody, generate(8, i => ({ id: `pay-${i}`, staffId: `staff-${i}`, staff: { name: `Trainer ${i+1}`, role: i === 0 ? 'Manager' : 'Trainer' }, amount: 25000 + (i * 2000), status: i === 2 ? 'PENDING' : 'PAID', month: new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' }), paidAt: i !== 2 ? new Date().toISOString() : undefined })), 'payrolls') as unknown as ApiResponse<T>;
+  if (path.includes('/hr/summary')) {
+    const staffList = MockDB.getCollection('mock_admin_staff', []);
+    const reqMonth = new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' });
+    const currentPayrolls = MockDB.getCollection('mock_admin_payrolls', []).filter((p: any) => p.month === reqMonth);
+    
+    const activeStaff = staffList.filter((s: any) => s.isActive).length;
+    const paidCount = currentPayrolls.filter((p: any) => p.status === 'PAID').length;
+    const pendingCount = currentPayrolls.filter((p: any) => p.status === 'PENDING').length;
+    const totalPayrollThisMonth = currentPayrolls.reduce((sum: number, p: any) => sum + (Number(p.amount) || 0), 0);
+    
+    return { success: true, message: 'Summary', data: { totalStaff: staffList.length, activeStaff, totalPayrollThisMonth, paidCount, pendingCount } } as unknown as ApiResponse<T>;
+  }
+  
+  if (path.includes('/hr/staff')) {
+    const existingStaff = MockDB.getCollection('mock_admin_staff', []);
+    if (existingStaff.length > 0 && existingStaff.some((r: any) => r.name?.includes('Trainer '))) {
+      const filtered = existingStaff.filter((r: any) => !r.name?.includes('Trainer '));
+      MockDB.setCollection('mock_admin_staff', filtered);
+    }
+    return MockDB.handleCrud('mock_admin_staff', method, path, parsedBody, [], 'staff') as unknown as ApiResponse<T>;
+  }
+  
+  if (path.includes('/hr/payrolls')) {
+    const existingPayrolls = MockDB.getCollection('mock_admin_payrolls', []);
+    if (existingPayrolls.length > 0 && existingPayrolls.some((r: any) => r.staff?.name?.includes('Trainer '))) {
+      const filtered = existingPayrolls.filter((r: any) => !r.staff?.name?.includes('Trainer '));
+      MockDB.setCollection('mock_admin_payrolls', filtered);
+    }
+    
+    if (method === 'GET') {
+      const qsMonthMatch = path.match(/month=([^&]+)/);
+      const reqMonth = qsMonthMatch ? decodeURIComponent(qsMonthMatch[1]) : new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' });
+      
+      const staffList = MockDB.getCollection('mock_admin_staff', []);
+      const attendanceList = MockDB.getCollection('mock_admin_attendance', []);
+      const currentPayrolls = MockDB.getCollection('mock_admin_payrolls', []);
+      
+      const today = new Date();
+      const isCurrentMonth = reqMonth === today.toLocaleString('en-US', { month: 'long', year: 'numeric' });
+      const daysElapsed = isCurrentMonth ? today.getDate() : 30; // approx 30 for past months
+      
+      staffList.filter((s: any) => s.isActive).forEach((s: any) => {
+        const staffAtt = attendanceList.filter((a: any) => String(a.staffId) === String(s.id));
+        const presentCount = staffAtt.filter((a: any) => a.status === 'PRESENT').length;
+        const leaveCount = staffAtt.filter((a: any) => a.status === 'LEAVE').length;
+        const totalAccounted = presentCount + leaveCount;
+        
+        let absences = daysElapsed - totalAccounted;
+        if (absences < 0) absences = 0; // fallback if someone checked in on weekends multiple times
+        
+        const baseSalary = Number(s.salary) || 0;
+        const perDay = baseSalary / 30;
+        const deduction = absences * perDay;
+        const finalAmount = Math.max(0, Math.round(baseSalary - deduction));
+        
+        const existingRecordIdx = currentPayrolls.findIndex((p: any) => String(p.staffId) === String(s.id) && p.month === reqMonth);
+        if (existingRecordIdx >= 0) {
+          if (currentPayrolls[existingRecordIdx].status === 'PENDING') {
+            currentPayrolls[existingRecordIdx].amount = finalAmount;
+            currentPayrolls[existingRecordIdx].staff = { name: s.name, role: s.role };
+          }
+        } else {
+          currentPayrolls.push({
+            id: `pay-${Date.now()}-${s.id}`,
+            staffId: s.id,
+            staff: { name: s.name, role: s.role },
+            month: reqMonth,
+            amount: finalAmount,
+            status: 'PENDING'
+          });
+        }
+      });
+      
+      MockDB.setCollection('mock_admin_payrolls', currentPayrolls);
+      const filtered = currentPayrolls.filter((p: any) => p.month === reqMonth);
+      return { success: true, message: 'Fetched payrolls', data: { payrolls: filtered, total: filtered.length } } as unknown as ApiResponse<T>;
+    }
+    
+    return MockDB.handleCrud('mock_admin_payrolls', method, path, parsedBody, [], 'payrolls') as unknown as ApiResponse<T>;
+  }
   if (path.includes('/exercises')) return MockDB.handleCrud('mock_admin_exercises', method, path, parsedBody, generate(10, i => ({ id: `ex-${i}`, name: `Exercise ${i+1}`, category: 'Strength', muscleGroup: ['Chest', 'Triceps'], difficulty: 'Beginner', isActive: true, videoUrl: '' })), 'exercises') as unknown as ApiResponse<T>;
   if (path.includes('/diet-plans')) return MockDB.handleCrud('mock_admin_diet_plans', method, path, parsedBody, generate(4, i => ({ id: `diet-${i}`, name: `Keto Diet ${i+1}`, goal: 'Weight Loss', calories: 1500 + (i * 200), meals: ['Breakfast', 'Lunch'], isActive: true })), 'dietPlans') as unknown as ApiResponse<T>;
   if (path.includes('/workouts')) return MockDB.handleCrud('mock_workouts', method, path, parsedBody, generate(5, i => ({ 

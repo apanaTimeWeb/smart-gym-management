@@ -19,7 +19,9 @@ export const AttendanceSchema = z.object({
   memberId: z.string().optional(),
   staffId: z.string().optional(),
   date: z.string().min(1, 'Date is required'),
-  checkIn: z.string().min(1, 'Time is required')
+  endDate: z.string().optional(),
+  status: z.enum(['PRESENT', 'LEAVE', 'ABSENT']).default('PRESENT'),
+  checkIn: z.string().optional()
 }).superRefine((data, ctx) => {
   if (data.type === 'MEMBER' && !data.memberId) {
     ctx.addIssue({
@@ -35,6 +37,20 @@ export const AttendanceSchema = z.object({
       path: ['staffId']
     });
   }
+  if (data.status === 'PRESENT' && (!data.checkIn || data.checkIn.trim() === '')) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Time is required for Present status',
+      path: ['checkIn']
+    });
+  }
+  if (data.endDate && new Date(data.endDate) < new Date(data.date)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'End date must be on or after start date',
+      path: ['endDate']
+    });
+  }
 });
 
 export type AttendanceFormValues = z.infer<typeof AttendanceSchema>;
@@ -44,5 +60,7 @@ export const EMPTY_ATTENDANCE_FORM: AttendanceFormValues = {
  memberId: '', 
  staffId: '', 
  date: new Date().toISOString().split('T')[0], 
+ endDate: '',
+ status: 'PRESENT',
  checkIn: '06:00' 
 };

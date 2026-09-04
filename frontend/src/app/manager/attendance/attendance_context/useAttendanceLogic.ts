@@ -100,34 +100,44 @@ export function useAttendanceLogic(): AttendanceContextType {
   const markAttendance = useCallback(async (data: AttendanceFormValues) => {
     setSaving(true);
     try {
-      const dateTime = new Date(`${data.date}T${data.checkIn}:00`);
-      
-            const payload: any = { 
-        type: data.type, 
-        date: dateTime.toISOString().split('T')[0], 
-        status: 'PRESENT',
-        checkIn: dateTime.toISOString(),
-      };
-      
-      if (data.type === 'MEMBER') {
-        payload.memberId = data.memberId ? data.memberId : undefined;
-        if (payload.memberId) {
-          const m = members.find(x => String(x.id) === payload.memberId);
-          payload.member = { name: m?.name || 'Unknown Member' };
+      const payloads: any[] = [];
+      const startDate = new Date(data.date);
+      const endDate = (data.status === 'LEAVE' && data.endDate) ? new Date(data.endDate) : startDate;
+
+      for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+        const dateStr = d.toISOString().split('T')[0];
+        const checkInIso = (data.status === 'PRESENT' && data.checkIn) 
+          ? new Date(`${dateStr}T${data.checkIn}:00`).toISOString() 
+          : undefined;
+        
+        const payload: any = { 
+          type: data.type, 
+          date: dateStr, 
+          status: data.status || 'PRESENT',
+          checkIn: checkInIso,
+        };
+        
+        if (data.type === 'MEMBER') {
+          payload.memberId = data.memberId ? data.memberId : undefined;
+          if (payload.memberId) {
+            const m = members.find(x => String(x.id) === payload.memberId);
+            payload.member = { name: m?.name || 'Unknown Member' };
+          }
+        } else {
+          payload.staffId = data.staffId ? data.staffId : undefined;
+          if (payload.staffId) {
+            const s = staff.find(x => String(x.id) === payload.staffId);
+            payload.staff = { name: s?.name || 'Unknown Staff' };
+          }
         }
-      } else {
-        payload.staffId = data.staffId ? data.staffId : undefined;
-        if (payload.staffId) {
-          const s = staff.find(x => String(x.id) === payload.staffId);
-          payload.staff = { name: s?.name || 'Unknown Staff' };
-        }
+        payloads.push(payload);
       }
 
-      const res = await attendanceApi.mark(payload) as ApiResponse<any>;
-      const newRecord = res.data?.id ? res.data : { ...payload, id: `att-${Date.now()}` };
-      setRecords(prev => [newRecord, ...prev]);
-      setTotalRecords(prev => prev + 1);
-      showToast(res.message || 'Attendance marked successfully', 'success');
+      for (const payload of payloads) {
+        await attendanceApi.mark(payload);
+      }
+      
+      showToast(payloads.length > 1 ? `Marked ${data.status} for ${payloads.length} days successfully` : 'Attendance marked successfully', 'success');
       setShowModal(false);
       setForm(EMPTY_ATTENDANCE_FORM);
       await loadAll();
