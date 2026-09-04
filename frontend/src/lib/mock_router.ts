@@ -168,43 +168,15 @@ export async function routeMockRequest<T>(
     const type = url.searchParams.get('type') || 'STAFF';
     const month = url.searchParams.get('month') || new Date().toISOString().slice(0, 7); // YYYY-MM
     
-    // Generate ~20-25 days of random attendance for the requested month
-    const daysInMonth = new Date(parseInt(month.split('-')[0]), parseInt(month.split('-')[1]), 0).getDate();
-    const history = [];
-    for (let i = 1; i <= daysInMonth; i++) {
-      // 80% chance present, 10% leave, 10% absent (except weekends)
-      const isWeekend = (new Date(`${month}-${i.toString().padStart(2, '0')}`).getDay() % 6 === 0);
-      if (!isWeekend) {
-        const rand = Math.random();
-        if (rand > 0.2) {
-          history.push({
-            id: `att-hist-${i}`,
-            type,
-            [type === 'STAFF' ? 'staffId' : 'memberId']: userId,
-            date: `${month}-${i.toString().padStart(2, '0')}`,
-            checkIn: `${month}-${i.toString().padStart(2, '0')}T08:00:00.000Z`,
-            checkOut: `${month}-${i.toString().padStart(2, '0')}T17:00:00.000Z`,
-            status: 'PRESENT'
-          });
-        } else if (rand > 0.1 && type === 'STAFF') {
-          history.push({
-            id: `att-hist-${i}`,
-            type,
-            [type === 'STAFF' ? 'staffId' : 'memberId']: userId,
-            date: `${month}-${i.toString().padStart(2, '0')}`,
-            status: 'LEAVE'
-          });
-        } else {
-          history.push({
-            id: `att-hist-${i}`,
-            type,
-            [type === 'STAFF' ? 'staffId' : 'memberId']: userId,
-            date: `${month}-${i.toString().padStart(2, '0')}`,
-            status: 'ABSENT'
-          });
-        }
-      }
-    }
+    // Fetch actual real data from mock db instead of generating random history
+    const allAttendance = MockDB.getCollection('mock_admin_attendance', []);
+    const history = allAttendance.filter(r => {
+      const rUserId = type === 'STAFF' ? r.staffId : r.memberId;
+      const matchesUser = String(rUserId) === String(userId);
+      const matchesMonth = typeof r.date === 'string' && r.date.startsWith(month);
+      return matchesUser && matchesMonth;
+    });
+    
     return { success: true, message: 'History fetched', data: history } as unknown as ApiResponse<T>;
   }
   if (path.includes('/attendance/today-stats')) {
@@ -215,7 +187,13 @@ export async function routeMockRequest<T>(
     const staffCheckIns = todayRecords.filter(r => r.type === 'STAFF').length;
     return { success: true, message: 'Stats', data: { totalCheckIns: todayRecords.length, memberCheckIns, staffCheckIns } } as unknown as ApiResponse<T>;
   }
-  if (path.includes('/attendance')) return MockDB.handleCrud('mock_admin_attendance', method, path, parsedBody, generate(20, i => { const d = new Date(); d.setHours(8, 0, 0, 0); const d2 = new Date(); d2.setHours(9, 30, 0, 0); return { id: `att-${i}`, type: i % 4 === 0 ? 'STAFF' : 'MEMBER', member: { name: `Active Member ${i}` }, staff: { name: `Trainer ${i}` }, date: new Date().toISOString(), checkIn: d.toISOString(), checkOut: d2.toISOString() }; }), 'attendance') as unknown as ApiResponse<T>;
+    const existing = MockDB.getCollection('mock_admin_attendance', []);
+    if (existing.length > 0 && existing.some((r: any) => r.member?.name?.includes('Active Member'))) {
+      localStorage.removeItem('mock_admin_attendance');
+    }
+    // Return empty by default so it starts blank until manually checked in
+    return MockDB.handleCrud('mock_admin_attendance', method, path, parsedBody, [], 'attendance') as unknown as ApiResponse<T>;
+  }
   if (path.includes('/hr/summary')) return { success: true, message: 'Summary', data: { totalStaff: 25, activeStaff: 22, totalPayrollThisMonth: 850000, paidCount: 20, pendingCount: 5 } } as unknown as ApiResponse<T>;
   if (path.includes('/hr/staff')) return MockDB.handleCrud('mock_admin_staff', method, path, parsedBody, generate(8, i => ({ id: `staff-${i}`, name: `Trainer ${i+1}`, role: i === 0 ? 'Manager' : 'Trainer', email: `trainer${i}@gym.com`, phone: '9988776655', isActive: true, joinDate: '2023-01-01', salary: 25000, branch: 'Main', gender: 'Male' })), 'staff') as unknown as ApiResponse<T>;
   if (path.includes('/hr/payrolls')) return MockDB.handleCrud('mock_admin_payrolls', method, path, parsedBody, generate(8, i => ({ id: `pay-${i}`, staffId: `staff-${i}`, staff: { name: `Trainer ${i+1}`, role: i === 0 ? 'Manager' : 'Trainer' }, amount: 25000 + (i * 2000), status: i === 2 ? 'PENDING' : 'PAID', month: new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' }), paidAt: i !== 2 ? new Date().toISOString() : undefined })), 'payrolls') as unknown as ApiResponse<T>;

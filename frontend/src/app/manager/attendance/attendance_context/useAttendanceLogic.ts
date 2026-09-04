@@ -75,7 +75,7 @@ export function useAttendanceLogic(): AttendanceContextType {
       const [attRes, statsRes, memRes, staffRes] = await Promise.all([
         attendanceApi.getAll(params) as unknown as Promise<ApiResponse<AttendanceResponse>>,
         attendanceApi.getTodayStats() as unknown as Promise<ApiResponse<AttendanceStatsResponse>>,
-        membersApi.getAll({ limit: '1000', status: 'ACTIVE' }) as unknown as Promise<ApiResponse<{ members: Member[] }>>,
+        membersApi.getAll({ limit: '1000', status: 'active' }) as unknown as Promise<ApiResponse<{ members: Member[] }>>,
         hrApi.getStaff() as unknown as Promise<ApiResponse<{ staff: Staff[] } | Staff[]>>,
       ]);
 
