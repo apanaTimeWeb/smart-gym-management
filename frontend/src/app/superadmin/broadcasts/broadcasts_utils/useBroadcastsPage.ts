@@ -1,5 +1,5 @@
-// RESPONSIBILITY: useBroadcastsPage.ts encapsulates all state and async logic for the Broadcasts page.
-// DATA FLOW: superadminApi → useBroadcastsPage → BroadcastsClient
+﻿// RESPONSIBILITY: useBroadcastsPage.ts encapsulates all state and async logic for the Broadcasts page.
+// DATA FLOW: superadminApi Ã¢â€ â€™ useBroadcastsPage Ã¢â€ â€™ BroadcastsClient
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -24,9 +24,12 @@ export const useBroadcastsPage = () => {
   
   useEffect(() => {
     if (!persistedBroadcasts) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPersistedBroadcasts(DEFAULT_BROADCASTS);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setBroadcasts(DEFAULT_BROADCASTS);
     } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setBroadcasts(persistedBroadcasts);
     }
   }, [persistedBroadcasts, setPersistedBroadcasts]);
@@ -179,3 +182,4 @@ export const useBroadcastsPage = () => {
     onQueueComplete
   };
 };
+

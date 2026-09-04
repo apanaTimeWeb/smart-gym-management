@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Renders the System & Audit page showing migration health and global audit logs. Fetches data directly using TanStack Query.
+﻿// RESPONSIBILITY: Renders the System & Audit page showing migration health and global audit logs. Fetches data directly using TanStack Query.
 'use client';
 
 import { useState, useMemo } from 'react';
@@ -16,10 +16,10 @@ interface TenantWithVersion extends Tenant {
 }
 
 const FALLBACK_LOGS = [
-  { id: '1', timestamp: new Date().toISOString(), targetResource: 'Subscription Plan', actorName: 'Superadmin', actorRole: 'GOD MODE', action: 'CREATE' },
-  { id: '2', timestamp: new Date(Date.now() - 3600000).toISOString(), targetResource: 'Gym: t-2', actorName: 'System', actorRole: 'CRON', action: 'BACKUP_DB' },
-  { id: '3', timestamp: new Date(Date.now() - 7200000).toISOString(), targetResource: 'Coupon: SUMMER50', actorName: 'Superadmin', actorRole: 'GOD MODE', action: 'UPDATE' },
-  { id: '4', timestamp: new Date(Date.now() - 86400000).toISOString(), targetResource: 'User: admin@gym.com', actorName: 'Superadmin', actorRole: 'GOD MODE', action: 'RESET_PASSWORD' }
+  { id: '1', timestamp: '2026-01-01T00:00:00Z', targetResource: 'Subscription Plan', actorName: 'Superadmin', actorRole: 'GOD MODE', action: 'CREATE' },
+  { id: '2', timestamp: '2026-01-01T01:00:00Z', targetResource: 'Gym: t-2', actorName: 'System', actorRole: 'CRON', action: 'BACKUP_DB' },
+  { id: '3', timestamp: '2026-01-01T02:00:00Z', targetResource: 'Coupon: SUMMER50', actorName: 'Superadmin', actorRole: 'GOD MODE', action: 'UPDATE' },
+  { id: '4', timestamp: '2026-01-02T00:00:00Z', targetResource: 'User: admin@gym.com', actorName: 'Superadmin', actorRole: 'GOD MODE', action: 'RESET_PASSWORD' }
 ] as unknown[];
 
 export default function SystemClient() {
@@ -40,9 +40,11 @@ export default function SystemClient() {
     queryFn: () => superadminApi.auditLogs.fetchGlobalLogs(),
   });
 
-  const tenants = (migrationsRes?.data?.tenants ?? []) as TenantWithVersion[];
+  const migrationsData = migrationsRes as { data?: { tenants?: TenantWithVersion[] } } | undefined;
+  const tenants = (migrationsData?.data?.tenants ?? []) as TenantWithVersion[];
   
-  const rawLogs = auditRes?.data ?? [];
+  const auditData = auditRes as { data?: GlobalAuditLog[] } | undefined;
+  const rawLogs = auditData?.data ?? [];
   const hasLogs = rawLogs.length > 0;
   const finalLogs = useMemo(() => hasLogs ? rawLogs : FALLBACK_LOGS, [hasLogs, rawLogs]);
 
@@ -65,7 +67,7 @@ export default function SystemClient() {
         };
       });
       toast.success(`Successfully migrated database for tenant ${tenantId}`);
-    } catch (error) {
+    } catch (err) {
       toast.error('Migration failed. Please check logs.');
     } finally {
       setMigratingTenants(prev => ({ ...prev, [tenantId]: false }));
@@ -221,3 +223,4 @@ export default function SystemClient() {
     </div>
   );
 }
+

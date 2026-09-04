@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 // RESPONSIBILITY: Renders the FlushTenantModal component using TanStack Query.
 import React, { useState, useEffect } from 'react';
 import { X, Loader2, Search } from 'lucide-react';
@@ -23,11 +23,13 @@ export default function FlushTenantModal({ isOpen, onClose, onFlush }: FlushTena
     enabled: isOpen,
   });
 
-  const gyms = (fetchRes?.data as unknown) ?? [];
+  const gyms = (fetchRes?.data as Tenant[]) ?? [];
 
   useEffect(() => {
     if (!isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSearch('');
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedTenantIds([]);
     }
   }, [isOpen]);

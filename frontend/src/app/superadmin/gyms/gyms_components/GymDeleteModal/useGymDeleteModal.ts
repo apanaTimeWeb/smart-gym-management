@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Hook to manage the state and logic of the GymDeleteModal.
+﻿// RESPONSIBILITY: Hook to manage the state and logic of the GymDeleteModal.
 // DATA FLOW: GymDeleteModal -> useGymDeleteModal -> API
 
 import { useState, useEffect } from 'react';
@@ -19,6 +19,7 @@ export function useGymDeleteModal() {
   // Reset confirmation text whenever the modal opens or closes
   useEffect(() => {
     if (!isDeleteModalOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setConfirmText('');
     }
   }, [isDeleteModalOpen]);

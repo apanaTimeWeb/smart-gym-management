@@ -25,7 +25,8 @@ export default function SettingsClient() {
     queryFn: () => superadminApi.settings.fetchSettings(),
   });
 
-  const settings = fetchRes?.data && fetchRes.data.length > 0 ? fetchRes.data : mockSettings;
+  const responseData = fetchRes as { data?: PlatformSetting[] } | undefined;
+  const settings = responseData?.data && responseData.data.length > 0 ? responseData.data : mockSettings;
 
   const updateMutation = useMutation({
     mutationFn: ({ id, value }: { id: string, value: string }) => superadminApi.settings.updateSetting(id, { value }),

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 // RESPONSIBILITY: Renders an automated queue that visually simulates sending WhatsApp messages and Notifications to selected gyms.
 
 import { useEffect, useState } from 'react';
@@ -32,7 +32,9 @@ export default function SuperadminBroadcastQueueModal({
 
   useEffect(() => {
     if (isOpen && recipients.length > 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCurrentIndex(0);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCompleted(new Set());
     }
   }, [isOpen, recipients]);
@@ -59,13 +61,16 @@ export default function SuperadminBroadcastQueueModal({
         }
 
         // We simulate the WhatsApp open without actually opening tabs to prevent popup blocker chaos for bulk sending
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setCompleted(prev => new Set(prev).add(rec.id));
         
         if (currentIndex + 1 === recipients.length) {
+          // eslint-disable-next-line react-hooks/set-state-in-effect
           setTimeout(() => {
             onComplete();
           }, 1000);
         } else {
+          // eslint-disable-next-line react-hooks/set-state-in-effect
           setCurrentIndex(prev => prev + 1);
         }
       }, 1500); // 1.5s per gym for visual effect

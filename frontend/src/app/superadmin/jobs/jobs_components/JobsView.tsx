@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 // RESPONSIBILITY: JobsView.tsx renders the BullMQ background jobs table and metrics cards using TanStack Query.
 import { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -28,14 +28,14 @@ export default function JobsView() {
   const [selectedJobIds, setSelectedJobIds] = useState<Set<string>>(new Set());
 
   // Modal State
-  const [inspectJob, setInspectJob] = useState<unknown | null>(null); // cast as unknown because type may not match fully
+  const [inspectJob, setInspectJob] = useState<BackgroundJob | null>(null); // cast as unknown because type may not match fully
 
   const { data: fetchRes, isLoading, isError } = useQuery({
     queryKey: ['superadmin', 'jobs'],
     queryFn: () => superadminApi.jobs.fetchJobs(),
   });
 
-  const rawJobs = (fetchRes?.data as unknown) ?? []; // Mock response is an array, wait, type is BackgroundJob[]
+  const rawJobs = (fetchRes?.data as BackgroundJob[]) ?? []; // Mock response is an array, wait, type is BackgroundJob[]
   const metrics = {
     activeJobs: 24,
     completed24h: 1205,
@@ -45,9 +45,9 @@ export default function JobsView() {
 
   // Fallback to mock data if empty
   const DUMMY_BACKGROUND_JOBS: BackgroundJob[] = rawJobs.length > 0 ? rawJobs : [
-    { id: 'job-1', queueName: 'billing', jobName: 'Process Monthly Invoices', status: 'ACTIVE', attempts: 1, createdAt: new Date().toISOString() },
-    { id: 'job-2', queueName: 'email', jobName: 'Send Welcome Email', status: 'FAILED', attempts: 3, error: 'Connection timeout', createdAt: new Date(Date.now() - 3600000).toISOString() },
-    { id: 'job-3', queueName: 'database', jobName: 'Nightly Backup', status: 'COMPLETED', attempts: 1, createdAt: new Date(Date.now() - 86400000).toISOString() },
+    { id: 'job-1', queueName: 'billing', jobName: 'Process Monthly Invoices', status: 'ACTIVE', attempts: 1, createdAt: '2026-01-01T00:00:00Z' },
+    { id: 'job-2', queueName: 'email', jobName: 'Send Welcome Email', status: 'FAILED', attempts: 3, error: 'Connection timeout', createdAt: '2026-01-01T01:00:00Z' },
+    { id: 'job-3', queueName: 'database', jobName: 'Nightly Backup', status: 'COMPLETED', attempts: 1, createdAt: '2026-01-02T00:00:00Z' },
   ];
 
   const handleRetryAll = () => {
@@ -325,7 +325,7 @@ export default function JobsView() {
       {/* Payload Inspect Modal */}
       {inspectJob && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm motion-safe:animate-in motion-safe:fade-in">
-          <div className="bg-card border border-border rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+          <div className="bg-card border border-border rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col max-h-full">
             <div className="flex items-center justify-between px-6 py-5 border-b border-border bg-sidebar/30">
               <div>
                 <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
@@ -374,3 +374,4 @@ export default function JobsView() {
     </div>
   );
 }
+

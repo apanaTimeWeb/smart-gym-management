@@ -20,7 +20,7 @@ interface InvoicesState {
   actionLoading: boolean;
 
   fetchData: () => Promise<void>;
-  logManualPayment: (data: unknown) => Promise<void>;
+  logManualPayment: (data: { gymId: string, amount: number, planName: string }) => Promise<void>;
 }
 
 export const useInvoicesStore = create<InvoicesState>((set, get) => ({
@@ -49,7 +49,7 @@ export const useInvoicesStore = create<InvoicesState>((set, get) => ({
     }
   },
 
-  logManualPayment: async (data: unknown) => {
+  logManualPayment: async (data: { gymId: string, amount: number, planName: string }) => {
     set({ actionLoading: true });
     try {
       // Simulate API call and locally append data to list (TC-25 fix)

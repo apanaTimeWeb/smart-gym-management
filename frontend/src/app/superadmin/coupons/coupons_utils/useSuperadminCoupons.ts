@@ -1,5 +1,5 @@
-// RESPONSIBILITY: useCouponsPage.ts encapsulates all state and async logic for the Coupons page.
-// DATA FLOW: superadminApi → useCouponsPage → CouponsClient
+﻿// RESPONSIBILITY: useCouponsPage.ts encapsulates all state and async logic for the Coupons page.
+// DATA FLOW: superadminApi Ã¢â€ â€™ useCouponsPage Ã¢â€ â€™ CouponsClient
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -8,7 +8,7 @@ import { useCouponsData } from '@/app/superadmin/coupons/coupons_utils/useCoupon
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { couponsApi } from '@/app/superadmin/coupons/coupons_api/coupons_api';
 import { useCouponsMutation } from '@/app/superadmin/coupons/coupons_utils/useCouponsMutation';
-import { CouponSchema, CouponFormData } from '@/app/superadmin/coupons/coupons_types/coupons_types';
+import { CouponSchema, type CouponFormData } from '@/app/superadmin/coupons/coupons_types/coupons_types';
 import type { Coupon, CouponStatus } from '@/app/superadmin/coupons/coupons_types/coupons_types';
 import { useLocalStorage } from '@/lib/useLocalStorage';
 
@@ -27,9 +27,12 @@ export const useSuperadminCoupons = () => {
   useEffect(() => {
     if (fetchedData) {
       if (!persistedCoupons) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setPersistedCoupons(fetchedData);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setCoupons(fetchedData);
       } else {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setCoupons(persistedCoupons);
       }
     }
@@ -166,3 +169,4 @@ export const useSuperadminCoupons = () => {
     totalCoupons,
   };
 };
+

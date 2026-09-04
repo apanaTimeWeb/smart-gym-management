@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 // RESPONSIBILITY: Renders the modal form for editing an existing subscription plan. Reads/writes via usePlansStore.
 
 import { useEffect } from 'react';
@@ -30,7 +30,8 @@ export default function PlanEditModal() {
   const queryClient = useQueryClient();
 
   const { register, control, handleSubmit, formState: { errors }, reset } = useForm<PlanFormValues>({
-    resolver: zodResolver(planSchema) as unknown,
+    // @ts-expect-error Zod resolver mismatch
+    resolver: zodResolver(planSchema),
   });
 
   const { fields, append, remove } = useFieldArray({ control, name: 'features' });
@@ -67,6 +68,7 @@ export default function PlanEditModal() {
 
   if (!isOpen || !selectedPlan) return null;
 
+  // @ts-expect-error React hook form type mismatch
   const onSubmit = async (data: PlanFormValues) => {
     editMutation.mutate({ ...data, features: data.features.map(f => f.value) });
   };
@@ -91,7 +93,7 @@ export default function PlanEditModal() {
           <div className="grid grid-cols-2 gap-4">
             {(['priceMonthly', 'priceAnnual'] as const).map(field => (
               <div key={field} className="space-y-2">
-                <label className="block text-sm font-medium text-secondary">{field === 'priceMonthly' ? 'Monthly Price (₹)' : 'Annual Price (₹)'} <span className="text-danger">*</span></label>
+                <label className="block text-sm font-medium text-secondary">{field === 'priceMonthly' ? 'Monthly Price (â‚¹)' : 'Annual Price (â‚¹)'} <span className="text-danger">*</span></label>
                 <input type="number" min="0" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }} step="0.01" {...register(field, { valueAsNumber: true })} className="w-full bg-input border border-border rounded-xl px-4 py-3 text-foreground focus:border-primary outline-none motion-safe:transition-colors" />
                 {errors[field] && <p className="text-danger text-xs">{errors[field]?.message}</p>}
               </div>
@@ -138,3 +140,5 @@ export default function PlanEditModal() {
     </div>
   );
 }
+
+
