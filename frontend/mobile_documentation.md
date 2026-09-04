@@ -24,23 +24,99 @@ Whichever is chosen, mandate the framework's **current-generation architecture**
 
 ## Rule 1 — Micro-Modularization (One Feature = One Self-Contained Folder)
 
-- One component/widget = one file. If a file's UI logic exceeds ~150 lines, split it.
-- One file = one responsibility — never mix data-fetching, business logic, and
-  presentation in the same file.
-- Every feature lives ENTIRELY inside its own feature folder (e.g.
-  `features/orders/` or `lib/features/orders/` for Dart/Flutter conventions).
-  That folder holds: UI components, hooks/controllers, validation schemas, types/models,
-  the feature's API-access layer, and its own context file (Rule 24). Nothing
-  feature-specific should exist outside this folder.
+This is the most important structural rule. **One feature = one self-contained folder.**
+If there is a bug in `members`, you drag ONLY the `features/members/` folder to the AI.
+Everything the AI needs — components, hooks/controllers, schemas, types, API, state,
+tests, and the context file — lives inside that single folder. Zero need to open any other folder.
+
+- One component/widget = one file. One file = one responsibility — never mix
+  data-fetching, business logic, and presentation in the same file.
+- Every feature lives ENTIRELY inside its own feature folder. Nothing feature-specific
+  exists outside it.
 - Screens/route entry points are THIN — they compose feature components only.
   No business logic, no direct API calls, no non-trivial state inside a screen file.
 
-Standard shape (apply this structure regardless of framework, adapting file
-extensions to the language in use):
+### File Size Ceilings (AI Context Limits)
 
+| File type | Maximum lines |
+|---|---|
+| Screen / Page entry point | **80 lines** |
+| Component / Widget | **200 lines** |
+| Custom Hook / Controller / Notifier | **150 lines** |
+| Validation Schema / Validator class | **150 lines** |
+| API service file | **150 lines** |
+| State store / Provider / Bloc | **180 lines** |
+| Type / Model file | **150 lines** |
+| Utility / Formatter file | **120 lines** |
 
+If a file exceeds its ceiling: split by **feature responsibility**, not randomly by line count.
+Never create dumping folders named `helpers/`, `common/`, or `misc/`.
+Keep all split files inside the **same feature folder**.
 
-features/orders/ components/ (or widgets/ in Flutter) hooks/ (or controllers/ / providers/) schemas/ (validation rules — Zod for RN, or equivalent validators for Flutter) types/ (or models/) api/ (all network calls for this feature only) state/ (feature-scoped state container, only if shared across components) tests/ orders_features.md (MANDATORY — see Rule 24)
+### Canonical Feature Folder Structure
+
+Adapt file extensions to the framework (`*.ts`/`*.tsx` for React Native; `*.dart` for Flutter):
+
+```
+features/
+└── members/                              ← entire feature lives here
+    ├── components/                       (or widgets/ in Flutter)
+    │   ├── MembersMemberCard.tsx         ← module-prefixed component
+    │   ├── MembersMemberCard.test.tsx    ← co-located test
+    │   ├── MembersMemberListItem.tsx
+    │   └── MembersEmptyState.tsx
+    ├── hooks/                            (or controllers/ / notifiers/ in Flutter)
+    │   ├── useMembers.ts                 ← server-state data-fetching hook
+    │   ├── useMembers.test.ts
+    │   ├── useMembersFilters.ts          ← client-state UI filter hook
+    │   └── useMembersFilters.test.ts
+    ├── schemas/                          (or validators/ in Flutter)
+    │   └── members.schema.ts             ← Zod schema / validator class
+    ├── types/                            (or models/ in Flutter)
+    │   └── members.types.ts              ← all interfaces, enums, type unions
+    ├── api/
+    │   └── members.api.ts                ← ALL network calls for this feature ONLY
+    ├── state/                            ← only if UI state shared across 2+ components
+    │   └── members.store.ts              ← Zustand (RN) / Riverpod provider (Flutter)
+    ├── tests/                            ← integration-level tests (unit = co-located)
+    │   └── members.integration.test.ts
+    ├── members_features.md               ← MANDATORY — see Rule 24
+    └── members_forbidden.md             ← MANDATORY — see Rule 29
+```
+
+### Hyper-Descriptive, Module-Prefixed Naming (AI Context Guarantee)
+
+Every file name **MUST begin with the feature name as a prefix**. When you tag a file
+in an AI prompt (e.g. `@MembersMemberCard.tsx`), the AI instantly knows which module
+it belongs to — zero ambiguity, zero cross-module hallucination risk.
+
+```
+❌ BAD:  Card.tsx, hook.ts, api.ts, store.ts, types.ts
+✅ GOOD: MembersMemberCard.tsx, useMembersFilters.ts, members.api.ts
+```
+
+- **No abbreviations:** Never `Btn`, `Nav`, `Util`. Use `Button`, `Navigation`, `Utility`.
+- **Suffix by type:** `...Card`, `...List`, `...Form`, `...Modal`, `...Sheet`, `...EmptyState`.
+- **Exported name = filename:** `MembersMemberCard.tsx` must export `MembersMemberCard`.
+  No default exports with a different name — this prevents AI hallucination.
+- **Props interfaces prefixed:** `export interface MembersMemberCardProps` — never generic `Props`.
+
+### Role Isolation (Mirror of Web Architecture)
+
+Just as the web has isolated `/admin`, `/manager`, `/trainer` root folders, the mobile
+app MUST follow the same pattern. A `MemberCard` in `admin/members/` is **never** imported
+into `manager/members/`. Duplicate it — AI writes the code, so duplication cost is near
+zero but isolation value is massive.
+
+```
+features/
+├── admin/
+│   └── members/      ← AdminMembers — completely isolated
+├── manager/
+│   └── members/      ← ManagerMembers — isolated, even if visually similar
+└── trainer/
+    └── members/      ← TrainerMembers — isolated
+```
 
 
 
@@ -119,18 +195,27 @@ stored data and route it accordingly:
 ## Rule 7 — API Layer & Error Handling
 
 - ONE central network-client module for the whole app — one HTTP client
-  instance, one place where auth headers and tenant/org headers are attached.
-  No feature creates its own separate HTTP client.
-- Every response is normalized into ONE shared response shape across the
-  entire app: a success flag, a data payload, and a structured error object
-  (code, message, optional field-level errors). Every feature's API layer
-  returns this shape — never raw, un-normalized responses.
-- User-facing error messages come from the backend's error message field
-  (backend-driven), never hardcoded strings duplicated across screens. If the
-  backend doesn't localize, resolve through one central error-code-to-message
-  mapping file — not per-screen fallback strings.
+  instance, one place where auth headers, tenant headers (`x-tenant-id`), and
+  correlation IDs are attached. No feature creates its own separate HTTP client.
+- Every response is normalized into ONE shared `ApiResponse<T>` shape:
+  `{ success, message, data: T | null, meta?, error?, statusCode? }`
+  This matches the backend's canonical envelope exactly (Backend Rule 28).
+  Every feature's API layer returns this shape — never raw, un-normalized responses.
+- User-facing error messages come from the backend's `message` field —
+  never hardcoded strings duplicated across screens.
 - Authentication expiry (401) is handled by ONE centralized
-  logout/token-refresh flow — never handled ad-hoc inside individual screens.
+  logout/token-refresh interceptor — never ad-hoc inside individual screens.
+
+**Typed API Verb Contract:** Every function in a feature's `*.api.ts` MUST follow
+the same verb naming as Backend Rule 86 and Frontend Rule 72 — 1:1 symmetry:
+- `fetchMembers(params)` — paginated list
+- `fetchMemberById(id)` — single entity
+- `createMember(dto)` — POST creation
+- `updateMember(id, dto)` — PATCH/PUT update
+- `deleteMember(id)` — DELETE
+- `exportMembersReport(params)` — report/export
+
+AI agents must never invent arbitrary function names like `loadData()` or `getData()`.
 
 ## Rule 8 — Lists & Rendering Performance
 
@@ -316,11 +401,21 @@ stored data and route it accordingly:
 - CI runs, on every push: (a) a software-composition-analysis (SCA)
   dependency vulnerability scan, (b) a secret-scanning check. Both must pass
   before merge.
-- Code ownership rules require mandatory review on: the central network
-  client, the central storage module, the central permissions module, the
-  central config module, and any native build/signing configuration file.
-- No new dependency is added without confirming current-architecture
-  compatibility (Rule 0/14) AND passing a vulnerability scan.
+- Code ownership (`CODEOWNERS`) requires mandatory human review on: the central
+  network client, the central storage module, the central permissions module,
+  the central config module, any auth flow, and any native build/signing config.
+- No new dependency is added without:
+  1. Checking the `/docs/decisions/approved-dependencies.md` list first.
+  2. Confirming current-generation architecture compatibility (Rule 0 / Rule 14).
+  3. Passing a vulnerability scan.
+  4. Adding a written justification for why no existing approved library suffices.
+
+**AI Dependency-Addition Guardrail:** An AI agent CANNOT add a new dependency
+(`npm install` / `pub add`) without first checking the approved-dependency list.
+Before proposing a new library, the AI must explicitly explain why an existing
+approved library (e.g. `react-native-keychain`, `zustand`, `react-hook-form`,
+`zod`, `@tanstack/react-query`, `react-native-fast-image`, `date-fns`,
+`react-native-reanimated`) does not suffice for the task.
 
 ## Rule 23 — Observability & Crash Reporting
 
@@ -336,40 +431,85 @@ stored data and route it accordingly:
 
 ## Rule 24 — AI-Context Documentation (THE MODULARIZATION CONTRACT)
 
-**This is the most important rule for how the codebase is worked on by AI
-agents or new engineers.**
+**This is the most important rule for AI-driven development.**
 
 Every feature folder MUST contain a file named `[featureName]_features.md`.
-This file is the single source of truth for that feature — anyone (human or
-AI) given ONLY this file plus the feature's code must be able to fully
-understand, modify, or debug it without reading any other part of the
-codebase.
+This file is the single source of truth for that feature — an AI given ONLY
+this file plus the feature folder must be able to fully understand, modify,
+or debug it without reading any other part of the codebase.
 
-Required sections in every `_features.md`:
+**Before modifying a feature, read its `_features.md` in full first.**
+If it is missing or stale, updating it is part of the same change — a feature
+is never "done" while its context file is out of date.
 
-- **Purpose** — what the feature does, which screens/users use it.
-- **Screens & Routes** — every entry point into this feature.
-- **Data Flow** — API endpoints consumed, server-state cache keys used and
-  what invalidates them, any shared client-state container used here and by
-  whom else.
-- **State Decisions** — what lives in server state vs shared client state vs
-  local state, and why (per Rule 4).
-- **Offline Behavior** — explicit "yes, with [strategy]" or "no offline
-  requirement."
-- **Platform-Specific Notes** — any iOS/Android divergence and why.
-- **Permissions Used** — which native permissions, requested via which
-  central-module function.
-- **Feature-Specific Dependencies** — anything beyond the approved base set,
-  and why.
-- **Rule Compliance Checklist** — one line per rule in this document (0
-  through 27), checked off only when genuinely true, not assumed.
-- **Known Issues / Tech Debt** — anything intentionally deferred, with a
-  reason and tracking reference.
+### Mandatory `_features.md` Template
 
-**Rule for AI agents/engineers:** before modifying a feature, read its
-`_features.md` in full first. If it's missing or no longer matches the code,
-updating it is part of the same change — a feature is never "done" while its
-context file is stale.
+Every `_features.md` MUST use this minimum structure:
+
+```markdown
+# [FeatureName] Feature Map
+
+## Purpose
+Brief business explanation of what this feature does and which user roles use it.
+
+## Screens & Entry Points
+| Screen name | Route / stack name | Role access |
+|---|---|---|
+
+## Folder Structure
+Brief description of each subfolder and its single responsibility.
+
+## Data & State Architecture
+- TanStack Query / repository cache keys:
+- Feature-scoped Zustand stores / Riverpod providers:
+- Local state decisions (per component):
+- Persisted state (offline requirement): Yes / No — if yes, document strategy
+- Storage keys used (namespaced constants):
+
+## API Contract
+| Function | Method | Endpoint | Request type | Response type |
+|---|---|---|---|---|
+
+## Permissions Used
+| Permission | Central module function | Rationale |
+|---|---|---|
+
+## Platform-Specific Notes
+List any iOS / Android divergence and why.
+
+## Offline Behavior
+Explicit "Yes, with [strategy]" or "No offline requirement."
+
+## Loading / Empty / Error States
+| State | Component file |
+|---|---|
+| Loading | FeatureListSkeleton.tsx |
+| Empty | FeatureEmptyState.tsx |
+| Error | FeatureErrorFallback.tsx |
+
+## Edge Cases / AI Warnings
+Known product constraints, regression risks, common AI hallucination traps.
+
+## Rule Compliance Checklist
+- [ ] Rule 1: Micro-modularization & module-prefixed naming
+- [ ] Rule 3: All styles use design tokens — no magic hex/dp values
+- [ ] Rule 4: State placed per Server/Client decision matrix
+- [ ] Rule 5: Forms use form library + schema validator
+- [ ] Rule 7: All API calls through central network client, typed verb contract
+- [ ] Rule 8: Lists use virtualized component for >20 items
+- [ ] Rule 7: User-facing messages come from backend's message field
+- [ ] Rule 6: Auth tokens in hardware-backed secure storage only
+- [ ] Rule 17: Co-located unit tests present; E2E for critical flows
+- [ ] Rule 23: Observability wired for critical error paths
+- [ ] Rule 22: No unapproved dependencies added
+- [ ] Rule 25: All interactive elements have accessible labels + 44/48dp targets
+- [ ] Rule 28: Zero cross-feature imports (self-containment verified)
+- [ ] Rule 29: `_forbidden.md` exists and is current
+
+## Known Issues / Tech Debt
+| Issue | Reason deferred | Tracking reference |
+|---|---|---|
+```
 
 ## Rule 25 — Accessibility
 
@@ -402,3 +542,66 @@ context file is stale.
   50% → 100% over roughly two weeks), monitoring crash-free rate at each
   stage before advancing — never a 100% release for high-risk native changes.
 
+---
+
+## Rule 28 — Zero Cross-Feature Imports (The Portable Folder Rule)
+
+Feature A (`members`) is **explicitly FORBIDDEN** from importing anything from
+Feature B (`attendance`) — no components, no hooks, no types, no constants.
+
+Every feature folder must be a **completely self-contained unit**. It may depend ONLY on:
+- (a) npm / pub packages
+- (b) Generic zero-business-logic primitives from `src/core/ui/` (shared UI atoms)
+- (c) Its own internal files
+
+This guarantees the entire feature folder can be deleted, copied, and pasted
+into a different project with **zero broken imports** — the drag-and-drop-to-AI
+workflow depends entirely on this guarantee.
+
+Enforce mechanically via `eslint-plugin-boundaries` (React Native) or equivalent
+static analysis / import linter (Flutter) so violations are caught in CI, not in code review.
+
+---
+
+## Rule 29 — Forbidden Patterns Per Feature (`_forbidden.md`)
+
+Every feature folder MUST have a `[featureName]_forbidden.md` file listing
+what is explicitly NOT allowed in that specific feature. This is the first file
+an AI agent reads before making any change to a feature.
+
+Example `members_forbidden.md`:
+```markdown
+# members — Forbidden Patterns
+
+- NEVER import from any other feature folder (admin/members/, trainer/members/, etc.)
+- NEVER call the HTTP client directly — always use members.api.ts
+- NEVER store API response data in members.store.ts — use the data-fetching layer cache only
+- NEVER implement ad-hoc confirmation dialogs — use the centralized confirmation module
+- NEVER add a new dependency without approval (Rule 22 — dependency guardrail)
+- NEVER hardcode hex colors, dp values, or font sizes — use design tokens only (Rule 3)
+- NEVER log auth tokens, PII, or payment data — sanitize before any log call
+```
+
+---
+
+## Workflow Checklist — What to Verify After AI Writes Code
+
+1. Read the feature's `_features.md` and `_forbidden.md` before giving the AI any files.
+2. Identify the exact layer (UI? Hook? API? Schema? State?) and pass only those files.
+3. After the AI writes code, verify:
+   - All styles use design tokens — no raw hex/dp values? (Rule 3)
+   - State placed per Server/Client matrix? (Rule 4)
+   - Forms using library + schema validator? (Rule 5)
+   - API calls through central client, typed verb names? (Rule 7)
+   - Lists virtualized for >20 items? (Rule 8)
+   - User messages from `response.message`, never hardcoded? (Rule 7)
+   - Auth tokens in hardware-backed secure storage only? (Rule 6)
+   - Co-located tests exist for new hooks and components? (Rule 17)
+   - Crash reporting wired for new critical paths? (Rule 23)
+   - Is any new dependency on the approved list? (Rule 22)
+   - `_features.md` updated? (Rule 24)
+   - All interactive elements have accessible labels + 44/48dp targets? (Rule 25)
+   - Any cross-feature imports? (Rule 28)
+   - `_forbidden.md` current? (Rule 29)
+4. Run CI gates: lint, type check, test pyramid, SCA scan, secrets scan.
+5. For auth, payment, storage, or tenant-routing changes: ensure CODEOWNERS human review.
