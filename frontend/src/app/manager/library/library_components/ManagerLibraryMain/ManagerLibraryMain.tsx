@@ -5,14 +5,13 @@ import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/Manage
 import ManagerToast from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import { LibraryProvider, useLibraryContext } from '@/app/manager/library/library_context/LibraryContext';
 import ManagerLibraryTabs from '@/app/manager/library/library_components/ManagerLibraryTabs/ManagerLibraryTabs';
-import ManagerLibraryExerciseModal from '@/app/manager/library/library_components/ManagerLibraryExerciseModal/ManagerLibraryExerciseModal';
-import ManagerLibraryDietModal from '@/app/manager/library/library_components/ManagerLibraryDietModal/ManagerLibraryDietModal';
-import ManagerLibraryExerciseGrid from '@/app/manager/library/library_components/ManagerLibraryExerciseGrid/ManagerLibraryExerciseGrid';
+
 import ManagerLibraryDietGrid from '@/app/manager/library/library_components/ManagerLibraryDietGrid/ManagerLibraryDietGrid';
+import ManagerLibraryDietModal from '@/app/manager/library/library_components/ManagerLibraryDietModal/ManagerLibraryDietModal';
 import type { LibraryInitialData } from '@/app/manager/library/library_types/library_types';
 
 function LibraryContent() {
- const { toast, hideToast, tab } = useLibraryContext();
+ const { toast, hideToast } = useLibraryContext();
 
  return (
  <div className="min-h-full pb-10 bg-background text-foreground">
@@ -21,11 +20,11 @@ function LibraryContent() {
  <ManagerLibraryTabs />
  
  <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden p-5">
-   {tab === 'Exercises' ? <ManagerLibraryExerciseGrid /> : <ManagerLibraryDietGrid />}
+   <ManagerLibraryDietGrid />
  </div>
  </div>
 
- <ManagerLibraryExerciseModal />
+
  <ManagerLibraryDietModal />
 
  {toast && (

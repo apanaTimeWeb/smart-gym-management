@@ -4,7 +4,6 @@ pipeline {
     // Yahan hum explicitly define kar rahe hain ki kaunsi app kis port par chalegi
     environment {
         FRONTEND_PORT = '3000'
-        BACKEND_PORT = '5000'
         // Ye line Jenkins ko order deti hai ki PM2 ko kill mat karna!
         JENKINS_NODE_COOKIE = 'dontKillMe' 
     }
@@ -42,30 +41,6 @@ pipeline {
             }
         }
 
-        // ==========================================
-        // BACKEND STAGES (NestJS)
-        // ==========================================
-        stage('Backend: Install & Build') {
-            steps {
-                dir('backend') {
-                    echo 'Installing NestJS dependencies...'
-                    sh 'npm install'
-                    
-                    echo 'Building NestJS for production...'
-                    sh 'npm run build' 
-                }
-            }
-        }
-
-        stage('Deploy: Backend (PM2)') {
-            steps {
-                dir('backend') {
-                    echo "Deploying NestJS Backend to PM2 on Port ${BACKEND_PORT}..."
-                    // PORT variable force karega NestJS ko 5000 par chalne ke liye
-                    sh 'PORT=$BACKEND_PORT pm2 restart nest-backend || PORT=$BACKEND_PORT pm2 start dist/main.js --name "nest-backend"'
-                }
-            }
-        }
 
         // ==========================================
         // SAVE SERVER STATE

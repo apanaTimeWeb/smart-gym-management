@@ -1,18 +1,15 @@
 // RESPONSIBILITY: Defines all TypeScript types, interfaces, and the FetchState enum for the Diet Library module.
 import type { } from '@/lib/api';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import type { LibraryTab } from '@/app/manager/library/library_utils/LibrarySharedConstants';
+import { EMPTY_DIET_FORM } from '@/app/manager/library/library_utils/LibrarySharedConstants';
 
 export interface LibraryInitialData {
-  exercises: Exercise[];
+
   dietPlans: DietPlan[];
 }
 
 export interface LibraryContextType {
- tab: LibraryTab;
- setTab: (t: LibraryTab) => void;
- 
- exercises: Exercise[];
+
  dietPlans: DietPlan[];
  loading: boolean;
  saving: boolean;
@@ -29,15 +26,6 @@ export interface LibraryContextType {
  
  loadAll: () => Promise<void>;
  
- // Exercise Modal State
- showExModal: boolean;
- setShowExModal: (show: boolean) => void;
- editExId: string | null;
- editExData: Record<string, unknown> | null;
- openAddEx: () => void;
- openEditEx: (ex: Exercise) => void;
- saveExercise: (data: Record<string, unknown>) => Promise<void>;
- deleteExercise: (id: string) => Promise<void>;
  
  // Diet Modal State
  showDietModal: boolean;
@@ -50,13 +38,15 @@ export interface LibraryContextType {
  deleteDietPlan: (id: string) => Promise<void>;
 }
 
-export interface Exercise {
-  id: string; name: string; category: string; muscleGroup: string[];
-  sets?: number; reps?: string; duration?: string;
-  difficulty: string; description?: string; videoUrl?: string; imageUrl?: string; isActive: boolean;
-}
+
 export interface DietPlan {
   id: string; name: string; goal: string;
   calories?: number; protein?: number; carbs?: number; fats?: number;
   description?: string; meals: string[]; isActive: boolean;
+}
+
+export interface Exercise {
+  id: string; name: string; category: string; muscleGroup?: string[];
+  sets?: number; reps?: number; duration?: number; difficulty: string;
+  description?: string; videoUrl?: string; isActive: boolean;
 }

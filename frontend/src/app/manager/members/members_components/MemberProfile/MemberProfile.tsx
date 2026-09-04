@@ -87,6 +87,7 @@ export default function MemberProfile() {
               { label: 'Member ID', value: selectedMember.id },
               { label: 'Branch', value: selectedMember.branch },
               { label: 'Gender', value: selectedMember.gender },
+              { label: 'Aadhaar Card', value: selectedMember.aadhaar || 'N/A' },
               { label: 'Join Date', value: new Date(selectedMember.joinDate).toLocaleDateString('en-IN') },
               { label: 'Expiry Date', value: new Date(selectedMember.expiryDate).toLocaleDateString('en-IN') },
               { label: 'Address', value: selectedMember.address || 'N/A' },

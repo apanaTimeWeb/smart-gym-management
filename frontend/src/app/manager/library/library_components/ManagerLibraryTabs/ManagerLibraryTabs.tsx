@@ -3,27 +3,13 @@
 
 import { RefreshCw, Plus, Search } from 'lucide-react';
 import { useLibraryContext } from '@/app/manager/library/library_context/LibraryContext';
-import { LIBRARY_TABS } from '@/app/manager/library/library_utils/LibrarySharedConstants';
-
 export default function ManagerLibraryTabs() {
-  const { tab, setTab, loadAll, openAddEx, openAddDiet, search, setSearch, setCurrentPage } = useLibraryContext();
+  const { loadAll, openAddDiet, search, setSearch, setCurrentPage } = useLibraryContext();
 
   return (
     <div className="border-b border-border flex flex-wrap gap-4 justify-between items-center bg-card p-2 sm:p-0">
       <div className="flex overflow-x-auto">
-        {LIBRARY_TABS.map(t => (
-          <button 
-            key={t} 
-            onClick={() => setTab(t)}
-            className={`px-5 py-3.5 text-sm font-medium transition-colors border-b-2 whitespace-nowrap ${
-              tab === t 
-                ? 'text-primary bg-primary/5 border-primary' 
-                : 'border-transparent text-secondary hover:text-foreground'
-            }`}
-          >
-            {t}
-          </button>
-        ))}
+        <h2 className="px-5 py-3.5 text-lg font-bold text-foreground whitespace-nowrap">Diet Plans</h2>
       </div>
       <div className="px-4 flex flex-wrap gap-3 items-center">
         <div className="relative">
@@ -31,8 +17,8 @@ export default function ManagerLibraryTabs() {
           <input 
             value={search} 
             onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} 
-            placeholder={`Search ${tab.toLowerCase()}...`} 
-            className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-40 sm: w-full sm:w-64  bg-input text-foreground" 
+            placeholder="Search diet plans..." 
+            className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-40 sm:w-full sm:max-w-[16rem] bg-input text-foreground" 
           />
         </div>
  <button 
@@ -41,22 +27,12 @@ export default function ManagerLibraryTabs() {
  >
  <RefreshCw size={14} />
  </button>
- {tab === 'Exercises' && (
- <button 
- onClick={openAddEx} 
- className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg transition-colors hover:bg-primary/90" 
- >
- <Plus size={14} /> Add Exercise
- </button>
- )}
- {tab === 'Diet Plans' && (
  <button 
  onClick={openAddDiet} 
  className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg transition-colors hover:bg-primary/90" 
  >
  <Plus size={14} /> Add Diet Plan
  </button>
- )}
  </div>
  </div>
  );

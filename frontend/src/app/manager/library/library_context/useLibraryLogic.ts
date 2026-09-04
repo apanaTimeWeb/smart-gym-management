@@ -2,9 +2,9 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useDebounce } from '@/app/manager/manager_utils/useDebounce';
 import { libraryApi } from '@/app/manager/library/library_api/library_api';
-import type { Exercise, DietPlan } from '@/app/manager/library/library_types/library_types';
+import type { DietPlan } from '@/app/manager/library/library_types/library_types';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import { EMPTY_EXERCISE_FORM, EMPTY_DIET_FORM, type LibraryTab, type ExerciseFormValues, type DietFormValues } from '@/app/manager/library/library_utils/LibrarySharedConstants';
+import { EMPTY_DIET_FORM, type DietFormValues } from '@/app/manager/library/library_utils/LibrarySharedConstants';
 import type { LibraryContextType, LibraryInitialData } from '@/app/manager/library/library_types/library_types';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -14,17 +14,8 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
   const router = useRouter();
   const searchParams = useSearchParams();
   
-  const tab = (searchParams.get('tab') as LibraryTab) || 'Exercises';
-  
-  const setTab = useCallback((newTab: LibraryTab) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('tab', newTab);
-    params.delete('page');
-    params.delete('search');
-    router.push(`?${params.toString()}`, { scroll: false });
-  }, [router, searchParams]);
 
-  const [exercises, setExercises] = useState<Exercise[]>(initialData?.exercises || []);
+
   const [dietPlans, setDietPlans] = useState<DietPlan[]>(initialData?.dietPlans || []);
  
  const [loading, setLoading] = useState(!initialData);
@@ -53,9 +44,6 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
     router.push(`?${params.toString()}`, { scroll: false });
   }, [router, searchParams]);
 
- const [showExModal, setShowExModal] = useState(false);
- const [editExId, setEditExId] = useState<string | null>(null);
- const [editExData, setEditExData] = useState<any>(null);
 
  const [showDietModal, setShowDietModal] = useState(false);
  const [editDietId, setEditDietId] = useState<string | null>(null);
@@ -74,11 +62,7 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
  if (debouncedSearch) {
   params.search = debouncedSearch;
  }
- const [exRes, dietRes] = await Promise.all([
- libraryApi.getExercises(params),
- libraryApi.getDietPlans(params),
- ]);
- setExercises(exRes.data?.exercises || exRes.data || []);
+ const dietRes = await libraryApi.getDietPlans(params);
  setDietPlans(dietRes.data?.dietPlans || dietRes.data || []);
  } catch (e) { 
  showToast((e as Error).message, 'error'); 
@@ -88,68 +72,6 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
   }, [showToast, currentPage, debouncedSearch]);
 
  useEffect(() => { loadAll(); }, [loadAll]);
-
- // Exercise CRUD
- const openAddEx = useCallback(() => { 
- setEditExId(null); 
- setEditExData(EMPTY_EXERCISE_FORM); 
- setShowExModal(true); 
- }, []);
- 
- const openEditEx = useCallback((ex: Exercise) => {
- setEditExId(ex.id);
- setEditExData({ 
- name: ex.name, 
- category: ex.category, 
- muscleGroup: ex.muscleGroup?.join(', '), 
- sets: ex.sets ? String(ex.sets) : '', 
- reps: ex.reps || '', 
- duration: ex.duration || '', 
- difficulty: ex.difficulty, 
- description: ex.description || '', 
- videoUrl: ex.videoUrl || '' 
- });
- setShowExModal(true);
- }, []);
- 
-  const saveExercise = useCallback(async (data: Partial<ExerciseFormValues>) => {
-    setSaving(true);
-    try {
-      const formattedData = {
-        ...data,
-        muscleGroup: typeof data.muscleGroup === 'string' ? data.muscleGroup.split(',').map(s => s.trim()) : data.muscleGroup
-      };
-      
-      if (editExId) {
-        const res = await libraryApi.updateExercise(editExId, formattedData as unknown as Partial<Exercise>);
-        const updatedEx = res.data || formattedData;
-        setExercises(prev => prev.map(e => String(e.id) === String(editExId) ? { ...e, ...updatedEx } as unknown as Exercise : e));
-        showToast(res.message || 'Exercise updated successfully', 'success');
-      } else {
-        const res = await libraryApi.createExercise(formattedData as unknown as Partial<Exercise>);
-        const newEx = res.data ? res.data : { ...formattedData, id: `ex-${Date.now()}` } as unknown as Exercise;
-        setExercises(prev => [newEx, ...prev]);
-        showToast(res.message || 'Exercise created successfully', 'success');
-      }
-      setShowExModal(false);
-    } catch (err) {
-      showToast((err as Error).message, 'error');
-    } finally {
-      setSaving(false);
-    }
-  }, [editExId, showToast]);
- 
-  const deleteExercise = useCallback(async (id: string) => {
-    const isConfirmed = await confirm({ title: 'Remove Exercise', message: 'Delete this exercise from library?', confirmText: 'Delete', type: 'danger' });
-    if (!isConfirmed) return;
-    try {
-      const res = await libraryApi.removeExercise(id);
-      setExercises(prev => prev.filter(e => String(e.id) !== String(id)));
-      showToast(res.message || 'Exercise deleted', 'success');
-    } catch (err) {
-      showToast((err as Error).message, 'error');
-    }
-  }, [showToast, confirm]);
 
  // Diet CRUD
  const openAddDiet = useCallback(() => { 
@@ -212,12 +134,11 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
   }, [showToast, confirm]);
 
   return {
-    tab, setTab,
-    exercises, dietPlans,
+    dietPlans,
     loading, saving, toast,
     search, debouncedSearch, setSearch, currentPage, setCurrentPage,
     showToast, hideToast, loadAll,
- showExModal, setShowExModal, editExId, editExData, openAddEx, openEditEx, saveExercise, deleteExercise,
+
  showDietModal, setShowDietModal, editDietId, editDietData, openAddDiet, openEditDiet, saveDietPlan, deleteDietPlan
  };
 }

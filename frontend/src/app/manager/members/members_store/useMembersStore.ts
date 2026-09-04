@@ -12,6 +12,8 @@ import { Member, MembersInitialData, FetchState } from '@/app/manager/members/me
 import type { Plan } from '@/app/manager/plans/plans_types/plans_types';
 import type { Payment } from '@/app/manager/finance/finance_types/finance_types';
 import { MemberFormValues, ATTENDANCE_CALENDAR_DAYS } from '@/app/manager/members/members_utils/MembersSharedConstants';
+import type { DietPlan } from '@/app/manager/library/library_types/library_types';
+import type { Workout } from '@/app/manager/workout/workout_types/workout_types';
 
 interface MembersState {
   members: Member[];
@@ -27,8 +29,10 @@ interface MembersState {
   loadAll: (params: { search?: string; status?: string; page: string }) => Promise<void>;
   loadMemberProfile: (memberId: string) => Promise<void>;
   toggleAtt: (memberId: string, day: number) => void;
-  saveMember: (data: MemberFormValues, editId: string | null) => Promise<{ success: boolean; message: string }>;
+  saveMember: (data: MemberFormValues, editId: string | null) => Promise<{ success: boolean; message: string; memberId?: string }>;
   deleteMember: (id: string) => Promise<{ success: boolean; message: string }>;
+  assignDiet: (memberId: string, diet: DietPlan | null) => Promise<void>;
+  assignWorkout: (memberId: string, workout: Workout | null) => Promise<void>;
 }
 
 export const useMembersStore = create<MembersState>((set) => ({
@@ -121,10 +125,11 @@ export const useMembersStore = create<MembersState>((set) => ({
             members: state.members.map(m => m.id === editId ? updatedMember as Member : m)
           };
         });
-        return { success: true, message: res.message || 'Updated successfully' };
+        return { success: true, message: res.message || 'Updated successfully', memberId: editId };
       } else {
         const newMember = { ...data, planId: data.planId, joinDate: new Date().toISOString() };
         const res = await membersApi.create(newMember);
+        let newId = '';
         set(state => {
           const plan = state.plans.find(p => String(p.id) === String(data.planId));
           // Use API response or fallback to mock
@@ -135,12 +140,13 @@ export const useMembersStore = create<MembersState>((set) => ({
             plan,
             pendingAmount: 0 
           };
+          newId = fullNewMember.id;
           return {
             members: [fullNewMember as unknown as Member, ...state.members],
             totalMembers: state.totalMembers + 1
           };
         });
-        return { success: true, message: res.message || 'Created successfully' };
+        return { success: true, message: res.message || 'Created successfully', memberId: newId };
       }
     } catch (err: unknown) {
       throw err;
@@ -157,6 +163,36 @@ export const useMembersStore = create<MembersState>((set) => ({
         totalMembers: state.totalMembers - 1
       }));
       return { success: true, message: res.message || 'Deleted successfully' };
+    } catch (err: unknown) {
+      throw err;
+    }
+  },
+
+  assignDiet: async (memberId: string, diet: DietPlan | null) => {
+    try {
+      const payload = { 
+        assignedDietId: diet?.id || '', 
+        assignedDiet: diet || undefined 
+      };
+      await membersApi.update(memberId, payload);
+      set(state => ({
+        members: state.members.map(m => m.id === memberId ? { ...m, ...payload } : m)
+      }));
+    } catch (err: unknown) {
+      throw err;
+    }
+  },
+
+  assignWorkout: async (memberId: string, workout: Workout | null) => {
+    try {
+      const payload = { 
+        assignedWorkoutId: workout?.id || '', 
+        assignedWorkout: workout || undefined 
+      };
+      await membersApi.update(memberId, payload);
+      set(state => ({
+        members: state.members.map(m => m.id === memberId ? { ...m, ...payload } : m)
+      }));
     } catch (err: unknown) {
       throw err;
     }

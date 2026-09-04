@@ -1,12 +1,12 @@
 // RESPONSIBILITY: Provides strongly-typed network calls for the library module.
 import { apiFetch, ApiResponse } from '@/lib/api';
 import { LibraryUrlConfig } from '@/app/manager/library/library_url_config';
-import type { Exercise, DietPlan } from '@/app/manager/library/library_types/library_types';
+import type { DietPlan, Exercise } from '@/app/manager/library/library_types/library_types';
 
 export const libraryApi = {
   getExercises: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<{ exercises: Exercise[], total: number }>>(`${LibraryUrlConfig.BACKEND_API.EXERCISES_BASE}${q}`);
+    return apiFetch<ApiResponse<{ exercises: Exercise[]; total: number }>>(`${LibraryUrlConfig.BACKEND_API.EXERCISES_BASE}${q}`);
   },
   createExercise: (body: Partial<Exercise>) =>
     apiFetch<ApiResponse<Exercise>>(LibraryUrlConfig.BACKEND_API.EXERCISES_BASE, { method: 'POST', body: JSON.stringify(body) }),

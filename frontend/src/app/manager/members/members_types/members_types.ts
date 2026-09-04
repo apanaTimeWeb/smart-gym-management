@@ -5,6 +5,8 @@ import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback
 import type { MessageType, ManagerMessageRecipient } from '@/app/manager/manager_components/ManagerFeedback/ManagerMessageModal';
 import type { ManagerReceiptData } from '@/app/manager/manager_components/ManagerShared/ManagerThermalReceipt';
 import type { MemberFormValues } from '@/app/manager/members/members_utils/MembersSharedConstants';
+import type { DietPlan } from '@/app/manager/library/library_types/library_types';
+import type { Workout } from '@/app/manager/workout/workout_types/workout_types';
 
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 
@@ -17,12 +19,16 @@ export interface MembersInitialData {
 
 export interface Member {
   id: string; name: string; email: string; phone: string;
-  gender: string; address?: string; branch: string;
+  gender: string; address?: string; aadhaar?: string; branch: string;
   planId: string; plan?: { id: string; name: string; tier: string };
   billingCycle: string; status: string;
   joinDate: string; expiryDate: string;
   paidAmount: number; pendingAmount: number; photo?: string;
   createdAt: string;
+  assignedDietId?: string;
+  assignedDiet?: DietPlan;
+  assignedWorkoutId?: string;
+  assignedWorkout?: Workout;
 }
 
 export interface MemberStats {
@@ -64,6 +70,8 @@ export interface MembersContextType {
   openEdit: (m: Member) => void;
   saveMember: (data: MemberFormValues) => Promise<void>;
   deleteMember: (id: string) => Promise<void>;
+  assignDiet: (memberId: string, diet: DietPlan | null) => Promise<void>;
+  assignWorkout: (memberId: string, workout: Workout | null) => Promise<void>;
 
   // Message Modal
   msgModal: { open: boolean; recipient: ManagerMessageRecipient; type: MessageType; message: string; subject?: string } | null;
