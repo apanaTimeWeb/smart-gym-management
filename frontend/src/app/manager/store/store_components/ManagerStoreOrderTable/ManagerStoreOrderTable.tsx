@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Renders the paginated order history table with status badges and customer info.
 'use client';
 
-import { Printer } from 'lucide-react';
+import { Printer, MessageCircle } from 'lucide-react';
 import type { Order } from '@/app/manager/store/store_types/store_types';
 import { useStoreContext } from '@/app/manager/store/store_context/StoreContext';
 import { formatCurrency } from '@/app/manager/store/store_utils/StoreSharedConstants';
@@ -31,6 +31,17 @@ export default function ManagerStoreOrderTable() {
       paymentMethod: o.method 
     });
     setTimeout(() => window.print(), 100);
+  };
+
+  const handleWhatsApp = (o: Order) => {
+    const itemsText = (o.items || []).map(i => {
+      const name = i.product?.name ? (i.product?.unit ? `${i.product.name} (${i.product.unit})` : i.product.name) : '';
+      return `- ${name}\n  ${i.qty} x Rs. ${i.price.toLocaleString()} = Rs. ${(i.qty * i.price).toLocaleString()}`;
+    }).join('\n');
+
+    const text = `*${GYM_DETAILS.name.toUpperCase()}*\nPh: ${GYM_DETAILS.phone}\n\n*PAYMENT RECEIPT*\nReceipt No: ORD-${o.id}\nDate: ${new Date(o.createdAt).toLocaleDateString('en-IN')}\n\n*ITEMS:*\n${itemsText}\n\n*TOTAL: Rs. ${o.total.toLocaleString()}*\nPaid via: ${o.method}\n\nThank You!`;
+    const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
   };
 
   
@@ -90,7 +101,18 @@ export default function ManagerStoreOrderTable() {
                 <td className="px-4 py-3 text-sm text-secondary">
                   {new Date(o.createdAt).toLocaleDateString('en-IN')}
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-4 py-3 flex items-center gap-2">
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleWhatsApp(o);
+                    }}
+                    className="p-1.5 rounded-lg bg-green-500/10 text-green-500 hover:bg-green-500/20 transition-colors"
+                    aria-label={`WhatsApp Receipt ORD-${o.id}`}
+                    title="Send via WhatsApp"
+                  >
+                    <MessageCircle size={14} />
+                  </button>
                   <button 
                     onClick={(e) => {
                       e.stopPropagation();
@@ -98,6 +120,7 @@ export default function ManagerStoreOrderTable() {
                     }}
                     className="p-1.5 rounded-lg bg-input text-secondary hover:text-foreground transition-colors"
                     aria-label={`Print Receipt ORD-${o.id}`}
+                    title="Print Receipt"
                   >
                     <Printer size={14} />
                   </button>
