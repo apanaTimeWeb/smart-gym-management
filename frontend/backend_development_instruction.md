@@ -80,6 +80,7 @@ Create a higher-level "Facade" or "Orchestrator" whose ONLY job is to open a tra
 Strictly ban global `common/` or `shared/` folders. If a utility, enum, or type is used by the Finance module, put it in `modules/finance/utils/`. If the HR module needs the exact same utility, **duplicate the code** into `modules/hr/utils/`. 
 * **Crucial Clarification (Domain vs Module):** WET duplication applies strictly at the **module level, not the domain level**. No shared folder is allowed at ANY level. Even if both the `billing` module and `attendance` module live under the same `erp` domain, they MUST get their own independent copies of a shared utility. There is no `erp/_shared/` folder.
 * **Why?** In an AI-driven codebase, code repetition is entirely acceptable because AI writes the code. If we use a global `common/` folder, an AI might modify a shared function to fix a bug in HR, inadvertently breaking the Finance module. Complete module isolation guarantees 0% cross-module side effects.
+* **Infrastructure Exception (Framework-Level vs Business-Logic-Level):** The WET-over-DRY / no-shared-folder rule applies strictly to **BUSINESS LOGIC utilities** (domain-specific helpers, formatters, validators). It does **NOT** apply to genuine framework-level infrastructure that every module is architecturally required to extend — e.g. `BaseEntity` (Rule 58), the global `ResponseInterceptor` (Rule 28), `RolesGuard`/`@Roles()` decorator (Rule 83), the structured logger (Rule 14), and `AsyncLocalStorage` context propagation (Rule 57). These live in a single, clearly-named `src/core/` or `src/infrastructure/` folder — **NOT** `src/shared/` or `src/common/` (to avoid becoming a dumping ground). This folder is intentionally small, framework-plumbing-only, and rarely touched — it does not carry the same "AI breaks module B while fixing module A" risk because it contains **no business logic**, only structural contracts that every module must extend by design.
 
 ### Edge Case D: External Service Adapters (Anti-Corruption Layer)
 *Scenario:* When your backend talks to the outside world (Stripe, AWS S3, SendGrid), never put the `axios.post()` or SDK calls directly inside your business logic.
@@ -336,7 +337,7 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **Architecture Strategy:**
   1. **Master Database:** A central database (e.g., `gymsmart_master`) must exist solely to manage global resources: Users, Authentication, Tenants (Gyms), Subscriptions, and Feature Flags.
   2. **Tenant Databases:** Every time a new gym registers, the backend must programmatically create a brand-new database (e.g., `tenant_db_101`) and run all schema migrations on it automatically. *(Note: All these logical databases reside within the same single MySQL/PostgreSQL server instance; do not spin up new physical servers/VPS per tenant).*
-  3. **Dynamic Connection Routing (Request Scoped):** The backend must intercept every incoming API request. Using a global middleware or interceptor, it must extract the `x-tenant-id` (from HTTP headers or JWT payload) and dynamically construct or switch the database connection to point to that specific tenant's database for the lifecycle of that request.
+  3. **Dynamic Connection Routing (Request Scoped):** The backend must intercept every incoming API request. Using a global middleware or interceptor, it must extract the `x-tenant-id` (from HTTP headers or JWT payload) and dynamically construct or switch the database connection to point to that specific tenant's database for the lifecycle of that request. **⚠️ See Rule 63 before implementing this** — the connection pool budget must be calculated across ALL active tenant DataSources combined, not per-tenant. Blindly applying `max: 20` per tenant DataSource will exhaust the database server's connection limit under load.
 * **How to Apply to Different Frameworks:**
   - **NestJS (Node/TypeScript):** Do not use a static `TypeOrmModule.forRoot`. Use request-scoped providers or custom connection factories that cache and resolve `DataSource` instances based on the request's tenant header.
   - **Django (Python):** Use database routers (`db_for_read`, `db_for_write`) paired with thread-local storage or middleware to dynamically route queries to the correct database alias based on the request.
@@ -731,7 +732,8 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
   2. **Authorization & Permission Guards** — Any new `@Roles()` decorator usage, `RolesGuard` modifications, resource-level authorization services (Rule 83).
   3. **Payment & Financial Mutations** — Any code that triggers charges, refunds, wallet deductions, or invoice generation.
   4. **Database Migration Files** — Any migration that adds `NOT NULL`, drops a column, or modifies a primary key. (Rule 24).
-  5. **Multi-Tenancy Connection Routing** — Any modification to the tenant DataSource factory or request-scoped connection resolver (Rule 39).
+  5. **Webhook Signature Verification** — Any code in webhook handlers that verifies HMAC/cryptographic signatures (Rule 45). A bypass here allows forged payment/delivery events to trigger real financial or state-changing actions — the risk is equivalent to a direct payment mutation.
+  6. **Tenant Provisioning & Connection Routing** — Any code that creates a new tenant database, runs migrations programmatically, or resolves the `x-tenant-id` to a DataSource (Rule 39). A bug here risks cross-tenant data leakage — the single most severe failure mode in this architecture. This includes both the provisioning flow AND any modification to the request-scoped connection resolver.
 * **Implementation:** In GitHub/GitLab, create a `CODEOWNERS` file mapping these folders to specific human reviewers. PRs touching these paths cannot be merged without a human approval even if all CI gates pass.
 * **PR Description Mandate:** Any PR touching these modules MUST include a section titled `## Security Impact Analysis` explaining what changed, what the risk surface is, and why the change is safe.
 * **Why:** Industry research confirms that ~45% of AI-generated code can introduce vulnerabilities, and the risk is highest in security-critical paths. An AI agent might generate a logically correct but cryptographically weak JWT validation, or a permission guard with a subtle bypass. Automated tools cannot catch all semantic security flaws — a human security review is the final, non-negotiable gate.
@@ -747,7 +749,7 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
    - Is there an N+1 query?
    - Is there a missing null check (use `findByIdOrThrow` where needed)?
    - Is a secret hardcoded? (Auto-blocked by pre-commit hook — Rule 91)
-   - Is the response wrapped in the standard envelope with a single consistent `data` shape?
+   - Is the response wrapped in the standard envelope with a single consistent `data` shape — is `data` a single explicitly typed value, never a polymorphic bag? (Rule 82)
    - Is the permission guard at the controller layer using typed enums? (Rule 83)
    - Is any ORM `orderBy` or `where` using user input without an allowlist? (Rule 92)
    - Are there any barrel file imports or relative path imports?
@@ -755,7 +757,9 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
    - Is every new method ≤ 20 lines using Guard Clauses? (Rule 85/87)
    - Does every new file have `// RESPONSIBILITY:` + `// FLOW:` + JSDoc on every method? (Rules 76/79/80)
    - Is a Mapper used to translate between ORM entities and domain objects? (Rule 89)
-   - If the change touches `auth/`, `billing/`, or `permissions/`, has a human reviewed it? (Rule 93)
+   - For mutation endpoints: is an `Idempotency-Key` header supported to prevent double-execution? (Rule 31)
+   - For background job queues: is a Dead Letter Queue configured for all retry-exhausted jobs? (Rule 61)
+   - If the change touches `auth/`, `billing/`, `webhooks/`, or `tenant-provisioning/`, has a human reviewed it? (Rule 93)
 6. Run automated CI gates: SAST, SCA, secrets scan, `tsc --noEmit`. (Rule 90)
 7. Run `pytest` against the live API to confirm contract compliance.
 8. For security-critical modules, ensure `CODEOWNERS` human approval is obtained. (Rule 93)
