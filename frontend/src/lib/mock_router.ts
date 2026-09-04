@@ -189,17 +189,12 @@ export async function routeMockRequest<T>(
   if (path.includes('/inquiries') || path.includes('/landing/booking') || path.includes('/landing/contact')) {
     // If it's a landing page POST, we coerce the method to POST for inquiries
     const actualMethod = path.includes('/landing') ? 'POST' : method;
-    return MockDB.handleCrud('mock_inquiries', actualMethod, path, parsedBody, generate(10, i => ({ 
-      id: `inq-${i}`, 
-      name: `Lead ${i + 1}`, 
-      phone: `887654321${i % 10}`, 
-      status: i % 2 === 0 ? 'NEW' : 'FOLLOW_UP', 
-      source: 'Instagram', 
-      interest: 'Basic Membership',
-      date: '2023-10-15', 
-      assignedTo: 'Trainer A',
-      createdAt: new Date().toISOString()
-    })), 'inquiries') as unknown as ApiResponse<T>;
+    const existing = MockDB.getCollection('mock_inquiries', []);
+    if (existing.length > 0 && existing.some((r: any) => r.name?.includes('Lead 1') || r.name?.includes('Lead 2') || r.source === 'Instagram')) {
+      const filtered = existing.filter((r: any) => !r.name?.includes('Lead 1') && !r.name?.includes('Lead 2') && r.source !== 'Instagram');
+      MockDB.setCollection('mock_inquiries', filtered);
+    }
+    return MockDB.handleCrud('mock_inquiries', actualMethod, path, parsedBody, [], 'inquiries') as unknown as ApiResponse<T>;
   }
   if (path.includes('/attendance/history')) {
     const url = new URL(`http://localhost${path}`);
@@ -526,6 +521,7 @@ export async function routeMockRequest<T>(
       let payments = MockDB.getCollection('mock_admin_payments', []);
       let staff = MockDB.getCollection('mock_admin_staff', []);
       let plans = MockDB.getCollection('mock_admin_plans', []);
+      let inquiries = MockDB.getCollection('mock_inquiries', []);
       
       if (rawMembers.length === 0) {
         rawMembers = generate(15, (i: number) => ({ id: `GS-${15102023000 + i}`, name: `Member ${i + 1}`, email: `member${i + 1}@example.com`, phone: `987654321${i}`, status: i % 4 === 0 ? 'PENDING' : i % 5 === 0 ? 'EXPIRED' : 'ACTIVE', planId: i % 3 === 0 ? 'p1' : i % 2 === 0 ? 'p2' : 'p3', plan: { id: i % 3 === 0 ? 'p1' : i % 2 === 0 ? 'p2' : 'p3', name: i % 3 === 0 ? 'Pro Plan' : i % 2 === 0 ? 'Basic Plan' : 'Elite Plan' }, joinDate: '2023-10-01', expiryDate: '2024-10-01', paidAmount: 5000, pendingAmount: i % 4 === 0 ? 1500 : 0 }));
@@ -574,12 +570,19 @@ export async function routeMockRequest<T>(
         return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
       }).reduce((sum: number, p: any) => sum + (Number(p.amount) || 0), 0);
 
-      // Pending payments (sum of all pendingAmount across members)
+      // Pending payments
       const pendingPayments = members.reduce((sum: number, m: any) => sum + (Number(m.pendingAmount) || 0), 0);
 
       // Staff stats
       const totalStaff = staff.length;
-      const activeStaff = staff.filter((s: any) => s.status === 'ACTIVE').length;
+      const activeStaff = staff.filter((s: any) => s.status === 'ACTIVE' || s.isActive === true).length;
+
+      // Inquiries stats
+      const totalInquiries = inquiries.length;
+      const newInquiries = inquiries.filter((inq: any) => {
+        const d = new Date(inq.createdAt || inq.date || now);
+        return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+      }).length;
 
       // Plan groupings
       const membersByPlanMap: Record<string, number> = {};
@@ -607,8 +610,8 @@ export async function routeMockRequest<T>(
           activeStaff,
           totalProducts: 120, // Mocked for now
           lowStockCount: 5,   // Mocked for now
-          totalInquiries: 45, // Mocked for now
-          newInquiries: 12,   // Mocked for now
+          totalInquiries,
+          newInquiries,
           membersByStatus: { active: activeMembers, pending: pendingMembers, expired: expiredMembers },
           memberGrowth: [
             { month: 'Jan', count: Math.max(0, totalMembers - 30) },
