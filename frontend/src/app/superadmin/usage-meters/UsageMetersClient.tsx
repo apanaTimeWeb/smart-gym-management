@@ -1,4 +1,8 @@
 'use client';
+/**
+ * RESPONSIBILITY: Renders the Usage Meters dashboard for superadmins to monitor tenant resource limits.
+ * DATA FLOW: usageMetersApi -> UsageMetersClient -> UI
+ */
 
 import { useState, useEffect } from 'react';
 import { usageMetersApi } from './usage-meters_api/usage-meters_api';
@@ -58,7 +62,7 @@ export default function UsageMetersClient() {
               <div>
                 <div className="flex justify-between text-sm mb-1.5">
                   <span className="flex items-center gap-1.5 text-secondary font-medium">
-                    <MessageSquare size={14} /> SMS Sent
+                    <MessageSquare size={18} /> SMS Sent
                   </span>
                   <span className="text-foreground font-semibold">{meter.smsSent} / {meter.smsLimit}</span>
                 </div>
@@ -74,7 +78,7 @@ export default function UsageMetersClient() {
               <div>
                 <div className="flex justify-between text-sm mb-1.5">
                   <span className="flex items-center gap-1.5 text-secondary font-medium">
-                    <HardDrive size={14} /> Storage (GB)
+                    <HardDrive size={18} /> Storage (GB)
                   </span>
                   <span className="text-foreground font-semibold">{meter.storageGb} / {meter.storageLimitGb}</span>
                 </div>
@@ -90,7 +94,7 @@ export default function UsageMetersClient() {
               <div>
                 <div className="flex justify-between text-sm mb-1.5">
                   <span className="flex items-center gap-1.5 text-secondary font-medium">
-                    <Users size={14} /> Active Members
+                    <Users size={18} /> Active Members
                   </span>
                   <span className="text-foreground font-semibold">{meter.activeMembers} / {meter.memberLimit}</span>
                 </div>
