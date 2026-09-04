@@ -6,12 +6,13 @@ import { Cpu, HardDrive, Server, Zap, RefreshCcw, Loader2 } from 'lucide-react';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import toast from 'react-hot-toast';
 import type { FetchState, InfrastructureNode } from '@/app/superadmin/superadmin_types/superadmin_types';
+import FlushTenantModal from '@/app/superadmin/infrastructure/infrastructure_components/FlushTenantModal';
 
 export default function InfrastructureClient() {
   const [nodes, setNodes] = useState<InfrastructureNode[]>([]);
   const [fetchState, setFetchState] = useState<FetchState>('idle');
   const [isFlushingAll, setIsFlushingAll] = useState(false);
-  const [isFlushingSpecific, setIsFlushingSpecific] = useState(false);
+  const [isFlushModalOpen, setIsFlushModalOpen] = useState(false);
 
   const fetchNodes = async () => {
     setFetchState('loading');
@@ -33,12 +34,10 @@ export default function InfrastructureClient() {
     }, 1500);
   };
 
-  const handleFlushSpecific = () => {
-    setIsFlushingSpecific(true);
-    setTimeout(() => {
-      setIsFlushingSpecific(false);
-      toast.success('Successfully flushed cache for specific tenant');
-    }, 1000);
+  const handleFlushSpecific = async (tenantId: string) => {
+    // In a real app, you would await an API call to superadminApi.infrastructure.flushTenant(tenantId)
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    toast.success(`Successfully flushed cache for tenant: ${tenantId}`);
   };
 
   // Refetch on mount to load infrastructure node metrics
@@ -146,15 +145,19 @@ export default function InfrastructureClient() {
             Flush All Tenants
           </button>
           <button 
-            onClick={handleFlushSpecific}
-            disabled={isFlushingSpecific}
+            onClick={() => setIsFlushModalOpen(true)}
             className="flex items-center justify-center gap-2 bg-input text-foreground px-5 py-2.5 rounded-lg font-medium hover:bg-border transition-colors border border-border min-w-[180px] disabled:opacity-50"
           >
-            {isFlushingSpecific ? <Loader2 size={18} className="motion-safe:animate-spin" /> : null}
             Flush Specific Tenant
           </button>
         </div>
       </div>
+
+      <FlushTenantModal 
+        isOpen={isFlushModalOpen} 
+        onClose={() => setIsFlushModalOpen(false)} 
+        onFlush={handleFlushSpecific} 
+      />
     </div>
   );
 }
