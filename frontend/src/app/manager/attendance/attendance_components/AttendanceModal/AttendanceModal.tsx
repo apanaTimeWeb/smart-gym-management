@@ -30,6 +30,9 @@ export default function AttendanceModal() {
 
   const watchType = watch('type');
   const watchStatus = watch('status');
+  
+  const d = new Date();
+  const todayDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
   useEffect(() => {
     if (showModal) {
@@ -116,6 +119,7 @@ export default function AttendanceModal() {
               </label>
               <input 
                 type="date" 
+                max={watchStatus !== 'LEAVE' ? todayDate : undefined}
                 {...register('date')}
                 className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus-visible:ring-2 ${
                   errors.date ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'

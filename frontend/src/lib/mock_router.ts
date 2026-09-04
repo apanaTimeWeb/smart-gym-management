@@ -332,22 +332,15 @@ export async function routeMockRequest<T>(
     isActive: true 
   })), 'dietPlans') as unknown as ApiResponse<T>;
   
-  const existingWorkouts = MockDB.getCollection('mock_workouts', []);
-  if (existingWorkouts.length > 0 && typeof existingWorkouts[0].days === 'number') {
-    MockDB.setCollection('mock_workouts', []); // Force purge old format
-  }
-  
   if (path.includes('/workouts')) return MockDB.handleCrud('mock_workouts', method, path, parsedBody, generate(5, i => ({ 
     id: `wo-${i}`, 
     name: `Hypertrophy Plan ${i+1}`, 
     level: i % 2 === 0 ? 'Intermediate' : 'Beginner',
     focus: 'Hypertrophy',
-    days: [
-      { day: 1, focus: 'Chest & Triceps', isRest: false, exercises: [{ name: 'Bench Press', sets: 4, reps: 10 }, { name: 'Triceps Extension', sets: 3, reps: 12 }] },
-      { day: 2, focus: 'Back & Biceps', isRest: false, exercises: [{ name: 'Pull-ups', sets: 4, reps: 8 }, { name: 'Bicep Curls', sets: 3, reps: 15 }] },
-      { day: 3, focus: 'Rest', isRest: true, exercises: [] },
-      { day: 4, focus: 'Legs', isRest: false, exercises: [{ name: 'Squats', sets: 4, reps: 12 }, { name: 'Leg Press', sets: 3, reps: 15 }] }
-    ]
+    days: 4,
+    exercises: 15 + i * 2,
+    duration: '60 min',
+    tags: ['Muscle', 'Strength']
   })), 'workouts') as unknown as ApiResponse<T>;
   if (path.includes('/admin/finance/summary')) return { success: true, message: 'Summary', data: { totalRevenue: 1500000, monthlyRevenue: 250000, pendingAmount: 45000, totalPayments: 345, revenueByMethod: { UPI: 120000, Cash: 50000, Card: 80000, NetBanking: 0 }, monthlyData: generate(6, i => ({ month: `M${i+1}`, revenue: 200000 + (i * 10000) })) } } as unknown as ApiResponse<T>;
   if (path.includes('/finance/payments')) return MockDB.handleCrud('mock_admin_payments', method, path, parsedBody, generate(10, i => ({ id: `pay-${i}`, memberId: `mem-${i}`, member: { name: `Payer ${i}`, email: `payer${i}@example.com`, phone: '9988776655', plan: { name: 'Pro Plan' } }, amount: 5000 + (i * 500), status: 'success', paidAt: new Date().toISOString(), method: 'UPI', invoiceNo: `INV-${1000 + i}` })), 'payments') as unknown as ApiResponse<T>;
