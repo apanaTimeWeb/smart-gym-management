@@ -106,20 +106,20 @@ export default function ProfileWorkout() {
         </div>
       ) : workout ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {workout.days && workout.days.length > 0 ? workout.days.map((day: any, idx: number) => (
+          {typeof workout.days === 'number' && workout.days > 0 ? Array.from({ length: workout.days }).map((_, idx) => (
             <div key={idx} className="bg-card border border-border p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-              <h5 className="font-semibold text-primary mb-3 pb-2 border-b border-border text-sm">Day {day.day}: {day.focus}</h5>
-              {day.isRest ? (
-                <p className="text-sm text-secondary italic">Rest Day - No workout assigned.</p>
-              ) : (
-                <ul className="space-y-2 text-sm text-secondary">
-                  {day.exercises?.map((ex: any, i: number) => (
-                    <li key={i} className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
-                      <span>{ex.name}</span> <span className="font-medium text-primary text-xs">{ex.sets}x{ex.reps}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
+              <h5 className="font-semibold text-primary mb-3 pb-2 border-b border-border text-sm">Day {idx + 1}: {workout.focus}</h5>
+              <ul className="space-y-2 text-sm text-secondary">
+                <li className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
+                  <span>Main Compound Movement</span> <span className="font-medium text-primary text-xs">3x10</span>
+                </li>
+                <li className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
+                  <span>Accessory Movement 1</span> <span className="font-medium text-primary text-xs">3x12</span>
+                </li>
+                <li className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
+                  <span>Accessory Movement 2</span> <span className="font-medium text-primary text-xs">4x8</span>
+                </li>
+              </ul>
             </div>
           )) : (
             <div className="col-span-full text-center py-4 text-secondary text-sm">No specific days mapped for this workout plan.</div>

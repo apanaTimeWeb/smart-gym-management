@@ -109,7 +109,7 @@ export default function ProfileDiet() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
              <div className="bg-card border border-border rounded-xl p-4 text-center shadow-sm">
                 <p className="text-xs text-secondary font-semibold uppercase tracking-wider mb-1">Calories</p>
-                <p className="text-xl font-bold text-primary">{diet.totalCalories?.toLocaleString() || 0} <span className="text-sm font-medium text-secondary">kcal</span></p>
+                <p className="text-xl font-bold text-primary">{diet.calories?.toLocaleString() || 0} <span className="text-sm font-medium text-secondary">kcal</span></p>
              </div>
              <div className="bg-card border border-border rounded-xl p-4 text-center shadow-sm">
                 <p className="text-xs text-secondary font-semibold uppercase tracking-wider mb-1">Protein</p>
