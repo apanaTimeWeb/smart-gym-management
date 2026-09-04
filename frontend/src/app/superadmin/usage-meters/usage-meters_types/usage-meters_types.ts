@@ -4,7 +4,8 @@ export interface UsageMeter {
   tenantName: string;
   smsSent: number;
   smsLimit: number;
-  storageGb: number;
+  databaseGb: number;
+  mediaGb: number;
   storageLimitGb: number;
   activeMembers: number;
   memberLimit: number;

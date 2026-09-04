@@ -447,12 +447,13 @@ export async function routeMockRequest<T>(
       tenantName: `Gym Branch ${i + 1}`,
       smsSent: 850 + (i * 45),
       smsLimit: 1000,
-      storageGb: 4.5 + (i * 1.2),
-      storageLimitGb: 5,
+      databaseGb: parseFloat((0.5 + (i * 0.15)).toFixed(2)),
+      mediaGb: parseFloat((4.0 + (i * 1.05)).toFixed(2)),
+      storageLimitGb: 10,
       activeMembers: 95 + (i * 20),
       memberLimit: 100 + (i * 30),
       billingCycleEnd: '2023-11-30'
-    })), 'usageMeters') as unknown as ApiResponse<T>;
+    }))) as unknown as ApiResponse<T>;
   }
 
   if (path.includes('/superadmin/analytics/revenue')) {
