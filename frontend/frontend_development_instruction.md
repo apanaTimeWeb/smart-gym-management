@@ -49,7 +49,7 @@ Remove all hardcoded Tailwind color utilities from the JSX. Map all CSS variable
 Because the components will be heavily micro-modularized, avoid creating a massive web of prop drilling. Do NOT bloat the global app state; keep the state architecture isolated to the feature.
 **The Canonical Decision Boundary:**
 - **React Context:** ONLY for synchronous, rarely-changing UI state (theme, sidebar open/close, locale). Never put API data or loading states in Context. You MUST implement proper memoization (`useMemo`, `useCallback`) to prevent massive re-render chains.
-- **Zustand (module-scoped store):** For ALL async data (API responses), loading states, and any state shared across more than one component within a module.
+- **Zustand (module-scoped store):** For UI-only shared state within a module (active filters, selected rows, wizard progress, table column preferences, local draft state). Do NOT store API response data or loading states here — see Rule 15C for the canonical Server State vs Client State decision matrix (TanStack Query is the single source of truth for all server/async data).
 - **Local `useState`:** Only for state that is strictly private to a single component and never needs to be shared.
 
 6. **Separation of Logic and UI (Custom Hooks for Extreme Isolation)**: 
@@ -207,6 +207,12 @@ List known product constraints, destructive actions, and common regression risks
 - [ ] Rule 9: Loading/error/not-found handling
 - [ ] Rule 14: Backend-driven messages
 - [ ] Rule 15A: Tests present
+- [ ] Rule 15B: Forms use React Hook Form + Zod
+- [ ] Rule 15C: State placed per Server/Client decision matrix
+- [ ] Rule 15D: Env vars validated centrally, none exposed unsafely
+- [ ] Rule 15E: Error monitoring wired for critical flows
+- [ ] Rule 74: Security scan gates passed (SCA + secrets)
+- [ ] Rule 76: CODEOWNERS covers security-critical paths
 - [ ] Rule 79: MSW handler present where needed
 ```
 
@@ -580,7 +586,7 @@ Every pull request must run:
 No PR may merge if a required gate fails.
 
 62. **Dependency-Addition Guardrail**:
-AI agents frequently install redundant packages. **An AI cannot add a new dependency without checking `package.json` first.** Before adding a new library, you must explicitly flag why an existing approved library (e.g., React Hook Form, Zod, date-fns, Zustand, socket.io-client, lucide-react) does not suffice for the task.
+AI agents frequently install redundant packages. **An AI cannot add a new dependency without checking `package.json` first.** Before adding a new library, you must explicitly flag why an existing approved library (e.g., React Hook Form, Zod, date-fns, Zustand, socket.io-client, lucide-react, react-apexcharts (canonical chart library — see global_design_system.md §10; Recharts and Chart.js are forbidden)) does not suffice for the task.
 
 63. **Zero Cross-Module Imports & Full Self-Containment (The Portable Folder Rule)**:
 - **Zero Cross-Module Imports:** Module A (e.g., `billing`) is explicitly FORBIDDEN from importing anything from Module B (e.g., `attendance`) — no components, no hooks, no types, no constants. This must be mechanically enforced using ESLint (`no-restricted-imports` or `eslint-plugin-boundaries`).
