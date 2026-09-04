@@ -143,7 +143,7 @@ export async function routeMockRequest<T>(
     const products = MockDB.getCollection('mock_products', []);
     const orders = MockDB.getCollection('mock_orders', []);
     const revenue = orders.reduce((acc: number, o: any) => acc + (Number(o.total) || 0), 0);
-    return { success: true, message: 'Summary', data: { totalProducts: products.length, totalOrders: orders.length, totalRevenue: revenue, lowStockProducts: products.filter((p: any) => Number(p.stock) < 10) } } as unknown as ApiResponse<T>;
+    return { success: true, message: 'Summary', data: { totalProducts: products.length, totalOrders: orders.length, totalRevenue: revenue, lowStockProducts: products.filter((p: any) => Number(p.stock) <= 10) } } as unknown as ApiResponse<T>;
   }
 
   if (path.includes('/store/orders')) {

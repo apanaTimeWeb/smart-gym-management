@@ -85,9 +85,9 @@ export default function ManagerStoreProductGrid() {
                 {formatCurrency(p.price)}
               </span>
               <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${
-                p.stock <= 5 
+                p.stock <= 10 
                   ? 'bg-danger-bg text-danger dark:bg-danger-bg dark:text-danger' 
-                  : p.stock <= 20 
+                  : p.stock <= 25 
                   ? 'bg-warning-bg text-warning dark:bg-warning-bg dark:text-warning' 
                   : 'bg-success-bg text-success dark:bg-success-bg dark:text-success'
               }`}>
