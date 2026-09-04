@@ -97,8 +97,8 @@ export const useGymsStore = create<GymsState>((set, get) => ({
     try {
       const currentGyms = get().gyms;
       const baseGyms = currentGyms || [
-        { id: '1', name: 'Golds Gym', ownerName: 'Arnold S.', adminEmail: 'admin@golds.com', phone: '1234567890', plan: 'Pro', status: 'ACTIVE', memberCount: 120, monthlyRevenue: 5000, databaseVersion: 'v1.2.0', createdAt: new Date().toISOString() },
-        { id: '2', name: 'Planet Fitness', ownerName: 'John D.', adminEmail: 'john@planet.com', phone: '0987654321', plan: 'Starter', status: 'TRIAL', memberCount: 45, monthlyRevenue: 1000, databaseVersion: 'v1.1.0', createdAt: new Date().toISOString() },
+        { id: '1', name: 'Golds Gym', ownerName: 'Arnold S.', adminEmail: 'admin@golds.com', phone: '7870009099', plan: 'Pro', status: 'ACTIVE', memberCount: 120, monthlyRevenue: 5000, databaseVersion: 'v1.2.0', createdAt: new Date().toISOString() },
+        { id: '2', name: 'Planet Fitness', ownerName: 'John D.', adminEmail: 'john@planet.com', phone: '7870009099', plan: 'Starter', status: 'TRIAL', memberCount: 45, monthlyRevenue: 1000, databaseVersion: 'v1.1.0', createdAt: new Date().toISOString() },
       ];
       const filtered = searchQuery ? baseGyms.filter(g => g.name.toLowerCase().includes(searchQuery.toLowerCase())) : baseGyms;
       set({ gyms: filtered, fetchState: 'success' });
@@ -112,7 +112,19 @@ export const useGymsStore = create<GymsState>((set, get) => ({
   handleGhostLogin: async (id, name) => {
     set({ actionLoadingId: id });
     try {
-      toast.success(`Ghost login initiated for ${name}.`); // Mock response for now
+      const res = await gymsApi.impersonateTenant(id);
+      if (res.success) {
+        toast.success(`Impersonating ${name}...`);
+        if (res.data?.token) {
+          localStorage.setItem('gymsmart_impersonate_token', res.data.token);
+        }
+        window.location.href = '/admin/dashboard';
+      } else {
+        toast.error(res.message || 'Failed to impersonate tenant');
+      }
+    } catch (error: unknown) {
+      const errMsg = error instanceof Error ? error.message : String(error) || 'Failed to impersonate tenant';
+      toast.error(errMsg);
     } finally {
       set({ actionLoadingId: null });
     }

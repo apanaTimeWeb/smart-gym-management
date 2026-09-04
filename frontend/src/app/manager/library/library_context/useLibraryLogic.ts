@@ -90,7 +90,7 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
  carbs: d.carbs ? String(d.carbs) : '', 
  fats: d.fats ? String(d.fats) : '', 
  description: d.description || '', 
- meals: d.meals?.join('\n') 
+ meals: d.meals?.map((m: any) => typeof m === 'string' ? m : `${m.time || ''} - ${m.name || 'Meal'}: ${m.foods?.join(', ') || ''}`).join('\n') 
  });
  setShowDietModal(true);
  }, []);

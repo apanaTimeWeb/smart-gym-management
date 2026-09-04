@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Renders the printable 80mm thermal receipt layout. Triggered by window.print() — hidden except on @media print.
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 export interface ManagerReceiptData {
  gymName: string;
@@ -13,10 +14,16 @@ export interface ManagerReceiptData {
 }
 
 export default function ManagerThermalReceipt({ data }: { data: ManagerReceiptData | null }) {
- if (!data) return null;
+ const [mounted, setMounted] = useState(false);
 
- return (
- <div id="thermal-receipt" className="hidden print:block absolute top-0 left-0 w-full p-2 bg-white text-black font-mono text-xs leading-tight z-50 break-words" style={{ maxWidth: '76mm' }}>
+ useEffect(() => {
+   setMounted(true);
+ }, []);
+
+ if (!data || !mounted) return null;
+
+ const receiptContent = (
+ <div id="thermal-receipt" className="hidden print:block p-4 mx-auto bg-white text-black font-mono leading-tight z-[9999] break-words" style={{ width: '80mm', maxWidth: '80mm', fontSize: '12px', boxSizing: 'border-box' }}>
  <div className="text-center border-black pb-2 mb-2" style={{ borderBottomWidth: '1.5px' }}>
  <h2 className="font-bold text-lg uppercase tracking-wider">{data.gymName}</h2>
  <p className="text-xs">Ph: {data.gymPhone}</p>
@@ -69,4 +76,6 @@ export default function ManagerThermalReceipt({ data }: { data: ManagerReceiptDa
  </div>
  </div>
  );
+
+ return createPortal(receiptContent, document.body);
 }

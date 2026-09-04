@@ -15,6 +15,8 @@ import type { MembersInitialData } from '@/app/manager/members/members_types/mem
 import dynamic from 'next/dynamic';
 
 const ManagerMembersModal = dynamic(() => import('@/app/manager/members/members_components/ManagerMembersModal/ManagerMembersModal'), { ssr: false });
+const ManagerRenewModal = dynamic(() => import('@/app/manager/members/members_components/ManagerRenewModal/ManagerRenewModal'), { ssr: false });
+const ManagerAddPaymentModal = dynamic(() => import('@/app/manager/members/members_components/ManagerAddPaymentModal'), { ssr: false });
 
 function MembersContent() {
   const { toast, hideToast, msgModal, closeMsg, showToast, printData, selectedMember } = useMembersContext();
@@ -38,6 +40,8 @@ function MembersContent() {
         )}
 
         <ManagerMembersModal />
+        <ManagerRenewModal />
+        <ManagerAddPaymentModal />
 
         {msgModal?.open && (
           <ManagerMessageModal 

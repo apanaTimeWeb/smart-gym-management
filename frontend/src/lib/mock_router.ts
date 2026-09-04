@@ -109,6 +109,15 @@ export async function routeMockRequest<T>(
     } as unknown as ApiResponse<T>;
   }
 
+  // Handle explicit dynamic mutations (like Login)
+  if (method === 'POST' && path.includes('/impersonate')) {
+    return {
+      success: true,
+      message: 'Impersonation successful',
+      data: { token: 'mock-impersonation-token-123' }
+    } as unknown as ApiResponse<T>;
+  }
+
   // ==========================================
   // STATEFUL MOCK DB INTERCEPTIONS (Admin/Manager/Trainer)
   // ==========================================
@@ -119,26 +128,53 @@ export async function routeMockRequest<T>(
 
   const generate = (count: number, generator: (i: number) => Record<string, unknown>) => Array.from({ length: count }, (_, i) => generator(i));
 
-  if (path.includes('/store/products')) return MockDB.handleCrud('mock_products', method, path, parsedBody, generate(15, i => ({ id: `prod-${i}`, name: `Mock Product ${i}`, category: 'Supplements', price: 1500, stock: 50, status: 'IN_STOCK' })), 'products') as unknown as ApiResponse<T>;
+  if (path.includes('/store/products')) {
+    const existing = MockDB.getCollection('mock_products', []);
+    if (existing.length > 0 && existing.some((r: any) => r.name?.includes('Mock Product'))) {
+      MockDB.setCollection('mock_products', []);
+    }
+    const defaultProducts = [
+      { id: 'prod-1', name: 'Optimum Nutrition Gold Standard Whey', category: 'Supplements', price: 6500, stock: 15, description: '100% Whey Protein Isolate', isActive: true, unit: '2.27 KG' },
+      { id: 'prod-2', name: 'MuscleBlaze Biozyme Performance Whey', category: 'Supplements', price: 2399, stock: 20, description: 'Enhanced absorption whey', isActive: true, unit: '1 KG' },
+      { id: 'prod-3', name: 'Cellucor C4 Original Pre-Workout', category: 'Supplements', price: 1800, stock: 45, description: 'Explosive energy pre-workout', isActive: true, unit: '195g' },
+      { id: 'prod-4', name: 'ON Micronized Creatine Monohydrate', category: 'Supplements', price: 1200, stock: 35, description: 'Pure unflavored creatine', isActive: true, unit: '300g' },
+      { id: 'prod-5', name: 'Scivation Xtend BCAA', category: 'Supplements', price: 2100, stock: 25, description: 'Intra-workout recovery drink', isActive: true, unit: '420g' },
+      { id: 'prod-6', name: 'Monster Energy Drink Zero Ultra', category: 'Supplements', price: 150, stock: 50, description: 'Sugar-free energy drink', isActive: true, unit: '500 ML' },
+      { id: 'prod-7', name: 'Under Armour Tech 2.0 T-Shirt', category: 'Merchandise', price: 1499, stock: 12, description: 'Breathable dry-fit training tee', isActive: true, unit: 'Large' },
+      { id: 'prod-8', name: 'BlenderBottle Classic Shaker', category: 'Accessories', price: 699, stock: 30, description: 'Spill-proof shaker bottle', isActive: true, unit: '800 ML' },
+      { id: 'prod-9', name: 'Nivia Python Gym Gloves', category: 'Accessories', price: 450, stock: 18, description: 'Weightlifting gloves with wrist support', isActive: true, unit: 'Medium' },
+      { id: 'prod-10', name: 'Rogue Heavy Duty Lifting Belt', category: 'Accessories', price: 3500, stock: 8, description: 'Leather powerlifting belt', isActive: true, unit: '1 Piece' }
+    ];
+    return MockDB.handleCrud('mock_products', method, path, parsedBody, defaultProducts, 'products') as unknown as ApiResponse<T>;
+  }
+
   if (path.includes('/store/summary')) {
     const products = MockDB.getCollection('mock_products', []);
-    const orders = MockDB.getCollection('mock_orders_v2', []);
-    const revenue = orders.reduce((acc, o) => acc + (Number(o.total) || 0), 0);
-    return { success: true, message: 'Summary', data: { totalProducts: products.length, totalOrders: orders.length, totalRevenue: revenue, lowStockProducts: products.filter(p => Number(p.stock) < 10) } } as unknown as ApiResponse<T>;
+    const orders = MockDB.getCollection('mock_orders', []);
+    const revenue = orders.reduce((acc: number, o: any) => acc + (Number(o.total) || 0), 0);
+    return { success: true, message: 'Summary', data: { totalProducts: products.length, totalOrders: orders.length, totalRevenue: revenue, lowStockProducts: products.filter((p: any) => Number(p.stock) <= 10) } } as unknown as ApiResponse<T>;
   }
+
   if (path.includes('/store/orders')) {
+    const existing = MockDB.getCollection('mock_orders', []);
+    if (existing.length > 0 && existing.some((r: any) => !r.items)) {
+       MockDB.setCollection('mock_orders', []);
+    }
     if (method === 'POST') {
        const products = MockDB.getCollection('mock_products', []);
        const items = (parsedBody.items || []) as any[];
        items.forEach(item => {
-         const prodIdx = products.findIndex(p => p.id === item.productId);
+         const prodIdx = products.findIndex(p => String(p.id) === String(item.productId));
          if (prodIdx > -1) {
            products[prodIdx].stock = Math.max(0, Number(products[prodIdx].stock) - Number(item.qty));
          }
        });
        MockDB.setCollection('mock_products', products);
     }
-    return MockDB.handleCrud('mock_orders_v2', method, path, parsedBody, generate(2, i => ({ id: `ord-${i}`, customerName: `Customer ${i}`, total: 3000, method: 'UPI', status: 'COMPLETED', createdAt: new Date().toISOString() })), 'orders') as unknown as ApiResponse<T>;
+    const defaultOrders = [
+      { id: 'ord-1', customerName: 'Demo Customer', total: 1200, method: 'UPI', status: 'COMPLETED', createdAt: new Date().toISOString(), items: [{ productId: 'prod-2', qty: 1, price: 1200, product: { name: 'Creatine Monohydrate', unit: '300g' } }] }
+    ];
+    return MockDB.handleCrud('mock_orders', method, path, parsedBody, defaultOrders, 'orders') as unknown as ApiResponse<T>;
   }
   if (path.includes('/plans') && !path.includes('/superadmin')) return MockDB.handleCrud('mock_admin_plans', method, path, parsedBody, generate(3, i => ({ id: `plan-${i}`, name: i === 0 ? 'Basic Plan' : i === 1 ? 'Pro Plan' : 'VIP Plan', tier: i === 0 ? 'Standard' : i === 1 ? 'Premium' : 'Elite', price1Month: 1000 * (i + 1), price3Month: 2500 * (i + 1), price6Month: 4800 * (i + 1), price12Month: 9000 * (i + 1), features: ['Access to gym', 'Locker facility', 'Cardio section'], isActive: true }))) as unknown as ApiResponse<T>;
   if (path.includes('/members/stats')) return { success: true, message: 'Stats', data: { total: 150, active: 110, pending: 25, expired: 15 } } as unknown as ApiResponse<T>;
@@ -283,19 +319,67 @@ export async function routeMockRequest<T>(
     return MockDB.handleCrud('mock_admin_payrolls', method, path, parsedBody, [], 'payrolls') as unknown as ApiResponse<T>;
   }
   if (path.includes('/exercises')) return MockDB.handleCrud('mock_admin_exercises', method, path, parsedBody, generate(10, i => ({ id: `ex-${i}`, name: `Exercise ${i+1}`, category: 'Strength', muscleGroup: ['Chest', 'Triceps'], difficulty: 'Beginner', isActive: true, videoUrl: '' })), 'exercises') as unknown as ApiResponse<T>;
-  if (path.includes('/diet-plans')) return MockDB.handleCrud('mock_admin_diet_plans', method, path, parsedBody, generate(4, i => ({ id: `diet-${i}`, name: `Keto Diet ${i+1}`, goal: 'Weight Loss', calories: 1500 + (i * 200), meals: ['Breakfast', 'Lunch'], isActive: true })), 'dietPlans') as unknown as ApiResponse<T>;
+  
+  const existingDiets = MockDB.getCollection('mock_admin_diet_plans', []);
+  if (existingDiets.length > 0 && typeof (existingDiets[0] as any).meals?.[0] === 'string') {
+    MockDB.setCollection('mock_admin_diet_plans', []); // Force purge old format
+  }
+  
+  if (path.includes('/diet-plans')) return MockDB.handleCrud('mock_admin_diet_plans', method, path, parsedBody, generate(4, i => ({ 
+    id: `diet-${i}`, 
+    name: `Pro Diet ${i+1}`, 
+    goal: 'Weight Loss', 
+    totalCalories: 1500 + (i * 200),
+    protein: 120 + i * 10,
+    carbs: 150 + i * 20,
+    fats: 50 + i * 5,
+    meals: [
+      { time: '08:00 AM', name: 'Breakfast', calories: 400, foods: ['Oats', 'Eggs', 'Banana'] },
+      { time: '01:00 PM', name: 'Lunch', calories: 600, foods: ['Chicken Breast', 'Rice', 'Broccoli'] },
+      { time: '07:00 PM', name: 'Dinner', calories: 500, foods: ['Salmon', 'Sweet Potato', 'Asparagus'] }
+    ], 
+    isActive: true 
+  })), 'dietPlans') as unknown as ApiResponse<T>;
+  
+  const existingWorkouts = MockDB.getCollection('mock_workouts', []);
+  if (existingWorkouts.length > 0 && typeof (existingWorkouts[0] as any).days === 'number') {
+    MockDB.setCollection('mock_workouts', []); // Force purge old format
+  }
   if (path.includes('/workouts')) return MockDB.handleCrud('mock_workouts', method, path, parsedBody, generate(5, i => ({ 
     id: `wo-${i}`, 
-    name: `Workout Plan ${i+1}`, 
+    name: `Hypertrophy Plan ${i+1}`, 
     level: i % 2 === 0 ? 'Intermediate' : 'Beginner',
-    days: 4 + (i % 3),
-    exercises: 15 + (i * 2),
     focus: 'Hypertrophy',
+    days: 4,
+    exercises: 15 + i * 2,
     duration: '60 min',
-    tags: ['Classic', 'Strength']
+    tags: ['Muscle', 'Strength']
   })), 'workouts') as unknown as ApiResponse<T>;
   if (path.includes('/admin/finance/summary')) return { success: true, message: 'Summary', data: { totalRevenue: 1500000, monthlyRevenue: 250000, pendingAmount: 45000, totalPayments: 345, revenueByMethod: { UPI: 120000, Cash: 50000, Card: 80000, NetBanking: 0 }, monthlyData: generate(6, i => ({ month: `M${i+1}`, revenue: 200000 + (i * 10000) })) } } as unknown as ApiResponse<T>;
-  if (path.includes('/finance/payments')) return MockDB.handleCrud('mock_admin_payments', method, path, parsedBody, generate(10, i => ({ id: `pay-${i}`, memberId: `mem-${i}`, member: { name: `Payer ${i}`, email: `payer${i}@example.com`, phone: '9988776655', plan: { name: 'Pro Plan' } }, amount: 5000 + (i * 500), status: 'success', paidAt: new Date().toISOString(), method: 'UPI', invoiceNo: `INV-${1000 + i}` })), 'payments') as unknown as ApiResponse<T>;
+  if (method === 'GET' && path.includes('/finance/payments/member/')) {
+    const segments = path.split('?')[0].split('/');
+    const memberId = segments[segments.length - 1];
+    let allPayments = MockDB.getCollection('mock_admin_payments', []);
+    let memberPayments = allPayments.filter((p: any) => String(p.memberId) === String(memberId));
+    
+    if (memberPayments.length === 0) {
+       const newPayment = {
+         id: `pay-mock-${Date.now()}`,
+         memberId: memberId,
+         amount: 3000,
+         method: 'UPI',
+         status: 'PAID',
+         paidAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+         invoiceNo: `INV-MOCK-${Date.now().toString().slice(-6)}`
+       };
+       allPayments.push(newPayment);
+       MockDB.setCollection('mock_admin_payments', allPayments);
+       memberPayments = [newPayment];
+    }
+
+    return { success: true, message: 'Fetched member payments', data: memberPayments } as unknown as ApiResponse<T>;
+  }
+  if (path.includes('/finance/payments')) return MockDB.handleCrud('mock_admin_payments', method, path, parsedBody, generate(10, i => ({ id: `pay-${i}`, memberId: `mem-${i}`, member: { name: `Payer ${i}`, email: `payer${i}@example.com`, phone: '9988776655', plan: { name: 'Pro Plan' } }, amount: 5000 + (i * 500), status: 'PAID', paidAt: new Date().toISOString(), method: 'UPI', invoiceNo: `INV-${1000 + i}` })), 'payments') as unknown as ApiResponse<T>;
   if (path.includes('/admin/settings')) {
     if (method === 'GET') {
       const settings = MockDB.getCollection('mock_admin_settings', [{ gymName: 'Demo Gym Base', ownerName: 'Admin Owner', phone: '9988776655', email: 'admin@gym.com', city: 'Mumbai', gstNumber: '27AAAAA1234A1Z5' }]);
@@ -308,6 +392,12 @@ export async function routeMockRequest<T>(
   }
   if (path.includes('/settings')) return MockDB.handleCrud('mock_settings', method, path, parsedBody, generate(1, i => ({ id: `setting-${i}`, gymName: 'Demo Gym Base', currency: 'INR', timezone: 'Asia/Kolkata', emailNotifications: true }))) as unknown as ApiResponse<T>;
 
+  if (path.includes('/store/summary')) {
+    const products = MockDB.getCollection('mock_store_products', []);
+    const orders = MockDB.getCollection('mock_orders_v2', []);
+    return { success: true, message: 'Store Summary', data: { totalProducts: products.length, totalOrders: orders.length, totalRevenue: orders.reduce((sum: number, o: any) => sum + (o.total || 0), 0), lowStockProducts: products.filter((p: any) => p.stock <= 5) } } as unknown as ApiResponse<T>;
+  }
+
 
   // SUPERADMIN Stateful Interceptions
   if (path.includes('/superadmin/tickets')) return MockDB.handleCrud('mock_tickets', method, path, parsedBody, generate(10, i => ({ id: `tkt-${i}`, tenantName: `Gym Branch ${i + 1}`, subject: `Billing Issue ${i}`, status: i % 3 === 0 ? 'RESOLVED' : 'OPEN', priority: i % 4 === 0 ? 'HIGH' : 'LOW', createdAt: '2023-10-10', lastUpdated: '2023-10-12' }))) as unknown as ApiResponse<T>;
@@ -316,7 +406,38 @@ export async function routeMockRequest<T>(
   if (path.includes('/superadmin/affiliates')) return MockDB.handleCrud('mock_affiliates', method, path, parsedBody, generate(6, i => ({ id: `aff-${i}`, name: `Partner ${i + 1}`, email: `partner${i}@example.com`, referralCode: `REF${i}00`, totalReferred: 5 * i, commissionEarned: 1000 * i, status: 'ACTIVE', joinedAt: '2023-05-01' }))) as unknown as ApiResponse<T>;
   if (path.includes('/superadmin/broadcasts')) return MockDB.handleCrud('mock_broadcasts', method, path, parsedBody, generate(4, i => ({ id: `bc-${i}`, title: `System Update v${i}.0`, content: 'Important update details.', status: i === 0 ? 'DRAFT' : 'SENT', audience: 'ALL_TENANTS', scheduledDate: null, sentDate: '2023-10-01' }))) as unknown as ApiResponse<T>;
   if (path.includes('/superadmin/system') || path.includes('/superadmin/infrastructure')) return MockDB.handleCrud('mock_infrastructure', method, path, parsedBody, generate(3, i => ({ id: `node-${i}`, name: `Production Node ${i + 1}`, cpuPercent: 30 + (i * 15), memoryPercent: 45 + (i * 10), diskPercent: 60 - (i * 5), status: 'Healthy' }))) as unknown as ApiResponse<T>;
-  if (path.includes('/superadmin/jobs')) return MockDB.handleCrud('mock_jobs', method, path, parsedBody, generate(8, (i: number) => ({ id: `job-${i}`, queueName: 'billing', jobName: 'process_invoice', status: i === 2 ? 'FAILED' : 'COMPLETED', attempts: 1, createdAt: '2023-11-05' })), 'jobs') as unknown as ApiResponse<T>;
+  if (path.includes('/superadmin/jobs')) return MockDB.handleCrud('mock_jobs', method, path, parsedBody, generate(12, (i: number) => {
+    const statuses = ['COMPLETED', 'ACTIVE', 'FAILED', 'DELAYED'];
+    const status = statuses[i % statuses.length];
+    const isFailed = status === 'FAILED';
+    const isCompleted = status === 'COMPLETED';
+    const queues = ['billing', 'email', 'webhook', 'database'];
+    const queueName = queues[i % queues.length];
+    const jobNames: Record<string, string[]> = {
+      'billing': ['process_invoice', 'renew_subscription', 'charge_card'],
+      'email': ['send_welcome', 'send_receipt', 'send_newsletter'],
+      'webhook': ['trigger_zapier', 'sync_crm'],
+      'database': ['backup', 'cleanup_logs']
+    };
+    const jobName = jobNames[queueName][i % jobNames[queueName].length];
+    
+    return { 
+      id: `job-${1000 + i}`, 
+      queueName, 
+      jobName, 
+      status, 
+      attempts: isFailed ? 3 : 1, 
+      createdAt: '2023-11-05T08:00:00Z',
+      finishedAt: (isCompleted || isFailed) ? '2023-11-05T08:05:00Z' : undefined,
+      durationMs: (isCompleted || isFailed) ? (1500 + i * 200) : undefined,
+      error: isFailed ? 'ConnectionTimeoutError: Failed to reach external API endpoint after 30000ms.' : undefined,
+      payload: {
+        tenantId: `tenant-${i}`,
+        action: jobName,
+        metadata: { retryCount: i, source: 'cron' }
+      }
+    };
+  }), 'jobs') as unknown as ApiResponse<T>;
   if (path.includes('/superadmin/backups')) return MockDB.handleCrud('mock_backups', method, path, parsedBody, generate(5, i => ({ id: `bup-${i}`, tenantName: `Gym Branch ${i + 1}`, databaseName: `db_gym_${i}`, sizeMB: 150 + (i * 50), status: 'SUCCESS', timestamp: '2023-11-05' }))) as unknown as ApiResponse<T>;
   if (path.includes('/superadmin/audit-logs')) return MockDB.handleCrud('mock_audit_logs', method, path, parsedBody, generate(15, i => ({ id: `log-${i}`, actorName: 'Demo Admin', actorRole: 'SUPERADMIN', action: 'UPDATE_TENANT', targetResource: `tenant-${i}`, timestamp: '2023-11-05', ipAddress: '192.168.1.1' }))) as unknown as ApiResponse<T>;
   if (path.includes('/admin/audit')) return MockDB.handleCrud('mock_admin_audit', method, path, parsedBody, generate(12, i => ({ id: `audit-${i}`, actorId: `admin-${i}`, actorRole: 'ADMIN', action: i % 2 === 0 ? 'CREATE' : 'UPDATE', entityType: i % 3 === 0 ? 'MEMBER' : 'PAYMENT', entityId: `entity-${i}`, oldValue: null, newValue: { foo: 'bar' }, ipAddress: '127.0.0.1', timestamp: new Date().toISOString() })), 'logs') as unknown as ApiResponse<T>;
@@ -340,6 +461,37 @@ export async function routeMockRequest<T>(
       return { success: true, message: 'Fetched migrations compound data', data: { migrations, tenants } } as unknown as ApiResponse<T>;
     }
     return MockDB.handleCrud('mock_migrations', method, path, parsedBody, [], 'migrations') as unknown as ApiResponse<T>;
+  }
+
+  if (path.includes('/superadmin/usage-meters')) {
+    return MockDB.handleCrud('mock_usage_meters', method, path, parsedBody, generate(5, i => ({
+      id: `meter-${i}`,
+      tenantId: `tenant-${i}`,
+      tenantName: `Gym Branch ${i + 1}`,
+      smsSent: 850 + (i * 45),
+      smsLimit: 1000,
+      databaseGb: parseFloat((0.5 + (i * 0.15)).toFixed(2)),
+      mediaGb: parseFloat((4.0 + (i * 1.05)).toFixed(2)),
+      storageLimitGb: 10,
+      activeMembers: 95 + (i * 20),
+      memberLimit: 100 + (i * 30),
+      billingCycleEnd: '2023-11-30'
+    }))) as unknown as ApiResponse<T>;
+  }
+
+  if (path.includes('/superadmin/analytics/revenue')) {
+    return {
+      success: true,
+      message: 'Fetched revenue analytics',
+      data: {
+        mrr: 125000,
+        arr: 1500000,
+        churnRate: 1.5,
+        ltv: 4500,
+        cac: 120,
+        activeTenants: 145
+      }
+    } as unknown as ApiResponse<T>;
   }
 
   // Dynamic Rich Data Generator for Demo Mode
@@ -370,36 +522,110 @@ export async function routeMockRequest<T>(
     }
 
     if (path.includes('/admin/dashboard') || path.includes('/manager/dashboard') || path.includes('/trainer/dashboard') || path.includes('/dashboard')) {
+      let rawMembers = MockDB.getCollection('mock_members', []);
+      let payments = MockDB.getCollection('mock_admin_payments', []);
+      let staff = MockDB.getCollection('mock_admin_staff', []);
+      let plans = MockDB.getCollection('mock_admin_plans', []);
+      
+      if (rawMembers.length === 0) {
+        rawMembers = generate(15, (i: number) => ({ id: `GS-${15102023000 + i}`, name: `Member ${i + 1}`, email: `member${i + 1}@example.com`, phone: `987654321${i}`, status: i % 4 === 0 ? 'PENDING' : i % 5 === 0 ? 'EXPIRED' : 'ACTIVE', planId: i % 3 === 0 ? 'p1' : i % 2 === 0 ? 'p2' : 'p3', plan: { id: i % 3 === 0 ? 'p1' : i % 2 === 0 ? 'p2' : 'p3', name: i % 3 === 0 ? 'Pro Plan' : i % 2 === 0 ? 'Basic Plan' : 'Elite Plan' }, joinDate: '2023-10-01', expiryDate: '2024-10-01', paidAmount: 5000, pendingAmount: i % 4 === 0 ? 1500 : 0 }));
+        MockDB.setCollection('mock_members', rawMembers);
+      }
+      
+      if (payments.length === 0) {
+        payments = generate(10, (i: number) => ({ id: `pay-${i}`, memberId: `GS-${15102023000 + i}`, member: { name: `Member ${i + 1}` }, amount: 5000, status: 'PAID', paidAt: new Date().toISOString(), method: 'UPI', invoiceNo: `INV-${1000 + i}` }));
+        MockDB.setCollection('mock_admin_payments', payments);
+      }
+      
+      if (staff.length === 0) {
+        staff = generate(8, (i: number) => ({ id: `staff-${i}`, name: `Staff ${i + 1}`, role: 'Trainer', status: 'ACTIVE', isActive: true, salary: 25000 }));
+        MockDB.setCollection('mock_admin_staff', staff);
+      }
+      
+      // Apply fallbacks because form submission might miss 'status' or 'plan' object
+      const members = rawMembers.map((m: any) => {
+        const p = m.plan || plans.find((x: any) => String(x.id) === String(m.planId)) || { name: 'Unknown Plan' };
+        return {
+          ...m,
+          status: m.status ? m.status.toUpperCase() : 'ACTIVE',
+          plan: p
+        };
+      });
+
+      const now = new Date();
+      const currentMonth = now.getMonth();
+      const currentYear = now.getFullYear();
+
+      // Members stats
+      const totalMembers = members.length;
+      const activeMembers = members.filter((m: any) => m.status === 'ACTIVE').length;
+      const pendingMembers = members.filter((m: any) => m.status === 'PENDING').length;
+      const expiredMembers = members.filter((m: any) => m.status === 'EXPIRED').length;
+      const newMembersThisMonth = members.filter((m: any) => {
+        const d = new Date(m.joinDate || m.createdAt || now);
+        return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+      }).length;
+
+      // Revenue stats
+      const validPayments = payments.filter((p: any) => p.status === 'PAID');
+      const totalRevenue = validPayments.reduce((sum: number, p: any) => sum + (Number(p.amount) || 0), 0);
+      const monthlyRevenue = validPayments.filter((p: any) => {
+        const d = new Date(p.paidAt || p.createdAt || now);
+        return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+      }).reduce((sum: number, p: any) => sum + (Number(p.amount) || 0), 0);
+
+      // Pending payments (sum of all pendingAmount across members)
+      const pendingPayments = members.reduce((sum: number, m: any) => sum + (Number(m.pendingAmount) || 0), 0);
+
+      // Staff stats
+      const totalStaff = staff.length;
+      const activeStaff = staff.filter((s: any) => s.status === 'ACTIVE').length;
+
+      // Plan groupings
+      const membersByPlanMap: Record<string, number> = {};
+      members.forEach((m: any) => {
+        const planName = m.plan?.name || 'Unknown';
+        membersByPlanMap[planName] = (membersByPlanMap[planName] || 0) + 1;
+      });
+      const membersByPlan = Object.entries(membersByPlanMap).map(([plan, count]) => ({ plan, count }));
+
+      // Recent items
+      const recentMembers = [...members].sort((a: any, b: any) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()).slice(0, 5);
+      const recentPayments = [...validPayments].sort((a: any, b: any) => new Date(b.paidAt || 0).getTime() - new Date(a.paidAt || 0).getTime()).slice(0, 5);
+      const pendingPaymentsList = members.filter((m: any) => m.pendingAmount > 0).sort((a: any, b: any) => b.pendingAmount - a.pendingAmount).slice(0, 5);
+
       return {
-        success: true, message: 'Demo Dashboard',
+        success: true, message: 'Demo Dashboard (Live Mock)',
         data: {
-          totalMembers: 1240, 
-          activeMembers: 890, 
-          newMembersThisMonth: 124,
-          totalRevenue: 5400000,
-          monthlyRevenue: 450000, 
-          pendingPayments: 24500,
-          totalStaff: 15,
-          activeStaff: 12,
-          totalProducts: 450,
-          lowStockCount: 3,
-          totalInquiries: 320,
-          newInquiries: 45,
-          membersByStatus: { active: 890, pending: 45, expired: 305 },
+          totalMembers, 
+          activeMembers, 
+          newMembersThisMonth,
+          totalRevenue,
+          monthlyRevenue, 
+          pendingPayments,
+          totalStaff,
+          activeStaff,
+          totalProducts: 120, // Mocked for now
+          lowStockCount: 5,   // Mocked for now
+          totalInquiries: 45, // Mocked for now
+          newInquiries: 12,   // Mocked for now
+          membersByStatus: { active: activeMembers, pending: pendingMembers, expired: expiredMembers },
           memberGrowth: [
-            { month: 'Jan', count: 800 }, { month: 'Feb', count: 850 },
-            { month: 'Mar', count: 950 }, { month: 'Apr', count: 1100 }
+            { month: 'Jan', count: Math.max(0, totalMembers - 30) },
+            { month: 'Feb', count: Math.max(0, totalMembers - 20) },
+            { month: 'Mar', count: Math.max(0, totalMembers - 10) },
+            { month: 'Apr', count: totalMembers }
           ],
           revenueChart: [
-            { month: 'Jan', revenue: 300000 }, { month: 'Feb', revenue: 350000 },
-            { month: 'Mar', revenue: 320000 }, { month: 'Apr', revenue: 450000 }
+            { month: 'Jan', revenue: Math.max(0, monthlyRevenue - 50000) },
+            { month: 'Feb', revenue: Math.max(0, monthlyRevenue - 30000) },
+            { month: 'Mar', revenue: Math.max(0, monthlyRevenue - 10000) },
+            { month: 'Apr', revenue: monthlyRevenue }
           ],
-          membersByPlan: [
-            { plan: 'Basic', count: 400 }, { plan: 'Pro', count: 600 }, { plan: 'Elite', count: 240 }
-          ],
-          recentMembers: generate(5, (i: number) => ({ id: `mem-${i}`, name: `New Member ${i}`, plan: 'Pro', status: 'ACTIVE', joinDate: '2023-10-01', paidAmount: 5000 })),
-          recentPayments: generate(5, (i: number) => ({ id: `pay-${i}`, invoiceNo: `INV-00${i}`, amount: 3000, method: 'CARD', paidAt: '2023-10-01', member: { name: `Member ${i}` } })),
-          pendingPaymentsList: generate(3, (i: number) => ({ id: `pend-${i}`, name: `Pending ${i}`, pendingAmount: 1500, expiryDate: '2023-09-25' }))
+          membersByPlan: membersByPlan.length > 0 ? membersByPlan : [{ plan: 'Basic', count: 0 }],
+          recentMembers,
+          recentPayments,
+          pendingPaymentsList
         }
       } as unknown as ApiResponse<T>;
     }

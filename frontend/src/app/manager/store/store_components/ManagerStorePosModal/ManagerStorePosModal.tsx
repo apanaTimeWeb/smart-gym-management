@@ -17,9 +17,7 @@ export default function ManagerStorePosModal() {
  saving, placeOrder 
  } = useStoreContext();
 
- const [productSearch, setProductSearch] = useState('');
-
- if (!showOrderModal) return null;
+  if (!showOrderModal) return null;
 
  return (
  <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
@@ -36,30 +34,23 @@ export default function ManagerStorePosModal() {
           <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
  
  {/* Product Grid */}
- <div>
- <div className="flex items-center justify-between mb-3">
-   <p className="text-sm font-medium text-secondary">Select Products</p>
-   <input 
-     type="text" 
-     placeholder="Search..." 
-     value={productSearch}
-     onChange={e => setProductSearch(e.target.value)}
-     className="w-1/2 px-3 py-1.5 text-xs rounded-lg border border-border bg-input text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
-   />
- </div>
- <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
- {products.filter(p => p.stock > 0 && p.name.toLowerCase().includes(productSearch.toLowerCase())).map(p => (
- <button 
- key={p.id} 
- onClick={() => addToOrder(p)} 
- className="w-full text-left p-3 border border-border rounded-xl hover:border-warning dark:hover:border-warning hover:bg-warning-bg dark:hover:bg-warning-bg transition-all bg-card"
- >
- <p className="text-sm font-medium text-foreground">{p.name}</p>
- <p className="text-xs text-secondary">{formatCurrency(p.price)} · Stock: {p.stock}</p>
- </button>
- ))}
- </div>
- </div>
+  <div>
+  <div className="flex flex-col mb-3">
+    <p className="text-sm font-medium text-secondary mb-2">Select Products to Add</p>
+    <SearchableDropdown
+      value={''}
+      onChange={(val) => {
+        const p = products.find(prod => String(prod.id) === String(val));
+        if (p) addToOrder(p);
+      }}
+      options={products.filter(p => p.stock > 0).map(p => ({ 
+        label: `${p.name} ${p.unit ? `(${p.unit})` : ''} - ${formatCurrency(p.price)} (Stock: ${p.stock})`, 
+        value: String(p.id) 
+      }))}
+      placeholder="Search and select products..."
+    />
+  </div>
+  </div>
  
  {/* Cart */}
  <div>
@@ -71,7 +62,7 @@ export default function ManagerStorePosModal() {
  {orderItems.map(i => (
  <div key={i.productId} className="flex items-center justify-between p-2 bg-input rounded-lg border border-border">
  <div className="flex-1">
- <p className="text-xs font-medium text-foreground">{i.name}</p>
+ <p className="text-xs font-medium text-foreground">{i.name} {i.unit && <span className="text-secondary font-normal">({i.unit})</span>}</p>
  <p className="text-xs text-secondary">{formatCurrency(i.price)} each</p>
  </div>
  <div className="flex flex-wrap items-center gap-2">

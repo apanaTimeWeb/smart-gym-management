@@ -7,7 +7,6 @@ import { useMembersStore } from '@/app/manager/members/members_store/useMembersS
 export default function ProfileAttendance() {
   const { selectedMember } = useMembersContext();
   const attMap = useMembersStore(s => s.attMap);
-  const toggleAtt = useMembersStore(s => s.toggleAtt);
 
   if (!selectedMember) return null;
 
@@ -32,8 +31,8 @@ export default function ProfileAttendance() {
       </div>
       
       <div className="flex items-center justify-between mb-3">
-        <p className="text-xs text-secondary opacity-70">
-          Click a day to toggle: 🟢 Present → 🔴 Absent
+        <p className="text-sm font-medium text-secondary">
+          Current Month Attendance
         </p>
         <span className="text-sm font-bold text-primary bg-primary-subtle px-3 py-1 rounded-full">
           {new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}
@@ -42,17 +41,16 @@ export default function ProfileAttendance() {
       
       <div className="grid grid-cols-7 gap-1.5 sm:grid-cols-10">
         {att.map(({ day, status }) => (
-          <button 
+          <div 
             key={day} 
-            onClick={() => toggleAtt(selectedMember.id, day)}
-            className={`h-10 w-full rounded-lg flex items-center justify-center text-xs font-bold transition-all hover:scale-110 border-none ${
+            className={`h-10 w-full rounded-lg flex items-center justify-center text-xs font-bold border-none ${
               status === 'P' ? 'bg-success text-white' 
-              : status === 'A' ? 'bg-danger-bg text-white' 
+              : status === 'A' ? 'bg-danger text-white' 
               : 'bg-input text-secondary border border-border'
             }`}
           >
             {day}
-          </button>
+          </div>
         ))}
       </div>
     </div>

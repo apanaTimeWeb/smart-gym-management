@@ -51,7 +51,9 @@ export default function ManagerStoreProductGrid() {
           >
             <div className="flex justify-between items-start mb-3">
               <div>
-                <p className="font-semibold text-foreground">{p.name}</p>
+                <p className="font-semibold text-foreground">
+                  {p.name} {p.unit && <span className="text-sm font-normal text-secondary ml-1">({p.unit})</span>}
+                </p>
                 <span className="text-xs bg-info-bg text-info dark:bg-info-bg dark:text-info px-2 py-0.5 rounded-full">
                   {p.category}
                 </span>
@@ -83,9 +85,9 @@ export default function ManagerStoreProductGrid() {
                 {formatCurrency(p.price)}
               </span>
               <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${
-                p.stock <= 5 
+                p.stock <= 10 
                   ? 'bg-danger-bg text-danger dark:bg-danger-bg dark:text-danger' 
-                  : p.stock <= 20 
+                  : p.stock <= 25 
                   ? 'bg-warning-bg text-warning dark:bg-warning-bg dark:text-warning' 
                   : 'bg-success-bg text-success dark:bg-success-bg dark:text-success'
               }`}>
