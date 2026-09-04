@@ -5,7 +5,8 @@ import { useSalesContext } from '@/app/admin/sales/sales_context/SalesContext';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 import AdminSalesEmptyState from '@/app/admin/sales/sales_components/AdminSalesEmptyState/AdminSalesEmptyState';
 import type { PendingPaymentMember } from '@/app/admin/sales/sales_types/sales_types';
-import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_utils/AdminSharedConstants';
+import { ADMIN_ITEMS_PER_PAGE, GYM_DETAILS } from '@/app/admin/admin_utils/AdminSharedConstants';
+import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
 
 export default function PendingPayments() {
   const { currentPage, setCurrentPage, pendingPayments, pendingTotal, fetchState, showToast } = useSalesContext();
@@ -60,8 +61,30 @@ export default function PendingPayments() {
                 <p className="text-xs text-secondary opacity-80">{p.daysOverdue || 0} days overdue</p>
               </div>
               <button
-                onClick={() => showToast(`Reminder sent to ${p.name}`, 'success')}
-                className="px-3 py-1.5 text-xs text-white bg-primary rounded-lg font-medium transition-all duration-200 ease-in-out hover:bg-primary-hover active:scale-95"
+                onClick={() => {
+                  const waText = WhatsAppFormatter.formatReceipt({
+                    title: GYM_DETAILS.name,
+                    subtitle: 'Payment Reminder',
+                    date: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
+                    customerInfo: {
+                      'Member': p.name,
+                      'Plan': p.plan || 'Standard',
+                    },
+                    sections: [
+                      {
+                        title: 'Outstanding Dues',
+                        items: {
+                          'Pending Amount': `Rs ${p.pendingAmount?.toLocaleString() || 0}`,
+                          'Overdue By': `${p.daysOverdue || 0} days`,
+                        }
+                      }
+                    ],
+                    footer: 'Please clear dues ASAP to avoid service interruption.'
+                  });
+                  window.open(`https://wa.me/91${p.phone?.replace(/\D/g, '') || ''}?text=${encodeURIComponent(waText)}`, '_blank');
+                  showToast(`Reminder sent via WhatsApp to ${p.name}`, 'success');
+                }}
+                className="px-3 py-1.5 text-xs text-white bg-primary rounded-lg font-medium transition-all duration-200 ease-in-out hover:bg-primary-hover active:scale-95 flex items-center gap-2"
               >
                 Send Reminder
               </button>

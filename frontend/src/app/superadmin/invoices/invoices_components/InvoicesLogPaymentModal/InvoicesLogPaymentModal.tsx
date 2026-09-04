@@ -90,7 +90,7 @@ export default function InvoicesLogPaymentModal({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-secondary mb-1.5">Amount (₹ / $)</label>
+            <label className="block text-sm font-medium text-secondary mb-1.5">Amount (₹)</label>
             <div className="relative">
               <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />
               <input type="number" min="0" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }} placeholder="e.g. 4999" className="w-full pl-9 pr-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary" />

@@ -41,7 +41,7 @@ export default function PlansList() {
             <div className="mb-4">
               <h2 className="text-xl font-bold text-foreground">{plan.name}</h2>
               <div className="flex items-end gap-1 mt-2">
-                <span className="text-3xl font-extrabold text-foreground">${Number(plan.priceMonthly).toFixed(2)}</span>
+                <span className="text-3xl font-extrabold text-foreground">₹{Number(plan.priceMonthly).toFixed(2)}</span>
                 <span className="text-secondary font-medium mb-1">/ mo</span>
               </div>
             </div>

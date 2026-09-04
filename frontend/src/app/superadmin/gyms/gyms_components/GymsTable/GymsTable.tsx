@@ -2,10 +2,10 @@
 // RESPONSIBILITY: Renders the table view of Gym tenants. Purely a view component that consumes useGymsTable hook.
 
 import { useState } from 'react';
-import { CheckCircle2, Ban, LogIn, PlayCircle, Edit2, Mail, Trash2, Loader2 } from 'lucide-react';
+import { CheckCircle2, Ban, LogIn, PlayCircle, Edit2, MessageCircle, Trash2, Loader2 } from 'lucide-react';
 import { useGymsTable } from '@/app/superadmin/gyms/gyms_components/GymsTable/useGymsTable';
 import GymEditModal from '@/app/superadmin/gyms/gyms_components/GymEditModal/GymEditModal';
-import GymEmailModal from '@/app/superadmin/gyms/gyms_components/GymEmailModal/GymEmailModal';
+import GymWhatsappModal from '@/app/superadmin/gyms/gyms_components/GymWhatsappModal/GymWhatsappModal';
 import GymDeleteModal from '@/app/superadmin/gyms/gyms_components/GymDeleteModal/GymDeleteModal';
 import GymsEmptyState from '@/app/superadmin/gyms/gyms_components/GymsEmptyState/GymsEmptyState';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
@@ -21,7 +21,7 @@ export default function GymsTable() {
     onSuspendClick,
     onDeleteClick,
     openEditModal,
-    openEmailModal
+    openWhatsappModal
   } = useGymsTable();
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -137,12 +137,12 @@ export default function GymsTable() {
                           {gym.status === 'SUSPENDED' ? <PlayCircle className="w-4 h-4" /> : <Ban className="w-4 h-4" />}
                         </button>
                         <button 
-                          onClick={(e) => { e.stopPropagation(); openEmailModal(gym); }}
-                          className="p-1.5 text-secondary hover:bg-info-bg hover:text-info rounded-lg transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
-                          title="Email Owner"
-                          aria-label={`Email owner of ${gym.name}`}
+                          onClick={(e) => { e.stopPropagation(); openWhatsappModal(gym); }}
+                          className="p-1.5 text-secondary hover:bg-[#25D366]/10 hover:text-[#25D366] rounded-lg transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
+                          title="WhatsApp Owner"
+                          aria-label={`WhatsApp owner of ${gym.name}`}
                         >
-                          <Mail className="w-4 h-4" />
+                          <MessageCircle className="w-4 h-4" />
                         </button>
                         <button 
                           onClick={(e) => { e.stopPropagation(); openEditModal(gym); }}
@@ -183,7 +183,7 @@ export default function GymsTable() {
       />
       
       <GymEditModal />
-      <GymEmailModal />
+      <GymWhatsappModal />
       <GymDeleteModal />
     </div>
   );

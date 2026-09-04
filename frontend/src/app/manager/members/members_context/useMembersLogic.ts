@@ -12,6 +12,7 @@ import { EMPTY_MEMBER_FORM, formatCurrency, MSG_TEMPLATES, MemberFormValues } fr
 import { GYM_DETAILS } from '@/app/manager/manager_utils/ManagerSharedConstants';
 import { useDebounce } from '@/app/manager/manager_utils/useDebounce';
 import { useMembersStore } from '@/app/manager/members/members_store/useMembersStore';
+import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
 
 export function useMembersLogic(initialData?: MembersInitialData | null): MembersContextType {
   const { confirm } = useConfirm();
@@ -24,6 +25,8 @@ export function useMembersLogic(initialData?: MembersInitialData | null): Member
   const loadAll = useMembersStore((s) => s.loadAll);
   const storeSaveMember = useMembersStore((s) => s.saveMember);
   const storeDeleteMember = useMembersStore((s) => s.deleteMember);
+  const storeAssignDiet = useMembersStore((s) => s.assignDiet);
+  const storeAssignWorkout = useMembersStore((s) => s.assignWorkout);
 
   const isFirstRender = React.useRef(true);
 
@@ -144,6 +147,30 @@ export function useMembersLogic(initialData?: MembersInitialData | null): Member
     }
   }, [showToast, selectedMember, confirm, storeDeleteMember]);
 
+  const assignDiet = useCallback(async (memberId: string, diet: any) => {
+    try {
+      await storeAssignDiet(memberId, diet);
+      showToast('Diet plan assigned successfully', 'success');
+      if (selectedMember?.id === memberId) {
+        setSelectedMember(prev => prev ? { ...prev, assignedDietId: diet?.id || '', assignedDiet: diet || undefined } : null);
+      }
+    } catch (err: unknown) {
+      showToast(err instanceof Error ? err.message : 'Failed to assign diet', 'error');
+    }
+  }, [storeAssignDiet, showToast, selectedMember]);
+
+  const assignWorkout = useCallback(async (memberId: string, workout: any) => {
+    try {
+      await storeAssignWorkout(memberId, workout);
+      showToast('Workout plan assigned successfully', 'success');
+      if (selectedMember?.id === memberId) {
+        setSelectedMember(prev => prev ? { ...prev, assignedWorkoutId: workout?.id || '', assignedWorkout: workout || undefined } : null);
+      }
+    } catch (err: unknown) {
+      showToast(err instanceof Error ? err.message : 'Failed to assign workout', 'error');
+    }
+  }, [storeAssignWorkout, showToast, selectedMember]);
+
   const openMsg = useCallback((m: Member, type: MessageType) => {
     const tpl = m.status === 'EXPIRED'
       ? MSG_TEMPLATES.EXPIRED(m.name)
@@ -167,13 +194,46 @@ export function useMembersLogic(initialData?: MembersInitialData | null): Member
     if (typeof window !== 'undefined') setTimeout(() => window.print(), 100);
   }, [selectedMember]);
 
+  const handleSharePaymentWhatsApp = useCallback((p: Payment) => {
+    if (!selectedMember) return;
+    const m = selectedMember;
+    
+    const waText = WhatsAppFormatter.formatReceipt({
+      title: GYM_DETAILS.name,
+      subtitle: 'Payment Receipt',
+      date: new Date(p.paidAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
+      customerInfo: {
+        'Member': m.name,
+        'Invoice': p.invoiceNo,
+      },
+      sections: [
+        {
+          items: {
+            'Membership': m.plan?.name || 'Standard',
+            'Amount': formatCurrency(p.amount),
+            'Method': p.method
+          }
+        },
+        {
+          items: {
+            'Status': p.status
+          }
+        }
+      ],
+      footer: 'Thank you for your payment!'
+    });
+
+    window.open(`https://wa.me/91${m.phone?.replace(/\D/g, '') || ''}?text=${encodeURIComponent(waText)}`, '_blank');
+    showToast('Receipt opened in WhatsApp', 'success');
+  }, [selectedMember, showToast]);
+
   return {
     search, debouncedSearch, setSearch, statusFilter, setStatusFilter, currentPage, setCurrentPage,
     toast, showToast, hideToast,
     selectedMember, setSelectedMember, profileTab, setProfileTab,
     showAddModal, setShowAddModal, editId, editData,
-    openAdd, openEdit, saveMember, deleteMember,
+    openAdd, openEdit, saveMember, deleteMember, assignDiet, assignWorkout,
     msgModal, openMsg, closeMsg,
-    printData, handlePrint, setPrintData
+    printData, handlePrint, handleSharePaymentWhatsApp, setPrintData
   };
 }

@@ -21,7 +21,7 @@ export function useGymsTable() {
   const handleSuspend = useGymsStore(state => state.handleSuspend);
   const openDeleteModal = useGymsStore(state => state.openDeleteModal);
   const openEditModal = useGymsStore(state => state.openEditModal);
-  const openEmailModal = useGymsStore(state => state.openEmailModal);
+  const openWhatsappModal = useGymsStore(state => state.openWhatsappModal);
 
   // Client-side filter as fallback, though fetchGyms handles server-side filtering now
   const filteredGyms = useMemo(() => {
@@ -67,6 +67,6 @@ export function useGymsTable() {
     onSuspendClick,
     onDeleteClick,
     openEditModal,
-    openEmailModal,
+    openWhatsappModal,
   };
 }

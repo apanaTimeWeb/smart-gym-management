@@ -93,8 +93,25 @@ export function useInquiriesLogic(): InquiriesContextType {
         inquiriesApi.getAll(params),
         inquiriesApi.getStats(),
       ]);
-      setInquiries(inqRes.data.inquiries || []);
-      setTotalInquiries(inqRes.data.total || 0);
+      
+      let fetchedInquiries = inqRes.data.inquiries || [];
+      
+      // Client-side filtering to exclude CONVERTED leads by default, and handle mock data filtering
+      if (statusFilter === 'All') {
+        fetchedInquiries = fetchedInquiries.filter(i => i.status !== 'CONVERTED');
+      } else {
+        fetchedInquiries = fetchedInquiries.filter(i => i.status === statusFilter);
+      }
+      
+      if (debouncedSearch) {
+        fetchedInquiries = fetchedInquiries.filter(i => 
+          i.name.toLowerCase().includes(debouncedSearch.toLowerCase()) || 
+          i.phone.includes(debouncedSearch)
+        );
+      }
+
+      setInquiries(fetchedInquiries);
+      setTotalInquiries(inqRes.data.total || fetchedInquiries.length);
       setStats(statsRes.data);
       setSelectedIds([]);
       setFetchState(FetchState.SUCCESS);
@@ -167,7 +184,7 @@ export function useInquiriesLogic(): InquiriesContextType {
   }, [showToast, confirm]);
 
   const updateStatus = useCallback(async (id: string, status: string) => {
-    if (status === 'CONVERTED') {
+    if (status === 'CONVERTED' && !convertLead) {
       const inq = inquiries.find(i => String(i.id) === String(id));
       if (inq) {
         setConvertLead(inq);
@@ -176,12 +193,17 @@ export function useInquiriesLogic(): InquiriesContextType {
     }
 
     try {
-      setInquiries(prev => prev.map(i => String(i.id) === String(id) ? { ...i, status } as unknown as Inquiry : i));
+      if (status === 'CONVERTED' && statusFilter === 'All') {
+        // If status becomes CONVERTED, remove it from the 'All' list immediately
+        setInquiries(prev => prev.filter(i => String(i.id) !== String(id)));
+      } else {
+        setInquiries(prev => prev.map(i => String(i.id) === String(id) ? { ...i, status } as unknown as Inquiry : i));
+      }
       showToast('Status updated', 'success');
     } catch (err) {
       showToast((err as Error).message, 'error');
     }
-  }, [showToast, inquiries]);
+  }, [showToast, inquiries, statusFilter, convertLead]);
 
   const openMsg = useCallback((inq: Inquiry, type: MessageType) => {
     const msg = generateDefaultMessage(inq.name, inq.interest);

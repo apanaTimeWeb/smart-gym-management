@@ -103,10 +103,12 @@ export default function AttendanceCalendar() {
         </div>
         
         {/* Stats */}
-        <div className="px-4 pb-2 flex items-center justify-between text-xs font-bold text-[var(--text-secondary)]">
+        <div className={`px-4 pb-2 grid ${calendarUser.type === 'STAFF' ? 'grid-cols-3' : 'grid-cols-2 gap-4 max-w-[75%]'} text-xs font-bold text-[var(--text-secondary)]`}>
           <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-[var(--success)]"></div> Present: {totalP}</div>
           <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-[var(--danger)]"></div> Absent: {totalA}</div>
-          <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-[var(--primary)]"></div> Leave: {totalL}</div>
+          {calendarUser.type === 'STAFF' && (
+            <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-[var(--primary)]"></div> Leave: {totalL}</div>
+          )}
         </div>
 
         {/* Calendar Grid */}

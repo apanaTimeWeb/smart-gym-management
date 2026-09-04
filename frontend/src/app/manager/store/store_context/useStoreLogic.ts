@@ -10,6 +10,7 @@ import { GYM_DETAILS } from '@/app/manager/manager_utils/ManagerSharedConstants'
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { StoreContextType, OrderItem, StoreInitialData, FetchState } from '@/app/manager/store/store_types/store_types';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
+import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
 
 export function useStoreLogic(initialData?: StoreInitialData | null): StoreContextType {
   const { confirm } = useConfirm();
@@ -201,8 +202,36 @@ export function useStoreLogic(initialData?: StoreInitialData | null): StoreConte
 
       if (sendViaWhatsapp && customerPhone) {
         showToast(`Order placed. Receipt sent to ${customerPhone}`, 'success');
-        const text = `Hi, your bill from ${GYM_DETAILS.name} for ₹${orderTotal} is completed. Thank you!`;
-        window.open(`https://wa.me/91${customerPhone}?text=${encodeURIComponent(text)}`, '_blank');
+        
+        const itemsRecord = orderItems.reduce((acc, item) => {
+          acc[`${item.qty}x ${item.name}`] = `Rs ${item.price * item.qty}`;
+          return acc;
+        }, {} as Record<string, string>);
+
+        const waText = WhatsAppFormatter.formatReceipt({
+          title: GYM_DETAILS.name,
+          subtitle: 'Retail Invoice',
+          date: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
+          customerInfo: {
+            'Phone': customerPhone,
+            'Order ID': `ORD-${res.data?.id || Date.now()}`,
+          },
+          sections: [
+            {
+              title: 'Items',
+              items: itemsRecord
+            },
+            {
+              items: {
+                'Total': `Rs ${orderTotal}`,
+                'Payment': orderMethod
+              }
+            }
+          ],
+          footer: 'Thank You! Visit Again'
+        });
+
+        window.open(`https://wa.me/91${customerPhone.replace(/\D/g, '')}?text=${encodeURIComponent(waText)}`, '_blank');
       } else {
         showToast('Order placed successfully. Printing receipt...', 'success');
         setPrintData({ 
