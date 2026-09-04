@@ -1,7 +1,8 @@
 'use client';
 // RESPONSIBILITY: Renders a single row in the Coupons data table. Handles row-level action buttons with stopPropagation. Purely presentational.
-import { Edit2, Trash2, RefreshCw, ToggleLeft, ToggleRight } from 'lucide-react';
+import { Edit2, Trash2, RefreshCw, ToggleLeft, ToggleRight, MessageCircle } from 'lucide-react';
 import SuperadminCouponsStatusBadge from '@/app/superadmin/coupons/coupons_components/SuperadminCouponsStatusBadge/SuperadminCouponsStatusBadge';
+import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
 import type { Coupon, CouponStatus } from '@/app/superadmin/coupons/coupons_types/coupons_types';
 
 interface CouponsTableRowProps {
@@ -14,6 +15,42 @@ interface CouponsTableRowProps {
 
 export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEdit, onDelete, onRestore }: CouponsTableRowProps) {
   const cpn = coupon;
+
+  const handleShareWhatsApp = (e: React.MouseEvent, cpn: Coupon) => {
+    e.stopPropagation();
+    
+    const dateStr = new Date(cpn.expiryDate).toLocaleDateString('en-IN', {
+      day: '2-digit', month: 'short', year: 'numeric'
+    });
+    
+    const discountStr = cpn.discountType === 'PERCENTAGE' 
+      ? `${cpn.discountValue}% OFF` 
+      : `Rs ${cpn.discountValue} OFF`;
+
+    const waText = WhatsAppFormatter.formatReceipt({
+      title: 'Smart Gym 360',
+      subtitle: 'Exclusive Gym Partner Coupon',
+      sections: [
+        {
+          items: {
+            'Coupon Code': cpn.code,
+            'Discount': discountStr,
+          }
+        },
+        {
+          title: 'Coupon Details',
+          items: {
+            'Valid Until': dateStr,
+            'Remaining': `${cpn.maxUses - cpn.currentUses} uses`,
+          }
+        }
+      ],
+      footer: 'Apply this code at checkout!'
+    });
+
+    window.open(`https://wa.me/?text=${encodeURIComponent(waText)}`, '_blank');
+  };
+
   return (
     <tr 
       className={`hover:bg-primary/5 transition-all duration-200 ease-in-out group cursor-pointer ${cpn.isDeleted ? 'opacity-50 grayscale' : ''}`}
@@ -44,6 +81,14 @@ export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEd
           </button>
         ) : (
           <>
+            <button
+              title="Share Coupon"
+              aria-label="Share Coupon"
+              onClick={(e) => handleShareWhatsApp(e, cpn)}
+              className="text-secondary hover:text-[#25D366] transition-colors p-1.5 bg-input hover:bg-[#25D366]/10 rounded-md border border-border"
+            >
+              <MessageCircle className="w-4 h-4" />
+            </button>
             <button
               title={cpn.status === 'ACTIVE' ? 'Deactivate Coupon' : 'Activate Coupon'}
               aria-label={cpn.status === 'ACTIVE' ? 'Deactivate Coupon' : 'Activate Coupon'}

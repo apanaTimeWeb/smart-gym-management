@@ -12,13 +12,14 @@ import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
 import type { Tenant } from '@/app/superadmin/gyms/gyms_types/gyms_types';
 import type { SubscriptionPlan } from '@/app/superadmin/plans/plans_types/plans_types';
+import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
 /** Simulated provisioning step delays (ms) — replace with real SSE/WebSocket events when backend supports it */
 const PROVISIONING_DELAYS = {
   VALIDATE: 800,
   CREATE_DB: 1500,
   RUN_MIGRATIONS: 2000,
   CREATE_USER: 1000,
-  SEND_EMAIL: 800,
+  SEND_WHATSAPP: 800,
   REDIRECT: 500,
 } as const;
 
@@ -71,10 +72,45 @@ export function useAddGymForm() {
     addLog('Creating Admin User account...');
     await delay(PROVISIONING_DELAYS.CREATE_USER);
 
-    addLog('Sending Welcome Email with temporary password...');
-    await delay(PROVISIONING_DELAYS.SEND_EMAIL);
+    addLog('Sending WhatsApp message with temporary password...');
+    await delay(PROVISIONING_DELAYS.SEND_WHATSAPP);
 
     try {
+      const dateStr = new Intl.DateTimeFormat('en-IN', {
+        day: '2-digit', month: 'short', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', hour12: true
+      }).format(new Date());
+
+      const waText = WhatsAppFormatter.formatReceipt({
+        title: 'Smart Gym 360',
+        subtitle: 'Tenant Provisioning',
+        date: dateStr,
+        customerInfo: {
+          Owner: data.ownerName,
+          Gym: data.gymName
+        },
+        sections: [
+          {
+            title: 'Account Details',
+            items: {
+              Email: data.adminEmail,
+              Pass: data.temporaryPassword
+            }
+          },
+          {
+            items: {
+              Plan: String(data.plan).toUpperCase()
+            }
+          }
+        ],
+        footer: 'Please login to continue'
+      });
+
+      const cleanPhone = data.phone.replace(/\D/g, '');
+      if (cleanPhone) {
+        window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(waText)}`, '_blank');
+      }
+
       addLog('Sending payload to backend...');
       // Mocking the backend API success as per "fix with all hardcoded data"
       const newGym = {

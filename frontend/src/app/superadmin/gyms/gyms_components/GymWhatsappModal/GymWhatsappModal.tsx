@@ -1,36 +1,36 @@
 'use client';
-// RESPONSIBILITY: Renders the modal UI for sending an email to a Gym owner. Purely a view component.
+// RESPONSIBILITY: Renders the modal UI for sending a WhatsApp message to a Gym owner. Purely a view component.
 
 import React from 'react';
 import { X } from 'lucide-react';
-import { useGymEmailModal } from '@/app/superadmin/gyms/gyms_components/GymEmailModal/useGymEmailModal';
+import { useGymWhatsappModal } from '@/app/superadmin/gyms/gyms_components/GymWhatsappModal/useGymWhatsappModal';
 
-export default function GymEmailModal() {
+export default function GymWhatsappModal() {
   const {
-    isEmailModalOpen,
-    closeEmailModal,
+    isWhatsappModalOpen,
+    closeWhatsappModal,
     selectedGym,
     register,
     handleSubmit,
     onSubmit,
     errors,
     isSubmitting,
-  } = useGymEmailModal();
+  } = useGymWhatsappModal();
 
-  if (!isEmailModalOpen || !selectedGym) return null;
+  if (!isWhatsappModalOpen || !selectedGym) return null;
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 p-4">
       <div className="bg-card rounded-2xl p-7 max-w-md w-full border border-border shadow-2xl relative">
         <button
-          onClick={closeEmailModal}
+          onClick={closeWhatsappModal}
           className="absolute top-5 right-5 text-secondary hover:text-foreground transition-colors"
         >
           <X className="w-5 h-5" />
         </button>
 
-        <h2 className="text-lg font-bold text-foreground mb-1">Email Gym Owner</h2>
-        <p className="text-sm text-secondary mb-6">Send an email to {selectedGym.ownerName} ({selectedGym.adminEmail}).</p>
+        <h2 className="text-lg font-bold text-foreground mb-1">WhatsApp Gym Owner</h2>
+        <p className="text-sm text-secondary mb-6">Send a WhatsApp message to {selectedGym.ownerName} ({selectedGym.phone}).</p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
@@ -58,7 +58,7 @@ export default function GymEmailModal() {
           <div className="flex justify-end gap-3 pt-4 mt-6">
             <button
               type="button"
-              onClick={closeEmailModal}
+              onClick={closeWhatsappModal}
               className="px-5 py-2.5 rounded-lg text-sm font-medium text-foreground border border-border hover:bg-background transition-colors"
               disabled={isSubmitting}
             >
@@ -66,10 +66,10 @@ export default function GymEmailModal() {
             </button>
             <button
               type="submit"
-              className="px-5 py-2.5 rounded-lg text-sm font-medium text-white bg-primary hover:bg-primary-hover transition-colors disabled:opacity-50"
+              className="px-5 py-2.5 rounded-lg text-sm font-medium text-white bg-[#25D366] hover:bg-[#20b957] transition-colors disabled:opacity-50"
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Sending...' : 'Send Email'}
+              {isSubmitting ? 'Sending...' : 'Send WhatsApp'}
             </button>
           </div>
         </form>

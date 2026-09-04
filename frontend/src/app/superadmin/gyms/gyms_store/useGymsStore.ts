@@ -23,7 +23,7 @@ interface GymsState {
   search: string;
   selectedGym: Tenant | null;
   isEditModalOpen: boolean;
-  isEmailModalOpen: boolean;
+  isWhatsappModalOpen: boolean;
   isDeleteModalOpen: boolean;
   gymToDelete: Tenant | null;
 
@@ -31,8 +31,8 @@ interface GymsState {
   setSearch: (search: string) => void;
   openEditModal: (gym: Tenant) => void;
   closeEditModal: () => void;
-  openEmailModal: (gym: Tenant) => void;
-  closeEmailModal: () => void;
+  openWhatsappModal: (gym: Tenant) => void;
+  closeWhatsappModal: () => void;
   openDeleteModal: (gym: Tenant) => void;
   closeDeleteModal: () => void;
   
@@ -42,7 +42,7 @@ interface GymsState {
   handleSuspend: (id: string, name: string, currentStatus: string) => Promise<void>;
   handleDelete: (id: string) => Promise<void>;
   handleEditGym: (id: string, data: Partial<Tenant>) => Promise<void>;
-  handleEmailOwner: (id: string, data: { subject: string; message: string; [key: string]: unknown }) => Promise<void>;
+  handleWhatsappOwner: (id: string, data: { subject: string; message: string; [key: string]: unknown }) => Promise<void>;
   addGym: (gym: Tenant) => void;
 }
 
@@ -54,7 +54,7 @@ export const useGymsStore = create<GymsState>((set, get) => ({
   search: '',
   selectedGym: null,
   isEditModalOpen: false,
-  isEmailModalOpen: false,
+  isWhatsappModalOpen: false,
   isDeleteModalOpen: false,
   gymToDelete: null,
 
@@ -77,10 +77,10 @@ export const useGymsStore = create<GymsState>((set, get) => ({
     setTimeout(() => set({ selectedGym: null }), 200);
   },
 
-  openEmailModal: (gym) => set({ selectedGym: gym, isEmailModalOpen: true }),
+  openWhatsappModal: (gym) => set({ selectedGym: gym, isWhatsappModalOpen: true }),
   
-  closeEmailModal: () => {
-    set({ isEmailModalOpen: false });
+  closeWhatsappModal: () => {
+    set({ isWhatsappModalOpen: false });
     setTimeout(() => set({ selectedGym: null }), 200);
   },
 
@@ -171,14 +171,19 @@ export const useGymsStore = create<GymsState>((set, get) => ({
     }
   },
 
-  handleEmailOwner: async (id, data) => {
+  handleWhatsappOwner: async (id, data) => {
     set({ actionLoadingId: id });
     try {
-      // Mocking email success
-      toast.success('Email sent successfully.');
-      get().closeEmailModal();
+      if (data.phone) {
+        const cleanPhone = String(data.phone).replace(/\D/g, '');
+        const waText = `*${data.subject}*\n\n${data.message}`;
+        window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(waText)}`, '_blank');
+      }
+
+      toast.success('WhatsApp opened successfully.');
+      get().closeWhatsappModal();
     } catch (error: unknown) {
-      const errMsg = error instanceof Error ? error.message : String(error) || 'Failed to send email.';
+      const errMsg = error instanceof Error ? error.message : String(error) || 'Failed to send WhatsApp message.';
       toast.error(errMsg);
     } finally {
       set({ actionLoadingId: null });
