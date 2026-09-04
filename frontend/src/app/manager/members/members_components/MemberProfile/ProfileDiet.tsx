@@ -144,21 +144,31 @@ export default function ProfileDiet() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {diet.meals && diet.meals.length > 0 ? diet.meals.map((meal: any, idx: number) => (
-              <div key={idx} className="bg-card border border-border p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-                <h5 className="font-semibold text-primary mb-3 pb-2 border-b border-border text-sm flex items-center justify-between">
-                  {meal.time} - {meal.name}
-                  <span className="text-xs font-normal text-secondary bg-input px-2 py-1 rounded">~{meal.calories} kcal</span>
-                </h5>
-                <ul className="space-y-2 text-sm text-secondary">
-                  {meal.foods?.map((f: string, i: number) => (
-                    <li key={i} className="flex items-center gap-2">
-                      <span className="text-primary">•</span> {f}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )) : (
+            {diet.meals && diet.meals.length > 0 ? diet.meals.map((meal: any, idx: number) => {
+              if (typeof meal === 'string') {
+                return (
+                  <div key={idx} className="bg-card border border-border p-4 rounded-xl shadow-sm">
+                    <h5 className="font-semibold text-primary mb-2 text-sm">Meal {idx + 1}</h5>
+                    <p className="text-sm text-secondary">{meal}</p>
+                  </div>
+                );
+              }
+              return (
+                <div key={idx} className="bg-card border border-border p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                  <h5 className="font-semibold text-primary mb-3 pb-2 border-b border-border text-sm flex items-center justify-between">
+                    {meal.time} - {meal.name}
+                    <span className="text-xs font-normal text-secondary bg-input px-2 py-1 rounded">~{meal.calories} kcal</span>
+                  </h5>
+                  <ul className="space-y-2 text-sm text-secondary">
+                    {meal.foods?.map((f: string, i: number) => (
+                      <li key={i} className="flex items-center gap-2">
+                        <span className="text-primary">•</span> {f}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            }) : (
               <div className="col-span-full text-center py-4 text-secondary text-sm">No specific meals mapped for this diet plan.</div>
             )}
           </div>

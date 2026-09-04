@@ -123,25 +123,52 @@ export default function ProfileWorkout() {
           </button>
         </div>
       ) : workout ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {workout.days && workout.days.length > 0 ? workout.days.map((day: any, idx: number) => (
-            <div key={idx} className="bg-card border border-border p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-              <h5 className="font-semibold text-primary mb-3 pb-2 border-b border-border text-sm">Day {day.day}: {day.focus}</h5>
-              {day.isRest ? (
-                <p className="text-sm text-secondary italic">Rest Day - No workout assigned.</p>
-              ) : (
-                <ul className="space-y-2 text-sm text-secondary">
-                  {day.exercises?.map((ex: any, i: number) => (
-                    <li key={i} className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
-                      <span>{ex.name}</span> <span className="font-medium text-primary text-xs">{ex.sets}x{ex.reps}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="bg-card border border-border rounded-xl p-4 text-center shadow-sm">
+              <p className="text-xs text-secondary font-semibold uppercase tracking-wider mb-1">Level</p>
+              <p className="text-lg font-bold text-primary">{workout.level || 'N/A'}</p>
             </div>
-          )) : (
-            <div className="col-span-full text-center py-4 text-secondary text-sm">No specific days mapped for this workout plan.</div>
-          )}
+            <div className="bg-card border border-border rounded-xl p-4 text-center shadow-sm">
+              <p className="text-xs text-secondary font-semibold uppercase tracking-wider mb-1">Days</p>
+              <p className="text-lg font-bold text-primary">{Array.isArray(workout.days) ? workout.days.length : (workout.days || 0)}</p>
+            </div>
+            <div className="bg-card border border-border rounded-xl p-4 text-center shadow-sm">
+              <p className="text-xs text-secondary font-semibold uppercase tracking-wider mb-1">Focus</p>
+              <p className="text-lg font-bold text-primary">{workout.focus || 'General'}</p>
+            </div>
+            <div className="bg-card border border-border rounded-xl p-4 text-center shadow-sm">
+              <p className="text-xs text-secondary font-semibold uppercase tracking-wider mb-1">Exercises</p>
+              <p className="text-lg font-bold text-primary">{workout.exercises || 'Varied'}</p>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {Array.isArray(workout.days) && workout.days.length > 0 ? workout.days.map((day: any, idx: number) => (
+              <div key={idx} className="bg-card border border-border p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                <h5 className="font-semibold text-primary mb-3 pb-2 border-b border-border text-sm">Day {day.day || idx + 1}: {day.focus}</h5>
+                {day.isRest ? (
+                  <p className="text-sm text-secondary italic">Rest Day - No workout assigned.</p>
+                ) : (
+                  <ul className="space-y-2 text-sm text-secondary">
+                    {day.exercises?.map((ex: any, i: number) => (
+                      <li key={i} className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
+                        <span>{ex.name}</span> <span className="font-medium text-primary text-xs">{ex.sets}x{ex.reps}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            )) : (
+              <div className="col-span-full bg-input border border-border rounded-xl p-6 text-center">
+                <Dumbbell className="mx-auto text-primary/40 mb-3" size={32} />
+                <p className="text-lg text-primary font-bold">{workout.name}</p>
+                <p className="text-secondary text-sm mt-2 max-w-md mx-auto">
+                  This plan is a {workout.level} level routine focused on {workout.focus}, spanning {workout.days} days per cycle.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       ) : null}
     </div>
