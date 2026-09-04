@@ -196,6 +196,30 @@ export async function routeMockRequest<T>(
     }
     return MockDB.handleCrud('mock_inquiries', actualMethod, path, parsedBody, [], 'inquiries') as unknown as ApiResponse<T>;
   }
+  if (path.includes('/expenses/stats')) {
+    const expenses = MockDB.getCollection('mock_admin_expenses', []);
+    const totalAmount = expenses.reduce((sum: number, e: any) => sum + (Number(e.amount) || 0), 0);
+    const paidAmount = expenses.filter((e: any) => e.status === 'PAID').reduce((sum: number, e: any) => sum + (Number(e.amount) || 0), 0);
+    const pendingAmount = expenses.filter((e: any) => e.status === 'PENDING').reduce((sum: number, e: any) => sum + (Number(e.amount) || 0), 0);
+    const now = new Date();
+    const thisMonthAmount = expenses.filter((e: any) => {
+      const d = new Date(e.date || e.createdAt);
+      return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+    }).reduce((sum: number, e: any) => sum + (Number(e.amount) || 0), 0);
+    return { success: true, message: 'Stats fetched', data: { totalAmount, paidAmount, pendingAmount, thisMonthAmount } } as unknown as ApiResponse<T>;
+  }
+  if (path.includes('/expenses')) {
+    return MockDB.handleCrud('mock_admin_expenses', method, path, parsedBody, generate(5, i => ({
+      id: `exp-${i}`,
+      title: i === 0 ? 'Electricity Bill' : i === 1 ? 'Rent' : i === 2 ? 'Equipment Repair' : 'Water Bill',
+      category: i === 0 ? 'Electricity' : i === 1 ? 'Rent' : i === 2 ? 'Equipment Maintenance' : 'Miscellaneous',
+      amount: i === 0 ? 15000 : i === 1 ? 50000 : i === 2 ? 5000 : 2000,
+      date: new Date().toISOString(),
+      status: i % 2 === 0 ? 'PAID' : 'PENDING',
+      referenceNo: `REF-${1000 + i}`,
+      notes: 'Mock generated expense'
+    })), 'expenses') as unknown as ApiResponse<T>;
+  }
   if (path.includes('/attendance/history')) {
     const url = new URL(`http://localhost${path}`);
     const userId = url.searchParams.get('userId') || 'mock-user';
