@@ -106,9 +106,9 @@ export default function ManagerHrPayrollTable() {
                   {p.status !== 'Paid' && (
                     <button 
                       onClick={() => markPayrollPaid(p.id)}
-                      className="flex items-center justify-end w-full gap-1 px-3 py-1.5 text-xs font-semibold text-primary-foreground bg-primary rounded-lg hover:opacity-90 transition-opacity"
+                      className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:bg-primary/90 transition-colors"
                     >
-                      <CheckCircle2 size={14} /> Mark Paid
+                      <CheckCircle2 size={16} /> Mark Paid
                     </button>
                   )}
                 </td>

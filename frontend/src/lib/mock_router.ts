@@ -237,8 +237,11 @@ export async function routeMockRequest<T>(
       const currentPayrolls = MockDB.getCollection('mock_admin_payrolls', []);
       
       const today = new Date();
-      const isCurrentMonth = reqMonth === today.toLocaleString('en-US', { month: 'long', year: 'numeric' });
-      const daysElapsed = isCurrentMonth ? today.getDate() : 30; // approx 30 for past months
+      const reqDate = reqMonth.includes('-') ? new Date(`${reqMonth}-01`) : new Date(reqMonth);
+      const daysInMonth = !isNaN(reqDate.getTime()) ? new Date(reqDate.getFullYear(), reqDate.getMonth() + 1, 0).getDate() : 30;
+      
+      const isCurrentMonth = reqMonth === today.toLocaleString('en-US', { month: 'long', year: 'numeric' }) || reqMonth === today.toISOString().slice(0, 7);
+      const daysElapsed = isCurrentMonth ? today.getDate() : daysInMonth;
       
       staffList.filter((s: any) => s.isActive).forEach((s: any) => {
         const staffAtt = attendanceList.filter((a: any) => String(a.staffId) === String(s.id));
@@ -250,7 +253,7 @@ export async function routeMockRequest<T>(
         if (absences < 0) absences = 0; // fallback if someone checked in on weekends multiple times
         
         const baseSalary = Number(s.salary) || 0;
-        const perDay = baseSalary / 30;
+        const perDay = baseSalary / daysInMonth;
         const deduction = absences * perDay;
         const finalAmount = Math.max(0, Math.round(baseSalary - deduction));
         

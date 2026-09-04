@@ -20,7 +20,7 @@ export const AttendanceSchema = z.object({
   staffId: z.string().optional(),
   date: z.string().min(1, 'Date is required'),
   endDate: z.string().optional(),
-  status: z.enum(['PRESENT', 'LEAVE', 'ABSENT']).default('PRESENT'),
+  status: z.enum(['PRESENT', 'LEAVE', 'ABSENT']),
   checkIn: z.string().optional()
 }).superRefine((data, ctx) => {
   if (data.type === 'MEMBER' && !data.memberId) {
