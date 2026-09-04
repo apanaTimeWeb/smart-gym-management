@@ -144,10 +144,7 @@ html { scroll-behavior: smooth; }
     visibility: visible;
   }
   #thermal-receipt {
-    position: absolute;
-    left: 0;
-    top: 0;
-    margin: 0;
+    margin: 0 auto;
     padding: 0;
     width: 80mm;
   }

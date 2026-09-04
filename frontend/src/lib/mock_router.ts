@@ -121,7 +121,7 @@ export async function routeMockRequest<T>(
 
   if (path.includes('/store/products')) {
     const existing = MockDB.getCollection('mock_products', []);
-    if (existing.length > 0 && (existing.length < 10 || existing.some((r: any) => r.name?.includes('Mock Product') || r.name === 'Optimum Nutrition Whey Protein'))) {
+    if (existing.length > 0 && existing.some((r: any) => r.name?.includes('Mock Product'))) {
       MockDB.setCollection('mock_products', []);
     }
     const defaultProducts = [
