@@ -119,26 +119,53 @@ export async function routeMockRequest<T>(
 
   const generate = (count: number, generator: (i: number) => Record<string, unknown>) => Array.from({ length: count }, (_, i) => generator(i));
 
-  if (path.includes('/store/products')) return MockDB.handleCrud('mock_products', method, path, parsedBody, generate(15, i => ({ id: `prod-${i}`, name: `Mock Product ${i}`, category: 'Supplements', price: 1500, stock: 50, status: 'IN_STOCK' })), 'products') as unknown as ApiResponse<T>;
+  if (path.includes('/store/products')) {
+    const existing = MockDB.getCollection('mock_products', []);
+    if (existing.length > 0 && (existing.length < 10 || existing.some((r: any) => r.name?.includes('Mock Product') || r.name === 'Optimum Nutrition Whey Protein'))) {
+      MockDB.setCollection('mock_products', []);
+    }
+    const defaultProducts = [
+      { id: 'prod-1', name: 'Optimum Nutrition Gold Standard Whey', category: 'Supplements', price: 6500, stock: 15, description: '100% Whey Protein Isolate', isActive: true, unit: '2.27 KG' },
+      { id: 'prod-2', name: 'MuscleBlaze Biozyme Performance Whey', category: 'Supplements', price: 2399, stock: 20, description: 'Enhanced absorption whey', isActive: true, unit: '1 KG' },
+      { id: 'prod-3', name: 'Cellucor C4 Original Pre-Workout', category: 'Supplements', price: 1800, stock: 45, description: 'Explosive energy pre-workout', isActive: true, unit: '195g' },
+      { id: 'prod-4', name: 'ON Micronized Creatine Monohydrate', category: 'Supplements', price: 1200, stock: 35, description: 'Pure unflavored creatine', isActive: true, unit: '300g' },
+      { id: 'prod-5', name: 'Scivation Xtend BCAA', category: 'Supplements', price: 2100, stock: 25, description: 'Intra-workout recovery drink', isActive: true, unit: '420g' },
+      { id: 'prod-6', name: 'Monster Energy Drink Zero Ultra', category: 'Supplements', price: 150, stock: 50, description: 'Sugar-free energy drink', isActive: true, unit: '500 ML' },
+      { id: 'prod-7', name: 'Under Armour Tech 2.0 T-Shirt', category: 'Merchandise', price: 1499, stock: 12, description: 'Breathable dry-fit training tee', isActive: true, unit: 'Large' },
+      { id: 'prod-8', name: 'BlenderBottle Classic Shaker', category: 'Accessories', price: 699, stock: 30, description: 'Spill-proof shaker bottle', isActive: true, unit: '800 ML' },
+      { id: 'prod-9', name: 'Nivia Python Gym Gloves', category: 'Accessories', price: 450, stock: 18, description: 'Weightlifting gloves with wrist support', isActive: true, unit: 'Medium' },
+      { id: 'prod-10', name: 'Rogue Heavy Duty Lifting Belt', category: 'Accessories', price: 3500, stock: 8, description: 'Leather powerlifting belt', isActive: true, unit: '1 Piece' }
+    ];
+    return MockDB.handleCrud('mock_products', method, path, parsedBody, defaultProducts, 'products') as unknown as ApiResponse<T>;
+  }
+
   if (path.includes('/store/summary')) {
     const products = MockDB.getCollection('mock_products', []);
-    const orders = MockDB.getCollection('mock_orders_v2', []);
-    const revenue = orders.reduce((acc, o) => acc + (Number(o.total) || 0), 0);
-    return { success: true, message: 'Summary', data: { totalProducts: products.length, totalOrders: orders.length, totalRevenue: revenue, lowStockProducts: products.filter(p => Number(p.stock) < 10) } } as unknown as ApiResponse<T>;
+    const orders = MockDB.getCollection('mock_orders', []);
+    const revenue = orders.reduce((acc: number, o: any) => acc + (Number(o.total) || 0), 0);
+    return { success: true, message: 'Summary', data: { totalProducts: products.length, totalOrders: orders.length, totalRevenue: revenue, lowStockProducts: products.filter((p: any) => Number(p.stock) < 10) } } as unknown as ApiResponse<T>;
   }
+
   if (path.includes('/store/orders')) {
+    const existing = MockDB.getCollection('mock_orders', []);
+    if (existing.length > 0 && existing.some((r: any) => !r.items)) {
+       MockDB.setCollection('mock_orders', []);
+    }
     if (method === 'POST') {
        const products = MockDB.getCollection('mock_products', []);
        const items = (parsedBody.items || []) as any[];
        items.forEach(item => {
-         const prodIdx = products.findIndex(p => p.id === item.productId);
+         const prodIdx = products.findIndex(p => String(p.id) === String(item.productId));
          if (prodIdx > -1) {
            products[prodIdx].stock = Math.max(0, Number(products[prodIdx].stock) - Number(item.qty));
          }
        });
        MockDB.setCollection('mock_products', products);
     }
-    return MockDB.handleCrud('mock_orders_v2', method, path, parsedBody, generate(2, i => ({ id: `ord-${i}`, customerName: `Customer ${i}`, total: 3000, method: 'UPI', status: 'COMPLETED', createdAt: new Date().toISOString() })), 'orders') as unknown as ApiResponse<T>;
+    const defaultOrders = [
+      { id: 'ord-1', customerName: 'Demo Customer', total: 1200, method: 'UPI', status: 'COMPLETED', createdAt: new Date().toISOString(), items: [{ productId: 'prod-2', qty: 1, price: 1200, product: { name: 'Creatine Monohydrate', unit: '300g' } }] }
+    ];
+    return MockDB.handleCrud('mock_orders', method, path, parsedBody, defaultOrders, 'orders') as unknown as ApiResponse<T>;
   }
   if (path.includes('/plans') && !path.includes('/superadmin')) return MockDB.handleCrud('mock_admin_plans', method, path, parsedBody, generate(3, i => ({ id: `plan-${i}`, name: i === 0 ? 'Basic Plan' : i === 1 ? 'Pro Plan' : 'VIP Plan', tier: i === 0 ? 'Standard' : i === 1 ? 'Premium' : 'Elite', price1Month: 1000 * (i + 1), price3Month: 2500 * (i + 1), price6Month: 4800 * (i + 1), price12Month: 9000 * (i + 1), features: ['Access to gym', 'Locker facility', 'Cardio section'], isActive: true }))) as unknown as ApiResponse<T>;
   if (path.includes('/members/stats')) return { success: true, message: 'Stats', data: { total: 150, active: 110, pending: 25, expired: 15 } } as unknown as ApiResponse<T>;
@@ -312,34 +339,6 @@ export async function routeMockRequest<T>(
     const products = MockDB.getCollection('mock_store_products', []);
     const orders = MockDB.getCollection('mock_orders_v2', []);
     return { success: true, message: 'Store Summary', data: { totalProducts: products.length, totalOrders: orders.length, totalRevenue: orders.reduce((sum: number, o: any) => sum + (o.total || 0), 0), lowStockProducts: products.filter((p: any) => p.stock <= 5) } } as unknown as ApiResponse<T>;
-  }
-
-  if (path.includes('/store/products')) {
-    const defaultProducts = [
-      { id: 'prod-1', name: 'Optimum Nutrition Whey Protein', category: 'Supplements', price: 6500, stock: 12, description: 'Gold standard whey protein isolate', isActive: true, unit: '2 KG' },
-      { id: 'prod-2', name: 'Creatine Monohydrate', category: 'Supplements', price: 1200, stock: 45, description: 'Pure creatine monohydrate powder', isActive: true, unit: '300g' },
-      { id: 'prod-3', name: 'Gym T-Shirt (Black)', category: 'Merchandise', price: 899, stock: 3, description: 'Breathable dry-fit gym apparel', isActive: true, unit: 'L' },
-      { id: 'prod-4', name: 'BCAA Energy Drink', category: 'Supplements', price: 150, stock: 50, description: 'Pre-workout amino acid drink', isActive: true, unit: '500 ML' },
-      { id: 'prod-5', name: 'Premium Lifting Belt', category: 'Accessories', price: 2500, stock: 8, description: 'Leather weightlifting belt', isActive: true, unit: '1 Piece' }
-    ];
-    return MockDB.handleCrud('mock_store_products', method, path, parsedBody, defaultProducts, 'products') as unknown as ApiResponse<T>;
-  }
-
-  if (path.includes('/store/orders')) {
-    const defaultOrders = [
-      { 
-        id: 'ord-1', 
-        customerName: 'Customer 1', 
-        total: 1200, 
-        method: 'UPI', 
-        status: 'COMPLETED', 
-        createdAt: new Date(Date.now() - 86400000).toISOString(),
-        items: [
-          { productId: 'prod-2', qty: 1, price: 1200, product: { name: 'Creatine Monohydrate', unit: '300g' } }
-        ]
-      }
-    ];
-    return MockDB.handleCrud('mock_orders_v2', method, path, parsedBody, defaultOrders, 'orders') as unknown as ApiResponse<T>;
   }
 
 
