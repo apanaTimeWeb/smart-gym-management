@@ -73,5 +73,6 @@ export interface MembersContextType {
   // Receipt Printing
   printData: ManagerReceiptData | null;
   handlePrint: (p: Payment) => void;
+  handleSharePaymentWhatsApp: (p: Payment) => void;
   setPrintData: (data: ManagerReceiptData | null) => void;
 }

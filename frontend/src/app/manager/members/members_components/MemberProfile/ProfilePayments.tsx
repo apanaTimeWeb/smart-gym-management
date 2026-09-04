@@ -1,13 +1,13 @@
 // RESPONSIBILITY: Renders the payment history and transaction records for a specific member profile.
 'use client';
 
-import { Printer } from 'lucide-react';
+import { Printer, MessageCircle } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/MembersContext';
 import { useMembersStore } from '@/app/manager/members/members_store/useMembersStore';
 import { formatCurrency } from '@/app/manager/members/members_utils/MembersSharedConstants';
 
 export default function ProfilePayments() {
- const { handlePrint } = useMembersContext();
+ const { handlePrint, handleSharePaymentWhatsApp } = useMembersContext();
  const payments = useMembersStore(s => s.payments);
 
  const totalPaid = payments.filter(p => p.status === 'PAID').reduce((s, p) => s + p.amount, 0);
@@ -49,12 +49,22 @@ export default function ProfilePayments() {
  {p.status}
  </span>
  </div>
+ <div className="flex items-center gap-2">
+ <button 
+ onClick={() => handleSharePaymentWhatsApp(p)} 
+ className="p-2 rounded-lg bg-input hover:bg-[#25D366]/10 text-secondary hover:text-[#25D366] transition-colors"
+ title="Share via WhatsApp"
+ >
+ <MessageCircle size={14} />
+ </button>
  <button 
  onClick={() => handlePrint(p)} 
  className="p-2 rounded-lg bg-input hover:bg-primary-subtle text-secondary transition-colors"
+ title="Print Receipt"
  >
  <Printer size={14} />
  </button>
+ </div>
  </div>
  </div>
  ))}

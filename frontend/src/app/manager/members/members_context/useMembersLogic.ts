@@ -12,6 +12,7 @@ import { EMPTY_MEMBER_FORM, formatCurrency, MSG_TEMPLATES, MemberFormValues } fr
 import { GYM_DETAILS } from '@/app/manager/manager_utils/ManagerSharedConstants';
 import { useDebounce } from '@/app/manager/manager_utils/useDebounce';
 import { useMembersStore } from '@/app/manager/members/members_store/useMembersStore';
+import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
 
 export function useMembersLogic(initialData?: MembersInitialData | null): MembersContextType {
   const { confirm } = useConfirm();
@@ -167,6 +168,39 @@ export function useMembersLogic(initialData?: MembersInitialData | null): Member
     if (typeof window !== 'undefined') setTimeout(() => window.print(), 100);
   }, [selectedMember]);
 
+  const handleSharePaymentWhatsApp = useCallback((p: Payment) => {
+    if (!selectedMember) return;
+    const m = selectedMember;
+    
+    const waText = WhatsAppFormatter.formatReceipt({
+      title: GYM_DETAILS.name,
+      subtitle: 'Payment Receipt',
+      date: new Date(p.paidAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
+      customerInfo: {
+        'Member': m.name,
+        'Invoice': p.invoiceNo,
+      },
+      sections: [
+        {
+          items: {
+            'Membership': m.plan?.name || 'Standard',
+            'Amount': formatCurrency(p.amount),
+            'Method': p.method
+          }
+        },
+        {
+          items: {
+            'Status': p.status
+          }
+        }
+      ],
+      footer: 'Thank you for your payment!'
+    });
+
+    window.open(`https://wa.me/91${m.phone?.replace(/\D/g, '') || ''}?text=${encodeURIComponent(waText)}`, '_blank');
+    showToast('Receipt opened in WhatsApp', 'success');
+  }, [selectedMember, showToast]);
+
   return {
     search, debouncedSearch, setSearch, statusFilter, setStatusFilter, currentPage, setCurrentPage,
     toast, showToast, hideToast,
@@ -174,6 +208,6 @@ export function useMembersLogic(initialData?: MembersInitialData | null): Member
     showAddModal, setShowAddModal, editId, editData,
     openAdd, openEdit, saveMember, deleteMember,
     msgModal, openMsg, closeMsg,
-    printData, handlePrint, setPrintData
+    printData, handlePrint, handleSharePaymentWhatsApp, setPrintData
   };
 }
