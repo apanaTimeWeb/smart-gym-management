@@ -76,18 +76,19 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
       const name = searchParams.get('name') || '';
       const phone = searchParams.get('phone') || '';
       const email = searchParams.get('email') || '';
-      
-      setEditId(null);
-      setEditData({
-        ...EMPTY_MEMBER_FORM,
-        name, phone, email
-      });
-      setShowAddModal(true);
-      
-      setUrlParam('action', null);
-      setUrlParam('name', null);
-      setUrlParam('phone', null);
-      setUrlParam('email', null);
+      setTimeout(() => {
+        setEditId(null);
+        setEditData({
+          ...EMPTY_MEMBER_FORM,
+          name, phone, email
+        });
+        setShowAddModal(true);
+        
+        setUrlParam('action', null);
+        setUrlParam('name', null);
+        setUrlParam('phone', null);
+        setUrlParam('email', null);
+      }, 0);
     }
   }, [searchParams, setUrlParam]);
 

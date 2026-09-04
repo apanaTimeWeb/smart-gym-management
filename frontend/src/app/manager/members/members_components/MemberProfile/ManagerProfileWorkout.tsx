@@ -15,10 +15,12 @@ export default function ManagerProfileWorkout() {
 
   useEffect(() => {
     if (isAssigning && availableWorkouts.length === 0) {
-      setLoadingWorkouts(true);
+      setTimeout(() => setLoadingWorkouts(true), 0);
       workoutApi.getWorkouts().then(res => {
         setAvailableWorkouts(res.data?.workouts || []);
-      }).catch(err => console.error(err)).finally(() => setLoadingWorkouts(false));
+      }).catch(err => console.error(err)).finally(() => {
+        setTimeout(() => setLoadingWorkouts(false), 0);
+      });
     }
   }, [isAssigning, availableWorkouts.length]);
 

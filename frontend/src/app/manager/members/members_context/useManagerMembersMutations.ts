@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import type { Member, MembersContextType } from '@/app/manager/members/members_types/ManagerMembersTypes';
+import type { Member } from '@/app/manager/members/members_types/ManagerMembersTypes';
 import { useManagerMembersStore } from '@/app/manager/members/members_store/useManagerMembersStore';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { DietPlan } from '@/app/manager/library/library_types/ManagerLibraryTypes';

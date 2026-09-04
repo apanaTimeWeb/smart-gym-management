@@ -20,7 +20,9 @@ export default async function Login() {
       if (userCookie?.value) {
         user = JSON.parse(decodeURIComponent(userCookie.value));
       }
-    } catch (e) {}
+    } catch {
+      // Return null gracefully or handle it differently if needed.
+    }
 
     if (user?.role === 'SUPERADMIN') {
       redirect(SuperadminUrlConfig.PAGES.DASHBOARD);

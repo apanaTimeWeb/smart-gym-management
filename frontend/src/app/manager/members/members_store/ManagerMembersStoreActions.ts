@@ -1,27 +1,32 @@
 import { membersApi } from '@/app/manager/members/members_api/ManagerMembersApi';
 import { financeApi } from '@/app/manager/finance/finance_api/ManagerFinanceApi';
 import { Member } from '@/app/manager/members/members_types/ManagerMembersTypes';
-import { MemberFormValues, MEMBERS_CYCLE_LABELS, getPriceForCycle } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
+import { MemberFormValues, getPriceForCycle } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import type { DietPlan } from '@/app/manager/library/library_types/ManagerLibraryTypes';
 import type { Workout } from '@/app/manager/workout/workout_types/ManagerWorkoutTypes';
 
-export const createMembersMutations = (set: any, get: any) => ({
+import type { MembersState } from './useManagerMembersStore';
+
+type StoreSet = (partial: Partial<MembersState> | ((state: MembersState) => Partial<MembersState>)) => void;
+type StoreGet = () => MembersState;
+
+export const createMembersMutations = (set: StoreSet, get: StoreGet) => ({
   saveMember: async (data: MemberFormValues, editId: string | null) => {
     set({ saving: true });
     try {
       if (editId) {
         const res = await membersApi.update(editId, data);
-        set((state: any) => ({
-          members: state.members.map((m: any) => m.id === editId ? { ...m, ...data } : m)
+        set((state: MembersState) => ({
+          members: state.members.map((m: Member) => m.id === editId ? { ...m, ...data } : m)
         }));
         return { success: true, message: res.message || 'Updated successfully' };
       } else {
         const payload = { ...data, status: 'ACTIVE' };
         const res = await membersApi.create(payload);
-        let newId = res.data?.id || (res as any).id;
+        let newId = res.data?.id || (res as { id?: string }).id;
         
         const state = get();
-        const plan = state.plans.find((p: any) => String(p.id) === String(data.planId));
+        const plan = state.plans.find((p: import('@/app/manager/plans/plans_types/ManagerPlansTypes').Plan) => String(p.id) === String(data.planId));
         
         let pendingAmount = data.pendingAmount;
         if (pendingAmount === undefined && plan) {
@@ -40,7 +45,7 @@ export const createMembersMutations = (set: any, get: any) => ({
           joinDate: data.joinDate || new Date().toISOString(),
         };
 
-        set((state: any) => {
+        set((state: MembersState) => {
           newId = fullNewMember.id;
           return {
             members: [fullNewMember as unknown as Member, ...state.members],
@@ -73,8 +78,8 @@ export const createMembersMutations = (set: any, get: any) => ({
   deleteMember: async (id: string) => {
     try {
       const res = await membersApi.remove(id);
-      set((state: any) => ({
-        members: state.members.filter((m: any) => m.id !== id),
+      set((state: MembersState) => ({
+        members: state.members.filter((m: Member) => m.id !== id),
         totalMembers: state.totalMembers - 1
       }));
       return { success: true, message: res.message || 'Deleted successfully' };
@@ -90,8 +95,8 @@ export const createMembersMutations = (set: any, get: any) => ({
         assignedDiet: diet || undefined 
       };
       await membersApi.update(memberId, payload);
-      set((state: any) => ({
-        members: state.members.map((m: any) => m.id === memberId ? { ...m, ...payload } : m)
+      set((state: MembersState) => ({
+        members: state.members.map((m: Member) => m.id === memberId ? { ...m, ...payload } : m)
       }));
     } catch (err: unknown) {
       throw err;
@@ -105,8 +110,8 @@ export const createMembersMutations = (set: any, get: any) => ({
         assignedWorkout: workout || undefined 
       };
       await membersApi.update(memberId, payload);
-      set((state: any) => ({
-        members: state.members.map((m: any) => m.id === memberId ? { ...m, ...payload } : m)
+      set((state: MembersState) => ({
+        members: state.members.map((m: Member) => m.id === memberId ? { ...m, ...payload } : m)
       }));
     } catch (err: unknown) {
       throw err;
@@ -117,7 +122,7 @@ export const createMembersMutations = (set: any, get: any) => ({
     set({ saving: true });
     try {
       const state = get();
-      const member = state.members.find((m: any) => m.id === memberId);
+      const member = state.members.find((m: Member) => m.id === memberId);
       const currentPaid = member?.paidAmount || 0;
 
       const payload = {
@@ -139,9 +144,9 @@ export const createMembersMutations = (set: any, get: any) => ({
          invoiceNo: `INV-REN-${Date.now().toString().slice(-6)}`
       });
 
-      set((state: any) => {
-         const plan = state.plans.find((p: any) => String(p.id) === String(data.planId));
-         const updatedMembers = state.members.map((m: any) => m.id === memberId ? { ...m, ...payload, plan } as Member : m);
+      set((state: MembersState) => {
+         const plan = state.plans.find((p: import('@/app/manager/plans/plans_types/ManagerPlansTypes').Plan) => String(p.id) === String(data.planId));
+         const updatedMembers = state.members.map((m: Member) => m.id === memberId ? { ...m, ...payload, plan } as Member : m);
          return {
            members: updatedMembers,
            payments: [pRes.data, ...state.payments]
@@ -159,7 +164,7 @@ export const createMembersMutations = (set: any, get: any) => ({
     set({ saving: true });
     try {
       const state = get();
-      const member = state.members.find((m: any) => m.id === memberId);
+      const member = state.members.find((m: Member) => m.id === memberId);
       const currentPaid = member?.paidAmount || 0;
       const currentPending = member?.pendingAmount || 0;
       
@@ -177,8 +182,8 @@ export const createMembersMutations = (set: any, get: any) => ({
          invoiceNo: `INV-PMT-${Date.now().toString().slice(-6)}`
       });
 
-      set((state: any) => {
-         const updatedMembers = state.members.map((m: any) => 
+      set((state: MembersState) => {
+         const updatedMembers = state.members.map((m: Member) => 
             m.id === memberId 
             ? { ...m, paidAmount: (m.paidAmount || 0) + data.amount, pendingAmount: Math.max(0, (m.pendingAmount || 0) - data.amount) } as Member 
             : m

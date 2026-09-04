@@ -15,10 +15,12 @@ export default function ManagerProfileDiet() {
 
   useEffect(() => {
     if (isAssigning && availableDiets.length === 0) {
-      setLoadingDiets(true);
+      setTimeout(() => setLoadingDiets(true), 0);
       libraryApi.getDietPlans().then(res => {
         setAvailableDiets(res.data?.dietPlans || []);
-      }).catch(err => console.error(err)).finally(() => setLoadingDiets(false));
+      }).catch(err => console.error(err)).finally(() => {
+        setTimeout(() => setLoadingDiets(false), 0);
+      });
     }
   }, [isAssigning, availableDiets.length]);
 

@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
     }
 
     return res;
-  } catch (error) {
-    return NextResponse.json({ error: 'Refresh failed' }, { status: StatusCodes.UNAUTHORIZED });
+  } catch {
+    return NextResponse.json({ success: false, message: 'Invalid refresh token' }, { status: 401 });
   }
 }

@@ -63,7 +63,7 @@ export default function ManagerProfilePayments() {
  <div className="flex items-center gap-2">
  <button 
  onClick={() => handleSharePaymentWhatsApp(p)} 
- className="p-2 rounded-lg bg-input hover:bg-[#25D366]/10 text-secondary hover:text-[#25D366] transition-colors"
+ className="p-2 rounded-lg bg-input hover:bg-green-500/10 text-secondary hover:text-green-500 transition-colors"
  title="Share via WhatsApp"
  >
  <MessageCircle size={14} />
