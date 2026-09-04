@@ -123,22 +123,8 @@ export default function ProfileWorkout() {
           </button>
         </div>
       ) : workout ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {typeof workout.days === 'number' && workout.days > 0 ? Array.from({ length: workout.days }).map((_, idx) => (
-            <div key={idx} className="bg-card border border-border p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-              <h5 className="font-semibold text-primary mb-3 pb-2 border-b border-border text-sm">Day {idx + 1}: {workout.focus}</h5>
-              <ul className="space-y-2 text-sm text-secondary">
-                <li className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
-                  <span>Main Compound Movement</span> <span className="font-medium text-primary text-xs">3x10</span>
-                </li>
-                <li className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
-                  <span>Accessory Movement 1</span> <span className="font-medium text-primary text-xs">3x12</span>
-                </li>
-                <li className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
-                  <span>Accessory Movement 2</span> <span className="font-medium text-primary text-xs">4x8</span>
-                </li>
-              </ul>
-            </div>
+        <div className="space-y-6">
+          <div className="grid grid-cols-3 gap-4">
             <div className="bg-card border border-border rounded-xl p-4 text-center shadow-sm">
               <p className="text-xs text-secondary font-semibold uppercase tracking-wider mb-1">Days</p>
               <p className="text-lg font-bold text-primary">{Array.isArray(workout.days) ? workout.days.length : (workout.days || 0)}</p>
@@ -152,24 +138,43 @@ export default function ProfileWorkout() {
               <p className="text-lg font-bold text-primary">{workout.exercises || 'Varied'}</p>
             </div>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {Array.isArray(workout.days) && workout.days.length > 0 ? workout.days.map((day: any, idx: number) => (
-              <div key={idx} className="bg-card border border-border p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-                <h5 className="font-semibold text-primary mb-3 pb-2 border-b border-border text-sm">Day {day.day || idx + 1}: {day.focus}</h5>
-                {day.isRest ? (
-                  <p className="text-sm text-secondary italic">Rest Day - No workout assigned.</p>
-                ) : (
+            {typeof workout.days === 'number' && workout.days > 0 ? (
+              Array.from({ length: workout.days }).map((_, idx) => (
+                <div key={idx} className="bg-card border border-border p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                  <h5 className="font-semibold text-primary mb-3 pb-2 border-b border-border text-sm">Day {idx + 1}: {workout.focus}</h5>
                   <ul className="space-y-2 text-sm text-secondary">
-                    {day.exercises?.map((ex: any, i: number) => (
-                      <li key={i} className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
-                        <span>{ex.name}</span> <span className="font-medium text-primary text-xs">{ex.sets}x{ex.reps}</span>
-                      </li>
-                    ))}
+                    <li className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
+                      <span>Main Compound Movement</span> <span className="font-medium text-primary text-xs">3x10</span>
+                    </li>
+                    <li className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
+                      <span>Accessory Movement 1</span> <span className="font-medium text-primary text-xs">3x12</span>
+                    </li>
+                    <li className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
+                      <span>Accessory Movement 2</span> <span className="font-medium text-primary text-xs">4x8</span>
+                    </li>
                   </ul>
-                )}
-              </div>
-            )) : (
+                </div>
+              ))
+            ) : Array.isArray(workout.days) && workout.days.length > 0 ? (
+              workout.days.map((day: any, idx: number) => (
+                <div key={idx} className="bg-card border border-border p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                  <h5 className="font-semibold text-primary mb-3 pb-2 border-b border-border text-sm">Day {day.day || idx + 1}: {day.focus}</h5>
+                  {day.isRest ? (
+                    <p className="text-sm text-secondary italic">Rest Day - No workout assigned.</p>
+                  ) : (
+                    <ul className="space-y-2 text-sm text-secondary">
+                      {day.exercises?.map((ex: any, i: number) => (
+                        <li key={i} className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
+                          <span>{ex.name}</span> <span className="font-medium text-primary text-xs">{ex.sets}x{ex.reps}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ))
+            ) : (
               <div className="col-span-full bg-input border border-border rounded-xl p-6 text-center">
                 <Dumbbell className="mx-auto text-primary/40 mb-3" size={32} />
                 <p className="text-lg text-primary font-bold">{workout.name}</p>
