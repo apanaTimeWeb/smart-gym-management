@@ -24,7 +24,7 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
   onSubmit,
   isEditMode = false,
 }) => {
-  if (!isOpen) return null;
+
 
   const { register, handleSubmit, watch, setValue, formState: { errors } } = form;
   const status = watch('status');
@@ -39,6 +39,8 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
 
   const allGymIds = gyms?.map(g => g.id) || [];
   const isAllSelected = allGymIds.length > 0 && targetGymIds.length === allGymIds.length;
+
+  if (!isOpen) return null;
 
   const handleSelectAll = () => {
     if (isAllSelected) {

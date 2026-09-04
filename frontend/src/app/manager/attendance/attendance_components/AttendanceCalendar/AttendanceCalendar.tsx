@@ -13,12 +13,6 @@ export default function AttendanceCalendar() {
   const [history, setHistory] = useState<Attendance[]>([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (calendarUser) {
-      loadHistory(currentDate);
-    }
-  }, [calendarUser, currentDate]);
-
   const loadHistory = async (date: Date) => {
     if (!calendarUser) return;
     setLoading(true);
@@ -34,6 +28,14 @@ export default function AttendanceCalendar() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (calendarUser) {
+      loadHistory(currentDate);
+    }
+  }, [calendarUser, currentDate]);
+
+
 
   if (!calendarUser) return null;
 

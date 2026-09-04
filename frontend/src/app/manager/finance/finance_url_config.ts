@@ -1,11 +1,10 @@
-// RESPONSIBILITY: Provides the implementation for finance_url_config.ts functionality within its module.
 export const FinanceUrlConfig = {
-  PAGES: {
-    LIST: '/admin/finance',
-  },
+  PAGES: { LIST: '/manager/finance' },
   BACKEND_API: {
-    PAYMENTS_BASE: '/admin/finance/payments',
-    SUMMARY: '/admin/finance/summary',
-    PAYMENTS_BY_MEMBER: (memberId: string) => `/admin/finance/payments/member/${memberId}`,
+    BASE: '/manager/finance',
+    PAYMENTS_BASE: '/manager/finance/payments',
+    SUMMARY: '/manager/finance/summary',
+    PAYMENTS_BY_MEMBER: (memberId: string) => `/manager/finance/payments-by-member/${memberId}`
   }
 };
+export const ManagerFinanceUrlConfig = FinanceUrlConfig;

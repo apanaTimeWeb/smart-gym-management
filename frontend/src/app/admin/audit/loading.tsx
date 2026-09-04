@@ -1,0 +1,1 @@
+export default function AdminAuditLoading() { return <div className="p-6 space-y-4"><div className="h-14 bg-card border border-border rounded-xl motion-safe:animate-pulse" /><div className="space-y-2">{Array.from({length:8}).map((_,i) => <div key={i} className="h-12 bg-card border border-border rounded-xl motion-safe:animate-pulse" />)}</div></div>; }

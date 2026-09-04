@@ -2,7 +2,7 @@
 import {
   LayoutDashboard, Users, FileBarChart,
   UserCog, ShoppingBag, Utensils, Dumbbell,
-  MessageSquare, CalendarCheck
+  MessageSquare, CalendarCheck, Receipt
 } from 'lucide-react';
 
 export const MANAGER_NAV_ITEMS = [
@@ -12,6 +12,7 @@ export const MANAGER_NAV_ITEMS = [
  { href: '/manager/attendance', label: 'Attendance', icon: CalendarCheck },
  { href: '/manager/hr', label: 'HR Management', icon: UserCog },
  { href: '/manager/store', label: 'Store', icon: ShoppingBag },
+ { href: '/manager/expenses', label: 'Expenses', icon: Receipt },
  { href: '/manager/library', label: 'Diet Library', icon: Utensils },
  { href: '/manager/workout', label: 'Workout Library', icon: Dumbbell },
  { href: '/manager/inquiries', label: 'Inquiries & Leads',icon: MessageSquare }

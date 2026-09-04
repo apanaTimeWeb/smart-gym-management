@@ -196,6 +196,30 @@ export async function routeMockRequest<T>(
     }
     return MockDB.handleCrud('mock_inquiries', actualMethod, path, parsedBody, [], 'inquiries') as unknown as ApiResponse<T>;
   }
+  if (path.includes('/expenses/stats')) {
+    const expenses = MockDB.getCollection('mock_admin_expenses', []);
+    const totalAmount = expenses.reduce((sum: number, e: any) => sum + (Number(e.amount) || 0), 0);
+    const paidAmount = expenses.filter((e: any) => e.status === 'PAID').reduce((sum: number, e: any) => sum + (Number(e.amount) || 0), 0);
+    const pendingAmount = expenses.filter((e: any) => e.status === 'PENDING').reduce((sum: number, e: any) => sum + (Number(e.amount) || 0), 0);
+    const now = new Date();
+    const thisMonthAmount = expenses.filter((e: any) => {
+      const d = new Date(e.date || e.createdAt);
+      return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+    }).reduce((sum: number, e: any) => sum + (Number(e.amount) || 0), 0);
+    return { success: true, message: 'Stats fetched', data: { totalAmount, paidAmount, pendingAmount, thisMonthAmount } } as unknown as ApiResponse<T>;
+  }
+  if (path.includes('/expenses')) {
+    return MockDB.handleCrud('mock_admin_expenses', method, path, parsedBody, generate(5, i => ({
+      id: `exp-${i}`,
+      title: i === 0 ? 'Electricity Bill' : i === 1 ? 'Rent' : i === 2 ? 'Equipment Repair' : 'Water Bill',
+      category: i === 0 ? 'Electricity' : i === 1 ? 'Rent' : i === 2 ? 'Equipment Maintenance' : 'Miscellaneous',
+      amount: i === 0 ? 15000 : i === 1 ? 50000 : i === 2 ? 5000 : 2000,
+      date: new Date().toISOString(),
+      status: i % 2 === 0 ? 'PAID' : 'PENDING',
+      referenceNo: `REF-${1000 + i}`,
+      notes: 'Mock generated expense'
+    })), 'expenses') as unknown as ApiResponse<T>;
+  }
   if (path.includes('/attendance/history')) {
     const url = new URL(`http://localhost${path}`);
     const userId = url.searchParams.get('userId') || 'mock-user';
@@ -354,7 +378,7 @@ export async function routeMockRequest<T>(
   if (method === 'GET' && path.includes('/finance/payments/member/')) {
     const segments = path.split('?')[0].split('/');
     const memberId = segments[segments.length - 1];
-    let allPayments = MockDB.getCollection('mock_admin_payments', []);
+    const allPayments = MockDB.getCollection('mock_admin_payments', []);
     let memberPayments = allPayments.filter((p: any) => String(p.memberId) === String(memberId));
     
     if (memberPayments.length === 0) {
@@ -380,7 +404,7 @@ export async function routeMockRequest<T>(
       const settings = MockDB.getCollection('mock_admin_settings', [{ gymName: 'Demo Gym Base', ownerName: 'Admin Owner', phone: '9988776655', email: 'admin@gym.com', city: 'Mumbai', gstNumber: '27AAAAA1234A1Z5' }]);
       return { success: true, message: 'Fetched Settings', data: settings[0] } as unknown as ApiResponse<T>;
     } else {
-      let parsed = typeof body === 'string' ? JSON.parse(body) : (body as Record<string, unknown>);
+      const parsed = typeof body === 'string' ? JSON.parse(body) : (body as Record<string, unknown>);
       MockDB.setCollection('mock_admin_settings', [parsed]);
       return { success: true, message: 'Settings Saved', data: parsed } as unknown as ApiResponse<T>;
     }
@@ -520,8 +544,8 @@ export async function routeMockRequest<T>(
       let rawMembers = MockDB.getCollection('mock_members', []);
       let payments = MockDB.getCollection('mock_admin_payments', []);
       let staff = MockDB.getCollection('mock_admin_staff', []);
-      let plans = MockDB.getCollection('mock_admin_plans', []);
-      let inquiries = MockDB.getCollection('mock_inquiries', []);
+      const plans = MockDB.getCollection('mock_admin_plans', []);
+      const inquiries = MockDB.getCollection('mock_inquiries', []);
       
       if (rawMembers.length === 0) {
         rawMembers = generate(15, (i: number) => ({ id: `GS-${15102023000 + i}`, name: `Member ${i + 1}`, email: `member${i + 1}@example.com`, phone: `987654321${i}`, status: i % 4 === 0 ? 'PENDING' : i % 5 === 0 ? 'EXPIRED' : 'ACTIVE', planId: i % 3 === 0 ? 'p1' : i % 2 === 0 ? 'p2' : 'p3', plan: { id: i % 3 === 0 ? 'p1' : i % 2 === 0 ? 'p2' : 'p3', name: i % 3 === 0 ? 'Pro Plan' : i % 2 === 0 ? 'Basic Plan' : 'Elite Plan' }, joinDate: '2023-10-01', expiryDate: '2024-10-01', paidAmount: 5000, pendingAmount: i % 4 === 0 ? 1500 : 0 }));
