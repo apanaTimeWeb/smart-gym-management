@@ -31,7 +31,7 @@ export default function SettingsClient() {
     mutationFn: ({ id, value }: { id: string, value: string }) => superadminApi.settings.updateSetting(id, { value }),
     onSuccess: (res, variables) => {
       toast.success(res.message || 'Setting updated successfully');
-      queryClient.setQueryData(['superadmin', 'settings'], (old: any) => {
+      queryClient.setQueryData(['superadmin', 'settings'], (old: unknown) => {
         if (!old?.data) return old;
         return {
           ...old,
@@ -44,8 +44,8 @@ export default function SettingsClient() {
         return next;
       });
     },
-    onError: (err: any) => {
-      toast.error(err.message || 'Failed to update setting');
+    onError: (err: unknown) => {
+      toast.error((err as Error).message || 'Failed to update setting');
     }
   });
 

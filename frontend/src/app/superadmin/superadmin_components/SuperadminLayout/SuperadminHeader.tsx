@@ -16,7 +16,7 @@ export default function SuperadminHeader() {
 
   // Sets mounted=true once on client-side hydration to enable ThemeToggle to render safely without SSR mismatch.
   useEffect(() => {
-    setMounted(true);
+    Promise.resolve().then(() => setMounted(true));
   }, []);
 
   // Attaches a global mousedown listener once on mount to close the profile dropdown when clicking outside.

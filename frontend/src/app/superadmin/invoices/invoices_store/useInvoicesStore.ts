@@ -49,7 +49,7 @@ export const useInvoicesStore = create<InvoicesState>((set, get) => ({
     }
   },
 
-  logManualPayment: async (data: any) => {
+  logManualPayment: async (data: unknown) => {
     set({ actionLoading: true });
     try {
       // Simulate API call and locally append data to list (TC-25 fix)

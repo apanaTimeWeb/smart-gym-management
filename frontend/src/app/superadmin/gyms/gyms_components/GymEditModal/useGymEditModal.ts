@@ -67,8 +67,8 @@ export function useGymEditModal() {
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'gyms'] });
       closeEditModal();
     },
-    onError: (err: any) => {
-      toast.error(err.message || 'Failed to update gym details.');
+    onError: (err: unknown) => {
+      toast.error((err as Error).message || 'Failed to update gym details.');
     }
   });
 

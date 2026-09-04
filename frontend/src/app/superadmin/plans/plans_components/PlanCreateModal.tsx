@@ -28,7 +28,7 @@ export default function PlanCreateModal() {
   const queryClient = useQueryClient();
 
   const { register, control, handleSubmit, formState: { errors }, reset } = useForm<PlanFormValues>({
-    resolver: zodResolver(planSchema) as any,
+    resolver: zodResolver(planSchema) as unknown,
     defaultValues: {
       name: '', priceMonthly: 0, priceAnnual: 0, maxMembers: 100, maxStaff: 5,
       features: [{ value: 'Core Gym Management' }],
@@ -38,15 +38,15 @@ export default function PlanCreateModal() {
   const { fields, append, remove } = useFieldArray({ control, name: 'features' });
 
   const createMutation = useMutation({
-    mutationFn: (data: any) => superadminApi.plans.createPlan(data),
+    mutationFn: (data: unknown) => superadminApi.plans.createPlan(data),
     onSuccess: (res) => {
       toast.success(res.message || 'Plan created successfully');
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'plans'] });
       reset();
       closeCreateModal();
     },
-    onError: (err: any) => {
-      toast.error(err.message || 'Failed to create plan');
+    onError: (err: unknown) => {
+      toast.error((err as Error).message || 'Failed to create plan');
     }
   });
 

@@ -28,14 +28,14 @@ export default function JobsView() {
   const [selectedJobIds, setSelectedJobIds] = useState<Set<string>>(new Set());
 
   // Modal State
-  const [inspectJob, setInspectJob] = useState<any | null>(null); // cast as any because type may not match fully
+  const [inspectJob, setInspectJob] = useState<unknown | null>(null); // cast as unknown because type may not match fully
 
   const { data: fetchRes, isLoading, isError } = useQuery({
     queryKey: ['superadmin', 'jobs'],
     queryFn: () => superadminApi.jobs.fetchJobs(),
   });
 
-  const rawJobs = (fetchRes?.data as any) ?? []; // Mock response is an array, wait, type is BackgroundJob[]
+  const rawJobs = (fetchRes?.data as unknown) ?? []; // Mock response is an array, wait, type is BackgroundJob[]
   const metrics = {
     activeJobs: 24,
     completed24h: 1205,
@@ -221,7 +221,7 @@ export default function JobsView() {
         )}
       </div>
 
-      <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden flex flex-col min-h-[400px]">
+      <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden flex flex-col min-h-96">
         <div className="overflow-x-auto flex-1">
           <table className="w-full text-left border-collapse min-w-full">
             <thead>

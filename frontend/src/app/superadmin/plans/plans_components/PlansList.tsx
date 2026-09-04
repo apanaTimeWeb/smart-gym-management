@@ -24,8 +24,8 @@ export default function PlansList() {
       toast.success(res.message || 'Plan deleted');
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'plans'] });
     },
-    onError: (err: any) => {
-      toast.error(err.message || 'Failed to delete plan');
+    onError: (err: unknown) => {
+      toast.error((err as Error).message || 'Failed to delete plan');
     }
   });
 

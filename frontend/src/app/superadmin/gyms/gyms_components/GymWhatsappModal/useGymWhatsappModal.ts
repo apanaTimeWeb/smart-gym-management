@@ -76,8 +76,8 @@ export function useGymWhatsappModal() {
       toast.success(res.message || 'WhatsApp opened successfully.');
       closeWhatsappModal();
     },
-    onError: (err: any) => {
-      toast.error(err.message || 'Failed to send WhatsApp message.');
+    onError: (err: unknown) => {
+      toast.error((err as Error).message || 'Failed to send WhatsApp message.');
     }
   });
 

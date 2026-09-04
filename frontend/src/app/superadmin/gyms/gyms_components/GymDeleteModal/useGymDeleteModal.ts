@@ -30,8 +30,8 @@ export function useGymDeleteModal() {
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'gyms'] });
       closeDeleteModal();
     },
-    onError: (err: any) => {
-      toast.error(err.message || 'Failed to delete tenant');
+    onError: (err: unknown) => {
+      toast.error((err as Error).message || 'Failed to delete tenant');
     }
   });
 

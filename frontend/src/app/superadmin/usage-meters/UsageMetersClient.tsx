@@ -8,7 +8,7 @@
 import { useState, useEffect } from 'react';
 import { usageMetersApi } from '@/app/superadmin/usage-meters/usage-meters_api/usage-meters_api';
 import type { UsageMeter } from '@/app/superadmin/usage-meters/usage-meters_types/usage-meters_types';
-import { BarChart2, HardDrive, MessageSquare, Users, Calendar } from 'lucide-react';
+import { HardDrive, MessageSquare, Users, Calendar } from 'lucide-react';
 
 export default function UsageMetersClient() {
   const [meters, setMeters] = useState<UsageMeter[]>([]);
@@ -92,7 +92,7 @@ export default function UsageMetersClient() {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {meters.map(meter => {
           const dbGb = meter.databaseGb || 0;
-          const mediaGb = meter.mediaGb || (meter as any).storageGb || 0;
+          const mediaGb = meter.mediaGb || (meter as Record<string, unknown>).storageGb || 0;
           const totalStorage = dbGb + mediaGb;
 
           return (

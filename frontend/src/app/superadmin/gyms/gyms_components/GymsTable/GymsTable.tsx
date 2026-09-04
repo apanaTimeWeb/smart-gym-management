@@ -44,7 +44,7 @@ export default function GymsTable() {
   const paginatedGyms = filteredGyms.slice((currentPage - 1) * GYMS_TABLE_PAGE_SIZE, currentPage * GYMS_TABLE_PAGE_SIZE);
 
   return (
-    <div className="overflow-x-auto flex flex-col min-h-[400px]">
+    <div className="overflow-x-auto flex flex-col min-h-96">
       <table className="w-full text-left border-collapse flex-1">
         <thead>
           <tr className="bg-primary/10 border-b border-border text-secondary text-sm">

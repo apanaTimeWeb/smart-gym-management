@@ -21,11 +21,11 @@ export default function FeaturesClient() {
     try {
       const res = await featuresApi.createNote({ ...noteForm, isPublished: true, date: new Date().toISOString() });
       if (res.data) {
-        setData((prev: any) => prev ? { ...prev, notes: [res.data, ...prev.notes] } : prev);
+        setData((prev: unknown) => prev ? { ...prev, notes: [res.data, ...prev.notes] } : prev);
         setNoteForm({ version: '', title: '', content: '' });
         toast.success('Release note published successfully');
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast.error('Failed to publish release note');
     } finally {
       setIsPublishing(false);

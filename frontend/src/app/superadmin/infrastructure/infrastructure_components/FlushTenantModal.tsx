@@ -23,7 +23,7 @@ export default function FlushTenantModal({ isOpen, onClose, onFlush }: FlushTena
     enabled: isOpen,
   });
 
-  const gyms = (fetchRes?.data as any) ?? [];
+  const gyms = (fetchRes?.data as unknown) ?? [];
 
   useEffect(() => {
     if (!isOpen) {

@@ -47,8 +47,9 @@ export function useGymsTable() {
         toast.error(res.message || 'Failed to impersonate tenant');
       }
     },
-    onError: (err: any) => {
-      toast.error(err.message || 'Failed to impersonate tenant');
+    onError: (err: unknown) => {
+      const error = err as Error;
+      toast.error(error.message || 'Failed to impersonate tenant');
     },
   });
 
@@ -58,8 +59,9 @@ export function useGymsTable() {
       toast.success(res.message || 'Status updated successfully.');
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'gyms'] });
     },
-    onError: (err: any) => {
-      toast.error(err.message || 'Failed to update status');
+    onError: (err: unknown) => {
+      const error = err as Error;
+      toast.error(error.message || 'Failed to update status');
     },
   });
 

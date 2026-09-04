@@ -27,7 +27,7 @@ export default function SuperadminDashboardView() {
     queryFn: () => superadminApi.dashboard.fetchDashboardData(),
   });
 
-  const data = fetchRes?.data as any; // Cast as any because the type from api is slightly different in the dummy response
+  const data = fetchRes?.data as unknown; // Cast as unknown because the type from api is slightly different in the dummy response
 
   if (isLoading) {
     return (
@@ -181,7 +181,7 @@ export default function SuperadminDashboardView() {
         <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
           <h2 className="text-base font-semibold text-foreground mb-6">Recent Onboards</h2>
           <div className="space-y-4">
-            {DUMMY_DASHBOARD_METRICS.recentOnboards.map((tenant: any) => (
+            {DUMMY_DASHBOARD_METRICS.recentOnboards.map((tenant: unknown) => (
               <div key={tenant.id} className="flex items-center justify-between p-4 bg-background rounded-lg border border-border hover:bg-input motion-safe:transition-colors motion-safe:duration-200 cursor-default">
                 <div>
                   <h3 className="text-sm font-semibold text-foreground truncate max-w-32" title={tenant.name}>{tenant.name}</h3>

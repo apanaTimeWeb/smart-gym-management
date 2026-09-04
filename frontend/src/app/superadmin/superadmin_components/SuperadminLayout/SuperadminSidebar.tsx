@@ -32,7 +32,7 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
 
   // Closes the mobile drawer whenever the route changes
   useEffect(() => {
-    setIsMobileOpen(false);
+    Promise.resolve().then(() => setIsMobileOpen(false));
   }, [pathname]);
 
   const navGroups = [

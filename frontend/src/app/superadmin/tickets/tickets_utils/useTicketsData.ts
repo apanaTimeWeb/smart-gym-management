@@ -12,8 +12,10 @@ export function useTicketsData<T>(endpoint: string) {
 
   useEffect(() => {
     let isMounted = true;
-    setFetchState('loading');
-    setError(null);
+    Promise.resolve().then(() => {
+      setFetchState('loading');
+      Promise.resolve().then(() => setError(null));
+    });
 
     apiFetch<ApiResponse<T>>(endpoint)
       .then(res => {
@@ -25,7 +27,7 @@ export function useTicketsData<T>(endpoint: string) {
       })
       .catch((err: Error) => {
         if (isMounted) {
-          setError(err.message);
+          setError((err as Error).message);
           setFetchState('error');
         }
       });

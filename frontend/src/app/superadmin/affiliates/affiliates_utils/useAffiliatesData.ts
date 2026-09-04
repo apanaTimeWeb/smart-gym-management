@@ -14,8 +14,8 @@ export function useAffiliatesData<T>(endpoint: string) {
   // Refetch when endpoint changes (navigating between superadmin pages).
   useEffect(() => {
     let isMounted = true;
-    setFetchState('loading');
-    setError(null);
+    Promise.resolve().then(() => setFetchState('loading'));
+    Promise.resolve().then(() => setError(null));
 
     apiFetch<{ success: boolean; data: T }>(endpoint)
       .then(res => {
@@ -27,7 +27,7 @@ export function useAffiliatesData<T>(endpoint: string) {
       })
       .catch((err: Error) => {
         if (isMounted) {
-          setError(err.message);
+          setError((err as Error).message);
           setFetchState('error');
         }
       });

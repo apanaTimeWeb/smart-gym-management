@@ -30,7 +30,7 @@ export default function PlanEditModal() {
   const queryClient = useQueryClient();
 
   const { register, control, handleSubmit, formState: { errors }, reset } = useForm<PlanFormValues>({
-    resolver: zodResolver(planSchema) as any,
+    resolver: zodResolver(planSchema) as unknown,
   });
 
   const { fields, append, remove } = useFieldArray({ control, name: 'features' });
@@ -52,14 +52,14 @@ export default function PlanEditModal() {
   }, [selectedPlan, isOpen, reset]);
 
   const editMutation = useMutation({
-    mutationFn: (data: any) => superadminApi.plans.updatePlan(selectedPlan!.id, data),
+    mutationFn: (data: unknown) => superadminApi.plans.updatePlan(selectedPlan!.id, data),
     onSuccess: (res) => {
       toast.success(res.message || 'Plan updated successfully');
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'plans'] });
       closeEditModal();
     },
-    onError: (err: any) => {
-      toast.error(err.message || 'Failed to update plan');
+    onError: (err: unknown) => {
+      toast.error((err as Error).message || 'Failed to update plan');
     }
   });
 

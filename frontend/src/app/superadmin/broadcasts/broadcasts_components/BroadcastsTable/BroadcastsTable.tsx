@@ -16,7 +16,7 @@ export default function BroadcastsTable({ broadcasts, onSend, onEdit, onDelete, 
   const paginatedBroadcasts = broadcasts.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   return (
-    <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm flex flex-col min-h-[400px]">
+    <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm flex flex-col min-h-96">
       <div className="overflow-x-auto flex-1">
         <table className="w-full text-left border-collapse">
           <thead>

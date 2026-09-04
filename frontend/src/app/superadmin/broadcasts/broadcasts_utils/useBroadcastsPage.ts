@@ -55,7 +55,7 @@ export const useBroadcastsPage = () => {
     queryFn: () => superadminApi.gyms.fetchGyms(),
   });
 
-  const gyms = (fetchRes?.data as any) ?? [];
+  const gyms = (fetchRes?.data as unknown) ?? [];
 
   const form = useForm<BroadcastFormData>({
     resolver: zodResolver(BroadcastSchema),

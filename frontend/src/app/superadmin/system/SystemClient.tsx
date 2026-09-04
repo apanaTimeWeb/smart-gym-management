@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Renders the System & Audit page showing migration health and global audit logs. Fetches data directly using TanStack Query.
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Database, ShieldAlert, Activity, Filter, RefreshCcw, Search, Loader2 } from 'lucide-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
@@ -14,6 +14,13 @@ const CURRENT_SCHEMA_VERSION = 'v2.4.1';
 interface TenantWithVersion extends Tenant {
   databaseVersion: string;
 }
+
+const FALLBACK_LOGS = [
+  { id: '1', timestamp: new Date().toISOString(), targetResource: 'Subscription Plan', actorName: 'Superadmin', actorRole: 'GOD MODE', action: 'CREATE' },
+  { id: '2', timestamp: new Date(Date.now() - 3600000).toISOString(), targetResource: 'Gym: t-2', actorName: 'System', actorRole: 'CRON', action: 'BACKUP_DB' },
+  { id: '3', timestamp: new Date(Date.now() - 7200000).toISOString(), targetResource: 'Coupon: SUMMER50', actorName: 'Superadmin', actorRole: 'GOD MODE', action: 'UPDATE' },
+  { id: '4', timestamp: new Date(Date.now() - 86400000).toISOString(), targetResource: 'User: admin@gym.com', actorName: 'Superadmin', actorRole: 'GOD MODE', action: 'RESET_PASSWORD' }
+] as unknown[];
 
 export default function SystemClient() {
   const [logSearch, setLogSearch] = useState('');
@@ -36,12 +43,8 @@ export default function SystemClient() {
   const tenants = (migrationsRes?.data?.tenants ?? []) as TenantWithVersion[];
   
   const rawLogs = auditRes?.data ?? [];
-  const finalLogs = rawLogs.length > 0 ? rawLogs : [
-    { id: '1', timestamp: new Date().toISOString(), targetResource: 'Subscription Plan', actorName: 'Superadmin', actorRole: 'GOD MODE', action: 'CREATE' },
-    { id: '2', timestamp: new Date(Date.now() - 3600000).toISOString(), targetResource: 'Gym: t-2', actorName: 'System', actorRole: 'CRON', action: 'BACKUP_DB' },
-    { id: '3', timestamp: new Date(Date.now() - 7200000).toISOString(), targetResource: 'Coupon: SUMMER50', actorName: 'Superadmin', actorRole: 'GOD MODE', action: 'UPDATE' },
-    { id: '4', timestamp: new Date(Date.now() - 86400000).toISOString(), targetResource: 'User: admin@gym.com', actorName: 'Superadmin', actorRole: 'GOD MODE', action: 'RESET_PASSWORD' }
-  ] as any[];
+  const hasLogs = rawLogs.length > 0;
+  const finalLogs = useMemo(() => hasLogs ? rawLogs : FALLBACK_LOGS, [hasLogs, rawLogs]);
 
   const handleRunMigration = async (tenantId: string) => {
     setMigratingTenants(prev => ({ ...prev, [tenantId]: true }));
@@ -49,7 +52,7 @@ export default function SystemClient() {
       // Simulate API call for migration
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      queryClient.setQueryData(['superadmin', 'migrations'], (old: any) => {
+      queryClient.setQueryData(['superadmin', 'migrations'], (old: unknown) => {
         if (!old?.data?.tenants) return old;
         return {
           ...old,
@@ -167,7 +170,7 @@ export default function SystemClient() {
           </div>
         </div>
 
-        <div className="bg-card border border-border rounded-xl overflow-hidden flex flex-col min-h-[400px]">
+        <div className="bg-card border border-border rounded-xl overflow-hidden flex flex-col min-h-96">
           <div className="overflow-x-auto flex-1">
             <table className="w-full text-left border-collapse">
               <thead>
