@@ -6,7 +6,10 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { X, Plus, Trash2, Loader2 } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { usePlansStore } from '@/app/superadmin/plans/plans_store/usePlansStore';
+import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 
 const planSchema = z.object({
   name: z.string().min(1, 'Plan Name is required'),
@@ -23,9 +26,8 @@ export default function PlanEditModal() {
   const isOpen = usePlansStore(state => state.isEditModalOpen);
   const closeEditModal = usePlansStore(state => state.closeEditModal);
   const selectedPlan = usePlansStore(state => state.selectedPlan);
-  const handleUpdatePlan = usePlansStore(state => state.handleUpdatePlan);
-  const actionLoadingId = usePlansStore(state => state.actionLoadingId);
-  const isSubmitting = selectedPlan ? actionLoadingId === selectedPlan.id : false;
+
+  const queryClient = useQueryClient();
 
   const { register, control, handleSubmit, formState: { errors }, reset } = useForm<PlanFormValues>({
     resolver: zodResolver(planSchema) as any,
@@ -49,10 +51,24 @@ export default function PlanEditModal() {
     }
   }, [selectedPlan, isOpen, reset]);
 
+  const editMutation = useMutation({
+    mutationFn: (data: any) => superadminApi.plans.updatePlan(selectedPlan!.id, data),
+    onSuccess: (res) => {
+      toast.success(res.message || 'Plan updated successfully');
+      queryClient.invalidateQueries({ queryKey: ['superadmin', 'plans'] });
+      closeEditModal();
+    },
+    onError: (err: any) => {
+      toast.error(err.message || 'Failed to update plan');
+    }
+  });
+
+  const isSubmitting = editMutation.isPending;
+
   if (!isOpen || !selectedPlan) return null;
 
   const onSubmit = async (data: PlanFormValues) => {
-    await handleUpdatePlan(selectedPlan.id, { ...data, features: data.features.map(f => f.value) });
+    editMutation.mutate({ ...data, features: data.features.map(f => f.value) });
   };
 
   return (

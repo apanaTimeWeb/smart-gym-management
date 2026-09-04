@@ -4,7 +4,8 @@
 import { Users, Building2, CreditCard, Activity } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
-import { useDashboardData } from '@/app/superadmin/dashboard/dashboard_utils/useDashboardData';
+import { useQuery } from '@tanstack/react-query';
+import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { CHART_COLORS } from '@/app/superadmin/superadmin_utils/SuperadminChartConstants';
 import type { SaaSDashboardMetrics, RevenueChartData, GrowthChartData, TimeRange } from '@/app/superadmin/dashboard/dashboard_types/dashboard_types';
@@ -20,9 +21,15 @@ export default function SuperadminDashboardView() {
     setStartDate(start);
     setEndDate(end);
   };
-  const { data, fetchState, error } = useDashboardData<{ metrics: SaaSDashboardMetrics, revenue: RevenueChartData[], growth: GrowthChartData[] }>(SuperadminUrlConfig.BACKEND_API.DASHBOARD_BASE);
+  
+  const { data: fetchRes, isLoading, isError } = useQuery({
+    queryKey: ['superadmin', 'dashboard'],
+    queryFn: () => superadminApi.dashboard.fetchDashboardData(),
+  });
 
-  if (fetchState === 'loading') {
+  const data = fetchRes?.data as any; // Cast as any because the type from api is slightly different in the dummy response
+
+  if (isLoading) {
     return (
       <div className="space-y-6">
         <div>
@@ -42,7 +49,7 @@ export default function SuperadminDashboardView() {
     );
   }
 
-  if (error || !data) return <div className="p-8 text-center text-danger font-medium">Error loading data.</div>;
+  if (isError || !data) return <div className="p-8 text-center text-danger font-medium">Error loading data.</div>;
 
   const { metrics: DUMMY_DASHBOARD_METRICS, revenue: REVENUE_CHART_DATA } = data;
 
@@ -75,7 +82,7 @@ export default function SuperadminDashboardView() {
     dataLabels: { enabled: false },
     stroke: { curve: 'smooth' as const, width: 2 },
     xaxis: {
-      categories: REVENUE_CHART_DATA.map(d => d.month),
+      categories: REVENUE_CHART_DATA.map((d: RevenueChartData) => d.month),
       axisBorder: { show: false },
       axisTicks: { show: false },
       labels: { style: { colors: CHART_COLORS.TEXT_SECONDARY } }
@@ -98,7 +105,7 @@ export default function SuperadminDashboardView() {
 
   const chartSeries = [{
     name: mrrLabel,
-    data: REVENUE_CHART_DATA.map(d => Math.round(d.mrr * timeMultiplier))
+    data: REVENUE_CHART_DATA.map((d: RevenueChartData) => Math.round(d.mrr * timeMultiplier))
   }];
 
   return (
@@ -174,7 +181,7 @@ export default function SuperadminDashboardView() {
         <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
           <h2 className="text-base font-semibold text-foreground mb-6">Recent Onboards</h2>
           <div className="space-y-4">
-            {DUMMY_DASHBOARD_METRICS.recentOnboards.map((tenant) => (
+            {DUMMY_DASHBOARD_METRICS.recentOnboards.map((tenant: any) => (
               <div key={tenant.id} className="flex items-center justify-between p-4 bg-background rounded-lg border border-border hover:bg-input motion-safe:transition-colors motion-safe:duration-200 cursor-default">
                 <div>
                   <h3 className="text-sm font-semibold text-foreground truncate max-w-32" title={tenant.name}>{tenant.name}</h3>

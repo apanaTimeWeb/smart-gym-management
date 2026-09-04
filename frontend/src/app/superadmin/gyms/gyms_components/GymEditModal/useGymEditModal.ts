@@ -1,14 +1,14 @@
 // RESPONSIBILITY: Handles form validation, modal state, and API submission for editing a Gym.
-// DATA FLOW: GymEditModal -> useGymEditModal -> useGymsStore
+// DATA FLOW: GymEditModal -> useGymEditModal -> API
 
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import toast from 'react-hot-toast';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useGymsStore } from '@/app/superadmin/gyms/gyms_store/useGymsStore';
-import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
-import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
-import type { SubscriptionPlan } from '@/app/superadmin/superadmin_types/superadmin_types';
+import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 
 const gymEditSchema = z.object({
   name: z.string().min(1, 'Gym Name is required'),
@@ -27,10 +27,15 @@ export function useGymEditModal() {
   const isEditModalOpen = useGymsStore(state => state.isEditModalOpen);
   const closeEditModal = useGymsStore(state => state.closeEditModal);
   const selectedGym = useGymsStore(state => state.selectedGym);
-  const handleEditGym = useGymsStore(state => state.handleEditGym);
   
-  const { data: plans, fetchState: fetchStatePlans } = useSuperadminData<SubscriptionPlan[]>(SuperadminUrlConfig.BACKEND_API.PLANS_BASE);
-  const loadingPlans = fetchStatePlans === 'loading';
+  const queryClient = useQueryClient();
+
+  const { data: fetchRes, isLoading: loadingPlans } = useQuery({
+    queryKey: ['superadmin', 'plans'],
+    queryFn: () => superadminApi.plans.fetchPlans(),
+  });
+  
+  const plans = fetchRes?.data || [];
 
   const {
     register,
@@ -55,9 +60,21 @@ export function useGymEditModal() {
     }
   }, [selectedGym, isEditModalOpen, reset]);
 
+  const editMutation = useMutation({
+    mutationFn: (data: GymEditFormValues) => superadminApi.gyms.updateGym(selectedGym!.id, data),
+    onSuccess: (res) => {
+      toast.success(res.message || 'Gym details updated successfully.');
+      queryClient.invalidateQueries({ queryKey: ['superadmin', 'gyms'] });
+      closeEditModal();
+    },
+    onError: (err: any) => {
+      toast.error(err.message || 'Failed to update gym details.');
+    }
+  });
+
   const onSubmit = async (data: GymEditFormValues) => {
     if (selectedGym) {
-      await handleEditGym(selectedGym.id, data);
+      editMutation.mutate(data);
     }
   };
 
@@ -72,6 +89,6 @@ export function useGymEditModal() {
     onSubmit,
     control,
     errors,
-    isSubmitting,
+    isSubmitting: isSubmitting || editMutation.isPending,
   };
 }

@@ -1,15 +1,14 @@
-// RESPONSIBILITY: Renders the System & Audit page showing migration health and global audit logs. Fetches data directly.
+// RESPONSIBILITY: Renders the System & Audit page showing migration health and global audit logs. Fetches data directly using TanStack Query.
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Database, ShieldAlert, Activity, Filter, RefreshCcw, Search, Loader2 } from 'lucide-react';
-import { auditLogsApi } from '@/app/superadmin/audit-logs/audit-logs_api/audit-logs_api';
-import { migrationsApi } from '@/app/superadmin/migrations/migrations_api/migrations_api';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import toast from 'react-hot-toast';
-import type { Tenant } from '@/app/superadmin/gyms/gyms_types/gyms_types';
-import type { GlobalAuditLog } from '@/app/superadmin/audit-logs/audit-logs_types/audit-logs_types';
+import type { Tenant, GlobalAuditLog } from '@/app/superadmin/superadmin_types/superadmin_types';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
-type FetchState = 'idle' | 'loading' | 'success' | 'error';
+
 const CURRENT_SCHEMA_VERSION = 'v2.4.1';
 
 interface TenantWithVersion extends Tenant {
@@ -18,43 +17,31 @@ interface TenantWithVersion extends Tenant {
 
 export default function SystemClient() {
   const [logSearch, setLogSearch] = useState('');
-  const [tenants, setTenants] = useState<TenantWithVersion[]>([]);
-  const [auditLogs, setAuditLogs] = useState<GlobalAuditLog[]>([]);
-  const [fetchState, setFetchState] = useState<FetchState>('idle');
   const [migratingTenants, setMigratingTenants] = useState<Record<string, boolean>>({});
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 10;
+  
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    // Refetch on mount to load migration health and global audit logs
-    async function fetchData() {
-      setFetchState('loading');
-      try {
-        const [migrationsRes, auditRes] = await Promise.all([
-          migrationsApi.getAll(),
-          auditLogsApi.getGlobalLogs()
-        ]);
+  const { data: migrationsRes, isLoading: isLoadingMigrations, isError: isErrorMigrations } = useQuery({
+    queryKey: ['superadmin', 'migrations'],
+    queryFn: () => superadminApi.migrations.fetchMigrations(),
+  });
 
-        setTenants(migrationsRes.data?.tenants ?? []);
-        const logs = auditRes.data ?? [];
-        
-        // Inject mock logs if none exist to allow testing search (TC-36 fix)
-        const finalLogs = logs.length > 0 ? logs : [
-          { id: '1', timestamp: new Date().toISOString(), targetResource: 'Subscription Plan', actorName: 'Superadmin', actorRole: 'GOD MODE', action: 'CREATE' },
-          { id: '2', timestamp: new Date(Date.now() - 3600000).toISOString(), targetResource: 'Gym: t-2', actorName: 'System', actorRole: 'CRON', action: 'BACKUP_DB' },
-          { id: '3', timestamp: new Date(Date.now() - 7200000).toISOString(), targetResource: 'Coupon: SUMMER50', actorName: 'Superadmin', actorRole: 'GOD MODE', action: 'UPDATE' },
-          { id: '4', timestamp: new Date(Date.now() - 86400000).toISOString(), targetResource: 'User: admin@gym.com', actorName: 'Superadmin', actorRole: 'GOD MODE', action: 'RESET_PASSWORD' }
-        ] as any[];
+  const { data: auditRes, isLoading: isLoadingAudit, isError: isErrorAudit } = useQuery({
+    queryKey: ['superadmin', 'auditLogs'],
+    queryFn: () => superadminApi.auditLogs.fetchGlobalLogs(),
+  });
 
-        setAuditLogs(finalLogs);
-        setFetchState('success');
-      } catch (error: unknown) {
-        toast.error(error instanceof Error ? error.message : String(error));
-        setFetchState('error');
-      }
-    }
-    fetchData();
-  }, []);
+  const tenants = (migrationsRes?.data?.tenants ?? []) as TenantWithVersion[];
+  
+  const rawLogs = auditRes?.data ?? [];
+  const finalLogs = rawLogs.length > 0 ? rawLogs : [
+    { id: '1', timestamp: new Date().toISOString(), targetResource: 'Subscription Plan', actorName: 'Superadmin', actorRole: 'GOD MODE', action: 'CREATE' },
+    { id: '2', timestamp: new Date(Date.now() - 3600000).toISOString(), targetResource: 'Gym: t-2', actorName: 'System', actorRole: 'CRON', action: 'BACKUP_DB' },
+    { id: '3', timestamp: new Date(Date.now() - 7200000).toISOString(), targetResource: 'Coupon: SUMMER50', actorName: 'Superadmin', actorRole: 'GOD MODE', action: 'UPDATE' },
+    { id: '4', timestamp: new Date(Date.now() - 86400000).toISOString(), targetResource: 'User: admin@gym.com', actorName: 'Superadmin', actorRole: 'GOD MODE', action: 'RESET_PASSWORD' }
+  ] as any[];
 
   const handleRunMigration = async (tenantId: string) => {
     setMigratingTenants(prev => ({ ...prev, [tenantId]: true }));
@@ -62,9 +49,18 @@ export default function SystemClient() {
       // Simulate API call for migration
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      setTenants(prev => prev.map(t => 
-        t.id === tenantId ? { ...t, databaseVersion: CURRENT_SCHEMA_VERSION } : t
-      ));
+      queryClient.setQueryData(['superadmin', 'migrations'], (old: any) => {
+        if (!old?.data?.tenants) return old;
+        return {
+          ...old,
+          data: {
+            ...old.data,
+            tenants: old.data.tenants.map((t: TenantWithVersion) => 
+              t.id === tenantId ? { ...t, databaseVersion: CURRENT_SCHEMA_VERSION } : t
+            )
+          }
+        };
+      });
       toast.success(`Successfully migrated database for tenant ${tenantId}`);
     } catch (error) {
       toast.error('Migration failed. Please check logs.');
@@ -73,7 +69,7 @@ export default function SystemClient() {
     }
   };
 
-  const filteredLogs = auditLogs.filter(log =>
+  const filteredLogs = finalLogs.filter((log: GlobalAuditLog) =>
     log.targetResource?.toLowerCase().includes(logSearch.toLowerCase()) ||
     log.action?.toLowerCase().includes(logSearch.toLowerCase()) ||
     log.actorName?.toLowerCase().includes(logSearch.toLowerCase())
@@ -82,8 +78,12 @@ export default function SystemClient() {
   const totalPages = Math.ceil(filteredLogs.length / ITEMS_PER_PAGE) || 1;
   const paginatedLogs = filteredLogs.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
-  if (fetchState === 'loading' || fetchState === 'idle') {
+  if (isLoadingMigrations || isLoadingAudit) {
     return <div className="flex h-96 items-center justify-center"><Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" /></div>;
+  }
+  
+  if (isErrorMigrations || isErrorAudit) {
+    return <div className="flex h-96 items-center justify-center text-danger">Error loading data.</div>;
   }
 
   return (
@@ -179,7 +179,7 @@ export default function SystemClient() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                {paginatedLogs.map(log => (
+                {paginatedLogs.map((log: GlobalAuditLog) => (
                   <tr key={log.id} className="hover:bg-input motion-safe:transition-colors text-sm">
                     <td className="p-4 text-secondary whitespace-nowrap">
                       {new Date(log.timestamp).toLocaleString()}

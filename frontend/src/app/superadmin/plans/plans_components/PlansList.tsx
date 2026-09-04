@@ -1,17 +1,37 @@
-// RESPONSIBILITY: Renders the grid of subscription plan cards. Reads from usePlansStore. No API calls.
+// RESPONSIBILITY: Renders the grid of subscription plan cards using TanStack Query.
+// DATA FLOW: superadminApi -> useQuery -> PlansList
+
 'use client';
 
 import { Check, Edit2, Trash2, Loader2 } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import { usePlansStore } from '@/app/superadmin/plans/plans_store/usePlansStore';
 
 export default function PlansList() {
-  const plans = usePlansStore(state => state.plans);
-  const fetchState = usePlansStore(state => state.fetchState);
-  const actionLoadingId = usePlansStore(state => state.actionLoadingId);
   const openEditModal = usePlansStore(state => state.openEditModal);
-  const handleDeletePlan = usePlansStore(state => state.handleDeletePlan);
+  const queryClient = useQueryClient();
 
-  if (fetchState === 'loading' || fetchState === 'idle') {
+  const { data: fetchRes, isLoading, isError } = useQuery({
+    queryKey: ['superadmin', 'plans'],
+    queryFn: () => superadminApi.plans.fetchPlans(),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => superadminApi.plans.deletePlan(id),
+    onSuccess: (res) => {
+      toast.success(res.message || 'Plan deleted');
+      queryClient.invalidateQueries({ queryKey: ['superadmin', 'plans'] });
+    },
+    onError: (err: any) => {
+      toast.error(err.message || 'Failed to delete plan');
+    }
+  });
+
+  const plans = fetchRes?.data || [];
+
+  if (isLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[...Array(3)].map((_, i) => (
@@ -21,14 +41,14 @@ export default function PlansList() {
     );
   }
 
-  if (fetchState === 'error') {
+  if (isError) {
     return <div className="p-8 text-center text-danger">Error loading plans.</div>;
   }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {plans.map((plan) => {
-        const isDeleting = actionLoadingId === plan.id;
+        const isDeleting = deleteMutation.isPending && deleteMutation.variables === plan.id;
         return (
           <div
             key={plan.id}
@@ -66,7 +86,7 @@ export default function PlansList() {
             <div className="flex gap-2">
               <button
                 onClick={() => openEditModal(plan)}
-                disabled={isDeleting}
+                disabled={isDeleting || deleteMutation.isPending}
                 aria-label={`Edit ${plan.name}`}
                 className="flex-1 py-2.5 flex items-center justify-center bg-input hover:bg-primary hover:text-white text-foreground rounded-xl motion-safe:transition-colors border border-border disabled:opacity-50"
               >
@@ -75,10 +95,10 @@ export default function PlansList() {
               <button
                 onClick={() => {
                   if (window.confirm(`Are you sure you want to delete the plan "${plan.name}"? This action cannot be undone.`)) {
-                    handleDeletePlan(plan.id);
+                    deleteMutation.mutate(plan.id);
                   }
                 }}
-                disabled={isDeleting}
+                disabled={isDeleting || deleteMutation.isPending}
                 aria-label={`Delete ${plan.name}`}
                 className="flex-1 py-2.5 flex items-center justify-center bg-input hover:bg-danger hover:text-white text-secondary rounded-xl motion-safe:transition-colors border border-border disabled:opacity-50"
               >

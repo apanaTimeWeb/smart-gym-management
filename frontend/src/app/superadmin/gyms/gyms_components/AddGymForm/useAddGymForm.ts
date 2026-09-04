@@ -136,8 +136,10 @@ export function useAddGymForm() {
         createdAt: new Date().toISOString(),
       } as unknown as Tenant;
 
-      import('@/app/superadmin/gyms/gyms_store/useGymsStore').then(({ useGymsStore }) => {
-        useGymsStore.getState().addGym(newGym);
+      // Invalidate queries to fetch new data on navigation
+      import('@tanstack/react-query').then(({ QueryClient }) => {
+         const queryClient = new QueryClient();
+         queryClient.invalidateQueries({ queryKey: ['superadmin', 'gyms'] });
       });
 
       addLog('Provisioning complete! Redirecting...');

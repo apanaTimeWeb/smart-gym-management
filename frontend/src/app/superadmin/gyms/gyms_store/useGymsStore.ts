@@ -1,18 +1,56 @@
-/**
- * RESPONSIBILITY: Zustand store that manages all async data, UI state (modals, search), and actions for the Gyms module.
- * DATA FLOW: API (superadminApi) <-> useGymsStore.ts <-> UI Components (GymsTable, GymEditModal, etc.)
- * 
- * Split into slices (gyms_ui_slice and gyms_data_slice) to comply with the 180-line maximum rule.
- */
+// RESPONSIBILITY: Zustand store that manages UI state (modals, search) for the Gyms module.
+// DATA FLOW: Component -> useGymsStore.ts -> UI Components
 
-// DATA FLOW: Component -> useGymsStore.ts -> API/Store
 import { create } from 'zustand';
-import { GymsUISlice, createGymsUISlice } from '@/app/superadmin/gyms/gyms_store/gyms_ui_slice';
-import { GymsDataSlice, createGymsDataSlice } from '@/app/superadmin/gyms/gyms_store/gyms_data_slice';
+import type { Tenant } from '@/app/superadmin/gyms/gyms_types/gyms_types';
 
-export type GymsState = GymsUISlice & GymsDataSlice;
+export interface GymsState {
+  // UI State
+  search: string;
+  selectedGym: Tenant | null;
+  isEditModalOpen: boolean;
+  isWhatsappModalOpen: boolean;
+  isDeleteModalOpen: boolean;
+  gymToDelete: Tenant | null;
 
-export const useGymsStore = create<GymsState>((...a) => ({
-  ...createGymsUISlice(...a),
-  ...createGymsDataSlice(...a),
+  // Actions
+  setSearch: (search: string) => void;
+  openEditModal: (gym: Tenant) => void;
+  closeEditModal: () => void;
+  openWhatsappModal: (gym: Tenant) => void;
+  closeWhatsappModal: () => void;
+  openDeleteModal: (gym: Tenant) => void;
+  closeDeleteModal: () => void;
+}
+
+export const useGymsStore = create<GymsState>((set) => ({
+  search: '',
+  selectedGym: null,
+  isEditModalOpen: false,
+  isWhatsappModalOpen: false,
+  isDeleteModalOpen: false,
+  gymToDelete: null,
+
+  setSearch: (search) => set({ search }),
+  
+  openEditModal: (gym) => set({ selectedGym: gym, isEditModalOpen: true }),
+  
+  closeEditModal: () => {
+    set({ isEditModalOpen: false });
+    setTimeout(() => set({ selectedGym: null }), 200);
+  },
+
+  openWhatsappModal: (gym) => set({ selectedGym: gym, isWhatsappModalOpen: true }),
+  
+  closeWhatsappModal: () => {
+    set({ isWhatsappModalOpen: false });
+    setTimeout(() => set({ selectedGym: null }), 200);
+  },
+
+  openDeleteModal: (gym) => set({ gymToDelete: gym, isDeleteModalOpen: true }),
+  
+  closeDeleteModal: () => {
+    set({ isDeleteModalOpen: false });
+    setTimeout(() => set({ gymToDelete: null }), 200);
+  },
 }));

@@ -1,8 +1,10 @@
 'use client';
-// RESPONSIBILITY: Renders the FlushTenantModal component.
+// RESPONSIBILITY: Renders the FlushTenantModal component using TanStack Query.
 import React, { useState, useEffect } from 'react';
 import { X, Loader2, Search } from 'lucide-react';
-import { useGymsStore } from '@/app/superadmin/gyms/gyms_store/useGymsStore';
+import { useQuery } from '@tanstack/react-query';
+import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
+import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 interface FlushTenantModalProps {
   isOpen: boolean;
@@ -11,16 +13,17 @@ interface FlushTenantModalProps {
 }
 
 export default function FlushTenantModal({ isOpen, onClose, onFlush }: FlushTenantModalProps) {
-  const { gyms, fetchState, fetchGyms } = useGymsStore();
   const [search, setSearch] = useState('');
   const [selectedTenantIds, setSelectedTenantIds] = useState<string[]>([]);
   const [isFlushing, setIsFlushing] = useState(false);
 
-  useEffect(() => {
-    if (isOpen && (!gyms || gyms.length === 0)) {
-      fetchGyms();
-    }
-  }, [isOpen, gyms, fetchGyms]);
+  const { data: fetchRes, isLoading: fetchStateLoading } = useQuery({
+    queryKey: ['superadmin', 'gyms'],
+    queryFn: () => superadminApi.gyms.fetchGyms(),
+    enabled: isOpen,
+  });
+
+  const gyms = (fetchRes?.data as any) ?? [];
 
   useEffect(() => {
     if (!isOpen) {
@@ -31,7 +34,7 @@ export default function FlushTenantModal({ isOpen, onClose, onFlush }: FlushTena
 
   if (!isOpen) return null;
 
-  const filteredGyms = gyms?.filter(g => g.name.toLowerCase().includes(search.toLowerCase()) || g.id.includes(search)) || [];
+  const filteredGyms = gyms?.filter((g: Tenant) => g.name.toLowerCase().includes(search.toLowerCase()) || g.id.includes(search)) || [];
 
   const handleFlush = async () => {
     if (selectedTenantIds.length === 0) return;
@@ -76,7 +79,7 @@ export default function FlushTenantModal({ isOpen, onClose, onFlush }: FlushTena
             <span className="text-sm font-semibold text-secondary">Found {filteredGyms.length} tenants</span>
             <div className="space-x-3">
               <button 
-                onClick={() => setSelectedTenantIds(filteredGyms.map(g => g.id))}
+                onClick={() => setSelectedTenantIds(filteredGyms.map((g: Tenant) => g.id))}
                 className="text-xs font-semibold text-primary hover:underline"
               >
                 Select All
@@ -91,7 +94,7 @@ export default function FlushTenantModal({ isOpen, onClose, onFlush }: FlushTena
           </div>
 
           <div className="border border-border rounded-lg overflow-hidden flex flex-col h-64 bg-background">
-            {fetchState === 'loading' ? (
+            {fetchStateLoading ? (
               <div className="flex-1 flex items-center justify-center">
                 <Loader2 className="w-6 h-6 motion-safe:animate-spin text-primary" />
               </div>
@@ -101,7 +104,7 @@ export default function FlushTenantModal({ isOpen, onClose, onFlush }: FlushTena
               </div>
             ) : (
               <div className="flex-1 overflow-y-auto custom-scrollbar p-2 space-y-1">
-                {filteredGyms.map(gym => {
+                {filteredGyms.map((gym: Tenant) => {
                   const isSelected = selectedTenantIds.includes(gym.id);
                   return (
                     <button

@@ -8,13 +8,7 @@ import PlanCreateModal from '@/app/superadmin/plans/plans_components/PlanCreateM
 import PlanEditModal from '@/app/superadmin/plans/plans_components/PlanEditModal';
 
 export default function PlansClient() {
-  const fetchPlans = usePlansStore(state => state.fetchPlans);
   const openCreateModal = usePlansStore(state => state.openCreateModal);
-
-  // Fetch plans on mount
-  useEffect(() => {
-    fetchPlans();
-  }, [fetchPlans]);
 
   return (
     <div className="space-y-8">

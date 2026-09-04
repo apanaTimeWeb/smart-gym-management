@@ -2,12 +2,13 @@
 'use client';
 
 import React from 'react';
-import { X } from 'lucide-react';
+import { X, Loader2 } from 'lucide-react';
 import { UseFormReturn, Controller } from 'react-hook-form';
 import type { BroadcastFormData } from '@/app/superadmin/broadcasts/broadcasts_types/broadcasts_types';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import { useGymsStore } from '@/app/superadmin/gyms/gyms_store/useGymsStore';
-import { useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
+import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 interface SuperadminBroadcastModalProps {
   isOpen: boolean;
@@ -25,19 +26,19 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
   isEditMode = false,
 }) => {
 
-
   const { register, handleSubmit, watch, setValue, formState: { errors } } = form;
   const status = watch('status');
   const targetGymIds = watch('targetGymIds') || [];
 
-  const gyms = useGymsStore(state => state.gyms);
-  const fetchGyms = useGymsStore(state => state.fetchGyms);
+  const { data: fetchRes, isLoading } = useQuery({
+    queryKey: ['superadmin', 'gyms'],
+    queryFn: () => superadminApi.gyms.fetchGyms(),
+    enabled: isOpen,
+  });
 
-  useEffect(() => {
-    if (!gyms) fetchGyms();
-  }, [gyms, fetchGyms]);
+  const gyms = (fetchRes?.data as any) ?? [];
 
-  const allGymIds = gyms?.map(g => g.id) || [];
+  const allGymIds = gyms?.map((g: Tenant) => g.id) || [];
   const isAllSelected = allGymIds.length > 0 && targetGymIds.length === allGymIds.length;
 
   if (!isOpen) return null;
@@ -52,7 +53,7 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
 
   const handleToggleGym = (id: string) => {
     if (targetGymIds.includes(id)) {
-      setValue('targetGymIds', targetGymIds.filter(g => g !== id), { shouldValidate: true });
+      setValue('targetGymIds', targetGymIds.filter((g: string) => g !== id), { shouldValidate: true });
     } else {
       setValue('targetGymIds', [...targetGymIds, id], { shouldValidate: true });
     }
@@ -103,7 +104,9 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
                 </button>
               </div>
               <div className="bg-input border border-border rounded-xl max-h-40 overflow-y-auto custom-scrollbar p-2 grid grid-cols-2 gap-2">
-                {gyms?.map(gym => (
+                {isLoading ? (
+                  <div className="col-span-2 flex justify-center py-4 text-primary"><Loader2 className="w-5 h-5 motion-safe:animate-spin" /></div>
+                ) : gyms?.map((gym: Tenant) => (
                   <label key={gym.id} className="flex items-center gap-2 cursor-pointer p-2 hover:bg-overlay rounded-lg motion-safe:transition-colors border border-transparent hover:border-border">
                     <input 
                       type="checkbox" 

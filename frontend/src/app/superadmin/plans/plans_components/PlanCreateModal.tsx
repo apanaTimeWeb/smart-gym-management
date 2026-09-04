@@ -5,7 +5,10 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { X, Plus, Trash2, Loader2 } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { usePlansStore } from '@/app/superadmin/plans/plans_store/usePlansStore';
+import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 
 const planSchema = z.object({
   name: z.string().min(1, 'Plan Name is required'),
@@ -21,9 +24,8 @@ type PlanFormValues = z.infer<typeof planSchema>;
 export default function PlanCreateModal() {
   const isOpen = usePlansStore(state => state.isCreateModalOpen);
   const closeCreateModal = usePlansStore(state => state.closeCreateModal);
-  const handleCreatePlan = usePlansStore(state => state.handleCreatePlan);
-  const actionLoadingId = usePlansStore(state => state.actionLoadingId);
-  const isSubmitting = actionLoadingId === 'create';
+
+  const queryClient = useQueryClient();
 
   const { register, control, handleSubmit, formState: { errors }, reset } = useForm<PlanFormValues>({
     resolver: zodResolver(planSchema) as any,
@@ -35,13 +37,27 @@ export default function PlanCreateModal() {
 
   const { fields, append, remove } = useFieldArray({ control, name: 'features' });
 
+  const createMutation = useMutation({
+    mutationFn: (data: any) => superadminApi.plans.createPlan(data),
+    onSuccess: (res) => {
+      toast.success(res.message || 'Plan created successfully');
+      queryClient.invalidateQueries({ queryKey: ['superadmin', 'plans'] });
+      reset();
+      closeCreateModal();
+    },
+    onError: (err: any) => {
+      toast.error(err.message || 'Failed to create plan');
+    }
+  });
+
+  const isSubmitting = createMutation.isPending;
+
   if (!isOpen) return null;
 
   const handleClose = () => { reset(); closeCreateModal(); };
 
   const onSubmit = async (data: PlanFormValues) => {
-    await handleCreatePlan({ ...data, features: data.features.map(f => f.value) });
-    reset();
+    createMutation.mutate({ ...data, features: data.features.map(f => f.value) });
   };
 
   return (

@@ -3,12 +3,13 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { broadcastsApi } from '@/app/superadmin/broadcasts/broadcasts_api/broadcasts_api';
 import { useSuperadminMutation } from '@/app/superadmin/superadmin_utils/hooks/useSuperadminMutation';
-import { BroadcastSchema, type BroadcastFormData, type Broadcast, type BroadcastAudience, type BroadcastStatus } from '@/app/superadmin/broadcasts/broadcasts_types/broadcasts_types';
+import { BroadcastSchema, type BroadcastFormData, type Broadcast, type BroadcastStatus } from '@/app/superadmin/broadcasts/broadcasts_types/broadcasts_types';
 import toast from 'react-hot-toast';
 import { useLocalStorage } from '@/lib/useLocalStorage';
-import { useGymsStore } from '@/app/superadmin/gyms/gyms_store/useGymsStore';
+import { useQuery } from '@tanstack/react-query';
+import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
+import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 /** LocalStorage key for persisting broadcasts across refreshes (TC-28/29 fix) */
 const BROADCASTS_STORAGE_KEY = 'superadmin_broadcasts_v1';
@@ -49,11 +50,12 @@ export const useBroadcastsPage = () => {
   const [queueRecipients, setQueueRecipients] = useState<{id: string; name: string; phone: string}[]>([]);
   const [queueTitle, setQueueTitle] = useState('');
 
-  const { gyms, fetchGyms } = useGymsStore();
-  
-  useEffect(() => {
-    if (!gyms) fetchGyms();
-  }, [gyms, fetchGyms]);
+  const { data: fetchRes } = useQuery({
+    queryKey: ['superadmin', 'gyms'],
+    queryFn: () => superadminApi.gyms.fetchGyms(),
+  });
+
+  const gyms = (fetchRes?.data as any) ?? [];
 
   const form = useForm<BroadcastFormData>({
     resolver: zodResolver(BroadcastSchema),
@@ -90,8 +92,8 @@ export const useBroadcastsPage = () => {
     }
 
     if (isSendingNow) {
-      const selectedGyms = gyms?.filter(g => payload.targetGymIds.includes(g.id)) || [];
-      const recipients = selectedGyms.map(g => ({ id: g.id, name: g.name, phone: g.phone }));
+      const selectedGyms = gyms?.filter((g: Tenant) => payload.targetGymIds.includes(g.id)) || [];
+      const recipients = selectedGyms.map((g: Tenant) => ({ id: g.id, name: g.name, phone: g.phone }));
       setQueueRecipients(recipients);
       setQueueTitle(payload.title);
       setQueueModalOpen(true);
@@ -109,8 +111,8 @@ export const useBroadcastsPage = () => {
 
     updateBroadcasts(prev => prev.map(item => item.id === id ? { ...item, status: 'SENT', sentDate: new Date().toISOString() } : item));
     
-    const selectedGyms = gyms?.filter(g => b.targetGymIds.includes(g.id)) || [];
-    const recipients = selectedGyms.map(g => ({ id: g.id, name: g.name, phone: g.phone }));
+    const selectedGyms = gyms?.filter((g: Tenant) => b.targetGymIds.includes(g.id)) || [];
+    const recipients = selectedGyms.map((g: Tenant) => ({ id: g.id, name: g.name, phone: g.phone }));
     setQueueRecipients(recipients);
     setQueueTitle(b.title);
     setQueueModalOpen(true);

@@ -1,30 +1,24 @@
-// RESPONSIBILITY: Renders the Server Infrastructure page showing real-time node health metrics. Fetches data directly.
+// RESPONSIBILITY: Renders the Server Infrastructure page showing real-time node health metrics. Fetches data directly using TanStack Query.
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Cpu, HardDrive, Server, Zap, RefreshCcw, Loader2 } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import toast from 'react-hot-toast';
-import type { FetchState, InfrastructureNode } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { InfrastructureNode } from '@/app/superadmin/superadmin_types/superadmin_types';
 import FlushTenantModal from '@/app/superadmin/infrastructure/infrastructure_components/FlushTenantModal';
 
 export default function InfrastructureClient() {
-  const [nodes, setNodes] = useState<InfrastructureNode[]>([]);
-  const [fetchState, setFetchState] = useState<FetchState>('idle');
   const [isFlushingAll, setIsFlushingAll] = useState(false);
   const [isFlushModalOpen, setIsFlushModalOpen] = useState(false);
 
-  const fetchNodes = async () => {
-    setFetchState('loading');
-    try {
-      const res = await superadminApi.infrastructure.getAll();
-      setNodes(res.data ?? []);
-      setFetchState('success');
-    } catch (e: unknown) {
-      toast.error(e instanceof Error ? e.message : String(e));
-      setFetchState('error');
-    }
-  };
+  const { data: fetchRes, isLoading, isError, refetch, isFetching } = useQuery({
+    queryKey: ['superadmin', 'infrastructure'],
+    queryFn: () => superadminApi.infrastructure.fetchInfrastructureNodes(),
+  });
+
+  const nodes = fetchRes?.data ?? [];
 
   const handleFlushAll = () => {
     setIsFlushingAll(true);
@@ -40,11 +34,6 @@ export default function InfrastructureClient() {
     toast.success(`Successfully flushed cache for ${tenantIds.length} tenant(s)`);
   };
 
-  // Refetch on mount to load infrastructure node metrics
-  useEffect(() => {
-    fetchNodes();
-  }, []);
-
   const withCpu = nodes.filter(n => n.cpuPercent !== null);
   const avgCpu = withCpu.length ? Math.round(withCpu.reduce((acc, n) => acc + (n.cpuPercent ?? 0), 0) / withCpu.length) : 0;
 
@@ -54,8 +43,12 @@ export default function InfrastructureClient() {
   const withDisk = nodes.filter(n => n.diskPercent !== null);
   const avgDisk = withDisk.length ? Math.round(withDisk.reduce((acc, n) => acc + (n.diskPercent ?? 0), 0) / withDisk.length) : 0;
 
-  if ((fetchState === 'loading' || fetchState === 'idle') && nodes.length === 0) {
+  if (isLoading && nodes.length === 0) {
     return <div className="flex h-96 items-center justify-center"><Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" /></div>;
+  }
+
+  if (isError) {
+    return <div className="flex h-96 items-center justify-center text-danger font-medium">Error loading data.</div>;
   }
 
   return (
@@ -66,11 +59,11 @@ export default function InfrastructureClient() {
           <p className="text-secondary mt-1">Real-time health metrics of your Docker/Kubernetes cluster.</p>
         </div>
         <button
-          onClick={fetchNodes}
-          disabled={fetchState === 'loading'}
+          onClick={() => refetch()}
+          disabled={isFetching}
           className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:opacity-90 motion-safe:transition-opacity flex items-center gap-2 border border-primary disabled:opacity-50"
         >
-          <RefreshCcw size={16} className={fetchState === 'loading' ? 'motion-safe:animate-spin' : ''} /> Force Sync Metrics
+          <RefreshCcw size={16} className={isFetching ? 'motion-safe:animate-spin' : ''} /> Force Sync Metrics
         </button>
       </div>
 
