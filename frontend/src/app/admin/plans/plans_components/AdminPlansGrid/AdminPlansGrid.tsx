@@ -20,8 +20,19 @@ export default function AdminPlansGrid() {
 
   if (fetchState === 'loading') {
     return (
-      <div className="flex items-center justify-center py-16">
-        <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1">
+        {[1, 2, 3].map(i => (
+          <div key={i} className="h-96 bg-card rounded-2xl border border-border motion-safe:animate-pulse"></div>
+        ))}
+      </div>
+    );
+  }
+
+  if (fetchState === 'error') {
+    return (
+      <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
+        <p className="text-danger font-medium">Failed to load membership plans.</p>
+        <p className="text-sm mt-1 text-secondary">Please check your connection and try again.</p>
       </div>
     );
   }
@@ -130,5 +141,3 @@ export default function AdminPlansGrid() {
     </div>
   );
 }
-
-

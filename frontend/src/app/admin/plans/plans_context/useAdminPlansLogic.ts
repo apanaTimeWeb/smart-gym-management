@@ -38,16 +38,12 @@ export function useAdminPlansLogic(initialData?: PlansInitialData | null): Plans
   const { data: plansRes, isLoading, isError } = useQuery({
     queryKey: ['adminPlans'],
     queryFn: () => plansApi.fetchAllPlans(),
+    initialData: initialData ? { success: true, message: 'SSR', data: initialData.plans } : undefined,
   });
 
   const fetchState: FetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
 
-  // Fallback to mock data if API fails or returns nothing initially, to keep the UI functional as before
-  const fetchedPlans = plansRes?.data || [
-    { id: '1', name: 'Basic Tier', tier: 'Basic', price1Month: 50, price3Month: 140, price6Month: 250, price12Month: 450, features: ['Gym Access', 'Locker Room'], isActive: true },
-    { id: '2', name: 'Pro Tier', tier: 'Pro', price1Month: 80, price3Month: 220, price6Month: 400, price12Month: 750, features: ['Gym Access', 'Classes', 'Sauna'], isActive: true },
-    { id: '3', name: 'Elite Tier', tier: 'Elite', price1Month: 120, price3Month: 330, price6Month: 600, price12Month: 1100, features: ['All Access', 'Personal Trainer', 'Diet Plan'], isActive: true },
-  ];
+  const fetchedPlans = plansRes?.data || [];
 
   const openAdd = useCallback(() => {
     setEditId(null);
