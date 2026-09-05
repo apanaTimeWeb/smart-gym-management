@@ -145,6 +145,11 @@ export async function routeMockRequest<T>(
       { id: 'prod-9', name: 'Nivia Python Gym Gloves', category: 'Accessories', price: 450, stock: 18, description: 'Weightlifting gloves with wrist support', isActive: true, unit: 'Medium' },
       { id: 'prod-10', name: 'Rogue Heavy Duty Lifting Belt', category: 'Accessories', price: 3500, stock: 8, description: 'Leather powerlifting belt', isActive: true, unit: '1 Piece' }
     ];
+    
+    if (existing.length === 0) {
+      MockDB.setCollection('mock_products', defaultProducts);
+    }
+    
     return MockDB.handleCrud('mock_products', method, path, parsedBody, defaultProducts, 'products') as unknown as ApiResponse<T>;
   }
 
@@ -174,6 +179,11 @@ export async function routeMockRequest<T>(
     const defaultOrders = [
       { id: 'ord-1', customerName: 'Demo Customer', total: 1200, method: 'UPI', status: 'COMPLETED', createdAt: new Date().toISOString(), items: [{ productId: 'prod-2', qty: 1, price: 1200, product: { name: 'Creatine Monohydrate', unit: '300g' } }] }
     ];
+    
+    if (existing.length === 0) {
+      MockDB.setCollection('mock_orders', defaultOrders);
+    }
+    
     return MockDB.handleCrud('mock_orders', method, path, parsedBody, defaultOrders, 'orders') as unknown as ApiResponse<T>;
   }
   if (path.includes('/plans') && !path.includes('/superadmin')) return MockDB.handleCrud('mock_admin_plans', method, path, parsedBody, generate(3, i => ({ id: `plan-${i}`, name: i === 0 ? 'Basic Plan' : i === 1 ? 'Pro Plan' : 'VIP Plan', tier: i === 0 ? 'Standard' : i === 1 ? 'Premium' : 'Elite', price1Month: 1000 * (i + 1), price3Month: 2500 * (i + 1), price6Month: 4800 * (i + 1), price12Month: 9000 * (i + 1), features: ['Access to gym', 'Locker facility', 'Cardio section'], isActive: true }))) as unknown as ApiResponse<T>;

@@ -33,6 +33,15 @@ export default function ManagerStoreProductGrid() {
     );
   }
 
+  if (fetchState === 'error') {
+    return (
+      <div className="text-center py-16 bg-card rounded-2xl border border-danger/30 mt-4">
+        <p className="text-danger font-medium">Failed to load products.</p>
+        <p className="text-sm mt-1 text-secondary">Please check your connection and try again.</p>
+      </div>
+    );
+  }
+
   if (products.length === 0) {
     return (
       <div className="text-center py-10 text-secondary">
