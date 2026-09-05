@@ -40,7 +40,7 @@ function getDashboardForRole(role: GymSmartUser["role"]): string {
   }
 }
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const user = getUserFromCookie(req);
 
