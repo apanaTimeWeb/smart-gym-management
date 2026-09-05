@@ -1,4 +1,4 @@
-import AdminNotificationsClient from '@/app/admin/notifications/AdminNotificationsClient';
+import AdminNotificationsClient from '@/app/admin/notifications/notifications_components/AdminNotificationsClient';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

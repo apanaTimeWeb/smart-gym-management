@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Server Component that acts as the entry point for the Tenants (Gyms) list page.
 import { Metadata } from 'next';
-import SuperadminGymsClient from '@/app/superadmin/gyms/SuperadminGymsClient';
+import SuperadminGymsClient from '@/app/superadmin/gyms/gyms_components/SuperadminGymsClient';
 
 export const metadata: Metadata = {
   title: 'Gyms | Superadmin',

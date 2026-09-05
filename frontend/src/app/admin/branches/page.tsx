@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import AdminHeader from "@/app/admin/admin_components/AdminLayout/AdminHeader";
-import { AdminBranchesProvider } from "@/app/admin/branches/branches_context/AdminBranchesContext";
+
 import AdminBranchesToolbar from "@/app/admin/branches/branches_components/AdminBranchesToolbar/AdminBranchesToolbar";
 import AdminBranchCard from "@/app/admin/branches/branches_components/AdminBranchCard/AdminBranchCard";
 import AdminBranchDetailDrawer from "@/app/admin/branches/branches_components/AdminBranchDetailDrawer/AdminBranchDetailDrawer";

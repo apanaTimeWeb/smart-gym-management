@@ -2,7 +2,9 @@
 'use client';
 
 import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
-import { AdminDashboardProvider, useAdminDashboardContext } from '@/app/admin/dashboard/dashboard_context/AdminDashboardContext';
+
+import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
+import { useAdminDashboardStore } from '@/app/admin/dashboard/dashboard_store/useAdminDashboardStore';
 import type { DashboardStats, TimeRange } from '@/app/admin/dashboard/dashboard_types/dashboard_types';
 import AdminDashboardKPIs from '@/app/admin/dashboard/dashboard_components/AdminDashboardKPIs/AdminDashboardKPIs';
 import AdminDashboardRecentMembers from '@/app/admin/dashboard/dashboard_components/AdminDashboardRecentMembers/AdminDashboardRecentMembers';

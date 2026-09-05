@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { EMPTY_PLAN_FORM, type PlanFormValues } from '@/app/admin/plans/plans_utils/AdminPlansSharedConstants';
+import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
 
 interface AdminPlansStore {
   showModal: boolean;
@@ -8,8 +9,8 @@ interface AdminPlansStore {
   setEditId: (id: string | null) => void;
   form: PlanFormValues;
   setForm: (form: PlanFormValues) => void;
-  toast: { message: string; type: 'success' | 'error' | 'info' | 'warning' } | null;
-  showToast: (message: string, type: 'success' | 'error' | 'info' | 'warning') => void;
+  toast: { message: string; type: ToastType } | null;
+  showToast: (message: string, type: ToastType) => void;
   hideToast: () => void;
 }
 

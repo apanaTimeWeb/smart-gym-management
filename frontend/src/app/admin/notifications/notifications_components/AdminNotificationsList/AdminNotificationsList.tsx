@@ -1,4 +1,4 @@
-import { NotificationItem } from '@/app/admin/notifications/notifications_utils/useNotificationsPage';
+import { NotificationItem } from '@/app/admin/notifications/notifications_utils/useAdminNotificationsPage';
 import { X, Bell } from 'lucide-react';
 
 interface NotificationsListProps {

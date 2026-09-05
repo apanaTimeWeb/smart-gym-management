@@ -8,7 +8,7 @@ import { FINANCE_PAYMENT_METHODS, AddPaymentSchema, type AddPaymentFormValues, E
 import { X, Save } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AdminSearchableDropdown } from '@/components/ui/AdminSearchableDropdown';
+import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
 
 export default function AdminFinanceAddPaymentModal() {
   const { payments, summary, totalPayments, fetchState, saving, error, loadAll, search, setSearch, currentPage, setCurrentPage, savePayment, methodFilter, setMethodFilter } = useAdminFinanceLogic();

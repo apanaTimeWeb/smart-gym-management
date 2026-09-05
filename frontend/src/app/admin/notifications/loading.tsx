@@ -1,19 +1,18 @@
 // RESPONSIBILITY: Renders the loading fallback for the notifications module.
-import { TableSkeleton } from '@/app/admin/admin_components/AdminShared/TableSkeleton';
+import { AdminTableSkeleton } from '@/app/admin/admin_components/AdminShared/AdminTableSkeleton';
 
 export default function Loading() {
   return (
-    <div className="min-h-screen flex flex-col p-6 space-y-5 bg-page">
-      <div className="h-20 bg-card rounded-xl motion-safe:animate-pulse"></div>
+    <div className="flex flex-col space-y-6 w-full animate-pulse">
       
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        {[1, 2, 3, 4].map(i => (
-          <div key={i} className="h-24 bg-card rounded-xl motion-safe:animate-pulse"></div>
-        ))}
-      </div>
+      {/* Header section skeleton */}
+      <div className="flex items-center justify-between bg-skeleton-base h-20 rounded-md p-4 w-full"></div>
       
-      <div className="h-16 bg-card rounded-xl motion-safe:animate-pulse"></div>
-      <TableSkeleton rows={8} />
+      {/* Toolbar / Actions skeleton */}
+      <div className="flex items-center space-x-4 h-12 bg-skeleton-base rounded-md p-4 w-1/3"></div>
+
+      {/* Main Table skeleton */}
+      <AdminTableSkeleton rows={8} />
     </div>
   );
 }

@@ -25,7 +25,7 @@ export interface PlansContextType {
   setShowModal: (show: boolean) => void;
   editId: string | null;
   form: PlanFormValues;
-  setForm: React.Dispatch<React.SetStateAction<PlanFormValues>>;
+  setForm: (form: PlanFormValues) => void;
 
   showToast: (msg: string, t: ToastType) => void;
   hideToast: () => void;
