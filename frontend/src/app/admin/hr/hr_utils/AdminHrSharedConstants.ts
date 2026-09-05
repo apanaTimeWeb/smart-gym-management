@@ -7,6 +7,7 @@ export const StaffSchema = z.object({
   phone: z.string().regex(/^\d{10}$/, "Phone number must be exactly 10 digits"),
   role: z.string().min(2, "Role is required"),
   salary: z.number().min(0, "Salary must be positive"),
+  branch: z.string().min(1, "Branch is required"),
   gender: z.enum(['MALE', 'FEMALE', 'OTHER']),
   address: z.string().optional(),
   joinDate: z.string(),
@@ -26,6 +27,7 @@ export const EMPTY_STAFF = {
  phone: '', 
  role: '', 
  salary: 0, 
+ branch: '',
  gender: 'MALE', 
  address: '', 
  joinDate: new Date().toISOString().split('T')[0],
@@ -49,7 +51,7 @@ export const EMPTY_PAYROLL_FORM = {
   notes: ''
 } as unknown as PayrollFormValues;
 
-export const STAFF_TABLE_HEADERS = ['Name', 'Role', 'Status', 'Phone', 'Salary', 'Joined'];
+export const STAFF_TABLE_HEADERS = ['Name', 'Branch', 'Role', 'Status', 'Phone', 'Salary', 'Joined'];
 
 export const PAYROLL_TABLE_HEADERS = ['Staff', 'Month', 'Amount', 'Status', 'Paid On'];
 

@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Server Component � fetches initial SSR data and renders the HR & Payroll module entry point.
-import AdminHrMain from '@/app/Admin/hr/hr_components/AdminHrMain/AdminHrMain';
-import { ssrHrApi } from '@/app/Admin/hr/hr_api/AdminHrServerApi';
-import type { HrInitialData } from '@/app/Admin/hr/hr_types/AdminHrTypes';
+import AdminHrMain from '@/app/admin/hr/hr_components/AdminHrMain/AdminHrMain';
+import { ssrHrApi } from '@/app/admin/hr/hr_api/AdminHrServerApi';
+import type { HrInitialData } from '@/app/admin/hr/hr_types/AdminHrTypes';
 
 export default async function HrPage() {
   let initialData: HrInitialData | null = null;

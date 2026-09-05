@@ -2,8 +2,8 @@
 'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';
-import type { HrContextType, HrInitialData } from '@/app/Admin/hr/hr_types/AdminHrTypes';
-import { useAdminHrLogic } from '@/app/Admin/hr/hr_context/useAdminHrLogic';
+import type { HrContextType, HrInitialData } from '@/app/admin/hr/hr_types/AdminHrTypes';
+import { useAdminHrLogic } from '@/app/admin/hr/hr_context/useAdminHrLogic';
 
 const AdminHrContext = createContext<HrContextType | undefined>(undefined);
 

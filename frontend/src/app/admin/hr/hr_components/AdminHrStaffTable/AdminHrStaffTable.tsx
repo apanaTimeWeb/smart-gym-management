@@ -1,19 +1,22 @@
 // RESPONSIBILITY: Renders the paginated staff members table with sortable columns and inline row actions.
 'use client';
 
-import { useHrContext } from '@/app/Admin/hr/hr_context/AdminHrContext';
-import { STAFF_TABLE_HEADERS } from '@/app/Admin/hr/hr_utils/AdminHrSharedConstants';
+import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
+import { STAFF_TABLE_HEADERS } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
 import { Edit2, Trash2, CheckCircle2, Ban, PlayCircle } from 'lucide-react';
-import AdminPagination from '@/app/Admin/Admin_components/AdminShared/AdminPagination';
-import { Admin_ITEMS_PER_PAGE } from '@/app/Admin/Admin_utils/AdminSharedConstants';
+import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
+import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_utils/AdminSharedConstants';
 
 export default function AdminHrStaffTable() {
-  const { staff, summary, fetchState, debouncedSearch, roleFilter, currentPage, setCurrentPage, openEdit, deleteStaff, toggleStaffStatus } = useHrContext();
+  const { staff, summary, fetchState, debouncedSearch, branchFilter, roleFilter, currentPage, setCurrentPage, openEdit, deleteStaff, toggleStaffStatus } = useHrContext();
 
-  const filteredStaff = staff.filter(s => roleFilter === 'All' || (s.role || '').toLowerCase().includes(roleFilter.toLowerCase()));
+  const filteredStaff = staff.filter(s => 
+    (roleFilter === 'All' || (s.role || '').toLowerCase().includes(roleFilter.toLowerCase())) &&
+    (branchFilter === 'All' || s.branch === branchFilter)
+  );
 
   const totalStaff = summary?.totalStaff || filteredStaff.length;
-  const totalPages = Math.ceil(totalStaff / Admin_ITEMS_PER_PAGE) || 1;
+  const totalPages = Math.ceil(totalStaff / ADMIN_ITEMS_PER_PAGE) || 1;
 
   if (fetchState === 'loading') {
     return (
@@ -36,6 +39,7 @@ export default function AdminHrStaffTable() {
                     <div><div className="h-4 bg-muted rounded w-24 mb-1"></div><div className="h-3 bg-muted rounded w-32"></div></div>
                   </td>
                   <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
+                  <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-24"></div></td>
                   <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-16"></div></td>
                   <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-24"></div></td>
                   <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
@@ -82,6 +86,7 @@ export default function AdminHrStaffTable() {
                     </div>
                   </div>
                 </td>
+                <td className="px-4 py-3 text-sm text-secondary">{s.branch}</td>
                 <td className="px-4 py-3 text-sm text-primary">{s.role}</td>
                 <td className="px-4 py-3">
                   {s.isActive === false ? (
@@ -149,7 +154,7 @@ export default function AdminHrStaffTable() {
         currentPage={currentPage} 
         totalPages={totalPages} 
         totalItems={totalStaff} 
-        itemsPerPage={Admin_ITEMS_PER_PAGE} 
+        itemsPerPage={ADMIN_ITEMS_PER_PAGE} 
         onPageChange={setCurrentPage} 
       />
     </div>

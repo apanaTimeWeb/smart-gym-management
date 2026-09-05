@@ -6,9 +6,9 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { X, Check } from 'lucide-react';
-import { useHrContext } from '@/app/Admin/hr/hr_context/AdminHrContext';
-import { PayrollSchema, type PayrollFormValues, EMPTY_PAYROLL_FORM } from '@/app/Admin/hr/hr_utils/AdminHrSharedConstants';
-import { attendanceApi } from '@/app/Admin/attendance/attendance_api/AdminAttendanceApi';
+import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
+import { PayrollSchema, type PayrollFormValues, EMPTY_PAYROLL_FORM } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
+
 
 export default function AdminHrPayrollModal() {
   const { showPayrollModal, setShowPayrollModal, savePayroll, saving, staff } = useHrContext();
@@ -32,33 +32,6 @@ export default function AdminHrPayrollModal() {
   useEffect(() => {
     const calculate = async () => {
       if (selectedStaffId && selectedMonth) {
-        const s = staff.find(x => String(x.id) === String(selectedStaffId));
-        if (!s) return;
-        try {
-          const res = await attendanceApi.getHistory(String(selectedStaffId), 'STAFF', selectedMonth);
-          if (res.success && res.data) {
-            const history = res.data;
-            const daysInMonth = new Date(parseInt(selectedMonth.split('-')[0]), parseInt(selectedMonth.split('-')[1]), 0).getDate();
-            
-            let presentDays = 0;
-            for (let i = 1; i <= daysInMonth; i++) {
-              const dateStr = `${selectedMonth}-${String(i).padStart(2, '0')}`;
-              const record = history.find(r => r.date === dateStr || r.date.startsWith(dateStr));
-              if (record && record.status === 'PRESENT') {
-                presentDays++;
-              }
-            }
-            
-            const baseSalary = s.salary || 0;
-            const payableAmount = Math.round((baseSalary / daysInMonth) * presentDays);
-            
-            setValue('amount', payableAmount);
-            setCalculationInfo(`Present: ${presentDays}/${daysInMonth} days. Payable: ₹${payableAmount}`);
-          }
-        } catch (e) {
-          console.error(e);
-        }
-      } else if (selectedStaffId) {
         const s = staff.find(x => String(x.id) === String(selectedStaffId));
         if (s) {
           setValue('amount', s.salary || 0);

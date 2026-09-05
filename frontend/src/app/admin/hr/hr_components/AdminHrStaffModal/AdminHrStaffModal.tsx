@@ -2,8 +2,8 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useHrContext } from '@/app/Admin/hr/hr_context/AdminHrContext';
-import { STAFF_MODAL_FIELDS, EMPTY_STAFF, GENDER_OPTIONS, BRANCH_OPTIONS, StaffSchema, type StaffFormValues, STAFF_ROLE_OPTIONS } from '@/app/Admin/hr/hr_utils/AdminHrSharedConstants';
+import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
+import { STAFF_MODAL_FIELDS, EMPTY_STAFF, GENDER_OPTIONS, BRANCH_OPTIONS, StaffSchema, type StaffFormValues, STAFF_ROLE_OPTIONS } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
 import { X, Save } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -74,6 +74,22 @@ export default function AdminHrStaffModal() {
   )}
   </div>
   ))}
+  <div>
+  <label className="block text-sm font-medium mb-1.5 text-secondary">Branch</label>
+  <Controller
+    name="branch"
+    control={control}
+    render={({ field }) => (
+      <SearchableDropdown
+        value={field.value || ''}
+        onChange={field.onChange}
+        options={BRANCH_OPTIONS.map(b => ({ label: b, value: b }))}
+        placeholder="Select Branch..."
+      />
+    )}
+  />
+  {errors.branch && <p className="text-danger text-xs mt-1.5">{errors.branch.message as string}</p>}
+  </div>
   <div>
   <label className="block text-sm font-medium mb-1.5 text-secondary">Role</label>
   <Controller

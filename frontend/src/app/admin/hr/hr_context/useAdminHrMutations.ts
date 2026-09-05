@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import type { Staff, Payroll, HrSummary } from '@/app/admin/hr/hr_types/AdminHrTypes';
 import { hrApi } from '@/app/admin/hr/hr_api/AdminHrApi';
 import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
-import { useConfirm } from '@/app/admin/admin_components/AdminFeedback/AdminConfirmProvider';
+import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/AdminConfirmProvider';
 
 export function useAdminHrMutations(
   staff: Staff[],
@@ -15,7 +15,7 @@ export function useAdminHrMutations(
   setSaving: (s: boolean) => void,
   showToast: (msg: string, t: ToastType) => void
 ) {
-  const { confirm } = useConfirm();
+  const { confirm } = useAdminConfirm();
 
   const saveStaff = useCallback(async (data: Partial<Staff> & { joinDate?: string | Date; salary?: string | number }) => {
     setSaving(true);

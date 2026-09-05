@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Provides strongly-typed network calls for the hr module.
 import { apiFetch, ApiResponse } from '@/lib/api';
-import { HrUrlConfig } from '@/app/Admin/hr/AdminHrUrlConfig';
-import type { Staff, Payroll, HrSummary } from '@/app/Admin/hr/hr_types/AdminHrTypes';
+import { HrUrlConfig } from '@/app/admin/hr/AdminHrUrlConfig';
+import type { Staff, Payroll, HrSummary } from '@/app/admin/hr/hr_types/AdminHrTypes';
 
 export const hrApi = {
   getStaff: (params?: Record<string, string>) => {

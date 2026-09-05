@@ -2,15 +2,15 @@
 'use client';
 
 import { useState } from 'react';
-import { useHrContext } from '@/app/Admin/hr/hr_context/AdminHrContext';
-import { HR_TABS } from '@/app/Admin/hr/hr_utils/AdminHrSharedConstants';
+import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
+import { HR_TABS, BRANCH_OPTIONS } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
 import { RefreshCw, Plus, Search } from 'lucide-react';
-import AdminHrStaffTable from '@/app/Admin/hr/hr_components/AdminHrStaffTable/AdminHrStaffTable';
-import AdminHrPayrollTable from '@/app/Admin/hr/hr_components/AdminHrPayrollTable/AdminHrPayrollTable';
+import AdminHrStaffTable from '@/app/admin/hr/hr_components/AdminHrStaffTable/AdminHrStaffTable';
+import AdminHrPayrollTable from '@/app/admin/hr/hr_components/AdminHrPayrollTable/AdminHrPayrollTable';
 
 export default function AdminHrTabs() {
   const [activeTab, setActiveTab] = useState(HR_TABS[0]);
-  const { loadAll, openAdd, openAddPayroll, fetchState, search, setSearch, roleFilter, setRoleFilter, setCurrentPage, payrollMonth, setPayrollMonth } = useHrContext();
+  const { loadAll, openAdd, openAddPayroll, fetchState, search, setSearch, branchFilter, setBranchFilter, roleFilter, setRoleFilter, setCurrentPage, payrollMonth, setPayrollMonth } = useHrContext();
 
   return (
     <div className="rounded-xl shadow-sm border overflow-hidden bg-card border-border">
@@ -37,15 +37,27 @@ export default function AdminHrTabs() {
             />
           </div>
           {activeTab === 'Staff' && (
-            <select
-              value={roleFilter}
-              onChange={e => { setRoleFilter(e.target.value); setCurrentPage(1); }}
-              className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 bg-card text-foreground"
-            >
-              <option value="All">All Roles</option>
-              <option value="Admin">Admin</option>
-              <option value="Trainer">Trainer</option>
-            </select>
+            <>
+              <select
+                value={branchFilter}
+                onChange={e => { setBranchFilter(e.target.value); setCurrentPage(1); }}
+                className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 bg-card text-foreground"
+              >
+                <option value="All">All Branches</option>
+                {BRANCH_OPTIONS.map(b => (
+                  <option key={b} value={b}>{b}</option>
+                ))}
+              </select>
+              <select
+                value={roleFilter}
+                onChange={e => { setRoleFilter(e.target.value); setCurrentPage(1); }}
+                className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 bg-card text-foreground"
+              >
+                <option value="All">All Roles</option>
+                <option value="Admin">Admin</option>
+                <option value="Trainer">Trainer</option>
+              </select>
+            </>
           )}
           {activeTab === 'Payroll' && (
             <input 

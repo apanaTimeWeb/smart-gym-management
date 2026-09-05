@@ -1,11 +1,11 @@
 // RESPONSIBILITY: Renders the payroll records table with pay status badges and mark-as-paid inline action.
 'use client';
 
-import { useHrContext } from '@/app/Admin/hr/hr_context/AdminHrContext';
-import { PAYROLL_TABLE_HEADERS } from '@/app/Admin/hr/hr_utils/AdminHrSharedConstants';
-import AdminPagination from '@/app/Admin/Admin_components/AdminShared/AdminPagination';
+import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
+import { PAYROLL_TABLE_HEADERS } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
+import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 import { CheckCircle2 } from 'lucide-react';
-import { Admin_ITEMS_PER_PAGE } from '@/app/Admin/Admin_utils/AdminSharedConstants';
+import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_utils/AdminSharedConstants';
 
 export default function AdminHrPayrollTable() {
   const { payrolls, search, currentPage, setCurrentPage, markPayrollPaid, fetchState, payrollMonth } = useHrContext();
@@ -26,8 +26,8 @@ export default function AdminHrPayrollTable() {
     return (nameMatch || roleMatch) && isTargetMonth;
   });
 
-    const totalPages = Math.ceil(filtered.length / Admin_ITEMS_PER_PAGE);
-  const currentData = filtered.slice((currentPage - 1) * Admin_ITEMS_PER_PAGE, currentPage * Admin_ITEMS_PER_PAGE);
+    const totalPages = Math.ceil(filtered.length / ADMIN_ITEMS_PER_PAGE);
+  const currentData = filtered.slice((currentPage - 1) * ADMIN_ITEMS_PER_PAGE, currentPage * ADMIN_ITEMS_PER_PAGE);
 
   if (fetchState === 'loading') {
     return (
@@ -128,7 +128,7 @@ export default function AdminHrPayrollTable() {
         currentPage={currentPage} 
         totalPages={totalPages} 
         totalItems={filtered.length} 
-        itemsPerPage={Admin_ITEMS_PER_PAGE} 
+        itemsPerPage={ADMIN_ITEMS_PER_PAGE} 
         onPageChange={setCurrentPage} 
       />
     </div>

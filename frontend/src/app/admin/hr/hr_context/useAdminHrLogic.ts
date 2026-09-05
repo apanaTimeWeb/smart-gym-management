@@ -1,10 +1,10 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import type { Staff, Payroll, HrSummary, HrContextType, HrInitialData } from '@/app/Admin/hr/hr_types/AdminHrTypes';
-import { hrApi } from '@/app/Admin/hr/hr_api/AdminHrApi';
-import type { ToastType } from '@/app/Admin/Admin_components/AdminFeedback/AdminToast';
-import { EMPTY_STAFF } from '@/app/Admin/hr/hr_utils/AdminHrSharedConstants';
-import { useDebounce } from '@/app/Admin/Admin_utils/useDebounce';
+import type { Staff, Payroll, HrSummary, HrContextType, HrInitialData } from '@/app/admin/hr/hr_types/AdminHrTypes';
+import { hrApi } from '@/app/admin/hr/hr_api/AdminHrApi';
+import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
+import { EMPTY_STAFF } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
+import { useDebounce } from '@/app/admin/admin_utils/useDebounce';
 import { useAdminHrMutations } from './useAdminHrMutations';
 
 export function useAdminHrLogic(initialData?: HrInitialData | null): HrContextType {
@@ -22,6 +22,7 @@ export function useAdminHrLogic(initialData?: HrInitialData | null): HrContextTy
   const search = searchParams.get('search') || '';
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
   const roleFilter = searchParams.get('role') || 'All';
+  const branchFilter = searchParams.get('branch') || 'All';
   const payrollMonth = searchParams.get('month') || new Date().toISOString().substring(0, 7);
   const debouncedSearch = useDebounce(search, 300);
   const currentSearch = search;
@@ -54,6 +55,7 @@ export function useAdminHrLogic(initialData?: HrInitialData | null): HrContextTy
   const setSearch = useCallback((val: string) => setUrlParam('search', val || null), [setUrlParam]);
   const setCurrentPage = useCallback((val: number) => setUrlParam('page', val.toString()), [setUrlParam]);
   const setRoleFilter = useCallback((val: string) => setUrlParam('role', val === 'All' ? null : val), [setUrlParam]);
+  const setBranchFilter = useCallback((val: string) => setUrlParam('branch', val === 'All' ? null : val), [setUrlParam]);
   const setPayrollMonth = useCallback((val: string) => setUrlParam('month', val), [setUrlParam]);
 
   const [showModal, setShowModal] = useState(false);
@@ -71,6 +73,7 @@ export function useAdminHrLogic(initialData?: HrInitialData | null): HrContextTy
     try {
       const staffParams: Record<string, string> = { search: debouncedSearch, page: String(currentPage) };
       if (roleFilter !== 'All') staffParams.role = roleFilter;
+      if (branchFilter !== 'All') staffParams.branch = branchFilter;
       
       const [staffRes, payrollsRes, summaryRes] = await Promise.all([
         hrApi.getStaff(staffParams),
@@ -88,7 +91,7 @@ export function useAdminHrLogic(initialData?: HrInitialData | null): HrContextTy
       showToast(msg, 'error');
       setFetchState('error');
     }
-  }, [showToast, debouncedSearch, currentPage, roleFilter, payrollMonth]);
+  }, [showToast, debouncedSearch, currentPage, roleFilter, branchFilter, payrollMonth]);
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -130,7 +133,7 @@ export function useAdminHrLogic(initialData?: HrInitialData | null): HrContextTy
 
   return {
     staff, payrolls, summary, fetchState, error, toast, showToast, hideToast, loadAll,
-    search, debouncedSearch, setSearch, roleFilter, setRoleFilter, currentPage, setCurrentPage,
+    search, debouncedSearch, setSearch, branchFilter, setBranchFilter, roleFilter, setRoleFilter, currentPage, setCurrentPage,
     showModal, setShowModal, showPayrollModal, setShowPayrollModal, editId, editData, saving, 
     openAdd, openEdit, openAddPayroll, saveStaff, savePayroll, deleteStaff, toggleStaffStatus, markPayrollPaid, payrollMonth, setPayrollMonth
   };

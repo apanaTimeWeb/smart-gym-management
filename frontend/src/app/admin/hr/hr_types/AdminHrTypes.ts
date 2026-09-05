@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Defines the TypeScript types and interfaces for the HR module.
-import type { ToastType } from '@/app/Admin/Admin_components/AdminFeedback/AdminToast';
-import { EMPTY_STAFF } from '@/app/Admin/hr/hr_utils/AdminHrSharedConstants';
+import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
+import { EMPTY_STAFF } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
 import React from 'react';
 
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';
@@ -22,6 +22,8 @@ export interface HrContextType {
   search: string;
   debouncedSearch: string;
   setSearch: (s: string) => void;
+  branchFilter: string;
+  setBranchFilter: (s: string) => void;
   roleFilter: string;
   setRoleFilter: (s: string) => void;
   currentPage: number;
