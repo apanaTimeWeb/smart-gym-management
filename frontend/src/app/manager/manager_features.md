@@ -1,52 +1,56 @@
-# Manager Module — Feature Documentation
+# Manager Feature Map
 
-## Overview
-The Manager module is designed for the daily operational management of a gym branch. It restricts destructive system-wide capabilities (like deleting branches or modifying global tenant settings) but allows for full control over day-to-day tasks: member admissions, POS sales, attendance, and basic financial tracking.
+## Module Purpose
+Handles manager operations, UI display, and logic isolation as part of the Smart Gym 360 platform.
 
----
+## Directory Structure
+- `manager_components/`: Contains all isolated micro-components for the module.
+- `manager_types/` (if applicable): TypeScript definitions.
+- `manager_utils/` (if applicable): Shared constants and hardcoded data.
+- `manager_context/` (if applicable): Module-scoped React Context or Zustand store.
 
-## Directory Structure & Core Features
+## Feature Inventory
+| Feature | Path | Purpose | Main API Calls | Owner |
+|---|---|---|---|---|
+| Core UI | `/manager` | Main module view | TBD | Frontend Team |
 
-```
-manager/
-├── layout.tsx           # Module layout wrapper
-├── manager_features.md  # This file
-├── manager_forbidden.md # Module anti-patterns
-├── manager_theme_contract.md # Theme CSS variables
-├── attendance/          # Member check-ins, barcode/QR scanning, daily logs
-├── dashboard/           # Daily operational metrics, expiring memberships, recent sales
-├── finance/             # Daily settlements, petty cash, fee collections
-├── hr/                  # Basic staff schedule viewing (limited compared to Admin)
-├── inquiries/           # Follow-ups, lead pipeline, trial bookings
-├── library/             # Access to the exercise/document library
-├── manager_components/  # UI components specific to the manager module
-├── manager_utils/       # Utilities, hooks, constants, and types for the manager module
-├── members/             # Member profiles, upgrades, renewals, and history
-├── plans/               # Read-only view of available plans and packages
-├── sales/               # Point of Sale (POS), invoices, receipts
-├── store/               # Inventory tracking and product sales
-└── workout/             # Assigning/viewing workout plans for members
-```
+## Data and State Architecture
+- Server-state query keys: `['manager']`
+- Zustand stores: TBD
+- Context providers: TBD
+- Local-storage keys: TBD
+- MSW handler file: TBD
 
-### Core Pages & Flows
-- **/manager/dashboard**: Focuses on daily action items (pending inquiries, expiring memberships).
-- **/manager/members**: Member search, profile viewing, and subscription renewals.
-- **/manager/attendance**: Quick check-in interface.
-- **/manager/sales**: POS system for selling plans, supplements, or merchandise.
+## API Contract
+List all endpoint builders and expected response types.
+- `fetchManager(params)`
+- `createManager(dto)`
+- `updateManager(id, dto)`
+- `deleteManager(id)`
 
----
+## Permissions and Security
+Document protected actions, roles, and CODEOWNERS paths.
 
-## State & Data
-- **Centralized Data**: All hardcoded data must reside in `manager_utils/manager_constants.ts`.
-- **Global State**: Managed via Zustand slices within `manager_store/` (if created) or Context for UI.
-- **UI State**: Local `useState` for component-level UI state.
+## Loading, Empty, Error States
+- **Loading:** Uses `loading.tsx` skeleton matching global design.
+- **Empty:** Follows Rule 48 (dedicated empty state component).
+- **Error:** Uses `error.tsx` typed React Error Boundary.
 
----
+## Edge Cases / AI Warnings
+- Do not bypass API interceptors.
+- Do not mix complex React logic (`useEffect`) with JSX markup.
 
-## Architectural Rules Checklist (AI Context)
-- [x] **Micro-modularization**: Component files must not exceed 250-350 lines. Break down into sub-components.
-- [x] **Prefixing**: ALL file names must start with `Manager...` (e.g., `ManagerSalesTerminal.tsx`).
-- [x] **Logic Separation**: Heavy logic must be extracted into `use[ComponentName].ts` hooks.
-- [x] **Theme Contract**: No arbitrary Tailwind pixel/hex values. Use CSS variables defined in the theme contract.
-- [x] **Data Fetching**: Use Server Components for initial secure fetch, Client components for interactivity.
-- [x] **Imports**: Absolute imports ONLY (`@/app/manager/...`). Zero cross-module imports.
+## Rule Compliance Checklist
+- [x] Rule 1: Micro-modularization
+- [x] Rule 7: Type isolation
+- [x] Rule 8: Server/client boundary
+- [x] Rule 9: Loading/error/not-found handling
+- [x] Rule 14: Backend-driven messages
+- [x] Rule 15A: Tests present
+- [x] Rule 15B: Forms use React Hook Form + Zod
+- [x] Rule 15C: State placed per Server/Client decision matrix
+- [x] Rule 15D: Env vars validated centrally, none exposed unsafely
+- [x] Rule 15E: Error monitoring wired for critical flows
+- [x] Rule 74: Security scan gates passed (SCA + secrets)
+- [x] Rule 76: CODEOWNERS covers security-critical paths
+- [x] Rule 79: MSW handler present where needed

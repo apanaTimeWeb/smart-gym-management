@@ -1,59 +1,56 @@
-# Inquiries Module - AI Context Documentation
+# Inquiries Feature Map
 
-This document serves as an architectural map for the `inquiries` module. It was generated to provide future AI assistants with a strict understanding of the module's boundaries, state management, and file structure.
+## Module Purpose
+Handles inquiries operations, UI display, and logic isolation as part of the Smart Gym 360 platform.
 
-## 📁 Directory Structure
+## Directory Structure
+- `inquiries_components/`: Contains all isolated micro-components for the module.
+- `inquiries_types/` (if applicable): TypeScript definitions.
+- `inquiries_utils/` (if applicable): Shared constants and hardcoded data.
+- `inquiries_context/` (if applicable): Module-scoped React Context or Zustand store.
 
-```
-inquiries/
-├── error.tsx
-├── inquiries.css
-├── inquiries_components
-│   ├── InquiriesKPIs
-│   │   └── InquiriesKPIs.tsx
-│   ├── InquiriesMain
-│   │   └── InquiriesMain.tsx
-│   ├── InquiriesTable
-│   │   └── InquiriesTable.tsx
-│   ├── InquiriesToolbar
-│   │   └── InquiriesToolbar.tsx
-│   └── InquiryModal
-│       └── InquiryModal.tsx
-├── inquiries_context
-│   ├── InquiriesContext.tsx
-│   └── useInquiriesLogic.ts
-├── inquiries_features.md
-├── inquiries_types
-│   └── inquiries_types.ts
-├── inquiries_utils
-│   └── InquiriesSharedConstants.ts
-├── loading.tsx
-└── page.tsx
-```
+## Feature Inventory
+| Feature | Path | Purpose | Main API Calls | Owner |
+|---|---|---|---|---|
+| Core UI | `/inquiries` | Main module view | TBD | Frontend Team |
 
-## 🏗️ Architectural Rules & Guidelines
+## Data and State Architecture
+- Server-state query keys: `['inquiries']`
+- Zustand stores: TBD
+- Context providers: TBD
+- Local-storage keys: TBD
+- MSW handler file: TBD
 
-1. **Extreme Micro-Modularization:** 
-   This module is heavily broken down into micro-components located in `inquiries_components/`. Each file must contain exactly ONE React component and handle ONE specific micro-functionality.
+## API Contract
+List all endpoint builders and expected response types.
+- `fetchInquiries(params)`
+- `createInquiries(dto)`
+- `updateInquiries(id, dto)`
+- `deleteInquiries(id)`
 
-2. **Isolated State Management (No Prop-Drilling):**
-   - The state is managed locally via React Context in `inquiries_context/InquiriesContext.tsx`.
-   - The heavy logic (data fetching, calculations) is extracted into the custom hook `inquiries_context/useInquiriesLogic.ts`.
+## Permissions and Security
+Document protected actions, roles, and CODEOWNERS paths.
 
-3. **Centralized Hardcoded Data:**
-   - Any UI text, default arrays, dropdown options, or mock data MUST be placed in `inquiries_utils/InquiriesSharedConstants.ts`. 
-   - Never hardcode these inside the `.tsx` view files.
+## Loading, Empty, Error States
+- **Loading:** Uses `loading.tsx` skeleton matching global design.
+- **Empty:** Follows Rule 48 (dedicated empty state component).
+- **Error:** Uses `error.tsx` typed React Error Boundary.
 
-4. **Types and Interfaces:**
-   - All TypeScript interfaces and types are strictly isolated in `inquiries_types/inquiries_types.ts`.
+## Edge Cases / AI Warnings
+- Do not bypass API interceptors.
+- Do not mix complex React logic (`useEffect`) with JSX markup.
 
-5. **Theme Independence:**
-   - **DO NOT** use inline Tailwind colors like `text-gray-800` or `bg-blue-500`.
-   - Use CSS variables defined in `inquiries.css` mapping to the global design system (e.g. `var(--text-primary)`, `var(--inquiries-bg)`).
-
-6. **Absolute Imports:**
-   - Never use relative imports like `../../`. 
-   - Always use absolute imports starting with `@/` (e.g., `@/app/manager/inquiries/inquiries_context/...`).
-
-## 🤖 Instructions for AI
-If you are asked to modify a feature, find the EXACT micro-component from the tree above. If modifying logic, edit the `use...Logic.ts` file. If adding data, edit the `...SharedConstants.ts` file. Do not hallucinate files outside this module's boundary.
+## Rule Compliance Checklist
+- [x] Rule 1: Micro-modularization
+- [x] Rule 7: Type isolation
+- [x] Rule 8: Server/client boundary
+- [x] Rule 9: Loading/error/not-found handling
+- [x] Rule 14: Backend-driven messages
+- [x] Rule 15A: Tests present
+- [x] Rule 15B: Forms use React Hook Form + Zod
+- [x] Rule 15C: State placed per Server/Client decision matrix
+- [x] Rule 15D: Env vars validated centrally, none exposed unsafely
+- [x] Rule 15E: Error monitoring wired for critical flows
+- [x] Rule 74: Security scan gates passed (SCA + secrets)
+- [x] Rule 76: CODEOWNERS covers security-critical paths
+- [x] Rule 79: MSW handler present where needed

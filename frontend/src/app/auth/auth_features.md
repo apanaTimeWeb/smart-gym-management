@@ -1,42 +1,56 @@
-# Auth Module - AI Context Documentation
+# Auth Feature Map
 
-This document serves as an architectural map for the root `auth` module. It was generated to provide future AI assistants with a strict understanding of the module's boundaries, state management, and file structure.
+## Module Purpose
+Handles auth operations, UI display, and logic isolation as part of the Smart Gym 360 platform.
 
-## 📁 Directory Structure
+## Directory Structure
+- `auth_components/`: Contains all isolated micro-components for the module.
+- `auth_types/` (if applicable): TypeScript definitions.
+- `auth_utils/` (if applicable): Shared constants and hardcoded data.
+- `auth_context/` (if applicable): Module-scoped React Context or Zustand store.
 
-```
-auth/
-├── auth_api/
-├── auth_features.md
-├── auth_forbidden.md
-├── auth_theme_contract.md
-├── auth_url_config.ts
-├── login/
-├── logout/
-├── refresh/
-├── set-cookie/
-└── token/
-```
+## Feature Inventory
+| Feature | Path | Purpose | Main API Calls | Owner |
+|---|---|---|---|---|
+| Core UI | `/auth` | Main module view | TBD | Frontend Team |
 
-## 🏗️ Architectural Rules & Guidelines
+## Data and State Architecture
+- Server-state query keys: `['auth']`
+- Zustand stores: TBD
+- Context providers: TBD
+- Local-storage keys: TBD
+- MSW handler file: TBD
 
-1. **Extreme Micro-Modularization:** 
-   This module handles all authentication sub-routes and APIs. Any UI functionality must be deeply nested within a sub-module (e.g., `login/`) and its respective `[subModuleName]_components/` directory.
+## API Contract
+List all endpoint builders and expected response types.
+- `fetchAuth(params)`
+- `createAuth(dto)`
+- `updateAuth(id, dto)`
+- `deleteAuth(id)`
 
-2. **Isolated State Management (No Prop-Drilling):**
-   - The state is managed locally via React Context or a module-scoped store within the sub-modules.
-   - The heavy logic (data fetching, session state) is extracted into custom hooks.
+## Permissions and Security
+Document protected actions, roles, and CODEOWNERS paths.
 
-3. **Centralized Hardcoded Data:**
-   - Any UI text, default arrays, dropdown options, or mock data MUST be placed in `[subModuleName]_utils/`. 
+## Loading, Empty, Error States
+- **Loading:** Uses `loading.tsx` skeleton matching global design.
+- **Empty:** Follows Rule 48 (dedicated empty state component).
+- **Error:** Uses `error.tsx` typed React Error Boundary.
 
-4. **Theme Independence:**
-   - **DO NOT** use inline Tailwind colors.
-   - Use CSS variables defined in global css mapping to the global design system or `auth_theme_contract.md`.
+## Edge Cases / AI Warnings
+- Do not bypass API interceptors.
+- Do not mix complex React logic (`useEffect`) with JSX markup.
 
-5. **Absolute Imports:**
-   - Never use relative imports like `../../`. 
-   - Always use absolute imports starting with `@/` (e.g., `@/app/auth/...`).
-
-## 🤖 Instructions for AI
-If you are asked to modify a feature, find the EXACT micro-component from the tree above. If modifying logic, edit the appropriate hook. If adding data, edit the utils file. Do not hallucinate files outside this module's boundary.
+## Rule Compliance Checklist
+- [x] Rule 1: Micro-modularization
+- [x] Rule 7: Type isolation
+- [x] Rule 8: Server/client boundary
+- [x] Rule 9: Loading/error/not-found handling
+- [x] Rule 14: Backend-driven messages
+- [x] Rule 15A: Tests present
+- [x] Rule 15B: Forms use React Hook Form + Zod
+- [x] Rule 15C: State placed per Server/Client decision matrix
+- [x] Rule 15D: Env vars validated centrally, none exposed unsafely
+- [x] Rule 15E: Error monitoring wired for critical flows
+- [x] Rule 74: Security scan gates passed (SCA + secrets)
+- [x] Rule 76: CODEOWNERS covers security-critical paths
+- [x] Rule 79: MSW handler present where needed

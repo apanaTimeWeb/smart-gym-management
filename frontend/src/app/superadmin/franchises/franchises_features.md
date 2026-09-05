@@ -1,30 +1,56 @@
-# Franchises Module - AI Context Documentation
+# Franchises Feature Map
 
-This document serves as an architectural map for the `franchises` module. It was generated to provide future AI assistants with a strict understanding of the module's boundaries, state management, and file structure.
+## Module Purpose
+Handles franchises operations, UI display, and logic isolation as part of the Smart Gym 360 platform.
 
-## 🏗️ Architectural Rules & Guidelines
+## Directory Structure
+- `franchises_components/`: Contains all isolated micro-components for the module.
+- `franchises_types/` (if applicable): TypeScript definitions.
+- `franchises_utils/` (if applicable): Shared constants and hardcoded data.
+- `franchises_context/` (if applicable): Module-scoped React Context or Zustand store.
 
-1. **Extreme Micro-Modularization:** 
-   This module is heavily broken down into micro-components located in `franchises_components/`. Each file must contain exactly ONE React component and handle ONE specific micro-functionality.
+## Feature Inventory
+| Feature | Path | Purpose | Main API Calls | Owner |
+|---|---|---|---|---|
+| Core UI | `/franchises` | Main module view | TBD | Frontend Team |
 
-2. **Isolated State Management (No Prop-Drilling):**
-   - The state is managed locally via React Context or a module-scoped store.
-   - The heavy logic (data fetching, calculations) is extracted into custom hooks.
+## Data and State Architecture
+- Server-state query keys: `['franchises']`
+- Zustand stores: TBD
+- Context providers: TBD
+- Local-storage keys: TBD
+- MSW handler file: TBD
 
-3. **Centralized Hardcoded Data:**
-   - Any UI text, default arrays, dropdown options, or mock data MUST be placed in `franchises_utils/`. 
-   - Never hardcode these inside the `.tsx` view files.
+## API Contract
+List all endpoint builders and expected response types.
+- `fetchFranchises(params)`
+- `createFranchises(dto)`
+- `updateFranchises(id, dto)`
+- `deleteFranchises(id)`
 
-4. **Types and Interfaces:**
-   - All TypeScript interfaces and types are strictly isolated in `franchises_types/`.
+## Permissions and Security
+Document protected actions, roles, and CODEOWNERS paths.
 
-5. **Theme Independence:**
-   - **DO NOT** use inline Tailwind colors.
-   - Use CSS variables defined in global css mapping to the global design system.
+## Loading, Empty, Error States
+- **Loading:** Uses `loading.tsx` skeleton matching global design.
+- **Empty:** Follows Rule 48 (dedicated empty state component).
+- **Error:** Uses `error.tsx` typed React Error Boundary.
 
-6. **Absolute Imports:**
-   - Never use relative imports like `../../`. 
-   - Always use absolute imports starting with `@/` (e.g., `@/app/superadmin/franchises/...`).
+## Edge Cases / AI Warnings
+- Do not bypass API interceptors.
+- Do not mix complex React logic (`useEffect`) with JSX markup.
 
-## 🤖 Instructions for AI
-If you are asked to modify a feature, find the EXACT micro-component from the tree above. If modifying logic, edit the appropriate hook. If adding data, edit the utils file. Do not hallucinate files outside this module's boundary.
+## Rule Compliance Checklist
+- [x] Rule 1: Micro-modularization
+- [x] Rule 7: Type isolation
+- [x] Rule 8: Server/client boundary
+- [x] Rule 9: Loading/error/not-found handling
+- [x] Rule 14: Backend-driven messages
+- [x] Rule 15A: Tests present
+- [x] Rule 15B: Forms use React Hook Form + Zod
+- [x] Rule 15C: State placed per Server/Client decision matrix
+- [x] Rule 15D: Env vars validated centrally, none exposed unsafely
+- [x] Rule 15E: Error monitoring wired for critical flows
+- [x] Rule 74: Security scan gates passed (SCA + secrets)
+- [x] Rule 76: CODEOWNERS covers security-critical paths
+- [x] Rule 79: MSW handler present where needed

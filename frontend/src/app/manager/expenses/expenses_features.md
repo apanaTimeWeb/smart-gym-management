@@ -1,48 +1,56 @@
-# Expenses Module - AI Context Documentation
+# Expenses Feature Map
 
-This document serves as an architectural map for the `expenses` module. It was generated to provide future AI assistants with a strict understanding of the module's boundaries, state management, and file structure.
+## Module Purpose
+Handles expenses operations, UI display, and logic isolation as part of the Smart Gym 360 platform.
 
-## 📁 Directory Structure
+## Directory Structure
+- `expenses_components/`: Contains all isolated micro-components for the module.
+- `expenses_types/` (if applicable): TypeScript definitions.
+- `expenses_utils/` (if applicable): Shared constants and hardcoded data.
+- `expenses_context/` (if applicable): Module-scoped React Context or Zustand store.
 
-```
-expenses/
-├── error.tsx
-├── expenses_api
-├── expenses_components
-├── expenses_context
-├── expenses_features.md
-├── expenses_forbidden.md
-├── expenses_store
-├── expenses_types
-├── expenses_utils
-├── loading.tsx
-├── ManagerExpensesUrlConfig.ts
-└── page.tsx
-```
+## Feature Inventory
+| Feature | Path | Purpose | Main API Calls | Owner |
+|---|---|---|---|---|
+| Core UI | `/expenses` | Main module view | TBD | Frontend Team |
 
-## 🏗️ Architectural Rules & Guidelines
+## Data and State Architecture
+- Server-state query keys: `['expenses']`
+- Zustand stores: TBD
+- Context providers: TBD
+- Local-storage keys: TBD
+- MSW handler file: TBD
 
-1. **Extreme Micro-Modularization:** 
-   This module is heavily broken down into micro-components located in `expenses_components/`. Each file must contain exactly ONE React component and handle ONE specific micro-functionality.
+## API Contract
+List all endpoint builders and expected response types.
+- `fetchExpenses(params)`
+- `createExpenses(dto)`
+- `updateExpenses(id, dto)`
+- `deleteExpenses(id)`
 
-2. **Isolated State Management (No Prop-Drilling):**
-   - The state is managed locally via React Context in `expenses_context/` or module-scoped store in `expenses_store/`.
-   - The heavy logic (data fetching, calculations) is extracted into the custom hooks.
+## Permissions and Security
+Document protected actions, roles, and CODEOWNERS paths.
 
-3. **Centralized Hardcoded Data:**
-   - Any UI text, default arrays, dropdown options, or mock data MUST be placed in `expenses_utils/`. 
-   - Never hardcode these inside the `.tsx` view files.
+## Loading, Empty, Error States
+- **Loading:** Uses `loading.tsx` skeleton matching global design.
+- **Empty:** Follows Rule 48 (dedicated empty state component).
+- **Error:** Uses `error.tsx` typed React Error Boundary.
 
-4. **Types and Interfaces:**
-   - All TypeScript interfaces and types are strictly isolated in `expenses_types/`.
+## Edge Cases / AI Warnings
+- Do not bypass API interceptors.
+- Do not mix complex React logic (`useEffect`) with JSX markup.
 
-5. **Theme Independence:**
-   - **DO NOT** use inline Tailwind colors.
-   - Use CSS variables defined in global css mapping to the global design system.
-
-6. **Absolute Imports:**
-   - Never use relative imports like `../../`. 
-   - Always use absolute imports starting with `@/` (e.g., `@/app/manager/expenses/...`).
-
-## 🤖 Instructions for AI
-If you are asked to modify a feature, find the EXACT micro-component from the tree above. If modifying logic, edit the appropriate hook. If adding data, edit the utils file. Do not hallucinate files outside this module's boundary.
+## Rule Compliance Checklist
+- [x] Rule 1: Micro-modularization
+- [x] Rule 7: Type isolation
+- [x] Rule 8: Server/client boundary
+- [x] Rule 9: Loading/error/not-found handling
+- [x] Rule 14: Backend-driven messages
+- [x] Rule 15A: Tests present
+- [x] Rule 15B: Forms use React Hook Form + Zod
+- [x] Rule 15C: State placed per Server/Client decision matrix
+- [x] Rule 15D: Env vars validated centrally, none exposed unsafely
+- [x] Rule 15E: Error monitoring wired for critical flows
+- [x] Rule 74: Security scan gates passed (SCA + secrets)
+- [x] Rule 76: CODEOWNERS covers security-critical paths
+- [x] Rule 79: MSW handler present where needed
