@@ -1,56 +1,54 @@
 # Landing Feature Map
 
 ## Module Purpose
-Handles landing operations, UI display, and logic isolation as part of the Smart Gym 360 platform.
+The Landing module provides the public-facing marketing and information pages for Smart Gym 360. It showcases features, pricing plans, trainer profiles, and acts as the entry point for both Superadmin and ERP users. It is entirely decoupled from authenticated operational modules.
 
 ## Directory Structure
-- `landing_components/`: Contains all isolated micro-components for the module.
-- `landing_types/` (if applicable): TypeScript definitions.
-- `landing_utils/` (if applicable): Shared constants and hardcoded data.
-- `landing_context/` (if applicable): Module-scoped React Context or Zustand store.
+- `landing_components/`: Contains all isolated micro-components for the landing page (Navbar, Hero, Features, Pricing, etc).
+- `landing_types/`: TypeScript definitions for landing-specific data structures.
+- `landing_utils/`: Shared constants and hardcoded data (e.g., feature lists, pricing tiers).
+- `landing_context/`: Module-scoped React Context for managing scroll state and mobile menu toggles.
 
 ## Feature Inventory
-| Feature | Path | Purpose | Main API Calls | Owner |
+| Feature | Path | Purpose | Main API Calls | Status |
 |---|---|---|---|---|
-| Core UI | `/landing` | Main module view | TBD | Frontend Team |
+| Home Page | `/` | Main marketing landing page | N/A (Static/Hardcoded) | ✅ Live |
+| Navbar | `LandingNavbar` | Navigation and login CTA | N/A | ✅ Live |
+| Hero | `LandingHero` | Main value proposition | N/A | ✅ Live |
+| Features | `LandingFeatures` | Showcasing platform capabilities | N/A | ✅ Live |
 
 ## Data and State Architecture
-- Server-state query keys: `['landing']`
-- Zustand stores: TBD
-- Context providers: TBD
-- Local-storage keys: TBD
-- MSW handler file: TBD
+- **Server-state query keys:** N/A (No API fetching required for current landing page)
+- **Zustand stores:** N/A
+- **Context providers:** `LandingProvider` (handles `scrolled` state for navbar, and `menuOpen` state)
+- **Local-storage keys:** None
+- **MSW handler file:** N/A
 
 ## API Contract
-List all endpoint builders and expected response types.
-- `fetchLanding(params)`
-- `createLanding(dto)`
-- `updateLanding(id, dto)`
-- `deleteLanding(id)`
+No API calls are currently made from the Landing module. All content is static or passed as hardcoded constants to ensure maximum performance and SEO.
 
 ## Permissions and Security
-Document protected actions, roles, and CODEOWNERS paths.
+- Role: Public access (Unauthenticated).
+- No sensitive data is exposed or fetched.
 
 ## Loading, Empty, Error States
 - **Loading:** Uses `loading.tsx` skeleton matching global design.
-- **Empty:** Follows Rule 48 (dedicated empty state component).
-- **Error:** Uses `error.tsx` typed React Error Boundary.
+- **Empty:** N/A for static content.
+- **Error:** Uses `error.tsx` typed React Error Boundary to catch UI rendering crashes.
 
 ## Edge Cases / AI Warnings
-- Do not bypass API interceptors.
-- Do not mix complex React logic (`useEffect`) with JSX markup.
+- **No API calls** should be added to the landing page unless explicitly requested (e.g., a contact form). Performance and SEO are the top priorities here.
+- **Z-index scale**: Follow global design rules (`LandingNavbar` is `z-20`).
 
 ## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization
-- [x] Rule 7: Type isolation
-- [x] Rule 8: Server/client boundary
-- [x] Rule 9: Loading/error/not-found handling
-- [x] Rule 14: Backend-driven messages
-- [x] Rule 15A: Tests present
-- [x] Rule 15B: Forms use React Hook Form + Zod
-- [x] Rule 15C: State placed per Server/Client decision matrix
-- [x] Rule 15D: Env vars validated centrally, none exposed unsafely
-- [x] Rule 15E: Error monitoring wired for critical flows
-- [x] Rule 74: Security scan gates passed (SCA + secrets)
-- [x] Rule 76: CODEOWNERS covers security-critical paths
-- [x] Rule 79: MSW handler present where needed
+- [x] Rule 1: Micro-modularization — module-prefixed subfolders
+- [x] Rule 2: Total Role Isolation — zero cross-role imports
+- [x] Rule 3: Hyper-descriptive naming — `Landing` prefix on all files
+- [x] Rule 4: Theme Independence — Tailwind tokens via `globals.css`
+- [x] Rule 5: Smart State Management — Context used for UI state
+- [x] Rule 7: Type Isolation — `*_types/` folders used
+- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server, `LandingNavbar.tsx` = Client
+- [x] Rule 9: Loading/error/not-found — `loading.tsx` + `error.tsx` present
+- [x] Rule 13: Feature Map — this document
+- [x] Design §12: Z-index scale — navbar z-20
+- [x] Design §29: motion-safe guards on all transitions and animations

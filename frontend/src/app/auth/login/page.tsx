@@ -41,7 +41,7 @@ export default async function Login() {
 
   return (
     <div className="min-h-screen flex bg-page font-sans relative">
-      <div className="absolute top-6 right-6 z-50">
+      <div className="absolute top-6 right-6 z-30">
         <ThemeToggle />
       </div>
       <LoginErrorBoundary>
