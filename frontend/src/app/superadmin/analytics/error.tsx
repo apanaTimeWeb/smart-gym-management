@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 // RESPONSIBILITY: error.tsx handles module-level rendering errors.
 
 import { useEffect } from 'react';

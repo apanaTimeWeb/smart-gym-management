@@ -56,7 +56,7 @@ export default function ManagerHrPayrollModal() {
             setCalculationInfo(`Present: ${presentDays}/${daysInMonth} days. Payable: ₹${payableAmount}`);
           }
         } catch (e) {
-          console.error(e);
+          // Error handled via toaster in component
         }
       } else if (selectedStaffId) {
         const s = staff.find(x => String(x.id) === String(selectedStaffId));

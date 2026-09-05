@@ -1,5 +1,5 @@
-﻿// RESPONSIBILITY: useCouponsPage.ts encapsulates all state and async logic for the Coupons page.
-// DATA FLOW: superadminApi Ã¢â€ â€™ useCouponsPage Ã¢â€ â€™ CouponsClient
+// RESPONSIBILITY: useCouponsPage.ts encapsulates all state and async logic for the Coupons page.
+// DATA FLOW: superadminApi â†’ useCouponsPage â†’ CouponsClient
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

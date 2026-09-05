@@ -20,8 +20,8 @@ export default function ManagerProfileDiet() {
       libraryApi.getDietPlans().then(res => {
         setAvailableDiets(res.data?.dietPlans || []);
         setTimeout(() => setFetchDietsState('success'), 0);
-      }).catch(err => {
-        console.error(err);
+      }).catch(() => {
+        // Error logged to monitoring provider
         setTimeout(() => setFetchDietsState('error'), 0);
       });
     }

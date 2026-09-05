@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Hook to manage the state and logic of the SuperadminGymDeleteModal.
+// RESPONSIBILITY: Hook to manage the state and logic of the SuperadminGymDeleteModal.
 // DATA FLOW: SuperadminGymDeleteModal -> useSuperadminGymDeleteModal -> API
 
 import { useState, useEffect } from 'react';

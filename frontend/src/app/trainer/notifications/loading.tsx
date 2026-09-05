@@ -5,7 +5,7 @@ import { Bell } from 'lucide-react';
 
 export default function NotificationsLoading() {
   return (
-    <div className="p-4 md:p-8 animate-pulse">
+    <div className="p-4 md:p-8 motion-safe:animate-pulse">
       <div className="mb-6">
         <h1 className="text-2xl font-bold flex items-center gap-2 mb-2 text-primary">
           <Bell className="text-secondary" />

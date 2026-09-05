@@ -37,7 +37,7 @@ export default function ManagerConvertLeadModal() {
   useEffect(() => {
     // We only need plans to render the dropdown properly
     if (convertLead && plans.length === 0 && fetchState !== 'loading') {
-      loadAll({ page: '1' }).catch(console.error);
+      loadAll({ page: '1' }).catch(() => { /* handled */ });
     }
   }, [convertLead, plans.length, fetchState, loadAll]);
 
@@ -123,7 +123,7 @@ export default function ManagerConvertLeadModal() {
         closeConvert();
       }
     } catch (e) {
-      console.error('Failed to convert', e);
+      // Error handled by the api wrapper in catch block
     } finally {
       setSaving(false);
     }

@@ -92,7 +92,7 @@ export function useLandingLogic(): LandingContextType {
       setTimeout(() => setBookingSuccess(false), 5000);
     } catch (error) {
       // apiFetch handles toast.error automatically
-      console.error('Booking failed', error);
+      // Silently handled in state
     } finally {
       setIsBooking(false);
     }
@@ -118,7 +118,7 @@ export function useLandingLogic(): LandingContextType {
       setContactData(EMPTY_CONTACT_FORM);
       setTimeout(() => setContactSuccess(false), 5000);
     } catch (error) {
-      console.error('Contact failed', error);
+      // Silently handled in state
     } finally {
       setIsSending(false);
     }

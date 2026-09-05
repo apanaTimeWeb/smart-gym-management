@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Skeleton loader for the page, conforming to enterprise design rules (bg-skeleton-base).
+// RESPONSIBILITY: Skeleton loader for the page, conforming to enterprise design rules (bg-skeleton-base).
 export default function Loading() {
   return (
     <div className="space-y-6">

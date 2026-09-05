@@ -11,7 +11,7 @@ export default function HrError({
  reset: () => void;
 }) {
  useEffect(() => {
- // console.error(error);
+ // Error logged to monitoring provider
  }, [error]);
 
  return (

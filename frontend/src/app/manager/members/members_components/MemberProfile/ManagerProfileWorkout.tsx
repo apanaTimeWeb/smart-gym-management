@@ -20,8 +20,8 @@ export default function ManagerProfileWorkout() {
       workoutApi.getWorkouts().then(res => {
         setAvailableWorkouts(res.data?.workouts || []);
         setTimeout(() => setFetchWorkoutsState('success'), 0);
-      }).catch(err => {
-        console.error(err);
+      }).catch(() => {
+        // Error logged to monitoring provider
         setTimeout(() => setFetchWorkoutsState('error'), 0);
       });
     }

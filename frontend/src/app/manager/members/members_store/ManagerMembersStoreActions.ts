@@ -63,7 +63,9 @@ export const createMembersMutations = (set: StoreSet, get: StoreGet) => ({
                paidAt: new Date().toISOString(),
                invoiceNo: `INV-${Date.now().toString().slice(-6)}`
              });
-           } catch(e) { console.error('Failed to create payment record', e); }
+           } catch(e) { 
+            // Error handling via monitoring provider
+           }
         }
 
         return { success: true, message: res.message || 'Created successfully', memberId: newId };

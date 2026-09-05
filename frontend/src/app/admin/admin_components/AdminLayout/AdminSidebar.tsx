@@ -54,7 +54,7 @@ export default function AdminSidebar({ isCollapsed, setIsCollapsed }: AdminSideb
         />
       )}
 
-      <aside className={`fixed left-0 top-0 h-full bg-sidebar border-r border-border z-50 flex flex-col transition-all duration-300 ${
+      <aside className={`fixed left-0 top-0 h-full bg-sidebar border-r border-border z-50 flex flex-col motion-safe:transition-all motion-safe:duration-300 ${
         isCollapsed ? 'lg:w-23' : 'lg:w-64'
       } ${
         isMobileOpen ? 'w-64 translate-x-0' : 'w-64 -translate-x-full lg:translate-x-0'

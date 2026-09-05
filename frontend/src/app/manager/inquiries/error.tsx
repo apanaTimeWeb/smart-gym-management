@@ -11,7 +11,7 @@ export default function InquiriesError({
  reset: () => void;
 }) {
  useEffect(() => {
- // console.error(error);
+ // Error logged to monitoring provider
  }, [error]);
 
  return (

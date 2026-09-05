@@ -14,7 +14,7 @@ export default function AdminBranchDetailDrawer() {
   return (
     <>
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40" onClick={closeDetail} />
-      <div className="fixed right-0 top-0 h-full w-full max-w-lg bg-card border-l border-border z-50 flex flex-col shadow-2xl">
+      <div className="fixed right-0 top-0 h-full w-full max-w-lg bg-card border-l border-border z-40 flex flex-col shadow-2xl">
         <div className="flex items-center justify-between p-5 border-b border-border">
           <div><h2 className="font-bold text-text-primary text-lg">{titles[view]}</h2><p className="text-sm text-text-secondary flex items-center gap-1.5 mt-0.5"><Building2 size={13} /> {branch.name}</p></div>
           <button onClick={closeDetail} className="w-8 h-8 rounded-lg bg-bg-input hover:bg-border flex items-center justify-center transition-colors"><X size={16} className="text-text-secondary" /></button>
