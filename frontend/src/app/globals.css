@@ -21,11 +21,9 @@
   
   --color-primary-hover: var(--primary-hover);
   --color-primary-subtle: var(--primary-subtle);
-  --color-bg-page: var(--bg-page);
-  --color-bg-card: var(--bg-card);
+  --color-page: var(--bg-page);
   --color-sidebar: var(--bg-sidebar);
   --color-header: var(--bg-header);
-  --color-bg-input: var(--bg-input);
   --color-border-focus: var(--border-focus);
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
@@ -42,9 +40,9 @@
   --color-skeleton-highlight: var(--skeleton-highlight);
 
   /* Surface elevation tokens (Design System §28) */
-  --color-bg-floating: var(--bg-floating);
-  --color-bg-overlay: var(--bg-overlay);
-  --color-bg-popover: var(--bg-popover);
+  --color-floating: var(--bg-floating);
+  --color-overlay: var(--bg-overlay);
+  --color-popover: var(--bg-popover);
 
   /* Payment mode tokens (Design System §1) */
   --color-pay-cash: var(--pay-cash);
