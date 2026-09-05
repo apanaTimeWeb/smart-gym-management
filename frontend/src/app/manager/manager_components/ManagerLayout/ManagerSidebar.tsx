@@ -83,15 +83,16 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
                 key={item.href}
                 href={item.href}
                 title={!showLabel ? item.label : ''}
-                className={`flex items-center gap-3 py-2.5 rounded-xl font-medium transition-all duration-200 group cursor-pointer ${
+                className={`flex items-center gap-3 py-2.5 rounded-xl font-medium motion-safe:transition-all motion-safe:duration-200 group cursor-pointer ${
                   !showLabel ? 'justify-center px-0' : 'px-3.5'
                 } ${
                   active
-                    ? 'bg-primary text-white border border-transparent shadow-lg'
-                    : 'text-secondary hover:text-primary hover:bg-primary-subtle'
+                    ? 'bg-primary-subtle text-primary border-l-2 border-primary'
+                    : 'text-secondary hover:text-primary hover:bg-primary-subtle border-l-2 border-transparent'
                 }`}
+                style={active ? { boxShadow: '0 0 15px rgba(250,204,21,0.15)' } : undefined}
               >
-                <Icon size={22} className={active ? 'text-white' : 'text-secondary group-hover:text-primary transition-colors'} />
+                <Icon size={18} strokeWidth={2} className={active ? 'text-primary' : 'text-secondary group-hover:text-primary motion-safe:transition-colors'} />
                 {showLabel && <span className="text-sm whitespace-nowrap">{item.label}</span>}
               </Link>
             );

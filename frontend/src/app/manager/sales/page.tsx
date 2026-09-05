@@ -14,9 +14,6 @@ export default async function SalesPage() {
       ssrSalesApi.getPendingPayments(params),
       ssrSalesApi.getAllMemberships(params)
     ]);
-    console.log('[DEBUG SSR] overviewRes:', overviewRes.data);
-    console.log('[DEBUG SSR] reportRes:', reportRes.data);
-    
     initialData = {
       overviewData: Array.isArray(overviewRes.data) ? overviewRes.data : overviewRes.data?.monthlyRevenue || [],
       membershipReport: Array.isArray(reportRes.data) ? reportRes.data : (reportRes.data?.report || []),
