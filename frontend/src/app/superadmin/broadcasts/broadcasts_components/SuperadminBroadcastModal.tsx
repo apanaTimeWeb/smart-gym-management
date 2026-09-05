@@ -9,6 +9,7 @@ import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { useQuery } from '@tanstack/react-query';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
+import { MOCK_GYMS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
 
 interface SuperadminBroadcastModalProps {
   isOpen: boolean;
@@ -36,7 +37,8 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
     enabled: isOpen,
   });
 
-  const gyms = (fetchRes?.data as Tenant[]) ?? [];
+  const rawGyms = (fetchRes?.data as Tenant[]) ?? [];
+  const gyms = rawGyms.length > 0 ? rawGyms : MOCK_GYMS;
 
   const allGymIds = gyms.map((g: Tenant) => g.id) || [];
   const isAllSelected = allGymIds.length > 0 && targetGymIds.length === allGymIds.length;

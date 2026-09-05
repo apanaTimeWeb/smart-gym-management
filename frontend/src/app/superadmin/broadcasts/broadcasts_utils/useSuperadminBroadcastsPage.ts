@@ -10,6 +10,7 @@ import { useLocalStorage } from '@/lib/useLocalStorage';
 import { useQuery } from '@tanstack/react-query';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
+import { MOCK_GYMS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
 
 /** LocalStorage key for persisting broadcasts across refreshes (TC-28/29 fix) */
 const BROADCASTS_STORAGE_KEY = 'superadmin_broadcasts_v1';
@@ -58,7 +59,8 @@ export const useSuperadminBroadcastsPage = () => {
     queryFn: () => superadminApi.gyms.fetchGyms(),
   });
 
-  const gyms = (fetchRes?.data as Tenant[]) ?? [];
+  const rawGyms = (fetchRes?.data as Tenant[]) ?? [];
+  const gyms = rawGyms.length > 0 ? rawGyms : MOCK_GYMS;
 
   const form = useForm<BroadcastFormData>({
     resolver: zodResolver(BroadcastSchema),

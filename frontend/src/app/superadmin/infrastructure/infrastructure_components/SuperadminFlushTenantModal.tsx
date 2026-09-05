@@ -5,6 +5,7 @@ import { X, Loader2, Search } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
+import { MOCK_GYMS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
 
 interface FlushTenantModalProps {
   isOpen: boolean;
@@ -23,7 +24,8 @@ export default function SuperadminFlushTenantModal({ isOpen, onClose, onFlush }:
     enabled: isOpen,
   });
 
-  const gyms = (fetchRes?.data as Tenant[]) ?? [];
+  const rawGyms = (fetchRes?.data as Tenant[]) ?? [];
+  const gyms = rawGyms.length > 0 ? rawGyms : MOCK_GYMS;
 
   useEffect(() => {
     if (!isOpen) {
