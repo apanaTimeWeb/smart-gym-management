@@ -26,6 +26,17 @@ export default function ManagerSalesAllMemberships() {
 
   const totalPages = Math.ceil(allMembershipsTotal / MANAGER_ITEMS_PER_PAGE) || 1;
 
+  const filteredMemberships = allMemberships.filter((m: Member) => {
+    if (filter === 'All') return true;
+    if (filter === 'Active') return m.status === 'ACTIVE' && new Date(m.expiryDate).getTime() >= now;
+    if (filter === 'Expired') return new Date(m.expiryDate).getTime() < now;
+    if (filter === 'Expiring Soon') {
+      const daysLeft = Math.floor((new Date(m.expiryDate).getTime() - now) / 86400000);
+      return daysLeft >= 0 && daysLeft <= 7;
+    }
+    return true;
+  });
+
   if (fetchState === 'loading') {
     return (
       <div className="space-y-2">
@@ -75,7 +86,7 @@ export default function ManagerSalesAllMemberships() {
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {allMemberships.map((r: Member) => (
+            {filteredMemberships.map((r: Member) => (
               <tr key={r.id} className="hover:bg-primary-subtle transition-colors">
                 <td className="px-4 py-3 text-sm font-medium text-foreground">{r.name}</td>
                 <td className="px-4 py-3 text-sm text-secondary">{r.plan?.name ?? `Plan #${r.planId}`}</td>
@@ -102,7 +113,7 @@ export default function ManagerSalesAllMemberships() {
         </table>
       </div>
 
-      {allMemberships.length === 0 && (
+      {filteredMemberships.length === 0 && (
         <ManagerSalesEmptyState message="No memberships found" subtext="Try adjusting your filters." />
       )}
 

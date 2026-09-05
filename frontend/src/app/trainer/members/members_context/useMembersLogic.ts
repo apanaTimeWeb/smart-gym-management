@@ -74,7 +74,7 @@ export function useMembersLogic(initialData?: any | null): MembersContextType {
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
-      if (initialData) return;
+      
     }
     loadAll({ search: debouncedSearch, status: statusFilter, page: currentPage.toString() }).catch(() => {
       showToast('Failed to load members', 'error');
@@ -140,4 +140,5 @@ export function useMembersLogic(initialData?: any | null): MembersContextType {
     msgModal, openMsg, closeMsg
   };
 }
+
 

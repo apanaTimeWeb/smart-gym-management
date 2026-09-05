@@ -258,7 +258,7 @@ export async function routeMockRequest<T>(
     return { success: true, message: 'History fetched', data: history } as unknown as ApiResponse<T>;
   }
   if (path.includes('/attendance/today-stats')) {
-    const records = MockDB.getCollection('mock_admin_attendance', generate(20, i => { const d = new Date(); d.setHours(8, 0, 0, 0); const d2 = new Date(); d2.setHours(9, 30, 0, 0); return { id: `att-${i}`, type: i % 4 === 0 ? 'STAFF' : 'MEMBER', member: { name: `Active Member ${i}` }, staff: { name: `Trainer ${i}` }, date: new Date().toISOString(), checkIn: d.toISOString(), checkOut: d2.toISOString() }; }));
+    const records = MockDB.getCollection('mock_admin_attendance', generate(20, i => { const d = new Date(); d.setHours(8, 0, 0, 0); const d2 = new Date(); d2.setHours(9, 30, 0, 0); return { id: `att-${i}`, type: i % 4 === 0 ? 'STAFF' : 'MEMBER', member: { name: `Member ${i + 1}` }, staff: { name: `Staff ${i + 1}` }, date: new Date().toISOString(), checkIn: d.toISOString(), checkOut: d2.toISOString() }; }));
     const todayStr = new Date().toISOString().split('T')[0];
     const todayRecords = records.filter(r => (r.date as string)?.startsWith(todayStr));
     const memberCheckIns = todayRecords.filter(r => r.type === 'MEMBER').length;
@@ -267,9 +267,9 @@ export async function routeMockRequest<T>(
   }
   if (path.includes('/attendance')) {
     const existing = MockDB.getCollection('mock_admin_attendance', []);
-    const defaultData = generate(20, i => { const d = new Date(); d.setHours(8, 0, 0, 0); const d2 = new Date(); d2.setHours(9, 30, 0, 0); return { id: `att-${i}`, type: i % 4 === 0 ? 'STAFF' : 'MEMBER', member: { name: `Active Member ${i}` }, staff: { name: `Trainer ${i}` }, date: new Date().toISOString(), checkIn: d.toISOString(), checkOut: d2.toISOString() }; });
+    const defaultData = generate(20, i => { const d = new Date(); d.setHours(8, 0, 0, 0); const d2 = new Date(); d2.setHours(9, 30, 0, 0); return { id: `att-${i}`, type: i % 4 === 0 ? 'STAFF' : 'MEMBER', member: { name: `Member ${i + 1}` }, staff: { name: `Staff ${i + 1}` }, date: new Date().toISOString(), checkIn: d.toISOString(), checkOut: d2.toISOString() }; });
     
-    if (existing.length === 0) {
+    if (existing.length === 0 || existing.some((r: any) => r.member?.name?.includes('Active Member') || r.staff?.name?.includes('Trainer '))) {
       MockDB.setCollection('mock_admin_attendance', defaultData);
     }
     
@@ -718,6 +718,31 @@ export async function routeMockRequest<T>(
       return { success: true, message: 'Demo Pending Payments', data: {
         members: generate(6, i => ({ id: `mem-${i}`, name: `Defaulter ${i+1}`, pendingAmount: 5000, dueDate: '2023-11-01' })),
         total: 6
+      }} as unknown as ApiResponse<T>;
+    }
+    if (path.includes('/sales/all-memberships')) {
+      return { success: true, message: 'Demo All Memberships', data: {
+        members: generate(10, i => {
+          const now = Date.now();
+          // Mix of statuses: 5 Active, 2 Expiring Soon (3 days), 3 Expired (-5 days)
+          let status = 'ACTIVE';
+          let expiry = now + 30 * 24 * 60 * 60 * 1000;
+          
+          if (i > 4 && i <= 6) {
+             expiry = now + 3 * 24 * 60 * 60 * 1000; // Expiring in 3 days
+          } else if (i > 6) {
+             status = 'EXPIRED';
+             expiry = now - 5 * 24 * 60 * 60 * 1000; // Expired 5 days ago
+          }
+
+          return { 
+            id: `all-mem-${i}`, name: `Member ${i+1}`, phone: '1234567890', email: `mem${i}@test.com`,
+            status, billingCycle: '1 Month', paidAmount: 5000, pendingAmount: 0,
+            joinDate: new Date(now - 60*24*60*60*1000).toISOString(), expiryDate: new Date(expiry).toISOString(),
+            planId: 'basic', gender: 'MALE', branch: 'Main', createdAt: new Date().toISOString()
+          };
+        }),
+        total: 10
       }} as unknown as ApiResponse<T>;
     }
     // End removed

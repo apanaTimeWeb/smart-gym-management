@@ -114,7 +114,7 @@ export function useManagerStoreLogic(initialData?: StoreInitialData | null): Sto
   useEffect(() => { 
     if (isFirstRender.current) {
       isFirstRender.current = false;
-      if (initialData) return;
+      
     }
     loadAll(); 
   }, [loadAll, initialData]);
@@ -146,3 +146,4 @@ export function useManagerStoreLogic(initialData?: StoreInitialData | null): Sto
     hideToast, loadAll
  };
 }
+

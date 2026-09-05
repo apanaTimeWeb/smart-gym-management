@@ -9,6 +9,7 @@ import { DATE_FILTERS } from '@/app/manager/sales/sales_utils/ManagerSalesShared
 export default function ManagerSalesToolbar() {
   const { 
     tab, dateFilter, setDateFilter, search, setSearch, setCurrentPage,
+    customStartDate, setCustomStartDate, customEndDate, setCustomEndDate,
     overviewData, membershipReport, pendingPayments, allMemberships
   } = useSalesContext();
   const [prevSearch, setPrevSearch] = useState(search);
@@ -46,6 +47,23 @@ export default function ManagerSalesToolbar() {
  </button>
  ))}
  </div>
+ {dateFilter === 'Custom' && (
+   <div className="flex items-center gap-2 mt-2 sm:mt-0 ml-0 sm:ml-2">
+     <input
+       type="date"
+       value={customStartDate}
+       onChange={(e) => setCustomStartDate(e.target.value)}
+       className="px-3 py-1.5 border border-border rounded-lg text-sm bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+     />
+     <span className="text-secondary text-sm">to</span>
+     <input
+       type="date"
+       value={customEndDate}
+       onChange={(e) => setCustomEndDate(e.target.value)}
+       className="px-3 py-1.5 border border-border rounded-lg text-sm bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+     />
+   </div>
+ )}
  <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
   <div className="relative">
     <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />

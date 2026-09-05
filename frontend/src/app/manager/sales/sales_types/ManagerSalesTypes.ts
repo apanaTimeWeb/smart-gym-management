@@ -55,6 +55,10 @@ export interface SalesContextType {
   setDateFilter: (filter: DateFilter) => void;
   search: string;
   setSearch: (search: string) => void;
+  customStartDate: string;
+  setCustomStartDate: (s: string) => void;
+  customEndDate: string;
+  setCustomEndDate: (s: string) => void;
   currentPage: number;
   setCurrentPage: (page: number) => void;
   

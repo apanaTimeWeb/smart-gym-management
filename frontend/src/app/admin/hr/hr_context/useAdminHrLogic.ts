@@ -115,7 +115,7 @@ export function useAdminHrLogic(initialData?: HrInitialData | null): HrContextTy
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
-      if (initialData) return;
+      
     }
     loadAll(); 
   }, [loadAll, initialData]);
@@ -157,4 +157,5 @@ export function useAdminHrLogic(initialData?: HrInitialData | null): HrContextTy
     openAdd, openEdit, openAddPayroll, saveStaff, savePayroll, deleteStaff, toggleStaffStatus, markPayrollPaid, payrollMonth, setPayrollMonth
   };
 }
+
 

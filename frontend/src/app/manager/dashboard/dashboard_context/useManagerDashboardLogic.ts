@@ -24,7 +24,7 @@ export function useManagerDashboardLogic(initialData?: DashboardStats | null): D
 
   // Fetch only when no SSR initialData was passed from page.tsx; initialData in deps prevents re-fetch on SSR hydration
   useEffect(() => {
-    if (initialData) return;
+    
 
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setStatus('loading');
@@ -41,3 +41,4 @@ export function useManagerDashboardLogic(initialData?: DashboardStats | null): D
 
   return { stats, status, error, timeRange, setTimeRange, startDate, endDate, setCustomDateRange };
 }
+
