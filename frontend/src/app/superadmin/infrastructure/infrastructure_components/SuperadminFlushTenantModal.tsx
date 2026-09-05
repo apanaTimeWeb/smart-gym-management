@@ -5,6 +5,7 @@ import { X, Loader2, Search } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
+import { MOCK_GYMS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
 
 interface FlushTenantModalProps {
   isOpen: boolean;
@@ -23,7 +24,8 @@ export default function SuperadminFlushTenantModal({ isOpen, onClose, onFlush }:
     enabled: isOpen,
   });
 
-  const gyms = (fetchRes?.data as Tenant[]) ?? [];
+  const rawGyms = (fetchRes?.data as Tenant[]) ?? [];
+  const gyms = rawGyms.length > 0 ? rawGyms : MOCK_GYMS;
 
   useEffect(() => {
     if (!isOpen) {
@@ -73,7 +75,7 @@ export default function SuperadminFlushTenantModal({ isOpen, onClose, onFlush }:
               placeholder="Search by gym name..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus motion-safe:transition-colors"
+              className="w-full pl-9 pr-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary motion-safe:transition-colors"
             />
           </div>
 

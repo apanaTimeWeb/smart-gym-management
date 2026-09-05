@@ -63,7 +63,12 @@ export function useManagerLibraryLogic(initialData?: LibraryInitialData | null):
   params.search = debouncedSearch;
  }
  const dietRes = await libraryApi.getDietPlans(params);
- setDietPlans(dietRes.data?.dietPlans || dietRes.data || []);
+ let fetchedDiets = dietRes.data?.dietPlans || dietRes.data || [];
+ if (debouncedSearch) {
+   const q = debouncedSearch.toLowerCase();
+   fetchedDiets = fetchedDiets.filter((d: DietPlan) => d.name.toLowerCase().includes(q));
+ }
+ setDietPlans(fetchedDiets);
  } catch (e) {
  showToast((e as Error).message, 'error');
  setFetchState('error');

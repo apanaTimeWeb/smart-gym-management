@@ -72,7 +72,17 @@ export function useAttendanceLogic(): AttendanceContextType {
         { id: '1', name: 'John Doe', phone: '123', email: 'john@test.com', status: 'ACTIVE', billingCycle: '1 Month', paidAmount: 100, pendingAmount: 0, expiryDate: new Date().toISOString(), joinDate: new Date().toISOString(), planId: 'p1', gender: 'MALE', branch: 'Main Branch', createdAt: new Date().toISOString() }
       ];
 
-      setRecords(mockRecords);
+      let fetchedRecords = mockRecords;
+      if (debouncedSearch) {
+        const q = debouncedSearch.toLowerCase();
+        fetchedRecords = fetchedRecords.filter(r => 
+          (r.member?.name && r.member.name.toLowerCase().includes(q))
+        );
+      }
+      // Assuming tab filters by type in this simple mock
+      fetchedRecords = fetchedRecords.filter(r => r.type === tab);
+
+      setRecords(fetchedRecords);
       setTotalRecords(1);
       setTodayStats(mockStats);
       setMembers(mockMembers);

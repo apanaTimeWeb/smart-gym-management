@@ -162,9 +162,9 @@ export default function SuperadminSystemClient() {
                 value={logSearch}
                 onChange={(e) => {
                   setLogSearch(e.target.value);
-                  setCurrentPage(1); // Reset page on search
+                   // Reset page on search
                 }}
-                className="bg-card border border-border text-foreground text-sm rounded-lg pl-9 pr-4 py-2 focus:outline-none focus:border-border-focus"
+                className="bg-card border border-border text-foreground text-sm rounded-lg pl-9 pr-4 py-2 focus:outline-none focus:border-primary"
               />
             </div>
             <button className="p-2 bg-card border border-border rounded-lg text-secondary hover:text-foreground motion-safe:transition-colors">
@@ -220,5 +220,6 @@ export default function SuperadminSystemClient() {
     </div>
   );
 }
+
 
 

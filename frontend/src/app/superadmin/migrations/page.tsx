@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function SuperadminMigrationsPage() {
   return (
-    <main className="w-full h-full bg-bg-page min-h-screen">
+    <main className="w-full h-full bg-background min-h-screen">
       <SuperadminMigrationsClient />
     </main>
   );

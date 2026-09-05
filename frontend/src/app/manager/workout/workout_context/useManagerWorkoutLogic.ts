@@ -52,9 +52,18 @@ export function useManagerWorkoutLogic(): WorkoutContextType {
         workoutApi.getWorkouts(params),
         libraryApi.getExercises(params),
       ]);
-      setWorkouts(wkRes.data.workouts || []);
+      let fetchedWorkouts = wkRes.data.workouts || [];
+      let fetchedExercises = exRes.data.exercises || [];
+
+      if (debouncedSearch) {
+        const q = debouncedSearch.toLowerCase();
+        fetchedWorkouts = fetchedWorkouts.filter((w: Workout) => w.name.toLowerCase().includes(q));
+        fetchedExercises = fetchedExercises.filter((e: Exercise) => e.name.toLowerCase().includes(q) || (e.category && e.category.toLowerCase().includes(q)));
+      }
+
+      setWorkouts(fetchedWorkouts);
       setTotalWorkouts(wkRes.data.total || 0);
-      setExercises(exRes.data.exercises || []);
+      setExercises(fetchedExercises);
       setTotalExercises(exRes.data.total || 0);
     } catch (e) {
       showToast((e as Error).message, 'error');

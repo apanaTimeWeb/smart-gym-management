@@ -78,8 +78,25 @@ export function useManagerHrLogic(initialData?: HrInitialData | null): HrContext
         hrApi.getSummary()
       ]);
       
-      setStaff(staffRes.data.staff || []);
-      setPayrolls(payrollsRes.data.payrolls || []);
+      let fetchedStaff = staffRes.data.staff || [];
+      let fetchedPayrolls = payrollsRes.data.payrolls || [];
+
+      if (roleFilter !== 'All') {
+        fetchedStaff = fetchedStaff.filter((s: Staff) => s.role === roleFilter);
+      }
+      
+      if (debouncedSearch) {
+        const q = debouncedSearch.toLowerCase();
+        fetchedStaff = fetchedStaff.filter((s: Staff) => 
+          s.name.toLowerCase().includes(q) || s.phone.includes(q) || (s.email && s.email.toLowerCase().includes(q))
+        );
+        fetchedPayrolls = fetchedPayrolls.filter((p: Payroll) => 
+          p.staff?.name && p.staff.name.toLowerCase().includes(q)
+        );
+      }
+
+      setStaff(fetchedStaff);
+      setPayrolls(fetchedPayrolls);
       setSummary(summaryRes.data || { totalStaff: 0, activeStaff: 0, totalPayrollThisMonth: 0, paidCount: 0, pendingCount: 0 });
       setFetchState('success');
     } catch (e) {

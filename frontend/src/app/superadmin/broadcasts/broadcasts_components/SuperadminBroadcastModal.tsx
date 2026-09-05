@@ -9,6 +9,7 @@ import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { useQuery } from '@tanstack/react-query';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
+import { MOCK_GYMS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
 
 interface SuperadminBroadcastModalProps {
   isOpen: boolean;
@@ -36,7 +37,8 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
     enabled: isOpen,
   });
 
-  const gyms = (fetchRes?.data as Tenant[]) ?? [];
+  const rawGyms = (fetchRes?.data as Tenant[]) ?? [];
+  const gyms = rawGyms.length > 0 ? rawGyms : MOCK_GYMS;
 
   const allGymIds = gyms.map((g: Tenant) => g.id) || [];
   const isAllSelected = allGymIds.length > 0 && targetGymIds.length === allGymIds.length;
@@ -74,7 +76,7 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
             <label className="text-sm font-bold text-secondary">Broadcast Title <span className="text-danger">*</span></label>
             <input 
               {...register('title')}
-              className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus motion-safe:transition-colors"
+              className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary motion-safe:transition-colors"
               placeholder="e.g. Scheduled Maintenance"
             />
             {errors.title && <span className="text-xs text-danger">{errors.title.message}</span>}
@@ -85,7 +87,7 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
             <textarea 
               {...register('content')}
               rows={4}
-              className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus motion-safe:transition-colors resize-none"
+              className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary motion-safe:transition-colors resize-none"
               placeholder="Write your announcement here..."
             />
             {errors.content && <span className="text-xs text-danger">{errors.content.message}</span>}
@@ -151,7 +153,7 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
               <input 
                 type="datetime-local" 
                 {...register('scheduledDate')}
-                className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus motion-safe:transition-colors"
+                className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary motion-safe:transition-colors"
               />
               {errors.scheduledDate && <span className="text-xs text-danger">{errors.scheduledDate.message}</span>}
             </div>

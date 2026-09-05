@@ -50,7 +50,7 @@ export default function SuperadminAddGymForm() {
                 <label className="text-sm font-bold text-secondary">Gym Name</label>
                 <input 
                   {...register('gymName')}
-                  className="w-full bg-card border border-border text-foreground rounded-lg px-4 py-2 focus:outline-none focus:border-border-focus motion-safe:transition-colors"
+                  className="w-full bg-card border border-border text-foreground rounded-lg px-4 py-2 focus:outline-none focus:border-primary motion-safe:transition-colors"
                   placeholder="e.g. Titan Fitness"
                 />
                 {errors.gymName && <p className="text-danger text-xs">{errors.gymName.message}</p>}
@@ -60,7 +60,7 @@ export default function SuperadminAddGymForm() {
                 <label className="text-sm font-bold text-secondary">Owner Name</label>
                 <input 
                   {...register('ownerName')}
-                  className="w-full bg-card border border-border text-foreground rounded-lg px-4 py-2 focus:outline-none focus:border-border-focus motion-safe:transition-colors"
+                  className="w-full bg-card border border-border text-foreground rounded-lg px-4 py-2 focus:outline-none focus:border-primary motion-safe:transition-colors"
                   placeholder="e.g. John Doe"
                 />
                 {errors.ownerName && <p className="text-danger text-xs">{errors.ownerName.message}</p>}
@@ -71,7 +71,7 @@ export default function SuperadminAddGymForm() {
                 <input 
                   type="email"
                   {...register('adminEmail')}
-                  className="w-full bg-card border border-border text-foreground rounded-lg px-4 py-2 focus:outline-none focus:border-border-focus motion-safe:transition-colors"
+                  className="w-full bg-card border border-border text-foreground rounded-lg px-4 py-2 focus:outline-none focus:border-primary motion-safe:transition-colors"
                   placeholder="admin@titanfitness.com"
                 />
                 {errors.adminEmail && <p className="text-danger text-xs">{errors.adminEmail.message}</p>}
@@ -81,7 +81,7 @@ export default function SuperadminAddGymForm() {
                 <label className="text-sm font-bold text-secondary">Phone Number</label>
                 <input 
                   {...register('phone')}
-                  className="w-full bg-card border border-border text-foreground rounded-lg px-4 py-2 focus:outline-none focus:border-border-focus motion-safe:transition-colors"
+                  className="w-full bg-card border border-border text-foreground rounded-lg px-4 py-2 focus:outline-none focus:border-primary motion-safe:transition-colors"
                   placeholder="+1 555-0000"
                 />
                 {errors.phone && <p className="text-danger text-xs">{errors.phone.message}</p>}
@@ -93,7 +93,7 @@ export default function SuperadminAddGymForm() {
                   <input 
                     type={showPassword ? "text" : "password"}
                     {...register('temporaryPassword')}
-                    className="w-full bg-card border border-border text-foreground rounded-lg px-4 py-2 pr-10 focus:outline-none focus:border-border-focus motion-safe:transition-colors"
+                    className="w-full bg-card border border-border text-foreground rounded-lg px-4 py-2 pr-10 focus:outline-none focus:border-primary motion-safe:transition-colors"
                     placeholder="Min 8 characters"
                   />
                   <button

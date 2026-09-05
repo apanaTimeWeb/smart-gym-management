@@ -73,8 +73,34 @@ export function useManagerStoreLogic(initialData?: StoreInitialData | null): Sto
         storeApi.getOrders(params),
         storeApi.getStoreSummary(),
       ]);
-      setProducts(Array.isArray(productsRes.data) ? productsRes.data : (productsRes.data as { products?: unknown[] }).products as Product[] || []);
-      setOrders(ordersRes.data.orders || []);
+      let fetchedProducts = Array.isArray(productsRes.data) ? productsRes.data : (productsRes.data as { products?: unknown[] }).products as Product[] || [];
+      let fetchedOrders = ordersRes.data.orders || [];
+
+      if (debouncedSearch) {
+        const q = debouncedSearch.toLowerCase();
+        fetchedProducts = fetchedProducts.filter((p: Product) => p.name.toLowerCase().includes(q) || (p.category && p.category.toLowerCase().includes(q)));
+        fetchedOrders = fetchedOrders.filter((o: Order) => 
+          o.id.toLowerCase().includes(q) || (o.notes && o.notes.toLowerCase().includes(q))
+        );
+      }
+
+      if (startDate) {
+        const start = new Date(startDate).getTime();
+        fetchedOrders = fetchedOrders.filter((o: Order) => new Date(o.createdAt).getTime() >= start);
+      }
+      if (endDate) {
+        const end = new Date(endDate).getTime();
+        fetchedOrders = fetchedOrders.filter((o: Order) => new Date(o.createdAt).getTime() <= end + 86400000);
+      }
+
+      fetchedOrders.sort((a, b) => {
+        const dateA = new Date(a.createdAt).getTime();
+        const dateB = new Date(b.createdAt).getTime();
+        return sortOrder === 'ASC' ? dateA - dateB : dateB - dateA;
+      });
+
+      setProducts(fetchedProducts);
+      setOrders(fetchedOrders);
       setTotalOrders(ordersRes.data.total || 0);
       setSummary(summaryRes.data);
  } catch (e) { 

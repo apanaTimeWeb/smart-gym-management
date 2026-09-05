@@ -22,7 +22,7 @@ export default function AdminPlansToolbar() {
     const timer = setTimeout(() => {
       if (localSearch !== search) {
         setSearch(localSearch);
-        setCurrentPage(1);
+        
       }
     }, 300);
     return () => clearTimeout(timer);
@@ -61,5 +61,6 @@ export default function AdminPlansToolbar() {
  </div>
  );
 }
+
 
 

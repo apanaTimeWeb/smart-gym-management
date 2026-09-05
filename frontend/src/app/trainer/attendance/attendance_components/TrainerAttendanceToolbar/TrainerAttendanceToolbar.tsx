@@ -18,7 +18,7 @@ export default function TrainerAttendanceToolbar() {
     const handler = setTimeout(() => {
       if (localSearch !== search) {
         setSearch(localSearch);
-        setCurrentPage(1);
+        
       }
     }, 300);
     return () => clearTimeout(handler);
@@ -69,4 +69,5 @@ export default function TrainerAttendanceToolbar() {
  </div>
  );
 }
+
 

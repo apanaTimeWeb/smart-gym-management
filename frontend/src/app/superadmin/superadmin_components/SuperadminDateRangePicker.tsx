@@ -18,9 +18,9 @@ export default function SuperadminDateRangePicker({ onRangeChange }: SuperadminD
   };
 
   return (
-    <div className="flex items-center gap-3 bg-bg-page border border-border rounded-lg p-1.5 shadow-sm">
-      <div className="pl-2"><Calendar className="w-4 h-4 text-text-secondary" /></div>
-      <select value={range} onChange={(e) => handleChange(e.target.value)} className="bg-transparent text-sm text-text-primary focus:outline-none cursor-pointer">
+    <div className="flex items-center gap-3 bg-background border border-border rounded-lg p-1.5 shadow-sm">
+      <div className="pl-2"><Calendar className="w-4 h-4 text-secondary" /></div>
+      <select value={range} onChange={(e) => handleChange(e.target.value)} className="bg-transparent text-sm text-foreground focus:outline-none cursor-pointer">
         <option value="today">Today</option>
         <option value="this_week">This Week</option>
         <option value="this_month">This Month</option>
@@ -29,9 +29,9 @@ export default function SuperadminDateRangePicker({ onRangeChange }: SuperadminD
       </select>
       {range === "custom" && (
         <div className="flex items-center gap-2 pl-2 border-l border-border">
-          <input type="date" value={customStart} onChange={e => { setCustomStart(e.target.value); onRangeChange(e.target.value, customEnd); }} className="bg-transparent text-sm text-text-primary focus:outline-none" />
-          <span className="text-text-secondary">-</span>
-          <input type="date" value={customEnd} onChange={e => { setCustomEnd(e.target.value); onRangeChange(customStart, e.target.value); }} className="bg-transparent text-sm text-text-primary focus:outline-none" />
+          <input type="date" value={customStart} onChange={e => { setCustomStart(e.target.value); onRangeChange(e.target.value, customEnd); }} className="bg-transparent text-sm text-foreground focus:outline-none" />
+          <span className="text-secondary">-</span>
+          <input type="date" value={customEnd} onChange={e => { setCustomEnd(e.target.value); onRangeChange(customStart, e.target.value); }} className="bg-transparent text-sm text-foreground focus:outline-none" />
         </div>
       )}
     </div>

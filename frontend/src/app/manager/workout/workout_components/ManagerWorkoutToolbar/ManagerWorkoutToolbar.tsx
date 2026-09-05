@@ -21,7 +21,7 @@ export default function ManagerWorkoutToolbar() {
     const timer = setTimeout(() => {
       if (localSearch !== search) {
         setSearch(localSearch);
-        if (typeof setCurrentPage === 'function') setCurrentPage(1);
+        
       }
     }, 300);
     return () => clearTimeout(timer);
@@ -33,7 +33,7 @@ export default function ManagerWorkoutToolbar() {
         {WORKOUT_TAB_OPTIONS.map(t => (
           <button 
             key={t} 
-            onClick={() => { setTab(t); setCurrentPage(1); setSearch(''); }}
+            onClick={() => { setTab(t);  setSearch(''); }}
             className={`px-5 py-3.5 text-sm font-medium transition-colors border-b-2 whitespace-nowrap ${
               tab === t 
                 ? 'text-primary bg-primary-subtle' 
@@ -66,3 +66,4 @@ export default function ManagerWorkoutToolbar() {
  </div>
  );
 }
+

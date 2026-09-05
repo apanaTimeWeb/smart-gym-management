@@ -80,7 +80,21 @@ export function useManagerAttendanceLogic(): AttendanceContextType {
         hrApi.getStaff() as unknown as Promise<ApiResponse<{ staff: Staff[] } | Staff[]>>,
       ]);
 
-      setRecords(attRes.data.attendance || ((attRes.data as unknown) as { attendances?: import("@/app/manager/attendance/attendance_types/ManagerAttendanceTypes").Attendance[] }).attendances || []);
+      let fetchedRecords = attRes.data.attendance || ((attRes.data as unknown) as { attendances?: import("@/app/manager/attendance/attendance_types/ManagerAttendanceTypes").Attendance[] }).attendances || [];
+      
+      if (tab !== 'All') {
+        fetchedRecords = fetchedRecords.filter((r: Attendance) => r.type === (tab === 'Members' ? 'MEMBER' : 'STAFF'));
+      }
+      
+      if (debouncedSearch) {
+        const q = debouncedSearch.toLowerCase();
+        fetchedRecords = fetchedRecords.filter((r: Attendance) => 
+          (r.member?.name && r.member.name.toLowerCase().includes(q)) || 
+          (r.staff?.name && r.staff.name.toLowerCase().includes(q))
+        );
+      }
+
+      setRecords(fetchedRecords);
       setTotalRecords(attRes.data.total || 0);
       setTodayStats(statsRes.data);
       setMembers(memRes.data.members || []);

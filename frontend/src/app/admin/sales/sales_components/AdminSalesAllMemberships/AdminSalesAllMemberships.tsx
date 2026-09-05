@@ -82,7 +82,7 @@ export default function AdminSalesAllMemberships() {
         {kpiCards.map(({ filter, label, count, icon: Icon, color, bg, activeBorder }) => (
           <button
             key={filter}
-            onClick={() => { setActiveFilter(filter); setCurrentPage(1); }}
+            onClick={() => { setActiveFilter(filter);  }}
             className={`text-left p-4 rounded-xl border-2 transition-all duration-200 bg-card hover:shadow-md ${
               activeFilter === filter
                 ? `${activeBorder} shadow-sm`
@@ -157,4 +157,5 @@ export default function AdminSalesAllMemberships() {
     </div>
   );
 }
+
 

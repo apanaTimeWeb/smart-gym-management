@@ -36,7 +36,7 @@ export default function AdminDashboardRecentMembers() {
             <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-secondary" />
             <input
               value={search}
-              onChange={e => { setSearch(e.target.value); setCurrentPage(1); }}
+              onChange={e => { setSearch(e.target.value);  }}
               placeholder="Search members..."
               className="pl-8 pr-3 py-1.5 text-sm border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page w-40 sm:w-52 bg-input text-primary"
             />
@@ -103,5 +103,6 @@ export default function AdminDashboardRecentMembers() {
     </div>
   );
 }
+
 
 

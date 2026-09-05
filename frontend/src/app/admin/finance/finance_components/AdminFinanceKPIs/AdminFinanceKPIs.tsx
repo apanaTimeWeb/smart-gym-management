@@ -70,7 +70,7 @@ export default function AdminFinanceKPIs() {
             key={k.label}
             onClick={() => {
               setMethodFilter(isThisActive ? 'All' : k.filterKey);
-              setCurrentPage(1);
+              
             }}
             className={`text-left rounded-xl p-4 shadow-sm border-2 transition-all duration-200 bg-card hover:shadow-md flex items-center gap-3 ${
               isThisActive ? `${k.activeBorder}` : 'border-border hover:border-border/70'
@@ -89,5 +89,6 @@ export default function AdminFinanceKPIs() {
     </div>
   );
 }
+
 
 

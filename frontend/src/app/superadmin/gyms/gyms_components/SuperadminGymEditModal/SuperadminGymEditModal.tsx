@@ -49,7 +49,7 @@ export default function SuperadminGymEditModal() {
             <input
               type="text"
               {...register('name')}
-              className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-border-focus focus:outline-none motion-safe:transition-colors"
+              className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none motion-safe:transition-colors"
             />
             {errors.name && <p className="text-xs text-danger mt-1">{errors.name.message}</p>}
           </div>
@@ -59,7 +59,7 @@ export default function SuperadminGymEditModal() {
             <input
               type="text"
               {...register('ownerName')}
-              className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-border-focus focus:outline-none motion-safe:transition-colors"
+              className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none motion-safe:transition-colors"
             />
             {errors.ownerName && <p className="text-xs text-danger mt-1">{errors.ownerName.message}</p>}
           </div>
@@ -69,7 +69,7 @@ export default function SuperadminGymEditModal() {
             <input
               type="email"
               {...register('adminEmail')}
-              className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-border-focus focus:outline-none motion-safe:transition-colors"
+              className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none motion-safe:transition-colors"
             />
             {errors.adminEmail && <p className="text-xs text-danger mt-1">{errors.adminEmail.message}</p>}
           </div>
@@ -79,7 +79,7 @@ export default function SuperadminGymEditModal() {
             <input
               type="text"
               {...register('phone')}
-              className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-border-focus focus:outline-none motion-safe:transition-colors"
+              className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none motion-safe:transition-colors"
               placeholder="+1 555-0000"
             />
             {errors.phone && <p className="text-xs text-danger mt-1">{errors.phone.message}</p>}
@@ -91,7 +91,7 @@ export default function SuperadminGymEditModal() {
               <input
                 type={showPassword ? "text" : "password"}
                 {...register('temporaryPassword')}
-                className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-border-focus focus:outline-none motion-safe:transition-colors pr-10"
+                className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none motion-safe:transition-colors pr-10"
                 placeholder="Leave blank to keep current"
               />
               <button

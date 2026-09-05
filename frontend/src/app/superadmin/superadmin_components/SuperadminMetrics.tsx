@@ -28,7 +28,7 @@ export default function SuperadminMetrics({ label, value, type = "number", icon:
         <Icon className={`w-5 h-5 ${c.split(" ")[0]}`} />
       </div>
       <div>
-        <p className="text-xs text-text-secondary font-medium uppercase tracking-wide">{label}</p>
+        <p className="text-xs text-secondary font-medium uppercase tracking-wide">{label}</p>
         <p className={`text-2xl font-bold ${c.split(" ")[0]} mt-0.5`}>{displayValue}</p>
       </div>
     </div>

@@ -61,7 +61,7 @@ export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps>
             <label className="text-sm font-bold text-secondary">Coupon Code <span className="text-danger">*</span></label>
             <input 
               {...register('code')}
-              className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground font-mono uppercase focus:outline-none focus:border-border-focus motion-safe:transition-colors"
+              className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground font-mono uppercase focus:outline-none focus:border-primary motion-safe:transition-colors"
               placeholder="e.g. SUMMER2026"
             />
             {errors.code && <span className="text-xs text-danger">{errors.code.message}</span>}
@@ -100,7 +100,7 @@ export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps>
                   onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }}
                   min="0"
                   {...register('discountValue', { valueAsNumber: true })}
-                  className={`w-full ${watch('discountType') === 'EXACT' ? 'pl-9 pr-4' : 'px-4'} py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus motion-safe:transition-colors`}
+                  className={`w-full ${watch('discountType') === 'EXACT' ? 'pl-9 pr-4' : 'px-4'} py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary motion-safe:transition-colors`}
                   placeholder={watch('discountType') === 'PERCENTAGE' ? '25' : '500'}
                 />
               </div>
@@ -114,7 +114,7 @@ export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps>
                 onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }}
                 min="0"
                 {...register('maxUses', { valueAsNumber: true })}
-                className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus motion-safe:transition-colors"
+                className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary motion-safe:transition-colors"
                 placeholder="100"
               />
               {errors.maxUses && <span className="text-xs text-danger">{errors.maxUses.message}</span>}
@@ -126,7 +126,7 @@ export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps>
             <input 
               type="date" 
               {...register('expiryDate')}
-              className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus motion-safe:transition-colors"
+              className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary motion-safe:transition-colors"
             />
             {errors.expiryDate && <span className="text-xs text-danger">{errors.expiryDate.message}</span>}
           </div>

@@ -105,9 +105,10 @@ export function useManagerInquiriesLogic(): InquiriesContextType {
       }
       
       if (debouncedSearch) {
+        const q = debouncedSearch.toLowerCase();
         fetchedInquiries = fetchedInquiries.filter(i => 
-          i.name.toLowerCase().includes(debouncedSearch.toLowerCase()) || 
-          i.phone.includes(debouncedSearch)
+          (i.name && i.name.toLowerCase().includes(q)) || 
+          (i.phone && i.phone.includes(debouncedSearch))
         );
       }
 

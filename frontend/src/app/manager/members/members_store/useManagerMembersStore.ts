@@ -68,7 +68,7 @@ export const useManagerMembersStore = create<MembersState>((set, get) => ({
       ]);
       
       const plans = plansRes.data || [];
-      const members = (membersRes.data?.members || []).map((m: Member & { planId?: string }) => {
+      let members = (membersRes.data?.members || []).map((m: Member & { planId?: string }) => {
         if (!m.plan && m.planId) {
           m.plan = plans.find((p: Plan) => String(p.id) === String(m.planId));
         }
@@ -79,6 +79,19 @@ export const useManagerMembersStore = create<MembersState>((set, get) => ({
         }
         return m;
       });
+
+      if (params?.status && params.status !== 'All') {
+        members = members.filter((m: Member) => m.status === params.status);
+      }
+      if (params?.search) {
+        const query = params.search.toLowerCase();
+        members = members.filter((m: Member) => 
+          m.name.toLowerCase().includes(query) || 
+          m.phone.includes(query) || 
+          (m.email && m.email.toLowerCase().includes(query))
+        );
+      }
+
       
       set({
         members,

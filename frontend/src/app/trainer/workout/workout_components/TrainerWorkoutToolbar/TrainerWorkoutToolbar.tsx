@@ -22,7 +22,7 @@ export default function TrainerWorkoutToolbar() {
     const handler = setTimeout(() => {
       if (localSearch !== search) {
         setSearch(localSearch);
-        setCurrentPage(1);
+        
       }
     }, 300);
     return () => clearTimeout(handler);
@@ -34,7 +34,7 @@ export default function TrainerWorkoutToolbar() {
         {WORKOUT_TAB_OPTIONS.map(t => (
           <button 
             key={t} 
-            onClick={() => { setTab(t); setCurrentPage(1); setSearch(''); }}
+            onClick={() => { setTab(t);  setSearch(''); }}
             className={`px-5 py-3.5 text-sm font-medium motion-safe:transition-colors border-b-2 whitespace-nowrap ${
               tab === t 
                 ? 'text-primary bg-primary-subtle' 
@@ -67,4 +67,5 @@ export default function TrainerWorkoutToolbar() {
  </div>
  );
 }
+
 

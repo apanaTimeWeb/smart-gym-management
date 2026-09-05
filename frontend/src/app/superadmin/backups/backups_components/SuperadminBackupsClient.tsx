@@ -116,7 +116,7 @@ if (fetchState === 'loading') return (
               value={search}
               onChange={(e) => {
                 setSearch(e.target.value);
-                setCurrentPage(1);
+                
               }}
             />
           </div>
@@ -222,3 +222,4 @@ if (fetchState === 'loading') return (
     </div>
   );
 }
+

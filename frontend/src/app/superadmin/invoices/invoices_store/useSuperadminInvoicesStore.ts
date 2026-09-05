@@ -11,6 +11,7 @@ import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import type { SaaSInvoice } from '@/app/superadmin/invoices/superadmin_invoices_types/superadmin_invoices_types';
 import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
 import type { FetchState } from '@/app/superadmin/superadmin_types/superadmin_types';
+import { MOCK_GYMS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
 
 interface InvoicesState {
   invoices: SaaSInvoice[];
@@ -37,9 +38,11 @@ export const useSuperadminInvoicesStore = create<InvoicesState>((set, get) => ({
         invoicesApi.fetchInvoices(),
         superadminApi.gyms.fetchGyms()
       ]);
+      const rawTenants = tenantsRes.data || [];
+      const tenants = rawTenants.length > 0 ? rawTenants : MOCK_GYMS;
       set({ 
         invoices: invoicesRes.data || [], 
-        tenants: tenantsRes.data || [], 
+        tenants: tenants, 
         fetchState: 'success' 
       });
     } catch (error: unknown) {
