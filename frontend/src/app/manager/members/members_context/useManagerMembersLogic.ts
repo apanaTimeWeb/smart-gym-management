@@ -64,7 +64,7 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
-      if (initialData) return;
+      
     }
     loadAll({ search: debouncedSearch, status: statusFilter, page: currentPage.toString() }).catch(() => {
       showToast('Failed to load members', 'error');
@@ -142,3 +142,4 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
     printData, handlePrint, handleSharePaymentWhatsApp, setPrintData
   };
 }
+

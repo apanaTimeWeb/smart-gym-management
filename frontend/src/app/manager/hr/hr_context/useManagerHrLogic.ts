@@ -110,7 +110,7 @@ export function useManagerHrLogic(initialData?: HrInitialData | null): HrContext
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
-      if (initialData) return;
+      
     }
     loadAll(); 
   }, [loadAll, initialData]);
@@ -152,3 +152,4 @@ export function useManagerHrLogic(initialData?: HrInitialData | null): HrContext
     openAdd, openEdit, openAddPayroll, saveStaff, savePayroll, deleteStaff, toggleStaffStatus, markPayrollPaid, payrollMonth, setPayrollMonth
   };
 }
+

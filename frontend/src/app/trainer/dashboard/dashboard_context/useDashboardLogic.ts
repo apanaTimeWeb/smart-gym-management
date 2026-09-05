@@ -25,7 +25,7 @@ export function useDashboardLogic(initialData?: DashboardStats | null): Dashboar
   };
 
   useEffect(() => {
-    if (initialData) return;
+    
 
     setTimeout(() => {
       setStatus('loading');
@@ -52,4 +52,5 @@ export function useDashboardLogic(initialData?: DashboardStats | null): Dashboar
     setCustomDateRange
   };
 }
+
 
