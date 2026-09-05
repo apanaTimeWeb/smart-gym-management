@@ -1,20 +1,44 @@
-# Login Module Architecture
+# Login Module - AI Context Documentation
 
-## Directory Structure
-- `page.tsx`: A Server Component responsible for checking the active session cookie (`gymsmart_user`). If a session exists, it performs a server-side redirect to the dashboard without sending any UI or JavaScript to the client.
-- `login.css`: Contains CSS variables (e.g., `--login-primary`, `--login-bg-page`) derived from `global_design_system.md` for extreme theme isolation.
-- `login_types/login_types.ts`: Contains isolated TypeScript definitions and interfaces used within the module.
-- `login_constants/LoginSharedConstants.ts`: Centralizes static texts, API paths, and asset paths used in the Login flow.
-- `login_components/`: Contains isolated micro-components that only concern themselves with the UI layout.
-  - `LoginErrorBoundary/LoginErrorBoundary.tsx`: Typed Error Boundary component that wraps the login UI elements.
-  - `LoginHeroSection/LoginHeroSection.tsx`: Renders the desktop left-side visual banner.
-  - `LoginMobileHeader/LoginMobileHeader.tsx`: Renders the mobile logo banner.
-  - `LoginForm/LoginForm.tsx`: Renders the inputs and the submit button. It acts strictly as a View layer.
-  - `LoginForm/useLoginForm.ts`: A custom hook that isolates the React state (`email`, `password`, `loading`, `error`, `showPassword`) and encapsulates the `handleLogin` API flow logic strictly for the LoginForm.
+This document serves as an architectural map for the `auth/login` sub-module. It was generated to provide future AI assistants with a strict understanding of the module's boundaries, state management, and file structure.
 
+## 📁 Directory Structure
 
-## Future Modifications
-- To change text or paths, edit `login_constants/LoginSharedConstants.ts`.
-- To modify the login sequence logic, edit `login_components/LoginForm/useLoginForm.ts`.
-- To edit colors, update the CSS variables in `login.css`.
-- To update the form layout, edit `login_components/LoginForm/LoginForm.tsx`.
+```
+login/
+├── error.tsx
+├── loading.tsx
+├── login_components/
+├── login_constants/
+├── login_features.md
+├── login_forbidden.md
+├── login_types/
+└── page.tsx
+```
+
+## 🏗️ Architectural Rules & Guidelines
+
+1. **Extreme Micro-Modularization:** 
+   This module is heavily broken down into micro-components located in `login_components/`. Each file must contain exactly ONE React component and handle ONE specific micro-functionality.
+
+2. **Isolated State Management (No Prop-Drilling):**
+   - The state is managed locally via React Context or a module-scoped store.
+   - The heavy logic (data fetching, calculations) is extracted into custom hooks.
+
+3. **Centralized Hardcoded Data:**
+   - Any UI text, default arrays, dropdown options, or mock data MUST be placed in `login_constants/`. 
+   - Never hardcode these inside the `.tsx` view files.
+
+4. **Types and Interfaces:**
+   - All TypeScript interfaces and types are strictly isolated in `login_types/`.
+
+5. **Theme Independence:**
+   - **DO NOT** use inline Tailwind colors.
+   - Use CSS variables defined in global css mapping to the global design system.
+
+6. **Absolute Imports:**
+   - Never use relative imports like `../../`. 
+   - Always use absolute imports starting with `@/` (e.g., `@/app/auth/login/...`).
+
+## 🤖 Instructions for AI
+If you are asked to modify a feature, find the EXACT micro-component from the tree above. If modifying logic, edit the appropriate hook. If adding data, edit the utils file. Do not hallucinate files outside this module's boundary.
