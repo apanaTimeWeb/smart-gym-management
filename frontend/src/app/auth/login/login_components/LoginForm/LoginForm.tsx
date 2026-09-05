@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the premium login form card. Strictly a View layer — all state and logic lives in useLoginForm.ts.
 // All UI strings come from LoginSharedConstants — zero inline strings.
 'use client';
@@ -244,3 +246,4 @@ export default function LoginForm() {
     </div>
   );
 }
+

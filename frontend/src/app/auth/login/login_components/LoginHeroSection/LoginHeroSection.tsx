@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the premium visual hero panel for the login page (desktop only, hidden on mobile).
 // Uses CSS animations defined inline for the animated gradient mesh background.
 // All text content is sourced from LoginSharedConstants — never inline strings here.
@@ -15,7 +17,7 @@ export default function LoginHeroSection() {
         <div
           className="absolute inset-0 opacity-30"
           style={{
-            background: 'radial-gradient(ellipse 80% 70% at 10% 20%, var(--primary) 0%, transparent 60%), radial-gradient(ellipse 60% 60% at 90% 80%, #8B5CF6 0%, transparent 55%)',
+            background: 'radial-gradient(ellipse 80% 70% at 10% 20%, var(--primary) 0%, transparent 60%), radial-gradient(ellipse 60% 60% at 90% 80%, var(--info) 0%, transparent 55%)',
           }}
         />
         {/* Floating orbs */}
@@ -31,7 +33,7 @@ export default function LoginHeroSection() {
         <div
           className="absolute w-64 h-64 rounded-full opacity-10 blur-3xl"
           style={{
-            background: '#8B5CF6',
+            background: 'var(--info)',
             bottom: '10%',
             left: '5%',
             animation: 'floatOrb2 16s ease-in-out infinite',
@@ -86,8 +88,7 @@ export default function LoginHeroSection() {
             {LoginSharedConstants.TEXT.TITLE}
             <br />
             <span
-              className="bg-clip-text text-transparent"
-              style={{ backgroundImage: 'linear-gradient(135deg, var(--primary), #8B5CF6)' }}
+              className="bg-clip-text text-transparent bg-gradient-to-br from-primary to-blue-500"
             >
               {LoginSharedConstants.TEXT.SUBTITLE}
             </span>
@@ -152,3 +153,4 @@ export default function LoginHeroSection() {
     </div>
   );
 }
+

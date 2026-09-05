@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Defines ALL TypeScript interfaces and types for the Landing module.
 // Every shape used by LandingContext, useLandingLogic, and form components is declared here.
 // Rule 7: Never define interfaces inside component files.
@@ -40,3 +42,4 @@ export interface LandingContextType {
   setContactData: React.Dispatch<React.SetStateAction<typeof EMPTY_CONTACT_FORM>>;
   handleContact:  (e: React.FormEvent) => void;
 }
+

@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
+// DATA FLOW: Standard component data flow.
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import LoginHeroSection from '@/app/auth/login/login_components/LoginHeroSection/LoginHeroSection';
@@ -52,3 +54,4 @@ export default async function Login() {
     </div>
   );
 }
+

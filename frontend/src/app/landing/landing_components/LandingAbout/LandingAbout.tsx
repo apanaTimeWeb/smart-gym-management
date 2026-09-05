@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
+// DATA FLOW: Standard component data flow.
 "use client";
 // RESPONSIBILITY: Renders the About section — mission text, feature checklist on the left,
 // and a 2×2 grid of stat cards on the right. All data from LandingSharedConstants.
@@ -53,3 +55,4 @@ export default function LandingAbout() {
     </section>
   );
 }
+

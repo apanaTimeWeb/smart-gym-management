@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Skeleton loading state for the /landing route (Next.js Suspense boundary).
 // Mimics the Navbar bar + Hero section shape with motion-safe:animate-pulse to avoid layout shift on load.
 // Rule 26: Skeleton loaders over generic spinners.
@@ -24,3 +26,4 @@ export default function LandingLoading() {
     </div>
   );
 }
+

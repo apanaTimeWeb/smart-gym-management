@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Centralized URL configuration for the Auth module containing all internal routes, external API endpoints, and proxy routes to prevent hardcoded magic strings.
 export const AuthUrlConfig = {
   PAGES: {
@@ -19,4 +21,5 @@ export const AuthUrlConfig = {
     LOGOUT: '/auth/logout',
   }
 };
+
 

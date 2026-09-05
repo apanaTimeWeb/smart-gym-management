@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the mobile header for the login page, containing the logo and brand name.
 import Image from 'next/image';
 import { LoginSharedConstants } from '@/app/auth/login/login_constants/LoginSharedConstants';
@@ -10,3 +12,4 @@ export default function LoginMobileHeader() {
     </div>
   );
 }
+

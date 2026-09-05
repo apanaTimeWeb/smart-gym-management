@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: route.ts handles the logic and UI for its corresponding feature.
 import { NextRequest, NextResponse } from 'next/server';
 import { StatusCodes } from 'http-status-codes';
@@ -53,3 +55,4 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: false, message: 'Invalid refresh token' }, { status: 401 });
   }
 }
+

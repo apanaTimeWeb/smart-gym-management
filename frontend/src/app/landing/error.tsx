@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
+// DATA FLOW: Standard component data flow.
 'use client';
 // RESPONSIBILITY: Next.js error boundary for the /landing route segment.
 // Displays a styled error card with a Retry button. Logs the error for observability.
@@ -33,3 +35,4 @@ export default function LandingError({
     </div>
   );
 }
+

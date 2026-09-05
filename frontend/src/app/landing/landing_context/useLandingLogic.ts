@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Encapsulates ALL stateful logic for the Landing page.
 // Returns a plain object consumed by LandingProvider → LandingContext.
 // This file contains ONLY state + handlers — zero JSX.
@@ -129,3 +131,4 @@ export function useLandingLogic(): LandingContextType {
     isSending, contactSuccess, contactData, setContactData, handleContact,
   };
 }
+
