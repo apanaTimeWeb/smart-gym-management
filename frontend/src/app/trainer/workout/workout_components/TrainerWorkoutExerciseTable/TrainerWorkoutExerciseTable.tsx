@@ -13,8 +13,25 @@ import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerShare
 export default function TrainerWorkoutExerciseTable() {
   const { exercises, totalExercises, search, currentPage, setCurrentPage, openEditEx, deleteEx } = useWorkoutContext();
 
-  
   const totalPages = Math.ceil(totalExercises / TRAINER_ITEMS_PER_PAGE) || 1;
+  const { fetchState } = useWorkoutContext();
+
+  if (fetchState === 'loading') {
+    return (
+      <div className="flex justify-center py-10">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (fetchState === 'error') {
+    return (
+      <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
+        <p className="text-danger font-medium">Failed to load exercises.</p>
+        <p className="text-sm mt-1 text-secondary">Please check your connection and try again.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-full min-h-96">
@@ -33,10 +50,12 @@ export default function TrainerWorkoutExerciseTable() {
             {exercises.map(ex => (
               <tr key={ex.id} className="hover:bg-accent motion-safe:transition-colors cursor-pointer" onClick={() => openEditEx(ex)}>
                 <td className="px-4 py-3 text-sm font-medium text-foreground">{ex.name}</td>
-                <td className="px-4 py-3 text-sm text-secondary">{ex.muscleGroup?.join(', ')}</td>
+                <td className="px-4 py-3 text-sm text-secondary">
+                  {Array.isArray(ex.muscleGroup) ? ex.muscleGroup.join(', ') : (ex.muscleGroup || (ex as any).muscle || 'N/A')}
+                </td>
                 <td className="px-4 py-3">
                   <span className="text-xs bg-input text-secondary border border-border px-2 py-1 rounded-full">
-                    {ex.category || 'N/A'}
+                    {ex.category || (ex as any).equipment || 'N/A'}
                   </span>
                 </td>
                 <td className="px-4 py-3">

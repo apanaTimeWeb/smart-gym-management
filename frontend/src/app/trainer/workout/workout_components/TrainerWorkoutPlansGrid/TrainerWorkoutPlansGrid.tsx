@@ -12,8 +12,25 @@ import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerShare
 export default function TrainerWorkoutPlansGrid() {
   const { workouts, totalWorkouts, search, currentPage, setCurrentPage, openEditWk, deleteWk } = useWorkoutContext();
 
-  
   const totalPages = Math.ceil(totalWorkouts / TRAINER_ITEMS_PER_PAGE) || 1;
+  const { fetchState } = useWorkoutContext();
+
+  if (fetchState === 'loading') {
+    return (
+      <div className="flex justify-center py-10">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (fetchState === 'error') {
+    return (
+      <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
+        <p className="text-danger font-medium">Failed to load workout plans.</p>
+        <p className="text-sm mt-1 text-secondary">Please check your connection and try again.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-full min-h-96">
@@ -73,9 +90,9 @@ export default function TrainerWorkoutPlansGrid() {
             </div>
             
             <div className="flex flex-wrap gap-1 mb-3">
-              {w.tags?.map((tag: string) => (
-                <span key={tag} className="text-xs bg-input text-secondary px-2 py-0.5 rounded-full">
-                  {tag}
+              {(Array.isArray(w.tags) ? w.tags : (typeof w.tags === 'string' ? (w.tags as string).split(',').filter(Boolean) : [])).map((tag: string) => (
+                <span key={tag.trim()} className="text-xs bg-input text-secondary px-2 py-0.5 rounded-full">
+                  {tag.trim()}
                 </span>
               ))}
             </div>
