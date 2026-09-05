@@ -21,7 +21,7 @@ export default function AdminSalesToolbar() {
     const handler = setTimeout(() => {
       if (localSearch !== search) {
         setSearch(localSearch);
-        setCurrentPage(1);
+        
       }
     }, 300);
     return () => clearTimeout(handler);
@@ -33,7 +33,7 @@ export default function AdminSalesToolbar() {
       setStartDate('');
       setEndDate('');
     }
-    setCurrentPage(1);
+    
   };
 
   return (
@@ -100,5 +100,6 @@ export default function AdminSalesToolbar() {
     </div>
   );
 }
+
 
 

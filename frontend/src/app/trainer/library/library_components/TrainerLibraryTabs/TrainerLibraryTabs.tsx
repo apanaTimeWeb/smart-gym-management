@@ -32,7 +32,7 @@ export default function TrainerLibraryTabs() {
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
           <input 
             value={search} 
-            onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} 
+            onChange={e => { setSearch(e.target.value);  }} 
             placeholder={`Search ${tab.toLowerCase()}...`} 
             className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus-visible:ring-primary w-40 sm: w-full sm:w-64  bg-input text-foreground" 
           />
@@ -63,4 +63,5 @@ export default function TrainerLibraryTabs() {
  </div>
  );
 }
+
 

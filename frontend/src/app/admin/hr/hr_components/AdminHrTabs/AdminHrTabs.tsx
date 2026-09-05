@@ -19,7 +19,7 @@ export default function AdminHrTabs() {
           {HR_TABS.map(t => (
             <button 
               key={t} 
-              onClick={() => { setActiveTab(t); setCurrentPage(1); setSearch(''); }}
+              onClick={() => { setActiveTab(t);  setSearch(''); }}
               className={`px-5 py-3.5 text-sm font-medium transition-colors border-b-2 whitespace-nowrap ${activeTab === t ? 'text-primary border-primary bg-primary/5' : 'text-secondary border-transparent hover:opacity-80 bg-transparent'}`}
             >
               {t}
@@ -31,7 +31,7 @@ export default function AdminHrTabs() {
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
             <input 
               value={search} 
-              onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} 
+              onChange={e => { setSearch(e.target.value);  }} 
               placeholder={`Search ${activeTab.toLowerCase()}...`} 
               className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 w-40 sm: w-full sm:w-64  bg-card text-foreground"
             />
@@ -40,7 +40,7 @@ export default function AdminHrTabs() {
             <>
               <select
                 value={branchFilter}
-                onChange={e => { setBranchFilter(e.target.value); setCurrentPage(1); }}
+                onChange={e => { setBranchFilter(e.target.value);  }}
                 className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 bg-card text-foreground"
               >
                 <option value="All">All Branches</option>
@@ -50,7 +50,7 @@ export default function AdminHrTabs() {
               </select>
               <select
                 value={roleFilter}
-                onChange={e => { setRoleFilter(e.target.value); setCurrentPage(1); }}
+                onChange={e => { setRoleFilter(e.target.value);  }}
                 className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 bg-card text-foreground"
               >
                 <option value="All">All Roles</option>
@@ -63,7 +63,7 @@ export default function AdminHrTabs() {
             <input 
               type="month"
               value={payrollMonth}
-              onChange={e => { setPayrollMonth(e.target.value); setCurrentPage(1); }}
+              onChange={e => { setPayrollMonth(e.target.value);  }}
               className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 bg-card text-foreground"
             />
           )}
@@ -108,3 +108,4 @@ export default function AdminHrTabs() {
  </div>
  );
 }
+
