@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Centralized constants, Zod schema, and shared utilities for the Members module. Single source of truth for form defaults, status colors, billing labels, and message templates.
 
 import { z } from 'zod';
@@ -58,3 +60,4 @@ export const PROFILE_TABS = [
   { id: 'overview', label: 'Overview' },
   { id: 'attendance', label: 'Attendance' }
 ];
+

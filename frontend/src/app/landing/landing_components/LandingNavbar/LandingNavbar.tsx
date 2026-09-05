@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
+// DATA FLOW: Standard component data flow.
 "use client";
 // RESPONSIBILITY: Renders the fixed top navigation bar for the landing page.
 // Shows logo, anchor links, theme toggle, and CTA buttons. Reads scroll state
@@ -16,7 +18,7 @@ export default function LandingNavbar() {
   const { menuOpen, setMenuOpen, scrolled } = useLandingContext();
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'landing-navbar--scrolled' : 'bg-transparent'}`}>
+    <nav className={`fixed top-0 left-0 right-0 z-20 transition-all duration-300 ${scrolled ? 'landing-navbar--scrolled' : 'bg-transparent'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
         {/* Logo */}
         <div className="flex items-center gap-2.5">
@@ -81,3 +83,4 @@ export default function LandingNavbar() {
     </nav>
   );
 }
+

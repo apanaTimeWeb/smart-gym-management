@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Provides the implementation for AdminSalesOverview.tsx functionality within its module.
 'use client';
 
-import { useSalesContext } from '@/app/admin/sales/sales_context/SalesContext';
+import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   AreaChart, Area
@@ -9,12 +9,22 @@ import {
 import { Loader2 } from 'lucide-react';
 
 export default function AdminSalesOverview() {
-  const { overviewData, fetchState } = useSalesContext();
+  const { overviewData, fetchState } = useAdminSalesLogic();
 
   if (fetchState === 'loading') {
     return (
-      <div className="flex justify-center py-10">
-        <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
+      <div className="space-y-6 animate-pulse">
+        <div className="bg-card p-5 rounded-xl border border-border shadow-lg h-[340px]"></div>
+        <div className="bg-card p-5 rounded-xl border border-border shadow-lg h-[320px]"></div>
+      </div>
+    );
+  }
+
+  if (fetchState === 'error') {
+    return (
+      <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
+        <p className="text-danger font-medium">Failed to load sales overview.</p>
+        <p className="text-sm mt-1 text-secondary">Please check your connection and try again.</p>
       </div>
     );
   }
@@ -65,3 +75,4 @@ export default function AdminSalesOverview() {
  </div>
  );
 }
+

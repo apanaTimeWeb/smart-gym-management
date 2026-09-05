@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the exercise cards grid with category and muscle group info in the Diet Library.
 'use client';
 
@@ -6,9 +8,11 @@ import { useLibraryContext } from '@/app/trainer/library/library_context/Library
 import { DIFF_COLORS } from '@/app/trainer/library/library_utils/LibrarySharedConstants';
 import TrainerPagination from '@/app/trainer/trainer_components/TrainerShared/TrainerPagination';
 import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerSharedConstants';
+import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 
 export default function TrainerLibraryExerciseGrid() {
-  const { exercises, loading, debouncedSearch, currentPage, setCurrentPage, openEditEx, deleteExercise } = useLibraryContext();
+  const { exercises, fetchState, debouncedSearch, currentPage, setCurrentPage, openEditEx, deleteExercise } = useLibraryContext();
+  const { confirm } = useConfirm();
 
   const filtered = exercises.filter(e => {
     const s = debouncedSearch.toLowerCase();
@@ -18,10 +22,29 @@ export default function TrainerLibraryExerciseGrid() {
   const totalPages = Math.ceil(filtered.length / TRAINER_ITEMS_PER_PAGE);
   const currentData = filtered.slice((currentPage - 1) * TRAINER_ITEMS_PER_PAGE, currentPage * TRAINER_ITEMS_PER_PAGE);
 
-  if (loading) {
+  if (fetchState === 'loading') {
     return (
-      <div className="flex justify-center py-10">
-        <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 flex-1">
+        {[...Array(6)].map((_, i) => (
+          <div key={i} className="rounded-xl border border-border bg-card p-5 motion-safe:animate-pulse h-48 flex flex-col">
+            <div className="flex justify-between items-start mb-3">
+              <div className="w-10 h-10 rounded-xl bg-muted shrink-0"></div>
+              <div className="flex gap-2">
+                <div className="w-8 h-8 rounded bg-muted"></div>
+                <div className="w-8 h-8 rounded bg-muted"></div>
+              </div>
+            </div>
+            <div className="w-3/4 h-5 rounded bg-muted mb-2"></div>
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-16 h-5 rounded-full bg-muted"></div>
+              <div className="w-20 h-5 rounded-full bg-muted"></div>
+            </div>
+            <div className="mt-auto space-y-2">
+              <div className="w-1/2 h-3 rounded bg-muted"></div>
+              <div className="w-1/3 h-3 rounded bg-muted"></div>
+            </div>
+          </div>
+        ))}
       </div>
     );
   }
@@ -32,7 +55,7 @@ export default function TrainerLibraryExerciseGrid() {
         {currentData.map(ex => (
           <div 
             key={ex.id} 
-            className="rounded-xl border border-border bg-card p-5 hover:shadow-md transition-shadow flex flex-col cursor-pointer"
+            className="rounded-xl border border-border bg-card p-5 hover:shadow-md motion-safe:transition-shadow flex flex-col cursor-pointer"
             onClick={() => openEditEx(ex)}
           >
             <div className="flex justify-between items-start mb-3">
@@ -42,19 +65,25 @@ export default function TrainerLibraryExerciseGrid() {
               <div className="flex gap-2">
                 <button 
                   onClick={(e) => { e.stopPropagation(); openEditEx(ex); }}
-                  className="p-1.5 rounded hover:bg-primary/10 transition-colors text-secondary hover:text-primary"
+                  className="p-1.5 rounded hover:bg-primary/10 motion-safe:transition-colors text-secondary hover:text-primary"
                   title="Edit"
                 >
                   <Edit2 size={16} />
                 </button>
                 <button 
-                  onClick={(e) => { 
+                  onClick={async (e) => { 
                     e.stopPropagation(); 
-                    if (window.confirm(`Are you sure you want to delete library exercise "${ex.name}"?`)) {
+                    const ok = await confirm({
+                      title: 'Delete Library Exercise',
+                      message: `Are you sure you want to delete library exercise "${ex.name}"?`,
+                      type: 'danger',
+                      confirmText: 'Delete'
+                    });
+                    if (ok) {
                       deleteExercise(ex.id); 
                     }
                   }}
-                  className="p-1.5 rounded transition-colors text-danger hover:bg-danger/10"
+                  className="p-1.5 rounded motion-safe:transition-colors text-danger hover:bg-danger/10"
                   title="Delete"
                 >
                   <Trash2 size={16} />
@@ -72,7 +101,7 @@ export default function TrainerLibraryExerciseGrid() {
             
             <div className="text-xs text-secondary space-y-1 mt-auto">
               <p>?? {ex.muscleGroup?.join(', ')}</p>
-              {ex.sets && <p>?? {ex.sets} sets � {ex.reps} reps</p>}
+              {ex.sets && <p>?? {ex.sets} sets  {ex.reps} reps</p>}
               {ex.duration && <p className="flex items-center gap-1"><Clock size={12} /> {ex.duration}</p>}
             </div>
           </div>

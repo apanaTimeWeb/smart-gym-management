@@ -6,8 +6,8 @@ import { X } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import { CouponSchema, CouponFormData } from '@/app/superadmin/coupons/coupons_types/coupons_types';
-import type { Coupon } from '@/app/superadmin/coupons/coupons_types/coupons_types';
+import { CouponSchema, CouponFormData } from '@/app/superadmin/coupons/superadmin_coupons_types/superadmin_coupons_types';
+import type { Coupon } from '@/app/superadmin/coupons/superadmin_coupons_types/superadmin_coupons_types';
 
 interface SuperadminCouponEditModalProps {
   isOpen: boolean;

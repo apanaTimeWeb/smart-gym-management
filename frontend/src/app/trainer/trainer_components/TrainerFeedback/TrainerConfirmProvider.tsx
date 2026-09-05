@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Provides a programmatic confirm() API to all TRAINER components via React Context. Renders a single shared TrainerConfirmModal at the root level. No async data — sync UI state only.
 'use client';
 
@@ -65,3 +67,4 @@ export const useConfirm = () => {
   if (!context) throw new Error("useConfirm must be used within TrainerConfirmProvider");
   return context;
 };
+

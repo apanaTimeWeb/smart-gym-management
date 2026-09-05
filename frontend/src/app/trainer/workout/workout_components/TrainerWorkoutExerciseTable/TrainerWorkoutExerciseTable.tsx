@@ -1,18 +1,39 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the exercises data table with muscle group, category, and inline edit/delete actions.
 'use client';
 
 import { Edit2, Trash2 } from 'lucide-react';
 import { useWorkoutContext } from '@/app/trainer/workout/workout_context/WorkoutContext';
 import { EXERCISE_TABLE_HEADERS } from '@/app/trainer/workout/workout_utils/WorkoutSharedConstants';
+import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 
 import TrainerPagination from '@/app/trainer/trainer_components/TrainerShared/TrainerPagination';
 import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerSharedConstants';
 
 export default function TrainerWorkoutExerciseTable() {
   const { exercises, totalExercises, search, currentPage, setCurrentPage, openEditEx, deleteEx } = useWorkoutContext();
+  const { confirm } = useConfirm();
 
-  
   const totalPages = Math.ceil(totalExercises / TRAINER_ITEMS_PER_PAGE) || 1;
+  const { fetchState } = useWorkoutContext();
+
+  if (fetchState === 'loading') {
+    return (
+      <div className="flex justify-center py-10">
+        <div className="motion-safe:animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (fetchState === 'error') {
+    return (
+      <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
+        <p className="text-danger font-medium">Failed to load exercises.</p>
+        <p className="text-sm mt-1 text-secondary">Please check your connection and try again.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-full min-h-96">
@@ -29,12 +50,14 @@ export default function TrainerWorkoutExerciseTable() {
           </thead>
           <tbody className="divide-y divide-border">
             {exercises.map(ex => (
-              <tr key={ex.id} className="hover:bg-accent transition-colors cursor-pointer" onClick={() => openEditEx(ex)}>
+              <tr key={ex.id} className="hover:bg-accent motion-safe:transition-colors cursor-pointer" onClick={() => openEditEx(ex)}>
                 <td className="px-4 py-3 text-sm font-medium text-foreground">{ex.name}</td>
-                <td className="px-4 py-3 text-sm text-secondary">{ex.muscleGroup?.join(', ')}</td>
+                <td className="px-4 py-3 text-sm text-secondary">
+                  {Array.isArray(ex.muscleGroup) ? ex.muscleGroup.join(', ') : (ex.muscleGroup || (ex as any).muscle || 'N/A')}
+                </td>
                 <td className="px-4 py-3">
                   <span className="text-xs bg-input text-secondary border border-border px-2 py-1 rounded-full">
-                    {ex.category || 'N/A'}
+                    {ex.category || (ex as any).equipment || 'N/A'}
                   </span>
                 </td>
                 <td className="px-4 py-3">
@@ -52,18 +75,24 @@ export default function TrainerWorkoutExerciseTable() {
                   <div className="flex items-center gap-2">
                     <button 
                       onClick={(e) => { e.stopPropagation(); openEditEx(ex); }} 
-                      className="text-info hover:text-info dark:hover:text-info p-1 rounded-md hover:bg-info-bg dark:hover:bg-info-bg transition-colors"
+                      className="text-info hover:text-info dark:hover:text-info p-1 rounded-md hover:bg-info-bg dark:hover:bg-info-bg motion-safe:transition-colors"
                     >
                       <Edit2 size={15} />
                     </button>
                     <button 
-                      onClick={(e) => { 
+                      onClick={async (e) => { 
                         e.stopPropagation(); 
-                        if (window.confirm(`Are you sure you want to delete exercise "${ex.name}"?`)) {
+                        const ok = await confirm({
+                          title: 'Delete Exercise',
+                          message: `Are you sure you want to delete exercise "${ex.name}"?`,
+                          type: 'danger',
+                          confirmText: 'Delete'
+                        });
+                        if (ok) {
                           deleteEx(ex.id); 
                         }
                       }} 
-                      className="text-danger hover:text-danger dark:hover:text-danger p-1 rounded-md hover:bg-danger-bg dark:hover:bg-danger-bg transition-colors"
+                      className="text-danger hover:text-danger dark:hover:text-danger p-1 rounded-md hover:bg-danger-bg dark:hover:bg-danger-bg motion-safe:transition-colors"
                     >
                       <Trash2 size={15} />
                     </button>
@@ -91,3 +120,4 @@ export default function TrainerWorkoutExerciseTable() {
     </div>
   );
 }
+

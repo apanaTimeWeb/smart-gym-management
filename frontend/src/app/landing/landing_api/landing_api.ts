@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Encapsulates all API calls for the Landing module.
 // Uses the centralized apiFetch wrapper. No component should call fetch() directly.
 import { apiFetch, ApiResponse } from '@/lib/api';
@@ -20,3 +22,4 @@ export const landingApi = {
     });
   },
 };
+

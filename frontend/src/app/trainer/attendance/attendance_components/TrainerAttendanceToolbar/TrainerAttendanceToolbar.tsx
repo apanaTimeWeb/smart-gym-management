@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Provides the search, filter tabs, and action buttons for the Attendance module.
 'use client';
 
@@ -29,7 +31,7 @@ export default function TrainerAttendanceToolbar() {
  <button 
  key={t} 
  onClick={() => setTab(t)}
- className={`px-5 py-3.5 text-sm font-medium transition-colors border-b-2 ${
+ className={`px-5 py-3.5 text-sm font-medium motion-safe:transition-colors border-b-2 ${
  tab === t 
  ? 'text-primary bg-primary-subtle border-primary' 
  : 'border-transparent text-secondary hover:text-foreground'
@@ -46,19 +48,19 @@ export default function TrainerAttendanceToolbar() {
         value={localSearch} 
         onChange={e => setLocalSearch(e.target.value)} 
         placeholder={`Search ${tab.toLowerCase()}...`} 
-        className="pl-9 pr-3 py-2 border border-border bg-input text-foreground rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-40 sm: w-full sm:w-64 "
+        className="pl-9 pr-3 py-2 border border-border bg-input text-foreground rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus-visible:ring-primary w-40 sm: w-full sm:w-64 "
       />
     </div>
     <div className="flex flex-wrap gap-2">
  <button 
  onClick={loadAll} 
- className="flex items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary transition-colors"
+ className="flex items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors"
  >
  <RefreshCw size={14} />
  </button>
  <button 
  onClick={() => setShowModal(true)} 
- className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-primary rounded-lg transition-opacity hover:opacity-90" 
+ className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-primary rounded-lg motion-safe:transition-opacity hover:opacity-90" 
  >
  <Plus size={14} /> Mark Attendance
  </button>
@@ -67,3 +69,4 @@ export default function TrainerAttendanceToolbar() {
  </div>
  );
 }
+

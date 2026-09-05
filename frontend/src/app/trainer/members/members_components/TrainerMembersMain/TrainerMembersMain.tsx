@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Entry point component for the members module that sets up context providers and layout.
 'use client';
 
@@ -62,3 +64,4 @@ export default function TrainerMembersMain({ initialData }: { initialData?: Memb
     </MembersProvider>
   );
 }
+

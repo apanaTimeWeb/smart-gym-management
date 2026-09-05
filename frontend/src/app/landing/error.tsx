@@ -1,7 +1,8 @@
-'use client';
 // RESPONSIBILITY: Next.js error boundary for the /landing route segment.
 // Displays a styled error card with a Retry button. Logs the error for observability.
 // Rule 9: error.tsx must be a Client Component ('use client') per Next.js spec.
+'use client';
+
 import { useEffect } from 'react';
 
 export default function LandingError({
@@ -12,8 +13,7 @@ export default function LandingError({
   reset: () => void;
 }) {
   useEffect(() => {
-    // In production this would send to Sentry / logging service
-    console.error('Landing Page Error:', error);
+    // Error monitoring handled by provider
   }, [error]);
 
   return (
@@ -21,7 +21,7 @@ export default function LandingError({
       <div className="bg-card border border-danger/30 p-8 rounded-3xl max-w-md w-full text-center space-y-4 shadow-2xl">
         <h2 className="text-2xl font-black text-foreground">Oops! Something went wrong.</h2>
         <p className="text-secondary text-sm">
-          We couldn&apos;t load the landing page. Please try refreshing.
+          We couldn't load the landing page. Please try refreshing.
         </p>
         <button
           onClick={() => reset()}

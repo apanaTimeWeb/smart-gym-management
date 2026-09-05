@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Typed Error Boundary component that wraps the login client components and displays a module-specific fallback UI on crash.
 'use client';
 
@@ -50,3 +52,4 @@ export default class LoginErrorBoundary extends Component<Props, State> {
     return this.props.children;
   }
 }
+

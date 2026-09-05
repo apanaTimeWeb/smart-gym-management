@@ -8,10 +8,12 @@ export interface LibraryInitialData {
   dietPlans: DietPlan[];
 }
 
+ export type FetchState = 'idle' | 'loading' | 'success' | 'error';
+
 export interface LibraryContextType {
 
  dietPlans: DietPlan[];
- loading: boolean;
+ fetchState: FetchState;
  saving: boolean;
   toast: { message: string; type: ToastType } | null;
   

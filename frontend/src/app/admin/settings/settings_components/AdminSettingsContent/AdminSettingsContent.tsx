@@ -2,14 +2,14 @@
 'use client';
 
 import { RefreshCw, Save, Settings } from 'lucide-react';
-import { useSettingsContext } from '@/app/admin/settings/settings_context/SettingsContext';
+import { useAdminSettingsLogic } from '@/app/admin/settings/settings_context/useAdminSettingsLogic';
 
 export default function AdminSettingsContent() {
  const { 
  activeTab, 
  form, handleChange, 
  saving, handleSave, fetchSettings 
- } = useSettingsContext();
+ } = useAdminSettingsLogic();
 
  return (
  <div className="bg-card rounded-xl shadow-sm border border-border mt-6">
@@ -68,3 +68,4 @@ export default function AdminSettingsContent() {
  </div>
  );
 }
+

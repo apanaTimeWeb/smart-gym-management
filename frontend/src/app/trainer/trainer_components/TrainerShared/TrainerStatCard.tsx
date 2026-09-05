@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders a single KPI stat card (icon, label, big number, trend). Used in dashboard and module KPI rows.
 import type { LucideIcon } from 'lucide-react';
 
@@ -13,7 +15,7 @@ interface TrainerStatCardProps {
 
 export default function TrainerStatCard({ title, value, change, changeType = 'neutral', icon: Icon, iconBg, iconColor }: TrainerStatCardProps) {
  return (
- <div className="bg-card rounded-xl p-5 shadow-sm border border-border hover:border-border-focus transition-colors">
+ <div className="bg-card rounded-xl p-5 shadow-sm border border-border hover:border-border-focus motion-safe:transition-colors">
  <div className="flex items-center justify-between">
  <div>
  <p className="text-xs font-medium text-secondary uppercase tracking-wider">{title}</p>
@@ -34,3 +36,4 @@ export default function TrainerStatCard({ title, value, change, changeType = 'ne
  </div>
  );
 }
+

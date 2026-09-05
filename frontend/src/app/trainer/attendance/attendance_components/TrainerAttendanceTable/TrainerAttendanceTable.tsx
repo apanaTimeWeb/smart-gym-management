@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the attendance data table and pagination controls.
 'use client';
 
@@ -6,6 +8,7 @@ import { useAttendanceContext } from '@/app/trainer/attendance/attendance_contex
 import { ATTENDANCE_TABLE_HEADERS, formatDate, formatTime } from '@/app/trainer/attendance/attendance_utils/AttendanceSharedConstants';
 import TrainerPagination from '@/app/trainer/trainer_components/TrainerShared/TrainerPagination';
 import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerSharedConstants';
+import TrainerAttendanceEmptyState from '@/app/trainer/attendance/attendance_components/TrainerAttendanceEmptyState/TrainerAttendanceEmptyState';
 
 export default function TrainerAttendanceTable() {
   const { records, totalRecords, fetchState, currentPage, setCurrentPage } = useAttendanceContext();
@@ -41,7 +44,7 @@ export default function TrainerAttendanceTable() {
  </thead>
  <tbody className="divide-y divide-border">
  {records.map(r => (
- <tr key={r.id} className="hover:bg-primary-subtle transition-colors">
+ <tr key={r.id} className="hover:bg-primary-subtle motion-safe:transition-colors">
  <td className="px-4 py-3 whitespace-nowrap">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
@@ -94,3 +97,4 @@ export default function TrainerAttendanceTable() {
   </div>
   );
 }
+

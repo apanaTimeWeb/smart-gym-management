@@ -145,6 +145,11 @@ export async function routeMockRequest<T>(
       { id: 'prod-9', name: 'Nivia Python Gym Gloves', category: 'Accessories', price: 450, stock: 18, description: 'Weightlifting gloves with wrist support', isActive: true, unit: 'Medium' },
       { id: 'prod-10', name: 'Rogue Heavy Duty Lifting Belt', category: 'Accessories', price: 3500, stock: 8, description: 'Leather powerlifting belt', isActive: true, unit: '1 Piece' }
     ];
+    
+    if (existing.length === 0) {
+      MockDB.setCollection('mock_products', defaultProducts);
+    }
+    
     return MockDB.handleCrud('mock_products', method, path, parsedBody, defaultProducts, 'products') as unknown as ApiResponse<T>;
   }
 
@@ -174,6 +179,11 @@ export async function routeMockRequest<T>(
     const defaultOrders = [
       { id: 'ord-1', customerName: 'Demo Customer', total: 1200, method: 'UPI', status: 'COMPLETED', createdAt: new Date().toISOString(), items: [{ productId: 'prod-2', qty: 1, price: 1200, product: { name: 'Creatine Monohydrate', unit: '300g' } }] }
     ];
+    
+    if (existing.length === 0) {
+      MockDB.setCollection('mock_orders', defaultOrders);
+    }
+    
     return MockDB.handleCrud('mock_orders', method, path, parsedBody, defaultOrders, 'orders') as unknown as ApiResponse<T>;
   }
   if (path.includes('/plans') && !path.includes('/superadmin')) return MockDB.handleCrud('mock_admin_plans', method, path, parsedBody, generate(3, i => ({ id: `plan-${i}`, name: i === 0 ? 'Basic Plan' : i === 1 ? 'Pro Plan' : 'VIP Plan', tier: i === 0 ? 'Standard' : i === 1 ? 'Premium' : 'Elite', price1Month: 1000 * (i + 1), price3Month: 2500 * (i + 1), price6Month: 4800 * (i + 1), price12Month: 9000 * (i + 1), features: ['Access to gym', 'Locker facility', 'Cardio section'], isActive: true }))) as unknown as ApiResponse<T>;
@@ -194,7 +204,17 @@ export async function routeMockRequest<T>(
       const filtered = existing.filter((r: any) => !r.name?.includes('Lead 1') && !r.name?.includes('Lead 2') && r.source !== 'Instagram');
       MockDB.setCollection('mock_inquiries', filtered);
     }
-    return MockDB.handleCrud('mock_inquiries', actualMethod, path, parsedBody, [], 'inquiries') as unknown as ApiResponse<T>;
+    const defaultInquiries = [
+      { id: 'inq-1', name: 'Ravi Kumar', phone: '+91 9876543210', email: 'ravi@example.com', status: 'PENDING', source: 'Instagram', interest: 'Weight Loss', createdAt: new Date().toISOString() },
+      { id: 'inq-2', name: 'Sneha Patel', phone: '+91 9876543211', email: 'sneha@example.com', status: 'FOLLOW_UP', source: 'Walk-in', interest: 'Personal Training', createdAt: new Date(Date.now() - 86400000).toISOString() },
+      { id: 'inq-3', name: 'Amit Singh', phone: '+91 9876543212', email: 'amit@example.com', status: 'RESOLVED', source: 'Website', interest: 'General Fitness', createdAt: new Date(Date.now() - 172800000).toISOString() }
+    ];
+    
+    if (existing.length === 0) {
+      MockDB.setCollection('mock_inquiries', defaultInquiries);
+    }
+    
+    return MockDB.handleCrud('mock_inquiries', actualMethod, path, parsedBody, defaultInquiries, 'inquiries') as unknown as ApiResponse<T>;
   }
   if (path.includes('/expenses/stats')) {
     const expenses = MockDB.getCollection('mock_admin_expenses', []);
@@ -247,12 +267,13 @@ export async function routeMockRequest<T>(
   }
   if (path.includes('/attendance')) {
     const existing = MockDB.getCollection('mock_admin_attendance', []);
-    if (existing.length > 0 && existing.some((r: any) => r.member?.name?.includes('Active Member') || r.staff?.name?.includes('Trainer '))) {
-      const filtered = existing.filter((r: any) => !r.member?.name?.includes('Active Member') && !r.staff?.name?.includes('Trainer '));
-      MockDB.setCollection('mock_admin_attendance', filtered);
+    const defaultData = generate(20, i => { const d = new Date(); d.setHours(8, 0, 0, 0); const d2 = new Date(); d2.setHours(9, 30, 0, 0); return { id: `att-${i}`, type: i % 4 === 0 ? 'STAFF' : 'MEMBER', member: { name: `Active Member ${i}` }, staff: { name: `Trainer ${i}` }, date: new Date().toISOString(), checkIn: d.toISOString(), checkOut: d2.toISOString() }; });
+    
+    if (existing.length === 0) {
+      MockDB.setCollection('mock_admin_attendance', defaultData);
     }
-    // Return empty by default so it starts blank until manually checked in
-    return MockDB.handleCrud('mock_admin_attendance', method, path, parsedBody, [], 'attendance') as unknown as ApiResponse<T>;
+    
+    return MockDB.handleCrud('mock_admin_attendance', method, path, parsedBody, defaultData, 'attendance') as unknown as ApiResponse<T>;
   }
   if (path.includes('/hr/summary')) {
     const staffList = MockDB.getCollection('mock_admin_staff', []);
@@ -344,36 +365,52 @@ export async function routeMockRequest<T>(
     MockDB.setCollection('mock_admin_diet_plans', []); // Force purge old format
   }
   
-  if (path.includes('/diet-plans')) return MockDB.handleCrud('mock_admin_diet_plans', method, path, parsedBody, generate(4, i => ({ 
-    id: `diet-${i}`, 
-    name: `Pro Diet ${i+1}`, 
-    goal: 'Weight Loss', 
-    totalCalories: 1500 + (i * 200),
-    protein: 120 + i * 10,
-    carbs: 150 + i * 20,
-    fats: 50 + i * 5,
-    meals: [
-      { time: '08:00 AM', name: 'Breakfast', calories: 400, foods: ['Oats', 'Eggs', 'Banana'] },
-      { time: '01:00 PM', name: 'Lunch', calories: 600, foods: ['Chicken Breast', 'Rice', 'Broccoli'] },
-      { time: '07:00 PM', name: 'Dinner', calories: 500, foods: ['Salmon', 'Sweet Potato', 'Asparagus'] }
-    ], 
-    isActive: true 
-  })), 'dietPlans') as unknown as ApiResponse<T>;
-  
+  if (path.includes('/diet-plans')) {
+    const defaultDiets = generate(4, i => ({ 
+      id: `diet-${i}`, 
+      name: `Pro Diet ${i+1}`, 
+      goal: 'Weight Loss', 
+      totalCalories: 1500 + (i * 200),
+      protein: 120 + i * 10,
+      carbs: 150 + i * 20,
+      fats: 50 + i * 5,
+      meals: [
+        { time: '08:00 AM', name: 'Breakfast', calories: 400, foods: ['Oats', 'Eggs', 'Banana'] },
+        { time: '01:00 PM', name: 'Lunch', calories: 600, foods: ['Chicken Breast', 'Rice', 'Broccoli'] },
+        { time: '07:00 PM', name: 'Dinner', calories: 500, foods: ['Salmon', 'Sweet Potato', 'Asparagus'] }
+      ], 
+      isActive: true 
+    }));
+    
+    if (MockDB.getCollection('mock_admin_diet_plans', []).length === 0) {
+      MockDB.setCollection('mock_admin_diet_plans', defaultDiets);
+    }
+    
+    return MockDB.handleCrud('mock_admin_diet_plans', method, path, parsedBody, defaultDiets, 'dietPlans') as unknown as ApiResponse<T>;
+  }
+
   const existingWorkouts = MockDB.getCollection('mock_workouts', []);
   if (existingWorkouts.length > 0 && typeof (existingWorkouts[0] as any).days === 'number') {
     MockDB.setCollection('mock_workouts', []); // Force purge old format
   }
-  if (path.includes('/workouts')) return MockDB.handleCrud('mock_workouts', method, path, parsedBody, generate(5, i => ({ 
-    id: `wo-${i}`, 
-    name: `Hypertrophy Plan ${i+1}`, 
-    level: i % 2 === 0 ? 'Intermediate' : 'Beginner',
-    focus: 'Hypertrophy',
-    days: 4,
-    exercises: 15 + i * 2,
-    duration: '60 min',
-    tags: ['Muscle', 'Strength']
-  })), 'workouts') as unknown as ApiResponse<T>;
+  if (path.includes('/workouts')) {
+    const defaultWorkouts = generate(5, i => ({ 
+      id: `wo-${i}`, 
+      name: `Hypertrophy Plan ${i+1}`, 
+      level: i % 2 === 0 ? 'Intermediate' : 'Beginner',
+      focus: 'Hypertrophy',
+      days: 4,
+      exercises: 15 + i * 2,
+      duration: '60 min',
+      tags: ['Muscle', 'Strength']
+    }));
+    
+    if (MockDB.getCollection('mock_workouts', []).length === 0) {
+      MockDB.setCollection('mock_workouts', defaultWorkouts);
+    }
+    
+    return MockDB.handleCrud('mock_workouts', method, path, parsedBody, defaultWorkouts, 'workouts') as unknown as ApiResponse<T>;
+  }
   if (path.includes('/admin/finance/summary')) return { success: true, message: 'Summary', data: { totalRevenue: 1500000, monthlyRevenue: 250000, pendingAmount: 45000, totalPayments: 345, revenueByMethod: { UPI: 120000, Cash: 50000, Card: 80000, NetBanking: 0 }, monthlyData: generate(6, i => ({ month: `M${i+1}`, revenue: 200000 + (i * 10000) })) } } as unknown as ApiResponse<T>;
   if (method === 'GET' && path.includes('/finance/payments/member/')) {
     const segments = path.split('?')[0].split('/');

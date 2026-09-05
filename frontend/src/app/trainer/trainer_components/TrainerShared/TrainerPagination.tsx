@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the pagination bar (Previous/Next + page info + rows-per-page) shared across all TRAINER table views.
 'use client';
 
@@ -75,7 +77,7 @@ export default function TrainerPagination({
         <button 
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="p-1.5 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="p-1.5 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-colors"
           style={{ color: textColor }}
         >
           <ChevronLeft size={18} />
@@ -89,7 +91,7 @@ export default function TrainerPagination({
               <button
                 key={p}
                 onClick={() => onPageChange(p as number)}
-                className="w-8 h-8 flex items-center justify-center rounded-lg text-sm font-medium transition-all"
+                className="w-8 h-8 flex items-center justify-center rounded-lg text-sm font-medium motion-safe:transition-all"
                 style={
                   currentPage === p 
                     ? { background: bgActive, color: textActive }
@@ -105,7 +107,7 @@ export default function TrainerPagination({
         <button 
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="p-1.5 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="p-1.5 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-colors"
           style={{ color: textColor }}
         >
           <ChevronRight size={18} />
@@ -114,3 +116,4 @@ export default function TrainerPagination({
     </div>
   );
 }
+

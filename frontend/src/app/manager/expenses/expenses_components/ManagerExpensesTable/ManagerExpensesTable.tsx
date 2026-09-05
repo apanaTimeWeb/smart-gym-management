@@ -2,6 +2,7 @@
 'use client';
 
 import { Edit, Trash2, Loader2 } from 'lucide-react';
+import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { useExpensesContext } from '@/app/manager/expenses/expenses_context/ManagerExpensesContext';
 import { useManagerExpensesStore } from '@/app/manager/expenses/expenses_store/useManagerExpensesStore';
 import { EXPENSES_TABLE_HEADERS, EXPENSE_STATUS_STYLES } from '@/app/manager/expenses/expenses_utils/ManagerExpensesSharedConstants';
@@ -10,6 +11,7 @@ import ManagerPagination from '@/app/manager/manager_components/ManagerShared/Ma
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 
 export default function ManagerExpensesTable() {
+  const { confirm } = useConfirm();
   const { currentPage, setCurrentPage, openEdit, deleteExpense } = useExpensesContext();
   const expenses = useManagerExpensesStore(s => s.expenses);
   const totalExpenses = useManagerExpensesStore(s => s.totalExpenses);
@@ -59,8 +61,14 @@ export default function ManagerExpensesTable() {
                       <td className="px-5 py-3.5 whitespace-nowrap">
                         <div className="flex items-center gap-2">
                           <button onClick={() => openEdit(e)} className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle transition-all duration-200" title="Edit"><Edit size={14} /></button>
-                          <button onClick={() => { 
-                            if (window.confirm(`Delete expense "${e.title}"?`)) deleteExpense(e.id); 
+                          <button onClick={async () => { 
+                            const ok = await confirm({
+                              title: 'Delete Expense',
+                              message: `Delete expense "${e.title}"?`,
+                              type: 'danger',
+                              confirmText: 'Delete'
+                            });
+                            if (ok) deleteExpense(e.id); 
                           }} className="p-1.5 rounded-lg bg-danger-bg text-danger hover:opacity-80 transition-all duration-200" title="Delete"><Trash2 size={14} /></button>
                         </div>
                       </td>

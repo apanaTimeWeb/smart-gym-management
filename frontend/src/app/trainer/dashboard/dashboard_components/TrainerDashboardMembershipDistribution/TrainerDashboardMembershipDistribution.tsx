@@ -1,8 +1,11 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the distribution of members by plan on the dashboard.
 'use client';
 
 import { useDashboardContext } from '@/app/trainer/dashboard/dashboard_context/DashboardContext';
 import { DASHBOARD_PLAN_BG_COLORS } from '@/app/trainer/dashboard/dashboard_utils/DashboardSharedConstants';
+import TrainerDashboardEmptyState from '@/app/trainer/dashboard/dashboard_components/TrainerDashboardEmptyState/TrainerDashboardEmptyState';
 
 export default function TrainerDashboardMembershipDistribution() {
  const { stats, timeRange } = useDashboardContext();
@@ -36,9 +39,10 @@ export default function TrainerDashboardMembershipDistribution() {
  );
  })}
  {(s.membersByPlan || []).length === 0 && (
- <p className="text-sm py-4 text-secondary">No data available yet.</p>
+ <TrainerDashboardEmptyState type="memberships" />
  )}
  </div>
  </div>
  );
 }
+

@@ -1,13 +1,13 @@
 // RESPONSIBILITY: Custom hook for managing the state and logic of the Support Tickets page
-// DATA FLOW: API -> useTicketsData -> useSuperadminTickets -> SuperadminTicketsClient
+// DATA FLOW: API -> useSuperadminTicketsData -> useSuperadminTickets -> SuperadminTicketsClient
 
 import { useState } from 'react';
-import { useTicketsData } from '@/app/superadmin/tickets/tickets_utils/useTicketsData';
+import { useSuperadminTicketsData } from '@/app/superadmin/tickets/tickets_utils/useSuperadminTicketsData';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
-import type { SupportTicket, TicketStatus, TicketPriority } from '@/app/superadmin/tickets/tickets_types/tickets_types';
+import type { SupportTicket, TicketStatus, TicketPriority } from '@/app/superadmin/tickets/superadmin_tickets_types/superadmin_tickets_types';
 
 export function useSuperadminTickets() {
-  const { data: DUMMY_SUPPORT_TICKETS, fetchState, error } = useTicketsData<SupportTicket[]>(SuperadminUrlConfig.BACKEND_API.TICKETS_BASE);
+  const { data: DUMMY_SUPPORT_TICKETS, fetchState, error } = useSuperadminTicketsData<SupportTicket[]>(SuperadminUrlConfig.BACKEND_API.TICKETS_BASE);
 
   const [search, setSearch] = useState('');
   const [showFilter, setShowFilter] = useState(false);

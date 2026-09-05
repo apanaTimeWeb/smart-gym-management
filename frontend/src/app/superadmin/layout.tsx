@@ -3,6 +3,7 @@
 import '@/app/superadmin/superadmin.css';
 import SuperadminLayout from '@/app/superadmin/superadmin_components/SuperadminLayout/SuperadminLayout';
 import { SuperadminQueryProvider } from '@/app/superadmin/superadmin_components/SuperadminQueryProvider';
+import { SuperadminConfirmProvider } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
 
 export const metadata = {
   title: 'Master Control Panel | GymSmart SaaS',
@@ -13,12 +14,10 @@ export default function SaaSLayout({ children }: { children: React.ReactNode }) 
   return (
     <div className="superadmin-module bg-background text-foreground min-h-screen">
       <SuperadminQueryProvider>
-        <SuperadminLayout>{children}</SuperadminLayout>
+        <SuperadminConfirmProvider>
+          <SuperadminLayout>{children}</SuperadminLayout>
+        </SuperadminConfirmProvider>
       </SuperadminQueryProvider>
     </div>
   );
 }
-
-
-
-

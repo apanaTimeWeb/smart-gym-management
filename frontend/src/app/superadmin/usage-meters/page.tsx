@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Renders the page component.
-import UsageMetersClient from '@/app/superadmin/usage-meters/UsageMetersClient';
+import SuperadminUsageMetersClient from '@/app/superadmin/usage-meters/usage-meters_components/SuperadminUsageMetersClient';
 
 export default function UsageMetersPage() {
-  return <UsageMetersClient />;
+  return <SuperadminUsageMetersClient />;
 }

@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Form modal for creating or editing a single exercise entry in the Workout Library module.
 'use client';
 
@@ -36,7 +38,7 @@ export default function ExerciseModal() {
   if (!showExModal) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 p-4">
       <div className="bg-card rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
         <div className="flex justify-between items-center p-5 border-b border-border">
           <h3 className="font-bold text-lg text-foreground">
@@ -45,7 +47,7 @@ export default function ExerciseModal() {
           <button 
             type="button"
             onClick={() => setShowExModal(false)} 
-            className="text-secondary hover:text-foreground hover:bg-primary-subtle p-1 rounded-md transition-colors"
+            className="text-secondary hover:text-foreground hover:bg-primary-subtle p-1 rounded-md motion-safe:transition-colors"
           >
             <X size={20} />
           </button>
@@ -56,8 +58,8 @@ export default function ExerciseModal() {
             <input 
               type="text" 
               {...register('name')}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
-                errors.name ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-warning'
+              className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page ${
+                errors.name ? 'border-destructive focus-visible:ring-destructive' : 'border-border focus-visible:ring-warning'
               } bg-input text-foreground`} 
             />
             {errors.name && <p className="text-danger text-xs mt-1">{errors.name.message}</p>}
@@ -68,8 +70,8 @@ export default function ExerciseModal() {
               type="text" 
               placeholder="e.g. Chest, Quadriceps" 
               {...register('muscle')}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
-                errors.muscle ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-warning'
+              className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page ${
+                errors.muscle ? 'border-destructive focus-visible:ring-destructive' : 'border-border focus-visible:ring-warning'
               } bg-input text-foreground`} 
             />
             {errors.muscle && <p className="text-danger text-xs mt-1">{errors.muscle.message}</p>}
@@ -109,14 +111,14 @@ export default function ExerciseModal() {
             <button 
               type="button" 
               onClick={() => setShowExModal(false)} 
-              className="px-4 py-2 border border-border rounded-lg font-medium text-secondary hover:text-foreground hover:bg-primary-subtle transition-colors"
+              className="px-4 py-2 border border-border rounded-lg font-medium text-secondary hover:text-foreground hover:bg-primary-subtle motion-safe:transition-colors"
             >
               Cancel
             </button>
             <button 
               type="submit" 
               disabled={saving}
-              className="px-4 py-2 rounded-lg font-medium text-white flex items-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-70" 
+              className="px-4 py-2 rounded-lg font-medium text-white flex items-center gap-2 hover:opacity-90 motion-safe:transition-opacity disabled:opacity-70" 
               style={{ background: 'var(--workout-highlight)' }}
             >
               {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" /> : <><Save size={15} /> Save</>}
@@ -127,3 +129,4 @@ export default function ExerciseModal() {
     </div>
   );
 }
+

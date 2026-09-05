@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the two rows of KPI metric stat cards on the dashboard using live data from DashboardContext.
 'use client';
 
@@ -48,3 +50,4 @@ export default function TrainerDashboardKPIs() {
     </>
   );
 }
+

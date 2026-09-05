@@ -7,11 +7,13 @@ import { useManagerMembersStore } from '@/app/manager/members/members_store/useM
 import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS, MEMBERS_TABLE_HEADERS, formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import { maskSensitiveData } from '@/lib/formatters';
 import ManagerMembersEmptyState from '@/app/manager/members/members_components/MembersEmptyState/ManagerMembersEmptyState';
-
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
+import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 
 export default function ManagerMembersTable() {
+  // useConfirm provides the design-system confirm modal (Rule 71 — no window.confirm)
+  const { confirm } = useConfirm();
   const { 
     search, statusFilter, currentPage, setCurrentPage,
     setSelectedMember, openEdit, openMsg, deleteMember
@@ -97,12 +99,23 @@ export default function ManagerMembersTable() {
                         <button onClick={(e) => { e.stopPropagation(); openEdit(m); }} className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle transition-all duration-200" title="Edit" aria-label={`Edit ${m.name}`}><Edit size={14} /></button>
                         <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'whatsapp'); }} className="p-1.5 rounded-lg bg-success text-white hover:opacity-80 transition-all duration-200" title="WhatsApp" aria-label={`Message ${m.name} on WhatsApp`}><MessageCircle size={14} /></button>
                         <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'email'); }} className="p-1.5 rounded-lg bg-info text-white hover:opacity-80 transition-all duration-200" title="Email" aria-label={`Email ${m.name}`}><Mail size={14} /></button>
-                        <button onClick={(e) => { 
-                          e.stopPropagation(); 
-                          if (window.confirm(`Are you sure you want to delete member "${m.name}"? This action cannot be undone.`)) {
-                            deleteMember(m.id); 
-                          }
-                        }} className="p-1.5 rounded-lg bg-danger-bg text-danger hover:opacity-80 transition-all duration-200" title="Delete" aria-label={`Delete ${m.name}`}><Trash2 size={14} /></button>
+                        <button
+                          onClick={async (e) => { 
+                            e.stopPropagation();
+                            const confirmed = await confirm({
+                              title: 'Delete Member',
+                              message: `Are you sure you want to permanently delete "${m.name}"? This action cannot be undone.`,
+                              confirmText: 'Delete',
+                              type: 'danger',
+                            });
+                            if (confirmed) deleteMember(m.id);
+                          }}
+                          className="p-1.5 rounded-lg bg-danger-bg text-danger hover:opacity-80 transition-all duration-200"
+                          title="Delete"
+                          aria-label={`Delete ${m.name}`}
+                        >
+                          <Trash2 size={14} />
+                        </button>
                       </div>
                     </td>
                   </tr>

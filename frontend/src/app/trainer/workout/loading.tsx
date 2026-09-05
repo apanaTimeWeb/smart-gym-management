@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Next.js loading.tsx � renders skeleton loader fallback while Workout Library module data loads.
 export default function Loading() {
  return (
@@ -12,3 +14,4 @@ export default function Loading() {
  </div>
  );
 }
+

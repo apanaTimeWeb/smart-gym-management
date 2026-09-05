@@ -11,8 +11,8 @@ export default async function LibraryPage() {
     initialData = {
       dietPlans: dietRes.data?.dietPlans || dietRes.data || [],
     };
-  } catch {
-    // console.error('Failed to fetch library initial data:', e);
+  } catch (e) {
+    // Silently fail and return empty array. Client handles refetch.
   }
 
   return <ManagerLibraryMain initialData={initialData} />;

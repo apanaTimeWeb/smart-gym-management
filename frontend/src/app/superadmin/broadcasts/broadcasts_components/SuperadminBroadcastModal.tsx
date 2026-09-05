@@ -1,10 +1,10 @@
-// RESPONSIBILITY: Renders the Create/Edit Broadcast modal form. Receives form state via props from useBroadcastsPage. No API calls.
+// RESPONSIBILITY: Renders the Create/Edit Broadcast modal form. Receives form state via props from useSuperadminBroadcastsPage. No API calls.
 'use client';
 
 import React from 'react';
 import { X, Loader2 } from 'lucide-react';
 import { UseFormReturn, Controller } from 'react-hook-form';
-import type { BroadcastFormData } from '@/app/superadmin/broadcasts/broadcasts_types/broadcasts_types';
+import type { BroadcastFormData } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { useQuery } from '@tanstack/react-query';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
@@ -112,7 +112,7 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
                       type="checkbox" 
                       checked={targetGymIds.includes(gym.id)}
                       onChange={() => handleToggleGym(gym.id)}
-                      className="w-4 h-4 rounded text-primary focus:ring-primary accent-primary"
+                      className="w-4 h-4 rounded text-primary focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page accent-primary"
                     />
                     <div className="flex flex-col overflow-hidden">
                       <span className="text-sm font-medium text-foreground truncate">{gym.name}</span>

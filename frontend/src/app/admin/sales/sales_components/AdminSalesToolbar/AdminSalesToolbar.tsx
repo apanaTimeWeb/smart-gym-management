@@ -2,13 +2,13 @@
 'use client';
 
 import { Download, Search, Calendar } from 'lucide-react';
-import { useSalesContext } from '@/app/admin/sales/sales_context/SalesContext';
-import { DATE_FILTERS, DateFilter } from '@/app/admin/sales/sales_utils/SalesSharedConstants';
+import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
+import { DATE_FILTERS, DateFilter } from '@/app/admin/sales/sales_utils/AdminSalesSharedConstants';
 import toast from 'react-hot-toast';
 import { useState, useEffect } from 'react';
 
 export default function AdminSalesToolbar() {
-  const { dateFilter, setDateFilter, search, setSearch, setCurrentPage } = useSalesContext();
+  const { dateFilter, setDateFilter, search, setSearch, setCurrentPage } = useAdminSalesLogic();
   const [localSearch, setLocalSearch] = useState(search);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -100,3 +100,5 @@ export default function AdminSalesToolbar() {
     </div>
   );
 }
+
+

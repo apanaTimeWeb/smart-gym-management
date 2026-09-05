@@ -1,13 +1,18 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Defines all TypeScript types, interfaces, and the FetchState enum for the Diet Library module.
 import type { } from '@/lib/api';
 import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
 import { EMPTY_EXERCISE_FORM, EMPTY_DIET_FORM, type LibraryTab } from '@/app/trainer/library/library_utils/LibrarySharedConstants';
 import React from 'react';
 
+import type { Exercise, DietPlan } from '@/app/trainer/trainer_types/trainer_types';
 export interface LibraryInitialData {
   exercises: Exercise[];
   dietPlans: DietPlan[];
 }
+
+import type { FetchState } from '@/app/trainer/trainer_types/trainer_types';
 
 export interface LibraryContextType {
  tab: LibraryTab;
@@ -15,7 +20,7 @@ export interface LibraryContextType {
  
  exercises: Exercise[];
  dietPlans: DietPlan[];
- loading: boolean;
+ fetchState: FetchState;
  saving: boolean;
   toast: { message: string; type: ToastType } | null;
   
@@ -51,13 +56,6 @@ export interface LibraryContextType {
  deleteDietPlan: (id: string) => Promise<void>;
 }
 
-export interface Exercise {
-  id: string; name: string; category: string; muscleGroup: string[];
-  sets?: number; reps?: string; duration?: string;
-  difficulty: string; description?: string; videoUrl?: string; imageUrl?: string; isActive: boolean;
-}
-export interface DietPlan {
-  id: string; name: string; goal: string;
-  calories?: number; protein?: number; carbs?: number; fats?: number;
-  description?: string; meals: string[]; isActive: boolean;
-}
+
+
+

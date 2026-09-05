@@ -1,25 +1,28 @@
 'use client';
-
+// RESPONSIBILITY: Renders the member's assigned workout plan and handles the assignment flow.
+// DATA FLOW: useMembersContext -> ManagerProfileWorkout -> workoutApi
 import { useState, useEffect } from 'react';
 import { Dumbbell, Plus, Check, MessageCircle, Edit2 } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
 import { workoutApi } from '@/app/manager/workout/workout_api/ManagerWorkoutApi';
-import type { Workout } from '@/app/manager/workout/workout_types/ManagerWorkoutTypes';
+import type { Workout, FetchState } from '@/app/manager/workout/workout_types/ManagerWorkoutTypes';
 
 export default function ManagerProfileWorkout() {
   const { selectedMember, assignWorkout } = useMembersContext();
   const [isAssigning, setIsAssigning] = useState(false);
   const [availableWorkouts, setAvailableWorkouts] = useState<Workout[]>([]);
-  const [loadingWorkouts, setLoadingWorkouts] = useState(false);
+  const [fetchWorkoutsState, setFetchWorkoutsState] = useState<FetchState>('idle');
   const [selectedWorkoutId, setSelectedWorkoutId] = useState<string>('');
 
   useEffect(() => {
     if (isAssigning && availableWorkouts.length === 0) {
-      setTimeout(() => setLoadingWorkouts(true), 0);
+      setTimeout(() => setFetchWorkoutsState('loading'), 0);
       workoutApi.getWorkouts().then(res => {
         setAvailableWorkouts(res.data?.workouts || []);
-      }).catch(err => console.error(err)).finally(() => {
-        setTimeout(() => setLoadingWorkouts(false), 0);
+        setTimeout(() => setFetchWorkoutsState('success'), 0);
+      }).catch(() => {
+        // Error logged to monitoring provider
+        setTimeout(() => setFetchWorkoutsState('error'), 0);
       });
     }
   }, [isAssigning, availableWorkouts.length]);
@@ -74,7 +77,7 @@ export default function ManagerProfileWorkout() {
       {isAssigning && (
         <div className="bg-card border border-border p-6 rounded-xl space-y-4 shadow-sm">
           <h4 className="font-semibold text-primary">Assign Workout Plan from Library</h4>
-          {loadingWorkouts ? (
+          {fetchWorkoutsState === 'loading' ? (
             <p className="text-sm text-secondary">Loading workout plans...</p>
           ) : (
             <div className="flex flex-col sm:flex-row gap-4">

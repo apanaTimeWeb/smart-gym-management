@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Entry component for the Diet Library module. Wraps the UI in the context provider and handles page layout.
 'use client';
 
@@ -42,3 +44,4 @@ export default function TrainerLibraryMain({ initialData }: { initialData?: Libr
  </LibraryProvider>
  );
 }
+

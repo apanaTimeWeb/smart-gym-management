@@ -2,7 +2,9 @@
 'use client';
 
 import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
-import { DashboardProvider, useDashboardContext } from '@/app/admin/dashboard/dashboard_context/DashboardContext';
+
+import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
+import { useAdminDashboardStore } from '@/app/admin/dashboard/dashboard_store/useAdminDashboardStore';
 import type { DashboardStats, TimeRange } from '@/app/admin/dashboard/dashboard_types/dashboard_types';
 import AdminDashboardKPIs from '@/app/admin/dashboard/dashboard_components/AdminDashboardKPIs/AdminDashboardKPIs';
 import AdminDashboardRecentMembers from '@/app/admin/dashboard/dashboard_components/AdminDashboardRecentMembers/AdminDashboardRecentMembers';
@@ -32,10 +34,18 @@ function DashboardSkeleton() {
   );
 }
 
-function DashboardContent() {
-  const { status, error, timeRange, setTimeRange, startDate, endDate, setCustomDateRange } = useDashboardContext();
+export default function AdminDashboardMain({ initialData }: { initialData?: DashboardStats | null }) {
+  // To avoid prop drilling, we could pass initialData to a hook here, but since the child DashboardContent
+  // uses the hook, it's better to inline DashboardContent or pass initialData down.
+  // We'll merge DashboardContent into AdminDashboardMain.
+  const { stats, status, error } = useAdminDashboardLogic(initialData);
+  const { timeRange, setTimeRange, startDate, endDate, setCustomDateRange } = useAdminDashboardStore();
 
-  if (status === 'loading') return <DashboardSkeleton />;
+  if (status === 'loading') return (
+    <div className="min-h-full">
+      <DashboardSkeleton />
+    </div>
+  );
 
   if (status === 'error') return (
     <div className="min-h-full flex items-center justify-center">
@@ -47,7 +57,7 @@ function DashboardContent() {
   );
 
   return (
-    <>
+    <div className="min-h-full">
       <AdminHeader title="Dashboard" subtitle="Welcome back, Admin! Here's your gym overview." />
       <div className="p-6 space-y-6">
         <div className="flex flex-col sm:flex-row justify-end mb-2 gap-3 items-center w-full">
@@ -97,16 +107,7 @@ function DashboardContent() {
         </div>
         <AdminDashboardMembershipDistribution />
       </div>
-    </>
+    </div>
   );
 }
 
-export default function AdminDashboardMain({ initialData }: { initialData?: DashboardStats | null }) {
-  return (
-    <DashboardProvider initialData={initialData}>
-      <div className="min-h-full">
-        <DashboardContent />
-      </div>
-    </DashboardProvider>
-  );
-}

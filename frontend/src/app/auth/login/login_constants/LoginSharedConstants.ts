@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Centralizes all static text, asset paths, and UI data for the Login module to avoid magic strings in components.
 // All hero section copy, form labels, and asset paths live here — never inline strings in JSX.
 export const LoginSharedConstants = {
@@ -32,3 +34,4 @@ export const LoginSharedConstants = {
     'WhatsApp & Email automation built-in',
   ],
 };
+

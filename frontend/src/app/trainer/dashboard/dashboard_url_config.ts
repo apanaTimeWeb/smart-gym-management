@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Centralized URL configuration for all Dashboard module API endpoints and page routes.
 export const DashboardUrlConfig = {
   PAGES: {
@@ -9,4 +11,5 @@ export const DashboardUrlConfig = {
     RECENT: '/trainer/dashboard/recent',
   }
 };
+
 

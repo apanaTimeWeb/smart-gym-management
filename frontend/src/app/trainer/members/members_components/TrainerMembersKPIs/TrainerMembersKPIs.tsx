@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the four KPI stat cards (Total, Active, Pending, Expired) for the Members module.
 'use client';
 
@@ -30,3 +32,4 @@ export default function TrainerMembersKPIs() {
     </div>
   );
 }
+

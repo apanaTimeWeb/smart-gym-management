@@ -1,21 +1,11 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Defines strict types and API response interfaces for the Attendance module to ensure type safety.
-import type { Member } from '@/app/trainer/members/members_types/members_types';
+import type { Member, Attendance, FetchState } from '@/app/trainer/trainer_types/trainer_types';
 import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
 import type { AttendanceTab, EMPTY_ATTENDANCE_FORM } from '@/app/trainer/attendance/attendance_utils/AttendanceSharedConstants';
 
-export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 
-export interface Attendance {
-  id: string;
-  memberId?: number;
-  staffId?: number;
-  date: string;
-  checkIn?: string;
-  checkOut?: string;
-  type: string;
-  member?: { name: string };
-  staff?: { name: string };
-}
 
 export interface AttendanceStatsResponse {
   totalCheckIns: number;
@@ -58,3 +48,4 @@ export interface AttendanceContextType {
   loadAll: () => Promise<void>;
   markAttendance: (data: typeof EMPTY_ATTENDANCE_FORM) => Promise<void>;
 }
+

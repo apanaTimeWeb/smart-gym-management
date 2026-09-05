@@ -19,7 +19,11 @@ function getUserFromCookie(req: NextRequest): GymSmartUser | null {
   const cookieValue = req.cookies.get("gymsmart_user")?.value;
   if (!cookieValue) return null;
   try {
-    return JSON.parse(decodeURIComponent(cookieValue)) as GymSmartUser;
+    const user = JSON.parse(decodeURIComponent(cookieValue)) as GymSmartUser;
+    if (user && user.role) {
+      user.role = user.role.toLowerCase() as any;
+    }
+    return user;
   } catch {
     return null;
   }

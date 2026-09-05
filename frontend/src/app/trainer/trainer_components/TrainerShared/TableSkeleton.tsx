@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders animated skeleton loader rows that match the data table layout. Used as placeholder while API data loads (Rule 26).
 import React from 'react';
 
@@ -19,3 +21,4 @@ export const TableSkeleton = ({ rows = 6, columns = 5 }: { rows?: number, column
     </div>
   );
 };
+

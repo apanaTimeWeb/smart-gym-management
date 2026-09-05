@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the toolbar for searching, filtering, and initiating the "Add Member" action.
 'use client';
 
@@ -56,3 +58,4 @@ export default function TrainerMembersToolbar() {
  </div>
  );
 }
+

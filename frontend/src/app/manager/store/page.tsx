@@ -18,8 +18,8 @@ export default async function StorePage() {
       totalOrders: ordersRes.data?.total || 0,
       summary: summaryRes.data || { revenue: 0, lowStock: 0 }
     } as unknown as StoreInitialData;
-  } catch (e: unknown) {
-    console.error('Failed to fetch store initial data:', e);
+  } catch {
+    // SSR data fetch failed gracefully — client-side store will re-fetch
   }
 
   return <ManagerStoreMain initialData={initialData} />;

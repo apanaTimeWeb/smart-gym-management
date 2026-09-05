@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Centralized API client exclusively for the Auth module. Encapsulates network calls to backend authentication routes.
 import { apiFetch, ApiResponse } from '@/lib/api';
 import { AuthUrlConfig } from '@/app/auth/auth_url_config';
@@ -11,4 +13,5 @@ export const authApi = {
     });
   },
 };
+
 

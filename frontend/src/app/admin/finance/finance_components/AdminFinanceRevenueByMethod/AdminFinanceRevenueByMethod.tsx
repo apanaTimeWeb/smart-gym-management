@@ -1,12 +1,14 @@
 // RESPONSIBILITY: Provides the implementation for AdminFinanceRevenueByMethod.tsx functionality within its module.
 'use client';
 
-import { useFinanceContext } from '@/app/admin/finance/finance_context/FinanceContext';
+import { useAdminFinanceLogic } from '@/app/admin/finance/finance_context/useAdminFinanceLogic';
+import { useAdminFinanceStore } from '@/app/admin/finance/finance_store/useAdminFinanceStore';
 
 const fmt = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');
 
 export default function AdminFinanceRevenueByMethod() {
- const { summary } = useFinanceContext();
+ const { payments, summary, totalPayments, fetchState, saving, error, loadAll, search, setSearch, currentPage, setCurrentPage, savePayment, methodFilter, setMethodFilter } = useAdminFinanceLogic();
+  const { showModal, setShowModal, toast, showToast, hideToast } = useAdminFinanceStore();
  if (!summary) return null;
 
  return (
@@ -20,3 +22,5 @@ export default function AdminFinanceRevenueByMethod() {
  </div>
  );
 }
+
+

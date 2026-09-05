@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders a custom searchable popover dropdown for large datasets (Rule 20). Replaces native <select> for all gyms/plans/user selectors.
 'use client';
 
@@ -68,12 +70,12 @@ export const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
       </div>
 
       {isOpen && !disabled && (
-        <div className="absolute z-50 w-full mt-1 bg-card border border-border rounded-lg shadow-lg overflow-hidden motion-safe:animate-in fade-in zoom-in-95 duration-100">
+        <div className="absolute z-30 w-full mt-1 bg-card border border-border rounded-lg shadow-lg overflow-hidden motion-safe:animate-in fade-in zoom-in-95 motion-safe:duration-100">
           <div className="p-2 border-b border-border relative">
             <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
             <input
               type="text"
-              className="w-full pl-8 pr-4 py-1.5 text-sm bg-input border border-border rounded-md focus:outline-none focus:border-primary text-foreground placeholder-muted-foreground"
+              className="w-full pl-8 pr-4 py-1.5 text-sm bg-input border border-border rounded-md focus-visible:outline-none focus:border-primary text-foreground placeholder-muted-foreground"
               placeholder="Search..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -106,3 +108,4 @@ export const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
     </div>
   );
 };
+

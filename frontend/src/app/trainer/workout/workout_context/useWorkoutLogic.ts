@@ -1,16 +1,21 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the Workout Library module.
-import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { 
-  EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM, WorkoutFormValues, ExerciseFormValues
+  EMPTY_WORKOUT_FORM, WorkoutFormValues
 } from '@/app/trainer/workout/workout_utils/WorkoutSharedConstants';
-import type { WorkoutContextType, Workout } from '@/app/trainer/workout/workout_types/workout_types';
+import type { WorkoutContextType } from '@/app/trainer/workout/workout_types/workout_types';
+import type { Workout } from '@/app/trainer/trainer_types/trainer_types';
 import { useDebounce } from '@/app/trainer/trainer_utils/useDebounce';
 import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 import { workoutApi } from '@/app/trainer/workout/workout_api/workout_api';
-import { libraryApi } from '@/app/trainer/library/library_api/library_api';
-import type { Exercise } from '@/app/trainer/library/library_types/library_types';
+import { trainerSharedApi } from '@/app/trainer/trainer_api/trainer_api';
+import type { Exercise, FetchState } from '@/app/trainer/trainer_types/trainer_types';
 import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+
+import { useTrainerWorkoutExercises } from './useTrainerWorkoutExercises';
 
 export function useWorkoutLogic(): WorkoutContextType {
   const { confirm } = useConfirm();
@@ -40,7 +45,7 @@ export function useWorkoutLogic(): WorkoutContextType {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [totalExercises, setTotalExercises] = useState(0);
 
-  const [loading, setLoading] = useState(true);
+  const [fetchState, setFetchState] = useState<FetchState>('loading');
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
@@ -48,15 +53,11 @@ export function useWorkoutLogic(): WorkoutContextType {
   const [editWkId, setEditWkId] = useState<string | null>(null);
   const [wkForm, setWkForm] = useState(EMPTY_WORKOUT_FORM);
 
-  const [showExModal, setShowExModal] = useState(false);
-  const [editExId, setEditExId] = useState<string | null>(null);
-  const [exForm, setExForm] = useState(EMPTY_EXERCISE_FORM);
-
   const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
   const hideToast = useCallback(() => setToast(null), []);
 
   const loadAll = useCallback(async () => {
-    setLoading(true);
+    setFetchState('loading');
     try {
       const params: Record<string, string> = {
         limit: '12',
@@ -66,22 +67,20 @@ export function useWorkoutLogic(): WorkoutContextType {
 
       const [wkRes, exRes] = await Promise.all([
         workoutApi.getWorkouts(params),
-        libraryApi.getExercises(params),
+        trainerSharedApi.fetchExercises(params) as Promise<any>,
       ]);
       setWorkouts(wkRes.data.workouts || []);
       setTotalWorkouts(wkRes.data.total || 0);
       setExercises(exRes.data.exercises || []);
       setTotalExercises(exRes.data.total || 0);
+      setFetchState('success');
     } catch (e) {
       showToast((e as Error).message, 'error');
-    } finally {
-      setLoading(false);
+      setFetchState('error');
     }
   }, [showToast, currentPage, debouncedSearch]);
 
   useEffect(() => { setTimeout(() => loadAll(), 0); }, [loadAll]);
-
-  // Derived state
 
   // Workout CRUD
   const openAddWk = useCallback(() => { 
@@ -130,7 +129,7 @@ export function useWorkoutLogic(): WorkoutContextType {
     } finally {
       setSaving(false);
     }
-  }, [editWkId, loadAll, showToast]);
+  }, [editWkId, showToast]);
   
   const deleteWk = useCallback(async (id: string) => { 
     const isConfirmed = await confirm({ title: 'Delete Workout', message: 'Delete this workout plan?', confirmText: 'Delete', type: 'danger' });
@@ -142,73 +141,17 @@ export function useWorkoutLogic(): WorkoutContextType {
     } catch (err) {
       showToast((err as Error).message, 'error');
     }
-  }, [confirm, loadAll, showToast]);
+  }, [confirm, showToast]);
 
-  // Exercise CRUD
-  const openAddEx = useCallback(() => { 
-    setEditExId(null); 
-    setExForm(EMPTY_EXERCISE_FORM); 
-    setShowExModal(true); 
-  }, []);
-  
-  const openEditEx = useCallback((ex: Exercise) => { 
-    setEditExId(ex.id); 
-    setExForm({ 
-      name: ex.name, 
-      muscle: ex.muscleGroup?.join(', ') || '', 
-      equipment: ex.category || '', 
-      difficulty: ex.difficulty 
-    }); 
-    setShowExModal(true); 
-  }, []);
-  
-  const saveEx = useCallback(async (data: ExerciseFormValues) => {
-    setSaving(true);
-    try {
-      // adapt to Exercise backend payload shape
-      const { muscle, equipment, ...rest } = data;
-      const payload = { 
-        ...rest, 
-        category: equipment,
-        muscleGroup: muscle.split(',').map(s => s.trim()) 
-      };
-      if (editExId) {
-        const res = await libraryApi.updateExercise(editExId, payload);
-        setExercises(prev => prev.map(e => String(e.id) === String(editExId) ? { ...e, ...payload } as unknown as Exercise : e));
-        showToast((res as { message?: string }).message || 'Success', 'success');
-      } else {
-        const res = await libraryApi.createExercise(payload);
-        const newEx = { ...payload, id: Math.random().toString(), isActive: true } as unknown as Exercise;
-        setExercises(prev => [newEx, ...prev]);
-        showToast((res as { message?: string }).message || 'Success', 'success');
-      }
-      setShowExModal(false);
-    } catch (err) {
-      showToast((err as Error).message, 'error');
-    } finally {
-      setSaving(false);
-    }
-  }, [editExId, loadAll, showToast]);
-  
-  const deleteEx = useCallback(async (id: string) => { 
-    const isConfirmed = await confirm({ title: 'Delete Exercise', message: 'Delete this exercise?', confirmText: 'Delete', type: 'danger' });
-    if (!isConfirmed) return;
-    try {
-      const res = await libraryApi.removeExercise(id);
-      setExercises(prev => prev.filter(e => String(e.id) !== String(id)));
-      showToast((res as { message?: string }).message || 'Success', 'success');
-    } catch (err) {
-      showToast((err as Error).message, 'error');
-    }
-  }, [confirm, loadAll, showToast]);
+  const exerciseLogic = useTrainerWorkoutExercises(setExercises, showToast, setSaving, confirm as any);
 
   return {
     tab, setTab, search, setSearch, currentPage, setCurrentPage,
     workouts, totalWorkouts, exercises, totalExercises,
-    loading, saving, toast, showToast, hideToast, loadAll,
+    fetchState, saving, toast, showToast, hideToast, loadAll,
     showWkModal, setShowWkModal, editWkId, wkForm, setWkForm,
-    showExModal, setShowExModal, editExId, exForm, setExForm,
     openAddWk, openEditWk, saveWk, deleteWk,
-    openAddEx, openEditEx, saveEx, deleteEx
+    ...exerciseLogic
   };
 }
+

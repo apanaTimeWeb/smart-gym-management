@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the search input, muscle group filter, and Add Plan CTA for the Workout Library.
 'use client';
 
@@ -33,7 +35,7 @@ export default function TrainerWorkoutToolbar() {
           <button 
             key={t} 
             onClick={() => { setTab(t); setCurrentPage(1); setSearch(''); }}
-            className={`px-5 py-3.5 text-sm font-medium transition-colors border-b-2 whitespace-nowrap ${
+            className={`px-5 py-3.5 text-sm font-medium motion-safe:transition-colors border-b-2 whitespace-nowrap ${
               tab === t 
                 ? 'text-primary bg-primary-subtle' 
                 : 'border-transparent text-secondary hover:text-foreground'
@@ -51,12 +53,12 @@ export default function TrainerWorkoutToolbar() {
               value={localSearch} 
               onChange={e => setLocalSearch(e.target.value)}  
  placeholder="Search..." 
- className="pl-8 pr-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-warning w-36 lg:w-48 bg-input text-foreground transition-all" 
+ className="pl-8 pr-3 py-2 text-sm border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus-visible:ring-warning w-36 lg:w-48 bg-input text-foreground motion-safe:transition-all" 
  />
  </div>
  <button 
  onClick={tab === 'Workout Plans' ? openAddWk : openAddEx}
- className="flex items-center gap-2 px-4 py-2 text-sm text-white rounded-lg font-medium hover:opacity-90 transition-opacity"
+ className="flex items-center gap-2 px-4 py-2 text-sm text-white rounded-lg font-medium hover:opacity-90 motion-safe:transition-opacity"
  style={{ background: 'var(--workout-highlight)' }}
  >
  <Plus size={15} /> <span className="hidden sm:inline">Add</span>
@@ -65,3 +67,4 @@ export default function TrainerWorkoutToolbar() {
  </div>
  );
 }
+

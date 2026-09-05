@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Renders the data table for Support Tickets
 import { MessageSquare } from 'lucide-react';
-import type { SupportTicket } from '@/app/superadmin/tickets/tickets_types/tickets_types';
+import type { SupportTicket } from '@/app/superadmin/tickets/superadmin_tickets_types/superadmin_tickets_types';
 import { PriorityColors, StatusColors } from '@/app/superadmin/tickets/tickets_utils/SuperadminTicketsConstants';
 import SuperadminTicketsEmptyState from '@/app/superadmin/tickets/tickets_components/SuperadminTicketsEmptyState/SuperadminTicketsEmptyState';
 

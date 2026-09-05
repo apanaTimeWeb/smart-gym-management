@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Form modal for creating or editing a diet plan in the Diet Library module.
 'use client';
 
@@ -36,7 +38,7 @@ export default function TrainerLibraryDietModal() {
  if (!showDietModal) return null;
 
  return (
- <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+ <div className="fixed inset-0 bg-black/60 z-40 flex items-center justify-center p-4">
  <div className="bg-card rounded-2xl shadow-xl w-full max-w-lg max-h-full overflow-y-auto">
  <div className="sticky top-0 bg-card px-6 py-4 border-b border-border flex items-center justify-between">
  <h3 className="text-lg font-bold text-foreground">
@@ -44,7 +46,7 @@ export default function TrainerLibraryDietModal() {
  </h3>
  <button 
  onClick={() => setShowDietModal(false)} 
- className="p-2 rounded-lg hover:bg-primary-subtle text-secondary transition-colors"
+ className="p-2 rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors"
  >
  <X size={18} />
  </button>
@@ -68,8 +70,8 @@ export default function TrainerLibraryDietModal() {
  min={f.type === 'number' ? "0" : undefined}
  onKeyDown={f.type === 'number' ? (e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); } : undefined}
  {...register(f.key as keyof DietFormValues)}
- className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 ${
-   errors[f.key as keyof DietFormValues] ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-warning'
+ className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page ${
+   errors[f.key as keyof DietFormValues] ? 'border-destructive focus-visible:ring-destructive' : 'border-border focus-visible:ring-warning'
  } bg-input text-foreground`}
  />
  {errors[f.key as keyof DietFormValues] && (
@@ -97,7 +99,7 @@ export default function TrainerLibraryDietModal() {
  <label className="block text-sm font-medium text-secondary mb-1">Meals (one per line)</label>
  <textarea 
  {...register('meals')}
- className="w-full border border-border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-warning bg-input text-foreground h-32 resize-none"
+ className="w-full border border-border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus-visible:ring-warning bg-input text-foreground h-32 resize-none"
  placeholder="Meal 1: Oats and eggs&#10;Meal 2: Chicken and rice"
  />
  </div>
@@ -105,14 +107,14 @@ export default function TrainerLibraryDietModal() {
  <button 
  type="button" 
  onClick={() => setShowDietModal(false)} 
- className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-foreground hover:bg-primary-subtle transition-colors"
+ className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-foreground hover:bg-primary-subtle motion-safe:transition-colors"
  >
  Cancel
  </button>
  <button 
  type="submit" 
  disabled={saving} 
- className="flex-1 py-2.5 rounded-xl text-sm font-bold text-primary-foreground bg-primary hover:bg-primary/90 flex items-center justify-center gap-2 disabled:opacity-70 transition-colors" 
+ className="flex-1 py-2.5 rounded-xl text-sm font-bold text-primary-foreground bg-primary hover:bg-primary/90 flex items-center justify-center gap-2 disabled:opacity-70 motion-safe:transition-colors" 
  >
  {saving ? <Loader2 className="w-4 h-4 motion-safe:animate-spin" /> : <><Save size={15} />{editDietId ? 'Update' : 'Add'}</>}
  </button>
@@ -122,3 +124,4 @@ export default function TrainerLibraryDietModal() {
  </div>
  );
 }
+

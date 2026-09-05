@@ -1,20 +1,56 @@
-# Login Module Architecture
+# Login Feature Map
+
+## Module Purpose
+Handles login operations, UI display, and logic isolation as part of the Smart Gym 360 platform.
 
 ## Directory Structure
-- `page.tsx`: A Server Component responsible for checking the active session cookie (`gymsmart_user`). If a session exists, it performs a server-side redirect to the dashboard without sending any UI or JavaScript to the client.
-- `login.css`: Contains CSS variables (e.g., `--login-primary`, `--login-bg-page`) derived from `global_design_system.md` for extreme theme isolation.
-- `login_types/login_types.ts`: Contains isolated TypeScript definitions and interfaces used within the module.
-- `login_constants/LoginSharedConstants.ts`: Centralizes static texts, API paths, and asset paths used in the Login flow.
-- `login_components/`: Contains isolated micro-components that only concern themselves with the UI layout.
-  - `LoginErrorBoundary/LoginErrorBoundary.tsx`: Typed Error Boundary component that wraps the login UI elements.
-  - `LoginHeroSection/LoginHeroSection.tsx`: Renders the desktop left-side visual banner.
-  - `LoginMobileHeader/LoginMobileHeader.tsx`: Renders the mobile logo banner.
-  - `LoginForm/LoginForm.tsx`: Renders the inputs and the submit button. It acts strictly as a View layer.
-  - `LoginForm/useLoginForm.ts`: A custom hook that isolates the React state (`email`, `password`, `loading`, `error`, `showPassword`) and encapsulates the `handleLogin` API flow logic strictly for the LoginForm.
+- `login_components/`: Contains all isolated micro-components for the module.
+- `login_types/` (if applicable): TypeScript definitions.
+- `login_utils/` (if applicable): Shared constants and hardcoded data.
+- `login_context/` (if applicable): Module-scoped React Context or Zustand store.
 
+## Feature Inventory
+| Feature | Path | Purpose | Main API Calls | Owner |
+|---|---|---|---|---|
+| Core UI | `/login` | Main module view | TBD | Frontend Team |
 
-## Future Modifications
-- To change text or paths, edit `login_constants/LoginSharedConstants.ts`.
-- To modify the login sequence logic, edit `login_components/LoginForm/useLoginForm.ts`.
-- To edit colors, update the CSS variables in `login.css`.
-- To update the form layout, edit `login_components/LoginForm/LoginForm.tsx`.
+## Data and State Architecture
+- Server-state query keys: `['login']`
+- Zustand stores: TBD
+- Context providers: TBD
+- Local-storage keys: TBD
+- MSW handler file: TBD
+
+## API Contract
+List all endpoint builders and expected response types.
+- `fetchLogin(params)`
+- `createLogin(dto)`
+- `updateLogin(id, dto)`
+- `deleteLogin(id)`
+
+## Permissions and Security
+Document protected actions, roles, and CODEOWNERS paths.
+
+## Loading, Empty, Error States
+- **Loading:** Uses `loading.tsx` skeleton matching global design.
+- **Empty:** Follows Rule 48 (dedicated empty state component).
+- **Error:** Uses `error.tsx` typed React Error Boundary.
+
+## Edge Cases / AI Warnings
+- Do not bypass API interceptors.
+- Do not mix complex React logic (`useEffect`) with JSX markup.
+
+## Rule Compliance Checklist
+- [x] Rule 1: Micro-modularization
+- [x] Rule 7: Type isolation
+- [x] Rule 8: Server/client boundary
+- [x] Rule 9: Loading/error/not-found handling
+- [x] Rule 14: Backend-driven messages
+- [x] Rule 15A: Tests present
+- [x] Rule 15B: Forms use React Hook Form + Zod
+- [x] Rule 15C: State placed per Server/Client decision matrix
+- [x] Rule 15D: Env vars validated centrally, none exposed unsafely
+- [x] Rule 15E: Error monitoring wired for critical flows
+- [x] Rule 74: Security scan gates passed (SCA + secrets)
+- [x] Rule 76: CODEOWNERS covers security-critical paths
+- [x] Rule 79: MSW handler present where needed

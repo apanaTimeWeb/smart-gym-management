@@ -4,11 +4,13 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Search } from 'lucide-react';
-import { useDashboardContext } from '@/app/admin/dashboard/dashboard_context/DashboardContext';
-import { formatCurrency } from '@/app/admin/dashboard/dashboard_utils/DashboardSharedConstants';
+import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
+import { useAdminDashboardStore } from '@/app/admin/dashboard/dashboard_store/useAdminDashboardStore';
+import { formatCurrency } from '@/app/admin/dashboard/dashboard_utils/AdminDashboardSharedConstants';
 
 export default function PendingPayments() {
-  const { stats } = useDashboardContext();
+  const { stats, status, error } = useAdminDashboardLogic();
+  const { timeRange, setTimeRange, startDate, endDate, setCustomDateRange } = useAdminDashboardStore();
   const [search, setSearch] = useState('');
 
   if (!stats) return null;
@@ -64,3 +66,5 @@ export default function PendingPayments() {
     </div>
   );
 }
+
+

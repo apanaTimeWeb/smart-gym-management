@@ -1,13 +1,15 @@
 // RESPONSIBILITY: Provides the implementation for AdminFinancePaymentsTable.tsx functionality within its module.
 'use client';
 
-import { useFinanceContext } from '@/app/admin/finance/finance_context/FinanceContext';
-import { PAYMENTS_TABLE_HEADERS, FINANCE_METHOD_STYLES, FINANCE_STATUS_STYLES } from '@/app/admin/finance/finance_utils/FinanceSharedConstants';
+import { useAdminFinanceLogic } from '@/app/admin/finance/finance_context/useAdminFinanceLogic';
+import { useAdminFinanceStore } from '@/app/admin/finance/finance_store/useAdminFinanceStore';
+import { PAYMENTS_TABLE_HEADERS, FINANCE_METHOD_STYLES, FINANCE_STATUS_STYLES } from '@/app/admin/finance/finance_utils/AdminFinanceSharedConstants';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_utils/AdminSharedConstants';
 
 export default function AdminFinancePaymentsTable() {
-  const { payments, totalPayments, fetchState, currentPage, setCurrentPage, methodFilter } = useFinanceContext();
+  const { payments, summary, totalPayments, fetchState, saving, error, loadAll, search, setSearch, currentPage, setCurrentPage, savePayment, methodFilter, setMethodFilter } = useAdminFinanceLogic();
+  const { showModal, setShowModal, toast, showToast, hideToast } = useAdminFinanceStore();
 
   // Apply client-side filter by payment status (DUE = Pending Amount KPI card)
   const filteredPayments = methodFilter === 'All'
@@ -46,6 +48,15 @@ export default function AdminFinancePaymentsTable() {
  </div>
  </>
  );
+ }
+
+ if (fetchState === 'error') {
+   return (
+     <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
+       <p className="text-danger font-medium">Failed to load payments.</p>
+       <p className="text-sm mt-1 text-secondary">Please check your connection and try again.</p>
+     </div>
+   );
  }
 
  return (
@@ -108,3 +119,5 @@ export default function AdminFinancePaymentsTable() {
  </>
  );
 }
+
+

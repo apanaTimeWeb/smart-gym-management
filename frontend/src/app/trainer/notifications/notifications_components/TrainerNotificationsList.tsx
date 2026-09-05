@@ -1,5 +1,9 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 import { NotificationItem } from '@/app/trainer/notifications/notifications_utils/useNotificationsPage';
 import { X, Bell } from 'lucide-react';
+import TrainerNotificationsEmptyState from '@/app/trainer/notifications/notifications_components/TrainerNotificationsEmptyState/TrainerNotificationsEmptyState';
+import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 
 interface NotificationsListProps {
   notifications: NotificationItem[];
@@ -8,16 +12,10 @@ interface NotificationsListProps {
 }
 
 export default function TrainerNotificationsList({ notifications, onMarkAsRead, onDelete }: NotificationsListProps) {
+  const { confirm } = useConfirm();
+  
   if (notifications.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center p-12 text-center">
-        <div className="w-16 h-16 bg-input rounded-full flex items-center justify-center mb-4">
-          <Bell className="w-8 h-8 text-secondary" />
-        </div>
-        <h3 className="text-lg font-medium text-foreground">You&apos;re all caught up!</h3>
-        <p className="text-sm text-secondary mt-1">No new notifications to show right now.</p>
-      </div>
-    );
+    return <TrainerNotificationsEmptyState />;
   }
 
   return (
@@ -26,7 +24,7 @@ export default function TrainerNotificationsList({ notifications, onMarkAsRead, 
         <div 
           key={n.id} 
           onMouseEnter={() => n.unread && onMarkAsRead(n.id)}
-          className={`p-4 md:px-6 flex items-start justify-between group transition-colors ${n.unread ? 'bg-primary-subtle hover:bg-primary-subtle/80' : 'bg-card hover:bg-input'}`}
+          className={`p-4 md:px-6 flex items-start justify-between group motion-safe:transition-colors ${n.unread ? 'bg-primary-subtle hover:bg-primary-subtle/80' : 'bg-card hover:bg-input'}`}
         >
           <div className="flex items-start gap-4 pr-4">
             <div className={`mt-1 w-2 h-2 rounded-full flex-shrink-0 ${n.unread ? 'bg-primary' : 'bg-transparent'}`} />
@@ -36,12 +34,18 @@ export default function TrainerNotificationsList({ notifications, onMarkAsRead, 
             </div>
           </div>
           <button 
-            onClick={() => {
-              if (window.confirm("Delete this notification?")) {
+            onClick={async () => {
+              const ok = await confirm({
+                title: 'Delete Notification',
+                message: 'Are you sure you want to delete this notification?',
+                type: 'danger',
+                confirmText: 'Delete'
+              });
+              if (ok) {
                 onDelete(n.id);
               }
             }}
-            className="text-secondary hover:text-danger p-2 rounded-md hover:bg-danger-bg opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all focus:opacity-100"
+            className="text-secondary hover:text-danger p-2 rounded-md hover:bg-danger-bg opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-all focus:opacity-100"
             aria-label="Delete notification"
           >
             <X size={18} />

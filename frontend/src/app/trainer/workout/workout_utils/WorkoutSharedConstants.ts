@@ -1,7 +1,9 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Centralized constants, schema, and shared utilities for the Workout Library module.
 import { z } from 'zod';
-import type { Exercise } from '@/app/trainer/library/library_types/library_types';
-import type { Workout } from '@/app/trainer/workout/workout_types/workout_types';
+import type { Exercise } from '@/app/trainer/trainer_types/trainer_types';
+import type { Workout } from '@/app/trainer/trainer_types/trainer_types';
 /* ── Dropdown / Filter Options (Rule 3: Backend-Ready Constants) ── */
 
 export const WORKOUT_LEVEL_OPTIONS = ['Beginner', 'Intermediate', 'Advanced', 'All Levels'] as const;
@@ -69,4 +71,5 @@ export const EMPTY_EXERCISE_FORM: ExerciseFormValues = {
   equipment: 'Barbell', 
   difficulty: 'Beginner' 
 };
+
 

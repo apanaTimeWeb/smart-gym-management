@@ -16,8 +16,8 @@ export default async function FinancePage() {
       totalPayments: paymentsRes.data?.total || 0,
       summary: summaryRes.data || null
     };
-  } catch (e) {
-    // console.error('Failed to fetch finance initial data:', e);
+  } catch {
+    // SSR data fetch failed gracefully — client-side hook will re-fetch
   }
 
   return <AdminFinanceMain initialData={initialData} />;

@@ -2,6 +2,7 @@
 'use client';
 
 import { Edit2, Trash2 } from 'lucide-react';
+import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { useWorkoutContext } from '@/app/manager/workout/workout_context/ManagerWorkoutContext';
 import { EXERCISE_TABLE_HEADERS } from '@/app/manager/workout/workout_utils/ManagerWorkoutSharedConstants';
 
@@ -10,6 +11,7 @@ import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerShare
 
 export default function ManagerWorkoutExerciseTable() {
   const { exercises, totalExercises, search, currentPage, setCurrentPage, openEditEx, deleteEx } = useWorkoutContext();
+  const { confirm } = useConfirm();
 
   
   const totalPages = Math.ceil(totalExercises / MANAGER_ITEMS_PER_PAGE) || 1;
@@ -57,9 +59,15 @@ export default function ManagerWorkoutExerciseTable() {
                       <Edit2 size={15} />
                     </button>
                     <button 
-                      onClick={(e) => { 
+                      onClick={async (e) => { 
                         e.stopPropagation(); 
-                        if (window.confirm(`Are you sure you want to delete exercise "${ex.name}"?`)) {
+                        const ok = await confirm({
+                          title: 'Delete Exercise',
+                          message: `Are you sure you want to delete exercise "${ex.name}"?`,
+                          type: 'danger',
+                          confirmText: 'Delete'
+                        });
+                        if (ok) {
                           deleteEx(ex.id); 
                         }
                       }}

@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Provides the implementation for finance_types.ts functionality within its module.
 
 import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
-import { AddPaymentFormValues } from '@/app/admin/finance/finance_utils/FinanceSharedConstants';
+import { AddPaymentFormValues } from '@/app/admin/finance/finance_utils/AdminFinanceSharedConstants';
 
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 
@@ -44,3 +44,4 @@ export interface FinanceSummary {
   revenueByMethod: { UPI: number; Cash: number; Card: number; NetBanking: number };
   monthlyData: { month: string; revenue: number }[];
 }
+

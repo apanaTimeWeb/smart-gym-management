@@ -1,7 +1,9 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Provides strongly-typed network calls for the workout module.
 import { apiFetch, ApiResponse } from '@/lib/api';
 import { WorkoutUrlConfig } from '@/app/trainer/workout/workout_url_config';
-import type { Workout } from '@/app/trainer/workout/workout_types/workout_types';
+import type { Workout } from '@/app/trainer/trainer_types/trainer_types';
 
 export const workoutApi = {
   getWorkouts: (params?: Record<string, string>) => {
@@ -14,3 +16,4 @@ export const workoutApi = {
     apiFetch<ApiResponse<Workout>>(WorkoutUrlConfig.BACKEND_API.WORKOUT_UPDATE(id), { method: 'PATCH', body: JSON.stringify(body) }),
   removeWorkout: (id: string) => apiFetch<ApiResponse<{ id: string }>>(WorkoutUrlConfig.BACKEND_API.WORKOUT_DELETE(id), { method: 'DELETE' }),
 };
+

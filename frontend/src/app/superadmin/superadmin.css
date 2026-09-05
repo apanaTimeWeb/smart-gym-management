@@ -164,10 +164,11 @@
 .status-dot--offline { background-color: var(--text-disabled); }
 
 /* ─── Table Row Hover Highlight ──────────────────────────────────────────── */
-/* Subtle primary-tinted row hover in all superadmin data tables               */
+/* Subtle primary-tinted (gold) row hover in all superadmin data tables       */
+/* Uses var(--primary) = #FACC15 gold per Design System §5b                  */
 
 .superadmin-table-row:hover {
-  background-color: rgba(99, 102, 241, 0.06);
+  background-color: rgba(250, 204, 21, 0.06);
 }
 
 /* ─── Print Styles (Design System §14) ──────────────────────────────────── */

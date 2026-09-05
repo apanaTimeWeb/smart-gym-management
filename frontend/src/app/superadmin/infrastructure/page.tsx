@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Pure Server Component for the infrastructure page. Renders the interactive client component.
-import InfrastructureClient from '@/app/superadmin/infrastructure/InfrastructureClient';
+import SuperadminInfrastructureClient from '@/app/superadmin/infrastructure/infrastructure_components/SuperadminInfrastructureClient';
 
 export default function Page() {
-  return <InfrastructureClient />;
+  return <SuperadminInfrastructureClient />;
 }

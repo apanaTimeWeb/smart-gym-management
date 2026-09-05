@@ -4,12 +4,14 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Search } from 'lucide-react';
-import { useDashboardContext } from '@/app/admin/dashboard/dashboard_context/DashboardContext';
-import { DASHBOARD_RECENT_MEMBERS_PAGE_SIZE, RECENT_MEMBERS_HEADERS, DASHBOARD_STATUS_STYLES, formatCurrency } from '@/app/admin/dashboard/dashboard_utils/DashboardSharedConstants';
+import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
+import { useAdminDashboardStore } from '@/app/admin/dashboard/dashboard_store/useAdminDashboardStore';
+import { DASHBOARD_RECENT_MEMBERS_PAGE_SIZE, RECENT_MEMBERS_HEADERS, DASHBOARD_STATUS_STYLES, formatCurrency } from '@/app/admin/dashboard/dashboard_utils/AdminDashboardSharedConstants';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 
 export default function AdminDashboardRecentMembers() {
-  const { stats } = useDashboardContext();
+  const { stats, status, error } = useAdminDashboardLogic();
+  const { timeRange, setTimeRange, startDate, endDate, setCustomDateRange } = useAdminDashboardStore();
   const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -101,3 +103,5 @@ export default function AdminDashboardRecentMembers() {
     </div>
   );
 }
+
+

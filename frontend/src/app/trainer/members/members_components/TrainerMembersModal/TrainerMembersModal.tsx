@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders a modal for creating or editing a member.
 'use client';
 
@@ -52,7 +54,7 @@ export default function TrainerMembersModal() {
           <h3 className="text-lg font-bold text-foreground">{editId ? 'Edit Member' : 'Add New Member'}</h3>
           <button
             onClick={() => setShowAddModal(false)}
-            className="p-2 rounded-lg hover:bg-primary-subtle text-secondary transition-all duration-200"
+            className="p-2 rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-all motion-safe:duration-200"
             aria-label="Close modal"
           >
             <X size={18} />
@@ -71,7 +73,7 @@ export default function TrainerMembersModal() {
                 type={f.type}
                 placeholder={f.placeholder}
                 {...register(f.key as keyof MemberFormValues)}
-                className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-colors ${
+                className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-colors ${
                   errors[f.key as keyof MemberFormValues] ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
                 }`}
               />
@@ -105,7 +107,7 @@ export default function TrainerMembersModal() {
               <input
                 type="date"
                 {...register('joinDate')}
-                className="w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-colors"
+                className="w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-colors"
               />
             </div>
             <div>
@@ -115,7 +117,7 @@ export default function TrainerMembersModal() {
                 min="0"
                 onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }}
                 {...register('amount', { valueAsNumber: true })}
-                className="w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-colors"
+                className="w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-colors"
               />
             </div>
           </div>
@@ -123,14 +125,14 @@ export default function TrainerMembersModal() {
             <button
               type="button"
               onClick={() => setShowAddModal(false)}
-              className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-primary hover:bg-primary-subtle transition-all duration-200 active:scale-95"
+              className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-primary hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-200 active:scale-95"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={saving}
-              className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-primary text-white flex items-center justify-center gap-2 disabled:opacity-70 hover:bg-primary-hover transition-all duration-200 active:scale-95"
+              className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-primary text-white flex items-center justify-center gap-2 disabled:opacity-70 hover:bg-primary-hover motion-safe:transition-all motion-safe:duration-200 active:scale-95"
             >
               {saving ? (
                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" />
@@ -144,3 +146,4 @@ export default function TrainerMembersModal() {
     </div>
   );
 }
+

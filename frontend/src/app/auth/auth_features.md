@@ -1,43 +1,55 @@
-# Auth Module — Feature Documentation
+# Auth Feature Map
 
-## Overview
-The Auth module is responsible for the authentication lifecycle of the application. It handles user login, secure token management (JWT/refresh tokens), logout procedures, and cookie-based sessions.
+## Module Purpose
+The Auth module provides authentication flows (Login, Logout, Token Refresh, Cookie Management) for all ERP roles (Manager, Trainer, Admin). It intercepts raw credentials, validates them against the backend, and securely sets HTTP-only cookies to establish sessions.
 
----
+## Directory Structure
+- `login/`: Contains the login page and its sub-components (Form, Hero, ErrorBoundary).
+- `logout/`: Contains the logout API route handler.
+- `refresh/`: Contains the token refresh API route handler.
+- `set-cookie/`: Contains the internal Next.js API route used by the client to securely set HTTP-only cookies after a successful login.
+- `token/`: Token utility or validation logic.
+- `auth_api/`: Frontend API wrappers for interacting with the authentication backend.
 
-## Directory Structure & Core Features
+## Feature Inventory
+| Feature | Path | Purpose | Main API Calls | Status |
+|---|---|---|---|---|
+| Login Page | `/auth/login` | Unified login interface | `POST /auth/login` | ✅ Live |
+| Set Cookie | `/auth/set-cookie` | Internal route to set HTTP-only cookie | N/A | ✅ Live |
+| Logout | `/auth/logout` | Clears cookies and session | N/A | ✅ Live |
 
-```
-auth/
-├── auth_features.md     # This file
-├── auth_forbidden.md    # Module anti-patterns
-├── auth_theme_contract.md # Theme CSS variables
-├── auth_url_config.ts   # All auth routes
-├── auth_api/          # Centralized API fetchers and interceptors for auth actions
-├── login/             # Login page, forms, and authentication state logic
-├── logout/            # Secure logout routines and state clearing
-├── refresh/           # Silent token refresh mechanisms
-├── set-cookie/        # Secure cookie handling utilities (HTTP-only)
-└── token/             # Token parsing, decoding, and validation utilities
-```
+## Data and State Architecture
+- **Server-state query keys:** N/A 
+- **Zustand stores:** N/A (Forms use local state or React Hook Form)
+- **Context providers:** N/A
+- **Local-storage keys:** None — All tokens strictly reside in HTTP-only cookies.
+- **MSW handler file:** N/A
 
-### Core Flows
-- **/auth/login**: Primary entry point for users to authenticate into the system.
-- **Token Refresh**: Background silent refresh triggered by the API interceptor on `401 Unauthorized`.
-- **Logout**: Clears all local state, invalidates tokens server-side, and redirects.
+## API Contract
+- `POST /auth/login`: Accepts `{ email, password }`, returns JWT and User object.
+- **Client-to-Next-Server**: The client form calls the external backend API. On success, it calls the internal Next.js route `/auth/set-cookie` to store the token securely in an HTTP-only cookie.
 
----
+## Permissions and Security
+- Role: Public access for Login.
+- **Tokens are NEVER stored in localStorage.** They are always stored in the `gymsmart_token` HTTP-only, secure, sameSite=strict cookie.
+- Server Components (`page.tsx`) read this cookie directly via `next/headers` `cookies()` to perform role-based redirects.
 
-## State & Data
-- **Centralized Config**: Authentication endpoints are defined in `auth_url_config.ts`.
-- **State Management**: Authentication state (user session, roles) is typically synced with a global store (e.g., Zustand) or Context to be consumed by other modules.
+## Loading, Empty, Error States
+- **Loading:** Uses inline button spinners during form submission.
+- **Empty:** N/A.
+- **Error:** Uses `LoginErrorBoundary` to catch UI rendering crashes. API errors are displayed via toast or inline form messages.
 
----
+## Edge Cases / AI Warnings
+- **Role-based Redirection:** `/auth/login` automatically redirects authenticated users to their respective dashboards based on the decoded role in the cookie.
+- **Z-index scale**: Theme toggle is `z-30`.
 
-## Architectural Rules Checklist (AI Context)
-- [x] **Micro-modularization**: Component files must not exceed 250-350 lines. Break down into sub-components.
-- [x] **Prefixing**: ALL file names must start with `Auth...` (e.g., `AuthLoginForm.tsx`).
-- [x] **Logic Separation**: Heavy logic must be extracted into `use[ComponentName].ts` hooks.
-- [x] **Theme Contract**: No arbitrary Tailwind pixel/hex values. Use CSS variables defined in the theme contract.
-- [x] **Data Fetching**: Use Server Components for secure operations where applicable, Client components for form interactivity.
-- [x] **Imports**: Absolute imports ONLY (`@/app/auth/...`).
+## Rule Compliance Checklist
+- [x] Rule 1: Micro-modularization — module-prefixed subfolders
+- [x] Rule 2: Total Role Isolation — auth serves as the gateway
+- [x] Rule 3: Hyper-descriptive naming — `Login` prefix on components
+- [x] Rule 4: Theme Independence — Tailwind tokens via `globals.css`
+- [x] Rule 7: Type Isolation — `*_types/` folders used
+- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server, `LoginForm.tsx` = Client
+- [x] Rule 13: Feature Map — this document
+- [x] Design §12: Z-index scale — floating toggles z-30
+- [x] Design §29: motion-safe guards on all transitions and animations

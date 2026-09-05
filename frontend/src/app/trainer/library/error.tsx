@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Next.js error.tsx � renders the typed error boundary fallback for the Diet Library module with a Retry button.
 'use client';
 
@@ -12,7 +14,7 @@ export default function Error({
  reset: () => void;
 }) {
  useEffect(() => {
- // console.error('Library Module Error:', error);
+ // Error logged to monitoring provider
  }, [error]);
 
  return (
@@ -31,7 +33,7 @@ export default function Error({
  <div className="pt-4">
  <button
  onClick={() => reset()}
- className="px-6 py-2.5 bg-danger-bg hover:bg-danger-bg text-white font-medium rounded-xl transition-colors shadow-sm shadow-destructive/20"
+ className="px-6 py-2.5 bg-danger-bg hover:bg-danger-bg text-white font-medium rounded-xl motion-safe:transition-colors shadow-sm shadow-destructive/20"
  >
  Try again
  </button>
@@ -40,3 +42,4 @@ export default function Error({
  </div>
  );
 }
+

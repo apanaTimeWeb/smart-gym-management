@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Centralized constants, schema, and shared utilities for the Diet Library module.
 import { z } from 'zod';
 import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerSharedConstants';
@@ -66,3 +68,4 @@ export const EMPTY_DIET_FORM = {
 
 export const LIBRARY_TABS = ['Exercises', 'Diet Plans'] as const;
 export type LibraryTab = typeof LIBRARY_TABS[number];
+

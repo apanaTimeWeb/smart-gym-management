@@ -32,6 +32,11 @@ export default function AttendanceTable() {
         </div>
       ))}
     </div>
+  ) : fetchState === 'error' ? (
+    <div className="text-center py-16 bg-card rounded-2xl border border-danger/30 mt-4">
+      <p className="text-danger font-medium">Failed to load attendance records.</p>
+      <p className="text-sm mt-1 text-secondary">Please check your connection and try again.</p>
+    </div>
   ) : (
  <div className="overflow-x-auto">
  <table className="w-full">

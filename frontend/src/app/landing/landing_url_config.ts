@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Single source of truth for all routes and anchor links used in the Landing module.
 // Import from this file whenever navigating to a page or jumping to a section — no hardcoded strings in JSX.
 export const LandingUrlConfig = {
@@ -25,3 +27,4 @@ export const LandingUrlConfig = {
     CONTACT: '/landing/contact',
   },
 } as const;
+

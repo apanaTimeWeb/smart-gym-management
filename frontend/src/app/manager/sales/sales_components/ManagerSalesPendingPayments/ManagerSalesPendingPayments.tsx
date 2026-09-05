@@ -38,6 +38,15 @@ export default function PendingPayments() {
     );
   }
 
+  if (fetchState === 'error') {
+    return (
+      <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
+        <p className="text-danger font-medium">Failed to load pending payments.</p>
+        <p className="text-sm mt-1 text-secondary">Please check your connection and try again.</p>
+      </div>
+    );
+  }
+
   return (
     <div>
       <p className="text-sm text-secondary mb-4">

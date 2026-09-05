@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Form modal for creating or editing a workout plan in the Workout Library module.
 'use client';
 
@@ -36,7 +38,7 @@ export default function TrainerWorkoutModal() {
   if (!showWkModal) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 p-4">
       <div className="bg-card rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
         <div className="flex justify-between items-center p-5 border-b border-border">
           <h3 className="font-bold text-lg text-foreground">
@@ -45,7 +47,7 @@ export default function TrainerWorkoutModal() {
           <button 
             type="button"
             onClick={() => setShowWkModal(false)} 
-            className="text-secondary hover:text-foreground hover:bg-primary-subtle p-1 rounded-md transition-colors"
+            className="text-secondary hover:text-foreground hover:bg-primary-subtle p-1 rounded-md motion-safe:transition-colors"
           >
             <X size={20} />
           </button>
@@ -56,8 +58,8 @@ export default function TrainerWorkoutModal() {
             <input 
               type="text" 
               {...register('name')}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
-                errors.name ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-warning'
+              className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page ${
+                errors.name ? 'border-destructive focus-visible:ring-destructive' : 'border-border focus-visible:ring-warning'
               } bg-input text-foreground`} 
             />
             {errors.name && <p className="text-danger text-xs mt-1">{errors.name.message}</p>}
@@ -86,8 +88,8 @@ export default function TrainerWorkoutModal() {
                 min="1" 
                 max="7" 
                 {...register('days', { valueAsNumber: true })}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
-                  errors.days ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-warning'
+                className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page ${
+                  errors.days ? 'border-destructive focus-visible:ring-destructive' : 'border-border focus-visible:ring-warning'
                 } bg-input text-foreground`} 
               />
               {errors.days && <p className="text-danger text-xs mt-1">{errors.days.message}</p>}
@@ -101,8 +103,8 @@ export default function TrainerWorkoutModal() {
                 type="text" 
                 placeholder="e.g. Hypertrophy" 
                 {...register('focus')}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
-                  errors.focus ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-warning'
+                className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page ${
+                  errors.focus ? 'border-destructive focus-visible:ring-destructive' : 'border-border focus-visible:ring-warning'
                 } bg-input text-foreground`} 
               />
               {errors.focus && <p className="text-danger text-xs mt-1">{errors.focus.message}</p>}
@@ -113,8 +115,8 @@ export default function TrainerWorkoutModal() {
                 type="text" 
                 placeholder="e.g. 60 min" 
                 {...register('duration')}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
-                  errors.duration ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-warning'
+                className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page ${
+                  errors.duration ? 'border-destructive focus-visible:ring-destructive' : 'border-border focus-visible:ring-warning'
                 } bg-input text-foreground`} 
               />
               {errors.duration && <p className="text-danger text-xs mt-1">{errors.duration.message}</p>}
@@ -128,8 +130,8 @@ export default function TrainerWorkoutModal() {
                 type="number" 
                 min="1" 
                 {...register('exercises', { valueAsNumber: true })}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
-                  errors.exercises ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-warning'
+                className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page ${
+                  errors.exercises ? 'border-destructive focus-visible:ring-destructive' : 'border-border focus-visible:ring-warning'
                 } bg-input text-foreground`} 
               />
               {errors.exercises && <p className="text-danger text-xs mt-1">{errors.exercises.message}</p>}
@@ -140,7 +142,7 @@ export default function TrainerWorkoutModal() {
                 type="text" 
                 placeholder="e.g. PPL, Classic" 
                 {...register('tags')}
-                className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-warning bg-input text-foreground" 
+                className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus-visible:ring-warning bg-input text-foreground" 
               />
             </div>
           </div>
@@ -149,14 +151,14 @@ export default function TrainerWorkoutModal() {
             <button 
               type="button" 
               onClick={() => setShowWkModal(false)} 
-              className="px-4 py-2 border border-border rounded-lg font-medium text-secondary hover:text-foreground hover:bg-primary-subtle transition-colors"
+              className="px-4 py-2 border border-border rounded-lg font-medium text-secondary hover:text-foreground hover:bg-primary-subtle motion-safe:transition-colors"
             >
               Cancel
             </button>
             <button 
               type="submit" 
               disabled={saving}
-              className="px-4 py-2 rounded-lg font-medium text-white flex items-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-70" 
+              className="px-4 py-2 rounded-lg font-medium text-white flex items-center gap-2 hover:opacity-90 motion-safe:transition-opacity disabled:opacity-70" 
               style={{ background: 'var(--workout-highlight)' }}
             >
               {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" /> : <><Save size={15} /> Save</>}
@@ -167,3 +169,4 @@ export default function TrainerWorkoutModal() {
     </div>
   );
 }
+

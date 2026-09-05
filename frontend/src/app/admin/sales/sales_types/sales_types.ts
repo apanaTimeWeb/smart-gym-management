@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Defines all types for the Admin Sales & Reports module — membership, payments, store sales.
-import { type SalesTab, type DateFilter } from '@/app/admin/sales/sales_utils/SalesSharedConstants';
+import { type SalesTab, type DateFilter } from '@/app/admin/sales/sales_utils/AdminSalesSharedConstants';
 import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
 
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';
@@ -108,3 +108,4 @@ export interface SalesContextType {
   toast: { message: string; type: ToastType } | null;
   showToast: (message: string, type: ToastType) => void;
 }
+

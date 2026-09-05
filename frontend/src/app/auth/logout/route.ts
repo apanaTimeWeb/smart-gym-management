@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: route.ts handles the logic and UI for its corresponding feature.
 import { NextRequest, NextResponse } from 'next/server';
 import { AuthUrlConfig } from '@/app/auth/auth_url_config';
@@ -24,3 +26,4 @@ export async function POST(req: NextRequest) {
 
   return res;
 }
+

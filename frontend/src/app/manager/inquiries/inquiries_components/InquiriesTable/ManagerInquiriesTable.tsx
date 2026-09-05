@@ -5,11 +5,13 @@ import { useInquiriesContext } from '@/app/manager/inquiries/inquiries_context/M
 import { FetchState } from '@/app/manager/inquiries/inquiries_types/ManagerInquiriesTypes';
 import { INQUIRIES_TABLE_HEADERS, INQUIRIES_STATUS_LABELS, INQUIRIES_STATUS_STYLES } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesSharedConstants';
 import { MessageCircle, Mail, Edit2, Trash2 } from 'lucide-react';
+import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 
 export default function ManagerInquiriesTable() {
+  const { confirm } = useConfirm();
   const {
     inquiries, fetchState, search, statusFilter, currentPage, setCurrentPage,
     openEdit, openMsg, deleteInquiry, updateStatus, totalInquiries,
@@ -55,6 +57,15 @@ export default function ManagerInquiriesTable() {
             </tbody>
           </table>
         </div>
+      </div>
+    );
+  }
+
+  if (fetchState === FetchState.ERROR) {
+    return (
+      <div className="bg-card rounded-xl shadow-sm border border-danger/30 overflow-hidden flex flex-col h-full min-h-96 justify-center items-center py-16 text-center">
+        <p className="text-danger font-medium">Failed to load inquiries.</p>
+        <p className="text-sm mt-1 text-secondary">Please check your connection and try again.</p>
       </div>
     );
   }
@@ -160,10 +171,15 @@ export default function ManagerInquiriesTable() {
                         <Edit2 size={13} />
                       </button>
                       <button
-                        onClick={(e) => { 
-                          e.stopPropagation(); 
-                          if (window.confirm(`Are you sure you want to delete inquiry from "${inq.name}"? This action cannot be undone.`)) {
-                            deleteInquiry(inq.id); 
+                        onClick={async () => {
+                          const ok = await confirm({
+                            title: 'Delete Inquiry',
+                            message: `Are you sure you want to delete inquiry from "${inq.name}"? This action cannot be undone.`,
+                            type: 'danger',
+                            confirmText: 'Delete'
+                          });
+                          if (ok) {
+                            deleteInquiry(inq.id);
                           }
                         }}
                         className="p-1.5 rounded-lg bg-danger-bg text-danger hover:opacity-80 transition-all duration-200"

@@ -1,4 +1,5 @@
-import AdminNotificationsClient from '@/app/admin/notifications/AdminNotificationsClient';
+// RESPONSIBILITY: Core UI component/route for the admin module orchestrating views and displaying sub-components.
+import AdminNotificationsClient from '@/app/admin/notifications/notifications_components/AdminNotificationsClient';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -20,3 +21,4 @@ export default function NotificationsPage() {
     </main>
   );
 }
+

@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Single source of truth for ALL hardcoded UI data in the Landing module.
 // When backend APIs are ready, replace these arrays one-by-one with API calls — zero UI changes needed.
 // Rule 3: No hardcoded data is allowed in .tsx view files. Rule 35: No magic strings.
@@ -102,3 +104,4 @@ export const EMPTY_CONTACT_FORM = {
   email:   '',
   message: '',
 };
+

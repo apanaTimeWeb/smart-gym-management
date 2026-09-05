@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
+// DATA FLOW: Standard component data flow.
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import LoginHeroSection from '@/app/auth/login/login_components/LoginHeroSection/LoginHeroSection';
@@ -24,20 +26,22 @@ export default async function Login() {
       // Return null gracefully or handle it differently if needed.
     }
 
-    if (user?.role === 'SUPERADMIN') {
+    const role = user?.role?.toUpperCase();
+    
+    if (role === 'SUPERADMIN') {
       redirect(SuperadminUrlConfig.PAGES.DASHBOARD);
-    } else if (user?.role === 'MANAGER') {
+    } else if (role === 'MANAGER') {
       redirect(AuthUrlConfig.PAGES.MANAGER_DASHBOARD);
-    } else if (user?.role === 'TRAINER') {
+    } else if (role === 'TRAINER') {
       redirect(AuthUrlConfig.PAGES.TRAINER_DASHBOARD);
-    } else {
+    } else if (role === 'ADMIN') {
       redirect(AuthUrlConfig.PAGES.ADMIN_DASHBOARD);
     }
   }
 
   return (
     <div className="min-h-screen flex bg-page font-sans relative">
-      <div className="absolute top-6 right-6 z-50">
+      <div className="absolute top-6 right-6 z-30">
         <ThemeToggle />
       </div>
       <LoginErrorBoundary>
@@ -50,3 +54,4 @@ export default async function Login() {
     </div>
   );
 }
+

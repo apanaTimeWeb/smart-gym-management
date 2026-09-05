@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Core data logic hook for the admin module.
+// DATA FLOW: Centralized store/hook logic mapping API mutations and query state to UI props.
 import { create } from 'zustand';
 
 export interface BranchExpenseItem { id: string; label: string; amount: number; category: string; date: string; }
@@ -107,3 +109,4 @@ export const useAdminGlobalStore = create<AdminGlobalState>((set) => ({
   branches: MOCK_BRANCHES,
   setBranches: (branches) => set({ branches }),
 }));
+

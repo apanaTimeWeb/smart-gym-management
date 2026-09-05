@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Renders the page component.
-import AnalyticsClient from '@/app/superadmin/analytics/analytics_components/AnalyticsClient';
+import SuperadminAnalyticsClient from '@/app/superadmin/analytics/analytics_components/SuperadminAnalyticsClient';
 
 export default function AnalyticsPage() {
-  return <AnalyticsClient />;
+  return <SuperadminAnalyticsClient />;
 }

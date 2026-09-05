@@ -2,7 +2,7 @@
 export const StoreUrlConfig = {
   PAGES: {
     PRODUCTS: '/manager/store',
-    ORDERS: '/manager/store/orders',
+    ORDERS: '/manager/store',
   },
   BACKEND_API: {
     PRODUCTS_BASE: '/manager/store/products',

@@ -1,17 +1,38 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the grid of workout plan cards with exercises count and action buttons.
 'use client';
 
 import { Dumbbell, Edit2, Trash2 } from 'lucide-react';
 import { useWorkoutContext } from '@/app/trainer/workout/workout_context/WorkoutContext';
+import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 
 import TrainerPagination from '@/app/trainer/trainer_components/TrainerShared/TrainerPagination';
 import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerSharedConstants';
 
 export default function TrainerWorkoutPlansGrid() {
   const { workouts, totalWorkouts, search, currentPage, setCurrentPage, openEditWk, deleteWk } = useWorkoutContext();
+  const { confirm } = useConfirm();
 
-  
   const totalPages = Math.ceil(totalWorkouts / TRAINER_ITEMS_PER_PAGE) || 1;
+  const { fetchState } = useWorkoutContext();
+
+  if (fetchState === 'loading') {
+    return (
+      <div className="flex justify-center py-10">
+        <div className="motion-safe:animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (fetchState === 'error') {
+    return (
+      <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
+        <p className="text-danger font-medium">Failed to load workout plans.</p>
+        <p className="text-sm mt-1 text-secondary">Please check your connection and try again.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-full min-h-96">
@@ -19,7 +40,7 @@ export default function TrainerWorkoutPlansGrid() {
         {workouts.map(w => (
           <div 
             key={w.id} 
-            className="border border-border rounded-xl p-4 hover:border-info dark:hover:border-info hover:shadow-sm transition-all bg-card"
+            className="border border-border rounded-xl p-4 hover:border-info dark:hover:border-info hover:shadow-sm motion-safe:transition-all bg-card"
           >
             <div className="flex items-start justify-between mb-3">
               <div className="w-10 h-10 bg-info-bg dark:bg-info-bg rounded-xl flex items-center justify-center">
@@ -37,18 +58,24 @@ export default function TrainerWorkoutPlansGrid() {
                 </span>
                 <button 
                   onClick={() => openEditWk(w)} 
-                  className="p-1.5 text-info hover:text-info hover:bg-info-bg dark:hover:bg-info-bg rounded-lg transition-colors"
+                  className="p-1.5 text-info hover:text-info hover:bg-info-bg dark:hover:bg-info-bg rounded-lg motion-safe:transition-colors"
                 >
                   <Edit2 size={13} />
                 </button>
                 <button 
-                  onClick={(e) => {
+                  onClick={async (e) => {
                     e.stopPropagation();
-                    if (window.confirm(`Are you sure you want to delete workout plan "${w.name}"?`)) {
+                    const ok = await confirm({
+                      title: 'Delete Workout Plan',
+                      message: `Are you sure you want to delete workout plan "${w.name}"?`,
+                      type: 'danger',
+                      confirmText: 'Delete'
+                    });
+                    if (ok) {
                       deleteWk(w.id);
                     }
                   }}
-                  className="p-1.5 text-danger hover:text-danger hover:bg-danger-bg dark:hover:bg-danger-bg rounded-lg transition-colors"
+                  className="p-1.5 text-danger hover:text-danger hover:bg-danger-bg dark:hover:bg-danger-bg rounded-lg motion-safe:transition-colors"
                 >
                   <Trash2 size={13} />
                 </button>
@@ -71,9 +98,9 @@ export default function TrainerWorkoutPlansGrid() {
             </div>
             
             <div className="flex flex-wrap gap-1 mb-3">
-              {w.tags?.map((tag: string) => (
-                <span key={tag} className="text-xs bg-input text-secondary px-2 py-0.5 rounded-full">
-                  {tag}
+              {(Array.isArray(w.tags) ? w.tags : (typeof w.tags === 'string' ? (w.tags as string).split(',').filter(Boolean) : [])).map((tag: string) => (
+                <span key={tag.trim()} className="text-xs bg-input text-secondary px-2 py-0.5 rounded-full">
+                  {tag.trim()}
                 </span>
               ))}
             </div>
@@ -101,3 +128,4 @@ export default function TrainerWorkoutPlansGrid() {
     </div>
   );
 }
+

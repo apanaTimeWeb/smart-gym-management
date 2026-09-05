@@ -5,12 +5,14 @@ import { useEffect } from 'react';
 import { X, Save, Loader2 } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import { usePlansContext } from '@/app/admin/plans/plans_context/PlansContext';
-import { TIERS, PlanSchema, type PlanFormValues, EMPTY_PLAN_FORM } from '@/app/admin/plans/plans_utils/PlansSharedConstants';
+import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
+import { useAdminPlansLogic } from '@/app/admin/plans/plans_context/useAdminPlansLogic';
+import { useAdminPlansStore } from '@/app/admin/plans/plans_store/useAdminPlansStore';
+import { TIERS, PlanSchema, type PlanFormValues, EMPTY_PLAN_FORM } from '@/app/admin/plans/plans_utils/AdminPlansSharedConstants';
 
 export default function AdminPlansModal() {
-  const { showModal, setShowModal, editId, form, saving, savePlan } = usePlansContext();
+  const { plans, fetchState, saving, search, setSearch, currentPage, setCurrentPage, loadPlans, openAdd, openEdit, savePlan, deletePlan } = useAdminPlansLogic();
+  const { showModal, setShowModal, editId, form, setForm, toast, showToast, hideToast } = useAdminPlansStore();
 
   const { register, handleSubmit, reset, control, formState: { errors } } = useForm<PlanFormValues>({
     resolver: zodResolver(PlanSchema),
@@ -61,7 +63,7 @@ export default function AdminPlansModal() {
                 control={control}
                 render={({ field }) => (
                   <div className={editId ? 'opacity-70 pointer-events-none' : ''}>
-                    <SearchableDropdown
+                    <AdminSearchableDropdown
                       value={field.value || ''}
                       onChange={field.onChange}
                       options={TIERS.map(t => ({ label: t, value: t }))}
@@ -134,3 +136,6 @@ export default function AdminPlansModal() {
     </div>
   );
 }
+
+
+

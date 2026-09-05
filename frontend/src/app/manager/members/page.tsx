@@ -19,8 +19,8 @@ export default async function MembersPage() {
       plans: plansRes.data || [],
       stats: statsRes.data || { total: 0, active: 0, pending: 0, expired: 0 }
     } as unknown as MembersInitialData;
-  } catch (e: unknown) {
-    console.error('[MembersPage SSR] Failed to fetch initial data:', e);
+  } catch {
+    // SSR data fetch failed gracefully — client-side hook will re-fetch
   }
 
   return <ManagerMembersMain initialData={initialData} />;

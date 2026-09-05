@@ -10,7 +10,8 @@ import { workoutApi } from '@/app/manager/workout/workout_api/ManagerWorkoutApi'
 import { libraryApi } from '@/app/manager/library/library_api/ManagerLibraryApi';
 import type { Exercise } from '@/app/manager/library/library_types/ManagerLibraryTypes';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-
+import { useManagerWorkoutExercises } from './useManagerWorkoutExercises';
+import { FetchState } from '@/app/manager/workout/workout_types/ManagerWorkoutTypes';
 export function useManagerWorkoutLogic(): WorkoutContextType {
   const { confirm } = useConfirm();
   const [tab, setTab] = useState('Workout Plans');
@@ -23,7 +24,7 @@ export function useManagerWorkoutLogic(): WorkoutContextType {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [totalExercises, setTotalExercises] = useState(0);
 
-  const [loading, setLoading] = useState(true);
+  const [fetchState, setFetchState] = useState<FetchState>('loading');
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
@@ -39,7 +40,7 @@ export function useManagerWorkoutLogic(): WorkoutContextType {
   const hideToast = useCallback(() => setToast(null), []);
 
   const loadAll = useCallback(async () => {
-    setLoading(true);
+    setFetchState('loading');
     try {
       const params: Record<string, string> = {
         limit: '12',
@@ -57,8 +58,9 @@ export function useManagerWorkoutLogic(): WorkoutContextType {
       setTotalExercises(exRes.data.total || 0);
     } catch (e) {
       showToast((e as Error).message, 'error');
+      setFetchState('error');
     } finally {
-      setLoading(false);
+      setFetchState('success');
     }
   }, [showToast, currentPage, debouncedSearch]);
 
@@ -131,74 +133,23 @@ export function useManagerWorkoutLogic(): WorkoutContextType {
     }
   }, [confirm, showToast]);
 
-  // Exercise CRUD
-  const openAddEx = useCallback(() => { 
-    setEditExId(null); 
-    setExForm(EMPTY_EXERCISE_FORM); 
-    setShowExModal(true); 
-  }, []);
-  
-  const openEditEx = useCallback((ex: Exercise) => { 
-    setEditExId(ex.id); 
-    setExForm({ 
-      name: ex.name, 
-      muscle: ex.muscleGroup?.join(', ') || '', 
-      equipment: ex.category || '', 
-      difficulty: ex.difficulty 
-    }); 
-    setShowExModal(true); 
-  }, []);
-  
-  const saveEx = useCallback(async (data: ExerciseFormValues) => {
-    setSaving(true);
-    try {
-      // adapt to Exercise backend payload shape
-      const { muscle, equipment, ...rest } = data;
-      const payload = { 
-        ...rest, 
-        category: equipment,
-        muscleGroup: muscle.split(',').map(s => s.trim()) 
-      };
-      if (editExId) {
-        const res = await libraryApi.updateExercise(editExId, payload as unknown as Partial<Exercise>);
-        const updatedEx = res.data || payload;
-        setExercises(prev => prev.map(e => String(e.id) === String(editExId) ? { ...e, ...updatedEx } as unknown as Exercise : e));
-        showToast(res.message || 'Exercise updated successfully', 'success');
-      } else {
-        const res = await libraryApi.createExercise(payload as unknown as Partial<Exercise>);
-        const newEx = res.data ? res.data : { ...payload, id: `ex-${Date.now()}` } as unknown as Exercise;
-        setExercises(prev => [newEx, ...prev]);
-        setTotalExercises(prev => prev + 1);
-        showToast(res.message || 'Exercise created successfully', 'success');
-      }
-      setShowExModal(false);
-    } catch (err) {
-      showToast((err as Error).message, 'error');
-    } finally {
-      setSaving(false);
-    }
-  }, [editExId, showToast]);
-  
-  const deleteEx = useCallback(async (id: string) => { 
-    const isConfirmed = await confirm({ title: 'Delete Exercise', message: 'Delete this exercise?', confirmText: 'Delete', type: 'danger' });
-    if (!isConfirmed) return;
-    try {
-      const res = await libraryApi.removeExercise(id);
-      setExercises(prev => prev.filter(e => String(e.id) !== String(id)));
-      setTotalExercises(prev => Math.max(0, prev - 1));
-      showToast(res.message || 'Exercise deleted', 'success');
-    } catch (err) {
-      showToast((err as Error).message, 'error');
-    }
-  }, [confirm, showToast]);
+  const exerciseLogic = useManagerWorkoutExercises(
+    setExercises,
+    setTotalExercises,
+    showToast,
+    setSaving,
+    confirm as any
+  );
 
   return {
-    tab, setTab, search, setSearch, currentPage, setCurrentPage,
-    workouts, totalWorkouts, exercises, totalExercises,
-    loading, saving, toast, showToast, hideToast, loadAll,
+    tab, setTab,
+    search, setSearch,
+    currentPage, setCurrentPage,
+    workouts, totalWorkouts,
+    exercises, totalExercises,
+    fetchState, saving, toast, showToast, hideToast, loadAll,
     showWkModal, setShowWkModal, editWkId, wkForm, setWkForm,
-    showExModal, setShowExModal, editExId, exForm, setExForm,
     openAddWk, openEditWk, saveWk, deleteWk,
-    openAddEx, openEditEx, saveEx, deleteEx
+    ...exerciseLogic
   };
 }

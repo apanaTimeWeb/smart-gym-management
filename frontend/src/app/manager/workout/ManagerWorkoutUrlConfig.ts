@@ -2,8 +2,8 @@
 export const WorkoutUrlConfig = {
   PAGES: {
     WORKOUTS: '/manager/workout',
-    EXERCISES: '/manager/workout/exercises',
-    DIET_PLANS: '/manager/workout/diet-plans',
+    EXERCISES: '/manager/workout',
+    DIET_PLANS: '/manager/workout',
   },
   BACKEND_API: {
     WORKOUTS_BASE: '/manager/workout/workouts',

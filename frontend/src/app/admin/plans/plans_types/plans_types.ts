@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Defines all TypeScript types and interfaces for the Plans module. Single source of truth for plan data shapes.
 
 import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
-import type { PlanFormValues } from '@/app/admin/plans/plans_utils/PlansSharedConstants';
+import type { PlanFormValues } from '@/app/admin/plans/plans_utils/AdminPlansSharedConstants';
 import React from 'react';
 
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';
@@ -25,7 +25,7 @@ export interface PlansContextType {
   setShowModal: (show: boolean) => void;
   editId: string | null;
   form: PlanFormValues;
-  setForm: React.Dispatch<React.SetStateAction<PlanFormValues>>;
+  setForm: (form: PlanFormValues) => void;
 
   showToast: (msg: string, t: ToastType) => void;
   hideToast: () => void;
@@ -43,3 +43,4 @@ export interface Plan {
   price6Month: number; price12Month: number;
   features: string[]; isActive: boolean;
 }
+

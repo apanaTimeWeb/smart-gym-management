@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the fixed bottom-right toast notification. Auto-dismisses after 4 seconds. Shared across all TRAINER modules.
 'use client';
 
@@ -39,7 +41,7 @@ export default function TrainerToast({ message, type, onClose }: TrainerToastPro
  </div>
  <button
  onClick={onClose}
- className="text-secondary hover:text-white flex-shrink-0 transition-colors"
+ className="text-secondary hover:text-white flex-shrink-0 motion-safe:transition-colors"
  >
  ✕
  </button>
@@ -52,3 +54,4 @@ export default function TrainerToast({ message, type, onClose }: TrainerToastPro
  </div>
  );
 }
+

@@ -1,7 +1,8 @@
 // RESPONSIBILITY: Generic fetch hook for Superadmin read-only data. Manages loading/error state for a single API endpoint. For mutations, use useSuperadminMutation instead.
-// DATA FLOW: API -> useSuperadminData -> Superadmin page components (FeaturesClient, BackupsClient, MigrationsClient, SuperadminDashboardView)
+// DATA FLOW: API -> useSuperadminData -> Superadmin page components (SuperadminFeaturesClient, SuperadminBackupsClient, MigrationsClient, SuperadminDashboardView)
 
 import { useState, useEffect, useCallback } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/api';
 import type { FetchState } from '@/app/superadmin/superadmin_types/superadmin_types';
 
@@ -12,44 +13,23 @@ import type { FetchState } from '@/app/superadmin/superadmin_types/superadmin_ty
  * @param endpoint - The API path to fetch (e.g. SuperadminUrlConfig.BACKEND_API.FEATURES_BASE)
  */
 export function useSuperadminData<T>(endpoint: string) {
-  const [data, setData] = useState<T | null>(null);
-  const [fetchState, setFetchState] = useState<FetchState>('loading');
-  const [error, setError] = useState<string | null>(null);
+  const query = useQuery({
+    queryKey: ['superadmin', endpoint],
+    queryFn: () => apiFetch<{ success: boolean; data: T }>(endpoint).then(res => {
+      if ('data' in res) return res.data;
+      return res as unknown as T;
+    })
+  });
 
-  // Refetch when endpoint changes (navigating between superadmin pages).
-  useEffect(() => {
-    let isMounted = true;
-    Promise.resolve().then(() => {
-      setFetchState('loading');
-      Promise.resolve().then(() => setError(null));
-    });
-
-    apiFetch<{ success: boolean; data: T }>(endpoint)
-      .then(res => {
-        if (isMounted) {
-          const responseData = ('data' in res) ? res.data : (res as unknown as T);
-          setData(responseData);
-          setFetchState('success');
-        }
-      })
-      .catch((err: Error) => {
-        if (isMounted) {
-          setError((err as Error).message);
-          setFetchState('error');
-        }
-      });
-
-    return () => { isMounted = false; };
-  }, [endpoint]);
+  const fetchState: FetchState = query.isLoading ? 'loading' : query.isError ? 'error' : 'success';
+  const data = query.data ?? null;
+  const error = query.error ? query.error.message : null;
 
   /** Pessimistically mutate local cache after a confirmed API write. */
   const mutate = useCallback((updater: T | ((prev: T | null) => T | null)) => {
-    setData(prev =>
-      typeof updater === 'function'
-        ? (updater as (prev: T | null) => T | null)(prev)
-        : updater
-    );
-  }, []);
+    // Local mutation is tricky without passing queryClient, so we just refetch for now
+    query.refetch();
+  }, [query]);
 
   return { data, fetchState, error, mutate };
 }

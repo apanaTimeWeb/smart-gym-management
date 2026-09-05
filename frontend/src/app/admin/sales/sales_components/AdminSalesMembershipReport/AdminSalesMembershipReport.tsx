@@ -2,14 +2,14 @@
 'use client';
 
 
-import { useSalesContext } from '@/app/admin/sales/sales_context/SalesContext';
+import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 import { Loader2 } from 'lucide-react';
 import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_utils/AdminSharedConstants';
 import type { MembershipReportItem } from '@/app/admin/sales/sales_types/sales_types';
 
 export default function AdminSalesMembershipReport() {
-  const { search, currentPage, setCurrentPage, membershipReport, membershipTotals, fetchState } = useSalesContext();
+  const { search, currentPage, setCurrentPage, membershipReport, membershipTotals, fetchState } = useAdminSalesLogic();
   
   const filtered = membershipReport.filter((r: MembershipReportItem) => 
     (r.plan || '').toLowerCase().includes(search.toLowerCase())
@@ -21,8 +21,38 @@ export default function AdminSalesMembershipReport() {
 
   if (fetchState === 'loading') {
     return (
-      <div className="flex justify-center py-10">
-        <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead className="bg-input">
+            <tr>
+              {['Plan', 'Total Receivable', 'Amount Received', 'Remaining', 'Refund'].map(h => (
+                <th key={h} className="text-left text-xs font-semibold text-secondary uppercase tracking-wider px-4 py-3">
+                  {h}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-border">
+            {[...Array(5)].map((_, i) => (
+              <tr key={i} className="motion-safe:animate-pulse bg-card">
+                <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-24"></div></td>
+                <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
+                <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
+                <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
+                <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-16"></div></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
+  if (fetchState === 'error') {
+    return (
+      <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
+        <p className="text-danger font-medium">Failed to load membership report.</p>
+        <p className="text-sm mt-1 text-secondary">Please check your connection and try again.</p>
       </div>
     );
   }
@@ -70,3 +100,4 @@ export default function AdminSalesMembershipReport() {
   </>
   );
 }
+

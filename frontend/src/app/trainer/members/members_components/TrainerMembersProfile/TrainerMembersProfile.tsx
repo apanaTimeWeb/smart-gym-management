@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders a detailed view of a selected member's profile.
 'use client';
 
@@ -21,7 +23,7 @@ export default function TrainerMembersProfile() {
       <div className="p-6 space-y-5">
         <button
           onClick={() => setSelectedMember(null)}
-          className="text-sm text-secondary hover:text-primary flex items-center gap-1.5 transition-all duration-200"
+          className="text-sm text-secondary hover:text-primary flex items-center gap-1.5 motion-safe:transition-all motion-safe:duration-200"
         >
           ← Back to Members
         </button>
@@ -52,19 +54,19 @@ export default function TrainerMembersProfile() {
             <div className="flex gap-2 flex-wrap">
               <button
                 onClick={() => openEdit(selectedMember)}
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border border-border rounded-xl hover:bg-primary-subtle text-primary transition-all duration-200 active:scale-95"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border border-border rounded-xl hover:bg-primary-subtle text-primary motion-safe:transition-all motion-safe:duration-200 active:scale-95"
               >
                 <Edit size={14} /> Edit
               </button>
               <button
                 onClick={() => openMsg(selectedMember, 'whatsapp')}
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-success text-white rounded-xl hover:opacity-90 transition-all duration-200 active:scale-95"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-success text-white rounded-xl hover:opacity-90 motion-safe:transition-all motion-safe:duration-200 active:scale-95"
               >
                 <MessageCircle size={14} /> WhatsApp
               </button>
               <button
                 onClick={() => openMsg(selectedMember, 'email')}
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-info text-white rounded-xl hover:opacity-90 transition-all duration-200 active:scale-95"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-info text-white rounded-xl hover:opacity-90 motion-safe:transition-all motion-safe:duration-200 active:scale-95"
               >
                 <Mail size={14} /> Email
               </button>
@@ -97,7 +99,7 @@ export default function TrainerMembersProfile() {
               <button
                 key={t}
                 onClick={() => { setProfileTab(t as 'overview' | 'attendance'); }}
-                className={`px-5 py-3.5 text-sm font-medium transition-all duration-200 border-b-2 ${
+                className={`px-5 py-3.5 text-sm font-medium motion-safe:transition-all motion-safe:duration-200 border-b-2 ${
                   profileTab === t
                     ? 'text-primary bg-primary-subtle border-primary'
                     : 'border-transparent text-secondary hover:text-primary'
@@ -117,3 +119,4 @@ export default function TrainerMembersProfile() {
     </div>
   );
 }
+

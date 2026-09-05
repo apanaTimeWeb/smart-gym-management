@@ -1,134 +1,54 @@
-# Landing Module — Feature Documentation
+# Landing Feature Map
 
-## Overview
-The public-facing marketing page for GymSmart gym management platform.
-A single-page scroll experience with 15 section components, a BMI calculator, a booking form,
-and a contact form. Fully static/mocked — no backend API calls.
-
----
-
-## Architecture
-
-### State Management
-- **React Context** (`LandingContext`) via `LandingProvider` — the single state container.
-- All state lives in `useLandingLogic.ts` (custom hook) — zero logic in component files.
-- Context value is strictly memoized with `useMemo` + all handlers with `useCallback` (Rule 15).
-
-### Theme Independence
-- CSS custom properties defined in `landing.css` under `.landing-module` scope.
-- Gradient classes for service/trainer/stat cards defined statically in `landing.css` (not in JSX).
-- **Never** use dynamic Tailwind class strings or arbitrary hex values (see `landing_forbidden.md`).
-
-### Data
-- ALL hardcoded UI data lives in `landing_utils/LandingSharedConstants.ts` (Rule 3).
-- When backend APIs are ready, replace each exported constant with an API call — zero UI changes.
-
----
+## Module Purpose
+The Landing module provides the public-facing marketing and information pages for Smart Gym 360. It showcases features, pricing plans, trainer profiles, and acts as the entry point for both Superadmin and ERP users. It is entirely decoupled from authenticated operational modules.
 
 ## Directory Structure
+- `landing_components/`: Contains all isolated micro-components for the landing page (Navbar, Hero, Features, Pricing, etc).
+- `landing_types/`: TypeScript definitions for landing-specific data structures.
+- `landing_utils/`: Shared constants and hardcoded data (e.g., feature lists, pricing tiers).
+- `landing_context/`: Module-scoped React Context for managing scroll state and mobile menu toggles.
 
-```
-landing/
-├── page.tsx                          # Server Component — renders LandingMain
-├── layout.tsx                        # Thin layout wrapper (no styles)
-├── loading.tsx                       # Skeleton hero + navbar loader (animate-pulse)
-├── error.tsx                         # Error boundary with Retry button
-├── landing.css                       # Module-scoped CSS: tokens, gradients, animations
-├── landing_url_config.ts             # All page routes + anchor IDs (PAGES + ANCHORS)
-├── landing_forbidden.md              # Forbidden anti-patterns (read before touching this module)
-├── landing_features.md               # This file
-├── landing_theme_contract.md         # Theme CSS variables
-│
-├── landing_api/                      # Centralized API fetchers
-│
-├── landing_types/
-│   └── landing_types.ts              # BmiResult, LandingContextType interfaces
-│
-├── landing_utils/
-│   └── LandingSharedConstants.ts     # STATS, SERVICES, TRAINERS, ABOUT_STATS_CARDS,
-│                                     # ABOUT_FEATURES, TRANSFORMATIONS, TESTIMONIALS,
-│                                     # PLANS, SCHEDULE, EMPTY_BOOKING_FORM, EMPTY_CONTACT_FORM
-│
-├── landing_context/
-│   ├── LandingContext.tsx            # LandingProvider + useLandingContext() hook
-│   └── useLandingLogic.ts            # All state (navbar, BMI, booking, contact) + handlers
-│
-└── landing_components/
-    ├── LandingMain/
-    │   └── LandingMain.tsx           # Root orchestrator — imports CSS, wraps LandingProvider,
-    │                                 # assembles all 15 sections in scroll order
-    ├── LandingNavbar/
-    │   └── LandingNavbar.tsx         # Fixed top nav: logo, links, CTA buttons, mobile menu
-    ├── LandingHero/
-    │   └── LandingHero.tsx           # Full-page hero with headline, 3 CTA buttons, STATS strip
-    ├── LandingAbout/
-    │   └── LandingAbout.tsx          # Mission text + ABOUT_FEATURES checklist + ABOUT_STATS_CARDS grid
-    ├── LandingBmiCalc/
-    │   └── LandingBmiCalc.tsx        # BMI calculator: height/weight form + result panel (colorClass)
-    ├── LandingPlans/
-    │   └── LandingPlans.tsx          # 5-plan membership card grid with badges
-    ├── LandingServices/
-    │   └── LandingServices.tsx       # 9-service card grid (icons with CSS gradient classes)
-    ├── LandingTrainers/
-    │   └── LandingTrainers.tsx       # 4-trainer card grid (avatar with CSS gradient classes)
-    ├── LandingSchedule/
-    │   └── LandingSchedule.tsx       # Horizontally scrollable class timetable (4×7 grid)
-    ├── LandingGallery/
-    │   └── LandingGallery.tsx        # 3-image facility gallery with hover-reveal labels (id="gallery")
-    ├── LandingBooking/
-    │   └── LandingBooking.tsx        # Booking form: trial/membership/class radio + 3 fields
-    ├── LandingTransformations/
-    │   └── LandingTransformations.tsx # Before/after weight cards with review quotes (id="transformations")
-    ├── LandingTestimonials/
-    │   └── LandingTestimonials.tsx   # Aggregate rating card + 4 member review cards
-    ├── LandingContact/
-    │   └── LandingContact.tsx        # Contact info panel + message form
-    └── LandingFooter/
-        └── LandingFooter.tsx         # Brand column, quick links, programs, newsletter
-```
+## Feature Inventory
+| Feature | Path | Purpose | Main API Calls | Status |
+|---|---|---|---|---|
+| Home Page | `/` | Main marketing landing page | N/A (Static/Hardcoded) | ✅ Live |
+| Navbar | `LandingNavbar` | Navigation and login CTA | N/A | ✅ Live |
+| Hero | `LandingHero` | Main value proposition | N/A | ✅ Live |
+| Features | `LandingFeatures` | Showcasing platform capabilities | N/A | ✅ Live |
 
----
+## Data and State Architecture
+- **Server-state query keys:** N/A (No API fetching required for current landing page)
+- **Zustand stores:** N/A
+- **Context providers:** `LandingProvider` (handles `scrolled` state for navbar, and `menuOpen` state)
+- **Local-storage keys:** None
+- **MSW handler file:** N/A
 
-## Section → Anchor ID Mapping
+## API Contract
+No API calls are currently made from the Landing module. All content is static or passed as hardcoded constants to ensure maximum performance and SEO.
 
-| Section               | `id` attribute       | `LandingUrlConfig.ANCHORS` key |
-|-----------------------|----------------------|-------------------------------|
-| LandingHero           | `#home`              | `HOME`                        |
-| LandingAbout          | `#about`             | `ABOUT`                       |
-| LandingBmiCalc        | `#bmi`               | *(no anchor in navbar)*       |
-| LandingPlans          | `#plans`             | `PLANS`                       |
-| LandingServices       | `#services`          | `SERVICES`                    |
-| LandingTrainers       | `#trainers`          | `TRAINERS`                    |
-| LandingSchedule       | `#schedule`          | `SCHEDULE`                    |
-| LandingGallery        | `#gallery`           | `GALLERY`                     |
-| LandingBooking        | `#booking`           | `BOOKING`                     |
-| LandingTransformations| `#transformations`   | `TRANSFORMATIONS`             |
-| LandingTestimonials   | `#testimonials`      | `TESTIMONIALS`                |
-| LandingContact        | `#contact`           | `CONTACT`                     |
+## Permissions and Security
+- Role: Public access (Unauthenticated).
+- No sensitive data is exposed or fetched.
 
----
+## Loading, Empty, Error States
+- **Loading:** Uses `loading.tsx` skeleton matching global design.
+- **Empty:** N/A for static content.
+- **Error:** Uses `error.tsx` typed React Error Boundary to catch UI rendering crashes.
 
-## Compliance Status
+## Edge Cases / AI Warnings
+- **No API calls** should be added to the landing page unless explicitly requested (e.g., a contact form). Performance and SEO are the top priorities here.
+- **Z-index scale**: Follow global design rules (`LandingNavbar` is `z-20`).
 
-| Rule | Status | Notes |
-|------|--------|-------|
-| Rule 1 — Micro-modularization | ✅ | 15 isolated section components |
-| Rule 2 — Descriptive naming | ✅ | All files descriptively named |
-| Rule 3 — Centralized data | ✅ | All data in LandingSharedConstants.ts |
-| Rule 4 — No inline colors | ✅ | Gradient classes in landing.css |
-| Rule 5 — State management | ✅ | React Context + useMemo |
-| Rule 6 — Logic/UI separation | ✅ | useLandingLogic.ts |
-| Rule 7 — Type isolation | ✅ | landing_types/landing_types.ts |
-| Rule 9 — loading.tsx + error.tsx | ✅ | Both present |
-| Rule 10 — Absolute imports | ✅ | No relative paths |
-| Rule 11 — URL config | ✅ | landing_url_config.ts |
-| Rule 15 — Memoization | ✅ | useMemo + useCallback |
-| Rule 18 — a11y / aria-labels | ✅ | Icon buttons have aria-label |
-| Rule 26 — Skeleton loaders | ✅ | loading.tsx uses animate-pulse |
-| Rule 27 — No any | ✅ | Strict TypeScript |
-| Rule 32 — No barrel files | ✅ | Direct imports only |
-| Rule 33 — Next/Image | ✅ | Navbar logo + Gallery images |
-| Rule 36 — No arbitrary Tailwind | ✅ | No [#hex] or [px] values |
-| Rule 37 — JSDoc | ✅ | useLandingLogic has JSDoc |
-| Rule 38 — RESPONSIBILITY comment | ✅ | All files, after "use client" |
-| Rule 39 — Data flow comments | ✅ | Context and hook files |
+## Rule Compliance Checklist
+- [x] Rule 1: Micro-modularization — module-prefixed subfolders
+- [x] Rule 2: Total Role Isolation — zero cross-role imports
+- [x] Rule 3: Hyper-descriptive naming — `Landing` prefix on all files
+- [x] Rule 4: Theme Independence — Tailwind tokens via `globals.css`
+- [x] Rule 5: Smart State Management — Context used for UI state
+- [x] Rule 7: Type Isolation — `*_types/` folders used
+- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server, `LandingNavbar.tsx` = Client
+- [x] Rule 9: Loading/error/not-found — `loading.tsx` + `error.tsx` present
+- [x] Rule 13: Feature Map — this document
+- [x] Design §12: Z-index scale — navbar z-20
+- [x] Design §29: motion-safe guards on all transitions and animations

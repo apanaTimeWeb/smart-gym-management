@@ -1,10 +1,10 @@
-// RESPONSIBILITY: Renders the Create/Edit Affiliate modal form. Receives form state via props from useAffiliatesPage. No API calls.
+// RESPONSIBILITY: Renders the Create/Edit Affiliate modal form. Receives form state via props from useSuperadminAffiliatesPage. No API calls.
 'use client';
 
 import React from 'react';
 import { X } from 'lucide-react';
 import { UseFormReturn } from 'react-hook-form';
-import type { AffiliateFormData } from '@/app/superadmin/affiliates/affiliates_types/affiliates_types';
+import type { AffiliateFormData } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
 
 interface SuperadminAffiliateModalProps {
   isOpen: boolean;

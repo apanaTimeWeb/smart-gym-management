@@ -1,15 +1,20 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the Diet Library module.
 import { useState, useCallback, useEffect } from 'react';
 import { useDebounce } from '@/app/trainer/trainer_utils/useDebounce';
 import { libraryApi } from '@/app/trainer/library/library_api/library_api';
-import type { Exercise, DietPlan } from '@/app/trainer/library/library_types/library_types';
+import type { LibraryContextType } from '@/app/trainer/library/library_types/library_types';
+import type { Exercise, DietPlan, FetchState } from '@/app/trainer/trainer_types/trainer_types';
 import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
-import { EMPTY_EXERCISE_FORM, EMPTY_DIET_FORM, type LibraryTab } from '@/app/trainer/library/library_utils/LibrarySharedConstants';
-import type { LibraryContextType, LibraryInitialData } from '@/app/trainer/library/library_types/library_types';
+import { type LibraryTab } from '@/app/trainer/library/library_utils/LibrarySharedConstants';
 import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 
-export function useLibraryLogic(initialData?: LibraryInitialData | null): LibraryContextType {
+import { useTrainerLibraryDiet } from './useTrainerLibraryDiet';
+import { useTrainerLibraryExercises } from './useTrainerLibraryExercises';
+
+export function useLibraryLogic(initialData?: any | null): LibraryContextType {
   const { confirm } = useConfirm();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -28,7 +33,7 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
   const [exercises, setExercises] = useState<Exercise[]>(initialData?.exercises || []);
   const [dietPlans, setDietPlans] = useState<DietPlan[]>(initialData?.dietPlans || []);
  
- const [loading, setLoading] = useState(!initialData);
+  const [fetchState, setFetchState] = useState<FetchState>(initialData ? 'success' : 'loading');
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
@@ -54,177 +59,45 @@ export function useLibraryLogic(initialData?: LibraryInitialData | null): Librar
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   }, [router, searchParams, pathname]);
 
- const [showExModal, setShowExModal] = useState(false);
- const [editExId, setEditExId] = useState<string | null>(null);
- const [editExData, setEditExData] = useState<Record<string, any> | null>(null);
+  const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
+  const hideToast = useCallback(() => setToast(null), []);
 
- const [showDietModal, setShowDietModal] = useState(false);
- const [editDietId, setEditDietId] = useState<string | null>(null);
- const [editDietData, setEditDietData] = useState<Record<string, any> | null>(null);
-
- const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
- const hideToast = useCallback(() => setToast(null), []);
-
- const loadAll = useCallback(async () => {
- setLoading(true);
- try {
- const params: Record<string, string> = {
-  page: currentPage.toString(),
-  limit: '10'
- };
- if (debouncedSearch) {
-  params.search = debouncedSearch;
- }
- const [exRes, dietRes] = await Promise.all([
- libraryApi.getExercises(params),
- libraryApi.getDietPlans(params),
- ]);
- setExercises(exRes.data?.exercises || exRes.data || []);
- setDietPlans(dietRes.data?.dietPlans || dietRes.data || []);
- } catch (e) { 
- showToast((e as Error).message, 'error'); 
- } finally { 
- setLoading(false); 
- }
- }, [showToast]);
+  const loadAll = useCallback(async () => {
+    setFetchState('loading');
+    try {
+      const params: Record<string, string> = {
+        page: currentPage.toString(),
+        limit: '10'
+      };
+      if (debouncedSearch) {
+        params.search = debouncedSearch;
+      }
+      const [exRes, dietRes] = await Promise.all([
+        libraryApi.getExercises(params),
+        libraryApi.getDietPlans(params),
+      ]);
+      setExercises(exRes.data?.exercises || exRes.data || []);
+      setDietPlans(dietRes.data?.dietPlans || dietRes.data || []);
+      setFetchState('success');
+    } catch (e) { 
+      showToast((e as Error).message, 'error'); 
+      setFetchState('error');
+    }
+  }, [showToast, currentPage, debouncedSearch]);
 
   useEffect(() => { setTimeout(() => loadAll(), 0); }, [loadAll]);
 
- // Exercise CRUD
- const openAddEx = useCallback(() => { 
- setEditExId(null); 
- setEditExData(EMPTY_EXERCISE_FORM); 
- setShowExModal(true); 
- }, []);
- 
- const openEditEx = useCallback((ex: Exercise) => {
- setEditExId(ex.id);
- setEditExData({ 
- name: ex.name, 
- category: ex.category, 
- muscleGroup: ex.muscleGroup?.join(', '), 
- sets: ex.sets ? String(ex.sets) : '', 
- reps: ex.reps || '', 
- duration: ex.duration || '', 
- difficulty: ex.difficulty, 
- description: ex.description || '', 
- videoUrl: ex.videoUrl || '' 
- });
- setShowExModal(true);
- }, []);
- 
- const saveExercise = useCallback(async (data: Record<string, any>) => {
- setSaving(true);
- try {
- const payload = { 
- ...data, 
- muscleGroup: data.muscleGroup ? data.muscleGroup.split(',').map((s: string) => s.trim()) : [], 
- sets: data.sets ? Number(data.sets) : undefined 
- };
- 
- if (editExId) { 
- const res = await libraryApi.updateExercise(editExId, payload as unknown as Partial<Exercise>) as any; 
- const updatedEx = res.data || payload;
- setExercises(prev => prev.map(e => String(e.id) === String(editExId) ? { ...e, ...updatedEx } as unknown as Exercise : e));
- showToast(res.message || 'Exercise updated successfully', 'success'); 
- } else { 
- const res = await libraryApi.createExercise(payload as unknown as Partial<Exercise>) as any; 
- const newEx = res.data ? res.data : { ...payload, id: Math.random().toString(), isActive: true } as unknown as Exercise;
- setExercises(prev => [newEx, ...prev]);
- showToast(res.message || 'Exercise created successfully', 'success'); 
- }
- setShowExModal(false);
- } catch (err) { 
- showToast((err as Error).message, 'error'); 
- } finally { 
- setSaving(false); 
- }
- }, [editExId, loadAll, showToast]);
- 
-  const deleteExercise = useCallback(async (id: string) => {
-   const isConfirmed = await confirm({ title: 'Delete Exercise', message: 'Delete this exercise?', confirmText: 'Delete', type: 'danger' });
-   if (!isConfirmed) return;
-   try { 
- const res = await libraryApi.removeExercise(id) as unknown as { message?: string }; 
- setExercises(prev => prev.filter(e => String(e.id) !== String(id)));
- showToast(res.message || 'Exercise deleted', 'success'); 
- } catch (err) { 
- showToast((err as Error).message, 'error'); 
- }
- }, [loadAll, showToast]);
-
- // Diet CRUD
- const openAddDiet = useCallback(() => { 
- setEditDietId(null); 
- setEditDietData(EMPTY_DIET_FORM); 
- setShowDietModal(true); 
- }, []);
- 
- const openEditDiet = useCallback((d: DietPlan) => {
- setEditDietId(d.id);
- setEditDietData({ 
- name: d.name, 
- goal: d.goal, 
- calories: d.calories ? String(d.calories) : '', 
- protein: d.protein ? String(d.protein) : '', 
- carbs: d.carbs ? String(d.carbs) : '', 
- fats: d.fats ? String(d.fats) : '', 
- description: d.description || '', 
- meals: d.meals?.join('\n') 
- });
- setShowDietModal(true);
- }, []);
- 
- const saveDietPlan = useCallback(async (data: Record<string, any>) => {
- setSaving(true);
- try {
- const payload = { 
- ...data, 
- calories: data.calories ? Number(data.calories) : undefined, 
- protein: data.protein ? Number(data.protein) : undefined, 
- carbs: data.carbs ? Number(data.carbs) : undefined, 
- fats: data.fats ? Number(data.fats) : undefined, 
- meals: data.meals ? data.meals.split('\n').map((s: string) => s.trim()).filter(Boolean) : [] 
- };
- 
-  if (editDietId) { 
-  const res = await libraryApi.updateDietPlan(editDietId, payload as unknown as Partial<DietPlan>) as any; 
-  const updatedDiet = res.data || payload;
-  setDietPlans(prev => prev.map(d => String(d.id) === String(editDietId) ? { ...d, ...updatedDiet } as unknown as DietPlan : d));
-  showToast(res.message || 'Diet plan updated', 'success'); 
-  } else { 
-  const res = await libraryApi.createDietPlan(payload as unknown as Partial<DietPlan>) as any; 
-  const newDiet = res.data ? res.data : { ...payload, id: Math.random().toString(), isActive: true } as unknown as DietPlan;
-  setDietPlans(prev => [newDiet, ...prev]);
-  showToast(res.message || 'Diet plan created', 'success'); 
-  }
- setShowDietModal(false);
- } catch (err) { 
- showToast((err as Error).message, 'error'); 
- } finally { 
- setSaving(false); 
- }
- }, [editDietId, loadAll, showToast]);
- 
-  const deleteDietPlan = useCallback(async (id: string) => {
-   const isConfirmed = await confirm({ title: 'Delete Diet Plan', message: 'Delete this diet plan?', confirmText: 'Delete', type: 'danger' });
-   if (!isConfirmed) return;
-  try { 
- const res = await libraryApi.removeDietPlan(id) as unknown as { message?: string }; 
- setDietPlans(prev => prev.filter(d => String(d.id) !== String(id)));
- showToast(res.message || 'Diet plan deleted', 'success'); 
- } catch (err) { 
- showToast((err as Error).message, 'error'); 
- }
- }, [loadAll, showToast]);
+  const dietLogic = useTrainerLibraryDiet(setDietPlans, showToast, setSaving, confirm as any);
+  const exerciseLogic = useTrainerLibraryExercises(setExercises, showToast, setSaving, confirm as any);
 
   return {
     tab, setTab,
     exercises, dietPlans,
-    loading, saving, toast,
+    fetchState, saving, toast,
     search, debouncedSearch, setSearch, currentPage, setCurrentPage,
     showToast, hideToast, loadAll,
- showExModal, setShowExModal, editExId, editExData, openAddEx, openEditEx, saveExercise, deleteExercise,
- showDietModal, setShowDietModal, editDietId, editDietData, openAddDiet, openEditDiet, saveDietPlan, deleteDietPlan
- };
+    ...exerciseLogic,
+    ...dietLogic
+  };
 }
+

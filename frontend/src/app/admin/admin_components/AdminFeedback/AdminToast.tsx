@@ -3,7 +3,7 @@
 
 import { useEffect } from 'react';
 
-export type ToastType = 'whatsapp' | 'email' | 'error' | 'success';
+export type ToastType = 'whatsapp' | 'email' | 'error' | 'success' | 'info' | 'warning';
 
 interface AdminToastProps {
  message: string;
@@ -17,11 +17,13 @@ export default function AdminToast({ message, type, onClose }: AdminToastProps) 
  return () => clearTimeout(timer);
  }, [onClose]);
 
- const config = {
+ const config: Record<ToastType, {prefix: string, border: string}> = {
  success: { prefix: '✅', border: 'var(--success)' },
  error: { prefix: '❌', border: 'var(--danger)' },
  whatsapp: { prefix: '💬', border: 'var(--success)' },
  email: { prefix: '📧', border: 'var(--info)' },
+ info: { prefix: 'ℹ️', border: 'var(--info)' },
+ warning: { prefix: '⚠️', border: 'var(--warning)' },
  };
 
  const { prefix, border } = config[type] || config.success;

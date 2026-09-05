@@ -1,7 +1,8 @@
-// RESPONSIBILITY: Renders interactive KPI cards for Finance module. Clicking a card filters the AdminFinancePaymentsTable by payment method (Rule 74). Reads/writes state via FinanceContext.
+// RESPONSIBILITY: Renders interactive KPI cards for Finance module. Clicking a card filters the AdminFinancePaymentsTable by payment method (Rule 74). Reads/writes state via AdminFinanceContext.
 'use client';
 
-import { useFinanceContext } from '@/app/admin/finance/finance_context/FinanceContext';
+import { useAdminFinanceLogic } from '@/app/admin/finance/finance_context/useAdminFinanceLogic';
+import { useAdminFinanceStore } from '@/app/admin/finance/finance_store/useAdminFinanceStore';
 import { FileText, TrendingUp, IndianRupee, CreditCard } from 'lucide-react';
 
 const METHOD_FILTER_MAP: Record<string, string> = {
@@ -12,7 +13,8 @@ const METHOD_FILTER_MAP: Record<string, string> = {
 };
 
 export default function AdminFinanceKPIs() {
-  const { summary, methodFilter, setMethodFilter, setCurrentPage } = useFinanceContext();
+  const { payments, summary, totalPayments, fetchState, saving, error, loadAll, search, setSearch, currentPage, setCurrentPage, savePayment, methodFilter, setMethodFilter } = useAdminFinanceLogic();
+  const { showModal, setShowModal, toast, showToast, hideToast } = useAdminFinanceStore();
   if (!summary) return null;
 
   const kpis = [
@@ -87,3 +89,5 @@ export default function AdminFinanceKPIs() {
     </div>
   );
 }
+
+

@@ -36,7 +36,7 @@ export default function ManagerWorkoutExerciseModal() {
   if (!showExModal) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 p-4">
       <div className="bg-card rounded-2xl shadow-xl w-full max-w-md overflow-hidden border-2 border-warning">
         <div className="flex justify-between items-center p-5 border-b border-border">
           <h3 className="font-bold text-lg text-foreground">

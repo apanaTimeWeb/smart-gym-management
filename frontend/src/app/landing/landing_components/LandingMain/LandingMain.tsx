@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
+// DATA FLOW: Standard component data flow.
 "use client";
 // RESPONSIBILITY: Root orchestrator for the Landing page. Bootstraps the LandingProvider
 // context tree and renders all 15 section components in their natural scroll order.
@@ -47,3 +49,4 @@ export default function LandingMain() {
     </LandingProvider>
   );
 }
+

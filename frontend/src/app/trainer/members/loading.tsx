@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the loading fallback for the members module.
 import { TableSkeleton } from '@/app/trainer/trainer_components/TrainerShared/TableSkeleton';
 export default function Loading() {
@@ -16,3 +18,4 @@ export default function Loading() {
  </div>
  );
 }
+

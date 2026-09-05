@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Provides UI orchestration state to the Diet Library module hierarchy. Async data is managed in useLibraryLogic.
 'use client';
 
@@ -26,3 +28,4 @@ export function useLibraryContext() {
  }
  return context;
 }
+

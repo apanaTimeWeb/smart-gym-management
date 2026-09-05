@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Defines strict types for the Dashboard module, including comprehensive KPI stats and recent activity shapes.
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 export type TimeRange = 'weekly' | 'monthly' | 'yearly' | 'custom';
@@ -29,3 +31,4 @@ export interface DashboardStats {
   membersByStatus: { active: number; pending: number; expired: number };
   recentMembers: RecentMember[];
 }
+

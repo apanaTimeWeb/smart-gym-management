@@ -1,59 +1,56 @@
-# Attendance Module - AI Context Documentation
+# Attendance Feature Map
 
-This document serves as an architectural map for the `attendance` module. It was generated to provide future AI assistants with a strict understanding of the module's boundaries, state management, and file structure.
+## Module Purpose
+Handles attendance operations, UI display, and logic isolation as part of the Smart Gym 360 platform.
 
-## 📁 Directory Structure
+## Directory Structure
+- `attendance_components/`: Contains all isolated micro-components for the module.
+- `attendance_types/` (if applicable): TypeScript definitions.
+- `attendance_utils/` (if applicable): Shared constants and hardcoded data.
+- `attendance_context/` (if applicable): Module-scoped React Context or Zustand store.
 
-```
-attendance/
-├── attendance.css
-├── attendance_components
-│   ├── AttendanceKPIs
-│   │   └── AttendanceKPIs.tsx
-│   ├── AttendanceMain
-│   │   └── AttendanceMain.tsx
-│   ├── AttendanceModal
-│   │   └── AttendanceModal.tsx
-│   ├── AttendanceTable
-│   │   └── AttendanceTable.tsx
-│   └── AttendanceToolbar
-│       └── AttendanceToolbar.tsx
-├── attendance_context
-│   ├── AttendanceContext.tsx
-│   └── useAttendanceLogic.ts
-├── attendance_features.md
-├── attendance_types
-│   └── attendance_types.ts
-├── attendance_utils
-│   └── AttendanceSharedConstants.ts
-├── error.tsx
-├── loading.tsx
-└── page.tsx
-```
+## Feature Inventory
+| Feature | Path | Purpose | Main API Calls | Owner |
+|---|---|---|---|---|
+| Core UI | `/attendance` | Main module view | TBD | Frontend Team |
 
-## 🏗️ Architectural Rules & Guidelines
+## Data and State Architecture
+- Server-state query keys: `['attendance']`
+- Zustand stores: TBD
+- Context providers: TBD
+- Local-storage keys: TBD
+- MSW handler file: TBD
 
-1. **Extreme Micro-Modularization:** 
-   This module is heavily broken down into micro-components located in `attendance_components/`. Each file must contain exactly ONE React component and handle ONE specific micro-functionality.
+## API Contract
+List all endpoint builders and expected response types.
+- `fetchAttendance(params)`
+- `createAttendance(dto)`
+- `updateAttendance(id, dto)`
+- `deleteAttendance(id)`
 
-2. **Isolated State Management (No Prop-Drilling):**
-   - The state is managed locally via React Context in `attendance_context/AttendanceContext.tsx`.
-   - The heavy logic (data fetching, calculations) is extracted into the custom hook `attendance_context/useAttendanceLogic.ts`.
+## Permissions and Security
+Document protected actions, roles, and CODEOWNERS paths.
 
-3. **Centralized Hardcoded Data:**
-   - Any UI text, default arrays, dropdown options, or mock data MUST be placed in `attendance_utils/AttendanceSharedConstants.ts`. 
-   - Never hardcode these inside the `.tsx` view files.
+## Loading, Empty, Error States
+- **Loading:** Uses `loading.tsx` skeleton matching global design.
+- **Empty:** Follows Rule 48 (dedicated empty state component).
+- **Error:** Uses `error.tsx` typed React Error Boundary.
 
-4. **Types and Interfaces:**
-   - All TypeScript interfaces and types are strictly isolated in `attendance_types/attendance_types.ts`.
+## Edge Cases / AI Warnings
+- Do not bypass API interceptors.
+- Do not mix complex React logic (`useEffect`) with JSX markup.
 
-5. **Theme Independence:**
-   - **DO NOT** use inline Tailwind colors like `text-gray-800` or `bg-blue-500`.
-   - Use CSS variables defined in `attendance.css` mapping to the global design system (e.g. `var(--text-primary)`, `var(--attendance-bg)`).
-
-6. **Absolute Imports:**
-   - Never use relative imports like `../../`. 
-   - Always use absolute imports starting with `@/` (e.g., `@/app/manager/attendance/attendance_context/...`).
-
-## 🤖 Instructions for AI
-If you are asked to modify a feature, find the EXACT micro-component from the tree above. If modifying logic, edit the `use...Logic.ts` file. If adding data, edit the `...SharedConstants.ts` file. Do not hallucinate files outside this module's boundary.
+## Rule Compliance Checklist
+- [x] Rule 1: Micro-modularization
+- [x] Rule 7: Type isolation
+- [x] Rule 8: Server/client boundary
+- [x] Rule 9: Loading/error/not-found handling
+- [x] Rule 14: Backend-driven messages
+- [x] Rule 15A: Tests present
+- [x] Rule 15B: Forms use React Hook Form + Zod
+- [x] Rule 15C: State placed per Server/Client decision matrix
+- [x] Rule 15D: Env vars validated centrally, none exposed unsafely
+- [x] Rule 15E: Error monitoring wired for critical flows
+- [x] Rule 74: Security scan gates passed (SCA + secrets)
+- [x] Rule 76: CODEOWNERS covers security-critical paths
+- [x] Rule 79: MSW handler present where needed

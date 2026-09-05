@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
+// DATA FLOW: Standard component data flow.
 "use client";
 // RESPONSIBILITY: Provides the LandingContext and useLandingContext() hook.
 // Wraps the entire Landing page tree so all sub-components can read shared state
@@ -37,3 +39,4 @@ export function useLandingContext(): LandingContextType {
   }
   return context;
 }
+

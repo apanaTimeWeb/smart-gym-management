@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the recent members table on the dashboard with a local search filter.
 'use client';
 
@@ -7,6 +9,7 @@ import { Search } from 'lucide-react';
 import { useDashboardContext } from '@/app/trainer/dashboard/dashboard_context/DashboardContext';
 import { DASHBOARD_RECENT_MEMBERS_PAGE_SIZE, RECENT_MEMBERS_HEADERS, DASHBOARD_STATUS_STYLES, formatCurrency } from '@/app/trainer/dashboard/dashboard_utils/DashboardSharedConstants';
 import TrainerPagination from '@/app/trainer/trainer_components/TrainerShared/TrainerPagination';
+import TrainerDashboardEmptyState from '@/app/trainer/dashboard/dashboard_components/TrainerDashboardEmptyState/TrainerDashboardEmptyState';
 
 export default function TrainerDashboardRecentMembers() {
   const { stats } = useDashboardContext();
@@ -56,7 +59,7 @@ export default function TrainerDashboardRecentMembers() {
             {paginated.map(m => {
               const statusStyle = DASHBOARD_STATUS_STYLES[m.status] || { bg: 'bg-input', text: 'text-secondary' };
               return (
-                <tr key={m.id} className="transition-colors hover:bg-primary/5 bg-card">
+                <tr key={m.id} className="motion-safe:transition-colors hover:bg-primary/5 bg-card">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full flex items-center justify-center font-semibold text-sm bg-primary/10 text-primary">
@@ -82,8 +85,8 @@ export default function TrainerDashboardRecentMembers() {
             })}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={5} className="text-center py-8 text-sm text-secondary">
-                  {search ? `No members matching "${search}"` : 'No members yet. Add your first member!'}
+                <td colSpan={5}>
+                  <TrainerDashboardEmptyState type={search ? 'matches' : 'members'} />
                 </td>
               </tr>
             )}
@@ -101,3 +104,4 @@ export default function TrainerDashboardRecentMembers() {
     </div>
   );
 }
+

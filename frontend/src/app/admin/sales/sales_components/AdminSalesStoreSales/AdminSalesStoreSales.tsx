@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Displays store orders and summary KPIs for Admin's Sales & Reports view. Read-only analytics.
 'use client';
 
-import { useSalesContext } from '@/app/admin/sales/sales_context/SalesContext';
+import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
 import { Package, ShoppingCart, IndianRupee, TrendingUp, ChevronDown, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
 
@@ -14,7 +14,7 @@ function formatDate(iso: string) {
 }
 
 export default function AdminSalesStoreSales() {
-  const { storeOrders, storeOrdersTotal, storeSummary, fetchState } = useSalesContext();
+  const { storeOrders, storeOrdersTotal, storeSummary, fetchState } = useAdminSalesLogic();
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
 
   const methodColor: Record<string, string> = {
@@ -123,3 +123,4 @@ export default function AdminSalesStoreSales() {
     </div>
   );
 }
+

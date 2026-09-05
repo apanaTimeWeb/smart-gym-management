@@ -70,7 +70,7 @@ export default function AttendanceCalendar() {
   });
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 motion-safe:animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50 p-4 motion-safe:animate-in fade-in duration-200">
       <div className="w-full max-w-md bg-card shadow-xl flex flex-col max-h-[90vh] rounded-2xl border-2 border-primary overflow-hidden">
         
         {/* Header */}
@@ -116,8 +116,15 @@ export default function AttendanceCalendar() {
         {/* Calendar Grid */}
         <div className="p-4 overflow-y-auto">
           {loading ? (
-            <div className="flex justify-center items-center py-12">
-              <Loader2 className="motion-safe:animate-spin text-secondary" size={32} />
+            <div>
+              <div className="grid grid-cols-7 gap-1.5 mb-2 text-center text-xs font-bold text-secondary">
+                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => <div key={d}>{d}</div>)}
+              </div>
+              <div className="grid grid-cols-7 gap-1.5 motion-safe:animate-pulse">
+                {[...Array(35)].map((_, i) => (
+                  <div key={i} className="aspect-square rounded-md bg-muted" />
+                ))}
+              </div>
             </div>
           ) : (
             <div>

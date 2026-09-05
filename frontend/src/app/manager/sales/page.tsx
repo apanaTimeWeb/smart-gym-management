@@ -15,16 +15,16 @@ export default async function SalesPage() {
       ssrSalesApi.getAllMemberships(params)
     ]);
     initialData = {
-      overviewData: overviewRes.data?.monthlyRevenue || [],
-      membershipReport: reportRes.data?.report || [],
-      membershipTotals: reportRes.data?.totals || {},
+      overviewData: Array.isArray(overviewRes.data) ? overviewRes.data : overviewRes.data?.monthlyRevenue || [],
+      membershipReport: Array.isArray(reportRes.data) ? reportRes.data : (reportRes.data?.report || []),
+      membershipTotals: reportRes.data?.totals || { activeCount: 0, revenue: 0, totalReceivable: 0, totalReceived: 0, remaining: 0, refunds: 0 },
       pendingPayments: pendingRes.data?.members || [],
       pendingTotal: pendingRes.data?.total || 0,
       allMemberships: allRes.data?.members || [],
       allMembershipsTotal: allRes.data?.total || 0
     } as unknown as SalesInitialData;
-  } catch (e: unknown) {
-    console.error('[SalesPage SSR] Failed to fetch initial data:', e);
+  } catch {
+    // SSR data fetch failed gracefully — client-side hook will re-fetch
   }
 
   return <ManagerSalesMain initialData={initialData} />;

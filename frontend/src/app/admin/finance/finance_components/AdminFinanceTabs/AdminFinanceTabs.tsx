@@ -2,15 +2,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useFinanceContext } from '@/app/admin/finance/finance_context/FinanceContext';
-import { FINANCE_TABS } from '@/app/admin/finance/finance_utils/FinanceSharedConstants';
+import { useAdminFinanceLogic } from '@/app/admin/finance/finance_context/useAdminFinanceLogic';
+import { useAdminFinanceStore } from '@/app/admin/finance/finance_store/useAdminFinanceStore';
+import { FINANCE_TABS } from '@/app/admin/finance/finance_utils/AdminFinanceSharedConstants';
 import { RefreshCw, Plus, Search } from 'lucide-react';
 import AdminFinancePaymentsTable from '@/app/admin/finance/finance_components/AdminFinancePaymentsTable/AdminFinancePaymentsTable';
 import AdminFinanceRevenueSummary from '@/app/admin/finance/finance_components/AdminFinanceRevenueSummary/AdminFinanceRevenueSummary';
 
 export default function AdminFinanceTabs() {
   const [tab, setTab] = useState(FINANCE_TABS[0]);
-  const { loadAll, setShowModal, search, setSearch, setCurrentPage } = useFinanceContext();
+  const { payments, summary, totalPayments, fetchState, saving, error, loadAll, search, setSearch, currentPage, setCurrentPage, savePayment, methodFilter, setMethodFilter } = useAdminFinanceLogic();
+  const { showModal, setShowModal, toast, showToast, hideToast } = useAdminFinanceStore();
 
   const [localSearch, setLocalSearch] = useState(search);
 
@@ -78,3 +80,5 @@ export default function AdminFinanceTabs() {
  </div>
  );
 }
+
+

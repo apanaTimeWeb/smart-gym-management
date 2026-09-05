@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Provides UI orchestration state to the Workout Library module hierarchy. Async data is managed in useWorkoutLogic.
 'use client';
 
@@ -24,3 +26,4 @@ export function useWorkoutContext() {
  }
  return context;
 }
+

@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 import { useState, useCallback } from 'react';
 import toast from 'react-hot-toast';
 
@@ -44,3 +46,4 @@ export const useNotificationsPage = () => {
     deleteNotification,
   };
 };
+

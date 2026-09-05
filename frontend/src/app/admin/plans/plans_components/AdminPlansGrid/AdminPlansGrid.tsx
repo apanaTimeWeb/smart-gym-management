@@ -2,14 +2,18 @@
 'use client';
 
 import { Edit2, Trash2, Tag, CheckCircle, Loader2 } from 'lucide-react';
-import { usePlansContext } from '@/app/admin/plans/plans_context/PlansContext';
-import { formatCurrency } from '@/app/admin/plans/plans_utils/PlansSharedConstants';
+import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/AdminConfirmProvider';
+import { useAdminPlansLogic } from '@/app/admin/plans/plans_context/useAdminPlansLogic';
+import { useAdminPlansStore } from '@/app/admin/plans/plans_store/useAdminPlansStore';
+import { formatCurrency } from '@/app/admin/plans/plans_utils/AdminPlansSharedConstants';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_utils/AdminSharedConstants';
 
 
 export default function AdminPlansGrid() {
-  const { plans, fetchState, search, currentPage, setCurrentPage, openEdit, deletePlan } = usePlansContext();
+  const { plans, fetchState, saving, search, setSearch, currentPage, setCurrentPage, loadPlans, openAdd, openEdit, savePlan, deletePlan } = useAdminPlansLogic();
+  const { showModal, setShowModal, editId, form, setForm, toast, showToast, hideToast } = useAdminPlansStore();
+  const { confirm } = useAdminConfirm();
 
   // Client-side filter on the already-fetched plans list (plans count is typically small, <100)
   const filtered = plans.filter(p => p.name.toLowerCase().includes(search.toLowerCase()));
@@ -18,8 +22,19 @@ export default function AdminPlansGrid() {
 
   if (fetchState === 'loading') {
     return (
-      <div className="flex items-center justify-center py-16">
-        <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1">
+        {[1, 2, 3].map(i => (
+          <div key={i} className="h-96 bg-card rounded-2xl border border-border motion-safe:animate-pulse"></div>
+        ))}
+      </div>
+    );
+  }
+
+  if (fetchState === 'error') {
+    return (
+      <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
+        <p className="text-danger font-medium">Failed to load membership plans.</p>
+        <p className="text-sm mt-1 text-secondary">Please check your connection and try again.</p>
       </div>
     );
   }
@@ -65,9 +80,15 @@ export default function AdminPlansGrid() {
                     <Edit2 size={16} />
                   </button>
                   <button
-                  onClick={(e) => {
+                  onClick={async (e) => {
                     e.stopPropagation();
-                    if (window.confirm(`Are you sure you want to delete plan "${p.name}"?`)) {
+                    const ok = await confirm({
+                      title: 'Delete Plan',
+                      message: `Are you sure you want to delete plan "${p.name}"?`,
+                      type: 'danger',
+                      confirmText: 'Delete'
+                    });
+                    if (ok) {
                       deletePlan(p.id);
                     }
                   }}

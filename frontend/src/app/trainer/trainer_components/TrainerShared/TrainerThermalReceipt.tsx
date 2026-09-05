@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the printable 80mm thermal receipt layout. Triggered by window.print() — hidden except on @media print.
 import React from 'react';
 
@@ -70,3 +72,4 @@ export default function TrainerThermalReceipt({ data }: { data: TrainerReceiptDa
  </div>
  );
 }
+

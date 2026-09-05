@@ -1,9 +1,11 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Single source of truth for all backend API endpoints used by the Workout Library module.
 export const WorkoutUrlConfig = {
   PAGES: {
     WORKOUTS: '/trainer/workout',
-    EXERCISES: '/trainer/workout/exercises',
-    DIET_PLANS: '/trainer/workout/diet-plans',
+    EXERCISES: '/trainer/workout',
+    DIET_PLANS: '/trainer/workout',
   },
   BACKEND_API: {
     WORKOUTS_BASE: '/trainer/workout/workouts',
@@ -17,3 +19,4 @@ export const WorkoutUrlConfig = {
     DIET_PLAN_DELETE: (id: string) => `/trainer/workout/diet-plans/${id}`,
   }
 };
+
