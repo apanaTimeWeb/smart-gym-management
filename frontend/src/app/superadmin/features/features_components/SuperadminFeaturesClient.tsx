@@ -1,4 +1,8 @@
-// RESPONSIBILITY: Renders the Product Management page â€” feature flag toggles and release note publishing. Fetches data via useSuperadminData. No mutations wired yet.
+// RESPONSIBILITY: Renders the Product Management page — feature flag toggles and release note publishing.
+// Fetches data via useSuperadminFeaturesData hook. Mutations (toggle, publish) dispatched from here.
+// No raw API calls — all async state goes through the hook (Rule 6).
+//
+// DATA FLOW: featuresApi → useSuperadminFeaturesData → SuperadminFeaturesClient → FeatureFlags/ReleaseNotes JSX
 'use client';
 
 import { useSuperadminFeaturesData } from '@/app/superadmin/features/features_utils/useSuperadminFeaturesData';
@@ -15,6 +19,10 @@ export default function SuperadminFeaturesClient() {
   const [isPublishing, setIsPublishing] = useState(false);
   const { data, fetchState, error, setData } = useSuperadminFeaturesData();
 
+  /**
+   * Handles release note form submission — calls featuresApi.createNote and
+   * prepends the new note to the notes list in-place via setData.
+   */
   const handlePublishNote = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsPublishing(true);
@@ -32,11 +40,17 @@ export default function SuperadminFeaturesClient() {
     }
   };
 
-  if (fetchState === 'loading') return <div className="p-8 text-center text-disabled">Loading...</div>;
-  if (error || !data) return <div className="p-8 text-center text-danger">Error loading data.</div>;
+  if (fetchState === 'loading') return (
+    <div className="space-y-4 motion-safe:animate-pulse">
+      <div className="h-8 w-64 bg-skeleton-base rounded" />
+      <div className="h-96 bg-skeleton-base rounded-xl border border-border" />
+    </div>
+  );
+  if (error || !data) return <div className="p-8 text-center text-danger font-medium">Error loading data.</div>;
 
   const { flags: DUMMY_FEATURE_FLAGS, notes: DUMMY_RELEASE_NOTES } = data as { flags: FeatureFlag[]; notes: ReleaseNote[] };
 
+  /** Optimistically toggles a feature flag's isGlobalEnabled in local state. */
   const handleToggle = (flagId: string) => {
     setData((prev: { flags: FeatureFlag[], notes: ReleaseNote[] } | null) => {
       if (!prev) return prev;
@@ -47,6 +61,10 @@ export default function SuperadminFeaturesClient() {
     });
   };
 
+  /** Named handlers for tab switching — Rule 52: no inline arrow functions on event handlers */
+  function handleShowFlagsTab() { setActiveTab('FLAGS'); }
+  function handleShowNotesTab() { setActiveTab('NOTES'); }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -56,13 +74,13 @@ export default function SuperadminFeaturesClient() {
         </div>
         <div className="flex bg-input p-1 rounded-lg border border-border">
           <button 
-            onClick={() => setActiveTab('FLAGS')}
+            onClick={handleShowFlagsTab}
             className={`px-4 py-2 rounded-md text-sm font-medium motion-safe:transition-colors ${activeTab === 'FLAGS' ? 'bg-card text-foreground shadow-sm' : 'text-secondary hover:text-foreground'}`}
           >
             Feature Flags
           </button>
           <button 
-            onClick={() => setActiveTab('NOTES')}
+            onClick={handleShowNotesTab}
             className={`px-4 py-2 rounded-md text-sm font-medium motion-safe:transition-colors ${activeTab === 'NOTES' ? 'bg-card text-foreground shadow-sm' : 'text-secondary hover:text-foreground'}`}
           >
             Release Notes

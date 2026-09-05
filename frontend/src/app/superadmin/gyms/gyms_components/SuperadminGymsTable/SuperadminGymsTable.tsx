@@ -28,11 +28,33 @@ export default function SuperadminGymsTable() {
   const [currentPage, setCurrentPage] = useState(1);
 
   if (fetchState === 'loading') {
+    // Loading skeleton mirrors the exact 7-column table layout (Rule 9, Rule 26)
     return (
-      <div className="p-4 space-y-4">
-        {[...Array(5)].map((_, i) => (
-          <div key={`skeleton-${i}`} className="h-12 bg-card motion-safe:animate-pulse rounded-lg border border-border" />
-        ))}
+      <div className="overflow-x-auto">
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="bg-primary/10 border-b border-border">
+              {['Gym Name', 'Owner', 'Plan', 'Members', 'MRR', 'Status', 'Actions'].map((h) => (
+                <th key={h} className="p-4">
+                  <div className="h-3 bg-skeleton-base motion-safe:animate-pulse rounded w-16" />
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-border">
+            {[...Array(5)].map((_, i) => (
+              <tr key={`skeleton-row-${i}`}>
+                <td className="p-4"><div className="h-4 bg-skeleton-base motion-safe:animate-pulse rounded w-32" /></td>
+                <td className="p-4"><div className="h-4 bg-skeleton-base motion-safe:animate-pulse rounded w-24" /></td>
+                <td className="p-4"><div className="h-5 bg-skeleton-base motion-safe:animate-pulse rounded-full w-16" /></td>
+                <td className="p-4"><div className="h-4 bg-skeleton-base motion-safe:animate-pulse rounded w-10 ml-auto" /></td>
+                <td className="p-4"><div className="h-4 bg-skeleton-base motion-safe:animate-pulse rounded w-20 ml-auto" /></td>
+                <td className="p-4"><div className="h-5 bg-skeleton-base motion-safe:animate-pulse rounded-full w-16 mx-auto" /></td>
+                <td className="p-4"><div className="h-6 bg-skeleton-base motion-safe:animate-pulse rounded w-20 ml-auto" /></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     );
   }
@@ -92,7 +114,8 @@ export default function SuperadminGymsTable() {
                   {gym.memberCount}
                 </td>
                 <td className="p-4 text-success font-medium text-right">
-                  ${gym.monthlyRevenue}
+                  {/* Design §21: Indian Numbering System — ₹1,23,456 */}
+                  ₹{gym.monthlyRevenue.toLocaleString('en-IN')}
                 </td>
                 <td className="p-4">
                   <div className="flex justify-center">

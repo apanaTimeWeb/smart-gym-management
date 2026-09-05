@@ -12,6 +12,7 @@ import type {
   PlatformSetting,
   MigrationsPageData,
   InfrastructureNode,
+  GlobalAuditLog,
 } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 /**
@@ -64,7 +65,7 @@ export const superadminApi = {
   auditLogs: {
     fetchGlobalLogs: (params?: Record<string, string>) => {
       const q = params ? '?' + new URLSearchParams(params).toString() : '';
-      return apiFetch<ApiResponse<any>>(`${SuperadminUrlConfig.BACKEND_API.AUDIT_LOGS_BASE}${q}`);
+      return apiFetch<ApiResponse<GlobalAuditLog[]>>(`${SuperadminUrlConfig.BACKEND_API.AUDIT_LOGS_BASE}${q}`);
     },
   },
 
