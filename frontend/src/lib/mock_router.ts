@@ -247,12 +247,13 @@ export async function routeMockRequest<T>(
   }
   if (path.includes('/attendance')) {
     const existing = MockDB.getCollection('mock_admin_attendance', []);
-    if (existing.length > 0 && existing.some((r: any) => r.member?.name?.includes('Active Member') || r.staff?.name?.includes('Trainer '))) {
-      const filtered = existing.filter((r: any) => !r.member?.name?.includes('Active Member') && !r.staff?.name?.includes('Trainer '));
-      MockDB.setCollection('mock_admin_attendance', filtered);
+    const defaultData = generate(20, i => { const d = new Date(); d.setHours(8, 0, 0, 0); const d2 = new Date(); d2.setHours(9, 30, 0, 0); return { id: `att-${i}`, type: i % 4 === 0 ? 'STAFF' : 'MEMBER', member: { name: `Active Member ${i}` }, staff: { name: `Trainer ${i}` }, date: new Date().toISOString(), checkIn: d.toISOString(), checkOut: d2.toISOString() }; });
+    
+    if (existing.length === 0) {
+      MockDB.setCollection('mock_admin_attendance', defaultData);
     }
-    // Return empty by default so it starts blank until manually checked in
-    return MockDB.handleCrud('mock_admin_attendance', method, path, parsedBody, [], 'attendance') as unknown as ApiResponse<T>;
+    
+    return MockDB.handleCrud('mock_admin_attendance', method, path, parsedBody, defaultData, 'attendance') as unknown as ApiResponse<T>;
   }
   if (path.includes('/hr/summary')) {
     const staffList = MockDB.getCollection('mock_admin_staff', []);

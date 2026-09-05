@@ -116,8 +116,15 @@ export default function AttendanceCalendar() {
         {/* Calendar Grid */}
         <div className="p-4 overflow-y-auto">
           {loading ? (
-            <div className="flex justify-center items-center py-12">
-              <Loader2 className="motion-safe:animate-spin text-secondary" size={32} />
+            <div>
+              <div className="grid grid-cols-7 gap-1.5 mb-2 text-center text-xs font-bold text-secondary">
+                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => <div key={d}>{d}</div>)}
+              </div>
+              <div className="grid grid-cols-7 gap-1.5 motion-safe:animate-pulse">
+                {[...Array(35)].map((_, i) => (
+                  <div key={i} className="aspect-square rounded-md bg-muted" />
+                ))}
+              </div>
             </div>
           ) : (
             <div>
