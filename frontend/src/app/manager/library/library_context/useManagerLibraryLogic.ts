@@ -5,7 +5,7 @@ import { libraryApi } from '@/app/manager/library/library_api/ManagerLibraryApi'
 import type { DietPlan } from '@/app/manager/library/library_types/ManagerLibraryTypes';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import { EMPTY_DIET_FORM, type DietFormValues } from '@/app/manager/library/library_utils/ManagerLibrarySharedConstants';
-import type { LibraryContextType, LibraryInitialData } from '@/app/manager/library/library_types/ManagerLibraryTypes';
+import type { LibraryContextType, LibraryInitialData, FetchState } from '@/app/manager/library/library_types/ManagerLibraryTypes';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -18,7 +18,7 @@ export function useManagerLibraryLogic(initialData?: LibraryInitialData | null):
 
   const [dietPlans, setDietPlans] = useState<DietPlan[]>(initialData?.dietPlans || []);
  
- const [loading, setLoading] = useState(!initialData);
+ const [fetchState, setFetchState] = useState<FetchState>(initialData ? 'success' : 'loading');
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
@@ -53,7 +53,7 @@ export function useManagerLibraryLogic(initialData?: LibraryInitialData | null):
  const hideToast = useCallback(() => setToast(null), []);
 
  const loadAll = useCallback(async () => {
- setLoading(true);
+ setFetchState('loading');
  try {
  const params: Record<string, string> = {
   page: currentPage.toString(),
@@ -64,10 +64,11 @@ export function useManagerLibraryLogic(initialData?: LibraryInitialData | null):
  }
  const dietRes = await libraryApi.getDietPlans(params);
  setDietPlans(dietRes.data?.dietPlans || dietRes.data || []);
- } catch (e) { 
- showToast((e as Error).message, 'error'); 
- } finally { 
- setLoading(false); 
+ } catch (e) {
+ showToast((e as Error).message, 'error');
+ setFetchState('error');
+ } finally {
+ setFetchState('success');
  }
   }, [showToast, currentPage, debouncedSearch]);
 
@@ -125,8 +126,7 @@ export function useManagerLibraryLogic(initialData?: LibraryInitialData | null):
   }, [showToast, confirm]);
 
   return {
-    dietPlans,
-    loading, saving, toast,
+    dietPlans, fetchState, saving, toast,
     search, debouncedSearch, setSearch, currentPage, setCurrentPage,
     showToast, hideToast, loadAll,
 

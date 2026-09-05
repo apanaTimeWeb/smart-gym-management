@@ -1,25 +1,28 @@
 'use client';
-
+// RESPONSIBILITY: Renders the member's assigned diet plan and handles the assignment flow.
+// DATA FLOW: useMembersContext -> ManagerProfileDiet -> libraryApi
 import { useState, useEffect } from 'react';
 import { Utensils, Plus, Check, MessageCircle, Edit2 } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
 import { libraryApi } from '@/app/manager/library/library_api/ManagerLibraryApi';
-import type { DietPlan } from '@/app/manager/library/library_types/ManagerLibraryTypes';
+import type { DietPlan, FetchState } from '@/app/manager/library/library_types/ManagerLibraryTypes';
 
 export default function ManagerProfileDiet() {
   const { selectedMember, assignDiet } = useMembersContext();
   const [isAssigning, setIsAssigning] = useState(false);
   const [availableDiets, setAvailableDiets] = useState<DietPlan[]>([]);
-  const [loadingDiets, setLoadingDiets] = useState(false);
+  const [fetchDietsState, setFetchDietsState] = useState<FetchState>('idle');
   const [selectedDietId, setSelectedDietId] = useState<string>('');
 
   useEffect(() => {
     if (isAssigning && availableDiets.length === 0) {
-      setTimeout(() => setLoadingDiets(true), 0);
+      setTimeout(() => setFetchDietsState('loading'), 0);
       libraryApi.getDietPlans().then(res => {
         setAvailableDiets(res.data?.dietPlans || []);
-      }).catch(err => console.error(err)).finally(() => {
-        setTimeout(() => setLoadingDiets(false), 0);
+        setTimeout(() => setFetchDietsState('success'), 0);
+      }).catch(err => {
+        console.error(err);
+        setTimeout(() => setFetchDietsState('error'), 0);
       });
     }
   }, [isAssigning, availableDiets.length]);
@@ -74,7 +77,7 @@ export default function ManagerProfileDiet() {
       {isAssigning && (
         <div className="bg-card border border-border p-6 rounded-xl space-y-4 shadow-sm">
           <h4 className="font-semibold text-primary">Assign Diet Plan from Library</h4>
-          {loadingDiets ? (
+          {fetchDietsState === 'loading' ? (
             <p className="text-sm text-secondary">Loading diet plans...</p>
           ) : (
             <div className="flex flex-col sm:flex-row gap-4">

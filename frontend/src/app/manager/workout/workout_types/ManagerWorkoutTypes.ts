@@ -5,6 +5,8 @@ import React from 'react';
 import type { Exercise } from '@/app/manager/library/library_types/ManagerLibraryTypes';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 
+export type FetchState = 'idle' | 'loading' | 'success' | 'error';
+
 export interface WorkoutContextType {
  tab: string;
  setTab: (tab: string) => void;
@@ -18,7 +20,7 @@ export interface WorkoutContextType {
  exercises: Exercise[];
  totalExercises: number;
  
- loading: boolean;
+ fetchState: FetchState;
  saving: boolean;
  toast: { message: string; type: ToastType } | null;
  showToast: (msg: string, type: ToastType) => void;

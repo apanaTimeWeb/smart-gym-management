@@ -7,7 +7,7 @@ import { Apple, Edit2, Trash2, Flame, Loader2 } from 'lucide-react';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 
 export default function ManagerLibraryDietGrid() {
-  const { dietPlans, loading, debouncedSearch, currentPage, setCurrentPage, openEditDiet, deleteDietPlan } = useLibraryContext();
+  const { dietPlans, fetchState, debouncedSearch, currentPage, setCurrentPage, openEditDiet, deleteDietPlan } = useLibraryContext();
 
   const filtered = dietPlans.filter(d => {
     const s = debouncedSearch.toLowerCase();
@@ -18,7 +18,7 @@ export default function ManagerLibraryDietGrid() {
   const totalPages = Math.ceil(filtered.length / MANAGER_ITEMS_PER_PAGE);
   const currentData = filtered.slice((currentPage - 1) * MANAGER_ITEMS_PER_PAGE, currentPage * MANAGER_ITEMS_PER_PAGE);
 
-  if (loading) {
+  if (fetchState === 'loading') {
     return (
       <div className="flex justify-center py-10">
         <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
