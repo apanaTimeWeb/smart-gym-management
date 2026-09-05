@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Pure Server Component for the affiliates page. Renders the interactive client component.
-import AffiliatesClient from '@/app/superadmin/affiliates/AffiliatesClient';
+import SuperadminAffiliatesClient from '@/app/superadmin/affiliates/SuperadminAffiliatesClient';
 
 export default function Page() {
-  return <AffiliatesClient />;
+  return <SuperadminAffiliatesClient />;
 }

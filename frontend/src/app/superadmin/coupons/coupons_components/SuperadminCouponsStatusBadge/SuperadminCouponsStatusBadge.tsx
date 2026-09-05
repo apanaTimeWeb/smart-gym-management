@@ -1,6 +1,6 @@
 'use client';
 // RESPONSIBILITY: Renders the status badge pill for a single coupon. Purely presentational — maps CouponStatus to design system colors.
-import type { CouponStatus } from '@/app/superadmin/coupons/coupons_types/coupons_types';
+import type { CouponStatus } from '@/app/superadmin/coupons/superadmin_coupons_types/superadmin_coupons_types';
 
 interface CouponsStatusBadgeProps {
   status: CouponStatus;

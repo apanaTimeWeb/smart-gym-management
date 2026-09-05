@@ -4,7 +4,7 @@
 import React from 'react';
 import { X } from 'lucide-react';
 import { UseFormReturn, Controller } from 'react-hook-form';
-import type { CouponFormData } from '@/app/superadmin/coupons/coupons_types/coupons_types';
+import type { CouponFormData } from '@/app/superadmin/coupons/superadmin_coupons_types/superadmin_coupons_types';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 
 interface SuperadminCouponModalProps {

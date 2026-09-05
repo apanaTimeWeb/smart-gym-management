@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Centralized pure-function validation helpers for the Superadmin module.
 // No React hooks, no API calls — only synchronous boolean checks and string formatters.
-// Used by: AddGymForm, SuperadminCouponModal, SuperadminAffiliateModal, SettingsClient.
+// Used by: SuperadminAddGymForm, SuperadminCouponModal, SuperadminAffiliateModal, SuperadminSettingsClient.
 //
 // Why isolated? If a validation rule changes (e.g., subdomain regex), only this file
 // is touched — zero risk of breaking unrelated UI components. (Frontend Rule 11, 6)
@@ -81,7 +81,7 @@ export function isFutureDate(isoDateString: string): boolean {
  * Validates that a password meets the minimum requirements:
  * - At least 8 characters
  * - Contains at least one uppercase, one lowercase, one digit
- * Used for: AddGymForm (initial admin password provisioning)
+ * Used for: SuperadminAddGymForm (initial admin password provisioning)
  * @param password - Raw password string
  * @returns true if strong enough
  */
@@ -119,7 +119,7 @@ export function isValidSettingValue(value: string, dataType: 'string' | 'number'
 
 /**
  * Returns a human-readable error message for an invalid subdomain.
- * Used by the AddGymForm to surface actionable error text.
+ * Used by the SuperadminAddGymForm to surface actionable error text.
  * @param subdomain - Raw input value
  * @returns Error string, or empty string if valid
  */

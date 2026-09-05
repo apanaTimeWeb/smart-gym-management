@@ -3,7 +3,7 @@
 import { Edit2, Trash2, RefreshCw, ToggleLeft, ToggleRight, MessageCircle } from 'lucide-react';
 import SuperadminCouponsStatusBadge from '@/app/superadmin/coupons/coupons_components/SuperadminCouponsStatusBadge/SuperadminCouponsStatusBadge';
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
-import type { Coupon, CouponStatus } from '@/app/superadmin/coupons/coupons_types/coupons_types';
+import type { Coupon, CouponStatus } from '@/app/superadmin/coupons/superadmin_coupons_types/superadmin_coupons_types';
 
 interface CouponsTableRowProps {
   coupon: Coupon;

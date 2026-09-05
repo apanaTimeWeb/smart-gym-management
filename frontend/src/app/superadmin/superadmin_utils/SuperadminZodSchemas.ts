@@ -9,14 +9,14 @@
 // are removed. Use .min(1, 'message') for required strings and .check() / .error()
 // overloads for custom error messages. z.enum() requires 'as const' tuple syntax.
 //
-// DATA FLOW: SuperadminZodSchemas → useAddGymForm / useCouponsPage / useAffiliatesPage → RHF register
+// DATA FLOW: SuperadminZodSchemas → useSuperadminAddGymForm / useCouponsPage / useSuperadminAffiliatesPage → RHF register
 
 import { z } from 'zod';
 
 // ─── Add / Onboard Gym Schema ─────────────────────────────────────────────── //
 
 /**
- * Zod v4 schema for the "Onboard New Gym" multi-step form (AddGymForm.tsx).
+ * Zod v4 schema for the "Onboard New Gym" multi-step form (SuperadminAddGymForm.tsx).
  * All required fields must pass before the form submits to the backend.
  * Password must match confirmPassword using .superRefine().
  */
@@ -79,7 +79,7 @@ export type AddGymFormValues = z.infer<typeof addGymSchema>;
 // ─── Subscription Plan Schema ─────────────────────────────────────────────── //
 
 /**
- * Zod v4 schema for creating / editing a Subscription Plan (PlanCreateModal, PlanEditModal).
+ * Zod v4 schema for creating / editing a Subscription Plan (SuperadminPlanCreateModal, SuperadminPlanEditModal).
  */
 export const subscriptionPlanSchema = z.object({
   name: z
@@ -112,9 +112,9 @@ export const subscriptionPlanSchema = z.object({
 
 export type SubscriptionPlanFormValues = z.infer<typeof subscriptionPlanSchema>;
 
-// Coupon Schema has been moved to coupons_types.ts
+// Coupon Schema has been moved to superadmin_coupons_types.ts
 
-// Affiliate Schema has been moved to affiliates_types.ts
+// Affiliate Schema has been moved to superadmin_affiliates_types.ts
 
 // ─── Broadcast Schema ─────────────────────────────────────────────────────── //
 
@@ -167,7 +167,7 @@ export type BroadcastFormValues = z.infer<typeof broadcastSchema>;
 // ─── Platform Setting Schema ──────────────────────────────────────────────── //
 
 /**
- * Zod v4 schema for editing a platform-wide key-value setting (SettingsClient).
+ * Zod v4 schema for editing a platform-wide key-value setting (SuperadminSettingsClient).
  * Value is always stored as a string; type coercion is handled by the backend.
  */
 export const platformSettingSchema = z.object({

@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Contains constants for Superadmin Tickets
-import type { TicketPriority, TicketStatus } from '@/app/superadmin/tickets/tickets_types/tickets_types';
+import type { TicketPriority, TicketStatus } from '@/app/superadmin/tickets/superadmin_tickets_types/superadmin_tickets_types';
 
 export const PriorityColors: Record<TicketPriority, string> = {
   LOW: 'text-success bg-success/10 border-success/20',
