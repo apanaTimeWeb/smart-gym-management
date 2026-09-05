@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Provides the implementation for AdminSalesOverview.tsx functionality within its module.
 'use client';
 
-import { useSalesContext } from '@/app/admin/sales/sales_context/SalesContext';
+import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   AreaChart, Area
@@ -9,7 +9,7 @@ import {
 import { Loader2 } from 'lucide-react';
 
 export default function AdminSalesOverview() {
-  const { overviewData, fetchState } = useSalesContext();
+  const { overviewData, fetchState } = useAdminSalesLogic();
 
   if (fetchState === 'loading') {
     return (
@@ -65,3 +65,4 @@ export default function AdminSalesOverview() {
  </div>
  );
 }
+

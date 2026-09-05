@@ -1,10 +1,10 @@
 "use client";
 import { Building2, TrendingUp, TrendingDown, Users, Activity, X } from "lucide-react";
-import { useAdminBranchesContext } from "@/app/admin/branches/branches_context/AdminBranchesContext";
+import { useAdminBranchesLogic } from "@/app/admin/branches/branches_context/useAdminBranchesLogic";
 import { formatCurrency } from "@/lib/formatters";
 
 export default function AdminBranchDetailDrawer() {
-  const { selectedBranch: branch, detailView: view, closeDetail } = useAdminBranchesContext();
+  const { selectedBranch: branch, detailView: view, closeDetail } = useAdminBranchesLogic();
   if (!branch || !view) return null;
 
   const methodColor: Record<string, string> = { UPI: "bg-pay-upi-bg text-pay-upi", Cash: "bg-pay-cash-bg text-pay-cash", Card: "bg-pay-card-bg text-pay-card" };
@@ -36,3 +36,4 @@ export default function AdminBranchDetailDrawer() {
     </>
   );
 }
+

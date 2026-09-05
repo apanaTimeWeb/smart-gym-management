@@ -1,36 +1,31 @@
 import { create } from 'zustand';
-import type { TimeRange } from '@/app/admin/dashboard/dashboard_types/dashboard_types';
 import type { Branch } from '@/app/admin/admin_store/useAdminGlobalStore';
-import type { DetailView } from '@/app/admin/branches/branches_context/useAdminBranchesLogic';
+import type { TimeRange } from '@/app/admin/dashboard/dashboard_types/dashboard_types';
+
+export type DetailView = "revenue" | "expenses" | "staff" | "students";
 
 interface AdminBranchesStore {
   timeRange: TimeRange;
-  setTimeRange: (t: TimeRange) => void;
+  setTimeRange: (range: TimeRange) => void;
   startDate: string;
-  setStartDate: (d: string) => void;
+  setStartDate: (date: string) => void;
   endDate: string;
-  setEndDate: (d: string) => void;
+  setEndDate: (date: string) => void;
   selectedBranch: Branch | null;
-  setSelectedBranch: (b: Branch | null) => void;
+  setSelectedBranch: (branch: Branch | null) => void;
   detailView: DetailView | null;
-  setDetailView: (v: DetailView | null) => void;
-  toast: { message: string; type: 'success' | 'error' | 'info' | 'warning' } | null;
-  showToast: (message: string, type: 'success' | 'error' | 'info' | 'warning') => void;
-  hideToast: () => void;
+  setDetailView: (view: DetailView | null) => void;
 }
 
 export const useAdminBranchesStore = create<AdminBranchesStore>((set) => ({
   timeRange: 'monthly',
-  setTimeRange: (t) => set({ timeRange: t }),
+  setTimeRange: (range) => set({ timeRange: range }),
   startDate: '',
-  setStartDate: (d) => set({ startDate: d }),
+  setStartDate: (date) => set({ startDate: date }),
   endDate: '',
-  setEndDate: (d) => set({ endDate: d }),
+  setEndDate: (date) => set({ endDate: date }),
   selectedBranch: null,
-  setSelectedBranch: (b) => set({ selectedBranch: b }),
+  setSelectedBranch: (branch) => set({ selectedBranch: branch }),
   detailView: null,
-  setDetailView: (v) => set({ detailView: v }),
-  toast: null,
-  showToast: (message, type) => set({ toast: { message, type } }),
-  hideToast: () => set({ toast: null }),
+  setDetailView: (view) => set({ detailView: view }),
 }));

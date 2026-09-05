@@ -39,8 +39,8 @@ export function useAdminSettingsLogic() {
  }, [form, updateMutation]);
 
  const handleChange = useCallback((field: string, value: string) => {
-   setForm(prev => ({ ...prev, [field]: value }));
- }, []);
+   setForm({ ...useAdminSettingsStore.getState().form, [field]: value });
+ }, [setForm]);
 
  return {
    activeTab, setActiveTab,

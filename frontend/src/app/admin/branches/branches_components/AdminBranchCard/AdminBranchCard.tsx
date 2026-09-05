@@ -1,10 +1,10 @@
 "use client";
 import { Building2, TrendingUp, TrendingDown, Users, Activity, ChevronRight } from "lucide-react";
-import { useAdminBranchesContext } from "@/app/admin/branches/branches_context/AdminBranchesContext";
+import { useAdminBranchesLogic } from "@/app/admin/branches/branches_context/useAdminBranchesLogic";
 import { formatCurrency } from "@/lib/formatters";
 
 export default function AdminBranchCard() {
-  const { branches, multiplier, openDetail } = useAdminBranchesContext();
+  const { branches, multiplier, openDetail } = useAdminBranchesLogic();
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {branches.map(branch => (
@@ -47,3 +47,4 @@ export default function AdminBranchCard() {
     </div>
   );
 }
+

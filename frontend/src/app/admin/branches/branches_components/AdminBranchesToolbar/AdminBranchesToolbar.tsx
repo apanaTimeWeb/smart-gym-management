@@ -1,10 +1,10 @@
 "use client";
 import { Calendar, ShieldCheck } from "lucide-react";
-import { useAdminBranchesContext } from "@/app/admin/branches/branches_context/AdminBranchesContext";
+import { useAdminBranchesLogic } from "@/app/admin/branches/branches_context/useAdminBranchesLogic";
 import type { TimeRange } from "@/app/admin/dashboard/dashboard_types/dashboard_types";
 
 export default function AdminBranchesToolbar() {
-  const { timeRange, setTimeRange, startDate, setStartDate, endDate, setEndDate } = useAdminBranchesContext();
+  const { timeRange, setTimeRange, startDate, setStartDate, endDate, setEndDate } = useAdminBranchesLogic();
   return (
     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-card p-4 border border-border rounded-xl">
       <div className="flex flex-wrap items-center gap-3">
@@ -30,3 +30,4 @@ export default function AdminBranchesToolbar() {
     </div>
   );
 }
+

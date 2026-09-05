@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Renders the list of members with pending payments, including skeleton loader, pagination, and overdue details. Receives data via SalesContext.
 'use client';
 
-import { useSalesContext } from '@/app/admin/sales/sales_context/SalesContext';
+import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 import AdminSalesEmptyState from '@/app/admin/sales/sales_components/AdminSalesEmptyState/AdminSalesEmptyState';
 import type { PendingPaymentMember } from '@/app/admin/sales/sales_types/sales_types';
@@ -9,7 +9,7 @@ import { ADMIN_ITEMS_PER_PAGE, GYM_DETAILS } from '@/app/admin/admin_utils/Admin
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
 
 export default function PendingPayments() {
-  const { currentPage, setCurrentPage, pendingPayments, pendingTotal, fetchState, showToast } = useSalesContext();
+  const { currentPage, setCurrentPage, pendingPayments, pendingTotal, fetchState, showToast } = useAdminSalesLogic();
 
   const totalPages = Math.ceil(pendingTotal / ADMIN_ITEMS_PER_PAGE) || 1;
 
@@ -105,3 +105,4 @@ export default function PendingPayments() {
     </div>
   );
 }
+

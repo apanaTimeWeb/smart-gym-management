@@ -1,11 +1,11 @@
 // RESPONSIBILITY: Renders the left-side vertical navigation tabs for different settings sections.
 'use client';
 
-import { useSettingsContext } from '@/app/admin/settings/settings_context/SettingsContext';
+import { useAdminSettingsLogic } from '@/app/admin/settings/settings_context/useAdminSettingsLogic';
 import { SETTINGS_TABS } from '@/app/admin/settings/settings_utils/SettingsSharedConstants';
 
 export default function AdminSettingsNav() {
- const { activeTab, setActiveTab } = useSettingsContext();
+ const { activeTab, setActiveTab } = useAdminSettingsLogic();
 
  return (
  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -32,3 +32,4 @@ export default function AdminSettingsNav() {
  </div>
  );
 }
+

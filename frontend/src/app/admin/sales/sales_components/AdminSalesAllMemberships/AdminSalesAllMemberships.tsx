@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { useSalesContext } from '@/app/admin/sales/sales_context/SalesContext';
+import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 import AdminSalesEmptyState from '@/app/admin/sales/sales_components/AdminSalesEmptyState/AdminSalesEmptyState';
 import type { Member } from '@/app/admin/sales/sales_types/sales_types';
@@ -35,7 +35,7 @@ function getMembershipFilter(member: Member): MembershipFilter {
 
 export default function AdminSalesAllMemberships() {
   const [activeFilter, setActiveFilter] = useState<MembershipFilter>('All');
-  const { currentPage, setCurrentPage, allMemberships, allMembershipsTotal, fetchState } = useSalesContext();
+  const { currentPage, setCurrentPage, allMemberships, allMembershipsTotal, fetchState } = useAdminSalesLogic();
 
   // Compute per-status counts for the KPI bar (Rule 74)
   const counts = useMemo(() => ({
@@ -157,3 +157,4 @@ export default function AdminSalesAllMemberships() {
     </div>
   );
 }
+

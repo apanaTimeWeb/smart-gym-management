@@ -2,14 +2,14 @@
 'use client';
 
 
-import { useSalesContext } from '@/app/admin/sales/sales_context/SalesContext';
+import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 import { Loader2 } from 'lucide-react';
 import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_utils/AdminSharedConstants';
 import type { MembershipReportItem } from '@/app/admin/sales/sales_types/sales_types';
 
 export default function AdminSalesMembershipReport() {
-  const { search, currentPage, setCurrentPage, membershipReport, membershipTotals, fetchState } = useSalesContext();
+  const { search, currentPage, setCurrentPage, membershipReport, membershipTotals, fetchState } = useAdminSalesLogic();
   
   const filtered = membershipReport.filter((r: MembershipReportItem) => 
     (r.plan || '').toLowerCase().includes(search.toLowerCase())
@@ -70,3 +70,4 @@ export default function AdminSalesMembershipReport() {
   </>
   );
 }
+

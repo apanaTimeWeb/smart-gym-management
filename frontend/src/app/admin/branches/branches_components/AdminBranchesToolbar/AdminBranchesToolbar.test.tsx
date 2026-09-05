@@ -8,3 +8,4 @@ describe('AdminBranchesToolbar Component', () => {
     expect(true).toBe(true);
   });
 });
+

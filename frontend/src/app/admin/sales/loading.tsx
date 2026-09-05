@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Provides the implementation for loading.tsx functionality within its module.
-import { TableSkeleton } from '@/app/admin/admin_components/AdminShared/TableSkeleton';
+import { TableSkeleton } from '@/app/admin/admin_components/AdminFeedback/TableSkeleton';
 export default function Loading() {
  return (
  <div className="min-h-screen flex flex-col p-6 space-y-5 bg-background">
@@ -9,3 +9,4 @@ export default function Loading() {
  </div>
  );
 }
+

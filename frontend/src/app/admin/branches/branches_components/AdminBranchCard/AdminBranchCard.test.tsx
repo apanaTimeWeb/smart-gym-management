@@ -8,3 +8,4 @@ describe('AdminBranchCard Component', () => {
     expect(true).toBe(true);
   });
 });
+

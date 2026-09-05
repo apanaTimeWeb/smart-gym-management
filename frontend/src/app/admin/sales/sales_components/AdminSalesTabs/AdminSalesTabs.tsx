@@ -1,11 +1,11 @@
 // RESPONSIBILITY: Provides the implementation for AdminSalesTabs.tsx functionality within its module.
 'use client';
 
-import { useSalesContext } from '@/app/admin/sales/sales_context/SalesContext';
-import { SALES_TABS } from '@/app/admin/sales/sales_utils/SalesSharedConstants';
+import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
+import { SALES_TABS } from '@/app/admin/sales/sales_utils/AdminSalesSharedConstants';
 
 export default function AdminSalesTabs() {
- const { tab, setTab } = useSalesContext();
+ const { tab, setTab } = useAdminSalesLogic();
 
  return (
  <div className="border-b border-border flex overflow-x-auto bg-card">
@@ -25,3 +25,5 @@ export default function AdminSalesTabs() {
  </div>
  );
 }
+
+
