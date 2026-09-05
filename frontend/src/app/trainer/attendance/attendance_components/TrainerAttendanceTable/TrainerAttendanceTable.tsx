@@ -6,6 +6,7 @@ import { useAttendanceContext } from '@/app/trainer/attendance/attendance_contex
 import { ATTENDANCE_TABLE_HEADERS, formatDate, formatTime } from '@/app/trainer/attendance/attendance_utils/AttendanceSharedConstants';
 import TrainerPagination from '@/app/trainer/trainer_components/TrainerShared/TrainerPagination';
 import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerSharedConstants';
+import TrainerAttendanceEmptyState from '@/app/trainer/attendance/attendance_components/TrainerAttendanceEmptyState/TrainerAttendanceEmptyState';
 
 export default function TrainerAttendanceTable() {
   const { records, totalRecords, fetchState, currentPage, setCurrentPage } = useAttendanceContext();

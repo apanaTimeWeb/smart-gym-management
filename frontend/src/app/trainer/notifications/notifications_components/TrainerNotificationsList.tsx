@@ -1,5 +1,6 @@
 import { NotificationItem } from '@/app/trainer/notifications/notifications_utils/useNotificationsPage';
 import { X, Bell } from 'lucide-react';
+import TrainerNotificationsEmptyState from '@/app/trainer/notifications/notifications_components/TrainerNotificationsEmptyState/TrainerNotificationsEmptyState';
 
 interface NotificationsListProps {
   notifications: NotificationItem[];
@@ -9,15 +10,7 @@ interface NotificationsListProps {
 
 export default function TrainerNotificationsList({ notifications, onMarkAsRead, onDelete }: NotificationsListProps) {
   if (notifications.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center p-12 text-center">
-        <div className="w-16 h-16 bg-input rounded-full flex items-center justify-center mb-4">
-          <Bell className="w-8 h-8 text-secondary" />
-        </div>
-        <h3 className="text-lg font-medium text-foreground">You&apos;re all caught up!</h3>
-        <p className="text-sm text-secondary mt-1">No new notifications to show right now.</p>
-      </div>
-    );
+    return <TrainerNotificationsEmptyState />;
   }
 
   return (
