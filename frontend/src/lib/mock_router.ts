@@ -355,36 +355,52 @@ export async function routeMockRequest<T>(
     MockDB.setCollection('mock_admin_diet_plans', []); // Force purge old format
   }
   
-  if (path.includes('/diet-plans')) return MockDB.handleCrud('mock_admin_diet_plans', method, path, parsedBody, generate(4, i => ({ 
-    id: `diet-${i}`, 
-    name: `Pro Diet ${i+1}`, 
-    goal: 'Weight Loss', 
-    totalCalories: 1500 + (i * 200),
-    protein: 120 + i * 10,
-    carbs: 150 + i * 20,
-    fats: 50 + i * 5,
-    meals: [
-      { time: '08:00 AM', name: 'Breakfast', calories: 400, foods: ['Oats', 'Eggs', 'Banana'] },
-      { time: '01:00 PM', name: 'Lunch', calories: 600, foods: ['Chicken Breast', 'Rice', 'Broccoli'] },
-      { time: '07:00 PM', name: 'Dinner', calories: 500, foods: ['Salmon', 'Sweet Potato', 'Asparagus'] }
-    ], 
-    isActive: true 
-  })), 'dietPlans') as unknown as ApiResponse<T>;
-  
+  if (path.includes('/diet-plans')) {
+    const defaultDiets = generate(4, i => ({ 
+      id: `diet-${i}`, 
+      name: `Pro Diet ${i+1}`, 
+      goal: 'Weight Loss', 
+      totalCalories: 1500 + (i * 200),
+      protein: 120 + i * 10,
+      carbs: 150 + i * 20,
+      fats: 50 + i * 5,
+      meals: [
+        { time: '08:00 AM', name: 'Breakfast', calories: 400, foods: ['Oats', 'Eggs', 'Banana'] },
+        { time: '01:00 PM', name: 'Lunch', calories: 600, foods: ['Chicken Breast', 'Rice', 'Broccoli'] },
+        { time: '07:00 PM', name: 'Dinner', calories: 500, foods: ['Salmon', 'Sweet Potato', 'Asparagus'] }
+      ], 
+      isActive: true 
+    }));
+    
+    if (MockDB.getCollection('mock_admin_diet_plans', []).length === 0) {
+      MockDB.setCollection('mock_admin_diet_plans', defaultDiets);
+    }
+    
+    return MockDB.handleCrud('mock_admin_diet_plans', method, path, parsedBody, defaultDiets, 'dietPlans') as unknown as ApiResponse<T>;
+  }
+
   const existingWorkouts = MockDB.getCollection('mock_workouts', []);
   if (existingWorkouts.length > 0 && typeof (existingWorkouts[0] as any).days === 'number') {
     MockDB.setCollection('mock_workouts', []); // Force purge old format
   }
-  if (path.includes('/workouts')) return MockDB.handleCrud('mock_workouts', method, path, parsedBody, generate(5, i => ({ 
-    id: `wo-${i}`, 
-    name: `Hypertrophy Plan ${i+1}`, 
-    level: i % 2 === 0 ? 'Intermediate' : 'Beginner',
-    focus: 'Hypertrophy',
-    days: 4,
-    exercises: 15 + i * 2,
-    duration: '60 min',
-    tags: ['Muscle', 'Strength']
-  })), 'workouts') as unknown as ApiResponse<T>;
+  if (path.includes('/workouts')) {
+    const defaultWorkouts = generate(5, i => ({ 
+      id: `wo-${i}`, 
+      name: `Hypertrophy Plan ${i+1}`, 
+      level: i % 2 === 0 ? 'Intermediate' : 'Beginner',
+      focus: 'Hypertrophy',
+      days: 4,
+      exercises: 15 + i * 2,
+      duration: '60 min',
+      tags: ['Muscle', 'Strength']
+    }));
+    
+    if (MockDB.getCollection('mock_workouts', []).length === 0) {
+      MockDB.setCollection('mock_workouts', defaultWorkouts);
+    }
+    
+    return MockDB.handleCrud('mock_workouts', method, path, parsedBody, defaultWorkouts, 'workouts') as unknown as ApiResponse<T>;
+  }
   if (path.includes('/admin/finance/summary')) return { success: true, message: 'Summary', data: { totalRevenue: 1500000, monthlyRevenue: 250000, pendingAmount: 45000, totalPayments: 345, revenueByMethod: { UPI: 120000, Cash: 50000, Card: 80000, NetBanking: 0 }, monthlyData: generate(6, i => ({ month: `M${i+1}`, revenue: 200000 + (i * 10000) })) } } as unknown as ApiResponse<T>;
   if (method === 'GET' && path.includes('/finance/payments/member/')) {
     const segments = path.split('?')[0].split('/');

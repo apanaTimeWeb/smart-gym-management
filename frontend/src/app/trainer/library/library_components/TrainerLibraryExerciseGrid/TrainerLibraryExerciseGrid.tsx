@@ -20,8 +20,27 @@ export default function TrainerLibraryExerciseGrid() {
 
   if (loading) {
     return (
-      <div className="flex justify-center py-10">
-        <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 flex-1">
+        {[...Array(6)].map((_, i) => (
+          <div key={i} className="rounded-xl border border-border bg-card p-5 motion-safe:animate-pulse h-48 flex flex-col">
+            <div className="flex justify-between items-start mb-3">
+              <div className="w-10 h-10 rounded-xl bg-muted shrink-0"></div>
+              <div className="flex gap-2">
+                <div className="w-8 h-8 rounded bg-muted"></div>
+                <div className="w-8 h-8 rounded bg-muted"></div>
+              </div>
+            </div>
+            <div className="w-3/4 h-5 rounded bg-muted mb-2"></div>
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-16 h-5 rounded-full bg-muted"></div>
+              <div className="w-20 h-5 rounded-full bg-muted"></div>
+            </div>
+            <div className="mt-auto space-y-2">
+              <div className="w-1/2 h-3 rounded bg-muted"></div>
+              <div className="w-1/3 h-3 rounded bg-muted"></div>
+            </div>
+          </div>
+        ))}
       </div>
     );
   }
