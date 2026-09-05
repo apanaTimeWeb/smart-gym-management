@@ -1,6 +1,7 @@
 'use client';
 // RESPONSIBILITY: Renders a single row in the Coupons data table. Handles row-level action buttons with stopPropagation. Purely presentational.
 import { Edit2, Trash2, RefreshCw, ToggleLeft, ToggleRight, MessageCircle } from 'lucide-react';
+import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
 import SuperadminCouponsStatusBadge from '@/app/superadmin/coupons/coupons_components/SuperadminCouponsStatusBadge/SuperadminCouponsStatusBadge';
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
 import type { Coupon, CouponStatus } from '@/app/superadmin/coupons/superadmin_coupons_types/superadmin_coupons_types';
@@ -15,6 +16,7 @@ interface CouponsTableRowProps {
 
 export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEdit, onDelete, onRestore }: CouponsTableRowProps) {
   const cpn = coupon;
+  const { confirm } = useSuperadminConfirm();
 
   const handleShareWhatsApp = (e: React.MouseEvent, cpn: Coupon) => {
     e.stopPropagation();
@@ -115,9 +117,15 @@ export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEd
             <button
               title="Delete Coupon"
               aria-label="Delete Coupon"
-              onClick={(e) => { 
+              onClick={async (e) => { 
                 e.stopPropagation(); 
-                if (window.confirm(`Are you sure you want to delete coupon "${cpn.code}"? This action cannot be undone.`)) {
+                const ok = await confirm({
+                  title: 'Delete Coupon',
+                  message: `Are you sure you want to delete coupon "${cpn.code}"? This action cannot be undone.`,
+                  type: 'danger',
+                  confirmText: 'Delete'
+                });
+                if (ok) {
                   onDelete(cpn.id); 
                 }
               }}

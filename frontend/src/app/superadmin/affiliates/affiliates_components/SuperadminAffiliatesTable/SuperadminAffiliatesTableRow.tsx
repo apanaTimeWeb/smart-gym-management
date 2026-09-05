@@ -1,6 +1,7 @@
 'use client';
 // RESPONSIBILITY: Renders a single row in the Affiliates data table. Handles row-level action buttons with stopPropagation. Purely presentational.
 import { Pencil, Trash2, Power, Check } from 'lucide-react';
+import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
 import SuperadminAffiliateStatusBadge from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliateStatusBadge/SuperadminAffiliateStatusBadge';
 import type { Affiliate, AffiliateStatus } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
 
@@ -12,6 +13,7 @@ interface AffiliatesTableRowProps {
 }
 
 export default function SuperadminAffiliatesTableRow({ affiliate: aff, onToggleStatus, onEdit, onDelete }: AffiliatesTableRowProps) {
+  const { confirm } = useSuperadminConfirm();
   return (
     <tr 
       className="hover:bg-primary/5 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out group cursor-pointer"
@@ -54,9 +56,15 @@ export default function SuperadminAffiliatesTableRow({ affiliate: aff, onToggleS
             <Pencil className="w-4 h-4" />
           </button>
           <button
-            onClick={(e) => { 
+            onClick={async (e) => { 
               e.stopPropagation(); 
-              if (window.confirm(`Are you sure you want to delete affiliate "${aff.name}"? This action cannot be undone.`)) {
+              const ok = await confirm({
+                title: 'Delete Affiliate',
+                message: `Are you sure you want to delete affiliate "${aff.name}"? This action cannot be undone.`,
+                type: 'danger',
+                confirmText: 'Delete'
+              });
+              if (ok) {
                 onDelete(aff.id); 
               }
             }}

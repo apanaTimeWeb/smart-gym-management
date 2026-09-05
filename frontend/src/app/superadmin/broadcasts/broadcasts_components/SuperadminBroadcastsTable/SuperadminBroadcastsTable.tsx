@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import SuperadminBroadcastStatusBadge from '@/app/superadmin/broadcasts/broadcasts_components/SuperadminBroadcastStatusBadge/SuperadminBroadcastStatusBadge';
 import { Send, Edit2, Trash2 } from 'lucide-react';
+import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
 import SuperadminBroadcastsEmptyState from '@/app/superadmin/broadcasts/broadcasts_components/SuperadminBroadcastsEmptyState/SuperadminBroadcastsEmptyState';
 import type { BroadcastsTableProps } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
@@ -11,6 +12,7 @@ const ITEMS_PER_PAGE = 10;
 
 export default function SuperadminBroadcastsTable({ broadcasts, onSend, onEdit, onDelete, onCreateClick }: BroadcastsTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
+  const { confirm } = useSuperadminConfirm();
 
   const totalPages = Math.ceil(broadcasts.length / ITEMS_PER_PAGE) || 1;
   const paginatedBroadcasts = broadcasts.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
@@ -80,9 +82,15 @@ export default function SuperadminBroadcastsTable({ broadcasts, onSend, onEdit, 
                       <Edit2 className="w-4 h-4" />
                     </button>
                     <button
-                      onClick={(e) => { 
+                      onClick={async (e) => { 
                         e.stopPropagation(); 
-                        if (window.confirm(`Are you sure you want to delete broadcast "${bc.title}"? This action cannot be undone.`)) {
+                        const ok = await confirm({
+                          title: 'Delete Broadcast',
+                          message: `Are you sure you want to delete broadcast "${bc.title}"? This action cannot be undone.`,
+                          type: 'danger',
+                          confirmText: 'Delete'
+                        });
+                        if (ok) {
                           onDelete(bc.id); 
                         }
                       }}

@@ -1,56 +1,51 @@
-# Superadmin Feature Map
+# Superadmin Module Feature Map
 
 ## Module Purpose
-Handles superadmin operations, UI display, and logic isolation as part of the Smart Gym 360 platform.
+The Superadmin module is the Master Control Panel (SaaS layer) for GymSmart 360. It manages global platforms, tenants (branches/franchises), global plans, coupons, SaaS invoices, system health, and infrastructure settings. It is fully isolated from Manager, Trainer, and Admin (gym-level) roles.
 
 ## Directory Structure
-- `superadmin_components/`: Contains all isolated micro-components for the module.
-- `superadmin_types/` (if applicable): TypeScript definitions.
-- `superadmin_utils/` (if applicable): Shared constants and hardcoded data.
-- `superadmin_context/` (if applicable): Module-scoped React Context or Zustand store.
-
-## Feature Inventory
-| Feature | Path | Purpose | Main API Calls | Owner |
-|---|---|---|---|---|
-| Core UI | `/superadmin` | Main module view | TBD | Frontend Team |
+- `superadmin_components/`: Global components (Layout, Header, Sidebar, ConfirmProvider, QueryProvider).
+- `superadmin_api/`: Dedicated API client for global administrative routes.
+- `superadmin_types/`: Shared TypeScript definitions.
+- `dashboard/`: SaaS-level KPI overview.
+- `analytics/`: Revenue analytics and MRR tracking.
+- `plans/`: SaaS subscription tiers and pricing definitions.
+- `coupons/`: Promotional codes for SaaS subscriptions.
+- `affiliates/`: Affiliate partners and referral tracking.
+- `gyms/` (Tenants): Master list of all gym instances (branches/franchises).
+- `invoices/`: Billing history and payments collected from tenants.
+- `tickets/`: Global support ticketing system.
+- `usage-meters/`: Resource usage tracking per tenant.
+- `broadcasts/`: System-wide announcements to all tenants.
+- `features/`: Feature flags and rollout controls.
+- `infrastructure/`: Server load, queue status, caching configuration.
+- `migrations/`: Database schema rollouts and tracking.
+- `jobs/`: Background job monitoring (queues, crons, workers).
+- `backups/`: Database backup scheduling and restoration.
+- `system/`: General system health (RAM, CPU, Uptime).
+- `global-audit/`: Master audit logs across all tenants.
 
 ## Data and State Architecture
-- Server-state query keys: `['superadmin']`
-- Zustand stores: TBD
-- Context providers: TBD
-- Local-storage keys: TBD
-- MSW handler file: TBD
-
-## API Contract
-List all endpoint builders and expected response types.
-- `fetchSuperadmin(params)`
-- `createSuperadmin(dto)`
-- `updateSuperadmin(id, dto)`
-- `deleteSuperadmin(id)`
+- **Server-state query keys:** Uses `['superadmin', ...]` with React Query (`useQuery`, `useMutation`).
+- **Zustand stores:** Used for module-scoped modal/drawer states (e.g., `useSuperadminPlansStore`).
+- **Context providers:** `SuperadminConfirmProvider`, `SuperadminQueryProvider`.
+- **Local-storage keys:** None — auth token is HTTP-only.
 
 ## Permissions and Security
-Document protected actions, roles, and CODEOWNERS paths.
-
-## Loading, Empty, Error States
-- **Loading:** Uses `loading.tsx` skeleton matching global design.
-- **Empty:** Follows Rule 48 (dedicated empty state component).
-- **Error:** Uses `error.tsx` typed React Error Boundary.
-
-## Edge Cases / AI Warnings
-- Do not bypass API interceptors.
-- Do not mix complex React logic (`useEffect`) with JSX markup.
+- Role: `SUPERADMIN` only.
+- Strict isolation from all ERP roles (`/admin`, `/manager`, `/trainer`).
 
 ## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization
-- [x] Rule 7: Type isolation
-- [x] Rule 8: Server/client boundary
-- [x] Rule 9: Loading/error/not-found handling
-- [x] Rule 14: Backend-driven messages
-- [x] Rule 15A: Tests present
-- [x] Rule 15B: Forms use React Hook Form + Zod
-- [x] Rule 15C: State placed per Server/Client decision matrix
-- [x] Rule 15D: Env vars validated centrally, none exposed unsafely
-- [x] Rule 15E: Error monitoring wired for critical flows
-- [x] Rule 74: Security scan gates passed (SCA + secrets)
-- [x] Rule 76: CODEOWNERS covers security-critical paths
-- [x] Rule 79: MSW handler present where needed
+- [x] Rule 1: Micro-modularization — module-prefixed subfolders
+- [x] Rule 2: Total Role Isolation — zero cross-role imports
+- [x] Rule 3: Hyper-descriptive naming — `Superadmin` prefix on all components
+- [x] Rule 4: Theme Independence — Tailwind tokens via `globals.css`
+- [x] Rule 7: Type Isolation — `*_types/` folders used
+- [x] Rule 8: Server/Client Boundary — clear separation
+- [x] Rule 9: Loading/error/not-found — handled via standard Next.js conventions
+- [x] Rule 13: Feature Map — this document
+- [x] Rule 71: Double verification — destructive actions use `useSuperadminConfirm()` modal
+- [x] Design §3: Sidebar active = subtle gold border + bg + glow
+- [x] Design §12: Z-index scale — header z-20, dropdowns z-30, modals z-40, toasts z-50
+- [x] Design §28: Surface elevation — `bg-popover` for dropdowns, `bg-overlay` for modals
+- [x] Design §29: motion-safe guards on all transitions and animations

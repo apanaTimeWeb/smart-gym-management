@@ -8,10 +8,12 @@ import toast from 'react-hot-toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import { useSuperadminPlansStore } from '@/app/superadmin/plans/plans_store/useSuperadminPlansStore';
+import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
 
 export default function SuperadminPlansList() {
   const openEditModal = useSuperadminPlansStore(state => state.openEditModal);
   const queryClient = useQueryClient();
+  const { confirm } = useSuperadminConfirm();
 
   const { data: fetchRes, isLoading, isError } = useQuery({
     queryKey: ['superadmin', 'plans'],
@@ -93,8 +95,14 @@ export default function SuperadminPlansList() {
                 <Edit2 size={18} />
               </button>
               <button
-                onClick={() => {
-                  if (window.confirm(`Are you sure you want to delete the plan "${plan.name}"? This action cannot be undone.`)) {
+                onClick={async () => {
+                  const ok = await confirm({
+                    title: 'Delete Plan',
+                    message: `Are you sure you want to delete the plan "${plan.name}"? This action cannot be undone.`,
+                    type: 'danger',
+                    confirmText: 'Delete'
+                  });
+                  if (ok) {
                     deleteMutation.mutate(plan.id);
                   }
                 }}

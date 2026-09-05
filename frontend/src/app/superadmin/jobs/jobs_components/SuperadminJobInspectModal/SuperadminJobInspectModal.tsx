@@ -34,7 +34,7 @@ export default function SuperadminJobInspectModal({ job, onClose }: SuperadminJo
       role="dialog"
       aria-modal="true"
       aria-label={`Inspect job ${job.id}`}
-      className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm motion-safe:animate-in motion-safe:fade-in"
+      className="fixed inset-0 bg-black/60 z-40 flex items-center justify-center p-4 backdrop-blur-sm motion-safe:animate-in motion-safe:fade-in"
     >
       <div className="bg-card border border-border rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         {/* Modal Header */}
