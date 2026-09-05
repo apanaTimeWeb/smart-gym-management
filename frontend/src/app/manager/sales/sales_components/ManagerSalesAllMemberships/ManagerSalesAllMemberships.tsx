@@ -36,6 +36,15 @@ export default function ManagerSalesAllMemberships() {
     );
   }
 
+  if (fetchState === 'error') {
+    return (
+      <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
+        <p className="text-danger font-medium">Failed to load memberships.</p>
+        <p className="text-sm mt-1 text-secondary">Please check your connection and try again.</p>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="flex flex-wrap gap-2 mb-4">

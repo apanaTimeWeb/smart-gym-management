@@ -14,10 +14,13 @@ export default async function SalesPage() {
       ssrSalesApi.getPendingPayments(params),
       ssrSalesApi.getAllMemberships(params)
     ]);
+    console.log('[DEBUG SSR] overviewRes:', overviewRes.data);
+    console.log('[DEBUG SSR] reportRes:', reportRes.data);
+    
     initialData = {
-      overviewData: overviewRes.data?.monthlyRevenue || [],
-      membershipReport: reportRes.data?.report || [],
-      membershipTotals: reportRes.data?.totals || {},
+      overviewData: Array.isArray(overviewRes.data) ? overviewRes.data : overviewRes.data?.monthlyRevenue || [],
+      membershipReport: Array.isArray(reportRes.data) ? reportRes.data : (reportRes.data?.report || []),
+      membershipTotals: reportRes.data?.totals || { activeCount: 0, revenue: 0, totalReceivable: 0, totalReceived: 0, remaining: 0, refunds: 0 },
       pendingPayments: pendingRes.data?.members || [],
       pendingTotal: pendingRes.data?.total || 0,
       allMemberships: allRes.data?.members || [],

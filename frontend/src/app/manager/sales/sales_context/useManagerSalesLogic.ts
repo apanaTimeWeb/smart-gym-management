@@ -78,8 +78,8 @@ export function useManagerSalesLogic(initialData?: SalesInitialData | null): Sal
       ]);
 
       setOverviewData(Array.isArray(overviewRes.data) ? overviewRes.data : overviewRes.data?.monthlyRevenue || []);
-      setMembershipReport(reportRes.data?.report || []);
-      setMembershipTotals(reportRes.data?.totals || { activeCount: 0, revenue: 0 });
+      setMembershipReport(Array.isArray(reportRes.data) ? reportRes.data : (reportRes.data?.report || []));
+      setMembershipTotals(reportRes.data?.totals || { activeCount: 0, revenue: 0, totalReceivable: 0, totalReceived: 0, remaining: 0, refunds: 0 });
       
       setPendingPayments((pendingRes.data?.members || []) as PendingPaymentMember[]);  // cast: backend returns generic member shape
       setPendingTotal(pendingRes.data?.total || 0);
