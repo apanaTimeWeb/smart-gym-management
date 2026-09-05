@@ -59,6 +59,15 @@ export default function ManagerInquiriesTable() {
     );
   }
 
+  if (fetchState === FetchState.ERROR) {
+    return (
+      <div className="bg-card rounded-xl shadow-sm border border-danger/30 overflow-hidden flex flex-col h-full min-h-96 justify-center items-center py-16 text-center">
+        <p className="text-danger font-medium">Failed to load inquiries.</p>
+        <p className="text-sm mt-1 text-secondary">Please check your connection and try again.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden flex flex-col h-full min-h-96">
       <div className="overflow-x-auto">

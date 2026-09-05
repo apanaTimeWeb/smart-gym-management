@@ -204,7 +204,17 @@ export async function routeMockRequest<T>(
       const filtered = existing.filter((r: any) => !r.name?.includes('Lead 1') && !r.name?.includes('Lead 2') && r.source !== 'Instagram');
       MockDB.setCollection('mock_inquiries', filtered);
     }
-    return MockDB.handleCrud('mock_inquiries', actualMethod, path, parsedBody, [], 'inquiries') as unknown as ApiResponse<T>;
+    const defaultInquiries = [
+      { id: 'inq-1', name: 'Ravi Kumar', phone: '+91 9876543210', email: 'ravi@example.com', status: 'PENDING', source: 'Instagram', interest: 'Weight Loss', createdAt: new Date().toISOString() },
+      { id: 'inq-2', name: 'Sneha Patel', phone: '+91 9876543211', email: 'sneha@example.com', status: 'FOLLOW_UP', source: 'Walk-in', interest: 'Personal Training', createdAt: new Date(Date.now() - 86400000).toISOString() },
+      { id: 'inq-3', name: 'Amit Singh', phone: '+91 9876543212', email: 'amit@example.com', status: 'RESOLVED', source: 'Website', interest: 'General Fitness', createdAt: new Date(Date.now() - 172800000).toISOString() }
+    ];
+    
+    if (existing.length === 0) {
+      MockDB.setCollection('mock_inquiries', defaultInquiries);
+    }
+    
+    return MockDB.handleCrud('mock_inquiries', actualMethod, path, parsedBody, defaultInquiries, 'inquiries') as unknown as ApiResponse<T>;
   }
   if (path.includes('/expenses/stats')) {
     const expenses = MockDB.getCollection('mock_admin_expenses', []);
