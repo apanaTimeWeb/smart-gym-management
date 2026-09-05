@@ -4,11 +4,13 @@
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
 import { STAFF_TABLE_HEADERS } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
 import { Edit2, Trash2, CheckCircle2, Ban, PlayCircle } from 'lucide-react';
+import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/AdminConfirmProvider';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_utils/AdminSharedConstants';
 
 export default function AdminHrStaffTable() {
   const { staff, summary, fetchState, debouncedSearch, branchFilter, roleFilter, currentPage, setCurrentPage, openEdit, deleteStaff, toggleStaffStatus } = useHrContext();
+  const { confirm } = useAdminConfirm();
 
   const filteredStaff = staff.filter(s => 
     (roleFilter === 'All' || (s.role || '').toLowerCase().includes(roleFilter.toLowerCase())) &&
@@ -125,9 +127,15 @@ export default function AdminHrStaffTable() {
                       <Edit2 size={16} />
                     </button>
                     <button 
-                      onClick={(e) => { 
+                      onClick={async (e) => { 
                         e.stopPropagation(); 
-                        if (window.confirm(`Are you sure you want to delete staff member "${s.name}"? This action cannot be undone.`)) {
+                        const ok = await confirm({
+                          title: 'Delete Staff Member',
+                          message: `Are you sure you want to delete staff member "${s.name}"? This action cannot be undone.`,
+                          type: 'danger',
+                          confirmText: 'Delete'
+                        });
+                        if (ok) {
                           deleteStaff(s.id); 
                         }
                       }}

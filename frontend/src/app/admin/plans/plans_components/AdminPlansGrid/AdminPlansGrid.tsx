@@ -2,6 +2,7 @@
 'use client';
 
 import { Edit2, Trash2, Tag, CheckCircle, Loader2 } from 'lucide-react';
+import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/AdminConfirmProvider';
 import { useAdminPlansLogic } from '@/app/admin/plans/plans_context/useAdminPlansLogic';
 import { useAdminPlansStore } from '@/app/admin/plans/plans_store/useAdminPlansStore';
 import { formatCurrency } from '@/app/admin/plans/plans_utils/AdminPlansSharedConstants';
@@ -12,6 +13,7 @@ import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_utils/AdminSharedConstan
 export default function AdminPlansGrid() {
   const { plans, fetchState, saving, search, setSearch, currentPage, setCurrentPage, loadPlans, openAdd, openEdit, savePlan, deletePlan } = useAdminPlansLogic();
   const { showModal, setShowModal, editId, form, setForm, toast, showToast, hideToast } = useAdminPlansStore();
+  const { confirm } = useAdminConfirm();
 
   // Client-side filter on the already-fetched plans list (plans count is typically small, <100)
   const filtered = plans.filter(p => p.name.toLowerCase().includes(search.toLowerCase()));
@@ -78,9 +80,15 @@ export default function AdminPlansGrid() {
                     <Edit2 size={16} />
                   </button>
                   <button
-                  onClick={(e) => {
+                  onClick={async (e) => {
                     e.stopPropagation();
-                    if (window.confirm(`Are you sure you want to delete plan "${p.name}"?`)) {
+                    const ok = await confirm({
+                      title: 'Delete Plan',
+                      message: `Are you sure you want to delete plan "${p.name}"?`,
+                      type: 'danger',
+                      confirmText: 'Delete'
+                    });
+                    if (ok) {
                       deletePlan(p.id);
                     }
                   }}

@@ -1,6 +1,7 @@
 // RESPONSIBILITY: Core UI component/route for the admin module orchestrating views and displaying sub-components.
 import { NotificationItem } from '@/app/admin/notifications/notifications_utils/useAdminNotificationsPage';
 import { X, Bell } from 'lucide-react';
+import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/AdminConfirmProvider';
 
 interface NotificationsListProps {
   notifications: NotificationItem[];
@@ -9,6 +10,8 @@ interface NotificationsListProps {
 }
 
 export default function AdminNotificationsList({ notifications, onMarkAsRead, onDelete }: NotificationsListProps) {
+  const { confirm } = useAdminConfirm();
+
   if (notifications.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center p-12 text-center">
@@ -37,8 +40,14 @@ export default function AdminNotificationsList({ notifications, onMarkAsRead, on
             </div>
           </div>
           <button 
-            onClick={() => {
-              if (window.confirm("Delete this notification?")) {
+            onClick={async () => {
+              const ok = await confirm({
+                title: 'Delete Notification',
+                message: 'Delete this notification?',
+                type: 'danger',
+                confirmText: 'Delete'
+              });
+              if (ok) {
                 onDelete(n.id);
               }
             }}
@@ -52,4 +61,3 @@ export default function AdminNotificationsList({ notifications, onMarkAsRead, on
     </div>
   );
 }
-

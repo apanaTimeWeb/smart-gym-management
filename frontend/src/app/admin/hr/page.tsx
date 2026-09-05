@@ -18,7 +18,7 @@ export default async function HrPage() {
       summary: summaryRes.data || null
     };
   } catch {
-    // console.error('Failed to fetch hr initial data:', e);
+    // SSR data fetch failed gracefully — client-side hook will re-fetch
   }
 
   return <AdminHrMain initialData={initialData} />;
