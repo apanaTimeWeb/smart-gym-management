@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Provides UI orchestration state to the members module hierarchy. Async data is in Zustand.
 // DATA FLOW: useMembersLogic -> MembersContext -> Members components
 'use client';
@@ -27,3 +29,4 @@ export function useMembersContext() {
   }
   return context;
 }
+

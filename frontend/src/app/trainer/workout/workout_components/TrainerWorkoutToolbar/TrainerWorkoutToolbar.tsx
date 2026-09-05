@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the search input, muscle group filter, and Add Plan CTA for the Workout Library.
 'use client';
 
@@ -65,3 +67,4 @@ export default function TrainerWorkoutToolbar() {
  </div>
  );
 }
+

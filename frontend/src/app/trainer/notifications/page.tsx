@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 import type { Metadata } from "next";
 export const metadata: Metadata = { title: "Notifications | Trainer � GymSmart", description: "Trainer notifications." };
 export default function TrainerNotificationsPage() {
@@ -8,3 +10,4 @@ export default function TrainerNotificationsPage() {
     </div>
   );
 }
+

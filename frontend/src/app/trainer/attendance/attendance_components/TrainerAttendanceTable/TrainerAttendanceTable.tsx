@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the attendance data table and pagination controls.
 'use client';
 
@@ -95,3 +97,4 @@ export default function TrainerAttendanceTable() {
   </div>
   );
 }
+

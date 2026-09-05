@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Centralized constants shared across all TRAINER modules — nav items, placeholder notifications, gym identity (name/phone), sensitive data masking utility, and pagination page size.
 import {
   LayoutDashboard, Users, Utensils, Dumbbell, CalendarCheck
@@ -26,3 +28,4 @@ export const GYM_DETAILS = {
 
 
 export const TRAINER_ITEMS_PER_PAGE = 10;
+

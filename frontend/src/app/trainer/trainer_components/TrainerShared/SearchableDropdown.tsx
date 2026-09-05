@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders a custom searchable popover dropdown for large datasets (Rule 20). Replaces native <select> for all gyms/plans/user selectors.
 'use client';
 
@@ -106,3 +108,4 @@ export const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
     </div>
   );
 };
+

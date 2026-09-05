@@ -1,6 +1,9 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Defines all TypeScript types, interfaces, and the FetchState enum for the Workout Library module.
 import { EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM } from '@/app/trainer/workout/workout_utils/WorkoutSharedConstants';
 import React from 'react';
+import type { FetchState } from '@/app/trainer/trainer_types/trainer_types';
 
 import type { Exercise, Workout } from '@/app/trainer/trainer_types/trainer_types';
 import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
@@ -18,7 +21,7 @@ export interface WorkoutContextType {
  exercises: Exercise[];
  totalExercises: number;
  
- loading: boolean;
+ fetchState: FetchState;
  saving: boolean;
  toast: { message: string; type: ToastType } | null;
  showToast: (msg: string, type: ToastType) => void;
@@ -47,5 +50,6 @@ export interface WorkoutContextType {
  saveEx: (data: typeof EMPTY_EXERCISE_FORM) => void;
  deleteEx: (id: string) => void;
 }
+
 
 

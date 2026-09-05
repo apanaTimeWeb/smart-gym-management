@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Provides isolated data fetching methods for the members module.
 import { apiFetch, ApiResponse } from '@/lib/api';
 import { MembersUrlConfig } from '@/app/trainer/members/members_url_config';
@@ -18,3 +20,4 @@ export const membersApi = {
   renew: (id: string, body: unknown) =>
     apiFetch<ApiResponse<Member>>(MembersUrlConfig.BACKEND_API.RENEW(id), { method: 'POST', body: JSON.stringify(body) }),
 };
+

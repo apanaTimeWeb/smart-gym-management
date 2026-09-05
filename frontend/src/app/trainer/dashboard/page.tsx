@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Server Component that fetches initial SSR data for the dashboard layout.
 import TrainerDashboardMain from '@/app/trainer/dashboard/dashboard_components/TrainerDashboardMain/TrainerDashboardMain';
 import { cookies } from 'next/headers';
@@ -31,3 +33,4 @@ export default async function DashboardPage() {
  const initialData = await getDashboardData();
  return <TrainerDashboardMain initialData={initialData} />;
 }
+

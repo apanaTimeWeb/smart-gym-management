@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the empty state for the dashboard recent members list.
 import { Users } from 'lucide-react';
 
@@ -11,3 +13,4 @@ export default function TrainerDashboardEmptyState({ type = 'members' }: { type?
     </div>
   );
 }
+

@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Contains logic, types, or component definition for this module.
 'use client';
 
@@ -45,15 +47,13 @@ export default function TrainerMembersProfileOverview() {
  <div className="flex flex-col gap-2">
  <button 
  onClick={() => openMsg(selectedMember, 'whatsapp')} 
- className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white rounded-xl justify-center motion-safe:transition-opacity hover:opacity-90" 
- style={{ backgroundColor: '#25D366' }}
+ className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white rounded-xl justify-center motion-safe:transition-colors bg-green-500 hover:bg-green-600" 
  >
  <MessageCircle size={14} /> Send WhatsApp
  </button>
  <button 
  onClick={() => openMsg(selectedMember, 'email')} 
- className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white rounded-xl justify-center motion-safe:transition-opacity hover:opacity-90" 
- style={{ backgroundColor: '#3B82F6' }}
+ className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white rounded-xl justify-center motion-safe:transition-colors bg-blue-500 hover:bg-blue-600" 
  >
  <Mail size={14} /> Send Email
  </button>
@@ -62,3 +62,4 @@ export default function TrainerMembersProfileOverview() {
  </div>
  );
 }
+

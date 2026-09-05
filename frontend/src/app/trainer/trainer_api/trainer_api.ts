@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Shared API methods for the Trainer module (Rule 63).
 import { apiFetch } from '@/lib/api';
 
@@ -11,3 +13,4 @@ export const trainerSharedApi = {
     return apiFetch(`/api/trainer/library/exercises${query}`);
   }
 };
+

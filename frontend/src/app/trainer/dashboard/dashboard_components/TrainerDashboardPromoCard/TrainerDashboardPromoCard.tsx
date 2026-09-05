@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders a promotional or informational card for the gym on the dashboard.
 'use client';
 
@@ -12,3 +14,4 @@ export default function TrainerDashboardPromoCard() {
  </div>
  );
 }
+

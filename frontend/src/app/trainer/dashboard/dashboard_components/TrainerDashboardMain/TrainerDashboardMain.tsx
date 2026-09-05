@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Main entry point for the dashboard module. Renders layout, handles high-level loading/error states, and sets up Context.
 'use client';
 
@@ -108,3 +110,4 @@ export default function TrainerDashboardMain({ initialData }: { initialData?: Da
     </DashboardProvider>
   );
 }
+

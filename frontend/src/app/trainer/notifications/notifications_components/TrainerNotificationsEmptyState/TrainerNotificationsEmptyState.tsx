@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the empty state for notifications list.
 import { BellOff } from 'lucide-react';
 
@@ -14,3 +16,4 @@ export default function TrainerNotificationsEmptyState() {
     </div>
   );
 }
+

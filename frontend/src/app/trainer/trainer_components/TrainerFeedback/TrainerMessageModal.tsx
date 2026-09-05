@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the send-message modal (WhatsApp/Email) for communicating with a member. Shared across the Members and Finance modules.
 'use client';
 
@@ -24,8 +26,8 @@ interface TrainerMessageModalProps {
  onSuccess?: (msg: string) => void;
 }
 
-const WA_GREEN = '#25D366';
-const EMAIL_BLUE = 'var(--info)';
+const WA_GREEN = 'bg-green-500';
+const EMAIL_BLUE = 'bg-blue-500';
 
 export default function TrainerMessageModal({
  isOpen,
@@ -86,10 +88,7 @@ export default function TrainerMessageModal({
  className="bg-card rounded-2xl shadow-2xl w-full max-w-lg relative overflow-hidden border border-border"
  style={{ animation: 'fadeScaleIn 0.2s ease' }}
  >
- <div
- className="px-6 py-4 flex items-center justify-between"
- style={{ background: type === 'whatsapp' ? WA_GREEN : 'var(--info)' }}
- >
+ <div className={`px-6 py-4 flex items-center justify-between ${type === 'whatsapp' ? WA_GREEN : EMAIL_BLUE}`}>
  <div className="flex flex-wrap items-center gap-3">
  <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center">
  <Icon size={18} color="white" />
@@ -204,3 +203,4 @@ export default function TrainerMessageModal({
  </div>
  );
 }
+

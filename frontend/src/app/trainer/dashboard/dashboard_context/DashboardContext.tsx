@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Provides dashboard stats and fetch state to the entire dashboard module hierarchy via React Context.
 'use client';
 
@@ -31,3 +33,4 @@ export function useDashboardContext() {
   }
   return context;
 }
+

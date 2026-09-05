@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the error boundary for the Notifications module.
 'use client';
 
@@ -34,3 +36,4 @@ export default function NotificationsError({
     </div>
   );
 }
+

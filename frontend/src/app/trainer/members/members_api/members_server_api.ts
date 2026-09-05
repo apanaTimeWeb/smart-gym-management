@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Server-side API fetching for the members module.
 import { ssrApiFetch } from '@/lib/server-api';
 import type { ApiResponse } from '@/lib/api';
@@ -10,3 +12,4 @@ export const ssrMembersApi = {
   },
   fetchMemberStats: () => ssrApiFetch<ApiResponse<unknown>>(MembersUrlConfig.BACKEND_API.STATS),
 };
+

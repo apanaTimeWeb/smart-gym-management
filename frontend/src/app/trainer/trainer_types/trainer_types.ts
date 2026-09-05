@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Shared TypeScript types for the Trainer module.
 // Extracted to strictly enforce Module Boundary Isolation (Rule 63).
 
@@ -45,3 +47,4 @@ export interface Workout {
 }
 
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';
+

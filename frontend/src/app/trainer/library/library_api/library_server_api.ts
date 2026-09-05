@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Server-side API fetching for the library module.
 import { ssrApiFetch } from '@/lib/server-api';
 import type { ApiResponse } from '@/lib/api';
@@ -8,3 +10,4 @@ export const ssrLibraryApi = {
   getExercises: () => ssrApiFetch<ApiResponse<{ exercises: Exercise[]; total: number }>>(LibraryUrlConfig.BACKEND_API.EXERCISES_BASE),
   getDietPlans: () => ssrApiFetch<ApiResponse<{ dietPlans: DietPlan[]; total: number }>>(LibraryUrlConfig.BACKEND_API.DIET_PLANS_BASE),
 };
+

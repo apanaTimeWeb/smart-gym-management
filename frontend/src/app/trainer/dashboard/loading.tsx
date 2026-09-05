@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the skeleton loading fallback for the dashboard layout.
 export default function DashboardLoading() {
   return (
@@ -33,3 +35,4 @@ export default function DashboardLoading() {
     </div>
   );
 }
+

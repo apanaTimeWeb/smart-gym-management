@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Custom hook managing the asynchronous fetching of dashboard statistics.
 // DATA FLOW: page.tsx (SSR) → TrainerDashboardMain → useDashboardLogic → DashboardContext → KPI/Chart components
 'use client';
@@ -50,3 +52,4 @@ export function useDashboardLogic(initialData?: DashboardStats | null): Dashboar
     setCustomDateRange
   };
 }
+

@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Prevents accidental navigation if unsaved changes exist (Rule 46).
 import { useEffect } from 'react';
 
@@ -13,3 +15,4 @@ export function useWarnIfUnsavedChanges(isDirty: boolean) {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [isDirty]);
 }
+

@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the recent members table on the dashboard with a local search filter.
 'use client';
 
@@ -102,3 +104,4 @@ export default function TrainerDashboardRecentMembers() {
     </div>
   );
 }
+

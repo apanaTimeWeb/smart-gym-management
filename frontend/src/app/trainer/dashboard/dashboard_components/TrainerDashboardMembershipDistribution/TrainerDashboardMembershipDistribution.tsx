@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the distribution of members by plan on the dashboard.
 'use client';
 
@@ -43,3 +45,4 @@ export default function TrainerDashboardMembershipDistribution() {
  </div>
  );
 }
+

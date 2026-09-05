@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the fixed top navigation bar — page title, global search, theme toggle, notifications dropdown, and user profile dropdown. No API calls.
 'use client';
 
@@ -151,3 +153,4 @@ export default function TrainerHeader({ title, subtitle }: TrainerHeaderProps) {
     </header>
   );
 }
+

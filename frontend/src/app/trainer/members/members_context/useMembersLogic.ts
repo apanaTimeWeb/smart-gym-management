@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Custom hook encapsulating UI state and orchestrating actions for the members module. Async state is in useMembersStore.
 // DATA FLOW: UI Interactions -> useMembersLogic -> useMembersStore -> API
 import React, { useState, useCallback, useEffect } from 'react';
@@ -138,3 +140,4 @@ export function useMembersLogic(initialData?: any | null): MembersContextType {
     msgModal, openMsg, closeMsg
   };
 }
+

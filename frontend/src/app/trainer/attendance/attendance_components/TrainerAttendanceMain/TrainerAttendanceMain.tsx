@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Entry component for the Attendance module that wraps the UI in the context provider and handles the core page layout.
 'use client';
 
@@ -41,3 +43,4 @@ export default function TrainerAttendanceMain() {
  </AttendanceProvider>
  );
 }
+

@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the collapsible left navigation sidebar with nav items, user identity footer, and mobile drawer. No API calls.
 'use client';
 
@@ -116,3 +118,4 @@ export default function TrainerSidebar({ isCollapsed, setIsCollapsed }: TrainerS
     </>
   );
 }
+

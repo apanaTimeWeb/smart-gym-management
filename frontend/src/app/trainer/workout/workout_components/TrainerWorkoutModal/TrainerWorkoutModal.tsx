@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Form modal for creating or editing a workout plan in the Workout Library module.
 'use client';
 
@@ -167,3 +169,4 @@ export default function TrainerWorkoutModal() {
     </div>
   );
 }
+

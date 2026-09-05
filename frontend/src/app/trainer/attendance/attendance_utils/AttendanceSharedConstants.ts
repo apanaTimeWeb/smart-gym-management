@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Centralized constants, schema, and shared utilities for the Attendance module.
 import { z } from 'zod';
 
@@ -46,3 +48,4 @@ export const EMPTY_ATTENDANCE_FORM: AttendanceFormValues = {
  date: new Date().toISOString().split('T')[0], 
  checkIn: '06:00' 
 };
+

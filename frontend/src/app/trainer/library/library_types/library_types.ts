@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Defines all TypeScript types, interfaces, and the FetchState enum for the Diet Library module.
 import type { } from '@/lib/api';
 import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
@@ -10,13 +12,15 @@ export interface LibraryInitialData {
   dietPlans: DietPlan[];
 }
 
+import type { FetchState } from '@/app/trainer/trainer_types/trainer_types';
+
 export interface LibraryContextType {
  tab: LibraryTab;
  setTab: (t: LibraryTab) => void;
  
  exercises: Exercise[];
  dietPlans: DietPlan[];
- loading: boolean;
+ fetchState: FetchState;
  saving: boolean;
   toast: { message: string; type: ToastType } | null;
   
@@ -51,6 +55,7 @@ export interface LibraryContextType {
  saveDietPlan: (data: Record<string, any>) => Promise<void>;
  deleteDietPlan: (id: string) => Promise<void>;
 }
+
 
 
 

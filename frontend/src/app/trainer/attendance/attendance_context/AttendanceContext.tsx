@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Provides UI orchestration state to the attendance module hierarchy. Async data is managed in useAttendanceLogic.
 'use client';
 
@@ -39,3 +41,4 @@ export function useAttendanceContext() {
  }
  return context;
 }
+

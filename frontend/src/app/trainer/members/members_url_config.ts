@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Single source of truth for all URLs used by the Members module.
 // Both page routes (for navigation) and backend API endpoints are defined here.
 // No file in the Members module should ever hardcode a URL string — always import from here.
@@ -15,4 +17,5 @@ export const MembersUrlConfig = {
     DELETE: (id: string) => `/trainer/members/${id}`,
   }
 };
+
 

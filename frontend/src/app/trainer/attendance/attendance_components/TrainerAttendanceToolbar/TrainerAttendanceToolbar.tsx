@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Provides the search, filter tabs, and action buttons for the Attendance module.
 'use client';
 
@@ -67,3 +69,4 @@ export default function TrainerAttendanceToolbar() {
  </div>
  );
 }
+

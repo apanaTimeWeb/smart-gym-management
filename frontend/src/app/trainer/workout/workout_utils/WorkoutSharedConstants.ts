@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Centralized constants, schema, and shared utilities for the Workout Library module.
 import { z } from 'zod';
 import type { Exercise } from '@/app/trainer/trainer_types/trainer_types';
@@ -69,4 +71,5 @@ export const EMPTY_EXERCISE_FORM: ExerciseFormValues = {
   equipment: 'Barbell', 
   difficulty: 'Beginner' 
 };
+
 

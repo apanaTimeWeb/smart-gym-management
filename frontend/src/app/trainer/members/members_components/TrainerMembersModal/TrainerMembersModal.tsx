@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders a modal for creating or editing a member.
 'use client';
 
@@ -144,3 +146,4 @@ export default function TrainerMembersModal() {
     </div>
   );
 }
+

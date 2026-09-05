@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the diet plan cards grid with macronutrient info and action buttons.
 'use client';
 
@@ -7,7 +9,7 @@ import { Apple, Edit2, Trash2, Flame, Loader2 } from 'lucide-react';
 import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerSharedConstants';
 
 export default function TrainerLibraryDietGrid() {
-  const { dietPlans, loading, debouncedSearch, currentPage, setCurrentPage, openEditDiet, deleteDietPlan } = useLibraryContext();
+  const { dietPlans, fetchState, debouncedSearch, currentPage, setCurrentPage, openEditDiet, deleteDietPlan } = useLibraryContext();
 
   const filtered = dietPlans.filter(d => {
     const s = debouncedSearch.toLowerCase();
@@ -18,7 +20,7 @@ export default function TrainerLibraryDietGrid() {
   const totalPages = Math.ceil(filtered.length / TRAINER_ITEMS_PER_PAGE);
   const currentData = filtered.slice((currentPage - 1) * TRAINER_ITEMS_PER_PAGE, currentPage * TRAINER_ITEMS_PER_PAGE);
 
-  if (loading) {
+  if (fetchState === 'loading') {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 flex-1">
         {[...Array(6)].map((_, i) => (
@@ -113,3 +115,4 @@ export default function TrainerLibraryDietGrid() {
     </div>
   );
 }
+

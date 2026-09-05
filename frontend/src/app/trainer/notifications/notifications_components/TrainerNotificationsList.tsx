@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 import { NotificationItem } from '@/app/trainer/notifications/notifications_utils/useNotificationsPage';
 import { X, Bell } from 'lucide-react';
 import TrainerNotificationsEmptyState from '@/app/trainer/notifications/notifications_components/TrainerNotificationsEmptyState/TrainerNotificationsEmptyState';
@@ -44,3 +46,4 @@ export default function TrainerNotificationsList({ notifications, onMarkAsRead, 
     </div>
   );
 }
+

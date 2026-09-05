@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Next.js loading.tsx � renders skeleton loader fallback while Diet Library module data loads.
 import { TableSkeleton } from '@/app/trainer/trainer_components/TrainerShared/TableSkeleton';
 export default function Loading() {
@@ -8,3 +10,4 @@ export default function Loading() {
  </div>
  );
 }
+

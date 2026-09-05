@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the primary tabular list of members with actions, filtering state, and pagination.
 'use client';
 
@@ -108,3 +110,4 @@ export default function TrainerMembersTable() {
     </div>
  );
 }
+

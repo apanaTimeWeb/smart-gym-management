@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 'use client';
 // RESPONSIBILITY: Orchestrates the notifications list and actions (mark all read, clear all).
 import { useNotificationsPage } from '@/app/trainer/notifications/notifications_utils/useNotificationsPage';
@@ -49,3 +51,4 @@ export default function TrainerNotificationsClient() {
     </div>
   );
 }
+

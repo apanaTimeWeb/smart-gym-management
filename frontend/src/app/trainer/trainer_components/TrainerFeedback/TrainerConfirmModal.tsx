@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the reusable confirmation/destructive action modal used across all TRAINER modules. Receives config via TrainerConfirmProvider. No API calls.
 'use client';
 
@@ -72,3 +74,4 @@ export default function TrainerConfirmModal({
     </div>
   );
 }
+

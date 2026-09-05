@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the exercise cards grid with category and muscle group info in the Diet Library.
 'use client';
 
@@ -8,7 +10,7 @@ import TrainerPagination from '@/app/trainer/trainer_components/TrainerShared/Tr
 import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerSharedConstants';
 
 export default function TrainerLibraryExerciseGrid() {
-  const { exercises, loading, debouncedSearch, currentPage, setCurrentPage, openEditEx, deleteExercise } = useLibraryContext();
+  const { exercises, fetchState, debouncedSearch, currentPage, setCurrentPage, openEditEx, deleteExercise } = useLibraryContext();
 
   const filtered = exercises.filter(e => {
     const s = debouncedSearch.toLowerCase();
@@ -18,7 +20,7 @@ export default function TrainerLibraryExerciseGrid() {
   const totalPages = Math.ceil(filtered.length / TRAINER_ITEMS_PER_PAGE);
   const currentData = filtered.slice((currentPage - 1) * TRAINER_ITEMS_PER_PAGE, currentPage * TRAINER_ITEMS_PER_PAGE);
 
-  if (loading) {
+  if (fetchState === 'loading') {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 flex-1">
         {[...Array(6)].map((_, i) => (
@@ -115,3 +117,4 @@ export default function TrainerLibraryExerciseGrid() {
     </div>
   );
 }
+

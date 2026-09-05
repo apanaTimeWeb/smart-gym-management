@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the tabbed view switching between Diet Plans and Exercises in the Diet Library.
 'use client';
 
@@ -61,3 +63,4 @@ export default function TrainerLibraryTabs() {
  </div>
  );
 }
+

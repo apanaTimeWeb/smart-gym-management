@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the top KPI stat cards (total check-ins, member check-ins, staff check-ins) for the Attendance module.
 'use client';
 
@@ -28,3 +30,4 @@ export default function TrainerAttendanceKPIs() {
  </div>
  );
 }
+

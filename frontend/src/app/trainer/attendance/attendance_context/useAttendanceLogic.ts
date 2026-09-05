@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Central logic hook for the Attendance module. Manages state, API interactions, and URL synchronization.
 // DATA FLOW: UI Components -> useAttendanceLogic (State + URL) -> API (Backend)
 import { useState, useCallback, useEffect } from 'react';
@@ -111,3 +113,4 @@ export function useAttendanceLogic(): AttendanceContextType {
     loadAll, markAttendance
   };
 }
+

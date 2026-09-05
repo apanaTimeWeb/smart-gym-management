@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders a bulk messaging modal for sending WhatsApp or Email messages to multiple recipients. Manages per-recipient send tracking for WhatsApp queue mode.
 'use client';
 
@@ -5,9 +7,8 @@ import { useState, useEffect } from 'react';
 import { X, Send, MessageCircle, Mail, CheckCircle, Phone, AtSign, Users } from 'lucide-react';
 import type { MessageType, TrainerMessageRecipient } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerMessageModal';
 
-// WhatsApp brand green — cannot be a CSS variable as it is a third-party brand color, not a design system token.
-// Defined here as a constant so it is changed in exactly one place if the brand color ever updates.
-const WA_GREEN = '#25D366';
+const WA_GREEN = 'bg-green-500';
+const EMAIL_BLUE = 'bg-blue-500';
 
 interface TrainerBulkMessageModalProps {
   open?: boolean;
@@ -44,9 +45,7 @@ export default function TrainerBulkMessageModal({
 
   if (!open) return null;
 
-  // accentColor is dynamic (WhatsApp brand green vs CSS variable info blue) — inline style is acceptable here
-  // because it is a runtime-computed value, not a hardcoded design system color.
-  const accentColor = type === 'whatsapp' ? WA_GREEN : 'var(--info)';
+  const accentColor = type === 'whatsapp' ? WA_GREEN : EMAIL_BLUE;
   const Icon = type === 'whatsapp' ? MessageCircle : Mail;
   const label = type === 'whatsapp' ? 'WhatsApp' : 'Email';
 
@@ -84,10 +83,7 @@ export default function TrainerBulkMessageModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
       <div className="bg-card rounded-2xl shadow-2xl w-full max-w-2xl relative overflow-hidden border border-border max-h-full flex flex-col motion-safe:animate-in zoom-in-95 motion-safe:duration-200">
-        <div
-          className="px-6 py-4 flex items-center justify-between shrink-0"
-          style={{ background: accentColor }}
-        >
+        <div className={`px-6 py-4 flex items-center justify-between shrink-0 ${accentColor}`}>
           <div className="flex flex-wrap items-center gap-3">
             <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center">
               <Icon size={18} color="white" />
@@ -236,3 +232,4 @@ export default function TrainerBulkMessageModal({
     </div>
   );
 }
+

@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 import { attendanceApi } from '@/app/trainer/attendance/attendance_api/attendance_api';
 /**
  * RESPONSIBILITY: Zustand store that manages all async data for the Members module.
@@ -136,3 +138,4 @@ export const useMembersStore = create<MembersState>((set, get) => ({
     }
   }
 }));
+

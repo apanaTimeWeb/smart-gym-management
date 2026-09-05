@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Contains logic, types, or component definition for this module.
 'use client';
 
@@ -53,4 +55,5 @@ export default function TrainerMembersProfileAttendance() {
  </div>
  );
 }
+
 

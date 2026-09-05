@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Generic debounce hook shared across all TRAINER modules.
 // Prevents excessive API calls by delaying a value update until the user stops typing.
 // Use this for all search inputs and filter inputs that trigger backend calls (Rule 15).
@@ -26,3 +28,4 @@ export function useDebounce<T>(value: T, delay: number = 300): T {
 
   return debouncedValue;
 }
+

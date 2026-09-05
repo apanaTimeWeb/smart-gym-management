@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the top banner/hero section with module title and CTA for the Workout Library.
 'use client';
 
@@ -21,3 +23,4 @@ export default function TrainerWorkoutBanner() {
  </div>
  );
 }
+

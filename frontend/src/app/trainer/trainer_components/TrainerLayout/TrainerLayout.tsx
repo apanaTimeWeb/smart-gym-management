@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Root shell layout for all TRAINER pages. Composes TrainerSidebar with the main content area. Manages sidebar collapsed state only.
 'use client';
 
@@ -16,3 +18,4 @@ export default function TrainerLayout({ children }: { children: React.ReactNode 
  </div>
  );
 }
+
