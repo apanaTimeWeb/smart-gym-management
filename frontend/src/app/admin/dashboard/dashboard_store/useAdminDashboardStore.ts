@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { TimeRange } from '../dashboard_types/dashboard_types';
+import type { TimeRange } from '@/app/admin/dashboard/dashboard_types/dashboard_types';
 
 interface AdminDashboardStore {
   timeRange: TimeRange;

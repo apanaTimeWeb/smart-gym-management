@@ -16,7 +16,7 @@ import type { SalesInitialData } from '@/app/admin/sales/sales_types/sales_types
 
 export default function AdminSalesMain({ initialData }: { initialData?: SalesInitialData | null }) {
   const { tab } = useAdminSalesLogic(initialData);
-  const { toast, showToast } = useAdminSalesStore();
+  const { toast, hideToast } = useAdminSalesStore();
 
   return (
     <div className="min-h-full pb-10 bg-background text-foreground">
@@ -37,7 +37,7 @@ export default function AdminSalesMain({ initialData }: { initialData?: SalesIni
         </div>
       </div>
       
-      {toast && <AdminToast message={toast.message} type={toast.type as any} onClose={() => showToast('', toast.type as any)} />}
+      {toast && <AdminToast message={toast.message} type={toast.type} onClose={hideToast} />}
     </div>
   );
 }
