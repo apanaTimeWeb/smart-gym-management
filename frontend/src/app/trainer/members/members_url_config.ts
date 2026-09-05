@@ -4,7 +4,7 @@
 export const MembersUrlConfig = {
   PAGES: {
     LIST: '/trainer/members',
-    ADD: '/trainer/members/add',
+    ADD: '/trainer/members',
   },
   BACKEND_API: {
     BASE: '/trainer/members',

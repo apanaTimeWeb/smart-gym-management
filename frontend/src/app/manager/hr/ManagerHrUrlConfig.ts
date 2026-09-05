@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Single source of truth for all backend API endpoints used by the HR module.
 export const HrUrlConfig = {
   PAGES: {
-    STAFF_LIST: '/manager/hr/staff',
-    PAYROLL: '/manager/hr/payroll',
+    STAFF_LIST: '/manager/hr',
+    PAYROLL: '/manager/hr',
   },
   BACKEND_API: {
     STAFF_BASE: '/manager/hr/staff',
