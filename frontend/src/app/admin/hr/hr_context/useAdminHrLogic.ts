@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Core data logic hook for the admin module.
+// DATA FLOW: Centralized store/hook logic mapping API mutations and query state to UI props.
 import React, { useState, useCallback, useEffect } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import type { Staff, Payroll, HrSummary, HrContextType, HrInitialData } from '@/app/admin/hr/hr_types/AdminHrTypes';
@@ -138,3 +140,4 @@ export function useAdminHrLogic(initialData?: HrInitialData | null): HrContextTy
     openAdd, openEdit, openAddPayroll, saveStaff, savePayroll, deleteStaff, toggleStaffStatus, markPayrollPaid, payrollMonth, setPayrollMonth
   };
 }
+

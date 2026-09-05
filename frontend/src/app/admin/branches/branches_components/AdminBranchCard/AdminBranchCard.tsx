@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Core UI component/route for the admin module orchestrating views and displaying sub-components.
 "use client";
 import { Building2, TrendingUp, TrendingDown, Users, Activity, ChevronRight } from "lucide-react";
 import { useAdminBranchesLogic } from "@/app/admin/branches/branches_context/useAdminBranchesLogic";
@@ -47,4 +48,5 @@ export default function AdminBranchCard() {
     </div>
   );
 }
+
 

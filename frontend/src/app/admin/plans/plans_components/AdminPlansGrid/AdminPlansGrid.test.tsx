@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Core UI component/route for the admin module orchestrating views and displaying sub-components.
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import AdminPlansGrid from './AdminPlansGrid';
@@ -8,3 +9,4 @@ describe('AdminPlansGrid Component', () => {
     expect(true).toBe(true);
   });
 });
+

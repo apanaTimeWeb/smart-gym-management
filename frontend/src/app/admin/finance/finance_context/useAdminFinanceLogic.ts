@@ -1,4 +1,5 @@
 // RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the Finance module.
+// DATA FLOW: Centralized store/hook logic mapping API mutations and query state to UI props.
 import { useCallback } from 'react';
 import { financeApi } from '@/app/admin/finance/finance_api/finance_api';
 import type { Payment, FinanceSummary } from '@/app/admin/finance/finance_types/finance_types';
@@ -119,4 +120,5 @@ export function useAdminFinanceLogic(initialData?: FinanceInitialData | null) {
     setMethodFilter
   };
 }
+
 

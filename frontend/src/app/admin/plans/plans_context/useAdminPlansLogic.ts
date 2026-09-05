@@ -1,5 +1,6 @@
 import { useAdminPlansStore } from '@/app/admin/plans/plans_store/useAdminPlansStore';
 // RESPONSIBILITY: Custom hook encapsulating all business logic, state, and API interactions for the Plans module.
+// DATA FLOW: Centralized store/hook logic mapping API mutations and query state to UI props.
 import { useState, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { plansApi } from '@/app/admin/plans/plans_api/plans_api';
@@ -131,5 +132,6 @@ export function useAdminPlansLogic(initialData?: PlansInitialData | null): Plans
     openAdd, openEdit, savePlan, deletePlan,
   };
 }
+
 
 

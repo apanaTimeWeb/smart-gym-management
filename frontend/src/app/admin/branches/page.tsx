@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Core UI component/route for the admin module orchestrating views and displaying sub-components.
 import type { Metadata } from "next";
 import AdminHeader from "@/app/admin/admin_components/AdminLayout/AdminHeader";
 
@@ -19,4 +20,5 @@ export default function AdminBranchesPage() {
     </div>
   );
 }
+
 

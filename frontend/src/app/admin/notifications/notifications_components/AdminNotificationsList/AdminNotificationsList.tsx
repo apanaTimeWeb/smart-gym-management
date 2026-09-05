@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Core UI component/route for the admin module orchestrating views and displaying sub-components.
 import { NotificationItem } from '@/app/admin/notifications/notifications_utils/useAdminNotificationsPage';
 import { X, Bell } from 'lucide-react';
 
@@ -51,3 +52,4 @@ export default function AdminNotificationsList({ notifications, onMarkAsRead, on
     </div>
   );
 }
+

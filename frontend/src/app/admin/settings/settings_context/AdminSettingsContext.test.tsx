@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Core UI component/route for the admin module orchestrating views and displaying sub-components.
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import AdminSettingsContext from './AdminSettingsContext';
@@ -8,3 +9,4 @@ describe('AdminSettingsContext Component', () => {
     expect(true).toBe(true);
   });
 });
+

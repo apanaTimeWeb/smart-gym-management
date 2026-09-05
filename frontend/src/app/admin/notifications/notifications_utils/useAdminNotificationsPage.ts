@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Core data logic hook for the admin module.
+// DATA FLOW: Centralized store/hook logic mapping API mutations and query state to UI props.
 import { useState, useCallback } from 'react';
 import toast from 'react-hot-toast';
 
@@ -46,3 +48,4 @@ export const useAdminNotificationsPage = () => {
     deleteNotification,
   };
 };
+

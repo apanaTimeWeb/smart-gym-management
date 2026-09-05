@@ -1,4 +1,5 @@
 // RESPONSIBILITY: Generic debounce hook shared across all ADMIN modules.
+// DATA FLOW: Centralized store/hook logic mapping API mutations and query state to UI props.
 // Prevents excessive API calls by delaying a value update until the user stops typing.
 // Use this for all search inputs and filter inputs that trigger backend calls (Rule 15).
 import { useState, useEffect } from 'react';
@@ -26,3 +27,4 @@ export function useDebounce<T>(value: T, delay: number = 300): T {
 
   return debouncedValue;
 }
+

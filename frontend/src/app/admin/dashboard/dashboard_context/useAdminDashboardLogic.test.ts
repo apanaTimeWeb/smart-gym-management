@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Core data logic hook for the admin module.
+// DATA FLOW: Centralized store/hook logic mapping API mutations and query state to UI props.
 import { describe, it, expect } from 'vitest';
 // import { useAdminDashboardLogic } from './useAdminDashboardLogic';
 
@@ -7,3 +9,4 @@ describe('useAdminDashboardLogic Utility/Hook', () => {
     expect(true).toBe(true);
   });
 });
+

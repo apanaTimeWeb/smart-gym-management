@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Core data logic hook for the admin module.
+// DATA FLOW: Centralized store/hook logic mapping API mutations and query state to UI props.
 "use client";
 import { useAdminBranchesStore } from "@/app/admin/branches/branches_store/useAdminBranchesStore";
 import { useAdminGlobalStore } from "@/app/admin/admin_store/useAdminGlobalStore";
@@ -48,4 +50,5 @@ export function useAdminBranchesLogic() {
     multiplier,
   };
 }
+
 

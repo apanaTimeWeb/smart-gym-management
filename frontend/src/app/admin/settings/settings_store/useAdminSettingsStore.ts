@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Core data logic hook for the admin module.
+// DATA FLOW: Centralized store/hook logic mapping API mutations and query state to UI props.
 import { create } from 'zustand';
 import { EMPTY_SETTINGS_FORM } from '@/app/admin/settings/settings_utils/AdminSettingsSharedConstants';
 
@@ -14,3 +16,4 @@ export const useAdminSettingsStore = create<AdminSettingsStore>((set) => ({
   form: EMPTY_SETTINGS_FORM,
   setForm: (form) => set({ form }),
 }));
+

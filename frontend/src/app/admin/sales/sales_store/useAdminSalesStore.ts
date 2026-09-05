@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Core data logic hook for the admin module.
+// DATA FLOW: Centralized store/hook logic mapping API mutations and query state to UI props.
 import { create } from 'zustand';
 
 interface AdminSalesStore {
@@ -23,3 +25,4 @@ export const useAdminSalesStore = create<AdminSalesStore>((set) => ({
   showToast: (message, type) => set({ toast: { message, type } }),
   hideToast: () => set({ toast: null }),
 }));
+

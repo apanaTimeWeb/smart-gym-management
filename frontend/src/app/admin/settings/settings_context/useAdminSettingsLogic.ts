@@ -1,4 +1,5 @@
 // RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the Settings module.
+// DATA FLOW: Centralized store/hook logic mapping API mutations and query state to UI props.
 import { useCallback, useEffect } from 'react';
 import { settingsApi } from '@/app/admin/settings/settings_api/settings_api';
 import toast from 'react-hot-toast';
@@ -44,7 +45,7 @@ export function useAdminSettingsLogic() {
 
  return {
    activeTab, setActiveTab,
-   loading: isLoading, 
+   fetchState: (isLoading ? 'loading' : isError ? 'error' : 'success') as import('@/app/superadmin/superadmin_types/superadmin_types').FetchState,
    saving: updateMutation.isPending, 
    form,
    handleChange, 
@@ -52,5 +53,6 @@ export function useAdminSettingsLogic() {
    handleSave
  };
 }
+
 
 
