@@ -8,7 +8,7 @@ import { getUser, logout } from '@/lib/api';
 import { ADMIN_PLACEHOLDER_NOTIFICATIONS } from '@/app/admin/admin_utils/AdminSharedConstants';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
-import { SearchableDropdown } from '@/app/admin/admin_components/AdminShared/SearchableDropdown';
+import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
 
 import type { AdminHeaderProps } from '@/app/admin/admin_components/AdminLayout/AdminLayoutTypes';
 
@@ -64,7 +64,7 @@ export default function AdminHeader({ title, subtitle }: AdminHeaderProps) {
       <div className="flex flex-wrap items-center gap-4">
         <div className="flex items-center gap-2 mr-4 bg-background border border-border rounded-lg px-3 py-1.5 hidden lg:flex">
           <Building2 size={16} className="text-primary" />
-          <SearchableDropdown 
+          <AdminSearchableDropdown 
             options={[
               { value: 'all', label: 'All Branches (Aggregate)' },
               ...branches.map(b => ({ value: b.id, label: b.name }))
@@ -163,3 +163,4 @@ export default function AdminHeader({ title, subtitle }: AdminHeaderProps) {
     </header>
   );
 }
+

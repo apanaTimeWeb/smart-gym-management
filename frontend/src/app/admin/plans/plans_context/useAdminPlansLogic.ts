@@ -1,15 +1,16 @@
+import { useAdminPlansStore } from '@/app/admin/plans/plans_store/useAdminPlansStore';
 // RESPONSIBILITY: Custom hook encapsulating all business logic, state, and API interactions for the Plans module.
 import { useState, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { plansApi } from '@/app/admin/plans/plans_api/plans_api';
 import type { Plan, PlansContextType, PlansInitialData, FetchState } from '@/app/admin/plans/plans_types/plans_types';
 import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
-import { EMPTY_PLAN_FORM, type PlanFormValues } from '@/app/admin/plans/plans_utils/PlansSharedConstants';
+import { EMPTY_PLAN_FORM, type PlanFormValues } from '@/app/admin/plans/plans_utils/AdminPlansSharedConstants';
 import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/AdminConfirmProvider';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 
-export function usePlansLogic(initialData?: PlansInitialData | null): PlansContextType {
+export function useAdminPlansLogic(initialData?: PlansInitialData | null): PlansContextType {
   const { confirm } = useAdminConfirm();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -31,15 +32,8 @@ export function usePlansLogic(initialData?: PlansInitialData | null): PlansConte
     router.push(`?${params.toString()}`, { scroll: false });
   }, [router, searchParams]);
 
-  const [showModal, setShowModal] = useState(false);
-  const [editId, setEditId] = useState<string | null>(null);
-  const [form, setForm] = useState<PlanFormValues>(EMPTY_PLAN_FORM);
+  const { showModal, setShowModal, editId, setEditId, form, setForm, showToast, hideToast } = useAdminPlansStore();
 
-  const showToast = useCallback((msg: string, t: ToastType) => {
-    if (t === 'error') toast.error(msg);
-    else toast.success(msg);
-  }, []);
-  const hideToast = useCallback(() => {}, []);
 
   const { data: plansRes, isLoading, isError } = useQuery({
     queryKey: ['adminPlans'],
@@ -141,3 +135,5 @@ export function usePlansLogic(initialData?: PlansInitialData | null): PlansConte
     openAdd, openEdit, savePlan, deletePlan,
   };
 }
+
+

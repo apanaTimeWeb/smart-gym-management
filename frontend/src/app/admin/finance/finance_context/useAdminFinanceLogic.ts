@@ -1,22 +1,23 @@
 // RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the Finance module.
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { financeApi } from '@/app/admin/finance/finance_api/finance_api';
 import type { Payment, FinanceSummary } from '@/app/admin/finance/finance_types/finance_types';
 import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
-import type { FinanceContextType, FinanceInitialData } from '@/app/admin/finance/finance_types/finance_types';
-import { AddPaymentFormValues } from '@/app/admin/finance/finance_utils/FinanceSharedConstants';
+import type { FinanceInitialData } from '@/app/admin/finance/finance_types/finance_types';
+import { AddPaymentFormValues } from '@/app/admin/finance/finance_utils/AdminFinanceSharedConstants';
 import type { FetchState } from '@/app/admin/finance/finance_types/finance_types';
 import { useDebounce } from '@/app/admin/admin_utils/useDebounce';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
+import { useAdminFinanceStore } from '@/app/admin/finance/finance_store/useAdminFinanceStore';
 
-export function useFinanceLogic(initialData?: FinanceInitialData | null): FinanceContextType {
-  const [showModal, setShowModal] = useState(false);
+export function useAdminFinanceLogic(initialData?: FinanceInitialData | null) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
+  const { showModal, setShowModal } = useAdminFinanceStore();
 
   // URL State
   const search = searchParams.get('search') || '';
@@ -116,3 +117,4 @@ export function useFinanceLogic(initialData?: FinanceInitialData | null): Financ
     setMethodFilter
   };
 }
+

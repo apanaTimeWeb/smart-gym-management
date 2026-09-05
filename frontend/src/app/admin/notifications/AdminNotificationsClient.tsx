@@ -1,11 +1,11 @@
 'use client';
 // RESPONSIBILITY: Orchestrates the notifications list and actions (mark all read, clear all).
-import { useNotificationsPage } from '@/app/admin/notifications/notifications_utils/useNotificationsPage';
-import AdminNotificationsList from '@/app/admin/notifications/notifications_components/AdminNotificationsList';
+import { useAdminNotificationsPage } from '@/app/admin/notifications/notifications_utils/useAdminNotificationsPage';
+import AdminNotificationsList from '@/app/admin/notifications/notifications_components/AdminNotificationsList/AdminNotificationsList';
 import { CheckCheck, Trash2 } from 'lucide-react';
 
 export default function AdminNotificationsClient() {
-  const { notifications, markAllAsRead, clearAll, markAsRead, deleteNotification } = useNotificationsPage();
+  const { notifications, markAllAsRead, clearAll, markAsRead, deleteNotification } = useAdminNotificationsPage();
 
   const unreadCount = notifications.filter(n => n.unread).length;
 

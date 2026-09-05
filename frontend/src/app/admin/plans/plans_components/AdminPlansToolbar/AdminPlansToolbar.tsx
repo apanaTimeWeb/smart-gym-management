@@ -3,10 +3,12 @@
 
 import { useState, useEffect } from 'react';
 import { RefreshCw, Plus, Search } from 'lucide-react';
-import { usePlansContext } from '@/app/admin/plans/plans_context/PlansContext';
+import { useAdminPlansLogic } from '@/app/admin/plans/plans_context/useAdminPlansLogic';
+import { useAdminPlansStore } from '@/app/admin/plans/plans_store/useAdminPlansStore';
 
 export default function AdminPlansToolbar() {
-  const { plans, loadPlans, openAdd, search, setSearch, setCurrentPage } = usePlansContext();
+  const { plans, fetchState, saving, search, setSearch, currentPage, setCurrentPage, loadPlans, openAdd, openEdit, savePlan, deletePlan } = useAdminPlansLogic();
+  const { showModal, setShowModal, editId, form, setForm, toast, showToast, hideToast } = useAdminPlansStore();
 
   const [localSearch, setLocalSearch] = useState(search);
 
@@ -59,3 +61,5 @@ export default function AdminPlansToolbar() {
  </div>
  );
 }
+
+

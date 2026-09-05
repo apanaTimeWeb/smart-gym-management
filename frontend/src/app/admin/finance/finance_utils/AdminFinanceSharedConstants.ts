@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Provides the implementation for FinanceSharedConstants.ts functionality within its module.
+// RESPONSIBILITY: Provides the implementation for AdminFinanceSharedConstants.ts functionality within its module.
 import { z } from 'zod';
 
 export const FINANCE_METHOD_STYLES: Record<string, { bg: string; text: string }> = {
@@ -34,3 +34,4 @@ export const EMPTY_PAYMENT_FORM: AddPaymentFormValues = {
   method: 'UPI',
   notes: ''
 };
+

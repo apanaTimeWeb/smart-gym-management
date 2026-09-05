@@ -16,7 +16,7 @@ const initialNotifications: NotificationItem[] = [
   { id: '4', text: 'Trainer Mark requested schedule change', time: 'Yesterday', unread: false },
 ];
 
-export const useNotificationsPage = () => {
+export const useAdminNotificationsPage = () => {
   const [notifications, setNotifications] = useState<NotificationItem[]>(initialNotifications);
 
   const markAllAsRead = useCallback(() => {

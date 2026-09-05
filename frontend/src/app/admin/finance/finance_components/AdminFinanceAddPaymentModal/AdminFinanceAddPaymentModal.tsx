@@ -2,15 +2,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useFinanceContext } from '@/app/admin/finance/finance_context/FinanceContext';
-import { FINANCE_PAYMENT_METHODS, AddPaymentSchema, type AddPaymentFormValues, EMPTY_PAYMENT_FORM } from '@/app/admin/finance/finance_utils/FinanceSharedConstants';
+import { useAdminFinanceLogic } from '@/app/admin/finance/finance_context/useAdminFinanceLogic';
+import { useAdminFinanceStore } from '@/app/admin/finance/finance_store/useAdminFinanceStore';
+import { FINANCE_PAYMENT_METHODS, AddPaymentSchema, type AddPaymentFormValues, EMPTY_PAYMENT_FORM } from '@/app/admin/finance/finance_utils/AdminFinanceSharedConstants';
 import { X, Save } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
+import { AdminSearchableDropdown } from '@/components/ui/AdminSearchableDropdown';
 
 export default function AdminFinanceAddPaymentModal() {
-  const { showModal, setShowModal, savePayment, saving } = useFinanceContext();
+  const { payments, summary, totalPayments, fetchState, saving, error, loadAll, search, setSearch, currentPage, setCurrentPage, savePayment, methodFilter, setMethodFilter } = useAdminFinanceLogic();
+  const { showModal, setShowModal, toast, showToast, hideToast } = useAdminFinanceStore();
 
   const {
     register,
@@ -78,7 +80,7 @@ export default function AdminFinanceAddPaymentModal() {
               name="method"
               control={control}
               render={({ field }) => (
-                <SearchableDropdown
+                <AdminSearchableDropdown
                   options={FINANCE_PAYMENT_METHODS.map(m => ({ label: m, value: m }))}
                   value={field.value}
                   onChange={field.onChange}
@@ -109,3 +111,6 @@ export default function AdminFinanceAddPaymentModal() {
     </div>
   );
 }
+
+
+

@@ -1,14 +1,16 @@
-// RESPONSIBILITY: Renders the two rows of KPI metric stat cards on the dashboard using live data from DashboardContext.
+// RESPONSIBILITY: Renders the two rows of KPI metric stat cards on the dashboard using live data from AdminDashboardContext.
 'use client';
 
-import { useDashboardContext } from '@/app/admin/dashboard/dashboard_context/DashboardContext';
+import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
+import { useAdminDashboardStore } from '@/app/admin/dashboard/dashboard_store/useAdminDashboardStore';
 import AdminStatCard from '@/app/admin/admin_components/AdminShared/AdminStatCard';
-import { formatCurrency } from '@/app/admin/dashboard/dashboard_utils/DashboardSharedConstants';
+import { formatCurrency } from '@/app/admin/dashboard/dashboard_utils/AdminDashboardSharedConstants';
 import { Users, DollarSign, TrendingUp, AlertCircle, CheckCircle, Clock, UserCheck, ShoppingCart } from 'lucide-react';
 import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
 
 export default function AdminDashboardKPIs() {
-  const { stats, timeRange } = useDashboardContext();
+  const { stats, status, error } = useAdminDashboardLogic();
+  const { timeRange, setTimeRange, startDate, endDate, setCustomDateRange } = useAdminDashboardStore();
   const { selectedBranchId } = useAdminGlobalStore();
   
   if (!stats) return null;
@@ -122,3 +124,5 @@ export default function AdminDashboardKPIs() {
     </>
   );
 }
+
+

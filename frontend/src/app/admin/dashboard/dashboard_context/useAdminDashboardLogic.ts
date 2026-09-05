@@ -1,19 +1,17 @@
 // RESPONSIBILITY: Custom hook managing the asynchronous fetching of dashboard statistics.
-// DATA FLOW: page.tsx (SSR) → AdminDashboardMain → useDashboardLogic → DashboardContext → KPI/Chart components
+// DATA FLOW: page.tsx (SSR) → AdminDashboardMain → useAdminDashboardLogic
 'use client';
 
-import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { dashboardApi } from '@/app/admin/dashboard/dashboard_api/dashboard_api';
-import type { DashboardContextType, FetchState, DashboardStats, TimeRange } from '@/app/admin/dashboard/dashboard_types/dashboard_types';
+import type { FetchState, DashboardStats } from '@/app/admin/dashboard/dashboard_types/dashboard_types';
+import { useAdminDashboardStore } from '@/app/admin/dashboard/dashboard_store/useAdminDashboardStore';
 
 /**
  * Hook to manage dashboard data fetching and network state tracking.
  */
-export function useDashboardLogic(initialData?: DashboardStats | null): DashboardContextType {
-  const [timeRange, setTimeRange] = useState<TimeRange>('monthly');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+export function useAdminDashboardLogic(initialData?: DashboardStats | null) {
+  const { timeRange, startDate, endDate } = useAdminDashboardStore();
 
   const { data, isLoading, isError, error: queryError } = useQuery({
     queryKey: ['adminDashboardStats', timeRange, startDate, endDate],
@@ -30,13 +28,6 @@ export function useDashboardLogic(initialData?: DashboardStats | null): Dashboar
     stats: data || null,
     status,
     error: isError ? (queryError as Error).message : '',
-    timeRange,
-    setTimeRange,
-    startDate,
-    endDate,
-    setCustomDateRange: (start: string, end: string) => {
-      setStartDate(start);
-      setEndDate(end);
-    }
   };
 }
+

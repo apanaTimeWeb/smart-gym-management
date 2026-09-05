@@ -1,11 +1,13 @@
 // RESPONSIBILITY: Renders the distribution of members by plan on the dashboard.
 'use client';
 
-import { useDashboardContext } from '@/app/admin/dashboard/dashboard_context/DashboardContext';
-import { DASHBOARD_PLAN_BG_COLORS } from '@/app/admin/dashboard/dashboard_utils/DashboardSharedConstants';
+import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
+import { useAdminDashboardStore } from '@/app/admin/dashboard/dashboard_store/useAdminDashboardStore';
+import { DASHBOARD_PLAN_BG_COLORS } from '@/app/admin/dashboard/dashboard_utils/AdminDashboardSharedConstants';
 
 export default function AdminDashboardMembershipDistribution() {
- const { stats, timeRange } = useDashboardContext();
+ const { stats, status, error } = useAdminDashboardLogic();
+  const { timeRange, setTimeRange, startDate, endDate, setCustomDateRange } = useAdminDashboardStore();
  if (!stats) return null;
  const s = stats;
 
@@ -42,3 +44,5 @@ export default function AdminDashboardMembershipDistribution() {
  </div>
  );
 }
+
+

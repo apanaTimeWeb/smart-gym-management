@@ -19,7 +19,7 @@ interface SearchableDropdownProps {
   containerStyle?: React.CSSProperties;
 }
 
-export const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
+export const AdminSearchableDropdown: React.FC<SearchableDropdownProps> = ({
   options,
   value,
   onChange,

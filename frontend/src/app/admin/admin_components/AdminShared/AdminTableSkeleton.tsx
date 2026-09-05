@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Renders animated skeleton loader rows that match the data table layout. Used as placeholder while API data loads (Rule 26).
 import React from 'react';
 
-export const TableSkeleton = ({ rows = 6, columns = 5 }: { rows?: number, columns?: number }) => {
+export const AdminTableSkeleton = ({ rows = 6, columns = 5 }: { rows?: number, columns?: number }) => {
   return (
     <div className="w-full bg-card border border-border rounded-xl overflow-hidden mt-4">
       <div className="w-full h-12 bg-primary/10 border-b border-border"></div>
