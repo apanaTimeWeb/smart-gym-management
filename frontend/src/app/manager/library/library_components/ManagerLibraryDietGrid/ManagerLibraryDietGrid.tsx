@@ -4,9 +4,11 @@
 import { useLibraryContext } from '@/app/manager/library/library_context/ManagerLibraryContext';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { Apple, Edit2, Trash2, Flame, Loader2 } from 'lucide-react';
+import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 
 export default function ManagerLibraryDietGrid() {
+  const { confirm } = useConfirm();
   const { dietPlans, fetchState, debouncedSearch, currentPage, setCurrentPage, openEditDiet, deleteDietPlan } = useLibraryContext();
 
   const filtered = dietPlans.filter(d => {
@@ -48,9 +50,15 @@ export default function ManagerLibraryDietGrid() {
                   <Edit2 size={16} />
                 </button>
                 <button 
-                  onClick={(e) => { 
+                  onClick={async (e) => { 
                     e.stopPropagation(); 
-                    if (window.confirm(`Are you sure you want to delete diet plan "${dp.name}"?`)) {
+                    const ok = await confirm({
+                      title: 'Delete Diet Plan',
+                      message: `Are you sure you want to delete diet plan "${dp.name}"?`,
+                      type: 'danger',
+                      confirmText: 'Delete'
+                    });
+                    if (ok) {
                       deleteDietPlan(dp.id); 
                     }
                   }}

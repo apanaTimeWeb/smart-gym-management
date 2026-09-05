@@ -68,7 +68,7 @@ export const AdminSearchableDropdown: React.FC<SearchableDropdownProps> = ({
       </div>
 
       {isOpen && !disabled && (
-        <div className="absolute z-50 w-full mt-1 bg-card border border-border rounded-lg shadow-lg overflow-hidden motion-safe:animate-in fade-in zoom-in-95 duration-100">
+        <div className="absolute z-30 w-full mt-1 bg-card border border-border rounded-lg shadow-lg overflow-hidden motion-safe:animate-in fade-in zoom-in-95 duration-100">
           <div className="p-2 border-b border-border relative">
             <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
             <input

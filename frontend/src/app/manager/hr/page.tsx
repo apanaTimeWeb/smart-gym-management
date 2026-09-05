@@ -17,8 +17,8 @@ export default async function HrPage() {
       payrolls: payrollRes.data?.payrolls || payrollRes.data || [],
       summary: summaryRes.data || null
     };
-  } catch {
-    // console.error('Failed to fetch hr initial data:', e);
+  } catch (e) {
+    // Silently fail and return empty data. Client handles refetch.
   }
 
   return <ManagerHrMain initialData={initialData} />;

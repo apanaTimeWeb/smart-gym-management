@@ -106,7 +106,7 @@ export default function ManagerRenewModal() {
   const selectedPlan = plans.find(p => String(p.id) === String(watchPlanId)) as PlanWithCustom | undefined;
 
   return (
-    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black/60 z-40 flex items-center justify-center p-4">
       <div className="bg-card rounded-2xl shadow-2xl shadow-black/50 w-full max-w-xl max-h-full overflow-y-auto border-2 border-primary">
         <div className="sticky top-0 px-8 py-5 border-b border-border bg-card flex items-center justify-between z-10">
           <div>

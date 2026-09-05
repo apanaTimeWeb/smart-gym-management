@@ -70,7 +70,7 @@ export default function AttendanceCalendar() {
   });
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 motion-safe:animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50 p-4 motion-safe:animate-in fade-in duration-200">
       <div className="w-full max-w-md bg-card shadow-xl flex flex-col max-h-[90vh] rounded-2xl border-2 border-primary overflow-hidden">
         
         {/* Header */}

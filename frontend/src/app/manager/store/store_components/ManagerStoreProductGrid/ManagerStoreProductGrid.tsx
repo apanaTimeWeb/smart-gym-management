@@ -2,6 +2,7 @@
 'use client';
 
 import { Edit2, Trash2 } from 'lucide-react';
+import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';
 import { formatCurrency } from '@/app/manager/store/store_utils/ManagerStoreSharedConstants';
 
@@ -9,6 +10,7 @@ import ManagerPagination from '@/app/manager/manager_components/ManagerShared/Ma
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 
 export default function ManagerStoreProductGrid() {
+  const { confirm } = useConfirm();
   const { products, summary, fetchState, debouncedSearch, currentPage, setCurrentPage, openEditProduct, deleteProduct } = useStoreContext();
 
   
@@ -76,11 +78,14 @@ export default function ManagerStoreProductGrid() {
                   <Edit2 size={13} />
                 </button>
                 <button 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (window.confirm(`Are you sure you want to delete product "${p.name}"?`)) {
-                      deleteProduct(p.id);
-                    }
+                  onClick={async () => {
+                    const ok = await confirm({
+                      title: 'Delete Product',
+                      message: `Are you sure you want to delete product "${p.name}"?`,
+                      type: 'danger',
+                      confirmText: 'Delete'
+                    });
+                    if (ok) deleteProduct(p.id);
                   }}
                   className="p-1.5 rounded-lg bg-danger-bg dark:bg-danger-bg text-danger hover:bg-danger-bg dark:hover:bg-danger-bg transition-colors"
                   aria-label={`Delete ${p.name}`}
