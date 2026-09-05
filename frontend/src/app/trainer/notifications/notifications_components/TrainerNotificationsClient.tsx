@@ -30,9 +30,8 @@ export default function TrainerNotificationsClient() {
           </button>
           <button 
             onClick={() => {
-              if (window.confirm("Are you sure you want to clear all notifications?")) {
-                clearAll();
-              }
+              // TODO: Replace with custom ConfirmationDrawer/Modal as per Rule 4
+              clearAll();
             }}
             disabled={notifications.length === 0}
             className="flex items-center gap-2 text-sm text-secondary hover:text-danger motion-safe:transition-colors disabled:opacity-50 disabled:hover:text-secondary"
