@@ -44,7 +44,7 @@ export const SuperadminAffiliateModal: React.FC<SuperadminAffiliateModalProps> =
             <label className="text-sm font-bold text-secondary">Partner Name <span className="text-danger">*</span></label>
             <input 
               {...register('name')}
-              className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus motion-safe:transition-colors"
+              className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary motion-safe:transition-colors"
               placeholder="e.g. Fitness Gurus LLC"
             />
             {errors.name && <span className="text-xs text-danger">{errors.name.message}</span>}
@@ -55,7 +55,7 @@ export const SuperadminAffiliateModal: React.FC<SuperadminAffiliateModalProps> =
             <input 
               type="email" 
               {...register('email')}
-              className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus motion-safe:transition-colors"
+              className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary motion-safe:transition-colors"
               placeholder="partner@example.com"
             />
             {errors.email && <span className="text-xs text-danger">{errors.email.message}</span>}
@@ -65,7 +65,7 @@ export const SuperadminAffiliateModal: React.FC<SuperadminAffiliateModalProps> =
             <label className="text-sm font-bold text-secondary">Custom Referral Code <span className="text-danger">*</span></label>
             <input 
               {...register('referralCode')}
-              className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground font-mono uppercase focus:outline-none focus:border-border-focus motion-safe:transition-colors"
+              className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground font-mono uppercase focus:outline-none focus:border-primary motion-safe:transition-colors"
               placeholder="e.g. PARTNER2026"
             />
             {errors.referralCode && <span className="text-xs text-danger">{errors.referralCode.message}</span>}

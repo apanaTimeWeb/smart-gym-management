@@ -116,7 +116,7 @@ export default function ManagerBulkMessageModal({
                 type="text"
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
-                className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-lg focus:outline-none focus:border-border-focus text-foreground"
+                className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-lg focus:outline-none focus:border-primary text-foreground"
                 placeholder="Email subject..."
               />
             </div>
@@ -130,7 +130,7 @@ export default function ManagerBulkMessageModal({
               rows={4}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-xl focus:outline-none focus:border-border-focus text-foreground resize-none"
+              className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-xl focus:outline-none focus:border-primary text-foreground resize-none"
               placeholder={`Type your ${label} message...`}
             />
           </div>

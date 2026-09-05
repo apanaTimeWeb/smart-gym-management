@@ -39,7 +39,7 @@ export default function SuperadminGymWhatsappModal() {
             <input
               type="text"
               {...register('subject')}
-              className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-border-focus focus:outline-none motion-safe:transition-colors"
+              className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none motion-safe:transition-colors"
               placeholder="e.g., Important update about your subscription"
             />
             {errors.subject && <p className="text-xs text-danger mt-1">{errors.subject.message}</p>}
@@ -50,7 +50,7 @@ export default function SuperadminGymWhatsappModal() {
             <textarea
               {...register('message')}
               rows={5}
-              className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-border-focus focus:outline-none motion-safe:transition-colors resize-none"
+              className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none motion-safe:transition-colors resize-none"
               placeholder="Type your message here..."
             />
             {errors.message && <p className="text-xs text-danger mt-1">{errors.message.message}</p>}

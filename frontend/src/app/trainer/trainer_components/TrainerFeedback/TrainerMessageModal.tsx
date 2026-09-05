@@ -139,7 +139,7 @@ export default function TrainerMessageModal({
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
               disabled={sending || sent}
-              className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-lg focus-visible:outline-none focus:border-border-focus text-foreground disabled:opacity-60"
+              className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-lg focus-visible:outline-none focus:border-primary text-foreground disabled:opacity-60"
               placeholder="Email subject..."
             />
           </div>
@@ -154,7 +154,7 @@ export default function TrainerMessageModal({
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             disabled={sending || sent}
-            className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-xl focus-visible:outline-none focus:border-border-focus text-foreground resize-none disabled:opacity-60"
+            className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-xl focus-visible:outline-none focus:border-primary text-foreground resize-none disabled:opacity-60"
             placeholder="Type your message..."
           />
           <p className="text-right text-xs text-secondary mt-1">{message.length} chars</p>

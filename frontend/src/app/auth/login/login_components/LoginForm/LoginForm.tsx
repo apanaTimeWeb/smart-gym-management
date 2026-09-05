@@ -83,7 +83,7 @@ export default function LoginForm() {
                   'border',
                   errors.email
                     ? 'border-danger ring-1 ring-danger/40'
-                    : 'border-border focus:border-border-focus focus:ring-1 focus:ring-primary/30',
+                    : 'border-border focus:border-primary focus:ring-1 focus:ring-primary/30',
                   'disabled:opacity-60 disabled:cursor-not-allowed',
                 ].join(' ')}
                 placeholder={LoginSharedConstants.TEXT.FORM_EMAIL_PLACEHOLDER}
@@ -123,7 +123,7 @@ export default function LoginForm() {
                   'border',
                   errors.password
                     ? 'border-danger ring-1 ring-danger/40'
-                    : 'border-border focus:border-border-focus focus:ring-1 focus:ring-primary/30',
+                    : 'border-border focus:border-primary focus:ring-1 focus:ring-primary/30',
                   'disabled:opacity-60 disabled:cursor-not-allowed',
                 ].join(' ')}
                 placeholder="••••••••"

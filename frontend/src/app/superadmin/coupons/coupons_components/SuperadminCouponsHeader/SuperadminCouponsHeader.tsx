@@ -25,7 +25,7 @@ export default function SuperadminCouponsHeader({ searchQuery, onSearchChange, o
             placeholder="Search coupons..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-border-focus motion-safe:transition-colors  w-full sm:w-64 "
+            className="pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary motion-safe:transition-colors  w-full sm:w-64 "
           />
         </div>
         <button
