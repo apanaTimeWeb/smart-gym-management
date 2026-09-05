@@ -112,7 +112,7 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
                       type="checkbox" 
                       checked={targetGymIds.includes(gym.id)}
                       onChange={() => handleToggleGym(gym.id)}
-                      className="w-4 h-4 rounded text-primary focus:ring-primary accent-primary"
+                      className="w-4 h-4 rounded text-primary focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page accent-primary"
                     />
                     <div className="flex flex-col overflow-hidden">
                       <span className="text-sm font-medium text-foreground truncate">{gym.name}</span>

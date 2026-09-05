@@ -67,7 +67,7 @@ export default function SuperadminUsageMetersClient() {
             <select 
               value={dateRange}
               onChange={(e) => setDateRange(e.target.value)}
-              className="appearance-none bg-card border border-border rounded-lg pl-9 pr-10 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+              className="appearance-none bg-card border border-border rounded-lg pl-9 pr-10 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
             >
               <option value="this_week">This Week</option>
               <option value="this_month">This Month</option>
@@ -82,14 +82,14 @@ export default function SuperadminUsageMetersClient() {
                 type="date" 
                 value={customFrom}
                 onChange={(e) => setCustomFrom(e.target.value)}
-                className="bg-card border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50" 
+                className="bg-card border border-border rounded-lg px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page" 
               />
               <span className="text-secondary">to</span>
               <input 
                 type="date" 
                 value={customTo}
                 onChange={(e) => setCustomTo(e.target.value)}
-                className="bg-card border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50" 
+                className="bg-card border border-border rounded-lg px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page" 
               />
             </div>
           )}

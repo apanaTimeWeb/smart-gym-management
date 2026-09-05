@@ -1,10 +1,11 @@
-﻿"use client";
+"use client";
 // RESPONSIBILITY: SuperadminJobsView.tsx renders the BullMQ background jobs table and metrics cards using TanStack Query.
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import { Activity, Play, AlertTriangle, RefreshCw, XCircle, Trash2, Eye, Filter, X as XIcon, Loader2 } from 'lucide-react';
+import SuperadminJobsEmptyState from '@/app/superadmin/jobs/jobs_components/SuperadminJobsEmptyState/SuperadminJobsEmptyState';
 import type { BackgroundJob } from '@/app/superadmin/superadmin_types/superadmin_types';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 
@@ -21,6 +22,7 @@ export default function SuperadminJobsView() {
   const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
   const [isRetrying, setIsRetrying] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   
   // Filtering & Selection State
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
@@ -178,7 +180,7 @@ export default function SuperadminJobsView() {
           <div className="flex items-center gap-2">
             <Filter size={16} className="text-secondary" />
             <select 
-              className="bg-input border border-border text-foreground text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-primary"
+              className="bg-input border border-border text-foreground text-sm rounded-lg px-3 py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
               value={statusFilter}
               onChange={(e) => { setStatusFilter(e.target.value); setCurrentPage(1); }}
             >
@@ -190,7 +192,7 @@ export default function SuperadminJobsView() {
             </select>
           </div>
           <select 
-            className="bg-input border border-border text-foreground text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-primary"
+            className="bg-input border border-border text-foreground text-sm rounded-lg px-3 py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
             value={queueFilter}
             onChange={(e) => { setQueueFilter(e.target.value); setCurrentPage(1); }}
           >
@@ -229,7 +231,7 @@ export default function SuperadminJobsView() {
                 <th className="p-4 w-12 text-center">
                   <input 
                     type="checkbox" 
-                    className="rounded border-border text-primary focus:ring-primary cursor-pointer w-4 h-4"
+                    className="rounded border-border text-primary focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page cursor-pointer w-4 h-4"
                     checked={selectedJobIds.size === paginatedJobs.length && paginatedJobs.length > 0}
                     onChange={() => toggleAll(paginatedJobs.map(j => j.id))}
                   />
@@ -243,16 +245,15 @@ export default function SuperadminJobsView() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {paginatedJobs.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="p-8 text-center text-secondary">No jobs found matching the criteria.</td>
-                </tr>
-              ) : paginatedJobs.map((job) => (
+                {filteredJobs.length === 0 && (
+                  <SuperadminJobsEmptyState isFiltered={Boolean(searchQuery || statusFilter !== 'ALL')} />
+                )}
+                {paginatedJobs.map((job) => (
                 <tr key={job.id} onClick={() => setInspectJob(job)} className="hover:bg-input motion-safe:transition-colors group cursor-pointer">
                   <td className="p-4 text-center">
                     <input 
                       type="checkbox" 
-                      className="rounded border-border text-primary focus:ring-primary cursor-pointer w-4 h-4"
+                      className="rounded border-border text-primary focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page cursor-pointer w-4 h-4"
                       checked={selectedJobIds.has(job.id)}
                       onChange={() => toggleSelection(job.id)}
                     />

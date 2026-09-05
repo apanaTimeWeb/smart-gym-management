@@ -3,6 +3,7 @@
 
 import { useState, useMemo } from 'react';
 import { Database, ShieldAlert, Activity, Filter, RefreshCcw, Search, Loader2 } from 'lucide-react';
+import SuperadminSystemEmptyState from '@/app/superadmin/system/system_components/SuperadminSystemEmptyState/SuperadminSystemEmptyState';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import toast from 'react-hot-toast';
@@ -203,13 +204,9 @@ export default function SuperadminSystemClient() {
                     </td>
                   </tr>
                 ))}
-                {filteredLogs.length === 0 && (
-                  <tr>
-                    <td colSpan={4} className="p-8 text-center text-disabled">
-                      No logs found.
-                    </td>
-                  </tr>
-                )}
+                  {paginatedLogs.length === 0 && (
+                    <SuperadminSystemEmptyState />
+                  )}
               </tbody>
             </table>
           </div>
