@@ -258,7 +258,7 @@ export async function routeMockRequest<T>(
     return { success: true, message: 'History fetched', data: history } as unknown as ApiResponse<T>;
   }
   if (path.includes('/attendance/today-stats')) {
-    const records = MockDB.getCollection('mock_admin_attendance', generate(20, i => { const d = new Date(); d.setHours(8, 0, 0, 0); const d2 = new Date(); d2.setHours(9, 30, 0, 0); return { id: `att-${i}`, type: i % 4 === 0 ? 'STAFF' : 'MEMBER', member: { name: `Active Member ${i}` }, staff: { name: `Trainer ${i}` }, date: new Date().toISOString(), checkIn: d.toISOString(), checkOut: d2.toISOString() }; }));
+    const records = MockDB.getCollection('mock_admin_attendance', generate(20, i => { const d = new Date(); d.setHours(8, 0, 0, 0); const d2 = new Date(); d2.setHours(9, 30, 0, 0); return { id: `att-${i}`, type: i % 4 === 0 ? 'STAFF' : 'MEMBER', member: { name: `Member ${i + 1}` }, staff: { name: `Staff ${i + 1}` }, date: new Date().toISOString(), checkIn: d.toISOString(), checkOut: d2.toISOString() }; }));
     const todayStr = new Date().toISOString().split('T')[0];
     const todayRecords = records.filter(r => (r.date as string)?.startsWith(todayStr));
     const memberCheckIns = todayRecords.filter(r => r.type === 'MEMBER').length;
@@ -267,9 +267,9 @@ export async function routeMockRequest<T>(
   }
   if (path.includes('/attendance')) {
     const existing = MockDB.getCollection('mock_admin_attendance', []);
-    const defaultData = generate(20, i => { const d = new Date(); d.setHours(8, 0, 0, 0); const d2 = new Date(); d2.setHours(9, 30, 0, 0); return { id: `att-${i}`, type: i % 4 === 0 ? 'STAFF' : 'MEMBER', member: { name: `Active Member ${i}` }, staff: { name: `Trainer ${i}` }, date: new Date().toISOString(), checkIn: d.toISOString(), checkOut: d2.toISOString() }; });
+    const defaultData = generate(20, i => { const d = new Date(); d.setHours(8, 0, 0, 0); const d2 = new Date(); d2.setHours(9, 30, 0, 0); return { id: `att-${i}`, type: i % 4 === 0 ? 'STAFF' : 'MEMBER', member: { name: `Member ${i + 1}` }, staff: { name: `Staff ${i + 1}` }, date: new Date().toISOString(), checkIn: d.toISOString(), checkOut: d2.toISOString() }; });
     
-    if (existing.length === 0) {
+    if (existing.length === 0 || existing.some((r: any) => r.member?.name?.includes('Active Member') || r.staff?.name?.includes('Trainer '))) {
       MockDB.setCollection('mock_admin_attendance', defaultData);
     }
     
