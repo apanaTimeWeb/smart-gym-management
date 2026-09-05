@@ -8,9 +8,11 @@ import { useLibraryContext } from '@/app/trainer/library/library_context/Library
 import { DIFF_COLORS } from '@/app/trainer/library/library_utils/LibrarySharedConstants';
 import TrainerPagination from '@/app/trainer/trainer_components/TrainerShared/TrainerPagination';
 import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerSharedConstants';
+import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 
 export default function TrainerLibraryExerciseGrid() {
   const { exercises, fetchState, debouncedSearch, currentPage, setCurrentPage, openEditEx, deleteExercise } = useLibraryContext();
+  const { confirm } = useConfirm();
 
   const filtered = exercises.filter(e => {
     const s = debouncedSearch.toLowerCase();
@@ -69,9 +71,15 @@ export default function TrainerLibraryExerciseGrid() {
                   <Edit2 size={16} />
                 </button>
                 <button 
-                  onClick={(e) => { 
+                  onClick={async (e) => { 
                     e.stopPropagation(); 
-                    if (window.confirm(`Are you sure you want to delete library exercise "${ex.name}"?`)) {
+                    const ok = await confirm({
+                      title: 'Delete Library Exercise',
+                      message: `Are you sure you want to delete library exercise "${ex.name}"?`,
+                      type: 'danger',
+                      confirmText: 'Delete'
+                    });
+                    if (ok) {
                       deleteExercise(ex.id); 
                     }
                   }}
@@ -93,7 +101,7 @@ export default function TrainerLibraryExerciseGrid() {
             
             <div className="text-xs text-secondary space-y-1 mt-auto">
               <p>?? {ex.muscleGroup?.join(', ')}</p>
-              {ex.sets && <p>?? {ex.sets} sets � {ex.reps} reps</p>}
+              {ex.sets && <p>?? {ex.sets} sets  {ex.reps} reps</p>}
               {ex.duration && <p className="flex items-center gap-1"><Clock size={12} /> {ex.duration}</p>}
             </div>
           </div>
@@ -117,4 +125,3 @@ export default function TrainerLibraryExerciseGrid() {
     </div>
   );
 }
-

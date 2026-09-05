@@ -1,13 +1,14 @@
 // RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
 // DATA FLOW: Standard component data flow.
-import type { Metadata } from "next";
-export const metadata: Metadata = { title: "Notifications | Trainer � GymSmart", description: "Trainer notifications." };
-export default function TrainerNotificationsPage() {
-  return (
-    <div className="min-h-full pb-10 p-6">
-      <h1 className="text-2xl font-bold text-text-primary">Notifications</h1>
-      <div className="bg-card border border-border rounded-xl p-16 mt-6 text-center text-text-secondary text-sm">Notifications module coming soon.</div>
-    </div>
-  );
-}
+// RESPONSIBILITY: Renders the notifications page.
+import { Metadata } from 'next';
+import TrainerNotificationsMain from '@/app/trainer/notifications/notifications_components/TrainerNotificationsMain/TrainerNotificationsMain';
 
+export const metadata: Metadata = {
+  title: 'Notifications | Trainer — GymSmart',
+  description: 'View and manage your gym notifications.',
+};
+
+export default function TrainerNotificationsPage() {
+  return <TrainerNotificationsMain />;
+}

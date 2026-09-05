@@ -23,8 +23,8 @@ export default async function SalesPage() {
       allMemberships: allRes.data?.members || [],
       allMembershipsTotal: allRes.data?.total || 0
     } as unknown as SalesInitialData;
-  } catch (e: unknown) {
-    console.error('[SalesPage SSR] Failed to fetch initial data:', e);
+  } catch {
+    // SSR data fetch failed gracefully — client-side hook will re-fetch
   }
 
   return <ManagerSalesMain initialData={initialData} />;

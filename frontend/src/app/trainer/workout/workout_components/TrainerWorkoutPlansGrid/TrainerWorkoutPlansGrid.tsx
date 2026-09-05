@@ -5,12 +5,14 @@
 
 import { Dumbbell, Edit2, Trash2 } from 'lucide-react';
 import { useWorkoutContext } from '@/app/trainer/workout/workout_context/WorkoutContext';
+import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 
 import TrainerPagination from '@/app/trainer/trainer_components/TrainerShared/TrainerPagination';
 import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerSharedConstants';
 
 export default function TrainerWorkoutPlansGrid() {
   const { workouts, totalWorkouts, search, currentPage, setCurrentPage, openEditWk, deleteWk } = useWorkoutContext();
+  const { confirm } = useConfirm();
 
   const totalPages = Math.ceil(totalWorkouts / TRAINER_ITEMS_PER_PAGE) || 1;
   const { fetchState } = useWorkoutContext();
@@ -61,9 +63,15 @@ export default function TrainerWorkoutPlansGrid() {
                   <Edit2 size={13} />
                 </button>
                 <button 
-                  onClick={(e) => {
+                  onClick={async (e) => {
                     e.stopPropagation();
-                    if (window.confirm(`Are you sure you want to delete workout plan "${w.name}"?`)) {
+                    const ok = await confirm({
+                      title: 'Delete Workout Plan',
+                      message: `Are you sure you want to delete workout plan "${w.name}"?`,
+                      type: 'danger',
+                      confirmText: 'Delete'
+                    });
+                    if (ok) {
                       deleteWk(w.id);
                     }
                   }}

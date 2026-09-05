@@ -22,10 +22,9 @@ export default async function MembersPage() {
       totalMembers: (membersRes.data as any).total || 0,
       stats: (statsRes.data as any) || { total: 0, active: 0, pending: 0, expired: 0 }
     };
-  } catch (e: unknown) {
-    console.error('[MembersPage SSR] Failed to fetch initial data:', e);
+  } catch {
+    // SSR data fetch failed gracefully — client-side hook will re-fetch
   }
 
   return <TrainerMembersMain initialData={initialData} />;
 }
-

@@ -41,7 +41,7 @@ export default function TrainerHeader({ title, subtitle }: TrainerHeaderProps) {
   }, []);
 
   return (
-    <header className="bg-card border-b border-border px-6 py-4 flex items-center justify-between sticky top-0 z-30">
+    <header className="bg-card border-b border-border px-6 py-4 flex items-center justify-between sticky top-0 z-20">
       <div className="flex flex-wrap items-center gap-4">
         <button
           className="p-2 -ml-3 text-secondary hover:text-foreground motion-safe:transition-colors bg-input hover:bg-background rounded-lg border border-border"
@@ -72,7 +72,7 @@ export default function TrainerHeader({ title, subtitle }: TrainerHeaderProps) {
           </button>
 
           {showNotifications && (
-            <div className="absolute right-0 mt-2 w-80 bg-card rounded-xl shadow-2xl border border-border overflow-hidden z-50">
+            <div className="absolute right-0 mt-2 w-80 bg-popover rounded-xl shadow-2xl border border-border overflow-hidden z-30">
               <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-header">
                 <h3 className="font-semibold text-foreground">Notifications</h3>
                 <button onClick={() => setShowNotifications(false)} className="text-secondary hover:text-foreground"><X size={16} /></button>
@@ -124,7 +124,7 @@ export default function TrainerHeader({ title, subtitle }: TrainerHeaderProps) {
           </div>
 
           {showProfile && (
-            <div className="absolute right-0 mt-2 w-56 bg-card rounded-xl shadow-2xl border border-border overflow-hidden z-50">
+            <div className="absolute right-0 mt-2 w-56 bg-popover rounded-xl shadow-2xl border border-border overflow-hidden z-30">
               <div className="px-4 py-3 border-b border-border bg-header">
                 <p className="text-sm font-semibold text-foreground">{mounted ? (user?.name || 'Trainer') : 'Trainer'}</p>
                 <p className="text-xs text-secondary">{mounted ? (user?.email || '') : ''}</p>

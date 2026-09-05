@@ -7,16 +7,17 @@ import { useLibraryContext } from '@/app/trainer/library/library_context/Library
 import TrainerPagination from '@/app/trainer/trainer_components/TrainerShared/TrainerPagination';
 import { Apple, Edit2, Trash2, Flame, Loader2 } from 'lucide-react';
 import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerSharedConstants';
+import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 
 export default function TrainerLibraryDietGrid() {
   const { dietPlans, fetchState, debouncedSearch, currentPage, setCurrentPage, openEditDiet, deleteDietPlan } = useLibraryContext();
+  const { confirm } = useConfirm();
 
   const filtered = dietPlans.filter(d => {
     const s = debouncedSearch.toLowerCase();
     return d.name.toLowerCase().includes(s) || d.goal.toLowerCase().includes(s);
   });
 
-  
   const totalPages = Math.ceil(filtered.length / TRAINER_ITEMS_PER_PAGE);
   const currentData = filtered.slice((currentPage - 1) * TRAINER_ITEMS_PER_PAGE, currentPage * TRAINER_ITEMS_PER_PAGE);
 
@@ -66,9 +67,15 @@ export default function TrainerLibraryDietGrid() {
                   <Edit2 size={16} />
                 </button>
                 <button 
-                  onClick={(e) => { 
+                  onClick={async (e) => { 
                     e.stopPropagation(); 
-                    if (window.confirm(`Are you sure you want to delete diet plan "${dp.name}"?`)) {
+                    const ok = await confirm({
+                      title: 'Delete Diet Plan',
+                      message: `Are you sure you want to delete diet plan "${dp.name}"?`,
+                      type: 'danger',
+                      confirmText: 'Delete'
+                    });
+                    if (ok) {
                       deleteDietPlan(dp.id); 
                     }
                   }}
@@ -115,4 +122,3 @@ export default function TrainerLibraryDietGrid() {
     </div>
   );
 }
-

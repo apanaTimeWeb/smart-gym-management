@@ -3,6 +3,7 @@
 import { NotificationItem } from '@/app/trainer/notifications/notifications_utils/useNotificationsPage';
 import { X, Bell } from 'lucide-react';
 import TrainerNotificationsEmptyState from '@/app/trainer/notifications/notifications_components/TrainerNotificationsEmptyState/TrainerNotificationsEmptyState';
+import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 
 interface NotificationsListProps {
   notifications: NotificationItem[];
@@ -11,6 +12,8 @@ interface NotificationsListProps {
 }
 
 export default function TrainerNotificationsList({ notifications, onMarkAsRead, onDelete }: NotificationsListProps) {
+  const { confirm } = useConfirm();
+  
   if (notifications.length === 0) {
     return <TrainerNotificationsEmptyState />;
   }
@@ -31,8 +34,14 @@ export default function TrainerNotificationsList({ notifications, onMarkAsRead, 
             </div>
           </div>
           <button 
-            onClick={() => {
-              if (window.confirm("Delete this notification?")) {
+            onClick={async () => {
+              const ok = await confirm({
+                title: 'Delete Notification',
+                message: 'Are you sure you want to delete this notification?',
+                type: 'danger',
+                confirmText: 'Delete'
+              });
+              if (ok) {
                 onDelete(n.id);
               }
             }}
@@ -46,4 +55,3 @@ export default function TrainerNotificationsList({ notifications, onMarkAsRead, 
     </div>
   );
 }
-
