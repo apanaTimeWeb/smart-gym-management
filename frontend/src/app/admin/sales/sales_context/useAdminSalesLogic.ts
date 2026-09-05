@@ -59,35 +59,36 @@ export function useAdminSalesLogic(initialData?: SalesInitialData | null): Sales
 
   const queryParams = { limit: '10', page: currentPage.toString(), ...(debouncedSearch ? { search: debouncedSearch } : {}) };
 
-  const { data: overviewRes, isLoading: overviewLoading } = useQuery({
+  const { data: overviewRes, isLoading: overviewLoading, isError: overviewError } = useQuery({
     queryKey: ['salesOverview', dateFilter],
     queryFn: () => salesApi.fetchOverview(),
+    initialData: initialData?.overviewData ? { success: true, message: 'SSR', data: { monthlyRevenue: initialData.overviewData } } : undefined,
   });
 
-  const { data: reportRes, isLoading: reportLoading } = useQuery({
+  const { data: reportRes, isLoading: reportLoading, isError: reportError } = useQuery({
     queryKey: ['salesMembershipReport', dateFilter],
     queryFn: () => salesApi.fetchMembershipReport(),
+    initialData: initialData?.membershipReport ? { success: true, message: 'SSR', data: { report: initialData.membershipReport, totals: initialData.membershipTotals || {} } } : undefined,
   });
 
-  const { data: pendingRes, isLoading: pendingLoading } = useQuery({
+  const { data: pendingRes, isLoading: pendingLoading, isError: pendingError } = useQuery({
     queryKey: ['salesPendingPayments', queryParams, dateFilter],
     queryFn: () => salesApi.fetchPendingPayments(queryParams),
+    initialData: initialData?.pendingPayments ? { success: true, message: 'SSR', data: { members: initialData.pendingPayments, total: initialData.pendingTotal || 0 } } : undefined,
   });
 
-  const { data: allMembershipsRes, isLoading: allMembershipsLoading } = useQuery({
+  const { data: allMembershipsRes, isLoading: allMembershipsLoading, isError: allMembershipsError } = useQuery({
     queryKey: ['salesAllMemberships', queryParams, dateFilter],
     queryFn: () => salesApi.fetchAllMemberships(queryParams),
+    initialData: initialData?.allMemberships ? { success: true, message: 'SSR', data: { members: initialData.allMemberships, total: initialData.allMembershipsTotal || 0 } } : undefined,
   });
 
   const isLoading = overviewLoading || reportLoading || pendingLoading || allMembershipsLoading;
-  const fetchState: FetchState = isLoading ? 'loading' : 'success';
+  const isError = overviewError || reportError || pendingError || allMembershipsError;
+  const fetchState: FetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
 
-  // Store sales - mock data
-  const storeOrders = [
-    { id: 'so1', total: 850, method: 'Cash', status: 'completed', createdAt: new Date().toISOString(), items: [{ id: 'i1', qty: 2, price: 350, product: { name: 'Protein Powder' } }, { id: 'i2', qty: 1, price: 150, product: { name: 'Gym Gloves' } }] },
-    { id: 'so2', total: 1200, method: 'UPI', status: 'completed', createdAt: new Date().toISOString(), items: [{ id: 'i3', qty: 1, price: 1200, product: { name: 'Resistance Bands Set' } }] },
-    { id: 'so3', total: 450, method: 'Card', status: 'completed', createdAt: new Date(Date.now() - 86400000).toISOString(), items: [{ id: 'i4', qty: 3, price: 150, product: { name: 'Gym Gloves' } }] },
-  ];
+  // Removed hardcoded store mock data to enforce Rule 75
+  const storeOrders: StoreOrder[] = [];
 
   return {
     tab, setTab,
@@ -102,8 +103,8 @@ export function useAdminSalesLogic(initialData?: SalesInitialData | null): Sales
     allMemberships: allMembershipsRes?.data?.members || [],
     allMembershipsTotal: allMembershipsRes?.data?.total || 0,
     storeOrders,
-    storeOrdersTotal: 3,
-    storeSummary: { totalProducts: 18, totalOrders: 142, totalRevenue: 89500, lowStockProducts: [] },
+    storeOrdersTotal: 0,
+    storeSummary: null,
     fetchState,
     loadAll: async () => {}, // Mocked to do nothing since React Query handles refetching automatically
     toast: null,

@@ -48,11 +48,13 @@ export function useAdminFinanceLogic(initialData?: FinanceInitialData | null) {
   const { data: paymentsRes, isLoading: paymentsLoading, isError: isPaymentsError, error: paymentsError } = useQuery({
     queryKey: ['financePayments', queryParams],
     queryFn: () => financeApi.fetchPayments(queryParams),
+    initialData: initialData?.payments ? { success: true, message: 'SSR', data: { payments: initialData.payments, total: initialData.totalPayments || 0 } } : undefined,
   });
 
-  const { data: summaryRes, isLoading: summaryLoading } = useQuery({
+  const { data: summaryRes, isLoading: summaryLoading, isError: isSummaryError } = useQuery({
     queryKey: ['financeSummary'],
     queryFn: () => financeApi.fetchSummary(),
+    initialData: initialData?.summary ? { success: true, message: 'SSR', data: initialData.summary } : undefined,
   });
 
   const createPaymentMutation = useMutation({
@@ -83,7 +85,7 @@ export function useAdminFinanceLogic(initialData?: FinanceInitialData | null) {
   }, [createPaymentMutation]);
 
   const isLoading = paymentsLoading || summaryLoading;
-  const isError = isPaymentsError;
+  const isError = isPaymentsError || isSummaryError;
   const fetchState: FetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
 
   let fetchedPayments = paymentsRes?.data?.payments || [];
