@@ -50,8 +50,27 @@ export default function SuperadminBackupsClient() {
       document.body.removeChild(link);
     };
 
-    const handleRestore = (id: string) => {
-      toast('Restoring snapshot requires confirmation modal (Simulated)', { icon: '⚠️' });
+    const [restoreModalOpen, setRestoreModalOpen] = useState(false);
+    const [selectedBackup, setSelectedBackup] = useState<BackupRecord | null>(null);
+
+    const handleRestoreClick = (backup: BackupRecord) => {
+      setSelectedBackup(backup);
+      setRestoreModalOpen(true);
+    };
+
+    const confirmRestore = async () => {
+      if (!selectedBackup) return;
+      setRestoreModalOpen(false);
+      
+      const loadingToast = toast.loading(`Restoring database ${selectedBackup.databaseName} from snapshot...`);
+      try {
+        await new Promise(res => setTimeout(res, 2500)); // Simulate API
+        toast.success(`Database ${selectedBackup.databaseName} successfully restored!`, { id: loadingToast });
+      } catch (err) {
+        toast.error('Failed to restore snapshot', { id: loadingToast });
+      } finally {
+        setSelectedBackup(null);
+      }
     };
 if (fetchState === 'loading') return (
     <div className="space-y-6 motion-safe:animate-pulse">
@@ -139,7 +158,7 @@ if (fetchState === 'loading') return (
                       <Download size={16} />
                     </button>
                     <button 
-                      onClick={() => handleRestore(backup.id)}
+                      onClick={() => handleRestoreClick(backup)}
                       className="p-2 text-secondary hover:text-danger hover:bg-danger-bg/10 rounded-lg motion-safe:transition-colors disabled:opacity-30" 
                       title="Restore Snapshot" 
                       disabled={backup.status !== 'SUCCESS'}
@@ -165,6 +184,41 @@ if (fetchState === 'loading') return (
           onPageChange={setCurrentPage}
         />
       </div>
+
+      {restoreModalOpen && selectedBackup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-card w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-border motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95">
+            <div className="p-6">
+              <div className="w-12 h-12 rounded-full bg-danger-bg/10 text-danger flex items-center justify-center mb-4">
+                <RotateCcw size={24} />
+              </div>
+              <h2 className="text-xl font-bold text-foreground mb-2">Restore Database Snapshot</h2>
+              <p className="text-sm text-secondary mb-4">
+                Are you absolutely sure you want to restore the <strong className="text-foreground">{selectedBackup.databaseName}</strong> database using snapshot <strong className="text-foreground font-mono">{selectedBackup.id}</strong>?
+              </p>
+              <div className="bg-warning/10 border border-warning/20 p-3 rounded-lg mb-6">
+                <p className="text-xs text-warning font-medium">
+                  ⚠️ WARNING: This will immediately overwrite the live production database for <strong>{selectedBackup.tenantName}</strong>. Any data created after {new Date(selectedBackup.timestamp).toLocaleString()} will be permanently lost!
+                </p>
+              </div>
+              <div className="flex gap-3 justify-end">
+                <button 
+                  onClick={() => setRestoreModalOpen(false)}
+                  className="px-4 py-2 rounded-lg font-medium border border-border text-foreground hover:bg-card-hover motion-safe:transition-colors"
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={confirmRestore}
+                  className="px-4 py-2 rounded-lg font-medium bg-danger hover:bg-danger/90 text-white motion-safe:transition-colors"
+                >
+                  Yes, Restore Snapshot
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
