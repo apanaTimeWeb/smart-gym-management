@@ -20,7 +20,7 @@ export default function AttendanceToolbar() {
     const timer = setTimeout(() => {
       if (localSearch !== search) {
         setSearch(localSearch);
-        setCurrentPage(1);
+        
       }
     }, 300);
     return () => clearTimeout(timer);
@@ -71,3 +71,4 @@ export default function AttendanceToolbar() {
  </div>
  );
 }
+

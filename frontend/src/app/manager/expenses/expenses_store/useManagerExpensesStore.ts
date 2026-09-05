@@ -31,8 +31,19 @@ export const useManagerExpensesStore = create<ExpensesState>((set, get) => ({
         expensesApi.getAll(params),
         expensesApi.getStats()
       ]);
+      let fetchedExpenses = expRes.data?.expenses || [];
+      if (params?.status && params.status !== 'All') {
+        fetchedExpenses = fetchedExpenses.filter((e: Expense) => e.status === params.status);
+      }
+      if (params?.search) {
+        const q = params.search.toLowerCase();
+        fetchedExpenses = fetchedExpenses.filter((e: Expense) => 
+          e.title.toLowerCase().includes(q) || e.category.toLowerCase().includes(q)
+        );
+      }
+
       set({
-        expenses: expRes.data?.expenses || [],
+        expenses: fetchedExpenses,
         totalExpenses: expRes.data?.total || 0,
         stats: statsRes.data || { totalAmount: 0, paidAmount: 0, pendingAmount: 0, thisMonthAmount: 0 },
         fetchState: 'success'

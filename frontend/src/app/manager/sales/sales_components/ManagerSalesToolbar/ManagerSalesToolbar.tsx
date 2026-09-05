@@ -23,7 +23,7 @@ export default function ManagerSalesToolbar() {
     const timer = setTimeout(() => {
       if (localSearch !== search) {
         setSearch(localSearch);
-        if (typeof setCurrentPage === 'function') setCurrentPage(1);
+        
       }
     }, 300);
     return () => clearTimeout(timer);
@@ -96,3 +96,4 @@ export default function ManagerSalesToolbar() {
  </div>
  );
 }
+

@@ -16,7 +16,7 @@ export default function ManagerLibraryTabs() {
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
           <input 
             value={search} 
-            onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} 
+            onChange={e => { setSearch(e.target.value);  }} 
             placeholder="Search diet plans..." 
             className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-40 sm:w-full sm:max-w-[16rem] bg-input text-foreground" 
           />
@@ -37,3 +37,4 @@ export default function ManagerLibraryTabs() {
  </div>
  );
 }
+

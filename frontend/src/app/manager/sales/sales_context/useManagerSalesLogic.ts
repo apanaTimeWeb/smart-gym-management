@@ -77,14 +77,26 @@ export function useManagerSalesLogic(initialData?: SalesInitialData | null): Sal
         salesApi.getAllMemberships(params)
       ]);
 
-      setOverviewData(Array.isArray(overviewRes.data) ? overviewRes.data : overviewRes.data?.monthlyRevenue || []);
-      setMembershipReport(Array.isArray(reportRes.data) ? reportRes.data : (reportRes.data?.report || []));
+      let fetchedOverview = Array.isArray(overviewRes.data) ? overviewRes.data : overviewRes.data?.monthlyRevenue || [];
+      let fetchedReport = Array.isArray(reportRes.data) ? reportRes.data : (reportRes.data?.report || []);
+      let fetchedPending = (pendingRes.data?.members || []) as PendingPaymentMember[];
+      let fetchedAll = allRes.data?.members || [];
+
+      if (debouncedSearch) {
+        const q = debouncedSearch.toLowerCase();
+        fetchedReport = fetchedReport.filter((m: MembershipReportItem) => m.name && m.name.toLowerCase().includes(q));
+        fetchedPending = fetchedPending.filter((m: PendingPaymentMember) => m.name.toLowerCase().includes(q) || (m.phone && m.phone.includes(q)));
+        fetchedAll = fetchedAll.filter((m: Member) => m.name.toLowerCase().includes(q) || m.phone.includes(q) || (m.email && m.email.toLowerCase().includes(q)));
+      }
+
+      setOverviewData(fetchedOverview);
+      setMembershipReport(fetchedReport);
       setMembershipTotals(reportRes.data?.totals || { activeCount: 0, revenue: 0, totalReceivable: 0, totalReceived: 0, remaining: 0, refunds: 0 });
       
-      setPendingPayments((pendingRes.data?.members || []) as PendingPaymentMember[]);  // cast: backend returns generic member shape
+      setPendingPayments(fetchedPending);
       setPendingTotal(pendingRes.data?.total || 0);
       
-      setAllMemberships(allRes.data?.members || []);
+      setAllMemberships(fetchedAll);
       setAllMembershipsTotal(allRes.data?.total || 0);
       
       setFetchState('success');

@@ -67,7 +67,16 @@ export default function ManagerFinanceMain() {
         financeApi.getPayments({ search, page: currentPage.toString(), limit: MANAGER_ITEMS_PER_PAGE.toString() }),
         financeApi.getSummary(),
       ]);
-      setPayments(paymentsRes.data?.payments || []);
+      let fetchedPayments = paymentsRes.data?.payments || [];
+      if (search) {
+        const q = search.toLowerCase();
+        fetchedPayments = fetchedPayments.filter((p: Payment) => 
+          (p.invoiceNo && p.invoiceNo.toLowerCase().includes(q)) ||
+          (p.member?.name && p.member.name.toLowerCase().includes(q)) ||
+          (p.method && p.method.toLowerCase().includes(q))
+        );
+      }
+      setPayments(fetchedPayments);
       setTotalPayments(paymentsRes.data?.total || 0);
       setSummary(summaryRes.data || null);
       setFetchState('success');
@@ -133,7 +142,7 @@ export default function ManagerFinanceMain() {
                 type="text"
                 placeholder="Search payments..."
                 value={search}
-                onChange={e => { setSearch(e.target.value); setCurrentPage(1); }}
+                onChange={e => { setSearch(e.target.value);  }}
                 className="w-full pl-9 pr-4 py-2 text-sm bg-input border border-border rounded-lg text-foreground focus:outline-none focus:border-primary"
               />
             </div>
@@ -226,3 +235,4 @@ export default function ManagerFinanceMain() {
     </div>
   );
 }
+
