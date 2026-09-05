@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Core infrastructure component for routing, loading, and error boundaries in the module.
 'use client';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -22,3 +23,4 @@ export function SuperadminQueryProvider({ children }: { children: React.ReactNod
     </QueryClientProvider>
   );
 }
+

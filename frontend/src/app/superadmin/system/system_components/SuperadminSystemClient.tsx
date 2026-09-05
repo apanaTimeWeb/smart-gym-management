@@ -21,7 +21,7 @@ const FALLBACK_LOGS = [
   { id: '2', timestamp: '2026-01-01T01:00:00Z', targetResource: 'Gym: t-2', actorName: 'System', actorRole: 'CRON', action: 'BACKUP_DB' },
   { id: '3', timestamp: '2026-01-01T02:00:00Z', targetResource: 'Coupon: SUMMER50', actorName: 'Superadmin', actorRole: 'GOD MODE', action: 'UPDATE' },
   { id: '4', timestamp: '2026-01-02T00:00:00Z', targetResource: 'User: admin@gym.com', actorName: 'Superadmin', actorRole: 'GOD MODE', action: 'RESET_PASSWORD' }
-] as unknown[];
+] as GlobalAuditLog[];
 
 export default function SuperadminSystemClient() {
   const [logSearch, setLogSearch] = useState('');
@@ -75,10 +75,10 @@ export default function SuperadminSystemClient() {
     }
   };
 
-  const filteredLogs = finalLogs.filter((log: any) =>
-    log.targetResource?.toLowerCase().includes(logSearch.toLowerCase()) ||
-    log.action?.toLowerCase().includes(logSearch.toLowerCase()) ||
-    log.actorName?.toLowerCase().includes(logSearch.toLowerCase())
+  const filteredLogs = finalLogs.filter((log: GlobalAuditLog) =>
+    log.targetResource.toLowerCase().includes(logSearch.toLowerCase()) ||
+    log.action.toLowerCase().includes(logSearch.toLowerCase()) ||
+    log.actorName.toLowerCase().includes(logSearch.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredLogs.length / ITEMS_PER_PAGE) || 1;
@@ -185,8 +185,8 @@ export default function SuperadminSystemClient() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                {paginatedLogs.map((log: any) => (
-                  <tr key={log.id} className="hover:bg-input motion-safe:transition-colors text-sm">
+                {paginatedLogs.map((log: GlobalAuditLog) => (
+                  <tr key={log.id} className="superadmin-table-row group hover:bg-input motion-safe:transition-colors text-sm">
                     <td className="p-4 text-secondary whitespace-nowrap">
                       {new Date(log.timestamp).toLocaleString()}
                     </td>

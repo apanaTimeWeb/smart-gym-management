@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Core infrastructure component for routing, loading, and error boundaries in the module.
 'use client';
 import { AlertCircle, RefreshCw } from 'lucide-react';
 import { useEffect } from 'react';
@@ -29,3 +30,4 @@ export default function ErrorBoundary({
     </div>
   );
 }
+

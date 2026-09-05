@@ -18,10 +18,10 @@ export function useSuperadminBackupsData() {
   const fetchState: FetchState = query.isLoading ? 'loading' : query.isError ? 'error' : 'success';
 
   return {
-    data: query.data ?? null,
+    data: query.data,
     fetchState,
-    error: query.error as Error | null,
-    setFetchState: (state: any) => {}, // mock to keep signature
-    setData: (updater: any) => {} // mock to keep signature
+    error: query.isError ? new Error('Failed to fetch backups data') : null,
+    setFetchState: (state: React.SetStateAction<FetchState>) => {}, // mock to keep signature
+    setData: (updater: React.SetStateAction<BackupRecord[] | null>) => {} // mock to keep signature
   };
 }

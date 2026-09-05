@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Core infrastructure component for routing, loading, and error boundaries in the module.
 import { Users } from 'lucide-react';
 
 export default function FranchisesPage() {
@@ -21,3 +22,4 @@ export default function FranchisesPage() {
     </div>
   );
 }
+

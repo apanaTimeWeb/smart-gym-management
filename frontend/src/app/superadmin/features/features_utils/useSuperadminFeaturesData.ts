@@ -26,11 +26,11 @@ export function useSuperadminFeaturesData() {
 
   const fetchState: FetchState = query.isLoading ? 'loading' : query.isError ? 'error' : 'success';
 
-  return { 
-    data: query.data ?? null, 
-    fetchState, 
-    error: query.error as Error | null, 
-    setFetchState: (state: any) => {}, 
-    setData: (updater: any) => {} 
+  return {
+    data: query.data as { flags: FeatureFlag[]; notes: ReleaseNote[] },
+    fetchState,
+    error: query.isError ? new Error('Failed to fetch product data') : null,
+    setFetchState: (state: React.SetStateAction<FetchState>) => {}, 
+    setData: (updater: React.SetStateAction<{ flags: FeatureFlag[]; notes: ReleaseNote[]; } | null>) => {} 
   };
 }
