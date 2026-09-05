@@ -9,6 +9,7 @@ import { useState, useEffect } from 'react';
 import { analyticsApi } from '@/app/superadmin/analytics/superadmin_analytics_api/superadmin_analytics_api';
 import type { RevenueMetrics } from '@/app/superadmin/analytics/superadmin_analytics_types/superadmin_analytics_types';
 import { TrendingUp, Users, DollarSign, Activity } from 'lucide-react';
+import { MOCK_ANALYTICS_DATA } from '@/app/superadmin/analytics/analytics_utils/SuperadminAnalyticsConstants';
 
 export default function SuperadminAnalyticsClient() {
   const [metrics, setMetrics] = useState<RevenueMetrics | null>(null);
@@ -20,25 +21,11 @@ export default function SuperadminAnalyticsClient() {
         setMetrics(res.data);
       } else {
         // Inject mock data for UI presentation if backend is empty
-        setMetrics({
-          mrr: 124500,
-          arr: 1494000,
-          churnRate: 1.2,
-          activeTenants: 142,
-          ltv: 25000,
-          cac: 1200
-        });
+        setMetrics(MOCK_ANALYTICS_DATA);
       }
       setLoading(false);
     }).catch(() => {
-      setMetrics({
-        mrr: 124500,
-        arr: 1494000,
-        churnRate: 1.2,
-        activeTenants: 142,
-        ltv: 25000,
-        cac: 1200
-      });
+      setMetrics(MOCK_ANALYTICS_DATA);
       setLoading(false);
     });
   }, []);

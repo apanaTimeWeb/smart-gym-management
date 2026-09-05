@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Renders the Platform Settings page. Fetches settings from API and allows inline editing per setting using TanStack Query.
+// RESPONSIBILITY: Renders the Platform Settings page. Fetches settings from API and allows inline editing per setting using TanStack Query.
 'use client';
 
 import { useState } from 'react';
@@ -8,13 +8,7 @@ import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import toast from 'react-hot-toast';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import type { PlatformSetting } from '@/app/superadmin/superadmin_types/superadmin_types';
-
-const mockSettings: PlatformSetting[] = [
-  { id: '1', key: 'MAX_MEMBERS_PER_GYM', value: '1000', description: 'Default maximum members for new tenants', category: 'general', dataType: 'number' },
-  { id: '2', key: 'MAX_BRANCHES', value: '5', description: 'Default maximum branches allowed', category: 'general', dataType: 'number' },
-  { id: '3', key: 'SYSTEM_CURRENCY', value: 'INR', description: 'Default currency for billing', category: 'general', dataType: 'string' },
-  { id: '4', key: 'ENABLE_BETA_FEATURES', value: 'false', description: 'Toggle experimental features globally', category: 'general', dataType: 'boolean' }
-];
+import { MOCK_PLATFORM_SETTINGS } from '@/app/superadmin/settings/settings_utils/SuperadminSettingsConstants';
 
 export default function SuperadminSettingsClient() {
   const [editedValues, setEditedValues] = useState<Record<string, string>>({});
@@ -26,7 +20,7 @@ export default function SuperadminSettingsClient() {
   });
 
   const responseData = fetchRes as { data?: PlatformSetting[] } | undefined;
-  const settings = responseData?.data && responseData.data.length > 0 ? responseData.data : mockSettings;
+  const settings = responseData?.data && responseData.data.length > 0 ? responseData.data : MOCK_PLATFORM_SETTINGS;
 
   const updateMutation = useMutation({
     mutationFn: ({ id, value }: { id: string, value: string }) => superadminApi.settings.updateSetting(id, { value }),
