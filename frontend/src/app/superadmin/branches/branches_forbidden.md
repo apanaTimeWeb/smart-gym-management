@@ -1,9 +1,9 @@
-# Forbidden Patterns for `superadmin/features`
+# Forbidden Patterns for `superadmin/branches`
 
 To maintain extreme isolation and enterprise-grade architecture in this module, the following are strictly forbidden:
 
 1. **No Mixed UI and Logic:** Do not mix `useEffect` or state hooks inside UI components. All heavy logic MUST reside in the adjacent custom hook.
-2. **No Relative Imports:** Never use `./` or `../../` in any file. Always use absolute paths starting with `@/app/superadmin/features/...`.
+2. **No Relative Imports:** Never use `./` or `../../` in any file. Always use absolute paths starting with `@/app/superadmin/branches/...`.
 3. **No Barrel Files:** Do not create `index.ts` files. Import files directly.
 4. **No Direct `window.confirm`:** Use a customized `ConfirmationDrawer` or `Modal`.
 5. **No Context for Async Data:** Do not use React Context for API data. Always use a Zustand store.
