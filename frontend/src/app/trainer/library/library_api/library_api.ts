@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Provides strongly-typed network calls for the library module.
 import { apiFetch, ApiResponse } from '@/lib/api';
 import { LibraryUrlConfig } from '@/app/trainer/library/library_url_config';
-import type { Exercise, DietPlan } from '@/app/trainer/library/library_types/library_types';
+import type { Exercise, DietPlan } from '@/app/trainer/trainer_types/trainer_types';
 
 export const libraryApi = {
   getExercises: (params?: Record<string, string>) => {

@@ -44,7 +44,7 @@ export default function ExerciseModal() {
  </h3>
  <button 
  onClick={() => setShowExModal(false)} 
- className="p-2 rounded-lg hover:bg-primary-subtle text-secondary transition-colors"
+ className="p-2 rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors"
  >
  <X size={18} />
  </button>
@@ -69,8 +69,8 @@ export default function ExerciseModal() {
  min={f.type === 'number' ? "0" : undefined}
  onKeyDown={f.type === 'number' ? (e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); } : undefined}
  {...register(f.key as keyof ExerciseFormValues)}
- className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 ${
-   errors[f.key as keyof ExerciseFormValues] ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-warning'
+ className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page ${
+   errors[f.key as keyof ExerciseFormValues] ? 'border-destructive focus-visible:ring-destructive' : 'border-border focus-visible:ring-warning'
  } bg-input text-foreground`}
  />
  {errors[f.key as keyof ExerciseFormValues] && (
@@ -112,14 +112,14 @@ export default function ExerciseModal() {
  <button 
  type="button" 
  onClick={() => setShowExModal(false)} 
- className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-foreground hover:bg-primary-subtle transition-colors"
+ className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-foreground hover:bg-primary-subtle motion-safe:transition-colors"
  >
  Cancel
  </button>
  <button 
  type="submit" 
  disabled={saving} 
- className="flex-1 py-2.5 rounded-xl text-sm font-bold text-primary-foreground bg-primary hover:bg-primary/90 flex items-center justify-center gap-2 disabled:opacity-70 transition-colors" 
+ className="flex-1 py-2.5 rounded-xl text-sm font-bold text-primary-foreground bg-primary hover:bg-primary/90 flex items-center justify-center gap-2 disabled:opacity-70 motion-safe:transition-colors" 
  >
  {saving ? <Loader2 className="w-4 h-4 motion-safe:animate-spin" /> : <><Save size={15} />{editExId ? 'Update' : 'Add'}</>}
  </button>

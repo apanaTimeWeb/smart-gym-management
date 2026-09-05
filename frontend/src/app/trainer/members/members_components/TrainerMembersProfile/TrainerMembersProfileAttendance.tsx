@@ -40,7 +40,7 @@ export default function TrainerMembersProfileAttendance() {
  <button 
  key={day} 
  onClick={() => toggleAtt(selectedMember.id, day)}
- className={`h-10 w-full rounded-lg flex items-center justify-center text-xs font-bold transition-all hover:scale-110 ${
+ className={`h-10 w-full rounded-lg flex items-center justify-center text-xs font-bold motion-safe:transition-all motion-safe:hover:scale-110 ${
  status === 'P' ? 'bg-success-bg text-success dark:bg-success-bg dark:text-success' 
  : status === 'A' ? 'bg-danger-bg text-danger dark:bg-danger-bg dark:text-danger' 
  : 'bg-warning-bg text-warning dark:bg-warning-bg dark:text-warning'

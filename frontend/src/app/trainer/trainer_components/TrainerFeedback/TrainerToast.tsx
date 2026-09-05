@@ -39,7 +39,7 @@ export default function TrainerToast({ message, type, onClose }: TrainerToastPro
  </div>
  <button
  onClick={onClose}
- className="text-secondary hover:text-white flex-shrink-0 transition-colors"
+ className="text-secondary hover:text-white flex-shrink-0 motion-safe:transition-colors"
  >
  ✕
  </button>

@@ -83,7 +83,7 @@ export default function TrainerBulkMessageModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="bg-card rounded-2xl shadow-2xl w-full max-w-2xl relative overflow-hidden border border-border max-h-full flex flex-col motion-safe:animate-in zoom-in-95 duration-200">
+      <div className="bg-card rounded-2xl shadow-2xl w-full max-w-2xl relative overflow-hidden border border-border max-h-full flex flex-col motion-safe:animate-in zoom-in-95 motion-safe:duration-200">
         <div
           className="px-6 py-4 flex items-center justify-between shrink-0"
           style={{ background: accentColor }}
@@ -101,7 +101,7 @@ export default function TrainerBulkMessageModal({
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
+            className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center motion-safe:transition-colors"
           >
             <X size={16} color="white" />
           </button>
@@ -117,7 +117,7 @@ export default function TrainerBulkMessageModal({
                 type="text"
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
-                className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-lg focus:outline-none focus:border-border-focus text-foreground"
+                className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-lg focus-visible:outline-none focus:border-border-focus text-foreground"
                 placeholder="Email subject..."
               />
             </div>
@@ -131,7 +131,7 @@ export default function TrainerBulkMessageModal({
               rows={4}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-xl focus:outline-none focus:border-border-focus text-foreground resize-none"
+              className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-xl focus-visible:outline-none focus:border-border-focus text-foreground resize-none"
               placeholder={`Type your ${label} message...`}
             />
           </div>
@@ -174,7 +174,7 @@ export default function TrainerBulkMessageModal({
                       <button
                         onClick={() => handleSendWhatsApp(idx)}
                         disabled={!hasContactInfo || !message.trim()}
-                        className={`shrink-0 px-3 py-1.5 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-all ${
+                        className={`shrink-0 px-3 py-1.5 text-xs font-semibold rounded-lg flex items-center gap-1.5 motion-safe:transition-all ${
                           isSent
                             ? 'bg-success/10 text-success border border-success/20'
                             : 'text-white hover:opacity-90 disabled:opacity-50'
@@ -203,7 +203,7 @@ export default function TrainerBulkMessageModal({
         <div className="px-6 py-4 bg-input border-t border-border flex gap-3 shrink-0">
           <button
             onClick={onClose}
-            className="px-5 py-2.5 text-sm border border-border rounded-xl hover:bg-card text-foreground font-medium transition-colors"
+            className="px-5 py-2.5 text-sm border border-border rounded-xl hover:bg-card text-foreground font-medium motion-safe:transition-colors"
           >
             Cancel
           </button>
@@ -212,7 +212,7 @@ export default function TrainerBulkMessageModal({
             <button
               onClick={handleSendEmail}
               disabled={!message.trim()}
-              className="flex-1 px-4 py-2.5 text-sm font-semibold text-white rounded-xl flex items-center justify-center gap-2 transition-all hover:opacity-90 disabled:opacity-50 bg-info"
+              className="flex-1 px-4 py-2.5 text-sm font-semibold text-white rounded-xl flex items-center justify-center gap-2 motion-safe:transition-all hover:opacity-90 disabled:opacity-50 bg-info"
             >
               <Send size={15} />
               Open Email Client (BCC All)
@@ -220,7 +220,7 @@ export default function TrainerBulkMessageModal({
           ) : (
             <button
               onClick={allWhatsAppSent ? handleDone : onClose}
-              className={`flex-1 px-4 py-2.5 text-sm font-semibold rounded-xl flex items-center justify-center gap-2 transition-all ${
+              className={`flex-1 px-4 py-2.5 text-sm font-semibold rounded-xl flex items-center justify-center gap-2 motion-safe:transition-all ${
                 allWhatsAppSent ? 'bg-success text-white' : 'bg-card border border-border text-foreground'
               }`}
             >

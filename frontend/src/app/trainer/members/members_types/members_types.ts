@@ -3,7 +3,7 @@ import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback
 import type { MessageType, TrainerMessageRecipient } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerMessageModal';
 import type { MemberFormValues } from '@/app/trainer/members/members_utils/MembersSharedConstants';
 
-export type FetchState = 'idle' | 'loading' | 'success' | 'error';
+import type { Member, MemberStats, FetchState } from '@/app/trainer/trainer_types/trainer_types';
 
 export interface MembersInitialData {
   members: Member[];
@@ -11,19 +11,9 @@ export interface MembersInitialData {
   totalMembers: number;
 }
 
-export interface Member {
-  id: string; name: string; email: string; phone: string;
-  gender: string; address?: string; branch: string;
-  planId: string; plan?: { id: string; name: string; tier: string };
-  billingCycle: string; status: string;
-  joinDate: string; expiryDate: string;
-  paidAmount: number; pendingAmount: number; photo?: string;
-  createdAt: string;
-}
 
-export interface MemberStats {
-  total: number; active: number; pending: number; expired: number;
-}
+
+
 
 export interface MembersContextType {
   search: string;

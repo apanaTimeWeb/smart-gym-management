@@ -13,7 +13,7 @@ interface TrainerStatCardProps {
 
 export default function TrainerStatCard({ title, value, change, changeType = 'neutral', icon: Icon, iconBg, iconColor }: TrainerStatCardProps) {
  return (
- <div className="bg-card rounded-xl p-5 shadow-sm border border-border hover:border-border-focus transition-colors">
+ <div className="bg-card rounded-xl p-5 shadow-sm border border-border hover:border-border-focus motion-safe:transition-colors">
  <div className="flex items-center justify-between">
  <div>
  <p className="text-xs font-medium text-secondary uppercase tracking-wider">{title}</p>

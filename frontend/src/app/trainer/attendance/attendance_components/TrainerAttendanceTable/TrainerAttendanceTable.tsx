@@ -41,7 +41,7 @@ export default function TrainerAttendanceTable() {
  </thead>
  <tbody className="divide-y divide-border">
  {records.map(r => (
- <tr key={r.id} className="hover:bg-primary-subtle transition-colors">
+ <tr key={r.id} className="hover:bg-primary-subtle motion-safe:transition-colors">
  <td className="px-4 py-3 whitespace-nowrap">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">

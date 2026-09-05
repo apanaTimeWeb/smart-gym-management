@@ -2,7 +2,7 @@
 import { EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM } from '@/app/trainer/workout/workout_utils/WorkoutSharedConstants';
 import React from 'react';
 
-import type { Exercise } from '@/app/trainer/library/library_types/library_types';
+import type { Exercise, Workout } from '@/app/trainer/trainer_types/trainer_types';
 import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
 
 export interface WorkoutContextType {
@@ -48,7 +48,4 @@ export interface WorkoutContextType {
  deleteEx: (id: string) => void;
 }
 
-export interface Workout {
-  id: string; name: string; level: string; days: number;
-  exercises: number; focus: string; duration: string; tags: string[]; isActive?: boolean;
-}
+

@@ -49,7 +49,7 @@ export default function TrainerMembersTable() {
                   return (
                   <tr 
                     key={m.id} 
-                    className="hover:bg-primary/5 transition-colors cursor-pointer"
+                    className="hover:bg-primary/5 motion-safe:transition-colors cursor-pointer"
                     onClick={() => { setSelectedMember(m); loadMemberProfile(m.id); }}
                   >
                     <td className="px-5 py-3.5 text-sm text-secondary font-medium">
@@ -80,8 +80,8 @@ export default function TrainerMembersTable() {
                     <td className="px-5 py-3.5 text-sm text-secondary">{new Date(m.expiryDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-2">
-                        <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'whatsapp'); }} className="p-1.5 rounded-lg bg-success text-white hover:opacity-80 transition-all duration-200" title="WhatsApp" aria-label={`Message ${m.name} on WhatsApp`}><MessageCircle size={14} /></button>
-                        <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'email'); }} className="p-1.5 rounded-lg bg-info text-white hover:opacity-80 transition-all duration-200" title="Email" aria-label={`Email ${m.name}`}><Mail size={14} /></button>
+                        <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'whatsapp'); }} className="p-1.5 rounded-lg bg-success text-white hover:opacity-80 motion-safe:transition-all motion-safe:duration-200" title="WhatsApp" aria-label={`Message ${m.name} on WhatsApp`}><MessageCircle size={14} /></button>
+                        <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'email'); }} className="p-1.5 rounded-lg bg-info text-white hover:opacity-80 motion-safe:transition-all motion-safe:duration-200" title="Email" aria-label={`Email ${m.name}`}><Mail size={14} /></button>
                       </div>
                     </td>
                   </tr>

@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Provides strongly-typed network calls for the workout module.
 import { apiFetch, ApiResponse } from '@/lib/api';
 import { WorkoutUrlConfig } from '@/app/trainer/workout/workout_url_config';
-import type { Workout } from '@/app/trainer/workout/workout_types/workout_types';
+import type { Workout } from '@/app/trainer/trainer_types/trainer_types';
 
 export const workoutApi = {
   getWorkouts: (params?: Record<string, string>) => {

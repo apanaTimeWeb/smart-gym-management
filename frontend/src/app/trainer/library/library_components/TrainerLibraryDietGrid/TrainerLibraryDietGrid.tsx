@@ -32,7 +32,7 @@ export default function TrainerLibraryDietGrid() {
         {currentData.map(dp => (
           <div 
             key={dp.id} 
-            className="rounded-xl border border-border bg-card p-5 hover:shadow-md transition-shadow flex flex-col cursor-pointer"
+            className="rounded-xl border border-border bg-card p-5 hover:shadow-md motion-safe:transition-shadow flex flex-col cursor-pointer"
             onClick={() => openEditDiet(dp)}
           >
             <div className="flex justify-between items-start mb-3">
@@ -42,7 +42,7 @@ export default function TrainerLibraryDietGrid() {
               <div className="flex gap-2">
                 <button 
                   onClick={(e) => { e.stopPropagation(); openEditDiet(dp); }}
-                  className="p-1.5 rounded hover:bg-primary/10 transition-colors text-secondary hover:text-primary"
+                  className="p-1.5 rounded hover:bg-primary/10 motion-safe:transition-colors text-secondary hover:text-primary"
                   title="Edit"
                 >
                   <Edit2 size={16} />
@@ -54,7 +54,7 @@ export default function TrainerLibraryDietGrid() {
                       deleteDietPlan(dp.id); 
                     }
                   }}
-                  className="p-1.5 rounded transition-colors text-danger hover:bg-danger/10"
+                  className="p-1.5 rounded motion-safe:transition-colors text-danger hover:bg-danger/10"
                   title="Delete"
                 >
                   <Trash2 size={16} />

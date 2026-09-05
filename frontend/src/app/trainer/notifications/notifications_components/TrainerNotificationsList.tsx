@@ -26,7 +26,7 @@ export default function TrainerNotificationsList({ notifications, onMarkAsRead, 
         <div 
           key={n.id} 
           onMouseEnter={() => n.unread && onMarkAsRead(n.id)}
-          className={`p-4 md:px-6 flex items-start justify-between group transition-colors ${n.unread ? 'bg-primary-subtle hover:bg-primary-subtle/80' : 'bg-card hover:bg-input'}`}
+          className={`p-4 md:px-6 flex items-start justify-between group motion-safe:transition-colors ${n.unread ? 'bg-primary-subtle hover:bg-primary-subtle/80' : 'bg-card hover:bg-input'}`}
         >
           <div className="flex items-start gap-4 pr-4">
             <div className={`mt-1 w-2 h-2 rounded-full flex-shrink-0 ${n.unread ? 'bg-primary' : 'bg-transparent'}`} />
@@ -41,7 +41,7 @@ export default function TrainerNotificationsList({ notifications, onMarkAsRead, 
                 onDelete(n.id);
               }
             }}
-            className="text-secondary hover:text-danger p-2 rounded-md hover:bg-danger-bg opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all focus:opacity-100"
+            className="text-secondary hover:text-danger p-2 rounded-md hover:bg-danger-bg opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-all focus:opacity-100"
             aria-label="Delete notification"
           >
             <X size={18} />

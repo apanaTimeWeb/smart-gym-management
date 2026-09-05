@@ -10,7 +10,7 @@ export default function TrainerLayout({ children }: { children: React.ReactNode 
  return (
  <div className="flex h-screen overflow-hidden bg-background text-foreground">
  <TrainerSidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
- <main className={`flex-1 flex flex-col h-screen overflow-y-auto transition-all duration-300 ${isCollapsed ? 'lg:ml-23' : 'lg:ml-64'}`}>
+ <main className={`flex-1 flex flex-col h-screen overflow-y-auto motion-safe:transition-all motion-safe:duration-300 ${isCollapsed ? 'lg:ml-23' : 'lg:ml-64'}`}>
  {children}
  </main>
  </div>

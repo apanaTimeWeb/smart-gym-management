@@ -55,7 +55,7 @@ function DashboardContent() {
               <label className="text-sm font-medium text-secondary">From:</label>
               <input
                 type="date"
-                className="bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-primary"
+                className="bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus-visible:outline-none focus:border-primary"
                 value={startDate}
                 onChange={(e) => setCustomDateRange(e.target.value, endDate)}
                 aria-label="Start Date"
@@ -63,7 +63,7 @@ function DashboardContent() {
               <label className="text-sm font-medium text-secondary ml-1">To:</label>
               <input
                 type="date"
-                className="bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-primary"
+                className="bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus-visible:outline-none focus:border-primary"
                 value={endDate}
                 onChange={(e) => setCustomDateRange(startDate, e.target.value)}
                 aria-label="End Date"
@@ -78,7 +78,7 @@ function DashboardContent() {
                 setCustomDateRange('', '');
               }
             }}
-            className="bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-primary w-full sm:w-auto"
+            className="bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus-visible:outline-none focus:border-primary w-full sm:w-auto"
           >
             <option value="weekly">This Week</option>
             <option value="monthly">This Month</option>

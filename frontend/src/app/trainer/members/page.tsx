@@ -12,8 +12,8 @@ export default async function MembersPage() {
   
   try {
     const [membersRes, statsRes] = await Promise.all([
-      ssrMembersApi.getAll({ limit: '10', page: '1' }),
-      ssrMembersApi.getStats(),
+      ssrMembersApi.fetchMembers({ limit: '10', page: '1' }),
+      ssrMembersApi.fetchMemberStats(),
     ]);
     initialData = {
       members: (membersRes.data as any).members || [],

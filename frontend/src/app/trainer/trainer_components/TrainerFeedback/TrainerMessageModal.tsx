@@ -102,7 +102,7 @@ export default function TrainerMessageModal({
  <button
  onClick={handleClose}
  disabled={sending}
- className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors disabled:opacity-50"
+ className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center motion-safe:transition-colors disabled:opacity-50"
  >
  <X size={16} color="white" />
  </button>
@@ -140,7 +140,7 @@ export default function TrainerMessageModal({
  value={subject}
  onChange={(e) => setSubject(e.target.value)}
  disabled={sending || sent}
- className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-lg focus:outline-none focus:border-border-focus text-foreground disabled:opacity-60"
+ className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-lg focus-visible:outline-none focus:border-border-focus text-foreground disabled:opacity-60"
  placeholder="Email subject..."
  />
  </div>
@@ -155,7 +155,7 @@ export default function TrainerMessageModal({
  value={message}
  onChange={(e) => setMessage(e.target.value)}
  disabled={sending || sent}
- className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-xl focus:outline-none focus:border-border-focus text-foreground resize-none disabled:opacity-60"
+ className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-xl focus-visible:outline-none focus:border-border-focus text-foreground resize-none disabled:opacity-60"
  placeholder="Type your message..."
  />
  <p className="text-right text-xs text-secondary mt-1">{message.length} chars</p>
@@ -165,14 +165,14 @@ export default function TrainerMessageModal({
  <button
  onClick={handleClose}
  disabled={sending}
- className="flex-1 px-4 py-2.5 text-sm border border-border rounded-xl hover:bg-input text-foreground font-medium transition-colors disabled:opacity-50"
+ className="flex-1 px-4 py-2.5 text-sm border border-border rounded-xl hover:bg-input text-foreground font-medium motion-safe:transition-colors disabled:opacity-50"
  >
  Cancel
  </button>
  <button
  onClick={handleSend}
  disabled={sending || sent || !message.trim()}
- className="flex-1 px-4 py-2.5 text-sm font-semibold text-white rounded-xl flex items-center justify-center gap-2 transition-all disabled:opacity-50"
+ className="flex-1 px-4 py-2.5 text-sm font-semibold text-white rounded-xl flex items-center justify-center gap-2 motion-safe:transition-all disabled:opacity-50"
  style={{ background: sent ? 'var(--success)' : (type === 'whatsapp' ? WA_GREEN : 'var(--info)') }}
  >
  {sent ? (

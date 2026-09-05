@@ -24,7 +24,7 @@ export default function TrainerNotificationsClient() {
           <button 
             onClick={markAllAsRead}
             disabled={unreadCount === 0}
-            className="flex items-center gap-2 text-sm text-secondary hover:text-primary transition-colors disabled:opacity-50 disabled:hover:text-secondary"
+            className="flex items-center gap-2 text-sm text-secondary hover:text-primary motion-safe:transition-colors disabled:opacity-50 disabled:hover:text-secondary"
           >
             <CheckCheck size={16} /> Mark all read
           </button>
@@ -35,7 +35,7 @@ export default function TrainerNotificationsClient() {
               }
             }}
             disabled={notifications.length === 0}
-            className="flex items-center gap-2 text-sm text-secondary hover:text-danger transition-colors disabled:opacity-50 disabled:hover:text-secondary"
+            className="flex items-center gap-2 text-sm text-secondary hover:text-danger motion-safe:transition-colors disabled:opacity-50 disabled:hover:text-secondary"
           >
             <Trash2 size={16} /> Clear all
           </button>

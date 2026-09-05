@@ -45,7 +45,7 @@ export default function TrainerAttendanceModal() {
           <button 
             type="button"
             onClick={() => setShowModal(false)} 
-            className="text-secondary hover:text-foreground hover:bg-primary/10 p-1 rounded-md transition-colors"
+            className="text-secondary hover:text-foreground hover:bg-primary/10 p-1 rounded-md motion-safe:transition-colors"
           >
             <X size={20} />
           </button>
@@ -57,7 +57,7 @@ export default function TrainerAttendanceModal() {
                 type="radio" 
                 value="MEMBER" 
                 {...register('type')}
-                className="text-primary focus:ring-primary" 
+                className="text-primary focus-visible:ring-primary" 
               />
               Member
             </label>
@@ -89,7 +89,7 @@ export default function TrainerAttendanceModal() {
               <input 
                 type="date" 
                 {...register('date')}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus-visible:ring-2 ${
+                className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 ${
                   errors.date ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
                 } bg-input text-foreground`} 
               />
@@ -100,7 +100,7 @@ export default function TrainerAttendanceModal() {
               <input 
                 type="time" 
                 {...register('checkIn')}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus-visible:ring-2 ${
+                className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 ${
                   errors.checkIn ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
                 } bg-input text-foreground`} 
               />
@@ -112,14 +112,14 @@ export default function TrainerAttendanceModal() {
             <button 
               type="button" 
               onClick={() => setShowModal(false)} 
-              className="px-4 py-2 border border-border rounded-lg font-medium text-secondary hover:text-foreground hover:bg-primary/10 transition-colors"
+              className="px-4 py-2 border border-border rounded-lg font-medium text-secondary hover:text-foreground hover:bg-primary/10 motion-safe:transition-colors"
             >
               Cancel
             </button>
             <button 
               type="submit" 
               disabled={saving}
-              className="px-4 py-2 rounded-lg font-medium text-white bg-primary flex items-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-70" 
+              className="px-4 py-2 rounded-lg font-medium text-white bg-primary flex items-center gap-2 hover:opacity-90 motion-safe:transition-opacity disabled:opacity-70" 
             >
               {saving ? <Loader2 className="w-4 h-4 motion-safe:animate-spin" /> : <><CheckCircle size={15} /> Check In</>}
             </button>

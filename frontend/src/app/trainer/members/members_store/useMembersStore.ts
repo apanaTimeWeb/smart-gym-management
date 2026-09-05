@@ -1,3 +1,4 @@
+import { attendanceApi } from '@/app/trainer/attendance/attendance_api/attendance_api';
 /**
  * RESPONSIBILITY: Zustand store that manages all async data for the Members module.
  * DATA FLOW: API -> useMembersStore -> useMembersLogic / UI Components
@@ -5,8 +6,9 @@
 
 import { create } from 'zustand';
 import { membersApi } from '@/app/trainer/members/members_api/members_api';
-import { attendanceApi } from '@/app/trainer/attendance/attendance_api/attendance_api';
-import type { Member, MembersInitialData, FetchState } from '@/app/trainer/members/members_types/members_types';
+import { trainerSharedApi } from '@/app/trainer/trainer_api/trainer_api';
+import type { MembersInitialData } from '@/app/trainer/members/members_types/members_types';
+import type { Member, FetchState } from '@/app/trainer/trainer_types/trainer_types';
 import { MemberFormValues, ATTENDANCE_CALENDAR_DAYS } from '@/app/trainer/members/members_utils/MembersSharedConstants';
 
 interface MembersState {
@@ -53,8 +55,8 @@ export const useMembersStore = create<MembersState>((set, get) => ({
       if (params.status && params.status !== 'All') apiParams.status = params.status;
 
       const [membersRes, statsRes] = await Promise.all([
-        membersApi.getAll(apiParams),
-        membersApi.getStats(),
+        membersApi.fetchMembers(apiParams),
+        membersApi.fetchMemberStats(),
       ]);
       
       set({
@@ -72,7 +74,7 @@ export const useMembersStore = create<MembersState>((set, get) => ({
   loadMemberProfile: async (memberId: string) => {
     try {
       
-      const aRes = await attendanceApi.getAll({ memberId: memberId.toString() });
+      const aRes = await attendanceApi.fetchAttendanceRecords({ memberId: memberId.toString() });
       
       if (aRes.success) {
         const realAtt = Array.from({ length: ATTENDANCE_CALENDAR_DAYS }, (_, i) => {
@@ -99,14 +101,14 @@ export const useMembersStore = create<MembersState>((set, get) => ({
     set({ saving: true });
     try {
       if (editId) {
-        const res = await membersApi.update(editId, data);
+        const res = await membersApi.updateMember(editId, data);
         const updatedMem = res.data || data;
         set((state) => ({
           members: state.members.map(m => String(m.id) === String(editId) ? { ...m, ...updatedMem } as unknown as Member : m)
         }));
         return { success: true, message: res.message || 'Updated successfully' };
       } else {
-        const res = await membersApi.create({ ...data, joinDate: new Date().toISOString() });
+        const res = await membersApi.createMember({ ...data, joinDate: new Date().toISOString() });
         const newMember = res.data ? res.data : { ...data, id: Math.random().toString(), status: 'ACTIVE', joinDate: new Date().toISOString(), planName: 'Basic', pendingAmount: 0 } as unknown as Member;
         set((state) => ({
           members: [newMember, ...state.members],
@@ -123,7 +125,7 @@ export const useMembersStore = create<MembersState>((set, get) => ({
 
   deleteMember: async (id: string) => {
     try {
-      const res = await membersApi.remove(id);
+      const res = await membersApi.deleteMember(id);
       set((state) => ({
         members: state.members.filter(m => String(m.id) !== String(id)),
         totalMembers: Math.max(0, state.totalMembers - 1)

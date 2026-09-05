@@ -2,7 +2,8 @@
 // DATA FLOW: UI Interactions -> useMembersLogic -> useMembersStore -> API
 import React, { useState, useCallback, useEffect } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import type { Member, MembersContextType, MembersInitialData } from '@/app/trainer/members/members_types/members_types';
+import type { MembersContextType } from '@/app/trainer/members/members_types/members_types';
+import type { Member } from '@/app/trainer/trainer_types/trainer_types';
 import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
 import type { MessageType, TrainerMessageRecipient } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerMessageModal';
 import type { TrainerReceiptData } from '@/app/trainer/trainer_components/TrainerShared/TrainerThermalReceipt';
@@ -12,7 +13,7 @@ import { GYM_DETAILS } from '@/app/trainer/trainer_utils/TrainerSharedConstants'
 import { useDebounce } from '@/app/trainer/trainer_utils/useDebounce';
 import { useMembersStore } from '@/app/trainer/members/members_store/useMembersStore';
 
-export function useMembersLogic(initialData?: MembersInitialData | null): MembersContextType {
+export function useMembersLogic(initialData?: any | null): MembersContextType {
   const { confirm } = useConfirm();
   const router = useRouter();
   const pathname = usePathname();

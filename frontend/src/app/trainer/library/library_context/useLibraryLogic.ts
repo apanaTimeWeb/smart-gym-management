@@ -2,14 +2,15 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useDebounce } from '@/app/trainer/trainer_utils/useDebounce';
 import { libraryApi } from '@/app/trainer/library/library_api/library_api';
-import type { Exercise, DietPlan } from '@/app/trainer/library/library_types/library_types';
+import type { LibraryContextType } from '@/app/trainer/library/library_types/library_types';
+import type { Exercise, DietPlan } from '@/app/trainer/trainer_types/trainer_types';
 import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
 import { EMPTY_EXERCISE_FORM, EMPTY_DIET_FORM, type LibraryTab } from '@/app/trainer/library/library_utils/LibrarySharedConstants';
-import type { LibraryContextType, LibraryInitialData } from '@/app/trainer/library/library_types/library_types';
+
 import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 
-export function useLibraryLogic(initialData?: LibraryInitialData | null): LibraryContextType {
+export function useLibraryLogic(initialData?: any | null): LibraryContextType {
   const { confirm } = useConfirm();
   const router = useRouter();
   const searchParams = useSearchParams();

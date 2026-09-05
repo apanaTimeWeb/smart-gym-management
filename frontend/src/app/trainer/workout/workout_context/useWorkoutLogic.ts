@@ -3,12 +3,14 @@ import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { 
   EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM, WorkoutFormValues, ExerciseFormValues
 } from '@/app/trainer/workout/workout_utils/WorkoutSharedConstants';
-import type { WorkoutContextType, Workout } from '@/app/trainer/workout/workout_types/workout_types';
+import type { WorkoutContextType } from '@/app/trainer/workout/workout_types/workout_types';
+import type { Workout } from '@/app/trainer/trainer_types/trainer_types';
 import { useDebounce } from '@/app/trainer/trainer_utils/useDebounce';
 import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 import { workoutApi } from '@/app/trainer/workout/workout_api/workout_api';
+import { trainerSharedApi } from '@/app/trainer/trainer_api/trainer_api';
 import { libraryApi } from '@/app/trainer/library/library_api/library_api';
-import type { Exercise } from '@/app/trainer/library/library_types/library_types';
+import type { Exercise } from '@/app/trainer/trainer_types/trainer_types';
 import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 
@@ -66,7 +68,7 @@ export function useWorkoutLogic(): WorkoutContextType {
 
       const [wkRes, exRes] = await Promise.all([
         workoutApi.getWorkouts(params),
-        libraryApi.getExercises(params),
+        trainerSharedApi.fetchExercises(params) as Promise<any>,
       ]);
       setWorkouts(wkRes.data.workouts || []);
       setTotalWorkouts(wkRes.data.total || 0);

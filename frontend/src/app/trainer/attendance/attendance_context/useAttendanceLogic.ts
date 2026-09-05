@@ -4,12 +4,13 @@ import { useState, useCallback, useEffect } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { ApiResponse } from '@/lib/api';
 import { attendanceApi } from '@/app/trainer/attendance/attendance_api/attendance_api';
-import { membersApi } from '@/app/trainer/members/members_api/members_api';
-import type { Member } from '@/app/trainer/members/members_types/members_types';
+import { trainerSharedApi } from '@/app/trainer/trainer_api/trainer_api';
+import type { Member } from '@/app/trainer/trainer_types/trainer_types';
 import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
 import { EMPTY_ATTENDANCE_FORM, ATTENDANCE_TABS, type AttendanceTab, AttendanceFormValues } from '@/app/trainer/attendance/attendance_utils/AttendanceSharedConstants';
 import { useDebounce } from '@/app/trainer/trainer_utils/useDebounce';
-import type { AttendanceContextType, Attendance, AttendanceStatsResponse, AttendanceResponse, FetchState } from '@/app/trainer/attendance/attendance_types/attendance_types';
+import type { AttendanceContextType } from '@/app/trainer/attendance/attendance_types/attendance_types';
+import type { Attendance, FetchState } from '@/app/trainer/trainer_types/trainer_types';
 
 export function useAttendanceLogic(): AttendanceContextType {
   const router = useRouter();
@@ -44,7 +45,7 @@ export function useAttendanceLogic(): AttendanceContextType {
   // Local State
   const [records, setRecords] = useState<Attendance[]>([]);
   const [totalRecords, setTotalRecords] = useState(0);
-  const [todayStats, setTodayStats] = useState<AttendanceStatsResponse>({ totalCheckIns: 0, memberCheckIns: 0, staffCheckIns: 0 });
+  const [todayStats, setTodayStats] = useState<any>({ totalCheckIns: 0, memberCheckIns: 0, staffCheckIns: 0 });
   const [members, setMembers] = useState<Member[]>([]);
  
   const [fetchState, setFetchState] = useState<FetchState>('loading');
@@ -64,7 +65,7 @@ export function useAttendanceLogic(): AttendanceContextType {
       const mockRecords: Attendance[] = [
         { id: '1', date: new Date().toISOString(), checkIn: new Date().toISOString(), type: 'MEMBER', memberId: 1, member: { name: 'John Doe' } }
       ];
-      const mockStats: AttendanceStatsResponse = { totalCheckIns: 1, memberCheckIns: 1, staffCheckIns: 0 };
+      const mockStats: any = { totalCheckIns: 1, memberCheckIns: 1, staffCheckIns: 0 };
       const mockMembers: Member[] = [
         { id: '1', name: 'John Doe', phone: '123', email: 'john@test.com', status: 'ACTIVE', billingCycle: '1 Month', paidAmount: 100, pendingAmount: 0, expiryDate: new Date().toISOString(), joinDate: new Date().toISOString(), planId: 'p1', gender: 'MALE', branch: 'Main Branch', createdAt: new Date().toISOString() }
       ];

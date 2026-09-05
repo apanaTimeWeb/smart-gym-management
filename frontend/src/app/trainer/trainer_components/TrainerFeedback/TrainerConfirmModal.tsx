@@ -28,7 +28,7 @@ export default function TrainerConfirmModal({
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 p-4">
-      <div className="bg-card rounded-2xl shadow-xl w-full max-w-sm overflow-hidden motion-safe:animate-in fade-in zoom-in duration-200">
+      <div className="bg-card rounded-2xl shadow-xl w-full max-w-sm overflow-hidden motion-safe:animate-in fade-in zoom-in motion-safe:duration-200">
         <div className="p-6">
           <div className="flex items-center gap-4 mb-4">
             <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${
@@ -49,7 +49,7 @@ export default function TrainerConfirmModal({
           <div className="flex gap-3 mt-6">
             <button
               onClick={onCancel}
-              className="flex-1 py-2.5 border border-border rounded-xl text-sm font-semibold text-foreground hover:bg-input transition-colors"
+              className="flex-1 py-2.5 border border-border rounded-xl text-sm font-semibold text-foreground hover:bg-input motion-safe:transition-colors"
             >
               {cancelText}
             </button>
@@ -58,7 +58,7 @@ export default function TrainerConfirmModal({
                 onConfirm();
                 onCancel();
               }}
-              className={`flex-1 py-2.5 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90 ${
+              className={`flex-1 py-2.5 rounded-xl text-sm font-semibold text-white motion-safe:transition-opacity hover:opacity-90 ${
                 type === 'danger' ? 'bg-danger-bg' :
                 type === 'warning' ? 'bg-warning' :
                 'bg-info'

@@ -4,6 +4,7 @@ import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback
 import { EMPTY_EXERCISE_FORM, EMPTY_DIET_FORM, type LibraryTab } from '@/app/trainer/library/library_utils/LibrarySharedConstants';
 import React from 'react';
 
+import type { Exercise, DietPlan } from '@/app/trainer/trainer_types/trainer_types';
 export interface LibraryInitialData {
   exercises: Exercise[];
   dietPlans: DietPlan[];
@@ -51,13 +52,5 @@ export interface LibraryContextType {
  deleteDietPlan: (id: string) => Promise<void>;
 }
 
-export interface Exercise {
-  id: string; name: string; category: string; muscleGroup: string[];
-  sets?: number; reps?: string; duration?: string;
-  difficulty: string; description?: string; videoUrl?: string; imageUrl?: string; isActive: boolean;
-}
-export interface DietPlan {
-  id: string; name: string; goal: string;
-  calories?: number; protein?: number; carbs?: number; fats?: number;
-  description?: string; meals: string[]; isActive: boolean;
-}
+
+

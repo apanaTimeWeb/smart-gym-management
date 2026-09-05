@@ -19,7 +19,7 @@ export default function TrainerWorkoutPlansGrid() {
         {workouts.map(w => (
           <div 
             key={w.id} 
-            className="border border-border rounded-xl p-4 hover:border-info dark:hover:border-info hover:shadow-sm transition-all bg-card"
+            className="border border-border rounded-xl p-4 hover:border-info dark:hover:border-info hover:shadow-sm motion-safe:transition-all bg-card"
           >
             <div className="flex items-start justify-between mb-3">
               <div className="w-10 h-10 bg-info-bg dark:bg-info-bg rounded-xl flex items-center justify-center">
@@ -37,7 +37,7 @@ export default function TrainerWorkoutPlansGrid() {
                 </span>
                 <button 
                   onClick={() => openEditWk(w)} 
-                  className="p-1.5 text-info hover:text-info hover:bg-info-bg dark:hover:bg-info-bg rounded-lg transition-colors"
+                  className="p-1.5 text-info hover:text-info hover:bg-info-bg dark:hover:bg-info-bg rounded-lg motion-safe:transition-colors"
                 >
                   <Edit2 size={13} />
                 </button>
@@ -48,7 +48,7 @@ export default function TrainerWorkoutPlansGrid() {
                       deleteWk(w.id);
                     }
                   }}
-                  className="p-1.5 text-danger hover:text-danger hover:bg-danger-bg dark:hover:bg-danger-bg rounded-lg transition-colors"
+                  className="p-1.5 text-danger hover:text-danger hover:bg-danger-bg dark:hover:bg-danger-bg rounded-lg motion-safe:transition-colors"
                 >
                   <Trash2 size={13} />
                 </button>
