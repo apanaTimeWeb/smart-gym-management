@@ -20,6 +20,8 @@ export function useManagerSalesLogic(initialData?: SalesInitialData | null): Sal
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
   const search = searchParams.get('search') || '';
+  const customStartDate = searchParams.get('startDate') || '';
+  const customEndDate = searchParams.get('endDate') || '';
   const currentPage = Number(searchParams.get('page')) || 1;
   const debouncedSearch = useDebounce(search, 300);
 
@@ -33,6 +35,22 @@ export function useManagerSalesLogic(initialData?: SalesInitialData | null): Sal
   const setTab = useCallback((val: SalesTab) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set('tab', val);
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [router, searchParams, pathname]);
+
+  const setCustomStartDate = useCallback((val: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (val) params.set('startDate', val);
+    else params.delete('startDate');
+    params.set('page', '1');
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [router, searchParams, pathname]);
+
+  const setCustomEndDate = useCallback((val: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (val) params.set('endDate', val);
+    else params.delete('endDate');
+    params.set('page', '1');
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   }, [router, searchParams, pathname]);
 
@@ -68,6 +86,10 @@ export function useManagerSalesLogic(initialData?: SalesInitialData | null): Sal
     setFetchState('loading');
     try {
       const params: Record<string, string> = { limit: '10', page: currentPage.toString(), period: dateFilter.toLowerCase() };
+      if (dateFilter === 'Custom') {
+        if (customStartDate) params.startDate = customStartDate;
+        if (customEndDate) params.endDate = customEndDate;
+      }
       if (debouncedSearch) params.search = debouncedSearch;
 
       const [overviewRes, reportRes, pendingRes, allRes] = await Promise.all([
@@ -115,6 +137,8 @@ export function useManagerSalesLogic(initialData?: SalesInitialData | null): Sal
     tab, setTab,
     dateFilter, setDateFilter,
     search, setSearch,
+    customStartDate, setCustomStartDate,
+    customEndDate, setCustomEndDate,
     currentPage, setCurrentPage,
     overviewData,
     membershipReport,

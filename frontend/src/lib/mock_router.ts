@@ -720,6 +720,17 @@ export async function routeMockRequest<T>(
         total: 6
       }} as unknown as ApiResponse<T>;
     }
+    if (path.includes('/sales/all-memberships')) {
+      return { success: true, message: 'Demo All Memberships', data: {
+        members: generate(10, i => ({ 
+          id: `all-mem-${i}`, name: `Member ${i+1}`, phone: '1234567890', email: `mem${i}@test.com`,
+          status: 'ACTIVE', billingCycle: '1 Month', paidAmount: 5000, pendingAmount: 0,
+          joinDate: new Date().toISOString(), expiryDate: new Date(Date.now() + 30*24*60*60*1000).toISOString(),
+          planId: 'basic', gender: 'MALE', branch: 'Main', createdAt: new Date().toISOString()
+        })),
+        total: 10
+      }} as unknown as ApiResponse<T>;
+    }
     // End removed
     // Removed /settings (handled by MockDB stateful routing)
 
