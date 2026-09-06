@@ -26,6 +26,10 @@ export function MembersProvider({ children, initialData }: { children: React.Rea
     openAdd, openEdit, saveMember, deleteMember, assignDiet, assignWorkout, renewMember, recordPayment, freezeMember, toggleSuspend, assignTrainer,
     msgModal, openMsg, closeMsg, printData, handlePrint, handleSharePaymentWhatsApp, setPrintData
   }), [search, debouncedSearch, statusFilter, currentPage, toast, selectedMember, profileTab, trainers, showAddModal, editId, editData, showRenewModal, showPaymentModal, msgModal, printData]);
+
+  return (
+    <ManagerMembersContext.Provider value={value}>
+      {children}
     </ManagerMembersContext.Provider>
   );
 }

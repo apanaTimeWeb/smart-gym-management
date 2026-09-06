@@ -94,6 +94,14 @@ export default function ManagerMembersTable() {
                         </span>
                       ) : <span className="text-secondary">—</span>}
                     </td>
+                    <td className="px-2 py-3 text-xs whitespace-nowrap">
+                      {m.assignedTrainerName ? (
+                        <div className="flex flex-col gap-0.5">
+                          <span className="font-semibold text-foreground">{m.assignedTrainerName.length > 15 ? m.assignedTrainerName.substring(0, 15) + '...' : m.assignedTrainerName}</span>
+                          {m.isPT && <span className="text-[9px] font-bold text-primary uppercase tracking-wide">PT</span>}
+                        </div>
+                      ) : <span className="text-secondary">—</span>}
+                    </td>
                     <td className="px-2 py-3 whitespace-nowrap">
                       <div className="flex items-center gap-1.5">
                         {m.pendingAmount > 0 && (
@@ -130,7 +138,7 @@ export default function ManagerMembersTable() {
                 )})}
                 {members.length === 0 && fetchState === 'success' && (
                   <tr>
-                    <td colSpan={11} className="p-0 border-b-0">
+                    <td colSpan={12} className="p-0 border-b-0">
                       <ManagerEmptyState 
                         icon={<Users size={32} />}
                         title={Boolean(search || statusFilter !== 'All') ? 'No members found' : 'No members yet'}
