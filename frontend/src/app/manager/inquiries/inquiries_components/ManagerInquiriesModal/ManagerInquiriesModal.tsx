@@ -92,7 +92,7 @@ export default function ManagerInquiriesModal() {
                   pattern={f.type === 'email' ? '.*\\.com$' : undefined}
                   title={f.type === 'email' ? 'Email must end with .com' : undefined}
                   {...register(f.key as keyof InquiryFormValues)}
-                  className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-colors ${
+                  className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-colors ${
                     errors[f.key as keyof InquiryFormValues] ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
                   }`}
                 />

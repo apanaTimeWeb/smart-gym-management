@@ -108,7 +108,7 @@ export const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
   return (
     <div className={`relative w-full ${className}`} ref={dropdownRef}>
       <div
-        className={`w-full bg-input border border-border rounded-lg px-4 py-2.5 flex items-center justify-between cursor-pointer ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+        className={`w-full bg-input border border-border rounded-lg px-4 py-2 flex items-center justify-between cursor-pointer ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
         onClick={toggleOpen}
       >
         <span className={`text-sm ${!selectedOption ? 'text-muted-foreground' : 'text-foreground'} truncate`}>

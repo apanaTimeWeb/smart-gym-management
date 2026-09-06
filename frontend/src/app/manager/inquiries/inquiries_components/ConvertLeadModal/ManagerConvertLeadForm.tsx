@@ -38,12 +38,13 @@ export default function ManagerConvertLeadForm({
             placeholder={f.placeholder}
             maxLength={f.key === 'phone' ? 10 : f.key === 'aadhaar' ? 12 : undefined}
             onKeyDown={(e) => {
-              if ((f.key === 'phone' || f.key === 'aadhaar') && ['e', 'E', '-', '+', '.'].includes(e.key)) {
-                e.preventDefault();
+              if (f.key === 'phone' || f.key === 'aadhaar') {
+                if (['e', 'E', '-', '+', '.'].includes(e.key)) e.preventDefault();
+                if (e.key.length === 1 && !/^[0-9]$/.test(e.key) && !e.ctrlKey && !e.metaKey) e.preventDefault();
               }
             }}
             {...register(f.key as keyof MemberFormValues)}
-            className={`w-full border rounded-xl px-4 py-3 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-all duration-200 ${
+            className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-all duration-200 ${
               errors[f.key as keyof MemberFormValues] ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
             }`}
           />
@@ -103,7 +104,7 @@ export default function ManagerConvertLeadForm({
             onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }}
             {...register('customDays')}
             placeholder="e.g. 15"
-            className={`w-full border rounded-xl px-4 py-3 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-all duration-200 ${
+            className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-all duration-200 ${
               errors.customDays ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
             }`}
           />
@@ -129,20 +130,20 @@ export default function ManagerConvertLeadForm({
 
       <div>
         <label className="block text-sm font-medium text-secondary mb-1.5">Join Date</label>
-        <input type="date" min={new Date().toISOString().split('T')[0]} {...register('joinDate')} className="w-full border rounded-xl px-4 py-3 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-all duration-200" />
+        <input type="date" min={new Date().toISOString().split('T')[0]} {...register('joinDate')} className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-all duration-200" />
       </div>
       <div>
         <label className="block text-sm font-medium text-secondary mb-1">Expiry Date <span className="text-danger">*</span></label>
-        <input type="date" min={new Date().toISOString().split('T')[0]} {...register('expiryDate')} className="w-full border rounded-xl px-4 py-3 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-all duration-200" />
+        <input type="date" min={new Date().toISOString().split('T')[0]} {...register('expiryDate')} className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-all duration-200" />
       </div>
 
       <div>
         <label className="block text-sm font-medium text-secondary mb-1.5">Total Plan Amount (₹)</label>
-        <input type="number" disabled {...register('totalAmount', { valueAsNumber: true })} className="w-full border rounded-xl px-4 py-3 text-sm focus-visible:outline-none bg-input opacity-80 cursor-not-allowed text-primary" />
+        <input type="number" disabled {...register('totalAmount', { valueAsNumber: true })} className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none bg-input opacity-80 cursor-not-allowed text-primary" />
       </div>
       <div>
         <label className="block text-sm font-medium text-secondary mb-1.5">Amount Paid (₹)</label>
-        <input type="number" min="0" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }} {...register('paidAmount', { valueAsNumber: true })} className="w-full border rounded-xl px-4 py-3 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-all duration-200" />
+        <input type="number" min="0" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }} {...register('paidAmount', { valueAsNumber: true })} className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-all duration-200" />
       </div>
     </div>
   );

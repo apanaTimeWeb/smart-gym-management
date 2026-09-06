@@ -28,7 +28,7 @@ export default function ManagerToast({ message, type, onClose }: ManagerToastPro
 
  return (
  <div
- className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 w-80 p-4 rounded-xl shadow-2xl bg-card text-foreground"
+ className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 w-[90vw] sm:w-80 max-w-sm p-4 rounded-xl shadow-2xl bg-card text-foreground"
  style={{ 
  borderLeft: `4px solid ${border}`,
  animation: 'toastIn 0.3s ease-out forwards'

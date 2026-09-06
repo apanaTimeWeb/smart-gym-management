@@ -39,7 +39,7 @@ export default function ManagerMembersTable() {
               <thead className="bg-primary/5">
                 <tr>
                   {MEMBERS_TABLE_HEADERS.map(h => (
-                    <th key={h} className="text-left text-xs font-semibold text-secondary uppercase tracking-wider px-5 py-3 whitespace-nowrap">
+                    <th key={h} className="text-left text-[11px] font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap">
                       {h}
                     </th>
                   ))}
@@ -54,48 +54,48 @@ export default function ManagerMembersTable() {
                     className="hover:bg-primary/5 transition-colors cursor-pointer"
                     onClick={() => { setSelectedMember(m); loadMemberProfile(m.id); }}
                   >
-                    <td className="px-5 py-3.5 text-sm text-secondary font-medium whitespace-nowrap">
+                    <td className="px-2 py-3 text-xs text-secondary font-medium whitespace-nowrap">
                       <span className="font-bold text-primary">{m.id}</span>
                     </td>
-                    <td className="px-5 py-3.5 whitespace-nowrap">
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm bg-primary/10 text-primary shrink-0">
+                    <td className="px-2 py-3 whitespace-nowrap">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs bg-primary/10 text-primary shrink-0">
                           {m.name?.charAt(0) || '?'}
                         </div>
                         <div>
-                          <p className="text-sm font-semibold text-foreground">{m.name || 'Unknown'}</p>
-                          <p className="text-xs text-secondary">{maskSensitiveData(m.phone || '', 'phone')}</p>
+                          <p className="text-xs font-semibold text-foreground">{m.name || 'Unknown'}</p>
+                          <p className="text-[11px] text-secondary">{maskSensitiveData(m.phone || '', 'phone')}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-5 py-3.5 text-sm text-foreground whitespace-nowrap">{m.plan?.name || `Plan #${m.planId}`}</td>
-                    <td className="px-5 py-3.5 whitespace-nowrap">
+                    <td className="px-2 py-3 text-xs text-foreground whitespace-nowrap">{m.plan?.name || `Plan #${m.planId}`}</td>
+                    <td className="px-2 py-3 whitespace-nowrap">
                       <span 
-                        className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusStyle.bg} ${statusStyle.text}`}
+                        className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-semibold ${statusStyle.bg} ${statusStyle.text}`}
                       >
                         {m.status}
                       </span>
                     </td>
-                    <td className="px-5 py-3.5 text-sm text-secondary whitespace-nowrap">{MEMBERS_CYCLE_LABELS[m.billingCycle] || m.billingCycle}</td>
-                    <td className="px-5 py-3.5 text-sm font-medium text-success whitespace-nowrap">{formatCurrency(m.paidAmount)}</td>
-                    <td className="px-5 py-3.5 text-sm font-medium text-danger whitespace-nowrap">{m.pendingAmount > 0 ? formatCurrency(m.pendingAmount) : '—'}</td>
-                    <td className="px-5 py-3.5 text-sm text-secondary whitespace-nowrap">{new Date(m.expiryDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
-                    <td className="px-5 py-3.5 text-sm whitespace-nowrap">
+                    <td className="px-2 py-3 text-xs text-secondary whitespace-nowrap">{MEMBERS_CYCLE_LABELS[m.billingCycle] || m.billingCycle}</td>
+                    <td className="px-2 py-3 text-xs font-semibold text-success whitespace-nowrap">{formatCurrency(m.paidAmount)}</td>
+                    <td className="px-2 py-3 text-xs font-semibold text-danger whitespace-nowrap">{m.pendingAmount > 0 ? formatCurrency(m.pendingAmount) : '—'}</td>
+                    <td className="px-2 py-3 text-xs text-secondary whitespace-nowrap">{new Date(m.expiryDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                    <td className="px-2 py-3 text-xs whitespace-nowrap">
                       {m.assignedDiet?.name ? (
-                        <span className="bg-primary/10 text-primary px-2 py-1 rounded-md text-xs font-semibold" title={m.assignedDiet.name}>
-                          {m.assignedDiet.name.length > 15 ? m.assignedDiet.name.substring(0, 15) + '...' : m.assignedDiet.name}
+                        <span className="bg-primary/10 text-primary px-2 py-1 rounded-md text-[10px] font-semibold" title={m.assignedDiet.name}>
+                          {m.assignedDiet.name.length > 10 ? m.assignedDiet.name.substring(0, 10) + '...' : m.assignedDiet.name}
                         </span>
                       ) : <span className="text-secondary">—</span>}
                     </td>
-                    <td className="px-5 py-3.5 text-sm whitespace-nowrap">
+                    <td className="px-2 py-3 text-xs whitespace-nowrap">
                       {m.assignedWorkout?.name ? (
-                        <span className="bg-primary/10 text-primary px-2 py-1 rounded-md text-xs font-semibold" title={m.assignedWorkout.name}>
-                          {m.assignedWorkout.name.length > 15 ? m.assignedWorkout.name.substring(0, 15) + '...' : m.assignedWorkout.name}
+                        <span className="bg-primary/10 text-primary px-2 py-1 rounded-md text-[10px] font-semibold" title={m.assignedWorkout.name}>
+                          {m.assignedWorkout.name.length > 10 ? m.assignedWorkout.name.substring(0, 10) + '...' : m.assignedWorkout.name}
                         </span>
                       ) : <span className="text-secondary">—</span>}
                     </td>
-                    <td className="px-5 py-3.5 whitespace-nowrap">
-                      <div className="flex items-center gap-2">
+                    <td className="px-2 py-3 whitespace-nowrap">
+                      <div className="flex items-center gap-1.5">
                         <button onClick={(e) => { e.stopPropagation(); openEdit(m); }} className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle transition-all duration-200" title="Edit" aria-label={`Edit ${m.name}`}><Edit size={14} /></button>
                         <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'whatsapp'); }} className="p-1.5 rounded-lg bg-success text-white hover:opacity-80 transition-all duration-200" title="WhatsApp" aria-label={`Message ${m.name} on WhatsApp`}><MessageCircle size={14} /></button>
                         <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'email'); }} className="p-1.5 rounded-lg bg-info text-white hover:opacity-80 transition-all duration-200" title="Email" aria-label={`Email ${m.name}`}><Mail size={14} /></button>
