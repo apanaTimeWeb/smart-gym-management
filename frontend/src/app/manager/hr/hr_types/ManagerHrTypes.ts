@@ -78,6 +78,9 @@ export interface HrSummary {
   totalAdvanceGiven: number;
   pendingPaymentsCount: number;
   totalStaff: number;
+  activeStaff: number;
+  totalPayrollThisMonth: number;
+  paidCount: number;
 }
 
 export interface LedgerEntry {

@@ -15,6 +15,7 @@ export const MemberSchema = z.object({
   totalAmount: z.coerce.number().min(0).optional(),
   paidAmount: z.coerce.number().min(0, "Amount must be valid").optional(),
   pendingAmount: z.coerce.number().optional(),
+  advanceAmount: z.coerce.number().optional(),
   joinDate: z.string().optional(),
   expiryDate: z.string().optional(),
   medicalHistory: z.string().optional(),
