@@ -50,10 +50,22 @@ export default function ManagerHrPayrollModal() {
             }
             
             const baseSalary = s.salary || 0;
-            const payableAmount = Math.round((baseSalary / daysInMonth) * presentDays);
+            const perDaySalary = baseSalary / daysInMonth;
+            const attendanceDeduction = Math.round(perDaySalary * (daysInMonth - presentDays));
+            
+            let payableAmount = baseSalary - attendanceDeduction;
+            let deductedAdvance = 0;
+            
+            if (s.advanceSalary && s.advanceSalary > 0) {
+               deductedAdvance = Math.min(payableAmount, s.advanceSalary);
+               payableAmount -= deductedAdvance;
+            }
+            
+            const info = `Base: ₹${baseSalary} | Att. Ded: -₹${attendanceDeduction} | Adv. Adj: -₹${deductedAdvance} | Net: ₹${payableAmount}`;
             
             setValue('amount', payableAmount);
-            setCalculationInfo(`Present: ${presentDays}/${daysInMonth} days. Payable: ₹${payableAmount}`);
+            setValue('paidAmount', payableAmount);
+            setCalculationInfo(info);
           }
         } catch (e) {
           // Error handled via toaster in component
@@ -61,8 +73,17 @@ export default function ManagerHrPayrollModal() {
       } else if (selectedStaffId) {
         const s = staff.find(x => String(x.id) === String(selectedStaffId));
         if (s) {
-          setValue('amount', s.salary || 0);
-          setCalculationInfo('');
+          const baseSalary = s.salary || 0;
+          let payableAmount = baseSalary;
+          let deductedAdvance = 0;
+          if (s.advanceSalary && s.advanceSalary > 0) {
+             deductedAdvance = Math.min(payableAmount, s.advanceSalary);
+             payableAmount -= deductedAdvance;
+          }
+          const info = `Base: ₹${baseSalary} | Att. Ded: ₹0 | Adv. Adj: -₹${deductedAdvance} | Net: ₹${payableAmount}`;
+          setValue('amount', payableAmount);
+          setValue('paidAmount', payableAmount);
+          setCalculationInfo(info);
         }
       }
     };
@@ -119,13 +140,25 @@ export default function ManagerHrPayrollModal() {
               <input 
                 type="number" min="0" onKeyDown={(e) => { if (['e', 'E', '-', '+'].includes(e.key)) e.preventDefault(); }}
                 {...register('amount', { valueAsNumber: true })}
-                readOnly
-                className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground cursor-not-allowed opacity-80"
+                className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground transition-all duration-200"
               />
               <p className="text-xs text-secondary mt-1.5">
-                {calculationInfo ? calculationInfo : "Amount is automatically set to the staff's base salary."}
+                {calculationInfo ? calculationInfo : "Amount is automatically set to the staff's net payable, but you can modify it."}
               </p>
               {errors.amount && <p className="text-danger text-xs mt-1.5">{errors.amount.message as string}</p>}
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-sm font-semibold text-secondary">Amount Paying Now (₹) <span className="text-danger">*</span></label>
+              <input 
+                type="number" min="0" onKeyDown={(e) => { if (['e', 'E', '-', '+'].includes(e.key)) e.preventDefault(); }}
+                {...register('paidAmount', { valueAsNumber: true })}
+                className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground transition-all duration-200"
+              />
+              <p className="text-xs text-secondary mt-1.5">
+                Set to 0 if you are only recording the payroll and paying later.
+              </p>
+              {errors.paidAmount && <p className="text-danger text-xs mt-1.5">{errors.paidAmount.message as string}</p>}
             </div>
             
             <div className="space-y-1.5">

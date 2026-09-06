@@ -7,6 +7,9 @@ import { HR_TABS } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
 import { RefreshCw, Plus, Search } from 'lucide-react';
 import ManagerHrStaffTable from '@/app/manager/hr/hr_components/ManagerHrStaffTable/ManagerHrStaffTable';
 import ManagerHrPayrollTable from '@/app/manager/hr/hr_components/ManagerHrPayrollTable/ManagerHrPayrollTable';
+import ManagerHrAdvanceTable from '@/app/manager/hr/hr_components/ManagerHrAdvanceTable/ManagerHrAdvanceTable';
+import ManagerHrDueTable from '@/app/manager/hr/hr_components/ManagerHrDueTable/ManagerHrDueTable';
+import ManagerHrLedgerTable from '@/app/manager/hr/hr_components/ManagerHrLedgerTable/ManagerHrLedgerTable';
 
 export default function ManagerHrTabs() {
   const [activeTab, setActiveTab] = useState(HR_TABS[0]);
@@ -36,7 +39,7 @@ export default function ManagerHrTabs() {
               className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 w-40 sm: w-full sm:w-64  bg-card text-foreground"
             />
           </div>
-          {activeTab === 'Staff' && (
+          {activeTab === 'Staff List' && (
             <select
               value={roleFilter}
               onChange={e => { setRoleFilter(e.target.value);  }}
@@ -47,7 +50,7 @@ export default function ManagerHrTabs() {
               <option value="Trainer">Trainer</option>
             </select>
           )}
-          {activeTab === 'Payroll' && (
+          {activeTab === 'Salary & Payments' && (
             <input 
               type="month"
               value={payrollMonth}
@@ -62,7 +65,7 @@ export default function ManagerHrTabs() {
     >
       <RefreshCw size={14} />
     </button>
-    {activeTab === 'Staff' && (
+    {activeTab === 'Staff List' && (
       <button 
         onClick={openAdd} 
         className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:opacity-90 transition-opacity" 
@@ -70,7 +73,7 @@ export default function ManagerHrTabs() {
         <Plus size={14} /> Add Staff
       </button>
     )}
-    {activeTab === 'Payroll' && (
+    {activeTab === 'Salary & Payments' && (
       <button 
         onClick={openAddPayroll} 
         className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:opacity-90 transition-opacity" 
@@ -82,17 +85,27 @@ export default function ManagerHrTabs() {
 </div>
 </div>
 
- <div className="p-5">
- {fetchState === 'loading' ? (
- <div className="flex justify-center py-10">
- <div className="w-8 h-8 border-4 border-t-transparent rounded-full motion-safe:animate-spin" style={{ borderColor: 'var(--hr-highlight)', borderTopColor: 'transparent' }} />
- </div>
- ) : activeTab === 'Staff' ? (
- <ManagerHrStaffTable />
- ) : (
- <ManagerHrPayrollTable />
- )}
- </div>
+  <div className="p-5">
+  {fetchState === 'loading' ? (
+    <div className="flex justify-center py-10">
+      <div className="w-8 h-8 border-4 border-t-transparent rounded-full motion-safe:animate-spin" style={{ borderColor: 'var(--hr-highlight)', borderTopColor: 'transparent' }} />
+    </div>
+  ) : activeTab === 'Staff List' ? (
+    <ManagerHrStaffTable />
+  ) : activeTab === 'Salary & Payments' ? (
+    <ManagerHrPayrollTable />
+  ) : activeTab === 'Advance' ? (
+    <ManagerHrAdvanceTable />
+  ) : activeTab === 'Dues' ? (
+    <ManagerHrDueTable />
+  ) : activeTab === 'Ledger' ? (
+    <ManagerHrLedgerTable />
+  ) : activeTab === 'Attendance' ? (
+    <div className="text-center text-secondary py-10">Attendance view is available in the main Attendance module.</div>
+  ) : (
+    <div className="text-center text-secondary py-10">Coming soon</div>
+  )}
+  </div>
  </div>
  );
 }

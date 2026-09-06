@@ -22,9 +22,13 @@ export function HrProvider({ children, initialData }: { children: React.ReactNod
    logic.currentPage,
    logic.showModal,
    logic.showPayrollModal,
+   logic.paymentModal,
    logic.editId,
    logic.editData,
-   logic.saving
+   logic.viewProfileData,
+   logic.saving,
+   logic.payrollMonth,
+   logic.roleFilter
  ]);
 
  return (

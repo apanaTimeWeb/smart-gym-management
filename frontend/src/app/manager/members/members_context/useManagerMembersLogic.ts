@@ -19,6 +19,7 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
   // Zustand Store
   const hydrate = useManagerMembersStore((s) => s.hydrate);
   const loadAll = useManagerMembersStore((s) => s.loadAll);
+  const trainers = useManagerMembersStore((s) => s.trainers);
 
   const isFirstRender = React.useRef(true);
 
@@ -105,15 +106,21 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
       email: m.email || '', 
       phone: m.phone, 
       address: m.address || '', 
+      aadhaar: m.aadhaar || '',
+      medicalHistory: m.medicalHistory || '',
       gender: (m.gender || 'MALE') as "MALE"|"FEMALE"|"OTHER", 
       billingCycle: m.billingCycle, 
       customDays: 0,
-      planId: String(m.planId) 
+      planId: String(m.planId),
+      joinDate: m.joinDate ? m.joinDate.split('T')[0] : '',
+      expiryDate: m.expiryDate ? m.expiryDate.split('T')[0] : '',
+      paidAmount: m.paidAmount || 0,
+      totalAmount: (m.paidAmount || 0) + (m.pendingAmount || 0)
     } as MemberFormValues);
     setShowAddModal(true);
   }, []);
 
-  const { saveMember, deleteMember, assignDiet, assignWorkout, renewMember, recordPayment, freezeMember } = useManagerMembersMutations(
+  const { saveMember, deleteMember, assignDiet, assignWorkout, renewMember, recordPayment, freezeMember, toggleSuspend, assignTrainer } = useManagerMembersMutations(
     showToast, selectedMember, setSelectedMember, editId, setShowAddModal, setShowRenewModal, setShowPaymentModal
   );
 
@@ -133,11 +140,11 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
   return {
     search, debouncedSearch, setSearch, statusFilter, setStatusFilter, currentPage, setCurrentPage,
     toast, showToast, hideToast,
-    selectedMember, setSelectedMember, profileTab, setProfileTab,
+    selectedMember, setSelectedMember, profileTab, setProfileTab, trainers,
     showAddModal, setShowAddModal, editId, editData,
     showRenewModal, setShowRenewModal,
     showPaymentModal, setShowPaymentModal,
-    openAdd, openEdit, saveMember, deleteMember, assignDiet, assignWorkout, renewMember, recordPayment, freezeMember,
+    openAdd, openEdit, saveMember, deleteMember, assignDiet, assignWorkout, renewMember, recordPayment, freezeMember, toggleSuspend, assignTrainer,
     msgModal, openMsg, closeMsg,
     printData, handlePrint, handleSharePaymentWhatsApp, setPrintData
   };

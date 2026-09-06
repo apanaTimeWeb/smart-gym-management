@@ -25,6 +25,8 @@ export function useManagerMembersMutations(
   const storeRenewMember = useManagerMembersStore((s) => s.renewMember);
   const storeRecordPayment = useManagerMembersStore((s) => s.recordPayment);
   const storeFreezeMember = useManagerMembersStore((s) => s.freezeMember);
+  const storeToggleSuspendMember = useManagerMembersStore((s) => s.toggleSuspendMember);
+  const storeAssignTrainer = useManagerMembersStore((s) => s.assignTrainer);
 
   const saveMember = useCallback(async (data: MemberFormValues) => {
     try {
@@ -116,6 +118,29 @@ export function useManagerMembersMutations(
     }
   }, [selectedMember, setSelectedMember, showToast, storeFreezeMember]);
 
+  const toggleSuspend = useCallback(async (isSuspended: boolean) => {
+    if (!selectedMember) return;
+    try {
+      await storeToggleSuspendMember(selectedMember.id, isSuspended);
+      setSelectedMember(prev => prev ? { ...prev, status: isSuspended ? 'SUSPENDED' : 'ACTIVE' } : null);
+      showToast(isSuspended ? 'Member suspended successfully' : 'Member unsuspended successfully', 'success');
+    } catch (err: unknown) {
+      showToast(err instanceof Error ? err.message : 'Failed to update membership status', 'error');
+    }
+  }, [selectedMember, setSelectedMember, showToast, storeToggleSuspendMember]);
+
+  const assignTrainer = useCallback(async (memberId: string, trainerId: string, trainerName: string, isPT: boolean) => {
+    try {
+      await storeAssignTrainer(memberId, trainerId, trainerName, isPT);
+      showToast('Trainer assigned successfully', 'success');
+      if (selectedMember?.id === memberId) {
+        setSelectedMember(prev => prev ? { ...prev, assignedTrainerId: trainerId, assignedTrainerName: trainerName, isPT } as Member : null);
+      }
+    } catch (err: unknown) {
+      showToast(err instanceof Error ? err.message : 'Failed to assign trainer', 'error');
+    }
+  }, [storeAssignTrainer, showToast, selectedMember, setSelectedMember]);
+
   return {
     saveMember,
     deleteMember,
@@ -123,6 +148,8 @@ export function useManagerMembersMutations(
     assignWorkout,
     renewMember,
     recordPayment,
-    freezeMember
+    freezeMember,
+    toggleSuspend,
+    assignTrainer
   };
 }

@@ -35,11 +35,15 @@ export default function ManagerAddPaymentModal() {
         </div>
         
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div className="p-3 bg-danger-bg rounded-lg border border-destructive/20 mb-4">
-            <p className="text-sm text-danger font-semibold">
-              Current Dues: ₹{selectedMember.pendingAmount > 0 ? selectedMember.pendingAmount : 0}
-            </p>
-          </div>
+          {(selectedMember.pendingAmount > 0 || (selectedMember.advanceAmount && selectedMember.advanceAmount > 0)) && (
+            <div className={`p-3 rounded-lg border mb-4 ${selectedMember.pendingAmount > 0 ? 'bg-danger-bg border-destructive/20' : 'bg-success-bg border-success/20'}`}>
+              <p className={`text-sm font-semibold ${selectedMember.pendingAmount > 0 ? 'text-danger' : 'text-success'}`}>
+                {selectedMember.pendingAmount > 0 
+                  ? `Current Dues: ₹${selectedMember.pendingAmount}` 
+                  : `Advance Balance: ₹${selectedMember.advanceAmount}`}
+              </p>
+            </div>
+          )}
 
           <div>
             <label className="block text-sm font-medium text-foreground mb-1.5">Amount (₹)</label>

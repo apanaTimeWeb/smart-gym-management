@@ -539,13 +539,35 @@ export async function routeMockRequest<T>(
     const staffList = MockDB.getCollection('mock_admin_staff', []);
     const reqMonth = new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' });
     const currentPayrolls = MockDB.generatePayrollsForMonth(reqMonth);
+    const ledgers = MockDB.getCollection('mock_admin_staff_ledger', []);
     
     const activeStaff = staffList.filter((s: any) => s.isActive).length;
-    const paidCount = currentPayrolls.filter((p: any) => p.status === 'PAID').length;
+    const paidCount = currentPayrolls.filter((p: any) => p.status === 'PAID' || p.status === 'Paid').length;
     const pendingCount = currentPayrolls.filter((p: any) => p.status === 'PENDING').length;
-    const totalPayrollThisMonth = currentPayrolls.reduce((sum: number, p: any) => sum + (Number(p.amount) || 0), 0);
     
-    return { success: true, message: 'Summary', data: { totalStaff: staffList.length, activeStaff, totalPayrollThisMonth, paidCount, pendingCount } } as unknown as ApiResponse<T>;
+    let totalSalaryThisMonth = 0;
+    let totalSalaryPaid = 0;
+    let totalSalaryDue = 0;
+    let totalAdvanceGiven = 0;
+    let pendingPaymentsCount = 0;
+
+    // Calculate from ledgers to be accurate
+    ledgers.forEach((l: any) => {
+      const d = new Date(l.date);
+      const isThisMonth = d.getMonth() === new Date().getMonth() && d.getFullYear() === new Date().getFullYear();
+      if (l.type === 'Salary Generated' && isThisMonth) totalSalaryThisMonth += (l.credit || 0);
+      if (l.type === 'Salary Paid' && isThisMonth) totalSalaryPaid += (l.debit || 0);
+      if (l.type === 'Advance Given' && isThisMonth) totalAdvanceGiven += (l.debit || 0);
+      if (l.type === 'Due Paid' && isThisMonth) totalSalaryPaid += (l.debit || 0);
+    });
+
+    // Calculate total due from all staff
+    staffList.forEach((s: any) => {
+      totalSalaryDue += (Number(s.currentDue) || 0);
+      if (Number(s.currentDue) > 0) pendingPaymentsCount++;
+    });
+    
+    return { success: true, message: 'Summary', data: { totalStaff: staffList.length, activeStaff, totalSalaryThisMonth, totalSalaryPaid, totalSalaryDue, totalAdvanceGiven, pendingPaymentsCount } } as unknown as ApiResponse<T>;
   }
   
   if (path.includes('/hr/staff')) {
@@ -591,6 +613,76 @@ export async function routeMockRequest<T>(
     }
     
     return MockDB.handleCrud('mock_admin_payrolls', method, path, parsedBody, [], 'payrolls') as unknown as ApiResponse<T>;
+  }
+
+  if (path.includes('/hr/ledger')) {
+    if (method === 'GET') {
+      const segments = path.split('?')[0].split('/');
+      const staffId = segments[segments.length - 1];
+      const allLedgers = MockDB.getCollection('mock_admin_staff_ledger', []);
+      const staffLedger = allLedgers.filter((l: any) => String(l.staffId) === String(staffId)).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      return { success: true, message: 'Fetched ledger', data: { ledger: staffLedger, total: staffLedger.length } } as unknown as ApiResponse<T>;
+    }
+  }
+
+  if (path.includes('/hr/advance')) {
+    if (method === 'POST') {
+      const { staffId, amount, notes, date, paymentMode } = parsedBody as any;
+      const staffList = MockDB.getCollection('mock_admin_staff', []);
+      const idx = staffList.findIndex((s: any) => String(s.id) === String(staffId));
+      if (idx > -1) {
+        staffList[idx].advanceSalary = (Number(staffList[idx].advanceSalary) || 0) + Number(amount);
+        MockDB.setCollection('mock_admin_staff', staffList);
+
+        const allLedgers = MockDB.getCollection('mock_admin_staff_ledger', []);
+        const staffLedgers = allLedgers.filter((l: any) => String(l.staffId) === String(staffId));
+        const lastBalance = staffLedgers.length > 0 ? Number(staffLedgers[staffLedgers.length - 1].balance) : 0;
+        
+        allLedgers.push({
+          id: `ledg-${Date.now()}`,
+          staffId,
+          date: date || new Date().toISOString(),
+          type: 'Advance Given',
+          credit: 0,
+          debit: Number(amount),
+          balance: lastBalance - Number(amount), // debit reduces balance
+          notes,
+          paymentMode
+        });
+        MockDB.setCollection('mock_admin_staff_ledger', allLedgers);
+        return { success: true, message: 'Advance recorded successfully', data: { advanceAmount: amount } } as unknown as ApiResponse<T>;
+      }
+    }
+  }
+
+  if (path.includes('/hr/due/pay')) {
+    if (method === 'POST') {
+      const { staffId, amount, notes, date, paymentMode } = parsedBody as any;
+      const staffList = MockDB.getCollection('mock_admin_staff', []);
+      const idx = staffList.findIndex((s: any) => String(s.id) === String(staffId));
+      if (idx > -1) {
+        staffList[idx].currentDue = Math.max(0, (Number(staffList[idx].currentDue) || 0) - Number(amount));
+        MockDB.setCollection('mock_admin_staff', staffList);
+
+        const allLedgers = MockDB.getCollection('mock_admin_staff_ledger', []);
+        const staffLedgers = allLedgers.filter((l: any) => String(l.staffId) === String(staffId));
+        const lastBalance = staffLedgers.length > 0 ? Number(staffLedgers[staffLedgers.length - 1].balance) : 0;
+        
+        allLedgers.push({
+          id: `ledg-${Date.now()}`,
+          staffId,
+          date: date || new Date().toISOString(),
+          type: 'Due Paid',
+          credit: 0,
+          debit: Number(amount),
+          balance: lastBalance - Number(amount), 
+          notes,
+          paymentMode
+        });
+        MockDB.setCollection('mock_admin_staff_ledger', allLedgers);
+        return { success: true, message: 'Due paid successfully', data: { paidAmount: amount } } as unknown as ApiResponse<T>;
+      }
+    }
   }
   if (path.includes('/exercises')) return MockDB.handleCrud('mock_admin_exercises', method, path, parsedBody, generate(10, i => ({ id: `ex-${i}`, name: `Exercise ${i+1}`, category: 'Strength', muscleGroup: ['Chest', 'Triceps'], difficulty: 'Beginner', isActive: true, videoUrl: '' })), 'exercises') as unknown as ApiResponse<T>;
   

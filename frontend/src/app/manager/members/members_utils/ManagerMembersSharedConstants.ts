@@ -23,10 +23,11 @@ export const MemberSchema = z.object({
 export type MemberFormValues = z.infer<typeof MemberSchema>;
 
 export const MEMBERS_STATUS_COLORS: Record<string, { bg: string; text: string }> = {
- ACTIVE: { bg: 'bg-success-bg', text: 'text-success' },
- PENDING: { bg: 'bg-warning-bg', text: 'text-warning' },
- EXPIRED: { bg: 'bg-danger-bg', text: 'text-danger' },
- FROZEN: { bg: 'bg-info-bg', text: 'text-info' },
+  ACTIVE: { bg: 'bg-success-bg', text: 'text-success' },
+  PENDING: { bg: 'bg-warning-bg', text: 'text-warning' },
+  EXPIRED: { bg: 'bg-danger-bg', text: 'text-danger' },
+  FROZEN: { bg: 'bg-info-bg', text: 'text-info' },
+  SUSPENDED: { bg: 'bg-danger', text: 'text-white' },
 };
 
 export const MEMBERS_CYCLE_LABELS: Record<string, string> = {
@@ -92,7 +93,7 @@ export const MSG_TEMPLATES = {
   DEFAULT: (name: string) => `Hi ${name}! 👋\n\nThis is a message from GymSmart. We hope you're enjoying your fitness journey!\n\n— Team GymSmart`
 };
 
-export const MEMBERS_TABLE_HEADERS = ['ID', 'MEMBER', 'PLAN', 'STATUS', 'CYCLE', 'PAID', 'PENDING', 'EXPIRY', 'DIET', 'WORKOUT', 'ACTIONS'];
+export const MEMBERS_TABLE_HEADERS = ['ID', 'MEMBER', 'PLAN', 'STATUS', 'CYCLE', 'PAID', 'PENDING', 'EXPIRY', 'DIET', 'WORKOUT', 'TRAINER', 'ACTIONS'];
 export const PROFILE_TABS = [
   { id: 'overview', label: 'Overview' },
   { id: 'attendance', label: 'Attendance' },

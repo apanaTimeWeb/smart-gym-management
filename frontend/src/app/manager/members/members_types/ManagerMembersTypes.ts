@@ -23,13 +23,16 @@ export interface Member {
   planId: string; plan?: { id: string; name: string; tier: string };
   billingCycle: string; status: string;
   joinDate: string; expiryDate: string;
-  paidAmount: number; pendingAmount: number; photo?: string;
+  paidAmount: number; pendingAmount: number; advanceAmount?: number; photo?: string;
   createdAt: string;
   assignedDietId?: string;
   assignedDiet?: DietPlan;
   assignedWorkoutId?: string;
   assignedWorkout?: Workout;
   medicalHistory?: string;
+  assignedTrainerId?: string;
+  assignedTrainerName?: string;
+  isPT?: boolean;
 }
 
 export interface MemberStats {
@@ -84,6 +87,9 @@ export interface MembersContextType {
   renewMember: (data: { planId: string; newExpiryDate: string; amountPaid: number; paymentMethod: string; billingCycle: string; customDays?: number }) => Promise<void>;
   recordPayment: (data: { amount: number; method: string }) => Promise<void>;
   freezeMember: (isFrozen: boolean) => Promise<void>;
+  toggleSuspend: (isSuspended: boolean) => Promise<void>;
+  assignTrainer: (memberId: string, trainerId: string, trainerName: string, isPT: boolean) => Promise<void>;
+  trainers: { id: string; name: string; role: string }[];
 
   // Message Modal
   msgModal: { open: boolean; recipient: ManagerMessageRecipient; type: MessageType; message: string; subject?: string } | null;
