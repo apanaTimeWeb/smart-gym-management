@@ -1,5 +1,5 @@
 import { ApiResponse } from './api';
-
+import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 class MockDB {
   private static prefix = 'gymsmart_mock_';
   
@@ -289,7 +289,7 @@ export async function routeMockRequest<T>(
     return MockDB.handleCrud('mock_orders', method, path, parsedBody, defaultOrders, 'orders') as unknown as ApiResponse<T>;
   }
 
-  if (path.includes('/superadmin/features')) {
+  if (path.includes(SuperadminUrlConfig.BACKEND_API.FEATURES_BASE)) {
     const defaultFlags = [
       { id: '1', name: 'Beta_Feature_0', description: 'Enable beta features', isGlobalEnabled: false, enabledTenantIds: [] },
       { id: '2', name: 'Beta_Feature_1', description: 'New dashboard', isGlobalEnabled: true, enabledTenantIds: [] },
@@ -314,7 +314,7 @@ export async function routeMockRequest<T>(
       const isToggle = path.endsWith('/toggle');
       const flagId = isToggle ? segments[segments.length - 2] : segments[segments.length - 1];
       
-      const idx = flags.findIndex((f: any) => f.id === flagId);
+      const idx = flags.findIndex((f: Record<string, unknown>) => f.id === flagId);
       if (idx > -1) {
         if (isToggle) {
           flags[idx].isGlobalEnabled = !flags[idx].isGlobalEnabled;
@@ -331,7 +331,7 @@ export async function routeMockRequest<T>(
     }
   }
 
-  if (path.includes('/superadmin/settings')) {
+  if (path.includes(SuperadminUrlConfig.BACKEND_API.SETTINGS_BASE)) {
     const defaultSettings = [
       { id: '1', key: 'MAX_GYMS_LIMIT', value: '500', description: 'Maximum total gyms allowed in the system', category: 'platform', dataType: 'number' },
       { id: '2', key: 'MAINTENANCE_MODE', value: 'false', description: 'Suspend all non-admin access', category: 'system', dataType: 'boolean' },
@@ -348,7 +348,7 @@ export async function routeMockRequest<T>(
     if (method === 'PATCH') {
       const segments = path.split('/');
       const settingId = segments[segments.length - 1];
-      const idx = settings.findIndex((s: any) => s.id === settingId);
+      const idx = settings.findIndex((s: Record<string, unknown>) => s.id === settingId);
       if (idx > -1) {
         settings[idx] = { ...settings[idx], ...parsedBody };
         MockDB.setCollection('mock_superadmin_settings', settings);
@@ -357,18 +357,18 @@ export async function routeMockRequest<T>(
     }
   }
 
-  if (path.includes('/superadmin/broadcasts') && method === 'POST') {
+  if (path.includes(SuperadminUrlConfig.BACKEND_API.BROADCASTS_BASE) && method === 'POST') {
     return { success: true, message: 'Broadcast sent successfully to all Admins', data: null } as unknown as ApiResponse<T>;
   }
 
-  if (path.includes('/superadmin/infrastructure')) {
-    if (path.includes('/redis/flush-global') && method === 'POST') {
+  if (path.includes(SuperadminUrlConfig.BACKEND_API.INFRASTRUCTURE_BASE)) {
+    if (path.includes(SuperadminUrlConfig.BACKEND_API.REDIS_FLUSH_GLOBAL) && method === 'POST') {
       const defaultTelemetry = { memoryUsagePercent: 2, hitRatioPercent: 0, totalKeysCached: 0, uptimeHours: 720 };
       MockDB.setCollection('mock_superadmin_redis_telemetry', [defaultTelemetry]);
       return { success: true, message: 'Global cache flushed' } as unknown as ApiResponse<T>;
     }
     
-    if (path.includes('/redis/flush-tenant') && method === 'POST') {
+    if (path.includes(SuperadminUrlConfig.BACKEND_API.REDIS_FLUSH_TENANT) && method === 'POST') {
       let telemetry = MockDB.getCollection('mock_superadmin_redis_telemetry', []);
       if (telemetry.length > 0) {
         const t = telemetry[0] as any;
@@ -382,7 +382,7 @@ export async function routeMockRequest<T>(
       return { success: true, message: 'Tenant cache flushed' } as unknown as ApiResponse<T>;
     }
     
-    if (path.includes('/redis') && method === 'GET') {
+    if (path.includes(SuperadminUrlConfig.BACKEND_API.REDIS_TELEMETRY) && method === 'GET') {
       const defaultTelemetry = { memoryUsagePercent: 68, hitRatioPercent: 94, totalKeysCached: 1450230, uptimeHours: 720 };
       let telemetry = MockDB.getCollection('mock_superadmin_redis_telemetry', []);
       if (telemetry.length === 0) {
@@ -392,7 +392,7 @@ export async function routeMockRequest<T>(
       return { success: true, data: telemetry[0], message: 'Fetched Redis telemetry' } as unknown as ApiResponse<T>;
     }
 
-    if (method === 'GET' && !path.includes('/redis')) {
+    if (method === 'GET' && !path.includes(SuperadminUrlConfig.BACKEND_API.REDIS_TELEMETRY)) {
       const defaultNodes = generate(6, i => ({
         id: `node-${i}`,
         name: `worker-${i + 1}.internal`,
