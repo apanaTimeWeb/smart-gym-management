@@ -2,13 +2,14 @@
 import {
   LayoutDashboard, Users, FileBarChart,
   UserCog, ShoppingBag, Utensils, Dumbbell,
-  MessageSquare, CalendarCheck, Receipt
+  MessageSquare, CalendarCheck, Receipt, ClipboardList
 } from 'lucide-react';
 
 export const MANAGER_NAV_ITEMS = [
  { href: '/manager/dashboard', label: 'Dashboard', icon: LayoutDashboard },
  { href: '/manager/members', label: 'Members', icon: Users },
  { href: '/manager/sales', label: 'Sales & Reports', icon: FileBarChart },
+ { href: '/manager/plans', label: 'Plan & Pricing', icon: ClipboardList },
  { href: '/manager/attendance', label: 'Attendance', icon: CalendarCheck },
  { href: '/manager/hr', label: 'HR Management', icon: UserCog },
  { href: '/manager/store', label: 'Store', icon: ShoppingBag },
