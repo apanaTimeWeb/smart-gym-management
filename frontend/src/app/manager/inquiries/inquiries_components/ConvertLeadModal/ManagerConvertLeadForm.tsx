@@ -134,7 +134,7 @@ export default function ManagerConvertLeadForm({
       </div>
       <div>
         <label className="block text-sm font-medium text-secondary mb-0.5">Expiry Date <span className="text-danger">*</span></label>
-        <input type="date" min={new Date().toISOString().split('T')[0]} {...register('expiryDate')} className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-all duration-200" />
+        <input type="date" disabled min={new Date().toISOString().split('T')[0]} {...register('expiryDate')} className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none bg-input text-primary opacity-80 cursor-not-allowed transition-all duration-200" />
       </div>
 
       <div>

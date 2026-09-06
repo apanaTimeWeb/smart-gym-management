@@ -12,6 +12,7 @@ import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency } from '@/app/ma
 import type { PlanWithCustom } from '@/app/manager/members/members_types/ManagerMembersTypes';
 
 const RenewSchema = z.object({
+  actionType: z.enum(['renew', 'upgrade']).default('renew'),
   planId: z.string().min(1, "Please select a plan"),
   billingCycle: z.string(),
   customDays: z.number().min(1, "Please enter valid days").optional(),
@@ -41,6 +42,7 @@ export default function ManagerRenewModal() {
   const useFormReturn = useForm<RenewFormValues>({
     resolver: zodResolver(RenewSchema),
     defaultValues: {
+      actionType: 'renew',
       planId: '',
       billingCycle: 'ONE_MONTH',
       paidAmount: 0,
@@ -54,6 +56,7 @@ export default function ManagerRenewModal() {
   useEffect(() => {
     if (showRenewModal && selectedMember) {
       reset({
+        actionType: 'renew',
         planId: String(selectedMember.planId || ''),
         billingCycle: selectedMember.billingCycle || 'ONE_MONTH',
         paidAmount: 0,
@@ -63,6 +66,7 @@ export default function ManagerRenewModal() {
     }
   }, [showRenewModal, selectedMember, reset]);
 
+  const watchActionType = useWatch({ control: useFormReturn.control, name: 'actionType' }) as 'renew' | 'upgrade';
   const watchPlanId = useWatch({ control: useFormReturn.control, name: 'planId' }) as string;
   const watchBillingCycle = useWatch({ control: useFormReturn.control, name: 'billingCycle' }) as string;
   const watchCustomDays = useWatch({ control: useFormReturn.control, name: 'customDays' }) as number;
@@ -74,10 +78,14 @@ export default function ManagerRenewModal() {
       useFormReturn.setValue('totalAmount', price, { shouldValidate: true });
       useFormReturn.setValue('paidAmount', price, { shouldValidate: true });
 
-      // Calculate new expiry date based on current expiry or today
+      // Calculate new expiry date based on actionType
       const now = new Date();
-      const currentExpiry = new Date(selectedMember.expiryDate);
-      const baseDate = currentExpiry > now ? currentExpiry : now;
+      let baseDate = now;
+      
+      if (watchActionType === 'renew') {
+        const currentExpiry = new Date(selectedMember.expiryDate);
+        baseDate = currentExpiry > now ? currentExpiry : now;
+      }
       
       const ed = new Date(baseDate);
       if (watchBillingCycle === 'ONE_MONTH') ed.setMonth(ed.getMonth() + 1);
@@ -88,7 +96,7 @@ export default function ManagerRenewModal() {
       
       useFormReturn.setValue('newExpiryDate', ed.toISOString().split('T')[0], { shouldValidate: true });
     }
-  }, [watchPlanId, watchBillingCycle, watchCustomDays, plans, selectedMember, useFormReturn]);
+  }, [watchActionType, watchPlanId, watchBillingCycle, watchCustomDays, plans, selectedMember, useFormReturn]);
 
   const onSubmit = (data: RenewFormValues) => {
     renewMember({
@@ -110,7 +118,7 @@ export default function ManagerRenewModal() {
       <div className="bg-card rounded-2xl shadow-2xl shadow-black/50 w-full max-w-xl max-h-full overflow-y-auto border-2 border-primary">
         <div className="sticky top-0 px-8 py-5 border-b border-border bg-card flex items-center justify-between z-10">
           <div>
-            <h3 className="text-xl font-bold text-foreground">Renew Membership</h3>
+            <h3 className="text-xl font-bold text-foreground">Renew / Upgrade Plan</h3>
             <p className="text-sm text-secondary mt-1">For {selectedMember.name}</p>
           </div>
           <button
@@ -123,6 +131,17 @@ export default function ManagerRenewModal() {
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="p-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="sm:col-span-2 flex gap-4 p-1.5 bg-input rounded-xl border border-border w-fit">
+              <label className={`flex-1 flex text-center cursor-pointer px-4 py-1.5 rounded-lg text-sm font-semibold transition-all ${watchActionType === 'renew' ? 'bg-primary text-white shadow-sm' : 'text-secondary hover:text-foreground'}`}>
+                <input type="radio" value="renew" {...register('actionType')} className="hidden" />
+                Renew Plan
+              </label>
+              <label className={`flex-1 flex text-center cursor-pointer px-4 py-1.5 rounded-lg text-sm font-semibold transition-all ${watchActionType === 'upgrade' ? 'bg-primary text-white shadow-sm' : 'text-secondary hover:text-foreground'}`}>
+                <input type="radio" value="upgrade" {...register('actionType')} className="hidden" />
+                Upgrade Plan
+              </label>
+            </div>
+
             <div>
               <label className="block text-sm font-medium text-secondary mb-1.5">Plan</label>
               <Controller
@@ -171,7 +190,7 @@ export default function ManagerRenewModal() {
             {watchPlanId && (
               <div className="sm:col-span-2 bg-primary/10 rounded-xl p-4 text-sm border border-primary/30 flex justify-between items-center">
                 <div>
-                  <span className="font-semibold text-primary">Renewal Price:</span>
+                  <span className="font-semibold text-primary">{watchActionType === 'renew' ? 'Renewal' : 'Upgrade'} Price:</span>
                   <span className="text-primary ml-1 font-bold">
                     {formatCurrency(getPriceForCycle(selectedPlan, watchBillingCycle, Number(watchCustomDays) || 0))}
                   </span>
@@ -212,7 +231,7 @@ export default function ManagerRenewModal() {
                 disabled
                 className="w-full border rounded-xl px-4 py-3 text-sm font-bold bg-success-bg/20 text-success border-success/30 cursor-not-allowed"
               />
-              <p className="text-xs text-secondary mt-1">Calculated automatically from {new Date(selectedMember.expiryDate) > new Date() ? 'current expiry date' : 'today'}</p>
+              <p className="text-xs text-secondary mt-1">Calculated automatically from {watchActionType === 'renew' ? (new Date(selectedMember.expiryDate) > new Date() ? 'current expiry date' : 'today') : 'today'}</p>
             </div>
           </div>
           
@@ -232,7 +251,7 @@ export default function ManagerRenewModal() {
               {saving ? (
                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" />
               ) : (
-                <><Save size={16} /> Confirm Renewal</>
+                <><Save size={16} /> Confirm {watchActionType === 'renew' ? 'Renewal' : 'Upgrade'}</>
               )}
             </button>
           </div>
