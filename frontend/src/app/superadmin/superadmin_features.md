@@ -24,6 +24,7 @@ The Superadmin module is the Master Control Panel (SaaS layer) for GymSmart 360.
 - `backups/`: Database backup scheduling and restoration.
 - `system/`: General system health (RAM, CPU, Uptime).
 - `global-audit/`: Master audit logs across all tenants.
+- `settings/`: Global platform settings and configuration.
 
 ## Data and State Architecture
 - **Server-state query keys:** Uses `['superadmin', ...]` with React Query (`useQuery`, `useMutation`).
