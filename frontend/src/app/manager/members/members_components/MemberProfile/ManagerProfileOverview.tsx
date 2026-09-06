@@ -1,12 +1,12 @@
 // RESPONSIBILITY: Contains logic, types, or component definition for this module.
 'use client';
 
-import { MessageCircle, Mail, Snowflake, Stethoscope } from 'lucide-react';
+import { MessageCircle, Mail, Snowflake, Stethoscope, Ban } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
 import { formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 
 export default function ManagerProfileOverview() {
-  const { selectedMember, openMsg, freezeMember } = useMembersContext();
+  const { selectedMember, openMsg, freezeMember, toggleSuspend } = useMembersContext();
 
  if (!selectedMember) return null;
 
@@ -62,24 +62,38 @@ export default function ManagerProfileOverview() {
  >
  <Mail size={14} /> Send Email
  </button>
- {selectedMember.status !== 'FROZEN' ? (
-   <button 
-   onClick={() => freezeMember(true)} 
-   className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-info bg-info-bg border border-info/30 rounded-xl justify-center transition-opacity hover:opacity-90" 
-   >
-   <Snowflake size={14} /> Freeze Membership
-   </button>
- ) : (
-   <button 
-   onClick={() => freezeMember(false)} 
-   className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-success bg-success-bg border border-success/30 rounded-xl justify-center transition-opacity hover:opacity-90" 
-   >
-   Unfreeze Membership
-   </button>
- )}
+  {selectedMember.status !== 'FROZEN' ? (
+    <button 
+    onClick={() => freezeMember(true)} 
+    className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-info bg-info-bg border border-info/30 rounded-xl justify-center transition-opacity hover:opacity-90" 
+    >
+    <Snowflake size={14} /> Freeze Membership
+    </button>
+  ) : (
+    <button 
+    onClick={() => freezeMember(false)} 
+    className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-success bg-success-bg border border-success/30 rounded-xl justify-center transition-opacity hover:opacity-90" 
+    >
+    Unfreeze Membership
+    </button>
+  )}
+  {selectedMember.status !== 'SUSPENDED' && selectedMember.pendingAmount > 0 ? (
+    <button 
+    onClick={() => toggleSuspend(true)} 
+    className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-danger bg-danger-bg border border-danger/30 rounded-xl justify-center transition-opacity hover:opacity-90" 
+    >
+    <Ban size={14} /> Suspend Member
+    </button>
+  ) : selectedMember.status === 'SUSPENDED' ? (
+    <button 
+    onClick={() => toggleSuspend(false)} 
+    className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-success bg-success-bg border border-success/30 rounded-xl justify-center transition-opacity hover:opacity-90" 
+    >
+    Unsuspend Member
+    </button>
+  ) : null}
  </div>
  </div>
  </div>
  );
 }
-

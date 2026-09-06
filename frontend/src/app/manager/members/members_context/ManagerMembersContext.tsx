@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Provides UI orchestration state to the members module hierarchy. Async data is in Zustand.
+// RESPONSIBILITY: Provides the Context wrapper for the Members module.
 // DATA FLOW: useManagerMembersLogic -> ManagerMembersContext -> Members components
 'use client';
 
@@ -11,8 +11,6 @@ const ManagerMembersContext = createContext<MembersContextType | undefined>(unde
 export function MembersProvider({ children, initialData }: { children: React.ReactNode, initialData?: MembersInitialData | null }) {
   const logic = useManagerMembersLogic(initialData);
 
-  // No useMemo needed — Context only holds lightweight sync UI state.
-  // Async data (members, plans, etc.) is in Zustand and accessed directly by components.
   return (
     <ManagerMembersContext.Provider value={logic}>
       {children}
