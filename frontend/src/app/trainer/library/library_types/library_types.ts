@@ -19,6 +19,8 @@ export interface LibraryContextType {
   search: string;
   debouncedSearch: string;
   setSearch: (s: string) => void;
+  filterGoal: string;
+  setFilterGoal: (g: string) => void;
   currentPage: number;
   setCurrentPage: (p: number) => void;
 

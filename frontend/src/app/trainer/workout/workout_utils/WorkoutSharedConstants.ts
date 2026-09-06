@@ -12,6 +12,10 @@ export const EXERCISE_DIFFICULTY_OPTIONS = ['Beginner', 'Intermediate', 'Advance
 
 export const EQUIPMENT_OPTIONS = ['Barbell', 'Dumbbell', 'Machine', 'Bodyweight', 'Cables', 'Kettlebell'] as const;
 
+export const WORKOUT_FOCUS_OPTIONS = ['Hypertrophy', 'Strength', 'Bodybuilding', 'Cardio', 'Bodyweight'];
+
+export const EXERCISE_MUSCLE_OPTIONS = ['Quadriceps', 'Chest', 'Back', 'Shoulders', 'Hamstrings', 'Posterior Chain', 'Arms', 'Core'];
+
 export const WORKOUT_TAB_OPTIONS = ['Workout Plans', 'Exercise Library'] as const;
 
 export const EXERCISE_TABLE_HEADERS = ['Exercise', 'Primary Muscle', 'Equipment', 'Difficulty', 'Actions'] as const;

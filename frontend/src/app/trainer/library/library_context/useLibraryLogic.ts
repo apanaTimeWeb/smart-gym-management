@@ -25,6 +25,7 @@ export function useLibraryLogic(initialData?: any | null): LibraryContextType {
 
   const [search, setLocalSearch] = useState(searchParams.get('search') || '');
   const debouncedSearch = useDebounce(search, 300);
+  const filterGoal = searchParams.get('goal') || 'All';
   const currentPage = Number(searchParams.get('page')) || 1;
 
   useEffect(() => {
@@ -37,13 +38,23 @@ export function useLibraryLogic(initialData?: any | null): LibraryContextType {
     }
   }, [debouncedSearch, searchParams, router, pathname]);
 
-  const setSearch = useCallback((val: string) => setLocalSearch(val), []);
+  const setSearch = useCallback((val: string) => {
+    setLocalSearch(val);
+  }, []);
+
+  const setUrlParam = useCallback((key: string, value: string | null) => {
+    const current = new URLSearchParams(Array.from(searchParams.entries()));
+    if (value && value !== 'All') current.set(key, value);
+    else current.delete(key);
+    if (key !== 'page') current.set('page', '1');
+    router.push(`${pathname}?${current.toString()}`, { scroll: false });
+  }, [searchParams, pathname, router]);
+
+  const setFilterGoal = useCallback((val: string) => setUrlParam('goal', val), [setUrlParam]);
 
   const setCurrentPage = useCallback((page: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('page', page.toString());
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
-  }, [router, searchParams, pathname]);
+    setUrlParam('page', page.toString());
+  }, [setUrlParam]);
 
   const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
   const hideToast = useCallback(() => setToast(null), []);
@@ -71,6 +82,10 @@ export function useLibraryLogic(initialData?: any | null): LibraryContextType {
         );
       }
       
+      if (filterGoal !== 'All') {
+        fetchedDietPlans = fetchedDietPlans.filter((d: DietPlan) => d.goal === filterGoal);
+      }
+      
       setDietPlans(fetchedDietPlans);
       setFetchState('success');
     } catch (e) { 
@@ -86,7 +101,7 @@ export function useLibraryLogic(initialData?: any | null): LibraryContextType {
   return {
     dietPlans,
     fetchState, saving, toast,
-    search, debouncedSearch, setSearch, currentPage, setCurrentPage,
+    search, debouncedSearch, setSearch, filterGoal, setFilterGoal, currentPage, setCurrentPage,
     showToast, hideToast, loadAll,
     ...dietLogic
   };
