@@ -59,7 +59,7 @@ export default function AdminConfirmModal({
                 onCancel();
               }}
               className={`flex-1 py-2.5 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90 ${
-                type === 'danger' ? 'bg-danger-bg' :
+                type === 'danger' ? 'bg-danger' :
                 type === 'warning' ? 'bg-warning' :
                 'bg-info'
               }`}
