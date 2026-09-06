@@ -14,11 +14,6 @@
   --color-primary: var(--primary);
   --color-primary-foreground: #ffffff;
   --color-secondary: var(--text-secondary);
-  --color-destructive: var(--danger);
-  --color-success: var(--success);
-  --color-warning: var(--warning);
-  --color-info: var(--info);
-  
   --color-primary-hover: var(--primary-hover);
   --color-primary-subtle: var(--primary-subtle);
   --color-page: var(--bg-page);
@@ -28,13 +23,6 @@
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-disabled: var(--text-disabled);
-  --color-success-bg: var(--success-bg);
-  --color-warning-bg: var(--warning-bg);
-  --color-danger: var(--danger);
-  --color-danger-bg: var(--danger-bg);
-  --color-info-bg: var(--info-bg);
-  --color-purple: var(--purple);
-  --color-purple-bg: var(--purple-bg);
   
   --color-skeleton-base: var(--skeleton-base);
   --color-skeleton-highlight: var(--skeleton-highlight);
@@ -96,16 +84,17 @@
   --text-secondary: #52525B; /* zinc-600 */
   --text-disabled: #A1A1AA; /* zinc-400 */
   
-  --success: #10B981;
-  --success-bg: #D1FAE5;
-  --warning: #F59E0B;
-  --warning-bg: #FEF3C7;
-  --danger: #EF4444;
-  --danger-bg: #FEE2E2;
-  --info: #3B82F6;
-  --info-bg: #DBEAFE;
-  --purple: #8B5CF6;
-  --purple-bg: #EDE9FE;
+  --color-success: #10B981;
+  --color-success-bg: #D1FAE5;
+  --color-warning: #F59E0B;
+  --color-warning-bg: #FEF3C7;
+  --color-danger: #EF4444;
+  --color-danger-bg: #FEE2E2;
+  --color-destructive: #EF4444;
+  --color-info: #3B82F6;
+  --color-info-bg: #DBEAFE;
+  --color-purple: #8B5CF6;
+  --color-purple-bg: #EDE9FE;
 
   /* Payment mode colors — Light Mode (Design System §1) */
   --pay-cash: #0F766E;
@@ -156,16 +145,17 @@
   --text-secondary: #A1A1AA; /* zinc-400 */
   --text-disabled: #52525B; /* zinc-600 */
   
-  --success: #22C55E; /* Stronger Fitness Green */
-  --success-bg: #064E3B;
-  --warning: #F59E0B; /* Amber */
-  --warning-bg: #451A03;
-  --danger: #EF4444; /* Red */
-  --danger-bg: #450A0A;
-  --info: #3B82F6;
-  --info-bg: #1E3A5F;
-  --purple: #C084FC;
-  --purple-bg: #3B0764;
+  --color-success: #22C55E; /* Stronger Fitness Green */
+  --color-success-bg: #064E3B;
+  --color-warning: #F59E0B; /* Amber */
+  --color-warning-bg: #451A03;
+  --color-danger: #EF4444; /* Red */
+  --color-danger-bg: #450A0A;
+  --color-destructive: #EF4444; /* Red */
+  --color-info: #3B82F6;
+  --color-info-bg: #1E3A5F;
+  --color-purple: #C084FC;
+  --color-purple-bg: #3B0764;
 
   /* Payment mode colors — Dark Mode (Design System §1) */
   --pay-cash: #5EEAD4;
