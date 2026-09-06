@@ -20,7 +20,10 @@ export const hrApi = {
   },
   createPayroll: (body: Partial<Payroll>) =>
     apiFetch<ApiResponse<Payroll>>(HrUrlConfig.BACKEND_API.PAYROLLS_BASE, { method: 'POST', body: JSON.stringify(body) }),
+  updatePayroll: (id: string, body: Partial<Payroll>) =>
+    apiFetch<ApiResponse<Payroll>>(`${HrUrlConfig.BACKEND_API.PAYROLLS_BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
   updatePayrollStatus: (id: string, status: string) =>
     apiFetch<ApiResponse<Payroll>>(HrUrlConfig.BACKEND_API.PAYROLL_STATUS_UPDATE(id), { method: 'PATCH', body: JSON.stringify({ status }) }),
   getSummary: () => apiFetch<ApiResponse<HrSummary>>(HrUrlConfig.BACKEND_API.SUMMARY),
 };
+

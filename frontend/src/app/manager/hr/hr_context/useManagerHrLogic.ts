@@ -148,7 +148,7 @@ export function useManagerHrLogic(initialData?: HrInitialData | null): HrContext
   }, []);
 
   const { saveStaff, savePayroll, deleteStaff, toggleStaffStatus, markPayrollPaid } = useManagerHrMutations(
-    staff, setStaff, setPayrolls, setSummary, editId, setShowModal, setShowPayrollModal, setSaving, showToast
+    staff, payrolls, setStaff, setPayrolls, setSummary, editId, setShowModal, setShowPayrollModal, setSaving, showToast
   );
 
   return {

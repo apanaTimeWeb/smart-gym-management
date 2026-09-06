@@ -6,6 +6,7 @@ import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/Man
 
 export function useManagerHrMutations(
   staff: Staff[],
+  payrolls: Payroll[],
   setStaff: React.Dispatch<React.SetStateAction<Staff[]>>,
   setPayrolls: React.Dispatch<React.SetStateAction<Payroll[]>>,
   setSummary: React.Dispatch<React.SetStateAction<HrSummary | null>>,
@@ -51,14 +52,30 @@ export function useManagerHrMutations(
     setSaving(true);
     try {
       const staffMember = staff.find(s => String(s.id) === String(data.staffId));
-      const newPayroll = {
+      
+      const payrollAmount = Number(data.amount || 0);
+
+      if (staffMember && staffMember.advanceSalary && staffMember.advanceSalary > 0) {
+        const baseSalary = staffMember.salary || 0;
+        const advanceDeducted = Math.min(baseSalary, staffMember.advanceSalary);
+        const newAdvance = staffMember.advanceSalary - advanceDeducted;
+        await hrApi.updateStaff(staffMember.id, { advanceSalary: newAdvance });
+        setStaff(prev => prev.map(s => String(s.id) === String(staffMember.id) ? { ...s, advanceSalary: newAdvance } as Staff : s));
+      }
+
+      const newPayrollData = {
         ...data,
-        id: `pay-${Date.now()}`,
-        amount: Number(data.amount || 0),
+        amount: payrollAmount,
+        paidAmount: payrollAmount,
+        pendingAmount: 0,
         status: 'Paid',
         paidAt: new Date().toISOString(),
         staff: staffMember ? { name: staffMember.name, role: staffMember.role } : undefined
-      } as Payroll;
+      };
+      
+      const res = await hrApi.createPayroll(newPayrollData);
+      const newPayroll = res.data ? res.data : { ...newPayrollData, id: `pay-${Date.now()}` } as Payroll;
+
       setPayrolls(prev => [newPayroll, ...prev]);
       setSummary(prev => prev ? { 
         ...prev, 
@@ -72,7 +89,7 @@ export function useManagerHrMutations(
     } finally {
       setSaving(false);
     }
-  }, [showToast, staff, setPayrolls, setSummary, setShowPayrollModal, setSaving]);
+  }, [showToast, staff, setPayrolls, setSummary, setShowPayrollModal, setSaving, setStaff]);
 
   const deleteStaff = useCallback(async (id: string) => {
     const isConfirmed = await confirm({ title: 'Remove Staff', message: 'Remove this staff member?', confirmText: 'Remove', type: 'danger' });
@@ -113,21 +130,33 @@ export function useManagerHrMutations(
 
   const markPayrollPaid = useCallback(async (id: string, amount: number) => {
     try {
+      const payroll = payrolls.find(p => String(p.id) === String(id));
+      if (!payroll) return;
+
+      const newPaid = (payroll.paidAmount || 0) + amount;
+      const newPending = Math.max(0, payroll.amount - newPaid);
+      const newStatus = newPending === 0 ? 'Paid' : 'PENDING';
+      
+      const payload = {
+        paidAmount: newPaid,
+        pendingAmount: newPending,
+        status: newStatus
+      };
+      
+      await hrApi.updatePayroll(id, payload);
+
       setPayrolls(prev => prev.map(p => {
         if (String(p.id) === String(id)) {
-          const newPaid = (p.paidAmount || 0) + amount;
-          const newPending = Math.max(0, p.amount - newPaid);
-          const newStatus = newPending === 0 ? 'Paid' : 'PENDING';
-          return { ...p, paidAmount: newPaid, pendingAmount: newPending, status: newStatus };
+          return { ...p, ...payload };
         }
         return p;
       }));
       // We could update summary here, but let's just show success
-      showToast('Salary payment recorded', 'success'); 
+      showToast('Salary payment recorded successfully', 'success'); 
     } catch (err) { 
       showToast((err as Error).message, 'error'); 
     }
-  }, [showToast, setPayrolls]);
+  }, [showToast, setPayrolls, payrolls]);
 
   return {
     saveStaff,

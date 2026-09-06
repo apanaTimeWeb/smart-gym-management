@@ -50,13 +50,16 @@ export default function ManagerHrPayrollModal() {
             }
             
             const baseSalary = s.salary || 0;
-            const payableAmount = Math.round((baseSalary / daysInMonth) * presentDays);
+            let payableAmount = Math.round((baseSalary / daysInMonth) * presentDays);
+            
+            let info = `Present: ${presentDays}/${daysInMonth} days. Base: ₹${payableAmount}`;
+            if (s.advanceSalary && s.advanceSalary > 0) {
+               const deducted = Math.min(payableAmount, s.advanceSalary);
+               payableAmount -= deducted;
+               info += ` | ⚠️ Auto-deducted Advance: ₹${deducted}. Net: ₹${payableAmount}`;
+            }
             
             setValue('amount', payableAmount);
-            let info = `Present: ${presentDays}/${daysInMonth} days. Payable: ₹${payableAmount}`;
-            if (s.advanceSalary && s.advanceSalary > 0) {
-               info += ` | ⚠️ Note: Staff has an advance balance of ₹${s.advanceSalary}`;
-            }
             setCalculationInfo(info);
           }
         } catch (e) {
@@ -65,11 +68,14 @@ export default function ManagerHrPayrollModal() {
       } else if (selectedStaffId) {
         const s = staff.find(x => String(x.id) === String(selectedStaffId));
         if (s) {
-          setValue('amount', s.salary || 0);
+          let payableAmount = s.salary || 0;
           let info = '';
           if (s.advanceSalary && s.advanceSalary > 0) {
-             info = `⚠️ Note: Staff has an advance balance of ₹${s.advanceSalary}`;
+             const deducted = Math.min(payableAmount, s.advanceSalary);
+             payableAmount -= deducted;
+             info = `⚠️ Auto-deducted Advance: ₹${deducted}. Net: ₹${payableAmount}`;
           }
+          setValue('amount', payableAmount);
           setCalculationInfo(info);
         }
       }
