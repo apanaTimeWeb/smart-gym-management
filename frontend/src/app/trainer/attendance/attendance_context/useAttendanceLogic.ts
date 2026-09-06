@@ -20,7 +20,8 @@ export function useAttendanceLogic(): AttendanceContextType {
   const searchParams = useSearchParams();
 
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
-  const [search, setLocalSearch] = useState(searchParams.get('search') || '');
+  const search = searchParams.get('search') || '';
+  const filterDate = searchParams.get('date') || 'All Time';
   const tabParam = searchParams.get('tab') as AttendanceTab | null;
   const tab: AttendanceTab = tabParam && ATTENDANCE_TABS.includes(tabParam) ? tabParam : ATTENDANCE_TABS[0];
   const debouncedSearch = useDebounce(search, 300);
@@ -40,7 +41,8 @@ export function useAttendanceLogic(): AttendanceContextType {
     }
   }, [debouncedSearch, searchParams, setUrlParam]);
 
-  const setSearch = useCallback((val: string) => setLocalSearch(val), []);
+  const setSearch = useCallback((val: string) => setUrlParam('search', val || null), [setUrlParam]);
+  const setFilterDate = useCallback((val: string) => setUrlParam('date', val), [setUrlParam]);
   const setCurrentPage = useCallback((val: number) => setUrlParam('page', val.toString()), [setUrlParam]);
   const setTab = useCallback((val: AttendanceTab) => setUrlParam('tab', val), [setUrlParam]);
 
@@ -88,6 +90,24 @@ export function useAttendanceLogic(): AttendanceContextType {
         );
       }
 
+      if (filterDate !== 'All Time') {
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        const todayTime = today.getTime();
+        
+        fetchedRecords = fetchedRecords.filter((r: Attendance) => {
+          const d = new Date(r.date);
+          d.setHours(0,0,0,0);
+          const rTime = d.getTime();
+          
+          if (filterDate === 'Today') return rTime === todayTime;
+          if (filterDate === 'Yesterday') return rTime === todayTime - 86400000;
+          if (filterDate === 'Last 7 Days') return rTime >= todayTime - 7 * 86400000;
+          if (filterDate === 'This Month') return d.getMonth() === today.getMonth() && d.getFullYear() === today.getFullYear();
+          return true;
+        });
+      }
+
       setRecords(fetchedRecords);
       setTotalRecords(attRes.data?.total || fetchedRecords.length || 0);
       setTodayStats(statsRes.data);
@@ -128,6 +148,7 @@ export function useAttendanceLogic(): AttendanceContextType {
     fetchState, saving, toast,
     tab, setTab,
     search, setSearch,
+    filterDate, setFilterDate,
     currentPage, setCurrentPage,
     showModal, setShowModal,
     form, setForm,
