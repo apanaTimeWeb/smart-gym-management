@@ -151,7 +151,7 @@ export default function ManagerConvertLeadModal() {
             closeConvert={closeConvert} 
           />
         ) : (
-          <form onSubmit={handleSubmit(onSubmit)} className="p-6 overflow-y-auto custom-scrollbar flex flex-col gap-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="overflow-y-auto flex-1 custom-scrollbar p-4 flex flex-col gap-4">
             <ManagerConvertLeadForm 
               useFormReturn={useFormReturn}
               plans={plans}

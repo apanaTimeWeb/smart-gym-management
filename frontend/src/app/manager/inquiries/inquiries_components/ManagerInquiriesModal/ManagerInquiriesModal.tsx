@@ -76,8 +76,8 @@ export default function ManagerInquiriesModal() {
           </button>
         </div>
         <div className="overflow-y-auto flex-1 custom-scrollbar">
-          <form onSubmit={handleSubmit(onSubmit)} className="p-6 flex flex-col gap-5">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <form onSubmit={handleSubmit(onSubmit)} className="p-4 flex flex-col gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3">
               {INQUIRY_MODAL_FIELDS.map(f => (
               <div key={f.key}>
                 <label className="block text-sm font-medium text-secondary mb-1">{f.label}</label>
