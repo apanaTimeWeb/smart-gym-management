@@ -114,7 +114,7 @@ export default function SuperadminJobsHeader({
             </button>
             <button
               onClick={onBulkDelete}
-              className="flex items-center gap-1.5 bg-danger-bg text-white px-3 py-1.5 rounded-md text-sm hover:opacity-90 motion-safe:transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger"
+              className="flex items-center gap-1.5 bg-danger text-white px-3 py-1.5 rounded-md text-sm hover:opacity-90 motion-safe:transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger"
             >
               <Trash2 size={13} /> Delete
             </button>
