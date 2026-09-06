@@ -17,7 +17,6 @@ export type InquiryFormValues = z.infer<typeof InquirySchema>;
 export const INQUIRIES_STATUS_LABELS: Record<string, string> = {
  NEW: 'New', 
  FOLLOW_UP: 'Follow Up', 
- CONVERTED: 'Converted', 
  LOST: 'Lost',
 };
 

@@ -66,7 +66,7 @@ export default function LandingBooking() {
                 </div>
                 <div>
                   <label className="text-xs font-medium text-secondary block mb-2">Email Address <span className="text-danger">*</span></label>
-                  <input type="email" required value={bookingData.email} onChange={e => setBookingData({ ...bookingData, email: e.target.value })} placeholder="john@example.com" className="w-full bg-card border border-border rounded-xl px-4 py-3 text-white placeholder-muted-foreground focus:outline-none focus:border-warning transition-colors" />
+                  <input type="email" required pattern=".*\.com$" title="Email must end with .com" value={bookingData.email} onChange={e => setBookingData({ ...bookingData, email: e.target.value })} placeholder="john@example.com" className="w-full bg-card border border-border rounded-xl px-4 py-3 text-white placeholder-muted-foreground focus:outline-none focus:border-warning transition-colors" />
                 </div>
               </div>
 
