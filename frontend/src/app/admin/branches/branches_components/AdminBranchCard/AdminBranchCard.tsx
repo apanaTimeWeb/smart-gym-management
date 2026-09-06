@@ -4,8 +4,48 @@ import { Building2, TrendingUp, TrendingDown, Users, Activity, ChevronRight } fr
 import { useAdminBranchesLogic } from "@/app/admin/branches/branches_context/useAdminBranchesLogic";
 import { formatCurrency } from "@/lib/formatters";
 
+function AdminBranchCardSkeleton() {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {[1, 2, 3].map(i => (
+        <div key={i} className="bg-card border border-border rounded-xl p-5 animate-pulse">
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 rounded-xl bg-input flex-shrink-0" />
+            <div className="flex-1 space-y-2">
+              <div className="h-5 bg-input rounded w-3/4" />
+              <div className="h-3 bg-input rounded w-1/2" />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3 mt-6">
+            {[1, 2, 3, 4].map(j => (
+              <div key={j} className="bg-input/50 rounded-xl p-3 h-16" />
+            ))}
+          </div>
+          <div className="mt-5 flex items-center justify-between border-t border-border pt-4">
+            <div className="h-4 w-16 bg-input rounded" />
+            <div className="h-4 w-20 bg-input rounded" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function AdminBranchCard() {
-  const { branches, multiplier, openDetail } = useAdminBranchesLogic();
+  const { branches, isLoading, isError, multiplier, openDetail } = useAdminBranchesLogic();
+
+  if (isLoading) return <AdminBranchCardSkeleton />;
+
+  if (isError) return (
+    <div className="flex flex-col items-center justify-center py-16 text-center gap-3">
+      <div className="w-12 h-12 rounded-xl bg-danger-bg flex items-center justify-center">
+        <Building2 size={22} className="text-danger" />
+      </div>
+      <p className="text-sm font-medium text-foreground">Failed to load branches</p>
+      <p className="text-xs text-secondary">Please refresh the page or try again later.</p>
+    </div>
+  );
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {branches.map(branch => (
@@ -48,5 +88,3 @@ export default function AdminBranchCard() {
     </div>
   );
 }
-
-

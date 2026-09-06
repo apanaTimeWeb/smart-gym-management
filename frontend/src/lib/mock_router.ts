@@ -525,6 +525,80 @@ export async function routeMockRequest<T>(
   }
 
 
+  if (path.includes('/admin/branches')) {
+    const defaultBranches = [
+      {
+        id: 'b1', name: 'Downtown Core', location: '123 Main St', status: 'active',
+        revenue: 125000, expenses: 45000, studentsCount: 450, staffCount: 12,
+        revenueItems: [
+          { id: 'r1', label: 'Membership Fee — Rahul Sharma', amount: 4500, method: 'UPI', date: '2026-09-01' },
+          { id: 'r2', label: 'Membership Fee — Priya Singh', amount: 3000, method: 'Cash', date: '2026-09-02' },
+          { id: 'r3', label: 'Store Sale — Protein Powder', amount: 850, method: 'Card', date: '2026-09-02' },
+          { id: 'r4', label: 'Personal Training — Amit Verma', amount: 5000, method: 'UPI', date: '2026-09-03' },
+        ],
+        expenseItems: [
+          { id: 'e1', label: 'Electricity Bill', amount: 12000, category: 'Utilities', date: '2026-09-01' },
+          { id: 'e2', label: 'Staff Salaries', amount: 24000, category: 'Payroll', date: '2026-09-01' },
+          { id: 'e3', label: 'Equipment Maintenance', amount: 5000, category: 'Maintenance', date: '2026-09-03' },
+          { id: 'e4', label: 'Cleaning Supplies', amount: 2000, category: 'Operations', date: '2026-09-03' },
+        ],
+        staffList: [
+          { id: 's1', name: 'Vikram Patel', role: 'Manager', shift: 'Morning', status: 'active' },
+          { id: 's2', name: 'Sunita Rao', role: 'Trainer', shift: 'Evening', status: 'active' },
+          { id: 's3', name: 'Arjun Mehta', role: 'Trainer', shift: 'Morning', status: 'on-leave' },
+          { id: 's4', name: 'Kavya Nair', role: 'Receptionist', shift: 'Full-day', status: 'active' },
+        ],
+        studentList: [
+          { id: 'st1', name: 'Rahul Sharma', plan: 'Premium', status: 'active', joinDate: '2026-01-15' },
+          { id: 'st2', name: 'Priya Singh', plan: 'Basic', status: 'active', joinDate: '2026-03-10' },
+          { id: 'st3', name: 'Amit Verma', plan: 'Personal Training', status: 'active', joinDate: '2026-07-01' },
+        ],
+      },
+      {
+        id: 'b2', name: 'Uptown Plaza', location: '456 North Ave', status: 'active',
+        revenue: 85000, expenses: 32000, studentsCount: 320, staffCount: 8,
+        revenueItems: [
+          { id: 'r5', label: 'Membership Fee — Neha Gupta', amount: 3000, method: 'UPI', date: '2026-09-01' },
+          { id: 'r6', label: 'Store Sale — Gym Gloves', amount: 450, method: 'Cash', date: '2026-09-02' },
+        ],
+        expenseItems: [
+          { id: 'e5', label: 'Electricity Bill', amount: 9000, category: 'Utilities', date: '2026-09-01' },
+          { id: 'e6', label: 'Staff Salaries', amount: 18000, category: 'Payroll', date: '2026-09-01' },
+        ],
+        staffList: [
+          { id: 's5', name: 'Deepak Kumar', role: 'Manager', shift: 'Morning', status: 'active' },
+          { id: 's6', name: 'Pooja Iyer', role: 'Trainer', shift: 'Evening', status: 'active' },
+        ],
+        studentList: [
+          { id: 'st4', name: 'Neha Gupta', plan: 'Basic', status: 'active', joinDate: '2026-02-20' },
+        ],
+      },
+      {
+        id: 'b3', name: 'Westside Mall', location: '789 West Blvd', status: 'active',
+        revenue: 150000, expenses: 55000, studentsCount: 600, staffCount: 15,
+        revenueItems: [
+          { id: 'r7', label: 'Membership Fee — Ravi Teja', amount: 4500, method: 'Card', date: '2026-09-01' },
+          { id: 'r8', label: 'Personal Training — Sneha Roy', amount: 6000, method: 'UPI', date: '2026-09-03' },
+        ],
+        expenseItems: [
+          { id: 'e7', label: 'Electricity Bill', amount: 15000, category: 'Utilities', date: '2026-09-01' },
+          { id: 'e8', label: 'Staff Salaries', amount: 30000, category: 'Payroll', date: '2026-09-01' },
+          { id: 'e9', label: 'Marketing', amount: 8000, category: 'Marketing', date: '2026-09-02' },
+        ],
+        staffList: [
+          { id: 's7', name: 'Anita Sharma', role: 'Manager', shift: 'Morning', status: 'active' },
+          { id: 's8', name: 'Ravi Teja', role: 'Trainer', shift: 'Morning', status: 'active' },
+          { id: 's9', name: 'Sneha Roy', role: 'Trainer', shift: 'Evening', status: 'on-leave' },
+        ],
+        studentList: [
+          { id: 'st5', name: 'Ravi Teja', plan: 'Premium', status: 'active', joinDate: '2026-01-10' },
+          { id: 'st6', name: 'Sneha Roy', plan: 'Personal Training', status: 'expired', joinDate: '2025-12-01' },
+        ],
+      },
+    ];
+    return MockDB.handleCrud('mock_admin_branches', method, path, parsedBody, defaultBranches, 'branches') as unknown as ApiResponse<T>;
+  }
+
   // SUPERADMIN Stateful Interceptions
   if (path.includes('/superadmin/tickets')) return MockDB.handleCrud('mock_tickets', method, path, parsedBody, generate(10, i => ({ id: `tkt-${i}`, tenantName: `Gym Branch ${i + 1}`, subject: `Billing Issue ${i}`, status: i % 3 === 0 ? 'RESOLVED' : 'OPEN', priority: i % 4 === 0 ? 'HIGH' : 'LOW', createdAt: '2023-10-10', lastUpdated: '2023-10-12' }))) as unknown as ApiResponse<T>;
   if (path.includes('/superadmin/invoices')) return MockDB.handleCrud('mock_invoices', method, path, parsedBody, generate(12, i => ({ id: `inv-${i}`, tenantName: `Gym Branch ${i + 1}`, amount: 5000 + (i * 1000), currency: 'INR', status: i % 4 === 0 ? 'PENDING' : 'PAID', date: '2023-11-01', planName: 'Enterprise' }))) as unknown as ApiResponse<T>;
