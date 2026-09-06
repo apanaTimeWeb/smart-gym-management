@@ -21,6 +21,8 @@ export function useManagerStoreLogic(initialData?: StoreInitialData | null): Sto
   const tab = searchParams.get('tab') || 'Products';
   
   const search = searchParams.get('search') || '';
+  const categoryFilter = searchParams.get('categoryFilter') || 'ALL';
+  const stockFilter = searchParams.get('stockFilter') || 'ALL';
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
   const startDate = searchParams.get('startDate') || '';
   const endDate = searchParams.get('endDate') || '';
@@ -38,6 +40,8 @@ export function useManagerStoreLogic(initialData?: StoreInitialData | null): Sto
 
   const setTab = useCallback((val: string) => setUrlParam('tab', val), [setUrlParam]);
   const setSearch = useCallback((val: string) => setUrlParam('search', val || null), [setUrlParam]);
+  const setCategoryFilter = useCallback((val: string) => setUrlParam('categoryFilter', val || null), [setUrlParam]);
+  const setStockFilter = useCallback((val: string) => setUrlParam('stockFilter', val || null), [setUrlParam]);
   const setCurrentPage = useCallback((val: number) => setUrlParam('page', val.toString()), [setUrlParam]);
   const setStartDate = useCallback((val: string) => setUrlParam('startDate', val || null), [setUrlParam]);
   const setEndDate = useCallback((val: string) => setUrlParam('endDate', val || null), [setUrlParam]);
@@ -76,12 +80,20 @@ export function useManagerStoreLogic(initialData?: StoreInitialData | null): Sto
       let fetchedProducts = Array.isArray(productsRes.data) ? productsRes.data : (productsRes.data as { products?: unknown[] }).products as Product[] || [];
       let fetchedOrders = ordersRes.data.orders || [];
 
-      if (debouncedSearch) {
+      if (debouncedSearch || categoryFilter !== 'ALL' || stockFilter !== 'ALL') {
         const q = debouncedSearch.toLowerCase();
-        fetchedProducts = fetchedProducts.filter((p: Product) => p.name.toLowerCase().includes(q) || (p.category && p.category.toLowerCase().includes(q)));
-        fetchedOrders = fetchedOrders.filter((o: Order) => 
-          o.id.toLowerCase().includes(q) || (o.notes && o.notes.toLowerCase().includes(q))
-        );
+        fetchedProducts = fetchedProducts.filter((p: Product) => {
+          const matchesSearch = !debouncedSearch || p.name.toLowerCase().includes(q) || (p.category && p.category.toLowerCase().includes(q));
+          const matchesCategory = categoryFilter === 'ALL' || p.category === categoryFilter;
+          const matchesStock = stockFilter === 'ALL' || (stockFilter === 'IN_STOCK' ? p.stock > 0 : p.stock === 0);
+          return matchesSearch && matchesCategory && matchesStock;
+        });
+        
+        if (debouncedSearch) {
+          fetchedOrders = fetchedOrders.filter((o: Order) => 
+            o.id.toLowerCase().includes(q) || (o.notes && o.notes.toLowerCase().includes(q))
+          );
+        }
       }
 
       if (startDate) {
@@ -106,10 +118,10 @@ export function useManagerStoreLogic(initialData?: StoreInitialData | null): Sto
  } catch (e) { 
  showToast((e as Error).message, 'error'); 
  setFetchState('error');
- } finally { 
- setFetchState('success'); 
- }
- }, [showToast, currentPage, debouncedSearch, startDate, endDate, sortOrder]);
+  } finally { 
+  setFetchState('success'); 
+  }
+  }, [showToast, currentPage, debouncedSearch, categoryFilter, stockFilter, startDate, endDate, sortOrder]);
 
   useEffect(() => { 
     if (isFirstRender.current) {
@@ -139,6 +151,7 @@ export function useManagerStoreLogic(initialData?: StoreInitialData | null): Sto
     tab, setTab,
     products, orders, totalOrders, summary, fetchState, saving,
     toast, printData, setPrintData, search, debouncedSearch, setSearch,
+    categoryFilter, setCategoryFilter, stockFilter, setStockFilter,
     currentPage, setCurrentPage,
     startDate, setStartDate, endDate, setEndDate, sortOrder, setSortOrder,
     ...productLogic,
