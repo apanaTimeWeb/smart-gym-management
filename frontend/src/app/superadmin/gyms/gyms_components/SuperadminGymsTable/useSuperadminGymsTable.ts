@@ -7,6 +7,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
 import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
+import { AuthUrlConfig } from '@/app/auth/auth_url_config';
 
 import { MOCK_GYMS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
 

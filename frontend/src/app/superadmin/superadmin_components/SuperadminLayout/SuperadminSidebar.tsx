@@ -69,13 +69,13 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
         { name: 'Dashboard', href: SuperadminUrlConfig.PAGES.DASHBOARD, icon: LayoutDashboard },
         { name: 'Revenue Analytics', href: SuperadminUrlConfig.PAGES.ANALYTICS, icon: BarChart2 },
         { name: 'Subscription Plans', href: SuperadminUrlConfig.PAGES.PLANS, icon: CreditCard },
+        // BarChart3 distinct from BarChart2 used by Revenue Analytics — Design §9b no icon duplication
+        { name: 'Usage Meters', href: SuperadminUrlConfig.PAGES.USAGE_METERS, icon: BarChart3 },
         { name: 'Promotional Coupons', href: SuperadminUrlConfig.PAGES.COUPONS, icon: Tag },
         { name: 'Affiliate Partners', href: SuperadminUrlConfig.PAGES.AFFILIATES, icon: Users },
         { name: 'Tenants (Gyms)', href: SuperadminUrlConfig.PAGES.GYMS_LIST, icon: Building2 },
         { name: 'SaaS Invoices', href: SuperadminUrlConfig.PAGES.INVOICES, icon: Receipt },
         { name: 'Support Tickets', href: SuperadminUrlConfig.PAGES.TICKETS, icon: Ticket },
-        // BarChart3 distinct from BarChart2 used by Revenue Analytics — Design §9b no icon duplication
-        { name: 'Usage Meters', href: SuperadminUrlConfig.PAGES.USAGE_METERS, icon: BarChart3 },
       ]
     },
     {

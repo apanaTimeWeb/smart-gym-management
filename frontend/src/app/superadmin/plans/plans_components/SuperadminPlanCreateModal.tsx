@@ -32,7 +32,7 @@ export default function SuperadminPlanCreateModal() {
   const { register, control, handleSubmit, formState: { errors, isDirty }, reset } = useForm<PlanFormValues>({
     resolver: zodResolver(planSchema) as unknown as Resolver<PlanFormValues>,
     defaultValues: {
-      name: '', priceMonthly: 0, priceAnnual: 0, maxMembers: 100, maxStaff: 5,
+      name: '', priceMonthly: 0, priceAnnual: 0, maxMembers: 100, maxStaff: 5, dbLimitGb: 1.0, binaryLimitGb: 10.0,
       features: [{ value: 'Core Gym Management' }],
     },
   });
@@ -96,6 +96,16 @@ export default function SuperadminPlanCreateModal() {
               <div key={field} className="space-y-2">
                 <label className="block text-sm font-medium text-secondary">{field === 'maxMembers' ? 'Max Members' : 'Max Staff'} <span className="text-danger">*</span></label>
                 <input type="number" min="0" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }} {...register(field, { valueAsNumber: true })} className="w-full bg-input border border-border rounded-xl px-4 py-3 text-foreground focus:border-primary outline-none motion-safe:transition-colors" />
+                {errors[field] && <p className="text-danger text-xs">{errors[field]?.message}</p>}
+              </div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            {(['dbLimitGb', 'binaryLimitGb'] as const).map(field => (
+              <div key={field} className="space-y-2">
+                <label className="block text-sm font-medium text-secondary">{field === 'dbLimitGb' ? 'DB Limit (GB)' : 'Binary Limit (GB)'} <span className="text-danger">*</span></label>
+                <input type="number" min="0" step="0.1" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }} {...register(field, { valueAsNumber: true })} className="w-full bg-input border border-border rounded-xl px-4 py-3 text-foreground focus:border-primary outline-none motion-safe:transition-colors" />
                 {errors[field] && <p className="text-danger text-xs">{errors[field]?.message}</p>}
               </div>
             ))}
