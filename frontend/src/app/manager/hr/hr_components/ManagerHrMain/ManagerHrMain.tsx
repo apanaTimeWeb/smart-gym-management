@@ -8,6 +8,7 @@ import ManagerHrKPIs from '@/app/manager/hr/hr_components/ManagerHrKPIs/ManagerH
 import ManagerHrTabs from '@/app/manager/hr/hr_components/ManagerHrTabs/ManagerHrTabs';
 import ManagerHrStaffModal from '@/app/manager/hr/hr_components/ManagerHrStaffModal/ManagerHrStaffModal';
 import ManagerHrPayrollModal from '@/app/manager/hr/hr_components/ManagerHrPayrollModal/ManagerHrPayrollModal';
+import ManagerHrPaymentModal from '@/app/manager/hr/hr_components/ManagerHrPaymentModal/ManagerHrPaymentModal';
 import type { HrInitialData } from '@/app/manager/hr/hr_types/ManagerHrTypes';
 
 function HrContent() {
@@ -23,6 +24,7 @@ function HrContent() {
 
       <ManagerHrStaffModal />
       <ManagerHrPayrollModal />
+      <ManagerHrPaymentModal />
 
       {toast && <ManagerToast message={toast.message} type={toast.type} onClose={hideToast} />}
     </div>

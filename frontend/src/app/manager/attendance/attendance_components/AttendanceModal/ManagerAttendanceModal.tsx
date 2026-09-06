@@ -36,8 +36,11 @@ export default function AttendanceModal() {
 
   useEffect(() => {
     if (showModal) {
+      const d = new Date();
+      const currentTodayDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
       reset({
         ...EMPTY_ATTENDANCE_FORM,
+        date: currentTodayDate,
         type: tab === 'Staff' ? 'STAFF' : 'MEMBER'
       });
     }
@@ -59,7 +62,23 @@ export default function AttendanceModal() {
           </button>
         </div>
         <form onSubmit={handleSubmit(markAttendance)} className="p-5 space-y-4">
-          {/* Type is now automatically inferred from the active tab */}
+          
+          {tab === 'All' && (
+            <div>
+              <label className="block text-sm font-medium text-secondary mb-2">User Type</label>
+              <div className="flex gap-4">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" value="MEMBER" {...register('type')} className="text-primary focus:ring-primary h-4 w-4" />
+                  <span className="text-sm font-medium text-foreground">Member</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" value="STAFF" {...register('type')} className="text-primary focus:ring-primary h-4 w-4" />
+                  <span className="text-sm font-medium text-foreground">Staff</span>
+                </label>
+              </div>
+            </div>
+          )}
+
           <div>
             <label className="block text-sm font-medium text-secondary mb-1">
               {watchType === 'MEMBER' ? 'Select Member' : 'Select Staff'}
@@ -119,11 +138,13 @@ export default function AttendanceModal() {
               </label>
               <input 
                 type="date" 
+                min={watchStatus !== 'LEAVE' ? todayDate : undefined}
                 max={watchStatus !== 'LEAVE' ? todayDate : undefined}
+                readOnly={watchStatus !== 'LEAVE'}
                 {...register('date')}
                 className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus-visible:ring-2 ${
                   errors.date ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
-                } bg-input text-foreground`} 
+                } bg-input text-foreground ${watchStatus !== 'LEAVE' ? 'opacity-80 cursor-not-allowed' : ''}`} 
               />
               {errors.date && <p className="text-danger text-xs mt-1">{errors.date.message}</p>}
             </div>

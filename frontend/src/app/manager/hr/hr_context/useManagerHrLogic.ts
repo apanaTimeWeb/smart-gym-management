@@ -58,6 +58,7 @@ export function useManagerHrLogic(initialData?: HrInitialData | null): HrContext
 
   const [showModal, setShowModal] = useState(false);
   const [showPayrollModal, setShowPayrollModal] = useState(false);
+  const [paymentModal, setPaymentModal] = useState<{ payrollId: string; staffName: string; pendingAmount: number; } | null>(null);
   const [editId, setEditId] = useState<string | null>(null);
   const [editData, setEditData] = useState<Partial<Staff> | null>(null);
   const [saving, setSaving] = useState(false);
@@ -148,8 +149,7 @@ export function useManagerHrLogic(initialData?: HrInitialData | null): HrContext
   return {
     staff, payrolls, summary, fetchState, error, toast, showToast, hideToast, loadAll,
     search, debouncedSearch, setSearch, roleFilter, setRoleFilter, currentPage, setCurrentPage,
-    showModal, setShowModal, showPayrollModal, setShowPayrollModal, editId, editData, saving, 
+    showModal, setShowModal, showPayrollModal, setShowPayrollModal, paymentModal, setPaymentModal, editId, editData, saving, 
     openAdd, openEdit, openAddPayroll, saveStaff, savePayroll, deleteStaff, toggleStaffStatus, markPayrollPaid, payrollMonth, setPayrollMonth
   };
 }
-

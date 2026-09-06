@@ -65,7 +65,8 @@ export function useManagerInquiriesMutations(
     }
 
     try {
-      if (status === 'CONVERTED' && statusFilter === 'All') {
+      await inquiriesApi.update(id, { status } as any);
+      if (status === 'CONVERTED') {
         setInquiries(prev => prev.filter(i => String(i.id) !== String(id)));
       } else {
         setInquiries(prev => prev.map(i => String(i.id) === String(id) ? { ...i, status } as unknown as Inquiry : i));

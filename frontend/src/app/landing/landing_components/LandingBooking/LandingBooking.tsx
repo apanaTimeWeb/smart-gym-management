@@ -66,18 +66,40 @@ export default function LandingBooking() {
                 </div>
                 <div>
                   <label className="text-xs font-medium text-secondary block mb-2">Email Address <span className="text-danger">*</span></label>
-                  <input type="email" required value={bookingData.email} onChange={e => setBookingData({ ...bookingData, email: e.target.value })} placeholder="john@example.com" className="w-full bg-card border border-border rounded-xl px-4 py-3 text-white placeholder-muted-foreground focus:outline-none focus:border-warning transition-colors" />
+                  <input type="email" required pattern=".*\.com$" title="Email must end with .com" value={bookingData.email} onChange={e => setBookingData({ ...bookingData, email: e.target.value })} placeholder="john@example.com" className="w-full bg-card border border-border rounded-xl px-4 py-3 text-white placeholder-muted-foreground focus:outline-none focus:border-warning transition-colors" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="text-xs font-medium text-secondary block mb-2">Phone / WhatsApp <span className="text-danger">*</span></label>
-                  <input type="tel" required value={bookingData.phone} onChange={e => setBookingData({ ...bookingData, phone: e.target.value })} placeholder="+91 XXXXX XXXXX" className="w-full bg-card border border-border rounded-xl px-4 py-3 text-white placeholder-muted-foreground focus:outline-none focus:border-warning transition-colors" />
+                  <div className="flex bg-card border border-border rounded-xl focus-within:border-warning focus-within:ring-1 focus-within:ring-warning transition-colors overflow-hidden">
+                    <span className="flex items-center justify-center px-4 bg-muted/20 text-secondary border-r border-border text-sm font-medium">
+                      +91
+                    </span>
+                    <input 
+                      type="tel" 
+                      required 
+                      value={bookingData.phone} 
+                      onChange={e => {
+                        // Strip all non-numeric characters and limit to 10 digits
+                        const val = e.target.value.replace(/\D/g, '').slice(0, 10);
+                        setBookingData({ ...bookingData, phone: val });
+                      }} 
+                      onKeyDown={(e) => {
+                        if (['e', 'E', '-', '+', '.'].includes(e.key)) {
+                          e.preventDefault();
+                        }
+                      }}
+                      maxLength={10}
+                      placeholder="9876543210" 
+                      className="w-full px-4 py-3 bg-transparent text-white placeholder-muted-foreground focus:outline-none" 
+                    />
+                  </div>
                 </div>
                 <div>
                   <label className="text-xs font-medium text-secondary block mb-2">Preferred Date <span className="text-danger">*</span></label>
-                  <input type="date" required value={bookingData.date} onChange={e => setBookingData({ ...bookingData, date: e.target.value })} className="w-full bg-card border border-border rounded-xl px-4 py-3 text-white placeholder-muted-foreground focus:outline-none focus:border-warning transition-colors [&::-webkit-calendar-picker-indicator]:filter-invert" />
+                  <input type="date" min={new Date().toISOString().split('T')[0]} required value={bookingData.date} onChange={e => setBookingData({ ...bookingData, date: e.target.value })} className="w-full bg-card border border-border rounded-xl px-4 py-3 text-white placeholder-muted-foreground focus:outline-none focus:border-warning transition-colors [&::-webkit-calendar-picker-indicator]:filter-invert" />
                 </div>
               </div>
 

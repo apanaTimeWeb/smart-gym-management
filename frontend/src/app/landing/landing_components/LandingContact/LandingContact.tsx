@@ -77,7 +77,7 @@ export default function LandingContact() {
                 </div>
                 <div>
                   <label className="text-xs font-medium text-secondary block mb-2">Email Address</label>
-                  <input type="email" required value={contactData.email} onChange={e => setContactData({ ...contactData, email: e.target.value })} placeholder="you@example.com" className="w-full bg-input border border-border rounded-xl px-4 py-3 text-white placeholder-muted-foreground focus:outline-none focus:border-warning transition-colors" />
+                  <input type="email" required pattern=".*\.com$" title="Email must end with .com" value={contactData.email} onChange={e => setContactData({ ...contactData, email: e.target.value })} placeholder="you@example.com" className="w-full bg-input border border-border rounded-xl px-4 py-3 text-white placeholder-muted-foreground focus:outline-none focus:border-warning transition-colors" />
                 </div>
                 <div>
                   <label className="text-xs font-medium text-secondary block mb-2">Message</label>

@@ -42,7 +42,7 @@ export default function ManagerConvertLeadModal() {
   }, [convertLead, plans.length, fetchState, loadAll]);
 
   const useFormReturn = useForm<MemberFormValues>({
-    resolver: zodResolver(MemberSchema),
+    resolver: zodResolver(MemberSchema) as any,
     defaultValues: EMPTY_MEMBER_FORM
   });
 
@@ -132,15 +132,15 @@ export default function ManagerConvertLeadModal() {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-card w-full max-w-4xl rounded-2xl shadow-xl flex flex-col max-h-[90vh] overflow-hidden border border-border animate-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60">
+      <div className="bg-card rounded-2xl shadow-xl w-full max-w-xl overflow-visible border border-border max-h-full flex flex-col">
         
-        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-border bg-muted/30">
+        <div className="sticky top-0 bg-card px-6 py-4 border-b border-border flex items-center justify-between z-10 rounded-t-2xl">
           <div>
-            <h2 className="text-lg sm:text-xl font-bold text-primary">Convert Lead to Member</h2>
-            <p className="text-xs sm:text-sm text-secondary mt-1">Complete admission for {convertLead?.name}</p>
+            <h3 className="text-lg font-bold text-primary">Convert to Member</h3>
+            <p className="text-xs text-secondary mt-0.5">Complete admission for {convertLead?.name}</p>
           </div>
-          <button onClick={closeConvert} className="p-2 hover:bg-destructive/10 hover:text-destructive rounded-full transition-colors">
+          <button onClick={closeConvert} className="p-2 rounded-full hover:bg-primary/10 transition-colors text-secondary hover:text-primary">
             <X size={20} />
           </button>
         </div>
@@ -151,7 +151,7 @@ export default function ManagerConvertLeadModal() {
             closeConvert={closeConvert} 
           />
         ) : (
-          <form onSubmit={handleSubmit(onSubmit)} className="flex-1 flex flex-col p-4 sm:p-6 overflow-y-auto space-y-6 bg-background custom-scrollbar">
+          <form onSubmit={handleSubmit(onSubmit)} className="overflow-y-auto flex-1 custom-scrollbar p-4 flex flex-col gap-4">
             <ManagerConvertLeadForm 
               useFormReturn={useFormReturn}
               plans={plans}
@@ -160,23 +160,23 @@ export default function ManagerConvertLeadModal() {
               watchCustomDays={watchCustomDays}
             />
 
-            <div className="flex justify-end gap-3 pt-6 border-t border-border mt-auto sticky bottom-0 bg-background pb-1">
+            <div className="flex gap-3 pt-4 border-t border-border mt-2">
               <button
                 type="button"
                 onClick={closeConvert}
-                className="px-6 py-2.5 text-sm font-semibold rounded-xl border border-border text-secondary hover:bg-primary/5 hover:text-primary transition-colors"
+                className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-primary hover:bg-primary-subtle transition-all duration-200 active:scale-95"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={saving}
-                className="px-8 py-2.5 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 disabled:opacity-70 transition-all hover:shadow-lg hover:shadow-primary/30 active:scale-95 bg-primary"
+                className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-primary text-white flex items-center justify-center gap-2 disabled:opacity-70 hover:bg-primary-hover transition-all duration-200 active:scale-95"
               >
                 {saving ? (
                   <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" />
                 ) : (
-                  <><Save size={16} /> Convert to Member</>
+                  <><Save size={15} /> Convert Lead</>
                 )}
               </button>
             </div>

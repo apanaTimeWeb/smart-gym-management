@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Renders the primary tabular list of expenses with actions and pagination.
 'use client';
 
-import { Edit, Trash2, Loader2 } from 'lucide-react';
+import { Edit, Trash2, Loader2, ExternalLink } from 'lucide-react';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { useExpensesContext } from '@/app/manager/expenses/expenses_context/ManagerExpensesContext';
 import { useManagerExpensesStore } from '@/app/manager/expenses/expenses_store/useManagerExpensesStore';
@@ -60,6 +60,11 @@ export default function ManagerExpensesTable() {
                       </td>
                       <td className="px-5 py-3.5 whitespace-nowrap">
                         <div className="flex items-center gap-2">
+                          {e.receiptUrl && (
+                            <a href={e.receiptUrl} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle transition-all duration-200" title="View Receipt">
+                              <ExternalLink size={14} />
+                            </a>
+                          )}
                           <button onClick={() => openEdit(e)} className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle transition-all duration-200" title="Edit"><Edit size={14} /></button>
                           <button onClick={async () => { 
                             const ok = await confirm({

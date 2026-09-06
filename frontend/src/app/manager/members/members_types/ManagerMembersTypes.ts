@@ -29,6 +29,7 @@ export interface Member {
   assignedDiet?: DietPlan;
   assignedWorkoutId?: string;
   assignedWorkout?: Workout;
+  medicalHistory?: string;
 }
 
 export interface MemberStats {
@@ -82,6 +83,7 @@ export interface MembersContextType {
   assignWorkout: (memberId: string, workout: Workout | null) => Promise<void>;
   renewMember: (data: { planId: string; newExpiryDate: string; amountPaid: number; paymentMethod: string; billingCycle: string; customDays?: number }) => Promise<void>;
   recordPayment: (data: { amount: number; method: string }) => Promise<void>;
+  freezeMember: (isFrozen: boolean) => Promise<void>;
 
   // Message Modal
   msgModal: { open: boolean; recipient: ManagerMessageRecipient; type: MessageType; message: string; subject?: string } | null;

@@ -7,11 +7,11 @@ import { useManagerMembersStore } from '@/app/manager/members/members_store/useM
 import { formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 
 export default function ManagerProfilePayments() {
-  const { handlePrint, handleSharePaymentWhatsApp, setShowRenewModal, setShowPaymentModal } = useMembersContext();
- const payments = useManagerMembersStore(s => s.payments);
+  const { handlePrint, handleSharePaymentWhatsApp, setShowRenewModal, setShowPaymentModal, selectedMember } = useMembersContext();
+  const payments = useManagerMembersStore(s => s.payments);
 
   const totalPaid = payments.filter(p => p.status === 'PAID').reduce((s, p) => s + p.amount, 0);
-  const totalDue = payments.filter(p => p.status === 'DUE').reduce((s, p) => s + p.amount, 0);
+  const totalDue = selectedMember?.pendingAmount || 0;
 
   // Sort payments chronologically (newest first)
   const sortedPayments = [...payments].sort((a, b) => new Date(b.paidAt).getTime() - new Date(a.paidAt).getTime());

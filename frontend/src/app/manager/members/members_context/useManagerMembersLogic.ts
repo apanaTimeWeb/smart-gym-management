@@ -113,7 +113,7 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
     setShowAddModal(true);
   }, []);
 
-  const { saveMember, deleteMember, assignDiet, assignWorkout, renewMember, recordPayment } = useManagerMembersMutations(
+  const { saveMember, deleteMember, assignDiet, assignWorkout, renewMember, recordPayment, freezeMember } = useManagerMembersMutations(
     showToast, selectedMember, setSelectedMember, editId, setShowAddModal, setShowRenewModal, setShowPaymentModal
   );
 
@@ -137,9 +137,8 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
     showAddModal, setShowAddModal, editId, editData,
     showRenewModal, setShowRenewModal,
     showPaymentModal, setShowPaymentModal,
-    openAdd, openEdit, saveMember, deleteMember, assignDiet, assignWorkout, renewMember, recordPayment,
+    openAdd, openEdit, saveMember, deleteMember, assignDiet, assignWorkout, renewMember, recordPayment, freezeMember,
     msgModal, openMsg, closeMsg,
     printData, handlePrint, handleSharePaymentWhatsApp, setPrintData
   };
 }
-

@@ -1,10 +1,11 @@
 // RESPONSIBILITY: Renders the attendance data table and pagination controls.
 'use client';
 
-import { Clock, Calendar } from 'lucide-react';
+import { Clock, Calendar, CalendarCheck } from 'lucide-react';
 import { useAttendanceContext } from '@/app/manager/attendance/attendance_context/ManagerAttendanceContext';
 import { ATTENDANCE_TABLE_HEADERS, formatDate, formatTime } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
+import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 
 export default function AttendanceTable() {
@@ -17,6 +18,8 @@ export default function AttendanceTable() {
   );
   
   const totalPages = Math.ceil((tab === 'All' ? totalRecords : filteredRecords.length) / MANAGER_ITEMS_PER_PAGE) || 1;
+  const startIndex = (currentPage - 1) * MANAGER_ITEMS_PER_PAGE;
+  const paginatedRecords = filteredRecords.slice(startIndex, startIndex + MANAGER_ITEMS_PER_PAGE);
 
   return (
  <div className="p-5">
@@ -50,7 +53,7 @@ export default function AttendanceTable() {
  </tr>
  </thead>
   <tbody className="divide-y divide-border">
-  {filteredRecords.map(r => (
+  {paginatedRecords.map(r => (
  <tr key={r.id} className="hover:bg-primary-subtle transition-colors">
  <td className="px-4 py-3 whitespace-nowrap">
  <div className="flex items-center gap-2">
@@ -75,9 +78,9 @@ export default function AttendanceTable() {
   </td>
   <td className="px-4 py-3 whitespace-nowrap">
     <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-      r.checkIn ? 'bg-success-bg text-success' : 'bg-danger-bg text-danger'
+      (r.checkIn || r.status === 'PRESENT' || r.type === 'MEMBER') ? 'bg-success-bg text-success' : 'bg-danger-bg text-danger'
     }`}>
-      {r.checkIn ? 'Present' : 'Absent'}
+      {(r.checkIn || r.status === 'PRESENT' || r.type === 'MEMBER') ? 'Present' : 'Absent'}
     </span>
   </td>
  <td className="px-4 py-3 text-sm text-secondary whitespace-nowrap">{formatDate(r.date)}</td>
@@ -85,7 +88,6 @@ export default function AttendanceTable() {
  <Clock size={13} className="opacity-50" />
  {formatTime(r.checkIn)}
  </td>
- <td className="px-4 py-3 text-sm text-secondary whitespace-nowrap">{formatTime(r.checkOut)}</td>
  <td className="px-4 py-3 text-sm whitespace-nowrap">
   <button 
     onClick={() => setCalendarUser({ id: String(r.memberId || r.staffId || r.id), name: String(r.member?.name || r.staff?.name), type: r.type as 'MEMBER'|'STAFF' })}
@@ -100,8 +102,12 @@ export default function AttendanceTable() {
  ))}
  {records.length === 0 && (
  <tr>
- <td colSpan={7} className="text-center py-10 text-secondary">
- No attendance records found.
+ <td colSpan={6} className="p-0 border-b-0">
+  <ManagerEmptyState 
+    icon={<CalendarCheck size={32} />}
+    title="No attendance records"
+    subtitle="There are no check-ins for this date or filter yet."
+  />
  </td>
  </tr>
  )}

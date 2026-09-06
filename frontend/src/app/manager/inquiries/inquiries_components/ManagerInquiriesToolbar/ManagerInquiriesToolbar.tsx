@@ -70,7 +70,9 @@ export default function ManagerInquiriesToolbar() {
             onChange={(val) => setStatusFilter(String(val))}
             options={[
               { label: 'All Status', value: 'All' },
-              ...Object.entries(INQUIRIES_STATUS_LABELS).map(([val, label]) => ({ label, value: val })),
+              ...Object.entries(INQUIRIES_STATUS_LABELS)
+                .filter(([val]) => val !== 'CONVERTED')
+                .map(([val, label]) => ({ label, value: val })),
             ]}
           />
         </div>
