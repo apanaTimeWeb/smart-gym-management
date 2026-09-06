@@ -77,9 +77,9 @@ export default function AttendanceTable() {
   </td>
   <td className="px-4 py-3 whitespace-nowrap">
     <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-      r.checkIn ? 'bg-success-bg text-success' : 'bg-danger-bg text-danger'
+      (r.checkIn || r.status === 'PRESENT' || r.type === 'MEMBER') ? 'bg-success-bg text-success' : 'bg-danger-bg text-danger'
     }`}>
-      {r.checkIn ? 'Present' : 'Absent'}
+      {(r.checkIn || r.status === 'PRESENT' || r.type === 'MEMBER') ? 'Present' : 'Absent'}
     </span>
   </td>
  <td className="px-4 py-3 text-sm text-secondary whitespace-nowrap">{formatDate(r.date)}</td>
@@ -87,7 +87,6 @@ export default function AttendanceTable() {
  <Clock size={13} className="opacity-50" />
  {formatTime(r.checkIn)}
  </td>
- <td className="px-4 py-3 text-sm text-secondary whitespace-nowrap">{formatTime(r.checkOut)}</td>
  <td className="px-4 py-3 text-sm whitespace-nowrap">
   <button 
     onClick={() => setCalendarUser({ id: String(r.memberId || r.staffId || r.id), name: String(r.member?.name || r.staff?.name), type: r.type as 'MEMBER'|'STAFF' })}
@@ -102,7 +101,7 @@ export default function AttendanceTable() {
  ))}
  {records.length === 0 && (
  <tr>
- <td colSpan={7} className="text-center py-10 text-secondary">
+ <td colSpan={6} className="text-center py-10 text-secondary">
  No attendance records found.
  </td>
  </tr>

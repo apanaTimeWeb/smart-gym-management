@@ -130,7 +130,9 @@ export const useManagerMembersStore = create<MembersState>((set, get) => ({
 
         const currentMonthRecords = fetchedRecords.filter(a => {
           const dateObj = new Date(a.date);
-          return dateObj.getMonth() === currentMonth && dateObj.getFullYear() === currentYear;
+          const isCurrentMonth = dateObj.getMonth() === currentMonth && dateObj.getFullYear() === currentYear;
+          const isSameMember = String(a.memberId) === String(memberId);
+          return isCurrentMonth && isSameMember;
         });
 
         const todayDate = today.getDate();
@@ -140,7 +142,7 @@ export const useManagerMembersStore = create<MembersState>((set, get) => ({
 
           let status = 'NONE';
           if (rec) {
-            status = rec.checkIn ? 'P' : 'A';
+            status = (rec.checkIn || rec.status === 'PRESENT' || !rec.status) ? 'P' : 'A';
           } else if (d <= todayDate) {
             status = 'A';
           }

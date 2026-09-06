@@ -201,7 +201,21 @@ export async function routeMockRequest<T>(
       const filtered = existing.filter((r: any) => !r.name?.includes('Demo Member'));
       MockDB.setCollection('mock_members', filtered);
     }
-    return MockDB.handleCrud('mock_members', method, path, parsedBody, [], 'members') as unknown as ApiResponse<T>;
+    
+    const res = MockDB.handleCrud('mock_members', method, path, parsedBody, [], 'members') as unknown as ApiResponse<any>;
+    
+    // Cascade delete attendance records if a member is deleted
+    if (method === 'DELETE' && res.success) {
+      const segments = path.split('?')[0].split('/');
+      const deletedId = segments[segments.length - 1];
+      if (deletedId) {
+        const attendanceColl = MockDB.getCollection('mock_admin_attendance', []);
+        const updatedAttendance = attendanceColl.filter((a: any) => String(a.memberId) !== String(deletedId));
+        MockDB.setCollection('mock_admin_attendance', updatedAttendance);
+      }
+    }
+    
+    return res as unknown as ApiResponse<T>;
   }
   if (path.includes('/inquiries/stats')) {
     const existing = MockDB.getCollection('mock_inquiries', []);
@@ -273,6 +287,26 @@ export async function routeMockRequest<T>(
     if (existing.length > 0 && existing.some((r: any) => r.member?.name?.includes('Member ') || r.staff?.name?.includes('Staff ') || r.member?.name?.includes('Active Member') || r.staff?.name?.includes('Trainer '))) {
       MockDB.setCollection('mock_admin_attendance', []);
       existing = [];
+    }
+    
+    // Purge orphaned records (deleted members/staff)
+    if (method === 'GET' && existing.length > 0) {
+      const allMembers = MockDB.getCollection('mock_members', []);
+      const allStaff = MockDB.getCollection('mock_admin_staff', []);
+      
+      const memberIds = new Set(allMembers.map(m => String(m.id)));
+      const staffIds = new Set(allStaff.map(s => String(s.id)));
+      
+      const cleaned = existing.filter((r: any) => {
+        if (r.type === 'MEMBER') return memberIds.has(String(r.memberId));
+        if (r.type === 'STAFF') return staffIds.has(String(r.staffId));
+        return true;
+      });
+      
+      if (cleaned.length !== existing.length) {
+        MockDB.setCollection('mock_admin_attendance', cleaned);
+        existing = cleaned;
+      }
     }
     
     return MockDB.handleCrud('mock_admin_attendance', method, path, parsedBody, [], 'attendance') as unknown as ApiResponse<T>;

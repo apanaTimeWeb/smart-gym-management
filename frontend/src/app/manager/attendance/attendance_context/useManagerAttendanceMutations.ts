@@ -40,8 +40,14 @@ export function useManagerAttendanceMutations(
           throw new Error(`Attendance already marked for this ${data.type === 'MEMBER' ? 'member' : 'staff'} on ${dateStr}`);
         }
 
-        const checkInIso = (data.status === 'PRESENT' && data.checkIn) 
-          ? new Date(`${dateStr}T${data.checkIn}:00`).toISOString() 
+        let checkInTime = data.checkIn;
+        if ((data.status === 'PRESENT' || data.type === 'MEMBER') && !checkInTime) {
+           const now = new Date();
+           checkInTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+        }
+
+        const checkInIso = (data.status === 'PRESENT' || data.type === 'MEMBER') && checkInTime
+          ? new Date(`${dateStr}T${checkInTime}:00`).toISOString() 
           : undefined;
         
         const payload: Record<string, unknown> = { 
