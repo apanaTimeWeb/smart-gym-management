@@ -331,6 +331,35 @@ export async function routeMockRequest<T>(
     }
   }
 
+  if (path.includes('/superadmin/settings')) {
+    const defaultSettings = [
+      { id: '1', key: 'MAX_GYMS_LIMIT', value: '500', description: 'Maximum total gyms allowed in the system', category: 'platform', dataType: 'number' },
+      { id: '2', key: 'MAINTENANCE_MODE', value: 'false', description: 'Suspend all non-admin access', category: 'system', dataType: 'boolean' },
+      { id: '3', key: 'DEFAULT_TRIAL_DAYS', value: '14', description: 'Default trial period for new gym signups', category: 'billing', dataType: 'number' },
+      { id: '4', key: 'SUPPORT_EMAIL', value: 'support@smartgym.com', description: 'Global support contact email', category: 'general', dataType: 'string' }
+    ];
+    const settings = MockDB.getCollection('mock_superadmin_settings', defaultSettings);
+    if (settings.length === 0) MockDB.setCollection('mock_superadmin_settings', defaultSettings);
+
+    if (method === 'GET') {
+      return { success: true, message: 'Settings fetched', data: settings } as unknown as ApiResponse<T>;
+    }
+
+    if (method === 'PATCH') {
+      const segments = path.split('/');
+      const settingId = segments[segments.length - 1];
+      const idx = settings.findIndex((s: any) => s.id === settingId);
+      if (idx > -1) {
+        settings[idx] = { ...settings[idx], ...parsedBody };
+        MockDB.setCollection('mock_superadmin_settings', settings);
+        return { success: true, message: 'Setting updated successfully', data: settings[idx] } as unknown as ApiResponse<T>;
+      }
+    }
+  }
+
+  if (path.includes('/superadmin/broadcasts') && method === 'POST') {
+    return { success: true, message: 'Broadcast sent successfully to all Admins', data: null } as unknown as ApiResponse<T>;
+  }
 
   if (path.includes('/superadmin/infrastructure')) {
     if (path.includes('/redis/flush-global') && method === 'POST') {

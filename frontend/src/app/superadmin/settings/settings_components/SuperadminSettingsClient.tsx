@@ -12,6 +12,7 @@ import { MOCK_PLATFORM_SETTINGS } from '@/app/superadmin/settings/settings_utils
 
 export default function SuperadminSettingsClient() {
   const [editedValues, setEditedValues] = useState<Record<string, string>>({});
+  const [broadcastMessage, setBroadcastMessage] = useState('');
   const queryClient = useQueryClient();
 
   const { data: fetchRes, isLoading, isError } = useQuery({
@@ -43,6 +44,17 @@ export default function SuperadminSettingsClient() {
     },
     onError: (err: unknown) => {
       toast.error((err as Error).message || 'Failed to update setting');
+    }
+  });
+
+  const broadcastMutation = useMutation({
+    mutationFn: (msg: string) => superadminApi.broadcasts.sendBroadcast(msg),
+    onSuccess: (res) => {
+      toast.success(res.message || 'Broadcast sent successfully!');
+      setBroadcastMessage('');
+    },
+    onError: (err: unknown) => {
+      toast.error((err as Error).message || 'Failed to send broadcast');
     }
   });
 
@@ -139,11 +151,17 @@ export default function SuperadminSettingsClient() {
             </div>
             <p className="text-sm text-secondary mb-4">Send a push notification to all Admins across all 50+ gyms.</p>
             <textarea
-              disabled
+              value={broadcastMessage}
+              onChange={(e) => setBroadcastMessage(e.target.value)}
               placeholder="e.g. System maintenance at 2AM EST..."
-              className="w-full bg-input border border-border text-disabled rounded-lg px-4 py-2 h-24 resize-none cursor-not-allowed"
+              className="w-full bg-input border border-border text-foreground rounded-lg px-4 py-2 h-24 resize-none focus:outline-none focus:border-primary motion-safe:transition-colors"
             />
-            <button disabled className="mt-2 w-full bg-primary/50 text-white font-medium py-2 rounded-lg cursor-not-allowed">
+            <button 
+              onClick={() => broadcastMutation.mutate(broadcastMessage)}
+              disabled={!broadcastMessage.trim() || broadcastMutation.isPending}
+              className="mt-2 w-full bg-primary hover:bg-primary-hover text-white font-medium py-2 rounded-lg motion-safe:transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {broadcastMutation.isPending && <Loader2 className="w-4 h-4 motion-safe:animate-spin" />}
               Broadcast Message
             </button>
           </div>
