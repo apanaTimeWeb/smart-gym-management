@@ -71,7 +71,7 @@ export default function ManagerHrPayrollTable() {
           <thead className="bg-input text-secondary">
             <tr>
               {PAYROLL_TABLE_HEADERS.map(h => (
-                <th key={h} className="text-left text-xs font-semibold uppercase tracking-wider px-4 py-3">
+                <th key={h} className={`text-xs font-semibold uppercase tracking-wider px-4 py-3 ${h === 'Amount' ? 'text-right' : 'text-left'}`}>
                   {h}
                 </th>
               ))}
@@ -90,7 +90,7 @@ export default function ManagerHrPayrollTable() {
                   </div>
                 </td>
                 <td className="px-4 py-3 text-sm text-primary">{p.month}</td>
-                <td className="px-4 py-3 text-sm font-bold text-success">{(p.amount || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
+                <td className="px-4 py-3 text-sm font-bold text-success text-right">{(p.amount || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
                 <td className="px-4 py-3">
                   <span 
                     className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${

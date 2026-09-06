@@ -60,7 +60,7 @@ export default function ManagerHrStaffTable() {
           <thead className="bg-input text-secondary">
             <tr>
               {STAFF_TABLE_HEADERS.map(h => (
-                <th key={h} className="text-left text-xs font-semibold uppercase tracking-wider px-4 py-3">
+                <th key={h} className={`text-xs font-semibold uppercase tracking-wider px-4 py-3 ${h === 'Salary' ? 'text-right' : 'text-left'}`}>
                   {h}
                 </th>
               ))}
@@ -98,7 +98,7 @@ export default function ManagerHrStaffTable() {
                   )}
                 </td>
                 <td className="px-4 py-3 text-sm text-secondary">{s.phone}</td>
-                <td className="px-4 py-3 text-sm font-medium text-success">{(s.salary || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
+                <td className="px-4 py-3 text-sm font-medium text-success text-right">{(s.salary || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
                 <td className="px-4 py-3 text-sm text-secondary">
                   {new Date(s.joinDate).toLocaleDateString('en-IN')}
                 </td>
