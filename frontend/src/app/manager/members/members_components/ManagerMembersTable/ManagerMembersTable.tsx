@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Renders the primary tabular list of members with actions, filtering state, and pagination.
 'use client';
 
-import { Edit, MessageCircle, Mail, Trash2, Loader2, Users } from 'lucide-react';
+import { Edit, MessageCircle, Mail, Trash2, Loader2, Users, Banknote } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
 import { useManagerMembersStore } from '@/app/manager/members/members_store/useManagerMembersStore';
 import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS, MEMBERS_TABLE_HEADERS, formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
@@ -16,7 +16,7 @@ export default function ManagerMembersTable() {
   const { confirm } = useConfirm();
   const { 
     search, statusFilter, currentPage, setCurrentPage,
-    setSelectedMember, openEdit, openMsg, deleteMember
+    setSelectedMember, openEdit, openMsg, deleteMember, setShowPaymentModal
   } = useMembersContext();
 
   const members = useManagerMembersStore(s => s.members);
@@ -96,6 +96,9 @@ export default function ManagerMembersTable() {
                     </td>
                     <td className="px-2 py-3 whitespace-nowrap">
                       <div className="flex items-center gap-1.5">
+                        {m.pendingAmount > 0 && (
+                          <button onClick={(e) => { e.stopPropagation(); setSelectedMember(m); setShowPaymentModal(true); }} className="p-1.5 rounded-lg bg-warning/10 text-warning hover:bg-warning/20 transition-all duration-200" title="Collect Dues" aria-label={`Collect Dues for ${m.name}`}><Banknote size={14} /></button>
+                        )}
                         <button onClick={(e) => { e.stopPropagation(); openEdit(m); }} className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle transition-all duration-200" title="Edit" aria-label={`Edit ${m.name}`}><Edit size={14} /></button>
                         <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'whatsapp'); }} className="p-1.5 rounded-lg bg-success text-white hover:opacity-80 transition-all duration-200" title="WhatsApp" aria-label={`Message ${m.name} on WhatsApp`}><MessageCircle size={14} /></button>
                         <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'email'); }} className="p-1.5 rounded-lg bg-info text-white hover:opacity-80 transition-all duration-200" title="Email" aria-label={`Email ${m.name}`}><Mail size={14} /></button>
