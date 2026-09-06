@@ -17,7 +17,7 @@ export const createMembersMutations = (set: StoreSet, get: StoreGet) => ({
       if (editId) {
         const res = await membersApi.update(editId, data);
         set((state: MembersState) => ({
-          members: state.members.map((m: Member) => m.id === editId ? { ...m, ...data } : m)
+          members: state.members.map((m: Member) => String(m.id) === String(editId) ? { ...m, ...data } : m)
         }));
         return { success: true, message: res.message || 'Updated successfully' };
       } else {

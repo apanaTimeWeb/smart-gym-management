@@ -28,7 +28,7 @@ class MockDB {
 
     if (method === 'GET') {
       if (id) {
-        const item = coll.find(x => x.id === id);
+        const item = coll.find(x => String(x.id) === String(id));
         return { success: !!item, message: item ? 'Fetched' : 'Not found', data: item || null };
       }
       // Return wrapped object if listKey provided, otherwise array
@@ -57,7 +57,7 @@ class MockDB {
     }
     
     if (method === 'PATCH' || method === 'PUT') {
-      const idx = coll.findIndex(x => x.id === id);
+      const idx = coll.findIndex(x => String(x.id) === String(id));
       if (idx === -1) return { success: false, message: 'Not found', data: null };
       coll[idx] = { ...coll[idx], ...(body as Record<string, unknown>), updatedAt: new Date().toISOString() };
       this.setCollection(collectionName, coll);
@@ -65,7 +65,7 @@ class MockDB {
     }
     
     if (method === 'DELETE') {
-      const newColl = coll.filter(x => x.id !== id);
+      const newColl = coll.filter(x => String(x.id) !== String(id));
       this.setCollection(collectionName, newColl);
       return { success: true, message: 'Deleted successfully', data: { id } };
     }
