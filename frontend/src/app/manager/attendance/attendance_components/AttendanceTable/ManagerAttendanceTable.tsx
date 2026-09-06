@@ -1,10 +1,11 @@
 // RESPONSIBILITY: Renders the attendance data table and pagination controls.
 'use client';
 
-import { Clock, Calendar } from 'lucide-react';
+import { Clock, Calendar, CalendarCheck } from 'lucide-react';
 import { useAttendanceContext } from '@/app/manager/attendance/attendance_context/ManagerAttendanceContext';
 import { ATTENDANCE_TABLE_HEADERS, formatDate, formatTime } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
+import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 
 export default function AttendanceTable() {
@@ -101,8 +102,12 @@ export default function AttendanceTable() {
  ))}
  {records.length === 0 && (
  <tr>
- <td colSpan={6} className="text-center py-10 text-secondary">
- No attendance records found.
+ <td colSpan={6} className="p-0 border-b-0">
+  <ManagerEmptyState 
+    icon={<CalendarCheck size={32} />}
+    title="No attendance records"
+    subtitle="There are no check-ins for this date or filter yet."
+  />
  </td>
  </tr>
  )}

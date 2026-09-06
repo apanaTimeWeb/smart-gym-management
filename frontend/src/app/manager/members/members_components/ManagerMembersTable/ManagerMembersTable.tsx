@@ -1,12 +1,12 @@
 // RESPONSIBILITY: Renders the primary tabular list of members with actions, filtering state, and pagination.
 'use client';
 
-import { Edit, MessageCircle, Mail, Trash2, Loader2 } from 'lucide-react';
+import { Edit, MessageCircle, Mail, Trash2, Loader2, Users } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
 import { useManagerMembersStore } from '@/app/manager/members/members_store/useManagerMembersStore';
 import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS, MEMBERS_TABLE_HEADERS, formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import { maskSensitiveData } from '@/lib/formatters';
-import ManagerMembersEmptyState from '@/app/manager/members/members_components/MembersEmptyState/ManagerMembersEmptyState';
+import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
@@ -123,7 +123,11 @@ export default function ManagerMembersTable() {
                 {members.length === 0 && fetchState === 'success' && (
                   <tr>
                     <td colSpan={11} className="p-0 border-b-0">
-                      <ManagerMembersEmptyState isFiltered={Boolean(search || statusFilter !== 'All')} />
+                      <ManagerEmptyState 
+                        icon={<Users size={32} />}
+                        title={Boolean(search || statusFilter !== 'All') ? 'No members found' : 'No members yet'}
+                        subtitle={Boolean(search || statusFilter !== 'All') ? 'Try adjusting your filters.' : 'Add your first member to get started.'}
+                      />
                     </td>
                   </tr>
                 )}

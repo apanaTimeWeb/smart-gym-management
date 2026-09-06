@@ -4,8 +4,9 @@
 import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
 import { PAYROLL_TABLE_HEADERS } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, Banknote } from 'lucide-react';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
+import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
 
 export default function ManagerHrPayrollTable() {
   const { payrolls, search, currentPage, setCurrentPage, markPayrollPaid, fetchState, payrollMonth } = useHrContext();
@@ -116,8 +117,12 @@ export default function ManagerHrPayrollTable() {
             ))}
             {currentData.length === 0 && (
               <tr>
-                <td colSpan={6} className="text-center py-10 text-sm text-secondary">
-                  No payroll records found.
+                <td colSpan={6} className="p-0 border-b-0">
+                  <ManagerEmptyState 
+                    icon={<Banknote size={32} />}
+                    title="No payroll records found"
+                    subtitle="There are no payroll records for the selected filters."
+                  />
                 </td>
               </tr>
             )}

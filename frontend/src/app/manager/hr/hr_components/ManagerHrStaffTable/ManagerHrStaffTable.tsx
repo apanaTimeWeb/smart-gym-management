@@ -3,10 +3,11 @@
 
 import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
 import { STAFF_TABLE_HEADERS } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
-import { Edit2, Trash2, CheckCircle2, Ban, PlayCircle } from 'lucide-react';
+import { Edit2, Trash2, CheckCircle2, Ban, PlayCircle, Users } from 'lucide-react';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
+import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
 
 export default function ManagerHrStaffTable() {
   const { staff, summary, fetchState, debouncedSearch, roleFilter, currentPage, setCurrentPage, openEdit, deleteStaff, toggleStaffStatus } = useHrContext();
@@ -145,8 +146,12 @@ export default function ManagerHrStaffTable() {
             ))}
             {filteredStaff.length === 0 && (
               <tr>
-                <td colSpan={7} className="text-center py-12 text-secondary">
-                  {debouncedSearch ? 'No staff match the filter.' : 'No staff members yet. Add your first staff!'}
+                <td colSpan={7} className="p-0 border-b-0">
+                  <ManagerEmptyState 
+                    icon={<Users size={32} />}
+                    title={debouncedSearch ? 'No staff found' : 'No staff members yet'}
+                    subtitle={debouncedSearch ? 'Try adjusting your search or filters.' : 'Add your first staff member to manage their payroll and attendance.'}
+                  />
                 </td>
               </tr>
             )}
