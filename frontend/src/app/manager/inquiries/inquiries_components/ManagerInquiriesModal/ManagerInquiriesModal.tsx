@@ -63,7 +63,7 @@ export default function ManagerInquiriesModal() {
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60">
-      <div className="bg-card rounded-2xl shadow-xl w-full max-w-2xl overflow-visible border border-border max-h-full flex flex-col">
+      <div className="bg-card rounded-2xl shadow-xl w-full max-w-xl overflow-visible border border-border max-h-full flex flex-col">
         <div className="sticky top-0 bg-card px-6 py-4 border-b border-border flex items-center justify-between z-10 rounded-t-2xl">
           <h3 className="text-lg font-bold text-primary">{editId ? 'Edit Inquiry' : 'New Inquiry'}</h3>
           <button
@@ -85,7 +85,10 @@ export default function ManagerInquiriesModal() {
                   type={f.type}
                   placeholder={'placeholder' in f ? (f as {placeholder?: string}).placeholder : undefined}
                   maxLength={f.type === 'tel' ? 10 : undefined}
-                  onKeyDown={f.type === 'tel' ? (e) => { if (['e', 'E', '-', '+', '.'].includes(e.key)) e.preventDefault(); } : undefined}
+                  onKeyDown={f.type === 'tel' ? (e) => { 
+                    if (['e', 'E', '-', '+', '.'].includes(e.key)) e.preventDefault(); 
+                    if (e.key.length === 1 && !/^[0-9]$/.test(e.key) && !e.ctrlKey && !e.metaKey) e.preventDefault(); 
+                  } : undefined}
                   pattern={f.type === 'email' ? '.*\\.com$' : undefined}
                   title={f.type === 'email' ? 'Email must end with .com' : undefined}
                   {...register(f.key as keyof InquiryFormValues)}

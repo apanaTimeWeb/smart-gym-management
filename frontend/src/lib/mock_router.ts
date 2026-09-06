@@ -585,10 +585,7 @@ export async function routeMockRequest<T>(
       const plans = MockDB.getCollection('mock_admin_plans', []);
       const inquiries = MockDB.getCollection('mock_inquiries', []);
       
-      if (rawMembers.length === 0) {
-        rawMembers = generate(15, (i: number) => ({ id: `GS-${15102023000 + i}`, name: `Member ${i + 1}`, email: `member${i + 1}@example.com`, phone: `987654321${i}`, status: i % 4 === 0 ? 'PENDING' : i % 5 === 0 ? 'EXPIRED' : 'ACTIVE', planId: i % 3 === 0 ? 'p1' : i % 2 === 0 ? 'p2' : 'p3', plan: { id: i % 3 === 0 ? 'p1' : i % 2 === 0 ? 'p2' : 'p3', name: i % 3 === 0 ? 'Pro Plan' : i % 2 === 0 ? 'Basic Plan' : 'Elite Plan' }, joinDate: '2023-10-01', expiryDate: '2024-10-01', paidAmount: 5000, pendingAmount: i % 4 === 0 ? 1500 : 0 }));
-        MockDB.setCollection('mock_members', rawMembers);
-      }
+      // Members will only be populated via conversions now, no dummy generation.
       
       if (payments.length === 0) {
         payments = generate(10, (i: number) => ({ id: `pay-${i}`, memberId: `GS-${15102023000 + i}`, member: { name: `Member ${i + 1}` }, amount: 5000, status: 'PAID', paidAt: new Date().toISOString(), method: 'UPI', invoiceNo: `INV-${1000 + i}` }));

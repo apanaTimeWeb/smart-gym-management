@@ -4,7 +4,7 @@ import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerShare
 
 export const InquirySchema = z.object({
   name: z.string().min(2, "Name is required"),
-  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  phone: z.string().regex(/^\d{10}$/, "Phone number must be exactly 10 digits"),
   email: z.string().email("Invalid email address").optional().or(z.literal('')),
   interest: z.string().min(2, "Interest is required"),
   status: z.enum(['NEW', 'FOLLOW_UP', 'CONVERTED', 'LOST']),

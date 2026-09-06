@@ -28,7 +28,7 @@ export default function ManagerToast({ message, type, onClose }: ManagerToastPro
 
  return (
  <div
- className="fixed bottom-6 right-6 z-50 flex items-center gap-3 w-80 p-4 rounded-xl shadow-2xl bg-card text-foreground"
+ className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 w-80 p-4 rounded-xl shadow-2xl bg-card text-foreground"
  style={{ 
  borderLeft: `4px solid ${border}`,
  animation: 'toastIn 0.3s ease-out forwards'
@@ -45,8 +45,8 @@ export default function ManagerToast({ message, type, onClose }: ManagerToastPro
  </button>
  <style>{`
  @keyframes toastIn {
- from { opacity: 0; transform: translateX(100%); }
- to { opacity: 1; transform: translateX(0); }
+ from { opacity: 0; transform: translate(-50%, -100%); }
+ to { opacity: 1; transform: translate(-50%, 0); }
  }
  `}</style>
  </div>

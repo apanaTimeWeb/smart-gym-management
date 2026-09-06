@@ -133,7 +133,7 @@ export default function ManagerConvertLeadModal() {
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60">
-      <div className="bg-card rounded-2xl shadow-xl w-full max-w-3xl overflow-visible border border-border max-h-full flex flex-col">
+      <div className="bg-card rounded-2xl shadow-xl w-full max-w-xl overflow-visible border border-border max-h-full flex flex-col">
         
         <div className="sticky top-0 bg-card px-6 py-4 border-b border-border flex items-center justify-between z-10 rounded-t-2xl">
           <div>
