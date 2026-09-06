@@ -6,9 +6,6 @@ export const LibraryUrlConfig = {
     LIBRARY: '/trainer/library',
   },
   BACKEND_API: {
-    EXERCISES_BASE: '/trainer/library/exercises',
-    EXERCISE_UPDATE: (id: string) => `/trainer/library/exercises/${id}`,
-    EXERCISE_DELETE: (id: string) => `/trainer/library/exercises/${id}`,
     DIET_PLANS_BASE: '/trainer/library/diet-plans',
     DIET_PLAN_UPDATE: (id: string) => `/trainer/library/diet-plans/${id}`,
     DIET_PLAN_DELETE: (id: string) => `/trainer/library/diet-plans/${id}`,

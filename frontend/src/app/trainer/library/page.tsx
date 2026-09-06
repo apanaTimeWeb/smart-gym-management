@@ -9,12 +9,10 @@ export default async function LibraryPage() {
   let initialData: LibraryInitialData | null = null;
   
   try {
-    const [exRes, dietRes] = await Promise.all([
-      ssrLibraryApi.getExercises(),
+    const [dietRes] = await Promise.all([
       ssrLibraryApi.getDietPlans(),
     ]);
     initialData = {
-      exercises: exRes.data?.exercises || exRes.data || [],
       dietPlans: dietRes.data?.dietPlans || dietRes.data || [],
     };
   } catch (e) {

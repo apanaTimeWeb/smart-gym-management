@@ -4,19 +4,6 @@
 import { z } from 'zod';
 import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerSharedConstants';
 
-export const ExerciseSchema = z.object({
-  name: z.string().min(2, "Name is required"),
-  category: z.string(),
-  muscleGroup: z.string().optional(),
-  sets: z.coerce.number().optional(),
-  reps: z.coerce.number().optional(),
-  duration: z.coerce.number().optional(),
-  difficulty: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']),
-  description: z.string().optional(),
-  videoUrl: z.string().url("Invalid URL").optional().or(z.literal(''))
-});
-
-export type ExerciseFormValues = z.infer<typeof ExerciseSchema>;
 
 export const DietSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -31,29 +18,7 @@ export const DietSchema = z.object({
 
 export type DietFormValues = z.infer<typeof DietSchema>;
 
-export const CATEGORIES = ['Chest', 'Back', 'Legs', 'Shoulders', 'Arms', 'Core', 'Cardio', 'Full Body', 'Yoga'];
-
-export const DIFFICULTIES = ['BEGINNER', 'INTERMEDIATE', 'ADVANCED'];
-
 export const GOALS = ['Weight Loss', 'Muscle Gain', 'Maintenance', 'Endurance', 'Flexibility'];
-
-export const DIFF_COLORS: Record<string, string> = {
- BEGINNER: 'bg-success-bg text-success',
- INTERMEDIATE: 'bg-warning-bg text-warning',
- ADVANCED: 'bg-danger-bg text-danger',
-};
-
-export const EMPTY_EXERCISE_FORM = { 
- name: '', 
- category: 'Chest', 
- muscleGroup: '', 
- sets: '', 
- reps: '', 
- duration: '', 
- difficulty: 'BEGINNER', 
- description: '', 
- videoUrl: '' 
-};
 
 export const EMPTY_DIET_FORM = { 
  name: '', 
@@ -66,6 +31,4 @@ export const EMPTY_DIET_FORM = {
  meals: '' 
 };
 
-export const LIBRARY_TABS = ['Exercises', 'Diet Plans'] as const;
-export type LibraryTab = typeof LIBRARY_TABS[number];
 
