@@ -63,7 +63,7 @@ export default function ManagerInquiriesModal() {
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60">
-      <div className="bg-card rounded-2xl shadow-xl w-full max-w-md overflow-visible border border-border max-h-full flex flex-col">
+      <div className="bg-card rounded-2xl shadow-xl w-full max-w-2xl overflow-visible border border-border max-h-full flex flex-col">
         <div className="sticky top-0 bg-card px-6 py-4 border-b border-border flex items-center justify-between z-10 rounded-t-2xl">
           <h3 className="text-lg font-bold text-primary">{editId ? 'Edit Inquiry' : 'New Inquiry'}</h3>
           <button
@@ -75,47 +75,47 @@ export default function ManagerInquiriesModal() {
             <X size={18} />
           </button>
         </div>
-        <div className="overflow-y-auto flex-1">
-          <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4 pb-32">
-            {INQUIRY_MODAL_FIELDS.map(f => (
-            <div key={f.key}>
-              <label className="block text-sm font-medium text-secondary mb-1">{f.label}</label>
-              <input
-                type={f.type}
-                placeholder={'placeholder' in f ? (f as {placeholder?: string}).placeholder : undefined}
-                maxLength={f.type === 'tel' ? 10 : undefined}
-                onKeyDown={f.type === 'tel' ? (e) => { if (['e', 'E', '-', '+', '.'].includes(e.key)) e.preventDefault(); } : undefined}
-                pattern={f.type === 'email' ? '.*\\.com$' : undefined}
-                title={f.type === 'email' ? 'Email must end with .com' : undefined}
-                {...register(f.key as keyof InquiryFormValues)}
-                className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-colors ${
-                  errors[f.key as keyof InquiryFormValues] ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
-                }`}
+        <div className="overflow-y-auto flex-1 custom-scrollbar">
+          <form onSubmit={handleSubmit(onSubmit)} className="p-6 flex flex-col gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              {INQUIRY_MODAL_FIELDS.map(f => (
+              <div key={f.key}>
+                <label className="block text-sm font-medium text-secondary mb-1">{f.label}</label>
+                <input
+                  type={f.type}
+                  placeholder={'placeholder' in f ? (f as {placeholder?: string}).placeholder : undefined}
+                  maxLength={f.type === 'tel' ? 10 : undefined}
+                  onKeyDown={f.type === 'tel' ? (e) => { if (['e', 'E', '-', '+', '.'].includes(e.key)) e.preventDefault(); } : undefined}
+                  pattern={f.type === 'email' ? '.*\\.com$' : undefined}
+                  title={f.type === 'email' ? 'Email must end with .com' : undefined}
+                  {...register(f.key as keyof InquiryFormValues)}
+                  className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-colors ${
+                    errors[f.key as keyof InquiryFormValues] ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
+                  }`}
+                />
+                {errors[f.key as keyof InquiryFormValues] && (
+                  <p className="text-danger text-xs mt-1">{errors[f.key as keyof InquiryFormValues]?.message}</p>
+                )}
+              </div>
+            ))}
+            <div>
+              <label className="block text-sm font-medium text-secondary mb-1">Interest (Plan)</label>
+              <Controller
+                name="interest"
+                control={control}
+                render={({ field }) => (
+                  <SearchableDropdown
+                    value={field.value || ''}
+                    onChange={field.onChange}
+                    options={[...plans, { label: 'Other', value: 'Other' }]}
+                    placeholder="Select Plan..."
+                  />
+                )}
               />
-              {errors[f.key as keyof InquiryFormValues] && (
-                <p className="text-danger text-xs mt-1">{errors[f.key as keyof InquiryFormValues]?.message}</p>
+              {errors.interest && (
+                <p className="text-danger text-xs mt-1">{errors.interest.message}</p>
               )}
             </div>
-          ))}
-          <div>
-            <label className="block text-sm font-medium text-secondary mb-1">Interest (Plan)</label>
-            <Controller
-              name="interest"
-              control={control}
-              render={({ field }) => (
-                <SearchableDropdown
-                  value={field.value || ''}
-                  onChange={field.onChange}
-                  options={[...plans, { label: 'Other', value: 'Other' }]}
-                  placeholder="Select Plan..."
-                />
-              )}
-            />
-            {errors.interest && (
-              <p className="text-danger text-xs mt-1">{errors.interest.message}</p>
-            )}
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-secondary mb-1">Status</label>
               <Controller
@@ -146,27 +146,28 @@ export default function ManagerInquiriesModal() {
                 )}
               />
             </div>
-          </div>
-          <div className="flex gap-3 pt-2">
-            <button
-              type="button"
-              onClick={() => setShowModal(false)}
-              className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-primary hover:bg-primary-subtle transition-all duration-200 active:scale-95"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={saving}
-              className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-primary text-white flex items-center justify-center gap-2 disabled:opacity-70 hover:bg-primary-hover transition-all duration-200 active:scale-95"
-            >
-              {saving
-                ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" />
-                : <><Save size={15} />{editId ? 'Update' : 'Add Inquiry'}</>
-              }
-            </button>
-          </div>
-        </form>
+            </div>
+            
+            <div className="flex gap-3 pt-2 mt-2 border-t border-border">
+              <button
+                type="button"
+                onClick={() => setShowModal(false)}
+                className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-primary hover:bg-primary-subtle transition-all duration-200 active:scale-95"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={saving}
+                className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-primary text-white flex items-center justify-center gap-2 disabled:opacity-70 hover:bg-primary-hover transition-all duration-200 active:scale-95"
+              >
+                {saving
+                  ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" />
+                  : <><Save size={15} />{editId ? 'Update' : 'Add Inquiry'}</>
+                }
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
