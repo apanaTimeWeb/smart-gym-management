@@ -84,6 +84,7 @@ export interface MembersContextType {
   renewMember: (data: { planId: string; newExpiryDate: string; amountPaid: number; paymentMethod: string; billingCycle: string; customDays?: number }) => Promise<void>;
   recordPayment: (data: { amount: number; method: string }) => Promise<void>;
   freezeMember: (isFrozen: boolean) => Promise<void>;
+  toggleSuspend: (isSuspended: boolean) => Promise<void>;
 
   // Message Modal
   msgModal: { open: boolean; recipient: ManagerMessageRecipient; type: MessageType; message: string; subject?: string } | null;

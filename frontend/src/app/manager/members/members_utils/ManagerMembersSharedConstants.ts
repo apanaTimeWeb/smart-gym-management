@@ -23,10 +23,11 @@ export const MemberSchema = z.object({
 export type MemberFormValues = z.infer<typeof MemberSchema>;
 
 export const MEMBERS_STATUS_COLORS: Record<string, { bg: string; text: string }> = {
- ACTIVE: { bg: 'bg-success-bg', text: 'text-success' },
- PENDING: { bg: 'bg-warning-bg', text: 'text-warning' },
- EXPIRED: { bg: 'bg-danger-bg', text: 'text-danger' },
- FROZEN: { bg: 'bg-info-bg', text: 'text-info' },
+  ACTIVE: { bg: 'bg-success-bg', text: 'text-success' },
+  PENDING: { bg: 'bg-warning-bg', text: 'text-warning' },
+  EXPIRED: { bg: 'bg-danger-bg', text: 'text-danger' },
+  FROZEN: { bg: 'bg-info-bg', text: 'text-info' },
+  SUSPENDED: { bg: 'bg-danger', text: 'text-white' },
 };
 
 export const MEMBERS_CYCLE_LABELS: Record<string, string> = {

@@ -37,6 +37,7 @@ export interface MembersState {
   renewMember: (memberId: string, data: { planId: string; newExpiryDate: string; amountPaid: number; paymentMethod: string; billingCycle: string; customDays?: number }) => Promise<{ success: boolean; message: string }>;
   recordPayment: (memberId: string, data: { amount: number; method: string }) => Promise<{ success: boolean; message: string }>;
   freezeMember: (memberId: string, isFrozen: boolean) => Promise<void>;
+  toggleSuspendMember: (memberId: string, isSuspended: boolean) => Promise<void>;
 }
 
 export const useManagerMembersStore = create<MembersState>((set, get) => ({

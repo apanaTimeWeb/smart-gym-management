@@ -140,6 +140,18 @@ export const createMembersMutations = (set: StoreSet, get: StoreGet) => ({
     }
   },
 
+  toggleSuspendMember: async (memberId: string, isSuspended: boolean) => {
+    try {
+      const payload = { status: isSuspended ? 'SUSPENDED' : 'ACTIVE' };
+      await membersApi.update(memberId, payload);
+      set((state: MembersState) => ({
+        members: state.members.map((m: Member) => m.id === memberId ? { ...m, ...payload } : m)
+      }));
+    } catch (err: unknown) {
+      throw err;
+    }
+  },
+
   renewMember: async (memberId: string, data: { planId: string; newExpiryDate: string; amountPaid: number; paymentMethod: string; billingCycle: string; customDays?: number }) => {
     set({ saving: true });
     try {
