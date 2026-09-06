@@ -72,6 +72,63 @@ class MockDB {
 
     return { success: false, message: 'Method not allowed', data: null };
   }
+
+  static generatePayrollsForMonth(reqMonth: string) {
+    const staffList = this.getCollection('mock_admin_staff', []);
+    const attendanceList = this.getCollection('mock_admin_attendance', []);
+    let currentPayrolls = this.getCollection('mock_admin_payrolls', []);
+
+    // Purge orphaned payrolls (staff deleted before cascade fix)
+    const validStaffIds = new Set(staffList.map(s => String(s.id)));
+    currentPayrolls = currentPayrolls.filter((p: any) => validStaffIds.has(String(p.staffId)));
+
+    const today = new Date();
+    const reqDate = reqMonth.includes('-') ? new Date(`${reqMonth}-01`) : new Date(reqMonth);
+    const daysInMonth = !isNaN(reqDate.getTime()) ? new Date(reqDate.getFullYear(), reqDate.getMonth() + 1, 0).getDate() : 30;
+
+    const isCurrentMonth = reqMonth === today.toLocaleString('en-US', { month: 'long', year: 'numeric' }) || reqMonth === today.toISOString().slice(0, 7);
+    const daysElapsed = isCurrentMonth ? today.getDate() : daysInMonth;
+
+    staffList.filter((s: any) => s.isActive).forEach((s: any) => {
+      const staffAtt = attendanceList.filter((a: any) => {
+        if (String(a.staffId) !== String(s.id)) return false;
+        const aDate = new Date(a.date);
+        const aMonth = aDate.toLocaleString('en-US', { month: 'long', year: 'numeric' });
+        return aMonth === reqMonth || a.date.startsWith(reqMonth);
+      });
+      const presentCount = staffAtt.filter((a: any) => a.status === 'PRESENT' || a.checkIn).length;
+      const leaveCount = staffAtt.filter((a: any) => a.status === 'LEAVE').length;
+      const totalAccounted = presentCount + leaveCount;
+
+      let absences = daysElapsed - totalAccounted;
+      if (absences < 0) absences = 0;
+
+      const baseSalary = Number(s.salary) || 0;
+      const perDay = baseSalary / daysInMonth;
+      const deduction = absences * perDay;
+      const finalAmount = Math.max(0, Math.round(baseSalary - deduction));
+
+      const existingRecordIdx = currentPayrolls.findIndex((p: any) => String(p.staffId) === String(s.id) && p.month === reqMonth);
+      if (existingRecordIdx >= 0) {
+        currentPayrolls[existingRecordIdx].staff = { name: s.name, role: s.role };
+        if (currentPayrolls[existingRecordIdx].status === 'PENDING') {
+          currentPayrolls[existingRecordIdx].amount = finalAmount;
+        }
+      } else {
+        currentPayrolls.push({
+          id: `pay-${Date.now()}-${s.id}`,
+          staffId: s.id,
+          staff: { name: s.name, role: s.role },
+          month: reqMonth,
+          amount: finalAmount,
+          status: 'PENDING'
+        });
+      }
+    });
+
+    this.setCollection('mock_admin_payrolls', currentPayrolls);
+    return currentPayrolls.filter((p: any) => p.month === reqMonth);
+  }
 }
 
 export async function routeMockRequest<T>(
@@ -314,7 +371,7 @@ export async function routeMockRequest<T>(
   if (path.includes('/hr/summary')) {
     const staffList = MockDB.getCollection('mock_admin_staff', []);
     const reqMonth = new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' });
-    const currentPayrolls = MockDB.getCollection('mock_admin_payrolls', []).filter((p: any) => p.month === reqMonth);
+    const currentPayrolls = MockDB.generatePayrollsForMonth(reqMonth);
     
     const activeStaff = staffList.filter((s: any) => s.isActive).length;
     const paidCount = currentPayrolls.filter((p: any) => p.status === 'PAID').length;
@@ -330,7 +387,25 @@ export async function routeMockRequest<T>(
       const filtered = existingStaff.filter((r: any) => !r.name?.includes('Trainer '));
       MockDB.setCollection('mock_admin_staff', filtered);
     }
-    return MockDB.handleCrud('mock_admin_staff', method, path, parsedBody, [], 'staff') as unknown as ApiResponse<T>;
+    
+    const res = MockDB.handleCrud('mock_admin_staff', method, path, parsedBody, [], 'staff') as unknown as ApiResponse<any>;
+    
+    // Cascade delete attendance and payrolls if a staff member is deleted
+    if (method === 'DELETE' && res.success) {
+      const segments = path.split('?')[0].split('/');
+      const deletedId = segments[segments.length - 1];
+      if (deletedId) {
+        const attendanceColl = MockDB.getCollection('mock_admin_attendance', []);
+        const updatedAttendance = attendanceColl.filter((a: any) => String(a.staffId) !== String(deletedId));
+        MockDB.setCollection('mock_admin_attendance', updatedAttendance);
+        
+        const payrollColl = MockDB.getCollection('mock_admin_payrolls', []);
+        const updatedPayrolls = payrollColl.filter((p: any) => String(p.staffId) !== String(deletedId));
+        MockDB.setCollection('mock_admin_payrolls', updatedPayrolls);
+      }
+    }
+    
+    return res as unknown as ApiResponse<T>;
   }
   
   if (path.includes('/hr/payrolls')) {
@@ -344,51 +419,7 @@ export async function routeMockRequest<T>(
       const qsMonthMatch = path.match(/month=([^&]+)/);
       const reqMonth = qsMonthMatch ? decodeURIComponent(qsMonthMatch[1]) : new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' });
       
-      const staffList = MockDB.getCollection('mock_admin_staff', []);
-      const attendanceList = MockDB.getCollection('mock_admin_attendance', []);
-      const currentPayrolls = MockDB.getCollection('mock_admin_payrolls', []);
-      
-      const today = new Date();
-      const reqDate = reqMonth.includes('-') ? new Date(`${reqMonth}-01`) : new Date(reqMonth);
-      const daysInMonth = !isNaN(reqDate.getTime()) ? new Date(reqDate.getFullYear(), reqDate.getMonth() + 1, 0).getDate() : 30;
-      
-      const isCurrentMonth = reqMonth === today.toLocaleString('en-US', { month: 'long', year: 'numeric' }) || reqMonth === today.toISOString().slice(0, 7);
-      const daysElapsed = isCurrentMonth ? today.getDate() : daysInMonth;
-      
-      staffList.filter((s: any) => s.isActive).forEach((s: any) => {
-        const staffAtt = attendanceList.filter((a: any) => String(a.staffId) === String(s.id));
-        const presentCount = staffAtt.filter((a: any) => a.status === 'PRESENT').length;
-        const leaveCount = staffAtt.filter((a: any) => a.status === 'LEAVE').length;
-        const totalAccounted = presentCount + leaveCount;
-        
-        let absences = daysElapsed - totalAccounted;
-        if (absences < 0) absences = 0; // fallback if someone checked in on weekends multiple times
-        
-        const baseSalary = Number(s.salary) || 0;
-        const perDay = baseSalary / daysInMonth;
-        const deduction = absences * perDay;
-        const finalAmount = Math.max(0, Math.round(baseSalary - deduction));
-        
-        const existingRecordIdx = currentPayrolls.findIndex((p: any) => String(p.staffId) === String(s.id) && p.month === reqMonth);
-        if (existingRecordIdx >= 0) {
-          if (currentPayrolls[existingRecordIdx].status === 'PENDING') {
-            currentPayrolls[existingRecordIdx].amount = finalAmount;
-            currentPayrolls[existingRecordIdx].staff = { name: s.name, role: s.role };
-          }
-        } else {
-          currentPayrolls.push({
-            id: `pay-${Date.now()}-${s.id}`,
-            staffId: s.id,
-            staff: { name: s.name, role: s.role },
-            month: reqMonth,
-            amount: finalAmount,
-            status: 'PENDING'
-          });
-        }
-      });
-      
-      MockDB.setCollection('mock_admin_payrolls', currentPayrolls);
-      const filtered = currentPayrolls.filter((p: any) => p.month === reqMonth);
+      const filtered = MockDB.generatePayrollsForMonth(reqMonth);
       return { success: true, message: 'Fetched payrolls', data: { payrolls: filtered, total: filtered.length } } as unknown as ApiResponse<T>;
     }
     
