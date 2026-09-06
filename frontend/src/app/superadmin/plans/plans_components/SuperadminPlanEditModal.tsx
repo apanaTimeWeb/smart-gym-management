@@ -46,6 +46,8 @@ export default function SuperadminPlanEditModal() {
         priceAnnual: selectedPlan.priceAnnual,
         maxMembers: selectedPlan.maxMembers,
         maxStaff: selectedPlan.maxStaff,
+        dbLimitGb: selectedPlan.dbLimitGb ?? 1.0,
+        binaryLimitGb: selectedPlan.binaryLimitGb ?? 10.0,
         features: selectedPlan.features?.length > 0
           ? selectedPlan.features.map(f => ({ value: f }))
           : [{ value: 'Core Gym Management' }],
@@ -107,6 +109,16 @@ export default function SuperadminPlanEditModal() {
               <div key={field} className="space-y-2">
                 <label className="block text-sm font-medium text-secondary">{field === 'maxMembers' ? 'Max Members' : 'Max Staff'} <span className="text-danger">*</span></label>
                 <input type="number" min="0" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }} {...register(field, { valueAsNumber: true })} className="w-full bg-input border border-border rounded-xl px-4 py-3 text-foreground focus:border-primary outline-none motion-safe:transition-colors" />
+                {errors[field] && <p className="text-danger text-xs">{errors[field]?.message}</p>}
+              </div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            {(['dbLimitGb', 'binaryLimitGb'] as const).map(field => (
+              <div key={field} className="space-y-2">
+                <label className="block text-sm font-medium text-secondary">{field === 'dbLimitGb' ? 'DB Limit (GB)' : 'Binary Limit (GB)'} <span className="text-danger">*</span></label>
+                <input type="number" min="0" step="0.1" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }} {...register(field, { valueAsNumber: true })} className="w-full bg-input border border-border rounded-xl px-4 py-3 text-foreground focus:border-primary outline-none motion-safe:transition-colors" />
                 {errors[field] && <p className="text-danger text-xs">{errors[field]?.message}</p>}
               </div>
             ))}

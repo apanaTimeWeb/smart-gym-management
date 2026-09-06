@@ -8,6 +8,9 @@ export interface UsageMeter {
   mediaGb: number;
   storageLimitGb: number;
   activeMembers: number;
+  totalMembers: number;
   memberLimit: number;
+  staffCount: number;
+  staffLimit: number;
   billingCycleEnd: string;
 }

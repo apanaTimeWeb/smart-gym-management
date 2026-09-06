@@ -167,13 +167,42 @@ export default function SuperadminUsageMetersClient() {
                 </div>
               </div>
 
-              {/* Members Meter (Limit Removed) */}
-              <div>
-                <div className="flex justify-between text-sm mb-1.5">
-                  <span className="flex items-center gap-1.5 text-secondary font-medium">
-                    <Users size={18} /> Active Members
-                  </span>
-                  <span className="text-foreground font-semibold">{meter.activeMembers.toLocaleString()}</span>
+              {/* Personnel Meters */}
+              <div className="space-y-4 pt-2 border-t border-border">
+                {/* Members */}
+                <div>
+                  <div className="flex justify-between text-sm mb-1.5">
+                    <span className="flex items-center gap-1.5 text-secondary font-medium">
+                      <Users size={18} /> Members
+                    </span>
+                    <span className="text-foreground font-semibold">
+                      {(meter.activeMembers ?? 0).toLocaleString()} <span className="text-xs text-secondary font-normal">Active</span> / {(meter.totalMembers ?? meter.activeMembers ?? 0).toLocaleString()} <span className="text-xs text-secondary font-normal">Total</span>
+                    </span>
+                  </div>
+                  <div className="h-2 w-full bg-input rounded-full overflow-hidden">
+                    <div 
+                      className={`h-full rounded-full ${getProgressColor(meter.activeMembers ?? 0, meter.memberLimit ?? 1)}`} 
+                      style={{ width: `${getPercentage(meter.activeMembers ?? 0, meter.memberLimit ?? 1)}%` }}
+                    />
+                  </div>
+                  <p className="text-xs text-secondary mt-1.5">Limit: {(meter.memberLimit ?? 0).toLocaleString()}</p>
+                </div>
+
+                {/* Staff */}
+                <div>
+                  <div className="flex justify-between text-sm mb-1.5">
+                    <span className="flex items-center gap-1.5 text-secondary font-medium">
+                      <Users size={18} /> Staff
+                    </span>
+                    <span className="text-foreground font-semibold">{(meter.staffCount ?? 0).toLocaleString()}</span>
+                  </div>
+                  <div className="h-2 w-full bg-input rounded-full overflow-hidden">
+                    <div 
+                      className={`h-full rounded-full ${getProgressColor(meter.staffCount ?? 0, meter.staffLimit ?? 1)}`} 
+                      style={{ width: `${getPercentage(meter.staffCount ?? 0, meter.staffLimit ?? 1)}%` }}
+                    />
+                  </div>
+                  <p className="text-xs text-secondary mt-1.5">Limit: {(meter.staffLimit ?? 0).toLocaleString()}</p>
                 </div>
               </div>
             </div>

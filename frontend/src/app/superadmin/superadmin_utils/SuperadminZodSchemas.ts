@@ -105,6 +105,14 @@ export const subscriptionPlanSchema = z.object({
     .int('Must be a whole number.')
     .min(1, 'Must allow at least 1 staff member.'),
 
+  dbLimitGb: z
+    .number()
+    .min(0, 'Must be at least 0 GB.'),
+
+  binaryLimitGb: z
+    .number()
+    .min(0, 'Must be at least 0 GB.'),
+
   features: z
     .array(z.string().min(1, 'Feature text cannot be empty.'))
     .min(1, 'Add at least one feature.'),
