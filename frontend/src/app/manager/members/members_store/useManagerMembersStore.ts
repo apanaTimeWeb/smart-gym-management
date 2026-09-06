@@ -66,7 +66,7 @@ export const useManagerMembersStore = create<MembersState>((set, get) => ({
         plansApi.getAll(),
         membersApi.getStats()
       ]);
-      
+
       let plans = plansRes.data || [];
       if (plans.length === 0) {
         // Fallback plans if API returns empty
@@ -76,7 +76,7 @@ export const useManagerMembersStore = create<MembersState>((set, get) => ({
           { id: 'plan-2', name: 'VIP Plan', tier: 'Elite', price1Month: 3000, price3Month: 7500, price6Month: 14400, price12Month: 27000, features: [], isActive: true }
         ] as Plan[];
       }
-      
+
       let members = (membersRes.data?.members || []).map((m: Member & { planId?: string }) => {
         if (!m.plan && m.planId) {
           m.plan = plans.find((p: Plan) => String(p.id) === String(m.planId));
@@ -94,14 +94,14 @@ export const useManagerMembersStore = create<MembersState>((set, get) => ({
       }
       if (params?.search) {
         const query = params.search.toLowerCase();
-        members = members.filter((m: Member) => 
-          m.name.toLowerCase().includes(query) || 
-          m.phone.includes(query) || 
+        members = members.filter((m: Member) =>
+          m.name.toLowerCase().includes(query) ||
+          m.phone.includes(query) ||
           (m.email && m.email.toLowerCase().includes(query))
         );
       }
 
-      
+
       set({
         members,
         totalMembers: membersRes.data?.total || 0,
@@ -111,7 +111,7 @@ export const useManagerMembersStore = create<MembersState>((set, get) => ({
       });
     } catch (e: unknown) {
       set({ fetchState: 'error' });
-      throw e; 
+      throw e;
     }
   },
 
@@ -119,14 +119,33 @@ export const useManagerMembersStore = create<MembersState>((set, get) => ({
     try {
       const pRes = await financeApi.getByMember(memberId);
       set({ payments: pRes.data || [] });
-      
+
       const aRes = await attendanceApi.getAll({ memberId: memberId.toString() });
-      
+
       if (aRes.success) {
+        const fetchedRecords = (aRes.data.attendance || (aRes.data as any).attendances || []) as import('@/app/manager/attendance/attendance_types/ManagerAttendanceTypes').Attendance[];
+        const today = new Date();
+        const currentMonth = today.getMonth();
+        const currentYear = today.getFullYear();
+
+        const currentMonthRecords = fetchedRecords.filter(a => {
+          const dateObj = new Date(a.date);
+          return dateObj.getMonth() === currentMonth && dateObj.getFullYear() === currentYear;
+        });
+
+        const todayDate = today.getDate();
         const realAtt = Array.from({ length: ATTENDANCE_CALENDAR_DAYS }, (_, i) => {
           const d = i + 1;
-          const rec = (aRes.data.attendance as Array<{ date: string, status?: string }>)?.find(a => new Date(a.date).getDate() === d);
-          return { day: d, status: rec ? (rec.status === 'LEAVE' ? 'L' : 'P') : 'NONE' };
+          const rec = currentMonthRecords.find(a => new Date(a.date).getDate() === d);
+
+          let status = 'NONE';
+          if (rec) {
+            status = rec.checkIn ? 'P' : 'A';
+          } else if (d <= todayDate) {
+            status = 'A';
+          }
+
+          return { day: d, status };
         });
         set((state) => ({ attMap: { ...state.attMap, [memberId]: realAtt } }));
       }

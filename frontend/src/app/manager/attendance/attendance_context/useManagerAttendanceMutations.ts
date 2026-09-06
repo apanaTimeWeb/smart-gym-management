@@ -22,8 +22,24 @@ export function useManagerAttendanceMutations(
       const startDate = new Date(data.date);
       const endDate = (data.status === 'LEAVE' && data.endDate) ? new Date(data.endDate) : startDate;
 
+      const existingRes = await attendanceApi.getAll({ limit: '1000' }) as any;
+      const existingRecords = existingRes.data?.attendance || existingRes.data?.attendances || existingRes.data || [];
+
       for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
         const dateStr = d.toISOString().split('T')[0];
+        
+        const isDuplicate = existingRecords.some((r: any) => {
+          if (data.type === 'MEMBER') {
+            return String(r.memberId) === String(data.memberId) && typeof r.date === 'string' && r.date.startsWith(dateStr);
+          } else {
+            return String(r.staffId) === String(data.staffId) && typeof r.date === 'string' && r.date.startsWith(dateStr);
+          }
+        });
+
+        if (isDuplicate) {
+          throw new Error(`Attendance already marked for this ${data.type === 'MEMBER' ? 'member' : 'staff'} on ${dateStr}`);
+        }
+
         const checkInIso = (data.status === 'PRESENT' && data.checkIn) 
           ? new Date(`${dateStr}T${data.checkIn}:00`).toISOString() 
           : undefined;

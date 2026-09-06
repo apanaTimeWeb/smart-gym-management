@@ -49,8 +49,12 @@ export const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
       }
     };
 
-    const handleScroll = () => {
+    const handleScroll = (event: Event) => {
       if (isOpen) {
+        const target = event.target as Node;
+        if (dropdownRef.current && dropdownRef.current.contains(target)) {
+          return; // Ignore scroll events originating from inside the dropdown
+        }
         setIsOpen(false);
       }
     };

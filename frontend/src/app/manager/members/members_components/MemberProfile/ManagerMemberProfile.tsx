@@ -109,11 +109,10 @@ export default function ManagerMemberProfile() {
               <button
                 key={t}
                 onClick={() => { setProfileTab(t as "overview" | "attendance" | "payments" | "workout" | "diet"); if (t === 'payments') loadMemberProfile(selectedMember.id); }}
-                className={`px-5 py-3.5 text-sm font-medium transition-all duration-200 border-b-2 ${
-                  profileTab === t
+                className={`px-5 py-3.5 text-sm font-medium transition-all duration-200 border-b-2 ${profileTab === t
                     ? 'text-primary bg-primary-subtle border-primary'
                     : 'border-transparent text-secondary hover:text-primary'
-                }`}
+                  }`}
               >
                 {label}
               </button>

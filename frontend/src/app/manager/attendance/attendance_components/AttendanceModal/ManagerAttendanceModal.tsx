@@ -36,8 +36,11 @@ export default function AttendanceModal() {
 
   useEffect(() => {
     if (showModal) {
+      const d = new Date();
+      const currentTodayDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
       reset({
         ...EMPTY_ATTENDANCE_FORM,
+        date: currentTodayDate,
         type: tab === 'Staff' ? 'STAFF' : 'MEMBER'
       });
     }
@@ -119,11 +122,13 @@ export default function AttendanceModal() {
               </label>
               <input 
                 type="date" 
+                min={watchStatus !== 'LEAVE' ? todayDate : undefined}
                 max={watchStatus !== 'LEAVE' ? todayDate : undefined}
+                readOnly={watchStatus !== 'LEAVE'}
                 {...register('date')}
                 className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus-visible:ring-2 ${
                   errors.date ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
-                } bg-input text-foreground`} 
+                } bg-input text-foreground ${watchStatus !== 'LEAVE' ? 'opacity-80 cursor-not-allowed' : ''}`} 
               />
               {errors.date && <p className="text-danger text-xs mt-1">{errors.date.message}</p>}
             </div>
