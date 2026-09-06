@@ -29,9 +29,16 @@ export const createMembersMutations = (set: StoreSet, get: StoreGet) => ({
         const plan = state.plans.find((p: import('@/app/manager/plans/plans_types/ManagerPlansTypes').Plan) => String(p.id) === String(data.planId));
         
         let pendingAmount = data.pendingAmount;
+        let advanceAmount = data.advanceAmount || 0;
         if (pendingAmount === undefined && plan) {
           const totalAmount = getPriceForCycle(plan, data.billingCycle, data.customDays);
-          pendingAmount = totalAmount - (data.paidAmount || 0);
+          if ((data.paidAmount || 0) <= totalAmount) {
+             pendingAmount = totalAmount - (data.paidAmount || 0);
+             advanceAmount = 0;
+          } else {
+             advanceAmount = (data.paidAmount || 0) - totalAmount;
+             pendingAmount = 0;
+          }
         }
 
         const fullNewMember = {
@@ -41,6 +48,7 @@ export const createMembersMutations = (set: StoreSet, get: StoreGet) => ({
           plan,
           status: 'ACTIVE',
           pendingAmount,
+          advanceAmount,
           attendance: 0,
           joinDate: data.joinDate || new Date().toISOString(),
         };
@@ -139,10 +147,31 @@ export const createMembersMutations = (set: StoreSet, get: StoreGet) => ({
       const member = state.members.find((m: Member) => m.id === memberId);
       const currentPaid = member?.paidAmount || 0;
       const currentPending = member?.pendingAmount || 0;
+      const currentAdvance = member?.advanceAmount || 0;
 
       const plan = state.plans.find((p: import('@/app/manager/plans/plans_types/ManagerPlansTypes').Plan) => String(p.id) === String(data.planId));
       const planPrice = getPriceForCycle(plan as any, data.billingCycle, data.customDays);
-      const newPending = Math.max(0, currentPending + planPrice - data.amountPaid);
+      
+      let totalAmountToClear = currentPending + planPrice;
+      let availableAdvance = currentAdvance;
+      
+      if (availableAdvance >= totalAmountToClear) {
+         availableAdvance -= totalAmountToClear;
+         totalAmountToClear = 0;
+      } else {
+         totalAmountToClear -= availableAdvance;
+         availableAdvance = 0;
+      }
+      
+      let newPending = 0;
+      let newAdvance = availableAdvance;
+
+      if (data.amountPaid <= totalAmountToClear) {
+         newPending = totalAmountToClear - data.amountPaid;
+      } else {
+         newAdvance += (data.amountPaid - totalAmountToClear);
+         newPending = 0;
+      }
 
       const payload = {
          planId: data.planId,
@@ -151,7 +180,8 @@ export const createMembersMutations = (set: StoreSet, get: StoreGet) => ({
          customDays: data.customDays,
          status: 'ACTIVE',
          paidAmount: currentPaid + data.amountPaid,
-         pendingAmount: newPending
+         pendingAmount: newPending,
+         advanceAmount: newAdvance
       };
       await membersApi.update(memberId, payload);
       
@@ -187,9 +217,22 @@ export const createMembersMutations = (set: StoreSet, get: StoreGet) => ({
       const member = state.members.find((m: Member) => m.id === memberId);
       const currentPaid = member?.paidAmount || 0;
       const currentPending = member?.pendingAmount || 0;
+      const currentAdvance = member?.advanceAmount || 0;
+      
+      let newPending = currentPending;
+      let newAdvance = currentAdvance;
+      
+      if (data.amount <= currentPending) {
+         newPending = currentPending - data.amount;
+      } else {
+         newAdvance = currentAdvance + (data.amount - currentPending);
+         newPending = 0;
+      }
+      
       const updatePayload = {
          paidAmount: currentPaid + data.amount,
-         pendingAmount: Math.max(0, currentPending - data.amount)
+         pendingAmount: newPending,
+         advanceAmount: newAdvance
       };
       
       await membersApi.update(memberId, updatePayload);
@@ -206,7 +249,7 @@ export const createMembersMutations = (set: StoreSet, get: StoreGet) => ({
       set((state: MembersState) => {
          const updatedMembers = state.members.map((m: Member) => 
             m.id === memberId 
-            ? { ...m, paidAmount: (m.paidAmount || 0) + data.amount, pendingAmount: Math.max(0, (m.pendingAmount || 0) - data.amount) } as Member 
+            ? { ...m, paidAmount: currentPaid + data.amount, pendingAmount: newPending, advanceAmount: newAdvance } as Member 
             : m
          );
          return {

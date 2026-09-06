@@ -12,7 +12,7 @@ export default function ManagerProfileOverview() {
 
   const totalAmount = (selectedMember.paidAmount || 0) + (selectedMember.pendingAmount || 0);
   const dues = selectedMember.pendingAmount > 0 ? selectedMember.pendingAmount : 0;
-  const advance = selectedMember.pendingAmount < 0 ? Math.abs(selectedMember.pendingAmount) : 0;
+  const advance = selectedMember.advanceAmount || 0;
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">

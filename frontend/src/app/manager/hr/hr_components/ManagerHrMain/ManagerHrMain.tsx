@@ -7,6 +7,7 @@ import { HrProvider, useHrContext } from '@/app/manager/hr/hr_context/ManagerHrC
 import ManagerHrKPIs from '@/app/manager/hr/hr_components/ManagerHrKPIs/ManagerHrKPIs';
 import ManagerHrTabs from '@/app/manager/hr/hr_components/ManagerHrTabs/ManagerHrTabs';
 import ManagerHrStaffModal from '@/app/manager/hr/hr_components/ManagerHrStaffModal/ManagerHrStaffModal';
+import ManagerHrStaffProfileModal from '@/app/manager/hr/hr_components/ManagerHrStaffProfileModal/ManagerHrStaffProfileModal';
 import ManagerHrPayrollModal from '@/app/manager/hr/hr_components/ManagerHrPayrollModal/ManagerHrPayrollModal';
 import ManagerHrPaymentModal from '@/app/manager/hr/hr_components/ManagerHrPaymentModal/ManagerHrPaymentModal';
 import type { HrInitialData } from '@/app/manager/hr/hr_types/ManagerHrTypes';
@@ -23,6 +24,7 @@ function HrContent() {
       </div>
 
       <ManagerHrStaffModal />
+      <ManagerHrStaffProfileModal />
       <ManagerHrPayrollModal />
       <ManagerHrPaymentModal />
 

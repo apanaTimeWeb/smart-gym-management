@@ -23,7 +23,7 @@ export interface Member {
   planId: string; plan?: { id: string; name: string; tier: string };
   billingCycle: string; status: string;
   joinDate: string; expiryDate: string;
-  paidAmount: number; pendingAmount: number; photo?: string;
+  paidAmount: number; pendingAmount: number; advanceAmount?: number; photo?: string;
   createdAt: string;
   assignedDietId?: string;
   assignedDiet?: DietPlan;

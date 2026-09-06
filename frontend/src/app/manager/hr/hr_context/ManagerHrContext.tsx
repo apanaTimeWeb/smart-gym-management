@@ -24,6 +24,7 @@ export function HrProvider({ children, initialData }: { children: React.ReactNod
    logic.showPayrollModal,
    logic.editId,
    logic.editData,
+   logic.viewProfileData,
    logic.saving
  ]);
 

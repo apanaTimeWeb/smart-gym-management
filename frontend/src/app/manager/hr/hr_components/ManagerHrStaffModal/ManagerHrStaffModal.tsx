@@ -50,13 +50,13 @@ export default function ManagerHrStaffModal() {
   <form onSubmit={handleSubmit(saveStaff)} className="p-8">
   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
   {STAFF_MODAL_FIELDS.map(f => (
-  <div key={f.key} className={f.key === 'name' ? 'sm:col-span-2' : ''}>
-  <label className="block text-sm font-medium mb-1.5 text-secondary">{f.label}</label>
+  <div key={f.key} className={f.key === 'name' || f.key === 'address' ? 'sm:col-span-2' : ''}>
+  <label className="block text-sm font-medium text-foreground mb-1.5">{f.label}</label>
   <input 
   type={f.type} 
   placeholder={f.placeholder} 
   min={f.type === 'number' ? '0' : undefined}
-  maxLength={f.type === 'tel' ? 10 : undefined}
+  maxLength={f.key === 'aadhaar' ? 12 : f.type === 'tel' ? 10 : undefined}
   onKeyDown={
     f.type === 'number' 
       ? (e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); } 

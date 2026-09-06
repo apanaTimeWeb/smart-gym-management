@@ -13,7 +13,8 @@ export const StaffSchema = z.object({
   temporaryPassword: z.string().optional().refine(val => !val || val.length >= 8, {
     message: "Password must be at least 8 characters",
   }),
-  isActive: z.boolean().default(true)
+  isActive: z.boolean().default(true),
+  aadhaar: z.string().regex(/^\d{12}$/, "Aadhaar must be exactly 12 digits").optional().or(z.literal(''))
 });
 
 export type StaffFormValues = z.infer<typeof StaffSchema>;
@@ -30,7 +31,8 @@ export const EMPTY_STAFF = {
  address: '', 
  joinDate: new Date().toISOString().split('T')[0],
  temporaryPassword: '',
- isActive: true
+ isActive: true,
+ aadhaar: ''
 };
 
 export const PayrollSchema = z.object({
@@ -79,5 +81,7 @@ export const STAFF_MODAL_FIELDS = [
  { label: 'Full Name', key: 'name', type: 'text', placeholder: '' },
  { label: 'Email', key: 'email', type: 'email', placeholder: '' },
  { label: 'Phone', key: 'phone', type: 'tel', placeholder: '' },
+ { label: 'Aadhaar No.', key: 'aadhaar', type: 'tel', placeholder: '123456789012' },
  { label: 'Monthly Salary (₹)', key: 'salary', type: 'number', placeholder: '' },
+ { label: 'Address', key: 'address', type: 'text', placeholder: 'Full Address' },
 ];

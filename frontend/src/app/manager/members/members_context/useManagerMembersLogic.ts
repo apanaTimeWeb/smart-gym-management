@@ -105,10 +105,16 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
       email: m.email || '', 
       phone: m.phone, 
       address: m.address || '', 
+      aadhaar: m.aadhaar || '',
+      medicalHistory: m.medicalHistory || '',
       gender: (m.gender || 'MALE') as "MALE"|"FEMALE"|"OTHER", 
       billingCycle: m.billingCycle, 
       customDays: 0,
-      planId: String(m.planId) 
+      planId: String(m.planId),
+      joinDate: m.joinDate ? m.joinDate.split('T')[0] : '',
+      expiryDate: m.expiryDate ? m.expiryDate.split('T')[0] : '',
+      paidAmount: m.paidAmount || 0,
+      totalAmount: (m.paidAmount || 0) + (m.pendingAmount || 0)
     } as MemberFormValues);
     setShowAddModal(true);
   }, []);

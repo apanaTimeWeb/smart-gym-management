@@ -70,11 +70,17 @@ export default function ManagerMembersModal() {
   }, [watchJoinDate, watchBillingCycle, watchCustomDays, useFormReturn]);
 
   const onSubmit = (data: MemberFormValues) => {
-    let payload: Partial<MemberFormValues> & { pendingAmount?: number } = { ...data };
+    let payload: Partial<MemberFormValues> & { pendingAmount?: number, advanceAmount?: number } = { ...data };
     if (!editId) {
       const total = data.totalAmount || 0;
       const paid = data.paidAmount || 0;
-      payload.pendingAmount = total - paid;
+      if (paid <= total) {
+        payload.pendingAmount = total - paid;
+        payload.advanceAmount = 0;
+      } else {
+        payload.pendingAmount = 0;
+        payload.advanceAmount = paid - total;
+      }
     } else {
       // Remove fields that should not be updated during edit
       delete payload.totalAmount;
@@ -113,6 +119,7 @@ export default function ManagerMembersModal() {
               { label: 'Full Name', key: 'name', type: 'text', placeholder: 'Rahul Sharma', fullWidth: true },
               { label: 'Email', key: 'email', type: 'email', placeholder: 'rahul@gmail.com' },
               { label: 'Phone', key: 'phone', type: 'tel', placeholder: '+91 98765 43210' },
+              { label: 'Aadhaar No.', key: 'aadhaar', type: 'tel', placeholder: '123456789012' },
               { label: 'Address', key: 'address', type: 'text', placeholder: 'Andheri, Mumbai', fullWidth: true },
             ].map(f => (
               <div key={f.key} className={f.fullWidth ? 'sm:col-span-2' : ''}>
@@ -120,7 +127,7 @@ export default function ManagerMembersModal() {
                 <input
                   type={f.type}
                   placeholder={f.placeholder}
-                  maxLength={f.type === 'tel' ? 10 : undefined}
+                  maxLength={f.key === 'aadhaar' ? 12 : f.type === 'tel' ? 10 : undefined}
                   onKeyDown={f.type === 'tel' ? (e) => { 
                     if (['e', 'E', '-', '+', '.'].includes(e.key)) e.preventDefault(); 
                     if (e.key.length === 1 && !/^[0-9]$/.test(e.key) && !e.ctrlKey && !e.metaKey) e.preventDefault(); 

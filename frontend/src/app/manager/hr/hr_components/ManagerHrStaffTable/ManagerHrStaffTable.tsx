@@ -10,7 +10,7 @@ import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerShare
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
 
 export default function ManagerHrStaffTable() {
-  const { staff, summary, fetchState, debouncedSearch, roleFilter, currentPage, setCurrentPage, openEdit, deleteStaff, toggleStaffStatus } = useHrContext();
+  const { staff, summary, fetchState, debouncedSearch, roleFilter, currentPage, setCurrentPage, openEdit, deleteStaff, toggleStaffStatus, setViewProfileData } = useHrContext();
   const { confirm } = useConfirm();
 
   const filteredStaff = staff.filter(s => roleFilter === 'All' || (s.role || '').toLowerCase().includes(roleFilter.toLowerCase()));
@@ -72,7 +72,7 @@ export default function ManagerHrStaffTable() {
               <tr 
                 key={s.id} 
                 className="transition-colors hover:bg-primary/5 cursor-pointer" 
-                onClick={() => openEdit(s)}
+                onClick={() => setViewProfileData(s)}
               >
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">

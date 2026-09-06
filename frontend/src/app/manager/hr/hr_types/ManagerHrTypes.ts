@@ -40,6 +40,8 @@ export interface HrContextType {
  setPaymentModal: (modal: { payrollId: string; staffName: string; pendingAmount: number; } | null) => void;
  editId: string | null;
  editData: Partial<Staff> | null;
+ viewProfileData: Staff | null;
+ setViewProfileData: (s: Staff | null) => void;
  saving: boolean;
  
  // Actions
@@ -58,7 +60,7 @@ export interface HrContextType {
 export interface Staff {
   id: string; name: string; email: string; phone: string;
   role: string; salary: number; branch: string; gender: string;
-  address?: string; joinDate: string; isActive: boolean;
+  address?: string; aadhaar?: string; upiId?: string; joinDate: string; isActive: boolean;
 }
 export interface Payroll {
   id: string; staffId: string; month: string; amount: number;
