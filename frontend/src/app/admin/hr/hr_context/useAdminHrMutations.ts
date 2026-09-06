@@ -58,7 +58,7 @@ export function useAdminHrMutations(
         id: `pay-${Date.now()}`,
         amount: Number(data.amount || 0),
         status: 'Paid',
-        date: new Date().toISOString(),
+        paidAt: new Date().toISOString(),
         staff: staffMember ? { name: staffMember.name, role: staffMember.role } : undefined
       } as Payroll;
       setPayrolls(prev => [newPayroll, ...prev]);
@@ -117,7 +117,7 @@ export function useAdminHrMutations(
     const isConfirmed = await confirm({ title: 'Mark as Paid', message: 'Are you sure you want to mark this payroll as paid?', confirmText: 'Yes, Mark Paid', type: 'info' });
     if (!isConfirmed) return;
     try { 
-      setPayrolls(prev => prev.map(p => String(p.id) === String(id) ? { ...p, status: 'Paid' } : p));
+      setPayrolls(prev => prev.map(p => String(p.id) === String(id) ? { ...p, status: 'Paid', paidAt: new Date().toISOString() } : p));
       setSummary(prev => prev ? { ...prev, paidCount: prev.paidCount + 1, pendingCount: Math.max(0, prev.pendingCount - 1) } : null);
       showToast('Payroll marked as paid', 'success'); 
     } catch (err) { 

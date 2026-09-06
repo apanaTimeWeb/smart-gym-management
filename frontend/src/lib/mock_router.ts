@@ -290,8 +290,8 @@ export async function routeMockRequest<T>(
   
   if (path.includes('/hr/staff')) {
     const existingStaff = MockDB.getCollection('mock_admin_staff', []);
-    if (existingStaff.length > 0 && existingStaff.some((r: any) => r.name?.includes('Trainer '))) {
-      const filtered = existingStaff.filter((r: any) => !r.name?.includes('Trainer '));
+    if (existingStaff.length > 0 && (existingStaff.some((r: any) => r.name?.includes('Trainer ')) || !existingStaff[0]?.joinDate)) {
+      const filtered = existingStaff.filter((r: any) => !r.name?.includes('Trainer ') && r.joinDate);
       MockDB.setCollection('mock_admin_staff', filtered);
     }
     return MockDB.handleCrud('mock_admin_staff', method, path, parsedBody, [], 'staff') as unknown as ApiResponse<T>;
@@ -595,7 +595,7 @@ export async function routeMockRequest<T>(
       }
       
       if (staff.length === 0) {
-        staff = generate(8, (i: number) => ({ id: `staff-${i}`, name: `Staff ${i + 1}`, role: 'Trainer', status: 'ACTIVE', isActive: true, salary: 25000 }));
+        staff = generate(8, (i: number) => ({ id: `staff-${i}`, name: `Staff ${i + 1}`, role: 'Trainer', status: 'ACTIVE', isActive: true, salary: 25000, joinDate: new Date().toISOString() }));
         MockDB.setCollection('mock_admin_staff', staff);
       }
       
