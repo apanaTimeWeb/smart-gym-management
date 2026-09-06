@@ -72,6 +72,9 @@ export function useLoginForm(): UseLoginFormReturn {
         } else {
           window.location.replace(AuthUrlConfig.PAGES.ADMIN_DASHBOARD);
         }
+      } else {
+        toast.error(res.message || 'Login failed. Please try again.');
+        setStatus('error');
       }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Login failed. Please try again.';

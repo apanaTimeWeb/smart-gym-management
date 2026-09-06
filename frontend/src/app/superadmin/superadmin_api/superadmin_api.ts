@@ -68,6 +68,9 @@ export const superadminApi = {
       return apiFetch<ApiResponse<GlobalAuditLog[]>>(`${SuperadminUrlConfig.BACKEND_API.AUDIT_LOGS_BASE}${q}`);
     },
   },
+  broadcasts: {
+    sendBroadcast: (message: string) => apiFetch<ApiResponse<void>>(SuperadminUrlConfig.BACKEND_API.BROADCASTS_BASE, { method: 'POST', body: JSON.stringify({ message }) }),
+  },
 
   dashboard: {
     fetchDashboardData: () => apiFetch<ApiResponse<SaaSDashboardMetrics>>(SuperadminUrlConfig.BACKEND_API.DASHBOARD_BASE),
@@ -83,5 +86,8 @@ export const superadminApi = {
   },
   infrastructure: {
     fetchInfrastructureNodes: () => apiFetch<ApiResponse<InfrastructureNode[]>>(SuperadminUrlConfig.BACKEND_API.INFRASTRUCTURE_BASE),
+    fetchRedisTelemetry: () => apiFetch<ApiResponse<any>>(SuperadminUrlConfig.BACKEND_API.REDIS_TELEMETRY),
+    flushGlobalCache: () => apiFetch<ApiResponse<void>>(SuperadminUrlConfig.BACKEND_API.REDIS_FLUSH_GLOBAL, { method: 'POST' }),
+    flushTenantCache: (tenantIds: string[]) => apiFetch<ApiResponse<void>>(SuperadminUrlConfig.BACKEND_API.REDIS_FLUSH_TENANT, { method: 'POST', body: JSON.stringify({ tenantIds }) }),
   },
 };

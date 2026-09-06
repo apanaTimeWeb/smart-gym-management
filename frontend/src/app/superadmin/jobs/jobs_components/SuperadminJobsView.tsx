@@ -15,8 +15,7 @@ import SuperadminPagination from '@/app/superadmin/superadmin_components/Superad
 
 export default function SuperadminJobsView() {
   const {
-    isLoading,
-    isError,
+    fetchState,
     filteredJobs,
     paginatedJobs,
     currentPage,
@@ -42,7 +41,7 @@ export default function SuperadminJobsView() {
     metrics,
   } = useJobsPage();
 
-  if (isLoading) {
+  if (fetchState === 'loading') {
     return (
       <div className="flex h-96 items-center justify-center">
         <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
@@ -50,7 +49,7 @@ export default function SuperadminJobsView() {
     );
   }
 
-  if (isError) {
+  if (fetchState === 'error') {
     return <div className="p-8 text-center text-danger font-medium">Error loading jobs. Please try again.</div>;
   }
 

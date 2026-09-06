@@ -7,17 +7,20 @@
 
 import { useSuperadminFeaturesData } from '@/app/superadmin/features/features_utils/useSuperadminFeaturesData';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
-import { ToggleLeft, Send, Search } from 'lucide-react';
+import { ToggleLeft, Send, Search, Users } from 'lucide-react';
 import { useState } from 'react';
 import type { FeatureFlag, ReleaseNote } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
 import { featuresApi } from '@/app/superadmin/features/superadmin_features_api/superadmin_features_api';
 import toast from 'react-hot-toast';
+import SuperadminFeatureRolloutModal from './SuperadminFeatureRolloutModal';
 
 export default function SuperadminFeaturesClient() {
   const [activeTab, setActiveTab] = useState<'FLAGS' | 'NOTES'>('FLAGS');
   const [noteForm, setNoteForm] = useState({ version: '', title: '', content: '' });
   const [isPublishing, setIsPublishing] = useState(false);
-  const { data, fetchState, error, setData } = useSuperadminFeaturesData();
+  const [rolloutFlag, setRolloutFlag] = useState<FeatureFlag | null>(null);
+
+  const { data, fetchState, error, setData, toggleFlag, updateFlag } = useSuperadminFeaturesData();
 
   /**
    * Handles release note form submission — calls featuresApi.createNote and
@@ -50,15 +53,23 @@ export default function SuperadminFeaturesClient() {
 
   const { flags: DUMMY_FEATURE_FLAGS, notes: DUMMY_RELEASE_NOTES } = data as { flags: FeatureFlag[]; notes: ReleaseNote[] };
 
-  /** Optimistically toggles a feature flag's isGlobalEnabled in local state. */
-  const handleToggle = (flagId: string) => {
-    setData((prev: { flags: FeatureFlag[], notes: ReleaseNote[] } | null) => {
-      if (!prev) return prev;
-      return {
-        ...prev,
-        flags: prev.flags.map((f: FeatureFlag) => f.id === flagId ? { ...f, isGlobalEnabled: !f.isGlobalEnabled } : f)
-      };
-    });
+  const handleToggle = async (flagId: string) => {
+    try {
+      await toggleFlag(flagId);
+      toast.success('Feature flag toggled');
+    } catch (e) {
+      toast.error('Failed to toggle feature flag');
+    }
+  };
+
+  const handleSaveRollout = async (tenantIds: string[]) => {
+    if (!rolloutFlag) return;
+    try {
+      await updateFlag({ id: rolloutFlag.id, body: { enabledTenantIds: tenantIds } });
+      toast.success('Canary rollout updated successfully');
+    } catch (e) {
+      toast.error('Failed to update canary rollout');
+    }
   };
 
   /** Named handlers for tab switching — Rule 52: no inline arrow functions on event handlers */
@@ -106,10 +117,21 @@ export default function SuperadminFeaturesClient() {
                   <h3 className="text-foreground font-bold mb-1">{flag.name}</h3>
                   <p className="text-sm text-secondary">{flag.description}</p>
                   
-                  {!flag.isGlobalEnabled && flag.enabledTenantIds.length > 0 && (
-                    <div className="mt-3 flex items-center gap-2">
-                      <span className="text-xs font-bold text-warning bg-warning/10 px-2 py-0.5 rounded">BETA OVERRIDE</span>
-                      <span className="text-xs text-secondary">Enabled for {flag.enabledTenantIds.length} specific gyms</span>
+                  {!flag.isGlobalEnabled && (
+                    <div className="mt-3 flex items-center gap-4">
+                      {flag.enabledTenantIds.length > 0 && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold text-warning bg-warning/10 px-2 py-0.5 rounded">BETA OVERRIDE</span>
+                          <span className="text-xs text-secondary">Enabled for {flag.enabledTenantIds.length} specific gyms</span>
+                        </div>
+                      )}
+                      <button 
+                        onClick={() => setRolloutFlag(flag)}
+                        className="text-xs flex items-center gap-1.5 text-primary hover:text-primary-hover font-semibold motion-safe:transition-colors"
+                      >
+                        <Users className="w-3.5 h-3.5" />
+                        Manage Rollout
+                      </button>
                     </div>
                   )}
                 </div>
@@ -177,6 +199,13 @@ export default function SuperadminFeaturesClient() {
           </div>
         </div>
       )}
+
+      <SuperadminFeatureRolloutModal 
+        isOpen={!!rolloutFlag} 
+        onClose={() => setRolloutFlag(null)} 
+        flag={rolloutFlag} 
+        onSaveRollout={handleSaveRollout} 
+      />
     </div>
   );
 }

@@ -12,6 +12,7 @@ import type { UsageMeter } from '@/app/superadmin/usage-meters/superadmin_usage-
 import { HardDrive, MessageSquare, Users, Calendar } from 'lucide-react';
 
 import { MOCK_USAGE_METERS } from '@/app/superadmin/usage-meters/usage-meters_utils/SuperadminUsageMetersConstants';
+import { getProgressColor, getPercentage } from '@/app/superadmin/usage-meters/usage-meters_utils/SuperadminUsageMetersUtils';
 
 export default function SuperadminUsageMetersClient() {
   const [meters, setMeters] = useState<UsageMeter[]>([]);
@@ -36,24 +37,15 @@ export default function SuperadminUsageMetersClient() {
     }
   });
 
+  const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
+
   useEffect(() => {
     if (queryData?.meters) {
       setMeters(queryData.meters as unknown as UsageMeter[]);
     }
   }, [queryData]);
 
-  const getProgressColor = (used: number, limit: number) => {
-    const percent = (used / limit) * 100;
-    if (percent > 90) return 'bg-danger';
-    if (percent > 75) return 'bg-warning';
-    return 'bg-success';
-  };
-
-  const getPercentage = (used: number, limit: number) => {
-    return Math.min(100, (used / limit) * 100).toFixed(1);
-  };
-
-  if (isLoading) {
+  if (fetchState === 'loading') {
     return (
       <div className="p-6 space-y-4">
         {[1, 2, 3].map(i => (

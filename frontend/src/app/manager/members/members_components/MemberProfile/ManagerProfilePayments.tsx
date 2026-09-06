@@ -18,7 +18,7 @@ export default function ManagerProfilePayments() {
 
   return (
   <div>
-  <div className="grid grid-cols-3 gap-4 mb-5">
+  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-5">
   <div className="bg-success-bg rounded-xl p-4 border border-success/20">
   <p className="text-xs text-success">Total Paid</p>
   <p className="text-xl font-bold text-success">{formatCurrency(totalPaid)}</p>
@@ -26,6 +26,10 @@ export default function ManagerProfilePayments() {
   <div className="bg-danger-bg rounded-xl p-4 border border-destructive/20">
   <p className="text-xs text-danger">Total Due</p>
   <p className="text-xl font-bold text-danger">{formatCurrency(totalDue)}</p>
+  </div>
+  <div className="bg-primary/10 rounded-xl p-4 border border-primary/20">
+  <p className="text-xs text-primary">Advance</p>
+  <p className="text-xl font-bold text-primary">{formatCurrency(selectedMember?.advanceAmount || 0)}</p>
   </div>
   <div className="bg-info-bg rounded-xl p-4 border border-info/20">
   <p className="text-xs text-info">Transactions</p>

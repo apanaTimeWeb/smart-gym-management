@@ -8,6 +8,7 @@ import { getUser, logout } from '@/lib/api';
 import { ADMIN_PLACEHOLDER_NOTIFICATIONS } from '@/app/admin/admin_utils/AdminSharedConstants';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
+import { useAdminBranchesData } from '@/app/admin/admin_store/useAdminBranchesData';
 import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
 
 import type { AdminHeaderProps } from '@/app/admin/admin_components/AdminLayout/AdminLayoutTypes';
@@ -20,7 +21,8 @@ export default function AdminHeader({ title, subtitle }: AdminHeaderProps) {
   const profileRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
   const user = getUser();
-  const { selectedBranchId, setSelectedBranchId, branches } = useAdminGlobalStore();
+  const { selectedBranchId, setSelectedBranchId } = useAdminGlobalStore();
+  const { data: branches = [] } = useAdminBranchesData();
 
   const removeNotification = (id: number, e: React.MouseEvent) => {
     e.stopPropagation();

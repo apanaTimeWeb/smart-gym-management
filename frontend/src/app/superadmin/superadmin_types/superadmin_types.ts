@@ -145,3 +145,10 @@ export interface MigrationsPageData {
   migrations: SchemaMigration[];
   tenants: Tenant[];
 }
+
+export interface RedisTelemetry {
+  memoryUsagePercent: number;
+  hitRatioPercent: number;
+  totalKeysCached: number;
+  uptimeHours: number;
+}

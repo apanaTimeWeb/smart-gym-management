@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
-import type { BackgroundJob } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { BackgroundJob, FetchState } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -21,8 +21,7 @@ const FALLBACK_JOBS: BackgroundJob[] = [
 ];
 
 export interface UseJobsPageReturn {
-  isLoading: boolean;
-  isError: boolean;
+  fetchState: FetchState;
   filteredJobs: BackgroundJob[];
   paginatedJobs: BackgroundJob[];
   currentPage: number;
@@ -149,8 +148,8 @@ export function useJobsPage(): UseJobsPageReturn {
   }
 
   return {
-    isLoading,
-    isError,
+    fetchState: isLoading ? 'loading' : isError ? 'error' : 'success',
+
     filteredJobs,
     paginatedJobs,
     currentPage,

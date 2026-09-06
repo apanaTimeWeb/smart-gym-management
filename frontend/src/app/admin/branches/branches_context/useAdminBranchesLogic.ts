@@ -2,14 +2,14 @@
 // DATA FLOW: Centralized store/hook logic mapping API mutations and query state to UI props.
 "use client";
 import { useAdminBranchesStore } from "@/app/admin/branches/branches_store/useAdminBranchesStore";
-import { useAdminGlobalStore } from "@/app/admin/admin_store/useAdminGlobalStore";
+import { useAdminBranchesData } from "@/app/admin/admin_store/useAdminBranchesData";
 import type { Branch } from "@/app/admin/admin_store/useAdminGlobalStore";
 import type { TimeRange } from "@/app/admin/dashboard/dashboard_types/dashboard_types";
 
 export type DetailView = "revenue" | "expenses" | "staff" | "students";
 
 export function useAdminBranchesLogic() {
-  const { branches } = useAdminGlobalStore();
+  const { data: branches = [], isLoading, isError } = useAdminBranchesData();
   const {
     timeRange, setTimeRange,
     startDate, setStartDate,
@@ -37,6 +37,8 @@ export function useAdminBranchesLogic() {
 
   return {
     branches,
+    isLoading,
+    isError,
     timeRange,
     setTimeRange,
     startDate,

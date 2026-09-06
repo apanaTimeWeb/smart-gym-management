@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { Cpu, HardDrive, Server, Zap, RefreshCcw, Loader2 } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import toast from 'react-hot-toast';
 import type { InfrastructureNode } from '@/app/superadmin/superadmin_types/superadmin_types';
@@ -13,25 +13,52 @@ export default function SuperadminInfrastructureClient() {
   const [isFlushingAll, setIsFlushingAll] = useState(false);
   const [isFlushModalOpen, setIsFlushModalOpen] = useState(false);
 
-  const { data: fetchRes, isLoading, isError, refetch, isFetching } = useQuery({
+  const queryClient = useQueryClient();
+
+  const { data: fetchRes, isLoading: isLoadingNodes, isError: isErrorNodes, refetch: refetchNodes, isFetching: isFetchingNodes } = useQuery({
     queryKey: ['superadmin', 'infrastructure'],
     queryFn: () => superadminApi.infrastructure.fetchInfrastructureNodes(),
   });
 
+  const { data: redisRes, isLoading: isLoadingRedis, refetch: refetchRedis, isFetching: isFetchingRedis } = useQuery({
+    queryKey: ['superadmin', 'redis'],
+    queryFn: () => superadminApi.infrastructure.fetchRedisTelemetry(),
+  });
+
   const nodes = fetchRes?.data ?? [];
+  const redisTelemetry = redisRes?.data;
+
+  const flushGlobalMutation = useMutation({
+    mutationFn: () => superadminApi.infrastructure.flushGlobalCache(),
+    onSuccess: (res) => {
+      queryClient.invalidateQueries({ queryKey: ['superadmin', 'redis'] });
+      toast.success(res?.message || 'Successfully flushed global cache');
+      setIsFlushingAll(false);
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || 'Failed to flush global cache');
+      setIsFlushingAll(false);
+    }
+  });
+
+  const flushTenantMutation = useMutation({
+    mutationFn: (tenantIds: string[]) => superadminApi.infrastructure.flushTenantCache(tenantIds),
+    onSuccess: (res) => {
+      queryClient.invalidateQueries({ queryKey: ['superadmin', 'redis'] });
+      toast.success(res?.message || 'Successfully flushed cache for tenant(s)');
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || 'Failed to flush tenant cache');
+    }
+  });
 
   const handleFlushAll = () => {
     setIsFlushingAll(true);
-    setTimeout(() => {
-      setIsFlushingAll(false);
-      toast.success('Successfully flushed global cache for all tenants');
-    }, 1500);
+    flushGlobalMutation.mutate();
   };
 
   const handleFlushSpecific = async (tenantIds: string[]) => {
-    // In a real app, you would await an API call to superadminApi.infrastructure.flushTenants(tenantIds)
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    toast.success(`Successfully flushed cache for ${tenantIds.length} tenant(s)`);
+    flushTenantMutation.mutate(tenantIds);
   };
 
   const withCpu = nodes.filter(n => n.cpuPercent !== null);
@@ -43,11 +70,11 @@ export default function SuperadminInfrastructureClient() {
   const withDisk = nodes.filter(n => n.diskPercent !== null);
   const avgDisk = withDisk.length ? Math.round(withDisk.reduce((acc, n) => acc + (n.diskPercent ?? 0), 0) / withDisk.length) : 0;
 
-  if (isLoading && nodes.length === 0) {
+  if (isLoadingNodes && nodes.length === 0) {
     return <div className="flex h-96 items-center justify-center"><Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" /></div>;
   }
 
-  if (isError) {
+  if (isErrorNodes) {
     return <div className="flex h-96 items-center justify-center text-danger font-medium">Error loading data.</div>;
   }
 
@@ -59,11 +86,11 @@ export default function SuperadminInfrastructureClient() {
           <p className="text-secondary mt-1">Real-time health metrics of your Docker/Kubernetes cluster.</p>
         </div>
         <button
-          onClick={() => refetch()}
-          disabled={isFetching}
+          onClick={() => { refetchNodes(); refetchRedis(); }}
+          disabled={isFetchingNodes || isFetchingRedis}
           className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:opacity-90 motion-safe:transition-opacity flex items-center gap-2 border border-primary disabled:opacity-50"
         >
-          <RefreshCcw size={16} className={isFetching ? 'motion-safe:animate-spin' : ''} /> Force Sync Metrics
+          <RefreshCcw size={16} className={isFetchingNodes || isFetchingRedis ? 'motion-safe:animate-spin' : ''} /> Force Sync Metrics
         </button>
       </div>
 
@@ -120,6 +147,53 @@ export default function SuperadminInfrastructureClient() {
         </div>
       </div>
 
+      {redisTelemetry && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* REDIS MEMORY */}
+          <div className="bg-card border border-border rounded-xl p-6 relative overflow-hidden group">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 bg-primary/10 rounded-lg text-primary"><Zap size={24} /></div>
+              <h2 className="text-lg font-bold text-foreground">Redis Memory</h2>
+            </div>
+            <div className="flex items-end gap-2 mb-2">
+              <span className="text-4xl font-extrabold text-foreground">{redisTelemetry.memoryUsagePercent}</span>
+              <span className="text-xl font-medium text-secondary">%</span>
+            </div>
+            <div className="w-full h-2 bg-input rounded-full overflow-hidden">
+              <div className="h-full bg-primary rounded-full motion-safe:transition-all motion-safe:duration-500" style={{ width: `${redisTelemetry.memoryUsagePercent}%` }} />
+            </div>
+            <p className="text-xs text-secondary mt-3">Redis cache memory usage</p>
+          </div>
+
+          {/* REDIS HIT RATIO */}
+          <div className="bg-card border border-border rounded-xl p-6 relative overflow-hidden group">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 bg-success/10 rounded-lg text-success"><RefreshCcw size={24} /></div>
+              <h2 className="text-lg font-bold text-foreground">Cache Hit Ratio</h2>
+            </div>
+            <div className="flex items-end gap-2 mb-2">
+              <span className="text-4xl font-extrabold text-foreground">{redisTelemetry.hitRatioPercent}</span>
+              <span className="text-xl font-medium text-secondary">%</span>
+            </div>
+            <div className="w-full h-2 bg-input rounded-full overflow-hidden">
+              <div className="h-full bg-success rounded-full motion-safe:transition-all motion-safe:duration-500" style={{ width: `${redisTelemetry.hitRatioPercent}%` }} />
+            </div>
+            <p className="text-xs text-secondary mt-3">Requests served from cache vs DB</p>
+          </div>
+
+          {/* REDIS TOTAL KEYS */}
+          <div className="bg-card border border-border rounded-xl p-6 relative overflow-hidden group flex flex-col justify-center">
+            <div className="flex items-center gap-3 mb-2">
+              <h2 className="text-lg font-bold text-foreground">Cached Keys</h2>
+            </div>
+            <div className="flex items-end gap-2 mb-2">
+              <span className="text-4xl font-extrabold text-primary">{redisTelemetry.totalKeysCached.toLocaleString()}</span>
+            </div>
+            <p className="text-xs text-secondary mt-3">Uptime: {redisTelemetry.uptimeHours} hours</p>
+          </div>
+        </div>
+      )}
+
       <div className="bg-card border border-border rounded-xl p-6">
         <div className="flex items-center gap-2 mb-4">
           <Zap className="w-5 h-5 text-primary" />
@@ -139,7 +213,7 @@ export default function SuperadminInfrastructureClient() {
           </button>
           <button 
             onClick={() => setIsFlushModalOpen(true)}
-            className="flex items-center justify-center gap-2 bg-input text-foreground px-5 py-2.5 rounded-lg font-medium hover:bg-border motion-safe:transition-colors border border-border min-w-[180px] disabled:opacity-50"
+            className="flex items-center justify-center gap-2 bg-transparent text-foreground px-5 py-2.5 rounded-lg font-medium hover:bg-border motion-safe:transition-colors border border-border min-w-[180px] disabled:opacity-50"
           >
             Flush Specific Tenant
           </button>

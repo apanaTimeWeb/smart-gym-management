@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Renders the primary tabular list of members with actions, filtering state, and pagination.
 'use client';
 
-import { Edit, MessageCircle, Mail, Trash2, Loader2, Users, Banknote } from 'lucide-react';
+import { Edit, MessageCircle, Mail, Trash2, Loader2, Users, Banknote, Ban } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
 import { useManagerMembersStore } from '@/app/manager/members/members_store/useManagerMembersStore';
 import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS, MEMBERS_TABLE_HEADERS, formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
@@ -16,7 +16,7 @@ export default function ManagerMembersTable() {
   const { confirm } = useConfirm();
   const { 
     search, statusFilter, currentPage, setCurrentPage,
-    setSelectedMember, openEdit, openMsg, deleteMember, setShowPaymentModal
+    setSelectedMember, openEdit, openMsg, deleteMember, setShowPaymentModal, toggleSuspend
   } = useMembersContext();
 
   const members = useManagerMembersStore(s => s.members);
@@ -94,6 +94,14 @@ export default function ManagerMembersTable() {
                         </span>
                       ) : <span className="text-secondary">—</span>}
                     </td>
+                    <td className="px-2 py-3 text-xs whitespace-nowrap">
+                      {m.assignedTrainerName ? (
+                        <div className="flex flex-col gap-0.5">
+                          <span className="font-semibold text-foreground">{m.assignedTrainerName.length > 15 ? m.assignedTrainerName.substring(0, 15) + '...' : m.assignedTrainerName}</span>
+                          {m.isPT && <span className="text-[9px] font-bold text-primary uppercase tracking-wide">PT</span>}
+                        </div>
+                      ) : <span className="text-secondary">—</span>}
+                    </td>
                     <td className="px-2 py-3 whitespace-nowrap">
                       <div className="flex items-center gap-1.5">
                         {m.pendingAmount > 0 && (
@@ -102,6 +110,11 @@ export default function ManagerMembersTable() {
                         <button onClick={(e) => { e.stopPropagation(); openEdit(m); }} className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle transition-all duration-200" title="Edit" aria-label={`Edit ${m.name}`}><Edit size={14} /></button>
                         <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'whatsapp'); }} className="p-1.5 rounded-lg bg-success text-white hover:opacity-80 transition-all duration-200" title="WhatsApp" aria-label={`Message ${m.name} on WhatsApp`}><MessageCircle size={14} /></button>
                         <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'email'); }} className="p-1.5 rounded-lg bg-info text-white hover:opacity-80 transition-all duration-200" title="Email" aria-label={`Email ${m.name}`}><Mail size={14} /></button>
+                        {m.status !== 'SUSPENDED' && m.pendingAmount > 0 ? (
+                          <button onClick={(e) => { e.stopPropagation(); setSelectedMember(m); toggleSuspend(true); }} className="p-1.5 rounded-lg bg-danger-bg text-danger hover:bg-danger/20 transition-all duration-200" title="Suspend Member" aria-label={`Suspend ${m.name}`}><Ban size={14} /></button>
+                        ) : m.status === 'SUSPENDED' ? (
+                          <button onClick={(e) => { e.stopPropagation(); setSelectedMember(m); toggleSuspend(false); }} className="p-1.5 rounded-lg bg-success-bg text-success hover:bg-success/20 transition-all duration-200" title="Unsuspend Member" aria-label={`Unsuspend ${m.name}`}><Ban size={14} /></button>
+                        ) : null}
                         <button
                           onClick={async (e) => { 
                             e.stopPropagation();
@@ -125,7 +138,7 @@ export default function ManagerMembersTable() {
                 )})}
                 {members.length === 0 && fetchState === 'success' && (
                   <tr>
-                    <td colSpan={11} className="p-0 border-b-0">
+                    <td colSpan={12} className="p-0 border-b-0">
                       <ManagerEmptyState 
                         icon={<Users size={32} />}
                         title={Boolean(search || statusFilter !== 'All') ? 'No members found' : 'No members yet'}

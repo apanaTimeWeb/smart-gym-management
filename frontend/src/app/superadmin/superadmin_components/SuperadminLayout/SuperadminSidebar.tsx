@@ -29,6 +29,10 @@ import {
   BarChart2,
   BarChart3,
   Gauge,
+  Settings,
+  Network,
+  Store,
+  History,
 } from 'lucide-react';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { logout } from '@/lib/api';
@@ -98,7 +102,8 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
         { name: 'Background Jobs', href: SuperadminUrlConfig.PAGES.JOBS, icon: Activity },
         { name: 'Database Backups', href: SuperadminUrlConfig.PAGES.BACKUPS, icon: DatabaseBackup },
         { name: 'System Health', href: SuperadminUrlConfig.PAGES.SYSTEM_HEALTH, icon: ServerCog },
-        { name: 'Global Audit Logs', href: SuperadminUrlConfig.PAGES.AUDIT_LOGS, icon: ShieldAlert },
+        { name: 'Global Audit Logs', href: SuperadminUrlConfig.PAGES.GLOBAL_AUDIT, icon: History },
+        { name: 'Global Settings', href: SuperadminUrlConfig.PAGES.SETTINGS, icon: Settings },
       ]
     }
   ];
@@ -119,11 +124,9 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex flex-col bg-sidebar border-r border-border motion-safe:transition-all motion-safe:duration-300 ${
-          isCollapsed ? 'lg:w-20' : 'lg:w-64'
-        } ${
-          isMobileOpen ? 'w-64 translate-x-0' : 'w-64 -translate-x-full lg:translate-x-0'
-        }`}
+        className={`fixed inset-y-0 left-0 z-50 flex flex-col bg-sidebar border-r border-border motion-safe:transition-all motion-safe:duration-300 ${isCollapsed ? 'lg:w-20' : 'lg:w-64'
+          } ${isMobileOpen ? 'w-64 translate-x-0' : 'w-64 -translate-x-full lg:translate-x-0'
+          }`}
       >
         {/* Logo / Branding Header */}
         <div className="flex h-20 items-center justify-between px-4 border-b border-border shrink-0">
@@ -206,9 +209,8 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
           <button
             onClick={handleLogout}
             aria-label="Logout from SaaS Panel"
-            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:text-danger hover:bg-danger-bg motion-safe:transition-all motion-safe:duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger ${
-              isCollapsed ? 'justify-center' : ''
-            }`}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:text-danger hover:bg-danger-bg motion-safe:transition-all motion-safe:duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger ${isCollapsed ? 'justify-center' : ''
+              }`}
           >
             <LogOut size={18} strokeWidth={2} className="shrink-0" />
             {!isCollapsed && <span className="font-medium text-sm">Logout</span>}

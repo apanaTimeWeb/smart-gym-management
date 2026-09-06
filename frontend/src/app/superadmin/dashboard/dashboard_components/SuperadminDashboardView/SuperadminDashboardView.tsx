@@ -67,11 +67,13 @@ export default function SuperadminDashboardView() {
     queryFn: () => superadminApi.dashboard.fetchDashboardData(),
   });
 
+  const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
+
   // Type-safe cast: the API wrapper returns ApiResponse<SaaSDashboardMetrics> but
   // the backend also returns revenue[] alongside it — typed here explicitly.
   const apiData = fetchRes?.data as unknown as DashboardApiData | undefined;
 
-  if (isLoading) {
+  if (fetchState === 'loading') {
     return (
       <div className="space-y-6">
         <div>

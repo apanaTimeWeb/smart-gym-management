@@ -40,6 +40,8 @@ export interface HrContextType {
  setPaymentModal: (modal: { payrollId: string; staffName: string; pendingAmount: number; } | null) => void;
  editId: string | null;
  editData: Partial<Staff> | null;
+ viewProfileData: Staff | null;
+ setViewProfileData: (s: Staff | null) => void;
  saving: boolean;
  
  // Actions
@@ -51,6 +53,8 @@ export interface HrContextType {
   deleteStaff: (id: string) => Promise<void>;
   toggleStaffStatus: (staff: Staff) => Promise<void>;
   markPayrollPaid: (id: string, amount: number) => Promise<void>;
+  giveAdvance: (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }) => Promise<void>;
+  payDue: (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }) => Promise<void>;
  payrollMonth: string;
  setPayrollMonth: (m: string) => void;
 }
@@ -58,7 +62,8 @@ export interface HrContextType {
 export interface Staff {
   id: string; name: string; email: string; phone: string;
   role: string; salary: number; branch: string; gender: string;
-  address?: string; joinDate: string; isActive: boolean;
+  address?: string; aadhaar?: string; upiId?: string; advanceSalary?: number; joinDate: string; isActive: boolean;
+  salaryType?: 'Monthly' | 'Daily'; paymentCycle?: string; currentDue?: number;
 }
 export interface Payroll {
   id: string; staffId: string; month: string; amount: number;
@@ -67,6 +72,23 @@ export interface Payroll {
   staff?: { name: string; role: string };
 }
 export interface HrSummary {
-  totalStaff: number; activeStaff: number;
-  totalPayrollThisMonth: number; paidCount: number; pendingCount: number;
+  totalSalaryThisMonth: number;
+  totalSalaryPaid: number;
+  totalSalaryDue: number;
+  totalAdvanceGiven: number;
+  pendingPaymentsCount: number;
+  totalStaff: number;
+}
+
+export interface LedgerEntry {
+  id: string;
+  staffId: string;
+  date: string;
+  type: 'Salary Generated' | 'Salary Paid' | 'Advance Given' | 'Due Paid';
+  credit: number;
+  debit: number;
+  balance: number;
+  notes?: string;
+  referenceNo?: string;
+  paymentMode?: string;
 }

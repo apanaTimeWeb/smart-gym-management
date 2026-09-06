@@ -1,5 +1,5 @@
 import { ApiResponse } from './api';
-
+import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 class MockDB {
   private static prefix = 'gymsmart_mock_';
   
@@ -148,9 +148,51 @@ export async function routeMockRequest<T>(
     let role = 'ADMIN';
     let email = 'admin@gymsmart.com';
     let name = 'Demo Admin';
-    if (bodyStr.includes('demo_admin')) { role = 'SUPERADMIN'; email = 'demo_admin@gym.com'; name = 'Super Admin'; }
-    else if (bodyStr.includes('manager@')) { role = 'MANAGER'; email = 'manager@gymsmart.com'; name = 'Demo Manager'; }
-    else if (bodyStr.includes('trainer@')) { role = 'TRAINER'; email = 'trainer@gymsmart.com'; name = 'Demo Trainer'; }
+    let isSuspended = false;
+    let suspensionMsg = '';
+
+    if (bodyStr.includes('demo_admin')) { 
+      role = 'SUPERADMIN'; email = 'demo_admin@gym.com'; name = 'Super Admin'; 
+    }
+    else if (bodyStr.includes('manager@')) { 
+      role = 'MANAGER'; email = 'manager@gymsmart.com'; name = 'Demo Manager'; 
+      // Check HR Staff mock DB
+      const staffList = MockDB.getCollection('mock_admin_staff', []);
+      const manager = staffList.find((s: any) => s.email === email);
+      if (manager && manager.isActive === false) {
+        isSuspended = true;
+        suspensionMsg = 'Your account has been suspended by the Admin.';
+      }
+    }
+    else if (bodyStr.includes('trainer@')) { 
+      role = 'TRAINER'; email = 'trainer@gymsmart.com'; name = 'Demo Trainer'; 
+      // Check HR Staff mock DB
+      const staffList = MockDB.getCollection('mock_admin_staff', []);
+      const trainer = staffList.find((s: any) => s.email === email);
+      if (trainer && trainer.isActive === false) {
+        isSuspended = true;
+        suspensionMsg = 'Your account has been suspended by the Admin.';
+      }
+    } else {
+      // Default Admin Login
+      const gymsList = MockDB.getCollection('mock_superadmin_gyms', []);
+      // Admin owns demo-tenant-id which might be gym-1234 or similar in the mock DB.
+      // If we don't know the exact ID, we check if ANY gym owned by sarah@flexfitness.com (or adminEmail) is suspended.
+      // Usually, admin logs in to gym-1234. Let's check for gym-1234 specifically or fallback to adminEmail.
+      const gym = gymsList.find((g: any) => g.adminEmail === email || g.id === 'gym-1234');
+      if (gym && gym.status === 'SUSPENDED') {
+        isSuspended = true;
+        suspensionMsg = 'Your gym account has been suspended by the Superadmin.';
+      }
+    }
+
+    if (isSuspended) {
+      return {
+        success: false,
+        message: suspensionMsg,
+        data: null
+      } as unknown as ApiResponse<T>;
+    }
     
     return {
       success: true,
@@ -246,6 +288,128 @@ export async function routeMockRequest<T>(
     
     return MockDB.handleCrud('mock_orders', method, path, parsedBody, defaultOrders, 'orders') as unknown as ApiResponse<T>;
   }
+
+  if (path.includes(SuperadminUrlConfig.BACKEND_API.FEATURES_BASE)) {
+    const defaultFlags = [
+      { id: '1', name: 'Beta_Feature_0', description: 'Enable beta features', isGlobalEnabled: false, enabledTenantIds: [] },
+      { id: '2', name: 'Beta_Feature_1', description: 'New dashboard', isGlobalEnabled: true, enabledTenantIds: [] },
+      { id: '3', name: 'Beta_Feature_2', description: 'Advanced analytics', isGlobalEnabled: false, enabledTenantIds: ['gym-1234'] },
+      { id: '4', name: 'Beta_Feature_3', description: 'Custom domains', isGlobalEnabled: true, enabledTenantIds: [] },
+    ];
+    const defaultNotes = [
+      { id: '1', version: 'v1.0.0', title: 'Initial Release', content: 'We are live!', isPublished: true, date: '2023-01-01' }
+    ];
+
+    const flags = MockDB.getCollection('mock_superadmin_features', defaultFlags);
+    if (flags.length === 0) MockDB.setCollection('mock_superadmin_features', defaultFlags);
+    const notes = MockDB.getCollection('mock_superadmin_notes', defaultNotes);
+    if (notes.length === 0) MockDB.setCollection('mock_superadmin_notes', defaultNotes);
+
+    if (method === 'GET') {
+      return { success: true, message: 'Fetched features', data: { flags, notes } } as unknown as ApiResponse<T>;
+    }
+    
+    if (method === 'PATCH' && path.includes('/flags/')) {
+      const segments = path.split('/');
+      const isToggle = path.endsWith('/toggle');
+      const flagId = isToggle ? segments[segments.length - 2] : segments[segments.length - 1];
+      
+      const idx = flags.findIndex((f: Record<string, unknown>) => f.id === flagId);
+      if (idx > -1) {
+        if (isToggle) {
+          flags[idx].isGlobalEnabled = !flags[idx].isGlobalEnabled;
+        } else {
+          flags[idx] = { ...flags[idx], ...parsedBody };
+        }
+        MockDB.setCollection('mock_superadmin_features', flags);
+        return { success: true, message: 'Flag updated', data: flags[idx] } as unknown as ApiResponse<T>;
+      }
+    }
+    
+    if (path.includes('/notes')) {
+      return MockDB.handleCrud('mock_superadmin_notes', method, path, parsedBody, [], 'notes') as unknown as ApiResponse<T>;
+    }
+  }
+
+  if (path.includes(SuperadminUrlConfig.BACKEND_API.SETTINGS_BASE)) {
+    const defaultSettings = [
+      { id: '1', key: 'MAX_GYMS_LIMIT', value: '500', description: 'Maximum total gyms allowed in the system', category: 'platform', dataType: 'number' },
+      { id: '2', key: 'MAINTENANCE_MODE', value: 'false', description: 'Suspend all non-admin access', category: 'system', dataType: 'boolean' },
+      { id: '3', key: 'DEFAULT_TRIAL_DAYS', value: '14', description: 'Default trial period for new gym signups', category: 'billing', dataType: 'number' },
+      { id: '4', key: 'SUPPORT_EMAIL', value: 'support@smartgym.com', description: 'Global support contact email', category: 'general', dataType: 'string' }
+    ];
+    const settings = MockDB.getCollection('mock_superadmin_settings', defaultSettings);
+    if (settings.length === 0) MockDB.setCollection('mock_superadmin_settings', defaultSettings);
+
+    if (method === 'GET') {
+      return { success: true, message: 'Settings fetched', data: settings } as unknown as ApiResponse<T>;
+    }
+
+    if (method === 'PATCH') {
+      const segments = path.split('/');
+      const settingId = segments[segments.length - 1];
+      const idx = settings.findIndex((s: Record<string, unknown>) => s.id === settingId);
+      if (idx > -1) {
+        settings[idx] = { ...settings[idx], ...parsedBody };
+        MockDB.setCollection('mock_superadmin_settings', settings);
+        return { success: true, message: 'Setting updated successfully', data: settings[idx] } as unknown as ApiResponse<T>;
+      }
+    }
+  }
+
+  if (path.includes(SuperadminUrlConfig.BACKEND_API.BROADCASTS_BASE) && method === 'POST') {
+    return { success: true, message: 'Broadcast sent successfully to all Admins', data: null } as unknown as ApiResponse<T>;
+  }
+
+  if (path.includes(SuperadminUrlConfig.BACKEND_API.INFRASTRUCTURE_BASE)) {
+    if (path.includes(SuperadminUrlConfig.BACKEND_API.REDIS_FLUSH_GLOBAL) && method === 'POST') {
+      const defaultTelemetry = { memoryUsagePercent: 2, hitRatioPercent: 0, totalKeysCached: 0, uptimeHours: 720 };
+      MockDB.setCollection('mock_superadmin_redis_telemetry', [defaultTelemetry]);
+      return { success: true, message: 'Global cache flushed' } as unknown as ApiResponse<T>;
+    }
+    
+    if (path.includes(SuperadminUrlConfig.BACKEND_API.REDIS_FLUSH_TENANT) && method === 'POST') {
+      let telemetry = MockDB.getCollection('mock_superadmin_redis_telemetry', []);
+      if (telemetry.length > 0) {
+        const t = telemetry[0] as any;
+        const newTelemetry = {
+          ...t,
+          memoryUsagePercent: Math.max(5, t.memoryUsagePercent - 5),
+          totalKeysCached: Math.max(0, t.totalKeysCached - 1000)
+        };
+        MockDB.setCollection('mock_superadmin_redis_telemetry', [newTelemetry]);
+      }
+      return { success: true, message: 'Tenant cache flushed' } as unknown as ApiResponse<T>;
+    }
+    
+    if (path.includes(SuperadminUrlConfig.BACKEND_API.REDIS_TELEMETRY) && method === 'GET') {
+      const defaultTelemetry = { memoryUsagePercent: 68, hitRatioPercent: 94, totalKeysCached: 1450230, uptimeHours: 720 };
+      let telemetry = MockDB.getCollection('mock_superadmin_redis_telemetry', []);
+      if (telemetry.length === 0) {
+        MockDB.setCollection('mock_superadmin_redis_telemetry', [defaultTelemetry]);
+        telemetry = [defaultTelemetry];
+      }
+      return { success: true, data: telemetry[0], message: 'Fetched Redis telemetry' } as unknown as ApiResponse<T>;
+    }
+
+    if (method === 'GET' && !path.includes(SuperadminUrlConfig.BACKEND_API.REDIS_TELEMETRY)) {
+      const defaultNodes = generate(6, i => ({
+        id: `node-${i}`,
+        name: `worker-${i + 1}.internal`,
+        cpuPercent: Math.floor(Math.random() * 40) + 10,
+        memoryPercent: Math.floor(Math.random() * 30) + 40,
+        diskPercent: Math.floor(Math.random() * 20) + 30,
+        status: 'ACTIVE'
+      }));
+      let nodes = MockDB.getCollection('mock_superadmin_infrastructure', []);
+      if (nodes.length === 0) {
+        MockDB.setCollection('mock_superadmin_infrastructure', defaultNodes);
+        nodes = defaultNodes;
+      }
+      return { success: true, data: nodes } as unknown as ApiResponse<T>;
+    }
+  }
+
   if (path.includes('/plans') && !path.includes('/superadmin')) {
     const defaultPlans = generate(3, i => ({ id: `plan-${i}`, name: i === 0 ? 'Basic Plan' : i === 1 ? 'Pro Plan' : 'VIP Plan', tier: i === 0 ? 'Standard' : i === 1 ? 'Premium' : 'Elite', price1Month: 1000 * (i + 1), price3Month: 2500 * (i + 1), price6Month: 4800 * (i + 1), price12Month: 9000 * (i + 1), features: ['Access to gym', 'Locker facility', 'Cardio section'], isActive: true }));
     const existing = MockDB.getCollection('mock_admin_plans', defaultPlans);
@@ -375,13 +539,35 @@ export async function routeMockRequest<T>(
     const staffList = MockDB.getCollection('mock_admin_staff', []);
     const reqMonth = new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' });
     const currentPayrolls = MockDB.generatePayrollsForMonth(reqMonth);
+    const ledgers = MockDB.getCollection('mock_admin_staff_ledger', []);
     
     const activeStaff = staffList.filter((s: any) => s.isActive).length;
-    const paidCount = currentPayrolls.filter((p: any) => p.status === 'PAID').length;
+    const paidCount = currentPayrolls.filter((p: any) => p.status === 'PAID' || p.status === 'Paid').length;
     const pendingCount = currentPayrolls.filter((p: any) => p.status === 'PENDING').length;
-    const totalPayrollThisMonth = currentPayrolls.reduce((sum: number, p: any) => sum + (Number(p.amount) || 0), 0);
     
-    return { success: true, message: 'Summary', data: { totalStaff: staffList.length, activeStaff, totalPayrollThisMonth, paidCount, pendingCount } } as unknown as ApiResponse<T>;
+    let totalSalaryThisMonth = 0;
+    let totalSalaryPaid = 0;
+    let totalSalaryDue = 0;
+    let totalAdvanceGiven = 0;
+    let pendingPaymentsCount = 0;
+
+    // Calculate from ledgers to be accurate
+    ledgers.forEach((l: any) => {
+      const d = new Date(l.date);
+      const isThisMonth = d.getMonth() === new Date().getMonth() && d.getFullYear() === new Date().getFullYear();
+      if (l.type === 'Salary Generated' && isThisMonth) totalSalaryThisMonth += (l.credit || 0);
+      if (l.type === 'Salary Paid' && isThisMonth) totalSalaryPaid += (l.debit || 0);
+      if (l.type === 'Advance Given' && isThisMonth) totalAdvanceGiven += (l.debit || 0);
+      if (l.type === 'Due Paid' && isThisMonth) totalSalaryPaid += (l.debit || 0);
+    });
+
+    // Calculate total due from all staff
+    staffList.forEach((s: any) => {
+      totalSalaryDue += (Number(s.currentDue) || 0);
+      if (Number(s.currentDue) > 0) pendingPaymentsCount++;
+    });
+    
+    return { success: true, message: 'Summary', data: { totalStaff: staffList.length, activeStaff, totalSalaryThisMonth, totalSalaryPaid, totalSalaryDue, totalAdvanceGiven, pendingPaymentsCount } } as unknown as ApiResponse<T>;
   }
   
   if (path.includes('/hr/staff')) {
@@ -427,6 +613,76 @@ export async function routeMockRequest<T>(
     }
     
     return MockDB.handleCrud('mock_admin_payrolls', method, path, parsedBody, [], 'payrolls') as unknown as ApiResponse<T>;
+  }
+
+  if (path.includes('/hr/ledger')) {
+    if (method === 'GET') {
+      const segments = path.split('?')[0].split('/');
+      const staffId = segments[segments.length - 1];
+      const allLedgers = MockDB.getCollection('mock_admin_staff_ledger', []);
+      const staffLedger = allLedgers.filter((l: any) => String(l.staffId) === String(staffId)).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      return { success: true, message: 'Fetched ledger', data: { ledger: staffLedger, total: staffLedger.length } } as unknown as ApiResponse<T>;
+    }
+  }
+
+  if (path.includes('/hr/advance')) {
+    if (method === 'POST') {
+      const { staffId, amount, notes, date, paymentMode } = parsedBody as any;
+      const staffList = MockDB.getCollection('mock_admin_staff', []);
+      const idx = staffList.findIndex((s: any) => String(s.id) === String(staffId));
+      if (idx > -1) {
+        staffList[idx].advanceSalary = (Number(staffList[idx].advanceSalary) || 0) + Number(amount);
+        MockDB.setCollection('mock_admin_staff', staffList);
+
+        const allLedgers = MockDB.getCollection('mock_admin_staff_ledger', []);
+        const staffLedgers = allLedgers.filter((l: any) => String(l.staffId) === String(staffId));
+        const lastBalance = staffLedgers.length > 0 ? Number(staffLedgers[staffLedgers.length - 1].balance) : 0;
+        
+        allLedgers.push({
+          id: `ledg-${Date.now()}`,
+          staffId,
+          date: date || new Date().toISOString(),
+          type: 'Advance Given',
+          credit: 0,
+          debit: Number(amount),
+          balance: lastBalance - Number(amount), // debit reduces balance
+          notes,
+          paymentMode
+        });
+        MockDB.setCollection('mock_admin_staff_ledger', allLedgers);
+        return { success: true, message: 'Advance recorded successfully', data: { advanceAmount: amount } } as unknown as ApiResponse<T>;
+      }
+    }
+  }
+
+  if (path.includes('/hr/due/pay')) {
+    if (method === 'POST') {
+      const { staffId, amount, notes, date, paymentMode } = parsedBody as any;
+      const staffList = MockDB.getCollection('mock_admin_staff', []);
+      const idx = staffList.findIndex((s: any) => String(s.id) === String(staffId));
+      if (idx > -1) {
+        staffList[idx].currentDue = Math.max(0, (Number(staffList[idx].currentDue) || 0) - Number(amount));
+        MockDB.setCollection('mock_admin_staff', staffList);
+
+        const allLedgers = MockDB.getCollection('mock_admin_staff_ledger', []);
+        const staffLedgers = allLedgers.filter((l: any) => String(l.staffId) === String(staffId));
+        const lastBalance = staffLedgers.length > 0 ? Number(staffLedgers[staffLedgers.length - 1].balance) : 0;
+        
+        allLedgers.push({
+          id: `ledg-${Date.now()}`,
+          staffId,
+          date: date || new Date().toISOString(),
+          type: 'Due Paid',
+          credit: 0,
+          debit: Number(amount),
+          balance: lastBalance - Number(amount), 
+          notes,
+          paymentMode
+        });
+        MockDB.setCollection('mock_admin_staff_ledger', allLedgers);
+        return { success: true, message: 'Due paid successfully', data: { paidAmount: amount } } as unknown as ApiResponse<T>;
+      }
+    }
   }
   if (path.includes('/exercises')) return MockDB.handleCrud('mock_admin_exercises', method, path, parsedBody, generate(10, i => ({ id: `ex-${i}`, name: `Exercise ${i+1}`, category: 'Strength', muscleGroup: ['Chest', 'Triceps'], difficulty: 'Beginner', isActive: true, videoUrl: '' })), 'exercises') as unknown as ApiResponse<T>;
   
@@ -524,6 +780,80 @@ export async function routeMockRequest<T>(
     return { success: true, message: 'Store Summary', data: { totalProducts: products.length, totalOrders: orders.length, totalRevenue: orders.reduce((sum: number, o: any) => sum + (o.total || 0), 0), lowStockProducts: products.filter((p: any) => p.stock <= 5) } } as unknown as ApiResponse<T>;
   }
 
+
+  if (path.includes('/admin/branches')) {
+    const defaultBranches = [
+      {
+        id: 'b1', name: 'Downtown Core', location: '123 Main St', status: 'active',
+        revenue: 125000, expenses: 45000, studentsCount: 450, staffCount: 12,
+        revenueItems: [
+          { id: 'r1', label: 'Membership Fee — Rahul Sharma', amount: 4500, method: 'UPI', date: '2026-09-01' },
+          { id: 'r2', label: 'Membership Fee — Priya Singh', amount: 3000, method: 'Cash', date: '2026-09-02' },
+          { id: 'r3', label: 'Store Sale — Protein Powder', amount: 850, method: 'Card', date: '2026-09-02' },
+          { id: 'r4', label: 'Personal Training — Amit Verma', amount: 5000, method: 'UPI', date: '2026-09-03' },
+        ],
+        expenseItems: [
+          { id: 'e1', label: 'Electricity Bill', amount: 12000, category: 'Utilities', date: '2026-09-01' },
+          { id: 'e2', label: 'Staff Salaries', amount: 24000, category: 'Payroll', date: '2026-09-01' },
+          { id: 'e3', label: 'Equipment Maintenance', amount: 5000, category: 'Maintenance', date: '2026-09-03' },
+          { id: 'e4', label: 'Cleaning Supplies', amount: 2000, category: 'Operations', date: '2026-09-03' },
+        ],
+        staffList: [
+          { id: 's1', name: 'Vikram Patel', role: 'Manager', shift: 'Morning', status: 'active' },
+          { id: 's2', name: 'Sunita Rao', role: 'Trainer', shift: 'Evening', status: 'active' },
+          { id: 's3', name: 'Arjun Mehta', role: 'Trainer', shift: 'Morning', status: 'on-leave' },
+          { id: 's4', name: 'Kavya Nair', role: 'Receptionist', shift: 'Full-day', status: 'active' },
+        ],
+        studentList: [
+          { id: 'st1', name: 'Rahul Sharma', plan: 'Premium', status: 'active', joinDate: '2026-01-15' },
+          { id: 'st2', name: 'Priya Singh', plan: 'Basic', status: 'active', joinDate: '2026-03-10' },
+          { id: 'st3', name: 'Amit Verma', plan: 'Personal Training', status: 'active', joinDate: '2026-07-01' },
+        ],
+      },
+      {
+        id: 'b2', name: 'Uptown Plaza', location: '456 North Ave', status: 'active',
+        revenue: 85000, expenses: 32000, studentsCount: 320, staffCount: 8,
+        revenueItems: [
+          { id: 'r5', label: 'Membership Fee — Neha Gupta', amount: 3000, method: 'UPI', date: '2026-09-01' },
+          { id: 'r6', label: 'Store Sale — Gym Gloves', amount: 450, method: 'Cash', date: '2026-09-02' },
+        ],
+        expenseItems: [
+          { id: 'e5', label: 'Electricity Bill', amount: 9000, category: 'Utilities', date: '2026-09-01' },
+          { id: 'e6', label: 'Staff Salaries', amount: 18000, category: 'Payroll', date: '2026-09-01' },
+        ],
+        staffList: [
+          { id: 's5', name: 'Deepak Kumar', role: 'Manager', shift: 'Morning', status: 'active' },
+          { id: 's6', name: 'Pooja Iyer', role: 'Trainer', shift: 'Evening', status: 'active' },
+        ],
+        studentList: [
+          { id: 'st4', name: 'Neha Gupta', plan: 'Basic', status: 'active', joinDate: '2026-02-20' },
+        ],
+      },
+      {
+        id: 'b3', name: 'Westside Mall', location: '789 West Blvd', status: 'active',
+        revenue: 150000, expenses: 55000, studentsCount: 600, staffCount: 15,
+        revenueItems: [
+          { id: 'r7', label: 'Membership Fee — Ravi Teja', amount: 4500, method: 'Card', date: '2026-09-01' },
+          { id: 'r8', label: 'Personal Training — Sneha Roy', amount: 6000, method: 'UPI', date: '2026-09-03' },
+        ],
+        expenseItems: [
+          { id: 'e7', label: 'Electricity Bill', amount: 15000, category: 'Utilities', date: '2026-09-01' },
+          { id: 'e8', label: 'Staff Salaries', amount: 30000, category: 'Payroll', date: '2026-09-01' },
+          { id: 'e9', label: 'Marketing', amount: 8000, category: 'Marketing', date: '2026-09-02' },
+        ],
+        staffList: [
+          { id: 's7', name: 'Anita Sharma', role: 'Manager', shift: 'Morning', status: 'active' },
+          { id: 's8', name: 'Ravi Teja', role: 'Trainer', shift: 'Morning', status: 'active' },
+          { id: 's9', name: 'Sneha Roy', role: 'Trainer', shift: 'Evening', status: 'on-leave' },
+        ],
+        studentList: [
+          { id: 'st5', name: 'Ravi Teja', plan: 'Premium', status: 'active', joinDate: '2026-01-10' },
+          { id: 'st6', name: 'Sneha Roy', plan: 'Personal Training', status: 'expired', joinDate: '2025-12-01' },
+        ],
+      },
+    ];
+    return MockDB.handleCrud('mock_admin_branches', method, path, parsedBody, defaultBranches, 'branches') as unknown as ApiResponse<T>;
+  }
 
   // SUPERADMIN Stateful Interceptions
   if (path.includes('/superadmin/tickets')) return MockDB.handleCrud('mock_tickets', method, path, parsedBody, generate(10, i => ({ id: `tkt-${i}`, tenantName: `Gym Branch ${i + 1}`, subject: `Billing Issue ${i}`, status: i % 3 === 0 ? 'RESOLVED' : 'OPEN', priority: i % 4 === 0 ? 'HIGH' : 'LOW', createdAt: '2023-10-10', lastUpdated: '2023-10-12' }))) as unknown as ApiResponse<T>;
