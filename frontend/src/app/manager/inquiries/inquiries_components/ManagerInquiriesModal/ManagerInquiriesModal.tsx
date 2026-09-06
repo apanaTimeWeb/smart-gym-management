@@ -22,10 +22,27 @@ export default function ManagerInquiriesModal() {
     if (showModal) {
       import('@/app/manager/plans/plans_api/ManagerPlansApi').then(m => {
         m.plansApi.getAll().then(res => {
-          if (res.data) {
+          if (res.data && Array.isArray(res.data) && res.data.length > 0) {
             setPlans(res.data.map((p: { name: string }) => ({ label: p.name, value: p.name })));
+          } else {
+            // Fallback if API returns empty
+            setPlans([
+              { label: 'Basic Plan', value: 'Basic Plan' },
+              { label: 'Pro Plan', value: 'Pro Plan' },
+              { label: 'VIP Plan', value: 'VIP Plan' }
+            ]);
           }
+        }).catch(err => {
+          console.error("Failed to fetch plans:", err);
+          // Fallback if API fails
+          setPlans([
+            { label: 'Basic Plan', value: 'Basic Plan' },
+            { label: 'Pro Plan', value: 'Pro Plan' },
+            { label: 'VIP Plan', value: 'VIP Plan' }
+          ]);
         });
+      }).catch(err => {
+        console.error("Failed to import plansApi:", err);
       });
     }
   }, [showModal]);

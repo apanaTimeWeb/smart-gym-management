@@ -47,7 +47,6 @@ export default function ManagerInquiriesTable() {
                     <div className="h-4 bg-muted rounded w-24"></div>
                   </td>
                   <td className="px-5 py-4"><div className="h-4 bg-muted rounded w-32"></div></td>
-                  <td className="px-5 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
                   <td className="px-5 py-4"><div className="h-4 bg-muted rounded w-16"></div></td>
                   <td className="px-5 py-4"><div className="h-8 bg-muted rounded-lg w-28"></div></td>
                   <td className="px-5 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
@@ -122,7 +121,6 @@ export default function ManagerInquiriesTable() {
                     <p className="text-sm text-primary">{inq.phone}</p>
                     <p className="text-xs text-secondary">{inq.email || '—'}</p>
                   </td>
-                  <td className="px-5 py-3.5 text-sm text-primary">{inq.interest}</td>
                   <td className="px-5 py-3.5 text-sm text-secondary">{inq.source || '—'}</td>
                   <td className="px-5 py-3.5" onClick={e => e.stopPropagation()}>
                     <div className="w-32">
@@ -195,7 +193,7 @@ export default function ManagerInquiriesTable() {
             })}
             {inquiries.length === 0 && fetchState === FetchState.SUCCESS && (
               <tr>
-                <td colSpan={8} className="text-center py-12 text-sm text-secondary">
+                <td colSpan={7} className="text-center py-12 text-sm text-secondary">
                   {search || statusFilter !== 'All' ? 'No inquiries match the filter.' : 'No inquiries yet. Add your first lead!'}
                 </td>
               </tr>

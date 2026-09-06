@@ -45,7 +45,7 @@ export const INQUIRY_SOURCES = [
 
 
 export const INQUIRIES_TABLE_HEADERS = [
- 'Lead', 'Contact', 'Interest', 'Source', 'Status', 'Date', 'Actions'
+ 'Lead', 'Contact', 'Source', 'Status', 'Date', 'Actions'
 ];
 
 export const INQUIRY_MODAL_FIELDS = [
