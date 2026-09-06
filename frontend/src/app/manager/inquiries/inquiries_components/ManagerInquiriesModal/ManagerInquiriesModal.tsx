@@ -125,7 +125,9 @@ export default function ManagerInquiriesModal() {
                   <SearchableDropdown
                     value={field.value || ''}
                     onChange={field.onChange}
-                    options={Object.entries(INQUIRIES_STATUS_LABELS).map(([val, label]) => ({ label, value: val }))}
+                    options={Object.entries(INQUIRIES_STATUS_LABELS)
+                      .filter(([val]) => val !== 'CONVERTED')
+                      .map(([val, label]) => ({ label, value: val }))}
                   />
                 )}
               />
