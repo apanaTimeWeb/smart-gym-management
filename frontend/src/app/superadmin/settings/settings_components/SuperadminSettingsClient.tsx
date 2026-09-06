@@ -19,6 +19,8 @@ export default function SuperadminSettingsClient() {
     queryFn: () => superadminApi.settings.fetchSettings(),
   });
 
+  const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
+
   const responseData = fetchRes as { data?: PlatformSetting[] } | undefined;
   const settings = responseData?.data && responseData.data.length > 0 ? responseData.data : MOCK_PLATFORM_SETTINGS;
 
@@ -50,11 +52,11 @@ export default function SuperadminSettingsClient() {
     updateMutation.mutate({ id, value: newValue });
   };
 
-  if (isLoading) {
+  if (fetchState === 'loading') {
     return <div className="flex h-96 items-center justify-center"><Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" /></div>;
   }
   
-  if (isError) {
+  if (fetchState === 'error') {
     return <div className="flex h-96 items-center justify-center text-danger font-medium">Error loading settings.</div>;
   }
 

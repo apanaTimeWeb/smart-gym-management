@@ -12,7 +12,7 @@ import { MOCK_MIGRATIONS } from '@/app/superadmin/migrations/migrations_utils/Su
 export default function SuperadminMigrationsClient() {
   const [migrations, setMigrations] = useState<MigrationLog[]>([]);
 
-  const { data: queryData, isLoading, refetch } = useQuery({
+  const { data: queryData, isLoading, isError, refetch } = useQuery({
     queryKey: ['superadmin', 'migrations'],
     queryFn: async () => {
       try {
@@ -28,6 +28,8 @@ export default function SuperadminMigrationsClient() {
       return { migrations: MOCK_MIGRATIONS };
     }
   });
+
+  const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
 
   useEffect(() => {
     if (queryData?.migrations) {
@@ -86,7 +88,7 @@ export default function SuperadminMigrationsClient() {
     }
   };
 
-  if (isLoading) {
+  if (fetchState === 'loading') {
     return (
       <div className="p-6 space-y-4">
         {[1, 2, 3].map(i => (

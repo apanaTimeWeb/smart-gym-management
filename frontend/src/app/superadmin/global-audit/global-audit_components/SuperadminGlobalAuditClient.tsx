@@ -14,7 +14,7 @@ export default function SuperadminGlobalAuditClient() {
   const [search, setSearch] = useState('');
   const [severityFilter, setSeverityFilter] = useState<'ALL' | 'INFO' | 'WARNING' | 'CRITICAL'>('ALL');
 
-  const { data: queryData, isLoading } = useQuery({
+  const { data: queryData, isLoading, isError } = useQuery({
     queryKey: ['superadmin', 'global-audit'],
     queryFn: async () => {
       try {
@@ -30,6 +30,8 @@ export default function SuperadminGlobalAuditClient() {
       return { logs: MOCK_AUDIT_LOGS };
     }
   });
+
+  const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
 
   useEffect(() => {
     if (queryData?.logs) {
@@ -61,7 +63,7 @@ export default function SuperadminGlobalAuditClient() {
     toast.success('Exporting global audit logs as CSV...');
   };
 
-  if (isLoading) {
+  if (fetchState === 'loading') {
     return (
       <div className="p-6 space-y-4">
         {[1, 2, 3, 4, 5].map(i => (
@@ -82,7 +84,7 @@ export default function SuperadminGlobalAuditClient() {
         <div className="flex items-center gap-3">
           <select
             value={severityFilter}
-            onChange={(e) => setSeverityFilter(e.target.value as any)}
+            onChange={(e) => setSeverityFilter(e.target.value as 'ALL' | 'INFO' | 'WARNING' | 'CRITICAL')}
             className="flex items-center gap-2 px-4 py-2 bg-card border border-border text-foreground font-medium rounded-lg hover:bg-card-hover focus:outline-none focus:border-primary motion-safe:transition-colors"
           >
             <option value="ALL">All Severities</option>

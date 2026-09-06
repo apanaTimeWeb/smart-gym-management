@@ -20,6 +20,8 @@ export default function SuperadminPlansList() {
     queryFn: () => superadminApi.plans.fetchPlans(),
   });
 
+  const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
+
   const deleteMutation = useMutation({
     mutationFn: (id: string) => superadminApi.plans.deletePlan(id),
     onSuccess: (res) => {
@@ -33,7 +35,7 @@ export default function SuperadminPlansList() {
 
   const plans = fetchRes?.data || [];
 
-  if (isLoading) {
+  if (fetchState === 'loading') {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[...Array(3)].map((_, i) => (
@@ -43,7 +45,7 @@ export default function SuperadminPlansList() {
     );
   }
 
-  if (isError) {
+  if (fetchState === 'error') {
     return <div className="p-8 text-center text-danger">Error loading plans.</div>;
   }
 
