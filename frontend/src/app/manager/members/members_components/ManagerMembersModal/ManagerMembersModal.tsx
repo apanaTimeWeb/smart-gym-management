@@ -257,6 +257,16 @@ export default function ManagerMembersModal() {
                 className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-all duration-200 ${editId ? 'opacity-80 cursor-not-allowed' : ''}`}
               />
             </div>
+            
+            <div className="sm:col-span-2">
+              <label className="block text-sm font-medium text-secondary mb-0.5">Medical History / Notes (Optional)</label>
+              <textarea
+                rows={2}
+                placeholder="e.g. Asthma, Knee injury, High BP..."
+                {...register('medicalHistory')}
+                className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-all duration-200 border-border focus-visible:ring-primary"
+              />
+            </div>
           </div>
           
           <div className="flex justify-end gap-3 mt-8 pt-6 border-t border-border">

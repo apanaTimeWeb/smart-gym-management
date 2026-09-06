@@ -24,6 +24,7 @@ export function useManagerMembersMutations(
   const storeAssignWorkout = useManagerMembersStore((s) => s.assignWorkout);
   const storeRenewMember = useManagerMembersStore((s) => s.renewMember);
   const storeRecordPayment = useManagerMembersStore((s) => s.recordPayment);
+  const storeFreezeMember = useManagerMembersStore((s) => s.freezeMember);
 
   const saveMember = useCallback(async (data: MemberFormValues) => {
     try {
@@ -104,12 +105,24 @@ export function useManagerMembersMutations(
     }
   }, [selectedMember, setSelectedMember, showToast, storeRecordPayment, setShowPaymentModal]);
 
+  const freezeMember = useCallback(async (isFrozen: boolean) => {
+    if (!selectedMember) return;
+    try {
+      await storeFreezeMember(selectedMember.id, isFrozen);
+      setSelectedMember(prev => prev ? { ...prev, status: isFrozen ? 'FROZEN' : 'ACTIVE' } : null);
+      showToast(isFrozen ? 'Membership frozen successfully' : 'Membership unfrozen successfully', 'success');
+    } catch (err: unknown) {
+      showToast(err instanceof Error ? err.message : 'Failed to update membership status', 'error');
+    }
+  }, [selectedMember, setSelectedMember, showToast, storeFreezeMember]);
+
   return {
     saveMember,
     deleteMember,
     assignDiet,
     assignWorkout,
     renewMember,
-    recordPayment
+    recordPayment,
+    freezeMember
   };
 }

@@ -1,12 +1,12 @@
 // RESPONSIBILITY: Contains logic, types, or component definition for this module.
 'use client';
 
-import { MessageCircle, Mail } from 'lucide-react';
+import { MessageCircle, Mail, Snowflake, Stethoscope } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
 import { formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 
 export default function ManagerProfileOverview() {
- const { selectedMember, openMsg } = useMembersContext();
+  const { selectedMember, openMsg, freezeMember } = useMembersContext();
 
  if (!selectedMember) return null;
 
@@ -40,6 +40,13 @@ export default function ManagerProfileOverview() {
             </div>
           )}
         </div>
+          {selectedMember.medicalHistory && (
+            <div className="flex flex-col gap-1 p-3 bg-warning-bg rounded-lg border border-warning/20">
+              <span className="text-sm font-semibold text-warning flex items-center gap-1.5"><Stethoscope size={14}/> Medical History / Notes</span>
+              <span className="text-sm text-foreground opacity-90">{selectedMember.medicalHistory}</span>
+            </div>
+          )}
+        </div>
       </div>
  <div>
  <h3 className="font-semibold text-foreground mb-3">Quick Actions</h3>
@@ -56,6 +63,21 @@ export default function ManagerProfileOverview() {
  >
  <Mail size={14} /> Send Email
  </button>
+ {selectedMember.status !== 'FROZEN' ? (
+   <button 
+   onClick={() => freezeMember(true)} 
+   className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-info bg-info-bg border border-info/30 rounded-xl justify-center transition-opacity hover:opacity-90" 
+   >
+   <Snowflake size={14} /> Freeze Membership
+   </button>
+ ) : (
+   <button 
+   onClick={() => freezeMember(false)} 
+   className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-success bg-success-bg border border-success/30 rounded-xl justify-center transition-opacity hover:opacity-90" 
+   >
+   Unfreeze Membership
+   </button>
+ )}
  </div>
  </div>
  </div>

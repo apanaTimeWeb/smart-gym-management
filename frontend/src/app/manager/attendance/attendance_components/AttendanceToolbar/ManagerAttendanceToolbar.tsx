@@ -2,12 +2,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { RefreshCw, Plus, Search } from 'lucide-react';
+import { RefreshCw, Plus, Search, Download } from 'lucide-react';
 import { useAttendanceContext } from '@/app/manager/attendance/attendance_context/ManagerAttendanceContext';
 import { ATTENDANCE_TABS } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
 
 export default function AttendanceToolbar() {
-  const { tab, setTab, loadAll, setShowModal, search, setSearch, setCurrentPage } = useAttendanceContext();
+  const { tab, setTab, loadAll, setShowModal, search, setSearch, setCurrentPage, exportAttendance } = useAttendanceContext();
   const [prevSearch, setPrevSearch] = useState(search);
   const [localSearch, setLocalSearch] = useState(search);
 
@@ -59,6 +59,12 @@ export default function AttendanceToolbar() {
  className="flex justify-center items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary transition-colors w-full sm:w-auto"
  >
  <RefreshCw size={14} />
+ </button>
+ <button 
+ onClick={() => exportAttendance && exportAttendance()} 
+ className="flex justify-center items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-info/10 text-info transition-colors w-full sm:w-auto"
+ >
+ <Download size={14} /> Export
  </button>
  <button 
  onClick={() => setShowModal(true)} 

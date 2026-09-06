@@ -17,6 +17,7 @@ export const MemberSchema = z.object({
   pendingAmount: z.coerce.number().optional(),
   joinDate: z.string().optional(),
   expiryDate: z.string().optional(),
+  medicalHistory: z.string().optional(),
 });
 
 export type MemberFormValues = z.infer<typeof MemberSchema>;
@@ -25,6 +26,7 @@ export const MEMBERS_STATUS_COLORS: Record<string, { bg: string; text: string }>
  ACTIVE: { bg: 'bg-success-bg', text: 'text-success' },
  PENDING: { bg: 'bg-warning-bg', text: 'text-warning' },
  EXPIRED: { bg: 'bg-danger-bg', text: 'text-danger' },
+ FROZEN: { bg: 'bg-info-bg', text: 'text-info' },
 };
 
 export const MEMBERS_CYCLE_LABELS: Record<string, string> = {
@@ -39,7 +41,8 @@ export const MEMBER_STATUS_OPTIONS = [
   { label: 'All Status', value: 'All' },
   { label: 'Active', value: 'ACTIVE' },
   { label: 'Pending', value: 'PENDING' },
-  { label: 'Expired', value: 'EXPIRED' }
+  { label: 'Expired', value: 'EXPIRED' },
+  { label: 'Frozen', value: 'FROZEN' }
 ];
 
 export const GENDER_OPTIONS = [
@@ -63,6 +66,7 @@ export const EMPTY_MEMBER_FORM: MemberFormValues = {
   planId: '',
   joinDate: today.toISOString().split('T')[0],
   expiryDate: nextMonth.toISOString().split('T')[0],
+  medicalHistory: '',
 };
 
 export const formatCurrency = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');

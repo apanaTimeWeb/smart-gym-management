@@ -113,6 +113,7 @@ class MockDB {
         currentPayrolls[existingRecordIdx].staff = { name: s.name, role: s.role };
         if (currentPayrolls[existingRecordIdx].status === 'PENDING') {
           currentPayrolls[existingRecordIdx].amount = finalAmount;
+          currentPayrolls[existingRecordIdx].pendingAmount = finalAmount - (currentPayrolls[existingRecordIdx].paidAmount || 0);
         }
       } else {
         currentPayrolls.push({
@@ -121,6 +122,8 @@ class MockDB {
           staff: { name: s.name, role: s.role },
           month: reqMonth,
           amount: finalAmount,
+          paidAmount: 0,
+          pendingAmount: finalAmount,
           status: 'PENDING'
         });
       }
