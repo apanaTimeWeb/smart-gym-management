@@ -2,15 +2,17 @@
 // DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Shared API methods for the Trainer module (Rule 63).
 import { apiFetch } from '@/lib/api';
+import { MembersUrlConfig } from '@/app/trainer/members/members_url_config';
+import { LibraryUrlConfig } from '@/app/trainer/library/library_url_config';
 
 export const trainerSharedApi = {
   fetchMembersBasic: async (params?: Record<string, string>) => {
     const query = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch(`/api/trainer/members${query}`);
+    return apiFetch(`${MembersUrlConfig.BACKEND_API.BASE}${query}`);
   },
   fetchExercises: async (params?: Record<string, string>) => {
     const query = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch(`/api/trainer/library/exercises${query}`);
+    return apiFetch(`${LibraryUrlConfig.BACKEND_API.EXERCISES_BASE}${query}`);
   }
 };
 

@@ -69,10 +69,24 @@ export function useWorkoutLogic(): WorkoutContextType {
         workoutApi.getWorkouts(params),
         trainerSharedApi.fetchExercises(params) as Promise<any>,
       ]);
-      setWorkouts(wkRes.data.workouts || []);
-      setTotalWorkouts(wkRes.data.total || 0);
-      setExercises(exRes.data.exercises || []);
-      setTotalExercises(exRes.data.total || 0);
+      
+      let fetchedWorkouts = wkRes.data.workouts || [];
+      let fetchedExercises = exRes.data.exercises || [];
+      
+      if (debouncedSearch) {
+        const q = debouncedSearch.toLowerCase();
+        fetchedWorkouts = fetchedWorkouts.filter((w: Workout) => 
+          w.name.toLowerCase().includes(q) || w.focus?.toLowerCase().includes(q) || (w.tags && w.tags.some(t => t.toLowerCase().includes(q)))
+        );
+        fetchedExercises = fetchedExercises.filter((e: Exercise) => 
+          e.name.toLowerCase().includes(q) || e.category?.toLowerCase().includes(q) || (e.muscleGroup && e.muscleGroup.some(m => m.toLowerCase().includes(q)))
+        );
+      }
+      
+      setWorkouts(fetchedWorkouts);
+      setTotalWorkouts(wkRes.data.total || fetchedWorkouts.length || 0);
+      setExercises(fetchedExercises);
+      setTotalExercises(exRes.data.total || fetchedExercises.length || 0);
       setFetchState('success');
     } catch (e) {
       showToast((e as Error).message, 'error');

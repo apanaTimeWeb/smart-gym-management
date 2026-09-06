@@ -76,8 +76,22 @@ export function useLibraryLogic(initialData?: any | null): LibraryContextType {
         libraryApi.getExercises(params),
         libraryApi.getDietPlans(params),
       ]);
-      setExercises(exRes.data?.exercises || exRes.data || []);
-      setDietPlans(dietRes.data?.dietPlans || dietRes.data || []);
+      
+      let fetchedExercises = exRes.data?.exercises || exRes.data || [];
+      let fetchedDietPlans = dietRes.data?.dietPlans || dietRes.data || [];
+      
+      if (debouncedSearch) {
+        const q = debouncedSearch.toLowerCase();
+        fetchedExercises = fetchedExercises.filter((e: Exercise) => 
+          e.name.toLowerCase().includes(q) || e.category?.toLowerCase().includes(q) || (e.muscleGroup && e.muscleGroup.some(m => m.toLowerCase().includes(q)))
+        );
+        fetchedDietPlans = fetchedDietPlans.filter((d: DietPlan) => 
+          d.name.toLowerCase().includes(q) || d.goal?.toLowerCase().includes(q)
+        );
+      }
+      
+      setExercises(fetchedExercises);
+      setDietPlans(fetchedDietPlans);
       setFetchState('success');
     } catch (e) { 
       showToast((e as Error).message, 'error'); 

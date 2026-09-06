@@ -63,29 +63,35 @@ export function useAttendanceLogic(): AttendanceContextType {
   const loadAll = useCallback(async () => {
     setFetchState('loading');
     try {
-      // Mocking fetch success
-      const mockRecords: Attendance[] = [
-        { id: '1', date: new Date().toISOString(), checkIn: new Date().toISOString(), type: 'MEMBER', memberId: 1, member: { name: 'John Doe' } }
-      ];
-      const mockStats: any = { totalCheckIns: 1, memberCheckIns: 1, staffCheckIns: 0 };
-      const mockMembers: Member[] = [
-        { id: '1', name: 'John Doe', phone: '123', email: 'john@test.com', status: 'ACTIVE', billingCycle: '1 Month', paidAmount: 100, pendingAmount: 0, expiryDate: new Date().toISOString(), joinDate: new Date().toISOString(), planId: 'p1', gender: 'MALE', branch: 'Main Branch', createdAt: new Date().toISOString() }
-      ];
+      const params: Record<string, string> = {
+        limit: '10',
+        page: currentPage.toString()
+      };
+      if (debouncedSearch) params.search = debouncedSearch;
+      params.type = 'MEMBER';
 
-      let fetchedRecords = mockRecords;
+      const [attRes, statsRes, memRes] = await Promise.all([
+        attendanceApi.fetchAttendanceRecords(params) as unknown as Promise<ApiResponse<any>>,
+        attendanceApi.getTodayStats() as unknown as Promise<ApiResponse<any>>,
+        trainerSharedApi.fetchMembersBasic({ limit: '1000', status: 'active' }) as unknown as Promise<ApiResponse<{ members: Member[] }>>,
+      ]);
+
+      let fetchedRecords = attRes.data?.attendance || attRes.data?.attendances || attRes.data || [];
+      
+      fetchedRecords = fetchedRecords.filter((r: Attendance) => r.type === 'MEMBER');
+      
       if (debouncedSearch) {
         const q = debouncedSearch.toLowerCase();
-        fetchedRecords = fetchedRecords.filter(r => 
-          (r.member?.name && r.member.name.toLowerCase().includes(q))
+        fetchedRecords = fetchedRecords.filter((r: Attendance) => 
+          (r.member?.name && r.member.name.toLowerCase().includes(q)) || 
+          (r.staff?.name && r.staff.name.toLowerCase().includes(q))
         );
       }
-      // Assuming tab filters by type in this simple mock
-      fetchedRecords = fetchedRecords.filter(r => r.type === tab);
 
       setRecords(fetchedRecords);
-      setTotalRecords(1);
-      setTodayStats(mockStats);
-      setMembers(mockMembers);
+      setTotalRecords(attRes.data?.total || fetchedRecords.length || 0);
+      setTodayStats(statsRes.data);
+      setMembers(memRes.data?.members || memRes.data || []);
     } catch (e) { 
       showToast((e as Error).message, 'error'); 
     } finally { 
@@ -99,8 +105,14 @@ export function useAttendanceLogic(): AttendanceContextType {
   const markAttendance = useCallback(async (data: AttendanceFormValues) => {
     setSaving(true);
     try {
-      // Mocking mark attendance success
-      showToast('Attendance marked successfully', 'success');
+      const res = await attendanceApi.createAttendanceRecord({
+        memberId: data.memberId,
+        staffId: data.staffId,
+        date: data.date,
+        checkIn: data.checkIn,
+        type: data.type
+      });
+      showToast((res as { message?: string }).message || 'Attendance marked successfully', 'success');
       setShowModal(false);
       setForm(EMPTY_ATTENDANCE_FORM);
       await loadAll();
