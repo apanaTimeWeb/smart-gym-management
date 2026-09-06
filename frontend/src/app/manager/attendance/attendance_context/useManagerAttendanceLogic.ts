@@ -94,6 +94,13 @@ export function useManagerAttendanceLogic(): AttendanceContextType {
         );
       }
 
+      // Sort by newest first
+      fetchedRecords.sort((a: any, b: any) => {
+        const dateA = new Date(a.createdAt || a.date).getTime();
+        const dateB = new Date(b.createdAt || b.date).getTime();
+        return dateB - dateA;
+      });
+
       setRecords(fetchedRecords);
       setTotalRecords(attRes.data.total || 0);
       setTodayStats(statsRes.data);

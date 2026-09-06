@@ -17,6 +17,8 @@ export default function AttendanceTable() {
   );
   
   const totalPages = Math.ceil((tab === 'All' ? totalRecords : filteredRecords.length) / MANAGER_ITEMS_PER_PAGE) || 1;
+  const startIndex = (currentPage - 1) * MANAGER_ITEMS_PER_PAGE;
+  const paginatedRecords = filteredRecords.slice(startIndex, startIndex + MANAGER_ITEMS_PER_PAGE);
 
   return (
  <div className="p-5">
@@ -50,7 +52,7 @@ export default function AttendanceTable() {
  </tr>
  </thead>
   <tbody className="divide-y divide-border">
-  {filteredRecords.map(r => (
+  {paginatedRecords.map(r => (
  <tr key={r.id} className="hover:bg-primary-subtle transition-colors">
  <td className="px-4 py-3 whitespace-nowrap">
  <div className="flex items-center gap-2">
