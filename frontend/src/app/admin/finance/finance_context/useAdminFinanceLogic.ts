@@ -23,6 +23,7 @@ export function useAdminFinanceLogic(initialData?: FinanceInitialData | null) {
   // URL State
   const search = searchParams.get('search') || '';
   const methodFilter = searchParams.get('method') || 'All';
+  const statusFilter = searchParams.get('status') || 'All';
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
   const debouncedSearch = useDebounce(search, 300);
 
@@ -37,6 +38,7 @@ export function useAdminFinanceLogic(initialData?: FinanceInitialData | null) {
   const setSearch = useCallback((val: string) => setUrlParam('search', val || null), [setUrlParam]);
   const setCurrentPage = useCallback((val: number) => setUrlParam('page', val.toString()), [setUrlParam]);
   const setMethodFilter = useCallback((val: string) => setUrlParam('method', val === 'All' ? null : val), [setUrlParam]);
+  const setStatusFilter = useCallback((val: string) => setUrlParam('status', val === 'All' ? null : val), [setUrlParam]);
 
   const showToast = useCallback((msg: string, t: ToastType) => {
     if (t === 'error') toast.error(msg);
@@ -97,6 +99,14 @@ export function useAdminFinanceLogic(initialData?: FinanceInitialData | null) {
       p.invoiceNo.toLowerCase().includes(debouncedSearch.toLowerCase())
     );
   }
+  
+  if (methodFilter !== 'All') {
+    fetchedPayments = fetchedPayments.filter(p => p.method === methodFilter);
+  }
+  
+  if (statusFilter !== 'All') {
+    fetchedPayments = fetchedPayments.filter(p => p.status === statusFilter);
+  }
 
   return {
     payments: fetchedPayments,
@@ -117,7 +127,9 @@ export function useAdminFinanceLogic(initialData?: FinanceInitialData | null) {
     setCurrentPage,
     savePayment,
     methodFilter,
-    setMethodFilter
+    setMethodFilter,
+    statusFilter,
+    setStatusFilter
   };
 }
 
