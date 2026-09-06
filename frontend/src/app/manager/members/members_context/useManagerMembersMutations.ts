@@ -24,16 +24,20 @@ export function useManagerMembersMutations(
   const storeAssignWorkout = useManagerMembersStore((s) => s.assignWorkout);
   const storeRenewMember = useManagerMembersStore((s) => s.renewMember);
   const storeRecordPayment = useManagerMembersStore((s) => s.recordPayment);
+  const storeFreezeMember = useManagerMembersStore((s) => s.freezeMember);
 
   const saveMember = useCallback(async (data: MemberFormValues) => {
     try {
       const res = await storeSaveMember(data, editId);
       showToast(res.message, 'success');
       setShowAddModal(false);
+      if (editId && selectedMember?.id === editId) {
+        setSelectedMember(prev => prev ? { ...prev, ...data } as Member : null);
+      }
     } catch (err: unknown) { 
       showToast(err instanceof Error ? err.message : 'Save failed', 'error'); 
     }
-  }, [editId, showToast, storeSaveMember, setShowAddModal]);
+  }, [editId, selectedMember, setSelectedMember, showToast, storeSaveMember, setShowAddModal]);
 
   const deleteMember = useCallback(async (id: string) => {
     const isConfirmed = await confirm({ title: 'Delete Member', message: 'Are you sure you want to delete this member? This action cannot be undone.', confirmText: 'Delete', type: 'danger' });
@@ -77,10 +81,14 @@ export function useManagerMembersMutations(
       const res = await storeRenewMember(selectedMember.id, data);
       showToast(res.message, 'success');
       setShowRenewModal(false);
+      setSelectedMember(prev => prev ? {
+        ...prev,
+        ...(res as any).data
+      } as Member : null);
     } catch (err: unknown) {
       showToast(err instanceof Error ? err.message : 'Renewal failed', 'error');
     }
-  }, [selectedMember, showToast, storeRenewMember, setShowRenewModal]);
+  }, [selectedMember, setSelectedMember, showToast, storeRenewMember, setShowRenewModal]);
 
   const recordPayment = useCallback(async (data: { amount: number; method: string }) => {
     if (!selectedMember) return;
@@ -88,10 +96,25 @@ export function useManagerMembersMutations(
       const res = await storeRecordPayment(selectedMember.id, data);
       showToast(res.message, 'success');
       setShowPaymentModal(false);
+      setSelectedMember(prev => prev ? {
+        ...prev,
+        ...(res as any).data
+      } as Member : null);
     } catch (err: unknown) {
       showToast(err instanceof Error ? err.message : 'Payment recording failed', 'error');
     }
-  }, [selectedMember, showToast, storeRecordPayment, setShowPaymentModal]);
+  }, [selectedMember, setSelectedMember, showToast, storeRecordPayment, setShowPaymentModal]);
+
+  const freezeMember = useCallback(async (isFrozen: boolean) => {
+    if (!selectedMember) return;
+    try {
+      await storeFreezeMember(selectedMember.id, isFrozen);
+      setSelectedMember(prev => prev ? { ...prev, status: isFrozen ? 'FROZEN' : 'ACTIVE' } : null);
+      showToast(isFrozen ? 'Membership frozen successfully' : 'Membership unfrozen successfully', 'success');
+    } catch (err: unknown) {
+      showToast(err instanceof Error ? err.message : 'Failed to update membership status', 'error');
+    }
+  }, [selectedMember, setSelectedMember, showToast, storeFreezeMember]);
 
   return {
     saveMember,
@@ -99,6 +122,7 @@ export function useManagerMembersMutations(
     assignDiet,
     assignWorkout,
     renewMember,
-    recordPayment
+    recordPayment,
+    freezeMember
   };
 }

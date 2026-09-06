@@ -94,6 +94,13 @@ export function useManagerAttendanceLogic(): AttendanceContextType {
         );
       }
 
+      // Sort by newest first
+      fetchedRecords.sort((a: any, b: any) => {
+        const dateA = new Date(a.createdAt || a.date).getTime();
+        const dateB = new Date(b.createdAt || b.date).getTime();
+        return dateB - dateA;
+      });
+
       setRecords(fetchedRecords);
       setTotalRecords(attRes.data.total || 0);
       setTodayStats(statsRes.data);
@@ -116,6 +123,31 @@ export function useManagerAttendanceLogic(): AttendanceContextType {
     members, staff, setSaving, setShowModal, setForm, showToast, loadAll
   );
 
+  const exportAttendance = useCallback(() => {
+    // Basic CSV Export mockup
+    const csvContent = [
+      ['Date', 'Name', 'Role', 'Status', 'Check In', 'Check Out'],
+      ...records.map(r => [
+        r.date, 
+        r.member?.name || r.staff?.name || 'Unknown', 
+        r.memberId ? 'Member' : 'Staff', 
+        r.status || 'Present', 
+        r.checkIn || '-', 
+        r.checkOut || '-'
+      ])
+    ].map(e => e.join(',')).join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `attendance_export_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showToast('Export successful', 'success');
+  }, [records, showToast]);
+
   return {
     records, totalRecords, todayStats, members, staff,
     fetchState, saving, toast,
@@ -126,6 +158,6 @@ export function useManagerAttendanceLogic(): AttendanceContextType {
     calendarUser, setCalendarUser,
     form, setForm,
     showToast, hideToast,
-    loadAll, markAttendance
+    loadAll, markAttendance, exportAttendance
   };
 }

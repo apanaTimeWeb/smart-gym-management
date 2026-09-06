@@ -3,7 +3,7 @@
 
 import { useSalesContext } from '@/app/manager/sales/sales_context/ManagerSalesContext';
 import { 
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
   AreaChart, Area
 } from 'recharts';
 import { Loader2 } from 'lucide-react';
@@ -41,9 +41,18 @@ export default function ManagerSalesOverview() {
       <Tooltip 
         cursor={{ fill: '#f1f5f9', opacity: 0.5 }}
         contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', backgroundColor: 'var(--bg-card)', color: 'var(--text-primary)' }}
-        formatter={(value: number | string | readonly (string | number)[] | undefined) => [`₹${Number(Array.isArray(value) ? value[0] : (value || 0)).toLocaleString()}`, 'Revenue']}
+        formatter={(value: number | string | readonly (string | number)[] | undefined, name: any) => {
+          const label = name === 'revenue' ? 'Memberships' : name === 'storeRevenue' ? 'Store POS' : name;
+          return [`₹${Number(Array.isArray(value) ? value[0] : (value || 0)).toLocaleString()}`, label];
+        }}
       />
-      <Bar dataKey="revenue" fill="#4F46E5" radius={[6, 6, 0, 0]} barSize={40} />
+      <Legend 
+        verticalAlign="top" 
+        height={36}
+        formatter={(value) => <span className="text-secondary text-sm font-medium">{value === 'revenue' ? 'Memberships' : value === 'storeRevenue' ? 'Store POS' : value}</span>}
+      />
+      <Bar dataKey="revenue" stackId="a" fill="#4F46E5" barSize={40} />
+      <Bar dataKey="storeRevenue" stackId="a" fill="#10B981" radius={[6, 6, 0, 0]} barSize={40} />
     </BarChart>
   </ResponsiveContainer>
  </div>

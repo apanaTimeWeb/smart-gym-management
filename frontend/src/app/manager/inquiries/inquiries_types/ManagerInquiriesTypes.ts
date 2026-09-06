@@ -71,6 +71,7 @@ export interface Inquiry {
   id: string; name: string; phone: string; email?: string;
   interest: string; status: string; source?: string;
   notes?: string; followUpDate?: string; createdAt: string;
+  followUpLogs?: { date: string; note: string }[];
 }
 
 export interface InquiryStats {

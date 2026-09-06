@@ -4,11 +4,12 @@
 import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
 import { PAYROLL_TABLE_HEADERS } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, Search, Banknote } from 'lucide-react';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
+import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
 
 export default function ManagerHrPayrollTable() {
-  const { payrolls, search, currentPage, setCurrentPage, markPayrollPaid, fetchState, payrollMonth } = useHrContext();
+  const { search, setSearch, payrollMonth, setPayrollMonth, payrolls, markPayrollPaid, setPaymentModal, currentPage, setCurrentPage, fetchState } = useHrContext();
 
   const filtered = payrolls.filter(p => {
     const nameMatch = (p.staff?.name || '').toLowerCase().includes(search.toLowerCase());
@@ -70,7 +71,7 @@ export default function ManagerHrPayrollTable() {
           <thead className="bg-input text-secondary">
             <tr>
               {PAYROLL_TABLE_HEADERS.map(h => (
-                <th key={h} className="text-left text-xs font-semibold uppercase tracking-wider px-4 py-3">
+                <th key={h} className={`text-xs font-semibold uppercase tracking-wider px-4 py-3 ${['Total Amount', 'Paid Amount', 'Pending'].includes(h) ? 'text-right' : 'text-left'}`}>
                   {h}
                 </th>
               ))}
@@ -89,7 +90,9 @@ export default function ManagerHrPayrollTable() {
                   </div>
                 </td>
                 <td className="px-4 py-3 text-sm text-primary">{p.month}</td>
-                <td className="px-4 py-3 text-sm font-bold text-success">{(p.amount || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
+                <td className="px-4 py-3 text-sm font-bold text-foreground text-right">{(p.amount || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
+                <td className="px-4 py-3 text-sm font-bold text-success text-right">{(p.paidAmount || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
+                <td className="px-4 py-3 text-sm font-bold text-danger text-right">{(p.pendingAmount || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
                 <td className="px-4 py-3">
                   <span 
                     className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
@@ -105,10 +108,10 @@ export default function ManagerHrPayrollTable() {
                 <td className="px-4 py-3 text-right">
                   {p.status !== 'Paid' && (
                     <button 
-                      onClick={() => markPayrollPaid(p.id)}
-                      className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:bg-primary/90 transition-colors"
+                      onClick={() => setPaymentModal({ payrollId: p.id, staffName: p.staff?.name || `Staff #${p.staffId}`, pendingAmount: p.pendingAmount || p.amount })}
+                      className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:bg-primary/90 transition-colors ml-auto"
                     >
-                      <CheckCircle2 size={16} /> Mark Paid
+                      <Banknote size={16} /> Pay Salary
                     </button>
                   )}
                 </td>
@@ -116,8 +119,12 @@ export default function ManagerHrPayrollTable() {
             ))}
             {currentData.length === 0 && (
               <tr>
-                <td colSpan={6} className="text-center py-10 text-sm text-secondary">
-                  No payroll records found.
+                <td colSpan={6} className="p-0 border-b-0">
+                  <ManagerEmptyState 
+                    icon={<Banknote size={32} />}
+                    title="No payroll records found"
+                    subtitle="There are no payroll records for the selected filters."
+                  />
                 </td>
               </tr>
             )}

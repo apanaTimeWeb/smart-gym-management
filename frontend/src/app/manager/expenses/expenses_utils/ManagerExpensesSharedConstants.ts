@@ -8,10 +8,22 @@ export const ExpenseSchema = z.object({
   date: z.string().min(1, 'Date is required'),
   status: z.enum(['PAID', 'PENDING']),
   referenceNo: z.string().optional(),
-  notes: z.string().optional()
+  notes: z.string().optional(),
+  receiptUrl: z.string().url('Must be a valid URL').optional().or(z.literal(''))
 });
 
 export type ExpenseFormValues = z.infer<typeof ExpenseSchema>;
+
+export const EMPTY_EXPENSE_FORM = {
+  title: '',
+  category: 'Miscellaneous',
+  amount: 0,
+  date: '',
+  status: 'PENDING',
+  referenceNo: '',
+  notes: '',
+  receiptUrl: ''
+};
 
 export const EXPENSE_CATEGORIES = [
   'Electricity',

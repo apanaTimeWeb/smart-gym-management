@@ -3,20 +3,21 @@ import type { PlanWithCustom } from '@/app/manager/members/members_types/Manager
 import { z } from 'zod';
 
 export const MemberSchema = z.object({
-  name: z.string().min(2, "Name is required").regex(/^[A-Za-z\s]+$/, "Only alphabets allowed"),
+  name: z.string().min(2, "Name is required"),
   email: z.string().email("Invalid email address").optional().or(z.literal('')),
   phone: z.string().regex(/^\d{10}$/, "Phone number must be exactly 10 digits"),
   address: z.string().optional(),
   aadhaar: z.string().regex(/^\d{12}$/, "Aadhaar must be exactly 12 digits").optional().or(z.literal('')),
   gender: z.enum(['MALE', 'FEMALE', 'OTHER']),
   billingCycle: z.string(),
-  customDays: z.number().min(1, "Please enter valid days").optional(),
+  customDays: z.coerce.number().min(1, "Please enter valid days").optional().or(z.literal(0)),
   planId: z.string().min(1, "Please select a plan"),
-  totalAmount: z.number().min(0).optional(),
-  paidAmount: z.number().min(0, "Amount must be valid").optional(),
-  pendingAmount: z.number().optional(),
+  totalAmount: z.coerce.number().min(0).optional(),
+  paidAmount: z.coerce.number().min(0, "Amount must be valid").optional(),
+  pendingAmount: z.coerce.number().optional(),
   joinDate: z.string().optional(),
   expiryDate: z.string().optional(),
+  medicalHistory: z.string().optional(),
 });
 
 export type MemberFormValues = z.infer<typeof MemberSchema>;
@@ -25,6 +26,7 @@ export const MEMBERS_STATUS_COLORS: Record<string, { bg: string; text: string }>
  ACTIVE: { bg: 'bg-success-bg', text: 'text-success' },
  PENDING: { bg: 'bg-warning-bg', text: 'text-warning' },
  EXPIRED: { bg: 'bg-danger-bg', text: 'text-danger' },
+ FROZEN: { bg: 'bg-info-bg', text: 'text-info' },
 };
 
 export const MEMBERS_CYCLE_LABELS: Record<string, string> = {
@@ -39,7 +41,8 @@ export const MEMBER_STATUS_OPTIONS = [
   { label: 'All Status', value: 'All' },
   { label: 'Active', value: 'ACTIVE' },
   { label: 'Pending', value: 'PENDING' },
-  { label: 'Expired', value: 'EXPIRED' }
+  { label: 'Expired', value: 'EXPIRED' },
+  { label: 'Frozen', value: 'FROZEN' }
 ];
 
 export const GENDER_OPTIONS = [
@@ -63,6 +66,7 @@ export const EMPTY_MEMBER_FORM: MemberFormValues = {
   planId: '',
   joinDate: today.toISOString().split('T')[0],
   expiryDate: nextMonth.toISOString().split('T')[0],
+  medicalHistory: '',
 };
 
 export const formatCurrency = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');

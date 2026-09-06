@@ -10,6 +10,7 @@ export interface Expense {
   status: ExpenseStatus;
   referenceNo?: string;
   notes?: string;
+  receiptUrl?: string;
   createdAt: string;
   updatedAt?: string;
 }

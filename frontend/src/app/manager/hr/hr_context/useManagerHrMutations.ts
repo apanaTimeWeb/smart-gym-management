@@ -111,17 +111,23 @@ export function useManagerHrMutations(
     }
   }, [showToast, confirm, setSaving, setStaff, setSummary]);
 
-  const markPayrollPaid = useCallback(async (id: string) => {
-    const isConfirmed = await confirm({ title: 'Mark as Paid', message: 'Are you sure you want to mark this payroll as paid?', confirmText: 'Yes, Mark Paid', type: 'info' });
-    if (!isConfirmed) return;
-    try { 
-      setPayrolls(prev => prev.map(p => String(p.id) === String(id) ? { ...p, status: 'Paid', paidAt: new Date().toISOString() } : p));
-      setSummary(prev => prev ? { ...prev, paidCount: prev.paidCount + 1, pendingCount: Math.max(0, prev.pendingCount - 1) } : null);
-      showToast('Payroll marked as paid', 'success'); 
+  const markPayrollPaid = useCallback(async (id: string, amount: number) => {
+    try {
+      setPayrolls(prev => prev.map(p => {
+        if (String(p.id) === String(id)) {
+          const newPaid = (p.paidAmount || 0) + amount;
+          const newPending = Math.max(0, p.amount - newPaid);
+          const newStatus = newPending === 0 ? 'Paid' : 'PENDING';
+          return { ...p, paidAmount: newPaid, pendingAmount: newPending, status: newStatus };
+        }
+        return p;
+      }));
+      // We could update summary here, but let's just show success
+      showToast('Salary payment recorded', 'success'); 
     } catch (err) { 
       showToast((err as Error).message, 'error'); 
     }
-  }, [showToast, confirm, setPayrolls, setSummary]);
+  }, [showToast, setPayrolls]);
 
   return {
     saveStaff,

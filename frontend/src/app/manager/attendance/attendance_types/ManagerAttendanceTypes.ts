@@ -63,4 +63,5 @@ export interface AttendanceContextType {
  
   loadAll: () => Promise<void>;
   markAttendance: (data: typeof EMPTY_ATTENDANCE_FORM) => Promise<void>;
+  exportAttendance: () => void;
 }

@@ -49,7 +49,16 @@ export default function RootLayout({
             shadow="0 0 10px #FACC15,0 0 5px #FACC15"
           />
           {children}
-          <Toaster position="bottom-right" />
+          <Toaster 
+            position="top-center" 
+            containerStyle={{
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              bottom: 'auto',
+              right: 'auto'
+            }}
+          />
         </ThemeProvider>
       </body>
     </html>

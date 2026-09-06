@@ -13,7 +13,7 @@ import ManagerProfileWorkout from '@/app/manager/members/members_components/Memb
 import ManagerProfileDiet from '@/app/manager/members/members_components/MemberProfile/ManagerProfileDiet';
 
 export default function ManagerMemberProfile() {
-  const { selectedMember, setSelectedMember, profileTab, setProfileTab, openEdit, openMsg } = useMembersContext();
+  const { selectedMember, setSelectedMember, profileTab, setProfileTab, openEdit, openMsg, setShowRenewModal } = useMembersContext();
   const loadMemberProfile = useManagerMembersStore(s => s.loadMemberProfile);
 
   if (!selectedMember) return null;
@@ -62,7 +62,7 @@ export default function ManagerMemberProfile() {
                 <Edit size={14} /> Edit
               </button>
               <button
-                onClick={() => openEdit({ ...selectedMember, status: 'ACTIVE' })}
+                onClick={() => setShowRenewModal(true)}
                 className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border border-border rounded-xl hover:bg-primary/10 text-primary transition-all duration-200 active:scale-95 bg-primary/5"
               >
                 Renew Plan
@@ -109,11 +109,10 @@ export default function ManagerMemberProfile() {
               <button
                 key={t}
                 onClick={() => { setProfileTab(t as "overview" | "attendance" | "payments" | "workout" | "diet"); if (t === 'payments') loadMemberProfile(selectedMember.id); }}
-                className={`px-5 py-3.5 text-sm font-medium transition-all duration-200 border-b-2 ${
-                  profileTab === t
+                className={`px-5 py-3.5 text-sm font-medium transition-all duration-200 border-b-2 ${profileTab === t
                     ? 'text-primary bg-primary-subtle border-primary'
                     : 'border-transparent text-secondary hover:text-primary'
-                }`}
+                  }`}
               >
                 {label}
               </button>

@@ -51,7 +51,7 @@ export const EMPTY_PAYROLL_FORM = {
 
 export const STAFF_TABLE_HEADERS = ['Name', 'Role', 'Status', 'Phone', 'Salary', 'Joined'];
 
-export const PAYROLL_TABLE_HEADERS = ['Staff', 'Month', 'Amount', 'Status', 'Paid On'];
+export const PAYROLL_TABLE_HEADERS = ['Staff', 'Month', 'Total Amount', 'Paid Amount', 'Pending', 'Status', 'Paid On'];
 
 export const GENDER_OPTIONS = [
  { label: 'Male', value: 'MALE' },

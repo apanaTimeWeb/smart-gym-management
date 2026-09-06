@@ -4,12 +4,16 @@ import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerShare
 
 export const InquirySchema = z.object({
   name: z.string().min(2, "Name is required"),
-  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  phone: z.string().regex(/^\d{10}$/, "Phone number must be exactly 10 digits"),
   email: z.string().email("Invalid email address").optional().or(z.literal('')),
   interest: z.string().min(2, "Interest is required"),
   status: z.enum(['NEW', 'FOLLOW_UP', 'CONVERTED', 'LOST']),
   source: z.string(),
-  notes: z.string().optional()
+  notes: z.string().optional(),
+  followUpLogs: z.array(z.object({
+    date: z.string(),
+    note: z.string()
+  })).optional()
 });
 
 export type InquiryFormValues = z.infer<typeof InquirySchema>;
@@ -28,7 +32,7 @@ export const INQUIRIES_STATUS_STYLES: Record<string, { bg: string; text: string 
   LOST: { bg: 'bg-danger-bg', text: 'text-danger' },
 };
 
-export const EMPTY_INQUIRY_FORM = { 
+export const EMPTY_INQUIRY_FORM: InquiryFormValues = { 
  name: '', 
  phone: '', 
  email: '', 
@@ -45,7 +49,7 @@ export const INQUIRY_SOURCES = [
 
 
 export const INQUIRIES_TABLE_HEADERS = [
- 'Lead', 'Contact', 'Interest', 'Source', 'Status', 'Date', 'Actions'
+ 'Lead', 'Contact', 'Source', 'Status', 'Date', 'Actions'
 ];
 
 export const INQUIRY_MODAL_FIELDS = [
