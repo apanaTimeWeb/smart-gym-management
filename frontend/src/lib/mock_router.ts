@@ -148,9 +148,51 @@ export async function routeMockRequest<T>(
     let role = 'ADMIN';
     let email = 'admin@gymsmart.com';
     let name = 'Demo Admin';
-    if (bodyStr.includes('demo_admin')) { role = 'SUPERADMIN'; email = 'demo_admin@gym.com'; name = 'Super Admin'; }
-    else if (bodyStr.includes('manager@')) { role = 'MANAGER'; email = 'manager@gymsmart.com'; name = 'Demo Manager'; }
-    else if (bodyStr.includes('trainer@')) { role = 'TRAINER'; email = 'trainer@gymsmart.com'; name = 'Demo Trainer'; }
+    let isSuspended = false;
+    let suspensionMsg = '';
+
+    if (bodyStr.includes('demo_admin')) { 
+      role = 'SUPERADMIN'; email = 'demo_admin@gym.com'; name = 'Super Admin'; 
+    }
+    else if (bodyStr.includes('manager@')) { 
+      role = 'MANAGER'; email = 'manager@gymsmart.com'; name = 'Demo Manager'; 
+      // Check HR Staff mock DB
+      const staffList = MockDB.getCollection('mock_admin_staff', []);
+      const manager = staffList.find((s: any) => s.email === email);
+      if (manager && manager.isActive === false) {
+        isSuspended = true;
+        suspensionMsg = 'Your account has been suspended by the Admin.';
+      }
+    }
+    else if (bodyStr.includes('trainer@')) { 
+      role = 'TRAINER'; email = 'trainer@gymsmart.com'; name = 'Demo Trainer'; 
+      // Check HR Staff mock DB
+      const staffList = MockDB.getCollection('mock_admin_staff', []);
+      const trainer = staffList.find((s: any) => s.email === email);
+      if (trainer && trainer.isActive === false) {
+        isSuspended = true;
+        suspensionMsg = 'Your account has been suspended by the Admin.';
+      }
+    } else {
+      // Default Admin Login
+      const gymsList = MockDB.getCollection('mock_superadmin_gyms', []);
+      // Admin owns demo-tenant-id which might be gym-1234 or similar in the mock DB.
+      // If we don't know the exact ID, we check if ANY gym owned by sarah@flexfitness.com (or adminEmail) is suspended.
+      // Usually, admin logs in to gym-1234. Let's check for gym-1234 specifically or fallback to adminEmail.
+      const gym = gymsList.find((g: any) => g.adminEmail === email || g.id === 'gym-1234');
+      if (gym && gym.status === 'SUSPENDED') {
+        isSuspended = true;
+        suspensionMsg = 'Your gym account has been suspended by the Superadmin.';
+      }
+    }
+
+    if (isSuspended) {
+      return {
+        success: false,
+        message: suspensionMsg,
+        data: null
+      } as unknown as ApiResponse<T>;
+    }
     
     return {
       success: true,
