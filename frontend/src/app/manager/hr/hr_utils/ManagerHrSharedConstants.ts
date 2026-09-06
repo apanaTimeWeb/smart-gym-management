@@ -43,7 +43,11 @@ export const PayrollSchema = z.object({
   staffId: z.string().min(1, "Please select staff"),
   month: z.string().min(1, "Month is required"),
   amount: z.number().min(0, "Amount must be positive"),
+  paidAmount: z.number().min(0, "Paid amount cannot be negative").default(0),
   notes: z.string().optional()
+}).refine(data => data.paidAmount <= data.amount, {
+  message: "Paid amount cannot exceed total amount",
+  path: ['paidAmount']
 });
 
 export type PayrollFormValues = z.infer<typeof PayrollSchema>;
@@ -52,12 +56,13 @@ export const EMPTY_PAYROLL_FORM = {
   staffId: '',
   month: new Date().toISOString().slice(0, 7),
   amount: 0,
+  paidAmount: 0,
   notes: ''
 } as unknown as PayrollFormValues;
 
 export const STAFF_TABLE_HEADERS = ['Name', 'Role', 'Status', 'Phone', 'Salary', 'Advance', 'Joined'];
 
-export const PAYROLL_TABLE_HEADERS = ['Staff', 'Month', 'Total Amount', 'Paid Amount', 'Pending', 'Status', 'Paid On'];
+export const PAYROLL_TABLE_HEADERS = ['Staff', 'Month', 'Base Salary', 'Net Payable', 'Paid Amount', 'Pending', 'Status', 'Paid On'];
 
 export const GENDER_OPTIONS = [
  { label: 'Male', value: 'MALE' },

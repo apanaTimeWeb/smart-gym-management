@@ -9,7 +9,7 @@ import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerShare
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
 
 export default function ManagerHrPayrollTable() {
-  const { search, setSearch, payrollMonth, setPayrollMonth, payrolls, markPayrollPaid, setPaymentModal, currentPage, setCurrentPage, fetchState } = useHrContext();
+  const { search, setSearch, payrollMonth, setPayrollMonth, payrolls, markPayrollPaid, setPaymentModal, currentPage, setCurrentPage, fetchState, staff } = useHrContext();
 
   const filtered = payrolls.filter(p => {
     const nameMatch = (p.staff?.name || '').toLowerCase().includes(search.toLowerCase());
@@ -52,6 +52,7 @@ export default function ManagerHrPayrollTable() {
                   </td>
                   <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-16"></div></td>
                   <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-24"></div></td>
+                  <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-24"></div></td>
                   <td className="px-4 py-4"><div className="h-5 bg-muted rounded-full w-16"></div></td>
                   <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
                   <td className="px-4 py-4 text-right"><div className="h-8 bg-muted rounded-lg w-24 ml-auto"></div></td>
@@ -71,7 +72,7 @@ export default function ManagerHrPayrollTable() {
           <thead className="bg-input text-secondary">
             <tr>
               {PAYROLL_TABLE_HEADERS.map(h => (
-                <th key={h} className={`text-xs font-semibold uppercase tracking-wider px-4 py-3 ${['Total Amount', 'Paid Amount', 'Pending'].includes(h) ? 'text-right' : 'text-left'}`}>
+                <th key={h} className={`text-xs font-semibold uppercase tracking-wider px-4 py-3 ${['Base Salary', 'Net Payable', 'Paid Amount', 'Pending'].includes(h) ? 'text-right' : 'text-left'}`}>
                   {h}
                 </th>
               ))}
@@ -90,6 +91,9 @@ export default function ManagerHrPayrollTable() {
                   </div>
                 </td>
                 <td className="px-4 py-3 text-sm text-primary">{p.month}</td>
+                <td className="px-4 py-3 text-sm font-medium text-right">
+                  {((staff.find(s => String(s.id) === String(p.staffId))?.salary) || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}
+                </td>
                 <td className="px-4 py-3 text-sm font-bold text-foreground text-right">{(p.amount || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
                 <td className="px-4 py-3 text-sm font-bold text-success text-right">{(p.paidAmount || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
                 <td className="px-4 py-3 text-sm font-bold text-danger text-right">{(p.pendingAmount || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>

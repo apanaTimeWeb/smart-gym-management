@@ -54,6 +54,9 @@ export function useManagerHrMutations(
       const staffMember = staff.find(s => String(s.id) === String(data.staffId));
       
       const payrollAmount = Number(data.amount || 0);
+      const paidAmount = Number(data.paidAmount || 0);
+      const pendingAmount = Math.max(0, payrollAmount - paidAmount);
+      const status = pendingAmount === 0 ? 'Paid' : 'PENDING';
 
       if (staffMember && staffMember.advanceSalary && staffMember.advanceSalary > 0) {
         const baseSalary = staffMember.salary || 0;
@@ -66,10 +69,10 @@ export function useManagerHrMutations(
       const newPayrollData = {
         ...data,
         amount: payrollAmount,
-        paidAmount: payrollAmount,
-        pendingAmount: 0,
-        status: 'Paid',
-        paidAt: new Date().toISOString(),
+        paidAmount: paidAmount,
+        pendingAmount: pendingAmount,
+        status: status,
+        paidAt: paidAmount > 0 ? new Date().toISOString() : undefined,
         staff: staffMember ? { name: staffMember.name, role: staffMember.role } : undefined
       };
       

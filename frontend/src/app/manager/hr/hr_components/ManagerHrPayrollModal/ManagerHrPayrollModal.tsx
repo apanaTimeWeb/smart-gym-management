@@ -60,6 +60,7 @@ export default function ManagerHrPayrollModal() {
             }
             
             setValue('amount', payableAmount);
+            setValue('paidAmount', payableAmount);
             setCalculationInfo(info);
           }
         } catch (e) {
@@ -76,6 +77,7 @@ export default function ManagerHrPayrollModal() {
              info = `⚠️ Auto-deducted Advance: ₹${deducted}. Net: ₹${payableAmount}`;
           }
           setValue('amount', payableAmount);
+          setValue('paidAmount', payableAmount);
           setCalculationInfo(info);
         }
       }
@@ -136,9 +138,22 @@ export default function ManagerHrPayrollModal() {
                 className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground transition-all duration-200"
               />
               <p className="text-xs text-secondary mt-1.5">
-                {calculationInfo ? calculationInfo : "Amount is automatically set to the staff's base salary, but you can modify it."}
+                {calculationInfo ? calculationInfo : "Amount is automatically set to the staff's net payable, but you can modify it."}
               </p>
               {errors.amount && <p className="text-danger text-xs mt-1.5">{errors.amount.message as string}</p>}
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-sm font-semibold text-secondary">Amount Paying Now (₹) <span className="text-danger">*</span></label>
+              <input 
+                type="number" min="0" onKeyDown={(e) => { if (['e', 'E', '-', '+'].includes(e.key)) e.preventDefault(); }}
+                {...register('paidAmount', { valueAsNumber: true })}
+                className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground transition-all duration-200"
+              />
+              <p className="text-xs text-secondary mt-1.5">
+                Set to 0 if you are only recording the payroll and paying later.
+              </p>
+              {errors.paidAmount && <p className="text-danger text-xs mt-1.5">{errors.paidAmount.message as string}</p>}
             </div>
             
             <div className="space-y-1.5">
