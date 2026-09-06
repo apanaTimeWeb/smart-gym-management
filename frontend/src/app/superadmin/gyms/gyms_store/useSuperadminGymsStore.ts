@@ -7,6 +7,7 @@ import type { Tenant } from '@/app/superadmin/gyms/superadmin_gyms_types/superad
 export interface GymsState {
   // UI State
   search: string;
+  statusFilter: string;
   selectedGym: Tenant | null;
   isEditModalOpen: boolean;
   isWhatsappModalOpen: boolean;
@@ -15,6 +16,7 @@ export interface GymsState {
 
   // Actions
   setSearch: (search: string) => void;
+  setStatusFilter: (status: string) => void;
   openEditModal: (gym: Tenant) => void;
   closeEditModal: () => void;
   openWhatsappModal: (gym: Tenant) => void;
@@ -25,6 +27,7 @@ export interface GymsState {
 
 export const useSuperadminGymsStore = create<GymsState>((set) => ({
   search: '',
+  statusFilter: 'All',
   selectedGym: null,
   isEditModalOpen: false,
   isWhatsappModalOpen: false,
@@ -32,6 +35,7 @@ export const useSuperadminGymsStore = create<GymsState>((set) => ({
   gymToDelete: null,
 
   setSearch: (search) => set({ search }),
+  setStatusFilter: (statusFilter) => set({ statusFilter }),
   
   openEditModal: (gym) => set({ selectedGym: gym, isEditModalOpen: true }),
   

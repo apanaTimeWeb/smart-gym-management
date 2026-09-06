@@ -7,7 +7,7 @@ import { Search } from 'lucide-react';
 import { useSuperadminGymsToolbar } from '@/app/superadmin/gyms/gyms_components/SuperadminGymsToolbar/useSuperadminGymsToolbar';
 
 export default function SuperadminGymsToolbar() {
-  const { search, handleSearchChange } = useSuperadminGymsToolbar();
+  const { search, handleSearchChange, statusFilter, setStatusFilter } = useSuperadminGymsToolbar();
 
   return (
     <div className="p-4 border-b border-border flex items-center gap-4">
@@ -22,6 +22,17 @@ export default function SuperadminGymsToolbar() {
           aria-label="Search gyms"
         />
       </div>
+      <select 
+        value={statusFilter} 
+        onChange={e => setStatusFilter(e.target.value)} 
+        className="px-3 py-2 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-card text-foreground"
+      >
+        <option value="All">All Statuses</option>
+        <option value="ACTIVE">Active</option>
+        <option value="SUSPENDED">Suspended</option>
+        <option value="TRIAL">Trial</option>
+        <option value="CANCELLED">Cancelled</option>
+      </select>
     </div>
   );
 }
