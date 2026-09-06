@@ -331,47 +331,6 @@ export async function routeMockRequest<T>(
     }
   }
 
-  if (path.includes('/superadmin/security')) {
-    const defaultWafConfig = {
-      geoBlockingEnabled: false,
-      blockedCountries: [],
-      rateLimitEnabled: true,
-      maxRequestsPerMinute: 1000
-    };
-    const defaultBlockedIps = [
-      { id: 'ip-1', ipAddress: '192.168.1.100', reason: 'Brute force login', blockedAt: new Date(Date.now() - 86400000).toISOString() }
-    ];
-    const defaultThreats = [
-      { id: 'thr-1', ipAddress: '192.168.1.100', eventType: 'BRUTE_FORCE', targetGymId: 'gym-1234', timestamp: new Date(Date.now() - 86400000).toISOString(), status: 'BLOCKED' },
-      { id: 'thr-2', ipAddress: '10.0.0.42', eventType: 'UNAUTHORIZED_ACCESS', timestamp: new Date().toISOString(), status: 'FLAGGED' }
-    ];
-
-    let wafConfig = MockDB.getCollection('mock_superadmin_waf_config', []);
-    if (wafConfig.length === 0) {
-      MockDB.setCollection('mock_superadmin_waf_config', [defaultWafConfig]);
-      wafConfig = [defaultWafConfig];
-    }
-    
-    let blockedIps = MockDB.getCollection('mock_superadmin_blocked_ips', defaultBlockedIps);
-    if (blockedIps.length === 0) MockDB.setCollection('mock_superadmin_blocked_ips', defaultBlockedIps);
-    
-    let threats = MockDB.getCollection('mock_superadmin_threats', defaultThreats);
-    if (threats.length === 0) MockDB.setCollection('mock_superadmin_threats', defaultThreats);
-
-    if (method === 'GET') {
-      return { success: true, message: 'Fetched security data', data: { wafConfig: wafConfig[0], blockedIps, threats } } as unknown as ApiResponse<T>;
-    }
-    
-    if (method === 'PATCH' && path.includes('/waf')) {
-      const updatedConfig = { ...wafConfig[0], ...parsedBody };
-      MockDB.setCollection('mock_superadmin_waf_config', [updatedConfig]);
-      return { success: true, message: 'WAF updated', data: updatedConfig } as unknown as ApiResponse<T>;
-    }
-    
-    if (path.includes('/ips')) {
-      return MockDB.handleCrud('mock_superadmin_blocked_ips', method, path, parsedBody, defaultBlockedIps, 'ips') as unknown as ApiResponse<T>;
-    }
-  }
 
   if (path.includes('/superadmin/infrastructure')) {
     if (path.includes('/redis/flush-global') && method === 'POST') {

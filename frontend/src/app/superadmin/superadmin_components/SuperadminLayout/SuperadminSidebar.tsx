@@ -32,6 +32,7 @@ import {
   Settings,
   Network,
   Store,
+  History,
 } from 'lucide-react';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { logout } from '@/lib/api';
@@ -96,13 +97,12 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
     {
       group: 'System & Infra',
       items: [
-        { name: 'Security & WAF', href: SuperadminUrlConfig.PAGES.SECURITY, icon: ShieldAlert },
         { name: 'Infrastructure', href: SuperadminUrlConfig.PAGES.INFRASTRUCTURE, icon: HardDrive },
         { name: 'Schema Rollouts', href: SuperadminUrlConfig.PAGES.MIGRATIONS, icon: DatabaseZap },
         { name: 'Background Jobs', href: SuperadminUrlConfig.PAGES.JOBS, icon: Activity },
         { name: 'Database Backups', href: SuperadminUrlConfig.PAGES.BACKUPS, icon: DatabaseBackup },
         { name: 'System Health', href: SuperadminUrlConfig.PAGES.SYSTEM_HEALTH, icon: ServerCog },
-        { name: 'Global Audit Logs', href: SuperadminUrlConfig.PAGES.GLOBAL_AUDIT, icon: Network },
+        { name: 'Global Audit Logs', href: SuperadminUrlConfig.PAGES.GLOBAL_AUDIT, icon: History },
         { name: 'Global Settings', href: SuperadminUrlConfig.PAGES.SETTINGS, icon: Settings },
       ]
     }
