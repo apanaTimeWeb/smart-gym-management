@@ -16,6 +16,7 @@ export function useManagerWorkoutLogic(): WorkoutContextType {
   const { confirm } = useConfirm();
   const [tab, setTab] = useState('Workout Plans');
   const [search, setSearch] = useState('');
+  const [levelFilter, setLevelFilter] = useState('ALL');
   const debouncedSearch = useDebounce(search, 300);
   const [currentPage, setCurrentPage] = useState(1);
   
@@ -55,10 +56,18 @@ export function useManagerWorkoutLogic(): WorkoutContextType {
       let fetchedWorkouts = wkRes.data.workouts || [];
       let fetchedExercises = exRes.data.exercises || [];
 
-      if (debouncedSearch) {
+      if (debouncedSearch || levelFilter !== 'ALL') {
         const q = debouncedSearch.toLowerCase();
-        fetchedWorkouts = fetchedWorkouts.filter((w: Workout) => w.name.toLowerCase().includes(q));
-        fetchedExercises = fetchedExercises.filter((e: Exercise) => e.name.toLowerCase().includes(q) || (e.category && e.category.toLowerCase().includes(q)));
+        
+        fetchedWorkouts = fetchedWorkouts.filter((w: Workout) => {
+          const matchesSearch = !debouncedSearch || w.name.toLowerCase().includes(q);
+          const matchesLevel = levelFilter === 'ALL' || w.level === levelFilter;
+          return matchesSearch && matchesLevel;
+        });
+
+        if (debouncedSearch) {
+          fetchedExercises = fetchedExercises.filter((e: Exercise) => e.name.toLowerCase().includes(q) || (e.category && e.category.toLowerCase().includes(q)));
+        }
       }
 
       setWorkouts(fetchedWorkouts);
@@ -71,7 +80,7 @@ export function useManagerWorkoutLogic(): WorkoutContextType {
     } finally {
       setFetchState('success');
     }
-  }, [showToast, currentPage, debouncedSearch]);
+  }, [showToast, currentPage, debouncedSearch, levelFilter]);
 
   // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { loadAll(); }, [loadAll]);
@@ -153,6 +162,7 @@ export function useManagerWorkoutLogic(): WorkoutContextType {
   return {
     tab, setTab,
     search, setSearch,
+    levelFilter, setLevelFilter,
     currentPage, setCurrentPage,
     workouts, totalWorkouts,
     exercises, totalExercises,

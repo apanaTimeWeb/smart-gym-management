@@ -92,6 +92,8 @@ export default function ManagerPlansMain() {
   const [plans, setPlans] = useState<Plan[]>([]);
   const [fetchState, setFetchState] = useState<'loading' | 'success' | 'error'>('loading');
   const [search, setSearch] = useState('');
+  const [tierFilter, setTierFilter] = useState<'ALL' | 'BASIC' | 'GOLD' | 'PREMIUM'>('ALL');
+  const [statusFilter, setStatusFilter] = useState<'ALL' | 'ACTIVE' | 'INACTIVE'>('ALL');
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
   const loadPlans = useCallback(async () => {
@@ -112,10 +114,12 @@ export default function ManagerPlansMain() {
     loadPlans();
   }, [loadPlans]);
 
-  const filteredPlans = plans.filter(p =>
-    p.name.toLowerCase().includes(search.toLowerCase()) ||
-    p.tier.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredPlans = plans.filter(p => {
+    const matchesSearch = !search || p.name.toLowerCase().includes(search.toLowerCase()) || p.tier.toLowerCase().includes(search.toLowerCase());
+    const matchesTier = tierFilter === 'ALL' || p.tier === tierFilter;
+    const matchesStatus = statusFilter === 'ALL' || (statusFilter === 'ACTIVE' ? p.isActive : !p.isActive);
+    return matchesSearch && matchesTier && matchesStatus;
+  });
 
   return (
     <div className="min-h-full pb-10">
@@ -149,6 +153,27 @@ export default function ManagerPlansMain() {
               onChange={e => setSearch(e.target.value)}
               className="w-full pl-9 pr-4 py-2 text-sm bg-input border border-border rounded-lg text-foreground focus:outline-none focus:border-primary"
             />
+          </div>
+          <div className="flex gap-2">
+            <select
+              value={tierFilter}
+              onChange={(e) => setTierFilter(e.target.value as any)}
+              className="px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary"
+            >
+              <option value="ALL">All Tiers</option>
+              <option value="BASIC">Basic</option>
+              <option value="GOLD">Gold</option>
+              <option value="PREMIUM">Premium</option>
+            </select>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value as any)}
+              className="px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary"
+            >
+              <option value="ALL">All Status</option>
+              <option value="ACTIVE">Active</option>
+              <option value="INACTIVE">Inactive</option>
+            </select>
           </div>
         </div>
 

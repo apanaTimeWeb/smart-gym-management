@@ -12,6 +12,8 @@ export interface WorkoutContextType {
  setTab: (tab: string) => void;
  search: string;
  setSearch: (s: string) => void;
+ levelFilter: string;
+ setLevelFilter: (s: string) => void;
  currentPage: number;
  setCurrentPage: (p: number) => void;
  
