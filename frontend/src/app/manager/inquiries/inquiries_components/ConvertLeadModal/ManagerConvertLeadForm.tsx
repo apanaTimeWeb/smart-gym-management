@@ -129,11 +129,11 @@ export default function ManagerConvertLeadForm({
 
       <div>
         <label className="block text-sm font-medium text-secondary mb-1.5">Join Date</label>
-        <input type="date" {...register('joinDate')} className="w-full border rounded-xl px-4 py-3 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-all duration-200" />
+        <input type="date" min={new Date().toISOString().split('T')[0]} {...register('joinDate')} className="w-full border rounded-xl px-4 py-3 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-all duration-200" />
       </div>
       <div>
-        <label className="block text-sm font-medium text-secondary mb-1.5">Expiry Date</label>
-        <input type="date" {...register('expiryDate')} className="w-full border rounded-xl px-4 py-3 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-all duration-200" />
+        <label className="block text-sm font-medium text-secondary mb-1">Expiry Date <span className="text-danger">*</span></label>
+        <input type="date" min={new Date().toISOString().split('T')[0]} {...register('expiryDate')} className="w-full border rounded-xl px-4 py-3 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-all duration-200" />
       </div>
 
       <div>

@@ -99,7 +99,7 @@ export default function LandingBooking() {
                 </div>
                 <div>
                   <label className="text-xs font-medium text-secondary block mb-2">Preferred Date <span className="text-danger">*</span></label>
-                  <input type="date" required value={bookingData.date} onChange={e => setBookingData({ ...bookingData, date: e.target.value })} className="w-full bg-card border border-border rounded-xl px-4 py-3 text-white placeholder-muted-foreground focus:outline-none focus:border-warning transition-colors [&::-webkit-calendar-picker-indicator]:filter-invert" />
+                  <input type="date" min={new Date().toISOString().split('T')[0]} required value={bookingData.date} onChange={e => setBookingData({ ...bookingData, date: e.target.value })} className="w-full bg-card border border-border rounded-xl px-4 py-3 text-white placeholder-muted-foreground focus:outline-none focus:border-warning transition-colors [&::-webkit-calendar-picker-indicator]:filter-invert" />
                 </div>
               </div>
 

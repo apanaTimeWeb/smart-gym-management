@@ -169,7 +169,8 @@ export default function ManagerInquiriesTable() {
                         <Edit2 size={13} />
                       </button>
                       <button
-                        onClick={async () => {
+                        onClick={async (e) => {
+                          e.stopPropagation();
                           const ok = await confirm({
                             title: 'Delete Inquiry',
                             message: `Are you sure you want to delete inquiry from "${inq.name}"? This action cannot be undone.`,

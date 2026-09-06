@@ -203,6 +203,15 @@ export async function routeMockRequest<T>(
     }
     return MockDB.handleCrud('mock_members', method, path, parsedBody, [], 'members') as unknown as ApiResponse<T>;
   }
+  if (path.includes('/inquiries/stats')) {
+    const existing = MockDB.getCollection('mock_inquiries', []);
+    const total = existing.length;
+    const newInq = existing.filter((i: any) => i.status === 'NEW').length;
+    const converted = existing.filter((i: any) => i.status === 'CONVERTED').length;
+    const followUp = existing.filter((i: any) => i.status === 'FOLLOW_UP').length;
+    return { success: true, message: 'Stats', data: { total, new: newInq, converted, followUp } } as unknown as ApiResponse<T>;
+  }
+
   if (path.includes('/inquiries') || path.includes('/landing/booking') || path.includes('/landing/contact')) {
     // If it's a landing page POST, we coerce the method to POST for inquiries
     const actualMethod = path.includes('/landing') ? 'POST' : method;
