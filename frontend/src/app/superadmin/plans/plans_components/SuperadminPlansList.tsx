@@ -75,6 +75,12 @@ export default function SuperadminPlansList() {
               <p className="text-sm text-secondary font-medium pb-2 border-b border-border">
                 Max Staff: <span className="text-foreground">{plan.maxStaff}</span>
               </p>
+              <p className="text-sm text-secondary font-medium pb-2 border-b border-border">
+                DB Limit (GB): <span className="text-foreground">{plan.dbLimitGb ?? 'Unlimited'}</span>
+              </p>
+              <p className="text-sm text-secondary font-medium pb-2 border-b border-border">
+                Binary Limit (GB): <span className="text-foreground">{plan.binaryLimitGb ?? 'Unlimited'}</span>
+              </p>
               <div className="pt-2">
                 {plan.features?.map((feat) => (
                   <div key={feat} className="flex items-center gap-2 mb-2 text-sm text-secondary">

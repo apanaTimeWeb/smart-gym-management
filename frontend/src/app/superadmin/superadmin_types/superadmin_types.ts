@@ -64,6 +64,8 @@ export interface SubscriptionPlan {
   priceAnnual: number;
   maxMembers: number;
   maxStaff: number;
+  dbLimitGb: number;
+  binaryLimitGb: number;
   features: string[];
   activeTenants: number;
 }
