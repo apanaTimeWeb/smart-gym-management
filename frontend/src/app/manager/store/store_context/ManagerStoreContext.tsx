@@ -13,6 +13,7 @@ export function StoreProvider({ children, initialData }: { children: React.React
  const {
    tab, products, orders, totalOrders, summary, fetchState, saving,
    toast, printData, search, debouncedSearch, currentPage,
+   categoryFilter, stockFilter,
    showProductModal, editProductId, editProductData,
    showOrderModal, orderItems, orderMethod, orderTotal,
    customerPhone, sendViaWhatsapp,
@@ -23,6 +24,7 @@ export function StoreProvider({ children, initialData }: { children: React.React
  const value = useMemo(() => logic, [
    tab, products, orders, totalOrders, summary, fetchState, saving,
    toast, printData, search, debouncedSearch, currentPage,
+   categoryFilter, stockFilter,
    showProductModal, editProductId, editProductData,
    showOrderModal, orderItems, orderMethod, orderTotal,
    customerPhone, sendViaWhatsapp,

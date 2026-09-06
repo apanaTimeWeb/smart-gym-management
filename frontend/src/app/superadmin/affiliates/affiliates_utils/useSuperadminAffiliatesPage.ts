@@ -23,6 +23,7 @@ export const useSuperadminAffiliatesPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingAffiliate, setEditingAffiliate] = useState<Affiliate | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<'ALL' | 'ACTIVE' | 'INACTIVE'>('ALL');
 
   const form = useForm<AffiliateFormData>({
     resolver: zodResolver(AffiliateSchema),
@@ -122,12 +123,16 @@ export const useSuperadminAffiliatesPage = () => {
 
   const filteredAffiliates = useMemo(() => {
     const lowerQuery = searchQuery.toLowerCase();
-    return affiliates.filter(a =>
-      (a?.name || '').toLowerCase().includes(lowerQuery) ||
-      (a?.referralCode || '').toLowerCase().includes(lowerQuery) ||
-      (a?.email || '').toLowerCase().includes(lowerQuery)
-    );
-  }, [affiliates, searchQuery]);
+    return affiliates.filter(a => {
+      const matchesSearch = (a?.name || '').toLowerCase().includes(lowerQuery) ||
+                            (a?.referralCode || '').toLowerCase().includes(lowerQuery) ||
+                            (a?.email || '').toLowerCase().includes(lowerQuery);
+      
+      const matchesStatus = statusFilter === 'ALL' || a.status === statusFilter;
+      
+      return matchesSearch && matchesStatus;
+    });
+  }, [affiliates, searchQuery, statusFilter]);
 
   return {
     fetchState,
@@ -135,6 +140,8 @@ export const useSuperadminAffiliatesPage = () => {
     affiliates: filteredAffiliates,
     searchQuery,
     setSearchQuery,
+    statusFilter,
+    setStatusFilter,
     isModalOpen,
     setIsModalOpen,
     form,

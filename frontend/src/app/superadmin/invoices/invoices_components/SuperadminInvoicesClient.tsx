@@ -41,6 +41,8 @@ export default function SuperadminInvoicesClient() {
     paymentMethod,
     setPaymentMethod,
     handleSelectGym,
+    statusFilter,
+    setStatusFilter,
   } = useSuperadminInvoicesPage();
 
   if (fetchState === 'loading') return (
@@ -77,7 +79,10 @@ export default function SuperadminInvoicesClient() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 bg-input border border-border rounded-lg text-sm font-medium text-secondary hover:text-foreground motion-safe:transition-colors">
+          <button 
+            onClick={() => setStatusFilter(statusFilter === 'FAILED' ? null : 'FAILED')}
+            className={`flex items-center gap-2 px-4 py-2 border rounded-lg text-sm font-medium motion-safe:transition-colors ${statusFilter === 'FAILED' ? 'bg-danger/10 border-danger/20 text-danger hover:bg-danger/20' : 'bg-input border-border text-secondary hover:text-foreground'}`}
+          >
             <Filter size={16} /> Filter Failed
           </button>
         </div>

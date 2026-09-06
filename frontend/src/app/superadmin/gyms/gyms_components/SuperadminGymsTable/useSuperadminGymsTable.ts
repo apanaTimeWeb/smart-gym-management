@@ -12,6 +12,7 @@ import { MOCK_GYMS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConsta
 
 export function useSuperadminGymsTable() {
   const search = useSuperadminGymsStore(state => state.search);
+  const statusFilter = useSuperadminGymsStore(state => state.statusFilter);
   const openDeleteModal = useSuperadminGymsStore(state => state.openDeleteModal);
   const openEditModal = useSuperadminGymsStore(state => state.openEditModal);
   const openWhatsappModal = useSuperadminGymsStore(state => state.openWhatsappModal);
@@ -30,12 +31,22 @@ export function useSuperadminGymsTable() {
   // Fallback Client-side filter
   const filteredGyms = useMemo(() => {
     if (!gyms) return [];
-    if (!search) return gyms;
-    return gyms.filter(g =>
-      g.name.toLowerCase().includes(search.toLowerCase()) ||
-      g.ownerName.toLowerCase().includes(search.toLowerCase())
-    );
-  }, [gyms, search]);
+    
+    let result = gyms;
+    
+    if (statusFilter && statusFilter !== 'All') {
+      result = result.filter(g => g.status === statusFilter);
+    }
+    
+    if (search) {
+      result = result.filter(g =>
+        g.name.toLowerCase().includes(search.toLowerCase()) ||
+        g.ownerName.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+    
+    return result;
+  }, [gyms, search, statusFilter]);
 
   // Mutations
   const impersonateMutation = useMutation({

@@ -18,12 +18,20 @@ export function useAdminPlansLogic(initialData?: PlansInitialData | null): Plans
   const queryClient = useQueryClient();
 
   const search = searchParams.get('search') || '';
+  const tierFilter = searchParams.get('tier') || 'All';
   const currentPage = Number(searchParams.get('page')) || 1;
 
   const setSearch = useCallback((val: string) => {
     const params = new URLSearchParams(searchParams.toString());
     if (val) { params.set('search', val); params.set('page', '1'); }
     else { params.delete('search'); params.set('page', '1'); }
+    router.push(`?${params.toString()}`, { scroll: false });
+  }, [router, searchParams]);
+
+  const setTierFilter = useCallback((val: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (val !== 'All') { params.set('tier', val); params.set('page', '1'); }
+    else { params.delete('tier'); params.set('page', '1'); }
     router.push(`?${params.toString()}`, { scroll: false });
   }, [router, searchParams]);
 
@@ -44,7 +52,11 @@ export function useAdminPlansLogic(initialData?: PlansInitialData | null): Plans
 
   const fetchState: FetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
 
-  const fetchedPlans = plansRes?.data || [];
+  let fetchedPlans = plansRes?.data || [];
+  
+  if (tierFilter !== 'All') {
+    fetchedPlans = fetchedPlans.filter((p: Plan) => p.tier === tierFilter);
+  }
 
   const openAdd = useCallback(() => {
     setEditId(null);
@@ -126,7 +138,7 @@ export function useAdminPlansLogic(initialData?: PlansInitialData | null): Plans
 
   return {
     plans: fetchedPlans, fetchState, saving, toast: null,
-    search, setSearch, currentPage, setCurrentPage,
+    search, setSearch, tierFilter, setTierFilter, currentPage, setCurrentPage,
     showModal, setShowModal, editId, form, setForm,
     showToast, hideToast, loadPlans: async () => {}, // Mocked for context
     openAdd, openEdit, savePlan, deletePlan,

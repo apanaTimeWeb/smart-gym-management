@@ -29,10 +29,11 @@ export interface AttendanceContextType {
   toast: { message: string; type: ToastType } | null;
  
   tab: AttendanceTab;
-  setTab: (t: AttendanceTab) => void;
-  
+  setTab: (tab: AttendanceTab) => void;
   search: string;
   setSearch: (s: string) => void;
+  filterDate: string;
+  setFilterDate: (d: string) => void;
   currentPage: number;
   setCurrentPage: (p: number) => void;
  

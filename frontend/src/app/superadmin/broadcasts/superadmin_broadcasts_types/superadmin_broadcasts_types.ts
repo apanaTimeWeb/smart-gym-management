@@ -29,6 +29,8 @@ export type BroadcastFormData = z.infer<typeof BroadcastSchema>;
 export interface BroadcastsHeaderProps {
   searchQuery: string;
   onSearchChange: (value: string) => void;
+  statusFilter?: 'ALL' | 'DRAFT' | 'SCHEDULED' | 'SENT' | 'FAILED';
+  onStatusFilterChange?: (value: 'ALL' | 'DRAFT' | 'SCHEDULED' | 'SENT' | 'FAILED') => void;
   onCreateClick: () => void;
 }
 

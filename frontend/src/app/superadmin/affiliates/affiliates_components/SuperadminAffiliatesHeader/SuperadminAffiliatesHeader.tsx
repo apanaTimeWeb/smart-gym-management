@@ -4,10 +4,18 @@ import { Users, Plus, Search } from 'lucide-react';
 interface AffiliatesHeaderProps {
   searchQuery: string;
   onSearchChange: (value: string) => void;
+  statusFilter: 'ALL' | 'ACTIVE' | 'INACTIVE';
+  onStatusFilterChange: (value: 'ALL' | 'ACTIVE' | 'INACTIVE') => void;
   onAddClick: () => void;
 }
 
-export default function SuperadminAffiliatesHeader({ searchQuery, onSearchChange, onAddClick }: AffiliatesHeaderProps) {
+export default function SuperadminAffiliatesHeader({ 
+  searchQuery, 
+  onSearchChange, 
+  statusFilter,
+  onStatusFilterChange,
+  onAddClick 
+}: AffiliatesHeaderProps) {
   return (
     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
@@ -28,6 +36,17 @@ export default function SuperadminAffiliatesHeader({ searchQuery, onSearchChange
             className="pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary motion-safe:transition-colors  w-full sm:w-64 "
           />
         </div>
+        
+        <select
+          value={statusFilter}
+          onChange={(e) => onStatusFilterChange(e.target.value as 'ALL' | 'ACTIVE' | 'INACTIVE')}
+          className="px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary motion-safe:transition-colors"
+        >
+          <option value="ALL">All Status</option>
+          <option value="ACTIVE">Active</option>
+          <option value="INACTIVE">Inactive</option>
+        </select>
+
         <button
           onClick={onAddClick}
           className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-white font-medium rounded-lg motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out motion-safe:active:scale-95 text-sm"

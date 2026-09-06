@@ -7,7 +7,7 @@ import { useWorkoutContext } from '@/app/manager/workout/workout_context/Manager
 import { WORKOUT_TAB_OPTIONS } from '@/app/manager/workout/workout_utils/ManagerWorkoutSharedConstants';
 
 export default function ManagerWorkoutToolbar() {
-  const { tab, setTab, search, setSearch, setCurrentPage, openAddWk, openAddEx } = useWorkoutContext();
+  const { tab, setTab, search, setSearch, levelFilter, setLevelFilter, setCurrentPage, openAddWk, openAddEx } = useWorkoutContext();
   const [localSearch, setLocalSearch] = useState(search);
 
   const [prevSearch, setPrevSearch] = useState(search);
@@ -51,19 +51,30 @@ export default function ManagerWorkoutToolbar() {
           <input 
             value={localSearch} 
             onChange={e => setLocalSearch(e.target.value)}  
- placeholder="Search..." 
- className="pl-8 pr-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-warning w-36 lg:w-48 bg-input text-foreground transition-all" 
- />
- </div>
- <button 
- onClick={tab === 'Workout Plans' ? openAddWk : openAddEx}
- className="flex items-center gap-2 px-4 py-2 text-sm text-white rounded-lg font-medium hover:opacity-90 transition-opacity"
- style={{ background: 'var(--workout-highlight)' }}
- >
- <Plus size={15} /> <span className="hidden sm:inline">Add</span>
- </button>
- </div>
- </div>
- );
+            placeholder="Search..." 
+            className="pl-8 pr-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-warning w-36 lg:w-48 bg-input text-foreground transition-all" 
+          />
+        </div>
+        {tab === 'Workout Plans' && (
+          <select
+            value={levelFilter}
+            onChange={(e) => setLevelFilter(e.target.value)}
+            className="hidden sm:block px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-warning bg-input text-foreground"
+          >
+            <option value="ALL">All Levels</option>
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
+          </select>
+        )}
+        <button 
+          onClick={tab === 'Workout Plans' ? openAddWk : openAddEx}
+          className="flex items-center gap-2 px-4 py-2 text-sm text-white rounded-lg font-medium hover:opacity-90 transition-opacity"
+          style={{ background: 'var(--workout-highlight)' }}
+        >
+          <Plus size={15} /> <span className="hidden sm:inline">Add</span>
+        </button>
+      </div>
+    </div>
+  );
 }
-

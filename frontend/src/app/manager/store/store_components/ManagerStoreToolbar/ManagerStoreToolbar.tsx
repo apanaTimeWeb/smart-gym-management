@@ -6,7 +6,7 @@ import { Plus, ShoppingCart, RefreshCw, Search } from 'lucide-react';
 import { useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';
 
 export default function ManagerStoreToolbar() {
-  const { tab, setTab, loadAll, openAddProduct, setShowOrderModal, search, setSearch, setCurrentPage } = useStoreContext();
+  const { tab, setTab, loadAll, openAddProduct, setShowOrderModal, search, setSearch, setCurrentPage, categoryFilter, setCategoryFilter, stockFilter, setStockFilter } = useStoreContext();
   const [prevSearch, setPrevSearch] = useState(search);
   const [localSearch, setLocalSearch] = useState(search);
 
@@ -53,8 +53,32 @@ export default function ManagerStoreToolbar() {
             className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-40 sm: w-full sm:w-64  bg-input text-foreground" 
           />
         </div>
+        {tab === 'Products' && (
+          <>
+            <select
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
+              className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary bg-input text-foreground"
+            >
+              <option value="ALL">All Categories</option>
+              <option value="Supplements">Supplements</option>
+              <option value="Merchandise">Merchandise</option>
+              <option value="Beverages">Beverages</option>
+              <option value="Equipment">Equipment</option>
+            </select>
+            <select
+              value={stockFilter}
+              onChange={(e) => setStockFilter(e.target.value)}
+              className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary bg-input text-foreground"
+            >
+              <option value="ALL">All Stock</option>
+              <option value="IN_STOCK">In Stock</option>
+              <option value="OUT_OF_STOCK">Out of Stock</option>
+            </select>
+          </>
+        )}
         <button 
- onClick={loadAll} 
+ onClick={loadAll}  
  className="flex items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary transition-colors"
  >
  <RefreshCw size={14} />

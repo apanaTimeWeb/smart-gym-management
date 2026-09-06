@@ -2,7 +2,7 @@
 // DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Handles the state and logic for managing gym exercises in the trainer workout library.
 import { useState, useCallback } from 'react';
-import { libraryApi } from '@/app/trainer/library/library_api/library_api';
+import { workoutApi } from '@/app/trainer/workout/workout_api/workout_api';
 import type { Exercise } from '@/app/trainer/trainer_types/trainer_types';
 import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
 import { EMPTY_EXERCISE_FORM, ExerciseFormValues } from '@/app/trainer/workout/workout_utils/WorkoutSharedConstants';
@@ -45,11 +45,11 @@ export function useTrainerWorkoutExercises(
         muscleGroup: muscle.split(',').map(s => s.trim()) 
       };
       if (editExId) {
-        const res = await libraryApi.updateExercise(editExId, payload);
+        const res = await workoutApi.updateExercise(editExId, payload);
         setExercises(prev => prev.map(e => String(e.id) === String(editExId) ? { ...e, ...payload } as unknown as Exercise : e));
         showToast((res as { message?: string }).message || 'Success', 'success');
       } else {
-        const res = await libraryApi.createExercise(payload);
+        const res = await workoutApi.createExercise(payload);
         const newEx = { ...payload, id: Math.random().toString(), isActive: true } as unknown as Exercise;
         setExercises(prev => [newEx, ...prev]);
         showToast((res as { message?: string }).message || 'Success', 'success');
@@ -66,7 +66,7 @@ export function useTrainerWorkoutExercises(
     const isConfirmed = await confirm({ title: 'Delete Exercise', message: 'Delete this exercise?', confirmText: 'Delete', type: 'danger' });
     if (!isConfirmed) return;
     try {
-      const res = await libraryApi.removeExercise(id);
+      const res = await workoutApi.removeExercise(id);
       setExercises(prev => prev.filter(e => String(e.id) !== String(id)));
       showToast((res as { message?: string }).message || 'Success', 'success');
     } catch (err) {

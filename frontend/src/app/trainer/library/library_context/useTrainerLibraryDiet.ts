@@ -5,7 +5,7 @@ import { useState, useCallback } from 'react';
 import { libraryApi } from '@/app/trainer/library/library_api/library_api';
 import type { DietPlan } from '@/app/trainer/trainer_types/trainer_types';
 import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
-import { EMPTY_DIET_FORM } from '@/app/trainer/library/library_utils/LibrarySharedConstants';
+import { EMPTY_DIET_FORM, type DietFormValues } from '@/app/trainer/library/library_utils/LibrarySharedConstants';
 
 export function useTrainerLibraryDiet(
   setDietPlans: React.Dispatch<React.SetStateAction<DietPlan[]>>,
@@ -15,11 +15,11 @@ export function useTrainerLibraryDiet(
 ) {
   const [showDietModal, setShowDietModal] = useState(false);
   const [editDietId, setEditDietId] = useState<string | null>(null);
-  const [editDietData, setEditDietData] = useState<Record<string, any> | null>(null);
+  const [editDietData, setEditDietData] = useState<DietFormValues | null>(null);
 
   const openAddDiet = useCallback(() => { 
     setEditDietId(null); 
-    setEditDietData(EMPTY_DIET_FORM); 
+    setEditDietData(EMPTY_DIET_FORM as unknown as DietFormValues); 
     setShowDietModal(true); 
   }, []);
   
@@ -28,17 +28,17 @@ export function useTrainerLibraryDiet(
     setEditDietData({ 
       name: d.name, 
       goal: d.goal, 
-      calories: d.calories ? String(d.calories) : '', 
-      protein: d.protein ? String(d.protein) : '', 
-      carbs: d.carbs ? String(d.carbs) : '', 
-      fats: d.fats ? String(d.fats) : '', 
+      calories: d.calories || undefined, 
+      protein: d.protein || undefined, 
+      carbs: d.carbs || undefined, 
+      fats: d.fats || undefined, 
       description: d.description || '', 
       meals: d.meals?.join('\n') 
     });
     setShowDietModal(true);
   }, []);
   
-  const saveDietPlan = useCallback(async (data: Record<string, any>) => {
+  const saveDietPlan = useCallback(async (data: DietFormValues) => {
     setSaving(true);
     try {
       const payload = { 
@@ -81,8 +81,10 @@ export function useTrainerLibraryDiet(
     }
   }, [confirm, setDietPlans, showToast]);
 
+  const closeDietModal = useCallback(() => setShowDietModal(false), []);
+
   return {
-    showDietModal, setShowDietModal, editDietId, editDietData, openAddDiet, openEditDiet, saveDietPlan, deleteDietPlan
+    showDietModal, editDietId, editDietData, openAddDiet, openEditDiet, closeDietModal, saveDietPlan, deleteDietPlan
   };
 }
 

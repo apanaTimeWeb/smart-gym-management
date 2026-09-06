@@ -11,7 +11,7 @@ import AdminFinanceRevenueSummary from '@/app/admin/finance/finance_components/A
 
 export default function AdminFinanceTabs() {
   const [tab, setTab] = useState(FINANCE_TABS[0]);
-  const { payments, summary, totalPayments, fetchState, saving, error, loadAll, search, setSearch, currentPage, setCurrentPage, savePayment, methodFilter, setMethodFilter } = useAdminFinanceLogic();
+  const { payments, summary, totalPayments, fetchState, saving, error, loadAll, search, setSearch, currentPage, setCurrentPage, savePayment, methodFilter, setMethodFilter, statusFilter, setStatusFilter } = useAdminFinanceLogic();
   const { showModal, setShowModal, toast, showToast, hideToast } = useAdminFinanceStore();
 
   const [localSearch, setLocalSearch] = useState(search);
@@ -56,6 +56,31 @@ export default function AdminFinanceTabs() {
         className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-card text-primary w-40 sm: w-full sm:w-64 "
       />
     </div>
+    {tab === 'Payments' && (
+      <>
+        <select 
+          value={methodFilter} 
+          onChange={e => setMethodFilter(e.target.value)} 
+          className="px-3 py-2 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-card text-foreground"
+        >
+          <option value="All">All Methods</option>
+          <option value="UPI">UPI</option>
+          <option value="Cash">Cash</option>
+          <option value="Card">Card</option>
+          <option value="NetBanking">NetBanking</option>
+        </select>
+        <select 
+          value={statusFilter} 
+          onChange={e => setStatusFilter(e.target.value)} 
+          className="px-3 py-2 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-card text-foreground"
+        >
+          <option value="All">All Statuses</option>
+          <option value="PAID">Paid</option>
+          <option value="DUE">Due</option>
+          <option value="REFUNDED">Refunded</option>
+        </select>
+      </>
+    )}
     <div className="flex flex-wrap gap-2">
  <button 
  onClick={loadAll} 

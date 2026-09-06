@@ -25,15 +25,17 @@ export function useSuperadminInvoicesPage() {
   const [isGymDropdownOpen, setIsGymDropdownOpen] = useState(false);
   const [selectedGymId, setSelectedGymId] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('UPI');
+  const [statusFilter, setStatusFilter] = useState<string | null>(null);
 
   const filteredInvoices = useMemo(() => {
     const lower = search.toLowerCase();
     return invoices.filter(
       (i) =>
-        i.tenantName?.toLowerCase().includes(lower) ||
-        i.id?.toLowerCase().includes(lower)
+        (i.tenantName?.toLowerCase().includes(lower) ||
+         i.id?.toLowerCase().includes(lower)) &&
+        (statusFilter ? i.status === statusFilter : true)
     );
-  }, [invoices, search]);
+  }, [invoices, search, statusFilter]);
 
   const filteredTenantsForDropdown = useMemo(
     () => tenants.filter((t) => t.name?.toLowerCase().includes(gymSearchTerm.toLowerCase())),
@@ -77,6 +79,8 @@ export function useSuperadminInvoicesPage() {
     paymentMethod,
     setPaymentMethod,
     handleSelectGym,
+    statusFilter,
+    setStatusFilter,
   };
 }
 

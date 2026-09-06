@@ -16,6 +16,8 @@ import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSupe
 export function useSuperadminGymsToolbar() {
   const search = useSuperadminGymsStore(state => state.search);
   const setSearch = useSuperadminGymsStore(state => state.setSearch);
+  const statusFilter = useSuperadminGymsStore(state => state.statusFilter);
+  const setStatusFilter = useSuperadminGymsStore(state => state.setStatusFilter);
 
   const handleSearchChange = (value: string) => {
     setSearch(value); // useQuery in useSuperadminGymsTable will handle the debouncing/refetching
@@ -23,6 +25,8 @@ export function useSuperadminGymsToolbar() {
 
   return {
     search,
-    handleSearchChange
+    handleSearchChange,
+    statusFilter,
+    setStatusFilter
   };
 }

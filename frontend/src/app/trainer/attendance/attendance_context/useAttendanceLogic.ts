@@ -20,7 +20,8 @@ export function useAttendanceLogic(): AttendanceContextType {
   const searchParams = useSearchParams();
 
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
-  const [search, setLocalSearch] = useState(searchParams.get('search') || '');
+  const search = searchParams.get('search') || '';
+  const filterDate = searchParams.get('date') || 'All Time';
   const tabParam = searchParams.get('tab') as AttendanceTab | null;
   const tab: AttendanceTab = tabParam && ATTENDANCE_TABS.includes(tabParam) ? tabParam : ATTENDANCE_TABS[0];
   const debouncedSearch = useDebounce(search, 300);
@@ -40,7 +41,8 @@ export function useAttendanceLogic(): AttendanceContextType {
     }
   }, [debouncedSearch, searchParams, setUrlParam]);
 
-  const setSearch = useCallback((val: string) => setLocalSearch(val), []);
+  const setSearch = useCallback((val: string) => setUrlParam('search', val || null), [setUrlParam]);
+  const setFilterDate = useCallback((val: string) => setUrlParam('date', val), [setUrlParam]);
   const setCurrentPage = useCallback((val: number) => setUrlParam('page', val.toString()), [setUrlParam]);
   const setTab = useCallback((val: AttendanceTab) => setUrlParam('tab', val), [setUrlParam]);
 
@@ -63,29 +65,53 @@ export function useAttendanceLogic(): AttendanceContextType {
   const loadAll = useCallback(async () => {
     setFetchState('loading');
     try {
-      // Mocking fetch success
-      const mockRecords: Attendance[] = [
-        { id: '1', date: new Date().toISOString(), checkIn: new Date().toISOString(), type: 'MEMBER', memberId: 1, member: { name: 'John Doe' } }
-      ];
-      const mockStats: any = { totalCheckIns: 1, memberCheckIns: 1, staffCheckIns: 0 };
-      const mockMembers: Member[] = [
-        { id: '1', name: 'John Doe', phone: '123', email: 'john@test.com', status: 'ACTIVE', billingCycle: '1 Month', paidAmount: 100, pendingAmount: 0, expiryDate: new Date().toISOString(), joinDate: new Date().toISOString(), planId: 'p1', gender: 'MALE', branch: 'Main Branch', createdAt: new Date().toISOString() }
-      ];
+      const params: Record<string, string> = {
+        limit: '10',
+        page: currentPage.toString()
+      };
+      if (debouncedSearch) params.search = debouncedSearch;
+      params.type = 'MEMBER';
 
-      let fetchedRecords = mockRecords;
+      const [attRes, statsRes, memRes] = await Promise.all([
+        attendanceApi.fetchAttendanceRecords(params) as unknown as Promise<ApiResponse<any>>,
+        attendanceApi.getTodayStats() as unknown as Promise<ApiResponse<any>>,
+        trainerSharedApi.fetchMembersBasic({ limit: '1000', status: 'active' }) as unknown as Promise<ApiResponse<{ members: Member[] }>>,
+      ]);
+
+      let fetchedRecords = attRes.data?.attendance || attRes.data?.attendances || attRes.data || [];
+      
+      fetchedRecords = fetchedRecords.filter((r: Attendance) => r.type === 'MEMBER');
+      
       if (debouncedSearch) {
         const q = debouncedSearch.toLowerCase();
-        fetchedRecords = fetchedRecords.filter(r => 
-          (r.member?.name && r.member.name.toLowerCase().includes(q))
+        fetchedRecords = fetchedRecords.filter((r: Attendance) => 
+          (r.member?.name && r.member.name.toLowerCase().includes(q)) || 
+          (r.staff?.name && r.staff.name.toLowerCase().includes(q))
         );
       }
-      // Assuming tab filters by type in this simple mock
-      fetchedRecords = fetchedRecords.filter(r => r.type === tab);
+
+      if (filterDate !== 'All Time') {
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        const todayTime = today.getTime();
+        
+        fetchedRecords = fetchedRecords.filter((r: Attendance) => {
+          const d = new Date(r.date);
+          d.setHours(0,0,0,0);
+          const rTime = d.getTime();
+          
+          if (filterDate === 'Today') return rTime === todayTime;
+          if (filterDate === 'Yesterday') return rTime === todayTime - 86400000;
+          if (filterDate === 'Last 7 Days') return rTime >= todayTime - 7 * 86400000;
+          if (filterDate === 'This Month') return d.getMonth() === today.getMonth() && d.getFullYear() === today.getFullYear();
+          return true;
+        });
+      }
 
       setRecords(fetchedRecords);
-      setTotalRecords(1);
-      setTodayStats(mockStats);
-      setMembers(mockMembers);
+      setTotalRecords(attRes.data?.total || fetchedRecords.length || 0);
+      setTodayStats(statsRes.data);
+      setMembers(memRes.data?.members || memRes.data || []);
     } catch (e) { 
       showToast((e as Error).message, 'error'); 
     } finally { 
@@ -99,8 +125,14 @@ export function useAttendanceLogic(): AttendanceContextType {
   const markAttendance = useCallback(async (data: AttendanceFormValues) => {
     setSaving(true);
     try {
-      // Mocking mark attendance success
-      showToast('Attendance marked successfully', 'success');
+      const res = await attendanceApi.createAttendanceRecord({
+        memberId: data.memberId,
+        staffId: data.staffId,
+        date: data.date,
+        checkIn: data.checkIn,
+        type: data.type
+      });
+      showToast((res as { message?: string }).message || 'Attendance marked successfully', 'success');
       setShowModal(false);
       setForm(EMPTY_ATTENDANCE_FORM);
       await loadAll();
@@ -116,6 +148,7 @@ export function useAttendanceLogic(): AttendanceContextType {
     fetchState, saving, toast,
     tab, setTab,
     search, setSearch,
+    filterDate, setFilterDate,
     currentPage, setCurrentPage,
     showModal, setShowModal,
     form, setForm,

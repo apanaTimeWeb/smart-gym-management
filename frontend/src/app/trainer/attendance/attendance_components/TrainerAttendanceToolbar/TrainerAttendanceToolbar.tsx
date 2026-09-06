@@ -9,7 +9,7 @@ import { useAttendanceContext } from '@/app/trainer/attendance/attendance_contex
 import { ATTENDANCE_TABS } from '@/app/trainer/attendance/attendance_utils/AttendanceSharedConstants';
 
 export default function TrainerAttendanceToolbar() {
-  const { tab, setTab, loadAll, setShowModal, search, setSearch, setCurrentPage } = useAttendanceContext();
+  const { tab, setTab, loadAll, setShowModal, search, setSearch, filterDate, setFilterDate, setCurrentPage } = useAttendanceContext();
   const [localSearch, setLocalSearch] = useState(search);
 
   useEffect(() => { setTimeout(() => setLocalSearch(search), 0); }, [search]);
@@ -51,6 +51,17 @@ export default function TrainerAttendanceToolbar() {
         className="pl-9 pr-3 py-2 border border-border bg-input text-foreground rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus-visible:ring-primary w-40 sm: w-full sm:w-64 "
       />
     </div>
+    <select 
+      value={filterDate} 
+      onChange={e => setFilterDate(e.target.value)} 
+      className="px-3 py-2 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground"
+    >
+      <option value="All Time">All Time</option>
+      <option value="Today">Today</option>
+      <option value="Yesterday">Yesterday</option>
+      <option value="Last 7 Days">Last 7 Days</option>
+      <option value="This Month">This Month</option>
+    </select>
     <div className="flex flex-wrap gap-2">
  <button 
  onClick={loadAll} 

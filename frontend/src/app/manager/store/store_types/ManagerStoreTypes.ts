@@ -39,6 +39,10 @@ export interface StoreContextType {
   search: string;
   debouncedSearch: string;
   setSearch: (s: string) => void;
+  categoryFilter: string;
+  setCategoryFilter: (s: string) => void;
+  stockFilter: string;
+  setStockFilter: (s: string) => void;
   currentPage: number;
   setCurrentPage: (p: number) => void;
   

@@ -13,7 +13,7 @@ import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 
 export default function TrainerLibraryDietModal() {
  const { 
- showDietModal, setShowDietModal, 
+ showDietModal, closeDietModal, 
  editDietId, editDietData, 
  saving, saveDietPlan 
  } = useLibraryContext();
@@ -45,7 +45,7 @@ export default function TrainerLibraryDietModal() {
  {editDietId ? 'Edit Diet Plan' : 'Add Diet Plan'}
  </h3>
  <button 
- onClick={() => setShowDietModal(false)} 
+ onClick={() => closeDietModal()} 
  className="p-2 rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors"
  >
  <X size={18} />
@@ -106,7 +106,7 @@ export default function TrainerLibraryDietModal() {
  <div className="flex gap-3 pt-2">
  <button 
  type="button" 
- onClick={() => setShowDietModal(false)} 
+ onClick={() => closeDietModal()} 
  className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-foreground hover:bg-primary-subtle motion-safe:transition-colors"
  >
  Cancel

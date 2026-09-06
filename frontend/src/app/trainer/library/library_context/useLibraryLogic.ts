@@ -5,14 +5,11 @@ import { useState, useCallback, useEffect } from 'react';
 import { useDebounce } from '@/app/trainer/trainer_utils/useDebounce';
 import { libraryApi } from '@/app/trainer/library/library_api/library_api';
 import type { LibraryContextType } from '@/app/trainer/library/library_types/library_types';
-import type { Exercise, DietPlan, FetchState } from '@/app/trainer/trainer_types/trainer_types';
+import type { DietPlan, FetchState } from '@/app/trainer/trainer_types/trainer_types';
 import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
-import { type LibraryTab } from '@/app/trainer/library/library_utils/LibrarySharedConstants';
 import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-
 import { useTrainerLibraryDiet } from './useTrainerLibraryDiet';
-import { useTrainerLibraryExercises } from './useTrainerLibraryExercises';
 
 export function useLibraryLogic(initialData?: any | null): LibraryContextType {
   const { confirm } = useConfirm();
@@ -20,17 +17,6 @@ export function useLibraryLogic(initialData?: any | null): LibraryContextType {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   
-  const tab = (searchParams.get('tab') as LibraryTab) || 'Exercises';
-  
-  const setTab = useCallback((newTab: LibraryTab) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('tab', newTab);
-    params.delete('page');
-    params.delete('search');
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
-  }, [router, searchParams, pathname]);
-
-  const [exercises, setExercises] = useState<Exercise[]>(initialData?.exercises || []);
   const [dietPlans, setDietPlans] = useState<DietPlan[]>(initialData?.dietPlans || []);
  
   const [fetchState, setFetchState] = useState<FetchState>(initialData ? 'success' : 'loading');
@@ -39,6 +25,7 @@ export function useLibraryLogic(initialData?: any | null): LibraryContextType {
 
   const [search, setLocalSearch] = useState(searchParams.get('search') || '');
   const debouncedSearch = useDebounce(search, 300);
+  const filterGoal = searchParams.get('goal') || 'All';
   const currentPage = Number(searchParams.get('page')) || 1;
 
   useEffect(() => {
@@ -51,13 +38,23 @@ export function useLibraryLogic(initialData?: any | null): LibraryContextType {
     }
   }, [debouncedSearch, searchParams, router, pathname]);
 
-  const setSearch = useCallback((val: string) => setLocalSearch(val), []);
+  const setSearch = useCallback((val: string) => {
+    setLocalSearch(val);
+  }, []);
+
+  const setUrlParam = useCallback((key: string, value: string | null) => {
+    const current = new URLSearchParams(Array.from(searchParams.entries()));
+    if (value && value !== 'All') current.set(key, value);
+    else current.delete(key);
+    if (key !== 'page') current.set('page', '1');
+    router.push(`${pathname}?${current.toString()}`, { scroll: false });
+  }, [searchParams, pathname, router]);
+
+  const setFilterGoal = useCallback((val: string) => setUrlParam('goal', val), [setUrlParam]);
 
   const setCurrentPage = useCallback((page: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('page', page.toString());
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
-  }, [router, searchParams, pathname]);
+    setUrlParam('page', page.toString());
+  }, [setUrlParam]);
 
   const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
   const hideToast = useCallback(() => setToast(null), []);
@@ -72,12 +69,24 @@ export function useLibraryLogic(initialData?: any | null): LibraryContextType {
       if (debouncedSearch) {
         params.search = debouncedSearch;
       }
-      const [exRes, dietRes] = await Promise.all([
-        libraryApi.getExercises(params),
+      const [dietRes] = await Promise.all([
         libraryApi.getDietPlans(params),
       ]);
-      setExercises(exRes.data?.exercises || exRes.data || []);
-      setDietPlans(dietRes.data?.dietPlans || dietRes.data || []);
+      
+      let fetchedDietPlans = dietRes.data?.dietPlans || dietRes.data || [];
+      
+      if (debouncedSearch) {
+        const q = debouncedSearch.toLowerCase();
+        fetchedDietPlans = fetchedDietPlans.filter((d: DietPlan) => 
+          d.name.toLowerCase().includes(q) || d.goal?.toLowerCase().includes(q)
+        );
+      }
+      
+      if (filterGoal !== 'All') {
+        fetchedDietPlans = fetchedDietPlans.filter((d: DietPlan) => d.goal === filterGoal);
+      }
+      
+      setDietPlans(fetchedDietPlans);
       setFetchState('success');
     } catch (e) { 
       showToast((e as Error).message, 'error'); 
@@ -88,15 +97,12 @@ export function useLibraryLogic(initialData?: any | null): LibraryContextType {
   useEffect(() => { setTimeout(() => loadAll(), 0); }, [loadAll]);
 
   const dietLogic = useTrainerLibraryDiet(setDietPlans, showToast, setSaving, confirm as any);
-  const exerciseLogic = useTrainerLibraryExercises(setExercises, showToast, setSaving, confirm as any);
 
   return {
-    tab, setTab,
-    exercises, dietPlans,
+    dietPlans,
     fetchState, saving, toast,
-    search, debouncedSearch, setSearch, currentPage, setCurrentPage,
+    search, debouncedSearch, setSearch, filterGoal, setFilterGoal, currentPage, setCurrentPage,
     showToast, hideToast, loadAll,
-    ...exerciseLogic,
     ...dietLogic
   };
 }

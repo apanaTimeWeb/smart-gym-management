@@ -25,6 +25,7 @@ export function useWorkoutLogic(): WorkoutContextType {
 
   const tab = searchParams.get('tab') || 'Workout Plans';
   const search = searchParams.get('search') || '';
+  const filterCategory = searchParams.get('category') || 'All';
   const currentPage = Number(searchParams.get('page')) || 1;
   const debouncedSearch = useDebounce(search, 300);
 
@@ -36,8 +37,15 @@ export function useWorkoutLogic(): WorkoutContextType {
     router.push(`${pathname}?${current.toString()}`, { scroll: false });
   }, [searchParams, pathname, router]);
 
-  const setTab = useCallback((val: string) => setUrlParam('tab', val), [setUrlParam]);
+  const setTab = useCallback((val: string) => {
+    const current = new URLSearchParams(Array.from(searchParams.entries()));
+    current.set('tab', val);
+    current.delete('category'); // Reset filter when switching tabs
+    router.push(`${pathname}?${current.toString()}`, { scroll: false });
+  }, [searchParams, pathname, router]);
+
   const setSearch = useCallback((val: string) => setUrlParam('search', val || null), [setUrlParam]);
+  const setFilterCategory = useCallback((val: string) => setUrlParam('category', val), [setUrlParam]);
   const setCurrentPage = useCallback((val: number) => setUrlParam('page', val.toString()), [setUrlParam]);
   
   const [workouts, setWorkouts] = useState<Workout[]>([]);
@@ -69,10 +77,32 @@ export function useWorkoutLogic(): WorkoutContextType {
         workoutApi.getWorkouts(params),
         trainerSharedApi.fetchExercises(params) as Promise<any>,
       ]);
-      setWorkouts(wkRes.data.workouts || []);
-      setTotalWorkouts(wkRes.data.total || 0);
-      setExercises(exRes.data.exercises || []);
-      setTotalExercises(exRes.data.total || 0);
+      
+      let fetchedWorkouts = wkRes.data.workouts || [];
+      let fetchedExercises = exRes.data.exercises || [];
+      
+      if (debouncedSearch) {
+        const q = debouncedSearch.toLowerCase();
+        fetchedWorkouts = fetchedWorkouts.filter((w: Workout) => 
+          w.name.toLowerCase().includes(q) || w.focus?.toLowerCase().includes(q) || (w.tags && w.tags.some(t => t.toLowerCase().includes(q)))
+        );
+        fetchedExercises = fetchedExercises.filter((e: Exercise) => 
+          e.name.toLowerCase().includes(q) || e.category?.toLowerCase().includes(q) || (e.muscleGroup && e.muscleGroup.some(m => m.toLowerCase().includes(q)))
+        );
+      }
+      
+      if (filterCategory !== 'All') {
+        if (tab === 'Workout Plans') {
+          fetchedWorkouts = fetchedWorkouts.filter((w: Workout) => w.focus === filterCategory);
+        } else {
+          fetchedExercises = fetchedExercises.filter((e: Exercise) => e.muscleGroup?.includes(filterCategory) || e.category === filterCategory);
+        }
+      }
+      
+      setWorkouts(fetchedWorkouts);
+      setTotalWorkouts(wkRes.data.total || fetchedWorkouts.length || 0);
+      setExercises(fetchedExercises);
+      setTotalExercises(exRes.data.total || fetchedExercises.length || 0);
       setFetchState('success');
     } catch (e) {
       showToast((e as Error).message, 'error');
@@ -146,7 +176,7 @@ export function useWorkoutLogic(): WorkoutContextType {
   const exerciseLogic = useTrainerWorkoutExercises(setExercises, showToast, setSaving, confirm as any);
 
   return {
-    tab, setTab, search, setSearch, currentPage, setCurrentPage,
+    tab, setTab, search, setSearch, filterCategory, setFilterCategory, currentPage, setCurrentPage,
     workouts, totalWorkouts, exercises, totalExercises,
     fetchState, saving, toast, showToast, hideToast, loadAll,
     showWkModal, setShowWkModal, editWkId, wkForm, setWkForm,

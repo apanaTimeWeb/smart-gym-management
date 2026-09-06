@@ -52,6 +52,8 @@ export default function ManagerFinanceMain() {
   const [summary, setSummary] = useState<FinanceSummary | null>(null);
   const [fetchState, setFetchState] = useState<'idle' | 'loading' | 'success' | 'error'>('loading');
   const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState<'ALL' | 'PAID' | 'PENDING'>('ALL');
+  const [methodFilter, setMethodFilter] = useState<'ALL' | 'UPI' | 'Cash' | 'Card' | 'NetBanking'>('ALL');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPayments, setTotalPayments] = useState(0);
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
@@ -68,13 +70,19 @@ export default function ManagerFinanceMain() {
         financeApi.getSummary(),
       ]);
       let fetchedPayments = paymentsRes.data?.payments || [];
-      if (search) {
+      if (search || statusFilter !== 'ALL' || methodFilter !== 'ALL') {
         const q = search.toLowerCase();
-        fetchedPayments = fetchedPayments.filter((p: Payment) => 
-          (p.invoiceNo && p.invoiceNo.toLowerCase().includes(q)) ||
-          (p.member?.name && p.member.name.toLowerCase().includes(q)) ||
-          (p.method && p.method.toLowerCase().includes(q))
-        );
+        fetchedPayments = fetchedPayments.filter((p: Payment) => {
+          const matchesSearch = !search || 
+            (p.invoiceNo && p.invoiceNo.toLowerCase().includes(q)) ||
+            (p.member?.name && p.member.name.toLowerCase().includes(q)) ||
+            (p.method && p.method.toLowerCase().includes(q));
+          
+          const matchesStatus = statusFilter === 'ALL' || p.status === statusFilter;
+          const matchesMethod = methodFilter === 'ALL' || p.method === methodFilter;
+          
+          return matchesSearch && matchesStatus && matchesMethod;
+        });
       }
       setPayments(fetchedPayments);
       setTotalPayments(paymentsRes.data?.total || 0);
@@ -86,12 +94,11 @@ export default function ManagerFinanceMain() {
     }
   }, [search, currentPage, showToast]);
 
-  // Re-fetch when search or page changes
-  // Dependency note: loadData captures search + currentPage via useCallback
+  // Re-fetch when search, filters, or page changes
   useEffect(() => {
     const debounceTimer = setTimeout(() => { loadData(); }, 300);
     return () => clearTimeout(debounceTimer);
-  }, [loadData]);
+  }, [loadData, statusFilter, methodFilter]);
 
   const formatCurrency = (v: number) =>
     new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(v);
@@ -145,6 +152,28 @@ export default function ManagerFinanceMain() {
                 onChange={e => { setSearch(e.target.value);  }}
                 className="w-full pl-9 pr-4 py-2 text-sm bg-input border border-border rounded-lg text-foreground focus:outline-none focus:border-primary"
               />
+            </div>
+            <div className="flex gap-2">
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value as any)}
+                className="px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary"
+              >
+                <option value="ALL">All Status</option>
+                <option value="PAID">Paid</option>
+                <option value="PENDING">Pending</option>
+              </select>
+              <select
+                value={methodFilter}
+                onChange={(e) => setMethodFilter(e.target.value as any)}
+                className="px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary"
+              >
+                <option value="ALL">All Methods</option>
+                <option value="UPI">UPI</option>
+                <option value="Cash">Cash</option>
+                <option value="Card">Card</option>
+                <option value="NetBanking">NetBanking</option>
+              </select>
             </div>
             <button
               onClick={loadData}

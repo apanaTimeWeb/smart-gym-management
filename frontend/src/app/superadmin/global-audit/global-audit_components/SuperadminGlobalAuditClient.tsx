@@ -12,6 +12,7 @@ import { MOCK_AUDIT_LOGS } from '@/app/superadmin/global-audit/global-audit_util
 export default function SuperadminGlobalAuditClient() {
   const [logs, setLogs] = useState<AuditLog[]>([]);
   const [search, setSearch] = useState('');
+  const [severityFilter, setSeverityFilter] = useState<'ALL' | 'INFO' | 'WARNING' | 'CRITICAL'>('ALL');
 
   const { data: queryData, isLoading } = useQuery({
     queryKey: ['superadmin', 'global-audit'],
@@ -36,11 +37,14 @@ export default function SuperadminGlobalAuditClient() {
     }
   }, [queryData]);
 
-  const filteredLogs = logs.filter(log => 
-    log.action.toLowerCase().includes(search.toLowerCase()) || 
-    log.actor.toLowerCase().includes(search.toLowerCase()) ||
-    log.resource.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredLogs = logs.filter(log => {
+    const matchesSearch = log.action.toLowerCase().includes(search.toLowerCase()) || 
+                          log.actor.toLowerCase().includes(search.toLowerCase()) ||
+                          log.resource.toLowerCase().includes(search.toLowerCase());
+    const matchesSeverity = severityFilter === 'ALL' || log.severity === severityFilter;
+    
+    return matchesSearch && matchesSeverity;
+  });
 
   const getSeverityBadge = (severity: AuditLog['severity']) => {
     switch (severity) {
@@ -76,9 +80,16 @@ export default function SuperadminGlobalAuditClient() {
         </div>
         
         <div className="flex items-center gap-3">
-          <button className="flex items-center gap-2 px-4 py-2 bg-card border border-border text-foreground font-medium rounded-lg hover:bg-card-hover motion-safe:transition-colors">
-            <Filter size={16} /> Filters
-          </button>
+          <select
+            value={severityFilter}
+            onChange={(e) => setSeverityFilter(e.target.value as any)}
+            className="flex items-center gap-2 px-4 py-2 bg-card border border-border text-foreground font-medium rounded-lg hover:bg-card-hover focus:outline-none focus:border-primary motion-safe:transition-colors"
+          >
+            <option value="ALL">All Severities</option>
+            <option value="INFO">Info</option>
+            <option value="WARNING">Warning</option>
+            <option value="CRITICAL">Critical</option>
+          </select>
           <button 
             onClick={exportLogs}
             className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground font-medium rounded-lg hover:bg-primary/90 motion-safe:transition-colors"

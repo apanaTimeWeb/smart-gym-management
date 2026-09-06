@@ -49,6 +49,7 @@ export const useSuperadminBroadcastsPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<'ALL' | 'DRAFT' | 'SCHEDULED' | 'SENT' | 'FAILED'>('ALL');
 
   const [queueModalOpen, setQueueModalOpen] = useState(false);
   const [queueRecipients, setQueueRecipients] = useState<{id: string; name: string; phone: string}[]>([]);
@@ -156,11 +157,13 @@ export const useSuperadminBroadcastsPage = () => {
 
   const filteredBroadcasts = useMemo(() => {
     const lowerQuery = searchQuery.toLowerCase();
-    return broadcasts.filter(b =>
-      (b.title || '').toLowerCase().includes(lowerQuery) ||
-      (b.content || '').toLowerCase().includes(lowerQuery)
-    );
-  }, [broadcasts, searchQuery]);
+    return broadcasts.filter(b => {
+      const matchesSearch = (b.title || '').toLowerCase().includes(lowerQuery) ||
+                            (b.content || '').toLowerCase().includes(lowerQuery);
+      const matchesStatus = statusFilter === 'ALL' || b.status === statusFilter;
+      return matchesSearch && matchesStatus;
+    });
+  }, [broadcasts, searchQuery, statusFilter]);
 
   return {
     fetchState,
@@ -168,6 +171,8 @@ export const useSuperadminBroadcastsPage = () => {
     broadcasts: filteredBroadcasts,
     searchQuery,
     setSearchQuery,
+    statusFilter,
+    setStatusFilter,
     isModalOpen,
     setIsModalOpen,
     form,

@@ -31,6 +31,8 @@ export interface FinanceContextType {
   savePayment: (data: AddPaymentFormValues) => Promise<void>;
   methodFilter: string;
   setMethodFilter: (method: string) => void;
+  statusFilter: string;
+  setStatusFilter: (status: string) => void;
 }
 
 export interface Payment {

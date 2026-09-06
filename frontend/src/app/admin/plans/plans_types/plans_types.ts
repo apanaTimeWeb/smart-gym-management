@@ -18,6 +18,8 @@ export interface PlansContextType {
 
   search: string;
   setSearch: (s: string) => void;
+  tierFilter: string;
+  setTierFilter: (t: string) => void;
   currentPage: number;
   setCurrentPage: (p: number) => void;
 
