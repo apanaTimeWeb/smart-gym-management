@@ -22,6 +22,7 @@ export const SuperadminUrlConfig = {
     AUDIT_LOGS: "/superadmin/global-audit",
     PLANS: "/superadmin/plans",
     GYM_ADD: "/superadmin/gyms/add",
+    SECURITY: "/superadmin/security",
   },
   BACKEND_API: {
     DASHBOARD: "/superadmin/dashboard",
@@ -47,5 +48,6 @@ export const SuperadminUrlConfig = {
     INVOICES_BASE: "/superadmin/invoices",
     AUDIT_LOGS_BASE: "/superadmin/audit-logs",
     AFFILIATES_BASE: "/superadmin/affiliates",
+    SECURITY_BASE: "/superadmin/security",
   }
 };

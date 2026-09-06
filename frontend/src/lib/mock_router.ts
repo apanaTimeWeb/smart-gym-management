@@ -288,6 +288,140 @@ export async function routeMockRequest<T>(
     
     return MockDB.handleCrud('mock_orders', method, path, parsedBody, defaultOrders, 'orders') as unknown as ApiResponse<T>;
   }
+
+  if (path.includes('/superadmin/features')) {
+    const defaultFlags = [
+      { id: '1', name: 'Beta_Feature_0', description: 'Enable beta features', isGlobalEnabled: false, enabledTenantIds: [] },
+      { id: '2', name: 'Beta_Feature_1', description: 'New dashboard', isGlobalEnabled: true, enabledTenantIds: [] },
+      { id: '3', name: 'Beta_Feature_2', description: 'Advanced analytics', isGlobalEnabled: false, enabledTenantIds: ['gym-1234'] },
+      { id: '4', name: 'Beta_Feature_3', description: 'Custom domains', isGlobalEnabled: true, enabledTenantIds: [] },
+    ];
+    const defaultNotes = [
+      { id: '1', version: 'v1.0.0', title: 'Initial Release', content: 'We are live!', isPublished: true, date: '2023-01-01' }
+    ];
+
+    const flags = MockDB.getCollection('mock_superadmin_features', defaultFlags);
+    if (flags.length === 0) MockDB.setCollection('mock_superadmin_features', defaultFlags);
+    const notes = MockDB.getCollection('mock_superadmin_notes', defaultNotes);
+    if (notes.length === 0) MockDB.setCollection('mock_superadmin_notes', defaultNotes);
+
+    if (method === 'GET') {
+      return { success: true, message: 'Fetched features', data: { flags, notes } } as unknown as ApiResponse<T>;
+    }
+    
+    if (method === 'PATCH' && path.includes('/flags/')) {
+      const segments = path.split('/');
+      const isToggle = path.endsWith('/toggle');
+      const flagId = isToggle ? segments[segments.length - 2] : segments[segments.length - 1];
+      
+      const idx = flags.findIndex((f: any) => f.id === flagId);
+      if (idx > -1) {
+        if (isToggle) {
+          flags[idx].isGlobalEnabled = !flags[idx].isGlobalEnabled;
+        } else {
+          flags[idx] = { ...flags[idx], ...parsedBody };
+        }
+        MockDB.setCollection('mock_superadmin_features', flags);
+        return { success: true, message: 'Flag updated', data: flags[idx] } as unknown as ApiResponse<T>;
+      }
+    }
+    
+    if (path.includes('/notes')) {
+      return MockDB.handleCrud('mock_superadmin_notes', method, path, parsedBody, [], 'notes') as unknown as ApiResponse<T>;
+    }
+  }
+
+  if (path.includes('/superadmin/security')) {
+    const defaultWafConfig = {
+      geoBlockingEnabled: false,
+      blockedCountries: [],
+      rateLimitEnabled: true,
+      maxRequestsPerMinute: 1000
+    };
+    const defaultBlockedIps = [
+      { id: 'ip-1', ipAddress: '192.168.1.100', reason: 'Brute force login', blockedAt: new Date(Date.now() - 86400000).toISOString() }
+    ];
+    const defaultThreats = [
+      { id: 'thr-1', ipAddress: '192.168.1.100', eventType: 'BRUTE_FORCE', targetGymId: 'gym-1234', timestamp: new Date(Date.now() - 86400000).toISOString(), status: 'BLOCKED' },
+      { id: 'thr-2', ipAddress: '10.0.0.42', eventType: 'UNAUTHORIZED_ACCESS', timestamp: new Date().toISOString(), status: 'FLAGGED' }
+    ];
+
+    let wafConfig = MockDB.getCollection('mock_superadmin_waf_config', []);
+    if (wafConfig.length === 0) {
+      MockDB.setCollection('mock_superadmin_waf_config', [defaultWafConfig]);
+      wafConfig = [defaultWafConfig];
+    }
+    
+    let blockedIps = MockDB.getCollection('mock_superadmin_blocked_ips', defaultBlockedIps);
+    if (blockedIps.length === 0) MockDB.setCollection('mock_superadmin_blocked_ips', defaultBlockedIps);
+    
+    let threats = MockDB.getCollection('mock_superadmin_threats', defaultThreats);
+    if (threats.length === 0) MockDB.setCollection('mock_superadmin_threats', defaultThreats);
+
+    if (method === 'GET') {
+      return { success: true, message: 'Fetched security data', data: { wafConfig: wafConfig[0], blockedIps, threats } } as unknown as ApiResponse<T>;
+    }
+    
+    if (method === 'PATCH' && path.includes('/waf')) {
+      const updatedConfig = { ...wafConfig[0], ...parsedBody };
+      MockDB.setCollection('mock_superadmin_waf_config', [updatedConfig]);
+      return { success: true, message: 'WAF updated', data: updatedConfig } as unknown as ApiResponse<T>;
+    }
+    
+    if (path.includes('/ips')) {
+      return MockDB.handleCrud('mock_superadmin_blocked_ips', method, path, parsedBody, defaultBlockedIps, 'ips') as unknown as ApiResponse<T>;
+    }
+  }
+
+  if (path.includes('/superadmin/infrastructure')) {
+    if (path.includes('/redis/flush-global') && method === 'POST') {
+      const defaultTelemetry = { memoryUsagePercent: 2, hitRatioPercent: 0, totalKeysCached: 0, uptimeHours: 720 };
+      MockDB.setCollection('mock_superadmin_redis_telemetry', [defaultTelemetry]);
+      return { success: true, message: 'Global cache flushed' } as unknown as ApiResponse<T>;
+    }
+    
+    if (path.includes('/redis/flush-tenant') && method === 'POST') {
+      let telemetry = MockDB.getCollection('mock_superadmin_redis_telemetry', []);
+      if (telemetry.length > 0) {
+        const t = telemetry[0] as any;
+        const newTelemetry = {
+          ...t,
+          memoryUsagePercent: Math.max(5, t.memoryUsagePercent - 5),
+          totalKeysCached: Math.max(0, t.totalKeysCached - 1000)
+        };
+        MockDB.setCollection('mock_superadmin_redis_telemetry', [newTelemetry]);
+      }
+      return { success: true, message: 'Tenant cache flushed' } as unknown as ApiResponse<T>;
+    }
+    
+    if (path.includes('/redis') && method === 'GET') {
+      const defaultTelemetry = { memoryUsagePercent: 68, hitRatioPercent: 94, totalKeysCached: 1450230, uptimeHours: 720 };
+      let telemetry = MockDB.getCollection('mock_superadmin_redis_telemetry', []);
+      if (telemetry.length === 0) {
+        MockDB.setCollection('mock_superadmin_redis_telemetry', [defaultTelemetry]);
+        telemetry = [defaultTelemetry];
+      }
+      return { success: true, data: telemetry[0], message: 'Fetched Redis telemetry' } as unknown as ApiResponse<T>;
+    }
+
+    if (method === 'GET' && !path.includes('/redis')) {
+      const defaultNodes = generate(6, i => ({
+        id: `node-${i}`,
+        name: `worker-${i + 1}.internal`,
+        cpuPercent: Math.floor(Math.random() * 40) + 10,
+        memoryPercent: Math.floor(Math.random() * 30) + 40,
+        diskPercent: Math.floor(Math.random() * 20) + 30,
+        status: 'ACTIVE'
+      }));
+      let nodes = MockDB.getCollection('mock_superadmin_infrastructure', []);
+      if (nodes.length === 0) {
+        MockDB.setCollection('mock_superadmin_infrastructure', defaultNodes);
+        nodes = defaultNodes;
+      }
+      return { success: true, data: nodes } as unknown as ApiResponse<T>;
+    }
+  }
+
   if (path.includes('/plans') && !path.includes('/superadmin')) {
     const defaultPlans = generate(3, i => ({ id: `plan-${i}`, name: i === 0 ? 'Basic Plan' : i === 1 ? 'Pro Plan' : 'VIP Plan', tier: i === 0 ? 'Standard' : i === 1 ? 'Premium' : 'Elite', price1Month: 1000 * (i + 1), price3Month: 2500 * (i + 1), price6Month: 4800 * (i + 1), price12Month: 9000 * (i + 1), features: ['Access to gym', 'Locker facility', 'Cardio section'], isActive: true }));
     const existing = MockDB.getCollection('mock_admin_plans', defaultPlans);

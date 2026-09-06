@@ -83,5 +83,8 @@ export const superadminApi = {
   },
   infrastructure: {
     fetchInfrastructureNodes: () => apiFetch<ApiResponse<InfrastructureNode[]>>(SuperadminUrlConfig.BACKEND_API.INFRASTRUCTURE_BASE),
+    fetchRedisTelemetry: () => apiFetch<ApiResponse<any>>(`${SuperadminUrlConfig.BACKEND_API.INFRASTRUCTURE_BASE}/redis`),
+    flushGlobalCache: () => apiFetch<ApiResponse<void>>(`${SuperadminUrlConfig.BACKEND_API.INFRASTRUCTURE_BASE}/redis/flush-global`, { method: 'POST' }),
+    flushTenantCache: (tenantIds: string[]) => apiFetch<ApiResponse<void>>(`${SuperadminUrlConfig.BACKEND_API.INFRASTRUCTURE_BASE}/redis/flush-tenant`, { method: 'POST', body: JSON.stringify({ tenantIds }) }),
   },
 };
