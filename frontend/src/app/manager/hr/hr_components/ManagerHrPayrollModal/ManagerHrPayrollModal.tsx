@@ -53,7 +53,11 @@ export default function ManagerHrPayrollModal() {
             const payableAmount = Math.round((baseSalary / daysInMonth) * presentDays);
             
             setValue('amount', payableAmount);
-            setCalculationInfo(`Present: ${presentDays}/${daysInMonth} days. Payable: ₹${payableAmount}`);
+            let info = `Present: ${presentDays}/${daysInMonth} days. Payable: ₹${payableAmount}`;
+            if (s.advanceSalary && s.advanceSalary > 0) {
+               info += ` | ⚠️ Note: Staff has an advance balance of ₹${s.advanceSalary}`;
+            }
+            setCalculationInfo(info);
           }
         } catch (e) {
           // Error handled via toaster in component
@@ -62,7 +66,11 @@ export default function ManagerHrPayrollModal() {
         const s = staff.find(x => String(x.id) === String(selectedStaffId));
         if (s) {
           setValue('amount', s.salary || 0);
-          setCalculationInfo('');
+          let info = '';
+          if (s.advanceSalary && s.advanceSalary > 0) {
+             info = `⚠️ Note: Staff has an advance balance of ₹${s.advanceSalary}`;
+          }
+          setCalculationInfo(info);
         }
       }
     };

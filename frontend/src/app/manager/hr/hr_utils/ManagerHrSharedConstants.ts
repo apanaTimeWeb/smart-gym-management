@@ -14,7 +14,9 @@ export const StaffSchema = z.object({
     message: "Password must be at least 8 characters",
   }),
   isActive: z.boolean().default(true),
-  aadhaar: z.string().regex(/^\d{12}$/, "Aadhaar must be exactly 12 digits").optional().or(z.literal(''))
+  aadhaar: z.string().regex(/^\d{12}$/, "Aadhaar must be exactly 12 digits").optional().or(z.literal('')),
+  upiId: z.string().regex(/^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}$/, "Invalid UPI ID format").optional().or(z.literal('')),
+  advanceSalary: z.number().min(0, "Advance cannot be negative").optional().default(0)
 });
 
 export type StaffFormValues = z.infer<typeof StaffSchema>;
@@ -32,7 +34,9 @@ export const EMPTY_STAFF = {
  joinDate: new Date().toISOString().split('T')[0],
  temporaryPassword: '',
  isActive: true,
- aadhaar: ''
+ aadhaar: '',
+ upiId: '',
+ advanceSalary: 0
 };
 
 export const PayrollSchema = z.object({
@@ -82,6 +86,8 @@ export const STAFF_MODAL_FIELDS = [
  { label: 'Email', key: 'email', type: 'email', placeholder: '' },
  { label: 'Phone', key: 'phone', type: 'tel', placeholder: '' },
  { label: 'Aadhaar No.', key: 'aadhaar', type: 'tel', placeholder: '123456789012' },
+ { label: 'UPI ID', key: 'upiId', type: 'text', placeholder: 'rahul@okhdfcbank' },
  { label: 'Monthly Salary (₹)', key: 'salary', type: 'number', placeholder: '' },
+ { label: 'Advance Paid (₹)', key: 'advanceSalary', type: 'number', placeholder: '0' },
  { label: 'Address', key: 'address', type: 'text', placeholder: 'Full Address' },
 ];

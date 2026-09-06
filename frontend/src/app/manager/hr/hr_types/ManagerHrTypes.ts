@@ -60,7 +60,7 @@ export interface HrContextType {
 export interface Staff {
   id: string; name: string; email: string; phone: string;
   role: string; salary: number; branch: string; gender: string;
-  address?: string; aadhaar?: string; upiId?: string; joinDate: string; isActive: boolean;
+  address?: string; aadhaar?: string; upiId?: string; advanceSalary?: number; joinDate: string; isActive: boolean;
 }
 export interface Payroll {
   id: string; staffId: string; month: string; amount: number;

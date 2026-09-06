@@ -135,6 +135,8 @@ export function useManagerHrLogic(initialData?: HrInitialData | null): HrContext
       gender: s.gender, 
       address: s.address || '', 
       aadhaar: s.aadhaar || '',
+      upiId: s.upiId || '',
+      advanceSalary: s.advanceSalary || 0,
       isActive: s.isActive,
       joinDate: new Date(s.joinDate).toISOString().split('T')[0] 
     });

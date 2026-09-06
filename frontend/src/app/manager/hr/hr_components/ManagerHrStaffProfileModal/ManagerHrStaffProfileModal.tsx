@@ -75,10 +75,26 @@ export default function ManagerHrStaffProfileModal() {
             </div>
 
             <div className="flex items-start gap-3">
+              <IndianRupee className="w-5 h-5 text-primary mt-0.5" />
+              <div>
+                <p className="text-xs text-secondary mb-0.5">Advance Balance</p>
+                <p className="text-sm font-bold text-primary">{(s.advanceSalary || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
               <Hash className="w-5 h-5 text-secondary mt-0.5" />
               <div>
                 <p className="text-xs text-secondary mb-0.5">Aadhaar No.</p>
                 <p className="text-sm font-semibold text-foreground">{s.aadhaar || 'N/A'}</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <span className="w-5 h-5 flex items-center justify-center font-bold text-xs text-secondary mt-0.5 border border-secondary rounded-sm">UPI</span>
+              <div>
+                <p className="text-xs text-secondary mb-0.5">UPI ID</p>
+                <p className="text-sm font-semibold text-foreground">{s.upiId || 'N/A'}</p>
               </div>
             </div>
 
