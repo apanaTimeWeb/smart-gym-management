@@ -119,6 +119,21 @@ export default function ManagerExpensesModal() {
                 className="w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-colors border-border focus-visible:ring-primary"
               />
             </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-secondary mb-1">Receipt URL (Optional)</label>
+              <input
+                type="url"
+                placeholder="https://example.com/receipt.jpg"
+                {...register('receiptUrl')}
+                className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-colors ${
+                  errors.receiptUrl ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
+                }`}
+              />
+              {errors.receiptUrl && (
+                <p className="text-danger text-xs mt-1">{errors.receiptUrl.message}</p>
+              )}
+            </div>
 
             <div>
               <label className="block text-sm font-medium text-secondary mb-1">Notes (Optional)</label>

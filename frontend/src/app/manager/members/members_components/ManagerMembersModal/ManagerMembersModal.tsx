@@ -21,7 +21,7 @@ export default function ManagerMembersModal() {
   const saving = useManagerMembersStore(s => s.saving);
 
   const useFormReturn = useForm<MemberFormValues>({
-    resolver: zodResolver(MemberSchema),
+    resolver: zodResolver(MemberSchema) as any,
     defaultValues: editData || EMPTY_MEMBER_FORM
   });
 
@@ -70,7 +70,7 @@ export default function ManagerMembersModal() {
   }, [watchJoinDate, watchBillingCycle, watchCustomDays, useFormReturn]);
 
   const onSubmit = (data: MemberFormValues) => {
-    let payload = { ...data };
+    let payload: Partial<MemberFormValues> & { pendingAmount?: number } = { ...data };
     if (!editId) {
       const total = data.totalAmount || 0;
       const paid = data.paidAmount || 0;
@@ -86,7 +86,7 @@ export default function ManagerMembersModal() {
       delete payload.billingCycle;
       delete payload.customDays;
     }
-    saveMember(payload);
+    saveMember(payload as MemberFormValues);
   };
 
   if (!showAddModal) return null;

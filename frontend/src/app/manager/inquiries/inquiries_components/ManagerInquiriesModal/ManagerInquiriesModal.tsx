@@ -48,14 +48,33 @@ export default function ManagerInquiriesModal() {
   }, [showModal]);
 
   // Sync form values when modal opens with new editData
+  const [newNote, setNewNote] = useState('');
+  
   useEffect(() => {
-    if (showModal && editData) reset(editData);
+    if (showModal) {
+      if (editData) {
+        reset(editData);
+      } else {
+        reset(EMPTY_INQUIRY_FORM);
+      }
+      setNewNote('');
+    }
   }, [showModal, editData, reset]);
 
   const onSubmit = (data: InquiryFormValues) => {
     const payload = { ...data };
     if (!payload.email) delete payload.email;
     if (!payload.notes) delete payload.notes;
+    
+    if (newNote.trim()) {
+      payload.followUpLogs = [...(editData?.followUpLogs || []), {
+        date: new Date().toISOString(),
+        note: newNote.trim()
+      }];
+    } else {
+      payload.followUpLogs = editData?.followUpLogs || [];
+    }
+    
     saveInquiry(payload);
   };
   
@@ -150,8 +169,40 @@ export default function ManagerInquiriesModal() {
               />
             </div>
             </div>
+
+            {/* Follow-up Logs Section */}
+            {editId && (
+              <div className="pt-4 mt-4 border-t border-border">
+                <h4 className="text-sm font-semibold text-primary mb-3">Follow-up History</h4>
+                
+                {editData?.followUpLogs && editData.followUpLogs.length > 0 ? (
+                  <div className="space-y-3 mb-4 max-h-32 overflow-y-auto custom-scrollbar pr-2">
+                    {editData.followUpLogs.map((log, i) => (
+                      <div key={i} className="bg-primary-subtle p-3 rounded-lg border border-primary/20">
+                        <div className="text-xs text-secondary font-medium mb-1">
+                          {new Date(log.date).toLocaleDateString()} {new Date(log.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </div>
+                        <div className="text-sm text-foreground">{log.note}</div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-secondary italic mb-4">No follow-up history yet.</p>
+                )}
+
+                <div>
+                  <label className="block text-sm font-medium text-secondary mb-1">Add New Follow-up Note</label>
+                  <textarea
+                    value={newNote}
+                    onChange={(e) => setNewNote(e.target.value)}
+                    placeholder="Enter call notes or remarks..."
+                    className="w-full border border-border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary transition-colors min-h-[80px]"
+                  />
+                </div>
+              </div>
+            )}
             
-            <div className="flex gap-3 pt-2 mt-2 border-t border-border">
+            <div className="flex gap-3 pt-2 mt-4 border-t border-border">
               <button
                 type="button"
                 onClick={() => setShowModal(false)}

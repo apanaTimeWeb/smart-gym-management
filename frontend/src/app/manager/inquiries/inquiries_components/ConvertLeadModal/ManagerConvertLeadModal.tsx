@@ -42,7 +42,7 @@ export default function ManagerConvertLeadModal() {
   }, [convertLead, plans.length, fetchState, loadAll]);
 
   const useFormReturn = useForm<MemberFormValues>({
-    resolver: zodResolver(MemberSchema),
+    resolver: zodResolver(MemberSchema) as any,
     defaultValues: EMPTY_MEMBER_FORM
   });
 

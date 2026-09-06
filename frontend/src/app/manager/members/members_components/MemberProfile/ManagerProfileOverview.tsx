@@ -47,7 +47,6 @@ export default function ManagerProfileOverview() {
             </div>
           )}
         </div>
-      </div>
  <div>
  <h3 className="font-semibold text-foreground mb-3">Quick Actions</h3>
  <div className="flex flex-col gap-2">

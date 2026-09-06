@@ -9,7 +9,11 @@ export const InquirySchema = z.object({
   interest: z.string().min(2, "Interest is required"),
   status: z.enum(['NEW', 'FOLLOW_UP', 'CONVERTED', 'LOST']),
   source: z.string(),
-  notes: z.string().optional()
+  notes: z.string().optional(),
+  followUpLogs: z.array(z.object({
+    date: z.string(),
+    note: z.string()
+  })).optional()
 });
 
 export type InquiryFormValues = z.infer<typeof InquirySchema>;

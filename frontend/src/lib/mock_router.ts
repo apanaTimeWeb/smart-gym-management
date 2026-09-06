@@ -113,7 +113,7 @@ class MockDB {
         currentPayrolls[existingRecordIdx].staff = { name: s.name, role: s.role };
         if (currentPayrolls[existingRecordIdx].status === 'PENDING') {
           currentPayrolls[existingRecordIdx].amount = finalAmount;
-          currentPayrolls[existingRecordIdx].pendingAmount = finalAmount - (currentPayrolls[existingRecordIdx].paidAmount || 0);
+          currentPayrolls[existingRecordIdx].pendingAmount = Number(finalAmount) - Number(currentPayrolls[existingRecordIdx].paidAmount || 0);
         }
       } else {
         currentPayrolls.push({
@@ -653,6 +653,7 @@ export async function routeMockRequest<T>(
       let staff = MockDB.getCollection('mock_admin_staff', []);
       const plans = MockDB.getCollection('mock_admin_plans', []);
       const inquiries = MockDB.getCollection('mock_inquiries', []);
+      const storeOrders = MockDB.getCollection('mock_store_orders', []);
       
       // Members will only be populated via conversions now, no dummy generation.
       
@@ -690,13 +691,22 @@ export async function routeMockRequest<T>(
         return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
       }).length;
 
-      // Revenue stats
+      // Revenue stats (Memberships + Store POS)
       const validPayments = payments.filter((p: any) => p.status === 'PAID');
-      const totalRevenue = validPayments.reduce((sum: number, p: any) => sum + (Number(p.amount) || 0), 0);
-      const monthlyRevenue = validPayments.filter((p: any) => {
+      
+      let totalRevenue = validPayments.reduce((sum: number, p: any) => sum + (Number(p.amount) || 0), 0);
+      let monthlyRevenue = validPayments.filter((p: any) => {
         const d = new Date(p.paidAt || p.createdAt || now);
         return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
       }).reduce((sum: number, p: any) => sum + (Number(p.amount) || 0), 0);
+      
+      // Add Store Orders to revenue
+      const validStoreOrders = storeOrders.filter((o: any) => o.status === 'COMPLETED' || !o.status);
+      totalRevenue += validStoreOrders.reduce((sum: number, o: any) => sum + (Number(o.total) || 0), 0);
+      monthlyRevenue += validStoreOrders.filter((o: any) => {
+        const d = new Date(o.createdAt || now);
+        return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+      }).reduce((sum: number, o: any) => sum + (Number(o.total) || 0), 0);
 
       // Pending payments
       const pendingPayments = members.reduce((sum: number, m: any) => sum + (Number(m.pendingAmount) || 0), 0);
@@ -772,7 +782,7 @@ export async function routeMockRequest<T>(
     // Removed /erp/hr, /erp/workout, /erp/library (now handled by MockDB)
     if (path.includes('/sales/overview')) {
       return { success: true, message: 'Demo Sales Overview', data: {
-        monthlyRevenue: generate(6, i => ({ month: `Month ${i+1}`, revenue: 300000 + (i * 15000), expenses: 100000 + (i * 5000), newMembers: 20 + i * 5 }))
+        monthlyRevenue: generate(6, i => ({ month: `Month ${i+1}`, revenue: 300000 + (i * 15000), storeRevenue: 50000 + (i * 8000), expenses: 100000 + (i * 5000), newMembers: 20 + i * 5 }))
       }} as unknown as ApiResponse<T>;
     }
     if (path.includes('/sales/membership-report')) {

@@ -5,7 +5,7 @@ import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency, MemberFormValue
 import type { PlanWithCustom } from '@/app/manager/members/members_types/ManagerMembersTypes';
 
 interface ManagerConvertLeadFormProps {
-  useFormReturn: UseFormReturn<MemberFormValues>;
+  useFormReturn: any;
   plans: PlanWithCustom[];
   watchPlanId?: string;
   watchBillingCycle?: string;

@@ -40,7 +40,7 @@ export default function ManagerRenewModal() {
   const saving = useManagerMembersStore(s => s.saving);
 
   const useFormReturn = useForm<RenewFormValues>({
-    resolver: zodResolver(RenewSchema),
+    resolver: zodResolver(RenewSchema) as any,
     defaultValues: {
       actionType: 'renew',
       planId: '',
