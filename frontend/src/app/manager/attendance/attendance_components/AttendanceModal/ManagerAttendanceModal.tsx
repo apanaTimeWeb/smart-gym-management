@@ -62,7 +62,23 @@ export default function AttendanceModal() {
           </button>
         </div>
         <form onSubmit={handleSubmit(markAttendance)} className="p-5 space-y-4">
-          {/* Type is now automatically inferred from the active tab */}
+          
+          {tab === 'All' && (
+            <div>
+              <label className="block text-sm font-medium text-secondary mb-2">User Type</label>
+              <div className="flex gap-4">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" value="MEMBER" {...register('type')} className="text-primary focus:ring-primary h-4 w-4" />
+                  <span className="text-sm font-medium text-foreground">Member</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" value="STAFF" {...register('type')} className="text-primary focus:ring-primary h-4 w-4" />
+                  <span className="text-sm font-medium text-foreground">Staff</span>
+                </label>
+              </div>
+            </div>
+          )}
+
           <div>
             <label className="block text-sm font-medium text-secondary mb-1">
               {watchType === 'MEMBER' ? 'Select Member' : 'Select Staff'}
