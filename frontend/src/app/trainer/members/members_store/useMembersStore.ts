@@ -65,7 +65,7 @@ export const useMembersStore = create<MembersState>((set, get) => ({
       if (params.search) {
         const q = params.search.toLowerCase();
         fetchedMembers = fetchedMembers.filter(m => 
-          m.name.toLowerCase().includes(q) || (m.phone && m.phone.includes(q))
+          m.name?.toLowerCase().includes(q) || (m.phone && m.phone?.includes(q))
         );
       }
       if (params.status && params.status !== 'All') {

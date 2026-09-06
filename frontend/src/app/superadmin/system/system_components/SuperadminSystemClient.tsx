@@ -76,9 +76,9 @@ export default function SuperadminSystemClient() {
   };
 
   const filteredLogs = finalLogs.filter((log: GlobalAuditLog) =>
-    log.targetResource.toLowerCase().includes(logSearch.toLowerCase()) ||
-    log.action.toLowerCase().includes(logSearch.toLowerCase()) ||
-    log.actorName.toLowerCase().includes(logSearch.toLowerCase())
+    log.targetResource?.toLowerCase().includes(logSearch.toLowerCase()) ||
+    log.action?.toLowerCase().includes(logSearch.toLowerCase()) ||
+    log.actorName?.toLowerCase().includes(logSearch.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredLogs.length / ITEMS_PER_PAGE) || 1;

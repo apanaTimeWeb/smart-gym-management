@@ -20,8 +20,8 @@ export default function AdminDashboardRecentMembers() {
 
   const filtered = members.filter(m => {
     const planName = typeof m.plan === 'string' ? m.plan : m.plan?.name || '';
-    return m.name.toLowerCase().includes(search.toLowerCase()) ||
-           planName.toLowerCase().includes(search.toLowerCase());
+    return m.name?.toLowerCase().includes(search.toLowerCase()) ||
+           planName?.toLowerCase().includes(search.toLowerCase());
   });
 
   const totalPages = Math.ceil(filtered.length / DASHBOARD_RECENT_MEMBERS_PAGE_SIZE) || 1;

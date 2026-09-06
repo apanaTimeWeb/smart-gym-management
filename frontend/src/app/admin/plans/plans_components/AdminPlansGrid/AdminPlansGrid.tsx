@@ -16,7 +16,7 @@ export default function AdminPlansGrid() {
   const { confirm } = useAdminConfirm();
 
   // Client-side filter on the already-fetched plans list (plans count is typically small, <100)
-  const filtered = plans.filter(p => p.name.toLowerCase().includes(search.toLowerCase()));
+  const filtered = plans.filter(p => p.name?.toLowerCase().includes(search.toLowerCase()));
   const totalPages = Math.ceil(filtered.length / ADMIN_ITEMS_PER_PAGE);
   const currentData = filtered.slice((currentPage - 1) * ADMIN_ITEMS_PER_PAGE, currentPage * ADMIN_ITEMS_PER_PAGE);
 

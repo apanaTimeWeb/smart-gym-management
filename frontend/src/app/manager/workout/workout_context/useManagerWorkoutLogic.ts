@@ -60,13 +60,13 @@ export function useManagerWorkoutLogic(): WorkoutContextType {
         const q = debouncedSearch.toLowerCase();
         
         fetchedWorkouts = fetchedWorkouts.filter((w: Workout) => {
-          const matchesSearch = !debouncedSearch || w.name.toLowerCase().includes(q);
+          const matchesSearch = !debouncedSearch || w.name?.toLowerCase().includes(q);
           const matchesLevel = levelFilter === 'ALL' || w.level === levelFilter;
           return matchesSearch && matchesLevel;
         });
 
         if (debouncedSearch) {
-          fetchedExercises = fetchedExercises.filter((e: Exercise) => e.name.toLowerCase().includes(q) || (e.category && e.category.toLowerCase().includes(q)));
+          fetchedExercises = fetchedExercises.filter((e: Exercise) => e.name?.toLowerCase().includes(q) || (e.category && e.category?.toLowerCase().includes(q)));
         }
       }
 

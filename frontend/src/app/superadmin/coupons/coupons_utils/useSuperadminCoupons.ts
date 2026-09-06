@@ -140,7 +140,7 @@ export const useSuperadminCoupons = () => {
         if (!a.isDeleted && b.isDeleted) return -1;
         return 0;
       })
-      .filter(c => c.code.toLowerCase().includes(lowerQuery));
+      .filter(c => c.code?.toLowerCase().includes(lowerQuery));
   }, [coupons, searchQuery, activeKpi]);
 
   return {

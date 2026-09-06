@@ -66,7 +66,7 @@ export function useManagerLibraryLogic(initialData?: LibraryInitialData | null):
  let fetchedDiets = dietRes.data?.dietPlans || dietRes.data || [];
  if (debouncedSearch) {
    const q = debouncedSearch.toLowerCase();
-   fetchedDiets = fetchedDiets.filter((d: DietPlan) => d.name.toLowerCase().includes(q));
+   fetchedDiets = fetchedDiets.filter((d: DietPlan) => d.name?.toLowerCase().includes(q));
  }
  setDietPlans(fetchedDiets);
  } catch (e) {

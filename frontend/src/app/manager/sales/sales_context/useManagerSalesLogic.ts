@@ -106,9 +106,9 @@ export function useManagerSalesLogic(initialData?: SalesInitialData | null): Sal
 
       if (debouncedSearch) {
         const q = debouncedSearch.toLowerCase();
-        fetchedReport = fetchedReport.filter((m: MembershipReportItem) => m.name && m.name.toLowerCase().includes(q));
-        fetchedPending = fetchedPending.filter((m: PendingPaymentMember) => m.name.toLowerCase().includes(q) || (m.phone && m.phone.includes(q)));
-        fetchedAll = fetchedAll.filter((m: Member) => m.name.toLowerCase().includes(q) || m.phone.includes(q) || (m.email && m.email.toLowerCase().includes(q)));
+        fetchedReport = fetchedReport.filter((m: MembershipReportItem) => m.name && m.name?.toLowerCase().includes(q));
+        fetchedPending = fetchedPending.filter((m: PendingPaymentMember) => m.name?.toLowerCase().includes(q) || (m.phone && m.phone?.includes(q)));
+        fetchedAll = fetchedAll.filter((m: Member) => m.name?.toLowerCase().includes(q) || m.phone?.includes(q) || (m.email && m.email?.toLowerCase().includes(q)));
       }
 
       setOverviewData(fetchedOverview);

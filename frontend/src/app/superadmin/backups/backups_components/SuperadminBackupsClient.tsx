@@ -81,9 +81,9 @@ if (fetchState === 'loading') return (
   if (error || !backups) return <div className="p-8 text-center text-danger">Error loading data.</div>;
 
   const filtered: BackupRecord[] = backups.filter((b: BackupRecord) => 
-    b.tenantName.toLowerCase().includes(search.toLowerCase()) || 
-    b.databaseName.toLowerCase().includes(search.toLowerCase()) ||
-    b.id.toLowerCase().includes(search.toLowerCase())
+    b.tenantName?.toLowerCase().includes(search.toLowerCase()) || 
+    b.databaseName?.toLowerCase().includes(search.toLowerCase()) ||
+    b.id?.toLowerCase().includes(search.toLowerCase())
   );
 
   const totalPages: number = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;

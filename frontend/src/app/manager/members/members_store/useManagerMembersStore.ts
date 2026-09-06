@@ -86,9 +86,9 @@ export const useManagerMembersStore = create<MembersState>((set, get) => ({
       if (params?.search) {
         const query = params.search.toLowerCase();
         members = members.filter((m: Member) => 
-          m.name.toLowerCase().includes(query) || 
-          m.phone.includes(query) || 
-          (m.email && m.email.toLowerCase().includes(query))
+          m.name?.toLowerCase().includes(query) || 
+          m.phone?.includes(query) || 
+          (m.email && m.email?.toLowerCase().includes(query))
         );
       }
 

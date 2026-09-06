@@ -15,7 +15,7 @@ export default function PendingPayments() {
   const list = stats.pendingPaymentsList || [];
 
   const filtered = list.filter(p =>
-    p.name.toLowerCase().includes(search.toLowerCase())
+    p.name?.toLowerCase().includes(search.toLowerCase())
   );
 
   return (

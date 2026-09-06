@@ -78,7 +78,7 @@ export function useLibraryLogic(initialData?: any | null): LibraryContextType {
       if (debouncedSearch) {
         const q = debouncedSearch.toLowerCase();
         fetchedDietPlans = fetchedDietPlans.filter((d: DietPlan) => 
-          d.name.toLowerCase().includes(q) || d.goal?.toLowerCase().includes(q)
+          d.name?.toLowerCase().includes(q) || d.goal?.toLowerCase().includes(q)
         );
       }
       

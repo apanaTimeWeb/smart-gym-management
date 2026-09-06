@@ -38,7 +38,7 @@ export const useManagerExpensesStore = create<ExpensesState>((set, get) => ({
       if (params?.search) {
         const q = params.search.toLowerCase();
         fetchedExpenses = fetchedExpenses.filter((e: Expense) => 
-          e.title.toLowerCase().includes(q) || e.category.toLowerCase().includes(q)
+          e.title?.toLowerCase().includes(q) || e.category?.toLowerCase().includes(q)
         );
       }
 
