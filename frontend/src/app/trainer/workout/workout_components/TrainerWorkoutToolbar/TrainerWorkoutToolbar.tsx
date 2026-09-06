@@ -34,7 +34,7 @@ export default function TrainerWorkoutToolbar() {
         {WORKOUT_TAB_OPTIONS.map(t => (
           <button 
             key={t} 
-            onClick={() => { setTab(t);  setSearch(''); }}
+            onClick={() => setTab(t)}
             className={`px-5 py-3.5 text-sm font-medium motion-safe:transition-colors border-b-2 whitespace-nowrap ${
               tab === t 
                 ? 'text-primary bg-primary-subtle' 
