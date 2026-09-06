@@ -55,7 +55,7 @@ export const EMPTY_PAYROLL_FORM = {
   notes: ''
 } as unknown as PayrollFormValues;
 
-export const STAFF_TABLE_HEADERS = ['Name', 'Role', 'Status', 'Phone', 'Salary', 'Joined'];
+export const STAFF_TABLE_HEADERS = ['Name', 'Role', 'Status', 'Phone', 'Salary', 'Advance', 'Joined'];
 
 export const PAYROLL_TABLE_HEADERS = ['Staff', 'Month', 'Total Amount', 'Paid Amount', 'Pending', 'Status', 'Paid On'];
 

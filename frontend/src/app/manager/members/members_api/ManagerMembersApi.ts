@@ -17,5 +17,5 @@ export const membersApi = {
   remove: (id: string) => apiFetch<ApiResponse<{ id: string }>>(MembersUrlConfig.BACKEND_API.DELETE(id), { method: 'DELETE' }),
   renew: (id: string, body: unknown) =>
     apiFetch<ApiResponse<Member>>(MembersUrlConfig.BACKEND_API.RENEW(id), { method: 'POST', body: JSON.stringify(body) }),
-  getTrainers: () => apiFetch<ApiResponse<{ staff: { id: string; name: string; role: string }[] }>>('/manager/hr'),
+  getTrainers: () => apiFetch<ApiResponse<{ staff: { id: string; name: string; role: string }[] }>>('/manager/hr/staff'),
 };

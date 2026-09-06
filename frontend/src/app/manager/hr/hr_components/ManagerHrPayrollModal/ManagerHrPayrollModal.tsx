@@ -127,11 +127,10 @@ export default function ManagerHrPayrollModal() {
               <input 
                 type="number" min="0" onKeyDown={(e) => { if (['e', 'E', '-', '+'].includes(e.key)) e.preventDefault(); }}
                 {...register('amount', { valueAsNumber: true })}
-                readOnly
-                className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground cursor-not-allowed opacity-80"
+                className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground transition-all duration-200"
               />
               <p className="text-xs text-secondary mt-1.5">
-                {calculationInfo ? calculationInfo : "Amount is automatically set to the staff's base salary."}
+                {calculationInfo ? calculationInfo : "Amount is automatically set to the staff's base salary, but you can modify it."}
               </p>
               {errors.amount && <p className="text-danger text-xs mt-1.5">{errors.amount.message as string}</p>}
             </div>

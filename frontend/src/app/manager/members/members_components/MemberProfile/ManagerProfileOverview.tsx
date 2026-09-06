@@ -108,7 +108,7 @@ export default function ManagerProfileOverview() {
     Unsuspend Member
     </button>
   ) : null}
-  {trainers.length > 0 && (
+  {trainers.length > 0 ? (
     <div className="mt-4 pt-4 border-t border-border">
       <h4 className="text-sm font-semibold mb-2">Assign Trainer</h4>
       {!isAssigningTrainer ? (
@@ -156,6 +156,13 @@ export default function ManagerProfileOverview() {
           </div>
         </div>
       )}
+    </div>
+  ) : (
+    <div className="mt-4 pt-4 border-t border-border">
+      <h4 className="text-sm font-semibold mb-2">Assign Trainer</h4>
+      <p className="text-xs text-secondary bg-secondary/5 p-3 rounded-lg border border-border">
+        No active trainers found. Please add staff with a &quot;Trainer&quot; role in the HR module first.
+      </p>
     </div>
   )}
  </div>

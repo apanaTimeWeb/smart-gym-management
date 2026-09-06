@@ -43,6 +43,7 @@ export default function ManagerHrStaffTable() {
                   <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-24"></div></td>
                   <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
                   <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-24"></div></td>
+                  <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
                   <td className="px-4 py-4"><div className="h-6 bg-muted rounded w-16 ml-auto"></div></td>
                 </tr>
               ))}
@@ -60,7 +61,7 @@ export default function ManagerHrStaffTable() {
           <thead className="bg-input text-secondary">
             <tr>
               {STAFF_TABLE_HEADERS.map(h => (
-                <th key={h} className={`text-xs font-semibold uppercase tracking-wider px-4 py-3 ${h === 'Salary' ? 'text-right' : 'text-left'}`}>
+                <th key={h} className={`text-xs font-semibold uppercase tracking-wider px-4 py-3 ${h === 'Salary' || h === 'Advance' ? 'text-right' : 'text-left'}`}>
                   {h}
                 </th>
               ))}
@@ -99,6 +100,7 @@ export default function ManagerHrStaffTable() {
                 </td>
                 <td className="px-4 py-3 text-sm text-secondary">{s.phone}</td>
                 <td className="px-4 py-3 text-sm font-medium text-success text-right">{(s.salary || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
+                <td className="px-4 py-3 text-sm font-medium text-primary text-right">{s.advanceSalary && s.advanceSalary > 0 ? s.advanceSalary.toLocaleString('en-IN', { style: 'currency', currency: 'INR' }) : '—'}</td>
                 <td className="px-4 py-3 text-sm text-secondary">
                   {s.joinDate ? new Date(s.joinDate).toLocaleDateString('en-IN') : 'N/A'}
                 </td>
@@ -146,7 +148,7 @@ export default function ManagerHrStaffTable() {
             ))}
             {filteredStaff.length === 0 && (
               <tr>
-                <td colSpan={7} className="p-0 border-b-0">
+                <td colSpan={8} className="p-0 border-b-0">
                   <ManagerEmptyState 
                     icon={<Users size={32} />}
                     title={debouncedSearch ? 'No staff found' : 'No staff members yet'}
