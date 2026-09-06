@@ -30,6 +30,9 @@ export interface Member {
   assignedWorkoutId?: string;
   assignedWorkout?: Workout;
   medicalHistory?: string;
+  assignedTrainerId?: string;
+  assignedTrainerName?: string;
+  isPT?: boolean;
 }
 
 export interface MemberStats {
@@ -85,6 +88,8 @@ export interface MembersContextType {
   recordPayment: (data: { amount: number; method: string }) => Promise<void>;
   freezeMember: (isFrozen: boolean) => Promise<void>;
   toggleSuspend: (isSuspended: boolean) => Promise<void>;
+  assignTrainer: (memberId: string, trainerId: string, trainerName: string, isPT: boolean) => Promise<void>;
+  trainers: { id: string; name: string; role: string }[];
 
   // Message Modal
   msgModal: { open: boolean; recipient: ManagerMessageRecipient; type: MessageType; message: string; subject?: string } | null;

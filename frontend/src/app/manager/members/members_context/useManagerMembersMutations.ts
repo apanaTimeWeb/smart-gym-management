@@ -26,6 +26,7 @@ export function useManagerMembersMutations(
   const storeRecordPayment = useManagerMembersStore((s) => s.recordPayment);
   const storeFreezeMember = useManagerMembersStore((s) => s.freezeMember);
   const storeToggleSuspendMember = useManagerMembersStore((s) => s.toggleSuspendMember);
+  const storeAssignTrainer = useManagerMembersStore((s) => s.assignTrainer);
 
   const saveMember = useCallback(async (data: MemberFormValues) => {
     try {
@@ -128,6 +129,18 @@ export function useManagerMembersMutations(
     }
   }, [selectedMember, setSelectedMember, showToast, storeToggleSuspendMember]);
 
+  const assignTrainer = useCallback(async (memberId: string, trainerId: string, trainerName: string, isPT: boolean) => {
+    try {
+      await storeAssignTrainer(memberId, trainerId, trainerName, isPT);
+      showToast('Trainer assigned successfully', 'success');
+      if (selectedMember?.id === memberId) {
+        setSelectedMember(prev => prev ? { ...prev, assignedTrainerId: trainerId, assignedTrainerName: trainerName, isPT } as Member : null);
+      }
+    } catch (err: unknown) {
+      showToast(err instanceof Error ? err.message : 'Failed to assign trainer', 'error');
+    }
+  }, [storeAssignTrainer, showToast, selectedMember, setSelectedMember]);
+
   return {
     saveMember,
     deleteMember,
@@ -136,6 +149,7 @@ export function useManagerMembersMutations(
     renewMember,
     recordPayment,
     freezeMember,
-    toggleSuspend
+    toggleSuspend,
+    assignTrainer
   };
 }

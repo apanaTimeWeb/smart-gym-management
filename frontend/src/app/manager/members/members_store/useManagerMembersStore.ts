@@ -20,6 +20,7 @@ export interface MembersState {
   members: Member[];
   plans: Plan[];
   payments: Payment[];
+  trainers: { id: string; name: string; role: string }[];
   stats: { total: number; active: number; pending: number; expired: number };
   fetchState: FetchState;
   saving: boolean;
@@ -38,12 +39,14 @@ export interface MembersState {
   recordPayment: (memberId: string, data: { amount: number; method: string }) => Promise<{ success: boolean; message: string }>;
   freezeMember: (memberId: string, isFrozen: boolean) => Promise<void>;
   toggleSuspendMember: (memberId: string, isSuspended: boolean) => Promise<void>;
+  assignTrainer: (memberId: string, trainerId: string, trainerName: string, isPT: boolean) => Promise<void>;
 }
 
 export const useManagerMembersStore = create<MembersState>((set, get) => ({
   members: [],
   plans: [],
   payments: [],
+  trainers: [],
   stats: { total: 0, active: 0, pending: 0, expired: 0 },
   fetchState: 'idle',
   saving: false,
@@ -63,10 +66,11 @@ export const useManagerMembersStore = create<MembersState>((set, get) => ({
   loadAll: async (params) => {
     set({ fetchState: 'loading' });
     try {
-      const [membersRes, plansRes, statsRes] = await Promise.all([
+      const [membersRes, plansRes, statsRes, trainersRes] = await Promise.all([
         membersApi.getAll(params as Record<string, string>),
         plansApi.getAll(),
-        membersApi.getStats()
+        membersApi.getStats(),
+        membersApi.getTrainers().catch(() => ({ data: { staff: [] } }))
       ]);
 
       let plans = plansRes.data || [];
@@ -108,6 +112,7 @@ export const useManagerMembersStore = create<MembersState>((set, get) => ({
         members,
         totalMembers: membersRes.data?.total || 0,
         plans,
+        trainers: (trainersRes as any)?.data?.staff?.filter((s: any) => s.role?.toLowerCase().includes('trainer')) || [],
         stats: statsRes.data || { total: 0, active: 0, pending: 0, expired: 0 },
         fetchState: 'success',
       });

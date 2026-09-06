@@ -19,6 +19,7 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
   // Zustand Store
   const hydrate = useManagerMembersStore((s) => s.hydrate);
   const loadAll = useManagerMembersStore((s) => s.loadAll);
+  const trainers = useManagerMembersStore((s) => s.trainers);
 
   const isFirstRender = React.useRef(true);
 
@@ -119,7 +120,7 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
     setShowAddModal(true);
   }, []);
 
-  const { saveMember, deleteMember, assignDiet, assignWorkout, renewMember, recordPayment, freezeMember, toggleSuspend } = useManagerMembersMutations(
+  const { saveMember, deleteMember, assignDiet, assignWorkout, renewMember, recordPayment, freezeMember, toggleSuspend, assignTrainer } = useManagerMembersMutations(
     showToast, selectedMember, setSelectedMember, editId, setShowAddModal, setShowRenewModal, setShowPaymentModal
   );
 
@@ -139,11 +140,11 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
   return {
     search, debouncedSearch, setSearch, statusFilter, setStatusFilter, currentPage, setCurrentPage,
     toast, showToast, hideToast,
-    selectedMember, setSelectedMember, profileTab, setProfileTab,
+    selectedMember, setSelectedMember, profileTab, setProfileTab, trainers,
     showAddModal, setShowAddModal, editId, editData,
     showRenewModal, setShowRenewModal,
     showPaymentModal, setShowPaymentModal,
-    openAdd, openEdit, saveMember, deleteMember, assignDiet, assignWorkout, renewMember, recordPayment, freezeMember, toggleSuspend,
+    openAdd, openEdit, saveMember, deleteMember, assignDiet, assignWorkout, renewMember, recordPayment, freezeMember, toggleSuspend, assignTrainer,
     msgModal, openMsg, closeMsg,
     printData, handlePrint, handleSharePaymentWhatsApp, setPrintData
   };
