@@ -186,7 +186,14 @@ export async function routeMockRequest<T>(
     
     return MockDB.handleCrud('mock_orders', method, path, parsedBody, defaultOrders, 'orders') as unknown as ApiResponse<T>;
   }
-  if (path.includes('/plans') && !path.includes('/superadmin')) return MockDB.handleCrud('mock_admin_plans', method, path, parsedBody, generate(3, i => ({ id: `plan-${i}`, name: i === 0 ? 'Basic Plan' : i === 1 ? 'Pro Plan' : 'VIP Plan', tier: i === 0 ? 'Standard' : i === 1 ? 'Premium' : 'Elite', price1Month: 1000 * (i + 1), price3Month: 2500 * (i + 1), price6Month: 4800 * (i + 1), price12Month: 9000 * (i + 1), features: ['Access to gym', 'Locker facility', 'Cardio section'], isActive: true }))) as unknown as ApiResponse<T>;
+  if (path.includes('/plans') && !path.includes('/superadmin')) {
+    const existing = MockDB.getCollection('mock_admin_plans', []);
+    const defaultPlans = generate(3, i => ({ id: `plan-${i}`, name: i === 0 ? 'Basic Plan' : i === 1 ? 'Pro Plan' : 'VIP Plan', tier: i === 0 ? 'Standard' : i === 1 ? 'Premium' : 'Elite', price1Month: 1000 * (i + 1), price3Month: 2500 * (i + 1), price6Month: 4800 * (i + 1), price12Month: 9000 * (i + 1), features: ['Access to gym', 'Locker facility', 'Cardio section'], isActive: true }));
+    if (existing.length === 0) {
+      MockDB.setCollection('mock_admin_plans', defaultPlans);
+    }
+    return MockDB.handleCrud('mock_admin_plans', method, path, parsedBody, defaultPlans) as unknown as ApiResponse<T>;
+  }
   if (path.includes('/members/stats')) return { success: true, message: 'Stats', data: { total: 150, active: 110, pending: 25, expired: 15 } } as unknown as ApiResponse<T>;
   if (path.includes('/members') && !path.includes('/stats') && !path.includes('/superadmin')) {
     const existing = MockDB.getCollection('mock_members', []);
