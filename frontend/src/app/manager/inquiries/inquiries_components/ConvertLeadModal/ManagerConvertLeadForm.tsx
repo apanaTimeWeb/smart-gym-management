@@ -23,7 +23,7 @@ export default function ManagerConvertLeadForm({
   const selectedPlan = plans.find(p => p.id.toString() === watchPlanId?.toString());
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+    <div className="flex flex-col gap-4">
       {[
         { label: 'Full Name', key: 'name', type: 'text', placeholder: 'Rahul Sharma', fullWidth: true },
         { label: 'Email', key: 'email', type: 'email', placeholder: 'rahul@gmail.com' },
