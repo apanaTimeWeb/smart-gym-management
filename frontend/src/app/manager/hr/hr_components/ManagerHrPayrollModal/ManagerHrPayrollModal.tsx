@@ -50,14 +50,18 @@ export default function ManagerHrPayrollModal() {
             }
             
             const baseSalary = s.salary || 0;
-            let payableAmount = Math.round((baseSalary / daysInMonth) * presentDays);
+            const perDaySalary = baseSalary / daysInMonth;
+            const attendanceDeduction = Math.round(perDaySalary * (daysInMonth - presentDays));
             
-            let info = `Present: ${presentDays}/${daysInMonth} days. Base: ₹${payableAmount}`;
+            let payableAmount = baseSalary - attendanceDeduction;
+            let deductedAdvance = 0;
+            
             if (s.advanceSalary && s.advanceSalary > 0) {
-               const deducted = Math.min(payableAmount, s.advanceSalary);
-               payableAmount -= deducted;
-               info += ` | ⚠️ Auto-deducted Advance: ₹${deducted}. Net: ₹${payableAmount}`;
+               deductedAdvance = Math.min(payableAmount, s.advanceSalary);
+               payableAmount -= deductedAdvance;
             }
+            
+            const info = `Base: ₹${baseSalary} | Att. Ded: -₹${attendanceDeduction} | Adv. Adj: -₹${deductedAdvance} | Net: ₹${payableAmount}`;
             
             setValue('amount', payableAmount);
             setValue('paidAmount', payableAmount);
@@ -69,13 +73,14 @@ export default function ManagerHrPayrollModal() {
       } else if (selectedStaffId) {
         const s = staff.find(x => String(x.id) === String(selectedStaffId));
         if (s) {
-          let payableAmount = s.salary || 0;
-          let info = '';
+          const baseSalary = s.salary || 0;
+          let payableAmount = baseSalary;
+          let deductedAdvance = 0;
           if (s.advanceSalary && s.advanceSalary > 0) {
-             const deducted = Math.min(payableAmount, s.advanceSalary);
-             payableAmount -= deducted;
-             info = `⚠️ Auto-deducted Advance: ₹${deducted}. Net: ₹${payableAmount}`;
+             deductedAdvance = Math.min(payableAmount, s.advanceSalary);
+             payableAmount -= deductedAdvance;
           }
+          const info = `Base: ₹${baseSalary} | Att. Ded: ₹0 | Adv. Adj: -₹${deductedAdvance} | Net: ₹${payableAmount}`;
           setValue('amount', payableAmount);
           setValue('paidAmount', payableAmount);
           setCalculationInfo(info);

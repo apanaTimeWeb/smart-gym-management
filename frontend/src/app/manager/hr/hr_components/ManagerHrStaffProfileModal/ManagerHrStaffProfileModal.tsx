@@ -75,10 +75,18 @@ export default function ManagerHrStaffProfileModal() {
             </div>
 
             <div className="flex items-start gap-3">
-              <IndianRupee className="w-5 h-5 text-primary mt-0.5" />
+              <IndianRupee className="w-5 h-5 text-[var(--danger)] mt-0.5" />
               <div>
                 <p className="text-xs text-secondary mb-0.5">Advance Balance</p>
-                <p className="text-sm font-bold text-primary">{(s.advanceSalary || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</p>
+                <p className="text-sm font-bold text-[var(--danger)]">{(s.advanceSalary || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <IndianRupee className="w-5 h-5 text-[var(--warning)] mt-0.5" />
+              <div>
+                <p className="text-xs text-secondary mb-0.5">Current Due</p>
+                <p className="text-sm font-bold text-[var(--warning)]">{(s.currentDue || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</p>
               </div>
             </div>
 

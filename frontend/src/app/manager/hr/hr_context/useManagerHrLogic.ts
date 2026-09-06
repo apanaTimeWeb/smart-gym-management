@@ -147,7 +147,7 @@ export function useManagerHrLogic(initialData?: HrInitialData | null): HrContext
     setShowPayrollModal(true);
   }, []);
 
-  const { saveStaff, savePayroll, deleteStaff, toggleStaffStatus, markPayrollPaid } = useManagerHrMutations(
+  const { saveStaff, savePayroll, deleteStaff, toggleStaffStatus, markPayrollPaid, giveAdvance, payDue } = useManagerHrMutations(
     staff, payrolls, setStaff, setPayrolls, setSummary, editId, setShowModal, setShowPayrollModal, setSaving, showToast
   );
 
@@ -155,6 +155,6 @@ export function useManagerHrLogic(initialData?: HrInitialData | null): HrContext
     staff, payrolls, summary, fetchState, error, toast, showToast, hideToast, loadAll,
     search, debouncedSearch, setSearch, roleFilter, setRoleFilter, currentPage, setCurrentPage,
     showModal, setShowModal, showPayrollModal, setShowPayrollModal, paymentModal, setPaymentModal, editId, editData, viewProfileData, setViewProfileData, saving, 
-    openAdd, openEdit, openAddPayroll, saveStaff, savePayroll, deleteStaff, toggleStaffStatus, markPayrollPaid, payrollMonth, setPayrollMonth
+    openAdd, openEdit, openAddPayroll, saveStaff, savePayroll, deleteStaff, toggleStaffStatus, markPayrollPaid, giveAdvance, payDue, payrollMonth, setPayrollMonth
   };
 }

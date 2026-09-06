@@ -21,7 +21,7 @@ export const StaffSchema = z.object({
 
 export type StaffFormValues = z.infer<typeof StaffSchema>;
 
-export const HR_TABS = ['Staff', 'Payroll'];
+export const HR_TABS = ['Staff List', 'Attendance', 'Salary & Payments', 'Advance', 'Dues', 'Ledger'];
 
 export const EMPTY_STAFF = { 
  name: '', 

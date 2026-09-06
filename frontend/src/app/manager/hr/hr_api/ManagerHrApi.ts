@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Provides strongly-typed network calls for the hr module.
 import { apiFetch, ApiResponse } from '@/lib/api';
 import { HrUrlConfig } from '@/app/manager/hr/ManagerHrUrlConfig';
-import type { Staff, Payroll, HrSummary } from '@/app/manager/hr/hr_types/ManagerHrTypes';
+import type { Staff, Payroll, HrSummary, LedgerEntry } from '@/app/manager/hr/hr_types/ManagerHrTypes';
 
 export const hrApi = {
   getStaff: (params?: Record<string, string>) => {
@@ -25,5 +25,11 @@ export const hrApi = {
   updatePayrollStatus: (id: string, status: string) =>
     apiFetch<ApiResponse<Payroll>>(HrUrlConfig.BACKEND_API.PAYROLL_STATUS_UPDATE(id), { method: 'PATCH', body: JSON.stringify({ status }) }),
   getSummary: () => apiFetch<ApiResponse<HrSummary>>(HrUrlConfig.BACKEND_API.SUMMARY),
+  getLedger: (staffId: string) => 
+    apiFetch<ApiResponse<{ ledger: LedgerEntry[]; total: number }>>(`${HrUrlConfig.BACKEND_API.STAFF_BASE}/ledger/${staffId}`),
+  giveAdvance: (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }) =>
+    apiFetch<ApiResponse<{ advanceAmount: number }>>(`${HrUrlConfig.BACKEND_API.STAFF_BASE}/advance`, { method: 'POST', body: JSON.stringify(data) }),
+  payDue: (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }) =>
+    apiFetch<ApiResponse<{ paidAmount: number }>>(`${HrUrlConfig.BACKEND_API.STAFF_BASE}/due/pay`, { method: 'POST', body: JSON.stringify(data) }),
 };
 

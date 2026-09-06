@@ -161,11 +161,40 @@ export function useManagerHrMutations(
     }
   }, [showToast, setPayrolls, payrolls]);
 
+  const giveAdvance = useCallback(async (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }) => {
+    setSaving(true);
+    try {
+      await hrApi.giveAdvance(data);
+      setStaff(prev => prev.map(s => String(s.id) === String(data.staffId) ? { ...s, advanceSalary: (s.advanceSalary || 0) + data.amount } as Staff : s));
+      showToast('Advance recorded successfully', 'success');
+      // Typically we'd reload summary or let it reload on demand
+    } catch (err) {
+      showToast((err as Error).message, 'error');
+    } finally {
+      setSaving(false);
+    }
+  }, [showToast, setSaving, setStaff]);
+
+  const payDue = useCallback(async (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }) => {
+    setSaving(true);
+    try {
+      await hrApi.payDue(data);
+      setStaff(prev => prev.map(s => String(s.id) === String(data.staffId) ? { ...s, currentDue: Math.max(0, (s.currentDue || 0) - data.amount) } as Staff : s));
+      showToast('Due paid successfully', 'success');
+    } catch (err) {
+      showToast((err as Error).message, 'error');
+    } finally {
+      setSaving(false);
+    }
+  }, [showToast, setSaving, setStaff]);
+
   return {
     saveStaff,
     savePayroll,
     deleteStaff,
     toggleStaffStatus,
-    markPayrollPaid
+    markPayrollPaid,
+    giveAdvance,
+    payDue
   };
 }
