@@ -3,7 +3,7 @@
 import { Megaphone, Plus, Search } from 'lucide-react';
 import type { BroadcastsHeaderProps } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
 
-export default function SuperadminBroadcastsHeader({ searchQuery, onSearchChange, onCreateClick }: BroadcastsHeaderProps) {
+export default function SuperadminBroadcastsHeader({ searchQuery, onSearchChange, statusFilter, onStatusFilterChange, onCreateClick }: BroadcastsHeaderProps) {
   return (
     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
@@ -24,6 +24,21 @@ export default function SuperadminBroadcastsHeader({ searchQuery, onSearchChange
             className="pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary motion-safe:transition-colors  w-full sm:w-64 "
           />
         </div>
+        
+        {onStatusFilterChange && (
+          <select
+            value={statusFilter}
+            onChange={(e) => onStatusFilterChange(e.target.value as 'ALL' | 'DRAFT' | 'SCHEDULED' | 'SENT' | 'FAILED')}
+            className="px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary motion-safe:transition-colors"
+          >
+            <option value="ALL">All Status</option>
+            <option value="DRAFT">Draft</option>
+            <option value="SCHEDULED">Scheduled</option>
+            <option value="SENT">Sent</option>
+            <option value="FAILED">Failed</option>
+          </select>
+        )}
+
         <button
           onClick={onCreateClick}
           className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-white font-medium rounded-lg motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out motion-safe:active:scale-95 text-sm"

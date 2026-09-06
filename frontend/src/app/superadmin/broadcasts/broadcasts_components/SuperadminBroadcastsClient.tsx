@@ -13,6 +13,8 @@ export default function SuperadminBroadcastsClient() {
     broadcasts,
     searchQuery,
     setSearchQuery,
+    statusFilter,
+    setStatusFilter,
     isModalOpen,
     setIsModalOpen,
     form,
@@ -43,6 +45,8 @@ export default function SuperadminBroadcastsClient() {
       <SuperadminBroadcastsHeader
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
+        statusFilter={statusFilter}
+        onStatusFilterChange={setStatusFilter}
         onCreateClick={openCreateModal}
       />
 

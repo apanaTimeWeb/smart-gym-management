@@ -13,6 +13,8 @@ export default function SuperadminAffiliatesClient() {
     affiliates,
     searchQuery,
     setSearchQuery,
+    statusFilter,
+    setStatusFilter,
     isModalOpen,
     setIsModalOpen,
     form,
@@ -46,6 +48,8 @@ export default function SuperadminAffiliatesClient() {
       <SuperadminAffiliatesHeader
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
+        statusFilter={statusFilter}
+        onStatusFilterChange={setStatusFilter}
         onAddClick={() => setIsModalOpen(true)}
       />
 
