@@ -100,7 +100,7 @@ export default function ManagerHrStaffTable() {
                 <td className="px-4 py-3 text-sm text-secondary">{s.phone}</td>
                 <td className="px-4 py-3 text-sm font-medium text-success text-right">{(s.salary || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
                 <td className="px-4 py-3 text-sm text-secondary">
-                  {new Date(s.joinDate).toLocaleDateString('en-IN')}
+                  {s.joinDate ? new Date(s.joinDate).toLocaleDateString('en-IN') : 'N/A'}
                 </td>
                 <td className="px-4 py-3 text-right">
                   <div className="flex items-center justify-end gap-2">

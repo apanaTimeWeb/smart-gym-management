@@ -13,7 +13,7 @@ export default function ManagerLibraryDietGrid() {
 
   const filtered = dietPlans.filter(d => {
     const s = debouncedSearch.toLowerCase();
-    return d.name.toLowerCase().includes(s) || d.goal.toLowerCase().includes(s);
+    return d.name?.toLowerCase().includes(s) || d.goal?.toLowerCase().includes(s);
   });
 
   

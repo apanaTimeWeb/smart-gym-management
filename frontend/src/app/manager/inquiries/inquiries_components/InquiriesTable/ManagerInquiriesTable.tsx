@@ -19,7 +19,7 @@ export default function ManagerInquiriesTable() {
   } = useInquiriesContext();
 
   const allSelected = inquiries.length > 0 && selectedIds.length === inquiries.length;
-  const isSelected = (id: string) => selectedIds.includes(id);
+  const isSelected = (id: string) => selectedIds?.includes(id);
 
   const totalPages = Math.ceil(totalInquiries / MANAGER_ITEMS_PER_PAGE);
 

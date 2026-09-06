@@ -94,9 +94,9 @@ export function useAdminFinanceLogic(initialData?: FinanceInitialData | null) {
   let fetchedPayments = paymentsRes?.data?.payments || [];
   if (debouncedSearch) {
     fetchedPayments = fetchedPayments.filter(p =>
-      p.member?.name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-      p.memberId.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-      p.invoiceNo.toLowerCase().includes(debouncedSearch.toLowerCase())
+      p.member?.name?.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+      p.memberId?.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+      p.invoiceNo?.toLowerCase().includes(debouncedSearch.toLowerCase())
     );
   }
   

@@ -54,7 +54,7 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
   };
 
   const handleToggleGym = (id: string) => {
-    if (targetGymIds.includes(id)) {
+    if (targetGymIds?.includes(id)) {
       setValue('targetGymIds', targetGymIds.filter((g: string) => g !== id), { shouldValidate: true });
     } else {
       setValue('targetGymIds', [...targetGymIds, id], { shouldValidate: true });
@@ -112,7 +112,7 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
                   <label key={gym.id} className="flex items-center gap-2 cursor-pointer p-2 hover:bg-overlay rounded-lg motion-safe:transition-colors border border-transparent hover:border-border">
                     <input 
                       type="checkbox" 
-                      checked={targetGymIds.includes(gym.id)}
+                      checked={targetGymIds?.includes(gym.id)}
                       onChange={() => handleToggleGym(gym.id)}
                       className="w-4 h-4 rounded text-primary focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page accent-primary"
                     />

@@ -74,9 +74,9 @@ export default function ManagerFinanceMain() {
         const q = search.toLowerCase();
         fetchedPayments = fetchedPayments.filter((p: Payment) => {
           const matchesSearch = !search || 
-            (p.invoiceNo && p.invoiceNo.toLowerCase().includes(q)) ||
-            (p.member?.name && p.member.name.toLowerCase().includes(q)) ||
-            (p.method && p.method.toLowerCase().includes(q));
+            (p.invoiceNo && p.invoiceNo?.toLowerCase().includes(q)) ||
+            (p.member?.name && p.member.name?.toLowerCase().includes(q)) ||
+            (p.method && p.method?.toLowerCase().includes(q));
           
           const matchesStatus = statusFilter === 'ALL' || p.status === statusFilter;
           const matchesMethod = methodFilter === 'ALL' || p.method === methodFilter;

@@ -38,7 +38,7 @@ export default function SuperadminFlushTenantModal({ isOpen, onClose, onFlush }:
 
   if (!isOpen) return null;
 
-  const filteredGyms = gyms?.filter((g: Tenant) => g.name.toLowerCase().includes(search.toLowerCase()) || g.id.includes(search)) || [];
+  const filteredGyms = gyms?.filter((g: Tenant) => g.name?.toLowerCase().includes(search.toLowerCase()) || g.id?.includes(search)) || [];
 
   const handleFlush = async () => {
     if (selectedTenantIds.length === 0) return;
@@ -109,13 +109,13 @@ export default function SuperadminFlushTenantModal({ isOpen, onClose, onFlush }:
             ) : (
               <div className="flex-1 overflow-y-auto custom-scrollbar p-2 space-y-1">
                 {filteredGyms.map((gym: Tenant) => {
-                  const isSelected = selectedTenantIds.includes(gym.id);
+                  const isSelected = selectedTenantIds?.includes(gym.id);
                   return (
                     <button
                       key={gym.id}
                       onClick={() => {
                         setSelectedTenantIds(prev => 
-                          prev.includes(gym.id) ? prev.filter(id => id !== gym.id) : [...prev, gym.id]
+                          prev?.includes(gym.id) ? prev.filter(id => id !== gym.id) : [...prev, gym.id]
                         )
                       }}
                       className={`w-full text-left px-4 py-3 rounded-md text-sm motion-safe:transition-colors flex items-center justify-between ${isSelected ? 'bg-primary/10 border-primary text-primary font-semibold' : 'hover:bg-input text-foreground border-transparent'} border`}

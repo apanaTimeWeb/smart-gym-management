@@ -17,9 +17,9 @@ export function useSuperadminTickets() {
   const ITEMS_PER_PAGE = 10;
 
   const filtered = (DUMMY_SUPPORT_TICKETS || []).filter(t => {
-    const matchesSearch = t.tenantName.toLowerCase().includes(search.toLowerCase()) || 
-                          t.subject.toLowerCase().includes(search.toLowerCase()) ||
-                          t.id.toLowerCase().includes(search.toLowerCase());
+    const matchesSearch = t.tenantName?.toLowerCase().includes(search.toLowerCase()) || 
+                          t.subject?.toLowerCase().includes(search.toLowerCase()) ||
+                          t.id?.toLowerCase().includes(search.toLowerCase());
     const matchesStatus = statusFilter === 'ALL' || t.status === statusFilter;
     const matchesPriority = priorityFilter === 'ALL' || t.priority === priorityFilter;
     return matchesSearch && matchesStatus && matchesPriority;

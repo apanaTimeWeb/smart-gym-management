@@ -84,10 +84,10 @@ export function useWorkoutLogic(): WorkoutContextType {
       if (debouncedSearch) {
         const q = debouncedSearch.toLowerCase();
         fetchedWorkouts = fetchedWorkouts.filter((w: Workout) => 
-          w.name.toLowerCase().includes(q) || w.focus?.toLowerCase().includes(q) || (w.tags && w.tags.some(t => t.toLowerCase().includes(q)))
+          w.name?.toLowerCase().includes(q) || w.focus?.toLowerCase().includes(q) || (w.tags && w.tags.some(t => t?.toLowerCase().includes(q)))
         );
         fetchedExercises = fetchedExercises.filter((e: Exercise) => 
-          e.name.toLowerCase().includes(q) || e.category?.toLowerCase().includes(q) || (e.muscleGroup && e.muscleGroup.some(m => m.toLowerCase().includes(q)))
+          e.name?.toLowerCase().includes(q) || e.category?.toLowerCase().includes(q) || (e.muscleGroup && e.muscleGroup.some(m => m?.toLowerCase().includes(q)))
         );
       }
       

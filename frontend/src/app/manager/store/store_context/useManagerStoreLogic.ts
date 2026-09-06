@@ -83,7 +83,7 @@ export function useManagerStoreLogic(initialData?: StoreInitialData | null): Sto
       if (debouncedSearch || categoryFilter !== 'ALL' || stockFilter !== 'ALL') {
         const q = debouncedSearch.toLowerCase();
         fetchedProducts = fetchedProducts.filter((p: Product) => {
-          const matchesSearch = !debouncedSearch || p.name.toLowerCase().includes(q) || (p.category && p.category.toLowerCase().includes(q));
+          const matchesSearch = !debouncedSearch || p.name?.toLowerCase().includes(q) || (p.category && p.category?.toLowerCase().includes(q));
           const matchesCategory = categoryFilter === 'ALL' || p.category === categoryFilter;
           const matchesStock = stockFilter === 'ALL' || (stockFilter === 'IN_STOCK' ? p.stock > 0 : p.stock === 0);
           return matchesSearch && matchesCategory && matchesStock;
@@ -91,7 +91,7 @@ export function useManagerStoreLogic(initialData?: StoreInitialData | null): Sto
         
         if (debouncedSearch) {
           fetchedOrders = fetchedOrders.filter((o: Order) => 
-            o.id.toLowerCase().includes(q) || (o.notes && o.notes.toLowerCase().includes(q))
+            o.id?.toLowerCase().includes(q) || (o.notes && o.notes?.toLowerCase().includes(q))
           );
         }
       }

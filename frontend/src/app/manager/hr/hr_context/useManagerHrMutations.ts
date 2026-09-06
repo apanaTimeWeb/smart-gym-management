@@ -56,7 +56,7 @@ export function useManagerHrMutations(
         id: `pay-${Date.now()}`,
         amount: Number(data.amount || 0),
         status: 'Paid',
-        date: new Date().toISOString(),
+        paidAt: new Date().toISOString(),
         staff: staffMember ? { name: staffMember.name, role: staffMember.role } : undefined
       } as Payroll;
       setPayrolls(prev => [newPayroll, ...prev]);

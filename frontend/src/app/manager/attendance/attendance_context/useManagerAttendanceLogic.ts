@@ -22,7 +22,7 @@ export function useManagerAttendanceLogic(): AttendanceContextType {
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
   const [search, setLocalSearch] = useState(searchParams.get('search') || '');
   const tabParam = searchParams.get('tab') as AttendanceTab | null;
-  const tab: AttendanceTab = tabParam && ATTENDANCE_TABS.includes(tabParam) ? tabParam : ATTENDANCE_TABS[0];
+  const tab: AttendanceTab = tabParam && ATTENDANCE_TABS?.includes(tabParam) ? tabParam : ATTENDANCE_TABS[0];
   const debouncedSearch = useDebounce(search, 300);
 
   const setUrlParam = useCallback((key: string, value: string | null) => {
@@ -89,8 +89,8 @@ export function useManagerAttendanceLogic(): AttendanceContextType {
       if (debouncedSearch) {
         const q = debouncedSearch.toLowerCase();
         fetchedRecords = fetchedRecords.filter((r: Attendance) => 
-          (r.member?.name && r.member.name.toLowerCase().includes(q)) || 
-          (r.staff?.name && r.staff.name.toLowerCase().includes(q))
+          (r.member?.name && r.member.name?.toLowerCase().includes(q)) || 
+          (r.staff?.name && r.staff.name?.toLowerCase().includes(q))
         );
       }
 

@@ -38,9 +38,9 @@ export default function SuperadminGlobalAuditClient() {
   }, [queryData]);
 
   const filteredLogs = logs.filter(log => {
-    const matchesSearch = log.action.toLowerCase().includes(search.toLowerCase()) || 
-                          log.actor.toLowerCase().includes(search.toLowerCase()) ||
-                          log.resource.toLowerCase().includes(search.toLowerCase());
+    const matchesSearch = log.action?.toLowerCase().includes(search.toLowerCase()) || 
+                          log.actor?.toLowerCase().includes(search.toLowerCase()) ||
+                          log.resource?.toLowerCase().includes(search.toLowerCase());
     const matchesSeverity = severityFilter === 'ALL' || log.severity === severityFilter;
     
     return matchesSearch && matchesSeverity;

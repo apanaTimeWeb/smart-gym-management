@@ -40,8 +40,8 @@ export function useSuperadminGymsTable() {
     
     if (search) {
       result = result.filter(g =>
-        g.name.toLowerCase().includes(search.toLowerCase()) ||
-        g.ownerName.toLowerCase().includes(search.toLowerCase())
+        g.name?.toLowerCase().includes(search.toLowerCase()) ||
+        g.ownerName?.toLowerCase().includes(search.toLowerCase())
       );
     }
     

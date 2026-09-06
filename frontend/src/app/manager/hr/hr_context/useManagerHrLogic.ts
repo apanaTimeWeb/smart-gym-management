@@ -89,10 +89,10 @@ export function useManagerHrLogic(initialData?: HrInitialData | null): HrContext
       if (debouncedSearch) {
         const q = debouncedSearch.toLowerCase();
         fetchedStaff = fetchedStaff.filter((s: Staff) => 
-          s.name.toLowerCase().includes(q) || s.phone.includes(q) || (s.email && s.email.toLowerCase().includes(q))
+          s.name?.toLowerCase().includes(q) || s.phone?.includes(q) || (s.email && s.email?.toLowerCase().includes(q))
         );
         fetchedPayrolls = fetchedPayrolls.filter((p: Payroll) => 
-          p.staff?.name && p.staff.name.toLowerCase().includes(q)
+          p.staff?.name && p.staff.name?.toLowerCase().includes(q)
         );
       }
 

@@ -15,7 +15,7 @@ export default function TrainerLibraryDietGrid() {
 
   const filtered = dietPlans.filter(d => {
     const s = debouncedSearch.toLowerCase();
-    return d.name.toLowerCase().includes(s) || d.goal.toLowerCase().includes(s);
+    return d.name?.toLowerCase().includes(s) || d.goal?.toLowerCase().includes(s);
   });
 
   const totalPages = Math.ceil(filtered.length / TRAINER_ITEMS_PER_PAGE);

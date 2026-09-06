@@ -115,7 +115,7 @@ export default function ManagerPlansMain() {
   }, [loadPlans]);
 
   const filteredPlans = plans.filter(p => {
-    const matchesSearch = !search || p.name.toLowerCase().includes(search.toLowerCase()) || p.tier.toLowerCase().includes(search.toLowerCase());
+    const matchesSearch = !search || p.name?.toLowerCase().includes(search.toLowerCase()) || p.tier?.toLowerCase().includes(search.toLowerCase());
     const matchesTier = tierFilter === 'ALL' || p.tier === tierFilter;
     const matchesStatus = statusFilter === 'ALL' || (statusFilter === 'ACTIVE' ? p.isActive : !p.isActive);
     return matchesSearch && matchesTier && matchesStatus;

@@ -69,14 +69,14 @@ export function useManagerInquiriesLogic(): InquiriesContextType {
     setSelectedIds(selectAll ? inquiries.map(i => i.id) : []);
   }, [inquiries]);
   const toggleSelectOne = useCallback((id: string) => {
-    setSelectedIds(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
+    setSelectedIds(prev => prev?.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
   }, []);
   const clearSelection = useCallback(() => setSelectedIds([]), []);
 
   const [bulkMsgModal, setBulkMsgModal] = useState<{ open: boolean; type: MessageType; recipients: ManagerMessageRecipient[] } | null>(null);
   const openBulkMsg = useCallback((type: MessageType) => {
     const recipients = inquiries
-      .filter(i => selectedIds.includes(i.id))
+      .filter(i => selectedIds?.includes(i.id))
       .map(i => ({ name: i.name, phone: i.phone, email: i.email || '' }));
     setBulkMsgModal({ open: true, type, recipients });
   }, [inquiries, selectedIds]);
@@ -107,8 +107,8 @@ export function useManagerInquiriesLogic(): InquiriesContextType {
       if (debouncedSearch) {
         const q = debouncedSearch.toLowerCase();
         fetchedInquiries = fetchedInquiries.filter(i => 
-          (i.name && i.name.toLowerCase().includes(q)) || 
-          (i.phone && i.phone.includes(debouncedSearch))
+          (i.name && i.name?.toLowerCase().includes(q)) || 
+          (i.phone && i.phone?.includes(debouncedSearch))
         );
       }
 
