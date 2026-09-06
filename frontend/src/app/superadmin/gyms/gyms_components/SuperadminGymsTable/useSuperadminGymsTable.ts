@@ -7,6 +7,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
 import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
+import { AuthUrlConfig } from '@/app/auth/auth_url_config';
 
 import { MOCK_GYMS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
 
@@ -51,11 +52,29 @@ export function useSuperadminGymsTable() {
   // Mutations
   const impersonateMutation = useMutation({
     mutationFn: (id: string) => superadminApi.gyms.impersonateTenant(id),
-    onSuccess: (res, id) => {
+    onSuccess: async (res, id) => {
       if (res.success && res.data?.token) {
         toast.success(res.message || 'Impersonating tenant...');
+        
+        // Save token to localStorage as backup
         localStorage.setItem('gymsmart_impersonate_token', res.data.token);
-        window.location.href = '/admin/dashboard';
+        
+        // Overwrite the HTTP-only session cookie so Next.js middleware and proxy API see an Admin session
+        try {
+          await fetch(AuthUrlConfig.PROXY_API.SET_COOKIE, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+              token: res.data.token, 
+              refreshToken: res.data.token, 
+              user: { role: 'ADMIN', email: `admin-${id}@gym.com`, name: `Impersonated Admin`, tenantId: id, id: `user-${id}` } 
+            }),
+          });
+        } catch (e) {
+          console.error('Failed to set impersonation cookie', e);
+        }
+
+        window.location.href = AuthUrlConfig.PAGES.ADMIN_DASHBOARD;
       } else {
         toast.error(res.message || 'Failed to impersonate tenant');
       }
