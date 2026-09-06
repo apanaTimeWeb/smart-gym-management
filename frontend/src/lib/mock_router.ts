@@ -259,7 +259,7 @@ export async function routeMockRequest<T>(
     return { success: true, message: 'History fetched', data: history } as unknown as ApiResponse<T>;
   }
   if (path.includes('/attendance/today-stats')) {
-    const records = MockDB.getCollection('mock_admin_attendance', generate(20, i => { const d = new Date(); d.setHours(8, 0, 0, 0); const d2 = new Date(); d2.setHours(9, 30, 0, 0); return { id: `att-${i}`, type: i % 4 === 0 ? 'STAFF' : 'MEMBER', member: { name: `Member ${i + 1}` }, staff: { name: `Staff ${i + 1}` }, date: new Date().toISOString(), checkIn: d.toISOString(), checkOut: d2.toISOString() }; }));
+    const records = MockDB.getCollection('mock_admin_attendance', []);
     const todayStr = new Date().toISOString().split('T')[0];
     const todayRecords = records.filter(r => (r.date as string)?.startsWith(todayStr));
     const memberCheckIns = todayRecords.filter(r => r.type === 'MEMBER').length;
@@ -267,14 +267,15 @@ export async function routeMockRequest<T>(
     return { success: true, message: 'Stats', data: { totalCheckIns: todayRecords.length, memberCheckIns, staffCheckIns } } as unknown as ApiResponse<T>;
   }
   if (path.includes('/attendance')) {
-    const existing = MockDB.getCollection('mock_admin_attendance', []);
-    const defaultData = generate(20, i => { const d = new Date(); d.setHours(8, 0, 0, 0); const d2 = new Date(); d2.setHours(9, 30, 0, 0); return { id: `att-${i}`, type: i % 4 === 0 ? 'STAFF' : 'MEMBER', member: { name: `Member ${i + 1}` }, staff: { name: `Staff ${i + 1}` }, date: new Date().toISOString(), checkIn: d.toISOString(), checkOut: d2.toISOString() }; });
+    let existing = MockDB.getCollection('mock_admin_attendance', []);
     
-    if (existing.length === 0 || existing.some((r: any) => r.member?.name?.includes('Active Member') || r.staff?.name?.includes('Trainer '))) {
-      MockDB.setCollection('mock_admin_attendance', defaultData);
+    // Purge old hardcoded format
+    if (existing.length > 0 && existing.some((r: any) => r.member?.name?.includes('Member ') || r.staff?.name?.includes('Staff ') || r.member?.name?.includes('Active Member') || r.staff?.name?.includes('Trainer '))) {
+      MockDB.setCollection('mock_admin_attendance', []);
+      existing = [];
     }
     
-    return MockDB.handleCrud('mock_admin_attendance', method, path, parsedBody, defaultData, 'attendance') as unknown as ApiResponse<T>;
+    return MockDB.handleCrud('mock_admin_attendance', method, path, parsedBody, [], 'attendance') as unknown as ApiResponse<T>;
   }
   if (path.includes('/hr/summary')) {
     const staffList = MockDB.getCollection('mock_admin_staff', []);
@@ -413,7 +414,7 @@ export async function routeMockRequest<T>(
     return MockDB.handleCrud('mock_workouts', method, path, parsedBody, defaultWorkouts, 'workouts') as unknown as ApiResponse<T>;
   }
   if (path.includes('/admin/finance/summary')) return { success: true, message: 'Summary', data: { totalRevenue: 1500000, monthlyRevenue: 250000, pendingAmount: 45000, totalPayments: 345, revenueByMethod: { UPI: 120000, Cash: 50000, Card: 80000, NetBanking: 0 }, monthlyData: generate(6, i => ({ month: `M${i+1}`, revenue: 200000 + (i * 10000) })) } } as unknown as ApiResponse<T>;
-  if (method === 'GET' && path.includes('/finance/payments/member/')) {
+  if (method === 'GET' && (path.includes('/finance/payments/member/') || path.includes('/finance/payments-by-member/'))) {
     const segments = path.split('?')[0].split('/');
     const memberId = segments[segments.length - 1];
     const allPayments = MockDB.getCollection('mock_admin_payments', []);

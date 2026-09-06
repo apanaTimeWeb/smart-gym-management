@@ -70,10 +70,23 @@ export default function ManagerMembersModal() {
   }, [watchJoinDate, watchBillingCycle, watchCustomDays, useFormReturn]);
 
   const onSubmit = (data: MemberFormValues) => {
-    const total = data.totalAmount || 0;
-    const paid = data.paidAmount || 0;
-    const pendingAmount = total - paid;
-    saveMember({ ...data, pendingAmount });
+    let payload = { ...data };
+    if (!editId) {
+      const total = data.totalAmount || 0;
+      const paid = data.paidAmount || 0;
+      payload.pendingAmount = total - paid;
+    } else {
+      // Remove fields that should not be updated during edit
+      delete payload.totalAmount;
+      delete payload.paidAmount;
+      delete payload.pendingAmount;
+      delete payload.joinDate;
+      delete payload.expiryDate;
+      delete payload.planId;
+      delete payload.billingCycle;
+      delete payload.customDays;
+    }
+    saveMember(payload);
   };
 
   if (!showAddModal) return null;
@@ -175,7 +188,7 @@ export default function ManagerMembersModal() {
                 <input
                   type="number"
                   min="0"
-                  disabled={!!editId}
+                  readOnly={!!editId}
                   onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }}
                   {...register('customDays')}
                   placeholder="e.g. 15"
@@ -209,7 +222,7 @@ export default function ManagerMembersModal() {
               <label className="block text-sm font-medium text-secondary mb-0.5">Join Date</label>
               <input
                 type="date"
-                disabled={!!editId}
+                readOnly={!!editId}
                 {...register('joinDate')}
                 className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-all duration-200 ${editId ? 'opacity-80 cursor-not-allowed' : ''}`}
               />
@@ -218,7 +231,7 @@ export default function ManagerMembersModal() {
               <label className="block text-sm font-medium text-secondary mb-0.5">Expiry Date</label>
               <input
                 type="date"
-                disabled
+                readOnly
                 {...register('expiryDate')}
                 className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none bg-input text-primary transition-all duration-200 opacity-80 cursor-not-allowed"
               />
@@ -228,7 +241,7 @@ export default function ManagerMembersModal() {
               <label className="block text-sm font-medium text-secondary mb-0.5">Total Plan Amount (₹)</label>
               <input
                 type="number"
-                disabled
+                readOnly
                 {...register('totalAmount', { valueAsNumber: true })}
                 className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none bg-input opacity-80 cursor-not-allowed text-primary"
               />
@@ -238,7 +251,7 @@ export default function ManagerMembersModal() {
               <input
                 type="number"
                 min="0"
-                disabled={!!editId}
+                readOnly={!!editId}
                 onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }}
                 {...register('paidAmount', { valueAsNumber: true })}
                 className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-all duration-200 ${editId ? 'opacity-80 cursor-not-allowed' : ''}`}

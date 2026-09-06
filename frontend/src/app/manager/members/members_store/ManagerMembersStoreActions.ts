@@ -126,6 +126,11 @@ export const createMembersMutations = (set: StoreSet, get: StoreGet) => ({
       const state = get();
       const member = state.members.find((m: Member) => m.id === memberId);
       const currentPaid = member?.paidAmount || 0;
+      const currentPending = member?.pendingAmount || 0;
+
+      const plan = state.plans.find((p: import('@/app/manager/plans/plans_types/ManagerPlansTypes').Plan) => String(p.id) === String(data.planId));
+      const planPrice = getPriceForCycle(plan as any, data.billingCycle, data.customDays);
+      const newPending = Math.max(0, currentPending + planPrice - data.amountPaid);
 
       const payload = {
          planId: data.planId,
@@ -133,7 +138,8 @@ export const createMembersMutations = (set: StoreSet, get: StoreGet) => ({
          billingCycle: data.billingCycle,
          customDays: data.customDays,
          status: 'ACTIVE',
-         paidAmount: currentPaid + data.amountPaid
+         paidAmount: currentPaid + data.amountPaid,
+         pendingAmount: newPending
       };
       await membersApi.update(memberId, payload);
       
@@ -154,7 +160,7 @@ export const createMembersMutations = (set: StoreSet, get: StoreGet) => ({
            payments: [pRes.data, ...state.payments]
          };
       });
-      return { success: true, message: 'Renewed successfully' };
+      return { success: true, message: 'Renewed successfully', data: { ...payload, plan } };
     } catch (err: unknown) {
       throw err;
     } finally {
@@ -169,11 +175,12 @@ export const createMembersMutations = (set: StoreSet, get: StoreGet) => ({
       const member = state.members.find((m: Member) => m.id === memberId);
       const currentPaid = member?.paidAmount || 0;
       const currentPending = member?.pendingAmount || 0;
-      
-      await membersApi.update(memberId, {
+      const updatePayload = {
          paidAmount: currentPaid + data.amount,
          pendingAmount: Math.max(0, currentPending - data.amount)
-      });
+      };
+      
+      await membersApi.update(memberId, updatePayload);
 
       const pRes = await financeApi.createPayment({
          memberId,
@@ -195,7 +202,7 @@ export const createMembersMutations = (set: StoreSet, get: StoreGet) => ({
            payments: [pRes.data, ...state.payments]
          };
       });
-      return { success: true, message: 'Payment recorded successfully' };
+      return { success: true, message: 'Payment recorded successfully', data: updatePayload };
     } catch (err: unknown) {
       throw err;
     } finally {
