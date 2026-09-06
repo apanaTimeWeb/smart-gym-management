@@ -32,7 +32,7 @@ export const INQUIRIES_STATUS_STYLES: Record<string, { bg: string; text: string 
   LOST: { bg: 'bg-danger-bg', text: 'text-danger' },
 };
 
-export const EMPTY_INQUIRY_FORM = { 
+export const EMPTY_INQUIRY_FORM: InquiryFormValues = { 
  name: '', 
  phone: '', 
  email: '', 

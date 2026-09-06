@@ -41,7 +41,7 @@ export default function ManagerSalesOverview() {
       <Tooltip 
         cursor={{ fill: '#f1f5f9', opacity: 0.5 }}
         contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', backgroundColor: 'var(--bg-card)', color: 'var(--text-primary)' }}
-        formatter={(value: number | string | readonly (string | number)[] | undefined, name: string) => {
+        formatter={(value: number | string | readonly (string | number)[] | undefined, name: any) => {
           const label = name === 'revenue' ? 'Memberships' : name === 'storeRevenue' ? 'Store POS' : name;
           return [`₹${Number(Array.isArray(value) ? value[0] : (value || 0)).toLocaleString()}`, label];
         }}

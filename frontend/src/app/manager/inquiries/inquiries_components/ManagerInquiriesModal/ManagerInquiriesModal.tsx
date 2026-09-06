@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { useInquiriesContext } from '@/app/manager/inquiries/inquiries_context/ManagerInquiriesContext';
-import { INQUIRY_MODAL_FIELDS, INQUIRIES_STATUS_LABELS, INQUIRY_SOURCES, InquirySchema, type InquiryFormValues } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesSharedConstants';
+import { INQUIRY_MODAL_FIELDS, INQUIRIES_STATUS_LABELS, INQUIRY_SOURCES, InquirySchema, EMPTY_INQUIRY_FORM, type InquiryFormValues } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesSharedConstants';
 import { X, Save } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
