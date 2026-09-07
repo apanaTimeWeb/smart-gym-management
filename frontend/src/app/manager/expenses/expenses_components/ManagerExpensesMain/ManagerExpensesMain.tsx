@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Main container for the Expenses module. Owns the ExpensesProvider and assembles Header, Toolbar, KPIs, Table, and Modal.
 'use client';
 
-import { Suspense } from 'react';
+import { Suspense, useState } from 'react';
 import { ExpensesProvider } from '@/app/manager/expenses/expenses_context/ManagerExpensesContext';
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
 import ManagerExpensesToolbar from '@/app/manager/expenses/expenses_components/ManagerExpensesToolbar/ManagerExpensesToolbar';
@@ -23,7 +23,7 @@ function ExpensesContent() {
     );
   }
 
-  const [activeTab, setActiveTab] = React.useState('View Expenses');
+  const [activeTab, setActiveTab] = useState('View Expenses');
 
   return (
     <div className="min-h-full pb-10">
