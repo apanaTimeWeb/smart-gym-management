@@ -16,16 +16,21 @@ function WorkoutContent() {
 
  return (
  <div className="min-h-full pb-10 workout-module bg-background text-foreground">
- <ManagerHeader title="Workout Library" subtitle="Comprehensive exercise and workout plan database" />
+ <ManagerHeader title="Workout Management" subtitle="Comprehensive exercise and workout plan database" />
  
  <div className="p-6 space-y-5">
  <ManagerWorkoutBanner />
 
- <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
- <ManagerWorkoutToolbar />
+  <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
+    <div className="border-b border-border flex gap-4 p-4">
+      <button onClick={() => {}} className="px-4 py-2 font-semibold text-primary border-b-2 border-primary">View Workout Plans</button>
+      <button onClick={() => {}} className="px-4 py-2 text-secondary hover:text-foreground">View Assigned Plans</button>
+      <button onClick={() => {}} className="px-4 py-2 text-secondary hover:text-foreground">Exercise Library</button>
+    </div>
+    <ManagerWorkoutToolbar />
 
- <div className="p-5">
- {tab === 'Workout Plans' ? <ManagerWorkoutPlansGrid /> : <ManagerWorkoutExerciseTable />}
+    <div className="p-5">
+    {tab === 'Workout Plans' ? <ManagerWorkoutPlansGrid /> : <ManagerWorkoutExerciseTable />}
  </div>
  </div>
  </div>

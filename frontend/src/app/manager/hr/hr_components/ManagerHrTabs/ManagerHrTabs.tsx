@@ -39,7 +39,7 @@ export default function ManagerHrTabs() {
               className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 w-40 sm: w-full sm:w-64  bg-card text-foreground"
             />
           </div>
-          {activeTab === 'Staff List' && (
+          {activeTab === 'Trainer List' && (
             <select
               value={roleFilter}
               onChange={e => { setRoleFilter(e.target.value);  }}
@@ -65,12 +65,12 @@ export default function ManagerHrTabs() {
     >
       <RefreshCw size={14} />
     </button>
-    {activeTab === 'Staff List' && (
+    {activeTab === 'Trainer List' && (
       <button 
         onClick={openAdd} 
         className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:opacity-90 transition-opacity" 
       >
-        <Plus size={14} /> Add Staff
+        <Plus size={14} /> Add Trainer
       </button>
     )}
     {activeTab === 'Salary & Payments' && (
@@ -90,18 +90,22 @@ export default function ManagerHrTabs() {
     <div className="flex justify-center py-10">
       <div className="w-8 h-8 border-4 border-t-transparent rounded-full motion-safe:animate-spin" style={{ borderColor: 'var(--hr-highlight)', borderTopColor: 'transparent' }} />
     </div>
-  ) : activeTab === 'Staff List' ? (
+  ) : activeTab === 'Trainer List' ? (
     <ManagerHrStaffTable />
-  ) : activeTab === 'Salary & Payments' ? (
-    <ManagerHrPayrollTable />
-  ) : activeTab === 'Advance' ? (
-    <ManagerHrAdvanceTable />
-  ) : activeTab === 'Dues' ? (
-    <ManagerHrDueTable />
-  ) : activeTab === 'Ledger' ? (
-    <ManagerHrLedgerTable />
-  ) : activeTab === 'Attendance' ? (
+  ) : activeTab === 'Trainer Attendance' ? (
     <div className="text-center text-secondary py-10">Attendance view is available in the main Attendance module.</div>
+  ) : activeTab === 'Trainer-Member Assignment' ? (
+    <div className="text-center text-secondary py-10">Trainer assignments are managed from the Personal Training module.</div>
+  ) : activeTab === 'Trainer Schedule' ? (
+    <div className="text-center text-secondary py-10">
+      <h3 className="text-lg font-bold text-foreground mb-2">Trainer Schedule</h3>
+      <p>Daily schedule for trainers will be displayed here.</p>
+    </div>
+  ) : activeTab === 'Trainer Performance' ? (
+    <div className="text-center text-secondary py-10">
+      <h3 className="text-lg font-bold text-foreground mb-2">Trainer Performance</h3>
+      <p>Performance metrics for trainers will be displayed here.</p>
+    </div>
   ) : (
     <div className="text-center text-secondary py-10">Coming soon</div>
   )}

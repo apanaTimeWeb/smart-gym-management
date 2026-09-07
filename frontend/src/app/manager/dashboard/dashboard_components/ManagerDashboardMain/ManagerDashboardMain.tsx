@@ -7,6 +7,7 @@ import type { DashboardStats } from '@/app/manager/dashboard/dashboard_types/Man
 import ManagerDashboardKPIs from '@/app/manager/dashboard/dashboard_components/ManagerDashboardKPIs/ManagerDashboardKPIs';
 import ManagerDashboardRecentMembers from '@/app/manager/dashboard/dashboard_components/ManagerDashboardRecentMembers/ManagerDashboardRecentMembers';
 import ManagerDashboardPendingPayments from '@/app/manager/dashboard/dashboard_components/ManagerDashboardPendingPayments/ManagerDashboardPendingPayments';
+import ManagerDashboardExpiringMemberships from '@/app/manager/dashboard/dashboard_components/ManagerDashboardExpiringMemberships/ManagerDashboardExpiringMemberships';
 import ManagerDashboardPromoCard from '@/app/manager/dashboard/dashboard_components/ManagerDashboardPromoCard/ManagerDashboardPromoCard';
 import ManagerDashboardMembershipDistribution from '@/app/manager/dashboard/dashboard_components/ManagerDashboardMembershipDistribution/ManagerDashboardMembershipDistribution';
 
@@ -92,6 +93,7 @@ function DashboardContent() {
           <ManagerDashboardRecentMembers />
           <div className="space-y-4">
             <ManagerDashboardPendingPayments />
+            <ManagerDashboardExpiringMemberships />
             <ManagerDashboardPromoCard />
           </div>
         </div>

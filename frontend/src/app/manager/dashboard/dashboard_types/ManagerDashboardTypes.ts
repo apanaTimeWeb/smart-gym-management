@@ -54,7 +54,10 @@ export interface DashboardStats {
   revenueChart: { month: string; revenue: number }[];
   membersByPlan: { plan: string; count: number }[];
   membersByStatus: { active: number; pending: number; expired: number };
+  todayAttendance: number;
+  trainerAttendance: { present: number; total: number };
   recentMembers: RecentMember[];
   recentPayments: RecentPayment[];
   pendingPaymentsList: PendingPayment[];
+  expiringMemberships: PendingPayment[];
 }

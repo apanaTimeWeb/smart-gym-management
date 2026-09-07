@@ -17,7 +17,7 @@ function SalesContent() {
 
  return (
  <div className="min-h-full pb-10 bg-background text-foreground">
- <ManagerHeader title="Sales & Reports" subtitle="Monitor membership revenue, track payments and analyze performance" />
+ <ManagerHeader title="Payment & Billing" subtitle="Manage all payments, dues, and receipts" />
  <div className="p-6 space-y-5">
  <ManagerSalesToolbar />
 
@@ -25,10 +25,14 @@ function SalesContent() {
  <ManagerSalesTabs />
 
  <div className="p-5">
- {tab === 'Overview' && <ManagerSalesOverview />}
- {tab === 'Membership Report' && <ManagerSalesMembershipReport />}
- {tab === 'Pending Payments' && <ManagerSalesPendingPayments />}
- {tab === 'All Memberships' && <ManagerSalesAllMemberships />}
+ {tab === 'Daily Collection Report' && <ManagerSalesOverview />}
+ {tab === 'Due Collection' && <ManagerSalesPendingPayments />}
+ {tab === 'Payment History' && <ManagerSalesAllMemberships />}
+ {['Collect Payment', 'Partial Payment', 'Generate Receipt', 'Print Receipt'].includes(tab) && (
+   <div className="text-center text-secondary py-10">
+     <p>Action "{tab}" is managed directly from the Member profile and Payment Modals.</p>
+   </div>
+ )}
  </div>
  </div>
  </div>

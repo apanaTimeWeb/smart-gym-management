@@ -1183,9 +1183,14 @@ export async function routeMockRequest<T>(
       const recentPayments = [...validPayments].sort((a: any, b: any) => new Date(b.paidAt || 0).getTime() - new Date(a.paidAt || 0).getTime()).slice(0, 5);
       const pendingPaymentsList = members.filter((m: any) => m.pendingAmount > 0).sort((a: any, b: any) => b.pendingAmount - a.pendingAmount).slice(0, 5);
 
+      // Expiring items
+      const expiringMemberships = members.filter((m: any) => m.status === 'ACTIVE').slice(0, 3);
+
       return {
         success: true, message: 'Demo Dashboard (Live Mock)',
         data: {
+          todayAttendance: 45,
+          trainerAttendance: { present: 5, total: 6 },
           totalMembers, 
           activeMembers, 
           newMembersThisMonth,
@@ -1214,7 +1219,8 @@ export async function routeMockRequest<T>(
           membersByPlan: membersByPlan.length > 0 ? membersByPlan : [{ plan: 'Basic', count: 0 }],
           recentMembers,
           recentPayments,
-          pendingPaymentsList
+          pendingPaymentsList,
+          expiringMemberships
         }
       } as unknown as ApiResponse<T>;
     }

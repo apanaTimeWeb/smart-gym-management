@@ -7,16 +7,17 @@ import {
 
 export const MANAGER_NAV_ITEMS = [
  { href: '/manager/dashboard', label: 'Dashboard', icon: LayoutDashboard },
- { href: '/manager/plans', label: 'Plans & Pricing', icon: Tags },
- { href: '/manager/members', label: 'Members', icon: Users },
- { href: '/manager/sales', label: 'Sales & Reports', icon: FileBarChart },
+ { href: '/manager/members', label: 'Member Management', icon: Users },
+ { href: '/manager/plans', label: 'Membership / Plans', icon: Tags },
+ { href: '/manager/sales', label: 'Payment & Billing', icon: FileBarChart },
+ { href: '/manager/hr', label: 'Trainer Management', icon: UserCog },
  { href: '/manager/attendance', label: 'Attendance', icon: CalendarCheck },
- { href: '/manager/hr', label: 'HR Management', icon: UserCog },
- { href: '/manager/store', label: 'Store', icon: ShoppingBag },
+ { href: '/manager/workout', label: 'Workout Management', icon: Dumbbell },
+ { href: '/manager/library', label: 'Diet Management', icon: Utensils },
+ { href: '/manager/pt', label: 'Personal Training', icon: Users },
  { href: '/manager/expenses', label: 'Expenses', icon: Receipt },
- { href: '/manager/library', label: 'Diet Library', icon: Utensils },
- { href: '/manager/workout', label: 'Workout Library', icon: Dumbbell },
- { href: '/manager/inquiries', label: 'Inquiries & Leads',icon: MessageSquare }
+ { href: '/manager/reports', label: 'Reports', icon: FileBarChart },
+ { href: '/manager/notifications', label: 'Notifications', icon: MessageSquare }
 ];
 
 // TODO: Replace with real API call once Notifications backend module is built.

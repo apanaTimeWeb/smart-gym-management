@@ -79,18 +79,18 @@ export default function ManagerSalesToolbar() {
       let csv = '';
       let filename = 'sales_report.csv';
       
-      if (tab === 'Overview') {
+      if (tab === 'Daily Collection Report') {
         csv = 'Date,Revenue\n' + overviewData.map(d => `${d.date},${d.revenue}`).join('\n');
-        filename = 'overview.csv';
-      } else if (tab === 'Membership Report') {
+        filename = 'daily_collection_report.csv';
+      } else if (tab === 'Collect Payment') {
         csv = 'Plan,Receivable,Received,Remaining,Refund\n' + membershipReport.map(r => `${r.plan},${r.receivable},${r.received},${r.remaining},${r.refund}`).join('\n');
         filename = 'membership_report.csv';
-      } else if (tab === 'Pending Payments') {
+      } else if (tab === 'Due Collection') {
         csv = 'Name,Phone,Pending Amount,Days Overdue\n' + pendingPayments.map(p => `${p.name},${p.phone},${p.pendingAmount},${p.daysOverdue}`).join('\n');
-        filename = 'pending_payments.csv';
-      } else if (tab === 'All Memberships') {
+        filename = 'due_collection.csv';
+      } else if (tab === 'Payment History') {
         csv = 'Name,Phone,Plan,Join Date\n' + allMemberships.map(m => `${m.name},${m.phone},${m.planId},${m.joinDate}`).join('\n');
-        filename = 'all_memberships.csv';
+        filename = 'payment_history.csv';
       }
 
       if (!csv) {
