@@ -1,58 +1,87 @@
+// RESPONSIBILITY: Renders the Revenue & Profit Trend area chart using ApexCharts (Recharts is forbidden per Rule 62).
 'use client';
 
-import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
-import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import dynamic from 'next/dynamic';
 import { BarChart3 } from 'lucide-react';
+import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
+
+const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 export default function AdminDashboardRevenueTrend() {
   const { stats } = useAdminDashboardLogic();
   if (!stats?.revenueTrend) return null;
 
+  const months = stats.revenueTrend.map((d) => d.month);
+  const revenues = stats.revenueTrend.map((d) => d.revenue);
+  const profits = stats.revenueTrend.map((d) => d.profit);
+
+  const options: ApexCharts.ApexOptions = {
+    chart: {
+      type: 'area',
+      background: 'transparent',
+      toolbar: { show: false },
+      zoom: { enabled: false },
+    },
+    colors: ['#FACC15', '#22C55E'],
+    fill: {
+      type: 'gradient',
+      gradient: {
+        shadeIntensity: 1,
+        opacityFrom: 0.25,
+        opacityTo: 0.02,
+        stops: [0, 95],
+      },
+    },
+    stroke: { curve: 'smooth', width: 2.5 },
+    dataLabels: { enabled: false },
+    xaxis: {
+      categories: months,
+      labels: { style: { colors: '#A1A1AA', fontSize: '12px' } },
+      axisBorder: { show: false },
+      axisTicks: { show: false },
+    },
+    yaxis: {
+      labels: {
+        style: { colors: '#A1A1AA', fontSize: '12px' },
+        formatter: (v) => `₹${v >= 1000 ? (v / 1000).toFixed(0) + 'k' : v}`,
+      },
+    },
+    grid: {
+      borderColor: 'rgba(255,255,255,0.05)',
+      strokeDashArray: 4,
+      xaxis: { lines: { show: false } },
+    },
+    tooltip: {
+      theme: 'dark',
+      y: {
+        formatter: (v) =>
+          new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(v),
+      },
+    },
+    legend: {
+      labels: { colors: '#A1A1AA' },
+      position: 'top',
+      horizontalAlign: 'right',
+    },
+  };
+
+  const series = [
+    { name: 'Total Revenue', data: revenues },
+    { name: 'Net Profit', data: profits },
+  ];
+
   return (
     <div className="bg-card/60 backdrop-blur-xl border border-border rounded-2xl shadow-lg p-6">
-      <div className="flex items-center gap-3 mb-6">
+      <div className="flex items-center gap-3 mb-4">
         <div className="p-2.5 bg-success/20 text-success rounded-xl">
-          <BarChart3 size={20} />
+          <BarChart3 size={18} strokeWidth={2} />
         </div>
         <div>
-          <h2 className="text-lg font-bold text-foreground">Revenue & Profit Trend</h2>
-          <p className="text-xs text-secondary">6-Month trailing performance</p>
+          <h2 className="text-base font-bold text-foreground">Revenue & Profit Trend</h2>
+          <p className="text-xs text-secondary">6-month trailing performance</p>
         </div>
       </div>
-
-      <div className="h-80 w-full mt-4">
-        <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={stats.revenueTrend} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-            <defs>
-              <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
-              </linearGradient>
-              <linearGradient id="colorProfit" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
-            <XAxis dataKey="month" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
-            <YAxis 
-              stroke="#94a3b8" 
-              fontSize={12} 
-              tickLine={false} 
-              axisLine={false}
-              tickFormatter={(value) => `₹${value >= 1000 ? (value / 1000).toFixed(0) + 'k' : value}`}
-            />
-            <Tooltip 
-              contentStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.9)', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '12px' }}
-              itemStyle={{ fontSize: '14px', fontWeight: 'bold' }}
-              formatter={(value: any) => [new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value || 0)]}
-            />
-            <Legend verticalAlign="top" height={36} wrapperStyle={{ fontSize: '12px' }} />
-            <Area type="monotone" dataKey="revenue" name="Total Revenue" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorRevenue)" />
-            <Area type="monotone" dataKey="profit" name="Net Profit" stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorProfit)" />
-          </AreaChart>
-        </ResponsiveContainer>
-      </div>
+      <ReactApexChart options={options} series={series} type="area" height={300} />
     </div>
   );
 }
