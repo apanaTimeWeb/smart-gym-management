@@ -17,7 +17,7 @@ function HrContent() {
 
  return (
  <div className="min-h-full pb-10 bg-background text-foreground">
- <AdminHeader title="HR & Payroll" subtitle="Manage gym staff, trainers, salaries and payroll" />
+ <AdminHeader title="HR & Managers" subtitle="Manage branch managers, view staff profiles, and oversee payroll" />
  <div className="p-6 space-y-5">
  <AdminHrKPIs />
  <AdminHrTabs />

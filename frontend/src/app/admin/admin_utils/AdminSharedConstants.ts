@@ -7,7 +7,7 @@ import {
  export const ADMIN_NAV_ITEMS = [
   { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/branches', label: 'Branches', icon: Building2 },
-  { href: '/admin/hr', label: 'Staff & Managers', icon: Users },
+  { href: '/admin/hr', label: 'Managers', icon: Users },
   { href: '/admin/plans', label: 'Plans', icon: ClipboardList },
   { href: '/admin/sales', label: 'Sales & Reports', icon: FileBarChart },
   { href: '/admin/finance', label: 'Finance', icon: IndianRupee },
