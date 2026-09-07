@@ -10,10 +10,10 @@ export const SETTINGS_TABS = [
 ];
 
 export const EMPTY_SETTINGS_FORM = {
- gymName: '',
- ownerName: '',
- phone: '',
- email: '',
- city: '',
- gstNumber: ''
+ gymName: 'GymSmart Fitness',
+ ownerName: 'Rajesh Kumar',
+ phone: '+91 83479 77566',
+ email: 'admin@gymsmart.in',
+ city: 'Mumbai',
+ gstNumber: '27AABCU9603R1ZX',
 };

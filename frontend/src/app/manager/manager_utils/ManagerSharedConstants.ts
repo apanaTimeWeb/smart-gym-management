@@ -2,7 +2,7 @@
 import {
   LayoutDashboard, Users, FileBarChart,
   UserCog, ShoppingBag, Utensils, Dumbbell,
-  MessageSquare, CalendarCheck, Receipt, Tags
+  MessageSquare, CalendarCheck, Receipt, Tags, Bell, BarChart3
 } from 'lucide-react';
 
 export const MANAGER_NAV_ITEMS = [

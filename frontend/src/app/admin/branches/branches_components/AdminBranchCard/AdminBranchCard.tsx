@@ -1,8 +1,10 @@
-// RESPONSIBILITY: Core UI component/route for the admin module orchestrating views and displaying sub-components.
+// RESPONSIBILITY: Renders each branch card with revenue/expense/student/staff tiles and the "Open as Manager" impersonation CTA.
 "use client";
-import { Building2, TrendingUp, TrendingDown, Users, Activity, ChevronRight } from "lucide-react";
+import { Building2, TrendingUp, TrendingDown, Users, Activity, ChevronRight, LogIn } from "lucide-react";
 import { useAdminBranchesLogic } from "@/app/admin/branches/branches_context/useAdminBranchesLogic";
 import { formatCurrency } from "@/lib/formatters";
+import { useAdminImpersonationStore } from "@/app/admin/admin_store/useAdminImpersonationStore";
+import type { Branch } from "@/app/admin/admin_store/useAdminGlobalStore";
 
 function AdminBranchCardSkeleton() {
   return (
@@ -46,9 +48,11 @@ export default function AdminBranchCard() {
     </div>
   );
 
+  const { startImpersonation } = useAdminImpersonationStore();
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {branches.map((branch: any) => (
+      {(branches as Branch[]).map((branch) => (
         <div key={branch.id} className="bg-card border border-border rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
           <div className="flex items-start gap-4">
             <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 text-primary"><Building2 size={24} /></div>
@@ -79,9 +83,19 @@ export default function AdminBranchCard() {
               <div className="flex items-center gap-0.5 mt-1 text-primary opacity-0 group-hover:opacity-100 transition-opacity"><span className="text-xs">View details</span><ChevronRight size={11} /></div>
             </button>
           </div>
-          <div className="mt-5 flex items-center justify-between border-t border-border pt-4">
-            <span className={`text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wider ${branch.status === "active" ? "bg-success-bg text-success" : "bg-input text-secondary"}`}>{branch.status}</span>
-            <span className="text-xs text-secondary font-medium">ID: {branch.id.toUpperCase()}</span>
+          <div className="mt-5 border-t border-border pt-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className={`text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wider ${branch.status === "active" ? "bg-success-bg text-success" : "bg-input text-secondary"}`}>{branch.status}</span>
+              <span className="text-xs text-secondary font-medium">ID: {branch.id.toUpperCase()}</span>
+            </div>
+            <button
+              onClick={() => startImpersonation({ id: branch.id, name: branch.name, location: branch.location })}
+              className="w-full flex items-center justify-center gap-2 py-2 bg-primary/10 hover:bg-primary/20 border border-primary/30 hover:border-primary/60 rounded-xl text-xs font-bold text-primary motion-safe:transition-all motion-safe:duration-200 active:scale-95"
+              aria-label={`Open ${branch.name} as manager`}
+            >
+              <LogIn size={14} />
+              Open as Manager
+            </button>
           </div>
         </div>
       ))}
