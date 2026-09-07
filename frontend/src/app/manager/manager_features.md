@@ -37,9 +37,11 @@ The Manager module is the primary operational hub for gym branch managers. It pr
 | Store | `/manager/store` | Product + order management | `GET/POST /manager/store/*` | ✅ Live |
 | Diet Library | `/manager/library` | Diet plan CRUD + assignment | `GET/POST /manager/library/*` | ✅ Live |
 | Workout Library | `/manager/workout` | Workout plan CRUD + assignment | `GET/POST /manager/workout/*` | ✅ Live |
-| Membership Plans | `/manager/plans` | View plans with pricing | `GET /manager/plans` | ✅ Live |
-| Finance | `/manager/finance` | Payments ledger + summary | `GET /manager/finance/*` | ✅ Live |
+| Membership Plans | `/manager/plans` | View plans + request changes | `GET /manager/plans` | ✅ Live |
+| Finance | `/manager/finance` | Payments ledger + revenue vs expense chart | `GET /manager/finance/*` | ✅ Live |
 | Inquiries & Leads | `/manager/inquiries` | Lead CRM + conversion | `GET/POST /manager/inquiries` | ✅ Live |
+| Reports | `/manager/reports` | Revenue, attendance, churn, expense analytics + CSV export | `GET /manager/reports/*` | ✅ Live (mock) |
+| Notifications | `/manager/notifications` | System alerts, expiry warnings, payment reminders | `GET /manager/notifications/*` | ✅ Live (mock) |
 
 ## Data and State Architecture
 
@@ -65,6 +67,8 @@ All API calls go through the centralized `apiFetch` wrapper at `@/lib/api`. Each
 | Library | `library_api/ManagerLibraryApi.ts` | `ManagerLibraryUrlConfig.ts` |
 | Workout | `workout_api/ManagerWorkoutApi.ts` | `ManagerWorkoutUrlConfig.ts` |
 | Inquiries | `inquiries_api/ManagerInquiriesApi.ts` | `ManagerInquiriesUrlConfig.ts` |
+| Reports | `reports_api/ManagerReportsApi.ts` | `ManagerReportsUrlConfig.ts` |
+| Notifications | `notifications_api/ManagerNotificationsApi.ts` | `ManagerNotificationsUrlConfig.ts` |
 
 **Response envelope:** `{ success: boolean, message: string, data: T | null, meta?: PaginationMeta }`
 
