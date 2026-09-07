@@ -7,7 +7,9 @@ import { HrProvider, useHrContext } from '@/app/admin/hr/hr_context/AdminHrConte
 import AdminHrKPIs from '@/app/admin/hr/hr_components/AdminHrKPIs/AdminHrKPIs';
 import AdminHrTabs from '@/app/admin/hr/hr_components/AdminHrTabs/AdminHrTabs';
 import AdminHrStaffModal from '@/app/admin/hr/hr_components/AdminHrStaffModal/AdminHrStaffModal';
+import AdminHrStaffProfileModal from '@/app/admin/hr/hr_components/AdminHrStaffProfileModal/AdminHrStaffProfileModal';
 import AdminHrPayrollModal from '@/app/admin/hr/hr_components/AdminHrPayrollModal/AdminHrPayrollModal';
+import AdminHrPaymentModal from '@/app/admin/hr/hr_components/AdminHrPaymentModal/AdminHrPaymentModal';
 import type { HrInitialData } from '@/app/admin/hr/hr_types/AdminHrTypes';
 
 function HrContent() {
@@ -22,7 +24,9 @@ function HrContent() {
  </div>
 
  <AdminHrStaffModal />
+ <AdminHrStaffProfileModal />
  <AdminHrPayrollModal />
+ <AdminHrPaymentModal />
  
  {toast && <AdminToast message={toast.message} type={toast.type} onClose={hideToast} />}
  </div>

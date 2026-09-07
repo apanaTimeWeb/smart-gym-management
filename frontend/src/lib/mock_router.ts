@@ -993,7 +993,14 @@ export async function routeMockRequest<T>(
       }
       
       if (staff.length === 0) {
-        staff = generate(8, (i: number) => ({ id: `staff-${i}`, name: `Staff ${i + 1}`, role: 'Trainer', status: 'ACTIVE', isActive: true, salary: 25000, joinDate: new Date().toISOString() }));
+        staff = generate(8, (i: number) => {
+          if (i === 0) {
+            return {
+              id: `staff-${i}`, name: `Rajesh Manager`, email: 'manager@gymsmart.com', role: 'Manager', status: 'ACTIVE', isActive: true, salary: 45000, joinDate: new Date().toISOString(), branch: 'b1', primaryBranchId: 'b1', assignedBranches: ['b1', 'b3', 'b5']
+            };
+          }
+          return { id: `staff-${i}`, name: `Staff ${i + 1}`, role: 'Trainer', status: 'ACTIVE', isActive: true, salary: 25000, joinDate: new Date().toISOString(), branch: 'b1' };
+        });
         MockDB.setCollection('mock_admin_staff', staff);
       }
       

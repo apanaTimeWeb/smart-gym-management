@@ -111,7 +111,7 @@ export default function AdminHeader({ title, subtitle }: AdminHeaderProps) {
           <AdminSearchableDropdown 
             options={[
               { value: 'all', label: 'All Branches (Aggregate)' },
-              ...branches.map(b => ({ value: b.id, label: b.name }))
+              ...branches.map((b: any) => ({ value: b.id, label: b.name }))
             ]}
             value={selectedBranchId}
             onChange={(val) => setSelectedBranchId(val as string)}

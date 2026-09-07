@@ -20,11 +20,17 @@ export default function AdminHrStaffModal() {
     handleSubmit, 
     reset,
     control,
+    watch,
+    setValue,
     formState: { errors }
   } = useForm<StaffFormValues>({
     resolver: zodResolver(StaffSchema) as unknown as import("react-hook-form").Resolver<StaffFormValues>,
     defaultValues: (editData as StaffFormValues) || {}
   });
+
+ const selectedRole = watch('role');
+ const isManager = selectedRole === 'Manager';
+ const assignedBranches = watch('assignedBranches') || [];
 
  useEffect(() => {
    if (showModal && editData) {
@@ -33,6 +39,14 @@ export default function AdminHrStaffModal() {
  }, [showModal, editData, reset]);
 
  if (!showModal) return null;
+
+ const branchLabels: Record<string, string> = {
+   'b1': 'Downtown Core',
+   'b2': 'Westside Gym',
+   'b3': 'Eastside Fitness',
+   'b4': 'North Park',
+   'b5': 'South End',
+ };
 
  return (
  <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60">
@@ -74,22 +88,73 @@ export default function AdminHrStaffModal() {
   )}
   </div>
   ))}
-  <div>
-  <label className="block text-sm font-medium mb-1.5 text-secondary">Branch</label>
-  <Controller
-    name="branch"
-    control={control}
-    render={({ field }) => (
-      <SearchableDropdown
-        value={field.value || ''}
-        onChange={field.onChange}
-        options={BRANCH_OPTIONS.map(b => ({ label: b, value: b }))}
-        placeholder="Select Branch..."
+  
+  {isManager ? (
+    <div className="sm:col-span-2 space-y-4 p-5 border border-border rounded-xl bg-input/20">
+      <div>
+        <label className="block text-sm font-medium mb-2 text-foreground">Assigned Branches</label>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          {BRANCH_OPTIONS.map(b => (
+            <label key={b} className={`flex items-center gap-2 p-3 border rounded-xl cursor-pointer transition-colors ${assignedBranches.includes(b) ? 'border-primary bg-primary/5 text-primary' : 'border-border hover:bg-input text-secondary'}`}>
+              <input 
+                type="checkbox" 
+                value={b}
+                checked={assignedBranches.includes(b)}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setValue('assignedBranches', [...assignedBranches, b]);
+                  } else {
+                    setValue('assignedBranches', assignedBranches.filter(x => x !== b));
+                    if (watch('primaryBranchId') === b) {
+                      setValue('primaryBranchId', '');
+                    }
+                  }
+                }}
+                className="w-4 h-4 text-primary bg-input border-border rounded focus:ring-primary"
+              />
+              <span className="text-sm font-medium">{branchLabels[b] || b}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+      <div>
+        <label className="block text-sm font-medium mb-1.5 text-secondary">Primary Branch</label>
+        <Controller
+          name="primaryBranchId"
+          control={control}
+          render={({ field }) => (
+            <SearchableDropdown
+              value={field.value || ''}
+              onChange={(val) => {
+                field.onChange(val);
+                setValue('branch', String(val)); // Fallback for backward compatibility
+              }}
+              options={assignedBranches.map(b => ({ label: branchLabels[b] || b, value: b }))}
+              placeholder="Select Primary Branch..."
+            />
+          )}
+        />
+        {errors.primaryBranchId && <p className="text-danger text-xs mt-1.5">{errors.primaryBranchId.message as string}</p>}
+      </div>
+    </div>
+  ) : (
+    <div>
+      <label className="block text-sm font-medium mb-1.5 text-secondary">Branch</label>
+      <Controller
+        name="branch"
+        control={control}
+        render={({ field }) => (
+          <SearchableDropdown
+            value={field.value || ''}
+            onChange={field.onChange}
+            options={BRANCH_OPTIONS.map(b => ({ label: branchLabels[b] || b, value: b }))}
+            placeholder="Select Branch..."
+          />
+        )}
       />
-    )}
-  />
-  {errors.branch && <p className="text-danger text-xs mt-1.5">{errors.branch.message as string}</p>}
-  </div>
+      {errors.branch && <p className="text-danger text-xs mt-1.5">{errors.branch.message as string}</p>}
+    </div>
+  )}
   <div>
   <label className="block text-sm font-medium mb-1.5 text-secondary">Role</label>
   <Controller

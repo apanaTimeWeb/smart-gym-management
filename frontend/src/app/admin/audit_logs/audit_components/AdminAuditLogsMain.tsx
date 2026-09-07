@@ -50,7 +50,7 @@ export default function AdminAuditLogsMain() {
 
   const getBranchName = (id: string) => {
     if (id === 'all') return 'Global (System)';
-    const b = branches.find(b => b.id === id);
+    const b = branches.find((b: any) => b.id === id);
     return b ? b.name : id;
   };
 

@@ -63,8 +63,11 @@ export function useAdminHrLogic(initialData?: HrInitialData | null): HrContextTy
 
   const [showModal, setShowModal] = useState(false);
   const [showPayrollModal, setShowPayrollModal] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [paymentModal, setPaymentModal] = useState<{ payrollId: string; staffName: string; pendingAmount: number; } | null>(null);
   const [editId, setEditId] = useState<string | null>(null);
   const [editData, setEditData] = useState<Partial<Staff> | null>(null);
+  const [viewProfileData, setViewProfileData] = useState<Staff | null>(null);
   const [saving, setSaving] = useState(false);
 
   const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
@@ -107,7 +110,7 @@ export function useAdminHrLogic(initialData?: HrInitialData | null): HrContextTy
       
       setStaff(fetchedStaff);
       setPayrolls(fetchedPayrolls);
-      setSummary(summaryRes.data || { totalStaff: 0, activeStaff: 0, totalPayrollThisMonth: 0, paidCount: 0, pendingCount: 0 });
+      setSummary(summaryRes.data || { totalSalaryThisMonth: 0, totalSalaryPaid: 0, totalSalaryDue: 0, totalAdvanceGiven: 0, pendingPaymentsCount: 0, totalStaff: 0, activeStaff: 0, totalPayrollThisMonth: 0, paidCount: 0, pendingCount: 0 });
       setFetchState('success');
     } catch (e) {
       const msg = (e as Error).message;
@@ -142,24 +145,36 @@ export function useAdminHrLogic(initialData?: HrInitialData | null): HrContextTy
       branch: s.branch, 
       gender: s.gender, 
       address: s.address || '', 
-      joinDate: new Date(s.joinDate).toISOString().split('T')[0] 
+      joinDate: new Date(s.joinDate).toISOString().split('T')[0],
+      assignedBranches: s.assignedBranches || [],
+      primaryBranchId: s.primaryBranchId || s.branch
     });
+    setShowProfileModal(false); // Close profile if open
     setShowModal(true);
+  }, []);
+
+  const openProfile = useCallback((s: Staff) => {
+    setEditId(s.id);
+    setEditData({ 
+      ...s,
+      joinDate: new Date(s.joinDate).toISOString().split('T')[0]
+    });
+    setShowProfileModal(true);
   }, []);
 
   const openAddPayroll = useCallback(() => {
     setShowPayrollModal(true);
   }, []);
 
-  const { saveStaff, savePayroll, deleteStaff, toggleStaffStatus, markPayrollPaid } = useAdminHrMutations(
-    staff, setStaff, setPayrolls, setSummary, editId, setShowModal, setShowPayrollModal, setSaving, showToast
+  const { saveStaff, savePayroll, deleteStaff, toggleStaffStatus, markPayrollPaid, giveAdvance, payDue } = useAdminHrMutations(
+    staff, payrolls, setStaff, setPayrolls, setSummary, editId, setShowModal, setShowPayrollModal, setSaving, showToast
   );
 
   return {
     staff, payrolls, summary, fetchState, error, toast, showToast, hideToast, loadAll,
     search, debouncedSearch, setSearch, branchFilter, setBranchFilter, roleFilter, setRoleFilter, currentPage, setCurrentPage,
-    showModal, setShowModal, showPayrollModal, setShowPayrollModal, editId, editData, saving, 
-    openAdd, openEdit, openAddPayroll, saveStaff, savePayroll, deleteStaff, toggleStaffStatus, markPayrollPaid, payrollMonth, setPayrollMonth
+    showModal, setShowModal, showPayrollModal, setShowPayrollModal, showProfileModal, setShowProfileModal, paymentModal, setPaymentModal, editId, editData, viewProfileData, setViewProfileData, saving, 
+    openAdd, openEdit, openProfile, openAddPayroll, saveStaff, savePayroll, deleteStaff, toggleStaffStatus, markPayrollPaid, giveAdvance, payDue, payrollMonth, setPayrollMonth
   };
 }
 

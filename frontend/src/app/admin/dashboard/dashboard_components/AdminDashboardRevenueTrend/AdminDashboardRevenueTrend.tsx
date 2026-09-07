@@ -45,7 +45,7 @@ export default function AdminDashboardRevenueTrend() {
             <Tooltip 
               contentStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.9)', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '12px' }}
               itemStyle={{ fontSize: '14px', fontWeight: 'bold' }}
-              formatter={(value: number) => [new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value)]}
+              formatter={(value: any) => [new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value || 0)]}
             />
             <Legend verticalAlign="top" height={36} wrapperStyle={{ fontSize: '12px' }} />
             <Area type="monotone" dataKey="revenue" name="Total Revenue" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorRevenue)" />
