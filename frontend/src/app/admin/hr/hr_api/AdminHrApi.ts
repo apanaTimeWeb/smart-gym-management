@@ -22,5 +22,8 @@ export const hrApi = {
     apiFetch<ApiResponse<Payroll>>(HrUrlConfig.BACKEND_API.PAYROLLS_BASE, { method: 'POST', body: JSON.stringify(body) }),
   updatePayrollStatus: (id: string, status: string) =>
     apiFetch<ApiResponse<Payroll>>(HrUrlConfig.BACKEND_API.PAYROLL_STATUS_UPDATE(id), { method: 'PATCH', body: JSON.stringify({ status }) }),
-  getSummary: () => apiFetch<ApiResponse<HrSummary>>(HrUrlConfig.BACKEND_API.SUMMARY),
+  getSummary: (branchId?: string) => {
+    const q = branchId && branchId !== 'all' ? `?branchId=${branchId}` : '';
+    return apiFetch<ApiResponse<HrSummary>>(`${HrUrlConfig.BACKEND_API.SUMMARY}${q}`);
+  },
 };

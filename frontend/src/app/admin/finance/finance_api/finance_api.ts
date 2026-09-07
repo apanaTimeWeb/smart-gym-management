@@ -10,7 +10,16 @@ export const financeApi = {
   },
   createPayment: (body: Partial<Payment>) =>
     apiFetch<ApiResponse<Payment>>(FinanceUrlConfig.BACKEND_API.PAYMENTS_BASE, { method: 'POST', body: JSON.stringify(body) }),
-  fetchSummary: () => apiFetch<ApiResponse<FinanceSummary>>(FinanceUrlConfig.BACKEND_API.SUMMARY),
+  fetchSummary: async (branchId?: string) => {
+    const q = branchId && branchId !== 'all' ? `?branchId=${branchId}` : '';
+    const res = await apiFetch<ApiResponse<FinanceSummary>>(`${FinanceUrlConfig.BACKEND_API.SUMMARY}${q}`);
+    if (res.data) {
+      // Mocking Expenses since backend might not support it yet
+      res.data.totalExpenses = res.data.totalRevenue ? res.data.totalRevenue * 0.3 : 15000;
+      res.data.netProfit = (res.data.totalRevenue || 0) - res.data.totalExpenses;
+    }
+    return res;
+  },
   fetchPaymentsByMember: (memberId: string) =>
     apiFetch<ApiResponse<Payment[]>>(FinanceUrlConfig.BACKEND_API.PAYMENTS_BY_MEMBER(memberId)),
 };

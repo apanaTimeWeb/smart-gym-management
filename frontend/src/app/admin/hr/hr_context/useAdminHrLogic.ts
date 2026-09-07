@@ -8,6 +8,7 @@ import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/Admin
 import { EMPTY_STAFF } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
 import { useDebounce } from '@/app/admin/admin_utils/useDebounce';
 import { useAdminHrMutations } from './useAdminHrMutations';
+import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
 
 export function useAdminHrLogic(initialData?: HrInitialData | null): HrContextType {
   const router = useRouter();
@@ -69,18 +70,20 @@ export function useAdminHrLogic(initialData?: HrInitialData | null): HrContextTy
   const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
   const hideToast = useCallback(() => setToast(null), []);
 
+  const { selectedBranchId } = useAdminGlobalStore();
+
   const loadAll = useCallback(async () => {
     setFetchState('loading');
     setError('');
     try {
-      const staffParams: Record<string, string> = { search: debouncedSearch, page: String(currentPage) };
+      const staffParams: Record<string, string> = { search: debouncedSearch, page: String(currentPage), branchId: selectedBranchId };
       if (roleFilter !== 'All') staffParams.role = roleFilter;
       if (branchFilter !== 'All') staffParams.branch = branchFilter;
       
       const [staffRes, payrollsRes, summaryRes] = await Promise.all([
         hrApi.getStaff(staffParams),
-        hrApi.getPayrolls({ search: debouncedSearch, page: String(currentPage), month: payrollMonth }),
-        hrApi.getSummary()
+        hrApi.getPayrolls({ search: debouncedSearch, page: String(currentPage), month: payrollMonth, branchId: selectedBranchId }),
+        hrApi.getSummary(selectedBranchId)
       ]);
       
       let fetchedStaff = staffRes.data.staff || [];
@@ -112,7 +115,7 @@ export function useAdminHrLogic(initialData?: HrInitialData | null): HrContextTy
       showToast(msg, 'error');
       setFetchState('error');
     }
-  }, [showToast, debouncedSearch, currentPage, roleFilter, branchFilter, payrollMonth]);
+  }, [showToast, debouncedSearch, currentPage, roleFilter, branchFilter, payrollMonth, selectedBranchId]);
 
   useEffect(() => {
     if (isFirstRender.current) {

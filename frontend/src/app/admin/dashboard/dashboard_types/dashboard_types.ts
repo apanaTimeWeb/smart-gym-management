@@ -37,12 +37,29 @@ export interface PendingPayment {
   expiryDate: string;
 }
 
+export interface BranchPerformance {
+  id: string;
+  name: string;
+  revenue: number;
+  activeMembers: number;
+  trend: 'up' | 'down' | 'flat';
+}
+
+export interface SystemAlert {
+  id: string;
+  message: string;
+  severity: 'high' | 'medium' | 'low';
+  date: string;
+}
+
 export interface DashboardStats {
   totalMembers: number;
   activeMembers: number;
   newMembersThisMonth: number;
   totalRevenue: number;
   monthlyRevenue: number;
+  netProfit: number;
+  totalExpenses: number;
   pendingPayments: number;
   totalStaff: number;
   activeStaff: number;
@@ -51,10 +68,9 @@ export interface DashboardStats {
   totalInquiries: number;
   newInquiries: number;
   memberGrowth: { month: string; count: number }[];
-  revenueChart: { month: string; revenue: number }[];
+  revenueTrend: { month: string; revenue: number; profit: number }[];
   membersByPlan: { plan: string; count: number }[];
   membersByStatus: { active: number; pending: number; expired: number };
-  recentMembers: RecentMember[];
-  recentPayments: RecentPayment[];
-  pendingPaymentsList: PendingPayment[];
+  branchLeaderboard: BranchPerformance[];
+  systemAlerts: SystemAlert[];
 }
