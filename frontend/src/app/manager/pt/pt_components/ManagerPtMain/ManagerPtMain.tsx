@@ -78,9 +78,95 @@ export default function ManagerPtMain() {
           </div>
         )}
 
-        {(activeTab === 'Assign Trainer' || activeTab === 'Track PT Sessions') && (
-          <div className="bg-card border border-border rounded-xl p-8 text-center">
-            <p className="text-sm text-secondary">Feature "{activeTab}" is coming soon or managed via Modal.</p>
+        {activeTab === 'Assign Trainer' && (
+          <div className="bg-card p-6 border border-border rounded-xl">
+            <h3 className="text-lg font-bold text-foreground mb-4">Assign Personal Trainer</h3>
+            <div className="space-y-4 max-w-md">
+              <div>
+                <label className="block text-sm font-medium mb-1">Select Member</label>
+                <select className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary">
+                  <option>Select a member...</option>
+                  <option>Rahul Kumar</option>
+                  <option>Priya Singh</option>
+                  <option>Amit Sharma</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Select PT Package</label>
+                <select className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary">
+                  <option>Monthly PT Package (12 Sessions)</option>
+                  <option>Quarterly PT Package (24 Sessions)</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Select Trainer</label>
+                <select className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary">
+                  <option>Vikram (Head Trainer)</option>
+                  <option>Neha (Cardio Expert)</option>
+                  <option>Rahul (Strength Trainer)</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Start Date</label>
+                <input type="date" className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary" />
+              </div>
+              <button className="w-full py-2 bg-primary text-primary-foreground font-semibold rounded-lg hover:opacity-90 transition-opacity mt-2">
+                Confirm Assignment
+              </button>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'Track PT Sessions' && (
+          <div className="bg-card p-6 border border-border rounded-xl">
+            <h3 className="text-lg font-bold text-foreground mb-4">Active PT Members Progress</h3>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="py-3 px-4 text-sm font-medium text-secondary">Member Name</th>
+                    <th className="py-3 px-4 text-sm font-medium text-secondary">Trainer</th>
+                    <th className="py-3 px-4 text-sm font-medium text-secondary">Package</th>
+                    <th className="py-3 px-4 text-sm font-medium text-secondary">Progress</th>
+                    <th className="py-3 px-4 text-sm font-medium text-secondary text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  <tr>
+                    <td className="py-3 px-4 text-sm text-foreground">Rahul Kumar</td>
+                    <td className="py-3 px-4 text-sm text-secondary">Vikram</td>
+                    <td className="py-3 px-4 text-sm text-secondary">12 Sessions</td>
+                    <td className="py-3 px-4 text-sm">
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 h-2 bg-input rounded-full overflow-hidden">
+                          <div className="h-full bg-primary w-1/2"></div>
+                        </div>
+                        <span className="text-xs font-bold text-foreground">6/12</span>
+                      </div>
+                    </td>
+                    <td className="py-3 px-4 text-right">
+                      <button className="px-3 py-1.5 text-xs font-semibold bg-input text-foreground rounded-lg hover:opacity-90 transition-opacity">Mark Session</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="py-3 px-4 text-sm text-foreground">Priya Singh</td>
+                    <td className="py-3 px-4 text-sm text-secondary">Neha</td>
+                    <td className="py-3 px-4 text-sm text-secondary">24 Sessions</td>
+                    <td className="py-3 px-4 text-sm">
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 h-2 bg-input rounded-full overflow-hidden">
+                          <div className="h-full bg-success w-5/6"></div>
+                        </div>
+                        <span className="text-xs font-bold text-foreground">20/24</span>
+                      </div>
+                    </td>
+                    <td className="py-3 px-4 text-right">
+                      <button className="px-3 py-1.5 text-xs font-semibold bg-input text-foreground rounded-lg hover:opacity-90 transition-opacity">Mark Session</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </div>

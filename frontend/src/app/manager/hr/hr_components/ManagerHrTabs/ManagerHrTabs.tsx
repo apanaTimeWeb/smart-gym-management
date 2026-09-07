@@ -93,18 +93,103 @@ export default function ManagerHrTabs() {
   ) : activeTab === 'Trainer List' ? (
     <ManagerHrStaffTable />
   ) : activeTab === 'Trainer Attendance' ? (
-    <div className="text-center text-secondary py-10">Attendance view is available in the main Attendance module.</div>
+    <div className="bg-card p-6 border border-border rounded-xl">
+      <h3 className="text-lg font-bold text-foreground mb-4">Mark Trainer Attendance (Today)</h3>
+      <div className="overflow-x-auto">
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="border-b border-border">
+              <th className="py-3 px-4 text-sm font-medium text-secondary">Trainer Name</th>
+              <th className="py-3 px-4 text-sm font-medium text-secondary">Shift</th>
+              <th className="py-3 px-4 text-sm font-medium text-secondary">Status</th>
+              <th className="py-3 px-4 text-sm font-medium text-secondary text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-border">
+            <tr>
+              <td className="py-3 px-4 text-sm text-foreground">Vikram (Head Trainer)</td>
+              <td className="py-3 px-4 text-sm text-secondary">Morning (6 AM - 2 PM)</td>
+              <td className="py-3 px-4 text-sm font-bold text-success">Present</td>
+              <td className="py-3 px-4 text-right">
+                <button className="px-3 py-1.5 text-xs font-semibold bg-input text-foreground rounded-lg hover:opacity-90 transition-opacity">Edit</button>
+              </td>
+            </tr>
+            <tr>
+              <td className="py-3 px-4 text-sm text-foreground">Neha (Cardio)</td>
+              <td className="py-3 px-4 text-sm text-secondary">Evening (2 PM - 10 PM)</td>
+              <td className="py-3 px-4 text-sm font-bold text-warning">Pending</td>
+              <td className="py-3 px-4 text-right flex justify-end gap-2">
+                <button className="px-3 py-1.5 text-xs font-semibold bg-success text-success-foreground rounded-lg hover:opacity-90 transition-opacity">Mark Present</button>
+                <button className="px-3 py-1.5 text-xs font-semibold bg-danger text-danger-foreground rounded-lg hover:opacity-90 transition-opacity">Mark Absent</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   ) : activeTab === 'Trainer-Member Assignment' ? (
-    <div className="text-center text-secondary py-10">Trainer assignments are managed from the Personal Training module.</div>
+    <div className="bg-card p-6 border border-border rounded-xl">
+      <h3 className="text-lg font-bold text-foreground mb-4">Assign Members to Trainers</h3>
+      <div className="space-y-4 max-w-md">
+        <div>
+          <label className="block text-sm font-medium mb-1">Select Member</label>
+          <select className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary">
+            <option>Select a member...</option>
+            <option>Rahul Kumar</option>
+            <option>Priya Singh</option>
+          </select>
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">Select Trainer</label>
+          <select className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary">
+            <option>Select a trainer...</option>
+            <option>Vikram (Head Trainer)</option>
+            <option>Neha (Cardio Expert)</option>
+          </select>
+        </div>
+        <button className="w-full py-2 bg-primary text-primary-foreground font-semibold rounded-lg hover:opacity-90 transition-opacity mt-2">
+          Assign Member
+        </button>
+      </div>
+    </div>
   ) : activeTab === 'Trainer Schedule' ? (
-    <div className="text-center text-secondary py-10">
-      <h3 className="text-lg font-bold text-foreground mb-2">Trainer Schedule</h3>
-      <p>Daily schedule for trainers will be displayed here.</p>
+    <div className="bg-card p-6 border border-border rounded-xl">
+      <h3 className="text-lg font-bold text-foreground mb-4">Today's Schedule</h3>
+      <div className="space-y-3">
+        <div className="p-4 bg-input rounded-lg flex justify-between items-center">
+          <div>
+            <p className="font-bold text-foreground">Vikram (Head Trainer)</p>
+            <p className="text-sm text-secondary">PT Session with Rahul Kumar</p>
+          </div>
+          <span className="text-sm font-semibold text-primary">10:00 AM - 11:00 AM</span>
+        </div>
+        <div className="p-4 bg-input rounded-lg flex justify-between items-center">
+          <div>
+            <p className="font-bold text-foreground">Neha (Cardio Expert)</p>
+            <p className="text-sm text-secondary">Group Aerobics</p>
+          </div>
+          <span className="text-sm font-semibold text-primary">05:00 PM - 06:00 PM</span>
+        </div>
+      </div>
     </div>
   ) : activeTab === 'Trainer Performance' ? (
-    <div className="text-center text-secondary py-10">
-      <h3 className="text-lg font-bold text-foreground mb-2">Trainer Performance</h3>
-      <p>Performance metrics for trainers will be displayed here.</p>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="bg-card p-6 border border-border rounded-xl">
+        <h3 className="text-lg font-bold text-foreground mb-1">Vikram (Head Trainer)</h3>
+        <p className="text-sm text-secondary mb-4">4.8/5.0 Average Rating</p>
+        <div className="space-y-2">
+          <div className="flex justify-between text-sm"><span>Sessions Completed</span><span className="font-bold">45</span></div>
+          <div className="flex justify-between text-sm"><span>Member Renewals</span><span className="font-bold text-success">85%</span></div>
+        </div>
+      </div>
+      <div className="bg-card p-6 border border-border rounded-xl">
+        <h3 className="text-lg font-bold text-foreground mb-1">Neha (Cardio Expert)</h3>
+        <p className="text-sm text-secondary mb-4">4.9/5.0 Average Rating</p>
+        <div className="space-y-2">
+          <div className="flex justify-between text-sm"><span>Sessions Completed</span><span className="font-bold">32</span></div>
+          <div className="flex justify-between text-sm"><span>Member Renewals</span><span className="font-bold text-success">92%</span></div>
+        </div>
+      </div>
     </div>
   ) : (
     <div className="text-center text-secondary py-10">Coming soon</div>
