@@ -12,12 +12,12 @@ export default function AttendanceTable() {
   const { records, totalRecords, fetchState, tab, currentPage, setCurrentPage, setCalendarUser } = useAttendanceContext();
 
   const filteredRecords = records.filter(r => 
-    tab === 'All' || 
-    (tab === 'Members' && r.type === 'MEMBER') || 
-    (tab === 'Staff' && r.type === 'STAFF')
+    tab === 'Daily Attendance Report' || 
+    (tab === 'Member Attendance' && r.type === 'MEMBER') || 
+    ((tab === 'Trainer Attendance' || tab === 'Staff Attendance') && r.type === 'STAFF')
   );
   
-  const totalPages = Math.ceil((tab === 'All' ? totalRecords : filteredRecords.length) / MANAGER_ITEMS_PER_PAGE) || 1;
+  const totalPages = Math.ceil(filteredRecords.length / MANAGER_ITEMS_PER_PAGE) || 1;
   const startIndex = (currentPage - 1) * MANAGER_ITEMS_PER_PAGE;
   const paginatedRecords = filteredRecords.slice(startIndex, startIndex + MANAGER_ITEMS_PER_PAGE);
 

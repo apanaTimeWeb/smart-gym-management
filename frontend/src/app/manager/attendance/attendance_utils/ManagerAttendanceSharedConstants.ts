@@ -11,7 +11,7 @@ export const ATTENDANCE_TABLE_HEADERS = [
   'Name', 'Type', 'Status', 'Date', 'Check In', 'Actions'
 ];
 
-export const ATTENDANCE_TABS = ['All', 'Members', 'Staff'] as const;
+export const ATTENDANCE_TABS = ['Member Attendance', 'Trainer Attendance', 'Staff Attendance', 'Daily Attendance Report'] as const;
 export type AttendanceTab = typeof ATTENDANCE_TABS[number];
 
 export const AttendanceSchema = z.object({
