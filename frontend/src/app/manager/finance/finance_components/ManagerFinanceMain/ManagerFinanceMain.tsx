@@ -48,7 +48,7 @@ function RevenueExpenseChart({ data }: { data: { month: string; revenue: number;
     plotOptions: { bar: { borderRadius: 4, columnWidth: '55%' } },
     colors: ['#FACC15', '#EF4444'],
     grid: { borderColor: 'rgba(255,255,255,0.05)', strokeDashArray: 4 },
-    tooltip: { theme: 'dark' },
+    tooltip: { theme: 'dark' as const },
     xaxis: {
       categories: data.map(d => d.month),
       labels: { style: { colors: '#A1A1AA', fontSize: '11px' } },

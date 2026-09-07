@@ -13,7 +13,7 @@ const Chart = dynamic(() => import('react-apexcharts'), { ssr: false, loading: (
 const CHART_BASE = {
   chart: { background: 'transparent', toolbar: { show: false }, fontFamily: 'Inter, sans-serif' },
   grid: { borderColor: 'rgba(255,255,255,0.05)', strokeDashArray: 4 },
-  tooltip: { theme: 'dark' },
+  tooltip: { theme: 'dark' as const },
   xaxis: { labels: { style: { colors: '#A1A1AA', fontSize: '11px' } }, axisBorder: { show: false }, axisTicks: { show: false } },
   yaxis: { labels: { style: { colors: '#A1A1AA', fontSize: '11px' } } },
   legend: { labels: { colors: '#A1A1AA' } },
