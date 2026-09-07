@@ -28,7 +28,7 @@ const DEMO_CREDENTIALS: Record<string, { password: string; role: string }> = {
 export function useLoginForm(): UseLoginFormReturn {
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: 'admin@gymsmart.com', password: 'superadmin123' },
+    defaultValues: { email: 'admin@gymsmart.com', password: 'demo123' },
   });
 
   const [status, setStatus] = useState<FetchState>('idle');
@@ -86,34 +86,25 @@ export function useLoginForm(): UseLoginFormReturn {
   const handleDemoSuperadminLogin = useCallback(() => {
     form.setValue('email', 'demo_admin@gym.com');
     form.setValue('password', 'demo123');
-    // We delay the submission slightly so the user sees the fields populate
-    setTimeout(() => {
-      form.handleSubmit(onSubmit)();
-    }, 300);
+    onSubmit({ email: 'demo_admin@gym.com', password: 'demo123' });
   }, [form, onSubmit]);
 
   const handleDemoAdminLogin = useCallback(() => {
     form.setValue('email', 'admin@gymsmart.com');
     form.setValue('password', 'demo123');
-    setTimeout(() => {
-      form.handleSubmit(onSubmit)();
-    }, 300);
+    onSubmit({ email: 'admin@gymsmart.com', password: 'demo123' });
   }, [form, onSubmit]);
 
   const handleDemoManagerLogin = useCallback(() => {
     form.setValue('email', 'manager@gymsmart.com');
     form.setValue('password', 'demo123');
-    setTimeout(() => {
-      form.handleSubmit(onSubmit)();
-    }, 300);
+    onSubmit({ email: 'manager@gymsmart.com', password: 'demo123' });
   }, [form, onSubmit]);
 
   const handleDemoTrainerLogin = useCallback(() => {
     form.setValue('email', 'trainer@gymsmart.com');
     form.setValue('password', 'demo123');
-    setTimeout(() => {
-      form.handleSubmit(onSubmit)();
-    }, 300);
+    onSubmit({ email: 'trainer@gymsmart.com', password: 'demo123' });
   }, [form, onSubmit]);
 
   return { 

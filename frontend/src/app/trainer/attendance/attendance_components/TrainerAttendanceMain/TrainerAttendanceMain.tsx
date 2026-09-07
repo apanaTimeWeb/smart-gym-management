@@ -27,8 +27,6 @@ function AttendanceContent() {
  </div>
  </div>
 
- <TrainerAttendanceModal />
-
  {toast && (
  <TrainerToast message={toast.message} type={toast.type} onClose={hideToast} />
  )}

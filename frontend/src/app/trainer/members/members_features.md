@@ -1,7 +1,8 @@
 # Members Feature Map
 
 ## Module Purpose
-Handles members operations, UI display, and logic isolation as part of the Smart Gym 360 platform.
+Handles members operations for Trainers. Trainers can only view members explicitly assigned to them.
+**Strict Restriction:** Trainers must NEVER have access to member payment history, membership fees, or renewal tabs. This module only exposes health metrics, progress tracking (BMI/calories/measurements), member's gym attendance, and diet/workout assignments.
 
 ## Directory Structure
 - `members_components/`: Contains all isolated micro-components for the module.
@@ -29,7 +30,9 @@ List all endpoint builders and expected response types.
 - `deleteMembers(id)`
 
 ## Permissions and Security
-Document protected actions, roles, and CODEOWNERS paths.
+- **Role:** TRAINER only.
+- **Data Scoping:** Must only fetch members where `assignedTrainerId` matches the logged-in trainer.
+- **Forbidden Actions:** No financial tabs (Payments, Renewals, Invoices) are allowed in the Trainer member profile view.
 
 ## Loading, Empty, Error States
 - **Loading:** Uses `loading.tsx` skeleton matching global design.

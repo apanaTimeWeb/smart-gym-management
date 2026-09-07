@@ -68,7 +68,7 @@ export default function TrainerMembersTable() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-5 py-3.5 text-sm text-foreground">{m.plan?.name || `Plan #${m.planId}`}</td>
+                    <td className="px-5 py-3.5 text-sm text-foreground">{m.age || 25} / {m.gender || 'Unknown'}</td>
                     <td className="px-5 py-3.5">
                       <span 
                         className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusStyle.bg} ${statusStyle.text}`}
@@ -76,10 +76,17 @@ export default function TrainerMembersTable() {
                         {m.status}
                       </span>
                     </td>
-                    <td className="px-5 py-3.5 text-sm text-secondary">{m.billingCycle}</td>
-                    <td className="px-5 py-3.5 text-sm font-medium text-success">{formatCurrency(m.paidAmount)}</td>
-                    <td className="px-5 py-3.5 text-sm font-medium text-danger">{m.pendingAmount > 0 ? formatCurrency(m.pendingAmount) : '—'}</td>
                     <td className="px-5 py-3.5 text-sm text-secondary">{new Date(m.expiryDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                    <td className="px-5 py-3.5 text-sm text-secondary">{m.lastWorkout || '2 days ago'}</td>
+                    <td className="px-5 py-3.5 text-sm">
+                      <span className={`inline-flex px-2 py-1 rounded-md text-xs font-medium ${
+                        m.progressStatus === 'Good' ? 'bg-success-bg text-success' : 
+                        m.progressStatus === 'Needs Attention' ? 'bg-danger-bg text-danger' : 
+                        'bg-warning-bg text-warning'
+                      }`}>
+                        {m.progressStatus || 'Average'}
+                      </span>
+                    </td>
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-2">
                         <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'whatsapp'); }} className="p-1.5 rounded-lg bg-success text-white hover:opacity-80 motion-safe:transition-all motion-safe:duration-200" title="WhatsApp" aria-label={`Message ${m.name} on WhatsApp`}><MessageCircle size={14} /></button>

@@ -125,26 +125,52 @@ export default function TrainerWorkoutModal() {
           
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-secondary mb-1">No. of Exercises</label>
-              <input 
-                type="number" 
-                min="1" 
-                {...register('exercises', { valueAsNumber: true })}
-                className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page ${
-                  errors.exercises ? 'border-destructive focus-visible:ring-destructive' : 'border-border focus-visible:ring-warning'
-                } bg-input text-foreground`} 
-              />
-              {errors.exercises && <p className="text-danger text-xs mt-1">{errors.exercises.message}</p>}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-secondary mb-1">Tags (comma separated)</label>
+              <label className="block text-sm font-medium text-secondary mb-1">Goal</label>
               <input 
                 type="text" 
-                placeholder="e.g. PPL, Classic" 
-                {...register('tags')}
+                placeholder="e.g. Weight Loss" 
+                {...register('goal')}
                 className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus-visible:ring-warning bg-input text-foreground" 
               />
             </div>
+            <div>
+              <label className="block text-sm font-medium text-secondary mb-1">Assigned To (Member ID)</label>
+              <input 
+                type="text" 
+                placeholder="Leave blank for global plan" 
+                {...register('assignedMemberId')}
+                className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus-visible:ring-warning bg-input text-foreground" 
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-secondary mb-1">Start Date</label>
+              <input 
+                type="date" 
+                {...register('startDate')}
+                className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus-visible:ring-warning bg-input text-foreground" 
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-secondary mb-1">End Date</label>
+              <input 
+                type="date" 
+                {...register('endDate')}
+                className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus-visible:ring-warning bg-input text-foreground" 
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-secondary mb-1">Instructions / Notes</label>
+            <textarea 
+              rows={2}
+              placeholder="e.g. Warm up properly before starting..." 
+              {...register('instructions')}
+              className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus-visible:ring-warning bg-input text-foreground custom-scrollbar" 
+            />
           </div>
           
           <div className="pt-2 flex justify-end gap-3">

@@ -11,6 +11,9 @@ export interface Member {
   joinDate: string; expiryDate: string;
   paidAmount: number; pendingAmount: number; photo?: string;
   createdAt: string;
+  age?: number;
+  lastWorkout?: string;
+  progressStatus?: 'Good' | 'Average' | 'Needs Attention';
 }
 
 export interface MemberStats {
@@ -33,6 +36,7 @@ export interface Exercise {
   id: string; name: string; category: string; muscleGroup: string[];
   sets?: number; reps?: string; duration?: string;
   difficulty: string; description?: string; videoUrl?: string; imageUrl?: string; isActive: boolean;
+  equipment?: string; instructions?: string;
 }
 
 export interface DietPlan {
@@ -41,9 +45,22 @@ export interface DietPlan {
   description?: string; meals: string[]; isActive: boolean;
 }
 
+export interface WorkoutExercise {
+  exerciseId: string;
+  name: string;
+  sets: number;
+  reps: string;
+  weight: string;
+  restTime: string;
+}
+
 export interface Workout {
   id: string; name: string; level: string; days: number;
   exercises: number; focus: string; duration: string; tags: string[]; isActive?: boolean;
+  goal?: string; startDate?: string; endDate?: string;
+  instructions?: string;
+  assignedMemberId?: string;
+  workoutExercises?: WorkoutExercise[];
 }
 
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';

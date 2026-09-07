@@ -24,11 +24,15 @@ export interface RecentMember {
 }
 
 export interface DashboardStats {
-  totalMembers: number;
-  activeMembers: number;
-  newMembersThisMonth: number;
-  membersByPlan: { plan: string; count: number }[];
-  membersByStatus: { active: number; pending: number; expired: number };
-  recentMembers: RecentMember[];
+  todaysSessions: number;
+  completedSessions: number;
+  pendingSessions: number;
+  myMembersCount: number;
+  todaysAttendance: number;
+  pendingWorkoutPlans: number;
+  recentMemberProgress: { id: string; name: string; detail: string; time: string }[];
+  upcomingSessions: { id: string; name: string; time: string; type: string }[];
+  membersByPlan?: { plan: string; count: number }[];
+  recentMembers?: RecentMember[];
 }
 

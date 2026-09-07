@@ -69,12 +69,6 @@ export default function TrainerAttendanceToolbar() {
  >
  <RefreshCw size={14} />
  </button>
- <button 
- onClick={() => setShowModal(true)} 
- className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-primary rounded-lg motion-safe:transition-opacity hover:opacity-90" 
- >
- <Plus size={14} /> Mark Attendance
- </button>
  </div>
  </div>
  </div>

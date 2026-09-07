@@ -44,12 +44,19 @@ export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const user = getUserFromCookie(req);
 
+  // LOGGING FOR MACBOOK DEBUGGING
+  console.log(`[MIDDLEWARE HIT] Time: ${new Date().toISOString()}`);
+  console.log(`[MIDDLEWARE HIT] IP: ${req.headers.get('x-forwarded-for') || 'Unknown'} | Path: ${pathname}`);
+  console.log(`[MIDDLEWARE HIT] User Cookie:`, user ? `Found (Role: ${user.role})` : 'Not Found');
+
   // Public routes: auth pages, landing, Next.js internals
   const isPublicRoute =
     pathname.startsWith("/auth") ||
     pathname.startsWith("/landing") ||
     pathname.startsWith("/_next") ||
     pathname.startsWith("/api") ||
+    pathname.startsWith("/__nextjs") ||
+    pathname.startsWith("/__turbopack") ||
     pathname === "/favicon.ico" ||
     pathname === "/icon.png" ||
     pathname === "/opengraph.jpg";
@@ -93,6 +100,6 @@ export function proxy(req: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!_next/static|_next/image|__nextjs|__turbopack|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
