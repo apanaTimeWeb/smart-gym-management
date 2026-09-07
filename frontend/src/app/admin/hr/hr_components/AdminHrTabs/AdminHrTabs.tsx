@@ -7,6 +7,9 @@ import { HR_TABS, BRANCH_OPTIONS } from '@/app/admin/hr/hr_utils/AdminHrSharedCo
 import { RefreshCw, Plus, Search } from 'lucide-react';
 import AdminHrStaffTable from '@/app/admin/hr/hr_components/AdminHrStaffTable/AdminHrStaffTable';
 import AdminHrPayrollTable from '@/app/admin/hr/hr_components/AdminHrPayrollTable/AdminHrPayrollTable';
+import AdminHrAdvanceTable from '@/app/admin/hr/hr_components/AdminHrAdvanceTable/AdminHrAdvanceTable';
+import AdminHrDueTable from '@/app/admin/hr/hr_components/AdminHrDueTable/AdminHrDueTable';
+import AdminHrLedgerTable from '@/app/admin/hr/hr_components/AdminHrLedgerTable/AdminHrLedgerTable';
 
 export default function AdminHrTabs() {
   const [activeTab, setActiveTab] = useState(HR_TABS[0]);
@@ -79,7 +82,7 @@ export default function AdminHrTabs() {
         onClick={openAdd} 
         className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:opacity-90 transition-opacity" 
       >
-        <Plus size={14} /> Add Staff
+        <Plus size={14} /> Add Manager
       </button>
     )}
     {activeTab === 'Payroll' && (
@@ -101,9 +104,15 @@ export default function AdminHrTabs() {
  </div>
  ) : activeTab === 'Staff' ? (
  <AdminHrStaffTable />
- ) : (
+ ) : activeTab === 'Payroll' ? (
  <AdminHrPayrollTable />
- )}
+ ) : activeTab === 'Advance' ? (
+ <AdminHrAdvanceTable />
+ ) : activeTab === 'Dues' ? (
+ <AdminHrDueTable />
+ ) : activeTab === 'Ledger' ? (
+ <AdminHrLedgerTable />
+ ) : null}
  </div>
  </div>
  );

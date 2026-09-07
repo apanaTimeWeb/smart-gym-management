@@ -11,11 +11,13 @@ import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/Admin
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
+import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
 
 export function useAdminSalesLogic(initialData?: SalesInitialData | null): SalesContextType {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
+  const { selectedBranchId } = useAdminGlobalStore();
 
   const tab = (searchParams.get('tab') || 'Overview') as SalesTab;
   const dateFilter = (searchParams.get('dateFilter') || 'This Month') as DateFilter;
@@ -57,28 +59,28 @@ export function useAdminSalesLogic(initialData?: SalesInitialData | null): Sales
     else toast.success(message);
   }, []);
 
-  const queryParams = { limit: '10', page: currentPage.toString(), ...(debouncedSearch ? { search: debouncedSearch } : {}) };
+  const queryParams = { limit: '10', page: currentPage.toString(), branchId: selectedBranchId, ...(debouncedSearch ? { search: debouncedSearch } : {}) };
 
   const { data: overviewRes, isLoading: overviewLoading, isError: overviewError } = useQuery({
-    queryKey: ['salesOverview', dateFilter],
-    queryFn: () => salesApi.fetchOverview(),
+    queryKey: ['salesOverview', dateFilter, selectedBranchId],
+    queryFn: () => salesApi.fetchOverview(selectedBranchId),
     initialData: initialData?.overviewData ? { success: true, message: 'SSR', data: { monthlyRevenue: initialData.overviewData } } : undefined,
   });
 
   const { data: reportRes, isLoading: reportLoading, isError: reportError } = useQuery({
-    queryKey: ['salesMembershipReport', dateFilter],
-    queryFn: () => salesApi.fetchMembershipReport(),
+    queryKey: ['salesMembershipReport', dateFilter, selectedBranchId],
+    queryFn: () => salesApi.fetchMembershipReport(selectedBranchId),
     initialData: initialData?.membershipReport ? { success: true, message: 'SSR', data: { report: initialData.membershipReport, totals: initialData.membershipTotals || {} } } : undefined,
   });
 
   const { data: pendingRes, isLoading: pendingLoading, isError: pendingError } = useQuery({
-    queryKey: ['salesPendingPayments', queryParams, dateFilter],
+    queryKey: ['salesPendingPayments', queryParams, dateFilter, selectedBranchId],
     queryFn: () => salesApi.fetchPendingPayments(queryParams),
     initialData: initialData?.pendingPayments ? { success: true, message: 'SSR', data: { members: initialData.pendingPayments, total: initialData.pendingTotal || 0 } } : undefined,
   });
 
   const { data: allMembershipsRes, isLoading: allMembershipsLoading, isError: allMembershipsError } = useQuery({
-    queryKey: ['salesAllMemberships', queryParams, dateFilter],
+    queryKey: ['salesAllMemberships', queryParams, dateFilter, selectedBranchId],
     queryFn: () => salesApi.fetchAllMemberships(queryParams),
     initialData: initialData?.allMemberships ? { success: true, message: 'SSR', data: { members: initialData.allMemberships, total: initialData.allMembershipsTotal || 0 } } : undefined,
   });

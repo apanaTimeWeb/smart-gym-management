@@ -4,9 +4,12 @@ import { SalesUrlConfig } from '@/app/admin/sales/sales_url_config';
 import type { OverviewDataPoint, MembershipReportItem, MembershipTotals, PendingPaymentMember, Member } from '@/app/admin/sales/sales_types/sales_types';
 
 export const salesApi = {
-  fetchOverview: () => apiFetch<ApiResponse<{ monthlyRevenue: OverviewDataPoint[] }>>(SalesUrlConfig.BACKEND_API.OVERVIEW),
-  fetchMembershipReport: (params?: Record<string, string>) => {
-    const q = params ? '?' + new URLSearchParams(params).toString() : '';
+  fetchOverview: (branchId?: string) => {
+    const q = branchId && branchId !== 'all' ? `?branchId=${branchId}` : '';
+    return apiFetch<ApiResponse<{ monthlyRevenue: OverviewDataPoint[] }>>(`${SalesUrlConfig.BACKEND_API.OVERVIEW}${q}`);
+  },
+  fetchMembershipReport: (branchId?: string) => {
+    const q = branchId && branchId !== 'all' ? `?branchId=${branchId}` : '';
     return apiFetch<ApiResponse<{ report: MembershipReportItem[]; totals: MembershipTotals }>>(`${SalesUrlConfig.BACKEND_API.MEMBERSHIP_REPORT}${q}`);
   },
   fetchPendingPayments: (params?: Record<string, string>) => {

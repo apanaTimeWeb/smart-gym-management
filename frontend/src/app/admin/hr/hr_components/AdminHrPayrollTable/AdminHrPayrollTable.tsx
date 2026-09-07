@@ -8,7 +8,7 @@ import { CheckCircle2 } from 'lucide-react';
 import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_utils/AdminSharedConstants';
 
 export default function AdminHrPayrollTable() {
-  const { payrolls, search, currentPage, setCurrentPage, markPayrollPaid, fetchState, payrollMonth } = useHrContext();
+  const { payrolls, search, currentPage, setCurrentPage, setPaymentModal, fetchState, payrollMonth, staff } = useHrContext();
 
   const filtered = payrolls.filter(p => {
     const nameMatch = (p.staff?.name || '').toLowerCase().includes(search.toLowerCase());
@@ -89,7 +89,12 @@ export default function AdminHrPayrollTable() {
                   </div>
                 </td>
                 <td className="px-4 py-3 text-sm text-primary">{p.month}</td>
-                <td className="px-4 py-3 text-sm font-bold text-success">{(p.amount || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
+                <td className="px-4 py-3 text-sm font-medium text-right">
+                  {((staff.find(s => String(s.id) === String(p.staffId))?.salary) || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}
+                </td>
+                <td className="px-4 py-3 text-sm font-bold text-foreground text-right">{(p.amount || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
+                <td className="px-4 py-3 text-sm font-bold text-success text-right">{(p.paidAmount || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
+                <td className="px-4 py-3 text-sm font-bold text-danger text-right">{(p.pendingAmount || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
                 <td className="px-4 py-3">
                   <span 
                     className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
@@ -105,10 +110,14 @@ export default function AdminHrPayrollTable() {
                 <td className="px-4 py-3 text-right">
                   {p.status !== 'Paid' && (
                     <button 
-                      onClick={() => markPayrollPaid(p.id)}
+                      onClick={() => setPaymentModal({
+                        payrollId: p.id,
+                        staffName: p.staff?.name || `Staff #${p.staffId}`,
+                        pendingAmount: p.pendingAmount
+                      })}
                       className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:bg-primary/90 transition-colors"
                     >
-                      <CheckCircle2 size={16} /> Mark Paid
+                      <CheckCircle2 size={16} /> Pay
                     </button>
                   )}
                 </td>

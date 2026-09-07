@@ -12,6 +12,7 @@ import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { useAdminFinanceStore } from '@/app/admin/finance/finance_store/useAdminFinanceStore';
+import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
 
 export function useAdminFinanceLogic(initialData?: FinanceInitialData | null) {
   const router = useRouter();
@@ -19,6 +20,7 @@ export function useAdminFinanceLogic(initialData?: FinanceInitialData | null) {
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
   const { showModal, setShowModal } = useAdminFinanceStore();
+  const { selectedBranchId } = useAdminGlobalStore();
 
   // URL State
   const search = searchParams.get('search') || '';
@@ -46,17 +48,17 @@ export function useAdminFinanceLogic(initialData?: FinanceInitialData | null) {
   }, []);
   const hideToast = useCallback(() => {}, []);
 
-  const queryParams = { limit: '10', page: currentPage.toString(), ...(debouncedSearch ? { search: debouncedSearch } : {}) };
+  const queryParams = { limit: '10', page: currentPage.toString(), branchId: selectedBranchId, ...(debouncedSearch ? { search: debouncedSearch } : {}) };
 
   const { data: paymentsRes, isLoading: paymentsLoading, isError: isPaymentsError, error: paymentsError } = useQuery({
-    queryKey: ['financePayments', queryParams],
+    queryKey: ['financePayments', queryParams, selectedBranchId],
     queryFn: () => financeApi.fetchPayments(queryParams),
     initialData: initialData?.payments ? { success: true, message: 'SSR', data: { payments: initialData.payments, total: initialData.totalPayments || 0 } } : undefined,
   });
 
   const { data: summaryRes, isLoading: summaryLoading, isError: isSummaryError } = useQuery({
-    queryKey: ['financeSummary'],
-    queryFn: () => financeApi.fetchSummary(),
+    queryKey: ['financeSummary', selectedBranchId],
+    queryFn: () => financeApi.fetchSummary(selectedBranchId),
     initialData: initialData?.summary ? { success: true, message: 'SSR', data: initialData.summary } : undefined,
   });
 

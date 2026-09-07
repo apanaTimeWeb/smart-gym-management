@@ -1,17 +1,18 @@
-// RESPONSIBILITY: Renders a modal to record a partial or full salary payment for staff.
 'use client';
 
 import { useState, useEffect } from 'react';
 import { IndianRupee, X } from 'lucide-react';
-import { formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
-import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
+import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
 
-export default function ManagerHrPaymentModal() {
+export default function AdminHrPaymentModal() {
   const { paymentModal, setPaymentModal, markPayrollPaid } = useHrContext();
   const [amount, setAmount] = useState<number | ''>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Sync state when modal opens
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
+  };
+
   useEffect(() => {
     if (paymentModal) {
       setAmount(paymentModal.pendingAmount);
