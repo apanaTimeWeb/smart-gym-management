@@ -9,7 +9,8 @@ import type { TimeRange } from "@/app/admin/dashboard/dashboard_types/dashboard_
 export type DetailView = "revenue" | "expenses" | "staff" | "students";
 
 export function useAdminBranchesLogic() {
-  const { data: branches = [], isLoading, isError } = useAdminBranchesData();
+  const { data: branchesData = [], isLoading, isError } = useAdminBranchesData();
+  const branches = Array.isArray(branchesData) ? branchesData : ((branchesData as any)?.branches || []);
   const {
     timeRange, setTimeRange,
     startDate, setStartDate,

@@ -12,7 +12,7 @@ import { attendanceApi } from '@/app/manager/attendance/attendance_api/ManagerAt
 
 export default function ManagerHrPayrollModal() {
   const { showPayrollModal, setShowPayrollModal, savePayroll, saving, staff } = useHrContext();
-  const [calculationInfo, setCalculationInfo] = React.useState('');
+  const [calcData, setCalcData] = React.useState<{base: number, attDed: number, advAdj: number, net: number} | null>(null);
 
   const { register, handleSubmit, reset, watch, setValue, control, formState: { errors } } = useForm<PayrollFormValues>({
     resolver: zodResolver(PayrollSchema),
@@ -25,7 +25,7 @@ export default function ManagerHrPayrollModal() {
   useEffect(() => {
     if (showPayrollModal) {
       reset(EMPTY_PAYROLL_FORM);
-      setCalculationInfo('');
+      setCalcData(null);
     }
   }, [showPayrollModal, reset]);
 
@@ -61,11 +61,10 @@ export default function ManagerHrPayrollModal() {
                payableAmount -= deductedAdvance;
             }
             
-            const info = `Base: ₹${baseSalary} | Att. Ded: -₹${attendanceDeduction} | Adv. Adj: -₹${deductedAdvance} | Net: ₹${payableAmount}`;
             
             setValue('amount', payableAmount);
             setValue('paidAmount', payableAmount);
-            setCalculationInfo(info);
+            setCalcData({ base: baseSalary, attDed: attendanceDeduction, advAdj: deductedAdvance, net: payableAmount });
           }
         } catch (e) {
           // Error handled via toaster in component
@@ -80,10 +79,9 @@ export default function ManagerHrPayrollModal() {
              deductedAdvance = Math.min(payableAmount, s.advanceSalary);
              payableAmount -= deductedAdvance;
           }
-          const info = `Base: ₹${baseSalary} | Att. Ded: ₹0 | Adv. Adj: -₹${deductedAdvance} | Net: ₹${payableAmount}`;
           setValue('amount', payableAmount);
           setValue('paidAmount', payableAmount);
-          setCalculationInfo(info);
+          setCalcData({ base: baseSalary, attDed: 0, advAdj: deductedAdvance, net: payableAmount });
         }
       }
     };
@@ -93,8 +91,8 @@ export default function ManagerHrPayrollModal() {
   if (!showPayrollModal) return null;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60">
-      <div className="w-full max-w-md rounded-2xl shadow-xl flex flex-col max-h-[90vh] bg-card border-2 border-warning">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm motion-safe:animate-in motion-safe:fade-in duration-200">
+      <div className="w-full max-w-md rounded-2xl shadow-2xl flex flex-col max-h-[90vh] bg-card/95 backdrop-blur-xl border border-white/10 motion-safe:animate-in motion-safe:zoom-in-95 duration-200">
         
         <div className="flex items-center justify-between px-8 py-5 border-b border-border">
           <h2 className="text-xl font-bold text-foreground">
@@ -136,15 +134,38 @@ export default function ManagerHrPayrollModal() {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-sm font-semibold text-secondary">Amount (₹) <span className="text-danger">*</span></label>
+              <label className="text-sm font-semibold text-secondary">Net Payable Amount (₹) <span className="text-danger">*</span></label>
               <input 
                 type="number" min="0" onKeyDown={(e) => { if (['e', 'E', '-', '+'].includes(e.key)) e.preventDefault(); }}
                 {...register('amount', { valueAsNumber: true })}
                 className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground transition-all duration-200"
               />
-              <p className="text-xs text-secondary mt-1.5">
-                {calculationInfo ? calculationInfo : "Amount is automatically set to the staff's net payable, but you can modify it."}
-              </p>
+              
+              {calcData ? (
+                <div className="mt-3 p-4 rounded-xl bg-white/5 border border-white/5 space-y-2">
+                  <div className="flex justify-between text-xs text-secondary">
+                    <span>Base Salary</span>
+                    <span className="font-medium text-foreground">₹{calcData.base}</span>
+                  </div>
+                  <div className="flex justify-between text-xs text-danger">
+                    <span>Attendance Ded.</span>
+                    <span>-₹{calcData.attDed}</span>
+                  </div>
+                  <div className="flex justify-between text-xs text-warning">
+                    <span>Advance Adj.</span>
+                    <span>-₹{calcData.advAdj}</span>
+                  </div>
+                  <div className="pt-2 border-t border-white/10 flex justify-between text-sm font-bold text-primary">
+                    <span>Net Auto-Calculated</span>
+                    <span>₹{calcData.net}</span>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-xs text-secondary mt-1.5">
+                  Amount is automatically calculated when staff and month are selected.
+                </p>
+              )}
+              
               {errors.amount && <p className="text-danger text-xs mt-1.5">{errors.amount.message as string}</p>}
             </div>
 
@@ -174,11 +195,11 @@ export default function ManagerHrPayrollModal() {
           </form>
         </div>
 
-        <div className="px-8 py-5 border-t border-border flex justify-end gap-3 bg-card/50">
+        <div className="px-8 py-5 border-t border-border flex justify-end gap-3 bg-white/5">
           <button 
             type="button" 
             onClick={() => setShowPayrollModal(false)}
-            className="px-6 py-2.5 rounded-xl text-sm font-semibold border border-border transition-colors text-secondary hover:bg-primary/5 hover:text-primary"
+            className="px-6 py-2.5 rounded-xl text-sm font-semibold border border-border transition-colors text-secondary hover:bg-white/5 hover:text-foreground"
           >
             Cancel
           </button>
@@ -186,7 +207,7 @@ export default function ManagerHrPayrollModal() {
             type="submit" 
             form="payroll-form"
             disabled={saving}
-            className="flex items-center gap-2 px-8 py-2.5 rounded-xl text-sm font-bold text-white transition-all hover:shadow-lg hover:shadow-primary/30 active:scale-95 disabled:opacity-70 bg-primary"
+            className="flex items-center gap-2 px-8 py-2.5 rounded-xl text-sm font-bold text-white transition-all hover:scale-[1.02] active:scale-[0.98] shadow-[0_0_20px_rgba(250,204,21,0.2)] disabled:opacity-70 disabled:hover:scale-100 bg-primary"
           >
             {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" /> : <Check size={16} />}
             {saving ? 'Saving...' : 'Disburse Payroll'}

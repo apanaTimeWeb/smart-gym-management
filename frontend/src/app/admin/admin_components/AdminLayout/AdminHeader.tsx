@@ -16,13 +16,15 @@ import type { AdminHeaderProps } from '@/app/admin/admin_components/AdminLayout/
 export default function AdminHeader({ title, subtitle }: AdminHeaderProps) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [notifications, setNotifications] = useState(ADMIN_PLACEHOLDER_NOTIFICATIONS);
   const notifRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
   const user = getUser();
   const { selectedBranchId, setSelectedBranchId } = useAdminGlobalStore();
-  const { data: branches = [] } = useAdminBranchesData();
+  const { data: branchesData = [] } = useAdminBranchesData();
+  const branches = Array.isArray(branchesData) ? branchesData : ((branchesData as any)?.branches || []);
 
   const removeNotification = (id: number, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -64,6 +66,46 @@ export default function AdminHeader({ title, subtitle }: AdminHeaderProps) {
         </div>
       </div>
       <div className="flex flex-wrap items-center gap-4">
+        
+        {/* Global Member Search */}
+        <div className="relative hidden md:block mr-2">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <Search size={16} className="text-secondary" />
+          </div>
+          <input
+            type="text"
+            placeholder="Global member search..."
+            className="w-64 pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-xl text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-foreground transition-all backdrop-blur-md placeholder:text-secondary/70"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          {searchQuery && (
+            <div className="absolute top-full mt-2 w-full bg-card/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl z-50 p-2 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-top-2">
+              <div className="flex justify-between items-center px-2 py-1 mb-1">
+                <p className="text-[10px] text-secondary uppercase font-bold tracking-wider">Search Results</p>
+                <button onClick={() => setSearchQuery('')} className="text-secondary hover:text-white"><X size={14}/></button>
+              </div>
+              <div className="flex items-center justify-between p-2 hover:bg-white/5 rounded-lg cursor-pointer transition-colors border border-transparent hover:border-white/10">
+                <div>
+                  <p className="text-sm font-semibold text-foreground">Rahul Kumar</p>
+                  <p className="text-xs text-secondary mt-0.5">Andheri Branch • +91 9876543210</p>
+                </div>
+                <span className="text-[10px] font-bold text-success bg-success/10 px-2 py-0.5 rounded-full border border-success/20">Active</span>
+              </div>
+              <div className="flex items-center justify-between p-2 hover:bg-white/5 rounded-lg cursor-pointer transition-colors mt-1 border border-transparent hover:border-white/10">
+                <div>
+                  <p className="text-sm font-semibold text-foreground">Pooja Sharma</p>
+                  <p className="text-xs text-secondary mt-0.5">Bandra Branch • +91 9123456789</p>
+                </div>
+                <span className="text-[10px] font-bold text-danger bg-danger/10 px-2 py-0.5 rounded-full border border-danger/20">Expired</span>
+              </div>
+              <div className="mt-2 pt-2 border-t border-white/10 text-center">
+                <button className="text-xs text-primary font-semibold hover:underline">View all results for "{searchQuery}"</button>
+              </div>
+            </div>
+          )}
+        </div>
+
         <div className="flex items-center gap-2 mr-4 bg-background border border-border rounded-lg px-3 py-1.5 hidden lg:flex">
           <Building2 size={16} className="text-primary" />
           <AdminSearchableDropdown 

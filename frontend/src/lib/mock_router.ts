@@ -852,7 +852,7 @@ export async function routeMockRequest<T>(
         ],
       },
     ];
-    return MockDB.handleCrud('mock_admin_branches', method, path, parsedBody, defaultBranches, 'branches') as unknown as ApiResponse<T>;
+    return MockDB.handleCrud('mock_admin_branches', method, path, parsedBody, defaultBranches) as unknown as ApiResponse<T>;
   }
 
   // SUPERADMIN Stateful Interceptions

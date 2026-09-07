@@ -4,11 +4,12 @@ import { DashboardUrlConfig } from '@/app/admin/dashboard/dashboard_url_config';
 import type { DashboardStats } from '@/app/admin/dashboard/dashboard_types/dashboard_types';
 
 export const dashboardApi = {
-  fetchDashboardStats: async (): Promise<ApiResponse<DashboardStats>> => {
+  fetchDashboardStats: async (branchId?: string): Promise<ApiResponse<DashboardStats>> => {
+    const query = branchId && branchId !== 'all' ? `?branchId=${branchId}` : '';
     const [kpiRes, chartsRes, recentRes] = await Promise.all([
-      apiFetch<ApiResponse<Partial<DashboardStats>>>(DashboardUrlConfig.BACKEND_API.STATS),
-      apiFetch<ApiResponse<Partial<DashboardStats>>>(DashboardUrlConfig.BACKEND_API.CHARTS),
-      apiFetch<ApiResponse<Partial<DashboardStats>>>(DashboardUrlConfig.BACKEND_API.RECENT),
+      apiFetch<ApiResponse<Partial<DashboardStats>>>(`${DashboardUrlConfig.BACKEND_API.STATS}${query}`),
+      apiFetch<ApiResponse<Partial<DashboardStats>>>(`${DashboardUrlConfig.BACKEND_API.CHARTS}${query}`),
+      apiFetch<ApiResponse<Partial<DashboardStats>>>(`${DashboardUrlConfig.BACKEND_API.RECENT}${query}`),
     ]);
     return {
       success: true,
