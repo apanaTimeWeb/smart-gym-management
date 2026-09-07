@@ -161,60 +161,235 @@ Never hardcode URLs (e.g., `/api/auth/refresh`, `/login`, etc.) directly into AP
 12. **No Hardcoded HTTP Status Codes**: 
 Never hardcode numeric HTTP status codes (e.g., `401`, `500`, `200`) in API routes, proxies, or fetch wrappers. Always use standard enums/constants from libraries like `http-status-codes` (e.g., `StatusCodes.UNAUTHORIZED`). This improves code readability and prevents silly typos in status codes.
 
-13. **Update AI-Context Documentation (The Feature Map)**: 
-Once the entire refactor is complete, generate or update a `[moduleName]_features.md` documentation file inside the module's root folder. This document MUST serve as a master map for future AI sessions and human developers.
+13. **Update AI-Context Documentation (The Feature Map)**:
+Once the entire refactor is complete, generate or update a `[moduleName]_features.md` documentation file inside the module's root folder. This document MUST serve as a master map for future AI sessions and human developers. A future AI reading only this file must be able to answer: What does this module do? What can the user do in it? What files handle what? What are the API endpoints? What must never be broken?
 
-### Mandatory `[moduleName]_features.md` Template
+### The Documentation Quality Standard
 
-Every module feature map MUST use this minimum structure:
+**CRITICAL — The difference between useful and useless documentation:**
 
-```markdown
-# [Module Name] Feature Map
-
+❌ **BAD (what AI agents produce by default — completely useless):**
+```
 ## Module Purpose
-Brief business explanation of what this module does.
-
-## Directory Structure
-Explain each module-prefixed folder and its responsibility.
+Handles gyms operations, UI display, and logic isolation.
 
 ## Feature Inventory
-| Feature | Path | Purpose | Main API Calls | Owner |
-|---|---|---|---|---|
-
-## Data and State Architecture
-- Server-state query keys:
-- Zustand stores:
-- Context providers:
-- Local-storage keys:
-- MSW handler file:
-
-## API Contract
-List all endpoint builders and expected response types.
-
-## Permissions and Security
-Document protected actions, roles, and CODEOWNERS paths.
-
-## Loading, Empty, Error States
-Document corresponding components/files for each main feature.
+| Core UI | /gyms | Main module view | TBD | Frontend Team |
 
 ## Edge Cases / AI Warnings
-List known product constraints, destructive actions, and common regression risks.
+- Do not bypass API interceptors.
+- Do not mix complex React logic with JSX markup.
+```
+
+✅ **GOOD (what this rule mandates — gives full context to any AI or human):**
+```
+## Module Purpose
+The Gyms module is the master tenant registry for the GymSmart SaaS platform. Superadmins
+use it to onboard new gym branches, view all active/suspended tenants, manage their
+subscription tier, and drill into per-gym usage metrics. It is the entry point for all
+tenant lifecycle operations (create → activate → suspend → delete).
+
+## Feature Inventory
+| Gym List        | /superadmin/gyms          | Paginated table of all tenants with status badges, search, and filter by plan/status | GET /superadmin/gyms?page&limit&search&status | ✅ Live |
+| Add Gym         | /superadmin/gyms/add      | Multi-step onboarding form: gym details → owner account → plan selection → confirm   | POST /superadmin/gyms                         | ✅ Live |
+| Gym Detail      | /superadmin/gyms/[id]     | Full profile: contact info, subscription history, usage stats, staff count           | GET /superadmin/gyms/:id                      | ✅ Live |
+| Suspend/Restore | /superadmin/gyms (inline) | Toggle gym active status — requires double-confirm modal                             | PATCH /superadmin/gyms/:id/status             | ✅ Live |
+
+## Edge Cases / AI Warnings
+- Suspending a gym immediately blocks ALL users of that tenant from logging in — this is
+  irreversible until manually restored. Always use useConfirm() with a typed warning message.
+- The Add Gym form is a 3-step wizard. Step 3 (plan selection) fetches live plan data from
+  GET /superadmin/plans — do NOT hardcode plan options.
+- Gym IDs are UUIDs, not sequential integers. Never use array index as a key.
+- The status badge color mapping lives in SuperadminGymsConstants.ts — do not inline colors.
+```
+
+The rule is simple: **if a section contains "TBD", "Main module view", "Do not bypass API interceptors", or any other generic filler, the documentation FAILS this rule and must be rewritten.**
+
+### Mandatory `[moduleName]_features.md` Template with Content Requirements
+
+Every module feature map MUST use this structure. Each section has mandatory content depth requirements listed below it.
+
+```markdown
+# [Module Name] — Feature Map
+
+## Module Purpose
+[REQUIRED: 3–6 sentences. Must answer: (1) What business problem does this module solve?
+(2) Who uses it (which role/persona)? (3) What are the 3–5 most important things a user
+can DO in this module? (4) What is strictly OFF-LIMITS for this role in this module?
+Generic phrases like "handles X operations" are forbidden.]
+
+## Directory Structure
+[REQUIRED: A table or bullet list of EVERY folder inside this module with a one-line
+description of its exact responsibility. Must name the actual files/components inside
+each folder, not just the folder name. Example:]
+
+| Folder | Responsibility | Key Files |
+|---|---|---|
+| `members_components/ManagerMembersTable/` | Renders the paginated member list table with search, filter, and row-click navigation | `ManagerMembersTable.tsx`, `ManagerMembersTableRow.tsx`, `ManagerMembersTableHeaders.ts` |
+| `members_components/ManagerMembersProfile/` | Full member profile modal: personal info, membership history, payment records, diet/workout assignment | `ManagerMembersProfileModal.tsx`, `ManagerMembersProfileTabs.tsx` |
+| `members_api/` | All API calls for member CRUD, renewal, payment recording | `ManagerMembersApi.ts`, `ManagerMembersUrlConfig.ts` |
+| `members_types/` | TypeScript interfaces for Member, MembershipRecord, PaymentRecord, form DTOs | `ManagerMembersTypes.ts` |
+| `members_store/` | Zustand store for selected member ID, active tab, filter state | `useManagerMembersStore.ts` |
+| `members_context/` | React Context bridging store state to deeply nested components | `ManagerMembersContext.tsx`, `MembersProvider.tsx` |
+
+## Feature Inventory
+[REQUIRED: Every distinct user-facing feature gets its own row. "Core UI" is NOT a feature.
+Each row must have a real Purpose description (what the user actually does), real API
+endpoints (not "TBD"), and an accurate Status. Minimum 1 row per meaningful UI section.]
+
+| Feature | Route | What the User Can Do | Key Components | Main API Calls | Status |
+|---|---|---|---|---|---|
+
+## User Flows & Interactions
+[REQUIRED: Describe the 2–4 most important multi-step user journeys in this module.
+Format: numbered steps. This section is what lets an AI understand the full flow
+without reading every component file. Example:]
+
+### Flow 1: Add New Member
+1. User clicks "Add Member" button in `ManagerMembersMain` toolbar
+2. `ManagerMembersAddModal` opens (managed by `useManagerMembersStore.openAddModal`)
+3. User fills 3-tab form: Personal Info → Membership Plan → Payment
+4. On submit, `createMember(dto)` is called from `ManagerMembersApi.ts`
+5. On success: store is updated pessimistically with `res.data`, modal closes, toast shows backend message
+6. On error: form preserves entered data, inline error shown from `res.message`
+
+### Flow 2: Renew Membership
+1. User clicks any member row → `ManagerMembersProfileModal` opens
+2. User navigates to "Membership" tab → clicks "Renew"
+3. `ManagerMembersRenewalModal` opens with pre-filled current plan
+4. On confirm: `renewMembership(memberId, dto)` called → store updated → toast shown
+
+## Data and State Architecture
+[REQUIRED: Must name the ACTUAL store files, context files, and query keys — not "TBD".]
+
+- **State pattern:** [e.g., "Zustand for UI state + React Context for cross-tree bridging. No TanStack Query — uses direct apiFetch calls."]
+- **Zustand stores:** [List actual store files and what state they hold, e.g., `useManagerMembersStore.ts` — holds: selectedMemberId, isAddModalOpen, isEditModalOpen, activeProfileTab, searchQuery, statusFilter, currentPage]
+- **Context providers:** [List actual provider files, e.g., `MembersProvider` in `ManagerMembersContext.tsx` — wraps `ManagerMembersMain`, provides store values to `ManagerMembersTable` and `ManagerMembersProfileModal`]
+- **Local-storage keys:** ["None" is a valid answer if accurate]
+- **MSW handler file:** [e.g., `src/mocks/handlers/manager-members.handlers.ts` or "Not yet configured"]
+
+## API Contract
+[REQUIRED: Every API function in the module's API file must be listed with its exact
+HTTP method, endpoint, request shape, and response type. "List all endpoint builders"
+is not acceptable — actually list them.]
+
+All calls go through `apiFetch` at `@/lib/api`. Response envelope: `{ success, message, data: T | null, meta?: PaginationMeta }`
+
+| Function | Method | Endpoint | Request | Response `data` type |
+|---|---|---|---|---|
+| `fetchMembers(params)` | GET | `/manager/members` | `{ page, limit, search, status }` | `Member[]` + `PaginationMeta` |
+| `fetchMemberById(id)` | GET | `/manager/members/:id` | — | `MemberDetail` |
+| `createMember(dto)` | POST | `/manager/members` | `CreateMemberDto` | `Member` |
+| `updateMember(id, dto)` | PATCH | `/manager/members/:id` | `UpdateMemberDto` | `Member` |
+| `deleteMember(id)` | DELETE | `/manager/members/:id` | — | `null` |
+| `renewMembership(id, dto)` | POST | `/manager/members/:id/renew` | `RenewalDto` | `MembershipRecord` |
+
+## Permissions and Security
+[REQUIRED: Must specify the exact role, what actions are protected, and HOW they are
+protected (which hook/component/guard). Generic statements are not acceptable.]
+
+- **Required role:** [e.g., `MANAGER` — enforced by `middleware.ts` checking `gymsmart_token` cookie]
+- **Destructive actions and their guards:** [e.g., "Delete member → `useConfirm()` from `ManagerConfirmProvider` with message 'This will permanently delete the member and all their records.'"]
+- **Sensitive data handling:** [e.g., "Phone numbers masked via `maskSensitiveData()` in list view. Full number visible only in profile modal."]
+- **Cross-role isolation:** [e.g., "Zero imports from `/admin`, `/trainer`, `/superadmin`. Enforced in `members_forbidden.md`."]
+- **CODEOWNERS:** [e.g., "No payment/auth logic in this module — standard review applies."]
+
+## Loading, Empty, and Error States
+[REQUIRED: For every major UI section, name the exact file/component that handles each
+state. "Uses loading.tsx skeleton" is not enough — describe what the skeleton looks like.]
+
+| Section | Loading State | Empty State | Error State |
+|---|---|---|---|
+| Full page | `loading.tsx` — skeleton mimicking toolbar + 8 KPI cards + table with 5 ghost rows | N/A | `error.tsx` — module-branded error with Retry button calling `reset()` |
+| Members table | `Loader2` spinner centered in table body while `fetchState === 'loading'` | `ManagerMembersEmptyState.tsx` — icon + "No members found" + "Add Member" CTA button | Inline error banner with retry link |
+| Profile modal | Skeleton tabs + ghost text lines | N/A | Inline "Failed to load profile" with retry |
+
+## Edge Cases and AI Warnings
+[REQUIRED: This is the most important section for AI safety. Must list SPECIFIC risks
+for THIS module — not generic advice. Every item must be actionable. Minimum 5 items
+for any module with CRUD operations. Format: bold warning title + explanation.]
+
+- **[Specific warning title]:** [Specific explanation of what breaks, why, and what to do instead]
+
+Examples of REQUIRED specificity:
+- **Never call `window.confirm()` for member deletion:** Always use `useConfirm()` from `ManagerConfirmProvider`. `window.confirm()` is blocked by most browsers in iframes and breaks the design system.
+- **Renewal form pre-fills current plan — do not reset on open:** `ManagerMembersRenewalModal` receives `currentPlan` as a prop and pre-fills the plan selector. If you reset the form on modal open, the user loses context.
+- **`deleteMember` removes ALL membership history:** This is irreversible. The confirm dialog must explicitly state this. Do not soften the warning message.
+- **Member status badge colors are defined in `ManagerMembersConstants.ts`:** Never add inline color classes for status. Add new statuses to the constants map.
+- **Phone number masking applies to list view only:** `ManagerMembersTable` uses `maskSensitiveData()`. `ManagerMembersProfileModal` shows the full number. Do not add masking to the profile modal.
+
+## Component Responsibility Map
+[REQUIRED for modules with 5+ components. Lists every component file with a one-line
+responsibility statement. This lets an AI know exactly which file to open for any task
+without reading all files.]
+
+| Component File | Responsibility |
+|---|---|
+| `ManagerMembersMain.tsx` | Root client orchestrator. Owns layout, renders toolbar + KPIs + table. No direct API calls. |
+| `ManagerMembersTable.tsx` | Renders paginated member rows. Handles row-click → opens profile modal. |
+| `ManagerMembersProfileModal.tsx` | Full member detail modal with tabs. Receives `memberId` prop, fetches own data. |
+| `ManagerMembersAddModal.tsx` | 3-tab add member form. Calls `createMember()`. Closes on success. |
+| `ManagerMembersKPIs.tsx` | 4 stat cards (Total, Active, Expired, Due Today). Read-only display. |
+| `ManagerMembersEmptyState.tsx` | Empty state UI shown when table has zero rows. Has "Add Member" CTA. |
 
 ## Rule Compliance Checklist
-- [ ] Rule 1: Micro-modularization
-- [ ] Rule 7: Type isolation
-- [ ] Rule 8: Server/client boundary
-- [ ] Rule 9: Loading/error/not-found handling
-- [ ] Rule 14: Backend-driven messages
-- [ ] Rule 15A: Tests present
+[REQUIRED: Every checkbox must be honestly marked. Do NOT mark [x] if the rule is not
+actually implemented. An honest [ ] is better than a false [x].]
+
+- [ ] Rule 1: Micro-modularization — module-prefixed subfolders, 300-line ceiling
+- [ ] Rule 2: Total Role Isolation — zero cross-role imports verified
+- [ ] Rule 3: Hyper-descriptive naming — role prefix on all files
+- [ ] Rule 4: Theme Independence — no hardcoded hex/Tailwind colors in JSX
+- [ ] Rule 5: Smart State Management — Zustand for UI state, Context for cross-tree
+- [ ] Rule 6: Logic/UI Separation — custom hooks extract all useEffect/logic
+- [ ] Rule 7: Type Isolation — all types in `*_types/` folder, no inline interfaces
+- [ ] Rule 8: Server/Client Boundary — `page.tsx` = Server Component, `*Main.tsx` = Client
+- [ ] Rule 9: Loading/error/not-found — `loading.tsx` + `error.tsx` present and non-generic
+- [ ] Rule 11: Centralized URL Config — `*UrlConfig.ts` file present, no hardcoded URLs
+- [ ] Rule 13: Feature Map — this document is complete and non-generic
+- [ ] Rule 14: Backend-driven messages — no hardcoded toast/alert strings
+- [ ] Rule 15A: Tests present — co-located test files for hooks and utils
 - [ ] Rule 15B: Forms use React Hook Form + Zod
 - [ ] Rule 15C: State placed per Server/Client decision matrix
 - [ ] Rule 15D: Env vars validated centrally, none exposed unsafely
 - [ ] Rule 15E: Error monitoring wired for critical flows
+- [ ] Rule 19: Clickable table rows — `cursor-pointer` on all `<tr>` elements
+- [ ] Rule 26: Loading button states — `Loader2` spinners on all async actions
+- [ ] Rule 30: Table controls — pagination, sorting, filtering implemented
+- [ ] Rule 32: No barrel files — no `index.ts` re-exports
+- [ ] Rule 40: `*_forbidden.md` file present and specific
+- [ ] Rule 43: Sensitive data masking — `maskSensitiveData()` used in list views
+- [ ] Rule 44: No `console.log` in production code
+- [ ] Rule 48: Empty state component present per entity list
+- [ ] Rule 55: No `key={index}` on reorderable/filterable lists
+- [ ] Rule 64: Mobile-first — `flex-col sm:flex-row`, responsive breakpoints verified
+- [ ] Rule 68: Table column count matches header count exactly
+- [ ] Rule 71: Double verification — destructive actions use `useConfirm()` modal
+- [ ] Rule 72: API function naming follows verb contract
+- [ ] Rule 73: `import type` used for all type-only imports
 - [ ] Rule 74: Security scan gates passed (SCA + secrets)
 - [ ] Rule 76: CODEOWNERS covers security-critical paths
 - [ ] Rule 79: MSW handler present where needed
+- [ ] Design §3: Sidebar active = subtle gold border + bg (NOT solid primary)
+- [ ] Design §12: Z-index scale — header z-20, dropdowns z-30, modals z-40, toasts z-50
+- [ ] Design §28: Surface elevation — `bg-popover` for dropdowns, `bg-overlay` for modals
+- [ ] Design §29: `motion-safe:` prefix on all transitions and animations
 ```
+
+### Sub-Module `[feature]_features.md` Files
+
+For large modules (5+ sub-features), each sub-folder MAY have its own `[feature]_features.md`. These sub-module files follow the same quality standard but can be shorter. They MUST still contain:
+- A real Module Purpose (not "handles X operations")
+- A real Feature Inventory with actual API endpoints
+- A real Edge Cases section with module-specific warnings (minimum 3 items)
+- A Component Responsibility Map
+
+Sub-module files with only generic boilerplate content are considered **undocumented** and must be regenerated.
+
+### Documentation Freshness Rule
+
+Every time a component is added, an API endpoint changes, or a new user flow is implemented, the `_features.md` for that module MUST be updated in the same commit. Stale documentation is worse than no documentation because it actively misleads future AI agents.
 
 14. **Backend-Driven UI Messages (No Hardcoded Toasts/Alerts)**: 
 Never hardcode success or error messages (e.g., "User created successfully" or "Invalid credentials") in the frontend components, hooks, or toast notifications. The frontend must strictly display the `message` string provided by the backend's standardized JSON response envelope.
