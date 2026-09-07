@@ -10,7 +10,7 @@ import TrainerPagination from '@/app/trainer/trainer_components/TrainerShared/Tr
 import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerSharedConstants';
 
 export default function TrainerWorkoutExerciseTable() {
-  const { exercises, totalExercises, currentPage, setCurrentPage, fetchState } = useWorkoutContext();
+  const { exercises, totalExercises, currentPage, setCurrentPage, fetchState, search } = useWorkoutContext();
 
   const totalPages = Math.ceil(totalExercises / TRAINER_ITEMS_PER_PAGE) || 1;
 

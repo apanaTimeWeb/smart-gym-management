@@ -12,6 +12,7 @@ import TrainerMembersProfileAttendance from '@/app/trainer/members/members_compo
 import TrainerMembersProfileFitness from '@/app/trainer/members/members_components/TrainerMembersProfile/TrainerMembersProfileFitness';
 import TrainerMembersProfileProgress from '@/app/trainer/members/members_components/TrainerMembersProfile/TrainerMembersProfileProgress';
 import TrainerMembersProfileWorkout from '@/app/trainer/members/members_components/TrainerMembersProfile/TrainerMembersProfileWorkout';
+import TrainerMembersProfileDiet from '@/app/trainer/members/members_components/TrainerMembersProfile/TrainerMembersProfileDiet';
 
 export default function TrainerMembersProfile() {
   const { selectedMember, setSelectedMember, profileTab, setProfileTab, openEdit, openMsg } = useMembersContext();
@@ -113,6 +114,7 @@ export default function TrainerMembersProfile() {
             {profileTab === 'fitness' && <TrainerMembersProfileFitness />}
             {profileTab === 'progress' && <TrainerMembersProfileProgress />}
             {profileTab === 'workout' && <TrainerMembersProfileWorkout />}
+            {profileTab === 'diet' && <TrainerMembersProfileDiet />}
           </div>
         </div>
       </div>

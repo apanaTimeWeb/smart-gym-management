@@ -1,4 +1,4 @@
-ru// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
+// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
 // DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Custom hook managing the form state, validation, and API submission for the login page.
 // DATA FLOW: LoginForm (View) -> useLoginForm.ts (Hook) -> auth_api.ts (API)

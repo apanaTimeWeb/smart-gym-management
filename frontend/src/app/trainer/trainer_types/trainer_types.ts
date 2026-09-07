@@ -14,6 +14,13 @@ export interface Member {
   age?: number;
   lastWorkout?: string;
   progressStatus?: 'Good' | 'Average' | 'Needs Attention';
+  assignedTrainerId?: string;
+  assignedTrainerName?: string;
+  isPT?: boolean;
+  assignedDietId?: string;
+  assignedDiet?: DietPlan;
+  assignedWorkoutId?: string;
+  assignedWorkout?: Workout;
 }
 
 export interface MemberStats {
@@ -28,8 +35,8 @@ export interface Attendance {
   checkIn?: string;
   checkOut?: string;
   type: string;
-  member?: { name: string };
-  staff?: { name: string };
+  member?: { name: string; id?: string };
+  staff?: { name: string; id?: string };
 }
 
 export interface Exercise {

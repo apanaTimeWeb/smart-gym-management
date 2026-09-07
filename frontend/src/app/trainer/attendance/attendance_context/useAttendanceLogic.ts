@@ -47,6 +47,7 @@ export function useAttendanceLogic(): AttendanceContextType {
   const setTab = useCallback((val: AttendanceTab) => setUrlParam('tab', val), [setUrlParam]);
 
   // Local State
+  const [viewMode, setViewMode] = useState<'calendar' | 'table'>('calendar');
   const [records, setRecords] = useState<Attendance[]>([]);
   const [totalRecords, setTotalRecords] = useState(0);
   const [todayStats, setTodayStats] = useState<any>({ totalCheckIns: 0, memberCheckIns: 0, staffCheckIns: 0 });
@@ -156,6 +157,7 @@ export function useAttendanceLogic(): AttendanceContextType {
     records, totalRecords, todayStats, members,
     fetchState, saving, toast,
     tab, setTab,
+    viewMode, setViewMode,
     search, setSearch,
     filterDate, setFilterDate,
     currentPage, setCurrentPage,

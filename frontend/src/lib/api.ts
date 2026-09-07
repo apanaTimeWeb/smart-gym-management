@@ -24,7 +24,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v
 
 // ─── User Helper (reads from non-HttpOnly cookie set by server) ───────────────
 
-export function getUser(): { name: string; email: string; role: string; tenantId?: string } | null {
+export function getUser(): { id?: string; name: string; email: string; role: string; tenantId?: string } | null {
   if (typeof window === 'undefined') return null;
   const c = document.cookie.split(';').find(x => x.trim().startsWith('gymsmart_user='));
   if (!c) return null;

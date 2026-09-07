@@ -5,17 +5,13 @@ import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback
 import type { MessageType, TrainerMessageRecipient } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerMessageModal';
 import type { MemberFormValues } from '@/app/trainer/members/members_utils/MembersSharedConstants';
 
-import type { Member, MemberStats, FetchState } from '@/app/trainer/trainer_types/trainer_types';
+import type { Member, MemberStats, FetchState, Workout, DietPlan } from '@/app/trainer/trainer_types/trainer_types';
 
 export interface MembersInitialData {
   members: Member[];
   stats: MemberStats;
   totalMembers: number;
 }
-
-
-
-
 
 export interface MembersContextType {
   search: string;
@@ -33,8 +29,8 @@ export interface MembersContextType {
   // Member Profile
   selectedMember: Member | null;
   setSelectedMember: (m: Member | null) => void;
-  profileTab: 'overview' | 'fitness' | 'progress' | 'workout' | 'attendance';
-  setProfileTab: (tab: 'overview' | 'fitness' | 'progress' | 'workout' | 'attendance') => void;
+  profileTab: 'overview' | 'fitness' | 'progress' | 'workout' | 'diet' | 'attendance';
+  setProfileTab: (tab: 'overview' | 'fitness' | 'progress' | 'workout' | 'diet' | 'attendance') => void;
 
   // Add/Edit Modal
   showAddModal: boolean;
@@ -47,6 +43,8 @@ export interface MembersContextType {
   openEdit: (m: Member) => void;
   saveMember: (data: MemberFormValues) => Promise<void>;
   deleteMember: (id: string) => Promise<void>;
+  assignWorkout: (memberId: string, workout: Workout | null) => Promise<void>;
+  assignDiet: (memberId: string, diet: DietPlan | null) => Promise<void>;
 
   // Message Modal
   msgModal: { open: boolean; recipient: TrainerMessageRecipient; type: MessageType; message: string; subject?: string } | null;

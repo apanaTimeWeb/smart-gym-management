@@ -30,6 +30,8 @@ export interface AttendanceContextType {
  
   tab: AttendanceTab;
   setTab: (tab: AttendanceTab) => void;
+  viewMode: 'calendar' | 'table';
+  setViewMode: (v: 'calendar' | 'table') => void;
   search: string;
   setSearch: (s: string) => void;
   filterDate: string;

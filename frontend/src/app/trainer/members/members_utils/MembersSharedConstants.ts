@@ -61,7 +61,8 @@ export const PROFILE_TABS = [
   { id: 'overview', label: 'Basic Info' },
   { id: 'fitness', label: 'Fitness Info' },
   { id: 'progress', label: 'Progress & Measurements' },
-  { id: 'workout', label: 'Workout History' },
-  { id: 'attendance', label: 'Attendance' }
+  { id: 'workout', label: 'Workout Plan' },
+  { id: 'diet', label: 'Diet Plan' },
+  { id: 'attendance', label: 'Attendance Calendar' }
 ];
 
