@@ -70,7 +70,7 @@ export function useManagerAttendanceLogic(): AttendanceContextType {
         page: currentPage.toString()
       };
       if (debouncedSearch) params.search = debouncedSearch;
-      if (tab !== 'All') params.type = tab === 'Members' ? 'MEMBER' : 'STAFF';
+      if (tab !== 'Daily Attendance Report') params.type = tab === 'Member Attendance' ? 'MEMBER' : 'STAFF';
 
       // We explicitly cast the responses via our strict generic wrapper
       const [attRes, statsRes, memRes, staffRes] = await Promise.all([
@@ -82,8 +82,8 @@ export function useManagerAttendanceLogic(): AttendanceContextType {
 
       let fetchedRecords = attRes.data.attendance || ((attRes.data as unknown) as { attendances?: import("@/app/manager/attendance/attendance_types/ManagerAttendanceTypes").Attendance[] }).attendances || [];
       
-      if (tab !== 'All') {
-        fetchedRecords = fetchedRecords.filter((r: Attendance) => r.type === (tab === 'Members' ? 'MEMBER' : 'STAFF'));
+      if (tab !== 'Daily Attendance Report') {
+        fetchedRecords = fetchedRecords.filter((r: Attendance) => r.type === (tab === 'Member Attendance' ? 'MEMBER' : 'STAFF'));
       }
       
       if (debouncedSearch) {

@@ -13,7 +13,9 @@ export const DietSchema = z.object({
   carbs: z.coerce.number().min(0).optional(),
   fats: z.coerce.number().min(0).optional(),
   description: z.string().optional(),
-  meals: z.string().optional()
+  meals: z.string().optional(),
+  waterTarget: z.string().optional(),
+  supplements: z.string().optional()
 });
 
 export type DietFormValues = z.infer<typeof DietSchema>;
@@ -28,7 +30,9 @@ export const EMPTY_DIET_FORM = {
  carbs: '', 
  fats: '', 
  description: '', 
- meals: '' 
+ meals: '',
+ waterTarget: '',
+ supplements: '' 
 };
 
 

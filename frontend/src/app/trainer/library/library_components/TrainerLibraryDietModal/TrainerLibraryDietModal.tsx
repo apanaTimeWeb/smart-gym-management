@@ -58,7 +58,9 @@ export default function TrainerLibraryDietModal() {
  { label: 'Protein (g)', key: 'protein', type: 'number', placeholder: '150' }, 
  { label: 'Carbs (g)', key: 'carbs', type: 'number', placeholder: '300' }, 
  { label: 'Fats (g)', key: 'fats', type: 'number', placeholder: '70' }, 
- { label: 'Description', key: 'description', type: 'text' }
+ { label: 'Description', key: 'description', type: 'text' },
+ { label: 'Water Target', key: 'waterTarget', type: 'text', placeholder: 'e.g. 3 Liters' },
+ { label: 'Supplements', key: 'supplements', type: 'text', placeholder: 'e.g. Creatine 5g' }
  ].map(f => (
  <div key={f.key}>
  <label className="block text-sm font-medium text-secondary mb-1">
