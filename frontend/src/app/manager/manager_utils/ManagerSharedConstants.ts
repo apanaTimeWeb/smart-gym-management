@@ -7,6 +7,7 @@ import {
 
 export const MANAGER_NAV_ITEMS = [
  { href: '/manager/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+ { href: '/manager/inquiries', label: 'Inquiries (Leads)', icon: Users },
  { href: '/manager/members', label: 'Member Management', icon: Users },
  { href: '/manager/plans', label: 'Membership / Plans', icon: Tags },
  { href: '/manager/sales', label: 'Payment & Billing', icon: FileBarChart },
