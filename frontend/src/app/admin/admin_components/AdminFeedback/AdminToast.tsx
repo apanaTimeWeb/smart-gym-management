@@ -2,6 +2,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { CheckCircle, XCircle, MessageCircle, Mail, Info, AlertTriangle, X } from 'lucide-react';
 
 export type ToastType = 'whatsapp' | 'email' | 'error' | 'success' | 'info' | 'warning';
 
@@ -17,40 +18,36 @@ export default function AdminToast({ message, type, onClose }: AdminToastProps) 
  return () => clearTimeout(timer);
  }, [onClose]);
 
- const config: Record<ToastType, {prefix: string, border: string}> = {
- success: { prefix: '✅', border: 'var(--success)' },
- error: { prefix: '❌', border: 'var(--danger)' },
- whatsapp: { prefix: '💬', border: 'var(--success)' },
- email: { prefix: '📧', border: 'var(--info)' },
- info: { prefix: 'ℹ️', border: 'var(--info)' },
- warning: { prefix: '⚠️', border: 'var(--warning)' },
+ const config: Record<ToastType, { icon: React.ReactNode, border: string, colorClass: string, shadow: string }> = {
+ success: { icon: <CheckCircle size={20} />, border: 'var(--success)', colorClass: 'text-success', shadow: 'shadow-[0_0_20px_rgba(34,197,94,0.15)]' },
+ error: { icon: <XCircle size={20} />, border: 'var(--danger)', colorClass: 'text-danger', shadow: 'shadow-[0_0_20px_rgba(239,68,68,0.15)]' },
+ whatsapp: { icon: <MessageCircle size={20} />, border: 'var(--success)', colorClass: 'text-success', shadow: 'shadow-[0_0_20px_rgba(34,197,94,0.15)]' },
+ email: { icon: <Mail size={20} />, border: 'var(--info)', colorClass: 'text-info', shadow: 'shadow-[0_0_20px_rgba(59,130,246,0.15)]' },
+ info: { icon: <Info size={20} />, border: 'var(--info)', colorClass: 'text-info', shadow: 'shadow-[0_0_20px_rgba(59,130,246,0.15)]' },
+ warning: { icon: <AlertTriangle size={20} />, border: 'var(--warning)', colorClass: 'text-warning', shadow: 'shadow-[0_0_20px_rgba(245,158,11,0.15)]' },
  };
 
- const { prefix, border } = config[type] || config.success;
+ const { icon, border, colorClass, shadow } = config[type] || config.success;
 
  return (
  <div
- className="fixed bottom-6 right-6 z-50 flex items-center gap-3 w-80 p-4 rounded-xl shadow-2xl bg-card text-foreground"
+ className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 w-80 p-4 rounded-xl border border-white/5 backdrop-blur-xl bg-card/90 text-foreground motion-safe:animate-in motion-safe:slide-in-from-right-8 motion-safe:fade-in duration-300 ${shadow}`}
  style={{ 
- borderLeft: `4px solid ${border}`,
- animation: 'toastIn 0.3s ease-out forwards'
+ borderLeft: `4px solid ${border}`
  }}
  >
+ <div className={`${colorClass} flex-shrink-0`}>
+ {icon}
+ </div>
  <div className="flex-1 text-sm font-semibold">
- {prefix} {message}
+ {message}
  </div>
  <button
  onClick={onClose}
- className="text-secondary hover:text-white flex-shrink-0 transition-colors"
+ className="text-secondary hover:text-foreground flex-shrink-0 transition-colors p-1 rounded-md hover:bg-white/10"
  >
- ✕
+ <X size={16} />
  </button>
- <style>{`
- @keyframes toastIn {
- from { opacity: 0; transform: translateX(100%); }
- to { opacity: 1; transform: translateX(0); }
- }
- `}</style>
  </div>
  );
 }

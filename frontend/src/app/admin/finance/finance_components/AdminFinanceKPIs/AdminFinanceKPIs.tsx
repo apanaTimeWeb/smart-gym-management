@@ -40,24 +40,33 @@ export default function AdminFinanceKPIs() {
       label: 'Pending Amount',
       value: (summary.pendingAmount || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }),
       icon: FileText,
-      colorClass: 'text-danger',
-      bgClass: 'bg-danger/10',
-      activeBorder: 'border-danger',
-      filterKey: 'DUE',
-    },
-    {
-      label: 'Total Payments',
-      value: summary.totalPayments?.toString() ?? '0',
-      icon: CreditCard,
       colorClass: 'text-warning',
       bgClass: 'bg-warning/10',
       activeBorder: 'border-warning',
+      filterKey: 'DUE',
+    },
+    {
+      label: 'Total Expenses',
+      value: (summary.totalExpenses || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }),
+      icon: CreditCard,
+      colorClass: 'text-danger',
+      bgClass: 'bg-danger/10',
+      activeBorder: 'border-danger',
+      filterKey: 'All',
+    },
+    {
+      label: 'Net Profit',
+      value: (summary.netProfit || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }),
+      icon: TrendingUp,
+      colorClass: 'text-success',
+      bgClass: 'bg-success/10',
+      activeBorder: 'border-success',
       filterKey: 'All',
     },
   ];
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
       {kpis.map((k) => {
         const isActive = methodFilter === k.filterKey && !(methodFilter === 'All' && k.filterKey === 'All' && k.label !== 'Total Revenue');
         // Special: "Pending Amount" card uniquely maps to 'DUE', so only it lights up when filter='DUE'

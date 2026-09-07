@@ -106,6 +106,24 @@ export default function ExerciseModal() {
               />
             </div>
           </div>
+          <div>
+            <label className="block text-sm font-medium text-secondary mb-1">Video / Image URL</label>
+            <input 
+              type="text" 
+              placeholder="e.g. https://youtube.com/..." 
+              {...register('videoUrl')}
+              className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus-visible:ring-warning bg-input text-foreground" 
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-secondary mb-1">Instructions / Sets / Reps</label>
+            <textarea 
+              rows={2}
+              placeholder="e.g. 3 sets of 10-12 reps. Keep back straight." 
+              {...register('instructions')}
+              className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus-visible:ring-warning bg-input text-foreground custom-scrollbar" 
+            />
+          </div>
           
           <div className="pt-2 flex justify-end gap-3">
             <button 

@@ -5,46 +5,51 @@
 
 import { useDashboardContext } from '@/app/trainer/dashboard/dashboard_context/DashboardContext';
 import TrainerStatCard from '@/app/trainer/trainer_components/TrainerShared/TrainerStatCard';
-import { Users, TrendingUp, UserCheck } from 'lucide-react';
+import { Users, UserCheck, CalendarCheck, Clock, Dumbbell, Activity } from 'lucide-react';
 
 export default function TrainerDashboardKPIs() {
-  const { stats, timeRange } = useDashboardContext();
+  const { stats } = useDashboardContext();
   if (!stats) return null;
   const s = stats;
 
-  const multiplier = timeRange === 'weekly' ? 0.25 : timeRange === 'yearly' ? 12 : timeRange === 'custom' ? 1.5 : 1;
-  const timeLabel = timeRange === 'weekly' ? 'This week' : timeRange === 'yearly' ? 'This year' : timeRange === 'custom' ? 'Selected range' : 'This month';
-  const memLabel = timeRange === 'weekly' ? 'New Members (Week)' : timeRange === 'yearly' ? 'New Members (Year)' : timeRange === 'custom' ? 'New Members (Custom)' : 'New Members (Month)';
-
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-4">
         <TrainerStatCard
-          title="Total Members"
-          value={s.totalMembers.toLocaleString()}
-          change="All time"
-          changeType="up"
+          title="Today's Sessions"
+          value={s.todaysSessions.toLocaleString()}
+          change={`${s.completedSessions}/${s.todaysSessions} Completed`}
+          changeType="neutral"
+          icon={Clock}
+          iconBg="bg-primary/10"
+          iconColor="text-primary"
+        />
+        <TrainerStatCard
+          title="My Members"
+          value={s.myMembersCount.toLocaleString()}
+          change="Assigned to you"
+          changeType="neutral"
           icon={Users}
           iconBg="bg-info-bg"
           iconColor="text-info"
         />
         <TrainerStatCard
-          title="Active Members"
-          value={s.activeMembers.toLocaleString()}
-          change={`${s.totalMembers ? Math.round((s.activeMembers / s.totalMembers) * 100) : 0}% of total`}
+          title="Today's Attendance"
+          value={s.todaysAttendance.toLocaleString()}
+          change="Members present today"
           changeType="neutral"
-          icon={UserCheck}
-          iconBg="bg-warning-bg"
-          iconColor="text-warning"
+          icon={CalendarCheck}
+          iconBg="bg-success-bg"
+          iconColor="text-success"
         />
         <TrainerStatCard
-          title={memLabel}
-          value={Math.round(s.newMembersThisMonth * multiplier).toLocaleString()}
-          change={timeLabel}
-          changeType="up"
-          icon={TrendingUp}
-          iconBg="bg-primary/10"
-          iconColor="text-primary"
+          title="Pending Plans"
+          value={s.pendingWorkoutPlans.toLocaleString()}
+          change="Workout plans to create"
+          changeType="down"
+          icon={Dumbbell}
+          iconBg="bg-warning-bg"
+          iconColor="text-warning"
         />
       </div>
     </>

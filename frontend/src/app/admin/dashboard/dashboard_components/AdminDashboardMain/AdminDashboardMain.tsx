@@ -5,12 +5,11 @@ import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 
 import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
 import { useAdminDashboardStore } from '@/app/admin/dashboard/dashboard_store/useAdminDashboardStore';
-import type { DashboardStats, TimeRange } from '@/app/admin/dashboard/dashboard_types/dashboard_types';
+import type { TimeRange } from '@/app/admin/dashboard/dashboard_types/dashboard_types';
 import AdminDashboardKPIs from '@/app/admin/dashboard/dashboard_components/AdminDashboardKPIs/AdminDashboardKPIs';
-import AdminDashboardRecentMembers from '@/app/admin/dashboard/dashboard_components/AdminDashboardRecentMembers/AdminDashboardRecentMembers';
-import AdminDashboardPendingPayments from '@/app/admin/dashboard/dashboard_components/AdminDashboardPendingPayments/AdminDashboardPendingPayments';
-import AdminDashboardPromoCard from '@/app/admin/dashboard/dashboard_components/AdminDashboardPromoCard/AdminDashboardPromoCard';
-import AdminDashboardMembershipDistribution from '@/app/admin/dashboard/dashboard_components/AdminDashboardMembershipDistribution/AdminDashboardMembershipDistribution';
+import AdminDashboardBranchLeaderboard from '@/app/admin/dashboard/dashboard_components/AdminDashboardBranchLeaderboard/AdminDashboardBranchLeaderboard';
+import AdminDashboardAlerts from '@/app/admin/dashboard/dashboard_components/AdminDashboardAlerts/AdminDashboardAlerts';
+import AdminDashboardRevenueTrend from '@/app/admin/dashboard/dashboard_components/AdminDashboardRevenueTrend/AdminDashboardRevenueTrend';
 
 // Skeleton for the dashboard content area while client-side data loads
 function DashboardSkeleton() {
@@ -19,26 +18,17 @@ function DashboardSkeleton() {
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         {[1, 2, 3, 4].map(i => <div key={i} className="h-28 bg-card rounded-xl motion-safe:animate-pulse border border-border" />)}
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        {[1, 2, 3, 4].map(i => <div key={i} className="h-28 bg-card rounded-xl motion-safe:animate-pulse border border-border" />)}
-      </div>
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <div className="xl:col-span-2 h-80 bg-card rounded-xl motion-safe:animate-pulse border border-border" />
-        <div className="space-y-4">
-          <div className="h-48 bg-card rounded-xl motion-safe:animate-pulse border border-border" />
-          <div className="h-28 bg-card rounded-xl motion-safe:animate-pulse border border-border" />
-        </div>
+        <div className="h-80 bg-card rounded-xl motion-safe:animate-pulse border border-border" />
       </div>
-      <div className="h-40 bg-card rounded-xl motion-safe:animate-pulse border border-border" />
+      <div className="h-80 bg-card rounded-xl motion-safe:animate-pulse border border-border" />
     </div>
   );
 }
 
-export default function AdminDashboardMain({ initialData }: { initialData?: DashboardStats | null }) {
-  // To avoid prop drilling, we could pass initialData to a hook here, but since the child DashboardContent
-  // uses the hook, it's better to inline DashboardContent or pass initialData down.
-  // We'll merge DashboardContent into AdminDashboardMain.
-  const { stats, status, error } = useAdminDashboardLogic(initialData);
+export default function AdminDashboardMain() {
+  const { stats, status, error } = useAdminDashboardLogic();
   const { timeRange, setTimeRange, startDate, endDate, setCustomDateRange } = useAdminDashboardStore();
 
   if (status === 'loading') return (
@@ -58,7 +48,7 @@ export default function AdminDashboardMain({ initialData }: { initialData?: Dash
 
   return (
     <div className="min-h-full">
-      <AdminHeader title="Dashboard" subtitle="Welcome back, Admin! Here's your gym overview." />
+      <AdminHeader title="Dashboard" subtitle="Welcome back, Admin! Here's your business overview." />
       <div className="p-6 space-y-6">
         <div className="flex flex-col sm:flex-row justify-end mb-2 gap-3 items-center w-full">
           {timeRange === 'custom' && (
@@ -97,15 +87,19 @@ export default function AdminDashboardMain({ initialData }: { initialData?: Dash
             <option value="custom">Custom Range</option>
           </select>
         </div>
+        
         <AdminDashboardKPIs />
+        
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-          <AdminDashboardRecentMembers />
-          <div className="space-y-4">
-            <AdminDashboardPendingPayments />
-            <AdminDashboardPromoCard />
+          <div className="xl:col-span-2 h-full">
+            <AdminDashboardBranchLeaderboard />
+          </div>
+          <div className="h-full max-h-96">
+            <AdminDashboardAlerts />
           </div>
         </div>
-        <AdminDashboardMembershipDistribution />
+        
+        <AdminDashboardRevenueTrend />
       </div>
     </div>
   );

@@ -9,8 +9,6 @@ import TrainerWorkoutBanner from '@/app/trainer/workout/workout_components/Train
 import TrainerWorkoutToolbar from '@/app/trainer/workout/workout_components/TrainerWorkoutToolbar/TrainerWorkoutToolbar';
 import TrainerWorkoutPlansGrid from '@/app/trainer/workout/workout_components/TrainerWorkoutPlansGrid/TrainerWorkoutPlansGrid';
 import TrainerWorkoutExerciseTable from '@/app/trainer/workout/workout_components/TrainerWorkoutExerciseTable/TrainerWorkoutExerciseTable';
-import TrainerWorkoutModal from '@/app/trainer/workout/workout_components/TrainerWorkoutModal/TrainerWorkoutModal';
-import TrainerWorkoutExerciseModal from '@/app/trainer/workout/workout_components/TrainerWorkoutExerciseModal/TrainerWorkoutExerciseModal';
 
 
 function WorkoutContent() {
@@ -32,8 +30,6 @@ function WorkoutContent() {
  </div>
  </div>
 
- <TrainerWorkoutModal />
- <TrainerWorkoutExerciseModal />
  </div>
  );
 }

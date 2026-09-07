@@ -26,8 +26,9 @@ export const MEMBERS_STATUS_COLORS: Record<string, { bg: string; text: string }>
 export const MEMBER_STATUS_OPTIONS = [
   { label: 'All Status', value: 'All' },
   { label: 'Active', value: 'ACTIVE' },
-  { label: 'Pending', value: 'PENDING' },
-  { label: 'Expired', value: 'EXPIRED' }
+  { label: 'Expiring Soon', value: 'EXPIRING_SOON' },
+  { label: 'Expired', value: 'EXPIRED' },
+  { label: 'New Members', value: 'NEW' }
 ];
 
 export const GENDER_OPTIONS = [
@@ -55,9 +56,13 @@ export const MSG_TEMPLATES = {
   DEFAULT: (name: string) => `Hi ${name}! 👋\n\nThis is a message from GymSmart. We hope you're enjoying your fitness journey!\n\n— Team GymSmart`
 };
 
-export const MEMBERS_TABLE_HEADERS = ['ID', 'MEMBER', 'PLAN', 'STATUS', 'CYCLE', 'PAID', 'PENDING', 'EXPIRY', 'ACTIONS'];
+export const MEMBERS_TABLE_HEADERS = ['ID', 'MEMBER', 'AGE/GENDER', 'STATUS', 'EXPIRY', 'LAST WORKOUT', 'PROGRESS', 'ACTIONS'];
 export const PROFILE_TABS = [
-  { id: 'overview', label: 'Overview' },
-  { id: 'attendance', label: 'Attendance' }
+  { id: 'overview', label: 'Basic Info' },
+  { id: 'fitness', label: 'Fitness Info' },
+  { id: 'progress', label: 'Progress & Measurements' },
+  { id: 'workout', label: 'Workout Plan' },
+  { id: 'diet', label: 'Diet Plan' },
+  { id: 'attendance', label: 'Attendance Calendar' }
 ];
 

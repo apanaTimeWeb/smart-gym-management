@@ -1,7 +1,8 @@
 # Trainer Module — Feature Map
 
 ## Module Purpose
-The Trainer module is the primary operational interface for gym trainers. It provides role-isolated access to member management (assigned members only), attendance tracking, workout plans, diet library, and notifications. Each sub-module is fully isolated from Admin and Manager roles (zero cross-module imports).
+The Trainer module is the primary operational interface for gym trainers. It provides role-isolated access to member management (assigned members only), attendance tracking, workout plans, diet library, and notifications. 
+**Strict Role Isolation:** Each sub-module is fully isolated from Admin and Manager roles. Trainers are strictly forbidden from accessing financial data, global member lists, gym revenue, membership plan pricing, and HR data (other staff's payroll/attendance).
 
 ## Directory Structure
 
@@ -22,12 +23,20 @@ The Trainer module is the primary operational interface for gym trainers. It pro
 
 | Feature | Path | Purpose | Main API Calls | Status |
 |---|---|---|---|---|
-| Dashboard | `/trainer/dashboard` | KPI overview, recent activity | `GET /trainer/dashboard/stats` | ✅ Live |
-| Members | `/trainer/members` | Assigned members directory | `GET/PATCH /trainer/members` | ✅ Live |
-| Attendance | `/trainer/attendance` | Daily check-in tracking | `GET/POST /trainer/attendance` | ✅ Live |
-| Diet Library | `/trainer/library` | Diet plan CRUD + assignment | `GET/POST /trainer/library/*` | ✅ Live |
-| Workout Library | `/trainer/workout` | Workout plan CRUD + assignment | `GET/POST /trainer/workout/*` | ✅ Live |
-| Notifications | `/trainer/notifications` | Alerts and messages | `GET/POST /trainer/notifications` | ✅ Live |
+| Dashboard | `/trainer/dashboard` | KPI overview (own clients), upcoming sessions | `GET /trainer/dashboard/stats` | ✅ Live |
+| Members | `/trainer/members` | Assigned members ONLY (profile, BMI/measurements, attendance, NO finance) | `GET/PATCH /trainer/members` | ✅ Live |
+| Attendance | `/trainer/attendance` | Own daily check-in and attendance history | `GET/POST /trainer/attendance` | ✅ Live |
+| Diet Library | `/trainer/library` | View diet plans + assign to own clients (No creating/editing global plans) | `GET/POST /trainer/library/*` | ✅ Live |
+| Workout Library | `/trainer/workout` | View workout plans + assign to own clients (No creating/editing global plans) | `GET/POST /trainer/workout/*` | ✅ Live |
+| Notifications | `/trainer/notifications` | Alerts relevant to trainer (e.g., manager msgs) | `GET/POST /trainer/notifications` | ✅ Live |
+
+## Forbidden Features (STRICTLY ENFORCED)
+- **Finance/Sales**: No dashboards, widgets, or APIs exposing gym revenue.
+- **Member Payments**: No viewing membership fees, pending payments, or transaction history.
+- **Global Member List**: Trainers can only view members explicitly assigned to them.
+- **HR & Payroll**: Trainers cannot see other staff members' profiles, attendance, or salaries. (They may only view their own attendance/salary if enabled).
+- **Store & Expenses**: Complete restriction from operational inventory or expense tracking.
+- **Membership Plans**: Complete restriction from managing pricing tiers.
 
 ## Data and State Architecture
 

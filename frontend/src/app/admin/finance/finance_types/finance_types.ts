@@ -43,7 +43,19 @@ export interface Payment {
 export interface FinanceSummary {
   totalRevenue: number; monthlyRevenue: number; pendingAmount: number;
   totalPayments: number;
+  totalExpenses: number;
+  netProfit: number;
   revenueByMethod: { UPI: number; Cash: number; Card: number; NetBanking: number };
   monthlyData: { month: string; revenue: number }[];
+}
+
+export interface Expense {
+  id: string;
+  amount: number;
+  category: string;
+  branchId: string;
+  date: string;
+  notes?: string;
+  recordedBy: string;
 }
 

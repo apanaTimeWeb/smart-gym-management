@@ -36,92 +36,45 @@ export default function AdminDashboardKPIs() {
     }
   };
 
-  const timeMultiplier = timeRange === 'weekly' ? 0.25 : timeRange === 'yearly' ? 12 : timeRange === 'custom' ? 1.5 : 1;
-  const timeLabel = timeRange === 'weekly' ? 'This week' : timeRange === 'yearly' ? 'This year' : timeRange === 'custom' ? 'Selected range' : 'This month';
-  const revLabel = timeRange === 'weekly' ? 'Weekly Revenue' : timeRange === 'yearly' ? 'Yearly Revenue' : timeRange === 'custom' ? 'Custom Revenue' : 'Monthly Revenue';
-  const memLabel = timeRange === 'weekly' ? 'New Members (Week)' : timeRange === 'yearly' ? 'New Members (Year)' : timeRange === 'custom' ? 'New Members (Custom)' : 'New Members (Month)';
-  const inqLabel = timeRange === 'weekly' ? 'New Inquiries (Week)' : timeRange === 'yearly' ? 'New Inquiries (Year)' : timeRange === 'custom' ? 'New Inquiries (Custom)' : 'New Inquiries (Month)';
-
   return (
-    <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        <AdminStatCard
-          title="Total Members"
-          value={s.totalMembers.toLocaleString()}
-          change="All time"
-          changeType="up"
-          icon={Users}
-          iconBg="bg-info-bg"
-          iconColor="text-info"
-        />
-        <AdminStatCard
-          title={revLabel}
-          value={formatCurrency(s.monthlyRevenue * timeMultiplier)}
-          change={timeLabel}
-          changeType="up"
-          icon={DollarSign}
-          iconBg="bg-success-bg"
-          iconColor="text-success"
-        />
-        <AdminStatCard
-          title="Active Members"
-          value={s.activeMembers.toLocaleString()}
-          change={`${s.totalMembers ? Math.round((s.activeMembers / s.totalMembers) * 100) : 0}% of total`}
-          changeType="neutral"
-          icon={UserCheck}
-          iconBg="bg-warning-bg"
-          iconColor="text-warning"
-        />
-        <AdminStatCard
-          title="Pending Payments"
-          value={formatCurrency(s.pendingPayments)}
-          change={`${s.membersByStatus?.pending || 0} members`}
-          changeType="down"
-          icon={AlertCircle}
-          iconBg="bg-danger-bg"
-          iconColor="text-danger"
-        />
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mt-6">
-        <AdminStatCard
-          title={memLabel}
-          value={Math.round(s.newMembersThisMonth * timeMultiplier).toLocaleString()}
-          change={timeLabel}
-          changeType="up"
-          icon={TrendingUp}
-          iconBg="bg-primary/10"
-          iconColor="text-primary"
-        />
-        <AdminStatCard
-          title="Total Staff"
-          value={s.activeStaff.toLocaleString()}
-          change="Active staff"
-          changeType="neutral"
-          icon={Clock}
-          iconBg="bg-warning-bg"
-          iconColor="text-warning"
-        />
-        <AdminStatCard
-          title="Store Products"
-          value={s.totalProducts.toLocaleString()}
-          change={s.lowStockCount > 0 ? `${s.lowStockCount} low stock` : 'All stocked'}
-          changeType={s.lowStockCount > 0 ? 'down' : 'up'}
-          icon={ShoppingCart}
-          iconBg="bg-info-bg"
-          iconColor="text-info"
-        />
-        <AdminStatCard
-          title={inqLabel}
-          value={Math.round(s.newInquiries * timeMultiplier).toLocaleString()}
-          change={`${s.totalInquiries} total`}
-          changeType="up"
-          icon={CheckCircle}
-          iconBg="bg-success-bg"
-          iconColor="text-success"
-        />
-      </div>
-    </>
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+      <AdminStatCard
+        title="Total Revenue"
+        value={formatCurrency(s.totalRevenue || 0)}
+        change="All Time"
+        changeType="neutral"
+        icon={DollarSign}
+        iconBg="bg-primary/20"
+        iconColor="text-primary"
+      />
+      <AdminStatCard
+        title="Net Profit"
+        value={formatCurrency(s.netProfit || 0)}
+        change="All Time"
+        changeType="up"
+        icon={TrendingUp}
+        iconBg="bg-success/20"
+        iconColor="text-success"
+      />
+      <AdminStatCard
+        title="Active Members"
+        value={(s.activeMembers || 0).toLocaleString()}
+        change={`${s.totalMembers ? Math.round((s.activeMembers / s.totalMembers) * 100) : 0}% capacity`}
+        changeType="neutral"
+        icon={UserCheck}
+        iconBg="bg-info/20"
+        iconColor="text-info"
+      />
+      <AdminStatCard
+        title="Total Outstanding"
+        value={formatCurrency(s.pendingPayments || 0)}
+        change={`${s.membersByStatus?.pending || 0} members due`}
+        changeType="down"
+        icon={AlertCircle}
+        iconBg="bg-danger/20"
+        iconColor="text-danger"
+      />
+    </div>
   );
 }
 

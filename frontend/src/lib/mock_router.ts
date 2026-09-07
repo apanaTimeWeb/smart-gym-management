@@ -420,13 +420,124 @@ export async function routeMockRequest<T>(
   }
   if (path.includes('/members/stats')) return { success: true, message: 'Stats', data: { total: 150, active: 110, pending: 25, expired: 15 } } as unknown as ApiResponse<T>;
   if (path.includes('/members') && !path.includes('/stats') && !path.includes('/superadmin')) {
-    const existing = MockDB.getCollection('mock_members', []);
+    let existing = MockDB.getCollection('mock_members', []);
+    if (existing.length === 0) {
+      const defaultMembers = [
+        {
+          id: 'GS-01',
+          name: 'Aman Verma',
+          email: 'aman.verma@example.com',
+          phone: '+91 98765 43210',
+          gender: 'MALE',
+          age: 26,
+          branch: 'Main Branch',
+          planId: 'plan-1',
+          plan: { id: 'plan-1', name: 'Gold Pro Fitness', tier: 'Pro' },
+          billingCycle: 'Monthly',
+          status: 'ACTIVE',
+          joinDate: '2026-01-10',
+          expiryDate: '2026-12-31',
+          paidAmount: 12000,
+          pendingAmount: 0,
+          assignedTrainerId: 'demo-trainer-id',
+          assignedTrainerName: 'Demo Trainer',
+          isPT: true,
+          createdAt: new Date().toISOString()
+        },
+        {
+          id: 'GS-02',
+          name: 'Priya Sharma',
+          email: 'priya.s@example.com',
+          phone: '+91 98123 45678',
+          gender: 'FEMALE',
+          age: 24,
+          branch: 'Main Branch',
+          planId: 'plan-2',
+          plan: { id: 'plan-2', name: 'Elite Annual', tier: 'Elite' },
+          billingCycle: 'Quarterly',
+          status: 'ACTIVE',
+          joinDate: '2026-02-15',
+          expiryDate: '2026-11-20',
+          paidAmount: 18000,
+          pendingAmount: 0,
+          assignedTrainerId: 'demo-trainer-id',
+          assignedTrainerName: 'Demo Trainer',
+          isPT: false,
+          createdAt: new Date().toISOString()
+        },
+        {
+          id: 'GS-03',
+          name: 'Rohan Malhotra',
+          email: 'rohan.m@example.com',
+          phone: '+91 98987 65432',
+          gender: 'MALE',
+          age: 29,
+          branch: 'Main Branch',
+          planId: 'plan-1',
+          plan: { id: 'plan-1', name: 'Gold Pro Fitness', tier: 'Pro' },
+          billingCycle: 'Annual',
+          status: 'ACTIVE',
+          joinDate: '2026-03-01',
+          expiryDate: '2027-03-01',
+          paidAmount: 25000,
+          pendingAmount: 0,
+          assignedTrainerId: 'demo-trainer-id',
+          assignedTrainerName: 'Demo Trainer',
+          isPT: true,
+          createdAt: new Date().toISOString()
+        },
+        {
+          id: 'GS-04',
+          name: 'Sneha Patel',
+          email: 'sneha.p@example.com',
+          phone: '+91 97654 32109',
+          gender: 'FEMALE',
+          age: 27,
+          branch: 'Main Branch',
+          planId: 'plan-3',
+          plan: { id: 'plan-3', name: 'Basic Fitness', tier: 'Basic' },
+          billingCycle: 'Monthly',
+          status: 'ACTIVE',
+          joinDate: '2026-04-01',
+          expiryDate: '2026-10-01',
+          paidAmount: 5000,
+          pendingAmount: 0,
+          assignedTrainerId: 'staff-2',
+          assignedTrainerName: 'Staff 2',
+          isPT: false,
+          createdAt: new Date().toISOString()
+        },
+        {
+          id: 'GS-05',
+          name: 'Vikram Singh',
+          email: 'vikram.singh@example.com',
+          phone: '+91 96543 21098',
+          gender: 'MALE',
+          age: 32,
+          branch: 'Main Branch',
+          planId: 'plan-2',
+          plan: { id: 'plan-2', name: 'Elite Annual', tier: 'Elite' },
+          billingCycle: 'Annual',
+          status: 'ACTIVE',
+          joinDate: '2026-02-01',
+          expiryDate: '2027-02-01',
+          paidAmount: 24000,
+          pendingAmount: 0,
+          assignedTrainerId: 'staff-3',
+          assignedTrainerName: 'Staff 3',
+          isPT: true,
+          createdAt: new Date().toISOString()
+        }
+      ];
+      MockDB.setCollection('mock_members', defaultMembers);
+      existing = defaultMembers;
+    }
     if (existing.length > 0 && existing.some((r: any) => r.name?.includes('Demo Member'))) {
       const filtered = existing.filter((r: any) => !r.name?.includes('Demo Member'));
       MockDB.setCollection('mock_members', filtered);
     }
     
-    const res = MockDB.handleCrud('mock_members', method, path, parsedBody, [], 'members') as unknown as ApiResponse<any>;
+    const res = MockDB.handleCrud('mock_members', method, path, parsedBody, existing, 'members') as unknown as ApiResponse<any>;
     
     // Cascade delete attendance records if a member is deleted
     if (method === 'DELETE' && res.success) {
@@ -852,7 +963,7 @@ export async function routeMockRequest<T>(
         ],
       },
     ];
-    return MockDB.handleCrud('mock_admin_branches', method, path, parsedBody, defaultBranches, 'branches') as unknown as ApiResponse<T>;
+    return MockDB.handleCrud('mock_admin_branches', method, path, parsedBody, defaultBranches) as unknown as ApiResponse<T>;
   }
 
   // SUPERADMIN Stateful Interceptions
@@ -993,7 +1104,14 @@ export async function routeMockRequest<T>(
       }
       
       if (staff.length === 0) {
-        staff = generate(8, (i: number) => ({ id: `staff-${i}`, name: `Staff ${i + 1}`, role: 'Trainer', status: 'ACTIVE', isActive: true, salary: 25000, joinDate: new Date().toISOString() }));
+        staff = generate(8, (i: number) => {
+          if (i === 0) {
+            return {
+              id: `staff-${i}`, name: `Rajesh Manager`, email: 'manager@gymsmart.com', role: 'Manager', status: 'ACTIVE', isActive: true, salary: 45000, joinDate: new Date().toISOString(), branch: 'b1', primaryBranchId: 'b1', assignedBranches: ['b1', 'b3', 'b5']
+            };
+          }
+          return { id: `staff-${i}`, name: `Staff ${i + 1}`, role: 'Trainer', status: 'ACTIVE', isActive: true, salary: 25000, joinDate: new Date().toISOString(), branch: 'b1' };
+        });
         MockDB.setCollection('mock_admin_staff', staff);
       }
       

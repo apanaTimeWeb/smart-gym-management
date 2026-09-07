@@ -18,12 +18,13 @@ export interface ApiResponse<T> {
 import { AuthUrlConfig } from '@/app/auth/auth_url_config';
 import { StatusCodes } from 'http-status-codes';
 import toast from 'react-hot-toast';
+import { routeMockRequest } from './mock_router';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 
 // ─── User Helper (reads from non-HttpOnly cookie set by server) ───────────────
 
-export function getUser(): { name: string; email: string; role: string; tenantId?: string } | null {
+export function getUser(): { id?: string; name: string; email: string; role: string; tenantId?: string } | null {
   if (typeof window === 'undefined') return null;
   const c = document.cookie.split(';').find(x => x.trim().startsWith('gymsmart_user='));
   if (!c) return null;
@@ -92,7 +93,6 @@ export async function apiFetch<T = unknown>(
   } catch (error) {
     // Intercept network failures or explicit demo mode
     if (error instanceof TypeError || (error as Error).message === 'DEMO_MODE_ACTIVE') {
-      const { routeMockRequest } = await import('./mock_router');
       return await routeMockRequest<T>(path, method, rest.body) as unknown as T;
     }
     throw error;

@@ -11,8 +11,8 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                echo 'Checking out features branch from Git...'
-                git branch: 'features', url: 'https://github.com/apanaTimeWeb/smart-gym-management.git'
+                echo 'Checking out vps branch from Git...'
+                git branch: 'vps', url: 'https://github.com/apanaTimeWeb/smart-gym-management.git'
             }
         }
 

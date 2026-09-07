@@ -9,7 +9,7 @@ import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagin
 import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_utils/AdminSharedConstants';
 
 export default function AdminHrStaffTable() {
-  const { staff, summary, fetchState, debouncedSearch, branchFilter, roleFilter, currentPage, setCurrentPage, openEdit, deleteStaff, toggleStaffStatus } = useHrContext();
+  const { staff, summary, fetchState, debouncedSearch, branchFilter, roleFilter, currentPage, setCurrentPage, openEdit, openProfile, deleteStaff, toggleStaffStatus } = useHrContext();
   const { confirm } = useAdminConfirm();
 
   const filteredStaff = staff.filter(s => 
@@ -75,7 +75,7 @@ export default function AdminHrStaffTable() {
               <tr 
                 key={s.id} 
                 className="transition-colors hover:bg-primary/5 cursor-pointer" 
-                onClick={() => openEdit(s)}
+                onClick={() => openProfile(s)}
               >
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
@@ -88,7 +88,20 @@ export default function AdminHrStaffTable() {
                     </div>
                   </div>
                 </td>
-                <td className="px-4 py-3 text-sm text-secondary">{s.branch}</td>
+                <td className="px-4 py-3 text-sm text-secondary">
+                  {s.role === 'Manager' && s.assignedBranches && s.assignedBranches.length > 0 ? (
+                    <div className="flex flex-col">
+                      <span className="font-medium text-primary">{s.primaryBranchId || s.assignedBranches[0]}</span>
+                      {s.assignedBranches.length > 1 && (
+                        <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded-full mt-1 w-max">
+                          +{s.assignedBranches.length - 1} More
+                        </span>
+                      )}
+                    </div>
+                  ) : (
+                    s.branch
+                  )}
+                </td>
                 <td className="px-4 py-3 text-sm text-primary">{s.role}</td>
                 <td className="px-4 py-3">
                   {s.isActive === false ? (
@@ -103,54 +116,59 @@ export default function AdminHrStaffTable() {
                 </td>
                 <td className="px-4 py-3 text-sm text-secondary">{s.phone}</td>
                 <td className="px-4 py-3 text-sm font-medium text-success">{(s.salary || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
+                <td className="px-4 py-3 text-sm font-medium text-primary text-right">{s.advanceSalary && s.advanceSalary > 0 ? s.advanceSalary.toLocaleString('en-IN', { style: 'currency', currency: 'INR' }) : '—'}</td>
                 <td className="px-4 py-3 text-sm text-secondary">
                   {s.joinDate ? new Date(s.joinDate).toLocaleDateString('en-IN') : 'N/A'}
                 </td>
                 <td className="px-4 py-3 text-right">
                   <div className="flex items-center justify-end gap-2">
-                    <button 
-                      onClick={(e) => { e.stopPropagation(); toggleStaffStatus(s); }}
-                      className={`p-1.5 rounded-lg transition-all duration-200 ease-in-out ${
-                        s.isActive === false 
-                          ? 'text-success hover:bg-success/10' 
-                          : 'text-danger hover:bg-danger/10'
-                      }`}
-                      title={s.isActive === false ? 'Activate Staff' : 'Suspend Staff'}
-                    >
-                      {s.isActive === false ? <PlayCircle size={16} /> : <Ban size={16} />}
-                    </button>
-                    <button 
-                      onClick={(e) => { e.stopPropagation(); openEdit(s); }} 
-                      className="p-1.5 rounded hover:bg-primary/10 transition-colors text-secondary hover:text-primary"
-                      title="Edit"
-                    >
-                      <Edit2 size={16} />
-                    </button>
-                    <button 
-                      onClick={async (e) => { 
-                        e.stopPropagation(); 
-                        const ok = await confirm({
-                          title: 'Delete Staff Member',
-                          message: `Are you sure you want to delete staff member "${s.name}"? This action cannot be undone.`,
-                          type: 'danger',
-                          confirmText: 'Delete'
-                        });
-                        if (ok) {
-                          deleteStaff(s.id); 
-                        }
-                      }}
-                      className="p-1.5 rounded transition-colors text-danger hover:bg-danger/10"
-                      title="Delete"
-                    >
-                      <Trash2 size={16} />
-                    </button>
+                    {s.role === 'Manager' && (
+                      <>
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); toggleStaffStatus(s); }}
+                          className={`p-1.5 rounded-lg transition-all duration-200 ease-in-out ${
+                            s.isActive === false 
+                              ? 'text-success hover:bg-success/10' 
+                              : 'text-danger hover:bg-danger/10'
+                          }`}
+                          title={s.isActive === false ? 'Activate Staff' : 'Suspend Staff'}
+                        >
+                          {s.isActive === false ? <PlayCircle size={16} /> : <Ban size={16} />}
+                        </button>
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); openEdit(s); }} 
+                          className="p-1.5 rounded hover:bg-primary/10 transition-colors text-secondary hover:text-primary"
+                          title="Edit"
+                        >
+                          <Edit2 size={16} />
+                        </button>
+                        <button 
+                          onClick={async (e) => { 
+                            e.stopPropagation(); 
+                            const ok = await confirm({
+                              title: 'Delete Staff Member',
+                              message: `Are you sure you want to delete staff member "${s.name}"? This action cannot be undone.`,
+                              type: 'danger',
+                              confirmText: 'Delete'
+                            });
+                            if (ok) {
+                              deleteStaff(s.id); 
+                            }
+                          }}
+                          className="p-1.5 rounded transition-colors text-danger hover:bg-danger/10"
+                          title="Delete"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </>
+                    )}
                   </div>
                 </td>
               </tr>
             ))}
             {filteredStaff.length === 0 && (
               <tr>
-                <td colSpan={7} className="text-center py-12 text-secondary">
+                <td colSpan={8} className="text-center py-12 text-secondary">
                   {debouncedSearch ? 'No staff match the filter.' : 'No staff members yet. Add your first staff!'}
                 </td>
               </tr>

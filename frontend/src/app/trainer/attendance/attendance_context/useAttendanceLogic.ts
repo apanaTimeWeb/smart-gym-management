@@ -4,7 +4,7 @@
 // DATA FLOW: UI Components -> useAttendanceLogic (State + URL) -> API (Backend)
 import { useState, useCallback, useEffect } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import { ApiResponse } from '@/lib/api';
+import { ApiResponse, getUser } from '@/lib/api';
 import { attendanceApi } from '@/app/trainer/attendance/attendance_api/attendance_api';
 import { trainerSharedApi } from '@/app/trainer/trainer_api/trainer_api';
 import type { Member } from '@/app/trainer/trainer_types/trainer_types';
@@ -47,6 +47,7 @@ export function useAttendanceLogic(): AttendanceContextType {
   const setTab = useCallback((val: AttendanceTab) => setUrlParam('tab', val), [setUrlParam]);
 
   // Local State
+  const [viewMode, setViewMode] = useState<'calendar' | 'table'>('calendar');
   const [records, setRecords] = useState<Attendance[]>([]);
   const [totalRecords, setTotalRecords] = useState(0);
   const [todayStats, setTodayStats] = useState<any>({ totalCheckIns: 0, memberCheckIns: 0, staffCheckIns: 0 });
@@ -65,12 +66,17 @@ export function useAttendanceLogic(): AttendanceContextType {
   const loadAll = useCallback(async () => {
     setFetchState('loading');
     try {
+      const user = getUser();
       const params: Record<string, string> = {
         limit: '10',
         page: currentPage.toString()
       };
       if (debouncedSearch) params.search = debouncedSearch;
-      params.type = 'MEMBER';
+      
+      params.type = tab === 'Members' ? 'MEMBER' : 'STAFF';
+      if (tab === 'My Attendance' && user?.id) {
+        params.staffId = String(user.id);
+      }
 
       const [attRes, statsRes, memRes] = await Promise.all([
         attendanceApi.fetchAttendanceRecords(params) as unknown as Promise<ApiResponse<any>>,
@@ -80,7 +86,11 @@ export function useAttendanceLogic(): AttendanceContextType {
 
       let fetchedRecords = attRes.data?.attendance || attRes.data?.attendances || attRes.data || [];
       
-      fetchedRecords = fetchedRecords.filter((r: Attendance) => r.type === 'MEMBER');
+      if (tab === 'Members') {
+        fetchedRecords = fetchedRecords.filter((r: Attendance) => r.type === 'MEMBER');
+      } else {
+        fetchedRecords = fetchedRecords.filter((r: Attendance) => r.type === 'STAFF' && (!user?.id || String(r.staffId) === String(user.id) || String(r.staff?.id) === String(user.id)));
+      }
       
       if (debouncedSearch) {
         const q = debouncedSearch.toLowerCase();
@@ -147,6 +157,7 @@ export function useAttendanceLogic(): AttendanceContextType {
     records, totalRecords, todayStats, members,
     fetchState, saving, toast,
     tab, setTab,
+    viewMode, setViewMode,
     search, setSearch,
     filterDate, setFilterDate,
     currentPage, setCurrentPage,

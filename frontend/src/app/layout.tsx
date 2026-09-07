@@ -1,12 +1,9 @@
 // RESPONSIBILITY: Root layout component that wraps the entire application. Initializes global font (Inter), Next-Themes provider, and Hot-Toast provider.
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import '@/app/globals.css';
 import NextTopLoader from 'nextjs-toploader';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { Toaster } from 'react-hot-toast';
-
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
@@ -26,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" data-scroll-behavior="smooth" className={`${inter.variable}`} suppressHydrationWarning>
+    <html lang="en" data-scroll-behavior="smooth" className="font-sans" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/icon.png" type="image/png" />
       </head>
