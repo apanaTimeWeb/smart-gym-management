@@ -3,7 +3,7 @@
 // RESPONSIBILITY: Renders the primary tabular list of members with actions, filtering state, and pagination.
 'use client';
 
-import { Edit, MessageCircle, Mail, Trash2, Loader2 } from 'lucide-react';
+import { MessageCircle, Mail, Loader2 } from 'lucide-react';
 import { useMembersContext } from '@/app/trainer/members/members_context/MembersContext';
 import { useMembersStore } from '@/app/trainer/members/members_store/useMembersStore';
 import { MEMBERS_STATUS_COLORS, MEMBERS_TABLE_HEADERS, formatCurrency } from '@/app/trainer/members/members_utils/MembersSharedConstants';
@@ -16,7 +16,7 @@ import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerShare
 export default function TrainerMembersTable() {
   const { 
     search, debouncedSearch, statusFilter, currentPage, setCurrentPage,
-    setSelectedMember, openEdit, openMsg, deleteMember
+    setSelectedMember, openMsg
   } = useMembersContext();
 
   const members = useMembersStore(s => s.members);

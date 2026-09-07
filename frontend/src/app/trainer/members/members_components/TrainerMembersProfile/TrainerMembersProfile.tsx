@@ -3,7 +3,7 @@
 // RESPONSIBILITY: Renders a detailed view of a selected member's profile.
 'use client';
 
-import { Edit, MessageCircle, Mail } from 'lucide-react';
+import { MessageCircle, Mail } from 'lucide-react';
 import TrainerHeader from '@/app/trainer/trainer_components/TrainerLayout/TrainerHeader';
 import { useMembersContext } from '@/app/trainer/members/members_context/MembersContext';
 import { MEMBERS_STATUS_COLORS, formatCurrency, PROFILE_TABS } from '@/app/trainer/members/members_utils/MembersSharedConstants';

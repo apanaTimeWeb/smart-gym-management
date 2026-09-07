@@ -2,7 +2,7 @@
 // DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Centralized constants shared across all TRAINER modules — nav items, placeholder notifications, gym identity (name/phone), sensitive data masking utility, and pagination page size.
 import {
-  LayoutDashboard, Users, Utensils, Dumbbell, CalendarCheck, Activity, Database, Clock, CalendarDays, Bell, User
+  LayoutDashboard, Users, Utensils, Dumbbell, CalendarCheck, Clock, Bell, User
 } from 'lucide-react';
 
 export const TRAINER_NAV_ITEMS = [
@@ -11,11 +11,9 @@ export const TRAINER_NAV_ITEMS = [
   { href: '/trainer/workout', label: 'Workout & Exercises', icon: Dumbbell },
   { href: '/trainer/sessions', label: 'Sessions', icon: Clock },
   { href: '/trainer/attendance', label: 'Attendance', icon: CalendarCheck },
-  { href: '/trainer/progress-tracking', label: 'Progress Tracking', icon: Activity },
-  { href: '/trainer/diet-plans', label: 'Diet Plans', icon: Utensils },
-  { href: '/trainer/schedule', label: 'My Schedule', icon: CalendarDays },
+  { href: '/trainer/library', label: 'Diet Library', icon: Utensils },
   { href: '/trainer/notifications', label: 'Notifications', icon: Bell },
-  { href: '/trainer/profile', label: 'Profile', icon: User },
+  { href: '/trainer/profile', label: 'My Profile', icon: User },
 ];
 
 // TODO: Replace with real API call once Notifications backend module is built.

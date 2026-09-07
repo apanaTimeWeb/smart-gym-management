@@ -4,12 +4,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Search, Plus } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { useWorkoutContext } from '@/app/trainer/workout/workout_context/WorkoutContext';
 import { WORKOUT_TAB_OPTIONS, WORKOUT_FOCUS_OPTIONS, EXERCISE_MUSCLE_OPTIONS } from '@/app/trainer/workout/workout_utils/WorkoutSharedConstants';
 
 export default function TrainerWorkoutToolbar() {
-  const { tab, setTab, search, setSearch, filterCategory, setFilterCategory, setCurrentPage, openAddWk, openAddEx } = useWorkoutContext();
+  const { tab, setTab, search, setSearch, filterCategory, setFilterCategory, setCurrentPage } = useWorkoutContext();
   const [localSearch, setLocalSearch] = useState(search);
 
    
@@ -67,16 +67,9 @@ export default function TrainerWorkoutToolbar() {
       : EXERCISE_MUSCLE_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)
     }
   </select>
- <button 
- onClick={tab === 'Workout Plans' ? openAddWk : openAddEx}
- className="flex items-center gap-2 px-4 py-2 text-sm text-white rounded-lg font-medium hover:opacity-90 motion-safe:transition-opacity"
- style={{ background: 'var(--workout-highlight)' }}
- >
- <Plus size={15} /> <span className="hidden sm:inline">Add</span>
- </button>
- </div>
  </div>
  );
 }
+
 
 

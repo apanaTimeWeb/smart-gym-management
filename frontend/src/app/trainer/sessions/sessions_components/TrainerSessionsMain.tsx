@@ -106,17 +106,6 @@ export default function TrainerSessionsMain() {
                   {session.status === 'Cancelled' && <XCircle size={12} />}
                   {session.status}
                 </span>
-
-                {session.status === 'Upcoming' && session.type === 'Group' && (
-                  <button className="px-4 py-2 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-primary/90 transition-colors">
-                    Mark Attendance
-                  </button>
-                )}
-                {session.status === 'Upcoming' && session.type === 'PT' && (
-                  <button className="px-4 py-2 bg-info text-white text-sm font-semibold rounded-lg hover:bg-info/90 transition-colors">
-                    Start Session
-                  </button>
-                )}
               </div>
             </div>
           ))}

@@ -4,12 +4,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { RefreshCw, Plus, Search } from 'lucide-react';
+import { RefreshCw, Search } from 'lucide-react';
 import { useAttendanceContext } from '@/app/trainer/attendance/attendance_context/AttendanceContext';
 import { ATTENDANCE_TABS } from '@/app/trainer/attendance/attendance_utils/AttendanceSharedConstants';
 
 export default function TrainerAttendanceToolbar() {
-  const { tab, setTab, loadAll, setShowModal, search, setSearch, filterDate, setFilterDate, setCurrentPage } = useAttendanceContext();
+  const { tab, setTab, loadAll, search, setSearch, filterDate, setFilterDate, setCurrentPage } = useAttendanceContext();
   const [localSearch, setLocalSearch] = useState(search);
 
   useEffect(() => { setTimeout(() => setLocalSearch(search), 0); }, [search]);

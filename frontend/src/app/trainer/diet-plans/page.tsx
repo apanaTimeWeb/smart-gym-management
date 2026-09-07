@@ -1,9 +1,7 @@
-import TrainerDietPlansMain from './TrainerDietPlansMain';
+import { redirect } from 'next/navigation';
 
-export const metadata = {
-  title: 'Diet Plans | Trainer | GymSmart',
-};
-
+// The real Diet Library implementation lives at /trainer/library.
+// This route is kept for backward compatibility but redirects immediately.
 export default function TrainerDietPlansPage() {
-  return <TrainerDietPlansMain />;
+  redirect('/trainer/library');
 }
