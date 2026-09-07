@@ -41,7 +41,7 @@ export default function AttendanceModal() {
       reset({
         ...EMPTY_ATTENDANCE_FORM,
         date: currentTodayDate,
-        type: tab === 'Staff' ? 'STAFF' : 'MEMBER'
+        type: (tab === 'Staff Attendance' || tab === 'Trainer Attendance') ? 'STAFF' : 'MEMBER'
       });
     }
   }, [showModal, reset, tab]);
@@ -63,7 +63,7 @@ export default function AttendanceModal() {
         </div>
         <form onSubmit={handleSubmit(markAttendance)} className="p-5 space-y-4">
           
-          {tab === 'All' && (
+          {tab === 'Daily Attendance Report' && (
             <div>
               <label className="block text-sm font-medium text-secondary mb-2">User Type</label>
               <div className="flex gap-4">

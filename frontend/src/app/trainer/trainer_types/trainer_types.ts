@@ -21,6 +21,7 @@ export interface Member {
   assignedDiet?: DietPlan;
   assignedWorkoutId?: string;
   assignedWorkout?: Workout;
+  fitnessGoal?: string;
 }
 
 export interface MemberStats {

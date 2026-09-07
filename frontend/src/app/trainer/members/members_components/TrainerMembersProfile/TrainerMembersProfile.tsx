@@ -80,6 +80,7 @@ export default function TrainerMembersProfile() {
               { label: 'Weight', value: '70 kg' },
               { label: 'Join Date', value: new Date(selectedMember.joinDate).toLocaleDateString('en-IN') },
               { label: 'Expiry Date', value: new Date(selectedMember.expiryDate).toLocaleDateString('en-IN') },
+              { label: 'Fitness Goal', value: selectedMember.fitnessGoal || 'Muscle Gain' },
               { label: 'Address', value: selectedMember.address || 'N/A' },
             ].map((f, i) => (
               <div key={i} className="bg-input rounded-lg p-3">

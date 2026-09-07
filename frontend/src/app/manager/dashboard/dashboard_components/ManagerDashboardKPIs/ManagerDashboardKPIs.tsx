@@ -21,34 +21,34 @@ export default function ManagerDashboardKPIs() {
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <ManagerStatCard
-          title="Total Members"
-          value={s.totalMembers.toLocaleString()}
-          change="All time"
-          changeType="up"
+          title="Today's Members"
+          value={s.activeMembers.toLocaleString()}
+          change={`${s.totalMembers ? Math.round((s.activeMembers / s.totalMembers) * 100) : 0}% of total`}
+          changeType="neutral"
           icon={Users}
           iconBg="bg-info-bg"
           iconColor="text-info"
         />
         <ManagerStatCard
-          title={revLabel}
+          title="Today's Collection"
           value={formatCurrency(s.monthlyRevenue * multiplier)}
-          change={timeLabel}
+          change="Daily revenue"
           changeType="up"
           icon={DollarSign}
           iconBg="bg-success-bg"
           iconColor="text-success"
         />
         <ManagerStatCard
-          title="Active Members"
-          value={s.activeMembers.toLocaleString()}
-          change={`${s.totalMembers ? Math.round((s.activeMembers / s.totalMembers) * 100) : 0}% of total`}
+          title="Trainer Attendance"
+          value={s.trainerAttendance ? `${s.trainerAttendance.present}/${s.trainerAttendance.total}` : '0/0'}
+          change="Present today"
           changeType="neutral"
           icon={UserCheck}
           iconBg="bg-warning-bg"
           iconColor="text-warning"
         />
         <ManagerStatCard
-          title="Pending Payments"
+          title="Pending Dues"
           value={formatCurrency(s.pendingPayments)}
           change={`${s.membersByStatus?.pending || 0} members`}
           changeType="down"
@@ -60,7 +60,7 @@ export default function ManagerDashboardKPIs() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mt-6">
         <ManagerStatCard
-          title={memLabel}
+          title="New Registrations"
           value={Math.round(s.newMembersThisMonth * multiplier).toLocaleString()}
           change={timeLabel}
           changeType="up"
@@ -69,9 +69,9 @@ export default function ManagerDashboardKPIs() {
           iconColor="text-primary"
         />
         <ManagerStatCard
-          title="Total Staff"
-          value={s.activeStaff.toLocaleString()}
-          change="Active staff"
+          title="Today's Attendance"
+          value={s.todayAttendance?.toLocaleString() || '0'}
+          change="Checked-in"
           changeType="neutral"
           icon={Clock}
           iconBg="bg-warning-bg"

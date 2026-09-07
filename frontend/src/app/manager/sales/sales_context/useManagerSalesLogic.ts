@@ -14,7 +14,7 @@ export function useManagerSalesLogic(initialData?: SalesInitialData | null): Sal
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
-  const tab = (searchParams.get('tab') || 'Overview') as SalesTab;
+  const tab = (searchParams.get('tab') || 'Collect Payment') as SalesTab;
   const dateFilter = (searchParams.get('dateFilter') || 'This Month') as DateFilter;
   const [fetchState, setFetchState] = useState<FetchState>(initialData ? 'success' : 'loading');
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
