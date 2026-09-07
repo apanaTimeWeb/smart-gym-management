@@ -3,7 +3,7 @@
 // RESPONSIBILITY: Contains logic, types, or component definition for this module.
 'use client';
 
-import { MessageCircle, Mail } from 'lucide-react';
+import { MessageCircle, Mail, Target } from 'lucide-react';
 import { useMembersContext } from '@/app/trainer/members/members_context/MembersContext';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
@@ -43,8 +43,23 @@ export default function TrainerMembersProfileOverview() {
  </div>
  </div>
  <div>
- <h3 className="font-semibold text-foreground mb-3">Quick Actions</h3>
+ <h3 className="font-semibold text-foreground mb-3">PT Package & Actions</h3>
+ <div className="bg-input/50 rounded-xl p-4 mb-4 border border-border flex items-center justify-between">
+   <div>
+     <p className="text-xs text-secondary">PT Sessions Remaining</p>
+     <p className="text-xl font-bold text-foreground">7 <span className="text-sm font-medium text-secondary">/ 12</span></p>
+   </div>
+   <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+     <Target size={20} />
+   </div>
+ </div>
  <div className="flex flex-col gap-2">
+ <button 
+ onClick={() => alert('Member Checked In')} 
+ className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-primary rounded-xl justify-center motion-safe:transition-colors hover:bg-primary/90" 
+ >
+ Check-in Member
+ </button>
  <button 
  onClick={() => openMsg(selectedMember, 'whatsapp')} 
  className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white rounded-xl justify-center motion-safe:transition-colors bg-green-500 hover:bg-green-600" 
@@ -55,7 +70,13 @@ export default function TrainerMembersProfileOverview() {
  onClick={() => openMsg(selectedMember, 'email')} 
  className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white rounded-xl justify-center motion-safe:transition-colors bg-blue-500 hover:bg-blue-600" 
  >
- <Mail size={14} /> Send Email
+ <Mail size={14} /> Send Feedback
+ </button>
+ <button 
+ onClick={() => alert('Add Note clicked')} 
+ className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-secondary bg-input border border-border rounded-xl justify-center motion-safe:transition-colors hover:bg-border" 
+ >
+ Add Note
  </button>
  </div>
  </div>

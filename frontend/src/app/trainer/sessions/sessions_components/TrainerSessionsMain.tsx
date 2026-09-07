@@ -96,7 +96,12 @@ export default function TrainerSessionsMain() {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between md:justify-end gap-4 w-full md:w-auto mt-4 md:mt-0 pt-4 md:pt-0 border-t border-border md:border-none">
+              <div className="flex flex-col md:flex-row items-center justify-between md:justify-end gap-4 w-full md:w-auto mt-4 md:mt-0 pt-4 md:pt-0 border-t border-border md:border-none">
+                {session.status === 'Upcoming' && (
+                  <button className="text-sm font-medium text-white bg-primary px-4 py-2 rounded-xl hover:bg-primary/90 motion-safe:transition-colors">
+                    Mark Attendance
+                  </button>
+                )}
                 <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
                   session.status === 'Completed' ? 'bg-success-bg text-success' :
                   session.status === 'Cancelled' ? 'bg-danger-bg text-danger' :

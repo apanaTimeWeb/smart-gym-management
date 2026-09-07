@@ -172,6 +172,16 @@ export default function TrainerWorkoutModal() {
               className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus-visible:ring-warning bg-input text-foreground custom-scrollbar" 
             />
           </div>
+
+          <div>
+            <label className="block text-sm font-medium text-secondary mb-1">Day-wise Workout Plan</label>
+            <textarea 
+              rows={6}
+              placeholder="Monday — Chest + Triceps&#10;├── Bench Press: 4 sets × 12 reps × 60 kg (90s rest)&#10;├── Incline DB Press: 3 sets × 10 reps × 25 kg" 
+              {...register('dayWisePlan')}
+              className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus-visible:ring-warning bg-input text-foreground custom-scrollbar font-mono text-sm" 
+            />
+          </div>
           
           <div className="pt-2 flex justify-end gap-3">
             <button 
