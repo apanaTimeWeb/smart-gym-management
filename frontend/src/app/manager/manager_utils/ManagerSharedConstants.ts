@@ -17,7 +17,8 @@ export const MANAGER_NAV_ITEMS = [
  { href: '/manager/pt', label: 'Personal Training', icon: Users },
  { href: '/manager/expenses', label: 'Expenses', icon: Receipt },
  { href: '/manager/reports', label: 'Reports', icon: FileBarChart },
- { href: '/manager/notifications', label: 'Notifications', icon: MessageSquare }
+ { href: '/manager/notifications', label: 'Notifications', icon: MessageSquare },
+ { href: '/manager/support', label: 'Help & Support', icon: MessageSquare }
 ];
 
 // TODO: Replace with real API call once Notifications backend module is built.
