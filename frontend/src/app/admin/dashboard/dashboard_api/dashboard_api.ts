@@ -7,11 +7,14 @@ export const dashboardApi = {
   fetchDashboardStats: async (branchId?: string): Promise<ApiResponse<DashboardStats>> => {
     const query = branchId && branchId !== 'all' ? `?branchId=${branchId}` : '';
     const res = await apiFetch<ApiResponse<Partial<DashboardStats>>>(`${DashboardUrlConfig.BACKEND_API.STATS}${query}`);
+    const raw = Array.isArray(res.data) ? {} : (res.data || {});
     return {
       success: true,
       message: 'Stats fetched successfully',
       data: {
-        ...(Array.isArray(res.data) ? {} : (res.data || {})),
+        ...raw,
+        membersByPlan: Array.isArray(raw.membersByPlan) ? raw.membersByPlan : [],
+        memberGrowth: Array.isArray(raw.memberGrowth) ? raw.memberGrowth : [],
         
         // --- INJECTED MOCK DATA FOR OWNER'S COCKPIT ---
         netProfit: 125000,

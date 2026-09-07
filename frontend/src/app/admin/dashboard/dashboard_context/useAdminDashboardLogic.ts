@@ -11,6 +11,18 @@ import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore
 /**
  * Hook to manage dashboard data fetching and network state tracking.
  */
+function sanitizeStats(raw: DashboardStats | null | undefined): DashboardStats | undefined {
+  if (!raw) return undefined;
+  return {
+    ...raw,
+    membersByPlan: Array.isArray(raw.membersByPlan) ? raw.membersByPlan : [],
+    memberGrowth: Array.isArray(raw.memberGrowth) ? raw.memberGrowth : [],
+    revenueTrend: Array.isArray(raw.revenueTrend) ? raw.revenueTrend : [],
+    branchLeaderboard: Array.isArray(raw.branchLeaderboard) ? raw.branchLeaderboard : [],
+    systemAlerts: Array.isArray(raw.systemAlerts) ? raw.systemAlerts : [],
+  };
+}
+
 export function useAdminDashboardLogic(initialData?: DashboardStats | null) {
   const { timeRange, startDate, endDate } = useAdminDashboardStore();
   const { selectedBranchId } = useAdminGlobalStore();
@@ -19,9 +31,9 @@ export function useAdminDashboardLogic(initialData?: DashboardStats | null) {
     queryKey: ['adminDashboardStats', timeRange, startDate, endDate, selectedBranchId],
     queryFn: async () => {
       const res = await dashboardApi.fetchDashboardStats(selectedBranchId);
-      return res.data;
+      return sanitizeStats(res.data) ?? res.data;
     },
-    initialData: initialData || undefined,
+    initialData: sanitizeStats(initialData),
   });
 
   const status: FetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
