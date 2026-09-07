@@ -24,11 +24,12 @@ export default function TrainerMembersProfileProgress() {
         <button className="text-sm text-white bg-primary px-3 py-1.5 rounded-lg font-medium hover:bg-primary/90 motion-safe:transition-colors">+ Log Measurement</button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         {[
           { label: 'Weight', current: '75 kg', prev: '76 kg', change: '-1 kg' },
           { label: 'Body Fat', current: '17%', prev: '18%', change: '-1%' },
           { label: 'Chest', current: '38 in', prev: '38 in', change: '0' },
+          { label: 'Waist', current: '31 in', prev: '32 in', change: '-1 in' },
           { label: 'Arms', current: '14 in', prev: '13.5 in', change: '+0.5 in' },
         ].map((m, i) => (
           <div key={i} className="bg-card border border-border rounded-xl p-4 shadow-sm">

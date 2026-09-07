@@ -4,12 +4,12 @@
 'use client';
 
 import { useEffect } from 'react';
-import { X, Save } from 'lucide-react';
-import { useForm, Controller } from 'react-hook-form';
+import { X, Save, Plus, Trash2, Dumbbell } from 'lucide-react';
+import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { useWorkoutContext } from '@/app/trainer/workout/workout_context/WorkoutContext';
-import { WORKOUT_LEVEL_OPTIONS, WorkoutSchema, type WorkoutFormValues, EMPTY_WORKOUT_FORM } from '@/app/trainer/workout/workout_utils/WorkoutSharedConstants';
+import { WORKOUT_LEVEL_OPTIONS, WorkoutSchema, type WorkoutFormValues, EMPTY_WORKOUT_FORM, INITIAL_EXERCISES } from '@/app/trainer/workout/workout_utils/WorkoutSharedConstants';
 
 export default function TrainerWorkoutModal() {
   const { 
@@ -27,6 +27,11 @@ export default function TrainerWorkoutModal() {
   } = useForm<WorkoutFormValues>({
     resolver: zodResolver(WorkoutSchema),
     defaultValues: wkForm || EMPTY_WORKOUT_FORM
+  });
+
+  const { fields: exerciseFields, append: appendExercise, remove: removeExercise } = useFieldArray({
+    control,
+    name: 'workoutExercises'
   });
 
   useEffect(() => {
@@ -173,14 +178,86 @@ export default function TrainerWorkoutModal() {
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-secondary mb-1">Day-wise Workout Plan</label>
-            <textarea 
-              rows={6}
-              placeholder="Monday — Chest + Triceps&#10;├── Bench Press: 4 sets × 12 reps × 60 kg (90s rest)&#10;├── Incline DB Press: 3 sets × 10 reps × 25 kg" 
-              {...register('dayWisePlan')}
-              className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus-visible:ring-warning bg-input text-foreground custom-scrollbar font-mono text-sm" 
-            />
+          <div className="pt-2 border-t border-border mt-4">
+            <div className="flex items-center justify-between mb-3">
+              <label className="block text-sm font-bold text-foreground">Workout Exercises</label>
+              <button
+                type="button"
+                onClick={() => appendExercise({ name: '', sets: 3, reps: 10, weight: '', restTime: '60s' })}
+                className="text-xs font-semibold text-primary bg-primary-subtle px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-primary/20 motion-safe:transition-colors"
+              >
+                <Plus size={14} /> Add Exercise
+              </button>
+            </div>
+            
+            <div className="space-y-3">
+              {exerciseFields.map((field, index) => (
+                <div key={field.id} className="bg-input/50 border border-border rounded-xl p-3 flex flex-col sm:flex-row gap-3">
+                  <div className="flex-1">
+                    <label className="block text-[10px] uppercase font-bold text-secondary mb-1">Exercise</label>
+                    <select
+                      {...register(`workoutExercises.${index}.name`)}
+                      className="w-full px-2 py-1.5 text-sm bg-input border border-border rounded-lg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary text-foreground"
+                    >
+                      <option value="">Select from library...</option>
+                      {(INITIAL_EXERCISES as any[]).map(ex => (
+                        <option key={ex.id} value={ex.name}>{ex.name} ({ex.muscle})</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="w-16">
+                    <label className="block text-[10px] uppercase font-bold text-secondary mb-1">Sets</label>
+                    <input
+                      type="number"
+                      {...register(`workoutExercises.${index}.sets`)}
+                      className="w-full px-2 py-1.5 text-sm bg-input border border-border rounded-lg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary text-foreground"
+                    />
+                  </div>
+                  <div className="w-16">
+                    <label className="block text-[10px] uppercase font-bold text-secondary mb-1">Reps</label>
+                    <input
+                      type="number"
+                      {...register(`workoutExercises.${index}.reps`)}
+                      className="w-full px-2 py-1.5 text-sm bg-input border border-border rounded-lg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary text-foreground"
+                    />
+                  </div>
+                  <div className="flex-1 sm:w-24">
+                    <label className="block text-[10px] uppercase font-bold text-secondary mb-1">Weight</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. 60kg"
+                      {...register(`workoutExercises.${index}.weight`)}
+                      className="w-full px-2 py-1.5 text-sm bg-input border border-border rounded-lg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary text-foreground"
+                    />
+                  </div>
+                  <div className="flex-1 sm:w-24">
+                    <label className="block text-[10px] uppercase font-bold text-secondary mb-1">Rest</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. 90s"
+                      {...register(`workoutExercises.${index}.restTime`)}
+                      className="w-full px-2 py-1.5 text-sm bg-input border border-border rounded-lg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary text-foreground"
+                    />
+                  </div>
+                  <div className="flex items-end pb-0.5">
+                    <button
+                      type="button"
+                      onClick={() => removeExercise(index)}
+                      className="p-2 text-danger hover:bg-danger-bg rounded-lg transition-colors"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+              
+              {exerciseFields.length === 0 && (
+                <div className="text-center py-6 border border-dashed border-border rounded-xl text-secondary text-sm">
+                  <Dumbbell size={24} className="mx-auto mb-2 opacity-50" />
+                  No exercises added. Click "Add Exercise" to build the plan.
+                </div>
+              )}
+            </div>
           </div>
           
           <div className="pt-2 flex justify-end gap-3">

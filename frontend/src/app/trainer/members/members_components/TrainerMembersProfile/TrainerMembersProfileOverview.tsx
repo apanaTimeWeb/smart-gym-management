@@ -73,6 +73,12 @@ export default function TrainerMembersProfileOverview() {
  <Mail size={14} /> Send Feedback
  </button>
  <button 
+ onClick={() => alert('Share Progress clicked')} 
+ className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-primary bg-primary-subtle rounded-xl justify-center motion-safe:transition-colors hover:bg-primary/20" 
+ >
+ Share Progress
+ </button>
+ <button 
  onClick={() => alert('Add Note clicked')} 
  className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-secondary bg-input border border-border rounded-xl justify-center motion-safe:transition-colors hover:bg-border" 
  >

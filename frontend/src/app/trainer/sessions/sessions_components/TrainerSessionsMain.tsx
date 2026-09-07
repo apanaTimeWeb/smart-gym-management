@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Calendar as CalendarIcon, Clock, Users, User, CheckCircle, XCircle } from 'lucide-react';
+import { Calendar as CalendarIcon, Clock, Users, User, CheckCircle, XCircle, Plus, X } from 'lucide-react';
 import TrainerHeader from '@/app/trainer/trainer_components/TrainerLayout/TrainerHeader';
 
 type SessionType = 'PT' | 'Group';
@@ -30,6 +30,7 @@ const MOCK_SESSIONS: Session[] = [
 export default function TrainerSessionsMain() {
   const [filter, setFilter] = useState<'All' | 'PT' | 'Group'>('All');
   const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0]);
+  const [showScheduleModal, setShowScheduleModal] = useState(false);
 
   const filteredSessions = MOCK_SESSIONS.filter(s => filter === 'All' || s.type === filter);
 
@@ -53,14 +54,22 @@ export default function TrainerSessionsMain() {
               </button>
             ))}
           </div>
-          <div className="flex items-center gap-2">
-            <CalendarIcon size={16} className="text-secondary" />
-            <input 
-              type="date" 
-              value={date}
-              onChange={e => setDate(e.target.value)}
-              className="bg-input border border-border text-foreground text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary"
-            />
+          <div className="flex flex-wrap items-center gap-4 w-full sm:w-auto">
+            <div className="flex items-center gap-2">
+              <CalendarIcon size={16} className="text-secondary" />
+              <input 
+                type="date" 
+                value={date}
+                onChange={e => setDate(e.target.value)}
+                className="bg-input border border-border text-foreground text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+            </div>
+            <button 
+              onClick={() => setShowScheduleModal(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-semibold hover:opacity-90 motion-safe:transition-opacity ml-auto"
+            >
+              <Plus size={16} /> Schedule PT
+            </button>
           </div>
         </div>
 
@@ -124,6 +133,65 @@ export default function TrainerSessionsMain() {
           )}
         </div>
       </div>
+
+      {showScheduleModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className="bg-card w-full max-w-md rounded-2xl shadow-xl overflow-hidden motion-safe:animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between p-5 border-b border-border">
+              <h3 className="text-lg font-bold text-foreground">Schedule PT Session</h3>
+              <button 
+                onClick={() => setShowScheduleModal(false)}
+                className="text-secondary hover:text-foreground hover:bg-input p-1 rounded-lg transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <div className="p-5 space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-secondary mb-1">Select Member</label>
+                <select className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary">
+                  <option value="">-- Choose Member --</option>
+                  <option value="1">Rahul Sharma</option>
+                  <option value="2">Priya Patel</option>
+                  <option value="3">Amit Kumar</option>
+                </select>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-secondary mb-1">Date</label>
+                  <input type="date" className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary" />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-secondary mb-1">Time</label>
+                  <input type="time" className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-secondary mb-1">Duration</label>
+                <select className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary">
+                  <option value="30m">30 Minutes</option>
+                  <option value="45m">45 Minutes</option>
+                  <option value="60m">60 Minutes</option>
+                </select>
+              </div>
+              <div className="pt-4 flex justify-end gap-2 border-t border-border mt-4">
+                <button 
+                  onClick={() => setShowScheduleModal(false)}
+                  className="px-4 py-2 text-sm font-semibold text-secondary hover:text-foreground hover:bg-input rounded-lg transition-colors"
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={() => setShowScheduleModal(false)}
+                  className="px-4 py-2 text-sm font-semibold text-white bg-primary rounded-lg hover:bg-primary/90 transition-colors"
+                >
+                  Confirm Assignment
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -53,7 +53,14 @@ export const WorkoutSchema = z.object({
   endDate: z.string().optional(),
   instructions: z.string().optional(),
   assignedMemberId: z.string().optional(),
-  dayWisePlan: z.string().optional()
+  workoutExercises: z.array(z.object({
+    exerciseId: z.string().optional(),
+    name: z.string(),
+    sets: z.coerce.number().min(1),
+    reps: z.string().or(z.coerce.number().transform(v => String(v))),
+    weight: z.string().optional(),
+    restTime: z.string().optional()
+  })).optional()
 });
 export type WorkoutFormValues = z.infer<typeof WorkoutSchema>;
 
@@ -70,7 +77,7 @@ export const EMPTY_WORKOUT_FORM: WorkoutFormValues = {
   endDate: '',
   instructions: '',
   assignedMemberId: '',
-  dayWisePlan: ''
+  workoutExercises: []
 };
 
 export const ExerciseSchema = z.object({
