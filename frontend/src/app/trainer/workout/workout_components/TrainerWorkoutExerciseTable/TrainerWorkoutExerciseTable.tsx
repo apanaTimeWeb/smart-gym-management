@@ -3,20 +3,16 @@
 // RESPONSIBILITY: Renders the exercises data table with muscle group, category, and inline edit/delete actions.
 'use client';
 
-import { Edit2, Trash2 } from 'lucide-react';
 import { useWorkoutContext } from '@/app/trainer/workout/workout_context/WorkoutContext';
 import { EXERCISE_TABLE_HEADERS } from '@/app/trainer/workout/workout_utils/WorkoutSharedConstants';
-import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 
 import TrainerPagination from '@/app/trainer/trainer_components/TrainerShared/TrainerPagination';
 import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerSharedConstants';
 
 export default function TrainerWorkoutExerciseTable() {
-  const { exercises, totalExercises, search, currentPage, setCurrentPage, openEditEx, deleteEx } = useWorkoutContext();
-  const { confirm } = useConfirm();
+  const { exercises, totalExercises, currentPage, setCurrentPage, fetchState, search } = useWorkoutContext();
 
   const totalPages = Math.ceil(totalExercises / TRAINER_ITEMS_PER_PAGE) || 1;
-  const { fetchState } = useWorkoutContext();
 
   if (fetchState === 'loading') {
     return (
@@ -50,7 +46,7 @@ export default function TrainerWorkoutExerciseTable() {
           </thead>
           <tbody className="divide-y divide-border">
             {exercises.map(ex => (
-              <tr key={ex.id} className="hover:bg-accent motion-safe:transition-colors cursor-pointer" onClick={() => openEditEx(ex)}>
+              <tr key={ex.id} className="hover:bg-accent motion-safe:transition-colors">
                 <td className="px-4 py-3 text-sm font-medium text-foreground">{ex.name}</td>
                 <td className="px-4 py-3 text-sm text-secondary">
                   {Array.isArray(ex.muscleGroup) ? ex.muscleGroup.join(', ') : (ex.muscleGroup || (ex as any).muscle || 'N/A')}
@@ -70,33 +66,6 @@ export default function TrainerWorkoutExerciseTable() {
                   }`}>
                     {ex.difficulty}
                   </span>
-                </td>
-                <td className="px-4 py-3">
-                  <div className="flex items-center gap-2">
-                    <button 
-                      onClick={(e) => { e.stopPropagation(); openEditEx(ex); }} 
-                      className="text-info hover:text-info dark:hover:text-info p-1 rounded-md hover:bg-info-bg dark:hover:bg-info-bg motion-safe:transition-colors"
-                    >
-                      <Edit2 size={15} />
-                    </button>
-                    <button 
-                      onClick={async (e) => { 
-                        e.stopPropagation(); 
-                        const ok = await confirm({
-                          title: 'Delete Exercise',
-                          message: `Are you sure you want to delete exercise "${ex.name}"?`,
-                          type: 'danger',
-                          confirmText: 'Delete'
-                        });
-                        if (ok) {
-                          deleteEx(ex.id); 
-                        }
-                      }} 
-                      className="text-danger hover:text-danger dark:hover:text-danger p-1 rounded-md hover:bg-danger-bg dark:hover:bg-danger-bg motion-safe:transition-colors"
-                    >
-                      <Trash2 size={15} />
-                    </button>
-                  </div>
                 </td>
               </tr>
             ))}

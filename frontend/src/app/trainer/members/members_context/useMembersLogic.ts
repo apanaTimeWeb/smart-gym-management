@@ -26,6 +26,8 @@ export function useMembersLogic(initialData?: any | null): MembersContextType {
   const loadAll = useMembersStore((s) => s.loadAll);
   const storeSaveMember = useMembersStore((s) => s.saveMember);
   const storeDeleteMember = useMembersStore((s) => s.deleteMember);
+  const storeAssignWorkout = useMembersStore((s) => s.assignWorkout);
+  const storeAssignDiet = useMembersStore((s) => s.assignDiet);
 
   const isFirstRender = React.useRef(true);
 
@@ -60,7 +62,7 @@ export function useMembersLogic(initialData?: any | null): MembersContextType {
   const [editId, setEditId] = useState<string | null>(null);
   const [editData, setEditData] = useState<MemberFormValues | null>(null);
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
-  const [profileTab, setProfileTab] = useState<'overview' | 'attendance'>('overview');
+  const [profileTab, setProfileTab] = useState<'overview' | 'attendance' | 'progress' | 'workout' | 'diet' | 'fitness'>('overview');
   const [msgModal, setMsgModal] = useState<{ open: boolean; recipient: TrainerMessageRecipient; type: MessageType; message: string; subject?: string } | null>(null);
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
@@ -121,6 +123,30 @@ export function useMembersLogic(initialData?: any | null): MembersContextType {
     }
   }, [loadAll, showToast, selectedMember, confirm, storeDeleteMember, debouncedSearch, statusFilter, currentPage]);
 
+  const assignWorkout = useCallback(async (memberId: string, workout: any | null) => {
+    try {
+      await storeAssignWorkout(memberId, workout);
+      showToast('Workout plan assigned successfully', 'success');
+      if (selectedMember?.id === memberId) {
+        setSelectedMember(prev => prev ? { ...prev, assignedWorkoutId: workout?.id || '', assignedWorkout: workout || undefined } as Member : null);
+      }
+    } catch (err: unknown) {
+      showToast(err instanceof Error ? err.message : 'Failed to assign workout plan', 'error');
+    }
+  }, [storeAssignWorkout, showToast, selectedMember]);
+
+  const assignDiet = useCallback(async (memberId: string, diet: any | null) => {
+    try {
+      await storeAssignDiet(memberId, diet);
+      showToast('Diet plan assigned successfully', 'success');
+      if (selectedMember?.id === memberId) {
+        setSelectedMember(prev => prev ? { ...prev, assignedDietId: diet?.id || '', assignedDiet: diet || undefined } as Member : null);
+      }
+    } catch (err: unknown) {
+      showToast(err instanceof Error ? err.message : 'Failed to assign diet plan', 'error');
+    }
+  }, [storeAssignDiet, showToast, selectedMember]);
+
   const openMsg = useCallback((m: Member, type: MessageType) => {
     const tpl = m.status === 'EXPIRED'
       ? MSG_TEMPLATES.EXPIRED(m.name)
@@ -137,6 +163,7 @@ export function useMembersLogic(initialData?: any | null): MembersContextType {
     selectedMember, setSelectedMember, profileTab, setProfileTab,
     showAddModal, setShowAddModal, editId, editData,
     openAdd, openEdit, saveMember, deleteMember,
+    assignWorkout, assignDiet,
     msgModal, openMsg, closeMsg
   };
 }

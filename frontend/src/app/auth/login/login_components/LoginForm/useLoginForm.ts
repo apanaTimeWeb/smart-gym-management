@@ -14,10 +14,10 @@ import { UseLoginFormReturn, LoginFormData, FetchState, loginSchema } from '@/ap
 
 /** Known demo credentials for mock authentication. Each entry maps email→password→role. */
 const DEMO_CREDENTIALS: Record<string, { password: string; role: string }> = {
-  'demo_admin@gym.com':     { password: 'demo123', role: 'SUPERADMIN' },
-  'admin@gymsmart.com':     { password: 'demo123', role: 'ADMIN' },
-  'manager@gymsmart.com':   { password: 'demo123', role: 'MANAGER' },
-  'trainer@gymsmart.com':   { password: 'demo123', role: 'TRAINER' },
+  'demo_admin@gym.com': { password: 'demo123', role: 'SUPERADMIN' },
+  'admin@gymsmart.com': { password: 'demo123', role: 'ADMIN' },
+  'manager@gymsmart.com': { password: 'demo123', role: 'MANAGER' },
+  'trainer@gymsmart.com': { password: 'demo123', role: 'TRAINER' },
 };
 
 /**
@@ -28,7 +28,7 @@ const DEMO_CREDENTIALS: Record<string, { password: string; role: string }> = {
 export function useLoginForm(): UseLoginFormReturn {
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: 'admin@gymsmart.com', password: 'superadmin123' },
+    defaultValues: { email: 'admin@gymsmart.com', password: 'demo123' },
   });
 
   const [status, setStatus] = useState<FetchState>('idle');
@@ -51,18 +51,18 @@ export function useLoginForm(): UseLoginFormReturn {
         const cookieRes = await fetch(AuthUrlConfig.PROXY_API.SET_COOKIE, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            token: res.data.accessToken, 
-            refreshToken: res.data.refreshToken, 
-            user: res.data.user 
+          body: JSON.stringify({
+            token: res.data.accessToken,
+            refreshToken: res.data.refreshToken,
+            user: res.data.user
           }),
         });
 
         if (!cookieRes.ok) throw new Error('Session setup failed');
-        
+
         setStatus('success');
         toast.success(res.message || 'Login successful');
-        
+
         if (res.data.user?.role === 'SUPERADMIN') {
           window.location.replace(SuperadminUrlConfig.PAGES.DASHBOARD);
         } else if (res.data.user?.role === 'MANAGER') {
@@ -86,39 +86,30 @@ export function useLoginForm(): UseLoginFormReturn {
   const handleDemoSuperadminLogin = useCallback(() => {
     form.setValue('email', 'demo_admin@gym.com');
     form.setValue('password', 'demo123');
-    // We delay the submission slightly so the user sees the fields populate
-    setTimeout(() => {
-      form.handleSubmit(onSubmit)();
-    }, 300);
+    onSubmit({ email: 'demo_admin@gym.com', password: 'demo123' });
   }, [form, onSubmit]);
 
   const handleDemoAdminLogin = useCallback(() => {
     form.setValue('email', 'admin@gymsmart.com');
     form.setValue('password', 'demo123');
-    setTimeout(() => {
-      form.handleSubmit(onSubmit)();
-    }, 300);
+    onSubmit({ email: 'admin@gymsmart.com', password: 'demo123' });
   }, [form, onSubmit]);
 
   const handleDemoManagerLogin = useCallback(() => {
     form.setValue('email', 'manager@gymsmart.com');
     form.setValue('password', 'demo123');
-    setTimeout(() => {
-      form.handleSubmit(onSubmit)();
-    }, 300);
+    onSubmit({ email: 'manager@gymsmart.com', password: 'demo123' });
   }, [form, onSubmit]);
 
   const handleDemoTrainerLogin = useCallback(() => {
     form.setValue('email', 'trainer@gymsmart.com');
     form.setValue('password', 'demo123');
-    setTimeout(() => {
-      form.handleSubmit(onSubmit)();
-    }, 300);
+    onSubmit({ email: 'trainer@gymsmart.com', password: 'demo123' });
   }, [form, onSubmit]);
 
-  return { 
-    form, status, showPassword, setShowPassword, onSubmit, 
-    handleDemoSuperadminLogin, handleDemoAdminLogin, handleDemoManagerLogin, handleDemoTrainerLogin 
+  return {
+    form, status, showPassword, setShowPassword, onSubmit,
+    handleDemoSuperadminLogin, handleDemoAdminLogin, handleDemoManagerLogin, handleDemoTrainerLogin
   };
 }
 

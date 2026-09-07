@@ -25,8 +25,6 @@ export function useDashboardLogic(initialData?: DashboardStats | null): Dashboar
   };
 
   useEffect(() => {
-    
-
     setTimeout(() => {
       setStatus('loading');
       dashboardApi.getStats()
@@ -39,7 +37,7 @@ export function useDashboardLogic(initialData?: DashboardStats | null): Dashboar
           setStatus('error');
         });
     }, 0);
-  }, [initialData]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps -- runs once on mount only
 
   return {
     stats,

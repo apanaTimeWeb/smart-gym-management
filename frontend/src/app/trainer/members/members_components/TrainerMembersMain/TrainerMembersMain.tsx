@@ -13,9 +13,6 @@ import TrainerMembersToolbar from '@/app/trainer/members/members_components/Trai
 import TrainerMembersTable from '@/app/trainer/members/members_components/TrainerMembersTable/TrainerMembersTable';
 import TrainerMembersProfile from '@/app/trainer/members/members_components/TrainerMembersProfile/TrainerMembersProfile';
 import type { MembersInitialData } from '@/app/trainer/members/members_types/members_types';
-import dynamic from 'next/dynamic';
-
-const TrainerMembersModal = dynamic(() => import('@/app/trainer/members/members_components/TrainerMembersModal/TrainerMembersModal'), { ssr: false });
 
 function MembersContent() {
   const { toast, hideToast, msgModal, closeMsg, showToast, selectedMember } = useMembersContext();
@@ -38,7 +35,7 @@ function MembersContent() {
           <TrainerMembersProfile />
         )}
 
-        <TrainerMembersModal />
+        {/* Add Member modal removed — trainers are view-only, cannot create members */}
 
         {msgModal?.open && (
           <TrainerMessageModal 

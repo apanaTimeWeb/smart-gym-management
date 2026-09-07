@@ -47,7 +47,12 @@ export const WorkoutSchema = z.object({
   exercises: z.number().min(1, 'Must be a valid number > 0'),
   focus: z.string().min(2, 'Focus area is required'),
   duration: z.string().min(2, 'Duration is required'),
-  tags: z.string()
+  tags: z.string(),
+  goal: z.string().optional(),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
+  instructions: z.string().optional(),
+  assignedMemberId: z.string().optional(),
 });
 export type WorkoutFormValues = z.infer<typeof WorkoutSchema>;
 
@@ -58,14 +63,21 @@ export const EMPTY_WORKOUT_FORM: WorkoutFormValues = {
   exercises: 0 as any, 
   focus: '', 
   duration: '', 
-  tags: '' 
+  tags: '',
+  goal: '',
+  startDate: '',
+  endDate: '',
+  instructions: '',
+  assignedMemberId: ''
 };
 
 export const ExerciseSchema = z.object({
   name: z.string().min(2, 'Name is required'),
   muscle: z.string().min(2, 'Primary muscle is required'),
   equipment: z.string(),
-  difficulty: z.string()
+  difficulty: z.string(),
+  instructions: z.string().optional(),
+  videoUrl: z.string().optional()
 });
 export type ExerciseFormValues = z.infer<typeof ExerciseSchema>;
 
@@ -73,7 +85,9 @@ export const EMPTY_EXERCISE_FORM: ExerciseFormValues = {
   name: '', 
   muscle: '', 
   equipment: 'Barbell', 
-  difficulty: 'Beginner' 
+  difficulty: 'Beginner',
+  instructions: '',
+  videoUrl: ''
 };
 
 
