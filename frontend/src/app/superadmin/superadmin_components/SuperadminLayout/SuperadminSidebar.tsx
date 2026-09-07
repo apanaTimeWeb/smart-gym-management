@@ -33,6 +33,10 @@ import {
   Network,
   Store,
   History,
+  UserPlus,
+  MessageSquare,
+  FileBarChart,
+  Eye,
 } from 'lucide-react';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { logout } from '@/lib/api';
@@ -86,6 +90,20 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
       group: 'Communication',
       items: [
         { name: 'Announcements', href: SuperadminUrlConfig.PAGES.BROADCASTS, icon: Megaphone },
+        { name: 'Tenant Messaging', href: SuperadminUrlConfig.PAGES.MESSAGING, icon: MessageSquare },
+      ]
+    },
+    {
+      group: 'Tenants',
+      items: [
+        { name: 'Onboarding', href: SuperadminUrlConfig.PAGES.ONBOARDING, icon: UserPlus },
+        { name: 'Portal Preview', href: SuperadminUrlConfig.PAGES.TENANT_PREVIEW, icon: Eye },
+      ]
+    },
+    {
+      group: 'Reports',
+      items: [
+        { name: 'Reports & Exports', href: SuperadminUrlConfig.PAGES.REPORTS, icon: FileBarChart },
       ]
     },
     {

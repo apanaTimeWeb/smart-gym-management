@@ -22,6 +22,10 @@ export const SuperadminUrlConfig = {
     AUDIT_LOGS: "/superadmin/global-audit",
     PLANS: "/superadmin/plans",
     GYM_ADD: "/superadmin/gyms/add",
+    ONBOARDING: "/superadmin/onboarding",
+    MESSAGING: "/superadmin/messaging",
+    REPORTS: "/superadmin/reports",
+    TENANT_PREVIEW: "/superadmin/tenant-preview",
   },
   BACKEND_API: {
     DASHBOARD: "/superadmin/dashboard",
