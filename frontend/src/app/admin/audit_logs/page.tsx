@@ -1,15 +1,11 @@
 import type { Metadata } from 'next';
-import AdminAuditLogsMain from './audit_components/AdminAuditLogsMain';
+import AdminAuditLogsMain from '@/app/admin/audit_logs/audit_components/AdminAuditLogsMain/AdminAuditLogsMain';
 
 export const metadata: Metadata = {
   title: 'Audit Logs | Admin - GymSmart',
-  description: 'View system activity and audit trails.',
+  description: 'Monitor system activity, security events, and audit trails.',
 };
 
 export default function AdminAuditLogsPage() {
-  return (
-    <div className="min-h-full pb-10 bg-background">
-      <AdminAuditLogsMain />
-    </div>
-  );
+  return <AdminAuditLogsMain />;
 }
