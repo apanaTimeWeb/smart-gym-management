@@ -45,19 +45,19 @@ export default function TrainerAttendanceTable() {
  <tbody className="divide-y divide-border">
  {records.map(r => (
  <tr key={r.id} className="hover:bg-primary-subtle motion-safe:transition-colors">
- <td className="px-4 py-3 whitespace-nowrap">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
-                      {(r.member?.name || '?').charAt(0)}
-                    </div>
-                    <div>
-                      <div className="text-sm font-medium text-foreground">
-                        {r.member?.name || '—'}
-                      </div>
-                      <div className="text-xs text-secondary">{r.type}</div>
-                    </div>
-                  </div>
-                </td>
+  <td className="px-4 py-3 whitespace-nowrap">
+                   <div className="flex items-center gap-3">
+                     <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
+                       {(r.type === 'MEMBER' ? (r.member?.name || '?') : (r.staff?.name || '?')).charAt(0)}
+                     </div>
+                     <div>
+                       <div className="text-sm font-medium text-foreground">
+                         {r.type === 'MEMBER' ? (r.member?.name || '—') : (r.staff?.name || '—')}
+                       </div>
+                       <div className="text-xs text-secondary">{r.type}</div>
+                     </div>
+                   </div>
+                 </td>
  <td className="px-4 py-3">
  <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
  r.type === 'MEMBER' 

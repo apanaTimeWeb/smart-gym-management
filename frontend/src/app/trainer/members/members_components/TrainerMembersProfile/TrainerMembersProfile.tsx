@@ -56,12 +56,6 @@ export default function TrainerMembersProfile() {
             </div>
             <div className="flex gap-2 flex-wrap">
               <button
-                onClick={() => openEdit(selectedMember)}
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border border-border rounded-xl hover:bg-primary-subtle text-primary motion-safe:transition-all motion-safe:duration-200 active:scale-95"
-              >
-                <Edit size={14} /> Edit
-              </button>
-              <button
                 onClick={() => openMsg(selectedMember, 'whatsapp')}
                 className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-success text-white rounded-xl hover:opacity-90 motion-safe:transition-all motion-safe:duration-200 active:scale-95"
               >
