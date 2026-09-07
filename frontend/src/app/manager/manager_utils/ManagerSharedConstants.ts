@@ -2,21 +2,23 @@
 import {
   LayoutDashboard, Users, FileBarChart,
   UserCog, ShoppingBag, Utensils, Dumbbell,
-  MessageSquare, CalendarCheck, Receipt, Tags
+  MessageSquare, CalendarCheck, Receipt, Tags, Bell, BarChart3
 } from 'lucide-react';
 
 export const MANAGER_NAV_ITEMS = [
- { href: '/manager/dashboard', label: 'Dashboard', icon: LayoutDashboard },
- { href: '/manager/plans', label: 'Plans & Pricing', icon: Tags },
- { href: '/manager/members', label: 'Members', icon: Users },
- { href: '/manager/sales', label: 'Sales & Reports', icon: FileBarChart },
- { href: '/manager/attendance', label: 'Attendance', icon: CalendarCheck },
- { href: '/manager/hr', label: 'HR Management', icon: UserCog },
- { href: '/manager/store', label: 'Store', icon: ShoppingBag },
- { href: '/manager/expenses', label: 'Expenses', icon: Receipt },
- { href: '/manager/library', label: 'Diet Library', icon: Utensils },
- { href: '/manager/workout', label: 'Workout Library', icon: Dumbbell },
- { href: '/manager/inquiries', label: 'Inquiries & Leads',icon: MessageSquare }
+  { href: '/manager/dashboard',    label: 'Dashboard',        icon: LayoutDashboard },
+  { href: '/manager/plans',        label: 'Plans & Pricing',  icon: Tags            },
+  { href: '/manager/members',      label: 'Members',          icon: Users           },
+  { href: '/manager/sales',        label: 'Sales & Reports',  icon: FileBarChart    },
+  { href: '/manager/reports',      label: 'Reports',          icon: BarChart3       },
+  { href: '/manager/attendance',   label: 'Attendance',       icon: CalendarCheck   },
+  { href: '/manager/hr',           label: 'HR Management',    icon: UserCog         },
+  { href: '/manager/store',        label: 'Store',            icon: ShoppingBag     },
+  { href: '/manager/expenses',     label: 'Expenses',         icon: Receipt         },
+  { href: '/manager/library',      label: 'Diet Library',     icon: Utensils        },
+  { href: '/manager/workout',      label: 'Workout Library',  icon: Dumbbell        },
+  { href: '/manager/inquiries',    label: 'Inquiries & Leads',icon: MessageSquare   },
+  { href: '/manager/notifications',label: 'Notifications',    icon: Bell            },
 ];
 
 // TODO: Replace with real API call once Notifications backend module is built.
