@@ -1,56 +1,71 @@
-# Login Feature Map
+# Login — Feature Map
 
 ## Module Purpose
-Handles login operations, UI display, and logic isolation as part of the Smart Gym 360 platform.
+The Login page is the unified authentication entry point for all ERP roles (Manager, Trainer,
+Admin). It accepts email + password, calls the backend auth API, and on success calls the
+internal Next.js `/auth/set-cookie` route to store the JWT in an HTTP-only cookie. Role-based
+redirection happens server-side in `page.tsx` after cookie is set. This module has no sidebar,
+no header — it uses a standalone full-page layout.
 
 ## Directory Structure
-- `login_components/`: Contains all isolated micro-components for the module.
-- `login_types/` (if applicable): TypeScript definitions.
-- `login_utils/` (if applicable): Shared constants and hardcoded data.
-- `login_context/` (if applicable): Module-scoped React Context or Zustand store.
+| File/Folder | Responsibility |
+|---|---|
+| `page.tsx` | Server Component — redirects already-authenticated users |
+| `login_components/LoginForm.tsx` | Client Component — email/password form with validation |
+| `login_components/LoginHero.tsx` | Left-panel branding/illustration (static) |
+| `login_components/LoginErrorBoundary.tsx` | Catches rendering crashes in login UI |
 
 ## Feature Inventory
-| Feature | Path | Purpose | Main API Calls | Owner |
+| Feature | Path | Purpose | Main API Calls | Status |
 |---|---|---|---|---|
-| Core UI | `/login` | Main module view | TBD | Frontend Team |
+| Login Form | `/auth/login` | Authenticate user, set cookie | `POST /auth/login` → internal `/auth/set-cookie` | ✅ Live |
+| Role Redirect | `/auth/login` | Send user to correct dashboard | Server-side cookie read | ✅ Live |
+| Password Toggle | `/auth/login` | Show/hide password field | Client-side only | ✅ Live |
 
 ## Data and State Architecture
-- Server-state query keys: `['login']`
-- Zustand stores: TBD
-- Context providers: TBD
-- Local-storage keys: TBD
-- MSW handler file: TBD
+- Server-state: None — form uses local React Hook Form state
+- Zustand stores: None
+- Context providers: None
+- Local-storage keys: None — token stored in HTTP-only cookie only
+- MSW handler: N/A
 
-## API Contract
-List all endpoint builders and expected response types.
-- `fetchLogin(params)`
-- `createLogin(dto)`
-- `updateLogin(id, dto)`
-- `deleteLogin(id)`
+## User Flows
+1. Unauthenticated user visits any protected route → redirected to `/auth/login`
+2. User enters email + password → Zod validates on submit
+3. `LoginForm` calls `POST /auth/login` → on success calls `/auth/set-cookie`
+4. Cookie set → `router.push()` to role-specific dashboard (`/manager/dashboard`, `/admin/dashboard`, etc.)
+5. On error → inline form error shown from `response.message`, no hardcoded strings
+
+## Component Responsibility Map
+- `LoginForm` — owns form state (React Hook Form + Zod), handles submit, shows loading spinner on button. MUST NOT store token in localStorage.
+- `LoginHero` — pure static display. MUST NOT contain any logic.
+- `LoginErrorBoundary` — catches rendering crashes only, not API errors.
 
 ## Permissions and Security
-Document protected actions, roles, and CODEOWNERS paths.
+| Action | Required Role |
+|---|---|
+| Access login page | Public (unauthenticated) |
+
+- Tokens are NEVER stored in `localStorage` or `sessionStorage`.
+- JWT lives exclusively in `gymsmart_token` HTTP-only, Secure, SameSite=Strict cookie.
+- Already-authenticated users are redirected away from `/auth/login` by `page.tsx` server-side.
 
 ## Loading, Empty, Error States
-- **Loading:** Uses `loading.tsx` skeleton matching global design.
-- **Empty:** Follows Rule 48 (dedicated empty state component).
-- **Error:** Uses `error.tsx` typed React Error Boundary.
+- **Loading:** Submit button shows `Loader2` spinner + `disabled` state during API call
+- **Empty:** N/A
+- **Error:** Inline error message below form from `response.message`; `LoginErrorBoundary` for render crashes
 
 ## Edge Cases / AI Warnings
-- Do not bypass API interceptors.
-- Do not mix complex React logic (`useEffect`) with JSX markup.
+- **Never store token in localStorage** — this is the single most critical security rule for this module. HTTP-only cookie only.
+- **Role redirect logic** — redirection target is determined by the decoded role in the cookie, read server-side in `page.tsx`. Never hardcode redirect paths in `LoginForm`.
+- **`\"use client\"` placement** — must be the absolute first line of `LoginForm.tsx`, before any comments or imports.
 
 ## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization
-- [x] Rule 7: Type isolation
-- [x] Rule 8: Server/client boundary
-- [x] Rule 9: Loading/error/not-found handling
-- [x] Rule 14: Backend-driven messages
-- [x] Rule 15A: Tests present
-- [x] Rule 15B: Forms use React Hook Form + Zod
-- [x] Rule 15C: State placed per Server/Client decision matrix
-- [x] Rule 15D: Env vars validated centrally, none exposed unsafely
-- [x] Rule 15E: Error monitoring wired for critical flows
-- [x] Rule 74: Security scan gates passed (SCA + secrets)
-- [x] Rule 76: CODEOWNERS covers security-critical paths
-- [x] Rule 79: MSW handler present where needed
+- [x] Rule 2: Total Role Isolation — auth module is standalone, no cross-role imports
+- [x] Rule 6: Logic/UI Separation — submit logic in `LoginForm`, hero is pure display
+- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server redirect, `LoginForm` = Client
+- [x] Rule 13: Feature Map — this document, updated same commit as code changes
+- [x] Rule 14: Backend-driven messages — error shown from `response.message`
+- [x] Rule 16: Form uses React Hook Form + Zod
+- [x] Rule 23: Password visibility toggle implemented
+- [x] Rule 26: Loading button state on submit

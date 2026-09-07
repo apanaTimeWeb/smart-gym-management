@@ -1,46 +1,76 @@
-# Reports Feature Map
+# Manager Reports — Feature Map
 
 ## Module Purpose
-Provides the Manager with exportable analytics across Revenue, Attendance, Member Churn, and Expense Breakdown. Uses ApexCharts for visualizations and supports CSV export per tab.
+The Manager Reports module provides comprehensive analytics and exportable reports for the
+branch: revenue reports, attendance reports, membership churn, and expense summaries. All
+reports are filterable by date range. CSV export is available for each report type. This
+module is read-only — no mutations originate here.
 
 ## Directory Structure
-| Folder | Responsibility |
+| File/Folder | Responsibility |
 |---|---|
-| `reports_components/ManagerReportsMain/` | Orchestrator — toolbar, tab switcher, wires KPIs + Charts + Table |
-| `reports_components/ManagerReportsKPIs/` | 8-card KPI row (revenue, expenses, members, attendance, churn) |
-| `reports_components/ManagerReportsCharts/` | ApexCharts per tab (bar, area, line, donut) |
-| `reports_components/ManagerReportsTable/` | Tabular data view for each report tab |
-| `reports_context/` | React Context bridging Zustand store with UI state (tab, date range) |
-| `reports_store/` | Zustand store — owns async fetch + CSV export |
-| `reports_api/` | API calls (mock until backend ready) |
-| `reports_types/` | All TypeScript types |
-| `reports_utils/` | Mock data, style maps, filter options |
+| `page.tsx` | Server Component — auth guard |
+| `loading.tsx` | Skeleton for report tabs + charts |
+| `error.tsx` | Error boundary |
+| `reports_components/ManagerReportsMain.tsx` | Root Client Component, tab switcher |
+| `reports_components/ManagerReportsRevenue.tsx` | Revenue report tab — chart + table |
+| `reports_components/ManagerReportsAttendance.tsx` | Attendance report tab — trend chart |
+| `reports_components/ManagerReportsChurn.tsx` | Membership churn report tab |
+| `reports_components/ManagerReportsExpenses.tsx` | Expense breakdown report tab |
+| `reports_components/ManagerReportsFilters.tsx` | Shared date range filter |
+| `reports_context/ReportsProvider.tsx` | Fetch state per active tab |
+| `reports_types/ManagerReportsTypes.ts` | `RevenueReport`, `AttendanceReport`, etc. types |
+| `reports_api/ManagerReportsApi.ts` | API wrappers |
+| `reports_utils/ManagerReportsUrlConfig.ts` | Centralized URL constants |
 
 ## Feature Inventory
 | Feature | Path | Purpose | Main API Calls | Status |
 |---|---|---|---|---|
-| Reports Dashboard | `/manager/reports` | KPIs + Charts + Table | `GET /manager/reports/summary` | ✅ Live (mock) |
-| CSV Export | `/manager/reports` | Download per-tab CSV | `GET /manager/reports/export` | ✅ Live (mock) |
+| Revenue Report | `/manager/reports` | Monthly revenue breakdown + chart | `GET /manager/reports/revenue` | ✅ Live (mock) |
+| Attendance Report | `/manager/reports` | Daily attendance trend | `GET /manager/reports/attendance` | ✅ Live (mock) |
+| Churn Report | `/manager/reports` | Membership expiry + cancellations | `GET /manager/reports/churn` | ✅ Live (mock) |
+| Expense Report | `/manager/reports` | Expense category breakdown | `GET /manager/reports/expenses` | ✅ Live (mock) |
+| CSV Export | `/manager/reports` | Download report as CSV | `GET /manager/reports/:type/export` | ✅ Live (mock) |
 
 ## Data and State Architecture
-- Zustand store: `useManagerReportsStore` — owns `summary`, `fetchState`, `exporting`
-- Context: `ReportsProvider` — owns `tab`, `dateRange`, `handleExportCSV`, `reload`
-- Local state: none
+- Server-state: `ReportsProvider` — active tab data, date filters
+- Zustand stores: None — read-only module
+- Context providers: `ReportsProvider`
+- Local-storage keys: None
+- MSW handler: Not yet configured
 
-## API Contract
-- `reportsApi.fetchSummary(params)` → `ReportSummary`
-- `reportsApi.exportReportCSV(tab, params)` → `Blob`
+## User Flows
+1. Manager opens `/manager/reports` → Revenue tab loads by default
+2. Manager switches tab → `ReportsProvider` fetches data for that report type
+3. Manager adjusts date range filter → active tab re-fetches
+4. Manager clicks "Export CSV" → `GET /export` → browser download triggered
+
+## Component Responsibility Map
+- `ManagerReportsMain` — tab switcher + provider. MUST NOT contain chart logic.
+- Each report tab component — owns its chart + table display. Receives data from context.
+- `ManagerReportsFilters` — shared date range filter, dispatches to context.
+- All charts — wrap `react-apexcharts`. MUST NOT use Recharts or Chart.js.
+
+## Permissions and Security
+| Action | Required Role |
+|---|---|
+| View reports | `MANAGER` |
+| Export CSV | `MANAGER` |
 
 ## Loading, Empty, Error States
-- Loading: `loading.tsx` structural skeleton
-- Error: `error.tsx` with retry button
-- Empty: inline "no data" handled per chart/table
+- **Loading:** `loading.tsx` — tab skeleton + chart placeholder + table skeleton
+- **Empty:** "No data for this period" with date range adjustment suggestion
+- **Error:** `error.tsx` with retry
+
+## Edge Cases / AI Warnings
+- **ApexCharts only** — never use Recharts or Chart.js in any report chart.
+- **CSV export** — triggers a browser file download, not a navigation. Use `window.open()` or `<a download>` pattern, not `router.push()`.
+- **No mutations** — this is a strictly read-only module.
 
 ## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization
-- [x] Rule 7: Type isolation
-- [x] Rule 8: Server/client boundary
-- [x] Rule 9: Loading/error handling
-- [x] Rule 14: Backend-driven messages
-- [x] Rule 15C: State per decision matrix (Zustand for server state)
-- [x] Design §10: ApexCharts only (no Recharts/Chart.js)
+- [x] Rule 1: Micro-modularization — module-prefixed files
+- [x] Rule 6: Logic/UI Separation — fetch in context, display in tab components
+- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server
+- [x] Rule 9: `loading.tsx` + `error.tsx` present
+- [x] Rule 13: Feature Map — this document, updated same commit as code changes
+- [x] Design §10: ApexCharts with correct color tokens

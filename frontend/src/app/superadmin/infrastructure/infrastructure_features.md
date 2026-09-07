@@ -1,56 +1,85 @@
-# Infrastructure Feature Map
+# Superadmin Infrastructure — Feature Map
 
 ## Module Purpose
-Handles infrastructure operations, UI display, and logic isolation as part of the Smart Gym 360 platform.
+The Superadmin Infrastructure module provides visibility into the platform's technical
+health — server status, database connection pools, queue depths, cache hit rates, and
+active worker counts. Superadmins use this module to monitor system performance, identify
+bottlenecks, and trigger manual interventions (cache flush, queue drain). This is an
+operations-focused module; it does not expose tenant business data.
 
 ## Directory Structure
-- `infrastructure_components/`: Contains all isolated micro-components for the module.
-- `infrastructure_types/` (if applicable): TypeScript definitions.
-- `infrastructure_utils/` (if applicable): Shared constants and hardcoded data.
-- `infrastructure_context/` (if applicable): Module-scoped React Context or Zustand store.
+| File | Responsibility |
+|---|---|
+| `page.tsx` | Server Component — auth guard |
+| `loading.tsx` | Status card grid skeleton |
+| `error.tsx` | Error boundary with retry |
+| `infrastructure_components/SuperadminInfrastructureClient.tsx` | Root Client Component — status grid + actions |
+| `infrastructure_components/SuperadminInfrastructureStatusGrid.tsx` | Grid of service health cards |
+| `infrastructure_components/SuperadminInfrastructureServiceCard.tsx` | Single service card — name, status, latency, uptime |
+| `infrastructure_components/SuperadminInfrastructureMetricsPanel.tsx` | DB pool, queue depth, cache hit rate metrics |
+| `infrastructure_components/SuperadminInfrastructureActionsPanel.tsx` | Manual actions — flush cache, drain queue |
+| `infrastructure_components/SuperadminInfrastructureAlertsBanner.tsx` | Active infrastructure alerts banner |
+| `infrastructure_types/SuperadminInfrastructureTypes.ts` | `ServiceStatus`, `InfraMetrics`, `ServiceHealth`, `InfraAction` |
+| `infrastructure_utils/SuperadminInfrastructureConstants.ts` | `SERVICE_STATUS_STYLES`, `HEALTH_THRESHOLD` |
 
 ## Feature Inventory
-| Feature | Path | Purpose | Main API Calls | Owner |
+| Feature | Path | Purpose | Main API Calls | Status |
 |---|---|---|---|---|
-| Core UI | `/infrastructure` | Main module view | TBD | Frontend Team |
+| Service Health Grid | `/superadmin/infrastructure` | All service statuses | `GET /superadmin/infrastructure/health` | ✅ Live |
+| Infrastructure Metrics | `/superadmin/infrastructure` | DB pool, queue, cache metrics | `GET /superadmin/infrastructure/metrics` | ✅ Live |
+| Active Alerts | `/superadmin/infrastructure` | Current infrastructure alerts | `GET /superadmin/infrastructure/alerts` | ✅ Live |
+| Flush Cache | `/superadmin/infrastructure` | Manually flush Redis cache | `POST /superadmin/infrastructure/cache/flush` | ✅ Live |
+| Drain Queue | `/superadmin/infrastructure` | Manually drain job queue | `POST /superadmin/infrastructure/queue/drain` | ✅ Live |
 
 ## Data and State Architecture
-- Server-state query keys: `['infrastructure']`
-- Zustand stores: TBD
-- Context providers: TBD
-- Local-storage keys: TBD
-- MSW handler file: TBD
+- TanStack Query keys: `['superadmin', 'infrastructure', 'health']`, `['superadmin', 'infrastructure', 'metrics']`, `['superadmin', 'infrastructure', 'alerts']`
+- Query refetch interval: 30 seconds for health + metrics (live monitoring)
+- Mutations: `useFlushCache`, `useDrainQueue`
+- Zustand stores: None
+- Context providers: None
 
-## API Contract
-List all endpoint builders and expected response types.
-- `fetchInfrastructure(params)`
-- `createInfrastructure(dto)`
-- `updateInfrastructure(id, dto)`
-- `deleteInfrastructure(id)`
+## User Flows
+1. Superadmin opens `/superadmin/infrastructure` → health, metrics, and alerts queries fire in parallel
+2. Queries auto-refetch every 30 seconds — live monitoring without manual refresh
+3. Superadmin clicks "Flush Cache" → `useConfirm()` with warning → `POST /cache/flush`
+4. Superadmin clicks "Drain Queue" → `useConfirm()` with warning about job loss → `POST /queue/drain`
+
+## Component Responsibility Map
+- `SuperadminInfrastructureClient` — layout orchestrator. MUST NOT contain metric logic.
+- `SuperadminInfrastructureServiceCard` — display only. Status color from `SERVICE_STATUS_STYLES`.
+- `SuperadminInfrastructureActionsPanel` — action buttons only. MUST use `useConfirm()` before any mutation.
+- `SuperadminInfrastructureMetricsPanel` — metrics display only. MUST NOT contain action logic.
 
 ## Permissions and Security
-Document protected actions, roles, and CODEOWNERS paths.
+| Action | Required Role |
+|---|---|
+| View infrastructure health | `SUPERADMIN` |
+| View metrics | `SUPERADMIN` |
+| Flush cache | `SUPERADMIN` |
+| Drain queue | `SUPERADMIN` |
+| ❌ Modify server configuration | DevOps only — not from UI |
 
 ## Loading, Empty, Error States
-- **Loading:** Uses `loading.tsx` skeleton matching global design.
-- **Empty:** Follows Rule 48 (dedicated empty state component).
-- **Error:** Uses `error.tsx` typed React Error Boundary.
+- **Loading:** `loading.tsx` — service card grid skeleton + metrics panel placeholder
+- **Empty alerts:** "No active infrastructure alerts" with green checkmark
+- **Error:** `error.tsx` with retry; individual service card shows "Unknown" status on query error
 
 ## Edge Cases / AI Warnings
-- Do not bypass API interceptors.
-- Do not mix complex React logic (`useEffect`) with JSX markup.
+- **Auto-refetch** — health + metrics queries MUST use `refetchInterval: 30000`. Never use `setInterval` in a component.
+- **Flush cache warning** — cache flush affects ALL tenants simultaneously; confirmation must state this explicitly.
+- **Drain queue warning** — draining the queue may cause in-flight jobs to fail; confirmation must warn about data loss risk.
+- **SERVICE_STATUS_STYLES** — maps `UP | DEGRADED | DOWN | UNKNOWN` to color classes; must live in constants.
+- **HEALTH_THRESHOLD** — named constants for degraded/down thresholds (e.g. latency > 500ms = DEGRADED); never inline numbers.
 
 ## Rule Compliance Checklist
 - [x] Rule 1: Micro-modularization
-- [x] Rule 7: Type isolation
-- [x] Rule 8: Server/client boundary
-- [x] Rule 9: Loading/error/not-found handling
-- [x] Rule 14: Backend-driven messages
-- [x] Rule 15A: Tests present
-- [x] Rule 15B: Forms use React Hook Form + Zod
-- [x] Rule 15C: State placed per Server/Client decision matrix
-- [x] Rule 15D: Env vars validated centrally, none exposed unsafely
-- [x] Rule 15E: Error monitoring wired for critical flows
-- [x] Rule 74: Security scan gates passed (SCA + secrets)
-- [x] Rule 76: CODEOWNERS covers security-critical paths
-- [x] Rule 79: MSW handler present where needed
+- [x] Rule 3: Module prefix naming — `SuperadminInfrastructure*`
+- [x] Rule 7: Type isolation — all types in `SuperadminInfrastructureTypes.ts`
+- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component
+- [x] Rule 9: `loading.tsx` + `error.tsx` present
+- [x] Rule 13: Feature Map — this document
+- [x] Rule 26: Cache flush + queue drain use `useConfirm()`
+- [x] Rule 40: `_forbidden.md` present
+- [x] Rule 55: No `key={index}` — stable service name keys used
+- [x] Rule 63: Zero cross-module imports
+- [x] Rule 73: `import type` for all type-only imports

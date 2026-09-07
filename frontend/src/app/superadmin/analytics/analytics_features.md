@@ -1,56 +1,84 @@
-# Analytics Feature Map
+# Superadmin Analytics — Feature Map
 
 ## Module Purpose
-Handles analytics operations, UI display, and logic isolation as part of the Smart Gym 360 platform.
+The Superadmin Analytics module provides deep cross-tenant business intelligence for the
+SaaS platform. It covers growth metrics (new gym signups over time), revenue breakdown by
+plan tier, feature adoption rates across tenants, and geographic distribution of gyms.
+This is a read-only, chart-heavy module — all data is fetched via TanStack Query and
+rendered exclusively with ApexCharts. No mutations occur here.
 
 ## Directory Structure
-- `analytics_components/`: Contains all isolated micro-components for the module.
-- `analytics_types/` (if applicable): TypeScript definitions.
-- `analytics_utils/` (if applicable): Shared constants and hardcoded data.
-- `analytics_context/` (if applicable): Module-scoped React Context or Zustand store.
+| File | Responsibility |
+|---|---|
+| `page.tsx` | Server Component — auth guard |
+| `loading.tsx` | Tab skeleton + chart area placeholders |
+| `error.tsx` | Error boundary with retry |
+| `analytics_components/SuperadminAnalyticsClient.tsx` | Root Client Component — tab navigation + layout |
+| `analytics_components/SuperadminAnalyticsGrowthTab.tsx` | Gym signup trend — ApexCharts line chart |
+| `analytics_components/SuperadminAnalyticsRevenueTab.tsx` | Revenue by plan tier — ApexCharts bar chart |
+| `analytics_components/SuperadminAnalyticsAdoptionTab.tsx` | Feature adoption rates — ApexCharts horizontal bar |
+| `analytics_components/SuperadminAnalyticsGeoTab.tsx` | Geographic distribution table + summary |
+| `analytics_components/SuperadminAnalyticsKpiRow.tsx` | Top-level KPI summary row (total signups, avg MRR, top region) |
+| `analytics_components/SuperadminAnalyticsDateFilter.tsx` | Date range picker — from/to query params |
+| `analytics_types/SuperadminAnalyticsTypes.ts` | `GrowthDataPoint`, `RevenueTierRow`, `AdoptionRate`, `GeoRow`, `AnalyticsTab` |
+| `analytics_utils/SuperadminAnalyticsConstants.ts` | `ANALYTICS_TABS`, `CHART_COLORS`, `KPI_CARD_GRADIENT` |
 
 ## Feature Inventory
-| Feature | Path | Purpose | Main API Calls | Owner |
+| Feature | Path | Purpose | Main API Calls | Status |
 |---|---|---|---|---|
-| Core UI | `/analytics` | Main module view | TBD | Frontend Team |
+| Growth Chart | `/superadmin/analytics` | New gym signups per month | `GET /superadmin/analytics/growth?from=&to=` | ✅ Live |
+| Revenue by Tier | `/superadmin/analytics` | MRR breakdown by plan tier | `GET /superadmin/analytics/revenue-by-tier?from=&to=` | ✅ Live |
+| Feature Adoption | `/superadmin/analytics` | % of tenants using each feature | `GET /superadmin/analytics/adoption` | ✅ Live |
+| Geographic Distribution | `/superadmin/analytics` | Gym count by city/region | `GET /superadmin/analytics/geo` | ✅ Live |
+| Date Range Filter | `/superadmin/analytics` | Filters growth + revenue queries | — (query params) | ✅ Live |
 
 ## Data and State Architecture
-- Server-state query keys: `['analytics']`
-- Zustand stores: TBD
-- Context providers: TBD
-- Local-storage keys: TBD
-- MSW handler file: TBD
+- TanStack Query keys: `['superadmin', 'analytics', 'growth', { from, to }]`, `['superadmin', 'analytics', 'revenue-tier', { from, to }]`, `['superadmin', 'analytics', 'adoption']`, `['superadmin', 'analytics', 'geo']`
+- Zustand stores: None
+- Context providers: None
+- Local-state: `activeTab` (useState), `dateRange` (useState) — local to `SuperadminAnalyticsClient`
 
-## API Contract
-List all endpoint builders and expected response types.
-- `fetchAnalytics(params)`
-- `createAnalytics(dto)`
-- `updateAnalytics(id, dto)`
-- `deleteAnalytics(id)`
+## User Flows
+1. Superadmin opens `/superadmin/analytics` → default tab "Growth" loads → `growth` query fires
+2. Superadmin changes date range → `from`/`to` state updates → growth + revenue queries refetch with new params
+3. Superadmin switches to "Revenue" tab → revenue-by-tier query fires (if not cached)
+4. Superadmin switches to "Adoption" tab → adoption query fires (no date filter — all-time)
+5. Superadmin switches to "Geo" tab → geo query fires (no date filter)
+
+## Component Responsibility Map
+- `SuperadminAnalyticsClient` — tab state + date range state. MUST NOT contain chart logic.
+- `SuperadminAnalyticsGrowthTab` — chart only. MUST use `dynamic()` with `ssr: false`.
+- `SuperadminAnalyticsDateFilter` — emits date range to parent via callback. MUST NOT fetch data.
+- All chart components — MUST use ApexCharts only. Recharts and Chart.js are forbidden (Rule 62).
 
 ## Permissions and Security
-Document protected actions, roles, and CODEOWNERS paths.
+| Action | Required Role |
+|---|---|
+| View all analytics | `SUPERADMIN` |
+| ❌ Any mutation | Forbidden — analytics is read-only |
 
 ## Loading, Empty, Error States
-- **Loading:** Uses `loading.tsx` skeleton matching global design.
-- **Empty:** Follows Rule 48 (dedicated empty state component).
-- **Error:** Uses `error.tsx` typed React Error Boundary.
+- **Loading:** `loading.tsx` — KPI row skeleton + tab bar + chart area placeholder (300px height)
+- **Empty:** "No data available for selected date range" with date reset CTA
+- **Error:** `error.tsx` with retry; per-tab inline error if individual query fails
 
 ## Edge Cases / AI Warnings
-- Do not bypass API interceptors.
-- Do not mix complex React logic (`useEffect`) with JSX markup.
+- **Chart SSR** — all chart tab components MUST use `dynamic(() => import(...), { ssr: false })`.
+- **Date range validation** — `from` must be before `to`; validate client-side before firing query.
+- **Adoption tab** — no date filter; do not pass `from`/`to` to adoption query even if date state is set.
+- **CHART_COLORS** — must live in `SuperadminAnalyticsConstants.ts`, never inlined in chart options.
+- **Tab state** — local `useState`, not URL params (analytics tabs are ephemeral session state).
 
 ## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization
-- [x] Rule 7: Type isolation
-- [x] Rule 8: Server/client boundary
-- [x] Rule 9: Loading/error/not-found handling
-- [x] Rule 14: Backend-driven messages
-- [x] Rule 15A: Tests present
-- [x] Rule 15B: Forms use React Hook Form + Zod
-- [x] Rule 15C: State placed per Server/Client decision matrix
-- [x] Rule 15D: Env vars validated centrally, none exposed unsafely
-- [x] Rule 15E: Error monitoring wired for critical flows
-- [x] Rule 74: Security scan gates passed (SCA + secrets)
-- [x] Rule 76: CODEOWNERS covers security-critical paths
-- [x] Rule 79: MSW handler present where needed
+- [x] Rule 1: Micro-modularization — each tab is its own component
+- [x] Rule 3: Module prefix naming — `SuperadminAnalytics*` on all components
+- [x] Rule 7: Type isolation — all types in `SuperadminAnalyticsTypes.ts`
+- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component
+- [x] Rule 9: `loading.tsx` + `error.tsx` present
+- [x] Rule 13: Feature Map — this document
+- [x] Rule 40: `_forbidden.md` present
+- [x] Rule 55: No `key={index}` — stable IDs used
+- [x] Rule 62: ApexCharts only
+- [x] Rule 63: Zero cross-module imports
+- [x] Rule 73: `import type` for all type-only imports
+- [x] Design §10: All charts loaded with `dynamic()` + `ssr: false`

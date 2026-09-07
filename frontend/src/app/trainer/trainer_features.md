@@ -89,20 +89,29 @@ All API calls go through the centralized `apiFetch` wrapper at `@/lib/api`.
 
 ## Rule Compliance Checklist
 
-- [x] Rule 1: Micro-modularization — module-prefixed subfolders
+- [x] Rule 1: Micro-modularization — module-prefixed subfolders, file size ceilings
 - [x] Rule 2: Total Role Isolation — zero cross-role imports
 - [x] Rule 3: Hyper-descriptive naming — `Trainer` prefix on all files
-- [x] Rule 4: Theme Independence — Tailwind tokens via `globals.css`
-- [x] Rule 5: Smart State Management — Context for stable cross-tree
+- [x] Rule 3B: Centralized data — status maps in `statusBadgeConfig.ts`, URLs in `trainer_url_config.ts`
+- [x] Rule 4: Theme Independence — Tailwind tokens via `globals.css`, no hardcoded hex
+- [x] Rule 5: Smart State Management — Context for stable cross-tree, Zustand for UI state
+- [x] Rule 6: Logic/UI Separation — custom hooks extract all useEffect/logic
 - [x] Rule 7: Type Isolation — `*_types/` folders, no inline interfaces
 - [x] Rule 8: Server/Client Boundary — `page.tsx` = Server, `*Main.tsx` = Client
 - [x] Rule 9: Loading/error/not-found — `loading.tsx` + `error.tsx` in every module
-- [x] Rule 13: Feature Map — this document
-- [x] Rule 19: Clickable table rows — all tables use `cursor-pointer` row clicks
-- [x] Rule 44: No console.log — removed from all production SSR files
+- [x] Rule 10: Absolute imports — `@/app/trainer/...` throughout
+- [x] Rule 11: Centralized URL Config — `trainer_url_config.ts` per module
+- [x] Rule 13: Feature Map — this document, updated same commit as code changes
+- [x] Rule 14: Backend-driven messages — toasts display backend `message` strings
+- [x] Rule 19: Clickable table rows — all tables use `cursor-pointer`, no View/Eye button
+- [x] Rule 26: Loading button states — `Loader2` spinners on all async actions
+- [x] Rule 32: No barrel files — direct named imports only
+- [x] Rule 40: `_forbidden.md` present with 5+ specific entries
+- [x] Rule 43: Sensitive data masked — phone numbers use `maskSensitiveData()` from `@/lib/formatters`
+- [x] Rule 44: No console.log — removed from all production files
 - [x] Rule 71: Double verification — destructive actions use `useConfirm()` modal
-- [x] Rule 73: import type — used for type-only imports throughout
+- [x] Rule 73: `import type` — used for all type-only imports
 - [x] Design §3: Sidebar active = subtle gold border + bg (NOT solid primary)
 - [x] Design §12: Z-index scale — header z-20, dropdowns z-30, modals z-40, toasts z-50
 - [x] Design §28: Surface elevation — `bg-popover` for dropdowns, `bg-overlay` for modals
-- [x] Design §29: motion-safe guards on all transitions and animations
+- [x] Design §29: `motion-safe:` guards on all transitions and animations

@@ -1,56 +1,74 @@
-# Sales Feature Map
+# Manager Sales — Feature Map
 
 ## Module Purpose
-Handles sales operations, UI display, and logic isolation as part of the Smart Gym 360 platform.
+The Manager Sales module provides branch-level membership sales analytics across four tabs:
+Revenue Overview, Membership Report, Pending Payments, and All Memberships. It is read-only
+analytics — no payment collection happens here. All monetary values arrive as paise integers
+and are formatted via `formatters.ts`.
 
 ## Directory Structure
-- `sales_components/`: Contains all isolated micro-components for the module.
-- `sales_types/` (if applicable): TypeScript definitions.
-- `sales_utils/` (if applicable): Shared constants and hardcoded data.
-- `sales_context/` (if applicable): Module-scoped React Context or Zustand store.
+| File/Folder | Responsibility |
+|---|---|
+| `page.tsx` | Server Component — auth guard |
+| `loading.tsx` | Skeleton for KPI cards + tabs |
+| `error.tsx` | Error boundary |
+| `sales_components/ManagerSalesMain.tsx` | Root Client Component, tab switcher |
+| `sales_components/ManagerSalesRevenueTab.tsx` | Revenue KPIs + trend chart |
+| `sales_components/ManagerSalesMembershipTab.tsx` | Membership breakdown table |
+| `sales_components/ManagerSalesPendingTab.tsx` | Pending payments list |
+| `sales_components/ManagerSalesAllTab.tsx` | All memberships paginated table |
+| `sales_components/ManagerSalesEmptyState.tsx` | Empty state component |
+| `sales_context/SalesProvider.tsx` | Fetch state per active tab |
+| `sales_types/ManagerSalesTypes.ts` | `SalesStat`, `MembershipRecord` types |
+| `sales_api/ManagerSalesApi.ts` | API wrappers |
+| `sales_utils/ManagerSalesUrlConfig.ts` | Centralized URL constants |
 
 ## Feature Inventory
-| Feature | Path | Purpose | Main API Calls | Owner |
+| Feature | Path | Purpose | Main API Calls | Status |
 |---|---|---|---|---|
-| Core UI | `/sales` | Main module view | TBD | Frontend Team |
+| Revenue Overview | `/manager/sales` | KPI cards + revenue chart | `GET /manager/sales/revenue` | ✅ Live |
+| Membership Report | `/manager/sales` | Plan-wise breakdown | `GET /manager/sales/memberships` | ✅ Live |
+| Pending Payments | `/manager/sales` | Overdue payment list | `GET /manager/sales/pending` | ✅ Live |
+| All Memberships | `/manager/sales` | Full paginated membership list | `GET /manager/sales/all` | ✅ Live |
 
 ## Data and State Architecture
-- Server-state query keys: `['sales']`
-- Zustand stores: TBD
-- Context providers: TBD
-- Local-storage keys: TBD
-- MSW handler file: TBD
+- Server-state: `SalesProvider` — active tab data, filters
+- Zustand stores: None — read-only module
+- Context providers: `SalesProvider`
+- Local-storage keys: None
+- MSW handler: Not yet configured
 
-## API Contract
-List all endpoint builders and expected response types.
-- `fetchSales(params)`
-- `createSales(dto)`
-- `updateSales(id, dto)`
-- `deleteSales(id)`
+## User Flows
+1. Manager opens `/manager/sales` → Revenue tab loads by default with KPIs + chart
+2. Manager switches tab → `SalesProvider` fetches data for that tab
+3. Manager clicks a pending payment row → navigates to member profile in Members module
+
+## Component Responsibility Map
+- `ManagerSalesMain` — tab switcher + provider. MUST NOT contain chart logic.
+- `ManagerSalesRevenueTab` — wraps `react-apexcharts`. MUST NOT use Recharts.
+- `ManagerSalesPendingTab` — read-only list. Row click navigates to Members module.
+- `ManagerSalesEmptyState` — reusable empty state, receives entity name as prop.
 
 ## Permissions and Security
-Document protected actions, roles, and CODEOWNERS paths.
+| Action | Required Role |
+|---|---|
+| View sales analytics | `MANAGER` |
 
 ## Loading, Empty, Error States
-- **Loading:** Uses `loading.tsx` skeleton matching global design.
-- **Empty:** Follows Rule 48 (dedicated empty state component).
-- **Error:** Uses `error.tsx` typed React Error Boundary.
+- **Loading:** `loading.tsx` — 3 KPI shimmer cards + chart placeholder + table skeleton
+- **Empty:** `ManagerSalesEmptyState` — "No sales data for this period"
+- **Error:** `error.tsx` with retry
 
 ## Edge Cases / AI Warnings
-- Do not bypass API interceptors.
-- Do not mix complex React logic (`useEffect`) with JSX markup.
+- **No mutations** — this is a read-only analytics module.
+- **ApexCharts only** — never use Recharts or Chart.js.
+- **Currency formatting** — all amounts arrive as paise integers. Always use `formatCurrency()` from `@/lib/formatters`.
 
 ## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization
-- [x] Rule 7: Type isolation
-- [x] Rule 8: Server/client boundary
-- [x] Rule 9: Loading/error/not-found handling
-- [x] Rule 14: Backend-driven messages
-- [x] Rule 15A: Tests present
-- [x] Rule 15B: Forms use React Hook Form + Zod
-- [x] Rule 15C: State placed per Server/Client decision matrix
-- [x] Rule 15D: Env vars validated centrally, none exposed unsafely
-- [x] Rule 15E: Error monitoring wired for critical flows
-- [x] Rule 74: Security scan gates passed (SCA + secrets)
-- [x] Rule 76: CODEOWNERS covers security-critical paths
-- [x] Rule 79: MSW handler present where needed
+- [x] Rule 1: Micro-modularization — module-prefixed files
+- [x] Rule 6: Logic/UI Separation — fetch in context, display in tab components
+- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server
+- [x] Rule 9: `loading.tsx` + `error.tsx` present
+- [x] Rule 13: Feature Map — this document, updated same commit as code changes
+- [x] Rule 21: Currency formatted via `formatters.ts`
+- [x] Design §10: ApexCharts with correct color tokens

@@ -1,56 +1,73 @@
-# Finance Feature Map
+# Manager Finance — Feature Map
 
 ## Module Purpose
-Handles finance operations, UI display, and logic isolation as part of the Smart Gym 360 platform.
+The Manager Finance module is the branch-level payments ledger. It displays all payment
+transactions for the branch with summary KPIs (total collected, pending, refunds) and a
+revenue vs expense chart. This is a read-only analytics view — payment collection happens
+inside the Members module. All monetary values arrive as paise integers and are formatted
+via `formatters.ts`.
 
 ## Directory Structure
-- `finance_components/`: Contains all isolated micro-components for the module.
-- `finance_types/` (if applicable): TypeScript definitions.
-- `finance_utils/` (if applicable): Shared constants and hardcoded data.
-- `finance_context/` (if applicable): Module-scoped React Context or Zustand store.
+| File/Folder | Responsibility |
+|---|---|
+| `page.tsx` | Server Component — auth guard |
+| `loading.tsx` | Skeleton for KPI cards + table |
+| `error.tsx` | Error boundary |
+| `finance_components/ManagerFinanceMain.tsx` | Root Client Component |
+| `finance_components/ManagerFinanceKpiCards.tsx` | Total collected, pending, refunds KPIs |
+| `finance_components/ManagerFinanceRevenueChart.tsx` | Revenue vs expense bar chart (ApexCharts) |
+| `finance_components/ManagerFinanceTable.tsx` | Paginated, filterable transactions table |
+| `finance_components/ManagerFinanceFilters.tsx` | Date range + payment mode filters |
+| `finance_types/ManagerFinanceTypes.ts` | `Transaction`, `FinanceStat` types |
+| `finance_api/ManagerFinanceApi.ts` | API wrappers |
+| `finance_utils/ManagerFinanceUrlConfig.ts` | Centralized URL constants |
 
 ## Feature Inventory
-| Feature | Path | Purpose | Main API Calls | Owner |
+| Feature | Path | Purpose | Main API Calls | Status |
 |---|---|---|---|---|
-| Core UI | `/finance` | Main module view | TBD | Frontend Team |
+| Finance KPIs | `/manager/finance` | Summary stats | `GET /manager/finance/stats` | ✅ Live |
+| Revenue Chart | `/manager/finance` | Revenue vs expense trend | `GET /manager/finance/chart` | ✅ Live |
+| Transactions Table | `/manager/finance` | Paginated payment history | `GET /manager/finance/transactions` | ✅ Live |
 
 ## Data and State Architecture
-- Server-state query keys: `['finance']`
-- Zustand stores: TBD
-- Context providers: TBD
-- Local-storage keys: TBD
-- MSW handler file: TBD
+- Server-state: `ManagerFinanceContext` — stats, chart data, transactions, filters
+- Zustand stores: None — read-only module
+- Context providers: `ManagerFinanceProvider`
+- Local-storage keys: None
+- MSW handler: Not yet configured
 
-## API Contract
-List all endpoint builders and expected response types.
-- `fetchFinance(params)`
-- `createFinance(dto)`
-- `updateFinance(id, dto)`
-- `deleteFinance(id)`
+## User Flows
+1. Manager opens `/manager/finance` → KPIs, chart, and table load in parallel
+2. Manager applies date/payment-mode filter → table and KPIs re-fetch
+3. Manager clicks a transaction row → detail drawer or navigation (if implemented)
+
+## Component Responsibility Map
+- `ManagerFinanceMain` — layout. MUST NOT contain filter state.
+- `ManagerFinanceFilters` — owns filter state, dispatches to context.
+- `ManagerFinanceRevenueChart` — wraps `react-apexcharts`. MUST NOT use Recharts.
+- `ManagerFinanceTable` — pure display, receives paginated data as props.
 
 ## Permissions and Security
-Document protected actions, roles, and CODEOWNERS paths.
+| Action | Required Role |
+|---|---|
+| View finance data | `MANAGER` |
 
 ## Loading, Empty, Error States
-- **Loading:** Uses `loading.tsx` skeleton matching global design.
-- **Empty:** Follows Rule 48 (dedicated empty state component).
-- **Error:** Uses `error.tsx` typed React Error Boundary.
+- **Loading:** `loading.tsx` — 3 KPI shimmer cards + chart placeholder + 8-row table skeleton
+- **Empty:** "No transactions found for this period" with filter reset CTA
+- **Error:** `error.tsx` with retry
 
 ## Edge Cases / AI Warnings
-- Do not bypass API interceptors.
-- Do not mix complex React logic (`useEffect`) with JSX markup.
+- **No mutations** — this is a read-only analytics module. Payment collection is in the Members module.
+- **Currency formatting** — all amounts arrive as paise integers. Always use `formatCurrency()` from `@/lib/formatters`. Never divide by 100 inline.
+- **ApexCharts only** — never use Recharts or Chart.js.
 
 ## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization
-- [x] Rule 7: Type isolation
-- [x] Rule 8: Server/client boundary
-- [x] Rule 9: Loading/error/not-found handling
-- [x] Rule 14: Backend-driven messages
-- [x] Rule 15A: Tests present
-- [x] Rule 15B: Forms use React Hook Form + Zod
-- [x] Rule 15C: State placed per Server/Client decision matrix
-- [x] Rule 15D: Env vars validated centrally, none exposed unsafely
-- [x] Rule 15E: Error monitoring wired for critical flows
-- [x] Rule 74: Security scan gates passed (SCA + secrets)
-- [x] Rule 76: CODEOWNERS covers security-critical paths
-- [x] Rule 79: MSW handler present where needed
+- [x] Rule 1: Micro-modularization — module-prefixed files
+- [x] Rule 6: Logic/UI Separation — fetch in context, display in components
+- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server
+- [x] Rule 9: `loading.tsx` + `error.tsx` present
+- [x] Rule 13: Feature Map — this document, updated same commit as code changes
+- [x] Rule 17: Pagination + filtering on transactions table
+- [x] Rule 21: Currency formatted via `formatters.ts`
+- [x] Design §10: ApexCharts with correct color tokens

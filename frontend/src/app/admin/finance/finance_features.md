@@ -1,56 +1,70 @@
-# Finance Feature Map
+# Admin Finance — Feature Map
 
 ## Module Purpose
-Handles finance operations, UI display, and logic isolation as part of the Smart Gym 360 platform.
+The Admin Finance module provides a system-wide view of all payment transactions across all
+branches. It is read-only analytics — no payment collection happens here (that is a Manager
+responsibility). Displays revenue summaries, payment mode breakdowns, and filterable transaction
+history. All monetary values are transmitted as integers (paise) and formatted via `formatters.ts`.
 
 ## Directory Structure
-- `finance_components/`: Contains all isolated micro-components for the module.
-- `finance_types/` (if applicable): TypeScript definitions.
-- `finance_utils/` (if applicable): Shared constants and hardcoded data.
-- `finance_context/` (if applicable): Module-scoped React Context or Zustand store.
+| File/Folder | Responsibility |
+|---|---|
+| `page.tsx` | Server Component — auth guard |
+| `loading.tsx` | Skeleton for KPI cards + table |
+| `error.tsx` | Error boundary |
+| `finance_components/AdminFinanceMain.tsx` | Root Client Component |
+| `finance_components/AdminFinanceKpiCards.tsx` | Total revenue, collections, pending KPIs |
+| `finance_components/AdminFinanceTable.tsx` | Paginated, filterable transaction table |
+| `finance_components/AdminFinanceFilters.tsx` | Date range, branch, payment mode filters |
+| `finance_types/AdminFinanceTypes.ts` | `Transaction`, `FinanceStats`, `FinanceFilters` types |
+| `finance_api/AdminFinanceApi.ts` | API wrappers for finance endpoints |
+| `finance_utils/AdminFinanceUrlConfig.ts` | Centralized URL constants |
 
 ## Feature Inventory
-| Feature | Path | Purpose | Main API Calls | Owner |
+| Feature | Path | Purpose | Main API Calls | Status |
 |---|---|---|---|---|
-| Core UI | `/finance` | Main module view | TBD | Frontend Team |
+| Finance Overview | `/admin/finance` | KPI cards + transaction table | `GET /admin/finance/stats` | ✅ Live |
+| Transaction Table | `/admin/finance` | Paginated payment history | `GET /admin/finance/transactions` | ✅ Live |
+| Filter by Branch/Date | `/admin/finance` | Scoped analytics | Query params on above | ✅ Live |
 
 ## Data and State Architecture
-- Server-state query keys: `['finance']`
-- Zustand stores: TBD
-- Context providers: TBD
-- Local-storage keys: TBD
-- MSW handler file: TBD
+- Server-state: Context-based fetch in `AdminFinanceProvider`
+- Zustand stores: None — read-only module
+- Context providers: `AdminFinanceProvider`
+- Local-storage keys: None
+- MSW handler: Not yet configured
 
-## API Contract
-List all endpoint builders and expected response types.
-- `fetchFinance(params)`
-- `createFinance(dto)`
-- `updateFinance(id, dto)`
-- `deleteFinance(id)`
+## User Flows
+1. Admin opens `/admin/finance` → skeleton loads → KPI cards + table populate
+2. Admin applies branch/date filter → table re-fetches with updated query params
+3. Admin clicks table row → navigates to transaction detail (if implemented)
+
+## Component Responsibility Map
+- `AdminFinanceMain` — layout orchestrator. MUST NOT contain filter state.
+- `AdminFinanceFilters` — owns filter state, calls context to trigger re-fetch.
+- `AdminFinanceTable` — pure display, receives paginated data as props. MUST NOT fetch directly.
+- `AdminFinanceKpiCards` — pure display. MUST NOT contain formatting logic (use `formatters.ts`).
 
 ## Permissions and Security
-Document protected actions, roles, and CODEOWNERS paths.
+| Action | Required Role |
+|---|---|
+| View finance data | `SUPERADMIN` (Admin role) |
 
 ## Loading, Empty, Error States
-- **Loading:** Uses `loading.tsx` skeleton matching global design.
-- **Empty:** Follows Rule 48 (dedicated empty state component).
-- **Error:** Uses `error.tsx` typed React Error Boundary.
+- **Loading:** Skeleton — 3 KPI shimmer cards + 8-row table skeleton
+- **Empty:** Table empty state with "No transactions found for this period" + filter reset CTA
+- **Error:** `error.tsx` with retry
 
 ## Edge Cases / AI Warnings
-- Do not bypass API interceptors.
-- Do not mix complex React logic (`useEffect`) with JSX markup.
+- **Currency formatting** — all amounts arrive as integers (paise). Always use `formatCurrency()` from `@/lib/formatters`. Never divide by 100 inline in components.
+- **No mutations** — this is a read-only analytics module. Never add payment collection here.
+- **Branch filter** — uses `useAdminGlobalStore` selected branch as default filter value.
 
 ## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization
-- [x] Rule 7: Type isolation
-- [x] Rule 8: Server/client boundary
-- [x] Rule 9: Loading/error/not-found handling
-- [x] Rule 14: Backend-driven messages
-- [x] Rule 15A: Tests present
-- [x] Rule 15B: Forms use React Hook Form + Zod
-- [x] Rule 15C: State placed per Server/Client decision matrix
-- [x] Rule 15D: Env vars validated centrally, none exposed unsafely
-- [x] Rule 15E: Error monitoring wired for critical flows
-- [x] Rule 74: Security scan gates passed (SCA + secrets)
-- [x] Rule 76: CODEOWNERS covers security-critical paths
-- [x] Rule 79: MSW handler present where needed
+- [x] Rule 1: Micro-modularization — module-prefixed files
+- [x] Rule 6: Logic/UI Separation — fetch in provider, display in components
+- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server
+- [x] Rule 9: `loading.tsx` + `error.tsx` present
+- [x] Rule 13: Feature Map — this document, updated same commit as code changes
+- [x] Rule 17: Pagination + filtering on transaction table
+- [x] Rule 21: Currency as integers, formatted via `formatters.ts`
