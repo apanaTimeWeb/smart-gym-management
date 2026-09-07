@@ -12,7 +12,7 @@ export const useAdminGymComparisonStore = create<AdminGymComparisonStore>((set, 
   toggleGym: (id) => {
     const current = get().selectedGymIds;
     if (current.includes(id)) {
-      if (current.length <= 2) return; // minimum 2 gyms
+      if (current.length <= 2) return; // minimum 2 gyms required
       set({ selectedGymIds: current.filter(g => g !== id) });
     } else {
       if (current.length >= 4) return; // maximum 4 gyms
