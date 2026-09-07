@@ -186,7 +186,7 @@ Each nav item has: [Icon] Label · Active state = Gold left border + `--primary-
 
 ## 4. STATUS BADGE RULES (Universal — Apply to ALL pages)
 
-> **CRITICAL ARCHITECTURE RULE:** The status-to-color mapping MUST live in a single constants file (e.g. `src/config/statusBadgeConfig.ts`), never as inline if/else or switch-case statements inside individual components. (Consistent with Frontend Rule 3/35).
+> **CRITICAL ARCHITECTURE RULE:** The status-to-color mapping MUST live in a single constants file (e.g. `src/config/statusBadgeConfig.ts`), never as inline if/else or switch-case statements inside individual components. (Consistent with Frontend Rule 3B/35).
 
 Badges are small pill-shaped labels: `border-radius: var(--radius-full)`, `padding: 2px 10px`, `font-size: 11px`, `font-weight: 600`.
 
