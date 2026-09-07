@@ -37,7 +37,7 @@ Rename all components, files, and folders to be extremely descriptive based on e
 - **Strict Suffixing**: Component names must end with their exact UI structural type (e.g., `...Modal.tsx`, `...Table.tsx`, `...Form.tsx`, `...Card.tsx`, `...Dropdown.tsx`).
 - **Prop Naming**: Do not export generic `Props` or `Data` interfaces. Always prefix them (e.g., `export interface InquiriesTableProps`).
 
-3. **Backend-Ready Centralized Data (Single Source of Truth)**: 
+3B. **Backend-Ready Centralized Data (Single Source of Truth)**: 
 Find all hardcoded UI data (dropdown options, filter lists, default preset arrays, payment modes, etc.) scattered across the UI components. Extract them into feature-specific constant files alongside their components (e.g., `HeaderConstants.ts` inside the `/Header` folder) or a module-level `[ModuleName]SharedConstants.ts` for data used across multiple sub-folders.
 *Why?* Because tomorrow, this hardcoded data will be replaced by a Backend API call. By keeping it all in one file today, I will only have to change one file tomorrow to integrate the API, without touching the UI components. Derive your TypeScript types directly from these central arrays.
 
@@ -369,8 +369,8 @@ actually implemented. An honest [ ] is better than a false [x].]
 - [ ] Rule 72: API function naming follows verb contract
 - [ ] Rule 73: `import type` used for all type-only imports
 - [ ] Rule 74: Security scan gates passed (SCA + secrets)
+- [ ] Rule 75: MSW handler present where needed
 - [ ] Rule 76: CODEOWNERS covers security-critical paths
-- [ ] Rule 79: MSW handler present where needed
 - [ ] Design §3: Sidebar active = subtle gold border + bg (NOT solid primary)
 - [ ] Design §12: Z-index scale — header z-20, dropdowns z-30, modals z-40, toasts z-50
 - [ ] Design §28: Surface elevation — `bg-popover` for dropdowns, `bg-overlay` for modals
@@ -447,7 +447,7 @@ Mandatory E2E flows:
 Testing rules:
 - Test user-visible behavior, not internal implementation details.
 - Do not use snapshots for dynamic, complex UI as a substitute for assertions.
-- Reuse Rule 79 MSW handlers in unit/component tests.
+- Reuse Rule 75 MSW handlers in unit/component tests.
 - A bug fix must include a regression test if reasonably testable.
 
 15B. **Form Management, Validation, and Submission Architecture**:
@@ -573,7 +573,7 @@ Requirements:
   - failed export
   - destructive action failure
   - repeated API error
-- Use `console.log` only in local development where allowed by Rule 65; it must not remain in production code.
+- Use `console.log` only in local development where allowed by Rule 61; it must not remain in production code.
 - Define an owner and alert policy for critical failures.
 
 16. **Robust Form Handling & Validation**:
@@ -610,7 +610,7 @@ Never rely solely on the backend to block unauthorized actions while leaving the
 When fetching complex layout data or lists, implement **Skeleton Loaders** (using Tailwind's `animate-pulse` or a library) that mimic the shape of incoming data instead of full-page spinning circles.
 
 27. **Strict TypeScript (No `any` Rule)**:
-The use of the `any` type is strictly forbidden. If a payload is unknown, use the `unknown` type and assert/validate safely via Zod. (Mechanically enforced via ESLint, see Rule 65).
+The use of the `any` type is strictly forbidden. If a payload is unknown, use the `unknown` type and assert/validate safely via Zod. (Mechanically enforced via ESLint, see Rule 61).
 
 28. **Icon-Driven Action Columns**:
 Whenever displaying action buttons in data tables/lists, prioritize using semantic icons (e.g., from `lucide-react`) instead of bulky text labels. Include descriptive tooltips and `aria-label`s.
@@ -634,10 +634,10 @@ Make Next.js `<Image>` component (`next/image`) default and mandatory. Permit do
 Strictly segregate public and private environment variables. Prefix public variables with `NEXT_PUBLIC_`. Never leak secret keys.
 
 35. **Strict Prohibition of Magic Strings & Numbers**:
-Never use raw strings or numbers directly in logic/UI. All magic values must be defined as TypeScript `enums` or `const` objects. (Mechanically enforced via ESLint, see Rule 65).
+Never use raw strings or numbers directly in logic/UI. All magic values must be defined as TypeScript `enums` or `const` objects. (Mechanically enforced via ESLint, see Rule 61).
 
 36. **No Arbitrary Tailwind Values (Strict Design System)**:
-Never use arbitrary, hardcoded pixel/hex values in Tailwind (e.g., `w-[325px]`). Adhere to standard framework scales (e.g., `w-80`). (Mechanically enforced via ESLint, see Rule 65).
+Never use arbitrary, hardcoded pixel/hex values in Tailwind (e.g., `w-[325px]`). Adhere to standard framework scales (e.g., `w-80`). (Mechanically enforced via ESLint, see Rule 61).
 
 37. **JSDoc for Complex Logic (AI Context Enhancer)**:
 Every custom hook, utility function, and complex data transformation MUST be prefixed with a short, descriptive JSDoc block detailing its intent.
@@ -663,7 +663,7 @@ Never use multiple boolean flags for async state. Use a single typed enum define
 Any field displaying sensitive data must be masked by default in list views (e.g., `98****2310`). Use a dedicated `maskSensitiveData()` utility.
 
 44. **No `console.log` in Production**:
-All `console.log` calls are strictly forbidden in committed code. Use a centralized logger utility (`src/lib/logger.ts`). (Mechanically enforced via ESLint, see Rule 65).
+All `console.log` calls are strictly forbidden in committed code. Use a centralized logger utility (`src/lib/logger.ts`). (Mechanically enforced via ESLint, see Rule 61).
 
 45. **Co-located Test Files**:
 Every custom hook and utility function must have a co-located test file (`use[X].test.ts`).
@@ -702,7 +702,7 @@ Using `key={index}` is strictly forbidden for lists that can reorder/filter. Alw
 Never use Google Fonts CDN (`@import`). Always use `next/font/google`.
 
 57. **Strict `tsconfig.json` Enforcement**:
-Run with `strict: true`. No `@ts-ignore` or `@ts-nocheck`. (Mechanically enforced via pre-commit, see Rule 65).
+Run with `strict: true`. No `@ts-ignore` or `@ts-nocheck`. (Mechanically enforced via pre-commit, see Rule 61).
 
 58. **No Direct Browser Storage Access in Components**:
 Never call `window.localStorage`, `sessionStorage`, or `document.cookie` directly inside React components.
@@ -729,7 +729,7 @@ Every API call must be typed using a global `ApiResponse<T>` generic interface t
 Handle unauthenticated redirects centrally in `middleware.ts` or an API interceptor.
 
 61. **Enforced Tooling Gates (Mechanical Blocking)**:
-Rules against arbitrary Tailwind (Rule 36), `any` types (Rule 27), `console.log` (Rule 46), magic strings (Rule 35), and TS ignores (Rule 60) are not just "trust-based suggestions". 
+Rules against arbitrary Tailwind (Rule 36), `any` types (Rule 27), `console.log` (Rule 44), magic strings (Rule 35), and TS ignores (Rule 57) are not just "trust-based suggestions". 
 You MUST implement **ESLint plugins** (`eslint-plugin-tailwindcss`, `@typescript-eslint/no-explicit-any`, `no-console`) and a **pre-commit hook** (`husky` + `lint-staged`) that runs `tsc --noEmit` and linters before any commit. These rules must be physically blocked by tooling to ensure extreme safety in an AI-driven codebase. Detailed test practices should reside in Rule 15A.
 
 ### Required CI Quality Gates
@@ -812,8 +812,8 @@ Whenever importing a TypeScript type, interface, or enum that is used purely for
 - ✅ **GOOD:** `import type { MemberTableProps } from '@/app/admin/members/members_types/member.types'`
 - **Why:** `import type` statements are completely erased at compile time, reducing bundle size, preventing accidental runtime usage of type definitions, and eliminating a major category of circular dependency errors. TypeScript's `verbatimModuleSyntax` compiler option can mechanically enforce this. This mirrors Backend Rule 88's `import type` mandate for the backend.
 
-74. **Security Scanning in Frontend CI/CD Tooling Gates (Extending Rule 65)**:
-Rule 65 mandates ESLint, `tsc --noEmit`, and pre-commit hooks. This rule adds mandatory **security gates** to the frontend CI/CD pipeline, mirroring Backend Rules 90 & 91:
+74. **Security Scanning in Frontend CI/CD Tooling Gates (Extending Rule 61)**:
+Rule 61 mandates ESLint, `tsc --noEmit`, and pre-commit hooks. This rule adds mandatory **security gates** to the frontend CI/CD pipeline, mirroring Backend Rules 90 & 91:
 - **Gate 1 — SCA (Dependency Vulnerability Scan):** Run `npm audit --audit-level=high` or an approved SCA tool on every PR. Any `Critical` or `High` severity CVE in a frontend dependency MUST block the merge. Frontend packages (including `react`, `axios`, `next`) have real CVEs that AI agents will never proactively check for.
 - **Gate 2 — Secrets Detection:** Run `gitleaks detect` on every PR diff. Frontend code frequently contains accidentally committed API keys, Stripe public keys, or environment variables. This gate is non-negotiable.
 - **Gate 3 — Pre-Commit Secret Scan:** Add `gitleaks detect --no-git` (staged files only) to the existing `husky + lint-staged` pre-commit hook so secrets are caught locally before pushing.
