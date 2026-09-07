@@ -5,7 +5,7 @@ import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 
 import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
 import { useAdminDashboardStore } from '@/app/admin/dashboard/dashboard_store/useAdminDashboardStore';
-import type { DashboardStats, TimeRange } from '@/app/admin/dashboard/dashboard_types/dashboard_types';
+import type { TimeRange } from '@/app/admin/dashboard/dashboard_types/dashboard_types';
 import AdminDashboardKPIs from '@/app/admin/dashboard/dashboard_components/AdminDashboardKPIs/AdminDashboardKPIs';
 import AdminDashboardBranchLeaderboard from '@/app/admin/dashboard/dashboard_components/AdminDashboardBranchLeaderboard/AdminDashboardBranchLeaderboard';
 import AdminDashboardAlerts from '@/app/admin/dashboard/dashboard_components/AdminDashboardAlerts/AdminDashboardAlerts';
@@ -27,11 +27,8 @@ function DashboardSkeleton() {
   );
 }
 
-export default function AdminDashboardMain({ initialData }: { initialData?: DashboardStats | null }) {
-  // To avoid prop drilling, we could pass initialData to a hook here, but since the child DashboardContent
-  // uses the hook, it's better to inline DashboardContent or pass initialData down.
-  // We'll merge DashboardContent into AdminDashboardMain.
-  const { stats, status, error } = useAdminDashboardLogic(initialData);
+export default function AdminDashboardMain() {
+  const { stats, status, error } = useAdminDashboardLogic();
   const { timeRange, setTimeRange, startDate, endDate, setCustomDateRange } = useAdminDashboardStore();
 
   if (status === 'loading') return (
