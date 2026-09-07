@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
+ru// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
 // DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Custom hook managing the form state, validation, and API submission for the login page.
 // DATA FLOW: LoginForm (View) -> useLoginForm.ts (Hook) -> auth_api.ts (API)
@@ -14,10 +14,10 @@ import { UseLoginFormReturn, LoginFormData, FetchState, loginSchema } from '@/ap
 
 /** Known demo credentials for mock authentication. Each entry maps email→password→role. */
 const DEMO_CREDENTIALS: Record<string, { password: string; role: string }> = {
-  'demo_admin@gym.com':     { password: 'demo123', role: 'SUPERADMIN' },
-  'admin@gymsmart.com':     { password: 'demo123', role: 'ADMIN' },
-  'manager@gymsmart.com':   { password: 'demo123', role: 'MANAGER' },
-  'trainer@gymsmart.com':   { password: 'demo123', role: 'TRAINER' },
+  'demo_admin@gym.com': { password: 'demo123', role: 'SUPERADMIN' },
+  'admin@gymsmart.com': { password: 'demo123', role: 'ADMIN' },
+  'manager@gymsmart.com': { password: 'demo123', role: 'MANAGER' },
+  'trainer@gymsmart.com': { password: 'demo123', role: 'TRAINER' },
 };
 
 /**
@@ -51,18 +51,18 @@ export function useLoginForm(): UseLoginFormReturn {
         const cookieRes = await fetch(AuthUrlConfig.PROXY_API.SET_COOKIE, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            token: res.data.accessToken, 
-            refreshToken: res.data.refreshToken, 
-            user: res.data.user 
+          body: JSON.stringify({
+            token: res.data.accessToken,
+            refreshToken: res.data.refreshToken,
+            user: res.data.user
           }),
         });
 
         if (!cookieRes.ok) throw new Error('Session setup failed');
-        
+
         setStatus('success');
         toast.success(res.message || 'Login successful');
-        
+
         if (res.data.user?.role === 'SUPERADMIN') {
           window.location.replace(SuperadminUrlConfig.PAGES.DASHBOARD);
         } else if (res.data.user?.role === 'MANAGER') {
@@ -107,9 +107,9 @@ export function useLoginForm(): UseLoginFormReturn {
     onSubmit({ email: 'trainer@gymsmart.com', password: 'demo123' });
   }, [form, onSubmit]);
 
-  return { 
-    form, status, showPassword, setShowPassword, onSubmit, 
-    handleDemoSuperadminLogin, handleDemoAdminLogin, handleDemoManagerLogin, handleDemoTrainerLogin 
+  return {
+    form, status, showPassword, setShowPassword, onSubmit,
+    handleDemoSuperadminLogin, handleDemoAdminLogin, handleDemoManagerLogin, handleDemoTrainerLogin
   };
 }
 

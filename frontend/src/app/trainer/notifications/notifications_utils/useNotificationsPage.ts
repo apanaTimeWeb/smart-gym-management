@@ -1,7 +1,6 @@
 // RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
 // DATA FLOW: Standard component data flow.
 import { useState, useCallback } from 'react';
-import toast from 'react-hot-toast';
 
 export type NotificationItem = {
   id: string;
@@ -21,12 +20,10 @@ export const useNotificationsPage = () => {
 
   const markAllAsRead = useCallback(() => {
     setNotifications(prev => prev.map(n => ({ ...n, unread: false })));
-    toast.success('All notifications marked as read');
   }, []);
 
   const clearAll = useCallback(() => {
     setNotifications([]);
-    toast.success('All notifications cleared');
   }, []);
 
   const markAsRead = useCallback((id: string) => {
@@ -35,7 +32,6 @@ export const useNotificationsPage = () => {
 
   const deleteNotification = useCallback((id: string) => {
     setNotifications(prev => prev.filter(n => n.id !== id));
-    toast.success('Notification removed');
   }, []);
 
   return {
