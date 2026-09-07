@@ -40,5 +40,5 @@ export interface FinanceSummary {
   totalRevenue: number; monthlyRevenue: number; pendingAmount: number;
   totalPayments: number;
   revenueByMethod: { UPI: number; Cash: number; Card: number; NetBanking: number };
-  monthlyData: { month: string; revenue: number }[];
+  monthlyData: { month: string; revenue: number; expenses?: number }[];
 }
