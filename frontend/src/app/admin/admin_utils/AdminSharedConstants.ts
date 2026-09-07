@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Centralized constants shared across all ADMIN modules — nav items, placeholder notifications, gym identity (name/phone), sensitive data masking utility, and pagination page size.
 import {
   LayoutDashboard, ClipboardList, FileBarChart,
-  IndianRupee, Settings, Building2, Users, ShieldAlert, Gauge
+  IndianRupee, Settings, Building2, Users, ShieldAlert, Gauge, Bell
 } from 'lucide-react';
 
 export const ADMIN_NAV_ITEMS = [
@@ -14,6 +14,7 @@ export const ADMIN_NAV_ITEMS = [
   { href: '/admin/finance', label: 'Finance', icon: IndianRupee },
   { href: '/admin/audit_logs', label: 'Audit Logs', icon: ShieldAlert },
   { href: '/admin/usage', label: 'Usage & Plan', icon: Gauge },
+  { href: '/admin/notifications', label: 'Notifications', icon: Bell },
   { href: '/admin/settings', label: 'Settings', icon: Settings },
 ];
 
