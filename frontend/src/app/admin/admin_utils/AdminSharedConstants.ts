@@ -2,7 +2,7 @@
 import {
   LayoutDashboard, ClipboardList, FileBarChart,
   IndianRupee, Settings, Building2, Users, ShieldAlert, Gauge, Bell,
-  BarChart3, GitCompare, Tag, ShieldCheck
+  BarChart3, GitCompare, Tag, ShieldCheck, Wallet, Ban, Megaphone, Download, Activity
 } from 'lucide-react';
 
 export const ADMIN_NAV_ITEMS = [
@@ -15,8 +15,13 @@ export const ADMIN_NAV_ITEMS = [
   { href: '/admin/finance', label: 'Finance', icon: IndianRupee },
   { href: '/admin/reports', label: 'Reports', icon: BarChart3 },
   { href: '/admin/gym-comparison', label: 'Gym Comparison', icon: GitCompare },
+  { href: '/admin/payouts', label: 'Payouts', icon: Wallet },
   { href: '/admin/coupons', label: 'Coupons', icon: Tag },
   { href: '/admin/permissions', label: 'Permissions', icon: ShieldCheck },
+  { href: '/admin/blacklist', label: 'Blacklist', icon: Ban },
+  { href: '/admin/bulk-communications', label: 'Bulk Comms', icon: Megaphone },
+  { href: '/admin/data-export', label: 'Data Export', icon: Download },
+  { href: '/admin/gym-health-alerts', label: 'Health Alerts', icon: Activity },
   { href: '/admin/audit_logs', label: 'Audit Logs', icon: ShieldAlert },
   { href: '/admin/usage', label: 'Usage & Plan', icon: Gauge },
   { href: '/admin/notifications', label: 'Notifications', icon: Bell },
