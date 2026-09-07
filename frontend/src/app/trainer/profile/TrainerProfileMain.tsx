@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { User, Lock, Clock, Award, Save, CalendarDays, Banknote } from 'lucide-react';
+import { User, Lock, Clock, Award, Save, CalendarDays, Banknote, X } from 'lucide-react';
 import TrainerHeader from '@/app/trainer/trainer_components/TrainerLayout/TrainerHeader';
 import { getUser } from '@/lib/api';
 
@@ -10,6 +10,7 @@ export default function TrainerProfileMain() {
   const [mounted, setMounted] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveMsg, setSaveMsg] = useState('');
+  const [showLeaveModal, setShowLeaveModal] = useState(false);
 
   useEffect(() => {
     setTimeout(() => setMounted(true), 0);
@@ -171,7 +172,7 @@ export default function TrainerProfileMain() {
                 <div className="space-y-6 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2 motion-safe:duration-300">
                   <div className="flex items-center justify-between border-b border-border pb-4 mb-6">
                     <h3 className="text-lg font-bold text-foreground">Attendance & Leaves</h3>
-                    <button className="text-sm font-medium text-white bg-primary px-4 py-2 rounded-xl hover:bg-primary/90">
+                    <button onClick={() => setShowLeaveModal(true)} className="text-sm font-medium text-white bg-primary px-4 py-2 rounded-xl hover:bg-primary/90 motion-safe:transition-colors">
                       Apply Leave
                     </button>
                   </div>
@@ -239,6 +240,37 @@ export default function TrainerProfileMain() {
           </div>
         </div>
       </div>
+
+      {showLeaveModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className="bg-card w-full max-w-md rounded-2xl shadow-xl overflow-hidden motion-safe:animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between p-5 border-b border-border">
+              <h3 className="text-lg font-bold text-foreground">Apply for Leave</h3>
+              <button onClick={() => setShowLeaveModal(false)} className="text-secondary hover:text-foreground hover:bg-input p-1 rounded-lg transition-colors"><X size={20} /></button>
+            </div>
+            <form onSubmit={(e) => { e.preventDefault(); alert('Leave Application Submitted'); setShowLeaveModal(false); }} className="p-5 space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-secondary mb-1">Start Date</label>
+                  <input type="date" required className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-secondary mb-1">End Date</label>
+                  <input type="date" required className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-secondary mb-1">Reason</label>
+                <textarea rows={3} required placeholder="e.g. Medical emergency" className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary custom-scrollbar"></textarea>
+              </div>
+              <div className="pt-4 flex justify-end gap-2 border-t border-border mt-4">
+                <button type="button" onClick={() => setShowLeaveModal(false)} className="px-4 py-2 text-sm font-semibold text-secondary hover:text-foreground hover:bg-input rounded-lg transition-colors">Cancel</button>
+                <button type="submit" className="px-4 py-2 text-sm font-semibold text-white bg-primary rounded-lg hover:bg-primary/90 transition-colors">Submit Application</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

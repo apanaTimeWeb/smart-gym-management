@@ -1,6 +1,7 @@
 'use client';
 
-import { TrendingDown, Calculator, Camera, Dumbbell } from 'lucide-react';
+import { useState } from 'react';
+import { TrendingDown, Calculator, Camera, Dumbbell, X, Plus } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const progressData = [
@@ -17,11 +18,14 @@ export default function TrainerMembersProfileProgress() {
   const height = 1.75; // meters (175 cm)
   const bmi = (currentWeight / (height * height)).toFixed(1);
 
+  const [showLogModal, setShowLogModal] = useState(false);
+  const [showPhotoModal, setShowPhotoModal] = useState(false);
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="font-bold text-foreground">Progress & Measurements</h3>
-        <button className="text-sm text-white bg-primary px-3 py-1.5 rounded-lg font-medium hover:bg-primary/90 motion-safe:transition-colors">+ Log Measurement</button>
+        <button onClick={() => setShowLogModal(true)} className="text-sm text-white bg-primary px-3 py-1.5 rounded-lg font-medium hover:bg-primary/90 motion-safe:transition-colors">+ Log Measurement</button>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
@@ -80,20 +84,22 @@ export default function TrainerMembersProfileProgress() {
             <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
               <Camera size={16} className="text-primary" /> Progress Photos
             </h4>
-            <button className="text-xs text-primary font-medium hover:underline">Upload New</button>
+            <button onClick={() => setShowPhotoModal(true)} className="text-xs text-primary font-medium hover:underline">Upload New</button>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
+            <div className="space-y-2 relative group">
               <div className="aspect-[3/4] bg-input border border-border rounded-lg flex flex-col items-center justify-center text-secondary">
                 <Camera size={24} className="opacity-50 mb-2" />
                 <span className="text-xs">Before (Jan 2026)</span>
               </div>
+              <button className="absolute top-2 right-2 bg-danger text-white p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"><X size={14} /></button>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 relative group">
               <div className="aspect-[3/4] bg-input border border-border rounded-lg flex flex-col items-center justify-center text-secondary">
                 <Camera size={24} className="opacity-50 mb-2" />
                 <span className="text-xs">Current (Jun 2026)</span>
               </div>
+              <button className="absolute top-2 right-2 bg-danger text-white p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"><X size={14} /></button>
             </div>
           </div>
         </div>
@@ -132,6 +138,74 @@ export default function TrainerMembersProfileProgress() {
           </div>
         </div>
       </div>
+
+      {showLogModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className="bg-card w-full max-w-md rounded-2xl shadow-xl overflow-hidden motion-safe:animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between p-5 border-b border-border">
+              <h3 className="text-lg font-bold text-foreground">Log Measurements</h3>
+              <button onClick={() => setShowLogModal(false)} className="text-secondary hover:text-foreground hover:bg-input p-1 rounded-lg transition-colors"><X size={20} /></button>
+            </div>
+            <div className="p-5 space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-secondary mb-1">Weight (kg)</label>
+                  <input type="number" className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground" defaultValue={75} />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-secondary mb-1">Body Fat (%)</label>
+                  <input type="number" className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground" defaultValue={17} />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-secondary mb-1">Chest (in)</label>
+                  <input type="number" className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground" defaultValue={38} />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-secondary mb-1">Waist (in)</label>
+                  <input type="number" className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground" defaultValue={31} />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-secondary mb-1">Arms (in)</label>
+                  <input type="number" className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground" defaultValue={14} />
+                </div>
+              </div>
+              <div className="pt-4 flex justify-end gap-2 border-t border-border mt-4">
+                <button onClick={() => setShowLogModal(false)} className="px-4 py-2 text-sm font-semibold text-secondary hover:text-foreground hover:bg-input rounded-lg transition-colors">Cancel</button>
+                <button onClick={() => setShowLogModal(false)} className="px-4 py-2 text-sm font-semibold text-white bg-primary rounded-lg hover:bg-primary/90 transition-colors">Save Logs</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showPhotoModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className="bg-card w-full max-w-sm rounded-2xl shadow-xl overflow-hidden motion-safe:animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between p-5 border-b border-border">
+              <h3 className="text-lg font-bold text-foreground">Upload Photo</h3>
+              <button onClick={() => setShowPhotoModal(false)} className="text-secondary hover:text-foreground hover:bg-input p-1 rounded-lg transition-colors"><X size={20} /></button>
+            </div>
+            <div className="p-5 space-y-4 text-center">
+              <div className="border-2 border-dashed border-border rounded-xl p-8 flex flex-col items-center justify-center text-secondary hover:bg-input/50 cursor-pointer transition-colors">
+                <Plus size={32} className="mb-2 text-primary" />
+                <p className="text-sm font-medium text-foreground">Click to browse or drag image</p>
+                <p className="text-xs mt-1">JPG, PNG (Max 5MB)</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-secondary mb-1 text-left">Photo Type</label>
+                <select className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground">
+                  <option>Current Progress</option>
+                  <option>Before Photo (Override)</option>
+                </select>
+              </div>
+              <div className="pt-4 flex justify-end gap-2 border-t border-border mt-4">
+                <button onClick={() => setShowPhotoModal(false)} className="px-4 py-2 text-sm font-semibold text-secondary hover:text-foreground hover:bg-input rounded-lg transition-colors">Cancel</button>
+                <button onClick={() => setShowPhotoModal(false)} className="px-4 py-2 text-sm font-semibold text-white bg-primary rounded-lg hover:bg-primary/90 transition-colors">Upload</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

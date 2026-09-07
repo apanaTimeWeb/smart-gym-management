@@ -107,9 +107,13 @@ export default function TrainerSessionsMain() {
 
               <div className="flex flex-col md:flex-row items-center justify-between md:justify-end gap-4 w-full md:w-auto mt-4 md:mt-0 pt-4 md:pt-0 border-t border-border md:border-none">
                 {session.status === 'Upcoming' && (
-                  <button className="text-sm font-medium text-white bg-primary px-4 py-2 rounded-xl hover:bg-primary/90 motion-safe:transition-colors">
-                    Mark Attendance
-                  </button>
+                  <div className="flex items-center gap-3">
+                    <button onClick={() => setShowScheduleModal(true)} className="text-sm font-semibold text-secondary hover:text-foreground hover:underline transition-colors">Edit</button>
+                    <button onClick={() => alert('Session Cancelled!')} className="text-sm font-semibold text-danger hover:text-danger/80 hover:underline transition-colors">Cancel</button>
+                    <button className="text-sm font-medium text-white bg-primary px-4 py-2 rounded-xl hover:bg-primary/90 motion-safe:transition-colors">
+                      Mark Attendance
+                    </button>
+                  </div>
                 )}
                 <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
                   session.status === 'Completed' ? 'bg-success-bg text-success' :
