@@ -6,18 +6,12 @@ import type { DashboardStats } from '@/app/admin/dashboard/dashboard_types/dashb
 export const dashboardApi = {
   fetchDashboardStats: async (branchId?: string): Promise<ApiResponse<DashboardStats>> => {
     const query = branchId && branchId !== 'all' ? `?branchId=${branchId}` : '';
-    const [kpiRes, chartsRes, recentRes] = await Promise.all([
-      apiFetch<ApiResponse<Partial<DashboardStats>>>(`${DashboardUrlConfig.BACKEND_API.STATS}${query}`),
-      apiFetch<ApiResponse<Partial<DashboardStats>>>(`${DashboardUrlConfig.BACKEND_API.CHARTS}${query}`),
-      apiFetch<ApiResponse<Partial<DashboardStats>>>(`${DashboardUrlConfig.BACKEND_API.RECENT}${query}`),
-    ]);
+    const res = await apiFetch<ApiResponse<Partial<DashboardStats>>>(`${DashboardUrlConfig.BACKEND_API.STATS}${query}`);
     return {
       success: true,
       message: 'Stats fetched successfully',
       data: {
-        ...(kpiRes.data || {}),
-        ...(chartsRes.data || {}),
-        ...(recentRes.data || {}),
+        ...(Array.isArray(res.data) ? {} : (res.data || {})),
         
         // --- INJECTED MOCK DATA FOR OWNER'S COCKPIT ---
         netProfit: 125000,
