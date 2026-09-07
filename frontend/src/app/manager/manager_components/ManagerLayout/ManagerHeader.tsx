@@ -131,7 +131,7 @@ export default function ManagerHeader({ title, subtitle }: ManagerHeaderProps) {
                 {(mounted && user?.role) && <p className="text-xs text-warning font-medium mt-0.5">{user.role}</p>}
               </div>
               <div className="py-1">
-                <Link href="/manager/settings" className="flex items-center gap-2 px-4 py-2 text-sm text-secondary hover:text-foreground hover:bg-input transition-colors" onClick={() => setShowProfile(false)}>
+                <Link href="/manager/profile" className="flex items-center gap-2 px-4 py-2 text-sm text-secondary hover:text-foreground hover:bg-input transition-colors" onClick={() => setShowProfile(false)}>
                   <User size={15} /> My Profile
                 </Link>
                 <Link href="/manager/settings" className="flex items-center gap-2 px-4 py-2 text-sm text-secondary hover:text-foreground hover:bg-input transition-colors" onClick={() => setShowProfile(false)}>
