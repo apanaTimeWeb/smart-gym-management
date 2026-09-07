@@ -82,7 +82,7 @@ export default function AdminHrTabs() {
         onClick={openAdd} 
         className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:opacity-90 transition-opacity" 
       >
-        <Plus size={14} /> Add Staff
+        <Plus size={14} /> Add Manager
       </button>
     )}
     {activeTab === 'Payroll' && (

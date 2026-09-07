@@ -61,13 +61,15 @@ export default function AdminHrStaffProfileModal() {
                   <h1 className="text-2xl font-bold text-foreground leading-tight">{editData.name}</h1>
                   <p className="text-sm font-medium text-primary mt-1">{editData.role} • ID: {editData.id?.toUpperCase()}</p>
                 </div>
-                <button
-                  onClick={() => openEdit(editData as any)}
-                  className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary font-semibold text-sm rounded-xl transition-colors flex items-center gap-2"
-                >
-                  <Edit2 size={14} />
-                  Edit Profile
-                </button>
+                {isManager && (
+                  <button
+                    onClick={() => openEdit(editData as any)}
+                    className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary font-semibold text-sm rounded-xl transition-colors flex items-center gap-2"
+                  >
+                    <Edit2 size={14} />
+                    Edit Profile
+                  </button>
+                )}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

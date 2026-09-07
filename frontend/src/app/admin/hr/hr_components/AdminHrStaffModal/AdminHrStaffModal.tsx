@@ -164,7 +164,7 @@ export default function AdminHrStaffModal() {
       <SearchableDropdown
         value={field.value || ''}
         onChange={field.onChange}
-        options={STAFF_ROLE_OPTIONS}
+        options={STAFF_ROLE_OPTIONS.filter(opt => opt.value === 'Manager')}
         placeholder="Select Role..."
       />
     )}
