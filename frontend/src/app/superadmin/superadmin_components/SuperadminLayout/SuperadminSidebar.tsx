@@ -33,7 +33,6 @@ import {
   UserPlus,
   MessageSquare,
   FileBarChart,
-  Eye,
   TrendingDown,
   UserCircle,
   Search,
@@ -113,7 +112,6 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
       items: [
         { name: 'Feature Flags', href: SuperadminUrlConfig.PAGES.FEATURES, icon: ToggleLeft },
         { name: 'Affiliate Partners', href: SuperadminUrlConfig.PAGES.AFFILIATES, icon: Users },
-        { name: 'Portal Preview', href: SuperadminUrlConfig.PAGES.TENANT_PREVIEW, icon: Eye },
       ]
     },
     {

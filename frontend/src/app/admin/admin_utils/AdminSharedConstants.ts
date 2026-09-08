@@ -2,8 +2,8 @@
 import {
   LayoutDashboard, ClipboardList, FileBarChart,
   IndianRupee, Settings, Building2, Users, ShieldAlert, Gauge, Bell,
-  BarChart3, GitCompare, Tag, ShieldCheck, Wallet, Ban, Megaphone, Download, Activity,
-  CreditCard, BellRing, TrendingUp, Target
+  BarChart3, Tag, ShieldCheck, Wallet, Ban, BellRing, Download, Activity,
+  CreditCard, TrendingUp, Target
 } from 'lucide-react';
 
 export const ADMIN_NAV_GROUPS = [
@@ -17,7 +17,6 @@ export const ADMIN_NAV_GROUPS = [
     group: 'Operations',
     items: [
       { href: '/admin/members',             label: 'Members',          icon: Users },
-      { href: '/admin/attendance',          label: 'Attendance',       icon: ClipboardList },
       { href: '/admin/plans',               label: 'Plans',            icon: ClipboardList },
       { href: '/admin/sales',               label: 'Sales & Reports',  icon: FileBarChart },
     ]
@@ -37,14 +36,12 @@ export const ADMIN_NAV_GROUPS = [
       { href: '/admin/hr',                  label: 'HR & Managers',    icon: Users },
       { href: '/admin/hr/performance',      label: 'Staff Performance',icon: Target },
       { href: '/admin/branches',            label: 'Branches',         icon: Building2 },
-      { href: '/admin/gym-comparison',      label: 'Gym Comparison',   icon: GitCompare },
       { href: '/admin/payouts',             label: 'Payouts',          icon: Wallet },
     ]
   },
   {
     group: 'Communication',
     items: [
-      { href: '/admin/bulk-communications', label: 'Bulk Comms',       icon: Megaphone },
       { href: '/admin/announcements',       label: 'Announcements',    icon: BellRing },
     ]
   },
