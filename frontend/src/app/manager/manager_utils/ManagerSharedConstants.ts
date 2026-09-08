@@ -2,7 +2,7 @@
 import {
   LayoutDashboard, Users, FileBarChart,
   UserCog, ShoppingBag, Utensils, Dumbbell,
-  MessageSquare, CalendarCheck, CalendarClock, Receipt, Tags, Bell, BarChart3, Megaphone
+  MessageSquare, CalendarCheck, CalendarClock, Receipt, Tags, Bell, BarChart3, Megaphone, Gift
 } from 'lucide-react';
 
 export const MANAGER_NAV_ITEMS = [
@@ -20,6 +20,7 @@ export const MANAGER_NAV_ITEMS = [
  { href: '/manager/expenses',        label: 'Expenses',           icon: Receipt },
  { href: '/manager/reports',         label: 'Reports',            icon: FileBarChart },
  { href: '/manager/communications',  label: 'Communications',     icon: Megaphone },
+ { href: '/manager/referrals',       label: 'Referrals & Rewards',icon: Gift },
  { href: '/manager/notifications',   label: 'Notifications',      icon: MessageSquare },
  { href: '/manager/support',         label: 'Help & Support',     icon: MessageSquare },
 ];

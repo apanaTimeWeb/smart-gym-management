@@ -24,6 +24,7 @@ The Manager module is the primary operational hub for gym branch managers. It pr
 | `plans/` | Membership plan viewing with pricing tiers and feature lists |
 | `finance/` | Payments ledger with summary KPIs and search |
 | `inquiries/` | CRM lead tracking, follow-up, and lead-to-member conversion |
+| `referrals/` | Member word-of-mouth referral tracking and reward management |
 
 ## Feature Inventory
 
@@ -42,6 +43,7 @@ The Manager module is the primary operational hub for gym branch managers. It pr
 | Membership Plans | `/manager/plans` | View plans + request changes | `GET /manager/plans` | ✅ Live |
 | Finance | `/manager/finance` | Payments ledger + revenue vs expense chart | `GET /manager/finance/*` | ✅ Live |
 | Inquiries & Leads | `/manager/inquiries` | Lead CRM + conversion | `GET/POST /manager/inquiries` | ✅ Live |
+| Referrals & Rewards | `/manager/referrals` | Referral tracking and incentives | `GET/POST /manager/referrals` | ✅ Live |
 | Reports | `/manager/reports` | Revenue, attendance, churn, expense analytics + CSV export | `GET /manager/reports/*` | ✅ Live (mock) |
 | Notifications | `/manager/notifications` | System alerts, expiry warnings, payment reminders | `GET /manager/notifications/*` | ✅ Live (mock) |
 
