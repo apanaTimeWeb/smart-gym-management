@@ -51,6 +51,16 @@ export const MEMBER_STATUS_OPTIONS = [
   { label: 'Banned', value: 'BANNED' }
 ];
 
+/** Status options for the Edit Member modal dropdown (no 'All Status' entry). (Rule 3B) */
+export const MEMBER_EDIT_STATUS_OPTIONS = [
+  { label: 'Active', value: 'ACTIVE' },
+  { label: 'Pending', value: 'PENDING' },
+  { label: 'Expired', value: 'EXPIRED' },
+  { label: 'Frozen', value: 'FROZEN' },
+  { label: 'Suspended', value: 'SUSPENDED' },
+  { label: 'Banned', value: 'BANNED' },
+];
+
 export const GENDER_OPTIONS = [
   { label: 'Male', value: 'MALE' },
   { label: 'Female', value: 'FEMALE' },

@@ -1,15 +1,15 @@
 // RESPONSIBILITY: Renders a modal for creating or editing a member.
 'use client';
 
-import { useEffect, useState } from 'react';
-import { X, Save, Upload, Camera } from 'lucide-react';
+import { useEffect } from 'react';
+import { X, Save } from 'lucide-react';
 import { useForm, Controller, useWatch } from 'react-hook-form';
-import toast from 'react-hot-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
 import { useManagerMembersStore } from '@/app/manager/members/members_store/useManagerMembersStore';
-import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency, MemberSchema, type MemberFormValues, EMPTY_MEMBER_FORM, GENDER_OPTIONS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
+import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency, MemberSchema, type MemberFormValues, EMPTY_MEMBER_FORM, GENDER_OPTIONS, MEMBER_EDIT_STATUS_OPTIONS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
+import ManagerMemberProfilePictureUpload from '@/app/manager/members/members_components/ManagerMembersModal/ManagerMemberProfilePictureUpload';
 import type { PlanWithCustom } from '@/app/manager/members/members_types/ManagerMembersTypes';
 
 export default function ManagerMembersModal() {
@@ -116,17 +116,8 @@ export default function ManagerMembersModal() {
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="p-6">
           
-          {/* Profile Picture Upload (Placeholder for QR Attendance) */}
-          <div className="flex flex-col items-center justify-center mb-6 pb-6 border-b border-border">
-            <div className="w-24 h-24 rounded-full bg-input border-2 border-dashed border-border flex flex-col items-center justify-center text-secondary mb-3 relative overflow-hidden group cursor-pointer hover:border-primary transition-colors">
-              <Camera size={24} className="mb-1 group-hover:text-primary transition-colors" />
-              <span className="text-xs font-medium group-hover:text-primary transition-colors">Upload</span>
-              <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" accept="image/*" />
-            </div>
-            <p className="text-xs text-secondary text-center max-w-xs">
-              Upload a clear face photo. This will be used for QR Code Face Verification during check-in.
-            </p>
-          </div>
+          {/* Profile Picture Upload — extracted component (Rule 1: file size ceiling) */}
+          <ManagerMemberProfilePictureUpload />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3">
             {[
@@ -182,14 +173,7 @@ export default function ManagerMembersModal() {
                     <SearchableDropdown
                       value={field.value || 'ACTIVE'}
                       onChange={field.onChange}
-                      options={[
-                        { label: 'Active', value: 'ACTIVE' },
-                        { label: 'Pending', value: 'PENDING' },
-                        { label: 'Expired', value: 'EXPIRED' },
-                        { label: 'Frozen', value: 'FROZEN' },
-                        { label: 'Suspended', value: 'SUSPENDED' },
-                        { label: 'Banned', value: 'BANNED' }
-                      ]}
+                      options={MEMBER_EDIT_STATUS_OPTIONS}
                     />
                   )}
                 />

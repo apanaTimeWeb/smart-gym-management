@@ -1,9 +1,17 @@
 // RESPONSIBILITY: Handles the state and mock verification logic for the Kiosk-mode QR Scanner.
+// DATA FLOW: Simulate Scan Button → useManagerQrScannerLogic (state machine) → ManagerQrScannerModal (view)
 import { useState, useCallback } from 'react';
 import toast from 'react-hot-toast';
 import type { ManagerQrScanStatus, ManagerQrScanHistoryRecord } from './ManagerQrScannerTypes';
 import { MANAGER_QR_INITIAL_HISTORY, MANAGER_QR_MOCK_ACTIVE_NAME } from './ManagerQrScannerConstants';
 
+/**
+ * useManagerQrScannerLogic
+ * Manages the state machine for the front-desk Kiosk QR scanner flow.
+ * States: IDLE → SCANNING (1s simulated delay) → ACTIVE | EXPIRED.
+ * Provides handleCheckIn which appends a new record to the local history log and resets to IDLE.
+ * When backend is live, replace the setTimeout simulation with a real API call to POST /manager/attendance.
+ */
 export function useManagerQrScannerLogic() {
   const [status, setStatus] = useState<ManagerQrScanStatus>('IDLE');
   const [history, setHistory] = useState<ManagerQrScanHistoryRecord[]>(MANAGER_QR_INITIAL_HISTORY);

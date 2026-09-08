@@ -10,6 +10,15 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  images: {
+    remotePatterns: [
+      {
+        // i.pravatar.cc — used as placeholder member avatar in Manager QR Kiosk (mock only)
+        protocol: 'https',
+        hostname: 'i.pravatar.cc',
+      },
+    ],
+  },
 };
 
 export default nextConfig;
