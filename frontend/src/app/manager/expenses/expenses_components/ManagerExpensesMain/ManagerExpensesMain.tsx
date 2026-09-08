@@ -8,6 +8,7 @@ import ManagerExpensesToolbar from '@/app/manager/expenses/expenses_components/M
 import ManagerExpensesKPIs from '@/app/manager/expenses/expenses_components/ManagerExpensesKPIs/ManagerExpensesKPIs';
 import ManagerExpensesTable from '@/app/manager/expenses/expenses_components/ManagerExpensesTable/ManagerExpensesTable';
 import ManagerExpensesModal from '@/app/manager/expenses/expenses_components/ManagerExpensesModal/ManagerExpensesModal';
+import ManagerExpensesChart from '@/app/manager/expenses/expenses_components/ManagerExpensesMain/ManagerExpensesChart';
 import { useManagerExpensesStore } from '@/app/manager/expenses/expenses_store/useManagerExpensesStore';
 
 // DATA FLOW: ExpensesProvider → useManagerExpensesStore (Zustand) → ManagerExpensesTable/KPIs/Toolbar
@@ -93,21 +94,8 @@ function ExpensesContent() {
         )}
 
         {activeTab === 'Expense Report' && (
-          <div className="bg-card border border-border rounded-xl p-6">
-            <h3 className="text-lg font-bold text-foreground mb-4">Monthly Expense Summary</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <div className="p-4 bg-input rounded-lg">
-                <p className="text-sm text-secondary">Total Expenses (This Month)</p>
-                <p className="text-2xl font-bold text-danger">₹45,000</p>
-              </div>
-              <div className="p-4 bg-input rounded-lg">
-                <p className="text-sm text-secondary">Highest Category</p>
-                <p className="text-2xl font-bold text-warning">Rent (₹30,000)</p>
-              </div>
-            </div>
-            <div className="h-64 flex items-center justify-center bg-input border border-dashed border-border rounded-xl">
-              <p className="text-secondary font-medium">Expense Chart Visualization Area</p>
-            </div>
+          <div className="bg-card border border-border rounded-xl p-2 min-h-[500px]">
+            <ManagerExpensesChart />
           </div>
         )}
 
