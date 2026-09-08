@@ -18,7 +18,7 @@ export const useTrainerScheduleStore = create<TrainerScheduleState>((set, get) =
         leaveRequests: res.data.leaves,
         fetchState: 'success'
       });
-    } catch (e) {
+    } catch {
       set({ fetchState: 'error' });
     }
   },

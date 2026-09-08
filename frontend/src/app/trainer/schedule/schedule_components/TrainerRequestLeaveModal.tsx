@@ -32,7 +32,7 @@ export default function TrainerRequestLeaveModal() {
             <h2 className="text-xl font-black text-foreground">Request Leave</h2>
             <p className="text-xs text-secondary mt-1">Submit time off for manager approval</p>
           </div>
-          <button onClick={() => setShowLeaveModal(false)} className="p-2 bg-input hover:bg-border text-secondary rounded-full transition-colors">
+          <button onClick={() => setShowLeaveModal(false)} className="p-2 bg-input hover:bg-border text-secondary rounded-full motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
             <X size={18} />
           </button>
         </div>
@@ -45,7 +45,7 @@ export default function TrainerRequestLeaveModal() {
               required
               value={startDate}
               onChange={e => setStartDate(e.target.value)}
-              className="w-full bg-input border border-border rounded-xl px-4 py-3 text-sm text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+              className="w-full bg-input border border-border rounded-xl px-4 py-3 text-sm text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary motion-safe:transition-all"
             />
           </div>
           
@@ -56,7 +56,7 @@ export default function TrainerRequestLeaveModal() {
               required
               value={endDate}
               onChange={e => setEndDate(e.target.value)}
-              className="w-full bg-input border border-border rounded-xl px-4 py-3 text-sm text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+              className="w-full bg-input border border-border rounded-xl px-4 py-3 text-sm text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary motion-safe:transition-all"
             />
           </div>
 
@@ -68,7 +68,7 @@ export default function TrainerRequestLeaveModal() {
               value={reason}
               onChange={e => setReason(e.target.value)}
               placeholder="E.g., Medical reasons, family function..."
-              className="w-full bg-input border border-border rounded-xl px-4 py-3 text-sm text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all resize-none"
+              className="w-full bg-input border border-border rounded-xl px-4 py-3 text-sm text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary motion-safe:transition-all resize-none"
             />
           </div>
         </form>
@@ -77,16 +77,16 @@ export default function TrainerRequestLeaveModal() {
           <button 
             type="button"
             onClick={() => setShowLeaveModal(false)}
-            className="px-5 py-2.5 text-sm font-bold text-secondary bg-input hover:bg-border rounded-xl transition-colors"
+            className="px-5 py-2.5 text-sm font-bold text-secondary bg-input hover:bg-border rounded-xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             Cancel
           </button>
           <button 
             onClick={handleSubmit}
             disabled={saving || !startDate || !endDate || !reason}
-            className="flex items-center gap-2 px-6 py-2.5 text-sm font-bold text-primary-foreground bg-primary hover:opacity-90 rounded-xl transition-opacity disabled:opacity-50"
+            className="flex items-center gap-2 px-6 py-2.5 text-sm font-bold text-primary-foreground bg-primary hover:opacity-90 rounded-xl motion-safe:transition-opacity disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
-            {saving ? <Loader2 size={16} className="animate-spin" /> : null}
+            {saving ? <Loader2 size={16} className="motion-safe:animate-spin" /> : null}
             Submit Request
           </button>
         </div>

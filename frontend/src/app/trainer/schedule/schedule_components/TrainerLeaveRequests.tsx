@@ -19,7 +19,7 @@ export default function TrainerLeaveRequests() {
   if (fetchState === 'loading') {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
       </div>
     );
   }
@@ -30,7 +30,7 @@ export default function TrainerLeaveRequests() {
         <h2 className="text-lg font-bold text-foreground">Time Off Requests</h2>
         <button 
           onClick={openLeaveModal}
-          className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground text-sm font-bold rounded-lg hover:opacity-90 transition-opacity"
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground text-sm font-bold rounded-lg hover:opacity-90 motion-safe:transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         >
           <Plus size={16} /> Request Leave
         </button>
@@ -51,7 +51,7 @@ export default function TrainerLeaveRequests() {
             {leaveRequests.map(leave => {
               const statusStyle = STATUS_COLORS[leave.status] || { bg: 'bg-input', text: 'text-secondary' };
               return (
-                <tr key={leave.id} className="hover:bg-primary/5 transition-colors">
+                <tr key={leave.id} className="hover:bg-primary/5 motion-safe:transition-colors cursor-pointer">
                   <td className="px-4 py-4 text-xs font-bold text-primary whitespace-nowrap">{leave.id}</td>
                   <td className="px-4 py-4 text-sm font-semibold text-foreground whitespace-nowrap">
                     {leave.startDate} <span className="text-secondary font-normal mx-1">to</span> {leave.endDate}

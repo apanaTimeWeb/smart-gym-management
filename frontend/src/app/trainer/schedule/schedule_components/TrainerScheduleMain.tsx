@@ -20,7 +20,7 @@ function ScheduleContent() {
         <div className="flex flex-wrap gap-2 bg-card border border-border p-1 rounded-xl w-fit">
           <button
             onClick={() => setActiveTab('availability')}
-            className={`px-4 py-2 text-sm font-semibold rounded-lg transition-colors ${
+            className={`px-4 py-2 text-sm font-semibold rounded-lg motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
               activeTab === 'availability' ? 'bg-primary text-primary-foreground shadow' : 'text-secondary hover:text-foreground hover:bg-accent'
             }`}
           >
@@ -28,7 +28,7 @@ function ScheduleContent() {
           </button>
           <button
             onClick={() => setActiveTab('leaves')}
-            className={`px-4 py-2 text-sm font-semibold rounded-lg transition-colors ${
+            className={`px-4 py-2 text-sm font-semibold rounded-lg motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
               activeTab === 'leaves' ? 'bg-primary text-primary-foreground shadow' : 'text-secondary hover:text-foreground hover:bg-accent'
             }`}
           >

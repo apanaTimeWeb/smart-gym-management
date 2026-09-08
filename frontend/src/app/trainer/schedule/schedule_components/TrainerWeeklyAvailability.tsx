@@ -50,7 +50,7 @@ export default function TrainerWeeklyAvailability() {
   if (fetchState === 'loading') {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
       </div>
     );
   }
@@ -103,9 +103,9 @@ export default function TrainerWeeklyAvailability() {
         <button 
           onClick={handleSave}
           disabled={saving}
-          className="flex items-center gap-2 px-6 py-2.5 bg-primary text-primary-foreground font-bold rounded-xl hover:opacity-90 transition-opacity disabled:opacity-70"
+          className="flex items-center gap-2 px-6 py-2.5 bg-primary text-primary-foreground font-bold rounded-xl hover:opacity-90 motion-safe:transition-opacity disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         >
-          {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save size={18} />}
+          {saving ? <Loader2 className="w-4 h-4 motion-safe:animate-spin" /> : <Save size={18} />}
           Save Availability
         </button>
       </div>

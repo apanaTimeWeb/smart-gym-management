@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Simulates the backend API for Trainer Schedule and Leaves.
-import { apiFetch } from '@/lib/api';
-import { TRAINER_SCHEDULE_API_URLS } from '../schedule_utils/TrainerScheduleUrlConfig';
-import type { WeeklyAvailability, LeaveRequest } from '../schedule_types/TrainerScheduleTypes';
+// DATA FLOW: trainerScheduleApi → useTrainerScheduleStore → ScheduleProvider → components
+// NOTE: Replace `return new Promise(...)` calls with `return apiFetch(URL)` when backend is ready.
+import type { WeeklyAvailability, LeaveRequest } from '@/app/trainer/schedule/schedule_types/TrainerScheduleTypes';
 
 // Initial Mock Data
 let MOCK_AVAILABILITY: WeeklyAvailability[] = [
