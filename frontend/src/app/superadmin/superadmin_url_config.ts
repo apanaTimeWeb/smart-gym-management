@@ -26,6 +26,8 @@ export const SuperadminUrlConfig = {
     MESSAGING: "/superadmin/messaging",
     REPORTS: "/superadmin/reports",
     TENANT_PREVIEW: "/superadmin/tenant-preview",
+    CHURN_ALERTS: "/superadmin/churn-alerts",
+    PROFILE: "/superadmin/profile",
   },
   BACKEND_API: {
     DASHBOARD: "/superadmin/dashboard",
@@ -64,5 +66,7 @@ export const SuperadminUrlConfig = {
     TENANT_PREVIEW_BASE: "/superadmin/tenant-preview",
     USAGE_METERS_BASE: "/superadmin/usage-meters",
     FRANCHISES_BASE: "/superadmin/franchises",
+    CHURN_ALERTS_BASE: "/superadmin/churn-alerts",
+    PROFILE_BASE: "/superadmin/profile",
   }
 };
