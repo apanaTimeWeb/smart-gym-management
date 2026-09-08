@@ -36,26 +36,36 @@ export default function ManagerMembersToolbar() {
   };
 
   const handleBulkReminder = async () => {
-    // Simulate finding expiring members
-    const expiringCount = members.filter(m => {
-      if (m.status !== 'ACTIVE') return false;
-      const daysUntilExpiry = (new Date(m.expiryDate).getTime() - new Date().getTime()) / (1000 * 3600 * 24);
-      return daysUntilExpiry >= 0 && daysUntilExpiry <= 30;
-    }).length;
+    // Calculate members expiring within the next 30 days
+    const today = new Date();
+    const in30Days = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
 
-    const count = expiringCount || Math.floor(Math.random() * 20) + 5; // fallback mock number for demonstration
-    
-    // Simulate bulk API call
+    const expiringMembers = members.filter(m => {
+      if (m.status !== 'ACTIVE') return false;
+      const expiry = new Date(m.expiryDate);
+      return expiry >= today && expiry <= in30Days;
+    });
+
+    const count = expiringMembers.length;
+
+    // If no one is expiring, surface a helpful empty-state toast instead of
+    // sending a misleading random number (Rule: no Math.random() fallbacks).
+    if (count === 0) {
+      showToast('No active members are expiring in the next 30 days. 🎉', 'success');
+      return;
+    }
+
     const confirmed = await confirm({
       title: 'Bulk WhatsApp Reminder',
-      message: `Send automated WhatsApp renewal reminders to ${count} members expiring in the next 30 days?`,
+      message: `Send automated WhatsApp renewal reminders to ${count} member${count !== 1 ? 's' : ''} expiring in the next 30 days?`,
       confirmText: 'Send Blast',
     });
 
     if (confirmed) {
-      showToast(`Successfully sent WhatsApp blast to ${count} members.`, 'success');
+      showToast(`Successfully sent WhatsApp blast to ${count} member${count !== 1 ? 's' : ''}.`, 'success');
     }
   };
+
 
   return (
     <div className="bg-card rounded-xl shadow-sm border border-border p-4 flex flex-col lg:flex-row gap-3 items-start lg:items-center justify-between">

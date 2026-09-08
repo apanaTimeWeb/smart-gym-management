@@ -8,7 +8,11 @@ import ManagerReferralsTable from '@/app/manager/referrals/referrals_components/
 import ManagerReferralsAddModal from '@/app/manager/referrals/referrals_components/ManagerReferralsMain/ManagerReferralsAddModal';
 import { useManagerReferralsStore } from '@/app/manager/referrals/referrals_store/useManagerReferralsStore';
 
-const qc = new QueryClient();
+// QueryClient must be instantiated OUTSIDE the component to avoid being
+// re-created on every render (would destroy TanStack Query cache entirely).
+const qc = new QueryClient({
+  defaultOptions: { queries: { staleTime: 1000 * 60 * 2, retry: 1 } }
+});
 
 export default function ManagerReferralsMain() {
   return (
