@@ -8,6 +8,7 @@ import {
 
 export const ADMIN_NAV_ITEMS = [
   { href: '/admin/dashboard',           label: 'Dashboard',        icon: LayoutDashboard },
+  { href: '/admin/attendance',          label: 'Attendance',       icon: ClipboardList },
   { href: '/admin/branches',            label: 'Branches',         icon: Building2 },
   { href: '/admin/members',             label: 'Members',          icon: Users },
   { href: '/admin/hr',                  label: 'HR & Managers',    icon: Users },

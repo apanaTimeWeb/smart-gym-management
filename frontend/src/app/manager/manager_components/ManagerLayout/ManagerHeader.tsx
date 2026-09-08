@@ -7,12 +7,15 @@ import Link from 'next/link';
 import { getUser, logout } from '@/lib/api';
 import { MANAGER_PLACEHOLDER_NOTIFICATIONS } from '@/app/manager/manager_utils/ManagerSharedConstants';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import ManagerQrScannerModal from '@/app/manager/manager_components/ManagerQrScanner/ManagerQrScannerModal';
+import { QrCode } from 'lucide-react';
 
 import type { ManagerHeaderProps } from '@/app/manager/manager_components/ManagerLayout/ManagerLayoutTypes';
 
 export default function ManagerHeader({ title, subtitle }: ManagerHeaderProps) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [showScanner, setShowScanner] = useState(false);
   const [notifications, setNotifications] = useState(MANAGER_PLACEHOLDER_NOTIFICATIONS);
   const notifRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
@@ -56,6 +59,15 @@ export default function ManagerHeader({ title, subtitle }: ManagerHeaderProps) {
       </div>
       <div className="flex flex-wrap items-center gap-4">
 
+
+        {/* QR Scanner Mode (Kiosk) */}
+        <button
+          onClick={() => setShowScanner(true)}
+          className="p-2 text-secondary hover:text-foreground hover:bg-input rounded-lg transition-colors border border-transparent hover:border-border hidden sm:flex items-center gap-2"
+          title="Open QR Scanner"
+        >
+          <QrCode size={19} />
+        </button>
 
         {/* Theme Toggle */}
         <ThemeToggle />
@@ -150,6 +162,8 @@ export default function ManagerHeader({ title, subtitle }: ManagerHeaderProps) {
           )}
         </div>
       </div>
+
+      <ManagerQrScannerModal open={showScanner} onClose={() => setShowScanner(false)} />
     </header>
   );
 }

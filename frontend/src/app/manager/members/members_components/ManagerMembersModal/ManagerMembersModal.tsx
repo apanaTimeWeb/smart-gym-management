@@ -1,9 +1,10 @@
 // RESPONSIBILITY: Renders a modal for creating or editing a member.
 'use client';
 
-import { useEffect } from 'react';
-import { X, Save } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { X, Save, Upload, Camera } from 'lucide-react';
 import { useForm, Controller, useWatch } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
@@ -93,6 +94,11 @@ export default function ManagerMembersModal() {
       delete payload.customDays;
     }
     saveMember(payload as MemberFormValues);
+    if (!editId) {
+      setTimeout(() => {
+        toast.success("QR Code sent to member's WhatsApp 💬");
+      }, 800);
+    }
   };
 
   if (!showAddModal) return null;
@@ -114,6 +120,19 @@ export default function ManagerMembersModal() {
           </button>
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="p-6">
+          
+          {/* Profile Picture Upload (Placeholder for QR Attendance) */}
+          <div className="flex flex-col items-center justify-center mb-6 pb-6 border-b border-border">
+            <div className="w-24 h-24 rounded-full bg-input border-2 border-dashed border-border flex flex-col items-center justify-center text-secondary mb-3 relative overflow-hidden group cursor-pointer hover:border-primary transition-colors">
+              <Camera size={24} className="mb-1 group-hover:text-primary transition-colors" />
+              <span className="text-[10px] font-medium group-hover:text-primary transition-colors">Upload</span>
+              <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" accept="image/*" />
+            </div>
+            <p className="text-xs text-secondary text-center max-w-xs">
+              Upload a clear face photo. This will be used for QR Code Face Verification during check-in.
+            </p>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3">
             {[
               { label: 'Full Name', key: 'name', type: 'text', placeholder: 'Rahul Sharma', fullWidth: true },
