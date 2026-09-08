@@ -1,4 +1,3 @@
-// RESPONSIBILITY: loading.tsx skeleton for /admin/profile.
 export default function AdminProfileLoading() {
   return (
     <div className="max-w-3xl mx-auto space-y-6">
