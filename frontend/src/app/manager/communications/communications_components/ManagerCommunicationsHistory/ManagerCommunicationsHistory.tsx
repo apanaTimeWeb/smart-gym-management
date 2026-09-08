@@ -21,7 +21,7 @@ export default function ManagerCommunicationsHistory() {
     filteredCampaigns,
   } = useManagerCommunicationsLogic();
 
-  if (fetchState === 'loading') return <TableSkeleton rows={5} cols={HEADERS.length} />;
+  if (fetchState === 'loading') return <TableSkeleton rows={5} />;
 
   return (
     <div className="space-y-4">
