@@ -35,22 +35,20 @@ export default function AdminHrPerformanceCharts({ data }: AdminHrPerformanceCha
     xaxis: {
       categories: topTrainers.map((t) => t.name),
       labels: {
-        style: { colors: 'var(--text-secondary)' },
+        style: { colors: '#A1A1AA' },
       },
     },
     yaxis: {
       labels: {
-        style: { colors: 'var(--text-foreground)', fontWeight: 600 },
+        style: { colors: '#E4E4E7', fontWeight: 600 },
       },
     },
-    colors: ['var(--primary)'],
+    colors: ['#FACC15'],
     grid: {
-      borderColor: 'var(--border)',
+      borderColor: 'rgba(255,255,255,0.06)',
       strokeDashArray: 4,
     },
-    theme: {
-      mode: 'dark', // Assuming dark theme based on UI context, or let CSS variables handle it
-    },
+    theme: { mode: 'dark' },
   };
 
   const chartSeries = [
