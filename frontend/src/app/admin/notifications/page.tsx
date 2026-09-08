@@ -1,24 +1,18 @@
-// RESPONSIBILITY: Core UI component/route for the admin module orchestrating views and displaying sub-components.
+// RESPONSIBILITY: Server Component entry point for /admin/notifications. Rule 8 compliant — no 'use client', no AdminHeader import.
+import type { Metadata } from 'next';
 import AdminNotificationsClient from '@/app/admin/notifications/notifications_components/AdminNotificationsClient';
-import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Notifications | Admin',
-  description: 'View your admin notifications',
+  title: 'Notifications | Admin | GymSmart',
+  description: 'View and manage your admin notifications.',
 };
 
-export default function NotificationsPage() {
+export default function AdminNotificationsPage() {
   return (
-    <main className="min-h-screen p-4 md:p-8 bg-background">
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground tracking-tight">Notifications</h1>
-          <p className="text-secondary mt-1">Manage your alerts and system messages.</p>
-        </div>
-        
+    <div className="min-h-full pb-10">
+      <div className="p-6 max-w-4xl mx-auto">
         <AdminNotificationsClient />
       </div>
-    </main>
+    </div>
   );
 }
-

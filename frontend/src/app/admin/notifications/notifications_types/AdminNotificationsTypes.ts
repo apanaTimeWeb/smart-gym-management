@@ -13,4 +13,12 @@ export interface AdminNotification {
   branchName?: string;
 }
 
+/** Lightweight notification item used by the page-level hook and list component. */
+export interface NotificationItem {
+  id: string;
+  text: string;
+  time: string;
+  unread: boolean;
+}
+
 export type NotificationsFetchState = 'idle' | 'loading' | 'success' | 'error';

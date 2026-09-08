@@ -1,11 +1,12 @@
 'use client';
 // RESPONSIBILITY: Root client component for Manager Settings page.
-// Renders language/timezone selectors (shadcn Select — Rule 20) and notification toggles.
 // DATA FLOW: useManagerSettingsLogic → ManagerSettingsMain
+// Rule 20: SearchableDropdown replaces native <select>.
 
 import { Bell, Globe, Save, Loader2 } from 'lucide-react';
 import { useManagerSettingsLogic } from '@/app/manager/settings/settings_context/useManagerSettingsLogic';
 import { LANGUAGE_OPTIONS, TIMEZONE_OPTIONS } from '@/app/manager/settings/settings_types/ManagerSettingsTypes';
+import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/SearchableDropdown';
 
 function ToggleSwitch({ enabled, onToggle, label, description }: {
   enabled: boolean;
@@ -29,31 +30,6 @@ function ToggleSwitch({ enabled, onToggle, label, description }: {
         <span className={`bg-white w-4 h-4 rounded-full shadow-md motion-safe:transition-transform ${enabled ? 'translate-x-5' : 'translate-x-0'}`} />
       </button>
     </label>
-  );
-}
-
-function SelectField({ label, value, onChange, options }: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  options: readonly { label: string; value: string }[];
-}) {
-  return (
-    <div>
-      <label className="block text-sm font-medium text-secondary mb-1.5">{label}</label>
-      <div className="relative">
-        <select
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className="w-full appearance-none bg-input border border-border rounded-lg px-4 py-2.5 text-foreground text-sm focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-colors pr-8"
-        >
-          {options.map((opt) => (
-            <option key={opt.value} value={opt.value}>{opt.label}</option>
-          ))}
-        </select>
-        <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-secondary">▾</span>
-      </div>
-    </div>
   );
 }
 
@@ -81,18 +57,24 @@ export default function ManagerSettingsMain() {
             <h2 className="text-base font-semibold text-foreground">Region &amp; Language</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <SelectField
-              label="Language"
-              value={language}
-              onChange={setLanguage}
-              options={LANGUAGE_OPTIONS}
-            />
-            <SelectField
-              label="Timezone"
-              value={timezone}
-              onChange={setTimezone}
-              options={TIMEZONE_OPTIONS}
-            />
+            <div>
+              <label className="block text-sm font-medium text-secondary mb-1.5">Language</label>
+              <SearchableDropdown
+                options={[...LANGUAGE_OPTIONS]}
+                value={language}
+                onChange={(val) => setLanguage(val as string)}
+                placeholder="Select language"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-secondary mb-1.5">Timezone</label>
+              <SearchableDropdown
+                options={[...TIMEZONE_OPTIONS]}
+                value={timezone}
+                onChange={(val) => setTimezone(val as string)}
+                placeholder="Select timezone"
+              />
+            </div>
           </div>
         </div>
 
@@ -104,13 +86,13 @@ export default function ManagerSettingsMain() {
           </div>
           <ToggleSwitch
             enabled={pushNotificationsEnabled}
-            onToggle={() => setPushNotificationsEnabled(v => !v)}
+            onToggle={() => setPushNotificationsEnabled((v) => !v)}
             label="Push Notifications"
             description="Receive alerts for new members and payments"
           />
           <ToggleSwitch
             enabled={emailDailyReports}
-            onToggle={() => setEmailDailyReports(v => !v)}
+            onToggle={() => setEmailDailyReports((v) => !v)}
             label="Email Daily Reports"
             description="Get daily summary of collections and attendance"
           />

@@ -1,9 +1,8 @@
 'use client';
 // RESPONSIBILITY: Root client component for Manager Support page.
-// Renders ticket submission form and previous tickets table.
 // DATA FLOW: useManagerSupportLogic → ManagerSupportMain
-// Rule 20: No native <select> — uses styled select with options from constants.
-// Rule 9b: No raw SVG — uses lucide-react Send icon.
+// Rule 20: SearchableDropdown replaces native <select>.
+// Rule 9b: lucide-react icons only — no raw SVG.
 
 import { useEffect } from 'react';
 import { Send, Loader2, LifeBuoy } from 'lucide-react';
@@ -12,6 +11,7 @@ import {
   SUPPORT_ISSUE_CATEGORIES,
   SUPPORT_TICKET_STATUS_STYLES,
 } from '@/app/manager/support/support_types/ManagerSupportTypes';
+import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/SearchableDropdown';
 
 export default function ManagerSupportMain() {
   const {
@@ -25,7 +25,6 @@ export default function ManagerSupportMain() {
     handleSubmit,
   } = useManagerSupportLogic();
 
-  // Dependency: [] — load tickets once on mount
   useEffect(() => {
     loadTickets();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -46,20 +45,17 @@ export default function ManagerSupportMain() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4 max-w-lg">
-          {/* Issue Category */}
+          {/* Issue Category — Rule 20: SearchableDropdown */}
           <div>
             <label className="block text-sm font-medium text-secondary mb-1.5">
               Issue Category <span className="text-danger">*</span>
             </label>
-            <select
+            <SearchableDropdown
+              options={SUPPORT_ISSUE_CATEGORIES.map((o) => ({ value: o.value, label: o.label }))}
               value={category}
-              onChange={(e) => setCategory(e.target.value as typeof category)}
-              className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-foreground text-sm focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-colors"
-            >
-              {SUPPORT_ISSUE_CATEGORIES.map((opt) => (
-                <option key={opt.value} value={opt.value}>{opt.label}</option>
-              ))}
-            </select>
+              onChange={(val) => setCategory(val as typeof category)}
+              placeholder="Select issue category"
+            />
           </div>
 
           {/* Subject */}
