@@ -64,3 +64,45 @@ export interface CommAutomation {
   messageTemplate: string;
   sendTime: string;
 }
+
+// ─── Churn Recovery Types ────────────────────────────────────────────────────
+
+export type ChurnReasonType =
+  | 'price'
+  | 'relocation'
+  | 'schedule'
+  | 'personal'
+  | 'dissatisfied'
+  | 'unknown';
+
+export type WinBackTemplateTier = '7_days' | '30_days' | '90_days' | 'custom';
+
+export interface ChurnedMember {
+  memberId: string;
+  name: string;
+  phone: string;
+  email: string;
+  plan: string;
+  exitDate: string;
+  daysSinceExit: number;
+  reason: ChurnReasonType;
+  lastContactedAt: string | null;
+  recovered: boolean;
+}
+
+export interface ChurnKPIData {
+  totalChurned: number;
+  churnedThisMonth: number;
+  recoveryRate: number;
+  avgDaysSinceExit: number;
+}
+
+export interface WinBackRecord {
+  id: string;
+  memberId: string;
+  memberName: string;
+  channel: CommChannel;
+  templateTier: WinBackTemplateTier;
+  sentAt: string;
+  recovered: boolean;
+}

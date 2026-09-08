@@ -3,7 +3,7 @@ import { create } from 'zustand';
 import type { CommSegment, CommChannel } from '@/app/manager/communications/communications_types/communications_types';
 import { EMPTY_COMM_FORM } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
 
-export type CommActiveTab = 'compose' | 'history' | 'automations';
+export type CommActiveTab = 'compose' | 'history' | 'automations' | 'churn_recovery';
 
 interface ManagerCommunicationsStore {
   activeTab: CommActiveTab;
@@ -30,6 +30,18 @@ interface ManagerCommunicationsStore {
   setCurrentPage: (p: number) => void;
 
   resetComposer: () => void;
+
+  // Churn Recovery UI state
+  churnSearch: string;
+  setChurnSearch: (s: string) => void;
+  churnReasonFilter: string;
+  setChurnReasonFilter: (r: string) => void;
+  churnCurrentPage: number;
+  setChurnCurrentPage: (p: number) => void;
+  isChurnComposerOpen: boolean;
+  openChurnComposer: (memberId: string) => void;
+  closeChurnComposer: () => void;
+  selectedChurnedMemberId: string | null;
 }
 
 export const useManagerCommunicationsStore = create<ManagerCommunicationsStore>((set) => ({
@@ -61,4 +73,16 @@ export const useManagerCommunicationsStore = create<ManagerCommunicationsStore>(
     selectedSegment: EMPTY_COMM_FORM.segment,
     selectedChannel: EMPTY_COMM_FORM.channel,
   }),
+
+  // Churn Recovery
+  churnSearch: '',
+  setChurnSearch: (s) => set({ churnSearch: s, churnCurrentPage: 1 }),
+  churnReasonFilter: 'all',
+  setChurnReasonFilter: (r) => set({ churnReasonFilter: r, churnCurrentPage: 1 }),
+  churnCurrentPage: 1,
+  setChurnCurrentPage: (p) => set({ churnCurrentPage: p }),
+  isChurnComposerOpen: false,
+  selectedChurnedMemberId: null,
+  openChurnComposer: (memberId) => set({ isChurnComposerOpen: true, selectedChurnedMemberId: memberId }),
+  closeChurnComposer: () => set({ isChurnComposerOpen: false, selectedChurnedMemberId: null }),
 }));

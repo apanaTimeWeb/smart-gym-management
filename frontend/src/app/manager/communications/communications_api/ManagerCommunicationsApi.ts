@@ -1,9 +1,27 @@
 // RESPONSIBILITY: Mock API client for the Manager Communications module.
-import type { CommCampaign, CommKPIData, CommRecipient, CommFormValues, CommSegment, CommAutomation } from '@/app/manager/communications/communications_types/communications_types';
-import { MOCK_CAMPAIGNS, MOCK_COMM_KPI, MOCK_AUTOMATIONS } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
+import type {
+  CommCampaign,
+  CommKPIData,
+  CommRecipient,
+  CommFormValues,
+  CommSegment,
+  CommAutomation,
+  ChurnedMember,
+  ChurnKPIData,
+  CommChannel,
+  WinBackTemplateTier,
+} from '@/app/manager/communications/communications_types/communications_types';
+import {
+  MOCK_CAMPAIGNS,
+  MOCK_COMM_KPI,
+  MOCK_AUTOMATIONS,
+  MOCK_CHURNED_MEMBERS,
+  MOCK_CHURN_KPI,
+} from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
 
 let mockCampaigns = [...MOCK_CAMPAIGNS];
 let mockAutomations = [...MOCK_AUTOMATIONS];
+let mockChurnedMembers = [...MOCK_CHURNED_MEMBERS];
 
 /** Simulates fetching members for a given segment from the backend. */
 const MOCK_SEGMENT_MEMBERS: Record<CommSegment, CommRecipient[]> = {
@@ -83,8 +101,57 @@ export const ManagerCommunicationsApi = {
     await new Promise(r => setTimeout(r, 500));
     const idx = mockAutomations.findIndex(a => a.id === id);
     if (idx === -1) throw new Error('Automation not found');
-    mockAutomations[idx] = { ...mockAutomations[idx], ...payload };
-    return mockAutomations[idx];
+    mockAutomations[idx] = { ...mockAutomations[idx], ...payload } as CommAutomation;
+    return mockAutomations[idx] as CommAutomation;
+  },
+
+  // ─── Churn Recovery API ───────────────────────────────────────────────────
+
+  /** Fetches all exited/churned members for this branch. */
+  fetchChurnedMembers: async (): Promise<ChurnedMember[]> => {
+    await new Promise(r => setTimeout(r, 500));
+    return mockChurnedMembers;
+  },
+
+  /** Fetches churn KPI aggregates for the overview stat cards. */
+  fetchChurnKPIs: async (): Promise<ChurnKPIData> => {
+    await new Promise(r => setTimeout(r, 250));
+    return MOCK_CHURN_KPI;
+  },
+
+  /** Sends a win-back message to a single churned member and logs it as a campaign. */
+  sendWinBackMessage: async (payload: {
+    memberId: string;
+    memberName: string;
+    phone: string;
+    email: string;
+    channel: CommChannel;
+    templateTier: WinBackTemplateTier;
+    message: string;
+    subject: string;
+  }): Promise<CommCampaign> => {
+    await new Promise(r => setTimeout(r, 600));
+    const campaign: CommCampaign = {
+      id: `wb${Date.now()}`,
+      title: `Win-Back: ${payload.memberName}`,
+      channel: payload.channel,
+      segment: 'expired',
+      segmentLabel: 'Win-Back (Churned)',
+      message: payload.message,
+      subject: payload.subject,
+      recipientCount: 1,
+      sentCount: 1,
+      status: 'sent',
+      sentAt: new Date().toISOString(),
+      sentBy: 'Manager',
+    };
+    mockCampaigns = [campaign, ...mockCampaigns];
+    // Update the member's lastContactedAt in mock state
+    mockChurnedMembers = mockChurnedMembers.map(m =>
+      m.memberId === payload.memberId
+        ? { ...m, lastContactedAt: new Date().toISOString() }
+        : m
+    );
+    return campaign;
   },
 };
-
