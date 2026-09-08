@@ -24,9 +24,6 @@ interface AdminFinancePnlTableProps {
   statusFilter: PnlStatusFilter;
   onResetFilter: () => void;
 }
-
-}
-
 function SortIcon({ col, sortKey, sortDir }: { col: string; sortKey: PnlSortKey; sortDir: PnlSortDirection }) {
   if (col !== sortKey) return <ChevronsUpDown size={12} className="text-disabled" />;
   return sortDir === 'asc'

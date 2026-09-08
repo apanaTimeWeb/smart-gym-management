@@ -25,7 +25,7 @@ export const financeApi = {
       setTimeout(() => {
         resolve({
           data: PNL_MOCK_DATA[period as keyof typeof PNL_MOCK_DATA] ?? [],
-          status: 200,
+          success: true,
           message: 'Success',
         });
       }, 800);
