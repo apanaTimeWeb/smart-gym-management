@@ -6,6 +6,7 @@ export const FinanceUrlConfig = {
   BACKEND_API: {
     PAYMENTS_BASE: '/admin/finance/payments',
     SUMMARY: '/admin/finance/summary',
+    PNL_COMPARISON: '/admin/finance/pnl',
     PAYMENTS_BY_MEMBER: (memberId: string) => `/admin/finance/payments/member/${memberId}`,
   }
 };

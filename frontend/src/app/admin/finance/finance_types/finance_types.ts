@@ -59,3 +59,52 @@ export interface Expense {
   recordedBy: string;
 }
 
+// ─── Branch P&L Types ──────────────────────────────────────────────────────────
+
+export type PnlPeriod = 'THIS_MONTH' | 'LAST_MONTH' | 'Q1' | 'Q2' | 'Q3' | 'Q4' | 'THIS_YEAR';
+
+export type PnlStatusFilter = 'ALL' | 'PROFITABLE' | 'BREAKEVEN' | 'LOSS';
+
+export type PnlSortKey = 'branchName' | 'revenue' | 'expenses' | 'netProfit' | 'marginPct';
+
+export type PnlSortDirection = 'asc' | 'desc';
+
+export type BranchPnlStatus = 'PROFITABLE' | 'BREAKEVEN' | 'LOSS';
+
+export interface BranchRevenueBreakdown {
+  memberships: number;
+  ptSessions: number;
+  products: number;
+  other: number;
+}
+
+export interface BranchExpenseBreakdown {
+  rent: number;
+  salaries: number;
+  utilities: number;
+  maintenance: number;
+  marketing: number;
+}
+
+export interface BranchPnlRecord {
+  branchId: string;
+  branchName: string;
+  location: string;
+  revenue: number;
+  expenses: number;
+  netProfit: number;
+  marginPct: number;
+  status: BranchPnlStatus;
+  momDelta: number; // month-over-month % change in net profit
+  revenueBreakdown: BranchRevenueBreakdown;
+  expenseBreakdown: BranchExpenseBreakdown;
+}
+
+export interface BranchPnlAggregates {
+  totalRevenue: number;
+  totalExpenses: number;
+  totalNetProfit: number;
+  overallMarginPct: number;
+  profitableBranches: number;
+  lossMakingBranches: number;
+}

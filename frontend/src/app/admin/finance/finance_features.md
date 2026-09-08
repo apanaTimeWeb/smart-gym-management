@@ -12,6 +12,7 @@ history. All monetary values are transmitted as integers (paise) and formatted v
 | `page.tsx` | Server Component — auth guard |
 | `loading.tsx` | Skeleton for KPI cards + table |
 | `error.tsx` | Error boundary |
+| `pnl/` | Nested route for the Branch-wise P&L Comparison |
 | `finance_components/AdminFinanceMain.tsx` | Root Client Component |
 | `finance_components/AdminFinanceKpiCards.tsx` | Total revenue, collections, pending KPIs |
 | `finance_components/AdminFinanceTable.tsx` | Paginated, filterable transaction table |
@@ -26,6 +27,7 @@ history. All monetary values are transmitted as integers (paise) and formatted v
 | Finance Overview | `/admin/finance` | KPI cards + transaction table | `GET /admin/finance/stats` | ✅ Live |
 | Transaction Table | `/admin/finance` | Paginated payment history | `GET /admin/finance/transactions` | ✅ Live |
 | Filter by Branch/Date | `/admin/finance` | Scoped analytics | Query params on above | ✅ Live |
+| Branch P&L Comparison | `/admin/finance/pnl` | Side-by-side branch profitability | `GET /admin/finance/pnl?period={period}` | ✅ Live |
 
 ## Data and State Architecture
 - Server-state: Context-based fetch in `AdminFinanceProvider`

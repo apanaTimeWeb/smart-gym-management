@@ -3,7 +3,7 @@ import {
   LayoutDashboard, ClipboardList, FileBarChart,
   IndianRupee, Settings, Building2, Users, ShieldAlert, Gauge, Bell,
   BarChart3, GitCompare, Tag, ShieldCheck, Wallet, Ban, Megaphone, Download, Activity,
-  CreditCard, BellRing
+  CreditCard, BellRing, TrendingUp
 } from 'lucide-react';
 
 export const ADMIN_NAV_ITEMS = [
@@ -14,6 +14,7 @@ export const ADMIN_NAV_ITEMS = [
   { href: '/admin/plans',               label: 'Plans',            icon: ClipboardList },
   { href: '/admin/sales',               label: 'Sales & Reports',  icon: FileBarChart },
   { href: '/admin/finance',             label: 'Finance',          icon: IndianRupee },
+  { href: '/admin/finance/pnl',         label: 'Branch P&L',       icon: TrendingUp },
   { href: '/admin/reports',             label: 'Reports',          icon: BarChart3 },
   { href: '/admin/gym-comparison',      label: 'Gym Comparison',   icon: GitCompare },
   { href: '/admin/payouts',             label: 'Payouts',          icon: Wallet },
