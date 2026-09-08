@@ -3,7 +3,7 @@ import {
   LayoutDashboard, ClipboardList, FileBarChart,
   IndianRupee, Settings, Building2, Users, ShieldAlert, Gauge, Bell,
   BarChart3, Tag, ShieldCheck, Wallet, Ban, BellRing, Download, Activity,
-  CreditCard, TrendingUp, Target
+  CreditCard, TrendingUp, Target, CalendarCheck
 } from 'lucide-react';
 
 export const ADMIN_NAV_GROUPS = [
@@ -17,6 +17,7 @@ export const ADMIN_NAV_GROUPS = [
     group: 'Operations',
     items: [
       { href: '/admin/members',             label: 'Members',          icon: Users },
+      { href: '/admin/attendance',          label: 'Attendance',       icon: CalendarCheck },
       { href: '/admin/plans',               label: 'Plans',            icon: ClipboardList },
       { href: '/admin/sales',               label: 'Sales & Reports',  icon: FileBarChart },
     ]
