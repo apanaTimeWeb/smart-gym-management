@@ -1,7 +1,8 @@
+// RESPONSIBILITY: Root client component for Trainer Reports. Renders report tabs and export UI. No direct API calls.
+// DATA FLOW: page.tsx (Server) → TrainerReportsMain (Client)
 'use client';
 
 import { useState } from 'react';
-import TrainerHeader from '@/app/trainer/trainer_components/TrainerLayout/TrainerHeader';
 import { Download, Users, CalendarCheck, TrendingUp, Dumbbell } from 'lucide-react';
 
 const REPORT_TABS = [
@@ -9,18 +10,20 @@ const REPORT_TABS = [
   { id: 'attendance', label: 'Attendance Report', icon: CalendarCheck },
   { id: 'progress', label: 'Progress Report', icon: TrendingUp },
   { id: 'workout', label: 'Workout Report', icon: Dumbbell },
-];
+] as const;
+
+type ReportTabId = typeof REPORT_TABS[number]['id'];
 
 export default function TrainerReportsMain() {
-  const [activeTab, setActiveTab] = useState('members');
+  const [activeTab, setActiveTab] = useState<ReportTabId>('members');
+
+  const activeTabLabel = REPORT_TABS.find((t) => t.id === activeTab)?.label ?? '';
 
   return (
-    <div className="min-h-full pb-10 bg-background text-foreground">
-      <TrainerHeader title="Reports" subtitle="Export and analyze data for your assigned members only" />
-      
+    <div className="min-h-full pb-10">
       <div className="p-6 space-y-6">
         <div className="flex overflow-x-auto gap-2 pb-2">
-          {REPORT_TABS.map(tab => {
+          {REPORT_TABS.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
             return (
@@ -38,14 +41,12 @@ export default function TrainerReportsMain() {
           })}
         </div>
 
-        <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden min-h-[400px]">
+        <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden min-h-96">
           <div className="p-6 border-b border-border flex justify-between items-center">
             <div>
-              <h3 className="font-bold text-lg text-foreground">
-                {REPORT_TABS.find(t => t.id === activeTab)?.label}
-              </h3>
+              <h3 className="font-bold text-lg text-foreground">{activeTabLabel}</h3>
               <p className="text-sm text-secondary mt-1">
-                Data restricted to your assigned members. Cannot view other trainers' members.
+                Data restricted to your assigned members. Cannot view other trainers&apos; members.
               </p>
             </div>
             <button className="flex items-center gap-2 px-4 py-2 bg-input border border-border rounded-xl text-sm font-medium hover:bg-border motion-safe:transition-colors text-foreground">
@@ -53,8 +54,8 @@ export default function TrainerReportsMain() {
               Export CSV
             </button>
           </div>
-          
-          <div className="p-6 flex flex-col items-center justify-center min-h-[300px] text-center">
+
+          <div className="p-6 flex flex-col items-center justify-center min-h-72 text-center">
             <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-4">
               <TrendingUp size={32} />
             </div>
