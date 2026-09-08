@@ -5,18 +5,43 @@ import {
   LayoutDashboard, Users, Utensils, Dumbbell, CalendarCheck, Clock, Bell, User, Activity, IndianRupee, Calendar
 } from 'lucide-react';
 
-export const TRAINER_NAV_ITEMS = [
-  { href: '/trainer/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/trainer/members', label: 'My Members', icon: Users },
-  { href: '/trainer/workout', label: 'Workout & Exercises', icon: Dumbbell },
-  { href: '/trainer/sessions', label: 'Sessions', icon: Clock },
-  { href: '/trainer/attendance', label: 'Attendance', icon: CalendarCheck },
-  { href: '/trainer/schedule', label: 'Schedule & Leaves', icon: Calendar },
-  { href: '/trainer/library', label: 'Diet Library', icon: Utensils },
-  { href: '/trainer/reports', label: 'Reports', icon: Activity },
-  { href: '/trainer/earnings', label: 'Earnings', icon: IndianRupee },
-  { href: '/trainer/notifications', label: 'Notifications', icon: Bell },
-  { href: '/trainer/profile', label: 'My Profile', icon: User },
+export const TRAINER_NAV_GROUPS = [
+  {
+    group: 'Overview',
+    items: [
+      { href: '/trainer/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    ]
+  },
+  {
+    group: 'Members & Training',
+    items: [
+      { href: '/trainer/members', label: 'My Members', icon: Users },
+      { href: '/trainer/workout', label: 'Workout & Exercises', icon: Dumbbell },
+      { href: '/trainer/library', label: 'Diet Library', icon: Utensils },
+      { href: '/trainer/sessions', label: 'Sessions', icon: Clock },
+    ]
+  },
+  {
+    group: 'Schedule & Attendance',
+    items: [
+      { href: '/trainer/attendance', label: 'Attendance', icon: CalendarCheck },
+      { href: '/trainer/schedule', label: 'Schedule & Leaves', icon: Calendar },
+    ]
+  },
+  {
+    group: 'Performance & Earnings',
+    items: [
+      { href: '/trainer/reports', label: 'Reports', icon: Activity },
+      { href: '/trainer/earnings', label: 'Earnings', icon: IndianRupee },
+    ]
+  },
+  {
+    group: 'Account',
+    items: [
+      { href: '/trainer/notifications', label: 'Notifications', icon: Bell },
+      { href: '/trainer/profile', label: 'My Profile', icon: User },
+    ]
+  }
 ];
 
 // TODO: Replace with real API call once Notifications backend module is built.

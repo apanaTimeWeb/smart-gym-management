@@ -2,9 +2,9 @@
 // RESPONSIBILITY: SuperadminSidebar.tsx renders the collapsible sidebar navigation for the SaaS Master Control Panel.
 // Active state: gold left border + bg-primary-subtle + gold glow (Design §3).
 // Sidebar footer: logout button per standard ERP shell layout.
-// No business logic, no API calls — pure navigation component.
+// Includes a local search filter for quick navigation.
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -22,7 +22,6 @@ import {
   Receipt,
   ToggleLeft,
   DatabaseZap,
-  ShieldAlert,
   Megaphone,
   Tag,
   Users,
@@ -30,8 +29,6 @@ import {
   BarChart3,
   Gauge,
   Settings,
-  Network,
-  Store,
   History,
   UserPlus,
   MessageSquare,
@@ -39,6 +36,7 @@ import {
   Eye,
   TrendingDown,
   UserCircle,
+  Search,
 } from 'lucide-react';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { logout } from '@/lib/api';
@@ -51,9 +49,9 @@ interface SuperadminSidebarProps {
 export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: SuperadminSidebarProps) {
   const pathname = usePathname();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Listens for the global 'toggle-sidebar' event dispatched by SuperadminHeader's hamburger button.
-  // Dependency: [isCollapsed, setIsCollapsed] — toggle logic needs current collapse state.
   useEffect(() => {
     const handleToggle = () => {
       if (window.innerWidth < 1024) {
@@ -67,52 +65,55 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
   }, [isCollapsed, setIsCollapsed]);
 
   // Closes the mobile drawer whenever the route changes to avoid stale open state.
-  // Dependency: [pathname] — re-runs whenever navigation occurs.
   useEffect(() => {
     Promise.resolve().then(() => setIsMobileOpen(false));
   }, [pathname]);
 
-  const navGroups = [
+  const allNavGroups = [
     {
-      group: 'SaaS Business',
+      group: 'Overview',
       items: [
         { name: 'Dashboard', href: SuperadminUrlConfig.PAGES.DASHBOARD, icon: LayoutDashboard },
-        { name: 'Revenue Analytics', href: SuperadminUrlConfig.PAGES.ANALYTICS, icon: BarChart2 },
-        { name: 'Subscription Plans', href: SuperadminUrlConfig.PAGES.PLANS, icon: CreditCard },
-        // BarChart3 distinct from BarChart2 used by Revenue Analytics — Design §9b no icon duplication
-        { name: 'Usage Meters', href: SuperadminUrlConfig.PAGES.USAGE_METERS, icon: BarChart3 },
-        { name: 'Promotional Coupons', href: SuperadminUrlConfig.PAGES.COUPONS, icon: Tag },
-        { name: 'Affiliate Partners', href: SuperadminUrlConfig.PAGES.AFFILIATES, icon: Users },
+      ]
+    },
+    {
+      group: 'Tenants & Plans',
+      items: [
         { name: 'Tenants (Gyms)', href: SuperadminUrlConfig.PAGES.GYMS_LIST, icon: Building2 },
-        { name: 'Churn Alerts', href: SuperadminUrlConfig.PAGES.CHURN_ALERTS, icon: TrendingDown },
-        { name: 'SaaS Invoices', href: SuperadminUrlConfig.PAGES.INVOICES, icon: Receipt },
-        { name: 'Support Tickets', href: SuperadminUrlConfig.PAGES.TICKETS, icon: Ticket },
-      ]
-    },
-    {
-      group: 'Communication',
-      items: [
-        { name: 'Announcements', href: SuperadminUrlConfig.PAGES.BROADCASTS, icon: Megaphone },
-        { name: 'Tenant Messaging', href: SuperadminUrlConfig.PAGES.MESSAGING, icon: MessageSquare },
-      ]
-    },
-    {
-      group: 'Tenants',
-      items: [
         { name: 'Onboarding', href: SuperadminUrlConfig.PAGES.ONBOARDING, icon: UserPlus },
-        { name: 'Portal Preview', href: SuperadminUrlConfig.PAGES.TENANT_PREVIEW, icon: Eye },
+        { name: 'Subscription Plans', href: SuperadminUrlConfig.PAGES.PLANS, icon: CreditCard },
       ]
     },
     {
-      group: 'Reports',
+      group: 'Billing & Revenue',
       items: [
+        { name: 'Revenue Analytics', href: SuperadminUrlConfig.PAGES.ANALYTICS, icon: BarChart2 },
+        { name: 'SaaS Invoices', href: SuperadminUrlConfig.PAGES.INVOICES, icon: Receipt },
+        { name: 'Promotional Coupons', href: SuperadminUrlConfig.PAGES.COUPONS, icon: Tag },
+      ]
+    },
+    {
+      group: 'Communication & Support',
+      items: [
+        { name: 'Support Tickets', href: SuperadminUrlConfig.PAGES.TICKETS, icon: Ticket },
+        { name: 'Tenant Messaging', href: SuperadminUrlConfig.PAGES.MESSAGING, icon: MessageSquare },
+        { name: 'Announcements', href: SuperadminUrlConfig.PAGES.BROADCASTS, icon: Megaphone },
+      ]
+    },
+    {
+      group: 'Insights & Reports',
+      items: [
+        { name: 'Churn Alerts', href: SuperadminUrlConfig.PAGES.CHURN_ALERTS, icon: TrendingDown },
+        { name: 'Usage Meters', href: SuperadminUrlConfig.PAGES.USAGE_METERS, icon: BarChart3 },
         { name: 'Reports & Exports', href: SuperadminUrlConfig.PAGES.REPORTS, icon: FileBarChart },
       ]
     },
     {
-      group: 'Product',
+      group: 'Platform Management',
       items: [
         { name: 'Feature Flags', href: SuperadminUrlConfig.PAGES.FEATURES, icon: ToggleLeft },
+        { name: 'Affiliate Partners', href: SuperadminUrlConfig.PAGES.AFFILIATES, icon: Users },
+        { name: 'Portal Preview', href: SuperadminUrlConfig.PAGES.TENANT_PREVIEW, icon: Eye },
       ]
     },
     {
@@ -134,6 +135,19 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
       ]
     }
   ];
+
+  // Filter groups based on search query
+  const filteredNavGroups = useMemo(() => {
+    if (!searchQuery.trim()) return allNavGroups;
+    const lowerQuery = searchQuery.toLowerCase();
+    
+    return allNavGroups
+      .map(group => ({
+        ...group,
+        items: group.items.filter(item => item.name.toLowerCase().includes(lowerQuery))
+      }))
+      .filter(group => group.items.length > 0);
+  }, [searchQuery]);
 
   async function handleLogout() {
     await logout();
@@ -186,49 +200,85 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
           </button>
         </div>
 
+        {/* Search Box */}
+        {!isCollapsed && (
+          <div className="px-4 py-3 border-b border-border shrink-0">
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Search size={16} className="text-secondary" />
+              </div>
+              <input
+                type="text"
+                placeholder="Search menu..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="block w-full pl-9 pr-3 py-2 border border-border rounded-lg leading-5 bg-input text-foreground placeholder-secondary focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm motion-safe:transition-colors"
+              />
+            </div>
+          </div>
+        )}
+        
+        {isCollapsed && (
+          <div className="flex items-center justify-center px-4 py-3 border-b border-border shrink-0">
+            <button
+              onClick={() => setIsCollapsed(false)}
+              aria-label="Search menu"
+              className="p-2 rounded-lg text-secondary hover:text-foreground hover:bg-input motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            >
+              <Search size={18} />
+            </button>
+          </div>
+        )}
+
         {/* Navigation Groups */}
         <nav className="flex-1 space-y-4 overflow-y-auto p-3 custom-scrollbar" aria-label="Sidebar navigation">
-          {navGroups.map((group) => (
-            <div key={group.group}>
-              {!isCollapsed && (
-                <p className="text-xs font-semibold text-disabled mb-2 px-2 uppercase tracking-wider">
-                  {group.group}
-                </p>
-              )}
-              <div className="space-y-0.5">
-                {group.items.map((item) => {
-                  const isActive = pathname.startsWith(item.href);
-                  const Icon = item.icon;
-                  return (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      title={isCollapsed ? item.name : undefined}
-                      aria-current={isActive ? 'page' : undefined}
-                      className={`
-                        relative flex items-center gap-3 rounded-lg px-3 py-2.5 motion-safe:transition-all motion-safe:duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1
-                        ${isActive
-                          // Design §3: Active = gold left border + primary-subtle bg + gold glow
-                          ? 'bg-primary-subtle text-primary border-l-2 border-primary shadow-[0_0_15px_rgba(250,204,21,0.15)] pl-[10px]'
-                          : 'text-secondary hover:bg-card hover:text-foreground border-l-2 border-transparent pl-[10px]'
-                        }
-                        ${isCollapsed ? 'justify-center pl-0' : ''}
-                      `}
-                    >
-                      <Icon
-                        size={18}
-                        strokeWidth={2}
-                        className={`shrink-0 ${isActive ? 'text-primary' : 'text-zinc-400 group-hover:text-white'}`}
-                      />
-                      {!isCollapsed && (
-                        <span className="font-medium text-sm leading-none">{item.name}</span>
-                      )}
-                    </Link>
-                  );
-                })}
-              </div>
+          {filteredNavGroups.length === 0 ? (
+            <div className="text-center py-4 text-sm text-secondary">
+              No matches found
             </div>
-          ))}
+          ) : (
+            filteredNavGroups.map((group) => (
+              <div key={group.group}>
+                {!isCollapsed && (
+                  <p className="text-xs font-semibold text-disabled mb-2 px-2 uppercase tracking-wider">
+                    {group.group}
+                  </p>
+                )}
+                <div className="space-y-0.5">
+                  {group.items.map((item) => {
+                    const isActive = pathname.startsWith(item.href);
+                    const Icon = item.icon;
+                    return (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        title={isCollapsed ? item.name : undefined}
+                        aria-current={isActive ? 'page' : undefined}
+                        className={`
+                          relative flex items-center gap-3 rounded-lg px-3 py-2.5 motion-safe:transition-all motion-safe:duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1
+                          ${isActive
+                            // Design §3: Active = gold left border + primary-subtle bg + gold glow
+                            ? 'bg-primary-subtle text-primary border-l-2 border-primary shadow-[0_0_15px_rgba(250,204,21,0.15)] pl-[10px]'
+                            : 'text-secondary hover:bg-card hover:text-foreground border-l-2 border-transparent pl-[10px]'
+                          }
+                          ${isCollapsed ? 'justify-center pl-0' : ''}
+                        `}
+                      >
+                        <Icon
+                          size={18}
+                          strokeWidth={2}
+                          className={`shrink-0 ${isActive ? 'text-primary' : 'text-zinc-400 group-hover:text-white'}`}
+                        />
+                        {!isCollapsed && (
+                          <span className="font-medium text-sm leading-none">{item.name}</span>
+                        )}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            ))
+          )}
         </nav>
 
         {/* Sidebar Footer — Logout */}
