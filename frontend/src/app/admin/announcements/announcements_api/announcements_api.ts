@@ -1,12 +1,11 @@
-// RESPONSIBILITY: API client for the Announcements module.
+// RESPONSIBILITY: API client for the Admin Announcements module.
 import type { Announcement, AnnouncementFormValues, AnnouncementKPIData } from '@/app/admin/announcements/announcements_types/announcements_types';
-import { MOCK_ANNOUNCEMENTS, MOCK_ANNOUNCEMENT_KPI, ANNOUNCEMENT_GYM_OPTIONS } from '@/app/admin/announcements/announcements_utils/AdminAnnouncementsSharedConstants';
+import { MOCK_ANNOUNCEMENTS, MOCK_ANNOUNCEMENT_KPI, ANNOUNCEMENT_COMPOSE_GYM_OPTIONS } from '@/app/admin/announcements/announcements_utils/AdminAnnouncementsSharedConstants';
 
 let mockList = [...MOCK_ANNOUNCEMENTS];
 
 function resolveGymNames(gymIds: string[]): string[] {
-  if (gymIds.includes('all')) return ['All Gyms'];
-  return gymIds.map(id => ANNOUNCEMENT_GYM_OPTIONS.find(g => g.value === id)?.label ?? id);
+  return gymIds.map(id => ANNOUNCEMENT_COMPOSE_GYM_OPTIONS.find(g => g.value === id)?.label ?? id);
 }
 
 function deriveStatus(publishedAt: string, expiresAt: string): Announcement['status'] {
@@ -34,7 +33,7 @@ export const announcementsApi = {
       id: `ann${Date.now()}`,
       gymNames: resolveGymNames(payload.gymIds),
       status: deriveStatus(payload.publishedAt, payload.expiresAt),
-      createdBy: 'Super Admin',
+      createdBy: 'Admin',
       createdAt: new Date().toISOString(),
       viewCount: 0,
     };

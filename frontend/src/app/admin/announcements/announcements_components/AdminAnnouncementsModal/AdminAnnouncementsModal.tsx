@@ -11,7 +11,7 @@ import {
   AnnouncementSchema,
   ANNOUNCEMENT_PRIORITY_OPTIONS,
   ANNOUNCEMENT_AUDIENCE_OPTIONS,
-  ANNOUNCEMENT_GYM_OPTIONS,
+  ANNOUNCEMENT_COMPOSE_GYM_OPTIONS,
 } from '@/app/admin/announcements/announcements_utils/AdminAnnouncementsSharedConstants';
 import type { AnnouncementFormValues } from '@/app/admin/announcements/announcements_types/announcements_types';
 
@@ -48,7 +48,7 @@ export default function AdminAnnouncementsModal() {
               </div>
               <div>
                 <h3 className="font-bold text-foreground">{isEdit ? 'Edit Announcement' : 'New Announcement'}</h3>
-                <p className="text-xs text-secondary">{isEdit ? 'Update announcement details' : 'Broadcast to members, staff, or trainers'}</p>
+                <p className="text-xs text-secondary">{isEdit ? 'Update announcement details' : 'Broadcast to your branch members, trainers, or staff'}</p>
               </div>
             </div>
             <button onClick={() => setShowModal(false)} className="w-8 h-8 rounded-lg bg-input hover:bg-border flex items-center justify-center motion-safe:transition-colors" aria-label="Close">
@@ -137,15 +137,15 @@ export default function AdminAnnouncementsModal() {
               {errors.audience && <p className="text-xs text-danger mt-1">{errors.audience.message}</p>}
             </div>
 
-            {/* Gyms */}
+            {/* Gyms — admin can only target their own branches, never cross-tenant */}
             <div>
-              <label className="block text-xs font-semibold text-secondary uppercase tracking-wider mb-1.5">Target Gyms *</label>
+              <label className="block text-xs font-semibold text-secondary uppercase tracking-wider mb-1.5">Target Branches *</label>
               <Controller
                 name="gymIds"
                 control={control}
                 render={({ field }) => (
                   <div className="flex flex-wrap gap-2">
-                    {ANNOUNCEMENT_GYM_OPTIONS.map(o => {
+                    {ANNOUNCEMENT_COMPOSE_GYM_OPTIONS.map(o => {
                       const selected = field.value.includes(o.value);
                       return (
                         <button
@@ -202,7 +202,7 @@ export default function AdminAnnouncementsModal() {
               <button
                 type="submit"
                 disabled={saving}
-                className="flex-1 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors flex items-center justify-center gap-2 disabled:opacity-60"
+                className="flex-1 py-2.5 bg-primary hover:bg-primary-hover text-black rounded-xl text-sm font-semibold motion-safe:transition-colors flex items-center justify-center gap-2 disabled:opacity-60"
               >
                 {saving ? <Loader2 size={15} className="motion-safe:animate-spin" /> : null}
                 {isEdit ? 'Save Changes' : 'Publish Announcement'}

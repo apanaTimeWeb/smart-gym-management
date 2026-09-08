@@ -69,9 +69,9 @@ export default function AdminAnnouncementsTable() {
           </div>
           <button
             onClick={openCreate}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors shrink-0"
+            className="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary-hover text-black rounded-xl text-sm font-semibold motion-safe:transition-colors shrink-0"
           >
-            <Plus size={15} /> New Announcement
+            <Plus size={15} /> Send Announcement
           </button>
         </div>
         <div className="flex flex-wrap gap-2 items-center">
@@ -96,7 +96,7 @@ export default function AdminAnnouncementsTable() {
             value={gymFilter}
             onChange={e => setGymFilter(e.target.value)}
             className="bg-input border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
-            aria-label="Filter by gym"
+            aria-label="Filter by branch"
           >
             {ANNOUNCEMENT_GYM_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
           </select>
@@ -119,7 +119,7 @@ export default function AdminAnnouncementsTable() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-primary/5 border-b border-border">
-                {['', 'Title & Preview', 'Audience', 'Gyms', 'Schedule', 'Priority', 'Status', 'Views', 'Actions'].map((h, i) => (
+                {['', 'Title & Preview', 'Audience', 'Branches', 'Schedule', 'Priority', 'Status', 'Views', 'Actions'].map((h, i) => (
                   <th key={i} className="p-4 text-xs font-semibold text-secondary uppercase tracking-wider whitespace-nowrap">{h}</th>
                 ))}
               </tr>
@@ -132,9 +132,9 @@ export default function AdminAnnouncementsTable() {
                     <p className="text-sm text-secondary font-medium">No announcements found</p>
                     <button
                       onClick={openCreate}
-                      className="mt-3 px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors"
+                      className="mt-3 px-4 py-2 bg-primary hover:bg-primary-hover text-black rounded-xl text-sm font-semibold motion-safe:transition-colors"
                     >
-                      Create First Announcement
+                      Send First Announcement
                     </button>
                   </td>
                 </tr>
@@ -157,7 +157,7 @@ export default function AdminAnnouncementsTable() {
                       ))}
                     </div>
                   </td>
-                  {/* Gyms */}
+                  {/* Branches */}
                   <td className="p-4 text-xs text-secondary whitespace-nowrap">{a.gymNames.join(', ')}</td>
                   {/* Schedule */}
                   <td className="p-4 text-xs text-secondary whitespace-nowrap">
