@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import { ManagerCommunicationsApi } from '@/app/manager/communications/communications_api/ManagerCommunicationsApi';
 import { useManagerCommunicationsStore } from '@/app/manager/communications/communications_store/useManagerCommunicationsStore';
 import { COMM_ITEMS_PER_PAGE, COMM_MESSAGE_TEMPLATES, COMM_SEGMENT_OPTIONS } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
-import type { CommFormValues, CommSegment, FetchState } from '@/app/manager/communications/communications_types/communications_types';
+import type { CommFormValues, CommSegment, FetchState, CommAutomation } from '@/app/manager/communications/communications_types/communications_types';
 
 export function useManagerCommunicationsLogic() {
   const qc = useQueryClient();
@@ -34,6 +34,12 @@ export function useManagerCommunicationsLogic() {
     staleTime: 1000 * 60,
   });
 
+  const { data: automations = [], isLoading: automationsLoading } = useQuery({
+    queryKey: ['managerCommunications', 'automations'],
+    queryFn: ManagerCommunicationsApi.fetchAutomations,
+    staleTime: 1000 * 60 * 5,
+  });
+
   const fetchState: FetchState = campaignsLoading ? 'loading' : campaignsError ? 'error' : 'success';
 
   // --- Filtered history ---
@@ -49,7 +55,6 @@ export function useManagerCommunicationsLogic() {
     store.currentPage * COMM_ITEMS_PER_PAGE
   );
 
-  // --- Send mutation ---
   const sendMutation = useMutation({
     mutationFn: (payload: CommFormValues & { recipientCount: number; segmentLabel: string }) =>
       ManagerCommunicationsApi.sendCampaign(payload),
@@ -61,6 +66,17 @@ export function useManagerCommunicationsLogic() {
     },
     onError: (err) => toast.error((err as Error).message),
   });
+
+  const automationMutation = useMutation({
+    mutationFn: ({ id, payload }: { id: string; payload: Partial<CommAutomation> }) =>
+      ManagerCommunicationsApi.updateAutomation(id, payload),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['managerCommunications', 'automations'] });
+      toast.success('Automation updated successfully');
+    },
+    onError: (err) => toast.error((err as Error).message),
+  });
+
 
   /** Called when segment changes — auto-fills the message template. */
   const handleSegmentChange = useCallback((segment: CommSegment) => {
@@ -115,5 +131,10 @@ export function useManagerCommunicationsLogic() {
     currentPage: store.currentPage,
     setCurrentPage: store.setCurrentPage,
     totalPages,
+    // Automations
+    automations,
+    automationsLoading,
+    updateAutomation: (id: string, payload: Partial<CommAutomation>) => automationMutation.mutate({ id, payload }),
+    isUpdatingAutomation: automationMutation.isPending,
   };
 }

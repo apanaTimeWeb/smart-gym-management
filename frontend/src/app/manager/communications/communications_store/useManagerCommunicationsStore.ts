@@ -3,7 +3,7 @@ import { create } from 'zustand';
 import type { CommSegment, CommChannel } from '@/app/manager/communications/communications_types/communications_types';
 import { EMPTY_COMM_FORM } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
 
-export type CommActiveTab = 'compose' | 'history';
+export type CommActiveTab = 'compose' | 'history' | 'automations';
 
 interface ManagerCommunicationsStore {
   activeTab: CommActiveTab;

@@ -51,3 +51,16 @@ export interface CommFormValues {
   message: string;
   subject: string;
 }
+
+export type CommAutomationType = 'birthday' | 'anniversary';
+
+export interface CommAutomation {
+  id: string;
+  type: CommAutomationType;
+  title: string;
+  description: string;
+  enabled: boolean;
+  channel: CommChannel;
+  messageTemplate: string;
+  sendTime: string;
+}

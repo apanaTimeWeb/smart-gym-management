@@ -6,8 +6,11 @@ daily task of sending targeted renewal reminders, payment due alerts, promotiona
 and event announcements to filtered member segments — without needing to go through the
 Members table and message each person individually. The manager selects an audience segment
 (e.g. "expiring in 7 days"), picks a channel (WhatsApp or Email), customises a pre-filled
-template, previews the recipient list, and dispatches the campaign. A full send history with
-status tracking is available in the History tab. This module is strictly read-only with
+template, previews the recipient list, and dispatches the campaign. 
+
+It also includes an **Automations** system where managers can toggle and configure background triggers like Birthday and Work Anniversary messages to automatically dispatch without manual intervention.
+
+A full send history with status tracking is available in the History tab. This module is strictly read-only with
 respect to member data — it never modifies member records.
 
 ## Directory Structure
@@ -18,6 +21,7 @@ respect to member data — it never modifies member records.
 | `communications_components/ManagerCommunicationsKPIs/` | 4 stat cards: Total Sent, WhatsApp Sent, Emails Sent, Campaigns This Month | `ManagerCommunicationsKPIs.tsx` |
 | `communications_components/ManagerCommunicationsSegmentPicker/` | Grid of audience segment cards with live recipient count badge | `ManagerCommunicationsSegmentPicker.tsx` |
 | `communications_components/ManagerCommunicationsComposer/` | Full compose UI — segment picker, channel toggle, title, subject, message body, send action, preview modal | `ManagerCommunicationsComposer.tsx` |
+| `communications_components/ManagerCommunicationsAutomations/` | UI for enabling/disabling automated background triggers (Birthdays, Anniversaries) and editing their WhatsApp templates. | `ManagerCommunicationsAutomations.tsx` |
 | `communications_components/ManagerCommunicationsHistory/` | Paginated history table of past campaigns with search + channel filter | `ManagerCommunicationsHistory.tsx` |
 | `communications_api/` | Mock API: fetchCampaigns, fetchKPIs, fetchSegmentRecipients, sendCampaign | `ManagerCommunicationsApi.ts` |
 | `communications_context/` | Business logic hook — queries, mutations, filtered data, segment change handler | `useManagerCommunicationsLogic.ts` |
@@ -34,6 +38,7 @@ respect to member data — it never modifies member records.
 | Message Composer | `/manager/communications` (Compose tab) | Set campaign title, pick channel (WhatsApp/Email), customise pre-filled template, set email subject | `ManagerCommunicationsComposer` | — | ✅ Live |
 | Preview & Send | `/manager/communications` (Compose tab) | Preview full recipient list in `ManagerBulkMessageModal` before dispatching | `ManagerBulkMessageModal` (shared) | — | ✅ Live |
 | Send Campaign | `/manager/communications` (Compose tab) | Dispatch campaign — records it in history, resets composer, switches to History tab | `ManagerCommunicationsComposer` | `POST /manager/communications/send` | ✅ Live |
+| Manage Automations | `/manager/communications` (Automations tab) | Toggle Birthday/Anniversary auto-messages and customize their templates | `ManagerCommunicationsAutomations` | `GET/PATCH /manager/communications/automations` | ✅ Live (UI) |
 | Send History | `/manager/communications` (History tab) | View all past campaigns with channel badge, segment, recipient count, sent count, status, date | `ManagerCommunicationsHistory` | `GET /manager/communications/campaigns` | ✅ Live |
 | History Filters | `/manager/communications` (History tab) | Search by campaign title; filter by channel (All / WhatsApp / Email) | `ManagerCommunicationsHistory` | — (client-side) | ✅ Live |
 

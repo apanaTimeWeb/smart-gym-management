@@ -1,8 +1,9 @@
 // RESPONSIBILITY: Mock API client for the Manager Communications module.
-import type { CommCampaign, CommKPIData, CommRecipient, CommFormValues, CommSegment } from '@/app/manager/communications/communications_types/communications_types';
-import { MOCK_CAMPAIGNS, MOCK_COMM_KPI } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
+import type { CommCampaign, CommKPIData, CommRecipient, CommFormValues, CommSegment, CommAutomation } from '@/app/manager/communications/communications_types/communications_types';
+import { MOCK_CAMPAIGNS, MOCK_COMM_KPI, MOCK_AUTOMATIONS } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
 
 let mockCampaigns = [...MOCK_CAMPAIGNS];
+let mockAutomations = [...MOCK_AUTOMATIONS];
 
 /** Simulates fetching members for a given segment from the backend. */
 const MOCK_SEGMENT_MEMBERS: Record<CommSegment, CommRecipient[]> = {
@@ -72,4 +73,18 @@ export const ManagerCommunicationsApi = {
     mockCampaigns = [campaign, ...mockCampaigns];
     return campaign;
   },
+
+  fetchAutomations: async (): Promise<CommAutomation[]> => {
+    await new Promise(r => setTimeout(r, 400));
+    return mockAutomations;
+  },
+
+  updateAutomation: async (id: string, payload: Partial<CommAutomation>): Promise<CommAutomation> => {
+    await new Promise(r => setTimeout(r, 500));
+    const idx = mockAutomations.findIndex(a => a.id === id);
+    if (idx === -1) throw new Error('Automation not found');
+    mockAutomations[idx] = { ...mockAutomations[idx], ...payload };
+    return mockAutomations[idx];
+  },
 };
+
