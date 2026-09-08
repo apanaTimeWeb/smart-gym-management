@@ -1,0 +1,21 @@
+// RESPONSIBILITY: Next.js loading skeleton for /manager/settings.
+export default function ManagerSettingsLoading() {
+  return (
+    <div className="max-w-3xl mx-auto space-y-6 p-6">
+      <div className="h-8 w-36 bg-skeleton-base motion-safe:animate-pulse rounded" />
+      {[...Array(2)].map((_, i) => (
+        <div key={i} className="bg-card border border-border rounded-xl p-6 space-y-4">
+          <div className="h-5 w-48 bg-skeleton-base motion-safe:animate-pulse rounded" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            {[...Array(2)].map((_, j) => (
+              <div key={j} className="space-y-2">
+                <div className="h-4 w-20 bg-skeleton-base motion-safe:animate-pulse rounded" />
+                <div className="h-10 w-full bg-skeleton-base motion-safe:animate-pulse rounded-lg" />
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
