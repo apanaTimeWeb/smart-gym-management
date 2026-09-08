@@ -1,0 +1,140 @@
+// RESPONSIBILITY: Centralized mock data and constants for the PT module to simulate API responses.
+
+import type { PtPackage, PtAssignment, PtTrainerWorkload, PtDashboardKpis } from '@/app/manager/pt/pt_types/ManagerPtTypes';
+
+export const MOCK_PT_KPIS: PtDashboardKpis = {
+  totalActiveAssignments: 42,
+  sessionsScheduledToday: 18,
+  packagesExpiringSoon: 7,
+  monthlyPtRevenue: 245000,
+};
+
+export const MOCK_PT_PACKAGES: PtPackage[] = [
+  {
+    id: 'pkg-1',
+    name: 'Kickstarter PT',
+    sessionCount: 12,
+    durationDays: 30,
+    price: 12000,
+    description: '12 sessions per month. Ideal for beginners starting their fitness journey.',
+  },
+  {
+    id: 'pkg-2',
+    name: 'Transformation Elite',
+    sessionCount: 24,
+    durationDays: 60,
+    price: 22000,
+    description: '24 sessions across 2 months with personalized diet monitoring.',
+  },
+  {
+    id: 'pkg-3',
+    name: 'Pro Bodybuilding',
+    sessionCount: 36,
+    durationDays: 90,
+    price: 30000,
+    description: 'Advanced 3-month prep package for serious athletes.',
+  },
+];
+
+export const MOCK_PT_WORKLOAD: PtTrainerWorkload[] = [
+  {
+    trainerId: 'tr-1',
+    trainerName: 'Vikram Singh',
+    activeClients: 12,
+    totalSessionsConducted: 450,
+    rating: 4.8,
+    status: 'Fully Booked',
+  },
+  {
+    trainerId: 'tr-2',
+    trainerName: 'Priya Sharma',
+    activeClients: 8,
+    totalSessionsConducted: 320,
+    rating: 4.9,
+    status: 'Available',
+  },
+  {
+    trainerId: 'tr-3',
+    trainerName: 'Rahul Verma',
+    activeClients: 15,
+    totalSessionsConducted: 610,
+    rating: 4.7,
+    status: 'Fully Booked',
+  },
+  {
+    trainerId: 'tr-4',
+    trainerName: 'Anjali Desai',
+    activeClients: 5,
+    totalSessionsConducted: 120,
+    rating: 4.5,
+    status: 'Available',
+  },
+];
+
+export const MOCK_PT_ASSIGNMENTS: PtAssignment[] = [
+  {
+    id: 'asg-1',
+    memberId: 'mem-101',
+    memberName: 'Karan Malhotra',
+    trainerId: 'tr-1',
+    trainerName: 'Vikram Singh',
+    packageId: 'pkg-2',
+    packageName: 'Transformation Elite',
+    totalSessions: 24,
+    completedSessions: 22,
+    startDate: '2023-09-01',
+    endDate: '2023-11-01',
+  },
+  {
+    id: 'asg-2',
+    memberId: 'mem-102',
+    memberName: 'Sneha Kapoor',
+    trainerId: 'tr-2',
+    trainerName: 'Priya Sharma',
+    packageId: 'pkg-1',
+    packageName: 'Kickstarter PT',
+    totalSessions: 12,
+    completedSessions: 4,
+    startDate: '2023-10-10',
+    endDate: '2023-11-10',
+  },
+  {
+    id: 'asg-3',
+    memberId: 'mem-103',
+    memberName: 'Rohan Das',
+    trainerId: 'tr-3',
+    trainerName: 'Rahul Verma',
+    packageId: 'pkg-3',
+    packageName: 'Pro Bodybuilding',
+    totalSessions: 36,
+    completedSessions: 35,
+    startDate: '2023-08-15',
+    endDate: '2023-11-15',
+  },
+  {
+    id: 'asg-4',
+    memberId: 'mem-104',
+    memberName: 'Aditi Rao',
+    trainerId: 'tr-4',
+    trainerName: 'Anjali Desai',
+    packageId: 'pkg-1',
+    packageName: 'Kickstarter PT',
+    totalSessions: 12,
+    completedSessions: 11,
+    startDate: '2023-09-20',
+    endDate: '2023-10-20',
+  },
+  {
+    id: 'asg-5',
+    memberId: 'mem-105',
+    memberName: 'Amit Patel',
+    trainerId: 'tr-1',
+    trainerName: 'Vikram Singh',
+    packageId: 'pkg-2',
+    packageName: 'Transformation Elite',
+    totalSessions: 24,
+    completedSessions: 10,
+    startDate: '2023-10-01',
+    endDate: '2023-12-01',
+  },
+];
