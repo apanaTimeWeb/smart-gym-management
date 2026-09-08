@@ -1,7 +1,8 @@
-// RESPONSIBILITY: Root layout for the MANAGER module. Wraps all MANAGER pages with the sidebar layout and feedback providers.
+// RESPONSIBILITY: Root layout for the MANAGER module. Wraps all MANAGER pages with QueryProvider, layout shell, and feedback providers.
 import React from 'react';
 import ManagerLayout from '@/app/manager/manager_components/ManagerLayout/ManagerLayout';
 import { ManagerConfirmProvider } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
+import { ManagerQueryProvider } from '@/app/manager/manager_components/ManagerQueryProvider';
 
 export const metadata = {
   title: 'GymSmart MANAGER | Gym Management System',
@@ -9,9 +10,11 @@ export const metadata = {
 };
 
 export default function MANAGERLayout({ children }: { children: React.ReactNode }) {
- return (
-    <ManagerConfirmProvider>
-      <ManagerLayout>{children}</ManagerLayout>
-    </ManagerConfirmProvider>
+  return (
+    <ManagerQueryProvider>
+      <ManagerConfirmProvider>
+        <ManagerLayout>{children}</ManagerLayout>
+      </ManagerConfirmProvider>
+    </ManagerQueryProvider>
   );
 }

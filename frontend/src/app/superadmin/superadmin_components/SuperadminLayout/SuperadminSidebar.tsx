@@ -37,6 +37,8 @@ import {
   MessageSquare,
   FileBarChart,
   Eye,
+  TrendingDown,
+  UserCircle,
 } from 'lucide-react';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { logout } from '@/lib/api';
@@ -82,6 +84,7 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
         { name: 'Promotional Coupons', href: SuperadminUrlConfig.PAGES.COUPONS, icon: Tag },
         { name: 'Affiliate Partners', href: SuperadminUrlConfig.PAGES.AFFILIATES, icon: Users },
         { name: 'Tenants (Gyms)', href: SuperadminUrlConfig.PAGES.GYMS_LIST, icon: Building2 },
+        { name: 'Churn Alerts', href: SuperadminUrlConfig.PAGES.CHURN_ALERTS, icon: TrendingDown },
         { name: 'SaaS Invoices', href: SuperadminUrlConfig.PAGES.INVOICES, icon: Receipt },
         { name: 'Support Tickets', href: SuperadminUrlConfig.PAGES.TICKETS, icon: Ticket },
       ]
@@ -122,6 +125,12 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
         { name: 'System Health', href: SuperadminUrlConfig.PAGES.SYSTEM_HEALTH, icon: ServerCog },
         { name: 'Global Audit Logs', href: SuperadminUrlConfig.PAGES.GLOBAL_AUDIT, icon: History },
         { name: 'Global Settings', href: SuperadminUrlConfig.PAGES.SETTINGS, icon: Settings },
+      ]
+    },
+    {
+      group: 'Account',
+      items: [
+        { name: 'My Profile', href: SuperadminUrlConfig.PAGES.PROFILE, icon: UserCircle },
       ]
     }
   ];

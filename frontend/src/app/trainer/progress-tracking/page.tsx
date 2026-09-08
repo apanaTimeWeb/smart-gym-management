@@ -1,8 +1,9 @@
-import { redirect } from 'next/navigation';
+import TrainerProgressMain from '@/app/trainer/progress-tracking/progress_components/TrainerProgressMain/TrainerProgressMain';
 
-// Progress tracking is member-specific and lives inside each member's profile tabs.
-// Redirect to members directory where the trainer can select any member and view their progress.
+export const metadata = {
+  title: 'Progress Tracking | Trainer | GymSmart',
+};
+
 export default function TrainerProgressTrackingPage() {
-  redirect('/trainer/members');
+  return <TrainerProgressMain />;
 }
-

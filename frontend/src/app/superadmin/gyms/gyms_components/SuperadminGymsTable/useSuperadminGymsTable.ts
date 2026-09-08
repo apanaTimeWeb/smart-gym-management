@@ -8,6 +8,7 @@ import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
 import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
 import { AuthUrlConfig } from '@/app/auth/auth_url_config';
+import { useSuperadminGhostLoginStore } from '@/app/superadmin/superadmin_components/SuperadminLayout/useSuperadminGhostLoginStore';
 
 import { MOCK_GYMS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
 
@@ -17,6 +18,7 @@ export function useSuperadminGymsTable() {
   const openDeleteModal = useSuperadminGymsStore(state => state.openDeleteModal);
   const openEditModal = useSuperadminGymsStore(state => state.openEditModal);
   const openWhatsappModal = useSuperadminGymsStore(state => state.openWhatsappModal);
+  const startGhostLogin = useSuperadminGhostLoginStore(state => state.startGhostLogin);
 
   const queryClient = useQueryClient();
 
@@ -54,29 +56,32 @@ export function useSuperadminGymsTable() {
     mutationFn: (id: string) => superadminApi.gyms.impersonateTenant(id),
     onSuccess: async (res, id) => {
       if (res.success && res.data?.token) {
-        toast.success(res.message || 'Impersonating tenant...');
-        
-        // Save token to localStorage as backup
-        localStorage.setItem('gymsmart_impersonate_token', res.data.token);
-        
-        // Overwrite the HTTP-only session cookie so Next.js middleware and proxy API see an Admin session
+        toast.success(res.message || 'Ghost login active. Viewing as tenant admin.');
+
+        // Set impersonation cookie so Next.js middleware sees an Admin session
         try {
           await fetch(AuthUrlConfig.PROXY_API.SET_COOKIE, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-              token: res.data.token, 
-              refreshToken: res.data.token, 
-              user: { role: 'ADMIN', email: `admin-${id}@gym.com`, name: `Impersonated Admin`, tenantId: id, id: `user-${id}` } 
+            body: JSON.stringify({
+              token: res.data.token,
+              refreshToken: res.data.token,
+              user: { role: 'ADMIN', email: `admin-${id}@gym.com`, name: 'Impersonated Admin', tenantId: id, id: `user-${id}` },
             }),
           });
-        } catch (e) {
-          console.error('Failed to set impersonation cookie', e);
+        } catch {
+          // Cookie set failure is non-fatal — token is still in the response
+        }
+
+        // Find the gym to populate the banner
+        const gym = gyms.find((g) => g.id === id);
+        if (gym) {
+          startGhostLogin({ id: gym.id, name: gym.name, plan: gym.plan, adminEmail: gym.adminEmail });
         }
 
         window.location.href = AuthUrlConfig.PAGES.ADMIN_DASHBOARD;
       } else {
-        toast.error(res.message || 'Failed to impersonate tenant');
+        toast.error(res.message || 'Failed to start ghost login');
       }
     },
     onError: (err: unknown) => {

@@ -53,8 +53,8 @@ export const MOCK_APP_INTEGRATION = {
   pushNotificationsEnabled: true,
   appStoreLink: 'https://apps.apple.com/gymsmart',
   playStoreLink: 'https://play.google.com/store/gymsmart',
-  apiKey: 'gsk_live_••••••••••••••••••••••••',
-  webhookUrl: 'https://api.gymsmart.in/webhooks/member-app',
+  apiKey: '<MEMBER_APP_API_KEY>',
+  webhookUrl: '<MEMBER_APP_WEBHOOK_URL>',
 };
 
 export const MOCK_GENERAL_SETTINGS = {

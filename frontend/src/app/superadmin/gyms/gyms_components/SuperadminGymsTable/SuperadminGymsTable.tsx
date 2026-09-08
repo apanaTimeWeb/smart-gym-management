@@ -10,7 +10,16 @@ import SuperadminGymWhatsappModal from '@/app/superadmin/gyms/gyms_components/Su
 import SuperadminGymDeleteModal from '@/app/superadmin/gyms/gyms_components/SuperadminGymDeleteModal/SuperadminGymDeleteModal';
 import SuperadminGymsEmptyState from '@/app/superadmin/gyms/gyms_components/SuperadminGymsEmptyState/SuperadminGymsEmptyState';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
-import { GYMS_TABLE_PAGE_SIZE } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
+import { GYMS_TABLE_PAGE_SIZE, GYMS_PLAN_COLORS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
+
+/**
+ * Returns the Tailwind badge classes for a given plan tier name.
+ * Source of truth: GYMS_PLAN_COLORS constant — never inline in JSX.
+ */
+function getPlanBadgeClasses(plan: string | undefined): string {
+  const key = plan?.toUpperCase() as keyof typeof GYMS_PLAN_COLORS;
+  return GYMS_PLAN_COLORS[key] ?? GYMS_PLAN_COLORS.DEFAULT;
+}
 
 export default function SuperadminGymsTable() {
   const {
@@ -83,10 +92,10 @@ export default function SuperadminGymsTable() {
         <tbody className="divide-y divide-border">
           {paginatedGyms.map((gym: Tenant) => {
             const isActionLoading = actionLoadingId === gym.id;
-            
+
             return (
-              <tr 
-                key={gym.id} 
+              <tr
+                key={gym.id}
                 onClick={() => handleRowClick(gym)}
                 className="hover:bg-card/50 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out group cursor-pointer"
               >
@@ -99,14 +108,7 @@ export default function SuperadminGymsTable() {
                   <p className="text-xs text-disabled mt-1 truncate" title={gym.adminEmail}>{gym.adminEmail}</p>
                 </td>
                 <td className="px-4 py-4">
-                  <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold tracking-wide
-                    ${
-                      gym.plan?.toUpperCase() === 'ENTERPRISE' ? 'bg-purple-bg text-purple border border-purple' : 
-                      gym.plan?.toUpperCase() === 'PRO' ? 'bg-primary-subtle text-primary border border-primary' : 
-                      gym.plan?.toUpperCase() === 'STARTER' || gym.plan?.toUpperCase() === 'BASIC' ? 'bg-success-bg text-success border border-success' :
-                      'bg-input text-secondary border border-border'
-                    }
-                  `}>
+                  <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold tracking-wide ${getPlanBadgeClasses(gym.plan)}`}>
                     {gym.plan?.toUpperCase() || 'UNKNOWN'}
                   </span>
                 </td>
@@ -140,7 +142,7 @@ export default function SuperadminGymsTable() {
                       </div>
                     ) : (
                       <>
-                        <button 
+                        <button
                           onClick={(e) => onGhostLoginClick(e, gym.id, gym.name)}
                           className="p-1.5 text-primary hover:bg-primary-subtle rounded-lg motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
                           title="Ghost Login (Login As Admin)"
@@ -148,19 +150,18 @@ export default function SuperadminGymsTable() {
                         >
                           <LogIn className="w-4 h-4" />
                         </button>
-                        <button 
+                        <button
                           onClick={(e) => onSuspendClick(e, gym.id, gym.name, gym.status)}
-                          className={`p-1.5 rounded-lg motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page ${
-                            gym.status === 'SUSPENDED' 
-                              ? 'text-success hover:bg-success/10' 
-                              : 'text-danger hover:bg-danger-bg/10'
-                          }`}
+                          className={`p-1.5 rounded-lg motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page ${gym.status === 'SUSPENDED'
+                            ? 'text-success hover:bg-success/10'
+                            : 'text-danger hover:bg-danger-bg/10'
+                            }`}
                           title={gym.status === 'SUSPENDED' ? 'Activate Tenant' : 'Suspend Tenant'}
                           aria-label={gym.status === 'SUSPENDED' ? `Activate ${gym.name}` : `Suspend ${gym.name}`}
                         >
                           {gym.status === 'SUSPENDED' ? <PlayCircle className="w-4 h-4" /> : <Ban className="w-4 h-4" />}
                         </button>
-                        <button 
+                        <button
                           onClick={(e) => { e.stopPropagation(); openWhatsappModal(gym); }}
                           className="p-1.5 text-secondary hover:bg-[#25D366]/10 hover:text-[#25D366] rounded-lg motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
                           title="WhatsApp Owner"
@@ -168,7 +169,7 @@ export default function SuperadminGymsTable() {
                         >
                           <MessageCircle className="w-4 h-4" />
                         </button>
-                        <button 
+                        <button
                           onClick={(e) => { e.stopPropagation(); openEditModal(gym); }}
                           className="p-1.5 text-secondary hover:bg-primary-subtle hover:text-primary rounded-lg motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
                           title="Edit Gym"
@@ -176,7 +177,7 @@ export default function SuperadminGymsTable() {
                         >
                           <Edit2 className="w-4 h-4" />
                         </button>
-                        <button 
+                        <button
                           onClick={(e) => onDeleteClick(e, gym)}
                           className="p-1.5 text-secondary hover:bg-danger-bg/10 hover:text-danger rounded-lg motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
                           title="Delete Gym"
@@ -191,7 +192,7 @@ export default function SuperadminGymsTable() {
               </tr>
             );
           })}
-          
+
           {filteredGyms.length === 0 && (
             <tr>
               <td colSpan={7}><SuperadminGymsEmptyState /></td>
@@ -199,13 +200,13 @@ export default function SuperadminGymsTable() {
           )}
         </tbody>
       </table>
-      
-      <SuperadminPagination 
+
+      <SuperadminPagination
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
       />
-      
+
       <SuperadminGymEditModal />
       <SuperadminGymWhatsappModal />
       <SuperadminGymDeleteModal />

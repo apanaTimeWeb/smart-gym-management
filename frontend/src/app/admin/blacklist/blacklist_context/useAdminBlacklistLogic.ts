@@ -13,7 +13,7 @@ import type { BlacklistFormValues, FetchState } from '@/app/admin/blacklist/blac
 export function useAdminBlacklistLogic() {
   const { confirm } = useAdminConfirm();
   const qc = useQueryClient();
-  const { showModal, setShowModal, form, setForm, search, scopeFilter, gymFilter, currentPage, setCurrentPage } = useAdminBlacklistStore();
+  const { activeTab, setActiveTab, showModal, setShowModal, form, setForm, search, scopeFilter, gymFilter, currentPage, setCurrentPage } = useAdminBlacklistStore();
 
   const { data = [], isLoading, isError } = useQuery({
     queryKey: ['adminBlacklist'],
@@ -39,6 +39,9 @@ export function useAdminBlacklistLogic() {
   const totalPages = Math.max(1, Math.ceil(filtered.length / BLACKLIST_ITEMS_PER_PAGE));
   const paginated = filtered.slice((currentPage - 1) * BLACKLIST_ITEMS_PER_PAGE, currentPage * BLACKLIST_ITEMS_PER_PAGE);
 
+  /** Cross-branch view: only gym-specific bans, grouped by member phone for deduplication. */
+  const gymSpecificEntries = data.filter(m => m.scope === 'specific' && m.isActive);
+
   const addMutation = useMutation({
     mutationFn: (payload: BlacklistFormValues) => blacklistApi.addToBlacklist(payload),
     onSuccess: () => { toast.success('Member blacklisted successfully'); setShowModal(false); qc.invalidateQueries({ queryKey: ['adminBlacklist'] }); },
@@ -57,6 +60,12 @@ export function useAdminBlacklistLogic() {
     onError: (err) => toast.error((err as Error).message),
   });
 
+  const propagateMutation = useMutation({
+    mutationFn: (id: string) => blacklistApi.propagateToAllBranches(id),
+    onSuccess: () => { toast.success('Ban propagated to all branches'); qc.invalidateQueries({ queryKey: ['adminBlacklist'] }); },
+    onError: (err) => toast.error((err as Error).message),
+  });
+
   const openAdd = useCallback(() => { setForm(EMPTY_BLACKLIST_FORM); setShowModal(true); }, [setForm, setShowModal]);
 
   const saveBlacklist = useCallback((data: BlacklistFormValues) => { addMutation.mutate(data); }, [addMutation]);
@@ -69,11 +78,24 @@ export function useAdminBlacklistLogic() {
 
   const toggleBlacklist = useCallback((id: string) => { toggleMutation.mutate(id); }, [toggleMutation]);
 
+  const propagateToAllBranches = useCallback(async (id: string, name: string) => {
+    const ok = await confirm({
+      title: 'Propagate Ban to All Branches',
+      message: `Upgrade ${name}'s gym-specific ban to a GLOBAL ban? This will block them from every branch immediately.`,
+      confirmText: 'Propagate',
+      type: 'danger',
+    });
+    if (!ok) return;
+    propagateMutation.mutate(id);
+  }, [confirm, propagateMutation]);
+
   return {
-    members: paginated, allMembers: filtered, fetchState, kpis,
+    members: paginated, allMembers: filtered, gymSpecificEntries, fetchState, kpis,
+    activeTab, setActiveTab,
     showModal, setShowModal, form, openAdd, saveBlacklist,
-    removeFromBlacklist, toggleBlacklist,
+    removeFromBlacklist, toggleBlacklist, propagateToAllBranches,
     saving: addMutation.isPending,
+    propagating: propagateMutation.isPending,
     currentPage, setCurrentPage, totalPages, totalItems: filtered.length,
   };
 }

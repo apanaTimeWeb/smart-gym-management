@@ -2,6 +2,13 @@
 import { z } from 'zod';
 import type { BlacklistedMember, BlacklistKPIData } from '@/app/admin/blacklist/blacklist_types/blacklist_types';
 
+export type BlacklistActiveTab = 'all' | 'cross-branch';
+
+export const BLACKLIST_TAB_OPTIONS: { value: BlacklistActiveTab; label: string }[] = [
+  { value: 'all', label: 'All Entries' },
+  { value: 'cross-branch', label: 'Cross-Branch View' },
+];
+
 export const BLACKLIST_GYM_OPTIONS = [
   { value: 'all', label: 'All Gyms' },
   { value: 'g1', label: 'Andheri East' },

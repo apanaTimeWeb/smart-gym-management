@@ -1,11 +1,11 @@
 // RESPONSIBILITY: Modularized API client for the Superadmin module. All methods import apiFetch from src/lib/api.ts and define only superadmin-scoped endpoints. No UI logic.
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { apiFetch } from '@/lib/api';
-import type { 
-  ApiResponse, 
-  Tenant, 
-  SubscriptionPlan, 
-  CreatePlanPayload, 
+import type {
+  ApiResponse,
+  Tenant,
+  SubscriptionPlan,
+  CreatePlanPayload,
   UpdatePlanPayload,
   BackgroundJob,
   SaaSDashboardMetrics,
@@ -14,6 +14,7 @@ import type {
   InfrastructureNode,
   GlobalAuditLog,
 } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { RedisTelemetry } from '@/app/superadmin/infrastructure/infrastructure_types/infrastructure_types';
 
 /**
  * Superadmin API Client
@@ -32,7 +33,7 @@ export const superadminApi = {
     impersonateTenant: (id: string) => apiFetch<ApiResponse<{ token: string }>>(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}/${id}/impersonate`, { method: 'POST' }),
     deleteGym: (id: string) => apiFetch<ApiResponse<void>>(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}/${id}`, { method: 'DELETE' }),
     fetchGymStats: () => apiFetch<ApiResponse<unknown>>(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}/stats`),
-    emailGymOwner: (id: string, body: { subject: string; message: string; [key: string]: unknown }) => apiFetch<ApiResponse<void>>(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}/${id}/email`, { method: 'POST', body: JSON.stringify(body) }),
+    emailGymOwner: (id: string, body: { subject: string; message: string;[key: string]: unknown }) => apiFetch<ApiResponse<void>>(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}/${id}/email`, { method: 'POST', body: JSON.stringify(body) }),
   },
   plans: {
     fetchPlans: (params?: Record<string, string>) => {
@@ -86,7 +87,7 @@ export const superadminApi = {
   },
   infrastructure: {
     fetchInfrastructureNodes: () => apiFetch<ApiResponse<InfrastructureNode[]>>(SuperadminUrlConfig.BACKEND_API.INFRASTRUCTURE_BASE),
-    fetchRedisTelemetry: () => apiFetch<ApiResponse<any>>(SuperadminUrlConfig.BACKEND_API.REDIS_TELEMETRY),
+    fetchRedisTelemetry: () => apiFetch<ApiResponse<RedisTelemetry>>(SuperadminUrlConfig.BACKEND_API.REDIS_TELEMETRY),
     flushGlobalCache: () => apiFetch<ApiResponse<void>>(SuperadminUrlConfig.BACKEND_API.REDIS_FLUSH_GLOBAL, { method: 'POST' }),
     flushTenantCache: (tenantIds: string[]) => apiFetch<ApiResponse<void>>(SuperadminUrlConfig.BACKEND_API.REDIS_FLUSH_TENANT, { method: 'POST', body: JSON.stringify({ tenantIds }) }),
   },
