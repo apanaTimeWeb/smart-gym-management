@@ -157,7 +157,32 @@ export default function ManagerMembersModal() {
                 )}
               />
             </div>
-            <div>
+            
+            {editId && (
+              <div>
+                <label className="block text-sm font-medium text-secondary mb-0.5">Member Status</label>
+                <Controller
+                  name="status"
+                  control={useFormReturn.control}
+                  render={({ field }) => (
+                    <SearchableDropdown
+                      value={field.value || 'ACTIVE'}
+                      onChange={field.onChange}
+                      options={[
+                        { label: 'Active', value: 'ACTIVE' },
+                        { label: 'Pending', value: 'PENDING' },
+                        { label: 'Expired', value: 'EXPIRED' },
+                        { label: 'Frozen', value: 'FROZEN' },
+                        { label: 'Suspended', value: 'SUSPENDED' },
+                        { label: 'Banned', value: 'BANNED' }
+                      ]}
+                    />
+                  )}
+                />
+              </div>
+            )}
+
+            <div className={editId ? 'sm:col-span-2' : ''}>
               <label className="block text-sm font-medium text-secondary mb-0.5">Plan</label>
               <Controller
                 name="planId"

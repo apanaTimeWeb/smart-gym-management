@@ -1,56 +1,72 @@
-# Notifications Feature Map
+# Admin Notifications — Feature Map
 
 ## Module Purpose
-Handles notifications operations, UI display, and logic isolation as part of the Smart Gym 360 platform.
+The Admin Notifications module displays system-level alerts and global communications for the
+Admin role. It shows expiry warnings, payment overdue alerts, system health notices, and
+admin-broadcast messages. Notifications are read-only from the admin perspective — sending
+broadcasts is handled by a separate broadcast module. Mark-as-read is the only mutation.
 
 ## Directory Structure
-- `notifications_components/`: Contains all isolated micro-components for the module.
-- `notifications_types/` (if applicable): TypeScript definitions.
-- `notifications_utils/` (if applicable): Shared constants and hardcoded data.
-- `notifications_context/` (if applicable): Module-scoped React Context or Zustand store.
+| File/Folder | Responsibility |
+|---|---|
+| `page.tsx` | Server Component — auth guard |
+| `loading.tsx` | Skeleton for notification list |
+| `error.tsx` | Error boundary |
+| `notifications_components/AdminNotificationsMain.tsx` | Root Client Component |
+| `notifications_components/AdminNotificationsList.tsx` | Scrollable list of notification cards |
+| `notifications_components/AdminNotificationsCard.tsx` | Single notification item with type badge |
+| `notifications_components/AdminNotificationsFilters.tsx` | Filter by type, read/unread, date |
+| `notifications_types/AdminNotificationsTypes.ts` | `Notification`, `NotificationType` enum |
+| `notifications_api/AdminNotificationsApi.ts` | API wrappers |
+| `notifications_utils/AdminNotificationsUrlConfig.ts` | Centralized URL constants |
 
 ## Feature Inventory
-| Feature | Path | Purpose | Main API Calls | Owner |
+| Feature | Path | Purpose | Main API Calls | Status |
 |---|---|---|---|---|
-| Core UI | `/notifications` | Main module view | TBD | Frontend Team |
+| Notification Feed | `/admin/notifications` | View all system alerts | `GET /admin/notifications` | ✅ Live |
+| Mark as Read | `/admin/notifications` | Clear unread badge | `PATCH /admin/notifications/:id/read` | ✅ Live |
+| Mark All Read | `/admin/notifications` | Bulk clear unread | `PATCH /admin/notifications/read-all` | ✅ Live |
+| Filter by Type | `/admin/notifications` | Scoped view | Query params on GET | ✅ Live |
 
 ## Data and State Architecture
-- Server-state query keys: `['notifications']`
-- Zustand stores: TBD
-- Context providers: TBD
-- Local-storage keys: TBD
-- MSW handler file: TBD
+- Server-state: `AdminNotificationsContext` — notification list, unread count
+- Zustand stores: None
+- Context providers: `AdminNotificationsProvider`
+- Local-storage keys: None
+- MSW handler: Not yet configured
 
-## API Contract
-List all endpoint builders and expected response types.
-- `fetchNotifications(params)`
-- `createNotifications(dto)`
-- `updateNotifications(id, dto)`
-- `deleteNotifications(id)`
+## User Flows
+1. Admin opens `/admin/notifications` → list loads, unread items highlighted
+2. Admin clicks a notification card → marks as read via `PATCH`, card loses unread highlight
+3. Admin clicks "Mark All Read" → bulk `PATCH` → all cards update, header badge clears
+
+## Component Responsibility Map
+- `AdminNotificationsMain` — layout + provider. MUST NOT contain list logic.
+- `AdminNotificationsList` — renders notification cards from context data.
+- `AdminNotificationsCard` — pure display. Badge color driven by `NotificationType` enum via `statusBadgeConfig.ts`.
+- `AdminNotificationsFilters` — owns filter state, dispatches to context.
 
 ## Permissions and Security
-Document protected actions, roles, and CODEOWNERS paths.
+| Action | Required Role |
+|---|---|
+| View notifications | `SUPERADMIN` |
+| Mark as read | `SUPERADMIN` |
 
 ## Loading, Empty, Error States
-- **Loading:** Uses `loading.tsx` skeleton matching global design.
-- **Empty:** Follows Rule 48 (dedicated empty state component).
-- **Error:** Uses `error.tsx` typed React Error Boundary.
+- **Loading:** `loading.tsx` — 6 notification card skeletons
+- **Empty:** "You're all caught up" with checkmark icon, no CTA needed
+- **Error:** `error.tsx` with retry
 
 ## Edge Cases / AI Warnings
-- Do not bypass API interceptors.
-- Do not mix complex React logic (`useEffect`) with JSX markup.
+- **Notification type badge colors** — must use `statusBadgeConfig.ts` token map, never inline color logic per notification type.
+- **Unread count in header** — the bell icon badge in `AdminLayout` reads from `AdminNotificationsContext`. Do not duplicate state.
+- **No delete** — notifications are never hard-deleted from the UI. Only mark-as-read is allowed.
 
 ## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization
-- [x] Rule 7: Type isolation
-- [x] Rule 8: Server/client boundary
-- [x] Rule 9: Loading/error/not-found handling
-- [x] Rule 14: Backend-driven messages
-- [x] Rule 15A: Tests present
-- [x] Rule 15B: Forms use React Hook Form + Zod
-- [x] Rule 15C: State placed per Server/Client decision matrix
-- [x] Rule 15D: Env vars validated centrally, none exposed unsafely
-- [x] Rule 15E: Error monitoring wired for critical flows
-- [x] Rule 74: Security scan gates passed (SCA + secrets)
-- [x] Rule 76: CODEOWNERS covers security-critical paths
-- [x] Rule 79: MSW handler present where needed
+- [x] Rule 1: Micro-modularization — module-prefixed files
+- [x] Rule 3B: Badge colors via `statusBadgeConfig.ts`
+- [x] Rule 6: Logic/UI Separation — list logic in context, display in components
+- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server
+- [x] Rule 9: `loading.tsx` + `error.tsx` present
+- [x] Rule 13: Feature Map — this document, updated same commit as code changes
+- [x] Rule 14: Backend-driven messages — toast on mark-read error uses `response.message`

@@ -394,7 +394,7 @@ AI agents must never invent arbitrary function names like `loadData()` or `getDa
   provider/self-hosted setup in `/docs/decisions/ota-strategy.md`, including
   rollback procedure and phased-rollout percentages.
 - Every OTA push follows the same staged-rollout discipline as a full release
-  (see Rule 24) — never push an OTA update to 100% of users immediately.
+  (see Rule 27) — never push an OTA update to 100% of users immediately.
 
 ## Rule 22 — Security Scanning & Dependency Guardrails
 
@@ -442,74 +442,200 @@ or debug it without reading any other part of the codebase.
 If it is missing or stale, updating it is part of the same change — a feature
 is never "done" while its context file is out of date.
 
-### Mandatory `_features.md` Template
+### The Documentation Quality Standard
 
-Every `_features.md` MUST use this minimum structure:
+**CRITICAL — The difference between useful and useless documentation:**
 
-```markdown
-# [FeatureName] Feature Map
-
+❌ **BAD (what AI agents produce by default — completely useless):**
+```
 ## Purpose
-Brief business explanation of what this feature does and which user roles use it.
+Handles members operations, UI display, and logic isolation.
 
 ## Screens & Entry Points
-| Screen name | Route / stack name | Role access |
-|---|---|---|
+| Members Screen | /members | All roles |
+
+## Edge Cases / AI Warnings
+- Do not bypass API interceptors.
+- Do not mix complex logic with UI.
+```
+
+✅ **GOOD (what this rule mandates — gives full context to any AI or human):**
+```
+## Purpose
+The Members feature is the primary member management interface for gym managers.
+Managers can view all branch members, add new members via a multi-step form, renew
+memberships, record payments, and assign diet/workout plans. Trainers see ONLY their
+assigned members with no financial data visible.
+
+## Screens & Entry Points
+| MembersListScreen   | members/list       | MANAGER (all members), TRAINER (assigned only) |
+| MembersDetailScreen | members/detail/:id | MANAGER, TRAINER                               |
+| MembersAddScreen    | members/add        | MANAGER only                                   |
+
+## Edge Cases / AI Warnings
+- Deleting a member removes ALL their membership history permanently. The confirmation
+  bottom sheet must explicitly state this. Do not soften the message.
+- The Add Member form is a 3-step wizard. Step 2 fetches live plan data from fetchPlans()
+  — do NOT hardcode plan options in the form.
+- Phone numbers must be masked (98****2310) in MembersMemberCard — full number visible
+  only in MembersDetailScreen. Never remove masking from the list view.
+- Member IDs are UUIDs. Never use array index as a FlatList/ListView key.
+```
+
+**The rule:** if a section contains "TBD", "Handles X operations", "Do not bypass API
+interceptors", or any other generic filler, the documentation **FAILS** this rule and
+must be rewritten before the feature is considered complete.
+
+### Mandatory `_features.md` Template with Content Requirements
+
+Every `_features.md` MUST use this structure. Each section has mandatory content depth
+requirements listed inline.
+
+```markdown
+# [FeatureName] — Feature Map
+
+## Purpose
+[REQUIRED: 3-5 sentences. Must answer: (1) What business problem does this feature solve?
+(2) Which role(s) use it and what can they DO? (3) What is strictly OFF-LIMITS for each
+role? Generic phrases like "handles X operations" are forbidden.]
+
+## Screens & Entry Points
+[REQUIRED: Every screen with its exact route/stack name and which roles can access it.
+"All roles" is not acceptable — name each role explicitly.]
+
+| Screen name | Route / stack name | Role access | Entry trigger |
+|---|---|---|---|
 
 ## Folder Structure
-Brief description of each subfolder and its single responsibility.
+[REQUIRED: Every subfolder listed with its exact responsibility AND the key files inside
+it. "Contains components" is not acceptable.]
+
+| Folder | Responsibility | Key Files |
+|---|---|---|
+| `components/` | Presentational UI only — no API calls, no business logic | `MembersMemberCard.tsx`, `MembersEmptyState.tsx`, `MembersListSkeleton.tsx` |
+| `hooks/` | Data-fetching and UI-state logic extracted from screens | `useMembers.ts` (server state), `useMembersFilters.ts` (client state) |
+| `api/` | All network calls for this feature — nothing else | `members.api.ts` |
+| `types/` | All interfaces, enums, type unions | `members.types.ts` |
+| `schemas/` | Zod schemas / validator classes for forms | `members.schema.ts` |
+| `state/` | Feature-scoped store for shared UI state | `members.store.ts` — holds: selectedMemberId, isAddSheetOpen, filterStatus |
+
+## User Flows & Interactions
+[REQUIRED: 2-4 most important multi-step flows. Numbered steps. This lets an AI
+understand the full journey without reading every file.]
+
+### Flow 1: Add New Member
+1. Manager taps "Add Member" FAB in MembersListScreen
+2. MembersAddScreen pushes onto stack
+3. 3-step form: Personal Info → Plan Selection (fetches live plans) → Payment
+4. On submit: createMember(dto) called → loading state shown on button
+5. On 2xx: query cache invalidated, screen pops, toast shows backend message
+6. On error: form preserves data, inline error from response.message
 
 ## Data & State Architecture
-- TanStack Query / repository cache keys:
-- Feature-scoped Zustand stores / Riverpod providers:
-- Local state decisions (per component):
-- Persisted state (offline requirement): Yes / No — if yes, document strategy
+[REQUIRED: Name the ACTUAL store files, cache keys, and providers — not "TBD".]
+
+- **State pattern:** [e.g., "TanStack Query for server state + Zustand members.store.ts for UI state"]
+- **Cache / query keys:** [e.g., `['members', 'list', filters]`, `['members', 'detail', memberId]`]
+- **Feature-scoped store:** [e.g., `members.store.ts` — holds: selectedMemberId, isAddSheetOpen, filterStatus, searchQuery]
+- **Local state decisions:** [e.g., "Detail screen tab selection is local useState — not shared"]
+- **Persisted state (offline requirement):** Yes / No — if Yes, document cache strategy and invalidation triggers
+- **Storage keys used:** ["None" or namespaced constants e.g. `MEMBERS_FILTER_PREFS_V1`] — if yes, document strategy
 - Storage keys used (namespaced constants):
 
 ## API Contract
-| Function | Method | Endpoint | Request type | Response type |
+[REQUIRED: Every function in the feature's api file listed with exact HTTP method,
+endpoint, request shape, and response type. "TBD" is not acceptable.]
+
+All calls go through the central network client. Response envelope:
+`{ success, message, data: T | null, meta?: PaginationMeta }`
+
+| Function | Method | Endpoint | Request | Response data type |
 |---|---|---|---|---|
+| `fetchMembers(params)` | GET | `/manager/members` | `{ page, limit, search, status }` | `Member[]` + PaginationMeta |
+| `fetchMemberById(id)` | GET | `/manager/members/:id` | — | `MemberDetail` |
+| `createMember(dto)` | POST | `/manager/members` | `CreateMemberDto` | `Member` |
+| `updateMember(id, dto)` | PATCH | `/manager/members/:id` | `UpdateMemberDto` | `Member` |
+| `deleteMember(id)` | DELETE | `/manager/members/:id` | — | `null` |
 
 ## Permissions Used
+[REQUIRED: "None" is a valid and complete answer if no device permissions are used.]
+
 | Permission | Central module function | Rationale |
 |---|---|---|
 
 ## Platform-Specific Notes
-List any iOS / Android divergence and why.
+[REQUIRED: "None" is acceptable if there are no iOS/Android divergences. If there are,
+name the exact component and what differs and why.]
 
 ## Offline Behavior
-Explicit "Yes, with [strategy]" or "No offline requirement."
+[REQUIRED: Explicit "No offline requirement" OR "Yes — [describe cache strategy,
+invalidation triggers, and conflict-resolution approach]".]
 
-## Loading / Empty / Error States
-| State | Component file |
+## Loading, Empty, and Error States
+[REQUIRED: Name the exact component file for each state per section. "Uses skeleton"
+is not enough — describe what the skeleton mimics.]
+
+| Section | Loading State | Empty State | Error State |
+|---|---|---|---|
+| Members list | `MembersListSkeleton.tsx` — 5 ghost card rows matching MembersMemberCard height | `MembersEmptyState.tsx` — icon + "No members yet" + "Add Member" CTA | `MembersErrorFallback.tsx` — retry button re-runs the query |
+| Detail screen | Skeleton matching header + 3 tab sections | N/A | Inline retry |
+
+## Edge Cases and AI Warnings
+[REQUIRED: Minimum 5 items for any feature with CRUD. Must be feature-specific and
+actionable — not generic advice. Format: bold title + explanation.]
+
+- **[Specific warning title]:** [What breaks, why, and what to do instead]
+
+## Component Responsibility Map
+[REQUIRED for features with 4+ components. One line per file so an AI knows exactly
+which file to open for any task without reading all files.]
+
+| File | Responsibility |
 |---|---|
-| Loading | FeatureListSkeleton.tsx |
-| Empty | FeatureEmptyState.tsx |
-| Error | FeatureErrorFallback.tsx |
-
-## Edge Cases / AI Warnings
-Known product constraints, regression risks, common AI hallucination traps.
+| `MembersListScreen.tsx` | Entry screen. Renders toolbar + filter bar + FlatList. No direct API calls. |
+| `MembersMemberCard.tsx` | Single list item. Displays masked phone. Tap navigates to detail screen. |
+| `MembersDetailScreen.tsx` | Full member profile with tabs. Fetches own data via fetchMemberById. |
+| `MembersEmptyState.tsx` | Empty state shown when list has zero items. Has "Add Member" CTA. |
+| `MembersListSkeleton.tsx` | Loading skeleton — 5 ghost rows matching MembersMemberCard layout. |
 
 ## Rule Compliance Checklist
-- [ ] Rule 1: Micro-modularization & module-prefixed naming
+[REQUIRED: Mark honestly. An honest [ ] is better than a false [x].]
+
+- [ ] Rule 1: Micro-modularization — module-prefixed files, size ceilings respected
+- [ ] Rule 1: Role isolation — zero cross-role imports (admin/manager/trainer isolated)
+- [ ] Rule 2: Navigation uses typed params — no full objects passed through routes
 - [ ] Rule 3: All styles use design tokens — no magic hex/dp values
 - [ ] Rule 4: State placed per Server/Client decision matrix
+- [ ] Rule 4: Pessimistic UI — financial/destructive mutations wait for 2xx before UI update
 - [ ] Rule 5: Forms use form library + schema validator
-- [ ] Rule 7: All API calls through central network client, typed verb contract
-- [ ] Rule 8: Lists use virtualized component for >20 items
-- [ ] Rule 7: User-facing messages come from backend's message field
 - [ ] Rule 6: Auth tokens in hardware-backed secure storage only
+- [ ] Rule 7 (API): All API calls through central network client, typed verb contract
+- [ ] Rule 7 (messages): User-facing messages come from backend response.message — never hardcoded
+- [ ] Rule 8: Lists use virtualized component for >20 items
+- [ ] Rule 8: Search/filter inputs debounced — minimum 300ms before API call
 - [ ] Rule 17: Co-located unit tests present; E2E for critical flows
-- [ ] Rule 23: Observability wired for critical error paths
 - [ ] Rule 22: No unapproved dependencies added
+- [ ] Rule 23: Observability wired for critical error paths
+- [ ] Rule 24: This _features.md is complete, specific, and non-generic
 - [ ] Rule 25: All interactive elements have accessible labels + 44/48dp targets
 - [ ] Rule 28: Zero cross-feature imports (self-containment verified)
-- [ ] Rule 29: `_forbidden.md` exists and is current
+- [ ] Rule 29: `_forbidden.md` exists, is specific, and has minimum 5 entries
+- [ ] Rule 30: Sensitive data masked in list/card views — full values only in detail screens
+- [ ] Rule 31: Destructive/financial actions use centralized confirmation bottom sheet
 
 ## Known Issues / Tech Debt
+[REQUIRED: "None" is acceptable. Never leave blank without explicitly stating no known issues.]
+
 | Issue | Reason deferred | Tracking reference |
 |---|---|---|
 ```
+
+### Documentation Freshness Rule
+
+Every time a component is added, an API endpoint changes, a new screen is added, or a
+user flow changes, the `_features.md` for that feature MUST be updated in the same
+commit. Stale documentation is worse than no documentation because it actively misleads
+future AI agents.
 
 ## Rule 25 — Accessibility
 
@@ -569,18 +695,110 @@ Every feature folder MUST have a `[featureName]_forbidden.md` file listing
 what is explicitly NOT allowed in that specific feature. This is the first file
 an AI agent reads before making any change to a feature.
 
-Example `members_forbidden.md`:
+### `_forbidden.md` Content Quality Standard
+
+Every entry MUST be feature-specific and actionable. Generic entries like
+"Do not bypass API interceptors" or "Follow best practices" are **forbidden in
+the forbidden file itself** — they add zero value. Every entry must name the
+specific file, hook, or pattern to use instead. Minimum 5 entries for any
+feature with CRUD operations.
+
+❌ **BAD (generic, useless):**
+```
+- NEVER bypass API interceptors
+- NEVER mix logic with UI
+- NEVER use bad state management
+```
+
+✅ **GOOD (specific, actionable):**
 ```markdown
 # members — Forbidden Patterns
 
-- NEVER import from any other feature folder (admin/members/, trainer/members/, etc.)
-- NEVER call the HTTP client directly — always use members.api.ts
-- NEVER store API response data in members.store.ts — use the data-fetching layer cache only
-- NEVER implement ad-hoc confirmation dialogs — use the centralized confirmation module
-- NEVER add a new dependency without approval (Rule 22 — dependency guardrail)
-- NEVER hardcode hex colors, dp values, or font sizes — use design tokens only (Rule 3)
-- NEVER log auth tokens, PII, or payment data — sanitize before any log call
+- NEVER import from any other feature folder (admin/members/, trainer/members/, etc.) — zero cross-feature imports, Rule 28
+- NEVER call the HTTP client directly — always use members.api.ts which goes through the central network client
+- NEVER store API response data in members.store.ts — the TanStack Query / Riverpod cache is the single source of truth for server data
+- NEVER execute delete/suspend actions on single tap — always show the centralized confirmation bottom sheet first (Rule 31)
+- NEVER add a new dependency without checking approved-dependencies.md first (Rule 22)
+- NEVER hardcode hex colors, dp values, or font sizes — use design tokens from mobile_global_design.md only (Rule 3)
+- NEVER log auth tokens, phone numbers, payment amounts, or full API response bodies — sanitize before any log call (Rule 6)
+- NEVER display raw phone numbers or payment amounts in list/card views — use maskSensitiveData() (Rule 30)
 ```
+
+---
+
+## Rule 30 — Sensitive Data Masking in UI
+
+Any field displaying sensitive personal or financial data MUST be masked by
+default in list views, card components, and summary screens:
+
+- Phone numbers: `98****2310` (show first 2 + last 4 digits)
+- Payment amounts in bulk lists: masked or summarized, not itemized per record
+- National IDs, account numbers: show last 4 digits only
+
+Full values are visible ONLY in dedicated detail/profile screens where the user
+has explicitly navigated to view a single record.
+
+Implementation: create ONE central `maskSensitiveData(value, type)` utility in
+`src/core/utils/maskSensitiveData.ts`. No component may implement its own masking
+logic inline — always import from this central utility.
+
+Never log masked or unmasked sensitive values — sanitize before any log call or
+crash-report breadcrumb (Rule 6 and Rule 23).
+
+---
+
+## Rule 31 — Double Verification for Destructive and Financial Actions
+
+On mobile, accidental taps on destructive actions are more likely than on desktop
+(small targets, no hover state, no right-click). This makes double-verification
+more critical on mobile, not less.
+
+**Any action that does any of the following MUST show a confirmation bottom sheet
+or dialog BEFORE executing:**
+- Deletes a record (member, expense, plan, etc.)
+- Suspends or deactivates a user or gym
+- Marks a payment, invoice, or payroll as paid/processed
+- Triggers any irreversible financial mutation
+
+Rules:
+- Never execute on a single tap — always require explicit confirmation.
+- The confirmation message must clearly state what will happen and whether it is
+  reversible. Do not soften destructive messages.
+- Use ONE centralized confirmation module (e.g. a `useConfirm()` hook backed by
+  a shared `ConfirmBottomSheet` component) — never implement ad-hoc alert dialogs
+  per screen. Native `Alert.alert()` is acceptable only as a fallback where a
+  custom bottom sheet cannot be rendered.
+- The confirm button must show a loading state while the mutation is in flight
+  and be disabled to prevent double-submission.
+
+---
+
+## Rule 32 — Pessimistic UI Updates and Search Debouncing
+
+### Pessimistic UI for Financial and Destructive Mutations
+
+For any mutation involving money or irreversible operations (delete, suspend,
+payment, payroll processing):
+- The action button MUST transition to a disabled loading state immediately on tap.
+- The UI (list, store, cache) MUST only update AFTER receiving a `2xx` response.
+- Optimistic updates (updating the UI before server confirmation) are **completely
+  forbidden** for these action types.
+- On error: restore the previous UI state, show the backend `message` field in a
+  toast or inline error — never a hardcoded string.
+
+For non-destructive mutations (e.g. updating a display name, adding a note),
+optimistic updates are permitted but must be rolled back cleanly on error.
+
+### Search and Filter Input Debouncing
+
+Any search input or filter control that triggers an API call MUST be debounced
+with a minimum **300ms** delay before firing the request. Mobile keyboards fire
+onChange on every keystroke — without debouncing, every character typed sends a
+separate API request, causing performance degradation and potential rate limiting.
+
+Implementation: use a shared `useDebounce(value, delay)` hook in
+`src/core/hooks/useDebounce.ts`. No feature may implement its own debounce logic
+inline — always import from this central hook.
 
 ---
 
@@ -591,17 +809,21 @@ Example `members_forbidden.md`:
 3. After the AI writes code, verify:
    - All styles use design tokens — no raw hex/dp values? (Rule 3)
    - State placed per Server/Client matrix? (Rule 4)
+   - Pessimistic UI on financial/destructive mutations? (Rule 32)
    - Forms using library + schema validator? (Rule 5)
    - API calls through central client, typed verb names? (Rule 7)
+   - Search/filter inputs debounced at 300ms? (Rule 32)
    - Lists virtualized for >20 items? (Rule 8)
    - User messages from `response.message`, never hardcoded? (Rule 7)
    - Auth tokens in hardware-backed secure storage only? (Rule 6)
+   - Sensitive data masked in list/card views? (Rule 30)
+   - Destructive/financial actions use confirmation bottom sheet? (Rule 31)
    - Co-located tests exist for new hooks and components? (Rule 17)
    - Crash reporting wired for new critical paths? (Rule 23)
    - Is any new dependency on the approved list? (Rule 22)
-   - `_features.md` updated? (Rule 24)
+   - `_features.md` updated with non-generic content? (Rule 24)
    - All interactive elements have accessible labels + 44/48dp targets? (Rule 25)
    - Any cross-feature imports? (Rule 28)
-   - `_forbidden.md` current? (Rule 29)
+   - `_forbidden.md` current and specific? (Rule 29)
 4. Run CI gates: lint, type check, test pyramid, SCA scan, secrets scan.
 5. For auth, payment, storage, or tenant-routing changes: ensure CODEOWNERS human review.

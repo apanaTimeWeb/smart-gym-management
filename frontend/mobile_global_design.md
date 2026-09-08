@@ -143,3 +143,91 @@ Define a named z-index scale so overlapping elements are never resolved with arb
 
 **Rule:** Never use a raw z-index / elevation number outside this table.
 If a new layer type is needed, extend this table — don't invent an arbitrary value inline.
+
+## 15. Sensitive Data Masking — Visual Specification (Rule 30)
+
+Any field displaying sensitive personal or financial data MUST be masked by default
+in list views, card components, and summary screens. Full values appear ONLY in
+dedicated detail/profile screens.
+
+| Data Type | Masked Display | Full Display (detail screen only) |
+|---|---|---|
+| Phone number | `98****2310` (first 2 + last 4) | `9876542310` |
+| National ID / Aadhaar | `**** **** 2310` (last 4 only) | Full number |
+| Bank account / card | `**** 2310` (last 4 only) | Full number |
+| Payment amount (bulk list) | Summarized total only | Per-record amount |
+
+**Token:** Masked text uses `muted` color token at 80% opacity — visually distinct
+from real data without being invisible.
+
+**Implementation:** ONE central `maskSensitiveData(value, type)` utility in
+`src/core/utils/maskSensitiveData.ts`. No component may implement its own masking
+logic inline.
+
+---
+
+## 16. Confirmation Bottom Sheet — Visual Specification (Rule 31)
+
+Every destructive or financial action MUST route through a single shared
+`ConfirmBottomSheet` component before executing. Never use ad-hoc `Alert.alert()`
+or per-screen confirmation dialogs.
+
+### Layout
+```
+┌─────────────────────────────────────┐
+│  ████  [Warning icon — destructive] │  ← icon color: `destructive` token
+│  [Action Title — heading-sm, bold]  │
+│  [Description — body-sm, muted]     │  ← must state if irreversible
+│  [Detail context if needed]         │
+├─────────────────────────────────────┤
+│  [Cancel — ghost, full width]       │
+│  [Confirm — destructive fill, fw]   │  ← disabled + spinner while in-flight
+└─────────────────────────────────────┘
+```
+
+### Token Mapping
+| Element | Token |
+|---|---|
+| Sheet background | `card` |
+| Warning icon | `destructive` |
+| Title | `foreground`, `heading-sm` |
+| Description | `muted`, `body-sm` |
+| Cancel button | `border` outline, `foreground` text |
+| Confirm button | `destructive` fill, white text |
+| Confirm (loading) | `destructive` fill, `Loader` spinner, `disabled` |
+
+**Z-index:** `z-bottom-sheet` (40) from Section 14.
+
+**Rule:** The confirm button MUST show a loading spinner and be `disabled` while
+the mutation is in flight — never allow double-submission.
+
+---
+
+## 17. Loading Button State & Pessimistic UI Tokens (Rule 32)
+
+### Loading Button State
+When any button triggers an async action it MUST transition to a loading state
+immediately on tap — retaining its size so the layout does not shift.
+
+| State | Visual |
+|---|---|
+| Default | Label text, `primary` fill |
+| Loading | Label hidden (or shifted), `Loader` icon `animate-spin`, `disabled=true`, same fill color at 70% opacity |
+| Success | Brief checkmark flash (150ms), then revert or navigate |
+| Error | Revert to default state — error shown in toast or inline field |
+
+**Token:** Loading spinner uses white on `primary`/`destructive` fill buttons.
+Spinner size: `icon-sm` (16px).
+
+### Pessimistic UI Rule
+For financial and destructive mutations the UI list/store/cache MUST only update
+AFTER a `2xx` response — never before.
+
+| Mutation type | UI update timing | On error |
+|---|---|---|
+| Financial (payment, refund, payroll) | After `2xx` only | Restore previous state + toast `response.message` |
+| Destructive (delete, suspend, exit) | After `2xx` only | Restore previous state + toast `response.message` |
+| Non-destructive (rename, add note) | Optimistic allowed | Roll back cleanly + toast |
+
+**Rule:** Never hardcode error strings in the UI — always surface `response.message`
+from the backend envelope (consistent with mobile Rule 32 and backend Rule 28).

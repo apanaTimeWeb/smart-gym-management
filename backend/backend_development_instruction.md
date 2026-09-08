@@ -80,6 +80,7 @@ Create a higher-level "Facade" or "Orchestrator" whose ONLY job is to open a tra
 Strictly ban global `common/` or `shared/` folders. If a utility, enum, or type is used by the Finance module, put it in `modules/finance/utils/`. If the HR module needs the exact same utility, **duplicate the code** into `modules/hr/utils/`. 
 * **Crucial Clarification (Domain vs Module):** WET duplication applies strictly at the **module level, not the domain level**. No shared folder is allowed at ANY level. Even if both the `billing` module and `attendance` module live under the same `erp` domain, they MUST get their own independent copies of a shared utility. There is no `erp/_shared/` folder.
 * **Why?** In an AI-driven codebase, code repetition is entirely acceptable because AI writes the code. If we use a global `common/` folder, an AI might modify a shared function to fix a bug in HR, inadvertently breaking the Finance module. Complete module isolation guarantees 0% cross-module side effects.
+* **Infrastructure Exception (Framework-Level vs Business-Logic-Level):** The WET-over-DRY / no-shared-folder rule applies strictly to **BUSINESS LOGIC utilities** (domain-specific helpers, formatters, validators). It does **NOT** apply to genuine framework-level infrastructure that every module is architecturally required to **extend OR consistently reference for correctness** (i.e., a single shared registry or config that MUST stay identical across all modules to function correctly — duplicating it would produce inconsistency, not isolation) — e.g. `BaseEntity` (Rule 58), the global `ResponseInterceptor` (Rule 28), `RolesGuard`/`@Roles()` decorator (Rule 83), the structured logger (Rule 14), `AsyncLocalStorage` context propagation (Rule 57), the centralized rate-limit tiers config (Rule 44), the event-registry constants (Rule 50), and the global database connection pool config (Rule 63). These live in a single, clearly-named `src/core/` or `src/infrastructure/` folder — **NOT** `src/shared/` or `src/common/` (to avoid becoming a dumping ground). This folder is intentionally small, framework-plumbing-only, and rarely touched — it does not carry the same "AI breaks module B while fixing module A" risk because it contains **no business logic**, only structural contracts that every module must extend or reference by architectural design.
 
 ### Edge Case D: External Service Adapters (Anti-Corruption Layer)
 *Scenario:* When your backend talks to the outside world (Stripe, AWS S3, SendGrid), never put the `axios.post()` or SDK calls directly inside your business logic.
@@ -163,11 +164,151 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 ## 19. Module-Level Feature Documentation
 *(Crucial for AI Context & Onboarding)*
 * **The Rule:** Every single module must contain a `[module_name]_backend_feature.md` file at its root (e.g., `modules/auth/auth_backend_feature.md`). 
-* **What it must contain:**
-  1. A high-level explanation of what the module does.
-  2. A breakdown of the folder structure and what exactly each file is responsible for.
-  3. Explanations of core business logic or complex workflows within the module.
 * **Why:** Before an AI or a new human developer makes any changes to a module, they will read this file first. It acts as the ultimate localized context guide, instantly explaining the routing, file responsibilities, and logic, drastically reducing the risk of hallucination or breaking existing architecture.
+
+### Documentation Quality Standard
+
+**The purpose of `_backend_feature.md` is that an AI given ONLY that file + the module folder can fully understand, modify, or debug the module without reading anything else. Generic boilerplate defeats this entirely.**
+
+#### ❌ BAD — What AI agents produce without quality enforcement:
+```markdown
+## Module Purpose
+Handles billing operations.
+
+## Feature Inventory
+| POST /billing/charge | /billing/charge | Handles charging | CreateChargeDto |
+
+## Edge Cases / AI Warnings
+- TBD
+- Do not bypass the Orchestrator.
+```
+*Why this fails: "Handles billing operations" tells an AI nothing. "TBD" is worse than no doc. "Do not bypass the Orchestrator" with no context is unactionable.*
+
+#### ✅ GOOD — What every `_backend_feature.md` must look like:
+```markdown
+## Module Purpose
+Processes all wallet top-ups, plan purchases, and refunds for gym members.
+Wallet balance is stored in paise (integer). All mutations go through
+BillingOrchestratorService to guarantee atomic DB + audit log writes.
+Never call BillingWalletRepository directly from outside this module.
+
+## Feature Inventory
+| POST /billing/wallet/topup | WalletCommandController | Top up member wallet | WalletTopupDto |
+| POST /billing/plans/purchase | PlanCommandController | Purchase a plan | PlanPurchaseDto |
+
+## Edge Cases / AI Warnings
+- Wallet deductions use pessimistic locking (Rule 41) — never remove the
+  SELECT FOR UPDATE or concurrent requests will produce negative balances.
+- Plan purchase and wallet deduction MUST be in the same transaction
+  (BillingOrchestratorService) — splitting them causes partial charge bugs.
+- Idempotency-Key header is mandatory on /wallet/topup (Rule 31) —
+  removing it will cause double-charges on network retries.
+```
+*Why this works: An AI can read this and immediately know the invariants, the danger zones, and exactly which rules apply — without reading a single source file.*
+
+**Failure Conditions — A `_backend_feature.md` FAILS quality review if it contains:**
+- Any section with "TBD" or "N/A" as the entire content
+- Module Purpose under 3 sentences
+- Edge Cases with fewer than 3 concrete, module-specific entries
+- Generic warnings not tied to a specific rule number (e.g., "be careful with transactions" with no Rule citation)
+- Feature Inventory rows where Purpose column is just "Handles X"
+
+**Documentation Freshness Rule:** `_backend_feature.md` MUST be updated in the same commit as any code change to the module. A stale feature doc is worse than no doc — it actively misleads AI agents.
+
+---
+
+### Mandatory `[module_name]_backend_feature.md` Template
+Every backend module MUST use this minimum structure:
+
+```markdown
+# [Module Name] Backend Feature Map
+
+## Module Purpose
+[REQUIRED: 3+ sentences. What business problem does this module solve? What are
+the key invariants (e.g., "all mutations go through the Orchestrator")? What
+should an AI NEVER do in this module?]
+
+## Directory Structure
+| File | Responsibility |
+|---|---|
+| [module]-command.controller.ts | [REQUIRED: exact HTTP mutations it handles] |
+| [module]-query.controller.ts | [REQUIRED: exact read endpoints it handles] |
+| services/[module]-orchestrator.service.ts | [REQUIRED: what it orchestrates] |
+| repositories/[module].repository.ts | [REQUIRED: what queries it owns] |
+| dtos/[module]-create.dto.ts | [REQUIRED: what it validates] |
+| [module].entity.ts | [REQUIRED: what DB table it maps to] |
+
+## Feature Inventory
+[REQUIRED: One row per endpoint. Purpose must be a full sentence, not "Handles X".]
+| Controller/Endpoint | HTTP | Path | Purpose | Request DTO | Response DTO |
+|---|---|---|---|---|---|
+
+## Data and State Architecture
+[REQUIRED: Fill every field. Write "none" only if genuinely none.]
+- DB Entities: [entity names and their table names]
+- Redis Caching Keys: [key patterns and TTLs, e.g., `billing:wallet:{memberId}` TTL 5min]
+- Event Emitters: [event names from event-registry.constants.ts, e.g., BILLING.PAYMENT.FAILED]
+- Background Jobs: [queue names and what triggers them]
+- Idempotency Keys: [which endpoints require Idempotency-Key header — Rule 31]
+
+## Business Flow / Key Sequences
+[REQUIRED: For each non-trivial mutation, describe the exact execution chain.]
+**Example — Plan Purchase:**
+1. PlanCommandController receives POST /billing/plans/purchase
+2. Validates PlanPurchaseDto (Rule 3)
+3. Calls BillingOrchestratorService.purchasePlan(dto)
+4. Orchestrator opens DB transaction
+5. Calls BillingWalletRepository.deductBalance() with pessimistic lock (Rule 41)
+6. Calls MemberPlanRepository.createPlanRecord()
+7. Commits transaction — emits BILLING.PLAN.PURCHASED event
+8. EventBus listener triggers NotificationService (decoupled — Rule 8A)
+
+## File Responsibility Map
+[REQUIRED: One line per file stating its single responsibility and what it must NOT do.]
+- `billing-orchestrator.service.ts` — Opens transactions, calls micro-services. MUST NOT contain business logic.
+- `billing-wallet.repository.ts` — Raw DB queries for wallet table only. MUST NOT call other repositories.
+- `billing-plan-purchase.service.ts` — Plan purchase business logic only. MUST NOT touch wallet directly.
+
+## Permissions and Security
+[REQUIRED: List every endpoint with its required role(s) and any resource-level checks.]
+| Endpoint | Required Role(s) | Resource-Level Check |
+|---|---|---|
+| POST /billing/wallet/topup | MANAGER, ADMIN | Actor must belong to same branch as member |
+| GET /billing/history | MANAGER, ADMIN, MEMBER | Member can only see own history |
+
+CODEOWNERS path: `src/modules/[domain]/[module]/` → @[reviewer-handle]
+
+## Edge Cases / AI Warnings
+[REQUIRED: Minimum 3 entries. Each must cite a specific Rule number and explain
+the exact consequence of violating it — not just "be careful".]
+- [Specific invariant]: [What breaks if violated] — see Rule [N]
+- [Concurrency risk]: [Race condition scenario] — requires pessimistic lock (Rule 41)
+- [Transaction boundary]: [What must be atomic and why] — see Rule 8B
+
+## Rule Compliance Checklist
+- [ ] Rule 7: TypeORM used for all DB access (no raw SQL outside QueryBuilder)
+- [ ] Rule 19: This file updated in same commit as any code change (Freshness Rule)
+- [ ] Rule 23: Heavy tasks (emails, PDFs, bulk ops) moved to background jobs
+- [ ] Rule 28: All responses wrapped in canonical envelope via ResponseInterceptor
+- [ ] Rule 29: Soft deletes only — no hard DELETE calls
+- [ ] Rule 31: Idempotency-Key supported on all financial mutation endpoints
+- [ ] Rule 34: N+1 queries prevented — eager loading used where needed
+- [ ] Rule 36: Fail-Fast applied — null checks at service layer, DB constraints enforced
+- [ ] Rule 41: Pessimistic locking on all concurrent balance/inventory mutations
+- [ ] Rule 48: Read (query) and write (command) controllers are separate files
+- [ ] Rule 56: findByIdOrThrow() used — null never propagates silently
+- [ ] Rule 62: Explicit return types on all service and repository methods
+- [ ] Rule 76: Every file starts with // RESPONSIBILITY: comment
+- [ ] Rule 79: Every file has // FLOW: comment below RESPONSIBILITY
+- [ ] Rule 80: JSDoc on all service methods, repositories, and utilities
+- [ ] Rule 83: RBAC enforced at controller layer via @Roles() — never inline in services
+- [ ] Rule 85: Guard clauses used — no nested if/else beyond 2 levels
+- [ ] Rule 86: Verb contract naming applied (createX, findXById, findXByIdOrThrow)
+- [ ] Rule 87: Every service method ≤ 20 lines, single responsibility
+- [ ] Rule 89: Domain objects used in services — ORM entities stay in repository layer
+- [ ] Rule 92: All ORM orderBy/where with user input validated against allowlist
+- [ ] Rule 93: If module touches auth/billing/webhooks/tenant — CODEOWNERS human review required
+```
 
 ## 20. Performance & Network Optimization (Compression, Rate Limiting & Caching)
 * **The Rule:** Enterprise APIs must protect their bandwidth and server load. 
@@ -336,7 +477,7 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **Architecture Strategy:**
   1. **Master Database:** A central database (e.g., `gymsmart_master`) must exist solely to manage global resources: Users, Authentication, Tenants (Gyms), Subscriptions, and Feature Flags.
   2. **Tenant Databases:** Every time a new gym registers, the backend must programmatically create a brand-new database (e.g., `tenant_db_101`) and run all schema migrations on it automatically. *(Note: All these logical databases reside within the same single MySQL/PostgreSQL server instance; do not spin up new physical servers/VPS per tenant).*
-  3. **Dynamic Connection Routing (Request Scoped):** The backend must intercept every incoming API request. Using a global middleware or interceptor, it must extract the `x-tenant-id` (from HTTP headers or JWT payload) and dynamically construct or switch the database connection to point to that specific tenant's database for the lifecycle of that request.
+  3. **Dynamic Connection Routing (Request Scoped):** The backend must intercept every incoming API request. Using a global middleware or interceptor, it must extract the `x-tenant-id` (from HTTP headers or JWT payload) and dynamically construct or switch the database connection to point to that specific tenant's database for the lifecycle of that request. **⚠️ See Rule 63 before implementing this** — the connection pool budget must be calculated across ALL active tenant DataSources combined, not per-tenant. Blindly applying `max: 20` per tenant DataSource will exhaust the database server's connection limit under load.
 * **How to Apply to Different Frameworks:**
   - **NestJS (Node/TypeScript):** Do not use a static `TypeOrmModule.forRoot`. Use request-scoped providers or custom connection factories that cache and resolve `DataSource` instances based on the request's tenant header.
   - **Django (Python):** Use database routers (`db_for_read`, `db_for_write`) paired with thread-local storage or middleware to dynamically route queries to the correct database alias based on the request.
@@ -458,7 +599,7 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **The Rule:** Never allow raw `any` types to escape the ORM layer. Query builder results or raw SQL executions must immediately be mapped to a strictly typed DTO or Entity class.
 
 ## 71. UTC Datetime Storage Format
-* **The Rule:** ALL dates and times MUST be stored in the database as UTC. The backend must never store local timezones. Any datetime conversion should happen purely on the frontend (Rule 24).
+* **The Rule:** ALL dates and times MUST be stored in the database as UTC. The backend must never store local timezones. Any datetime conversion for display purposes should happen purely on the frontend.
 
 ## 72. Per-Endpoint Payload Size Limits
 * **The Rule:** The default global `1mb` limit (Rule 37) can be overridden per-endpoint for specific use cases. General endpoints must reject payloads >1MB. File-upload endpoints must explicitly declare their own larger limit (e.g., `10mb` for profile images, `50mb` for bulk import CSVs). These overrides must be declared in the endpoint's controller decorator, not scattered in middleware.
@@ -470,8 +611,17 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 ## 74. Mechanical Enforcement of Isolation (The "Tooling Gate")
 * **The Rule:** The backend must explicitly enforce architectural boundaries mechanically. If using Node.js, mandate `eslint-plugin-boundaries` or `no-restricted-imports`. If using Python, mandate `import-linter`. This guarantees that an AI cannot accidentally import an `attendance` repository into a `billing` service. Trust is not enough; the pipeline must block cross-module violations.
 
-## 75. Hard File-Size Ceilings
-* **The Rule:** Services and controllers have a strict file size ceiling of ~300 lines maximum. If a backend file exceeds this, the AI must explicitly pause and refactor it by splitting the logic into an Orchestrator/Facade and smaller micro-services. This strictly prevents token explosion and hallucination.
+## 75. Hard File-Size Ceilings (AI Context Limits)
+* **The Rule:** To prevent token explosion and hallucination, backend files must strictly adhere to size limits. If a backend file exceeds its ceiling, the AI must explicitly pause and refactor it by splitting the logic into an Orchestrator/Facade and smaller micro-services.
+
+| File Type | Maximum Lines |
+|---|---|
+| Controller (`*.controller.ts`) | **200 lines** |
+| Service (`*.service.ts`) | **300 lines** |
+| Repository (`*.repository.ts`) | **200 lines** |
+| Entity/DTO (`*.entity.ts`, `*.dto.ts`) | **150 lines** |
+| Module Config (`*.module.ts`) | **100 lines** |
+| Utilities/Mappers | **120 lines** |
 
 ## 76. Strict File Responsibility Contract
 * **The Rule:** Every backend controller, service, or repository MUST start with a single-line comment at the very top of the file explicitly defining its boundary. (e.g., `// RESPONSIBILITY: Processes incoming Stripe webhooks and emits EVENT_PAYMENT_SUCCESS. No direct DB writes.`). This instantly grounds the AI's context when reading the file.
@@ -480,7 +630,58 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **The Rule:** An AI agent cannot blindly add new dependencies (`npm install` or `pip install`) without human approval. Before proposing a new library, the AI must check the `package.json` or `requirements.txt` to verify if an existing approved library (e.g., `date-fns` instead of adding `moment`, or a native ORM feature) can suffice for the task.
 
 ## 78. Forbidden Patterns File (`[moduleName]_forbidden.md`)
-* **The Rule:** Every backend module must have a tiny markdown file listing what is explicitly NOT allowed in that specific module. For example, `billing_forbidden.md` might state: "Never bypass the Orchestrator for payments. Never mutate the DB without pessimistic locking." This acts as the ultimate localized guardrail for AI agents.
+* **The Rule:** Every backend module must have a `[moduleName]_forbidden.md` file listing what is explicitly NOT allowed in that specific module.
+
+### `_forbidden.md` Content Quality Standard
+
+**Failure Conditions — A `_forbidden.md` FAILS quality review if it contains:**
+- Fewer than 5 entries
+- Generic entries not tied to a specific rule number (e.g., "Never bypass the Orchestrator" with no rule citation)
+- Entries that apply to every module equally (e.g., "Do not use console.log") — those belong in the global instruction, not here
+- Entries with no explanation of the consequence of violation
+
+#### ❌ BAD — Generic, unactionable:
+```markdown
+# billing_forbidden.md
+- Never bypass the Orchestrator for payments.
+- Never mutate the DB without pessimistic locking.
+- Do not use console.log.
+- Do not bypass API interceptors.
+```
+*Why this fails: "Never bypass the Orchestrator" with no context tells an AI nothing about which specific call paths are forbidden or what breaks if violated.*
+
+#### ✅ GOOD — Specific, rule-cited, consequence-explained:
+```markdown
+# billing_forbidden.md
+
+## What is NEVER allowed in this module
+
+1. **Never call BillingWalletRepository directly from outside BillingOrchestratorService.**
+   Consequence: Wallet deductions outside the Orchestrator bypass the DB transaction
+   boundary, causing partial charges where balance is deducted but plan is not activated.
+   Rule: 8B (Orchestrator Pattern), Rule 41 (Pessimistic Locking).
+
+2. **Never remove the SELECT FOR UPDATE lock from deductBalance().**
+   Consequence: Concurrent top-up + deduction requests will race, producing negative
+   wallet balances that cannot be recovered without manual DB correction.
+   Rule: 41 (Transaction Locks & Race Condition Prevention).
+
+3. **Never process a plan purchase and wallet deduction in separate transactions.**
+   Consequence: A crash between the two operations leaves the member charged but
+   without an active plan — a financial discrepancy requiring manual reconciliation.
+   Rule: 8B (Orchestrator Pattern).
+
+4. **Never omit the Idempotency-Key check on /billing/wallet/topup.**
+   Consequence: Network retries from mobile clients will double-charge the member.
+   Rule: 31 (Idempotency Keys for Critical Mutations).
+
+5. **Never return raw MemberEntity or WalletEntity from billing service methods.**
+   Consequence: ORM entity leakage means a DB column rename breaks service-layer
+   callers that should be completely unaware of the schema.
+   Rule: 89 (Domain Object vs ORM Entity Separation).
+```
+
+**Minimum requirement:** Every `_forbidden.md` must have at least **5 entries**, each with a specific consequence and a Rule citation.
 
 ---
 
@@ -570,7 +771,7 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 ---
 
 ## 85. Guard Clause / Early Return Pattern (No Nested Conditional Hell)
-* **The Rule:** Deeply nested `if/else` blocks inside service methods are strictly forbidden. This mirrors Frontend Rule 53 which bans ternary hell. All service methods MUST use the **Guard Clause** (Early Return) pattern: validate inputs and exit early at the top of the function, keeping the happy path flat and readable.
+* **The Rule:** Deeply nested `if/else` blocks inside service methods are strictly forbidden. This mirrors Frontend Rule 51 which bans ternary hell. All service methods MUST use the **Guard Clause** (Early Return) pattern: validate inputs and exit early at the top of the function, keeping the happy path flat and readable.
   - ❌ **BAD (Nested):**
     ```typescript
     async suspendMember(id: string) {
@@ -631,7 +832,7 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 ---
 
 ## 88. Strict Import Order Convention (Mechanical ESLint Enforcement)
-* **The Rule:** All backend TypeScript/JavaScript files MUST enforce a strict, consistent import order. This mirrors Frontend Rule 51. Configure ESLint's `import/order` rule to enforce the following groups in this exact sequence:
+* **The Rule:** All backend TypeScript/JavaScript files MUST enforce a strict, consistent import order. This mirrors Frontend Rule 49. Configure ESLint's `import/order` rule to enforce the following groups in this exact sequence:
   1. **Node.js built-ins** (e.g., `node:fs`, `node:path`)
   2. **Framework core** (e.g., `@nestjs/common`, `express`, `django`)
   3. **Third-party packages** (e.g., `typeorm`, `class-validator`, `bcrypt`)
@@ -677,12 +878,12 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **Mandatory Gate 2 — SCA (Software Composition Analysis):** Run a dependency vulnerability scanner (e.g., `npm audit`, `safety` for Python, `Snyk`) on every PR. Any new dependency with a known `Critical` CVE must block the merge.
 * **Mandatory Gate 3 — Secrets Detection:** Run a secrets scanner (e.g., `GitLeaks`, `Trufflehog`) on every PR diff. A single hardcoded API key or database password in a commit is a catastrophic security breach. This gate must never be skipped.
 * **Mandatory Gate 4 — TypeScript Strict Compile Check:** Run `tsc --noEmit` on every PR. The build must pass with zero type errors — no `@ts-ignore` bypasses allowed (Rule 69).
-* **Why:** Frontend Rule 65 mandates mechanical tooling gates for the frontend. The backend requires the exact same discipline but with an added focus on security. An AI writing authentication or payment code must have its output automatically vetted before it reaches production.
+* **Why:** Frontend Rule 61 mandates mechanical tooling gates for the frontend. The backend requires the exact same discipline but with an added focus on security. An AI writing authentication or payment code must have its output automatically vetted before it reaches production.
 
 ---
 
 ## 91. Mandatory Backend Pre-Commit Hooks (Blocking Gates Before Push)
-* **The Rule:** This mirrors Frontend Rule 65's `husky + lint-staged` mandate. The backend repository MUST configure pre-commit hooks using `husky` (Node.js) or `pre-commit` framework (Python) to run fast, blocking checks before every `git push`. These hooks run locally on the developer/AI agent's machine — they are the first line of defense before code reaches CI.
+* **The Rule:** This mirrors Frontend Rule 61's `husky + lint-staged` mandate. The backend repository MUST configure pre-commit hooks using `husky` (Node.js) or `pre-commit` framework (Python) to run fast, blocking checks before every `git push`. These hooks run locally on the developer/AI agent's machine — they are the first line of defense before code reaches CI.
 * **Required Pre-Commit Checks (must all pass):**
   1. `tsc --noEmit` — TypeScript type check. Zero errors required.
   2. `eslint --fix` — Auto-fix lint violations; fail if unfixable violations remain.
@@ -731,7 +932,8 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
   2. **Authorization & Permission Guards** — Any new `@Roles()` decorator usage, `RolesGuard` modifications, resource-level authorization services (Rule 83).
   3. **Payment & Financial Mutations** — Any code that triggers charges, refunds, wallet deductions, or invoice generation.
   4. **Database Migration Files** — Any migration that adds `NOT NULL`, drops a column, or modifies a primary key. (Rule 24).
-  5. **Multi-Tenancy Connection Routing** — Any modification to the tenant DataSource factory or request-scoped connection resolver (Rule 39).
+  5. **Webhook Signature Verification** — Any code in webhook handlers that verifies HMAC/cryptographic signatures (Rule 45). A bypass here allows forged payment/delivery events to trigger real financial or state-changing actions — the risk is equivalent to a direct payment mutation.
+  6. **Tenant Provisioning & Connection Routing** — Any code that creates a new tenant database, runs migrations programmatically, or resolves the `x-tenant-id` to a DataSource (Rule 39). A bug here risks cross-tenant data leakage — the single most severe failure mode in this architecture. This includes both the provisioning flow AND any modification to the request-scoped connection resolver.
 * **Implementation:** In GitHub/GitLab, create a `CODEOWNERS` file mapping these folders to specific human reviewers. PRs touching these paths cannot be merged without a human approval even if all CI gates pass.
 * **PR Description Mandate:** Any PR touching these modules MUST include a section titled `## Security Impact Analysis` explaining what changed, what the risk surface is, and why the change is safe.
 * **Why:** Industry research confirms that ~45% of AI-generated code can introduce vulnerabilities, and the risk is highest in security-critical paths. An AI agent might generate a logically correct but cryptographically weak JWT validation, or a permission guard with a subtle bypass. Automated tools cannot catch all semantic security flaws — a human security review is the final, non-negotiable gate.
@@ -747,7 +949,7 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
    - Is there an N+1 query?
    - Is there a missing null check (use `findByIdOrThrow` where needed)?
    - Is a secret hardcoded? (Auto-blocked by pre-commit hook — Rule 91)
-   - Is the response wrapped in the standard envelope with a single consistent `data` shape?
+   - Is the response wrapped in the standard envelope with a single consistent `data` shape — is `data` a single explicitly typed value, never a polymorphic bag? (Rule 82)
    - Is the permission guard at the controller layer using typed enums? (Rule 83)
    - Is any ORM `orderBy` or `where` using user input without an allowlist? (Rule 92)
    - Are there any barrel file imports or relative path imports?
@@ -755,7 +957,9 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
    - Is every new method ≤ 20 lines using Guard Clauses? (Rule 85/87)
    - Does every new file have `// RESPONSIBILITY:` + `// FLOW:` + JSDoc on every method? (Rules 76/79/80)
    - Is a Mapper used to translate between ORM entities and domain objects? (Rule 89)
-   - If the change touches `auth/`, `billing/`, or `permissions/`, has a human reviewed it? (Rule 93)
+   - For mutation endpoints: is an `Idempotency-Key` header supported to prevent double-execution? (Rule 31)
+   - For background job queues: is a Dead Letter Queue configured for all retry-exhausted jobs? (Rule 61)
+   - If the change touches `auth/`, `billing/`, `webhooks/`, or `tenant-provisioning/`, has a human reviewed it? (Rule 93)
 6. Run automated CI gates: SAST, SCA, secrets scan, `tsc --noEmit`. (Rule 90)
 7. Run `pytest` against the live API to confirm contract compliance.
 8. For security-critical modules, ensure `CODEOWNERS` human approval is obtained. (Rule 93)

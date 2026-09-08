@@ -1,56 +1,68 @@
-# Dashboard Feature Map
+# Trainer Dashboard — Feature Map
 
 ## Module Purpose
-Handles dashboard operations, UI display, and logic isolation as part of the Smart Gym 360 platform.
+The Trainer Dashboard is the primary landing page for the Trainer role. It shows KPIs
+scoped to the trainer's own clients: assigned member count, today's sessions, upcoming
+sessions, and recent member activity. Financial data, global member counts, and revenue
+are strictly forbidden in this module. All data is read-only.
 
 ## Directory Structure
-- `dashboard_components/`: Contains all isolated micro-components for the module.
-- `dashboard_types/` (if applicable): TypeScript definitions.
-- `dashboard_utils/` (if applicable): Shared constants and hardcoded data.
-- `dashboard_context/` (if applicable): Module-scoped React Context or Zustand store.
+| File/Folder | Responsibility |
+|---|---|
+| `page.tsx` | Server Component — auth guard |
+| `loading.tsx` | Structural skeleton matching KPI grid layout |
+| `error.tsx` | Error boundary |
+| `dashboard_components/TrainerDashboardMain.tsx` | Root Client Component |
+| `dashboard_components/TrainerDashboardKpiCards.tsx` | Assigned members, today's sessions KPIs |
+| `dashboard_components/TrainerDashboardUpcomingSessions.tsx` | Next 5 scheduled sessions list |
+| `dashboard_components/TrainerDashboardRecentActivity.tsx` | Recent member check-ins / progress updates |
+| `dashboard_context/DashboardProvider.tsx` | Fetch state for all dashboard data |
 
 ## Feature Inventory
-| Feature | Path | Purpose | Main API Calls | Owner |
+| Feature | Path | Purpose | Main API Calls | Status |
 |---|---|---|---|---|
-| Core UI | `/dashboard` | Main module view | TBD | Frontend Team |
+| KPI Cards | `/trainer/dashboard` | Assigned members, session counts | `GET /trainer/dashboard/stats` | ✅ Live |
+| Upcoming Sessions | `/trainer/dashboard` | Next scheduled sessions | `GET /trainer/dashboard/sessions` | ✅ Live |
+| Recent Activity | `/trainer/dashboard` | Member check-ins / updates | `GET /trainer/dashboard/activity` | ✅ Live |
 
 ## Data and State Architecture
-- Server-state query keys: `['dashboard']`
-- Zustand stores: TBD
-- Context providers: TBD
-- Local-storage keys: TBD
-- MSW handler file: TBD
+- Server-state: `DashboardProvider` — parallel fetch of all 3 endpoints
+- Zustand stores: None — read-only
+- Context providers: `DashboardProvider`
+- Local-storage keys: None
+- MSW handler: Not yet configured
 
-## API Contract
-List all endpoint builders and expected response types.
-- `fetchDashboard(params)`
-- `createDashboard(dto)`
-- `updateDashboard(id, dto)`
-- `deleteDashboard(id)`
+## User Flows
+1. Trainer logs in → redirected to `/trainer/dashboard`
+2. `loading.tsx` skeleton renders immediately
+3. `DashboardProvider` fires parallel API calls → sections populate
+4. Trainer clicks a member in recent activity → navigates to `/trainer/members/:id`
+
+## Component Responsibility Map
+- `TrainerDashboardMain` — layout grid. MUST NOT fetch data directly.
+- `DashboardProvider` — owns all fetch state. MUST NOT render UI.
+- `TrainerDashboardKpiCards` — pure display, receives stats as props.
+- `TrainerDashboardUpcomingSessions` — read-only list, no actions.
 
 ## Permissions and Security
-Document protected actions, roles, and CODEOWNERS paths.
+| Action | Required Role |
+|---|---|
+| View dashboard | `TRAINER` |
+| ❌ View revenue / finance | Strictly forbidden — Trainer role |
 
 ## Loading, Empty, Error States
-- **Loading:** Uses `loading.tsx` skeleton matching global design.
-- **Empty:** Follows Rule 48 (dedicated empty state component).
-- **Error:** Uses `error.tsx` typed React Error Boundary.
+- **Loading:** `loading.tsx` — 3 KPI shimmer cards + 2 list skeletons
+- **Empty:** KPI cards show `0`; lists show "No upcoming sessions"
+- **Error:** `error.tsx` with retry
 
 ## Edge Cases / AI Warnings
-- Do not bypass API interceptors.
-- Do not mix complex React logic (`useEffect`) with JSX markup.
+- **No financial data** — never add revenue, payment, or salary KPIs to this dashboard. Trainer role is strictly forbidden from financial data.
+- **Parallel fetches mandatory** — all 3 API calls must fire simultaneously via `Promise.all`.
+- **No mutations** — this page is 100% read-only.
 
 ## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization
-- [x] Rule 7: Type isolation
-- [x] Rule 8: Server/client boundary
-- [x] Rule 9: Loading/error/not-found handling
-- [x] Rule 14: Backend-driven messages
-- [x] Rule 15A: Tests present
-- [x] Rule 15B: Forms use React Hook Form + Zod
-- [x] Rule 15C: State placed per Server/Client decision matrix
-- [x] Rule 15D: Env vars validated centrally, none exposed unsafely
-- [x] Rule 15E: Error monitoring wired for critical flows
-- [x] Rule 74: Security scan gates passed (SCA + secrets)
-- [x] Rule 76: CODEOWNERS covers security-critical paths
-- [x] Rule 79: MSW handler present where needed
+- [x] Rule 2: Total Role Isolation — no financial data, no cross-role imports
+- [x] Rule 6: Logic/UI Separation — all fetch in `DashboardProvider`
+- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server
+- [x] Rule 9: `loading.tsx` + `error.tsx` present
+- [x] Rule 13: Feature Map — this document, updated same commit as code changes

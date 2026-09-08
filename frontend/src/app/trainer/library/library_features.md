@@ -1,56 +1,66 @@
-# Library Feature Map
+# Trainer Library — Feature Map
 
 ## Module Purpose
-Handles library operations, UI display, and logic isolation as part of the Smart Gym 360 platform.
+The Trainer Library module provides access to the diet plan library for the Trainer role.
+Trainers can view existing diet plans and assign them to their assigned members. Trainers
+cannot create or delete global diet plans — that is a Manager responsibility. This module
+is a read-and-assign interface only.
 
 ## Directory Structure
-- `library_components/`: Contains all isolated micro-components for the module.
-- `library_types/` (if applicable): TypeScript definitions.
-- `library_utils/` (if applicable): Shared constants and hardcoded data.
-- `library_context/` (if applicable): Module-scoped React Context or Zustand store.
+| File/Folder | Responsibility |
+|---|---|
+| `page.tsx` | Server Component — auth guard |
+| `loading.tsx` | Grid skeleton |
+| `error.tsx` | Error boundary |
+| `library_components/TrainerLibraryMain.tsx` | Root Client Component |
+| `library_components/TrainerLibraryGrid.tsx` | Card grid of available diet plans |
+| `library_components/TrainerLibraryPlanCard.tsx` | Single diet plan card with Assign button |
+| `library_components/TrainerLibraryAssignModal.tsx` | Assign plan to assigned member |
+| `library_context/LibraryProvider.tsx` | Fetch state, plan list |
+| `library_types/TrainerLibraryTypes.ts` | `DietPlan`, `AssignPlanDto` types |
+| `library_api/TrainerLibraryApi.ts` | API wrappers |
+| `library_utils/TrainerLibraryUrlConfig.ts` | Centralized URL constants |
 
 ## Feature Inventory
-| Feature | Path | Purpose | Main API Calls | Owner |
+| Feature | Path | Purpose | Main API Calls | Status |
 |---|---|---|---|---|
-| Core UI | `/library` | Main module view | TBD | Frontend Team |
+| Diet Plan Grid | `/trainer/library` | View all available diet plans | `GET /trainer/library/plans` | ✅ Live |
+| Assign to Member | `/trainer/library` | Link plan to assigned member | `PATCH /trainer/members/:id/diet` | ✅ Live |
 
 ## Data and State Architecture
-- Server-state query keys: `['library']`
-- Zustand stores: TBD
-- Context providers: TBD
-- Local-storage keys: TBD
-- MSW handler file: TBD
+- Server-state: `LibraryProvider` — plan list
+- Zustand stores: `useTrainerLibraryStore` — modal open/close, selected plan
+- Context providers: `LibraryProvider`
+- Local-storage keys: None
 
-## API Contract
-List all endpoint builders and expected response types.
-- `fetchLibrary(params)`
-- `createLibrary(dto)`
-- `updateLibrary(id, dto)`
-- `deleteLibrary(id)`
+## User Flows
+1. Trainer opens `/trainer/library` → plan grid loads
+2. Trainer clicks "Assign" on a plan → `TrainerLibraryAssignModal` → member search (assigned members only) → submit → `PATCH`
+
+## Component Responsibility Map
+- `TrainerLibraryMain` — layout + provider. MUST NOT contain form logic.
+- `TrainerLibraryAssignModal` — member search uses `SearchableDropdown` scoped to assigned members only.
 
 ## Permissions and Security
-Document protected actions, roles, and CODEOWNERS paths.
+| Action | Required Role |
+|---|---|
+| View diet plans | `TRAINER` |
+| Assign to member | `TRAINER` |
+| ❌ Create / Delete plans | Manager only — forbidden in Trainer role |
 
 ## Loading, Empty, Error States
-- **Loading:** Uses `loading.tsx` skeleton matching global design.
-- **Empty:** Follows Rule 48 (dedicated empty state component).
-- **Error:** Uses `error.tsx` typed React Error Boundary.
+- **Loading:** `loading.tsx` — 6 plan card skeletons
+- **Empty:** "No diet plans available" — contact Manager message
+- **Error:** `error.tsx` with retry
 
 ## Edge Cases / AI Warnings
-- Do not bypass API interceptors.
-- Do not mix complex React logic (`useEffect`) with JSX markup.
+- **Assign modal member list** — must only show members assigned to the authenticated trainer, not the full branch member list.
+- **No create/delete** — never add create or delete actions to this module.
 
 ## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization
-- [x] Rule 7: Type isolation
-- [x] Rule 8: Server/client boundary
-- [x] Rule 9: Loading/error/not-found handling
-- [x] Rule 14: Backend-driven messages
-- [x] Rule 15A: Tests present
-- [x] Rule 15B: Forms use React Hook Form + Zod
-- [x] Rule 15C: State placed per Server/Client decision matrix
-- [x] Rule 15D: Env vars validated centrally, none exposed unsafely
-- [x] Rule 15E: Error monitoring wired for critical flows
-- [x] Rule 74: Security scan gates passed (SCA + secrets)
-- [x] Rule 76: CODEOWNERS covers security-critical paths
-- [x] Rule 79: MSW handler present where needed
+- [x] Rule 2: Total Role Isolation — no create/delete, assigned members only in assign modal
+- [x] Rule 6: Logic/UI Separation — fetch in context, form in modal
+- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server
+- [x] Rule 9: `loading.tsx` + `error.tsx` present
+- [x] Rule 13: Feature Map — this document, updated same commit as code changes
+- [x] Rule 20: Member search uses `SearchableDropdown`

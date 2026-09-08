@@ -43,8 +43,8 @@ export const INITIAL_EXERCISES: unknown[] = [
 export const WorkoutSchema = z.object({
   name: z.string().min(2, 'Name is required'),
   level: z.string(),
-  days: z.number().min(1, 'Must be a valid number > 0'),
-  exercises: z.number().min(1, 'Must be a valid number > 0'),
+  days: z.coerce.number().min(1, 'Must be a valid number > 0'),
+  exercises: z.coerce.number().min(1, 'Must be a valid number > 0'),
   focus: z.string().min(2, 'Focus area is required'),
   duration: z.string().min(2, 'Duration is required'),
   tags: z.string(),
@@ -53,14 +53,22 @@ export const WorkoutSchema = z.object({
   endDate: z.string().optional(),
   instructions: z.string().optional(),
   assignedMemberId: z.string().optional(),
+  workoutExercises: z.array(z.object({
+    exerciseId: z.string().optional(),
+    name: z.string(),
+    sets: z.coerce.number().min(1),
+    reps: z.string().or(z.coerce.number().transform(v => String(v))),
+    weight: z.string().optional(),
+    restTime: z.string().optional()
+  })).optional()
 });
 export type WorkoutFormValues = z.infer<typeof WorkoutSchema>;
 
 export const EMPTY_WORKOUT_FORM: WorkoutFormValues = { 
   name: '', 
   level: 'Beginner', 
-  days: 0 as any, 
-  exercises: 0 as any, 
+  days: 0, 
+  exercises: 0, 
   focus: '', 
   duration: '', 
   tags: '',
@@ -68,7 +76,8 @@ export const EMPTY_WORKOUT_FORM: WorkoutFormValues = {
   startDate: '',
   endDate: '',
   instructions: '',
-  assignedMemberId: ''
+  assignedMemberId: '',
+  workoutExercises: []
 };
 
 export const ExerciseSchema = z.object({

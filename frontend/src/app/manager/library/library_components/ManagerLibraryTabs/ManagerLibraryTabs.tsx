@@ -9,7 +9,7 @@ export default function ManagerLibraryTabs() {
   return (
     <div className="border-b border-border flex flex-wrap gap-4 justify-between items-center bg-card p-2 sm:p-0">
       <div className="flex overflow-x-auto">
-        <h2 className="px-5 py-3.5 text-lg font-bold text-foreground whitespace-nowrap">Diet Plans</h2>
+        <h2 className="px-5 py-3.5 text-lg font-bold text-foreground whitespace-nowrap">View Diet Plans</h2>
       </div>
       <div className="px-4 flex flex-wrap gap-3 items-center">
         <div className="relative">

@@ -1,56 +1,80 @@
-# Hr Feature Map
+# Manager HR — Feature Map
 
 ## Module Purpose
-Handles hr operations, UI display, and logic isolation as part of the Smart Gym 360 platform.
+The Manager HR module handles branch-level staff management and payroll processing. It covers
+two tabs: Staff Directory (view/add/edit branch staff) and Payroll (process monthly salary
+payments). Payroll processing is a financial mutation and requires `useConfirm()` double-
+verification. Staff deactivation is a soft-delete only.
 
 ## Directory Structure
-- `hr_components/`: Contains all isolated micro-components for the module.
-- `hr_types/` (if applicable): TypeScript definitions.
-- `hr_utils/` (if applicable): Shared constants and hardcoded data.
-- `hr_context/` (if applicable): Module-scoped React Context or Zustand store.
+| File/Folder | Responsibility |
+|---|---|
+| `page.tsx` | Server Component — auth guard |
+| `loading.tsx` | Skeleton for tabs + table |
+| `error.tsx` | Error boundary |
+| `hr_components/ManagerHrMain.tsx` | Root Client Component, tab switcher |
+| `hr_components/ManagerHrStaffTable.tsx` | Branch staff directory table |
+| `hr_components/ManagerHrPayrollTable.tsx` | Monthly payroll records table |
+| `hr_components/ManagerHrAddStaffModal.tsx` | Add new staff form |
+| `hr_components/ManagerHrEditStaffModal.tsx` | Edit staff details form |
+| `hr_components/ManagerHrProcessPayrollModal.tsx` | Process salary payment form |
+| `hr_context/HrProvider.tsx` | Fetch state for staff + payroll |
+| `hr_types/ManagerHrTypes.ts` | `StaffMember`, `PayrollRecord`, `ProcessPayrollDto` types |
+| `hr_api/ManagerHrApi.ts` | API wrappers |
+| `hr_utils/ManagerHrUrlConfig.ts` | Centralized URL constants |
 
 ## Feature Inventory
-| Feature | Path | Purpose | Main API Calls | Owner |
+| Feature | Path | Purpose | Main API Calls | Status |
 |---|---|---|---|---|
-| Core UI | `/hr` | Main module view | TBD | Frontend Team |
+| Staff Directory | `/manager/hr` | View branch staff | `GET /manager/hr/staff` | ✅ Live |
+| Add Staff | `/manager/hr` | Register new staff member | `POST /manager/hr/staff` | ✅ Live |
+| Edit Staff | `/manager/hr` | Update staff details | `PATCH /manager/hr/staff/:id` | ✅ Live |
+| Deactivate Staff | `/manager/hr` | Soft-deactivate staff | `PATCH /manager/hr/staff/:id/deactivate` | ✅ Live |
+| Payroll Records | `/manager/hr` | View salary payment history | `GET /manager/hr/payroll` | ✅ Live |
+| Process Payroll | `/manager/hr` | Record salary payment | `POST /manager/hr/payroll` | ✅ Live |
 
 ## Data and State Architecture
-- Server-state query keys: `['hr']`
-- Zustand stores: TBD
-- Context providers: TBD
-- Local-storage keys: TBD
-- MSW handler file: TBD
+- Server-state: `HrProvider` — staff list, payroll list, active tab
+- Zustand stores: `useManagerHrStore` — modal open/close, selected staff
+- Context providers: `HrProvider`
+- Local-storage keys: None
+- MSW handler: Not yet configured
 
-## API Contract
-List all endpoint builders and expected response types.
-- `fetchHr(params)`
-- `createHr(dto)`
-- `updateHr(id, dto)`
-- `deleteHr(id)`
+## User Flows
+1. Manager opens `/manager/hr` → Staff tab loads by default
+2. Manager clicks "Add Staff" → `ManagerHrAddStaffModal` → submit → `POST` → table refreshes
+3. Manager switches to Payroll tab → payroll records load
+4. Manager clicks "Process Payroll" → `ManagerHrProcessPayrollModal` → `useConfirm()` → `POST` → record added
+
+## Component Responsibility Map
+- `ManagerHrMain` — tab switcher + provider wrapper. MUST NOT contain table logic.
+- `ManagerHrStaffTable` / `ManagerHrPayrollTable` — pure display, receive data as props.
+- `ManagerHrProcessPayrollModal` — financial mutation, requires `useConfirm()` before submit.
 
 ## Permissions and Security
-Document protected actions, roles, and CODEOWNERS paths.
+| Action | Required Role |
+|---|---|
+| View staff / payroll | `MANAGER` |
+| Add / Edit staff | `MANAGER` |
+| Process payroll | `MANAGER` — requires `useConfirm()` |
+| Deactivate staff | `MANAGER` — requires `useConfirm()` |
 
 ## Loading, Empty, Error States
-- **Loading:** Uses `loading.tsx` skeleton matching global design.
-- **Empty:** Follows Rule 48 (dedicated empty state component).
-- **Error:** Uses `error.tsx` typed React Error Boundary.
+- **Loading:** `loading.tsx` — tab skeleton + 6-row table skeleton
+- **Empty:** "No staff members" / "No payroll records" with CTA
+- **Error:** `error.tsx` with retry
 
 ## Edge Cases / AI Warnings
-- Do not bypass API interceptors.
-- Do not mix complex React logic (`useEffect`) with JSX markup.
+- **Payroll is a financial mutation** — always requires `useConfirm()` before `POST`. Never allow single-click payroll processing.
+- **Deactivation is soft-delete** — sets `is_active: false` via PATCH, never hard DELETE.
+- **Phone masking** — staff phone numbers in table must use `maskSensitiveData()` from `@/lib/formatters`.
+- **Salary amounts** — stored and transmitted as paise integers. Use `formatCurrency()` for display.
 
 ## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization
-- [x] Rule 7: Type isolation
-- [x] Rule 8: Server/client boundary
-- [x] Rule 9: Loading/error/not-found handling
-- [x] Rule 14: Backend-driven messages
-- [x] Rule 15A: Tests present
-- [x] Rule 15B: Forms use React Hook Form + Zod
-- [x] Rule 15C: State placed per Server/Client decision matrix
-- [x] Rule 15D: Env vars validated centrally, none exposed unsafely
-- [x] Rule 15E: Error monitoring wired for critical flows
-- [x] Rule 74: Security scan gates passed (SCA + secrets)
-- [x] Rule 76: CODEOWNERS covers security-critical paths
-- [x] Rule 79: MSW handler present where needed
+- [x] Rule 1: Micro-modularization — module-prefixed files
+- [x] Rule 6: Logic/UI Separation — fetch in context, form in modals
+- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server
+- [x] Rule 9: `loading.tsx` + `error.tsx` present
+- [x] Rule 13: Feature Map — this document, updated same commit as code changes
+- [x] Rule 43: Phone numbers masked in table view
+- [x] Rule 71: Payroll processing + deactivation use `useConfirm()`

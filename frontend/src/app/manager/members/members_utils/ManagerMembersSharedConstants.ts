@@ -19,6 +19,7 @@ export const MemberSchema = z.object({
   joinDate: z.string().optional(),
   expiryDate: z.string().optional(),
   medicalHistory: z.string().optional(),
+  status: z.enum(['ACTIVE', 'PENDING', 'EXPIRED', 'FROZEN', 'SUSPENDED', 'BANNED']).optional(),
 });
 
 export type MemberFormValues = z.infer<typeof MemberSchema>;
@@ -29,6 +30,7 @@ export const MEMBERS_STATUS_COLORS: Record<string, { bg: string; text: string }>
   EXPIRED: { bg: 'bg-danger-bg', text: 'text-danger' },
   FROZEN: { bg: 'bg-info-bg', text: 'text-info' },
   SUSPENDED: { bg: 'bg-danger', text: 'text-white' },
+  BANNED: { bg: 'bg-gray-800', text: 'text-white' },
 };
 
 export const MEMBERS_CYCLE_LABELS: Record<string, string> = {
@@ -44,7 +46,9 @@ export const MEMBER_STATUS_OPTIONS = [
   { label: 'Active', value: 'ACTIVE' },
   { label: 'Pending', value: 'PENDING' },
   { label: 'Expired', value: 'EXPIRED' },
-  { label: 'Frozen', value: 'FROZEN' }
+  { label: 'Frozen', value: 'FROZEN' },
+  { label: 'Suspended', value: 'SUSPENDED' },
+  { label: 'Banned', value: 'BANNED' }
 ];
 
 export const GENDER_OPTIONS = [

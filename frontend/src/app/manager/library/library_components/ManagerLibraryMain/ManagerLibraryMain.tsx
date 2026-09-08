@@ -15,7 +15,7 @@ function LibraryContent() {
 
  return (
  <div className="min-h-full pb-10 bg-background text-foreground">
- <ManagerHeader title="Library" subtitle="Manage exercises and diet plans for member assignments" />
+ <ManagerHeader title="Diet Management" subtitle="Manage exercises and diet plans for member assignments" />
  <div className="p-6 space-y-5">
  <ManagerLibraryTabs />
  

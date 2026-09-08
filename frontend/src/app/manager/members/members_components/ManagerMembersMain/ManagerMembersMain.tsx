@@ -26,7 +26,7 @@ function MembersContent() {
       <div className="print-hide">
         {!selectedMember ? (
           <>
-            <ManagerHeader title="Members Directory" subtitle="Manage gym members, profiles, and subscriptions" />
+            <ManagerHeader title="Member Management" subtitle="Manage gym members, profiles, and subscriptions" />
             <div className="p-6 space-y-5">
               <ManagerMembersKPIs />
               <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">

@@ -221,6 +221,27 @@ export default function TrainerMembersProfileWorkout() {
           </button>
         </div>
       ) : null}
+
+      {/* Workout History Section */}
+      <div className="bg-card border border-border rounded-2xl p-6 mt-6">
+        <h4 className="text-lg font-bold text-foreground mb-4">Workout History</h4>
+        <div className="space-y-3">
+          {[
+            { name: 'Full Body Strength', date: 'Aug 2026 - Sep 2026', level: 'Beginner', status: 'Completed' },
+            { name: 'HIIT Fat Burn', date: 'Jul 2026 - Aug 2026', level: 'Beginner', status: 'Completed' },
+          ].map((historyItem, idx) => (
+            <div key={idx} className="bg-input rounded-xl p-4 flex items-center justify-between">
+              <div>
+                <h5 className="font-bold text-sm text-foreground">{historyItem.name}</h5>
+                <p className="text-xs text-secondary">{historyItem.date} · {historyItem.level}</p>
+              </div>
+              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-success-bg text-success flex items-center gap-1">
+                <Check size={12} /> {historyItem.status}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
