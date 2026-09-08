@@ -1,18 +1,20 @@
-// RESPONSIBILITY: Root client orchestrator for the Communications module — renders KPIs, tab switcher, and conditionally Composer or History.
+// RESPONSIBILITY: Root client orchestrator for the Communications module — renders KPIs, tab switcher, and conditionally Composer, History, Automations, or Churn Recovery.
 'use client';
 
-import { MessageCircle, History, Zap } from 'lucide-react';
+import { MessageCircle, History, Zap, UserX } from 'lucide-react';
 import ManagerCommunicationsKPIs from '@/app/manager/communications/communications_components/ManagerCommunicationsKPIs/ManagerCommunicationsKPIs';
 import ManagerCommunicationsComposer from '@/app/manager/communications/communications_components/ManagerCommunicationsComposer/ManagerCommunicationsComposer';
 import ManagerCommunicationsHistory from '@/app/manager/communications/communications_components/ManagerCommunicationsHistory/ManagerCommunicationsHistory';
 import ManagerCommunicationsAutomations from '@/app/manager/communications/communications_components/ManagerCommunicationsAutomations/ManagerCommunicationsAutomations';
+import ManagerChurnRecoveryTab from '@/app/manager/communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryTab';
 import { useManagerCommunicationsLogic } from '@/app/manager/communications/communications_context/useManagerCommunicationsLogic';
 import type { CommActiveTab } from '@/app/manager/communications/communications_store/useManagerCommunicationsStore';
 
-const TABS: { value: CommActiveTab; label: string; icon: any }[] = [
-  { value: 'compose', label: 'Compose',       icon: MessageCircle },
-  { value: 'history', label: 'Send History',  icon: History },
-  { value: 'automations', label: 'Automations', icon: Zap },
+const TABS: { value: CommActiveTab; label: string; Icon: React.ElementType }[] = [
+  { value: 'compose',        label: 'Compose',       Icon: MessageCircle },
+  { value: 'history',        label: 'Send History',  Icon: History },
+  { value: 'automations',    label: 'Automations',   Icon: Zap },
+  { value: 'churn_recovery', label: 'Win-Back',      Icon: UserX },
 ];
 
 export default function ManagerCommunicationsMain() {
@@ -30,30 +32,40 @@ export default function ManagerCommunicationsMain() {
         <ManagerCommunicationsKPIs />
 
         {/* Tab switcher */}
-        <div className="flex items-center gap-1 bg-input border border-border rounded-xl p-1 w-fit">
+        <div className="flex items-center gap-1 bg-input border border-border rounded-xl p-1 w-fit flex-wrap">
           {TABS.map((tab) => {
             const isActive = activeTab === tab.value;
-            const Icon = tab.icon;
+            const { Icon } = tab;
             return (
               <button
                 key={tab.value}
+                type="button"
                 onClick={() => setActiveTab(tab.value)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium motion-safe:transition-all ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium motion-safe:transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                   isActive
                     ? 'bg-card text-foreground shadow-sm border border-border'
                     : 'text-secondary hover:text-foreground'
-                }`}
+                } ${tab.value === 'churn_recovery' && isActive ? 'text-danger' : ''}`}
               >
-                <Icon size={15} />
+                <Icon
+                  size={15}
+                  className={tab.value === 'churn_recovery' && isActive ? 'text-danger' : ''}
+                />
                 {tab.label}
+                {tab.value === 'churn_recovery' && (
+                  <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] font-semibold bg-danger-bg text-danger">
+                    NEW
+                  </span>
+                )}
               </button>
             );
           })}
         </div>
 
-        {activeTab === 'compose' && <ManagerCommunicationsComposer />}
-        {activeTab === 'history' && <ManagerCommunicationsHistory />}
-        {activeTab === 'automations' && <ManagerCommunicationsAutomations />}
+        {activeTab === 'compose'        && <ManagerCommunicationsComposer />}
+        {activeTab === 'history'        && <ManagerCommunicationsHistory />}
+        {activeTab === 'automations'    && <ManagerCommunicationsAutomations />}
+        {activeTab === 'churn_recovery' && <ManagerChurnRecoveryTab />}
       </div>
     </div>
   );

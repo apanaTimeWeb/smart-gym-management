@@ -8,8 +8,10 @@ import TrainerToast from '@/app/trainer/trainer_components/TrainerFeedback/Train
 
 import { AttendanceProvider, useAttendanceContext } from '@/app/trainer/attendance/attendance_context/AttendanceContext';
 import TrainerAttendanceKPIs from '@/app/trainer/attendance/attendance_components/TrainerAttendanceKPIs/TrainerAttendanceKPIs';
+import TrainerAttendanceSummaryCard from '@/app/trainer/attendance/attendance_components/TrainerAttendanceSummaryCard/TrainerAttendanceSummaryCard';
 import TrainerAttendanceToolbar from '@/app/trainer/attendance/attendance_components/TrainerAttendanceToolbar/TrainerAttendanceToolbar';
 import TrainerAttendanceTable from '@/app/trainer/attendance/attendance_components/TrainerAttendanceTable/TrainerAttendanceTable';
+import TrainerAttendanceModal from '@/app/trainer/attendance/attendance_components/TrainerAttendanceModal/TrainerAttendanceModal';
 import TrainerMyAttendanceCalendar from '@/app/trainer/attendance/attendance_components/TrainerMyAttendanceCalendar/TrainerMyAttendanceCalendar';
 
 function AttendanceContent() {
@@ -20,7 +22,9 @@ function AttendanceContent() {
       <TrainerHeader title="Attendance" subtitle="Track daily member and staff check-ins" />
       <div className="p-6 space-y-5">
         <TrainerAttendanceKPIs />
-        
+
+        {tab === 'My Attendance' && <TrainerAttendanceSummaryCard />}
+
         <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
           <TrainerAttendanceToolbar />
           {tab === 'My Attendance' && viewMode === 'calendar' ? (
@@ -31,10 +35,12 @@ function AttendanceContent() {
         </div>
       </div>
 
- {toast && (
- <TrainerToast message={toast.message} type={toast.type} onClose={hideToast} />
- )}
- </div>
+      <TrainerAttendanceModal />
+
+      {toast && (
+        <TrainerToast message={toast.message} type={toast.type} onClose={hideToast} />
+      )}
+    </div>
  );
 }
 
