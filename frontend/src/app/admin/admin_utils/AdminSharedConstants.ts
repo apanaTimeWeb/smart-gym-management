@@ -13,6 +13,7 @@ export const ADMIN_NAV_ITEMS = [
   { href: '/admin/hr',                  label: 'HR & Managers',    icon: Users },
   { href: '/admin/hr/performance',      label: 'Staff Performance',icon: Target },
   { href: '/admin/plans',               label: 'Plans',            icon: ClipboardList },
+  { href: '/admin/plans/revenue',       label: 'Plan Revenue',     icon: TrendingUp },
   { href: '/admin/sales',               label: 'Sales & Reports',  icon: FileBarChart },
   { href: '/admin/finance',             label: 'Finance',          icon: IndianRupee },
   { href: '/admin/finance/pnl',         label: 'Branch P&L',       icon: TrendingUp },

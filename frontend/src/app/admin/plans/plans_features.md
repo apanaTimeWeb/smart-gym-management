@@ -17,8 +17,12 @@ be blocked at the API level; the UI must show a clear error from `response.messa
 | `plans_components/AdminPlanCard.tsx` | Single plan card with price, duration, features |
 | `plans_components/AdminPlansAddModal.tsx` | Create new plan form modal |
 | `plans_components/AdminPlansEditModal.tsx` | Edit existing plan form modal |
+| `plans_components/AdminPlansRevenue/` | Sub-folder for Plan Revenue attribution dashboard components |
+| `revenue/page.tsx` | Plan Revenue attribution dashboard server route |
 | `plans_types/AdminPlansTypes.ts` | `Plan`, `CreatePlanDto`, `UpdatePlanDto` types |
+| `plans_types/AdminPlansRevenueTypes.ts` | `PlanRevenueRecord`, `RevenuePeriod` types |
 | `plans_api/AdminPlansApi.ts` | API wrappers |
+| `plans_context/useAdminPlansRevenueLogic.ts`| Data fetching hook for Plan Revenue |
 | `plans_utils/AdminPlansUrlConfig.ts` | Centralized URL constants |
 
 ## Feature Inventory
@@ -29,6 +33,7 @@ be blocked at the API level; the UI must show a clear error from `response.messa
 | Edit Plan | `/admin/plans` | Update plan details/pricing | `PATCH /admin/plans/:id` | ✅ Live |
 | Toggle Active | `/admin/plans` | Activate / deactivate a plan | `PATCH /admin/plans/:id/status` | ✅ Live |
 | Delete Plan | `/admin/plans` | Remove unused plan | `DELETE /admin/plans/:id` | ✅ Live |
+| Plan Revenue | `/admin/plans/revenue` | View revenue breakdown by plan | `GET /admin/plans/revenue` (Mocked) | ✅ Live |
 
 ## Data and State Architecture
 - Server-state: `AdminPlansContext` — plans list
