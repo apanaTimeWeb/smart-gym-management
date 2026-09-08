@@ -55,7 +55,7 @@ export function useAdminAnnouncementsLogic() {
       qc.invalidateQueries({ queryKey: ['adminAnnouncements'] });
       qc.invalidateQueries({ queryKey: ['adminAnnouncementsKPIs'] });
     },
-    onError: (err) => toast.error((err as Error).message),
+    onError: () => toast.error('Failed to create announcement. Please try again.'),
   });
 
   const updateMutation = useMutation({
@@ -67,7 +67,7 @@ export function useAdminAnnouncementsLogic() {
       setEditingAnnouncement(null);
       qc.invalidateQueries({ queryKey: ['adminAnnouncements'] });
     },
-    onError: (err) => toast.error((err as Error).message),
+    onError: () => toast.error('Failed to update announcement. Please try again.'),
   });
 
   const deleteMutation = useMutation({
@@ -77,7 +77,7 @@ export function useAdminAnnouncementsLogic() {
       qc.invalidateQueries({ queryKey: ['adminAnnouncements'] });
       qc.invalidateQueries({ queryKey: ['adminAnnouncementsKPIs'] });
     },
-    onError: (err) => toast.error((err as Error).message),
+    onError: () => toast.error('Failed to delete announcement. Please try again.'),
   });
 
   const pinMutation = useMutation({
@@ -86,7 +86,7 @@ export function useAdminAnnouncementsLogic() {
       toast.success(data.isPinned ? 'Announcement pinned' : 'Announcement unpinned');
       qc.invalidateQueries({ queryKey: ['adminAnnouncements'] });
     },
-    onError: (err) => toast.error((err as Error).message),
+    onError: () => toast.error('Failed to update pin status. Please try again.'),
   });
 
   const openCreate = useCallback(() => {
