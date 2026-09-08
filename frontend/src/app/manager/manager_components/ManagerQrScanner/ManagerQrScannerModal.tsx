@@ -1,42 +1,23 @@
 // RESPONSIBILITY: Renders the Kiosk-mode QR Scanner for the front desk. Handles face verification and check-in.
 'use client';
 
-import { useState } from 'react';
 import { X, ScanLine, UserCheck, AlertCircle, Loader2 } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { useManagerQrScannerLogic } from './useManagerQrScannerLogic';
+import { MANAGER_QR_MOCK_ACTIVE_NAME, MANAGER_QR_MOCK_ACTIVE_ID, MANAGER_QR_MOCK_PT_INFO } from './ManagerQrScannerConstants';
 
 interface ManagerQrScannerModalProps {
   open: boolean;
   onClose: () => void;
 }
 
-type ScanStatus = 'IDLE' | 'SCANNING' | 'ACTIVE' | 'EXPIRED';
-
 export default function ManagerQrScannerModal({ open, onClose }: ManagerQrScannerModalProps) {
-  const [status, setStatus] = useState<ScanStatus>('IDLE');
-  const [history, setHistory] = useState<{ id: string; time: string; name: string }[]>([]);
+  const { status, history, handleSimulateScan, handleCheckIn, resetStatus } = useManagerQrScannerLogic();
 
   if (!open) return null;
 
-  const handleSimulateScan = (simulateActive: boolean) => {
-    setStatus('SCANNING');
-    setTimeout(() => {
-      setStatus(simulateActive ? 'ACTIVE' : 'EXPIRED');
-    }, 1000);
-  };
-
-  const handleCheckIn = () => {
-    setHistory(prev => [
-      { id: `M-00${Math.floor(Math.random() * 100) + 10}`, time: new Date().toLocaleTimeString(), name: 'Rahul Sharma' },
-      ...prev
-    ]);
-    toast.success('Check-in successful!');
-    setStatus('IDLE');
-  };
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-sm motion-safe:transition-opacity">
-      <div className="w-full max-w-5xl h-[85vh] bg-card rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row border border-border motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95">
+    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm motion-safe:transition-opacity">
+      <div className="w-full max-w-5xl h-[85vh] bg-overlay rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row border border-border motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95">
         
         {/* Left Side - The Scanner */}
         <div className="flex-1 bg-black/95 relative flex flex-col items-center justify-center p-8 border-b md:border-b-0 md:border-r border-border">
@@ -59,7 +40,7 @@ export default function ManagerQrScannerModal({ open, onClose }: ManagerQrScanne
             
             {/* Scanning Line Animation */}
             {(status === 'IDLE' || status === 'SCANNING') && (
-              <div className="absolute top-0 left-0 w-full h-1 bg-primary shadow-[0_0_15px_rgba(var(--primary),0.8)] motion-safe:animate-[scan_2.5s_ease-in-out_infinite]"></div>
+              <div className="absolute top-0 left-0 w-full h-1 bg-primary shadow-[0_0_15px_rgba(250,204,21,0.8)] motion-safe:animate-qr-scan"></div>
             )}
             
             {/* Center Icon */}
@@ -89,7 +70,7 @@ export default function ManagerQrScannerModal({ open, onClose }: ManagerQrScanne
         </div>
 
         {/* Right Side - Verification & History */}
-        <div className="w-full md:w-[450px] bg-card flex flex-col overflow-hidden">
+        <div className="w-full md:w-[450px] flex flex-col overflow-hidden">
           {/* Verification Panel */}
           <div className="p-6 border-b border-border min-h-[350px] flex flex-col justify-center relative">
             {status === 'IDLE' && (
@@ -113,16 +94,16 @@ export default function ManagerQrScannerModal({ open, onClose }: ManagerQrScanne
                   <img src="https://i.pravatar.cc/300?u=a042581f4e29026704d" alt="Member" className="w-full h-full object-cover" />
                 </div>
                 
-                <h3 className="text-2xl font-black text-foreground">Rahul Sharma</h3>
-                <p className="text-sm font-bold text-secondary mb-1">M-0045</p>
+                <h3 className="text-2xl font-black text-foreground">{MANAGER_QR_MOCK_ACTIVE_NAME}</h3>
+                <p className="text-sm font-bold text-secondary mb-1">{MANAGER_QR_MOCK_ACTIVE_ID}</p>
                 
-                <div className={`mt-3 px-4 py-1.5 rounded-full text-sm font-bold flex items-center gap-2 ${status === 'ACTIVE' ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'}`}>
+                <div className={`mt-3 px-4 py-1.5 rounded-full text-sm font-bold flex items-center gap-2 ${status === 'ACTIVE' ? 'bg-success-bg text-success' : 'bg-danger-bg text-danger'}`}>
                   {status === 'ACTIVE' ? <UserCheck size={16} /> : <AlertCircle size={16} />}
                   {status === 'ACTIVE' ? 'MEMBERSHIP ACTIVE' : 'MEMBERSHIP EXPIRED'}
                 </div>
 
                 {status === 'ACTIVE' && (
-                  <p className="text-xs text-warning font-medium mt-3 bg-warning/10 px-3 py-1 rounded-lg">PT Session Scheduled Today at 6:00 PM</p>
+                  <p className="text-xs text-warning font-medium mt-3 bg-warning/10 px-3 py-1 rounded-lg">{MANAGER_QR_MOCK_PT_INFO}</p>
                 )}
 
                 <div className="mt-8 w-full">
@@ -135,7 +116,7 @@ export default function ManagerQrScannerModal({ open, onClose }: ManagerQrScanne
                     </button>
                   ) : (
                     <button 
-                      onClick={() => setStatus('IDLE')}
+                      onClick={resetStatus}
                       className="w-full py-4 bg-danger hover:bg-danger/90 text-white text-lg font-black rounded-2xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-danger shadow-lg shadow-danger/20 flex items-center justify-center gap-2"
                     >
                       <AlertCircle size={24} /> Block & Collect Payment
@@ -153,7 +134,7 @@ export default function ManagerQrScannerModal({ open, onClose }: ManagerQrScanne
               {history.map((h, i) => (
                 <div key={i} className="bg-card border border-border p-3 rounded-xl flex items-center justify-between shadow-sm">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                    <div className="w-10 h-10 rounded-full bg-primary-subtle flex items-center justify-center text-primary font-bold">
                       {h.name.charAt(0)}
                     </div>
                     <div>
@@ -171,19 +152,6 @@ export default function ManagerQrScannerModal({ open, onClose }: ManagerQrScanne
           </div>
         </div>
       </div>
-
-      <style>{`
-        @keyframes scan {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(18rem); }
-        }
-        @media (min-width: 640px) {
-          @keyframes scan {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(20rem); }
-          }
-        }
-      `}</style>
     </div>
   );
 }

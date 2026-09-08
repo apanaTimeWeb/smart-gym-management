@@ -94,11 +94,6 @@ export default function ManagerMembersModal() {
       delete payload.customDays;
     }
     saveMember(payload as MemberFormValues);
-    if (!editId) {
-      setTimeout(() => {
-        toast.success("QR Code sent to member's WhatsApp 💬");
-      }, 800);
-    }
   };
 
   if (!showAddModal) return null;
@@ -125,7 +120,7 @@ export default function ManagerMembersModal() {
           <div className="flex flex-col items-center justify-center mb-6 pb-6 border-b border-border">
             <div className="w-24 h-24 rounded-full bg-input border-2 border-dashed border-border flex flex-col items-center justify-center text-secondary mb-3 relative overflow-hidden group cursor-pointer hover:border-primary transition-colors">
               <Camera size={24} className="mb-1 group-hover:text-primary transition-colors" />
-              <span className="text-[10px] font-medium group-hover:text-primary transition-colors">Upload</span>
+              <span className="text-xs font-medium group-hover:text-primary transition-colors">Upload</span>
               <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" accept="image/*" />
             </div>
             <p className="text-xs text-secondary text-center max-w-xs">
