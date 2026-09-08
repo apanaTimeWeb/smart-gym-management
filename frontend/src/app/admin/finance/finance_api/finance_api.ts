@@ -1,7 +1,7 @@
-// RESPONSIBILITY: Provides strongly-typed network calls for the finance module.
 import { apiFetch, ApiResponse } from '@/lib/api';
+import { PNL_MOCK_DATA } from '@/app/admin/finance/finance_utils/AdminFinancePnlConstants';
 import { FinanceUrlConfig } from '@/app/admin/finance/finance_url_config';
-import type { Payment, FinanceSummary } from '@/app/admin/finance/finance_types/finance_types';
+import type { Payment, FinanceSummary, BranchPnlRecord } from '@/app/admin/finance/finance_types/finance_types';
 
 export const financeApi = {
   fetchPayments: (params?: Record<string, string>) => {
@@ -20,6 +20,14 @@ export const financeApi = {
     }
     return res;
   },
-  fetchPaymentsByMember: (memberId: string) =>
-    apiFetch<ApiResponse<Payment[]>>(FinanceUrlConfig.BACKEND_API.PAYMENTS_BY_MEMBER(memberId)),
+  fetchBranchPnl: (period: string) =>
+    new Promise<ApiResponse<BranchPnlRecord[]>>((resolve) => {
+      setTimeout(() => {
+        resolve({
+          data: PNL_MOCK_DATA[period as keyof typeof PNL_MOCK_DATA] ?? [],
+          success: true,
+          message: 'Success',
+        });
+      }, 800);
+    }),
 };

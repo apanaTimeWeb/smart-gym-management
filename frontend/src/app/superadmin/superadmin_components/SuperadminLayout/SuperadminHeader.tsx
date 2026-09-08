@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { logout } from '@/lib/api';
+import SuperadminNotificationBell from '@/app/superadmin/superadmin_components/SuperadminLayout/SuperadminNotificationBell';
 
 export default function SuperadminHeader() {
   const [showProfile, setShowProfile] = useState(false);
@@ -69,6 +70,9 @@ export default function SuperadminHeader() {
       </div>
 
       <div className="flex flex-wrap items-center gap-4">
+        {/* Notification Bell */}
+        {mounted && <SuperadminNotificationBell />}
+
         {/* Theme Toggle - accessible dark/light mode switcher */}
         {mounted && <ThemeToggle />}
 

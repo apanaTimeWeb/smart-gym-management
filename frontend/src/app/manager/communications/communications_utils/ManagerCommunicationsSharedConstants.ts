@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Constants, Zod schema, mock data, and message templates for the Communications module.
 import { z } from 'zod';
-import type { CommCampaign, CommKPIData, CommSegment, CommChannel } from '@/app/manager/communications/communications_types/communications_types';
+import type { CommCampaign, CommKPIData, CommSegment, CommChannel, CommAutomation } from '@/app/manager/communications/communications_types/communications_types';
 
 export const COMM_SEGMENT_OPTIONS: { value: CommSegment; label: string; description: string }[] = [
   { value: 'all_active',       label: 'All Active Members',       description: 'Every member with an active membership' },
@@ -64,6 +64,29 @@ export const MOCK_CAMPAIGNS: CommCampaign[] = [
   { id: 'c2', title: 'Pending Dues Alert',    channel: 'whatsapp', segment: 'pending_payment',  segmentLabel: 'Pending Payment',     message: 'Friendly reminder about your dues...', recipientCount: 12, sentCount: 11, status: 'partial', sentAt: '2025-06-08T09:00:00Z', sentBy: 'Manager' },
   { id: 'c3', title: 'Welcome Back Campaign', channel: 'email',    segment: 'expired',          segmentLabel: 'Expired Members',     message: 'We miss you at GymSmart!', subject: 'We miss you!', recipientCount: 34, sentCount: 34, status: 'sent', sentAt: '2025-06-05T14:00:00Z', sentBy: 'Manager' },
   { id: 'c4', title: 'Monthly Newsletter',    channel: 'email',    segment: 'all_active',       segmentLabel: 'All Active Members',  message: 'This month at GymSmart...', subject: 'June Newsletter', recipientCount: 120, sentCount: 120, status: 'sent', sentAt: '2025-06-01T08:00:00Z', sentBy: 'Manager' },
+];
+
+export const MOCK_AUTOMATIONS: CommAutomation[] = [
+  {
+    id: 'auto-1',
+    type: 'birthday',
+    title: 'Birthday Wishes',
+    description: 'Automatically send a WhatsApp message to members on their birthday at 9:00 AM.',
+    enabled: true,
+    channel: 'whatsapp',
+    messageTemplate: 'Hi {name}, wishing you a very Happy Birthday from all of us at GymSmart! 🎂 Have a fantastic day and keep crushing those fitness goals! 💪',
+    sendTime: '09:00',
+  },
+  {
+    id: 'auto-2',
+    type: 'anniversary',
+    title: 'Gym Anniversary',
+    description: 'Celebrate the day they joined our gym. Sent at 10:00 AM.',
+    enabled: false,
+    channel: 'whatsapp',
+    messageTemplate: 'Happy Gym Anniversary {name}! 🎉 You have been with us for another strong year. Thank you for being part of the GymSmart family. Keep lifting! 🏋️‍♂️',
+    sendTime: '10:00',
+  }
 ];
 
 export const MOCK_COMM_KPI: CommKPIData = {

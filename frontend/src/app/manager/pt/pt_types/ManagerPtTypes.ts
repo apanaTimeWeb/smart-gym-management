@@ -25,6 +25,22 @@ export interface PtAssignment {
   endDate: string;
 }
 
+export interface PtTrainerWorkload {
+  trainerId: string;
+  trainerName: string;
+  activeClients: number;
+  totalSessionsConducted: number;
+  rating: number;
+  status: 'Available' | 'Fully Booked';
+}
+
+export interface PtDashboardKpis {
+  totalActiveAssignments: number;
+  sessionsScheduledToday: number;
+  packagesExpiringSoon: number;
+  monthlyPtRevenue: number;
+}
+
 export interface CreatePtAssignmentPayload {
   memberId: string;
   trainerId: string;
@@ -32,12 +48,12 @@ export interface CreatePtAssignmentPayload {
   startDate: string;
 }
 
-export type PtActiveTab = 'packages' | 'schedule' | 'assign' | 'track';
+export type PtActiveTab = 'dashboard' | 'assignments' | 'packages' | 'workload';
 export type PtFetchState = 'idle' | 'loading' | 'success' | 'error';
 
 export const PT_TAB_OPTIONS: { id: PtActiveTab; label: string }[] = [
-  { id: 'packages', label: 'View PT Packages' },
-  { id: 'schedule', label: 'Schedule Sessions' },
-  { id: 'assign', label: 'Assign Trainer' },
-  { id: 'track', label: 'Track Progress' },
+  { id: 'dashboard', label: 'PT Dashboard' },
+  { id: 'assignments', label: 'Active Assignments' },
+  { id: 'workload', label: 'Trainer Workload' },
+  { id: 'packages', label: 'PT Packages' },
 ];

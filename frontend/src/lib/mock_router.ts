@@ -539,6 +539,10 @@ export async function routeMockRequest<T>(
     
     const res = MockDB.handleCrud('mock_members', method, path, parsedBody, existing, 'members') as unknown as ApiResponse<any>;
     
+    if (method === 'POST' && res.success) {
+      res.message = "QR Code sent to member's WhatsApp 💬";
+    }
+    
     // Cascade delete attendance records if a member is deleted
     if (method === 'DELETE' && res.success) {
       const segments = path.split('?')[0].split('/');

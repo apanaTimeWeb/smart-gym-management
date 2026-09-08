@@ -236,3 +236,12 @@ html { scroll-behavior: smooth; }
     size: 80mm auto;
   }
 }
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes qr-scan {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(18rem); }
+  }
+}
+@theme inline {
+  --animate-qr-scan: qr-scan 2.5s ease-in-out infinite;
+}

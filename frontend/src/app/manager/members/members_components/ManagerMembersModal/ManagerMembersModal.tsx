@@ -8,7 +8,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
 import { useManagerMembersStore } from '@/app/manager/members/members_store/useManagerMembersStore';
-import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency, MemberSchema, type MemberFormValues, EMPTY_MEMBER_FORM, GENDER_OPTIONS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
+import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency, MemberSchema, type MemberFormValues, EMPTY_MEMBER_FORM, GENDER_OPTIONS, MEMBER_EDIT_STATUS_OPTIONS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
+import ManagerMemberProfilePictureUpload from '@/app/manager/members/members_components/ManagerMembersModal/ManagerMemberProfilePictureUpload';
 import type { PlanWithCustom } from '@/app/manager/members/members_types/ManagerMembersTypes';
 
 export default function ManagerMembersModal() {
@@ -114,6 +115,10 @@ export default function ManagerMembersModal() {
           </button>
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="p-6">
+          
+          {/* Profile Picture Upload — extracted component (Rule 1: file size ceiling) */}
+          <ManagerMemberProfilePictureUpload />
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3">
             {[
               { label: 'Full Name', key: 'name', type: 'text', placeholder: 'Rahul Sharma', fullWidth: true },
@@ -168,14 +173,7 @@ export default function ManagerMembersModal() {
                     <SearchableDropdown
                       value={field.value || 'ACTIVE'}
                       onChange={field.onChange}
-                      options={[
-                        { label: 'Active', value: 'ACTIVE' },
-                        { label: 'Pending', value: 'PENDING' },
-                        { label: 'Expired', value: 'EXPIRED' },
-                        { label: 'Frozen', value: 'FROZEN' },
-                        { label: 'Suspended', value: 'SUSPENDED' },
-                        { label: 'Banned', value: 'BANNED' }
-                      ]}
+                      options={MEMBER_EDIT_STATUS_OPTIONS}
                     />
                   )}
                 />

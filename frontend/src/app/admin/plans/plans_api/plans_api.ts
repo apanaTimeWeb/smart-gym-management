@@ -2,6 +2,8 @@
 import { apiFetch, ApiResponse } from '@/lib/api';
 import { PlansUrlConfig } from '@/app/admin/plans/plans_url_config';
 import type { Plan } from '@/app/admin/plans/plans_types/plans_types';
+import type { PlanRevenueRecord, RevenuePeriod } from '@/app/admin/plans/plans_types/AdminPlansRevenueTypes';
+import { REVENUE_MOCK_DATA } from '@/app/admin/plans/plans_utils/AdminPlansRevenueConstants';
 
 export const plansApi = {
   fetchAllPlans: () => apiFetch<ApiResponse<Plan[]>>(PlansUrlConfig.BACKEND_API.BASE),
@@ -11,4 +13,14 @@ export const plansApi = {
   updatePlan: (id: string, body: Partial<Plan>) =>
     apiFetch<ApiResponse<Plan>>(PlansUrlConfig.BACKEND_API.UPDATE(id), { method: 'PATCH', body: JSON.stringify(body) }),
   deletePlan: (id: string) => apiFetch<ApiResponse<{ id: string }>>(PlansUrlConfig.BACKEND_API.DELETE(id), { method: 'DELETE' }),
+  fetchPlanRevenue: (period: RevenuePeriod) =>
+    new Promise<ApiResponse<PlanRevenueRecord[]>>((resolve) => {
+      setTimeout(() => {
+        resolve({
+          success: true,
+          data: REVENUE_MOCK_DATA[period] ?? [],
+          message: 'Success',
+        });
+      }, 800);
+    }),
 };

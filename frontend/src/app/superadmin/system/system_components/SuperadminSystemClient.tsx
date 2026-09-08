@@ -2,8 +2,9 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Database, ShieldAlert, Activity, Filter, RefreshCcw, Search, Loader2 } from 'lucide-react';
+import { Database, ShieldAlert, Activity, Filter, RefreshCcw, Search, Loader2, Clock } from 'lucide-react';
 import SuperadminSystemEmptyState from '@/app/superadmin/system/system_components/SuperadminSystemEmptyState/SuperadminSystemEmptyState';
+import SuperadminSystemSlaTab from '@/app/superadmin/system/system_components/SuperadminSystemSlaTab';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import toast from 'react-hot-toast';
@@ -24,6 +25,7 @@ const FALLBACK_LOGS = [
 ] as GlobalAuditLog[];
 
 export default function SuperadminSystemClient() {
+  const [tab, setTab] = useState<'migrations' | 'sla'>('migrations');
   const [logSearch, setLogSearch] = useState('');
   const [migratingTenants, setMigratingTenants] = useState<Record<string, boolean>>({});
   const [currentPage, setCurrentPage] = useState(1);
@@ -98,10 +100,32 @@ export default function SuperadminSystemClient() {
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-bold text-foreground">System & Audit</h1>
-        <p className="text-secondary mt-1">Global database migration health and cross-tenant audit logs.</p>
+        <p className="text-secondary mt-1">Global database migration health and cross-tenant SLA tracking.</p>
       </div>
 
-      {/* Database Migration Health */}
+      {/* Tabs */}
+      <div className="flex gap-1 bg-input border border-border rounded-xl p-1 w-fit">
+        <button
+          onClick={() => setTab('migrations')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+            tab === 'migrations' ? 'bg-card text-foreground shadow-sm' : 'text-secondary hover:text-foreground'
+          }`}
+        >
+          <Database size={18} strokeWidth={2} /> Migrations & Audit
+        </button>
+        <button
+          onClick={() => setTab('sla')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+            tab === 'sla' ? 'bg-card text-foreground shadow-sm' : 'text-secondary hover:text-foreground'
+          }`}
+        >
+          <Clock size={18} strokeWidth={2} /> SLA & Uptime Tracker
+        </button>
+      </div>
+
+      {tab === 'migrations' && (
+        <div className="space-y-8 animate-superadmin-fade-in-up">
+          {/* Database Migration Health */}
       <div>
         <div className="flex items-center gap-2 mb-4">
           <Database className="w-5 h-5 text-primary" />
@@ -219,6 +243,12 @@ export default function SuperadminSystemClient() {
           />
         </div>
       </div>
+        </div>
+      )}
+
+      {tab === 'sla' && (
+        <SuperadminSystemSlaTab />
+      )}
     </div>
   );
 }

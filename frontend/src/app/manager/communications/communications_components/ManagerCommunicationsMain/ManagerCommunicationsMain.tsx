@@ -1,15 +1,18 @@
 // RESPONSIBILITY: Root client orchestrator for the Communications module — renders KPIs, tab switcher, and conditionally Composer or History.
 'use client';
 
-import { MessageCircle, History } from 'lucide-react';
+import { MessageCircle, History, Zap } from 'lucide-react';
 import ManagerCommunicationsKPIs from '@/app/manager/communications/communications_components/ManagerCommunicationsKPIs/ManagerCommunicationsKPIs';
 import ManagerCommunicationsComposer from '@/app/manager/communications/communications_components/ManagerCommunicationsComposer/ManagerCommunicationsComposer';
 import ManagerCommunicationsHistory from '@/app/manager/communications/communications_components/ManagerCommunicationsHistory/ManagerCommunicationsHistory';
+import ManagerCommunicationsAutomations from '@/app/manager/communications/communications_components/ManagerCommunicationsAutomations/ManagerCommunicationsAutomations';
 import { useManagerCommunicationsLogic } from '@/app/manager/communications/communications_context/useManagerCommunicationsLogic';
+import type { CommActiveTab } from '@/app/manager/communications/communications_store/useManagerCommunicationsStore';
 
-const TABS = [
-  { value: 'compose' as const, label: 'Compose',       icon: MessageCircle },
-  { value: 'history' as const, label: 'Send History',  icon: History },
+const TABS: { value: CommActiveTab; label: string; icon: any }[] = [
+  { value: 'compose', label: 'Compose',       icon: MessageCircle },
+  { value: 'history', label: 'Send History',  icon: History },
+  { value: 'automations', label: 'Automations', icon: Zap },
 ];
 
 export default function ManagerCommunicationsMain() {
@@ -48,11 +51,9 @@ export default function ManagerCommunicationsMain() {
           })}
         </div>
 
-        {activeTab === 'compose' ? (
-          <ManagerCommunicationsComposer />
-        ) : (
-          <ManagerCommunicationsHistory />
-        )}
+        {activeTab === 'compose' && <ManagerCommunicationsComposer />}
+        {activeTab === 'history' && <ManagerCommunicationsHistory />}
+        {activeTab === 'automations' && <ManagerCommunicationsAutomations />}
       </div>
     </div>
   );

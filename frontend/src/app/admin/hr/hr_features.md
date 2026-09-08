@@ -28,6 +28,7 @@ actions (deactivate staff, revoke role) require `useConfirm()` double-verificati
 | Add Staff | `/admin/hr` | Create new staff member | `POST /admin/hr/staff` | ✅ Live |
 | Edit Staff | `/admin/hr` | Update role/branch/details | `PATCH /admin/hr/staff/:id` | ✅ Live |
 | Deactivate Staff | `/admin/hr` | Soft-deactivate a staff member | `DELETE /admin/hr/staff/:id` | ✅ Live |
+| Staff Performance | `/admin/hr/performance` | View trainers and managers metrics | `GET /admin/hr/staff/performance` | ✅ Live (Mocked) |
 
 ## Data and State Architecture
 - Server-state: `AdminHrContext` — staff list, pagination, filters

@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useMemo } from 'react';
-import { Bell, Search, LogOut, Settings, User, X, Menu, Building2 } from 'lucide-react';
+import { Bell, Search, LogOut, Settings, User, X, Menu, Building2, QrCode } from 'lucide-react';
 import Link from 'next/link';
 import { getUser, logout } from '@/lib/api';
 import { ADMIN_PLACEHOLDER_NOTIFICATIONS } from '@/app/admin/admin_utils/AdminSharedConstants';
@@ -11,6 +11,7 @@ import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore
 import { useAdminBranchesData } from '@/app/admin/admin_store/useAdminBranchesData';
 import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
 import { ADMIN_MOCK_MEMBERS } from '@/app/admin/members/members_utils/AdminMembersSharedConstants';
+import AdminQrScannerModal from '@/app/admin/admin_components/AdminQrScanner/AdminQrScannerModal';
 import type { AdminHeaderProps } from '@/app/admin/admin_components/AdminLayout/AdminLayoutTypes';
 import type { Branch } from '@/app/admin/admin_store/useAdminGlobalStore';
 
@@ -24,6 +25,7 @@ const STATUS_STYLES: Record<string, string> = {
 export default function AdminHeader({ title, subtitle }: AdminHeaderProps) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [showScanner, setShowScanner] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearch, setShowSearch] = useState(false);
   const [notifications, setNotifications] = useState(ADMIN_PLACEHOLDER_NOTIFICATIONS);
@@ -71,6 +73,7 @@ export default function AdminHeader({ title, subtitle }: AdminHeaderProps) {
   ];
 
   return (
+    <>
     <header className="bg-card border-b border-border px-6 py-4 flex items-center justify-between sticky top-0 z-20">
       <div className="flex items-center gap-4">
         <button
@@ -161,6 +164,16 @@ export default function AdminHeader({ title, subtitle }: AdminHeaderProps) {
           />
         </div>
 
+        {/* QR Scanner Mode (Kiosk) — visible on all breakpoints (Rule 64) */}
+        <button
+          onClick={() => setShowScanner(true)}
+          aria-label="Open QR Scanner kiosk mode"
+          className="p-2 text-secondary hover:text-foreground hover:bg-input rounded-lg motion-safe:transition-colors border border-transparent hover:border-border flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+        >
+          <QrCode size={18} strokeWidth={2} />
+          <span className="hidden sm:inline text-sm font-medium">Scanner</span>
+        </button>
+
         <ThemeToggle />
 
         {/* Notifications */}
@@ -237,5 +250,7 @@ export default function AdminHeader({ title, subtitle }: AdminHeaderProps) {
         </div>
       </div>
     </header>
+    <AdminQrScannerModal open={showScanner} onClose={() => setShowScanner(false)} />
+    </>
   );
 }
