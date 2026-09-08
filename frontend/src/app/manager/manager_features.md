@@ -16,6 +16,7 @@ The Manager module is the primary operational hub for gym branch managers. It pr
 | `attendance/` | Daily check-in/check-out tracking, calendar view, KPIs |
 | `sales/` | Revenue overview, membership report, pending payments, all memberships tabs |
 | `hr/` | Staff management + payroll processing with KPIs and tab interface |
+| `schedule/` | Trainer scheduling, shifts, availability, and weekly planner |
 | `expenses/` | Operational expense tracking with CRUD and KPIs |
 | `store/` | Gym store product and order management |
 | `library/` | Diet plan library — create, view, assign to members |
@@ -33,6 +34,7 @@ The Manager module is the primary operational hub for gym branch managers. It pr
 | Attendance | `/manager/attendance` | Daily check-in tracking | `GET/POST /manager/attendance` | ✅ Live |
 | Sales & Reports | `/manager/sales` | Revenue analytics | `GET /manager/sales/*` | ✅ Live |
 | HR & Payroll | `/manager/hr` | Staff + payroll management | `GET/POST /manager/hr/*` | ✅ Live |
+| Trainer Schedule | `/manager/schedule` | Shift management and weekly schedule | `GET/POST/PATCH/DELETE /manager/schedule/*` | ✅ Live |
 | Expenses | `/manager/expenses` | Expense CRUD | `GET/POST/PATCH/DELETE /manager/expenses` | ✅ Live |
 | Store | `/manager/store` | Product + order management | `GET/POST /manager/store/*` | ✅ Live |
 | Diet Library | `/manager/library` | Diet plan CRUD + assignment | `GET/POST /manager/library/*` | ✅ Live |

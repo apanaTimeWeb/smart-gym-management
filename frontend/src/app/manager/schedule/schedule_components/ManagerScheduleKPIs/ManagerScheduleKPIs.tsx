@@ -11,7 +11,7 @@ export default function ManagerScheduleKPIs() {
     return (
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
         {[1, 2, 3, 4].map(i => (
-          <div key={i} className="h-28 bg-card rounded-xl border border-border motion-safe:animate-pulse" />
+          <div key={i} className="h-28 bg-skeleton-base bg-skeleton-highlight rounded-xl border border-border motion-safe:animate-pulse" />
         ))}
       </div>
     );

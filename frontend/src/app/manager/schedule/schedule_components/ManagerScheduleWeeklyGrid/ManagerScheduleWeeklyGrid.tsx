@@ -1,14 +1,16 @@
 // RESPONSIBILITY: Renders the 7-day weekly schedule grid showing all trainer shifts per day column.
 'use client';
-import { Plus, Pencil, Trash2 } from 'lucide-react';
+import { Plus, Pencil, Trash2, CalendarX } from 'lucide-react';
 import { useScheduleContext } from '@/app/manager/schedule/schedule_context/ManagerScheduleContext';
 import { SHIFT_DAYS, SHIFT_STATUS_STYLES } from '@/app/manager/schedule/schedule_utils/ManagerScheduleSharedConstants';
 import type { ShiftDay, TrainerShift } from '@/app/manager/schedule/schedule_types/ManagerScheduleTypes';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
+import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
+import ManagerTooltip from '@/app/manager/manager_components/ManagerFeedback/ManagerTooltip';
 
 export default function ManagerScheduleWeeklyGrid() {
   const { trainers, selectedDay, openAddShift, openEditShift, deleteShift } = useScheduleContext();
-  const confirm = useConfirm();
+  const { confirm } = useConfirm();
 
   const days: ShiftDay[] = selectedDay === 'All' ? SHIFT_DAYS : [selectedDay];
 
@@ -16,17 +18,19 @@ export default function ManagerScheduleWeeklyGrid() {
     const ok = await confirm({
       title: 'Remove Shift',
       message: `Remove ${shift.day} shift for ${shift.trainerName}? This cannot be undone.`,
-      confirmLabel: 'Remove',
-      variant: 'danger',
+      confirmText: 'Remove',
+      type: 'danger',
     });
     if (ok) await deleteShift(shift.id);
   };
 
   if (trainers.length === 0) {
     return (
-      <div className="bg-card border border-border rounded-xl p-12 text-center">
-        <p className="text-secondary text-sm">No trainers found. Add trainers in the HR module first.</p>
-      </div>
+      <ManagerEmptyState
+        icon={<CalendarX size={32} />}
+        title="No trainers found"
+        subtitle="Add trainers in the HR module before assigning shifts."
+      />
     );
   }
 
@@ -48,9 +52,13 @@ export default function ManagerScheduleWeeklyGrid() {
         <tbody className="divide-y divide-border">
           {trainers.map(trainer => (
             <tr key={trainer.trainerId} className="hover:bg-primary/5 motion-safe:transition-colors">
-              <td className="py-3 px-4 sticky left-0 bg-card z-10">
-                <p className="text-sm font-semibold text-foreground truncate max-w-[160px]">{trainer.trainerName}</p>
-                <p className="text-xs text-secondary truncate max-w-[160px]">{trainer.trainerRole}</p>
+              <td className="py-3 px-4 sticky left-0 bg-card z-10 flex flex-col items-start justify-center gap-0.5">
+                <ManagerTooltip content={trainer.trainerName}>
+                  <p className="text-sm font-semibold text-foreground truncate max-w-[160px]">{trainer.trainerName}</p>
+                </ManagerTooltip>
+                <ManagerTooltip content={trainer.trainerRole}>
+                  <p className="text-xs text-secondary truncate max-w-[160px]">{trainer.trainerRole}</p>
+                </ManagerTooltip>
               </td>
               {days.map(day => {
                 const shift = trainer.shifts.find(s => s.day === day);
@@ -64,7 +72,11 @@ export default function ManagerScheduleWeeklyGrid() {
                           <p className="text-secondary mt-0.5">{shift.startTime}–{shift.endTime}</p>
                         )}
                         {shift.notes && (
-                          <p className="text-secondary text-[10px] mt-0.5 truncate max-w-[80px]" title={shift.notes}>{shift.notes}</p>
+                          <div className="mt-0.5">
+                            <ManagerTooltip content={shift.notes}>
+                              <p className="text-secondary text-[10px] truncate max-w-[80px]">{shift.notes}</p>
+                            </ManagerTooltip>
+                          </div>
                         )}
                         <div className="absolute top-1 right-1 hidden group-hover:flex gap-1">
                           <button

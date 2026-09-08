@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Root client orchestrator for the Schedule module. Owns layout, toolbar, view toggle, and renders sub-components.
 'use client';
 import { useState } from 'react';
-import { Search, LayoutGrid, Table2 } from 'lucide-react';
+import { Search, LayoutGrid, Table2, AlertCircle } from 'lucide-react';
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
 import ManagerToast from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import { ScheduleProvider, useScheduleContext } from '@/app/manager/schedule/schedule_context/ManagerScheduleContext';
@@ -9,12 +9,36 @@ import ManagerScheduleKPIs from '@/app/manager/schedule/schedule_components/Mana
 import ManagerScheduleWeeklyGrid from '@/app/manager/schedule/schedule_components/ManagerScheduleWeeklyGrid/ManagerScheduleWeeklyGrid';
 import ManagerScheduleTrainerCard from '@/app/manager/schedule/schedule_components/ManagerScheduleTrainerCard/ManagerScheduleTrainerCard';
 import ManagerScheduleShiftModal from '@/app/manager/schedule/schedule_components/ManagerScheduleShiftModal/ManagerScheduleShiftModal';
+import ManagerScheduleSkeleton from '@/app/manager/schedule/schedule_components/ManagerScheduleSkeleton/ManagerScheduleSkeleton';
 import { SHIFT_DAYS } from '@/app/manager/schedule/schedule_utils/ManagerScheduleSharedConstants';
 import type { ShiftDay } from '@/app/manager/schedule/schedule_types/ManagerScheduleTypes';
 
 function ScheduleContent() {
-  const { trainers, toast, hideToast, selectedDay, setSelectedDay, search, setSearch } = useScheduleContext();
+  const { trainers, toast, hideToast, selectedDay, setSelectedDay, search, setSearch, fetchState, error } = useScheduleContext();
   const [view, setView] = useState<'grid' | 'cards'>('grid');
+
+  if (fetchState === 'loading') {
+    return <ManagerScheduleSkeleton />;
+  }
+
+  if (fetchState === 'error') {
+    return (
+      <div className="min-h-full pb-10">
+        <ManagerHeader title="Trainer Schedule" subtitle="View trainer availability, shift timings, and weekly schedule" />
+        <div className="p-6 mt-10">
+          <div className="max-w-md w-full bg-card border border-danger/20 rounded-xl p-8 text-center space-y-4 mx-auto">
+            <div className="w-12 h-12 bg-danger/10 text-danger rounded-full flex items-center justify-center mx-auto">
+              <AlertCircle size={24} />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-foreground">Failed to load schedule</h3>
+              <p className="text-sm text-secondary mt-1">{error}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-full pb-10">

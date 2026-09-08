@@ -1,6 +1,7 @@
 // RESPONSIBILITY: All data-fetching, mutation, and UI state logic for the Schedule module. Keeps components pure.
 'use client';
 import { useState, useCallback, useEffect } from 'react';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import type {
   TrainerScheduleSummary, ScheduleKPIData, ScheduleContextType,
   TrainerShift, CreateShiftDto, ShiftDay,
@@ -11,17 +12,36 @@ import { MOCK_TRAINERS, MOCK_SCHEDULE_KPIS } from '@/app/manager/schedule/schedu
 import { useDebounce } from '@/app/manager/manager_utils/useDebounce';
 
 export function useManagerScheduleLogic(): ScheduleContextType {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
   const [trainers, setTrainers] = useState<TrainerScheduleSummary[]>([]);
   const [kpis, setKpis] = useState<ScheduleKPIData | null>(null);
   const [fetchState, setFetchState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [error, setError] = useState('');
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
-  const [selectedDay, setSelectedDay] = useState<ShiftDay | 'All'>('All');
-  const [search, setSearch] = useState('');
   const [saving, setSaving] = useState(false);
   const [shiftModal, setShiftModal] = useState<{ open: boolean; editShift: TrainerShift | null; trainerId: string | null }>({
     open: false, editShift: null, trainerId: null,
   });
+
+  const search = searchParams.get('search') ?? '';
+  const selectedDay = (searchParams.get('day') as ShiftDay | 'All') ?? 'All';
+
+  const setSearch = useCallback((val: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (val) params.set('search', val);
+    else params.delete('search');
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [pathname, router, searchParams]);
+
+  const setSelectedDay = useCallback((val: ShiftDay | 'All') => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (val !== 'All') params.set('day', val);
+    else params.delete('day');
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [pathname, router, searchParams]);
 
   const debouncedSearch = useDebounce(search, 300);
 
