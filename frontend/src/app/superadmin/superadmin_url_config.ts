@@ -25,7 +25,7 @@ export const SuperadminUrlConfig = {
     ONBOARDING: "/superadmin/onboarding",
     MESSAGING: "/superadmin/messaging",
     REPORTS: "/superadmin/reports",
-    TENANT_PREVIEW: "/superadmin/tenant-preview",
+    TENANT_PREVIEW: "/superadmin/tenant-preview", // removed — kept for type safety, route deleted
     CHURN_ALERTS: "/superadmin/churn-alerts",
     PROFILE: "/superadmin/profile",
   },
@@ -63,7 +63,7 @@ export const SuperadminUrlConfig = {
     ONBOARDING_BASE: "/superadmin/onboarding",
     MESSAGING_BASE: "/superadmin/messaging",
     REPORTS_BASE: "/superadmin/reports",
-    TENANT_PREVIEW_BASE: "/superadmin/tenant-preview",
+    TENANT_PREVIEW_BASE: "/superadmin/tenant-preview", // removed — kept for type safety, route deleted
     USAGE_METERS_BASE: "/superadmin/usage-meters",
     FRANCHISES_BASE: "/superadmin/franchises",
     CHURN_ALERTS_BASE: "/superadmin/churn-alerts",

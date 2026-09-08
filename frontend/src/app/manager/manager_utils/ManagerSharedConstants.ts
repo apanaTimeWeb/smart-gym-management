@@ -47,12 +47,6 @@ export const MANAGER_NAV_GROUPS = [
       { href: '/manager/notifications',   label: 'Notifications',      icon: MessageSquare },
     ]
   },
-  {
-    group: 'System',
-    items: [
-      { href: '/manager/support',         label: 'Help & Support',     icon: MessageSquare },
-    ]
-  }
 ];
 
 // TODO: Replace with real API call once Notifications backend module is built.
