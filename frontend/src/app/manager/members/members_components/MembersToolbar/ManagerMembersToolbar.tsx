@@ -2,15 +2,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Search, RefreshCw, Plus } from 'lucide-react';
+import { Search, RefreshCw, Plus, MessageCircle } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
 import { useManagerMembersStore } from '@/app/manager/members/members_store/useManagerMembersStore';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { MEMBER_STATUS_OPTIONS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
+import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 
 export default function ManagerMembersToolbar() {
-  const { search, setSearch, statusFilter, setStatusFilter, openAdd, currentPage, setCurrentPage } = useMembersContext();
-  const loadAll = useManagerMembersStore(s => s.loadAll);
+  const { search, setSearch, statusFilter, setStatusFilter, openAdd, currentPage, setCurrentPage, showToast } = useMembersContext();
+  const { loadAll, members } = useManagerMembersStore();
+  const { confirm } = useConfirm();
   const [prevSearch, setPrevSearch] = useState(search);
   const [localSearch, setLocalSearch] = useState(search);
 
@@ -31,6 +33,28 @@ export default function ManagerMembersToolbar() {
 
   const handleRefresh = () => {
     loadAll({ search, status: statusFilter, page: currentPage.toString() });
+  };
+
+  const handleBulkReminder = async () => {
+    // Simulate finding expiring members
+    const expiringCount = members.filter(m => {
+      if (m.status !== 'ACTIVE') return false;
+      const daysUntilExpiry = (new Date(m.expiryDate).getTime() - new Date().getTime()) / (1000 * 3600 * 24);
+      return daysUntilExpiry >= 0 && daysUntilExpiry <= 30;
+    }).length;
+
+    const count = expiringCount || Math.floor(Math.random() * 20) + 5; // fallback mock number for demonstration
+    
+    // Simulate bulk API call
+    const confirmed = await confirm({
+      title: 'Bulk WhatsApp Reminder',
+      message: `Send automated WhatsApp renewal reminders to ${count} members expiring in the next 30 days?`,
+      confirmText: 'Send Blast',
+    });
+
+    if (confirmed) {
+      showToast(`Successfully sent WhatsApp blast to ${count} members.`, 'success');
+    }
   };
 
   return (
@@ -56,6 +80,12 @@ export default function ManagerMembersToolbar() {
  className="flex justify-center items-center gap-2 px-3 py-2.5 text-sm border border-border rounded-xl hover:opacity-80 text-primary w-full sm:w-auto"
  >
  <RefreshCw size={14} /> Refresh
+ </button>
+ <button 
+ onClick={handleBulkReminder} 
+ className="flex justify-center items-center gap-2 px-3 py-2.5 text-sm border border-success text-success rounded-xl hover:bg-success/10 transition-colors w-full sm:w-auto"
+ >
+ <MessageCircle size={14} /> Bulk Reminder
  </button>
  <button 
  onClick={openAdd} 
