@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders the skeleton loading state for the Staff Performance Dashboard.
 import { Target } from 'lucide-react';
 
 export default function Loading() {

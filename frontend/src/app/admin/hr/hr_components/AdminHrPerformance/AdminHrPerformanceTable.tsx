@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders sortable table displaying detailed staff performance metrics.
 'use client';
 
 import { ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react';
@@ -64,7 +65,7 @@ export default function AdminHrPerformanceTable({
                 const statusCfg = PERFORMANCE_STATUS_CONFIG[staff.status];
                 
                 return (
-                  <tr key={staff.id} className="hover:bg-input motion-safe:transition-colors">
+                  <tr key={staff.id} className="hover:bg-input motion-safe:transition-colors cursor-pointer">
                     {/* Staff Name & Branch */}
                     <td className="px-4 py-3.5">
                       <div className="flex items-center gap-2.5">

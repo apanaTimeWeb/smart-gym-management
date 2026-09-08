@@ -1,15 +1,19 @@
+// RESPONSIBILITY: Root client orchestrator for Staff Performance Dashboard.
 'use client';
 
 import { useAdminHrPerformanceLogic } from '@/app/admin/hr/hr_context/useAdminHrPerformanceLogic';
 import AdminHrPerformancePeriodSelector from '@/app/admin/hr/hr_components/AdminHrPerformance/AdminHrPerformancePeriodSelector';
 import AdminHrPerformanceKPIs from '@/app/admin/hr/hr_components/AdminHrPerformance/AdminHrPerformanceKPIs';
 import AdminHrPerformanceTable from '@/app/admin/hr/hr_components/AdminHrPerformance/AdminHrPerformanceTable';
-import { Target } from 'lucide-react';
+import AdminHrPerformanceCharts from '@/app/admin/hr/hr_components/AdminHrPerformance/AdminHrPerformanceCharts';
+import { Target, Search } from 'lucide-react';
 
 export default function AdminHrPerformanceMain() {
   const {
     period,
     setPeriod,
+    searchQuery,
+    setSearchQuery,
     sortKey,
     sortDir,
     handleSort,
@@ -53,13 +57,31 @@ export default function AdminHrPerformanceMain() {
           {/* KPIs */}
           <AdminHrPerformanceKPIs aggregates={aggregates} />
 
-          {/* Table */}
-          <AdminHrPerformanceTable
-            data={sortedData}
-            sortKey={sortKey}
-            sortDir={sortDir}
-            onSort={handleSort}
-          />
+          {/* Charts */}
+          <AdminHrPerformanceCharts data={sortedData} />
+
+          {/* Table Controls & Table */}
+          <div className="space-y-4">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+              <h2 className="text-lg font-bold text-foreground w-full sm:w-auto">Detailed Metrics</h2>
+              <div className="relative w-full sm:w-72">
+                <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-disabled" />
+                <input
+                  type="text"
+                  placeholder="Search staff..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 bg-input border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary motion-safe:transition-all"
+                />
+              </div>
+            </div>
+            <AdminHrPerformanceTable
+              data={sortedData}
+              sortKey={sortKey}
+              sortDir={sortDir}
+              onSort={handleSort}
+            />
+          </div>
         </>
       )}
     </div>

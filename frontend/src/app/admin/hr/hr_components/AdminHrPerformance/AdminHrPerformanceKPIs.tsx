@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders the top-level KPI cards for the Performance Dashboard.
 'use client';
 
 import { UserPlus, Calendar, Star, Users } from 'lucide-react';
@@ -11,14 +12,14 @@ export default function AdminHrPerformanceKPIs({ aggregates }: AdminHrPerformanc
   const kpis = [
     {
       label: 'Total Sessions',
-      value: aggregates.totalSessions.toString(),
+      value: aggregates.totalSessions.toLocaleString('en-IN'),
       icon: Calendar,
       iconColor: 'text-primary',
       iconBg: 'bg-primary/10',
     },
     {
       label: 'Members Added',
-      value: aggregates.totalMembersAdded.toString(),
+      value: aggregates.totalMembersAdded.toLocaleString('en-IN'),
       icon: UserPlus,
       iconColor: 'text-success',
       iconBg: 'bg-success/10',

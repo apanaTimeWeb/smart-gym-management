@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Handles and displays errors encountered while loading the Staff Performance Dashboard.
 'use client';
 
 import { AlertTriangle, RefreshCw } from 'lucide-react';

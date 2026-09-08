@@ -13,6 +13,7 @@ import type {
 
 export function useAdminHrPerformanceLogic() {
   const [period, setPeriod] = useState<PerformancePeriod>('THIS_MONTH');
+  const [searchQuery, setSearchQuery] = useState('');
   const [sortKey, setSortKey] = useState<PerformanceSortKey>('rating');
   const [sortDir, setSortDir] = useState<PerformanceSortDirection>('desc');
 
@@ -32,8 +33,18 @@ export function useAdminHrPerformanceLogic() {
     }
   };
 
+  const filteredData = useMemo(() => {
+    if (!searchQuery.trim()) return staffData;
+    const lowerQ = searchQuery.toLowerCase();
+    return staffData.filter(s => 
+      s.name.toLowerCase().includes(lowerQ) || 
+      s.role.toLowerCase().includes(lowerQ) ||
+      s.branchName.toLowerCase().includes(lowerQ)
+    );
+  }, [staffData, searchQuery]);
+
   const sortedData = useMemo(() => {
-    return [...staffData].sort((a, b) => {
+    return [...filteredData].sort((a, b) => {
       const aVal = a[sortKey];
       const bVal = b[sortKey];
 
@@ -45,7 +56,7 @@ export function useAdminHrPerformanceLogic() {
       }
       return 0;
     });
-  }, [staffData, sortKey, sortDir]);
+  }, [filteredData, sortKey, sortDir]);
 
   const aggregates = useMemo<PerformanceAggregates>(() => {
     if (staffData.length === 0) {
@@ -88,6 +99,8 @@ export function useAdminHrPerformanceLogic() {
   return {
     period,
     setPeriod,
+    searchQuery,
+    setSearchQuery,
     sortKey,
     sortDir,
     handleSort,
