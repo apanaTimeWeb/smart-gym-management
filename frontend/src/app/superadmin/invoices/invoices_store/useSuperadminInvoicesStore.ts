@@ -7,6 +7,7 @@
 import { create } from 'zustand';
 import toast from 'react-hot-toast';
 import { invoicesApi } from '@/app/superadmin/invoices/superadmin_invoices_api/superadmin_invoices_api';
+import type { CreateManualPaymentDto } from '@/app/superadmin/invoices/superadmin_invoices_api/superadmin_invoices_api';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import type { SaaSInvoice } from '@/app/superadmin/invoices/superadmin_invoices_types/superadmin_invoices_types';
 import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
@@ -24,7 +25,7 @@ interface InvoicesState {
   logManualPayment: (data: { gymId: string, amount: number, planName: string }) => Promise<void>;
 }
 
-export const useSuperadminInvoicesStore = create<InvoicesState>((set, get) => ({
+export const useSuperadminInvoicesStore = create<InvoicesState>((set) => ({
   invoices: [],
   tenants: [],
   fetchState: 'idle',
@@ -40,10 +41,10 @@ export const useSuperadminInvoicesStore = create<InvoicesState>((set, get) => ({
       ]);
       const rawTenants = tenantsRes.data || [];
       const tenants = rawTenants.length > 0 ? rawTenants : MOCK_GYMS;
-      set({ 
-        invoices: invoicesRes.data || [], 
-        tenants: tenants, 
-        fetchState: 'success' 
+      set({
+        invoices: invoicesRes.data || [],
+        tenants: tenants,
+        fetchState: 'success'
       });
     } catch (error: unknown) {
       const errMsg = error instanceof Error ? error.message : 'Failed to fetch invoices data';
@@ -55,24 +56,25 @@ export const useSuperadminInvoicesStore = create<InvoicesState>((set, get) => ({
   logManualPayment: async (data: { gymId: string, amount: number, planName: string }) => {
     set({ actionLoading: true });
     try {
-      // Simulate API call and locally append data to list (TC-25 fix)
-      const newInvoice: SaaSInvoice = {
-        id: `INV-${Math.floor(Math.random() * 100000)}`,
-        tenantName: get().tenants.find(t => t.id === data.gymId)?.name || 'Unknown Gym',
-        amount: data.amount || 0,
+      const dto: CreateManualPaymentDto = {
+        gymId: data.gymId,
+        amount: data.amount,
+        planName: data.planName,
         currency: 'INR',
-        status: 'PAID',
-        date: new Date().toISOString(),
-        planName: data.planName || 'Custom Plan'
       };
-
-      set(state => ({
-        invoices: [newInvoice, ...state.invoices]
-      }));
-
-      toast.success('Payment logged successfully');
+      const res = await invoicesApi.createManualPayment(dto);
+      if (res.success && res.data) {
+        // Pessimistic update: only prepend the invoice confirmed by the backend (Rule 15)
+        set(state => ({
+          invoices: [res.data!, ...state.invoices],
+        }));
+        toast.success(res.message || 'Payment logged successfully');
+      } else {
+        toast.error(res.message || 'Failed to log payment');
+      }
     } catch (error: unknown) {
-      toast.error('Failed to log payment');
+      const errMsg = error instanceof Error ? error.message : 'Failed to log payment';
+      toast.error(errMsg);
     } finally {
       set({ actionLoading: false });
     }

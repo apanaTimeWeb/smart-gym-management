@@ -52,7 +52,17 @@ export const SuperadminUrlConfig = {
     COUPONS_BASE: "/superadmin/coupons",
     FEATURES_BASE: "/superadmin/features",
     INVOICES_BASE: "/superadmin/invoices",
+    INVOICES_MANUAL_PAYMENT: "/superadmin/invoices/manual-payment",
     AUDIT_LOGS_BASE: "/superadmin/audit-logs",
     AFFILIATES_BASE: "/superadmin/affiliates",
+    // Ghost login / impersonation — tenant-scoped path, :id injected at call site
+    IMPERSONATE_BASE: "/superadmin/gyms-list",
+    // Additional module API roots
+    ONBOARDING_BASE: "/superadmin/onboarding",
+    MESSAGING_BASE: "/superadmin/messaging",
+    REPORTS_BASE: "/superadmin/reports",
+    TENANT_PREVIEW_BASE: "/superadmin/tenant-preview",
+    USAGE_METERS_BASE: "/superadmin/usage-meters",
+    FRANCHISES_BASE: "/superadmin/franchises",
   }
 };
