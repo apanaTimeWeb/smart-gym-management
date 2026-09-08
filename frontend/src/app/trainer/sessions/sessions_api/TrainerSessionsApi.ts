@@ -50,6 +50,9 @@ export async function cancelTrainerSession(id: string): Promise<void> {
 /**
  * Marks attendance for a session by ID.
  */
-export async function markTrainerSessionAttendance(id: string): Promise<void> {
-  return apiFetch<void>(TRAINER_SESSIONS_API_ROUTES.markAttendance(id), { method: 'PATCH' });
+export async function markTrainerSessionAttendance(id: string, memberIds: string[]): Promise<void> {
+  return apiFetch<void>(TRAINER_SESSIONS_API_ROUTES.markAttendance(id), { 
+    method: 'PATCH',
+    body: JSON.stringify({ attendedMemberIds: memberIds }),
+  });
 }

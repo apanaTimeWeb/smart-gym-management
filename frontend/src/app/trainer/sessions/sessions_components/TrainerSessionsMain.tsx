@@ -15,6 +15,8 @@ import {
 } from '@/app/trainer/sessions/sessions_utils/TrainerSessionsSharedConstants';
 import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/SearchableDropdown';
 import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
+import TrainerSessionAttendanceModal from '@/app/trainer/sessions/sessions_components/TrainerSessionAttendanceModal';
+import { markTrainerSessionAttendance } from '@/app/trainer/sessions/sessions_api/TrainerSessionsApi';
 
 export default function TrainerSessionsMain() {
   const [filter, setFilter] = useState<SessionFilter>('All');
@@ -23,6 +25,7 @@ export default function TrainerSessionsMain() {
   const [selectedMemberId, setSelectedMemberId] = useState<string | number>('');
   const [selectedDuration, setSelectedDuration] = useState<string | number>('60m');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [attendanceSession, setAttendanceSession] = useState<TrainerSession | null>(null);
   const { confirm } = useConfirm();
 
   const filteredSessions: TrainerSession[] = MOCK_SESSIONS.filter(
@@ -53,6 +56,17 @@ export default function TrainerSessionsMain() {
     setShowScheduleModal(false);
     setSelectedMemberId('');
     setSelectedDuration('60m');
+  };
+
+  const handleAttendanceSubmit = async (sessionId: string, attendedMemberIds: string[]) => {
+    try {
+      await markTrainerSessionAttendance(sessionId, attendedMemberIds);
+      // In a real app, refresh the list here
+      setAttendanceSession(null);
+    } catch (error) {
+      console.error('Failed to mark attendance:', error);
+      // Add toast notification logic here if needed
+    }
   };
 
   return (
@@ -137,9 +151,14 @@ export default function TrainerSessionsMain() {
                     >
                       Cancel
                     </button>
-                    <button className="text-sm font-medium text-white bg-primary px-4 py-2 rounded-xl hover:bg-primary/90 motion-safe:transition-colors">
-                      Mark Attendance
-                    </button>
+                    {session.isOnline && (
+                      <button 
+                        onClick={() => setAttendanceSession(session)}
+                        className="text-sm font-medium text-white bg-primary px-4 py-2 rounded-xl hover:bg-primary/90 motion-safe:transition-colors"
+                      >
+                        Mark Attendance
+                      </button>
+                    )}
                   </div>
                 )}
                 <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${SESSION_STATUS_STYLES[session.status]}`}>
@@ -232,6 +251,15 @@ export default function TrainerSessionsMain() {
             </form>
           </div>
         </div>
+      )}
+
+      {/* Attendance Modal */}
+      {attendanceSession && (
+        <TrainerSessionAttendanceModal
+          session={attendanceSession}
+          onClose={() => setAttendanceSession(null)}
+          onSubmit={handleAttendanceSubmit}
+        />
       )}
     </div>
   );
