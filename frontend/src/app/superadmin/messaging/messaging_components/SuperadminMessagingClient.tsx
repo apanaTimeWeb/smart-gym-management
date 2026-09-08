@@ -9,6 +9,7 @@ import {
   AlertTriangle, Info, X, Search, ChevronDown,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useSearchParams } from 'next/navigation';
 import type {
   TenantMessage,
   SuperadminNotification,
@@ -123,7 +124,10 @@ function TenantSearchDropdown({
 }
 
 export default function SuperadminMessagingClient() {
-  const [tab, setTab] = useState<MessagingTab>('messages');
+  const searchParams = useSearchParams();
+  const initialTab = (searchParams.get('tab') as MessagingTab) || 'messages';
+
+  const [tab, setTab] = useState<MessagingTab>(initialTab);
   const [messages, setMessages] = useState<TenantMessage[]>(INITIAL_MESSAGES);
   const [notifications, setNotifications] = useState<SuperadminNotification[]>(INITIAL_NOTIFICATIONS);
   const [search, setSearch] = useState('');
