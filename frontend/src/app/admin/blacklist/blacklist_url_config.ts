@@ -5,5 +5,6 @@ export const AdminBlacklistUrlConfig = {
     BASE: '/admin/blacklist',
     BY_ID: (id: string) => `/admin/blacklist/${id}`,
     REMOVE: (id: string) => `/admin/blacklist/${id}/remove`,
+    PROPAGATE: (id: string) => `/admin/blacklist/${id}/propagate`,
   },
 } as const;

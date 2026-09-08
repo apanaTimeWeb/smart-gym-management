@@ -1,9 +1,12 @@
 // RESPONSIBILITY: Zustand store for Blacklist module UI state.
 import { create } from 'zustand';
 import type { BlacklistFormValues } from '@/app/admin/blacklist/blacklist_types/blacklist_types';
+import type { BlacklistActiveTab } from '@/app/admin/blacklist/blacklist_utils/AdminBlacklistSharedConstants';
 import { EMPTY_BLACKLIST_FORM } from '@/app/admin/blacklist/blacklist_utils/AdminBlacklistSharedConstants';
 
 interface AdminBlacklistStore {
+  activeTab: BlacklistActiveTab;
+  setActiveTab: (t: BlacklistActiveTab) => void;
   showModal: boolean;
   setShowModal: (v: boolean) => void;
   form: BlacklistFormValues;
@@ -19,6 +22,8 @@ interface AdminBlacklistStore {
 }
 
 export const useAdminBlacklistStore = create<AdminBlacklistStore>((set) => ({
+  activeTab: 'all',
+  setActiveTab: (t) => set({ activeTab: t }),
   showModal: false,
   setShowModal: (v) => set({ showModal: v }),
   form: EMPTY_BLACKLIST_FORM,
