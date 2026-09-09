@@ -2,7 +2,6 @@
 import { apiFetch, ApiResponse } from '@/lib/api';
 import { HrUrlConfig } from '@/app/admin/hr/hr_utils/hr_url_config';
 import type { Staff, Payroll, HrSummary, LedgerEntry } from '@/app/admin/hr/hr_types/AdminHrTypes';
-import { PERFORMANCE_MOCK_DATA } from '@/app/admin/hr/hr_utils/AdminHrPerformanceConstants';
 import type { StaffPerformanceRecord, PerformancePeriod } from '@/app/admin/hr/hr_types/AdminHrPerformanceTypes';
 
 export const hrApi = {
@@ -38,13 +37,5 @@ export const hrApi = {
   payDue: (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }) =>
     apiFetch<ApiResponse<{ paidAmount: number }>>(`${HrUrlConfig.BACKEND_API.STAFF_BASE}/due/pay`, { method: 'POST', body: JSON.stringify(data) }),
   fetchStaffPerformance: (period: PerformancePeriod) =>
-    new Promise<ApiResponse<StaffPerformanceRecord[]>>((resolve) => {
-      setTimeout(() => {
-        resolve({
-          data: PERFORMANCE_MOCK_DATA[period] ?? [],
-          success: true,
-          message: 'Success',
-        });
-      }, 800);
-    }),
+    apiFetch<ApiResponse<StaffPerformanceRecord[]>>(`/api/admin/hr/performance?period=${period}`),
 };

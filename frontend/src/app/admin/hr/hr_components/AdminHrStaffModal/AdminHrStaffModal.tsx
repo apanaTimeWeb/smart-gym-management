@@ -3,7 +3,9 @@
 
 import { useEffect } from 'react';
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
-import { STAFF_MODAL_FIELDS, EMPTY_STAFF, GENDER_OPTIONS, BRANCH_OPTIONS, StaffSchema, type StaffFormValues, STAFF_ROLE_OPTIONS } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
+import { STAFF_MODAL_FIELDS, EMPTY_STAFF, GENDER_OPTIONS, StaffSchema, type StaffFormValues, STAFF_ROLE_OPTIONS } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
+import { useAdminBranchesData } from '@/app/admin/admin_store/useAdminBranchesData';
+import type { Branch } from '@/app/admin/admin_store/useAdminGlobalStore';
 import { X, Save } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -12,8 +14,9 @@ import { Eye, EyeOff } from 'lucide-react';
 import React from 'react';
 
 export default function AdminHrStaffModal() {
- const { showModal, setShowModal, editId, editData, saveStaff, saving } = useHrContext();
- const [showPassword, setShowPassword] = React.useState(false);
+  const { showModal, setShowModal, editId, editData, saveStaff, saving } = useHrContext();
+  const [showPassword, setShowPassword] = React.useState(false);
+  const { data: branches = [] } = useAdminBranchesData();
 
   const { 
     register, 
@@ -40,15 +43,12 @@ export default function AdminHrStaffModal() {
 
  if (!showModal) return null;
 
- const branchLabels: Record<string, string> = {
-   'b1': 'Downtown Core',
-   'b2': 'Westside Gym',
-   'b3': 'Eastside Fitness',
-   'b4': 'North Park',
-   'b5': 'South End',
- };
+  const getBranchLabel = (id: string) => {
+    const branch = (branches as Branch[]).find(b => b.id === id);
+    return branch ? branch.name : id;
+  };
 
- return (
+  return (
  <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60">
   <div className="rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-card border-2 border-warning">
   <div className="sticky top-0 px-8 py-5 border-b border-border bg-card flex items-center justify-between z-10">
@@ -94,25 +94,25 @@ export default function AdminHrStaffModal() {
       <div>
         <label className="block text-sm font-medium mb-2 text-foreground">Assigned Branches</label>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {BRANCH_OPTIONS.map(b => (
-            <label key={b} className={`flex items-center gap-2 p-3 border rounded-xl cursor-pointer transition-colors ${assignedBranches.includes(b) ? 'border-primary bg-primary/5 text-primary' : 'border-border hover:bg-input text-secondary'}`}>
+          {(branches as Branch[]).map(b => (
+            <label key={b.id} className={`flex items-center gap-2 p-3 border rounded-xl cursor-pointer transition-colors ${assignedBranches.includes(b.id) ? 'border-primary bg-primary/5 text-primary' : 'border-border hover:bg-input text-secondary'}`}>
               <input 
                 type="checkbox" 
-                value={b}
-                checked={assignedBranches.includes(b)}
+                value={b.id}
+                checked={assignedBranches.includes(b.id)}
                 onChange={(e) => {
                   if (e.target.checked) {
-                    setValue('assignedBranches', [...assignedBranches, b]);
+                    setValue('assignedBranches', [...assignedBranches, b.id]);
                   } else {
-                    setValue('assignedBranches', assignedBranches.filter(x => x !== b));
-                    if (watch('primaryBranchId') === b) {
+                    setValue('assignedBranches', assignedBranches.filter(x => x !== b.id));
+                    if (watch('primaryBranchId') === b.id) {
                       setValue('primaryBranchId', '');
                     }
                   }
                 }}
                 className="w-4 h-4 text-primary bg-input border-border rounded focus:ring-primary"
               />
-              <span className="text-sm font-medium">{branchLabels[b] || b}</span>
+              <span className="text-sm font-medium">{b.name}</span>
             </label>
           ))}
         </div>
@@ -129,7 +129,7 @@ export default function AdminHrStaffModal() {
                 field.onChange(val);
                 setValue('branch', String(val)); // Fallback for backward compatibility
               }}
-              options={assignedBranches.map(b => ({ label: branchLabels[b] || b, value: b }))}
+              options={assignedBranches.map(id => ({ label: getBranchLabel(id), value: id }))}
               placeholder="Select Primary Branch..."
             />
           )}
@@ -147,7 +147,7 @@ export default function AdminHrStaffModal() {
           <SearchableDropdown
             value={field.value || ''}
             onChange={field.onChange}
-            options={BRANCH_OPTIONS.map(b => ({ label: branchLabels[b] || b, value: b }))}
+            options={(branches as Branch[]).map(b => ({ label: b.name, value: b.id }))}
             placeholder="Select Branch..."
           />
         )}

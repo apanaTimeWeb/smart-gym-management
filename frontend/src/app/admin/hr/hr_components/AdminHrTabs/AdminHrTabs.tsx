@@ -3,7 +3,9 @@
 
 import { useState } from 'react';
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
-import { HR_TABS, BRANCH_OPTIONS } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
+import { HR_TABS } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
+import { useAdminBranchesData } from '@/app/admin/admin_store/useAdminBranchesData';
+import type { Branch } from '@/app/admin/admin_store/useAdminGlobalStore';
 import { RefreshCw, Plus, Search } from 'lucide-react';
 import AdminHrStaffTable from '@/app/admin/hr/hr_components/AdminHrStaffTable/AdminHrStaffTable';
 import AdminHrPayrollTable from '@/app/admin/hr/hr_components/AdminHrPayrollTable/AdminHrPayrollTable';
@@ -14,6 +16,7 @@ import AdminHrLedgerTable from '@/app/admin/hr/hr_components/AdminHrLedgerTable/
 export default function AdminHrTabs() {
   const [activeTab, setActiveTab] = useState(HR_TABS[0]);
   const { loadAll, openAdd, openAddPayroll, fetchState, search, setSearch, branchFilter, setBranchFilter, roleFilter, setRoleFilter, setCurrentPage, payrollMonth, setPayrollMonth } = useHrContext();
+  const { data: branches = [] } = useAdminBranchesData();
 
   return (
     <div className="rounded-xl shadow-sm border overflow-hidden bg-card border-border">
@@ -47,8 +50,8 @@ export default function AdminHrTabs() {
                 className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 bg-card text-foreground"
               >
                 <option value="All">All Branches</option>
-                {BRANCH_OPTIONS.map(b => (
-                  <option key={b} value={b}>{b}</option>
+                {(branches as Branch[]).map(b => (
+                  <option key={b.id} value={b.id}>{b.name}</option>
                 ))}
               </select>
               <select

@@ -5,23 +5,34 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useAdminMembersStore } from '@/app/admin/members/members_store/useAdminMembersStore';
 import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
-import { ADMIN_MOCK_MEMBERS, ADMIN_MOCK_MEMBERS_SUMMARY, ADMIN_MEMBERS_ITEMS_PER_PAGE } from '@/app/admin/members/members_utils/AdminMembersSharedConstants';
+import { ADMIN_MEMBERS_ITEMS_PER_PAGE } from '@/app/admin/members/members_utils/AdminMembersSharedConstants';
+import { useQuery } from '@tanstack/react-query';
+import { apiFetch, ApiResponse } from '@/lib/api';
 import type { AdminMember, AdminMembersSummary, FetchState } from '@/app/admin/members/members_types/AdminMembersTypes';
 import { useDebounce } from '@/app/admin/admin_utils/useDebounce';
 
 export function useAdminMembersLogic() {
   const { selectedBranchId } = useAdminGlobalStore();
   const { search, statusFilter, branchFilter, expiryFilter, currentPage, setCurrentPage } = useAdminMembersStore();
-  const [fetchState, setFetchState] = useState<FetchState>('success');
   const [error, setError] = useState('');
   const [selectedMember, setSelectedMember] = useState<AdminMember | null>(null);
-  const [summary] = useState<AdminMembersSummary>(ADMIN_MOCK_MEMBERS_SUMMARY);
+
+  const { data: membersData, isLoading: membersLoading } = useQuery({
+    queryKey: ['adminMembers'],
+    queryFn: () => apiFetch<ApiResponse<AdminMember[]>>('/api/admin/members/list').then(r => r.data || []),
+  });
+  
+  const { data: summaryData, isLoading: summaryLoading } = useQuery({
+    queryKey: ['adminMembersSummary'],
+    queryFn: () => apiFetch<ApiResponse<AdminMembersSummary>>('/api/admin/members/summary').then(r => r.data || {} as AdminMembersSummary),
+  });
 
   const debouncedSearch = useDebounce(search, 300);
 
   const filteredMembers = useMemo(() => {
     const activeBranch = selectedBranchId !== 'all' ? selectedBranchId : branchFilter;
-    return ADMIN_MOCK_MEMBERS.filter((m) => {
+    const membersList = membersData || [];
+    return membersList.filter((m) => {
       const matchesBranch = activeBranch === 'all' || m.branchId === activeBranch;
       const matchesStatus = statusFilter === 'all' || m.status === statusFilter;
       const matchesSearch = !debouncedSearch ||
@@ -33,7 +44,7 @@ export function useAdminMembersLogic() {
         (expiryFilter === 'this_month' && (m.id === 'm10' || m.id === 'm11' || m.id === 'm2'));
       return matchesBranch && matchesStatus && matchesSearch && matchesExpiry;
     });
-  }, [debouncedSearch, statusFilter, branchFilter, expiryFilter, selectedBranchId]);
+  }, [debouncedSearch, statusFilter, branchFilter, expiryFilter, selectedBranchId, membersData]);
 
   const totalPages = Math.max(1, Math.ceil(filteredMembers.length / ADMIN_MEMBERS_ITEMS_PER_PAGE));
   const paginatedMembers = filteredMembers.slice(
@@ -42,10 +53,12 @@ export function useAdminMembersLogic() {
   );
 
   const loadAll = useCallback(async () => {
-    setFetchState('loading');
-    await new Promise((r) => setTimeout(r, 400));
-    setFetchState('success');
+    // No-op for now
   }, []);
+
+  const isLoading = membersLoading || summaryLoading;
+  const fetchState: FetchState = isLoading ? 'loading' : 'success';
+  const summary = summaryData || {} as AdminMembersSummary;
 
   return {
     members: paginatedMembers,

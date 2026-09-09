@@ -18,13 +18,8 @@ import { DATE_RANGE_OPTIONS } from '@/app/admin/reports/reports_utils/AdminRepor
 import { reportsApi } from '@/app/admin/reports/reports_api/reports_api';
 import type { ReportDateRange } from '@/app/admin/reports/reports_types/reports_types';
 
-const GYM_OPTIONS = [
-  { value: 'all', label: 'All Gyms' },
-  { value: 'b1', label: 'Andheri East' },
-  { value: 'b2', label: 'Bandra West' },
-  { value: 'b3', label: 'Powai' },
-  { value: 'b4', label: 'Thane' },
-];
+import { useAdminBranchesData } from '@/app/admin/admin_store/useAdminBranchesData';
+import type { Branch } from '@/app/admin/admin_store/useAdminGlobalStore';
 
 const EXPORT_FORMAT_OPTIONS = [
   { value: 'pdf', label: 'Export as PDF' },
@@ -46,8 +41,14 @@ function ReportsSkeleton() {
 export default function AdminReportsMain() {
   const { activeTab, dateRange, setDateRange, startDate, endDate, setCustomDateRange, selectedGymId, setSelectedGymId } = useAdminReportsStore();
   const { fetchState } = useAdminReportsLogic();
+  const { data: branches = [] } = useAdminBranchesData();
   const [exporting, setExporting] = useState(false);
   const [exportFormat, setExportFormat] = useState<string>('pdf');
+
+  const gymOptions = [
+    { value: 'all', label: 'All Gyms' },
+    ...(branches as Branch[]).map((b) => ({ value: b.id, label: b.name })),
+  ];
 
   const handleExport = async () => {
     setExporting(true);
@@ -79,7 +80,7 @@ export default function AdminReportsMain() {
           <div className="flex flex-wrap gap-3 items-center">
             <div className="w-44">
               <AdminSearchableDropdown
-                options={GYM_OPTIONS}
+                options={gymOptions}
                 value={selectedGymId}
                 onChange={(v) => setSelectedGymId(v as string)}
                 placeholder="All Gyms"
@@ -108,14 +109,13 @@ export default function AdminReportsMain() {
 
           {/* Export Controls */}
           <div className="flex items-center gap-2">
-            <select
-              value={exportFormat}
-              onChange={(e) => setExportFormat(e.target.value)}
-              className="bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              aria-label="Export format"
-            >
-              {EXPORT_FORMAT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-            </select>
+            <div className="w-40 bg-input rounded-lg border-none">
+              <AdminSearchableDropdown
+                options={EXPORT_FORMAT_OPTIONS}
+                value={exportFormat}
+                onChange={(v) => setExportFormat(v as string)}
+              />
+            </div>
             <button
               onClick={handleExport}
               disabled={exporting}

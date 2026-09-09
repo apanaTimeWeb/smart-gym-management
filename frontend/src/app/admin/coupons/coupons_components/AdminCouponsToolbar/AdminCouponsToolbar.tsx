@@ -12,6 +12,7 @@ export default function AdminCouponsToolbar() {
   const { statusFilter, setStatusFilter, setSearch } = useAdminCouponsStore();
   const { openAdd } = useAdminCouponsLogic();
   const [localSearch, setLocalSearch] = useState('');
+  const [dateRange, setDateRange] = useState('all_time');
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLocalSearch(e.target.value);
@@ -38,6 +39,19 @@ export default function AdminCouponsToolbar() {
             value={statusFilter}
             onChange={(v) => setStatusFilter(v as string)}
             placeholder="All Status"
+          />
+        </div>
+        <div className="w-40 bg-input rounded-lg border-none">
+          <AdminSearchableDropdown
+            options={[
+              { value: 'all_time', label: 'All Time' },
+              { value: 'today', label: 'Today' },
+              { value: 'this_week', label: 'This Week' },
+              { value: 'this_month', label: 'This Month' },
+              { value: 'custom', label: 'Custom Range' },
+            ]}
+            value={dateRange}
+            onChange={(v) => setDateRange(v as string)}
           />
         </div>
       </div>

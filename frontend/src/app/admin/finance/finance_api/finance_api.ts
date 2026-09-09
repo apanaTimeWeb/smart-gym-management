@@ -1,5 +1,4 @@
 import { apiFetch, ApiResponse } from '@/lib/api';
-import { PNL_MOCK_DATA } from '@/app/admin/finance/finance_utils/AdminFinancePnlConstants';
 import { FinanceUrlConfig } from '@/app/admin/finance/finance_url_config';
 import type { Payment, FinanceSummary, BranchPnlRecord } from '@/app/admin/finance/finance_types/finance_types';
 
@@ -21,13 +20,9 @@ export const financeApi = {
     return res;
   },
   fetchBranchPnl: (period: string) =>
-    new Promise<ApiResponse<BranchPnlRecord[]>>((resolve) => {
-      setTimeout(() => {
-        resolve({
-          data: PNL_MOCK_DATA[period as keyof typeof PNL_MOCK_DATA] ?? [],
-          success: true,
-          message: 'Success',
-        });
-      }, 800);
-    }),
+    apiFetch<ApiResponse<BranchPnlRecord[]>>(`/api/admin/finance/pnl?period=${period}`),
+  fetchExpenses: (params?: Record<string, string>) => {
+    const q = params ? '?' + new URLSearchParams(params).toString() : '';
+    return apiFetch<ApiResponse<any[]>>(`/api/admin/finance/expenses${q}`);
+  },
 };

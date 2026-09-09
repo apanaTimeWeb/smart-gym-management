@@ -4,14 +4,15 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { Bell, Search, LogOut, Settings, User, X, Menu, Building2, QrCode } from 'lucide-react';
 import Link from 'next/link';
-import { getUser, logout } from '@/lib/api';
+import { getUser, logout, apiFetch } from '@/lib/api';
 import { ADMIN_PLACEHOLDER_NOTIFICATIONS, STATUS_STYLES } from '@/app/admin/admin_utils/AdminSharedConstants';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
 import { useAdminBranchesData } from '@/app/admin/admin_store/useAdminBranchesData';
 import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
-import { ADMIN_MOCK_MEMBERS } from '@/app/admin/members/members_utils/AdminMembersSharedConstants';
+import { useQuery } from '@tanstack/react-query';
 import AdminQrScannerModal from '@/app/admin/admin_components/AdminQrScanner/AdminQrScannerModal';
+import type { AdminMember } from '@/app/admin/members/members_types/AdminMembersTypes';
 import type { AdminHeaderProps } from '@/app/admin/admin_components/AdminLayout/AdminLayoutTypes';
 import type { Branch } from '@/app/admin/admin_store/useAdminGlobalStore';
 
@@ -31,17 +32,23 @@ export default function AdminHeader({ title, subtitle }: AdminHeaderProps) {
   const { data: branchesData = [] } = useAdminBranchesData();
   const branches = Array.isArray(branchesData) ? branchesData : [];
 
+  const { data: membersData } = useQuery({
+    queryKey: ['adminMembers'],
+    queryFn: () => apiFetch<{ data: AdminMember[] }>('/api/admin/members/list').then(r => r.data || []),
+  });
+
   // Filter real mock members by search query
   const searchResults = useMemo(() => {
     if (!searchQuery.trim()) return [];
     const q = searchQuery.toLowerCase();
-    return ADMIN_MOCK_MEMBERS.filter(
+    const membersList = membersData || [];
+    return membersList.filter(
       (m) =>
         m.name.toLowerCase().includes(q) ||
         m.phone.includes(q) ||
         m.email.toLowerCase().includes(q)
     ).slice(0, 5);
-  }, [searchQuery]);
+  }, [searchQuery, membersData]);
 
   const removeNotification = (id: number, e: React.MouseEvent) => {
     e.stopPropagation();

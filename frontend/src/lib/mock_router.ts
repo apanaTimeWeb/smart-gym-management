@@ -1,4 +1,7 @@
 import { ApiResponse } from './api';
+import { ADMIN_MOCK_REPORT_DATA, ADMIN_PNL_MOCK_DATA, ADMIN_MOCK_EXPENSES } from './mock_admin_data';
+import { ADMIN_MOCK_ATTENDANCE_SUMMARY, ADMIN_MOCK_ATTENDANCE_TREND, ADMIN_MOCK_ATTENDANCE_RECORDS, ADMIN_MOCK_MEMBERS, ADMIN_MOCK_MEMBERS_SUMMARY } from './mock_admin_data_2';
+import { ADMIN_PERFORMANCE_MOCK_DATA, ADMIN_REVENUE_MOCK_DATA } from './mock_admin_data_3';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 class MockDB {
   private static prefix = 'gymsmart_mock_';
@@ -977,6 +980,57 @@ export async function routeMockRequest<T>(
     { id: 'msg-003', tenantId: 'gym-9012', tenantName: 'Zenith Yoga & Pilates', channel: 'EMAIL', subject: 'Welcome to GymSmart 360!', body: 'Hi Mia, welcome aboard! Here is how to get started.', status: 'DRAFT', sentAt: null, scheduledAt: null, createdAt: '2024-05-20T11:00:00Z' },
     { id: 'msg-004', tenantId: 'gym-3456', tenantName: 'PowerHouse Gym Koramangala', channel: 'IN_APP', subject: 'Action required: Payment overdue', body: 'Your subscription payment is overdue. Please update your billing.', status: 'SENT', sentAt: '2024-04-20T09:00:00Z', scheduledAt: null, createdAt: '2024-04-20T08:55:00Z' },
   ]) as unknown as ApiResponse<T>;
+  if (path.includes('/admin/reports/data')) {
+    const gymId = parsedUrl.searchParams.get('gymId');
+    let data = { ...ADMIN_MOCK_REPORT_DATA };
+    if (gymId && gymId !== 'all') {
+      data = {
+        ...data,
+        revenueByGym: data.revenueByGym.filter(g => g.gymId === gymId),
+        membershipGrowth: data.membershipGrowth.filter(g => g.gymId === gymId),
+        attendanceSummary: data.attendanceSummary.filter(g => g.gymId === gymId),
+        payrollSummary: data.payrollSummary.filter(g => g.gymId === gymId),
+        pnlSummary: data.pnlSummary.filter(g => g.gymId === gymId),
+      };
+    }
+    return { success: true, message: 'Report data fetched', data } as unknown as ApiResponse<T>;
+  }
+
+  if (path.includes('/admin/finance/pnl')) {
+    const period = parsedUrl.searchParams.get('period') || 'THIS_MONTH';
+    return { success: true, message: 'PNL data fetched', data: ADMIN_PNL_MOCK_DATA[period as keyof typeof ADMIN_PNL_MOCK_DATA] || [] } as unknown as ApiResponse<T>;
+  }
+
+  if (path.includes('/admin/finance/expenses')) {
+    return { success: true, message: 'Expenses fetched', data: ADMIN_MOCK_EXPENSES } as unknown as ApiResponse<T>;
+  }
+
+  if (path.includes('/admin/attendance/records')) {
+    return { success: true, message: 'Records fetched', data: ADMIN_MOCK_ATTENDANCE_RECORDS } as unknown as ApiResponse<T>;
+  }
+  if (path.includes('/admin/attendance/summary')) {
+    return { success: true, message: 'Summary fetched', data: ADMIN_MOCK_ATTENDANCE_SUMMARY } as unknown as ApiResponse<T>;
+  }
+  if (path.includes('/admin/attendance/trend')) {
+    return { success: true, message: 'Trend fetched', data: ADMIN_MOCK_ATTENDANCE_TREND } as unknown as ApiResponse<T>;
+  }
+
+  if (path.includes('/admin/members/list')) {
+    return { success: true, message: 'Members fetched', data: ADMIN_MOCK_MEMBERS } as unknown as ApiResponse<T>;
+  }
+  if (path.includes('/admin/members/summary')) {
+    return { success: true, message: 'Summary fetched', data: ADMIN_MOCK_MEMBERS_SUMMARY } as unknown as ApiResponse<T>;
+  }
+
+  if (path.includes('/admin/hr/performance')) {
+    const period = parsedUrl.searchParams.get('period') || 'THIS_MONTH';
+    return { success: true, message: 'Performance fetched', data: ADMIN_PERFORMANCE_MOCK_DATA[period as keyof typeof ADMIN_PERFORMANCE_MOCK_DATA] || [] } as unknown as ApiResponse<T>;
+  }
+
+  if (path.includes('/admin/plans/revenue')) {
+    const period = parsedUrl.searchParams.get('period') || 'THIS_MONTH';
+    return { success: true, message: 'Revenue fetched', data: ADMIN_REVENUE_MOCK_DATA[period as keyof typeof ADMIN_REVENUE_MOCK_DATA] || [] } as unknown as ApiResponse<T>;
+  }
   
   if (path.includes('/superadmin/messaging/notifications')) return MockDB.handleCrud('mock_messaging_notifications', method, path, parsedBody, [
     { id: 'notif-1', title: 'New tenant signup', body: 'FitZone Indiranagar just signed up for a trial.', type: 'INFO', read: false, createdAt: '2024-05-22T10:00:00Z' },
