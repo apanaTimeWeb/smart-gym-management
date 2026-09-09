@@ -122,46 +122,44 @@ export default function AdminHrStaffTable() {
                 </td>
                 <td className="px-4 py-3 text-right">
                   <div className="flex items-center justify-end gap-2">
-                    {s.role === 'Manager' && (
-                      <>
-                        <button 
-                          onClick={(e) => { e.stopPropagation(); toggleStaffStatus(s); }}
-                          className={`p-1.5 rounded-lg transition-all duration-200 ease-in-out ${
-                            s.isActive === false 
-                              ? 'text-success hover:bg-success/10' 
-                              : 'text-danger hover:bg-danger/10'
-                          }`}
-                          title={s.isActive === false ? 'Activate Staff' : 'Suspend Staff'}
-                        >
-                          {s.isActive === false ? <PlayCircle size={16} /> : <Ban size={16} />}
-                        </button>
-                        <button 
-                          onClick={(e) => { e.stopPropagation(); openEdit(s); }} 
-                          className="p-1.5 rounded hover:bg-primary/10 transition-colors text-secondary hover:text-primary"
-                          title="Edit"
-                        >
-                          <Edit2 size={16} />
-                        </button>
-                        <button 
-                          onClick={async (e) => { 
-                            e.stopPropagation(); 
-                            const ok = await confirm({
-                              title: 'Delete Staff Member',
-                              message: `Are you sure you want to delete staff member "${s.name}"? This action cannot be undone.`,
-                              type: 'danger',
-                              confirmText: 'Delete'
-                            });
-                            if (ok) {
-                              deleteStaff(s.id); 
-                            }
-                          }}
-                          className="p-1.5 rounded transition-colors text-danger hover:bg-danger/10"
-                          title="Delete"
-                        >
-                          <Trash2 size={16} />
-                        </button>
-                      </>
-                    )}
+                    <>
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); toggleStaffStatus(s); }}
+                        className={`p-1.5 rounded-lg transition-all duration-200 ease-in-out ${
+                          s.isActive === false 
+                            ? 'text-success hover:bg-success/10' 
+                            : 'text-danger hover:bg-danger/10'
+                        }`}
+                        title={s.isActive === false ? 'Activate Staff' : 'Suspend Staff'}
+                      >
+                        {s.isActive === false ? <PlayCircle size={16} /> : <Ban size={16} />}
+                      </button>
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); openEdit(s); }} 
+                        className="p-1.5 rounded hover:bg-primary/10 transition-colors text-secondary hover:text-primary"
+                        title="Edit"
+                      >
+                        <Edit2 size={16} />
+                      </button>
+                      <button 
+                        onClick={async (e) => { 
+                          e.stopPropagation(); 
+                          const ok = await confirm({
+                            title: 'Delete Staff Member',
+                            message: `Are you sure you want to delete staff member "${s.name}"? This action cannot be undone.`,
+                            type: 'danger',
+                            confirmText: 'Delete'
+                          });
+                          if (ok) {
+                            deleteStaff(s.id); 
+                          }
+                        }}
+                        className="p-1.5 rounded transition-colors text-danger hover:bg-danger/10"
+                        title="Delete"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </>
                   </div>
                 </td>
               </tr>

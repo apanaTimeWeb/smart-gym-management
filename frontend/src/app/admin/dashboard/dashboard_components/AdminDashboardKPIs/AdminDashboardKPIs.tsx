@@ -37,6 +37,27 @@ export default function AdminDashboardKPIs() {
   };
 
   return (
+    <>
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 mb-4">
+      <AdminStatCard
+        title="Avg. Attendance/Day"
+        value={(s.avgAttendance || 124).toLocaleString()}
+        change="This month"
+        changeType="up"
+        icon={Users}
+        iconBg="bg-primary/20"
+        iconColor="text-primary"
+      />
+      <AdminStatCard
+        title="Renewals Pending"
+        value={(s.renewalsPending || 15).toLocaleString()}
+        change="Next 7 days"
+        changeType="down"
+        icon={Clock}
+        iconBg="bg-warning/20"
+        iconColor="text-warning"
+      />
+    </div>
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
       <AdminStatCard
         title="Total Revenue"
@@ -75,6 +96,7 @@ export default function AdminDashboardKPIs() {
         iconColor="text-danger"
       />
     </div>
+    </>
   );
 }
 

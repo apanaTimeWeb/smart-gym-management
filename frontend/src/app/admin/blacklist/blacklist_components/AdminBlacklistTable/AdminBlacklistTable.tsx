@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Table showing blacklisted members with toggle and remove actions.
 'use client';
 
-import { Globe, Building2, ToggleLeft, ToggleRight, Trash2 } from 'lucide-react';
+import { Globe, Building2, ToggleLeft, ToggleRight, Trash2, Unlock } from 'lucide-react';
 import { useAdminBlacklistLogic } from '@/app/admin/blacklist/blacklist_context/useAdminBlacklistLogic';
 import { AdminTableSkeleton } from '@/app/admin/admin_components/AdminShared/AdminTableSkeleton';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
@@ -56,8 +56,8 @@ export default function AdminBlacklistTable() {
                     <button onClick={() => toggleBlacklist(m.id)} className="p-1.5 rounded-lg hover:bg-input text-secondary hover:text-foreground motion-safe:transition-colors" aria-label="Toggle blacklist">
                       {m.isActive ? <ToggleRight size={16} className="text-danger" /> : <ToggleLeft size={16} />}
                     </button>
-                    <button onClick={() => removeFromBlacklist(m.id, m.memberName)} className="p-1.5 rounded-lg hover:bg-danger-bg text-secondary hover:text-danger motion-safe:transition-colors" aria-label="Remove from blacklist">
-                      <Trash2 size={15} />
+                    <button onClick={() => removeFromBlacklist(m.id, m.memberName)} className="p-1.5 rounded-lg hover:bg-success/10 text-secondary hover:text-success motion-safe:transition-colors" aria-label="Unblock member" title="Unblock">
+                      <Unlock size={15} />
                     </button>
                   </div>
                 </td>

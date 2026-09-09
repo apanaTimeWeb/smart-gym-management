@@ -48,6 +48,8 @@ export interface Invoice {
   planName: string;
   billingCycle: 'monthly' | 'annual';
   pdfUrl: string;
+  taxAmount?: number;
+  gstNumber?: string;
 }
 
 export interface PaymentMethod {

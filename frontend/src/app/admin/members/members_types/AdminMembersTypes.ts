@@ -18,6 +18,10 @@ export interface AdminMember {
   gender: 'Male' | 'Female' | 'Other';
   referralSource?: string;
   photo?: string;
+  lastCheckIn?: string;
+  totalVisits?: number;
+  dateOfBirth?: string;
+  address?: string;
 }
 
 export interface AdminMembersSummary {

@@ -37,6 +37,9 @@ export interface MembershipReportItem {
   received?: number;
   remaining?: number;
   refund?: number;
+  referralSource?: string;
+  couponCode?: string;
+  renewalCount?: number;
 }
 
 export interface MembershipTotals {

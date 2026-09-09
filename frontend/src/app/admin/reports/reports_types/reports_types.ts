@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Defines all TypeScript types for the Reports module. Single source of truth for all report data shapes.
 
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';
-export type ReportTab = 'revenue' | 'membership' | 'attendance' | 'payroll' | 'pnl';
+export type ReportTab = 'revenue' | 'membership' | 'attendance' | 'payroll' | 'pnl' | 'tax';
 export type ReportDateRange = 'this_month' | 'last_month' | 'last_3_months' | 'last_6_months' | 'this_year' | 'custom';
 
 export interface ReportsContextType {

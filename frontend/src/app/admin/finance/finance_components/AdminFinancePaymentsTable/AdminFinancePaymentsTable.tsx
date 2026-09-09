@@ -8,6 +8,7 @@ import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagin
 import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_utils/AdminSharedConstants';
 
 import { formatCurrency } from '@/lib/formatters';
+import { Printer, Undo } from 'lucide-react';
 
 export default function AdminFinancePaymentsTable() {
   const { payments, summary, totalPayments, fetchState, saving, error, loadAll, search, setSearch, currentPage, setCurrentPage, savePayment, methodFilter, setMethodFilter } = useAdminFinanceLogic();
@@ -43,6 +44,7 @@ export default function AdminFinancePaymentsTable() {
  <td className="px-4 py-4"><div className="h-5 bg-muted rounded-full w-20"></div></td>
  <td className="px-4 py-4"><div className="h-5 bg-muted rounded-full w-24"></div></td>
  <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-24"></div></td>
+ <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-16"></div></td>
  </tr>
  ))}
  </tbody>
@@ -97,6 +99,16 @@ export default function AdminFinancePaymentsTable() {
  </td>
  <td className="px-4 py-3 text-sm text-secondary">
  {new Date(p.paidAt).toLocaleDateString('en-IN')}
+ </td>
+ <td className="px-4 py-3">
+   <div className="flex items-center gap-2">
+     <button onClick={(e) => { e.stopPropagation(); }} className="p-1.5 rounded-lg bg-input hover:bg-border text-secondary" title="Print Receipt">
+       <Printer size={16} />
+     </button>
+     <button onClick={(e) => { e.stopPropagation(); }} className="p-1.5 rounded-lg bg-input hover:bg-border text-secondary" title="Refund">
+       <Undo size={16} />
+     </button>
+   </div>
  </td>
  </tr>
  );

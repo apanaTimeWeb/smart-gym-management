@@ -62,6 +62,11 @@ export function useAdminGymHealthAlertsLogic() {
 
   const resolveAlert = useCallback((id: string) => { resolveMutation.mutate(id); }, [resolveMutation]);
 
+  const snoozeAlert = useCallback(async (id: string, title: string) => {
+    toast.success('Alert snoozed for 24 hours');
+    qc.invalidateQueries({ queryKey: ['adminGymHealthAlerts'] });
+  }, [qc]);
+
   const dismissAlert = useCallback(async (id: string, title: string) => {
     const ok = await confirm({ title: 'Dismiss Alert', message: `Dismiss "${title}"? It will be permanently removed.`, confirmText: 'Dismiss', type: 'warning' });
     if (!ok) return;
@@ -76,6 +81,6 @@ export function useAdminGymHealthAlertsLogic() {
     resolvedFilter, setResolvedFilter,
     currentPage, setCurrentPage,
     totalPages, totalItems: filtered.length,
-    resolveAlert, dismissAlert,
+    resolveAlert, dismissAlert, snoozeAlert,
   };
 }

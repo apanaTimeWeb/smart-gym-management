@@ -7,6 +7,7 @@ export const REPORT_TABS: { value: ReportTab; label: string }[] = [
   { value: 'attendance', label: 'Attendance' },
   { value: 'payroll', label: 'Payroll' },
   { value: 'pnl', label: 'P&L' },
+  { value: 'tax', label: 'Tax Liability Report' },
 ];
 
 export const DATE_RANGE_OPTIONS: { value: ReportDateRange; label: string }[] = [

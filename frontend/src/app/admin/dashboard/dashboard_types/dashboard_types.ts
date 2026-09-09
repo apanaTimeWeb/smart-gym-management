@@ -76,4 +76,9 @@ export interface DashboardStats {
   membersByStatus: { active: number; pending: number; expired: number };
   branchLeaderboard: BranchPerformance[];
   systemAlerts: SystemAlert[];
+  todayAttendance?: number;
+  expiringThisWeek?: number;
+  totalInquiriesOpen?: number;
+  avgAttendance?: number;
+  renewalsPending?: number;
 }

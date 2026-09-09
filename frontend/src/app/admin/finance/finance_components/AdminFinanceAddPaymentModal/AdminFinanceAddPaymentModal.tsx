@@ -54,11 +54,20 @@ export default function AdminFinanceAddPaymentModal() {
         <form onSubmit={handleSubmit(handleAddPayment)} className="p-6 space-y-4">
           <div>
             <label className="block text-sm font-medium mb-1 text-secondary">Member ID</label>
-            <input
-              type="text"
-              placeholder="Enter Member ID (e.g. m123)"
-              {...register('memberId')}
-              className={`w-full px-4 py-2 border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary ${errors.memberId ? 'border-danger' : 'border-border'}`}
+            <Controller
+              name="memberId"
+              control={control}
+              render={({ field }) => (
+                <AdminSearchableDropdown
+                  options={[
+                    { value: 'm123', label: 'm123 - John Doe (Active)' },
+                    { value: 'm124', label: 'm124 - Jane Smith (Pending)' }
+                  ]}
+                  value={field.value}
+                  onChange={field.onChange}
+                  placeholder="Search Member..."
+                />
+              )}
             />
             {errors.memberId && <p className="text-danger text-xs mt-1">{errors.memberId.message}</p>}
           </div>

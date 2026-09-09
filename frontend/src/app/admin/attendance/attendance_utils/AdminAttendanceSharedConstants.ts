@@ -22,6 +22,7 @@ export const ATTENDANCE_TABLE_HEADERS = [
   'Member',
   'Branch',
   'Plan',
+  'Trainer',
   'Check-In',
   'Check-Out',
   'Duration',

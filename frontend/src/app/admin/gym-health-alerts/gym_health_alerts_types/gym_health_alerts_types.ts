@@ -23,6 +23,9 @@ export interface GymHealthAlert {
   detectedAt: string;
   isResolved: boolean;
   resolvedAt?: string;
+  alertAge?: number;
+  assignedTo?: string;
+  snoozeUntil?: string;
 }
 
 export interface GymHealthKPIData {

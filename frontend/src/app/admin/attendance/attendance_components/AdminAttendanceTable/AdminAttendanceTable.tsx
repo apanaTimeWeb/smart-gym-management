@@ -62,6 +62,11 @@ export default function AdminAttendanceTable() {
                   <span className="text-sm text-foreground">{r.planName}</span>
                 </td>
                 <td className="px-4 py-3">
+                  <span className="text-sm text-foreground">
+                    {r.sessionType === 'PT' ? (r.trainerName || 'Unassigned') : '—'}
+                  </span>
+                </td>
+                <td className="px-4 py-3">
                   <span className="text-sm text-foreground whitespace-nowrap">
                     {r.checkInTime || '—'}
                   </span>

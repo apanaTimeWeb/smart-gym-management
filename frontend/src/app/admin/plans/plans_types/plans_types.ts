@@ -44,5 +44,9 @@ export interface Plan {
   price1Month: number; price3Month: number;
   price6Month: number; price12Month: number;
   features: string[]; isActive: boolean;
+  freezeAllowed?: boolean;
+  joiningFee?: number;
+  ptSessionsIncluded?: number;
+  taxRate?: number;
 }
 
