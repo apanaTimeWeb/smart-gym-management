@@ -1,6 +1,5 @@
 // RESPONSIBILITY: Renders the SuperadminInvoicesTable component.
 import React, { useState } from 'react';
-import { Receipt } from 'lucide-react';
 import type { SaaSInvoice } from '@/app/superadmin/invoices/superadmin_invoices_types/superadmin_invoices_types';
 import SuperadminInvoicesTableRow from '@/app/superadmin/invoices/invoices_components/SuperadminInvoicesTable/SuperadminInvoicesTableRow';
 import SuperadminInvoicesEmptyState from '@/app/superadmin/invoices/invoices_components/SuperadminInvoicesEmptyState/SuperadminInvoicesEmptyState';
@@ -12,6 +11,9 @@ interface InvoicesTableProps {
 }
 
 const ITEMS_PER_PAGE = 10;
+// Rule 68: TABLE_COLUMN_COUNT must match <th> count AND colSpan on empty state
+// Columns: Invoice ID | Gym | Plan | Type | Amount | Status | Date | Actions = 8
+const TABLE_COLUMN_COUNT = 8;
 
 export default function SuperadminInvoicesTable({ invoices, onLogPaymentClick }: InvoicesTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
@@ -28,6 +30,7 @@ export default function SuperadminInvoicesTable({ invoices, onLogPaymentClick }:
               <th className="p-4 font-semibold text-secondary">Invoice ID</th>
               <th className="p-4 font-semibold text-secondary">Gym (Tenant)</th>
               <th className="p-4 font-semibold text-secondary">Plan</th>
+              <th className="p-4 font-semibold text-secondary">Type</th>
               <th className="p-4 font-semibold text-secondary">Amount</th>
               <th className="p-4 font-semibold text-secondary">Status</th>
               <th className="p-4 font-semibold text-secondary">Date</th>
@@ -37,7 +40,7 @@ export default function SuperadminInvoicesTable({ invoices, onLogPaymentClick }:
           <tbody className="divide-y divide-border">
             {paginatedInvoices.length === 0 ? (
               <tr>
-                <td colSpan={7}><SuperadminInvoicesEmptyState onLogPaymentClick={onLogPaymentClick} /></td>
+                <td colSpan={TABLE_COLUMN_COUNT}><SuperadminInvoicesEmptyState onLogPaymentClick={onLogPaymentClick} /></td>
               </tr>
             ) : (
               paginatedInvoices.map((inv) => (

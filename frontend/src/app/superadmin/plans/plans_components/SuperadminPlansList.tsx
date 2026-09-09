@@ -34,7 +34,6 @@ export default function SuperadminPlansList() {
   });
 
   const archiveMutation = useMutation({
-    // @ts-expect-error PATCH /superadmin/plans/:id/archive to be implemented on backend
     mutationFn: (id: string) => superadminApi.plans.archivePlan(id),
     onSuccess: () => {
       toast.success('Plan archived. Existing tenants remain unaffected.');
