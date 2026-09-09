@@ -52,6 +52,10 @@ export interface Payment {
   invoiceNo: string; 
   paidAt: string;
   member?: { name: string; email: string; phone: string; plan?: { name: string } };
+  refundReason?: string;
+  receiptNumber?: string;
+  discountApplied?: number;
+  couponCode?: string;
 }
 export interface FinanceSummary {
   totalRevenue: number; monthlyRevenue: number; pendingAmount: number;
@@ -70,6 +74,10 @@ export interface Expense {
   date: string;
   notes?: string;
   recordedBy: string;
+  vendor?: string;
+  billNumber?: string;
+  approvedBy?: string;
+  receiptUrl?: string;
 }
 
 // ─── Branch P&L Types ──────────────────────────────────────────────────────────

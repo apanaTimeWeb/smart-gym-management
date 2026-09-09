@@ -11,6 +11,8 @@ import ManagerDashboardExpiringMemberships from '@/app/manager/dashboard/dashboa
 import ManagerDashboardPromoCard from '@/app/manager/dashboard/dashboard_components/ManagerDashboardPromoCard/ManagerDashboardPromoCard';
 import ManagerDashboardMembershipDistribution from '@/app/manager/dashboard/dashboard_components/ManagerDashboardMembershipDistribution/ManagerDashboardMembershipDistribution';
 import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/SearchableDropdown';
+import ManagerDashboardRevenueChart from '@/app/manager/dashboard/dashboard_components/ManagerDashboardRevenueChart/ManagerDashboardRevenueChart';
+import ManagerDashboardMemberGrowthChart from '@/app/manager/dashboard/dashboard_components/ManagerDashboardMemberGrowthChart/ManagerDashboardMemberGrowthChart';
 
 // Skeleton for the dashboard content area while client-side data loads
 function DashboardSkeleton() {
@@ -99,6 +101,13 @@ function DashboardContent() {
           </div>
         </div>
         <ManagerDashboardKPIs />
+        
+        {/* CRITICAL FIX: Missing Business Charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <ManagerDashboardRevenueChart />
+          <ManagerDashboardMemberGrowthChart />
+        </div>
+
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
           <ManagerDashboardRecentMembers />
           <div className="space-y-4">

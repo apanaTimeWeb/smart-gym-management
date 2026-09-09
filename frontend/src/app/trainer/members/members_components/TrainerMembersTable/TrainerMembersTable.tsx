@@ -110,7 +110,7 @@ export default function TrainerMembersTable() {
                 )})}
                 {members.length === 0 && fetchState === 'success' && (
                   <tr>
-                    <td colSpan={9} className="p-0 border-b-0">
+                    <td colSpan={11} className="p-0 border-b-0">
                       <TrainerMembersEmptyState isFiltered={Boolean(search || statusFilter !== 'All')} />
                     </td>
                   </tr>

@@ -22,7 +22,22 @@ export interface LeaveRequest {
   leaveType: LeaveType;
   status: LeaveStatus;
   managerNotes?: string;
+  totalDays?: number;
+  attachmentUrl?: string;
+  approvedBy?: string;
+  rejectedReason?: string;
   createdAt: string;
+}
+
+export interface ScheduleEvent {
+  id: string;
+  title: string;
+  start: string;
+  end: string;
+  type: string;
+  isRecurring?: boolean;
+  recurrenceRule?: string;
+  meetingLink?: string;
 }
 
 export interface TrainerScheduleState {

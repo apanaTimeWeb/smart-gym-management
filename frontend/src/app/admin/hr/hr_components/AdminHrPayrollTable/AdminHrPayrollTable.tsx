@@ -4,7 +4,7 @@
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
 import { PAYROLL_TABLE_HEADERS } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, Download } from 'lucide-react';
 import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_utils/AdminSharedConstants';
 
 export default function AdminHrPayrollTable() {
@@ -65,6 +65,11 @@ export default function AdminHrPayrollTable() {
 
   return (
     <div className="flex flex-col h-full">
+      <div className="flex justify-end mb-4">
+        <button className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors">
+          Bulk Generate Payroll
+        </button>
+      </div>
       <div className="overflow-x-auto flex-1">
         <table className="w-full">
           <thead className="bg-input text-secondary">
@@ -108,18 +113,23 @@ export default function AdminHrPayrollTable() {
                   {p.paidAt ? new Date(p.paidAt).toLocaleDateString('en-IN') : '—'}
                 </td>
                 <td className="px-4 py-3 text-right">
-                  {p.status !== 'Paid' && (
-                    <button 
-                      onClick={() => setPaymentModal({
-                        payrollId: p.id,
-                        staffName: p.staff?.name || `Staff #${p.staffId}`,
-                        pendingAmount: p.pendingAmount
-                      })}
-                      className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:bg-primary/90 transition-colors"
-                    >
-                      <CheckCircle2 size={16} /> Pay
+                  <div className="flex justify-end gap-2">
+                    <button className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-semibold text-secondary border border-border rounded-lg hover:bg-border transition-colors">
+                      <Download size={16} /> Payslip
                     </button>
-                  )}
+                    {p.status !== 'Paid' && (
+                      <button 
+                        onClick={() => setPaymentModal({
+                          payrollId: p.id,
+                          staffName: p.staff?.name || `Staff #${p.staffId}`,
+                          pendingAmount: p.pendingAmount
+                        })}
+                        className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:bg-primary/90 transition-colors"
+                      >
+                        <CheckCircle2 size={16} /> Pay
+                      </button>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}

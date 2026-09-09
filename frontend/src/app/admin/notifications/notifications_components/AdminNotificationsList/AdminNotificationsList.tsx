@@ -10,9 +10,10 @@ interface Props {
   notifications: NotificationItem[];
   onMarkAsRead: (id: string) => void;
   onDelete: (id: string) => void;
+  onMarkAllAsRead?: () => void;
 }
 
-export default function AdminNotificationsList({ notifications, onMarkAsRead, onDelete }: Props) {
+export default function AdminNotificationsList({ notifications, onMarkAsRead, onDelete, onMarkAllAsRead }: Props) {
   const { confirm } = useAdminConfirm();
 
   if (notifications.length === 0) {
@@ -28,8 +29,19 @@ export default function AdminNotificationsList({ notifications, onMarkAsRead, on
   }
 
   return (
-    <div className="divide-y divide-border">
-      {notifications.map((n) => (
+    <div>
+      {onMarkAllAsRead && notifications.some(n => n.unread) && (
+        <div className="flex justify-end p-3 border-b border-border bg-card">
+          <button 
+            onClick={onMarkAllAsRead} 
+            className="text-xs font-semibold text-primary hover:text-primary-hover hover:underline transition-colors"
+          >
+            Mark all as read
+          </button>
+        </div>
+      )}
+      <div className="divide-y divide-border">
+        {notifications.map((n) => (
         <div
           key={n.id}
           onMouseEnter={() => n.unread && onMarkAsRead(n.id)}
@@ -63,6 +75,7 @@ export default function AdminNotificationsList({ notifications, onMarkAsRead, on
           </button>
         </div>
       ))}
+    </div>
     </div>
   );
 }

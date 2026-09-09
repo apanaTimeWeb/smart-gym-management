@@ -14,6 +14,8 @@ export function useSuperadminGymsToolbar() {
   const setStatusFilter = useSuperadminGymsStore(state => state.setStatusFilter);
   const planFilter = useSuperadminGymsStore(state => state.planFilter);
   const setPlanFilter = useSuperadminGymsStore(state => state.setPlanFilter);
+  const viewMode = useSuperadminGymsStore(state => state.viewMode);
+  const setViewMode = useSuperadminGymsStore(state => state.setViewMode);
 
   const handleSearchChange = (value: string) => {
     setSearch(value);
@@ -41,6 +43,8 @@ export function useSuperadminGymsToolbar() {
     setStatusFilter,
     planFilter,
     setPlanFilter,
+    viewMode,
+    setViewMode,
     handleExportGyms,
   };
 }

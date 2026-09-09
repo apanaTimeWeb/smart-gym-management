@@ -8,6 +8,10 @@ export interface TrainerNotificationItem {
   time: string;
   unread: boolean;
   type?: NotificationType;
+  actionUrl?: string;
+  relatedEntityId?: string;
+  relatedEntityType?: string;
+  metadata?: Record<string, unknown>;
 }
 
 export interface TrainerNotificationsApiResponse {

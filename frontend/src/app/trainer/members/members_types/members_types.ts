@@ -31,8 +31,8 @@ export interface MembersContextType {
   // Member Profile
   selectedMember: Member | null;
   setSelectedMember: (m: Member | null) => void;
-  profileTab: 'overview' | 'fitness' | 'assessment' | 'progress' | 'workout' | 'diet' | 'attendance';
-  setProfileTab: (tab: 'overview' | 'fitness' | 'assessment' | 'progress' | 'workout' | 'diet' | 'attendance') => void;
+  profileTab: 'overview' | 'fitness' | 'assessment' | 'progress' | 'workout' | 'diet' | 'attendance' | 'notes';
+  setProfileTab: (tab: 'overview' | 'fitness' | 'assessment' | 'progress' | 'workout' | 'diet' | 'attendance' | 'notes') => void;
 
   // Add/Edit Modal
   showAddModal: boolean;

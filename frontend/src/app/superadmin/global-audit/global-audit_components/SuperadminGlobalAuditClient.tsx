@@ -14,10 +14,11 @@ import SuperadminPagination from '@/app/superadmin/superadmin_components/Superad
 export default function SuperadminGlobalAuditClient() {
   const [search, setSearch] = useState('');
   const [severityFilter, setSeverityFilter] = useState<'ALL' | 'INFO' | 'WARNING' | 'CRITICAL'>('ALL');
+  const [actorTypeFilter, setActorTypeFilter] = useState<'ALL' | 'SUPERADMIN' | 'SYSTEM' | 'TENANT'>('ALL');
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 20;
 
-  const { data: queryData, isLoading, isError } = useQuery({
+  const { data: queryData, isLoading, isError, refetch, isFetching } = useQuery({
     queryKey: ['superadmin', 'global-audit'],
     queryFn: async () => {
       try {
@@ -39,15 +40,16 @@ export default function SuperadminGlobalAuditClient() {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [search, severityFilter]);
+  }, [search, severityFilter, actorTypeFilter]);
 
   const filteredLogs = displayLogs.filter(log => {
     const matchesSearch = log.action?.toLowerCase().includes(search.toLowerCase()) || 
                           log.actor?.toLowerCase().includes(search.toLowerCase()) ||
                           log.resource?.toLowerCase().includes(search.toLowerCase());
     const matchesSeverity = severityFilter === 'ALL' || log.severity === severityFilter;
+    const matchesActorType = actorTypeFilter === 'ALL' || log.actorType === actorTypeFilter;
     
-    return matchesSearch && matchesSeverity;
+    return matchesSearch && matchesSeverity && matchesActorType;
   });
 
   const totalPages = Math.ceil(filteredLogs.length / ITEMS_PER_PAGE) || 1;
@@ -104,6 +106,13 @@ export default function SuperadminGlobalAuditClient() {
     { value: 'CRITICAL', label: 'Critical' },
   ];
 
+  const actorTypeOptions = [
+    { value: 'ALL', label: 'All Actors' },
+    { value: 'SUPERADMIN', label: 'Superadmin' },
+    { value: 'SYSTEM', label: 'System' },
+    { value: 'TENANT', label: 'Tenant' },
+  ];
+
   if (fetchState === 'loading') {
     return (
       <div className="p-6 max-w-7xl mx-auto space-y-6">
@@ -140,13 +149,13 @@ export default function SuperadminGlobalAuditClient() {
         </div>
         
         <div className="flex items-center gap-3">
-          <div className="w-48 z-20">
-            <SearchableDropdown
-              options={severityOptions}
-              value={severityFilter}
-              onChange={(val) => setSeverityFilter(val as 'ALL' | 'INFO' | 'WARNING' | 'CRITICAL')}
-            />
-          </div>
+          <button 
+            onClick={() => refetch()}
+            disabled={isFetching}
+            className="flex items-center gap-2 px-4 py-2 bg-input border border-border text-foreground font-medium rounded-lg hover:bg-card-hover motion-safe:transition-colors disabled:opacity-50"
+          >
+            {isFetching ? 'Refreshing...' : 'Refresh'}
+          </button>
           <button 
             onClick={exportLogs}
             className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground font-medium rounded-lg hover:bg-primary/90 motion-safe:transition-colors"
@@ -157,8 +166,8 @@ export default function SuperadminGlobalAuditClient() {
       </div>
 
       <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm flex flex-col min-h-[500px]">
-        <div className="p-4 border-b border-border bg-card-hover/50">
-          <div className="relative max-w-md">
+        <div className="p-4 border-b border-border bg-card-hover/50 flex flex-col sm:flex-row items-center gap-4 justify-between">
+          <div className="relative w-full max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />
             <input 
               type="text" 
@@ -167,6 +176,24 @@ export default function SuperadminGlobalAuditClient() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
+          </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="w-48 z-20 border-none bg-input rounded-lg">
+              <SearchableDropdown
+                options={severityOptions}
+                value={severityFilter}
+                onChange={(val) => setSeverityFilter(val as 'ALL' | 'INFO' | 'WARNING' | 'CRITICAL')}
+                className="bg-transparent border-transparent"
+              />
+            </div>
+            <div className="w-48 z-20 border-none bg-input rounded-lg">
+              <SearchableDropdown
+                options={actorTypeOptions}
+                value={actorTypeFilter}
+                onChange={(val) => setActorTypeFilter(val as 'ALL' | 'SUPERADMIN' | 'SYSTEM' | 'TENANT')}
+                className="bg-transparent border-transparent"
+              />
+            </div>
           </div>
         </div>
 
@@ -195,7 +222,14 @@ export default function SuperadminGlobalAuditClient() {
                     <p className="text-sm text-secondary mt-1">{log.details}</p>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <p className="text-sm font-medium text-foreground">{log.actor}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-medium text-foreground">{log.actor}</p>
+                      {log.actorType && (
+                        <span className="text-[10px] font-bold bg-input text-secondary px-1.5 py-0.5 rounded tracking-wider">
+                          {log.actorType}
+                        </span>
+                      )}
+                    </div>
                     <p className="text-xs font-mono text-secondary mt-1 opacity-70">{log.ipAddress}</p>
                   </td>
                 </tr>

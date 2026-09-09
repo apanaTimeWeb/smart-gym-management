@@ -4,12 +4,19 @@
 import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  AreaChart, Area
+  AreaChart, Area, PieChart, Pie, Cell, Legend
 } from 'recharts';
 import { Loader2 } from 'lucide-react';
 
 export default function AdminSalesOverview() {
   const { overviewData, fetchState } = useAdminSalesLogic();
+
+  const referralData = [
+    { name: 'Instagram', value: 45000, color: '#E1306C' },
+    { name: 'Google Ads', value: 65000, color: '#4285F4' },
+    { name: 'Word of Mouth', value: 25000, color: '#10B981' },
+    { name: 'Walk-in', value: 15000, color: '#F59E0B' },
+  ];
 
   if (fetchState === 'loading') {
     return (
@@ -71,6 +78,31 @@ export default function AdminSalesOverview() {
     </AreaChart>
   </ResponsiveContainer>
  </div>
+ </div>
+ 
+ <div className="bg-card p-5 rounded-xl border border-border shadow-lg dark:shadow-none">
+   <h3 className="font-bold text-foreground mb-4">Marketing ROI: Revenue by Referral Source</h3>
+   <div className="h-64 w-full">
+    <ResponsiveContainer width="100%" height="100%">
+      <PieChart>
+        <Pie
+          data={referralData}
+          cx="50%"
+          cy="50%"
+          innerRadius={60}
+          outerRadius={80}
+          paddingAngle={5}
+          dataKey="value"
+        >
+          {referralData.map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={entry.color} />
+          ))}
+        </Pie>
+        <Tooltip formatter={(value: any) => `₹${Number(value || 0).toLocaleString()}`} />
+        <Legend verticalAlign="bottom" height={36} />
+      </PieChart>
+    </ResponsiveContainer>
+   </div>
  </div>
  </div>
  );

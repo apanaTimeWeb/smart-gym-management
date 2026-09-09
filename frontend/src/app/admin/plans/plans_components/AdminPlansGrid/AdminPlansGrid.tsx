@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Renders the grid of membership plan cards with edit/delete actions and pagination.
 'use client';
 
-import { Edit2, Trash2, Tag, CheckCircle, Loader2 } from 'lucide-react';
+import { Edit2, Trash2, Tag, CheckCircle, Loader2, Snowflake } from 'lucide-react';
 import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/AdminConfirmProvider';
 import { useAdminPlansLogic } from '@/app/admin/plans/plans_context/useAdminPlansLogic';
 import { useAdminPlansStore } from '@/app/admin/plans/plans_store/useAdminPlansStore';
@@ -131,6 +131,12 @@ export default function AdminPlansGrid() {
                       <span>{f}</span>
                     </li>
                   ))}
+                  {p.freezeAllowed && (
+                    <li className="flex items-start gap-2 text-sm text-secondary">
+                      <Snowflake size={16} className="text-info flex-shrink-0 mt-0.5" />
+                      <span>Freeze Allowed</span>
+                    </li>
+                  )}
                 </ul>
               </div>
             </div>

@@ -11,6 +11,10 @@ interface AdminMembersStoreState {
   setBranchFilter: (s: string) => void;
   expiryFilter: 'all' | 'this_week' | 'this_month';
   setExpiryFilter: (s: 'all' | 'this_week' | 'this_month') => void;
+  genderFilter: string;
+  setGenderFilter: (s: string) => void;
+  planFilter: string;
+  setPlanFilter: (s: string) => void;
   currentPage: number;
   setCurrentPage: (p: number) => void;
 }
@@ -24,6 +28,10 @@ export const useAdminMembersStore = create<AdminMembersStoreState>((set) => ({
   setBranchFilter: (s) => set({ branchFilter: s, currentPage: 1 }),
   expiryFilter: 'all',
   setExpiryFilter: (s) => set({ expiryFilter: s, currentPage: 1 }),
+  genderFilter: 'all',
+  setGenderFilter: (s) => set({ genderFilter: s, currentPage: 1 }),
+  planFilter: 'all',
+  setPlanFilter: (s) => set({ planFilter: s, currentPage: 1 }),
   currentPage: 1,
   setCurrentPage: (p) => set({ currentPage: p }),
 }));

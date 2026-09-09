@@ -31,7 +31,10 @@ export default function SuperadminAffiliatesTableRow({ affiliate: aff, onToggleS
         <span className="px-2 py-1 bg-input rounded text-secondary font-mono">{aff.referralCode}</span>
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-foreground">
-        {aff.totalReferred} Gyms
+        {aff.referralCount ?? aff.totalReferred} Gyms
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground">
+        {aff.conversionRate !== undefined ? `${aff.conversionRate}%` : '—'}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-success font-medium">
         ₹{aff.commissionEarned.toLocaleString(undefined, { minimumFractionDigits: 2 })}

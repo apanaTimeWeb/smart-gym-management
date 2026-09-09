@@ -7,18 +7,20 @@
 
 import { useSuperadminFeaturesData } from '@/app/superadmin/features/features_utils/useSuperadminFeaturesData';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
-import { ToggleLeft, Send, Search, Users } from 'lucide-react';
+import { ToggleLeft, Send, Search, Users, Clock } from 'lucide-react';
 import { useState } from 'react';
 import type { FeatureFlag, ReleaseNote } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
 import { featuresApi } from '@/app/superadmin/features/superadmin_features_api/superadmin_features_api';
 import toast from 'react-hot-toast';
 import SuperadminFeatureRolloutModal from './SuperadminFeatureRolloutModal';
+import SuperadminFeatureHistoryModal from './SuperadminFeatureHistoryModal';
 
 export default function SuperadminFeaturesClient() {
   const [activeTab, setActiveTab] = useState<'FLAGS' | 'NOTES'>('FLAGS');
   const [noteForm, setNoteForm] = useState({ version: '', title: '', content: '' });
   const [isPublishing, setIsPublishing] = useState(false);
   const [rolloutFlag, setRolloutFlag] = useState<FeatureFlag | null>(null);
+  const [historyFlag, setHistoryFlag] = useState<FeatureFlag | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
   const { data, fetchState, error, setData, toggleFlag, updateFlag } = useSuperadminFeaturesData();
@@ -146,6 +148,19 @@ export default function SuperadminFeaturesClient() {
                       </button>
                     </div>
                   )}
+                  {flag.isGlobalEnabled && (
+                    <div className="mt-3 flex items-center gap-4">
+                      {/* Placeholder for layout consistency when globally enabled */}
+                      <span className="text-xs text-secondary opacity-0">Placeholder</span>
+                    </div>
+                  )}
+                  <button 
+                    onClick={() => setHistoryFlag(flag)}
+                    className="mt-2 text-xs flex items-center gap-1.5 text-secondary hover:text-foreground font-semibold motion-safe:transition-colors"
+                  >
+                    <Clock className="w-3.5 h-3.5" />
+                    View History
+                  </button>
                 </div>
                 <div className="flex flex-col items-end">
                   <div onClick={() => handleToggle(flag.id)} className={`w-12 h-6 rounded-full relative cursor-pointer motion-safe:transition-colors ${flag.isGlobalEnabled ? 'bg-success' : 'bg-border'}`}>
@@ -217,6 +232,12 @@ export default function SuperadminFeaturesClient() {
         onClose={() => setRolloutFlag(null)} 
         flag={rolloutFlag} 
         onSaveRollout={handleSaveRollout} 
+      />
+
+      <SuperadminFeatureHistoryModal
+        isOpen={!!historyFlag}
+        onClose={() => setHistoryFlag(null)}
+        flag={historyFlag}
       />
     </div>
   );

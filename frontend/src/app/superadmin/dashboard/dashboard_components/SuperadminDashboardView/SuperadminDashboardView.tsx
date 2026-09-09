@@ -80,8 +80,8 @@ export default function SuperadminDashboardView() {
           <div className="h-8 w-48 bg-skeleton-base motion-safe:animate-pulse rounded" />
           <div className="h-4 w-96 bg-skeleton-base motion-safe:animate-pulse rounded mt-2" />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
             <div key={`kpi-skeleton-${i}`} className="bg-skeleton-base border border-border rounded-xl p-6 h-32 motion-safe:animate-pulse" />
           ))}
         </div>
@@ -201,6 +201,16 @@ export default function SuperadminDashboardView() {
       colorClass: healthScore !== undefined && healthScore < 80 ? 'text-warning' : 'text-success',
       iconBgClass: healthScore !== undefined && healthScore < 80 ? 'bg-warning/10' : 'bg-success/10',
     },
+    {
+      label: 'TRIALS EXPIRING (7D)',
+      value: String(metrics.trialsExpiringIn7Days || 0),
+      trend: undefined,
+      trendUp: false,
+      icon: AlertCircle,
+      colorClass: 'text-warning',
+      iconBgClass: 'bg-warning/10',
+      onClick: () => router.push('/superadmin/churn-alerts')
+    },
   ];
 
   const chartOptions = {
@@ -269,6 +279,34 @@ export default function SuperadminDashboardView() {
   };
   const donutSeries = (metrics.revenueByTier || []).map((t) => Math.round(t.amount * timeMultiplier));
 
+  const geoChartOptions = {
+    chart: { type: 'bar' as const, toolbar: { show: false }, background: 'transparent' },
+    colors: [CHART_COLORS.WARNING],
+    plotOptions: { bar: { horizontal: true, borderRadius: 4, dataLabels: { position: 'top' } } },
+    dataLabels: {
+      enabled: true,
+      offsetX: 20,
+      style: { fontSize: '12px', colors: [CHART_COLORS.TEXT_SECONDARY] },
+      formatter: (val: number) => `₹${(val / 1000).toFixed(1)}k`
+    },
+    stroke: { show: true, width: 1, colors: ['transparent'] },
+    xaxis: {
+      categories: (metrics.revenueByGeography || []).map((g) => g.region),
+      labels: { style: { colors: CHART_COLORS.TEXT_SECONDARY }, formatter: (val: number) => `₹${(val / 1000).toFixed(0)}k` },
+      axisBorder: { show: false },
+      axisTicks: { show: false },
+    },
+    yaxis: { labels: { style: { colors: CHART_COLORS.TEXT_SECONDARY } } },
+    grid: { borderColor: CHART_COLORS.BORDER, strokeDashArray: 4, xaxis: { lines: { show: true } }, yaxis: { lines: { show: false } } },
+    theme: { mode: 'dark' as const },
+    tooltip: { theme: 'dark' as const, y: { formatter: (val: number) => `₹${val.toLocaleString('en-IN')}` } },
+  };
+
+  const geoChartSeries = [{
+    name: 'Revenue',
+    data: (metrics.revenueByGeography || []).map((g) => Math.round(g.revenue * timeMultiplier)),
+  }];
+
   return (
     <div className="space-y-6">
       {/* Page Header + Time Range Filter */}
@@ -317,13 +355,14 @@ export default function SuperadminDashboardView() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         {kpiCards.map((card) => {
           const Icon = card.icon;
           return (
-            <div
+              <div
               key={card.label}
-              className="relative overflow-hidden bg-card border border-border rounded-xl p-6 shadow-sm motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-lg motion-safe:transition-all motion-safe:duration-200 bg-gradient-to-b from-yellow-400/10 to-transparent"
+              onClick={card.onClick}
+              className={`relative overflow-hidden bg-card border border-border rounded-xl p-6 shadow-sm motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-lg motion-safe:transition-all motion-safe:duration-200 bg-gradient-to-b from-yellow-400/10 to-transparent ${card.onClick ? 'cursor-pointer' : ''}`}
             >
               <div className="flex items-center justify-between mb-4">
                 <span className="text-secondary font-medium text-xs uppercase tracking-wider">{card.label}</span>
@@ -393,7 +432,7 @@ export default function SuperadminDashboardView() {
         </div>
 
         {/* Gym Growth Chart */}
-        <div className="lg:col-span-2 bg-card border border-border rounded-xl p-6 shadow-sm mt-6">
+        <div className="lg:col-span-2 bg-card border border-border rounded-xl p-6 shadow-sm mt-6 lg:mt-0">
           <h2 className="text-base font-semibold text-foreground mb-6">Gym Growth (New Signups)</h2>
           <div className="h-80 w-full">
             <Chart options={growthChartOptions} series={growthChartSeries} type="bar" height="100%" />
@@ -401,13 +440,25 @@ export default function SuperadminDashboardView() {
         </div>
 
         {/* Revenue by Plan Tier Donut Chart — audit item #35 */}
-        <div className="lg:col-span-1 bg-card border border-border rounded-xl p-6 shadow-sm mt-6">
+        <div className="lg:col-span-1 bg-card border border-border rounded-xl p-6 shadow-sm mt-6 lg:mt-0">
           <h2 className="text-base font-semibold text-foreground mb-6">Revenue by Plan</h2>
           <div className="h-80 w-full flex items-center justify-center">
             {(metrics.revenueByTier?.length || 0) > 0 ? (
               <Chart options={donutOptions} series={donutSeries} type="donut" height="100%" />
             ) : (
               <div className="text-secondary text-sm">No revenue data by tier</div>
+            )}
+          </div>
+        </div>
+
+        {/* Revenue by Geography Bar Chart */}
+        <div className="lg:col-span-3 bg-card border border-border rounded-xl p-6 shadow-sm mt-6 lg:mt-0">
+          <h2 className="text-base font-semibold text-foreground mb-6">Revenue by Geography</h2>
+          <div className="h-80 w-full">
+            {(metrics.revenueByGeography?.length || 0) > 0 ? (
+              <Chart options={geoChartOptions} series={geoChartSeries} type="bar" height="100%" />
+            ) : (
+              <div className="flex h-full items-center justify-center text-secondary text-sm">No geographical revenue data available</div>
             )}
           </div>
         </div>

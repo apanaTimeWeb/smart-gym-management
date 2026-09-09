@@ -39,13 +39,33 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
     const current = new URLSearchParams(Array.from(searchParams.entries()));
     if (value) current.set(key, value);
     else current.delete(key);
-    if (key !== 'page') current.set('page', '1');
+    if (key !== 'page' && key !== 'sort' && key !== 'dir') current.set('page', '1');
     router.push(`${pathname}?${current.toString()}`);
   }, [searchParams, pathname, router]);
 
   const setSearch = useCallback((val: string) => setUrlParam('search', val || null), [setUrlParam]);
   const setStatusFilter = useCallback((val: string) => setUrlParam('status', val === 'All' ? null : val), [setUrlParam]);
+  const setGenderFilter = useCallback((val: string) => setUrlParam('gender', val === 'All' ? null : val), [setUrlParam]);
+  const setPlanFilter = useCallback((val: string) => setUrlParam('plan', val === 'All' ? null : val), [setUrlParam]);
+  
+  const setExpiryRange = useCallback((from: string, to: string) => {
+    const current = new URLSearchParams(Array.from(searchParams.entries()));
+    if (from) current.set('expiryFrom', from); else current.delete('expiryFrom');
+    if (to) current.set('expiryTo', to); else current.delete('expiryTo');
+    current.set('page', '1');
+    router.push(`${pathname}?${current.toString()}`);
+  }, [searchParams, pathname, router]);
+
+  const setSortColumn = useCallback((val: any) => setUrlParam('sort', val), [setUrlParam]);
+  const setSortDirection = useCallback((val: any) => setUrlParam('dir', val), [setUrlParam]);
   const setCurrentPage = useCallback((val: number) => setUrlParam('page', val.toString()), [setUrlParam]);
+
+  const genderFilter = searchParams.get('gender') || 'All';
+  const planFilter = searchParams.get('plan') || 'All';
+  const expiryFrom = searchParams.get('expiryFrom') || '';
+  const expiryTo = searchParams.get('expiryTo') || '';
+  const sortColumn = (searchParams.get('sort') as any) || 'name';
+  const sortDirection = (searchParams.get('dir') as any) || 'asc';
 
   // UI State
   const [showAddModal, setShowAddModal] = useState(false);
@@ -137,8 +157,14 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
     setMsgModal({ open: true, type, recipient: { name: m.name, phone: m.phone, email: m.email }, message: tpl });
   }, []);
 
+  const exportMembers = useCallback((format: any) => {
+    showToast(`Exporting members as ${format}...`, 'success');
+  }, [showToast]);
+
   return {
     search, debouncedSearch, setSearch, statusFilter, setStatusFilter, currentPage, setCurrentPage,
+    genderFilter, setGenderFilter, planFilter, setPlanFilter, expiryFrom, expiryTo, setExpiryRange,
+    sortColumn, setSortColumn, sortDirection, setSortDirection, exportMembers,
     toast, showToast, hideToast,
     selectedMember, setSelectedMember, profileTab, setProfileTab, trainers,
     showAddModal, setShowAddModal, editId, editData,

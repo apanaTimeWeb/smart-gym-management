@@ -5,7 +5,7 @@
 
 import { useDashboardContext } from '@/app/trainer/dashboard/dashboard_context/DashboardContext';
 import TrainerStatCard from '@/app/trainer/trainer_components/TrainerShared/TrainerStatCard';
-import { Users, UserCheck, CalendarCheck, Clock, Dumbbell, Activity } from 'lucide-react';
+import { Users, UserCheck, CalendarCheck, Clock, Dumbbell, Activity, DollarSign, Star, CalendarClock, TrendingUp } from 'lucide-react';
 
 export default function TrainerDashboardKPIs() {
   const { stats } = useDashboardContext();
@@ -50,6 +50,60 @@ export default function TrainerDashboardKPIs() {
           icon={Dumbbell}
           iconBg="bg-warning-bg"
           iconColor="text-warning"
+        />
+        <TrainerStatCard
+          title="Total PT Revenue"
+          value={`$${s.totalPTRevenue?.toLocaleString() ?? 0}`}
+          change="This month"
+          changeType="neutral"
+          icon={DollarSign}
+          iconBg="bg-success-bg"
+          iconColor="text-success"
+        />
+        <TrainerStatCard
+          title="Weekly Sessions"
+          value={s.weeklySessionsCompleted?.toLocaleString() ?? '0'}
+          change="Completed"
+          changeType="neutral"
+          icon={Activity}
+          iconBg="bg-primary/10"
+          iconColor="text-primary"
+        />
+        <TrainerStatCard
+          title="Avg Session Rating"
+          value={s.avgSessionRating?.toFixed(1) ?? '0.0'}
+          change="Out of 5.0"
+          changeType="neutral"
+          icon={Star}
+          iconBg="bg-warning-bg"
+          iconColor="text-warning"
+        />
+        <TrainerStatCard
+          title="Active Clients"
+          value={s.activeClientsCount?.toLocaleString() ?? '0'}
+          change="Currently active"
+          changeType="neutral"
+          icon={UserCheck}
+          iconBg="bg-info-bg"
+          iconColor="text-info"
+        />
+        <TrainerStatCard
+          title="Attendance Rate"
+          value={`${s.attendanceRate ?? 0}%`}
+          change="Average attendance"
+          changeType="neutral"
+          icon={TrendingUp}
+          iconBg="bg-primary/10"
+          iconColor="text-primary"
+        />
+        <TrainerStatCard
+          title="Next Session"
+          value={s.nextSessionTime ?? 'N/A'}
+          change="Upcoming"
+          changeType="neutral"
+          icon={CalendarClock}
+          iconBg="bg-info-bg"
+          iconColor="text-info"
         />
       </div>
     </>

@@ -21,6 +21,9 @@ export interface Announcement {
   viewCount: number;
   viewsByBranch?: { branchId: string, count: number }[];
   isPinned: boolean;
+  deliveryStatus?: string;
+  pushNotificationSent?: boolean;
+  acknowledgedCount?: number;
 }
 
 export interface AnnouncementFormValues {

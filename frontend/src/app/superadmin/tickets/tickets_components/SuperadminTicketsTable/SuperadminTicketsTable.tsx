@@ -15,8 +15,14 @@ interface SuperadminTicketsTableProps {
 
 export default function SuperadminTicketsTable({ tickets, onReply, onClose, onAssign }: SuperadminTicketsTableProps) {
   const router = useRouter();
-  const isSlaBreached = (ticket: SupportTicket) =>
-    !!ticket.slaBreachAt && new Date(ticket.slaBreachAt) < new Date();
+  const getSlaStatus = (ticket: SupportTicket) => {
+    if (!ticket.slaDeadline) return { label: 'No SLA', color: 'text-secondary', icon: null };
+    const diff = new Date(ticket.slaDeadline).getTime() - new Date().getTime();
+    if (diff < 0) return { label: 'Breached', color: 'text-danger', icon: <AlertOctagon size={12} /> };
+    if (diff < 12 * 60 * 60 * 1000) return { label: 'Approaching', color: 'text-warning', icon: <AlertOctagon size={12} /> };
+    return { label: 'OK', color: 'text-success', icon: <CheckCircle2 size={12} /> };
+  };
+
   return (
     <div className="overflow-x-auto flex-1">
       <table className="w-full text-left border-collapse min-w-max">
@@ -38,7 +44,9 @@ export default function SuperadminTicketsTable({ tickets, onReply, onClose, onAs
               <td colSpan={8}><SuperadminTicketsEmptyState /></td>
             </tr>
           ) : (
-            tickets.map((ticket) => (
+            tickets.map((ticket) => {
+              const sla = getSlaStatus(ticket);
+              return (
               <tr key={ticket.id} className="hover:bg-input motion-safe:transition-colors">
                 <td className="p-4 text-sm font-medium text-foreground">{ticket.id}</td>
                 <td className="p-4 text-sm text-secondary">
@@ -60,13 +68,9 @@ export default function SuperadminTicketsTable({ tickets, onReply, onClose, onAs
                   <span className={StatusColors[ticket.status]}>{ticket.status.replace('_', ' ')}</span>
                 </td>
                 <td className="p-4 text-sm">
-                  {isSlaBreached(ticket) ? (
-                    <span className="flex items-center gap-1 text-danger text-xs font-semibold">
-                      <AlertOctagon size={12} /> SLA Breached
-                    </span>
-                  ) : (
-                    <span className="text-secondary text-xs">OK</span>
-                  )}
+                  <span className={`flex items-center gap-1 text-xs font-semibold ${sla.color}`}>
+                    {sla.icon} {sla.label}
+                  </span>
                 </td>
                 <td className="p-4 text-sm text-secondary">{new Date(ticket.lastUpdated).toLocaleString()}</td>
                 <td className="p-4 text-sm text-right">
@@ -99,7 +103,8 @@ export default function SuperadminTicketsTable({ tickets, onReply, onClose, onAs
                   </div>
                 </td>
               </tr>
-            ))
+              );
+            })
           )}
         </tbody>
       </table>

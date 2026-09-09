@@ -49,8 +49,12 @@ export const managerPtApi = {
       packageName: 'Assigned Package', // Mocked name
       totalSessions: 12,
       completedSessions: 0,
+      sessionsRemaining: 12,
       startDate: body.startDate,
       endDate: '2024-01-01',
+      paymentStatus: 'PAID',
+      amountPaid: 0,
+      totalAmount: 0,
     };
     return { success: true, message: 'Trainer assigned successfully!', data: newAssignment };
   },

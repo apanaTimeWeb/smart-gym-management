@@ -1,4 +1,6 @@
 // RESPONSIBILITY: TypeScript types for the Manager Communications module.
+// HIGHLY RECOMMENDED additions: failedCount, deliveredCount, openRate, scheduledAt on CommCampaign;
+// MessageTemplate interface; lifetimeValue on ChurnedMember.
 
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 export type CommChannel = 'whatsapp' | 'email';
@@ -10,7 +12,7 @@ export type CommSegment =
   | 'pending_payment'
   | 'custom';
 
-export type CommStatus = 'sent' | 'failed' | 'partial';
+export type CommStatus = 'sent' | 'failed' | 'partial' | 'scheduled';
 
 export interface CommRecipient {
   memberId: string;
@@ -22,6 +24,7 @@ export interface CommRecipient {
   pendingAmount: number;
 }
 
+// ─── Campaign ─────────────────────────────────────────────────────────────────
 export interface CommCampaign {
   id: string;
   title: string;
@@ -35,8 +38,27 @@ export interface CommCampaign {
   status: CommStatus;
   sentAt: string;
   sentBy: string;
+  // HIGHLY RECOMMENDED — standard analytics fields for campaigns
+  failedCount: number;
+  deliveredCount: number;
+  openRate?: number;      // percentage, email-only
+  scheduledAt?: string;   // if status is 'scheduled'
 }
 
+// ─── Message Templates ────────────────────────────────────────────────────────
+/** HIGHLY RECOMMENDED — standard SaaS feature for reusable message templates. */
+export interface MessageTemplate {
+  id: string;
+  name: string;
+  channel: CommChannel;
+  body: string;
+  variables: string[];     // e.g. ['{{member_name}}', '{{expiry_date}}']
+  isDefault: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// ─── KPIs ─────────────────────────────────────────────────────────────────────
 export interface CommKPIData {
   totalSent: number;
   whatsappSent: number;
@@ -52,6 +74,7 @@ export interface CommFormValues {
   subject: string;
 }
 
+// ─── Automation ───────────────────────────────────────────────────────────────
 export type CommAutomationType = 'birthday' | 'anniversary';
 
 export interface CommAutomation {
@@ -65,8 +88,7 @@ export interface CommAutomation {
   sendTime: string;
 }
 
-// ─── Churn Recovery Types ────────────────────────────────────────────────────
-
+// ─── Churn Recovery ───────────────────────────────────────────────────────────
 export type ChurnReasonType =
   | 'price'
   | 'relocation'
@@ -88,6 +110,8 @@ export interface ChurnedMember {
   reason: ChurnReasonType;
   lastContactedAt: string | null;
   recovered: boolean;
+  // HIGHLY RECOMMENDED — needed for churn impact analysis
+  lifetimeValue: number;   // total INR paid by member during their tenure
 }
 
 export interface ChurnKPIData {

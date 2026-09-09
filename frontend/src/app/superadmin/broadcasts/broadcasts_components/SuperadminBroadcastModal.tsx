@@ -1,13 +1,14 @@
-// RESPONSIBILITY: Renders the Create/Edit Broadcast modal form. Receives form state via props from useSuperadminBroadcastsPage. No API calls.
+// RESPONSIBILITY: Renders the Create/Edit Broadcast modal form. Receives form state via props from useSuperadminBroadcastsPage. No API calls except recipient count preview.
 'use client';
 
 import React from 'react';
-import { X, Loader2 } from 'lucide-react';
+import { X, Loader2, Users } from 'lucide-react';
 import { UseFormReturn, Controller } from 'react-hook-form';
+import { useQuery } from '@tanstack/react-query';
 import type { BroadcastFormData } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import { useQuery } from '@tanstack/react-query';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
+import { broadcastsApi } from '@/app/superadmin/broadcasts/superadmin_broadcasts_api/superadmin_broadcasts_api';
 import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
 import { MOCK_GYMS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
 
@@ -37,11 +38,21 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
     enabled: isOpen,
   });
 
+  // Fetch recipient count for the "SENT" confirmation preview
+  const { data: recipientCountRes } = useQuery({
+    queryKey: ['superadmin', 'broadcasts', 'recipient-count'],
+    queryFn: () => broadcastsApi.fetchRecipientCount(),
+    enabled: isOpen && status === 'SENT',
+  });
+
   const rawGyms = (fetchRes?.data as Tenant[]) ?? [];
   const gyms = rawGyms.length > 0 ? rawGyms : MOCK_GYMS;
 
-  const allGymIds = gyms.map((g: Tenant) => g.id) || [];
+  const allGymIds = gyms.map(g => g.id) || [];
   const isAllSelected = allGymIds.length > 0 && targetGymIds.length === allGymIds.length;
+
+  // Recipient count: use API value if available, else fall back to selected gym count
+  const recipientCount = recipientCountRes?.data?.count ?? targetGymIds.length;
 
   if (!isOpen) return null;
 
@@ -108,7 +119,7 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
               <div className="bg-input border border-border rounded-xl max-h-40 overflow-y-auto custom-scrollbar p-2 grid grid-cols-2 gap-2">
                 {isLoading ? (
                   <div className="col-span-2 flex justify-center py-4 text-primary"><Loader2 className="w-5 h-5 motion-safe:animate-spin" /></div>
-                ) : gyms?.map((gym: Tenant) => (
+                ) : gyms?.map(gym => (
                   <label key={gym.id} className="flex items-center gap-2 cursor-pointer p-2 hover:bg-overlay rounded-lg motion-safe:transition-colors border border-transparent hover:border-border">
                     <input 
                       type="checkbox" 
@@ -150,12 +161,47 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
           {status === 'SCHEDULED' && (
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-bold text-secondary">Scheduled Date & Time <span className="text-danger">*</span></label>
-              <input 
-                type="datetime-local" 
-                {...register('scheduledDate')}
-                className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary motion-safe:transition-colors"
-              />
+              <div className="flex gap-4">
+                <input 
+                  type="date"
+                  onChange={(e) => {
+                    const date = e.target.value;
+                    const time = (document.getElementById('bcast-time') as HTMLInputElement)?.value || '00:00';
+                    if (date) setValue('scheduledDate', new Date(`${date}T${time}:00Z`).toISOString(), { shouldValidate: true });
+                  }}
+                  className="flex-1 px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary motion-safe:transition-colors"
+                />
+                <input 
+                  id="bcast-time"
+                  type="time" 
+                  onChange={(e) => {
+                    const time = e.target.value;
+                    const date = (e.target.previousElementSibling as HTMLInputElement)?.value;
+                    if (date && time) setValue('scheduledDate', new Date(`${date}T${time}:00Z`).toISOString(), { shouldValidate: true });
+                  }}
+                  className="flex-1 px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary motion-safe:transition-colors"
+                />
+              </div>
+              <input type="hidden" {...register('scheduledDate')} />
               {errors.scheduledDate && <span className="text-xs text-danger">{errors.scheduledDate.message}</span>}
+            </div>
+          )}
+
+          {status === 'SENT' && (
+            <div className="space-y-3">
+              {/* Bug #21 fix: Recipient count preview */}
+              <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 flex items-center gap-3">
+                <Users size={18} className="text-primary shrink-0" />
+                <p className="text-sm text-foreground">
+                  This broadcast will reach{' '}
+                  <strong className="text-primary">{recipientCount} active tenant{recipientCount !== 1 ? 's' : ''}</strong>.
+                </p>
+              </div>
+              <div className="bg-warning/10 border border-warning/20 rounded-lg p-4">
+                <p className="text-sm text-warning font-medium">
+                  ⚠️ You are about to send this broadcast immediately to <strong>{targetGymIds.length}</strong> {targetGymIds.length === 1 ? 'gym' : 'gyms'}. This action cannot be undone.
+                </p>
+              </div>
             </div>
           )}
 
@@ -171,7 +217,7 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
               type="submit" 
               className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-white font-medium rounded-lg motion-safe:transition-colors text-sm"
             >
-              Save Broadcast
+              {status === 'SENT' ? `Send to ${targetGymIds.length} Gyms` : 'Save Broadcast'}
             </button>
           </div>
         </form>

@@ -49,6 +49,7 @@ export interface SaaSDashboardMetrics {
   overdueInvoicesCount: number;
   pendingRevenue: number;
   recentOnboards: Tenant[];
+  trialsExpiringIn7Days?: number;
   /** MRR % change vs previous period — from API, never hardcoded */
   mrrDeltaPercent?: number;
   /** ARR % change vs previous year — from API, never hardcoded */
@@ -57,6 +58,7 @@ export interface SaaSDashboardMetrics {
   arpu?: number;
   /** Revenue breakdown by plan tier for donut chart (audit item #35) */
   revenueByTier?: PlanRevenueBreakdown[];
+  revenueByGeography?: { region: string; revenue: number }[];
   /**
    * Composite platform health score 0–100.
    * Computed by backend from: churn rate, overdue invoices, system uptime, active tenant ratio.

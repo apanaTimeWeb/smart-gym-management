@@ -4,7 +4,7 @@
 import { useDashboardContext } from '@/app/manager/dashboard/dashboard_context/ManagerDashboardContext';
 import ManagerStatCard from '@/app/manager/manager_components/ManagerShared/ManagerStatCard';
 import { formatCurrency } from '@/app/manager/dashboard/dashboard_utils/ManagerDashboardSharedConstants';
-import { Users, DollarSign, TrendingUp, AlertCircle, CheckCircle, Clock, UserCheck, ShoppingCart } from 'lucide-react';
+import { Users, DollarSign, TrendingUp, AlertCircle, CheckCircle, Clock, UserCheck, ShoppingCart, Snowflake, TrendingDown, Target } from 'lucide-react';
 
 export default function ManagerDashboardKPIs() {
   const { stats, timeRange } = useDashboardContext();
@@ -94,6 +94,55 @@ export default function ManagerDashboardKPIs() {
           icon={CheckCircle}
           iconBg="bg-success-bg"
           iconColor="text-success"
+        />
+      </div>
+
+      {/* CRITICAL FIX: Missing Business KPIs Row */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mt-6">
+        <ManagerStatCard
+          title="Today's Collection"
+          value={formatCurrency(s.todayCollection || 0)}
+          change="Daily revenue"
+          changeType="up"
+          icon={DollarSign}
+          iconBg="bg-success-bg"
+          iconColor="text-success"
+        />
+        <ManagerStatCard
+          title="Revenue Growth"
+          value={`${s.revenueGrowthPercent || 0}%`}
+          change="MoM Change"
+          changeType={(s.revenueGrowthPercent || 0) >= 0 ? "up" : "down"}
+          icon={(s.revenueGrowthPercent || 0) >= 0 ? TrendingUp : TrendingDown}
+          iconBg={(s.revenueGrowthPercent || 0) >= 0 ? "bg-success-bg" : "bg-danger-bg"}
+          iconColor={(s.revenueGrowthPercent || 0) >= 0 ? "text-success" : "text-danger"}
+        />
+        <ManagerStatCard
+          title="PT Revenue"
+          value={formatCurrency(s.totalPTRevenue || 0)}
+          change="This Month"
+          changeType="neutral"
+          icon={Target}
+          iconBg="bg-info-bg"
+          iconColor="text-info"
+        />
+        <ManagerStatCard
+          title="Frozen Memberships"
+          value={(s.frozenMembershipsCount || 0).toLocaleString()}
+          change="Currently on hold"
+          changeType="neutral"
+          icon={Snowflake}
+          iconBg="bg-primary/10"
+          iconColor="text-primary"
+        />
+        <ManagerStatCard
+          title="Churn Rate"
+          value={`${s.churnRate || 0}%`}
+          change="This Month"
+          changeType={(s.churnRate || 0) > 5 ? "down" : "neutral"}
+          icon={AlertCircle}
+          iconBg={(s.churnRate || 0) > 5 ? "bg-danger-bg" : "bg-warning-bg"}
+          iconColor={(s.churnRate || 0) > 5 ? "text-danger" : "text-warning"}
         />
       </div>
     </>

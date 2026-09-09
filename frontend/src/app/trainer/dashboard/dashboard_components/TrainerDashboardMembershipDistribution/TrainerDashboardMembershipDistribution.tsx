@@ -1,48 +1,49 @@
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
-// RESPONSIBILITY: Renders the distribution of members by plan on the dashboard.
 'use client';
 
+import dynamic from 'next/dynamic';
+import type { ApexOptions } from 'apexcharts';
 import { useDashboardContext } from '@/app/trainer/dashboard/dashboard_context/DashboardContext';
-import { DASHBOARD_PLAN_BG_COLORS } from '@/app/trainer/dashboard/dashboard_utils/DashboardSharedConstants';
 import TrainerDashboardEmptyState from '@/app/trainer/dashboard/dashboard_components/TrainerDashboardEmptyState/TrainerDashboardEmptyState';
 
+const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
+
+const COLORS = ['#3b82f6', '#22c55e', '#f59e0b', '#ef4444', '#8b5cf6'];
+
 export default function TrainerDashboardMembershipDistribution() {
- const { stats, timeRange } = useDashboardContext();
- if (!stats) return null;
- const s = stats;
+  const { stats, timeRange } = useDashboardContext();
+  if (!stats) return null;
 
- const timeMultiplier = timeRange === 'weekly' ? 0.25 : timeRange === 'yearly' ? 12 : timeRange === 'custom' ? 1.5 : 1;
+  const timeMultiplier = timeRange === 'weekly' ? 0.25 : timeRange === 'yearly' ? 12 : timeRange === 'custom' ? 1.5 : 1;
 
- const total = (s.membersByPlan || []).reduce((a, b) => a + Math.round(b.count * timeMultiplier), 0);
+  const data = (stats.membersByPlan || []).map(p => ({
+    name: p.plan,
+    value: Math.round(p.count * timeMultiplier),
+  }));
 
- return (
- <div className="rounded-xl shadow-sm border p-5 bg-card border-border">
- <h2 className="font-semibold mb-4 text-primary">Membership Distribution</h2>
- <div className="flex flex-wrap gap-3">
- {(s.membersByPlan || []).map((p) => {
- const scaledCount = Math.round(p.count * timeMultiplier);
- const pct = total > 0 ? Math.round((scaledCount / total) * 100) : 0;
- const bgStyle = DASHBOARD_PLAN_BG_COLORS[p.plan] || 'bg-secondary';
- return (
- <div key={p.plan} className="flex-1 min-w-40 rounded-lg p-4 bg-input">
- <div className="flex items-center gap-2 mb-2">
- <div className={`w-3 h-3 rounded-full ${bgStyle}`} />
- <span className="text-sm font-medium text-primary">{p.plan}</span>
- </div>
- <div className="text-2xl font-bold text-primary">{scaledCount}</div>
- <div className="mt-2 h-1.5 rounded-full overflow-hidden bg-border">
- <div className={`h-full rounded-full ${bgStyle}`} style={{ width: `${pct}%` }} />
- </div>
- <div className="text-xs mt-1 text-secondary">{pct}% of total</div>
- </div>
- );
- })}
- {(s.membersByPlan || []).length === 0 && (
- <TrainerDashboardEmptyState type="memberships" />
- )}
- </div>
- </div>
- );
+  const options: ApexOptions = {
+    chart: { type: 'donut', toolbar: { show: false } },
+    labels: data.map(d => d.name),
+    colors: COLORS,
+    legend: { position: 'bottom', fontSize: '12px', labels: { colors: 'hsl(var(--foreground))' } },
+    dataLabels: { enabled: false },
+    plotOptions: { pie: { donut: { size: '65%' } } },
+    tooltip: { theme: 'dark' },
+    stroke: { width: 0 },
+  };
+
+  return (
+    <div className="rounded-xl shadow-sm border p-5 bg-card border-border flex flex-col h-full min-h-[300px]">
+      <h2 className="font-semibold mb-4 text-primary">Membership Distribution</h2>
+      {data.length === 0 ? (
+        <TrainerDashboardEmptyState type="memberships" />
+      ) : (
+        <Chart
+          type="donut"
+          series={data.map(d => d.value)}
+          options={options}
+          height={260}
+        />
+      )}
+    </div>
+  );
 }
-

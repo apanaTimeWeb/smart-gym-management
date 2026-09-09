@@ -37,5 +37,20 @@ export interface DashboardStats {
   upcomingSessions: { id: string; name: string; time: string; type: string }[];
   membersByPlan?: { plan: string; count: number }[];
   recentMembers?: RecentMember[];
+  trainerProfile?: TrainerProfileSummary;
+  totalPTRevenue?: number;
+  weeklySessionsCompleted?: number;
+  avgSessionRating?: number;
+  activeClientsCount?: number;
+  attendanceRate?: number;
+  nextSessionTime?: string;
+}
+
+export interface TrainerProfileSummary {
+  id?: string;
+  name?: string;
+  shiftStart?: string;
+  shiftEnd?: string;
+  rating?: number;
 }
 

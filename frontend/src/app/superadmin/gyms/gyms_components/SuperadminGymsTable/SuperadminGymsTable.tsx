@@ -118,9 +118,9 @@ export default function SuperadminGymsTable() {
             <th className="p-4 font-semibold uppercase text-xs tracking-wider text-center w-32">Status</th>
             <th
               className="p-4 font-semibold uppercase text-xs tracking-wider text-right w-32 cursor-pointer hover:text-foreground motion-safe:transition-colors"
-              onClick={() => handleSort('lastLoginAt')}
+              onClick={() => handleSort('lastActiveAt')}
             >
-              Last Login <SortIcon col="lastLoginAt" />
+              Last Active <SortIcon col="lastActiveAt" />
             </th>
             <th className="p-4 font-semibold uppercase text-xs tracking-wider text-right w-40">Actions</th>
           </tr>
@@ -171,7 +171,7 @@ export default function SuperadminGymsTable() {
                 </td>
                 <td className="p-4 text-right">
                   <span className="text-xs text-secondary">
-                    {gym.lastLoginAt ? new Date(gym.lastLoginAt).toLocaleDateString('en-IN') : '—'}
+                    {gym.lastActiveAt ? new Date(gym.lastActiveAt).toLocaleDateString('en-IN') : (gym.lastLoginAt ? new Date(gym.lastLoginAt).toLocaleDateString('en-IN') : '—')}
                   </span>
                 </td>
                 <td className="p-4 text-right">

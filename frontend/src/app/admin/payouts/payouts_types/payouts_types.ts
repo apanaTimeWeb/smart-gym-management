@@ -14,6 +14,9 @@ export interface GymPayout {
   netProfit: number;
   payoutStatus: 'paid' | 'pending' | 'processing';
   paidOn?: string;
+  approvedBy?: string;
+  approvedAt?: string;
+  rejectionReason?: string;
 }
 
 export interface PnLEntry {

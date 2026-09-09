@@ -65,13 +65,19 @@ export default function AdminCouponsTable() {
                   {coupon.assignedGymNames.join(', ')}
                 </td>
                 <td className="px-5 py-4">
-                  <div className="text-sm text-foreground">{coupon.usedCount} / {coupon.usageLimit}</div>
-                  <div className="mt-1 h-1.5 bg-input rounded-full w-20">
-                    <div
-                      className="h-1.5 bg-primary rounded-full"
-                      style={{ width: `${Math.min(100, (coupon.usedCount / coupon.usageLimit) * 100)}%` }}
-                    />
-                  </div>
+                  {coupon.usageLimit ? (
+                    <>
+                      <div className="text-sm text-foreground">{coupon.usedCount} / {coupon.usageLimit} Used</div>
+                      <div className="mt-1 h-1.5 bg-input rounded-full w-20">
+                        <div
+                          className="h-1.5 bg-primary rounded-full"
+                          style={{ width: `${Math.min(100, (coupon.usedCount / coupon.usageLimit) * 100)}%` }}
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <div className="text-sm text-foreground">{coupon.usedCount} Used (Unlimited)</div>
+                  )}
                 </td>
                 <td className="px-5 py-4 text-sm text-foreground whitespace-nowrap">{coupon.validUntil}</td>
                 <td className="px-5 py-4">

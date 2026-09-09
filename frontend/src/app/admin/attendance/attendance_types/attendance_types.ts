@@ -16,6 +16,9 @@ export interface AdminAttendanceRecord {
   date: string;
   status: AttendanceStatus;
   planName: string;
+  trainerId?: string;
+  trainerName?: string;
+  sessionType?: 'General' | 'PT' | 'Class';
 }
 
 export interface AdminAttendanceSummary {

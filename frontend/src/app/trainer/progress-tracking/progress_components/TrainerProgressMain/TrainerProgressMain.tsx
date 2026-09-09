@@ -11,6 +11,7 @@ import TrainerProgressEmptyState from '@/app/trainer/progress-tracking/progress_
 import TrainerProgressMemberSelector from '@/app/trainer/progress-tracking/progress_components/TrainerProgressMemberSelector/TrainerProgressMemberSelector';
 import TrainerProgressComparisonChart from '@/app/trainer/progress-tracking/progress_components/TrainerProgressComparisonChart/TrainerProgressComparisonChart';
 import TrainerProgressComparisonTable from '@/app/trainer/progress-tracking/progress_components/TrainerProgressComparisonTable/TrainerProgressComparisonTable';
+import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/SearchableDropdown';
 
 export default function TrainerProgressMain() {
   const {
@@ -32,6 +33,8 @@ export default function TrainerProgressMain() {
     comparisonSnapshots,
     activeComparisonMetric,
     setActiveComparisonMetric,
+    selectedMemberId,
+    setSelectedMemberId,
   } = useTrainerProgressLogic();
 
   return (
@@ -81,7 +84,24 @@ export default function TrainerProgressMain() {
         {/* Individual tab */}
         {activeTab === 'individual' && (
           <>
-            {memberEntries.length === 0 ? (
+            <div className="flex items-center justify-between bg-card p-4 rounded-xl border border-border">
+              <span className="text-sm font-semibold text-foreground">Select Member:</span>
+              <SearchableDropdown
+                value={selectedMemberId}
+                onChange={(val) => setSelectedMemberId(String(val))}
+                options={[
+                  { label: 'Select a Member...', value: '' },
+                  ...allComparisonMembers.map(m => ({ label: m.name, value: m.id }))
+                ]}
+                className="w-64"
+              />
+            </div>
+            
+            {!selectedMemberId ? (
+              <div className="text-center py-12 text-secondary bg-card rounded-xl border border-border">
+                Please select a member to view their progress.
+              </div>
+            ) : memberEntries.length === 0 ? (
               <TrainerProgressEmptyState onAdd={openAddModal} />
             ) : (
               <>

@@ -15,7 +15,7 @@ const STATUS_STYLES: Record<string, string> = {
   frozen: 'bg-info-bg text-info',
 };
 
-const TABLE_HEADERS = ['Member', 'Branch', 'Plan', 'Status', 'Expiry', 'Outstanding'];
+const TABLE_HEADERS = ['Member', 'Branch', 'Plan', 'Join Date', 'Status', 'Expiry', 'Outstanding'];
 
 export default function AdminMembersTable() {
   const { members, allFilteredCount, totalPages, selectedMember, setSelectedMember } = useAdminMembersLogic();
@@ -63,6 +63,11 @@ export default function AdminMembersTable() {
                 </td>
                 <td className="px-4 py-3">
                   <span className="text-sm text-foreground">{m.planName}</span>
+                </td>
+                <td className="px-4 py-3">
+                  <span className="text-sm text-foreground whitespace-nowrap">
+                    {new Date(m.joinDate).toLocaleDateString('en-IN')}
+                  </span>
                 </td>
                 <td className="px-4 py-3">
                   <span className={`text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider ${STATUS_STYLES[m.status] ?? 'bg-input text-secondary'}`}>

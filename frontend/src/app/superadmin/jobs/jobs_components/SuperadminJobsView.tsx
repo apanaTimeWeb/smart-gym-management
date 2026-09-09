@@ -78,7 +78,7 @@ export default function SuperadminJobsView() {
         onFilterChange={() => setCurrentPage(1)}
       />
 
-      <SuperadminJobsStatsBar metrics={metrics} />
+      <SuperadminJobsStatsBar metrics={metrics} onFilterSelect={(status) => { setStatusFilter(status as any); setCurrentPage(1); }} />
 
       <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden flex flex-col min-h-96">
         <SuperadminJobsTable

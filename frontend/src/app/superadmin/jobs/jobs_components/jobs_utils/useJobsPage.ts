@@ -87,13 +87,18 @@ export function useJobsPage(): UseJobsPageReturn {
   function handleRetryAll() {
     setIsRetrying(true);
     toast.promise(
-      new Promise(resolve => setTimeout(resolve, 1500)),
+      superadminApi.jobs.retryAll().then((res) => {
+        if (!res.success) throw new Error(res.message || 'Failed to retry jobs.');
+        return res.data;
+      }),
       {
         loading: 'Retrying all failed jobs...',
-        success: 'Successfully queued all failed jobs for retry.',
-        error: 'Failed to retry jobs.',
+        success: (data) => `Successfully queued ${data?.queuedCount ?? 'all'} failed jobs for retry.`,
+        error: (err: Error) => err.message,
       }
-    ).finally(() => setIsRetrying(false));
+    ).then(() => {
+      void queryClient.invalidateQueries({ queryKey: ['superadmin', 'jobs'] });
+    }).finally(() => setIsRetrying(false));
   }
 
   function handleRetryJob(id: string) {

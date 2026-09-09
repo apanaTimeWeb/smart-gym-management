@@ -30,6 +30,9 @@ import {
 } from '@/app/superadmin/reports/reports_types/reports_constants';
 import { superadminReportsApi } from '@/app/superadmin/reports/reports_api/superadmin_reports_api';
 
+import { SuperadminReportsDatePresetDropdown, type DatePreset } from '@/app/superadmin/reports/reports_components/SuperadminReportsDatePresetDropdown';
+import { SuperadminReportsExportButton } from '@/app/superadmin/reports/reports_components/SuperadminReportsExportButton';
+
 // Heavy chart — code-split via dynamic import (Rule 15, Design §10)
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -41,6 +44,7 @@ export default function SuperadminReportsClient() {
   const firstDay = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
   const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0];
   
+  const [datePreset, setDatePreset] = useState<DatePreset>('THIS_MONTH');
   const [dateFrom, setDateFrom] = useState(firstDay);
   const [dateTo, setDateTo] = useState(lastDay);
   const [searchQuery, setSearchQuery] = useState('');
@@ -76,12 +80,21 @@ export default function SuperadminReportsClient() {
     return () => { mounted = false; };
   }, []);
 
+  const handleDatePresetChange = (preset: DatePreset, from: string, to: string) => {
+    setDatePreset(preset);
+    if (preset !== 'CUSTOM') {
+      setDateFrom(from);
+      setDateTo(to);
+    }
+  };
+
   const handleDateFromChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     if (dateTo && val > dateTo) {
       toast.error('Start date cannot be after end date');
       return;
     }
+    setDatePreset('CUSTOM');
     setDateFrom(val);
   };
 
@@ -91,6 +104,7 @@ export default function SuperadminReportsClient() {
       toast.error('End date cannot be before start date');
       return;
     }
+    setDatePreset('CUSTOM');
     setDateTo(val);
   };
 
@@ -212,20 +226,7 @@ export default function SuperadminReportsClient() {
           <h1 className="text-2xl font-bold text-foreground">Reports & Exports</h1>
           <p className="text-secondary mt-1 text-sm">Revenue reports, churn analysis, and tenant health scores.</p>
         </div>
-        <div className="flex gap-2">
-          <button
-            onClick={handleExportCSV}
-            className="flex items-center gap-2 px-4 py-2 bg-input border border-border text-secondary hover:text-foreground rounded-lg text-sm motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-          >
-            <Download size={18} strokeWidth={2} /> CSV
-          </button>
-          <button
-            onClick={handleExportPDF}
-            className="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary-hover text-black font-semibold rounded-lg text-sm shadow-lg shadow-primary/20 motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-          >
-            <Download size={18} strokeWidth={2} /> PDF
-          </button>
-        </div>
+        <SuperadminReportsExportButton onExportCSV={handleExportCSV} onExportPDF={handleExportPDF} />
       </div>
 
       {/* Summary KPIs — Design §5a: gold gradient on all cards */}
@@ -267,19 +268,22 @@ export default function SuperadminReportsClient() {
 
       <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
         <div className="flex items-center gap-3 flex-wrap">
-          <span className="text-xs text-secondary font-medium">Date Range:</span>
+          <SuperadminReportsDatePresetDropdown 
+            value={datePreset}
+            onChange={handleDatePresetChange}
+          />
           <input
             type="date"
             value={dateFrom}
             onChange={handleDateFromChange}
-            className="px-3 py-1.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
+            className="px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
           />
           <span className="text-secondary text-sm">to</span>
           <input
             type="date"
             value={dateTo}
             onChange={handleDateToChange}
-            className="px-3 py-1.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
+            className="px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
           />
         </div>
 

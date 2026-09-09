@@ -2,6 +2,13 @@
 
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 
+export interface AdminUsageHistoryPoint {
+  date: string;       // ISO date string e.g. '2025-01-15'
+  membersUsed: number;
+  storageUsedGb: number;
+  smsUsed: number;
+}
+
 export interface AdminUsageData {
   tenantId: string;
   planName: string;
@@ -21,6 +28,7 @@ export interface AdminUsageData {
   branchLimit: number;
   apiCallsToday: number;
   apiCallsLimit: number;
+  usageHistory: AdminUsageHistoryPoint[];
 }
 
 export interface AdminUsageMetric {

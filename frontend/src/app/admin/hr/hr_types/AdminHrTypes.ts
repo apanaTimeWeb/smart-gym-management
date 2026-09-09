@@ -92,6 +92,10 @@ export interface Staff {
   primaryBranchId?: string; // The primary branch ID for this manager
   emergencyContactName?: string;
   emergencyContactPhone?: string;
+  department?: string;
+  certifications?: string[];
+  contractType?: string;
+  terminationDate?: string;
 }
 export interface Payroll {
   id: string; staffId: string; month: string; amount: number;
@@ -123,4 +127,5 @@ export interface LedgerEntry {
   notes?: string;
   referenceNo?: string;
   paymentMode?: string;
+  openingBalance?: number;
 }

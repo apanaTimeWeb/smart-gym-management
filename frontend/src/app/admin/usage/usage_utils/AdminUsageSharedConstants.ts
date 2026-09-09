@@ -20,6 +20,14 @@ export const MOCK_USAGE_DATA: AdminUsageData = {
   branchLimit: 5,
   apiCallsToday: 8420,
   apiCallsLimit: 10000,
+  usageHistory: [
+    { date: '2025-08-01', membersUsed: 1600, storageUsedGb: 9.2, smsUsed: 6800 },
+    { date: '2025-09-01', membersUsed: 1720, storageUsedGb: 10.1, smsUsed: 7400 },
+    { date: '2025-10-01', membersUsed: 1800, storageUsedGb: 11.0, smsUsed: 8100 },
+    { date: '2025-11-01', membersUsed: 1870, storageUsedGb: 11.5, smsUsed: 8800 },
+    { date: '2025-12-01', membersUsed: 1920, storageUsedGb: 12.0, smsUsed: 9200 },
+    { date: '2026-01-01', membersUsed: 1950, storageUsedGb: 12.5, smsUsed: 9500 },
+  ],
 };
 
 export const PLAN_TIERS = [

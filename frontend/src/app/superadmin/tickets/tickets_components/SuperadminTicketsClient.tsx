@@ -8,18 +8,15 @@ import SuperadminTicketsTable from '@/app/superadmin/tickets/tickets_components/
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 import SuperadminTicketsReplyModal from '@/app/superadmin/tickets/tickets_components/SuperadminTicketsReplyModal/SuperadminTicketsReplyModal';
 import toast from 'react-hot-toast';
+import { useSuperadminTicketsStore } from '@/app/superadmin/tickets/tickets_store/useSuperadminTicketsStore';
 
 export default function SuperadminTicketsClient() {
-  const [replyModalOpen, setReplyModalOpen] = useState(false);
-  const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
-  const [assignModalTicketId, setAssignModalTicketId] = useState<string | null>(null);
   const [assigneeInput, setAssigneeInput] = useState('');
 
   const handleCloseTicket = async (ticketId: string) => {
     try {
       const { ticketsApi } = await import('@/app/superadmin/tickets/superadmin_tickets_api/superadmin_tickets_api');
-      // POST /superadmin/tickets/:id/close — to be implemented on backend
-      await (ticketsApi as unknown as Record<string, (id: string) => Promise<unknown>>)['closeTicket']?.(ticketId);
+      await ticketsApi.closeTicket(ticketId);
       toast.success('Ticket closed.');
     } catch {
       toast.error('Failed to close ticket.');
@@ -35,11 +32,7 @@ export default function SuperadminTicketsClient() {
     if (!assignModalTicketId || !assigneeInput.trim()) return;
     try {
       const { ticketsApi } = await import('@/app/superadmin/tickets/superadmin_tickets_api/superadmin_tickets_api');
-      // PATCH /superadmin/tickets/:id/assign — to be implemented on backend
-      await (ticketsApi as unknown as Record<string, (id: string, assignee: string) => Promise<unknown>>)['assignTicket']?.(
-        assignModalTicketId,
-        assigneeInput.trim(),
-      );
+      await ticketsApi.assignTicket(assignModalTicketId, assigneeInput.trim());
       toast.success(`Ticket assigned to ${assigneeInput.trim()}.`);
     } catch {
       toast.error('Failed to assign ticket.');
@@ -52,6 +45,11 @@ export default function SuperadminTicketsClient() {
   const {
     fetchState,
     error,
+    totalPages,
+    paginatedTickets,
+  } = useSuperadminTickets();
+
+  const {
     search,
     setSearch,
     showFilter,
@@ -62,9 +60,11 @@ export default function SuperadminTicketsClient() {
     setPriorityFilter,
     currentPage,
     setCurrentPage,
-    totalPages,
-    paginatedTickets,
-  } = useSuperadminTickets();
+    replyModalTicketId,
+    setReplyModalTicketId,
+    assignModalTicketId,
+    setAssignModalTicketId,
+  } = useSuperadminTicketsStore();
 
   if (fetchState === 'loading') return (
     <div className="space-y-6 motion-safe:animate-pulse">
@@ -92,8 +92,7 @@ export default function SuperadminTicketsClient() {
         <SuperadminTicketsTable
           tickets={paginatedTickets}
           onReply={(ticketId) => {
-            setSelectedTicketId(ticketId);
-            setReplyModalOpen(true);
+            setReplyModalTicketId(ticketId);
           }}
           onClose={handleCloseTicket}
           onAssign={handleOpenAssign}
@@ -106,9 +105,9 @@ export default function SuperadminTicketsClient() {
       </div>
 
       <SuperadminTicketsReplyModal
-        isOpen={replyModalOpen}
-        onClose={() => setReplyModalOpen(false)}
-        ticketId={selectedTicketId}
+        isOpen={!!replyModalTicketId}
+        onClose={() => setReplyModalTicketId(null)}
+        ticketId={replyModalTicketId}
       />
 
       {/* Assign Ticket inline modal — replaces forbidden prompt() */}

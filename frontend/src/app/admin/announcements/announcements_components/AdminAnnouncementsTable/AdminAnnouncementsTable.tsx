@@ -119,7 +119,7 @@ export default function AdminAnnouncementsTable() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-primary/5 border-b border-border">
-                {['', 'Title & Preview', 'Audience', 'Branches', 'Schedule', 'Priority', 'Status', 'Views', 'Actions'].map((h, i) => (
+                {['', 'Title & Preview', 'Audience', 'Branches', 'Schedule', 'Priority', 'Status', 'Views', 'Acknowledged', 'Delivery', 'Actions'].map((h, i) => (
                   <th key={i} className="p-4 text-xs font-semibold text-secondary uppercase tracking-wider whitespace-nowrap">{h}</th>
                 ))}
               </tr>
@@ -127,7 +127,7 @@ export default function AdminAnnouncementsTable() {
             <tbody className="divide-y divide-border">
               {paginated.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="p-12 text-center">
+                  <td colSpan={11} className="p-12 text-center">
                     <Megaphone size={32} className="mx-auto mb-3 opacity-30 text-secondary" />
                     <p className="text-sm text-secondary font-medium">No announcements found</p>
                     <button
@@ -179,8 +179,16 @@ export default function AdminAnnouncementsTable() {
                   {/* Views */}
                   <td className="p-4">
                     <div className="flex items-center gap-1 text-xs text-secondary">
-                      <Eye size={12} /> {a.viewCount.toLocaleString('en-IN')}
+                      <Eye size={12} /> {(a as any).viewCount?.toLocaleString('en-IN') || 0}
                     </div>
+                  </td>
+                  {/* Acknowledged */}
+                  <td className="p-4 text-xs text-secondary whitespace-nowrap">
+                    {(a as any).acknowledgedCount?.toLocaleString('en-IN') || 0}
+                  </td>
+                  {/* Delivery */}
+                  <td className="p-4 text-xs text-secondary whitespace-nowrap capitalize">
+                    {(a as any).deliveryStatus || 'Sent'}
                   </td>
                   {/* Actions */}
                   <td className="p-4">

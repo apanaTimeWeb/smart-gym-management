@@ -14,6 +14,8 @@ export interface Affiliate {
   bankDetails?: string;
   status: AffiliateStatus;
   joinedAt: string;
+  referralCount?: number;
+  conversionRate?: number;
 }
 
 import { z } from 'zod';

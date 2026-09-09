@@ -59,18 +59,18 @@ export default function SuperadminChurnTable({ alerts, onActionClick }: Superadm
                 </div>
               </td>
               <td className="px-4 py-3">
-                <span className={`text-xs ${alert.lastLoginDaysAgo >= 14 ? 'text-danger' : 'text-secondary'}`}>
-                  {alert.lastLoginDaysAgo}d ago
+                <span className={`text-xs ${alert.lastLoginDays >= 14 ? 'text-danger' : 'text-secondary'}`}>
+                  {alert.lastLoginDays}d ago
                 </span>
               </td>
               <td className="px-4 py-3">
-                <span className={`text-xs font-medium ${alert.memberCountDrop >= 20 ? 'text-danger' : 'text-warning'}`}>
-                  -{alert.memberCountDrop}%
+                <span className={`text-xs font-medium ${alert.memberDrop >= 20 ? 'text-danger' : 'text-warning'}`}>
+                  -{alert.memberDrop}%
                 </span>
               </td>
               <td className="px-4 py-3 text-right">
                 <span className="text-xs font-medium text-foreground">
-                  ₹{alert.mrr.toLocaleString('en-IN')}
+                  ₹{alert.mrrAtRisk.toLocaleString('en-IN')}
                 </span>
               </td>
               <td className="px-4 py-3">

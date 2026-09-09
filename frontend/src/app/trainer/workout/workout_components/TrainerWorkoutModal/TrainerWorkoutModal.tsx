@@ -10,6 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/SearchableDropdown';
 import { useWorkoutContext } from '@/app/trainer/workout/workout_context/WorkoutContext';
 import { WORKOUT_LEVEL_OPTIONS, WorkoutSchema, type WorkoutFormValues, EMPTY_WORKOUT_FORM } from '@/app/trainer/workout/workout_utils/WorkoutSharedConstants';
+import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 
 export default function TrainerWorkoutModal() {
   const { 
@@ -17,6 +18,7 @@ export default function TrainerWorkoutModal() {
     editWkId, wkForm, 
     saveWk, saving 
   } = useWorkoutContext();
+  const { confirm } = useConfirm();
 
   const {
     register,
@@ -239,7 +241,15 @@ export default function TrainerWorkoutModal() {
                   <div className="flex items-end pb-0.5">
                     <button
                       type="button"
-                      onClick={() => removeExercise(index)}
+                      onClick={async () => {
+                        const ok = await confirm({
+                          title: 'Remove Exercise',
+                          message: 'Are you sure you want to remove this exercise from the plan?',
+                          type: 'danger',
+                          confirmText: 'Remove'
+                        });
+                        if (ok) removeExercise(index);
+                      }}
                       className="p-2 text-danger hover:bg-danger-bg rounded-lg transition-colors"
                     >
                       <Trash2 size={16} />

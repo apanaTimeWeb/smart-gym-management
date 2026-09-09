@@ -10,7 +10,7 @@ import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShar
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 import {
   IndianRupee, Wallet, Clock, TrendingUp,
-  Search, Loader2, RefreshCw, Download,
+  Search, Loader2, RefreshCw, Download, FileText, Printer, Percent, ArrowLeftRight
 } from 'lucide-react';
 
 const Chart = dynamic(() => import('react-apexcharts'), {
@@ -108,8 +108,10 @@ function FinanceInner() {
     statusFilter, setStatusFilter,
     methodFilter, setMethodFilter,
     currentPage, setCurrentPage,
+    startDate, setStartDate,
+    endDate, setEndDate,
     payments, summary, totalPayments,
-    fetchState, reload, exportCSV,
+    fetchState, reload, exportCSV, exportPDF, printReceipt
   } = useFinanceContext();
 
   const totalPages = Math.ceil(totalPayments / MANAGER_ITEMS_PER_PAGE);
@@ -120,11 +122,15 @@ function FinanceInner() {
 
       <div className="p-6 space-y-6">
         {/* KPIs */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-6 gap-4">
           <KPICard label="Total Revenue"   value={summary ? fmt(summary.totalRevenue)   : '—'} icon={<TrendingUp  size={20} className="text-success" />} color="bg-success/10" />
           <KPICard label="This Month"      value={summary ? fmt(summary.monthlyRevenue) : '—'} icon={<IndianRupee size={20} className="text-primary" />} color="bg-primary/10" />
           <KPICard label="Total Payments"  value={summary ? String(summary.totalPayments) : '—'} icon={<Wallet  size={20} className="text-info"    />} color="bg-info/10"    />
           <KPICard label="Pending Amount"  value={summary ? fmt(summary.pendingAmount)  : '—'} icon={<Clock      size={20} className="text-warning" />} color="bg-warning/10" />
+          
+          {/* CRITICAL FIX: Missing GST/Refunds KPIs */}
+          <KPICard label="GST Collected"   value={summary ? fmt(summary.gstCollected || 0) : '—'} icon={<Percent    size={20} className="text-success" />} color="bg-success/10" />
+          <KPICard label="Total Refunds"   value={summary ? fmt(summary.totalRefunds || 0) : '—'} icon={<ArrowLeftRight size={20} className="text-danger" />} color="bg-danger/10" />
         </div>
 
         {/* Tabs */}
@@ -146,18 +152,37 @@ function FinanceInner() {
         {tab === 'Payments' && (
           <div className="bg-card rounded-xl border border-border overflow-hidden shadow-sm">
             {/* Toolbar */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 border-b border-border">
-              <div className="relative w-full sm:w-72">
-                <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
-                <input
-                  type="text"
-                  placeholder="Search payments..."
-                  value={search}
-                  onChange={e => { setSearch(e.target.value); setCurrentPage(1); }}
-                  className="w-full pl-9 pr-4 py-2 text-sm bg-input border border-border rounded-lg text-foreground focus:outline-none focus:border-primary"
-                />
-              </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-3 p-4 border-b border-border">
+                <div className="flex flex-col sm:flex-row gap-3 w-full xl:w-auto">
+                  <div className="relative w-full sm:w-64">
+                    <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
+                    <input
+                      type="text"
+                      placeholder="Search payments..."
+                      value={search}
+                      onChange={e => { setSearch(e.target.value); setCurrentPage(1); }}
+                      className="w-full pl-9 pr-4 py-2 text-sm bg-input border border-border rounded-lg text-foreground focus:outline-none focus:border-primary"
+                    />
+                  </div>
+                  <div className="flex items-center gap-2 w-full sm:w-auto">
+                    <input
+                      type="date"
+                      value={startDate}
+                      onChange={e => { setStartDate(e.target.value); setCurrentPage(1); }}
+                      className="w-full sm:w-36 bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-primary"
+                      title="Start Date"
+                    />
+                    <span className="text-secondary text-sm">to</span>
+                    <input
+                      type="date"
+                      value={endDate}
+                      onChange={e => { setEndDate(e.target.value); setCurrentPage(1); }}
+                      className="w-full sm:w-36 bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-primary"
+                      title="End Date"
+                    />
+                  </div>
+                </div>
+              <div className="flex flex-wrap gap-2 w-full xl:w-auto justify-start xl:justify-end">
                 <div className="w-40">
                   <SearchableDropdown
                     value={statusFilter}
@@ -186,8 +211,12 @@ function FinanceInner() {
                   />
                 </div>
                 <button onClick={exportCSV}
-                  className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-primary text-white hover:opacity-90 motion-safe:transition-opacity">
-                  <Download size={14} /> Export CSV
+                  className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg bg-primary text-white hover:opacity-90 motion-safe:transition-opacity">
+                  <Download size={14} /> CSV
+                </button>
+                <button onClick={exportPDF}
+                  className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg bg-info text-white hover:opacity-90 motion-safe:transition-opacity">
+                  <FileText size={14} /> PDF
                 </button>
                 <button onClick={reload}
                   className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-input border border-border text-secondary hover:text-foreground motion-safe:transition-colors">
@@ -216,7 +245,7 @@ function FinanceInner() {
                   <table className="w-full">
                     <thead className="bg-primary/5">
                       <tr>
-                        {['Invoice #', 'Member', 'Plan', 'Amount', 'Method', 'Status', 'Date'].map(h => (
+                        {['Invoice #', 'Member', 'Plan', 'Amount', 'Method', 'Status', 'Date', 'Actions'].map(h => (
                           <th key={h} className="text-left text-xs font-semibold text-secondary uppercase tracking-wider px-5 py-3 whitespace-nowrap">{h}</th>
                         ))}
                       </tr>
@@ -244,6 +273,15 @@ function FinanceInner() {
                             </td>
                             <td className="px-5 py-3.5 text-sm text-secondary whitespace-nowrap">
                               {new Date(p.paidAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                            </td>
+                            <td className="px-5 py-3.5 whitespace-nowrap">
+                              <button 
+                                onClick={() => printReceipt(p.id)}
+                                className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle transition-all duration-200" 
+                                title="Print Receipt"
+                              >
+                                <Printer size={14} />
+                              </button>
                             </td>
                           </tr>
                         );

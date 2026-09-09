@@ -1,10 +1,20 @@
 // RESPONSIBILITY: Display referrals table with claim reward action.
+// Rule 20 FIX: Replaced native <select> with SearchableDropdown.
 'use client';
 
-import { Loader2, Search, Filter, Gift, Check, IndianRupee } from 'lucide-react';
+import { Loader2, Search, Gift, Check, IndianRupee } from 'lucide-react';
 import { useManagerReferralsLogic } from '@/app/manager/referrals/referrals_context/useManagerReferralsLogic';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
+import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/SearchableDropdown';
+import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
 import { maskSensitiveData } from '@/lib/formatters';
+
+const REFERRAL_STATUS_OPTIONS = [
+  { value: 'ALL', label: 'All Statuses' },
+  { value: 'PENDING', label: 'Pending Join' },
+  { value: 'JOINED', label: 'Joined' },
+  { value: 'REJECTED', label: 'Rejected' },
+];
 
 export default function ManagerReferralsTable() {
   const { 
@@ -31,18 +41,13 @@ export default function ManagerReferralsTable() {
           />
         </div>
         
-        <div className="flex items-center gap-2">
-          <Filter className="text-secondary" size={16} />
-          <select
+        <div className="w-full sm:w-48">
+          <SearchableDropdown
             value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
-          >
-            <option value="ALL">All Statuses</option>
-            <option value="PENDING">Pending Join</option>
-            <option value="JOINED">Joined</option>
-            <option value="REJECTED">Rejected</option>
-          </select>
+            onChange={(val) => setStatusFilter(String(val))}
+            options={REFERRAL_STATUS_OPTIONS}
+            placeholder="Filter by status"
+          />
         </div>
       </div>
 
@@ -54,10 +59,11 @@ export default function ManagerReferralsTable() {
             <p className="text-sm font-medium">Loading Referrals...</p>
           </div>
         ) : referrals.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center text-secondary">
-            <Gift size={48} className="mb-4 opacity-20" />
-            <p className="text-sm font-medium">No referrals found.</p>
-          </div>
+          <ManagerEmptyState
+            icon={<Gift size={32} />}
+            title="No referrals found"
+            subtitle="No referrals match the current filter. Try changing the status filter."
+          />
         ) : (
           <table className="w-full text-left text-sm whitespace-nowrap">
             <thead className="sticky top-0 bg-card border-b border-border text-secondary font-semibold text-xs uppercase z-10">

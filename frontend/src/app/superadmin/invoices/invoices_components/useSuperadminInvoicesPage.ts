@@ -84,6 +84,7 @@ export function useSuperadminInvoicesPage() {
   return {
     fetchState,
     error,
+    invoices,
     filteredInvoices,
     filteredTenantsForDropdown,
     selectedGym,

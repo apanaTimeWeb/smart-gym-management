@@ -12,4 +12,5 @@ export interface SaaSInvoice {
   paymentMethod?: string;
   invoiceType: 'RECURRING' | 'ONE_TIME' | 'SETUP_FEE';
   planName: string;
+  taxId?: string;
 }

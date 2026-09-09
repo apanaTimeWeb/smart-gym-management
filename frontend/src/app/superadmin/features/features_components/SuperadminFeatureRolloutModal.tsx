@@ -41,7 +41,7 @@ export default function SuperadminFeatureRolloutModal({ isOpen, onClose, flag, o
 
   if (!isOpen || !flag) return null;
 
-  const filteredGyms = gyms?.filter((g: Tenant) => g.name?.toLowerCase().includes(search.toLowerCase()) || g.id?.includes(search)) || [];
+  const filteredGyms = gyms?.filter(g => g.name?.toLowerCase().includes(search.toLowerCase()) || g.id?.includes(search)) || [];
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -85,7 +85,7 @@ export default function SuperadminFeatureRolloutModal({ isOpen, onClose, flag, o
             <span className="text-sm font-semibold text-secondary">Found {filteredGyms.length} tenants</span>
             <div className="space-x-3">
               <button 
-                onClick={() => setSelectedTenantIds(filteredGyms.map((g: Tenant) => g.id))}
+                onClick={() => setSelectedTenantIds(filteredGyms.map(g => g.id))}
                 className="text-xs font-semibold text-primary hover:underline"
               >
                 Select All
@@ -110,7 +110,7 @@ export default function SuperadminFeatureRolloutModal({ isOpen, onClose, flag, o
               </div>
             ) : (
               <div className="flex-1 overflow-y-auto custom-scrollbar p-2 space-y-1">
-                {filteredGyms.map((gym: Tenant) => {
+                {filteredGyms.map(gym => {
                   const isSelected = selectedTenantIds.includes(gym.id);
                   return (
                     <button

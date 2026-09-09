@@ -15,6 +15,7 @@ import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShar
 import { useTrainerSessionsLogic } from '@/app/trainer/sessions/sessions_context/useTrainerSessionsLogic';
 import TrainerSessionAttendanceModal from '@/app/trainer/sessions/sessions_components/TrainerSessionAttendanceModal';
 import TrainerSessionsEditModal from '@/app/trainer/sessions/sessions_components/TrainerSessionsEditModal';
+import TrainerSessionsKPIs from '@/app/trainer/sessions/sessions_components/TrainerSessionsKPIs';
 import { markTrainerSessionAttendance } from '@/app/trainer/sessions/sessions_api/TrainerSessionsApi';
 import type { CreateSessionDto } from '@/app/trainer/sessions/sessions_api/TrainerSessionsApi';
 
@@ -45,6 +46,7 @@ export default function TrainerSessionsMain() {
   // Schedule PT modal form state — private to this component
   const [selectedMemberId, setSelectedMemberId] = useState<string | number>('');
   const [selectedDuration, setSelectedDuration] = useState<string | number>('60m');
+  const [selectedType, setSelectedType] = useState<string | number>('PT');
   const [modalDate, setModalDate] = useState<string>('');
   const [modalTime, setModalTime] = useState<string>('');
 
@@ -62,12 +64,13 @@ export default function TrainerSessionsMain() {
       date: modalDate,
       time: modalTime,
       duration: String(selectedDuration),
-      type: 'PT',
+      type: String(selectedType) as any,
     };
     await handleScheduleSubmit(dto);
     // Reset form fields after successful submit (hook handles modal close and toast)
     setSelectedMemberId('');
     setSelectedDuration('60m');
+    setSelectedType('PT');
     setModalDate('');
     setModalTime('');
   };
@@ -101,6 +104,7 @@ export default function TrainerSessionsMain() {
       )}
 
       <div className="p-6 space-y-6">
+        <TrainerSessionsKPIs sessions={sessions} />
         {/* Toolbar */}
         <div className="bg-card rounded-xl shadow-sm border border-border p-4 flex flex-col sm:flex-row justify-between items-center gap-4">
           <div className="flex bg-input rounded-lg p-1">
@@ -186,14 +190,12 @@ export default function TrainerSessionsMain() {
                       >
                         Cancel
                       </button>
-                      {session.isOnline && (
-                        <button
-                          onClick={() => setAttendanceSession(session)}
-                          className="text-sm font-medium text-white bg-primary px-4 py-2 rounded-xl hover:bg-primary/90 motion-safe:transition-colors"
-                        >
-                          Mark Attendance
-                        </button>
-                      )}
+                      <button
+                        onClick={() => setAttendanceSession(session)}
+                        className="text-sm font-medium text-white bg-primary px-4 py-2 rounded-xl hover:bg-primary/90 motion-safe:transition-colors"
+                      >
+                        Mark Attendance
+                      </button>
                     </div>
                   )}
                   <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${SESSION_STATUS_STYLES[session.status]}`}>
@@ -232,7 +234,16 @@ export default function TrainerSessionsMain() {
             </div>
             <form onSubmit={handleFormSubmit} className="p-5 space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-secondary mb-1">Select Member</label>
+                <label className="block text-sm font-semibold text-secondary mb-1">Session Type</label>
+                <SearchableDropdown
+                  options={[{value: 'PT', label: 'Personal Training'}, {value: 'Group', label: 'Group Class'}, {value: 'Zumba', label: 'Zumba'}, {value: 'Yoga', label: 'Yoga'}]}
+                  value={selectedType}
+                  onChange={setSelectedType}
+                  placeholder="-- Choose Type --"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-secondary mb-1">Select Member (Optional for Group)</label>
                 <SearchableDropdown
                   options={memberOptions}
                   value={selectedMemberId}

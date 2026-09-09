@@ -13,7 +13,7 @@ interface InvoicesTableProps {
 const ITEMS_PER_PAGE = 10;
 // Rule 68: TABLE_COLUMN_COUNT must match <th> count AND colSpan on empty state
 // Columns: Invoice ID | Gym | Plan | Type | Amount | Status | Date | Actions = 8
-const TABLE_COLUMN_COUNT = 8;
+const TABLE_COLUMN_COUNT = 9;
 
 export default function SuperadminInvoicesTable({ invoices, onLogPaymentClick }: InvoicesTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,6 +29,7 @@ export default function SuperadminInvoicesTable({ invoices, onLogPaymentClick }:
             <tr className="bg-header border-b border-border text-sm">
               <th className="p-4 font-semibold text-secondary">Invoice ID</th>
               <th className="p-4 font-semibold text-secondary">Gym (Tenant)</th>
+              <th className="p-4 font-semibold text-secondary">Tax ID</th>
               <th className="p-4 font-semibold text-secondary">Plan</th>
               <th className="p-4 font-semibold text-secondary">Type</th>
               <th className="p-4 font-semibold text-secondary">Amount</th>

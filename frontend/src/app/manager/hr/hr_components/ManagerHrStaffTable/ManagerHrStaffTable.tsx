@@ -1,16 +1,18 @@
-// RESPONSIBILITY: Renders the paginated staff members table with sortable columns and inline row actions.
+// RESPONSIBILITY: Renders the paginated staff members table with inline row actions.
+// Rule 71 FIX: toggleStaffStatus now uses useConfirm() modal before firing.
+// Rule 48 FIX: Uses ManagerEmptyState component for empty state.
 'use client';
 
 import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
 import { STAFF_TABLE_HEADERS } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
-import { Edit2, Trash2, CheckCircle2, Ban, PlayCircle, Users } from 'lucide-react';
+import { Edit2, Trash2, CheckCircle2, Ban, PlayCircle, Users, Download } from 'lucide-react';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
 
 export default function ManagerHrStaffTable() {
-  const { staff, summary, fetchState, debouncedSearch, roleFilter, currentPage, setCurrentPage, openEdit, deleteStaff, toggleStaffStatus, setViewProfileData } = useHrContext();
+  const { staff, summary, fetchState, debouncedSearch, roleFilter, currentPage, setCurrentPage, openEdit, deleteStaff, toggleStaffStatus, setViewProfileData, exportStaff } = useHrContext();
   const { confirm } = useConfirm();
 
   const filteredStaff = staff.filter(s => roleFilter === 'All' || (s.role || '').toLowerCase().includes(roleFilter.toLowerCase()));
@@ -56,6 +58,16 @@ export default function ManagerHrStaffTable() {
 
   return (
     <div className="flex flex-col h-full">
+      {/* Export CSV toolbar — Rule HIGHLY RECOMMENDED */}
+      <div className="flex justify-end px-4 pt-3">
+        <button
+          onClick={() => exportStaff()}
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium border border-border rounded-lg hover:bg-primary-subtle text-secondary hover:text-foreground transition-colors"
+          aria-label="Export staff list as CSV"
+        >
+          <Download size={13} /> Export CSV
+        </button>
+      </div>
       <div className="overflow-x-auto flex-1">
         <table className="w-full">
           <thead className="bg-input text-secondary">
@@ -106,14 +118,28 @@ export default function ManagerHrStaffTable() {
                 </td>
                 <td className="px-4 py-3 text-right">
                   <div className="flex items-center justify-end gap-2">
-                    <button 
-                      onClick={(e) => { e.stopPropagation(); toggleStaffStatus(s); }}
+                    <button
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        // Rule 71: toggleStaffStatus is a destructive/reversible action — require confirmation.
+                        const isSuspending = s.isActive !== false;
+                        const ok = await confirm({
+                          title: isSuspending ? 'Suspend Staff Member' : 'Activate Staff Member',
+                          message: isSuspending
+                            ? `Suspend "${s.name}"? They will no longer be able to check in until reactivated.`
+                            : `Activate "${s.name}"? They will regain normal access.`,
+                          type: isSuspending ? 'danger' : 'info',
+                          confirmText: isSuspending ? 'Suspend' : 'Activate',
+                        });
+                        if (ok) toggleStaffStatus(s);
+                      }}
                       className={`p-1.5 rounded-lg transition-all duration-200 ease-in-out ${
-                        s.isActive === false 
-                          ? 'text-success hover:bg-success/10' 
+                        s.isActive === false
+                          ? 'text-success hover:bg-success/10'
                           : 'text-danger hover:bg-danger/10'
                       }`}
                       title={s.isActive === false ? 'Activate Staff' : 'Suspend Staff'}
+                      aria-label={s.isActive === false ? `Activate ${s.name}` : `Suspend ${s.name}`}
                     >
                       {s.isActive === false ? <PlayCircle size={16} /> : <Ban size={16} />}
                     </button>

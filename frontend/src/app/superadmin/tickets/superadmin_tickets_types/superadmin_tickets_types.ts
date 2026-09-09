@@ -2,6 +2,16 @@
 export type TicketStatus = 'OPEN' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
 export type TicketPriority = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 
+export interface SupportTicketMessage {
+  id: string;
+  senderId: string;
+  senderName: string;
+  senderRole: 'TENANT' | 'SUPERADMIN' | 'SYSTEM';
+  content: string;
+  attachments?: string[];
+  createdAt: string;
+}
+
 export interface SupportTicket {
   id: string;
   tenantId: string;
@@ -13,7 +23,10 @@ export interface SupportTicket {
   priority: TicketPriority;
   assignedTo?: string;
   attachments?: string[];
-  slaBreachAt?: string;
+  slaDeadline?: string;
+  firstResponseAt?: string;
+  resolutionTime?: number;
+  messages: SupportTicketMessage[];
   createdAt: string;
   lastUpdated: string;
 }
