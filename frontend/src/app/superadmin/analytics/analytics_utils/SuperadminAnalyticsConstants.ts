@@ -11,6 +11,9 @@ export const MOCK_ANALYTICS_METRICS: RevenueMetrics = {
   activeTenants: 142,
   ltv: 25000,
   cac: 1200,
+  arpu: 876,
+  mrrDeltaPercent: 5.2,
+  arrDeltaPercent: 12.4,
 };
 
 /** Monthly mock data for MRR area chart and tenant growth bar chart (Design §10) */

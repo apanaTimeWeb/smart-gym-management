@@ -21,6 +21,7 @@ export function useAdminHrLogic(initialData?: HrInitialData | null): HrContextTy
   const [fetchState, setFetchState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [error, setError] = useState('');
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
+  const [visibleColumns, setVisibleColumns] = useState<string[]>(['Name', 'Role', 'Branch', 'Status']);
 
   const search = searchParams.get('search') || '';
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
@@ -174,8 +175,8 @@ export function useAdminHrLogic(initialData?: HrInitialData | null): HrContextTy
     staff, payrolls, summary, fetchState, error, toast, showToast, hideToast, loadAll,
     search, debouncedSearch, setSearch, branchFilter, setBranchFilter, roleFilter, setRoleFilter, currentPage, setCurrentPage,
     showModal, setShowModal, showPayrollModal, setShowPayrollModal, showProfileModal, setShowProfileModal, paymentModal, setPaymentModal, editId, editData, viewProfileData, setViewProfileData, saving, 
-    openAdd, openEdit, openProfile, openAddPayroll, saveStaff, savePayroll, deleteStaff, toggleStaffStatus, markPayrollPaid, giveAdvance, payDue, payrollMonth, setPayrollMonth
+    openAdd, openEdit, openProfile, openAddPayroll, saveStaff, savePayroll, deleteStaff, toggleStaffStatus, markPayrollPaid, giveAdvance, payDue, payrollMonth, setPayrollMonth,
+    visibleColumns,
+    setVisibleColumns,
   };
 }
-
-

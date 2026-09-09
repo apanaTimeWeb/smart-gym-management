@@ -12,11 +12,12 @@ interface AffiliatesTableProps {
   onEdit: (affiliate: Affiliate) => void;
   onDelete: (id: string) => void;
   onAddClick: () => void;
+  onPayCommission?: (affiliate: Affiliate) => void;
 }
 
 const ITEMS_PER_PAGE = 10;
 
-export default function SuperadminAffiliatesTable({ affiliates, onToggleStatus, onEdit, onDelete, onAddClick }: AffiliatesTableProps) {
+export default function SuperadminAffiliatesTable({ affiliates, onToggleStatus, onEdit, onDelete, onAddClick, onPayCommission }: AffiliatesTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
 
   const totalPages = Math.ceil(affiliates.length / ITEMS_PER_PAGE) || 1;
@@ -49,6 +50,7 @@ export default function SuperadminAffiliatesTable({ affiliates, onToggleStatus, 
                   onToggleStatus={onToggleStatus}
                   onEdit={onEdit}
                   onDelete={onDelete}
+                  onPayCommission={onPayCommission}
                 />
               ))
             )}

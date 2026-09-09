@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Next.js error.tsx � renders the typed error boundary fallback for the Settings module with a Retry button.
 'use client';
+import Link from 'next/link';
 
 import { useEffect } from 'react';
 import { AlertTriangle } from 'lucide-react';

@@ -11,5 +11,5 @@ export const PriorityColors: Record<TicketPriority, string> = {
 export const StatusColors: Record<TicketStatus, string> = {
   OPEN: 'text-warning',
   IN_PROGRESS: 'text-primary',
-  RESOLVED: 'text-success'
+  RESOLVED: 'text-success', CLOSED: 'text-secondary'
 };

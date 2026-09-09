@@ -19,7 +19,7 @@ export default function SuperadminTicketsClient() {
     try {
       const { ticketsApi } = await import('@/app/superadmin/tickets/superadmin_tickets_api/superadmin_tickets_api');
       // POST /superadmin/tickets/:id/close — to be implemented on backend
-      await (ticketsApi as Record<string, (id: string) => Promise<unknown>>)['closeTicket']?.(ticketId);
+      await (ticketsApi as unknown as Record<string, (id: string) => Promise<unknown>>)['closeTicket']?.(ticketId);
       toast.success('Ticket closed.');
     } catch {
       toast.error('Failed to close ticket.');
@@ -36,7 +36,7 @@ export default function SuperadminTicketsClient() {
     try {
       const { ticketsApi } = await import('@/app/superadmin/tickets/superadmin_tickets_api/superadmin_tickets_api');
       // PATCH /superadmin/tickets/:id/assign — to be implemented on backend
-      await (ticketsApi as Record<string, (id: string, assignee: string) => Promise<unknown>>)['assignTicket']?.(
+      await (ticketsApi as unknown as Record<string, (id: string, assignee: string) => Promise<unknown>>)['assignTicket']?.(
         assignModalTicketId,
         assigneeInput.trim(),
       );

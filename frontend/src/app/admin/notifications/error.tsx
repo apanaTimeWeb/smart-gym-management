@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Renders the error boundary fallback for the notifications module.
 'use client';
+import Link from 'next/link';
 
 import { useEffect } from 'react';
 import { AlertTriangle } from 'lucide-react';

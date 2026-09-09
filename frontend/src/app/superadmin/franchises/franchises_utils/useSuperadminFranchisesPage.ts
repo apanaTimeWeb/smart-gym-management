@@ -56,7 +56,7 @@ export function useSuperadminFranchisesPage() {
     mutationFn: (data: { id: string; payload: FranchiseFormValues }) =>
       superadminFranchisesApi.updateFranchise(data.id, data.payload as Partial<SuperadminFranchise>),
     onSuccess: (res) => {
-      toast.success(res.message);
+      toast.success(res.message || 'Updated successfully');
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'franchises'] });
     },
     onError: () => toast.error('Failed to update franchise.'),

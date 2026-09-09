@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Renders the error boundary for the branches module.
 'use client';
+import Link from 'next/link';
 
 import { useEffect } from 'react';
 import { AlertTriangle } from 'lucide-react';
