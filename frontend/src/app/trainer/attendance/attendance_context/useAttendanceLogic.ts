@@ -112,6 +112,8 @@ export function useAttendanceLogic(): AttendanceContextType {
         staffId: data.staffId,
         date: data.date,
         checkIn: data.checkIn,
+        checkOut: data.checkOut,
+        notes: data.notes,
         type: data.type
       });
       showToast((res as { message?: string }).message || 'Attendance marked successfully', 'success');

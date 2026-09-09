@@ -25,6 +25,8 @@ export interface Member {
   daysSinceLastCheckIn?: number;
 }
 
+export type AssignedMemberView = Omit<Member, 'paidAmount' | 'pendingAmount' | 'billingCycle'>;
+
 export interface MemberStats {
   total: number; active: number; pending: number; expired: number;
 }

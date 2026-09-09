@@ -19,6 +19,8 @@ export interface MembersContextType {
   setSearch: (s: string) => void;
   statusFilter: string;
   setStatusFilter: (s: string) => void;
+  progressStatusFilter: string;
+  setProgressStatusFilter: (s: string) => void;
   currentPage: number;
   setCurrentPage: (p: number) => void;
 

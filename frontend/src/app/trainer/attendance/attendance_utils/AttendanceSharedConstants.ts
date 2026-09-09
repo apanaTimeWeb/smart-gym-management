@@ -21,7 +21,9 @@ export const AttendanceSchema = z.object({
   memberId: z.string().optional(),
   staffId: z.string().optional(),
   date: z.string().min(1, 'Date is required'),
-  checkIn: z.string().min(1, 'Time is required')
+  checkIn: z.string().min(1, 'Time is required'),
+  checkOut: z.string().optional(),
+  notes: z.string().optional(),
 }).superRefine((data, ctx) => {
   if (data.type === 'MEMBER' && !data.memberId) {
     ctx.addIssue({
@@ -46,6 +48,8 @@ export const EMPTY_ATTENDANCE_FORM: AttendanceFormValues = {
  memberId: '', 
  staffId: '', 
  date: new Date().toISOString().split('T')[0], 
- checkIn: '06:00' 
+ checkIn: '06:00',
+ checkOut: '',
+ notes: ''
 };
 

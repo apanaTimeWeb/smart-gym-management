@@ -12,12 +12,7 @@ export const membersApi = {
   },
   fetchMemberById: (id: string) => apiFetch<ApiResponse<Member>>(MembersUrlConfig.BACKEND_API.GET_ONE(id)),
   fetchMemberStats: () => apiFetch<ApiResponse<MemberStats>>(MembersUrlConfig.BACKEND_API.STATS),
-  createMember: (body: Partial<Member>) =>
-    apiFetch<ApiResponse<Member>>(MembersUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body) }),
   updateMember: (id: string, body: Partial<Member>) =>
     apiFetch<ApiResponse<Member>>(MembersUrlConfig.BACKEND_API.UPDATE(id), { method: 'PATCH', body: JSON.stringify(body) }),
-  deleteMember: (id: string) => apiFetch<ApiResponse<{ id: string }>>(MembersUrlConfig.BACKEND_API.DELETE(id), { method: 'DELETE' }),
-  renew: (id: string, body: unknown) =>
-    apiFetch<ApiResponse<Member>>(MembersUrlConfig.BACKEND_API.RENEW(id), { method: 'POST', body: JSON.stringify(body) }),
 };
 

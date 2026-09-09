@@ -6,7 +6,7 @@ import { AttendanceUrlConfig } from '@/app/trainer/attendance/attendance_url_con
 import type { Attendance } from '@/app/trainer/trainer_types/trainer_types';
 
 export const attendanceApi = {
-  createAttendanceRecord: (body: { memberId?: string; staffId?: string; date: string; checkIn?: string; type: string }) =>
+  createAttendanceRecord: (body: { memberId?: string; staffId?: string; date: string; checkIn?: string; checkOut?: string; notes?: string; type: string }) =>
     apiFetch(AttendanceUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body) }),
   fetchAttendanceRecords: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
