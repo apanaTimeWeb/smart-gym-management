@@ -59,7 +59,8 @@ export const WorkoutSchema = z.object({
     sets: z.coerce.number().min(1),
     reps: z.string().or(z.coerce.number().transform(v => String(v))),
     weight: z.string().optional(),
-    restTime: z.string().optional()
+    restTime: z.string().optional(),
+    sortOrder: z.coerce.number().default(0), // Required for drag-to-reorder; backend updates all affected sortOrder values
   })).optional()
 });
 export type WorkoutFormValues = z.infer<typeof WorkoutSchema>;

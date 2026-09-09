@@ -58,7 +58,9 @@ export const MANAGER_PLACEHOLDER_NOTIFICATIONS = [
 
 export const GYM_DETAILS = {
   name: process.env.NEXT_PUBLIC_GYM_NAME || 'GymSmart Fitness',
-  phone: process.env.NEXT_PUBLIC_GYM_PHONE || '+91 83479 77566'
+  phone: process.env.NEXT_PUBLIC_GYM_PHONE || '+91 83479 77566',
+  gstNumber: process.env.NEXT_PUBLIC_GYM_GST || '29ABCDE1234F1Z5',
+  address: process.env.NEXT_PUBLIC_GYM_ADDRESS || '123 Fitness Street, Banglore'
 };
 
 

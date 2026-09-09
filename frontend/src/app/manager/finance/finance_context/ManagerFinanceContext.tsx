@@ -50,7 +50,7 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
   const exportCSV = useCallback(() => {
     const headers = ['Invoice No', 'Member', 'Plan', 'Amount', 'Method', 'Status', 'Date'];
     const rows = payments.map(p => [
-      p.invoiceNo,
+      p.invoiceNumber,
       p.member?.name ?? '',
       p.member?.plan?.name ?? '',
       p.amount,

@@ -383,7 +383,7 @@ export default function AdminSettingsContent() {
                 <label className="block text-sm font-medium text-secondary mb-1">{f.label}</label>
                 <input
                   type={f.type}
-                  value={(form as Record<string, string>)[f.field] || ''}
+                  value={(form as Record<string, any>)[f.field] || ''}
                   onChange={e => handleChange(f.field, e.target.value)}
                   className="w-full px-3 py-2.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-input text-foreground"
                 />

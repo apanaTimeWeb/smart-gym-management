@@ -6,5 +6,6 @@ export const AdminDataExportUrlConfig = {
     REQUEST: '/admin/data-export/request',
     DOWNLOAD: (id: string) => `/admin/data-export/${id}/download`,
     HISTORY: '/admin/data-export/history',
+    SCHEDULE: '/admin/data-export/schedule',
   },
 } as const;

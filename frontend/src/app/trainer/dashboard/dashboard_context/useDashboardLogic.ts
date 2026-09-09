@@ -27,7 +27,7 @@ export function useDashboardLogic(initialData?: DashboardStats | null): Dashboar
   useEffect(() => {
     setTimeout(() => {
       setStatus('loading');
-      dashboardApi.getStats()
+      dashboardApi.getStats(timeRange !== 'custom' ? timeRange : undefined, startDate || undefined, endDate || undefined)
         .then(res => {
           setStats(res.data);
           setStatus('success');
@@ -37,7 +37,7 @@ export function useDashboardLogic(initialData?: DashboardStats | null): Dashboar
           setStatus('error');
         });
     }, 0);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps -- runs once on mount only
+  }, [timeRange, startDate, endDate]); // refetch when range or custom dates change
 
   return {
     stats,

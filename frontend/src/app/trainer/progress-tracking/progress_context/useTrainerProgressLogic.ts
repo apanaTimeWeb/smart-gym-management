@@ -1,7 +1,9 @@
 // RESPONSIBILITY: Logic hook for the Trainer Progress Tracking module.
-// DATA FLOW: SharedConstants (mock) → useTrainerProgressLogic → TrainerProgressMain
+// DATA FLOW: URL ?memberId → useTrainerProgressLogic → TrainerProgressMain
+// CRITICAL: selectedMemberId MUST come from URL params or a member selector — NEVER hardcoded.
 
 import { useState, useCallback, useMemo } from 'react';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import type { ProgressEntry, ProgressChartMetric, ComparisonMemberSnapshot, ComparisonMetric } from '@/app/trainer/progress-tracking/progress_types/TrainerProgressTypes';
 import { MOCK_PROGRESS_ENTRIES, MOCK_COMPARISON_ENTRIES, COMPARISON_MAX_MEMBERS } from '@/app/trainer/progress-tracking/progress_utils/TrainerProgressSharedConstants';
 import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
@@ -47,15 +49,27 @@ function buildSnapshot(memberId: string, memberName: string, entries: typeof MOC
 }
 
 export const useTrainerProgressLogic = () => {
+  // selectedMemberId is driven by URL ?memberId= param — never hardcoded.
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const selectedMemberId = searchParams.get('memberId') ?? '';
+  const setSelectedMemberId = useCallback((id: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (id) params.set('memberId', id);
+    else params.delete('memberId');
+    router.push(`${pathname}?${params.toString()}`);
+  }, [searchParams, pathname, router]);
+
   const [entries, setEntries] = useState<ProgressEntry[]>(MOCK_PROGRESS_ENTRIES);
-  const [selectedMemberId, setSelectedMemberId] = useState<string>('m1');
   const [activeMetric, setActiveMetric] = useState<ProgressChartMetric>('weight');
   const [showModal, setShowModal] = useState(false);
   const [editingEntry, setEditingEntry] = useState<ProgressEntry | null>(null);
 
   // Comparison tab state
   const [activeTab, setActiveTab] = useState<ProgressTab>('individual');
-  const [selectedComparisonIds, setSelectedComparisonIds] = useState<string[]>(['m1', 'm2', 'm3', 'm4']);
+  const [selectedComparisonIds, setSelectedComparisonIds] = useState<string[]>([]);
   const [activeComparisonMetric, setActiveComparisonMetric] = useState<ComparisonMetric>('weightChangeKg');
 
   const memberEntries = useMemo(

@@ -1,5 +1,5 @@
 'use client';
-import { IndianRupee, Clock, Activity, Target } from 'lucide-react';
+import { IndianRupee, Clock, Activity, Target, Minus } from 'lucide-react';
 import { useTrainerEarningsContext } from '@/app/trainer/earnings/earnings_context/TrainerEarningsContext';
 
 export default function TrainerEarningsKPIs() {
@@ -7,8 +7,8 @@ export default function TrainerEarningsKPIs() {
 
   if (fetchState === 'loading' || !kpis) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {[1, 2, 3, 4].map(i => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        {[1, 2, 3, 4, 5].map(i => (
           <div key={i} className="h-28 bg-skeleton-base bg-skeleton-highlight rounded-xl border border-border motion-safe:animate-pulse" />
         ))}
       </div>
@@ -20,10 +20,11 @@ export default function TrainerEarningsKPIs() {
     { label: 'Pending Payouts', value: `₹${kpis.pendingPayouts.toLocaleString('en-IN')}`, icon: Clock, color: 'text-warning', bg: 'bg-warning/10' },
     { label: 'Sessions Completed', value: kpis.sessionsCompleted.toString(), icon: Activity, color: 'text-info', bg: 'bg-info/10' },
     { label: 'Commission Rate', value: `${kpis.commissionRate}%`, icon: Target, color: 'text-primary', bg: 'bg-primary-subtle' },
+    { label: 'Tax Deducted (TDS)', value: `₹${kpis.taxDeduction.toLocaleString('en-IN')}`, icon: Minus, color: 'text-danger', bg: 'bg-danger/10' },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
       {cards.map(c => {
         const Icon = c.icon;
         return (

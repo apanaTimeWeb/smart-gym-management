@@ -24,6 +24,9 @@ export interface ProgressSummary {
   firstEntry: ProgressEntry | null;
   weightChangeKg: number;
   bmiChange: number;
+  targetWeightKg?: number;
+  targetBodyFatPercent?: number;
+  targetDate?: string;
 }
 
 export interface CreateProgressEntryDto {

@@ -16,6 +16,7 @@ export interface BlacklistedMember {
   assignedGyms: string[];
   assignedGymNames: string[];
   isActive: boolean;
+  history?: { action: string; actor: string; timestamp: string; note: string }[];
 }
 
 export interface BlacklistFormValues {

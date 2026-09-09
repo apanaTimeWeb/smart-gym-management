@@ -9,5 +9,6 @@ export const InquiriesUrlConfig = {
     STATS: '/manager/inquiries/meta/stats',
     UPDATE: (id: string) => `/manager/inquiries/${id}`,
     DELETE: (id: string) => `/manager/inquiries/${id}`,
+    CONVERT: (id: string) => `/manager/inquiries/${id}/convert`,
   }
 };

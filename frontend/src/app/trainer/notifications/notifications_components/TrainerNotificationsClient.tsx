@@ -1,13 +1,14 @@
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
+// RESPONSIBILITY: Orchestrates the notifications list and actions (mark all read).
+// ROLE BOUNDARY: clearAll and deleteNotification are FORBIDDEN for trainer role — Manager-only.
+// DATA FLOW: useTrainerNotificationsLogic → TrainerNotificationsClient → TrainerNotificationsList
 'use client';
-// RESPONSIBILITY: Orchestrates the notifications list and actions (mark all read, clear all).
+
 import { useNotificationsPage } from '@/app/trainer/notifications/notifications_utils/useNotificationsPage';
 import TrainerNotificationsList from '@/app/trainer/notifications/notifications_components/TrainerNotificationsList';
-import { CheckCheck, Trash2 } from 'lucide-react';
+import { CheckCheck } from 'lucide-react';
 
 export default function TrainerNotificationsClient() {
-  const { notifications, markAllAsRead, clearAll, markAsRead, deleteNotification } = useNotificationsPage();
+  const { notifications, markAllAsRead, markAsRead } = useNotificationsPage();
 
   const unreadCount = notifications.filter(n => n.unread).length;
 
@@ -30,23 +31,12 @@ export default function TrainerNotificationsClient() {
           >
             <CheckCheck size={16} /> Mark all read
           </button>
-          <button 
-            onClick={() => {
-              // TODO: Replace with custom ConfirmationDrawer/Modal as per Rule 4
-              clearAll();
-            }}
-            disabled={notifications.length === 0}
-            className="flex items-center gap-2 text-sm text-secondary hover:text-danger motion-safe:transition-colors disabled:opacity-50 disabled:hover:text-secondary"
-          >
-            <Trash2 size={16} /> Clear all
-          </button>
         </div>
       </div>
       
       <TrainerNotificationsList 
         notifications={notifications} 
         onMarkAsRead={markAsRead} 
-        onDelete={deleteNotification} 
       />
     </div>
   );

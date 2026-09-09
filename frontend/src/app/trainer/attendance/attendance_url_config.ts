@@ -8,6 +8,8 @@ export const AttendanceUrlConfig = {
   BACKEND_API: {
     BASE: '/trainer/attendance',
     TODAY_STATS: '/trainer/attendance/today-stats',
+    CHECKOUT: (id: string) => `/trainer/attendance/${id}/checkout`,
+    EXPORT_CSV: '/trainer/attendance/export?format=csv',
   }
 };
 

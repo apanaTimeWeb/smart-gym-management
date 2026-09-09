@@ -204,3 +204,19 @@ export const emailOwnerSchema = z.object({
 });
 
 export type EmailOwnerFormValues = z.infer<typeof emailOwnerSchema>;
+
+// ─── Edit Franchise Schema ────────────────────────────────────────────────── //
+
+/**
+ * Zod v4 schema for editing a franchise (SuperadminFranchiseModal).
+ */
+export const franchiseSchema = z.object({
+  franchiseName: z.string().min(1, 'Required').max(100, 'Name too long'),
+  ownerName: z.string().min(1, 'Required').max(80, 'Name too long'),
+  ownerEmail: z.string().email('Invalid email').min(1, 'Required'),
+  city: z.string().min(1, 'Required').max(100, 'City too long'),
+  state: z.string().min(1, 'Required').max(100, 'State too long'),
+  plan: z.string().min(1, 'Required'),
+});
+
+export type FranchiseFormValues = z.infer<typeof franchiseSchema>;

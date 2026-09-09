@@ -8,6 +8,7 @@ import SuperadminInvoicesStatsBar from '@/app/superadmin/invoices/invoices_compo
 import SuperadminInvoicesTable from '@/app/superadmin/invoices/invoices_components/SuperadminInvoicesTable/SuperadminInvoicesTable';
 import SuperadminInvoicesEmptyState from '@/app/superadmin/invoices/invoices_components/SuperadminInvoicesEmptyState/SuperadminInvoicesEmptyState';
 import SuperadminInvoicesLogPaymentModal from '@/app/superadmin/invoices/invoices_components/SuperadminInvoicesLogPaymentModal/SuperadminInvoicesLogPaymentModal';
+import SuperadminDateRangePicker from '@/app/superadmin/superadmin_components/SuperadminDateRangePicker';
 import toast from 'react-hot-toast';
 
 export default function SuperadminInvoicesClient() {
@@ -32,6 +33,12 @@ export default function SuperadminInvoicesClient() {
     handleSelectGym,
     statusFilter,
     setStatusFilter,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+    pendingRevenue,
+    overdueCount,
   } = useSuperadminInvoicesPage();
 
   if (fetchState === 'loading') return (
@@ -54,7 +61,12 @@ export default function SuperadminInvoicesClient() {
     <div className="space-y-6 relative">
       <SuperadminInvoicesHeader onLogPaymentClick={() => setShowAddModal(true)} />
       
-      <SuperadminInvoicesStatsBar totalRevenue={totalRevenue} failedRevenue={failedRevenue} />
+      <SuperadminInvoicesStatsBar 
+        totalRevenue={totalRevenue} 
+        failedRevenue={failedRevenue} 
+        pendingRevenue={pendingRevenue}
+        overdueCount={overdueCount}
+      />
 
       <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
         <div className="p-4 border-b border-border flex gap-4">
@@ -69,6 +81,12 @@ export default function SuperadminInvoicesClient() {
             />
           </div>
           <div className="flex gap-2">
+            <SuperadminDateRangePicker 
+              onRangeChange={(start, end) => {
+                setStartDate(start);
+                setEndDate(end);
+              }}
+            />
             <select
               value={statusFilter || ''}
               onChange={(e) => setStatusFilter(e.target.value || null)}

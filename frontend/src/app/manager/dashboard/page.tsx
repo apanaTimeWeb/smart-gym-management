@@ -3,6 +3,7 @@ import ManagerDashboardMain from '@/app/manager/dashboard/dashboard_components/M
 import { cookies } from 'next/headers';
 import type { DashboardStats } from '@/app/manager/dashboard/dashboard_types/ManagerDashboardTypes';
 import { ApiResponse } from '@/lib/api';
+import { DashboardUrlConfig } from '@/app/manager/dashboard/ManagerDashboardUrlConfig';
 
 async function getDashboardData() {
   try {
@@ -12,7 +13,7 @@ async function getDashboardData() {
     if (!token) return null;
     
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001';
-    const res = await fetch(`${backendUrl}/manager/dashboard/stats`, {
+    const res = await fetch(`${backendUrl}${DashboardUrlConfig.BACKEND_API.STATS}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       },

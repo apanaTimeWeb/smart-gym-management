@@ -2,15 +2,20 @@
 // RESPONSIBILITY: Renders the table view of Gym tenants. Purely a view component that consumes useSuperadminGymsTable hook.
 
 import { useState } from 'react';
-import { CheckCircle2, Ban, LogIn, PlayCircle, Edit2, MessageCircle, Trash2, Loader2 } from 'lucide-react';
+import { CheckCircle2, Ban, LogIn, PlayCircle, Edit2, MessageCircle, Trash2, Loader2, ArrowUpDown, ExternalLink } from 'lucide-react';
 import { useSuperadminGymsTable } from '@/app/superadmin/gyms/gyms_components/SuperadminGymsTable/useSuperadminGymsTable';
+import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
+import { useRouter } from 'next/navigation';
 import type { Tenant } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_types';
 import SuperadminGymEditModal from '@/app/superadmin/gyms/gyms_components/SuperadminGymEditModal/SuperadminGymEditModal';
 import SuperadminGymWhatsappModal from '@/app/superadmin/gyms/gyms_components/SuperadminGymWhatsappModal/SuperadminGymWhatsappModal';
 import SuperadminGymDeleteModal from '@/app/superadmin/gyms/gyms_components/SuperadminGymDeleteModal/SuperadminGymDeleteModal';
 import SuperadminGymsEmptyState from '@/app/superadmin/gyms/gyms_components/SuperadminGymsEmptyState/SuperadminGymsEmptyState';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
-import { GYMS_TABLE_PAGE_SIZE, GYMS_PLAN_COLORS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
+import { GYMS_PLAN_COLORS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
+
+// Rule 68: TABLE_COLUMN_COUNT must match <th> count AND colSpan on empty state
+const TABLE_COLUMN_COUNT = 8; // Name | Owner | Plan | Members | MRR | Status | Last Login | Actions
 
 /**
  * Returns the Tailwind badge classes for a given plan tier name.
@@ -22,6 +27,7 @@ function getPlanBadgeClasses(plan: string | undefined): string {
 }
 
 export default function SuperadminGymsTable() {
+  const router = useRouter();
   const {
     filteredGyms,
     fetchState,
@@ -31,19 +37,35 @@ export default function SuperadminGymsTable() {
     onSuspendClick,
     onDeleteClick,
     openEditModal,
-    openWhatsappModal
+    openWhatsappModal,
   } = useSuperadminGymsTable();
 
-  const [currentPage, setCurrentPage] = useState(1);
+  const { currentPage, pageLimit, setCurrentPage, setSortBy, setSortOrder, sortBy, sortOrder } = useSuperadminGymsStore();
+  const totalPages = Math.ceil(filteredGyms.length / pageLimit) || 1;
+
+  const handleSort = (col: string) => {
+    if (sortBy === col) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(col);
+      setSortOrder('desc');
+    }
+  };
+
+  const SortIcon = ({ col }: { col: string }) => (
+    <ArrowUpDown
+      size={12}
+      className={`inline ml-1 ${sortBy === col ? 'text-primary' : 'text-disabled'}`}
+    />
+  );
 
   if (fetchState === 'loading') {
-    // Loading skeleton mirrors the exact 7-column table layout (Rule 9, Rule 26)
     return (
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-primary/10 border-b border-border">
-              {['Gym Name', 'Owner', 'Plan', 'Members', 'MRR', 'Status', 'Actions'].map((h) => (
+              {['Gym Name', 'Owner', 'Plan', 'Members', 'MRR', 'Status', 'Last Login', 'Actions'].map((h) => (
                 <th key={h} className="p-4">
                   <div className="h-3 bg-skeleton-base motion-safe:animate-pulse rounded w-16" />
                 </th>
@@ -59,6 +81,7 @@ export default function SuperadminGymsTable() {
                 <td className="p-4"><div className="h-4 bg-skeleton-base motion-safe:animate-pulse rounded w-10 ml-auto" /></td>
                 <td className="p-4"><div className="h-4 bg-skeleton-base motion-safe:animate-pulse rounded w-20 ml-auto" /></td>
                 <td className="p-4"><div className="h-5 bg-skeleton-base motion-safe:animate-pulse rounded-full w-16 mx-auto" /></td>
+                <td className="p-4"><div className="h-4 bg-skeleton-base motion-safe:animate-pulse rounded w-20 ml-auto" /></td>
                 <td className="p-4"><div className="h-6 bg-skeleton-base motion-safe:animate-pulse rounded w-20 ml-auto" /></td>
               </tr>
             ))}
@@ -72,9 +95,6 @@ export default function SuperadminGymsTable() {
     return <div className="p-8 text-center text-danger">Error loading gyms. Please try again.</div>;
   }
 
-  const totalPages = Math.ceil(filteredGyms.length / GYMS_TABLE_PAGE_SIZE) || 1;
-  const paginatedGyms = filteredGyms.slice((currentPage - 1) * GYMS_TABLE_PAGE_SIZE, currentPage * GYMS_TABLE_PAGE_SIZE);
-
   return (
     <div className="overflow-x-auto flex flex-col min-h-96">
       <table className="w-full text-left border-collapse flex-1">
@@ -83,16 +103,31 @@ export default function SuperadminGymsTable() {
             <th className="p-4 font-semibold uppercase text-xs tracking-wider w-48">Gym Name</th>
             <th className="p-4 font-semibold uppercase text-xs tracking-wider min-w-40">Owner</th>
             <th className="p-4 font-semibold uppercase text-xs tracking-wider w-32">Plan</th>
-            <th className="p-4 font-semibold uppercase text-xs tracking-wider text-right w-24">Members</th>
-            <th className="p-4 font-semibold uppercase text-xs tracking-wider text-right w-32">MRR</th>
+            <th
+              className="p-4 font-semibold uppercase text-xs tracking-wider text-right w-24 cursor-pointer hover:text-foreground motion-safe:transition-colors"
+              onClick={() => handleSort('memberCount')}
+            >
+              Members <SortIcon col="memberCount" />
+            </th>
+            <th
+              className="p-4 font-semibold uppercase text-xs tracking-wider text-right w-32 cursor-pointer hover:text-foreground motion-safe:transition-colors"
+              onClick={() => handleSort('monthlyRevenue')}
+            >
+              MRR <SortIcon col="monthlyRevenue" />
+            </th>
             <th className="p-4 font-semibold uppercase text-xs tracking-wider text-center w-32">Status</th>
+            <th
+              className="p-4 font-semibold uppercase text-xs tracking-wider text-right w-32 cursor-pointer hover:text-foreground motion-safe:transition-colors"
+              onClick={() => handleSort('lastLoginAt')}
+            >
+              Last Login <SortIcon col="lastLoginAt" />
+            </th>
             <th className="p-4 font-semibold uppercase text-xs tracking-wider text-right w-40">Actions</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-border">
-          {paginatedGyms.map((gym: Tenant) => {
+          {filteredGyms.map((gym: Tenant) => {
             const isActionLoading = actionLoadingId === gym.id;
-
             return (
               <tr
                 key={gym.id}
@@ -135,6 +170,12 @@ export default function SuperadminGymsTable() {
                   </div>
                 </td>
                 <td className="p-4 text-right">
+                  <span className="text-xs text-secondary">
+                    {gym.lastLoginAt ? new Date(gym.lastLoginAt).toLocaleDateString('en-IN') : '—'}
+                  </span>
+                </td>
+                <td className="p-4 text-right">
+                  {/* Rule 64: opacity-100 on mobile, hover-only on lg+ */}
                   <div className="flex items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity">
                     {isActionLoading ? (
                       <div className="p-2 text-primary">
@@ -142,6 +183,14 @@ export default function SuperadminGymsTable() {
                       </div>
                     ) : (
                       <>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); router.push(`/superadmin/gyms/${gym.id}`); }}
+                          className="p-1.5 text-secondary hover:bg-input hover:text-foreground rounded-lg motion-safe:transition-all"
+                          title="View Gym Detail"
+                          aria-label={`View detail for ${gym.name}`}
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </button>
                         <button
                           onClick={(e) => onGhostLoginClick(e, gym.id, gym.name)}
                           className="p-1.5 text-primary hover:bg-primary-subtle rounded-lg motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
@@ -152,10 +201,11 @@ export default function SuperadminGymsTable() {
                         </button>
                         <button
                           onClick={(e) => onSuspendClick(e, gym.id, gym.name, gym.status)}
-                          className={`p-1.5 rounded-lg motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page ${gym.status === 'SUSPENDED'
-                            ? 'text-success hover:bg-success/10'
-                            : 'text-danger hover:bg-danger-bg/10'
-                            }`}
+                          className={`p-1.5 rounded-lg motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page ${
+                            gym.status === 'SUSPENDED'
+                              ? 'text-success hover:bg-success/10'
+                              : 'text-danger hover:bg-danger-bg/10'
+                          }`}
                           title={gym.status === 'SUSPENDED' ? 'Activate Tenant' : 'Suspend Tenant'}
                           aria-label={gym.status === 'SUSPENDED' ? `Activate ${gym.name}` : `Suspend ${gym.name}`}
                         >
@@ -195,7 +245,8 @@ export default function SuperadminGymsTable() {
 
           {filteredGyms.length === 0 && (
             <tr>
-              <td colSpan={7}><SuperadminGymsEmptyState /></td>
+              {/* Rule 68: colSpan must exactly match TABLE_COLUMN_COUNT */}
+              <td colSpan={TABLE_COLUMN_COUNT}><SuperadminGymsEmptyState /></td>
             </tr>
           )}
         </tbody>

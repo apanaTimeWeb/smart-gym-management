@@ -15,6 +15,11 @@ import { MOCK_GYMS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConsta
 export function useSuperadminGymsTable() {
   const search = useSuperadminGymsStore(state => state.search);
   const statusFilter = useSuperadminGymsStore(state => state.statusFilter);
+  const planFilter = useSuperadminGymsStore(state => state.planFilter);
+  const sortBy = useSuperadminGymsStore(state => state.sortBy);
+  const sortOrder = useSuperadminGymsStore(state => state.sortOrder);
+  const currentPage = useSuperadminGymsStore(state => state.currentPage);
+  const pageLimit = useSuperadminGymsStore(state => state.pageLimit);
   const openDeleteModal = useSuperadminGymsStore(state => state.openDeleteModal);
   const openEditModal = useSuperadminGymsStore(state => state.openEditModal);
   const openWhatsappModal = useSuperadminGymsStore(state => state.openWhatsappModal);
@@ -22,34 +27,30 @@ export function useSuperadminGymsTable() {
 
   const queryClient = useQueryClient();
 
-  // Fetch Gyms
+  // Fetch Gyms — passes server-side params (page, limit, status, plan, search, sortBy, order)
+  const queryParams = {
+    ...(search && { search }),
+    ...(statusFilter !== 'All' && { status: statusFilter }),
+    ...(planFilter !== 'All' && { plan: planFilter }),
+    sortBy,
+    order: sortOrder,
+    page: String(currentPage),
+    limit: String(pageLimit),
+  };
+
   const { data: fetchRes, isLoading, isError } = useQuery({
-    queryKey: ['superadmin', 'gyms'],
-    queryFn: () => superadminApi.gyms.fetchGyms(),
+    queryKey: ['superadmin', 'gyms', queryParams],
+    queryFn: () => superadminApi.gyms.fetchGyms(queryParams),
   });
 
   const gyms = fetchRes?.data && fetchRes.data.length > 0 ? fetchRes.data : MOCK_GYMS;
   const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
 
-  // Fallback Client-side filter
+  // Server-side filtering is now primary; this is a lightweight client guard
   const filteredGyms = useMemo(() => {
     if (!gyms) return [];
-    
-    let result = gyms;
-    
-    if (statusFilter && statusFilter !== 'All') {
-      result = result.filter(g => g.status === statusFilter);
-    }
-    
-    if (search) {
-      result = result.filter(g =>
-        g.name?.toLowerCase().includes(search.toLowerCase()) ||
-        g.ownerName?.toLowerCase().includes(search.toLowerCase())
-      );
-    }
-    
-    return result;
-  }, [gyms, search, statusFilter]);
+    return gyms;
+  }, [gyms]);
 
   // Mutations
   const impersonateMutation = useMutation({

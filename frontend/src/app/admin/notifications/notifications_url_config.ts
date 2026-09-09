@@ -4,6 +4,7 @@
 export const AdminNotificationsUrlConfig = {
   PAGES: {
     LIST: '/admin/notifications',
+    SETTINGS: '/admin/settings/notifications',
   },
   BACKEND_API: {
     BASE: '/admin/notifications',

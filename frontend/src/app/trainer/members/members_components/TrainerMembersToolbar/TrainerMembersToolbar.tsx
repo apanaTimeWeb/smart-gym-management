@@ -11,7 +11,7 @@ import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { MEMBER_STATUS_OPTIONS } from '@/app/trainer/members/members_utils/MembersSharedConstants';
 
 export default function TrainerMembersToolbar() {
-  const { search, setSearch, statusFilter, setStatusFilter, openAdd, currentPage } = useMembersContext();
+  const { search, setSearch, statusFilter, setStatusFilter, progressStatusFilter, setProgressStatusFilter, openAdd, currentPage } = useMembersContext();
   const [localSearch, setLocalSearch] = useState(search);
 
   useEffect(() => { setTimeout(() => setLocalSearch(search), 0); }, [search]);
@@ -27,7 +27,7 @@ export default function TrainerMembersToolbar() {
   const loadAll = useMembersStore(s => s.loadAll);
 
   const handleRefresh = () => {
-    loadAll({ search, status: statusFilter, page: currentPage.toString() });
+    loadAll({ search, status: statusFilter, progressStatus: progressStatusFilter !== 'All' ? progressStatusFilter : undefined, page: currentPage.toString() });
   };
 
   return (
@@ -47,6 +47,17 @@ export default function TrainerMembersToolbar() {
           onChange={(val) => setStatusFilter(String(val))}
           className="w-48"
           options={MEMBER_STATUS_OPTIONS}
+        />
+        <SearchableDropdown
+          value={progressStatusFilter}
+          onChange={(val) => setProgressStatusFilter(String(val))}
+          className="w-48"
+          options={[
+            { label: 'All Progress', value: 'All' },
+            { label: 'Good', value: 'Good' },
+            { label: 'Average', value: 'Average' },
+            { label: 'Needs Attention', value: 'Needs Attention' }
+          ]}
         />
   <button 
   onClick={handleRefresh} 

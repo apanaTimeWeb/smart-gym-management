@@ -16,6 +16,7 @@ export interface AdminMember {
   expiryDate: string;
   pendingAmount: number;
   gender: 'Male' | 'Female' | 'Other';
+  referralSource?: string;
   photo?: string;
 }
 

@@ -16,6 +16,7 @@ export const hrApi = {
   updateStaff: (id: string, body: Partial<Staff>) =>
     apiFetch<ApiResponse<Staff>>(HrUrlConfig.BACKEND_API.STAFF_UPDATE(id), { method: 'PATCH', body: JSON.stringify(body) }),
   removeStaff: (id: string) => apiFetch<ApiResponse<{ id: string }>>(HrUrlConfig.BACKEND_API.STAFF_DELETE(id), { method: 'DELETE' }),
+  bulkDeactivateStaff: (ids: string[]) => apiFetch<ApiResponse<{ count: number }>>(HrUrlConfig.BACKEND_API.BULK_DEACTIVATE, { method: 'PATCH', body: JSON.stringify({ ids }) }),
   getPayrolls: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
     return apiFetch<ApiResponse<{ payrolls: Payroll[]; total: number }>>(`${HrUrlConfig.BACKEND_API.PAYROLLS_BASE}${q}`);

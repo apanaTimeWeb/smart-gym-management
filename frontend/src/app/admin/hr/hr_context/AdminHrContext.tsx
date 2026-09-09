@@ -55,6 +55,8 @@ export function HrProvider({ children, initialData }: { children: React.ReactNod
    payDue: logic.payDue,
    payrollMonth: logic.payrollMonth,
    setPayrollMonth: logic.setPayrollMonth,
+   visibleColumns: logic.visibleColumns,
+   setVisibleColumns: logic.setVisibleColumns,
  }), [
    logic.staff,
    logic.payrolls,
@@ -76,6 +78,7 @@ export function HrProvider({ children, initialData }: { children: React.ReactNod
    logic.roleFilter,
    logic.branchFilter,
    logic.payrollMonth,
+   logic.visibleColumns,
    logic.showToast,
    logic.hideToast,
    logic.loadAll,
@@ -100,6 +103,7 @@ export function HrProvider({ children, initialData }: { children: React.ReactNod
    logic.giveAdvance,
    logic.payDue,
    logic.setPayrollMonth,
+   logic.setVisibleColumns,
  ]);
 
  return (

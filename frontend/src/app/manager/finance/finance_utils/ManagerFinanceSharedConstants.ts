@@ -24,7 +24,10 @@ export const AddPaymentSchema = z.object({
   memberId: z.string().refine(val => !isNaN(Number(val)) && Number(val) > 0, 'Valid Member ID required'),
   amount: z.string().refine(val => !isNaN(Number(val)) && Number(val) > 0, 'Valid amount required'),
   method: z.string(),
-  notes: z.string().optional()
+  notes: z.string().optional(),
+  invoiceNumber: z.string().optional(),
+  receiptNumber: z.string().optional(),
+  taxId: z.string().optional()
 });
 export type AddPaymentFormValues = z.infer<typeof AddPaymentSchema>;
 
@@ -32,5 +35,8 @@ export const EMPTY_PAYMENT_FORM: AddPaymentFormValues = {
   memberId: '',
   amount: '',
   method: 'UPI',
-  notes: ''
+  notes: '',
+  invoiceNumber: '',
+  receiptNumber: '',
+  taxId: ''
 };

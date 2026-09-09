@@ -4,7 +4,7 @@ export const DashboardUrlConfig = {
     HOME: '/manager/dashboard',
   },
   BACKEND_API: {
-    STATS: '/manager/dashboard/kpi',
+    STATS: '/manager/dashboard/stats',
     CHARTS: '/manager/dashboard/charts',
     RECENT: '/manager/dashboard/recent',
   }

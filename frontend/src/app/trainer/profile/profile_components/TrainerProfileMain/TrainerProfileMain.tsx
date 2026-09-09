@@ -6,13 +6,14 @@ import { User, Lock, Save, Loader2, Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { useTrainerProfileLogic } from '@/app/trainer/profile/profile_context/useTrainerProfileLogic';
 import TrainerHeader from '@/app/trainer/trainer_components/TrainerLayout/TrainerHeader';
+import { TRAINER_SPECIALIZATIONS } from '@/app/trainer/profile/profile_utils/TrainerProfileSharedConstants';
 
 export default function TrainerProfileMain() {
   const {
     activeTab, setActiveTab,
     name, setName,
     phone, setPhone,
-    specialization, setSpecialization,
+    specialization, toggleSpecialization,
     currentPassword, setCurrentPassword,
     newPassword, setNewPassword,
     confirmPassword, setConfirmPassword,
@@ -89,9 +90,23 @@ export default function TrainerProfileMain() {
                 className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-foreground text-sm focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-secondary mb-1.5">Specialization</label>
-              <input type="text" value={specialization} onChange={(e) => setSpecialization(e.target.value)} placeholder="e.g. Strength & Conditioning"
-                className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-foreground text-sm focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary" />
+              <label className="block text-sm font-medium text-secondary mb-2">Specialization <span className="text-secondary font-normal">(select all that apply)</span></label>
+              <div className="flex flex-wrap gap-2">
+                {TRAINER_SPECIALIZATIONS.map((s) => (
+                  <button
+                    key={s}
+                    type="button"
+                    onClick={() => toggleSpecialization(s)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-semibold border motion-safe:transition-all ${
+                      specialization.includes(s)
+                        ? 'bg-primary text-white border-primary shadow-sm'
+                        : 'bg-input text-secondary border-border hover:border-primary hover:text-foreground'
+                    }`}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
           <div className="flex justify-end pt-2">

@@ -9,6 +9,7 @@ export const LibraryUrlConfig = {
     DIET_PLANS_BASE: '/trainer/library/diet-plans',
     DIET_PLAN_UPDATE: (id: string) => `/trainer/library/diet-plans/${id}`,
     DIET_PLAN_DELETE: (id: string) => `/trainer/library/diet-plans/${id}`,
+    ASSIGN_DIET: (id: string) => `/trainer/members/${id}/diet`,
   }
 };
 

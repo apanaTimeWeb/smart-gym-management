@@ -5,7 +5,7 @@
 // DATA FLOW: useAnalyticsPage → SuperadminAnalyticsClient → KPI Cards + Charts
 
 import dynamic from 'next/dynamic';
-import { TrendingUp, Users, IndianRupee, Activity, ArrowDownRight } from 'lucide-react';
+import { TrendingUp, Users, IndianRupee, Activity, ArrowDownRight, DollarSign } from 'lucide-react';
 import { useAnalyticsPage } from '@/app/superadmin/analytics/analytics_utils/useAnalyticsPage';
 import { CHART_COLORS } from '@/app/superadmin/superadmin_utils/SuperadminChartConstants';
 
@@ -23,7 +23,7 @@ export default function SuperadminAnalyticsClient() {
           <div className="h-4 w-96 bg-skeleton-base motion-safe:animate-pulse rounded" />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[1, 2, 3, 4].map((i) => (
+          {[1, 2, 3, 4, 5].map((i) => (
             <div key={`skeleton-${i}`} className="h-32 bg-skeleton-base motion-safe:animate-pulse rounded-xl border border-border" />
           ))}
         </div>
@@ -43,13 +43,28 @@ export default function SuperadminAnalyticsClient() {
     );
   }
 
+  // Rule 18 fix: deltas come from API fields, not hardcoded strings
+  const mrrDelta = metrics.mrrDeltaPercent !== undefined
+    ? `${metrics.mrrDeltaPercent > 0 ? '+' : ''}${metrics.mrrDeltaPercent}% from last month`
+    : undefined;
+
+  const arrDelta = metrics.arrDeltaPercent !== undefined
+    ? `${metrics.arrDeltaPercent > 0 ? '+' : ''}${metrics.arrDeltaPercent}% from last year`
+    : undefined;
+
+  const churnDelta = metrics.churnDeltaPercent !== undefined
+    ? `${metrics.churnDeltaPercent > 0 ? '+' : ''}${metrics.churnDeltaPercent}% vs last month`
+    : 'Target: < 2%';
+
+  // ARPU computed from API fields (audit item #36)
+  const arpu = metrics.arpu ?? (metrics.activeTenants > 0 ? Math.round(metrics.mrr / metrics.activeTenants) : 0);
+
   const kpiCards = [
     {
       label: 'MRR',
-      // Design §21: Indian currency — ₹1,24,500
       value: `₹${metrics.mrr.toLocaleString('en-IN')}`,
-      delta: '+12% from last month',
-      deltaUp: true,
+      delta: mrrDelta,
+      deltaUp: (metrics.mrrDeltaPercent ?? 0) >= 0,
       icon: IndianRupee,
       iconBg: 'bg-success/10',
       iconColor: 'text-success',
@@ -57,8 +72,8 @@ export default function SuperadminAnalyticsClient() {
     {
       label: 'ARR',
       value: `₹${metrics.arr.toLocaleString('en-IN')}`,
-      delta: '+15% from last year',
-      deltaUp: true,
+      delta: arrDelta,
+      deltaUp: (metrics.arrDeltaPercent ?? 0) >= 0,
       icon: TrendingUp,
       iconBg: 'bg-primary/10',
       iconColor: 'text-primary',
@@ -66,7 +81,7 @@ export default function SuperadminAnalyticsClient() {
     {
       label: 'Churn Rate',
       value: `${metrics.churnRate}%`,
-      delta: 'Target: < 2%',
+      delta: churnDelta,
       deltaUp: metrics.churnRate < 2,
       icon: ArrowDownRight,
       iconBg: 'bg-danger-bg',
@@ -75,11 +90,21 @@ export default function SuperadminAnalyticsClient() {
     {
       label: 'Active Tenants',
       value: String(metrics.activeTenants),
-      delta: '+3 this week',
+      delta: undefined,
       deltaUp: true,
       icon: Users,
       iconBg: 'bg-warning/10',
       iconColor: 'text-warning',
+    },
+    {
+      label: 'ARPU',
+      // Design §21: Indian currency — ₹1,24,500
+      value: `₹${arpu.toLocaleString('en-IN')}`,
+      delta: 'Avg revenue per tenant',
+      deltaUp: true,
+      icon: DollarSign,
+      iconBg: 'bg-primary/10',
+      iconColor: 'text-primary',
     },
   ];
 
@@ -150,14 +175,13 @@ export default function SuperadminAnalyticsClient() {
       </div>
 
       {/* KPI Cards — Design §5a: gold gradient, icon, trend line */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         {kpiCards.map((card) => {
           const Icon = card.icon;
           return (
             <div
               key={card.label}
-              className="bg-card border border-border p-6 rounded-xl shadow-sm motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-lg motion-safe:transition-all motion-safe:duration-200"
-              style={{ background: 'linear-gradient(180deg, rgba(250,204,21,0.08), rgba(255,255,255,0.02))' }}
+              className="bg-card border border-border p-6 rounded-xl shadow-sm motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-lg motion-safe:transition-all motion-safe:duration-200 bg-gradient-to-b from-yellow-400/10 to-transparent"
             >
               <div className="flex items-center justify-between mb-4">
                 <span className="text-secondary font-medium text-xs uppercase tracking-wider">{card.label}</span>
@@ -166,9 +190,11 @@ export default function SuperadminAnalyticsClient() {
                 </div>
               </div>
               <p className="text-3xl font-bold text-foreground">{card.value}</p>
-              <p className={`text-xs mt-2 font-medium ${card.deltaUp ? 'text-success' : 'text-secondary'}`}>
-                {card.deltaUp ? '↑' : '↓'} {card.delta}
-              </p>
+              {card.delta && (
+                <p className={`text-xs mt-2 font-medium ${card.deltaUp ? 'text-success' : 'text-secondary'}`}>
+                  {card.deltaUp ? '↑' : '↓'} {card.delta}
+                </p>
+              )}
             </div>
           );
         })}

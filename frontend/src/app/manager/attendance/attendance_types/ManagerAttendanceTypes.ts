@@ -13,6 +13,9 @@ export interface Attendance {
   date: string;
   checkIn?: string;
   checkOut?: string;
+  checkOutTime?: string;
+  trainerId?: string;
+  trainerName?: string;
   type: string;
   status?: string;
   member?: { name: string };

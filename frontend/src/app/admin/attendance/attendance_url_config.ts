@@ -10,4 +10,5 @@ export const ADMIN_ATTENDANCE_API = {
   records:  '/api/v1/admin/attendance/records',
   summary:  '/api/v1/admin/attendance/summary',
   trend:    '/api/v1/admin/attendance/trend',
+  absentToday: '/api/v1/admin/attendance/absent-today',
 } as const;

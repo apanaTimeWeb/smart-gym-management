@@ -78,45 +78,17 @@ export function useAttendanceLogic(): AttendanceContextType {
         params.staffId = String(user.id);
       }
 
+      if (filterDate !== 'All Time') {
+        params.date = filterDate;
+      }
+
       const [attRes, statsRes, memRes] = await Promise.all([
         attendanceApi.fetchAttendanceRecords(params) as unknown as Promise<ApiResponse<any>>,
         attendanceApi.getTodayStats() as unknown as Promise<ApiResponse<any>>,
         trainerSharedApi.fetchMembersBasic({ limit: '1000', status: 'active' }) as unknown as Promise<ApiResponse<{ members: Member[] }>>,
       ]);
 
-      let fetchedRecords = attRes.data?.attendance || attRes.data?.attendances || attRes.data || [];
-      
-      if (tab === 'Members') {
-        fetchedRecords = fetchedRecords.filter((r: Attendance) => r.type === 'MEMBER');
-      } else {
-        fetchedRecords = fetchedRecords.filter((r: Attendance) => r.type === 'STAFF' && (!user?.id || String(r.staffId) === String(user.id) || String(r.staff?.id) === String(user.id)));
-      }
-      
-      if (debouncedSearch) {
-        const q = debouncedSearch.toLowerCase();
-        fetchedRecords = fetchedRecords.filter((r: Attendance) => 
-          (r.member?.name && r.member.name?.toLowerCase().includes(q)) || 
-          (r.staff?.name && r.staff.name?.toLowerCase().includes(q))
-        );
-      }
-
-      if (filterDate !== 'All Time') {
-        const today = new Date();
-        today.setHours(0,0,0,0);
-        const todayTime = today.getTime();
-        
-        fetchedRecords = fetchedRecords.filter((r: Attendance) => {
-          const d = new Date(r.date);
-          d.setHours(0,0,0,0);
-          const rTime = d.getTime();
-          
-          if (filterDate === 'Today') return rTime === todayTime;
-          if (filterDate === 'Yesterday') return rTime === todayTime - 86400000;
-          if (filterDate === 'Last 7 Days') return rTime >= todayTime - 7 * 86400000;
-          if (filterDate === 'This Month') return d.getMonth() === today.getMonth() && d.getFullYear() === today.getFullYear();
-          return true;
-        });
-      }
+      const fetchedRecords = attRes.data?.attendance || attRes.data?.attendances || attRes.data || [];
 
       setRecords(fetchedRecords);
       setTotalRecords(attRes.data?.total || fetchedRecords.length || 0);
@@ -140,6 +112,8 @@ export function useAttendanceLogic(): AttendanceContextType {
         staffId: data.staffId,
         date: data.date,
         checkIn: data.checkIn,
+        checkOut: data.checkOut,
+        notes: data.notes,
         type: data.type
       });
       showToast((res as { message?: string }).message || 'Attendance marked successfully', 'success');

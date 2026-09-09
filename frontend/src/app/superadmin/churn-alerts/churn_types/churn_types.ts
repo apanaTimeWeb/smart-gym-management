@@ -19,6 +19,8 @@ export interface ChurnAlert {
   paymentFailures: number;
   daysUntilRenewal: number;
   mrr: number;
+  contractEndDate?: string;
+  lastPaymentDate?: string;
   notes: string;
   flaggedAt: string; // ISO 8601 UTC
 }

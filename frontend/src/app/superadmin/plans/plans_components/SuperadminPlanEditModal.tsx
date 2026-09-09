@@ -74,7 +74,7 @@ export default function SuperadminPlanEditModal() {
   if (!isOpen || !selectedPlan) return null;
 
   const onSubmit: SubmitHandler<PlanFormValues> = async (data) => {
-    editMutation.mutate({ ...data, features: data.features.map(f => f.value) });
+    editMutation.mutate({ ...data, features: data.features.map(f => f.value), currency: 'INR', isPublic: true, trialDays: 14, setupFee: 0 });
   };
 
     useWarnIfUnsavedChanges(isDirty);

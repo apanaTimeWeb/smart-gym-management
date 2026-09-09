@@ -52,14 +52,14 @@ export const ATTENDANCE_CALENDAR_DAYS = 30;
 
 export const MSG_TEMPLATES = {
   EXPIRED: (name: string) => `Hi ${name}! 🔔\n\nYour membership has expired. Renew today to continue your fitness journey!\n\n— Team GymSmart`,
-  PENDING: (name: string, formattedAmount: string) => `Hi ${name} 🙏\n\nFriendly reminder: You have a pending amount of ${formattedAmount}. Please clear your dues at the earliest.\n\n— Team GymSmart`,
   DEFAULT: (name: string) => `Hi ${name}! 👋\n\nThis is a message from GymSmart. We hope you're enjoying your fitness journey!\n\n— Team GymSmart`
 };
 
-export const MEMBERS_TABLE_HEADERS = ['ID', 'MEMBER', 'AGE/GENDER', 'STATUS', 'EXPIRY', 'LAST WORKOUT', 'PROGRESS', 'ACTIONS'];
+export const MEMBERS_TABLE_HEADERS = ['ID', 'MEMBER', 'AGE/GENDER', 'STATUS', 'EXPIRY', 'FITNESS GOAL', 'LAST WORKOUT', 'PLANS (DIET/WORKOUT)', 'CHECK-IN DAYS', 'PROGRESS', 'ACTIONS'];
 export const PROFILE_TABS = [
   { id: 'overview', label: 'Basic Info' },
   { id: 'fitness', label: 'Fitness Info' },
+  { id: 'assessment', label: 'Fitness Assessment' },
   { id: 'progress', label: 'Progress & Measurements' },
   { id: 'workout', label: 'Workout Plan' },
   { id: 'diet', label: 'Diet Plan' },

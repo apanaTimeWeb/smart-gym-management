@@ -22,6 +22,12 @@ export interface Tenant {
   memberCount: number;
   monthlyRevenue: number;
   databaseVersion: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  gstin?: string;
+  trialEndsAt?: string;
+  lastLoginAt?: string;
 }
 
 export interface AuditLog {
@@ -41,8 +47,15 @@ export interface SaaSDashboardMetrics {
   totalGyms: number;
   activeGyms: number;
   suspendedGyms: number;
+  trialGyms: number;
   totalEndUsers: number;
   monthlyRecurringRevenue: number;
+  mrrDeltaPercent?: number;
+  arrDeltaPercent?: number;
+  arpu?: number;
+  revenueByTier?: { plan: string; amount: number }[];
+  overdueInvoicesCount: number;
+  pendingRevenue: number;
   recentOnboards: Tenant[];
 }
 
@@ -68,6 +81,11 @@ export interface SubscriptionPlan {
   binaryLimitGb: number;
   features: string[];
   activeTenants: number;
+  isPublic: boolean;
+  trialDays: number;
+  setupFee: number;
+  currency: string;
+  isArchived?: boolean;
 }
 
 export type CreatePlanPayload = Omit<SubscriptionPlan, 'id' | 'activeTenants'>;

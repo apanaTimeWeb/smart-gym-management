@@ -63,7 +63,14 @@ export default function SuperadminPlanCreateModal() {
   const handleClose = () => { reset(); closeCreateModal(); };
 
   const onSubmit: SubmitHandler<PlanFormValues> = async (data) => {
-    createMutation.mutate({ ...data, features: data.features.map(f => f.value) });
+    createMutation.mutate({ 
+      ...data, 
+      features: data.features.map(f => f.value),
+      currency: 'INR',
+      isPublic: true,
+      trialDays: 14,
+      setupFee: 0
+    });
   };
 
   return (

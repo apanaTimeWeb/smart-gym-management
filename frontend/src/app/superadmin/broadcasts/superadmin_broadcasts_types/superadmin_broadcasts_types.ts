@@ -11,6 +11,10 @@ export interface Broadcast {
   targetGymIds: string[];
   scheduledDate: string | null;
   sentDate: string | null;
+  totalRecipients?: number;
+  deliveredCount?: number;
+  failedCount?: number;
+  audience?: BroadcastAudience;
 }
 
 export const BroadcastSchema = z.object({

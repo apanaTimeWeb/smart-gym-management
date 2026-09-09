@@ -63,7 +63,12 @@ export default function TrainerMembersTable() {
                           {m.name.charAt(0)}
                         </div>
                         <div>
-                          <p className="text-sm font-semibold text-foreground">{m.name}</p>
+                          <div className="flex items-center gap-1.5">
+                            <p className="text-sm font-semibold text-foreground">{m.name}</p>
+                            {m.isPT && (
+                              <span className="text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded bg-info/10 text-info border border-info/20">PT</span>
+                            )}
+                          </div>
                           <p className="text-xs text-secondary">{maskSensitiveData(m.phone, 'phone')}</p>
                         </div>
                       </div>
@@ -76,13 +81,21 @@ export default function TrainerMembersTable() {
                         {m.status}
                       </span>
                     </td>
-                    <td className="px-5 py-3.5 text-sm text-secondary">{new Date(m.expiryDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
-                    <td className="px-5 py-3.5 text-sm text-secondary">{m.lastWorkout || '2 days ago'}</td>
-                    <td className="px-5 py-3.5 text-sm">
+                    <td className="px-5 py-3.5 text-sm text-secondary whitespace-nowrap">{new Date(m.expiryDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                    <td className="px-5 py-3.5 text-sm text-foreground whitespace-nowrap">{m.fitnessGoal || 'General Fitness'}</td>
+                    <td className="px-5 py-3.5 text-sm text-secondary whitespace-nowrap">{m.lastWorkout || '2 days ago'}</td>
+                    <td className="px-5 py-3.5 text-sm whitespace-nowrap">
+                      <div className="flex gap-2">
+                        <span className={`w-2 h-2 rounded-full ${m.assignedDietId ? 'bg-success' : 'bg-input'}`} title="Diet Plan" />
+                        <span className={`w-2 h-2 rounded-full ${m.assignedWorkoutId ? 'bg-primary' : 'bg-input'}`} title="Workout Plan" />
+                      </div>
+                    </td>
+                    <td className="px-5 py-3.5 text-sm text-secondary whitespace-nowrap">{m.daysSinceLastCheckIn ?? 2} days</td>
+                    <td className="px-5 py-3.5 text-sm whitespace-nowrap">
                       <span className={`inline-flex px-2 py-1 rounded-md text-xs font-medium ${
-                        m.progressStatus === 'Good' ? 'bg-success-bg text-success' : 
-                        m.progressStatus === 'Needs Attention' ? 'bg-danger-bg text-danger' : 
-                        'bg-warning-bg text-warning'
+                        m.progressStatus === 'Good' ? 'bg-success/10 text-success' : 
+                        m.progressStatus === 'Needs Attention' ? 'bg-danger/10 text-danger' : 
+                        'bg-warning/10 text-warning'
                       }`}>
                         {m.progressStatus || 'Average'}
                       </span>

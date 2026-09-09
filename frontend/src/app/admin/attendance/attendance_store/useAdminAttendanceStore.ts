@@ -13,6 +13,8 @@ interface AdminAttendanceStoreState {
   setDateRange: (d: DateRangeFilter) => void;
   currentPage: number;
   setCurrentPage: (p: number) => void;
+  visibleColumns: string[];
+  setVisibleColumns: (cols: string[]) => void;
 }
 
 export const useAdminAttendanceStore = create<AdminAttendanceStoreState>((set) => ({
@@ -26,4 +28,6 @@ export const useAdminAttendanceStore = create<AdminAttendanceStoreState>((set) =
   setDateRange: (d) => set({ dateRange: d, currentPage: 1 }),
   currentPage: 1,
   setCurrentPage: (p) => set({ currentPage: p }),
+  visibleColumns: ['Member', 'Branch', 'Time', 'Status'],
+  setVisibleColumns: (cols) => set({ visibleColumns: cols }),
 }));

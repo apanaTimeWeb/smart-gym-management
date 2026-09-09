@@ -12,6 +12,7 @@ export interface CreateManualPaymentDto {
 }
 
 export const invoicesApi = {
+  /** GET /superadmin/invoices — fetch paginated/filtered invoice list */
   fetchInvoices: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
     return apiFetch<ApiResponse<SaaSInvoice[]>>(`${SuperadminUrlConfig.BACKEND_API.INVOICES_BASE}${q}`);
@@ -24,6 +25,25 @@ export const invoicesApi = {
       body: JSON.stringify(dto),
     }),
 
-  getDownloadUrl: (id: string) => 
+  /** GET /superadmin/invoices/:id/download — returns a signed PDF download URL */
+  getDownloadUrl: (id: string) =>
     apiFetch<ApiResponse<{ downloadUrl: string }>>(`${SuperadminUrlConfig.BACKEND_API.INVOICES_BASE}/${id}/download`),
+
+  /**
+   * GET /superadmin/invoices/export — streams a CSV of all invoices matching current filters.
+   * Returns a signed download URL from the backend.
+   */
+  exportInvoicesCSV: (params?: Record<string, string>) => {
+    const q = params ? '?' + new URLSearchParams(params).toString() : '';
+    return apiFetch<ApiResponse<{ downloadUrl: string }>>(`${SuperadminUrlConfig.BACKEND_API.INVOICES_BASE}/export${q}`);
+  },
+
+  /**
+   * POST /superadmin/invoices/:id/resend — resends the invoice email to the tenant's admin email.
+   * Used for OVERDUE and PENDING invoices.
+   */
+  resendInvoiceEmail: (id: string) =>
+    apiFetch<ApiResponse<null>>(`${SuperadminUrlConfig.BACKEND_API.INVOICES_BASE}/${id}/resend`, {
+      method: 'POST',
+    }),
 };

@@ -8,9 +8,9 @@ export const WorkoutUrlConfig = {
     DIET_PLANS: '/trainer/workout',
   },
   BACKEND_API: {
-    WORKOUTS_BASE: '/trainer/workout/workouts',
-    WORKOUT_UPDATE: (id: string) => `/trainer/workout/workouts/${id}`,
-    WORKOUT_DELETE: (id: string) => `/trainer/workout/workouts/${id}`,
+    WORKOUTS_BASE: '/trainer/workout/plans',
+    WORKOUT_UPDATE: (id: string) => `/trainer/workout/plans/${id}`,
+    WORKOUT_DELETE: (id: string) => `/trainer/workout/plans/${id}`,
     EXERCISES_BASE: '/trainer/workout/exercises',
     EXERCISE_UPDATE: (id: string) => `/trainer/workout/exercises/${id}`,
     EXERCISE_DELETE: (id: string) => `/trainer/workout/exercises/${id}`,

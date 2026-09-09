@@ -71,7 +71,7 @@ export interface Payroll {
   status: string; paidAt?: string; notes?: string;
   staff?: { name: string; role: string };
 }
-export interface HrSummary {
+export interface HrSummaryStats {
   totalSalaryThisMonth: number;
   totalSalaryPaid: number;
   totalSalaryDue: number;
@@ -82,6 +82,7 @@ export interface HrSummary {
   totalPayrollThisMonth: number;
   paidCount: number;
 }
+export type HrSummary = HrSummaryStats;
 
 export interface LedgerEntry {
   id: string;

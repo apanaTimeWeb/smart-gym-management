@@ -21,6 +21,7 @@ let MOCK_LEAVES: LeaveRequest[] = [
     startDate: '2024-11-15',
     endDate: '2024-11-16',
     reason: 'Family function',
+    leaveType: 'Personal',
     status: 'APPROVED',
     createdAt: '2024-11-01T10:00:00Z'
   },
@@ -30,6 +31,7 @@ let MOCK_LEAVES: LeaveRequest[] = [
     startDate: '2024-12-25',
     endDate: '2024-12-26',
     reason: 'Holiday travel',
+    leaveType: 'Casual Leave',
     status: 'PENDING',
     createdAt: '2024-12-01T10:00:00Z'
   }

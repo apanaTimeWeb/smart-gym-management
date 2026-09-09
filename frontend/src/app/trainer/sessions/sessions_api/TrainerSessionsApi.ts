@@ -11,6 +11,9 @@ export interface CreateSessionDto {
   time: string;
   duration: string;
   type: 'PT' | 'Group';
+  recurrenceType?: 'none' | 'weekly' | 'biweekly';
+  recurrenceEndDate?: string;
+  location?: string;
 }
 
 /**

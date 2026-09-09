@@ -50,12 +50,12 @@ export function useAdminAnnouncementsLogic() {
   const createMutation = useMutation({
     mutationFn: (payload: AnnouncementFormValues) => announcementsApi.createAnnouncement(payload),
     onSuccess: () => {
-      toast.success('Announcement created successfully');
+      toast.success('Announcement created');
       setShowModal(false);
       qc.invalidateQueries({ queryKey: ['adminAnnouncements'] });
       qc.invalidateQueries({ queryKey: ['adminAnnouncementsKPIs'] });
     },
-    onError: () => toast.error('Failed to create announcement. Please try again.'),
+    onError: (err: Error) => toast.error(err.message ?? 'Failed to create announcement'),
   });
 
   const updateMutation = useMutation({
@@ -67,7 +67,7 @@ export function useAdminAnnouncementsLogic() {
       setEditingAnnouncement(null);
       qc.invalidateQueries({ queryKey: ['adminAnnouncements'] });
     },
-    onError: () => toast.error('Failed to update announcement. Please try again.'),
+    onError: (err: Error) => toast.error(err.message ?? 'Failed to update announcement'),
   });
 
   const deleteMutation = useMutation({
@@ -77,16 +77,16 @@ export function useAdminAnnouncementsLogic() {
       qc.invalidateQueries({ queryKey: ['adminAnnouncements'] });
       qc.invalidateQueries({ queryKey: ['adminAnnouncementsKPIs'] });
     },
-    onError: () => toast.error('Failed to delete announcement. Please try again.'),
+    onError: (err: Error) => toast.error(err.message ?? 'Failed to delete announcement'),
   });
 
   const pinMutation = useMutation({
     mutationFn: (id: string) => announcementsApi.togglePin(id),
-    onSuccess: (data) => {
-      toast.success(data.isPinned ? 'Announcement pinned' : 'Announcement unpinned');
+    onSuccess: (res: Announcement) => {
+      toast.success(res.isPinned ? 'Pinned' : 'Unpinned');
       qc.invalidateQueries({ queryKey: ['adminAnnouncements'] });
     },
-    onError: () => toast.error('Failed to update pin status. Please try again.'),
+    onError: (err: Error) => toast.error(err.message ?? 'Failed to update pin status'),
   });
 
   const openCreate = useCallback(() => {

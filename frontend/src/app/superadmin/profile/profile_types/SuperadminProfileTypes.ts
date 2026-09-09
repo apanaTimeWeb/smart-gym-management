@@ -5,6 +5,8 @@ export interface SuperadminProfileData {
   name: string;
   email: string;
   phone: string;
+  timezone?: string;
+  language?: string;
   role: 'SUPERADMIN';
   twoFactorEnabled: boolean;
   lastLoginAt: string;
@@ -14,6 +16,8 @@ export interface SuperadminProfileData {
 export interface UpdateSuperadminProfilePayload {
   name: string;
   phone: string;
+  timezone?: string;
+  language?: string;
 }
 
 export interface UpdateSuperadminPasswordPayload {

@@ -8,9 +8,11 @@ import type { ChurnKpiData } from '@/app/superadmin/churn-alerts/churn_types/chu
 
 interface SuperadminChurnKPIsProps {
   kpis: ChurnKpiData;
+  activeFilter?: string;
+  onFilterClick?: (filter: string) => void;
 }
 
-export default function SuperadminChurnKPIs({ kpis }: SuperadminChurnKPIsProps) {
+export default function SuperadminChurnKPIs({ kpis, activeFilter, onFilterClick }: SuperadminChurnKPIsProps) {
   const cards = [
     {
       label: 'Total At Risk',
@@ -18,6 +20,7 @@ export default function SuperadminChurnKPIs({ kpis }: SuperadminChurnKPIsProps) 
       icon: Activity,
       color: 'text-warning',
       iconBg: 'bg-warning-bg',
+      filter: 'ALL',
     },
     {
       label: 'Critical Risk',
@@ -25,6 +28,7 @@ export default function SuperadminChurnKPIs({ kpis }: SuperadminChurnKPIsProps) 
       icon: AlertTriangle,
       color: 'text-danger',
       iconBg: 'bg-danger-bg',
+      filter: 'CRITICAL',
     },
     {
       label: 'High Risk',
@@ -32,6 +36,7 @@ export default function SuperadminChurnKPIs({ kpis }: SuperadminChurnKPIsProps) 
       icon: TrendingDown,
       color: 'text-warning',
       iconBg: 'bg-warning-bg',
+      filter: 'HIGH',
     },
     {
       label: 'MRR At Risk',
@@ -39,6 +44,7 @@ export default function SuperadminChurnKPIs({ kpis }: SuperadminChurnKPIsProps) 
       icon: DollarSign,
       color: 'text-danger',
       iconBg: 'bg-danger-bg',
+      filter: null,
     },
   ];
 
@@ -46,10 +52,17 @@ export default function SuperadminChurnKPIs({ kpis }: SuperadminChurnKPIsProps) 
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
       {cards.map((card) => {
         const Icon = card.icon;
+        const isActive = activeFilter === card.filter;
+        const isClickable = !!card.filter && !!onFilterClick;
         return (
           <div
             key={card.label}
-            className="bg-card border border-border rounded-xl p-4 shadow-sm motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-lg motion-safe:transition-all motion-safe:duration-200"
+            onClick={() => isClickable && onFilterClick!(card.filter!)}
+            className={`bg-card border rounded-xl p-4 shadow-sm motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-lg motion-safe:transition-all motion-safe:duration-200 ${
+              isClickable ? 'cursor-pointer' : 'cursor-default'
+            } ${
+              isActive ? 'border-primary ring-1 ring-primary/40' : 'border-border'
+            }`}
             style={{ background: KPI_CARD_GRADIENT }}
           >
             <div className="flex items-start justify-between mb-3">

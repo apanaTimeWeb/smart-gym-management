@@ -7,5 +7,8 @@ export const AttendanceUrlConfig = {
     BASE: '/manager/attendance',
     TODAY_STATS: '/manager/attendance/today-stats',
     HISTORY: '/manager/attendance/history',
+    CHECKOUT: (id: string) => `/manager/attendance/${id}/checkout`,
+    MONTHLY: '/manager/attendance/monthly',
+    DAILY: '/manager/attendance/daily',
   }
 };

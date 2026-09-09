@@ -10,4 +10,5 @@ export const TRAINER_PROGRESS_API_ROUTES = {
   update: (memberId: string, entryId: string) => `/api/v1/trainer/members/${memberId}/progress/${entryId}`,
   delete: (memberId: string, entryId: string) => `/api/v1/trainer/members/${memberId}/progress/${entryId}`,
   summary: (memberId: string) => `/api/v1/trainer/members/${memberId}/progress/summary`,
+  export: (memberId: string, format: 'pdf' | 'csv' = 'pdf') => `/api/v1/trainer/members/${memberId}/progress/export?format=${format}`,
 } as const;

@@ -10,9 +10,6 @@ import type {
 } from '@/app/trainer/earnings/earnings_types/TrainerEarningsTypes';
 import { trainerEarningsApi } from '@/app/trainer/earnings/earnings_api/trainer_earnings_api';
 import {
-  MOCK_EARNINGS_KPIS,
-  MOCK_PENDING_PAYOUTS,
-  MOCK_EARNINGS_HISTORY,
   EARNINGS_ITEMS_PER_PAGE,
 } from '@/app/trainer/earnings/earnings_utils/TrainerEarningsSharedConstants';
 
@@ -23,66 +20,63 @@ export function useTrainerEarningsLogic(): TrainerEarningsContextType {
 
   const [kpis, setKpis] = useState<TrainerEarningsKPIsData | null>(null);
   const [pendingPayouts, setPendingPayouts] = useState<TrainerPendingPayout[]>([]);
-  const [history, setHistory] = useState<TrainerEarningsHistoryRow[]>([]);
+  const [paginatedHistory, setPaginatedHistory] = useState<TrainerEarningsHistoryRow[]>([]);
+  const [totalPages, setTotalPages] = useState(1);
   const [fetchState, setFetchState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [error, setError] = useState('');
 
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
   const search = searchParams.get('search') || '';
+  const startDate = searchParams.get('startDate') || '';
+  const endDate = searchParams.get('endDate') || '';
 
-  const setCurrentPage = useCallback((page: number) => {
+  const setUrlParam = useCallback((key: string, value: string | null) => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set('page', page.toString());
+    if (value) params.set(key, value);
+    else params.delete(key);
+    if (key !== 'page') params.set('page', '1');
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   }, [pathname, router, searchParams]);
 
-  const setSearch = useCallback((val: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (val) params.set('search', val);
-    else params.delete('search');
-    params.set('page', '1'); // reset page on search
-    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-  }, [pathname, router, searchParams]);
+  const setCurrentPage = useCallback((page: number) => setUrlParam('page', page.toString()), [setUrlParam]);
+  const setSearch = useCallback((val: string) => setUrlParam('search', val || null), [setUrlParam]);
+  const setStartDate = useCallback((val: string) => setUrlParam('startDate', val || null), [setUrlParam]);
+  const setEndDate = useCallback((val: string) => setUrlParam('endDate', val || null), [setUrlParam]);
 
   const loadAll = useCallback(async () => {
     setFetchState('loading');
     setError('');
     try {
-      // TODO: Replace with real API calls once backend is ready
-      // const [kpisRes, pendingRes, historyRes] = await Promise.all([
-      //   trainerEarningsApi.getKPIs(),
-      //   trainerEarningsApi.getPending(),
-      //   trainerEarningsApi.getHistory(),
-      // ]);
-      // setKpis(kpisRes.data);
-      // setPendingPayouts(pendingRes.data);
-      // setHistory(historyRes.data);
+      const historyParams: Record<string, string> = {
+        page: currentPage.toString(),
+        limit: EARNINGS_ITEMS_PER_PAGE.toString(),
+      };
+      if (search) historyParams.search = search;
+      if (startDate) historyParams.startDate = startDate;
+      if (endDate) historyParams.endDate = endDate;
 
-      await new Promise(r => setTimeout(r, 600)); // simulate network
-      setKpis(MOCK_EARNINGS_KPIS);
-      setPendingPayouts(MOCK_PENDING_PAYOUTS);
-      setHistory(MOCK_EARNINGS_HISTORY);
+      const [kpisRes, pendingRes, historyRes] = await Promise.all([
+        trainerEarningsApi.getKPIs(),
+        trainerEarningsApi.getPending(),
+        trainerEarningsApi.getHistory(historyParams),
+      ]);
+      setKpis(kpisRes.data || null);
+      setPendingPayouts(pendingRes.data || []);
+      // Backend must return { data: { rows, total, pages } }
+      const histData = historyRes.data as any;
+      setPaginatedHistory(histData?.rows || histData || []);
+      setTotalPages(histData?.pages || Math.ceil((histData?.total || 0) / EARNINGS_ITEMS_PER_PAGE) || 1);
       
       setFetchState('success');
     } catch (e) {
       setError((e as Error).message);
       setFetchState('error');
     }
-  }, []);
+  }, [currentPage, search, startDate, endDate]);
 
   useEffect(() => {
     void loadAll();
   }, [loadAll]);
-
-  // Client-side filtering and pagination
-  const filteredHistory = history.filter(row => 
-    row.description.toLowerCase().includes(search.toLowerCase()) || 
-    row.type.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const totalPages = Math.ceil(filteredHistory.length / EARNINGS_ITEMS_PER_PAGE) || 1;
-  const startIndex = (currentPage - 1) * EARNINGS_ITEMS_PER_PAGE;
-  const paginatedHistory = filteredHistory.slice(startIndex, startIndex + EARNINGS_ITEMS_PER_PAGE);
 
   return {
     kpis,
@@ -95,6 +89,11 @@ export function useTrainerEarningsLogic(): TrainerEarningsContextType {
     totalPages,
     search,
     setSearch,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
     loadAll,
   };
 }
+

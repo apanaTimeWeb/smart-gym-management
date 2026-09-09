@@ -213,7 +213,7 @@ function FinanceInner() {
                         const ms = METHOD_STYLES[p.method] ?? { bg: 'bg-input', text: 'text-secondary' };
                         return (
                           <tr key={p.id} className="hover:bg-primary/5 motion-safe:transition-colors">
-                            <td className="px-5 py-3.5 text-sm font-bold text-primary whitespace-nowrap">{p.invoiceNo}</td>
+                            <td className="px-5 py-3.5 text-sm font-bold text-primary whitespace-nowrap">{p.invoiceNumber}</td>
                             <td className="px-5 py-3.5 whitespace-nowrap">
                               <p className="text-sm font-semibold text-foreground">{p.member?.name ?? '—'}</p>
                               <p className="text-xs text-secondary">{p.member?.email ?? ''}</p>

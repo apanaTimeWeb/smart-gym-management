@@ -10,7 +10,17 @@ export interface BranchStudent { id: string; name: string; plan: string; status:
 export interface Branch {
   id: string;
   name: string;
+  branchCode?: string;
+  gstNumber?: string;
+  address?: string;
   location: string;
+  contactPhone?: string;
+  contactEmail?: string;
+  openingTime?: string;
+  closingTime?: string;
+  maxCapacity?: number;
+  currentOccupancy?: number;
+  equipmentCount?: number;
   status: 'active' | 'inactive';
   revenue: number;
   expenses: number;

@@ -10,6 +10,7 @@ import SuperadminChurnFilters from '@/app/superadmin/churn-alerts/churn_componen
 import SuperadminChurnTable from '@/app/superadmin/churn-alerts/churn_components/SuperadminChurnTable/SuperadminChurnTable';
 import SuperadminChurnEmptyState from '@/app/superadmin/churn-alerts/churn_components/SuperadminChurnEmptyState/SuperadminChurnEmptyState';
 import SuperadminChurnActionModal from '@/app/superadmin/churn-alerts/churn_components/SuperadminChurnActionModal/SuperadminChurnActionModal';
+import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 import { churnAlertsApi } from '@/app/superadmin/churn-alerts/churn_api/superadmin_churn_api';
 import type { ChurnAlert, ChurnFilterStatus, ChurnActionPayload } from '@/app/superadmin/churn-alerts/churn_types/churn_types';
 
@@ -18,6 +19,8 @@ export default function SuperadminChurnMain() {
   const [search, setSearch] = useState('');
   const [activeFilter, setActiveFilter] = useState<ChurnFilterStatus>('ALL');
   const [actionAlert, setActionAlert] = useState<ChurnAlert | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const CHURN_PAGE_SIZE = 20;
 
   const { data: alertsRes, isLoading: alertsLoading, isError: alertsError } = useQuery({
     queryKey: ['superadmin', 'churn-alerts'],
@@ -57,6 +60,9 @@ export default function SuperadminChurnMain() {
     });
   }, [alerts, search, activeFilter]);
 
+  const totalPages = Math.ceil(filtered.length / CHURN_PAGE_SIZE) || 1;
+  const paginatedAlerts = filtered.slice((currentPage - 1) * CHURN_PAGE_SIZE, currentPage * CHURN_PAGE_SIZE);
+
   function handleActionConfirm(payload: ChurnActionPayload) {
     updateActionMutation.mutate(payload);
   }
@@ -92,7 +98,11 @@ export default function SuperadminChurnMain() {
         </div>
       </div>
 
-      <SuperadminChurnKPIs kpis={kpis} />
+      <SuperadminChurnKPIs
+        kpis={kpis}
+        activeFilter={activeFilter}
+        onFilterClick={(f) => { setActiveFilter(f as ChurnFilterStatus); setCurrentPage(1); }}
+      />
 
       <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
         <SuperadminChurnFilters
@@ -107,10 +117,17 @@ export default function SuperadminChurnMain() {
             onClearFilter={() => { setSearch(''); setActiveFilter('ALL'); }}
           />
         ) : (
-          <SuperadminChurnTable
-            alerts={filtered}
-            onActionClick={setActionAlert}
-          />
+          <>
+            <SuperadminChurnTable
+              alerts={paginatedAlerts}
+              onActionClick={setActionAlert}
+            />
+            <SuperadminPagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+          </>
         )}
       </div>
 

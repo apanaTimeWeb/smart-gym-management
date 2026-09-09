@@ -23,7 +23,7 @@ export interface RecentMember {
 
 export interface RecentPayment {
   id: string; 
-  invoiceNo: string; 
+  invoiceNumber: string; 
   amount: number; 
   method: string; 
   paidAt: string;

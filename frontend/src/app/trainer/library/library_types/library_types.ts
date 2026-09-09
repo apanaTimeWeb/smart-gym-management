@@ -28,13 +28,13 @@ export interface LibraryContextType {
   hideToast: () => void;
   loadAll: () => Promise<void>;
 
-  // Diet Modal State
+  // Diet Modal State — view/assign only for Trainer role; create/edit/delete are Manager-only
   showDietModal: boolean;
   editDietId: string | null;
-  editDietData: DietFormValues | null;
+  editDietData: DietPlan | null;
   openAddDiet: () => void;
   openEditDiet: (d: DietPlan) => void;
   closeDietModal: () => void;
-  saveDietPlan: (data: DietFormValues) => Promise<void>;
+  saveDietPlan: () => Promise<void>;
   deleteDietPlan: (id: string) => Promise<void>;
 }

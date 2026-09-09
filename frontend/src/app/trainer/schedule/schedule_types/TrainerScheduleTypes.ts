@@ -9,6 +9,9 @@ export interface WeeklyAvailability {
 }
 
 export type LeaveStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
+export type LeaveType = 'Sick Leave' | 'Casual Leave' | 'Emergency' | 'Personal' | 'Other';
+
+export const LEAVE_TYPE_OPTIONS: LeaveType[] = ['Sick Leave', 'Casual Leave', 'Emergency', 'Personal', 'Other'];
 
 export interface LeaveRequest {
   id: string;
@@ -16,6 +19,7 @@ export interface LeaveRequest {
   startDate: string; // YYYY-MM-DD
   endDate: string;   // YYYY-MM-DD
   reason: string;
+  leaveType: LeaveType;
   status: LeaveStatus;
   managerNotes?: string;
   createdAt: string;
@@ -24,6 +28,7 @@ export interface LeaveRequest {
 export interface TrainerScheduleState {
   availability: WeeklyAvailability[];
   leaveRequests: LeaveRequest[];
+  leaveBalance: number;
   fetchState: 'idle' | 'loading' | 'success' | 'error';
   saving: boolean;
 

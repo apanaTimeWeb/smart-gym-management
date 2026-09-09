@@ -9,7 +9,7 @@ export interface Member {
   planId: string; plan?: { id: string; name: string; tier: string };
   billingCycle: string; status: string;
   joinDate: string; expiryDate: string;
-  paidAmount: number; pendingAmount: number; photo?: string;
+  photo?: string;
   createdAt: string;
   age?: number;
   lastWorkout?: string;
@@ -22,7 +22,10 @@ export interface Member {
   assignedWorkoutId?: string;
   assignedWorkout?: Workout;
   fitnessGoal?: string;
+  daysSinceLastCheckIn?: number;
 }
+
+export type AssignedMemberView = Omit<Member, 'billingCycle'>;
 
 export interface MemberStats {
   total: number; active: number; pending: number; expired: number;
@@ -60,6 +63,7 @@ export interface WorkoutExercise {
   reps: string;
   weight: string;
   restTime: string;
+  sortOrder: number;
 }
 
 export interface Workout {
