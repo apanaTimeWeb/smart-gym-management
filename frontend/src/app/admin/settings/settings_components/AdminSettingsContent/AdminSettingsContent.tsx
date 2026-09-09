@@ -2,16 +2,20 @@
 'use client';
 
 import { useState } from 'react';
-import { RefreshCw, Save, CheckCircle, XCircle, Shield, Smartphone, Bell, Settings, Copy, ExternalLink, Users, Plus } from 'lucide-react';
+import { RefreshCw, Save, CheckCircle, XCircle, Shield, Smartphone, Bell, Settings, Copy, ExternalLink, Users, Plus, Receipt, CreditCard, ToggleLeft, ToggleRight } from 'lucide-react';
 import { useAdminSettingsLogic } from '@/app/admin/settings/settings_context/useAdminSettingsLogic';
 import {
   MOCK_NOTIFICATION_SETTINGS,
   MOCK_ROLES,
   MOCK_APP_INTEGRATION,
   MOCK_GENERAL_SETTINGS,
+  MOCK_GST_SETTINGS,
+  MOCK_PAYMENT_GATEWAY_SETTINGS,
   TIMEZONE_OPTIONS,
   LANGUAGE_OPTIONS,
   BACKUP_FREQUENCY_OPTIONS,
+  GST_STATE_CODES,
+  TAX_RATE_OPTIONS,
 } from '@/app/admin/settings/settings_utils/AdminSettingsSharedConstants';
 import toast from 'react-hot-toast';
 
@@ -262,6 +266,180 @@ function AppIntegrationTab() {
   );
 }
 
+function GstTaxTab() {
+  const [settings, setSettings] = useState(MOCK_GST_SETTINGS);
+  const set = (key: keyof typeof MOCK_GST_SETTINGS, value: string | boolean) =>
+    setSettings(prev => ({ ...prev, [key]: value }));
+
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div>
+          <label className="block text-sm font-medium text-secondary mb-1">GST Number (GSTIN)</label>
+          <input
+            type="text"
+            value={settings.gstNumber}
+            onChange={e => set('gstNumber', e.target.value.toUpperCase())}
+            placeholder="27AABCU9603R1ZX"
+            maxLength={15}
+            className="w-full px-3 py-2.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-input text-foreground font-mono uppercase"
+          />
+          <p className="text-xs text-secondary mt-1">15-character alphanumeric GSTIN</p>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-secondary mb-1">Business Legal Name</label>
+          <input
+            type="text"
+            value={settings.businessLegalName}
+            onChange={e => set('businessLegalName', e.target.value)}
+            placeholder="As registered with GST"
+            className="w-full px-3 py-2.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-input text-foreground"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-secondary mb-1">Default Tax Rate</label>
+          <select
+            value={settings.taxRate}
+            onChange={e => set('taxRate', e.target.value)}
+            className="w-full px-3 py-2.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-input text-foreground"
+          >
+            {TAX_RATE_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+          </select>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-secondary mb-1">State Code</label>
+          <select
+            value={settings.stateCode}
+            onChange={e => set('stateCode', e.target.value)}
+            className="w-full px-3 py-2.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-input text-foreground"
+          >
+            {GST_STATE_CODES.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+          </select>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-secondary mb-1">HSN / SAC Code</label>
+          <input
+            type="text"
+            value={settings.hsnCode}
+            onChange={e => set('hsnCode', e.target.value)}
+            placeholder="999311"
+            className="w-full px-3 py-2.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-input text-foreground font-mono"
+          />
+          <p className="text-xs text-secondary mt-1">SAC 999311 = Fitness / Sports services</p>
+        </div>
+      </div>
+      <div className="space-y-3 pt-2 border-t border-border">
+        <p className="text-sm font-semibold text-foreground">Invoice Options</p>
+        {[
+          { key: 'showGstOnInvoice' as const, label: 'Show GST breakdown on invoices & receipts' },
+          { key: 'taxInclusivePricing' as const, label: 'Prices are tax-inclusive (GST already included in plan price)' },
+        ].map(f => (
+          <div key={f.key} className="flex items-center justify-between p-3 bg-input/40 rounded-xl border border-border">
+            <ToggleSwitch checked={settings[f.key] as boolean} onChange={v => set(f.key, v)} label={f.label} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PaymentGatewayTab() {
+  const [settings, setSettings] = useState(MOCK_PAYMENT_GATEWAY_SETTINGS);
+  const set = (key: keyof typeof MOCK_PAYMENT_GATEWAY_SETTINGS, value: string | boolean) =>
+    setSettings(prev => ({ ...prev, [key]: value }));
+
+  return (
+    <div className="space-y-6">
+      {/* Razorpay */}
+      <div className="bg-input/40 rounded-xl border border-border p-4 space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+              <CreditCard size={16} className="text-primary" />
+            </div>
+            <p className="text-sm font-semibold text-foreground">Razorpay</p>
+          </div>
+          <ToggleSwitch checked={settings.razorpayEnabled} onChange={v => set('razorpayEnabled', v)} label="" />
+        </div>
+        {settings.razorpayEnabled && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-medium text-secondary mb-1">Key ID</label>
+              <input
+                type="text"
+                value={settings.razorpayKeyId}
+                onChange={e => set('razorpayKeyId', e.target.value)}
+                placeholder="rzp_live_..."
+                className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-input text-foreground font-mono"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-secondary mb-1">Webhook Secret</label>
+              <input
+                type="password"
+                value={settings.razorpayWebhookSecret}
+                onChange={e => set('razorpayWebhookSecret', e.target.value)}
+                placeholder="whsec_..."
+                className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-input text-foreground"
+              />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* UPI */}
+      <div className="bg-input/40 rounded-xl border border-border p-4 space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-success/10 flex items-center justify-center">
+              <Receipt size={16} className="text-success" />
+            </div>
+            <p className="text-sm font-semibold text-foreground">UPI / QR Code</p>
+          </div>
+          <ToggleSwitch checked={settings.upiEnabled} onChange={v => set('upiEnabled', v)} label="" />
+        </div>
+        {settings.upiEnabled && (
+          <div>
+            <label className="block text-xs font-medium text-secondary mb-1">UPI ID</label>
+            <input
+              type="text"
+              value={settings.upiId}
+              onChange={e => set('upiId', e.target.value)}
+              placeholder="yourgym@upi"
+              className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-input text-foreground"
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Other options */}
+      <div className="space-y-3 pt-2 border-t border-border">
+        <p className="text-sm font-semibold text-foreground">Receipt Settings</p>
+        {[
+          { key: 'cashEnabled' as const, label: 'Accept Cash Payments' },
+          { key: 'autoReceiptEnabled' as const, label: 'Auto-generate receipt on payment' },
+        ].map(f => (
+          <div key={f.key} className="flex items-center justify-between p-3 bg-input/40 rounded-xl border border-border">
+            <ToggleSwitch checked={settings[f.key] as boolean} onChange={v => set(f.key, v)} label={f.label} />
+          </div>
+        ))}
+        <div>
+          <label className="block text-sm font-medium text-secondary mb-1">Receipt Number Prefix</label>
+          <input
+            type="text"
+            value={settings.receiptPrefix}
+            onChange={e => set('receiptPrefix', e.target.value.toUpperCase())}
+            maxLength={6}
+            placeholder="GS"
+            className="w-32 px-3 py-2.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-input text-foreground font-mono uppercase"
+          />
+          <p className="text-xs text-secondary mt-1">e.g. prefix GS → receipt GS-00123</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function GeneralSettingsTab() {
   const [settings, setSettings] = useState(MOCK_GENERAL_SETTINGS);
   const set = (key: keyof typeof MOCK_GENERAL_SETTINGS, value: string | boolean) =>
@@ -395,6 +573,8 @@ export default function AdminSettingsContent() {
         {activeTab === 'Notifications' && <NotificationsTab />}
         {activeTab === 'Roles & Permissions' && <RolesTab />}
         {activeTab === 'App Integration' && <AppIntegrationTab />}
+        {activeTab === 'GST & Tax' && <GstTaxTab />}
+        {activeTab === 'Payment Gateway' && <PaymentGatewayTab />}
         {activeTab === 'General Settings' && <GeneralSettingsTab />}
       </div>
     </div>

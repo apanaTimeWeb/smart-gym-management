@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Centralized constants, schema, and shared utilities for the Settings module.
-import { Building, Bell, Shield, Smartphone, Settings as SettingsIcon, Webhook } from 'lucide-react';
+import { Building, Bell, Shield, Smartphone, Settings as SettingsIcon, Webhook, Receipt, CreditCard } from 'lucide-react';
 
 export const SETTINGS_TABS = [
   { icon: Building, title: 'Gym Profile', desc: 'Update gym name, logo, address, and contact details', color: 'text-info', bg: 'bg-info-bg' },
@@ -7,6 +7,8 @@ export const SETTINGS_TABS = [
   { icon: Shield, title: 'Roles & Permissions', desc: 'Manage admin roles and access control', color: 'text-purple', bg: 'bg-purple-bg' },
   { icon: Smartphone, title: 'App Integration', desc: 'Member app settings and configurations', color: 'text-success', bg: 'bg-success-bg' },
   { icon: Webhook, title: 'Webhooks', desc: 'Configure API webhooks and integrations', color: 'text-primary', bg: 'bg-primary/20' },
+  { icon: Receipt, title: 'GST & Tax', desc: 'Configure GST number, tax rates, and invoice settings', color: 'text-warning', bg: 'bg-warning-bg' },
+  { icon: CreditCard, title: 'Payment Gateway', desc: 'Manage Razorpay, Stripe, and UPI payment configurations', color: 'text-success', bg: 'bg-success-bg' },
   { icon: SettingsIcon, title: 'General Settings', desc: 'System preferences, timezone, language', color: 'text-secondary', bg: 'bg-card' },
 ];
 
@@ -20,6 +22,47 @@ export const EMPTY_SETTINGS_FORM = {
   twoFactorEnabled: false,
   twoFactorMethod: 'SMS' as 'SMS' | 'TOTP',
 };
+
+export const MOCK_GST_SETTINGS = {
+  gstNumber: '27AABCU9603R1ZX',
+  businessLegalName: '',
+  taxRate: '18',
+  taxInclusivePricing: false,
+  showGstOnInvoice: true,
+  hsnCode: '999311',
+  stateCode: '27',
+};
+
+export const MOCK_PAYMENT_GATEWAY_SETTINGS = {
+  razorpayEnabled: true,
+  razorpayKeyId: 'rzp_live_xxxxxxxxxxxxxxxx',
+  razorpayWebhookSecret: '',
+  stripeEnabled: false,
+  stripePublishableKey: '',
+  upiEnabled: true,
+  upiId: 'gymsmart@upi',
+  cashEnabled: true,
+  autoReceiptEnabled: true,
+  receiptPrefix: 'GS',
+};
+
+export const GST_STATE_CODES = [
+  { value: '27', label: '27 — Maharashtra' },
+  { value: '07', label: '07 — Delhi' },
+  { value: '29', label: '29 — Karnataka' },
+  { value: '33', label: '33 — Tamil Nadu' },
+  { value: '06', label: '06 — Haryana' },
+  { value: '24', label: '24 — Gujarat' },
+  { value: '36', label: '36 — Telangana' },
+];
+
+export const TAX_RATE_OPTIONS = [
+  { value: '0', label: '0% — Exempt' },
+  { value: '5', label: '5% — GST' },
+  { value: '12', label: '12% — GST' },
+  { value: '18', label: '18% — GST (Standard)' },
+  { value: '28', label: '28% — GST (Luxury)' },
+];
 
 export const MOCK_NOTIFICATION_SETTINGS = {
   smsOnJoin: true,

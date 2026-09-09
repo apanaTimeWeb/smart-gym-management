@@ -1,6 +1,7 @@
 // RESPONSIBILITY: Main entry point for Admin Usage & Subscription page. Composes metric cards and plan cards.
 'use client';
 
+import { useRef } from 'react';
 import { RefreshCw, Calendar, CreditCard } from 'lucide-react';
 import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 import AdminUsageMetricCard from '@/app/admin/usage/usage_components/AdminUsageMetricCard/AdminUsageMetricCard';
@@ -10,6 +11,11 @@ import { formatCurrency } from '@/lib/formatters';
 
 export default function AdminUsageMain() {
   const { data, metrics, loadUsage, fetchState } = useAdminUsageLogic();
+  const planCardRef = useRef<HTMLDivElement>(null);
+
+  const handleUpgrade = () => {
+    planCardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   return (
     <div className="min-h-full pb-10 bg-background text-foreground">
@@ -52,13 +58,15 @@ export default function AdminUsageMain() {
           <h2 className="text-sm font-bold text-foreground mb-3 uppercase tracking-wider">Resource Usage</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
             {metrics.map((m) => (
-              <AdminUsageMetricCard key={m.label} metric={m} />
+              <AdminUsageMetricCard key={m.label} metric={m} onUpgrade={handleUpgrade} />
             ))}
           </div>
         </div>
 
         {/* Plan Comparison */}
-        <AdminUsagePlanCard />
+        <div ref={planCardRef}>
+          <AdminUsagePlanCard />
+        </div>
       </div>
     </div>
   );
