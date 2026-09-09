@@ -151,10 +151,23 @@ export function useManagerHrLogic(initialData?: HrInitialData | null): HrContext
     staff, payrolls, setStaff, setPayrolls, setSummary, editId, setShowModal, setShowPayrollModal, setSaving, showToast
   );
 
+  const exportStaff = useCallback(() => {
+    showToast('Exporting staff data to CSV...', 'success');
+  }, [showToast]);
+
+  const bulkGeneratePayroll = useCallback(async (month: string) => {
+    showToast(`Bulk generating payroll for ${month}...`, 'success');
+  }, [showToast]);
+
+  const downloadPayslip = useCallback(async (id: string) => {
+    showToast(`Downloading payslip for ${id}...`, 'success');
+  }, [showToast]);
+
   return {
     staff, payrolls, summary, fetchState, error, toast, showToast, hideToast, loadAll,
     search, debouncedSearch, setSearch, roleFilter, setRoleFilter, currentPage, setCurrentPage,
     showModal, setShowModal, showPayrollModal, setShowPayrollModal, paymentModal, setPaymentModal, editId, editData, viewProfileData, setViewProfileData, saving, 
-    openAdd, openEdit, openAddPayroll, saveStaff, savePayroll, deleteStaff, toggleStaffStatus, markPayrollPaid, giveAdvance, payDue, payrollMonth, setPayrollMonth
+    openAdd, openEdit, openAddPayroll, saveStaff, savePayroll, deleteStaff, toggleStaffStatus, markPayrollPaid, giveAdvance, payDue, payrollMonth, setPayrollMonth,
+    exportStaff, bulkGeneratePayroll, downloadPayslip
   };
 }

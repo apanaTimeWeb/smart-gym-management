@@ -6,6 +6,8 @@ export const MOCK_REFERRALS_KPIS: ManagerReferralsKPIs = {
   totalConverted: 89,
   pendingRewards: 12,
   claimedRewards: 77,
+  conversionRate: 71.8,
+  totalRewardsPaidOut: 38500,
 };
 
 export const MOCK_REFERRALS: ManagerReferral[] = [
@@ -19,6 +21,7 @@ export const MOCK_REFERRALS: ManagerReferral[] = [
     status: 'JOINED',
     rewardStatus: 'PENDING',
     rewardAmount: 500,
+    rewardType: 'CASH',
   },
   {
     id: 'ref-102',
@@ -30,6 +33,7 @@ export const MOCK_REFERRALS: ManagerReferral[] = [
     status: 'JOINED',
     rewardStatus: 'CLAIMED',
     rewardAmount: 500,
+    rewardType: 'CASH',
   },
   {
     id: 'ref-103',
@@ -41,6 +45,7 @@ export const MOCK_REFERRALS: ManagerReferral[] = [
     status: 'PENDING',
     rewardStatus: 'N/A',
     rewardAmount: 500,
+    rewardType: 'CASH',
   },
   {
     id: 'ref-104',
@@ -52,6 +57,7 @@ export const MOCK_REFERRALS: ManagerReferral[] = [
     status: 'REJECTED',
     rewardStatus: 'N/A',
     rewardAmount: 500,
+    rewardType: 'CASH',
   },
   {
     id: 'ref-105',
@@ -63,5 +69,6 @@ export const MOCK_REFERRALS: ManagerReferral[] = [
     status: 'JOINED',
     rewardStatus: 'PENDING',
     rewardAmount: 1000, // Special promo
+    rewardType: 'DISCOUNT',
   }
 ];

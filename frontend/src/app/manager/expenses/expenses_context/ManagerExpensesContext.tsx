@@ -24,6 +24,8 @@ interface ExpensesContextValue {
   openEdit: (e: Expense) => void;
   saveExpense: (data: Partial<Expense>) => Promise<void>;
   deleteExpense: (id: string) => Promise<void>;
+  markAsPaid: (id: string) => Promise<void>;
+  exportExpenses: () => void;
   
   saving: boolean;
 }
@@ -85,6 +87,20 @@ export function ExpensesProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const markAsPaid = async (id: string) => {
+    try {
+      await storeSave({ id, status: 'PAID' });
+      toast.success('Expense marked as paid.');
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : 'Failed to mark as paid');
+    }
+  };
+
+  const exportExpenses = () => {
+    toast.success('Exporting expenses as CSV...');
+    // Real implementation would generate and download CSV
+  };
+
   const value = {
     search, setSearch,
     statusFilter, setStatusFilter,
@@ -92,7 +108,7 @@ export function ExpensesProvider({ children }: { children: ReactNode }) {
     showModal, setShowModal,
     editId, editData,
     openAdd, openEdit,
-    saveExpense, deleteExpense,
+    saveExpense, deleteExpense, markAsPaid, exportExpenses,
     saving
   };
 

@@ -51,6 +51,20 @@ export const MEMBER_STATUS_OPTIONS = [
   { label: 'Banned', value: 'BANNED' }
 ];
 
+/** Gender filter options for the Members toolbar (Rule 3B — centralized for API query param support). */
+export const MEMBER_GENDER_OPTIONS = [
+  { label: 'All Genders', value: 'All' },
+  { label: 'Male', value: 'MALE' },
+  { label: 'Female', value: 'FEMALE' },
+  { label: 'Other', value: 'OTHER' },
+];
+
+export const MEMBER_EXPORT_FORMATS = [
+  { label: 'Export CSV', value: 'csv' as const },
+  { label: 'Export PDF', value: 'pdf' as const },
+];
+
+
 /** Status options for the Edit Member modal dropdown (no 'All Status' entry). (Rule 3B) */
 export const MEMBER_EDIT_STATUS_OPTIONS = [
   { label: 'Active', value: 'ACTIVE' },

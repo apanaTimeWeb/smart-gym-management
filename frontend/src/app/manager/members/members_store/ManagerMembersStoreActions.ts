@@ -216,7 +216,7 @@ export const createMembersMutations = (set: StoreSet, get: StoreGet) => ({
       const pRes = await financeApi.createPayment({
          memberId,
          amount: data.amountPaid,
-         method: data.paymentMethod,
+         method: data.paymentMethod as any,
          status: 'PAID',
          paidAt: new Date().toISOString(),
          invoiceNumber: `INV-REN-${Date.now().toString().slice(-6)}`
@@ -268,7 +268,7 @@ export const createMembersMutations = (set: StoreSet, get: StoreGet) => ({
       const pRes = await financeApi.createPayment({
          memberId,
          amount: data.amount,
-         method: data.method,
+         method: data.method as any,
          status: 'PAID',
          paidAt: new Date().toISOString(),
          invoiceNumber: `INV-PMT-${Date.now().toString().slice(-6)}`

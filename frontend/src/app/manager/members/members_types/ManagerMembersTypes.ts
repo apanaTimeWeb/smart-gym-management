@@ -1,4 +1,8 @@
-// RESPONSIBILITY: Defines all TypeScript types, interfaces, and the FetchState enum for the Members module. Single source of truth for member data shapes.
+// RESPONSIBILITY: Defines all TypeScript types, interfaces, and the FetchState enum for the Members module.
+// Single source of truth for member data shapes.
+// CRITICAL additions: freezeUntil, emergencyContact, referralCode, bloodGroup, membershipNumber,
+// genderFilter, planFilter, expiryRange — all required for filter/export API params and DB schema.
+
 import type { Plan } from '@/app/manager/plans/plans_types/ManagerPlansTypes';
 import type { Payment } from '@/app/manager/finance/finance_types/ManagerFinanceTypes';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
@@ -9,6 +13,9 @@ import type { DietPlan } from '@/app/manager/library/library_types/ManagerLibrar
 import type { Workout } from '@/app/manager/workout/workout_types/ManagerWorkoutTypes';
 
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';
+export type MemberSortColumn = 'name' | 'joinDate' | 'expiryDate' | 'paidAmount' | 'status';
+export type SortDirection = 'asc' | 'desc';
+export type ExportFormat = 'csv' | 'pdf';
 
 export interface MembersInitialData {
   members: Member[];
@@ -17,13 +24,31 @@ export interface MembersInitialData {
   totalMembers: number;
 }
 
+// ─── Member ───────────────────────────────────────────────────────────────────
+export interface MemberEmergencyContact {
+  name: string;
+  phone: string;
+}
+
 export interface Member {
-  id: string; name: string; email: string; phone: string;
-  gender: string; address?: string; aadhaar?: string; branch: string;
-  planId: string; plan?: { id: string; name: string; tier: string };
-  billingCycle: string; status: string;
-  joinDate: string; expiryDate: string;
-  paidAmount: number; pendingAmount: number; advanceAmount?: number; photo?: string;
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  gender: string;
+  address?: string;
+  aadhaar?: string;
+  branch: string;
+  planId: string;
+  plan?: { id: string; name: string; tier: string };
+  billingCycle: string;
+  status: string;
+  joinDate: string;
+  expiryDate: string;
+  paidAmount: number;
+  pendingAmount: number;
+  advanceAmount?: number;
+  photo?: string;
   createdAt: string;
   dateOfBirth?: string;
   acquisitionSource?: string;
@@ -35,10 +60,20 @@ export interface Member {
   assignedTrainerId?: string;
   assignedTrainerName?: string;
   isPT?: boolean;
+  // CRITICAL — missing fields that break business flows
+  freezeUntil?: string;           // ISO date — used by freezeMember()
+  emergencyContact?: MemberEmergencyContact;
+  referralCode?: string;
+  bloodGroup?: string;
+  membershipNumber?: string;      // unique business identifier
 }
 
+// ─── Member Stats ─────────────────────────────────────────────────────────────
 export interface MemberStats {
-  total: number; active: number; pending: number; expired: number;
+  total: number;
+  active: number;
+  pending: number;
+  expired: number;
 }
 
 /** Extends Plan with an optional per-day custom price used in the billing cycle calculator. */
@@ -46,12 +81,26 @@ export interface PlanWithCustom extends Plan {
   priceCustom?: number;
 }
 
+// ─── Context ──────────────────────────────────────────────────────────────────
 export interface MembersContextType {
   search: string;
   debouncedSearch: string;
   setSearch: (s: string) => void;
   statusFilter: string;
   setStatusFilter: (s: string) => void;
+  // CRITICAL — backend API needs these query params
+  genderFilter: string;
+  setGenderFilter: (s: string) => void;
+  planFilter: string;
+  setPlanFilter: (s: string) => void;
+  expiryFrom: string;
+  expiryTo: string;
+  setExpiryRange: (from: string, to: string) => void;
+  // Sort state (needed for sortable column headers — Rule 30)
+  sortColumn: MemberSortColumn;
+  sortDirection: SortDirection;
+  setSortColumn: (col: MemberSortColumn) => void;
+  setSortDirection: (dir: SortDirection) => void;
   currentPage: number;
   setCurrentPage: (p: number) => void;
 
@@ -86,11 +135,19 @@ export interface MembersContextType {
   deleteMember: (id: string) => Promise<void>;
   assignDiet: (memberId: string, diet: DietPlan | null) => Promise<void>;
   assignWorkout: (memberId: string, workout: Workout | null) => Promise<void>;
-  renewMember: (data: { planId: string; newExpiryDate: string; amountPaid: number; paymentMethod: string; billingCycle: string; customDays?: number }) => Promise<void>;
+  renewMember: (data: {
+    planId: string;
+    newExpiryDate: string;
+    amountPaid: number;
+    paymentMethod: string;
+    billingCycle: string;
+    customDays?: number;
+  }) => Promise<void>;
   recordPayment: (data: { amount: number; method: string }) => Promise<void>;
-  freezeMember: (isFrozen: boolean) => Promise<void>;
+  freezeMember: (isFrozen: boolean, freezeUntil?: string) => Promise<void>;
   toggleSuspend: (isSuspended: boolean) => Promise<void>;
   assignTrainer: (memberId: string, trainerId: string, trainerName: string, isPT: boolean) => Promise<void>;
+  exportMembers: (format: ExportFormat) => void;
   trainers: { id: string; name: string; role: string }[];
 
   // Message Modal

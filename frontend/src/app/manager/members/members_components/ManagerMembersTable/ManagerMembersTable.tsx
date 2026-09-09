@@ -1,23 +1,28 @@
 // RESPONSIBILITY: Renders the primary tabular list of members with actions, filtering state, and pagination.
 'use client';
 
-import { Edit, MessageCircle, Mail, Trash2, Loader2, Users, Banknote, Ban } from 'lucide-react';
+import { Edit, MessageCircle, Mail, Trash2, Loader2, Users, Banknote, Ban, ArrowUp, ArrowDown, ArrowUpDown } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
 import { useManagerMembersStore } from '@/app/manager/members/members_store/useManagerMembersStore';
-import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS, MEMBERS_TABLE_HEADERS, formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
+import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS, formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import { maskSensitiveData } from '@/lib/formatters';
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
+import { useState } from 'react';
+import type { MemberSortColumn } from '@/app/manager/members/members_types/ManagerMembersTypes';
 
 export default function ManagerMembersTable() {
   // useConfirm provides the design-system confirm modal (Rule 71 — no window.confirm)
   const { confirm } = useConfirm();
   const { 
     search, statusFilter, currentPage, setCurrentPage,
-    setSelectedMember, openEdit, openMsg, deleteMember, setShowPaymentModal, toggleSuspend
+    setSelectedMember, openEdit, openMsg, deleteMember, setShowPaymentModal, toggleSuspend,
+    sortColumn, sortDirection, setSortColumn, setSortDirection
   } = useMembersContext();
+
+  const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
 
   const members = useManagerMembersStore(s => s.members);
   const totalMembers = useManagerMembersStore(s => s.totalMembers);
@@ -25,6 +30,33 @@ export default function ManagerMembersTable() {
   const loadMemberProfile = useManagerMembersStore(s => s.loadMemberProfile);
 
   const totalPages = Math.ceil(totalMembers / MANAGER_ITEMS_PER_PAGE);
+
+  const handleSort = (column: MemberSortColumn) => {
+    if (sortColumn === column) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortColumn(column);
+      setSortDirection('asc');
+    }
+  };
+
+  const SortIcon = ({ column }: { column: MemberSortColumn }) => {
+    if (sortColumn !== column) return <ArrowUpDown size={12} className="ml-1 opacity-50 inline" />;
+    return sortDirection === 'asc' ? <ArrowUp size={12} className="ml-1 inline text-primary" /> : <ArrowDown size={12} className="ml-1 inline text-primary" />;
+  };
+
+  const toggleAll = () => {
+    if (selectedRows.size === members.length) setSelectedRows(new Set());
+    else setSelectedRows(new Set(members.map(m => m.id)));
+  };
+
+  const toggleRow = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const newSet = new Set(selectedRows);
+    if (newSet.has(id)) newSet.delete(id);
+    else newSet.add(id);
+    setSelectedRows(newSet);
+  };
 
   return (
     <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden flex flex-col h-full min-h-96">
@@ -38,11 +70,34 @@ export default function ManagerMembersTable() {
             <table className="w-full">
               <thead className="bg-primary/5">
                 <tr>
-                  {MEMBERS_TABLE_HEADERS.map(h => (
-                    <th key={h} className="text-left text-[11px] font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap">
-                      {h}
-                    </th>
-                  ))}
+                  <th className="px-2 py-3 w-10 text-center">
+                    <input 
+                      type="checkbox" 
+                      className="rounded border-border text-primary focus:ring-primary w-3.5 h-3.5"
+                      checked={members.length > 0 && selectedRows.size === members.length}
+                      onChange={toggleAll}
+                    />
+                  </th>
+                  <th className="text-left text-[11px] font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap">ID</th>
+                  <th className="text-left text-[11px] font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap cursor-pointer hover:text-primary transition-colors" onClick={() => handleSort('name')}>
+                    MEMBER <SortIcon column="name" />
+                  </th>
+                  <th className="text-left text-[11px] font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap">GENDER</th>
+                  <th className="text-left text-[11px] font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap">PLAN</th>
+                  <th className="text-left text-[11px] font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap cursor-pointer hover:text-primary transition-colors" onClick={() => handleSort('status')}>
+                    STATUS <SortIcon column="status" />
+                  </th>
+                  <th className="text-left text-[11px] font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap cursor-pointer hover:text-primary transition-colors" onClick={() => handleSort('joinDate')}>
+                    JOIN DATE <SortIcon column="joinDate" />
+                  </th>
+                  <th className="text-left text-[11px] font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap cursor-pointer hover:text-primary transition-colors" onClick={() => handleSort('expiryDate')}>
+                    EXPIRY <SortIcon column="expiryDate" />
+                  </th>
+                  <th className="text-left text-[11px] font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap cursor-pointer hover:text-primary transition-colors" onClick={() => handleSort('paidAmount')}>
+                    PAID <SortIcon column="paidAmount" />
+                  </th>
+                  <th className="text-left text-[11px] font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap">PENDING</th>
+                  <th className="text-left text-[11px] font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap">ACTIONS</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -54,6 +109,14 @@ export default function ManagerMembersTable() {
                     className="hover:bg-primary/5 transition-colors cursor-pointer"
                     onClick={() => { setSelectedMember(m); loadMemberProfile(m.id); }}
                   >
+                    <td className="px-2 py-3 text-center" onClick={(e) => e.stopPropagation()}>
+                      <input 
+                        type="checkbox" 
+                        className="rounded border-border text-primary focus:ring-primary w-3.5 h-3.5"
+                        checked={selectedRows.has(m.id)}
+                        onChange={(e) => toggleRow(m.id, e as any)}
+                      />
+                    </td>
                     <td className="px-2 py-3 text-xs text-secondary font-medium whitespace-nowrap">
                       <span className="font-bold text-primary">{m.id}</span>
                     </td>
@@ -68,6 +131,7 @@ export default function ManagerMembersTable() {
                         </div>
                       </div>
                     </td>
+                    <td className="px-2 py-3 text-xs text-secondary whitespace-nowrap">{m.gender || '—'}</td>
                     <td className="px-2 py-3 text-xs text-foreground whitespace-nowrap">{m.plan?.name || `Plan #${m.planId}`}</td>
                     <td className="px-2 py-3 whitespace-nowrap">
                       <span 
@@ -76,33 +140,12 @@ export default function ManagerMembersTable() {
                         {m.status}
                       </span>
                     </td>
-                    <td className="px-2 py-3 text-xs text-secondary whitespace-nowrap">{MEMBERS_CYCLE_LABELS[m.billingCycle] || m.billingCycle}</td>
+                    <td className="px-2 py-3 text-xs text-secondary whitespace-nowrap">{new Date(m.joinDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                    <td className="px-2 py-3 text-xs text-secondary whitespace-nowrap">{new Date(m.expiryDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
                     <td className="px-2 py-3 text-xs font-semibold text-success whitespace-nowrap">{formatCurrency(m.paidAmount)}</td>
                     <td className="px-2 py-3 text-xs font-semibold text-danger whitespace-nowrap">{m.pendingAmount > 0 ? formatCurrency(m.pendingAmount) : '—'}</td>
-                    <td className="px-2 py-3 text-xs text-secondary whitespace-nowrap">{new Date(m.expiryDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
                     <td className="px-2 py-3 text-xs whitespace-nowrap">
-                      {m.assignedDiet?.name ? (
-                        <span className="bg-primary/10 text-primary px-2 py-1 rounded-md text-[10px] font-semibold" title={m.assignedDiet.name}>
-                          {m.assignedDiet.name.length > 10 ? m.assignedDiet.name.substring(0, 10) + '...' : m.assignedDiet.name}
-                        </span>
-                      ) : <span className="text-secondary">—</span>}
-                    </td>
-                    <td className="px-2 py-3 text-xs whitespace-nowrap">
-                      {m.assignedWorkout?.name ? (
-                        <span className="bg-primary/10 text-primary px-2 py-1 rounded-md text-[10px] font-semibold" title={m.assignedWorkout.name}>
-                          {m.assignedWorkout.name.length > 10 ? m.assignedWorkout.name.substring(0, 10) + '...' : m.assignedWorkout.name}
-                        </span>
-                      ) : <span className="text-secondary">—</span>}
-                    </td>
-                    <td className="px-2 py-3 text-xs whitespace-nowrap">
-                      {m.assignedTrainerName ? (
-                        <div className="flex flex-col gap-0.5">
-                          <span className="font-semibold text-foreground">{m.assignedTrainerName.length > 15 ? m.assignedTrainerName.substring(0, 15) + '...' : m.assignedTrainerName}</span>
-                          {m.isPT && <span className="text-[9px] font-bold text-primary uppercase tracking-wide">PT</span>}
-                        </div>
-                      ) : <span className="text-secondary">—</span>}
-                    </td>
-                    <td className="px-2 py-3 whitespace-nowrap">
+
                       <div className="flex items-center gap-1.5">
                         {m.pendingAmount > 0 && (
                           <button onClick={(e) => { e.stopPropagation(); setSelectedMember(m); setShowPaymentModal(true); }} className="p-1.5 rounded-lg bg-warning/10 text-warning hover:bg-warning/20 transition-all duration-200" title="Collect Dues" aria-label={`Collect Dues for ${m.name}`}><Banknote size={14} /></button>

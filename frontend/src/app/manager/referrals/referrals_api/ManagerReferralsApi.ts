@@ -27,6 +27,7 @@ export const ManagerReferralsApi = {
       status: 'PENDING',
       rewardStatus: 'N/A',
       rewardAmount: 500,
+      rewardType: 'CASH',
     };
     mockReferrals = [newRef, ...mockReferrals];
     return newRef;

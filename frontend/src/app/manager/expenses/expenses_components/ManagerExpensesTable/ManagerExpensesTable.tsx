@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Renders the primary tabular list of expenses with actions and pagination.
 'use client';
 
-import { Edit, Trash2, Loader2, ExternalLink } from 'lucide-react';
+import { Edit, Trash2, Loader2, ExternalLink, CheckCircle2, Banknote } from 'lucide-react';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { useExpensesContext } from '@/app/manager/expenses/expenses_context/ManagerExpensesContext';
 import { useManagerExpensesStore } from '@/app/manager/expenses/expenses_store/useManagerExpensesStore';
@@ -9,10 +9,11 @@ import { EXPENSES_TABLE_HEADERS, EXPENSE_STATUS_STYLES } from '@/app/manager/exp
 import { formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
+import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
 
 export default function ManagerExpensesTable() {
   const { confirm } = useConfirm();
-  const { currentPage, setCurrentPage, openEdit, deleteExpense } = useExpensesContext();
+  const { currentPage, setCurrentPage, openEdit, deleteExpense, markAsPaid } = useExpensesContext();
   const expenses = useManagerExpensesStore(s => s.expenses);
   const totalExpenses = useManagerExpensesStore(s => s.totalExpenses);
   const fetchState = useManagerExpensesStore(s => s.fetchState);
@@ -60,6 +61,22 @@ export default function ManagerExpensesTable() {
                       </td>
                       <td className="px-5 py-3.5 whitespace-nowrap">
                         <div className="flex items-center gap-2">
+                          {e.status === 'PENDING' && (
+                            <button
+                              onClick={async () => {
+                                const ok = await confirm({
+                                  title: 'Mark as Paid',
+                                  message: `Mark expense "${e.title}" as paid?`,
+                                  confirmText: 'Mark Paid',
+                                });
+                                if (ok && markAsPaid) markAsPaid(e.id);
+                              }}
+                              className="p-1.5 rounded-lg bg-success/10 text-success hover:bg-success/20 transition-all duration-200"
+                              title="Mark as Paid"
+                            >
+                              <CheckCircle2 size={14} />
+                            </button>
+                          )}
                           {e.receiptUrl && (
                             <a href={e.receiptUrl} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle transition-all duration-200" title="View Receipt">
                               <ExternalLink size={14} />
@@ -82,8 +99,12 @@ export default function ManagerExpensesTable() {
                 })}
                 {expenses.length === 0 && fetchState === 'success' && (
                   <tr>
-                    <td colSpan={7} className="text-center py-12 text-sm text-secondary">
-                      No expenses found matching the current criteria.
+                    <td colSpan={7} className="p-0 border-b-0">
+                      <ManagerEmptyState 
+                        icon={<Banknote size={32} />}
+                        title="No expenses found"
+                        subtitle="There are no expenses matching the current criteria."
+                      />
                     </td>
                   </tr>
                 )}

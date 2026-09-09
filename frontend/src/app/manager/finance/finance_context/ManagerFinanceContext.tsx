@@ -18,6 +18,10 @@ interface FinanceContextValue {
   setMethodFilter: (v: string) => void;
   currentPage: number;
   setCurrentPage: (v: number) => void;
+  startDate: string;
+  setStartDate: (v: string) => void;
+  endDate: string;
+  setEndDate: (v: string) => void;
   payments: ReturnType<typeof useManagerFinanceStore.getState>['payments'];
   summary: ReturnType<typeof useManagerFinanceStore.getState>['summary'];
   totalPayments: number;
@@ -25,6 +29,8 @@ interface FinanceContextValue {
   saving: boolean;
   reload: () => void;
   exportCSV: () => void;
+  exportPDF: () => void;
+  printReceipt: (id: string) => void;
 }
 
 const ManagerFinanceContext = createContext<FinanceContextValue | undefined>(undefined);
@@ -35,12 +41,14 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [methodFilter, setMethodFilter] = useState('ALL');
   const [currentPage, setCurrentPage] = useState(1);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   const { payments, summary, totalPayments, fetchState, saving, loadAll } = useManagerFinanceStore();
 
   const reload = useCallback(() => {
-    loadAll({ search, status: statusFilter, method: methodFilter, page: currentPage.toString(), limit: MANAGER_ITEMS_PER_PAGE.toString() });
-  }, [search, statusFilter, methodFilter, currentPage, loadAll]);
+    loadAll({ search, status: statusFilter, method: methodFilter, page: currentPage.toString(), limit: MANAGER_ITEMS_PER_PAGE.toString(), startDate, endDate });
+  }, [search, statusFilter, methodFilter, currentPage, startDate, endDate, loadAll]);
 
   useEffect(() => {
     const t = setTimeout(reload, 300);
@@ -68,6 +76,14 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
     URL.revokeObjectURL(url);
   }, [payments]);
 
+  const exportPDF = useCallback(() => {
+    alert('Export PDF functionality will be implemented here.');
+  }, []);
+
+  const printReceipt = useCallback((id: string) => {
+    alert(`Printing receipt for payment ID: ${id}`);
+  }, []);
+
   return (
     <ManagerFinanceContext.Provider value={{
       tab, setTab,
@@ -75,9 +91,11 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
       statusFilter, setStatusFilter,
       methodFilter, setMethodFilter,
       currentPage, setCurrentPage,
+      startDate, setStartDate,
+      endDate, setEndDate,
       payments, summary, totalPayments,
       fetchState, saving,
-      reload, exportCSV,
+      reload, exportCSV, exportPDF, printReceipt
     }}>
       {children}
     </ManagerFinanceContext.Provider>

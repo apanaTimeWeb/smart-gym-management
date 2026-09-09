@@ -41,6 +41,9 @@ export const MOCK_SCHEDULE_KPIS: ScheduleKPIData = {
   trainersOnDutyToday: 3,
   trainersOnLeaveToday: 1,
   totalShiftsThisWeek: 28,
+  totalClassesThisWeek: 12,
+  avgOccupancyRate: 78.5,
+  totalEnrolledMembers: 94,
 };
 
 export const MOCK_TRAINERS: TrainerScheduleSummary[] = [
