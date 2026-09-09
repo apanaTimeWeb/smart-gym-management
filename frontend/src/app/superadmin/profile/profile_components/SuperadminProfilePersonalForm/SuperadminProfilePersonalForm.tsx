@@ -1,5 +1,5 @@
 'use client';
-// RESPONSIBILITY: Form for updating the superadmin's name and phone number.
+// RESPONSIBILITY: Form for updating the superadmin's personal profile fields.
 // Uses React Hook Form + Zod. Emits save to parent via onSave callback.
 
 import { useEffect } from 'react';
@@ -9,9 +9,29 @@ import { z } from 'zod';
 import { Loader2 } from 'lucide-react';
 import type { SuperadminProfileData, UpdateSuperadminProfilePayload } from '@/app/superadmin/profile/profile_types/SuperadminProfileTypes';
 
+const TIMEZONE_OPTIONS = [
+  'Asia/Kolkata',
+  'Asia/Dubai',
+  'Asia/Singapore',
+  'Europe/London',
+  'America/New_York',
+  'America/Los_Angeles',
+  'UTC',
+] as const;
+
+const LANGUAGE_OPTIONS = [
+  { value: 'en', label: 'English' },
+  { value: 'hi', label: 'Hindi' },
+  { value: 'mr', label: 'Marathi' },
+  { value: 'ta', label: 'Tamil' },
+  { value: 'te', label: 'Telugu' },
+] as const;
+
 const personalSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   phone: z.string().min(10, 'Enter a valid phone number').max(15),
+  timezone: z.string().optional(),
+  language: z.string().optional(),
 });
 
 type PersonalFormValues = z.infer<typeof personalSchema>;
@@ -34,12 +54,26 @@ export default function SuperadminProfilePersonalForm({
     formState: { errors, isDirty },
   } = useForm<PersonalFormValues>({
     resolver: zodResolver(personalSchema),
-    defaultValues: { name: profile.name, phone: profile.phone },
+    defaultValues: {
+      name: profile.name,
+      phone: profile.phone,
+      timezone: profile.timezone ?? 'Asia/Kolkata',
+      language: profile.language ?? 'en',
+    },
   });
 
+  // Rule 53: reset when profile prop changes (e.g. after successful save)
   useEffect(() => {
-    reset({ name: profile.name, phone: profile.phone });
+    reset({
+      name: profile.name,
+      phone: profile.phone,
+      timezone: profile.timezone ?? 'Asia/Kolkata',
+      language: profile.language ?? 'en',
+    });
   }, [profile, reset]);
+
+  const inputClass =
+    'w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary';
 
   return (
     <form onSubmit={handleSubmit(onSave)} className="space-y-5">
@@ -47,25 +81,19 @@ export default function SuperadminProfilePersonalForm({
         <label className="block text-sm font-medium text-secondary mb-1.5">
           Full Name <span className="text-danger">*</span>
         </label>
-        <input
-          {...register('name')}
-          type="text"
-          className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
-        />
+        <input {...register('name')} type="text" className={inputClass} />
         {errors.name && (
           <p className="mt-1 text-xs text-danger" role="alert">{errors.name.message}</p>
         )}
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-secondary mb-1.5">
-          Email Address
-        </label>
+        <label className="block text-sm font-medium text-secondary mb-1.5">Email Address</label>
         <input
           type="email"
           value={profile.email}
           readOnly
-          className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-disabled cursor-not-allowed opacity-60"
+          className={`${inputClass} cursor-not-allowed opacity-60`}
         />
         <p className="mt-1 text-xs text-secondary">Email cannot be changed from this panel.</p>
       </div>
@@ -74,14 +102,29 @@ export default function SuperadminProfilePersonalForm({
         <label className="block text-sm font-medium text-secondary mb-1.5">
           Phone Number <span className="text-danger">*</span>
         </label>
-        <input
-          {...register('phone')}
-          type="tel"
-          className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
-        />
+        <input {...register('phone')} type="tel" className={inputClass} />
         {errors.phone && (
           <p className="mt-1 text-xs text-danger" role="alert">{errors.phone.message}</p>
         )}
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-secondary mb-1.5">Timezone</label>
+        <select {...register('timezone')} className={inputClass}>
+          {TIMEZONE_OPTIONS.map((tz) => (
+            <option key={tz} value={tz}>{tz}</option>
+          ))}
+        </select>
+        <p className="mt-1 text-xs text-secondary">Used for scheduling and date display across the platform.</p>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-secondary mb-1.5">Language</label>
+        <select {...register('language')} className={inputClass}>
+          {LANGUAGE_OPTIONS.map((lang) => (
+            <option key={lang.value} value={lang.value}>{lang.label}</option>
+          ))}
+        </select>
       </div>
 
       <div className="flex justify-end pt-2">
