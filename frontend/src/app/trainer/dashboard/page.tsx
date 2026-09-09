@@ -13,8 +13,13 @@ async function getDashboardData() {
     
     if (!token) return null;
     
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001';
-    const res = await fetch(`${backendUrl}/trainer/dashboard/stats`, {
+    const backendUrl = process.env.BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001';
+    const allowedHosts = ['localhost', '127.0.0.1'];
+    const parsedUrl = new URL(backendUrl);
+    if (!allowedHosts.includes(parsedUrl.hostname) && !parsedUrl.hostname.endsWith('.gymsmart.com')) {
+      return null;
+    }
+    const res = await fetch(`${parsedUrl.origin}/trainer/dashboard/stats`, {
       headers: {
         'Authorization': `Bearer ${token}`
       },
