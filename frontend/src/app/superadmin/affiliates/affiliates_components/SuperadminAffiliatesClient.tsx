@@ -22,6 +22,7 @@ export default function SuperadminAffiliatesClient() {
     handleEditAffiliate,
     handleToggleAffiliateStatus,
     handleDeleteAffiliate,
+    handlePayCommission,
     openEditModal,
     editingAffiliate,
     setEditingAffiliate,
@@ -30,6 +31,10 @@ export default function SuperadminAffiliatesClient() {
     fetchState,
     error,
     isMutating,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
   } = useSuperadminAffiliatesPage();
 
   if (fetchState === 'loading') return (
@@ -51,6 +56,10 @@ export default function SuperadminAffiliatesClient() {
         statusFilter={statusFilter}
         onStatusFilterChange={setStatusFilter}
         onAddClick={() => setIsModalOpen(true)}
+        startDate={startDate ?? ''}
+        onStartDateChange={setStartDate ?? (() => {})}
+        endDate={endDate ?? ''}
+        onEndDateChange={setEndDate ?? (() => {})}
       />
 
       <SuperadminAffiliatesStatsBar
@@ -67,6 +76,7 @@ export default function SuperadminAffiliatesClient() {
           onToggleStatus={handleToggleAffiliateStatus}
           onEdit={openEditModal}
           onDelete={handleDeleteAffiliate}
+          onPayCommission={handlePayCommission}
         />
       )}
 

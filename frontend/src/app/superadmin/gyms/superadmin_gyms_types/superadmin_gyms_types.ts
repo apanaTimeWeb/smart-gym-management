@@ -13,6 +13,12 @@ export interface Tenant {
   memberCount: number;
   monthlyRevenue: number;
   databaseVersion: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  gstin?: string;
+  trialEndsAt?: string;
+  lastLoginAt?: string;
 }
 
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';

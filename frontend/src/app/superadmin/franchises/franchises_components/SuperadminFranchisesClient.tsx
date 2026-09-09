@@ -3,15 +3,17 @@
 // DATA FLOW: superadminFranchisesApi → useSuperadminFranchisesPage → SuperadminFranchisesClient
 
 import { useState } from 'react';
-import { Network, Users, TrendingUp, Ban, Search, CheckCircle2, AlertTriangle, Building2 } from 'lucide-react';
+import { Network, Users, TrendingUp, Ban, Search, CheckCircle2, AlertTriangle, Building2, Edit2 } from 'lucide-react';
 import { useSuperadminFranchisesPage } from '@/app/superadmin/franchises/franchises_utils/useSuperadminFranchisesPage';
+import { SuperadminFranchiseModal, FranchiseFormData } from '@/app/superadmin/franchises/franchises_components/SuperadminFranchiseModal/SuperadminFranchiseModal';
 import { FRANCHISE_STATUS_STYLES, FRANCHISES_PAGE_SIZE } from '@/app/superadmin/franchises/franchises_utils/SuperadminFranchisesConstants';
 import type { SuperadminFranchise } from '@/app/superadmin/franchises/franchises_types/superadmin_franchises_types';
 import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
 
 export default function SuperadminFranchisesClient() {
-  const { franchises, fetchState, search, setSearch, handleSuspend, handleActivate } = useSuperadminFranchisesPage();
+  const { franchises, fetchState, search, setSearch, handleSuspend, handleActivate, handleEdit, isEditing } = useSuperadminFranchisesPage();
   const [page, setPage] = useState(1);
+  const [editingFranchise, setEditingFranchise] = useState<SuperadminFranchise | null>(null);
   const { confirm } = useSuperadminConfirm();
 
   const onSuspendClick = async (id: string) => {
@@ -124,21 +126,30 @@ export default function SuperadminFranchisesClient() {
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    {f.status === 'SUSPENDED' ? (
+                    <div className="flex items-center gap-2">
                       <button
-                        onClick={() => onActivateClick(f.id)}
-                        className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-success/10 text-success text-xs font-medium hover:bg-success/20 motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-success"
+                        onClick={() => setEditingFranchise(f)}
+                        className="p-1.5 text-secondary hover:text-primary hover:bg-primary-subtle rounded-lg motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                        aria-label="Edit Franchise"
                       >
-                        <CheckCircle2 size={12} /> Activate
+                        <Edit2 size={16} />
                       </button>
-                    ) : (
-                      <button
-                        onClick={() => onSuspendClick(f.id)}
-                        className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-danger/10 text-danger text-xs font-medium hover:bg-danger/20 motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger"
-                      >
-                        <AlertTriangle size={12} /> Suspend
-                      </button>
-                    )}
+                      {f.status === 'SUSPENDED' ? (
+                        <button
+                          onClick={() => onActivateClick(f.id)}
+                          className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-success/10 text-success text-xs font-medium hover:bg-success/20 motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-success"
+                        >
+                          <CheckCircle2 size={12} /> Activate
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => onSuspendClick(f.id)}
+                          className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-danger/10 text-danger text-xs font-medium hover:bg-danger/20 motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger"
+                        >
+                          <AlertTriangle size={12} /> Suspend
+                        </button>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -165,6 +176,19 @@ export default function SuperadminFranchisesClient() {
           </div>
         )}
       </div>
+
+      {editingFranchise && (
+        <SuperadminFranchiseModal
+          isOpen={!!editingFranchise}
+          onClose={() => setEditingFranchise(null)}
+          franchise={editingFranchise}
+          isMutating={isEditing}
+          onSubmit={(data: FranchiseFormData) => {
+            handleEdit(editingFranchise.id, data);
+            setEditingFranchise(null);
+          }}
+        />
+      )}
     </div>
   );
 }

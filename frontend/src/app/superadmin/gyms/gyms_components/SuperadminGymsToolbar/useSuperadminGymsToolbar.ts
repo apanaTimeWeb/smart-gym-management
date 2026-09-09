@@ -18,15 +18,33 @@ export function useSuperadminGymsToolbar() {
   const setSearch = useSuperadminGymsStore(state => state.setSearch);
   const statusFilter = useSuperadminGymsStore(state => state.statusFilter);
   const setStatusFilter = useSuperadminGymsStore(state => state.setStatusFilter);
+  const planFilter = useSuperadminGymsStore(state => state.planFilter);
+  const setPlanFilter = useSuperadminGymsStore(state => state.setPlanFilter);
 
   const handleSearchChange = (value: string) => {
-    setSearch(value); // useQuery in useSuperadminGymsTable will handle the debouncing/refetching
+    setSearch(value);
+  };
+
+  const handleExportGyms = async () => {
+    try {
+      const { superadminGymsApi } = await import('@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api');
+      // @ts-expect-error GET /superadmin/gyms/export to be implemented on backend
+      const res = await superadminGymsApi.exportGymsCSV();
+      if (res.data?.downloadUrl) {
+        window.open(res.data.downloadUrl, '_blank');
+      }
+    } catch (err) {
+      // toast shown by centralized error handler
+    }
   };
 
   return {
     search,
     handleSearchChange,
     statusFilter,
-    setStatusFilter
+    setStatusFilter,
+    planFilter,
+    setPlanFilter,
+    handleExportGyms,
   };
 }

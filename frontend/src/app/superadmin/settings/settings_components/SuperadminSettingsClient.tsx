@@ -2,7 +2,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Settings, Loader2, Save } from 'lucide-react';
+import { Settings, Loader2, Save, FileText } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import toast from 'react-hot-toast';
@@ -143,6 +143,37 @@ export default function SuperadminSettingsClient() {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Changelog UI Mock */}
+        <div className="bg-card border border-border rounded-xl p-6">
+          <div className="flex items-center gap-2 mb-4 border-b border-border pb-4">
+            <FileText className="w-5 h-5 text-primary" />
+            <h2 className="text-lg font-bold text-foreground uppercase">Changelog</h2>
+          </div>
+          
+          <div className="space-y-6 text-sm">
+            <div className="relative pl-6 border-l-2 border-primary/20 pb-2">
+              <div className="absolute w-3 h-3 bg-primary rounded-full -left-2 top-1"></div>
+              <h3 className="font-semibold text-foreground text-base mb-1">v2.4.1 (Current)</h3>
+              <p className="text-xs text-secondary mb-2">Released on Sept 09, 2026</p>
+              <ul className="list-disc pl-4 text-secondary space-y-1">
+                <li>Added support for trialGyms count in dashboard.</li>
+                <li>Fixed overdue invoices KPI aggregation bug.</li>
+                <li>Added "Revenue by Plan Tier" donut chart.</li>
+              </ul>
+            </div>
+            <div className="relative pl-6 border-l-2 border-primary/20 pb-2">
+              <div className="absolute w-3 h-3 bg-border rounded-full -left-2 top-1"></div>
+              <h3 className="font-semibold text-foreground text-base mb-1">v2.4.0</h3>
+              <p className="text-xs text-secondary mb-2">Released on Aug 21, 2026</p>
+              <ul className="list-disc pl-4 text-secondary space-y-1">
+                <li>Introduced Superadmin module.</li>
+                <li>Added global audit logs.</li>
+                <li>Basic Gym management and SLA tracker.</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -8,6 +8,17 @@ export interface RevenueMetrics {
   ltv: number;
   cac: number;
   activeTenants: number;
+  arpu: number;
+  mrrDeltaPercent: number;
+  arrDeltaPercent: number;
+  churnDeltaPercent?: number;
+}
+
+/** Revenue breakdown by plan tier for donut/pie chart */
+export interface PlanRevenueBreakdown {
+  plan: string;
+  revenue: number;
+  tenantCount: number;
 }
 
 /** Monthly data point for MRR area chart and tenant growth bar chart */
@@ -22,6 +33,7 @@ export interface MonthlyAnalyticsDataPoint {
 export interface AnalyticsApiData {
   metrics: RevenueMetrics;
   monthly: MonthlyAnalyticsDataPoint[];
+  planRevenue?: PlanRevenueBreakdown[];
 }
 
 /** Canonical async state enum — Rule 42: never use boolean `isLoading` flags */

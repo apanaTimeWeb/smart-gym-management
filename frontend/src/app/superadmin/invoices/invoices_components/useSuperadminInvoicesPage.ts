@@ -26,16 +26,25 @@ export function useSuperadminInvoicesPage() {
   const [selectedGymId, setSelectedGymId] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('UPI');
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   const filteredInvoices = useMemo(() => {
     const lower = search.toLowerCase();
-    return invoices.filter(
-      (i) =>
-        (i.tenantName?.toLowerCase().includes(lower) ||
-         i.id?.toLowerCase().includes(lower)) &&
-        (statusFilter ? i.status === statusFilter : true)
-    );
-  }, [invoices, search, statusFilter]);
+    return invoices.filter((i) => {
+      const matchSearch = (i.tenantName?.toLowerCase().includes(lower) || i.id?.toLowerCase().includes(lower));
+      const matchStatus = statusFilter ? i.status === statusFilter : true;
+      let matchDate = true;
+      if (startDate && endDate) {
+        const iDate = new Date(i.issuedAt);
+        const sDate = new Date(startDate);
+        const eDate = new Date(endDate);
+        eDate.setHours(23, 59, 59, 999);
+        matchDate = iDate >= sDate && iDate <= eDate;
+      }
+      return matchSearch && matchStatus && matchDate;
+    });
+  }, [invoices, search, statusFilter, startDate, endDate]);
 
   const filteredTenantsForDropdown = useMemo(
     () => tenants.filter((t) => t.name?.toLowerCase().includes(gymSearchTerm.toLowerCase())),
@@ -51,6 +60,16 @@ export function useSuperadminInvoicesPage() {
 
   const failedRevenue = useMemo(
     () => invoices.filter((i) => i.status === 'FAILED').reduce((acc, curr) => acc + curr.amount, 0),
+    [invoices]
+  );
+
+  const pendingRevenue = useMemo(
+    () => invoices.filter((i) => i.status === 'PENDING').reduce((acc, curr) => acc + curr.amount, 0),
+    [invoices]
+  );
+
+  const overdueCount = useMemo(
+    () => invoices.filter((i) => i.status === 'OVERDUE').length,
     [invoices]
   );
 
@@ -81,6 +100,12 @@ export function useSuperadminInvoicesPage() {
     handleSelectGym,
     statusFilter,
     setStatusFilter,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+    pendingRevenue,
+    overdueCount,
   };
 }
 

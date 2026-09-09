@@ -1,6 +1,7 @@
 'use client';
 // RESPONSIBILITY: Renders a single row in the Affiliates data table. Handles row-level action buttons with stopPropagation. Purely presentational.
-import { Pencil, Trash2, Power, Check } from 'lucide-react';
+import { Pencil, Trash2, Power, Check, Banknote } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
 import SuperadminAffiliateStatusBadge from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliateStatusBadge/SuperadminAffiliateStatusBadge';
 import type { Affiliate, AffiliateStatus } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
@@ -10,9 +11,10 @@ interface AffiliatesTableRowProps {
   onToggleStatus: (id: string, currentStatus: AffiliateStatus) => void;
   onEdit: (affiliate: Affiliate) => void;
   onDelete: (id: string) => void;
+  onPayCommission?: (affiliate: Affiliate) => void;
 }
 
-export default function SuperadminAffiliatesTableRow({ affiliate: aff, onToggleStatus, onEdit, onDelete }: AffiliatesTableRowProps) {
+export default function SuperadminAffiliatesTableRow({ affiliate: aff, onToggleStatus, onEdit, onDelete, onPayCommission }: AffiliatesTableRowProps) {
   const { confirm } = useSuperadminConfirm();
   return (
     <tr 
@@ -33,6 +35,9 @@ export default function SuperadminAffiliatesTableRow({ affiliate: aff, onToggleS
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-success font-medium">
         ₹{aff.commissionEarned.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+        {aff.pendingPayout ? (
+          <span className="ml-2 text-xs text-warning">(₹{aff.pendingPayout.toLocaleString()} pending)</span>
+        ) : null}
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
         <SuperadminAffiliateStatusBadge status={aff.status} />
@@ -47,6 +52,25 @@ export default function SuperadminAffiliatesTableRow({ affiliate: aff, onToggleS
           >
             {aff.status === 'ACTIVE' ? <Power className="w-4 h-4" /> : <Check className="w-4 h-4" />}
           </button>
+          {onPayCommission && (aff.pendingPayout ?? 0) > 0 && (
+            <button
+              onClick={async (e) => {
+                e.stopPropagation();
+                const ok = await confirm({
+                  title: 'Pay Commission',
+                  message: `Pay ₹${aff.pendingPayout?.toLocaleString()} to ${aff.name}? This will trigger a bank transfer.`,
+                  type: 'warning',
+                  confirmText: 'Pay Now',
+                });
+                if (ok) onPayCommission(aff);
+              }}
+              className="p-1.5 text-secondary hover:text-success motion-safe:transition-colors"
+              title="Pay Commission"
+              aria-label={`Pay commission to ${aff.name}`}
+            >
+              <Banknote className="w-4 h-4" />
+            </button>
+          )}
           <button
             onClick={(e) => { e.stopPropagation(); onEdit(aff); }}
             className="p-1.5 text-secondary hover:text-info motion-safe:transition-colors"

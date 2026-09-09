@@ -5,9 +5,13 @@ export interface Affiliate {
   id: string;
   name: string;
   email: string;
+  phone?: string;
   referralCode: string;
   totalReferred: number;
   commissionEarned: number;
+  commissionRate?: number;
+  pendingPayout?: number;
+  bankDetails?: string;
   status: AffiliateStatus;
   joinedAt: string;
 }

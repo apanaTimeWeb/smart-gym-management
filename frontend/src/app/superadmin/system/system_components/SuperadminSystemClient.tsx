@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Database, ShieldAlert, Activity, Filter, RefreshCcw, Search, Loader2, Clock } from 'lucide-react';
+import { Database, ShieldAlert, Activity, Filter, RefreshCcw, Search, Loader2, Clock, Download } from 'lucide-react';
 import SuperadminSystemEmptyState from '@/app/superadmin/system/system_components/SuperadminSystemEmptyState/SuperadminSystemEmptyState';
 import SuperadminSystemSlaTab from '@/app/superadmin/system/system_components/SuperadminSystemSlaTab';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -87,6 +87,27 @@ export default function SuperadminSystemClient() {
     log.action?.toLowerCase().includes(logSearch.toLowerCase()) ||
     log.actorName?.toLowerCase().includes(logSearch.toLowerCase())
   );
+
+  const handleExportCSV = () => {
+    const headers = ['Timestamp', 'Target', 'Actor', 'Role', 'Action'];
+    const csvContent = [
+      headers.join(','),
+      ...filteredLogs.map((log: GlobalAuditLog) => [
+        new Date(log.timestamp).toISOString(),
+        `"${log.targetResource}"`,
+        `"${log.actorName}"`,
+        `"${log.actorRole}"`,
+        `"${log.action}"`
+      ].join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `audit_logs_${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+    toast.success('Audit logs exported successfully');
+  };
 
   const totalPages = Math.ceil(filteredLogs.length / ITEMS_PER_PAGE) || 1;
   const paginatedLogs = filteredLogs.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
@@ -198,6 +219,12 @@ export default function SuperadminSystemClient() {
             </div>
             <button className="p-2 bg-card border border-border rounded-lg text-secondary hover:text-foreground motion-safe:transition-colors">
               <Filter className="w-4 h-4" />
+            </button>
+            <button
+              onClick={handleExportCSV}
+              className="flex items-center gap-2 p-2 bg-input border border-border rounded-lg text-sm font-medium text-foreground hover:bg-card-hover motion-safe:transition-colors"
+            >
+              <Download className="w-4 h-4" /> Export CSV
             </button>
           </div>
         </div>

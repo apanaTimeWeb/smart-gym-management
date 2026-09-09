@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Renders the SuperadminInvoicesTableRow component.
 import React from 'react';
-import { Receipt, MessageCircle } from 'lucide-react';
+import { Receipt, MessageCircle, Mail } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
 import type { SaaSInvoice } from '@/app/superadmin/invoices/superadmin_invoices_types/superadmin_invoices_types';
@@ -19,7 +19,7 @@ interface InvoicesTableRowProps {
 export default function SuperadminInvoicesTableRow({ invoice: inv }: InvoicesTableRowProps) {
   const handleShareWhatsApp = (e: React.MouseEvent, inv: SaaSInvoice) => {
     e.stopPropagation();
-    const dateStr = new Date(inv.date).toLocaleDateString('en-IN', {
+    const dateStr = new Date(inv.issuedAt).toLocaleDateString('en-IN', {
       day: '2-digit', month: 'short', year: 'numeric'
     });
 
@@ -62,6 +62,19 @@ export default function SuperadminInvoicesTableRow({ invoice: inv }: InvoicesTab
     }
   };
 
+  const handleResendEmail = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    toast.success(`Resending invoice ${inv.id} to email...`);
+    try {
+      const { invoicesApi } = await import('@/app/superadmin/invoices/superadmin_invoices_api/superadmin_invoices_api');
+      // @ts-expect-error POST /superadmin/invoices/:id/resend endpoint to be implemented on backend
+      await invoicesApi.resendInvoiceEmail(inv.id);
+      toast.success('Invoice resent successfully.');
+    } catch (err) {
+      toast.error('Failed to resend invoice.');
+    }
+  };
+
   return (
     <tr className="hover:bg-input motion-safe:transition-colors">
       <td className="p-4 text-sm font-mono text-secondary">{inv.id}</td>
@@ -73,8 +86,15 @@ export default function SuperadminInvoicesTableRow({ invoice: inv }: InvoicesTab
           {inv.status}
         </span>
       </td>
-      <td className="p-4 text-sm text-secondary">{new Date(inv.date).toLocaleDateString()}</td>
+      <td className="p-4 text-sm text-secondary">{new Date(inv.issuedAt).toLocaleDateString()}</td>
       <td className="p-4 text-right flex items-center justify-end gap-2">
+        <button 
+          title="Resend to Email"
+          onClick={handleResendEmail}
+          className="text-secondary hover:text-primary motion-safe:transition-colors p-1.5 bg-input hover:bg-primary/10 rounded-md border border-border"
+        >
+          <Mail className="w-4 h-4" />
+        </button>
         <button 
           title="Share via WhatsApp"
           onClick={(e) => handleShareWhatsApp(e, inv)}

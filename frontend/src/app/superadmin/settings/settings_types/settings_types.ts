@@ -12,7 +12,18 @@ export interface PlatformSetting {
   label: string;
   description: string;
   isPublic: boolean;
+  isReadOnly?: boolean;
   updatedAt: string;
+  updatedBy?: string;
+}
+
+/** Tracks who changed what setting and when — used for Settings changelog view */
+export interface SettingChangelogEntry {
+  settingKey: string;
+  oldValue: string;
+  newValue: string;
+  changedBy: string;
+  changedAt: string;
 }
 
 export interface UpdateSettingPayload {

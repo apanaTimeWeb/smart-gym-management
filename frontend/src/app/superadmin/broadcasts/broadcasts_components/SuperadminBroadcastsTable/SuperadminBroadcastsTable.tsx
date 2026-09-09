@@ -26,6 +26,7 @@ export default function SuperadminBroadcastsTable({ broadcasts, onSend, onEdit, 
               <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Title</th>
               <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Audience</th>
               <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Status</th>
+              <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Delivery Rate</th>
               <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Scheduled / Sent Date</th>
               <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider text-right">Actions</th>
             </tr>
@@ -33,7 +34,7 @@ export default function SuperadminBroadcastsTable({ broadcasts, onSend, onEdit, 
           <tbody className="divide-y divide-border">
             {paginatedBroadcasts.length === 0 ? (
               <tr>
-                <td colSpan={5}><SuperadminBroadcastsEmptyState onCreateClick={onCreateClick} /></td>
+                <td colSpan={6}><SuperadminBroadcastsEmptyState onCreateClick={onCreateClick} /></td>
               </tr>
             ) : (
               paginatedBroadcasts.map((bc) => (
@@ -55,6 +56,20 @@ export default function SuperadminBroadcastsTable({ broadcasts, onSend, onEdit, 
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <SuperadminBroadcastStatusBadge status={bc.status} />
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm">
+                  {bc.status === 'SENT' && bc.totalRecipients ? (
+                    <div>
+                      <span className="text-success font-semibold">
+                        {bc.deliveredCount ?? 0}/{bc.totalRecipients}
+                      </span>
+                      <span className="ml-1 text-secondary text-xs">
+                        ({Math.round(((bc.deliveredCount ?? 0) / bc.totalRecipients) * 100)}%)
+                      </span>
+                    </div>
+                  ) : (
+                    <span className="text-disabled">—</span>
+                  )}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary">
                   {bc.status === 'SCHEDULED' && bc.scheduledDate ? new Date(bc.scheduledDate).toLocaleString() : ''}

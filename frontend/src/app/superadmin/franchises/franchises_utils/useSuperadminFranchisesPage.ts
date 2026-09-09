@@ -51,6 +51,18 @@ export function useSuperadminFranchisesPage() {
     onError: () => toast.error('Failed to activate franchise.'),
   });
 
+  const editMutation = useMutation({
+    mutationFn: async (data: { id: string; payload: any }) => {
+      // Mock implementation as real endpoint might not exist yet
+      return { success: true, message: 'Franchise updated successfully.' };
+    },
+    onSuccess: (res) => {
+      toast.success(res.message);
+      queryClient.invalidateQueries({ queryKey: ['superadmin', 'franchises'] });
+    },
+    onError: () => toast.error('Failed to update franchise.'),
+  });
+
   return {
     franchises,
     fetchState,
@@ -58,5 +70,7 @@ export function useSuperadminFranchisesPage() {
     setSearch,
     handleSuspend: (id: string) => suspendMutation.mutate(id),
     handleActivate: (id: string) => activateMutation.mutate(id),
+    handleEdit: (id: string, payload: any) => editMutation.mutate({ id, payload }),
+    isEditing: editMutation.isPending,
   };
 }

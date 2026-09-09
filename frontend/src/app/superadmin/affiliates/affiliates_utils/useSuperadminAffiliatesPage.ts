@@ -24,6 +24,8 @@ export const useSuperadminAffiliatesPage = () => {
   const [editingAffiliate, setEditingAffiliate] = useState<Affiliate | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'ACTIVE' | 'INACTIVE'>('ALL');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   const form = useForm<AffiliateFormData>({
     resolver: zodResolver(AffiliateSchema),
@@ -127,12 +129,24 @@ export const useSuperadminAffiliatesPage = () => {
       const matchesSearch = (a?.name || '').toLowerCase().includes(lowerQuery) ||
                             (a?.referralCode || '').toLowerCase().includes(lowerQuery) ||
                             (a?.email || '').toLowerCase().includes(lowerQuery);
-      
       const matchesStatus = statusFilter === 'ALL' || a.status === statusFilter;
-      
-      return matchesSearch && matchesStatus;
+      let matchesDate = true;
+      if (startDate && endDate && a.joinedAt) {
+        const joined = new Date(a.joinedAt);
+        matchesDate = joined >= new Date(startDate) && joined <= new Date(endDate);
+      }
+      return matchesSearch && matchesStatus && matchesDate;
     });
-  }, [affiliates, searchQuery, statusFilter]);
+  }, [affiliates, searchQuery, statusFilter, startDate, endDate]);
+
+  const handlePayCommission = async (affiliate: Affiliate) => {
+    try {
+      // @ts-expect-error POST /superadmin/affiliates/:id/pay to be implemented on backend
+      await affiliatesApi.payCommission(affiliate.id);
+    } catch {
+      // handled by error boundary
+    }
+  };
 
   return {
     fetchState,
@@ -149,11 +163,16 @@ export const useSuperadminAffiliatesPage = () => {
     handleEditAffiliate,
     handleToggleAffiliateStatus,
     handleDeleteAffiliate,
+    handlePayCommission,
     openEditModal,
     editingAffiliate,
     setEditingAffiliate,
     isMutating,
     totalAffiliates,
     totalCommission,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
   };
 };

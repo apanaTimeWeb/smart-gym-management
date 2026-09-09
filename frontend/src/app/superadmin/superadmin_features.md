@@ -54,7 +54,7 @@ any route under `/superadmin`.
 
 | Feature | Route | What the User Can Do | Key Components | Main API Calls | Status |
 |---|---|---|---|---|---|
-| SaaS Dashboard | `/superadmin/dashboard` | View MRR, active gyms, new onboards, suspended tenants at a glance | `SuperadminDashboardClient` | `GET /superadmin/dashboard/metrics` | ✅ Live |
+| SaaS Dashboard | `/superadmin/dashboard` | View MRR, active gyms, new onboards, suspended tenants, Trial Gyms, ARPU, Revenue by Tier | `SuperadminDashboardClient` | `GET /superadmin/dashboard/metrics` | ✅ Live |
 | Tenant List | `/superadmin/gyms` | Paginated gym table with search, status filter, inline actions | `SuperadminGymsClient`, `SuperadminGymsTable` | `GET /superadmin/gyms-list` | ✅ Live |
 | Onboard Gym | `/superadmin/gyms/add` | Multi-step wizard to register a new gym tenant | `SuperadminAddGymForm` | `POST /superadmin/gyms-list` | ✅ Live |
 | Suspend / Reactivate | `/superadmin/gyms` | Toggle gym status ACTIVE ↔ SUSPENDED | `useSuperadminGymsTable` | `PATCH /superadmin/gyms-list/:id/status` | ✅ Live |
@@ -71,13 +71,14 @@ any route under `/superadmin`.
 | Infrastructure | `/superadmin/infrastructure` | View server node health, Redis telemetry; flush global or tenant cache | `SuperadminInfrastructureClient`, `SuperadminFlushTenantModal` | `GET /superadmin/infrastructure`, `GET /superadmin/infrastructure/redis`, `POST /superadmin/infrastructure/redis/flush-*` | ✅ Live |
 | Schema Migrations | `/superadmin/migrations` | Track and trigger database schema rollouts across all tenant instances | `SuperadminMigrationsClient` | `GET /superadmin/migrations`, `POST /superadmin/migrations/trigger` | ✅ Live |
 | Background Jobs | `/superadmin/jobs` | Monitor BullMQ job queues — active, completed, failed, delayed counts | `SuperadminJobsClient` | `GET /superadmin/jobs` | ✅ Live |
-| Backups | `/superadmin/backups` | View backup schedule; trigger manual backup; initiate restore | `SuperadminBackupsClient` | `GET/POST /superadmin/backups` | ✅ Live |
+| Backups | `/superadmin/backups` | View backup schedule; trigger manual backup; initiate restore (type-to-confirm) | `SuperadminBackupsClient` | `GET/POST /superadmin/backups` | ✅ Live |
 | System Health | `/superadmin/system` | View CPU, RAM, disk, uptime, and per-service status | `SuperadminSystemClient` | `GET /superadmin/system-health` | ✅ Live |
-| Global Audit Log | `/superadmin/global-audit` | Immutable log of all superadmin actions across all tenants | `SuperadminGlobalAuditClient` | `GET /superadmin/audit-logs` | ✅ Live |
-| Platform Settings | `/superadmin/settings` | Edit global key-value configuration (billing cycle, maintenance mode, SMTP) | `SuperadminSettingsClient` | `GET /superadmin/settings`, `PATCH /superadmin/settings/:id` | ✅ Live |
+| Global Audit Log | `/superadmin/global-audit` | Immutable log of all superadmin actions across all tenants. Includes CSV Export. | `SuperadminGlobalAuditClient` | `GET /superadmin/audit-logs` | ✅ Live |
+| Platform Settings | `/superadmin/settings` | Edit global key-value configuration. View platform Changelog. | `SuperadminSettingsClient` | `GET /superadmin/settings`, `PATCH /superadmin/settings/:id` | ✅ Live |
 | Tenant Preview | `/superadmin/tenant-preview` | Read-only simulation of any gym's admin dashboard — no mutations | `SuperadminTenantPreviewClient` | `GET /superadmin/tenant-preview/:id` (future) | ✅ Live |
 | Analytics | `/superadmin/analytics` | MRR trends, gym growth charts, churn analysis | `SuperadminAnalyticsClient` | `GET /superadmin/analytics` | ✅ Live |
 | Reports | `/superadmin/reports` | Platform-wide financial and operational PDF/CSV exports | `SuperadminReportsClient` | `GET /superadmin/reports` | ✅ Live |
+| Franchises | `/superadmin/franchises` | Manage franchise groups containing multiple branches. Edit franchise details. | `SuperadminFranchisesClient`, `SuperadminFranchiseModal` | `GET/PATCH /superadmin/franchises` | ✅ Live |
 
 ---
 

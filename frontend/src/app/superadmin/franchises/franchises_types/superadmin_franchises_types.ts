@@ -16,6 +16,9 @@ export interface SuperadminFranchise {
   plan: string;
   city: string;
   state: string;
+  gstin?: string;
+  registrationNumber?: string;
+  contractStartDate?: string;
   createdAt: string;
 }
 

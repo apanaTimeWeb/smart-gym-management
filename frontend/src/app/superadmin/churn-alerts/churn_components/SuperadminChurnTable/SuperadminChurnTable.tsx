@@ -21,7 +21,7 @@ export default function SuperadminChurnTable({ alerts, onActionClick }: Superadm
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-border bg-input/40">
-            {['Tenant', 'Plan', 'Risk Level', 'Risk Score', 'Last Login', 'Member Drop', 'MRR', 'Action Status', 'Actions'].map((h) => (
+            {['Tenant', 'Plan', 'Risk Level', 'Risk Score', 'Last Login', 'Member Drop', 'MRR', 'Last Payment', 'Contract End', 'Action Status', 'Actions'].map((h) => (
               <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider whitespace-nowrap">
                 {h}
               </th>
@@ -71,6 +71,16 @@ export default function SuperadminChurnTable({ alerts, onActionClick }: Superadm
               <td className="px-4 py-3 text-right">
                 <span className="text-xs font-medium text-foreground">
                   ₹{alert.mrr.toLocaleString('en-IN')}
+                </span>
+              </td>
+              <td className="px-4 py-3">
+                <span className="text-xs text-secondary">
+                  {alert.lastPaymentDate ? new Date(alert.lastPaymentDate).toLocaleDateString('en-IN') : '—'}
+                </span>
+              </td>
+              <td className="px-4 py-3">
+                <span className="text-xs text-secondary">
+                  {alert.contractEndDate ? new Date(alert.contractEndDate).toLocaleDateString('en-IN') : '—'}
                 </span>
               </td>
               <td className="px-4 py-3">

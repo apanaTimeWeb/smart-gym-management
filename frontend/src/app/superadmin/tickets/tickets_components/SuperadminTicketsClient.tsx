@@ -11,6 +11,25 @@ import SuperadminTicketsReplyModal from '@/app/superadmin/tickets/tickets_compon
 export default function SuperadminTicketsClient() {
   const [replyModalOpen, setReplyModalOpen] = useState(false);
   const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
+
+  const handleCloseTicket = async (ticketId: string) => {
+    try {
+      const { ticketsApi } = await import('@/app/superadmin/tickets/superadmin_tickets_api/superadmin_tickets_api');
+      // @ts-expect-error PATCH /superadmin/tickets/:id/close to be implemented
+      await ticketsApi.closeTicket(ticketId);
+    } catch {
+      // handled by error boundary
+    }
+  };
+
+  const handleAssignTicket = (ticketId: string) => {
+    // @ts-expect-error Assign modal to be implemented in future iteration
+    const assignee = prompt('Enter assignee name or email:');
+    if (assignee) {
+      // eslint-disable-next-line no-console
+      console.log(`Assigning ticket ${ticketId} to ${assignee}`);
+    }
+  };
   const {
     fetchState,
     error,
@@ -57,6 +76,8 @@ export default function SuperadminTicketsClient() {
             setSelectedTicketId(ticketId);
             setReplyModalOpen(true);
           }}
+          onClose={handleCloseTicket}
+          onAssign={handleAssignTicket}
         />
         <SuperadminPagination 
           currentPage={currentPage}

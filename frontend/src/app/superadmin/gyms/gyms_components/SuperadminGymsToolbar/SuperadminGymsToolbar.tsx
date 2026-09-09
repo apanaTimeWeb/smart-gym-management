@@ -2,12 +2,12 @@
 // RESPONSIBILITY: Renders the search toolbar for the Gyms table.
 
 import React from 'react';
-import { Search } from 'lucide-react';
+import { Search, Download } from 'lucide-react';
 
 import { useSuperadminGymsToolbar } from '@/app/superadmin/gyms/gyms_components/SuperadminGymsToolbar/useSuperadminGymsToolbar';
 
 export default function SuperadminGymsToolbar() {
-  const { search, handleSearchChange, statusFilter, setStatusFilter } = useSuperadminGymsToolbar();
+  const { search, handleSearchChange, statusFilter, setStatusFilter, planFilter, setPlanFilter, handleExportGyms } = useSuperadminGymsToolbar();
 
   return (
     <div className="p-4 border-b border-border flex items-center gap-4">
@@ -33,6 +33,23 @@ export default function SuperadminGymsToolbar() {
         <option value="TRIAL">Trial</option>
         <option value="CANCELLED">Cancelled</option>
       </select>
+      <select 
+        value={planFilter} 
+        onChange={e => setPlanFilter(e.target.value)} 
+        className="px-3 py-2 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-card text-foreground"
+      >
+        <option value="All">All Plans</option>
+        <option value="STARTER">Starter</option>
+        <option value="PRO">Pro</option>
+        <option value="ENTERPRISE">Enterprise</option>
+      </select>
+      <button
+        onClick={handleExportGyms}
+        className="flex items-center gap-2 px-4 py-2 border border-border rounded-lg text-sm text-foreground bg-card hover:bg-input motion-safe:transition-colors"
+        title="Export Gyms as CSV"
+      >
+        <Download size={16} /> Export
+      </button>
     </div>
   );
 }

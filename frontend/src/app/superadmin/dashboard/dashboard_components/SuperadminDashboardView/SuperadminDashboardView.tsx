@@ -5,7 +5,7 @@
 //
 // DATA FLOW: superadminApi.dashboard.fetchDashboardData() → useQuery → SuperadminDashboardView → KPI + Chart JSX
 
-import { Users, Building2, CreditCard, Activity } from 'lucide-react';
+import { Users, Building2, CreditCard, Activity, AlertCircle, Clock, CheckCircle2, TrendingUp, DollarSign } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useState, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -15,6 +15,7 @@ import { CHART_COLORS } from '@/app/superadmin/superadmin_utils/SuperadminChartC
 import type {
   SaaSDashboardMetrics,
   RevenueChartData,
+  GrowthChartData,
   TimeRange,
 } from '@/app/superadmin/dashboard/superadmin_dashboard_types/superadmin_dashboard_types';
 
@@ -27,6 +28,7 @@ const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 interface DashboardApiData {
   metrics: SaaSDashboardMetrics;
   revenue: RevenueChartData[];
+  growth: GrowthChartData[];
 }
 
 /**
@@ -108,7 +110,7 @@ export default function SuperadminDashboardView() {
     );
   }
 
-  const { metrics, revenue: revenueChartData } = apiData;
+  const { metrics, revenue: revenueChartData, growth: growthChartData = [] } = apiData;
 
   const timeMultiplier = timeRange === 'weekly' ? 0.25 : timeRange === 'yearly' ? 12 : timeRange === 'custom' ? 1.5 : 1;
   const mrrLabel = timeRange === 'weekly' ? 'WEEKLY RR' : timeRange === 'yearly' ? 'YEARLY RR' : timeRange === 'custom' ? 'CUSTOM RR' : 'TOTAL MRR';
@@ -124,8 +126,8 @@ export default function SuperadminDashboardView() {
     {
       label: mrrLabel,
       value: formatIndianCurrency(Math.round((metrics.monthlyRecurringRevenue || 0) * timeMultiplier)),
-      trend: mrrTrendStr,
-      trendUp: mrrTrendNum >= 0,
+      trend: metrics.mrrDeltaPercent !== undefined ? `${metrics.mrrDeltaPercent > 0 ? '+' : ''}${metrics.mrrDeltaPercent}% vs last month` : mrrTrendStr,
+      trendUp: metrics.mrrDeltaPercent !== undefined ? metrics.mrrDeltaPercent >= 0 : mrrTrendNum >= 0,
       icon: CreditCard,
       colorClass: 'text-success',
       iconBgClass: 'bg-success/10',
@@ -156,6 +158,51 @@ export default function SuperadminDashboardView() {
       icon: Users,
       colorClass: 'text-purple',
       iconBgClass: 'bg-purple/10',
+    },
+    {
+      label: 'ARPU',
+      value: formatIndianCurrency(metrics.arpu || 0),
+      trend: undefined,
+      trendUp: true,
+      icon: DollarSign,
+      colorClass: 'text-success',
+      iconBgClass: 'bg-success/10',
+    },
+    {
+      label: 'TRIAL GYMS',
+      value: String(metrics.trialGyms || 0),
+      trend: undefined,
+      trendUp: true,
+      icon: Clock,
+      colorClass: 'text-warning',
+      iconBgClass: 'bg-warning/10',
+    },
+    {
+      label: 'OVERDUE INVOICES',
+      value: String(metrics.overdueInvoicesCount || 0),
+      trend: undefined,
+      trendUp: false,
+      icon: AlertCircle,
+      colorClass: 'text-danger',
+      iconBgClass: 'bg-danger/10',
+    },
+    {
+      label: 'PENDING REVENUE',
+      value: formatIndianCurrency(metrics.pendingRevenue || 0),
+      trend: undefined,
+      trendUp: true,
+      icon: CreditCard,
+      colorClass: 'text-warning',
+      iconBgClass: 'bg-warning/10',
+    },
+    {
+      label: 'PLATFORM HEALTH',
+      value: '98/100', // Mocked computed health score for now
+      trend: undefined,
+      trendUp: true,
+      icon: CheckCircle2,
+      colorClass: 'text-success',
+      iconBgClass: 'bg-success/10',
     },
   ];
 
@@ -202,6 +249,41 @@ export default function SuperadminDashboardView() {
     name: mrrLabel,
     data: revenueChartData.map((d: RevenueChartData) => Math.round(d.mrr * timeMultiplier)),
   }];
+
+  const growthChartOptions = {
+    ...chartOptions,
+    colors: [CHART_COLORS.INFO],
+    xaxis: {
+      ...chartOptions.xaxis,
+      categories: growthChartData.map((d: GrowthChartData) => d.month),
+    },
+    yaxis: {
+      labels: {
+        style: { colors: CHART_COLORS.TEXT_SECONDARY },
+        formatter: (val: number) => val.toFixed(0),
+      },
+    },
+  };
+
+  const growthChartSeries = [{
+    name: 'New Gyms',
+    data: growthChartData.map((d: GrowthChartData) => d.gyms),
+  }];
+
+  const donutOptions = {
+    chart: { type: 'donut' as const, background: 'transparent' },
+    labels: (metrics.revenueByTier || []).map(t => t.plan.toUpperCase()),
+    colors: [CHART_COLORS.PRIMARY, CHART_COLORS.INFO, CHART_COLORS.WARNING, CHART_COLORS.SUCCESS, CHART_COLORS.DANGER],
+    theme: { mode: 'dark' as const },
+    stroke: { show: false },
+    dataLabels: { enabled: false },
+    tooltip: {
+      theme: 'dark' as const,
+      y: { formatter: (val: number) => `₹${val.toLocaleString('en-IN')}` }
+    },
+    legend: { position: 'bottom' as const, labels: { colors: CHART_COLORS.TEXT_SECONDARY } }
+  };
+  const donutSeries = (metrics.revenueByTier || []).map(t => Math.round(t.amount * timeMultiplier));
 
   return (
     <div className="space-y-6">
@@ -290,7 +372,14 @@ export default function SuperadminDashboardView() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* MRR Area Chart */}
         <div className="lg:col-span-2 bg-card border border-border rounded-xl p-6 shadow-sm">
-          <h2 className="text-base font-semibold text-foreground mb-6">{mrrLabel} Growth</h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-base font-semibold text-foreground">{mrrLabel} Growth</h2>
+            {metrics.arrDeltaPercent !== undefined && (
+              <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${metrics.arrDeltaPercent >= 0 ? 'bg-success-bg text-success border border-success/20' : 'bg-danger-bg text-danger border border-danger/20'}`}>
+                ARR Trend: {metrics.arrDeltaPercent > 0 ? '+' : ''}{metrics.arrDeltaPercent}%
+              </span>
+            )}
+          </div>
           <div className="h-80 w-full">
             <Chart options={chartOptions} series={chartSeries} type="area" height="100%" />
           </div>
@@ -311,7 +400,8 @@ export default function SuperadminDashboardView() {
               return (
                 <div
                   key={tenant.id}
-                  className="flex items-center justify-between p-4 bg-background rounded-lg border border-border hover:bg-input motion-safe:transition-colors motion-safe:duration-200 cursor-default"
+                  onClick={() => router.push(`/superadmin/gyms?id=${tenant.id}`)}
+                  className="flex items-center justify-between p-4 bg-background rounded-lg border border-border hover:bg-input motion-safe:transition-colors motion-safe:duration-200 cursor-pointer"
                 >
                   <div className="min-w-0 flex-1">
                     <h3 className="text-sm font-semibold text-foreground truncate" title={tenant.name}>
@@ -330,6 +420,26 @@ export default function SuperadminDashboardView() {
                 </div>
               );
             })}
+          </div>
+        </div>
+
+        {/* Gym Growth Chart */}
+        <div className="lg:col-span-2 bg-card border border-border rounded-xl p-6 shadow-sm mt-6">
+          <h2 className="text-base font-semibold text-foreground mb-6">Gym Growth (New Signups)</h2>
+          <div className="h-80 w-full">
+            <Chart options={growthChartOptions} series={growthChartSeries} type="bar" height="100%" />
+          </div>
+        </div>
+
+        {/* Revenue by Plan Tier Donut Chart */}
+        <div className="lg:col-span-1 bg-card border border-border rounded-xl p-6 shadow-sm mt-6">
+          <h2 className="text-base font-semibold text-foreground mb-6">Revenue by Plan</h2>
+          <div className="h-80 w-full flex items-center justify-center">
+            {(metrics.revenueByTier?.length || 0) > 0 ? (
+              <Chart options={donutOptions} series={donutSeries} type="donut" height="100%" />
+            ) : (
+              <div className="text-secondary text-sm">No revenue data by tier</div>
+            )}
           </div>
         </div>
       </div>

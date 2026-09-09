@@ -24,14 +24,23 @@ export interface Tenant {
   memberCount: number;
   monthlyRevenue: number;
   databaseVersion: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  gstin?: string;
+  trialEndsAt?: string;
+  lastLoginAt?: string;
 }
 
 export interface SaaSDashboardMetrics {
   totalGyms: number;
   activeGyms: number;
   suspendedGyms: number;
+  trialGyms: number;
   totalEndUsers: number;
   monthlyRecurringRevenue: number;
+  overdueInvoicesCount: number;
+  pendingRevenue: number;
   recentOnboards: Tenant[];
 }
 

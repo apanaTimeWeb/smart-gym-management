@@ -4,6 +4,12 @@ export interface UsageMeter {
   tenantName: string;
   smsSent: number;
   smsLimit: number;
+  whatsappMessagesSent: number;
+  whatsappLimit: number;
+  emailsSent: number;
+  emailLimit: number;
+  apiCallsCount: number;
+  apiCallsLimit?: number;
   databaseGb: number;
   mediaGb: number;
   storageLimitGb: number;

@@ -3,7 +3,7 @@
 
 'use client';
 
-import { Check, Edit2, Trash2, Loader2 } from 'lucide-react';
+import { Check, Edit2, Trash2, Loader2, Archive } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
@@ -33,6 +33,16 @@ export default function SuperadminPlansList() {
     }
   });
 
+  const archiveMutation = useMutation({
+    // @ts-expect-error PATCH /superadmin/plans/:id/archive to be implemented on backend
+    mutationFn: (id: string) => superadminApi.plans.archivePlan(id),
+    onSuccess: () => {
+      toast.success('Plan archived. Existing tenants remain unaffected.');
+      queryClient.invalidateQueries({ queryKey: ['superadmin', 'plans'] });
+    },
+    onError: () => { toast.error('Failed to archive plan.'); },
+  });
+
   const plans = fetchRes?.data || [];
 
   if (fetchState === 'loading') {
@@ -58,6 +68,11 @@ export default function SuperadminPlansList() {
             key={plan.id}
             className="bg-card border border-border rounded-2xl p-6 flex flex-col relative overflow-hidden group hover:border-primary motion-safe:transition-colors motion-safe:duration-200"
           >
+            {plan.isArchived && (
+              <div className="absolute top-0 left-0 bg-secondary/20 text-secondary px-3 py-1 text-xs font-bold rounded-br-lg">
+                ARCHIVED
+              </div>
+            )}
             <div className="absolute top-0 right-0 bg-primary/10 text-primary px-3 py-1 text-xs font-bold rounded-bl-lg">
               {plan.activeTenants ?? 0} Gyms Active
             </div>
@@ -104,21 +119,36 @@ export default function SuperadminPlansList() {
               </button>
               <button
                 onClick={async () => {
-                  const ok = await confirm({
-                    title: 'Delete Plan',
-                    message: `Are you sure you want to delete the plan "${plan.name}"? This action cannot be undone.`,
-                    type: 'danger',
-                    confirmText: 'Delete'
-                  });
-                  if (ok) {
-                    deleteMutation.mutate(plan.id);
+                  const hasTenants = (plan.activeTenants ?? 0) > 0;
+                  if (hasTenants) {
+                    // Block delete — offer archive instead
+                    const ok = await confirm({
+                      title: 'Cannot Delete Active Plan',
+                      message: `"${plan.name}" has ${plan.activeTenants} active tenants. Archive it instead to hide it from new signups while keeping existing tenants.`,
+                      type: 'warning',
+                      confirmText: 'Archive Plan',
+                    });
+                    if (ok) archiveMutation.mutate(plan.id);
+                  } else {
+                    const ok = await confirm({
+                      title: 'Delete Plan',
+                      message: `Delete "${plan.name}"? This cannot be undone.`,
+                      type: 'danger',
+                      confirmText: 'Delete',
+                    });
+                    if (ok) deleteMutation.mutate(plan.id);
                   }
                 }}
-                disabled={isDeleting || deleteMutation.isPending}
-                aria-label={`Delete ${plan.name}`}
+                disabled={isDeleting || deleteMutation.isPending || archiveMutation.isPending}
+                aria-label={`Delete or archive ${plan.name}`}
+                title={(plan.activeTenants ?? 0) > 0 ? 'Archive plan (has active tenants)' : 'Delete plan'}
                 className="flex-1 py-2.5 flex items-center justify-center bg-input hover:bg-danger hover:text-white text-secondary rounded-xl motion-safe:transition-colors border border-border disabled:opacity-50"
               >
-                {isDeleting ? <Loader2 size={18} className="motion-safe:animate-spin" /> : <Trash2 size={18} />}
+                {isDeleting || archiveMutation.isPending
+                  ? <Loader2 size={18} className="motion-safe:animate-spin" />
+                  : (plan.activeTenants ?? 0) > 0
+                    ? <Archive size={18} />
+                    : <Trash2 size={18} />}
               </button>
             </div>
           </div>
