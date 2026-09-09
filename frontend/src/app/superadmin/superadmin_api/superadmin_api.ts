@@ -61,6 +61,7 @@ export const superadminApi = {
       const q = params ? '?' + new URLSearchParams(params).toString() : '';
       return apiFetch<ApiResponse<BackgroundJob[]>>(`${SuperadminUrlConfig.BACKEND_API.JOBS_BASE}${q}`);
     },
+    retryAll: () => apiFetch<ApiResponse<{ queuedCount: number }>>(`${SuperadminUrlConfig.BACKEND_API.JOBS_BASE}/retry-all`, { method: 'POST' }),
   },
 
   migrations: {

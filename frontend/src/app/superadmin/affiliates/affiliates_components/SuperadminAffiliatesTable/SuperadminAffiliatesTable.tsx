@@ -31,7 +31,8 @@ export default function SuperadminAffiliatesTable({ affiliates, onToggleStatus, 
             <tr className="bg-primary/5 border-b border-border">
               <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Partner Name</th>
               <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Referral Code</th>
-              <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Total Referred</th>
+              <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Referral Count</th>
+              <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Conversion Rate</th>
               <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Commission Earned</th>
               <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Status</th>
               <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider text-right">Actions</th>
@@ -40,7 +41,7 @@ export default function SuperadminAffiliatesTable({ affiliates, onToggleStatus, 
           <tbody className="divide-y divide-border">
             {paginatedAffiliates.length === 0 ? (
               <tr>
-                <td colSpan={6}><SuperadminAffiliatesEmptyState onAddClick={onAddClick} /></td>
+                <td colSpan={7}><SuperadminAffiliatesEmptyState onAddClick={onAddClick} /></td>
               </tr>
             ) : (
               paginatedAffiliates.map((aff) => (

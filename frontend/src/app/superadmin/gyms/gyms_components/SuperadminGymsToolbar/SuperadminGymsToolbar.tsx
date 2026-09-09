@@ -7,7 +7,7 @@ import { Search, Download } from 'lucide-react';
 import { useSuperadminGymsToolbar } from '@/app/superadmin/gyms/gyms_components/SuperadminGymsToolbar/useSuperadminGymsToolbar';
 
 export default function SuperadminGymsToolbar() {
-  const { search, handleSearchChange, statusFilter, setStatusFilter, planFilter, setPlanFilter, handleExportGyms } = useSuperadminGymsToolbar();
+  const { search, handleSearchChange, statusFilter, setStatusFilter, planFilter, setPlanFilter, viewMode, setViewMode, handleExportGyms } = useSuperadminGymsToolbar();
 
   return (
     <div className="p-4 border-b border-border flex items-center gap-4">
@@ -43,6 +43,22 @@ export default function SuperadminGymsToolbar() {
         <option value="PRO">Pro</option>
         <option value="ENTERPRISE">Enterprise</option>
       </select>
+      
+      <div className="flex bg-input border border-border rounded-lg p-1">
+        <button
+          onClick={() => setViewMode('list')}
+          className={`px-3 py-1.5 text-sm rounded-md motion-safe:transition-colors ${viewMode === 'list' ? 'bg-background text-foreground shadow-sm' : 'text-secondary hover:text-foreground hover:bg-background/50'}`}
+        >
+          List
+        </button>
+        <button
+          onClick={() => setViewMode('calendar')}
+          className={`px-3 py-1.5 text-sm rounded-md motion-safe:transition-colors ${viewMode === 'calendar' ? 'bg-background text-foreground shadow-sm' : 'text-secondary hover:text-foreground hover:bg-background/50'}`}
+        >
+          Calendar
+        </button>
+      </div>
+
       <button
         onClick={handleExportGyms}
         className="flex items-center gap-2 px-4 py-2 border border-border rounded-lg text-sm text-foreground bg-card hover:bg-input motion-safe:transition-colors"

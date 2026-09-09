@@ -7,6 +7,7 @@ export interface AuditLog {
   actorRole?: 'SUPERADMIN' | 'ADMIN' | 'STAFF' | 'MEMBER';
   tenantId?: string;
   tenantName?: string;
+  actorType?: 'SUPERADMIN' | 'SYSTEM' | 'TENANT';
   action: string;
   resource: string;
   resourceId?: string;

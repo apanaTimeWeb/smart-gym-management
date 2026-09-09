@@ -1,19 +1,21 @@
-// RESPONSIBILITY: Custom hook for managing the state and logic of the Support Tickets page
+// RESPONSIBILITY: Custom hook for managing the logic of the Support Tickets page
 // DATA FLOW: API -> useSuperadminTicketsData -> useSuperadminTickets -> SuperadminTicketsClient
 
-import { useState } from 'react';
 import { useSuperadminTicketsData } from '@/app/superadmin/tickets/tickets_utils/useSuperadminTicketsData';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
-import type { SupportTicket, TicketStatus, TicketPriority } from '@/app/superadmin/tickets/superadmin_tickets_types/superadmin_tickets_types';
+import type { SupportTicket } from '@/app/superadmin/tickets/superadmin_tickets_types/superadmin_tickets_types';
+import { useSuperadminTicketsStore } from '@/app/superadmin/tickets/tickets_store/useSuperadminTicketsStore';
 
 export function useSuperadminTickets() {
   const { data: DUMMY_SUPPORT_TICKETS, fetchState, error } = useSuperadminTicketsData<SupportTicket[]>(SuperadminUrlConfig.BACKEND_API.TICKETS_BASE);
 
-  const [search, setSearch] = useState('');
-  const [showFilter, setShowFilter] = useState(false);
-  const [statusFilter, setStatusFilter] = useState<TicketStatus | 'ALL'>('ALL');
-  const [priorityFilter, setPriorityFilter] = useState<TicketPriority | 'ALL'>('ALL');
-  const [currentPage, setCurrentPage] = useState(1);
+  const {
+    search,
+    statusFilter,
+    priorityFilter,
+    currentPage,
+  } = useSuperadminTicketsStore();
+
   const ITEMS_PER_PAGE = 10;
 
   const filtered = (DUMMY_SUPPORT_TICKETS || []).filter(t => {
@@ -31,16 +33,6 @@ export function useSuperadminTickets() {
   return {
     fetchState,
     error,
-    search,
-    setSearch,
-    showFilter,
-    setShowFilter,
-    statusFilter,
-    setStatusFilter,
-    priorityFilter,
-    setPriorityFilter,
-    currentPage,
-    setCurrentPage,
     totalPages,
     paginatedTickets,
   };

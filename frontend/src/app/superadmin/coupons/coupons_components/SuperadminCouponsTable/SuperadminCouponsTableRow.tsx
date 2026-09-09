@@ -1,6 +1,6 @@
 'use client';
 // RESPONSIBILITY: Renders a single row in the Coupons data table. Handles row-level action buttons with stopPropagation. Purely presentational.
-import { Edit2, Trash2, RefreshCw, ToggleLeft, ToggleRight, MessageCircle } from 'lucide-react';
+import { Edit2, Trash2, RefreshCw, ToggleLeft, ToggleRight, MessageCircle, History } from 'lucide-react';
 import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
 import SuperadminCouponsStatusBadge from '@/app/superadmin/coupons/coupons_components/SuperadminCouponsStatusBadge/SuperadminCouponsStatusBadge';
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
@@ -113,6 +113,18 @@ export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEd
               className="text-secondary hover:text-primary motion-safe:transition-colors p-1.5 bg-input hover:bg-primary/10 rounded-md border border-border"
             >
               <Edit2 className="w-4 h-4" />
+            </button>
+            <button
+              title="View History"
+              aria-label="View History"
+              onClick={(e) => { 
+                e.stopPropagation(); 
+                // Custom event to trigger drawer in Client
+                document.dispatchEvent(new CustomEvent('open-coupon-history', { detail: cpn }));
+              }}
+              className="text-secondary hover:text-info motion-safe:transition-colors p-1.5 bg-input hover:bg-info/10 rounded-md border border-border"
+            >
+              <History className="w-4 h-4" />
             </button>
             <button
               title="Delete Coupon"

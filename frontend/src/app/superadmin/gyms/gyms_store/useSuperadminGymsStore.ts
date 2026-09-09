@@ -6,6 +6,7 @@ import type { Tenant } from '@/app/superadmin/gyms/superadmin_gyms_types/superad
 
 export interface GymsState {
   // UI State
+  viewMode: 'list' | 'calendar';
   search: string;
   statusFilter: string;
   planFilter: string;
@@ -20,6 +21,7 @@ export interface GymsState {
   gymToDelete: Tenant | null;
 
   // Actions
+  setViewMode: (mode: 'list' | 'calendar') => void;
   setSearch: (search: string) => void;
   setStatusFilter: (status: string) => void;
   setPlanFilter: (plan: string) => void;
@@ -35,6 +37,7 @@ export interface GymsState {
 }
 
 export const useSuperadminGymsStore = create<GymsState>((set) => ({
+  viewMode: 'list',
   search: '',
   statusFilter: 'All',
   planFilter: 'All',
@@ -48,6 +51,7 @@ export const useSuperadminGymsStore = create<GymsState>((set) => ({
   isDeleteModalOpen: false,
   gymToDelete: null,
 
+  setViewMode: (viewMode) => set({ viewMode }),
   setSearch: (search) => set({ search }),
   setStatusFilter: (statusFilter) => set({ statusFilter }),
   setPlanFilter: (planFilter) => set({ planFilter }),

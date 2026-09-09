@@ -4,7 +4,8 @@
 import { useSuperadminBackupsData } from '@/app/superadmin/backups/backups_utils/useSuperadminBackupsData';
 import SuperadminBackupsEmptyState from '@/app/superadmin/backups/backups_components/SuperadminBackupsEmptyState/SuperadminBackupsEmptyState';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
-import { DatabaseBackup, Search, Download, RotateCcw } from 'lucide-react';
+import SuperadminBackupsScheduleModal from '@/app/superadmin/backups/backups_components/SuperadminBackupsScheduleModal';
+import { DatabaseBackup, Search, Download, RotateCcw, Clock } from 'lucide-react';
 import type { BackupRecord } from '@/app/superadmin/backups/superadmin_backups_types/superadmin_backups_types';
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
@@ -12,19 +13,26 @@ import SuperadminPagination from '@/app/superadmin/superadmin_components/Superad
 import { backupsApi } from '@/app/superadmin/backups/superadmin_backups_api/superadmin_backups_api';
 import { StatusColors } from '@/app/superadmin/backups/backups_utils/SuperadminBackupsConstants';
 
+import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
+
 export default function SuperadminBackupsClient() {
   const { data: backups, fetchState, error } = useSuperadminBackupsData();
 
     const [search, setSearch] = useState('');
+    const [statusFilter, setStatusFilter] = useState('ALL');
+    const [typeFilter, setTypeFilter] = useState('ALL');
     const [isTriggering, setIsTriggering] = useState(false);
+    const [triggerModalOpen, setTriggerModalOpen] = useState(false);
+    const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const ITEMS_PER_PAGE = 10;
 
     useEffect(() => {
       setCurrentPage(1);
-    }, [search]);
+    }, [search, statusFilter, typeFilter]);
 
     const handleTriggerSnapshot = async () => {
+      setTriggerModalOpen(false);
       setIsTriggering(true);
       const loadingToast = toast.loading('Initiating global pg_dump snapshot...');
       try {
@@ -80,34 +88,46 @@ if (fetchState === 'loading') return (
   );
   if (error || !backups) return <div className="p-8 text-center text-danger">Error loading data.</div>;
 
-  const filtered: BackupRecord[] = backups.filter((b: BackupRecord) => 
-    b.tenantName?.toLowerCase().includes(search.toLowerCase()) || 
-    b.databaseName?.toLowerCase().includes(search.toLowerCase()) ||
-    b.id?.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered: BackupRecord[] = backups.filter((b: BackupRecord) => {
+    const matchesSearch = b.tenantName?.toLowerCase().includes(search.toLowerCase()) || 
+                          b.databaseName?.toLowerCase().includes(search.toLowerCase()) ||
+                          b.id?.toLowerCase().includes(search.toLowerCase());
+    const matchesStatus = statusFilter === 'ALL' || b.status === statusFilter;
+    const bType = b.id.includes('MANUAL') ? 'MANUAL' : 'AUTOMATED'; // Mock logic for type
+    const matchesType = typeFilter === 'ALL' || bType === typeFilter;
+    return matchesSearch && matchesStatus && matchesType;
+  });
 
   const totalPages: number = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;
   const paginatedBackups: BackupRecord[] = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Tenant Database Backups</h1>
-          <p className="text-secondary mt-1">Manage automated pg_dump snapshots for all isolated gym databases.</p>
+          <p className="text-secondary mt-1 text-sm">Manage automated pg_dump snapshots for all isolated gym databases.</p>
         </div>
-        <button 
-          onClick={handleTriggerSnapshot}
-          disabled={isTriggering}
-          className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-hover motion-safe:transition-colors flex items-center gap-2 disabled:opacity-50"
-        >
-          <DatabaseBackup size={18} /> {isTriggering ? 'Creating Snapshot...' : 'Trigger Global Snapshot'}
-        </button>
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={() => setScheduleModalOpen(true)}
+            className="bg-input text-foreground px-4 py-2 rounded-lg font-medium hover:bg-border motion-safe:transition-colors border border-border flex items-center gap-2"
+          >
+            <Clock size={16} /> Configure Schedule
+          </button>
+          <button 
+            onClick={() => setTriggerModalOpen(true)}
+            disabled={isTriggering}
+            className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-hover motion-safe:transition-colors flex items-center gap-2 disabled:opacity-50"
+          >
+            <DatabaseBackup size={16} /> {isTriggering ? 'Creating Snapshot...' : 'Global Snapshot'}
+          </button>
+        </div>
       </div>
 
       <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden flex flex-col min-h-96">
-        <div className="p-4 border-b border-border">
-          <div className="relative max-w-md">
+        <div className="p-4 border-b border-border flex flex-col sm:flex-row gap-4 justify-between items-center">
+          <div className="relative w-full max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />
             <input 
               type="text" 
@@ -116,9 +136,35 @@ if (fetchState === 'loading') return (
               value={search}
               onChange={(e) => {
                 setSearch(e.target.value);
-                
               }}
             />
+          </div>
+          <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+            <div className="w-40 border-none bg-input rounded-lg">
+              <SearchableDropdown
+                value={statusFilter}
+                onChange={(val) => setStatusFilter(String(val))}
+                options={[
+                  { value: 'ALL', label: 'All Statuses' },
+                  { value: 'SUCCESS', label: 'Success' },
+                  { value: 'FAILED', label: 'Failed' },
+                  { value: 'IN_PROGRESS', label: 'In Progress' }
+                ]}
+                className="bg-transparent border-transparent text-sm"
+              />
+            </div>
+            <div className="w-40 border-none bg-input rounded-lg">
+              <SearchableDropdown
+                value={typeFilter}
+                onChange={(val) => setTypeFilter(String(val))}
+                options={[
+                  { value: 'ALL', label: 'All Types' },
+                  { value: 'AUTOMATED', label: 'Automated' },
+                  { value: 'MANUAL', label: 'Manual' }
+                ]}
+                className="bg-transparent border-transparent text-sm"
+              />
+            </div>
           </div>
         </div>
 
@@ -230,6 +276,41 @@ if (fetchState === 'loading') return (
           </div>
         </div>
       )}
+
+      {triggerModalOpen && (
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-card w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-border motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95">
+            <div className="p-6">
+              <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-4">
+                <DatabaseBackup size={24} />
+              </div>
+              <h2 className="text-xl font-bold text-foreground mb-2">Trigger Global Backup</h2>
+              <p className="text-sm text-secondary mb-6">
+                Are you sure you want to trigger a manual pg_dump snapshot for all tenant databases? This process is resource-intensive and may take a few minutes.
+              </p>
+              <div className="flex gap-3 justify-end">
+                <button 
+                  onClick={() => setTriggerModalOpen(false)}
+                  className="px-4 py-2 rounded-lg font-medium border border-border text-foreground hover:bg-card-hover motion-safe:transition-colors"
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={handleTriggerSnapshot}
+                  className="px-4 py-2 rounded-lg font-medium bg-primary hover:bg-primary-hover text-white motion-safe:transition-colors"
+                >
+                  Yes, Start Backup
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <SuperadminBackupsScheduleModal
+        isOpen={scheduleModalOpen}
+        onClose={() => setScheduleModalOpen(false)}
+      />
     </div>
   );
 }

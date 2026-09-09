@@ -14,11 +14,11 @@ export interface ChurnAlert {
   riskLevel: ChurnRiskLevel;
   actionStatus: ChurnActionStatus;
   riskScore: number; // 0–100
-  lastLoginDaysAgo: number;
-  memberCountDrop: number; // % drop in last 30 days
+  lastLoginDays: number;
+  memberDrop: number; // % drop in last 30 days
   paymentFailures: number;
-  daysUntilRenewal: number;
-  mrr: number;
+  renewalDaysLeft: number;
+  mrrAtRisk: number;
   contractEndDate?: string;
   lastPaymentDate?: string;
   notes: string;

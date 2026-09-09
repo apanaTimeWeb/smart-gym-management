@@ -13,6 +13,7 @@ import SuperadminChurnActionModal from '@/app/superadmin/churn-alerts/churn_comp
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 import { churnAlertsApi } from '@/app/superadmin/churn-alerts/churn_api/superadmin_churn_api';
 import type { ChurnAlert, ChurnFilterStatus, ChurnActionPayload } from '@/app/superadmin/churn-alerts/churn_types/churn_types';
+import { MOCK_CHURN_ALERTS, MOCK_CHURN_KPI } from '@/app/superadmin/churn-alerts/churn_utils/churn_constants';
 
 export default function SuperadminChurnMain() {
   const queryClient = useQueryClient();
@@ -44,8 +45,13 @@ export default function SuperadminChurnMain() {
     }
   });
 
-  const alerts = alertsRes?.data || [];
-  const kpis = kpisRes?.data || { totalAtRisk: 0, highRisk: 0, savedThisMonth: 0, churnedThisMonth: 0, savedValue: 0, criticalCount: 0, highCount: 0, estimatedMrrAtRisk: 0 };
+  const alerts = alertsRes?.data && alertsRes.data.length > 0 
+    ? alertsRes.data 
+    : (process.env.NODE_ENV === 'development' ? MOCK_CHURN_ALERTS : []);
+    
+  const kpis = kpisRes?.data 
+    ? kpisRes.data 
+    : (process.env.NODE_ENV === 'development' ? MOCK_CHURN_KPI : { totalAtRisk: 0, criticalCount: 0, highCount: 0, estimatedMrrAtRisk: 0 });
 
   const filtered = useMemo(() => {
     return alerts.filter((a) => {
@@ -96,6 +102,22 @@ export default function SuperadminChurnMain() {
             Monitor at-risk tenants and take proactive action before they churn.
           </p>
         </div>
+        <button
+          onClick={() => {
+            const atRiskCount = filtered.filter(a => a.riskLevel === 'CRITICAL' || a.riskLevel === 'HIGH').length;
+            if (atRiskCount === 0) {
+              toast.error('No critical/high risk tenants found in current view.');
+              return;
+            }
+            toast.success(`Bulk outreach emails sent to ${atRiskCount} at-risk gym owners!`);
+          }}
+          className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg font-medium motion-safe:transition-colors shadow-lg shadow-primary/20"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+          Bulk Outreach
+        </button>
       </div>
 
       <SuperadminChurnKPIs

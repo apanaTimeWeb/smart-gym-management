@@ -98,8 +98,8 @@ export const useSuperadminBroadcastsPage = () => {
     }
 
     if (isSendingNow) {
-      const selectedGyms = gyms?.filter((g: Tenant) => payload.targetGymIds?.includes(g.id)) || [];
-      const recipients = selectedGyms.map((g: Tenant) => ({ id: g.id, name: g.name, phone: g.phone }));
+      const selectedGyms = gyms?.filter(g => payload.targetGymIds?.includes(g.id)) || [];
+      const recipients = selectedGyms.map(g => ({ id: g.id, name: (g as any).gymName || g.name, phone: g.phone || 'N/A' }));
       setQueueRecipients(recipients);
       setQueueTitle(payload.title);
       setQueueModalOpen(true);
@@ -117,8 +117,8 @@ export const useSuperadminBroadcastsPage = () => {
 
     updateBroadcasts(prev => prev.map(item => item.id === id ? { ...item, status: 'SENT', sentDate: new Date().toISOString() } : item));
     
-    const selectedGyms = gyms?.filter((g: Tenant) => b.targetGymIds?.includes(g.id)) || [];
-    const recipients = selectedGyms.map((g: Tenant) => ({ id: g.id, name: g.name, phone: g.phone }));
+    const selectedGyms = gyms?.filter(g => b.targetGymIds?.includes(g.id)) || [];
+    const recipients = selectedGyms.map(g => ({ id: g.id, name: (g as any).gymName || g.name, phone: g.phone || 'N/A' }));
     setQueueRecipients(recipients);
     setQueueTitle(b.title);
     setQueueModalOpen(true);

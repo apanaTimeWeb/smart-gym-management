@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Building2, User, CreditCard, Activity, MapPin, Shield, Clock } from 'lucide-react';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import type { Tenant } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_types';
+import { MOCK_GYM_DETAIL } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
 
 interface SuperadminGymDetailClientProps {
   gymId: string;
@@ -21,6 +22,8 @@ export default function SuperadminGymDetailClient({ gymId }: SuperadminGymDetail
     queryFn: () => superadminApi.gyms.fetchGymById(gymId),
   });
 
+  const gym: Tenant | undefined = res?.data || (process.env.NODE_ENV === 'development' ? MOCK_GYM_DETAIL : undefined);
+
   if (isLoading) {
     return (
       <div className="space-y-6 motion-safe:animate-pulse">
@@ -33,7 +36,7 @@ export default function SuperadminGymDetailClient({ gymId }: SuperadminGymDetail
     );
   }
 
-  if (isError || !res?.data) {
+  if (isError || !gym) {
     return (
       <div className="p-8 text-center">
         <p className="text-danger font-medium mb-4">Failed to load gym details.</p>
@@ -41,8 +44,6 @@ export default function SuperadminGymDetailClient({ gymId }: SuperadminGymDetail
       </div>
     );
   }
-
-  const gym: Tenant = res.data;
 
   return (
     <div className="space-y-6">

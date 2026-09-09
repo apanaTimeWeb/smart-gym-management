@@ -11,6 +11,15 @@ export interface Coupon {
   status: CouponStatus;
   expiryDate: string;
   isDeleted: boolean;
+  redemptions?: RedemptionRecord[];
+}
+
+export interface RedemptionRecord {
+  id: string;
+  tenantName: string;
+  redeemedAt: string;
+  planName: string;
+  discountApplied: number;
 }
 
 import { z } from 'zod';

@@ -4,6 +4,8 @@
 
 import { RefreshCw, Filter, Trash2 } from 'lucide-react';
 
+import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
+
 interface SuperadminJobsHeaderProps {
   selectedCount: number;
   isRetrying: boolean;
@@ -35,15 +37,6 @@ export default function SuperadminJobsHeader({
   onBulkDelete,
   onFilterChange,
 }: SuperadminJobsHeaderProps) {
-  function handleStatusChange(e: React.ChangeEvent<HTMLSelectElement>) {
-    setStatusFilter(e.target.value);
-    onFilterChange();
-  }
-
-  function handleQueueChange(e: React.ChangeEvent<HTMLSelectElement>) {
-    setQueueFilter(e.target.value);
-    onFilterChange();
-  }
 
   return (
     <div className="space-y-4">
@@ -76,31 +69,35 @@ export default function SuperadminJobsHeader({
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2">
             <Filter size={15} className="text-secondary shrink-0" />
-            <select
-              aria-label="Filter by status"
-              className="bg-input border border-border text-foreground text-sm rounded-lg px-3 py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              value={statusFilter}
-              onChange={handleStatusChange}
-            >
-              <option value="ALL">All Statuses</option>
-              <option value="FAILED">Failed</option>
-              <option value="ACTIVE">Active</option>
-              <option value="COMPLETED">Completed</option>
-              <option value="DELAYED">Delayed</option>
-            </select>
+            <div className="w-40 border-none bg-input rounded-lg">
+              <SearchableDropdown
+                value={statusFilter}
+                onChange={(val) => { setStatusFilter(String(val)); onFilterChange(); }}
+                options={[
+                  { value: 'ALL', label: 'All Statuses' },
+                  { value: 'FAILED', label: 'Failed' },
+                  { value: 'ACTIVE', label: 'Active' },
+                  { value: 'COMPLETED', label: 'Completed' },
+                  { value: 'DELAYED', label: 'Delayed' },
+                ]}
+                className="bg-transparent border-transparent text-sm"
+              />
+            </div>
           </div>
-          <select
-            aria-label="Filter by queue"
-            className="bg-input border border-border text-foreground text-sm rounded-lg px-3 py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            value={queueFilter}
-            onChange={handleQueueChange}
-          >
-            <option value="ALL">All Queues</option>
-            <option value="billing">billing</option>
-            <option value="email">email</option>
-            <option value="webhook">webhook</option>
-            <option value="database">database</option>
-          </select>
+          <div className="w-40 border-none bg-input rounded-lg">
+            <SearchableDropdown
+              value={queueFilter}
+              onChange={(val) => { setQueueFilter(String(val)); onFilterChange(); }}
+              options={[
+                { value: 'ALL', label: 'All Queues' },
+                { value: 'billing', label: 'billing' },
+                { value: 'email', label: 'email' },
+                { value: 'webhook', label: 'webhook' },
+                { value: 'database', label: 'database' },
+              ]}
+              className="bg-transparent border-transparent text-sm"
+            />
+          </div>
         </div>
 
         {selectedCount > 0 && (

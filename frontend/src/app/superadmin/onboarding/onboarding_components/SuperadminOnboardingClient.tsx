@@ -16,6 +16,7 @@ import {
   KPI_CARD_GRADIENT,
 } from '@/app/superadmin/onboarding/onboarding_types/onboarding_constants';
 import type { TenantOnboarding } from '@/app/superadmin/onboarding/onboarding_types/onboarding_types';
+import SuperadminConversionFunnel from '@/app/superadmin/onboarding/onboarding_components/SuperadminConversionFunnel/SuperadminConversionFunnel';
 
 export default function SuperadminOnboardingClient() {
   const [tenants, setTenants] = useState<TenantOnboarding[]>(MOCK_ONBOARDINGS);
@@ -114,6 +115,8 @@ export default function SuperadminOnboardingClient() {
           </div>
         ))}
       </div>
+
+      <SuperadminConversionFunnel tenants={tenants} />
 
       {/* Search */}
       <div className="relative max-w-sm">

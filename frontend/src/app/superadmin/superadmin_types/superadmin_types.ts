@@ -28,6 +28,7 @@ export interface Tenant {
   gstin?: string;
   trialEndsAt?: string;
   lastLoginAt?: string;
+  lastActiveAt?: string | null;
 }
 
 export interface AuditLog {
@@ -54,9 +55,12 @@ export interface SaaSDashboardMetrics {
   arrDeltaPercent?: number;
   arpu?: number;
   revenueByTier?: { plan: string; amount: number }[];
+  revenueByGeography?: { region: string; revenue: number }[];
   overdueInvoicesCount: number;
   pendingRevenue: number;
   recentOnboards: Tenant[];
+  platformHealthScore?: number;
+  trialsExpiringIn7Days?: number;
 }
 
 // Phase 2 Types
@@ -155,6 +159,7 @@ export interface GlobalAuditLog {
   targetResource: string;
   actorName: string;
   actorRole: string;
+  actorType?: 'SUPERADMIN' | 'SYSTEM' | 'TENANT';
   action: string;
   ipAddress?: string;
 }

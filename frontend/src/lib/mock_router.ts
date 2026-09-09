@@ -1184,7 +1184,13 @@ export async function routeMockRequest<T>(
             totalEndUsers: 15420,
             recentOnboards: generate(5, i => ({
               id: `tenant-${i}`, name: `Demo Gym ${i}`, ownerName: `Owner ${i}`, plan: i % 2 === 0 ? 'Enterprise' : 'Pro', createdAt: '2023-10-01'
-            }))
+            })),
+            revenueByGeography: [
+              { region: 'North America', revenue: 500000 },
+              { region: 'Europe', revenue: 350000 },
+              { region: 'Asia Pacific', revenue: 250000 },
+              { region: 'Latin America', revenue: 150000 }
+            ]
           },
           revenue: [
             { month: 'Jan', mrr: 1000000 }, { month: 'Feb', mrr: 1100000 },

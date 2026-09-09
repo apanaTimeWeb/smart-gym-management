@@ -8,8 +8,25 @@ import SuperadminCouponsTable from '@/app/superadmin/coupons/coupons_components/
 import SuperadminCouponsEmptyState from '@/app/superadmin/coupons/coupons_components/SuperadminCouponsEmptyState/SuperadminCouponsEmptyState';
 import { SuperadminCouponModal } from '@/app/superadmin/coupons/coupons_components/SuperadminCouponModal';
 import { SuperadminCouponEditModal } from '@/app/superadmin/coupons/coupons_components/SuperadminCouponEditModal';
+import SuperadminCouponsRedemptionDrawer from '@/app/superadmin/coupons/coupons_components/SuperadminCouponsRedemptionDrawer';
+import { useState, useEffect } from 'react';
+import type { Coupon } from '@/app/superadmin/coupons/superadmin_coupons_types/superadmin_coupons_types';
 
 export default function SuperadminCouponsClient() {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [drawerCoupon, setDrawerCoupon] = useState<Coupon | null>(null);
+
+  useEffect(() => {
+    const handleOpenHistory = (e: Event) => {
+      const customEvent = e as CustomEvent<Coupon>;
+      setDrawerCoupon(customEvent.detail);
+      setIsDrawerOpen(true);
+    };
+    document.addEventListener('open-coupon-history', handleOpenHistory);
+    return () => {
+      document.removeEventListener('open-coupon-history', handleOpenHistory);
+    };
+  }, []);
   const {
     coupons,
     searchQuery,
@@ -91,6 +108,12 @@ export default function SuperadminCouponsClient() {
         onClose={() => setIsEditModalOpen(false)}
         onSubmit={handleUpdateCoupon}
         coupon={selectedCoupon}
+      />
+
+      <SuperadminCouponsRedemptionDrawer
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        coupon={drawerCoupon}
       />
     </div>
   );

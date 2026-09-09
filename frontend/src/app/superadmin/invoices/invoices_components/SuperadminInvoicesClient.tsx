@@ -8,9 +8,11 @@ import SuperadminInvoicesStatsBar from '@/app/superadmin/invoices/invoices_compo
 import SuperadminInvoicesTable from '@/app/superadmin/invoices/invoices_components/SuperadminInvoicesTable/SuperadminInvoicesTable';
 import SuperadminInvoicesEmptyState from '@/app/superadmin/invoices/invoices_components/SuperadminInvoicesEmptyState/SuperadminInvoicesEmptyState';
 import SuperadminInvoicesLogPaymentModal from '@/app/superadmin/invoices/invoices_components/SuperadminInvoicesLogPaymentModal/SuperadminInvoicesLogPaymentModal';
+import SuperadminInvoicesAgingReport from '@/app/superadmin/invoices/invoices_components/SuperadminInvoicesAgingReport/SuperadminInvoicesAgingReport';
 import SuperadminDateRangePicker from '@/app/superadmin/superadmin_components/SuperadminDateRangePicker';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import toast from 'react-hot-toast';
+import { useState } from 'react';
 
 const STATUS_OPTIONS = [
   { value: '', label: 'All Statuses' },
@@ -21,9 +23,11 @@ const STATUS_OPTIONS = [
 ];
 
 export default function SuperadminInvoicesClient() {
+  const [activeTab, setActiveTab] = useState<'ALL' | 'AGING'>('ALL');
   const {
     fetchState,
     error,
+    invoices,
     filteredInvoices,
     filteredTenantsForDropdown,
     selectedGym,
@@ -78,44 +82,68 @@ export default function SuperadminInvoicesClient() {
       />
 
       <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
-        <div className="p-4 border-b border-border flex gap-4">
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />
-            <input
-              type="text"
-              placeholder="Search by invoice ID or gym name..."
-              className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-          <div className="flex gap-2">
-            <SuperadminDateRangePicker 
-              onRangeChange={(start, end) => {
-                setStartDate(start);
-                setEndDate(end);
-              }}
-            />
-            <div className="w-40 border-none bg-input rounded-lg">
-              <SearchableDropdown
-                options={STATUS_OPTIONS}
-                value={statusFilter || ''}
-                onChange={(val) => setStatusFilter(val ? String(val) : null)}
-                className="bg-transparent border-border"
-              />
-            </div>
+        <div className="p-4 border-b border-border flex flex-col md:flex-row gap-4 justify-between items-center bg-input/20">
+          <div className="flex bg-input border border-border rounded-lg p-1 w-full md:w-auto">
+            <button
+              onClick={() => setActiveTab('ALL')}
+              className={`flex-1 md:flex-none px-4 py-2 text-sm rounded-md font-medium motion-safe:transition-colors ${activeTab === 'ALL' ? 'bg-background text-foreground shadow-sm' : 'text-secondary hover:text-foreground hover:bg-background/50'}`}
+            >
+              All Invoices
+            </button>
+            <button
+              onClick={() => setActiveTab('AGING')}
+              className={`flex-1 md:flex-none px-4 py-2 text-sm rounded-md font-medium motion-safe:transition-colors ${activeTab === 'AGING' ? 'bg-background text-foreground shadow-sm' : 'text-secondary hover:text-foreground hover:bg-background/50'}`}
+            >
+              Aging Report
+            </button>
           </div>
         </div>
 
-        {filteredInvoices.length === 0 ? (
-          <SuperadminInvoicesEmptyState onLogPaymentClick={() => setShowAddModal(true)} />
+        {activeTab === 'AGING' ? (
+          <SuperadminInvoicesAgingReport invoices={invoices} />
         ) : (
-          <SuperadminInvoicesTable 
-            onLogPaymentClick={() => setShowAddModal(true)}
-            invoices={filteredInvoices} 
-          />
+          <>
+            <div className="p-4 border-b border-border flex gap-4">
+              <div className="relative flex-1 max-w-md">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />
+                <input
+                  type="text"
+                  placeholder="Search by invoice ID or gym name..."
+                  className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
+              <div className="flex gap-2">
+                <SuperadminDateRangePicker 
+                  onRangeChange={(start, end) => {
+                    setStartDate(start);
+                    setEndDate(end);
+                  }}
+                />
+                <div className="w-40 border-none bg-input rounded-lg">
+                  <SearchableDropdown
+                    options={STATUS_OPTIONS}
+                    value={statusFilter || ''}
+                    onChange={(val) => setStatusFilter(val ? String(val) : null)}
+                    className="bg-transparent border-border"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {filteredInvoices.length === 0 ? (
+              <SuperadminInvoicesEmptyState onLogPaymentClick={() => setShowAddModal(true)} />
+            ) : (
+              <SuperadminInvoicesTable 
+                onLogPaymentClick={() => setShowAddModal(true)}
+                invoices={filteredInvoices} 
+              />
+            )}
+          </>
         )}
       </div>
+
 
       {showAddModal && (
         <SuperadminInvoicesLogPaymentModal

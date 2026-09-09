@@ -11,4 +11,6 @@ export const ticketsApi = {
   },
   fetchTicketById: (id: string) => apiFetch<ApiResponse<SupportTicket>>(`${SuperadminUrlConfig.BACKEND_API.TICKETS_BASE}/${id}`),
   updateTicket: (id: string, body: Partial<SupportTicket>) => apiFetch<ApiResponse<SupportTicket>>(`${SuperadminUrlConfig.BACKEND_API.TICKETS_BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
+  closeTicket: (id: string) => apiFetch<ApiResponse<SupportTicket>>(`${SuperadminUrlConfig.BACKEND_API.TICKETS_BASE}/${id}/close`, { method: 'POST' }),
+  assignTicket: (id: string, assignee: string) => apiFetch<ApiResponse<SupportTicket>>(`${SuperadminUrlConfig.BACKEND_API.TICKETS_BASE}/${id}/assign`, { method: 'PATCH', body: JSON.stringify({ assignee }) }),
 };

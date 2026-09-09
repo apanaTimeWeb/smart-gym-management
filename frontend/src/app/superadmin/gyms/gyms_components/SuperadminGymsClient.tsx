@@ -8,7 +8,12 @@ import SuperadminGymsToolbar from '@/app/superadmin/gyms/gyms_components/Superad
 import SuperadminGymsTable from '@/app/superadmin/gyms/gyms_components/SuperadminGymsTable/SuperadminGymsTable';
 
 
+import SuperadminGymsCalendar from '@/app/superadmin/gyms/gyms_components/SuperadminGymsCalendar/SuperadminGymsCalendar';
+import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
+
 export default function SuperadminGymsClient() {
+  const viewMode = useSuperadminGymsStore(state => state.viewMode);
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -27,7 +32,7 @@ export default function SuperadminGymsClient() {
 
       <div className="bg-background border border-border rounded-xl overflow-hidden shadow-sm">
         <SuperadminGymsToolbar />
-        <SuperadminGymsTable />
+        {viewMode === 'calendar' ? <SuperadminGymsCalendar /> : <SuperadminGymsTable />}
       </div>
     </div>
   );

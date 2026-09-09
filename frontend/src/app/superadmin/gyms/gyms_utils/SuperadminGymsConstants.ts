@@ -68,3 +68,48 @@ export const MOCK_GYMS: Tenant[] = [
     databaseVersion: 'v1.2'
   }
 ];
+
+export const MOCK_GYM_DETAIL: Tenant = {
+  id: 'gym-1234',
+  name: 'Flex Fitness Central',
+  ownerName: 'Sarah Connor',
+  adminEmail: 'sarah@flexfitness.com',
+  phone: '+1 555-0192',
+  status: 'ACTIVE',
+  plan: 'ENTERPRISE',
+  createdAt: '2023-01-15T00:00:00Z',
+  memberCount: 1250,
+  monthlyRevenue: 12500,
+  databaseVersion: 'v1.4',
+  city: 'San Francisco',
+  state: 'CA',
+  country: 'USA',
+  gstin: '27AABCU9603R1ZN',
+  trialEndsAt: undefined,
+  lastLoginAt: '2023-10-25T08:30:00Z',
+  lastActiveAt: '2023-10-26T10:15:00Z',
+  staffCount: 15,
+  usageStats: {
+    storageUsedMb: 450,
+    apiCallsMonthly: 125000,
+    activeMembers: 1100,
+  },
+  subscriptionHistory: [
+    {
+      id: 'sub-1',
+      planName: 'ENTERPRISE',
+      startDate: '2023-01-15T00:00:00Z',
+      endDate: '2024-01-15T00:00:00Z',
+      status: 'ACTIVE',
+      amount: 499,
+    },
+    {
+      id: 'sub-2',
+      planName: 'PRO',
+      startDate: '2022-01-15T00:00:00Z',
+      endDate: '2023-01-15T00:00:00Z',
+      status: 'EXPIRED',
+      amount: 199,
+    },
+  ],
+};

@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 import type { InfrastructureNode } from '@/app/superadmin/superadmin_types/superadmin_types';
 import SuperadminFlushTenantModal from '@/app/superadmin/infrastructure/infrastructure_components/SuperadminFlushTenantModal';
 import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
+import SuperadminUptimeChart from '@/app/superadmin/infrastructure/infrastructure_components/SuperadminUptimeChart/SuperadminUptimeChart';
 
 export default function SuperadminInfrastructureClient() {
   const [isFlushingAll, setIsFlushingAll] = useState(false);
@@ -168,6 +169,8 @@ export default function SuperadminInfrastructureClient() {
           <p className="text-xs text-secondary mt-3">Avg across {withDisk.length} storage volumes</p>
         </div>
       </div>
+
+      <SuperadminUptimeChart />
 
       {redisTelemetry && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
