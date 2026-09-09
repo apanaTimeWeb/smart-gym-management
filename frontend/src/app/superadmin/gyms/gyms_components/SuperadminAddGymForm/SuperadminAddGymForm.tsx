@@ -88,6 +88,19 @@ export default function SuperadminAddGymForm() {
               </div>
               
               <div className="space-y-2">
+                <label className="text-sm font-bold text-secondary">Aadhar Number</label>
+                <input
+                  {...register('aadharNumber')}
+                  className="w-full bg-card border border-border text-foreground rounded-lg px-4 py-2 focus:outline-none focus:border-primary motion-safe:transition-colors"
+                  placeholder="12-digit Aadhar number"
+                  maxLength={12}
+                  inputMode="numeric"
+                  onKeyDown={(e) => { if (!/[0-9]|Backspace|Delete|Tab|ArrowLeft|ArrowRight/.test(e.key)) e.preventDefault(); }}
+                />
+                {errors.aadharNumber && <p className="text-danger text-xs">{errors.aadharNumber.message}</p>}
+              </div>
+
+              <div className="space-y-2">
                 <label className="text-sm font-bold text-secondary">Temporary Password</label>
                 <div className="relative">
                   <input 

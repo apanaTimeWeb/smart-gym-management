@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Renders the SuperadminInvoicesLogPaymentModal component.
 import React from 'react';
 import { X, Search, DollarSign } from 'lucide-react';

@@ -7,13 +7,14 @@
 import dynamic from 'next/dynamic';
 import { TrendingUp, Users, IndianRupee, Activity, ArrowDownRight, DollarSign } from 'lucide-react';
 import { useAnalyticsPage } from '@/app/superadmin/analytics/analytics_utils/useAnalyticsPage';
+import type { AnalyticsTimeRange } from '@/app/superadmin/analytics/analytics_utils/useAnalyticsPage';
 import { CHART_COLORS } from '@/app/superadmin/superadmin_utils/SuperadminChartConstants';
 
 // Heavy chart component — code-split via dynamic import (Rule 15, Design §10)
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 export default function SuperadminAnalyticsClient() {
-  const { metrics, monthlyData, fetchState } = useAnalyticsPage();
+  const { metrics, monthlyData, fetchState, timeRange, setTimeRange, customStart, setCustomStart, customEnd, setCustomEnd } = useAnalyticsPage();
 
   if (fetchState === 'loading') {
     return (
@@ -168,10 +169,44 @@ export default function SuperadminAnalyticsClient() {
 
   return (
     <div className="space-y-6">
-      {/* Page Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">Revenue Analytics</h1>
-        <p className="text-secondary mt-1 text-sm">Global SaaS metrics and financial intelligence.</p>
+      {/* Page Header + Time Range Filter */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">Revenue Analytics</h1>
+          <p className="text-secondary mt-1 text-sm">Global SaaS metrics and financial intelligence.</p>
+        </div>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+          <select
+            value={timeRange}
+            onChange={(e) => setTimeRange(e.target.value as AnalyticsTimeRange)}
+            aria-label="Select time range"
+            className="bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
+          >
+            <option value="this_week">This Week</option>
+            <option value="this_month">This Month</option>
+            <option value="this_year">This Year</option>
+            <option value="custom">Custom Range</option>
+          </select>
+          {timeRange === 'custom' && (
+            <div className="flex items-center gap-2">
+              <input
+                type="date"
+                value={customStart}
+                onChange={(e) => setCustomStart(e.target.value)}
+                aria-label="Start date"
+                className="bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-primary"
+              />
+              <span className="text-secondary text-sm">to</span>
+              <input
+                type="date"
+                value={customEnd}
+                onChange={(e) => setCustomEnd(e.target.value)}
+                aria-label="End date"
+                className="bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-primary"
+              />
+            </div>
+          )}
+        </div>
       </div>
 
       {/* KPI Cards — Design §5a: gold gradient, icon, trend line */}

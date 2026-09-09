@@ -6,6 +6,10 @@ export const OnboardGymSchema = z.object({
   ownerName: z.string().min(2, 'Owner name is required'),
   adminEmail: z.string().email('Invalid email address'),
   phone: z.string().min(10, 'Valid phone number required'),
+  aadharNumber: z.string()
+    .regex(/^\d{12}$/, 'Aadhar number must be exactly 12 digits')
+    .optional()
+    .or(z.literal('')),
   plan: z.string().min(1, 'Please select a plan'),
   temporaryPassword: z.string().min(8, 'Password must be at least 8 characters'),
 });
