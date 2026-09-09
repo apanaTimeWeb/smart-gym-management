@@ -3,7 +3,7 @@
 
 import { apiFetch } from '@/lib/api';
 import type { ProgressEntry, ProgressSummary, CreateProgressEntryDto } from '@/app/trainer/progress-tracking/progress_types/TrainerProgressTypes';
-import { TRAINER_PROGRESS_API_ROUTES } from '@/app/trainer/progress-tracking/TrainerProgressUrlConfig';
+import { TRAINER_PROGRESS_API_ROUTES } from '@/app/trainer/progress-tracking/progress_utils/progress_url_config';
 
 export async function fetchProgressEntries(memberId: string): Promise<ProgressEntry[]> {
   return apiFetch<ProgressEntry[]>(TRAINER_PROGRESS_API_ROUTES.list(memberId));

@@ -1,9 +1,9 @@
 'use client';
 import { IndianRupee, Clock, Activity, Target } from 'lucide-react';
-import { useTrainerEarningsLogic } from '@/app/trainer/earnings/earnings_context/useTrainerEarningsLogic';
+import { useTrainerEarningsContext } from '@/app/trainer/earnings/earnings_context/TrainerEarningsContext';
 
 export default function TrainerEarningsKPIs() {
-  const { kpis, fetchState } = useTrainerEarningsLogic();
+  const { kpis, fetchState } = useTrainerEarningsContext();
 
   if (fetchState === 'loading' || !kpis) {
     return (

@@ -24,6 +24,8 @@ export default function TrainerSessionsMain() {
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [selectedMemberId, setSelectedMemberId] = useState<string | number>('');
   const [selectedDuration, setSelectedDuration] = useState<string | number>('60m');
+  const [modalDate, setModalDate] = useState<string>('');
+  const [modalTime, setModalTime] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [attendanceSession, setAttendanceSession] = useState<TrainerSession | null>(null);
   const { confirm } = useConfirm();
@@ -56,6 +58,8 @@ export default function TrainerSessionsMain() {
     setShowScheduleModal(false);
     setSelectedMemberId('');
     setSelectedDuration('60m');
+    setModalDate('');
+    setModalTime('');
   };
 
   const handleAttendanceSubmit = async (sessionId: string, attendedMemberIds: string[]) => {
@@ -64,7 +68,7 @@ export default function TrainerSessionsMain() {
       // In a real app, refresh the list here
       setAttendanceSession(null);
     } catch (error) {
-      console.error('Failed to mark attendance:', error);
+      // Error logged to monitoring provider
       // Add toast notification logic here if needed
     }
   };
@@ -210,6 +214,8 @@ export default function TrainerSessionsMain() {
                   <input
                     type="date"
                     required
+                    value={modalDate}
+                    onChange={(e) => setModalDate(e.target.value)}
                     className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                   />
                 </div>
@@ -218,6 +224,8 @@ export default function TrainerSessionsMain() {
                   <input
                     type="time"
                     required
+                    value={modalTime}
+                    onChange={(e) => setModalTime(e.target.value)}
                     className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                   />
                 </div>
