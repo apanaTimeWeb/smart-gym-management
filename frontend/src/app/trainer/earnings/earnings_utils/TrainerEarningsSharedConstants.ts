@@ -7,6 +7,9 @@ export const MOCK_EARNINGS_KPIS: TrainerEarningsKPIsData = {
   pendingPayouts: 12500,
   sessionsCompleted: 42,
   commissionRate: 35,
+  taxDeduction: 4500,
+  bankAccount: '****1234',
+  commissionTier: 'Gold',
 };
 
 export const MOCK_PENDING_PAYOUTS: TrainerPendingPayout[] = [

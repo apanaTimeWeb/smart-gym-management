@@ -3,7 +3,7 @@ export interface TrainerEarningsKPIsData {
   pendingPayouts: number;
   sessionsCompleted: number;
   commissionRate: number;
-  taxDeduction?: number;
+  taxDeduction: number;
   bankAccount?: string;
   commissionTier?: string;
 }
@@ -38,5 +38,9 @@ export interface TrainerEarningsContextType {
   totalPages: number;
   search: string;
   setSearch: (search: string) => void;
+  startDate: string;
+  setStartDate: (date: string) => void;
+  endDate: string;
+  setEndDate: (date: string) => void;
   loadAll: () => Promise<void>;
 }

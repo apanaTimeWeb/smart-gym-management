@@ -63,6 +63,7 @@ export interface WorkoutExercise {
   reps: string;
   weight: string;
   restTime: string;
+  sortOrder: number;
 }
 
 export interface Workout {

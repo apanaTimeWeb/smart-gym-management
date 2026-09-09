@@ -6,7 +6,7 @@ export interface TrainerProfileData {
   email: string;
   phone: string;
   role: string;
-  specialization: string;
+  specialization: string[]; // Trainers can have multiple specializations (stored as JSON array in DB)
   joinedAt: string;
   avatarInitial: string;
 }
@@ -14,7 +14,7 @@ export interface TrainerProfileData {
 export interface UpdateTrainerProfilePayload {
   name: string;
   phone: string;
-  specialization: string;
+  specialization: string[]; // Array; backend stores as JSON column
 }
 
 export interface UpdateTrainerPasswordPayload {

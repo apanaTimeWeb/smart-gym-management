@@ -11,11 +11,13 @@ export const MembersUrlConfig = {
   BACKEND_API: {
     BASE: '/trainer/members',
     STATS: '/trainer/members/stats',
-    RENEW: (id: string) => `/trainer/members/${id}/renew`,
     GET_ONE: (id: string) => `/trainer/members/${id}`,
     UPDATE: (id: string) => `/trainer/members/${id}`,
-    DELETE: (id: string) => `/trainer/members/${id}`,
     EXPORT_CSV: '/trainer/members/export?format=csv',
+    // NOTE: RENEW and DELETE are Manager-only actions. They are defined here for
+    //       URL completeness but must NOT be called from the Trainer API layer.
+    // RENEW: (id: string) => `/trainer/members/${id}/renew`,  // FORBIDDEN for trainer role
+    // DELETE: (id: string) => `/trainer/members/${id}`,       // FORBIDDEN for trainer role
   }
 };
 

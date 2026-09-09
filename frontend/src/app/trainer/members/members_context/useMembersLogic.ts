@@ -42,6 +42,7 @@ export function useMembersLogic(initialData?: any | null): MembersContextType {
   // URL State
   const search = searchParams.get('search') || '';
   const statusFilter = searchParams.get('status') || 'All';
+  const progressStatusFilter = searchParams.get('progressStatus') || 'All';
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
   const debouncedSearch = useDebounce(search, 300);
 
@@ -55,6 +56,7 @@ export function useMembersLogic(initialData?: any | null): MembersContextType {
 
   const setSearch = useCallback((val: string) => setUrlParam('search', val || null), [setUrlParam]);
   const setStatusFilter = useCallback((val: string) => setUrlParam('status', val === 'All' ? null : val), [setUrlParam]);
+  const setProgressStatusFilter = useCallback((val: string) => setUrlParam('progressStatus', val === 'All' ? null : val), [setUrlParam]);
   const setCurrentPage = useCallback((val: number) => setUrlParam('page', val.toString()), [setUrlParam]);
 
   // UI State
@@ -78,7 +80,7 @@ export function useMembersLogic(initialData?: any | null): MembersContextType {
       isFirstRender.current = false;
       
     }
-    loadAll({ search: debouncedSearch, status: statusFilter, page: currentPage.toString() }).catch(() => {
+    loadAll({ search: debouncedSearch, status: statusFilter, progressStatus: progressStatusFilter !== 'All' ? progressStatusFilter : undefined, page: currentPage.toString() }).catch(() => {
       showToast('Failed to load members', 'error');
     });
   }, [loadAll, debouncedSearch, statusFilter, currentPage, showToast]);
@@ -150,15 +152,16 @@ export function useMembersLogic(initialData?: any | null): MembersContextType {
   const openMsg = useCallback((m: Member, type: MessageType) => {
     const tpl = m.status === 'EXPIRED'
       ? MSG_TEMPLATES.EXPIRED(m.name)
-      : m.pendingAmount > 0
-      ? MSG_TEMPLATES.PENDING(m.name, formatCurrency(m.pendingAmount))
       : MSG_TEMPLATES.DEFAULT(m.name);
     setMsgModal({ open: true, type, recipient: { name: m.name, phone: m.phone, email: m.email }, message: tpl });
   }, []);
 
 
   return {
-    search, debouncedSearch, setSearch, statusFilter, setStatusFilter, currentPage, setCurrentPage,
+    search, debouncedSearch, setSearch,
+    statusFilter, setStatusFilter,
+    progressStatusFilter, setProgressStatusFilter,
+    currentPage, setCurrentPage,
     toast, showToast, hideToast,
     selectedMember, setSelectedMember, profileTab, setProfileTab,
     showAddModal, setShowAddModal, editId, editData,

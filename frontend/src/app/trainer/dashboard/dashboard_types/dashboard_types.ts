@@ -32,6 +32,7 @@ export interface DashboardStats {
   pendingWorkoutPlans: number;
   monthlyEarnings: number;
   memberGoalCompletionRate: number;
+  goalCompletionTrend?: { month: string; rate: number }[];
   recentMemberProgress: { id: string; name: string; detail: string; time: string }[];
   upcomingSessions: { id: string; name: string; time: string; type: string }[];
   membersByPlan?: { plan: string; count: number }[];

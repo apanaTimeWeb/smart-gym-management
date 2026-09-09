@@ -6,8 +6,13 @@ import { DashboardUrlConfig } from '@/app/trainer/dashboard/dashboard_url_config
 import type { DashboardStats } from '@/app/trainer/dashboard/dashboard_types/dashboard_types';
 
 export const dashboardApi = {
-  getStats: async (): Promise<ApiResponse<DashboardStats>> => {
-    return apiFetch<ApiResponse<DashboardStats>>(DashboardUrlConfig.BACKEND_API.STATS);
+  getStats: async (range?: string, startDate?: string, endDate?: string): Promise<ApiResponse<DashboardStats>> => {
+    const params = new URLSearchParams();
+    if (range) params.set('range', range);
+    if (startDate) params.set('startDate', startDate);
+    if (endDate) params.set('endDate', endDate);
+    const q = params.toString() ? `?${params.toString()}` : '';
+    return apiFetch<ApiResponse<DashboardStats>>(`${DashboardUrlConfig.BACKEND_API.STATS}${q}`);
   },
 };
 

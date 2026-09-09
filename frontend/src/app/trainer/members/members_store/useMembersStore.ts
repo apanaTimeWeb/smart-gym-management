@@ -23,7 +23,7 @@ interface MembersState {
   attMap: Record<string, { day: number; status: string }[]>;
 
   hydrate: (data: MembersInitialData) => void;
-  loadAll: (params: { search?: string; status?: string; page: string }) => Promise<void>;
+  loadAll: (params: { search?: string; status?: string; progressStatus?: string; page: string }) => Promise<void>;
   loadMemberProfile: (memberId: string) => Promise<void>;
   assignWorkout: (memberId: string, workout: Workout | null) => Promise<void>;
   assignDiet: (memberId: string, diet: DietPlan | null) => Promise<void>;
@@ -58,6 +58,7 @@ export const useMembersStore = create<MembersState>((set, get) => ({
       };
       if (params.search) apiParams.search = params.search;
       if (params.status && params.status !== 'All') apiParams.status = params.status;
+      if (params.progressStatus) apiParams.progressStatus = params.progressStatus;
 
       const [membersRes, statsRes] = await Promise.all([
         membersApi.fetchMembers(apiParams),
@@ -165,6 +166,7 @@ export const useMembersStore = create<MembersState>((set, get) => ({
     set({ saving: true });
     try {
       if (editId) {
+        // Trainers can only update assigned member details (progress/assignment)
         const res = await membersApi.updateMember(editId, data);
         const updatedMem = res.data || data;
         set((state) => ({
@@ -172,13 +174,8 @@ export const useMembersStore = create<MembersState>((set, get) => ({
         }));
         return { success: true, message: res.message || 'Updated successfully' };
       } else {
-        const res = await membersApi.createMember({ ...data, joinDate: new Date().toISOString() });
-        const newMember = res.data ? res.data : { ...data, id: Math.random().toString(), status: 'ACTIVE', joinDate: new Date().toISOString(), planName: 'Basic', pendingAmount: 0 } as unknown as Member;
-        set((state) => ({
-          members: [newMember, ...state.members],
-          totalMembers: state.totalMembers + 1
-        }));
-        return { success: true, message: res.message || 'Created successfully' };
+        // Creating members is a Manager-only action
+        throw new Error('Creating members is a Manager-only action. Please contact your manager.');
       }
     } catch (err: unknown) {
       throw err;
@@ -187,17 +184,9 @@ export const useMembersStore = create<MembersState>((set, get) => ({
     }
   },
 
-  deleteMember: async (id: string) => {
-    try {
-      const res = await membersApi.deleteMember(id);
-      set((state) => ({
-        members: state.members.filter(m => String(m.id) !== String(id)),
-        totalMembers: Math.max(0, state.totalMembers - 1)
-      }));
-      return { success: true, message: res.message || 'Deleted successfully' };
-    } catch (err: unknown) {
-      throw err;
-    }
+  deleteMember: async (_id: string) => {
+    // Deleting members is a Manager-only action
+    throw new Error('Deleting members is a Manager-only action. Please contact your manager.');
   }
 }));
 

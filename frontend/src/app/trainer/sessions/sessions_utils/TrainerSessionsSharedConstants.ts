@@ -18,6 +18,7 @@ export interface TrainerSession {
   isOnline: boolean;
   enrolledMembers?: { id: string; name: string }[];
   sessionNotes?: string;
+  location?: string;
 }
 
 export const SESSION_FILTER_OPTIONS: SessionFilter[] = ['All', 'PT', 'Group'];
