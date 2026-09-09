@@ -146,10 +146,9 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
                           !showLabel ? 'justify-center px-0' : 'px-3.5'
                         } ${
                           active
-                            ? 'bg-primary-subtle text-primary border-l-2 border-primary'
+                            ? 'bg-primary-subtle text-primary border-l-2 border-primary shadow-[0_0_15px_rgba(250,204,21,0.15)]'
                             : 'text-secondary hover:text-primary hover:bg-primary-subtle border-l-2 border-transparent'
                         }`}
-                        style={active ? { boxShadow: '0 0 15px rgba(250,204,21,0.15)' } : undefined}
                       >
                         <Icon size={22} className={active ? 'text-primary' : 'text-secondary group-hover:text-primary transition-colors'} />
                         {showLabel && <span className="text-sm whitespace-nowrap">{item.label}</span>}
