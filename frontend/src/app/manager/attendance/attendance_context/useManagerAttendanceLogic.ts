@@ -21,6 +21,9 @@ export function useManagerAttendanceLogic(): AttendanceContextType {
 
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
   const [search, setLocalSearch] = useState(searchParams.get('search') || '');
+  const [dateFilter, setDateFilter] = useState(searchParams.get('date') || '');
+  const [statusFilter, setStatusFilter] = useState(searchParams.get('status') || '');
+  
   const tabParam = searchParams.get('tab') as AttendanceTab | null;
   const tab: AttendanceTab = tabParam && ATTENDANCE_TABS?.includes(tabParam) ? tabParam : ATTENDANCE_TABS[0];
   const debouncedSearch = useDebounce(search, 300);
@@ -39,6 +42,14 @@ export function useManagerAttendanceLogic(): AttendanceContextType {
       setUrlParam('search', debouncedSearch || null);
     }
   }, [debouncedSearch, searchParams, setUrlParam]);
+
+  useEffect(() => {
+    setUrlParam('date', dateFilter || null);
+  }, [dateFilter, setUrlParam]);
+
+  useEffect(() => {
+    setUrlParam('status', statusFilter || null);
+  }, [statusFilter, setUrlParam]);
 
   const setSearch = useCallback((val: string) => setLocalSearch(val), []);
   const setCurrentPage = useCallback((val: number) => setUrlParam('page', val.toString()), [setUrlParam]);
@@ -70,6 +81,8 @@ export function useManagerAttendanceLogic(): AttendanceContextType {
         page: currentPage.toString()
       };
       if (debouncedSearch) params.search = debouncedSearch;
+      if (dateFilter) params.date = dateFilter;
+      if (statusFilter) params.status = statusFilter;
       if (tab !== 'Daily Attendance Report') params.type = tab === 'Member Attendance' ? 'MEMBER' : 'STAFF';
 
       // We explicitly cast the responses via our strict generic wrapper
@@ -92,6 +105,12 @@ export function useManagerAttendanceLogic(): AttendanceContextType {
           (r.member?.name && r.member.name?.toLowerCase().includes(q)) || 
           (r.staff?.name && r.staff.name?.toLowerCase().includes(q))
         );
+      }
+      if (dateFilter) {
+        fetchedRecords = fetchedRecords.filter((r: Attendance) => r.date === dateFilter);
+      }
+      if (statusFilter && statusFilter !== 'All') {
+        fetchedRecords = fetchedRecords.filter((r: Attendance) => r.status === statusFilter);
       }
 
       // Sort by newest first
@@ -153,6 +172,8 @@ export function useManagerAttendanceLogic(): AttendanceContextType {
     fetchState, saving, toast,
     tab, setTab,
     search, setSearch,
+    dateFilter, setDateFilter,
+    statusFilter, setStatusFilter,
     currentPage, setCurrentPage,
     showModal, setShowModal,
     calendarUser, setCalendarUser,

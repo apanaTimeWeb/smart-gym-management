@@ -12,7 +12,7 @@ async function getDashboardData() {
     
     if (!token) return null;
     
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001';
+    const backendUrl = process.env.BACKEND_API_URL || process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001';
     const res = await fetch(`${backendUrl}${DashboardUrlConfig.BACKEND_API.STATS}`, {
       headers: {
         'Authorization': `Bearer ${token}`

@@ -9,6 +9,7 @@ export const inquiriesApi = {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
     return apiFetch<ApiResponse<{ inquiries: Inquiry[]; total: number }>>(`${InquiriesUrlConfig.BACKEND_API.BASE}${q}`);
   },
+  getPlans: () => apiFetch<ApiResponse<{name: string}[]>>('/api/manager/plans'),
   getOne: (id: string) => apiFetch<ApiResponse<Inquiry>>(InquiriesUrlConfig.BACKEND_API.GET_ONE(id)),
   getStats: () => apiFetch<ApiResponse<InquiryStats>>(InquiriesUrlConfig.BACKEND_API.STATS),
   create: (body: Partial<InquiryFormValues>) =>

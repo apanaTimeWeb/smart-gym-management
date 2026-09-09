@@ -49,6 +49,10 @@ export interface AttendanceContextType {
   
   search: string;
   setSearch: (s: string) => void;
+  dateFilter: string;
+  setDateFilter: (s: string) => void;
+  statusFilter: string;
+  setStatusFilter: (s: string) => void;
   currentPage: number;
   setCurrentPage: (p: number) => void;
  

@@ -70,7 +70,6 @@ export const GENDER_OPTIONS = [
  { label: 'Other', value: 'OTHER' }
 ];
 
-export const BRANCH_OPTIONS = ['Main Branch', 'Branch 2', 'Branch 3'];
 
 export const STAFF_ROLE_OPTIONS = [
   { label: 'General Trainer', value: 'General Trainer' },
