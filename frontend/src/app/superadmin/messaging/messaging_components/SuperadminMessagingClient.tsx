@@ -16,14 +16,13 @@ import type {
   MessageChannel,
   NotificationType,
   MessagingTab,
+  MessagingTenant,
 } from '@/app/superadmin/messaging/messaging_types/messaging_types';
 import {
   CHANNEL_STYLES,
   MESSAGE_STATUS_STYLES,
-  INITIAL_MESSAGES,
-  INITIAL_NOTIFICATIONS,
-  MESSAGING_TENANTS,
 } from '@/app/superadmin/messaging/messaging_types/messaging_constants';
+import { superadminMessagingApi } from '@/app/superadmin/messaging/messaging_api/superadmin_messaging_api';
 import SuperadminDateRangePicker from '@/app/superadmin/superadmin_components/SuperadminDateRangePicker';
 
 // Isolated notification icon component — avoids inline JSX in const objects (Rule 38)
@@ -37,16 +36,18 @@ function NotifIcon({ type }: { type: NotificationType }) {
 function TenantSearchDropdown({
   value,
   onChange,
+  tenants,
 }: {
   value: string;
   onChange: (id: string) => void;
+  tenants: MessagingTenant[];
 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const ref = useRef<HTMLDivElement>(null);
 
-  const selected = MESSAGING_TENANTS.find((t) => t.id === value);
-  const filtered = MESSAGING_TENANTS.filter((t) =>
+  const selected = tenants.find((t) => t.id === value);
+  const filtered = tenants.filter((t) =>
     t.name.toLowerCase().includes(query.toLowerCase())
   );
 
@@ -129,8 +130,10 @@ export default function SuperadminMessagingClient() {
   const initialTab = (searchParams.get('tab') as MessagingTab) || 'messages';
 
   const [tab, setTab] = useState<MessagingTab>(initialTab);
-  const [messages, setMessages] = useState<TenantMessage[]>(INITIAL_MESSAGES);
-  const [notifications, setNotifications] = useState<SuperadminNotification[]>(INITIAL_NOTIFICATIONS);
+  const [messages, setMessages] = useState<TenantMessage[]>([]);
+  const [notifications, setNotifications] = useState<SuperadminNotification[]>([]);
+  const [tenants, setTenants] = useState<MessagingTenant[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [channelFilter, setChannelFilter] = useState<MessageChannel | 'ALL'>('ALL');
   const [composeOpen, setComposeOpen] = useState(false);
@@ -141,6 +144,31 @@ export default function SuperadminMessagingClient() {
   const [composeChannel, setComposeChannel] = useState<MessageChannel>('EMAIL');
   const [composeSubject, setComposeSubject] = useState('');
   const [composeBody, setComposeBody] = useState('');
+
+  useEffect(() => {
+    let mounted = true;
+    async function loadData() {
+      setIsLoading(true);
+      try {
+        const [msgsRes, notifsRes, tenantsRes] = await Promise.all([
+          superadminMessagingApi.fetchMessages(),
+          superadminMessagingApi.fetchNotifications(),
+          superadminMessagingApi.fetchTenants()
+        ]);
+        if (mounted) {
+          if (msgsRes.success && msgsRes.data) setMessages(msgsRes.data as unknown as TenantMessage[]);
+          if (notifsRes.success && notifsRes.data) setNotifications(notifsRes.data as unknown as SuperadminNotification[]);
+          if (tenantsRes.success && tenantsRes.data) setTenants(tenantsRes.data as unknown as MessagingTenant[]);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        if (mounted) setIsLoading(false);
+      }
+    }
+    loadData();
+    return () => { mounted = false; };
+  }, []);
 
   const filteredMessages = messages.filter((m) => {
     const matchSearch =
@@ -167,26 +195,30 @@ export default function SuperadminMessagingClient() {
       toast.error('Please fill all fields.');
       return;
     }
-    const tenant = MESSAGING_TENANTS.find((g) => g.id === composeTenantId);
-    const newMsg: TenantMessage = {
-      id: `msg-${Date.now()}`,
+    const tenant = tenants.find((g) => g.id === composeTenantId);
+    const newMsg: Partial<TenantMessage> = {
       tenantId: composeTenantId,
       tenantName: tenant?.name ?? 'Unknown',
       channel: composeChannel,
       subject: composeSubject,
       body: composeBody,
-      status: 'SENT',
-      sentAt: new Date().toISOString(),
-      scheduledAt: null,
-      createdAt: new Date().toISOString(),
     };
-    setMessages((prev) => [newMsg, ...prev]);
-    toast.success('Message sent successfully.');
-    setComposeOpen(false);
-    setComposeTenantId('');
-    setComposeSubject('');
-    setComposeBody('');
-    setComposeChannel('EMAIL');
+
+    superadminMessagingApi.sendMessage(newMsg).then(res => {
+      if (res.success && res.data) {
+        setMessages((prev) => [res.data as unknown as TenantMessage, ...prev]);
+        toast.success('Message sent successfully.');
+        setComposeOpen(false);
+        setComposeTenantId('');
+        setComposeSubject('');
+        setComposeBody('');
+        setComposeChannel('EMAIL');
+      } else {
+        toast.error(res.message || 'Failed to send message');
+      }
+    }).catch(() => {
+      toast.error('Failed to send message');
+    });
   }
 
   function handleMarkAllRead() {
@@ -390,7 +422,7 @@ export default function SuperadminMessagingClient() {
               <div>
                 <label className="text-xs font-medium text-secondary uppercase tracking-wider block mb-1">Tenant</label>
                 {/* Rule 20: Custom searchable dropdown — no native <select> for large datasets */}
-                <TenantSearchDropdown value={composeTenantId} onChange={setComposeTenantId} />
+                <TenantSearchDropdown value={composeTenantId} onChange={setComposeTenantId} tenants={tenants} />
               </div>
 
               <div>

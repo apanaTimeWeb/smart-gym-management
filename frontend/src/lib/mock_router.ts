@@ -971,6 +971,54 @@ export async function routeMockRequest<T>(
   }
 
   // SUPERADMIN Stateful Interceptions
+  if (path.includes('/superadmin/messaging/messages')) return MockDB.handleCrud('mock_messaging_messages', method, path, parsedBody, [
+    { id: 'msg-001', tenantId: 'gym-1234', tenantName: 'Flex Fitness Central', channel: 'EMAIL', subject: 'Your invoice is ready', body: 'Hi Sarah, your invoice for May 2024 is ready.', status: 'SENT', sentAt: '2024-05-01T10:00:00Z', scheduledAt: null, createdAt: '2024-05-01T09:55:00Z' },
+    { id: 'msg-002', tenantId: 'gym-5678', tenantName: 'Iron Temple Barbell Club', channel: 'SMS', subject: 'Trial expiring soon', body: 'Your trial ends in 3 days. Upgrade now to keep access.', status: 'SENT', sentAt: '2024-05-18T08:00:00Z', scheduledAt: null, createdAt: '2024-05-18T07:58:00Z' },
+    { id: 'msg-003', tenantId: 'gym-9012', tenantName: 'Zenith Yoga & Pilates', channel: 'EMAIL', subject: 'Welcome to GymSmart 360!', body: 'Hi Mia, welcome aboard! Here is how to get started.', status: 'DRAFT', sentAt: null, scheduledAt: null, createdAt: '2024-05-20T11:00:00Z' },
+    { id: 'msg-004', tenantId: 'gym-3456', tenantName: 'PowerHouse Gym Koramangala', channel: 'IN_APP', subject: 'Action required: Payment overdue', body: 'Your subscription payment is overdue. Please update your billing.', status: 'SENT', sentAt: '2024-04-20T09:00:00Z', scheduledAt: null, createdAt: '2024-04-20T08:55:00Z' },
+  ]) as unknown as ApiResponse<T>;
+  
+  if (path.includes('/superadmin/messaging/notifications')) return MockDB.handleCrud('mock_messaging_notifications', method, path, parsedBody, [
+    { id: 'notif-1', title: 'New tenant signup', body: 'FitZone Indiranagar just signed up for a trial.', type: 'INFO', read: false, createdAt: '2024-05-22T10:00:00Z' },
+    { id: 'notif-2', title: 'Payment failed', body: 'Invoice #INV-0042 for PowerHouse Gym failed to process.', type: 'WARNING', read: false, createdAt: '2024-05-21T14:30:00Z' },
+    { id: 'notif-3', title: 'System alert: High DB load', body: 'Database CPU exceeded 85% for 10 minutes.', type: 'CRITICAL', read: false, createdAt: '2024-05-21T03:15:00Z' },
+    { id: 'notif-4', title: 'Backup completed', body: 'Daily backup for all tenants completed successfully.', type: 'INFO', read: true, createdAt: '2024-05-20T02:00:00Z' },
+    { id: 'notif-5', title: 'Trial expiring', body: 'Iron Temple Barbell Club trial expires in 6 days.', type: 'WARNING', read: true, createdAt: '2024-05-19T09:00:00Z' },
+  ]) as unknown as ApiResponse<T>;
+
+  if (path.includes('/superadmin/messaging/tenants')) return MockDB.handleCrud('mock_messaging_tenants', method, path, parsedBody, [
+    { id: 'gym-1234', name: 'Flex Fitness Central', plan: 'ENTERPRISE' },
+    { id: 'gym-5678', name: 'Iron Temple Barbell Club', plan: 'PRO' },
+    { id: 'gym-9012', name: 'Zenith Yoga & Pilates', plan: 'STARTER' },
+    { id: 'gym-3456', name: 'PowerHouse Gym Koramangala', plan: 'PRO' },
+    { id: 'gym-7890', name: 'FitZone Indiranagar', plan: 'STARTER' },
+  ]) as unknown as ApiResponse<T>;
+
+  if (path.includes('/superadmin/reports/revenue')) return MockDB.handleCrud('mock_reports_revenue', method, path, parsedBody, [
+    { month: 'Dec 23', mrr: 82000, newRevenue: 12000, churnedRevenue: 3000, netRevenue: 91000, tenantCount: 18 },
+    { month: 'Jan 24', mrr: 91000, newRevenue: 15000, churnedRevenue: 6000, netRevenue: 100000, tenantCount: 21 },
+    { month: 'Feb 24', mrr: 100000, newRevenue: 18000, churnedRevenue: 9000, netRevenue: 109000, tenantCount: 24 },
+    { month: 'Mar 24', mrr: 109000, newRevenue: 22000, churnedRevenue: 13000, netRevenue: 118000, tenantCount: 27 },
+    { month: 'Apr 24', mrr: 118000, newRevenue: 25000, churnedRevenue: 15000, netRevenue: 128000, tenantCount: 31 },
+    { month: 'May 24', mrr: 128000, newRevenue: 30000, churnedRevenue: 20000, netRevenue: 138000, tenantCount: 34 },
+  ]) as unknown as ApiResponse<T>;
+
+  if (path.includes('/superadmin/reports/churn')) return MockDB.handleCrud('mock_reports_churn', method, path, parsedBody, [
+    { id: 'c-001', gymName: 'Peak Performance Studio', ownerName: 'James Rodrigues', plan: 'PRO', churnedAt: '2024-04-15', reason: 'Too expensive', mrr: 4500, daysActive: 180 },
+    { id: 'c-002', gymName: 'Sunrise Fitness Hub', ownerName: 'Anita Sharma', plan: 'STARTER', churnedAt: '2024-04-22', reason: 'Switched to competitor', mrr: 1200, daysActive: 90 },
+    { id: 'c-003', gymName: 'Urban Crossfit Box', ownerName: 'Derek Patel', plan: 'PRO', churnedAt: '2024-05-01', reason: 'Missing features', mrr: 3800, daysActive: 240 },
+    { id: 'c-004', gymName: 'Lotus Wellness Center', ownerName: 'Kavya Nair', plan: 'STARTER', churnedAt: '2024-05-10', reason: 'Business closed', mrr: 900, daysActive: 60 },
+    { id: 'c-005', gymName: 'Thunder Gym Whitefield', ownerName: 'Suresh Kumar', plan: 'ENTERPRISE', churnedAt: '2024-05-18', reason: 'Pricing negotiation failed', mrr: 12000, daysActive: 365 },
+  ]) as unknown as ApiResponse<T>;
+
+  if (path.includes('/superadmin/reports/health')) return MockDB.handleCrud('mock_reports_health', method, path, parsedBody, [
+    { id: 'gym-1234', gymName: 'Flex Fitness Central', plan: 'ENTERPRISE', score: 94, grade: 'A', memberCount: 1250, lastLogin: '2024-05-22', paymentHealth: 'GOOD', featureUsage: 92, supportTickets: 1 },
+    { id: 'gym-5678', gymName: 'Iron Temple Barbell Club', plan: 'PRO', score: 78, grade: 'B', memberCount: 450, lastLogin: '2024-05-21', paymentHealth: 'GOOD', featureUsage: 74, supportTickets: 3 },
+    { id: 'gym-7890', gymName: 'FitZone Indiranagar', plan: 'STARTER', score: 65, grade: 'C', memberCount: 120, lastLogin: '2024-05-19', paymentHealth: 'AT_RISK', featureUsage: 55, supportTickets: 5 },
+    { id: 'gym-9012', gymName: 'Zenith Yoga & Pilates', plan: 'STARTER', score: 42, grade: 'D', memberCount: 85, lastLogin: '2024-05-10', paymentHealth: 'AT_RISK', featureUsage: 30, supportTickets: 8 },
+    { id: 'gym-3456', gymName: 'PowerHouse Gym Koramangala', plan: 'PRO', score: 18, grade: 'F', memberCount: 200, lastLogin: '2024-04-28', paymentHealth: 'OVERDUE', featureUsage: 12, supportTickets: 14 },
+  ]) as unknown as ApiResponse<T>;
+
   if (path.includes('/superadmin/tickets')) return MockDB.handleCrud('mock_tickets', method, path, parsedBody, generate(10, i => ({ id: `tkt-${i}`, tenantName: `Gym Branch ${i + 1}`, subject: `Billing Issue ${i}`, status: i % 3 === 0 ? 'RESOLVED' : 'OPEN', priority: i % 4 === 0 ? 'HIGH' : 'LOW', createdAt: '2023-10-10', lastUpdated: '2023-10-12' }))) as unknown as ApiResponse<T>;
   if (path.includes('/superadmin/invoices')) return MockDB.handleCrud('mock_invoices', method, path, parsedBody, generate(12, i => ({ id: `inv-${i}`, tenantName: `Gym Branch ${i + 1}`, amount: 5000 + (i * 1000), currency: 'INR', status: i % 4 === 0 ? 'PENDING' : 'PAID', date: '2023-11-01', planName: 'Enterprise' }))) as unknown as ApiResponse<T>;
   if (path.includes('/superadmin/coupons')) return MockDB.handleCrud('mock_coupons', method, path, parsedBody, generate(5, i => ({ id: `coup-${i}`, code: `WELCOME${i * 10}`, discountType: 'PERCENTAGE', discountValue: 10 + i, maxUses: 100, currentUses: 20 * i, status: 'ACTIVE', expiryDate: '2024-12-31', isDeleted: false }))) as unknown as ApiResponse<T>;

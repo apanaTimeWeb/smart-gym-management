@@ -1,6 +1,14 @@
 'use client';
 // RESPONSIBILITY: Renders the page title, search input, and "Create Coupon" CTA button for the Coupons page. Receives all state via props — no API calls.
 import { Tag, Plus, Search, Filter } from 'lucide-react';
+import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
+
+const STATUS_OPTIONS = [
+  { value: 'ALL', label: 'All Statuses' },
+  { value: 'ACTIVE', label: 'Active' },
+  { value: 'INACTIVE', label: 'Inactive' },
+];
+
 interface CouponsHeaderProps {
   searchQuery: string;
   onSearchChange: (value: string) => void;
@@ -32,17 +40,13 @@ export default function SuperadminCouponsHeader({ searchQuery, onSearchChange, o
         </div>
         
         {onStatusFilterChange && (
-          <div className="relative flex items-center bg-input border border-border rounded-lg px-3 py-2 motion-safe:transition-colors focus-within:border-primary">
-            <Filter className="w-4 h-4 text-secondary mr-2" />
-            <select 
-              value={statusFilter} 
-              onChange={(e) => onStatusFilterChange(e.target.value)}
-              className="bg-transparent text-sm text-foreground focus:outline-none appearance-none pr-4 cursor-pointer"
-            >
-              <option value="ALL">All Statuses</option>
-              <option value="ACTIVE">Active</option>
-              <option value="INACTIVE">Inactive</option>
-            </select>
+          <div className="w-40 border-none bg-input rounded-lg">
+            <SearchableDropdown
+              options={STATUS_OPTIONS}
+              value={statusFilter || 'ALL'}
+              onChange={(val) => onStatusFilterChange(String(val))}
+              className="bg-transparent border-border"
+            />
           </div>
         )}
 
