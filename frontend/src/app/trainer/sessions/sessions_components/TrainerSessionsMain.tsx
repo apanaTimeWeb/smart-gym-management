@@ -1,9 +1,9 @@
-// RESPONSIBILITY: Root client component for Trainer Sessions. Renders session list, filter toolbar, and schedule modal. No direct API calls.
+// RESPONSIBILITY: Root client component for Trainer Sessions. Renders session list, filter toolbar, schedule modal, and edit modal.
 // DATA FLOW: page.tsx (Server) → TrainerSessionsMain (Client) → session cards
 'use client';
 
 import { useState } from 'react';
-import { Calendar as CalendarIcon, Clock, Users, User, CheckCircle, XCircle, Plus, X, Loader2 } from 'lucide-react';
+import { Calendar as CalendarIcon, Clock, Users, User, CheckCircle, XCircle, Plus, X, Loader2, Pencil } from 'lucide-react';
 import type { SessionFilter, TrainerSession } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
 import {
   SESSION_FILTER_OPTIONS,
@@ -16,6 +16,7 @@ import {
 import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/SearchableDropdown';
 import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 import TrainerSessionAttendanceModal from '@/app/trainer/sessions/sessions_components/TrainerSessionAttendanceModal';
+import TrainerSessionsEditModal from '@/app/trainer/sessions/sessions_components/TrainerSessionsEditModal';
 import { markTrainerSessionAttendance } from '@/app/trainer/sessions/sessions_api/TrainerSessionsApi';
 
 export default function TrainerSessionsMain() {
@@ -28,9 +29,11 @@ export default function TrainerSessionsMain() {
   const [modalTime, setModalTime] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [attendanceSession, setAttendanceSession] = useState<TrainerSession | null>(null);
+  const [editingSession, setEditingSession] = useState<TrainerSession | null>(null);
+  const [sessions, setSessions] = useState<TrainerSession[]>(MOCK_SESSIONS);
   const { confirm } = useConfirm();
 
-  const filteredSessions: TrainerSession[] = MOCK_SESSIONS.filter(
+  const filteredSessions: TrainerSession[] = sessions.filter(
     (s) => filter === 'All' || s.type === filter
   );
 
@@ -144,10 +147,11 @@ export default function TrainerSessionsMain() {
                 {session.status === 'Upcoming' && (
                   <div className="flex items-center gap-3">
                     <button
-                      onClick={() => setShowScheduleModal(true)}
-                      className="text-sm font-semibold text-secondary hover:text-foreground hover:underline motion-safe:transition-colors"
+                      onClick={() => setEditingSession(session)}
+                      className="flex items-center gap-1 text-sm font-semibold text-secondary hover:text-foreground hover:underline motion-safe:transition-colors"
+                      aria-label={`Edit session ${session.title}`}
                     >
-                      Edit
+                      <Pencil size={13} /> Edit
                     </button>
                     <button
                       onClick={() => handleCancelSession(session.id)}
@@ -267,6 +271,18 @@ export default function TrainerSessionsMain() {
           session={attendanceSession}
           onClose={() => setAttendanceSession(null)}
           onSubmit={handleAttendanceSubmit}
+        />
+      )}
+
+      {/* Edit Session Modal */}
+      {editingSession && (
+        <TrainerSessionsEditModal
+          session={editingSession}
+          onClose={() => setEditingSession(null)}
+          onSuccess={(updated) => {
+            setSessions((prev) => prev.map((s) => (s.id === updated.id ? updated : s)));
+            setEditingSession(null);
+          }}
         />
       )}
     </div>

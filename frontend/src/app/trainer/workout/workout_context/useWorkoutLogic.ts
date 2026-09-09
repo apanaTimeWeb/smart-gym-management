@@ -136,13 +136,14 @@ export function useWorkoutLogic(): WorkoutContextType {
   const saveWk = useCallback(async (data: WorkoutFormValues) => {
     setSaving(true);
     try {
-      const mappedExercises = data.workoutExercises?.map(ex => ({
+      const mappedExercises = data.workoutExercises?.map((ex, idx) => ({
         exerciseId: ex.exerciseId || `ex-${Date.now()}-${Math.random()}`,
         name: ex.name,
         sets: ex.sets,
         reps: String(ex.reps),
         weight: ex.weight || '',
-        restTime: ex.restTime || ''
+        restTime: ex.restTime || '',
+        sortOrder: ex.sortOrder ?? idx,
       })) || [];
 
       const payload = { 

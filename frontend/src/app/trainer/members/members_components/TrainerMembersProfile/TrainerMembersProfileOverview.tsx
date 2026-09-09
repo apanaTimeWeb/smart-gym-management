@@ -32,6 +32,16 @@ export default function TrainerMembersProfileOverview() {
  <>
  <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
  <div className="xl:col-span-2">
+ <div className="grid grid-cols-2 gap-4 mb-5">
+   <div className="bg-card border border-border p-4 rounded-xl">
+     <p className="text-xs text-secondary mb-1">Fitness Goal</p>
+     <p className="text-sm font-semibold text-foreground">{selectedMember.fitnessGoal || 'Not specified'}</p>
+   </div>
+   <div className="bg-card border border-border p-4 rounded-xl">
+     <p className="text-xs text-secondary mb-1">Days Since Last Check-in</p>
+     <p className="text-sm font-semibold text-foreground">{selectedMember.daysSinceLastCheckIn ?? 'N/A'}</p>
+   </div>
+ </div>
  <h3 className="font-semibold text-foreground mb-3">Physical Progress</h3>
  <div className="bg-card border border-border p-4 rounded-xl h-64">
    <ResponsiveContainer width="100%" height="100%">

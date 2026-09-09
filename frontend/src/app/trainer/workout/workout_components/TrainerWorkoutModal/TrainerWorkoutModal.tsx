@@ -183,7 +183,7 @@ export default function TrainerWorkoutModal() {
               <label className="block text-sm font-bold text-foreground">Workout Exercises</label>
               <button
                 type="button"
-                onClick={() => appendExercise({ name: '', sets: 3, reps: '10', weight: '', restTime: '60s' })}
+                onClick={() => appendExercise({ name: '', sets: 3, reps: '10', weight: '', restTime: '60s', sortOrder: exerciseFields.length })}
                 className="text-xs font-semibold text-primary bg-primary-subtle px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-primary/20 motion-safe:transition-colors"
               >
                 <Plus size={14} /> Add Exercise

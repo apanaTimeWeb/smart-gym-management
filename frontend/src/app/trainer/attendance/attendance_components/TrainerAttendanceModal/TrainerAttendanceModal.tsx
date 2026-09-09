@@ -108,6 +108,23 @@ export default function TrainerAttendanceModal() {
               />
               {errors.checkIn && <p className="text-danger text-xs mt-1">{errors.checkIn.message}</p>}
             </div>
+            <div>
+              <label className="block text-sm font-medium text-secondary mb-1">Check Out Time</label>
+              <input 
+                type="time" 
+                {...register('checkOut')}
+                className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 border-border focus-visible:ring-primary bg-input text-foreground`} 
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-secondary mb-1">Notes</label>
+              <input 
+                type="text" 
+                {...register('notes')}
+                placeholder="Optional notes..."
+                className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 border-border focus-visible:ring-primary bg-input text-foreground`} 
+              />
+            </div>
           </div>
 
           <div className="pt-2 flex justify-end gap-3">
@@ -123,7 +140,7 @@ export default function TrainerAttendanceModal() {
               disabled={saving}
               className="px-4 py-2 rounded-lg font-medium text-white bg-primary flex items-center gap-2 hover:opacity-90 motion-safe:transition-opacity disabled:opacity-70" 
             >
-              {saving ? <Loader2 className="w-4 h-4 motion-safe:animate-spin" /> : <><CheckCircle size={15} /> Check In</>}
+              {saving ? <Loader2 className="w-4 h-4 motion-safe:animate-spin" /> : <><CheckCircle size={15} /> Save Record</>}
             </button>
           </div>
         </form>

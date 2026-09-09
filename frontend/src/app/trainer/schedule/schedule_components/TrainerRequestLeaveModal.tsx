@@ -3,6 +3,8 @@
 
 import { useScheduleContext } from '@/app/trainer/schedule/schedule_context/TrainerScheduleContext';
 import { useTrainerScheduleStore } from '@/app/trainer/schedule/schedule_store/useTrainerScheduleStore';
+import { LEAVE_TYPE_OPTIONS } from '@/app/trainer/schedule/schedule_types/TrainerScheduleTypes';
+import type { LeaveType } from '@/app/trainer/schedule/schedule_types/TrainerScheduleTypes';
 import { X, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -13,13 +15,14 @@ export default function TrainerRequestLeaveModal() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [reason, setReason] = useState('');
+  const [leaveType, setLeaveType] = useState<LeaveType>('Casual Leave');
 
   if (!showLeaveModal) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!startDate || !endDate || !reason) return;
-    submitLeave({ startDate, endDate, reason });
+    submitLeave({ startDate, endDate, reason, leaveType });
   };
 
   return (
@@ -38,6 +41,19 @@ export default function TrainerRequestLeaveModal() {
         </div>
 
         <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-5 custom-scrollbar">
+          <div>
+            <label className="block text-sm font-bold text-foreground mb-1.5">Leave Type</label>
+            <select
+              value={leaveType}
+              onChange={e => setLeaveType(e.target.value as LeaveType)}
+              className="w-full bg-input border border-border rounded-xl px-4 py-3 text-sm text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary motion-safe:transition-all"
+            >
+              {LEAVE_TYPE_OPTIONS.map(opt => (
+                <option key={opt} value={opt}>{opt}</option>
+              ))}
+            </select>
+          </div>
+
           <div>
             <label className="block text-sm font-bold text-foreground mb-1.5">Start Date</label>
             <input 

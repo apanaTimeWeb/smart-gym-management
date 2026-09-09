@@ -12,7 +12,7 @@ export function useTrainerProfileLogic() {
   const [activeTab, setActiveTab] = useState<TrainerProfileTab>('personal');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
-  const [specialization, setSpecialization] = useState('');
+  const [specialization, setSpecialization] = useState<string[]>([]);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -67,6 +67,7 @@ export function useTrainerProfileLogic() {
     name, setName,
     phone, setPhone,
     specialization, setSpecialization,
+    toggleSpecialization: (s: string) => setSpecialization(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s]),
     currentPassword, setCurrentPassword,
     newPassword, setNewPassword,
     confirmPassword, setConfirmPassword,
