@@ -4,6 +4,7 @@
 import { useExpensesContext } from '@/app/manager/expenses/expenses_context/ManagerExpensesContext';
 import { Search, Plus } from 'lucide-react';
 import { EXPENSE_STATUS_LABELS } from '@/app/manager/expenses/expenses_utils/ManagerExpensesSharedConstants';
+import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/SearchableDropdown';
 
 export default function ManagerExpensesToolbar() {
   const { search, setSearch, statusFilter, setStatusFilter, openAdd } = useExpensesContext();
@@ -22,16 +23,17 @@ export default function ManagerExpensesToolbar() {
             className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-foreground transition-all"
           />
         </div>
-        <select
-          value={statusFilter}
-          onChange={e => setStatusFilter(e.target.value)}
-          className="w-full sm:w-auto px-4 py-2 bg-input border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-foreground transition-all cursor-pointer"
-        >
-          <option value="All">All Statuses</option>
-          {Object.entries(EXPENSE_STATUS_LABELS).map(([val, label]) => (
-            <option key={val} value={val}>{label}</option>
-          ))}
-        </select>
+        <div className="w-full sm:w-48">
+          <SearchableDropdown
+            value={statusFilter}
+            onChange={(val) => setStatusFilter(val.toString())}
+            options={[
+              { value: 'All', label: 'All Statuses' },
+              ...Object.entries(EXPENSE_STATUS_LABELS).map(([val, label]) => ({ value: val, label }))
+            ]}
+            className="bg-input"
+          />
+        </div>
       </div>
       <button
         onClick={openAdd}

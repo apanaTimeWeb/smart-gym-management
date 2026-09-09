@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 import { X, Save } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
+import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/SearchableDropdown';
 import { useMembersContext } from '@/app/trainer/members/members_context/MembersContext';
 import { useMembersStore } from '@/app/trainer/members/members_store/useMembersStore';
 import { MemberSchema, type MemberFormValues, EMPTY_MEMBER_FORM, GENDER_OPTIONS } from '@/app/trainer/members/members_utils/MembersSharedConstants';

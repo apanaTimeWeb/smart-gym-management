@@ -127,6 +127,8 @@ export const useSuperadminCoupons = () => {
   );
   const totalCoupons = useMemo(() => coupons.length, [coupons]);
 
+  const [statusFilter, setStatusFilter] = useState<string>('ALL');
+
   const filteredCoupons = useMemo(() => {
     const lowerQuery = searchQuery.toLowerCase();
     return [...coupons]
@@ -135,13 +137,18 @@ export const useSuperadminCoupons = () => {
         if (activeKpi === 'REDEEMED') return c.currentUses > 0;
         return true;
       })
+      .filter(c => {
+        if (statusFilter === 'ACTIVE') return c.status === 'ACTIVE';
+        if (statusFilter === 'INACTIVE') return c.status === 'INACTIVE';
+        return true;
+      })
       .sort((a, b) => {
         if (a.isDeleted && !b.isDeleted) return 1;
         if (!a.isDeleted && b.isDeleted) return -1;
         return 0;
       })
       .filter(c => c.code?.toLowerCase().includes(lowerQuery));
-  }, [coupons, searchQuery, activeKpi]);
+  }, [coupons, searchQuery, activeKpi, statusFilter]);
 
   return {
     fetchState,
@@ -167,6 +174,8 @@ export const useSuperadminCoupons = () => {
     activeKpi,
     setActiveKpi,
     totalCoupons,
+    statusFilter,
+    setStatusFilter,
   };
 };
 

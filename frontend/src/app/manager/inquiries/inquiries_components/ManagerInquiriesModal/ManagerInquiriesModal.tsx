@@ -8,6 +8,7 @@ import { X, Save } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
+import { inquiriesApi } from '@/app/manager/inquiries/inquiries_api/ManagerInquiriesApi';
 
 export default function ManagerInquiriesModal() {
   const { showModal, setShowModal, editId, editData, saveInquiry, saving } = useInquiriesContext();
@@ -20,29 +21,25 @@ export default function ManagerInquiriesModal() {
   const [plans, setPlans] = useState<{ label: string, value: string }[]>([]);
   useEffect(() => {
     if (showModal) {
-      import('@/app/manager/plans/plans_api/ManagerPlansApi').then(m => {
-        m.plansApi.getAll().then(res => {
-          if (res.data && Array.isArray(res.data) && res.data.length > 0) {
-            setPlans(res.data.map((p: { name: string }) => ({ label: p.name, value: p.name })));
-          } else {
-            // Fallback if API returns empty
-            setPlans([
-              { label: 'Basic Plan', value: 'Basic Plan' },
-              { label: 'Pro Plan', value: 'Pro Plan' },
-              { label: 'VIP Plan', value: 'VIP Plan' }
-            ]);
-          }
-        }).catch(err => {
-          console.error("Failed to fetch plans:", err);
-          // Fallback if API fails
+      inquiriesApi.getPlans().then(res => {
+        if (res.data && Array.isArray(res.data) && res.data.length > 0) {
+          setPlans(res.data.map((p: { name: string }) => ({ label: p.name, value: p.name })));
+        } else {
+          // Fallback if API returns empty
           setPlans([
             { label: 'Basic Plan', value: 'Basic Plan' },
             { label: 'Pro Plan', value: 'Pro Plan' },
             { label: 'VIP Plan', value: 'VIP Plan' }
           ]);
-        });
+        }
       }).catch(err => {
-        console.error("Failed to import plansApi:", err);
+        console.error("Failed to fetch plans:", err instanceof Error ? err.message : "Unknown error");
+        // Fallback if API fails
+        setPlans([
+          { label: 'Basic Plan', value: 'Basic Plan' },
+          { label: 'Pro Plan', value: 'Pro Plan' },
+          { label: 'VIP Plan', value: 'VIP Plan' }
+        ]);
       });
     }
   }, [showModal]);

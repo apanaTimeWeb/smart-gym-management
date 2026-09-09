@@ -62,6 +62,11 @@ export function useAdminFinanceLogic(initialData?: FinanceInitialData | null) {
     initialData: initialData?.summary ? { success: true, message: 'SSR', data: initialData.summary } : undefined,
   });
 
+  const { data: expensesRes, isLoading: expensesLoading, isError: isExpensesError } = useQuery({
+    queryKey: ['financeExpenses', queryParams, selectedBranchId],
+    queryFn: () => financeApi.fetchExpenses(queryParams),
+  });
+
   const createPaymentMutation = useMutation({
     mutationFn: (newPayment: Partial<Payment>) => financeApi.createPayment(newPayment),
     onSuccess: (res) => {
@@ -89,8 +94,8 @@ export function useAdminFinanceLogic(initialData?: FinanceInitialData | null) {
     createPaymentMutation.mutate(newPayment as Partial<Payment>);
   }, [createPaymentMutation]);
 
-  const isLoading = paymentsLoading || summaryLoading;
-  const isError = isPaymentsError || isSummaryError;
+  const isLoading = paymentsLoading || summaryLoading || expensesLoading;
+  const isError = isPaymentsError || isSummaryError || isExpensesError;
   const fetchState: FetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
 
   let fetchedPayments = paymentsRes?.data?.payments || [];
@@ -112,11 +117,12 @@ export function useAdminFinanceLogic(initialData?: FinanceInitialData | null) {
 
   return {
     payments: fetchedPayments,
+    expenses: expensesRes?.data || [],
     totalPayments: paymentsRes?.data?.total || 0,
     summary: summaryRes?.data || null,
     fetchState,
     saving: createPaymentMutation.isPending,
-    error: isError ? (paymentsError as Error).message : '',
+    error: isError ? 'An error occurred' : '',
     toast: null,
     showToast,
     hideToast,

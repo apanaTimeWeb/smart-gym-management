@@ -118,10 +118,10 @@ export function useAdminAnnouncementsLogic() {
     }
   }, [editingAnnouncement, createMutation, updateMutation]);
 
-  const deleteAnnouncement = useCallback(async (id: string, title: string) => {
+  const deleteAnnouncement = useCallback(async (id: string, _title: string) => {
     const ok = await confirm({
       title: 'Delete Announcement',
-      message: `Delete "${title}"? This cannot be undone.`,
+      message: 'Delete this announcement? This cannot be undone.',
       confirmText: 'Delete',
       type: 'danger',
     });

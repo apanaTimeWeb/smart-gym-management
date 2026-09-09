@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import { FinanceProvider, useFinanceContext } from '@/app/manager/finance/finance_context/ManagerFinanceContext';
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
+import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/SearchableDropdown';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 import {
   IndianRupee, Wallet, Clock, TrendingUp,
@@ -157,21 +158,33 @@ function FinanceInner() {
                 />
               </div>
               <div className="flex flex-wrap gap-2">
-                <select value={statusFilter} onChange={e => { setStatusFilter(e.target.value); setCurrentPage(1); }}
-                  className="px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary">
-                  <option value="ALL">All Status</option>
-                  <option value="PAID">Paid</option>
-                  <option value="PENDING">Pending</option>
-                  <option value="REFUNDED">Refunded</option>
-                </select>
-                <select value={methodFilter} onChange={e => { setMethodFilter(e.target.value); setCurrentPage(1); }}
-                  className="px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary">
-                  <option value="ALL">All Methods</option>
-                  <option value="UPI">UPI</option>
-                  <option value="Cash">Cash</option>
-                  <option value="Card">Card</option>
-                  <option value="NetBanking">NetBanking</option>
-                </select>
+                <div className="w-40">
+                  <SearchableDropdown
+                    value={statusFilter}
+                    onChange={(val) => { setStatusFilter(val.toString()); setCurrentPage(1); }}
+                    options={[
+                      { value: 'ALL', label: 'All Status' },
+                      { value: 'PAID', label: 'Paid' },
+                      { value: 'PENDING', label: 'Pending' },
+                      { value: 'REFUNDED', label: 'Refunded' },
+                    ]}
+                    className="bg-input"
+                  />
+                </div>
+                <div className="w-44">
+                  <SearchableDropdown
+                    value={methodFilter}
+                    onChange={(val) => { setMethodFilter(val.toString()); setCurrentPage(1); }}
+                    options={[
+                      { value: 'ALL', label: 'All Methods' },
+                      { value: 'UPI', label: 'UPI' },
+                      { value: 'Cash', label: 'Cash' },
+                      { value: 'Card', label: 'Card' },
+                      { value: 'NetBanking', label: 'NetBanking' },
+                    ]}
+                    className="bg-input"
+                  />
+                </div>
                 <button onClick={exportCSV}
                   className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-primary text-white hover:opacity-90 motion-safe:transition-opacity">
                   <Download size={14} /> Export CSV

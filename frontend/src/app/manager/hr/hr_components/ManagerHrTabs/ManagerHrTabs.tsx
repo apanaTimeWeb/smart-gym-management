@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
 import { HR_TABS } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
 import { RefreshCw, Plus, Search } from 'lucide-react';
+import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/SearchableDropdown';
 import ManagerHrStaffTable from '@/app/manager/hr/hr_components/ManagerHrStaffTable/ManagerHrStaffTable';
 import ManagerHrPayrollTable from '@/app/manager/hr/hr_components/ManagerHrPayrollTable/ManagerHrPayrollTable';
 import ManagerHrAdvanceTable from '@/app/manager/hr/hr_components/ManagerHrAdvanceTable/ManagerHrAdvanceTable';
@@ -13,7 +14,7 @@ import ManagerHrLedgerTable from '@/app/manager/hr/hr_components/ManagerHrLedger
 
 export default function ManagerHrTabs() {
   const [activeTab, setActiveTab] = useState(HR_TABS[0]);
-  const { loadAll, openAdd, openAddPayroll, fetchState, search, setSearch, roleFilter, setRoleFilter, setCurrentPage, payrollMonth, setPayrollMonth } = useHrContext();
+  const { loadAll, openAdd, openAddPayroll, fetchState, search, setSearch, roleFilter, setRoleFilter, setCurrentPage, payrollMonth, setPayrollMonth, staff } = useHrContext();
 
   return (
     <div className="rounded-xl shadow-sm border overflow-hidden bg-card border-border">
@@ -40,15 +41,18 @@ export default function ManagerHrTabs() {
             />
           </div>
           {activeTab === 'Trainer List' && (
-            <select
-              value={roleFilter}
-              onChange={e => { setRoleFilter(e.target.value);  }}
-              className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 bg-card text-foreground"
-            >
-              <option value="All">All Roles</option>
-              <option value="Manager">Manager</option>
-              <option value="Trainer">Trainer</option>
-            </select>
+            <div className="w-32">
+              <SearchableDropdown
+                value={roleFilter}
+                onChange={(val) => setRoleFilter(val.toString())}
+                options={[
+                  { value: 'All', label: 'All Roles' },
+                  { value: 'Manager', label: 'Manager' },
+                  { value: 'Trainer', label: 'Trainer' },
+                ]}
+                className="bg-card"
+              />
+            </div>
           )}
           {activeTab === 'Salary & Payments' && (
             <input 
@@ -106,23 +110,21 @@ export default function ManagerHrTabs() {
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            <tr>
-              <td className="py-3 px-4 text-sm text-foreground">Vikram (Head Trainer)</td>
-              <td className="py-3 px-4 text-sm text-secondary">Morning (6 AM - 2 PM)</td>
-              <td className="py-3 px-4 text-sm font-bold text-success">Present</td>
-              <td className="py-3 px-4 text-right">
-                <button className="px-3 py-1.5 text-xs font-semibold bg-input text-foreground rounded-lg hover:opacity-90 transition-opacity">Edit</button>
-              </td>
-            </tr>
-            <tr>
-              <td className="py-3 px-4 text-sm text-foreground">Neha (Cardio)</td>
-              <td className="py-3 px-4 text-sm text-secondary">Evening (2 PM - 10 PM)</td>
-              <td className="py-3 px-4 text-sm font-bold text-warning">Pending</td>
-              <td className="py-3 px-4 text-right flex justify-end gap-2">
-                <button className="px-3 py-1.5 text-xs font-semibold bg-success text-success-foreground rounded-lg hover:opacity-90 transition-opacity">Mark Present</button>
-                <button className="px-3 py-1.5 text-xs font-semibold bg-danger text-danger-foreground rounded-lg hover:opacity-90 transition-opacity">Mark Absent</button>
-              </td>
-            </tr>
+            {(!staff || staff.length === 0) ? (
+              <tr><td colSpan={4} className="py-8 text-center text-secondary text-sm">No staff found</td></tr>
+            ) : (
+              staff.map(s => (
+                <tr key={s.id}>
+                  <td className="py-3 px-4 text-sm text-foreground">{s.name}</td>
+                  <td className="py-3 px-4 text-sm text-secondary">Morning (6 AM - 2 PM)</td>
+                  <td className="py-3 px-4 text-sm font-bold text-warning">Pending</td>
+                  <td className="py-3 px-4 text-right flex justify-end gap-2">
+                    <button className="px-3 py-1.5 text-xs font-semibold bg-success text-success-foreground rounded-lg hover:opacity-90 transition-opacity">Mark Present</button>
+                    <button className="px-3 py-1.5 text-xs font-semibold bg-danger text-danger-foreground rounded-lg hover:opacity-90 transition-opacity">Mark Absent</button>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
@@ -133,19 +135,11 @@ export default function ManagerHrTabs() {
       <div className="space-y-4 max-w-md">
         <div>
           <label className="block text-sm font-medium mb-1">Select Member</label>
-          <select className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary">
-            <option>Select a member...</option>
-            <option>Rahul Kumar</option>
-            <option>Priya Singh</option>
-          </select>
+          <SearchableDropdown value="" onChange={() => {}} options={[]} placeholder="Select a member..." className="bg-input" />
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Select Trainer</label>
-          <select className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary">
-            <option>Select a trainer...</option>
-            <option>Vikram (Head Trainer)</option>
-            <option>Neha (Cardio Expert)</option>
-          </select>
+          <SearchableDropdown value="" onChange={() => {}} options={(staff || []).map(s => ({ value: s.id, label: s.name }))} placeholder="Select a trainer..." className="bg-input" />
         </div>
         <button className="w-full py-2 bg-primary text-primary-foreground font-semibold rounded-lg hover:opacity-90 transition-opacity mt-2">
           Assign Member
@@ -156,40 +150,37 @@ export default function ManagerHrTabs() {
     <div className="bg-card p-6 border border-border rounded-xl">
       <h3 className="text-lg font-bold text-foreground mb-4">Today's Schedule</h3>
       <div className="space-y-3">
-        <div className="p-4 bg-input rounded-lg flex justify-between items-center">
-          <div>
-            <p className="font-bold text-foreground">Vikram (Head Trainer)</p>
-            <p className="text-sm text-secondary">PT Session with Rahul Kumar</p>
-          </div>
-          <span className="text-sm font-semibold text-primary">10:00 AM - 11:00 AM</span>
-        </div>
-        <div className="p-4 bg-input rounded-lg flex justify-between items-center">
-          <div>
-            <p className="font-bold text-foreground">Neha (Cardio Expert)</p>
-            <p className="text-sm text-secondary">Group Aerobics</p>
-          </div>
-          <span className="text-sm font-semibold text-primary">05:00 PM - 06:00 PM</span>
-        </div>
+        {(!staff || staff.length === 0) ? (
+          <div className="text-secondary text-sm text-center py-4">No trainers scheduled</div>
+        ) : (
+          staff.map(s => (
+            <div key={s.id} className="p-4 bg-input rounded-lg flex justify-between items-center">
+              <div>
+                <p className="font-bold text-foreground">{s.name}</p>
+                <p className="text-sm text-secondary">Scheduled Shift</p>
+              </div>
+              <span className="text-sm font-semibold text-primary">10:00 AM - 6:00 PM</span>
+            </div>
+          ))
+        )}
       </div>
     </div>
   ) : activeTab === 'Trainer Performance' ? (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div className="bg-card p-6 border border-border rounded-xl">
-        <h3 className="text-lg font-bold text-foreground mb-1">Vikram (Head Trainer)</h3>
-        <p className="text-sm text-secondary mb-4">4.8/5.0 Average Rating</p>
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm"><span>Sessions Completed</span><span className="font-bold">45</span></div>
-          <div className="flex justify-between text-sm"><span>Member Renewals</span><span className="font-bold text-success">85%</span></div>
-        </div>
-      </div>
-      <div className="bg-card p-6 border border-border rounded-xl">
-        <h3 className="text-lg font-bold text-foreground mb-1">Neha (Cardio Expert)</h3>
-        <p className="text-sm text-secondary mb-4">4.9/5.0 Average Rating</p>
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm"><span>Sessions Completed</span><span className="font-bold">32</span></div>
-          <div className="flex justify-between text-sm"><span>Member Renewals</span><span className="font-bold text-success">92%</span></div>
-        </div>
-      </div>
+      {(!staff || staff.length === 0) ? (
+        <div className="col-span-full text-center text-secondary py-8">No trainer data available</div>
+      ) : (
+        staff.map(s => (
+          <div key={s.id} className="bg-card p-6 border border-border rounded-xl">
+            <h3 className="text-lg font-bold text-foreground mb-1">{s.name}</h3>
+            <p className="text-sm text-secondary mb-4">N/A Average Rating</p>
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm"><span>Sessions Completed</span><span className="font-bold">0</span></div>
+              <div className="flex justify-between text-sm"><span>Member Renewals</span><span className="font-bold text-success">0%</span></div>
+            </div>
+          </div>
+        ))
+      )}
     </div>
   ) : (
     <div className="text-center text-secondary py-10">Coming soon</div>

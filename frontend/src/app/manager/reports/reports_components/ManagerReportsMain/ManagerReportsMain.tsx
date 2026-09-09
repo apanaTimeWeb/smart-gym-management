@@ -8,6 +8,7 @@ import ManagerReportsKPIs from '@/app/manager/reports/reports_components/Manager
 import ManagerReportsCharts from '@/app/manager/reports/reports_components/ManagerReportsCharts/ManagerReportsCharts';
 import ManagerReportsTable from '@/app/manager/reports/reports_components/ManagerReportsTable/ManagerReportsTable';
 import { REPORT_TABS, REPORT_DATE_RANGE_OPTIONS } from '@/app/manager/reports/reports_utils/ManagerReportsSharedConstants';
+import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/SearchableDropdown';
 import { Download, RefreshCw, Loader2 } from 'lucide-react';
 
 function ReportsInner() {
@@ -37,15 +38,14 @@ function ReportsInner() {
 
           {/* Controls */}
           <div className="flex flex-wrap gap-2">
-            <select
-              value={dateRange}
-              onChange={e => setDateRange(e.target.value)}
-              className="px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary"
-            >
-              {REPORT_DATE_RANGE_OPTIONS.map(o => (
-                <option key={o.value} value={o.value}>{o.label}</option>
-              ))}
-            </select>
+            <div className="w-48">
+              <SearchableDropdown
+                value={dateRange}
+                onChange={(val) => setDateRange(val.toString())}
+                options={REPORT_DATE_RANGE_OPTIONS}
+                className="bg-input"
+              />
+            </div>
             <button
               onClick={reload}
               className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-input border border-border text-secondary hover:text-foreground motion-safe:transition-colors"

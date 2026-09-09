@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react';
 import { Plus, ShoppingCart, RefreshCw, Search } from 'lucide-react';
 import { useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';
+import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/SearchableDropdown';
 
 export default function ManagerStoreToolbar() {
   const { tab, setTab, loadAll, openAddProduct, setShowOrderModal, search, setSearch, setCurrentPage, categoryFilter, setCategoryFilter, stockFilter, setStockFilter } = useStoreContext();
@@ -55,26 +56,32 @@ export default function ManagerStoreToolbar() {
         </div>
         {tab === 'Products' && (
           <>
-            <select
-              value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-              className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary bg-input text-foreground"
-            >
-              <option value="ALL">All Categories</option>
-              <option value="Supplements">Supplements</option>
-              <option value="Merchandise">Merchandise</option>
-              <option value="Beverages">Beverages</option>
-              <option value="Equipment">Equipment</option>
-            </select>
-            <select
-              value={stockFilter}
-              onChange={(e) => setStockFilter(e.target.value)}
-              className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary bg-input text-foreground"
-            >
-              <option value="ALL">All Stock</option>
-              <option value="IN_STOCK">In Stock</option>
-              <option value="OUT_OF_STOCK">Out of Stock</option>
-            </select>
+            <div className="w-36">
+              <SearchableDropdown
+                value={categoryFilter}
+                onChange={(val) => setCategoryFilter(val.toString())}
+                options={[
+                  { value: 'ALL', label: 'All Categories' },
+                  { value: 'Supplements', label: 'Supplements' },
+                  { value: 'Merchandise', label: 'Merchandise' },
+                  { value: 'Beverages', label: 'Beverages' },
+                  { value: 'Equipment', label: 'Equipment' },
+                ]}
+                className="bg-input"
+              />
+            </div>
+            <div className="w-36">
+              <SearchableDropdown
+                value={stockFilter}
+                onChange={(val) => setStockFilter(val.toString())}
+                options={[
+                  { value: 'ALL', label: 'All Stock' },
+                  { value: 'IN_STOCK', label: 'In Stock' },
+                  { value: 'OUT_OF_STOCK', label: 'Out of Stock' },
+                ]}
+                className="bg-input"
+              />
+            </div>
           </>
         )}
         <button 

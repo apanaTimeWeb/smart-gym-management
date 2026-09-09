@@ -3,7 +3,7 @@
 
 import { useState, useMemo } from 'react';
 import { Plus } from 'lucide-react';
-import { MOCK_EXPENSES } from '@/app/admin/finance/finance_utils/AdminFinanceSharedConstants';
+import { useAdminFinanceLogic } from '@/app/admin/finance/finance_context/useAdminFinanceLogic';
 import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
 import { formatCurrency } from '@/lib/formatters';
 import AdminFinanceAddExpenseModal from '@/app/admin/finance/finance_components/AdminFinanceAddExpenseModal/AdminFinanceAddExpenseModal';
@@ -27,9 +27,10 @@ export default function AdminFinanceExpensesTable() {
   const [categoryFilter, setCategoryFilter] = useState('All');
   const [showModal, setShowModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const { expenses = [] } = useAdminFinanceLogic();
 
   const filtered = useMemo(() => {
-    return MOCK_EXPENSES.filter((e) => {
+    return expenses.filter((e: any) => {
       const matchesBranch = selectedBranchId === 'all' || e.branchId === selectedBranchId;
       const matchesCategory = categoryFilter === 'All' || e.category === categoryFilter;
       return matchesBranch && matchesCategory;
@@ -38,9 +39,9 @@ export default function AdminFinanceExpensesTable() {
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
   const paginated = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
-  const totalAmount = filtered.reduce((sum, e) => sum + e.amount, 0);
+  const totalAmount = filtered.reduce((sum: number, e: any) => sum + e.amount, 0);
 
-  const categories = ['All', ...Array.from(new Set(MOCK_EXPENSES.map((e) => e.category)))];
+  const categories = ['All', ...Array.from(new Set(expenses.map((e: any) => e.category)))];
 
   return (
     <div className="space-y-4">
@@ -82,11 +83,11 @@ export default function AdminFinanceExpensesTable() {
                 <tr>
                   <td colSpan={6} className="px-4 py-12 text-center text-sm text-secondary">No expenses found.</td>
                 </tr>
-              ) : paginated.map((e) => (
+              ) : paginated.map((e: any) => (
                 <tr key={e.id} className="hover:bg-primary/5 motion-safe:transition-colors">
                   <td className="px-4 py-3 text-sm text-foreground whitespace-nowrap">{new Date(e.date).toLocaleDateString('en-IN')}</td>
                   <td className="px-4 py-3">
-                    <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${CATEGORY_COLORS[e.category] ?? 'bg-input text-secondary'}`}>{e.category}</span>
+                    <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${CATEGORY_COLORS[e.category as string] ?? 'bg-input text-secondary'}`}>{e.category}</span>
                   </td>
                   <td className="px-4 py-3 text-sm text-foreground">{e.branchName}</td>
                   <td className="px-4 py-3 text-sm font-bold text-danger">{formatCurrency(e.amount)}</td>

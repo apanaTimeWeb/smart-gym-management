@@ -74,7 +74,7 @@ export const GENDER_OPTIONS = [
  { label: 'Other', value: 'OTHER' }
 ];
 
-export const BRANCH_OPTIONS = ['b1', 'b2', 'b3', 'b4', 'b5'];
+
 
 export const STAFF_ROLE_OPTIONS = [
   { label: 'Manager', value: 'Manager' },

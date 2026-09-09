@@ -5,9 +5,10 @@ import { useState, useEffect } from 'react';
 import { RefreshCw, Plus, Search, Download } from 'lucide-react';
 import { useAttendanceContext } from '@/app/manager/attendance/attendance_context/ManagerAttendanceContext';
 import { ATTENDANCE_TABS } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
+import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 
 export default function AttendanceToolbar() {
-  const { tab, setTab, loadAll, setShowModal, search, setSearch, setCurrentPage, exportAttendance } = useAttendanceContext();
+  const { tab, setTab, loadAll, setShowModal, search, setSearch, dateFilter, setDateFilter, statusFilter, setStatusFilter, setCurrentPage, exportAttendance } = useAttendanceContext();
   const [prevSearch, setPrevSearch] = useState(search);
   const [localSearch, setLocalSearch] = useState(search);
 
@@ -50,10 +51,29 @@ export default function AttendanceToolbar() {
         value={localSearch} 
         onChange={e => setLocalSearch(e.target.value)} 
         placeholder={`Search ${tab.toLowerCase()}...`} 
-        className="pl-9 pr-3 py-2 border border-border bg-input text-foreground rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-full sm: w-full sm:w-64 "
+        className="pl-9 pr-3 py-2 border border-border bg-input text-foreground rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-full sm:w-64"
       />
     </div>
-    <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+    
+    <div className="w-full sm:w-auto">
+      <input
+        type="date"
+        value={dateFilter}
+        onChange={(e) => setDateFilter(e.target.value)}
+        className="px-3 py-2 border border-border bg-input text-foreground rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-full"
+      />
+    </div>
+    
+    <div className="w-full sm:w-auto z-50">
+      <SearchableDropdown
+        value={statusFilter || 'All'}
+        onChange={(v) => setStatusFilter(String(v) === 'All' ? '' : String(v))}
+        options={[{label: 'All Status', value: 'All'}, {label: 'Present', value: 'Present'}, {label: 'Absent', value: 'Absent'}, {label: 'Late', value: 'Late'}]}
+        placeholder="Status"
+      />
+    </div>
+
+    <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto ml-auto">
  <button 
  onClick={loadAll} 
  className="flex justify-center items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary transition-colors w-full sm:w-auto"

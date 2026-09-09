@@ -32,39 +32,41 @@ export function useSuperadminInvoicesPage() {
   const filteredInvoices = useMemo(() => {
     const lower = search.toLowerCase();
     return invoices.filter((i) => {
-      const matchSearch = (i.tenantName?.toLowerCase().includes(lower) || i.id?.toLowerCase().includes(lower));
+      const matchSearch = ((i.tenantName || '').toLowerCase().includes(lower) || (i.id || '').toLowerCase().includes(lower));
       const matchStatus = statusFilter ? i.status === statusFilter : true;
       let matchDate = true;
-      if (startDate && endDate) {
+      if (startDate && endDate && i.issuedAt && startDate !== 'this_month' && startDate !== 'this_week' && startDate !== 'this_year' && startDate !== 'today') {
         const iDate = new Date(i.issuedAt);
         const sDate = new Date(startDate);
         const eDate = new Date(endDate);
-        eDate.setHours(23, 59, 59, 999);
-        matchDate = iDate >= sDate && iDate <= eDate;
+        if (!isNaN(iDate.getTime()) && !isNaN(sDate.getTime()) && !isNaN(eDate.getTime())) {
+          eDate.setHours(23, 59, 59, 999);
+          matchDate = iDate >= sDate && iDate <= eDate;
+        }
       }
       return matchSearch && matchStatus && matchDate;
     });
   }, [invoices, search, statusFilter, startDate, endDate]);
 
   const filteredTenantsForDropdown = useMemo(
-    () => tenants.filter((t) => t.name?.toLowerCase().includes(gymSearchTerm.toLowerCase())),
+    () => tenants.filter((t) => (t.name || '').toLowerCase().includes(gymSearchTerm.toLowerCase())),
     [tenants, gymSearchTerm]
   );
 
   const selectedGym = tenants.find((t) => t.id === selectedGymId);
 
   const totalRevenue = useMemo(
-    () => invoices.filter((i) => i.status === 'PAID').reduce((acc, curr) => acc + curr.amount, 0),
+    () => invoices.filter((i) => i.status === 'PAID').reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0),
     [invoices]
   );
 
   const failedRevenue = useMemo(
-    () => invoices.filter((i) => i.status === 'FAILED').reduce((acc, curr) => acc + curr.amount, 0),
+    () => invoices.filter((i) => i.status === 'FAILED').reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0),
     [invoices]
   );
 
   const pendingRevenue = useMemo(
-    () => invoices.filter((i) => i.status === 'PENDING').reduce((acc, curr) => acc + curr.amount, 0),
+    () => invoices.filter((i) => i.status === 'PENDING').reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0),
     [invoices]
   );
 

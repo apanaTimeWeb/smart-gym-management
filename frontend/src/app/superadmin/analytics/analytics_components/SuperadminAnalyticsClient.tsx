@@ -7,13 +7,22 @@
 import dynamic from 'next/dynamic';
 import { TrendingUp, Users, IndianRupee, Activity, ArrowDownRight, DollarSign } from 'lucide-react';
 import { useAnalyticsPage } from '@/app/superadmin/analytics/analytics_utils/useAnalyticsPage';
+import type { AnalyticsTimeRange } from '@/app/superadmin/analytics/analytics_utils/useAnalyticsPage';
 import { CHART_COLORS } from '@/app/superadmin/superadmin_utils/SuperadminChartConstants';
+import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
+
+const TIME_OPTIONS = [
+  { value: 'this_week', label: 'This Week' },
+  { value: 'this_month', label: 'This Month' },
+  { value: 'this_year', label: 'This Year' },
+  { value: 'custom', label: 'Custom Range' },
+];
 
 // Heavy chart component — code-split via dynamic import (Rule 15, Design §10)
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 export default function SuperadminAnalyticsClient() {
-  const { metrics, monthlyData, fetchState } = useAnalyticsPage();
+  const { metrics, monthlyData, fetchState, timeRange, setTimeRange, customStart, setCustomStart, customEnd, setCustomEnd } = useAnalyticsPage();
 
   if (fetchState === 'loading') {
     return (
@@ -168,10 +177,41 @@ export default function SuperadminAnalyticsClient() {
 
   return (
     <div className="space-y-6">
-      {/* Page Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">Revenue Analytics</h1>
-        <p className="text-secondary mt-1 text-sm">Global SaaS metrics and financial intelligence.</p>
+      {/* Page Header + Time Range Filter */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">Revenue Analytics</h1>
+          <p className="text-secondary mt-1 text-sm">Global SaaS metrics and financial intelligence.</p>
+        </div>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+          <div className="w-48">
+            <SearchableDropdown
+              options={TIME_OPTIONS}
+              value={timeRange}
+              onChange={(val) => setTimeRange(String(val) as AnalyticsTimeRange)}
+              className="bg-input border-border text-sm"
+            />
+          </div>
+          {timeRange === 'custom' && (
+            <div className="flex items-center gap-2">
+              <input
+                type="date"
+                value={customStart}
+                onChange={(e) => setCustomStart(e.target.value)}
+                aria-label="Start date"
+                className="bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-primary"
+              />
+              <span className="text-secondary text-sm">to</span>
+              <input
+                type="date"
+                value={customEnd}
+                onChange={(e) => setCustomEnd(e.target.value)}
+                aria-label="End date"
+                className="bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-primary"
+              />
+            </div>
+          )}
+        </div>
       </div>
 
       {/* KPI Cards — Design §5a: gold gradient, icon, trend line */}

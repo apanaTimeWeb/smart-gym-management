@@ -10,6 +10,7 @@ import ManagerDashboardPendingPayments from '@/app/manager/dashboard/dashboard_c
 import ManagerDashboardExpiringMemberships from '@/app/manager/dashboard/dashboard_components/ManagerDashboardExpiringMemberships/ManagerDashboardExpiringMemberships';
 import ManagerDashboardPromoCard from '@/app/manager/dashboard/dashboard_components/ManagerDashboardPromoCard/ManagerDashboardPromoCard';
 import ManagerDashboardMembershipDistribution from '@/app/manager/dashboard/dashboard_components/ManagerDashboardMembershipDistribution/ManagerDashboardMembershipDistribution';
+import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/SearchableDropdown';
 
 // Skeleton for the dashboard content area while client-side data loads
 function DashboardSkeleton() {
@@ -72,21 +73,30 @@ function DashboardContent() {
               />
             </div>
           )}
-          <select 
-            value={timeRange} 
-            onChange={(e) => {
-              setTimeRange(e.target.value as "weekly" | "monthly" | "yearly");
-              if (e.target.value !== 'custom') {
-                setCustomDateRange('', '');
-              }
-            }}
-            className="bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-primary w-full sm:w-auto"
-          >
-            <option value="weekly">This Week</option>
-            <option value="monthly">This Month</option>
-            <option value="yearly">This Year</option>
-            <option value="custom">Custom Range</option>
-          </select>
+          <div className="w-full sm:w-48">
+            <SearchableDropdown 
+              value={timeRange} 
+              onChange={(value) => {
+                const valStr = value as "weekly" | "monthly" | "yearly" | "custom";
+                if (valStr !== 'custom') {
+                  setTimeRange(valStr as "weekly" | "monthly" | "yearly");
+                  setCustomDateRange('', '');
+                } else {
+                  // The context type for timeRange is probably "weekly" | "monthly" | "yearly", but custom is used.
+                  // Wait, looking at the previous select, timeRange state holds "custom".
+                  // So we cast it.
+                  setTimeRange(valStr as any);
+                }
+              }}
+              options={[
+                { value: 'weekly', label: 'This Week' },
+                { value: 'monthly', label: 'This Month' },
+                { value: 'yearly', label: 'This Year' },
+                { value: 'custom', label: 'Custom Range' },
+              ]}
+              className="bg-input"
+            />
+          </div>
         </div>
         <ManagerDashboardKPIs />
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">

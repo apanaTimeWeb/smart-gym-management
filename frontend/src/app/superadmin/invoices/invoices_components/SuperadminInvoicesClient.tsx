@@ -9,7 +9,16 @@ import SuperadminInvoicesTable from '@/app/superadmin/invoices/invoices_componen
 import SuperadminInvoicesEmptyState from '@/app/superadmin/invoices/invoices_components/SuperadminInvoicesEmptyState/SuperadminInvoicesEmptyState';
 import SuperadminInvoicesLogPaymentModal from '@/app/superadmin/invoices/invoices_components/SuperadminInvoicesLogPaymentModal/SuperadminInvoicesLogPaymentModal';
 import SuperadminDateRangePicker from '@/app/superadmin/superadmin_components/SuperadminDateRangePicker';
+import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import toast from 'react-hot-toast';
+
+const STATUS_OPTIONS = [
+  { value: '', label: 'All Statuses' },
+  { value: 'PAID', label: 'Paid' },
+  { value: 'PENDING', label: 'Pending' },
+  { value: 'OVERDUE', label: 'Overdue' },
+  { value: 'FAILED', label: 'Failed' },
+];
 
 export default function SuperadminInvoicesClient() {
   const {
@@ -87,17 +96,14 @@ export default function SuperadminInvoicesClient() {
                 setEndDate(end);
               }}
             />
-            <select
-              value={statusFilter || ''}
-              onChange={(e) => setStatusFilter(e.target.value || null)}
-              className="bg-input border border-border text-foreground text-sm rounded-lg pl-3 pr-8 py-2 focus:outline-none focus:border-primary"
-            >
-              <option value="">All Statuses</option>
-              <option value="PAID">Paid</option>
-              <option value="PENDING">Pending</option>
-              <option value="OVERDUE">Overdue</option>
-              <option value="FAILED">Failed</option>
-            </select>
+            <div className="w-40 border-none bg-input rounded-lg">
+              <SearchableDropdown
+                options={STATUS_OPTIONS}
+                value={statusFilter || ''}
+                onChange={(val) => setStatusFilter(val ? String(val) : null)}
+                className="bg-transparent border-border"
+              />
+            </div>
           </div>
         </div>
 
