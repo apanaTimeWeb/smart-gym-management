@@ -33,7 +33,7 @@ export const useManagerFinanceStore = create<FinanceState>((set, get) => ({
       if (params?.search) {
         const q = params.search.toLowerCase();
         fetched = fetched.filter((p: Payment) =>
-          p.invoiceNo?.toLowerCase().includes(q) ||
+          p.invoiceNumber?.toLowerCase().includes(q) ||
           p.member?.name?.toLowerCase().includes(q) ||
           p.method?.toLowerCase().includes(q)
         );

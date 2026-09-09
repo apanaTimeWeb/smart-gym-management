@@ -51,7 +51,7 @@ export default function ManagerProfilePayments() {
   {sortedPayments.map(p => (
   <div key={p.id} className="flex items-center justify-between p-3 border border-border rounded-lg bg-card">
   <div>
-  <p className="text-sm font-medium text-foreground">{p.invoiceNo}</p>
+  <p className="text-sm font-medium text-foreground">{p.invoiceNumber}</p>
   <p className="text-xs text-secondary">{p.method} · {new Date(p.paidAt).toLocaleDateString('en-IN')}</p>
  </div>
  <div className="flex items-center gap-3">

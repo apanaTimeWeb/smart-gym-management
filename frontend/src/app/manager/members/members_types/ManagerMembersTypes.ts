@@ -25,6 +25,8 @@ export interface Member {
   joinDate: string; expiryDate: string;
   paidAmount: number; pendingAmount: number; advanceAmount?: number; photo?: string;
   createdAt: string;
+  dateOfBirth?: string;
+  acquisitionSource?: string;
   assignedDietId?: string;
   assignedDiet?: DietPlan;
   assignedWorkoutId?: string;

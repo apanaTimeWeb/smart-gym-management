@@ -49,8 +49,8 @@ export function useAdminAnnouncementsLogic() {
 
   const createMutation = useMutation({
     mutationFn: (payload: AnnouncementFormValues) => announcementsApi.createAnnouncement(payload),
-    onSuccess: (res) => {
-      toast.success(res.message ?? 'Announcement created');
+    onSuccess: () => {
+      toast.success('Announcement created');
       setShowModal(false);
       qc.invalidateQueries({ queryKey: ['adminAnnouncements'] });
       qc.invalidateQueries({ queryKey: ['adminAnnouncementsKPIs'] });
@@ -61,8 +61,8 @@ export function useAdminAnnouncementsLogic() {
   const updateMutation = useMutation({
     mutationFn: ({ id, payload }: { id: string; payload: AnnouncementFormValues }) =>
       announcementsApi.updateAnnouncement(id, payload),
-    onSuccess: (res) => {
-      toast.success(res.message ?? 'Announcement updated');
+    onSuccess: () => {
+      toast.success('Announcement updated');
       setShowModal(false);
       setEditingAnnouncement(null);
       qc.invalidateQueries({ queryKey: ['adminAnnouncements'] });
@@ -72,8 +72,8 @@ export function useAdminAnnouncementsLogic() {
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => announcementsApi.deleteAnnouncement(id),
-    onSuccess: (res) => {
-      toast.success(res.message ?? 'Announcement deleted');
+    onSuccess: () => {
+      toast.success('Announcement deleted');
       qc.invalidateQueries({ queryKey: ['adminAnnouncements'] });
       qc.invalidateQueries({ queryKey: ['adminAnnouncementsKPIs'] });
     },
@@ -82,8 +82,8 @@ export function useAdminAnnouncementsLogic() {
 
   const pinMutation = useMutation({
     mutationFn: (id: string) => announcementsApi.togglePin(id),
-    onSuccess: (res) => {
-      toast.success(res.message ?? (res.isPinned ? 'Pinned' : 'Unpinned'));
+    onSuccess: (res: Announcement) => {
+      toast.success(res.isPinned ? 'Pinned' : 'Unpinned');
       qc.invalidateQueries({ queryKey: ['adminAnnouncements'] });
     },
     onError: (err: Error) => toast.error(err.message ?? 'Failed to update pin status'),

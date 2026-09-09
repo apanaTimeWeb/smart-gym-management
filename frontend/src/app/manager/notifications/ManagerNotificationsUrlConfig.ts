@@ -4,7 +4,6 @@ export const ManagerNotificationsUrlConfig = {
     BASE: '/manager/notifications',
     MARK_READ: (id: string) => `/manager/notifications/${id}/read`,
     MARK_ALL_READ: '/manager/notifications/read-all',
-    DELETE: (id: string) => `/manager/notifications/${id}`,
     KPIS: '/manager/notifications/kpis',
   },
 };

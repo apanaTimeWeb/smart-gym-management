@@ -26,6 +26,7 @@ export interface MembersState {
   saving: boolean;
   totalMembers: number;
   attMap: Record<string, { day: number; status: string }[]>;
+  selectedMemberIds: string[];
 
   hydrate: (data: MembersInitialData) => void;
   loadAll: (params: { search?: string; status?: string; page: string }) => Promise<void>;
@@ -40,6 +41,7 @@ export interface MembersState {
   freezeMember: (memberId: string, isFrozen: boolean) => Promise<void>;
   toggleSuspendMember: (memberId: string, isSuspended: boolean) => Promise<void>;
   assignTrainer: (memberId: string, trainerId: string, trainerName: string, isPT: boolean) => Promise<void>;
+  setSelectedMemberIds: (ids: string[]) => void;
 }
 
 export const useManagerMembersStore = create<MembersState>((set, get) => ({
@@ -52,6 +54,9 @@ export const useManagerMembersStore = create<MembersState>((set, get) => ({
   saving: false,
   totalMembers: 0,
   attMap: {},
+  selectedMemberIds: [],
+
+  setSelectedMemberIds: (ids) => set({ selectedMemberIds: ids }),
 
   hydrate: (data: MembersInitialData) => {
     set({

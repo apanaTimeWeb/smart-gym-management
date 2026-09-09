@@ -13,6 +13,9 @@ export const MembersUrlConfig = {
     GET_ONE: (id: string) => `/manager/members/${id}`,
     UPDATE: (id: string) => `/manager/members/${id}`,
     DELETE: (id: string) => `/manager/members/${id}`,
+    POST_PAYMENT: (id: string) => `/manager/members/${id}/payments`,
+    EXPORT: '/manager/members/export',
+    RESEND_WELCOME: (id: string) => `/manager/members/${id}/resend-welcome`,
   }
 };
 

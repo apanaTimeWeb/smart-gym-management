@@ -18,7 +18,7 @@ export function useManagerMembersPrintLogic(
     const m = selectedMember;
     setPrintData({
       gymName: GYM_DETAILS.name, gymPhone: GYM_DETAILS.phone,
-      receiptNo: p.invoiceNo,
+      receiptNo: p.invoiceNumber,
       date: new Date(p.paidAt).toLocaleDateString('en-IN'),
       customerName: m.name,
       items: [{ name: `Membership - ${m.plan?.name || ''}`, price: p.amount, amount: p.amount }],
@@ -37,7 +37,7 @@ export function useManagerMembersPrintLogic(
       date: new Date(p.paidAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
       customerInfo: {
         'Member': m.name,
-        'Invoice': p.invoiceNo,
+        'Invoice': p.invoiceNumber,
       },
       sections: [
         {

@@ -69,7 +69,7 @@ export const createMembersMutations = (set: StoreSet, get: StoreGet) => ({
                method: 'UPI',
                status: 'PAID',
                paidAt: new Date().toISOString(),
-               invoiceNo: `INV-${Date.now().toString().slice(-6)}`
+               invoiceNumber: `INV-${Date.now().toString().slice(-6)}`
              });
            } catch(e) { 
             // Error handling via monitoring provider
@@ -219,7 +219,7 @@ export const createMembersMutations = (set: StoreSet, get: StoreGet) => ({
          method: data.paymentMethod,
          status: 'PAID',
          paidAt: new Date().toISOString(),
-         invoiceNo: `INV-REN-${Date.now().toString().slice(-6)}`
+         invoiceNumber: `INV-REN-${Date.now().toString().slice(-6)}`
       });
 
       set((state: MembersState) => {
@@ -271,7 +271,7 @@ export const createMembersMutations = (set: StoreSet, get: StoreGet) => ({
          method: data.method,
          status: 'PAID',
          paidAt: new Date().toISOString(),
-         invoiceNo: `INV-PMT-${Date.now().toString().slice(-6)}`
+         invoiceNumber: `INV-PMT-${Date.now().toString().slice(-6)}`
       });
 
       set((state: MembersState) => {
