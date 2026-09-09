@@ -13,14 +13,15 @@ All broadcasts are logged and visible to tenants in their notification center.
 | `page.tsx` | Server Component — auth guard |
 | `loading.tsx` | Table skeleton + compose area placeholder |
 | `error.tsx` | Error boundary with retry |
-| `broadcasts_components/SuperadminBroadcastsClient.tsx` | Root Client Component — history table + compose |
-| `broadcasts_components/SuperadminBroadcastsHistoryTable.tsx` | Table of past broadcasts — subject, channel, sent date, reach |
-| `broadcasts_components/SuperadminBroadcastsHistoryRow.tsx` | Single broadcast row |
-| `broadcasts_components/SuperadminBroadcastsComposeForm.tsx` | Compose new broadcast — subject, body, channel, schedule |
-| `broadcasts_components/SuperadminBroadcastsPreviewModal.tsx` | Preview broadcast before sending |
-| `broadcasts_components/SuperadminBroadcastsChannelBadge.tsx` | Channel badge — EMAIL / SMS / IN_APP |
-| `broadcasts_types/SuperadminBroadcastsTypes.ts` | `Broadcast`, `BroadcastChannel`, `BroadcastStatus`, `CreateBroadcastDto` |
-| `broadcasts_utils/SuperadminBroadcastsConstants.ts` | `BROADCAST_CHANNEL_STYLES`, `BROADCAST_STATUS_STYLES` |
+| `broadcasts_components/SuperadminBroadcastsClient.tsx` | Root Client Component — broadcasts table + modals |
+| `broadcasts_components/SuperadminBroadcastsTable/` | Table of broadcasts |
+| `broadcasts_components/SuperadminBroadcastsHeader/` | Search, filter, and create button |
+| `broadcasts_components/SuperadminBroadcastsEmptyState/` | Empty state when no broadcasts |
+| `broadcasts_components/SuperadminBroadcastModal.tsx` | Compose new broadcast modal |
+| `broadcasts_components/SuperadminBroadcastQueueModal.tsx` | Modal showing queue progress when sending |
+| `broadcasts_components/SuperadminBroadcastStatusBadge/` | Status badge for broadcasts |
+| `broadcasts_types/` | Broadcast types |
+| `broadcasts_utils/` | Shared utilities and hooks (`useSuperadminBroadcastsPage`) |
 
 ## Feature Inventory
 | Feature | Path | Purpose | Main API Calls | Status |
@@ -46,9 +47,9 @@ All broadcasts are logged and visible to tenants in their notification center.
 
 ## Component Responsibility Map
 - `SuperadminBroadcastsClient` — compose visibility state. MUST NOT contain form logic.
-- `SuperadminBroadcastsComposeForm` — form only. MUST use RHF + Zod. MUST NOT manage history state.
-- `SuperadminBroadcastsPreviewModal` — display only. MUST NOT mutate; confirm action emits to parent.
-- `SuperadminBroadcastsHistoryTable` — read-only. MUST NOT contain compose logic.
+- `SuperadminBroadcastModal` — handles creating/editing broadcasts. MUST use RHF + Zod.
+- `SuperadminBroadcastQueueModal` — displays queue progress during send.
+- `SuperadminBroadcastsTable` — read-only table of broadcasts.
 
 ## Permissions and Security
 | Action | Required Role |

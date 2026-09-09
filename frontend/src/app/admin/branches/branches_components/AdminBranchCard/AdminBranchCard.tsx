@@ -10,7 +10,7 @@ function AdminBranchCardSkeleton() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {[1, 2, 3].map(i => (
-        <div key={i} className="bg-card border border-border rounded-xl p-5 animate-pulse">
+        <div key={i} className="bg-card border border-border rounded-xl p-5 motion-safe:animate-pulse">
           <div className="flex items-start gap-4">
             <div className="w-12 h-12 rounded-xl bg-input flex-shrink-0" />
             <div className="flex-1 space-y-2">
@@ -35,6 +35,7 @@ function AdminBranchCardSkeleton() {
 
 export default function AdminBranchCard() {
   const { branches, isLoading, isError, multiplier, openDetail } = useAdminBranchesLogic();
+  const { startImpersonation } = useAdminImpersonationStore();
 
   if (isLoading) return <AdminBranchCardSkeleton />;
 
@@ -47,8 +48,6 @@ export default function AdminBranchCard() {
       <p className="text-xs text-secondary">Please refresh the page or try again later.</p>
     </div>
   );
-
-  const { startImpersonation } = useAdminImpersonationStore();
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

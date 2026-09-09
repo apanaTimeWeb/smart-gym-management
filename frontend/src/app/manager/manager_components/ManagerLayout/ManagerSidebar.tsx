@@ -63,7 +63,7 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
       {/* Mobile Backdrop */}
       {isMobileOpen && (
         <div
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 lg:hidden transition-opacity"
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 lg:hidden motion-safe:transition-opacity"
           onClick={() => setIsMobileOpen(false)}
         />
       )}
@@ -79,7 +79,7 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
           <div className="flex items-center gap-3 overflow-hidden">
             <Image src="/logo.png" alt="GymSmart MANAGER" width={44} height={44} className="object-contain min-w-11 rounded-lg" />
             {(!isCollapsed || isMobileOpen) && (
-              <div className="whitespace-nowrap transition-opacity duration-300 flex flex-col">
+              <div className="whitespace-nowrap motion-safe:transition-opacity motion-safe:duration-300 flex flex-col">
                 <span className="text-foreground font-bold text-lg leading-tight tracking-tight">GymSmart</span>
                 <span className="text-xs text-warning font-bold uppercase tracking-wider -mt-0.5">MANAGER Portal</span>
               </div>
@@ -142,16 +142,15 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
                         key={item.href}
                         href={item.href}
                         title={!showLabel ? item.label : ''}
-                        className={`flex items-center gap-3 py-2.5 rounded-xl font-medium transition-all duration-200 group cursor-pointer ${
+                        className={`flex items-center gap-3 py-2.5 rounded-xl font-medium motion-safe:transition-all motion-safe:duration-200 group cursor-pointer ${
                           !showLabel ? 'justify-center px-0' : 'px-3.5'
                         } ${
                           active
-                            ? 'bg-primary-subtle text-primary border-l-2 border-primary'
+                            ? 'bg-primary-subtle text-primary border-l-2 border-primary shadow-[0_0_15px_rgba(250,204,21,0.15)]'
                             : 'text-secondary hover:text-primary hover:bg-primary-subtle border-l-2 border-transparent'
                         }`}
-                        style={active ? { boxShadow: '0 0 15px rgba(250,204,21,0.15)' } : undefined}
                       >
-                        <Icon size={22} className={active ? 'text-primary' : 'text-secondary group-hover:text-primary transition-colors'} />
+                        <Icon size={22} className={active ? 'text-primary' : 'text-secondary group-hover:text-primary motion-safe:transition-colors'} />
                         {showLabel && <span className="text-sm whitespace-nowrap">{item.label}</span>}
                       </Link>
                     );

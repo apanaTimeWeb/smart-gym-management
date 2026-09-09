@@ -54,10 +54,7 @@ export default function AdminConfirmModal({
               {cancelText}
             </button>
             <button
-              onClick={() => {
-                onConfirm();
-                onCancel();
-              }}
+              onClick={onConfirm}
               className={`flex-1 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:scale-[1.02] active:scale-[0.98] ${
                 type === 'danger' ? 'bg-danger shadow-[0_0_20px_rgba(239,68,68,0.3)]' :
                 type === 'warning' ? 'bg-warning shadow-[0_0_20px_rgba(245,158,11,0.3)]' :

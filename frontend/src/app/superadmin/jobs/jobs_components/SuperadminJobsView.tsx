@@ -43,8 +43,17 @@ export default function SuperadminJobsView() {
 
   if (fetchState === 'loading') {
     return (
-      <div className="flex h-96 items-center justify-center">
-        <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <div className="h-8 w-48 bg-skeleton-base motion-safe:animate-pulse rounded" />
+          <div className="h-8 w-64 bg-skeleton-base motion-safe:animate-pulse rounded" />
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map(i => (
+            <div key={`sk-stat-${i}`} className="h-24 bg-skeleton-base motion-safe:animate-pulse rounded-xl border border-border" />
+          ))}
+        </div>
+        <div className="h-96 bg-skeleton-base motion-safe:animate-pulse rounded-xl border border-border" />
       </div>
     );
   }

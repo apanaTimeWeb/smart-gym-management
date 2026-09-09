@@ -61,6 +61,12 @@ export const superadminApi = {
       const q = params ? '?' + new URLSearchParams(params).toString() : '';
       return apiFetch<ApiResponse<MigrationsPageData>>(`${SuperadminUrlConfig.BACKEND_API.MIGRATIONS_BASE}${q}`);
     },
+    triggerMigration: (tenantId: string) => {
+      return apiFetch<ApiResponse<void>>(`${SuperadminUrlConfig.BACKEND_API.MIGRATIONS_BASE}/trigger`, {
+        method: 'POST',
+        body: JSON.stringify({ tenantId })
+      });
+    },
   },
 
   auditLogs: {
@@ -74,7 +80,10 @@ export const superadminApi = {
   },
 
   dashboard: {
-    fetchDashboardData: () => apiFetch<ApiResponse<SaaSDashboardMetrics>>(SuperadminUrlConfig.BACKEND_API.DASHBOARD_BASE),
+    fetchDashboardData: (params?: Record<string, string>) => {
+      const q = params ? '?' + new URLSearchParams(params).toString() : '';
+      return apiFetch<ApiResponse<SaaSDashboardMetrics>>(`${SuperadminUrlConfig.BACKEND_API.DASHBOARD_BASE}${q}`);
+    },
     fetchDashboardMetrics: () => apiFetch<ApiResponse<SaaSDashboardMetrics>>(`${SuperadminUrlConfig.BACKEND_API.DASHBOARD_BASE}/metrics`),
   },
   settings: {

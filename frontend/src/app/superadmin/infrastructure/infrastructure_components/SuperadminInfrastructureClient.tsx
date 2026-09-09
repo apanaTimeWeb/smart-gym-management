@@ -8,21 +8,25 @@ import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import toast from 'react-hot-toast';
 import type { InfrastructureNode } from '@/app/superadmin/superadmin_types/superadmin_types';
 import SuperadminFlushTenantModal from '@/app/superadmin/infrastructure/infrastructure_components/SuperadminFlushTenantModal';
+import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
 
 export default function SuperadminInfrastructureClient() {
   const [isFlushingAll, setIsFlushingAll] = useState(false);
   const [isFlushModalOpen, setIsFlushModalOpen] = useState(false);
 
+  const { confirm } = useSuperadminConfirm();
   const queryClient = useQueryClient();
 
   const { data: fetchRes, isLoading: isLoadingNodes, isError: isErrorNodes, refetch: refetchNodes, isFetching: isFetchingNodes } = useQuery({
     queryKey: ['superadmin', 'infrastructure'],
     queryFn: () => superadminApi.infrastructure.fetchInfrastructureNodes(),
+    refetchInterval: 30000,
   });
 
   const { data: redisRes, isLoading: isLoadingRedis, refetch: refetchRedis, isFetching: isFetchingRedis } = useQuery({
     queryKey: ['superadmin', 'redis'],
     queryFn: () => superadminApi.infrastructure.fetchRedisTelemetry(),
+    refetchInterval: 30000,
   });
 
   const nodes = fetchRes?.data ?? [];
@@ -35,8 +39,8 @@ export default function SuperadminInfrastructureClient() {
       toast.success(res?.message || 'Successfully flushed global cache');
       setIsFlushingAll(false);
     },
-    onError: (error: any) => {
-      toast.error(error?.message || 'Failed to flush global cache');
+    onError: (error: unknown) => {
+      toast.error((error as Error)?.message || 'Failed to flush global cache');
       setIsFlushingAll(false);
     }
   });
@@ -47,12 +51,21 @@ export default function SuperadminInfrastructureClient() {
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'redis'] });
       toast.success(res?.message || 'Successfully flushed cache for tenant(s)');
     },
-    onError: (error: any) => {
-      toast.error(error?.message || 'Failed to flush tenant cache');
+    onError: (error: unknown) => {
+      toast.error((error as Error)?.message || 'Failed to flush tenant cache');
     }
   });
 
-  const handleFlushAll = () => {
+  const handleFlushAll = async () => {
+    const confirmed = await confirm({
+      title: 'Flush Global Cache',
+      message: 'Are you sure you want to flush the global Redis cache across all tenants? This may temporarily increase database load.',
+      confirmText: 'Flush All',
+      type: 'warning'
+    });
+
+    if (!confirmed) return;
+
     setIsFlushingAll(true);
     flushGlobalMutation.mutate();
   };
@@ -71,7 +84,16 @@ export default function SuperadminInfrastructureClient() {
   const avgDisk = withDisk.length ? Math.round(withDisk.reduce((acc, n) => acc + (n.diskPercent ?? 0), 0) / withDisk.length) : 0;
 
   if (isLoadingNodes && nodes.length === 0) {
-    return <div className="flex h-96 items-center justify-center"><Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" /></div>;
+    return (
+      <div className="space-y-6">
+        <div className="h-10 w-64 bg-card motion-safe:animate-pulse rounded-xl mb-8" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[1, 2, 3].map(i => (
+            <div key={i} className="h-40 bg-card motion-safe:animate-pulse rounded-xl" />
+          ))}
+        </div>
+      </div>
+    );
   }
 
   if (isErrorNodes) {

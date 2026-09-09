@@ -11,17 +11,6 @@ import SuperadminInvoicesLogPaymentModal from '@/app/superadmin/invoices/invoice
 import toast from 'react-hot-toast';
 
 export default function SuperadminInvoicesClient() {
-  const handleDownloadInvoice = (id: string) => {
-    toast.success(`Downloading invoice #${id}.pdf...`);
-    // Simulate real download behavior (TC-24 fix)
-    const link = document.createElement('a');
-    link.href = '#';
-    link.download = `invoice_${id}.pdf`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
   const {
     fetchState,
     error,
@@ -79,12 +68,19 @@ export default function SuperadminInvoicesClient() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <button 
-            onClick={() => setStatusFilter(statusFilter === 'FAILED' ? null : 'FAILED')}
-            className={`flex items-center gap-2 px-4 py-2 border rounded-lg text-sm font-medium motion-safe:transition-colors ${statusFilter === 'FAILED' ? 'bg-danger/10 border-danger/20 text-danger hover:bg-danger/20' : 'bg-input border-border text-secondary hover:text-foreground'}`}
-          >
-            <Filter size={16} /> Filter Failed
-          </button>
+          <div className="flex gap-2">
+            <select
+              value={statusFilter || ''}
+              onChange={(e) => setStatusFilter(e.target.value || null)}
+              className="bg-input border border-border text-foreground text-sm rounded-lg pl-3 pr-8 py-2 focus:outline-none focus:border-primary"
+            >
+              <option value="">All Statuses</option>
+              <option value="PAID">Paid</option>
+              <option value="PENDING">Pending</option>
+              <option value="OVERDUE">Overdue</option>
+              <option value="FAILED">Failed</option>
+            </select>
+          </div>
         </div>
 
         {filteredInvoices.length === 0 ? (

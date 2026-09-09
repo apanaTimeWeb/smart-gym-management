@@ -2,7 +2,7 @@
 'use client';
 
 import { useAdminSettingsLogic } from '@/app/admin/settings/settings_context/useAdminSettingsLogic';
-import { SETTINGS_TABS } from '@/app/admin/settings/settings_utils/SettingsSharedConstants';
+import { SETTINGS_TABS } from '@/app/admin/settings/settings_utils/AdminSettingsSharedConstants';
 
 export default function AdminSettingsNav() {
  const { activeTab, setActiveTab } = useAdminSettingsLogic();

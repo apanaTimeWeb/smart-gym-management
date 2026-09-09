@@ -23,4 +23,7 @@ export const invoicesApi = {
       method: 'POST',
       body: JSON.stringify(dto),
     }),
+
+  getDownloadUrl: (id: string) => 
+    apiFetch<ApiResponse<{ downloadUrl: string }>>(`${SuperadminUrlConfig.BACKEND_API.INVOICES_BASE}/${id}/download`),
 };

@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Server component entry point for the Superadmin Global Audit module.
 import { Metadata } from 'next';
-import SuperadminGlobalAuditClient from './global-audit_components/SuperadminGlobalAuditClient';
+import SuperadminGlobalAuditClient from '@/app/superadmin/global-audit/global-audit_components/SuperadminGlobalAuditClient';
 
 export const metadata: Metadata = {
   title: 'Global Audit Logs | Superadmin Dashboard',

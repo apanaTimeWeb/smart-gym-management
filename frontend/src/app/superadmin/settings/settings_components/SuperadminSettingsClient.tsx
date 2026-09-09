@@ -2,7 +2,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Settings, BellRing, Loader2, Save } from 'lucide-react';
+import { Settings, Loader2, Save } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import toast from 'react-hot-toast';
@@ -12,7 +12,6 @@ import { MOCK_PLATFORM_SETTINGS } from '@/app/superadmin/settings/settings_utils
 
 export default function SuperadminSettingsClient() {
   const [editedValues, setEditedValues] = useState<Record<string, string>>({});
-  const [broadcastMessage, setBroadcastMessage] = useState('');
   const queryClient = useQueryClient();
 
   const { data: fetchRes, isLoading, isError } = useQuery({
@@ -47,16 +46,7 @@ export default function SuperadminSettingsClient() {
     }
   });
 
-  const broadcastMutation = useMutation({
-    mutationFn: (msg: string) => superadminApi.broadcasts.sendBroadcast(msg),
-    onSuccess: (res) => {
-      toast.success(res.message || 'Broadcast sent successfully!');
-      setBroadcastMessage('');
-    },
-    onError: (err: unknown) => {
-      toast.error((err as Error).message || 'Failed to send broadcast');
-    }
-  });
+
 
   const handleSave = (id: string) => {
     const newValue = editedValues[id];
@@ -65,7 +55,19 @@ export default function SuperadminSettingsClient() {
   };
 
   if (fetchState === 'loading') {
-    return <div className="flex h-96 items-center justify-center"><Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" /></div>;
+    return (
+      <div className="space-y-6">
+        <div>
+          <div className="h-8 w-48 bg-skeleton-base motion-safe:animate-pulse rounded" />
+          <div className="h-4 w-96 bg-skeleton-base motion-safe:animate-pulse rounded mt-2" />
+        </div>
+        <div className="max-w-4xl space-y-6">
+          {[1, 2].map((i) => (
+            <div key={`sk-${i}`} className="bg-skeleton-base border border-border rounded-xl p-6 h-48 motion-safe:animate-pulse" />
+          ))}
+        </div>
+      </div>
+    );
   }
   
   if (fetchState === 'error') {
@@ -86,8 +88,8 @@ export default function SuperadminSettingsClient() {
         <p className="text-secondary mt-1">Configure global SaaS limits, master credentials, and system defaults.</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
+      <div className="max-w-4xl space-y-6">
+        <div>
           {Object.entries(groupedSettings).map(([category, items]) => (
             <div key={category} className="bg-card border border-border rounded-xl p-6">
               <div className="flex items-center gap-2 mb-4 border-b border-border pb-4">
@@ -141,30 +143,6 @@ export default function SuperadminSettingsClient() {
               </div>
             </div>
           ))}
-        </div>
-
-        <div className="space-y-6">
-          <div className="bg-card border border-border rounded-xl p-6">
-            <div className="flex items-center gap-2 mb-4 border-b border-border pb-4">
-              <BellRing className="w-5 h-5 text-warning" />
-              <h2 className="text-lg font-bold text-foreground">Global Broadcast</h2>
-            </div>
-            <p className="text-sm text-secondary mb-4">Send a push notification to all Admins across all 50+ gyms.</p>
-            <textarea
-              value={broadcastMessage}
-              onChange={(e) => setBroadcastMessage(e.target.value)}
-              placeholder="e.g. System maintenance at 2AM EST..."
-              className="w-full bg-input border border-border text-foreground rounded-lg px-4 py-2 h-24 resize-none focus:outline-none focus:border-primary motion-safe:transition-colors"
-            />
-            <button 
-              onClick={() => broadcastMutation.mutate(broadcastMessage)}
-              disabled={!broadcastMessage.trim() || broadcastMutation.isPending}
-              className="mt-2 w-full bg-primary hover:bg-primary-hover text-white font-medium py-2 rounded-lg motion-safe:transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-            >
-              {broadcastMutation.isPending && <Loader2 className="w-4 h-4 motion-safe:animate-spin" />}
-              Broadcast Message
-            </button>
-          </div>
         </div>
       </div>
     </div>

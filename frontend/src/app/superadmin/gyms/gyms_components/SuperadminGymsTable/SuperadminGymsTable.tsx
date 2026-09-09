@@ -163,7 +163,7 @@ export default function SuperadminGymsTable() {
                         </button>
                         <button
                           onClick={(e) => { e.stopPropagation(); openWhatsappModal(gym); }}
-                          className="p-1.5 text-secondary hover:bg-[#25D366]/10 hover:text-[#25D366] rounded-lg motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
+                          className="p-1.5 text-secondary hover:bg-success/10 hover:text-success rounded-lg motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
                           title="WhatsApp Owner"
                           aria-label={`WhatsApp owner of ${gym.name}`}
                         >

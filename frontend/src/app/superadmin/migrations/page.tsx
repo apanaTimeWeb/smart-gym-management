@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Server component entry point for the Superadmin Migrations module.
 import { Metadata } from 'next';
-import SuperadminMigrationsClient from './migrations_components/SuperadminMigrationsClient';
+import SuperadminMigrationsClient from '@/app/superadmin/migrations/migrations_components/SuperadminMigrationsClient';
 
 export const metadata: Metadata = {
   title: 'Schema Rollouts | Superadmin Dashboard',

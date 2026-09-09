@@ -2,27 +2,12 @@
 'use client';
 
 import { Plus } from 'lucide-react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import ManagerReferralsKPIs from '@/app/manager/referrals/referrals_components/ManagerReferralsMain/ManagerReferralsKPIs';
 import ManagerReferralsTable from '@/app/manager/referrals/referrals_components/ManagerReferralsMain/ManagerReferralsTable';
 import ManagerReferralsAddModal from '@/app/manager/referrals/referrals_components/ManagerReferralsMain/ManagerReferralsAddModal';
 import { useManagerReferralsStore } from '@/app/manager/referrals/referrals_store/useManagerReferralsStore';
 
-// QueryClient must be instantiated OUTSIDE the component to avoid being
-// re-created on every render (would destroy TanStack Query cache entirely).
-const qc = new QueryClient({
-  defaultOptions: { queries: { staleTime: 1000 * 60 * 2, retry: 1 } }
-});
-
 export default function ManagerReferralsMain() {
-  return (
-    <QueryClientProvider client={qc}>
-      <ManagerReferralsContent />
-    </QueryClientProvider>
-  );
-}
-
-function ManagerReferralsContent() {
   const setIsAddModalOpen = useManagerReferralsStore((s) => s.setIsAddModalOpen);
 
   return (

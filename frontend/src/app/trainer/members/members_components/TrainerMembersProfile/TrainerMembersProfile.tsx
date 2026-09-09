@@ -13,6 +13,7 @@ import TrainerMembersProfileFitness from '@/app/trainer/members/members_componen
 import TrainerMembersProfileProgress from '@/app/trainer/members/members_components/TrainerMembersProfile/TrainerMembersProfileProgress';
 import TrainerMembersProfileWorkout from '@/app/trainer/members/members_components/TrainerMembersProfile/TrainerMembersProfileWorkout';
 import TrainerMembersProfileDiet from '@/app/trainer/members/members_components/TrainerMembersProfile/TrainerMembersProfileDiet';
+import { maskSensitiveData } from '@/lib/formatters';
 
 export default function TrainerMembersProfile() {
   const { selectedMember, setSelectedMember, profileTab, setProfileTab, openEdit, openMsg } = useMembersContext();
@@ -41,7 +42,7 @@ export default function TrainerMembersProfile() {
               </div>
               <div>
                 <h2 className="text-xl font-bold text-primary">{selectedMember.name}</h2>
-                <p className="text-secondary text-sm">{selectedMember.email} · {selectedMember.phone}</p>
+                <p className="text-secondary text-sm">{selectedMember.email} · {maskSensitiveData(selectedMember.phone, 'phone')}</p>
                 <div className="flex gap-2 mt-2 flex-wrap">
                   <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusStyle.bg} ${statusStyle.text}`}>
                     {selectedMember.status}
@@ -82,8 +83,8 @@ export default function TrainerMembersProfile() {
               { label: 'Expiry Date', value: new Date(selectedMember.expiryDate).toLocaleDateString('en-IN') },
               { label: 'Fitness Goal', value: selectedMember.fitnessGoal || 'Muscle Gain' },
               { label: 'Address', value: selectedMember.address || 'N/A' },
-            ].map((f, i) => (
-              <div key={i} className="bg-input rounded-lg p-3">
+            ].map((f) => (
+              <div key={f.label} className="bg-input rounded-lg p-3">
                 <p className="text-xs text-secondary mb-0.5">{f.label}</p>
                 <p className="text-sm font-semibold text-primary">{f.value}</p>
               </div>

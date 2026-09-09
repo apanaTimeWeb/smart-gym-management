@@ -9,6 +9,7 @@ const STATUS_COLORS: Record<SaaSInvoice['status'], string> = {
   PAID: 'text-success bg-success/10',
   PENDING: 'text-warning bg-warning/10',
   FAILED: 'text-danger bg-danger-bg/10',
+  OVERDUE: 'text-danger bg-danger-bg/10',
 };
 
 interface InvoicesTableRowProps {
@@ -45,6 +46,22 @@ export default function SuperadminInvoicesTableRow({ invoice: inv }: InvoicesTab
     window.open(`https://wa.me/?text=${encodeURIComponent(waText)}`, '_blank');
   };
 
+  const handleDownload = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    toast.success(`Downloading PDF for invoice ${inv.id}...`);
+    try {
+      const { invoicesApi } = await import('@/app/superadmin/invoices/superadmin_invoices_api/superadmin_invoices_api');
+      const res = await invoicesApi.getDownloadUrl(inv.id);
+      if (res.data?.downloadUrl) {
+        window.open(res.data.downloadUrl, '_blank');
+      } else {
+        toast.error('Download URL not found.');
+      }
+    } catch (err) {
+      toast.error('Failed to download invoice.');
+    }
+  };
+
   return (
     <tr className="hover:bg-input motion-safe:transition-colors">
       <td className="p-4 text-sm font-mono text-secondary">{inv.id}</td>
@@ -66,7 +83,7 @@ export default function SuperadminInvoicesTableRow({ invoice: inv }: InvoicesTab
           <MessageCircle className="w-4 h-4" />
         </button>
         <button 
-          onClick={(e) => { e.stopPropagation(); toast.success(`Downloading PDF for invoice ${inv.id}`); }}
+          onClick={handleDownload}
           className="text-sm font-medium text-primary hover:underline flex items-center gap-1"
         >
           <Receipt size={14} /> View

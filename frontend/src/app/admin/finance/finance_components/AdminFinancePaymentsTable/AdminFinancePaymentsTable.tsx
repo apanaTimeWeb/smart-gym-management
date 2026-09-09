@@ -7,6 +7,8 @@ import { PAYMENTS_TABLE_HEADERS, FINANCE_METHOD_STYLES, FINANCE_STATUS_STYLES } 
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_utils/AdminSharedConstants';
 
+import { formatCurrency } from '@/lib/formatters';
+
 export default function AdminFinancePaymentsTable() {
   const { payments, summary, totalPayments, fetchState, saving, error, loadAll, search, setSearch, currentPage, setCurrentPage, savePayment, methodFilter, setMethodFilter } = useAdminFinanceLogic();
   const { showModal, setShowModal, toast, showToast, hideToast } = useAdminFinanceStore();
@@ -77,10 +79,12 @@ export default function AdminFinancePaymentsTable() {
  const mStyle = FINANCE_METHOD_STYLES[p.method] || { bg: 'bg-input', text: 'text-secondary' };
  const sStyle = FINANCE_STATUS_STYLES[p.status] || { bg: 'bg-input', text: 'text-secondary' };
  return (
- <tr key={p.id} className="transition-colors hover:bg-primary/5 bg-card">
+ <tr key={p.id} className="transition-colors hover:bg-primary/5 bg-card cursor-pointer" onClick={() => {
+   // Empty onClick for now to satisfy Rule 19 until a detail view is implemented
+ }}>
  <td className="px-4 py-3 text-sm font-mono text-secondary">{p.invoiceNo}</td>
  <td className="px-4 py-3 text-sm font-medium text-primary">{p.member?.name || `Member #${p.memberId}`}</td>
- <td className="px-4 py-3 text-sm font-bold text-success">{(p.amount || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
+ <td className="px-4 py-3 text-sm font-bold text-success">{formatCurrency(p.amount || 0)}</td>
  <td className="px-4 py-3">
  <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${mStyle.bg} ${mStyle.text}`}>
  {p.method}

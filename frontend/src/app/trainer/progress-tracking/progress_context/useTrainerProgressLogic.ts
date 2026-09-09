@@ -4,6 +4,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import type { ProgressEntry, ProgressChartMetric, ComparisonMemberSnapshot, ComparisonMetric } from '@/app/trainer/progress-tracking/progress_types/TrainerProgressTypes';
 import { MOCK_PROGRESS_ENTRIES, MOCK_COMPARISON_ENTRIES, COMPARISON_MAX_MEMBERS } from '@/app/trainer/progress-tracking/progress_utils/TrainerProgressSharedConstants';
+import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 
 type ProgressTab = 'individual' | 'compare';
 
@@ -88,9 +89,18 @@ export const useTrainerProgressLogic = () => {
   const openEditModal = useCallback((entry: ProgressEntry) => { setEditingEntry(entry); setShowModal(true); }, []);
   const closeModal = useCallback(() => { setShowModal(false); setEditingEntry(null); }, []);
 
-  const handleDelete = useCallback((entryId: string) => {
+  const { confirm } = useConfirm();
+
+  const handleDelete = useCallback(async (entryId: string) => {
+    const ok = await confirm({
+      title: 'Delete Progress Entry',
+      message: 'Are you sure you want to delete this progress entry? This action cannot be undone.',
+      type: 'danger',
+      confirmText: 'Delete',
+    });
+    if (!ok) return;
     setEntries((prev) => prev.filter((e) => e.id !== entryId));
-  }, []);
+  }, [confirm]);
 
   const handleSave = useCallback((data: Omit<ProgressEntry, 'id' | 'memberId' | 'recordedBy'>) => {
     if (editingEntry) {

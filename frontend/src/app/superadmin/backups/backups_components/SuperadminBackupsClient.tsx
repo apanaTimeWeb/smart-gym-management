@@ -6,15 +6,11 @@ import SuperadminBackupsEmptyState from '@/app/superadmin/backups/backups_compon
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { DatabaseBackup, Search, Download, RotateCcw } from 'lucide-react';
 import type { BackupRecord } from '@/app/superadmin/backups/superadmin_backups_types/superadmin_backups_types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
-
-const StatusColors: Record<BackupRecord['status'], string> = {
-  SUCCESS: 'text-success bg-success/10',
-  IN_PROGRESS: 'text-primary bg-primary/10',
-  FAILED: 'text-danger bg-danger-bg/10',
-};
+import { backupsApi } from '@/app/superadmin/backups/superadmin_backups_api/superadmin_backups_api';
+import { StatusColors } from '@/app/superadmin/backups/backups_utils/SuperadminBackupsConstants';
 
 export default function SuperadminBackupsClient() {
   const { data: backups, fetchState, error } = useSuperadminBackupsData();
@@ -24,13 +20,15 @@ export default function SuperadminBackupsClient() {
     const [currentPage, setCurrentPage] = useState(1);
     const ITEMS_PER_PAGE = 10;
 
+    useEffect(() => {
+      setCurrentPage(1);
+    }, [search]);
+
     const handleTriggerSnapshot = async () => {
       setIsTriggering(true);
       const loadingToast = toast.loading('Initiating global pg_dump snapshot...');
       try {
-        await new Promise(res => setTimeout(res, 2000)); // Simulate API
-        
-        // Add a new mock backup to the top of the list
+        await backupsApi.triggerSnapshot();
         toast.success('Global snapshot completed successfully', { id: loadingToast });
       } catch (err) {
         toast.error('Failed to trigger snapshot', { id: loadingToast });
@@ -41,9 +39,8 @@ export default function SuperadminBackupsClient() {
 
     const handleDownload = (id: string) => {
       toast.success(`Starting download for backup ${id}`);
-      // Simulate real download behavior (TC-32)
       const link = document.createElement('a');
-      link.href = '#';
+      link.href = backupsApi.getDownloadUrl(id);
       link.download = `${id}_snapshot.sql.gz`;
       document.body.appendChild(link);
       link.click();
@@ -52,24 +49,27 @@ export default function SuperadminBackupsClient() {
 
     const [restoreModalOpen, setRestoreModalOpen] = useState(false);
     const [selectedBackup, setSelectedBackup] = useState<BackupRecord | null>(null);
+    const [restoreConfirmText, setRestoreConfirmText] = useState('');
 
     const handleRestoreClick = (backup: BackupRecord) => {
       setSelectedBackup(backup);
+      setRestoreConfirmText('');
       setRestoreModalOpen(true);
     };
 
     const confirmRestore = async () => {
-      if (!selectedBackup) return;
+      if (!selectedBackup || restoreConfirmText !== 'RESTORE') return;
       setRestoreModalOpen(false);
       
       const loadingToast = toast.loading(`Restoring database ${selectedBackup.databaseName} from snapshot...`);
       try {
-        await new Promise(res => setTimeout(res, 2500)); // Simulate API
+        await backupsApi.restoreSnapshot(selectedBackup.id);
         toast.success(`Database ${selectedBackup.databaseName} successfully restored!`, { id: loadingToast });
       } catch (err) {
         toast.error('Failed to restore snapshot', { id: loadingToast });
       } finally {
         setSelectedBackup(null);
+        setRestoreConfirmText('');
       }
     };
 if (fetchState === 'loading') return (
@@ -201,16 +201,27 @@ if (fetchState === 'loading') return (
                   ⚠️ WARNING: This will immediately overwrite the live production database for <strong>{selectedBackup.tenantName}</strong>. Any data created after {new Date(selectedBackup.timestamp).toLocaleString()} will be permanently lost!
                 </p>
               </div>
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-foreground mb-2">Type <span className="font-mono text-danger font-bold">RESTORE</span> to confirm</label>
+                <input 
+                  type="text" 
+                  value={restoreConfirmText}
+                  onChange={(e) => setRestoreConfirmText(e.target.value)}
+                  className="w-full px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-danger"
+                  placeholder="RESTORE"
+                />
+              </div>
               <div className="flex gap-3 justify-end">
                 <button 
-                  onClick={() => setRestoreModalOpen(false)}
+                  onClick={() => { setRestoreModalOpen(false); setRestoreConfirmText(''); }}
                   className="px-4 py-2 rounded-lg font-medium border border-border text-foreground hover:bg-card-hover motion-safe:transition-colors"
                 >
                   Cancel
                 </button>
                 <button 
                   onClick={confirmRestore}
-                  className="px-4 py-2 rounded-lg font-medium bg-danger hover:bg-danger/90 text-white motion-safe:transition-colors"
+                  disabled={restoreConfirmText !== 'RESTORE'}
+                  className="px-4 py-2 rounded-lg font-medium bg-danger hover:bg-danger/90 text-white motion-safe:transition-colors disabled:opacity-50"
                 >
                   Yes, Restore Snapshot
                 </button>

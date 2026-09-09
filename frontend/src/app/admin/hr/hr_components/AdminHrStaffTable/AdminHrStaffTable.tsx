@@ -168,7 +168,7 @@ export default function AdminHrStaffTable() {
             ))}
             {filteredStaff.length === 0 && (
               <tr>
-                <td colSpan={8} className="text-center py-12 text-secondary">
+                <td colSpan={9} className="text-center py-12 text-secondary">
                   {debouncedSearch ? 'No staff match the filter.' : 'No staff members yet. Add your first staff!'}
                 </td>
               </tr>

@@ -1,8 +1,8 @@
 export const getProgressColor = (used: number, limit: number) => {
   const percent = (used / limit) * 100;
-  if (percent > 90) return 'bg-danger';
-  if (percent > 75) return 'bg-warning';
-  return 'bg-success';
+  if (percent >= 90) return 'bg-danger';
+  if (percent >= 75) return 'bg-warning';
+  return 'bg-primary';
 };
 
 export const getPercentage = (used: number, limit: number) => {

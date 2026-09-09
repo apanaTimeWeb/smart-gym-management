@@ -32,10 +32,10 @@ export default function AdminPagination({
   const startItem = totalItems && itemsPerPage ? (currentPage - 1) * itemsPerPage + 1 : null;
   const endItem = totalItems && itemsPerPage ? Math.min(currentPage * itemsPerPage, totalItems) : null;
 
-  const bgActive = colors?.bgActive ?? 'var(--primary)';
-  const textActive = colors?.textActive ?? 'white';
-  const textColor = colors?.text ?? 'var(--text-secondary)';
-  const borderColor = colors?.border ?? 'var(--border)';
+  const bgActive = colors?.bgActive ?? 'bg-primary';
+  const textActive = colors?.textActive ?? 'text-white';
+  const textColor = colors?.text ?? 'text-secondary';
+  const borderColor = colors?.border ?? 'border-border';
 
   const getVisiblePages = () => {
     const pages = [];
@@ -55,17 +55,16 @@ export default function AdminPagination({
 
   return (
     <div 
-      className="px-5 py-4 flex flex-col sm:flex-row items-center justify-between gap-4"
-      style={{ borderColor }}
+      className={`px-5 py-4 flex flex-col sm:flex-row items-center justify-between gap-4 ${borderColor}`}
     >
       {startItem !== null && endItem !== null && totalItems !== undefined ? (
-        <div className="text-sm text-center sm:text-left" style={{ color: textColor }}>
+        <div className={`text-sm text-center sm:text-left ${textColor}`}>
           Showing <span className="font-medium">{startItem}</span> to{' '}
           <span className="font-medium">{endItem}</span> of{' '}
           <span className="font-medium">{totalItems}</span> results
         </div>
       ) : (
-        <div className="text-sm" style={{ color: textColor }}>
+        <div className={`text-sm ${textColor}`}>
           Page <span className="font-medium">{currentPage}</span> of{' '}
           <span className="font-medium">{totalPages}</span>
         </div>
@@ -75,8 +74,7 @@ export default function AdminPagination({
         <button 
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="p-1.5 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          style={{ color: textColor }}
+          className={`p-1.5 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${textColor} hover:bg-black/5 dark:hover:bg-white/5`}
         >
           <ChevronLeft size={18} />
         </button>
@@ -84,17 +82,16 @@ export default function AdminPagination({
         <div className="flex items-center gap-1 mx-1">
           {getVisiblePages().map((p, i) => (
             p === '...' ? (
-              <span key={`dots-${i}`} className="px-2" style={{ color: textColor }}>...</span>
+              <span key={`dots-${i}`} className={`px-2 ${textColor}`}>...</span>
             ) : (
               <button
                 key={p}
                 onClick={() => onPageChange(p as number)}
-                className="w-8 h-8 flex items-center justify-center rounded-lg text-sm font-medium transition-all"
-                style={
+                className={`w-8 h-8 flex items-center justify-center rounded-lg text-sm font-medium transition-all ${
                   currentPage === p 
-                    ? { background: bgActive, color: textActive }
-                    : { color: textColor }
-                }
+                    ? `${bgActive} ${textActive}`
+                    : `${textColor} hover:bg-black/5 dark:hover:bg-white/5`
+                }`}
               >
                 {p}
               </button>
@@ -105,8 +102,7 @@ export default function AdminPagination({
         <button 
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="p-1.5 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          style={{ color: textColor }}
+          className={`p-1.5 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${textColor} hover:bg-black/5 dark:hover:bg-white/5`}
         >
           <ChevronRight size={18} />
         </button>

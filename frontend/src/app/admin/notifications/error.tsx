@@ -4,7 +4,7 @@
 import { useEffect } from 'react';
 import { AlertTriangle } from 'lucide-react';
 
-export default function Error({
+export default function AdminNotificationsError({
   error,
   reset,
 }: {

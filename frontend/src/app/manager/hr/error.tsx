@@ -17,12 +17,11 @@ export default function HrError({
  return (
  <div className="min-h-full flex items-center justify-center hr-module">
  <div className="text-center">
- <p className="font-medium" style={{ color: 'var(--danger)' }}>Something went wrong!</p>
- <p className="text-sm mt-1" style={{ color: 'var(--danger)' }}>{error.message || 'An unexpected error occurred in the HR module.'}</p>
+ <p className="font-medium text-danger">Something went wrong!</p>
+ <p className="text-sm mt-1 text-danger">{error.message || 'An unexpected error occurred in the HR module.'}</p>
  <button
  onClick={() => reset()}
- className="mt-4 px-4 py-2 rounded-md font-medium text-white"
- style={{ backgroundColor: 'var(--primary)' }}
+ className="mt-4 px-4 py-2 rounded-md font-medium text-primary-foreground bg-primary"
  >
  Try again
  </button>

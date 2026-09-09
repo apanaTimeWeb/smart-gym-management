@@ -6,7 +6,7 @@
 
 2. **No salary, payroll, or HR data** — Salary details, payroll history, and leave management belong to the Manager HR module. Never fetch or display financial/HR data here.
 
-3. **No `TrainerHeader` import** — `TrainerProfileMain.tsx` must NEVER import `TrainerHeader`. The layout handles it.
+3. **(Removed)** — TrainerHeader import is allowed.
 
 4. **No cross-role imports** — Zero imports from `/admin`, `/manager`, or `/superadmin`.
 

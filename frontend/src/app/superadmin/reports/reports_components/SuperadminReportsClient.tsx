@@ -30,15 +30,61 @@ type Tab = ReportsTab;
 
 export default function SuperadminReportsClient() {
   const [tab, setTab] = useState<ReportsTab>('revenue');
-  const [dateFrom, setDateFrom] = useState('2024-01-01');
-  const [dateTo, setDateTo] = useState('2024-05-31');
+  const today = new Date();
+  const firstDay = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
+  const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0];
+  
+  const [dateFrom, setDateFrom] = useState(firstDay);
+  const [dateTo, setDateTo] = useState(lastDay);
+
+  const handleDateFromChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    if (dateTo && val > dateTo) {
+      toast.error('Start date cannot be after end date');
+      return;
+    }
+    setDateFrom(val);
+  };
+
+  const handleDateToChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    if (dateFrom && val < dateFrom) {
+      toast.error('End date cannot be before start date');
+      return;
+    }
+    setDateTo(val);
+  };
 
   function handleExportCSV() {
-    toast.success('Exporting CSV report... (demo)');
+    let csvRows: string[] = [];
+    if (tab === 'revenue') {
+      csvRows = [
+        ['Month', 'MRR', 'New Revenue', 'Churned', 'Net Revenue', 'Tenants'].join(','),
+        ...REVENUE_DATA.map(r => [r.month, r.mrr, r.newRevenue, r.churnedRevenue, r.netRevenue, r.tenantCount].join(','))
+      ];
+    } else if (tab === 'churn') {
+      csvRows = [
+        ['Tenant', 'Owner', 'Plan', 'Churned At', 'Reason', 'Lost MRR', 'Days Active'].join(','),
+        ...CHURN_DATA.map(c => [c.gymName, c.ownerName, c.plan, c.churnedAt, c.reason, c.mrr, c.daysActive].join(','))
+      ];
+    } else {
+      csvRows = [
+        ['Tenant', 'Plan', 'Score', 'Grade', 'Members', 'Last Login', 'Payment Health', 'Feature Usage', 'Tickets'].join(','),
+        ...HEALTH_DATA.map(h => [h.gymName, h.plan, h.score, h.grade, h.memberCount, h.lastLogin, h.paymentHealth, h.featureUsage, h.supportTickets].join(','))
+      ];
+    }
+    
+    const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `superadmin_${tab}_report.csv`;
+    a.click();
+    toast.success('Report downloaded successfully');
   }
 
   function handleExportPDF() {
-    toast.success('Generating PDF report... (demo)');
+    window.print();
   }
 
   const lastRow = REVENUE_DATA[REVENUE_DATA.length - 1] as RevenueRow;
@@ -174,14 +220,14 @@ export default function SuperadminReportsClient() {
         <input
           type="date"
           value={dateFrom}
-          onChange={(e) => setDateFrom(e.target.value)}
+          onChange={handleDateFromChange}
           className="px-3 py-1.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
         />
         <span className="text-secondary text-sm">to</span>
         <input
           type="date"
           value={dateTo}
-          onChange={(e) => setDateTo(e.target.value)}
+          onChange={handleDateToChange}
           className="px-3 py-1.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
         />
       </div>

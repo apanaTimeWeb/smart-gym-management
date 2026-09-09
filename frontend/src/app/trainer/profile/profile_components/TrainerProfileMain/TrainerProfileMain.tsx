@@ -5,6 +5,7 @@
 import { User, Lock, Save, Loader2, Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { useTrainerProfileLogic } from '@/app/trainer/profile/profile_context/useTrainerProfileLogic';
+import TrainerHeader from '@/app/trainer/trainer_components/TrainerLayout/TrainerHeader';
 
 export default function TrainerProfileMain() {
   const {
@@ -30,16 +31,13 @@ export default function TrainerProfileMain() {
   ];
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6 p-6">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">My Profile</h1>
-        <p className="text-secondary mt-1 text-sm">Manage your account details and password.</p>
-      </div>
+    <div className="min-h-full pb-10">
+      <TrainerHeader title="My Profile" subtitle="Manage your account details and password." />
+      <div className="max-w-3xl mx-auto space-y-6 p-6">
 
       {/* Avatar card */}
       <div
-        className="bg-card border border-border rounded-xl p-6 flex items-center gap-5"
-        style={{ background: 'linear-gradient(180deg, rgba(250,204,21,0.08), rgba(255,255,255,0.02))' }}
+        className="bg-card border border-border rounded-xl p-6 flex items-center gap-5 bg-gradient-to-b from-primary/10 to-white/5"
       >
         <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-2xl font-bold text-black shrink-0">
           {mounted ? displayInitial : 'T'}
@@ -138,6 +136,7 @@ export default function TrainerProfileMain() {
           </div>
         </form>
       )}
+    </div>
     </div>
   );
 }

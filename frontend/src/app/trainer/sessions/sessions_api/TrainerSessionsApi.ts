@@ -3,7 +3,7 @@
 
 import { apiFetch } from '@/lib/api';
 import type { TrainerSession } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
-import { TRAINER_SESSIONS_API_ROUTES } from '@/app/trainer/sessions/TrainerSessionsUrlConfig';
+import { TRAINER_SESSIONS_API_ROUTES } from '@/app/trainer/sessions/sessions_utils/sessions_url_config';
 
 export interface CreateSessionDto {
   memberId: string;

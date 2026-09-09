@@ -7,10 +7,24 @@ import { Network, Users, TrendingUp, Ban, Search, CheckCircle2, AlertTriangle, B
 import { useSuperadminFranchisesPage } from '@/app/superadmin/franchises/franchises_utils/useSuperadminFranchisesPage';
 import { FRANCHISE_STATUS_STYLES, FRANCHISES_PAGE_SIZE } from '@/app/superadmin/franchises/franchises_utils/SuperadminFranchisesConstants';
 import type { SuperadminFranchise } from '@/app/superadmin/franchises/franchises_types/superadmin_franchises_types';
+import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
 
 export default function SuperadminFranchisesClient() {
   const { franchises, fetchState, search, setSearch, handleSuspend, handleActivate } = useSuperadminFranchisesPage();
   const [page, setPage] = useState(1);
+  const { confirm } = useSuperadminConfirm();
+
+  const onSuspendClick = async (id: string) => {
+    if (await confirm({ title: 'Suspend Franchise', message: 'Are you sure you want to suspend this franchise? It will immediately revoke access for all branch staff under this franchise.', type: 'danger', confirmText: 'Suspend' })) {
+      handleSuspend(id);
+    }
+  };
+
+  const onActivateClick = async (id: string) => {
+    if (await confirm({ title: 'Activate Franchise', message: 'Are you sure you want to activate this franchise?', type: 'info', confirmText: 'Activate' })) {
+      handleActivate(id);
+    }
+  };
 
   const totalPages = Math.ceil(franchises.length / FRANCHISES_PAGE_SIZE) || 1;
   const paginated = franchises.slice((page - 1) * FRANCHISES_PAGE_SIZE, page * FRANCHISES_PAGE_SIZE);
@@ -50,8 +64,7 @@ export default function SuperadminFranchisesClient() {
           return (
             <div
               key={k.label}
-              className="bg-card border border-border rounded-xl p-4 shadow-sm motion-safe:hover:-translate-y-1 motion-safe:transition-all motion-safe:duration-200"
-              style={{ background: 'linear-gradient(180deg, rgba(250,204,21,0.08), rgba(255,255,255,0.02))' }}
+              className="bg-card border border-border rounded-xl p-4 shadow-sm motion-safe:hover:-translate-y-1 motion-safe:transition-all motion-safe:duration-200 bg-gradient-to-b from-yellow-400/10 to-transparent"
             >
               <div className={`w-8 h-8 rounded-lg ${k.bg} flex items-center justify-center mb-3`}>
                 <Icon size={18} strokeWidth={2} className={k.color} />
@@ -113,14 +126,14 @@ export default function SuperadminFranchisesClient() {
                   <td className="px-4 py-3">
                     {f.status === 'SUSPENDED' ? (
                       <button
-                        onClick={() => handleActivate(f.id)}
+                        onClick={() => onActivateClick(f.id)}
                         className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-success/10 text-success text-xs font-medium hover:bg-success/20 motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-success"
                       >
                         <CheckCircle2 size={12} /> Activate
                       </button>
                     ) : (
                       <button
-                        onClick={() => handleSuspend(f.id)}
+                        onClick={() => onSuspendClick(f.id)}
                         className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-danger/10 text-danger text-xs font-medium hover:bg-danger/20 motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger"
                       >
                         <AlertTriangle size={12} /> Suspend

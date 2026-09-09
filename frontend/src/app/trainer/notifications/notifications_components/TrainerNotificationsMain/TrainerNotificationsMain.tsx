@@ -5,6 +5,7 @@
 import TrainerNotificationsList from '@/app/trainer/notifications/notifications_components/TrainerNotificationsList';
 import { useTrainerNotificationsLogic } from '@/app/trainer/notifications/notifications_context/useTrainerNotificationsLogic';
 import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
+import TrainerHeader from '@/app/trainer/trainer_components/TrainerLayout/TrainerHeader';
 
 export default function TrainerNotificationsMain() {
   const { notifications, unreadCount, markAllAsRead, clearAll, markAsRead, deleteNotification } =
@@ -13,6 +14,7 @@ export default function TrainerNotificationsMain() {
 
   return (
     <div className="min-h-full pb-10">
+      <TrainerHeader title="Notifications" subtitle="Stay updated with your activities and alerts" />
       <div className="p-4 sm:p-6 max-w-4xl mx-auto w-full">
         <div className="flex items-center justify-between mb-4 mt-2">
           <div>

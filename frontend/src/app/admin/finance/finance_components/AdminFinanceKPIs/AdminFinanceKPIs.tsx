@@ -5,6 +5,8 @@ import { useAdminFinanceLogic } from '@/app/admin/finance/finance_context/useAdm
 import { useAdminFinanceStore } from '@/app/admin/finance/finance_store/useAdminFinanceStore';
 import { FileText, TrendingUp, IndianRupee, CreditCard } from 'lucide-react';
 
+import { formatCurrency } from '@/lib/formatters';
+
 const METHOD_FILTER_MAP: Record<string, string> = {
   'Total Revenue': 'All',
   'Monthly Revenue': 'All',
@@ -20,7 +22,7 @@ export default function AdminFinanceKPIs() {
   const kpis = [
     {
       label: 'Total Revenue',
-      value: (summary.totalRevenue || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }),
+      value: formatCurrency(summary.totalRevenue || 0),
       icon: TrendingUp,
       colorClass: 'text-success',
       bgClass: 'bg-success/10',
@@ -29,7 +31,7 @@ export default function AdminFinanceKPIs() {
     },
     {
       label: 'Monthly Revenue',
-      value: (summary.monthlyRevenue || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }),
+      value: formatCurrency(summary.monthlyRevenue || 0),
       icon: IndianRupee,
       colorClass: 'text-primary',
       bgClass: 'bg-primary/10',
@@ -38,7 +40,7 @@ export default function AdminFinanceKPIs() {
     },
     {
       label: 'Pending Amount',
-      value: (summary.pendingAmount || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }),
+      value: formatCurrency(summary.pendingAmount || 0),
       icon: FileText,
       colorClass: 'text-warning',
       bgClass: 'bg-warning/10',
@@ -47,7 +49,7 @@ export default function AdminFinanceKPIs() {
     },
     {
       label: 'Total Expenses',
-      value: (summary.totalExpenses || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }),
+      value: formatCurrency(summary.totalExpenses || 0),
       icon: CreditCard,
       colorClass: 'text-danger',
       bgClass: 'bg-danger/10',
@@ -56,7 +58,7 @@ export default function AdminFinanceKPIs() {
     },
     {
       label: 'Net Profit',
-      value: (summary.netProfit || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }),
+      value: formatCurrency(summary.netProfit || 0),
       icon: TrendingUp,
       colorClass: 'text-success',
       bgClass: 'bg-success/10',
