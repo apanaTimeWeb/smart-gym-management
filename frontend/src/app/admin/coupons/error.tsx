@@ -1,9 +1,7 @@
 'use client';
-export default function CouponsError({ reset }: { reset: () => void }) {
-  return (
-    <div className="flex flex-col items-center justify-center min-h-96 gap-4">
-      <p className="text-danger font-semibold">Failed to load coupons</p>
-      <button onClick={reset} className="px-4 py-2 bg-primary text-black rounded-lg text-sm font-medium">Try Again</button>
-    </div>
-  );
+// RESPONSIBILITY: Error boundary for Admin Coupons page. Handles 403 permission-denied separately from generic errors.
+import AdminErrorFallback from '@/app/admin/admin_components/AdminShared/AdminErrorFallback';
+
+export default function CouponsError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+  return <AdminErrorFallback error={error} reset={reset} moduleName="Coupons" />;
 }

@@ -49,44 +49,44 @@ export function useAdminAnnouncementsLogic() {
 
   const createMutation = useMutation({
     mutationFn: (payload: AnnouncementFormValues) => announcementsApi.createAnnouncement(payload),
-    onSuccess: () => {
-      toast.success('Announcement created successfully');
+    onSuccess: (res) => {
+      toast.success(res.message ?? 'Announcement created');
       setShowModal(false);
       qc.invalidateQueries({ queryKey: ['adminAnnouncements'] });
       qc.invalidateQueries({ queryKey: ['adminAnnouncementsKPIs'] });
     },
-    onError: () => toast.error('Failed to create announcement. Please try again.'),
+    onError: (err: Error) => toast.error(err.message ?? 'Failed to create announcement'),
   });
 
   const updateMutation = useMutation({
     mutationFn: ({ id, payload }: { id: string; payload: AnnouncementFormValues }) =>
       announcementsApi.updateAnnouncement(id, payload),
-    onSuccess: () => {
-      toast.success('Announcement updated');
+    onSuccess: (res) => {
+      toast.success(res.message ?? 'Announcement updated');
       setShowModal(false);
       setEditingAnnouncement(null);
       qc.invalidateQueries({ queryKey: ['adminAnnouncements'] });
     },
-    onError: () => toast.error('Failed to update announcement. Please try again.'),
+    onError: (err: Error) => toast.error(err.message ?? 'Failed to update announcement'),
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => announcementsApi.deleteAnnouncement(id),
-    onSuccess: () => {
-      toast.success('Announcement deleted');
+    onSuccess: (res) => {
+      toast.success(res.message ?? 'Announcement deleted');
       qc.invalidateQueries({ queryKey: ['adminAnnouncements'] });
       qc.invalidateQueries({ queryKey: ['adminAnnouncementsKPIs'] });
     },
-    onError: () => toast.error('Failed to delete announcement. Please try again.'),
+    onError: (err: Error) => toast.error(err.message ?? 'Failed to delete announcement'),
   });
 
   const pinMutation = useMutation({
     mutationFn: (id: string) => announcementsApi.togglePin(id),
-    onSuccess: (data) => {
-      toast.success(data.isPinned ? 'Announcement pinned' : 'Announcement unpinned');
+    onSuccess: (res) => {
+      toast.success(res.message ?? (res.isPinned ? 'Pinned' : 'Unpinned'));
       qc.invalidateQueries({ queryKey: ['adminAnnouncements'] });
     },
-    onError: () => toast.error('Failed to update pin status. Please try again.'),
+    onError: (err: Error) => toast.error(err.message ?? 'Failed to update pin status'),
   });
 
   const openCreate = useCallback(() => {
