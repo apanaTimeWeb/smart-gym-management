@@ -7,7 +7,7 @@ import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import {
   Download, TrendingDown, HeartPulse, IndianRupee,
-  AlertTriangle, CheckCircle2, XCircle,
+  AlertTriangle, CheckCircle2, XCircle, Search, Filter,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { CHART_COLORS } from '@/app/superadmin/superadmin_utils/SuperadminChartConstants';
@@ -36,6 +36,8 @@ export default function SuperadminReportsClient() {
   
   const [dateFrom, setDateFrom] = useState(firstDay);
   const [dateTo, setDateTo] = useState(lastDay);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [planFilter, setPlanFilter] = useState('ALL');
 
   const handleDateFromChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
@@ -137,11 +139,23 @@ export default function SuperadminReportsClient() {
 
   const churnPieSeries = Object.values(churnReasonCounts);
 
-  const avgDaysActive = Math.round(
-    CHURN_DATA.reduce((s, c) => s + c.daysActive, 0) / CHURN_DATA.length
-  );
+  const filteredChurnData = CHURN_DATA.filter(c => {
+    const matchSearch = c.gymName.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchPlan = planFilter === 'ALL' || c.plan === planFilter;
+    return matchSearch && matchPlan;
+  });
 
-  const sortedHealthData = [...HEALTH_DATA].sort((a, b) => b.score - a.score);
+  const avgDaysActive = filteredChurnData.length > 0 ? Math.round(
+    filteredChurnData.reduce((s, c) => s + c.daysActive, 0) / filteredChurnData.length
+  ) : 0;
+
+  const filteredHealthData = HEALTH_DATA.filter(h => {
+    const matchSearch = h.gymName.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchPlan = planFilter === 'ALL' || h.plan === planFilter;
+    return matchSearch && matchPlan;
+  });
+
+  const sortedHealthData = [...filteredHealthData].sort((a, b) => b.score - a.score);
 
   function renderTicketCount(count: number) {
     const color =
@@ -214,22 +228,52 @@ export default function SuperadminReportsClient() {
         </div>
       </div>
 
-      {/* Date Range Filter */}
-      <div className="flex items-center gap-3 flex-wrap">
-        <span className="text-xs text-secondary font-medium">Date Range:</span>
-        <input
-          type="date"
-          value={dateFrom}
-          onChange={handleDateFromChange}
-          className="px-3 py-1.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
-        />
-        <span className="text-secondary text-sm">to</span>
-        <input
-          type="date"
-          value={dateTo}
-          onChange={handleDateToChange}
-          className="px-3 py-1.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
-        />
+      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+        <div className="flex items-center gap-3 flex-wrap">
+          <span className="text-xs text-secondary font-medium">Date Range:</span>
+          <input
+            type="date"
+            value={dateFrom}
+            onChange={handleDateFromChange}
+            className="px-3 py-1.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
+          />
+          <span className="text-secondary text-sm">to</span>
+          <input
+            type="date"
+            value={dateTo}
+            onChange={handleDateToChange}
+            className="px-3 py-1.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
+          />
+        </div>
+
+        {tab !== 'revenue' && (
+          <div className="flex items-center gap-3 flex-wrap w-full sm:w-auto">
+            <div className="relative flex-1 sm:w-64">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />
+              <input
+                type="text"
+                placeholder="Search by gym name..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
+              />
+            </div>
+            <div className="relative flex items-center bg-input border border-border rounded-lg px-3 py-2 focus-within:border-primary">
+              <Filter className="w-4 h-4 text-secondary mr-2" />
+              <select
+                value={planFilter}
+                onChange={(e) => setPlanFilter(e.target.value)}
+                className="bg-transparent text-sm text-foreground focus:outline-none appearance-none pr-4 cursor-pointer"
+              >
+                <option value="ALL">All Plans</option>
+                <option value="ENTERPRISE">Enterprise</option>
+                <option value="PRO">Pro</option>
+                <option value="STARTER">Starter</option>
+                <option value="BASIC">Basic</option>
+              </select>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Tabs */}
@@ -301,7 +345,7 @@ export default function SuperadminReportsClient() {
             </div>
             <div className="bg-card border border-border rounded-xl p-6 shadow-sm space-y-3">
               <h2 className="text-base font-semibold text-foreground mb-2">Churn Summary</h2>
-              <div className="flex justify-between text-sm"><span className="text-secondary">Total Churned Tenants</span><span className="text-foreground font-medium">{CHURN_DATA.length}</span></div>
+              <div className="flex justify-between text-sm"><span className="text-secondary">Filtered Churned Tenants</span><span className="text-foreground font-medium">{filteredChurnData.length}</span></div>
               <div className="flex justify-between text-sm"><span className="text-secondary">Total Lost MRR</span><span className="text-danger font-medium">₹{totalChurnedRevenue.toLocaleString('en-IN')}</span></div>
               <div className="flex justify-between text-sm"><span className="text-secondary">Avg Days Active Before Churn</span><span className="text-foreground font-medium">{avgDaysActive} days</span></div>
               <div className="flex justify-between text-sm"><span className="text-secondary">Top Churn Reason</span><span className="text-foreground font-medium">Too expensive</span></div>
@@ -319,7 +363,7 @@ export default function SuperadminReportsClient() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
-                  {CHURN_DATA.map((row: ChurnRecord) => (
+                  {filteredChurnData.map((row: ChurnRecord) => (
                     <tr key={row.id} className="hover:bg-input/30 motion-safe:transition-colors">
                       <td className="px-4 py-3">
                         <p className="font-medium text-foreground">{row.gymName}</p>

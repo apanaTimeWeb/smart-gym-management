@@ -33,6 +33,8 @@ export default function SuperadminCouponsClient() {
     activeKpi,
     setActiveKpi,
     totalCoupons,
+    statusFilter,
+    setStatusFilter,
   } = useSuperadminCoupons();
 
   if (fetchState === 'loading') return (
@@ -52,6 +54,8 @@ export default function SuperadminCouponsClient() {
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         onCreateClick={() => setIsModalOpen(true)}
+        statusFilter={statusFilter}
+        onStatusFilterChange={setStatusFilter}
       />
 
       <SuperadminCouponsStatsBar

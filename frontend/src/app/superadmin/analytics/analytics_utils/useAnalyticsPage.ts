@@ -36,7 +36,7 @@ export function useAnalyticsPage(): UseAnalyticsPageReturn {
     let cancelled = false;
     setFetchState('loading');
     analyticsApi
-      .getRevenueMetrics()
+      .getRevenueMetrics({ timeRange, customStart, customEnd })
       .then((res) => {
         if (cancelled) return;
         if (res.success && res.data) {
@@ -53,11 +53,11 @@ export function useAnalyticsPage(): UseAnalyticsPageReturn {
         setError(null);
       });
     return () => { cancelled = true; };
-  }, []);
+  }, [timeRange, customStart, customEnd]);
 
   useEffect(() => {
     return fetchMetrics();
-  }, [fetchMetrics, timeRange, customStart, customEnd]);
+  }, [fetchMetrics]);
 
   return { metrics, monthlyData, fetchState, error, timeRange, setTimeRange, customStart, setCustomStart, customEnd, setCustomEnd };
 }

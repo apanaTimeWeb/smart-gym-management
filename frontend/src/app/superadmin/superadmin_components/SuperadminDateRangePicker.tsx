@@ -14,7 +14,19 @@ export default function SuperadminDateRangePicker({ onRangeChange }: SuperadminD
 
   const handleChange = (val: string) => {
     setRange(val);
-    if (val !== "custom") onRangeChange(val, val); // Mock behavior for now
+    if (val !== "custom") {
+      const today = new Date();
+      let start = new Date();
+      let end = new Date();
+      if (val === "this_week") {
+        start.setDate(today.getDate() - today.getDay());
+      } else if (val === "this_month") {
+        start = new Date(today.getFullYear(), today.getMonth(), 1);
+      } else if (val === "this_year") {
+        start = new Date(today.getFullYear(), 0, 1);
+      }
+      onRangeChange(start.toISOString().split('T')[0], end.toISOString().split('T')[0]);
+    }
   };
 
   return (

@@ -1,13 +1,15 @@
 'use client';
 // RESPONSIBILITY: Renders the page title, search input, and "Create Coupon" CTA button for the Coupons page. Receives all state via props — no API calls.
-import { Tag, Plus, Search } from 'lucide-react';
+import { Tag, Plus, Search, Filter } from 'lucide-react';
 interface CouponsHeaderProps {
   searchQuery: string;
   onSearchChange: (value: string) => void;
   onCreateClick: () => void;
+  statusFilter?: string;
+  onStatusFilterChange?: (value: string) => void;
 }
 
-export default function SuperadminCouponsHeader({ searchQuery, onSearchChange, onCreateClick }: CouponsHeaderProps) {
+export default function SuperadminCouponsHeader({ searchQuery, onSearchChange, onCreateClick, statusFilter, onStatusFilterChange }: CouponsHeaderProps) {
   return (
     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
@@ -25,9 +27,25 @@ export default function SuperadminCouponsHeader({ searchQuery, onSearchChange, o
             placeholder="Search coupons..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary motion-safe:transition-colors  w-full sm:w-64 "
+            className="pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary motion-safe:transition-colors w-full sm:w-64"
           />
         </div>
+        
+        {onStatusFilterChange && (
+          <div className="relative flex items-center bg-input border border-border rounded-lg px-3 py-2 motion-safe:transition-colors focus-within:border-primary">
+            <Filter className="w-4 h-4 text-secondary mr-2" />
+            <select 
+              value={statusFilter} 
+              onChange={(e) => onStatusFilterChange(e.target.value)}
+              className="bg-transparent text-sm text-foreground focus:outline-none appearance-none pr-4 cursor-pointer"
+            >
+              <option value="ALL">All Statuses</option>
+              <option value="ACTIVE">Active</option>
+              <option value="INACTIVE">Inactive</option>
+            </select>
+          </div>
+        )}
+
         <button
           onClick={onCreateClick}
           className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-white font-medium rounded-lg motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out motion-safe:active:scale-95 text-sm"

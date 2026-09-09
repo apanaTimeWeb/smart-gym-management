@@ -24,6 +24,7 @@ import {
   INITIAL_NOTIFICATIONS,
   MESSAGING_TENANTS,
 } from '@/app/superadmin/messaging/messaging_types/messaging_constants';
+import SuperadminDateRangePicker from '@/app/superadmin/superadmin_components/SuperadminDateRangePicker';
 
 // Isolated notification icon component — avoids inline JSX in const objects (Rule 38)
 function NotifIcon({ type }: { type: NotificationType }) {
@@ -133,6 +134,8 @@ export default function SuperadminMessagingClient() {
   const [search, setSearch] = useState('');
   const [channelFilter, setChannelFilter] = useState<MessageChannel | 'ALL'>('ALL');
   const [composeOpen, setComposeOpen] = useState(false);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   const [composeTenantId, setComposeTenantId] = useState('');
   const [composeChannel, setComposeChannel] = useState<MessageChannel>('EMAIL');
@@ -144,7 +147,17 @@ export default function SuperadminMessagingClient() {
       m.tenantName.toLowerCase().includes(search.toLowerCase()) ||
       m.subject.toLowerCase().includes(search.toLowerCase());
     const matchChannel = channelFilter === 'ALL' || m.channel === channelFilter;
-    return matchSearch && matchChannel;
+    let matchDate = true;
+    if (startDate && endDate && m.sentAt && startDate !== 'this_month' && startDate !== 'this_week' && startDate !== 'this_year' && startDate !== 'today') {
+      const iDate = new Date(m.sentAt);
+      const sDate = new Date(startDate);
+      const eDate = new Date(endDate);
+      if (!isNaN(iDate.getTime()) && !isNaN(sDate.getTime()) && !isNaN(eDate.getTime())) {
+        eDate.setHours(23, 59, 59, 999);
+        matchDate = iDate >= sDate && iDate <= eDate;
+      }
+    }
+    return matchSearch && matchChannel && matchDate;
   });
 
   const unreadCount = notifications.filter((n) => !n.read).length;
@@ -259,6 +272,14 @@ export default function SuperadminMessagingClient() {
                   {ch}
                 </button>
               ))}
+            </div>
+            <div className="flex gap-2">
+              <SuperadminDateRangePicker 
+                onRangeChange={(start, end) => {
+                  setStartDate(start);
+                  setEndDate(end);
+                }}
+              />
             </div>
           </div>
 

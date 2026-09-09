@@ -35,12 +35,14 @@ export function useSuperadminInvoicesPage() {
       const matchSearch = ((i.tenantName || '').toLowerCase().includes(lower) || (i.id || '').toLowerCase().includes(lower));
       const matchStatus = statusFilter ? i.status === statusFilter : true;
       let matchDate = true;
-      if (startDate && endDate && i.issuedAt) {
+      if (startDate && endDate && i.issuedAt && startDate !== 'this_month' && startDate !== 'this_week' && startDate !== 'this_year' && startDate !== 'today') {
         const iDate = new Date(i.issuedAt);
         const sDate = new Date(startDate);
         const eDate = new Date(endDate);
-        eDate.setHours(23, 59, 59, 999);
-        matchDate = iDate >= sDate && iDate <= eDate;
+        if (!isNaN(iDate.getTime()) && !isNaN(sDate.getTime()) && !isNaN(eDate.getTime())) {
+          eDate.setHours(23, 59, 59, 999);
+          matchDate = iDate >= sDate && iDate <= eDate;
+        }
       }
       return matchSearch && matchStatus && matchDate;
     });
