@@ -25,6 +25,10 @@ export interface TrainerEarningsHistoryRow {
   description: string;
   amount: number;
   status: PayoutStatus;
+  sessionId?: string;
+  tdsDeducted?: number;
+  netPayout?: number;
+  invoiceNumber?: string;
 }
 
 export interface TrainerEarningsContextType {

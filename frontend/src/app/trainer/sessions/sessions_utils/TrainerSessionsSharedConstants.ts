@@ -10,6 +10,7 @@ export interface TrainerSession {
   title: string;
   type: SessionType;
   time: string;
+  sessionDate: string;
   duration: string;
   status: SessionStatus;
   attendees: number;
@@ -20,6 +21,10 @@ export interface TrainerSession {
   sessionNotes?: string;
   location?: string;
   room?: string;
+  trainerNotes?: string;
+  memberRating?: number;
+  cancellationReason?: string;
+  recurrenceRule?: string;
 }
 
 export const SESSION_FILTER_OPTIONS: SessionFilter[] = ['All', 'PT', 'Group'];

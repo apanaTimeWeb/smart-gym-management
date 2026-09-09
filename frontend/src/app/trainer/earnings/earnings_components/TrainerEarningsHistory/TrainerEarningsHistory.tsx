@@ -5,7 +5,8 @@ import { PAYOUT_STATUS_STYLES } from '@/app/trainer/earnings/earnings_utils/Trai
 
 export default function TrainerEarningsHistory() {
   const {
-    paginatedHistory, fetchState, search, setSearch, currentPage, setCurrentPage, totalPages
+    paginatedHistory, fetchState, search, setSearch, currentPage, setCurrentPage, totalPages,
+    startDate, setStartDate, endDate, setEndDate
   } = useTrainerEarningsContext();
 
   if (fetchState === 'loading') {
@@ -26,6 +27,24 @@ export default function TrainerEarningsHistory() {
             onChange={e => setSearch(e.target.value)}
             className="w-full pl-8 pr-4 py-1.5 bg-input border border-border rounded-lg text-sm text-foreground placeholder:text-secondary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary motion-safe:transition-shadow"
           />
+        </div>
+        <div className="flex items-center gap-2 mt-2 sm:mt-0">
+          <input
+            type="date"
+            value={startDate}
+            onChange={e => setStartDate(e.target.value)}
+            className="px-2 py-1.5 bg-input border border-border rounded-lg text-sm text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+          />
+          <span className="text-secondary text-sm">to</span>
+          <input
+            type="date"
+            value={endDate}
+            onChange={e => setEndDate(e.target.value)}
+            className="px-2 py-1.5 bg-input border border-border rounded-lg text-sm text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+          />
+          <button className="px-3 py-1.5 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-primary/90 ml-2">
+            Export CSV
+          </button>
         </div>
       </div>
 

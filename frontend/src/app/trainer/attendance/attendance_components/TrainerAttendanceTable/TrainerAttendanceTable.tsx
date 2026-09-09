@@ -11,7 +11,7 @@ import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerShare
 import TrainerAttendanceEmptyState from '@/app/trainer/attendance/attendance_components/TrainerAttendanceEmptyState/TrainerAttendanceEmptyState';
 
 export default function TrainerAttendanceTable() {
-  const { records, totalRecords, fetchState, currentPage, setCurrentPage } = useAttendanceContext();
+  const { records, totalRecords, fetchState, currentPage, setCurrentPage, search, filterDate } = useAttendanceContext();
 
   
   const totalPages = Math.ceil(totalRecords / TRAINER_ITEMS_PER_PAGE) || 1;
@@ -73,12 +73,18 @@ export default function TrainerAttendanceTable() {
  {formatTime(r.checkIn)}
  </td>
  <td className="px-4 py-3 text-sm text-secondary">{formatTime(r.checkOut)}</td>
+ <td className="px-4 py-3 text-sm text-secondary">{r.durationMinutes ? `${r.durationMinutes}m` : '—'}</td>
+ <td className="px-4 py-3">
+   <span className="inline-flex px-2 py-0.5 rounded-md text-[10px] font-medium bg-secondary/10 text-secondary border border-border">
+     {r.checkInMethod || 'Manual'}
+   </span>
+ </td>
  </tr>
  ))}
  {records.length === 0 && (
  <tr>
- <td colSpan={5} className="text-center py-10 text-secondary">
- No attendance records found.
+ <td colSpan={7} className="p-0">
+   <TrainerAttendanceEmptyState isFiltered={search !== '' || filterDate !== 'All Time'} />
  </td>
  </tr>
  )}

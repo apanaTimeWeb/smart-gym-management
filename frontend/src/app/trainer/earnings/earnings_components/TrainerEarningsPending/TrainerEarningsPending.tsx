@@ -14,6 +14,9 @@ export default function TrainerEarningsPending() {
     <div className="bg-card border border-border rounded-xl overflow-hidden flex flex-col h-full">
       <div className="px-5 py-4 border-b border-border flex items-center justify-between bg-header">
         <h2 className="text-base font-semibold text-foreground">Upcoming Payouts</h2>
+        <button className="px-3 py-1.5 bg-primary/10 text-primary hover:bg-primary/20 rounded-lg text-sm font-semibold transition-colors">
+          Request Payout
+        </button>
       </div>
       <div className="p-5 flex-1 overflow-y-auto custom-scrollbar space-y-4">
         {pendingPayouts.length === 0 ? (

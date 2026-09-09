@@ -63,6 +63,7 @@ export const PROFILE_TABS = [
   { id: 'progress', label: 'Progress & Measurements' },
   { id: 'workout', label: 'Workout Plan' },
   { id: 'diet', label: 'Diet Plan' },
-  { id: 'attendance', label: 'Attendance Calendar' }
+  { id: 'attendance', label: 'Attendance Calendar' },
+  { id: 'notes', label: 'Trainer Notes' }
 ];
 

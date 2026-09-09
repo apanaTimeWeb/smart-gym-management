@@ -65,6 +65,12 @@ export default function TrainerMembersToolbar() {
   >
   <RefreshCw size={14} /> Refresh
   </button>
+  <button
+    onClick={() => openAdd()}
+    className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:opacity-90"
+  >
+    <Plus size={16} /> Add Member
+  </button>
   </div>
  </div>
  );

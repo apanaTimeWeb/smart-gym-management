@@ -10,6 +10,8 @@ import TrainerDashboardKPIs from '@/app/trainer/dashboard/dashboard_components/T
 import TrainerDashboardUpcomingSessions from '@/app/trainer/dashboard/dashboard_components/TrainerDashboardUpcomingSessions/TrainerDashboardUpcomingSessions';
 import TrainerDashboardRecentProgress from '@/app/trainer/dashboard/dashboard_components/TrainerDashboardRecentProgress/TrainerDashboardRecentProgress';
 import TrainerDashboardQuickActions from '@/app/trainer/dashboard/dashboard_components/TrainerDashboardQuickActions/TrainerDashboardQuickActions';
+import TrainerDashboardGoalTrendChart from '@/app/trainer/dashboard/dashboard_components/TrainerDashboardGoalTrendChart/TrainerDashboardGoalTrendChart';
+import TrainerDashboardMembershipDistribution from '@/app/trainer/dashboard/dashboard_components/TrainerDashboardMembershipDistribution/TrainerDashboardMembershipDistribution';
 
 // Skeleton for the dashboard content area while client-side data loads
 function DashboardSkeleton() {
@@ -54,6 +56,10 @@ function DashboardContent() {
             <TrainerDashboardQuickActions />
             <TrainerDashboardRecentProgress />
           </div>
+        </div>
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          <TrainerDashboardGoalTrendChart />
+          <TrainerDashboardMembershipDistribution />
         </div>
       </div>
     </>

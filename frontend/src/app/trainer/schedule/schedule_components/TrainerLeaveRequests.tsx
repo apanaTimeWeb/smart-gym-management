@@ -3,6 +3,7 @@
 
 import { useScheduleContext } from '@/app/trainer/schedule/schedule_context/TrainerScheduleContext';
 import { useTrainerScheduleStore } from '@/app/trainer/schedule/schedule_store/useTrainerScheduleStore';
+import TrainerScheduleEmptyState from '@/app/trainer/schedule/schedule_components/TrainerScheduleEmptyState';
 import { Plus, Loader2 } from 'lucide-react';
 
 const STATUS_COLORS: Record<string, { bg: string, text: string }> = {
@@ -15,6 +16,7 @@ export default function TrainerLeaveRequests() {
   const { openLeaveModal } = useScheduleContext();
   const leaveRequests = useTrainerScheduleStore(s => s.leaveRequests);
   const fetchState = useTrainerScheduleStore(s => s.fetchState);
+  const leaveBalance = useTrainerScheduleStore(s => s.leaveBalance);
 
   if (fetchState === 'loading') {
     return (
@@ -27,7 +29,12 @@ export default function TrainerLeaveRequests() {
   return (
     <div className="flex flex-col h-full min-h-[500px]">
       <div className="p-4 border-b border-border flex justify-between items-center bg-input/50">
-        <h2 className="text-lg font-bold text-foreground">Time Off Requests</h2>
+        <div className="flex items-center gap-4">
+          <h2 className="text-lg font-bold text-foreground">Time Off Requests</h2>
+          <span className="text-sm font-semibold bg-primary/10 text-primary px-3 py-1 rounded-full">
+            {leaveBalance} days remaining
+          </span>
+        </div>
         <button 
           onClick={openLeaveModal}
           className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground text-sm font-bold rounded-lg hover:opacity-90 motion-safe:transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
@@ -70,8 +77,8 @@ export default function TrainerLeaveRequests() {
             })}
             {leaveRequests.length === 0 && (
               <tr>
-                <td colSpan={5} className="py-10 text-center text-secondary font-medium">
-                  No leave requests found.
+                <td colSpan={5} className="p-0 border-b-0">
+                  <TrainerScheduleEmptyState />
                 </td>
               </tr>
             )}

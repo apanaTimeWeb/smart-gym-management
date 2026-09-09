@@ -14,6 +14,7 @@ import TrainerMembersProfileProgress from '@/app/trainer/members/members_compone
 import TrainerMembersProfileWorkout from '@/app/trainer/members/members_components/TrainerMembersProfile/TrainerMembersProfileWorkout';
 import TrainerMembersProfileDiet from '@/app/trainer/members/members_components/TrainerMembersProfile/TrainerMembersProfileDiet';
 import TrainerMembersProfileAssessment from '@/app/trainer/members/members_components/TrainerMembersProfile/TrainerMembersProfileAssessment';
+import TrainerMembersProfileNotes from '@/app/trainer/members/members_components/TrainerMembersProfile/TrainerMembersProfileNotes';
 import { maskSensitiveData } from '@/lib/formatters';
 
 export default function TrainerMembersProfile() {
@@ -119,6 +120,7 @@ export default function TrainerMembersProfile() {
             {profileTab === 'progress' && <TrainerMembersProfileProgress />}
             {profileTab === 'workout' && <TrainerMembersProfileWorkout />}
             {profileTab === 'diet' && <TrainerMembersProfileDiet />}
+            {profileTab === 'notes' && <TrainerMembersProfileNotes />}
           </div>
         </div>
       </div>

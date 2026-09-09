@@ -64,7 +64,7 @@ export function useMembersLogic(initialData?: any | null): MembersContextType {
   const [editId, setEditId] = useState<string | null>(null);
   const [editData, setEditData] = useState<MemberFormValues | null>(null);
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
-  const [profileTab, setProfileTab] = useState<'overview' | 'attendance' | 'progress' | 'workout' | 'diet' | 'fitness' | 'assessment'>('overview');
+  const [profileTab, setProfileTab] = useState<'overview' | 'attendance' | 'progress' | 'workout' | 'diet' | 'fitness' | 'assessment' | 'notes'>('overview');
   const [msgModal, setMsgModal] = useState<{ open: boolean; recipient: TrainerMessageRecipient; type: MessageType; message: string; subject?: string } | null>(null);
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 

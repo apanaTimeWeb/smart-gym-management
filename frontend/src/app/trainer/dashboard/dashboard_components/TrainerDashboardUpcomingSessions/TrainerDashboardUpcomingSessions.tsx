@@ -2,6 +2,7 @@
 
 import { useDashboardContext } from '@/app/trainer/dashboard/dashboard_context/DashboardContext';
 import { Calendar, Clock } from 'lucide-react';
+import Link from 'next/link';
 
 export default function TrainerDashboardUpcomingSessions() {
   const { stats } = useDashboardContext();
@@ -14,7 +15,7 @@ export default function TrainerDashboardUpcomingSessions() {
           <Calendar className="text-primary" size={20} />
           Upcoming Sessions
         </h3>
-        <button className="text-sm text-primary font-medium hover:underline">View Schedule</button>
+        <Link href="/trainer/schedule" className="text-sm text-primary font-medium hover:underline">View Schedule</Link>
       </div>
 
       <div className="space-y-3">

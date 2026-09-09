@@ -9,6 +9,17 @@ export interface TrainerProfileData {
   specialization: string[]; // Trainers can have multiple specializations (stored as JSON array in DB)
   joinedAt: string;
   avatarInitial: string;
+  certifications?: string[];
+  specialties?: string[];
+  emergencyContact?: {
+    name: string;
+    phone: string;
+    relation: string;
+  };
+  bio?: string;
+  experienceYears?: number;
+  profilePhotoUrl?: string;
+  languagesSpoken?: string[];
 }
 
 export interface UpdateTrainerProfilePayload {

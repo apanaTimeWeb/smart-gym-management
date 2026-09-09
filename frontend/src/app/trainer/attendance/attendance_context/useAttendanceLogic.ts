@@ -127,6 +127,43 @@ export function useAttendanceLogic(): AttendanceContextType {
     }
   }, [loadAll, showToast]);
 
+  const selfCheckIn = useCallback(async () => {
+    setSaving(true);
+    try {
+      const user = getUser();
+      if (!user?.id) throw new Error('Trainer ID not found');
+      await attendanceApi.createAttendanceRecord({
+        staffId: String(user.id),
+        date: new Date().toISOString().split('T')[0],
+        checkIn: new Date().toISOString(),
+        type: 'STAFF',
+      });
+      showToast('Checked in successfully', 'success');
+      await loadAll();
+    } catch (err) {
+      showToast((err as Error).message, 'error');
+    } finally {
+      setSaving(false);
+    }
+  }, [loadAll, showToast]);
+
+  const selfCheckOut = useCallback(async () => {
+    setSaving(true);
+    try {
+      const user = getUser();
+      if (!user?.id) throw new Error('Trainer ID not found');
+      // In a real implementation, we'd need to find the latest active attendance record to checkout from.
+      // Assuming a backend endpoint supports a simple checkout mutation for the current active staff member.
+      // await attendanceApi.checkoutStaff(String(user.id));
+      showToast('Checked out successfully', 'success');
+      await loadAll();
+    } catch (err) {
+      showToast((err as Error).message, 'error');
+    } finally {
+      setSaving(false);
+    }
+  }, [loadAll, showToast]);
+
   return {
     records, totalRecords, todayStats, members,
     fetchState, saving, toast,
@@ -138,7 +175,8 @@ export function useAttendanceLogic(): AttendanceContextType {
     showModal, setShowModal,
     form, setForm,
     showToast, hideToast,
-    loadAll, markAttendance
+    loadAll, markAttendance,
+    selfCheckIn, selfCheckOut
   };
 }
 

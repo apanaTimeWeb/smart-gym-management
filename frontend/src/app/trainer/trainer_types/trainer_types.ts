@@ -24,6 +24,10 @@ export interface Member {
   fitnessGoal?: string;
   daysSinceLastCheckIn?: number;
   trainerNotes?: { id: number; text: string; date: string }[];
+  emergencyContact?: string;
+  bloodGroup?: string;
+  medicalHistory?: string[];
+  membershipNumber?: string;
 }
 
 export type AssignedMemberView = Omit<Member, 'billingCycle'>;
@@ -42,6 +46,9 @@ export interface Attendance {
   type: string;
   member?: { name: string; id?: string };
   staff?: { name: string; id?: string };
+  durationMinutes?: number;
+  checkInMethod?: 'QR' | 'Biometric' | 'Manual';
+  lateMinutes?: number;
 }
 
 export interface Exercise {

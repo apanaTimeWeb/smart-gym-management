@@ -14,6 +14,10 @@ export interface ProgressEntry {
   hipCm?: number;
   notes?: string;
   recordedBy: string;
+  bloodPressure?: string;
+  restingHeartRate?: number;
+  vo2Max?: number;
+  progressPhotos?: string[];
 }
 
 export interface ProgressSummary {
@@ -27,6 +31,7 @@ export interface ProgressSummary {
   targetWeightKg?: number;
   targetBodyFatPercent?: number;
   targetDate?: string;
+  goalStatus?: 'On Track' | 'Off Track' | 'Achieved';
 }
 
 export interface CreateProgressEntryDto {
