@@ -3,15 +3,9 @@
  * DATA FLOW: SuperadminGymsToolbar -> useSuperadminGymsToolbar -> useSuperadminGymsStore -> API
  */
 
-/**
- * RESPONSIBILITY: Manages the logic for the Gyms search toolbar, including search debouncing.
- * DATA FLOW: SuperadminGymsToolbar -> useSuperadminGymsToolbar -> useSuperadminGymsStore -> API
- */
-
-// DATA FLOW: Component -> useSuperadminGymsToolbar.ts -> API/Store
-import { useEffect, useState, useMemo } from 'react';
-
+import toast from 'react-hot-toast';
 import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
+import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 
 export function useSuperadminGymsToolbar() {
   const search = useSuperadminGymsStore(state => state.search);
@@ -26,15 +20,17 @@ export function useSuperadminGymsToolbar() {
   };
 
   const handleExportGyms = async () => {
+    toast.loading('Exporting gyms...', { id: 'gyms-export' });
     try {
-      const { superadminGymsApi } = await import('@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api');
-      // @ts-expect-error GET /superadmin/gyms/export to be implemented on backend
-      const res = await superadminGymsApi.exportGymsCSV();
+      const res = await gymsApi.exportGymsCSV();
       if (res.data?.downloadUrl) {
         window.open(res.data.downloadUrl, '_blank');
+        toast.success('Export ready.', { id: 'gyms-export' });
+      } else {
+        toast.error(res.message || 'Export URL not found.', { id: 'gyms-export' });
       }
-    } catch (err) {
-      // toast shown by centralized error handler
+    } catch {
+      toast.error('Failed to export gyms.', { id: 'gyms-export' });
     }
   };
 

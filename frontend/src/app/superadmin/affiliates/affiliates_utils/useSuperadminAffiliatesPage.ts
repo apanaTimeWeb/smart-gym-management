@@ -141,7 +141,6 @@ export const useSuperadminAffiliatesPage = () => {
 
   const handlePayCommission = async (affiliate: Affiliate) => {
     try {
-      // @ts-expect-error POST /superadmin/affiliates/:id/pay to be implemented on backend
       await affiliatesApi.payCommission(affiliate.id);
     } catch {
       // handled by error boundary

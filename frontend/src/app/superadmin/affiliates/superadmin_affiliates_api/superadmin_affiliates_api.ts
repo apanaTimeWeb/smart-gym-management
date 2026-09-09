@@ -13,4 +13,6 @@ export const affiliatesApi = {
   updateAffiliate: (id: string, body: Partial<Affiliate>) => apiFetch<ApiResponse<Affiliate>>(`${SuperadminUrlConfig.BACKEND_API.AFFILIATES_BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
   updateStatus: (id: string, status: string) => apiFetch<ApiResponse<Affiliate>>(`${SuperadminUrlConfig.BACKEND_API.AFFILIATES_BASE}/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) }),
   deleteAffiliate: (id: string) => apiFetch<ApiResponse<void>>(`${SuperadminUrlConfig.BACKEND_API.AFFILIATES_BASE}/${id}`, { method: 'DELETE' }),
+  /** POST /superadmin/affiliates/:id/pay — triggers payout of pending commission to affiliate */
+  payCommission: (id: string) => apiFetch<ApiResponse<void>>(`${SuperadminUrlConfig.BACKEND_API.AFFILIATES_BASE}/${id}/pay`, { method: 'POST' }),
 };

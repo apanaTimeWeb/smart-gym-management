@@ -9,6 +9,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { superadminFranchisesApi } from '@/app/superadmin/franchises/superadmin_franchises_api/superadmin_franchises_api';
 import { MOCK_FRANCHISES } from '@/app/superadmin/franchises/franchises_utils/SuperadminFranchisesConstants';
 import type { SuperadminFranchise, FranchisesFetchState } from '@/app/superadmin/franchises/franchises_types/superadmin_franchises_types';
+import type { FranchiseFormValues } from '@/app/superadmin/superadmin_utils/SuperadminZodSchemas';
 
 export function useSuperadminFranchisesPage() {
   const [search, setSearch] = useState('');
@@ -52,10 +53,8 @@ export function useSuperadminFranchisesPage() {
   });
 
   const editMutation = useMutation({
-    mutationFn: async (data: { id: string; payload: any }) => {
-      // Mock implementation as real endpoint might not exist yet
-      return { success: true, message: 'Franchise updated successfully.' };
-    },
+    mutationFn: (data: { id: string; payload: FranchiseFormValues }) =>
+      superadminFranchisesApi.updateFranchise(data.id, data.payload as Partial<SuperadminFranchise>),
     onSuccess: (res) => {
       toast.success(res.message);
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'franchises'] });
@@ -70,7 +69,7 @@ export function useSuperadminFranchisesPage() {
     setSearch,
     handleSuspend: (id: string) => suspendMutation.mutate(id),
     handleActivate: (id: string) => activateMutation.mutate(id),
-    handleEdit: (id: string, payload: any) => editMutation.mutate({ id, payload }),
+    handleEdit: (id: string, payload: FranchiseFormValues) => editMutation.mutate({ id, payload }),
     isEditing: editMutation.isPending,
   };
 }

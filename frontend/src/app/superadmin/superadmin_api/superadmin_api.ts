@@ -34,6 +34,11 @@ export const superadminApi = {
     deleteGym: (id: string) => apiFetch<ApiResponse<void>>(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}/${id}`, { method: 'DELETE' }),
     fetchGymStats: () => apiFetch<ApiResponse<unknown>>(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}/stats`),
     emailGymOwner: (id: string, body: { subject: string; message: string;[key: string]: unknown }) => apiFetch<ApiResponse<void>>(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}/${id}/email`, { method: 'POST', body: JSON.stringify(body) }),
+    /** GET /superadmin/gyms/export — returns signed CSV download URL */
+    exportGymsCSV: (params?: Record<string, string>) => {
+      const q = params ? '?' + new URLSearchParams(params).toString() : '';
+      return apiFetch<ApiResponse<{ downloadUrl: string }>>(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}/export${q}`);
+    },
   },
   plans: {
     fetchPlans: (params?: Record<string, string>) => {
@@ -44,6 +49,8 @@ export const superadminApi = {
     createPlan: (body: CreatePlanPayload) => apiFetch<ApiResponse<SubscriptionPlan>>(SuperadminUrlConfig.BACKEND_API.PLANS_BASE, { method: 'POST', body: JSON.stringify(body) }),
     updatePlan: (id: string, body: UpdatePlanPayload) => apiFetch<ApiResponse<SubscriptionPlan>>(`${SuperadminUrlConfig.BACKEND_API.PLANS_BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
     deletePlan: (id: string) => apiFetch<ApiResponse<void>>(`${SuperadminUrlConfig.BACKEND_API.PLANS_BASE}/${id}`, { method: 'DELETE' }),
+    /** PATCH /superadmin/plans/:id/archive — hides plan from new signups, keeps existing tenants */
+    archivePlan: (id: string) => apiFetch<ApiResponse<void>>(`${SuperadminUrlConfig.BACKEND_API.PLANS_BASE}/${id}/archive`, { method: 'PATCH' }),
   },
 
 

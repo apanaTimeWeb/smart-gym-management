@@ -16,4 +16,7 @@ export const superadminFranchisesApi = {
     apiFetch<ApiResponse<void>>(`${BASE}/${id}/suspend`, { method: 'PATCH' }),
   activateFranchise: (id: string) =>
     apiFetch<ApiResponse<void>>(`${BASE}/${id}/activate`, { method: 'PATCH' }),
+  /** PATCH /superadmin/franchises/:id — update franchise details */
+  updateFranchise: (id: string, body: Partial<SuperadminFranchise>) =>
+    apiFetch<ApiResponse<SuperadminFranchise>>(`${BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
 };

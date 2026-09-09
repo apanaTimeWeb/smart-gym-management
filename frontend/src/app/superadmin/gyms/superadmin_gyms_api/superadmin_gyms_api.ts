@@ -17,4 +17,9 @@ export const gymsApi = {
   fetchGymStats: () => apiFetch<ApiResponse<unknown>>(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}/stats`),
   impersonateTenant: (id: string) => apiFetch<ApiResponse<{ token: string }>>(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}/${id}/impersonate`, { method: 'POST' }),
   emailGymOwner: (id: string, body: { subject: string; message: string; [key: string]: unknown }) => apiFetch<ApiResponse<void>>(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}/${id}/email`, { method: 'POST', body: JSON.stringify(body) }),
+  /** GET /superadmin/gyms/export — returns signed CSV download URL */
+  exportGymsCSV: (params?: Record<string, string>) => {
+    const q = params ? '?' + new URLSearchParams(params).toString() : '';
+    return apiFetch<ApiResponse<{ downloadUrl: string }>>(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}/export${q}`);
+  },
 };
