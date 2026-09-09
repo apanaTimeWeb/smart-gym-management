@@ -23,6 +23,7 @@ export interface Member {
   assignedWorkout?: Workout;
   fitnessGoal?: string;
   daysSinceLastCheckIn?: number;
+  trainerNotes?: { id: number; text: string; date: string }[];
 }
 
 export type AssignedMemberView = Omit<Member, 'billingCycle'>;
