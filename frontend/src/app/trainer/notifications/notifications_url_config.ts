@@ -10,4 +10,6 @@ export const TRAINER_NOTIFICATIONS_API_ROUTES = {
   markAllRead: '/api/v1/trainer/notifications/read-all',
   delete: (id: string) => `/api/v1/trainer/notifications/${id}`,
   clearAll: '/api/v1/trainer/notifications',
+  WS_ENDPOINT: '/trainer/notifications/ws',
+  PREFERENCES: '/trainer/notifications/preferences',
 } as const;

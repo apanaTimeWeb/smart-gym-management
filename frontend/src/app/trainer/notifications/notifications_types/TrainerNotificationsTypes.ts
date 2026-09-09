@@ -10,3 +10,11 @@ export interface TrainerNotificationItem {
 export interface TrainerNotificationsApiResponse {
   notifications: TrainerNotificationItem[];
 }
+
+export interface NotificationPreferences {
+  email: boolean;
+  push: boolean;
+  sms: boolean;
+  sessionReminders: boolean;
+  memberUpdates: boolean;
+}

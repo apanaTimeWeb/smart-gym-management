@@ -24,6 +24,7 @@ export interface LeaveRequest {
 export interface TrainerScheduleState {
   availability: WeeklyAvailability[];
   leaveRequests: LeaveRequest[];
+  leaveBalance: number;
   fetchState: 'idle' | 'loading' | 'success' | 'error';
   saving: boolean;
 

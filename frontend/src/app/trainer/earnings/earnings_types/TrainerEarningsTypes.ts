@@ -3,6 +3,9 @@ export interface TrainerEarningsKPIsData {
   pendingPayouts: number;
   sessionsCompleted: number;
   commissionRate: number;
+  taxDeduction?: number;
+  bankAccount?: string;
+  commissionTier?: string;
 }
 
 export type PayoutStatus = 'pending' | 'processing' | 'settled';

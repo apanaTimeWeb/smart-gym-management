@@ -6,6 +6,7 @@ import type { TrainerScheduleState } from '@/app/trainer/schedule/schedule_types
 export const useTrainerScheduleStore = create<TrainerScheduleState>((set, get) => ({
   availability: [],
   leaveRequests: [],
+  leaveBalance: 0,
   fetchState: 'idle',
   saving: false,
 

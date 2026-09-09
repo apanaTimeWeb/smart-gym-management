@@ -48,20 +48,14 @@ export function useTrainerEarningsLogic(): TrainerEarningsContextType {
     setFetchState('loading');
     setError('');
     try {
-      // TODO: Replace with real API calls once backend is ready
-      // const [kpisRes, pendingRes, historyRes] = await Promise.all([
-      //   trainerEarningsApi.getKPIs(),
-      //   trainerEarningsApi.getPending(),
-      //   trainerEarningsApi.getHistory(),
-      // ]);
-      // setKpis(kpisRes.data);
-      // setPendingPayouts(pendingRes.data);
-      // setHistory(historyRes.data);
-
-      await new Promise(r => setTimeout(r, 600)); // simulate network
-      setKpis(MOCK_EARNINGS_KPIS);
-      setPendingPayouts(MOCK_PENDING_PAYOUTS);
-      setHistory(MOCK_EARNINGS_HISTORY);
+      const [kpisRes, pendingRes, historyRes] = await Promise.all([
+        trainerEarningsApi.getKPIs(),
+        trainerEarningsApi.getPending(),
+        trainerEarningsApi.getHistory(),
+      ]);
+      setKpis(kpisRes.data || null);
+      setPendingPayouts(pendingRes.data || []);
+      setHistory(historyRes.data || []);
       
       setFetchState('success');
     } catch (e) {

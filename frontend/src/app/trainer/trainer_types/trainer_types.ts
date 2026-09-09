@@ -22,6 +22,7 @@ export interface Member {
   assignedWorkoutId?: string;
   assignedWorkout?: Workout;
   fitnessGoal?: string;
+  daysSinceLastCheckIn?: number;
 }
 
 export interface MemberStats {

@@ -9,6 +9,7 @@ export const DashboardUrlConfig = {
     STATS: '/trainer/dashboard/kpi',
     CHARTS: '/trainer/dashboard/charts',
     RECENT: '/trainer/dashboard/recent',
+    EXPIRING_MEMBERS: '/trainer/dashboard/expiring-members',
   }
 };
 

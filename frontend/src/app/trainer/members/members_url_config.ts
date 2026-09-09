@@ -15,6 +15,7 @@ export const MembersUrlConfig = {
     GET_ONE: (id: string) => `/trainer/members/${id}`,
     UPDATE: (id: string) => `/trainer/members/${id}`,
     DELETE: (id: string) => `/trainer/members/${id}`,
+    EXPORT_CSV: '/trainer/members/export?format=csv',
   }
 };
 
