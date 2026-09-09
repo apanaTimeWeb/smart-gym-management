@@ -8,11 +8,14 @@ import { ShieldAlert, Search, Filter, AlertTriangle, Info, Download } from 'luci
 import toast from 'react-hot-toast';
 
 import { MOCK_AUDIT_LOGS } from '@/app/superadmin/global-audit/global-audit_utils/SuperadminGlobalAuditConstants';
+import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
+import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 
 export default function SuperadminGlobalAuditClient() {
-  const [logs, setLogs] = useState<AuditLog[]>([]);
   const [search, setSearch] = useState('');
   const [severityFilter, setSeverityFilter] = useState<'ALL' | 'INFO' | 'WARNING' | 'CRITICAL'>('ALL');
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 20;
 
   const { data: queryData, isLoading, isError } = useQuery({
     queryKey: ['superadmin', 'global-audit'],
@@ -32,14 +35,13 @@ export default function SuperadminGlobalAuditClient() {
   });
 
   const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
+  const displayLogs = queryData?.logs || MOCK_AUDIT_LOGS;
 
   useEffect(() => {
-    if (queryData?.logs) {
-      setLogs(queryData.logs);
-    }
-  }, [queryData]);
+    setCurrentPage(1);
+  }, [search, severityFilter]);
 
-  const filteredLogs = logs.filter(log => {
+  const filteredLogs = displayLogs.filter(log => {
     const matchesSearch = log.action?.toLowerCase().includes(search.toLowerCase()) || 
                           log.actor?.toLowerCase().includes(search.toLowerCase()) ||
                           log.resource?.toLowerCase().includes(search.toLowerCase());
@@ -47,6 +49,9 @@ export default function SuperadminGlobalAuditClient() {
     
     return matchesSearch && matchesSeverity;
   });
+
+  const totalPages = Math.ceil(filteredLogs.length / ITEMS_PER_PAGE) || 1;
+  const paginatedLogs = filteredLogs.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   const getSeverityBadge = (severity: AuditLog['severity']) => {
     switch (severity) {
@@ -60,15 +65,68 @@ export default function SuperadminGlobalAuditClient() {
   };
 
   const exportLogs = () => {
+    if (filteredLogs.length === 0) {
+      toast.error('No logs to export');
+      return;
+    }
+    const headers = ['Timestamp', 'Severity', 'Action', 'Resource', 'Details', 'Actor', 'IP Address'];
+    const csvContent = [
+      headers.join(','),
+      ...filteredLogs.map(log => 
+        [
+          new Date(log.timestamp).toISOString(),
+          log.severity,
+          `"${(log.action || '').replace(/"/g, '""')}"`,
+          `"${(log.resource || '').replace(/"/g, '""')}"`,
+          `"${(log.details || '').replace(/"/g, '""')}"`,
+          `"${(log.actor || '').replace(/"/g, '""')}"`,
+          log.ipAddress
+        ].join(',')
+      )
+    ].join('\n');
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `global_audit_logs_${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
     toast.success('Exporting global audit logs as CSV...');
   };
 
+  const severityOptions = [
+    { value: 'ALL', label: 'All Severities' },
+    { value: 'INFO', label: 'Info' },
+    { value: 'WARNING', label: 'Warning' },
+    { value: 'CRITICAL', label: 'Critical' },
+  ];
+
   if (fetchState === 'loading') {
     return (
-      <div className="p-6 space-y-4">
-        {[1, 2, 3, 4, 5].map(i => (
-          <div key={`skeleton-${i}`} className="h-16 bg-card motion-safe:animate-pulse rounded-xl border border-border" />
-        ))}
+      <div className="p-6 max-w-7xl mx-auto space-y-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+          <div>
+            <div className="h-8 w-48 bg-skeleton-base motion-safe:animate-pulse rounded mb-2" />
+            <div className="h-4 w-96 bg-skeleton-base motion-safe:animate-pulse rounded" />
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="w-48 h-10 bg-skeleton-base motion-safe:animate-pulse rounded-lg" />
+            <div className="w-32 h-10 bg-skeleton-base motion-safe:animate-pulse rounded-lg" />
+          </div>
+        </div>
+        <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm flex flex-col min-h-[500px]">
+          <div className="p-4 border-b border-border bg-card-hover/50">
+            <div className="h-10 w-full max-w-md bg-skeleton-base motion-safe:animate-pulse rounded-lg" />
+          </div>
+          <div className="p-6 space-y-4">
+            {[1, 2, 3, 4, 5, 6].map(i => (
+              <div key={`skeleton-${i}`} className="h-16 bg-skeleton-base motion-safe:animate-pulse rounded-xl border border-border" />
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
@@ -82,16 +140,13 @@ export default function SuperadminGlobalAuditClient() {
         </div>
         
         <div className="flex items-center gap-3">
-          <select
-            value={severityFilter}
-            onChange={(e) => setSeverityFilter(e.target.value as 'ALL' | 'INFO' | 'WARNING' | 'CRITICAL')}
-            className="flex items-center gap-2 px-4 py-2 bg-card border border-border text-foreground font-medium rounded-lg hover:bg-card-hover focus:outline-none focus:border-primary motion-safe:transition-colors"
-          >
-            <option value="ALL">All Severities</option>
-            <option value="INFO">Info</option>
-            <option value="WARNING">Warning</option>
-            <option value="CRITICAL">Critical</option>
-          </select>
+          <div className="w-48 z-20">
+            <SearchableDropdown
+              options={severityOptions}
+              value={severityFilter}
+              onChange={(val) => setSeverityFilter(val as 'ALL' | 'INFO' | 'WARNING' | 'CRITICAL')}
+            />
+          </div>
           <button 
             onClick={exportLogs}
             className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground font-medium rounded-lg hover:bg-primary/90 motion-safe:transition-colors"
@@ -126,7 +181,7 @@ export default function SuperadminGlobalAuditClient() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {filteredLogs.map(log => (
+              {paginatedLogs.map(log => (
                 <tr key={log.id} className="hover:bg-card-hover motion-safe:transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className="text-sm font-mono text-secondary">{new Date(log.timestamp).toLocaleString()}</span>
@@ -156,6 +211,13 @@ export default function SuperadminGlobalAuditClient() {
               )}
             </tbody>
           </table>
+        </div>
+        <div className="p-4 border-t border-border">
+          <SuperadminPagination 
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
         </div>
       </div>
     </div>

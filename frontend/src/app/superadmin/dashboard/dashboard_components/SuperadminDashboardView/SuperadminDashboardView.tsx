@@ -63,8 +63,15 @@ export default function SuperadminDashboardView() {
   }, [router, searchParams]);
 
   const { data: fetchRes, isLoading, isError } = useQuery({
-    queryKey: ['superadmin', 'dashboard'],
-    queryFn: () => superadminApi.dashboard.fetchDashboardData(),
+    queryKey: ['superadmin', 'dashboard', timeRange, startDate, endDate],
+    queryFn: () => {
+      const params: Record<string, string> = { range: timeRange };
+      if (timeRange === 'custom') {
+        if (startDate) params.startDate = startDate;
+        if (endDate) params.endDate = endDate;
+      }
+      return superadminApi.dashboard.fetchDashboardData(params);
+    },
   });
 
   const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
@@ -106,12 +113,19 @@ export default function SuperadminDashboardView() {
   const timeMultiplier = timeRange === 'weekly' ? 0.25 : timeRange === 'yearly' ? 12 : timeRange === 'custom' ? 1.5 : 1;
   const mrrLabel = timeRange === 'weekly' ? 'WEEKLY RR' : timeRange === 'yearly' ? 'YEARLY RR' : timeRange === 'custom' ? 'CUSTOM RR' : 'TOTAL MRR';
 
+  const lastTwoMonths = revenueChartData.length >= 2 ? revenueChartData.slice(-2) : [];
+  const mrrTrendNum = lastTwoMonths.length === 2 && lastTwoMonths[0].mrr > 0 
+    ? Math.round(((lastTwoMonths[1].mrr - lastTwoMonths[0].mrr) / lastTwoMonths[0].mrr) * 100)
+    : 0;
+  
+  const mrrTrendStr = mrrTrendNum ? `${mrrTrendNum > 0 ? '+' : ''}${mrrTrendNum}% vs last month` : undefined;
+
   const kpiCards = [
     {
       label: mrrLabel,
       value: formatIndianCurrency(Math.round((metrics.monthlyRecurringRevenue || 0) * timeMultiplier)),
-      trend: '+12%',
-      trendUp: true,
+      trend: mrrTrendStr,
+      trendUp: mrrTrendNum >= 0,
       icon: CreditCard,
       colorClass: 'text-success',
       iconBgClass: 'bg-success/10',
@@ -119,7 +133,7 @@ export default function SuperadminDashboardView() {
     {
       label: 'TOTAL GYMS (TENANTS)',
       value: String(metrics.totalGyms),
-      trend: '+3 this week',
+      trend: undefined,
       trendUp: true,
       icon: Building2,
       colorClass: 'text-primary',
@@ -137,7 +151,7 @@ export default function SuperadminDashboardView() {
     {
       label: 'TOTAL END USERS',
       value: (metrics.totalEndUsers || 0).toLocaleString('en-IN'),
-      trend: '+8% vs last month',
+      trend: undefined,
       trendUp: true,
       icon: Users,
       colorClass: 'text-purple',
@@ -247,11 +261,8 @@ export default function SuperadminDashboardView() {
           return (
             <div
               key={card.label}
-              // Design §5a: Subtle premium gold gradient over bg-card
-              className="relative overflow-hidden bg-card border border-border rounded-xl p-6 shadow-sm motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-lg motion-safe:transition-all motion-safe:duration-200"
-              style={{
-                background: 'linear-gradient(180deg, rgba(250,204,21,0.08), rgba(255,255,255,0.02))',
-              }}
+              // Design §5a: Subtle premium gold gradient over bg-card using standard Tailwind
+              className="relative overflow-hidden bg-card border border-border rounded-xl p-6 shadow-sm motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-lg motion-safe:transition-all motion-safe:duration-200 bg-gradient-to-b from-yellow-400/10 to-transparent"
             >
               {/* Design §5a: Icon top-left in rounded square with color bg */}
               <div className="flex items-center justify-between mb-4">

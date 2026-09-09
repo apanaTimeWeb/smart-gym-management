@@ -8,10 +8,24 @@ import { Building2, Users, TrendingUp, Ban, Search, CheckCircle2, AlertTriangle 
 import { useSuperadminBranchesPage } from '@/app/superadmin/branches/branches_utils/useSuperadminBranchesPage';
 import { BRANCH_STATUS_STYLES, BRANCHES_PAGE_SIZE } from '@/app/superadmin/branches/branches_utils/SuperadminBranchesConstants';
 import type { SuperadminBranch } from '@/app/superadmin/branches/branches_types/superadmin_branches_types';
+import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
 
 export default function SuperadminBranchesClient() {
   const { branches, fetchState, search, setSearch, handleSuspend, handleActivate } = useSuperadminBranchesPage();
   const [page, setPage] = useState(1);
+  const { confirm } = useSuperadminConfirm();
+
+  const onSuspendClick = async (id: string) => {
+    if (await confirm({ title: 'Suspend Branch', message: 'Are you sure you want to suspend this branch? It will immediately revoke access for all branch staff.', type: 'danger', confirmText: 'Suspend' })) {
+      handleSuspend(id);
+    }
+  };
+
+  const onActivateClick = async (id: string) => {
+    if (await confirm({ title: 'Activate Branch', message: 'Are you sure you want to activate this branch?', type: 'info', confirmText: 'Activate' })) {
+      handleActivate(id);
+    }
+  };
 
   const totalPages = Math.ceil(branches.length / BRANCHES_PAGE_SIZE) || 1;
   const paginated = branches.slice((page - 1) * BRANCHES_PAGE_SIZE, page * BRANCHES_PAGE_SIZE);
@@ -52,8 +66,7 @@ export default function SuperadminBranchesClient() {
           return (
             <div
               key={k.label}
-              className="bg-card border border-border rounded-xl p-4 shadow-sm motion-safe:hover:-translate-y-1 motion-safe:transition-all motion-safe:duration-200"
-              style={{ background: 'linear-gradient(180deg, rgba(250,204,21,0.08), rgba(255,255,255,0.02))' }}
+              className="bg-card border border-border rounded-xl p-4 shadow-sm motion-safe:hover:-translate-y-1 motion-safe:transition-all motion-safe:duration-200 bg-gradient-to-b from-yellow-400/10 to-transparent"
             >
               <div className={`w-8 h-8 rounded-lg ${k.bg} flex items-center justify-center mb-3`}>
                 <Icon size={18} strokeWidth={2} className={k.color} />
@@ -111,14 +124,14 @@ export default function SuperadminBranchesClient() {
                   <td className="px-4 py-3">
                     {branch.status === 'SUSPENDED' ? (
                       <button
-                        onClick={() => handleActivate(branch.id)}
+                        onClick={() => onActivateClick(branch.id)}
                         className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-success/10 text-success text-xs font-medium hover:bg-success/20 motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-success"
                       >
                         <CheckCircle2 size={12} /> Activate
                       </button>
                     ) : (
                       <button
-                        onClick={() => handleSuspend(branch.id)}
+                        onClick={() => onSuspendClick(branch.id)}
                         className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-danger/10 text-danger text-xs font-medium hover:bg-danger/20 motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger"
                       >
                         <AlertTriangle size={12} /> Suspend

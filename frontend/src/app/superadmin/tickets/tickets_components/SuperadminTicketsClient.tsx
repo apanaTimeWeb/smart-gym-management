@@ -1,12 +1,16 @@
 // RESPONSIBILITY: Root orchestrator for the Tickets page. Composes isolated sub-components and passes state from useSuperadminTickets. No business logic here.
 'use client';
 
+import { useState } from 'react';
 import { useSuperadminTickets } from '@/app/superadmin/tickets/tickets_utils/useSuperadminTickets';
 import SuperadminTicketsHeader from '@/app/superadmin/tickets/tickets_components/SuperadminTicketsHeader/SuperadminTicketsHeader';
 import SuperadminTicketsTable from '@/app/superadmin/tickets/tickets_components/SuperadminTicketsTable/SuperadminTicketsTable';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
+import SuperadminTicketsReplyModal from '@/app/superadmin/tickets/tickets_components/SuperadminTicketsReplyModal/SuperadminTicketsReplyModal';
 
 export default function SuperadminTicketsClient() {
+  const [replyModalOpen, setReplyModalOpen] = useState(false);
+  const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
   const {
     fetchState,
     error,
@@ -49,7 +53,10 @@ export default function SuperadminTicketsClient() {
       <div className="bg-card border border-border rounded-xl shadow-sm flex flex-col min-h-96">
         <SuperadminTicketsTable 
           tickets={paginatedTickets}
-          onReply={(ticketId) => alert(`Open reply modal for ticket ${ticketId}`)}
+          onReply={(ticketId) => {
+            setSelectedTicketId(ticketId);
+            setReplyModalOpen(true);
+          }}
         />
         <SuperadminPagination 
           currentPage={currentPage}
@@ -57,6 +64,12 @@ export default function SuperadminTicketsClient() {
           onPageChange={setCurrentPage}
         />
       </div>
+
+      <SuperadminTicketsReplyModal 
+        isOpen={replyModalOpen}
+        onClose={() => setReplyModalOpen(false)}
+        ticketId={selectedTicketId}
+      />
     </div>
   );
 }

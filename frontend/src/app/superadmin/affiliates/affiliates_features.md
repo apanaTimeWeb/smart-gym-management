@@ -1,39 +1,41 @@
 # Affiliates Feature Map
 
 ## Module Purpose
-Handles affiliates operations, UI display, and logic isolation as part of the Smart Gym 360 platform.
+Handles affiliate operations, UI display, and logic isolation as part of the Smart Gym 360 platform.
 
 ## Directory Structure
 - `affiliates_components/`: Contains all isolated micro-components for the module.
-- `affiliates_types/` (if applicable): TypeScript definitions.
-- `affiliates_utils/` (if applicable): Shared constants and hardcoded data.
-- `affiliates_context/` (if applicable): Module-scoped React Context or Zustand store.
+- `superadmin_affiliates_types/`: TypeScript definitions for affiliates.
+- `affiliates_utils/`: Shared constants and hooks (e.g. useAffiliatesPage).
+- `superadmin_affiliates_api/`: API endpoints for affiliates.
 
 ## Feature Inventory
 | Feature | Path | Purpose | Main API Calls | Owner |
 |---|---|---|---|---|
-| Core UI | `/affiliates` | Main module view | TBD | Frontend Team |
+| Core UI | `/affiliates` | Main module view (Table, Header, StatsBar) | `fetchAffiliates` | Frontend Team |
 
 ## Data and State Architecture
-- Server-state query keys: `['affiliates']`
-- Zustand stores: TBD
-- Context providers: TBD
-- Local-storage keys: TBD
-- MSW handler file: TBD
+- Server-state query keys: `['superadmin', 'affiliates']`
+- Zustand stores: N/A
+- Context providers: N/A
+- Local-storage keys: N/A
+- MSW handler file: N/A
 
 ## API Contract
 List all endpoint builders and expected response types.
-- `fetchAffiliates(params)`
-- `createAffiliates(dto)`
-- `updateAffiliates(id, dto)`
-- `deleteAffiliates(id)`
+- `fetchAffiliates(params)`: Fetches a list of affiliates.
+- `createAffiliate(dto)`: Creates a new affiliate.
+- `updateAffiliate(id, dto)`: Updates an existing affiliate.
+- `deleteAffiliate(id)`: Deletes an affiliate.
+- `suspendAffiliate(id)`: Suspends an affiliate.
+- `activateAffiliate(id)`: Activates an affiliate.
 
 ## Permissions and Security
-Document protected actions, roles, and CODEOWNERS paths.
+Only Superadmins can manage affiliates.
 
 ## Loading, Empty, Error States
 - **Loading:** Uses `loading.tsx` skeleton matching global design.
-- **Empty:** Follows Rule 48 (dedicated empty state component).
+- **Empty:** Uses `<SuperadminAffiliatesEmptyState />` following Rule 48.
 - **Error:** Uses `error.tsx` typed React Error Boundary.
 
 ## Edge Cases / AI Warnings

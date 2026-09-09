@@ -15,16 +15,20 @@ import { MOCK_USAGE_METERS } from '@/app/superadmin/usage-meters/usage-meters_ut
 import { getProgressColor, getPercentage } from '@/app/superadmin/usage-meters/usage-meters_utils/SuperadminUsageMetersUtils';
 
 export default function SuperadminUsageMetersClient() {
-  const [meters, setMeters] = useState<UsageMeter[]>([]);
   const [dateRange, setDateRange] = useState('this_month');
   const [customFrom, setCustomFrom] = useState('');
   const [customTo, setCustomTo] = useState('');
 
   const { data: queryData, isLoading, isError } = useQuery({
-    queryKey: ['superadmin', 'usage-meters'],
+    queryKey: ['superadmin', 'usage-meters', dateRange, customFrom, customTo],
     queryFn: async () => {
       try {
-        const res = await usageMetersApi.fetchUsageMeters();
+        const params: Record<string, string> = { range: dateRange };
+        if (dateRange === 'custom') {
+          if (customFrom) params.from = customFrom;
+          if (customTo) params.to = customTo;
+        }
+        const res = await usageMetersApi.fetchUsageMeters(params);
         if (res.success && res.data && res.data.length > 0) {
           return { meters: res.data };
         }
@@ -38,12 +42,7 @@ export default function SuperadminUsageMetersClient() {
   });
 
   const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
-
-  useEffect(() => {
-    if (queryData?.meters) {
-      setMeters(queryData.meters as unknown as UsageMeter[]);
-    }
-  }, [queryData]);
+  const displayMeters = queryData?.meters || MOCK_USAGE_METERS;
 
   if (fetchState === 'loading') {
     return (
@@ -56,7 +55,7 @@ export default function SuperadminUsageMetersClient() {
   }
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-6">
+    <div className="max-w-7xl mx-auto space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Usage Meters</h1>
@@ -98,7 +97,7 @@ export default function SuperadminUsageMetersClient() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        {meters.map(meter => {
+        {displayMeters.map((meter: UsageMeter) => {
           const dbGb = meter.databaseGb || 0;
           const mediaGb = meter.mediaGb || ((meter as unknown as Record<string, unknown>).storageGb as number) || 0;
           const totalStorage = dbGb + mediaGb;

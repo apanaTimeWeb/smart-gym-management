@@ -4,7 +4,7 @@ export interface SaaSInvoice {
   tenantName: string;
   amount: number;
   currency: string;
-  status: 'PAID' | 'PENDING' | 'FAILED';
+  status: 'PAID' | 'PENDING' | 'FAILED' | 'OVERDUE';
   date: string;
   planName: string;
 }

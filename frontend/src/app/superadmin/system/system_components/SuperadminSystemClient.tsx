@@ -10,19 +10,9 @@ import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import toast from 'react-hot-toast';
 import type { Tenant, GlobalAuditLog, MigrationsPageData } from '@/app/superadmin/superadmin_types/superadmin_types';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
+import { MOCK_AUDIT_LOGS } from '@/app/superadmin/global-audit/global-audit_utils/SuperadminGlobalAuditConstants';
 
-const CURRENT_SCHEMA_VERSION = 'v2.4.1';
-
-interface TenantWithVersion extends Tenant {
-  databaseVersion: string;
-}
-
-const FALLBACK_LOGS = [
-  { id: '1', timestamp: '2026-01-01T00:00:00Z', targetResource: 'Subscription Plan', actorName: 'Superadmin', actorRole: 'GOD MODE', action: 'CREATE' },
-  { id: '2', timestamp: '2026-01-01T01:00:00Z', targetResource: 'Gym: t-2', actorName: 'System', actorRole: 'CRON', action: 'BACKUP_DB' },
-  { id: '3', timestamp: '2026-01-01T02:00:00Z', targetResource: 'Coupon: SUMMER50', actorName: 'Superadmin', actorRole: 'GOD MODE', action: 'UPDATE' },
-  { id: '4', timestamp: '2026-01-02T00:00:00Z', targetResource: 'User: admin@gym.com', actorName: 'Superadmin', actorRole: 'GOD MODE', action: 'RESET_PASSWORD' }
-] as GlobalAuditLog[];
+const CURRENT_SCHEMA_VERSION = process.env.NEXT_PUBLIC_CURRENT_SCHEMA_VERSION || 'v2.4.1';
 
 export default function SuperadminSystemClient() {
   const [tab, setTab] = useState<'migrations' | 'sla'>('migrations');
@@ -34,7 +24,7 @@ export default function SuperadminSystemClient() {
   const queryClient = useQueryClient();
 
   const { data: migrationsRes, isLoading: isLoadingMigrations, isError: isErrorMigrations } = useQuery({
-    queryKey: ['superadmin', 'migrations'],
+    queryKey: ['superadmin', 'system-migrations'],
     queryFn: () => superadminApi.migrations.fetchMigrations(),
   });
 
@@ -45,27 +35,40 @@ export default function SuperadminSystemClient() {
 
   const fetchState = (isLoadingMigrations || isLoadingAudit) ? 'loading' : (isErrorMigrations || isErrorAudit) ? 'error' : 'success';
 
-  const migrationsData = migrationsRes as { data?: { tenants?: TenantWithVersion[] } } | undefined;
-  const tenants = (migrationsData?.data?.tenants ?? []) as TenantWithVersion[];
+  const migrationsData = migrationsRes as { data?: { tenants?: Tenant[] } } | undefined;
+  const tenants = (migrationsData?.data?.tenants ?? []) as Tenant[];
   
   const auditData = auditRes as { data?: GlobalAuditLog[] } | undefined;
   const rawLogs = auditData?.data ?? [];
   const hasLogs = rawLogs.length > 0;
-  const finalLogs = useMemo(() => hasLogs ? rawLogs : FALLBACK_LOGS, [hasLogs, rawLogs]);
+  
+  const finalLogs = useMemo(() => {
+    if (hasLogs) return rawLogs;
+    if (process.env.NODE_ENV === 'development') {
+      return MOCK_AUDIT_LOGS.map(log => ({
+        id: log.id,
+        timestamp: log.timestamp,
+        targetResource: log.resource,
+        actorName: log.actor,
+        actorRole: 'SYSTEM', // MOCK_AUDIT_LOGS doesn't have actorRole
+        action: log.action,
+      })) as GlobalAuditLog[];
+    }
+    return [];
+  }, [hasLogs, rawLogs]);
 
   const handleRunMigration = async (tenantId: string) => {
     setMigratingTenants(prev => ({ ...prev, [tenantId]: true }));
     try {
-      // Simulate API call for migration
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await superadminApi.migrations.triggerMigration(tenantId);
       
-      queryClient.setQueryData(['superadmin', 'migrations'], (old: { data?: MigrationsPageData } | undefined) => {
+      queryClient.setQueryData(['superadmin', 'system-migrations'], (old: { data?: MigrationsPageData } | undefined) => {
         if (!old?.data?.tenants) return old;
         return {
           ...old,
           data: {
             ...old.data,
-            tenants: old.data.tenants.map((t: TenantWithVersion) => 
+            tenants: old.data.tenants.map((t: Tenant) => 
               t.id === tenantId ? { ...t, databaseVersion: CURRENT_SCHEMA_VERSION } : t
             )
           }
@@ -188,7 +191,7 @@ export default function SuperadminSystemClient() {
                 value={logSearch}
                 onChange={(e) => {
                   setLogSearch(e.target.value);
-                   // Reset page on search
+                  setCurrentPage(1); // Reset page on search
                 }}
                 className="bg-card border border-border text-foreground text-sm rounded-lg pl-9 pr-4 py-2 focus:outline-none focus:border-primary"
               />

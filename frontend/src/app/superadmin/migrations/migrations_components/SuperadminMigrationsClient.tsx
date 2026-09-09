@@ -1,19 +1,22 @@
 'use client';
 // RESPONSIBILITY: Renders the Schema Rollouts dashboard for superadmins to manage database migrations across tenants.
-import { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { migrationsApi } from '@/app/superadmin/migrations/superadmin_migrations_api/superadmin_migrations_api';
 import type { MigrationLog } from '@/app/superadmin/migrations/superadmin_migrations_types/superadmin_migrations_types';
 import { Database, CheckCircle, AlertTriangle, Clock, RefreshCw, XCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-import { MOCK_MIGRATIONS } from '@/app/superadmin/migrations/migrations_utils/SuperadminMigrationsConstants';
+import { MOCK_MIGRATIONS, STATUS_COLORS } from '@/app/superadmin/migrations/migrations_utils/SuperadminMigrationsConstants';
+import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
 
 export default function SuperadminMigrationsClient() {
-  const [migrations, setMigrations] = useState<MigrationLog[]>([]);
+  const [versionInput, setVersionInput] = useState('');
+  const { confirm } = useSuperadminConfirm();
+  const queryClient = useQueryClient();
 
-  const { data: queryData, isLoading, isError, refetch } = useQuery({
-    queryKey: ['superadmin', 'migrations'],
+  const { data: queryData, isLoading, isError } = useQuery({
+    queryKey: ['superadmin', 'migrations-log'],
     queryFn: async () => {
       try {
         const res = await migrationsApi.fetchMigrations();
@@ -30,23 +33,31 @@ export default function SuperadminMigrationsClient() {
   });
 
   const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
+  const displayMigrations = queryData?.migrations || MOCK_MIGRATIONS;
 
-  useEffect(() => {
-    if (queryData?.migrations) {
-      setMigrations(queryData.migrations);
+  const handleRollout = async () => {
+    if (!versionInput.trim()) {
+      toast.error('Please enter a target schema version.');
+      return;
     }
-  }, [queryData]);
 
-  const handleRollout = async (version: string) => {
+    const confirmed = await confirm({
+      title: 'Deploy New Schema',
+      message: `Are you sure you want to deploy schema version ${versionInput} across ALL active tenant databases?`,
+      confirmText: 'Deploy Schema',
+      type: 'warning'
+    });
+
+    if (!confirmed) return;
+
     try {
-      toast.success(`Initializing schema rollout for ${version}...`);
+      const loadingToast = toast.loading(`Initializing schema rollout for ${versionInput}...`);
       
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 600));
+      await migrationsApi.triggerMigration(versionInput, 'ALL_ACTIVE');
 
       const newMigration: MigrationLog = {
         id: `mig-${Date.now()}`,
-        version: version,
+        version: versionInput,
         description: 'Manual schema deployment triggered via dashboard',
         appliedAt: null,
         status: 'IN_PROGRESS',
@@ -56,16 +67,25 @@ export default function SuperadminMigrationsClient() {
       };
 
       // Optimistically add to UI at the top of the list
-      setMigrations(prev => [newMigration, ...prev]);
+      queryClient.setQueryData(['superadmin', 'migrations-log'], (old: { migrations: MigrationLog[] } | undefined) => {
+        return {
+          migrations: [newMigration, ...(old?.migrations || MOCK_MIGRATIONS)]
+        };
+      });
       
-      // Simulate the migration completing successfully after 3.5 seconds
+      // Simulate the migration completing successfully after a delay
       setTimeout(() => {
-        setMigrations(prev => prev.map(m => 
-          m.id === newMigration.id 
-            ? { ...m, status: 'COMPLETED', appliedAt: new Date().toISOString(), durationMs: 3450 } 
-            : m
-        ));
-        toast.success(`Schema ${version} deployed successfully across all instances!`);
+        queryClient.setQueryData(['superadmin', 'migrations-log'], (old: { migrations: MigrationLog[] } | undefined) => {
+          return {
+            migrations: (old?.migrations || []).map(m => 
+              m.id === newMigration.id 
+                ? { ...m, status: 'COMPLETED', appliedAt: new Date().toISOString(), durationMs: 3450 } 
+                : m
+            )
+          };
+        });
+        toast.success(`Schema ${versionInput} deployed successfully across all instances!`, { id: loadingToast });
+        setVersionInput(''); // clear input
       }, 3500);
 
     } catch (err) {
@@ -74,17 +94,20 @@ export default function SuperadminMigrationsClient() {
   };
 
   const getStatusBadge = (status: MigrationLog['status']) => {
+    const baseClasses = "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium";
+    const colorClasses = STATUS_COLORS[status] || 'bg-secondary/10 text-secondary';
+    
     switch (status) {
       case 'COMPLETED':
-        return <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-success/10 text-success"><CheckCircle size={14} /> Completed</span>;
+        return <span className={`${baseClasses} ${colorClasses}`}><CheckCircle size={14} /> Completed</span>;
       case 'FAILED':
-        return <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-danger-bg/10 text-danger"><XCircle size={14} /> Failed</span>;
+        return <span className={`${baseClasses} ${colorClasses}`}><XCircle size={14} /> Failed</span>;
       case 'PENDING':
-        return <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-warning/10 text-warning"><Clock size={14} /> Pending</span>;
+        return <span className={`${baseClasses} ${colorClasses}`}><Clock size={14} /> Pending</span>;
       case 'IN_PROGRESS':
-        return <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary"><RefreshCw size={14} className="animate-spin" /> In Progress</span>;
+        return <span className={`${baseClasses} ${colorClasses}`}><RefreshCw size={14} className="motion-safe:animate-spin" /> In Progress</span>;
       default:
-        return <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-secondary/10 text-secondary">{status}</span>;
+        return <span className={`${baseClasses} ${colorClasses}`}>{status}</span>;
     }
   };
 
@@ -106,12 +129,21 @@ export default function SuperadminMigrationsClient() {
           <p className="text-secondary mt-1">Manage and track database schema migrations across all tenant instances.</p>
         </div>
         
-        <button 
-          onClick={() => handleRollout('v1.6.0')}
-          className="flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg font-medium hover:bg-primary/90 motion-safe:transition-colors"
-        >
-          <Database size={18} /> Deploy New Schema
-        </button>
+        <div className="flex items-center gap-3">
+          <input
+            type="text"
+            placeholder="e.g. v1.6.0"
+            value={versionInput}
+            onChange={(e) => setVersionInput(e.target.value)}
+            className="w-32 px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary"
+          />
+          <button 
+            onClick={handleRollout}
+            className="flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg font-medium hover:bg-primary/90 motion-safe:transition-colors"
+          >
+            <Database size={18} /> Deploy New Schema
+          </button>
+        </div>
       </div>
 
       <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm">
@@ -127,7 +159,7 @@ export default function SuperadminMigrationsClient() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {migrations.map(mig => (
+              {displayMigrations.map(mig => (
                 <tr key={mig.id} className="hover:bg-card-hover motion-safe:transition-colors group">
                   <td className="px-6 py-4">
                     <span className="font-mono font-bold text-foreground">{mig.version}</span>
@@ -148,7 +180,7 @@ export default function SuperadminMigrationsClient() {
                 </tr>
               ))}
               
-              {migrations.length === 0 && (
+              {displayMigrations.length === 0 && (
                 <tr>
                   <td colSpan={5} className="px-6 py-12 text-center text-secondary">
                     <Database size={32} className="mx-auto mb-3 opacity-20" />

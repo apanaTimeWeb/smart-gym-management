@@ -19,6 +19,7 @@ export default function SuperadminFeaturesClient() {
   const [noteForm, setNoteForm] = useState({ version: '', title: '', content: '' });
   const [isPublishing, setIsPublishing] = useState(false);
   const [rolloutFlag, setRolloutFlag] = useState<FeatureFlag | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const { data, fetchState, error, setData, toggleFlag, updateFlag } = useSuperadminFeaturesData();
 
@@ -52,6 +53,11 @@ export default function SuperadminFeaturesClient() {
   if (error || !data) return <div className="p-8 text-center text-danger font-medium">Error loading data.</div>;
 
   const { flags: DUMMY_FEATURE_FLAGS, notes: DUMMY_RELEASE_NOTES } = data as { flags: FeatureFlag[]; notes: ReleaseNote[] };
+
+  const filteredFlags = DUMMY_FEATURE_FLAGS.filter(f => 
+    f.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    f.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const handleToggle = async (flagId: string) => {
     try {
@@ -107,11 +113,17 @@ export default function SuperadminFeaturesClient() {
             </h2>
             <div className="relative max-w-xs w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />
-              <input type="text" placeholder="Search flags..." className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm" />
+              <input 
+                type="text" 
+                placeholder="Search flags..." 
+                className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm focus:outline-none focus:border-primary"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </div>
           </div>
           <div className="divide-y divide-border">
-            {DUMMY_FEATURE_FLAGS.map((flag: FeatureFlag) => (
+            {filteredFlags.map((flag: FeatureFlag) => (
               <div key={flag.id} className="p-6 flex items-center justify-between hover:bg-input motion-safe:transition-colors">
                 <div>
                   <h3 className="text-foreground font-bold mb-1">{flag.name}</h3>
