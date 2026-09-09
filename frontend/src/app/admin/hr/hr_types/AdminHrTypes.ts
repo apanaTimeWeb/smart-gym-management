@@ -19,6 +19,9 @@ export interface HrContextType {
  error: string;
   toast: { message: string; type: ToastType } | null;
   
+  visibleColumns: string[];
+  setVisibleColumns: (cols: string[]) => void;
+  
   search: string;
   debouncedSearch: string;
   setSearch: (s: string) => void;
@@ -65,12 +68,30 @@ export interface HrContextType {
 }
 
 export interface Staff {
-  id: string; name: string; email: string; phone: string;
-  role: string; salary: number; branch: string; gender: string;
-  address?: string; aadhaar?: string; upiId?: string; advanceSalary?: number; joinDate: string; isActive: boolean;
-  salaryType?: 'Monthly' | 'Daily'; paymentCycle?: string; currentDue?: number;
+  id: string; 
+  employeeId?: string;
+  name: string; 
+  email: string; 
+  phone: string;
+  role: string; 
+  salary: number; 
+  branch: string; 
+  gender: string;
+  address?: string; 
+  aadhaar?: string; 
+  upiId?: string; 
+  bankAccountNumber?: string;
+  advanceSalary?: number; 
+  joinDate: string; 
+  joiningDate?: string;
+  isActive: boolean;
+  salaryType?: 'Monthly' | 'Daily'; 
+  paymentCycle?: string; 
+  currentDue?: number;
   assignedBranches?: string[]; // Array of branch IDs assigned to the manager
   primaryBranchId?: string; // The primary branch ID for this manager
+  emergencyContactName?: string;
+  emergencyContactPhone?: string;
 }
 export interface Payroll {
   id: string; staffId: string; month: string; amount: number;

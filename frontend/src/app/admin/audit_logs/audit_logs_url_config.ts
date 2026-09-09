@@ -4,5 +4,7 @@ export const AdminAuditLogsUrlConfig = {
   BACKEND_API: {
     BASE: '/admin/audit-logs',
     EXPORT: '/admin/audit-logs/export',
+    BY_ENTITY: (entityType: string, entityId: string) => `/admin/audit-logs?entityType=${entityType}&entityId=${entityId}`,
+    ACTORS: '/admin/audit-logs/actors',
   },
 } as const;

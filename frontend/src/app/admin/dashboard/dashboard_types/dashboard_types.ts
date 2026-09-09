@@ -67,6 +67,9 @@ export interface DashboardStats {
   lowStockCount: number;
   totalInquiries: number;
   newInquiries: number;
+  churnRate: number;
+  retentionRate: number;
+  arpm: number;
   memberGrowth: { month: string; count: number }[];
   revenueTrend: { month: string; revenue: number; profit: number }[];
   membersByPlan: { plan: string; count: number }[];

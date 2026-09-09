@@ -36,8 +36,21 @@ export interface FinanceContextType {
 }
 
 export interface Payment {
-  id: string; memberId: string; amount: number; method: string;
-  status: string; notes?: string; invoiceNo: string; paidAt: string;
+  id: string; 
+  memberId: string; 
+  amount: number; 
+  method: string;
+  paymentMode?: 'CASH' | 'UPI' | 'CARD' | 'ONLINE';
+  gstAmount?: number;
+  taxRate?: number;
+  invoiceNumber?: string;
+  hsn_code?: string;
+  planId?: string;
+  type?: 'PAYMENT' | 'REFUND' | 'ADJUSTMENT';
+  status: string; 
+  notes?: string; 
+  invoiceNo: string; 
+  paidAt: string;
   member?: { name: string; email: string; phone: string; plan?: { name: string } };
 }
 export interface FinanceSummary {

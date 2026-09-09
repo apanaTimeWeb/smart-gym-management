@@ -19,6 +19,7 @@ export interface Announcement {
   createdBy: string;
   createdAt: string;
   viewCount: number;
+  viewsByBranch?: { branchId: string, count: number }[];
   isPinned: boolean;
 }
 

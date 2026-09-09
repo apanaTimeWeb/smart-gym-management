@@ -16,6 +16,8 @@ export const EMPTY_SETTINGS_FORM = {
   email: 'admin@gymsmart.in',
   city: 'Mumbai',
   gstNumber: '27AABCU9603R1ZX',
+  twoFactorEnabled: false,
+  twoFactorMethod: 'SMS' as 'SMS' | 'TOTP',
 };
 
 export const MOCK_NOTIFICATION_SETTINGS = {

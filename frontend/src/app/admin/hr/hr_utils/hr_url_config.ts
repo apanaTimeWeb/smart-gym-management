@@ -9,6 +9,7 @@ export const HrUrlConfig = {
     STAFF_GET_ONE: (id: string) => `/admin/hr/staff/${id}`,
     STAFF_UPDATE: (id: string) => `/admin/hr/staff/${id}`,
     STAFF_DELETE: (id: string) => `/admin/hr/staff/${id}`,
+    BULK_DEACTIVATE: '/admin/hr/staff/bulk-deactivate',
     PAYROLLS_BASE: '/admin/hr/payrolls',
     PAYROLL_STATUS_UPDATE: (id: string) => `/admin/hr/payrolls/${id}/status`,
     SUMMARY: '/admin/hr/summary',

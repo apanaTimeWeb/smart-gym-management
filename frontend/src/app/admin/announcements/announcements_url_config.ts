@@ -5,5 +5,6 @@ export const AdminAnnouncementsUrlConfig = {
     BASE: '/admin/announcements',
     BY_ID: (id: string) => `/admin/announcements/${id}`,
     PUBLISH: (id: string) => `/admin/announcements/${id}/publish`,
+    PIN: (id: string) => `/admin/announcements/${id}/pin`,
   },
 } as const;

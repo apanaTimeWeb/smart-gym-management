@@ -5,5 +5,6 @@ export const AdminPayoutsUrlConfig = {
     BASE: '/admin/payouts',
     BY_ID: (id: string) => `/admin/payouts/${id}`,
     SUMMARY: '/admin/payouts/summary',
+    MARK_PAID: (id: string) => `/admin/payouts/${id}/mark-paid`,
   },
 } as const;
