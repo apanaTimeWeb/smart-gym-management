@@ -74,17 +74,17 @@ export default function SuperadminInvoicesTableRow({ invoice: inv }: InvoicesTab
 
   return (
     <tr className="hover:bg-input motion-safe:transition-colors">
-      <td className="p-4 text-sm font-mono text-secondary">{inv.id}</td>
-      <td className="p-4 text-sm font-bold text-foreground">{inv.tenantName}</td>
-      <td className="p-4 text-sm text-secondary">{inv.planName}</td>
-      <td className="p-4 text-sm text-secondary capitalize">{inv.invoiceType.replace('_', ' ').toLowerCase()}</td>
-      <td className="p-4 text-sm font-bold text-foreground">₹{inv.amount.toFixed(2)}</td>
+      <td className="p-4 text-sm font-mono text-secondary">{inv.id || 'N/A'}</td>
+      <td className="p-4 text-sm font-bold text-foreground">{inv.tenantName || 'Unknown Tenant'}</td>
+      <td className="p-4 text-sm text-secondary">{inv.planName || 'N/A'}</td>
+      <td className="p-4 text-sm text-secondary capitalize">{inv.invoiceType ? inv.invoiceType.replace('_', ' ').toLowerCase() : 'N/A'}</td>
+      <td className="p-4 text-sm font-bold text-foreground">₹{Number(inv.amount || 0).toFixed(2)}</td>
       <td className="p-4">
-        <span className={`px-2.5 py-1 rounded-md text-xs font-bold ${STATUS_COLORS[inv.status]}`}>
-          {inv.status}
+        <span className={`px-2.5 py-1 rounded-md text-xs font-bold ${STATUS_COLORS[inv.status] || 'bg-secondary/10 text-secondary'}`}>
+          {inv.status || 'UNKNOWN'}
         </span>
       </td>
-      <td className="p-4 text-sm text-secondary">{new Date(inv.issuedAt).toLocaleDateString('en-IN')}</td>
+      <td className="p-4 text-sm text-secondary">{inv.issuedAt ? new Date(inv.issuedAt).toLocaleDateString('en-IN') : 'N/A'}</td>
       <td className="p-4 text-right flex items-center justify-end gap-2">
         <button
           title="Resend to Email"
