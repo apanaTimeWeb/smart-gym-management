@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Contains constants for Superadmin Tickets
-import type { TicketPriority, TicketStatus } from '@/app/superadmin/tickets/superadmin_tickets_types/superadmin_tickets_types';
+// RESPONSIBILITY: Contains constants and mock data for Superadmin Tickets
+import type { TicketPriority, TicketStatus, SupportTicket } from '@/app/superadmin/tickets/superadmin_tickets_types/superadmin_tickets_types';
 
 export const PriorityColors: Record<TicketPriority, string> = {
   LOW: 'text-success bg-success/10 border-success/20',
@@ -11,5 +11,94 @@ export const PriorityColors: Record<TicketPriority, string> = {
 export const StatusColors: Record<TicketStatus, string> = {
   OPEN: 'text-warning',
   IN_PROGRESS: 'text-primary',
-  RESOLVED: 'text-success', CLOSED: 'text-secondary'
+  RESOLVED: 'text-success',
+  CLOSED: 'text-secondary'
 };
+
+export const MOCK_TICKETS: SupportTicket[] = [
+  {
+    id: 'TKT-001',
+    tenantId: 'ten-001',
+    tenantName: 'Iron Peak Fitness',
+    reporterEmail: 'rajesh@ironpeak.in',
+    subject: 'Members unable to check-in via QR code',
+    description: 'Since yesterday morning, all QR code scans at the entrance are failing with a 403 error.',
+    status: 'OPEN',
+    priority: 'CRITICAL',
+    assignedTo: undefined,
+    slaDeadline: new Date(Date.now() + 4 * 60 * 60 * 1000).toISOString(),
+    firstResponseAt: undefined,
+    resolutionTime: undefined,
+    messages: [],
+    createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+    lastUpdated: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: 'TKT-002',
+    tenantId: 'ten-002',
+    tenantName: 'FitZone Studio',
+    reporterEmail: 'priya@fitzone.in',
+    subject: 'Invoice PDF download returns 404',
+    description: 'Clicking "Download Invoice" on any invoice from the last 3 months returns a 404 page.',
+    status: 'IN_PROGRESS',
+    priority: 'HIGH',
+    assignedTo: 'support@gymsmart.in',
+    slaDeadline: new Date(Date.now() + 20 * 60 * 60 * 1000).toISOString(),
+    firstResponseAt: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
+    resolutionTime: undefined,
+    messages: [],
+    createdAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
+    lastUpdated: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: 'TKT-003',
+    tenantId: 'ten-003',
+    tenantName: 'Muscle Factory',
+    reporterEmail: 'arjun@musclefactory.in',
+    subject: 'Trainer schedule not syncing to mobile app',
+    description: 'Changes made to trainer schedules in the web dashboard are not reflecting in the mobile app for members.',
+    status: 'OPEN',
+    priority: 'MEDIUM',
+    assignedTo: undefined,
+    slaDeadline: new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString(),
+    firstResponseAt: undefined,
+    resolutionTime: undefined,
+    messages: [],
+    createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+    lastUpdated: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: 'TKT-004',
+    tenantId: 'ten-004',
+    tenantName: 'Zen Wellness Hub',
+    reporterEmail: 'sneha@zenwellness.in',
+    subject: 'Request to upgrade plan from BASIC to PRO',
+    description: 'We would like to upgrade our subscription plan. Please assist with the process.',
+    status: 'RESOLVED',
+    priority: 'LOW',
+    assignedTo: 'billing@gymsmart.in',
+    slaDeadline: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+    firstResponseAt: new Date(Date.now() - 10 * 60 * 60 * 1000).toISOString(),
+    resolutionTime: 480,
+    messages: [],
+    createdAt: new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString(),
+    lastUpdated: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: 'TKT-005',
+    tenantId: 'ten-005',
+    tenantName: 'PowerHouse Gym',
+    reporterEmail: 'vikram@powerhouse.in',
+    subject: 'Bulk member import CSV failing with validation error',
+    description: 'Uploading a CSV with 200 members fails at row 47 with "Invalid date format". The date column uses DD/MM/YYYY.',
+    status: 'IN_PROGRESS',
+    priority: 'HIGH',
+    assignedTo: 'support@gymsmart.in',
+    slaDeadline: new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString(),
+    firstResponseAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+    resolutionTime: undefined,
+    messages: [],
+    createdAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
+    lastUpdated: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+  },
+];

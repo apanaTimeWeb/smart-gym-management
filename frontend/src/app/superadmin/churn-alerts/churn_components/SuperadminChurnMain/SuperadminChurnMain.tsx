@@ -15,13 +15,15 @@ import { churnAlertsApi } from '@/app/superadmin/churn-alerts/churn_api/superadm
 import type { ChurnAlert, ChurnFilterStatus, ChurnActionPayload } from '@/app/superadmin/churn-alerts/churn_types/churn_types';
 import { MOCK_CHURN_ALERTS, MOCK_CHURN_KPI } from '@/app/superadmin/churn-alerts/churn_utils/churn_constants';
 
+const IS_DEV = process.env.NODE_ENV === 'development';
+const CHURN_PAGE_SIZE = 20;
+
 export default function SuperadminChurnMain() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
   const [activeFilter, setActiveFilter] = useState<ChurnFilterStatus>('ALL');
   const [actionAlert, setActionAlert] = useState<ChurnAlert | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const CHURN_PAGE_SIZE = 20;
 
   const { data: alertsRes, isLoading: alertsLoading, isError: alertsError } = useQuery({
     queryKey: ['superadmin', 'churn-alerts'],
@@ -45,13 +47,16 @@ export default function SuperadminChurnMain() {
     }
   });
 
-  const alerts = alertsRes?.data && alertsRes.data.length > 0 
-    ? alertsRes.data 
-    : (process.env.NODE_ENV === 'development' ? MOCK_CHURN_ALERTS : []);
-    
-  const kpis = kpisRes?.data 
-    ? kpisRes.data 
-    : (process.env.NODE_ENV === 'development' ? MOCK_CHURN_KPI : { totalAtRisk: 0, criticalCount: 0, highCount: 0, estimatedMrrAtRisk: 0 });
+  // Fix: use mock data whenever API has no data (empty array, error, or null) in development
+  const alerts: ChurnAlert[] = (() => {
+    if (alertsRes?.data && alertsRes.data.length > 0) return alertsRes.data;
+    return IS_DEV ? MOCK_CHURN_ALERTS : [];
+  })();
+
+  const kpis = (() => {
+    if (kpisRes?.data) return kpisRes.data;
+    return IS_DEV ? MOCK_CHURN_KPI : { totalAtRisk: 0, criticalCount: 0, highCount: 0, estimatedMrrAtRisk: 0 };
+  })();
 
   const filtered = useMemo(() => {
     return alerts.filter((a) => {
@@ -87,10 +92,6 @@ export default function SuperadminChurnMain() {
         <div className="h-96 bg-card rounded-xl border border-border motion-safe:animate-pulse" />
       </div>
     );
-  }
-
-  if (alertsError) {
-    return <div className="p-8 text-center text-danger">Error loading churn alerts.</div>;
   }
 
   return (

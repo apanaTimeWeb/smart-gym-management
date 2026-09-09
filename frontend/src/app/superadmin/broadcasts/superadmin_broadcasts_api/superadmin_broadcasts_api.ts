@@ -12,4 +12,6 @@ export const broadcastsApi = {
   updateBroadcast: (id: string, body: Partial<Broadcast>) => apiFetch<ApiResponse<Broadcast>>(`${SuperadminUrlConfig.BACKEND_API.BROADCASTS_BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
   deleteBroadcast: (id: string) => apiFetch<ApiResponse<void>>(`${SuperadminUrlConfig.BACKEND_API.BROADCASTS_BASE}/${id}`, { method: 'DELETE' }),
   send: (id: string) => apiFetch<ApiResponse<void>>(`${SuperadminUrlConfig.BACKEND_API.BROADCASTS_BASE}/${id}/send`, { method: 'POST' }),
+  /** GET /superadmin/broadcasts/recipient-count — returns count of active tenants that will receive the broadcast */
+  fetchRecipientCount: () => apiFetch<ApiResponse<{ count: number }>>(`${SuperadminUrlConfig.BACKEND_API.BROADCASTS_BASE}/recipient-count`),
 };
