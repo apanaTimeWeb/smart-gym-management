@@ -9,7 +9,7 @@ import { X, CheckCircle, Loader2 } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AttendanceSchema, type AttendanceFormValues, EMPTY_ATTENDANCE_FORM } from '@/app/trainer/attendance/attendance_utils/AttendanceSharedConstants';
-import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
+import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/SearchableDropdown';
 
 export default function TrainerAttendanceModal() {
   const { 

@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
-// RESPONSIBILITY: Centralized constants shared across all TRAINER modules — nav items, placeholder notifications, gym identity (name/phone), sensitive data masking utility, and pagination page size.
+// RESPONSIBILITY: Centralized constants shared across all TRAINER modules — nav items, gym identity (name/phone), and pagination page size.
+// DATA FLOW: Imported directly by TrainerSidebar, TrainerHeader, and module-level utils.
 import {
   LayoutDashboard, Users, Utensils, Dumbbell, CalendarCheck, Clock, Bell, User, IndianRupee, Calendar
 } from 'lucide-react';
@@ -41,13 +40,6 @@ export const TRAINER_NAV_GROUPS = [
       { href: '/trainer/profile', label: 'My Profile', icon: User },
     ]
   }
-];
-
-// TODO: Replace with real API call once Notifications backend module is built.
-export const TRAINER_PLACEHOLDER_NOTIFICATIONS = [
- { id: 1, text: 'Your assigned member Amit logged a new weight', time: '5m ago', unread: true },
- { id: 2, text: 'Manager approved your leave request for tomorrow', time: '1h ago', unread: false },
- { id: 3, text: 'New member Pooja was assigned to you', time: '2h ago', unread: false },
 ];
 
 export const GYM_DETAILS = {

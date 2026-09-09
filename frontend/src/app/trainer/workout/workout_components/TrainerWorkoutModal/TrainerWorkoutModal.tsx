@@ -7,9 +7,9 @@ import { useEffect } from 'react';
 import { X, Save, Plus, Trash2, Dumbbell } from 'lucide-react';
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
+import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/SearchableDropdown';
 import { useWorkoutContext } from '@/app/trainer/workout/workout_context/WorkoutContext';
-import { WORKOUT_LEVEL_OPTIONS, WorkoutSchema, type WorkoutFormValues, EMPTY_WORKOUT_FORM, INITIAL_EXERCISES } from '@/app/trainer/workout/workout_utils/WorkoutSharedConstants';
+import { WORKOUT_LEVEL_OPTIONS, WorkoutSchema, type WorkoutFormValues, EMPTY_WORKOUT_FORM } from '@/app/trainer/workout/workout_utils/WorkoutSharedConstants';
 
 export default function TrainerWorkoutModal() {
   const { 
@@ -194,16 +194,13 @@ export default function TrainerWorkoutModal() {
               {exerciseFields.map((field, index) => (
                 <div key={field.id} className="bg-input/50 border border-border rounded-xl p-3 flex flex-col sm:flex-row gap-3">
                   <div className="flex-1">
-                    <label className="block text-[10px] uppercase font-bold text-secondary mb-1">Exercise</label>
-                    <select
+                    <label className="block text-[10px] uppercase font-bold text-secondary mb-1">Exercise Name</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Barbell Squat"
                       {...register(`workoutExercises.${index}.name`)}
                       className="w-full px-2 py-1.5 text-sm bg-input border border-border rounded-lg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary text-foreground"
-                    >
-                      <option value="">Select from library...</option>
-                      {(INITIAL_EXERCISES as any[]).map(ex => (
-                        <option key={ex.id} value={ex.name}>{ex.name} ({ex.muscle})</option>
-                      ))}
-                    </select>
+                    />
                   </div>
                   <div className="w-16">
                     <label className="block text-[10px] uppercase font-bold text-secondary mb-1">Sets</label>

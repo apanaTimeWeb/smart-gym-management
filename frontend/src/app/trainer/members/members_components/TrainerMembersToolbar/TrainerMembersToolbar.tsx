@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 import { Search, RefreshCw, Plus } from 'lucide-react';
 import { useMembersContext } from '@/app/trainer/members/members_context/MembersContext';
 import { useMembersStore } from '@/app/trainer/members/members_store/useMembersStore';
-import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
+import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/SearchableDropdown';
 import { MEMBER_STATUS_OPTIONS } from '@/app/trainer/members/members_utils/MembersSharedConstants';
 
 export default function TrainerMembersToolbar() {

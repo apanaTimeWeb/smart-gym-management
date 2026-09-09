@@ -7,14 +7,14 @@ import { useState, useRef, useEffect } from 'react';
 import { Bell, Search, LogOut, Settings, User, X, Menu } from 'lucide-react';
 import Link from 'next/link';
 import { getUser, logout } from '@/lib/api';
-import { TRAINER_PLACEHOLDER_NOTIFICATIONS } from '@/app/trainer/trainer_utils/TrainerSharedConstants';
+// Notifications are fetched from the API — placeholder array removed (Rule 75).
 import { ThemeToggle } from '@/components/ThemeToggle';
 
 import type { TrainerHeaderProps } from '@/app/trainer/trainer_components/TrainerLayout/TrainerLayoutTypes';
 
 export default function TrainerHeader({ title, subtitle }: TrainerHeaderProps) {
   const [showNotifications, setShowNotifications] = useState(false);
-  const [notifications, setNotifications] = useState(TRAINER_PLACEHOLDER_NOTIFICATIONS);
+  const [notifications, setNotifications] = useState<{ id: number; text: string; time: string; unread: boolean }[]>([]);
   const [showProfile, setShowProfile] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);

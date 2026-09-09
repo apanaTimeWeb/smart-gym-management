@@ -1,16 +1,39 @@
-// RESPONSIBILITY: Logic hook for the Trainer Progress Tracking module.
-// DATA FLOW: URL ?memberId → useTrainerProgressLogic → TrainerProgressMain
-// CRITICAL: selectedMemberId MUST come from URL params or a member selector — NEVER hardcoded.
+// RESPONSIBILITY: Logic hook for the Trainer Progress Tracking module. Manages all API interactions, entry state, and comparison state.
+// DATA FLOW: TrainerProgressApi + trainerSharedApi → useTrainerProgressLogic → TrainerProgressMain
+// CRITICAL: selectedMemberId MUST come from URL params — NEVER hardcoded.
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import type { ProgressEntry, ProgressChartMetric, ComparisonMemberSnapshot, ComparisonMetric } from '@/app/trainer/progress-tracking/progress_types/TrainerProgressTypes';
-import { MOCK_PROGRESS_ENTRIES, MOCK_COMPARISON_ENTRIES, COMPARISON_MAX_MEMBERS } from '@/app/trainer/progress-tracking/progress_utils/TrainerProgressSharedConstants';
+import type {
+  ProgressEntry,
+  ProgressChartMetric,
+  ComparisonMemberSnapshot,
+  ComparisonMetric,
+  ProgressFetchState,
+  CreateProgressEntryDto,
+} from '@/app/trainer/progress-tracking/progress_types/TrainerProgressTypes';
+import { COMPARISON_MAX_MEMBERS } from '@/app/trainer/progress-tracking/progress_utils/TrainerProgressSharedConstants';
+import {
+  fetchProgressEntries,
+  createProgressEntry,
+  updateProgressEntry,
+  deleteProgressEntry,
+} from '@/app/trainer/progress-tracking/progress_api/TrainerProgressApi';
+import { trainerSharedApi } from '@/app/trainer/trainer_api/trainer_api';
 import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 
 type ProgressTab = 'individual' | 'compare';
 
-function buildSnapshot(memberId: string, memberName: string, entries: typeof MOCK_COMPARISON_ENTRIES): ComparisonMemberSnapshot {
+interface AssignedMember {
+  id: string;
+  name: string;
+}
+
+/**
+ * Computes a comparison snapshot for a single member from their full progress entry list.
+ * Calculates weight/fat/muscle deltas between first and latest recorded entry.
+ */
+function buildSnapshot(memberId: string, memberName: string, entries: ProgressEntry[]): ComparisonMemberSnapshot {
   const memberEntries = entries
     .filter(e => e.memberId === memberId)
     .sort((a, b) => a.date.localeCompare(b.date));
@@ -19,8 +42,8 @@ function buildSnapshot(memberId: string, memberName: string, entries: typeof MOC
     return { memberId, memberName, latestWeightKg: null, latestBmi: null, latestBodyFatPercent: null, latestMuscleMassKg: null, weightChangeKg: null, bodyFatChange: null, muscleMassChange: null, totalEntries: 0, trend: 'insufficient' };
   }
 
-  const first = memberEntries[0];
-  const latest = memberEntries[memberEntries.length - 1];
+  const first = memberEntries[0]!;
+  const latest = memberEntries[memberEntries.length - 1]!;
   const weightChange = memberEntries.length >= 2 ? Math.round((latest.weightKg - first.weightKg) * 10) / 10 : null;
   const bodyFatChange = memberEntries.length >= 2 && latest.bodyFatPercent != null && first.bodyFatPercent != null
     ? Math.round((latest.bodyFatPercent - first.bodyFatPercent) * 10) / 10 : null;
@@ -62,34 +85,106 @@ export const useTrainerProgressLogic = () => {
     router.push(`${pathname}?${params.toString()}`);
   }, [searchParams, pathname, router]);
 
-  const [entries, setEntries] = useState<ProgressEntry[]>(MOCK_PROGRESS_ENTRIES);
+  // Individual tab state
+  const [entries, setEntries] = useState<ProgressEntry[]>([]);
+  const [fetchState, setFetchState] = useState<ProgressFetchState>('idle');
   const [activeMetric, setActiveMetric] = useState<ProgressChartMetric>('weight');
   const [showModal, setShowModal] = useState(false);
   const [editingEntry, setEditingEntry] = useState<ProgressEntry | null>(null);
 
   // Comparison tab state
   const [activeTab, setActiveTab] = useState<ProgressTab>('individual');
+  const [assignedMembers, setAssignedMembers] = useState<AssignedMember[]>([]);
   const [selectedComparisonIds, setSelectedComparisonIds] = useState<string[]>([]);
+  const [comparisonEntriesMap, setComparisonEntriesMap] = useState<Map<string, ProgressEntry[]>>(new Map());
   const [activeComparisonMetric, setActiveComparisonMetric] = useState<ComparisonMetric>('weightChangeKg');
+
+  const { confirm } = useConfirm();
+
+  // Fetch the trainer's assigned members once on mount — used for both member selector and comparison list.
+  // WHY: member list is stable per trainer session; one fetch suffices for both tabs.
+  useEffect(() => {
+    let cancelled = false;
+    const load = async () => {
+      try {
+        const res = await trainerSharedApi.fetchMembersBasic({ limit: '200', status: 'active' }) as {
+          data?: { members?: AssignedMember[] } | AssignedMember[];
+        };
+        if (cancelled) return;
+        const raw = (res.data as { members?: AssignedMember[] })?.members
+          ?? (res.data as AssignedMember[])
+          ?? [];
+        setAssignedMembers(raw.map(m => ({ id: m.id, name: m.name })));
+      } catch {
+        // Non-critical; comparison selector will be empty
+      }
+    };
+    void load();
+    return () => { cancelled = true; };
+  }, []);
+
+  // Fetch progress entries for the selected member whenever selectedMemberId changes.
+  // WHY: each member has a separate progress entry set; re-fetch on every member switch.
+  useEffect(() => {
+    if (!selectedMemberId) {
+      setEntries([]);
+      setFetchState('idle');
+      return;
+    }
+    let cancelled = false;
+    const load = async () => {
+      setFetchState('loading');
+      try {
+        const data = await fetchProgressEntries(selectedMemberId);
+        if (!cancelled) {
+          setEntries(data);
+          setFetchState('success');
+        }
+      } catch (err) {
+        if (!cancelled) {
+          console.error('[useTrainerProgressLogic] fetchProgressEntries failed:', (err as Error).message);
+          setFetchState('error');
+        }
+      }
+    };
+    void load();
+    return () => { cancelled = true; };
+  }, [selectedMemberId]);
+
+  // Fetch progress entries for each comparison member as they are selected.
+  // WHY: each member's entries are fetched lazily to avoid over-fetching all members upfront.
+  useEffect(() => {
+    const fetchMissing = async () => {
+      for (const memberId of selectedComparisonIds) {
+        if (!comparisonEntriesMap.has(memberId)) {
+          try {
+            const data = await fetchProgressEntries(memberId);
+            setComparisonEntriesMap(prev => new Map(prev).set(memberId, data));
+          } catch {
+            // Set empty array so we don't re-fetch on every render
+            setComparisonEntriesMap(prev => new Map(prev).set(memberId, []));
+          }
+        }
+      }
+    };
+    void fetchMissing();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedComparisonIds]); // comparisonEntriesMap intentionally excluded to avoid infinite loop
 
   const memberEntries = useMemo(
     () => entries.filter((e) => e.memberId === selectedMemberId),
     [entries, selectedMemberId]
   );
 
-  // All unique members available in comparison mock data
-  const allComparisonMembers = useMemo(() => {
-    const seen = new Map<string, string>();
-    MOCK_COMPARISON_ENTRIES.forEach(e => seen.set(e.memberId, e.memberName));
-    return Array.from(seen.entries()).map(([id, name]) => ({ id, name }));
-  }, []);
+  const allComparisonMembers = useMemo(() => assignedMembers, [assignedMembers]);
 
   const comparisonSnapshots = useMemo<ComparisonMemberSnapshot[]>(() => {
     return selectedComparisonIds.map(id => {
       const name = allComparisonMembers.find(m => m.id === id)?.name ?? id;
-      return buildSnapshot(id, name, MOCK_COMPARISON_ENTRIES);
+      const memberProgressEntries = comparisonEntriesMap.get(id) ?? [];
+      return buildSnapshot(id, name, memberProgressEntries);
     });
-  }, [selectedComparisonIds, allComparisonMembers]);
+  }, [selectedComparisonIds, allComparisonMembers, comparisonEntriesMap]);
 
   const toggleComparisonMember = useCallback((memberId: string) => {
     setSelectedComparisonIds(prev => {
@@ -103,8 +198,6 @@ export const useTrainerProgressLogic = () => {
   const openEditModal = useCallback((entry: ProgressEntry) => { setEditingEntry(entry); setShowModal(true); }, []);
   const closeModal = useCallback(() => { setShowModal(false); setEditingEntry(null); }, []);
 
-  const { confirm } = useConfirm();
-
   const handleDelete = useCallback(async (entryId: string) => {
     const ok = await confirm({
       title: 'Delete Progress Entry',
@@ -113,29 +206,43 @@ export const useTrainerProgressLogic = () => {
       confirmText: 'Delete',
     });
     if (!ok) return;
-    setEntries((prev) => prev.filter((e) => e.id !== entryId));
-  }, [confirm]);
-
-  const handleSave = useCallback((data: Omit<ProgressEntry, 'id' | 'memberId' | 'recordedBy'>) => {
-    if (editingEntry) {
-      setEntries((prev) =>
-        prev.map((e) => (e.id === editingEntry.id ? { ...editingEntry, ...data } : e))
-      );
-    } else {
-      const newEntry: ProgressEntry = {
-        ...data,
-        id: Date.now().toString(),
-        memberId: selectedMemberId,
-        recordedBy: 'Trainer',
-      };
-      setEntries((prev) => [...prev, newEntry]);
+    try {
+      await deleteProgressEntry(selectedMemberId, entryId);
+      setEntries(prev => prev.filter(e => e.id !== entryId));
+    } catch (err) {
+      console.error('[useTrainerProgressLogic] deleteProgressEntry failed:', (err as Error).message);
     }
-    closeModal();
+  }, [confirm, selectedMemberId]);
+
+  const handleSave = useCallback(async (data: Omit<ProgressEntry, 'id' | 'memberId' | 'recordedBy'>) => {
+    const dto: CreateProgressEntryDto = {
+      date: data.date,
+      weightKg: data.weightKg,
+      heightCm: data.heightCm,
+      bodyFatPercent: data.bodyFatPercent,
+      muscleMassKg: data.muscleMassKg,
+      waistCm: data.waistCm,
+      notes: data.notes,
+    };
+    try {
+      if (editingEntry) {
+        const updated = await updateProgressEntry(selectedMemberId, editingEntry.id, dto);
+        setEntries(prev => prev.map(e => e.id === editingEntry.id ? updated : e));
+      } else {
+        const created = await createProgressEntry(selectedMemberId, dto);
+        setEntries(prev => [...prev, created]);
+      }
+      closeModal();
+    } catch (err) {
+      console.error('[useTrainerProgressLogic] save failed:', (err as Error).message);
+    }
   }, [editingEntry, selectedMemberId, closeModal]);
 
   return {
     // Individual tab
     memberEntries,
+    entries,
+    fetchState,
     selectedMemberId,
     setSelectedMemberId,
     activeMetric,

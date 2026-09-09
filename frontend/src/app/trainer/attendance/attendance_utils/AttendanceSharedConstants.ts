@@ -16,6 +16,14 @@ export const ATTENDANCE_TABLE_HEADERS = [
 export const ATTENDANCE_TABS = ['Members', 'My Attendance'] as const;
 export type AttendanceTab = typeof ATTENDANCE_TABS[number];
 
+export const ATTENDANCE_DATE_FILTER_OPTIONS: { value: string; label: string }[] = [
+  { value: 'All Time',   label: 'All Time' },
+  { value: 'Today',      label: 'Today' },
+  { value: 'Yesterday',  label: 'Yesterday' },
+  { value: 'Last 7 Days', label: 'Last 7 Days' },
+  { value: 'This Month', label: 'This Month' },
+];
+
 export const AttendanceSchema = z.object({
   type: z.enum(['MEMBER', 'STAFF']),
   memberId: z.string().optional(),
