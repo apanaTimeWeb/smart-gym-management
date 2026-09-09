@@ -13,12 +13,7 @@ import AdminDashboardExpiringWidget from '@/app/admin/dashboard/dashboard_compon
 import AdminDashboardAttendanceTrend from '@/app/admin/dashboard/dashboard_components/AdminDashboardAttendanceTrend/AdminDashboardAttendanceTrend';
 import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
 
-const TIME_RANGE_OPTIONS = [
-  { value: 'weekly', label: 'This Week' },
-  { value: 'monthly', label: 'This Month' },
-  { value: 'yearly', label: 'This Year' },
-  { value: 'custom', label: 'Custom Range' },
-];
+import { TIME_RANGE_OPTIONS } from '@/app/admin/dashboard/dashboard_utils/AdminDashboardSharedConstants';
 
 function DashboardSkeleton() {
   return (
@@ -44,14 +39,9 @@ export default function AdminDashboardMain() {
 
   if (status === 'loading') return <div className="min-h-full"><DashboardSkeleton /></div>;
 
-  if (status === 'error') return (
-    <div className="min-h-full flex items-center justify-center">
-      <div className="text-center">
-        <p className="font-medium text-danger">Failed to load dashboard</p>
-        <p className="text-sm mt-1 text-danger">{error}</p>
-      </div>
-    </div>
-  );
+  if (status === 'error') {
+    throw new Error(error || 'Failed to load dashboard');
+  }
 
   return (
     <div className="min-h-full">

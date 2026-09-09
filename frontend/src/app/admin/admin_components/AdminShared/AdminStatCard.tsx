@@ -27,8 +27,8 @@ export default function AdminStatCard({ title, value, change, changeType = 'neut
             </p>
           )}
         </div>
-        <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: iconBg }}>
-          <Icon size={22} style={{ color: iconColor }} />
+        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${iconBg}`}>
+          <Icon size={22} className={iconColor} />
         </div>
       </div>
     </div>

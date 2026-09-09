@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Renders the loading fallback for the notifications module.
 import { AdminTableSkeleton } from '@/app/admin/admin_components/AdminShared/AdminTableSkeleton';
 
-export default function Loading() {
+export default function AdminNotificationsLoading() {
   return (
     <div className="flex flex-col space-y-6 w-full animate-pulse">
       

@@ -4,7 +4,7 @@
 import { useEffect } from 'react';
 import { AlertTriangle } from 'lucide-react';
 
-export default function BranchesError({ error, reset }: { error: Error & { digest?: string }, reset: () => void }) {
+export default function AdminBranchesError({ error, reset }: { error: Error & { digest?: string }, reset: () => void }) {
   // Error logged to monitoring service
   useEffect(() => {
     // Log error locally or to monitoring service

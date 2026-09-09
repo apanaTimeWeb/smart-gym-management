@@ -83,3 +83,10 @@ export const GYM_DETAILS = {
 
 
 export const ADMIN_ITEMS_PER_PAGE = 10;
+
+export const STATUS_STYLES: Record<string, string> = {
+  active: 'text-success bg-success/10 border-success/20',
+  expired: 'text-danger bg-danger/10 border-danger/20',
+  pending: 'text-warning bg-warning/10 border-warning/20',
+  frozen: 'text-info bg-info/10 border-info/20',
+};

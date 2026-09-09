@@ -5,7 +5,7 @@ import { useState, useRef, useEffect, useMemo } from 'react';
 import { Bell, Search, LogOut, Settings, User, X, Menu, Building2, QrCode } from 'lucide-react';
 import Link from 'next/link';
 import { getUser, logout } from '@/lib/api';
-import { ADMIN_PLACEHOLDER_NOTIFICATIONS } from '@/app/admin/admin_utils/AdminSharedConstants';
+import { ADMIN_PLACEHOLDER_NOTIFICATIONS, STATUS_STYLES } from '@/app/admin/admin_utils/AdminSharedConstants';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
 import { useAdminBranchesData } from '@/app/admin/admin_store/useAdminBranchesData';
@@ -14,13 +14,6 @@ import { ADMIN_MOCK_MEMBERS } from '@/app/admin/members/members_utils/AdminMembe
 import AdminQrScannerModal from '@/app/admin/admin_components/AdminQrScanner/AdminQrScannerModal';
 import type { AdminHeaderProps } from '@/app/admin/admin_components/AdminLayout/AdminLayoutTypes';
 import type { Branch } from '@/app/admin/admin_store/useAdminGlobalStore';
-
-const STATUS_STYLES: Record<string, string> = {
-  active: 'text-success bg-success/10 border-success/20',
-  expired: 'text-danger bg-danger/10 border-danger/20',
-  pending: 'text-warning bg-warning/10 border-warning/20',
-  frozen: 'text-info bg-info/10 border-info/20',
-};
 
 export default function AdminHeader({ title, subtitle }: AdminHeaderProps) {
   const [showNotifications, setShowNotifications] = useState(false);

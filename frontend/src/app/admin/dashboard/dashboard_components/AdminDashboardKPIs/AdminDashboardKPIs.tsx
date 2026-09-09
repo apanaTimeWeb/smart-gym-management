@@ -4,7 +4,7 @@
 import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
 import { useAdminDashboardStore } from '@/app/admin/dashboard/dashboard_store/useAdminDashboardStore';
 import AdminStatCard from '@/app/admin/admin_components/AdminShared/AdminStatCard';
-import { formatCurrency } from '@/app/admin/dashboard/dashboard_utils/AdminDashboardSharedConstants';
+import { formatCurrency } from '@/lib/formatters';
 import { Users, DollarSign, TrendingUp, AlertCircle, CheckCircle, Clock, UserCheck, ShoppingCart } from 'lucide-react';
 import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
 

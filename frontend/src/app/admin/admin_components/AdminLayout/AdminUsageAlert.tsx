@@ -39,7 +39,7 @@ export default function AdminUsageAlert() {
   if (maxPercent <= 90) return null;
 
   const isLimitReached = maxPercent >= 100;
-  const bgColor = isLimitReached ? 'bg-[var(--danger)]/10 border-[var(--danger)]' : 'bg-[var(--warning)]/10 border-[var(--warning)]';
+  const bgColor = isLimitReached ? 'bg-danger/10' : 'bg-warning/10';
   const textColor = isLimitReached ? 'text-danger' : 'text-warning';
   const borderColor = isLimitReached ? 'border-danger' : 'border-warning';
 
