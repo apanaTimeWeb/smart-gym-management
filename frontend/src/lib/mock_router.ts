@@ -226,6 +226,7 @@ export async function routeMockRequest<T>(
   // ==========================================
   // STATEFUL MOCK DB INTERCEPTIONS (Admin/Manager/Trainer)
   // ==========================================
+  const parsedUrl = new URL(path, 'http://localhost');
   let parsedBody: any = body;
   if (typeof body === 'string') {
     try { parsedBody = JSON.parse(body); } catch (e) {}

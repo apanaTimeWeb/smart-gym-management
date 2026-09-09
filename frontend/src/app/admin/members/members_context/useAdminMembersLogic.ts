@@ -24,7 +24,7 @@ export function useAdminMembersLogic() {
   
   const { data: summaryData, isLoading: summaryLoading } = useQuery({
     queryKey: ['adminMembersSummary'],
-    queryFn: () => apiFetch<ApiResponse<AdminMembersSummary>>('/api/admin/members/summary').then(r => r.data || {} as AdminMembersSummary),
+    queryFn: () => apiFetch<ApiResponse<AdminMembersSummary>>('/api/admin/members/summary').then(r => r.data || null),
   });
 
   const debouncedSearch = useDebounce(search, 300);
@@ -58,7 +58,7 @@ export function useAdminMembersLogic() {
 
   const isLoading = membersLoading || summaryLoading;
   const fetchState: FetchState = isLoading ? 'loading' : 'success';
-  const summary = summaryData || {} as AdminMembersSummary;
+  const summary = summaryData ? summaryData : null;
 
   return {
     members: paginatedMembers,
