@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Single source of truth for all backend API endpoints used by the HR module.
-export const HrUrlConfig = {
+// Rule 3: Export name prefixed with Admin per module naming convention.
+export const AdminHrUrlConfig = {
   PAGES: {
     STAFF_LIST: '/admin/hr',
     PAYROLL: '/admin/hr',
@@ -14,4 +15,7 @@ export const HrUrlConfig = {
     PAYROLL_STATUS_UPDATE: (id: string) => `/admin/hr/payrolls/${id}/status`,
     SUMMARY: '/admin/hr/summary',
   }
-};
+} as const;
+
+/** @deprecated Use AdminHrUrlConfig */
+export const HrUrlConfig = AdminHrUrlConfig;

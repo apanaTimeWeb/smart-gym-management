@@ -107,7 +107,7 @@ export default function AdminBlacklistModal() {
             <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 bg-input border border-border rounded-lg text-sm font-medium text-secondary hover:text-foreground motion-safe:transition-colors">
               Cancel
             </button>
-            <button type="submit" disabled={saving} className="px-5 py-2 bg-danger text-white rounded-lg text-sm font-semibold hover:opacity-90 motion-safe:transition-opacity disabled:opacity-60 disabled:cursor-not-allowed active:scale-95">
+            <button type="submit" disabled={saving} className="px-5 py-2 bg-danger text-white rounded-lg text-sm font-semibold hover:opacity-90 motion-safe:transition-opacity disabled:opacity-60 disabled:cursor-not-allowed active:scale-95 min-w-[120px]">
               {saving ? 'Blacklisting...' : 'Blacklist Member'}
             </button>
           </div>

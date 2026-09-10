@@ -6,7 +6,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { blacklistApi } from '@/app/admin/blacklist/blacklist_api/blacklist_api';
 import { useAdminBlacklistStore } from '@/app/admin/blacklist/blacklist_store/useAdminBlacklistStore';
-import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/AdminConfirmProvider';
+import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
 import { BLACKLIST_ITEMS_PER_PAGE, EMPTY_BLACKLIST_FORM } from '@/app/admin/blacklist/blacklist_utils/AdminBlacklistSharedConstants';
 import type { BlacklistFormValues, FetchState } from '@/app/admin/blacklist/blacklist_types/blacklist_types';
 

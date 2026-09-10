@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 import type { Staff, Payroll, HrSummary } from '@/app/admin/hr/hr_types/AdminHrTypes';
 import { hrApi } from '@/app/admin/hr/hr_api/AdminHrApi';
 import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
-import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/AdminConfirmProvider';
+import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
 
 export function useAdminHrMutations(
   staff: Staff[],

@@ -7,7 +7,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { gymHealthAlertsApi } from '@/app/admin/gym-health-alerts/gym_health_alerts_api/gym_health_alerts_api';
 import { useAdminGymHealthAlertsStore } from '@/app/admin/gym-health-alerts/gym_health_alerts_store/useAdminGymHealthAlertsStore';
-import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/AdminConfirmProvider';
+import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
 import { GYM_HEALTH_ITEMS_PER_PAGE } from '@/app/admin/gym-health-alerts/gym_health_alerts_utils/AdminGymHealthAlertsSharedConstants';
 import type { FetchState } from '@/app/admin/gym-health-alerts/gym_health_alerts_types/gym_health_alerts_types';
 

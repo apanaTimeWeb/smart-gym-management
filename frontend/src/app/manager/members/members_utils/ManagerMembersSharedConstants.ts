@@ -1,6 +1,9 @@
 // RESPONSIBILITY: Centralized constants, Zod schema, and shared utilities for the Members module. Single source of truth for form defaults, status colors, billing labels, and message templates.
 import type { PlanWithCustom } from '@/app/manager/members/members_types/ManagerMembersTypes';
 import { z } from 'zod';
+import { formatCurrency } from '@/lib/formatters';
+
+export { formatCurrency };
 
 export const MemberSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -99,7 +102,7 @@ export const EMPTY_MEMBER_FORM: MemberFormValues = {
   medicalHistory: '',
 };
 
-export const formatCurrency = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');
+
 
 /** Fixed 30-day display grid for the attendance calendar UI */
 export const ATTENDANCE_CALENDAR_DAYS = 30;

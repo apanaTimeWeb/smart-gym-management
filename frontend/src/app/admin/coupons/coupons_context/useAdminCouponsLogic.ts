@@ -7,7 +7,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { couponsApi } from '@/app/admin/coupons/coupons_api/coupons_api';
 import { useAdminCouponsStore } from '@/app/admin/coupons/coupons_store/useAdminCouponsStore';
-import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/AdminConfirmProvider';
+import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
 import { EMPTY_COUPON_FORM, COUPONS_ITEMS_PER_PAGE } from '@/app/admin/coupons/coupons_utils/AdminCouponsSharedConstants';
 import type { Coupon, CouponFormValues, FetchState } from '@/app/admin/coupons/coupons_types/coupons_types';
 

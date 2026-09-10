@@ -1,10 +1,11 @@
-// RESPONSIBILITY: Centralized constants shared across all ADMIN modules — nav items, placeholder notifications, gym identity (name/phone), sensitive data masking utility, and pagination page size.
+// RESPONSIBILITY: Centralized configuration for all ADMIN module routes, navigation groups, gym identity, and basic shared constants.
 import {
   LayoutDashboard, ClipboardList, FileBarChart,
   IndianRupee, Settings, Building2, Users, ShieldAlert, Gauge, Bell,
   BarChart3, Tag, ShieldCheck, Wallet, Ban, BellRing, Download, Activity,
   CreditCard, TrendingUp, Target, CalendarCheck
 } from 'lucide-react';
+import { env } from '@/config/env';
 
 export const ADMIN_NAV_GROUPS = [
   {
@@ -76,17 +77,15 @@ export const ADMIN_PLACEHOLDER_NOTIFICATIONS = [
 ];
 
 export const GYM_DETAILS = {
-  name: process.env.NEXT_PUBLIC_GYM_NAME || 'GymSmart Fitness',
-  phone: process.env.NEXT_PUBLIC_GYM_PHONE || '+91 83479 77566'
+  name: env.NEXT_PUBLIC_GYM_NAME,
+  phone: env.NEXT_PUBLIC_GYM_PHONE,
 };
-
-
 
 export const ADMIN_ITEMS_PER_PAGE = 10;
 
 export const STATUS_STYLES: Record<string, string> = {
-  active: 'text-success bg-success/10 border-success/20',
-  expired: 'text-danger bg-danger/10 border-danger/20',
-  pending: 'text-warning bg-warning/10 border-warning/20',
-  frozen: 'text-info bg-info/10 border-info/20',
+  active: 'text-success bg-success-bg border-success/20',
+  expired: 'text-danger bg-danger-bg border-danger/20',
+  pending: 'text-warning bg-warning-bg border-warning/20',
+  frozen: 'text-info bg-info-bg border-info/20',
 };

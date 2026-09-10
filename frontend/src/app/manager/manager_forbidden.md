@@ -9,4 +9,4 @@ Future AI sessions: read this file before touching any component in this module.
 4. **No Fat Components**: Do NOT mix heavy data fetching, formatting logic, and complex UI in one `.tsx` file. Extract logic to `use[ComponentName].ts`.
 5. **No Barrel Files**: Do NOT use `index.ts` files for exporting. Use direct absolute imports (`@/app/manager/...`).
 6. **No Client-Side Pagination for Large Sets**: Do NOT fetch all members/inquiries and paginate on the client. Always use server-side pagination.
-7. **No Hardcoded URLs**: Do NOT hardcode `/api/manager/...` directly in fetch calls. Add them to `manager_utils/manager_url_config.ts`.
+7. **No Hardcoded URLs**: Do NOT hardcode `/api/manager/...` directly in React components. All URLs must be encapsulated in their respective API service classes (e.g. `ManagerMembersApi.ts`).

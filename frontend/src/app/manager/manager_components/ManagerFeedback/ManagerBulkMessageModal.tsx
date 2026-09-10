@@ -29,6 +29,8 @@ export default function ManagerBulkMessageModal({
   const [message, setMessage] = useState(defaultMessage);
   const [subject, setSubject] = useState('Message from GymSmart');
 
+  const [isSendingAll, setIsSendingAll] = useState(false);
+
   // For WhatsApp Queue Tracking
   const [sentIndexes, setSentIndexes] = useState<Set<number>>(new Set());
 
@@ -62,15 +64,33 @@ export default function ManagerBulkMessageModal({
     }, 1500);
   };
 
+  const personalizeMessage = (baseMsg: string, name: string) => {
+    return baseMsg.replace(/{name}/gi, name);
+  };
+
   const handleSendWhatsApp = (index: number) => {
     const recipient = recipients[index];
     const phone = recipient.phone?.replace(/\D/g, '') || '';
     if (!phone) return;
 
-    const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+    const personalizedMessage = personalizeMessage(message, recipient.name);
+    const url = `https://wa.me/${phone}?text=${encodeURIComponent(personalizedMessage)}`;
     window.open(url, '_blank');
 
     setSentIndexes(prev => new Set(prev).add(index));
+  };
+
+  const handleSendAllWhatsApp = async () => {
+    setIsSendingAll(true);
+    for (let i = 0; i < recipients.length; i++) {
+      const recipient = recipients[i];
+      const hasPhone = !!recipient.phone;
+      if (hasPhone && !sentIndexes.has(i)) {
+        handleSendWhatsApp(i);
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
+    }
+    setIsSendingAll(false);
   };
 
   const allWhatsAppSent = type === 'whatsapp' && sentIndexes.size === recipients.length && recipients.length > 0;
@@ -217,18 +237,31 @@ export default function ManagerBulkMessageModal({
               Open Email Client (BCC All)
             </button>
           ) : (
-            <button
-              onClick={allWhatsAppSent ? handleDone : onClose}
-              className={`flex-1 px-4 py-2.5 text-sm font-semibold rounded-xl flex items-center justify-center gap-2 transition-all ${
-                allWhatsAppSent ? 'bg-success text-white' : 'bg-card border border-border text-foreground'
-              }`}
-            >
-              {allWhatsAppSent ? (
-                <><CheckCircle size={15} /> All Done</>
-              ) : (
-                'Close Queue'
+            <>
+              {!allWhatsAppSent && (
+                <button
+                  onClick={handleSendAllWhatsApp}
+                  disabled={isSendingAll || !message.trim()}
+                  className="flex-1 px-4 py-2.5 text-sm font-semibold text-white rounded-xl flex items-center justify-center gap-2 transition-all hover:opacity-90 disabled:opacity-50"
+                  style={{ background: WA_GREEN }}
+                >
+                  <MessageCircle size={15} />
+                  {isSendingAll ? 'Opening...' : `Send All (${recipients.length - sentIndexes.size})`}
+                </button>
               )}
-            </button>
+              <button
+                onClick={allWhatsAppSent ? handleDone : onClose}
+                className={`flex-1 px-4 py-2.5 text-sm font-semibold rounded-xl flex items-center justify-center gap-2 transition-all ${
+                  allWhatsAppSent ? 'bg-success text-white' : 'bg-card border border-border text-foreground'
+                }`}
+              >
+                {allWhatsAppSent ? (
+                  <><CheckCircle size={15} /> All Done</>
+                ) : (
+                  'Close Queue'
+                )}
+              </button>
+            </>
           )}
         </div>
       </div>

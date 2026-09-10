@@ -12,7 +12,7 @@ import { TIERS, PlanSchema, type PlanFormValues, EMPTY_PLAN_FORM } from '@/app/a
 
 export default function AdminPlansModal() {
   const { plans, fetchState, saving, search, setSearch, currentPage, setCurrentPage, loadPlans, openAdd, openEdit, savePlan, deletePlan } = useAdminPlansLogic();
-  const { showModal, setShowModal, editId, form, setForm, toast, showToast, hideToast } = useAdminPlansStore();
+  const { showModal, setShowModal, editId, form, setForm } = useAdminPlansStore();
 
   const { register, handleSubmit, reset, control, formState: { errors } } = useForm<PlanFormValues>({
     resolver: zodResolver(PlanSchema),

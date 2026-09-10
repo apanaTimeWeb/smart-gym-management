@@ -371,6 +371,11 @@ actually implemented. An honest [ ] is better than a false [x].]
 - [ ] Rule 74: Security scan gates passed (SCA + secrets)
 - [ ] Rule 75: MSW handler present where needed
 - [ ] Rule 76: CODEOWNERS covers security-critical paths
+- [ ] Rule 78: En-dash fallback — `displayValue()` used for all nullable fields in tables and profiles
+- [ ] Rule 79: Unsaved changes guard — `useUnsavedChangesGuard(isDirty)` on all complex forms and wizards
+- [ ] Rule 80: Currency/number formatting — `formatCurrency()` and `formatNumber()` used, no raw `.toFixed()` in JSX
+- [ ] Rule 81: Button loading width stability — no layout shift on loading state, `min-w` or text+spinner pattern used
+- [ ] Rule 82: Toast deduplication — all `toast()` calls pass a stable `id`, no stacking identical toasts
 - [ ] Design §3: Sidebar active = subtle gold border + bg (NOT solid primary)
 - [ ] Design §12: Z-index scale — header z-20, dropdowns z-30, modals z-40, toasts z-50
 - [ ] Design §28: Surface elevation — `bg-popover` for dropdowns, `bg-overlay` for modals
@@ -619,7 +624,7 @@ Whenever displaying action buttons in data tables/lists, prioritize using semant
 Whenever the user performs an action that sends a proof/document, present an option to choose between mediums (e.g., WhatsApp vs. Email) using Radio Buttons. Do NOT use checkboxes if only one is to be selected.
 
 30. **Mandatory Table Controls (Pagination, Sorting, & Filtering)**:
-Whenever displaying tabular data, you MUST always implement pagination, column sorting, and relevant filtering directly above the table.
+Whenever displaying tabular data, you MUST always implement pagination, column sorting, and relevant filtering directly above the table. **Table Header Sorting Indicators:** Any sortable column header MUST include a visible sorting icon (e.g., up/down arrows like `ArrowUpDown`, `ArrowUp`, `ArrowDown` from `lucide-react`). The actively sorted column must highlight the directional arrow (e.g., in a primary/accent color) to clearly indicate the current sort direction.
 
 31. **Modularized API Clients (No Centralized API Blob)**:
 Do not define module-specific API routes in a giant global file. Every module MUST have its own API file inside a dedicated folder (e.g., `[moduleName]_api/[moduleName]_api.ts`) importing the core base fetcher.
@@ -868,6 +873,62 @@ Branch protection requirements:
 - No merge with failing checks.
 - No bypass for CODEOWNERS on security-sensitive files.
 - Require at least one human approval for all AI-generated changes.
+
+78. **The "En-Dash" Rule for Empty Data (Visual Integrity)**:
+Never render completely blank table cells or profile field values when an API returns `null`, `undefined`, or an empty string for optional fields. Always use a meaningful fallback so the user explicitly knows the value is intentionally absent — not a rendering failure or a loading bug.
+- **Standard fallback:** Use an en-dash (`—`) for table cells and detail views: `{data.optionalField || '—'}`
+- **Numeric fields:** Use `0` or `—` depending on whether zero is a valid meaningful value (e.g., `totalSessions` should show `0`, but `assignedTrainer` should show `—`).
+- **Why:** A blank cell is visually indistinguishable from a broken render or a missing API field. An en-dash is an explicit, intentional signal to the user that the data does not exist. This is especially critical in financial tables, member profiles, and audit logs where a blank value could be misread as a data integrity issue.
+- ❌ **BAD:** `<td>{member.trainerName}</td>` — renders nothing if `null`
+- ✅ **GOOD:** `<td>{member.trainerName || '—'}</td>` — renders `—` explicitly
+- **Centralize the fallback:** Define a shared utility `displayValue(val: string | null | undefined): string` in `src/lib/formatters.ts` that returns the value or `'—'`, so the fallback logic is never duplicated inline.
+
+79. **Unsaved Changes Guard (Data Loss Prevention)**:
+Any complex form or multi-step wizard MUST implement a "Dirty State Guard" to prevent accidental data loss. This rule extends and supersedes Rule 46.
+- **Rule 46** covers the `beforeunload` browser event (tab/window close or hard refresh). That remains mandatory.
+- **This rule additionally mandates** interception of in-app Next.js router navigation. `beforeunload` does NOT fire on client-side route changes in the Next.js App Router. You MUST implement a `useUnsavedChangesGuard(isDirty: boolean)` custom hook that:
+  1. Listens to `beforeunload` for browser-level exits.
+  2. Uses a navigation interception pattern (e.g., a custom `useBlocker`-style hook or a prompt triggered before `router.push`) to catch in-app navigation when `formState.isDirty === true`.
+  3. Displays a confirmation dialog: *"You have unsaved changes. Are you sure you want to leave? Your changes will be lost."*
+  4. Only proceeds with navigation if the user explicitly confirms.
+- **Scope:** Apply to all forms with 3+ fields, all multi-step wizards, and any modal where the user has typed or selected values.
+- **Reset condition:** The guard must be deactivated immediately after a successful form submission or an explicit "Discard Changes" action.
+- ❌ **BAD:** User fills a 3-step Add Member wizard, accidentally clicks a sidebar link, and loses all entered data with no warning.
+- ✅ **GOOD:** `useUnsavedChangesGuard(formState.isDirty)` intercepts the navigation and shows a confirm dialog before the route changes.
+
+80. **Currency & Number Formatting Standardization**:
+Never manually concatenate currency symbols, format numbers with raw `.toFixed()`, or build locale strings directly inside JSX or component logic. All financial values and large numeric metrics MUST be piped through a centralized formatting utility.
+- **Required utility:** Define `formatCurrency(value: number, currencyCode?: string): string` and `formatNumber(value: number): string` in `src/lib/formatters.ts`. This is the single source of truth for all numeric display formatting across the entire application.
+- **Locale consistency:** The utility must use the `Intl.NumberFormat` API to ensure consistent comma separators, decimal places, and currency symbol placement based on the app's configured locale — never hardcoded.
+- **Decimal precision:** Financial values must always display exactly 2 decimal places. Metric counts (e.g., total members) must display with comma separators but no decimals.
+- **This rule is the numeric parallel to Rule 24** (which standardizes date/time formatting via `date-fns`/`dayjs`). Just as Rule 24 forbids raw `new Date()` in JSX, this rule forbids raw number concatenation.
+- ❌ **BAD:** `<td>₹{payment.amount.toFixed(2)}</td>`
+- ✅ **GOOD:** `<td>{formatCurrency(payment.amount, 'INR')}</td>`
+- **ESLint enforcement:** Add a custom ESLint rule or `no-restricted-syntax` pattern to flag direct `.toFixed()` calls and currency symbol string concatenation in `.tsx` files.
+
+81. **Button Loading Width Stability (No Layout Shifts)**:
+Buttons that enter a loading state MUST maintain their exact original width. When a button's text label is replaced by a `Loader2` spinner (as mandated by Rule 26), the button must not shrink or collapse, as this causes a jarring layout shift that breaks the visual rhythm of forms and toolbars.
+- **Required pattern:** Apply a `min-w-[...]` class dynamically on the button, OR replace only the leading icon with the spinner while keeping the text label visible (e.g., "Saving..."), OR use a fixed-width wrapper.
+- **Recommended approach:** Keep the button text visible alongside the spinner during loading (e.g., `<Loader2 className="animate-spin" /> Saving...`) rather than replacing the text entirely. This also improves accessibility by maintaining a readable label for screen readers.
+- **Forbidden pattern:** Never let a button collapse to icon-only width during loading if it was originally a full text button. The width change is visually disruptive, especially in form footers where multiple buttons are aligned.
+- ❌ **BAD:** Button reads "Save Changes" (120px wide) → loading state shows only `<Loader2>` (32px wide) → layout shifts.
+- ✅ **GOOD:** Button reads "Save Changes" → loading state shows `<Loader2 /> Saving...` at the same width, or `min-w` is set to lock the width.
+- **Applies to:** All submit buttons, confirmation buttons in modals, and any async action trigger button across the entire application.
+
+82. **Toast Deduplication (No Stacking Identical Notifications)**:
+Global toast notifications MUST be deduplicated. If a specific toast (identified by its message string or a semantic error code) is already visible on screen, subsequent identical triggers must either silently refresh the toast's auto-dismiss timer or be completely ignored — never stack multiple identical toasts.
+- **Why this matters:** In modules with heavy API interaction (e.g., a billing page where a user rapidly clicks "Retry" on a failing request), the same error toast can stack 5–10 times, flooding the screen and degrading the user experience significantly.
+- **Implementation:** Use the toast library's built-in deduplication ID feature. Pass a stable `toastId` derived from the error code or message hash when calling `toast.error(message, { id: errorCode })`. Most toast libraries (e.g., `react-hot-toast`, `sonner`) support this natively.
+- **Canonical pattern:**
+  ```ts
+  // In the centralized API interceptor (src/lib/api.ts)
+  toast.error(res.message, { id: res.error ?? 'api-error' });
+  ```
+- **Success toasts:** Apply the same deduplication for success toasts on rapid repeated actions (e.g., toggling a status on/off quickly).
+- **Never deduplicate:** Do NOT deduplicate toasts for genuinely distinct events (e.g., two different members being deleted in sequence). Deduplication applies only to identical messages triggered by the same repeated action.
+- **ESLint note:** All raw `toast()` calls outside of `src/lib/api.ts` or the approved toast utility wrapper should be flagged for review to ensure the `id` field is always passed.
+
+
 
 ---
 Think step-by-step. Create a detailed implementation plan first so I can review it, and then execute it perfectly without breaking existing data flows!

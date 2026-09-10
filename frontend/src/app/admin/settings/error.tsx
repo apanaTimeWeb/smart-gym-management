@@ -1,55 +1,46 @@
-// RESPONSIBILITY: Next.js error.tsx � renders the typed error boundary fallback for the Settings module with a Retry button.
+// RESPONSIBILITY: Renders the error boundary fallback for the settings module.
 'use client';
+
+import { useEffect } from "react";
 import Link from 'next/link';
+import { StatusCodes } from 'http-status-codes';
+import { logErrorToMonitoring } from '@/app/admin/admin_utils/monitoring';
 
-import { useEffect } from 'react';
-import { AlertTriangle } from 'lucide-react';
-
-export default function Error({
- error,
- reset,
+export default function SettingsError({
+  error,
+  reset,
 }: {
- error: Error & { digest?: string };
- reset: () => void;
+  error: Error & { digest?: string };
+  reset: () => void;
 }) {
- useEffect(() => {
- // Error logged to monitoring provider
- }, [error]);
+  useEffect(() => {
+    logErrorToMonitoring(error, { module: 'settings' });
+  }, [error]);
 
-  if (error.message?.includes('403') || (error as any).status === 403) {
+  if (error.message?.includes(String(StatusCodes.FORBIDDEN)) || (error as any).status === StatusCodes.FORBIDDEN) {
     return (
       <div className="min-h-full flex flex-col items-center justify-center p-8 text-center">
-        <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--danger)' }}>Access Denied</h2>
-        <p className="text-[var(--text-secondary)] mb-6">You don't have permission to view this page.</p>
-        <Link href="/admin/dashboard" className="px-4 py-2 rounded-md bg-[var(--primary)] text-white hover:opacity-90">
+        <h2 className="text-2xl font-bold mb-4 text-danger">Access Denied</h2>
+        <p className="text-secondary mb-6">You don't have permission to view this page.</p>
+        <Link href="/admin/dashboard" className="px-4 py-2 rounded-md bg-primary text-black hover:bg-primary-hover motion-safe:transition-colors">
           Return to Dashboard
         </Link>
       </div>
     );
   }
 
- return (
- <div className="min-h-full flex items-center justify-center p-6 bg-background">
- <div className="bg-card border border-destructive/20 p-8 rounded-2xl shadow-xl max-w-md w-full text-center space-y-4">
- <div className="w-16 h-16 bg-danger-bg/10 rounded-full flex items-center justify-center mx-auto text-danger mb-2">
- <AlertTriangle size={32} />
- </div>
- 
- <h2 className="text-xl font-bold text-foreground">Something went wrong!</h2>
- 
- <p className="text-sm text-secondary">
- We encountered an issue loading the settings dashboard.
- </p>
-
- <div className="pt-4">
- <button
- onClick={() => reset()}
- className="px-6 py-2.5 bg-danger hover:bg-danger/90 text-white font-medium rounded-xl transition-colors shadow-sm shadow-destructive/20"
- >
- Try again
- </button>
- </div>
- </div>
- </div>
- );
+  return (
+    <div className="min-h-full flex items-center justify-center">
+      <div className="text-center">
+        <p className="font-medium text-danger">Something went wrong!</p>
+        <p className="text-sm mt-1 text-danger">{error.message || 'An unexpected error occurred in the settings module.'}</p>
+        <button
+          onClick={() => reset()}
+          className="mt-4 px-4 py-2 rounded-md font-medium text-black bg-primary hover:bg-primary-hover motion-safe:transition-colors"
+        >
+          Try again
+        </button>
+      </div>
+    </div>
+  );
 }

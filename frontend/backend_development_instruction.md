@@ -940,6 +940,289 @@ the exact consequence of violating it — not just "be careful".]
 
 ---
 
+## 94. Canonical `PaginationMeta` Shape (Response Pagination Envelope Consistency)
+* **The Rule:** Rule 28 mandates that the response envelope supports a `meta?: PaginationMeta` field, but never defines its exact shape. Every AI agent left to its own devices will invent a different structure — some return `totalPages`, some return `total`, some return `hasNextPage`, some return all three with different key names. This creates a frontend parsing nightmare.
+* **The Canonical `PaginationMeta` Shape — this is the ONLY acceptable definition:**
+  ```typescript
+  // src/core/types/pagination.types.ts
+  export interface PaginationMeta {
+    total: number;        // Total number of records matching the query (before pagination)
+    page: number;         // Current page number (1-indexed)
+    limit: number;        // Number of records per page
+    totalPages: number;   // Math.ceil(total / limit) — pre-calculated by the backend
+    hasNextPage: boolean; // page < totalPages
+    hasPrevPage: boolean; // page > 1
+  }
+  ```
+* **Rules:**
+  - `total` is always the count of ALL matching records, not just the current page.
+  - `page` is always **1-indexed** (first page = `1`, not `0`).
+  - `totalPages`, `hasNextPage`, and `hasPrevPage` MUST be pre-calculated by the backend. The frontend must never compute these from `total` and `limit` — that logic belongs in one place.
+  - For non-paginated list endpoints (e.g., dropdown options), `meta` must be `undefined` — never an empty object `{}`.
+  - A shared `buildPaginationMeta(total: number, page: number, limit: number): PaginationMeta` utility must exist in `src/core/utils/pagination.utils.ts` and be used by ALL repositories. Never calculate pagination fields inline per-repository.
+* **Standard Query DTO:**
+  ```typescript
+  // src/core/dtos/pagination-query.dto.ts
+  export class PaginationQueryDto {
+    @IsOptional() @Type(() => Number) @IsInt() @Min(1)
+    page?: number = 1;
+
+    @IsOptional() @Type(() => Number) @IsInt() @Min(1) @Max(100)
+    limit?: number = 20;
+  }
+  ```
+  All paginated query DTOs MUST extend `PaginationQueryDto`. Never define `page` and `limit` fields independently per-module.
+* **Example response:**
+  ```json
+  {
+    "success": true,
+    "message": "Members fetched successfully",
+    "data": [...],
+    "meta": {
+      "total": 243,
+      "page": 2,
+      "limit": 20,
+      "totalPages": 13,
+      "hasNextPage": true,
+      "hasPrevPage": true
+    }
+  }
+  ```
+* **Why:** The frontend's `PaginationMeta` TypeScript type (Frontend Rule 59) must map 1:1 to this shape. If the backend returns `total_count` instead of `total`, the frontend type breaks silently and pagination controls show `NaN` pages. One canonical shape, defined once, used everywhere.
+
+---
+
+## 95. Enum-Driven Entity Status Fields (No Raw String Columns)
+* **The Rule:** All entity columns that represent a finite set of states (e.g., `status`, `type`, `role`, `medium`, `priority`) MUST use a TypeScript `enum` — never raw string literals. Saving `member.status = 'actve'` (a typo) to the database must be a **compile-time error**, not a silent data corruption bug discovered in production.
+* **The Pattern:**
+  ```typescript
+  // In the module's constants file: members.constants.ts
+  export enum MemberStatus {
+    ACTIVE = 'ACTIVE',
+    SUSPENDED = 'SUSPENDED',
+    EXPIRED = 'EXPIRED',
+    PENDING = 'PENDING',
+  }
+  ```
+  ```typescript
+  // In the entity: member.entity.ts
+  @Column({ type: 'enum', enum: MemberStatus, default: MemberStatus.PENDING })
+  status: MemberStatus;
+  ```
+* **Rules:**
+  - ❌ **BAD:** `@Column({ type: 'varchar' }) status: string;` — accepts any string, including typos.
+  - ❌ **BAD:** `@Column({ type: 'varchar' }) status: 'active' | 'suspended';` — inline union, not reusable, not a runtime guard.
+  - ✅ **GOOD:** `@Column({ type: 'enum', enum: MemberStatus }) status: MemberStatus;` — compile-time AND database-level enforcement.
+  - All enums MUST be defined in the module's `[module].constants.ts` file (Rule 5) — never inline inside the entity file.
+  - Enum values MUST be `SCREAMING_SNAKE_CASE` strings (e.g., `'ACTIVE'`, `'IN_PROGRESS'`) so they are human-readable in raw database queries.
+  - When adding a new enum value, a database migration MUST be generated to update the DB enum type. Never rely on ORM auto-sync in production (Rule 24).
+  - DTO validation for enum fields MUST use `@IsEnum(MemberStatus)` from `class-validator` — never `@IsString()`.
+* **Database-Level Enforcement:** For PostgreSQL, use `type: 'enum'` which creates a native PG enum type. For MySQL, use `type: 'enum'` which creates a column-level CHECK constraint. Both enforce valid values at the DB layer as a second line of defense.
+* **Why:** AI agents default to `string` columns for status fields because it's the path of least resistance. A single typo (`'actve'` instead of `'active'`) silently corrupts data — the record is saved, no error is thrown, but every `WHERE status = 'ACTIVE'` query silently excludes that record. TypeScript enums make this a compile-time error that is caught before the code ever runs.
+
+---
+
+## 96. Scheduled Job Documentation & Centralized Inventory
+* **The Rule:** Rule 42 mandates distributed cron jobs technically, but in a large system with 10+ scheduled jobs across multiple modules, nobody — human or AI — knows what jobs exist, when they run, what data they touch, or what happens if they fail. This is a critical operational blind spot. Every scheduled job MUST be registered in a centralized inventory.
+* **Required File:** `src/core/scheduled-jobs.registry.ts` — a single file that serves as the master inventory of ALL background scheduled jobs across the entire application.
+  ```typescript
+  // src/core/scheduled-jobs.registry.ts
+  // RESPONSIBILITY: Master inventory of all scheduled jobs. Update this file whenever
+  // a new job is added, modified, or removed anywhere in the application.
+
+  export const SCHEDULED_JOBS_REGISTRY = [
+    {
+      name: 'MembershipExpiryNotifier',
+      module: 'members',
+      file: 'src/modules/erp/members/jobs/membership-expiry-notifier.job.ts',
+      schedule: '0 9 * * *',          // Every day at 9:00 AM UTC
+      description: 'Sends renewal reminder notifications to members whose membership expires in 3 days.',
+      touchesEntities: ['members', 'notifications'],
+      failureBehavior: 'Logs to DLQ. Member does not receive reminder. Non-critical.',
+      idempotent: true,
+      lastReviewedBy: 'backend-team',
+    },
+    {
+      name: 'WalletAutoDeductionJob',
+      module: 'billing',
+      file: 'src/modules/erp/billing/jobs/wallet-auto-deduction.job.ts',
+      schedule: '0 0 1 * *',          // 1st of every month at midnight UTC
+      description: 'Auto-deducts monthly plan fees from member wallets for active auto-renew subscriptions.',
+      touchesEntities: ['wallets', 'subscriptions', 'payment_transactions'],
+      failureBehavior: 'CRITICAL — moves to DLQ. Triggers alert to ops team. Member is NOT charged until manual retry.',
+      idempotent: true,               // Uses Idempotency-Key per Rule 31
+      lastReviewedBy: 'backend-team',
+    },
+  ] as const;
+  ```
+* **Mandatory fields per entry:** `name`, `module`, `file`, `schedule` (cron expression), `description` (what it does in plain English), `touchesEntities` (which DB tables it reads/writes), `failureBehavior` (what breaks if the job fails), `idempotent` (boolean — is it safe to run twice?).
+* **`_backend_feature.md` Integration:** The "Data and State Architecture" section of every module's `_backend_feature.md` (Rule 19) MUST list all scheduled jobs owned by that module, referencing the registry entry by name.
+* **Operational Rules:**
+  - A new scheduled job MUST be added to the registry in the same PR as the job implementation. A job without a registry entry is considered undocumented and must be blocked at code review.
+  - Any job that touches financial data (`wallets`, `payment_transactions`, `subscriptions`) is automatically subject to the CODEOWNERS human review gate (Rule 93).
+  - Every scheduled job MUST have a Dead Letter Queue configured (Rule 61) — no exceptions.
+* **Why:** Without a centralized inventory, an AI asked to "add a new cleanup job" has no way of knowing that a similar job already exists in another module, leading to duplicate jobs running simultaneously. More critically, when a production incident occurs at 2 AM and a scheduled job is the suspected cause, the on-call engineer needs to find it in under 60 seconds — not grep through 50 module folders.
+
+---
+
+## 97. API Timeout & Downstream Dependency Timeout Policy
+* **The Rule:** Rule 47 covers circuit breakers for when external services fail repeatedly. But circuit breakers only open after failures accumulate. The first line of defense is **explicit timeouts** on every outbound call. An AI will never set timeouts by default — it will write `await axios.get(url)` with no timeout, meaning a slow external service can hold a Node.js thread indefinitely, silently exhausting the connection pool and causing cascading failures across the entire application.
+* **Mandatory Timeout Tiers — define these in `src/core/config/timeout.config.ts`:**
+  ```typescript
+  export const TIMEOUT_CONFIG = {
+    // Outbound HTTP calls to external services
+    EXTERNAL_API_DEFAULT_MS: 5_000,    // 5s — default for all external HTTP calls
+    PAYMENT_GATEWAY_MS: 10_000,        // 10s — payment APIs are slower but critical
+    WHATSAPP_API_MS: 4_000,            // 4s — messaging APIs
+    SMS_API_MS: 3_000,                 // 3s — SMS APIs
+
+    // Database query timeouts
+    DB_QUERY_DEFAULT_MS: 3_000,        // 3s — standard queries
+    DB_QUERY_REPORT_MS: 30_000,        // 30s — analytics/report queries
+    DB_TRANSACTION_MS: 10_000,         // 10s — multi-step transactions
+
+    // Background job step timeouts
+    JOB_STEP_DEFAULT_MS: 30_000,       // 30s — individual job processor step
+  } as const;
+  ```
+* **Enforcement Rules:**
+  - Every `axios` / `fetch` / `HttpService` call in an adapter (Rule 8D) MUST pass `timeout: TIMEOUT_CONFIG.EXTERNAL_API_DEFAULT_MS` (or the appropriate tier). No raw `axios.get(url)` without a timeout is permitted.
+  - TypeORM query timeouts must be set via `QueryBuilder.maxExecutionTime(TIMEOUT_CONFIG.DB_QUERY_DEFAULT_MS)` for all non-trivial queries. Report/analytics queries must explicitly use the `DB_QUERY_REPORT_MS` tier.
+  - When a timeout fires, the adapter MUST catch the `ECONNABORTED` / `ETIMEDOUT` error and throw a typed custom exception (Rule 6) — e.g., `PaymentGatewayTimeoutException` — never let the raw Axios error propagate to the service layer.
+  - ❌ **BAD:** `await this.httpService.get('https://api.stripe.com/charges').toPromise()`
+  - ✅ **GOOD:** `await this.httpService.get('https://api.stripe.com/charges', { timeout: TIMEOUT_CONFIG.PAYMENT_GATEWAY_MS }).toPromise()`
+* **SLA Category Integration:** Timeout values must align with the SLA categories defined in Rule 59. A `FAST` endpoint (`< 200ms`) must have downstream timeouts that sum to less than 200ms. If a downstream call has a 5s timeout, the endpoint cannot be classified as `FAST`.
+* **Why:** A single slow WhatsApp API call with no timeout can hold a Node.js async thread for 60+ seconds. Under load, 50 concurrent requests to the same slow endpoint will queue 50 threads, exhausting the connection pool and making the entire application unresponsive — not just the WhatsApp feature. Explicit timeouts are the difference between a degraded feature and a full application outage.
+
+---
+
+## 98. Structured Validation Error Response Shape (The `400` Contract)
+* **The Rule:** Rule 3 mandates DTO validation, and Rule 28 mandates a standard response envelope. But neither defines what the response looks like when validation fails. Every AI agent will produce a different `400 Bad Request` shape — some return `{ message: "validation failed" }`, some return `{ errors: ["email must be an email"] }`, some return NestJS's raw default `{ statusCode: 400, message: [...], error: "Bad Request" }`. The frontend's inline field error display (Frontend Rule 15B) requires a **predictable, field-keyed error shape**.
+* **The Canonical Validation Error Shape:**
+  ```typescript
+  // This is what EVERY 400 validation error response must look like
+  // It fits inside the standard ApiResponse envelope (Rule 28)
+  {
+    "success": false,
+    "message": "Validation failed. Please check the highlighted fields.",
+    "data": null,
+    "error": "VALIDATION_ERROR",
+    "statusCode": 400,
+    "validationErrors": [
+      { "field": "email",    "message": "email must be a valid email address" },
+      { "field": "phone",    "message": "phone must not be empty" },
+      { "field": "age",      "message": "age must not be less than 18" }
+    ]
+  }
+  ```
+* **Required TypeScript type:**
+  ```typescript
+  // src/core/types/validation-error.types.ts
+  export interface ValidationErrorItem {
+    field: string;    // The exact DTO property name (e.g., 'email', 'address.city')
+    message: string;  // Human-readable error message from class-validator
+  }
+
+  // Extends the base ApiResponse envelope
+  export interface ValidationErrorResponse extends ApiResponse<null> {
+    validationErrors: ValidationErrorItem[];
+  }
+  ```
+* **Implementation — Global Validation Exception Filter:**
+  - In NestJS: Create a global `ValidationExceptionFilter` that catches `BadRequestException` thrown by the `ValidationPipe` and transforms the raw `class-validator` error array into the canonical `validationErrors` shape above.
+  - The `ValidationPipe` must be configured globally with `{ whitelist: true, forbidNonWhitelisted: true, transform: true }` (Rule 37).
+  - Nested DTO errors (e.g., `address.city`) must use dot-notation for the `field` key so the frontend can map them to nested form fields.
+  - ❌ **BAD:** Returning NestJS's raw default `{ statusCode: 400, message: ["email must be an email"], error: "Bad Request" }`
+  - ✅ **GOOD:** The global filter transforms this into `{ success: false, validationErrors: [{ field: "email", message: "email must be a valid email address" }], ... }`
+* **Frontend Contract:** The frontend's React Hook Form + Zod integration (Frontend Rule 15B) must handle this shape by iterating `validationErrors` and calling `form.setError(item.field, { message: item.message })` for each entry. This maps backend validation errors directly to inline field errors without any custom parsing logic per-form.
+* **Why:** Without this rule, every module's validation errors look different. The frontend team ends up writing custom error-parsing logic for every form, and AI agents on the frontend generate brittle one-off parsers. One canonical shape means one shared `handleValidationErrors(form, res)` utility handles every form in the entire application.
+
+---
+
+## 99. Immutable Service Layer (No Direct Entity Mutation Outside Repository)
+* **The Rule:** Rule 89 separates ORM entities from domain objects. This rule enforces the complementary constraint: **service methods must never directly mutate ORM entity properties and call `save()` themselves**. All entity persistence — including updates — must go through the repository's explicitly defined methods. A service that reaches into an entity and mutates its fields bypasses audit hooks, soft-delete scopes, base entity `updatedAt` logic, and any future middleware attached to the repository layer.
+* **The Forbidden Pattern:**
+  ```typescript
+  // ❌ BAD — Service directly mutates entity and calls save()
+  async suspendMember(id: string): Promise<MemberEntity> {
+    const member = await this.memberRepo.findByIdOrThrow(id);
+    member.status = MemberStatus.SUSPENDED;   // Direct mutation
+    member.suspendedAt = new Date();           // Direct mutation
+    return this.memberRepo.save(member);       // Bypasses all repository hooks
+  }
+  ```
+* **The Required Pattern — Repository owns all mutations:**
+  ```typescript
+  // ✅ GOOD — Repository exposes a named, intention-revealing method
+  // In member.repository.ts:
+  async suspendById(id: string, suspendedAt: Date): Promise<MemberEntity> {
+    // All mutation logic, audit hooks, and constraint checks live here
+    return this.repo.save({ id, status: MemberStatus.SUSPENDED, suspendedAt });
+  }
+
+  // In member-suspension.service.ts:
+  async suspendMember(id: string): Promise<MemberEntity> {
+    await this.memberRepo.findByIdOrThrow(id); // Existence check
+    return this.memberRepo.suspendById(id, new Date()); // Repository owns the mutation
+  }
+  ```
+* **Rules:**
+  - Services may call `findByIdOrThrow()` to assert existence and read current state.
+  - Services may call named repository mutation methods (e.g., `suspendById`, `updateEmail`, `markAsDeleted`).
+  - Services must NEVER call the generic `repo.save(entity)` directly after mutating entity properties inline.
+  - The generic `save()` method on the repository is `protected` or `private` — only callable from within the repository class itself.
+  - Every repository mutation method must have its own JSDoc (Rule 80) and be listed in the module's `_backend_feature.md` File Responsibility Map (Rule 19).
+* **The `partial update` exception:** For simple field updates driven by a DTO (e.g., `PATCH /members/:id`), the repository may expose a generic `updateById(id: string, dto: UpdateMemberDto): Promise<MemberEntity>` that internally calls `repo.update(id, dto)`. This is acceptable because the DTO is already validated (Rule 3) and the update is not bypassing any business invariant.
+* **Why:** When an AI is asked to "add an audit log entry whenever a member is suspended", the correct answer is to add it inside `memberRepo.suspendById()`. If suspension logic is scattered across 5 different service methods that all do `member.status = 'SUSPENDED'; repo.save(member)`, the AI must find and modify all 5 — and will inevitably miss one. A single named repository method is the single place to add cross-cutting concerns.
+
+---
+
+## 100. Database Constraint Naming Convention
+* **The Rule:** Rules 60 and 66 define column and table naming conventions. But AI agents generate random, unreadable constraint names like `UQ_3f4a8b2c1d` or `FK_abc123` — names that are meaningless in migration files, error logs, and database admin tools. All database constraints MUST follow a strict, human-readable naming convention defined here.
+* **The Canonical Naming Patterns:**
+
+  | Constraint Type | Pattern | Example |
+  |---|---|---|
+  | Primary Key | `PK_[table]` | `PK_members` |
+  | Foreign Key | `FK_[table]_[referenced_table]_[column]` | `FK_subscriptions_members_member_id` |
+  | Unique Constraint | `UQ_[table]_[column(s)]` | `UQ_members_email`, `UQ_staff_phone_branch_id` |
+  | Index | `IDX_[table]_[column(s)]` | `IDX_members_status`, `IDX_payment_transactions_created_at` |
+  | Check Constraint | `CHK_[table]_[rule_description]` | `CHK_members_age_min_18`, `CHK_wallets_balance_non_negative` |
+  | Composite Index | `IDX_[table]_[col1]_[col2]` | `IDX_members_branch_id_status` |
+
+* **Implementation in TypeORM:**
+  ```typescript
+  @Entity('members')
+  @Unique('UQ_members_email', ['email'])
+  @Index('IDX_members_status', ['status'])
+  @Index('IDX_members_branch_id_status', ['branchId', 'status'])
+  export class MemberEntity extends BaseEntity {
+
+    @Column({ unique: false }) // Uniqueness enforced via @Unique above, not inline
+    email: string;
+
+    @ManyToOne(() => BranchEntity)
+    @JoinColumn({
+      name: 'branch_id',
+      foreignKeyConstraintName: 'FK_members_branches_branch_id'
+    })
+    branch: BranchEntity;
+
+    @Check('CHK_wallets_balance_non_negative', '"balance" >= 0')
+    @Column({ type: 'bigint', default: 0 })
+    balance: number;
+  }
+  ```
+* **Rules:**
+  - All constraint names MUST be explicitly declared in the entity definition — never rely on ORM auto-generated names.
+  - Constraint names must be unique across the entire database — prefix with the table name to guarantee this.
+  - When a constraint is dropped and recreated in a migration (e.g., adding a column to a composite unique constraint), the migration MUST reference the constraint by its exact name. Auto-generated names make this impossible.
+  - Check constraints for business invariants (e.g., `balance >= 0`, `age >= 18`) are MANDATORY for all financial and safety-critical columns. Application-level validation (Rule 3) is the first line of defense; DB check constraints are the last.
+  - All constraint names must be added to the module's `_backend_feature.md` under the "Data and State Architecture" section so future AI agents know what constraints exist before writing migration files.
+* **Why:** When a production `INSERT` fails with `ERROR: duplicate key value violates unique constraint "UQ_3f4a8b2c1d"`, the on-call engineer has no idea which table or column caused it without running a separate DB query. With `UQ_members_email`, the error message is self-documenting. More critically, when an AI writes a migration to drop and recreate a constraint, it must reference the constraint by name — if the name is auto-generated and unknown, the AI will hallucinate a name, causing the migration to fail in production.
+
+---
+
 ## Updated Summary Checklist (v5 — Final):
 1. Identify the exact layer (Validation? Query? Business Logic? External Adapter? Permission Guard? Mapper?).
 2. Select the **one or two** micro-files associated with that layer.
@@ -952,6 +1235,13 @@ the exact consequence of violating it — not just "be careful".]
    - Is the response wrapped in the standard envelope with a single consistent `data` shape — is `data` a single explicitly typed value, never a polymorphic bag? (Rule 82)
    - Is the permission guard at the controller layer using typed enums? (Rule 83)
    - Is any ORM `orderBy` or `where` using user input without an allowlist? (Rule 92)
+   - Does every paginated endpoint use `PaginationQueryDto` and return the canonical `PaginationMeta` shape via `buildPaginationMeta()`? (Rule 94)
+   - Are all status/type/role entity columns using TypeScript enums with `@IsEnum()` DTO validation — never raw `string` columns? (Rule 95)
+   - Is every new scheduled job registered in `src/core/scheduled-jobs.registry.ts` with all mandatory fields? (Rule 96)
+   - Do all outbound HTTP calls and DB queries have explicit timeouts from `TIMEOUT_CONFIG`? (Rule 97)
+   - Does the global `ValidationExceptionFilter` transform `400` errors into the canonical `validationErrors` shape? (Rule 98)
+   - Do service methods call named repository mutation methods — never directly mutating entity properties and calling `save()` inline? (Rule 99)
+   - Are all DB constraints (FK, UQ, IDX, CHK) explicitly named following the `FK_[table]_[ref]_[col]` convention — never auto-generated? (Rule 100)
    - Are there any barrel file imports or relative path imports?
    - Does every new method follow the verb naming convention with `OrThrow` where needed? (Rule 86)
    - Is every new method ≤ 20 lines using Guard Clauses? (Rule 85/87)

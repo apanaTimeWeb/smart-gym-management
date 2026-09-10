@@ -7,7 +7,8 @@
     "build": "node clean.js && next build",
     "start": "next start",
     "lint": "eslint",
-    "prepare": "husky"
+    "prepare": "husky",
+    "security-scan": "npm audit"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -56,6 +57,7 @@
   },
   "lint-staged": {
     "*.{ts,tsx}": [
+      "tsc --noEmit",
       "eslint --fix"
     ]
   }

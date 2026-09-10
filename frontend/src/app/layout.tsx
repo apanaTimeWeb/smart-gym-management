@@ -4,6 +4,7 @@ import '@/app/globals.css';
 import NextTopLoader from 'nextjs-toploader';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { Toaster } from 'react-hot-toast';
+import { QueryProvider } from '@/components/QueryProvider';
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
@@ -45,7 +46,9 @@ export default function RootLayout({
             speed={200}
             shadow="0 0 10px #FACC15,0 0 5px #FACC15"
           />
-          {children}
+          <QueryProvider>
+            {children}
+          </QueryProvider>
           <Toaster 
             position="top-center" 
             containerStyle={{

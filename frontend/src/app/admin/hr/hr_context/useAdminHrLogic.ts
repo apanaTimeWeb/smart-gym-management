@@ -9,6 +9,7 @@ import { EMPTY_STAFF } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
 import { useDebounce } from '@/app/admin/admin_utils/useDebounce';
 import { useAdminHrMutations } from './useAdminHrMutations';
 import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
+import { useAdminToastStore } from '@/app/admin/admin_store/useAdminToastStore';
 
 export function useAdminHrLogic(initialData?: HrInitialData | null): HrContextType {
   const router = useRouter();
@@ -20,8 +21,8 @@ export function useAdminHrLogic(initialData?: HrInitialData | null): HrContextTy
   const [summary, setSummary] = useState<HrSummary | null>(null);
   const [fetchState, setFetchState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [error, setError] = useState('');
-  const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
   const [visibleColumns, setVisibleColumns] = useState<string[]>(['Name', 'Role', 'Branch', 'Status']);
+  const { showToast } = useAdminToastStore();
 
   const search = searchParams.get('search') || '';
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
@@ -71,8 +72,6 @@ export function useAdminHrLogic(initialData?: HrInitialData | null): HrContextTy
   const [viewProfileData, setViewProfileData] = useState<Staff | null>(null);
   const [saving, setSaving] = useState(false);
 
-  const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
-  const hideToast = useCallback(() => setToast(null), []);
 
   const { selectedBranchId } = useAdminGlobalStore();
 
@@ -172,7 +171,7 @@ export function useAdminHrLogic(initialData?: HrInitialData | null): HrContextTy
   );
 
   return {
-    staff, payrolls, summary, fetchState, error, toast, showToast, hideToast, loadAll,
+    staff, payrolls, summary, fetchState, error, showToast, loadAll,
     search, debouncedSearch, setSearch, branchFilter, setBranchFilter, roleFilter, setRoleFilter, currentPage, setCurrentPage,
     showModal, setShowModal, showPayrollModal, setShowPayrollModal, showProfileModal, setShowProfileModal, paymentModal, setPaymentModal, editId, editData, viewProfileData, setViewProfileData, saving, 
     openAdd, openEdit, openProfile, openAddPayroll, saveStaff, savePayroll, deleteStaff, toggleStaffStatus, markPayrollPaid, giveAdvance, payDue, payrollMonth, setPayrollMonth,

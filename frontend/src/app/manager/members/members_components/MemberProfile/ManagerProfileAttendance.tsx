@@ -2,15 +2,14 @@
 'use client';
 
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
-import { useManagerMembersStore } from '@/app/manager/members/members_store/useManagerMembersStore';
+import { useFetchAttendance } from '@/app/manager/members/members_api/useManagerMembersQueries';
 
 export default function ManagerProfileAttendance() {
   const { selectedMember } = useMembersContext();
-  const attMap = useManagerMembersStore(s => s.attMap);
+  const { data: att = [] } = useFetchAttendance(selectedMember?.id || '');
 
   if (!selectedMember) return null;
 
-  const att = attMap[selectedMember.id] || [];
   const presentDays = att.filter(a => a.status === 'P').length;
   const absentDays = att.filter(a => a.status === 'A').length;
   const attPct = att.length > 0 ? Math.round((presentDays / att.length) * 100) : 0;

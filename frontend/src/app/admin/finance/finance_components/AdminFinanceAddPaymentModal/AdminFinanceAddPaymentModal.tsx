@@ -12,7 +12,7 @@ import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShare
 
 export default function AdminFinanceAddPaymentModal() {
   const { payments, summary, totalPayments, fetchState, saving, error, loadAll, search, setSearch, currentPage, setCurrentPage, savePayment, methodFilter, setMethodFilter } = useAdminFinanceLogic();
-  const { showModal, setShowModal, toast, showToast, hideToast } = useAdminFinanceStore();
+  const { showModal, setShowModal } = useAdminFinanceStore();
 
   const {
     register,

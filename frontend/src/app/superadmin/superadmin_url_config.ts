@@ -19,7 +19,6 @@ export const SuperadminUrlConfig = {
     JOBS: "/superadmin/jobs",
     BACKUPS: "/superadmin/backups",
     SYSTEM_HEALTH: "/superadmin/system",
-    AUDIT_LOGS: "/superadmin/global-audit",
     PLANS: "/superadmin/plans",
     GYM_ADD: "/superadmin/gyms/add",
     ONBOARDING: "/superadmin/onboarding",
@@ -30,10 +29,8 @@ export const SuperadminUrlConfig = {
     PROFILE: "/superadmin/profile",
   },
   BACKEND_API: {
-    DASHBOARD: "/superadmin/dashboard",
     BRANCHES: "/superadmin/branches",
     FRANCHISES: "/superadmin/franchises",
-    SETTINGS: "/superadmin/settings",
     USAGE_METERS: "/superadmin/usage-meters",
     GLOBAL_AUDIT: "/superadmin/global-audit",
     ANALYTICS: "/superadmin/analytics",
@@ -64,8 +61,7 @@ export const SuperadminUrlConfig = {
     MESSAGING_BASE: "/superadmin/messaging",
     REPORTS_BASE: "/superadmin/reports",
     TENANT_PREVIEW_BASE: "/superadmin/tenant-preview", // removed — kept for type safety, route deleted
-    USAGE_METERS_BASE: "/superadmin/usage-meters",
-    FRANCHISES_BASE: "/superadmin/franchises",
+    // Note: USAGE_METERS and FRANCHISES keys above already cover these paths — no _BASE duplicates needed
     CHURN_ALERTS_BASE: "/superadmin/churn-alerts",
     PROFILE_BASE: "/superadmin/profile",
   }

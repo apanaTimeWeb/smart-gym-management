@@ -5,7 +5,7 @@ import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
 import { PAYROLL_TABLE_HEADERS } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 import { CheckCircle2, Download } from 'lucide-react';
-import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_utils/AdminSharedConstants';
+import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_url_config';
 
 export default function AdminHrPayrollTable() {
   const { payrolls, search, currentPage, setCurrentPage, setPaymentModal, fetchState, payrollMonth, staff } = useHrContext();

@@ -3,26 +3,115 @@
 ## Module Purpose
 The Gym Health Alerts module gives gym admins a real-time dashboard of operational warnings
 and issues that need attention — members with expiring subscriptions, attendance anomalies,
-overdue fee payments, equipment maintenance flags, and system-level alerts from the platform.
-Each alert has a severity level (critical, warning, info), a description, and an action link
-that deep-links to the relevant module. Admins can dismiss individual alerts once resolved.
+overdue fee payments, equipment maintenance flags, and system-level alerts. Each alert has a
+severity level (CRITICAL, WARNING, INFO), a description, and an action link that deep-links
+to the relevant module. Admins can dismiss individual alerts once resolved. KPI cards are
+interactive filters. The alert list auto-refreshes every 60 seconds via TanStack Query's
+`refetchInterval` — never `setInterval`.
+
+## Directory Structure
+
+| Folder | Responsibility | Key Files |
+|---|---|---|
+| `gym_health_alerts_components/AdminGymHealthAlertsMain/` | Root client orchestrator — renders KPIs, filters, and alert table | `AdminGymHealthAlertsMain.tsx` |
+| `gym_health_alerts_components/AdminGymHealthAlertsKPIs/` | 4 interactive stat cards: Total, Critical, Warning, Info — each filters the list | `AdminGymHealthAlertsKPIs.tsx` |
+| `gym_health_alerts_components/AdminGymHealthAlertsFilters/` | Severity filter chips + search | `AdminGymHealthAlertsFilters.tsx` |
+| `gym_health_alerts_components/AdminGymHealthAlertsTable/` | Alert list with severity badges, description, action link, dismiss button | `AdminGymHealthAlertsTable.tsx` |
+| `gym_health_alerts_api/` | API client — fetchAlerts, fetchSummary, dismissAlert | `gym_health_alerts_api.ts` |
+| `gym_health_alerts_context/` | Data logic hook — TanStack Query with `refetchInterval: 60_000`, dismiss mutation | `useAdminGymHealthAlertsLogic.ts` |
+| `gym_health_alerts_store/` | Zustand store — severityFilter, search | `useAdminGymHealthAlertsStore.ts` |
+| `gym_health_alerts_types/` | TypeScript types: GymHealthAlert, AlertSeverity, AlertKPIData | `gym_health_alerts_types.ts` |
+| `gym_health_alerts_utils/` | Constants: `GYM_HEALTH_ALERT_SEVERITY_STYLES`, alert category labels | `AdminGymHealthAlertsSharedConstants.ts` |
 
 ## Feature Inventory
-| Feature | Route | What the Admin Can Do | Main API Calls | Status |
-|---|---|---|---|---|
-| Alert Feed | `/admin/gym-health-alerts` | View all active alerts sorted by severity | `GET /admin/gym-health-alerts` | ✅ Live |
-| Alert Summary | `/admin/gym-health-alerts` | KPI counts: Critical / Warning / Info | `GET /admin/gym-health-alerts/summary` | ✅ Live |
-| Dismiss Alert | `/admin/gym-health-alerts` | Mark an alert as resolved | `POST /admin/gym-health-alerts/:id/dismiss` | ✅ Live |
 
-## Edge Cases / AI Warnings
-- **KPI cards must function as interactive filters** (Rule 70) — clicking "Critical" filters the list.
-- **Alert severity colors map to design tokens** — Critical → `text-danger`, Warning → `text-warning`, Info → `text-info`. These must come from `GYM_HEALTH_ALERT_SEVERITY_STYLES` in `gym-health-alerts_utils/` constants.
-- **Auto-refresh every 60 seconds** using `refetchInterval: 60_000` in TanStack Query — never use `setInterval`.
-- **Dismiss is immediate** — use a pessimistic update pattern: remove from list on API success, re-add on error.
+| Feature | Route | What the Admin Can Do | Key Components | Main API Calls | Status |
+|---|---|---|---|---|---|
+| Alert Feed | `/admin/gym-health-alerts` | View all active alerts sorted by severity, auto-refreshes every 60s | `AdminGymHealthAlertsTable` | `GET /admin/gym-health-alerts` | ✅ Live |
+| Alert Summary | `/admin/gym-health-alerts` | KPI counts: Critical / Warning / Info — each card filters the list | `AdminGymHealthAlertsKPIs` | `GET /admin/gym-health-alerts/summary` | ✅ Live |
+| Severity Filter | `/admin/gym-health-alerts` | Filter alert list by severity level | `AdminGymHealthAlertsFilters` | — (query param) | ✅ Live |
+| Dismiss Alert | `/admin/gym-health-alerts` | Mark an alert as resolved — removes from active list | `AdminGymHealthAlertsTable` | `POST /admin/gym-health-alerts/:id/dismiss` | ✅ Live |
+
+## User Flows & Interactions
+
+### Flow 1: Triage Critical Alerts
+1. Admin navigates to `/admin/gym-health-alerts`
+2. Clicks "Critical" KPI card → `severityFilter` set to `'CRITICAL'` in store
+3. Table filters to show only critical alerts
+4. Admin clicks the action link on an alert → deep-links to the relevant module (e.g. `/admin/members`)
+5. After resolving, admin returns and clicks "Dismiss" on the alert
+
+### Flow 2: Dismiss a Resolved Alert
+1. Admin clicks "Dismiss" on an alert row
+2. Pessimistic update: alert removed from list immediately on API success
+3. `alertsApi.dismissAlert(id)` called → `POST /admin/gym-health-alerts/:id/dismiss`
+4. On error: alert re-added to list, toast shows backend error message
+
+## Data and State Architecture
+
+- **State pattern:** Zustand for UI filter state + TanStack Query for server state with auto-refresh
+- **Zustand store:** `useAdminGymHealthAlertsStore.ts` — holds: `severityFilter`, `search`
+- **Query keys:** `['adminGymHealthAlerts', { severityFilter, search }]`, `['adminGymHealthAlertsSummary']`
+- **Auto-refresh:** `refetchInterval: 60_000` on the alerts query — never `setInterval`
+- **Dismiss pattern:** Pessimistic update — remove from cache on success, re-add on error
+- **Local-storage keys:** None
+- **MSW handler file:** Not yet configured
+
+## API Contract
+
+All calls go through `gymHealthAlertsApi` in `gym_health_alerts_api/gym_health_alerts_api.ts`.
+
+| Function | Method | Endpoint | Request | Response `data` type |
+|---|---|---|---|---|
+| `fetchAlerts(params)` | GET | `/admin/gym-health-alerts` | `{ severity, search }` | `GymHealthAlert[]` |
+| `fetchSummary()` | GET | `/admin/gym-health-alerts/summary` | — | `AlertKPIData` |
+| `dismissAlert(id)` | POST | `/admin/gym-health-alerts/:id/dismiss` | — | `null` |
+
+## Permissions and Security
+
+- **Required role:** `ADMIN` — enforced by `middleware.ts`
+- **Dismiss is the only mutation** — no create, edit, or delete of alerts. Alerts are generated by the backend.
+- **Action links deep-link to other modules** — use `AdminGymHealthAlertsUrlConfig` for all link hrefs. Never hardcode module paths.
+- **Cross-role isolation:** Zero imports from `/manager`, `/trainer`, `/superadmin`
+
+## Loading, Empty, and Error States
+
+| Section | Loading State | Empty State | Error State |
+|---|---|---|---|
+| Full page | `loading.tsx` — skeleton: 4 KPI cards + filter chips + alert list | N/A | `error.tsx` — module-branded with Retry |
+| Alert table | Skeleton rows while loading | Inline "No active alerts — your gym is healthy!" with checkmark icon | Inline via TanStack Query `isError` |
+
+## Edge Cases and AI Warnings
+
+- **Never use `setInterval` for auto-refresh** — use `refetchInterval: 60_000` in the TanStack Query `useQuery` options. `setInterval` in components or hooks is forbidden.
+- **`GYM_HEALTH_ALERT_SEVERITY_STYLES` is the single source of truth for severity badge colors** — never add inline color ternaries. Critical → `text-danger bg-danger-bg`, Warning → `text-warning bg-warning-bg`, Info → `text-info bg-info-bg`.
+- **KPI cards are interactive filters (Rule 70)** — clicking a severity KPI card sets `severityFilter` in the store. Never make them purely decorative.
+- **Dismiss uses pessimistic update** — remove from the TanStack Query cache on API success, re-add on error. Do not trigger a full refetch after dismiss.
+- **Action links must use `AdminGymHealthAlertsUrlConfig`** — never hardcode module paths like `/admin/members` directly in the alert table component.
+
+## Component Responsibility Map
+
+| Component File | Responsibility |
+|---|---|
+| `AdminGymHealthAlertsMain.tsx` | Root orchestrator. Renders KPIs, filters, and alert table. No direct API calls. |
+| `AdminGymHealthAlertsKPIs.tsx` | 4 interactive stat cards. Each click sets `severityFilter` in store. |
+| `AdminGymHealthAlertsFilters.tsx` | Severity filter chips + search input. Writes to store. |
+| `AdminGymHealthAlertsTable.tsx` | Alert list with severity badges, action links, and dismiss buttons. |
 
 ## Rule Compliance Checklist
-- [x] Rule 8: `page.tsx` is Server Component
+
+- [x] Rule 1: Micro-modularization — module-prefixed subfolders
+- [x] Rule 2: Total Role Isolation — zero cross-role imports
+- [x] Rule 3: Hyper-descriptive naming — Admin prefix on all files
+- [x] Rule 4: Theme Independence — no hardcoded colors in JSX
+- [x] Rule 5: Smart State Management — Zustand + TanStack Query with `refetchInterval`
+- [x] Rule 6: Logic/UI Separation — `useAdminGymHealthAlertsLogic` extracts all logic
+- [x] Rule 7: Type Isolation — all types in `gym_health_alerts_types/`
+- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component
+- [x] Rule 9: `loading.tsx` + `error.tsx` + `not-found.tsx` present
 - [x] Rule 11: `gym-health-alerts_url_config.ts` present
-- [x] Rule 13: This document
+- [x] Rule 13: Feature Map — this document
 - [x] Rule 40: `gym-health-alerts_forbidden.md` present
 - [x] Rule 70: KPI cards are interactive severity filters
+- [ ] Rule 15A: Tests — not yet configured
+- [ ] Rule 75: MSW handler — not yet configured

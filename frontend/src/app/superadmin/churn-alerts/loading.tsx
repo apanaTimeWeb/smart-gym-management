@@ -12,7 +12,7 @@ export default function ChurnAlertsLoading() {
       {/* KPI cards skeleton */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="h-24 bg-skeleton-base motion-safe:animate-pulse rounded-xl border border-border" />
+          <div key={`kpi-skel-${i}`} className="h-24 bg-skeleton-base motion-safe:animate-pulse rounded-xl border border-border" />
         ))}
       </div>
 
@@ -21,7 +21,7 @@ export default function ChurnAlertsLoading() {
         <div className="h-14 border-b border-border bg-skeleton-base/50 motion-safe:animate-pulse" />
         <div className="divide-y divide-border">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="h-16 bg-skeleton-highlight motion-safe:animate-pulse opacity-50" />
+            <div key={`table-skel-${i}`} className="h-16 bg-skeleton-highlight motion-safe:animate-pulse opacity-50" />
           ))}
         </div>
       </div>

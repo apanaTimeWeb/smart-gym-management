@@ -2,7 +2,6 @@
 'use client';
 
 import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
-import AdminToast from '@/app/admin/admin_components/AdminFeedback/AdminToast';
 import { useAdminFinanceLogic } from '@/app/admin/finance/finance_context/useAdminFinanceLogic';
 import { useAdminFinanceStore } from '@/app/admin/finance/finance_store/useAdminFinanceStore';
 import AdminFinanceKPIs from '@/app/admin/finance/finance_components/AdminFinanceKPIs/AdminFinanceKPIs';
@@ -13,7 +12,6 @@ import type { FinanceInitialData } from '@/app/admin/finance/finance_types/finan
 
 export default function AdminFinanceMain({ initialData }: { initialData?: FinanceInitialData | null }) {
   const { fetchState } = useAdminFinanceLogic(initialData);
-  const { toast, hideToast } = useAdminFinanceStore();
 
   return (
     <div className="min-h-full pb-10 bg-background text-foreground">
@@ -25,10 +23,6 @@ export default function AdminFinanceMain({ initialData }: { initialData?: Financ
       </div>
 
       <AdminFinanceAddPaymentModal />
-      
-      {toast && (
-        <AdminToast message={toast.message} type={toast.type} onClose={hideToast} />
-      )}
     </div>
   );
 }

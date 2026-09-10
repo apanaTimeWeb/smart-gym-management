@@ -44,7 +44,6 @@ any route under `/superadmin`.
 | `messaging/` | Direct messaging to gym owners via email or in-app channel | `SuperadminMessagingClient.tsx`, `messaging_features.md` |
 | `reports/` | Platform-wide financial and operational reports | `SuperadminReportsClient.tsx`, `reports_features.md` |
 | `onboarding/` | Guided onboarding wizard for new gym tenants | `SuperadminOnboardingClient.tsx`, `onboarding_features.md` |
-| `tenant-preview/` | Read-only simulated view of any tenant's admin dashboard (no mutations) | `SuperadminTenantPreviewClient.tsx`, `tenant-preview_features.md` |
 | `branches/` | Cross-tenant branch management and franchise group view | `SuperadminBranchesClient.tsx`, `branches_features.md` |
 | `franchises/` | Franchise group management — parent entities owning multiple gym branches | `SuperadminFranchisesClient.tsx`, `franchises_features.md` |
 
@@ -75,7 +74,6 @@ any route under `/superadmin`.
 | System Health | `/superadmin/system` | View CPU, RAM, disk, uptime, and per-service status | `SuperadminSystemClient` | `GET /superadmin/system-health` | ✅ Live |
 | Global Audit Log | `/superadmin/global-audit` | Immutable log of all superadmin actions across all tenants. Includes CSV Export. | `SuperadminGlobalAuditClient` | `GET /superadmin/audit-logs` | ✅ Live |
 | Platform Settings | `/superadmin/settings` | Edit global key-value configuration. View platform Changelog. | `SuperadminSettingsClient` | `GET /superadmin/settings`, `PATCH /superadmin/settings/:id` | ✅ Live |
-| Tenant Preview | `/superadmin/tenant-preview` | Read-only simulation of any gym's admin dashboard — no mutations | `SuperadminTenantPreviewClient` | `GET /superadmin/tenant-preview/:id` (future) | ✅ Live |
 | Analytics | `/superadmin/analytics` | MRR trends, gym growth charts, churn analysis | `SuperadminAnalyticsClient` | `GET /superadmin/analytics` | ✅ Live |
 | Reports | `/superadmin/reports` | Platform-wide financial and operational PDF/CSV exports | `SuperadminReportsClient` | `GET /superadmin/reports` | ✅ Live |
 | Franchises | `/superadmin/franchises` | Manage franchise groups containing multiple branches. Edit franchise details. | `SuperadminFranchisesClient`, `SuperadminFranchiseModal` | `GET/PATCH /superadmin/franchises` | ✅ Live |
@@ -234,7 +232,7 @@ Central client: `superadminApi` in `superadmin_api/superadmin_api.ts`
 - [x] Rule 10: Absolute imports — `@/app/superadmin/...` throughout
 - [x] Rule 11: Centralized URL Config — `SuperadminUrlConfig` used everywhere; no hardcoded strings
 - [x] Rule 13: Feature Map — this document; updated with every code change
-- [x] Rule 14: Backend-driven messages — all toasts display `res.message`; no hardcoded strings
+- [x] Rule 14: Backend-driven messages — all toasts display `res.message` / `err.message`; fallback strings use `|| 'fallback'` pattern (backend message always preferred)
 - [x] Rule 19: Clickable table rows — `cursor-pointer` on all `<tr>`; no View/Eye button
 - [x] Rule 26: Loading button states — `Loader2` spinners on all async actions
 - [x] Rule 32: No barrel files — direct named imports only
@@ -246,7 +244,7 @@ Central client: `superadminApi` in `superadmin_api/superadmin_api.ts`
 - [x] Rule 71: Destructive actions use `useConfirm()` or type-to-confirm modal
 - [x] Rule 73: `import type` used for all type-only imports
 - [ ] Rule 15A: Tests — co-located test files for hooks and utils not yet present (gap)
-- [ ] Rule 15B: Forms — React Hook Form + Zod used in most forms; verify coverage in all modals
+- [x] Rule 15B: Forms — React Hook Form + Zod used in all forms and modals (including `SuperadminChurnActionModal` via `churnActionSchema`)
 - [ ] Rule 75: MSW handlers — not yet configured for any superadmin module
 - [x] Design §3: Sidebar active state = subtle gold left border + `bg-primary-subtle` + glow
 - [x] Design §12: Z-index scale — header `z-20`, dropdowns `z-30`, modals `z-40`, toasts `z-50`, Ghost Login banner `z-50`

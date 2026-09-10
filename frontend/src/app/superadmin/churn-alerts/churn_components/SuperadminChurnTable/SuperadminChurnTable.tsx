@@ -3,7 +3,7 @@
 // Receives filtered data from parent — owns no filter or fetch state.
 
 import { AlertTriangle, Phone, Mail, Edit2 } from 'lucide-react';
-import { maskSensitiveData } from '@/lib/formatters';
+import { maskSensitiveData, formatCurrency, displayValue } from '@/lib/formatters';
 import {
   CHURN_RISK_STYLES,
   CHURN_ACTION_STATUS_STYLES,
@@ -70,17 +70,17 @@ export default function SuperadminChurnTable({ alerts, onActionClick }: Superadm
               </td>
               <td className="px-4 py-3 text-right">
                 <span className="text-xs font-medium text-foreground">
-                  ₹{alert.mrrAtRisk.toLocaleString('en-IN')}
+                  {formatCurrency(alert.mrrAtRisk)}
                 </span>
               </td>
               <td className="px-4 py-3">
                 <span className="text-xs text-secondary">
-                  {alert.lastPaymentDate ? new Date(alert.lastPaymentDate).toLocaleDateString('en-IN') : '—'}
+                  {displayValue(alert.lastPaymentDate ? new Date(alert.lastPaymentDate).toLocaleDateString('en-IN') : null)}
                 </span>
               </td>
               <td className="px-4 py-3">
                 <span className="text-xs text-secondary">
-                  {alert.contractEndDate ? new Date(alert.contractEndDate).toLocaleDateString('en-IN') : '—'}
+                  {displayValue(alert.contractEndDate ? new Date(alert.contractEndDate).toLocaleDateString('en-IN') : null)}
                 </span>
               </td>
               <td className="px-4 py-3">
@@ -89,7 +89,7 @@ export default function SuperadminChurnTable({ alerts, onActionClick }: Superadm
                 </span>
               </td>
               <td className="px-4 py-3">
-                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 motion-safe:transition-opacity">
+                <div className="flex items-center gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity">
                   <a
                     href={`mailto:${alert.adminEmail}`}
                     aria-label={`Email ${alert.gymName}`}

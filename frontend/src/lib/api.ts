@@ -8,10 +8,18 @@
  * Base URL: http://localhost:5000/api/v1
  */
 
+export interface PaginationMeta {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
 export interface ApiResponse<T> {
   success: boolean;
   data: T;
   message: string;
+  meta?: PaginationMeta;
 }
 
 
@@ -123,7 +131,7 @@ export async function apiFetch<T = unknown>(
   if (!finalRes.ok) {
     const errorMsg = json.message || `API Error: ${finalRes.status}`;
     if (typeof window !== 'undefined') {
-      toast.error(errorMsg);
+      toast.error(errorMsg, { id: errorMsg });
     }
     throw new Error(errorMsg);
   }

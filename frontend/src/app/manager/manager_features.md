@@ -51,11 +51,11 @@ The Manager module is the primary operational hub for gym branch managers. It pr
 
 ## Data and State Architecture
 
-- **Server-state query keys:** N/A — this module uses Context + Zustand (not TanStack Query)
-- **Zustand stores:** `useManagerMembersStore`, `useManagerExpensesStore` — module-scoped, UI client state only
-- **Context providers:** `DashboardProvider`, `MembersProvider`, `AttendanceProvider`, `SalesProvider`, `HrProvider`, `ExpensesProvider` (via `ManagerExpensesMain`), `InquiriesProvider`
+- **Server-state query keys:** Handled by `TanStack Query` (currently implemented in `members`, migrating others).
+- **Zustand stores:** `useManagerMembersStore`, `useManagerExpensesStore` — module-scoped, strictly transient UI state (e.g. selected IDs).
+- **Context providers:** `DashboardProvider`, `ManagerMembersContext` (UI coordination), `AttendanceProvider`, `SalesProvider`, `HrProvider`, `ExpensesProvider` (via `ManagerExpensesMain`), `InquiriesProvider`
 - **Local-storage keys:** None — auth token stored in HTTP-only cookie
-- **MSW handler file:** Not yet configured — all API calls go to real backend
+- **MSW handler file:** `manager-members.handlers.ts` for mocked API responses.
 
 ## API Contract
 

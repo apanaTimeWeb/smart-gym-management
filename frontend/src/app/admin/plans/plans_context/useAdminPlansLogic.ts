@@ -1,4 +1,5 @@
 import { useAdminPlansStore } from '@/app/admin/plans/plans_store/useAdminPlansStore';
+import { useAdminToastStore } from '@/app/admin/admin_store/useAdminToastStore';
 // RESPONSIBILITY: Custom hook encapsulating all business logic, state, and API interactions for the Plans module.
 // DATA FLOW: Centralized store/hook logic mapping API mutations and query state to UI props.
 import { useState, useCallback } from 'react';
@@ -7,7 +8,7 @@ import { plansApi } from '@/app/admin/plans/plans_api/plans_api';
 import type { Plan, PlansContextType, PlansInitialData, FetchState } from '@/app/admin/plans/plans_types/plans_types';
 import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
 import { EMPTY_PLAN_FORM, type PlanFormValues } from '@/app/admin/plans/plans_utils/AdminPlansSharedConstants';
-import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/AdminConfirmProvider';
+import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 
@@ -41,7 +42,8 @@ export function useAdminPlansLogic(initialData?: PlansInitialData | null): Plans
     router.push(`?${params.toString()}`, { scroll: false });
   }, [router, searchParams]);
 
-  const { showModal, setShowModal, editId, setEditId, form, setForm, showToast, hideToast } = useAdminPlansStore();
+  const { showModal, setShowModal, editId, setEditId, form, setForm } = useAdminPlansStore();
+  const { showToast } = useAdminToastStore();
 
 
   const { data: plansRes, isLoading, isError } = useQuery({
@@ -140,10 +142,7 @@ export function useAdminPlansLogic(initialData?: PlansInitialData | null): Plans
     plans: fetchedPlans, fetchState, saving, toast: null,
     search, setSearch, tierFilter, setTierFilter, currentPage, setCurrentPage,
     showModal, setShowModal, editId, form, setForm,
-    showToast, hideToast, loadPlans: async () => {}, // Mocked for context
+    showToast, hideToast: () => {}, loadPlans: async () => {}, // Mocked for context
     openAdd, openEdit, savePlan, deletePlan,
   };
 }
-
-
-

@@ -24,8 +24,7 @@ interface ManagerMessageModalProps {
  onSuccess?: (msg: string) => void;
 }
 
-const WA_GREEN = '#25D366';
-const EMAIL_BLUE = 'var(--info)';
+
 
 export default function ManagerMessageModal({
  isOpen,
@@ -86,8 +85,7 @@ export default function ManagerMessageModal({
  style={{ animation: 'fadeScaleIn 0.2s ease' }}
  >
  <div
- className="px-6 py-4 flex items-center justify-between"
- style={{ background: type === 'whatsapp' ? WA_GREEN : 'var(--info)' }}
+ className={`px-6 py-4 flex items-center justify-between ${type === 'whatsapp' ? 'bg-success' : 'bg-info'}`}
  >
  <div className="flex flex-wrap items-center gap-3">
  <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center">
@@ -171,8 +169,7 @@ export default function ManagerMessageModal({
  <button
  onClick={handleSend}
  disabled={sending || sent || !message.trim()}
- className="flex-1 px-4 py-2.5 text-sm font-semibold text-white rounded-xl flex items-center justify-center gap-2 transition-all disabled:opacity-50"
- style={{ background: sent ? 'var(--success)' : (type === 'whatsapp' ? WA_GREEN : 'var(--info)') }}
+ className={`flex-1 px-4 py-2.5 text-sm font-semibold text-white rounded-xl flex items-center justify-center gap-2 transition-all disabled:opacity-50 ${sent ? 'bg-success' : type === 'whatsapp' ? 'bg-success' : 'bg-info'}`}
  >
  {sent ? (
  <>

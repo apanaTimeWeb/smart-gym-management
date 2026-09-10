@@ -11,9 +11,6 @@ interface AdminPlansStore {
   setEditId: (id: string | null) => void;
   form: PlanFormValues;
   setForm: (form: PlanFormValues) => void;
-  toast: { message: string; type: ToastType } | null;
-  showToast: (message: string, type: ToastType) => void;
-  hideToast: () => void;
 }
 
 export const useAdminPlansStore = create<AdminPlansStore>((set) => ({
@@ -23,8 +20,5 @@ export const useAdminPlansStore = create<AdminPlansStore>((set) => ({
   setEditId: (id) => set({ editId: id }),
   form: EMPTY_PLAN_FORM,
   setForm: (form) => set({ form }),
-  toast: null,
-  showToast: (message, type) => set({ toast: { message, type } }),
-  hideToast: () => set({ toast: null }),
 }));
 

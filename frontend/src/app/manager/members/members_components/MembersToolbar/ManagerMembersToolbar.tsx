@@ -5,7 +5,7 @@
 import { useState, useEffect } from 'react';
 import { Search, RefreshCw, Plus, MessageCircle, Download, Calendar } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
-import { useManagerMembersStore } from '@/app/manager/members/members_store/useManagerMembersStore';
+import { useFetchMembers, useFetchPlans } from '@/app/manager/members/members_api/useManagerMembersQueries';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import {
   MEMBER_STATUS_OPTIONS,
@@ -24,8 +24,10 @@ export default function ManagerMembersToolbar() {
     openAdd, currentPage, setCurrentPage, showToast,
     exportMembers,
   } = useMembersContext();
-  const { loadAll, members } = useManagerMembersStore();
-  const plans = useManagerMembersStore(s => s.plans);
+  const { data: membersRes, refetch } = useFetchMembers({ search, status: statusFilter, page: currentPage.toString() });
+  const members = membersRes?.members || [];
+  const { data: plansData } = useFetchPlans();
+  const plans = plansData || [];
   const { confirm } = useConfirm();
   const [localSearch, setLocalSearch] = useState(search);
   const [prevSearch, setPrevSearch] = useState(search);
@@ -45,7 +47,7 @@ export default function ManagerMembersToolbar() {
   }, [localSearch, search, setSearch]);
 
   const handleRefresh = () => {
-    loadAll({ search, status: statusFilter, page: currentPage.toString() });
+    refetch();
   };
 
   const handleBulkReminder = async () => {

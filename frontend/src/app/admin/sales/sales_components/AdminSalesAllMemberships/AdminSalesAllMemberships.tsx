@@ -6,7 +6,7 @@ import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSale
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 import AdminSalesEmptyState from '@/app/admin/sales/sales_components/AdminSalesEmptyState/AdminSalesEmptyState';
 import type { Member } from '@/app/admin/sales/sales_types/sales_types';
-import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_utils/AdminSharedConstants';
+import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_url_config';
 import { Users, CheckCircle, AlertTriangle, XCircle } from 'lucide-react';
 
 type MembershipFilter = 'All' | 'Active' | 'Expiring Soon' | 'Expired';

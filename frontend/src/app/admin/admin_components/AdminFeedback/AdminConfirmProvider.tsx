@@ -16,7 +16,7 @@ interface ConfirmContextType {
   confirm: (options: ConfirmOptions) => Promise<boolean>;
 }
 
-const ConfirmContext = createContext<ConfirmContextType | undefined>(undefined);
+export const ConfirmContext = createContext<ConfirmContextType | undefined>(undefined);
 
 export function AdminConfirmProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -60,8 +60,3 @@ export function AdminConfirmProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export const useAdminConfirm = () => {
-  const context = useContext(ConfirmContext);
-  if (!context) throw new Error("useAdminConfirm must be used within AdminConfirmProvider");
-  return context;
-};

@@ -4,9 +4,11 @@
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
 import { STAFF_TABLE_HEADERS } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
 import { Edit2, Trash2, CheckCircle2, Ban, PlayCircle } from 'lucide-react';
-import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/AdminConfirmProvider';
+import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
-import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_utils/AdminSharedConstants';
+import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_url_config';
+import { displayValue } from '@/app/admin/admin_utils/displayValue';
+import { formatCurrency } from '@/app/admin/admin_utils/formatCurrency';
 
 export default function AdminHrStaffTable() {
   const { staff, summary, fetchState, debouncedSearch, branchFilter, roleFilter, currentPage, setCurrentPage, openEdit, openProfile, deleteStaff, toggleStaffStatus } = useHrContext();
@@ -83,15 +85,15 @@ export default function AdminHrStaffTable() {
                       {(s.name || '?').charAt(0).toUpperCase()}
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-primary">{s.name || 'Unknown Staff'}</p>
-                      <p className="text-xs text-secondary">{s.email || 'No email'}</p>
+                      <p className="text-sm font-medium text-primary">{displayValue(s.name)}</p>
+                      <p className="text-xs text-secondary">{displayValue(s.email)}</p>
                     </div>
                   </div>
                 </td>
                 <td className="px-4 py-3 text-sm text-secondary">
                   {s.role === 'Manager' && s.assignedBranches && s.assignedBranches.length > 0 ? (
                     <div className="flex flex-col">
-                      <span className="font-medium text-primary">{s.primaryBranchId || s.assignedBranches[0]}</span>
+                      <span className="font-medium text-primary">{displayValue(s.primaryBranchId || s.assignedBranches[0])}</span>
                       {s.assignedBranches.length > 1 && (
                         <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded-full mt-1 w-max">
                           +{s.assignedBranches.length - 1} More
@@ -99,10 +101,10 @@ export default function AdminHrStaffTable() {
                       )}
                     </div>
                   ) : (
-                    s.branch
+                    displayValue(s.branch)
                   )}
                 </td>
-                <td className="px-4 py-3 text-sm text-primary">{s.role}</td>
+                <td className="px-4 py-3 text-sm text-primary">{displayValue(s.role)}</td>
                 <td className="px-4 py-3">
                   {s.isActive === false ? (
                     <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-danger/10 text-danger border border-danger/20">
@@ -114,11 +116,11 @@ export default function AdminHrStaffTable() {
                     </span>
                   )}
                 </td>
-                <td className="px-4 py-3 text-sm text-secondary">{s.phone}</td>
-                <td className="px-4 py-3 text-sm font-medium text-success">{(s.salary || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
-                <td className="px-4 py-3 text-sm font-medium text-primary text-right">{s.advanceSalary && s.advanceSalary > 0 ? s.advanceSalary.toLocaleString('en-IN', { style: 'currency', currency: 'INR' }) : '—'}</td>
+                <td className="px-4 py-3 text-sm text-secondary">{displayValue(s.phone)}</td>
+                <td className="px-4 py-3 text-sm font-medium text-success">{formatCurrency(s.salary)}</td>
+                <td className="px-4 py-3 text-sm font-medium text-primary text-right">{s.advanceSalary && s.advanceSalary > 0 ? formatCurrency(s.advanceSalary) : '—'}</td>
                 <td className="px-4 py-3 text-sm text-secondary">
-                  {s.joinDate ? new Date(s.joinDate).toLocaleDateString('en-IN') : 'N/A'}
+                  {s.joinDate ? new Date(s.joinDate).toLocaleDateString('en-IN') : displayValue(null)}
                 </td>
                 <td className="px-4 py-3 text-right">
                   <div className="flex items-center justify-end gap-2">

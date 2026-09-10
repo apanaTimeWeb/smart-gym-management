@@ -1,46 +1,15 @@
+// RESPONSIBILITY: Legacy global-level usage API stub. The canonical implementation is
+// usage/usage_api/AdminUsageApi.ts. This file is kept only for backward-compat imports
+// from AdminHeader/AdminUsageAlert. Do NOT add new types or logic here.
+// Rule 7: AdminUsageData type lives in usage/usage_types/AdminUsageTypes.ts
+import type { AdminUsageData } from '@/app/admin/usage/usage_types/AdminUsageTypes';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
+import { AdminUsageUrlConfig } from '@/app/admin/usage/usage_url_config';
 
-export interface AdminUsageData {
-  tenantId: string;
-  smsSent: number;
-  smsLimit: number;
-  databaseGb: number;
-  mediaGb: number;
-  storageLimitGb: number;
-  activeMembers: number;
-  totalMembers: number;
-  memberLimit: number;
-  staffCount: number;
-  staffLimit: number;
-  billingCycleEnd: string;
-}
+export type { AdminUsageData };
 
-// RESPONSIBILITY: Provides API calls for the Admin to fetch their own usage data against limits.
 export const adminUsageApi = {
-  fetchMyUsage: async (): Promise<ApiResponse<AdminUsageData>> => {
-    // Mocking an API call for usage limits
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          success: true,
-          message: 'Usage data fetched successfully',
-          data: {
-            tenantId: 'gym-1234',
-            smsSent: 9500, // Near limit
-            smsLimit: 10000,
-            databaseGb: 8.0,
-            mediaGb: 11.5, // 19.5 total
-            storageLimitGb: 20, // Near limit
-            activeMembers: 1950,
-            totalMembers: 2100,
-            memberLimit: 2000,
-            staffCount: 15,
-            staffLimit: 15,
-            billingCycleEnd: 'Oct 15, 2026'
-          }
-        });
-      }, 500);
-    });
-  }
+  fetchMyUsage: (): Promise<ApiResponse<AdminUsageData>> =>
+    apiFetch<ApiResponse<AdminUsageData>>(AdminUsageUrlConfig.BACKEND_API.MY_USAGE),
 };

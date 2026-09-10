@@ -2,7 +2,6 @@
 'use client';
 
 import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
-import AdminToast from '@/app/admin/admin_components/AdminFeedback/AdminToast';
 import { HrProvider, useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
 import AdminHrKPIs from '@/app/admin/hr/hr_components/AdminHrKPIs/AdminHrKPIs';
 import AdminHrTabs from '@/app/admin/hr/hr_components/AdminHrTabs/AdminHrTabs';
@@ -13,7 +12,6 @@ import AdminHrPaymentModal from '@/app/admin/hr/hr_components/AdminHrPaymentModa
 import type { HrInitialData } from '@/app/admin/hr/hr_types/AdminHrTypes';
 
 function HrContent() {
- const { toast, hideToast } = useHrContext();
 
  return (
  <div className="min-h-full pb-10 bg-background text-foreground">
@@ -28,7 +26,7 @@ function HrContent() {
  <AdminHrPayrollModal />
  <AdminHrPaymentModal />
  
- {toast && <AdminToast message={toast.message} type={toast.type} onClose={hideToast} />}
+
  </div>
  );
 }

@@ -137,7 +137,7 @@ export default function AdminCouponsModal() {
             <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 bg-input border border-border rounded-lg text-sm font-medium text-secondary hover:text-foreground motion-safe:transition-colors">
               Cancel
             </button>
-            <button type="submit" disabled={saving} className="px-5 py-2 bg-primary text-black rounded-lg text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-60 disabled:cursor-not-allowed active:scale-95">
+            <button type="submit" disabled={saving} className="px-5 py-2 bg-primary text-black rounded-lg text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-60 disabled:cursor-not-allowed active:scale-95 min-w-[120px]">
               {saving ? 'Saving...' : editId ? 'Update Coupon' : 'Create Coupon'}
             </button>
           </div>

@@ -1,0 +1,15 @@
+# GymSmart CODEOWNERS
+# Ensures mandatory human review for critical security and configuration paths.
+
+# Require review for any changes to authentication and authorization logic
+/src/app/auth/ @frontend-leads
+/src/lib/api.ts @frontend-leads @security-team
+/src/lib/usePermissions.ts @frontend-leads @security-team
+
+# Require review for API URL definitions (prevents accidental misdirection of API calls)
+*UrlConfig.ts @frontend-leads
+
+# Require review for payment / finance UI (high risk of data errors)
+/src/app/manager/finance/ @frontend-leads @finance-team
+/src/app/manager/members/members_components/ManagerPaymentModal.tsx @frontend-leads @finance-team
+/src/app/manager/members/members_components/ManagerRenewModal.tsx @frontend-leads @finance-team

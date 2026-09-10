@@ -16,14 +16,12 @@ require `useConfirm()` double-verification.
 | `members_components/ManagerMembersMain.tsx` | Root Client Component, wraps `MembersProvider` |
 | `members_components/ManagerMembersTable.tsx` | Paginated member list, clickable rows |
 | `members_components/ManagerMembersFilters.tsx` | Search, status, plan, date filters |
-| `members_components/ManagerMembersAddModal.tsx` | New member registration (3-tab form) |
-| `members_components/ManagerMembersProfileModal.tsx` | Full member profile drawer |
-| `members_components/ManagerMembersRenewalModal.tsx` | Membership renewal form |
-| `members_components/ManagerMembersPaymentModal.tsx` | Record payment form |
-| `members_components/ManagerMembersEmptyState.tsx` | Empty state when no members found |
-| `members_types/ManagerMembersTypes.ts` | `Member`, `CreateMemberDto`, `RenewMembershipDto` types |
-| `members_api/ManagerMembersApi.ts` | API wrappers |
-| `members_utils/ManagerMembersUrlConfig.ts` | Centralized URL constants |
+| `members_components/ManagerMembersModal/ManagerMembersModal.tsx` | New member registration form (Replaced add modal) |
+| `members_components/MemberProfile/ManagerMemberProfile.tsx` | Full member profile view |
+| `members_components/ManagerRenewModal.tsx` | Membership renewal form |
+| `members_components/ManagerPaymentModal.tsx` | Record payment form |
+| `members_api/useManagerMembersQueries.ts` | TanStack Query hooks for backend fetching |
+| `members_context/useManagerMembersMutations.ts` | TanStack Mutation hooks for write operations |
 
 ## Feature Inventory
 | Feature | Path | Purpose | Main API Calls | Status |
@@ -38,11 +36,11 @@ require `useConfirm()` double-verification.
 | Assign Workout | `/manager/members` | Link workout plan to member | `PATCH /manager/members/:id/workout` | ✅ Live |
 
 ## Data and State Architecture
-- Server-state: `MembersProvider` — member list, pagination, filters, selected member
-- Zustand stores: `useManagerMembersStore` — modal open/close states
-- Context providers: `MembersProvider`
+- Server-state: `TanStack Query` (`useManagerMembersQueries`, `useManagerMembersMutations`)
+- Zustand stores: `useManagerMembersStore` — strictly transient UI state (e.g. selected IDs)
+- Context providers: `ManagerMembersContext` — coordinates UI interactions and modal states
 - Local-storage keys: None
-- MSW handler: Not yet configured
+- MSW handler: `manager-members.handlers.ts`
 
 ## User Flows
 1. Manager opens `/manager/members` → table loads with paginated member list

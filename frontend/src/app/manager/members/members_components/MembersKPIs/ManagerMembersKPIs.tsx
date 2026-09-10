@@ -2,7 +2,7 @@
 'use client';
 
 import { User, CheckCircle, Clock, XCircle } from 'lucide-react';
-import { useManagerMembersStore } from '@/app/manager/members/members_store/useManagerMembersStore';
+import { useFetchMemberStats } from '@/app/manager/members/members_api/useManagerMembersQueries';
 
 const KPI_CONFIG = [
   { label: 'Total Members', key: 'total',   color: 'text-info',    bg: 'bg-info-bg',    icon: User         },
@@ -12,7 +12,7 @@ const KPI_CONFIG = [
 ] as const;
 
 export default function ManagerMembersKPIs() {
-  const stats = useManagerMembersStore(s => s.stats);
+  const { data: stats } = useFetchMemberStats();
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">

@@ -22,10 +22,10 @@ const eslintConfig = defineConfig([
       ]
     },
     rules: {
-      "no-console": ["warn", { allow: ["warn", "error", "info"] }],
-      "@typescript-eslint/no-explicit-any": "warn",
+      "no-console": ["error", { allow: ["warn", "error", "info"] }],
+      "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/no-unused-vars": "warn",
-      "tailwindcss/no-arbitrary-value": "warn",
+      "tailwindcss/no-arbitrary-value": "error",
       "boundaries/dependencies": [
         2,
         {

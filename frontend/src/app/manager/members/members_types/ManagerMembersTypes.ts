@@ -148,7 +148,6 @@ export interface MembersContextType {
   toggleSuspend: (isSuspended: boolean) => Promise<void>;
   assignTrainer: (memberId: string, trainerId: string, trainerName: string, isPT: boolean) => Promise<void>;
   exportMembers: (format: ExportFormat) => void;
-  trainers: { id: string; name: string; role: string }[];
 
   // Message Modal
   msgModal: { open: boolean; recipient: ManagerMessageRecipient; type: MessageType; message: string; subject?: string } | null;

@@ -1,22 +1,22 @@
 // RESPONSIBILITY: Renders the error boundary for the branches module.
 'use client';
 import Link from 'next/link';
-
 import { useEffect } from 'react';
 import { AlertTriangle } from 'lucide-react';
+import { StatusCodes } from 'http-status-codes';
+import { logErrorToMonitoring } from '@/app/admin/admin_utils/monitoring';
 
 export default function AdminBranchesError({ error, reset }: { error: Error & { digest?: string }, reset: () => void }) {
-  // Error logged to monitoring service
   useEffect(() => {
-    // Log error locally or to monitoring service
+    logErrorToMonitoring(error, { module: 'branches' });
   }, [error]);
 
-  if (error.message?.includes('403') || (error as any).status === 403) {
+  if (error.message?.includes(String(StatusCodes.FORBIDDEN)) || (error as any).status === StatusCodes.FORBIDDEN) {
     return (
       <div className="min-h-full flex flex-col items-center justify-center p-8 text-center">
-        <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--danger)' }}>Access Denied</h2>
-        <p className="text-[var(--text-secondary)] mb-6">You don't have permission to view this page.</p>
-        <Link href="/admin/dashboard" className="px-4 py-2 rounded-md bg-[var(--primary)] text-white hover:opacity-90">
+        <h2 className="text-2xl font-bold mb-4 text-danger">Access Denied</h2>
+        <p className="text-secondary mb-6">You don't have permission to view this page.</p>
+        <Link href="/admin/dashboard" className="px-4 py-2 rounded-md bg-primary text-black hover:bg-primary-hover motion-safe:transition-colors">
           Return to Dashboard
         </Link>
       </div>
@@ -30,7 +30,7 @@ export default function AdminBranchesError({ error, reset }: { error: Error & { 
       <p className="text-secondary">{error.message}</p>
       <button
         onClick={() => reset()}
-        className="px-4 py-2 mt-4 bg-primary text-primary-foreground rounded-lg hover:bg-primary-hover transition-colors"
+        className="px-4 py-2 mt-4 bg-primary text-black rounded-lg hover:bg-primary-hover motion-safe:transition-colors"
       >
         Try again
       </button>

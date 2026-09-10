@@ -2,7 +2,6 @@
 'use client';
 
 import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
-import AdminToast from '@/app/admin/admin_components/AdminFeedback/AdminToast';
 
 import { useAdminPlansLogic } from '@/app/admin/plans/plans_context/useAdminPlansLogic';
 import { useAdminPlansStore } from '@/app/admin/plans/plans_store/useAdminPlansStore';
@@ -13,7 +12,6 @@ import type { PlansInitialData } from '@/app/admin/plans/plans_types/plans_types
 
 export default function AdminPlansMain({ initialData }: { initialData?: PlansInitialData | null }) {
   const { fetchState } = useAdminPlansLogic(initialData);
-  const { toast, hideToast } = useAdminPlansStore();
 
   return (
     <div className="min-h-full pb-10">
@@ -24,10 +22,6 @@ export default function AdminPlansMain({ initialData }: { initialData?: PlansIni
       </div>
 
       <AdminPlansModal />
-
-      {toast && (
-        <AdminToast message={toast.message} type={toast.type} onClose={hideToast} />
-      )}
     </div>
   );
 }

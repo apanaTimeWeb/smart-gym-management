@@ -3,7 +3,7 @@
 
 import { Edit, MessageCircle, Mail, Trash2, Loader2, Users, Banknote, Ban, ArrowUp, ArrowDown, ArrowUpDown } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
-import { useManagerMembersStore } from '@/app/manager/members/members_store/useManagerMembersStore';
+import { useFetchMembers } from '@/app/manager/members/members_api/useManagerMembersQueries';
 import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS, formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import { maskSensitiveData } from '@/lib/formatters';
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
@@ -24,10 +24,10 @@ export default function ManagerMembersTable() {
 
   const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
 
-  const members = useManagerMembersStore(s => s.members);
-  const totalMembers = useManagerMembersStore(s => s.totalMembers);
-  const fetchState = useManagerMembersStore(s => s.fetchState);
-  const loadMemberProfile = useManagerMembersStore(s => s.loadMemberProfile);
+  const { data: membersRes, isLoading, isError } = useFetchMembers({ search, status: statusFilter, page: currentPage.toString() });
+  const members = membersRes?.members || [];
+  const totalMembers = membersRes?.total || 0;
+  const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
 
   const totalPages = Math.ceil(totalMembers / MANAGER_ITEMS_PER_PAGE);
 
@@ -107,7 +107,7 @@ export default function ManagerMembersTable() {
                   <tr 
                     key={m.id} 
                     className="hover:bg-primary/5 transition-colors cursor-pointer"
-                    onClick={() => { setSelectedMember(m); loadMemberProfile(m.id); }}
+                    onClick={() => { setSelectedMember(m); }}
                   >
                     <td className="px-2 py-3 text-center" onClick={(e) => e.stopPropagation()}>
                       <input 

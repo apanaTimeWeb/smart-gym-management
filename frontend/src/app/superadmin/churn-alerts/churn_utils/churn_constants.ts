@@ -17,7 +17,7 @@ export const CHURN_ACTION_STATUS_STYLES: Record<ChurnActionStatus, string> = {
   CHURNED: 'bg-danger-bg text-danger',
 };
 
-export const KPI_CARD_GRADIENT = 'linear-gradient(180deg, rgba(250,204,21,0.08), rgba(255,255,255,0.02))';
+export const KPI_CARD_GRADIENT = 'linear-gradient(180deg, var(--warning-bg), transparent)';
 
 export const MOCK_CHURN_KPI: ChurnKpiData = {
   totalAtRisk: 14,
