@@ -1,13 +1,12 @@
-// RESPONSIBILITY: Custom hook encapsulating UI state and orchestrating actions for the members module. Async state is in useManagerMembersStore.
-// DATA FLOW: UI Interactions -> useManagerMembersLogic -> useManagerMembersStore -> API
+// RESPONSIBILITY: Custom hook encapsulating UI state and orchestrating actions for the members module.
+// DATA FLOW: UI Interactions -> useManagerMembersLogic -> Context -> Components
 import React, { useState, useCallback, useEffect } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import type { Member, MembersContextType, MembersInitialData } from '@/app/manager/members/members_types/ManagerMembersTypes';
+import type { Member, MembersContextType, MembersInitialData, MemberSortColumn, SortDirection } from '@/app/manager/members/members_types/ManagerMembersTypes';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import type { MessageType, ManagerMessageRecipient } from '@/app/manager/manager_components/ManagerFeedback/ManagerMessageModal';
 import { EMPTY_MEMBER_FORM, formatCurrency, MSG_TEMPLATES, MemberFormValues } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import { useDebounce } from '@/app/manager/manager_utils/useDebounce';
-import { useManagerMembersStore } from '@/app/manager/members/members_store/useManagerMembersStore';
 import { useManagerMembersMutations } from './useManagerMembersMutations';
 import { useManagerMembersPrintLogic } from './useManagerMembersPrintLogic';
 
@@ -15,19 +14,6 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-
-  // Zustand Store
-  const hydrate = useManagerMembersStore((s) => s.hydrate);
-  const loadAll = useManagerMembersStore((s) => s.loadAll);
-  const trainers = useManagerMembersStore((s) => s.trainers);
-
-  const isFirstRender = React.useRef(true);
-
-  useEffect(() => {
-    if (initialData) {
-      hydrate(initialData);
-    }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // URL State
   const search = searchParams.get('search') || '';
@@ -56,16 +42,16 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
     router.push(`${pathname}?${current.toString()}`);
   }, [searchParams, pathname, router]);
 
-  const setSortColumn = useCallback((val: any) => setUrlParam('sort', val), [setUrlParam]);
-  const setSortDirection = useCallback((val: any) => setUrlParam('dir', val), [setUrlParam]);
+  const setSortColumn = useCallback((val: 'name' | 'joinDate' | 'expiryDate' | 'paidAmount' | 'status') => setUrlParam('sort', val), [setUrlParam]);
+  const setSortDirection = useCallback((val: 'asc' | 'desc') => setUrlParam('dir', val), [setUrlParam]);
   const setCurrentPage = useCallback((val: number) => setUrlParam('page', val.toString()), [setUrlParam]);
 
   const genderFilter = searchParams.get('gender') || 'All';
   const planFilter = searchParams.get('plan') || 'All';
   const expiryFrom = searchParams.get('expiryFrom') || '';
   const expiryTo = searchParams.get('expiryTo') || '';
-  const sortColumn = (searchParams.get('sort') as any) || 'name';
-  const sortDirection = (searchParams.get('dir') as any) || 'asc';
+  const sortColumn = (searchParams.get('sort') as MemberSortColumn) || 'name';
+  const sortDirection = (searchParams.get('dir') as SortDirection) || 'asc';
 
   // UI State
   const [showAddModal, setShowAddModal] = useState(false);
@@ -83,20 +69,11 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
   const closeMsg = useCallback(() => setMsgModal(null), []);
 
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      
-    }
-    loadAll({ search: debouncedSearch, status: statusFilter, page: currentPage.toString() }).catch(() => {
-      showToast('Failed to load members', 'error');
-    });
-  }, [loadAll, debouncedSearch, statusFilter, currentPage, showToast, initialData]);
-
-  useEffect(() => {
     if (searchParams.get('action') === 'add_member') {
       const name = searchParams.get('name') || '';
       const phone = searchParams.get('phone') || '';
       const email = searchParams.get('email') || '';
+      // Allow current execution context to clear before modifying state
       setTimeout(() => {
         setEditId(null);
         setEditData({
@@ -157,7 +134,7 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
     setMsgModal({ open: true, type, recipient: { name: m.name, phone: m.phone, email: m.email }, message: tpl });
   }, []);
 
-  const exportMembers = useCallback((format: any) => {
+  const exportMembers = useCallback((format: string) => {
     showToast(`Exporting members as ${format}...`, 'success');
   }, [showToast]);
 
@@ -166,7 +143,7 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
     genderFilter, setGenderFilter, planFilter, setPlanFilter, expiryFrom, expiryTo, setExpiryRange,
     sortColumn, setSortColumn, sortDirection, setSortDirection, exportMembers,
     toast, showToast, hideToast,
-    selectedMember, setSelectedMember, profileTab, setProfileTab, trainers,
+    selectedMember, setSelectedMember, profileTab, setProfileTab,
     showAddModal, setShowAddModal, editId, editData,
     showRenewModal, setShowRenewModal,
     showPaymentModal, setShowPaymentModal,

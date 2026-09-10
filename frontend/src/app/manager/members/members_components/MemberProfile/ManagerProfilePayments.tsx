@@ -3,12 +3,12 @@
 
 import { Printer, MessageCircle } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
-import { useManagerMembersStore } from '@/app/manager/members/members_store/useManagerMembersStore';
+import { useFetchPayments } from '@/app/manager/members/members_api/useManagerMembersQueries';
 import { formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 
 export default function ManagerProfilePayments() {
   const { handlePrint, handleSharePaymentWhatsApp, setShowRenewModal, setShowPaymentModal, selectedMember } = useMembersContext();
-  const payments = useManagerMembersStore(s => s.payments);
+  const { data: payments = [] } = useFetchPayments(selectedMember?.id || '');
 
   const totalPaid = payments.filter(p => p.status === 'PAID').reduce((s, p) => s + p.amount, 0);
   const totalDue = selectedMember?.pendingAmount || 0;

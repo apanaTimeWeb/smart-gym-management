@@ -4,7 +4,7 @@
 import { Edit, MessageCircle, Mail } from 'lucide-react';
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
-import { useManagerMembersStore } from '@/app/manager/members/members_store/useManagerMembersStore';
+
 import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS, formatCurrency, PROFILE_TABS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import ManagerProfileOverview from '@/app/manager/members/members_components/MemberProfile/ManagerProfileOverview';
 import ManagerProfileAttendance from '@/app/manager/members/members_components/MemberProfile/ManagerProfileAttendance';
@@ -14,7 +14,7 @@ import ManagerProfileDiet from '@/app/manager/members/members_components/MemberP
 
 export default function ManagerMemberProfile() {
   const { selectedMember, setSelectedMember, profileTab, setProfileTab, openEdit, openMsg, setShowRenewModal } = useMembersContext();
-  const loadMemberProfile = useManagerMembersStore(s => s.loadMemberProfile);
+
 
   if (!selectedMember) return null;
 
@@ -108,7 +108,7 @@ export default function ManagerMemberProfile() {
             {PROFILE_TABS.map(({ id: t, label }) => (
               <button
                 key={t}
-                onClick={() => { setProfileTab(t as "overview" | "attendance" | "payments" | "workout" | "diet"); if (t === 'payments') loadMemberProfile(selectedMember.id); }}
+                onClick={() => { setProfileTab(t as "overview" | "attendance" | "payments" | "workout" | "diet"); }}
                 className={`px-5 py-3.5 text-sm font-medium transition-all duration-200 border-b-2 ${profileTab === t
                     ? 'text-primary bg-primary-subtle border-primary'
                     : 'border-transparent text-secondary hover:text-primary'

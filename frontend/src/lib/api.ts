@@ -131,7 +131,7 @@ export async function apiFetch<T = unknown>(
   if (!finalRes.ok) {
     const errorMsg = json.message || `API Error: ${finalRes.status}`;
     if (typeof window !== 'undefined') {
-      toast.error(errorMsg);
+      toast.error(errorMsg, { id: errorMsg });
     }
     throw new Error(errorMsg);
   }

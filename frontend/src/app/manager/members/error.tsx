@@ -3,6 +3,7 @@
 
 import { useEffect } from 'react';
 import { AlertTriangle } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
 export default function Error({
  error,
@@ -12,7 +13,7 @@ export default function Error({
  reset: () => void;
 }) {
  useEffect(() => {
- // Error logged to monitoring provider
+   logger.error('Members dashboard error:', { error });
  }, [error]);
 
  return (
@@ -31,7 +32,7 @@ export default function Error({
  <div className="pt-4">
  <button
  onClick={() => reset()}
- className="px-6 py-2.5 bg-danger hover:bg-danger text-white font-medium rounded-xl transition-colors shadow-sm shadow-danger/20"
+ className="px-6 py-2.5 bg-danger hover:bg-danger text-white font-medium rounded-xl transition-colors shadow-sm"
  >
  Try again
  </button>

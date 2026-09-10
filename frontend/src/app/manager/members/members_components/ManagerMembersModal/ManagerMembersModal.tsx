@@ -7,10 +7,12 @@ import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
-import { useManagerMembersStore } from '@/app/manager/members/members_store/useManagerMembersStore';
+import { useFetchPlans } from '@/app/manager/members/members_api/useManagerMembersQueries';
+import { useIsMutating } from '@tanstack/react-query';
 import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency, MemberSchema, type MemberFormValues, EMPTY_MEMBER_FORM, GENDER_OPTIONS, MEMBER_EDIT_STATUS_OPTIONS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import ManagerMemberProfilePictureUpload from '@/app/manager/members/members_components/ManagerMembersModal/ManagerMemberProfilePictureUpload';
 import type { PlanWithCustom } from '@/app/manager/members/members_types/ManagerMembersTypes';
+import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
 
 export default function ManagerMembersModal() {
   const {
@@ -18,8 +20,9 @@ export default function ManagerMembersModal() {
     saveMember
   } = useMembersContext();
 
-  const plans = useManagerMembersStore(s => s.plans);
-  const saving = useManagerMembersStore(s => s.saving);
+  const { data: plansData } = useFetchPlans();
+  const plans = plansData || [];
+  const saving = useIsMutating() > 0;
 
   const useFormReturn = useForm<MemberFormValues>({
     resolver: zodResolver(MemberSchema) as any,
@@ -30,8 +33,10 @@ export default function ManagerMembersModal() {
     register,
     handleSubmit,
     reset,
-    formState: { errors }
+    formState: { errors, isDirty }
   } = useFormReturn;
+
+  useUnsavedChangesGuard(isDirty && !saving);
 
   // Refetch editData into form whenever modal opens for edit
   useEffect(() => {

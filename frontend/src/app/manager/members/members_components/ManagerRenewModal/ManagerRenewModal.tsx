@@ -7,7 +7,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
-import { useManagerMembersStore } from '@/app/manager/members/members_store/useManagerMembersStore';
+import { useFetchPlans } from '@/app/manager/members/members_api/useManagerMembersQueries';
+import { useIsMutating } from '@tanstack/react-query';
 import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import type { PlanWithCustom } from '@/app/manager/members/members_types/ManagerMembersTypes';
 
@@ -36,8 +37,9 @@ export default function ManagerRenewModal() {
     showRenewModal, setShowRenewModal, selectedMember, renewMember
   } = useMembersContext();
 
-  const plans = useManagerMembersStore(s => s.plans);
-  const saving = useManagerMembersStore(s => s.saving);
+  const { data: plansData } = useFetchPlans();
+  const plans = plansData || [];
+  const saving = useIsMutating() > 0;
 
   const useFormReturn = useForm<RenewFormValues>({
     resolver: zodResolver(RenewSchema) as any,

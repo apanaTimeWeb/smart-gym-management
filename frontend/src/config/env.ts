@@ -17,8 +17,10 @@ const _env = envSchema.safeParse({
   NEXT_PUBLIC_GYM_PHONE: process.env.NEXT_PUBLIC_GYM_PHONE,
 });
 
+import { logger } from '@/lib/logger';
+
 if (!_env.success) {
-  console.error('❌ Invalid environment variables:', _env.error.format());
+  logger.error('❌ Invalid environment variables:', { error: _env.error.format() });
   throw new Error('Invalid environment variables');
 }
 
