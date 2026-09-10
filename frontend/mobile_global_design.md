@@ -48,8 +48,61 @@ must meet this via minimum height/width or padding.
 - Standard screen-transition fade/slide: `~250ms` duration, ease-out curve.
 - All presets centralized in one shared animation-config module — never
   redefined inline per screen.
+- **`prefers-reduced-motion` compliance (mandatory):** Always check the OS
+  reduced-motion setting before playing non-essential animations. Users with
+  vestibular disorders or motion sensitivity configure this at the OS level.
+  - React Native: `import { AccessibilityInfo } from 'react-native'` — use
+    `AccessibilityInfo.isReduceMotionEnabled()` or the `useReduceMotion()` hook
+    from `react-native-reanimated` to skip or shorten animations.
+  - Flutter: `MediaQuery.of(context).disableAnimations` — if `true`, skip
+    all non-essential `AnimationController` transitions.
+  - **Rule:** Any animation that is purely decorative (card hover lift, skeleton
+    shimmer, screen transition) MUST be skipped or reduced to an instant
+    state-change when reduced-motion is enabled. Functional animations (e.g.
+    a spinner indicating in-progress work) may remain.
 
-## 8. Chart Palette
+### Motion Token Scale
+All animation durations MUST use these named tokens — never arbitrary inline values:
+
+| Token | Duration | Usage |
+|---|---|---|
+| `duration-fast` | 150ms | Micro-interactions: button press, checkbox toggle |
+| `duration-base` | 200ms | Standard transitions: hover/press states, dropdown open |
+| `duration-slow` | 300ms | Screen-level transitions: bottom sheet open, modal appear |
+| `duration-xslow` | 500ms | Complex layout shifts: skeleton → content swap |
+
+## 8. Status & Semantic Colors
+
+Every status badge, label, and icon color MUST use these tokens — never raw hex
+values inline. Maps 1:1 with the enum values defined in each feature's `*.types.ts`
+(mobile Rule 34).
+
+| Token | Text color | Background color | Enum values it covers |
+|---|---|---|---|
+| `status-success` | `#22C55E` | `#064E3B` | `Active`, `Present`, `Paid`, `Delivered`, `Resolved` |
+| `status-warning` | `#F59E0B` | `#451A03` | `Pending`, `Expiring`, `Held`, `InProgress` |
+| `status-danger` | `#EF4444` | `#450A0A` | `Suspended`, `Overdue`, `Failed`, `Expired` |
+| `status-info` | `#3B82F6` | `#1E3A5F` | `New`, `Interested`, `Visited` |
+| `status-neutral` | `#A1A1AA` | `#1E1E2E` | `Inactive`, `Cancelled`, `Exited` |
+| `status-purple` | `#C084FC` | `#3B0764` | `Alumni`, `ExMember`, custom tags |
+
+**Rule:** The status-to-token mapping MUST live in one central constants file
+(e.g. `src/core/config/statusBadgeConfig.ts`) — never as inline conditionals
+inside individual components. This is the mobile equivalent of the web's
+`statusBadgeConfig.ts` (web design Section 4).
+
+## 8a. Payment Mode Color Tokens
+
+Payment mode colors are separated from status colors to avoid visual collision.
+
+| Token | Text color | Background color | Usage |
+|---|---|---|---|
+| `pay-cash` | `#5EEAD4` | `#134E4A` | Cash payments |
+| `pay-upi` | `#67E8F9` | `#164E63` | UPI payments |
+| `pay-card` | `#94A3B8` | `#1E293B` | Card payments |
+| `pay-bank` | `#38BDF8` | `#0C4A6E` | Bank transfers |
+
+## 9. Chart Palette
 Series color order (applied consistently across every chart in the app):
 `primary, #22C55E, #F59E0B, #EC4899, #06B6D4`.
 
@@ -231,3 +284,36 @@ AFTER a `2xx` response — never before.
 
 **Rule:** Never hardcode error strings in the UI — always surface `response.message`
 from the backend envelope (consistent with mobile Rule 32 and backend Rule 28).
+
+---
+
+## 18. Theme Contract Cross-Reference (Rule 52)
+
+This file (`mobile_global_design.md`) is the VALUES source — it defines what every
+token is worth in light and dark mode.
+
+`mobile_theme_contract.md` (required by mobile Rule 52) is the CATALOGUE — it lists
+every token name, its value from this file, and its exact usage context in one
+scannable table that AI agents read before writing any styled component.
+
+**Relationship:**
+- When a new token is needed: add it to THIS file first (with light + dark values
+  and a usage description), then add it to `mobile_theme_contract.md`, then
+  implement it in the framework's theme module (Rule 3).
+- AI agents writing components MUST reference `mobile_theme_contract.md` to pick
+  token names — never guess a token name or hardcode a value from memory.
+- The two files must stay in sync. A token present in one but not the other is a
+  documentation bug — fix it in the same commit.
+
+**Token categories that MUST appear in `mobile_theme_contract.md`:**
+- Color tokens (Section 1 of this file)
+- Status & semantic color tokens (Section 8)
+- Payment mode color tokens (Section 8a)
+- Spacing scale (Section 2)
+- Typography scale (Section 3)
+- Border radius scale (Section 4)
+- Icon size tokens (Section 5)
+- Touch target tokens (Section 6)
+- Motion duration tokens (Section 7)
+- Elevation/shadow tokens (Section 10)
+- Z-index/elevation stack (Section 14)
