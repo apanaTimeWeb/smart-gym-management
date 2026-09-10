@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Provides strongly-typed network calls for the hr module.
-import { apiFetch, ApiResponse } from '@/lib/api';
+import { apiFetch } from '@/lib/api';
+import type { ApiResponse } from '@/lib/api';
 import { HrUrlConfig } from '@/app/manager/hr/ManagerHrUrlConfig';
 import type { Staff, Payroll, HrSummary, LedgerEntry } from '@/app/manager/hr/hr_types/ManagerHrTypes';
 

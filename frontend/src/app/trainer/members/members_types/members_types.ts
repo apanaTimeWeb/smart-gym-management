@@ -14,6 +14,16 @@ export interface MembersInitialData {
 }
 
 export interface MembersContextType {
+  // Data state
+  members: Member[];
+  stats: MemberStats;
+  totalMembers: number;
+  fetchState: FetchState;
+  saving: boolean;
+  attMap: Record<string, { day: number; status: string }[]>;
+  loadAll: () => Promise<void>;
+  loadMemberProfile: (memberId: string) => Promise<void>;
+
   search: string;
   debouncedSearch: string;
   setSearch: (s: string) => void;

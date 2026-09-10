@@ -3,7 +3,8 @@
 // RESPONSIBILITY: Typed Error Boundary component that wraps the login client components and displays a module-specific fallback UI on crash.
 'use client';
 
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import React, { Component } from 'react';
+import type { ErrorInfo, ReactNode } from 'react';
 import { AuthUrlConfig } from '@/app/auth/auth_url_config';
 import { logger } from '@/lib/logger';
 

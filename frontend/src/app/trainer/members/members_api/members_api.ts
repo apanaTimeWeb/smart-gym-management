@@ -1,7 +1,8 @@
 // RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
 // DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Provides isolated data fetching methods for the members module.
-import { apiFetch, ApiResponse } from '@/lib/api';
+import { apiFetch } from '@/lib/api';
+import type { ApiResponse } from '@/lib/api';
 import { MembersUrlConfig } from '@/app/trainer/members/members_url_config';
 import type { Member, MemberStats } from '@/app/trainer/trainer_types/trainer_types';
 

@@ -1,4 +1,4 @@
-# Forbidden Patterns for `erp/library`
+# Forbidden Patterns for `trainer/library`
 
 To maintain extreme isolation and enterprise-grade architecture in this module, the following are strictly forbidden:
 

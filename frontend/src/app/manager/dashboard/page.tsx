@@ -2,7 +2,7 @@
 import ManagerDashboardMain from '@/app/manager/dashboard/dashboard_components/ManagerDashboardMain/ManagerDashboardMain';
 import { cookies } from 'next/headers';
 import type { DashboardStats } from '@/app/manager/dashboard/dashboard_types/ManagerDashboardTypes';
-import { ApiResponse } from '@/lib/api';
+import type { ApiResponse } from '@/lib/api';
 import { DashboardUrlConfig } from '@/app/manager/dashboard/ManagerDashboardUrlConfig';
 
 async function getDashboardData() {

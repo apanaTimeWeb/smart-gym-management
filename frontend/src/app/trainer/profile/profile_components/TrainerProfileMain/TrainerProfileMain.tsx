@@ -5,7 +5,6 @@
 import { User, Lock, Save, Loader2, Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { useTrainerProfileLogic } from '@/app/trainer/profile/profile_context/useTrainerProfileLogic';
-import TrainerHeader from '@/app/trainer/trainer_components/TrainerLayout/TrainerHeader';
 import { TRAINER_SPECIALIZATIONS } from '@/app/trainer/profile/profile_utils/TrainerProfileSharedConstants';
 
 export default function TrainerProfileMain() {
@@ -33,8 +32,7 @@ export default function TrainerProfileMain() {
 
   return (
     <div className="min-h-full pb-10">
-      <TrainerHeader title="My Profile" subtitle="Manage your account details and password." />
-      <div className="max-w-3xl mx-auto space-y-6 p-6">
+            <div className="max-w-3xl mx-auto space-y-6 p-6">
 
       {/* Avatar card */}
       <div

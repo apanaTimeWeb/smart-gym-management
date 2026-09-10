@@ -23,7 +23,7 @@ export const ManagerReferralsApi = {
       referrerId: dto.referrerId,
       refereeName: dto.refereeName,
       refereePhone: dto.refereePhone,
-      dateReferred: new Date().toISOString().split('T')[0],
+      dateReferred: new Date().toISOString().split('T')[0] || '',
       status: 'PENDING',
       rewardStatus: 'N/A',
       rewardAmount: 500,
@@ -38,7 +38,7 @@ export const ManagerReferralsApi = {
     const idx = mockReferrals.findIndex(r => r.id === referralId);
     if (idx === -1) throw new Error('Referral not found');
     
-    mockReferrals[idx] = { ...mockReferrals[idx], rewardStatus: 'CLAIMED' };
-    return mockReferrals[idx];
+    mockReferrals[idx] = { ...mockReferrals[idx]!, rewardStatus: 'CLAIMED' } as ManagerReferral;
+    return mockReferrals[idx]!;
   },
 };

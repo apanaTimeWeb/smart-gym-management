@@ -1,7 +1,8 @@
 // RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
 // DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Provides strongly-typed network calls for dashboard metrics.
-import { apiFetch, ApiResponse } from '@/lib/api';
+import { apiFetch } from '@/lib/api';
+import type { ApiResponse } from '@/lib/api';
 import { DashboardUrlConfig } from '@/app/trainer/dashboard/dashboard_url_config';
 import type { DashboardStats } from '@/app/trainer/dashboard/dashboard_types/dashboard_types';
 

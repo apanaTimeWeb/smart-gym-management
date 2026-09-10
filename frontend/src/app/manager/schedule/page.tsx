@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Server component entry point for the Trainer Schedule module.
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import ManagerScheduleMain from '@/app/manager/schedule/schedule_components/ManagerScheduleMain/ManagerScheduleMain';
 
 export const metadata: Metadata = {

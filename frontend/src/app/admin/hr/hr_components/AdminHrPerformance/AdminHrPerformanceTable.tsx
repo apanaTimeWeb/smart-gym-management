@@ -106,8 +106,8 @@ export default function AdminHrPerformanceTable({
 
                     {/* Status Badge */}
                     <td className="px-4 py-3.5">
-                      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${statusCfg.bgClass} ${statusCfg.textClass}`}>
-                        {statusCfg.label}
+                      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${statusCfg?.bgClass} ${statusCfg?.textClass}`}>
+                        {statusCfg?.label || staff.status}
                       </span>
                     </td>
                   </tr>

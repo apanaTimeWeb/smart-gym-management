@@ -97,8 +97,8 @@ export const EMPTY_MEMBER_FORM: MemberFormValues = {
   gender: 'MALE',
   billingCycle: 'ONE_MONTH',
   planId: '',
-  joinDate: today.toISOString().split('T')[0],
-  expiryDate: nextMonth.toISOString().split('T')[0],
+  joinDate: today.toISOString().split('T')[0] || '',
+  expiryDate: nextMonth.toISOString().split('T')[0] || '',
   medicalHistory: '',
 };
 

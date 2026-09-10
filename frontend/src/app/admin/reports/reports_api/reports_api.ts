@@ -1,5 +1,6 @@
 // RESPONSIBILITY: API client for the Reports module. All network calls for report data.
-import { apiFetch, ApiResponse } from '@/lib/api';
+import { apiFetch } from '@/lib/api';
+import type { ApiResponse } from '@/lib/api';
 import type { ReportData } from '@/app/admin/reports/reports_types/reports_types';
 
 export const reportsApi = {

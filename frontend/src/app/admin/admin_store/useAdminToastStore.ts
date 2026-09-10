@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Global store for Admin Toast notifications, enforcing deduplication via stable IDs.
 import { create } from 'zustand';
-import { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
+import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
 
 interface ToastState {
   toast: { id: string; message: string; type: ToastType } | null;

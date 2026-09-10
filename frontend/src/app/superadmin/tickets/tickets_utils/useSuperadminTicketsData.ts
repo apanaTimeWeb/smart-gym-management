@@ -2,7 +2,8 @@
 // DATA FLOW: Component -> useSuperadminTicketsData.ts -> API/Store
 import { useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, ApiResponse } from '@/lib/api';
+import { apiFetch } from '@/lib/api';
+import type { ApiResponse } from '@/lib/api';
 
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 

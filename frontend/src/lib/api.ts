@@ -74,7 +74,7 @@ export async function apiFetch<T = unknown>(
       // Fallback to checking a specific cookie if tenantId is stored separately
       const tenantCookie = document.cookie.split(';').find(x => x.trim().startsWith('x-tenant-id='));
       if (tenantCookie) {
-        headers['x-tenant-id'] = tenantCookie.split('=')[1].trim();
+        headers['x-tenant-id'] = tenantCookie.split('=')[1]?.trim() || '';
       }
     }
   }

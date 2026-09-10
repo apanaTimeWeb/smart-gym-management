@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { X } from 'lucide-react';
-import { UseFormReturn } from 'react-hook-form';
+import type { UseFormReturn } from 'react-hook-form';
 import type { AffiliateFormData } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
 
 interface SuperadminAffiliateModalProps {

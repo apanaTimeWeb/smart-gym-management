@@ -3,7 +3,8 @@
 
 import { Download, Search, Calendar } from 'lucide-react';
 import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
-import { DATE_FILTERS, DateFilter } from '@/app/admin/sales/sales_utils/AdminSalesSharedConstants';
+import { DATE_FILTERS } from '@/app/admin/sales/sales_utils/AdminSalesSharedConstants';
+import type { DateFilter } from '@/app/admin/sales/sales_utils/AdminSalesSharedConstants';
 import toast from 'react-hot-toast';
 import { useState, useEffect } from 'react';
 

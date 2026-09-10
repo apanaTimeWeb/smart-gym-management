@@ -38,7 +38,7 @@ export default function ManagerExpensesChart() {
     }));
 
     // Sort descending by value
-    return data.sort((a, b) => b.value - a.value);
+    return data.sort((a, b) => (b.value || 0) - (a.value || 0));
   }, [expenses]);
 
   if (chartData.length === 0) {
@@ -50,7 +50,7 @@ export default function ManagerExpensesChart() {
   }
 
   // Calculate total and highest for the summary headers
-  const totalThisMonth = chartData.reduce((acc, curr) => acc + curr.value, 0);
+  const totalThisMonth = chartData.reduce((acc, curr) => acc + (curr.value || 0), 0);
   const highestCategory = chartData.length > 0 ? chartData[0] : null;
 
   return (
@@ -65,7 +65,7 @@ export default function ManagerExpensesChart() {
         <div className="p-4 bg-input rounded-lg border border-border">
           <p className="text-sm font-bold text-secondary uppercase tracking-wider mb-1">Highest Category</p>
           <p className="text-2xl font-black text-warning">
-            {highestCategory ? `${highestCategory.name} (₹${highestCategory.value.toLocaleString('en-IN')})` : 'N/A'}
+            {highestCategory ? `${highestCategory.name} (₹${(highestCategory.value || 0).toLocaleString('en-IN')})` : 'N/A'}
           </p>
         </div>
         <div className="p-4 bg-input rounded-lg border border-border">

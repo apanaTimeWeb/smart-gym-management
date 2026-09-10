@@ -1,7 +1,8 @@
 // RESPONSIBILITY: Provides local UI state (filtering, pagination, modal visibility) for the Expenses module.
 'use client';
 
-import { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import type { ReactNode } from 'react';
 import { useManagerExpensesStore } from '@/app/manager/expenses/expenses_store/useManagerExpensesStore';
 import type { Expense } from '@/app/manager/expenses/expenses_types/ManagerExpensesTypes';
 import toast from 'react-hot-toast';

@@ -5,7 +5,8 @@
 import { useState } from 'react';
 import { Network, Users, TrendingUp, Ban, Search, CheckCircle2, AlertTriangle, Building2, Edit2 } from 'lucide-react';
 import { useSuperadminFranchisesPage } from '@/app/superadmin/franchises/franchises_utils/useSuperadminFranchisesPage';
-import { SuperadminFranchiseModal, FranchiseFormData } from '@/app/superadmin/franchises/franchises_components/SuperadminFranchiseModal/SuperadminFranchiseModal';
+import { SuperadminFranchiseModal } from '@/app/superadmin/franchises/franchises_components/SuperadminFranchiseModal/SuperadminFranchiseModal';
+import type { FranchiseFormData } from '@/app/superadmin/franchises/franchises_components/SuperadminFranchiseModal/SuperadminFranchiseModal';
 import { FRANCHISE_STATUS_STYLES, FRANCHISES_PAGE_SIZE } from '@/app/superadmin/franchises/franchises_utils/SuperadminFranchisesConstants';
 import type { SuperadminFranchise } from '@/app/superadmin/franchises/franchises_types/superadmin_franchises_types';
 import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';

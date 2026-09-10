@@ -26,7 +26,7 @@ function PlanCard({ plan, onUpgrade, upgrading }: { plan: SaaSPlan; onUpgrade: (
       )}
 
       <div>
-        <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${style.bg} ${style.text}`}>{plan.name}</span>
+        <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${style?.bg || ''} ${style?.text || ''}`}>{plan.name}</span>
         <div className="mt-3">
           <span className="text-3xl font-bold text-foreground">{fmt(plan.monthlyPrice)}</span>
           {plan.monthlyPrice > 0 && <span className="text-secondary text-sm">/month</span>}

@@ -1,7 +1,8 @@
 // RESPONSIBILITY: API client for the Churn Alerts module.
 // All endpoints sourced from SuperadminUrlConfig — no hardcoded strings.
 
-import { apiFetch, ApiResponse } from '@/lib/api';
+import { apiFetch } from '@/lib/api';
+import type { ApiResponse } from '@/lib/api';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import type { ChurnAlert, ChurnKpiData, ChurnActionPayload } from '@/app/superadmin/churn-alerts/churn_types/churn_types';
 

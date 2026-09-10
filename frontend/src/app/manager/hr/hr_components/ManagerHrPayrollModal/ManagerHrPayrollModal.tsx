@@ -38,7 +38,7 @@ export default function ManagerHrPayrollModal() {
           const res = await attendanceApi.getHistory(String(selectedStaffId), 'STAFF', selectedMonth);
           if (res.success && res.data) {
             const history = res.data;
-            const daysInMonth = new Date(parseInt(selectedMonth.split('-')[0]), parseInt(selectedMonth.split('-')[1]), 0).getDate();
+            const daysInMonth = new Date(parseInt((selectedMonth || '').split('-')[0] || '0'), parseInt((selectedMonth || '').split('-')[1] || '0'), 0).getDate();
             
             let presentDays = 0;
             for (let i = 1; i <= daysInMonth; i++) {

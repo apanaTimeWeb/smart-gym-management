@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Provides isolated data fetching methods for the expenses module.
-import { apiFetch, ApiResponse } from '@/lib/api';
+import { apiFetch } from '@/lib/api';
+import type { ApiResponse } from '@/lib/api';
 import { ExpensesUrlConfig } from '@/app/manager/expenses/ManagerExpensesUrlConfig';
 import type { Expense, ExpenseStats } from '@/app/manager/expenses/expenses_types/ManagerExpensesTypes';
 

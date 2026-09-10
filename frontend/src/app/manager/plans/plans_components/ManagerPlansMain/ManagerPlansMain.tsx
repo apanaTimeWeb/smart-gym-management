@@ -74,7 +74,7 @@ function ChangeRequestModal() {
 // ── Plan Card ─────────────────────────────────────────────────────────────────
 function PlanCard({ plan }: { plan: Plan }) {
   const { openRequestModal } = usePlansContext();
-  const tier = TIER_STYLES[plan.tier] ?? TIER_STYLES['BASIC'];
+  const tier = TIER_STYLES[plan.tier] ?? TIER_STYLES['BASIC'] ?? { bg: 'bg-secondary/10', text: 'text-secondary', label: plan.tier ?? 'BASIC' };
   const features = Array.isArray(plan.features)
     ? plan.features
     : (plan.features as string ?? '').split(',').map(f => f.trim()).filter(Boolean);

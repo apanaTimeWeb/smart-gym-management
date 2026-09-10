@@ -4,6 +4,7 @@
 import React from 'react';
 import TrainerLayout from '@/app/trainer/trainer_components/TrainerLayout/TrainerLayout';
 import { TrainerConfirmProvider } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
+import { TrainerNotificationsProvider } from '@/app/trainer/notifications/notifications_context/TrainerNotificationsContext';
 
 export const metadata = {
   title: 'GymSmart TRAINER | Gym Management System',
@@ -13,7 +14,9 @@ export const metadata = {
 export default function TRAINERLayout({ children }: { children: React.ReactNode }) {
  return (
     <TrainerConfirmProvider>
-      <TrainerLayout>{children}</TrainerLayout>
+      <TrainerNotificationsProvider>
+        <TrainerLayout>{children}</TrainerLayout>
+      </TrainerNotificationsProvider>
     </TrainerConfirmProvider>
   );
 }

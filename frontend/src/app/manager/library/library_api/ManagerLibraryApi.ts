@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Provides strongly-typed network calls for the library module.
-import { apiFetch, ApiResponse } from '@/lib/api';
+import { apiFetch } from '@/lib/api';
+import type { ApiResponse } from '@/lib/api';
 import { LibraryUrlConfig } from '@/app/manager/library/ManagerLibraryUrlConfig';
 import type { DietPlan, Exercise } from '@/app/manager/library/library_types/ManagerLibraryTypes';
 

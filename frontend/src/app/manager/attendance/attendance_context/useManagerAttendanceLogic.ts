@@ -2,7 +2,7 @@
 // DATA FLOW: UI Components -> useManagerAttendanceLogic (State + URL) -> API (Backend)
 import { useState, useCallback, useEffect } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import { ApiResponse } from '@/lib/api';
+import type { ApiResponse } from '@/lib/api';
 import { attendanceApi } from '@/app/manager/attendance/attendance_api/ManagerAttendanceApi';
 import { hrApi } from '@/app/manager/hr/hr_api/ManagerHrApi';
 import { membersApi } from '@/app/manager/members/members_api/ManagerMembersApi';
@@ -11,7 +11,7 @@ import type { Staff } from '@/app/manager/hr/hr_types/ManagerHrTypes';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import { EMPTY_ATTENDANCE_FORM, ATTENDANCE_TABS, type AttendanceTab } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
 import { useDebounce } from '@/app/manager/manager_utils/useDebounce';
-import { AttendanceContextType, Attendance, AttendanceStatsResponse, AttendanceResponse, FetchState } from '@/app/manager/attendance/attendance_types/ManagerAttendanceTypes';
+import type { AttendanceContextType, Attendance, AttendanceStatsResponse, AttendanceResponse, FetchState } from '@/app/manager/attendance/attendance_types/ManagerAttendanceTypes';
 import { useManagerAttendanceMutations } from './useManagerAttendanceMutations';
 
 export function useManagerAttendanceLogic(): AttendanceContextType {

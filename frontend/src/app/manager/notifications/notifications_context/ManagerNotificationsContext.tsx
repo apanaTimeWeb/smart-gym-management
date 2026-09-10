@@ -1,7 +1,8 @@
 // RESPONSIBILITY: React Context — bridges Zustand notifications store with UI state (filters, pagination).
 'use client';
 
-import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import type { ReactNode } from 'react';
 import { useManagerNotificationsStore } from '@/app/manager/notifications/notifications_store/useManagerNotificationsStore';
 import toast from 'react-hot-toast';
 

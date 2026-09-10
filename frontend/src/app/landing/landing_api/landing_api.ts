@@ -2,7 +2,8 @@
 // DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Encapsulates all API calls for the Landing module.
 // Uses the centralized apiFetch wrapper. No component should call fetch() directly.
-import { apiFetch, ApiResponse } from '@/lib/api';
+import { apiFetch } from '@/lib/api';
+import type { ApiResponse } from '@/lib/api';
 import { LandingUrlConfig } from '@/app/landing/landing_url_config';
 
 export const landingApi = {

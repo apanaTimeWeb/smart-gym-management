@@ -1,4 +1,5 @@
-import { apiFetch, ApiResponse } from '@/lib/api';
+import { apiFetch } from '@/lib/api';
+import type { ApiResponse } from '@/lib/api';
 import { FinanceUrlConfig } from '@/app/admin/finance/finance_url_config';
 import type { Payment, FinanceSummary, BranchPnlRecord } from '@/app/admin/finance/finance_types/finance_types';
 

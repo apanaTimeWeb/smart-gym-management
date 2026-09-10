@@ -3,7 +3,7 @@
 
 import { useScheduleContext } from '@/app/trainer/schedule/schedule_context/TrainerScheduleContext';
 import { useTrainerScheduleStore } from '@/app/trainer/schedule/schedule_store/useTrainerScheduleStore';
-import TrainerScheduleEmptyState from '@/app/trainer/schedule/schedule_components/TrainerScheduleEmptyState';
+import TrainerScheduleEmptyState from '@/app/trainer/schedule/schedule_components/TrainerScheduleEmptyState/TrainerScheduleEmptyState';
 import { Plus, Loader2 } from 'lucide-react';
 
 const STATUS_COLORS: Record<string, { bg: string, text: string }> = {

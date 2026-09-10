@@ -102,8 +102,8 @@ export default function ManagerCommunicationsHistory() {
                       </td>
                       <td className="px-4 py-3 text-sm text-foreground font-medium">{c.sentCount}</td>
                       <td className="px-4 py-3">
-                        <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusStyle.bg} ${statusStyle.text}`}>
-                          {statusStyle.label}
+                        <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusStyle?.bg || ''} ${statusStyle?.text || ''}`}>
+                          {statusStyle?.label || c.status}
                         </span>
                       </td>
                       <td className="px-4 py-3 text-sm text-secondary whitespace-nowrap">

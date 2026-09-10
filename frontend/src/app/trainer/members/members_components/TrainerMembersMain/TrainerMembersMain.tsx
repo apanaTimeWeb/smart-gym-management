@@ -3,7 +3,6 @@
 // RESPONSIBILITY: Entry point component for the members module that sets up context providers and layout.
 'use client';
 
-import TrainerHeader from '@/app/trainer/trainer_components/TrainerLayout/TrainerHeader';
 import TrainerToast from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
 import TrainerMessageModal from '@/app/trainer/trainer_components/TrainerFeedback/TrainerMessageModal';
 
@@ -22,8 +21,7 @@ function MembersContent() {
       <div className="print-hide">
         {!selectedMember ? (
           <>
-            <TrainerHeader title="Members Directory" subtitle="Manage gym members, profiles, and subscriptions" />
-            <div className="p-6 space-y-5">
+                        <div className="p-6 space-y-5">
               <TrainerMembersKPIs />
               <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
                 <TrainerMembersToolbar />

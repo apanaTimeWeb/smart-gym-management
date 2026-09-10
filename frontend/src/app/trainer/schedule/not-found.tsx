@@ -1,16 +1,22 @@
-// RESPONSIBILITY: 404 fallback route boundary for the Trainer Schedule module.
 import Link from 'next/link';
+import { SearchX } from 'lucide-react';
 
-export default function TrainerScheduleNotFound() {
+export default function NotFound() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6 text-center px-4">
-      <div className="text-6xl font-bold text-primary opacity-30">404</div>
-      <h1 className="text-2xl font-semibold text-text-primary">Schedule Not Found</h1>
-      <p className="text-text-secondary max-w-md">
-        The schedule or leave request you&apos;re looking for doesn&apos;t exist.
+    <div className="flex flex-col items-center justify-center min-h-[400px] p-8 text-center">
+      <div className="bg-primary/10 p-4 rounded-full mb-4">
+        <SearchX size={48} className="text-primary" />
+      </div>
+      <h2 className="text-2xl font-bold text-foreground mb-2">Page Not Found</h2>
+      <p className="text-secondary max-w-md mb-6">
+        We couldn't find the page you're looking for within the schedule module. 
+        It might have been removed, renamed, or temporarily unavailable.
       </p>
-      <Link href="/trainer/schedule" className="btn btn-primary">
-        Back to Schedule
+      <Link 
+        href="/trainer/dashboard"
+        className="px-6 py-2 bg-primary text-white font-semibold rounded-lg hover:bg-primary/90 motion-safe:transition-colors"
+      >
+        Return to Dashboard
       </Link>
     </div>
   );

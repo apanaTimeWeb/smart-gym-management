@@ -1,11 +1,9 @@
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
-// RESPONSIBILITY: Main entry point for the dashboard module. Renders layout, handles high-level loading/error states, and sets up Context.
+// RESPONSIBILITY: Main entry point for the dashboard module. Renders layout, handles loading/error states, and sets up Context.
+// DATA FLOW: page.tsx (SSR) → TrainerDashboardMain (Client) → DashboardProvider → child components
 'use client';
 
-import TrainerHeader from '@/app/trainer/trainer_components/TrainerLayout/TrainerHeader';
 import { DashboardProvider, useDashboardContext } from '@/app/trainer/dashboard/dashboard_context/DashboardContext';
-import type { DashboardStats, TimeRange } from '@/app/trainer/dashboard/dashboard_types/dashboard_types';
+import type { DashboardStats } from '@/app/trainer/dashboard/dashboard_types/dashboard_types';
 import TrainerDashboardKPIs from '@/app/trainer/dashboard/dashboard_components/TrainerDashboardKPIs/TrainerDashboardKPIs';
 import TrainerDashboardUpcomingSessions from '@/app/trainer/dashboard/dashboard_components/TrainerDashboardUpcomingSessions/TrainerDashboardUpcomingSessions';
 import TrainerDashboardRecentProgress from '@/app/trainer/dashboard/dashboard_components/TrainerDashboardRecentProgress/TrainerDashboardRecentProgress';
@@ -13,7 +11,6 @@ import TrainerDashboardQuickActions from '@/app/trainer/dashboard/dashboard_comp
 import TrainerDashboardGoalTrendChart from '@/app/trainer/dashboard/dashboard_components/TrainerDashboardGoalTrendChart/TrainerDashboardGoalTrendChart';
 import TrainerDashboardMembershipDistribution from '@/app/trainer/dashboard/dashboard_components/TrainerDashboardMembershipDistribution/TrainerDashboardMembershipDistribution';
 
-// Skeleton for the dashboard content area while client-side data loads
 function DashboardSkeleton() {
   return (
     <div className="p-6 space-y-6">
@@ -32,7 +29,7 @@ function DashboardSkeleton() {
 }
 
 function DashboardContent() {
-  const { status, error, timeRange, setTimeRange, startDate, endDate, setCustomDateRange } = useDashboardContext();
+  const { status, error } = useDashboardContext();
 
   if (status === 'loading') return <DashboardSkeleton />;
 
@@ -46,23 +43,20 @@ function DashboardContent() {
   );
 
   return (
-    <>
-      <TrainerHeader title="Dashboard" subtitle="Welcome back, Trainer! Here's your gym overview." />
-      <div className="p-6 space-y-6">
-        <TrainerDashboardKPIs />
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-          <TrainerDashboardUpcomingSessions />
-          <div className="space-y-6">
-            <TrainerDashboardQuickActions />
-            <TrainerDashboardRecentProgress />
-          </div>
-        </div>
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-          <TrainerDashboardGoalTrendChart />
-          <TrainerDashboardMembershipDistribution />
+    <div className="p-6 space-y-6">
+      <TrainerDashboardKPIs />
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <TrainerDashboardUpcomingSessions />
+        <div className="space-y-6">
+          <TrainerDashboardQuickActions />
+          <TrainerDashboardRecentProgress />
         </div>
       </div>
-    </>
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <TrainerDashboardGoalTrendChart />
+        <TrainerDashboardMembershipDistribution />
+      </div>
+    </div>
   );
 }
 
@@ -75,4 +69,3 @@ export default function TrainerDashboardMain({ initialData }: { initialData?: Da
     </DashboardProvider>
   );
 }
-

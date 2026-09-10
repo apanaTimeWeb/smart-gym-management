@@ -3,7 +3,7 @@
 // RESPONSIBILITY: Provides a programmatic confirm() API to all TRAINER components via React Context. Renders a single shared TrainerConfirmModal at the root level. No async data — sync UI state only.
 'use client';
 
-import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
 import TrainerConfirmModal from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmModal';
 
 interface ConfirmOptions {

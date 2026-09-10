@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Provides strongly-typed network calls for the sales module.
-import { apiFetch, ApiResponse } from '@/lib/api';
+import { apiFetch } from '@/lib/api';
+import type { ApiResponse } from '@/lib/api';
 import { SalesUrlConfig } from '@/app/manager/sales/ManagerSalesUrlConfig';
 import type { OverviewDataPoint, MembershipReportItem, MembershipTotals, PendingPaymentMember } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
 import type { Member } from '@/app/manager/members/members_types/ManagerMembersTypes';

@@ -55,7 +55,7 @@ export const EMPTY_ATTENDANCE_FORM: AttendanceFormValues = {
  type: 'MEMBER', 
  memberId: '', 
  staffId: '', 
- date: new Date().toISOString().split('T')[0], 
+ date: new Date().toISOString().split('T')[0] || '', 
  checkIn: '06:00',
  checkOut: '',
  notes: ''

@@ -6,12 +6,11 @@
 import { useState, useEffect } from 'react';
 import { Search, RefreshCw, Plus } from 'lucide-react';
 import { useMembersContext } from '@/app/trainer/members/members_context/MembersContext';
-import { useMembersStore } from '@/app/trainer/members/members_store/useMembersStore';
 import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/SearchableDropdown';
 import { MEMBER_STATUS_OPTIONS } from '@/app/trainer/members/members_utils/MembersSharedConstants';
 
 export default function TrainerMembersToolbar() {
-  const { search, setSearch, statusFilter, setStatusFilter, progressStatusFilter, setProgressStatusFilter, openAdd, currentPage } = useMembersContext();
+  const { search, setSearch, statusFilter, setStatusFilter, progressStatusFilter, setProgressStatusFilter, openAdd, currentPage, loadAll } = useMembersContext();
   const [localSearch, setLocalSearch] = useState(search);
 
   useEffect(() => { setTimeout(() => setLocalSearch(search), 0); }, [search]);
@@ -24,10 +23,8 @@ export default function TrainerMembersToolbar() {
     }, 300);
     return () => clearTimeout(handler);
   }, [localSearch, search, setSearch]);
-  const loadAll = useMembersStore(s => s.loadAll);
-
   const handleRefresh = () => {
-    loadAll({ search, status: statusFilter, progressStatus: progressStatusFilter !== 'All' ? progressStatusFilter : undefined, page: currentPage.toString() });
+    loadAll();
   };
 
   return (

@@ -43,7 +43,7 @@ export default function LandingFooter() {
             <ul className="space-y-3">
               {QUICK_LINKS.map(l => (
                 <li key={l}>
-                  <Link href={`#${l.split(' ')[0].toLowerCase()}`} className="text-secondary hover:text-warning text-sm transition-colors">{l}</Link>
+                  <Link href={`#${l.split(' ')[0]?.toLowerCase() || ''}`} className="text-secondary hover:text-foreground text-sm font-medium motion-safe:transition-colors">{l}</Link>
                 </li>
               ))}
             </ul>

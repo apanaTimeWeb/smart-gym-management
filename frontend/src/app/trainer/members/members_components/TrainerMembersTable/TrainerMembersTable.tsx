@@ -5,7 +5,6 @@
 
 import { MessageCircle, Mail, Loader2 } from 'lucide-react';
 import { useMembersContext } from '@/app/trainer/members/members_context/MembersContext';
-import { useMembersStore } from '@/app/trainer/members/members_store/useMembersStore';
 import { MEMBERS_STATUS_COLORS, MEMBERS_TABLE_HEADERS, formatCurrency } from '@/app/trainer/members/members_utils/MembersSharedConstants';
 import { maskSensitiveData } from '@/lib/formatters';
 import TrainerMembersEmptyState from '@/app/trainer/members/members_components/TrainerMembersEmptyState/TrainerMembersEmptyState';
@@ -16,13 +15,8 @@ import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerShare
 export default function TrainerMembersTable() {
   const { 
     search, debouncedSearch, statusFilter, currentPage, setCurrentPage,
-    setSelectedMember, openMsg
+    setSelectedMember, openMsg, fetchState, members, loadMemberProfile, totalMembers
   } = useMembersContext();
-
-  const members = useMembersStore(s => s.members);
-  const totalMembers = useMembersStore(s => s.totalMembers);
-  const fetchState = useMembersStore(s => s.fetchState);
-  const loadMemberProfile = useMembersStore(s => s.loadMemberProfile);
 
   const totalPages = Math.ceil(totalMembers / TRAINER_ITEMS_PER_PAGE);
 

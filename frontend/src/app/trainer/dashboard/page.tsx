@@ -4,7 +4,7 @@
 import TrainerDashboardMain from '@/app/trainer/dashboard/dashboard_components/TrainerDashboardMain/TrainerDashboardMain';
 import { cookies } from 'next/headers';
 import type { DashboardStats } from '@/app/trainer/dashboard/dashboard_types/dashboard_types';
-import { ApiResponse } from '@/lib/api';
+import type { ApiResponse } from '@/lib/api';
 
 async function getDashboardData() {
   try {

@@ -1,7 +1,8 @@
 // RESPONSIBILITY: API client for the Superadmin Profile module.
 // All endpoints sourced from SuperadminProfileUrlConfig — no hardcoded strings.
 
-import { apiFetch, ApiResponse } from '@/lib/api';
+import { apiFetch } from '@/lib/api';
+import type { ApiResponse } from '@/lib/api';
 import { SuperadminProfileUrlConfig } from '@/app/superadmin/profile/profile_utils/SuperadminProfileUrlConfig';
 import type {
   SuperadminProfileData,

@@ -25,6 +25,7 @@ export default function TrainerWeeklyAvailability() {
 
   const handleToggle = (index: number) => {
     const updated = [...localSchedule];
+    if (!updated[index]) return;
     updated[index].isAvailable = !updated[index].isAvailable;
     // Reset hours if toggled off
     if (!updated[index].isAvailable) {
@@ -39,6 +40,7 @@ export default function TrainerWeeklyAvailability() {
 
   const handleChangeTime = (index: number, field: 'startTime' | 'endTime', value: string) => {
     const updated = [...localSchedule];
+    if (!updated[index]) return;
     updated[index][field] = value;
     setLocalSchedule(updated);
   };

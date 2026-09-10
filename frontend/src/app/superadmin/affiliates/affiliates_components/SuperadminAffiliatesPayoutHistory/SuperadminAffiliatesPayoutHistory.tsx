@@ -21,7 +21,7 @@ export default function SuperadminAffiliatesPayoutHistory({ affiliates }: { affi
         method: i % 2 === 0 ? 'Bank Transfer' : 'PayPal',
         referenceId: `REF-${Math.floor(Math.random() * 100000)}`
       }));
-    }).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    }).sort((a, b) => new Date(b.date || '').getTime() - new Date(a.date || '').getTime());
   }, [affiliates]);
 
   if (payouts.length === 0) {
@@ -49,7 +49,7 @@ export default function SuperadminAffiliatesPayoutHistory({ affiliates }: { affi
           {payouts.map((payout) => (
             <tr key={payout.id} className="hover:bg-input/50 motion-safe:transition-colors">
               <td className="p-4 text-sm text-secondary">
-                {new Date(payout.date).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' })}
+                {new Date(payout.date || '').toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' })}
               </td>
               <td className="p-4">
                 <span className="text-foreground font-medium">{payout.affiliateName}</span>

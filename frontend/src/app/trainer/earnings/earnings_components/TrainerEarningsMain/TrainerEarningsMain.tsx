@@ -5,8 +5,6 @@ import { TrainerEarningsProvider, useTrainerEarningsContext } from '@/app/traine
 import TrainerEarningsKPIs from '@/app/trainer/earnings/earnings_components/TrainerEarningsKPIs/TrainerEarningsKPIs';
 import TrainerEarningsPending from '@/app/trainer/earnings/earnings_components/TrainerEarningsPending/TrainerEarningsPending';
 import TrainerEarningsHistory from '@/app/trainer/earnings/earnings_components/TrainerEarningsHistory/TrainerEarningsHistory';
-import TrainerHeader from '@/app/trainer/trainer_components/TrainerLayout/TrainerHeader';
-
 function TrainerEarningsContent() {
   const { fetchState, error } = useTrainerEarningsContext();
 
@@ -21,8 +19,7 @@ function TrainerEarningsContent() {
 
   return (
     <div className="min-h-full pb-10">
-      <TrainerHeader title="Earnings & Payouts" subtitle="Track your session earnings, commissions, and upcoming payouts." />
-      <div className="p-6 space-y-6">
+            <div className="p-6 space-y-6">
         <TrainerEarningsKPIs />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">

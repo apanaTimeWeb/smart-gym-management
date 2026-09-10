@@ -1,7 +1,8 @@
 // RESPONSIBILITY: React Context — bridges Zustand finance store with UI state (filters, tab, pagination).
 'use client';
 
-import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import type { ReactNode } from 'react';
 import { useManagerFinanceStore } from '@/app/manager/finance/finance_store/useManagerFinanceStore';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 

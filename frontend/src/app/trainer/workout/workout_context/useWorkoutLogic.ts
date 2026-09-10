@@ -1,21 +1,23 @@
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the Workout Library module.
+// DATA FLOW: WorkoutContext → useWorkoutLogic → workoutApi / trainerSharedApi
 import { useState, useCallback, useEffect } from 'react';
-import { 
-  EMPTY_WORKOUT_FORM, WorkoutFormValues
+import {
+  EMPTY_WORKOUT_FORM, type WorkoutFormValues
 } from '@/app/trainer/workout/workout_utils/WorkoutSharedConstants';
 import type { WorkoutContextType } from '@/app/trainer/workout/workout_types/workout_types';
-import type { Workout } from '@/app/trainer/trainer_types/trainer_types';
+import type { Workout, Exercise, FetchState } from '@/app/trainer/trainer_types/trainer_types';
 import { useDebounce } from '@/app/trainer/trainer_utils/useDebounce';
 import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 import { workoutApi } from '@/app/trainer/workout/workout_api/workout_api';
 import { trainerSharedApi } from '@/app/trainer/trainer_api/trainer_api';
-import type { Exercise, FetchState } from '@/app/trainer/trainer_types/trainer_types';
 import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import { useTrainerWorkoutExercises } from '@/app/trainer/workout/workout_context/useTrainerWorkoutExercises';
+import type { ApiResponse } from '@/lib/api';
 
-import { useTrainerWorkoutExercises } from './useTrainerWorkoutExercises';
+// Bug #5: typed response shapes instead of any
+interface WorkoutsApiResponse { workouts?: Workout[]; total?: number }
+interface ExercisesApiResponse { exercises?: Exercise[]; total?: number }
 
 export function useWorkoutLogic(): WorkoutContextType {
   const { confirm } = useConfirm();
@@ -23,9 +25,9 @@ export function useWorkoutLogic(): WorkoutContextType {
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
-  const tab = searchParams.get('tab') || 'Workout Plans';
-  const search = searchParams.get('search') || '';
-  const filterCategory = searchParams.get('category') || 'All';
+  const tab = searchParams.get('tab') ?? 'Workout Plans';
+  const search = searchParams.get('search') ?? '';
+  const filterCategory = searchParams.get('category') ?? 'All';
   const currentPage = Number(searchParams.get('page')) || 1;
   const debouncedSearch = useDebounce(search, 300);
 
@@ -47,7 +49,7 @@ export function useWorkoutLogic(): WorkoutContextType {
   const setSearch = useCallback((val: string) => setUrlParam('search', val || null), [setUrlParam]);
   const setFilterCategory = useCallback((val: string) => setUrlParam('category', val), [setUrlParam]);
   const setCurrentPage = useCallback((val: number) => setUrlParam('page', val.toString()), [setUrlParam]);
-  
+
   const [workouts, setWorkouts] = useState<Workout[]>([]);
   const [totalWorkouts, setTotalWorkouts] = useState(0);
   const [exercises, setExercises] = useState<Exercise[]>([]);
@@ -67,102 +69,97 @@ export function useWorkoutLogic(): WorkoutContextType {
   const loadAll = useCallback(async () => {
     setFetchState('loading');
     try {
+      // Bug #6 fix: pass all filter params to API — DO NOT re-filter client-side after server fetch
       const params: Record<string, string> = {
         limit: '12',
         page: currentPage.toString()
       };
       if (debouncedSearch) params.search = debouncedSearch;
+      if (filterCategory && filterCategory !== 'All') params.category = filterCategory;
 
+      // Bug #5 fix: typed API calls — no more `as Promise<any>`
       const [wkRes, exRes] = await Promise.all([
-        workoutApi.getWorkouts(params),
-        trainerSharedApi.fetchExercises(params) as Promise<any>,
+        workoutApi.getWorkouts(params) as Promise<ApiResponse<WorkoutsApiResponse>>,
+        trainerSharedApi.fetchExercises(params) as Promise<ApiResponse<ExercisesApiResponse>>,
       ]);
-      
-      let fetchedWorkouts = wkRes.data.workouts || [];
-      let fetchedExercises = exRes.data.exercises || [];
-      
-      if (debouncedSearch) {
-        const q = debouncedSearch.toLowerCase();
-        fetchedWorkouts = fetchedWorkouts.filter((w: Workout) => 
-          w.name?.toLowerCase().includes(q) || w.focus?.toLowerCase().includes(q) || (w.tags && w.tags.some(t => t?.toLowerCase().includes(q)))
-        );
-        fetchedExercises = fetchedExercises.filter((e: Exercise) => 
-          e.name?.toLowerCase().includes(q) || e.category?.toLowerCase().includes(q) || (e.muscleGroup && e.muscleGroup.some(m => m?.toLowerCase().includes(q)))
-        );
-      }
-      
-      if (filterCategory !== 'All') {
-        if (tab === 'Workout Plans') {
-          fetchedWorkouts = fetchedWorkouts.filter((w: Workout) => w.focus === filterCategory);
-        } else {
-          fetchedExercises = fetchedExercises.filter((e: Exercise) => e.muscleGroup?.includes(filterCategory) || e.category === filterCategory);
-        }
-      }
-      
+
+      // Bug #6 fix: trust server-side filtering — no client-side re-filter loops
+      const fetchedWorkouts: Workout[] = wkRes.data?.workouts ?? [];
+      const fetchedExercises: Exercise[] = exRes.data?.exercises ?? [];
+
       setWorkouts(fetchedWorkouts);
-      setTotalWorkouts(wkRes.data.total || fetchedWorkouts.length || 0);
+      setTotalWorkouts(wkRes.data?.total ?? fetchedWorkouts.length);
       setExercises(fetchedExercises);
-      setTotalExercises(exRes.data.total || fetchedExercises.length || 0);
+      setTotalExercises(exRes.data?.total ?? fetchedExercises.length);
       setFetchState('success');
     } catch (e) {
       showToast((e as Error).message, 'error');
       setFetchState('error');
     }
-  }, [showToast, currentPage, debouncedSearch]);
+  }, [showToast, currentPage, debouncedSearch, filterCategory]);
 
-  useEffect(() => { setTimeout(() => loadAll(), 0); }, [loadAll]);
+  // Bug #7 fix: direct useEffect with cancelled flag instead of setTimeout anti-pattern
+  // Deps: loadAll changes when URL params change, which drives re-fetch on navigation
+  useEffect(() => {
+    let cancelled = false;
+    const run = async () => { if (!cancelled) await loadAll(); };
+    void run();
+    return () => { cancelled = true; };
+  }, [loadAll]);
 
   // Workout CRUD
-  const openAddWk = useCallback(() => { 
-    setEditWkId(null); 
-    setWkForm(EMPTY_WORKOUT_FORM); 
-    setShowWkModal(true); 
+  const openAddWk = useCallback(() => {
+    setEditWkId(null);
+    setWkForm(EMPTY_WORKOUT_FORM);
+    setShowWkModal(true);
   }, []);
-  
-  const openEditWk = useCallback((w: Workout) => { 
-    setEditWkId(w.id); 
-    setWkForm({ 
-      name: w.name, 
-      level: w.level, 
-      days: w.days, 
-      exercises: w.exercises, 
-      focus: w.focus, 
-      duration: w.duration, 
-      tags: w.tags.join(', ') 
-    }); 
-    setShowWkModal(true); 
+
+  const openEditWk = useCallback((w: Workout) => {
+    setEditWkId(w.id);
+    setWkForm({
+      name: w.name,
+      level: w.level,
+      days: w.days,
+      exercises: w.exercises,
+      focus: w.focus,
+      duration: w.duration,
+      tags: w.tags.join(', ')
+    });
+    setShowWkModal(true);
   }, []);
-  
+
   const saveWk = useCallback(async (data: WorkoutFormValues) => {
     setSaving(true);
     try {
       const mappedExercises = data.workoutExercises?.map((ex, idx) => ({
-        exerciseId: ex.exerciseId || `ex-${Date.now()}-${Math.random()}`,
+        exerciseId: ex.exerciseId ?? `ex-${Date.now()}-${Math.random()}`,
         name: ex.name,
         sets: ex.sets,
         reps: String(ex.reps),
-        weight: ex.weight || '',
-        restTime: ex.restTime || '',
+        weight: ex.weight ?? '',
+        restTime: ex.restTime ?? '',
         sortOrder: ex.sortOrder ?? idx,
-      })) || [];
+      })) ?? [];
 
-      const payload = { 
-        ...data, 
-        days: Number(data.days), 
-        exercises: Number(data.exercises), 
-        tags: typeof data.tags === 'string' ? data.tags.split(',').map(t => t.trim()).filter(Boolean) : (data.tags || []),
+      const payload = {
+        ...data,
+        days: Number(data.days),
+        exercises: Number(data.exercises),
+        tags: typeof data.tags === 'string' ? data.tags.split(',').map(t => t.trim()).filter(Boolean) : (data.tags ?? []),
         workoutExercises: mappedExercises
       };
-      
+
       if (editWkId) {
         const res = await workoutApi.updateWorkout(editWkId, payload);
         setWorkouts(prev => prev.map(w => String(w.id) === String(editWkId) ? { ...w, ...payload } as unknown as Workout : w));
-        showToast((res as { message?: string }).message || 'Success', 'success');
+        // Bug #3 fix: generic non-business fallback (Rule 14)
+        showToast((res as { message?: string }).message ?? 'Operation completed', 'success');
       } else {
         const res = await workoutApi.createWorkout(payload);
         const newWk = { ...payload, id: Math.random().toString(), isActive: true } as unknown as Workout;
         setWorkouts(prev => [newWk, ...prev]);
-        showToast((res as { message?: string }).message || 'Success', 'success');
+        // Bug #3 fix: generic non-business fallback (Rule 14)
+        showToast((res as { message?: string }).message ?? 'Operation completed', 'success');
       }
       setShowWkModal(false);
     } catch (err) {
@@ -171,20 +168,22 @@ export function useWorkoutLogic(): WorkoutContextType {
       setSaving(false);
     }
   }, [editWkId, showToast]);
-  
-  const deleteWk = useCallback(async (id: string) => { 
+
+  const deleteWk = useCallback(async (id: string) => {
     const isConfirmed = await confirm({ title: 'Delete Workout', message: 'Delete this workout plan?', confirmText: 'Delete', type: 'danger' });
     if (!isConfirmed) return;
     try {
       const res = await workoutApi.removeWorkout(id);
       setWorkouts(prev => prev.filter(w => String(w.id) !== String(id)));
-      showToast((res as { message?: string }).message || 'Success', 'success');
+      // Bug #3 fix: generic non-business fallback (Rule 14)
+      showToast((res as { message?: string }).message ?? 'Operation completed', 'success');
     } catch (err) {
       showToast((err as Error).message, 'error');
     }
   }, [confirm, showToast]);
 
-  const exerciseLogic = useTrainerWorkoutExercises(setExercises, showToast, setSaving, confirm as any);
+  // Bug #5 fix: confirm is now properly typed via ConfirmOptions — no more `confirm as any`
+  const exerciseLogic = useTrainerWorkoutExercises(setExercises, showToast, setSaving, confirm);
 
   return {
     tab, setTab, search, setSearch, filterCategory, setFilterCategory, currentPage, setCurrentPage,
@@ -195,4 +194,3 @@ export function useWorkoutLogic(): WorkoutContextType {
     ...exerciseLogic
   };
 }
-

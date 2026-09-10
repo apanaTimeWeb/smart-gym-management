@@ -1,7 +1,8 @@
 // RESPONSIBILITY: React Context — bridges Zustand plans store with UI state (search, filters, change-request modal).
 'use client';
 
-import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import type { ReactNode } from 'react';
 import { useManagerPlansStore } from '@/app/manager/plans/plans_store/useManagerPlansStore';
 import toast from 'react-hot-toast';
 import type { Plan } from '@/app/manager/plans/plans_types/ManagerPlansTypes';

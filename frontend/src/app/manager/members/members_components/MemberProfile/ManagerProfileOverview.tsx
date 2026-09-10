@@ -8,9 +8,12 @@ import React, { useState } from 'react';
 import { MessageCircle, Mail, Snowflake, Stethoscope, Ban, UserCheck } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
 import { formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
+import { useFetchTrainers } from '@/app/manager/members/members_api/useManagerMembersQueries';
 
 export default function ManagerProfileOverview() {
-  const { selectedMember, openMsg, freezeMember, toggleSuspend, trainers, assignTrainer } = useMembersContext();
+  const { selectedMember, openMsg, freezeMember, toggleSuspend, assignTrainer } = useMembersContext();
+  const { data: trainersData } = useFetchTrainers();
+  const trainers = trainersData || [];
   const [isAssigningTrainer, setIsAssigningTrainer] = useState(false);
   const [selectedTrainerId, setSelectedTrainerId] = useState('');
   const [isPT, setIsPT] = useState(false);
@@ -142,7 +145,7 @@ export default function ManagerProfileOverview() {
                     className="w-full p-2.5 bg-background border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
                   >
                     <option value="">Select Trainer</option>
-                    {trainers.map(t => (
+                    {trainers.map((t: any) => (
                       <option key={t.id} value={t.id}>{t.name} ({t.role})</option>
                     ))}
                   </select>
@@ -154,7 +157,7 @@ export default function ManagerProfileOverview() {
                     <button 
                       onClick={() => {
                         if(selectedTrainerId) {
-                          const t = trainers.find(x => x.id === selectedTrainerId);
+                          const t = trainers.find((x: any) => x.id === selectedTrainerId);
                           if(t) assignTrainer(selectedMember.id, t.id, t.name, isPT);
                           setIsAssigningTrainer(false);
                         }
