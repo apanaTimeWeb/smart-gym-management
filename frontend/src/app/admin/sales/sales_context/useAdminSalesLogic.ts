@@ -4,12 +4,13 @@ import { useCallback } from 'react';
 import { useDebounce } from '@/app/admin/admin_utils/useDebounce';
 import { type SalesTab, type DateFilter } from '@/app/admin/sales/sales_utils/AdminSalesSharedConstants';
 import { useAdminSalesStore } from '@/app/admin/sales/sales_store/useAdminSalesStore';
+import { useAdminToastStore } from '@/app/admin/admin_store/useAdminToastStore';
 import type { SalesContextType, SalesInitialData, FetchState, OverviewDataPoint, MembershipReportItem, MembershipTotals, PendingPaymentMember, StoreOrder, StoreSummary } from '@/app/admin/sales/sales_types/sales_types';
 import type { Member } from '@/app/admin/sales/sales_types/sales_types';
 import { salesApi } from '@/app/admin/sales/sales_api/sales_api';
 import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
 
@@ -18,6 +19,9 @@ export function useAdminSalesLogic(initialData?: SalesInitialData | null): Sales
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { selectedBranchId } = useAdminGlobalStore();
+
+  const queryClient = useQueryClient();
+  const { showToast } = useAdminToastStore();
 
   const tab = (searchParams.get('tab') || 'Overview') as SalesTab;
   const dateFilter = (searchParams.get('dateFilter') || 'This Month') as DateFilter;
@@ -51,13 +55,9 @@ export function useAdminSalesLogic(initialData?: SalesInitialData | null): Sales
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   }, [router, searchParams, pathname]);
 
-  // Remove custom toast state in favor of react-hot-toast, but we'll return a mock showToast for compatibility with context if needed, or update Context.
-  // The plan said "Ensure backend-driven toasts (`res.message`)". We'll use react-hot-toast directly in mutations.
-  // For context backward compatibility:
-  const showToast = useCallback((message: string, type: ToastType) => {
-    if (type === 'error') toast.error(message);
-    else toast.success(message);
-  }, []);
+  const refreshData = useCallback(async () => {
+    await queryClient.invalidateQueries({ queryKey: ['salesOverview', dateFilter, selectedBranchId] });
+  }, [queryClient, dateFilter, selectedBranchId]);
 
   const queryParams = { limit: '10', page: currentPage.toString(), branchId: selectedBranchId, ...(debouncedSearch ? { search: debouncedSearch } : {}) };
 
@@ -89,7 +89,6 @@ export function useAdminSalesLogic(initialData?: SalesInitialData | null): Sales
   const isError = overviewError || reportError || pendingError || allMembershipsError;
   const fetchState: FetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
 
-  // Removed hardcoded store mock data to enforce Rule 75
   const storeOrders: StoreOrder[] = [];
 
   return {
@@ -108,11 +107,7 @@ export function useAdminSalesLogic(initialData?: SalesInitialData | null): Sales
     storeOrdersTotal: 0,
     storeSummary: null,
     fetchState,
-    loadAll: async () => {}, // Mocked to do nothing since React Query handles refetching automatically
-    toast: null,
-    showToast
+    loadAll: refreshData,
+    showToast,
   };
 }
-
-
-

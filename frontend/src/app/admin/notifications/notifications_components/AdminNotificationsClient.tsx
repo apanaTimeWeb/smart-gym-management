@@ -1,7 +1,7 @@
 'use client';
 // RESPONSIBILITY: Orchestrates the notifications list and actions (mark all read, clear all).
 import { useAdminNotificationsPage } from '@/app/admin/notifications/notifications_utils/useAdminNotificationsPage';
-import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/AdminConfirmProvider';
+import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
 import AdminNotificationsList from '@/app/admin/notifications/notifications_components/AdminNotificationsList/AdminNotificationsList';
 import { CheckCheck, Trash2 } from 'lucide-react';
 

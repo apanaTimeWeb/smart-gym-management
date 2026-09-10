@@ -6,7 +6,7 @@
 // DATA FLOW: useJobsPage → SuperadminJobsView → SuperadminJobsHeader + StatsBar + Table + InspectModal
 
 import { Loader2 } from 'lucide-react';
-import { useJobsPage } from '@/app/superadmin/jobs/jobs_components/jobs_utils/useJobsPage';
+import { useJobsPage } from '@/app/superadmin/jobs/jobs_utils/useJobsPage';
 import SuperadminJobsHeader from '@/app/superadmin/jobs/jobs_components/SuperadminJobsHeader/SuperadminJobsHeader';
 import SuperadminJobsStatsBar from '@/app/superadmin/jobs/jobs_components/SuperadminJobsStatsBar/SuperadminJobsStatsBar';
 import SuperadminJobsTable from '@/app/superadmin/jobs/jobs_components/SuperadminJobsTable/SuperadminJobsTable';

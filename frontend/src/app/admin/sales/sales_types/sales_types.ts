@@ -108,7 +108,7 @@ export interface SalesContextType {
   fetchState: FetchState;
   loadAll: () => Promise<void>;
 
-  toast: { message: string; type: ToastType } | null;
+
   showToast: (message: string, type: ToastType) => void;
 }
 

@@ -7,7 +7,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Search } from 'lucide-react';
 import { getUser } from '@/lib/api';
-import { ADMIN_NAV_GROUPS } from '@/app/admin/admin_utils/AdminSharedConstants';
+import { ADMIN_NAV_GROUPS } from '@/app/admin/admin_url_config';
 
 import type { AdminSidebarProps } from '@/app/admin/admin_components/AdminLayout/AdminLayoutTypes';
 

@@ -2,7 +2,7 @@
 'use client';
 import Link from 'next/link';
 
-import { GYM_DETAILS } from '@/app/admin/admin_utils/AdminSharedConstants';
+import { GYM_DETAILS } from '@/app/admin/admin_url_config';
 
 export default function AdminSettingsBanner() {
   return (

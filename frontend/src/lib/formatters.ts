@@ -114,3 +114,11 @@ export function maskSensitiveData(
   // id: show last 4 chars
   return `***${value.slice(-4)}`;
 }
+
+
+export function displayValue(value: string | number | null | undefined, fallback: string = '-'): string {
+  if (value === null || value === undefined || value === '') {
+    return fallback;
+  }
+  return String(value);
+}

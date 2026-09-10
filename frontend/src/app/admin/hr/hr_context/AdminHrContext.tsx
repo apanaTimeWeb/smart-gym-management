@@ -16,9 +16,9 @@ export function HrProvider({ children, initialData }: { children: React.ReactNod
    summary: logic.summary,
    fetchState: logic.fetchState,
    error: logic.error,
-   toast: logic.toast,
+
    showToast: logic.showToast,
-   hideToast: logic.hideToast,
+
    loadAll: logic.loadAll,
    search: logic.search,
    debouncedSearch: logic.debouncedSearch,
@@ -63,7 +63,6 @@ export function HrProvider({ children, initialData }: { children: React.ReactNod
    logic.summary,
    logic.fetchState,
    logic.error,
-   logic.toast,
    logic.search,
    logic.debouncedSearch,
    logic.currentPage,
@@ -80,7 +79,6 @@ export function HrProvider({ children, initialData }: { children: React.ReactNod
    logic.payrollMonth,
    logic.visibleColumns,
    logic.showToast,
-   logic.hideToast,
    logic.loadAll,
    logic.setSearch,
    logic.setBranchFilter,

@@ -70,7 +70,7 @@ export default function SuperadminChurnTable({ alerts, onActionClick }: Superadm
               </td>
               <td className="px-4 py-3 text-right">
                 <span className="text-xs font-medium text-foreground">
-                  {formatCurrency(alert.mrrAtRisk, 'INR')}
+                  {formatCurrency(alert.mrrAtRisk)}
                 </span>
               </td>
               <td className="px-4 py-3">

@@ -2,17 +2,17 @@
 'use client';
 
 import { Edit2, Trash2, Tag, CheckCircle, Loader2, Snowflake } from 'lucide-react';
-import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/AdminConfirmProvider';
+import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
 import { useAdminPlansLogic } from '@/app/admin/plans/plans_context/useAdminPlansLogic';
 import { useAdminPlansStore } from '@/app/admin/plans/plans_store/useAdminPlansStore';
 import { formatCurrency } from '@/app/admin/plans/plans_utils/AdminPlansSharedConstants';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
-import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_utils/AdminSharedConstants';
+import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_url_config';
 
 
 export default function AdminPlansGrid() {
   const { plans, fetchState, saving, search, setSearch, currentPage, setCurrentPage, loadPlans, openAdd, openEdit, savePlan, deletePlan } = useAdminPlansLogic();
-  const { showModal, setShowModal, editId, form, setForm, toast, showToast, hideToast } = useAdminPlansStore();
+  const { showModal, setShowModal, editId, form, setForm } = useAdminPlansStore();
   const { confirm } = useAdminConfirm();
 
   // Client-side filter on the already-fetched plans list (plans count is typically small, <100)

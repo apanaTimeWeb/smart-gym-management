@@ -8,7 +8,7 @@ const fmt = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');
 
 export default function AdminFinanceRevenueSummary() {
  const { payments, summary, totalPayments, fetchState, saving, error, loadAll, search, setSearch, currentPage, setCurrentPage, savePayment, methodFilter, setMethodFilter } = useAdminFinanceLogic();
-  const { showModal, setShowModal, toast, showToast, hideToast } = useAdminFinanceStore();
+  const { showModal, setShowModal } = useAdminFinanceStore();
  if (!summary) return null;
 
  return (

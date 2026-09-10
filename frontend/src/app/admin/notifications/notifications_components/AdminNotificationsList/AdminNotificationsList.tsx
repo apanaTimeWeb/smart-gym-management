@@ -3,7 +3,7 @@
 // DATA FLOW: AdminNotificationsClient → AdminNotificationsList
 
 import { X, Bell } from 'lucide-react';
-import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/AdminConfirmProvider';
+import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
 import type { NotificationItem } from '@/app/admin/notifications/notifications_types/AdminNotificationsTypes';
 
 interface Props {

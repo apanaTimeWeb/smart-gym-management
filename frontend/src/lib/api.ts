@@ -8,10 +8,18 @@
  * Base URL: http://localhost:5000/api/v1
  */
 
+export interface PaginationMeta {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
 export interface ApiResponse<T> {
   success: boolean;
   data: T;
   message: string;
+  meta?: PaginationMeta;
 }
 
 

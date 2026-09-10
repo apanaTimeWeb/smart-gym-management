@@ -16,7 +16,7 @@ const METHOD_FILTER_MAP: Record<string, string> = {
 
 export default function AdminFinanceKPIs() {
   const { payments, summary, totalPayments, fetchState, saving, error, loadAll, search, setSearch, currentPage, setCurrentPage, savePayment, methodFilter, setMethodFilter } = useAdminFinanceLogic();
-  const { showModal, setShowModal, toast, showToast, hideToast } = useAdminFinanceStore();
+  const { showModal, setShowModal } = useAdminFinanceStore();
   if (!summary) return null;
 
   const kpis = [

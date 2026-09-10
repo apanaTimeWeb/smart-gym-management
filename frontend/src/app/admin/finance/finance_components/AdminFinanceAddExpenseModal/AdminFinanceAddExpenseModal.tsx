@@ -87,7 +87,7 @@ export default function AdminFinanceAddExpenseModal({ onClose }: AdminFinanceAdd
           </div>
           <div className="flex gap-3 pt-1">
             <button type="button" onClick={onClose} className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-foreground hover:bg-primary-subtle motion-safe:transition-all active:scale-95">Cancel</button>
-            <button type="submit" disabled={saving} className="flex-1 py-2.5 rounded-xl text-sm font-bold text-white bg-primary hover:bg-primary-hover flex items-center justify-center gap-2 disabled:opacity-70 motion-safe:transition-all active:scale-95">
+            <button type="submit" disabled={saving} className="flex-1 py-2.5 rounded-xl text-sm font-bold text-white bg-primary hover:bg-primary-hover flex items-center justify-center gap-2 disabled:opacity-70 motion-safe:transition-all active:scale-95 min-w-[120px]">
               {saving ? <Loader2 size={15} className="motion-safe:animate-spin" /> : <><Save size={15} /> Save Expense</>}
             </button>
           </div>

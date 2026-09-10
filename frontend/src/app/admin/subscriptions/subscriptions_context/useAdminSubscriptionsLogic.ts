@@ -5,7 +5,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { subscriptionsApi } from '@/app/admin/subscriptions/subscriptions_api/subscriptions_api';
 import { useAdminSubscriptionsStore } from '@/app/admin/subscriptions/subscriptions_store/useAdminSubscriptionsStore';
-import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/AdminConfirmProvider';
+import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
 import type { FetchState } from '@/app/admin/subscriptions/subscriptions_types/subscriptions_types';
 
 export function useAdminSubscriptionsLogic() {

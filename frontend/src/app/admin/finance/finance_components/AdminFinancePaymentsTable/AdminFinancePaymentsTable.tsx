@@ -5,14 +5,14 @@ import { useAdminFinanceLogic } from '@/app/admin/finance/finance_context/useAdm
 import { useAdminFinanceStore } from '@/app/admin/finance/finance_store/useAdminFinanceStore';
 import { PAYMENTS_TABLE_HEADERS, FINANCE_METHOD_STYLES, FINANCE_STATUS_STYLES } from '@/app/admin/finance/finance_utils/AdminFinanceSharedConstants';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
-import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_utils/AdminSharedConstants';
+import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_url_config';
 
 import { formatCurrency } from '@/lib/formatters';
 import { Printer, Undo } from 'lucide-react';
 
 export default function AdminFinancePaymentsTable() {
   const { payments, summary, totalPayments, fetchState, saving, error, loadAll, search, setSearch, currentPage, setCurrentPage, savePayment, methodFilter, setMethodFilter } = useAdminFinanceLogic();
-  const { showModal, setShowModal, toast, showToast, hideToast } = useAdminFinanceStore();
+  const { showModal, setShowModal } = useAdminFinanceStore();
 
   // Apply client-side filter by payment status (DUE = Pending Amount KPI card)
   const filteredPayments = methodFilter === 'All'

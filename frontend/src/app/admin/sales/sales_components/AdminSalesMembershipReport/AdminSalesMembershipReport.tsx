@@ -5,7 +5,7 @@
 import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 import { Loader2 } from 'lucide-react';
-import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_utils/AdminSharedConstants';
+import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_url_config';
 import type { MembershipReportItem } from '@/app/admin/sales/sales_types/sales_types';
 
 export default function AdminSalesMembershipReport() {

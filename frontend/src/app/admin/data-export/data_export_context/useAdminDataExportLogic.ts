@@ -7,7 +7,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { dataExportApi } from '@/app/admin/data-export/data_export_api/data_export_api';
 import { useAdminDataExportStore } from '@/app/admin/data-export/data_export_store/useAdminDataExportStore';
-import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/AdminConfirmProvider';
+import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
 import { DATA_EXPORT_ITEMS_PER_PAGE } from '@/app/admin/data-export/data_export_utils/AdminDataExportSharedConstants';
 import type { ExportFormValues, FetchState } from '@/app/admin/data-export/data_export_types/data_export_types';
 

@@ -9,7 +9,7 @@ import { TIERS } from '@/app/admin/plans/plans_utils/AdminPlansSharedConstants';
 
 export default function AdminPlansToolbar() {
   const { plans, fetchState, saving, search, setSearch, tierFilter, setTierFilter, currentPage, setCurrentPage, loadPlans, openAdd, openEdit, savePlan, deletePlan } = useAdminPlansLogic();
-  const { showModal, setShowModal, editId, form, setForm, toast, showToast, hideToast } = useAdminPlansStore();
+  const { showModal, setShowModal, editId, form, setForm } = useAdminPlansStore();
 
   const [localSearch, setLocalSearch] = useState(search);
 

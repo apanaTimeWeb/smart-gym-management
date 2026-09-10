@@ -17,8 +17,7 @@ export interface HrContextType {
  summary: HrSummary | null;
  fetchState: FetchState;
  error: string;
-  toast: { message: string; type: ToastType } | null;
-  
+
   visibleColumns: string[];
   setVisibleColumns: (cols: string[]) => void;
   
@@ -33,7 +32,6 @@ export interface HrContextType {
   setCurrentPage: (p: number) => void;
   
   showToast: (msg: string, t: ToastType) => void;
-  hideToast: () => void;
  loadAll: () => Promise<void>;
  
  // Form / Modal State

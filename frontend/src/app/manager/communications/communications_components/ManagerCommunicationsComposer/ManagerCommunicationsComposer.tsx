@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Full message composer — channel selector, segment picker, title, message body, subject (email), recipient preview, and send action.
 'use client';
 
-import { MessageCircle, Mail, Send, Loader2, Users, Eye } from 'lucide-react';
+import { MessageCircle, Mail, Send, Loader2, Users, Eye, Zap } from 'lucide-react';
 import { useState } from 'react';
 import { useManagerCommunicationsLogic } from '@/app/manager/communications/communications_context/useManagerCommunicationsLogic';
 import ManagerCommunicationsSegmentPicker from '@/app/manager/communications/communications_components/ManagerCommunicationsSegmentPicker/ManagerCommunicationsSegmentPicker';
@@ -34,6 +34,12 @@ export default function ManagerCommunicationsComposer() {
     phone: r.phone,
     email: r.email,
   }));
+
+  const templates = [
+    { title: 'Monthly Fee Reminder', body: 'Hi {name},\n\nJust a gentle reminder that your monthly gym fee is due. Please complete the payment at the earliest to continue your uninterrupted workouts.\n\nThanks,\nGymSmart Team' },
+    { title: 'Payment Overdue', body: '⚠️ Hi {name},\n\nYour payment is currently overdue. Please pay your pending dues immediately to avoid suspension of your membership.\n\nRegards,\nGymSmart Team' },
+    { title: 'Renewal Reminder', body: 'Hi {name},\n\nYour membership is expiring soon! Renew now to keep your fitness journey going without any breaks. Contact the reception for exciting renewal offers.\n\nThanks,\nGymSmart Team' },
+  ];
 
   return (
     <div className="bg-card border border-border rounded-xl p-6 space-y-6">
@@ -79,6 +85,28 @@ export default function ManagerCommunicationsComposer() {
         <label className="block text-sm font-semibold text-secondary uppercase tracking-wider">
           3. Compose Message
         </label>
+
+        {/* Quick Templates */}
+        <div className="bg-input border border-border rounded-lg p-3">
+          <label className="block text-xs font-semibold text-foreground mb-2 flex items-center gap-1.5">
+            <Zap size={14} className="text-warning" /> Quick Templates
+          </label>
+          <div className="flex flex-wrap gap-2">
+            {templates.map((tpl, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => {
+                  setComposerTitle(tpl.title);
+                  setComposerMessage(tpl.body);
+                }}
+                className="px-3 py-1.5 text-xs font-medium bg-card border border-border rounded-md hover:border-primary hover:text-primary transition-colors"
+              >
+                {tpl.title}
+              </button>
+            ))}
+          </div>
+        </div>
 
         {/* Campaign title */}
         <div>

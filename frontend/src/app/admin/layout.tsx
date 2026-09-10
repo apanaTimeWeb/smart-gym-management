@@ -2,8 +2,8 @@
 import React from 'react';
 import AdminLayout from '@/app/admin/admin_components/AdminLayout/AdminLayout';
 import { AdminConfirmProvider } from '@/app/admin/admin_components/AdminFeedback/AdminConfirmProvider';
-
-import { AdminQueryProvider } from '@/app/admin/admin_components/AdminQueryProvider';
+import { AdminToastProvider } from '@/app/admin/admin_components/AdminFeedback/AdminToastProvider';
+import AdminQueryProvider from '@/app/admin/admin_components/AdminQueryProvider';
 
 export const metadata = {
   title: 'GymSmart ADMIN | Gym Management System',
@@ -11,9 +11,10 @@ export const metadata = {
 };
 
 export default function ADMINLayout({ children }: { children: React.ReactNode }) {
- return (
+  return (
     <AdminQueryProvider>
       <AdminConfirmProvider>
+        <AdminToastProvider />
         <AdminLayout>{children}</AdminLayout>
       </AdminConfirmProvider>
     </AdminQueryProvider>

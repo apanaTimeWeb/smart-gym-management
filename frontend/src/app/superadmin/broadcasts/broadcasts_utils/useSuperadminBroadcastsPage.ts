@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSuperadminMutation } from '@/app/superadmin/superadmin_utils/hooks/useSuperadminMutation';
+
 import { BroadcastSchema, type BroadcastFormData, type Broadcast, type BroadcastStatus } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
 import toast from 'react-hot-toast';
 import { useLocalStorage } from '@/lib/useLocalStorage';
@@ -74,7 +74,7 @@ export const useSuperadminBroadcastsPage = () => {
     },
   });
 
-  const { mutate, isMutating } = useSuperadminMutation();
+  const isMutating = false;
 
   const handleCreateBroadcast = useCallback(async (data: BroadcastFormData) => {
     const { scheduledDate, ...rest } = data;

@@ -9,9 +9,6 @@ interface AdminSalesStore {
   setDateRange: (range: string) => void;
   filterPlan: string;
   setFilterPlan: (plan: string) => void;
-  toast: { message: string; type: 'success' | 'error' | 'info' | 'warning' } | null;
-  showToast: (message: string, type: 'success' | 'error' | 'info' | 'warning') => void;
-  hideToast: () => void;
 }
 
 export const useAdminSalesStore = create<AdminSalesStore>((set) => ({
@@ -21,8 +18,5 @@ export const useAdminSalesStore = create<AdminSalesStore>((set) => ({
   setDateRange: (range) => set({ dateRange: range }),
   filterPlan: 'All Plans',
   setFilterPlan: (plan) => set({ filterPlan: plan }),
-  toast: null,
-  showToast: (message, type) => set({ toast: { message, type } }),
-  hideToast: () => set({ toast: null }),
 }));
 

@@ -4,6 +4,7 @@ import { useCallback } from 'react';
 import { financeApi } from '@/app/admin/finance/finance_api/finance_api';
 import type { Payment, FinanceSummary } from '@/app/admin/finance/finance_types/finance_types';
 import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
+import { useAdminToastStore } from '@/app/admin/admin_store/useAdminToastStore';
 import type { FinanceInitialData } from '@/app/admin/finance/finance_types/finance_types';
 import { AddPaymentFormValues } from '@/app/admin/finance/finance_utils/AdminFinanceSharedConstants';
 import type { FetchState } from '@/app/admin/finance/finance_types/finance_types';
@@ -20,6 +21,7 @@ export function useAdminFinanceLogic(initialData?: FinanceInitialData | null) {
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
   const { showModal, setShowModal } = useAdminFinanceStore();
+  const { showToast } = useAdminToastStore();
   const { selectedBranchId } = useAdminGlobalStore();
 
   // URL State
@@ -42,10 +44,6 @@ export function useAdminFinanceLogic(initialData?: FinanceInitialData | null) {
   const setMethodFilter = useCallback((val: string) => setUrlParam('method', val === 'All' ? null : val), [setUrlParam]);
   const setStatusFilter = useCallback((val: string) => setUrlParam('status', val === 'All' ? null : val), [setUrlParam]);
 
-  const showToast = useCallback((msg: string, t: ToastType) => {
-    if (t === 'error') toast.error(msg);
-    else toast.success(msg);
-  }, []);
   const hideToast = useCallback(() => {}, []);
 
   const queryParams = { limit: '10', page: currentPage.toString(), branchId: selectedBranchId, ...(debouncedSearch ? { search: debouncedSearch } : {}) };
@@ -123,9 +121,8 @@ export function useAdminFinanceLogic(initialData?: FinanceInitialData | null) {
     fetchState,
     saving: createPaymentMutation.isPending,
     error: isError ? 'An error occurred' : '',
-    toast: null,
     showToast,
-    hideToast,
+    hideToast: () => {},
     loadAll: async () => {}, // Mocked for context compatibility
     showModal,
     setShowModal,
