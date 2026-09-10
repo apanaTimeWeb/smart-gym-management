@@ -1,4 +1,4 @@
-import { ApiResponse } from './api';
+import type { ApiResponse } from './api';
 import { ADMIN_MOCK_REPORT_DATA, ADMIN_PNL_MOCK_DATA, ADMIN_MOCK_EXPENSES } from './mock_admin_data';
 import { ADMIN_MOCK_ATTENDANCE_SUMMARY, ADMIN_MOCK_ATTENDANCE_TREND, ADMIN_MOCK_ATTENDANCE_RECORDS, ADMIN_MOCK_MEMBERS, ADMIN_MOCK_MEMBERS_SUMMARY } from './mock_admin_data_2';
 import { ADMIN_PERFORMANCE_MOCK_DATA, ADMIN_REVENUE_MOCK_DATA } from './mock_admin_data_3';
@@ -22,11 +22,12 @@ class MockDB {
 
   static handleCrud(collectionName: string, method: string, path: string, body?: unknown, defaultData: Record<string, unknown>[] = [], listKey?: string) {
     const coll = this.getCollection(collectionName, defaultData);
-    const segments = path.split('?')[0].split('/');
+    const segments = (path.split('?')[0] || '').split('/');
     const possibleId = segments[segments.length - 1];
     
     // Determine if we are querying an ID (PATCH/DELETE or GET with an ID segment)
-    const isBaseEndpoint = path.split('?')[0].endsWith(collectionName) || path.split('?')[0].endsWith(collectionName.split('_').pop() || '');
+    const basePath = path.split('?')[0] || '';
+    const isBaseEndpoint = basePath.endsWith(collectionName) || basePath.endsWith(collectionName.split('_').pop() || '');
     const id = (method === 'PATCH' || method === 'DELETE' || (method === 'GET' && !isBaseEndpoint)) ? possibleId : null;
 
     if (method === 'GET') {
@@ -112,11 +113,12 @@ class MockDB {
       const finalAmount = Math.max(0, Math.round(baseSalary - deduction));
 
       const existingRecordIdx = currentPayrolls.findIndex((p: any) => String(p.staffId) === String(s.id) && p.month === reqMonth);
-      if (existingRecordIdx >= 0) {
-        currentPayrolls[existingRecordIdx].staff = { name: s.name, role: s.role };
-        if (currentPayrolls[existingRecordIdx].status === 'PENDING') {
-          currentPayrolls[existingRecordIdx].amount = finalAmount;
-          currentPayrolls[existingRecordIdx].pendingAmount = Number(finalAmount) - Number(currentPayrolls[existingRecordIdx].paidAmount || 0);
+      const existingRecord = existingRecordIdx >= 0 ? currentPayrolls[existingRecordIdx] : null;
+      if (existingRecord) {
+        existingRecord.staff = { name: s.name, role: s.role };
+        if (existingRecord.status === 'PENDING') {
+          existingRecord.amount = finalAmount;
+          existingRecord.pendingAmount = Number(finalAmount) - Number(existingRecord.paidAmount || 0);
         }
       } else {
         currentPayrolls.push({
@@ -276,8 +278,9 @@ export async function routeMockRequest<T>(
        const items = (parsedBody.items || []) as any[];
        items.forEach(item => {
          const prodIdx = products.findIndex(p => String(p.id) === String(item.productId));
-         if (prodIdx > -1) {
-           products[prodIdx].stock = Math.max(0, Number(products[prodIdx].stock) - Number(item.qty));
+         const prod = prodIdx > -1 ? products[prodIdx] : null;
+         if (prod) {
+           prod.stock = Math.max(0, Number(prod.stock) - Number(item.qty));
          }
        });
        MockDB.setCollection('mock_products', products);
@@ -319,11 +322,12 @@ export async function routeMockRequest<T>(
       const flagId = isToggle ? segments[segments.length - 2] : segments[segments.length - 1];
       
       const idx = flags.findIndex((f: Record<string, unknown>) => f.id === flagId);
-      if (idx > -1) {
+      const flag = idx > -1 ? flags[idx] : null;
+      if (flag) {
         if (isToggle) {
-          flags[idx].isGlobalEnabled = !flags[idx].isGlobalEnabled;
+          flag.isGlobalEnabled = !flag.isGlobalEnabled;
         } else {
-          flags[idx] = { ...flags[idx], ...parsedBody };
+          flags[idx] = { ...flag, ...parsedBody };
         }
         MockDB.setCollection('mock_superadmin_features', flags);
         return { success: true, message: 'Flag updated', data: flags[idx] } as unknown as ApiResponse<T>;
@@ -549,7 +553,7 @@ export async function routeMockRequest<T>(
     
     // Cascade delete attendance records if a member is deleted
     if (method === 'DELETE' && res.success) {
-      const segments = path.split('?')[0].split('/');
+      const segments = (path.split('?')[0] || '').split('/');
       const deletedId = segments[segments.length - 1];
       if (deletedId) {
         const attendanceColl = MockDB.getCollection('mock_admin_attendance', []);
@@ -617,7 +621,7 @@ export async function routeMockRequest<T>(
   }
   if (path.includes('/attendance/today-stats')) {
     const records = MockDB.getCollection('mock_admin_attendance', []);
-    const todayStr = new Date().toISOString().split('T')[0];
+    const todayStr = new Date().toISOString().split('T')[0] || '';
     const todayRecords = records.filter(r => (r.date as string)?.startsWith(todayStr));
     const memberCheckIns = todayRecords.filter(r => r.type === 'MEMBER').length;
     const staffCheckIns = todayRecords.filter(r => r.type === 'STAFF').length;
@@ -700,7 +704,7 @@ export async function routeMockRequest<T>(
     
     // Cascade delete attendance and payrolls if a staff member is deleted
     if (method === 'DELETE' && res.success) {
-      const segments = path.split('?')[0].split('/');
+      const segments = (path.split('?')[0] || '').split('/');
       const deletedId = segments[segments.length - 1];
       if (deletedId) {
         const attendanceColl = MockDB.getCollection('mock_admin_attendance', []);
@@ -725,7 +729,7 @@ export async function routeMockRequest<T>(
     
     if (method === 'GET') {
       const qsMonthMatch = path.match(/month=([^&]+)/);
-      const reqMonth = qsMonthMatch ? decodeURIComponent(qsMonthMatch[1]) : new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' });
+      const reqMonth = qsMonthMatch ? decodeURIComponent(qsMonthMatch[1] || '') : new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' });
       
       const filtered = MockDB.generatePayrollsForMonth(reqMonth);
       return { success: true, message: 'Fetched payrolls', data: { payrolls: filtered, total: filtered.length } } as unknown as ApiResponse<T>;
@@ -736,7 +740,7 @@ export async function routeMockRequest<T>(
 
   if (path.includes('/hr/ledger')) {
     if (method === 'GET') {
-      const segments = path.split('?')[0].split('/');
+      const segments = (path.split('?')[0] || '').split('/');
       const staffId = segments[segments.length - 1];
       const allLedgers = MockDB.getCollection('mock_admin_staff_ledger', []);
       const staffLedger = allLedgers.filter((l: any) => String(l.staffId) === String(staffId)).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -749,13 +753,14 @@ export async function routeMockRequest<T>(
       const { staffId, amount, notes, date, paymentMode } = parsedBody as any;
       const staffList = MockDB.getCollection('mock_admin_staff', []);
       const idx = staffList.findIndex((s: any) => String(s.id) === String(staffId));
-      if (idx > -1) {
-        staffList[idx].advanceSalary = (Number(staffList[idx].advanceSalary) || 0) + Number(amount);
+      const staff = idx > -1 ? staffList[idx] : null;
+      if (staff) {
+        staff.advanceSalary = (Number(staff.advanceSalary) || 0) + Number(amount);
         MockDB.setCollection('mock_admin_staff', staffList);
 
         const allLedgers = MockDB.getCollection('mock_admin_staff_ledger', []);
         const staffLedgers = allLedgers.filter((l: any) => String(l.staffId) === String(staffId));
-        const lastBalance = staffLedgers.length > 0 ? Number(staffLedgers[staffLedgers.length - 1].balance) : 0;
+        const lastBalance = staffLedgers.length > 0 ? Number(staffLedgers[staffLedgers.length - 1]?.balance || 0) : 0;
         
         allLedgers.push({
           id: `ledg-${Date.now()}`,
@@ -779,13 +784,14 @@ export async function routeMockRequest<T>(
       const { staffId, amount, notes, date, paymentMode } = parsedBody as any;
       const staffList = MockDB.getCollection('mock_admin_staff', []);
       const idx = staffList.findIndex((s: any) => String(s.id) === String(staffId));
-      if (idx > -1) {
-        staffList[idx].currentDue = Math.max(0, (Number(staffList[idx].currentDue) || 0) - Number(amount));
+      const staff = idx > -1 ? staffList[idx] : null;
+      if (staff) {
+        staff.currentDue = Math.max(0, (Number(staff.currentDue) || 0) - Number(amount));
         MockDB.setCollection('mock_admin_staff', staffList);
 
         const allLedgers = MockDB.getCollection('mock_admin_staff_ledger', []);
         const staffLedgers = allLedgers.filter((l: any) => String(l.staffId) === String(staffId));
-        const lastBalance = staffLedgers.length > 0 ? Number(staffLedgers[staffLedgers.length - 1].balance) : 0;
+        const lastBalance = staffLedgers.length > 0 ? Number(staffLedgers[staffLedgers.length - 1]?.balance || 0) : 0;
         
         allLedgers.push({
           id: `ledg-${Date.now()}`,
@@ -858,7 +864,7 @@ export async function routeMockRequest<T>(
   }
   if (path.includes('/admin/finance/summary')) return { success: true, message: 'Summary', data: { totalRevenue: 1500000, monthlyRevenue: 250000, pendingAmount: 45000, totalPayments: 345, revenueByMethod: { UPI: 120000, Cash: 50000, Card: 80000, NetBanking: 0 }, monthlyData: generate(6, i => ({ month: `M${i+1}`, revenue: 200000 + (i * 10000) })) } } as unknown as ApiResponse<T>;
   if (method === 'GET' && (path.includes('/finance/payments/member/') || path.includes('/finance/payments-by-member/'))) {
-    const segments = path.split('?')[0].split('/');
+    const segments = (path.split('?')[0] || '').split('/');
     const memberId = segments[segments.length - 1];
     const allPayments = MockDB.getCollection('mock_admin_payments', []);
     let memberPayments = allPayments.filter((p: any) => String(p.memberId) === String(memberId));
@@ -1086,14 +1092,15 @@ export async function routeMockRequest<T>(
     const isFailed = status === 'FAILED';
     const isCompleted = status === 'COMPLETED';
     const queues = ['billing', 'email', 'webhook', 'database'];
-    const queueName = queues[i % queues.length];
+    const queueName = queues[i % queues.length] || 'billing';
     const jobNames: Record<string, string[]> = {
       'billing': ['process_invoice', 'renew_subscription', 'charge_card'],
       'email': ['send_welcome', 'send_receipt', 'send_newsletter'],
       'webhook': ['trigger_zapier', 'sync_crm'],
       'database': ['backup', 'cleanup_logs']
     };
-    const jobName = jobNames[queueName][i % jobNames[queueName].length];
+    const jobsList = jobNames[queueName] || ['process_invoice'];
+    const jobName = jobsList[i % jobsList.length];
     
     return { 
       id: `job-${1000 + i}`, 

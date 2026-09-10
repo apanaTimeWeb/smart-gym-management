@@ -4,7 +4,7 @@ import type { Member } from '@/app/manager/members/members_types/ManagerMembersT
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import type { DietPlan } from '@/app/manager/library/library_types/ManagerLibraryTypes';
 import type { Workout } from '@/app/manager/workout/workout_types/ManagerWorkoutTypes';
-import { MemberFormValues } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
+import type { MemberFormValues } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import { membersApi } from '@/app/manager/members/members_api/ManagerMembersApi';
 import { financeApi } from '@/app/manager/finance/finance_api/ManagerFinanceApi';
@@ -113,7 +113,7 @@ export function useManagerMembersMutations(
       await financeApi.createPayment({
          memberId: data.memberId,
          amount: data.amountPaid,
-         method: data.paymentMethod as 'UPI' | 'CASH' | 'CARD' | 'BANK_TRANSFER',
+         method: data.paymentMethod as 'UPI' | 'Cash' | 'Card' | 'NetBanking',
          status: 'PAID',
          paidAt: new Date().toISOString(),
          invoiceNumber: `INV-REN-${Date.now().toString().slice(-6)}`
@@ -136,7 +136,7 @@ export function useManagerMembersMutations(
       await financeApi.createPayment({
          memberId: data.memberId,
          amount: data.amount,
-         method: data.method as 'UPI' | 'CASH' | 'CARD' | 'BANK_TRANSFER',
+         method: data.method as 'UPI' | 'Cash' | 'Card' | 'NetBanking',
          status: 'PAID',
          paidAt: new Date().toISOString(),
          invoiceNumber: `INV-PMT-${Date.now().toString().slice(-6)}`

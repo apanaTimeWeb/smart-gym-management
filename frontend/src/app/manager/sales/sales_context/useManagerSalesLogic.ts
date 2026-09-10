@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useDebounce } from '@/app/manager/manager_utils/useDebounce';
 import { type SalesTab, type DateFilter } from '@/app/manager/sales/sales_utils/ManagerSalesSharedConstants';
-import { SalesContextType, SalesInitialData, FetchState, OverviewDataPoint, MembershipReportItem, MembershipTotals, PendingPaymentMember } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
+import type { SalesContextType, SalesInitialData, FetchState, OverviewDataPoint, MembershipReportItem, MembershipTotals, PendingPaymentMember } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
 import type { Member } from '@/app/manager/members/members_types/ManagerMembersTypes';
 import { salesApi } from '@/app/manager/sales/sales_api/ManagerSalesApi';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';

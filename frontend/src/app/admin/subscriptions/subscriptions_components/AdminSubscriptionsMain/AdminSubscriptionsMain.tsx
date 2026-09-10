@@ -32,10 +32,10 @@ export default function AdminSubscriptionsMain() {
 
         {/* Current plan banner */}
         {subscription && (
-          <div className={`bg-card border rounded-xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 ${tierStyle.border}`}>
+          <div className={`bg-card border rounded-xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 ${tierStyle?.border || ''}`}>
             <div className="flex items-center gap-4">
-              <div className={`p-3 rounded-xl ${tierStyle.bg}`}>
-                <Calendar size={22} className={tierStyle.text} />
+              <div className={`p-3 rounded-xl ${tierStyle?.bg || ''}`}>
+                <Calendar size={22} className={tierStyle?.text || ''} />
               </div>
               <div>
                 <p className="text-xs text-secondary uppercase tracking-wider font-semibold">Current Plan</p>

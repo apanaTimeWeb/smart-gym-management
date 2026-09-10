@@ -1,6 +1,7 @@
 // RESPONSIBILITY: Handles logic and state for Exercises inside the Workout module.
 import { useState, useCallback } from 'react';
-import { EMPTY_EXERCISE_FORM, ExerciseFormValues } from '@/app/manager/workout/workout_utils/ManagerWorkoutSharedConstants';
+import { EMPTY_EXERCISE_FORM } from '@/app/manager/workout/workout_utils/ManagerWorkoutSharedConstants';
+import type { ExerciseFormValues } from '@/app/manager/workout/workout_utils/ManagerWorkoutSharedConstants';
 import type { Exercise } from '@/app/manager/library/library_types/ManagerLibraryTypes';
 import { libraryApi } from '@/app/manager/library/library_api/ManagerLibraryApi';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';

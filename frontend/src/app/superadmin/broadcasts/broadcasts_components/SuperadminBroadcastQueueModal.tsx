@@ -44,6 +44,8 @@ export default function SuperadminBroadcastQueueModal({
       const timer = setTimeout(() => {
         const rec = recipients[currentIndex];
         
+        if (!rec) return;
+
         // Push notification logic (mocked to localstorage)
         try {
           const key = 'admin_notifications_v1';

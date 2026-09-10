@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Reusable Tooltip component for truncating data in tables and cards, complying with Design Rule 13 & 19.
 'use client';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 interface ManagerTooltipProps {
   content: string;

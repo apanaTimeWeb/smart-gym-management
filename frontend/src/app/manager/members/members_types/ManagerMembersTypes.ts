@@ -131,10 +131,10 @@ export interface MembersContextType {
   // Actions
   openAdd: () => void;
   openEdit: (m: Member) => void;
-  saveMember: (data: MemberFormValues) => Promise<void>;
+  saveMember: (data: MemberFormValues) => Promise<any>;
   deleteMember: (id: string) => Promise<void>;
-  assignDiet: (memberId: string, diet: DietPlan | null) => Promise<void>;
-  assignWorkout: (memberId: string, workout: Workout | null) => Promise<void>;
+  assignDiet: (memberId: string, diet: DietPlan | null) => Promise<any>;
+  assignWorkout: (memberId: string, workout: Workout | null) => Promise<any>;
   renewMember: (data: {
     planId: string;
     newExpiryDate: string;
@@ -142,11 +142,11 @@ export interface MembersContextType {
     paymentMethod: string;
     billingCycle: string;
     customDays?: number;
-  }) => Promise<void>;
-  recordPayment: (data: { amount: number; method: string }) => Promise<void>;
-  freezeMember: (isFrozen: boolean, freezeUntil?: string) => Promise<void>;
-  toggleSuspend: (isSuspended: boolean) => Promise<void>;
-  assignTrainer: (memberId: string, trainerId: string, trainerName: string, isPT: boolean) => Promise<void>;
+  }) => Promise<any>;
+  recordPayment: (data: { amount: number; method: string }) => Promise<any>;
+  freezeMember: (isFrozen: boolean, freezeUntil?: string) => Promise<any>;
+  toggleSuspend: (isSuspended: boolean) => Promise<any>;
+  assignTrainer: (memberId: string, trainerId: string, trainerName: string, isPT: boolean) => Promise<any>;
   exportMembers: (format: ExportFormat) => void;
 
   // Message Modal

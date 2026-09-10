@@ -24,7 +24,7 @@ export default function TrainerProgressComparisonChart({ snapshots, activeMetric
   const series = snapshots.map((s, i) => ({
     name: s.memberName,
     data: [s[activeMetric] ?? 0],
-    color: MEMBER_COLORS[i % MEMBER_COLORS.length],
+    color: MEMBER_COLORS[i % MEMBER_COLORS.length] || '#FACC15',
   }));
 
   const options: ApexCharts.ApexOptions = {
@@ -73,7 +73,7 @@ export default function TrainerProgressComparisonChart({ snapshots, activeMetric
       theme: 'dark',
       y: { formatter: (val: number) => `${val}${metricConfig.unit}` },
     },
-    colors: snapshots.map((_, i) => MEMBER_COLORS[i % MEMBER_COLORS.length]),
+    colors: snapshots.map((_, i) => MEMBER_COLORS[i % MEMBER_COLORS.length] || '#FACC15'),
   };
 
   if (snapshots.length === 0) {

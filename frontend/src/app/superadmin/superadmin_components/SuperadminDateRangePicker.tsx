@@ -35,7 +35,7 @@ export default function SuperadminDateRangePicker({ onRangeChange }: SuperadminD
       } else if (stringVal === "this_year") {
         start = new Date(today.getFullYear(), 0, 1);
       }
-      onRangeChange(start.toISOString().split('T')[0], end.toISOString().split('T')[0]);
+      onRangeChange(start.toISOString().split('T')[0] || '', end.toISOString().split('T')[0] || '');
     }
   };
 

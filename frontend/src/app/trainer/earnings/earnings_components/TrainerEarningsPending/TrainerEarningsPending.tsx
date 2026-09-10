@@ -1,7 +1,7 @@
 'use client';
 import { CalendarClock } from 'lucide-react';
 import { useTrainerEarningsContext } from '@/app/trainer/earnings/earnings_context/TrainerEarningsContext';
-import { PAYOUT_STATUS_STYLES } from '@/app/trainer/earnings/earnings_utils/TrainerEarningsSharedConstants';
+import { PAYOUT_STATUS_STYLES, formatCurrency } from '@/app/trainer/earnings/earnings_utils/TrainerEarningsSharedConstants';
 
 export default function TrainerEarningsPending() {
   const { pendingPayouts, fetchState } = useTrainerEarningsContext();
@@ -32,11 +32,11 @@ export default function TrainerEarningsPending() {
               <div key={p.id} className="p-4 rounded-xl border border-border bg-page flex flex-col gap-3">
                 <div className="flex justify-between items-start">
                   <div>
-                    <p className="text-sm font-semibold text-foreground">₹{p.amount.toLocaleString('en-IN')}</p>
+                    <p className="text-sm font-semibold text-foreground">{formatCurrency(p.amount)}</p>
                     <p className="text-xs text-secondary mt-0.5">{p.period}</p>
                   </div>
-                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider ${style.bg} ${style.text}`}>
-                    {style.label}
+                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider ${style?.bg || 'bg-secondary/10'} ${style?.text || 'text-secondary'}`}>
+                    {style?.label || p.status}
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5 text-xs text-secondary pt-3 border-t border-border">

@@ -63,6 +63,7 @@ export default function AdminBulkMessageModal({
 
   const handleSendWhatsApp = (index: number) => {
     const recipient = recipients[index];
+    if (!recipient) return;
     const phone = recipient.phone?.replace(/\D/g, '') || '';
     if (!phone) return;
 

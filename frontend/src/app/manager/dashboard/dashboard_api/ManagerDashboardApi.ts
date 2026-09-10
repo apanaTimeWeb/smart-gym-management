@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Provides strongly-typed network calls for dashboard metrics.
-import { apiFetch, ApiResponse } from '@/lib/api';
+import { apiFetch } from '@/lib/api';
+import type { ApiResponse } from '@/lib/api';
 import { DashboardUrlConfig } from '@/app/manager/dashboard/ManagerDashboardUrlConfig';
 import type { DashboardStats } from '@/app/manager/dashboard/dashboard_types/ManagerDashboardTypes';
 

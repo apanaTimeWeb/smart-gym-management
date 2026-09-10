@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Provides strongly-typed network calls for the plans module.
-import { apiFetch, ApiResponse } from '@/lib/api';
+import { apiFetch } from '@/lib/api';
+import type { ApiResponse } from '@/lib/api';
 import { PlansUrlConfig } from '@/app/manager/plans/ManagerPlansUrlConfig';
 import type { Plan } from '@/app/manager/plans/plans_types/ManagerPlansTypes';
 

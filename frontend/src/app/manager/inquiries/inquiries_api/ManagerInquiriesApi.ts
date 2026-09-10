@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Provides strongly-typed network calls for the inquiries module.
-import { apiFetch, ApiResponse } from '@/lib/api';
+import { apiFetch } from '@/lib/api';
+import type { ApiResponse } from '@/lib/api';
 import { InquiriesUrlConfig } from '@/app/manager/inquiries/ManagerInquiriesUrlConfig';
 import type { Inquiry, InquiryStats } from '@/app/manager/inquiries/inquiries_types/ManagerInquiriesTypes';
 import type { InquiryFormValues } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesSharedConstants';

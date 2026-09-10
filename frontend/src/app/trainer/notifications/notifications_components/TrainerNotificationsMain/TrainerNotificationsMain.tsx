@@ -1,13 +1,15 @@
-// RESPONSIBILITY: Entry component for the notifications module. Provides the main view and state management for notifications.
-// DATA FLOW: page.tsx (SSR) → TrainerNotificationsMain (client) → TrainerNotificationsList
+// RESPONSIBILITY: Entry component for the notifications module. Mounts provider and renders notification list.
+// DATA FLOW: page.tsx (SSR) → TrainerNotificationsMain → TrainerNotificationsProvider → TrainerNotificationsContent
 'use client';
 
 import { Loader2 } from 'lucide-react';
 import TrainerNotificationsList from '@/app/trainer/notifications/notifications_components/TrainerNotificationsList';
-import { useTrainerNotificationsLogic } from '@/app/trainer/notifications/notifications_context/useTrainerNotificationsLogic';
-import TrainerHeader from '@/app/trainer/trainer_components/TrainerLayout/TrainerHeader';
+import {
+  TrainerNotificationsProvider,
+  useTrainerNotificationsContext,
+} from '@/app/trainer/notifications/notifications_context/TrainerNotificationsContext';
 
-export default function TrainerNotificationsMain() {
+function TrainerNotificationsContent() {
   const {
     notifications,
     unreadCount,
@@ -17,11 +19,10 @@ export default function TrainerNotificationsMain() {
     loadMore,
     markAllAsRead,
     markAsRead,
-  } = useTrainerNotificationsLogic();
+  } = useTrainerNotificationsContext();
 
   return (
     <div className="min-h-full pb-10">
-      <TrainerHeader title="Notifications" subtitle="Stay updated with your activities and alerts" />
       <div className="p-4 sm:p-6 max-w-4xl mx-auto w-full">
         <div className="flex items-center justify-between mb-4 mt-2">
           <div>
@@ -60,7 +61,6 @@ export default function TrainerNotificationsMain() {
           />
         </div>
 
-        {/* Load More — server-side pagination per Rule 6 (no client-side pagination for large sets) */}
         {hasMore && notifications.length > 0 && (
           <div className="flex justify-center mt-6">
             <button
@@ -81,4 +81,10 @@ export default function TrainerNotificationsMain() {
   );
 }
 
-
+export default function TrainerNotificationsMain() {
+  return (
+    <TrainerNotificationsProvider>
+      <TrainerNotificationsContent />
+    </TrainerNotificationsProvider>
+  );
+}

@@ -36,8 +36,8 @@ export function computeDuration(checkIn: string, checkOut: string | null): strin
   if (!checkIn || !checkOut) return '—';
   const [inH, inM] = checkIn.replace(/ AM| PM/, '').split(':').map(Number);
   const [outH, outM] = checkOut.replace(/ AM| PM/, '').split(':').map(Number);
-  const inMinutes  = (checkIn.includes('PM')  && inH  !== 12 ? inH  + 12 : inH)  * 60 + (inM  ?? 0);
-  const outMinutes = (checkOut.includes('PM') && outH !== 12 ? outH + 12 : outH) * 60 + (outM ?? 0);
+  const inMinutes  = (checkIn.includes('PM')  && (inH ?? 0)  !== 12 ? (inH ?? 0)  + 12 : (inH ?? 0))  * 60 + (inM  ?? 0);
+  const outMinutes = (checkOut.includes('PM') && (outH ?? 0) !== 12 ? (outH ?? 0) + 12 : (outH ?? 0)) * 60 + (outM ?? 0);
   const diff = outMinutes - inMinutes;
   if (diff <= 0) return '—';
   const h = Math.floor(diff / 60);

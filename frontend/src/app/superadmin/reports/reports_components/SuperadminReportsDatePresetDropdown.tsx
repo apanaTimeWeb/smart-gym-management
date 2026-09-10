@@ -15,24 +15,24 @@ export function SuperadminReportsDatePresetDropdown({ value, onChange }: Superad
 
     switch (preset) {
       case 'THIS_MONTH':
-        from = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
-        to = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0];
+        from = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0] || '';
+        to = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0] || '';
         break;
       case 'LAST_MONTH':
-        from = new Date(today.getFullYear(), today.getMonth() - 1, 1).toISOString().split('T')[0];
-        to = new Date(today.getFullYear(), today.getMonth(), 0).toISOString().split('T')[0];
+        from = new Date(today.getFullYear(), today.getMonth() - 1, 1).toISOString().split('T')[0] || '';
+        to = new Date(today.getFullYear(), today.getMonth(), 0).toISOString().split('T')[0] || '';
         break;
       case 'LAST_3_MONTHS':
-        from = new Date(today.getFullYear(), today.getMonth() - 3, 1).toISOString().split('T')[0];
-        to = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0];
+        from = new Date(today.getFullYear(), today.getMonth() - 3, 1).toISOString().split('T')[0] || '';
+        to = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0] || '';
         break;
       case 'LAST_6_MONTHS':
-        from = new Date(today.getFullYear(), today.getMonth() - 6, 1).toISOString().split('T')[0];
-        to = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0];
+        from = new Date(today.getFullYear(), today.getMonth() - 6, 1).toISOString().split('T')[0] || '';
+        to = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0] || '';
         break;
       case 'THIS_YEAR':
-        from = new Date(today.getFullYear(), 0, 1).toISOString().split('T')[0];
-        to = new Date(today.getFullYear(), 11, 31).toISOString().split('T')[0];
+        from = new Date(today.getFullYear(), 0, 1).toISOString().split('T')[0] || '';
+        to = new Date(today.getFullYear(), 11, 31).toISOString().split('T')[0] || '';
         break;
       default:
         // 'CUSTOM' - do not auto-set dates

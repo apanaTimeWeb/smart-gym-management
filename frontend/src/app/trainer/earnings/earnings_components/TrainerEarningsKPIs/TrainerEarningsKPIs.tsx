@@ -1,6 +1,7 @@
 'use client';
 import { IndianRupee, Clock, Activity, Target, Minus } from 'lucide-react';
 import { useTrainerEarningsContext } from '@/app/trainer/earnings/earnings_context/TrainerEarningsContext';
+import { formatCurrency } from '@/app/trainer/earnings/earnings_utils/TrainerEarningsSharedConstants';
 
 export default function TrainerEarningsKPIs() {
   const { kpis, fetchState } = useTrainerEarningsContext();
@@ -16,11 +17,11 @@ export default function TrainerEarningsKPIs() {
   }
 
   const cards = [
-    { label: 'Total Earnings', value: `₹${kpis.totalEarnings.toLocaleString('en-IN')}`, icon: IndianRupee, color: 'text-success', bg: 'bg-success/10' },
-    { label: 'Pending Payouts', value: `₹${kpis.pendingPayouts.toLocaleString('en-IN')}`, icon: Clock, color: 'text-warning', bg: 'bg-warning/10' },
+    { label: 'Total Earnings', value: formatCurrency(kpis.totalEarnings), icon: IndianRupee, color: 'text-success', bg: 'bg-success/10' },
+    { label: 'Pending Payouts', value: formatCurrency(kpis.pendingPayouts), icon: Clock, color: 'text-warning', bg: 'bg-warning/10' },
     { label: 'Sessions Completed', value: kpis.sessionsCompleted.toString(), icon: Activity, color: 'text-info', bg: 'bg-info/10' },
     { label: 'Commission Rate', value: `${kpis.commissionRate}%`, icon: Target, color: 'text-primary', bg: 'bg-primary-subtle' },
-    { label: 'Tax Deducted (TDS)', value: `₹${kpis.taxDeduction.toLocaleString('en-IN')}`, icon: Minus, color: 'text-danger', bg: 'bg-danger/10' },
+    { label: 'Tax Deducted (TDS)', value: formatCurrency(kpis.taxDeduction), icon: Minus, color: 'text-danger', bg: 'bg-danger/10' },
   ];
 
   return (

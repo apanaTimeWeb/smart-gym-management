@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Provides strongly-typed network calls for the workout module.
-import { apiFetch, ApiResponse } from '@/lib/api';
+import { apiFetch } from '@/lib/api';
+import type { ApiResponse } from '@/lib/api';
 import { WorkoutUrlConfig } from '@/app/manager/workout/ManagerWorkoutUrlConfig';
 import type { Workout } from '@/app/manager/workout/workout_types/ManagerWorkoutTypes';
 

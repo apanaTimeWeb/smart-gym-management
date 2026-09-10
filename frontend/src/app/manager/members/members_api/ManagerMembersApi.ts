@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Provides isolated data fetching methods for the members module.
-import { apiFetch, ApiResponse } from '@/lib/api';
+import { apiFetch } from '@/lib/api';
+import type { ApiResponse } from '@/lib/api';
 import { MembersUrlConfig } from '@/app/manager/members/ManagerMembersUrlConfig';
 import type { Member, MemberStats } from '@/app/manager/members/members_types/ManagerMembersTypes';
 

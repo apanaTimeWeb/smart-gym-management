@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Provides strongly-typed network calls for attendance operations.
-import { apiFetch, ApiResponse } from '@/lib/api';
+import { apiFetch } from '@/lib/api';
+import type { ApiResponse } from '@/lib/api';
 import { AttendanceUrlConfig } from '@/app/manager/attendance/ManagerAttendanceUrlConfig';
 import type { Attendance, AttendanceResponse } from '@/app/manager/attendance/attendance_types/ManagerAttendanceTypes';
 

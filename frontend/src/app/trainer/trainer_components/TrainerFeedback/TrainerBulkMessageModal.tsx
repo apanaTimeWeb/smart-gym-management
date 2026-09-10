@@ -64,7 +64,7 @@ export default function TrainerBulkMessageModal({
 
   const handleSendWhatsApp = (index: number) => {
     const recipient = recipients[index];
-    const phone = recipient.phone?.replace(/\D/g, '') || '';
+    const phone = recipient?.phone?.replace(/\D/g, '') || '';
     if (!phone) return;
 
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;

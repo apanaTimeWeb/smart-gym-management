@@ -4,7 +4,7 @@
 'use client';
 
 import { User, CheckCircle, Clock, XCircle } from 'lucide-react';
-import { useMembersStore } from '@/app/trainer/members/members_store/useMembersStore';
+import { useMembersContext } from '@/app/trainer/members/members_context/MembersContext';
 
 const KPI_CONFIG = [
   { label: 'Total Members', key: 'total',   color: 'text-info',    bg: 'bg-info-bg',    icon: User         },
@@ -14,7 +14,7 @@ const KPI_CONFIG = [
 ] as const;
 
 export default function TrainerMembersKPIs() {
-  const stats = useMembersStore(s => s.stats);
+  const { stats } = useMembersContext();
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">

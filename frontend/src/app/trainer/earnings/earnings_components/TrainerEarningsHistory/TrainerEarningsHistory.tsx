@@ -1,13 +1,39 @@
 'use client';
-import { Search, FileText } from 'lucide-react';
+import { Search, FileText, Download, Loader2 } from 'lucide-react';
+import { useState } from 'react';
 import { useTrainerEarningsContext } from '@/app/trainer/earnings/earnings_context/TrainerEarningsContext';
-import { PAYOUT_STATUS_STYLES } from '@/app/trainer/earnings/earnings_utils/TrainerEarningsSharedConstants';
+import { PAYOUT_STATUS_STYLES, formatCurrency } from '@/app/trainer/earnings/earnings_utils/TrainerEarningsSharedConstants';
+import { TrainerEarningsUrlConfig } from '@/app/trainer/earnings/earnings_utils/TrainerEarningsUrlConfig';
 
 export default function TrainerEarningsHistory() {
   const {
     paginatedHistory, fetchState, search, setSearch, currentPage, setCurrentPage, totalPages,
     startDate, setStartDate, endDate, setEndDate
   } = useTrainerEarningsContext();
+
+  const [isExporting, setIsExporting] = useState(false);
+
+  const handleExportCsv = async () => {
+    if (isExporting) return;
+    setIsExporting(true);
+    try {
+      const params = new URLSearchParams();
+      if (search) params.set('search', search);
+      if (startDate) params.set('startDate', startDate);
+      if (endDate) params.set('endDate', endDate);
+      const queryString = params.toString();
+      const url = `${TrainerEarningsUrlConfig.BACKEND_API.EXPORT_CSV}${queryString ? `&${queryString}` : ''}`;
+      // Trigger file download via anchor tag
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `earnings-export-${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   if (fetchState === 'loading') {
     return <div className="h-[400px] bg-skeleton-base bg-skeleton-highlight rounded-xl border border-border motion-safe:animate-pulse" />;
@@ -42,7 +68,13 @@ export default function TrainerEarningsHistory() {
             onChange={e => setEndDate(e.target.value)}
             className="px-2 py-1.5 bg-input border border-border rounded-lg text-sm text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
           />
-          <button className="px-3 py-1.5 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-primary/90 ml-2">
+          <button
+            onClick={handleExportCsv}
+            disabled={isExporting}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-primary/90 ml-2 disabled:opacity-70 motion-safe:transition-opacity"
+            aria-label="Export earnings as CSV"
+          >
+            {isExporting ? <Loader2 size={13} className="motion-safe:animate-spin" /> : <Download size={13} />}
             Export CSV
           </button>
         </div>
@@ -79,11 +111,11 @@ export default function TrainerEarningsHistory() {
                       <p className="text-xs text-secondary mt-0.5">{row.type}</p>
                     </td>
                     <td className="py-3 px-4 text-sm font-semibold text-foreground text-right whitespace-nowrap">
-                      ₹{row.amount.toLocaleString('en-IN')}
+                      {formatCurrency(row.amount)}
                     </td>
                     <td className="py-3 px-4 text-right">
-                      <span className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider ${style.bg} ${style.text}`}>
-                        {style.label}
+                      <span className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider ${style?.bg || 'bg-secondary/10'} ${style?.text || 'text-secondary'}`}>
+                        {style?.label || row.status}
                       </span>
                     </td>
                   </tr>

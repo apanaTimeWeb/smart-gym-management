@@ -9,16 +9,13 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/SearchableDropdown';
 import { useMembersContext } from '@/app/trainer/members/members_context/MembersContext';
-import { useMembersStore } from '@/app/trainer/members/members_store/useMembersStore';
 import { MemberSchema, type MemberFormValues, EMPTY_MEMBER_FORM, GENDER_OPTIONS } from '@/app/trainer/members/members_utils/MembersSharedConstants';
 
 export default function TrainerMembersModal() {
   const {
     showAddModal, setShowAddModal, editId, editData,
-    saveMember
+    saveMember, saving
   } = useMembersContext();
-
-  const saving = useMembersStore(s => s.saving);
 
   const useFormReturn = useForm<MemberFormValues>({
     resolver: zodResolver(MemberSchema),

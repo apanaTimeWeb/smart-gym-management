@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Provides strongly-typed network calls for the store module.
-import { apiFetch, ApiResponse } from '@/lib/api';
+import { apiFetch } from '@/lib/api';
+import type { ApiResponse } from '@/lib/api';
 import { StoreUrlConfig } from '@/app/manager/store/ManagerStoreUrlConfig';
 import type { Product, Order, StoreSummary } from '@/app/manager/store/store_types/ManagerStoreTypes';
 

@@ -2,7 +2,8 @@
 // RESPONSIBILITY: Renders the modal form for editing an existing subscription plan. Reads/writes via useSuperadminPlansStore.
 
 import { useEffect } from 'react';
-import { useForm, useFieldArray, SubmitHandler, Resolver } from 'react-hook-form';
+import { useForm, useFieldArray } from 'react-hook-form';
+import type { SubmitHandler, Resolver } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { X, Plus, Trash2, Loader2 } from 'lucide-react';

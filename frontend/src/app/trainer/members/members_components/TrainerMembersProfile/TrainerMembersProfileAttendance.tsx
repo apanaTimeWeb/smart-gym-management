@@ -5,11 +5,9 @@
 import { useMemo } from 'react';
 import { Calendar as CalendarIcon, CheckCircle2, XCircle, AlertCircle, ShieldCheck } from 'lucide-react';
 import { useMembersContext } from '@/app/trainer/members/members_context/MembersContext';
-import { useMembersStore } from '@/app/trainer/members/members_store/useMembersStore';
 
 export default function TrainerMembersProfileAttendance() {
-  const { selectedMember } = useMembersContext();
-  const attMap = useMembersStore(s => s.attMap);
+  const { selectedMember, attMap } = useMembersContext();
 
   const now = new Date();
   const currentYear = now.getFullYear();

@@ -2,10 +2,9 @@
 'use client';
 
 import { useScheduleContext, ScheduleProvider } from '@/app/trainer/schedule/schedule_context/TrainerScheduleContext';
-import TrainerHeader from '@/app/trainer/trainer_components/TrainerLayout/TrainerHeader';
-import TrainerWeeklyAvailability from '@/app/trainer/schedule/schedule_components/TrainerWeeklyAvailability';
-import TrainerLeaveRequests from '@/app/trainer/schedule/schedule_components/TrainerLeaveRequests';
-import TrainerRequestLeaveModal from '@/app/trainer/schedule/schedule_components/TrainerRequestLeaveModal';
+import TrainerWeeklyAvailability from '@/app/trainer/schedule/schedule_components/TrainerWeeklyAvailability/TrainerWeeklyAvailability';
+import TrainerLeaveRequests from '@/app/trainer/schedule/schedule_components/TrainerLeaveRequests/TrainerLeaveRequests';
+import TrainerRequestLeaveModal from '@/app/trainer/schedule/schedule_components/TrainerRequestLeaveModal/TrainerRequestLeaveModal';
 import TrainerToast from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
 
 function ScheduleContent() {
@@ -13,8 +12,7 @@ function ScheduleContent() {
 
   return (
     <div className="min-h-full pb-10">
-      <TrainerHeader title="Schedule & Leaves" subtitle="Manage your weekly availability and request time off" />
-      
+            
       <div className="p-4 sm:p-6 max-w-screen-xl mx-auto w-full space-y-6">
         {/* Module Tabs */}
         <div className="flex flex-wrap gap-2 bg-card border border-border p-1 rounded-xl w-fit">

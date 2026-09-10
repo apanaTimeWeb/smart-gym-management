@@ -1,8 +1,9 @@
 // RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the Workout Library module.
 import { useState, useCallback, useEffect } from 'react';
 import { 
-  EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM, WorkoutFormValues, ExerciseFormValues
+  EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM
 } from '@/app/manager/workout/workout_utils/ManagerWorkoutSharedConstants';
+import type { WorkoutFormValues, ExerciseFormValues } from '@/app/manager/workout/workout_utils/ManagerWorkoutSharedConstants';
 import type { WorkoutContextType, Workout } from '@/app/manager/workout/workout_types/ManagerWorkoutTypes';
 import { useDebounce } from '@/app/manager/manager_utils/useDebounce';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
@@ -11,7 +12,7 @@ import { libraryApi } from '@/app/manager/library/library_api/ManagerLibraryApi'
 import type { Exercise } from '@/app/manager/library/library_types/ManagerLibraryTypes';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import { useManagerWorkoutExercises } from './useManagerWorkoutExercises';
-import { FetchState } from '@/app/manager/workout/workout_types/ManagerWorkoutTypes';
+import type { FetchState } from '@/app/manager/workout/workout_types/ManagerWorkoutTypes';
 export function useManagerWorkoutLogic(): WorkoutContextType {
   const { confirm } = useConfirm();
   const [tab, setTab] = useState('Workout Plans');

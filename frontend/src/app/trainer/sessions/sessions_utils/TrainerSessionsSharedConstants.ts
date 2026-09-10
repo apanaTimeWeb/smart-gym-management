@@ -1,31 +1,24 @@
-// RESPONSIBILITY: Centralized constants for the Trainer Sessions module.
-// DATA FLOW: Imported by useTrainerSessionsLogic and TrainerSessionsMain.
+// RESPONSIBILITY: Centralized runtime constants for the Trainer Sessions module.
+// TypeScript types (SessionType, SessionStatus, SessionFilter, TrainerSession) live in
+// sessions_types/TrainerSessionsTypes.ts (Rule 7 — type isolation).
+// Bug #9 fix: Types are imported from the types file and re-exported for backward compat.
+// Bug #19 fix: Adds isSpecificFilter() type guard for SessionFilter vs SessionType conflation.
+import type { SessionType, SessionStatus, SessionFilter, TrainerSession } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
+export type { SessionType, SessionStatus, SessionFilter, TrainerSession };
 
-export type SessionType = 'PT' | 'Group';
-export type SessionStatus = 'Upcoming' | 'Completed' | 'Cancelled';
-export type SessionFilter = 'All' | 'PT' | 'Group';
-
-export interface TrainerSession {
-  id: string;
-  title: string;
-  type: SessionType;
-  time: string;
-  sessionDate: string;
-  duration: string;
-  status: SessionStatus;
-  attendees: number;
-  maxAttendees?: number;
-  member?: string;
-  isOnline: boolean;
-  enrolledMembers?: { id: string; name: string }[];
-  sessionNotes?: string;
-  location?: string;
-  room?: string;
-  trainerNotes?: string;
-  memberRating?: number;
-  cancellationReason?: string;
-  recurrenceRule?: string;
+/**
+ * Type guard: returns true if filter is a specific session type (not 'All').
+ * Bug #19: Prevents SessionFilter from being used where SessionType is required.
+ * @example
+ * if (isSpecificFilter(filter)) {
+ *   // filter is narrowed to SessionType here
+ * }
+ */
+export function isSpecificFilter(f: SessionFilter): f is SessionType {
+  return f !== 'All';
 }
+
+
 
 export const SESSION_FILTER_OPTIONS: SessionFilter[] = ['All', 'PT', 'Group'];
 

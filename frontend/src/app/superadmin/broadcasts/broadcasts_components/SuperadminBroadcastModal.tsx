@@ -3,7 +3,8 @@
 
 import React from 'react';
 import { X, Loader2, Users } from 'lucide-react';
-import { UseFormReturn, Controller } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
+import type { UseFormReturn } from 'react-hook-form';
 import { useQuery } from '@tanstack/react-query';
 import type { BroadcastFormData } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';

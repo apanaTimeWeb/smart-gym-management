@@ -3,8 +3,9 @@ import { useState, useCallback } from 'react';
 import type { Product } from '@/app/manager/store/store_types/ManagerStoreTypes';
 import { storeApi } from '@/app/manager/store/store_api/ManagerStoreApi';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import { EMPTY_PRODUCT_FORM, ProductFormValues } from '@/app/manager/store/store_utils/ManagerStoreSharedConstants';
-import { StoreSummary } from '@/app/manager/store/store_types/ManagerStoreTypes';
+import { EMPTY_PRODUCT_FORM } from '@/app/manager/store/store_utils/ManagerStoreSharedConstants';
+import type { ProductFormValues } from '@/app/manager/store/store_utils/ManagerStoreSharedConstants';
+import type { StoreSummary } from '@/app/manager/store/store_types/ManagerStoreTypes';
 
 export function useManagerStoreProducts(
   setProducts: React.Dispatch<React.SetStateAction<Product[]>>,

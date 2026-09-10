@@ -14,7 +14,7 @@ export default function AdminHrLedgerTable() {
 
   useEffect(() => {
     if (staff.length > 0 && !selectedStaffId) {
-      setSelectedStaffId(staff[0].id);
+      if (staff[0]?.id) setSelectedStaffId(staff[0].id);
     }
   }, [staff, selectedStaffId]);
 

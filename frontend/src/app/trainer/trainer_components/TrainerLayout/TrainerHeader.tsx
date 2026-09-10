@@ -9,12 +9,13 @@ import Link from 'next/link';
 import { getUser, logout } from '@/lib/api';
 // Notifications are fetched from the API — placeholder array removed (Rule 75).
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { useTrainerNotificationsContext } from '@/app/trainer/notifications/notifications_context/TrainerNotificationsContext';
 
 import type { TrainerHeaderProps } from '@/app/trainer/trainer_components/TrainerLayout/TrainerLayoutTypes';
 
 export default function TrainerHeader({ title, subtitle }: TrainerHeaderProps) {
   const [showNotifications, setShowNotifications] = useState(false);
-  const [notifications, setNotifications] = useState<{ id: number; text: string; time: string; unread: boolean }[]>([]);
+  const { unreadCount } = useTrainerNotificationsContext();
   const [showProfile, setShowProfile] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
@@ -68,7 +69,11 @@ export default function TrainerHeader({ title, subtitle }: TrainerHeaderProps) {
             className="relative p-2 text-secondary hover:text-foreground hover:bg-input rounded-lg motion-safe:transition-colors border border-transparent hover:border-border"
           >
             <Bell size={19} />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-primary"></span>
+            {unreadCount > 0 && (
+              <span className="absolute top-1.5 right-1.5 flex h-3 w-3 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-white">
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
+            )}
           </button>
 
           {showNotifications && (
@@ -78,28 +83,9 @@ export default function TrainerHeader({ title, subtitle }: TrainerHeaderProps) {
                 <button onClick={() => setShowNotifications(false)} className="text-secondary hover:text-foreground"><X size={16} /></button>
               </div>
               <div className="max-h-75 overflow-y-auto">
-                {notifications.length > 0 ? (
-                  notifications.map(n => (
-                    <div key={n.id} className={`group px-4 py-3 border-b border-border hover:bg-input motion-safe:transition-colors ${n.unread ? 'bg-primary-subtle' : ''}`}>
-                      <div className="flex justify-between items-start">
-                        <div className="cursor-pointer flex-1">
-                          <p className={`text-sm ${n.unread ? 'text-foreground font-medium' : 'text-secondary'}`}>{n.text}</p>
-                          <span className="text-xs text-secondary mt-1 block">{n.time}</span>
-                        </div>
-                        <button 
-                          onClick={(e) => { e.stopPropagation(); setNotifications(prev => prev.filter(notif => notif.id !== n.id)); }}
-                          className="text-secondary hover:text-foreground opacity-0 group-hover:opacity-100 motion-safe:transition-opacity p-1"
-                        >
-                          <X size={14} />
-                        </button>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="px-4 py-6 text-center text-sm text-secondary">
-                    No new notifications
-                  </div>
-                )}
+                <div className="px-4 py-6 text-center text-sm text-secondary">
+                  No new notifications
+                </div>
               </div>
               <div className="p-3 text-center border-t border-border bg-header">
                 <Link 

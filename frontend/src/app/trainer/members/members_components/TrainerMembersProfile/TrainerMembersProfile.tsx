@@ -4,7 +4,6 @@
 'use client';
 
 import { MessageCircle, Mail } from 'lucide-react';
-import TrainerHeader from '@/app/trainer/trainer_components/TrainerLayout/TrainerHeader';
 import { useMembersContext } from '@/app/trainer/members/members_context/MembersContext';
 import { MEMBERS_STATUS_COLORS, formatCurrency, PROFILE_TABS } from '@/app/trainer/members/members_utils/MembersSharedConstants';
 import TrainerMembersProfileOverview from '@/app/trainer/members/members_components/TrainerMembersProfile/TrainerMembersProfileOverview';
@@ -26,8 +25,7 @@ export default function TrainerMembersProfile() {
 
   return (
     <div className="min-h-full">
-      <TrainerHeader title="Member Profile" subtitle={`Viewing profile of ${selectedMember.name}`} />
-      <div className="p-6 space-y-5">
+            <div className="p-6 space-y-5">
         <button
           onClick={() => setSelectedMember(null)}
           className="text-sm text-secondary hover:text-primary flex items-center gap-1.5 motion-safe:transition-all motion-safe:duration-200"

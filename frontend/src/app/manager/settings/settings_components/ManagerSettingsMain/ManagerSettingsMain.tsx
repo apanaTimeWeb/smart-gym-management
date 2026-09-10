@@ -5,7 +5,8 @@
 
 import { Bell, Globe, Save, Loader2, Building, Clock, Settings, Mail } from 'lucide-react';
 import { useManagerSettingsLogic } from '@/app/manager/settings/settings_context/useManagerSettingsLogic';
-import { LANGUAGE_OPTIONS, TIMEZONE_OPTIONS, SETTINGS_TABS, SettingsTab, DAYS_OF_WEEK } from '@/app/manager/settings/settings_types/ManagerSettingsTypes';
+import { LANGUAGE_OPTIONS, TIMEZONE_OPTIONS, SETTINGS_TABS, DAYS_OF_WEEK } from '@/app/manager/settings/settings_types/ManagerSettingsTypes';
+import type { SettingsTab } from '@/app/manager/settings/settings_types/ManagerSettingsTypes';
 import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/SearchableDropdown';
 import { useState } from 'react';
 
@@ -145,7 +146,7 @@ export default function ManagerSettingsMain() {
                     <label className="flex items-center gap-2 cursor-pointer">
                       <input type="checkbox" checked={oh.isOpen} onChange={e => {
                         const newOp = [...opHours];
-                        newOp[idx].isOpen = e.target.checked;
+                        newOp[idx]!.isOpen = e.target.checked;
                         setOpHours(newOp);
                       }} className="rounded border-border text-primary focus:ring-primary w-4 h-4" />
                       <span className="text-sm font-medium text-foreground">{oh.day}</span>
@@ -153,13 +154,13 @@ export default function ManagerSettingsMain() {
                   </div>
                   <input type="time" disabled={!oh.isOpen} value={oh.openTime} onChange={e => {
                     const newOp = [...opHours];
-                    newOp[idx].openTime = e.target.value;
+                    newOp[idx]!.openTime = e.target.value;
                     setOpHours(newOp);
                   }} className="bg-input border border-border text-sm rounded-lg px-3 py-1.5 text-foreground disabled:opacity-50" />
                   <span className="text-secondary text-sm">to</span>
                   <input type="time" disabled={!oh.isOpen} value={oh.closeTime} onChange={e => {
                     const newOp = [...opHours];
-                    newOp[idx].closeTime = e.target.value;
+                    newOp[idx]!.closeTime = e.target.value;
                     setOpHours(newOp);
                   }} className="bg-input border border-border text-sm rounded-lg px-3 py-1.5 text-foreground disabled:opacity-50" />
                 </div>

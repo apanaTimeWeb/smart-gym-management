@@ -5,13 +5,23 @@ import { useState, useCallback } from 'react';
 import { workoutApi } from '@/app/trainer/workout/workout_api/workout_api';
 import type { Exercise } from '@/app/trainer/trainer_types/trainer_types';
 import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
-import { EMPTY_EXERCISE_FORM, ExerciseFormValues } from '@/app/trainer/workout/workout_utils/WorkoutSharedConstants';
+import { EMPTY_EXERCISE_FORM } from '@/app/trainer/workout/workout_utils/WorkoutSharedConstants';
+import type { ExerciseFormValues } from '@/app/trainer/workout/workout_utils/WorkoutSharedConstants';
+
+// Bug #5 fix: use ConfirmOptions type instead of any for the confirm param
+interface ConfirmOptions {
+  title: string;
+  message: string;
+  confirmText?: string;
+  cancelText?: string;
+  type?: 'danger' | 'warning' | 'info';
+}
 
 export function useTrainerWorkoutExercises(
   setExercises: React.Dispatch<React.SetStateAction<Exercise[]>>,
   showToast: (msg: string, t: ToastType) => void,
   setSaving: (saving: boolean) => void,
-  confirm: (opts: any) => Promise<boolean>
+  confirm: (opts: ConfirmOptions) => Promise<boolean>
 ) {
   const [showExModal, setShowExModal] = useState(false);
   const [editExId, setEditExId] = useState<string | null>(null);
@@ -47,12 +57,12 @@ export function useTrainerWorkoutExercises(
       if (editExId) {
         const res = await workoutApi.updateExercise(editExId, payload);
         setExercises(prev => prev.map(e => String(e.id) === String(editExId) ? { ...e, ...payload } as unknown as Exercise : e));
-        showToast((res as { message?: string }).message || 'Success', 'success');
+        showToast((res as { message?: string }).message ?? 'Operation completed', 'success');
       } else {
         const res = await workoutApi.createExercise(payload);
         const newEx = { ...payload, id: Math.random().toString(), isActive: true } as unknown as Exercise;
         setExercises(prev => [newEx, ...prev]);
-        showToast((res as { message?: string }).message || 'Success', 'success');
+        showToast((res as { message?: string }).message ?? 'Operation completed', 'success');
       }
       setShowExModal(false);
     } catch (err) {

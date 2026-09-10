@@ -1,8 +1,10 @@
 # Progress Tracking — Features
 
-## Overview
-Standalone module for tracking member body measurements and fitness metrics over time.
-Has two tabs: **Individual** (single-member history) and **Compare Members** (side-by-side multi-member analysis).
+## Module Purpose
+**What problem it solves:** Enables precise tracking of member body measurements, fitness metrics, and visual progress over time, replacing paper logs with digital charts and comparison tools.
+**Who uses it:** Trainers.
+**What they can do:** Record weight, body fat, muscle mass, and measurements for assigned members; view historical trends via charts; and compare progress metrics side-by-side across multiple members to evaluate program effectiveness.
+**What is strictly off-limits:** Trainers CANNOT view or edit progress data for members not explicitly assigned to them. Trainers CANNOT delete a member's progress record without confirmation (useConfirm).
 
 ## Directory Structure
 | File/Folder | Responsibility |
@@ -22,7 +24,7 @@ Has two tabs: **Individual** (single-member history) and **Compare Members** (si
 | `progress_types/TrainerProgressTypes.ts` | `ProgressEntry`, `ProgressSummary`, `ComparisonMemberSnapshot`, `ComparisonMetric` |
 | `progress_api/TrainerProgressApi.ts` | API wrappers — fetchProgressEntries, createProgressEntry, etc. |
 | `progress_utils/TrainerProgressSharedConstants.ts` | `PROGRESS_CHART_METRICS`, `COMPARISON_METRICS`, `COMPARISON_MAX_MEMBERS`, mock data |
-| `TrainerProgressUrlConfig.ts` | `TRAINER_PROGRESS_ROUTES` + `TRAINER_PROGRESS_API_ROUTES` |
+| `progress_utils/progress_url_config.ts` | `TRAINER_PROGRESS_ROUTES` + `TRAINER_PROGRESS_API_ROUTES` |
 
 ## Feature Inventory
 | Feature | Tab | Purpose | Status |
@@ -71,7 +73,7 @@ Computed in `useTrainerProgressLogic → buildSnapshot()`:
 - [x] Rule 6: Logic/UI Separation — all state + snapshot logic in `useTrainerProgressLogic`
 - [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component
 - [x] Rule 9: `loading.tsx` + `error.tsx` present
-- [x] Rule 11: `TrainerProgressUrlConfig.ts` present
+- [x] Rule 11: `progress_url_config.ts` present
 - [x] Rule 13: Feature Map — this document
 - [x] Rule 20: No native `<select>` for large datasets — toggle chips used
 - [x] Rule 29: All animations use `motion-safe:` prefix

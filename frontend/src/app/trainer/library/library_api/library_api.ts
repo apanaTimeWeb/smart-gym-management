@@ -1,7 +1,8 @@
 // RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
 // DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Provides strongly-typed network calls for the library module.
-import { apiFetch, ApiResponse } from '@/lib/api';
+import { apiFetch } from '@/lib/api';
+import type { ApiResponse } from '@/lib/api';
 import { LibraryUrlConfig } from '@/app/trainer/library/library_url_config';
 import type { Exercise, DietPlan } from '@/app/trainer/trainer_types/trainer_types';
 

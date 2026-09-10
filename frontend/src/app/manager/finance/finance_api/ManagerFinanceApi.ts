@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Provides strongly-typed network calls for the finance module.
-import { apiFetch, ApiResponse } from '@/lib/api';
+import { apiFetch } from '@/lib/api';
+import type { ApiResponse } from '@/lib/api';
 import { FinanceUrlConfig } from '@/app/manager/finance/ManagerFinanceUrlConfig';
 import type { Payment, FinanceSummary } from '@/app/manager/finance/finance_types/ManagerFinanceTypes';
 

@@ -111,7 +111,7 @@ export default function LoginHeroSection() {
         {/* Glass stat cards */}
         <div className="grid grid-cols-3 gap-3">
           {LoginSharedConstants.HERO_STATS.map((stat, i) => {
-            const Icon = HERO_ICONS[i];
+            const Icon = HERO_ICONS[i % HERO_ICONS.length] || TrendingUp;
             return (
               <div
                 key={stat.label}

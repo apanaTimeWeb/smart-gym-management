@@ -10,8 +10,8 @@ export default function ManagerProfileAttendance() {
 
   if (!selectedMember) return null;
 
-  const presentDays = att.filter(a => a.status === 'P').length;
-  const absentDays = att.filter(a => a.status === 'A').length;
+  const presentDays = att.filter((a: any) => a.status === 'P').length;
+  const absentDays = att.filter((a: any) => a.status === 'A').length;
   const attPct = att.length > 0 ? Math.round((presentDays / att.length) * 100) : 0;
 
   return (
@@ -39,7 +39,7 @@ export default function ManagerProfileAttendance() {
       </div>
       
       <div className="grid grid-cols-7 gap-1.5 sm:grid-cols-10">
-        {att.map(({ day, status }) => (
+        {att.map(({ day, status }: { day: number; status: string }) => (
           <div 
             key={day} 
             className={`h-10 w-full rounded-lg flex items-center justify-center text-xs font-bold border-none ${

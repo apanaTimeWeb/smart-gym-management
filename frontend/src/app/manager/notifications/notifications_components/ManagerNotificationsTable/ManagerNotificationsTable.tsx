@@ -75,8 +75,8 @@ export default function ManagerNotificationsTable() {
       ) : (
         <ul className="divide-y divide-border">
           {notifications.map(n => {
-            const typeStyle = NOTIFICATION_TYPE_STYLES[n.type] ?? NOTIFICATION_TYPE_STYLES['SYSTEM'];
-            const priorityStyle = NOTIFICATION_PRIORITY_STYLES[n.priority];
+            const typeStyle = NOTIFICATION_TYPE_STYLES[n.type] ?? NOTIFICATION_TYPE_STYLES['SYSTEM'] ?? { bg: 'bg-secondary/10', text: 'text-secondary', label: n.type };
+            const priorityStyle = NOTIFICATION_PRIORITY_STYLES[n.priority] ?? { bg: 'bg-secondary/10', text: 'text-secondary' };
             const isUnread = n.status === 'UNREAD';
 
             return (

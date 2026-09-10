@@ -12,15 +12,41 @@ import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency, MemberSchema, t
 import type { PlanWithCustom } from '@/app/manager/members/members_types/ManagerMembersTypes';
 import ManagerConvertLeadSuccess from './ManagerConvertLeadSuccess';
 import ManagerConvertLeadForm from './ManagerConvertLeadForm';
+import { useFetchPlans } from '@/app/manager/members/members_api/useManagerMembersQueries';
+import { membersApi } from '@/app/manager/members/members_api/ManagerMembersApi';
+import { financeApi } from '@/app/manager/finance/finance_api/ManagerFinanceApi';
+import { useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 
 export default function ManagerConvertLeadModal() {
   const { convertLead, closeConvert, updateStatus } = useInquiriesContext();
   const isOpen = !!convertLead;
   
-  const loadAll = useManagerMembersStore(s => s.loadAll);
-  const saveMember = useManagerMembersStore(s => s.saveMember);
-  const plans = useManagerMembersStore(s => s.plans);
-  const fetchState = useManagerMembersStore(s => s.fetchState);
+  const { data: plansData, isLoading: fetchState } = useFetchPlans();
+  const plans = plansData || [];
+  const queryClient = useQueryClient();
+  
+  const saveMember = async (data: any, _: any) => {
+    const payload = { ...data, status: 'ACTIVE' };
+    const res = await membersApi.create(payload);
+    const newId = res.data?.id || (res as any).id;
+    
+    if (data.paidAmount && data.paidAmount > 0 && newId) {
+       await financeApi.createPayment({
+         memberId: newId,
+         amount: data.paidAmount,
+         method: 'UPI',
+         status: 'PAID',
+         paidAt: new Date().toISOString(),
+         invoiceNumber: `INV-${Date.now().toString().slice(-6)}`
+       });
+    }
+    queryClient.invalidateQueries({ queryKey: ['manager', 'members'] });
+    queryClient.invalidateQueries({ queryKey: ['manager', 'payments'] });
+    queryClient.invalidateQueries({ queryKey: ['manager', 'stats'] });
+    toast.success('Member created successfully');
+    return res;
+  };
   const [saving, setSaving] = useState(false);
   const [successData, setSuccessData] = useState<{
     gymId: string;
@@ -35,11 +61,8 @@ export default function ManagerConvertLeadModal() {
   } | null>(null);
 
   useEffect(() => {
-    // We only need plans to render the dropdown properly
-    if (convertLead && plans.length === 0 && fetchState !== 'loading') {
-      loadAll({ page: '1' }).catch(() => { /* handled */ });
-    }
-  }, [convertLead, plans.length, fetchState, loadAll]);
+    // Plans are now fetched automatically by useFetchPlans.
+  }, [convertLead, plans.length, fetchState]);
 
   const useFormReturn = useForm<MemberFormValues>({
     resolver: zodResolver(MemberSchema) as any,
@@ -90,7 +113,7 @@ export default function ManagerConvertLeadModal() {
         else if (watchBillingCycle === 'TWELVE_MONTHS') ed.setMonth(ed.getMonth() + 12);
         else if (watchBillingCycle === 'CUSTOM' && watchCustomDays) ed.setDate(ed.getDate() + Number(watchCustomDays));
         
-        useFormReturn.setValue('expiryDate', ed.toISOString().split('T')[0], { shouldValidate: true });
+        useFormReturn.setValue('expiryDate', ed.toISOString().split('T')[0] || '', { shouldValidate: true });
       }
     }
   }, [watchJoinDate, watchBillingCycle, watchCustomDays, useFormReturn]);
@@ -109,7 +132,7 @@ export default function ManagerConvertLeadModal() {
         
         const planName = plans.find(p => p.id.toString() === data.planId?.toString())?.name || 'Membership';
         setSuccessData({
-          gymId: res.memberId || 'N/A',
+          gymId: res.data?.id || (res as any).id || 'N/A',
           name: data.name,
           phone: data.phone,
           planName,

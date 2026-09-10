@@ -1,4 +1,4 @@
-import TrainerScheduleMain from '@/app/trainer/schedule/schedule_components/TrainerScheduleMain';
+import TrainerScheduleMain from '@/app/trainer/schedule/schedule_components/TrainerScheduleMain/TrainerScheduleMain';
 
 export const metadata = {
   title: 'Schedule & Leaves | GymSmart Trainer',

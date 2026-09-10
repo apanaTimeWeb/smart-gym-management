@@ -109,7 +109,7 @@ export function maskSensitiveData(
   if (type === 'email') {
     const parts = value.split('@');
     if (parts.length !== 2) return value;
-    return `${parts[0].charAt(0)}***@${parts[1]}`;
+    return `${parts[0]?.charAt(0)}***@${parts[1]}`;
   }
   // id: show last 4 chars
   return `***${value.slice(-4)}`;

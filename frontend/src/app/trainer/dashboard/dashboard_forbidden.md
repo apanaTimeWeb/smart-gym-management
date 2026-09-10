@@ -1,4 +1,4 @@
-# Forbidden Patterns for `erp/dashboard`
+# Forbidden Patterns for `trainer/dashboard`
 
 To maintain extreme isolation and enterprise-grade architecture in this module, the following are strictly forbidden:
 

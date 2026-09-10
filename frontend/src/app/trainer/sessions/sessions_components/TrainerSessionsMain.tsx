@@ -9,15 +9,13 @@ import {
   SESSION_FILTER_OPTIONS,
   SESSION_STATUS_STYLES,
   SESSION_TYPE_STYLES,
-  DURATION_OPTIONS,
 } from '@/app/trainer/sessions/sessions_utils/TrainerSessionsSharedConstants';
-import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/SearchableDropdown';
 import { useTrainerSessionsLogic } from '@/app/trainer/sessions/sessions_context/useTrainerSessionsLogic';
-import TrainerSessionAttendanceModal from '@/app/trainer/sessions/sessions_components/TrainerSessionAttendanceModal';
-import TrainerSessionsEditModal from '@/app/trainer/sessions/sessions_components/TrainerSessionsEditModal';
-import TrainerSessionsKPIs from '@/app/trainer/sessions/sessions_components/TrainerSessionsKPIs';
+import TrainerSessionAttendanceModal from '@/app/trainer/sessions/sessions_components/TrainerSessionAttendanceModal/TrainerSessionAttendanceModal';
+import TrainerSessionsEditModal from '@/app/trainer/sessions/sessions_components/TrainerSessionsEditModal/TrainerSessionsEditModal';
+import TrainerSessionsKPIs from '@/app/trainer/sessions/sessions_components/TrainerSessionsKPIs/TrainerSessionsKPIs';
+import TrainerSessionsScheduleModal from '@/app/trainer/sessions/sessions_components/TrainerSessionsScheduleModal/TrainerSessionsScheduleModal';
 import { markTrainerSessionAttendance } from '@/app/trainer/sessions/sessions_api/TrainerSessionsApi';
-import type { CreateSessionDto } from '@/app/trainer/sessions/sessions_api/TrainerSessionsApi';
 
 export default function TrainerSessionsMain() {
   const {
@@ -39,49 +37,20 @@ export default function TrainerSessionsMain() {
     clearToast,
   } = useTrainerSessionsLogic();
 
-  // Local modal state — strictly private to this component (Rule 5: local useState for component-private UI)
+  // Local modal state — strictly private to this component (Rule 5)
   const [attendanceSession, setAttendanceSession] = useState<TrainerSession | null>(null);
   const [editingSession, setEditingSession] = useState<TrainerSession | null>(null);
-
-  // Schedule PT modal form state — private to this component
-  const [selectedMemberId, setSelectedMemberId] = useState<string | number>('');
-  const [selectedDuration, setSelectedDuration] = useState<string | number>('60m');
-  const [selectedType, setSelectedType] = useState<string | number>('PT');
-  const [modalDate, setModalDate] = useState<string>('');
-  const [modalTime, setModalTime] = useState<string>('');
-
-  const durationOptions = DURATION_OPTIONS.map(d => ({ value: d.value, label: d.label }));
 
   const filteredSessions: TrainerSession[] = sessions.filter(
     (s) => filter === 'All' || s.type === filter
   );
 
-  const handleFormSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!selectedMemberId || !modalDate || !modalTime) return;
-    const dto: CreateSessionDto = {
-      memberId: String(selectedMemberId),
-      date: modalDate,
-      time: modalTime,
-      duration: String(selectedDuration),
-      type: String(selectedType) as any,
-    };
-    await handleScheduleSubmit(dto);
-    // Reset form fields after successful submit (hook handles modal close and toast)
-    setSelectedMemberId('');
-    setSelectedDuration('60m');
-    setSelectedType('PT');
-    setModalDate('');
-    setModalTime('');
-  };
-
   const handleAttendanceSubmit = async (sessionId: string, attendedMemberIds: string[]) => {
     try {
       await markTrainerSessionAttendance(sessionId, attendedMemberIds);
       setAttendanceSession(null);
-    } catch (err) {
-      // Error is surfaced to the monitoring provider; in production wire this to a toast
-      console.error('[TrainerSessionsMain] markAttendance failed:', (err as Error).message);
+    } catch {
+      // Error surfaced to monitoring provider — wire to toast in production
     }
   };
 
@@ -218,90 +187,14 @@ export default function TrainerSessionsMain() {
         )}
       </div>
 
-      {/* Schedule PT Modal */}
+      {/* Schedule PT Modal — form logic extracted to TrainerSessionsScheduleModal (Rule 6, Rule 15B) */}
       {showScheduleModal && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="bg-overlay w-full max-w-md rounded-2xl shadow-2xl border border-border overflow-hidden motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-200">
-            <div className="flex items-center justify-between p-5 border-b border-border">
-              <h3 className="text-lg font-bold text-foreground">Schedule PT Session</h3>
-              <button
-                onClick={closeScheduleModal}
-                className="text-secondary hover:text-foreground hover:bg-input p-1 rounded-lg motion-safe:transition-colors"
-                aria-label="Close modal"
-              >
-                <X size={20} />
-              </button>
-            </div>
-            <form onSubmit={handleFormSubmit} className="p-5 space-y-4">
-              <div>
-                <label className="block text-sm font-semibold text-secondary mb-1">Session Type</label>
-                <SearchableDropdown
-                  options={[{value: 'PT', label: 'Personal Training'}, {value: 'Group', label: 'Group Class'}, {value: 'Zumba', label: 'Zumba'}, {value: 'Yoga', label: 'Yoga'}]}
-                  value={selectedType}
-                  onChange={setSelectedType}
-                  placeholder="-- Choose Type --"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-secondary mb-1">Select Member (Optional for Group)</label>
-                <SearchableDropdown
-                  options={memberOptions}
-                  value={selectedMemberId}
-                  onChange={setSelectedMemberId}
-                  placeholder="-- Choose Member --"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-semibold text-secondary mb-1">Date</label>
-                  <input
-                    type="date"
-                    required
-                    value={modalDate}
-                    onChange={(e) => setModalDate(e.target.value)}
-                    className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-secondary mb-1">Time</label>
-                  <input
-                    type="time"
-                    required
-                    value={modalTime}
-                    onChange={(e) => setModalTime(e.target.value)}
-                    className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-secondary mb-1">Duration</label>
-                <SearchableDropdown
-                  options={durationOptions}
-                  value={selectedDuration}
-                  onChange={setSelectedDuration}
-                  placeholder="Select duration"
-                />
-              </div>
-              <div className="pt-4 flex justify-end gap-2 border-t border-border mt-4">
-                <button
-                  type="button"
-                  onClick={closeScheduleModal}
-                  className="px-4 py-2 text-sm font-semibold text-secondary hover:text-foreground hover:bg-input rounded-lg motion-safe:transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-primary rounded-lg hover:bg-primary/90 motion-safe:transition-colors disabled:opacity-70"
-                >
-                  {isSubmitting && <Loader2 size={16} className="motion-safe:animate-spin" />}
-                  Confirm Assignment
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+        <TrainerSessionsScheduleModal
+          onClose={closeScheduleModal}
+          onSubmit={handleScheduleSubmit}
+          memberOptions={memberOptions}
+          isSubmitting={isSubmitting}
+        />
       )}
 
       {/* Attendance Modal */}

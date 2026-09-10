@@ -70,7 +70,7 @@ export default function ManagerMembersModal() {
         else if (watchBillingCycle === 'TWELVE_MONTHS') ed.setMonth(ed.getMonth() + 12);
         else if (watchBillingCycle === 'CUSTOM' && watchCustomDays) ed.setDate(ed.getDate() + Number(watchCustomDays));
         
-        useFormReturn.setValue('expiryDate', ed.toISOString().split('T')[0], { shouldValidate: true });
+        useFormReturn.setValue('expiryDate', ed.toISOString().split('T')[0] || '', { shouldValidate: true });
       }
     }
   }, [watchJoinDate, watchBillingCycle, watchCustomDays, useFormReturn]);

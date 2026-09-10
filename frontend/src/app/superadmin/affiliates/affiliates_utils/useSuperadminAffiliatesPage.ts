@@ -7,8 +7,8 @@ import { useSuperadminAffiliatesData } from '@/app/superadmin/affiliates/affilia
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { affiliatesApi } from '@/app/superadmin/affiliates/superadmin_affiliates_api/superadmin_affiliates_api';
 import { useSuperadminAffiliatesMutation } from '@/app/superadmin/affiliates/affiliates_utils/useSuperadminAffiliatesMutation';
-import { AffiliateSchema, AffiliateFormData } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
-import type { Affiliate, AffiliateStatus } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
+import { AffiliateSchema } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
+import type { Affiliate, AffiliateStatus, AffiliateFormData } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
 
 export const useSuperadminAffiliatesPage = () => {
   const [affiliates, setAffiliates] = useState<Affiliate[]>([

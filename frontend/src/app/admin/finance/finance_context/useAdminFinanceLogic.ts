@@ -6,7 +6,7 @@ import type { Payment, FinanceSummary } from '@/app/admin/finance/finance_types/
 import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
 import { useAdminToastStore } from '@/app/admin/admin_store/useAdminToastStore';
 import type { FinanceInitialData } from '@/app/admin/finance/finance_types/finance_types';
-import { AddPaymentFormValues } from '@/app/admin/finance/finance_utils/AdminFinanceSharedConstants';
+import type { AddPaymentFormValues } from '@/app/admin/finance/finance_utils/AdminFinanceSharedConstants';
 import type { FetchState } from '@/app/admin/finance/finance_types/finance_types';
 import { useDebounce } from '@/app/admin/admin_utils/useDebounce';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';

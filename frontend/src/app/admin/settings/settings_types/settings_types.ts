@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Defines all TypeScript types, interfaces, and the FetchState enum for the Settings module.
 import { EMPTY_SETTINGS_FORM } from '@/app/admin/settings/settings_utils/AdminSettingsSharedConstants';
-import { FetchState } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { FetchState } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 export interface SettingsContextType {
  activeTab: string;

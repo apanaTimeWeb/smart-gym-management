@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Hardcoded mock data and constants for Staff Performance Dashboard.
-import { StaffPerformanceRecord, PerformancePeriod } from '@/app/admin/hr/hr_types/AdminHrPerformanceTypes';
+import type { StaffPerformanceRecord, PerformancePeriod } from '@/app/admin/hr/hr_types/AdminHrPerformanceTypes';
 
 export const PERFORMANCE_PERIOD_OPTIONS: { label: string; value: PerformancePeriod }[] = [
   { label: 'This Month', value: 'THIS_MONTH' },

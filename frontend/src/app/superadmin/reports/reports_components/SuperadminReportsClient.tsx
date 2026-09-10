@@ -141,7 +141,7 @@ export default function SuperadminReportsClient() {
   }
 
   const lastRow = revenueData.length > 0 ? revenueData[revenueData.length - 1] : { mrr: 0 };
-  const totalMRR = lastRow.mrr;
+  const totalMRR = lastRow?.mrr || 0;
   const totalChurnedRevenue = churnData.reduce((s, c) => s + c.mrr, 0);
   const avgHealthScore = healthData.length > 0 ? Math.round(healthData.reduce((s, h) => s + h.score, 0) / healthData.length) : 0;
 

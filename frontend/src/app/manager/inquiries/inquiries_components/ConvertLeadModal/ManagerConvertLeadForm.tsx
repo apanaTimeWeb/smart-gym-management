@@ -1,7 +1,9 @@
 // RESPONSIBILITY: Renders the form fields for converting a lead.
-import { Controller, UseFormReturn } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
+import type { UseFormReturn } from 'react-hook-form';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency, MemberFormValues, GENDER_OPTIONS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
+import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency, GENDER_OPTIONS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
+import type { MemberFormValues } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import type { PlanWithCustom } from '@/app/manager/members/members_types/ManagerMembersTypes';
 
 interface ManagerConvertLeadFormProps {

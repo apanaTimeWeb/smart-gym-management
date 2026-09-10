@@ -1,35 +1,38 @@
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the Diet Library module.
+// DATA FLOW: LibraryContext → useLibraryLogic → libraryApi
 import { useState, useCallback, useEffect } from 'react';
 import { useDebounce } from '@/app/trainer/trainer_utils/useDebounce';
 import { libraryApi } from '@/app/trainer/library/library_api/library_api';
-import type { LibraryContextType } from '@/app/trainer/library/library_types/library_types';
+import type { LibraryContextType, LibraryInitialData } from '@/app/trainer/library/library_types/library_types';
 import type { DietPlan, FetchState } from '@/app/trainer/trainer_types/trainer_types';
 import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
 import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import { useTrainerLibraryDiet } from './useTrainerLibraryDiet';
+import { useTrainerLibraryDiet } from '@/app/trainer/library/library_context/useTrainerLibraryDiet';
+import type { ApiResponse } from '@/lib/api';
 
-export function useLibraryLogic(initialData?: any | null): LibraryContextType {
+// Bug #5: typed response shape instead of any
+interface DietPlansApiResponse { dietPlans?: DietPlan[]; total?: number }
+
+export function useLibraryLogic(initialData?: LibraryInitialData | null): LibraryContextType {
   const { confirm } = useConfirm();
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  
-  const [dietPlans, setDietPlans] = useState<DietPlan[]>(initialData?.dietPlans || []);
- 
+
+  const [dietPlans, setDietPlans] = useState<DietPlan[]>(initialData?.dietPlans ?? []);
   const [fetchState, setFetchState] = useState<FetchState>(initialData ? 'success' : 'loading');
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
-  const [search, setLocalSearch] = useState(searchParams.get('search') || '');
+  const [search, setLocalSearch] = useState(searchParams.get('search') ?? '');
   const debouncedSearch = useDebounce(search, 300);
-  const filterGoal = searchParams.get('goal') || 'All';
+  const filterGoal = searchParams.get('goal') ?? 'All';
   const currentPage = Number(searchParams.get('page')) || 1;
 
+  // Sync debouncedSearch back to URL when debounced value diverges from URL param
   useEffect(() => {
-    const currentSearch = searchParams.get('search') || '';
+    const currentSearch = searchParams.get('search') ?? '';
     if (debouncedSearch !== currentSearch) {
       const params = new URLSearchParams(searchParams.toString());
       if (debouncedSearch) { params.set('search', debouncedSearch); params.set('page', '1'); }
@@ -38,9 +41,7 @@ export function useLibraryLogic(initialData?: any | null): LibraryContextType {
     }
   }, [debouncedSearch, searchParams, router, pathname]);
 
-  const setSearch = useCallback((val: string) => {
-    setLocalSearch(val);
-  }, []);
+  const setSearch = useCallback((val: string) => { setLocalSearch(val); }, []);
 
   const setUrlParam = useCallback((key: string, value: string | null) => {
     const current = new URLSearchParams(Array.from(searchParams.entries()));
@@ -62,41 +63,38 @@ export function useLibraryLogic(initialData?: any | null): LibraryContextType {
   const loadAll = useCallback(async () => {
     setFetchState('loading');
     try {
+      // Bug #6 fix: pass all filter params to API — DO NOT re-filter client-side after server fetch
       const params: Record<string, string> = {
         page: currentPage.toString(),
         limit: '10'
       };
-      if (debouncedSearch) {
-        params.search = debouncedSearch;
-      }
-      const [dietRes] = await Promise.all([
-        libraryApi.getDietPlans(params),
-      ]);
-      
-      let fetchedDietPlans = dietRes.data?.dietPlans || dietRes.data || [];
-      
-      if (debouncedSearch) {
-        const q = debouncedSearch.toLowerCase();
-        fetchedDietPlans = fetchedDietPlans.filter((d: DietPlan) => 
-          d.name?.toLowerCase().includes(q) || d.goal?.toLowerCase().includes(q)
-        );
-      }
-      
-      if (filterGoal !== 'All') {
-        fetchedDietPlans = fetchedDietPlans.filter((d: DietPlan) => d.goal === filterGoal);
-      }
-      
+      if (debouncedSearch) params.search = debouncedSearch;
+      if (filterGoal && filterGoal !== 'All') params.goal = filterGoal;
+
+      // Bug #5 fix: typed API response instead of any
+      const dietRes = await libraryApi.getDietPlans(params) as ApiResponse<DietPlansApiResponse>;
+
+      // Bug #6 fix: trust server-side filtering — no client-side re-filter loops
+      const fetchedDietPlans: DietPlan[] = dietRes.data?.dietPlans ?? (Array.isArray(dietRes.data) ? dietRes.data as DietPlan[] : []);
+
       setDietPlans(fetchedDietPlans);
       setFetchState('success');
-    } catch (e) { 
-      showToast((e as Error).message, 'error'); 
+    } catch (e) {
+      showToast((e as Error).message, 'error');
       setFetchState('error');
     }
-  }, [showToast, currentPage, debouncedSearch]);
+  }, [showToast, currentPage, debouncedSearch, filterGoal]);
 
-  useEffect(() => { setTimeout(() => loadAll(), 0); }, [loadAll]);
+  // Bug #7 fix: direct useEffect with cancelled flag instead of setTimeout anti-pattern
+  // Deps: loadAll changes when URL params change, which drives re-fetch on navigation
+  useEffect(() => {
+    let cancelled = false;
+    const run = async () => { if (!cancelled) await loadAll(); };
+    void run();
+    return () => { cancelled = true; };
+  }, [loadAll]);
 
-  const dietLogic = useTrainerLibraryDiet(setDietPlans, showToast, setSaving, confirm as any);
+  const dietLogic = useTrainerLibraryDiet(setDietPlans, showToast, setSaving, confirm);
 
   return {
     dietPlans,
@@ -106,4 +104,3 @@ export function useLibraryLogic(initialData?: any | null): LibraryContextType {
     ...dietLogic
   };
 }
-

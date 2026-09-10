@@ -1,4 +1,4 @@
-# Forbidden Patterns for `erp/members`
+# Forbidden Patterns for `trainer/members`
 
 To maintain extreme isolation and enterprise-grade architecture in this module, the following are strictly forbidden:
 
@@ -10,3 +10,6 @@ To maintain extreme isolation and enterprise-grade architecture in this module, 
 6. **No Arbitrary Tailwind Values:** Do not use values like `bg-[#123456]` or `p-[15px]`. Use design system tokens (`bg-card`, `p-4`).
 7. **No Hardcoded Toasts from UI:** UI components should not intercept API errors to show toasts; let the API interceptor or Zustand store handle notifications and state updates.
 8. **No Localized API Calls:** UI components should never call `apiFetch` directly. They must trigger actions in custom hooks or stores, which then communicate with `members_api`.
+9. **No Cross-Module Imports:** `members_store/useMembersStore.ts` MUST NOT import from `attendance_api/` or any other sub-module's API layer. Cross-module attendance data must go through `trainerSharedApi` or a dedicated trainer-scoped endpoint. Importing `attendanceApi` from the attendance module is a direct Rule 2 (Total Role Isolation) and Rule 63 (Zero Cross-Module Imports) violation.
+10. **No Client-Side Role Filtering:** Do NOT filter the members list by `assignedTrainerId` on the frontend. The API endpoint `/trainer/members` must return ONLY members assigned to the authenticated trainer (enforced by backend). Client-side filtering is a security anti-pattern — it implies the backend is leaking the full member list to the trainer role.
+11. **No Hardcoded Demo Credentials:** The pattern `user.email === 'trainer@gymsmart.com'` is a critical security anti-pattern. Never bypass business logic with hardcoded email addresses in production frontend code.

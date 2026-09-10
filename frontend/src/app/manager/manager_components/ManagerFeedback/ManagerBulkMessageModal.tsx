@@ -70,6 +70,7 @@ export default function ManagerBulkMessageModal({
 
   const handleSendWhatsApp = (index: number) => {
     const recipient = recipients[index];
+    if (!recipient) return;
     const phone = recipient.phone?.replace(/\D/g, '') || '';
     if (!phone) return;
 
@@ -84,7 +85,7 @@ export default function ManagerBulkMessageModal({
     setIsSendingAll(true);
     for (let i = 0; i < recipients.length; i++) {
       const recipient = recipients[i];
-      const hasPhone = !!recipient.phone;
+      const hasPhone = !!recipient?.phone;
       if (hasPhone && !sentIndexes.has(i)) {
         handleSendWhatsApp(i);
         await new Promise(resolve => setTimeout(resolve, 500));

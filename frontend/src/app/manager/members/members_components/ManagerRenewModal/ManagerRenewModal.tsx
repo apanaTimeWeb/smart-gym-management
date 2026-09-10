@@ -96,7 +96,7 @@ export default function ManagerRenewModal() {
       else if (watchBillingCycle === 'TWELVE_MONTHS') ed.setMonth(ed.getMonth() + 12);
       else if (watchBillingCycle === 'CUSTOM' && watchCustomDays) ed.setDate(ed.getDate() + Number(watchCustomDays));
       
-      useFormReturn.setValue('newExpiryDate', ed.toISOString().split('T')[0], { shouldValidate: true });
+      useFormReturn.setValue('newExpiryDate', ed.toISOString().split('T')[0] || '', { shouldValidate: true });
     }
   }, [watchActionType, watchPlanId, watchBillingCycle, watchCustomDays, plans, selectedMember, useFormReturn]);
 
