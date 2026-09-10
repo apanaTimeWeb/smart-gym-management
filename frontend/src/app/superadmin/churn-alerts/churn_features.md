@@ -36,10 +36,11 @@ is the single most impactful churn-reduction workflow.
 | Email / Call | `/superadmin/churn-alerts` | Quick mailto/tel links on each row | `SuperadminChurnTable` | — (native links) | ✅ Live |
 
 ## Data and State Architecture
-- **State pattern:** Local `useState` for alerts list, search, filter, and modal state — all in `SuperadminChurnMain`
-- **TanStack Query keys (future):** `['superadmin', 'churn-alerts']`, `['superadmin', 'churn-alerts', 'kpis']`
+- **State pattern:** TanStack Query (`useQuery` / `useMutation`) via `useChurnAlertsPage.ts` — this is the single source of truth for all server data. Local `useState` is used only for UI-only state (search, filter, modal, pagination).
+- **TanStack Query keys:** `['superadmin', 'churn-alerts']`, `['superadmin', 'churn-kpis']`
+- **Mutations:** `updateActionMutation` (PATCH action), `bulkOutreachMutation` — both in `useChurnAlertsPage.ts`
 - **Zustand stores:** None
-- **Mock data:** `MOCK_CHURN_ALERTS` + `MOCK_CHURN_KPI` in `churn_constants.ts` — gate with `NODE_ENV` before production
+- **Mock data:** `MOCK_CHURN_ALERTS` + `MOCK_CHURN_KPI` in `churn_constants.ts` — gated with `process.env.NODE_ENV === 'development'`
 
 ## API Contract
 | Function | Method | Endpoint | Request | Response `data` |

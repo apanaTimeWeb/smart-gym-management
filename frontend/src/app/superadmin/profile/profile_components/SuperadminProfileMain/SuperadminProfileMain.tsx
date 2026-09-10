@@ -2,30 +2,11 @@
 // RESPONSIBILITY: Root client orchestrator for the Superadmin Profile page.
 // Owns tab state, fetch state, and mutation handlers. Delegates rendering to child components.
 
-import { useState } from 'react';
-import toast from 'react-hot-toast';
 import SuperadminProfileAvatarCard from '@/app/superadmin/profile/profile_components/SuperadminProfileAvatarCard/SuperadminProfileAvatarCard';
 import SuperadminProfilePersonalForm from '@/app/superadmin/profile/profile_components/SuperadminProfilePersonalForm/SuperadminProfilePersonalForm';
 import SuperadminProfileSecurityForm from '@/app/superadmin/profile/profile_components/SuperadminProfileSecurityForm/SuperadminProfileSecurityForm';
-import { superadminProfileApi } from '@/app/superadmin/profile/profile_api/superadmin_profile_api';
-import type {
-  SuperadminProfileData,
-  ProfileTab,
-  UpdateSuperadminProfilePayload,
-  UpdateSuperadminPasswordPayload,
-  Toggle2FAPayload,
-} from '@/app/superadmin/profile/profile_types/SuperadminProfileTypes';
-
-const MOCK_PROFILE: SuperadminProfileData = {
-  id: 'sa-001',
-  name: 'Platform Admin',
-  email: 'admin@gymsmart360.com',
-  phone: '9999999999',
-  role: 'SUPERADMIN',
-  twoFactorEnabled: false,
-  lastLoginAt: new Date().toISOString(),
-  createdAt: '2024-01-01T00:00:00Z',
-};
+import type { ProfileTab } from '@/app/superadmin/profile/profile_types/SuperadminProfileTypes';
+import { useProfilePage } from '@/app/superadmin/profile/profile_utils/useProfilePage';
 
 const TABS: { id: ProfileTab; label: string }[] = [
   { id: 'personal', label: 'Personal Info' },
@@ -33,56 +14,24 @@ const TABS: { id: ProfileTab; label: string }[] = [
 ];
 
 export default function SuperadminProfileMain() {
-  const [profile, setProfile] = useState<SuperadminProfileData>(MOCK_PROFILE);
-  const [activeTab, setActiveTab] = useState<ProfileTab>('personal');
-  const [isSavingPersonal, setIsSavingPersonal] = useState(false);
-  const [isSavingPassword, setIsSavingPassword] = useState(false);
-  const [isTogglingTwoFA, setIsTogglingTwoFA] = useState(false);
+  const {
+    activeTab, setActiveTab,
+    profile, profileLoading,
+    personalState, updatePersonalMutation,
+    passwordState, updatePasswordMutation,
+    twoFAState, toggle2FAMutation,
+  } = useProfilePage();
 
-  async function handleSavePersonal(payload: UpdateSuperadminProfilePayload) {
-    setIsSavingPersonal(true);
-    try {
-      const res = await superadminProfileApi.updateProfile(payload);
-      if (res.success && res.data) {
-        setProfile(res.data);
-        toast.success(res.message);
-      } else {
-        toast.error(res.message);
-      }
-    } catch {
-      toast.error('Failed to update profile. Please try again.');
-    } finally {
-      setIsSavingPersonal(false);
-    }
-  }
-
-  async function handleSavePassword(payload: UpdateSuperadminPasswordPayload) {
-    setIsSavingPassword(true);
-    try {
-      const res = await superadminProfileApi.updatePassword(payload);
-      toast.success(res.message || 'Password updated successfully.');
-    } catch {
-      toast.error('Failed to update password. Please try again.');
-    } finally {
-      setIsSavingPassword(false);
-    }
-  }
-
-  async function handleToggle2FA(payload: Toggle2FAPayload) {
-    setIsTogglingTwoFA(true);
-    try {
-      const res = await superadminProfileApi.toggle2FA(payload);
-      if (res.success && res.data) {
-        setProfile(res.data);
-        toast.success(res.message);
-      } else {
-        toast.error(res.message);
-      }
-    } catch {
-      toast.error('Failed to update 2FA settings. Please try again.');
-    } finally {
-      setIsTogglingTwoFA(false);
-    }
+  if (profileLoading || !profile) {
+    return (
+      <div className="space-y-6">
+        <div className="h-8 bg-card rounded w-48 motion-safe:animate-pulse" />
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div className="lg:col-span-1 h-64 bg-card rounded-xl border border-border motion-safe:animate-pulse" />
+          <div className="lg:col-span-3 h-96 bg-card rounded-xl border border-border motion-safe:animate-pulse" />
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -124,17 +73,17 @@ export default function SuperadminProfileMain() {
             {activeTab === 'personal' && (
               <SuperadminProfilePersonalForm
                 profile={profile}
-                isSaving={isSavingPersonal}
-                onSave={handleSavePersonal}
+                isSaving={personalState === 'loading'}
+                onSave={(data) => updatePersonalMutation.mutate(data)}
               />
             )}
             {activeTab === 'security' && (
               <SuperadminProfileSecurityForm
                 profile={profile}
-                isSavingPassword={isSavingPassword}
-                isTogglingTwoFA={isTogglingTwoFA}
-                onSavePassword={handleSavePassword}
-                onToggle2FA={handleToggle2FA}
+                isSavingPassword={passwordState === 'loading'}
+                isTogglingTwoFA={twoFAState === 'loading'}
+                onSavePassword={(data) => updatePasswordMutation.mutate(data)}
+                onToggle2FA={(data) => toggle2FAMutation.mutate(data)}
               />
             )}
           </div>

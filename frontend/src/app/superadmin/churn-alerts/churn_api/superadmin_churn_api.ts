@@ -22,4 +22,10 @@ export const churnAlertsApi = {
     apiFetch<ApiResponse<void>>(`${SuperadminUrlConfig.BACKEND_API.CHURN_ALERTS_BASE}/${alertId}`, {
       method: 'DELETE',
     }),
+
+  bulkOutreach: (tenantIds: string[]) =>
+    apiFetch<ApiResponse<void>>(`${SuperadminUrlConfig.BACKEND_API.CHURN_ALERTS_BASE}/bulk-outreach`, {
+      method: 'POST',
+      body: JSON.stringify({ tenantIds }),
+    }),
 };

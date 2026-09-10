@@ -5,36 +5,11 @@
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { Loader2 } from 'lucide-react';
 import type { SuperadminProfileData, UpdateSuperadminProfilePayload } from '@/app/superadmin/profile/profile_types/SuperadminProfileTypes';
-
-const TIMEZONE_OPTIONS = [
-  'Asia/Kolkata',
-  'Asia/Dubai',
-  'Asia/Singapore',
-  'Europe/London',
-  'America/New_York',
-  'America/Los_Angeles',
-  'UTC',
-] as const;
-
-const LANGUAGE_OPTIONS = [
-  { value: 'en', label: 'English' },
-  { value: 'hi', label: 'Hindi' },
-  { value: 'mr', label: 'Marathi' },
-  { value: 'ta', label: 'Tamil' },
-  { value: 'te', label: 'Telugu' },
-] as const;
-
-const personalSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
-  phone: z.string().min(10, 'Enter a valid phone number').max(15),
-  timezone: z.string().optional(),
-  language: z.string().optional(),
-});
-
-type PersonalFormValues = z.infer<typeof personalSchema>;
+import { TIMEZONE_OPTIONS, LANGUAGE_OPTIONS } from '@/app/superadmin/profile/profile_utils/SuperadminProfileConstants';
+import { personalSchema, type PersonalFormValues } from '@/app/superadmin/profile/profile_utils/SuperadminProfilePersonalForm.schema';
+import { useWarnIfUnsavedChanges } from '@/app/superadmin/superadmin_utils/useWarnIfUnsavedChanges';
 
 interface SuperadminProfilePersonalFormProps {
   profile: SuperadminProfileData;
@@ -61,6 +36,8 @@ export default function SuperadminProfilePersonalForm({
       language: profile.language ?? 'en',
     },
   });
+
+  useWarnIfUnsavedChanges(isDirty, "You have unsaved changes in your profile. Are you sure you want to leave?");
 
   // Rule 53: reset when profile prop changes (e.g. after successful save)
   useEffect(() => {

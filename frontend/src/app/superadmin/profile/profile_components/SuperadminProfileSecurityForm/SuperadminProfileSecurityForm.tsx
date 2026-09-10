@@ -5,26 +5,14 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { Eye, EyeOff, Loader2, ShieldCheck, ShieldOff } from 'lucide-react';
 import type {
   SuperadminProfileData,
   UpdateSuperadminPasswordPayload,
   Toggle2FAPayload,
 } from '@/app/superadmin/profile/profile_types/SuperadminProfileTypes';
-
-const passwordSchema = z
-  .object({
-    currentPassword: z.string().min(1, 'Current password is required'),
-    newPassword: z.string().min(8, 'New password must be at least 8 characters'),
-    confirmPassword: z.string().min(1, 'Please confirm your new password'),
-  })
-  .refine((d) => d.newPassword === d.confirmPassword, {
-    message: 'Passwords do not match',
-    path: ['confirmPassword'],
-  });
-
-type PasswordFormValues = z.infer<typeof passwordSchema>;
+import { passwordSchema, type PasswordFormValues } from '@/app/superadmin/profile/profile_utils/SuperadminProfileSecurityForm.schema';
+import { useWarnIfUnsavedChanges } from '@/app/superadmin/superadmin_utils/useWarnIfUnsavedChanges';
 
 interface SuperadminProfileSecurityFormProps {
   profile: SuperadminProfileData;
@@ -51,8 +39,10 @@ export default function SuperadminProfileSecurityForm({
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm<PasswordFormValues>({ resolver: zodResolver(passwordSchema) });
+
+  useWarnIfUnsavedChanges(isDirty, "You have unsaved changes in your password form. Are you sure you want to leave?");
 
   function handlePasswordSubmit(values: PasswordFormValues) {
     onSavePassword(values);
@@ -109,7 +99,7 @@ export default function SuperadminProfileSecurityForm({
           <div className="flex justify-end pt-1">
             <button
               type="submit"
-              disabled={isSavingPassword}
+              disabled={isSavingPassword || !isDirty}
               className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-black font-semibold text-sm rounded-lg motion-safe:transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               {isSavingPassword && <Loader2 size={16} strokeWidth={2} className="motion-safe:animate-spin" />}

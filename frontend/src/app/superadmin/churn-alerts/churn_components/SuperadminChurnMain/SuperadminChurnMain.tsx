@@ -2,83 +2,25 @@
 // RESPONSIBILITY: Root client orchestrator for the Churn Alerts page.
 // Owns filter state, action modal state, and data. Delegates rendering to child components.
 
-import { useState, useMemo } from 'react';
-import toast from 'react-hot-toast';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import SuperadminChurnKPIs from '@/app/superadmin/churn-alerts/churn_components/SuperadminChurnKPIs/SuperadminChurnKPIs';
 import SuperadminChurnFilters from '@/app/superadmin/churn-alerts/churn_components/SuperadminChurnFilters/SuperadminChurnFilters';
 import SuperadminChurnTable from '@/app/superadmin/churn-alerts/churn_components/SuperadminChurnTable/SuperadminChurnTable';
 import SuperadminChurnEmptyState from '@/app/superadmin/churn-alerts/churn_components/SuperadminChurnEmptyState/SuperadminChurnEmptyState';
 import SuperadminChurnActionModal from '@/app/superadmin/churn-alerts/churn_components/SuperadminChurnActionModal/SuperadminChurnActionModal';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
-import { churnAlertsApi } from '@/app/superadmin/churn-alerts/churn_api/superadmin_churn_api';
-import type { ChurnAlert, ChurnFilterStatus, ChurnActionPayload } from '@/app/superadmin/churn-alerts/churn_types/churn_types';
-import { MOCK_CHURN_ALERTS, MOCK_CHURN_KPI } from '@/app/superadmin/churn-alerts/churn_utils/churn_constants';
-
-const IS_DEV = process.env.NODE_ENV === 'development';
-const CHURN_PAGE_SIZE = 20;
+import type { ChurnFilterStatus } from '@/app/superadmin/churn-alerts/churn_types/churn_types';
+import { useChurnAlertsPage } from '@/app/superadmin/churn-alerts/churn_utils/useChurnAlertsPage';
 
 export default function SuperadminChurnMain() {
-  const queryClient = useQueryClient();
-  const [search, setSearch] = useState('');
-  const [activeFilter, setActiveFilter] = useState<ChurnFilterStatus>('ALL');
-  const [actionAlert, setActionAlert] = useState<ChurnAlert | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const { data: alertsRes, isLoading: alertsLoading, isError: alertsError } = useQuery({
-    queryKey: ['superadmin', 'churn-alerts'],
-    queryFn: () => churnAlertsApi.fetchAlerts(),
-  });
-
-  const { data: kpisRes, isLoading: kpisLoading } = useQuery({
-    queryKey: ['superadmin', 'churn-kpis'],
-    queryFn: () => churnAlertsApi.fetchKpis(),
-  });
-
-  const updateActionMutation = useMutation({
-    mutationFn: (payload: ChurnActionPayload) => churnAlertsApi.updateAction(payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['superadmin', 'churn-alerts'] });
-      toast.success('Action updated successfully.');
-      setActionAlert(null);
-    },
-    onError: () => {
-      toast.error('Failed to update action.');
-    }
-  });
-
-  // Fix: use mock data whenever API has no data (empty array, error, or null) in development
-  const alerts: ChurnAlert[] = (() => {
-    if (alertsRes?.data && alertsRes.data.length > 0) return alertsRes.data;
-    return IS_DEV ? MOCK_CHURN_ALERTS : [];
-  })();
-
-  const kpis = (() => {
-    if (kpisRes?.data) return kpisRes.data;
-    return IS_DEV ? MOCK_CHURN_KPI : { totalAtRisk: 0, criticalCount: 0, highCount: 0, estimatedMrrAtRisk: 0 };
-  })();
-
-  const filtered = useMemo(() => {
-    return alerts.filter((a) => {
-      const matchesSearch =
-        a.gymName.toLowerCase().includes(search.toLowerCase()) ||
-        a.ownerName.toLowerCase().includes(search.toLowerCase());
-      const matchesFilter =
-        activeFilter === 'ALL' ||
-        a.riskLevel === activeFilter ||
-        a.actionStatus === activeFilter;
-      return matchesSearch && matchesFilter;
-    });
-  }, [alerts, search, activeFilter]);
-
-  const totalPages = Math.ceil(filtered.length / CHURN_PAGE_SIZE) || 1;
-  const paginatedAlerts = filtered.slice((currentPage - 1) * CHURN_PAGE_SIZE, currentPage * CHURN_PAGE_SIZE);
-
-  function handleActionConfirm(payload: ChurnActionPayload) {
-    updateActionMutation.mutate(payload);
-  }
-
-  const isFiltered = search !== '' || activeFilter !== 'ALL';
+  const {
+    search, setSearch,
+    activeFilter, setActiveFilter,
+    actionAlert, setActionAlert,
+    currentPage, setCurrentPage,
+    alertsLoading, kpisLoading,
+    kpis, filtered, paginatedAlerts, totalPages, isFiltered,
+    handleActionConfirm, handleBulkOutreach
+  } = useChurnAlertsPage();
 
   if (alertsLoading || kpisLoading) {
     return (
@@ -104,14 +46,7 @@ export default function SuperadminChurnMain() {
           </p>
         </div>
         <button
-          onClick={() => {
-            const atRiskCount = filtered.filter(a => a.riskLevel === 'CRITICAL' || a.riskLevel === 'HIGH').length;
-            if (atRiskCount === 0) {
-              toast.error('No critical/high risk tenants found in current view.');
-              return;
-            }
-            toast.success(`Bulk outreach emails sent to ${atRiskCount} at-risk gym owners!`);
-          }}
+          onClick={handleBulkOutreach}
           className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg font-medium motion-safe:transition-colors shadow-lg shadow-primary/20"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

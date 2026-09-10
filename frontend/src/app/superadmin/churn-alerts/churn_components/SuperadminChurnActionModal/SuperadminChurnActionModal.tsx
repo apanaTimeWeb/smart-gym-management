@@ -1,11 +1,13 @@
 'use client';
 // RESPONSIBILITY: Modal for updating the action status and notes on a churn alert.
-// Emits the confirmed payload to parent — owns no mutation logic.
+// Uses React Hook Form + Zod (churnActionSchema). Emits confirmed payload to parent via onConfirm — owns no mutation or fetch logic.
 
 import { X } from 'lucide-react';
-import { useState } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { CHURN_ACTION_STATUS_STYLES } from '@/app/superadmin/churn-alerts/churn_utils/churn_constants';
 import type { ChurnAlert, ChurnActionStatus, ChurnActionPayload } from '@/app/superadmin/churn-alerts/churn_types/churn_types';
+import { churnActionSchema, type ChurnActionFormValues } from '@/app/superadmin/churn-alerts/churn_utils/SuperadminChurnActionModal.schema';
 
 const ACTION_OPTIONS: ChurnActionStatus[] = ['PENDING', 'CONTACTED', 'RESOLVED', 'CHURNED'];
 
@@ -16,11 +18,16 @@ interface SuperadminChurnActionModalProps {
 }
 
 export default function SuperadminChurnActionModal({ alert, onConfirm, onClose }: SuperadminChurnActionModalProps) {
-  const [status, setStatus] = useState<ChurnActionStatus>(alert.actionStatus);
-  const [notes, setNotes] = useState(alert.notes);
+  const { control, handleSubmit, formState: { errors } } = useForm<ChurnActionFormValues>({
+    resolver: zodResolver(churnActionSchema),
+    defaultValues: {
+      status: alert.actionStatus,
+      notes: alert.notes,
+    },
+  });
 
-  function handleSubmit() {
-    onConfirm({ alertId: alert.id, status, notes });
+  function onSubmit(data: ChurnActionFormValues) {
+    onConfirm({ alertId: alert.id, status: data.status, notes: data.notes });
   }
 
   return (
@@ -42,54 +49,75 @@ export default function SuperadminChurnActionModal({ alert, onConfirm, onClose }
           <p className="text-xs text-secondary">{alert.adminEmail}</p>
         </div>
 
-        <div className="mb-4">
-          <label className="block text-xs font-semibold text-secondary uppercase tracking-wider mb-2">
-            Action Status
-          </label>
-          <div className="flex flex-wrap gap-2">
-            {ACTION_OPTIONS.map((opt) => (
-              <button
-                key={opt}
-                onClick={() => setStatus(opt)}
-                className={`px-3 py-1.5 rounded-full text-xs font-semibold motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-                  status === opt
-                    ? CHURN_ACTION_STATUS_STYLES[opt] + ' ring-2 ring-offset-1 ring-primary'
-                    : 'bg-input text-secondary hover:text-foreground border border-border'
-                }`}
-              >
-                {opt}
-              </button>
-            ))}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="mb-4">
+            <label className="block text-xs font-semibold text-secondary uppercase tracking-wider mb-2">
+              Action Status
+            </label>
+            <Controller
+              name="status"
+              control={control}
+              render={({ field }) => (
+                <div className="flex flex-wrap gap-2">
+                  {ACTION_OPTIONS.map((opt) => (
+                    <button
+                      key={opt}
+                      type="button"
+                      onClick={() => field.onChange(opt)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-semibold motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                        field.value === opt
+                          ? CHURN_ACTION_STATUS_STYLES[opt] + ' ring-2 ring-offset-1 ring-primary'
+                          : 'bg-input text-secondary hover:text-foreground border border-border'
+                      }`}
+                    >
+                      {opt}
+                    </button>
+                  ))}
+                </div>
+              )}
+            />
+            {errors.status && (
+              <p className="mt-1 text-xs text-danger" role="alert">{errors.status.message}</p>
+            )}
           </div>
-        </div>
 
-        <div className="mb-5">
-          <label className="block text-xs font-semibold text-secondary uppercase tracking-wider mb-2">
-            Notes
-          </label>
-          <textarea
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            rows={3}
-            placeholder="Add context about this tenant's situation..."
-            className="w-full px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground resize-none focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
-          />
-        </div>
+          <div className="mb-5">
+            <label className="block text-xs font-semibold text-secondary uppercase tracking-wider mb-2">
+              Notes
+            </label>
+            <Controller
+              name="notes"
+              control={control}
+              render={({ field }) => (
+                <textarea
+                  {...field}
+                  rows={3}
+                  placeholder="Add context about this tenant's situation..."
+                  className="w-full px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground resize-none focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
+                />
+              )}
+            />
+            {errors.notes && (
+              <p className="mt-1 text-xs text-danger" role="alert">{errors.notes.message}</p>
+            )}
+          </div>
 
-        <div className="flex gap-3 justify-end">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 rounded-lg bg-input text-secondary hover:text-foreground text-sm motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleSubmit}
-            className="px-4 py-2 rounded-lg bg-primary text-black font-semibold text-sm hover:bg-primary-hover motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-          >
-            Save Action
-          </button>
-        </div>
+          <div className="flex gap-3 justify-end">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 rounded-lg bg-input text-secondary hover:text-foreground text-sm motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 rounded-lg bg-primary text-black font-semibold text-sm hover:bg-primary-hover motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            >
+              Save Action
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
