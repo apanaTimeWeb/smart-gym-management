@@ -619,7 +619,7 @@ Whenever displaying action buttons in data tables/lists, prioritize using semant
 Whenever the user performs an action that sends a proof/document, present an option to choose between mediums (e.g., WhatsApp vs. Email) using Radio Buttons. Do NOT use checkboxes if only one is to be selected.
 
 30. **Mandatory Table Controls (Pagination, Sorting, & Filtering)**:
-Whenever displaying tabular data, you MUST always implement pagination, column sorting, and relevant filtering directly above the table.
+Whenever displaying tabular data, you MUST always implement pagination, column sorting, and relevant filtering directly above the table. **Table Header Sorting Indicators:** Any sortable column header MUST include a visible sorting icon (e.g., up/down arrows like `ArrowUpDown`, `ArrowUp`, `ArrowDown` from `lucide-react`). The actively sorted column must highlight the directional arrow (e.g., in a primary/accent color) to clearly indicate the current sort direction.
 
 31. **Modularized API Clients (No Centralized API Blob)**:
 Do not define module-specific API routes in a giant global file. Every module MUST have its own API file inside a dedicated folder (e.g., `[moduleName]_api/[moduleName]_api.ts`) importing the core base fetcher.
