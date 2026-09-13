@@ -1,18 +1,17 @@
 // RESPONSIBILITY: Root client orchestrator for the Trainer Schedule module.
 'use client';
 
-import { useScheduleContext, ScheduleProvider } from '@/app/trainer/schedule/schedule_context/TrainerScheduleContext';
+import { useTrainerScheduleStore } from '@/app/trainer/schedule/schedule_store/useTrainerScheduleStore';
 import TrainerWeeklyAvailability from '@/app/trainer/schedule/schedule_components/TrainerWeeklyAvailability/TrainerWeeklyAvailability';
 import TrainerLeaveRequests from '@/app/trainer/schedule/schedule_components/TrainerLeaveRequests/TrainerLeaveRequests';
 import TrainerRequestLeaveModal from '@/app/trainer/schedule/schedule_components/TrainerRequestLeaveModal/TrainerRequestLeaveModal';
 import TrainerToast from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
 
-function ScheduleContent() {
-  const { activeTab, setActiveTab, toast, hideToast } = useScheduleContext();
+export default function TrainerScheduleMain() {
+  const { activeTab, setActiveTab, toast, hideToast } = useTrainerScheduleStore();
 
   return (
     <div className="min-h-full pb-10">
-            
       <div className="p-4 sm:p-6 max-w-screen-xl mx-auto w-full space-y-6">
         {/* Module Tabs */}
         <div className="flex flex-wrap gap-2 bg-card border border-border p-1 rounded-xl w-fit">
@@ -44,13 +43,5 @@ function ScheduleContent() {
       <TrainerRequestLeaveModal />
       {toast && <TrainerToast message={toast.message} type={toast.type} onClose={hideToast} />}
     </div>
-  );
-}
-
-export default function TrainerScheduleMain() {
-  return (
-    <ScheduleProvider>
-      <ScheduleContent />
-    </ScheduleProvider>
   );
 }

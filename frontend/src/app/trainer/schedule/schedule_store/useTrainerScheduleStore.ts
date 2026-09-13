@@ -1,46 +1,28 @@
-// RESPONSIBILITY: Zustand store that manages all async data for the Trainer Schedule module.
+// RESPONSIBILITY: Zustand store that manages UI-only state for the Trainer Schedule module.
 import { create } from 'zustand';
-import { trainerScheduleApi } from '@/app/trainer/schedule/schedule_api/TrainerScheduleApi';
-import type { TrainerScheduleState } from '@/app/trainer/schedule/schedule_types/TrainerScheduleTypes';
 
-export const useTrainerScheduleStore = create<TrainerScheduleState>((set, get) => ({
-  availability: [],
-  leaveRequests: [],
-  leaveBalance: 0,
-  fetchState: 'idle',
-  saving: false,
+interface TrainerScheduleStore {
+  activeTab: 'availability' | 'leaves';
+  setActiveTab: (tab: 'availability' | 'leaves') => void;
+  showLeaveModal: boolean;
+  setShowLeaveModal: (show: boolean) => void;
+  openLeaveModal: () => void;
+  closeLeaveModal: () => void;
+  toast: { message: string; type: 'success' | 'error' } | null;
+  showToast: (message: string, type: 'success' | 'error') => void;
+  hideToast: () => void;
+}
 
-  loadSchedule: async () => {
-    set({ fetchState: 'loading' });
-    try {
-      const res = await trainerScheduleApi.getSchedule();
-      set({
-        availability: res.data.availability,
-        leaveRequests: res.data.leaves,
-        fetchState: 'success'
-      });
-    } catch {
-      set({ fetchState: 'error' });
-    }
-  },
-
-  updateAvailability: async (data) => {
-    set({ saving: true });
-    try {
-      await trainerScheduleApi.updateAvailability(data);
-      await get().loadSchedule(); // Re-fetch to confirm
-    } finally {
-      set({ saving: false });
-    }
-  },
-
-  requestLeave: async (data) => {
-    set({ saving: true });
-    try {
-      await trainerScheduleApi.requestLeave(data);
-      await get().loadSchedule();
-    } finally {
-      set({ saving: false });
-    }
-  }
+export const useTrainerScheduleStore = create<TrainerScheduleStore>((set) => ({
+  activeTab: 'availability',
+  setActiveTab: (tab) => set({ activeTab: tab }),
+  
+  showLeaveModal: false,
+  setShowLeaveModal: (show) => set({ showLeaveModal: show }),
+  openLeaveModal: () => set({ showLeaveModal: true }),
+  closeLeaveModal: () => set({ showLeaveModal: false }),
+  
+  toast: null,
+  showToast: (message, type) => set({ toast: { message, type } }),
+  hideToast: () => set({ toast: null }),
 }));

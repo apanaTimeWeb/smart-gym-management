@@ -24,7 +24,7 @@
 - Never define `MOCK_*` arrays inside JSX, hooks, or logic files.
 
 ## No Arbitrary Style Values
-- Never use `bg-[var(--...)]`, `text-[var(--...)]`, raw rgba shadows, or Tailwind color utilities like `bg-green-500`.
+- Never use arbitrary CSS variable utility classes like `bg-[var(--custom-token)]`, `text-[var(--custom-token)]`, raw rgba shadows, or Tailwind color utilities like `bg-green-500`.
 - Use only semantic tokens defined in `communications_theme_contract.md`.
 
 ## No `any` Types

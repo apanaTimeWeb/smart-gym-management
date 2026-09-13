@@ -2,26 +2,30 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useScheduleContext } from '@/app/trainer/schedule/schedule_context/TrainerScheduleContext';
+import { useTrainerScheduleQuery } from '@/app/trainer/schedule/schedule_queries/useTrainerScheduleQuery';
+import { useTrainerScheduleMutations } from '@/app/trainer/schedule/schedule_queries/useTrainerScheduleMutations';
 import { useTrainerScheduleStore } from '@/app/trainer/schedule/schedule_store/useTrainerScheduleStore';
+import { useWarnIfUnsavedChanges } from '@/app/trainer/trainer_utils/useWarnIfUnsavedChanges';
 import type { WeeklyAvailability } from '@/app/trainer/schedule/schedule_types/TrainerScheduleTypes';
 import { Loader2, Save } from 'lucide-react';
 
 export default function TrainerWeeklyAvailability() {
-  const { saveAvailability } = useScheduleContext();
-  const availability = useTrainerScheduleStore(s => s.availability);
-  const fetchState = useTrainerScheduleStore(s => s.fetchState);
-  const saving = useTrainerScheduleStore(s => s.saving);
+  const { data, isLoading, isError } = useTrainerScheduleQuery();
+  const { updateAvailability } = useTrainerScheduleMutations();
+  const showToast = useTrainerScheduleStore(s => s.showToast);
 
   const [localSchedule, setLocalSchedule] = useState<WeeklyAvailability[]>([]);
+  const [isDirty, setIsDirty] = useState(false);
 
   // Hydrate local state once loaded
   useEffect(() => {
-    if (fetchState === 'success') {
-      // Deep copy to avoid mutating store directly
-      setLocalSchedule(JSON.parse(JSON.stringify(availability)));
+    if (data?.availability) {
+      setLocalSchedule(JSON.parse(JSON.stringify(data.availability)));
+      setIsDirty(false);
     }
-  }, [fetchState, availability]);
+  }, [data?.availability]);
+
+  useWarnIfUnsavedChanges(isDirty && !updateAvailability.isPending);
 
   const handleToggle = (index: number) => {
     const updated = [...localSchedule];
@@ -36,6 +40,7 @@ export default function TrainerWeeklyAvailability() {
       updated[index].endTime = '18:00';
     }
     setLocalSchedule(updated);
+    setIsDirty(true);
   };
 
   const handleChangeTime = (index: number, field: 'startTime' | 'endTime', value: string) => {
@@ -43,18 +48,29 @@ export default function TrainerWeeklyAvailability() {
     if (!updated[index]) return;
     updated[index][field] = value;
     setLocalSchedule(updated);
+    setIsDirty(true);
   };
 
-  const handleSave = () => {
-    saveAvailability(localSchedule);
+  const handleSave = async () => {
+    try {
+      await updateAvailability.mutateAsync(localSchedule);
+      setIsDirty(false);
+      showToast('Availability schedule updated.', 'success');
+    } catch {
+      showToast('Failed to update availability.', 'error');
+    }
   };
 
-  if (fetchState === 'loading') {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
       </div>
     );
+  }
+
+  if (isError) {
+    return <div className="p-6 text-danger">Failed to load schedule.</div>;
   }
 
   return (
@@ -104,10 +120,10 @@ export default function TrainerWeeklyAvailability() {
       <div className="mt-8 border-t border-border pt-6 flex justify-end">
         <button 
           onClick={handleSave}
-          disabled={saving}
+          disabled={updateAvailability.isPending || !isDirty}
           className="flex items-center gap-2 px-6 py-2.5 bg-primary text-primary-foreground font-bold rounded-xl hover:opacity-90 motion-safe:transition-opacity disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         >
-          {saving ? <Loader2 className="w-4 h-4 motion-safe:animate-spin" /> : <Save size={18} />}
+          {updateAvailability.isPending ? <Loader2 className="w-4 h-4 motion-safe:animate-spin" /> : <Save size={18} />}
           Save Availability
         </button>
       </div>
