@@ -32,7 +32,7 @@ export function useChurnAlertsPage() {
       toast.success(res.message || 'Action updated successfully.', { id: 'churn-update-success' });
       setActionAlert(null);
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast.error(error.message || 'Failed to update action.', { id: 'churn-update-error' });
     }
   });
@@ -42,7 +42,7 @@ export function useChurnAlertsPage() {
     onSuccess: (res) => {
       toast.success(res.message || 'Bulk outreach emails sent!', { id: 'churn-bulk-success' });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast.error(error.message || 'Failed to send bulk outreach.', { id: 'churn-bulk-error' });
     }
   });

@@ -55,11 +55,8 @@ export function useManagerSalesLogic(initialData?: SalesInitialData | null): Sal
   }, [router, searchParams, pathname]);
 
   const setDateFilter = useCallback((val: DateFilter) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('dateFilter', val);
-    params.set('page', '1');
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
-  }, [router, searchParams, pathname]);
+    // Keep it for backward compatibility if needed by types, but it's not used by dropdown
+  }, []);
 
   const setCurrentPage = useCallback((page: number) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -85,8 +82,11 @@ export function useManagerSalesLogic(initialData?: SalesInitialData | null): Sal
   const loadAll = useCallback(async () => {
     setFetchState('loading');
     try {
-      const params: Record<string, string> = { limit: '10', page: currentPage.toString(), period: dateFilter.toLowerCase() };
-      if (dateFilter === 'Custom') {
+      const range = searchParams.get('range') || 'this_month';
+      const params: Record<string, string> = { limit: '10', page: currentPage.toString(), range };
+      if (range === 'custom') {
+        const customStartDate = searchParams.get('startDate');
+        const customEndDate = searchParams.get('endDate');
         if (customStartDate) params.startDate = customStartDate;
         if (customEndDate) params.endDate = customEndDate;
       }

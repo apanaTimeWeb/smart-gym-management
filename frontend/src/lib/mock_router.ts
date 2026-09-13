@@ -862,7 +862,30 @@ export async function routeMockRequest<T>(
     
     return MockDB.handleCrud('mock_workouts', method, path, parsedBody, defaultWorkouts, 'workouts') as unknown as ApiResponse<T>;
   }
-  if (path.includes('/admin/finance/summary')) return { success: true, message: 'Summary', data: { totalRevenue: 1500000, monthlyRevenue: 250000, pendingAmount: 45000, totalPayments: 345, revenueByMethod: { UPI: 120000, Cash: 50000, Card: 80000, NetBanking: 0 }, monthlyData: generate(6, i => ({ month: `M${i+1}`, revenue: 200000 + (i * 10000) })) } } as unknown as ApiResponse<T>;
+  // FINANCE MOCKS (Admin & Manager)
+  if (path.includes('/admin/finance/summary') || path.includes('/manager/finance/summary')) {
+    const range = parsedUrl.searchParams.get('range') || 'this_month';
+    let mult = 1;
+    if (range === 'last_month') mult = 0.9;
+    else if (range === 'last_3_months') mult = 2.8;
+    else if (range === 'last_6_months') mult = 5.5;
+    else if (range === 'this_year') mult = 11.2;
+    else if (range === 'yearly') mult = 24.5;
+    else if (range === 'custom') mult = 1.5;
+
+    return { 
+      success: true, 
+      message: 'Summary', 
+      data: { 
+        totalRevenue: 1500000 * mult, 
+        monthlyRevenue: 250000 * mult, 
+        pendingAmount: 45000 * mult, 
+        totalPayments: Math.floor(345 * mult), 
+        revenueByMethod: { UPI: 120000 * mult, Cash: 50000 * mult, Card: 80000 * mult, NetBanking: 0 }, 
+        monthlyData: generate(6, i => ({ month: `M${i+1}`, revenue: (200000 + (i * 10000)) * mult })) 
+      } 
+    } as unknown as ApiResponse<T>;
+  }
   if (method === 'GET' && (path.includes('/finance/payments/member/') || path.includes('/finance/payments-by-member/'))) {
     const segments = (path.split('?')[0] || '').split('/');
     const memberId = segments[segments.length - 1];
@@ -989,6 +1012,15 @@ export async function routeMockRequest<T>(
   ]) as unknown as ApiResponse<T>;
   if (path.includes('/admin/reports/data')) {
     const gymId = parsedUrl.searchParams.get('gymId');
+    const range = parsedUrl.searchParams.get('dateRange') || 'this_month';
+    let mult = 1;
+    if (range === 'last_month') mult = 0.9;
+    else if (range === 'last_3_months') mult = 2.8;
+    else if (range === 'last_6_months') mult = 5.5;
+    else if (range === 'this_year') mult = 11.2;
+    else if (range === 'yearly') mult = 24.5;
+    else if (range === 'custom') mult = 1.5;
+
     let data = { ...ADMIN_MOCK_REPORT_DATA };
     if (gymId && gymId !== 'all') {
       data = {
@@ -1000,6 +1032,17 @@ export async function routeMockRequest<T>(
         pnlSummary: data.pnlSummary.filter(g => g.gymId === gymId),
       };
     }
+    
+    // Scale data
+    data = {
+      ...data,
+      revenueByGym: data.revenueByGym.map(g => ({ ...g, revenue: g.revenue * mult })),
+      membershipGrowth: data.membershipGrowth.map(g => ({ ...g, activeMembers: Math.floor(g.activeMembers * mult) })),
+      attendanceSummary: data.attendanceSummary.map(g => ({ ...g, totalCheckIns: Math.floor(g.totalCheckIns * mult) })),
+      payrollSummary: data.payrollSummary.map(g => ({ ...g, totalPayroll: g.totalPayroll * mult })),
+      pnlSummary: data.pnlSummary.map(g => ({ ...g, netProfit: g.netProfit * mult })),
+    };
+    
     return { success: true, message: 'Report data fetched', data } as unknown as ApiResponse<T>;
   }
 
@@ -1123,7 +1166,7 @@ export async function routeMockRequest<T>(
   if (path.includes('/superadmin/audit-logs')) return MockDB.handleCrud('mock_audit_logs', method, path, parsedBody, generate(15, i => ({ id: `log-${i}`, actorName: 'Demo Admin', actorRole: 'SUPERADMIN', action: 'UPDATE_TENANT', targetResource: `tenant-${i}`, timestamp: '2023-11-05', ipAddress: '192.168.1.1' }))) as unknown as ApiResponse<T>;
   if (path.includes('/admin/audit')) return MockDB.handleCrud('mock_admin_audit', method, path, parsedBody, generate(12, i => ({ id: `audit-${i}`, actorId: `admin-${i}`, actorRole: 'ADMIN', action: i % 2 === 0 ? 'CREATE' : 'UPDATE', entityType: i % 3 === 0 ? 'MEMBER' : 'PAYMENT', entityId: `entity-${i}`, oldValue: null, newValue: { foo: 'bar' }, ipAddress: '127.0.0.1', timestamp: new Date().toISOString() })), 'logs') as unknown as ApiResponse<T>;
   if (path.includes('/superadmin/settings')) return MockDB.handleCrud('mock_settings', method, path, parsedBody, generate(6, i => ({ id: `set-${i}`, key: `ALLOW_SIGNUPS_${i}`, value: 'true', description: 'Enable signups', category: 'General', dataType: 'boolean' }))) as unknown as ApiResponse<T>;
-  if (path.includes('/tenants') || path.includes('/gyms') || path.includes('/superadmin/gyms')) return MockDB.handleCrud('mock_tenants', method, path, parsedBody, generate(8, i => ({ id: `tenant-${i}`, name: `Gym Branch ${i + 1}`, ownerName: 'Admin Owner', adminEmail: `admin${i}@gym.com`, phone: `998877665${i}`, status: 'ACTIVE', plan: 'Enterprise', createdAt: '2023-01-01', memberCount: 150 + (i * 20), monthlyRevenue: 50000 + (i * 5000), databaseVersion: 'v1.0' }))) as unknown as ApiResponse<T>;
+  if (path.includes('/tenants') || path.includes('/gyms') || path.includes('/superadmin/gyms')) return MockDB.handleCrud('mock_tenants', method, path, parsedBody, generate(8, i => ({ id: `tenant-${i}`, name: `Gym Branch ${i + 1}`, ownerName: 'Admin Owner', adminEmail: `admin${i}@gym.com`, phone: `998877665${i}`, status: 'ACTIVE', plan: 'Enterprise', createdAt: '2023-01-01', memberCount: 150 + (i * 20), monthlyRevenue: 50000 + (i * 5000), databaseVersion: 'v1.0', lastActiveAt: new Date(Date.now() - (i * 86400000)).toISOString() }))) as unknown as ApiResponse<T>;
   if (path.includes('/superadmin/plans')) return MockDB.handleCrud('mock_saas_plans', method, path, parsedBody, generate(3, i => ({ id: `saas-plan-${i}`, name: i === 0 ? 'Starter' : i === 1 ? 'Pro' : 'Enterprise', priceMonthly: 1000 * (i + 1), priceAnnual: 10000 * (i + 1), maxMembers: 100 * (i + 1), maxStaff: 5 * (i + 1), features: ['CRM', 'Billing', 'Analytics'], activeTenants: 10 * (i + 1) }))) as unknown as ApiResponse<T>;
   // For features and migrations, which return compound objects in GET, we let GET bypass or handle specifically.
   if (path.includes('/superadmin/features')) {
@@ -1160,17 +1203,63 @@ export async function routeMockRequest<T>(
     }))) as unknown as ApiResponse<T>;
   }
 
+  // REPORTS MOCKS (Admin & Manager)
+  if (path.includes('/admin/reports/data') || path.includes('/manager/reports/summary')) {
+    const gymId = parsedUrl.searchParams.get('gymId');
+    const range = parsedUrl.searchParams.get('range') || parsedUrl.searchParams.get('dateRange') || 'this_month';
+    let mult = 1;
+    if (range === 'this_year' || range === 'yearly') mult = 12;
+    else if (range === 'last_6_months') mult = 6;
+    else if (range === 'last_3_months') mult = 3;
+    else if (range === 'last_month') mult = 1;
+    else if (range === 'weekly') mult = 0.25;
+    else if (range === 'custom') mult = 1.5;
+
+    let data = { ...ADMIN_MOCK_REPORT_DATA };
+    if (gymId && gymId !== 'all') {
+      data = {
+        ...data,
+        revenueByGym: data.revenueByGym.filter(g => g.gymId === gymId),
+        membershipGrowth: data.membershipGrowth.filter(g => g.gymId === gymId),
+        attendanceSummary: data.attendanceSummary.filter(g => g.gymId === gymId),
+        payrollSummary: data.payrollSummary.filter(g => g.gymId === gymId),
+        pnlSummary: data.pnlSummary.filter(g => g.gymId === gymId),
+      };
+    }
+    
+    // Scale data
+    data = {
+      ...data,
+      revenueByGym: data.revenueByGym.map(g => ({ ...g, revenue: g.revenue * mult })),
+      membershipGrowth: data.membershipGrowth.map(g => ({ ...g, activeMembers: Math.floor(g.activeMembers * mult) })),
+      attendanceSummary: data.attendanceSummary.map(g => ({ ...g, totalCheckIns: Math.floor(g.totalCheckIns * mult) })),
+      payrollSummary: data.payrollSummary.map(g => ({ ...g, totalPayroll: g.totalPayroll * mult })),
+      pnlSummary: data.pnlSummary.map(g => ({ ...g, netProfit: g.netProfit * mult })),
+    };
+    
+    return { success: true, message: 'Report data fetched', data } as unknown as ApiResponse<T>;
+  }
+
   if (path.includes('/superadmin/analytics/revenue')) {
+    const range = parsedUrl.searchParams.get('range') || 'this_month';
+    let mult = 1;
+    if (range === 'this_year' || range === 'yearly') mult = 12;
+    else if (range === 'last_6_months') mult = 6;
+    else if (range === 'last_3_months') mult = 3;
+    else if (range === 'last_month') mult = 1;
+    else if (range === 'weekly') mult = 0.25;
+    else if (range === 'custom') mult = 1.5;
+
     return {
       success: true,
       message: 'Fetched revenue analytics',
       data: {
-        mrr: 125000,
-        arr: 1500000,
+        mrr: 125000 * mult,
+        arr: 1500000 * mult,
         churnRate: 1.5,
-        ltv: 4500,
+        ltv: 4500 * (mult > 1 ? 1.2 : 1),
         cac: 120,
-        activeTenants: 145
+        activeTenants: Math.floor(145 * (mult > 1 ? 1.1 : mult < 1 ? 0.9 : 1))
       }
     } as unknown as ApiResponse<T>;
   }
@@ -1181,27 +1270,36 @@ export async function routeMockRequest<T>(
     const generate = (count: number, generator: (i: number) => Record<string, unknown>) => Array.from({ length: count }, (_, i) => generator(i));
 
     if (path.includes('/superadmin/dashboard')) {
+      const range = parsedUrl.searchParams.get('range') || 'this_month';
+      let mult = 1;
+      if (range === 'this_year' || range === 'yearly') mult = 12;
+      else if (range === 'last_6_months') mult = 6;
+      else if (range === 'last_3_months') mult = 3;
+      else if (range === 'last_month') mult = 1;
+      else if (range === 'weekly') mult = 0.25;
+      else if (range === 'custom') mult = 1.5;
+
       return {
         success: true, message: 'Superadmin Dashboard Mock',
         data: {
           metrics: {
-            monthlyRecurringRevenue: 1250000,
-            totalGyms: 45,
-            activeGyms: 42,
-            totalEndUsers: 15420,
+            monthlyRecurringRevenue: 1250000 * mult,
+            totalGyms: Math.floor(45 * (mult > 1 ? 1.1 : mult < 1 ? 0.9 : 1)),
+            activeGyms: Math.floor(42 * (mult > 1 ? 1.1 : mult < 1 ? 0.9 : 1)),
+            totalEndUsers: Math.floor(15420 * mult),
             recentOnboards: generate(5, i => ({
               id: `tenant-${i}`, name: `Demo Gym ${i}`, ownerName: `Owner ${i}`, plan: i % 2 === 0 ? 'Enterprise' : 'Pro', createdAt: '2023-10-01'
             })),
             revenueByGeography: [
-              { region: 'North America', revenue: 500000 },
-              { region: 'Europe', revenue: 350000 },
-              { region: 'Asia Pacific', revenue: 250000 },
-              { region: 'Latin America', revenue: 150000 }
+              { region: 'North America', revenue: 500000 * mult },
+              { region: 'Europe', revenue: 350000 * mult },
+              { region: 'Asia Pacific', revenue: 250000 * mult },
+              { region: 'Latin America', revenue: 150000 * mult }
             ]
           },
           revenue: [
-            { month: 'Jan', mrr: 1000000 }, { month: 'Feb', mrr: 1100000 },
-            { month: 'Mar', mrr: 1150000 }, { month: 'Apr', mrr: 1250000 }
+            { month: 'Jan', mrr: 1000000 * mult }, { month: 'Feb', mrr: 1100000 * mult },
+            { month: 'Mar', mrr: 1150000 * mult }, { month: 'Apr', mrr: 1250000 * mult }
           ],
           growth: []
         }
@@ -1209,6 +1307,15 @@ export async function routeMockRequest<T>(
     }
 
     if (path.includes('/admin/dashboard') || path.includes('/manager/dashboard') || path.includes('/trainer/dashboard') || path.includes('/dashboard')) {
+      const range = parsedUrl.searchParams.get('range') || 'this_month';
+      let mult = 1;
+      if (range === 'last_month') mult = 0.9;
+      else if (range === 'last_3_months') mult = 2.8;
+      else if (range === 'last_6_months') mult = 5.5;
+      else if (range === 'this_year') mult = 11.2;
+      else if (range === 'yearly') mult = 24.5;
+      else if (range === 'custom') mult = 1.5;
+
       let rawMembers = MockDB.getCollection('mock_members', []);
       let payments = MockDB.getCollection('mock_admin_payments', []);
       let staff = MockDB.getCollection('mock_admin_staff', []);
@@ -1309,14 +1416,14 @@ export async function routeMockRequest<T>(
       return {
         success: true, message: 'Demo Dashboard (Live Mock)',
         data: {
-          todayAttendance: 45,
+          todayAttendance: Math.floor(45 * mult),
           trainerAttendance: { present: 5, total: 6 },
-          totalMembers, 
-          activeMembers, 
-          newMembersThisMonth,
-          totalRevenue,
-          monthlyRevenue, 
-          pendingPayments,
+          totalMembers: Math.floor(totalMembers * mult), 
+          activeMembers: Math.floor(activeMembers * mult), 
+          newMembersThisMonth: Math.floor(newMembersThisMonth * mult),
+          totalRevenue: totalRevenue * mult,
+          monthlyRevenue: monthlyRevenue * mult, 
+          pendingPayments: pendingPayments * mult,
           totalStaff,
           activeStaff,
           totalProducts: 120, // Mocked for now
@@ -1344,6 +1451,58 @@ export async function routeMockRequest<T>(
         }
       } as unknown as ApiResponse<T>;
     }
+
+    // TRAINER MOCKS
+    if (path.includes('/trainer/dashboard/kpi')) {
+      const range = parsedUrl.searchParams.get('range') || 'this_month';
+      let mult = 1;
+      if (range === 'last_month') mult = 0.9;
+      else if (range === 'last_3_months') mult = 2.8;
+      else if (range === 'last_6_months') mult = 5.5;
+      else if (range === 'this_year') mult = 11.2;
+      else if (range === 'yearly') mult = 24.5;
+      else if (range === 'custom') mult = 1.5;
+
+      return {
+        success: true,
+        message: 'Trainer KPIs Fetched',
+        data: {
+          todaysSessions: Math.floor(6 * mult),
+          completedSessions: Math.floor(4 * mult),
+          myMembersCount: Math.floor(15 * mult),
+          todaysAttendance: Math.floor(12 * mult),
+          pendingWorkoutPlans: Math.floor(3 * mult),
+          totalPTRevenue: 2400 * mult,
+          weeklySessionsCompleted: Math.floor(25 * mult),
+          avgSessionRating: 4.8,
+          activeClientsCount: Math.floor(14 * mult),
+          attendanceRate: 92,
+          nextSessionTime: 'Today 14:00',
+        }
+      } as unknown as ApiResponse<T>;
+    }
+
+    if (path.includes('/trainer/earnings/kpis')) {
+      const range = parsedUrl.searchParams.get('range') || 'this_month';
+      let mult = 1;
+      if (range === 'last_month') mult = 0.9;
+      else if (range === 'last_3_months') mult = 2.8;
+      else if (range === 'last_6_months') mult = 5.5;
+      else if (range === 'this_year') mult = 11.2;
+      else if (range === 'yearly') mult = 24.5;
+      else if (range === 'custom') mult = 1.5;
+
+      return {
+        success: true,
+        message: 'Trainer Earnings KPIs',
+        data: {
+          totalEarnings: 3200 * mult,
+          pendingPayout: 800 * mult,
+          thisMonthEarnings: 1500 * mult,
+          nextPayoutDate: '2023-11-01',
+        }
+      } as unknown as ApiResponse<T>;
+    }
     
     // Removed /members, /inquiries, /attendance (now handled by MockDB stateful routing)
 
@@ -1354,26 +1513,35 @@ export async function routeMockRequest<T>(
     // Superadmin Mock Generics removed (now handled by MockDB stateful routing)
 
     // Removed /erp/hr, /erp/workout, /erp/library (now handled by MockDB)
+    const range = parsedUrl.searchParams.get('range') || 'this_month';
+    let mult = 1;
+    if (range === 'last_month') mult = 0.9;
+    else if (range === 'last_3_months') mult = 2.8;
+    else if (range === 'last_6_months') mult = 5.5;
+    else if (range === 'this_year') mult = 11.2;
+    else if (range === 'yearly') mult = 24.5;
+    else if (range === 'custom') mult = 1.5;
+
     if (path.includes('/sales/overview')) {
       return { success: true, message: 'Demo Sales Overview', data: {
-        monthlyRevenue: generate(6, i => ({ month: `Month ${i+1}`, revenue: 300000 + (i * 15000), storeRevenue: 50000 + (i * 8000), expenses: 100000 + (i * 5000), newMembers: 20 + i * 5 }))
+        monthlyRevenue: generate(6, i => ({ month: `Month ${i+1}`, revenue: (300000 + (i * 15000)) * mult, storeRevenue: (50000 + (i * 8000)) * mult, expenses: (100000 + (i * 5000)) * mult, newMembers: Math.floor((20 + i * 5) * mult) }))
       }} as unknown as ApiResponse<T>;
     }
     if (path.includes('/sales/membership-report')) {
       return { success: true, message: 'Demo Membership Report', data: {
-        report: generate(5, i => ({ plan: `Plan ${i+1}`, receivable: 50000 * (i+1), received: 40000 * (i+1), remaining: 10000 * (i+1), refund: 0 })),
-        totals: { totalReceivable: 750000, totalReceived: 600000, remaining: 150000, refunds: 0 }
+        report: generate(5, i => ({ plan: `Plan ${i+1}`, receivable: 50000 * (i+1) * mult, received: 40000 * (i+1) * mult, remaining: 10000 * (i+1) * mult, refund: 0 })),
+        totals: { totalReceivable: 750000 * mult, totalReceived: 600000 * mult, remaining: 150000 * mult, refunds: 0 }
       }} as unknown as ApiResponse<T>;
     }
     if (path.includes('/sales/pending-payments')) {
       return { success: true, message: 'Demo Pending Payments', data: {
-        members: generate(6, i => ({ id: `mem-${i}`, name: `Defaulter ${i+1}`, pendingAmount: 5000, dueDate: '2023-11-01' })),
-        total: 6
+        members: generate(Math.floor(6 * mult), i => ({ id: `mem-${i}`, name: `Defaulter ${i+1}`, pendingAmount: 5000 * mult, dueDate: '2023-11-01' })),
+        total: Math.floor(6 * mult)
       }} as unknown as ApiResponse<T>;
     }
     if (path.includes('/sales/all-memberships')) {
       return { success: true, message: 'Demo All Memberships', data: {
-        members: generate(10, i => {
+        members: generate(Math.floor(10 * mult), i => {
           const now = Date.now();
           // Mix of statuses: 5 Active, 2 Expiring Soon (3 days), 3 Expired (-5 days)
           let status = 'ACTIVE';

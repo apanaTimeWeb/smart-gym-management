@@ -8,7 +8,10 @@ import type {
 } from '@/app/trainer/earnings/earnings_types/TrainerEarningsTypes';
 
 export const trainerEarningsApi = {
-  getKPIs: () => apiFetch<ApiResponse<TrainerEarningsKPIsData>>(TrainerEarningsUrlConfig.BACKEND_API.KPIS),
+  getKPIs: (params?: Record<string, string>) => {
+    const q = params && Object.keys(params).length ? '?' + new URLSearchParams(params).toString() : '';
+    return apiFetch<ApiResponse<TrainerEarningsKPIsData>>(`${TrainerEarningsUrlConfig.BACKEND_API.KPIS}${q}`);
+  },
   getPending: () => apiFetch<ApiResponse<TrainerPendingPayout[]>>(TrainerEarningsUrlConfig.BACKEND_API.PENDING),
   getHistory: (params?: Record<string, string>) => {
     const q = params && Object.keys(params).length ? '?' + new URLSearchParams(params).toString() : '';

@@ -32,7 +32,7 @@ export function useProfilePage() {
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'profile'] });
       toast.success(res.message || 'Profile updated successfully.', { id: 'profile-update' });
     },
-    onError: (err: any) => {
+    onError: (err: Error) => {
       setPersonalState('error');
       toast.error(err.message || 'Failed to update profile.', { id: 'profile-update-error' });
     }
@@ -45,7 +45,7 @@ export function useProfilePage() {
       setPasswordState('success');
       toast.success(res.message || 'Password updated successfully.', { id: 'password-update' });
     },
-    onError: (err: any) => {
+    onError: (err: Error) => {
       setPasswordState('error');
       toast.error(err.message || 'Failed to update password.', { id: 'password-update-error' });
     }
@@ -59,7 +59,7 @@ export function useProfilePage() {
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'profile'] });
       toast.success(res.message || '2FA settings updated.', { id: '2fa-update' });
     },
-    onError: (err: any) => {
+    onError: (err: Error) => {
       setTwoFAState('error');
       toast.error(err.message || 'Failed to update 2FA settings.', { id: '2fa-update-error' });
     }

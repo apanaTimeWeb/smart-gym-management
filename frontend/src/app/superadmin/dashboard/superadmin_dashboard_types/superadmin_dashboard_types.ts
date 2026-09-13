@@ -2,7 +2,7 @@
 export type TenantStatus = 'ACTIVE' | 'SUSPENDED' | 'TRIAL' | 'CANCELLED';
 
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';
-export type TimeRange = 'weekly' | 'monthly' | 'yearly' | 'custom';
+export type TimeRange = 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly' | 'custom' | 'this_month' | 'last_month' | 'last_3_months' | 'last_6_months' | 'this_year';
 
 export interface DashboardContextType {
   stats: unknown | null;

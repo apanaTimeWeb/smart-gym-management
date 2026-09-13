@@ -9,7 +9,6 @@ import SuperadminInvoicesTable from '@/app/superadmin/invoices/invoices_componen
 import SuperadminInvoicesEmptyState from '@/app/superadmin/invoices/invoices_components/SuperadminInvoicesEmptyState/SuperadminInvoicesEmptyState';
 import SuperadminInvoicesLogPaymentModal from '@/app/superadmin/invoices/invoices_components/SuperadminInvoicesLogPaymentModal/SuperadminInvoicesLogPaymentModal';
 import SuperadminInvoicesAgingReport from '@/app/superadmin/invoices/invoices_components/SuperadminInvoicesAgingReport/SuperadminInvoicesAgingReport';
-import SuperadminDateRangePicker from '@/app/superadmin/superadmin_components/SuperadminDateRangePicker';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import toast from 'react-hot-toast';
 import { useState } from 'react';
@@ -46,10 +45,6 @@ export default function SuperadminInvoicesClient() {
     handleSelectGym,
     statusFilter,
     setStatusFilter,
-    startDate,
-    setStartDate,
-    endDate,
-    setEndDate,
     pendingRevenue,
     overdueCount,
   } = useSuperadminInvoicesPage();
@@ -115,12 +110,6 @@ export default function SuperadminInvoicesClient() {
                 />
               </div>
               <div className="flex gap-2">
-                <SuperadminDateRangePicker 
-                  onRangeChange={(start, end) => {
-                    setStartDate(start);
-                    setEndDate(end);
-                  }}
-                />
                 <div className="w-40 border-none bg-input rounded-lg">
                   <SearchableDropdown
                     options={STATUS_OPTIONS}

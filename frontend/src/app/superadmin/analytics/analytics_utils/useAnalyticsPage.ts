@@ -4,6 +4,7 @@
 // DATA FLOW: analyticsApi.getRevenueMetrics() → useAnalyticsPage → SuperadminAnalyticsClient → UI
 
 import { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { analyticsApi } from '@/app/superadmin/analytics/superadmin_analytics_api/superadmin_analytics_api';
 import type { RevenueMetrics, MonthlyAnalyticsDataPoint, FetchState } from '@/app/superadmin/analytics/superadmin_analytics_types/superadmin_analytics_types';
 import { MOCK_ANALYTICS_METRICS, MOCK_MONTHLY_DATA } from '@/app/superadmin/analytics/analytics_utils/SuperadminAnalyticsConstants';
@@ -15,12 +16,9 @@ interface UseAnalyticsPageReturn {
   monthlyData: MonthlyAnalyticsDataPoint[];
   fetchState: FetchState;
   error: string | null;
-  timeRange: AnalyticsTimeRange;
-  setTimeRange: (range: AnalyticsTimeRange) => void;
+  timeRange: string;
   customStart: string;
-  setCustomStart: (v: string) => void;
   customEnd: string;
-  setCustomEnd: (v: string) => void;
 }
 
 export function useAnalyticsPage(): UseAnalyticsPageReturn {
@@ -28,9 +26,10 @@ export function useAnalyticsPage(): UseAnalyticsPageReturn {
   const [monthlyData] = useState<MonthlyAnalyticsDataPoint[]>(MOCK_MONTHLY_DATA);
   const [fetchState, setFetchState] = useState<FetchState>('loading');
   const [error, setError] = useState<string | null>(null);
-  const [timeRange, setTimeRange] = useState<AnalyticsTimeRange>('this_month');
-  const [customStart, setCustomStart] = useState('');
-  const [customEnd, setCustomEnd] = useState('');
+  const searchParams = useSearchParams();
+  const timeRange = searchParams.get('range') || 'this_month';
+  const customStart = searchParams.get('startDate') || '';
+  const customEnd = searchParams.get('endDate') || '';
 
   const fetchMetrics = useCallback(() => {
     let cancelled = false;
@@ -59,5 +58,5 @@ export function useAnalyticsPage(): UseAnalyticsPageReturn {
     return fetchMetrics();
   }, [fetchMetrics]);
 
-  return { metrics, monthlyData, fetchState, error, timeRange, setTimeRange, customStart, setCustomStart, customEnd, setCustomEnd };
+  return { metrics, monthlyData, fetchState, error, timeRange, customStart, customEnd };
 }

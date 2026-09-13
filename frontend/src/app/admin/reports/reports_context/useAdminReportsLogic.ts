@@ -3,12 +3,17 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
+import { useSearchParams } from 'next/navigation';
 import { reportsApi } from '@/app/admin/reports/reports_api/reports_api';
 import { useAdminReportsStore } from '@/app/admin/reports/reports_store/useAdminReportsStore';
-import type { FetchState } from '@/app/admin/reports/reports_types/reports_types';
+import type { FetchState, ReportDateRange } from '@/app/admin/reports/reports_types/reports_types';
 
 export function useAdminReportsLogic() {
-  const { dateRange, startDate, endDate, selectedGymId } = useAdminReportsStore();
+  const searchParams = useSearchParams();
+  const dateRange = (searchParams.get('range') as ReportDateRange) || 'this_month';
+  const startDate = searchParams.get('startDate') || '';
+  const endDate = searchParams.get('endDate') || '';
+  const { selectedGymId } = useAdminReportsStore();
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['adminReports', dateRange, startDate, endDate, selectedGymId],

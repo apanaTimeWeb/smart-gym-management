@@ -10,6 +10,7 @@ import TrainerDashboardRecentProgress from '@/app/trainer/dashboard/dashboard_co
 import TrainerDashboardQuickActions from '@/app/trainer/dashboard/dashboard_components/TrainerDashboardQuickActions/TrainerDashboardQuickActions';
 import TrainerDashboardGoalTrendChart from '@/app/trainer/dashboard/dashboard_components/TrainerDashboardGoalTrendChart/TrainerDashboardGoalTrendChart';
 import TrainerDashboardMembershipDistribution from '@/app/trainer/dashboard/dashboard_components/TrainerDashboardMembershipDistribution/TrainerDashboardMembershipDistribution';
+import { TrainerDateFilterDropdown } from '@/app/trainer/trainer_components/TrainerShared/TrainerDateFilterDropdown';
 
 function DashboardSkeleton() {
   return (
@@ -44,6 +45,10 @@ function DashboardContent() {
 
   return (
     <div className="p-6 space-y-6">
+      <div className="flex justify-between items-center mb-2">
+        <h1 className="text-2xl font-bold">Dashboard</h1>
+        <TrainerDateFilterDropdown />
+      </div>
       <TrainerDashboardKPIs />
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <TrainerDashboardUpcomingSessions />

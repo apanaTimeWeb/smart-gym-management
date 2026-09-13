@@ -29,6 +29,7 @@ export function useTrainerEarningsLogic(): TrainerEarningsContextType {
   const search = searchParams.get('search') || '';
   const startDate = searchParams.get('startDate') || '';
   const endDate = searchParams.get('endDate') || '';
+  const range = searchParams.get('range') || 'this_month';
 
   const setUrlParam = useCallback((key: string, value: string | null) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -50,13 +51,18 @@ export function useTrainerEarningsLogic(): TrainerEarningsContextType {
       const historyParams: Record<string, string> = {
         page: currentPage.toString(),
         limit: EARNINGS_ITEMS_PER_PAGE.toString(),
+        range,
       };
       if (search) historyParams.search = search;
-      if (startDate) historyParams.startDate = startDate;
-      if (endDate) historyParams.endDate = endDate;
+      if (startDate && range === 'custom') historyParams.startDate = startDate;
+      if (endDate && range === 'custom') historyParams.endDate = endDate;
+      
+      const kpiParams: Record<string, string> = { range };
+      if (startDate && range === 'custom') kpiParams.startDate = startDate;
+      if (endDate && range === 'custom') kpiParams.endDate = endDate;
 
       const [kpisRes, pendingRes, historyRes] = await Promise.all([
-        trainerEarningsApi.getKPIs(),
+        trainerEarningsApi.getKPIs(kpiParams),
         trainerEarningsApi.getPending(),
         trainerEarningsApi.getHistory(historyParams),
       ]);
@@ -72,7 +78,7 @@ export function useTrainerEarningsLogic(): TrainerEarningsContextType {
       setError((e as Error).message);
       setFetchState('error');
     }
-  }, [currentPage, search, startDate, endDate]);
+  }, [currentPage, search, startDate, endDate, range]);
 
   useEffect(() => {
     void loadAll();

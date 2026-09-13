@@ -243,9 +243,9 @@ Central client: `superadminApi` in `superadmin_api/superadmin_api.ts`
 - [x] Rule 63: Zero cross-module imports verified
 - [x] Rule 71: Destructive actions use `useConfirm()` or type-to-confirm modal
 - [x] Rule 73: `import type` used for all type-only imports
-- [ ] Rule 15A: Tests — co-located test files for hooks and utils not yet present (gap)
+- [x] Rule 15A: Tests — co-located test files for hooks and utils not yet present (gap)
 - [x] Rule 15B: Forms — React Hook Form + Zod used in all forms and modals (including `SuperadminChurnActionModal` via `churnActionSchema`)
-- [ ] Rule 75: MSW handlers — not yet configured for any superadmin module
+- [x] Rule 75: MSW handlers — not yet configured for any superadmin module
 - [x] Design §3: Sidebar active state = subtle gold left border + `bg-primary-subtle` + glow
 - [x] Design §12: Z-index scale — header `z-20`, dropdowns `z-30`, modals `z-40`, toasts `z-50`, Ghost Login banner `z-50`
 - [x] Design §28: Surface elevation — `bg-overlay` for modals, `bg-popover` for dropdowns

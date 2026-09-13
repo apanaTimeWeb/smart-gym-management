@@ -7,8 +7,8 @@ import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/Manage
 import ManagerReportsKPIs from '@/app/manager/reports/reports_components/ManagerReportsKPIs/ManagerReportsKPIs';
 import ManagerReportsCharts from '@/app/manager/reports/reports_components/ManagerReportsCharts/ManagerReportsCharts';
 import ManagerReportsTable from '@/app/manager/reports/reports_components/ManagerReportsTable/ManagerReportsTable';
-import { REPORT_TABS, REPORT_DATE_RANGE_OPTIONS } from '@/app/manager/reports/reports_utils/ManagerReportsSharedConstants';
-import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/SearchableDropdown';
+import { REPORT_TABS } from '@/app/manager/reports/reports_utils/ManagerReportsSharedConstants';
+import { ManagerDateFilterDropdown } from '@/app/manager/manager_components/ManagerShared/ManagerDateFilterDropdown';
 import { Download, RefreshCw, Loader2 } from 'lucide-react';
 
 function ReportsInner() {
@@ -39,12 +39,7 @@ function ReportsInner() {
           {/* Controls */}
           <div className="flex flex-wrap gap-2">
             <div className="w-48">
-              <SearchableDropdown
-                value={dateRange}
-                onChange={(val) => setDateRange(val.toString())}
-                options={REPORT_DATE_RANGE_OPTIONS}
-                className="bg-input"
-              />
+              <ManagerDateFilterDropdown />
             </div>
             <button
               onClick={reload}

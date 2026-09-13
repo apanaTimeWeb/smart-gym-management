@@ -11,7 +11,10 @@ export const financeApi = {
   },
   createPayment: (body: Partial<Payment>) =>
     apiFetch<ApiResponse<Payment>>(FinanceUrlConfig.BACKEND_API.PAYMENTS_BASE, { method: 'POST', body: JSON.stringify(body) }),
-  getSummary: () => apiFetch<ApiResponse<FinanceSummary>>(FinanceUrlConfig.BACKEND_API.SUMMARY),
+  getSummary: (range?: string) => {
+    const q = range ? `?range=${range}` : '';
+    return apiFetch<ApiResponse<FinanceSummary>>(`${FinanceUrlConfig.BACKEND_API.SUMMARY}${q}`);
+  },
   getByMember: (memberId: string) =>
     apiFetch<ApiResponse<Payment[]>>(FinanceUrlConfig.BACKEND_API.PAYMENTS_BY_MEMBER(memberId)),
 };

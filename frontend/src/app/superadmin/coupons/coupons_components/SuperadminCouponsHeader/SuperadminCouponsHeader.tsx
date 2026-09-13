@@ -2,6 +2,7 @@
 // RESPONSIBILITY: Renders the page title, search input, and "Create Coupon" CTA button for the Coupons page. Receives all state via props — no API calls.
 import { Tag, Plus, Search, Filter } from 'lucide-react';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
+import { SuperadminDateFilterDropdown } from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminDateFilterDropdown';
 
 const STATUS_OPTIONS = [
   { value: 'ALL', label: 'All Statuses' },
@@ -28,6 +29,7 @@ export default function SuperadminCouponsHeader({ searchQuery, onSearchChange, o
         <p className="text-sm text-secondary mt-1">Manage global discount codes for new SaaS subscriptions.</p>
       </div>
       <div className="flex flex-wrap items-center gap-3">
+        <SuperadminDateFilterDropdown />
         <div className="relative">
           <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
           <input

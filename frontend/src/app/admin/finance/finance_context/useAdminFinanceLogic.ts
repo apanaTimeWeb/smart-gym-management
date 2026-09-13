@@ -54,9 +54,11 @@ export function useAdminFinanceLogic(initialData?: FinanceInitialData | null) {
     initialData: initialData?.payments ? { success: true, message: 'SSR', data: { payments: initialData.payments, total: initialData.totalPayments || 0 } } : undefined,
   });
 
+  const range = searchParams.get('range') || 'this_month';
+
   const { data: summaryRes, isLoading: summaryLoading, isError: isSummaryError } = useQuery({
-    queryKey: ['financeSummary', selectedBranchId],
-    queryFn: () => financeApi.fetchSummary(selectedBranchId),
+    queryKey: ['financeSummary', selectedBranchId, range],
+    queryFn: () => financeApi.fetchSummary(selectedBranchId, range),
     initialData: initialData?.summary ? { success: true, message: 'SSR', data: initialData.summary } : undefined,
   });
 

@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Encapsulates local UI state for the Invoices page (filtering, modal state, derived stats).
 // DATA FLOW: useSuperadminInvoicesStore -> useSuperadminInvoicesPage -> SuperadminInvoicesClient
-'use client';
 import { useState, useMemo, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useSuperadminInvoicesStore } from '@/app/superadmin/invoices/invoices_store/useSuperadminInvoicesStore';
 
 export function useSuperadminInvoicesPage() {
@@ -26,8 +26,10 @@ export function useSuperadminInvoicesPage() {
   const [selectedGymId, setSelectedGymId] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('UPI');
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+
+  const searchParams = useSearchParams();
+  const startDate = searchParams.get('startDate') || '';
+  const endDate = searchParams.get('endDate') || '';
 
   const filteredInvoices = useMemo(() => {
     const lower = search.toLowerCase();
@@ -104,9 +106,7 @@ export function useSuperadminInvoicesPage() {
     statusFilter,
     setStatusFilter,
     startDate,
-    setStartDate,
     endDate,
-    setEndDate,
     pendingRevenue,
     overdueCount,
   };
