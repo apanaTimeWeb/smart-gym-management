@@ -4,13 +4,15 @@ import type { ApiResponse } from '@/lib/api';
 import type { AuditLog } from '@/app/superadmin/global-audit/superadmin_global-audit_types/superadmin_global-audit_types';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 
+import { MOCK_SUPERADMIN_GLOBAL_AUDIT } from '@/app/superadmin/global-audit/superadmin_global-audit_api/SuperadminGlobalAuditMockData';
+
 export const globalAuditApi = {
-  fetchAuditLogs: () => {
-    // Return a mocked API promise if endpoint doesn't exist yet
-    return Promise.resolve({
+  fetchAuditLogs: async () => {
+    await new Promise(r => setTimeout(r, 400));
+    return {
       success: true,
       message: 'Audit logs fetched successfully',
-      data: [] // We'll inject mock data in the client for UI purposes
-    } as ApiResponse<AuditLog[]>);
+      data: MOCK_SUPERADMIN_GLOBAL_AUDIT
+    };
   }
 };

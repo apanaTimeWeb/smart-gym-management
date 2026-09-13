@@ -4,13 +4,32 @@ import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import type { SupportTicket } from '@/app/superadmin/tickets/superadmin_tickets_types/superadmin_tickets_types';
 
+import { MOCK_SUPERADMIN_TICKETS } from '@/app/superadmin/tickets/superadmin_tickets_api/SuperadminTicketsMockData';
+
+let mockTickets = [...MOCK_SUPERADMIN_TICKETS];
+
 export const ticketsApi = {
-  fetchTickets: (params?: Record<string, string>) => {
-    const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<SupportTicket[]>>(`${SuperadminUrlConfig.BACKEND_API.TICKETS_BASE}${q}`);
+  fetchTickets: async (params?: Record<string, string>) => {
+    await new Promise(r => setTimeout(r, 400));
+    return { success: true, message: 'Success', data: mockTickets };
   },
-  fetchTicketById: (id: string) => apiFetch<ApiResponse<SupportTicket>>(`${SuperadminUrlConfig.BACKEND_API.TICKETS_BASE}/${id}`),
-  updateTicket: (id: string, body: Partial<SupportTicket>) => apiFetch<ApiResponse<SupportTicket>>(`${SuperadminUrlConfig.BACKEND_API.TICKETS_BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
-  closeTicket: (id: string) => apiFetch<ApiResponse<SupportTicket>>(`${SuperadminUrlConfig.BACKEND_API.TICKETS_BASE}/${id}/close`, { method: 'POST' }),
-  assignTicket: (id: string, assignee: string) => apiFetch<ApiResponse<SupportTicket>>(`${SuperadminUrlConfig.BACKEND_API.TICKETS_BASE}/${id}/assign`, { method: 'PATCH', body: JSON.stringify({ assignee }) }),
+  fetchTicketById: async (id: string) => {
+    await new Promise(r => setTimeout(r, 300));
+    return { success: true, message: 'Success', data: mockTickets.find(t => t.id === id) as SupportTicket };
+  },
+  updateTicket: async (id: string, body: Partial<SupportTicket>) => {
+    await new Promise(r => setTimeout(r, 500));
+    mockTickets = mockTickets.map(t => t.id === id ? { ...t, ...body, lastUpdated: new Date().toISOString() } : t);
+    return { success: true, message: 'Updated', data: mockTickets.find(t => t.id === id) as SupportTicket };
+  },
+  closeTicket: async (id: string) => {
+    await new Promise(r => setTimeout(r, 400));
+    mockTickets = mockTickets.map(t => t.id === id ? { ...t, status: 'CLOSED', lastUpdated: new Date().toISOString() } : t);
+    return { success: true, message: 'Closed', data: mockTickets.find(t => t.id === id) as SupportTicket };
+  },
+  assignTicket: async (id: string, assignee: string) => {
+    await new Promise(r => setTimeout(r, 400));
+    mockTickets = mockTickets.map(t => t.id === id ? { ...t, assignedTo: assignee, status: 'IN_PROGRESS', lastUpdated: new Date().toISOString() } : t);
+    return { success: true, message: 'Assigned', data: mockTickets.find(t => t.id === id) as SupportTicket };
+  },
 };

@@ -7,7 +7,8 @@ import { useState, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Search } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { MOCK_ONBOARDINGS } from '@/app/superadmin/onboarding/onboarding_types/onboarding_constants';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { onboardingApi } from '@/app/superadmin/onboarding/superadmin_onboarding_api/superadmin_onboarding_api';
 import type { TenantOnboarding } from '@/app/superadmin/onboarding/onboarding_types/onboarding_types';
 import SuperadminConversionFunnel from '@/app/superadmin/onboarding/onboarding_components/SuperadminConversionFunnel/SuperadminConversionFunnel';
 import { SuperadminOnboardingStatsBar } from './SuperadminOnboardingStatsBar';
@@ -16,12 +17,18 @@ import { SuperadminOnboardingModals } from './SuperadminOnboardingModals';
 import { SuperadminDateFilterDropdown } from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminDateFilterDropdown';
 
 export default function SuperadminOnboardingClient() {
-  const [tenants, setTenants] = useState<TenantOnboarding[]>(MOCK_ONBOARDINGS);
+  const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [extendModalId, setExtendModalId] = useState<string | null>(null);
   const [extendDays, setExtendDays] = useState('7');
   const [convertConfirmId, setConvertConfirmId] = useState<string | null>(null);
+
+  const { data: response, isLoading } = useQuery({
+    queryKey: ['superadmin_onboardings'],
+    queryFn: () => onboardingApi.fetchOnboardings(),
+  });
+  const tenants = response?.data || [];
 
   const searchParams = useSearchParams();
   const startDate = searchParams.get('startDate');
@@ -53,44 +60,61 @@ export default function SuperadminOnboardingClient() {
     trial: dateFilteredTenants.filter((t) => t.trialStatus === 'TRIAL').length,
   };
 
+  const resendMut = useMutation({
+    mutationFn: onboardingApi.resendVerification,
+    onSuccess: () => {
+      toast.success('Verification email resent successfully.');
+      queryClient.invalidateQueries({ queryKey: ['superadmin_onboardings'] });
+    },
+  });
+
+  const markVerifiedMut = useMutation({
+    mutationFn: onboardingApi.markVerified,
+    onSuccess: () => {
+      toast.success('Email marked as verified.');
+      queryClient.invalidateQueries({ queryKey: ['superadmin_onboardings'] });
+    },
+  });
+
+  const extendMut = useMutation({
+    mutationFn: ({ id, days }: { id: string; days: number }) => onboardingApi.extendTrial(id, days),
+    onSuccess: (data, variables) => {
+      toast.success(`Trial extended by ${variables.days} days.`);
+      setExtendModalId(null);
+      setExtendDays('7');
+      queryClient.invalidateQueries({ queryKey: ['superadmin_onboardings'] });
+    },
+  });
+
+  const convertMut = useMutation({
+    mutationFn: onboardingApi.convertToPaid,
+    onSuccess: () => {
+      toast.success('Gym converted to paid plan.');
+      setConvertConfirmId(null);
+      queryClient.invalidateQueries({ queryKey: ['superadmin_onboardings'] });
+    },
+  });
+
   function handleResendVerification(id: string) {
-    toast.success('Verification email resent successfully.');
-    setTenants((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, welcomeEmailSent: true } : t))
-    );
+    resendMut.mutate(id);
   }
 
   function handleExtendTrial(id: string) {
     const days = parseInt(extendDays, 10);
     if (!days || days < 1) return;
-    setTenants((prev) =>
-      prev.map((t) => {
-        if (t.id !== id) return t;
-        return { ...t, trialDaysLeft: t.trialDaysLeft + days, trialStatus: 'TRIAL' };
-      })
-    );
-    toast.success(`Trial extended by ${days} days.`);
-    setExtendModalId(null);
-    setExtendDays('7');
+    extendMut.mutate({ id, days });
   }
 
   function handleConvertToPaidConfirmed(id: string) {
-    setTenants((prev) =>
-      prev.map((t) =>
-        t.id === id
-          ? { ...t, trialStatus: 'CONVERTED', onboardingStatus: 'COMPLETED', trialDaysLeft: 0 }
-          : t
-      )
-    );
-    toast.success('Gym converted to paid plan.');
-    setConvertConfirmId(null);
+    convertMut.mutate(id);
   }
 
   function handleMarkVerified(id: string) {
-    setTenants((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, emailVerified: true } : t))
-    );
-    toast.success('Email marked as verified.');
+    markVerifiedMut.mutate(id);
+  }
+
+  if (isLoading) {
+    return <div className="p-8 text-center text-secondary">Loading onboarding data...</div>;
   }
 
   return (

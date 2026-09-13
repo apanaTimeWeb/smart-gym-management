@@ -5,18 +5,32 @@ import type { SuperadminFranchise } from '@/app/superadmin/franchises/franchises
 
 const BASE = '/superadmin/franchises';
 
+import { MOCK_SUPERADMIN_FRANCHISES } from '@/app/superadmin/franchises/superadmin_franchises_api/SuperadminFranchisesMockData';
+
+let mockFranchises = [...MOCK_SUPERADMIN_FRANCHISES];
+
 export const superadminFranchisesApi = {
-  fetchFranchises: (params?: Record<string, string>) => {
-    const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<SuperadminFranchise[]>>(`${BASE}${q}`);
+  fetchFranchises: async (params?: Record<string, string>) => {
+    await new Promise(r => setTimeout(r, 400));
+    return { success: true, message: 'Success', data: mockFranchises };
   },
-  fetchFranchiseById: (id: string) =>
-    apiFetch<ApiResponse<SuperadminFranchise>>(`${BASE}/${id}`),
-  suspendFranchise: (id: string) =>
-    apiFetch<ApiResponse<void>>(`${BASE}/${id}/suspend`, { method: 'PATCH' }),
-  activateFranchise: (id: string) =>
-    apiFetch<ApiResponse<void>>(`${BASE}/${id}/activate`, { method: 'PATCH' }),
-  /** PATCH /superadmin/franchises/:id — update franchise details */
-  updateFranchise: (id: string, body: Partial<SuperadminFranchise>) =>
-    apiFetch<ApiResponse<SuperadminFranchise>>(`${BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
+  fetchFranchiseById: async (id: string) => {
+    await new Promise(r => setTimeout(r, 300));
+    return { success: true, message: 'Success', data: mockFranchises.find(f => f.id === id) as SuperadminFranchise };
+  },
+  suspendFranchise: async (id: string) => {
+    await new Promise(r => setTimeout(r, 400));
+    mockFranchises = mockFranchises.map(f => f.id === id ? { ...f, status: 'SUSPENDED' } : f);
+    return { success: true, message: 'Suspended', data: undefined };
+  },
+  activateFranchise: async (id: string) => {
+    await new Promise(r => setTimeout(r, 400));
+    mockFranchises = mockFranchises.map(f => f.id === id ? { ...f, status: 'ACTIVE' } : f);
+    return { success: true, message: 'Activated', data: undefined };
+  },
+  updateFranchise: async (id: string, body: Partial<SuperadminFranchise>) => {
+    await new Promise(r => setTimeout(r, 500));
+    mockFranchises = mockFranchises.map(f => f.id === id ? { ...f, ...body } : f);
+    return { success: true, message: 'Updated', data: mockFranchises.find(f => f.id === id) as SuperadminFranchise };
+  },
 };
