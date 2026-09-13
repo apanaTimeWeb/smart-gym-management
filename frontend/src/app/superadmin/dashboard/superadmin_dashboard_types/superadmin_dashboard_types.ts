@@ -76,3 +76,28 @@ export interface GrowthChartData {
   month: string;
   gyms: number;
 }
+
+export interface SuperadminDashboardApiData {
+  metrics: SaaSDashboardMetrics;
+  revenue: RevenueChartData[];
+  growth: GrowthChartData[];
+}
+
+export interface SuperadminDashboardKpiGridProps {
+  metrics: SaaSDashboardMetrics;
+  revenueChartData: RevenueChartData[];
+  timeMultiplier: number;
+  mrrLabel: string;
+}
+
+export interface SuperadminDashboardChartsProps {
+  metrics: SaaSDashboardMetrics;
+  revenueChartData: RevenueChartData[];
+  growthChartData: GrowthChartData[];
+  timeMultiplier: number;
+  mrrLabel: string;
+}
+
+export interface SuperadminDashboardRecentOnboardsProps {
+  recentOnboards: Tenant[];
+}

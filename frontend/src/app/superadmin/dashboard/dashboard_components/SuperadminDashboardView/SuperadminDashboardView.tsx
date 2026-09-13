@@ -1,52 +1,13 @@
 'use client';
-// RESPONSIBILITY: SuperadminDashboardView.tsx renders the main SaaS metrics dashboard.
-// Displays KPI cards with gold gradient, MRR area chart (ApexCharts), and recent onboards panel.
-// Syncs time range filter to URL query params (Rule 41). No direct API calls — uses TanStack Query.
-//
-// DATA FLOW: superadminApi.dashboard.fetchDashboardData() → useQuery → SuperadminDashboardView → KPI + Chart JSX
-
-import { useState, useCallback } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
-import type { SaaSDashboardMetrics, RevenueChartData, GrowthChartData, TimeRange } from '@/app/superadmin/dashboard/superadmin_dashboard_types/superadmin_dashboard_types';
-import { SuperadminDashboardHeader } from './SuperadminDashboardHeader';
-import { SuperadminDashboardKpiGrid } from './SuperadminDashboardKpiGrid';
-import { SuperadminDashboardCharts } from './SuperadminDashboardCharts';
-import { SuperadminDashboardRecentOnboards } from './SuperadminDashboardRecentOnboards';
-
-/**
- * Type-safe shape of the dashboard API response data object.
- */
-interface DashboardApiData {
-  metrics: SaaSDashboardMetrics;
-  revenue: RevenueChartData[];
-  growth: GrowthChartData[];
-}
+// RESPONSIBILITY: Pure View component for the Dashboard. Renders KPI cards, charts, and recent onboards by consuming useSuperadminDashboardView.
+import { SuperadminDashboardHeader } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardView/SuperadminDashboardHeader';
+import { SuperadminDashboardKpiGrid } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardView/SuperadminDashboardKpiGrid';
+import { SuperadminDashboardCharts } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardView/SuperadminDashboardCharts';
+import { SuperadminDashboardRecentOnboards } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardView/SuperadminDashboardRecentOnboards';
+import { useSuperadminDashboardView } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardView/useSuperadminDashboardView';
 
 export default function SuperadminDashboardView() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
-  // Rule 41: Sync filter state to URL query params for shareable views
-  const timeRange = (searchParams.get('range') as TimeRange) ?? 'this_month';
-  const startDate = searchParams.get('startDate') || '';
-  const endDate = searchParams.get('endDate') || '';
-
-  const { data: fetchRes, isLoading, isError } = useQuery({
-    queryKey: ['superadmin', 'dashboard', timeRange, startDate, endDate],
-    queryFn: () => {
-      const params: Record<string, string> = { range: timeRange };
-      if (timeRange === 'custom') {
-        if (startDate) params.startDate = startDate;
-        if (endDate) params.endDate = endDate;
-      }
-      return superadminApi.dashboard.fetchDashboardData(params);
-    },
-  });
-
-  const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
-  const apiData = fetchRes?.data as unknown as DashboardApiData | undefined;
+  const { fetchState, apiData, timeRange } = useSuperadminDashboardView();
 
   if (fetchState === 'loading') {
     return (
@@ -68,7 +29,7 @@ export default function SuperadminDashboardView() {
     );
   }
 
-  if (isError || !apiData) {
+  if (fetchState === 'error' || !apiData) {
     return (
       <div className="p-8 text-center text-danger font-medium">
         Failed to load dashboard data. Please try again.
