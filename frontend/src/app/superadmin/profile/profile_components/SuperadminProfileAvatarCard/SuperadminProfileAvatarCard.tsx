@@ -10,17 +10,18 @@ interface SuperadminProfileAvatarCardProps {
 }
 
 export default function SuperadminProfileAvatarCard({ profile }: SuperadminProfileAvatarCardProps) {
-  const initials = profile.name
+  if (!profile) return null;
+
+  const initials = (profile.name || 'Super Admin')
     .split(' ')
     .map((n) => n[0])
     .join('')
     .toUpperCase()
     .slice(0, 2);
 
-  const lastLogin = new Date(profile.lastLoginAt).toLocaleString('en-IN', {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-  });
+  const lastLogin = profile.lastLoginAt 
+    ? new Date(profile.lastLoginAt).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })
+    : 'Unknown';
 
   return (
     <div className="bg-card border border-border rounded-xl p-6 flex flex-col items-center text-center gap-4 shadow-sm">
