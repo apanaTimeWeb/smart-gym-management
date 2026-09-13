@@ -2,6 +2,7 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { useManagerFinanceStore } from '@/app/manager/finance/finance_store/useManagerFinanceStore';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
@@ -38,18 +39,24 @@ const ManagerFinanceContext = createContext<FinanceContextValue | undefined>(und
 
 export function FinanceProvider({ children }: { children: ReactNode }) {
   const [tab, setTab] = useState<FinanceTab>('Payments');
+  const searchParams = useSearchParams();
+  const range = searchParams.get('range') || 'this_month';
+  const startDate = searchParams.get('startDate') || '';
+  const endDate = searchParams.get('endDate') || '';
+  
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [methodFilter, setMethodFilter] = useState('ALL');
   const [currentPage, setCurrentPage] = useState(1);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+
+  const setStartDate = () => {};
+  const setEndDate = () => {};
 
   const { payments, summary, totalPayments, fetchState, saving, loadAll } = useManagerFinanceStore();
 
   const reload = useCallback(() => {
-    loadAll({ search, status: statusFilter, method: methodFilter, page: currentPage.toString(), limit: MANAGER_ITEMS_PER_PAGE.toString(), startDate, endDate });
-  }, [search, statusFilter, methodFilter, currentPage, startDate, endDate, loadAll]);
+    loadAll({ search, status: statusFilter, method: methodFilter, page: currentPage.toString(), limit: MANAGER_ITEMS_PER_PAGE.toString(), range, startDate, endDate });
+  }, [search, statusFilter, methodFilter, currentPage, range, startDate, endDate, loadAll]);
 
   useEffect(() => {
     const t = setTimeout(reload, 300);

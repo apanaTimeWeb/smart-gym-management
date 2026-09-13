@@ -27,7 +27,7 @@ export const useManagerFinanceStore = create<FinanceState>((set, get) => ({
     try {
       const [paymentsRes, summaryRes] = await Promise.all([
         financeApi.getPayments(params),
-        financeApi.getSummary(),
+        financeApi.getSummary(params?.range),
       ]);
       let fetched = paymentsRes.data?.payments || [];
       if (params?.search) {

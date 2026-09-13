@@ -862,7 +862,8 @@ export async function routeMockRequest<T>(
     
     return MockDB.handleCrud('mock_workouts', method, path, parsedBody, defaultWorkouts, 'workouts') as unknown as ApiResponse<T>;
   }
-  if (path.includes('/admin/finance/summary')) {
+  // FINANCE MOCKS (Admin & Manager)
+  if (path.includes('/admin/finance/summary') || path.includes('/manager/finance/summary')) {
     const range = parsedUrl.searchParams.get('range') || 'this_month';
     let mult = 1;
     if (range === 'last_month') mult = 0.9;
@@ -1200,6 +1201,43 @@ export async function routeMockRequest<T>(
       memberLimit: 100 + (i * 30),
       billingCycleEnd: '2023-11-30'
     }))) as unknown as ApiResponse<T>;
+  }
+
+  // REPORTS MOCKS (Admin & Manager)
+  if (path.includes('/admin/reports/data') || path.includes('/manager/reports/summary')) {
+    const gymId = parsedUrl.searchParams.get('gymId');
+    const range = parsedUrl.searchParams.get('range') || parsedUrl.searchParams.get('dateRange') || 'this_month';
+    let mult = 1;
+    if (range === 'this_year' || range === 'yearly') mult = 12;
+    else if (range === 'last_6_months') mult = 6;
+    else if (range === 'last_3_months') mult = 3;
+    else if (range === 'last_month') mult = 1;
+    else if (range === 'weekly') mult = 0.25;
+    else if (range === 'custom') mult = 1.5;
+
+    let data = { ...ADMIN_MOCK_REPORT_DATA };
+    if (gymId && gymId !== 'all') {
+      data = {
+        ...data,
+        revenueByGym: data.revenueByGym.filter(g => g.gymId === gymId),
+        membershipGrowth: data.membershipGrowth.filter(g => g.gymId === gymId),
+        attendanceSummary: data.attendanceSummary.filter(g => g.gymId === gymId),
+        payrollSummary: data.payrollSummary.filter(g => g.gymId === gymId),
+        pnlSummary: data.pnlSummary.filter(g => g.gymId === gymId),
+      };
+    }
+    
+    // Scale data
+    data = {
+      ...data,
+      revenueByGym: data.revenueByGym.map(g => ({ ...g, revenue: g.revenue * mult })),
+      membershipGrowth: data.membershipGrowth.map(g => ({ ...g, activeMembers: Math.floor(g.activeMembers * mult) })),
+      attendanceSummary: data.attendanceSummary.map(g => ({ ...g, totalCheckIns: Math.floor(g.totalCheckIns * mult) })),
+      payrollSummary: data.payrollSummary.map(g => ({ ...g, totalPayroll: g.totalPayroll * mult })),
+      pnlSummary: data.pnlSummary.map(g => ({ ...g, netProfit: g.netProfit * mult })),
+    };
+    
+    return { success: true, message: 'Report data fetched', data } as unknown as ApiResponse<T>;
   }
 
   if (path.includes('/superadmin/analytics/revenue')) {

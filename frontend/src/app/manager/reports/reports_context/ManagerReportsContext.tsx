@@ -3,6 +3,7 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, useCallback, useMemo, type ReactNode } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useManagerReportsStore } from '@/app/manager/reports/reports_store/useManagerReportsStore';
 import type { ReportTab } from '@/app/manager/reports/reports_types/ManagerReportsTypes';
 
@@ -22,7 +23,9 @@ const ManagerReportsContext = createContext<ReportsContextValue | undefined>(und
 
 export function ReportsProvider({ children }: { children: ReactNode }) {
   const [tab, setTab] = useState<ReportTab>('Revenue');
-  const [dateRange, setDateRange] = useState('12m');
+  const searchParams = useSearchParams();
+  const dateRange = searchParams.get('range') || 'this_month';
+  const setDateRange = () => {};
 
   const { summary, fetchState, exporting, loadSummary, exportCSV } = useManagerReportsStore();
 

@@ -12,6 +12,7 @@ import {
   IndianRupee, Wallet, Clock, TrendingUp,
   Search, Loader2, RefreshCw, Download, FileText, Printer, Percent, ArrowLeftRight
 } from 'lucide-react';
+import { ManagerDateFilterDropdown } from '@/app/manager/manager_components/ManagerShared/ManagerDateFilterDropdown';
 
 const Chart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
@@ -165,21 +166,7 @@ function FinanceInner() {
                     />
                   </div>
                   <div className="flex items-center gap-2 w-full sm:w-auto">
-                    <input
-                      type="date"
-                      value={startDate}
-                      onChange={e => { setStartDate(e.target.value); setCurrentPage(1); }}
-                      className="w-full sm:w-36 bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-primary"
-                      title="Start Date"
-                    />
-                    <span className="text-secondary text-sm">to</span>
-                    <input
-                      type="date"
-                      value={endDate}
-                      onChange={e => { setEndDate(e.target.value); setCurrentPage(1); }}
-                      className="w-full sm:w-36 bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-primary"
-                      title="End Date"
-                    />
+                    <ManagerDateFilterDropdown />
                   </div>
                 </div>
               <div className="flex flex-wrap gap-2 w-full xl:w-auto justify-start xl:justify-end">
