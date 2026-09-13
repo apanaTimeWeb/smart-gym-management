@@ -2,7 +2,7 @@
 // RESPONSIBILITY: A unified Date Filter dropdown used across Superadmin pages (Dashboard, Analytics, Invoices, Coupons, Onboarding, Reports).
 // It syncs the selected preset directly to the URL query parameters (range, startDate, endDate), allowing SSR/hooks to fetch data accordingly.
 
-import { useCallback } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 
@@ -25,6 +25,35 @@ export function SuperadminDateFilterDropdown() {
   const pathname = usePathname();
 
   const value = (searchParams.get('range') as TimeRange) ?? 'this_month';
+  const currentStartDate = searchParams.get('startDate') || '';
+  const currentEndDate = searchParams.get('endDate') || '';
+
+  const [customStart, setCustomStart] = useState(currentStartDate);
+  const [customEnd, setCustomEnd] = useState(currentEndDate);
+
+  useEffect(() => {
+    if (value === 'custom') {
+      setCustomStart(currentStartDate);
+      setCustomEnd(currentEndDate);
+    }
+  }, [value, currentStartDate, currentEndDate]);
+
+  const handleCustomDateChange = useCallback((type: 'start' | 'end', val: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('range', 'custom');
+    
+    if (type === 'start') {
+      setCustomStart(val);
+      if (val) params.set('startDate', val);
+      else params.delete('startDate');
+    } else {
+      setCustomEnd(val);
+      if (val) params.set('endDate', val);
+      else params.delete('endDate');
+    }
+    
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [router, searchParams, pathname]);
 
   const handlePresetChange = useCallback((preset: string) => {
     const today = new Date();
@@ -69,13 +98,33 @@ export function SuperadminDateFilterDropdown() {
   }, [router, searchParams, pathname]);
 
   return (
-    <div className="w-48 bg-input border border-border rounded-lg shadow-sm">
-      <SearchableDropdown
-        options={OPTIONS}
-        value={value}
-        onChange={(val) => handlePresetChange(String(val))}
-        className="bg-transparent border-transparent"
-      />
+    <div className="flex items-center gap-2 flex-wrap">
+      <div className="w-48 bg-input border border-border rounded-lg shadow-sm shrink-0">
+        <SearchableDropdown
+          options={OPTIONS}
+          value={value}
+          onChange={(val) => handlePresetChange(String(val))}
+          className="bg-transparent border-transparent"
+        />
+      </div>
+
+      {value === 'custom' && (
+        <div className="flex items-center gap-2 bg-input border border-border rounded-lg shadow-sm px-3 py-[9px] shrink-0">
+          <input 
+            type="date" 
+            value={customStart}
+            onChange={(e) => handleCustomDateChange('start', e.target.value)}
+            className="bg-transparent text-sm text-foreground focus:outline-none custom-date-input"
+          />
+          <span className="text-secondary text-sm font-medium">to</span>
+          <input 
+            type="date" 
+            value={customEnd}
+            onChange={(e) => handleCustomDateChange('end', e.target.value)}
+            className="bg-transparent text-sm text-foreground focus:outline-none custom-date-input"
+          />
+        </div>
+      )}
     </div>
   );
 }
