@@ -1,11 +1,11 @@
 'use client';
 
-import { useDashboardContext } from '@/app/trainer/dashboard/dashboard_context/DashboardContext';
-import { Activity, ArrowRight } from 'lucide-react';
+import { useTrainerDashboardQuery } from '@/app/trainer/dashboard/dashboard_queries/useTrainerDashboardQuery';
+import { Activity, ArrowRight, User } from 'lucide-react';
 import Link from 'next/link';
 
 export default function TrainerDashboardRecentProgress() {
-  const { stats } = useDashboardContext();
+  const { data: stats } = useTrainerDashboardQuery();
   if (!stats?.recentMemberProgress) return null;
 
   return (

@@ -1,56 +1,48 @@
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
-// RESPONSIBILITY: Defines strict types for the Dashboard module, including comprehensive KPI stats and recent activity shapes.
+// RESPONSIBILITY: Zod schemas and TypeScript types for the Trainer Dashboard module.
+import { z } from 'zod';
+
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 export type TimeRange = 'weekly' | 'monthly' | 'yearly' | 'custom';
-export interface DashboardContextType { 
-  stats: DashboardStats | null; 
-  status: FetchState; 
-  error: string;
-  timeRange: TimeRange;
-  setTimeRange: (range: TimeRange) => void;
-  startDate: string;
-  endDate: string;
-  setCustomDateRange: (start: string, end: string) => void;
-}
 
-export interface RecentMember {
-  id: string; 
-  name: string; 
-  plan: string | { name: string }; 
-  status: string;
-  joinDate: string; 
-  paidAmount: number;
-}
+export const TrainerProfileSummarySchema = z.object({
+  id: z.string().optional(),
+  name: z.string().optional(),
+  shiftStart: z.string().optional(),
+  shiftEnd: z.string().optional(),
+  rating: z.number().optional(),
+});
+export type TrainerProfileSummary = z.infer<typeof TrainerProfileSummarySchema>;
 
-export interface DashboardStats {
-  todaysSessions: number;
-  completedSessions: number;
-  pendingSessions: number;
-  myMembersCount: number;
-  todaysAttendance: number;
-  pendingWorkoutPlans: number;
-  monthlyEarnings: number;
-  memberGoalCompletionRate: number;
-  goalCompletionTrend?: { month: string; rate: number }[];
-  recentMemberProgress: { id: string; name: string; detail: string; time: string }[];
-  upcomingSessions: { id: string; name: string; time: string; type: string }[];
-  membersByPlan?: { plan: string; count: number }[];
-  recentMembers?: RecentMember[];
-  trainerProfile?: TrainerProfileSummary;
-  totalPTRevenue?: number;
-  weeklySessionsCompleted?: number;
-  avgSessionRating?: number;
-  activeClientsCount?: number;
-  attendanceRate?: number;
-  nextSessionTime?: string;
-}
+export const RecentMemberSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  plan: z.union([z.string(), z.object({ name: z.string() })]),
+  status: z.string(),
+  joinDate: z.string(),
+  paidAmount: z.number(),
+});
+export type RecentMember = z.infer<typeof RecentMemberSchema>;
 
-export interface TrainerProfileSummary {
-  id?: string;
-  name?: string;
-  shiftStart?: string;
-  shiftEnd?: string;
-  rating?: number;
-}
-
+export const DashboardStatsSchema = z.object({
+  todaysSessions: z.number(),
+  completedSessions: z.number(),
+  pendingSessions: z.number(),
+  myMembersCount: z.number(),
+  todaysAttendance: z.number(),
+  pendingWorkoutPlans: z.number(),
+  monthlyEarnings: z.number(),
+  memberGoalCompletionRate: z.number(),
+  goalCompletionTrend: z.array(z.object({ month: z.string(), rate: z.number() })).optional(),
+  recentMemberProgress: z.array(z.object({ id: z.string(), name: z.string(), detail: z.string(), time: z.string() })),
+  upcomingSessions: z.array(z.object({ id: z.string(), name: z.string(), time: z.string(), type: z.string() })),
+  membersByPlan: z.array(z.object({ plan: z.string(), count: z.number() })).optional(),
+  recentMembers: z.array(RecentMemberSchema).optional(),
+  trainerProfile: TrainerProfileSummarySchema.optional(),
+  totalPTRevenue: z.number().optional(),
+  weeklySessionsCompleted: z.number().optional(),
+  avgSessionRating: z.number().optional(),
+  activeClientsCount: z.number().optional(),
+  attendanceRate: z.number().optional(),
+  nextSessionTime: z.string().optional(),
+});
+export type DashboardStats = z.infer<typeof DashboardStatsSchema>;

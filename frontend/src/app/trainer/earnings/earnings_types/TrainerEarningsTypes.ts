@@ -1,50 +1,45 @@
-export interface TrainerEarningsKPIsData {
-  totalEarnings: number;
-  pendingPayouts: number;
-  sessionsCompleted: number;
-  commissionRate: number;
-  taxDeduction: number;
-  bankAccount?: string;
-  commissionTier?: string;
-}
+import { z } from 'zod';
 
-export type PayoutStatus = 'pending' | 'processing' | 'settled';
+export const TrainerEarningsKPIsDataSchema = z.object({
+  totalEarnings: z.number(),
+  pendingPayouts: z.number(),
+  sessionsCompleted: z.number(),
+  commissionRate: z.number(),
+  taxDeduction: z.number(),
+  bankAccount: z.string().optional(),
+  commissionTier: z.string().optional(),
+});
+export type TrainerEarningsKPIsData = z.infer<typeof TrainerEarningsKPIsDataSchema>;
 
-export interface TrainerPendingPayout {
-  id: string;
-  period: string;
-  amount: number;
-  status: PayoutStatus;
-  dueDate: string;
-}
+export const PayoutStatusSchema = z.enum(['pending', 'processing', 'settled']);
+export type PayoutStatus = z.infer<typeof PayoutStatusSchema>;
 
-export interface TrainerEarningsHistoryRow {
-  id: string;
-  date: string;
-  type: 'Session' | 'Bonus' | 'Commission';
-  description: string;
-  amount: number;
-  status: PayoutStatus;
-  sessionId?: string;
-  tdsDeducted?: number;
-  netPayout?: number;
-  invoiceNumber?: string;
-}
+export const TrainerPendingPayoutSchema = z.object({
+  id: z.string(),
+  period: z.string(),
+  amount: z.number(),
+  status: PayoutStatusSchema,
+  dueDate: z.string(),
+});
+export type TrainerPendingPayout = z.infer<typeof TrainerPendingPayoutSchema>;
 
-export interface TrainerEarningsContextType {
-  kpis: TrainerEarningsKPIsData | null;
-  pendingPayouts: TrainerPendingPayout[];
-  paginatedHistory: TrainerEarningsHistoryRow[];
-  fetchState: 'idle' | 'loading' | 'success' | 'error';
-  error: string;
-  currentPage: number;
-  setCurrentPage: (page: number) => void;
-  totalPages: number;
-  search: string;
-  setSearch: (search: string) => void;
-  startDate: string;
-  setStartDate: (date: string) => void;
-  endDate: string;
-  setEndDate: (date: string) => void;
-  loadAll: () => Promise<void>;
-}
+export const TrainerEarningsHistoryRowSchema = z.object({
+  id: z.string(),
+  date: z.string(),
+  type: z.enum(['Session', 'Bonus', 'Commission']),
+  description: z.string(),
+  amount: z.number(),
+  status: PayoutStatusSchema,
+  sessionId: z.string().optional(),
+  tdsDeducted: z.number().optional(),
+  netPayout: z.number().optional(),
+  invoiceNumber: z.string().optional(),
+});
+export type TrainerEarningsHistoryRow = z.infer<typeof TrainerEarningsHistoryRowSchema>;
+
+export const TrainerEarningsDataSchema = z.object({
+  kpis: TrainerEarningsKPIsDataSchema,
+  pendingPayouts: z.array(TrainerPendingPayoutSchema),
+  history: z.array(TrainerEarningsHistoryRowSchema),
+});
+export type TrainerEarningsData = z.infer<typeof TrainerEarningsDataSchema>;

@@ -1,12 +1,13 @@
 'use client';
 import { CalendarClock } from 'lucide-react';
-import { useTrainerEarningsContext } from '@/app/trainer/earnings/earnings_context/TrainerEarningsContext';
+import { useTrainerEarningsQuery } from '@/app/trainer/earnings/earnings_queries/useTrainerEarningsQuery';
 import { PAYOUT_STATUS_STYLES, formatCurrency } from '@/app/trainer/earnings/earnings_utils/TrainerEarningsSharedConstants';
 
 export default function TrainerEarningsPending() {
-  const { pendingPayouts, fetchState } = useTrainerEarningsContext();
+  const { data } = useTrainerEarningsQuery();
+  const pendingPayouts = data?.pendingPayouts || [];
 
-  if (fetchState === 'loading') {
+  if (!data) {
     return <div className="h-[300px] bg-skeleton-base bg-skeleton-highlight rounded-xl border border-border motion-safe:animate-pulse" />;
   }
 
