@@ -40,7 +40,7 @@ export default function SuperadminChurnMain() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Churn Alerts</h1>
+          <h1 className="text-2xl font-bold text-foreground">Members About to Leave</h1>
           <p className="text-secondary mt-1 text-sm">
             Monitor at-risk tenants and take proactive action before they churn.
           </p>

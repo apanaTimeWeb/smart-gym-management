@@ -66,7 +66,7 @@ function MembersTable() {
     <table className="w-full">
       <thead className="bg-primary/5">
         <tr>
-          {['Month', 'New Members', 'Churned', 'Active'].map(h => (
+          {['Month', 'New Members', 'Lost', 'Active'].map(h => (
             <th key={h} className="text-left text-xs font-semibold text-secondary uppercase tracking-wider px-5 py-3">{h}</th>
           ))}
         </tr>

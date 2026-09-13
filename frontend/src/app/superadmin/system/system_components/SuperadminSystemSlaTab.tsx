@@ -9,7 +9,7 @@ export default function SuperadminSystemSlaTab() {
   const [slaSearch, setSlaSearch] = useState('');
 
   const handleGenerateCredit = (tenantId: string) => {
-    toast.success(`Generated SLA Credit invoice for tenant ${tenantId}`);
+    toast.success(`Generated Downtime Credit invoice for gym ${tenantId}`);
   };
 
   const filteredSla = SUPERADMIN_SYSTEM_MOCK_SLA_DATA.filter(sla => sla.name.toLowerCase().includes(slaSearch.toLowerCase()));
@@ -24,14 +24,14 @@ export default function SuperadminSystemSlaTab() {
         <div className="bg-card border border-border rounded-xl p-6">
           <div className="flex items-center gap-3 mb-2">
             <div className="p-2 bg-primary/10 rounded-lg text-primary"><ServerCog size={24} /></div>
-            <h3 className="font-semibold text-foreground">Tracked Tenants</h3>
+            <h3 className="font-semibold text-foreground">Tracked Gyms</h3>
           </div>
           <p className="text-3xl font-extrabold text-foreground">{totalTenants}</p>
         </div>
         <div className="bg-card border border-border rounded-xl p-6">
           <div className="flex items-center gap-3 mb-2">
             <div className="p-2 bg-danger/10 rounded-lg text-danger"><AlertCircle size={24} /></div>
-            <h3 className="font-semibold text-foreground">SLA Breaches (30d)</h3>
+            <h3 className="font-semibold text-foreground">Uptime Failures (30d)</h3>
           </div>
           <p className="text-3xl font-extrabold text-danger">{breachedTenants}</p>
         </div>
@@ -47,12 +47,12 @@ export default function SuperadminSystemSlaTab() {
       {/* SLA Table */}
       <div className="bg-card border border-border rounded-xl overflow-hidden flex flex-col min-h-96">
         <div className="p-4 border-b border-border flex justify-between items-center bg-header">
-          <h2 className="text-lg font-bold text-foreground flex items-center gap-2"><Clock size={20} className="text-primary"/> Tenant SLA Status</h2>
+          <h2 className="text-lg font-bold text-foreground flex items-center gap-2"><Clock size={20} className="text-primary"/> Gym Uptime Status</h2>
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-disabled" />
             <input
               type="text"
-              placeholder="Search tenant..."
+              placeholder="Search gym..."
               value={slaSearch}
               onChange={(e) => setSlaSearch(e.target.value)}
               className="bg-input border border-border text-foreground text-sm rounded-lg pl-9 pr-4 py-2 focus:outline-none focus:border-primary w-64"
@@ -63,8 +63,8 @@ export default function SuperadminSystemSlaTab() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-input/40 border-b border-border text-secondary text-xs uppercase tracking-wider">
-                <th className="p-4 font-semibold">Tenant</th>
-                <th className="p-4 font-semibold">Target SLA</th>
+                <th className="p-4 font-semibold">Gym</th>
+                <th className="p-4 font-semibold">Target Uptime</th>
                 <th className="p-4 font-semibold">30d Uptime</th>
                 <th className="p-4 font-semibold">Downtime (Mins)</th>
                 <th className="p-4 font-semibold">Status</th>
@@ -108,7 +108,7 @@ export default function SuperadminSystemSlaTab() {
               ))}
               {filteredSla.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="p-8 text-center text-secondary">No tenants found.</td>
+                  <td colSpan={6} className="p-8 text-center text-secondary">No gyms found.</td>
                 </tr>
               )}
             </tbody>

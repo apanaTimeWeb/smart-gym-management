@@ -6,9 +6,11 @@
 import { useDashboardContext } from '@/app/trainer/dashboard/dashboard_context/DashboardContext';
 import TrainerStatCard from '@/app/trainer/trainer_components/TrainerShared/TrainerStatCard';
 import { Users, UserCheck, CalendarCheck, Clock, Dumbbell, Activity, DollarSign, Star, CalendarClock, TrendingUp } from 'lucide-react';
+import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
 export default function TrainerDashboardKPIs() {
   const { stats } = useDashboardContext();
+  const dateSuffix = useDateRangeSuffix();
   if (!stats) return null;
   const s = stats;
 
@@ -16,7 +18,7 @@ export default function TrainerDashboardKPIs() {
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-4">
         <TrainerStatCard
-          title="Today's Sessions"
+          title={`Today's Sessions${dateSuffix}`}
           value={s.todaysSessions.toLocaleString()}
           change={`${s.completedSessions}/${s.todaysSessions} Completed`}
           changeType="neutral"
@@ -25,7 +27,7 @@ export default function TrainerDashboardKPIs() {
           iconColor="text-primary"
         />
         <TrainerStatCard
-          title="My Members"
+          title={`My Members${dateSuffix}`}
           value={s.myMembersCount.toLocaleString()}
           change="Assigned to you"
           changeType="neutral"
@@ -34,7 +36,7 @@ export default function TrainerDashboardKPIs() {
           iconColor="text-info"
         />
         <TrainerStatCard
-          title="Today's Attendance"
+          title={`Today's Attendance${dateSuffix}`}
           value={s.todaysAttendance.toLocaleString()}
           change="Members present today"
           changeType="neutral"
@@ -43,7 +45,7 @@ export default function TrainerDashboardKPIs() {
           iconColor="text-success"
         />
         <TrainerStatCard
-          title="Pending Plans"
+          title={`Pending Plans${dateSuffix}`}
           value={s.pendingWorkoutPlans.toLocaleString()}
           change="Workout plans to create"
           changeType="down"
@@ -52,7 +54,7 @@ export default function TrainerDashboardKPIs() {
           iconColor="text-warning"
         />
         <TrainerStatCard
-          title="Total PT Revenue"
+          title={`Total PT Revenue${dateSuffix}`}
           value={`$${s.totalPTRevenue?.toLocaleString() ?? 0}`}
           change="This month"
           changeType="neutral"
@@ -61,7 +63,7 @@ export default function TrainerDashboardKPIs() {
           iconColor="text-success"
         />
         <TrainerStatCard
-          title="Weekly Sessions"
+          title={`Weekly Sessions${dateSuffix}`}
           value={s.weeklySessionsCompleted?.toLocaleString() ?? '0'}
           change="Completed"
           changeType="neutral"
@@ -70,7 +72,7 @@ export default function TrainerDashboardKPIs() {
           iconColor="text-primary"
         />
         <TrainerStatCard
-          title="Avg Session Rating"
+          title={`Avg Session Rating${dateSuffix}`}
           value={s.avgSessionRating?.toFixed(1) ?? '0.0'}
           change="Out of 5.0"
           changeType="neutral"
@@ -79,7 +81,7 @@ export default function TrainerDashboardKPIs() {
           iconColor="text-warning"
         />
         <TrainerStatCard
-          title="Active Clients"
+          title={`Active Clients${dateSuffix}`}
           value={s.activeClientsCount?.toLocaleString() ?? '0'}
           change="Currently active"
           changeType="neutral"
@@ -88,7 +90,7 @@ export default function TrainerDashboardKPIs() {
           iconColor="text-info"
         />
         <TrainerStatCard
-          title="Attendance Rate"
+          title={`Attendance Rate${dateSuffix}`}
           value={`${s.attendanceRate ?? 0}%`}
           change="Average attendance"
           changeType="neutral"
@@ -97,7 +99,7 @@ export default function TrainerDashboardKPIs() {
           iconColor="text-primary"
         />
         <TrainerStatCard
-          title="Next Session"
+          title={`Next Session${dateSuffix}`}
           value={s.nextSessionTime ?? 'N/A'}
           change="Upcoming"
           changeType="neutral"

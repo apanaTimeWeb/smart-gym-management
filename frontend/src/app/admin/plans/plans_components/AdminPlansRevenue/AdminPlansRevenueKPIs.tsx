@@ -4,32 +4,34 @@
 import { IndianRupee, Users, TrendingUp, Award } from 'lucide-react';
 import type { RevenueAggregates } from '@/app/admin/plans/plans_types/AdminPlansRevenueTypes';
 import { formatKPI } from '@/lib/formatters';
+import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
 export default function AdminPlansRevenueKPIs({ aggregates }: { aggregates: RevenueAggregates }) {
+  const dateSuffix = useDateRangeSuffix();
   const kpis = [
     {
-      label: 'Total Revenue',
+      label: 'Total Revenue' + dateSuffix,
       value: formatKPI(aggregates.totalRevenue),
       icon: IndianRupee,
       iconColor: 'text-primary',
       iconBg: 'bg-primary/10',
     },
     {
-      label: 'Total Subscriptions',
+      label: 'Total Subscriptions' + dateSuffix,
       value: aggregates.totalSubscriptions.toLocaleString('en-IN'),
       icon: Users,
       iconColor: 'text-success',
       iconBg: 'bg-success/10',
     },
     {
-      label: 'Avg Renewal Rate',
+      label: 'Avg Renewal Rate' + dateSuffix,
       value: `${aggregates.avgRenewalRate.toFixed(1)}%`,
       icon: TrendingUp,
       iconColor: 'text-info',
       iconBg: 'bg-info/10',
     },
     {
-      label: 'Top Performing Plan',
+      label: 'Top Performing Plan' + dateSuffix,
       value: aggregates.topPerformingPlanName,
       icon: Award,
       iconColor: 'text-warning',

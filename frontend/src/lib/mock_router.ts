@@ -5,7 +5,7 @@ import { ADMIN_PERFORMANCE_MOCK_DATA, ADMIN_REVENUE_MOCK_DATA } from './mock_adm
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 class MockDB {
   private static prefix = 'gymsmart_mock_';
-  
+
   static getCollection(name: string, defaultData: Record<string, unknown>[] = []): Record<string, unknown>[] {
     if (typeof window === 'undefined') return defaultData;
     const val = localStorage.getItem(this.prefix + name);
@@ -13,7 +13,7 @@ class MockDB {
     this.setCollection(name, defaultData);
     return defaultData;
   }
-  
+
   static setCollection(name: string, data: Record<string, unknown>[]) {
     if (typeof window !== 'undefined') {
       localStorage.setItem(this.prefix + name, JSON.stringify(data));
@@ -24,7 +24,7 @@ class MockDB {
     const coll = this.getCollection(collectionName, defaultData);
     const segments = (path.split('?')[0] || '').split('/');
     const possibleId = segments[segments.length - 1];
-    
+
     // Determine if we are querying an ID (PATCH/DELETE or GET with an ID segment)
     const basePath = path.split('?')[0] || '';
     const isBaseEndpoint = basePath.endsWith(collectionName) || basePath.endsWith(collectionName.split('_').pop() || '');
@@ -38,10 +38,10 @@ class MockDB {
       // Return wrapped object if listKey provided, otherwise array
       return { success: true, message: 'Fetched list', data: listKey ? { [listKey]: coll, total: coll.length } : coll };
     }
-    
+
     if (method === 'POST') {
       let idStr = `${collectionName.split('_').pop()}-${Date.now()}`;
-      
+
       // Custom ID format for members
       if (collectionName === 'mock_members') {
         const today = new Date();
@@ -59,7 +59,7 @@ class MockDB {
       this.setCollection(collectionName, coll);
       return { success: true, message: 'Created successfully', data: newItem };
     }
-    
+
     if (method === 'PATCH' || method === 'PUT') {
       const idx = coll.findIndex(x => String(x.id) === String(id));
       if (idx === -1) return { success: false, message: 'Not found', data: null };
@@ -67,7 +67,7 @@ class MockDB {
       this.setCollection(collectionName, coll);
       return { success: true, message: 'Updated successfully', data: coll[idx] };
     }
-    
+
     if (method === 'DELETE') {
       const newColl = coll.filter(x => String(x.id) !== String(id));
       this.setCollection(collectionName, newColl);
@@ -156,11 +156,11 @@ export async function routeMockRequest<T>(
     let isSuspended = false;
     let suspensionMsg = '';
 
-    if (bodyStr.includes('demo_admin')) { 
-      role = 'SUPERADMIN'; email = 'demo_admin@gym.com'; name = 'Super Admin'; 
+    if (bodyStr.includes('demo_admin')) {
+      role = 'SUPERADMIN'; email = 'demo_admin@gym.com'; name = 'Super Admin';
     }
-    else if (bodyStr.includes('manager@')) { 
-      role = 'MANAGER'; email = 'manager@gymsmart.com'; name = 'Demo Manager'; 
+    else if (bodyStr.includes('manager@')) {
+      role = 'MANAGER'; email = 'manager@gymsmart.com'; name = 'Demo Manager';
       // Check HR Staff mock DB
       const staffList = MockDB.getCollection('mock_admin_staff', []);
       const manager = staffList.find((s: any) => s.email === email);
@@ -169,8 +169,8 @@ export async function routeMockRequest<T>(
         suspensionMsg = 'Your account has been suspended by the Admin.';
       }
     }
-    else if (bodyStr.includes('trainer@')) { 
-      role = 'TRAINER'; email = 'trainer@gymsmart.com'; name = 'Demo Trainer'; 
+    else if (bodyStr.includes('trainer@')) {
+      role = 'TRAINER'; email = 'trainer@gymsmart.com'; name = 'Demo Trainer';
       // Check HR Staff mock DB
       const staffList = MockDB.getCollection('mock_admin_staff', []);
       const trainer = staffList.find((s: any) => s.email === email);
@@ -198,7 +198,7 @@ export async function routeMockRequest<T>(
         data: null
       } as unknown as ApiResponse<T>;
     }
-    
+
     return {
       success: true,
       message: 'Demo Login Successful',
@@ -231,7 +231,7 @@ export async function routeMockRequest<T>(
   const parsedUrl = new URL(path, 'http://localhost');
   let parsedBody: any = body;
   if (typeof body === 'string') {
-    try { parsedBody = JSON.parse(body); } catch (e) {}
+    try { parsedBody = JSON.parse(body); } catch (e) { }
   }
 
   const generate = (count: number, generator: (i: number) => Record<string, unknown>) => Array.from({ length: count }, (_, i) => generator(i));
@@ -253,11 +253,11 @@ export async function routeMockRequest<T>(
       { id: 'prod-9', name: 'Nivia Python Gym Gloves', category: 'Accessories', price: 450, stock: 18, description: 'Weightlifting gloves with wrist support', isActive: true, unit: 'Medium' },
       { id: 'prod-10', name: 'Rogue Heavy Duty Lifting Belt', category: 'Accessories', price: 3500, stock: 8, description: 'Leather powerlifting belt', isActive: true, unit: '1 Piece' }
     ];
-    
+
     if (existing.length === 0) {
       MockDB.setCollection('mock_products', defaultProducts);
     }
-    
+
     return MockDB.handleCrud('mock_products', method, path, parsedBody, defaultProducts, 'products') as unknown as ApiResponse<T>;
   }
 
@@ -271,28 +271,28 @@ export async function routeMockRequest<T>(
   if (path.includes('/store/orders')) {
     const existing = MockDB.getCollection('mock_orders', []);
     if (existing.length > 0 && existing.some((r: any) => !r.items)) {
-       MockDB.setCollection('mock_orders', []);
+      MockDB.setCollection('mock_orders', []);
     }
     if (method === 'POST') {
-       const products = MockDB.getCollection('mock_products', []);
-       const items = (parsedBody.items || []) as any[];
-       items.forEach(item => {
-         const prodIdx = products.findIndex(p => String(p.id) === String(item.productId));
-         const prod = prodIdx > -1 ? products[prodIdx] : null;
-         if (prod) {
-           prod.stock = Math.max(0, Number(prod.stock) - Number(item.qty));
-         }
-       });
-       MockDB.setCollection('mock_products', products);
+      const products = MockDB.getCollection('mock_products', []);
+      const items = (parsedBody.items || []) as any[];
+      items.forEach(item => {
+        const prodIdx = products.findIndex(p => String(p.id) === String(item.productId));
+        const prod = prodIdx > -1 ? products[prodIdx] : null;
+        if (prod) {
+          prod.stock = Math.max(0, Number(prod.stock) - Number(item.qty));
+        }
+      });
+      MockDB.setCollection('mock_products', products);
     }
     const defaultOrders = [
       { id: 'ord-1', customerName: 'Demo Customer', total: 1200, method: 'UPI', status: 'COMPLETED', createdAt: new Date().toISOString(), items: [{ productId: 'prod-2', qty: 1, price: 1200, product: { name: 'Creatine Monohydrate', unit: '300g' } }] }
     ];
-    
+
     if (existing.length === 0) {
       MockDB.setCollection('mock_orders', defaultOrders);
     }
-    
+
     return MockDB.handleCrud('mock_orders', method, path, parsedBody, defaultOrders, 'orders') as unknown as ApiResponse<T>;
   }
 
@@ -315,12 +315,12 @@ export async function routeMockRequest<T>(
     if (method === 'GET') {
       return { success: true, message: 'Fetched features', data: { flags, notes } } as unknown as ApiResponse<T>;
     }
-    
+
     if (method === 'PATCH' && path.includes('/flags/')) {
       const segments = path.split('/');
       const isToggle = path.endsWith('/toggle');
       const flagId = isToggle ? segments[segments.length - 2] : segments[segments.length - 1];
-      
+
       const idx = flags.findIndex((f: Record<string, unknown>) => f.id === flagId);
       const flag = idx > -1 ? flags[idx] : null;
       if (flag) {
@@ -333,7 +333,7 @@ export async function routeMockRequest<T>(
         return { success: true, message: 'Flag updated', data: flags[idx] } as unknown as ApiResponse<T>;
       }
     }
-    
+
     if (path.includes('/notes')) {
       return MockDB.handleCrud('mock_superadmin_notes', method, path, parsedBody, [], 'notes') as unknown as ApiResponse<T>;
     }
@@ -375,7 +375,7 @@ export async function routeMockRequest<T>(
       MockDB.setCollection('mock_superadmin_redis_telemetry', [defaultTelemetry]);
       return { success: true, message: 'Global cache flushed' } as unknown as ApiResponse<T>;
     }
-    
+
     if (path.includes(SuperadminUrlConfig.BACKEND_API.REDIS_FLUSH_TENANT) && method === 'POST') {
       let telemetry = MockDB.getCollection('mock_superadmin_redis_telemetry', []);
       if (telemetry.length > 0) {
@@ -389,7 +389,7 @@ export async function routeMockRequest<T>(
       }
       return { success: true, message: 'Tenant cache flushed' } as unknown as ApiResponse<T>;
     }
-    
+
     if (path.includes(SuperadminUrlConfig.BACKEND_API.REDIS_TELEMETRY) && method === 'GET') {
       const defaultTelemetry = { memoryUsagePercent: 68, hitRatioPercent: 94, totalKeysCached: 1450230, uptimeHours: 720 };
       let telemetry = MockDB.getCollection('mock_superadmin_redis_telemetry', []);
@@ -544,13 +544,13 @@ export async function routeMockRequest<T>(
       const filtered = existing.filter((r: any) => !r.name?.includes('Demo Member'));
       MockDB.setCollection('mock_members', filtered);
     }
-    
+
     const res = MockDB.handleCrud('mock_members', method, path, parsedBody, existing, 'members') as unknown as ApiResponse<any>;
-    
+
     if (method === 'POST' && res.success) {
       res.message = "QR Code sent to member's WhatsApp 💬";
     }
-    
+
     // Cascade delete attendance records if a member is deleted
     if (method === 'DELETE' && res.success) {
       const segments = (path.split('?')[0] || '').split('/');
@@ -561,7 +561,7 @@ export async function routeMockRequest<T>(
         MockDB.setCollection('mock_admin_attendance', updatedAttendance);
       }
     }
-    
+
     return res as unknown as ApiResponse<T>;
   }
   if (path.includes('/inquiries/stats')) {
@@ -607,7 +607,7 @@ export async function routeMockRequest<T>(
     const userId = url.searchParams.get('userId') || 'mock-user';
     const type = url.searchParams.get('type') || 'STAFF';
     const month = url.searchParams.get('month') || new Date().toISOString().slice(0, 7); // YYYY-MM
-    
+
     // Fetch actual real data from mock db instead of generating random history
     const allAttendance = MockDB.getCollection('mock_admin_attendance', []);
     const history = allAttendance.filter(r => {
@@ -616,7 +616,7 @@ export async function routeMockRequest<T>(
       const matchesMonth = typeof r.date === 'string' && r.date.startsWith(month);
       return matchesUser && matchesMonth;
     });
-    
+
     return { success: true, message: 'History fetched', data: history } as unknown as ApiResponse<T>;
   }
   if (path.includes('/attendance/today-stats')) {
@@ -629,33 +629,33 @@ export async function routeMockRequest<T>(
   }
   if (path.includes('/attendance')) {
     let existing = MockDB.getCollection('mock_admin_attendance', []);
-    
+
     // Purge old hardcoded format
     if (existing.length > 0 && existing.some((r: any) => r.member?.name?.includes('Member ') || r.staff?.name?.includes('Staff ') || r.member?.name?.includes('Active Member') || r.staff?.name?.includes('Trainer '))) {
       MockDB.setCollection('mock_admin_attendance', []);
       existing = [];
     }
-    
+
     // Purge orphaned records (deleted members/staff)
     if (method === 'GET' && existing.length > 0) {
       const allMembers = MockDB.getCollection('mock_members', []);
       const allStaff = MockDB.getCollection('mock_admin_staff', []);
-      
+
       const memberIds = new Set(allMembers.map(m => String(m.id)));
       const staffIds = new Set(allStaff.map(s => String(s.id)));
-      
+
       const cleaned = existing.filter((r: any) => {
         if (r.type === 'MEMBER') return memberIds.has(String(r.memberId));
         if (r.type === 'STAFF') return staffIds.has(String(r.staffId));
         return true;
       });
-      
+
       if (cleaned.length !== existing.length) {
         MockDB.setCollection('mock_admin_attendance', cleaned);
         existing = cleaned;
       }
     }
-    
+
     return MockDB.handleCrud('mock_admin_attendance', method, path, parsedBody, [], 'attendance') as unknown as ApiResponse<T>;
   }
   if (path.includes('/hr/summary')) {
@@ -663,11 +663,11 @@ export async function routeMockRequest<T>(
     const reqMonth = new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' });
     const currentPayrolls = MockDB.generatePayrollsForMonth(reqMonth);
     const ledgers = MockDB.getCollection('mock_admin_staff_ledger', []);
-    
+
     const activeStaff = staffList.filter((s: any) => s.isActive).length;
     const paidCount = currentPayrolls.filter((p: any) => p.status === 'PAID' || p.status === 'Paid').length;
     const pendingCount = currentPayrolls.filter((p: any) => p.status === 'PENDING').length;
-    
+
     let totalSalaryThisMonth = 0;
     let totalSalaryPaid = 0;
     let totalSalaryDue = 0;
@@ -689,19 +689,19 @@ export async function routeMockRequest<T>(
       totalSalaryDue += (Number(s.currentDue) || 0);
       if (Number(s.currentDue) > 0) pendingPaymentsCount++;
     });
-    
+
     return { success: true, message: 'Summary', data: { totalStaff: staffList.length, activeStaff, totalSalaryThisMonth, totalSalaryPaid, totalSalaryDue, totalAdvanceGiven, pendingPaymentsCount } } as unknown as ApiResponse<T>;
   }
-  
+
   if (path.includes('/hr/staff')) {
     const existingStaff = MockDB.getCollection('mock_admin_staff', []);
     if (existingStaff.length > 0 && (existingStaff.some((r: any) => r.name?.includes('Trainer ')) || !existingStaff[0]?.joinDate)) {
       const filtered = existingStaff.filter((r: any) => !r.name?.includes('Trainer ') && r.joinDate);
       MockDB.setCollection('mock_admin_staff', filtered);
     }
-    
+
     const res = MockDB.handleCrud('mock_admin_staff', method, path, parsedBody, [], 'staff') as unknown as ApiResponse<any>;
-    
+
     // Cascade delete attendance and payrolls if a staff member is deleted
     if (method === 'DELETE' && res.success) {
       const segments = (path.split('?')[0] || '').split('/');
@@ -710,31 +710,31 @@ export async function routeMockRequest<T>(
         const attendanceColl = MockDB.getCollection('mock_admin_attendance', []);
         const updatedAttendance = attendanceColl.filter((a: any) => String(a.staffId) !== String(deletedId));
         MockDB.setCollection('mock_admin_attendance', updatedAttendance);
-        
+
         const payrollColl = MockDB.getCollection('mock_admin_payrolls', []);
         const updatedPayrolls = payrollColl.filter((p: any) => String(p.staffId) !== String(deletedId));
         MockDB.setCollection('mock_admin_payrolls', updatedPayrolls);
       }
     }
-    
+
     return res as unknown as ApiResponse<T>;
   }
-  
+
   if (path.includes('/hr/payrolls')) {
     const existingPayrolls = MockDB.getCollection('mock_admin_payrolls', []);
     if (existingPayrolls.length > 0 && existingPayrolls.some((r: any) => r.staff?.name?.includes('Trainer '))) {
       const filtered = existingPayrolls.filter((r: any) => !r.staff?.name?.includes('Trainer '));
       MockDB.setCollection('mock_admin_payrolls', filtered);
     }
-    
+
     if (method === 'GET') {
       const qsMonthMatch = path.match(/month=([^&]+)/);
       const reqMonth = qsMonthMatch ? decodeURIComponent(qsMonthMatch[1] || '') : new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' });
-      
+
       const filtered = MockDB.generatePayrollsForMonth(reqMonth);
       return { success: true, message: 'Fetched payrolls', data: { payrolls: filtered, total: filtered.length } } as unknown as ApiResponse<T>;
     }
-    
+
     return MockDB.handleCrud('mock_admin_payrolls', method, path, parsedBody, [], 'payrolls') as unknown as ApiResponse<T>;
   }
 
@@ -761,7 +761,7 @@ export async function routeMockRequest<T>(
         const allLedgers = MockDB.getCollection('mock_admin_staff_ledger', []);
         const staffLedgers = allLedgers.filter((l: any) => String(l.staffId) === String(staffId));
         const lastBalance = staffLedgers.length > 0 ? Number(staffLedgers[staffLedgers.length - 1]?.balance || 0) : 0;
-        
+
         allLedgers.push({
           id: `ledg-${Date.now()}`,
           staffId,
@@ -792,7 +792,7 @@ export async function routeMockRequest<T>(
         const allLedgers = MockDB.getCollection('mock_admin_staff_ledger', []);
         const staffLedgers = allLedgers.filter((l: any) => String(l.staffId) === String(staffId));
         const lastBalance = staffLedgers.length > 0 ? Number(staffLedgers[staffLedgers.length - 1]?.balance || 0) : 0;
-        
+
         allLedgers.push({
           id: `ledg-${Date.now()}`,
           staffId,
@@ -800,7 +800,7 @@ export async function routeMockRequest<T>(
           type: 'Due Paid',
           credit: 0,
           debit: Number(amount),
-          balance: lastBalance - Number(amount), 
+          balance: lastBalance - Number(amount),
           notes,
           paymentMode
         });
@@ -809,18 +809,18 @@ export async function routeMockRequest<T>(
       }
     }
   }
-  if (path.includes('/exercises')) return MockDB.handleCrud('mock_admin_exercises', method, path, parsedBody, generate(10, i => ({ id: `ex-${i}`, name: `Exercise ${i+1}`, category: 'Strength', muscleGroup: ['Chest', 'Triceps'], difficulty: 'Beginner', isActive: true, videoUrl: '' })), 'exercises') as unknown as ApiResponse<T>;
-  
+  if (path.includes('/exercises')) return MockDB.handleCrud('mock_admin_exercises', method, path, parsedBody, generate(10, i => ({ id: `ex-${i}`, name: `Exercise ${i + 1}`, category: 'Strength', muscleGroup: ['Chest', 'Triceps'], difficulty: 'Beginner', isActive: true, videoUrl: '' })), 'exercises') as unknown as ApiResponse<T>;
+
   const existingDiets = MockDB.getCollection('mock_admin_diet_plans', []);
   if (existingDiets.length > 0 && typeof (existingDiets[0] as any).meals?.[0] === 'string') {
     MockDB.setCollection('mock_admin_diet_plans', []); // Force purge old format
   }
-  
+
   if (path.includes('/diet-plans')) {
-    const defaultDiets = generate(4, i => ({ 
-      id: `diet-${i}`, 
-      name: `Pro Diet ${i+1}`, 
-      goal: 'Weight Loss', 
+    const defaultDiets = generate(4, i => ({
+      id: `diet-${i}`,
+      name: `Pro Diet ${i + 1}`,
+      goal: 'Weight Loss',
       totalCalories: 1500 + (i * 200),
       protein: 120 + i * 10,
       carbs: 150 + i * 20,
@@ -829,14 +829,14 @@ export async function routeMockRequest<T>(
         { time: '08:00 AM', name: 'Breakfast', calories: 400, foods: ['Oats', 'Eggs', 'Banana'] },
         { time: '01:00 PM', name: 'Lunch', calories: 600, foods: ['Chicken Breast', 'Rice', 'Broccoli'] },
         { time: '07:00 PM', name: 'Dinner', calories: 500, foods: ['Salmon', 'Sweet Potato', 'Asparagus'] }
-      ], 
-      isActive: true 
+      ],
+      isActive: true
     }));
-    
+
     if (MockDB.getCollection('mock_admin_diet_plans', []).length === 0) {
       MockDB.setCollection('mock_admin_diet_plans', defaultDiets);
     }
-    
+
     return MockDB.handleCrud('mock_admin_diet_plans', method, path, parsedBody, defaultDiets, 'dietPlans') as unknown as ApiResponse<T>;
   }
 
@@ -845,9 +845,9 @@ export async function routeMockRequest<T>(
     MockDB.setCollection('mock_workouts', []); // Force purge old format
   }
   if (path.includes('/workouts')) {
-    const defaultWorkouts = generate(5, i => ({ 
-      id: `wo-${i}`, 
-      name: `Hypertrophy Plan ${i+1}`, 
+    const defaultWorkouts = generate(5, i => ({
+      id: `wo-${i}`,
+      name: `Hypertrophy Plan ${i + 1}`,
       level: i % 2 === 0 ? 'Intermediate' : 'Beginner',
       focus: 'Hypertrophy',
       days: 4,
@@ -855,11 +855,11 @@ export async function routeMockRequest<T>(
       duration: '60 min',
       tags: ['Muscle', 'Strength']
     }));
-    
+
     if (MockDB.getCollection('mock_workouts', []).length === 0) {
       MockDB.setCollection('mock_workouts', defaultWorkouts);
     }
-    
+
     return MockDB.handleCrud('mock_workouts', method, path, parsedBody, defaultWorkouts, 'workouts') as unknown as ApiResponse<T>;
   }
   // FINANCE MOCKS (Admin & Manager)
@@ -873,17 +873,17 @@ export async function routeMockRequest<T>(
     else if (range === 'yearly') mult = 24.5;
     else if (range === 'custom') mult = 1.5;
 
-    return { 
-      success: true, 
-      message: 'Summary', 
-      data: { 
-        totalRevenue: 1500000 * mult, 
-        monthlyRevenue: 250000 * mult, 
-        pendingAmount: 45000 * mult, 
-        totalPayments: Math.floor(345 * mult), 
-        revenueByMethod: { UPI: 120000 * mult, Cash: 50000 * mult, Card: 80000 * mult, NetBanking: 0 }, 
-        monthlyData: generate(6, i => ({ month: `M${i+1}`, revenue: (200000 + (i * 10000)) * mult })) 
-      } 
+    return {
+      success: true,
+      message: 'Summary',
+      data: {
+        totalRevenue: 1500000 * mult,
+        monthlyRevenue: 250000 * mult,
+        pendingAmount: 45000 * mult,
+        totalPayments: Math.floor(345 * mult),
+        revenueByMethod: { UPI: 120000 * mult, Cash: 50000 * mult, Card: 80000 * mult, NetBanking: 0 },
+        monthlyData: generate(6, i => ({ month: `M${i + 1}`, revenue: (200000 + (i * 10000)) * mult }))
+      }
     } as unknown as ApiResponse<T>;
   }
   if (method === 'GET' && (path.includes('/finance/payments/member/') || path.includes('/finance/payments-by-member/'))) {
@@ -891,20 +891,20 @@ export async function routeMockRequest<T>(
     const memberId = segments[segments.length - 1];
     const allPayments = MockDB.getCollection('mock_admin_payments', []);
     let memberPayments = allPayments.filter((p: any) => String(p.memberId) === String(memberId));
-    
+
     if (memberPayments.length === 0) {
-       const newPayment = {
-         id: `pay-mock-${Date.now()}`,
-         memberId: memberId,
-         amount: 3000,
-         method: 'UPI',
-         status: 'PAID',
-         paidAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-         invoiceNo: `INV-MOCK-${Date.now().toString().slice(-6)}`
-       };
-       allPayments.push(newPayment);
-       MockDB.setCollection('mock_admin_payments', allPayments);
-       memberPayments = [newPayment];
+      const newPayment = {
+        id: `pay-mock-${Date.now()}`,
+        memberId: memberId,
+        amount: 3000,
+        method: 'UPI',
+        status: 'PAID',
+        paidAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+        invoiceNo: `INV-MOCK-${Date.now().toString().slice(-6)}`
+      };
+      allPayments.push(newPayment);
+      MockDB.setCollection('mock_admin_payments', allPayments);
+      memberPayments = [newPayment];
     }
 
     return { success: true, message: 'Fetched member payments', data: memberPayments } as unknown as ApiResponse<T>;
@@ -1032,7 +1032,7 @@ export async function routeMockRequest<T>(
         pnlSummary: data.pnlSummary.filter(g => g.gymId === gymId),
       };
     }
-    
+
     // Scale data
     data = {
       ...data,
@@ -1042,7 +1042,7 @@ export async function routeMockRequest<T>(
       payrollSummary: data.payrollSummary.map(g => ({ ...g, totalPayroll: g.totalPayroll * mult })),
       pnlSummary: data.pnlSummary.map(g => ({ ...g, netProfit: g.netProfit * mult })),
     };
-    
+
     return { success: true, message: 'Report data fetched', data } as unknown as ApiResponse<T>;
   }
 
@@ -1081,7 +1081,7 @@ export async function routeMockRequest<T>(
     const period = parsedUrl.searchParams.get('period') || 'THIS_MONTH';
     return { success: true, message: 'Revenue fetched', data: ADMIN_REVENUE_MOCK_DATA[period as keyof typeof ADMIN_REVENUE_MOCK_DATA] || [] } as unknown as ApiResponse<T>;
   }
-  
+
   if (path.includes('/superadmin/messaging/notifications')) return MockDB.handleCrud('mock_messaging_notifications', method, path, parsedBody, [
     { id: 'notif-1', title: 'New tenant signup', body: 'FitZone Indiranagar just signed up for a trial.', type: 'INFO', read: false, createdAt: '2024-05-22T10:00:00Z' },
     { id: 'notif-2', title: 'Payment failed', body: 'Invoice #INV-0042 for PowerHouse Gym failed to process.', type: 'WARNING', read: false, createdAt: '2024-05-21T14:30:00Z' },
@@ -1144,13 +1144,13 @@ export async function routeMockRequest<T>(
     };
     const jobsList = jobNames[queueName] || ['process_invoice'];
     const jobName = jobsList[i % jobsList.length];
-    
-    return { 
-      id: `job-${1000 + i}`, 
-      queueName, 
-      jobName, 
-      status, 
-      attempts: isFailed ? 3 : 1, 
+
+    return {
+      id: `job-${1000 + i}`,
+      queueName,
+      jobName,
+      status,
+      attempts: isFailed ? 3 : 1,
       createdAt: '2023-11-05T08:00:00Z',
       finishedAt: (isCompleted || isFailed) ? '2023-11-05T08:05:00Z' : undefined,
       durationMs: (isCompleted || isFailed) ? (1500 + i * 200) : undefined,
@@ -1226,7 +1226,7 @@ export async function routeMockRequest<T>(
         pnlSummary: data.pnlSummary.filter(g => g.gymId === gymId),
       };
     }
-    
+
     // Scale data
     data = {
       ...data,
@@ -1236,7 +1236,7 @@ export async function routeMockRequest<T>(
       payrollSummary: data.payrollSummary.map(g => ({ ...g, totalPayroll: g.totalPayroll * mult })),
       pnlSummary: data.pnlSummary.map(g => ({ ...g, netProfit: g.netProfit * mult })),
     };
-    
+
     return { success: true, message: 'Report data fetched', data } as unknown as ApiResponse<T>;
   }
 
@@ -1322,14 +1322,14 @@ export async function routeMockRequest<T>(
       const plans = MockDB.getCollection('mock_admin_plans', []);
       const inquiries = MockDB.getCollection('mock_inquiries', []);
       const storeOrders = MockDB.getCollection('mock_store_orders', []);
-      
+
       // Members will only be populated via conversions now, no dummy generation.
-      
+
       if (payments.length === 0) {
         payments = generate(10, (i: number) => ({ id: `pay-${i}`, memberId: `GS-${15102023000 + i}`, member: { name: `Member ${i + 1}` }, amount: 5000, status: 'PAID', paidAt: new Date().toISOString(), method: 'UPI', invoiceNo: `INV-${1000 + i}` }));
         MockDB.setCollection('mock_admin_payments', payments);
       }
-      
+
       if (staff.length === 0) {
         staff = generate(8, (i: number) => {
           if (i === 0) {
@@ -1341,7 +1341,7 @@ export async function routeMockRequest<T>(
         });
         MockDB.setCollection('mock_admin_staff', staff);
       }
-      
+
       // Apply fallbacks because form submission might miss 'status' or 'plan' object
       const members = rawMembers.map((m: any) => {
         const p = m.plan || plans.find((x: any) => String(x.id) === String(m.planId)) || { name: 'Unknown Plan' };
@@ -1368,13 +1368,13 @@ export async function routeMockRequest<T>(
 
       // Revenue stats (Memberships + Store POS)
       const validPayments = payments.filter((p: any) => p.status === 'PAID');
-      
+
       let totalRevenue = validPayments.reduce((sum: number, p: any) => sum + (Number(p.amount) || 0), 0);
       let monthlyRevenue = validPayments.filter((p: any) => {
         const d = new Date(p.paidAt || p.createdAt || now);
         return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
       }).reduce((sum: number, p: any) => sum + (Number(p.amount) || 0), 0);
-      
+
       // Add Store Orders to revenue
       const validStoreOrders = storeOrders.filter((o: any) => o.status === 'COMPLETED' || !o.status);
       totalRevenue += validStoreOrders.reduce((sum: number, o: any) => sum + (Number(o.total) || 0), 0);
@@ -1418,11 +1418,11 @@ export async function routeMockRequest<T>(
         data: {
           todayAttendance: Math.floor(45 * mult),
           trainerAttendance: { present: 5, total: 6 },
-          totalMembers: Math.floor(totalMembers * mult), 
-          activeMembers: Math.floor(activeMembers * mult), 
+          totalMembers: Math.floor(totalMembers * mult),
+          activeMembers: Math.floor(activeMembers * mult),
           newMembersThisMonth: Math.floor(newMembersThisMonth * mult),
           totalRevenue: totalRevenue * mult,
-          monthlyRevenue: monthlyRevenue * mult, 
+          monthlyRevenue: monthlyRevenue * mult,
           pendingPayments: pendingPayments * mult,
           totalStaff,
           activeStaff,
@@ -1503,13 +1503,13 @@ export async function routeMockRequest<T>(
         }
       } as unknown as ApiResponse<T>;
     }
-    
+
     // Removed /members, /inquiries, /attendance (now handled by MockDB stateful routing)
 
     // Removed /finance and /superadmin/plans (handled by MockDB stateful routing)
 
     // Removed /plans, /store (now handled by MockDB)
-    
+
     // Superadmin Mock Generics removed (now handled by MockDB stateful routing)
 
     // Removed /erp/hr, /erp/workout, /erp/library (now handled by MockDB)
@@ -1523,46 +1523,55 @@ export async function routeMockRequest<T>(
     else if (range === 'custom') mult = 1.5;
 
     if (path.includes('/sales/overview')) {
-      return { success: true, message: 'Demo Sales Overview', data: {
-        monthlyRevenue: generate(6, i => ({ month: `Month ${i+1}`, revenue: (300000 + (i * 15000)) * mult, storeRevenue: (50000 + (i * 8000)) * mult, expenses: (100000 + (i * 5000)) * mult, newMembers: Math.floor((20 + i * 5) * mult) }))
-      }} as unknown as ApiResponse<T>;
+      return {
+        success: true, message: 'Demo Sales Overview', data: {
+          monthlyRevenue: generate(6, i => ({ month: `Month ${i + 1}`, revenue: (300000 + (i * 15000)) * mult, storeRevenue: (50000 + (i * 8000)) * mult, expenses: (100000 + (i * 5000)) * mult, newMembers: Math.floor((20 + i * 5) * mult) }))
+        }
+      } as unknown as ApiResponse<T>;
     }
     if (path.includes('/sales/membership-report')) {
-      return { success: true, message: 'Demo Membership Report', data: {
-        report: generate(5, i => ({ plan: `Plan ${i+1}`, receivable: 50000 * (i+1) * mult, received: 40000 * (i+1) * mult, remaining: 10000 * (i+1) * mult, refund: 0 })),
-        totals: { totalReceivable: 750000 * mult, totalReceived: 600000 * mult, remaining: 150000 * mult, refunds: 0 }
-      }} as unknown as ApiResponse<T>;
+      return {
+        success: true, message: 'Demo Membership Report', data: {
+          report: generate(5, i => ({ plan: `Plan ${i + 1}`, receivable: 50000 * (i + 1) * mult, received: 40000 * (i + 1) * mult, remaining: 10000 * (i + 1) * mult, refund: 0 })),
+          totals: { totalReceivable: 750000 * mult, totalReceived: 600000 * mult, remaining: 150000 * mult, refunds: 0 }
+        }
+      } as unknown as ApiResponse<T>;
     }
     if (path.includes('/sales/pending-payments')) {
-      return { success: true, message: 'Demo Pending Payments', data: {
-        members: generate(Math.floor(6 * mult), i => ({ id: `mem-${i}`, name: `Defaulter ${i+1}`, pendingAmount: 5000 * mult, dueDate: '2023-11-01' })),
-        total: Math.floor(6 * mult)
-      }} as unknown as ApiResponse<T>;
+      return {
+        success: true, message: 'Demo Pending Payments', data: {
+          members: generate(Math.floor(6 * mult), i => ({ id: `mem-${i}`, name: `Defaulter ${i + 1}`, pendingAmount: 5000 * mult, dueDate: '2023-11-01' })),
+          total: Math.floor(6 * mult)
+        }
+      } as unknown as ApiResponse<T>;
     }
     if (path.includes('/sales/all-memberships')) {
-      return { success: true, message: 'Demo All Memberships', data: {
-        members: generate(Math.floor(10 * mult), i => {
-          const now = Date.now();
-          // Mix of statuses: 5 Active, 2 Expiring Soon (3 days), 3 Expired (-5 days)
-          let status = 'ACTIVE';
-          let expiry = now + 30 * 24 * 60 * 60 * 1000;
-          
-          if (i > 4 && i <= 6) {
-             expiry = now + 3 * 24 * 60 * 60 * 1000; // Expiring in 3 days
-          } else if (i > 6) {
-             status = 'EXPIRED';
-             expiry = now - 5 * 24 * 60 * 60 * 1000; // Expired 5 days ago
-          }
+      return {
+        success: true, message: 'Demo All Memberships', data: {
+          members: generate(Math.floor(10 * mult), i => {
+            const now = Date.now();
+            // Mix of statuses: 5 Active, 2 Expiring Soon (3 days), 3 Expired (-5 days)
+            let status = 'ACTIVE';
+            let expiry = now + 30 * 24 * 60 * 60 * 1000;
 
-          return { 
-            id: `all-mem-${i}`, name: `Member ${i+1}`, phone: '1234567890', email: `mem${i}@test.com`,
-            status, billingCycle: '1 Month', paidAmount: 5000, pendingAmount: 0,
-            joinDate: new Date(now - 60*24*60*60*1000).toISOString(), expiryDate: new Date(expiry).toISOString(),
-            planId: 'basic', gender: 'MALE', branch: 'Main', createdAt: new Date().toISOString()
-          };
-        }),
-        total: 10
-      }} as unknown as ApiResponse<T>;
+            if (i > 4 && i <= 6) {
+              expiry = now + 3 * 24 * 60 * 60 * 1000; // Expiring in 3 days
+            } else if (i > 6) {
+              status = 'EXPIRED';
+              expiry = now - 5 * 24 * 60 * 60 * 1000; // Expired 5 days ago
+            }
+
+
+            return {
+              id: `all-mem-${i}`, name: `Member ${i + 1}`, phone: '1234567890', email: `mem${i}@test.com`,
+              status, billingCycle: '1 Month', paidAmount: 5000, pendingAmount: 0,
+              joinDate: new Date(now - 60 * 24 * 60 * 60 * 1000).toISOString(), expiryDate: new Date(expiry).toISOString(),
+              planId: 'basic', gender: 'MALE', branch: 'Main', createdAt: new Date().toISOString()
+            };
+          }),
+          total: 10
+        }
+      } as unknown as ApiResponse<T>;
     }
     // End removed
     // Removed /settings (handled by MockDB stateful routing)
@@ -1577,7 +1586,7 @@ export async function routeMockRequest<T>(
   // Generic fallback if no specific mock is found for mutations (POST, PUT, DELETE)
   // Removed console.log per Rule 46
   // parsedBody is already defined and parsed at the top of the function
-  
+
   const safeData = {
     id: `mock-id-${Date.now()}`,
     ...parsedBody,

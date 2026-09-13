@@ -110,7 +110,7 @@ export default function SuperadminGlobalAuditClient() {
     { value: 'ALL', label: 'All Actors' },
     { value: 'SUPERADMIN', label: 'Superadmin' },
     { value: 'SYSTEM', label: 'System' },
-    { value: 'TENANT', label: 'Tenant' },
+    { value: 'TENANT', label: 'Gym' },
   ];
 
   if (fetchState === 'loading') {

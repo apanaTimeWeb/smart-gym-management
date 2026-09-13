@@ -27,7 +27,7 @@ export function SuperadminMessagingMessagesTab({
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />
           <input
             type="text"
-            placeholder="Search tenant or subject..."
+            placeholder="Search gym or subject..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
@@ -63,7 +63,7 @@ export function SuperadminMessagingMessagesTab({
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border bg-input/40">
-                <th className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">Tenant</th>
+                <th className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">Gym</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">Channel</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">Subject</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">Status</th>

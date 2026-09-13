@@ -66,9 +66,9 @@ export default function ManagerReferralsAddModal() {
             </div>
 
             <div className="bg-input/20 p-3 rounded-lg border border-border space-y-3">
-              <h3 className="text-xs font-bold text-secondary uppercase tracking-wider">Referee (New Lead)</h3>
+              <h3 className="text-xs font-bold text-secondary uppercase tracking-wider">Referee (New Inquiry)</h3>
               <div>
-                <label className="block text-sm font-medium text-foreground mb-1">Lead Name *</label>
+                <label className="block text-sm font-medium text-foreground mb-1">Inquiry Name *</label>
                 <input 
                   type="text" 
                   required

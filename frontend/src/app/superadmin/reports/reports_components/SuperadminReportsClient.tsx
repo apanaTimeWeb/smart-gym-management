@@ -99,17 +99,17 @@ export default function SuperadminReportsClient() {
     let csvRows: string[] = [];
     if (tab === 'revenue') {
       csvRows = [
-        ['Month', 'MRR', 'New Revenue', 'Churned', 'Net Revenue', 'Tenants'].join(','),
+        ['Month', 'Monthly Income', 'New Revenue', 'Lost Income', 'Net Revenue', 'Gyms'].join(','),
         ...revenueData.map(r => [r.month, r.mrr, r.newRevenue, r.churnedRevenue, r.netRevenue, r.tenantCount].join(','))
       ];
     } else if (tab === 'churn') {
       csvRows = [
-        ['Tenant', 'Owner', 'Plan', 'Churned At', 'Reason', 'Lost MRR', 'Days Active'].join(','),
+        ['Gym', 'Owner', 'Plan', 'Left On', 'Reason', 'Lost Monthly Income', 'Days Active'].join(','),
         ...churnData.map(c => [c.gymName, c.ownerName, c.plan, c.churnedAt, c.reason, c.mrr, c.daysActive].join(','))
       ];
     } else {
       csvRows = [
-        ['Tenant', 'Plan', 'Score', 'Grade', 'Members', 'Last Login', 'Payment Health', 'Feature Usage', 'Tickets'].join(','),
+        ['Gym', 'Plan', 'Score', 'Grade', 'Members', 'Last Login', 'Payment Health', 'Feature Usage', 'Tickets'].join(','),
         ...healthData.map(h => [h.gymName, h.plan, h.score, h.grade, h.memberCount, h.lastLogin, h.paymentHealth, h.featureUsage, h.supportTickets].join(','))
       ];
     }
@@ -131,6 +131,16 @@ export default function SuperadminReportsClient() {
   const totalMRR = lastRow?.mrr || 0;
   const totalChurnedRevenue = churnData.reduce((s, c) => s + c.mrr, 0);
   const avgHealthScore = healthData.length > 0 ? Math.round(healthData.reduce((s, h) => s + h.score, 0) / healthData.length) : 0;
+
+  const dateSuffixMap: Record<string, string> = {
+    'THIS_MONTH': 'this month',
+    'LAST_MONTH': 'last month',
+    'THIS_QUARTER': 'this quarter',
+    'THIS_YEAR': 'this year',
+    'LAST_YEAR': 'last year',
+    'CUSTOM': `from ${dateFrom} to ${dateTo}`
+  };
+  const computedDateSuffix = dateSuffixMap[datePreset] || '';
 
   const filteredChurnData = churnData.filter(c => {
     const matchSearch = c.gymName.toLowerCase().includes(searchQuery.toLowerCase());
@@ -156,7 +166,7 @@ export default function SuperadminReportsClient() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Reports & Exports</h1>
-          <p className="text-secondary mt-1 text-sm">Revenue reports, churn analysis, and tenant health scores.</p>
+          <p className="text-secondary mt-1 text-sm">Revenue reports, members lost analysis, and gym health scores.</p>
         </div>
         <SuperadminReportsExportButton onExportCSV={handleExportCSV} onExportPDF={handleExportPDF} />
       </div>
@@ -167,6 +177,7 @@ export default function SuperadminReportsClient() {
         churnCount={churnData.length}
         avgHealthScore={avgHealthScore}
         healthDataLength={healthData.length}
+        dateSuffix={computedDateSuffix}
       />
 
       <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
@@ -218,8 +229,8 @@ export default function SuperadminReportsClient() {
       <div className="flex gap-1 bg-input border border-border rounded-xl p-1 w-fit flex-wrap">
         {([
           { key: 'revenue' as const, label: 'Revenue Report', icon: IndianRupee },
-          { key: 'churn' as const, label: 'Churn Analysis', icon: TrendingDown },
-          { key: 'health' as const, label: 'Tenant Health', icon: HeartPulse },
+          { key: 'churn' as const, label: 'Members Lost Analysis', icon: TrendingDown },
+          { key: 'health' as const, label: 'Gym Health', icon: HeartPulse },
         ]).map(({ key, label, icon: Icon }) => (
           <button
             key={key}

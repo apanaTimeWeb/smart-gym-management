@@ -25,7 +25,7 @@ export default function SuperadminConversionFunnel({ tenants }: { tenants: Tenan
     ];
 
     const series = [{
-      name: 'Tenants',
+      name: 'Gyms',
       data: data
     }];
 

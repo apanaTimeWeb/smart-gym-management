@@ -130,17 +130,17 @@ export const CHURN_REASON_OPTIONS: { value: ChurnReasonType | 'all'; label: stri
 
 export const CHURN_WIN_BACK_TEMPLATES: Record<WinBackTemplateTier, { label: string; subject: string; message: string }> = {
   '7_days': {
-    label: 'Churned < 7 Days',
+    label: 'Lost < 7 Days',
     subject: 'We noticed you left — come back today!',
     message: 'Hi {name}! 👋\n\nWe noticed your membership ended just a few days ago. We\'d love to have you back! Rejoin this week and we\'ll waive the re-joining fee.\n\nYour fitness journey doesn\'t have to stop here. Come back and pick up right where you left off! 💪\n\n— Team GymSmart',
   },
   '30_days': {
-    label: 'Churned 7–30 Days',
+    label: 'Lost 7–30 Days',
     subject: 'We miss you at GymSmart — special offer inside!',
     message: 'Hi {name}! 🌟\n\nIt\'s been a few weeks since we last saw you, and we genuinely miss having you around!\n\nTo make it easy to come back, we\'re offering you a *special 10% discount* on your next membership renewal. This offer is valid for the next 7 days.\n\nReady to restart your fitness journey? Reply to this message or walk in to the gym anytime!\n\n— Team GymSmart',
   },
   '90_days': {
-    label: 'Churned 30–90 Days',
+    label: 'Lost 30–90 Days',
     subject: 'Still thinking about getting back in shape?',
     message: 'Hi {name}! 💪\n\nWe\'ve been thinking about you. It\'s been a while since your last session at GymSmart, and we want you to know the door is always open.\n\nWe\'ve added new equipment, refreshed our batch timings, and our trainers are ready to build a custom plan just for you.\n\nCome visit us anytime — no strings attached. Let\'s get you back on track! 🏋️\n\n— Team GymSmart',
   },

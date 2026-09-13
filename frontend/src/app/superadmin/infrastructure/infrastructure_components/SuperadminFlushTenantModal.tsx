@@ -56,8 +56,8 @@ export default function SuperadminFlushTenantModal({ isOpen, onClose, onFlush }:
       <div className="bg-overlay border border-border rounded-2xl w-full max-w-md shadow-2xl overflow-hidden flex flex-col motion-safe:animate-in motion-safe:zoom-in-95">
         <div className="flex items-center justify-between px-6 py-5 border-b border-border">
           <div>
-            <h2 className="text-xl font-bold text-foreground">Flush Specific Tenant</h2>
-            <p className="text-sm text-secondary">Select a tenant to clear its Redis cache.</p>
+            <h2 className="text-xl font-bold text-foreground">Flush Specific Gym</h2>
+            <p className="text-sm text-secondary">Select a gym to clear its Redis cache.</p>
           </div>
           <button 
             onClick={onClose} 
@@ -80,7 +80,7 @@ export default function SuperadminFlushTenantModal({ isOpen, onClose, onFlush }:
           </div>
 
           <div className="flex justify-between items-center px-1">
-            <span className="text-sm font-semibold text-secondary">Found {filteredGyms.length} tenants</span>
+            <span className="text-sm font-semibold text-secondary">Found {filteredGyms.length} gyms</span>
             <div className="space-x-3">
               <button 
                 onClick={() => setSelectedTenantIds(filteredGyms.map((g: Tenant) => g.id))}
@@ -148,7 +148,7 @@ export default function SuperadminFlushTenantModal({ isOpen, onClose, onFlush }:
             className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover disabled:bg-primary/50 text-white font-medium rounded-lg motion-safe:transition-colors text-sm disabled:cursor-not-allowed"
           >
             {isFlushing && <Loader2 className="w-4 h-4 motion-safe:animate-spin" />}
-            Flush {selectedTenantIds.length > 0 ? selectedTenantIds.length : ''} {selectedTenantIds.length === 1 ? 'Tenant' : 'Tenants'}
+            Flush {selectedTenantIds.length > 0 ? selectedTenantIds.length : ''} {selectedTenantIds.length === 1 ? 'Gym' : 'Gyms'}
           </button>
         </div>
       </div>

@@ -16,7 +16,7 @@ function ReportsInner() {
 
   return (
     <div className="min-h-full pb-10">
-      <ManagerHeader title="Reports & Analytics" subtitle="Revenue, attendance, member churn, and expense breakdown" />
+      <ManagerHeader title="Reports & Analytics" subtitle="Revenue, attendance, members lost, and expense breakdown" />
 
       <div className="p-6 space-y-6">
         {/* Toolbar */}

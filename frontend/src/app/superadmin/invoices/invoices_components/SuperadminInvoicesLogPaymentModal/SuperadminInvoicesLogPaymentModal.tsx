@@ -46,7 +46,7 @@ export default function SuperadminInvoicesLogPaymentModal({
         <div className="p-5 space-y-4">
           {/* Searchable Gym Dropdown */}
           <div className="relative">
-            <label className="block text-sm font-medium text-secondary mb-1.5">Select Gym (Tenant)</label>
+            <label className="block text-sm font-medium text-secondary mb-1.5">Select Gym</label>
             <div
               className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground cursor-pointer flex justify-between items-center hover:border-primary motion-safe:transition-colors"
               onClick={() => setIsGymDropdownOpen(!isGymDropdownOpen)}

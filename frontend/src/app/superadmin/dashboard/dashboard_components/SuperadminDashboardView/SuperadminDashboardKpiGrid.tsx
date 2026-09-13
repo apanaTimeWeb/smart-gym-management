@@ -1,6 +1,7 @@
 import { Users, Building2, CreditCard, Activity, AlertCircle, Clock, CheckCircle2, DollarSign } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import type { SaaSDashboardMetrics, RevenueChartData } from '@/app/superadmin/dashboard/superadmin_dashboard_types/superadmin_dashboard_types';
+import { useDateRangeSuffix } from '@/app/superadmin/superadmin_components/SuperadminShared/useDateRangeSuffix';
 
 function formatIndianCurrency(value: number): string {
   return `₹${value.toLocaleString('en-IN')}`;
@@ -18,6 +19,7 @@ export function SuperadminDashboardKpiGrid({
   mrrLabel: string;
 }) {
   const router = useRouter();
+  const dateSuffix = useDateRangeSuffix();
 
   const lastTwoMonths = revenueChartData.length >= 2 ? revenueChartData.slice(-2) : [];
   const mrrTrendNum = lastTwoMonths.length === 2 && lastTwoMonths[0]!.mrr > 0
@@ -30,7 +32,7 @@ export function SuperadminDashboardKpiGrid({
 
   const kpiCards = [
     {
-      label: mrrLabel,
+      label: mrrLabel + dateSuffix,
       value: formatIndianCurrency(Math.round((metrics.monthlyRecurringRevenue || 0) * timeMultiplier)),
       trend: metrics.mrrDeltaPercent !== undefined
         ? `${metrics.mrrDeltaPercent > 0 ? '+' : ''}${metrics.mrrDeltaPercent}% vs last month`
@@ -41,7 +43,7 @@ export function SuperadminDashboardKpiGrid({
       iconBgClass: 'bg-success/10',
     },
     {
-      label: 'TOTAL GYMS (TENANTS)',
+      label: 'TOTAL GYMS' + dateSuffix,
       value: String(metrics.totalGyms),
       trend: undefined,
       trendUp: true,
@@ -50,7 +52,7 @@ export function SuperadminDashboardKpiGrid({
       iconBgClass: 'bg-primary/10',
     },
     {
-      label: 'ACTIVE GYMS',
+      label: 'ACTIVE GYMS' + dateSuffix,
       value: String(metrics.activeGyms),
       trend: undefined,
       trendUp: true,
@@ -59,7 +61,7 @@ export function SuperadminDashboardKpiGrid({
       iconBgClass: 'bg-primary/10',
     },
     {
-      label: 'TOTAL END USERS',
+      label: 'TOTAL END USERS' + dateSuffix,
       value: (metrics.totalEndUsers || 0).toLocaleString('en-IN'),
       trend: undefined,
       trendUp: true,
@@ -68,7 +70,7 @@ export function SuperadminDashboardKpiGrid({
       iconBgClass: 'bg-purple/10',
     },
     {
-      label: 'ARPU',
+      label: 'Avg. Income per Gym' + dateSuffix,
       value: formatIndianCurrency(metrics.arpu || 0),
       trend: undefined,
       trendUp: true,
@@ -77,7 +79,7 @@ export function SuperadminDashboardKpiGrid({
       iconBgClass: 'bg-success/10',
     },
     {
-      label: 'TRIAL GYMS',
+      label: 'TRIAL GYMS' + dateSuffix,
       value: String(metrics.trialGyms || 0),
       trend: undefined,
       trendUp: true,
@@ -86,7 +88,7 @@ export function SuperadminDashboardKpiGrid({
       iconBgClass: 'bg-warning/10',
     },
     {
-      label: 'OVERDUE INVOICES',
+      label: 'OVERDUE INVOICES' + dateSuffix,
       value: String(metrics.overdueInvoicesCount || 0),
       trend: undefined,
       trendUp: false,
@@ -95,7 +97,7 @@ export function SuperadminDashboardKpiGrid({
       iconBgClass: 'bg-danger/10',
     },
     {
-      label: 'PENDING REVENUE',
+      label: 'PENDING REVENUE' + dateSuffix,
       value: formatIndianCurrency(metrics.pendingRevenue || 0),
       trend: undefined,
       trendUp: true,
@@ -104,7 +106,7 @@ export function SuperadminDashboardKpiGrid({
       iconBgClass: 'bg-warning/10',
     },
     {
-      label: 'PLATFORM HEALTH',
+      label: 'PLATFORM HEALTH' + dateSuffix,
       value: healthDisplay,
       trend: undefined,
       trendUp: healthScore !== undefined ? healthScore >= 80 : true,

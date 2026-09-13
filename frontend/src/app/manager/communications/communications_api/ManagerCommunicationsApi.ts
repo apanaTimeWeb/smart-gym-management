@@ -138,7 +138,7 @@ export const ManagerCommunicationsApi = {
       title: `Win-Back: ${payload.memberName}`,
       channel: payload.channel,
       segment: 'expired',
-      segmentLabel: 'Win-Back (Churned)',
+      segmentLabel: 'Win-Back (Lost)',
       message: payload.message,
       subject: payload.subject,
       recipientCount: 1,

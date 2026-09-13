@@ -74,7 +74,7 @@ export const MOCK_SAAS_PLANS: SaaSPlan[] = [
     memberLimit: 999999,
     staffLimit: 9999,
     storageGb: 1000,
-    features: ['Unlimited Gym Branches', 'Unlimited Members', 'Unlimited Staff', '1 TB Storage', 'Custom Integrations', 'White-label Option', 'SLA Guarantee', 'Dedicated Infrastructure', 'Custom Contracts'],
+    features: ['Unlimited Gym Branches', 'Unlimited Members', 'Unlimited Staff', '1 TB Storage', 'Custom Integrations', 'White-label Option', 'Uptime Guarantee', 'Dedicated Infrastructure', 'Custom Contracts'],
     isPopular: false,
     isCurrent: false,
   },

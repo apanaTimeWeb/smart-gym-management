@@ -34,7 +34,7 @@ export function SuperadminOnboardingTable({
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border bg-input/40">
-              <th className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">Tenant</th>
+              <th className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">Gym</th>
               <th className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">Email</th>
               <th className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">Onboarding</th>
               <th className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">Trial</th>
@@ -208,7 +208,7 @@ export function SuperadminOnboardingTable({
       </div>
 
       {filtered.length === 0 && (
-        <div className="py-16 text-center text-secondary">No tenants match your search.</div>
+        <div className="py-16 text-center text-secondary">No gyms match your search.</div>
       )}
     </div>
   );

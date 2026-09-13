@@ -50,17 +50,17 @@ export default function SuperadminInfrastructureClient() {
     mutationFn: (tenantIds: string[]) => superadminApi.infrastructure.flushTenantCache(tenantIds),
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'redis'] });
-      toast.success(res?.message || 'Successfully flushed cache for tenant(s)');
+      toast.success(res?.message || 'Successfully flushed cache for gym(s)');
     },
     onError: (error: unknown) => {
-      toast.error((error as Error)?.message || 'Failed to flush tenant cache');
+      toast.error((error as Error)?.message || 'Failed to flush gym cache');
     }
   });
 
   const handleFlushAll = async () => {
     const confirmed = await confirm({
       title: 'Flush Global Cache',
-      message: 'Are you sure you want to flush the global Redis cache across all tenants? This may temporarily increase database load.',
+      message: 'Are you sure you want to flush the global Redis cache across all gyms? This may temporarily increase database load.',
       confirmText: 'Flush All',
       type: 'warning'
     });

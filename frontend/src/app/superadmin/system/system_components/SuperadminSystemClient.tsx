@@ -124,7 +124,7 @@ export default function SuperadminSystemClient() {
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-bold text-foreground">System & Audit</h1>
-        <p className="text-secondary mt-1">Global database migration health and cross-tenant SLA tracking.</p>
+        <p className="text-secondary mt-1">Global database migration health and cross-gym uptime tracking.</p>
       </div>
 
       {/* Tabs */}
@@ -143,7 +143,7 @@ export default function SuperadminSystemClient() {
             tab === 'sla' ? 'bg-card text-foreground shadow-sm' : 'text-secondary hover:text-foreground'
           }`}
         >
-          <Clock size={18} strokeWidth={2} /> SLA & Uptime Tracker
+          <Clock size={18} strokeWidth={2} /> Uptime Tracker
         </button>
       </div>
 

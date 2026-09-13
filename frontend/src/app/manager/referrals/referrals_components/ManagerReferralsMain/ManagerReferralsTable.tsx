@@ -69,9 +69,9 @@ export default function ManagerReferralsTable() {
             <thead className="sticky top-0 bg-card border-b border-border text-secondary font-semibold text-xs uppercase z-10">
               <tr>
                 <th className="px-6 py-4">Referrer (Member)</th>
-                <th className="px-6 py-4">Referee (Lead)</th>
+                <th className="px-6 py-4">Referee (Inquiry)</th>
                 <th className="px-6 py-4">Date</th>
-                <th className="px-6 py-4">Lead Status</th>
+                <th className="px-6 py-4">Inquiry Status</th>
                 <th className="px-6 py-4">Reward Status</th>
                 <th className="px-6 py-4 text-right">Action</th>
               </tr>

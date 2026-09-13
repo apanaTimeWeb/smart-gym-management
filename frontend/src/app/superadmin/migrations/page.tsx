@@ -4,7 +4,7 @@ import SuperadminMigrationsClient from '@/app/superadmin/migrations/migrations_c
 
 export const metadata: Metadata = {
   title: 'Schema Rollouts | Superadmin Dashboard',
-  description: 'Manage and track database schema migrations across all tenant instances.',
+  description: 'Manage and track database schema migrations across all gym instances.',
 };
 
 export default function SuperadminMigrationsPage() {

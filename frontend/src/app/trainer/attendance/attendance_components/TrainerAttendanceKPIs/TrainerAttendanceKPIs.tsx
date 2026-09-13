@@ -5,14 +5,16 @@
 
 import { CalendarCheck, Users, UserCheck } from 'lucide-react';
 import { useAttendanceContext } from '@/app/trainer/attendance/attendance_context/AttendanceContext';
+import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
 export default function TrainerAttendanceKPIs() {
   const { todayStats } = useAttendanceContext();
+  const dateSuffix = useDateRangeSuffix();
 
   const kpis = [
-    { label: "Today's Check-ins", value: todayStats.totalCheckIns, icon: CalendarCheck, color: 'text-warning', bg: 'bg-warning/10' },
-    { label: 'Member Check-ins', value: todayStats.memberCheckIns, icon: Users, color: 'text-info', bg: 'bg-info/10' },
-    { label: 'Staff Check-ins', value: todayStats.staffCheckIns, icon: UserCheck, color: 'text-success', bg: 'bg-success/10' },
+    { label: "Today's Check-ins" + dateSuffix, value: todayStats.totalCheckIns, icon: CalendarCheck, color: 'text-warning', bg: 'bg-warning/10' },
+    { label: 'Member Check-ins' + dateSuffix, value: todayStats.memberCheckIns, icon: Users, color: 'text-info', bg: 'bg-info/10' },
+    { label: 'Staff Check-ins' + dateSuffix, value: todayStats.staffCheckIns, icon: UserCheck, color: 'text-success', bg: 'bg-success/10' },
   ];
 
   return (

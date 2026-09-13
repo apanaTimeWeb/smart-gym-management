@@ -82,7 +82,7 @@ export default function SuperadminOnboardingClient() {
           : t
       )
     );
-    toast.success('Tenant converted to paid plan.');
+    toast.success('Gym converted to paid plan.');
     setConvertConfirmId(null);
   }
 
@@ -97,9 +97,9 @@ export default function SuperadminOnboardingClient() {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Tenant Onboarding</h1>
+          <h1 className="text-2xl font-bold text-foreground">Gym Onboarding</h1>
           <p className="text-secondary mt-1 text-sm">
-            Track email verification, onboarding checklists, and trial lifecycle for every tenant.
+            Track email verification, onboarding checklists, and trial lifecycle for every gym.
           </p>
         </div>
         <div className="flex items-center gap-3 w-full md:w-auto">

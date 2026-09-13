@@ -29,11 +29,11 @@ export default function SuperadminTicketsTable({ tickets, onReply, onClose, onAs
         <thead>
             <tr className="bg-header border-b border-border text-sm">
               <th className="p-4 font-semibold text-secondary">Ticket ID</th>
-              <th className="p-4 font-semibold text-secondary">Gym (Tenant)</th>
+              <th className="p-4 font-semibold text-secondary">Gym</th>
               <th className="p-4 font-semibold text-secondary">Subject</th>
               <th className="p-4 font-semibold text-secondary">Priority</th>
               <th className="p-4 font-semibold text-secondary">Status</th>
-              <th className="p-4 font-semibold text-secondary">SLA</th>
+              <th className="p-4 font-semibold text-secondary">Response Time</th>
               <th className="p-4 font-semibold text-secondary">Last Updated</th>
               <th className="p-4 font-semibold text-secondary text-right">Actions</th>
             </tr>

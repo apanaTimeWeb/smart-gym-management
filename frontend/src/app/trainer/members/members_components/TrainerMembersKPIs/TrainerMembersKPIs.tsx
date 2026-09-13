@@ -5,6 +5,7 @@
 
 import { User, CheckCircle, Clock, XCircle } from 'lucide-react';
 import { useMembersContext } from '@/app/trainer/members/members_context/MembersContext';
+import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
 const KPI_CONFIG = [
   { label: 'Total Members', key: 'total',   color: 'text-info',    bg: 'bg-info-bg',    icon: User         },
@@ -15,6 +16,7 @@ const KPI_CONFIG = [
 
 export default function TrainerMembersKPIs() {
   const { stats } = useMembersContext();
+  const dateSuffix = useDateRangeSuffix();
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -24,7 +26,7 @@ export default function TrainerMembersKPIs() {
             <s.icon size={19} className={s.color} />
           </div>
           <div>
-            <p className="text-xs text-secondary font-medium">{s.label}</p>
+            <p className="text-xs text-secondary font-medium">{s.label + dateSuffix}</p>
             <p className="text-xl font-bold text-primary">{stats[s.key]}</p>
           </div>
         </div>

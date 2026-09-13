@@ -35,7 +35,7 @@ export default function SuperadminBranchesClient() {
     { label: 'Active', value: branches.filter(b => b.status === 'ACTIVE').length, icon: CheckCircle2, color: 'text-success', bg: 'bg-success/10' },
     { label: 'Suspended', value: branches.filter(b => b.status === 'SUSPENDED').length, icon: Ban, color: 'text-danger', bg: 'bg-danger/10' },
     { label: 'Total Members', value: branches.reduce((s, b) => s + b.memberCount, 0).toLocaleString('en-IN'), icon: Users, color: 'text-info', bg: 'bg-info/10' },
-    { label: 'Combined MRR', value: `₹${branches.reduce((s, b) => s + b.monthlyRevenue, 0).toLocaleString('en-IN')}`, icon: TrendingUp, color: 'text-warning', bg: 'bg-warning/10' },
+    { label: 'Combined Monthly Income', value: `₹${branches.reduce((s, b) => s + b.monthlyRevenue, 0).toLocaleString('en-IN')}`, icon: TrendingUp, color: 'text-warning', bg: 'bg-warning/10' },
   ];
 
   if (fetchState === 'loading') {
@@ -56,7 +56,7 @@ export default function SuperadminBranchesClient() {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-foreground">Branches</h1>
-        <p className="text-secondary mt-1 text-sm">All gym branches across every tenant on the platform.</p>
+        <p className="text-secondary mt-1 text-sm">All gym branches across every gym on the platform.</p>
       </div>
 
       {/* KPI Cards */}
@@ -83,7 +83,7 @@ export default function SuperadminBranchesClient() {
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />
         <input
           type="text"
-          placeholder="Search branch, tenant, city..."
+          placeholder="Search branch, gym, city..."
           value={search}
           onChange={(e) => { setSearch(e.target.value); setPage(1); }}
           className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
@@ -96,7 +96,7 @@ export default function SuperadminBranchesClient() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border bg-input/40">
-                {['Branch', 'Tenant', 'Manager', 'City', 'Members', 'MRR', 'Status', 'Actions'].map((h) => (
+                {['Branch', 'Gym', 'Manager', 'City', 'Members', 'Monthly Income', 'Status', 'Actions'].map((h) => (
                   <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">{h}</th>
                 ))}
               </tr>

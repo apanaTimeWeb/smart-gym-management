@@ -32,7 +32,7 @@ export default function SuperadminAffiliatesTable({ affiliates, onToggleStatus, 
               <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Partner Name</th>
               <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Referral Code</th>
               <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Referral Count</th>
-              <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Conversion Rate</th>
+              <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Join Rate %</th>
               <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Commission Earned</th>
               <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Status</th>
               <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider text-right">Actions</th>

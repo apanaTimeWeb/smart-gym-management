@@ -15,12 +15,12 @@ export default function SuperadminChurnEmptyState({ isFiltered, onClearFilter }:
         <ShieldCheck size={28} strokeWidth={2} className="text-success" />
       </div>
       <h3 className="text-base font-semibold text-foreground mb-1">
-        {isFiltered ? 'No alerts match your filter' : 'No churn alerts — platform is healthy'}
+        {isFiltered ? 'No alerts match your filter' : 'No alerts — platform is healthy'}
       </h3>
       <p className="text-sm text-secondary max-w-xs">
         {isFiltered
           ? 'Try adjusting your search or filter criteria.'
-          : 'All tenants are active and engaged. Check back later.'}
+          : 'All gyms are active and engaged. Check back later.'}
       </p>
       {isFiltered && (
         <button

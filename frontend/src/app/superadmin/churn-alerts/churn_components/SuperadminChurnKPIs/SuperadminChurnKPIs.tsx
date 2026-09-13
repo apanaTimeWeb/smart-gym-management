@@ -39,7 +39,7 @@ export default function SuperadminChurnKPIs({ kpis, activeFilter, onFilterClick 
       filter: 'HIGH',
     },
     {
-      label: 'MRR At Risk',
+      label: 'Monthly Income At Risk',
       value: `₹${(kpis.estimatedMrrAtRisk / 100000).toFixed(1)}L`,
       icon: DollarSign,
       color: 'text-danger',

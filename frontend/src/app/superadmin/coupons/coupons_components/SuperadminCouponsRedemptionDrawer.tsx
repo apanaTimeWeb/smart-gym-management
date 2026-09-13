@@ -96,7 +96,7 @@ export default function SuperadminCouponsRedemptionDrawer({ coupon, isOpen, onCl
               <div className="text-center py-12 px-4 border border-dashed border-border rounded-xl">
                 <History className="w-8 h-8 text-secondary/30 mx-auto mb-3" />
                 <p className="text-foreground font-medium mb-1">No Redemptions Yet</p>
-                <p className="text-sm text-secondary">This coupon hasn't been used by any tenant.</p>
+                <p className="text-sm text-secondary">This coupon hasn't been used by any gym.</p>
               </div>
             )}
           </div>

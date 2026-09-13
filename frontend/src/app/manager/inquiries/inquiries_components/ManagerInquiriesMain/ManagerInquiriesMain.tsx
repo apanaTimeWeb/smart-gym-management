@@ -17,7 +17,7 @@ function InquiriesContent() {
 
   return (
     <div className="min-h-full pb-10">
-      <ManagerHeader title="Inquiries & Leads" subtitle="Track, follow up, and convert leads into members" />
+      <ManagerHeader title="Inquiries" subtitle="Track, follow up, and convert inquiries into members" />
       <div className="p-6 space-y-5">
         <ManagerInquiriesKPIs />
         <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">

@@ -3,12 +3,14 @@
 
 import { CalendarCheck, CalendarX, TrendingUp, Users } from 'lucide-react';
 import type { TrainerSession } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
+import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
 interface TrainerSessionsKPIsProps {
   sessions: TrainerSession[];
 }
 
 export default function TrainerSessionsKPIs({ sessions }: TrainerSessionsKPIsProps) {
+  const dateSuffix = useDateRangeSuffix();
   const todayCount = sessions.filter(s => {
     // Basic approximation assuming sessions are loaded for today
     return s.status !== 'Cancelled';
@@ -24,7 +26,7 @@ export default function TrainerSessionsKPIs({ sessions }: TrainerSessionsKPIsPro
           <CalendarCheck size={24} />
         </div>
         <div>
-          <p className="text-sm font-medium text-secondary mb-1">Today's Sessions</p>
+          <p className="text-sm font-medium text-secondary mb-1">{`Today's Sessions${dateSuffix}`}</p>
           <h3 className="text-2xl font-bold text-foreground">{todayCount}</h3>
         </div>
       </div>
@@ -33,7 +35,7 @@ export default function TrainerSessionsKPIs({ sessions }: TrainerSessionsKPIsPro
           <TrendingUp size={24} />
         </div>
         <div>
-          <p className="text-sm font-medium text-secondary mb-1">Completed (Week)</p>
+          <p className="text-sm font-medium text-secondary mb-1">{`Completed (Week)${dateSuffix}`}</p>
           <h3 className="text-2xl font-bold text-foreground">{completedThisWeek}</h3>
         </div>
       </div>
@@ -42,7 +44,7 @@ export default function TrainerSessionsKPIs({ sessions }: TrainerSessionsKPIsPro
           <CalendarX size={24} />
         </div>
         <div>
-          <p className="text-sm font-medium text-secondary mb-1">Cancelled (Month)</p>
+          <p className="text-sm font-medium text-secondary mb-1">{`Cancelled (Month)${dateSuffix}`}</p>
           <h3 className="text-2xl font-bold text-foreground">{cancelledThisMonth}</h3>
         </div>
       </div>
@@ -51,7 +53,7 @@ export default function TrainerSessionsKPIs({ sessions }: TrainerSessionsKPIsPro
           <Users size={24} />
         </div>
         <div>
-          <p className="text-sm font-medium text-secondary mb-1">Avg Attendance</p>
+          <p className="text-sm font-medium text-secondary mb-1">{`Avg Attendance${dateSuffix}`}</p>
           <h3 className="text-2xl font-bold text-foreground">{avgAttendanceRate}%</h3>
         </div>
       </div>

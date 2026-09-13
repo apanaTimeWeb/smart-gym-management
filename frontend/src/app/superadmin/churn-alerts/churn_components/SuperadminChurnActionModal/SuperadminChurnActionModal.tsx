@@ -92,7 +92,7 @@ export default function SuperadminChurnActionModal({ alert, onConfirm, onClose }
                 <textarea
                   {...field}
                   rows={3}
-                  placeholder="Add context about this tenant's situation..."
+                  placeholder="Add context about this gym's situation..."
                   className="w-full px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground resize-none focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
                 />
               )}

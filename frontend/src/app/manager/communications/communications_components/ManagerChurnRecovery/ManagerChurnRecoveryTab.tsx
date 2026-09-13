@@ -35,7 +35,7 @@ export default function ManagerChurnRecoveryTab() {
       {/* Section header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-base font-semibold text-foreground">Churn Recovery / Win-Back</h2>
+          <h2 className="text-base font-semibold text-foreground">Member Recovery / Win-Back</h2>
           <p className="text-xs text-secondary mt-0.5">
             Target exited members with personalised win-back campaigns to re-engage them.
           </p>

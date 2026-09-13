@@ -9,12 +9,14 @@ import { TrendingUp, Users, IndianRupee, Activity, ArrowDownRight, DollarSign } 
 import { useAnalyticsPage } from '@/app/superadmin/analytics/analytics_utils/useAnalyticsPage';
 import { CHART_COLORS } from '@/app/superadmin/superadmin_utils/SuperadminChartConstants';
 import { SuperadminDateFilterDropdown } from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminDateFilterDropdown';
+import { useDateRangeSuffix } from '@/app/superadmin/superadmin_components/SuperadminShared/useDateRangeSuffix';
 
 // Heavy chart component — code-split via dynamic import (Rule 15, Design §10)
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 export default function SuperadminAnalyticsClient() {
   const { metrics, monthlyData, fetchState } = useAnalyticsPage();
+  const dateSuffix = useDateRangeSuffix();
 
   if (fetchState === 'loading') {
     return (
@@ -62,7 +64,7 @@ export default function SuperadminAnalyticsClient() {
 
   const kpiCards = [
     {
-      label: 'MRR',
+      label: 'Monthly Income' + dateSuffix,
       value: `₹${metrics.mrr.toLocaleString('en-IN')}`,
       delta: mrrDelta,
       deltaUp: (metrics.mrrDeltaPercent ?? 0) >= 0,
@@ -71,7 +73,7 @@ export default function SuperadminAnalyticsClient() {
       iconColor: 'text-success',
     },
     {
-      label: 'ARR',
+      label: 'ARR' + dateSuffix,
       value: `₹${metrics.arr.toLocaleString('en-IN')}`,
       delta: arrDelta,
       deltaUp: (metrics.arrDeltaPercent ?? 0) >= 0,
@@ -80,7 +82,7 @@ export default function SuperadminAnalyticsClient() {
       iconColor: 'text-primary',
     },
     {
-      label: 'Churn Rate',
+      label: 'Members Lost %' + dateSuffix,
       value: `${metrics.churnRate}%`,
       delta: churnDelta,
       deltaUp: metrics.churnRate < 2,
@@ -89,7 +91,7 @@ export default function SuperadminAnalyticsClient() {
       iconColor: 'text-danger',
     },
     {
-      label: 'Active Tenants',
+      label: 'Active Gyms' + dateSuffix,
       value: String(metrics.activeTenants),
       delta: undefined,
       deltaUp: true,
@@ -98,10 +100,10 @@ export default function SuperadminAnalyticsClient() {
       iconColor: 'text-warning',
     },
     {
-      label: 'ARPU',
+      label: 'Avg. Income per Gym' + dateSuffix,
       // Design §21: Indian currency — ₹1,24,500
       value: `₹${arpu.toLocaleString('en-IN')}`,
-      delta: 'Avg revenue per tenant',
+      delta: 'Avg revenue per gym',
       deltaUp: true,
       icon: DollarSign,
       iconBg: 'bg-primary/10',
@@ -137,7 +139,7 @@ export default function SuperadminAnalyticsClient() {
     tooltip: { theme: 'dark' as const },
   };
 
-  const mrrAreaSeries = [{ name: 'MRR', data: monthlyData.map((d) => d.mrr) }];
+  const mrrAreaSeries = [{ name: 'Monthly Income', data: monthlyData.map((d) => d.mrr) }];
 
   // Design §10: Grouped bar chart — new tenants (gold) vs churned (red)
   const tenantBarOptions = {
@@ -163,7 +165,7 @@ export default function SuperadminAnalyticsClient() {
   };
 
   const tenantBarSeries = [
-    { name: 'Active Tenants', data: monthlyData.map((d) => d.tenantCount) },
+    { name: 'Active Gyms', data: monthlyData.map((d) => d.tenantCount) },
     { name: 'Churned', data: monthlyData.map((d) => d.churnedCount) },
   ];
 
@@ -209,14 +211,14 @@ export default function SuperadminAnalyticsClient() {
       {/* Charts Row — Design §10: ApexCharts area + bar */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
-          <h2 className="text-base font-semibold text-foreground mb-6">MRR Growth Trend</h2>
+          <h2 className="text-base font-semibold text-foreground mb-6">Monthly Income Growth Trend</h2>
           <div className="h-72">
             <Chart options={mrrAreaOptions} series={mrrAreaSeries} type="area" height="100%" />
           </div>
         </div>
 
         <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
-          <h2 className="text-base font-semibold text-foreground mb-6">Tenant Growth vs Churn</h2>
+          <h2 className="text-base font-semibold text-foreground mb-6">Gym Growth vs Members Lost</h2>
           <div className="h-72">
             <Chart options={tenantBarOptions} series={tenantBarSeries} type="bar" height="100%" />
           </div>

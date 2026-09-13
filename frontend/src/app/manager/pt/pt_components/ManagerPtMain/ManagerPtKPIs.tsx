@@ -4,12 +4,14 @@
 import { Users, CalendarCheck, TrendingUp, AlertCircle } from 'lucide-react';
 import type { PtDashboardKpis } from '@/app/manager/pt/pt_types/ManagerPtTypes';
 import { formatKPI } from '@/lib/formatters';
+import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
 interface ManagerPtKPIsProps {
   kpis: PtDashboardKpis | null;
 }
 
 export default function ManagerPtKPIs({ kpis }: ManagerPtKPIsProps) {
+  const dateSuffix = useDateRangeSuffix();
   if (!kpis) return null;
 
   return (
@@ -21,7 +23,7 @@ export default function ManagerPtKPIs({ kpis }: ManagerPtKPIsProps) {
             <Users size={20} className="text-primary" />
           </div>
           <span className="text-[11px] font-medium text-secondary uppercase tracking-wider">
-            Active PT Members
+            {`Active PT Members${dateSuffix}`}
           </span>
         </div>
         <div className="text-2xl font-bold text-foreground">
@@ -36,7 +38,7 @@ export default function ManagerPtKPIs({ kpis }: ManagerPtKPIsProps) {
             <CalendarCheck size={20} className="text-success" />
           </div>
           <span className="text-[11px] font-medium text-secondary uppercase tracking-wider">
-            Sessions Today
+            {`Sessions Today${dateSuffix}`}
           </span>
         </div>
         <div className="text-2xl font-bold text-foreground">
@@ -51,7 +53,7 @@ export default function ManagerPtKPIs({ kpis }: ManagerPtKPIsProps) {
             <AlertCircle size={20} className="text-warning" />
           </div>
           <span className="text-[11px] font-medium text-secondary uppercase tracking-wider">
-            Expiring Packages
+            {`Expiring Packages${dateSuffix}`}
           </span>
         </div>
         <div className="text-2xl font-bold text-foreground">
@@ -66,7 +68,7 @@ export default function ManagerPtKPIs({ kpis }: ManagerPtKPIsProps) {
             <TrendingUp size={20} className="text-info" />
           </div>
           <span className="text-[11px] font-medium text-secondary uppercase tracking-wider">
-            Monthly PT Revenue
+            {`Monthly PT Revenue${dateSuffix}`}
           </span>
         </div>
         <div className="text-2xl font-bold text-foreground">

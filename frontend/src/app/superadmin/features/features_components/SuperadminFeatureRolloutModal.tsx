@@ -82,7 +82,7 @@ export default function SuperadminFeatureRolloutModal({ isOpen, onClose, flag, o
           </div>
 
           <div className="flex justify-between items-center px-1">
-            <span className="text-sm font-semibold text-secondary">Found {filteredGyms.length} tenants</span>
+            <span className="text-sm font-semibold text-secondary">Found {filteredGyms.length} gyms</span>
             <div className="space-x-3">
               <button 
                 onClick={() => setSelectedTenantIds(filteredGyms.map(g => g.id))}
