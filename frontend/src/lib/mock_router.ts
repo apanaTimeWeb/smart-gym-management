@@ -1451,6 +1451,58 @@ export async function routeMockRequest<T>(
         }
       } as unknown as ApiResponse<T>;
     }
+
+    // TRAINER MOCKS
+    if (path.includes('/trainer/dashboard/kpi')) {
+      const range = parsedUrl.searchParams.get('range') || 'this_month';
+      let mult = 1;
+      if (range === 'last_month') mult = 0.9;
+      else if (range === 'last_3_months') mult = 2.8;
+      else if (range === 'last_6_months') mult = 5.5;
+      else if (range === 'this_year') mult = 11.2;
+      else if (range === 'yearly') mult = 24.5;
+      else if (range === 'custom') mult = 1.5;
+
+      return {
+        success: true,
+        message: 'Trainer KPIs Fetched',
+        data: {
+          todaysSessions: Math.floor(6 * mult),
+          completedSessions: Math.floor(4 * mult),
+          myMembersCount: Math.floor(15 * mult),
+          todaysAttendance: Math.floor(12 * mult),
+          pendingWorkoutPlans: Math.floor(3 * mult),
+          totalPTRevenue: 2400 * mult,
+          weeklySessionsCompleted: Math.floor(25 * mult),
+          avgSessionRating: 4.8,
+          activeClientsCount: Math.floor(14 * mult),
+          attendanceRate: 92,
+          nextSessionTime: 'Today 14:00',
+        }
+      } as unknown as ApiResponse<T>;
+    }
+
+    if (path.includes('/trainer/earnings/kpis')) {
+      const range = parsedUrl.searchParams.get('range') || 'this_month';
+      let mult = 1;
+      if (range === 'last_month') mult = 0.9;
+      else if (range === 'last_3_months') mult = 2.8;
+      else if (range === 'last_6_months') mult = 5.5;
+      else if (range === 'this_year') mult = 11.2;
+      else if (range === 'yearly') mult = 24.5;
+      else if (range === 'custom') mult = 1.5;
+
+      return {
+        success: true,
+        message: 'Trainer Earnings KPIs',
+        data: {
+          totalEarnings: 3200 * mult,
+          pendingPayout: 800 * mult,
+          thisMonthEarnings: 1500 * mult,
+          nextPayoutDate: '2023-11-01',
+        }
+      } as unknown as ApiResponse<T>;
+    }
     
     // Removed /members, /inquiries, /attendance (now handled by MockDB stateful routing)
 

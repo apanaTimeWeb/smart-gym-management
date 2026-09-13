@@ -5,6 +5,8 @@ import { TrainerEarningsProvider, useTrainerEarningsContext } from '@/app/traine
 import TrainerEarningsKPIs from '@/app/trainer/earnings/earnings_components/TrainerEarningsKPIs/TrainerEarningsKPIs';
 import TrainerEarningsPending from '@/app/trainer/earnings/earnings_components/TrainerEarningsPending/TrainerEarningsPending';
 import TrainerEarningsHistory from '@/app/trainer/earnings/earnings_components/TrainerEarningsHistory/TrainerEarningsHistory';
+import { TrainerDateFilterDropdown } from '@/app/trainer/trainer_components/TrainerShared/TrainerDateFilterDropdown';
+
 function TrainerEarningsContent() {
   const { fetchState, error } = useTrainerEarningsContext();
 
@@ -19,7 +21,11 @@ function TrainerEarningsContent() {
 
   return (
     <div className="min-h-full pb-10">
-            <div className="p-6 space-y-6">
+      <div className="p-6 space-y-6">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold">Earnings</h1>
+          <TrainerDateFilterDropdown />
+        </div>
         <TrainerEarningsKPIs />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">

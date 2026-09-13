@@ -5,6 +5,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { dashboardApi } from '@/app/trainer/dashboard/dashboard_api/dashboard_api';
 import type { DashboardContextType, FetchState, DashboardStats, TimeRange } from '@/app/trainer/dashboard/dashboard_types/dashboard_types';
+import { useSearchParams } from 'next/navigation';
 
 /**
  * Hook to manage dashboard data fetching and network state tracking.
@@ -14,14 +15,16 @@ export function useDashboardLogic(initialData?: DashboardStats | null): Dashboar
   const [stats, setStats] = useState<DashboardStats | null>(initialData ?? null);
   const [status, setStatus] = useState<FetchState>(initialData ? 'success' : 'loading');
   const [error, setError] = useState('');
-  const [timeRange, setTimeRange] = useState<TimeRange>('monthly');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  
+  const searchParams = useSearchParams();
+  const range = searchParams.get('range') || 'this_month';
+  const startDate = searchParams.get('startDate') || '';
+  const endDate = searchParams.get('endDate') || '';
 
-  const setCustomDateRange = useCallback((start: string, end: string) => {
-    setStartDate(start);
-    setEndDate(end);
-  }, []);
+  // Backward compatibility types if needed
+  const timeRange = (range as TimeRange) || 'monthly';
+  const setTimeRange = () => {};
+  const setCustomDateRange = () => {};
 
   // Bug #7 fix: direct async effect with cancelled flag instead of setTimeout(() => {...}, 0)
   // The setTimeout pattern masks React strict-mode double-invocation and causes loading flash.
@@ -30,7 +33,7 @@ export function useDashboardLogic(initialData?: DashboardStats | null): Dashboar
     let cancelled = false;
     setStatus('loading');
     dashboardApi
-      .getStats(timeRange !== 'custom' ? timeRange : undefined, startDate || undefined, endDate || undefined)
+      .getStats(range, startDate || undefined, endDate || undefined)
       .then(res => {
         if (!cancelled) {
           setStats(res.data);
@@ -44,7 +47,7 @@ export function useDashboardLogic(initialData?: DashboardStats | null): Dashboar
         }
       });
     return () => { cancelled = true; };
-  }, [timeRange, startDate, endDate]);
+  }, [range, startDate, endDate]);
 
   return {
     stats,
