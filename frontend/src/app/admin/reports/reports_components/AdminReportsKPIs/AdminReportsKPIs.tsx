@@ -5,15 +5,17 @@ import { TrendingUp, TrendingDown, Users, IndianRupee, Activity, Wallet } from '
 import AdminStatCard from '@/app/admin/admin_components/AdminShared/AdminStatCard';
 import { useAdminReportsLogic } from '@/app/admin/reports/reports_context/useAdminReportsLogic';
 import { formatCurrency } from '@/app/admin/reports/reports_utils/AdminReportsSharedConstants';
+import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
 export default function AdminReportsKPIs() {
   const { reportData } = useAdminReportsLogic();
+  const dateSuffix = useDateRangeSuffix();
   const kpis = reportData?.kpis;
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
       <AdminStatCard
-        title="Total Revenue"
+        title={`Total Revenue${dateSuffix}`}
         value={kpis ? formatCurrency(kpis.totalRevenue) : '—'}
         change="vs last period"
         changeType="up"
@@ -22,7 +24,7 @@ export default function AdminReportsKPIs() {
         iconColor="var(--primary)"
       />
       <AdminStatCard
-        title="Net Profit"
+        title={`Net Profit${dateSuffix}`}
         value={kpis ? formatCurrency(kpis.netProfit) : '—'}
         change={kpis ? `${((kpis.netProfit / kpis.totalRevenue) * 100).toFixed(1)}% margin` : '—'}
         changeType="up"
@@ -31,7 +33,7 @@ export default function AdminReportsKPIs() {
         iconColor="var(--success)"
       />
       <AdminStatCard
-        title="Total Expenses"
+        title={`Total Expenses${dateSuffix}`}
         value={kpis ? formatCurrency(kpis.totalExpenses) : '—'}
         change="across all gyms"
         changeType="neutral"
@@ -40,7 +42,7 @@ export default function AdminReportsKPIs() {
         iconColor="var(--danger)"
       />
       <AdminStatCard
-        title="Total Members"
+        title={`Total Members${dateSuffix}`}
         value={kpis ? kpis.totalMembers.toLocaleString('en-IN') : '—'}
         change={kpis ? `+${kpis.newMembers} new` : '—'}
         changeType="up"
@@ -49,7 +51,7 @@ export default function AdminReportsKPIs() {
         iconColor="var(--info)"
       />
       <AdminStatCard
-        title="Total Payroll"
+        title={`Total Payroll${dateSuffix}`}
         value={kpis ? formatCurrency(kpis.totalPayroll) : '—'}
         change="this period"
         changeType="neutral"
@@ -58,7 +60,7 @@ export default function AdminReportsKPIs() {
         iconColor="var(--purple)"
       />
       <AdminStatCard
-        title="Avg Attendance Rate"
+        title={`Avg Attendance Rate${dateSuffix}`}
         value={kpis ? `${kpis.avgAttendanceRate}%` : '—'}
         change="across all gyms"
         changeType="up"

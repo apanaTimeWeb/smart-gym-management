@@ -4,14 +4,16 @@
 import { Users, UserCheck, Clock, IndianRupee } from 'lucide-react';
 import { useAdminMembersLogic } from '@/app/admin/members/members_context/useAdminMembersLogic';
 import { formatCurrency } from '@/lib/formatters';
+import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
 export default function AdminMembersKPIs() {
   const { summary } = useAdminMembersLogic();
+  const dateSuffix = useDateRangeSuffix();
   if (!summary) return null;
 
   const cards = [
     {
-      title: 'Total Members',
+      title: 'Total Members' + dateSuffix,
       value: summary.totalMembers.toLocaleString('en-IN'),
       sub: `+${summary.newThisMonth} this month`,
       subColor: 'text-success',
@@ -20,7 +22,7 @@ export default function AdminMembersKPIs() {
       iconColor: 'text-info',
     },
     {
-      title: 'Active Members',
+      title: 'Active Members' + dateSuffix,
       value: summary.activeMembers.toLocaleString('en-IN'),
       sub: `${Math.round((summary.activeMembers / summary.totalMembers) * 100)}% of total`,
       subColor: 'text-secondary',
@@ -29,7 +31,7 @@ export default function AdminMembersKPIs() {
       iconColor: 'text-success',
     },
     {
-      title: 'Expiring This Month',
+      title: 'Expiring This Month' + dateSuffix,
       value: summary.expiringThisMonth.toLocaleString('en-IN'),
       sub: `${summary.expiringThisWeek} expiring this week`,
       subColor: 'text-warning',
@@ -38,7 +40,7 @@ export default function AdminMembersKPIs() {
       iconColor: 'text-warning',
     },
     {
-      title: 'Total Outstanding',
+      title: 'Total Outstanding' + dateSuffix,
       value: formatCurrency(summary.totalOutstanding),
       sub: `${summary.pendingMembers} members with dues`,
       subColor: 'text-danger',

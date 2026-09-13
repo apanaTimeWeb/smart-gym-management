@@ -7,11 +7,13 @@ import AdminStatCard from '@/app/admin/admin_components/AdminShared/AdminStatCar
 import { formatCurrency } from '@/lib/formatters';
 import { Users, DollarSign, TrendingUp, AlertCircle, CheckCircle, Clock, UserCheck, ShoppingCart } from 'lucide-react';
 import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
+import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
 export default function AdminDashboardKPIs() {
   const { stats, status, error } = useAdminDashboardLogic();
   const { timeRange, setTimeRange, startDate, endDate, setCustomDateRange } = useAdminDashboardStore();
   const { selectedBranchId } = useAdminGlobalStore();
+  const dateSuffix = useDateRangeSuffix();
   
   if (!stats) return null;
   
@@ -40,7 +42,7 @@ export default function AdminDashboardKPIs() {
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 mb-4">
       <AdminStatCard
-        title="Avg. Attendance/Day"
+        title={`Avg. Attendance/Day${dateSuffix}`}
         value={(s.avgAttendance || 124).toLocaleString()}
         change="This month"
         changeType="up"
@@ -49,7 +51,7 @@ export default function AdminDashboardKPIs() {
         iconColor="text-primary"
       />
       <AdminStatCard
-        title="Renewals Pending"
+        title={`Renewals Pending${dateSuffix}`}
         value={(s.renewalsPending || 15).toLocaleString()}
         change="Next 7 days"
         changeType="down"
@@ -60,7 +62,7 @@ export default function AdminDashboardKPIs() {
     </div>
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
       <AdminStatCard
-        title="Total Revenue"
+        title={`Total Revenue${dateSuffix}`}
         value={formatCurrency(s.totalRevenue || 0)}
         change="All Time"
         changeType="neutral"
@@ -69,7 +71,7 @@ export default function AdminDashboardKPIs() {
         iconColor="text-primary"
       />
       <AdminStatCard
-        title="Net Profit"
+        title={`Net Profit${dateSuffix}`}
         value={formatCurrency(s.netProfit || 0)}
         change="All Time"
         changeType="up"
@@ -78,7 +80,7 @@ export default function AdminDashboardKPIs() {
         iconColor="text-success"
       />
       <AdminStatCard
-        title="Active Members"
+        title={`Active Members${dateSuffix}`}
         value={(s.activeMembers || 0).toLocaleString()}
         change={`${s.totalMembers ? Math.round((s.activeMembers / s.totalMembers) * 100) : 0}% capacity`}
         changeType="neutral"
@@ -87,7 +89,7 @@ export default function AdminDashboardKPIs() {
         iconColor="text-info"
       />
       <AdminStatCard
-        title="Total Outstanding"
+        title={`Total Outstanding${dateSuffix}`}
         value={formatCurrency(s.pendingPayments || 0)}
         change={`${s.membersByStatus?.pending || 0} members due`}
         changeType="down"

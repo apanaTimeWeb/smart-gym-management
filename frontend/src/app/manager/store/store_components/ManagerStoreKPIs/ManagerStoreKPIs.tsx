@@ -4,15 +4,17 @@
 import { Package, ShoppingCart, TrendingUp, AlertTriangle } from 'lucide-react';
 import { useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';
 import { formatCurrency } from '@/app/manager/store/store_utils/ManagerStoreSharedConstants';
+import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
 export default function ManagerStoreKPIs() {
  const { summary } = useStoreContext();
+ const dateSuffix = useDateRangeSuffix();
 
  const kpis = [
- { label: 'Total Products', value: summary?.totalProducts || 0, icon: Package, color: 'text-info', bg: 'bg-info-bg dark:bg-info-bg' },
- { label: 'Total Orders', value: summary?.totalOrders || 0, icon: ShoppingCart, color: 'text-success', bg: 'bg-success-bg dark:bg-success-bg' },
- { label: 'Store Revenue', value: formatCurrency(summary?.totalRevenue || 0), icon: TrendingUp, color: 'text-warning', bg: 'bg-warning-bg dark:bg-warning-bg' },
- { label: 'Low Stock', value: summary?.lowStockProducts?.length || 0, icon: AlertTriangle, color: 'text-danger', bg: 'bg-danger-bg dark:bg-danger-bg' },
+ { label: 'Total Products' + dateSuffix, value: summary?.totalProducts || 0, icon: Package, color: 'text-info', bg: 'bg-info-bg dark:bg-info-bg' },
+ { label: 'Total Orders' + dateSuffix, value: summary?.totalOrders || 0, icon: ShoppingCart, color: 'text-success', bg: 'bg-success-bg dark:bg-success-bg' },
+ { label: 'Store Revenue' + dateSuffix, value: formatCurrency(summary?.totalRevenue || 0), icon: TrendingUp, color: 'text-warning', bg: 'bg-warning-bg dark:bg-warning-bg' },
+ { label: 'Low Stock' + dateSuffix, value: summary?.lowStockProducts?.length || 0, icon: AlertTriangle, color: 'text-danger', bg: 'bg-danger-bg dark:bg-danger-bg' },
  ];
 
  return (

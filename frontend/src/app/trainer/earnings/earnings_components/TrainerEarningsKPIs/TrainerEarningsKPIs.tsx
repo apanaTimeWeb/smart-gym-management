@@ -2,9 +2,11 @@
 import { IndianRupee, Clock, Activity, Target, Minus } from 'lucide-react';
 import { useTrainerEarningsContext } from '@/app/trainer/earnings/earnings_context/TrainerEarningsContext';
 import { formatCurrency } from '@/app/trainer/earnings/earnings_utils/TrainerEarningsSharedConstants';
+import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
 export default function TrainerEarningsKPIs() {
   const { kpis, fetchState } = useTrainerEarningsContext();
+  const dateSuffix = useDateRangeSuffix();
 
   if (fetchState === 'loading' || !kpis) {
     return (
@@ -17,11 +19,11 @@ export default function TrainerEarningsKPIs() {
   }
 
   const cards = [
-    { label: 'Total Earnings', value: formatCurrency(kpis.totalEarnings), icon: IndianRupee, color: 'text-success', bg: 'bg-success/10' },
-    { label: 'Pending Payouts', value: formatCurrency(kpis.pendingPayouts), icon: Clock, color: 'text-warning', bg: 'bg-warning/10' },
-    { label: 'Sessions Completed', value: kpis.sessionsCompleted.toString(), icon: Activity, color: 'text-info', bg: 'bg-info/10' },
-    { label: 'Commission Rate', value: `${kpis.commissionRate}%`, icon: Target, color: 'text-primary', bg: 'bg-primary-subtle' },
-    { label: 'Tax Deducted (TDS)', value: formatCurrency(kpis.taxDeduction), icon: Minus, color: 'text-danger', bg: 'bg-danger/10' },
+    { label: 'Total Earnings' + dateSuffix, value: formatCurrency(kpis.totalEarnings), icon: IndianRupee, color: 'text-success', bg: 'bg-success/10' },
+    { label: 'Pending Payouts' + dateSuffix, value: formatCurrency(kpis.pendingPayouts), icon: Clock, color: 'text-warning', bg: 'bg-warning/10' },
+    { label: 'Sessions Completed' + dateSuffix, value: kpis.sessionsCompleted.toString(), icon: Activity, color: 'text-info', bg: 'bg-info/10' },
+    { label: 'Commission Rate' + dateSuffix, value: `${kpis.commissionRate}%`, icon: Target, color: 'text-primary', bg: 'bg-primary-subtle' },
+    { label: 'Tax Deducted (TDS)' + dateSuffix, value: formatCurrency(kpis.taxDeduction), icon: Minus, color: 'text-danger', bg: 'bg-danger/10' },
   ];
 
   return (

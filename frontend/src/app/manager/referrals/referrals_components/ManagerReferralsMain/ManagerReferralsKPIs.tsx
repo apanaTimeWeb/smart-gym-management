@@ -4,9 +4,11 @@
 import { Users, UserCheck, Gift, CheckCircle } from 'lucide-react';
 import ManagerStatCard from '@/app/manager/manager_components/ManagerShared/ManagerStatCard';
 import { useManagerReferralsLogic } from '@/app/manager/referrals/referrals_context/useManagerReferralsLogic';
+import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
 export default function ManagerReferralsKPIs() {
   const { kpis, isKpisLoading } = useManagerReferralsLogic();
+  const dateSuffix = useDateRangeSuffix();
 
   if (isKpisLoading || !kpis) {
     return (
@@ -21,7 +23,7 @@ export default function ManagerReferralsKPIs() {
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
       <ManagerStatCard 
-        title="Total Referrals" 
+        title={`Total Referrals${dateSuffix}`} 
         value={kpis.totalReferrals.toString()} 
         icon={Users} 
         change="+12"
@@ -30,7 +32,7 @@ export default function ManagerReferralsKPIs() {
         iconColor="var(--primary)"
       />
       <ManagerStatCard 
-        title="Converted to Members" 
+        title={`Converted to Members${dateSuffix}`} 
         value={kpis.totalConverted.toString()} 
         icon={UserCheck} 
         change="+5"
@@ -39,7 +41,7 @@ export default function ManagerReferralsKPIs() {
         iconColor="#22c55e"
       />
       <ManagerStatCard 
-        title="Pending Rewards" 
+        title={`Pending Rewards${dateSuffix}`} 
         value={kpis.pendingRewards.toString()} 
         icon={Gift} 
         change={kpis.pendingRewards > 5 ? 'Action Needed' : ''}
@@ -48,7 +50,7 @@ export default function ManagerReferralsKPIs() {
         iconColor="#eab308"
       />
       <ManagerStatCard 
-        title="Claimed Rewards" 
+        title={`Claimed Rewards${dateSuffix}`} 
         value={kpis.claimedRewards.toString()} 
         icon={CheckCircle} 
         iconBg="var(--primary-subtle)"

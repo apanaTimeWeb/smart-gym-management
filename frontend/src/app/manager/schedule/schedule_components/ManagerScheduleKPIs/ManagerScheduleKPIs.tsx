@@ -3,9 +3,11 @@
 import { Users, UserCheck, UserX, CalendarDays } from 'lucide-react';
 import ManagerStatCard from '@/app/manager/manager_components/ManagerShared/ManagerStatCard';
 import { useScheduleContext } from '@/app/manager/schedule/schedule_context/ManagerScheduleContext';
+import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
 export default function ManagerScheduleKPIs() {
   const { kpis, fetchState } = useScheduleContext();
+  const dateSuffix = useDateRangeSuffix();
 
   if (fetchState === 'loading' || !kpis) {
     return (
@@ -20,28 +22,28 @@ export default function ManagerScheduleKPIs() {
   return (
     <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
       <ManagerStatCard
-        title="Total Trainers"
+        title={`Total Trainers${dateSuffix}`}
         value={kpis.totalTrainers}
         icon={Users}
         iconBg="rgba(250,204,21,0.12)"
         iconColor="var(--primary)"
       />
       <ManagerStatCard
-        title="On Duty Today"
+        title={`On Duty Today${dateSuffix}`}
         value={kpis.trainersOnDutyToday}
         icon={UserCheck}
         iconBg="rgba(34,197,94,0.12)"
         iconColor="var(--success)"
       />
       <ManagerStatCard
-        title="On Leave Today"
+        title={`On Leave Today${dateSuffix}`}
         value={kpis.trainersOnLeaveToday}
         icon={UserX}
         iconBg="rgba(245,158,11,0.12)"
         iconColor="var(--warning)"
       />
       <ManagerStatCard
-        title="Shifts This Week"
+        title={`Shifts This Week${dateSuffix}`}
         value={kpis.totalShiftsThisWeek}
         icon={CalendarDays}
         iconBg="rgba(59,130,246,0.12)"
