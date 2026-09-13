@@ -56,7 +56,7 @@ export default function SuperadminBranchesClient() {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-foreground">Branches</h1>
-        <p className="text-secondary mt-1 text-sm">All gym branches across every tenant on the platform.</p>
+        <p className="text-secondary mt-1 text-sm">All gym branches across every gym on the platform.</p>
       </div>
 
       {/* KPI Cards */}

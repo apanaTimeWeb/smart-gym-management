@@ -37,7 +37,7 @@ export default function SuperadminAddGymForm() {
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Provision New Tenant</h1>
+          <h1 className="text-3xl font-bold text-foreground">Provision New Gym</h1>
           <p className="text-secondary mt-1">This will spin up a completely isolated database for the new gym.</p>
         </div>
       </div>
@@ -148,7 +148,7 @@ export default function SuperadminAddGymForm() {
                 {isProvisioning ? (
                   <><Loader2 className="w-5 h-5 motion-safe:animate-spin" /> Provisioning DB...</>
                 ) : (
-                  <><Save className="w-5 h-5" /> Provision Tenant</>
+                  <><Save className="w-5 h-5" /> Provision Gym</>
                 )}
               </button>
             </div>

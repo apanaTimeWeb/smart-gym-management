@@ -76,9 +76,9 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
       ]
     },
     {
-      group: 'Tenants & Plans',
+      group: 'Gyms & Plans',
       items: [
-        { name: 'Tenants (Gyms)', href: SuperadminUrlConfig.PAGES.GYMS_LIST, icon: Building2 },
+        { name: 'Gyms', href: SuperadminUrlConfig.PAGES.GYMS_LIST, icon: Building2 },
         { name: 'Onboarding', href: SuperadminUrlConfig.PAGES.ONBOARDING, icon: UserPlus },
         { name: 'Subscription Plans', href: SuperadminUrlConfig.PAGES.PLANS, icon: CreditCard },
       ]

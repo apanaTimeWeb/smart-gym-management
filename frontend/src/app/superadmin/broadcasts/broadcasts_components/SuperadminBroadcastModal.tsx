@@ -195,7 +195,7 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
                 <Users size={18} className="text-primary shrink-0" />
                 <p className="text-sm text-foreground">
                   This broadcast will reach{' '}
-                  <strong className="text-primary">{recipientCount} active tenant{recipientCount !== 1 ? 's' : ''}</strong>.
+                  <strong className="text-primary">{recipientCount} active gym{recipientCount !== 1 ? 's' : ''}</strong>.
                 </p>
               </div>
               <div className="bg-warning/10 border border-warning/20 rounded-lg p-4">

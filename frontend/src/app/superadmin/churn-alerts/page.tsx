@@ -4,7 +4,7 @@ import SuperadminChurnMain from '@/app/superadmin/churn-alerts/churn_components/
 
 export const metadata: Metadata = {
   title: 'Churn Alerts | Superadmin | GymSmart',
-  description: 'Monitor at-risk tenants and take proactive retention actions.',
+  description: 'Monitor at-risk gyms and take proactive retention actions.',
 };
 
 export default function SuperadminChurnAlertsPage() {

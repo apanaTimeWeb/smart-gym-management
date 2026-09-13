@@ -99,7 +99,7 @@ export default function SuperadminReportsClient() {
     let csvRows: string[] = [];
     if (tab === 'revenue') {
       csvRows = [
-        ['Month', 'Monthly Income', 'New Revenue', 'Churned', 'Net Revenue', 'Gyms'].join(','),
+        ['Month', 'Monthly Income', 'New Revenue', 'Lost Income', 'Net Revenue', 'Gyms'].join(','),
         ...revenueData.map(r => [r.month, r.mrr, r.newRevenue, r.churnedRevenue, r.netRevenue, r.tenantCount].join(','))
       ];
     } else if (tab === 'churn') {
@@ -166,7 +166,7 @@ export default function SuperadminReportsClient() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Reports & Exports</h1>
-          <p className="text-secondary mt-1 text-sm">Revenue reports, churn analysis, and tenant health scores.</p>
+          <p className="text-secondary mt-1 text-sm">Revenue reports, members lost analysis, and gym health scores.</p>
         </div>
         <SuperadminReportsExportButton onExportCSV={handleExportCSV} onExportPDF={handleExportPDF} />
       </div>
@@ -230,7 +230,7 @@ export default function SuperadminReportsClient() {
         {([
           { key: 'revenue' as const, label: 'Revenue Report', icon: IndianRupee },
           { key: 'churn' as const, label: 'Members Lost Analysis', icon: TrendingDown },
-          { key: 'health' as const, label: 'Tenant Health', icon: HeartPulse },
+          { key: 'health' as const, label: 'Gym Health', icon: HeartPulse },
         ]).map(({ key, label, icon: Icon }) => (
           <button
             key={key}

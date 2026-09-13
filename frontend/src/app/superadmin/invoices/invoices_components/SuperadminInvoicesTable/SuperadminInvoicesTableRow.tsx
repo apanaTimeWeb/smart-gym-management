@@ -75,7 +75,7 @@ export default function SuperadminInvoicesTableRow({ invoice: inv }: InvoicesTab
   return (
     <tr className="hover:bg-input motion-safe:transition-colors">
       <td className="p-4 text-sm font-mono text-secondary">{inv.id || 'N/A'}</td>
-      <td className="p-4 text-sm font-bold text-foreground">{inv.tenantName || 'Unknown Tenant'}</td>
+      <td className="p-4 text-sm font-bold text-foreground">{inv.tenantName || 'Unknown Gym'}</td>
       <td className="p-4 text-sm text-secondary font-mono">{inv.taxId || 'N/A'}</td>
       <td className="p-4 text-sm text-secondary">{inv.planName || 'N/A'}</td>
       <td className="p-4 text-sm text-secondary capitalize">{inv.invoiceType ? inv.invoiceType.replace('_', ' ').toLowerCase() : 'N/A'}</td>

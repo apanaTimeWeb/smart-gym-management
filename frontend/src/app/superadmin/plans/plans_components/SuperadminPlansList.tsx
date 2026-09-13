@@ -36,7 +36,7 @@ export default function SuperadminPlansList() {
   const archiveMutation = useMutation({
     mutationFn: (id: string) => superadminApi.plans.archivePlan(id),
     onSuccess: () => {
-      toast.success('Plan archived. Existing tenants remain unaffected.');
+      toast.success('Plan archived. Existing gyms remain unaffected.');
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'plans'] });
     },
     onError: () => { toast.error('Failed to archive plan.'); },
@@ -140,7 +140,7 @@ export default function SuperadminPlansList() {
                 }}
                 disabled={isDeleting || deleteMutation.isPending || archiveMutation.isPending}
                 aria-label={`Delete or archive ${plan.name}`}
-                title={(plan.activeTenants ?? 0) > 0 ? 'Archive plan (has active tenants)' : 'Delete plan'}
+                title={(plan.activeTenants ?? 0) > 0 ? 'Archive plan (has active gyms)' : 'Delete plan'}
                 className="flex-1 py-2.5 flex items-center justify-center bg-input hover:bg-danger hover:text-white text-secondary rounded-xl motion-safe:transition-colors border border-border disabled:opacity-50"
               >
                 {isDeleting || archiveMutation.isPending

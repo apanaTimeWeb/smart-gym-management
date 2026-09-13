@@ -94,7 +94,7 @@ function MembersChart() {
       options={options}
       series={[
         { name: 'New Members', data: data.map(d => d.newMembers) },
-        { name: 'Churned',     data: data.map(d => d.churned)    },
+        { name: 'Lost Members',     data: data.map(d => d.churned)    },
         { name: 'Active',      data: data.map(d => d.active)     },
       ]}
     />

@@ -36,7 +36,7 @@ export default function SuperadminGymDeleteModal() {
           <div className="bg-danger-bg p-2 rounded-full">
             <AlertTriangle className="w-6 h-6 text-danger" />
           </div>
-          <h2 className="text-lg font-bold text-foreground">Delete Tenant</h2>
+          <h2 className="text-lg font-bold text-foreground">Delete Gym</h2>
         </div>
         
         <p className="text-sm text-secondary mb-4">

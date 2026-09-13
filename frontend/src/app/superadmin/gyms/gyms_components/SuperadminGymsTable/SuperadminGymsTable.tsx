@@ -206,7 +206,7 @@ export default function SuperadminGymsTable() {
                               ? 'text-success hover:bg-success/10'
                               : 'text-danger hover:bg-danger-bg/10'
                           }`}
-                          title={gym.status === 'SUSPENDED' ? 'Activate Tenant' : 'Suspend Tenant'}
+                          title={gym.status === 'SUSPENDED' ? 'Activate Gym' : 'Suspend Gym'}
                           aria-label={gym.status === 'SUSPENDED' ? `Activate ${gym.name}` : `Suspend ${gym.name}`}
                         >
                           {gym.status === 'SUSPENDED' ? <PlayCircle className="w-4 h-4" /> : <Ban className="w-4 h-4" />}

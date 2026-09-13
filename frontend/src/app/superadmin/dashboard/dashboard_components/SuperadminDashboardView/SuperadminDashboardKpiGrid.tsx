@@ -43,7 +43,7 @@ export function SuperadminDashboardKpiGrid({
       iconBgClass: 'bg-success/10',
     },
     {
-      label: 'TOTAL GYMS (TENANTS)' + dateSuffix,
+      label: 'TOTAL GYMS' + dateSuffix,
       value: String(metrics.totalGyms),
       trend: undefined,
       trendUp: true,

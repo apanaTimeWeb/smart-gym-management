@@ -21,7 +21,7 @@ export default function ChurnAlertsError({
       <div className="w-16 h-16 bg-danger-bg rounded-full flex items-center justify-center mb-4">
         <AlertTriangle className="w-8 h-8 text-danger" />
       </div>
-      <h2 className="text-xl font-bold text-foreground mb-2">Failed to load Churn Alerts</h2>
+      <h2 className="text-xl font-bold text-foreground mb-2">Failed to load Alerts for Members About to Leave</h2>
       <p className="text-secondary text-sm max-w-md text-center mb-6">
         An unexpected error occurred while rendering this module. Please try again or contact support if the issue persists.
       </p>

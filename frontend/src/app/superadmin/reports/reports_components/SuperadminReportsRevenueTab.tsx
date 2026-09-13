@@ -51,7 +51,7 @@ export function SuperadminReportsRevenueTab({
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border bg-input/40">
-                {['Month', 'Monthly Income', 'New Revenue', 'Churned', 'Net Revenue', 'Gyms'].map((h) => (
+                {['Month', 'Monthly Income', 'New Revenue', 'Lost Income', 'Net Revenue', 'Gyms'].map((h) => (
                   <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">{h}</th>
                 ))}
               </tr>

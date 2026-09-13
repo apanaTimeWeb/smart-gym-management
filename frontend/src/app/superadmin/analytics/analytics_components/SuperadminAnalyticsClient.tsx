@@ -103,7 +103,7 @@ export default function SuperadminAnalyticsClient() {
       label: 'Avg. Income per Gym' + dateSuffix,
       // Design §21: Indian currency — ₹1,24,500
       value: `₹${arpu.toLocaleString('en-IN')}`,
-      delta: 'Avg revenue per tenant',
+      delta: 'Avg revenue per gym',
       deltaUp: true,
       icon: DollarSign,
       iconBg: 'bg-primary/10',
@@ -218,7 +218,7 @@ export default function SuperadminAnalyticsClient() {
         </div>
 
         <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
-          <h2 className="text-base font-semibold text-foreground mb-6">Tenant Growth vs Churn</h2>
+          <h2 className="text-base font-semibold text-foreground mb-6">Gym Growth vs Members Lost</h2>
           <div className="h-72">
             <Chart options={tenantBarOptions} series={tenantBarSeries} type="bar" height="100%" />
           </div>

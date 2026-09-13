@@ -199,7 +199,7 @@ export default function ManagerConvertLeadModal() {
                 {saving ? (
                   <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" />
                 ) : (
-                  <><Save size={15} /> Convert Lead</>
+                  <><Save size={15} /> Convert Inquiry</>
                 )}
               </button>
             </div>

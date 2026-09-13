@@ -15,7 +15,7 @@ export const MANAGER_NAV_GROUPS = [
   {
     group: 'Operations',
     items: [
-      { href: '/manager/inquiries',       label: 'Inquiries (Leads)',  icon: Users },
+      { href: '/manager/inquiries',       label: 'Inquiries',  icon: Users },
       { href: '/manager/members',         label: 'Member Management',  icon: Users },
       { href: '/manager/attendance',      label: 'Attendance',         icon: CalendarCheck },
       { href: '/manager/plans',           label: 'Membership / Plans', icon: Tags },

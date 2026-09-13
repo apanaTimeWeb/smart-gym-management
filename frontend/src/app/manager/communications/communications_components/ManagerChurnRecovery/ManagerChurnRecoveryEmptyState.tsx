@@ -9,7 +9,7 @@ export default function ManagerChurnRecoveryEmptyState() {
       <div className="w-16 h-16 rounded-full bg-success-bg flex items-center justify-center mb-4">
         <ShieldCheck size={32} className="text-success" />
       </div>
-      <h3 className="text-base font-semibold text-foreground">No churned members</h3>
+      <h3 className="text-base font-semibold text-foreground">No lost members</h3>
       <p className="text-sm text-secondary mt-1 max-w-xs">
         Great retention! No exited members found for this branch. Keep up the excellent member engagement.
       </p>

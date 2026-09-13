@@ -4,7 +4,7 @@ import SuperadminGymsClient from '@/app/superadmin/gyms/gyms_components/Superadm
 
 export const metadata: Metadata = {
   title: 'Gyms | Superadmin',
-  description: 'Manage SaaS clients and tenants.',
+  description: 'Manage gyms.',
 };
 
 export default function GymsPage() {

@@ -47,7 +47,7 @@ export default function SuperadminSystemSlaTab() {
       {/* SLA Table */}
       <div className="bg-card border border-border rounded-xl overflow-hidden flex flex-col min-h-96">
         <div className="p-4 border-b border-border flex justify-between items-center bg-header">
-          <h2 className="text-lg font-bold text-foreground flex items-center gap-2"><Clock size={20} className="text-primary"/> Tenant SLA Status</h2>
+          <h2 className="text-lg font-bold text-foreground flex items-center gap-2"><Clock size={20} className="text-primary"/> Gym Uptime Status</h2>
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-disabled" />
             <input
@@ -108,7 +108,7 @@ export default function SuperadminSystemSlaTab() {
               ))}
               {filteredSla.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="p-8 text-center text-secondary">No tenants found.</td>
+                  <td colSpan={6} className="p-8 text-center text-secondary">No gyms found.</td>
                 </tr>
               )}
             </tbody>

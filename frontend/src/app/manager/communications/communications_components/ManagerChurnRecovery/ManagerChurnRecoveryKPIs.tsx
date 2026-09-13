@@ -11,7 +11,7 @@ interface ManagerChurnRecoveryKPIsProps {
 const CHURN_KPI_CARDS = [
   {
     key: 'totalChurned' as keyof ChurnKPIData,
-    label: 'TOTAL CHURNED',
+    label: 'TOTAL LOST',
     icon: UserX,
     iconBg: 'bg-danger-bg',
     iconColor: 'text-danger',
@@ -20,7 +20,7 @@ const CHURN_KPI_CARDS = [
   },
   {
     key: 'churnedThisMonth' as keyof ChurnKPIData,
-    label: 'CHURNED THIS MONTH',
+    label: 'LOST THIS MONTH',
     icon: TrendingDown,
     iconBg: 'bg-warning-bg',
     iconColor: 'text-warning',

@@ -30,7 +30,7 @@ export default function SuperadminTicketsHeader({
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Support Tickets</h1>
-          <p className="text-secondary mt-1">Manage incoming issues from SaaS tenants.</p>
+          <p className="text-secondary mt-1">Manage incoming issues from gyms.</p>
         </div>
       </div>
 

@@ -46,7 +46,7 @@ export function SuperadminMessagingTenantDropdown({
         className="w-full flex items-center justify-between px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-colors"
       >
         <span className={selected ? 'text-foreground' : 'text-secondary'}>
-          {selected ? `${selected.name} — ${selected.plan}` : 'Select tenant...'}
+          {selected ? `${selected.name} — ${selected.plan}` : 'Select gym...'}
         </span>
         <ChevronDown size={18} strokeWidth={2} className="text-secondary shrink-0" />
       </button>
@@ -68,7 +68,7 @@ export function SuperadminMessagingTenantDropdown({
           </div>
           <ul role="listbox" className="max-h-48 overflow-y-auto">
             {filtered.length === 0 && (
-              <li className="px-3 py-2 text-sm text-secondary">No tenants found.</li>
+              <li className="px-3 py-2 text-sm text-secondary">No gyms found.</li>
             )}
             {filtered.map((t) => (
               <li
