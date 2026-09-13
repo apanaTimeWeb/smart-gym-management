@@ -15,16 +15,17 @@
 | `progress_components/TrainerProgressMain/` | Root Client Component — tab switcher + layout |
 | `progress_components/TrainerProgressChart/` | SVG line chart for individual member metric trend |
 | `progress_components/TrainerProgressTable/` | History table with edit/delete per row |
-| `progress_components/TrainerProgressModal/` | Add / Edit entry form (react-hook-form) |
+| `progress_components/TrainerProgressModal/` | Add / Edit entry form (react-hook-form + zod) |
 | `progress_components/TrainerProgressEmptyState/` | Empty state when no entries exist |
 | `progress_components/TrainerProgressMemberSelector/` | Toggle-chip multi-member selector (max 4) |
 | `progress_components/TrainerProgressComparisonChart/` | ApexCharts grouped bar chart — side-by-side metric comparison |
 | `progress_components/TrainerProgressComparisonTable/` | Snapshot table with trend badge + delta columns |
-| `progress_context/useTrainerProgressLogic.ts` | All state: entries, tab, comparison selection, snapshots, trend |
-| `progress_types/TrainerProgressTypes.ts` | `ProgressEntry`, `ProgressSummary`, `ComparisonMemberSnapshot`, `ComparisonMetric` |
+| `progress_queries/` | `useTrainerProgressQuery.ts`, `useTrainerProgressMutations.ts` (TanStack Query) |
+| `progress_store/` | `useTrainerProgressStore.ts` (Zustand UI state) |
+| `progress_utils/` | `useTrainerProgressFilters.ts` (URL), `useTrainerProgressComparison.ts`, `TrainerProgressSharedConstants.ts` |
+| `progress_types/` | `progress.schema.ts` (Zod), `TrainerProgressTypes.ts` |
 | `progress_api/TrainerProgressApi.ts` | API wrappers — fetchProgressEntries, createProgressEntry, etc. |
-| `progress_utils/TrainerProgressSharedConstants.ts` | `PROGRESS_CHART_METRICS`, `COMPARISON_METRICS`, `COMPARISON_MAX_MEMBERS`, mock data |
-| `progress_utils/progress_url_config.ts` | `TRAINER_PROGRESS_ROUTES` + `TRAINER_PROGRESS_API_ROUTES` |
+| `progress_fixtures/TrainerProgressMockData.ts` | Isolated mock data for Progress entries |
 
 ## Feature Inventory
 | Feature | Tab | Purpose | Status |
@@ -43,7 +44,9 @@
 ```
 page.tsx (Server Component)
   └── TrainerProgressMain (Client)
-        ├── useTrainerProgressLogic (all state + mock data + snapshot computation)
+        ├── useTrainerProgressFilters (URL State)
+        ├── useTrainerProgressStore (UI State)
+        ├── useTrainerProgressQuery & useTrainerProgressMutations (Server State)
         │
         ├── [Individual tab]
         │     ├── TrainerProgressChart (SVG line chart)
@@ -57,7 +60,7 @@ page.tsx (Server Component)
 ```
 
 ## Comparison Trend Logic
-Computed in `useTrainerProgressLogic → buildSnapshot()`:
+Computed in `useTrainerProgressComparison → buildComparisonSnapshot()`:
 - **improving** — weight dropped > 0.5 kg OR muscle gained > 0.5 kg
 - **plateau** — weight change ≤ ±0.5 kg AND muscle change ≤ ±0.3 kg
 - **declining** — weight increased > 0.5 kg AND no muscle gain

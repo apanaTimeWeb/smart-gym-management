@@ -2,10 +2,10 @@
 // DATA FLOW: TrainerMembersProfile → TrainerMembersProfileNotes
 
 'use client';
-import { useMembersContext } from '@/app/trainer/members/members_context/MembersContext';
+import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
 
 export default function TrainerMembersProfileNotes() {
-  const { selectedMember } = useMembersContext();
+  const selectedMember = useTrainerMembersStore(s => s.selectedMember);
 
   if (!selectedMember) return null;
 

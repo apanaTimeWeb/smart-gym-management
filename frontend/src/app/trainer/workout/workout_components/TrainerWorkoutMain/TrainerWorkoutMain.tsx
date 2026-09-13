@@ -3,40 +3,31 @@
 // RESPONSIBILITY: Entry component for the Workout Library module. Wraps the UI in the context provider and handles page layout.
 'use client';
 
-import { WorkoutProvider, useWorkoutContext } from '@/app/trainer/workout/workout_context/WorkoutContext';
 import TrainerWorkoutBanner from '@/app/trainer/workout/workout_components/TrainerWorkoutBanner/TrainerWorkoutBanner';
 import TrainerWorkoutToolbar from '@/app/trainer/workout/workout_components/TrainerWorkoutToolbar/TrainerWorkoutToolbar';
 import TrainerWorkoutPlansGrid from '@/app/trainer/workout/workout_components/TrainerWorkoutPlansGrid/TrainerWorkoutPlansGrid';
 import TrainerWorkoutExerciseTable from '@/app/trainer/workout/workout_components/TrainerWorkoutExerciseTable/TrainerWorkoutExerciseTable';
-
-
-function WorkoutContent() {
- const { tab } = useWorkoutContext();
-
- return (
- <div className="min-h-full pb-10 workout-module bg-background text-foreground">
-  
- <div className="p-6 space-y-5">
- <TrainerWorkoutBanner />
-
- <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
- <TrainerWorkoutToolbar />
-
- <div className="p-5">
- {tab === 'Workout Plans' ? <TrainerWorkoutPlansGrid /> : <TrainerWorkoutExerciseTable />}
- </div>
- </div>
- </div>
-
- </div>
- );
-}
+import { useTrainerWorkoutFilters } from '@/app/trainer/workout/workout_utils/useTrainerWorkoutFilters';
+import TrainerWorkoutModal from '@/app/trainer/workout/workout_components/TrainerWorkoutModal/TrainerWorkoutModal';
+import TrainerWorkoutExerciseModal from '@/app/trainer/workout/workout_components/TrainerWorkoutExerciseModal/TrainerWorkoutExerciseModal';
 
 export default function TrainerWorkoutMain() {
- return (
- <WorkoutProvider>
- <WorkoutContent />
- </WorkoutProvider>
- );
+  const { tab } = useTrainerWorkoutFilters();
+
+  return (
+    <div className="min-h-full pb-10 workout-module bg-background text-foreground">
+      <div className="p-6 space-y-5">
+        <TrainerWorkoutBanner />
+        <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
+          <TrainerWorkoutToolbar />
+          <div className="p-5">
+            {tab === 'Workout Plans' ? <TrainerWorkoutPlansGrid /> : <TrainerWorkoutExerciseTable />}
+          </div>
+        </div>
+      </div>
+      <TrainerWorkoutModal />
+      <TrainerWorkoutExerciseModal />
+    </div>
+  );
 }
 

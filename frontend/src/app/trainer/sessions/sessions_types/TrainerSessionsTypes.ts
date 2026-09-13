@@ -3,41 +3,54 @@
 // Bug #9 fix: Types are now defined here directly (not re-exported from constants).
 // DataFlow: Imported by useTrainerSessionsLogic, TrainerSessionsMain, and session sub-components.
 
-/**
- * Discriminated union of session type values.
- * Use `isSpecificFilter()` from constants when narrowing SessionFilter to SessionType.
- */
-export type SessionType = 'PT' | 'Group';
+// DataFlow: Imported by useTrainerSessionsLogic, TrainerSessionsMain, and session sub-components.
 
-/** Status lifecycle of a booked session. */
-export type SessionStatus = 'Upcoming' | 'Completed' | 'Cancelled';
+import { z } from 'zod';
 
-/**
- * Filter value for session list views.
- * 'All' shows all session types; PT/Group narrow to specific types.
- * Use `isSpecificFilter(f)` type guard when SessionType is required (not 'All').
- */
-export type SessionFilter = 'All' | SessionType;
+export const SessionTypeSchema = z.enum(['PT', 'Group']);
+export type SessionType = z.infer<typeof SessionTypeSchema>;
 
-/** Full session record as returned by the trainer sessions API. */
-export interface TrainerSession {
-  id: string;
-  title: string;
-  type: SessionType;
-  time: string;
-  sessionDate: string;
-  duration: string;
-  status: SessionStatus;
-  attendees: number;
-  maxAttendees?: number;
-  member?: string;
-  isOnline: boolean;
-  enrolledMembers?: { id: string; name: string }[];
-  sessionNotes?: string;
-  location?: string;
-  room?: string;
-  trainerNotes?: string;
-  memberRating?: number;
-  cancellationReason?: string;
-  recurrenceRule?: string;
-}
+export const SessionStatusSchema = z.enum(['Upcoming', 'Completed', 'Cancelled']);
+export type SessionStatus = z.infer<typeof SessionStatusSchema>;
+
+export const SessionFilterSchema = z.union([z.literal('All'), SessionTypeSchema]);
+export type SessionFilter = z.infer<typeof SessionFilterSchema>;
+
+export const TrainerSessionSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  type: SessionTypeSchema,
+  time: z.string(),
+  sessionDate: z.string(),
+  duration: z.string(),
+  status: SessionStatusSchema,
+  attendees: z.number(),
+  maxAttendees: z.number().optional(),
+  member: z.string().optional(),
+  isOnline: z.boolean(),
+  enrolledMembers: z.array(
+    z.object({ id: z.string(), name: z.string() })
+  ).optional(),
+  sessionNotes: z.string().optional(),
+  location: z.string().optional(),
+  room: z.string().optional(),
+  trainerNotes: z.string().optional(),
+  memberRating: z.number().optional(),
+  cancellationReason: z.string().optional(),
+  recurrenceRule: z.string().optional(),
+});
+export type TrainerSession = z.infer<typeof TrainerSessionSchema>;
+
+export const CreateSessionDtoSchema = z.object({
+  memberId: z.string().optional().or(z.literal('')),
+  date: z.string().min(1, 'Date is required'),
+  time: z.string().min(1, 'Time is required'),
+  duration: z.string().min(1, 'Duration is required'),
+  type: SessionTypeSchema,
+  recurrenceType: z.enum(['none', 'weekly', 'biweekly']).optional(),
+  recurrenceEndDate: z.string().optional(),
+  location: z.string().optional(),
+  room: z.string().optional(),
+});
+export type CreateSessionDto = z.infer<typeof CreateSessionDtoSchema>;
+

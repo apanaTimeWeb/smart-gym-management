@@ -10,36 +10,31 @@ import {
   SESSION_STATUS_STYLES,
   SESSION_TYPE_STYLES,
 } from '@/app/trainer/sessions/sessions_utils/TrainerSessionsSharedConstants';
-import { useTrainerSessionsLogic } from '@/app/trainer/sessions/sessions_context/useTrainerSessionsLogic';
+import { useTrainerSessionsFilters } from '@/app/trainer/sessions/sessions_utils/useTrainerSessionsFilters';
+import { useTrainerSessionsQuery } from '@/app/trainer/sessions/sessions_queries/useTrainerSessionsQuery';
+import { useTrainerSessionMutations } from '@/app/trainer/sessions/sessions_queries/useTrainerSessionMutations';
+import { useMembersBasicQuery } from '@/app/trainer/sessions/sessions_queries/useTrainerSessionsQuery';
+import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 import TrainerSessionAttendanceModal from '@/app/trainer/sessions/sessions_components/TrainerSessionAttendanceModal/TrainerSessionAttendanceModal';
 import TrainerSessionsEditModal from '@/app/trainer/sessions/sessions_components/TrainerSessionsEditModal/TrainerSessionsEditModal';
 import TrainerSessionsKPIs from '@/app/trainer/sessions/sessions_components/TrainerSessionsKPIs/TrainerSessionsKPIs';
 import TrainerSessionsScheduleModal from '@/app/trainer/sessions/sessions_components/TrainerSessionsScheduleModal/TrainerSessionsScheduleModal';
-import { markTrainerSessionAttendance } from '@/app/trainer/sessions/sessions_api/TrainerSessionsApi';
 
 export default function TrainerSessionsMain() {
-  const {
-    sessions,
-    setSessions,
-    fetchState,
-    filter,
-    setFilter,
-    date,
-    setDate,
-    showScheduleModal,
-    openScheduleModal,
-    closeScheduleModal,
-    memberOptions,
-    handleScheduleSubmit,
-    isSubmitting,
-    handleCancelSession,
-    toast,
-    clearToast,
-  } = useTrainerSessionsLogic();
+  const { filter, setFilter, date, setDate } = useTrainerSessionsFilters();
+  const { data: sessions = [], isLoading, isError } = useTrainerSessionsQuery(date);
+  const { data: memberOptionsRaw = [] } = useMembersBasicQuery();
+  const memberOptions = memberOptionsRaw.map(m => ({ value: m.id, label: m.name }));
+  const { createSession, cancelSession, markAttendance } = useTrainerSessionMutations();
+  const { confirm } = useConfirm();
 
-  // Local modal state — strictly private to this component (Rule 5)
+  const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [attendanceSession, setAttendanceSession] = useState<TrainerSession | null>(null);
   const [editingSession, setEditingSession] = useState<TrainerSession | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+
+  const clearToast = () => setToast(null);
+  const showToast = (message: string, type: 'success' | 'error') => setToast({ message, type });
 
   const filteredSessions: TrainerSession[] = sessions.filter(
     (s) => filter === 'All' || s.type === filter
@@ -47,10 +42,37 @@ export default function TrainerSessionsMain() {
 
   const handleAttendanceSubmit = async (sessionId: string, attendedMemberIds: string[]) => {
     try {
-      await markTrainerSessionAttendance(sessionId, attendedMemberIds);
+      await markAttendance.mutateAsync({ id: sessionId, memberIds: attendedMemberIds });
       setAttendanceSession(null);
+      showToast('Attendance marked successfully', 'success');
     } catch {
-      // Error surfaced to monitoring provider — wire to toast in production
+      showToast('Failed to mark attendance', 'error');
+    }
+  };
+
+  const handleCancelSession = async (sessionId: string) => {
+    const ok = await confirm({
+      title: 'Cancel Session',
+      message: 'Are you sure you want to cancel this session? This action cannot be undone.',
+      type: 'danger',
+      confirmText: 'Cancel Session',
+    });
+    if (!ok) return;
+    try {
+      await cancelSession.mutateAsync(sessionId);
+      showToast('Session cancelled', 'success');
+    } catch (err) {
+      showToast((err as Error).message ?? 'Failed to cancel session', 'error');
+    }
+  };
+
+  const handleScheduleSubmit = async (dto: any) => {
+    try {
+      await createSession.mutateAsync(dto);
+      setShowScheduleModal(false);
+      showToast('Session scheduled successfully', 'success');
+    } catch (err) {
+      showToast((err as Error).message ?? 'Failed to schedule session', 'error');
     }
   };
 
@@ -100,7 +122,7 @@ export default function TrainerSessionsMain() {
               />
             </div>
             <button
-              onClick={openScheduleModal}
+              onClick={() => setShowScheduleModal(true)}
               className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-semibold hover:opacity-90 motion-safe:transition-opacity ml-auto"
             >
               <Plus size={16} /> Schedule PT
@@ -109,9 +131,13 @@ export default function TrainerSessionsMain() {
         </div>
 
         {/* Sessions List */}
-        {fetchState === 'loading' ? (
+        {isLoading ? (
           <div className="flex items-center justify-center py-20">
             <Loader2 size={32} className="motion-safe:animate-spin text-primary" />
+          </div>
+        ) : isError ? (
+          <div className="flex items-center justify-center py-20">
+            <p className="text-danger">Failed to load sessions. Please try again.</p>
           </div>
         ) : (
           <div className="grid gap-4">
@@ -187,13 +213,12 @@ export default function TrainerSessionsMain() {
         )}
       </div>
 
-      {/* Schedule PT Modal — form logic extracted to TrainerSessionsScheduleModal (Rule 6, Rule 15B) */}
       {showScheduleModal && (
         <TrainerSessionsScheduleModal
-          onClose={closeScheduleModal}
+          onClose={() => setShowScheduleModal(false)}
           onSubmit={handleScheduleSubmit}
           memberOptions={memberOptions}
-          isSubmitting={isSubmitting}
+          isSubmitting={createSession.isPending}
         />
       )}
 
@@ -206,14 +231,13 @@ export default function TrainerSessionsMain() {
         />
       )}
 
-      {/* Edit Session Modal */}
       {editingSession && (
         <TrainerSessionsEditModal
           session={editingSession}
           onClose={() => setEditingSession(null)}
-          onSuccess={(updated) => {
-            setSessions((prev) => prev.map((s) => (s.id === updated.id ? updated : s)));
+          onSuccess={() => {
             setEditingSession(null);
+            showToast('Session updated successfully', 'success');
           }}
         />
       )}

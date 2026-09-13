@@ -4,17 +4,28 @@
 'use client';
 
 import { Dumbbell } from 'lucide-react';
-import { useWorkoutContext } from '@/app/trainer/workout/workout_context/WorkoutContext';
-
+import { useTrainerWorkoutFilters } from '@/app/trainer/workout/workout_utils/useTrainerWorkoutFilters';
+import { useTrainerWorkoutsQuery } from '@/app/trainer/workout/workout_queries/useWorkoutQuery';
 import TrainerPagination from '@/app/trainer/trainer_components/TrainerShared/TrainerPagination';
 import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerSharedConstants';
+import { useTrainerWorkoutStore } from '@/app/trainer/workout/workout_store/useTrainerWorkoutStore';
+import { useTrainerWorkoutMutations } from '@/app/trainer/workout/workout_queries/useWorkoutMutations';
+import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
+import { Edit2, Trash2 } from 'lucide-react';
 
 export default function TrainerWorkoutPlansGrid() {
-  const { workouts, totalWorkouts, currentPage, setCurrentPage, fetchState, search } = useWorkoutContext();
+  const { search, category, page, setPage } = useTrainerWorkoutFilters();
+  const { data, status } = useTrainerWorkoutsQuery(search, category, page);
+  const { setEditWk, setShowWkModal } = useTrainerWorkoutStore();
+  const { deleteWorkout } = useTrainerWorkoutMutations();
+  const { confirm } = useConfirm();
+
+  const workouts = data?.workouts ?? [];
+  const totalWorkouts = data?.total ?? 0;
 
   const totalPages = Math.ceil(totalWorkouts / TRAINER_ITEMS_PER_PAGE) || 1;
 
-  if (fetchState === 'loading') {
+  if (status === 'pending') {
     return (
       <div className="flex justify-center py-10">
         <div className="motion-safe:animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -22,7 +33,7 @@ export default function TrainerWorkoutPlansGrid() {
     );
   }
 
-  if (fetchState === 'error') {
+  if (status === 'error') {
     return (
       <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
         <p className="text-danger font-medium">Failed to load workout plans.</p>
@@ -56,7 +67,20 @@ export default function TrainerWorkoutPlansGrid() {
               </div>
             </div>
             
-            <h3 className="font-semibold text-foreground mb-3">{w.name}</h3>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-semibold text-foreground truncate mr-2">{w.name}</h3>
+              <div className="flex gap-1 shrink-0">
+                <button onClick={() => { setEditWk(w); setShowWkModal(true); }} className="p-1.5 text-secondary hover:text-foreground hover:bg-input rounded-md transition-colors">
+                  <Edit2 size={14} />
+                </button>
+                <button onClick={async () => {
+                  const ok = await confirm({ title: 'Delete Plan', message: 'Delete this plan?', type: 'danger', confirmText: 'Delete' });
+                  if (ok) deleteWorkout.mutate(w.id);
+                }} className="p-1.5 text-secondary hover:text-danger hover:bg-danger-bg rounded-md transition-colors">
+                  <Trash2 size={14} />
+                </button>
+              </div>
+            </div>
             
             <div className="grid grid-cols-3 gap-2 mb-3">
               {[
@@ -92,11 +116,11 @@ export default function TrainerWorkoutPlansGrid() {
       </div>
       <div className="mt-6">
         <TrainerPagination 
-          currentPage={currentPage} 
+          currentPage={page} 
           totalPages={totalPages} 
           totalItems={totalWorkouts} 
           itemsPerPage={TRAINER_ITEMS_PER_PAGE} 
-          onPageChange={setCurrentPage} 
+          onPageChange={setPage} 
         />
       </div>
     </div>

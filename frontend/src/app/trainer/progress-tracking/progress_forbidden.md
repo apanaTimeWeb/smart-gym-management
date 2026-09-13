@@ -25,3 +25,13 @@
 11. **No write operations in comparison view** — `TrainerProgressComparisonTable` and `TrainerProgressComparisonChart` are strictly read-only. Never add edit/delete buttons to the Compare tab.
 
 12. **No more than COMPARISON_MAX_MEMBERS selected** — the selector enforces this in UI; `toggleComparisonMember` in the logic hook also enforces it. Never bypass this limit.
+
+13. **NO Global Member Access:** Trainers cannot fetch `fetchProgressEntries` for a member ID that is not actively assigned to them. The member selector must ONLY list the trainer's own assigned members.
+
+14. **NO Editing Historic/Other Trainer's Data:** Trainers cannot edit or delete a progress entry recorded by another trainer or by the admin. Progress mutations should only be allowed on entries owned/recorded by the current trainer.
+
+15. **NO Member Profile or Plan Deletion:** Progress tracking is purely observational and metric-based. Trainers must not be able to suspend a member or delete a member's plan from the progress tracking UI.
+
+16. **NO Hardcoded Trainer ID:** When creating an entry (`createProgressEntry`), the `recordedBy` or `trainerId` field must come from the server's session/auth token context. The frontend must not hardcode `"Trainer John"`.
+
+17. **NO Mixed Client/Server Filtering for Trends:** Do not pull down 10,000 progress entries to calculate trends on the client. Only fetch the entries for the explicitly selected member(s).

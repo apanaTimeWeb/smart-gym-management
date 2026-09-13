@@ -3,11 +3,23 @@
 'use client';
 
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import { X, Loader2, Save } from 'lucide-react';
 import type { TrainerSession } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
 import { updateTrainerSession } from '@/app/trainer/sessions/sessions_api/TrainerSessionsApi';
 import { DURATION_OPTIONS } from '@/app/trainer/sessions/sessions_utils/TrainerSessionsSharedConstants';
 import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/SearchableDropdown';
+import { useWarnIfUnsavedChanges } from '@/app/trainer/trainer_utils/useWarnIfUnsavedChanges';
+
+const editSessionSchema = z.object({
+  time: z.string().min(1, 'Time is required'),
+  duration: z.string().min(1, 'Duration is required'),
+  location: z.string().optional(),
+  room: z.string().optional(),
+});
+type EditSessionValues = z.infer<typeof editSessionSchema>;
 
 interface TrainerSessionsEditModalProps {
   session: TrainerSession;
@@ -20,31 +32,34 @@ export default function TrainerSessionsEditModal({
   onClose,
   onSuccess,
 }: TrainerSessionsEditModalProps) {
-  const [time, setTime] = useState(session.time ?? '');
-  const [duration, setDuration] = useState<string | number>(session.duration ?? '60m');
-  const [location, setLocation] = useState(session.location ?? '');
-  const [room, setRoom] = useState(session.room ?? '');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { register, handleSubmit, watch, setValue, formState: { errors, isDirty, isSubmitting } } = useForm<EditSessionValues>({
+    resolver: zodResolver(editSessionSchema),
+    defaultValues: {
+      time: session.time ?? '',
+      duration: session.duration ?? '60m',
+      location: session.location ?? '',
+      room: session.room ?? '',
+    },
+  });
+
   const [error, setError] = useState('');
+  useWarnIfUnsavedChanges(isDirty && !isSubmitting);
 
   const durationOptions = DURATION_OPTIONS.map((d) => ({ value: d.value, label: d.label }));
+  const selectedDuration = watch('duration');
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!time || !duration) return;
-    setIsSubmitting(true);
+  const onSubmitForm = async (data: EditSessionValues) => {
     setError('');
     try {
       const updated = await updateTrainerSession(session.id, {
-        time,
-        duration: String(duration),
-        location: location || undefined,
+        time: data.time,
+        duration: data.duration,
+        location: data.location || undefined,
+        room: data.room || undefined,
       });
       onSuccess(updated);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to update session.');
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -65,7 +80,7 @@ export default function TrainerSessionsEditModal({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-5 space-y-4">
+        <form onSubmit={handleSubmit(onSubmitForm)} className="p-5 space-y-4">
           {error && (
             <p className="text-sm text-danger bg-danger-bg rounded-lg px-3 py-2">{error}</p>
           )}
@@ -79,19 +94,20 @@ export default function TrainerSessionsEditModal({
                 id="edit-session-time"
                 type="time"
                 required
-                value={time}
-                onChange={(e) => setTime(e.target.value)}
+                {...register('time')}
                 className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               />
+              {errors.time && <p className="text-xs text-danger mt-1">{errors.time.message}</p>}
             </div>
             <div>
               <label className="block text-sm font-semibold text-secondary mb-1">Duration</label>
               <SearchableDropdown
                 options={durationOptions}
-                value={duration}
-                onChange={setDuration}
+                value={selectedDuration}
+                onChange={(val) => setValue('duration', String(val), { shouldValidate: true })}
                 placeholder="Select duration"
               />
+              {errors.duration && <p className="text-xs text-danger mt-1">{errors.duration.message}</p>}
             </div>
           </div>
 
@@ -102,8 +118,7 @@ export default function TrainerSessionsEditModal({
             <input
               id="edit-session-location"
               type="text"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
+              {...register('location')}
               placeholder="e.g. Main Floor, Yoga Studio"
               className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
             />
@@ -116,8 +131,7 @@ export default function TrainerSessionsEditModal({
             <input
               id="edit-session-room"
               type="text"
-              value={room}
-              onChange={(e) => setRoom(e.target.value)}
+              {...register('room')}
               placeholder="e.g. Room A, Studio 2"
               className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
             />

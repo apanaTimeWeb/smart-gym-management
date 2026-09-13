@@ -4,10 +4,12 @@
 
 import { useMemo } from 'react';
 import { Calendar as CalendarIcon, CheckCircle2, XCircle, AlertCircle, ShieldCheck } from 'lucide-react';
-import { useMembersContext } from '@/app/trainer/members/members_context/MembersContext';
+import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
+import { useTrainerMemberAttendanceQuery } from '@/app/trainer/members/members_queries/useTrainerMembersQuery';
 
 export default function TrainerMembersProfileAttendance() {
-  const { selectedMember, attMap } = useMembersContext();
+  const selectedMember = useTrainerMembersStore(s => s.selectedMember);
+  const { data: rawAtt = [] } = useTrainerMemberAttendanceQuery(selectedMember?.id || '');
 
   const now = new Date();
   const currentYear = now.getFullYear();
@@ -21,8 +23,6 @@ export default function TrainerMembersProfileAttendance() {
   const firstDayIndex = useMemo(() => new Date(currentYear, currentMonth, 1).getDay(), [currentYear, currentMonth]); // 0 = Sun, 1 = Mon...
 
   if (!selectedMember) return null;
-
-  const rawAtt = attMap[selectedMember.id] || [];
   
   // Map days to attendance status
   const attLookup = useMemo(() => {

@@ -8,32 +8,59 @@ import { X, Save } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/SearchableDropdown';
-import { useWorkoutContext } from '@/app/trainer/workout/workout_context/WorkoutContext';
-import { EQUIPMENT_OPTIONS, EXERCISE_DIFFICULTY_OPTIONS, ExerciseSchema, type ExerciseFormValues, EMPTY_EXERCISE_FORM } from '@/app/trainer/workout/workout_utils/WorkoutSharedConstants';
+import { EQUIPMENT_OPTIONS, EXERCISE_DIFFICULTY_OPTIONS } from '@/app/trainer/workout/workout_utils/WorkoutSharedConstants';
+import { CreateExerciseSchema, type CreateExerciseFormValues, EMPTY_EXERCISE_FORM } from '@/app/trainer/workout/workout_types/workout.schema';
+import { useTrainerWorkoutStore } from '@/app/trainer/workout/workout_store/useTrainerWorkoutStore';
+import { useTrainerWorkoutMutations } from '@/app/trainer/workout/workout_queries/useWorkoutMutations';
+import { useWarnIfUnsavedChanges } from '@/app/trainer/trainer_utils/useWarnIfUnsavedChanges';
 
 export default function ExerciseModal() {
-  const { 
-    showExModal, setShowExModal, 
-    editExId, exForm, 
-    saveEx, saving
-  } = useWorkoutContext();
+  const { showExModal, setShowExModal, editEx } = useTrainerWorkoutStore();
+  const { createExercise, updateExercise } = useTrainerWorkoutMutations();
 
   const {
     register,
     handleSubmit,
     reset,
     control,
-    formState: { errors }
-  } = useForm<ExerciseFormValues>({
-    resolver: zodResolver(ExerciseSchema),
-    defaultValues: exForm || EMPTY_EXERCISE_FORM
+    formState: { errors, isDirty }
+  } = useForm<CreateExerciseFormValues>({
+    resolver: zodResolver(CreateExerciseSchema),
+    defaultValues: EMPTY_EXERCISE_FORM
   });
+
+  useWarnIfUnsavedChanges(isDirty);
 
   useEffect(() => {
     if (showExModal) {
-      reset(exForm);
+      if (editEx) {
+        reset({
+          name: editEx.name,
+          muscle: editEx.muscleGroup?.[0] ?? '',
+          equipment: editEx.equipment ?? 'Bodyweight',
+          difficulty: editEx.difficulty,
+          instructions: editEx.instructions ?? '',
+          videoUrl: editEx.videoUrl ?? ''
+        });
+      } else {
+        reset(EMPTY_EXERCISE_FORM);
+      }
     }
-  }, [showExModal, exForm, reset]);
+  }, [showExModal, editEx, reset]);
+
+  const isSaving = createExercise.isPending || updateExercise.isPending;
+
+  const onSubmit = (data: CreateExerciseFormValues) => {
+    const dto = CreateExerciseSchema.parse(data);
+    if (editEx) {
+      updateExercise.mutate(
+        { id: editEx.id, dto },
+        { onSuccess: () => setShowExModal(false) }
+      );
+    } else {
+      createExercise.mutate(dto, { onSuccess: () => setShowExModal(false) });
+    }
+  };
 
   if (!showExModal) return null;
 
@@ -42,7 +69,7 @@ export default function ExerciseModal() {
       <div className="bg-card rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
         <div className="flex justify-between items-center p-5 border-b border-border">
           <h3 className="font-bold text-lg text-foreground">
-            {editExId ? 'Edit Exercise' : 'Add Exercise'}
+            {editEx ? 'Edit Exercise' : 'Add Exercise'}
           </h3>
           <button 
             type="button"
@@ -52,7 +79,7 @@ export default function ExerciseModal() {
             <X size={20} />
           </button>
         </div>
-        <form onSubmit={handleSubmit(saveEx as any)} className="p-5 space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="p-5 space-y-4">
           <div>
             <label className="block text-sm font-medium text-secondary mb-1">Exercise Name *</label>
             <input 
@@ -135,11 +162,11 @@ export default function ExerciseModal() {
             </button>
             <button 
               type="submit" 
-              disabled={saving}
+              disabled={isSaving}
               className="px-4 py-2 rounded-lg font-medium text-white flex items-center gap-2 hover:opacity-90 motion-safe:transition-opacity disabled:opacity-70" 
               style={{ background: 'var(--workout-highlight)' }}
             >
-              {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" /> : <><Save size={15} /> Save</>}
+              {isSaving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" /> : <><Save size={15} /> Save</>}
             </button>
           </div>
         </form>

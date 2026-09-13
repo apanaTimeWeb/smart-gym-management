@@ -4,12 +4,14 @@
 
 import { useState, useEffect } from 'react';
 import { Dumbbell, Plus, Check, MessageCircle, RefreshCw, Calendar, Flame, Target } from 'lucide-react';
-import { useMembersContext } from '@/app/trainer/members/members_context/MembersContext';
+import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
+import { useTrainerMembersMutations } from '@/app/trainer/members/members_queries/useTrainerMembersMutations';
 import { workoutApi } from '@/app/trainer/workout/workout_api/workout_api';
 import type { Workout, FetchState } from '@/app/trainer/trainer_types/trainer_types';
 
 export default function TrainerMembersProfileWorkout() {
-  const { selectedMember, assignWorkout } = useMembersContext();
+  const selectedMember = useTrainerMembersStore(s => s.selectedMember);
+  const { assignWorkout } = useTrainerMembersMutations();
   const [isAssigning, setIsAssigning] = useState(false);
   const [availableWorkouts, setAvailableWorkouts] = useState<Workout[]>([]);
   const [fetchWorkoutsState, setFetchWorkoutsState] = useState<FetchState>('idle');
@@ -40,7 +42,7 @@ export default function TrainerMembersProfileWorkout() {
     const selected = availableWorkouts.find(w => String(w.id) === selectedWorkoutId) || null;
     setSaving(true);
     try {
-      await assignWorkout(selectedMember.id, selected);
+      await assignWorkout.mutateAsync({ id: selectedMember.id, workout: selected });
       setIsAssigning(false);
       setSelectedWorkoutId('');
     } finally {

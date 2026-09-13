@@ -1,9 +1,11 @@
+'use client';
 import React from 'react';
 import { X, Loader2 } from 'lucide-react';
-import { useTrainerScheduleForm } from './useTrainerScheduleForm';
+import { useTrainerScheduleForm } from '@/app/trainer/sessions/sessions_components/TrainerSessionsScheduleModal/useTrainerScheduleForm';
 import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/SearchableDropdown';
+import { useWarnIfUnsavedChanges } from '@/app/trainer/trainer_utils/useWarnIfUnsavedChanges';
 import { DURATION_OPTIONS } from '@/app/trainer/sessions/sessions_utils/TrainerSessionsSharedConstants';
-import type { CreateSessionDto } from '@/app/trainer/sessions/sessions_api/TrainerSessionsApi';
+import type { CreateSessionDto } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
 
 interface TrainerSessionsScheduleModalProps {
   onClose: () => void;
@@ -19,12 +21,14 @@ export default function TrainerSessionsScheduleModal({
   isSubmitting,
 }: TrainerSessionsScheduleModalProps) {
   const { form, handleSubmit } = useTrainerScheduleForm(onSubmit);
-  const { register, watch, setValue, formState: { errors } } = form;
+  const { register, watch, setValue, formState: { errors, isDirty } } = form;
 
   const durationOptions = DURATION_OPTIONS.map(d => ({ value: d.value, label: d.label }));
   const selectedType = watch('type');
   const selectedMemberId = watch('memberId');
   const selectedDuration = watch('duration');
+
+  useWarnIfUnsavedChanges(isDirty && !isSubmitting);
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">

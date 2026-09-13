@@ -1,15 +1,18 @@
 'use client';
 // RESPONSIBILITY: Renders the trainer's own monthly attendance calendar history.
-// DATA FLOW: useAttendanceContext -> TrainerMyAttendanceCalendar
+// DATA FLOW: props (records from TrainerAttendanceMain) → display only
 // Strictly view-only: trainers can browse past and present month logs.
 
 import { useState, useMemo } from 'react';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, CheckCircle2, XCircle, Clock, ShieldCheck, UserCheck } from 'lucide-react';
-import { useAttendanceContext } from '@/app/trainer/attendance/attendance_context/AttendanceContext';
 import { getUser } from '@/lib/api';
+import type { AttendanceRecord } from '@/app/trainer/attendance/attendance_types/attendance_types';
 
-export default function TrainerMyAttendanceCalendar() {
-  const { records } = useAttendanceContext();
+interface Props {
+  records: AttendanceRecord[];
+}
+
+export default function TrainerMyAttendanceCalendar({ records }: Props) {
   const user = getUser();
 
   const [currentDate, setCurrentDate] = useState(new Date());

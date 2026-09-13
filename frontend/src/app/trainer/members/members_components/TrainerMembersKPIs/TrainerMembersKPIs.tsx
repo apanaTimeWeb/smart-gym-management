@@ -4,7 +4,7 @@
 'use client';
 
 import { User, CheckCircle, Clock, XCircle } from 'lucide-react';
-import { useMembersContext } from '@/app/trainer/members/members_context/MembersContext';
+import { useTrainerMemberStatsQuery } from '@/app/trainer/members/members_queries/useTrainerMembersQuery';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
 const KPI_CONFIG = [
@@ -15,7 +15,7 @@ const KPI_CONFIG = [
 ] as const;
 
 export default function TrainerMembersKPIs() {
-  const { stats } = useMembersContext();
+  const { data: stats = { total: 0, active: 0, pending: 0, expired: 0 } } = useTrainerMemberStatsQuery();
   const dateSuffix = useDateRangeSuffix();
 
   return (

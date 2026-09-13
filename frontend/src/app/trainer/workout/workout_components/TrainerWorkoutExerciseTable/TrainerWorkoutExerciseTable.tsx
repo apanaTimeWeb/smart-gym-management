@@ -3,18 +3,29 @@
 // RESPONSIBILITY: Renders the exercises data table with muscle group, category, and inline edit/delete actions.
 'use client';
 
-import { useWorkoutContext } from '@/app/trainer/workout/workout_context/WorkoutContext';
+import { useTrainerWorkoutFilters } from '@/app/trainer/workout/workout_utils/useTrainerWorkoutFilters';
+import { useTrainerExercisesQuery } from '@/app/trainer/workout/workout_queries/useWorkoutQuery';
 import { EXERCISE_TABLE_HEADERS } from '@/app/trainer/workout/workout_utils/WorkoutSharedConstants';
-
 import TrainerPagination from '@/app/trainer/trainer_components/TrainerShared/TrainerPagination';
 import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerSharedConstants';
+import { useTrainerWorkoutStore } from '@/app/trainer/workout/workout_store/useTrainerWorkoutStore';
+import { useTrainerWorkoutMutations } from '@/app/trainer/workout/workout_queries/useWorkoutMutations';
+import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
+import { Edit2, Trash2 } from 'lucide-react';
 
 export default function TrainerWorkoutExerciseTable() {
-  const { exercises, totalExercises, currentPage, setCurrentPage, fetchState, search } = useWorkoutContext();
+  const { search, category, page, setPage } = useTrainerWorkoutFilters();
+  const { data, status } = useTrainerExercisesQuery(search, category, page);
+  const { setEditEx, setShowExModal } = useTrainerWorkoutStore();
+  const { deleteExercise } = useTrainerWorkoutMutations();
+  const { confirm } = useConfirm();
+
+  const exercises = data?.exercises ?? [];
+  const totalExercises = data?.total ?? 0;
 
   const totalPages = Math.ceil(totalExercises / TRAINER_ITEMS_PER_PAGE) || 1;
 
-  if (fetchState === 'loading') {
+  if (status === 'pending') {
     return (
       <div className="flex justify-center py-10">
         <div className="motion-safe:animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -22,7 +33,7 @@ export default function TrainerWorkoutExerciseTable() {
     );
   }
 
-  if (fetchState === 'error') {
+  if (status === 'error') {
     return (
       <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
         <p className="text-danger font-medium">Failed to load exercises.</p>
@@ -67,6 +78,17 @@ export default function TrainerWorkoutExerciseTable() {
                     {ex.difficulty}
                   </span>
                 </td>
+                <td className="px-4 py-3 flex gap-1">
+                  <button onClick={() => { setEditEx(ex); setShowExModal(true); }} className="p-1.5 text-secondary hover:text-foreground hover:bg-input rounded-md transition-colors">
+                    <Edit2 size={14} />
+                  </button>
+                  <button onClick={async () => {
+                    const ok = await confirm({ title: 'Delete Exercise', message: 'Delete this exercise?', type: 'danger', confirmText: 'Delete' });
+                    if (ok) deleteExercise.mutate(ex.id);
+                  }} className="p-1.5 text-secondary hover:text-danger hover:bg-danger-bg rounded-md transition-colors">
+                    <Trash2 size={14} />
+                  </button>
+                </td>
               </tr>
             ))}
             {exercises.length === 0 && (
@@ -80,11 +102,11 @@ export default function TrainerWorkoutExerciseTable() {
         </table>
       </div>
       <TrainerPagination 
-        currentPage={currentPage} 
+        currentPage={page} 
         totalPages={totalPages} 
         totalItems={totalExercises} 
         itemsPerPage={TRAINER_ITEMS_PER_PAGE} 
-        onPageChange={setCurrentPage} 
+        onPageChange={setPage} 
       />
     </div>
   );
