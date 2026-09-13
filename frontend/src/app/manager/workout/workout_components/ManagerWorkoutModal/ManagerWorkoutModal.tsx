@@ -8,24 +8,30 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { useWorkoutContext } from '@/app/manager/workout/workout_context/ManagerWorkoutContext';
 import { WorkoutSchema, type WorkoutFormValues, EMPTY_WORKOUT_FORM } from '@/app/manager/workout/workout_utils/ManagerWorkoutSharedConstants';
+import { useSaveWorkoutMutation } from '@/app/manager/workout/workout_api/useManagerWorkoutMutations';
+import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
+import toast from 'react-hot-toast';
 
 export default function ManagerWorkoutModal() {
   const { 
     showWkModal, setShowWkModal, 
-    editWkId, wkForm, 
-    saveWk, saving 
+    editWkId, wkForm 
   } = useWorkoutContext();
+
+  const saveMutation = useSaveWorkoutMutation();
 
   const {
     register,
     handleSubmit,
     reset,
     control,
-    formState: { errors }
+    formState: { errors, isDirty }
   } = useForm<WorkoutFormValues>({
     resolver: zodResolver(WorkoutSchema),
     defaultValues: wkForm || EMPTY_WORKOUT_FORM
   });
+
+  useUnsavedChangesGuard(showWkModal && isDirty);
 
   useEffect(() => {
     if (showWkModal) {
@@ -50,7 +56,22 @@ export default function ManagerWorkoutModal() {
             <X size={20} />
           </button>
         </div>
-        <form onSubmit={handleSubmit((data) => saveWk(data))} className="p-5 space-y-4">
+        <form onSubmit={handleSubmit(async (data) => {
+          try {
+            const payload = { 
+              ...data, 
+              id: editWkId || undefined,
+              days: Number(data.days), 
+              exercises: Number(data.exercises), 
+              tags: data.tags.split(',').map(t => t.trim()).filter(Boolean) 
+            };
+            await saveMutation.mutateAsync(payload);
+            toast.success(editWkId ? 'Workout updated successfully' : 'Workout created successfully');
+            setShowWkModal(false);
+          } catch (err: unknown) {
+            toast.error(err instanceof Error ? err.message : 'Failed to save workout');
+          }
+        })} className="p-5 space-y-4">
           <div>
             <label className="block text-sm font-medium text-secondary mb-1">Plan Name *</label>
             <input 
@@ -157,11 +178,10 @@ export default function ManagerWorkoutModal() {
             </button>
             <button 
               type="submit" 
-              disabled={saving}
-              className="px-4 py-2 rounded-lg font-medium text-white flex items-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-70" 
-              style={{ background: 'var(--workout-highlight)' }}
+              disabled={saveMutation.isPending}
+              className="px-4 py-2 rounded-lg font-medium text-white flex items-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-70 bg-primary" 
             >
-              {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" /> : <><Save size={15} /> Save</>}
+              {saveMutation.isPending ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" /> : <><Save size={15} /> Save</>}
             </button>
           </div>
         </form>

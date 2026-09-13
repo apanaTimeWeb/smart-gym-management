@@ -4,25 +4,12 @@ import { cookies } from 'next/headers';
 import type { DashboardStats } from '@/app/manager/dashboard/dashboard_types/ManagerDashboardTypes';
 import type { ApiResponse } from '@/lib/api';
 import { DashboardUrlConfig } from '@/app/manager/dashboard/ManagerDashboardUrlConfig';
+import { ssrDashboardApi } from '@/app/manager/dashboard/dashboard_api/ManagerDashboardServerApi';
 
 async function getDashboardData() {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('gymsmart_token')?.value;
-    
-    if (!token) return null;
-    
-    const backendUrl = process.env.BACKEND_API_URL || process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001';
-    const res = await fetch(`${backendUrl}${DashboardUrlConfig.BACKEND_API.STATS}`, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      },
-      next: { revalidate: 60 } // Cache for 60 seconds
-    });
-    
-    if (!res.ok) return null;
-    const json = await res.json() as ApiResponse<DashboardStats>;
-    return json.data || null;
+    const res = await ssrDashboardApi.getStats();
+    return res.data || null;
   } catch (e) {
     return null;
   }

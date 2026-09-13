@@ -3,7 +3,15 @@
 // DATA FLOW: page.tsx (Server) → TrainerProgressMain (Client) → chart, table, modal, comparison
 
 import { Plus, BarChart2, User } from 'lucide-react';
-import { useTrainerProgressLogic } from '@/app/trainer/progress-tracking/progress_context/useTrainerProgressLogic';
+import { useMemo, useEffect, useState } from 'react';
+import { useTrainerProgressStore } from '@/app/trainer/progress-tracking/progress_store/useTrainerProgressStore';
+import { useTrainerProgressFilters } from '@/app/trainer/progress-tracking/progress_utils/useTrainerProgressFilters';
+import { useTrainerProgressMembersQuery, useTrainerProgressEntriesQuery } from '@/app/trainer/progress-tracking/progress_queries/useTrainerProgressQuery';
+import { useTrainerProgressMutations } from '@/app/trainer/progress-tracking/progress_queries/useTrainerProgressMutations';
+import { buildComparisonSnapshot } from '@/app/trainer/progress-tracking/progress_utils/useTrainerProgressComparison';
+import { fetchProgressEntries } from '@/app/trainer/progress-tracking/progress_api/TrainerProgressApi';
+import type { ProgressEntry } from '@/app/trainer/progress-tracking/progress_types/TrainerProgressTypes';
+import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 import TrainerProgressChart from '@/app/trainer/progress-tracking/progress_components/TrainerProgressChart/TrainerProgressChart';
 import TrainerProgressTable from '@/app/trainer/progress-tracking/progress_components/TrainerProgressTable/TrainerProgressTable';
 import TrainerProgressModal from '@/app/trainer/progress-tracking/progress_components/TrainerProgressModal/TrainerProgressModal';
@@ -14,28 +22,73 @@ import TrainerProgressComparisonTable from '@/app/trainer/progress-tracking/prog
 import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/SearchableDropdown';
 
 export default function TrainerProgressMain() {
-  const {
-    memberEntries,
-    activeMetric,
-    setActiveMetric,
-    showModal,
-    editingEntry,
-    openAddModal,
-    openEditModal,
-    closeModal,
-    handleDelete,
-    handleSave,
-    activeTab,
-    setActiveTab,
-    allComparisonMembers,
-    selectedComparisonIds,
-    toggleComparisonMember,
-    comparisonSnapshots,
-    activeComparisonMetric,
-    setActiveComparisonMetric,
-    selectedMemberId,
-    setSelectedMemberId,
-  } = useTrainerProgressLogic();
+  const { selectedMemberId, setSelectedMemberId, activeTab, setActiveTab } = useTrainerProgressFilters();
+  const { data: allComparisonMembers = [] } = useTrainerProgressMembersQuery();
+  const { data: memberEntries = [] } = useTrainerProgressEntriesQuery(selectedMemberId);
+  const { deleteEntry, createEntry, updateEntry } = useTrainerProgressMutations();
+  const { confirm } = useConfirm();
+
+  const activeMetric = useTrainerProgressStore(s => s.activeMetric);
+  const setActiveMetric = useTrainerProgressStore(s => s.setActiveMetric);
+  const showModal = useTrainerProgressStore(s => s.showModal);
+  const setShowModal = useTrainerProgressStore(s => s.setShowModal);
+  const editingEntry = useTrainerProgressStore(s => s.editingEntry);
+  const setEditingEntry = useTrainerProgressStore(s => s.setEditingEntry);
+  const activeComparisonMetric = useTrainerProgressStore(s => s.activeComparisonMetric);
+  const setActiveComparisonMetric = useTrainerProgressStore(s => s.setActiveComparisonMetric);
+  const selectedComparisonIds = useTrainerProgressStore(s => s.selectedComparisonIds);
+  const toggleComparisonMember = useTrainerProgressStore(s => s.toggleComparisonMember);
+
+  const openAddModal = () => { setEditingEntry(null); setShowModal(true); };
+  const openEditModal = (entry: any) => { setEditingEntry(entry); setShowModal(true); };
+  const closeModal = () => { setShowModal(false); setEditingEntry(null); };
+
+  const handleDelete = async (entryId: string) => {
+    const ok = await confirm({
+      title: 'Delete Progress Entry',
+      message: 'Are you sure you want to delete this progress entry? This action cannot be undone.',
+      type: 'danger',
+      confirmText: 'Delete',
+    });
+    if (!ok) return;
+    deleteEntry.mutate({ memberId: selectedMemberId, entryId });
+  };
+
+  const handleSave = (data: any) => {
+    if (editingEntry) {
+      updateEntry.mutate({ memberId: selectedMemberId, entryId: editingEntry.id, dto: data });
+    } else {
+      createEntry.mutate({ memberId: selectedMemberId, dto: data });
+    }
+    closeModal();
+  };
+
+  // Pre-fetch comparison entries
+  const [comparisonEntriesMap, setComparisonEntriesMap] = useState<Map<string, ProgressEntry[]>>(new Map());
+
+  useEffect(() => {
+    const fetchMissing = async () => {
+      for (const memberId of selectedComparisonIds) {
+        if (!comparisonEntriesMap.has(memberId)) {
+          try {
+            const data = await fetchProgressEntries(memberId);
+            setComparisonEntriesMap(prev => new Map(prev).set(memberId, data));
+          } catch {
+            setComparisonEntriesMap(prev => new Map(prev).set(memberId, []));
+          }
+        }
+      }
+    };
+    void fetchMissing();
+  }, [selectedComparisonIds, comparisonEntriesMap]);
+
+  const comparisonSnapshots = useMemo(() => {
+    return selectedComparisonIds.map(id => {
+      const name = allComparisonMembers.find(m => m.id === id)?.name ?? id;
+      const mEntries = comparisonEntriesMap.get(id) ?? [];
+      return buildComparisonSnapshot(id, name, mEntries);
+    });
+  }, [selectedComparisonIds, allComparisonMembers, comparisonEntriesMap]);
 
   return (
     <div className="min-h-full pb-10">

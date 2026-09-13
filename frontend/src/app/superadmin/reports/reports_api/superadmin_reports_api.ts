@@ -2,14 +2,19 @@ import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import type { RevenueRow, ChurnRecord, TenantHealthScore } from '@/app/superadmin/reports/reports_types/reports_types';
 
+import { MOCK_SUPERADMIN_REPORTS_REVENUE, MOCK_SUPERADMIN_REPORTS_CHURN, MOCK_SUPERADMIN_REPORTS_HEALTH } from '@/app/superadmin/reports/reports_api/SuperadminReportsMockData';
+
 export const superadminReportsApi = {
   fetchRevenueData: async () => {
-    return apiFetch<ApiResponse<RevenueRow[]>>('/superadmin/reports/revenue');
+    await new Promise(r => setTimeout(r, 400));
+    return { success: true, message: 'Success', data: MOCK_SUPERADMIN_REPORTS_REVENUE };
   },
   fetchChurnData: async () => {
-    return apiFetch<ApiResponse<ChurnRecord[]>>('/superadmin/reports/churn');
+    await new Promise(r => setTimeout(r, 400));
+    return { success: true, message: 'Success', data: MOCK_SUPERADMIN_REPORTS_CHURN };
   },
   fetchHealthData: async () => {
-    return apiFetch<ApiResponse<TenantHealthScore[]>>('/superadmin/reports/health');
+    await new Promise(r => setTimeout(r, 400));
+    return { success: true, message: 'Success', data: MOCK_SUPERADMIN_REPORTS_HEALTH };
   },
 };

@@ -1,39 +1,28 @@
 // RESPONSIBILITY: Renders a month-wise calendar view of attendance for a specific user.
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useAttendanceContext } from '@/app/manager/attendance/attendance_context/ManagerAttendanceContext';
-import { attendanceApi } from '@/app/manager/attendance/attendance_api/ManagerAttendanceApi';
-import type { Attendance } from '@/app/manager/attendance/attendance_types/ManagerAttendanceTypes';
+import { useAttendanceHistoryQuery } from '@/app/manager/attendance/attendance_api/useManagerAttendanceQueries';
 import { X, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 
 export default function AttendanceCalendar() {
   const { calendarUser, setCalendarUser, showToast } = useAttendanceContext();
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [history, setHistory] = useState<Attendance[]>([]);
-  const [loading, setLoading] = useState(false);
 
-  const loadHistory = async (date: Date) => {
-    if (!calendarUser) return;
-    setLoading(true);
-    try {
-      const monthStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-      const res = await attendanceApi.getHistory(calendarUser.id, calendarUser.type, monthStr);
-      if (res.success && res.data) {
-        setHistory(res.data as any); // Assuming ApiResponse structure
-      }
-    } catch (err) {
-      showToast((err as Error).message, 'error');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const monthStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
+  
+  const { data: historyData, isLoading: loading, isError, error } = useAttendanceHistoryQuery(
+    calendarUser?.id || '',
+    calendarUser?.type || 'MEMBER',
+    monthStr
+  );
 
-  useEffect(() => {
-    if (calendarUser) {
-      loadHistory(currentDate);
-    }
-  }, [calendarUser, currentDate]);
+  const history = Array.isArray(historyData) ? historyData : [];
+
+  if (isError) {
+    showToast((error as Error).message, 'error');
+  }
 
 
 
@@ -122,7 +111,7 @@ export default function AttendanceCalendar() {
               </div>
               <div className="grid grid-cols-7 gap-1.5 motion-safe:animate-pulse">
                 {[...Array(35)].map((_, i) => (
-                  <div key={i} className="aspect-square rounded-md bg-muted" />
+                  <div key={`skeleton-${i}`} className="aspect-square rounded-md bg-muted" />
                 ))}
               </div>
             </div>

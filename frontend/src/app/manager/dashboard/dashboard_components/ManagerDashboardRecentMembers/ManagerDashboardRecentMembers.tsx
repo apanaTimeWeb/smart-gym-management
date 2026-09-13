@@ -3,13 +3,16 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Search } from 'lucide-react';
-import { useDashboardContext } from '@/app/manager/dashboard/dashboard_context/ManagerDashboardContext';
-import { DASHBOARD_RECENT_MEMBERS_PAGE_SIZE, RECENT_MEMBERS_HEADERS, DASHBOARD_STATUS_STYLES, formatCurrency } from '@/app/manager/dashboard/dashboard_utils/ManagerDashboardSharedConstants';
+import { Search, ArrowRight, UserPlus } from 'lucide-react';
+import { DASHBOARD_RECENT_MEMBERS_PAGE_SIZE, RECENT_MEMBERS_HEADERS, DASHBOARD_STATUS_STYLES } from '@/app/manager/dashboard/dashboard_utils/ManagerDashboardSharedConstants';
+import { formatCurrency } from '@/lib/formatters';
+import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/useManagerDashboardQueries';
+import { useManagerDashboardStore } from '@/app/manager/dashboard/dashboard_store/useManagerDashboardStore';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 
 export default function ManagerDashboardRecentMembers() {
-  const { stats } = useDashboardContext();
+  const { timeRange } = useManagerDashboardStore();
+  const { data: stats } = useDashboardStatsQuery(timeRange);
   const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 

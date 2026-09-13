@@ -4,15 +4,38 @@ import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import type { SubscriptionPlan, CreatePlanPayload, UpdatePlanPayload } from '@/app/superadmin/plans/superadmin_plans_types/superadmin_plans_types';
 
+import { MOCK_SUPERADMIN_PLANS } from '@/app/superadmin/plans/superadmin_plans_api/SuperadminPlansMockData';
+
+let mockPlans = [...MOCK_SUPERADMIN_PLANS];
+
 export const plansApi = {
-  fetchPlans: (params?: Record<string, string>) => {
-    const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<SubscriptionPlan[]>>(`${SuperadminUrlConfig.BACKEND_API.PLANS_BASE}${q}`);
+  fetchPlans: async (params?: Record<string, string>) => {
+    await new Promise(r => setTimeout(r, 400));
+    return { success: true, message: 'Success', data: mockPlans };
   },
-  fetchPlanById: (id: string) => apiFetch<ApiResponse<SubscriptionPlan>>(`${SuperadminUrlConfig.BACKEND_API.PLANS_BASE}/${id}`),
-  createPlan: (body: CreatePlanPayload) => apiFetch<ApiResponse<SubscriptionPlan>>(SuperadminUrlConfig.BACKEND_API.PLANS_BASE, { method: 'POST', body: JSON.stringify(body) }),
-  updatePlan: (id: string, body: UpdatePlanPayload) => apiFetch<ApiResponse<SubscriptionPlan>>(`${SuperadminUrlConfig.BACKEND_API.PLANS_BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
-  deletePlan: (id: string) => apiFetch<ApiResponse<void>>(`${SuperadminUrlConfig.BACKEND_API.PLANS_BASE}/${id}`, { method: 'DELETE' }),
-  /** PATCH /superadmin/plans/:id/archive — hides plan from new signups, keeps existing tenants on it */
-  archivePlan: (id: string) => apiFetch<ApiResponse<void>>(`${SuperadminUrlConfig.BACKEND_API.PLANS_BASE}/${id}/archive`, { method: 'PATCH' }),
+  fetchPlanById: async (id: string) => {
+    await new Promise(r => setTimeout(r, 300));
+    return { success: true, message: 'Success', data: mockPlans.find(p => p.id === id) as SubscriptionPlan };
+  },
+  createPlan: async (body: CreatePlanPayload) => {
+    await new Promise(r => setTimeout(r, 500));
+    const newPlan = { ...body, id: `p${Date.now()}`, activeTenants: 0, isArchived: false } as SubscriptionPlan;
+    mockPlans = [newPlan, ...mockPlans];
+    return { success: true, message: 'Created', data: newPlan };
+  },
+  updatePlan: async (id: string, body: UpdatePlanPayload) => {
+    await new Promise(r => setTimeout(r, 500));
+    mockPlans = mockPlans.map(p => p.id === id ? { ...p, ...body } : p);
+    return { success: true, message: 'Updated', data: mockPlans.find(p => p.id === id) as SubscriptionPlan };
+  },
+  deletePlan: async (id: string) => {
+    await new Promise(r => setTimeout(r, 400));
+    mockPlans = mockPlans.filter(p => p.id !== id);
+    return { success: true, message: 'Deleted', data: undefined };
+  },
+  archivePlan: async (id: string) => {
+    await new Promise(r => setTimeout(r, 400));
+    mockPlans = mockPlans.map(p => p.id === id ? { ...p, isArchived: true } : p);
+    return { success: true, message: 'Archived', data: undefined };
+  },
 };

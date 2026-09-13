@@ -17,11 +17,15 @@ export interface FetchMembersParams {
   limit?: number;
 }
 
+import { MOCK_ADMIN_MEMBERS, MOCK_ADMIN_MEMBERS_SUMMARY } from '@/app/admin/members/members_api/AdminMembersMockData';
+
 export const adminMembersApi = {
-  fetchMembers: (params: FetchMembersParams) =>
-    apiFetch<ApiResponse<AdminMember[]>>(`${ADMIN_MEMBERS_URLS.list}?${new URLSearchParams(
-      Object.fromEntries(Object.entries(params).filter(([, v]) => v !== undefined && v !== '').map(([k, v]) => [k, String(v)]))
-    )}`),
-  fetchSummary: () =>
-    apiFetch<ApiResponse<AdminMembersSummary>>(ADMIN_MEMBERS_URLS.summary),
+  fetchMembers: async (params: FetchMembersParams) => {
+    await new Promise(res => setTimeout(res, 300));
+    return { success: true, message: 'Success', data: MOCK_ADMIN_MEMBERS };
+  },
+  fetchSummary: async () => {
+    await new Promise(res => setTimeout(res, 300));
+    return { success: true, message: 'Success', data: MOCK_ADMIN_MEMBERS_SUMMARY };
+  },
 };

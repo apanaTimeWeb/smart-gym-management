@@ -4,6 +4,7 @@
 import { useEffect } from 'react';
 import { useExpensesContext } from '@/app/manager/expenses/expenses_context/ManagerExpensesContext';
 import { ExpenseSchema, EXPENSE_CATEGORIES, EXPENSE_STATUS_LABELS, type ExpenseFormValues } from '@/app/manager/expenses/expenses_utils/ManagerExpensesSharedConstants';
+import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
 import { X, Save } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -12,10 +13,12 @@ import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 export default function ManagerExpensesModal() {
   const { showModal, setShowModal, editId, editData, saveExpense, saving } = useExpensesContext();
 
-  const { register, handleSubmit, reset, control, formState: { errors } } = useForm<ExpenseFormValues>({
+  const { register, handleSubmit, reset, control, formState: { errors, isDirty } } = useForm<ExpenseFormValues>({
     resolver: zodResolver(ExpenseSchema),
-    defaultValues: editData || { status: 'PAID', date: new Date().toISOString().split('T')[0] },
+    defaultValues: editData || { status: 'PAID', date: new Date().toISOString().split('T')[0] || '' },
   });
+
+  useUnsavedChangesGuard(isDirty && showModal);
 
   useEffect(() => {
     if (showModal && editData) reset(editData);

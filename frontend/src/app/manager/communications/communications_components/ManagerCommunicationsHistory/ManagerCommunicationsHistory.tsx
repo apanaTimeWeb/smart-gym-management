@@ -7,8 +7,6 @@ import { TableSkeleton } from '@/app/manager/manager_components/ManagerShared/Ta
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { COMM_STATUS_STYLES } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
 
-// WhatsApp brand green — third-party brand color, not a design system token.
-const WA_GREEN = '#25D366';
 
 const HEADERS = ['Campaign', 'Channel', 'Segment', 'Recipients', 'Sent', 'Status', 'Date'];
 
@@ -86,8 +84,7 @@ export default function ManagerCommunicationsHistory() {
                       </td>
                       <td className="px-4 py-3">
                         <span
-                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold text-white"
-                          style={{ background: isWA ? WA_GREEN : 'var(--info)' }}
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold text-white ${isWA ? 'bg-[#25D366]' : 'bg-info-bg text-info'}`}
                         >
                           {isWA ? <MessageCircle size={11} /> : <Mail size={11} />}
                           {isWA ? 'WhatsApp' : 'Email'}

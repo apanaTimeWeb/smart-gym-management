@@ -10,6 +10,7 @@ import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/Man
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
+import { formatCurrency } from '@/lib/formatters';
 
 export default function ManagerHrStaffTable() {
   const { staff, summary, fetchState, debouncedSearch, roleFilter, currentPage, setCurrentPage, openEdit, deleteStaff, toggleStaffStatus, setViewProfileData, exportStaff } = useHrContext();
@@ -35,7 +36,7 @@ export default function ManagerHrStaffTable() {
             </thead>
             <tbody className="divide-y divide-border">
               {[...Array(5)].map((_, i) => (
-                <tr key={i} className="motion-safe:animate-pulse">
+                <tr key={`staff-loading-${i}`} className="motion-safe:animate-pulse">
                   <td className="px-4 py-4 flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-muted"></div>
                     <div><div className="h-4 bg-muted rounded w-24 mb-1"></div><div className="h-3 bg-muted rounded w-32"></div></div>
@@ -111,8 +112,8 @@ export default function ManagerHrStaffTable() {
                   )}
                 </td>
                 <td className="px-4 py-3 text-sm text-secondary">{s.phone}</td>
-                <td className="px-4 py-3 text-sm font-medium text-success text-right">{(s.salary || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
-                <td className="px-4 py-3 text-sm font-medium text-primary text-right">{s.advanceSalary && s.advanceSalary > 0 ? s.advanceSalary.toLocaleString('en-IN', { style: 'currency', currency: 'INR' }) : '—'}</td>
+                <td className="px-4 py-3 text-sm font-medium text-success text-right">{formatCurrency(s.salary || 0)}</td>
+                <td className="px-4 py-3 text-sm font-medium text-primary text-right">{s.advanceSalary && s.advanceSalary > 0 ? formatCurrency(s.advanceSalary) : '—'}</td>
                 <td className="px-4 py-3 text-sm text-secondary">
                   {s.joinDate ? new Date(s.joinDate).toLocaleDateString('en-IN') : 'N/A'}
                 </td>

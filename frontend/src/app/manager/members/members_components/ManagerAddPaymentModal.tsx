@@ -2,14 +2,18 @@
 'use client';
 
 import { useState } from 'react';
-import { X } from 'lucide-react';
+import { Calendar, CheckCircle2, Copy, FileText, Share2, Wallet, X } from 'lucide-react';
+import { formatCurrency } from '@/lib/formatters';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
+import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
 
 export default function ManagerAddPaymentModal() {
   const { showPaymentModal, setShowPaymentModal, recordPayment, selectedMember } = useMembersContext();
   const [amount, setAmount] = useState<number | ''>('');
   const [method, setMethod] = useState('UPI');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useUnsavedChangesGuard(!!amount && !isSubmitting);
 
   if (!showPaymentModal || !selectedMember) return null;
 
@@ -39,8 +43,8 @@ export default function ManagerAddPaymentModal() {
             <div className={`p-3 rounded-lg border mb-4 ${selectedMember.pendingAmount > 0 ? 'bg-danger-bg border-destructive/20' : 'bg-success-bg border-success/20'}`}>
               <p className={`text-sm font-semibold ${selectedMember.pendingAmount > 0 ? 'text-danger' : 'text-success'}`}>
                 {selectedMember.pendingAmount > 0 
-                  ? `Current Dues: ₹${selectedMember.pendingAmount}` 
-                  : `Advance Balance: ₹${selectedMember.advanceAmount}`}
+                  ? `Current Dues: ${formatCurrency(selectedMember.pendingAmount)}` 
+                  : `Advance Balance: ${formatCurrency(selectedMember.advanceAmount || 0)}`}
               </p>
             </div>
           )}

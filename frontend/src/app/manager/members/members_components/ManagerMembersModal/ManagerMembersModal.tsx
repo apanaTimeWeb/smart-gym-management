@@ -3,16 +3,15 @@
 
 import { useEffect } from 'react';
 import { X, Save } from 'lucide-react';
-import { useForm, Controller, useWatch } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { Controller } from 'react-hook-form';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
 import { useFetchPlans } from '@/app/manager/members/members_api/useManagerMembersQueries';
 import { useIsMutating } from '@tanstack/react-query';
-import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency, MemberSchema, type MemberFormValues, EMPTY_MEMBER_FORM, GENDER_OPTIONS, MEMBER_EDIT_STATUS_OPTIONS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
+import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency, type MemberFormValues, GENDER_OPTIONS, MEMBER_EDIT_STATUS_OPTIONS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import ManagerMemberProfilePictureUpload from '@/app/manager/members/members_components/ManagerMembersModal/ManagerMemberProfilePictureUpload';
-import type { PlanWithCustom } from '@/app/manager/members/members_types/ManagerMembersTypes';
 import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
+import { useManagerMembersModalForm } from '@/app/manager/members/members_components/ManagerMembersModal/useManagerMembersModalForm';
 
 export default function ManagerMembersModal() {
   const {
@@ -24,86 +23,21 @@ export default function ManagerMembersModal() {
   const plans = plansData || [];
   const saving = useIsMutating() > 0;
 
-  const useFormReturn = useForm<MemberFormValues>({
-    resolver: zodResolver(MemberSchema) as any,
-    defaultValues: editData || EMPTY_MEMBER_FORM
-  });
-
   const {
+    useFormReturn,
     register,
     handleSubmit,
-    reset,
-    formState: { errors, isDirty }
-  } = useFormReturn;
+    errors,
+    isDirty,
+    watchPlanId,
+    watchBillingCycle,
+    watchCustomDays,
+    selectedPlan,
+  } = useManagerMembersModalForm(editData, showAddModal, plans, saveMember, editId);
 
   useUnsavedChangesGuard(isDirty && !saving);
 
-  // Refetch editData into form whenever modal opens for edit
-  useEffect(() => {
-    if (showAddModal) {
-      reset({ ...EMPTY_MEMBER_FORM, ...(editData || {}) });
-    }
-  }, [showAddModal, editData, reset]);
-
-  const watchPlanId = useWatch({ control: useFormReturn.control, name: 'planId' }) as string;
-  const watchBillingCycle = useWatch({ control: useFormReturn.control, name: 'billingCycle' }) as string;
-  const watchCustomDays = useWatch({ control: useFormReturn.control, name: 'customDays' }) as number;
-  const watchJoinDate = useWatch({ control: useFormReturn.control, name: 'joinDate' }) as string;
-
-  useEffect(() => {
-    if (watchPlanId && watchBillingCycle) {
-      const selectedPlan = plans.find(p => p.id.toString() === watchPlanId.toString()) as PlanWithCustom | undefined;
-      const price = getPriceForCycle(selectedPlan, watchBillingCycle, Number(watchCustomDays) || 0);
-      useFormReturn.setValue('totalAmount', price, { shouldValidate: true });
-      useFormReturn.setValue('paidAmount', price, { shouldValidate: true }); // Default to fully paid
-    }
-  }, [watchPlanId, watchBillingCycle, watchCustomDays, plans, useFormReturn]);
-
-  useEffect(() => {
-    if (watchJoinDate && watchBillingCycle) {
-      const jd = new Date(watchJoinDate);
-      if (!isNaN(jd.getTime())) {
-        const ed = new Date(jd);
-        if (watchBillingCycle === 'ONE_MONTH') ed.setMonth(ed.getMonth() + 1);
-        else if (watchBillingCycle === 'THREE_MONTHS') ed.setMonth(ed.getMonth() + 3);
-        else if (watchBillingCycle === 'SIX_MONTHS') ed.setMonth(ed.getMonth() + 6);
-        else if (watchBillingCycle === 'TWELVE_MONTHS') ed.setMonth(ed.getMonth() + 12);
-        else if (watchBillingCycle === 'CUSTOM' && watchCustomDays) ed.setDate(ed.getDate() + Number(watchCustomDays));
-        
-        useFormReturn.setValue('expiryDate', ed.toISOString().split('T')[0] || '', { shouldValidate: true });
-      }
-    }
-  }, [watchJoinDate, watchBillingCycle, watchCustomDays, useFormReturn]);
-
-  const onSubmit = (data: MemberFormValues) => {
-    let payload: Partial<MemberFormValues> & { pendingAmount?: number, advanceAmount?: number } = { ...data };
-    if (!editId) {
-      const total = data.totalAmount || 0;
-      const paid = data.paidAmount || 0;
-      if (paid <= total) {
-        payload.pendingAmount = total - paid;
-        payload.advanceAmount = 0;
-      } else {
-        payload.pendingAmount = 0;
-        payload.advanceAmount = paid - total;
-      }
-    } else {
-      // Remove fields that should not be updated during edit
-      delete payload.totalAmount;
-      delete payload.paidAmount;
-      delete payload.pendingAmount;
-      delete payload.joinDate;
-      delete payload.expiryDate;
-      delete payload.planId;
-      delete payload.billingCycle;
-      delete payload.customDays;
-    }
-    saveMember(payload as MemberFormValues);
-  };
-
   if (!showAddModal) return null;
-
-  const selectedPlan = plans.find(p => p.id.toString() === watchPlanId?.toString()) as PlanWithCustom | undefined;
 
   return (
     <div className="fixed inset-0 bg-black/60 z-40 flex items-center justify-center p-4">
@@ -119,7 +53,7 @@ export default function ManagerMembersModal() {
             <X size={20} />
           </button>
         </div>
-        <form onSubmit={handleSubmit(onSubmit)} className="p-6">
+        <form onSubmit={handleSubmit} className="p-6">
           
           {/* Profile Picture Upload — extracted component (Rule 1: file size ceiling) */}
           <ManagerMemberProfilePictureUpload />
@@ -273,7 +207,7 @@ export default function ManagerMembersModal() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-secondary mb-0.5">Total Plan Amount (₹)</label>
+              <label className="block text-sm font-medium text-secondary mb-0.5">Total Plan Amount ({formatCurrency(0).replace(/0/g, '').trim()})</label>
               <input
                 type="number"
                 readOnly
@@ -282,7 +216,7 @@ export default function ManagerMembersModal() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-secondary mb-0.5">Amount Paid (₹)</label>
+              <label className="block text-sm font-medium text-secondary mb-0.5">Amount Paid ({formatCurrency(0).replace(/0/g, '').trim()})</label>
               <input
                 type="number"
                 min="0"

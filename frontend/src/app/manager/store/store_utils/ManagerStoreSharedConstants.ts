@@ -12,7 +12,6 @@ export const ProductSchema = z.object({
 
 export type ProductFormValues = z.infer<typeof ProductSchema>;
 
-export const formatCurrency = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');
 
 export const CATEGORIES = ['Supplements', 'Accessories', 'Equipment', 'Merchandise', 'Others'];
 export const PAYMENT_METHODS = ['UPI', 'Cash'];

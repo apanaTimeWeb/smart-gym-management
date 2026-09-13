@@ -92,7 +92,7 @@ export default function ManagerHrTabs() {
   <div className="p-5">
   {fetchState === 'loading' ? (
     <div className="flex justify-center py-10">
-      <div className="w-8 h-8 border-4 border-t-transparent rounded-full motion-safe:animate-spin" style={{ borderColor: 'var(--hr-highlight)', borderTopColor: 'transparent' }} />
+      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full motion-safe:animate-spin" />
     </div>
   ) : activeTab === 'Trainer List' ? (
     <ManagerHrStaffTable />

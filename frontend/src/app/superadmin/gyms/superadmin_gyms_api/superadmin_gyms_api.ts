@@ -4,22 +4,54 @@ import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import type { Tenant } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_types';
 
+import { MOCK_GYMS, MOCK_GYM_STATS } from '@/app/superadmin/gyms/superadmin_gyms_api/SuperadminGymsMockData';
+
+let mockGymsList = [...MOCK_GYMS];
+
 export const gymsApi = {
-  fetchGyms: (params?: Record<string, string>) => {
-    const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<Tenant[]>>(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}${q}`);
+  fetchGyms: async (params?: Record<string, string>) => {
+    await new Promise(r => setTimeout(r, 400));
+    return { success: true, message: 'Success', data: mockGymsList };
   },
-  fetchGymById: (id: string) => apiFetch<ApiResponse<Tenant>>(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}/${id}`),
-  createGym: (body: Partial<Tenant>) => apiFetch<ApiResponse<Tenant>>(SuperadminUrlConfig.BACKEND_API.GYMS_BASE, { method: 'POST', body: JSON.stringify(body) }),
-  updateGym: (id: string, body: Partial<Tenant>) => apiFetch<ApiResponse<Tenant>>(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
-  changeGymStatus: (id: string, status: string) => apiFetch<ApiResponse<Tenant>>(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) }),
-  deleteGym: (id: string) => apiFetch<ApiResponse<void>>(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}/${id}`, { method: 'DELETE' }),
-  fetchGymStats: () => apiFetch<ApiResponse<unknown>>(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}/stats`),
-  impersonateTenant: (id: string) => apiFetch<ApiResponse<{ token: string }>>(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}/${id}/impersonate`, { method: 'POST' }),
-  emailGymOwner: (id: string, body: { subject: string; message: string; [key: string]: unknown }) => apiFetch<ApiResponse<void>>(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}/${id}/email`, { method: 'POST', body: JSON.stringify(body) }),
-  /** GET /superadmin/gyms/export — returns signed CSV download URL */
-  exportGymsCSV: (params?: Record<string, string>) => {
-    const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<{ downloadUrl: string }>>(`${SuperadminUrlConfig.BACKEND_API.GYMS_BASE}/export${q}`);
+  fetchGymById: async (id: string) => {
+    await new Promise(r => setTimeout(r, 300));
+    return { success: true, message: 'Success', data: mockGymsList.find(g => g.id === id) as Tenant };
+  },
+  createGym: async (body: Partial<Tenant>) => {
+    await new Promise(r => setTimeout(r, 500));
+    const newGym = { ...body, id: `t${Date.now()}`, createdAt: new Date().toISOString() } as Tenant;
+    mockGymsList = [newGym, ...mockGymsList];
+    return { success: true, message: 'Created', data: newGym };
+  },
+  updateGym: async (id: string, body: Partial<Tenant>) => {
+    await new Promise(r => setTimeout(r, 500));
+    mockGymsList = mockGymsList.map(g => g.id === id ? { ...g, ...body } : g);
+    return { success: true, message: 'Updated', data: mockGymsList.find(g => g.id === id) as Tenant };
+  },
+  changeGymStatus: async (id: string, status: string) => {
+    await new Promise(r => setTimeout(r, 300));
+    mockGymsList = mockGymsList.map(g => g.id === id ? { ...g, status: status as Tenant['status'] } : g);
+    return { success: true, message: 'Status updated', data: mockGymsList.find(g => g.id === id) as Tenant };
+  },
+  deleteGym: async (id: string) => {
+    await new Promise(r => setTimeout(r, 400));
+    mockGymsList = mockGymsList.filter(g => g.id !== id);
+    return { success: true, message: 'Deleted', data: undefined };
+  },
+  fetchGymStats: async () => {
+    await new Promise(r => setTimeout(r, 200));
+    return { success: true, message: 'Success', data: MOCK_GYM_STATS };
+  },
+  impersonateTenant: async (id: string) => {
+    await new Promise(r => setTimeout(r, 400));
+    return { success: true, message: 'Impersonating', data: { token: 'mock-jwt-token' } };
+  },
+  emailGymOwner: async (id: string, body: { subject: string; message: string; [key: string]: unknown }) => {
+    await new Promise(r => setTimeout(r, 500));
+    return { success: true, message: 'Email sent', data: undefined };
+  },
+  exportGymsCSV: async (params?: Record<string, string>) => {
+    await new Promise(r => setTimeout(r, 600));
+    return { success: true, message: 'Success', data: { downloadUrl: '/mock-download-url.csv' } };
   },
 };

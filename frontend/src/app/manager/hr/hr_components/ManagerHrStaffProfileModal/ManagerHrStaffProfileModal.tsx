@@ -3,6 +3,7 @@
 
 import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
 import { X, Edit2, Phone, Mail, Calendar, MapPin, IndianRupee, Hash } from 'lucide-react';
+import { formatCurrency } from '@/lib/formatters';
 
 export default function ManagerHrStaffProfileModal() {
   const { viewProfileData, setViewProfileData, openEdit } = useHrContext();
@@ -70,23 +71,23 @@ export default function ManagerHrStaffProfileModal() {
               <IndianRupee className="w-5 h-5 text-secondary mt-0.5" />
               <div>
                 <p className="text-xs text-secondary mb-0.5">Monthly Salary</p>
-                <p className="text-sm font-bold text-success">{(s.salary || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</p>
+                <p className="text-sm font-bold text-success">{formatCurrency(s.salary || 0)}</p>
               </div>
             </div>
 
             <div className="flex items-start gap-3">
-              <IndianRupee className="w-5 h-5 text-[var(--danger)] mt-0.5" />
+              <IndianRupee className="w-5 h-5 text-danger mt-0.5" />
               <div>
                 <p className="text-xs text-secondary mb-0.5">Advance Balance</p>
-                <p className="text-sm font-bold text-[var(--danger)]">{(s.advanceSalary || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</p>
+                <p className="text-sm font-bold text-danger">{formatCurrency(s.advanceSalary || 0)}</p>
               </div>
             </div>
 
             <div className="flex items-start gap-3">
-              <IndianRupee className="w-5 h-5 text-[var(--warning)] mt-0.5" />
+              <IndianRupee className="w-5 h-5 text-warning mt-0.5" />
               <div>
                 <p className="text-xs text-secondary mb-0.5">Current Due</p>
-                <p className="text-sm font-bold text-[var(--warning)]">{(s.currentDue || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</p>
+                <p className="text-sm font-bold text-warning">{formatCurrency(s.currentDue || 0)}</p>
               </div>
             </div>
 

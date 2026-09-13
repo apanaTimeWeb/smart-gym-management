@@ -3,14 +3,16 @@
 // RESPONSIBILITY: Renders the two rows of KPI metric stat cards on the dashboard using live data from DashboardContext.
 'use client';
 
-import { useDashboardContext } from '@/app/trainer/dashboard/dashboard_context/DashboardContext';
+import { useTrainerDashboardQuery } from '@/app/trainer/dashboard/dashboard_queries/useTrainerDashboardQuery';
 import TrainerStatCard from '@/app/trainer/trainer_components/TrainerShared/TrainerStatCard';
 import { Users, UserCheck, CalendarCheck, Clock, Dumbbell, Activity, DollarSign, Star, CalendarClock, TrendingUp } from 'lucide-react';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
+import { formatCurrency } from '@/app/trainer/dashboard/dashboard_utils/DashboardSharedConstants';
 
 export default function TrainerDashboardKPIs() {
-  const { stats } = useDashboardContext();
+  const { data: stats } = useTrainerDashboardQuery();
   const dateSuffix = useDateRangeSuffix();
+  
   if (!stats) return null;
   const s = stats;
 
@@ -55,7 +57,7 @@ export default function TrainerDashboardKPIs() {
         />
         <TrainerStatCard
           title={`Total PT Revenue${dateSuffix}`}
-          value={`$${s.totalPTRevenue?.toLocaleString() ?? 0}`}
+          value={formatCurrency(s.totalPTRevenue ?? 0)}
           change="This month"
           changeType="neutral"
           icon={DollarSign}

@@ -13,6 +13,14 @@ export function formatINR(amount: number): string {
 }
 
 /**
+ * Formats a regular number using the Indian Numbering System.
+ */
+export function formatNumber(amount: number): string {
+  if (isNaN(amount)) return '0';
+  return amount.toLocaleString('en-IN');
+}
+
+/**
  * Alias for formatINR — used widely across the members and finance modules.
  */
 export const formatCurrency = formatINR;

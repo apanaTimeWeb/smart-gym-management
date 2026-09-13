@@ -6,6 +6,7 @@ import { Dumbbell, Plus, Check, MessageCircle, Edit2 } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
 import { workoutApi } from '@/app/manager/workout/workout_api/ManagerWorkoutApi';
 import type { Workout, FetchState } from '@/app/manager/workout/workout_types/ManagerWorkoutTypes';
+import { MOCK_WORKOUT_EXERCISES } from '@/app/manager/members/members_utils/ManagerMembersMockData';
 
 export default function ManagerProfileWorkout() {
   const { selectedMember, assignWorkout } = useMembersContext();
@@ -53,7 +54,7 @@ export default function ManagerProfileWorkout() {
                 const text = `*WORKOUT PLAN: ${workout?.name || 'Assigned'}*\nLevel: ${workout?.level || 'N/A'}\n\n*Routine:*\n${Array.isArray(workout?.days) ? workout.days.map((d: import("@/app/manager/workout/workout_types/ManagerWorkoutTypes").WorkoutDay | number) => `*Day ${typeof d === 'number' ? d : d.day}: ${typeof d === 'number' ? '' : d.focus}*\n${typeof d === 'number' ? false : d.isRest ? 'Rest Day' : (typeof d === 'number' ? [] : d.exercises || []).map((e: import("@/app/manager/workout/workout_types/ManagerWorkoutTypes").WorkoutExercise) => `- ${e.name} (${e.sets}x${e.reps})`).join('\n')}`).join('\n\n') : `Number of days: ${workout?.days}`}`;
                 window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
               }}
-              className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-green-500/30 transition-all active:scale-95"
+              className="flex items-center gap-2 px-4 py-2 bg-success text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-success/30 transition-all active:scale-95"
             >
               <MessageCircle size={16} /> Send via WhatsApp
             </button>
@@ -146,30 +147,26 @@ export default function ManagerProfileWorkout() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {typeof workout.days === 'number' && workout.days > 0 ? Array.from({ length: workout.days }).map((_, idx) => (
-              <div key={idx} className="bg-card border border-border p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+              <div key={`workout-day-${idx}`} className="bg-card border border-border p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
                 <h5 className="font-semibold text-primary mb-3 pb-2 border-b border-border text-sm">Day {idx + 1}: {workout.focus}</h5>
                 <ul className="space-y-2 text-sm text-secondary">
-                  <li className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
-                    <span>Main Compound Movement</span> <span className="font-medium text-primary text-xs">3x10</span>
-                  </li>
-                  <li className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
-                    <span>Accessory Movement 1</span> <span className="font-medium text-primary text-xs">3x12</span>
-                  </li>
-                  <li className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
-                    <span>Accessory Movement 2</span> <span className="font-medium text-primary text-xs">4x8</span>
-                  </li>
+                  {MOCK_WORKOUT_EXERCISES.map((ex, i) => (
+                    <li key={`ex-${ex.name}-${i}`} className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
+                      <span>{ex.name}</span> <span className="font-medium text-primary text-xs">{ex.sets}x{ex.reps}</span>
+                    </li>
+                  ))}
                 </ul>
               </div>
             )) : Array.isArray(workout.days) && workout.days.length > 0 ? (
               workout.days.map((day: import("@/app/manager/workout/workout_types/ManagerWorkoutTypes").WorkoutDay | number, idx: number) => (
-                <div key={idx} className="bg-card border border-border p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                <div key={`actual-day-${idx}`} className="bg-card border border-border p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
                   <h5 className="font-semibold text-primary mb-3 pb-2 border-b border-border text-sm">Day {typeof day === 'number' ? day : day.day || idx + 1}: {typeof day === 'number' ? '' : day.focus}</h5>
                   {typeof day === 'number' ? false : day.isRest ? (
                     <p className="text-sm text-secondary italic">Rest Day - No workout assigned.</p>
                   ) : (
                     <ul className="space-y-2 text-sm text-secondary">
                       {(typeof day === 'number' ? [] : day.exercises || []).map((ex: import("@/app/manager/workout/workout_types/ManagerWorkoutTypes").WorkoutExercise, i: number) => (
-                        <li key={i} className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
+                        <li key={`act-ex-${ex.name}-${i}`} className="flex justify-between items-center bg-input px-3 py-2 rounded-lg">
                           <span>{ex.name}</span> <span className="font-medium text-primary text-xs">{ex.sets}x{ex.reps}</span>
                         </li>
                       ))}

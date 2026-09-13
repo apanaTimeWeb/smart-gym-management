@@ -3,7 +3,7 @@
 
 import { Package, ShoppingCart, TrendingUp, AlertTriangle } from 'lucide-react';
 import { useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';
-import { formatCurrency } from '@/app/manager/store/store_utils/ManagerStoreSharedConstants';
+import { formatCurrency } from '@/lib/formatters';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
 export default function ManagerStoreKPIs() {
@@ -20,8 +20,8 @@ export default function ManagerStoreKPIs() {
  return (
  <div className="space-y-5">
  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
- {kpis.map((s, i) => (
- <div key={i} className="bg-card rounded-xl p-4 shadow-sm border border-border flex items-center gap-3">
+ {kpis.map((s) => (
+ <div key={s.label} className="bg-card rounded-xl p-4 shadow-sm border border-border flex items-center gap-3">
  <div className={`w-10 h-10 rounded-xl ${s.bg} flex items-center justify-center`}>
  <s.icon size={19} className={s.color} />
  </div>

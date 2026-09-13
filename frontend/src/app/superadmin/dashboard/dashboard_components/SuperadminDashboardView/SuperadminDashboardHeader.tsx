@@ -1,4 +1,5 @@
-import { SuperadminDateFilterDropdown } from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminDateFilterDropdown';
+// RESPONSIBILITY: Renders the Dashboard header with the local date filter. No API calls.
+import { SuperadminDashboardDateFilterDropdown } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardDateFilterDropdown/SuperadminDashboardDateFilterDropdown';
 
 export function SuperadminDashboardHeader() {
   return (
@@ -10,7 +11,7 @@ export function SuperadminDashboardHeader() {
         </p>
       </div>
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full md:w-auto">
-        <SuperadminDateFilterDropdown />
+        <SuperadminDashboardDateFilterDropdown />
       </div>
     </div>
   );

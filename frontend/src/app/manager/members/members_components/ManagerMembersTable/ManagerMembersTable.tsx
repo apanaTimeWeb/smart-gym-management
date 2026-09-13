@@ -17,14 +17,24 @@ export default function ManagerMembersTable() {
   // useConfirm provides the design-system confirm modal (Rule 71 — no window.confirm)
   const { confirm } = useConfirm();
   const { 
-    search, statusFilter, currentPage, setCurrentPage,
+    search, statusFilter, genderFilter, planFilter, expiryFrom, expiryTo, currentPage, setCurrentPage,
     setSelectedMember, openEdit, openMsg, deleteMember, setShowPaymentModal, toggleSuspend,
     sortColumn, sortDirection, setSortColumn, setSortDirection
   } = useMembersContext();
 
   const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
 
-  const { data: membersRes, isLoading, isError } = useFetchMembers({ search, status: statusFilter, page: currentPage.toString() });
+  const { data: membersRes, isLoading, isError } = useFetchMembers({ 
+    search, 
+    status: statusFilter, 
+    gender: genderFilter, 
+    plan: planFilter, 
+    expiryFrom, 
+    expiryTo, 
+    sort: sortColumn, 
+    dir: sortDirection, 
+    page: currentPage.toString() 
+  });
   const members = membersRes?.members || [];
   const totalMembers = membersRes?.total || 0;
   const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
@@ -50,7 +60,7 @@ export default function ManagerMembersTable() {
     else setSelectedRows(new Set(members.map(m => m.id)));
   };
 
-  const toggleRow = (id: string, e: React.MouseEvent) => {
+  const toggleRow = (id: string, e: React.ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation();
     const newSet = new Set(selectedRows);
     if (newSet.has(id)) newSet.delete(id);
@@ -114,7 +124,7 @@ export default function ManagerMembersTable() {
                         type="checkbox" 
                         className="rounded border-border text-primary focus:ring-primary w-3.5 h-3.5"
                         checked={selectedRows.has(m.id)}
-                        onChange={(e) => toggleRow(m.id, e as any)}
+                        onChange={(e) => toggleRow(m.id, e)}
                       />
                     </td>
                     <td className="px-2 py-3 text-xs text-secondary font-medium whitespace-nowrap">

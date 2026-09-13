@@ -1,7 +1,13 @@
+'use client';
+// RESPONSIBILITY: Renders the recent tenant onboarding records and navigates to the tenant detail page.
 import { useRouter } from 'next/navigation';
-import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { SuperadminDashboardRecentOnboardsProps } from '@/app/superadmin/dashboard/superadmin_dashboard_types/superadmin_dashboard_types';
+import {
+  DASHBOARD_PLAN_BADGE_CLASSES,
+  DASHBOARD_PLAN_BADGE_FALLBACK_CLASS,
+} from '@/app/superadmin/dashboard/dashboard_utils/SuperadminDashboardConstants';
 
-export function SuperadminDashboardRecentOnboards({ recentOnboards }: { recentOnboards: Tenant[] }) {
+export function SuperadminDashboardRecentOnboards({ recentOnboards }: SuperadminDashboardRecentOnboardsProps) {
   const router = useRouter();
 
   return (
@@ -10,11 +16,7 @@ export function SuperadminDashboardRecentOnboards({ recentOnboards }: { recentOn
       <div className="space-y-4">
         {recentOnboards.map((tenant) => {
           const planUpper = tenant.plan?.toUpperCase() ?? 'UNKNOWN';
-          const planClass =
-            planUpper === 'ENTERPRISE' ? 'bg-purple-bg text-purple border border-purple' :
-            planUpper === 'PRO' ? 'bg-primary-subtle text-primary border border-primary' :
-            (planUpper === 'STARTER' || planUpper === 'BASIC') ? 'bg-success-bg text-success border border-success' :
-            'bg-input text-secondary border border-border';
+          const planClass = DASHBOARD_PLAN_BADGE_CLASSES[planUpper] ?? DASHBOARD_PLAN_BADGE_FALLBACK_CLASS;
           return (
             <div
               key={tenant.id}

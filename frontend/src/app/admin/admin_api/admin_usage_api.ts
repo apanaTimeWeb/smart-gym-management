@@ -9,7 +9,11 @@ import { AdminUsageUrlConfig } from '@/app/admin/usage/usage_url_config';
 
 export type { AdminUsageData };
 
+import { MOCK_ADMIN_USAGE_DATA } from '@/app/admin/usage/usage_api/AdminUsageMockData';
+
 export const adminUsageApi = {
-  fetchMyUsage: (): Promise<ApiResponse<AdminUsageData>> =>
-    apiFetch<ApiResponse<AdminUsageData>>(AdminUsageUrlConfig.BACKEND_API.MY_USAGE),
+  fetchMyUsage: async () => {
+    await new Promise(res => setTimeout(res, 300));
+    return { success: true, message: 'Success', data: MOCK_ADMIN_USAGE_DATA };
+  }
 };

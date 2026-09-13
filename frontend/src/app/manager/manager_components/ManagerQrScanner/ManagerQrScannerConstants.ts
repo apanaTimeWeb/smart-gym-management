@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Defines mock data and constants for the Manager QR Scanner feature.
-import type { ManagerQrScanHistoryRecord, ManagerQrScanStatus } from './ManagerQrScannerTypes';
+import type { ManagerQrScanHistoryRecord, ManagerQrScanStatus } from '@/app/manager/manager_components/ManagerQrScanner/ManagerQrScannerTypes';
 
 export const MANAGER_QR_INITIAL_HISTORY: ManagerQrScanHistoryRecord[] = [];
 

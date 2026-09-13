@@ -8,6 +8,7 @@ import { useManagerPtLogic } from '@/app/manager/pt/pt_context/useManagerPtLogic
 import { PT_TAB_OPTIONS } from '@/app/manager/pt/pt_types/ManagerPtTypes';
 import { managerPtApi } from '@/app/manager/pt/pt_api/ManagerPtApi';
 import toast from 'react-hot-toast';
+import { formatCurrency } from '@/lib/formatters';
 
 // Child Components
 import ManagerPtKPIs from '@/app/manager/pt/pt_components/ManagerPtMain/ManagerPtKPIs';
@@ -262,7 +263,7 @@ export default function ManagerPtMain() {
                         {pkg.sessionCount} Sessions
                       </span>
                       <span className="text-foreground font-bold text-xl">
-                        ₹{pkg.price.toLocaleString('en-IN')}
+                        {formatCurrency(pkg.price)}
                       </span>
                     </div>
                     <h3 className="text-lg font-bold text-foreground mb-2">{pkg.name}</h3>

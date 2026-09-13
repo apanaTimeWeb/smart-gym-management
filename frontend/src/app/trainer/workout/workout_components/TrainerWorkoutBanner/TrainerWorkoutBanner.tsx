@@ -4,10 +4,13 @@
 'use client';
 
 import { Dumbbell } from 'lucide-react';
-import { useWorkoutContext } from '@/app/trainer/workout/workout_context/WorkoutContext';
+import { useTrainerWorkoutsQuery, useTrainerExercisesQuery } from '@/app/trainer/workout/workout_queries/useWorkoutQuery';
+import { useTrainerWorkoutFilters } from '@/app/trainer/workout/workout_utils/useTrainerWorkoutFilters';
 
 export default function TrainerWorkoutBanner() {
- const { workouts, exercises } = useWorkoutContext();
+  const { search, category, page } = useTrainerWorkoutFilters();
+  const { data: wData } = useTrainerWorkoutsQuery(search, category, page);
+  const { data: eData } = useTrainerExercisesQuery(search, category, page);
 
  return (
  <div className="rounded-xl p-5 text-white shadow-lg shadow-info/20" style={{ background: 'linear-gradient(135deg, var(--workout-banner-gradient-start), var(--workout-banner-gradient-end))' }}>
@@ -15,7 +18,7 @@ export default function TrainerWorkoutBanner() {
  <div>
  <h2 className="text-xl font-bold">Complete Workout Database</h2>
  <p className="text-white/80 mt-1 text-sm font-medium">
- {workouts.length} workout programs · {exercises.length} exercises
+ {wData?.total ?? 0} workout programs · {eData?.total ?? 0} exercises
  </p>
  </div>
  <Dumbbell size={56} className="text-info/40 transform -rotate-12" />
@@ -23,4 +26,3 @@ export default function TrainerWorkoutBanner() {
  </div>
  );
 }
-

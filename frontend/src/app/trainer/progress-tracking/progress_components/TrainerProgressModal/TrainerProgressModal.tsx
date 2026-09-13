@@ -1,10 +1,14 @@
 'use client';
-// RESPONSIBILITY: Add / Edit modal for a single progress entry.
-// DATA FLOW: useTrainerProgressLogic → TrainerProgressModal
+// RESPONSIBILITY: Add / Edit modal for a single progress entry with Zod validation.
+// DATA FLOW: TrainerProgressMain → TrainerProgressModal
 
-import { useState, useEffect } from 'react';
 import { X, Loader2 } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect } from 'react';
 import type { ProgressEntry, CreateProgressEntryDto } from '@/app/trainer/progress-tracking/progress_types/TrainerProgressTypes';
+import { CreateProgressEntrySchema, type CreateProgressEntryFormValues } from '@/app/trainer/progress-tracking/progress_types/progress.schema';
+import { useWarnIfUnsavedChanges } from '@/app/trainer/trainer_utils/useWarnIfUnsavedChanges';
 
 interface Props {
   editingEntry: ProgressEntry | null;
@@ -12,50 +16,48 @@ interface Props {
   onClose: () => void;
 }
 
-const EMPTY: CreateProgressEntryDto = {
+const EMPTY: CreateProgressEntryFormValues = {
   date: new Date().toISOString().split('T')[0] ?? '',
   weightKg: 0,
   heightCm: 0,
 };
 
-function calcBmi(weight: number, heightCm: number): number {
-  if (!heightCm) return 0;
-  const h = heightCm / 100;
-  return Math.round((weight / (h * h)) * 10) / 10;
-}
-
 export default function TrainerProgressModal({ editingEntry, onSave, onClose }: Props) {
-  const [form, setForm] = useState<CreateProgressEntryDto>(EMPTY);
-  const [saving, setSaving] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting, isDirty },
+  } = useForm<CreateProgressEntryFormValues>({
+    resolver: zodResolver(CreateProgressEntrySchema),
+    defaultValues: EMPTY,
+  });
+
+  useWarnIfUnsavedChanges(isDirty);
 
   useEffect(() => {
     if (editingEntry) {
-      setForm({
+      reset({
         date: editingEntry.date,
         weightKg: editingEntry.weightKg,
         heightCm: editingEntry.heightCm,
-        bodyFatPercent: editingEntry.bodyFatPercent,
-        muscleMassKg: editingEntry.muscleMassKg,
-        chestCm: editingEntry.chestCm,
-        waistCm: editingEntry.waistCm,
-        hipCm: editingEntry.hipCm,
-        notes: editingEntry.notes,
+        bodyFatPercent: editingEntry.bodyFatPercent ?? undefined,
+        muscleMassKg: editingEntry.muscleMassKg ?? undefined,
+        chestCm: editingEntry.chestCm ?? undefined,
+        waistCm: editingEntry.waistCm ?? undefined,
+        hipCm: editingEntry.hipCm ?? undefined,
+        notes: editingEntry.notes ?? undefined,
       });
     } else {
-      setForm(EMPTY);
+      reset(EMPTY);
     }
-  }, [editingEntry]);
+  }, [editingEntry, reset]);
 
-  const set = (field: keyof CreateProgressEntryDto, value: string | number) =>
-    setForm((prev) => ({ ...prev, [field]: value }));
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSaving(true);
-    await new Promise((r) => setTimeout(r, 400));
-    const bmi = calcBmi(form.weightKg, form.heightCm);
-    onSave({ ...form, bmi });
-    setSaving(false);
+  const onSubmit = async (formData: CreateProgressEntryFormValues) => {
+    // The resolver has validated the data, we parse to get the transformed output
+    const data = CreateProgressEntrySchema.parse(formData);
+    const bmi = Math.round((data.weightKg / Math.pow(data.heightCm / 100, 2)) * 10) / 10;
+    onSave({ ...data, bmi });
   };
 
   return (
@@ -74,96 +76,86 @@ export default function TrainerProgressModal({ editingEntry, onSave, onClose }: 
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-5 space-y-4 max-h-[70vh] overflow-y-auto">
+        <form onSubmit={handleSubmit(onSubmit)} className="p-5 space-y-4 max-h-[70vh] overflow-y-auto">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-semibold text-secondary mb-1">Date</label>
               <input
                 type="date"
-                required
-                value={form.date}
-                onChange={(e) => set('date', e.target.value)}
+                {...register('date')}
                 className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               />
+              {errors.date && <span className="text-xs text-danger mt-1">{errors.date.message}</span>}
             </div>
             <div>
               <label className="block text-sm font-semibold text-secondary mb-1">Weight (kg)</label>
               <input
                 type="number"
-                required
-                min={1}
-                step={0.1}
-                value={form.weightKg || ''}
-                onChange={(e) => set('weightKg', parseFloat(e.target.value))}
+                step="0.1"
+                {...register('weightKg', { valueAsNumber: true })}
                 className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               />
+              {errors.weightKg && <span className="text-xs text-danger mt-1">{errors.weightKg.message}</span>}
             </div>
             <div>
               <label className="block text-sm font-semibold text-secondary mb-1">Height (cm)</label>
               <input
                 type="number"
-                required
-                min={1}
-                step={0.1}
-                value={form.heightCm || ''}
-                onChange={(e) => set('heightCm', parseFloat(e.target.value))}
+                step="0.1"
+                {...register('heightCm', { valueAsNumber: true })}
                 className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               />
+              {errors.heightCm && <span className="text-xs text-danger mt-1">{errors.heightCm.message}</span>}
             </div>
             <div>
               <label className="block text-sm font-semibold text-secondary mb-1">Body Fat (%)</label>
               <input
                 type="number"
-                min={0}
-                step={0.1}
-                value={form.bodyFatPercent ?? ''}
-                onChange={(e) => set('bodyFatPercent', parseFloat(e.target.value))}
+                step="0.1"
+                {...register('bodyFatPercent', { valueAsNumber: true })}
                 className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               />
+              {errors.bodyFatPercent && <span className="text-xs text-danger mt-1">{errors.bodyFatPercent.message}</span>}
             </div>
             <div>
               <label className="block text-sm font-semibold text-secondary mb-1">Muscle Mass (kg)</label>
               <input
                 type="number"
-                min={0}
-                step={0.1}
-                value={form.muscleMassKg ?? ''}
-                onChange={(e) => set('muscleMassKg', parseFloat(e.target.value))}
+                step="0.1"
+                {...register('muscleMassKg', { valueAsNumber: true })}
                 className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               />
+              {errors.muscleMassKg && <span className="text-xs text-danger mt-1">{errors.muscleMassKg.message}</span>}
             </div>
             <div>
               <label className="block text-sm font-semibold text-secondary mb-1">Waist (cm)</label>
               <input
                 type="number"
-                min={0}
-                step={0.1}
-                value={form.waistCm ?? ''}
-                onChange={(e) => set('waistCm', parseFloat(e.target.value))}
+                step="0.1"
+                {...register('waistCm', { valueAsNumber: true })}
                 className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               />
+              {errors.waistCm && <span className="text-xs text-danger mt-1">{errors.waistCm.message}</span>}
             </div>
             <div>
               <label className="block text-sm font-semibold text-secondary mb-1">Chest (cm)</label>
               <input
                 type="number"
-                min={0}
-                step={0.1}
-                value={form.chestCm ?? ''}
-                onChange={(e) => set('chestCm', parseFloat(e.target.value))}
+                step="0.1"
+                {...register('chestCm', { valueAsNumber: true })}
                 className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               />
+              {errors.chestCm && <span className="text-xs text-danger mt-1">{errors.chestCm.message}</span>}
             </div>
             <div>
               <label className="block text-sm font-semibold text-secondary mb-1">Hip (cm)</label>
               <input
                 type="number"
-                min={0}
-                step={0.1}
-                value={form.hipCm ?? ''}
-                onChange={(e) => set('hipCm', parseFloat(e.target.value))}
+                step="0.1"
+                {...register('hipCm', { valueAsNumber: true })}
                 className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               />
+              {errors.hipCm && <span className="text-xs text-danger mt-1">{errors.hipCm.message}</span>}
             </div>
           </div>
 
@@ -171,8 +163,7 @@ export default function TrainerProgressModal({ editingEntry, onSave, onClose }: 
             <label className="block text-sm font-semibold text-secondary mb-1">Notes</label>
             <textarea
               rows={2}
-              value={form.notes ?? ''}
-              onChange={(e) => set('notes', e.target.value)}
+              {...register('notes')}
               className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary resize-none"
             />
           </div>
@@ -187,10 +178,10 @@ export default function TrainerProgressModal({ editingEntry, onSave, onClose }: 
             </button>
             <button
               type="submit"
-              disabled={saving}
+              disabled={isSubmitting}
               className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-primary rounded-lg hover:bg-primary/90 motion-safe:transition-colors disabled:opacity-70"
             >
-              {saving && <Loader2 size={16} className="motion-safe:animate-spin" />}
+              {isSubmitting && <Loader2 size={16} className="motion-safe:animate-spin" />}
               {editingEntry ? 'Save Changes' : 'Add Entry'}
             </button>
           </div>

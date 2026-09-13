@@ -2,6 +2,8 @@
 // DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Shared TypeScript types for the Trainer module.
 // Extracted to strictly enforce Module Boundary Isolation (Rule 63).
+import type { Workout, Exercise, WorkoutExercise } from '@/app/trainer/workout/workout_types/workout.schema';
+export type { Workout, Exercise, WorkoutExercise };
 
 export interface Member {
   id: string; name: string; email: string; phone: string;
@@ -51,37 +53,13 @@ export interface Attendance {
   lateMinutes?: number;
 }
 
-export interface Exercise {
-  id: string; name: string; category: string; muscleGroup: string[];
-  sets?: number; reps?: string; duration?: string;
-  difficulty: string; description?: string; videoUrl?: string; imageUrl?: string; isActive: boolean;
-  equipment?: string; instructions?: string;
-}
-
 export interface DietPlan {
   id: string; name: string; goal: string;
   calories?: number; protein?: number; carbs?: number; fats?: number;
   description?: string; meals: string[]; isActive: boolean;
 }
 
-export interface WorkoutExercise {
-  exerciseId: string;
-  name: string;
-  sets: number;
-  reps: string;
-  weight: string;
-  restTime: string;
-  sortOrder: number;
-}
 
-export interface Workout {
-  id: string; name: string; level: string; days: number;
-  exercises: number; focus: string; duration: string; tags: string[]; isActive?: boolean;
-  goal?: string; startDate?: string; endDate?: string;
-  instructions?: string;
-  assignedMemberId?: string;
-  workoutExercises?: WorkoutExercise[];
-}
 
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 

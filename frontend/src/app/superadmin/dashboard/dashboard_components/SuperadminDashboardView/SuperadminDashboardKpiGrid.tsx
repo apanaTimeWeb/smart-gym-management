@@ -1,25 +1,20 @@
+'use client';
+// RESPONSIBILITY: Renders the Dashboard KPI cards. No API calls.
 import { Users, Building2, CreditCard, Activity, AlertCircle, Clock, CheckCircle2, DollarSign } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import type { SaaSDashboardMetrics, RevenueChartData } from '@/app/superadmin/dashboard/superadmin_dashboard_types/superadmin_dashboard_types';
-import { useDateRangeSuffix } from '@/app/superadmin/superadmin_components/SuperadminShared/useDateRangeSuffix';
-
-function formatIndianCurrency(value: number): string {
-  return `₹${value.toLocaleString('en-IN')}`;
-}
+import type { SuperadminDashboardKpiGridProps } from '@/app/superadmin/dashboard/superadmin_dashboard_types/superadmin_dashboard_types';
+import { useSuperadminDashboardDateRangeSuffix } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardView/useSuperadminDashboardDateRangeSuffix';
+import { SuperadminDashboardUrlConfig } from '@/app/superadmin/dashboard/dashboard_utils/SuperadminDashboardUrlConfig';
+import { formatCurrency, formatNumber } from '@/lib/formatters';
 
 export function SuperadminDashboardKpiGrid({
   metrics,
   revenueChartData,
   timeMultiplier,
   mrrLabel
-}: {
-  metrics: SaaSDashboardMetrics;
-  revenueChartData: RevenueChartData[];
-  timeMultiplier: number;
-  mrrLabel: string;
-}) {
+}: SuperadminDashboardKpiGridProps) {
   const router = useRouter();
-  const dateSuffix = useDateRangeSuffix();
+  const dateSuffix = useSuperadminDashboardDateRangeSuffix();
 
   const lastTwoMonths = revenueChartData.length >= 2 ? revenueChartData.slice(-2) : [];
   const mrrTrendNum = lastTwoMonths.length === 2 && lastTwoMonths[0]!.mrr > 0
@@ -33,14 +28,14 @@ export function SuperadminDashboardKpiGrid({
   const kpiCards = [
     {
       label: mrrLabel + dateSuffix,
-      value: formatIndianCurrency(Math.round((metrics.monthlyRecurringRevenue || 0) * timeMultiplier)),
+      value: formatCurrency(Math.round((metrics.monthlyRecurringRevenue || 0) * timeMultiplier)),
       trend: metrics.mrrDeltaPercent !== undefined
         ? `${metrics.mrrDeltaPercent > 0 ? '+' : ''}${metrics.mrrDeltaPercent}% vs last month`
         : mrrTrendStr,
       trendUp: metrics.mrrDeltaPercent !== undefined ? metrics.mrrDeltaPercent >= 0 : mrrTrendNum >= 0,
       icon: CreditCard,
       colorClass: 'text-success',
-      iconBgClass: 'bg-success/10',
+      iconBgClass: 'bg-success-bg',
     },
     {
       label: 'TOTAL GYMS' + dateSuffix,
@@ -49,7 +44,7 @@ export function SuperadminDashboardKpiGrid({
       trendUp: true,
       icon: Building2,
       colorClass: 'text-primary',
-      iconBgClass: 'bg-primary/10',
+      iconBgClass: 'bg-primary-subtle',
     },
     {
       label: 'ACTIVE GYMS' + dateSuffix,
@@ -58,25 +53,25 @@ export function SuperadminDashboardKpiGrid({
       trendUp: true,
       icon: Activity,
       colorClass: 'text-primary',
-      iconBgClass: 'bg-primary/10',
+      iconBgClass: 'bg-primary-subtle',
     },
     {
       label: 'TOTAL END USERS' + dateSuffix,
-      value: (metrics.totalEndUsers || 0).toLocaleString('en-IN'),
+      value: formatNumber(metrics.totalEndUsers || 0),
       trend: undefined,
       trendUp: true,
       icon: Users,
       colorClass: 'text-purple',
-      iconBgClass: 'bg-purple/10',
+      iconBgClass: 'bg-purple-bg',
     },
     {
       label: 'Avg. Income per Gym' + dateSuffix,
-      value: formatIndianCurrency(metrics.arpu || 0),
+      value: formatCurrency(metrics.arpu || 0),
       trend: undefined,
       trendUp: true,
       icon: DollarSign,
       colorClass: 'text-success',
-      iconBgClass: 'bg-success/10',
+      iconBgClass: 'bg-success-bg',
     },
     {
       label: 'TRIAL GYMS' + dateSuffix,
@@ -85,7 +80,7 @@ export function SuperadminDashboardKpiGrid({
       trendUp: true,
       icon: Clock,
       colorClass: 'text-warning',
-      iconBgClass: 'bg-warning/10',
+      iconBgClass: 'bg-warning-bg',
     },
     {
       label: 'OVERDUE INVOICES' + dateSuffix,
@@ -94,16 +89,16 @@ export function SuperadminDashboardKpiGrid({
       trendUp: false,
       icon: AlertCircle,
       colorClass: 'text-danger',
-      iconBgClass: 'bg-danger/10',
+      iconBgClass: 'bg-danger-bg',
     },
     {
       label: 'PENDING REVENUE' + dateSuffix,
-      value: formatIndianCurrency(metrics.pendingRevenue || 0),
+      value: formatCurrency(metrics.pendingRevenue || 0),
       trend: undefined,
       trendUp: true,
       icon: CreditCard,
       colorClass: 'text-warning',
-      iconBgClass: 'bg-warning/10',
+      iconBgClass: 'bg-warning-bg',
     },
     {
       label: 'PLATFORM HEALTH' + dateSuffix,
@@ -112,7 +107,7 @@ export function SuperadminDashboardKpiGrid({
       trendUp: healthScore !== undefined ? healthScore >= 80 : true,
       icon: CheckCircle2,
       colorClass: healthScore !== undefined && healthScore < 80 ? 'text-warning' : 'text-success',
-      iconBgClass: healthScore !== undefined && healthScore < 80 ? 'bg-warning/10' : 'bg-success/10',
+      iconBgClass: healthScore !== undefined && healthScore < 80 ? 'bg-warning-bg' : 'bg-success-bg',
     },
     {
       label: 'TRIALS EXPIRING (7D)',
@@ -121,8 +116,8 @@ export function SuperadminDashboardKpiGrid({
       trendUp: false,
       icon: AlertCircle,
       colorClass: 'text-warning',
-      iconBgClass: 'bg-warning/10',
-      onClick: () => router.push('/superadmin/churn-alerts')
+      iconBgClass: 'bg-warning-bg',
+      onClick: () => router.push(SuperadminDashboardUrlConfig.PAGES.CHURN_ALERTS)
     },
   ];
 
@@ -134,7 +129,7 @@ export function SuperadminDashboardKpiGrid({
           <div
             key={card.label}
             onClick={card.onClick}
-            className={`relative overflow-hidden bg-card border border-border rounded-xl p-6 shadow-sm motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-lg motion-safe:transition-all motion-safe:duration-200 bg-gradient-to-b from-yellow-400/10 to-transparent ${card.onClick ? 'cursor-pointer' : ''}`}
+            className={`relative overflow-hidden bg-card border border-border rounded-xl p-6 shadow-sm motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-lg motion-safe:transition-all motion-safe:duration-200 bg-gradient-to-b from-primary-subtle to-transparent ${card.onClick ? 'cursor-pointer' : ''}`}
           >
             <div className="flex items-center justify-between mb-4">
               <span className="text-secondary font-medium text-xs uppercase tracking-wider">{card.label}</span>

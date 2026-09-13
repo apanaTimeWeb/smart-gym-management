@@ -4,7 +4,7 @@
 'use client';
 
 import { MessageCircle, Mail } from 'lucide-react';
-import { useMembersContext } from '@/app/trainer/members/members_context/MembersContext';
+import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
 import { MEMBERS_STATUS_COLORS, formatCurrency, PROFILE_TABS } from '@/app/trainer/members/members_utils/MembersSharedConstants';
 import TrainerMembersProfileOverview from '@/app/trainer/members/members_components/TrainerMembersProfile/TrainerMembersProfileOverview';
 import TrainerMembersProfileAttendance from '@/app/trainer/members/members_components/TrainerMembersProfile/TrainerMembersProfileAttendance';
@@ -17,7 +17,11 @@ import TrainerMembersProfileNotes from '@/app/trainer/members/members_components
 import { maskSensitiveData } from '@/lib/formatters';
 
 export default function TrainerMembersProfile() {
-  const { selectedMember, setSelectedMember, profileTab, setProfileTab, openEdit, openMsg } = useMembersContext();
+  const selectedMember = useTrainerMembersStore(s => s.selectedMember);
+  const setSelectedMember = useTrainerMembersStore(s => s.setSelectedMember);
+  const profileTab = useTrainerMembersStore(s => s.profileTab);
+  const setProfileTab = useTrainerMembersStore(s => s.setProfileTab);
+  const openMsg = useTrainerMembersStore(s => s.openMsg);
 
   if (!selectedMember) return null;
 
@@ -58,13 +62,13 @@ export default function TrainerMembersProfile() {
             </div>
             <div className="flex gap-2 flex-wrap">
               <button
-                onClick={() => openMsg(selectedMember, 'whatsapp')}
+                onClick={() => openMsg({ name: selectedMember.name, email: selectedMember.email, phone: selectedMember.phone }, 'whatsapp', '')}
                 className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-success text-white rounded-xl hover:opacity-90 motion-safe:transition-all motion-safe:duration-200 active:scale-95"
               >
                 <MessageCircle size={14} /> WhatsApp
               </button>
               <button
-                onClick={() => openMsg(selectedMember, 'email')}
+                onClick={() => openMsg({ name: selectedMember.name, email: selectedMember.email, phone: selectedMember.phone }, 'email', '')}
                 className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-info text-white rounded-xl hover:opacity-90 motion-safe:transition-all motion-safe:duration-200 active:scale-95"
               >
                 <Mail size={14} /> Email

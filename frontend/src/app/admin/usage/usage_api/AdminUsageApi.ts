@@ -30,14 +30,16 @@ export interface AdminUpgradeRequestDto {
 /**
  * Fetches the admin's current plan usage data against their subscription limits.
  */
-export const adminUsageApi = {
-  fetchMyUsage: () =>
-    apiFetch<ApiResponse<AdminUsageData>>(AdminUsageUrlConfig.BACKEND_API.MY_USAGE),
+import { MOCK_ADMIN_USAGE_DATA } from '@/app/admin/usage/usage_api/AdminUsageMockData';
 
-  /** POST /admin/usage/upgrade-request — sends an upgrade request to the superadmin */
-  requestUpgrade: (dto: AdminUpgradeRequestDto) =>
-    apiFetch<ApiResponse<void>>(AdminUsageUrlConfig.BACKEND_API.UPGRADE_REQUEST, {
-      method: 'POST',
-      body: JSON.stringify(dto),
-    }),
+export const adminUsageApi = {
+  fetchMyUsage: async () => {
+    await new Promise(res => setTimeout(res, 300));
+    return { success: true, message: 'Success', data: MOCK_ADMIN_USAGE_DATA };
+  },
+
+  requestUpgrade: async (dto: AdminUpgradeRequestDto) => {
+    await new Promise(res => setTimeout(res, 600));
+    return { success: true, message: 'Upgrade requested successfully', data: undefined };
+  },
 };

@@ -4,7 +4,8 @@
 
 import { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
-import { useWorkoutContext } from '@/app/trainer/workout/workout_context/WorkoutContext';
+import { useTrainerWorkoutFilters } from '@/app/trainer/workout/workout_utils/useTrainerWorkoutFilters';
+import { useTrainerWorkoutStore } from '@/app/trainer/workout/workout_store/useTrainerWorkoutStore';
 import { WORKOUT_TAB_OPTIONS, WORKOUT_FOCUS_OPTIONS, EXERCISE_MUSCLE_OPTIONS } from '@/app/trainer/workout/workout_utils/WorkoutSharedConstants';
 import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/SearchableDropdown';
 
@@ -22,7 +23,8 @@ const EXERCISE_CATEGORY_OPTIONS = [
 ];
 
 export default function TrainerWorkoutToolbar() {
-  const { tab, setTab, search, setSearch, filterCategory, setFilterCategory, setCurrentPage } = useWorkoutContext();
+  const { tab, setTab, search, setSearch, category, setCategory } = useTrainerWorkoutFilters();
+  const { setEditWk, setShowWkModal, setEditEx, setShowExModal } = useTrainerWorkoutStore();
   const [localSearch, setLocalSearch] = useState(search);
 
   // Sync local search back to context if the URL resets it externally (tab switch resets URL).
@@ -38,7 +40,7 @@ export default function TrainerWorkoutToolbar() {
       }
     }, 300);
     return () => clearTimeout(handler);
-  }, [localSearch, search, setSearch, setCurrentPage]);
+  }, [localSearch, search, setSearch]);
 
   // Category options change dynamically based on active tab.
   const categoryOptions = tab === 'Workout Plans' ? WORKOUT_CATEGORY_OPTIONS : EXERCISE_CATEGORY_OPTIONS;
@@ -62,6 +64,12 @@ export default function TrainerWorkoutToolbar() {
         ))}
       </div>
       <div className="px-4 flex gap-3 items-center">
+        <button 
+          onClick={() => tab === 'Workout Plans' ? (setEditWk(null), setShowWkModal(true)) : (setEditEx(null), setShowExModal(true))}
+          className="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2"
+        >
+          Add {tab === 'Workout Plans' ? 'Plan' : 'Exercise'}
+        </button>
         <div className="relative hidden sm:block">
           <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
           <input
@@ -71,11 +79,10 @@ export default function TrainerWorkoutToolbar() {
             className="pl-8 pr-3 py-2 text-sm border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus-visible:ring-warning w-36 lg:w-48 bg-input text-foreground motion-safe:transition-all"
           />
         </div>
-        {/* SearchableDropdown replaces native <select> to fix dark mode rendering (Rule 20) */}
         <SearchableDropdown
           options={categoryOptions}
-          value={filterCategory}
-          onChange={(val) => setFilterCategory(String(val))}
+          value={category}
+          onChange={(val) => setCategory(String(val))}
           placeholder="All Categories"
           className="w-44"
         />

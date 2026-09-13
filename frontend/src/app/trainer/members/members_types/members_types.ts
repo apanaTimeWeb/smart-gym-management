@@ -4,8 +4,15 @@
 import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
 import type { MessageType, TrainerMessageRecipient } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerMessageModal';
 import type { MemberFormValues } from '@/app/trainer/members/members_utils/MembersSharedConstants';
+import { z } from 'zod';
+import { MemberSchema, MemberStatsSchema, DietPlanSchema } from './members.schema';
+import type { Workout, WorkoutExercise } from '@/app/trainer/trainer_types/trainer_types';
 
-import type { Member, MemberStats, FetchState, Workout, DietPlan } from '@/app/trainer/trainer_types/trainer_types';
+export type Member = z.infer<typeof MemberSchema>;
+export type MemberStats = z.infer<typeof MemberStatsSchema>;
+export type DietPlan = z.infer<typeof DietPlanSchema>;
+export type { Workout, WorkoutExercise };
+export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 
 export interface MembersInitialData {
   members: Member[];

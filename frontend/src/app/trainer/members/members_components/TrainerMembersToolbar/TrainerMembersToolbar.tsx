@@ -5,12 +5,16 @@
 
 import { useState, useEffect } from 'react';
 import { Search, RefreshCw, Plus } from 'lucide-react';
-import { useMembersContext } from '@/app/trainer/members/members_context/MembersContext';
+import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
+import { useTrainerMembersFilters } from '@/app/trainer/members/members_utils/useTrainerMembersFilters';
+import { useQueryClient } from '@tanstack/react-query';
 import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/SearchableDropdown';
 import { MEMBER_STATUS_OPTIONS } from '@/app/trainer/members/members_utils/MembersSharedConstants';
 
 export default function TrainerMembersToolbar() {
-  const { search, setSearch, statusFilter, setStatusFilter, progressStatusFilter, setProgressStatusFilter, openAdd, currentPage, loadAll } = useMembersContext();
+  const { search, setSearch, statusFilter, setStatusFilter, progressStatusFilter, setProgressStatusFilter } = useTrainerMembersFilters();
+  const openAdd = useTrainerMembersStore(s => s.setShowAddModal);
+  const queryClient = useQueryClient();
   const [localSearch, setLocalSearch] = useState(search);
 
   useEffect(() => { setTimeout(() => setLocalSearch(search), 0); }, [search]);
@@ -24,7 +28,7 @@ export default function TrainerMembersToolbar() {
     return () => clearTimeout(handler);
   }, [localSearch, search, setSearch]);
   const handleRefresh = () => {
-    loadAll();
+    queryClient.invalidateQueries({ queryKey: ['trainer', 'members'] });
   };
 
   return (
@@ -63,7 +67,7 @@ export default function TrainerMembersToolbar() {
   <RefreshCw size={14} /> Refresh
   </button>
   <button
-    onClick={() => openAdd()}
+    onClick={() => openAdd(true)}
     className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:opacity-90"
   >
     <Plus size={16} /> Add Member

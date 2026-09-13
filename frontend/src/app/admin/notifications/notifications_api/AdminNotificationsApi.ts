@@ -20,32 +20,37 @@ export interface MarkReadDto {
 /**
  * Fetches all notifications for the authenticated admin.
  */
+import { MOCK_ADMIN_NOTIFICATIONS } from '@/app/admin/notifications/notifications_api/AdminNotificationsMockData';
+
+let mockNotifs = [...MOCK_ADMIN_NOTIFICATIONS];
+
 export const adminNotificationsApi = {
-  fetchNotifications: () =>
-    apiFetch<ApiResponse<AdminNotification[]>>(AdminNotificationsUrlConfig.BACKEND_API.BASE),
+  fetchNotifications: async () => {
+    await new Promise(res => setTimeout(res, 300));
+    return { success: true, message: 'Success', data: mockNotifs };
+  },
 
-  /** PATCH /admin/notifications/mark-read — mark specific notifications as read */
-  markRead: (dto: MarkReadDto) =>
-    apiFetch<ApiResponse<void>>(AdminNotificationsUrlConfig.BACKEND_API.MARK_READ, {
-      method: 'PATCH',
-      body: JSON.stringify(dto),
-    }),
+  markRead: async (dto: MarkReadDto) => {
+    await new Promise(res => setTimeout(res, 200));
+    mockNotifs = mockNotifs.map(n => dto.ids.includes(n.id) ? { ...n, unread: false } : n);
+    return { success: true, message: 'Marked read', data: undefined };
+  },
 
-  /** PATCH /admin/notifications/mark-all-read — mark ALL notifications as read */
-  markAllRead: () =>
-    apiFetch<ApiResponse<void>>(AdminNotificationsUrlConfig.BACKEND_API.MARK_ALL_READ, {
-      method: 'PATCH',
-    }),
+  markAllRead: async () => {
+    await new Promise(res => setTimeout(res, 300));
+    mockNotifs = mockNotifs.map(n => ({ ...n, unread: false }));
+    return { success: true, message: 'All marked read', data: undefined };
+  },
 
-  /** DELETE /admin/notifications/:id — remove a single notification */
-  deleteNotification: (id: string) =>
-    apiFetch<ApiResponse<void>>(`${AdminNotificationsUrlConfig.BACKEND_API.BASE}/${id}`, {
-      method: 'DELETE',
-    }),
+  deleteNotification: async (id: string) => {
+    await new Promise(res => setTimeout(res, 200));
+    mockNotifs = mockNotifs.filter(n => n.id !== id);
+    return { success: true, message: 'Deleted', data: undefined };
+  },
 
-  /** DELETE /admin/notifications — clear all notifications */
-  clearAll: () =>
-    apiFetch<ApiResponse<void>>(AdminNotificationsUrlConfig.BACKEND_API.BASE, {
-      method: 'DELETE',
-    }),
+  clearAll: async () => {
+    await new Promise(res => setTimeout(res, 300));
+    mockNotifs = [];
+    return { success: true, message: 'Cleared', data: undefined };
+  },
 };

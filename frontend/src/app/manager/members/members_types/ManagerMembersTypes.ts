@@ -7,10 +7,11 @@ import type { Plan } from '@/app/manager/plans/plans_types/ManagerPlansTypes';
 import type { Payment } from '@/app/manager/finance/finance_types/ManagerFinanceTypes';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import type { MessageType, ManagerMessageRecipient } from '@/app/manager/manager_components/ManagerFeedback/ManagerMessageModal';
-import type { ManagerReceiptData } from '@/app/manager/manager_components/ManagerShared/ManagerThermalReceipt';
+import type { ManagerReceiptData } from '@/app/manager/members/members_components/ManagerMembersThermalReceipt';
 import type { MemberFormValues } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import type { DietPlan } from '@/app/manager/library/library_types/ManagerLibraryTypes';
 import type { Workout } from '@/app/manager/workout/workout_types/ManagerWorkoutTypes';
+import type { MemberType, MemberStatsType } from '@/app/manager/members/members_types/members.schema';
 
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 export type MemberSortColumn = 'name' | 'joinDate' | 'expiryDate' | 'paidAmount' | 'status';
@@ -30,51 +31,13 @@ export interface MemberEmergencyContact {
   phone: string;
 }
 
-export interface Member {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  gender: string;
-  address?: string;
-  aadhaar?: string;
-  branch: string;
-  planId: string;
-  plan?: { id: string; name: string; tier: string };
-  billingCycle: string;
-  status: string;
-  joinDate: string;
-  expiryDate: string;
-  paidAmount: number;
-  pendingAmount: number;
-  advanceAmount?: number;
-  photo?: string;
-  createdAt: string;
-  dateOfBirth?: string;
-  acquisitionSource?: string;
-  assignedDietId?: string;
+export interface Member extends Omit<MemberType, 'assignedDiet' | 'assignedWorkout'> {
   assignedDiet?: DietPlan;
-  assignedWorkoutId?: string;
   assignedWorkout?: Workout;
-  medicalHistory?: string;
-  assignedTrainerId?: string;
-  assignedTrainerName?: string;
-  isPT?: boolean;
-  // CRITICAL — missing fields that break business flows
-  freezeUntil?: string;           // ISO date — used by freezeMember()
-  emergencyContact?: MemberEmergencyContact;
-  referralCode?: string;
-  bloodGroup?: string;
-  membershipNumber?: string;      // unique business identifier
 }
 
 // ─── Member Stats ─────────────────────────────────────────────────────────────
-export interface MemberStats {
-  total: number;
-  active: number;
-  pending: number;
-  expired: number;
-}
+export interface MemberStats extends MemberStatsType {}
 
 /** Extends Plan with an optional per-day custom price used in the billing cycle calculator. */
 export interface PlanWithCustom extends Plan {
@@ -131,10 +94,10 @@ export interface MembersContextType {
   // Actions
   openAdd: () => void;
   openEdit: (m: Member) => void;
-  saveMember: (data: MemberFormValues) => Promise<any>;
+  saveMember: (data: MemberFormValues) => Promise<{ id?: string; message?: string }>;
   deleteMember: (id: string) => Promise<void>;
-  assignDiet: (memberId: string, diet: DietPlan | null) => Promise<any>;
-  assignWorkout: (memberId: string, workout: Workout | null) => Promise<any>;
+  assignDiet: (memberId: string, diet: DietPlan | null) => Promise<unknown> ;
+  assignWorkout: (memberId: string, workout: Workout | null) => Promise<unknown>;
   renewMember: (data: {
     planId: string;
     newExpiryDate: string;
@@ -142,11 +105,11 @@ export interface MembersContextType {
     paymentMethod: string;
     billingCycle: string;
     customDays?: number;
-  }) => Promise<any>;
-  recordPayment: (data: { amount: number; method: string }) => Promise<any>;
-  freezeMember: (isFrozen: boolean, freezeUntil?: string) => Promise<any>;
-  toggleSuspend: (isSuspended: boolean) => Promise<any>;
-  assignTrainer: (memberId: string, trainerId: string, trainerName: string, isPT: boolean) => Promise<any>;
+  }) => Promise<unknown>;
+  recordPayment: (data: { amount: number; method: string }) => Promise<unknown>;
+  freezeMember: (isFrozen: boolean, freezeUntil?: string) => Promise<unknown>;
+  toggleSuspend: (isSuspended: boolean) => Promise<unknown>;
+  assignTrainer: (memberId: string, trainerId: string, trainerName: string, isPT: boolean) => Promise<unknown>;
   exportMembers: (format: ExportFormat) => void;
 
   // Message Modal

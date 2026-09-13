@@ -4,7 +4,9 @@
 'use client';
 
 import { MessageCircle, Mail, Loader2 } from 'lucide-react';
-import { useMembersContext } from '@/app/trainer/members/members_context/MembersContext';
+import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
+import { useTrainerMembersFilters } from '@/app/trainer/members/members_utils/useTrainerMembersFilters';
+import { useTrainerMembersQuery } from '@/app/trainer/members/members_queries/useTrainerMembersQuery';
 import { MEMBERS_STATUS_COLORS, MEMBERS_TABLE_HEADERS, formatCurrency } from '@/app/trainer/members/members_utils/MembersSharedConstants';
 import { maskSensitiveData } from '@/lib/formatters';
 import TrainerMembersEmptyState from '@/app/trainer/members/members_components/TrainerMembersEmptyState/TrainerMembersEmptyState';
@@ -13,16 +15,26 @@ import TrainerPagination from '@/app/trainer/trainer_components/TrainerShared/Tr
 import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerSharedConstants';
 
 export default function TrainerMembersTable() {
-  const { 
-    search, debouncedSearch, statusFilter, currentPage, setCurrentPage,
-    setSelectedMember, openMsg, fetchState, members, loadMemberProfile, totalMembers
-  } = useMembersContext();
+  const { search, statusFilter, progressStatusFilter, currentPage, setCurrentPage } = useTrainerMembersFilters();
+  const setSelectedMember = useTrainerMembersStore(s => s.setSelectedMember);
+  const openMsg = useTrainerMembersStore(s => s.openMsg);
+  const setProfileTab = useTrainerMembersStore(s => s.setProfileTab);
 
+  const { data, isLoading } = useTrainerMembersQuery({ 
+    page: String(currentPage), 
+    limit: String(TRAINER_ITEMS_PER_PAGE), 
+    search, 
+    status: statusFilter, 
+    progressStatus: progressStatusFilter 
+  });
+
+  const members = data?.members || [];
+  const totalMembers = data?.total || 0;
   const totalPages = Math.ceil(totalMembers / TRAINER_ITEMS_PER_PAGE);
 
   return (
     <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden flex flex-col h-full min-h-96">
-      {fetchState === 'loading' ? (
+      {isLoading ? (
         <div className="flex items-center justify-center py-16 flex-1">
           <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
         </div>
@@ -46,7 +58,7 @@ export default function TrainerMembersTable() {
                   <tr 
                     key={m.id} 
                     className="hover:bg-primary/5 motion-safe:transition-colors cursor-pointer"
-                    onClick={() => { setSelectedMember(m); loadMemberProfile(m.id); }}
+                    onClick={() => { setSelectedMember(m); setProfileTab('overview'); }}
                   >
                     <td className="px-5 py-3.5 text-sm text-secondary font-medium">
                       #{m.id.split('-').pop()?.substring(0, 5) || m.id.substring(0, 5)}
@@ -96,13 +108,13 @@ export default function TrainerMembersTable() {
                     </td>
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-2">
-                        <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'whatsapp'); }} className="p-1.5 rounded-lg bg-success text-white hover:opacity-80 motion-safe:transition-all motion-safe:duration-200" title="WhatsApp" aria-label={`Message ${m.name} on WhatsApp`}><MessageCircle size={14} /></button>
-                        <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'email'); }} className="p-1.5 rounded-lg bg-info text-white hover:opacity-80 motion-safe:transition-all motion-safe:duration-200" title="Email" aria-label={`Email ${m.name}`}><Mail size={14} /></button>
+                        <button onClick={(e) => { e.stopPropagation(); openMsg({ name: m.name, phone: m.phone, email: m.email }, 'whatsapp', ''); }} className="p-1.5 rounded-lg bg-success text-white hover:opacity-80 motion-safe:transition-all motion-safe:duration-200" title="WhatsApp" aria-label={`Message ${m.name} on WhatsApp`}><MessageCircle size={14} /></button>
+                        <button onClick={(e) => { e.stopPropagation(); openMsg({ name: m.name, phone: m.phone, email: m.email }, 'email', ''); }} className="p-1.5 rounded-lg bg-info text-white hover:opacity-80 motion-safe:transition-all motion-safe:duration-200" title="Email" aria-label={`Email ${m.name}`}><Mail size={14} /></button>
                       </div>
                     </td>
                   </tr>
                 )})}
-                {members.length === 0 && fetchState === 'success' && (
+                {members.length === 0 && !isLoading && (
                   <tr>
                     <td colSpan={11} className="p-0 border-b-0">
                       <TrainerMembersEmptyState isFiltered={Boolean(search || statusFilter !== 'All')} />

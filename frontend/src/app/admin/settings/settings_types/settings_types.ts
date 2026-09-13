@@ -1,14 +1,11 @@
-// RESPONSIBILITY: Defines all TypeScript types, interfaces, and the FetchState enum for the Settings module.
-import { EMPTY_SETTINGS_FORM } from '@/app/admin/settings/settings_utils/AdminSettingsSharedConstants';
-import type { FetchState } from '@/app/superadmin/superadmin_types/superadmin_types';
+// RESPONSIBILITY: Defines all TypeScript types for the Settings module. Derived from Zod schemas — no inline interfaces.
+import { z } from 'zod';
+import type { GymProfileSchema, NotificationsSettingsSchema, AppIntegrationSettingsSchema, GstTaxSettingsSchema, PaymentGatewaySettingsSchema, GeneralSettingsSchema, AdminSettingsResponseSchema } from '@/app/admin/settings/settings_types/settings.schema';
 
-export interface SettingsContextType {
- activeTab: string;
- setActiveTab: (tab: string) => void;
- fetchState: FetchState;
- saving: boolean;
- form: typeof EMPTY_SETTINGS_FORM;
- handleChange: (field: string, value: string) => void;
- fetchSettings: () => Promise<void>;
- handleSave: () => Promise<void>;
-}
+export type GymProfileType = z.infer<typeof GymProfileSchema>;
+export type NotificationsSettingsType = z.infer<typeof NotificationsSettingsSchema>;
+export type AppIntegrationSettingsType = z.infer<typeof AppIntegrationSettingsSchema>;
+export type GstTaxSettingsType = z.infer<typeof GstTaxSettingsSchema>;
+export type PaymentGatewaySettingsType = z.infer<typeof PaymentGatewaySettingsSchema>;
+export type GeneralSettingsType = z.infer<typeof GeneralSettingsSchema>;
+export type AdminSettingsResponse = z.infer<typeof AdminSettingsResponseSchema>;

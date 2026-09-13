@@ -1,20 +1,11 @@
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
-// RESPONSIBILITY: Provides strongly-typed network calls for dashboard metrics.
-import { apiFetch } from '@/lib/api';
-import type { ApiResponse } from '@/lib/api';
-import { DashboardUrlConfig } from '@/app/trainer/dashboard/dashboard_url_config';
-import type { DashboardStats } from '@/app/trainer/dashboard/dashboard_types/dashboard_types';
+// RESPONSIBILITY: Zod-validated mock API layer for Trainer Dashboard.
+import { DashboardStatsSchema, type DashboardStats } from '@/app/trainer/dashboard/dashboard_types/dashboard_types';
+import { MOCK_DASHBOARD_STATS } from '@/app/trainer/dashboard/dashboard_fixtures/TrainerDashboardMockData';
 
 export const dashboardApi = {
-  getStats: async (range?: string, startDate?: string, endDate?: string): Promise<ApiResponse<DashboardStats>> => {
-    const params = new URLSearchParams();
-    if (range) params.set('range', range);
-    if (startDate) params.set('startDate', startDate);
-    if (endDate) params.set('endDate', endDate);
-    const q = params.toString() ? `?${params.toString()}` : '';
-    return apiFetch<ApiResponse<DashboardStats>>(`${DashboardUrlConfig.BACKEND_API.STATS}${q}`);
+  getStats: async (range?: string, startDate?: string, endDate?: string): Promise<DashboardStats> => {
+    // Simulate network latency
+    await new Promise((resolve) => setTimeout(resolve, 600));
+    return DashboardStatsSchema.parse(MOCK_DASHBOARD_STATS);
   },
 };
-
-

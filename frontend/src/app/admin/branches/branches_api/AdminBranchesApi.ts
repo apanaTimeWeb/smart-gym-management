@@ -3,16 +3,38 @@ import { apiFetch } from '@/lib/api';
 
 const BASE = '/admin/branches';
 
+import { MOCK_ADMIN_BRANCHES } from '@/app/admin/branches/branches_api/AdminBranchesMockData';
+import type { AdminBranch } from '@/app/admin/branches/branches_types/AdminBranchesTypes';
+
+let mockBranches = [...MOCK_ADMIN_BRANCHES];
+
 export const adminBranchesApi = {
-  fetchBranches: (params?: Record<string, string>) => {
-    const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<import('@/lib/api').ApiResponse<unknown[]>>(`${BASE}${q}`);
+  fetchBranches: async (params?: Record<string, string>) => {
+    await new Promise(res => setTimeout(res, 300));
+    return { success: true, message: 'Success', data: mockBranches };
   },
-  fetchBranchById: (id: string) => apiFetch<import('@/lib/api').ApiResponse<unknown>>(`${BASE}/${id}`),
-  createBranch: (body: Record<string, unknown>) =>
-    apiFetch<import('@/lib/api').ApiResponse<unknown>>(BASE, { method: 'POST', body: JSON.stringify(body) }),
-  updateBranch: (id: string, body: Record<string, unknown>) =>
-    apiFetch<import('@/lib/api').ApiResponse<unknown>>(`${BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
-  deleteBranch: (id: string) =>
-    apiFetch<import('@/lib/api').ApiResponse<void>>(`${BASE}/${id}`, { method: 'DELETE' }),
+  fetchBranchById: async (id: string) => {
+    await new Promise(res => setTimeout(res, 300));
+    const branch = mockBranches.find(b => b.id === id);
+    if (!branch) throw new Error('Not found');
+    return { success: true, message: 'Success', data: branch };
+  },
+  createBranch: async (body: Record<string, unknown>) => {
+    await new Promise(res => setTimeout(res, 400));
+    const newBranch = { ...body, id: `b${Date.now()}` } as unknown as AdminBranch;
+    mockBranches.push(newBranch);
+    return { success: true, message: 'Created', data: newBranch };
+  },
+  updateBranch: async (id: string, body: Record<string, unknown>) => {
+    await new Promise(res => setTimeout(res, 400));
+    const idx = mockBranches.findIndex(b => b.id === id);
+    if (idx === -1) throw new Error('Not found');
+    mockBranches[idx] = { ...mockBranches[idx], ...body } as AdminBranch;
+    return { success: true, message: 'Updated', data: mockBranches[idx] };
+  },
+  deleteBranch: async (id: string) => {
+    await new Promise(res => setTimeout(res, 400));
+    mockBranches = mockBranches.filter(b => b.id !== id);
+    return { success: true, message: 'Deleted', data: undefined };
+  },
 };

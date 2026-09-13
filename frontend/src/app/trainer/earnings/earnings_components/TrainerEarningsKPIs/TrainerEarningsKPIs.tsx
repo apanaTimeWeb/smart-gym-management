@@ -1,14 +1,15 @@
 'use client';
 import { IndianRupee, Clock, Activity, Target, Minus } from 'lucide-react';
-import { useTrainerEarningsContext } from '@/app/trainer/earnings/earnings_context/TrainerEarningsContext';
+import { useTrainerEarningsQuery } from '@/app/trainer/earnings/earnings_queries/useTrainerEarningsQuery';
 import { formatCurrency } from '@/app/trainer/earnings/earnings_utils/TrainerEarningsSharedConstants';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
 export default function TrainerEarningsKPIs() {
-  const { kpis, fetchState } = useTrainerEarningsContext();
+  const { data } = useTrainerEarningsQuery();
+  const kpis = data?.kpis;
   const dateSuffix = useDateRangeSuffix();
 
-  if (fetchState === 'loading' || !kpis) {
+  if (!kpis) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {[1, 2, 3, 4, 5].map(i => (

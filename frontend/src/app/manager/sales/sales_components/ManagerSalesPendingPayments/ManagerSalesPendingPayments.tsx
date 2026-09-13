@@ -2,6 +2,7 @@
 'use client';
 
 import { useSalesContext } from '@/app/manager/sales/sales_context/ManagerSalesContext';
+import { formatCurrency } from '@/lib/formatters';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import ManagerSalesEmptyState from '@/app/manager/sales/sales_components/ManagerSalesEmptyState/ManagerSalesEmptyState';
 import type { PendingPaymentMember } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
@@ -66,7 +67,7 @@ export default function PendingPayments() {
             </div>
             <div className="flex items-center gap-4">
               <div className="text-right">
-                <p className="font-bold text-danger">₹{p.pendingAmount?.toLocaleString() || 0}</p>
+                <p className="font-bold text-danger">{formatCurrency(p.pendingAmount || 0)}</p>
                 <p className="text-xs text-secondary opacity-80">{p.daysOverdue || 0} days overdue</p>
               </div>
               <button
@@ -83,7 +84,7 @@ export default function PendingPayments() {
                       {
                         title: 'Outstanding Dues',
                         items: {
-                          'Pending Amount': `Rs ${p.pendingAmount?.toLocaleString() || 0}`,
+                          'Pending Amount': formatCurrency(p.pendingAmount || 0),
                           'Overdue By': `${p.daysOverdue || 0} days`,
                         }
                       }

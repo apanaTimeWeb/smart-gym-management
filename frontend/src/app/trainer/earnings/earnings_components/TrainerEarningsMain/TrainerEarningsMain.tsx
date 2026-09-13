@@ -1,20 +1,33 @@
 'use client';
 
-import { AlertCircle } from 'lucide-react';
-import { TrainerEarningsProvider, useTrainerEarningsContext } from '@/app/trainer/earnings/earnings_context/TrainerEarningsContext';
+import { AlertCircle, Loader2 } from 'lucide-react';
+import { useTrainerEarningsQuery } from '@/app/trainer/earnings/earnings_queries/useTrainerEarningsQuery';
 import TrainerEarningsKPIs from '@/app/trainer/earnings/earnings_components/TrainerEarningsKPIs/TrainerEarningsKPIs';
 import TrainerEarningsPending from '@/app/trainer/earnings/earnings_components/TrainerEarningsPending/TrainerEarningsPending';
 import TrainerEarningsHistory from '@/app/trainer/earnings/earnings_components/TrainerEarningsHistory/TrainerEarningsHistory';
 import { TrainerDateFilterDropdown } from '@/app/trainer/trainer_components/TrainerShared/TrainerDateFilterDropdown';
 
-function TrainerEarningsContent() {
-  const { fetchState, error } = useTrainerEarningsContext();
+export default function TrainerEarningsMain() {
+  const { isLoading, isError, error } = useTrainerEarningsQuery();
 
-  if (fetchState === 'error') {
+  if (isLoading) {
     return (
-      <div className="p-6 bg-danger/10 border border-danger rounded-xl flex items-center gap-3 text-danger">
-        <AlertCircle size={20} />
-        <p className="text-sm font-medium">{error || 'Failed to load earnings data.'}</p>
+      <div className="min-h-full flex items-center justify-center pt-20">
+        <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="p-6">
+        <div className="bg-danger/10 border border-danger rounded-xl p-4 flex items-center gap-3 text-danger max-w-md">
+          <AlertCircle size={24} />
+          <div>
+            <p className="font-bold">Failed to load earnings data</p>
+            <p className="text-sm mt-1">{error?.message || 'Please try again later.'}</p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -37,13 +50,5 @@ function TrainerEarningsContent() {
         </div>
       </div>
     </div>
-  );
-}
-
-export default function TrainerEarningsMain() {
-  return (
-    <TrainerEarningsProvider>
-      <TrainerEarningsContent />
-    </TrainerEarningsProvider>
   );
 }

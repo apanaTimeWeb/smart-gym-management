@@ -12,7 +12,7 @@ import {
   MOCK_PT_ASSIGNMENTS, 
   MOCK_PT_WORKLOAD, 
   MOCK_PT_KPIS 
-} from '@/app/manager/pt/pt_utils/ManagerPtConstants';
+} from '@/app/manager/pt/pt_fixtures/ManagerPtMockData';
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 

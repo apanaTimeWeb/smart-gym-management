@@ -68,7 +68,7 @@ export default function TrainerProgressChart({ entries, activeMetric, onMetricCh
               className="motion-safe:transition-all"
             />
             {values.map((v, i) => (
-              <g key={i}>
+              <g key={entries[i]!.id}>
                 <circle cx={toX(i)} cy={toY(v)} r="4" fill="var(--color-primary)" />
                 <text x={toX(i)} y={H - 4} textAnchor="middle" fontSize="9" fill="var(--color-secondary)">
                   {labels[i]}

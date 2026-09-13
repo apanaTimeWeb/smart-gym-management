@@ -3,15 +3,16 @@ import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import type { ManagerSettingsPreferences, UpdateManagerSettingsPayload } from '@/app/manager/settings/settings_types/ManagerSettingsTypes';
 
-const BASE = '/manager/settings';
+import { MOCK_SETTINGS_PREFERENCES } from '@/app/manager/settings/settings_fixtures/ManagerSettingsMockData';
 
 export const managerSettingsApi = {
-  fetchSettings: () =>
-    apiFetch<ApiResponse<ManagerSettingsPreferences>>(BASE),
+  fetchSettings: async () => {
+    await new Promise(res => setTimeout(res, 300));
+    return { success: true, message: 'Success', data: MOCK_SETTINGS_PREFERENCES };
+  },
 
-  updateSettings: (body: UpdateManagerSettingsPayload) =>
-    apiFetch<ApiResponse<ManagerSettingsPreferences>>(BASE, {
-      method: 'PATCH',
-      body: JSON.stringify(body),
-    }),
+  updateSettings: async (body: UpdateManagerSettingsPayload) => {
+    await new Promise(res => setTimeout(res, 400));
+    return { success: true, message: 'Success', data: { ...MOCK_SETTINGS_PREFERENCES, ...body } };
+  },
 };

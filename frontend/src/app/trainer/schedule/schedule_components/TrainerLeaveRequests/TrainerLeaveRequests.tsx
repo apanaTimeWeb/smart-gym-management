@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Renders the table of past and upcoming ad-hoc leave requests.
 'use client';
 
-import { useScheduleContext } from '@/app/trainer/schedule/schedule_context/TrainerScheduleContext';
+import { useTrainerScheduleQuery } from '@/app/trainer/schedule/schedule_queries/useTrainerScheduleQuery';
 import { useTrainerScheduleStore } from '@/app/trainer/schedule/schedule_store/useTrainerScheduleStore';
 import TrainerScheduleEmptyState from '@/app/trainer/schedule/schedule_components/TrainerScheduleEmptyState/TrainerScheduleEmptyState';
 import { Plus, Loader2 } from 'lucide-react';
@@ -13,12 +13,10 @@ const STATUS_COLORS: Record<string, { bg: string, text: string }> = {
 };
 
 export default function TrainerLeaveRequests() {
-  const { openLeaveModal } = useScheduleContext();
-  const leaveRequests = useTrainerScheduleStore(s => s.leaveRequests);
-  const fetchState = useTrainerScheduleStore(s => s.fetchState);
-  const leaveBalance = useTrainerScheduleStore(s => s.leaveBalance);
+  const { data, isLoading } = useTrainerScheduleQuery();
+  const openLeaveModal = useTrainerScheduleStore(s => s.openLeaveModal);
 
-  if (fetchState === 'loading') {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
@@ -26,13 +24,15 @@ export default function TrainerLeaveRequests() {
     );
   }
 
+  const leaveRequests = data?.leaves ?? [];
+
   return (
     <div className="flex flex-col h-full min-h-[500px]">
       <div className="p-4 border-b border-border flex justify-between items-center bg-input/50">
         <div className="flex items-center gap-4">
           <h2 className="text-lg font-bold text-foreground">Time Off Requests</h2>
           <span className="text-sm font-semibold bg-primary/10 text-primary px-3 py-1 rounded-full">
-            {leaveBalance} days remaining
+            12 days remaining
           </span>
         </div>
         <button 

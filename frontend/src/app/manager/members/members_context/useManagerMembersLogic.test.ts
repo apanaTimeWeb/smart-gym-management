@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { renderHook } from '@testing-library/react';
-import { useManagerMembersLogic } from './useManagerMembersLogic';
+import { useManagerMembersLogic } from '@/app/manager/members/members_context/useManagerMembersLogic';
 
 // Mock useRouter and useSearchParams
 vi.mock('next/navigation', () => ({

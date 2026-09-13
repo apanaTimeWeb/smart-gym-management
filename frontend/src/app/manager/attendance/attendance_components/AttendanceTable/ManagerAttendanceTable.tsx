@@ -54,7 +54,7 @@ export default function AttendanceTable() {
       {fetchState === 'loading' ? (
         <div className="motion-safe:animate-pulse bg-card rounded-xl border border-border mt-4">
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-16 border-b border-border flex items-center px-4 gap-4">
+            <div key={`skeleton-${i}`} className="h-16 border-b border-border flex items-center px-4 gap-4">
               <div className="h-8 w-8 bg-muted rounded-full"></div>
               <div className="h-4 bg-muted rounded w-32"></div>
               <div className="h-4 bg-muted rounded-full w-16"></div>

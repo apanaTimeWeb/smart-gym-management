@@ -23,8 +23,8 @@ export function useUnsavedChangesGuard(isDirty: boolean, warningText: string = '
     const originalPushState = window.history.pushState;
     const originalReplaceState = window.history.replaceState;
 
-    const handleRouteChange = (originalFn: any) => {
-      return function (this: any, ...args: any[]) {
+    const handleRouteChange = (originalFn: Function) => {
+      return function (this: unknown, ...args: unknown[]) {
         if (isDirty) {
           if (!window.confirm(warningText)) {
             // User cancelled the navigation

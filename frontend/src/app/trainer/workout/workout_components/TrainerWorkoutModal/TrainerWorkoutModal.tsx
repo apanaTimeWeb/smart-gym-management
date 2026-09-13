@@ -8,16 +8,15 @@ import { X, Save, Plus, Trash2, Dumbbell } from 'lucide-react';
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/SearchableDropdown';
-import { useWorkoutContext } from '@/app/trainer/workout/workout_context/WorkoutContext';
-import { WORKOUT_LEVEL_OPTIONS, WorkoutSchema, type WorkoutFormValues, EMPTY_WORKOUT_FORM } from '@/app/trainer/workout/workout_utils/WorkoutSharedConstants';
+import { CreateWorkoutPlanSchema, type CreateWorkoutFormValues, EMPTY_WORKOUT_FORM } from '@/app/trainer/workout/workout_types/workout.schema';
 import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
+import { useTrainerWorkoutStore } from '@/app/trainer/workout/workout_store/useTrainerWorkoutStore';
+import { useTrainerWorkoutMutations } from '@/app/trainer/workout/workout_queries/useWorkoutMutations';
+import { useWarnIfUnsavedChanges } from '@/app/trainer/trainer_utils/useWarnIfUnsavedChanges';
 
 export default function TrainerWorkoutModal() {
-  const { 
-    showWkModal, setShowWkModal, 
-    editWkId, wkForm, 
-    saveWk, saving 
-  } = useWorkoutContext();
+  const { showWkModal, setShowWkModal, editWk } = useTrainerWorkoutStore();
+  const { createWorkout, updateWorkout } = useTrainerWorkoutMutations();
   const { confirm } = useConfirm();
 
   const {
@@ -25,11 +24,13 @@ export default function TrainerWorkoutModal() {
     handleSubmit,
     reset,
     control,
-    formState: { errors }
-  } = useForm<WorkoutFormValues>({
-    resolver: zodResolver(WorkoutSchema) as any,
-    defaultValues: wkForm || EMPTY_WORKOUT_FORM
+    formState: { errors, isDirty }
+  } = useForm<CreateWorkoutFormValues>({
+    resolver: zodResolver(CreateWorkoutPlanSchema),
+    defaultValues: EMPTY_WORKOUT_FORM
   });
+
+  useWarnIfUnsavedChanges(isDirty);
 
   const { fields: exerciseFields, append: appendExercise, remove: removeExercise } = useFieldArray({
     control,
@@ -38,9 +39,42 @@ export default function TrainerWorkoutModal() {
 
   useEffect(() => {
     if (showWkModal) {
-      reset(wkForm);
+      if (editWk) {
+        reset({
+          name: editWk.name,
+          level: editWk.level,
+          days: editWk.days,
+          exercises: editWk.exercises,
+          focus: editWk.focus,
+          duration: editWk.duration,
+          tags: editWk.tags.join(', '),
+          goal: editWk.goal ?? '',
+          startDate: editWk.startDate ?? '',
+          endDate: editWk.endDate ?? '',
+          instructions: editWk.instructions ?? '',
+          assignedMemberId: editWk.assignedMemberId ?? '',
+          workoutExercises: editWk.workoutExercises ?? []
+        });
+      } else {
+        reset(EMPTY_WORKOUT_FORM);
+      }
     }
-  }, [showWkModal, wkForm, reset]);
+  }, [showWkModal, editWk, reset]);
+
+  const isSaving = createWorkout.isPending || updateWorkout.isPending;
+
+  const onSubmit = (data: CreateWorkoutFormValues) => {
+    // Parse using Zod schema to ensure correct types (e.g., coercing days/exercises)
+    const dto = CreateWorkoutPlanSchema.parse(data);
+    if (editWk) {
+      updateWorkout.mutate(
+        { id: editWk.id, dto },
+        { onSuccess: () => setShowWkModal(false) }
+      );
+    } else {
+      createWorkout.mutate(dto, { onSuccess: () => setShowWkModal(false) });
+    }
+  };
 
   if (!showWkModal) return null;
 
@@ -49,7 +83,7 @@ export default function TrainerWorkoutModal() {
       <div className="bg-card rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
         <div className="flex justify-between items-center p-5 border-b border-border">
           <h3 className="font-bold text-lg text-foreground">
-            {editWkId ? 'Edit Workout Plan' : 'Add Workout Plan'}
+            {editWk ? 'Edit Workout Plan' : 'Add Workout Plan'}
           </h3>
           <button 
             type="button"
@@ -59,7 +93,7 @@ export default function TrainerWorkoutModal() {
             <X size={20} />
           </button>
         </div>
-        <form onSubmit={handleSubmit(saveWk as any)} className="p-5 space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="p-5 space-y-4">
           <div>
             <label className="block text-sm font-medium text-secondary mb-1">Plan Name *</label>
             <input 
@@ -277,11 +311,11 @@ export default function TrainerWorkoutModal() {
             </button>
             <button 
               type="submit" 
-              disabled={saving}
+              disabled={isSaving}
               className="px-4 py-2 rounded-lg font-medium text-white flex items-center gap-2 hover:opacity-90 motion-safe:transition-opacity disabled:opacity-70" 
               style={{ background: 'var(--workout-highlight)' }}
             >
-              {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" /> : <><Save size={15} /> Save</>}
+              {isSaving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" /> : <><Save size={15} /> Save</>}
             </button>
           </div>
         </form>

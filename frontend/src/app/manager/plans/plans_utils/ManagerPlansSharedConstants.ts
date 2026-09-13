@@ -26,4 +26,9 @@ export const EMPTY_PLAN_FORM: PlanFormValues = {
  features: '' 
 };
 
-export const formatCurrency = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');
+export { formatCurrency } from '@/lib/formatters';
+
+export const MANAGER_PLANS_MESSAGES = {
+  CHANGE_REQUEST_SUCCESS: 'Change request sent to admin.',
+  CHANGE_REQUEST_ERROR: 'Failed to send request. Try again.'
+};

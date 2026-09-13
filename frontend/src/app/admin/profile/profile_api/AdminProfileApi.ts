@@ -5,10 +5,22 @@ import type { AdminProfileData, UpdateAdminProfilePayload, UpdateAdminPasswordPa
 
 const BASE = '/admin/profile';
 
+import { MOCK_ADMIN_PROFILE } from '@/app/admin/profile/profile_api/AdminProfileMockData';
+
+let mockProfile = { ...MOCK_ADMIN_PROFILE };
+
 export const adminProfileApi = {
-  fetchProfile: () => apiFetch<ApiResponse<AdminProfileData>>(BASE),
-  updateProfile: (body: UpdateAdminProfilePayload) =>
-    apiFetch<ApiResponse<AdminProfileData>>(BASE, { method: 'PATCH', body: JSON.stringify(body) }),
-  updatePassword: (body: UpdateAdminPasswordPayload) =>
-    apiFetch<ApiResponse<void>>(`${BASE}/password`, { method: 'PATCH', body: JSON.stringify(body) }),
+  fetchProfile: async () => {
+    await new Promise(res => setTimeout(res, 300));
+    return { success: true, message: 'Success', data: mockProfile };
+  },
+  updateProfile: async (body: UpdateAdminProfilePayload) => {
+    await new Promise(res => setTimeout(res, 400));
+    mockProfile = { ...mockProfile, ...body };
+    return { success: true, message: 'Profile updated', data: mockProfile };
+  },
+  updatePassword: async (body: UpdateAdminPasswordPayload) => {
+    await new Promise(res => setTimeout(res, 400));
+    return { success: true, message: 'Password updated', data: undefined };
+  },
 };

@@ -4,6 +4,8 @@
 import { useInquiriesContext } from '@/app/manager/inquiries/inquiries_context/ManagerInquiriesContext';
 import { MessageSquare, Plus, Clock, CheckCircle } from 'lucide-react';
 
+import { formatNumber } from '@/lib/formatters';
+
 const KPI_CONFIG = [
   { key: 'total',     label: 'Total Inquiries', icon: MessageSquare, color: 'text-info',    bg: 'bg-info-bg'     },
   { key: 'new',       label: 'New',             icon: Plus,          color: 'text-warning', bg: 'bg-warning-bg'  },
@@ -12,7 +14,24 @@ const KPI_CONFIG = [
 ] as const;
 
 export default function ManagerInquiriesKPIs() {
-  const { stats } = useInquiriesContext();
+  const { stats, isLoading } = useInquiriesContext();
+
+  if (isLoading && !stats) {
+    return (
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        {[1, 2, 3, 4].map(i => (
+          <div key={i} className="bg-card rounded-xl p-4 shadow-sm border border-border flex items-center gap-3 motion-safe:animate-pulse">
+            <div className="w-10 h-10 rounded-xl bg-muted"></div>
+            <div className="space-y-2">
+              <div className="h-3 w-20 bg-muted rounded"></div>
+              <div className="h-5 w-10 bg-muted rounded"></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   if (!stats) return null;
 
   return (
@@ -24,7 +43,7 @@ export default function ManagerInquiriesKPIs() {
           </div>
           <div>
             <p className="text-xs text-secondary font-medium">{s.label}</p>
-            <p className="text-xl font-bold text-primary">{stats[s.key]}</p>
+            <p className="text-xl font-bold text-primary">{formatNumber(stats[s.key])}</p>
           </div>
         </div>
       ))}

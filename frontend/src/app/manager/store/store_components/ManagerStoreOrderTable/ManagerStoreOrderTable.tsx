@@ -4,7 +4,7 @@
 import { Printer, MessageCircle } from 'lucide-react';
 import type { Order } from '@/app/manager/store/store_types/ManagerStoreTypes';
 import { useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';
-import { formatCurrency } from '@/app/manager/store/store_utils/ManagerStoreSharedConstants';
+import { formatCurrency, displayValue } from '@/lib/formatters';
 import { GYM_DETAILS } from '@/app/manager/manager_utils/ManagerSharedConstants';
 
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
@@ -36,10 +36,10 @@ export default function ManagerStoreOrderTable() {
   const handleWhatsApp = (o: Order) => {
     const itemsText = (o.items || []).map(i => {
       const name = i.product?.name ? (i.product?.unit ? `${i.product.name} (${i.product.unit})` : i.product.name) : '';
-      return `- ${name}\n  ${i.qty} x Rs. ${i.price.toLocaleString()} = Rs. ${(i.qty * i.price).toLocaleString()}`;
+      return `- ${name}\n  ${i.qty} x ${formatCurrency(i.price)} = ${formatCurrency(i.qty * i.price)}`;
     }).join('\n');
 
-    const text = `*${GYM_DETAILS.name.toUpperCase()}*\nPh: ${GYM_DETAILS.phone}\n\n*PAYMENT RECEIPT*\nReceipt No: ORD-${o.id}\nDate: ${new Date(o.createdAt).toLocaleDateString('en-IN')}\n\n*ITEMS:*\n${itemsText}\n\n*TOTAL: Rs. ${o.total.toLocaleString()}*\nPaid via: ${o.method}\n\nThank You!`;
+    const text = `*${GYM_DETAILS.name.toUpperCase()}*\nPh: ${GYM_DETAILS.phone}\n\n*PAYMENT RECEIPT*\nReceipt No: ORD-${o.id}\nDate: ${new Date(o.createdAt).toLocaleDateString('en-IN')}\n\n*ITEMS:*\n${itemsText}\n\n*TOTAL: ${formatCurrency(o.total)}*\nPaid via: ${o.method}\n\nThank You!`;
     const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
     window.open(url, '_blank');
   };
@@ -116,7 +116,7 @@ export default function ManagerStoreOrderTable() {
                       e.stopPropagation();
                       handleWhatsApp(o);
                     }}
-                    className="p-1.5 rounded-lg bg-green-500/10 text-green-500 hover:bg-green-500/20 transition-colors"
+                    className="p-1.5 rounded-lg bg-success-bg text-success hover:bg-success-bg/80 transition-colors"
                     aria-label={`WhatsApp Receipt ORD-${o.id}`}
                     title="Send via WhatsApp"
                   >

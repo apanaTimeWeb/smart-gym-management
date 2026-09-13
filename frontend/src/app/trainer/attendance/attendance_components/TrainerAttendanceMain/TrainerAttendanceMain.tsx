@@ -1,11 +1,14 @@
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
-// RESPONSIBILITY: Entry component for the Attendance module that wraps the UI in the context provider and handles the core page layout.
+// RESPONSIBILITY: Root client component for the Trainer Attendance module.
+// Orchestrates query/store hooks and renders the attendance page layout.
+// DATA FLOW: page.tsx (Server) → TrainerAttendanceMain (Client) → hooks → sub-components
 'use client';
 
+import { useState, useEffect } from 'react';
 import TrainerToast from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
-
-import { AttendanceProvider, useAttendanceContext } from '@/app/trainer/attendance/attendance_context/AttendanceContext';
+import { useAttendanceFilters } from '@/app/trainer/attendance/attendance_queries/useAttendanceFilters';
+import { useAttendanceRecordsQuery, useAttendanceStatsQuery, useAttendanceMembersQuery } from '@/app/trainer/attendance/attendance_queries/useAttendanceQuery';
+import { useAttendanceMutations } from '@/app/trainer/attendance/attendance_queries/useAttendanceMutations';
+import { useTrainerAttendanceStore } from '@/app/trainer/attendance/attendance_store/useTrainerAttendanceStore';
 import TrainerAttendanceKPIs from '@/app/trainer/attendance/attendance_components/TrainerAttendanceKPIs/TrainerAttendanceKPIs';
 import TrainerAttendanceSummaryCard from '@/app/trainer/attendance/attendance_components/TrainerAttendanceSummaryCard/TrainerAttendanceSummaryCard';
 import TrainerAttendanceToolbar from '@/app/trainer/attendance/attendance_components/TrainerAttendanceToolbar/TrainerAttendanceToolbar';
@@ -13,40 +16,98 @@ import TrainerAttendanceTable from '@/app/trainer/attendance/attendance_componen
 import TrainerAttendanceModal from '@/app/trainer/attendance/attendance_components/TrainerAttendanceModal/TrainerAttendanceModal';
 import TrainerMyAttendanceCalendar from '@/app/trainer/attendance/attendance_components/TrainerMyAttendanceCalendar/TrainerMyAttendanceCalendar';
 
-function AttendanceContent() {
-  const { toast, hideToast, tab, viewMode } = useAttendanceContext();
+export default function TrainerAttendanceMain() {
+  const filters = useAttendanceFilters();
+  const { tab, search, filterDate, currentPage } = filters;
+
+  const { data: recordsData, isLoading, refetch } = useAttendanceRecordsQuery({ tab, search, filterDate, currentPage });
+  const { data: stats } = useAttendanceStatsQuery();
+  const { data: members = [] } = useAttendanceMembersQuery();
+  const { markAttendance, selfCheckIn, selfCheckOut } = useAttendanceMutations();
+  const { showModal, openModal, closeModal, viewMode, toast, showToast, hideToast } = useTrainerAttendanceStore();
+
+  const records = recordsData?.records ?? [];
+  const totalRecords = recordsData?.total ?? 0;
+
+  // Wire mutations to toast feedback
+  const handleMarkAttendance = async (data: Parameters<typeof markAttendance.mutateAsync>[0]) => {
+    try {
+      await markAttendance.mutateAsync(data);
+      closeModal();
+      showToast('Attendance recorded successfully', 'success');
+    } catch (err) {
+      showToast((err as Error).message ?? 'Failed to record attendance', 'error');
+    }
+  };
+
+  const handleSelfCheckIn = async () => {
+    try {
+      await selfCheckIn.mutateAsync();
+      showToast('Checked in successfully', 'success');
+    } catch (err) {
+      showToast((err as Error).message ?? 'Check-in failed', 'error');
+    }
+  };
+
+  const handleSelfCheckOut = async () => {
+    try {
+      await selfCheckOut.mutateAsync();
+      showToast('Checked out successfully', 'success');
+    } catch (err) {
+      showToast((err as Error).message ?? 'Check-out failed', 'error');
+    }
+  };
 
   return (
     <div className="min-h-full pb-10 attendance-module bg-background text-foreground">
-            <div className="p-6 space-y-5">
-        <TrainerAttendanceKPIs />
+      <div className="p-6 space-y-5">
+        <TrainerAttendanceKPIs
+          stats={stats ?? { totalCheckIns: 0, memberCheckIns: 0, staffCheckIns: 0 }}
+        />
 
-        {tab === 'My Attendance' && <TrainerAttendanceSummaryCard />}
+        {tab === 'My Attendance' && (
+          <TrainerAttendanceSummaryCard records={records} />
+        )}
 
         <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
-          <TrainerAttendanceToolbar />
+          <TrainerAttendanceToolbar
+            {...filters}
+            viewMode={viewMode}
+            onAddRecord={openModal}
+            onRefresh={refetch}
+            onSelfCheckIn={handleSelfCheckIn}
+            onSelfCheckOut={handleSelfCheckOut}
+            selfCheckInPending={selfCheckIn.isPending}
+            selfCheckOutPending={selfCheckOut.isPending}
+          />
+
           {tab === 'My Attendance' && viewMode === 'calendar' ? (
-            <TrainerMyAttendanceCalendar />
+            <TrainerMyAttendanceCalendar records={records} />
           ) : (
-            <TrainerAttendanceTable />
+            <TrainerAttendanceTable
+              records={records}
+              totalRecords={totalRecords}
+              isLoading={isLoading}
+              search={search}
+              filterDate={filterDate}
+              currentPage={currentPage}
+              onPageChange={filters.setCurrentPage}
+            />
           )}
         </div>
       </div>
 
-      <TrainerAttendanceModal />
+      <TrainerAttendanceModal
+        isOpen={showModal}
+        onClose={closeModal}
+        members={members}
+        saving={markAttendance.isPending}
+        onSubmit={handleMarkAttendance}
+      />
 
       {toast && (
         <TrainerToast message={toast.message} type={toast.type} onClose={hideToast} />
       )}
     </div>
- );
+  );
 }
-
-export default function TrainerAttendanceMain() {
- return (
- <AttendanceProvider>
- <AttendanceContent />
- </AttendanceProvider>
- );
-}
-

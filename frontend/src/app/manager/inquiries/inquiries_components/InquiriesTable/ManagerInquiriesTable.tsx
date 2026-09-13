@@ -2,8 +2,8 @@
 'use client';
 
 import { useInquiriesContext } from '@/app/manager/inquiries/inquiries_context/ManagerInquiriesContext';
-import { FetchState } from '@/app/manager/inquiries/inquiries_types/ManagerInquiriesTypes';
-import { INQUIRIES_TABLE_HEADERS, INQUIRIES_STATUS_LABELS, INQUIRIES_STATUS_STYLES } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesSharedConstants';
+import { INQUIRIES_TABLE_HEADERS, INQUIRIES_STATUS_LABELS } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesSharedConstants';
+import { displayValue, formatDate } from '@/lib/formatters';
 import { MessageCircle, Mail, Edit2, Trash2 } from 'lucide-react';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
@@ -13,7 +13,7 @@ import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerShare
 export default function ManagerInquiriesTable() {
   const { confirm } = useConfirm();
   const {
-    inquiries, fetchState, search, statusFilter, currentPage, setCurrentPage,
+    inquiries, isLoading, isError, search, statusFilter, currentPage, setCurrentPage,
     openEdit, openMsg, deleteInquiry, updateStatus, totalInquiries,
     selectedIds, toggleSelectAll, toggleSelectOne,
   } = useInquiriesContext();
@@ -23,7 +23,9 @@ export default function ManagerInquiriesTable() {
 
   const totalPages = Math.ceil(totalInquiries / MANAGER_ITEMS_PER_PAGE);
 
-  if (fetchState === FetchState.LOADING) {
+  const MANAGER_SKELETON_ROWS = ['skeleton-1', 'skeleton-2', 'skeleton-3', 'skeleton-4', 'skeleton-5'];
+
+  if (isLoading) {
     return (
       <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden flex flex-col h-full min-h-96">
         <div className="overflow-x-auto">
@@ -39,8 +41,8 @@ export default function ManagerInquiriesTable() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {[...Array(5)].map((_, i) => (
-                <tr key={i} className="motion-safe:animate-pulse">
+              {MANAGER_SKELETON_ROWS.map((key) => (
+                <tr key={key} className="motion-safe:animate-pulse">
                   <td className="px-5 py-4"><div className="h-4 bg-muted rounded w-4"></div></td>
                   <td className="px-5 py-4 flex items-center gap-3">
                     <div className="w-9 h-9 rounded-full bg-muted"></div>
@@ -60,7 +62,7 @@ export default function ManagerInquiriesTable() {
     );
   }
 
-  if (fetchState === FetchState.ERROR) {
+  if (isError) {
     return (
       <div className="bg-card rounded-xl shadow-sm border border-danger/30 overflow-hidden flex flex-col h-full min-h-96 justify-center items-center py-16 text-center">
         <p className="text-danger font-medium">Failed to load inquiries.</p>
@@ -112,16 +114,16 @@ export default function ManagerInquiriesTable() {
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm bg-warning-bg text-warning">
-                        {(inq.name || '').charAt(0)}
+                        {displayValue(inq.name).charAt(0)}
                       </div>
-                      <p className="text-sm font-semibold text-primary">{inq.name || 'Unknown'}</p>
+                      <p className="text-sm font-semibold text-primary">{displayValue(inq.name)}</p>
                     </div>
                   </td>
                   <td className="px-5 py-3.5">
-                    <p className="text-sm text-primary">{inq.phone}</p>
-                    <p className="text-xs text-secondary">{inq.email || '—'}</p>
+                    <p className="text-sm text-primary">{displayValue(inq.phone)}</p>
+                    <p className="text-xs text-secondary">{displayValue(inq.email)}</p>
                   </td>
-                  <td className="px-5 py-3.5 text-sm text-secondary">{inq.source || '—'}</td>
+                  <td className="px-5 py-3.5 text-sm text-secondary">{displayValue(inq.source)}</td>
                   <td className="px-5 py-3.5" onClick={e => e.stopPropagation()}>
                     <div className="w-32">
                       <SearchableDropdown
@@ -132,7 +134,7 @@ export default function ManagerInquiriesTable() {
                     </div>
                   </td>
                   <td className="px-5 py-3.5 text-sm text-secondary">
-                    {new Date(inq.createdAt).toLocaleDateString('en-IN')}
+                    {formatDate(inq.createdAt)}
                   </td>
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-2">
@@ -192,7 +194,7 @@ export default function ManagerInquiriesTable() {
                 </tr>
               );
             })}
-            {inquiries.length === 0 && fetchState === FetchState.SUCCESS && (
+            {inquiries.length === 0 && !isLoading && !isError && (
               <tr>
                 <td colSpan={7} className="text-center py-12 text-sm text-secondary">
                   {search || statusFilter !== 'All' ? 'No inquiries match the filter.' : 'No inquiries yet. Add your first inquiry!'}

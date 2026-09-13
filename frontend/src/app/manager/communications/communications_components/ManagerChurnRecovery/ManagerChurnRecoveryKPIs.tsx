@@ -3,6 +3,7 @@
 
 import { UserX, TrendingDown, RotateCcw, Clock } from 'lucide-react';
 import type { ChurnKPIData } from '@/app/manager/communications/communications_types/communications_types';
+import { formatNumber, formatPercent } from '@/lib/formatters';
 
 interface ManagerChurnRecoveryKPIsProps {
   kpis: ChurnKPIData | undefined;
@@ -15,7 +16,7 @@ const CHURN_KPI_CARDS = [
     icon: UserX,
     iconBg: 'bg-danger-bg',
     iconColor: 'text-danger',
-    format: (v: number) => v.toString(),
+    format: (v: number) => formatNumber(v),
     trend: null,
   },
   {
@@ -24,7 +25,7 @@ const CHURN_KPI_CARDS = [
     icon: TrendingDown,
     iconBg: 'bg-warning-bg',
     iconColor: 'text-warning',
-    format: (v: number) => v.toString(),
+    format: (v: number) => formatNumber(v),
     trend: null,
   },
   {
@@ -33,7 +34,7 @@ const CHURN_KPI_CARDS = [
     icon: RotateCcw,
     iconBg: 'bg-success-bg',
     iconColor: 'text-success',
-    format: (v: number) => `${v.toFixed(1)}%`,
+    format: (v: number) => formatPercent(v),
     trend: null,
   },
   {

@@ -4,25 +4,44 @@ import { ManagerScheduleUrlConfig } from '@/app/manager/schedule/ManagerSchedule
 import type { TrainerScheduleSummary, ScheduleKPIData, CreateShiftDto, UpdateShiftDto, TrainerShift } from '@/app/manager/schedule/schedule_types/ManagerScheduleTypes';
 import type { ApiResponse } from '@/lib/api';
 
+import { MOCK_TRAINERS, MOCK_SCHEDULE_KPIS } from '@/app/manager/schedule/schedule_fixtures/ManagerScheduleMockData';
+
 export const scheduleApi = {
-  getTrainers: () =>
-    apiFetch<ApiResponse<{ trainers: TrainerScheduleSummary[] }>>(ManagerScheduleUrlConfig.BACKEND_API.TRAINERS),
+  getTrainers: async () => {
+    await new Promise(res => setTimeout(res, 300));
+    return { success: true, message: 'Success', data: { trainers: MOCK_TRAINERS } };
+  },
 
-  getKPIs: () =>
-    apiFetch<ApiResponse<ScheduleKPIData>>(ManagerScheduleUrlConfig.BACKEND_API.KPIS),
+  getKPIs: async () => {
+    await new Promise(res => setTimeout(res, 200));
+    return { success: true, message: 'Success', data: MOCK_SCHEDULE_KPIS };
+  },
 
-  createShift: (body: CreateShiftDto) =>
-    apiFetch<ApiResponse<TrainerShift>>(ManagerScheduleUrlConfig.BACKEND_API.SHIFTS_BASE, {
-      method: 'POST',
-      body: JSON.stringify(body),
-    }),
+  createShift: async (body: CreateShiftDto) => {
+    await new Promise(res => setTimeout(res, 400));
+    const newShift: TrainerShift = {
+      id: `S${Date.now()}`,
+      trainerId: body.trainerId,
+      trainerName: 'Mock Trainer', // In real app, look up trainer
+      trainerRole: 'Trainer',
+      day: body.day,
+      startTime: body.startTime,
+      endTime: body.endTime,
+      status: body.status,
+      notes: body.notes,
+      location: body.location,
+      substituteTrainerId: body.substituteTrainerId,
+    };
+    return { success: true, message: 'Shift created', data: newShift };
+  },
 
-  updateShift: (id: string, body: UpdateShiftDto) =>
-    apiFetch<ApiResponse<TrainerShift>>(ManagerScheduleUrlConfig.BACKEND_API.SHIFT_UPDATE(id), {
-      method: 'PATCH',
-      body: JSON.stringify(body),
-    }),
+  updateShift: async (id: string, body: UpdateShiftDto) => {
+    await new Promise(res => setTimeout(res, 400));
+    return { success: true, message: 'Shift updated', data: { id, ...body } as TrainerShift };
+  },
 
-  deleteShift: (id: string) =>
-    apiFetch<ApiResponse<null>>(ManagerScheduleUrlConfig.BACKEND_API.SHIFT_DELETE(id), { method: 'DELETE' }),
+  deleteShift: async (id: string) => {
+    await new Promise(res => setTimeout(res, 400));
+    return { success: true, message: 'Shift deleted', data: null };
+  },
 };

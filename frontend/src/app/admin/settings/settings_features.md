@@ -2,9 +2,7 @@
 
 ## Module Purpose
 The Admin Settings module manages system-wide configuration for the gym platform — gym identity
-(name, logo, contact), GST/tax settings, notification preferences, and integration toggles
-(WhatsApp, payment gateway). Settings are saved via PATCH and take effect immediately. This
-module has no table or list — it is a form-only module.
+(name, logo, contact), GST/tax settings, notification preferences, payment gateways, and integrations. Settings are saved via the backend API and take effect immediately. This module has no table or list — it is a form-based module with multiple sub-tabs driven by the URL.
 
 ## Directory Structure
 | File/Folder | Responsibility |
@@ -12,63 +10,55 @@ module has no table or list — it is a form-only module.
 | `page.tsx` | Server Component — auth guard |
 | `loading.tsx` | Skeleton for settings form sections |
 | `error.tsx` | Error boundary |
-| `settings_components/AdminSettingsMain.tsx` | Root Client Component |
-| `settings_components/AdminSettingsGymProfile.tsx` | Gym name, logo, address, contact form section |
-| `settings_components/AdminSettingsTaxConfig.tsx` | GST number, tax rate configuration |
-| `settings_components/AdminSettingsNotifications.tsx` | Toggle notification preferences |
-| `settings_components/AdminSettingsIntegrations.tsx` | WhatsApp / payment gateway toggles |
-| `settings_types/AdminSettingsTypes.ts` | `GymSettings`, `UpdateSettingsDto` types |
-| `settings_api/AdminSettingsApi.ts` | API wrappers |
-| `settings_utils/AdminSettingsUrlConfig.ts` | Centralized URL constants |
+| `settings_components/AdminSettingsContent/AdminSettingsContent.tsx` | Root Client Component (tab orchestrator) |
+| `settings_components/AdminSettingsNav/AdminSettingsNav.tsx` | Navigation menu connecting to URL `?tab=` |
+| `settings_components/AdminSettingsGymProfile/AdminSettingsGymProfile.tsx` | Gym Profile Form (RHF + Zod) |
+| `settings_components/AdminSettingsNotifications/AdminSettingsNotifications.tsx` | Notifications Form (RHF + Zod) |
+| `settings_components/AdminSettingsRoles/AdminSettingsRoles.tsx` | Roles List (UI only) |
+| `settings_components/AdminSettingsAppIntegration/AdminSettingsAppIntegration.tsx` | App Integrations Form (RHF + Zod) |
+| `settings_components/AdminSettingsGST/AdminSettingsGST.tsx` | GST & Tax Form (RHF + Zod) |
+| `settings_components/AdminSettingsPaymentGateway/AdminSettingsPaymentGateway.tsx` | Payment Gateway Form (RHF + Zod) |
+| `settings_components/AdminSettingsGeneral/AdminSettingsGeneral.tsx` | General Settings Form (RHF + Zod) |
+| `settings_types/settings.schema.ts` | Zod schemas for all sub-sections |
+| `settings_types/settings_types.ts` | Inferred types from Zod schemas |
+| `settings_api/settings_api.ts` | API boundary with Zod safeParse validation |
+| `settings_utils/AdminSettingsSharedConstants.ts` | Shared mock and layout data |
 
 ## Feature Inventory
 | Feature | Path | Purpose | Main API Calls | Status |
 |---|---|---|---|---|
-| Gym Profile | `/admin/settings` | Update gym name, logo, contact | `GET/PATCH /admin/settings/profile` | ✅ Live |
-| Tax Config | `/admin/settings` | GST number + tax rate | `GET/PATCH /admin/settings/tax` | ✅ Live |
-| Notifications | `/admin/settings` | Toggle alert preferences | `GET/PATCH /admin/settings/notifications` | ✅ Live |
-| Integrations | `/admin/settings` | WhatsApp / payment toggles | `GET/PATCH /admin/settings/integrations` | ✅ Live |
+| Gym Profile | `/admin/settings?tab=profile` | Update gym name, logo, contact | `GET/POST /admin/settings` | ✅ Live |
+| Notifications | `/admin/settings?tab=notifications` | Toggle alert preferences | `GET/POST /admin/settings` | ✅ Live |
+| Roles | `/admin/settings?tab=roles` | Manage access control | N/A | 🏗 Mock |
+| Integrations | `/admin/settings?tab=integration` | Member app, online payments | `GET/POST /admin/settings` | ✅ Live |
+| GST & Tax | `/admin/settings?tab=gst` | GST number + tax rate | `GET/POST /admin/settings` | ✅ Live |
+| Payment Gateway | `/admin/settings?tab=payment` | Razorpay/UPI config | `GET/POST /admin/settings` | ✅ Live |
+| General | `/admin/settings?tab=general` | Timezone, language, backups | `GET/POST /admin/settings` | ✅ Live |
 
 ## Data and State Architecture
-- Server-state: Fetched on mount inside each settings section component
-- Zustand stores: None
-- Context providers: `AdminSettingsProvider` — holds current settings, dirty state
-- Local-storage keys: None
-- MSW handler: Not yet configured
+- **Server-state**: Fetched by TanStack Query in `AdminSettingsContent` and passed down as `initialData`.
+- **URL State**: Active tab is managed via `useSearchParams` (`?tab=profile`). No Zustand.
+- **Form State**: Each sub-component manages its own `react-hook-form` and tracks `isDirty` state independently.
+- **Unsaved Changes**: Hook `useUnsavedChangesGuard` leverages the `beforeunload` event to prevent accidental navigation when forms are dirty.
 
 ## User Flows
-1. Admin opens `/admin/settings` → all sections load with current values pre-filled
-2. Admin edits a field → form becomes dirty → "Save Changes" button activates
-3. Admin clicks "Save" → `PATCH` → success toast from `response.message` → form resets dirty state
-4. Admin uploads logo → file validated (type + size) → uploaded to storage → URL saved via PATCH
-
-## Component Responsibility Map
-- `AdminSettingsMain` — layout + tab/section navigation. MUST NOT contain form state.
-- Each section component — owns its own React Hook Form instance + Zod schema.
-- `AdminSettingsProvider` — tracks global dirty state to warn on unsaved navigation.
-
-## Permissions and Security
-| Action | Required Role |
-|---|---|
-| View settings | `SUPERADMIN` |
-| Update settings | `SUPERADMIN` |
-
-## Loading, Empty, Error States
-- **Loading:** `loading.tsx` — form field skeletons per section
-- **Empty:** N/A — settings always have default values
-- **Error:** `error.tsx` with retry; save errors shown as toast from `response.message`
+1. Admin opens `/admin/settings` → `AdminSettingsContent` reads `?tab=profile` and TanStack Query fetches settings.
+2. `AdminSettingsGymProfile` mounts with `initialData` injected into `react-hook-form`.
+3. Admin edits a field → form becomes dirty.
+4. If Admin attempts to close tab, browser warns them of unsaved changes.
+5. Admin clicks "Save Changes" → Component calls `settingsApi.updateSettings` → TanStack Query invalidate → Toast success message driven by backend.
 
 ## Edge Cases / AI Warnings
-- **Unsaved changes warning** — if admin navigates away with dirty form, show browser `beforeunload` warning (Rule 46).
-- **Logo upload** — file must be validated for MIME type (image only) and size (<2MB) before upload. Never pass raw `File` object to the API wrapper.
-- **Tax rate** — stored and transmitted as a decimal (e.g., `0.18` for 18% GST), not as a percentage integer. Display as percentage in UI.
+- **Unsaved changes warning** — standard `beforeunload` is implemented. Custom App Router interception for soft navigation is a known limitation of Next.js and requires specialized hooks.
+- **Mock Data Handling** — Because the backend may not yet return all subsections, `settings.schema.ts` explicitly defines `.optional().default({...})` fallbacks for `notifications`, `integration`, `gst`, `payment`, and `general` to prevent frontend crashes on validation.
+- **No Global Forms** — Avoid merging the forms into a "God State". Keep forms isolated to their respective sub-components.
 
 ## Rule Compliance Checklist
 - [x] Rule 1: Micro-modularization — module-prefixed files
 - [x] Rule 6: Logic/UI Separation — form logic in section components, not in Main
 - [x] Rule 8: Server/Client Boundary — `page.tsx` = Server
 - [x] Rule 9: `loading.tsx` + `error.tsx` present
-- [x] Rule 13: Feature Map — this document, updated same commit as code changes
+- [x] Rule 13: Feature Map — this document, accurately reflecting the new RHF split
 - [x] Rule 14: Backend-driven messages — save success/error uses `response.message`
 - [x] Rule 16: Forms use React Hook Form + Zod
-- [x] Rule 46: Unsaved changes warning on navigation
+- [x] Rule 46: Unsaved changes warning on navigation (via `beforeunload`)

@@ -8,22 +8,21 @@ import type {
   UpdateManagerProfilePayload,
   UpdateManagerPasswordPayload,
 } from '@/app/manager/profile/profile_types/ManagerProfileTypes';
-
-const BASE = '/manager/profile';
+import { MOCK_PROFILE } from '@/app/manager/profile/profile_fixtures/ManagerProfileMockData';
 
 export const managerProfileApi = {
-  fetchProfile: () =>
-    apiFetch<ApiResponse<ManagerProfileData>>(BASE),
+  fetchProfile: async () => {
+    await new Promise(res => setTimeout(res, 300));
+    return { success: true, message: 'Success', data: MOCK_PROFILE };
+  },
 
-  updateProfile: (body: UpdateManagerProfilePayload) =>
-    apiFetch<ApiResponse<ManagerProfileData>>(BASE, {
-      method: 'PATCH',
-      body: JSON.stringify(body),
-    }),
+  updateProfile: async (body: UpdateManagerProfilePayload) => {
+    await new Promise(res => setTimeout(res, 400));
+    return { success: true, message: 'Success', data: { ...MOCK_PROFILE, ...body } };
+  },
 
-  updatePassword: (body: UpdateManagerPasswordPayload) =>
-    apiFetch<ApiResponse<void>>(`${BASE}/password`, {
-      method: 'PATCH',
-      body: JSON.stringify(body),
-    }),
+  updatePassword: async (body: UpdateManagerPasswordPayload) => {
+    await new Promise(res => setTimeout(res, 500));
+    return { success: true, message: 'Password updated', data: undefined };
+  },
 };

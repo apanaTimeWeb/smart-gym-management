@@ -14,7 +14,7 @@ export default function HrLoading() {
       {/* KPI Cards Skeleton */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="p-6 rounded-xl border border-border bg-card motion-safe:animate-pulse h-28"></div>
+          <div key={`hr-loading-kpi-${i}`} className="p-6 rounded-xl border border-border bg-card motion-safe:animate-pulse h-28"></div>
         ))}
       </div>
 
@@ -26,7 +26,7 @@ export default function HrLoading() {
         </div>
         <div className="p-4">
           {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="h-16 w-full bg-input rounded-lg mb-2 motion-safe:animate-pulse"></div>
+            <div key={`hr-loading-row-${i}`} className="h-16 w-full bg-input rounded-lg mb-2 motion-safe:animate-pulse"></div>
           ))}
         </div>
       </div>

@@ -3,6 +3,7 @@
 // DATA FLOW: useMembersContext -> ManagerProfileDiet -> libraryApi
 import { useState, useEffect } from 'react';
 import { Utensils, Plus, Check, MessageCircle, Edit2 } from 'lucide-react';
+import { formatNumber } from '@/lib/formatters';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
 import { libraryApi } from '@/app/manager/library/library_api/ManagerLibraryApi';
 import type { DietPlan, FetchState } from '@/app/manager/library/library_types/ManagerLibraryTypes';
@@ -53,7 +54,7 @@ export default function ManagerProfileDiet() {
                 const text = `*DIET PLAN: ${diet?.name || 'Assigned'}*\n\n*Macros:*\nCalories: ${diet?.calories || 0} kcal\nProtein: ${diet?.protein || 0}g\nCarbs: ${diet?.carbs || 0}g\nFats: ${diet?.fats || 0}g\n\n*Meals:*\n${diet?.meals?.map((m: import("@/app/manager/library/library_types/ManagerLibraryTypes").DietMeal | string) => `*${typeof m === 'string' ? '' : m.time} - ${typeof m === 'string' ? m : m.name}* (${typeof m === 'string' ? 0 : m.calories || 0} kcal)\n${(typeof m === 'string' ? [] : m.foods || []).map((f: string) => `- ${f}`).join('\n')}`).join('\n\n')}`;
                 window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
               }}
-              className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-green-500/30 transition-all active:scale-95"
+              className="flex items-center gap-2 px-4 py-2 bg-success text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-success/30 transition-all active:scale-95"
             >
               <MessageCircle size={16} /> Send via WhatsApp
             </button>
@@ -132,7 +133,7 @@ export default function ManagerProfileDiet() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
              <div className="bg-card border border-border rounded-xl p-4 text-center shadow-sm">
                 <p className="text-xs text-secondary font-semibold uppercase tracking-wider mb-1">Calories</p>
-                <p className="text-xl font-bold text-primary">{diet.calories?.toLocaleString() || 0} <span className="text-sm font-medium text-secondary">kcal</span></p>
+                <p className="text-xl font-bold text-primary">{formatNumber(diet.calories || 0)} <span className="text-sm font-medium text-secondary">kcal</span></p>
              </div>
              <div className="bg-card border border-border rounded-xl p-4 text-center shadow-sm">
                 <p className="text-xs text-secondary font-semibold uppercase tracking-wider mb-1">Protein</p>
@@ -152,21 +153,21 @@ export default function ManagerProfileDiet() {
             {diet.meals && diet.meals.length > 0 ? diet.meals.map((meal: import("@/app/manager/library/library_types/ManagerLibraryTypes").DietMeal | string, idx: number) => {
               if (typeof meal === 'string') {
                 return (
-                  <div key={idx} className="bg-card border border-border p-4 rounded-xl shadow-sm">
+                  <div key={`meal-str-${idx}`} className="bg-card border border-border p-4 rounded-xl shadow-sm">
                     <h5 className="font-semibold text-primary mb-2 text-sm">Meal {idx + 1}</h5>
                     <p className="text-sm text-secondary">{meal}</p>
                   </div>
                 );
               }
               return (
-                <div key={idx} className="bg-card border border-border p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                <div key={`meal-${typeof meal === 'string' ? idx : meal.name}-${idx}`} className="bg-card border border-border p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
                   <h5 className="font-semibold text-primary mb-3 pb-2 border-b border-border text-sm flex items-center justify-between">
                     {typeof meal === 'string' ? '' : meal.time} - {typeof meal === 'string' ? '' : meal.name}
                     <span className="text-xs font-normal text-secondary bg-input px-2 py-1 rounded">~{typeof meal === 'string' ? 0 : meal.calories} kcal</span>
                   </h5>
                   <ul className="space-y-2 text-sm text-secondary">
                     {(typeof meal === 'string' ? [] : meal.foods || []).map((f: string, i: number) => (
-                      <li key={i} className="flex items-center gap-2">
+                      <li key={`food-${idx}-${i}`} className="flex items-center gap-2">
                         <span className="text-primary">•</span> {f}
                       </li>
                     ))}

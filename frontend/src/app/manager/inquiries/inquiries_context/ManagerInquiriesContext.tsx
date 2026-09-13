@@ -12,7 +12,7 @@ export function InquiriesProvider({ children }: { children: React.ReactNode }) {
   const logic = useManagerInquiriesLogic();
 
   const {
-    inquiries, stats, fetchState, error, toast, totalInquiries,
+    inquiries, stats, isLoading, isError, toast, totalInquiries,
     search, debouncedSearch, statusFilter, dateFilter, currentPage,
     showModal, editId, editData, saving, msgModal,
     selectedIds, bulkMsgModal, convertLead,
@@ -21,7 +21,7 @@ export function InquiriesProvider({ children }: { children: React.ReactNode }) {
   // Memoize with explicit primitive deps to prevent re-render chains across micro-components
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const value = useMemo(() => logic, [
-    inquiries, stats, fetchState, error, toast, totalInquiries,
+    inquiries, stats, isLoading, isError, toast, totalInquiries,
     search, debouncedSearch, statusFilter, dateFilter, currentPage,
     showModal, editId, editData, saving, msgModal,
     selectedIds, bulkMsgModal, convertLead,

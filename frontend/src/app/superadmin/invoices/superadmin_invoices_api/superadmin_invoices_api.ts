@@ -11,39 +11,44 @@ export interface CreateManualPaymentDto {
   currency?: string;
 }
 
+import { MOCK_SUPERADMIN_INVOICES } from '@/app/superadmin/invoices/superadmin_invoices_api/SuperadminInvoicesMockData';
+
+let mockInvoices = [...MOCK_SUPERADMIN_INVOICES];
+
 export const invoicesApi = {
-  /** GET /superadmin/invoices — fetch paginated/filtered invoice list */
-  fetchInvoices: (params?: Record<string, string>) => {
-    const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<SaaSInvoice[]>>(`${SuperadminUrlConfig.BACKEND_API.INVOICES_BASE}${q}`);
+  fetchInvoices: async (params?: Record<string, string>) => {
+    await new Promise(r => setTimeout(r, 400));
+    return { success: true, message: 'Success', data: mockInvoices };
   },
-
-  /** POST /superadmin/invoices/manual-payment — logs a manual cash/offline payment for a tenant */
-  createManualPayment: (dto: CreateManualPaymentDto) =>
-    apiFetch<ApiResponse<SaaSInvoice>>(SuperadminUrlConfig.BACKEND_API.INVOICES_MANUAL_PAYMENT, {
-      method: 'POST',
-      body: JSON.stringify(dto),
-    }),
-
-  /** GET /superadmin/invoices/:id/download — returns a signed PDF download URL */
-  getDownloadUrl: (id: string) =>
-    apiFetch<ApiResponse<{ downloadUrl: string }>>(`${SuperadminUrlConfig.BACKEND_API.INVOICES_BASE}/${id}/download`),
-
-  /**
-   * GET /superadmin/invoices/export — streams a CSV of all invoices matching current filters.
-   * Returns a signed download URL from the backend.
-   */
-  exportInvoicesCSV: (params?: Record<string, string>) => {
-    const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<{ downloadUrl: string }>>(`${SuperadminUrlConfig.BACKEND_API.INVOICES_BASE}/export${q}`);
+  createManualPayment: async (dto: CreateManualPaymentDto) => {
+    await new Promise(r => setTimeout(r, 500));
+    const newInvoice = {
+      id: `inv${Date.now()}`,
+      tenantId: dto.gymId,
+      tenantName: 'Mock Gym', // Simplified
+      amount: dto.amount,
+      currency: dto.currency || 'INR',
+      status: 'PAID',
+      issuedAt: new Date().toISOString(),
+      dueDate: new Date().toISOString(),
+      paidAt: new Date().toISOString(),
+      paymentMethod: 'Manual',
+      invoiceType: 'ONE_TIME',
+      planName: dto.planName
+    } as SaaSInvoice;
+    mockInvoices = [newInvoice, ...mockInvoices];
+    return { success: true, message: 'Created', data: newInvoice };
   },
-
-  /**
-   * POST /superadmin/invoices/:id/resend — resends the invoice email to the tenant's admin email.
-   * Used for OVERDUE and PENDING invoices.
-   */
-  resendInvoiceEmail: (id: string) =>
-    apiFetch<ApiResponse<null>>(`${SuperadminUrlConfig.BACKEND_API.INVOICES_BASE}/${id}/resend`, {
-      method: 'POST',
-    }),
+  getDownloadUrl: async (id: string) => {
+    await new Promise(r => setTimeout(r, 300));
+    return { success: true, message: 'Success', data: { downloadUrl: '/mock-invoice.pdf' } };
+  },
+  exportInvoicesCSV: async (params?: Record<string, string>) => {
+    await new Promise(r => setTimeout(r, 600));
+    return { success: true, message: 'Success', data: { downloadUrl: '/mock-invoices.csv' } };
+  },
+  resendInvoiceEmail: async (id: string) => {
+    await new Promise(r => setTimeout(r, 400));
+    return { success: true, message: 'Email resent', data: null };
+  },
 };

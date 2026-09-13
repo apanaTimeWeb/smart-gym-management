@@ -3,6 +3,7 @@
 
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import type { ReactNode } from 'react';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useManagerNotificationsStore } from '@/app/manager/notifications/notifications_store/useManagerNotificationsStore';
 import toast from 'react-hot-toast';
 
@@ -27,10 +28,23 @@ interface NotificationsContextValue {
 const ManagerNotificationsContext = createContext<NotificationsContextValue | undefined>(undefined);
 
 export function NotificationsProvider({ children }: { children: ReactNode }) {
-  const [search, setSearch] = useState('');
-  const [typeFilter, setTypeFilter] = useState('ALL');
-  const [priorityFilter, setPriorityFilter] = useState('ALL');
-  const [statusFilter, setStatusFilter] = useState('ALL');
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const [search, setSearch] = useState(searchParams.get('search') || '');
+  const [typeFilter, setTypeFilter] = useState(searchParams.get('type') || 'ALL');
+  const [priorityFilter, setPriorityFilter] = useState(searchParams.get('priority') || 'ALL');
+  const [statusFilter, setStatusFilter] = useState(searchParams.get('status') || 'ALL');
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (search) params.set('search', search); else params.delete('search');
+    if (typeFilter !== 'ALL') params.set('type', typeFilter); else params.delete('type');
+    if (priorityFilter !== 'ALL') params.set('priority', priorityFilter); else params.delete('priority');
+    if (statusFilter !== 'ALL') params.set('status', statusFilter); else params.delete('status');
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [search, typeFilter, priorityFilter, statusFilter, pathname, router, searchParams]);
 
   const { notifications, kpis, fetchState, saving, loadAll, markRead, markAllRead, deleteNotification } = useManagerNotificationsStore();
 

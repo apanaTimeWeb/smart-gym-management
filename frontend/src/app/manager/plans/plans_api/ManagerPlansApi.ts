@@ -1,15 +1,27 @@
 // RESPONSIBILITY: Provides strongly-typed network calls for the plans module.
-import { apiFetch } from '@/lib/api';
-import type { ApiResponse } from '@/lib/api';
-import { PlansUrlConfig } from '@/app/manager/plans/ManagerPlansUrlConfig';
+import { MOCK_PLANS } from '@/app/manager/plans/plans_fixtures/ManagerPlansMockData';
 import type { Plan } from '@/app/manager/plans/plans_types/ManagerPlansTypes';
 
 export const plansApi = {
-  getAll: () => apiFetch<ApiResponse<Plan[]>>(PlansUrlConfig.BACKEND_API.BASE),
-  getOne: (id: string) => apiFetch<ApiResponse<Plan>>(PlansUrlConfig.BACKEND_API.GET_ONE(id)),
-  create: (body: Partial<Plan>) =>
-    apiFetch<ApiResponse<Plan>>(PlansUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body) }),
-  update: (id: string, body: Partial<Plan>) =>
-    apiFetch<ApiResponse<Plan>>(PlansUrlConfig.BACKEND_API.UPDATE(id), { method: 'PATCH', body: JSON.stringify(body) }),
-  remove: (id: string) => apiFetch<ApiResponse<{ id: string }>>(PlansUrlConfig.BACKEND_API.DELETE(id), { method: 'DELETE' }),
+  getAll: async () => {
+    await new Promise(res => setTimeout(res, 400));
+    return { success: true, message: 'Success', data: MOCK_PLANS };
+  },
+  getOne: async (id: string) => {
+    await new Promise(res => setTimeout(res, 400));
+    const plan = MOCK_PLANS.find(p => p.id === id) || MOCK_PLANS[0];
+    return { success: true, message: 'Success', data: plan };
+  },
+  create: async (body: Partial<Plan>) => {
+    await new Promise(res => setTimeout(res, 400));
+    return { success: true, message: 'Created', data: MOCK_PLANS[0] };
+  },
+  update: async (id: string, body: Partial<Plan>) => {
+    await new Promise(res => setTimeout(res, 400));
+    return { success: true, message: 'Updated', data: MOCK_PLANS[0] };
+  },
+  remove: async (id: string) => {
+    await new Promise(res => setTimeout(res, 400));
+    return { success: true, message: 'Removed', data: { id } };
+  },
 };

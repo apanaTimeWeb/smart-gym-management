@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { renderHook } from '@testing-library/react';
-import { useManagerMembersMutations } from './useManagerMembersMutations';
+import { useManagerMembersMutations } from '@/app/manager/members/members_context/useManagerMembersMutations';
 
 // Mock dependencies
 vi.mock('@tanstack/react-query', () => ({

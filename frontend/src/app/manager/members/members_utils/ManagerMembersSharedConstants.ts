@@ -5,27 +5,8 @@ import { formatCurrency } from '@/lib/formatters';
 
 export { formatCurrency };
 
-export const MemberSchema = z.object({
-  name: z.string().min(2, "Name is required"),
-  email: z.string().email("Invalid email address").optional().or(z.literal('')),
-  phone: z.string().regex(/^\d{10}$/, "Phone number must be exactly 10 digits"),
-  address: z.string().optional(),
-  aadhaar: z.string().regex(/^\d{12}$/, "Aadhaar must be exactly 12 digits").optional().or(z.literal('')),
-  gender: z.enum(['MALE', 'FEMALE', 'OTHER']),
-  billingCycle: z.string(),
-  customDays: z.coerce.number().min(1, "Please enter valid days").optional().or(z.literal(0)),
-  planId: z.string().min(1, "Please select a plan"),
-  totalAmount: z.coerce.number().min(0).optional(),
-  paidAmount: z.coerce.number().min(0, "Amount must be valid").optional(),
-  pendingAmount: z.coerce.number().optional(),
-  advanceAmount: z.coerce.number().optional(),
-  joinDate: z.string().optional(),
-  expiryDate: z.string().optional(),
-  medicalHistory: z.string().optional(),
-  status: z.enum(['ACTIVE', 'PENDING', 'EXPIRED', 'FROZEN', 'SUSPENDED', 'BANNED']).optional(),
-});
-
-export type MemberFormValues = z.infer<typeof MemberSchema>;
+import { MemberFormSchema as MemberSchema, type MemberFormType as MemberFormValues } from '@/app/manager/members/members_types/members.schema';
+export { MemberSchema, type MemberFormValues };
 
 export const MEMBERS_STATUS_COLORS: Record<string, { bg: string; text: string }> = {
   ACTIVE: { bg: 'bg-success-bg', text: 'text-success' },
@@ -33,7 +14,7 @@ export const MEMBERS_STATUS_COLORS: Record<string, { bg: string; text: string }>
   EXPIRED: { bg: 'bg-danger-bg', text: 'text-danger' },
   FROZEN: { bg: 'bg-info-bg', text: 'text-info' },
   SUSPENDED: { bg: 'bg-danger', text: 'text-white' },
-  BANNED: { bg: 'bg-gray-800', text: 'text-white' },
+  BANNED: { bg: 'bg-secondary/80', text: 'text-white' },
 };
 
 export const MEMBERS_CYCLE_LABELS: Record<string, string> = {

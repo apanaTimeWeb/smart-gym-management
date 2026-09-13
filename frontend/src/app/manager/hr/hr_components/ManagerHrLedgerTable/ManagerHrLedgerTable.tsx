@@ -5,6 +5,7 @@ import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
 import { hrApi } from '@/app/manager/hr/hr_api/ManagerHrApi';
 import type { LedgerEntry } from '@/app/manager/hr/hr_types/ManagerHrTypes';
 import { FileText, Search } from 'lucide-react';
+import { formatCurrency } from '@/lib/formatters';
 
 export default function ManagerHrLedgerTable() {
   const { staff, showToast } = useHrContext();
@@ -25,8 +26,8 @@ export default function ManagerHrLedgerTable() {
       try {
         const res = await hrApi.getLedger(selectedStaffId);
         setLedger(res.data?.ledger || []);
-      } catch (e: any) {
-        showToast(e.message, 'error');
+      } catch (e) {
+        showToast((e as Error).message, 'error');
       } finally {
         setLoading(false);
       }
@@ -34,9 +35,6 @@ export default function ManagerHrLedgerTable() {
     fetchLedger();
   }, [selectedStaffId, showToast]);
 
-  const formatMoney = (amount: number) => {
-    return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
-  };
 
   const selectedStaff = staff.find(s => String(s.id) === String(selectedStaffId));
 
@@ -66,15 +64,15 @@ export default function ManagerHrLedgerTable() {
         <div className="grid grid-cols-3 gap-4 mb-4">
           <div className="bg-card p-4 rounded-xl border border-border">
             <p className="text-xs text-secondary uppercase">Base Salary</p>
-            <p className="text-xl font-bold text-foreground">{formatMoney(selectedStaff.salary || 0)}/mo</p>
+            <p className="text-xl font-bold text-foreground">{formatCurrency(selectedStaff.salary || 0)}/mo</p>
           </div>
           <div className="bg-card p-4 rounded-xl border border-border">
             <p className="text-xs text-secondary uppercase">Advance Balance</p>
-            <p className="text-xl font-bold text-[var(--danger)]">{formatMoney(selectedStaff.advanceSalary || 0)}</p>
+            <p className="text-xl font-bold text-danger">{formatCurrency(selectedStaff.advanceSalary || 0)}</p>
           </div>
           <div className="bg-card p-4 rounded-xl border border-border">
             <p className="text-xs text-secondary uppercase">Due Amount</p>
-            <p className="text-xl font-bold text-[var(--hr-highlight)]">{formatMoney(selectedStaff.currentDue || 0)}</p>
+            <p className="text-xl font-bold text-warning">{formatCurrency(selectedStaff.currentDue || 0)}</p>
           </div>
         </div>
       )}
@@ -110,17 +108,17 @@ export default function ManagerHrLedgerTable() {
                     <td className="p-4 text-foreground whitespace-nowrap">{new Date(l.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
                     <td className="p-4">
                       <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium 
-                        ${l.type.includes('Advance') ? 'bg-[var(--danger)]/10 text-[var(--danger)]' : 
-                          l.type.includes('Salary Generated') ? 'bg-blue-500/10 text-blue-500' : 
-                          l.type.includes('Due') ? 'bg-[var(--warning)]/10 text-[var(--warning)]' :
-                          'bg-[var(--success)]/10 text-[var(--success)]'}`}>
+                        ${l.type.includes('Advance') ? 'bg-danger-bg text-danger' : 
+                          l.type.includes('Salary Generated') ? 'bg-info-bg text-info' : 
+                          l.type.includes('Due') ? 'bg-warning-bg text-warning' :
+                          'bg-success-bg text-success'}`}>
                         {l.type}
                       </span>
                     </td>
                     <td className="p-4 text-secondary max-w-[200px] truncate" title={l.notes}>{l.notes || '-'}</td>
-                    <td className="p-4 text-right text-[var(--success)] font-medium">{l.credit > 0 ? `+${l.credit.toLocaleString('en-IN')}` : '-'}</td>
-                    <td className="p-4 text-right text-[var(--danger)] font-medium">{l.debit > 0 ? `-${l.debit.toLocaleString('en-IN')}` : '-'}</td>
-                    <td className="p-4 text-right font-bold text-foreground bg-primary/5">{l.balance.toLocaleString('en-IN')}</td>
+                    <td className="p-4 text-right text-success font-medium">{l.credit > 0 ? `+${formatCurrency(l.credit)}` : '-'}</td>
+                    <td className="p-4 text-right text-danger font-medium">{l.debit > 0 ? `-${formatCurrency(l.debit)}` : '-'}</td>
+                    <td className="p-4 text-right font-bold text-foreground bg-primary/5">{formatCurrency(l.balance)}</td>
                   </tr>
                 ))
               )}

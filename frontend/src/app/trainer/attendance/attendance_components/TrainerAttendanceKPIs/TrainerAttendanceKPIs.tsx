@@ -1,20 +1,22 @@
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
-// RESPONSIBILITY: Renders the top KPI stat cards (total check-ins, member check-ins, staff check-ins) for the Attendance module.
+// RESPONSIBILITY: Renders the top KPI stat cards for the Attendance module (total, member, staff check-ins).
+// DATA FLOW: props (from useAttendanceStatsQuery via TrainerAttendanceMain) → display only
 'use client';
 
 import { CalendarCheck, Users, UserCheck } from 'lucide-react';
-import { useAttendanceContext } from '@/app/trainer/attendance/attendance_context/AttendanceContext';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
+import type { AttendanceStats } from '@/app/trainer/attendance/attendance_types/attendance_types';
 
-export default function TrainerAttendanceKPIs() {
-  const { todayStats } = useAttendanceContext();
+interface Props {
+  stats: AttendanceStats;
+}
+
+export default function TrainerAttendanceKPIs({ stats }: Props) {
   const dateSuffix = useDateRangeSuffix();
 
   const kpis = [
-    { label: "Today's Check-ins" + dateSuffix, value: todayStats.totalCheckIns, icon: CalendarCheck, color: 'text-warning', bg: 'bg-warning/10' },
-    { label: 'Member Check-ins' + dateSuffix, value: todayStats.memberCheckIns, icon: Users, color: 'text-info', bg: 'bg-info/10' },
-    { label: 'Staff Check-ins' + dateSuffix, value: todayStats.staffCheckIns, icon: UserCheck, color: 'text-success', bg: 'bg-success/10' },
+    { label: "Today's Check-ins" + dateSuffix, value: stats.totalCheckIns, icon: CalendarCheck, color: 'text-warning', bg: 'bg-warning/10' },
+    { label: 'Member Check-ins' + dateSuffix, value: stats.memberCheckIns, icon: Users, color: 'text-info', bg: 'bg-info/10' },
+    { label: 'Staff Check-ins' + dateSuffix, value: stats.staffCheckIns, icon: UserCheck, color: 'text-success', bg: 'bg-success/10' },
   ];
 
   return (

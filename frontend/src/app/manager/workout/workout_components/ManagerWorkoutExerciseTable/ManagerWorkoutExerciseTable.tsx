@@ -1,20 +1,40 @@
 // RESPONSIBILITY: Renders the exercises data table with muscle group, category, and inline edit/delete actions.
 'use client';
 
-import { Edit2, Trash2 } from 'lucide-react';
+import { Edit2, Trash2, Loader2 } from 'lucide-react';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { useWorkoutContext } from '@/app/manager/workout/workout_context/ManagerWorkoutContext';
 import { EXERCISE_TABLE_HEADERS } from '@/app/manager/workout/workout_utils/ManagerWorkoutSharedConstants';
+import { useExercisesQuery } from '@/app/manager/workout/workout_api/useManagerWorkoutQueries';
+import { useDeleteExerciseMutation } from '@/app/manager/workout/workout_api/useManagerWorkoutMutations';
+import toast from 'react-hot-toast';
 
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 
 export default function ManagerWorkoutExerciseTable() {
-  const { exercises, totalExercises, search, currentPage, setCurrentPage, openEditEx, deleteEx } = useWorkoutContext();
+  const { search, currentPage, setCurrentPage, openEditEx } = useWorkoutContext();
   const { confirm } = useConfirm();
 
-  
+  const { data, isLoading } = useExercisesQuery({
+    search,
+    page: currentPage.toString()
+  });
+
+  const deleteMutation = useDeleteExerciseMutation();
+
+  const exercises = data?.exercises || [];
+  const totalExercises = data?.total || 0;
+
   const totalPages = Math.ceil(totalExercises / MANAGER_ITEMS_PER_PAGE) || 1;
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-16 flex-1 h-full min-h-96">
+        <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-full min-h-96">
@@ -68,7 +88,12 @@ export default function ManagerWorkoutExerciseTable() {
                           confirmText: 'Delete'
                         });
                         if (ok) {
-                          deleteEx(ex.id); 
+                          try {
+                            await deleteMutation.mutateAsync(ex.id);
+                            toast.success('Exercise deleted');
+                          } catch (err: unknown) {
+                            toast.error(err instanceof Error ? err.message : 'Failed to delete exercise');
+                          }
                         }
                       }}
                       className="text-danger hover:text-danger dark:hover:text-danger p-1 rounded-md hover:bg-danger-bg dark:hover:bg-danger-bg transition-colors"

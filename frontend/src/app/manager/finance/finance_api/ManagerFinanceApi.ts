@@ -4,17 +4,23 @@ import type { ApiResponse } from '@/lib/api';
 import { FinanceUrlConfig } from '@/app/manager/finance/ManagerFinanceUrlConfig';
 import type { Payment, FinanceSummary } from '@/app/manager/finance/finance_types/ManagerFinanceTypes';
 
+import { MOCK_PAYMENTS, MOCK_FINANCE_SUMMARY } from '@/app/manager/finance/finance_fixtures/ManagerFinanceMockData';
+
 export const financeApi = {
-  getPayments: (params?: Record<string, string>) => {
-    const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<{ payments: Payment[]; total: number }>>(`${FinanceUrlConfig.BACKEND_API.PAYMENTS_BASE}${q}`);
+  getPayments: async (params?: Record<string, string>) => {
+    await new Promise(res => setTimeout(res, 400));
+    return { success: true, message: 'Success', data: { payments: MOCK_PAYMENTS, total: MOCK_PAYMENTS.length } };
   },
-  createPayment: (body: Partial<Payment>) =>
-    apiFetch<ApiResponse<Payment>>(FinanceUrlConfig.BACKEND_API.PAYMENTS_BASE, { method: 'POST', body: JSON.stringify(body) }),
-  getSummary: (range?: string) => {
-    const q = range ? `?range=${range}` : '';
-    return apiFetch<ApiResponse<FinanceSummary>>(`${FinanceUrlConfig.BACKEND_API.SUMMARY}${q}`);
+  createPayment: async (body: Partial<Payment>) => {
+    await new Promise(res => setTimeout(res, 400));
+    return { success: true, message: 'Success', data: MOCK_PAYMENTS[0] };
   },
-  getByMember: (memberId: string) =>
-    apiFetch<ApiResponse<Payment[]>>(FinanceUrlConfig.BACKEND_API.PAYMENTS_BY_MEMBER(memberId)),
+  getSummary: async (range?: string) => {
+    await new Promise(res => setTimeout(res, 400));
+    return { success: true, message: 'Success', data: MOCK_FINANCE_SUMMARY };
+  },
+  getByMember: async (memberId: string) => {
+    await new Promise(res => setTimeout(res, 400));
+    return { success: true, message: 'Success', data: MOCK_PAYMENTS.filter(p => p.memberId === memberId) };
+  },
 };

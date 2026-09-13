@@ -6,7 +6,7 @@
 import TrainerToast from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
 import TrainerMessageModal from '@/app/trainer/trainer_components/TrainerFeedback/TrainerMessageModal';
 
-import { MembersProvider, useMembersContext } from '@/app/trainer/members/members_context/MembersContext';
+import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
 import TrainerMembersKPIs from '@/app/trainer/members/members_components/TrainerMembersKPIs/TrainerMembersKPIs';
 import TrainerMembersToolbar from '@/app/trainer/members/members_components/TrainerMembersToolbar/TrainerMembersToolbar';
 import TrainerMembersTable from '@/app/trainer/members/members_components/TrainerMembersTable/TrainerMembersTable';
@@ -14,7 +14,12 @@ import TrainerMembersProfile from '@/app/trainer/members/members_components/Trai
 import type { MembersInitialData } from '@/app/trainer/members/members_types/members_types';
 
 function MembersContent() {
-  const { toast, hideToast, msgModal, closeMsg, showToast, selectedMember } = useMembersContext();
+  const toast = useTrainerMembersStore(s => s.toast);
+  const hideToast = useTrainerMembersStore(s => s.hideToast);
+  const msgModal = useTrainerMembersStore(s => s.msgModal);
+  const closeMsg = useTrainerMembersStore(s => s.closeMsg);
+  const showToast = useTrainerMembersStore(s => s.showToast);
+  const selectedMember = useTrainerMembersStore(s => s.selectedMember);
 
   return (
     <div className="min-h-full pb-10">
@@ -53,10 +58,8 @@ function MembersContent() {
 }
 
 export default function TrainerMembersMain({ initialData }: { initialData?: MembersInitialData | null }) {
-  return (
-    <MembersProvider initialData={initialData}>
-      <MembersContent />
-    </MembersProvider>
-  );
+  // initialData is available if we want to hydrate TanStack query cache, but since we are using 
+  // mock fixtures that resolve instantly, we'll let the hooks fetch on mount.
+  return <MembersContent />;
 }
 

@@ -1,80 +1,60 @@
 # Manager HR — Feature Map
 
 ## Module Purpose
-The Manager HR module handles branch-level staff management and payroll processing. It covers
-two tabs: Staff Directory (view/add/edit branch staff) and Payroll (process monthly salary
-payments). Payroll processing is a financial mutation and requires `useConfirm()` double-
-verification. Staff deactivation is a soft-delete only.
+The Manager HR module handles staff lifecycle management, payroll calculation, advance payment tracking, and ledger monitoring. It heavily utilizes URL-backed state for list navigation and filters, and handles complex multi-step state mutations spanning staff profiles and payroll records.
 
-## Directory Structure
-| File/Folder | Responsibility |
-|---|---|
-| `page.tsx` | Server Component — auth guard |
-| `loading.tsx` | Skeleton for tabs + table |
-| `error.tsx` | Error boundary |
-| `hr_components/ManagerHrMain.tsx` | Root Client Component, tab switcher |
-| `hr_components/ManagerHrStaffTable.tsx` | Branch staff directory table |
-| `hr_components/ManagerHrPayrollTable.tsx` | Monthly payroll records table |
-| `hr_components/ManagerHrAddStaffModal.tsx` | Add new staff form |
-| `hr_components/ManagerHrEditStaffModal.tsx` | Edit staff details form |
-| `hr_components/ManagerHrProcessPayrollModal.tsx` | Process salary payment form |
-| `hr_context/HrProvider.tsx` | Fetch state for staff + payroll |
-| `hr_types/ManagerHrTypes.ts` | `StaffMember`, `PayrollRecord`, `ProcessPayrollDto` types |
-| `hr_api/ManagerHrApi.ts` | API wrappers |
-| `hr_utils/ManagerHrUrlConfig.ts` | Centralized URL constants |
+## Exact Routes
+- `/manager/hr`: The single entry point containing the dashboard view, staff list, payroll records, and financial ledgers, navigable via tabs.
 
-## Feature Inventory
-| Feature | Path | Purpose | Main API Calls | Status |
-|---|---|---|---|---|
-| Staff Directory | `/manager/hr` | View branch staff | `GET /manager/hr/staff` | ✅ Live |
-| Add Staff | `/manager/hr` | Register new staff member | `POST /manager/hr/staff` | ✅ Live |
-| Edit Staff | `/manager/hr` | Update staff details | `PATCH /manager/hr/staff/:id` | ✅ Live |
-| Deactivate Staff | `/manager/hr` | Soft-deactivate staff | `PATCH /manager/hr/staff/:id/deactivate` | ✅ Live |
-| Payroll Records | `/manager/hr` | View salary payment history | `GET /manager/hr/payroll` | ✅ Live |
-| Process Payroll | `/manager/hr` | Record salary payment | `POST /manager/hr/payroll` | ✅ Live |
+## Actual Feature Behavior
+- **Staff List**: Paginated, filterable table. Syncs search string, current page, and role filters with URL.
+- **Staff Profile Modal**: Read-only profile drawer detailing contact info, join date, current advance balance, and outstanding dues.
+- **Staff Edit/Add Modal**: Form for registering or modifying staff details, validated with Zod/RHF and protected by dirty-state guards.
+- **Payroll Table**: List of payroll records generated for a selected month (synced via URL). Includes bulk generate functionality and payslip downloads.
+- **Payroll Modal**: Form calculating net payable amount dynamically based on base salary, attendance deductions, and advance adjustments.
+- **Ledger/Advance Tables**: Specialized views for tracking the flow of staff payments, credits, debits, and balance history.
 
-## Data and State Architecture
-- Server-state: `HrProvider` — staff list, payroll list, active tab
-- Zustand stores: `useManagerHrStore` — modal open/close, selected staff
-- Context providers: `HrProvider`
-- Local-storage keys: None
-- MSW handler: Not yet configured
+## Actual Component Files
+- `page.tsx`: Server Component — auth guard and layout wrapper.
+- `loading.tsx`: Next.js suspense loading fallback.
+- `error.tsx`: Section-level error boundary.
+- `hr_context/ManagerHrContext.tsx`: React Context provider wrapping the entire feature state.
+- `hr_context/useManagerHrLogic.ts`: Core state orchestration, data fetching (`loadAll`), and URL syncing hook.
+- `hr_context/useManagerHrUIState.ts`: Isolated hook managing all modal and transient UI view states.
+- `hr_components/ManagerHrMain/*`: Tab layout orchestrator and primary dashboard view.
+- `hr_components/ManagerHrKPIs/*`: Top metric cards dynamically reflecting filtered context stats.
+- `hr_components/ManagerHrStaffTable/*`: Presentation table for staff members.
+- `hr_components/ManagerHrPayrollTable/*`: Presentation table for payroll records.
+- `hr_components/ManagerHrStaffModal/*`: Add/Edit staff form.
+- `hr_components/ManagerHrPayrollModal/*`: Payroll record generation form.
 
-## User Flows
-1. Manager opens `/manager/hr` → Staff tab loads by default
-2. Manager clicks "Add Staff" → `ManagerHrAddStaffModal` → submit → `POST` → table refreshes
-3. Manager switches to Payroll tab → payroll records load
-4. Manager clicks "Process Payroll" → `ManagerHrProcessPayrollModal` → `useConfirm()` → `POST` → record added
+## Actual State Model
+- **UI State**: Handled natively by `useManagerHrUIState.ts` (modals, IDs, dirty state).
+- **Domain State**: Handled by `useManagerHrLogic.ts`, persisting primary filters to `useSearchParams`.
+- **Form State**: Managed using `react-hook-form` tied with `zodResolver`.
 
-## Component Responsibility Map
-- `ManagerHrMain` — tab switcher + provider wrapper. MUST NOT contain table logic.
-- `ManagerHrStaffTable` / `ManagerHrPayrollTable` — pure display, receive data as props.
-- `ManagerHrProcessPayrollModal` — financial mutation, requires `useConfirm()` before submit.
+## Actual Fixture/Data Layer
+- `hr_utils/ManagerHrSharedConstants.ts`: Centralized schemas, table headers, default values, and Zod definitions.
+- Uses `ManagerHrApi.ts` as the bridge client for frontend API operations.
 
-## Permissions and Security
-| Action | Required Role |
-|---|---|
-| View staff / payroll | `MANAGER` |
-| Add / Edit staff | `MANAGER` |
-| Process payroll | `MANAGER` — requires `useConfirm()` |
-| Deactivate staff | `MANAGER` — requires `useConfirm()` |
+## Actual API Files
+- `hr_api/ManagerHrApi.ts`: Client functions for CRUD on staff and payrolls.
 
-## Loading, Empty, Error States
-- **Loading:** `loading.tsx` — tab skeleton + 6-row table skeleton
-- **Empty:** "No staff members" / "No payroll records" with CTA
-- **Error:** `error.tsx` with retry
+## Actual Loading State
+- Global layout loading uses `loading.tsx`. Local data re-fetches utilize `fetchState === 'loading'` and render loaders over tables. Form submissions trigger `saving` state, disabling interactive buttons.
 
-## Edge Cases / AI Warnings
-- **Payroll is a financial mutation** — always requires `useConfirm()` before `POST`. Never allow single-click payroll processing.
-- **Deactivation is soft-delete** — sets `is_active: false` via PATCH, never hard DELETE.
-- **Phone masking** — staff phone numbers in table must use `maskSensitiveData()` from `@/lib/formatters`.
-- **Salary amounts** — stored and transmitted as paise integers. Use `formatCurrency()` for display.
+## Actual Empty State
+- Relies on `ManagerEmptyState` shared component with tailored imagery for empty staff, payroll, or ledger results.
 
-## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization — module-prefixed files
-- [x] Rule 6: Logic/UI Separation — fetch in context, form in modals
-- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server
-- [x] Rule 9: `loading.tsx` + `error.tsx` present
-- [x] Rule 13: Feature Map — this document, updated same commit as code changes
-- [x] Rule 43: Phone numbers masked in table view
-- [x] Rule 71: Payroll processing + deactivation use `useConfirm()`
+## Actual Error State
+- Unhandled render errors fall to `error.tsx`. API errors surface via the global toast notification system integrated in `useManagerHrLogic.ts`.
+
+## Actual Security Rules
+- Protected under the `manager` route group. Action buttons such as "Delete" or "Suspend" demand secondary verification via `useConfirm`.
+
+## Feature-Specific AI Warnings
+1. **Never use `any`**: Ensure API payloads and component props are strictly typed to the domains in `ManagerHrTypes.ts`.
+2. **Never inline format currency**: Always import `formatCurrency` from `@/lib/formatters`. Do not use `.toLocaleString()`.
+3. **Never embed hardcoded colors**: Follow `hr_theme_contract.md`. E.g., `text-success`, not `text-[var(--success)]`.
+4. **Never create local-only filter state**: Changes to search strings or pagination must invoke URL router pushes.
+5. **Never merge split files**: The `useManagerHrLogic` hook was split explicitly due to strict file size policies. Do not bundle UI state back into domain logic.

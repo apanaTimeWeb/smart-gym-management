@@ -3,9 +3,9 @@ import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import type { Staff, Payroll, HrSummary, HrContextType, HrInitialData } from '@/app/manager/hr/hr_types/ManagerHrTypes';
 import { hrApi } from '@/app/manager/hr/hr_api/ManagerHrApi';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import { EMPTY_STAFF } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
+import { useManagerHrUIState } from '@/app/manager/hr/hr_context/useManagerHrUIState';
 import { useDebounce } from '@/app/manager/manager_utils/useDebounce';
-import { useManagerHrMutations } from './useManagerHrMutations';
+import { useManagerHrMutations } from '@/app/manager/hr/hr_context/useManagerHrMutations';
 
 export function useManagerHrLogic(initialData?: HrInitialData | null): HrContextType {
   const router = useRouter();
@@ -17,7 +17,6 @@ export function useManagerHrLogic(initialData?: HrInitialData | null): HrContext
   const [summary, setSummary] = useState<HrSummary | null>(null);
   const [fetchState, setFetchState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [error, setError] = useState('');
-  const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
   const search = searchParams.get('search') || '';
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
@@ -56,16 +55,11 @@ export function useManagerHrLogic(initialData?: HrInitialData | null): HrContext
   const setRoleFilter = useCallback((val: string) => setUrlParam('role', val === 'All' ? null : val), [setUrlParam]);
   const setPayrollMonth = useCallback((val: string) => setUrlParam('month', val), [setUrlParam]);
 
-  const [showModal, setShowModal] = useState(false);
-  const [showPayrollModal, setShowPayrollModal] = useState(false);
-  const [paymentModal, setPaymentModal] = useState<{ payrollId: string; staffName: string; pendingAmount: number; } | null>(null);
-  const [editId, setEditId] = useState<string | null>(null);
-  const [editData, setEditData] = useState<Partial<Staff> | null>(null);
-  const [viewProfileData, setViewProfileData] = useState<Staff | null>(null);
-  const [saving, setSaving] = useState(false);
-
-  const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
-  const hideToast = useCallback(() => setToast(null), []);
+  const {
+    showModal, setShowModal, showPayrollModal, setShowPayrollModal, paymentModal, setPaymentModal,
+    editId, editData, viewProfileData, setViewProfileData, saving, setSaving, toast, showToast, hideToast,
+    openAdd, openEdit, openAddPayroll
+  } = useManagerHrUIState();
 
   const loadAll = useCallback(async () => {
     setFetchState('loading');
@@ -116,36 +110,6 @@ export function useManagerHrLogic(initialData?: HrInitialData | null): HrContext
     }
     loadAll(); 
   }, [loadAll, initialData]);
-
-  const openAdd = useCallback(() => {
-    setEditId(null);
-    setEditData(EMPTY_STAFF);
-    setShowModal(true);
-  }, []);
-
-  const openEdit = useCallback((s: Staff) => {
-    setEditId(s.id);
-    setEditData({ 
-      name: s.name, 
-      email: s.email, 
-      phone: s.phone, 
-      role: s.role, 
-      salary: s.salary, 
-      branch: s.branch, 
-      gender: s.gender, 
-      address: s.address || '', 
-      aadhaar: s.aadhaar || '',
-      upiId: s.upiId || '',
-      advanceSalary: s.advanceSalary || 0,
-      isActive: s.isActive,
-      joinDate: new Date(s.joinDate).toISOString().split('T')[0] 
-    });
-    setShowModal(true);
-  }, []);
-
-  const openAddPayroll = useCallback(() => {
-    setShowPayrollModal(true);
-  }, []);
 
   const { saveStaff, savePayroll, deleteStaff, toggleStaffStatus, markPayrollPaid, giveAdvance, payDue } = useManagerHrMutations(
     staff, payrolls, setStaff, setPayrolls, setSummary, editId, setShowModal, setShowPayrollModal, setSaving, showToast

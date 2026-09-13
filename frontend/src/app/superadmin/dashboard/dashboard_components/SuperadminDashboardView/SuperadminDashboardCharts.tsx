@@ -1,6 +1,9 @@
+'use client';
+// RESPONSIBILITY: Renders the Dashboard revenue, growth, plan, and geography ApexCharts. No data fetching.
 import dynamic from 'next/dynamic';
-import { CHART_COLORS } from '@/app/superadmin/superadmin_utils/SuperadminChartConstants';
-import type { SaaSDashboardMetrics, RevenueChartData, GrowthChartData } from '@/app/superadmin/dashboard/superadmin_dashboard_types/superadmin_dashboard_types';
+import { DASHBOARD_CHART_COLORS } from '@/app/superadmin/dashboard/dashboard_utils/SuperadminDashboardConstants';
+import type { SuperadminDashboardChartsProps, RevenueChartData, GrowthChartData } from '@/app/superadmin/dashboard/superadmin_dashboard_types/superadmin_dashboard_types';
+import { formatCurrency, formatNumber } from '@/lib/formatters';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -10,16 +13,10 @@ export function SuperadminDashboardCharts({
   growthChartData,
   timeMultiplier,
   mrrLabel
-}: {
-  metrics: SaaSDashboardMetrics;
-  revenueChartData: RevenueChartData[];
-  growthChartData: GrowthChartData[];
-  timeMultiplier: number;
-  mrrLabel: string;
-}) {
+}: SuperadminDashboardChartsProps) {
   const chartOptions = {
     chart: { type: 'area' as const, toolbar: { show: false }, background: 'transparent' },
-    colors: [CHART_COLORS.PRIMARY],
+    colors: [DASHBOARD_CHART_COLORS.PRIMARY],
     fill: {
       type: 'gradient',
       gradient: { shadeIntensity: 1, opacityFrom: 0.4, opacityTo: 0.05, stops: [0, 90, 100] },
@@ -30,15 +27,15 @@ export function SuperadminDashboardCharts({
       categories: revenueChartData.map((d: RevenueChartData) => d.month),
       axisBorder: { show: false },
       axisTicks: { show: false },
-      labels: { style: { colors: CHART_COLORS.TEXT_SECONDARY } },
+      labels: { style: { colors: DASHBOARD_CHART_COLORS.TEXT_SECONDARY } },
     },
     yaxis: {
       labels: {
-        style: { colors: CHART_COLORS.TEXT_SECONDARY },
-        formatter: (val: number) => `₹${(val / 1000).toFixed(1)}k`,
+        style: { colors: DASHBOARD_CHART_COLORS.TEXT_SECONDARY },
+        formatter: (val: number) => formatCurrency(val / 1000).replace('.00', '') + 'k',
       },
     },
-    grid: { borderColor: CHART_COLORS.BORDER, strokeDashArray: 4 },
+    grid: { borderColor: DASHBOARD_CHART_COLORS.BORDER, strokeDashArray: 4 },
     theme: { mode: 'dark' as const },
     tooltip: { theme: 'dark' as const },
   };
@@ -50,15 +47,15 @@ export function SuperadminDashboardCharts({
 
   const growthChartOptions = {
     ...chartOptions,
-    colors: [CHART_COLORS.INFO],
+    colors: [DASHBOARD_CHART_COLORS.INFO],
     xaxis: {
       ...chartOptions.xaxis,
       categories: growthChartData.map((d: GrowthChartData) => d.month),
     },
     yaxis: {
       labels: {
-        style: { colors: CHART_COLORS.TEXT_SECONDARY },
-        formatter: (val: number) => val.toFixed(0),
+        style: { colors: DASHBOARD_CHART_COLORS.TEXT_SECONDARY },
+        formatter: (val: number) => formatNumber(Math.round(val)),
       },
     },
   };
@@ -71,39 +68,39 @@ export function SuperadminDashboardCharts({
   const donutOptions = {
     chart: { type: 'donut' as const, background: 'transparent' },
     labels: (metrics.revenueByTier || []).map((t) => t.plan.toUpperCase()),
-    colors: [CHART_COLORS.PRIMARY, CHART_COLORS.INFO, CHART_COLORS.WARNING, CHART_COLORS.SUCCESS, CHART_COLORS.DANGER],
+    colors: [DASHBOARD_CHART_COLORS.PRIMARY, DASHBOARD_CHART_COLORS.INFO, DASHBOARD_CHART_COLORS.WARNING, DASHBOARD_CHART_COLORS.SUCCESS, DASHBOARD_CHART_COLORS.DANGER],
     theme: { mode: 'dark' as const },
     stroke: { show: false },
     dataLabels: { enabled: false },
     tooltip: {
       theme: 'dark' as const,
-      y: { formatter: (val: number) => `₹${val.toLocaleString('en-IN')}` },
+      y: { formatter: (val: number) => formatCurrency(val) },
     },
-    legend: { position: 'bottom' as const, labels: { colors: CHART_COLORS.TEXT_SECONDARY } },
+    legend: { position: 'bottom' as const, labels: { colors: DASHBOARD_CHART_COLORS.TEXT_SECONDARY } },
   };
   const donutSeries = (metrics.revenueByTier || []).map((t) => Math.round(t.amount * timeMultiplier));
 
   const geoChartOptions = {
     chart: { type: 'bar' as const, toolbar: { show: false }, background: 'transparent' },
-    colors: [CHART_COLORS.WARNING],
+    colors: [DASHBOARD_CHART_COLORS.WARNING],
     plotOptions: { bar: { horizontal: true, borderRadius: 4, dataLabels: { position: 'top' } } },
     dataLabels: {
       enabled: true,
       offsetX: 20,
-      style: { fontSize: '12px', colors: [CHART_COLORS.TEXT_SECONDARY] },
-      formatter: (val: number) => `₹${(val / 1000).toFixed(1)}k`
+      style: { fontSize: '12px', colors: [DASHBOARD_CHART_COLORS.TEXT_SECONDARY] },
+      formatter: (val: number) => formatCurrency(val / 1000).replace('.00', '') + 'k'
     },
     stroke: { show: true, width: 1, colors: ['transparent'] },
     xaxis: {
       categories: (metrics.revenueByGeography || []).map((g) => g.region),
-      labels: { style: { colors: CHART_COLORS.TEXT_SECONDARY }, formatter: (val: number) => `₹${(val / 1000).toFixed(0)}k` },
+      labels: { style: { colors: DASHBOARD_CHART_COLORS.TEXT_SECONDARY }, formatter: (val: number) => formatCurrency(val / 1000).replace('.00', '') + 'k' },
       axisBorder: { show: false },
       axisTicks: { show: false },
     },
-    yaxis: { labels: { style: { colors: CHART_COLORS.TEXT_SECONDARY } } },
-    grid: { borderColor: CHART_COLORS.BORDER, strokeDashArray: 4, xaxis: { lines: { show: true } }, yaxis: { lines: { show: false } } },
+    yaxis: { labels: { style: { colors: DASHBOARD_CHART_COLORS.TEXT_SECONDARY } } },
+    grid: { borderColor: DASHBOARD_CHART_COLORS.BORDER, strokeDashArray: 4, xaxis: { lines: { show: true } }, yaxis: { lines: { show: false } } },
     theme: { mode: 'dark' as const },
-    tooltip: { theme: 'dark' as const, y: { formatter: (val: number) => `₹${val.toLocaleString('en-IN')}` } },
+    tooltip: { theme: 'dark' as const, y: { formatter: (val: number) => formatCurrency(val) } },
   };
 
   const geoChartSeries = [{

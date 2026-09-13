@@ -3,7 +3,7 @@
 
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
 import ManagerToast from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import ManagerThermalReceipt from '@/app/manager/manager_components/ManagerShared/ManagerThermalReceipt';
+import ManagerMembersThermalReceipt from '@/app/manager/members/members_components/ManagerMembersThermalReceipt';
 
 import { StoreProvider, useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';
 import ManagerStoreKPIs from '@/app/manager/store/store_components/ManagerStoreKPIs/ManagerStoreKPIs';
@@ -46,7 +46,7 @@ function StoreContent() {
       )}
       
       {printData && (
-        <ManagerThermalReceipt data={printData} />
+        <ManagerMembersThermalReceipt data={printData} />
       )}
     </div>
   );

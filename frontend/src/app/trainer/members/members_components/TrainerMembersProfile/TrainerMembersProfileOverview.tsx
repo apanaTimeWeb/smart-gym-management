@@ -5,8 +5,8 @@
 
 import { useState, useRef } from 'react';
 import { MessageCircle, Mail, Target, X, Trash2 } from 'lucide-react';
-import { useMembersContext } from '@/app/trainer/members/members_context/MembersContext';
-import { membersApi } from '@/app/trainer/members/members_api/members_api';
+import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
+import { useTrainerMembersMutations } from '@/app/trainer/members/members_queries/useTrainerMembersMutations';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const progressData = [
@@ -19,7 +19,10 @@ const progressData = [
 ];
 
 export default function TrainerMembersProfileOverview() {
-  const { selectedMember, openMsg, showToast } = useMembersContext();
+  const selectedMember = useTrainerMembersStore(s => s.selectedMember);
+  const openMsg = useTrainerMembersStore(s => s.openMsg);
+  const showToast = useTrainerMembersStore(s => s.showToast);
+  const { updateMember } = useTrainerMembersMutations();
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [showNoteModal, setShowNoteModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
@@ -39,7 +42,7 @@ export default function TrainerMembersProfileOverview() {
     try {
       const newNote = { id: Date.now(), text, date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) };
       const updated = [...notes, newNote];
-      await membersApi.updateMember(selectedMember.id, { trainerNotes: updated } as any);
+      await updateMember.mutateAsync({ id: selectedMember.id, data: { trainerNotes: updated } as any });
       setNotes(updated);
       showToast('Note saved successfully', 'success');
       setShowNoteModal(false);
@@ -53,7 +56,7 @@ export default function TrainerMembersProfileOverview() {
   const handleDeleteNote = async (id: number) => {
     const updated = notes.filter(n => n.id !== id);
     try {
-      await membersApi.updateMember(selectedMember.id, { trainerNotes: updated } as any);
+      await updateMember.mutateAsync({ id: selectedMember.id, data: { trainerNotes: updated } as any });
       setNotes(updated);
     } catch {
       showToast('Failed to delete note', 'error');
@@ -118,7 +121,7 @@ export default function TrainerMembersProfileOverview() {
               Check-in Member
             </button>
             <button
-              onClick={() => openMsg(selectedMember, 'whatsapp')}
+              onClick={() => openMsg({ name: selectedMember.name, phone: selectedMember.phone, email: selectedMember.email }, 'whatsapp', '')}
               className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white rounded-xl justify-center motion-safe:transition-colors bg-success hover:bg-success/90"
             >
               <MessageCircle size={14} /> Send WhatsApp

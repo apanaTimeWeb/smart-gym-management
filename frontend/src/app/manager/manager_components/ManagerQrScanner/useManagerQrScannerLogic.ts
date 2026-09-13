@@ -2,14 +2,14 @@
 // DATA FLOW: Simulate Scan Button → useManagerQrScannerLogic (state machine) → ManagerQrScannerModal (view)
 import { useState, useCallback } from 'react';
 import toast from 'react-hot-toast';
-import type { ManagerQrScanStatus, ManagerQrScanHistoryRecord } from './ManagerQrScannerTypes';
+import type { ManagerQrScanStatus, ManagerQrScanHistoryRecord } from '@/app/manager/manager_components/ManagerQrScanner/ManagerQrScannerTypes';
 import {
   MANAGER_QR_INITIAL_HISTORY,
   MANAGER_QR_MOCK_ACTIVE_NAME,
   MANAGER_QR_TOAST_CHECKIN_SUCCESS,
   MANAGER_QR_SCAN_DELAY_MS,
   MANAGER_QR_MOCK_ID_PREFIX,
-} from './ManagerQrScannerConstants';
+} from '@/app/manager/manager_components/ManagerQrScanner/ManagerQrScannerConstants';
 
 /**
  * useManagerQrScannerLogic

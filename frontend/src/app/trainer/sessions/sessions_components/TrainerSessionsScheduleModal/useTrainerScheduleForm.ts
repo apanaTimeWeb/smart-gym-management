@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import type { CreateSessionDto } from '@/app/trainer/sessions/sessions_api/TrainerSessionsApi';
+import type { CreateSessionDto } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
 
 const sessionSchema = z.object({
   type: z.enum(['PT', 'Group']),

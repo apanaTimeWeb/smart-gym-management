@@ -5,7 +5,7 @@ import { storeApi } from '@/app/manager/store/store_api/ManagerStoreApi';
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
 import { GYM_DETAILS } from '@/app/manager/manager_utils/ManagerSharedConstants';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import type { ManagerReceiptData } from '@/app/manager/manager_components/ManagerShared/ManagerThermalReceipt';
+import type { ManagerReceiptData } from '@/app/manager/members/members_components/ManagerMembersThermalReceipt';
 
 export function useManagerStoreOrder(
   loadAll: () => Promise<void>,

@@ -1,34 +1,50 @@
-// RESPONSIBILITY: Provides the tab switcher, search input, date filter dropdown, and view-mode toggle for the Attendance module.
-// DATA FLOW: useAttendanceContext → TrainerAttendanceToolbar → URL params via context setters
+// RESPONSIBILITY: Toolbar for Attendance — tabs, search, date filter, view-mode toggle, and action buttons.
+// DATA FLOW: props (from TrainerAttendanceMain) → URL state via useAttendanceFilters setters
 'use client';
 
 import { useState, useEffect } from 'react';
-import { RefreshCw, Search, Calendar as CalendarIcon, List } from 'lucide-react';
-import { useAttendanceContext } from '@/app/trainer/attendance/attendance_context/AttendanceContext';
-import { ATTENDANCE_TABS, ATTENDANCE_DATE_FILTER_OPTIONS } from '@/app/trainer/attendance/attendance_utils/AttendanceSharedConstants';
+import { RefreshCw, Search, Calendar as CalendarIcon, List, Plus, LogIn, LogOut, Loader2 } from 'lucide-react';
+import { ATTENDANCE_TABS, ATTENDANCE_DATE_FILTER_OPTIONS, type AttendanceTab } from '@/app/trainer/attendance/attendance_utils/AttendanceSharedConstants';
 import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/SearchableDropdown';
 
-export default function TrainerAttendanceToolbar() {
-  const { tab, setTab, viewMode, setViewMode, loadAll, search, setSearch, filterDate, setFilterDate, setCurrentPage } = useAttendanceContext();
+interface TrainerAttendanceToolbarProps {
+  tab: AttendanceTab;
+  setTab: (t: AttendanceTab) => void;
+  viewMode: 'calendar' | 'table';
+  search: string;
+  setSearch: (s: string) => void;
+  filterDate: string;
+  setFilterDate: (d: string) => void;
+  onAddRecord: () => void;
+  onRefresh: () => void;
+  onSelfCheckIn: () => void;
+  onSelfCheckOut: () => void;
+  selfCheckInPending: boolean;
+  selfCheckOutPending: boolean;
+  setViewMode?: (v: 'calendar' | 'table') => void;
+}
+
+export default function TrainerAttendanceToolbar({
+  tab, setTab, viewMode, search, setSearch,
+  filterDate, setFilterDate,
+  onAddRecord, onRefresh, onSelfCheckIn, onSelfCheckOut,
+  selfCheckInPending, selfCheckOutPending,
+  setViewMode,
+}: TrainerAttendanceToolbarProps) {
   const [localSearch, setLocalSearch] = useState(search);
 
-  // Sync local search back to context if the URL resets it externally.
-  // WHY: filterDate/tab changes reset the URL ?search= param, so localSearch must follow.
-  useEffect(() => { setTimeout(() => setLocalSearch(search), 0); }, [search]);
+  useEffect(() => { setLocalSearch(search); }, [search]);
 
-  // Debounce search → only flush to URL after 300 ms of inactivity (Rule 15).
-  // WHY: search is in deps because we only push when the debounced value diverges from the URL.
   useEffect(() => {
     const handler = setTimeout(() => {
-      if (localSearch !== search) {
-        setSearch(localSearch);
-      }
+      if (localSearch !== search) setSearch(localSearch);
     }, 300);
     return () => clearTimeout(handler);
-  }, [localSearch, search, setSearch, setCurrentPage]);
+  }, [localSearch, search, setSearch]);
 
   return (
-    <div className="border-b border-border flex justify-between items-center">
+    <div className="border-b border-border flex flex-col sm:flex-row justify-between items-start sm:items-center">
+      {/* Tabs */}
       <div className="flex">
         {ATTENDANCE_TABS.map(t => (
           <button
@@ -44,8 +60,11 @@ export default function TrainerAttendanceToolbar() {
           </button>
         ))}
       </div>
-      <div className="px-4 py-2.5 flex flex-wrap gap-3 items-center">
-        {tab === 'My Attendance' && (
+
+      {/* Controls */}
+      <div className="px-4 py-2.5 flex flex-wrap gap-2 items-center">
+        {/* My Attendance view toggle */}
+        {tab === 'My Attendance' && setViewMode && (
           <div className="flex bg-input border border-border rounded-lg p-0.5">
             <button
               onClick={() => setViewMode('calendar')}
@@ -53,7 +72,7 @@ export default function TrainerAttendanceToolbar() {
                 viewMode === 'calendar' ? 'bg-card text-primary shadow-sm' : 'text-secondary hover:text-foreground'
               }`}
             >
-              <CalendarIcon size={14} /> Calendar History
+              <CalendarIcon size={14} /> Calendar
             </button>
             <button
               onClick={() => setViewMode('table')}
@@ -61,20 +80,23 @@ export default function TrainerAttendanceToolbar() {
                 viewMode === 'table' ? 'bg-card text-primary shadow-sm' : 'text-secondary hover:text-foreground'
               }`}
             >
-              <List size={14} /> List View
+              <List size={14} /> List
             </button>
           </div>
         )}
+
+        {/* Search */}
         <div className="relative">
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
           <input
             value={localSearch}
             onChange={e => setLocalSearch(e.target.value)}
             placeholder={`Search ${tab.toLowerCase()}...`}
-            className="pl-9 pr-3 py-2 border border-border bg-input text-foreground rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus-visible:ring-primary w-40 sm:w-64"
+            className="pl-9 pr-3 py-2 border border-border bg-input text-foreground rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary w-40 sm:w-56"
           />
         </div>
-        {/* SearchableDropdown replaces native <select> to fix dark mode rendering (Rule 20) */}
+
+        {/* Date filter */}
         <SearchableDropdown
           options={ATTENDANCE_DATE_FILTER_OPTIONS}
           value={filterDate}
@@ -82,15 +104,47 @@ export default function TrainerAttendanceToolbar() {
           placeholder="Filter by date"
           className="w-36"
         />
-        <div className="flex flex-wrap gap-2">
+
+        {/* Refresh */}
+        <button
+          onClick={onRefresh}
+          className="flex items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors"
+          aria-label="Refresh attendance records"
+        >
+          <RefreshCw size={14} />
+        </button>
+
+        {/* Self Check-in / Check-out (My Attendance tab only) */}
+        {tab === 'My Attendance' && (
+          <>
+            <button
+              onClick={onSelfCheckIn}
+              disabled={selfCheckInPending}
+              className="flex items-center gap-2 px-3 py-2 text-sm bg-success text-white rounded-lg hover:opacity-90 disabled:opacity-70 motion-safe:transition-opacity"
+            >
+              {selfCheckInPending ? <Loader2 size={14} className="motion-safe:animate-spin" /> : <LogIn size={14} />}
+              Check In
+            </button>
+            <button
+              onClick={onSelfCheckOut}
+              disabled={selfCheckOutPending}
+              className="flex items-center gap-2 px-3 py-2 text-sm bg-warning text-white rounded-lg hover:opacity-90 disabled:opacity-70 motion-safe:transition-opacity"
+            >
+              {selfCheckOutPending ? <Loader2 size={14} className="motion-safe:animate-spin" /> : <LogOut size={14} />}
+              Check Out
+            </button>
+          </>
+        )}
+
+        {/* Add Record */}
+        {tab === 'Members' && (
           <button
-            onClick={loadAll}
-            className="flex items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors"
-            aria-label="Refresh attendance records"
+            onClick={onAddRecord}
+            className="flex items-center gap-2 px-3 py-2 text-sm bg-primary text-white rounded-lg hover:opacity-90 motion-safe:transition-opacity"
           >
-            <RefreshCw size={14} />
+            <Plus size={14} /> Add Record
           </button>
-        </div>
+        )}
       </div>
     </div>
   );

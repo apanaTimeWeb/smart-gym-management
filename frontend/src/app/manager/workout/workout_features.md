@@ -1,78 +1,35 @@
 # Manager Workout — Feature Map
 
 ## Module Purpose
-The Manager Workout module manages the branch workout plan library. Managers can create,
-view, edit, and assign workout plans to members. Workout plans contain exercise schedules,
-sets/reps, rest periods, and difficulty levels. Assignment links a plan to a specific member
-profile. This module mirrors the Library (diet) module in structure.
+The Manager Workout module is responsible for managing Workout Plans and the central Exercise Library. It uses URL parameters for managing current tab and search states and centralizes state management via a context provider. Forms are managed through React Hook Form with Zod validation.
 
 ## Directory Structure
 | File/Folder | Responsibility |
 |---|---|
-| `page.tsx` | Server Component — auth guard |
-| `loading.tsx` | Grid skeleton |
-| `error.tsx` | Error boundary |
-| `workout_components/ManagerWorkoutMain.tsx` | Root Client Component |
-| `workout_components/ManagerWorkoutGrid.tsx` | Card grid of all workout plans |
-| `workout_components/ManagerWorkoutPlanCard.tsx` | Single workout plan card |
-| `workout_components/ManagerWorkoutAddModal.tsx` | Create new workout plan form |
-| `workout_components/ManagerWorkoutEditModal.tsx` | Edit workout plan form |
-| `workout_components/ManagerWorkoutAssignModal.tsx` | Assign plan to member |
-| `workout_context/WorkoutProvider.tsx` | Fetch state, plan list |
-| `workout_types/ManagerWorkoutTypes.ts` | `WorkoutPlan`, `CreateWorkoutPlanDto`, `AssignPlanDto` types |
-| `workout_api/ManagerWorkoutApi.ts` | API wrappers |
-| `workout_utils/ManagerWorkoutUrlConfig.ts` | Centralized URL constants |
+| `page.tsx` | Server Component — main entry point |
+| `loading.tsx` | Layout skeleton |
+| `error.tsx` | Route-level error boundary |
+| `not-found.tsx` | 404 fallback |
+| `workout_components/` | All UI components for plans and exercises |
+| `workout_context/` | State and query providers (e.g., `ManagerWorkoutContext.tsx`) |
+| `workout_api/` | API calls and React Query hooks |
+| `workout_types/` | Specific TypeScript definitions |
+| `workout_utils/` | Constants, schemas, and helpers |
 
 ## Feature Inventory
 | Feature | Path | Purpose | Main API Calls | Status |
 |---|---|---|---|---|
-| Workout Plan Grid | `/manager/workout` | View all workout plans | `GET /manager/workout/plans` | ✅ Live |
-| Add Plan | `/manager/workout` | Create new workout plan | `POST /manager/workout/plans` | ✅ Live |
-| Edit Plan | `/manager/workout` | Update plan details | `PATCH /manager/workout/plans/:id` | ✅ Live |
-| Delete Plan | `/manager/workout` | Remove workout plan | `DELETE /manager/workout/plans/:id` | ✅ Live |
-| Assign to Member | `/manager/workout` | Link plan to member | `PATCH /manager/members/:id/workout` | ✅ Live |
+| Workout Plans Grid | `/manager/workout` | Display, create, edit, delete workout plans | `GET /manager/workout/plans`, `POST /manager/workout/plans`, `PUT`, `DELETE` | ✅ Live |
+| Exercise Library Table | `/manager/workout?tab=Exercises` | Display, create, edit, delete individual exercises | `GET /manager/workout/exercises`, `POST /manager/workout/exercises`, `PUT`, `DELETE` | ✅ Live |
 
 ## Data and State Architecture
-- Server-state: `WorkoutProvider` — plan list
-- Zustand stores: `useManagerWorkoutStore` — modal open/close, selected plan
-- Context providers: `WorkoutProvider`
-- Local-storage keys: None
-- MSW handler: Not yet configured
-
-## User Flows
-1. Manager opens `/manager/workout` → plan card grid loads
-2. Manager clicks "Add Plan" → `ManagerWorkoutAddModal` → submit → `POST` → grid refreshes
-3. Manager clicks a plan card → `ManagerWorkoutEditModal` opens with pre-filled data
-4. Manager clicks "Assign" → `ManagerWorkoutAssignModal` → member search → submit → `PATCH`
-5. Manager deletes plan → `useConfirm()` → `DELETE` → grid refreshes
-
-## Component Responsibility Map
-- `ManagerWorkoutMain` — layout + provider. MUST NOT contain form logic.
-- `ManagerWorkoutGrid` — renders plan cards from context. MUST NOT fetch directly.
-- `ManagerWorkoutAssignModal` — member search uses `SearchableDropdown` (Rule 20).
-
-## Permissions and Security
-| Action | Required Role |
-|---|---|
-| View / Create / Edit plans | `MANAGER` |
-| Delete plan | `MANAGER` — requires `useConfirm()` |
-| Assign to member | `MANAGER` |
-
-## Loading, Empty, Error States
-- **Loading:** `loading.tsx` — 6 plan card skeletons in a grid
-- **Empty:** "No workout plans yet" with "Add Plan" CTA
-- **Error:** `error.tsx` with retry
+- **Server-state:** TanStack Query is integrated via `useManagerWorkoutQueries.ts` and `useManagerWorkoutMutations.ts`. 
+- **Client-state (Sync):** URL parameters (`?tab=`, `?search=`, `?level=`, `?page=`). 
+- **Context providers:** `WorkoutProvider` serves UI states (e.g., modal visibility) and synchronizes with URL parameters.
+- **Forms:** React Hook Form + Zod used in `ManagerWorkoutModal` and `ManagerWorkoutExerciseModal` with `useUnsavedChangesGuard`.
 
 ## Edge Cases / AI Warnings
-- **Member search in assign modal** — must use `SearchableDropdown`, not a native `<select>`.
-- **Delete blocked if assigned** — API returns `400` with descriptive `message`. Surface via toast from `response.message`.
-- **Do not use Dumbbell icon for plan cards** — use `Dumbbell` only for equipment-specific items. Use `ClipboardList` for workout plan cards.
-
-## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization — module-prefixed files
-- [x] Rule 6: Logic/UI Separation — fetch in context, form in modals
-- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server
-- [x] Rule 9: `loading.tsx` + `error.tsx` present
-- [x] Rule 13: Feature Map — this document, updated same commit as code changes
-- [x] Rule 20: Member search uses `SearchableDropdown`
-- [x] Rule 71: Delete uses `useConfirm()` double-verification
+- **URL Synchronization:** Changing tabs or searches must be synced to the URL using the `ManagerWorkoutContext` helper functions (`setTab`, `setSearch`).
+- **No `any` Types:** All types are strictly typed (no `as any`).
+- **Formatting:** All currency/number representations (if applicable) must use `@/lib/formatters`.
+- **Styling:** Inline CSS variables (`var(--workout-highlight)`) are forbidden; use semantic Tailwind classes (`bg-primary`).

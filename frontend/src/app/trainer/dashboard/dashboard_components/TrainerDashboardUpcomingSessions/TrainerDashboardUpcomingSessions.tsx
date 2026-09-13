@@ -1,11 +1,12 @@
 'use client';
 
-import { useDashboardContext } from '@/app/trainer/dashboard/dashboard_context/DashboardContext';
-import { Calendar, Clock } from 'lucide-react';
+import { useTrainerDashboardQuery } from '@/app/trainer/dashboard/dashboard_queries/useTrainerDashboardQuery';
+import { CalendarClock, Clock, User, Users, Calendar } from 'lucide-react';
 import Link from 'next/link';
+import { SESSION_TYPE_STYLES } from '@/app/trainer/sessions/sessions_utils/TrainerSessionsSharedConstants';
 
 export default function TrainerDashboardUpcomingSessions() {
-  const { stats } = useDashboardContext();
+  const { data: stats } = useTrainerDashboardQuery();
   if (!stats?.upcomingSessions) return null;
 
   return (

@@ -1,16 +1,22 @@
 'use client';
 import { Search, FileText, Download, Loader2 } from 'lucide-react';
 import { useState } from 'react';
-import { useTrainerEarningsContext } from '@/app/trainer/earnings/earnings_context/TrainerEarningsContext';
+import { useTrainerEarningsStore } from '@/app/trainer/earnings/earnings_store/useTrainerEarningsStore';
+import { useTrainerEarningsQuery } from '@/app/trainer/earnings/earnings_queries/useTrainerEarningsQuery';
 import { PAYOUT_STATUS_STYLES, formatCurrency } from '@/app/trainer/earnings/earnings_utils/TrainerEarningsSharedConstants';
 import { TrainerEarningsUrlConfig } from '@/app/trainer/earnings/earnings_utils/TrainerEarningsUrlConfig';
 
 export default function TrainerEarningsHistory() {
-  const {
-    paginatedHistory, fetchState, search, setSearch, currentPage, setCurrentPage, totalPages,
-    startDate, setStartDate, endDate, setEndDate
-  } = useTrainerEarningsContext();
-
+  const { search, setSearch, currentPage, setCurrentPage, startDate, setStartDate, endDate, setEndDate } = useTrainerEarningsStore();
+  const { data } = useTrainerEarningsQuery();
+  
+  const history = data?.history || [];
+  
+  // Apply local pagination/search since mock doesn't do it
+  const filteredHistory = history.filter(row => row.description.toLowerCase().includes(search.toLowerCase()));
+  const totalPages = Math.ceil(filteredHistory.length / 10);
+  const paginatedHistory = filteredHistory.slice((currentPage - 1) * 10, currentPage * 10);
+  
   const [isExporting, setIsExporting] = useState(false);
 
   const handleExportCsv = async () => {
@@ -35,7 +41,7 @@ export default function TrainerEarningsHistory() {
     }
   };
 
-  if (fetchState === 'loading') {
+  if (!data) {
     return <div className="h-[400px] bg-skeleton-base bg-skeleton-highlight rounded-xl border border-border motion-safe:animate-pulse" />;
   }
 

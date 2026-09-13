@@ -1,24 +1,20 @@
 // RESPONSIBILITY: Main container for the Expenses module. Owns the ExpensesProvider and assembles Header, Toolbar, KPIs, Table, and Modal.
 'use client';
 
-import { Suspense, useState } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { Loader2, Save } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { ExpensesProvider } from '@/app/manager/expenses/expenses_context/ManagerExpensesContext';
+import { ExpensesProvider, useExpensesContext } from '@/app/manager/expenses/expenses_context/ManagerExpensesContext';
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
 import ManagerExpensesToolbar from '@/app/manager/expenses/expenses_components/ManagerExpensesToolbar/ManagerExpensesToolbar';
 import ManagerExpensesKPIs from '@/app/manager/expenses/expenses_components/ManagerExpensesKPIs/ManagerExpensesKPIs';
 import ManagerExpensesTable from '@/app/manager/expenses/expenses_components/ManagerExpensesTable/ManagerExpensesTable';
 import ManagerExpensesModal from '@/app/manager/expenses/expenses_components/ManagerExpensesModal/ManagerExpensesModal';
 import ManagerExpensesChart from '@/app/manager/expenses/expenses_components/ManagerExpensesMain/ManagerExpensesChart';
-import { useManagerExpensesStore } from '@/app/manager/expenses/expenses_store/useManagerExpensesStore';
 import type { ExpenseStatus } from '@/app/manager/expenses/expenses_types/ManagerExpensesTypes';
+import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
+import { useExpensesListQuery } from '@/app/manager/expenses/expenses_api/useManagerExpensesQueries';
 
-// DATA FLOW: ExpensesProvider → useManagerExpensesStore (Zustand) → ManagerExpensesTable/KPIs/Toolbar
-
-// ── Add Expense Form ─────────────────────────────────────────────────────────
-// Fully functional form wired to useManagerExpensesStore.saveExpense().
-// Rule 26: "Save Expense" button shows Loader2 while saving.
 const EXPENSE_CATEGORIES = [
   'Equipment Maintenance',
   'Rent & Utilities',
@@ -29,13 +25,16 @@ const EXPENSE_CATEGORIES = [
 ];
 
 function AddExpenseForm({ onSaved }: { onSaved: () => void }) {
-  const { saveExpense, saving } = useManagerExpensesStore();
+  const { saveExpense, saving } = useExpensesContext();
   const [category, setCategory]       = useState(EXPENSE_CATEGORIES[0]);
   const [title, setTitle]             = useState('');
   const [amount, setAmount]           = useState('');
   const [date, setDate]               = useState('');
   const [status, setStatus]           = useState<ExpenseStatus>('PAID');
   const [notes, setNotes]             = useState('');
+
+  const isDirty = title.trim() !== '' || amount !== '' || date !== '' || notes.trim() !== '';
+  useUnsavedChangesGuard(isDirty);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,8 +57,6 @@ function AddExpenseForm({ onSaved }: { onSaved: () => void }) {
         notes: notes.trim() || undefined,
         createdAt: new Date().toISOString(),
       });
-      toast.success('Expense saved successfully!');
-      // Reset form
       setTitle(''); setAmount(''); setDate(''); setNotes(''); setStatus('PAID');
       setCategory(EXPENSE_CATEGORIES[0]);
       onSaved();
@@ -163,10 +160,15 @@ function AddExpenseForm({ onSaved }: { onSaved: () => void }) {
 }
 
 function ExpensesContent() {
-  const fetchState = useManagerExpensesStore(s => s.fetchState);
+  const { search, statusFilter, currentPage } = useExpensesContext();
+  const { isError } = useExpensesListQuery({
+    search,
+    status: statusFilter !== 'All' ? statusFilter : '',
+    page: currentPage.toString(),
+  });
   const [activeTab, setActiveTab] = useState('View Expenses');
 
-  if (fetchState === 'error') {
+  if (isError) {
     return (
       <div className="flex items-center justify-center h-64">
         <p className="text-danger font-medium">Failed to load expenses. Please try again.</p>

@@ -8,15 +8,17 @@ import { X, Save } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/SearchableDropdown';
-import { useMembersContext } from '@/app/trainer/members/members_context/MembersContext';
+import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
+import { useTrainerMembersMutations } from '@/app/trainer/members/members_queries/useTrainerMembersMutations';
 import { MemberSchema, type MemberFormValues, EMPTY_MEMBER_FORM, GENDER_OPTIONS } from '@/app/trainer/members/members_utils/MembersSharedConstants';
 
 export default function TrainerMembersModal() {
-  const {
-    showAddModal, setShowAddModal, editId, editData,
-    saveMember, saving
-  } = useMembersContext();
-
+  const showAddModal = useTrainerMembersStore(s => s.showAddModal);
+  const setShowAddModal = useTrainerMembersStore(s => s.setShowAddModal);
+  const editId = useTrainerMembersStore(s => s.editId);
+  const editData = useTrainerMembersStore(s => s.editData);
+  const { updateMember } = useTrainerMembersMutations();
+  const showToast = useTrainerMembersStore(s => s.showToast);
   const useFormReturn = useForm<MemberFormValues>({
     resolver: zodResolver(MemberSchema),
     defaultValues: editData || EMPTY_MEMBER_FORM
@@ -39,7 +41,18 @@ export default function TrainerMembersModal() {
 
 
 
-  const onSubmit = (data: MemberFormValues) => saveMember(data);
+  const onSubmit = async (data: MemberFormValues) => {
+    try {
+      if (!editId) {
+        throw new Error('Creating members is a Manager-only action. Please contact your manager.');
+      }
+      await updateMember.mutateAsync({ id: editId, data: data as any });
+      showToast('Member updated successfully', 'success');
+      setShowAddModal(false);
+    } catch (err: any) {
+      showToast(err.message || 'Failed to update member', 'error');
+    }
+  };
 
   if (!showAddModal) return null;
 
@@ -128,10 +141,10 @@ export default function TrainerMembersModal() {
             </button>
             <button
               type="submit"
-              disabled={saving}
+              disabled={updateMember.isPending}
               className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-primary text-white flex items-center justify-center gap-2 disabled:opacity-70 hover:bg-primary-hover motion-safe:transition-all motion-safe:duration-200 active:scale-95"
             >
-              {saving ? (
+              {updateMember.isPending ? (
                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" />
               ) : (
                 <><Save size={15} /> {editId ? 'Update' : 'Add Member'}</>

@@ -1,57 +1,70 @@
-// RESPONSIBILITY: Types for Trainer Schedule and Leave management.
-export type DayOfWeek = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
+// RESPONSIBILITY: Zod schemas and derived types for the Trainer Schedule and Leave management.
+// DATA FLOW: API layer → Zod parse → typed domain types → TanStack Query → UI
+import { z } from 'zod';
 
-export interface WeeklyAvailability {
-  day: DayOfWeek;
-  isAvailable: boolean;
-  startTime: string; // HH:mm
-  endTime: string;   // HH:mm
-}
+export const DayOfWeekSchema = z.enum(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']);
+export type DayOfWeek = z.infer<typeof DayOfWeekSchema>;
 
-export type LeaveStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
-export type LeaveType = 'Sick Leave' | 'Casual Leave' | 'Emergency' | 'Personal' | 'Other';
+export const WeeklyAvailabilitySchema = z.object({
+  day: DayOfWeekSchema,
+  isAvailable: z.boolean(),
+  startTime: z.string(), // HH:mm
+  endTime: z.string(),   // HH:mm
+});
+export type WeeklyAvailability = z.infer<typeof WeeklyAvailabilitySchema>;
 
-export const LEAVE_TYPE_OPTIONS: LeaveType[] = ['Sick Leave', 'Casual Leave', 'Emergency', 'Personal', 'Other'];
+export const LeaveStatusSchema = z.enum(['PENDING', 'APPROVED', 'REJECTED']);
+export type LeaveStatus = z.infer<typeof LeaveStatusSchema>;
 
-export interface LeaveRequest {
-  id: string;
-  trainerId: string;
-  startDate: string; // YYYY-MM-DD
-  endDate: string;   // YYYY-MM-DD
-  reason: string;
-  leaveType: LeaveType;
-  status: LeaveStatus;
-  managerNotes?: string;
-  totalDays?: number;
-  attachmentUrl?: string;
-  approvedBy?: string;
-  rejectedReason?: string;
-  createdAt: string;
-}
+export const LEAVE_TYPE_OPTIONS = ['Sick Leave', 'Casual Leave', 'Emergency', 'Personal', 'Other'] as const;
+export const LeaveTypeSchema = z.enum(LEAVE_TYPE_OPTIONS);
+export type LeaveType = z.infer<typeof LeaveTypeSchema>;
 
-export interface ScheduleEvent {
-  id: string;
-  title: string;
-  start: string;
-  end: string;
-  type: string;
-  isRecurring?: boolean;
-  recurrenceRule?: string;
-  meetingLink?: string;
-}
+export const LeaveRequestSchema = z.object({
+  id: z.string(),
+  trainerId: z.string(),
+  startDate: z.string(), // YYYY-MM-DD
+  endDate: z.string(),   // YYYY-MM-DD
+  reason: z.string(),
+  leaveType: LeaveTypeSchema,
+  status: LeaveStatusSchema,
+  managerNotes: z.string().optional(),
+  totalDays: z.number().optional(),
+  attachmentUrl: z.string().optional(),
+  approvedBy: z.string().optional(),
+  rejectedReason: z.string().optional(),
+  createdAt: z.string(),
+});
+export type LeaveRequest = z.infer<typeof LeaveRequestSchema>;
 
-export interface TrainerScheduleState {
-  availability: WeeklyAvailability[];
-  leaveRequests: LeaveRequest[];
-  leaveBalance: number;
-  fetchState: 'idle' | 'loading' | 'success' | 'error';
-  saving: boolean;
+export const CreateLeaveDtoSchema = z.object({
+  startDate: z.string().min(1, 'Start date is required'),
+  endDate: z.string().min(1, 'End date is required'),
+  reason: z.string().min(5, 'Please provide a valid reason'),
+  leaveType: LeaveTypeSchema,
+});
+export type CreateLeaveDto = z.infer<typeof CreateLeaveDtoSchema>;
 
-  loadSchedule: () => Promise<void>;
-  updateAvailability: (availability: WeeklyAvailability[]) => Promise<void>;
-  requestLeave: (leave: Partial<LeaveRequest>) => Promise<void>;
-}
+export const ScheduleEventSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  start: z.string(),
+  end: z.string(),
+  type: z.string(),
+  isRecurring: z.boolean().optional(),
+  recurrenceRule: z.string().optional(),
+  meetingLink: z.string().optional(),
+});
+export type ScheduleEvent = z.infer<typeof ScheduleEventSchema>;
 
+export const ScheduleResponseSchema = z.object({
+  availability: z.array(WeeklyAvailabilitySchema),
+  leaves: z.array(LeaveRequestSchema),
+});
+export type ScheduleResponse = z.infer<typeof ScheduleResponseSchema>;
+
+// Legacy context type for transition (will be removed)
+/** @deprecated — replaced by queries and Zustand store */
 export interface TrainerScheduleContextType {
   activeTab: 'availability' | 'leaves';
   setActiveTab: (tab: 'availability' | 'leaves') => void;
@@ -63,4 +76,14 @@ export interface TrainerScheduleContextType {
   openLeaveModal: () => void;
   submitLeave: (data: Partial<LeaveRequest>) => Promise<void>;
   saveAvailability: (data: WeeklyAvailability[]) => Promise<void>;
+}
+
+export interface TrainerScheduleState {
+  activeTab: 'availability' | 'leaves';
+  setActiveTab: (tab: 'availability' | 'leaves') => void;
+  showLeaveModal: boolean;
+  setShowLeaveModal: (show: boolean) => void;
+  toast: { message: string; type: 'success' | 'error' } | null;
+  showToast: (msg: string, type: 'success' | 'error') => void;
+  hideToast: () => void;
 }

@@ -29,7 +29,7 @@ function ToggleSwitch({ enabled, onToggle, label, description }: {
         onClick={onToggle}
         className={`w-11 h-6 flex items-center rounded-full p-1 motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${enabled ? 'bg-primary' : 'bg-border'}`}
       >
-        <span className={`bg-white w-4 h-4 rounded-full shadow-md motion-safe:transition-transform ${enabled ? 'translate-x-5' : 'translate-x-0'}`} />
+        <span className={`bg-background w-4 h-4 rounded-full shadow-md motion-safe:transition-transform ${enabled ? 'translate-x-5' : 'translate-x-0'}`} />
       </button>
     </label>
   );

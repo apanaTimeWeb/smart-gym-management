@@ -6,13 +6,13 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Search } from 'lucide-react';
-import { useDashboardContext } from '@/app/trainer/dashboard/dashboard_context/DashboardContext';
+import { useTrainerDashboardQuery } from '@/app/trainer/dashboard/dashboard_queries/useTrainerDashboardQuery';
 import { DASHBOARD_RECENT_MEMBERS_PAGE_SIZE, RECENT_MEMBERS_HEADERS, DASHBOARD_STATUS_STYLES, formatCurrency } from '@/app/trainer/dashboard/dashboard_utils/DashboardSharedConstants';
 import TrainerPagination from '@/app/trainer/trainer_components/TrainerShared/TrainerPagination';
 import TrainerDashboardEmptyState from '@/app/trainer/dashboard/dashboard_components/TrainerDashboardEmptyState/TrainerDashboardEmptyState';
 
 export default function TrainerDashboardRecentMembers() {
-  const { stats } = useDashboardContext();
+  const { data: stats } = useTrainerDashboardQuery();
   const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 

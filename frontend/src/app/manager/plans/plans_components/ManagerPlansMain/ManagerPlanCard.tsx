@@ -1,0 +1,75 @@
+// RESPONSIBILITY: Pure display component rendering a single membership plan.
+import { CheckCircle, XCircle, IndianRupee, Send } from 'lucide-react';
+import { formatCurrency } from '@/app/manager/plans/plans_utils/ManagerPlansSharedConstants';
+import type { Plan } from '@/app/manager/plans/plans_types/ManagerPlansTypes';
+import { usePlansContext } from '@/app/manager/plans/plans_context/ManagerPlansContext';
+
+const TIER_STYLES: Record<string, { bg: string; text: string; label: string }> = {
+  BASIC:   { bg: 'bg-info/10',    text: 'text-info',    label: 'Basic'   },
+  GOLD:    { bg: 'bg-warning/10', text: 'text-warning', label: 'Gold'    },
+  PREMIUM: { bg: 'bg-primary/10', text: 'text-primary', label: 'Premium' },
+};
+
+export default function ManagerPlanCard({ plan }: { plan: Plan }) {
+  const { openRequestModal } = usePlansContext();
+  const tier = TIER_STYLES[plan.tier] ?? TIER_STYLES['BASIC'] ?? { bg: 'bg-secondary/10', text: 'text-secondary', label: plan.tier ?? 'BASIC' };
+  const features = Array.isArray(plan.features)
+    ? plan.features
+    : (plan.features as string ?? '').split(',').map((f: string) => f.trim()).filter(Boolean);
+
+  return (
+    <div className={`bg-card border rounded-xl p-5 flex flex-col gap-4 motion-safe:transition-all motion-safe:duration-200 motion-safe:hover:-translate-y-1 hover:shadow-lg ${plan.isActive ? 'border-border' : 'border-border opacity-60'}`}>
+      {/* Header */}
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${tier.bg} ${tier.text}`}>{tier.label}</span>
+            {plan.isActive
+              ? <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-success/10 text-success flex items-center gap-1"><CheckCircle size={11} />Active</span>
+              : <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-danger/10 text-danger flex items-center gap-1"><XCircle size={11} />Inactive</span>
+            }
+          </div>
+          <h3 className="text-base font-bold text-foreground">{plan.name}</h3>
+        </div>
+        <div className="shrink-0 w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+          <IndianRupee size={18} className="text-primary" />
+        </div>
+      </div>
+
+      {/* Pricing */}
+      <div className="grid grid-cols-2 gap-2">
+        {[
+          { label: '1 Month',   price: plan.price1Month  },
+          { label: '3 Months',  price: plan.price3Month  },
+          { label: '6 Months',  price: plan.price6Month  },
+          { label: '12 Months', price: plan.price12Month },
+        ].map(row => (
+          <div key={`plan-${plan.id}-price-${row.label}`} className="bg-input rounded-lg px-3 py-2">
+            <p className="text-xs text-secondary">{row.label}</p>
+            <p className="text-sm font-bold text-foreground">{formatCurrency(row.price)}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Features */}
+      {features.length > 0 && (
+        <div className="space-y-1.5 pt-1 border-t border-border">
+          {features.map((f: string, i: number) => (
+            <div key={`plan-${plan.id}-feature-${i}`} className="flex items-center gap-2 text-sm text-secondary">
+              <CheckCircle size={13} className="text-success shrink-0" />
+              <span className="truncate">{f}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Request change CTA */}
+      <button
+        onClick={() => openRequestModal(plan)}
+        className="mt-auto flex items-center justify-center gap-2 w-full py-2 text-xs font-semibold rounded-lg border border-primary/40 text-primary hover:bg-primary/10 motion-safe:transition-colors"
+      >
+        <Send size={12} /> Request Change
+      </button>
+    </div>
+  );
+}
