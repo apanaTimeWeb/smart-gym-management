@@ -9,7 +9,7 @@ export default function SuperadminSystemSlaTab() {
   const [slaSearch, setSlaSearch] = useState('');
 
   const handleGenerateCredit = (tenantId: string) => {
-    toast.success(`Generated SLA Credit invoice for tenant ${tenantId}`);
+    toast.success(`Generated Downtime Credit invoice for gym ${tenantId}`);
   };
 
   const filteredSla = SUPERADMIN_SYSTEM_MOCK_SLA_DATA.filter(sla => sla.name.toLowerCase().includes(slaSearch.toLowerCase()));
@@ -52,7 +52,7 @@ export default function SuperadminSystemSlaTab() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-disabled" />
             <input
               type="text"
-              placeholder="Search tenant..."
+              placeholder="Search gym..."
               value={slaSearch}
               onChange={(e) => setSlaSearch(e.target.value)}
               className="bg-input border border-border text-foreground text-sm rounded-lg pl-9 pr-4 py-2 focus:outline-none focus:border-primary w-64"

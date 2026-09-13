@@ -33,7 +33,7 @@ export default function SuperadminTicketsTable({ tickets, onReply, onClose, onAs
               <th className="p-4 font-semibold text-secondary">Subject</th>
               <th className="p-4 font-semibold text-secondary">Priority</th>
               <th className="p-4 font-semibold text-secondary">Status</th>
-              <th className="p-4 font-semibold text-secondary">SLA</th>
+              <th className="p-4 font-semibold text-secondary">Response Time</th>
               <th className="p-4 font-semibold text-secondary">Last Updated</th>
               <th className="p-4 font-semibold text-secondary text-right">Actions</th>
             </tr>

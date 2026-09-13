@@ -15,7 +15,7 @@ export default function SuperadminPlansClient() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Subscription Plans</h1>
-          <p className="text-secondary mt-1">Manage pricing tiers and limits for SaaS tenants.</p>
+          <p className="text-secondary mt-1">Manage pricing tiers and limits for gyms.</p>
         </div>
         <button
           onClick={openCreateModal}

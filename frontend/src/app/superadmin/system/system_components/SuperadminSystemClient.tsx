@@ -143,7 +143,7 @@ export default function SuperadminSystemClient() {
             tab === 'sla' ? 'bg-card text-foreground shadow-sm' : 'text-secondary hover:text-foreground'
           }`}
         >
-          <Clock size={18} strokeWidth={2} /> SLA & Uptime Tracker
+          <Clock size={18} strokeWidth={2} /> Uptime Tracker
         </button>
       </div>
 

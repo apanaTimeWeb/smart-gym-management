@@ -170,7 +170,7 @@ export default function SuperadminSettingsClient() {
               <ul className="list-disc pl-4 text-secondary space-y-1">
                 <li>Introduced Superadmin module.</li>
                 <li>Added global audit logs.</li>
-                <li>Basic Gym management and SLA tracker.</li>
+                <li>Basic Gym management and uptime tracker.</li>
               </ul>
             </div>
           </div>

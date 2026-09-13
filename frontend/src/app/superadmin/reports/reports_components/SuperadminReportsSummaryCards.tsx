@@ -28,7 +28,7 @@ export function SuperadminReportsSummaryCards({
       >
         <div className="flex items-center gap-2 mb-2">
           <IndianRupee size={18} strokeWidth={2} className="text-primary" />
-          <span className="text-xs text-secondary uppercase tracking-wider">Current MRR{suffix}</span>
+          <span className="text-xs text-secondary uppercase tracking-wider">Current Monthly Income{suffix}</span>
         </div>
         <p className="text-3xl font-bold text-foreground">₹{totalMRR.toLocaleString('en-IN')}</p>
         <p className="text-xs text-success mt-1">↑ +8.6% from last month</p>

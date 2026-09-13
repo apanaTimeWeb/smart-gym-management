@@ -126,7 +126,7 @@ export default function SuperadminMigrationsClient() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Schema Rollouts</h1>
-          <p className="text-secondary mt-1">Manage and track database schema migrations across all tenant instances.</p>
+          <p className="text-secondary mt-1">Manage and track database schema migrations across all gym instances.</p>
         </div>
         
         <div className="flex items-center gap-3">

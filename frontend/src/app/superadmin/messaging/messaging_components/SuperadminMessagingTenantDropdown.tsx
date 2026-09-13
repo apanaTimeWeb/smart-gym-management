@@ -59,7 +59,7 @@ export function SuperadminMessagingTenantDropdown({
               <input
                 type="text"
                 autoFocus
-                placeholder="Search tenants..."
+                placeholder="Search gyms..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 className="w-full pl-8 pr-3 py-1.5 bg-input border border-border rounded-md text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"

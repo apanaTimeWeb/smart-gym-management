@@ -208,7 +208,7 @@ export function SuperadminOnboardingTable({
       </div>
 
       {filtered.length === 0 && (
-        <div className="py-16 text-center text-secondary">No tenants match your search.</div>
+        <div className="py-16 text-center text-secondary">No gyms match your search.</div>
       )}
     </div>
   );

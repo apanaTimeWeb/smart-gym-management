@@ -83,7 +83,7 @@ export default function SuperadminBranchesClient() {
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />
         <input
           type="text"
-          placeholder="Search branch, tenant, city..."
+          placeholder="Search branch, gym, city..."
           value={search}
           onChange={(e) => { setSearch(e.target.value); setPage(1); }}
           className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
