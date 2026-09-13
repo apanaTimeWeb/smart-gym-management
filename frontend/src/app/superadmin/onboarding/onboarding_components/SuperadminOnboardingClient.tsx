@@ -3,7 +3,8 @@
 // trial management (extend trial, convert to paid). All data is static/hardcoded.
 // DATA FLOW: MOCK_ONBOARDINGS → SuperadminOnboardingClient → table rows + expand + modals
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Search } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { MOCK_ONBOARDINGS } from '@/app/superadmin/onboarding/onboarding_types/onboarding_constants';
@@ -12,6 +13,7 @@ import SuperadminConversionFunnel from '@/app/superadmin/onboarding/onboarding_c
 import { SuperadminOnboardingStatsBar } from './SuperadminOnboardingStatsBar';
 import { SuperadminOnboardingTable } from './SuperadminOnboardingTable';
 import { SuperadminOnboardingModals } from './SuperadminOnboardingModals';
+import { SuperadminDateFilterDropdown } from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminDateFilterDropdown';
 
 export default function SuperadminOnboardingClient() {
   const [tenants, setTenants] = useState<TenantOnboarding[]>(MOCK_ONBOARDINGS);
@@ -21,18 +23,34 @@ export default function SuperadminOnboardingClient() {
   const [extendDays, setExtendDays] = useState('7');
   const [convertConfirmId, setConvertConfirmId] = useState<string | null>(null);
 
-  const filtered = tenants.filter(
+  const searchParams = useSearchParams();
+  const startDate = searchParams.get('startDate');
+  const endDate = searchParams.get('endDate');
+
+  // Filter based on Date Range
+  const dateFilteredTenants = useMemo(() => {
+    if (!startDate && !endDate) return tenants;
+    return tenants.filter((t) => {
+      if (!t.signupDate) return true;
+      const signup = new Date(t.signupDate);
+      if (startDate && signup < new Date(startDate)) return false;
+      if (endDate && signup > new Date(endDate)) return false;
+      return true;
+    });
+  }, [tenants, startDate, endDate]);
+
+  const filtered = dateFilteredTenants.filter(
     (t) =>
       t.gymName.toLowerCase().includes(search.toLowerCase()) ||
       t.adminEmail.toLowerCase().includes(search.toLowerCase())
   );
 
   const stats = {
-    total: tenants.length,
-    completed: tenants.filter((t) => t.onboardingStatus === 'COMPLETED').length,
-    inProgress: tenants.filter((t) => t.onboardingStatus === 'IN_PROGRESS').length,
-    stalled: tenants.filter((t) => t.onboardingStatus === 'STALLED').length,
-    trial: tenants.filter((t) => t.trialStatus === 'TRIAL').length,
+    total: dateFilteredTenants.length,
+    completed: dateFilteredTenants.filter((t) => t.onboardingStatus === 'COMPLETED').length,
+    inProgress: dateFilteredTenants.filter((t) => t.onboardingStatus === 'IN_PROGRESS').length,
+    stalled: dateFilteredTenants.filter((t) => t.onboardingStatus === 'STALLED').length,
+    trial: dateFilteredTenants.filter((t) => t.trialStatus === 'TRIAL').length,
   };
 
   function handleResendVerification(id: string) {
@@ -77,16 +95,21 @@ export default function SuperadminOnboardingClient() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">Tenant Onboarding</h1>
-        <p className="text-secondary mt-1 text-sm">
-          Track email verification, onboarding checklists, and trial lifecycle for every tenant.
-        </p>
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">Tenant Onboarding</h1>
+          <p className="text-secondary mt-1 text-sm">
+            Track email verification, onboarding checklists, and trial lifecycle for every tenant.
+          </p>
+        </div>
+        <div className="flex items-center gap-3 w-full md:w-auto">
+          <SuperadminDateFilterDropdown />
+        </div>
       </div>
 
       <SuperadminOnboardingStatsBar stats={stats} />
 
-      <SuperadminConversionFunnel tenants={tenants} />
+      <SuperadminConversionFunnel tenants={dateFilteredTenants} />
 
       <div className="relative max-w-sm">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />

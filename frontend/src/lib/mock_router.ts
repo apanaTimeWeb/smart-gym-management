@@ -1123,7 +1123,7 @@ export async function routeMockRequest<T>(
   if (path.includes('/superadmin/audit-logs')) return MockDB.handleCrud('mock_audit_logs', method, path, parsedBody, generate(15, i => ({ id: `log-${i}`, actorName: 'Demo Admin', actorRole: 'SUPERADMIN', action: 'UPDATE_TENANT', targetResource: `tenant-${i}`, timestamp: '2023-11-05', ipAddress: '192.168.1.1' }))) as unknown as ApiResponse<T>;
   if (path.includes('/admin/audit')) return MockDB.handleCrud('mock_admin_audit', method, path, parsedBody, generate(12, i => ({ id: `audit-${i}`, actorId: `admin-${i}`, actorRole: 'ADMIN', action: i % 2 === 0 ? 'CREATE' : 'UPDATE', entityType: i % 3 === 0 ? 'MEMBER' : 'PAYMENT', entityId: `entity-${i}`, oldValue: null, newValue: { foo: 'bar' }, ipAddress: '127.0.0.1', timestamp: new Date().toISOString() })), 'logs') as unknown as ApiResponse<T>;
   if (path.includes('/superadmin/settings')) return MockDB.handleCrud('mock_settings', method, path, parsedBody, generate(6, i => ({ id: `set-${i}`, key: `ALLOW_SIGNUPS_${i}`, value: 'true', description: 'Enable signups', category: 'General', dataType: 'boolean' }))) as unknown as ApiResponse<T>;
-  if (path.includes('/tenants') || path.includes('/gyms') || path.includes('/superadmin/gyms')) return MockDB.handleCrud('mock_tenants', method, path, parsedBody, generate(8, i => ({ id: `tenant-${i}`, name: `Gym Branch ${i + 1}`, ownerName: 'Admin Owner', adminEmail: `admin${i}@gym.com`, phone: `998877665${i}`, status: 'ACTIVE', plan: 'Enterprise', createdAt: '2023-01-01', memberCount: 150 + (i * 20), monthlyRevenue: 50000 + (i * 5000), databaseVersion: 'v1.0' }))) as unknown as ApiResponse<T>;
+  if (path.includes('/tenants') || path.includes('/gyms') || path.includes('/superadmin/gyms')) return MockDB.handleCrud('mock_tenants', method, path, parsedBody, generate(8, i => ({ id: `tenant-${i}`, name: `Gym Branch ${i + 1}`, ownerName: 'Admin Owner', adminEmail: `admin${i}@gym.com`, phone: `998877665${i}`, status: 'ACTIVE', plan: 'Enterprise', createdAt: '2023-01-01', memberCount: 150 + (i * 20), monthlyRevenue: 50000 + (i * 5000), databaseVersion: 'v1.0', lastActiveAt: new Date(Date.now() - (i * 86400000)).toISOString() }))) as unknown as ApiResponse<T>;
   if (path.includes('/superadmin/plans')) return MockDB.handleCrud('mock_saas_plans', method, path, parsedBody, generate(3, i => ({ id: `saas-plan-${i}`, name: i === 0 ? 'Starter' : i === 1 ? 'Pro' : 'Enterprise', priceMonthly: 1000 * (i + 1), priceAnnual: 10000 * (i + 1), maxMembers: 100 * (i + 1), maxStaff: 5 * (i + 1), features: ['CRM', 'Billing', 'Analytics'], activeTenants: 10 * (i + 1) }))) as unknown as ApiResponse<T>;
   // For features and migrations, which return compound objects in GET, we let GET bypass or handle specifically.
   if (path.includes('/superadmin/features')) {
@@ -1161,16 +1161,25 @@ export async function routeMockRequest<T>(
   }
 
   if (path.includes('/superadmin/analytics/revenue')) {
+    const range = parsedUrl.searchParams.get('range') || 'this_month';
+    let mult = 1;
+    if (range === 'this_year' || range === 'yearly') mult = 12;
+    else if (range === 'last_6_months') mult = 6;
+    else if (range === 'last_3_months') mult = 3;
+    else if (range === 'last_month') mult = 1;
+    else if (range === 'weekly') mult = 0.25;
+    else if (range === 'custom') mult = 1.5;
+
     return {
       success: true,
       message: 'Fetched revenue analytics',
       data: {
-        mrr: 125000,
-        arr: 1500000,
+        mrr: 125000 * mult,
+        arr: 1500000 * mult,
         churnRate: 1.5,
-        ltv: 4500,
+        ltv: 4500 * (mult > 1 ? 1.2 : 1),
         cac: 120,
-        activeTenants: 145
+        activeTenants: Math.floor(145 * (mult > 1 ? 1.1 : mult < 1 ? 0.9 : 1))
       }
     } as unknown as ApiResponse<T>;
   }
@@ -1181,27 +1190,36 @@ export async function routeMockRequest<T>(
     const generate = (count: number, generator: (i: number) => Record<string, unknown>) => Array.from({ length: count }, (_, i) => generator(i));
 
     if (path.includes('/superadmin/dashboard')) {
+      const range = parsedUrl.searchParams.get('range') || 'this_month';
+      let mult = 1;
+      if (range === 'this_year' || range === 'yearly') mult = 12;
+      else if (range === 'last_6_months') mult = 6;
+      else if (range === 'last_3_months') mult = 3;
+      else if (range === 'last_month') mult = 1;
+      else if (range === 'weekly') mult = 0.25;
+      else if (range === 'custom') mult = 1.5;
+
       return {
         success: true, message: 'Superadmin Dashboard Mock',
         data: {
           metrics: {
-            monthlyRecurringRevenue: 1250000,
-            totalGyms: 45,
-            activeGyms: 42,
-            totalEndUsers: 15420,
+            monthlyRecurringRevenue: 1250000 * mult,
+            totalGyms: Math.floor(45 * (mult > 1 ? 1.1 : mult < 1 ? 0.9 : 1)),
+            activeGyms: Math.floor(42 * (mult > 1 ? 1.1 : mult < 1 ? 0.9 : 1)),
+            totalEndUsers: Math.floor(15420 * mult),
             recentOnboards: generate(5, i => ({
               id: `tenant-${i}`, name: `Demo Gym ${i}`, ownerName: `Owner ${i}`, plan: i % 2 === 0 ? 'Enterprise' : 'Pro', createdAt: '2023-10-01'
             })),
             revenueByGeography: [
-              { region: 'North America', revenue: 500000 },
-              { region: 'Europe', revenue: 350000 },
-              { region: 'Asia Pacific', revenue: 250000 },
-              { region: 'Latin America', revenue: 150000 }
+              { region: 'North America', revenue: 500000 * mult },
+              { region: 'Europe', revenue: 350000 * mult },
+              { region: 'Asia Pacific', revenue: 250000 * mult },
+              { region: 'Latin America', revenue: 150000 * mult }
             ]
           },
           revenue: [
-            { month: 'Jan', mrr: 1000000 }, { month: 'Feb', mrr: 1100000 },
-            { month: 'Mar', mrr: 1150000 }, { month: 'Apr', mrr: 1250000 }
+            { month: 'Jan', mrr: 1000000 * mult }, { month: 'Feb', mrr: 1100000 * mult },
+            { month: 'Mar', mrr: 1150000 * mult }, { month: 'Apr', mrr: 1250000 * mult }
           ],
           growth: []
         }

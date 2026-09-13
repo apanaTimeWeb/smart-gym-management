@@ -1,6 +1,7 @@
 // RESPONSIBILITY: useCouponsPage.ts encapsulates all state and async logic for the Coupons page.
 // DATA FLOW: superadminApi â†’ useCouponsPage â†’ CouponsClient
 import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
@@ -117,21 +118,23 @@ export const useSuperadminCoupons = () => {
     toast.success(`Coupon marked as ${newStatus}`);
   }, [updateCoupons]);
 
-  const activeCoupons = useMemo(
-    () => coupons.filter(c => c.status === 'ACTIVE' && !c.isDeleted).length,
-    [coupons]
-  );
-  const totalRedeemed = useMemo(
-    () => coupons.reduce((sum, c) => sum + c.currentUses, 0),
-    [coupons]
-  );
-  const totalCoupons = useMemo(() => coupons.length, [coupons]);
-
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
+
+  const searchParams = useSearchParams();
+  const startDate = searchParams.get('startDate');
+  const endDate = searchParams.get('endDate');
 
   const filteredCoupons = useMemo(() => {
     const lowerQuery = searchQuery.toLowerCase();
     return [...coupons]
+      .filter(c => {
+        if (!startDate && !endDate) return true;
+        if (!c.expiryDate) return true;
+        const expiry = new Date(c.expiryDate);
+        if (startDate && expiry < new Date(startDate)) return false;
+        if (endDate && expiry > new Date(endDate)) return false;
+        return true;
+      })
       .filter(c => {
         if (activeKpi === 'ACTIVE') return c.status === 'ACTIVE' && !c.isDeleted;
         if (activeKpi === 'REDEEMED') return c.currentUses > 0;
@@ -148,7 +151,17 @@ export const useSuperadminCoupons = () => {
         return 0;
       })
       .filter(c => c.code?.toLowerCase().includes(lowerQuery));
-  }, [coupons, searchQuery, activeKpi, statusFilter]);
+  }, [coupons, searchQuery, activeKpi, statusFilter, startDate, endDate]);
+
+  const activeCoupons = useMemo(
+    () => filteredCoupons.filter(c => c.status === 'ACTIVE' && !c.isDeleted).length,
+    [filteredCoupons]
+  );
+  const totalRedeemed = useMemo(
+    () => filteredCoupons.reduce((sum, c) => sum + c.currentUses, 0),
+    [filteredCoupons]
+  );
+  const totalCoupons = useMemo(() => filteredCoupons.length, [filteredCoupons]);
 
   return {
     fetchState,

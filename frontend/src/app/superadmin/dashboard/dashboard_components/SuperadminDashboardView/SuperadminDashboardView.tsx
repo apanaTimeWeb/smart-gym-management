@@ -29,21 +29,9 @@ export default function SuperadminDashboardView() {
   const searchParams = useSearchParams();
 
   // Rule 41: Sync filter state to URL query params for shareable views
-  const timeRangeFromUrl = (searchParams.get('range') as TimeRange) ?? 'monthly';
-  const [timeRange, setTimeRange] = useState<TimeRange>(timeRangeFromUrl);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-
-  const handleTimeRangeChange = useCallback((newRange: TimeRange) => {
-    setTimeRange(newRange);
-    if (newRange !== 'custom') {
-      setStartDate('');
-      setEndDate('');
-    }
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('range', newRange);
-    router.replace(`?${params.toString()}`, { scroll: false });
-  }, [router, searchParams]);
+  const timeRange = (searchParams.get('range') as TimeRange) ?? 'this_month';
+  const startDate = searchParams.get('startDate') || '';
+  const endDate = searchParams.get('endDate') || '';
 
   const { data: fetchRes, isLoading, isError } = useQuery({
     queryKey: ['superadmin', 'dashboard', timeRange, startDate, endDate],
@@ -90,19 +78,12 @@ export default function SuperadminDashboardView() {
 
   const { metrics, revenue: revenueChartData, growth: growthChartData = [] } = apiData;
 
-  const timeMultiplier = timeRange === 'weekly' ? 0.25 : timeRange === 'yearly' ? 12 : timeRange === 'custom' ? 1.5 : 1;
-  const mrrLabel = timeRange === 'weekly' ? 'WEEKLY RR' : timeRange === 'yearly' ? 'YEARLY RR' : timeRange === 'custom' ? 'CUSTOM RR' : 'TOTAL MRR';
+  const timeMultiplier = 1; // Backend returns properly scaled metrics
+  const mrrLabel = (timeRange === 'this_year' || timeRange === 'yearly') ? 'YEARLY RR' : 'TOTAL MRR';
 
   return (
     <div className="space-y-6">
-      <SuperadminDashboardHeader
-        timeRange={timeRange}
-        startDate={startDate}
-        endDate={endDate}
-        handleTimeRangeChange={handleTimeRangeChange}
-        setStartDate={setStartDate}
-        setEndDate={setEndDate}
-      />
+      <SuperadminDashboardHeader />
 
       <SuperadminDashboardKpiGrid
         metrics={metrics}
