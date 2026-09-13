@@ -9,12 +9,14 @@ import { TrendingUp, Users, IndianRupee, Activity, ArrowDownRight, DollarSign } 
 import { useAnalyticsPage } from '@/app/superadmin/analytics/analytics_utils/useAnalyticsPage';
 import { CHART_COLORS } from '@/app/superadmin/superadmin_utils/SuperadminChartConstants';
 import { SuperadminDateFilterDropdown } from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminDateFilterDropdown';
+import { useDateRangeSuffix } from '@/app/superadmin/superadmin_components/SuperadminShared/useDateRangeSuffix';
 
 // Heavy chart component — code-split via dynamic import (Rule 15, Design §10)
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 export default function SuperadminAnalyticsClient() {
   const { metrics, monthlyData, fetchState } = useAnalyticsPage();
+  const dateSuffix = useDateRangeSuffix();
 
   if (fetchState === 'loading') {
     return (
@@ -62,7 +64,7 @@ export default function SuperadminAnalyticsClient() {
 
   const kpiCards = [
     {
-      label: 'MRR',
+      label: 'MRR' + dateSuffix,
       value: `₹${metrics.mrr.toLocaleString('en-IN')}`,
       delta: mrrDelta,
       deltaUp: (metrics.mrrDeltaPercent ?? 0) >= 0,
@@ -71,7 +73,7 @@ export default function SuperadminAnalyticsClient() {
       iconColor: 'text-success',
     },
     {
-      label: 'ARR',
+      label: 'ARR' + dateSuffix,
       value: `₹${metrics.arr.toLocaleString('en-IN')}`,
       delta: arrDelta,
       deltaUp: (metrics.arrDeltaPercent ?? 0) >= 0,
@@ -80,7 +82,7 @@ export default function SuperadminAnalyticsClient() {
       iconColor: 'text-primary',
     },
     {
-      label: 'Churn Rate',
+      label: 'Churn Rate' + dateSuffix,
       value: `${metrics.churnRate}%`,
       delta: churnDelta,
       deltaUp: metrics.churnRate < 2,
@@ -89,7 +91,7 @@ export default function SuperadminAnalyticsClient() {
       iconColor: 'text-danger',
     },
     {
-      label: 'Active Tenants',
+      label: 'Active Tenants' + dateSuffix,
       value: String(metrics.activeTenants),
       delta: undefined,
       deltaUp: true,
@@ -98,7 +100,7 @@ export default function SuperadminAnalyticsClient() {
       iconColor: 'text-warning',
     },
     {
-      label: 'ARPU',
+      label: 'ARPU' + dateSuffix,
       // Design §21: Indian currency — ₹1,24,500
       value: `₹${arpu.toLocaleString('en-IN')}`,
       delta: 'Avg revenue per tenant',

@@ -132,6 +132,16 @@ export default function SuperadminReportsClient() {
   const totalChurnedRevenue = churnData.reduce((s, c) => s + c.mrr, 0);
   const avgHealthScore = healthData.length > 0 ? Math.round(healthData.reduce((s, h) => s + h.score, 0) / healthData.length) : 0;
 
+  const dateSuffixMap: Record<string, string> = {
+    'THIS_MONTH': 'this month',
+    'LAST_MONTH': 'last month',
+    'THIS_QUARTER': 'this quarter',
+    'THIS_YEAR': 'this year',
+    'LAST_YEAR': 'last year',
+    'CUSTOM': `from ${dateFrom} to ${dateTo}`
+  };
+  const computedDateSuffix = dateSuffixMap[datePreset] || '';
+
   const filteredChurnData = churnData.filter(c => {
     const matchSearch = c.gymName.toLowerCase().includes(searchQuery.toLowerCase());
     const matchPlan = planFilter === 'ALL' || c.plan === planFilter;
@@ -167,6 +177,7 @@ export default function SuperadminReportsClient() {
         churnCount={churnData.length}
         avgHealthScore={avgHealthScore}
         healthDataLength={healthData.length}
+        dateSuffix={computedDateSuffix}
       />
 
       <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">

@@ -1,3 +1,5 @@
+'use client';
+
 import { TrendingDown, HeartPulse, IndianRupee } from 'lucide-react';
 import { KPI_CARD_GRADIENT } from '@/app/superadmin/reports/reports_types/reports_constants';
 
@@ -7,13 +9,17 @@ export function SuperadminReportsSummaryCards({
   churnCount,
   avgHealthScore,
   healthDataLength,
+  dateSuffix,
 }: {
   totalMRR: number;
   totalChurnedRevenue: number;
   churnCount: number;
   avgHealthScore: number;
   healthDataLength: number;
+  dateSuffix?: string;
 }) {
+  const suffix = dateSuffix ? ` ${dateSuffix.toUpperCase()}` : '';
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
       <div
@@ -22,7 +28,7 @@ export function SuperadminReportsSummaryCards({
       >
         <div className="flex items-center gap-2 mb-2">
           <IndianRupee size={18} strokeWidth={2} className="text-primary" />
-          <span className="text-xs text-secondary uppercase tracking-wider">Current MRR</span>
+          <span className="text-xs text-secondary uppercase tracking-wider">Current MRR{suffix}</span>
         </div>
         <p className="text-3xl font-bold text-foreground">₹{totalMRR.toLocaleString('en-IN')}</p>
         <p className="text-xs text-success mt-1">↑ +8.6% from last month</p>
@@ -33,7 +39,7 @@ export function SuperadminReportsSummaryCards({
       >
         <div className="flex items-center gap-2 mb-2">
           <TrendingDown size={18} strokeWidth={2} className="text-danger" />
-          <span className="text-xs text-secondary uppercase tracking-wider">Churned Revenue (MTD)</span>
+          <span className="text-xs text-secondary uppercase tracking-wider">Churned Revenue{suffix}</span>
         </div>
         <p className="text-3xl font-bold text-foreground">₹{totalChurnedRevenue.toLocaleString('en-IN')}</p>
         <p className="text-xs text-danger mt-1">{churnCount} tenants churned</p>
@@ -44,7 +50,7 @@ export function SuperadminReportsSummaryCards({
       >
         <div className="flex items-center gap-2 mb-2">
           <HeartPulse size={18} strokeWidth={2} className="text-success" />
-          <span className="text-xs text-secondary uppercase tracking-wider">Avg Health Score</span>
+          <span className="text-xs text-secondary uppercase tracking-wider">Avg Health Score{suffix}</span>
         </div>
         <p className="text-3xl font-bold text-foreground">{avgHealthScore}/100</p>
         <p className="text-xs text-secondary mt-1">Across {healthDataLength} active tenants</p>
