@@ -20,7 +20,7 @@ export function useSuperadminFeaturesData() {
   const toggleFlagMutation = useMutation({
     mutationFn: (id: string) => featuresApi.toggleFlag(id),
     onSuccess: (res) => {
-      queryClient.setQueryData(queryKey, (old: any) => {
+      queryClient.setQueryData(queryKey, (old: { flags: FeatureFlag[]; notes: ReleaseNote[] } | undefined) => {
         if (!old) return old;
         return {
           ...old,
@@ -33,7 +33,7 @@ export function useSuperadminFeaturesData() {
   const updateFlagMutation = useMutation({
     mutationFn: ({ id, body }: { id: string, body: Partial<FeatureFlag> }) => featuresApi.updateFlag(id, body),
     onSuccess: (res) => {
-      queryClient.setQueryData(queryKey, (old: any) => {
+      queryClient.setQueryData(queryKey, (old: { flags: FeatureFlag[]; notes: ReleaseNote[] } | undefined) => {
         if (!old) return old;
         return {
           ...old,
@@ -52,7 +52,7 @@ export function useSuperadminFeaturesData() {
     
     // Legacy setters maintained to not break existing component code completely, 
     // but the component should ideally be migrated to use mutations directly
-    setData: (updater: any) => queryClient.setQueryData(queryKey, updater),
+    setData: (updater: unknown) => queryClient.setQueryData(queryKey, updater),
     setFetchState: () => {}, 
 
     // New mutation exports
