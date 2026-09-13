@@ -1,12 +1,11 @@
-# Forbidden Patterns for `erp/dashboard`
+# Forbidden Patterns for `manager/dashboard`
 
-To maintain extreme isolation and enterprise-grade architecture in this module, the following are strictly forbidden:
+To maintain enterprise-grade architecture in this module, the following are strictly forbidden:
 
-1. **No Mixed UI and Logic:** Do not mix `useEffect` or state hooks inside UI components. All heavy logic MUST reside in the adjacent custom hook.
-2. **No Relative Imports:** Never use `./` or `../../` in any file. Always use absolute paths starting with `@/app/manager/dashboard/...`.
-3. **No Barrel Files:** Do not create `index.ts` files. Import files directly.
-4. **No Direct `window.confirm`:** Use a customized `ConfirmationDrawer` or `Modal`.
-5. **No Context for Async Data:** Do not use React Context for API data. Always use a Zustand store.
-6. **No Arbitrary Tailwind Values:** Do not use values like `bg-[#123456]` or `p-[15px]`. Use design system tokens (`bg-card`, `p-4`).
-7. **No Hardcoded Toasts from UI:** UI components should not intercept API errors to show toasts; let the API interceptor or Zustand store handle notifications and state updates.
-8. **No Localized API Calls:** UI components should never call `apiFetch` directly. They must trigger actions in custom hooks or stores, which then communicate with `dashboard_api`.
+1. **No Mixed UI and Logic:** Do not mix data fetching logic inside UI components. All async logic MUST reside in `useManagerDashboardLogic.ts` via TanStack Query.
+2. **No Relative Imports:** Never use `./` or `../`. Always use absolute paths starting with `@/app/manager/dashboard/...`.
+3. **No Direct Formatting:** Do NOT use `.toLocaleString()`, `.toFixed()`, or string concatenation for currencies (`₹` + value) in components. All formatting MUST go through `@/lib/formatters` (`formatCurrency`, `formatKPI`).
+4. **No Recharts or Chart.js:** The only allowed charting library is `react-apexcharts`.
+5. **No Context for Async Cache:** Do not store API responses manually in React Context state. Let TanStack Query manage the cache, while Context just distributes the active data view.
+6. **No Local State for Date Filter:** The date range filter MUST sync to the URL (`?range=`). Do not keep it only in `useState` or `Zustand`.
+7. **No Arbitrary Colors:** Do not use `bg-green-500`, `text-[var(--primary)]`, or raw hex codes in JSX (except within ApexCharts config objects where canvas rendering requires hex). Follow `manager_dashboard_theme_contract.md`.

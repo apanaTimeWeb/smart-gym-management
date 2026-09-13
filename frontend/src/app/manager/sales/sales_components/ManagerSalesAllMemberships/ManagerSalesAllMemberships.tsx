@@ -4,6 +4,7 @@
 import { useState } from 'react';
 import { useSalesContext } from '@/app/manager/sales/sales_context/ManagerSalesContext';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
+import { formatCurrency } from '@/lib/formatters';
 import ManagerSalesEmptyState from '@/app/manager/sales/sales_components/ManagerSalesEmptyState/ManagerSalesEmptyState';
 import type { Member } from '@/app/manager/members/members_types/ManagerMembersTypes';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
@@ -101,7 +102,7 @@ export default function ManagerSalesAllMemberships() {
                     {r.status}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-sm font-medium text-foreground">₹{r.paidAmount?.toLocaleString('en-IN') || 0}</td>
+                <td className="px-4 py-3 text-sm font-medium text-foreground">{formatCurrency(r.paidAmount || 0)}</td>
                 <td className={`px-4 py-3 text-sm font-medium ${getDaysLeftColorClass(
                   Math.max(0, Math.floor((new Date(r.expiryDate).getTime() - now) / 86400000))
                 )}`}>

@@ -46,8 +46,8 @@ function AttendanceTable() {
         </tr>
       </thead>
       <tbody className="divide-y divide-border">
-        {data.map((d, i) => (
-          <tr key={i} className="hover:bg-primary/5 motion-safe:transition-colors">
+        {data.map((d) => (
+          <tr key={d.date} className="hover:bg-primary/5 motion-safe:transition-colors">
             <td className="px-5 py-3.5 text-sm text-foreground">{d.date}</td>
             <td className="px-5 py-3.5 text-sm text-success font-semibold">{d.present}</td>
             <td className="px-5 py-3.5 text-sm text-danger">{d.absent}</td>

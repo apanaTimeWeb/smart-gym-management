@@ -8,24 +8,30 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { useWorkoutContext } from '@/app/manager/workout/workout_context/ManagerWorkoutContext';
 import { EQUIPMENT_OPTIONS, EXERCISE_DIFFICULTY_OPTIONS, ExerciseSchema, type ExerciseFormValues, EMPTY_EXERCISE_FORM } from '@/app/manager/workout/workout_utils/ManagerWorkoutSharedConstants';
+import { useSaveExerciseMutation } from '@/app/manager/workout/workout_api/useManagerWorkoutMutations';
+import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
+import toast from 'react-hot-toast';
 
 export default function ManagerWorkoutExerciseModal() {
   const { 
     showExModal, setShowExModal, 
-    editExId, exForm, 
-    saveEx, saving
+    editExId, exForm 
   } = useWorkoutContext();
+
+  const saveMutation = useSaveExerciseMutation();
 
   const {
     register,
     handleSubmit,
     reset,
     control,
-    formState: { errors }
+    formState: { errors, isDirty }
   } = useForm<ExerciseFormValues>({
     resolver: zodResolver(ExerciseSchema),
     defaultValues: exForm || EMPTY_EXERCISE_FORM
   });
+
+  useUnsavedChangesGuard(showExModal && isDirty);
 
   useEffect(() => {
     if (showExModal) {
@@ -50,7 +56,22 @@ export default function ManagerWorkoutExerciseModal() {
             <X size={20} />
           </button>
         </div>
-        <form onSubmit={handleSubmit((data) => saveEx(data))} className="p-5 space-y-4">
+        <form onSubmit={handleSubmit(async (data) => {
+          try {
+            const { muscle, equipment, ...rest } = data;
+            const payload = { 
+              ...rest, 
+              id: editExId || undefined,
+              category: equipment,
+              muscleGroup: muscle.split(',').map(s => s.trim()) 
+            };
+            await saveMutation.mutateAsync(payload);
+            toast.success(editExId ? 'Exercise updated successfully' : 'Exercise created successfully');
+            setShowExModal(false);
+          } catch (err: unknown) {
+            toast.error(err instanceof Error ? err.message : 'Failed to save exercise');
+          }
+        })} className="p-5 space-y-4">
           <div>
             <label className="block text-sm font-medium text-secondary mb-1">Exercise Name *</label>
             <input 
@@ -115,11 +136,10 @@ export default function ManagerWorkoutExerciseModal() {
             </button>
             <button 
               type="submit" 
-              disabled={saving}
-              className="px-4 py-2 rounded-lg font-medium text-white flex items-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-70" 
-              style={{ background: 'var(--workout-highlight)' }}
+              disabled={saveMutation.isPending}
+              className="px-4 py-2 rounded-lg font-medium text-white flex items-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-70 bg-primary" 
             >
-              {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" /> : <><Save size={15} /> Save</>}
+              {saveMutation.isPending ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" /> : <><Save size={15} /> Save</>}
             </button>
           </div>
         </form>

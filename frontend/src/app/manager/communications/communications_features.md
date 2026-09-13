@@ -30,7 +30,8 @@ respect to member data — it never modifies member records.
 | `communications_context/` | Business logic hooks — queries, mutations, filtered data | `useManagerCommunicationsLogic.ts`, `useManagerChurnRecoveryLogic.ts` |
 | `communications_store/` | Zustand store — activeTab, composer fields, history filters, churn filters, pagination | `useManagerCommunicationsStore.ts` |
 | `communications_types/` | TypeScript types: CommCampaign, CommRecipient, CommKPIData, CommFormValues, CommSegment, CommChannel, CommStatus, ChurnedMember, ChurnKPIData, WinBackRecord, ChurnReasonType, WinBackTemplateTier | `communications_types.ts` |
-| `communications_utils/` | Constants, Zod schema, mock data, message templates, win-back templates, status styles, churn reason labels | `ManagerCommunicationsSharedConstants.ts` |
+| `communications_utils/` | Constants, Zod schema, status styles, churn reason labels | `ManagerCommunicationsSharedConstants.ts` |
+| `communications_fixtures/` | Mock data, message templates, win-back templates, automations mocks | `ManagerCommunicationsMockData.ts` |
 
 ## Feature Inventory
 
@@ -89,14 +90,16 @@ respect to member data — it never modifies member records.
 ## Data and State Architecture
 
 - **State pattern:** Zustand for all composer/churn UI state + TanStack Query for server state (campaigns, KPIs, segment recipients, churned members, churn KPIs)
-- **Zustand store:** `useManagerCommunicationsStore.ts` — holds: `activeTab` (including `'churn_recovery'`), `selectedSegment`, `selectedChannel`, `composerTitle`, `composerMessage`, `composerSubject`, `historySearch`, `historyChannelFilter`, `currentPage`, `churnSearch`, `churnReasonFilter`, `churnCurrentPage`, `isChurnComposerOpen`, `selectedChurnedMemberId`
-- **TanStack Query keys:**
-  - `['managerCommunications', 'campaigns']`
+- **URL state:** Tab selection (`?tab=`), history search (`?search=`), history channel filter (`?channel=`), history page (`?page=`), churn search (`?c_search=`), churn reason (`?c_reason=`), churn page (`?c_page=`) are all synced to URL via `useRouter` + `useSearchParams`.
+- **Zustand store:** `useManagerCommunicationsStore.ts` — UI-only: `activeTab`, `selectedSegment`, `selectedChannel`, `composerTitle`, `composerMessage`, `composerSubject`, `historySearch`, `historyChannelFilter`, `currentPage`, `churnSearch`, `churnReasonFilter`, `churnCurrentPage`, `isChurnComposerOpen`, `selectedChurnedMemberId`
+- **TanStack Query keys (canonical format):**
+  - `['managerCommunications', 'campaigns']` (TODO migrate to `['manager', 'communications', 'campaigns']`)
   - `['managerCommunications', 'kpis']`
   - `['managerCommunications', 'segment', selectedSegment]`
   - `['managerCommunications', 'automations']`
   - `['managerCommunications', 'churn', 'members']`
   - `['managerCommunications', 'churn', 'kpis']`
+- **Fixture data:** `communications_fixtures/ManagerCommunicationsMockData.ts` — `MOCK_CAMPAIGNS`, `MOCK_AUTOMATIONS`, `MOCK_COMM_KPI`, `MOCK_CHURNED_MEMBERS`, `MOCK_CHURN_KPI`, `COMM_MESSAGE_TEMPLATES`, `CHURN_WIN_BACK_TEMPLATES`
 - **Template auto-fill:** When segment changes, `handleSegmentChange()` in the logic hook auto-fills from `COMM_MESSAGE_TEMPLATES`. When a churned member is selected, `useManagerChurnRecoveryLogic` derives `defaultTier` from `daysSinceExit` and auto-fills from `CHURN_WIN_BACK_TEMPLATES`.
 - **Local-storage keys:** None
 - **MSW handler file:** Not yet configured
@@ -144,7 +147,7 @@ All calls go through `ManagerCommunicationsApi` in `communications_api/ManagerCo
 - **`sendWinBackMessage` logs a campaign entry:** Win-back sends appear in the Send History tab with segment label "Win-Back (Churned)". Do not remove this side-effect from the mock API — it ensures the history tab is a complete audit log.
 - **Churn composer `defaultTier` derives from `daysSinceExit`:** If `daysSinceExit ≤ 7` → `'7_days'`, `≤ 30` → `'30_days'`, else `'90_days'`. This is computed in `useManagerChurnRecoveryLogic.getTemplateTier()` — do not duplicate this logic in the component.
 - **`recovered: true` members show no Win-Back button:** `ManagerChurnRecoveryTableRow` conditionally hides the Win-Back CTA for recovered members. Do not remove this guard.
-- **`CHURN_WIN_BACK_TEMPLATES` is the single source of truth:** Never add inline message text in the composer component. Always add new win-back tiers to `ManagerCommunicationsSharedConstants.ts`.
+- **`CHURN_WIN_BACK_TEMPLATES` is the single source of truth:** Never add inline message text in the composer component. Always add new win-back tiers to `communications_fixtures/ManagerCommunicationsMockData.ts` (fixture phase) or the API (production phase).
 
 ## Component Responsibility Map
 

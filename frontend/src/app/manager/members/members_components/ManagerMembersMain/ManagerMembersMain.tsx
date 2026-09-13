@@ -4,7 +4,7 @@
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
 import ManagerToast from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import ManagerMessageModal from '@/app/manager/manager_components/ManagerFeedback/ManagerMessageModal';
-import ManagerThermalReceipt from '@/app/manager/manager_components/ManagerShared/ManagerThermalReceipt';
+import ManagerMembersThermalReceipt from '@/app/manager/members/members_components/ManagerMembersThermalReceipt';
 
 import { MembersProvider, useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
 import ManagerMembersKPIs from '@/app/manager/members/members_components/MembersKPIs/ManagerMembersKPIs';
@@ -58,7 +58,7 @@ function MembersContent() {
       </div>
 
       {printData && (
-        <ManagerThermalReceipt data={printData} />
+        <ManagerMembersThermalReceipt data={printData} />
       )}
     </div>
   );

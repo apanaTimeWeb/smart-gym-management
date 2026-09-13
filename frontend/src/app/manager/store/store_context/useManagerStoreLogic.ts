@@ -1,18 +1,15 @@
 // RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the gym product Store module.
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useDebounce } from '@/app/manager/manager_utils/useDebounce';
-import { storeApi } from '@/app/manager/store/store_api/ManagerStoreApi';
-import type { Product, Order, StoreSummary } from '@/app/manager/store/store_types/ManagerStoreTypes';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import type { ManagerReceiptData } from '@/app/manager/manager_components/ManagerShared/ManagerThermalReceipt';
-import { EMPTY_PRODUCT_FORM } from '@/app/manager/store/store_utils/ManagerStoreSharedConstants';
-import type { ProductFormValues } from '@/app/manager/store/store_utils/ManagerStoreSharedConstants';
-import { GYM_DETAILS } from '@/app/manager/manager_utils/ManagerSharedConstants';
+import type { ManagerReceiptData } from '@/app/manager/members/members_components/ManagerMembersThermalReceipt';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import type { StoreContextType, OrderItem, StoreInitialData, FetchState } from '@/app/manager/store/store_types/ManagerStoreTypes';
+import type { StoreContextType, StoreInitialData } from '@/app/manager/store/store_types/ManagerStoreTypes';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
-import { useManagerStoreOrder } from './useManagerStoreOrder';
-import { useManagerStoreProducts } from './useManagerStoreProducts';
+import { useManagerStoreOrder } from '@/app/manager/store/store_context/useManagerStoreOrder';
+import { useManagerStoreProducts } from '@/app/manager/store/store_context/useManagerStoreProducts';
+import { useManagerStoreQueries } from '@/app/manager/store/store_context/useManagerStoreQueries';
+
 export function useManagerStoreLogic(initialData?: StoreInitialData | null): StoreContextType {
   const { confirm } = useConfirm();
   const router = useRouter();
@@ -47,87 +44,28 @@ export function useManagerStoreLogic(initialData?: StoreInitialData | null): Sto
   const setStartDate = useCallback((val: string) => setUrlParam('startDate', val || null), [setUrlParam]);
   const setEndDate = useCallback((val: string) => setUrlParam('endDate', val || null), [setUrlParam]);
   const setSortOrder = useCallback((val: 'ASC' | 'DESC') => setUrlParam('sortOrder', val), [setUrlParam]);
-  const [products, setProducts] = useState<Product[]>(initialData?.products || []);
-  const [orders, setOrders] = useState<Order[]>(initialData?.orders || []);
-  const [totalOrders, setTotalOrders] = useState<number>(initialData?.totalOrders || 0);
-  const [summary, setSummary] = useState<StoreSummary | null>(initialData?.summary || null);
-  const [fetchState, setFetchState] = useState<FetchState>(initialData ? 'success' : 'loading');
+
   const [saving, setSaving] = useState(false);
   const isFirstRender = React.useRef(true);
- 
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
   const [printData, setPrintData] = useState<ManagerReceiptData | null>(null);
 
   const showToast = useCallback((msg: string, t: ToastType) => setToast({ message: msg, type: t }), []);
   const hideToast = useCallback(() => setToast(null), []);
 
- const loadAll = useCallback(async () => {
- setFetchState('loading');
- try {
-      const params: Record<string, string> = { 
-        limit: '10', 
-        page: currentPage.toString(),
-        sortOrder
-      };
-      if (debouncedSearch) params.search = debouncedSearch;
-      if (startDate) params.startDate = startDate;
-      if (endDate) params.endDate = endDate;
-
-      const [productsRes, ordersRes, summaryRes] = await Promise.all([
-        storeApi.getProducts(params),
-        storeApi.getOrders(params),
-        storeApi.getStoreSummary(),
-      ]);
-      let fetchedProducts = Array.isArray(productsRes.data) ? productsRes.data : (productsRes.data as { products?: unknown[] }).products as Product[] || [];
-      let fetchedOrders = ordersRes.data.orders || [];
-
-      if (debouncedSearch || categoryFilter !== 'ALL' || stockFilter !== 'ALL') {
-        const q = debouncedSearch.toLowerCase();
-        fetchedProducts = fetchedProducts.filter((p: Product) => {
-          const matchesSearch = !debouncedSearch || p.name?.toLowerCase().includes(q) || (p.category && p.category?.toLowerCase().includes(q));
-          const matchesCategory = categoryFilter === 'ALL' || p.category === categoryFilter;
-          const matchesStock = stockFilter === 'ALL' || (stockFilter === 'IN_STOCK' ? p.stock > 0 : p.stock === 0);
-          return matchesSearch && matchesCategory && matchesStock;
-        });
-        
-        if (debouncedSearch) {
-          fetchedOrders = fetchedOrders.filter((o: Order) => 
-            o.id?.toLowerCase().includes(q) || (o.notes && o.notes?.toLowerCase().includes(q))
-          );
-        }
-      }
-
-      if (startDate) {
-        const start = new Date(startDate).getTime();
-        fetchedOrders = fetchedOrders.filter((o: Order) => new Date(o.createdAt).getTime() >= start);
-      }
-      if (endDate) {
-        const end = new Date(endDate).getTime();
-        fetchedOrders = fetchedOrders.filter((o: Order) => new Date(o.createdAt).getTime() <= end + 86400000);
-      }
-
-      fetchedOrders.sort((a, b) => {
-        const dateA = new Date(a.createdAt).getTime();
-        const dateB = new Date(b.createdAt).getTime();
-        return sortOrder === 'ASC' ? dateA - dateB : dateB - dateA;
-      });
-
-      setProducts(fetchedProducts);
-      setOrders(fetchedOrders);
-      setTotalOrders(ordersRes.data.total || 0);
-      setSummary(summaryRes.data);
- } catch (e) { 
- showToast((e as Error).message, 'error'); 
- setFetchState('error');
-  } finally { 
-  setFetchState('success'); 
-  }
-  }, [showToast, currentPage, debouncedSearch, categoryFilter, stockFilter, startDate, endDate, sortOrder]);
+  const {
+    products, setProducts,
+    orders,
+    totalOrders,
+    summary, setSummary,
+    fetchState, loadAll
+  } = useManagerStoreQueries(
+    currentPage, sortOrder, debouncedSearch, startDate, endDate, categoryFilter, stockFilter, showToast, initialData
+  );
 
   useEffect(() => { 
     if (isFirstRender.current) {
       isFirstRender.current = false;
-      
     }
     loadAll(); 
   }, [loadAll, initialData]);
@@ -137,7 +75,7 @@ export function useManagerStoreLogic(initialData?: StoreInitialData | null): Sto
     setSummary,
     showToast,
     setSaving,
-    confirm as any
+    confirm as unknown as Parameters<typeof useManagerStoreProducts>[4]
   );
 
   const orderLogic = useManagerStoreOrder(

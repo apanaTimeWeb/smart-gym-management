@@ -3,7 +3,7 @@
 
 import { useDashboardContext } from '@/app/manager/dashboard/dashboard_context/ManagerDashboardContext';
 import ManagerStatCard from '@/app/manager/manager_components/ManagerShared/ManagerStatCard';
-import { formatCurrency } from '@/app/manager/dashboard/dashboard_utils/ManagerDashboardSharedConstants';
+import { formatCurrency, formatKPI } from '@/lib/formatters';
 import { Users, DollarSign, TrendingUp, AlertCircle, CheckCircle, Clock, UserCheck, ShoppingCart, Snowflake, TrendingDown, Target } from 'lucide-react';
 
 export default function ManagerDashboardKPIs() {
@@ -22,7 +22,7 @@ export default function ManagerDashboardKPIs() {
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <ManagerStatCard
           title="Today's Members"
-          value={s.activeMembers.toLocaleString()}
+          value={formatKPI(s.activeMembers)}
           change={`${s.totalMembers ? Math.round((s.activeMembers / s.totalMembers) * 100) : 0}% of total`}
           changeType="neutral"
           icon={Users}
@@ -61,7 +61,7 @@ export default function ManagerDashboardKPIs() {
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mt-6">
         <ManagerStatCard
           title="New Registrations"
-          value={Math.round(s.newMembersThisMonth * multiplier).toLocaleString()}
+          value={formatKPI(Math.round(s.newMembersThisMonth * multiplier))}
           change={timeLabel}
           changeType="up"
           icon={TrendingUp}
@@ -70,7 +70,7 @@ export default function ManagerDashboardKPIs() {
         />
         <ManagerStatCard
           title="Today's Attendance"
-          value={s.todayAttendance?.toLocaleString() || '0'}
+          value={s.todayAttendance ? formatKPI(s.todayAttendance) : '0'}
           change="Checked-in"
           changeType="neutral"
           icon={Clock}
@@ -79,7 +79,7 @@ export default function ManagerDashboardKPIs() {
         />
         <ManagerStatCard
           title="Store Products"
-          value={s.totalProducts.toLocaleString()}
+          value={formatKPI(s.totalProducts)}
           change={s.lowStockCount > 0 ? `${s.lowStockCount} low stock` : 'All stocked'}
           changeType={s.lowStockCount > 0 ? 'down' : 'up'}
           icon={ShoppingCart}
@@ -88,7 +88,7 @@ export default function ManagerDashboardKPIs() {
         />
         <ManagerStatCard
           title={inqLabel}
-          value={Math.round(s.newInquiries * multiplier).toLocaleString()}
+          value={formatKPI(Math.round(s.newInquiries * multiplier))}
           change={`${s.totalInquiries} total`}
           changeType="up"
           icon={CheckCircle}
@@ -128,7 +128,7 @@ export default function ManagerDashboardKPIs() {
         />
         <ManagerStatCard
           title="Frozen Memberships"
-          value={(s.frozenMembershipsCount || 0).toLocaleString()}
+          value={formatKPI(s.frozenMembershipsCount || 0)}
           change="Currently on hold"
           changeType="neutral"
           icon={Snowflake}

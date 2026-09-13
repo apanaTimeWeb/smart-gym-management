@@ -1,31 +1,20 @@
-// RESPONSIBILITY: Custom hook encapsulating all business logic, state, and API interactions for the Inquiries module.
-// DATA FLOW: inquiriesApi -> useManagerInquiriesLogic -> ManagerInquiriesContext -> Inquiries components
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useDebounce } from '@/app/manager/manager_utils/useDebounce';
-import { inquiriesApi } from '@/app/manager/inquiries/inquiries_api/ManagerInquiriesApi';
-import type { Inquiry, InquiryStats, InquiriesContextType } from '@/app/manager/inquiries/inquiries_types/ManagerInquiriesTypes';
-import { FetchState } from '@/app/manager/inquiries/inquiries_types/ManagerInquiriesTypes';
+import type { Inquiry, InquiriesContextType } from '@/app/manager/inquiries/inquiries_types/ManagerInquiriesTypes';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import type { MessageType, ManagerMessageRecipient } from '@/app/manager/manager_components/ManagerFeedback/ManagerMessageModal';
 import { EMPTY_INQUIRY_FORM, generateDefaultMessage, type InquiryFormValues } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesSharedConstants';
-import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
-import { useManagerInquiriesMutations } from './useManagerInquiriesMutations';
+import { useInquiriesQuery, useInquiryStatsQuery } from '@/app/manager/inquiries/inquiries_api/useManagerInquiriesQueries';
+import { useManagerInquiriesMutations } from '@/app/manager/inquiries/inquiries_api/useManagerInquiriesMutations';
 
 /**
  * Hook to manage inquiries data, filtering state, and all CRUD operations.
  */
 export function useManagerInquiriesLogic(): InquiriesContextType {
-  const { confirm } = useConfirm();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-
-  const [inquiries, setInquiries] = useState<Inquiry[]>([]);
-  const [stats, setStats] = useState<InquiryStats | null>(null);
-  const [fetchState, setFetchState] = useState<FetchState>(FetchState.LOADING);
-  const [error, setError] = useState('');
-  const [totalInquiries, setTotalInquiries] = useState(0);
 
   // Read filter state from URL (Rule 42 — URL as State)
   const search = searchParams.get('search') || '';
@@ -55,7 +44,6 @@ export function useManagerInquiriesLogic(): InquiriesContextType {
   const [showModal, setShowModal] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [editData, setEditData] = useState<InquiryFormValues | null>(null);
-  const [saving, setSaving] = useState(false);
 
   const [msgModal, setMsgModal] = useState<{ open: boolean; recipient: ManagerMessageRecipient; type: MessageType; message: string; subject?: string } | null>(null);
   const closeMsg = useCallback(() => setMsgModal(null), []);
@@ -63,6 +51,19 @@ export function useManagerInquiriesLogic(): InquiriesContextType {
   const [convertLead, setConvertLead] = useState<Inquiry | null>(null);
   const openConvert = useCallback((inq: Inquiry) => setConvertLead(inq), []);
   const closeConvert = useCallback(() => setConvertLead(null), []);
+
+  // React Query data fetching
+  const queryParams: Record<string, string> = { limit: '10', page: currentPage.toString() };
+  if (debouncedSearch) queryParams.search = debouncedSearch;
+  if (statusFilter !== 'All') queryParams.status = statusFilter;
+
+  const { data: inqData, isLoading: isListLoading, isError: isListError } = useInquiriesQuery(queryParams);
+  const { data: statsData, isLoading: isStatsLoading } = useInquiryStatsQuery();
+  
+  const inquiries = inqData?.inquiries || [];
+  const totalInquiries = inqData?.total || 0;
+  const stats = statsData || null;
+  const isLoading = isListLoading || isStatsLoading;
 
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const toggleSelectAll = useCallback((selectAll: boolean) => {
@@ -81,53 +82,6 @@ export function useManagerInquiriesLogic(): InquiriesContextType {
     setBulkMsgModal({ open: true, type, recipients });
   }, [inquiries, selectedIds]);
   const closeBulkMsg = useCallback(() => setBulkMsgModal(null), []);
-
-  const loadAll = useCallback(async () => {
-    setFetchState(FetchState.LOADING);
-    setError('');
-    try {
-      const params: Record<string, string> = { limit: '10', page: currentPage.toString() };
-      if (debouncedSearch) params.search = debouncedSearch;
-      if (statusFilter !== 'All') params.status = statusFilter;
-
-      const [inqRes, statsRes] = await Promise.all([
-        inquiriesApi.getAll(params),
-        inquiriesApi.getStats(),
-      ]);
-      
-      let fetchedInquiries = inqRes.data.inquiries || [];
-      
-      // Client-side filtering to exclude CONVERTED leads by default, and handle mock data filtering
-      if (statusFilter === 'All') {
-        fetchedInquiries = fetchedInquiries.filter(i => i.status !== 'CONVERTED');
-      } else {
-        fetchedInquiries = fetchedInquiries.filter(i => i.status === statusFilter);
-      }
-      
-      if (debouncedSearch) {
-        const q = debouncedSearch.toLowerCase();
-        fetchedInquiries = fetchedInquiries.filter(i => 
-          (i.name && i.name?.toLowerCase().includes(q)) || 
-          (i.phone && i.phone?.includes(debouncedSearch))
-        );
-      }
-
-      setInquiries(fetchedInquiries);
-      setTotalInquiries(inqRes.data.total || fetchedInquiries.length);
-      setStats(statsRes.data);
-      setSelectedIds([]);
-      setFetchState(FetchState.SUCCESS);
-    } catch (e) {
-      const msg = (e as Error).message;
-      setError(msg);
-      showToast(msg, 'error');
-      setFetchState(FetchState.ERROR);
-    }
-  }, [showToast, currentPage, debouncedSearch, statusFilter]);
-
-  // Refetch when URL-driven filters change
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => { setTimeout(() => loadAll(), 0); }, [loadAll]);
 
   const openAdd = useCallback(() => {
     setEditId(null);
@@ -149,10 +103,29 @@ export function useManagerInquiriesLogic(): InquiriesContextType {
     setShowModal(true);
   }, []);
 
+  const { createInquiry, updateInquiry, deleteInquiry: removeInq, isCreating, isUpdating } = useManagerInquiriesMutations({
+    showToast,
+    onSuccessCallback: () => {
+      setShowModal(false);
+      setConvertLead(null);
+    }
+  });
 
-  const { saveInquiry, deleteInquiry, updateStatus } = useManagerInquiriesMutations(
-    inquiries, setInquiries, setStats, editId, setShowModal, setSaving, showToast, statusFilter, convertLead, setConvertLead
-  );
+  const saveInquiry = async (data: InquiryFormValues) => {
+    if (editId) {
+      updateInquiry({ id: editId, data });
+    } else {
+      createInquiry(data);
+    }
+  };
+
+  const deleteInquiry = async (id: string) => {
+    removeInq(id);
+  };
+
+  const updateStatus = async (id: string, status: string) => {
+    updateInquiry({ id, data: { status: status as InquiryFormValues['status'] } });
+  };
 
   const openMsg = useCallback((inq: Inquiry, type: MessageType) => {
     const msg = generateDefaultMessage(inq.name, inq.interest);
@@ -160,10 +133,10 @@ export function useManagerInquiriesLogic(): InquiriesContextType {
   }, []);
 
   return {
-    inquiries, stats, fetchState, error, toast, showToast, hideToast, loadAll, totalInquiries,
+    inquiries, stats, isLoading, isError: isListError, toast, showToast, hideToast, totalInquiries,
     search, debouncedSearch, setSearch, statusFilter, setStatusFilter, dateFilter, setDateFilter, currentPage, setCurrentPage,
     selectedIds, toggleSelectAll, toggleSelectOne, clearSelection,
-    showModal, setShowModal, editId, editData, saving,
+    showModal, setShowModal, editId, editData, saving: isCreating || isUpdating,
     openAdd, openEdit, saveInquiry, deleteInquiry, updateStatus,
     msgModal, openMsg, closeMsg,
     bulkMsgModal, openBulkMsg, closeBulkMsg,

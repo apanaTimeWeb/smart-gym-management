@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { EMPTY_MEMBER_FORM, formatCurrency } from './ManagerMembersSharedConstants';
+import { EMPTY_MEMBER_FORM, formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 
 describe('ManagerMembersSharedConstants', () => {
   it('should format currency correctly', () => {

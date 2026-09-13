@@ -1,11 +1,12 @@
 // RESPONSIBILITY: Provides local UI state (filtering, pagination, modal visibility) for the Expenses module.
 'use client';
 
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { createContext, useContext, useState, useCallback, useMemo } from 'react';
 import type { ReactNode } from 'react';
-import { useManagerExpensesStore } from '@/app/manager/expenses/expenses_store/useManagerExpensesStore';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import type { Expense } from '@/app/manager/expenses/expenses_types/ManagerExpensesTypes';
 import toast from 'react-hot-toast';
+import { useSaveExpenseMutation, useDeleteExpenseMutation } from '@/app/manager/expenses/expenses_api/useManagerExpensesMutations';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 
 interface ExpensesContextValue {
@@ -34,44 +35,52 @@ interface ExpensesContextValue {
 const ManagerExpensesContext = createContext<ExpensesContextValue | undefined>(undefined);
 
 export function ExpensesProvider({ children }: { children: ReactNode }) {
-  const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState('All');
-  const [currentPage, setCurrentPage] = useState(1);
-  
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const search = searchParams.get('search') || '';
+  const statusFilter = searchParams.get('status') || 'All';
+  const currentPage = parseInt(searchParams.get('page') || '1', 10);
+
+  const createQueryString = useCallback((name: string, value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (value && value !== 'All' && value !== '1') {
+      params.set(name, value);
+    } else {
+      params.delete(name);
+    }
+    return params.toString();
+  }, [searchParams]);
+
+  const setSearch = (v: string) => router.replace(`${pathname}?${createQueryString('search', v)}`);
+  const setStatusFilter = (v: string) => router.replace(`${pathname}?${createQueryString('status', v)}`);
+  const setCurrentPage = (v: number) => router.replace(`${pathname}?${createQueryString('page', v.toString())}`);
+
   const [showModal, setShowModal] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [editData, setEditData] = useState<Partial<Expense> | null>(null);
 
-  const { loadAll, saveExpense: storeSave, deleteExpense: storeDelete, saving } = useManagerExpensesStore();
-
-  const fetchWithParams = useCallback(() => {
-    loadAll({
-      search,
-      status: statusFilter !== 'All' ? statusFilter : '',
-      page: currentPage.toString(),
-      limit: MANAGER_ITEMS_PER_PAGE.toString()
-    });
-  }, [search, statusFilter, currentPage, loadAll]);
-
-  useEffect(() => {
-    fetchWithParams();
-  }, [fetchWithParams]);
+  const saveMutation = useSaveExpenseMutation();
+  const deleteMutation = useDeleteExpenseMutation();
+  
+  const saving = saveMutation.isPending || deleteMutation.isPending;
 
   const openAdd = () => {
     setEditId(null);
-    setEditData({ status: 'PAID', date: new Date().toISOString().split('T')[0] });
+    setEditData({ status: 'PAID', date: new Date().toISOString().split('T')[0] || '' });
     setShowModal(true);
   };
 
   const openEdit = (e: Expense) => {
     setEditId(e.id);
-    setEditData({ ...e, date: e.date.split('T')[0] }); // Format for date input
+    setEditData({ ...e, date: e.date.split('T')[0] || '' }); // Format for date input
     setShowModal(true);
   };
 
   const saveExpense = async (data: Partial<Expense>) => {
     try {
-      await storeSave({ ...data, id: editId || undefined });
+      await saveMutation.mutateAsync({ ...data, id: editId || undefined });
       toast.success(`Expense ${editId ? 'updated' : 'added'} successfully.`);
       setShowModal(false);
     } catch (e: unknown) {
@@ -81,7 +90,7 @@ export function ExpensesProvider({ children }: { children: ReactNode }) {
 
   const deleteExpense = async (id: string) => {
     try {
-      await storeDelete(id);
+      await deleteMutation.mutateAsync(id);
       toast.success('Expense deleted successfully.');
     } catch (e: unknown) {
       toast.error(e instanceof Error ? e.message : 'Failed to delete expense');
@@ -90,7 +99,7 @@ export function ExpensesProvider({ children }: { children: ReactNode }) {
 
   const markAsPaid = async (id: string) => {
     try {
-      await storeSave({ id, status: 'PAID' });
+      await saveMutation.mutateAsync({ id, status: 'PAID' });
       toast.success('Expense marked as paid.');
     } catch (e: unknown) {
       toast.error(e instanceof Error ? e.message : 'Failed to mark as paid');
@@ -102,7 +111,7 @@ export function ExpensesProvider({ children }: { children: ReactNode }) {
     // Real implementation would generate and download CSV
   };
 
-  const value = {
+  const value = useMemo(() => ({
     search, setSearch,
     statusFilter, setStatusFilter,
     currentPage, setCurrentPage,
@@ -111,7 +120,7 @@ export function ExpensesProvider({ children }: { children: ReactNode }) {
     openAdd, openEdit,
     saveExpense, deleteExpense, markAsPaid, exportExpenses,
     saving
-  };
+  }), [search, statusFilter, currentPage, showModal, editId, editData, saving]);
 
   return <ManagerExpensesContext.Provider value={value}>{children}</ManagerExpensesContext.Provider>;
 }

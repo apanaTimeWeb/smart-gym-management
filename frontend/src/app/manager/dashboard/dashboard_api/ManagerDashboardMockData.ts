@@ -1,0 +1,61 @@
+import type { DashboardStats } from '@/app/manager/dashboard/dashboard_types/ManagerDashboardTypes';
+
+export const MOCK_DASHBOARD_STATS: DashboardStats = {
+  totalMembers: 1245,
+  activeMembers: 1100,
+  newMembersThisMonth: 45,
+  totalRevenue: 450000,
+  monthlyRevenue: 85000,
+  pendingPayments: 12000,
+  totalStaff: 25,
+  activeStaff: 22,
+  totalProducts: 450,
+  lowStockCount: 12,
+  totalInquiries: 156,
+  newInquiries: 34,
+  todayAttendance: 245,
+  trainerAttendance: { present: 18, total: 20 },
+  memberGrowth: [
+    { month: 'Jan', count: 1100 },
+    { month: 'Feb', count: 1150 },
+    { month: 'Mar', count: 1200 },
+    { month: 'Apr', count: 1220 },
+    { month: 'May', count: 1245 },
+  ],
+  revenueChart: [
+    { month: 'Jan', revenue: 75000 },
+    { month: 'Feb', revenue: 80000 },
+    { month: 'Mar', revenue: 78000 },
+    { month: 'Apr', revenue: 82000 },
+    { month: 'May', revenue: 85000 },
+  ],
+  membersByPlan: [
+    { plan: 'Annual', count: 450 },
+    { plan: 'Half-Yearly', count: 300 },
+    { plan: 'Quarterly', count: 250 },
+    { plan: 'Monthly', count: 245 },
+  ],
+  membersByStatus: { active: 1100, pending: 45, expired: 100 },
+  recentMembers: [
+    { id: '1', name: 'John Doe', plan: 'Annual', status: 'Active', joinDate: '2024-05-01', paidAmount: 15000 },
+    { id: '2', name: 'Jane Smith', plan: 'Quarterly', status: 'Pending', joinDate: '2024-05-05', paidAmount: 0 },
+    { id: '3', name: 'Bob Johnson', plan: 'Monthly', status: 'Active', joinDate: '2024-05-10', paidAmount: 1500 },
+  ],
+  recentPayments: [
+    { id: '1', invoiceNumber: 'INV-001', amount: 15000, method: 'UPI', paidAt: '2024-05-01T10:00:00Z', member: { name: 'John Doe' } },
+    { id: '2', invoiceNumber: 'INV-002', amount: 1500, method: 'Card', paidAt: '2024-05-10T14:30:00Z', member: { name: 'Bob Johnson' } },
+  ],
+  pendingPaymentsList: [
+    { id: '2', name: 'Jane Smith', pendingAmount: 4000, expiryDate: '2024-06-05' },
+    { id: '4', name: 'Alice Brown', pendingAmount: 15000, expiryDate: '2024-06-15' },
+  ],
+  expiringMemberships: [
+    { id: '5', name: 'Charlie Davis', pendingAmount: 0, expiryDate: '2024-05-20' },
+    { id: '6', name: 'Eve Wilson', pendingAmount: 0, expiryDate: '2024-05-25' },
+  ],
+  churnRate: 4.2,
+  revenueGrowthPercent: 12.5,
+  todayCollection: 4500,
+  frozenMembershipsCount: 15,
+  totalPTRevenue: 25000,
+};

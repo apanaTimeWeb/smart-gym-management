@@ -1,22 +1,26 @@
 // RESPONSIBILITY: Custom hook encapsulating all business logic, async API calls, URL-synced state (search, page), and data for the Sales & Reports module. Feeds ManagerSalesContext.
-// DATA FLOW: salesApi → useManagerSalesLogic → ManagerSalesContext → Sales components
-import { useState, useCallback, useEffect } from 'react';
+// DATA FLOW: useManagerSalesQueries → useManagerSalesLogic → ManagerSalesContext → Sales components
+import { useState, useCallback, useMemo } from 'react';
 import { useDebounce } from '@/app/manager/manager_utils/useDebounce';
 import { type SalesTab, type DateFilter } from '@/app/manager/sales/sales_utils/ManagerSalesSharedConstants';
-import type { SalesContextType, SalesInitialData, FetchState, OverviewDataPoint, MembershipReportItem, MembershipTotals, PendingPaymentMember } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
-import type { Member } from '@/app/manager/members/members_types/ManagerMembersTypes';
-import { salesApi } from '@/app/manager/sales/sales_api/ManagerSalesApi';
+import type { SalesContextType, SalesInitialData, FetchState } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import { 
+  useSalesOverviewQuery, 
+  useMembershipReportQuery, 
+  usePendingPaymentsQuery, 
+  useAllMembershipsQuery 
+} from '@/app/manager/sales/sales_api/useManagerSalesQueries';
 
 export function useManagerSalesLogic(initialData?: SalesInitialData | null): SalesContextType {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
-  const tab = (searchParams.get('tab') || 'Collect Payment') as SalesTab;
+  const tab = (searchParams.get('tab') || 'Revenue Overview') as SalesTab;
   const dateFilter = (searchParams.get('dateFilter') || 'This Month') as DateFilter;
-  const [fetchState, setFetchState] = useState<FetchState>(initialData ? 'success' : 'loading');
+  
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
   const search = searchParams.get('search') || '';
@@ -55,8 +59,12 @@ export function useManagerSalesLogic(initialData?: SalesInitialData | null): Sal
   }, [router, searchParams, pathname]);
 
   const setDateFilter = useCallback((val: DateFilter) => {
-    // Keep it for backward compatibility if needed by types, but it's not used by dropdown
-  }, []);
+    const params = new URLSearchParams(searchParams.toString());
+    if (val && val !== 'This Month') params.set('dateFilter', val);
+    else params.delete('dateFilter');
+    params.set('page', '1');
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [router, searchParams, pathname]);
 
   const setCurrentPage = useCallback((page: number) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -69,69 +77,30 @@ export function useManagerSalesLogic(initialData?: SalesInitialData | null): Sal
     setTimeout(() => setToast(null), 3000);
   }, []);
 
-  const [overviewData, setOverviewData] = useState<OverviewDataPoint[]>(initialData?.overviewData || []);
-  const [membershipReport, setMembershipReport] = useState<MembershipReportItem[]>(initialData?.membershipReport || []);
-  const [membershipTotals, setMembershipTotals] = useState<MembershipTotals>(initialData?.membershipTotals || { activeCount: 0, revenue: 0 });
-  const [pendingPayments, setPendingPayments] = useState<PendingPaymentMember[]>((initialData?.pendingPayments as PendingPaymentMember[]) || []);
-  const [pendingTotal, setPendingTotal] = useState(initialData?.pendingTotal || 0);
-  const [allMemberships, setAllMemberships] = useState<Member[]>(initialData?.allMemberships || []);
-  const [allMembershipsTotal, setAllMembershipsTotal] = useState(initialData?.allMembershipsTotal || 0);
-
-
-
-  const loadAll = useCallback(async () => {
-    setFetchState('loading');
-    try {
-      const range = searchParams.get('range') || 'this_month';
-      const params: Record<string, string> = { limit: '10', page: currentPage.toString(), range };
-      if (range === 'custom') {
-        const customStartDate = searchParams.get('startDate');
-        const customEndDate = searchParams.get('endDate');
-        if (customStartDate) params.startDate = customStartDate;
-        if (customEndDate) params.endDate = customEndDate;
-      }
-      if (debouncedSearch) params.search = debouncedSearch;
-
-      const [overviewRes, reportRes, pendingRes, allRes] = await Promise.all([
-        salesApi.getOverview(params),
-        salesApi.getMembershipReport(params),
-        salesApi.getPendingPayments(params),
-        salesApi.getAllMemberships(params)
-      ]);
-
-      let fetchedOverview = Array.isArray(overviewRes.data) ? overviewRes.data : overviewRes.data?.monthlyRevenue || [];
-      let fetchedReport = Array.isArray(reportRes.data) ? reportRes.data : (reportRes.data?.report || []);
-      let fetchedPending = (pendingRes.data?.members || []) as PendingPaymentMember[];
-      let fetchedAll = allRes.data?.members || [];
-
-      if (debouncedSearch) {
-        const q = debouncedSearch.toLowerCase();
-        fetchedReport = fetchedReport.filter((m: MembershipReportItem) => m.name && m.name?.toLowerCase().includes(q));
-        fetchedPending = fetchedPending.filter((m: PendingPaymentMember) => m.name?.toLowerCase().includes(q) || (m.phone && m.phone?.includes(q)));
-        fetchedAll = fetchedAll.filter((m: Member) => m.name?.toLowerCase().includes(q) || m.phone?.includes(q) || (m.email && m.email?.toLowerCase().includes(q)));
-      }
-
-      setOverviewData(fetchedOverview);
-      setMembershipReport(fetchedReport);
-      setMembershipTotals(reportRes.data?.totals || { activeCount: 0, revenue: 0, totalReceivable: 0, totalReceived: 0, remaining: 0, refunds: 0 });
-      
-      setPendingPayments(fetchedPending);
-      setPendingTotal(pendingRes.data?.total || 0);
-      
-      setAllMemberships(fetchedAll);
-      setAllMembershipsTotal(allRes.data?.total || 0);
-      
-      setFetchState('success');
-    } catch (e: unknown) {
-      showToast(e instanceof Error ? e.message : 'Failed to fetch sales data', 'error');
-      setFetchState('error');
+  const queryParams = useMemo(() => {
+    const range = searchParams.get('range') || 'this_month';
+    const params: Record<string, string> = { limit: '10', page: currentPage.toString(), range };
+    if (range === 'custom') {
+      const customStartDate = searchParams.get('startDate');
+      const customEndDate = searchParams.get('endDate');
+      if (customStartDate) params.startDate = customStartDate;
+      if (customEndDate) params.endDate = customEndDate;
     }
-  }, [currentPage, debouncedSearch, dateFilter, showToast]);
+    if (debouncedSearch) params.search = debouncedSearch;
+    return params;
+  }, [currentPage, debouncedSearch, searchParams]);
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    loadAll();
-  }, [loadAll]);
+  // TanStack Queries
+  const { data: overviewData = initialData?.overviewData || [], isLoading: isLoadingOverview, isError: isErrorOverview } = useSalesOverviewQuery(queryParams);
+  const { data: reportData, isLoading: isLoadingReport, isError: isErrorReport } = useMembershipReportQuery(queryParams);
+  const { data: pendingData, isLoading: isLoadingPending, isError: isErrorPending } = usePendingPaymentsQuery(queryParams);
+  const { data: allData, isLoading: isLoadingAll, isError: isErrorAll } = useAllMembershipsQuery(queryParams);
+
+  const fetchState: FetchState = (isLoadingOverview || isLoadingReport || isLoadingPending || isLoadingAll) 
+    ? 'loading' 
+    : (isErrorOverview || isErrorReport || isErrorPending || isErrorAll) 
+      ? 'error' 
+      : 'success';
 
   return {
     tab, setTab,
@@ -141,14 +110,15 @@ export function useManagerSalesLogic(initialData?: SalesInitialData | null): Sal
     customEndDate, setCustomEndDate,
     currentPage, setCurrentPage,
     overviewData,
-    membershipReport,
-    membershipTotals,
-    pendingPayments,
-    pendingTotal,
-    allMemberships,
-    allMembershipsTotal,
+    membershipReport: reportData?.report || initialData?.membershipReport || [],
+    membershipTotals: reportData?.totals || initialData?.membershipTotals || { activeCount: 0, revenue: 0, totalReceivable: 0, totalReceived: 0, remaining: 0, refunds: 0 },
+    pendingPayments: pendingData?.members || initialData?.pendingPayments || [],
+    pendingTotal: pendingData?.total || initialData?.pendingTotal || 0,
+    allMemberships: allData?.members || initialData?.allMemberships || [],
+    allMembershipsTotal: allData?.total || initialData?.allMembershipsTotal || 0,
+    
     fetchState,
-    loadAll,
+    loadAll: async () => {}, // No-op, data fetching is now handled by TanStack Query automatically
     toast,
     showToast
   };

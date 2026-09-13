@@ -2,10 +2,10 @@
 // DATA FLOW: page.tsx (SSR) → ManagerDashboardMain → useManagerDashboardLogic → DashboardContext → KPI/Chart components
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { dashboardApi } from '@/app/manager/dashboard/dashboard_api/ManagerDashboardApi';
 import type { DashboardContextType, FetchState, DashboardStats, TimeRange } from '@/app/manager/dashboard/dashboard_types/ManagerDashboardTypes';
+import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/useManagerDashboardQueries';
 
 /**
  * Hook to manage dashboard data fetching and network state tracking.
@@ -14,9 +14,11 @@ export function useManagerDashboardLogic(initialData?: DashboardStats | null): D
   const searchParams = useSearchParams();
   const range = searchParams.get('range') || 'this_month';
 
-  const [stats, setStats] = useState<DashboardStats | null>(initialData || null);
-  const [status, setStatus] = useState<FetchState>(initialData ? 'success' : 'loading');
-  const [error, setError] = useState('');
+  const { data: statsData, isLoading, isError, error: queryError } = useDashboardStatsQuery(range);
+
+  const stats = useMemo(() => statsData || initialData || null, [statsData, initialData]);
+  const status: FetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
+  const error = isError ? (queryError as Error).message : '';
 
   // Not used in UI but kept to satisfy context type contract for now
   const timeRange = 'monthly' as TimeRange;
@@ -24,21 +26,6 @@ export function useManagerDashboardLogic(initialData?: DashboardStats | null): D
   const startDate = '';
   const endDate = '';
   const setCustomDateRange = () => {};
-
-  // Fetch only when no SSR initialData was passed from page.tsx; initialData in deps prevents re-fetch on SSR hydration
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setStatus('loading');
-    dashboardApi.getStats(range)
-      .then(res => {
-        setStats(res.data);
-        setStatus('success');
-      })
-      .catch(e => {
-        setError(e.message);
-        setStatus('error');
-      });
-  }, [initialData, range]); 
 
   return { stats, status, error, timeRange, setTimeRange, startDate, endDate, setCustomDateRange };
 }

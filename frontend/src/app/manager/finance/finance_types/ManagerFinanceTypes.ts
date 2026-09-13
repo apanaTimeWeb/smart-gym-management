@@ -38,7 +38,6 @@ export interface FinanceContextType {
   setDateRange: (start: string, end: string) => void;
   // Export
   exportPayments: (format: 'csv' | 'pdf') => void;
-  savePayment: (data: AddPaymentFormValues) => Promise<void>;
 }
 
 // ─── Payment ─────────────────────────────────────────────────────────────────

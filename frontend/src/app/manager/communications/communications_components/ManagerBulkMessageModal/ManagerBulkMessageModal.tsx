@@ -109,7 +109,7 @@ export default function ManagerBulkMessageModal({
           style={{ background: accentColor }}
         >
           <div className="flex flex-wrap items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center">
               <Icon size={18} color="white" />
             </div>
             <div>
@@ -121,7 +121,7 @@ export default function ManagerBulkMessageModal({
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
+            className="w-8 h-8 rounded-full bg-primary/20 hover:bg-primary/30 flex items-center justify-center transition-colors"
           >
             <X size={16} color="white" />
           </button>

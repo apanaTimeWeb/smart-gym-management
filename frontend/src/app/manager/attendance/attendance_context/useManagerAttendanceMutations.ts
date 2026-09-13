@@ -3,6 +3,7 @@ import { attendanceApi } from '@/app/manager/attendance/attendance_api/ManagerAt
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import type { AttendanceFormValues } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
 import { EMPTY_ATTENDANCE_FORM } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
+import type { Attendance } from '@/app/manager/attendance/attendance_types/ManagerAttendanceTypes';
 import type { Member } from '@/app/manager/members/members_types/ManagerMembersTypes';
 import type { Staff } from '@/app/manager/hr/hr_types/ManagerHrTypes';
 
@@ -22,13 +23,14 @@ export function useManagerAttendanceMutations(
       const startDate = new Date(data.date);
       const endDate = (data.status === 'LEAVE' && data.endDate) ? new Date(data.endDate) : startDate;
 
-      const existingRes = await attendanceApi.getAll({ limit: '1000' }) as any;
-      const existingRecords = existingRes.data?.attendance || existingRes.data?.attendances || existingRes.data || [];
+      const existingRes = await attendanceApi.getAll({ limit: '1000' });
+      const resData = existingRes?.data;
+      const existingRecords: Attendance[] = resData?.attendances || resData?.attendance || [];
 
       for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-        const dateStr = d.toISOString().split('T')[0];
+        const dateStr = d.toISOString().split('T')[0] || '';
         
-        const isDuplicate = existingRecords.some((r: any) => {
+        const isDuplicate = existingRecords.some((r: Attendance) => {
           if (data.type === 'MEMBER') {
             return String(r.memberId) === String(data.memberId) && typeof r.date === 'string' && r.date.startsWith(dateStr);
           } else {

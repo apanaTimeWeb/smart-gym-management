@@ -12,8 +12,10 @@ export type PendingPaymentMember = Omit<Member, 'plan'> & {
 };
 
 export interface OverviewDataPoint {
-  date: string;
+  month: string;
   revenue: number;
+  storeRevenue?: number;
+  newMembers?: number;
 }
 
 export interface MembershipReportItem {

@@ -10,8 +10,9 @@ export default function ManagerProfileAttendance() {
 
   if (!selectedMember) return null;
 
-  const presentDays = att.filter((a: any) => a.status === 'P').length;
-  const absentDays = att.filter((a: any) => a.status === 'A').length;
+  const attendanceData = att as Array<{ day?: number; status?: string }>;
+  const presentDays = attendanceData.filter((a) => a.status === 'P').length;
+  const absentDays = attendanceData.filter((a) => a.status === 'A').length;
   const attPct = att.length > 0 ? Math.round((presentDays / att.length) * 100) : 0;
 
   return (
@@ -21,8 +22,8 @@ export default function ManagerProfileAttendance() {
           { label: 'Present', value: presentDays, color: 'text-success dark:text-success', bg: 'bg-success-bg ' },
           { label: 'Absent', value: absentDays, color: 'text-danger dark:text-danger', bg: 'bg-danger-bg dark:bg-danger-bg' },
           { label: 'Attendance %', value: `${attPct}%`, color: attPct >= 75 ? 'text-success dark:text-success' : 'text-danger dark:text-danger', bg: 'bg-input' },
-        ].map((s, i) => (
-          <div key={i} className={`${s.bg} rounded-xl p-4 border border-border`}>
+        ].map((s) => (
+          <div key={s.label} className={`${s.bg} rounded-xl p-4 border border-border`}>
             <p className="text-xs text-secondary mb-1">{s.label}</p>
             <p className={`text-2xl font-bold ${s.color}`}>{s.value}</p>
           </div>
@@ -39,7 +40,7 @@ export default function ManagerProfileAttendance() {
       </div>
       
       <div className="grid grid-cols-7 gap-1.5 sm:grid-cols-10">
-        {att.map(({ day, status }: { day: number; status: string }) => (
+        {attendanceData.map(({ day, status }) => (
           <div 
             key={day} 
             className={`h-10 w-full rounded-lg flex items-center justify-center text-xs font-bold border-none ${

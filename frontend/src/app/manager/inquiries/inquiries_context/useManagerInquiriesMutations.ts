@@ -65,7 +65,7 @@ export function useManagerInquiriesMutations(
     }
 
     try {
-      await inquiriesApi.update(id, { status } as any);
+      await inquiriesApi.update(id, { status: status as 'NEW' | 'FOLLOW_UP' | 'CONVERTED' | 'LOST' });
       if (status === 'CONVERTED') {
         setInquiries(prev => prev.filter(i => String(i.id) !== String(id)));
       } else {

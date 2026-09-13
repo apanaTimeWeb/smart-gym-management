@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import type { Member } from '@/app/manager/members/members_types/ManagerMembersTypes';
 import type { Payment } from '@/app/manager/finance/finance_types/ManagerFinanceTypes';
-import type { ManagerReceiptData } from '@/app/manager/manager_components/ManagerShared/ManagerThermalReceipt';
+import type { ManagerReceiptData } from '@/app/manager/members/members_components/ManagerMembersThermalReceipt';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import { GYM_DETAILS } from '@/app/manager/manager_utils/ManagerSharedConstants';
 import { formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';

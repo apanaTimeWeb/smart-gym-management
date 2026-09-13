@@ -3,6 +3,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { managerPtApi } from '@/app/manager/pt/pt_api/ManagerPtApi';
 import type { 
@@ -14,7 +15,19 @@ import type {
 } from '@/app/manager/pt/pt_types/ManagerPtTypes';
 
 export function useManagerPtLogic() {
-  const [activeTab, setActiveTab] = useState<PtActiveTab>('dashboard');
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const [activeTab, setActiveTab] = useState<PtActiveTab>(
+    (searchParams.get('tab') as PtActiveTab) || 'dashboard'
+  );
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('tab', activeTab);
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [activeTab, pathname, router, searchParams]);
   
   // Data State
   const [packages, setPackages] = useState<PtPackage[]>([]);

@@ -8,6 +8,7 @@ import ManagerPagination from '@/app/manager/manager_components/ManagerShared/Ma
 import { CheckCircle2, Search, Banknote, Download, RefreshCw } from 'lucide-react';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
+import { formatCurrency } from '@/lib/formatters';
 
 export default function ManagerHrPayrollTable() {
   const { search, setSearch, payrollMonth, setPayrollMonth, payrolls, markPayrollPaid, setPaymentModal, currentPage, setCurrentPage, fetchState, staff, bulkGeneratePayroll, downloadPayslip } = useHrContext();
@@ -46,7 +47,7 @@ export default function ManagerHrPayrollTable() {
             </thead>
             <tbody className="divide-y divide-border">
               {[...Array(5)].map((_, i) => (
-                <tr key={i} className="motion-safe:animate-pulse bg-card">
+                <tr key={`payroll-loading-${i}`} className="motion-safe:animate-pulse bg-card">
                   <td className="px-4 py-4">
                     <div className="h-4 bg-muted rounded w-32 mb-2"></div>
                     <div className="h-3 bg-muted rounded w-20"></div>
@@ -102,12 +103,12 @@ export default function ManagerHrPayrollTable() {
                   </div>
                 </td>
                 <td className="px-4 py-3 text-sm text-primary">{p.month}</td>
-                <td className="px-4 py-3 text-sm font-medium text-right">
-                  {((staff.find(s => String(s.id) === String(p.staffId))?.salary) || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}
+                <td className="px-4 py-3 text-sm font-medium text-secondary text-right">
+                  {formatCurrency(((staff.find(s => String(s.id) === String(p.staffId))?.salary) || 0))}
                 </td>
-                <td className="px-4 py-3 text-sm font-bold text-foreground text-right">{(p.amount || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
-                <td className="px-4 py-3 text-sm font-bold text-success text-right">{(p.paidAmount || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
-                <td className="px-4 py-3 text-sm font-bold text-danger text-right">{(p.pendingAmount || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
+                <td className="px-4 py-3 text-sm font-bold text-foreground text-right">{formatCurrency(p.amount || 0)}</td>
+                <td className="px-4 py-3 text-sm font-bold text-success text-right">{formatCurrency(p.paidAmount || 0)}</td>
+                <td className="px-4 py-3 text-sm font-bold text-danger text-right">{formatCurrency(p.pendingAmount || 0)}</td>
                 <td className="px-4 py-3">
                   <span 
                     className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${

@@ -7,7 +7,7 @@ export const reportsApi = {
   fetchSummary: async (params?: Record<string, string>): Promise<ReportSummary> => {
     const qs = new URLSearchParams(params).toString();
     const q = qs ? `?${qs}` : '';
-    const res = await apiFetch<any>(`${ManagerReportsUrlConfig.BACKEND_API.SUMMARY}${q}`);
+    const res = await apiFetch<{ data?: ReportSummary } & ReportSummary>(`${ManagerReportsUrlConfig.BACKEND_API.SUMMARY}${q}`);
     return res.data || res;
   },
 

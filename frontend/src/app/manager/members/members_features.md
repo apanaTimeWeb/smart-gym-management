@@ -1,88 +1,74 @@
 # Manager Members — Feature Map
 
 ## Module Purpose
-The Manager Members module is the most complex sub-module in the Manager role. It provides
-full member lifecycle management: registration, profile viewing, membership renewal, payment
-recording, diet/workout plan assignment, and soft-deletion (mark exit). Phone numbers are
-masked in list view; full values visible only in profile detail. All destructive actions
-require `useConfirm()` double-verification.
+The Manager Members module manages the full lifecycle of members including registration, profile viewing, membership renewal, payment logging, and soft deletion. It utilizes a URL-backed state for searching and filtering, and relies heavily on TanStack Query for server state management.
 
-## Directory Structure
-| File/Folder | Responsibility |
-|---|---|
-| `page.tsx` | Server Component — auth guard |
-| `loading.tsx` | Table skeleton |
-| `error.tsx` | Error boundary |
-| `members_components/ManagerMembersMain.tsx` | Root Client Component, wraps `MembersProvider` |
-| `members_components/ManagerMembersTable.tsx` | Paginated member list, clickable rows |
-| `members_components/ManagerMembersFilters.tsx` | Search, status, plan, date filters |
-| `members_components/ManagerMembersModal/ManagerMembersModal.tsx` | New member registration form (Replaced add modal) |
-| `members_components/MemberProfile/ManagerMemberProfile.tsx` | Full member profile view |
-| `members_components/ManagerRenewModal.tsx` | Membership renewal form |
-| `members_components/ManagerPaymentModal.tsx` | Record payment form |
-| `members_api/useManagerMembersQueries.ts` | TanStack Query hooks for backend fetching |
-| `members_context/useManagerMembersMutations.ts` | TanStack Mutation hooks for write operations |
+## Exact Routes
+- `/manager/members`: Main list view, filterable and paginated. Profile, registration, and renewal are handled via modals on this route.
 
-## Feature Inventory
-| Feature | Path | Purpose | Main API Calls | Status |
-|---|---|---|---|---|
-| Member List | `/manager/members` | Paginated, filterable member table | `GET /manager/members` | ✅ Live |
-| Add Member | `/manager/members` | Register new member | `POST /manager/members` | ✅ Live |
-| View Profile | `/manager/members` | Full member detail drawer | `GET /manager/members/:id` | ✅ Live |
-| Renew Membership | `/manager/members` | Extend membership plan | `POST /manager/members/:id/renew` | ✅ Live |
-| Record Payment | `/manager/members` | Log a payment against member | `POST /manager/members/:id/payments` | ✅ Live |
-| Mark Exit | `/manager/members` | Soft-delete / deactivate member | `PATCH /manager/members/:id/exit` | ✅ Live |
-| Assign Diet Plan | `/manager/members` | Link diet plan to member | `PATCH /manager/members/:id/diet` | ✅ Live |
-| Assign Workout | `/manager/members` | Link workout plan to member | `PATCH /manager/members/:id/workout` | ✅ Live |
+## Actual Feature Behavior
+- **Member List**: Paginated, filterable table. Syncs search, status, gender, and plan filters with the URL.
+- **Registration**: Multi-tab modal form (`ManagerMembersModal`) for new members. Protected by `useUnsavedChangesGuard`.
+- **Profile View**: Drawer component (`ManagerMemberProfile`) displaying overview, attendance, payments, workout, and diet plans.
+- **Renewal**: Form modal (`ManagerRenewModal`) handling plan extensions.
+- **Payments**: Form modal (`ManagerPaymentModal`) for logging individual payments.
+- **Status Mutations**: Actions to freeze, suspend, and assign trainers/diets/workouts, fully backed by TanStack Query mutations.
 
-## Data and State Architecture
-- Server-state: `TanStack Query` (`useManagerMembersQueries`, `useManagerMembersMutations`)
-- Zustand stores: `useManagerMembersStore` — strictly transient UI state (e.g. selected IDs)
-- Context providers: `ManagerMembersContext` — coordinates UI interactions and modal states
-- Local-storage keys: None
-- MSW handler: `manager-members.handlers.ts`
+## Actual Component Files
+- `page.tsx`: Server Component — auth guard and layout shell.
+- `loading.tsx`: Uses `Loader2` for global loading, but specific components have internal loading states.
+- `error.tsx`: Section-level error boundary.
+- `members_components/ManagerMembersMain.tsx`: Orchestration component integrating URL states and context.
+- `members_components/ManagerMembersTable/ManagerMembersTable.tsx`: Dumb presentation table with row selection and sortable headers.
+- `members_components/ManagerMembersToolbar.tsx`: Search and filter controls.
+- `members_components/ManagerMembersModal/*`: Add/Edit member forms, split by responsibility.
+- `members_components/ManagerRenewModal/ManagerRenewModal.tsx`: Membership renewal form.
+- `members_components/MemberProfile/ManagerMemberProfile.tsx`: Profile drawer.
 
-## User Flows
-1. Manager opens `/manager/members` → table loads with paginated member list
-2. Manager clicks "Add Member" → `ManagerMembersAddModal` opens (3 tabs: Personal, Plan, Payment) → submit → `POST` → table refreshes
-3. Manager clicks a member row → `ManagerMembersProfileModal` opens with full profile
-4. Inside profile → Manager clicks "Renew" → `ManagerMembersRenewalModal` opens → submit → `POST /renew`
-5. Manager clicks "Mark Exit" → `useConfirm()` → on confirm → `PATCH /exit` → member status updates to Exited
+## Actual Query Keys
+- `['manager', 'members', { search, status, gender, plan, sort, dir, page }]`: Fetching the member list.
+- `['manager', 'members', 'stats']`: Fetching KPI statistics.
+- `['manager', 'trainers']`: Fetching trainers.
+- `['manager', 'payments', memberId]`: Fetching member payments.
+- `['manager', 'attendance', memberId]`: Fetching member attendance.
 
-## Component Responsibility Map
-- `ManagerMembersMain` — layout + provider wrapper. MUST NOT contain table logic.
-- `ManagerMembersTable` — display only, receives member array as props. Row click dispatches to store.
-- `ManagerMembersAddModal` — 3-tab form, owns React Hook Form state. MUST NOT call API directly — dispatches to context.
-- `ManagerMembersProfileModal` — full-height drawer. Fetches single member on open via `GET /members/:id`.
-- `ManagerMembersFilters` — owns filter state, dispatches to `MembersProvider`.
+## Actual State Model
+- **Server State**: Managed by TanStack Query (`useManagerMembersQueries.ts` and `useManagerMembersMutations.ts`).
+- **Context State**: `ManagerMembersContext` manages strictly UI transient states (e.g., active modals, selected member, profile tab).
+- **URL State**: `useManagerMembersLogic.ts` syncs filters and pagination to the URL.
 
-## Permissions and Security
-| Action | Required Role |
-|---|---|
-| View member list | `MANAGER` |
-| Add / Edit member | `MANAGER` |
-| Mark Exit | `MANAGER` — requires `useConfirm()` |
-| Record payment | `MANAGER` |
+## Actual Fixture/Data Layer
+- `ManagerMembersSharedConstants.ts` contains hardcoded data for lists, statuses, and pricing options.
+- The `membersApi` abstraction serves as a bridge, currently returning mock data but fully prepared for backend integration.
 
-## Loading, Empty, Error States
-- **Loading:** `loading.tsx` — 8-row table skeleton with column widths matching real table
-- **Empty:** `ManagerMembersEmptyState.tsx` — "No members found" with "Add Member" CTA
-- **Error:** `error.tsx` with retry
+## Actual API Files
+- `members_api/ManagerMembersApi.ts`: Mocked HTTP client functions for member CRUD.
+- `members_api/useManagerMembersQueries.ts`: TanStack Query fetchers.
+- `members_context/useManagerMembersMutations.ts`: Wrapper for TanStack Query mutations.
+- `members_context/useManagerMembersCoreMutations.ts` & `useManagerMembersStatusMutations.ts`: Core mutation handlers.
 
-## Edge Cases / AI Warnings
-- **Phone masking in list** — `ManagerMembersTable` must display masked phone (`98****2310`) using `maskSensitiveData()` from `@/lib/formatters`. Full number visible only in `ManagerMembersProfileModal`.
-- **Mark Exit is NOT hard delete** — sets `status: 'EXITED'` via PATCH. Never call a DELETE endpoint for members.
-- **3-tab add form** — all 3 tabs share one React Hook Form instance. Do not split into separate forms — the entire payload is submitted together on the final tab.
-- **Renewal vs new membership** — renewal uses `POST /renew`, not `POST /members`. Never reuse the add-member API for renewals.
+## Actual Loading State
+- The route uses `loading.tsx` for initial fetch.
+- `ManagerMembersTable` displays a `Loader2` spinner when `isLoading` is true.
+- Sub-components display localized spinners when `useIsMutating()` is active.
 
-## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization — module-prefixed files
-- [x] Rule 6: Logic/UI Separation — fetch in context, form logic in modals
-- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server
-- [x] Rule 9: `loading.tsx` + `error.tsx` present
-- [x] Rule 13: Feature Map — this document, updated same commit as code changes
-- [x] Rule 14: Backend-driven messages — all toasts use `response.message`
-- [x] Rule 16: Forms use React Hook Form + Zod
-- [x] Rule 17: Server-side pagination + filtering
-- [x] Rule 43: Phone numbers masked in list view
-- [x] Rule 71: Mark Exit uses `useConfirm()` double-verification
+## Actual Empty State
+- Handled via `ManagerEmptyState` when the member list is empty, with a CTA to add a new member.
+
+## Actual Error State
+- Features `error.tsx` for unhandled exceptions.
+- Form submissions use `react-hot-toast` (via context wrapper) to display validation and API errors.
+
+## Actual Security Rules
+- Requires Manager role authentication.
+- Masked sensitive data: Phone numbers and emails are masked in the main list, visible only inside the explicit profile view.
+
+## Actual Multi-Step Flows
+- **Add Member**: Tabbed wizard (Personal -> Membership -> Payment) inside `ManagerMembersModal`. Protected by `useUnsavedChangesGuard`.
+
+## Feature-Specific AI Warnings
+1. **Never use `any`**: All mutation returns and query extractions must be strictly typed.
+2. **Never break `useUnsavedChangesGuard`**: Complex forms must alert users before unloading.
+3. **Never bypass `useConfirm`**: Destructive actions (delete, suspend) must invoke the `confirm()` dialogue.
+4. **Never manipulate theme values**: Stick strictly to tokens in `members_theme_contract.md`.
+5. **Never handle filters locally**: URL `searchParams` is the absolute source of truth for the member list.

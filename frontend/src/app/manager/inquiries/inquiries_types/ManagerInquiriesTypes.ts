@@ -12,15 +12,15 @@ export enum FetchState {
 }
 
 export interface InquiriesContextType {
+  // Query Data
   inquiries: Inquiry[];
   stats: InquiryStats | null;
-  fetchState: FetchState;
-  error: string;
+  isLoading: boolean;
+  isError: boolean;
   totalInquiries: number;
   toast: { message: string; type: ToastType } | null;
   showToast: (msg: string, t: ToastType) => void;
   hideToast: () => void;
-  loadAll: () => Promise<void>;
 
   search: string;
   debouncedSearch: string;

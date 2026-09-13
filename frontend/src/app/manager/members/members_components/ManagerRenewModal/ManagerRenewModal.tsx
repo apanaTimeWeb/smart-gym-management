@@ -32,6 +32,8 @@ const PAYMENT_METHODS = [
   { label: 'Net Banking', value: 'NetBanking' }
 ];
 
+import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
+
 export default function ManagerRenewModal() {
   const {
     showRenewModal, setShowRenewModal, selectedMember, renewMember
@@ -42,7 +44,7 @@ export default function ManagerRenewModal() {
   const saving = useIsMutating() > 0;
 
   const useFormReturn = useForm<RenewFormValues>({
-    resolver: zodResolver(RenewSchema) as any,
+    resolver: zodResolver(RenewSchema) as unknown as import("react-hook-form").Resolver<RenewFormValues>,
     defaultValues: {
       actionType: 'renew',
       planId: '',
@@ -53,7 +55,9 @@ export default function ManagerRenewModal() {
     }
   });
 
-  const { register, handleSubmit, reset, formState: { errors } } = useFormReturn;
+  const { register, handleSubmit, reset, formState: { errors, isDirty } } = useFormReturn;
+
+  useUnsavedChangesGuard(isDirty && !saving);
 
   useEffect(() => {
     if (showRenewModal && selectedMember) {

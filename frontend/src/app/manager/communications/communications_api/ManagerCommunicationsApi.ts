@@ -17,7 +17,7 @@ import {
   MOCK_AUTOMATIONS,
   MOCK_CHURNED_MEMBERS,
   MOCK_CHURN_KPI,
-} from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
+} from '@/app/manager/communications/communications_fixtures/ManagerCommunicationsMockData';
 
 let mockCampaigns = [...MOCK_CAMPAIGNS];
 let mockAutomations = [...MOCK_AUTOMATIONS];

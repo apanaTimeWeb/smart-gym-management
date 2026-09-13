@@ -94,7 +94,7 @@ export default function ManagerMemberProfile() {
               { label: 'Total Paid', value: formatCurrency(selectedMember.paidAmount) },
               { label: 'Pending', value: formatCurrency(selectedMember.pendingAmount) },
             ].map((f, i) => (
-              <div key={i} className="bg-input rounded-lg p-3">
+              <div key={`member-summary-stat-${f.label.replace(/\s+/g, '-')}`} className="bg-input rounded-lg p-3">
                 <p className="text-xs text-secondary mb-0.5">{f.label}</p>
                 <p className="text-sm font-semibold text-primary">{f.value}</p>
               </div>

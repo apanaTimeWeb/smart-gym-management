@@ -1,18 +1,39 @@
 // RESPONSIBILITY: Renders the grid of workout plan cards with exercises count and action buttons.
 'use client';
 
-import { Dumbbell, Edit2, Trash2 } from 'lucide-react';
+import { Dumbbell, Edit2, Trash2, Loader2 } from 'lucide-react';
 import { useWorkoutContext } from '@/app/manager/workout/workout_context/ManagerWorkoutContext';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
-
+import { useWorkoutPlansQuery } from '@/app/manager/workout/workout_api/useManagerWorkoutQueries';
+import { useDeleteWorkoutMutation } from '@/app/manager/workout/workout_api/useManagerWorkoutMutations';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
+import toast from 'react-hot-toast';
 
 export default function ManagerWorkoutPlansGrid() {
-  const { workouts, totalWorkouts, search, currentPage, setCurrentPage, openEditWk, deleteWk } = useWorkoutContext();
+  const { search, levelFilter, currentPage, setCurrentPage, openEditWk } = useWorkoutContext();
   const { confirm } = useConfirm();
   
+  const { data, isLoading } = useWorkoutPlansQuery({
+    search,
+    level: levelFilter !== 'ALL' ? levelFilter : '',
+    page: currentPage.toString()
+  });
+
+  const deleteMutation = useDeleteWorkoutMutation();
+
+  const workouts = data?.workouts || [];
+  const totalWorkouts = data?.total || 0;
+
   const totalPages = Math.ceil(totalWorkouts / MANAGER_ITEMS_PER_PAGE) || 1;
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-16 flex-1 h-full min-h-96">
+        <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-full min-h-96">
@@ -51,7 +72,12 @@ export default function ManagerWorkoutPlansGrid() {
                       confirmText: 'Delete'
                     });
                     if (ok) {
-                      deleteWk(w.id);
+                      try {
+                        await deleteMutation.mutateAsync(w.id);
+                        toast.success('Workout plan deleted');
+                      } catch (e: unknown) {
+                        toast.error(e instanceof Error ? e.message : 'Failed to delete plan');
+                      }
                     }
                   }}
                   className="p-1.5 text-danger hover:text-danger hover:bg-danger-bg dark:hover:bg-danger-bg rounded-lg transition-colors"

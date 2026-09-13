@@ -21,10 +21,21 @@ export default function ManagerMembersToolbar() {
     genderFilter, setGenderFilter,
     planFilter, setPlanFilter,
     expiryFrom, expiryTo, setExpiryRange,
+    sortColumn, sortDirection,
     openAdd, currentPage, setCurrentPage, showToast,
     exportMembers,
   } = useMembersContext();
-  const { data: membersRes, refetch } = useFetchMembers({ search, status: statusFilter, page: currentPage.toString() });
+  const { data: membersRes, refetch } = useFetchMembers({ 
+    search, 
+    status: statusFilter, 
+    gender: genderFilter, 
+    plan: planFilter, 
+    expiryFrom, 
+    expiryTo, 
+    sort: sortColumn, 
+    dir: sortDirection, 
+    page: currentPage.toString() 
+  });
   const members = membersRes?.members || [];
   const { data: plansData } = useFetchPlans();
   const plans = plansData || [];

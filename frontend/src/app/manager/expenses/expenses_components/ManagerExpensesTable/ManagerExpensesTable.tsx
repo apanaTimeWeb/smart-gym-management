@@ -4,7 +4,7 @@
 import { Edit, Trash2, Loader2, ExternalLink, CheckCircle2, Banknote } from 'lucide-react';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { useExpensesContext } from '@/app/manager/expenses/expenses_context/ManagerExpensesContext';
-import { useManagerExpensesStore } from '@/app/manager/expenses/expenses_store/useManagerExpensesStore';
+import { useExpensesListQuery } from '@/app/manager/expenses/expenses_api/useManagerExpensesQueries';
 import { EXPENSES_TABLE_HEADERS, EXPENSE_STATUS_STYLES } from '@/app/manager/expenses/expenses_utils/ManagerExpensesSharedConstants';
 import { formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
@@ -13,16 +13,22 @@ import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/
 
 export default function ManagerExpensesTable() {
   const { confirm } = useConfirm();
-  const { currentPage, setCurrentPage, openEdit, deleteExpense, markAsPaid } = useExpensesContext();
-  const expenses = useManagerExpensesStore(s => s.expenses);
-  const totalExpenses = useManagerExpensesStore(s => s.totalExpenses);
-  const fetchState = useManagerExpensesStore(s => s.fetchState);
+  const { search, statusFilter, currentPage, setCurrentPage, openEdit, deleteExpense, markAsPaid } = useExpensesContext();
+  
+  const { data, isLoading } = useExpensesListQuery({
+    search,
+    status: statusFilter !== 'All' ? statusFilter : '',
+    page: currentPage.toString(),
+  });
+
+  const expenses = data?.expenses || [];
+  const totalExpenses = data?.total || 0;
 
   const totalPages = Math.ceil(totalExpenses / MANAGER_ITEMS_PER_PAGE);
 
   return (
     <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden flex flex-col h-full min-h-[400px]">
-      {fetchState === 'loading' ? (
+      {isLoading ? (
         <div className="flex items-center justify-center py-16 flex-1">
           <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
         </div>
@@ -97,7 +103,7 @@ export default function ManagerExpensesTable() {
                     </tr>
                   );
                 })}
-                {expenses.length === 0 && fetchState === 'success' && (
+                {expenses.length === 0 && !isLoading && (
                   <tr>
                     <td colSpan={7} className="p-0 border-b-0">
                       <ManagerEmptyState 

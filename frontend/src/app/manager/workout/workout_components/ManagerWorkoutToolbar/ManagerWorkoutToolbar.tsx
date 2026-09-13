@@ -34,12 +34,7 @@ export default function ManagerWorkoutToolbar() {
           <button 
             key={t} 
             onClick={() => { setTab(t);  setSearch(''); }}
-            className={`px-5 py-3.5 text-sm font-medium transition-colors border-b-2 whitespace-nowrap ${
-              tab === t 
-                ? 'text-primary bg-primary-subtle' 
-                : 'border-transparent text-secondary hover:text-foreground'
-            }`}
-            style={tab === t ? { borderBottomColor: 'var(--workout-highlight)' } : {}}
+            className={`px-4 py-3 text-sm font-semibold border-b-2 transition-colors whitespace-nowrap ${tab === t ? 'text-primary border-primary' : 'text-secondary border-transparent hover:text-foreground hover:border-border'}`}
           >
             {t}
           </button>
@@ -69,8 +64,7 @@ export default function ManagerWorkoutToolbar() {
         )}
         <button 
           onClick={tab === 'Workout Plans' ? openAddWk : openAddEx}
-          className="flex items-center gap-2 px-4 py-2 text-sm text-white rounded-lg font-medium hover:opacity-90 transition-opacity"
-          style={{ background: 'var(--workout-highlight)' }}
+          className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-primary rounded-lg hover:opacity-90 transition-opacity"
         >
           <Plus size={15} /> <span className="hidden sm:inline">Add</span>
         </button>

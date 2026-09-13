@@ -88,7 +88,7 @@ export default function ManagerMessageModal({
  className={`px-6 py-4 flex items-center justify-between ${type === 'whatsapp' ? 'bg-success' : 'bg-info'}`}
  >
  <div className="flex flex-wrap items-center gap-3">
- <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center">
+ <div className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center">
  <Icon size={18} color="white" />
  </div>
  <div>
@@ -99,7 +99,7 @@ export default function ManagerMessageModal({
  <button
  onClick={handleClose}
  disabled={sending}
- className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors disabled:opacity-50"
+ className="w-8 h-8 rounded-full bg-primary/20 hover:bg-primary/30 flex items-center justify-center transition-colors disabled:opacity-50"
  >
  <X size={16} color="white" />
  </button>
@@ -108,8 +108,7 @@ export default function ManagerMessageModal({
  <div className="px-6 pt-4 pb-2">
  <div className="flex items-center gap-3 p-3 bg-input rounded-xl border border-border">
  <div
- className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
- style={{ background: 'var(--primary)' }}
+ className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0 bg-primary"
  >
  {recipient.name.charAt(0)}
  </div>

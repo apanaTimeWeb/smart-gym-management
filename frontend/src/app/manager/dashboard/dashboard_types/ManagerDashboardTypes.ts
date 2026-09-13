@@ -42,6 +42,16 @@ export interface PendingPayment {
 }
 
 // ─── Dashboard Stats ──────────────────────────────────────────────────────────
+export interface DashboardGrowthChartData {
+  month: string;
+  count: number;
+}
+
+export interface DashboardRevenueChartData {
+  month: string;
+  revenue: number;
+}
+
 export interface DashboardStats {
   // Core member metrics
   totalMembers: number;
@@ -64,8 +74,8 @@ export interface DashboardStats {
   todayAttendance: number;
   trainerAttendance: { present: number; total: number };
   // Chart data (existing — but no chart was rendering them — fixed separately)
-  memberGrowth: { month: string; count: number }[];
-  revenueChart: { month: string; revenue: number }[];
+  memberGrowth: DashboardGrowthChartData[];
+  revenueChart: DashboardRevenueChartData[];
   membersByPlan: { plan: string; count: number }[];
   membersByStatus: { active: number; pending: number; expired: number };
   // Lists

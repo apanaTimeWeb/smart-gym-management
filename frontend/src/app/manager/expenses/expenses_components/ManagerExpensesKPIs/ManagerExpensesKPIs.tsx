@@ -1,15 +1,14 @@
 // RESPONSIBILITY: Renders high-level KPIs for the Expenses module.
 'use client';
 
-import { useManagerExpensesStore } from '@/app/manager/expenses/expenses_store/useManagerExpensesStore';
 import { IndianRupee, TrendingDown, Clock, CheckCircle } from 'lucide-react';
 import { formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants'; // Reusing formatCurrency
+import { useExpensesStatsQuery } from '@/app/manager/expenses/expenses_api/useManagerExpensesQueries';
 
 export default function ManagerExpensesKPIs() {
-  const stats = useManagerExpensesStore(s => s.stats);
-  const fetchState = useManagerExpensesStore(s => s.fetchState);
+  const { data: stats, isLoading, isError } = useExpensesStatsQuery();
 
-  if (fetchState === 'loading' || fetchState === 'error') return null; // Let Suspense/Main handle it
+  if (isLoading || isError || !stats) return null; // Let Suspense/Main handle it
 
   const KPI_CARDS = [
     { label: 'Total Expenses (All Time)', value: formatCurrency(stats.totalAmount), icon: IndianRupee, color: 'text-primary', bg: 'bg-primary/10' },

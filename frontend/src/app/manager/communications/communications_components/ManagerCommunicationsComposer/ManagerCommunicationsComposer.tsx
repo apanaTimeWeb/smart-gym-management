@@ -1,11 +1,11 @@
 // RESPONSIBILITY: Full message composer — channel selector, segment picker, title, message body, subject (email), recipient preview, and send action.
 'use client';
-
 import { MessageCircle, Mail, Send, Loader2, Users, Eye, Zap } from 'lucide-react';
 import { useState } from 'react';
 import { useManagerCommunicationsLogic } from '@/app/manager/communications/communications_context/useManagerCommunicationsLogic';
+import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
 import ManagerCommunicationsSegmentPicker from '@/app/manager/communications/communications_components/ManagerCommunicationsSegmentPicker/ManagerCommunicationsSegmentPicker';
-import ManagerBulkMessageModal from '@/app/manager/manager_components/ManagerFeedback/ManagerBulkMessageModal';
+import ManagerBulkMessageModal from '@/app/manager/communications/communications_components/ManagerBulkMessageModal/ManagerBulkMessageModal';
 import type { MessageType } from '@/app/manager/manager_components/ManagerFeedback/ManagerMessageModal';
 
 // WhatsApp brand green — third-party brand color, not a design system token.
@@ -21,8 +21,11 @@ export default function ManagerCommunicationsComposer() {
     selectedSegment,
     handleSend, sending,
   } = useManagerCommunicationsLogic();
-
   const [showPreview, setShowPreview] = useState(false);
+
+  // Mark form as dirty if title or message is filled and we are not actively sending
+  const isDirty = (composerTitle.trim().length > 0 || composerMessage.trim().length > 0) && !sending;
+  useUnsavedChangesGuard(isDirty);
 
   const canSend = composerTitle.trim().length >= 3
     && composerMessage.trim().length >= 10

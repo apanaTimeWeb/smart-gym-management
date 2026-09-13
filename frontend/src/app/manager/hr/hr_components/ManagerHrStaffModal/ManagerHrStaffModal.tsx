@@ -10,6 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { Eye, EyeOff } from 'lucide-react';
 import React from 'react';
+import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
 
 export default function ManagerHrStaffModal() {
  const { showModal, setShowModal, editId, editData, saveStaff, saving } = useHrContext();
@@ -20,11 +21,13 @@ export default function ManagerHrStaffModal() {
     handleSubmit, 
     reset,
     control,
-    formState: { errors }
+    formState: { errors, isDirty }
   } = useForm<StaffFormValues>({
     resolver: zodResolver(StaffSchema) as unknown as import("react-hook-form").Resolver<StaffFormValues>,
     defaultValues: (editData as StaffFormValues) || {}
   });
+  
+  useUnsavedChangesGuard(isDirty && showModal);
 
  useEffect(() => {
    if (showModal && editData) {
@@ -41,7 +44,7 @@ export default function ManagerHrStaffModal() {
   <h3 className="text-xl font-bold text-foreground">{editId ? 'Edit Staff' : 'Add Staff Member'}</h3>
   <button 
   type="button" 
-  onClick={() => setShowModal(false)} 
+  onClick={() => { if (!isDirty || window.confirm('Discard unsaved changes?')) setShowModal(false); }} 
   className="p-2 rounded-full hover:bg-primary/10 transition-colors text-secondary hover:text-primary"
   >
   <X size={20} />
@@ -141,7 +144,7 @@ export default function ManagerHrStaffModal() {
     </div>
     <label className="relative inline-flex items-center cursor-pointer">
       <input type="checkbox" {...register('isActive')} className="sr-only peer" />
-      <div className="w-11 h-6 bg-border peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-success"></div>
+      <div className="w-11 h-6 bg-border peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-background after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-background after:border-border after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-success"></div>
     </label>
   </div>
 
@@ -149,7 +152,7 @@ export default function ManagerHrStaffModal() {
   <div className="flex justify-end gap-3 mt-8 pt-6 border-t border-border">
   <button 
   type="button" 
-  onClick={() => setShowModal(false)} 
+  onClick={() => { if (!isDirty || window.confirm('Discard unsaved changes?')) setShowModal(false); }} 
   className="px-6 py-2.5 text-sm font-semibold rounded-xl border border-border text-secondary hover:bg-primary/5 hover:text-primary transition-colors"
   >
   Cancel

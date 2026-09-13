@@ -4,6 +4,7 @@
 
 import { useSalesContext } from '@/app/manager/sales/sales_context/ManagerSalesContext';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
+import { formatCurrency } from '@/lib/formatters';
 import { Loader2 } from 'lucide-react';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 import type { MembershipReportItem } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
@@ -51,13 +52,13 @@ export default function ManagerSalesMembershipReport() {
  </thead>
   <tbody className="divide-y divide-border">
   {paginated.length > 0 ? (
-    paginated.map((r, i) => (
-      <tr key={i} className="hover:bg-primary-subtle transition-colors">
+    paginated.map((r) => (
+      <tr key={r.plan} className="hover:bg-primary-subtle transition-colors">
       <td className="px-4 py-3 text-sm font-medium text-foreground">{r.plan || ''}</td>
-      <td className="px-4 py-3 text-sm text-secondary">₹{(r.receivable || 0).toLocaleString()}</td>
-      <td className="px-4 py-3 text-sm font-medium text-success dark:text-success">₹{(r.received || 0).toLocaleString()}</td>
-      <td className="px-4 py-3 text-sm font-medium text-warning dark:text-warning">₹{(r.remaining || 0).toLocaleString()}</td>
-      <td className="px-4 py-3 text-sm text-danger">₹{(r.refund || 0).toLocaleString()}</td>
+      <td className="px-4 py-3 text-sm text-secondary">{formatCurrency(r.receivable || 0)}</td>
+      <td className="px-4 py-3 text-sm font-medium text-success dark:text-success">{formatCurrency(r.received || 0)}</td>
+      <td className="px-4 py-3 text-sm font-medium text-warning dark:text-warning">{formatCurrency(r.remaining || 0)}</td>
+      <td className="px-4 py-3 text-sm text-danger">{formatCurrency(r.refund || 0)}</td>
       </tr>
     ))
   ) : (
@@ -69,10 +70,10 @@ export default function ManagerSalesMembershipReport() {
   )}
  <tr className="bg-input font-semibold border-t-2 border-border">
  <td className="px-4 py-3 text-sm text-foreground">Total</td>
- <td className="px-4 py-3 text-sm text-foreground">₹{(membershipTotals.totalReceivable || 0).toLocaleString()}</td>
- <td className="px-4 py-3 text-sm text-success dark:text-success">₹{(membershipTotals.totalReceived || 0).toLocaleString()}</td>
- <td className="px-4 py-3 text-sm text-warning dark:text-warning">₹{(membershipTotals.remaining || 0).toLocaleString()}</td>
- <td className="px-4 py-3 text-sm text-danger dark:text-danger">₹{(membershipTotals.refunds || 0).toLocaleString()}</td>
+          <td className="px-4 py-3 text-sm text-foreground">{formatCurrency(membershipTotals.totalReceivable || 0)}</td>
+          <td className="px-4 py-3 text-sm text-success dark:text-success">{formatCurrency(membershipTotals.totalReceived || 0)}</td>
+          <td className="px-4 py-3 text-sm text-warning dark:text-warning">{formatCurrency(membershipTotals.remaining || 0)}</td>
+          <td className="px-4 py-3 text-sm text-danger dark:text-danger">{formatCurrency(membershipTotals.refunds || 0)}</td>
  </tr>
   </tbody>
   </table>

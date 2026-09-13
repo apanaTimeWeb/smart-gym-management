@@ -1,22 +1,38 @@
 // RESPONSIBILITY: Provides strongly-typed network calls for attendance operations.
-import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
-import { AttendanceUrlConfig } from '@/app/manager/attendance/ManagerAttendanceUrlConfig';
 import type { Attendance, AttendanceResponse } from '@/app/manager/attendance/attendance_types/ManagerAttendanceTypes';
+import { MOCK_ATTENDANCE_RECORDS, MOCK_ATTENDANCE_STATS } from '@/app/manager/attendance/attendance_api/ManagerAttendanceMockData';
 
 export const attendanceApi = {
-  mark: (body: { memberId?: string; staffId?: string; date: string; checkIn?: string; type: string }) =>
-    apiFetch(AttendanceUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body) }),
-  getAll: (params?: Record<string, string>) => {
-    const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<AttendanceResponse>>(`${AttendanceUrlConfig.BACKEND_API.BASE}${q}`);
+  mark: async (body: { memberId?: string; staffId?: string; date: string; checkIn?: string; type: string }) => {
+    await new Promise(resolve => setTimeout(resolve, 300));
+    return { success: true, message: 'Attendance marked' };
   },
-  getTodayStats: () =>
-    apiFetch<ApiResponse<{ totalCheckIns: number; memberCheckIns: number; staffCheckIns: number }>>(
-      AttendanceUrlConfig.BACKEND_API.TODAY_STATS
-    ),
-  getHistory: (userId: string, type: 'MEMBER' | 'STAFF', month: string) => 
-    apiFetch<ApiResponse<Attendance[]>>(
-      `${AttendanceUrlConfig.BACKEND_API.HISTORY}?userId=${userId}&type=${type}&month=${month}`
-    ),
+  getAll: async (params?: Record<string, string>): Promise<ApiResponse<AttendanceResponse>> => {
+    await new Promise(resolve => setTimeout(resolve, 300));
+    return {
+      success: true,
+      message: 'Fetched attendance records',
+      data: {
+        attendances: MOCK_ATTENDANCE_RECORDS,
+        total: MOCK_ATTENDANCE_RECORDS.length,
+      }
+    };
+  },
+  getTodayStats: async () => {
+    await new Promise(resolve => setTimeout(resolve, 300));
+    return {
+      success: true,
+      message: 'Fetched stats',
+      data: MOCK_ATTENDANCE_STATS,
+    };
+  },
+  getHistory: async (userId: string, type: 'MEMBER' | 'STAFF', month: string): Promise<ApiResponse<Attendance[]>> => {
+    await new Promise(resolve => setTimeout(resolve, 300));
+    return {
+      success: true,
+      message: 'Fetched history',
+      data: MOCK_ATTENDANCE_RECORDS.filter(r => r.type === type && (type === 'MEMBER' ? String(r.memberId) === userId : String(r.staffId) === userId)),
+    };
+  },
 };

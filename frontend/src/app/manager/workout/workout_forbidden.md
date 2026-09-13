@@ -1,12 +1,8 @@
-# Forbidden Patterns for `erp/workout`
+# Forbidden Patterns for `manager/workout`
 
-To maintain extreme isolation and enterprise-grade architecture in this module, the following are strictly forbidden:
-
-1. **No Mixed UI and Logic:** Do not mix `useEffect` or state hooks inside UI components. All heavy logic MUST reside in the adjacent custom hook.
-2. **No Relative Imports:** Never use `./` or `../../` in any file. Always use absolute paths starting with `@/app/manager/workout/...`.
-3. **No Barrel Files:** Do not create `index.ts` files. Import files directly.
-4. **No Direct `window.confirm`:** Use a customized `ConfirmationDrawer` or `Modal`.
-5. **No Context for Async Data:** Do not use React Context for API data. Always use a Zustand store.
-6. **No Arbitrary Tailwind Values:** Do not use values like `bg-[#123456]` or `p-[15px]`. Use design system tokens (`bg-card`, `p-4`).
-7. **No Hardcoded Toasts from UI:** UI components should not intercept API errors to show toasts; let the API interceptor or Zustand store handle notifications and state updates.
-8. **No Localized API Calls:** UI components should never call `apiFetch` directly. They must trigger actions in custom hooks or stores, which then communicate with `workout_api`.
+1. **No Inline Styling Violations:** Do not use `text-green-500`, `bg-[#123456]`, or raw CSS variable expressions (`var(--workout-highlight)`) in JSX `style` tags. Use semantic Tailwind variables defined in `manager_workout_theme_contract.md`.
+2. **No Unsafe Type Casting:** `any` and `as any` are strictly forbidden. Narrow types properly or use `unknown`.
+3. **No Direct Formatting:** Never use `.toLocaleString()` or string concatenation for numbers/currency. ALWAYS import formatters from `@/lib/formatters`.
+4. **No Relative Imports:** Use `@/app/manager/workout/...` rather than `../` or `./`.
+5. **URL is the Source of Truth:** Do not introduce hidden filter states in `useState` that do not sync to the URL. If you filter workouts or exercises, update the URL params using the context helpers.
+6. **No Unprotected Forms:** Complex forms must use React Hook Form + Zod and must include `useUnsavedChangesGuard` to prevent accidental navigation loss.

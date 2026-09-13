@@ -1,58 +1,17 @@
 // RESPONSIBILITY: Custom hook encapsulating UI state and orchestrating actions for the members module.
 // DATA FLOW: UI Interactions -> useManagerMembersLogic -> Context -> Components
 import React, { useState, useCallback, useEffect } from 'react';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import type { Member, MembersContextType, MembersInitialData, MemberSortColumn, SortDirection } from '@/app/manager/members/members_types/ManagerMembersTypes';
+import type { Member, MembersContextType, MembersInitialData } from '@/app/manager/members/members_types/ManagerMembersTypes';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import type { MessageType, ManagerMessageRecipient } from '@/app/manager/manager_components/ManagerFeedback/ManagerMessageModal';
 import { EMPTY_MEMBER_FORM, formatCurrency, MSG_TEMPLATES } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import type { MemberFormValues } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
-import { useDebounce } from '@/app/manager/manager_utils/useDebounce';
-import { useManagerMembersMutations } from './useManagerMembersMutations';
-import { useManagerMembersPrintLogic } from './useManagerMembersPrintLogic';
+import { useManagerMembersMutations } from '@/app/manager/members/members_context/useManagerMembersMutations';
+import { useManagerMembersPrintLogic } from '@/app/manager/members/members_context/useManagerMembersPrintLogic';
+import { useManagerMembersUrlState } from '@/app/manager/members/members_context/useManagerMembersUrlState';
 
 export function useManagerMembersLogic(initialData?: MembersInitialData | null): MembersContextType {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  // URL State
-  const search = searchParams.get('search') || '';
-  const statusFilter = searchParams.get('status') || 'All';
-  const currentPage = parseInt(searchParams.get('page') || '1', 10);
-  const debouncedSearch = useDebounce(search, 300);
-
-  const setUrlParam = useCallback((key: string, value: string | null) => {
-    const current = new URLSearchParams(Array.from(searchParams.entries()));
-    if (value) current.set(key, value);
-    else current.delete(key);
-    if (key !== 'page' && key !== 'sort' && key !== 'dir') current.set('page', '1');
-    router.push(`${pathname}?${current.toString()}`);
-  }, [searchParams, pathname, router]);
-
-  const setSearch = useCallback((val: string) => setUrlParam('search', val || null), [setUrlParam]);
-  const setStatusFilter = useCallback((val: string) => setUrlParam('status', val === 'All' ? null : val), [setUrlParam]);
-  const setGenderFilter = useCallback((val: string) => setUrlParam('gender', val === 'All' ? null : val), [setUrlParam]);
-  const setPlanFilter = useCallback((val: string) => setUrlParam('plan', val === 'All' ? null : val), [setUrlParam]);
-  
-  const setExpiryRange = useCallback((from: string, to: string) => {
-    const current = new URLSearchParams(Array.from(searchParams.entries()));
-    if (from) current.set('expiryFrom', from); else current.delete('expiryFrom');
-    if (to) current.set('expiryTo', to); else current.delete('expiryTo');
-    current.set('page', '1');
-    router.push(`${pathname}?${current.toString()}`);
-  }, [searchParams, pathname, router]);
-
-  const setSortColumn = useCallback((val: 'name' | 'joinDate' | 'expiryDate' | 'paidAmount' | 'status') => setUrlParam('sort', val), [setUrlParam]);
-  const setSortDirection = useCallback((val: 'asc' | 'desc') => setUrlParam('dir', val), [setUrlParam]);
-  const setCurrentPage = useCallback((val: number) => setUrlParam('page', val.toString()), [setUrlParam]);
-
-  const genderFilter = searchParams.get('gender') || 'All';
-  const planFilter = searchParams.get('plan') || 'All';
-  const expiryFrom = searchParams.get('expiryFrom') || '';
-  const expiryTo = searchParams.get('expiryTo') || '';
-  const sortColumn = (searchParams.get('sort') as MemberSortColumn) || 'name';
-  const sortDirection = (searchParams.get('dir') as SortDirection) || 'asc';
+  const urlState = useManagerMembersUrlState();
 
   // UI State
   const [showAddModal, setShowAddModal] = useState(false);
@@ -70,26 +29,21 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
   const closeMsg = useCallback(() => setMsgModal(null), []);
 
   useEffect(() => {
-    if (searchParams.get('action') === 'add_member') {
-      const name = searchParams.get('name') || '';
-      const phone = searchParams.get('phone') || '';
-      const email = searchParams.get('email') || '';
-      // Allow current execution context to clear before modifying state
+    if (urlState.searchParams.get('action') === 'add_member') {
+      const name = urlState.searchParams.get('name') || '';
+      const phone = urlState.searchParams.get('phone') || '';
+      const email = urlState.searchParams.get('email') || '';
       setTimeout(() => {
         setEditId(null);
-        setEditData({
-          ...EMPTY_MEMBER_FORM,
-          name, phone, email
-        });
+        setEditData({ ...EMPTY_MEMBER_FORM, name, phone, email });
         setShowAddModal(true);
-        
-        setUrlParam('action', null);
-        setUrlParam('name', null);
-        setUrlParam('phone', null);
-        setUrlParam('email', null);
+        urlState.setUrlParam('action', null);
+        urlState.setUrlParam('name', null);
+        urlState.setUrlParam('phone', null);
+        urlState.setUrlParam('email', null);
       }, 0);
     }
-  }, [searchParams, setUrlParam]);
+  }, [urlState]);
 
   const openAdd = useCallback(() => { 
     setEditId(null); 
@@ -140,9 +94,7 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
   }, [showToast]);
 
   return {
-    search, debouncedSearch, setSearch, statusFilter, setStatusFilter, currentPage, setCurrentPage,
-    genderFilter, setGenderFilter, planFilter, setPlanFilter, expiryFrom, expiryTo, setExpiryRange,
-    sortColumn, setSortColumn, sortDirection, setSortDirection, exportMembers,
+    ...urlState, exportMembers,
     toast, showToast, hideToast,
     selectedMember, setSelectedMember, profileTab, setProfileTab,
     showAddModal, setShowAddModal, editId, editData,

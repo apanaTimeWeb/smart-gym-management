@@ -3,7 +3,8 @@
 
 import { X, Printer, Plus, Minus, Send } from 'lucide-react';
 import { useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';
-import { PAYMENT_METHODS, formatCurrency } from '@/app/manager/store/store_utils/ManagerStoreSharedConstants';
+import { PAYMENT_METHODS } from '@/app/manager/store/store_utils/ManagerStoreSharedConstants';
+import { formatCurrency } from '@/lib/formatters';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 
 export default function ManagerStorePosModal() {

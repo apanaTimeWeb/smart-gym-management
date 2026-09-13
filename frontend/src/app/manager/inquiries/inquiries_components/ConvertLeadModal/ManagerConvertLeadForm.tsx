@@ -7,7 +7,7 @@ import type { MemberFormValues } from '@/app/manager/members/members_utils/Manag
 import type { PlanWithCustom } from '@/app/manager/members/members_types/ManagerMembersTypes';
 
 interface ManagerConvertLeadFormProps {
-  useFormReturn: any;
+  useFormReturn: UseFormReturn<MemberFormValues>;
   plans: PlanWithCustom[];
   watchPlanId?: string;
   watchBillingCycle?: string;

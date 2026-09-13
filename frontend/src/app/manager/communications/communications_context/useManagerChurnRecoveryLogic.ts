@@ -1,102 +1,77 @@
 // RESPONSIBILITY: Business logic hook for the Churn Recovery / Win-Back tab.
-// DATA FLOW: ManagerCommunicationsApi → useManagerChurnRecoveryLogic → ManagerChurnRecoveryTab → child components
+// DATA FLOW: ManagerCommunicationsApi -> useManagerChurnRecoveryLogic -> ManagerChurnRecoveryTab -> child components
 'use client';
 
 import { useCallback, useMemo } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
-import { ManagerCommunicationsApi } from '@/app/manager/communications/communications_api/ManagerCommunicationsApi';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useManagerCommunicationsStore } from '@/app/manager/communications/communications_store/useManagerCommunicationsStore';
-import {
-  CHURN_ITEMS_PER_PAGE,
-  CHURN_WIN_BACK_TEMPLATES,
-} from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
-import type {
-  ChurnedMember,
-  CommChannel,
-  FetchState,
-  WinBackTemplateTier,
-} from '@/app/manager/communications/communications_types/communications_types';
+import { CHURN_ITEMS_PER_PAGE } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
+import { CHURN_WIN_BACK_TEMPLATES } from '@/app/manager/communications/communications_fixtures/ManagerCommunicationsMockData';
+import type { ChurnedMember, CommChannel, FetchState, WinBackTemplateTier } from '@/app/manager/communications/communications_types/communications_types';
+import { useManagerChurnRecoveryQueries } from '@/app/manager/communications/communications_context/useManagerChurnRecoveryQueries';
+import { useManagerChurnRecoveryMutations } from '@/app/manager/communications/communications_context/useManagerChurnRecoveryMutations';
 
 export function useManagerChurnRecoveryLogic() {
-  const qc = useQueryClient();
   const store = useManagerCommunicationsStore();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  // ─── Server State ───────────────────────────────────────────────────────────
+  // URL state
+  const churnSearch = searchParams.get('c_search') ?? store.churnSearch;
+  const churnReasonFilter = searchParams.get('c_reason') ?? store.churnReasonFilter;
+  const churnCurrentPage = searchParams.has('c_page') ? Number(searchParams.get('c_page')) : store.churnCurrentPage;
 
-  const {
-    data: churnedMembers = [],
-    isLoading: churnLoading,
-    isError: churnError,
-  } = useQuery({
-    queryKey: ['managerCommunications', 'churn', 'members'],
-    queryFn: ManagerCommunicationsApi.fetchChurnedMembers,
-    staleTime: 1000 * 60 * 3,
-  });
+  const updateURL = useCallback((params: Record<string, string | null>) => {
+    const newParams = new URLSearchParams(searchParams.toString());
+    Object.entries(params).forEach(([k, v]) => {
+      if (v === null) newParams.delete(k);
+      else newParams.set(k, v);
+    });
+    router.replace(`${pathname}?${newParams.toString()}`);
+  }, [searchParams, pathname, router]);
 
-  const { data: churnKPIs } = useQuery({
-    queryKey: ['managerCommunications', 'churn', 'kpis'],
-    queryFn: ManagerCommunicationsApi.fetchChurnKPIs,
-    staleTime: 1000 * 60 * 5,
-  });
+  const setChurnSearch = useCallback((s: string) => {
+    store.setChurnSearch(s);
+    updateURL({ c_search: s || null, c_page: '1' });
+  }, [store, updateURL]);
+
+  const setChurnReasonFilter = useCallback((r: string) => {
+    store.setChurnReasonFilter(r);
+    updateURL({ c_reason: r === 'all' ? null : r, c_page: '1' });
+  }, [store, updateURL]);
+
+  const setChurnCurrentPage = useCallback((p: number) => {
+    store.setChurnCurrentPage(p);
+    updateURL({ c_page: p.toString() });
+  }, [store, updateURL]);
+
+  const { churnedMembers, churnLoading, churnError, churnKPIs } = useManagerChurnRecoveryQueries();
+  const { winBackMutation } = useManagerChurnRecoveryMutations(store.closeChurnComposer);
 
   const fetchState: FetchState = churnLoading ? 'loading' : churnError ? 'error' : 'success';
 
-  // ─── Filtered + Paginated Members ──────────────────────────────────────────
-
   const filteredMembers = useMemo(() => {
     return churnedMembers.filter((m: ChurnedMember) => {
-      const matchSearch = !store.churnSearch
-        || m.name.toLowerCase().includes(store.churnSearch.toLowerCase());
-      const matchReason = store.churnReasonFilter === 'all'
-        || m.reason === store.churnReasonFilter;
+      const matchSearch = !churnSearch || m.name.toLowerCase().includes(churnSearch.toLowerCase());
+      const matchReason = churnReasonFilter === 'all' || m.reason === churnReasonFilter;
       return matchSearch && matchReason;
     });
-  }, [churnedMembers, store.churnSearch, store.churnReasonFilter]);
+  }, [churnedMembers, churnSearch, churnReasonFilter]);
 
   const totalPages = Math.max(1, Math.ceil(filteredMembers.length / CHURN_ITEMS_PER_PAGE));
-  const paginatedMembers = filteredMembers.slice(
-    (store.churnCurrentPage - 1) * CHURN_ITEMS_PER_PAGE,
-    store.churnCurrentPage * CHURN_ITEMS_PER_PAGE,
-  );
-
-  // ─── Derive template tier from days since exit ──────────────────────────────
+  const paginatedMembers = filteredMembers.slice((churnCurrentPage - 1) * CHURN_ITEMS_PER_PAGE, churnCurrentPage * CHURN_ITEMS_PER_PAGE);
 
   const getTemplateTier = useCallback((daysSinceExit: number): WinBackTemplateTier => {
-    if (daysSinceExit <= 7)  return '7_days';
+    if (daysSinceExit <= 7) return '7_days';
     if (daysSinceExit <= 30) return '30_days';
     return '90_days';
   }, []);
 
-  // ─── Win-Back Mutation ──────────────────────────────────────────────────────
-
-  const winBackMutation = useMutation({
-    mutationFn: (payload: {
-      memberId: string;
-      memberName: string;
-      phone: string;
-      email: string;
-      channel: CommChannel;
-      templateTier: WinBackTemplateTier;
-      message: string;
-      subject: string;
-    }) => ManagerCommunicationsApi.sendWinBackMessage(payload),
-    onSuccess: () => {
-      toast.success('Win-back message sent successfully');
-      store.closeChurnComposer();
-      qc.invalidateQueries({ queryKey: ['managerCommunications'] });
-    },
-    onError: (err) => toast.error((err as Error).message),
-  });
-
-  // ─── Exposed Handlers ───────────────────────────────────────────────────────
-
-  /** Opens the win-back composer drawer for a specific churned member. */
   const handleOpenComposer = useCallback((memberId: string) => {
     store.openChurnComposer(memberId);
   }, [store]);
 
-  /** Sends a win-back message for the given member. */
   const handleSendWinBack = useCallback((
     member: ChurnedMember,
     channel: CommChannel,
@@ -104,48 +79,32 @@ export function useManagerChurnRecoveryLogic() {
     message: string,
     subject: string,
   ) => {
-    winBackMutation.mutate({
-      memberId: member.memberId,
-      memberName: member.name,
-      phone: member.phone,
-      email: member.email,
-      channel,
-      templateTier,
-      message,
-      subject,
-    });
+    winBackMutation.mutate({ memberId: member.memberId, memberName: member.name, phone: member.phone, email: member.email, channel, templateTier, message, subject });
   }, [winBackMutation]);
 
-  /** Returns the selected churned member object by ID from store. */
   const selectedMember = useMemo(
     () => churnedMembers.find((m: ChurnedMember) => m.memberId === store.selectedChurnedMemberId) ?? null,
     [churnedMembers, store.selectedChurnedMemberId],
   );
 
   return {
-    // KPIs
     churnKPIs,
-    // Table data
     paginatedMembers,
     filteredMembers,
     fetchState,
     totalPages,
-    // Filters
-    churnSearch: store.churnSearch,
-    setChurnSearch: store.setChurnSearch,
-    churnReasonFilter: store.churnReasonFilter,
-    setChurnReasonFilter: store.setChurnReasonFilter,
-    churnCurrentPage: store.churnCurrentPage,
-    setChurnCurrentPage: store.setChurnCurrentPage,
-    // Composer drawer
+    churnSearch,
+    setChurnSearch,
+    churnReasonFilter,
+    setChurnReasonFilter,
+    churnCurrentPage,
+    setChurnCurrentPage,
     isChurnComposerOpen: store.isChurnComposerOpen,
     openChurnComposer: handleOpenComposer,
     closeChurnComposer: store.closeChurnComposer,
     selectedMember,
-    // Send
     handleSendWinBack,
     isSending: winBackMutation.isPending,
-    // Utilities
     getTemplateTier,
     CHURN_WIN_BACK_TEMPLATES,
   };

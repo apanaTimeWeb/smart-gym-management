@@ -9,7 +9,8 @@ import type {
   CommChannel,
   WinBackTemplateTier,
 } from '@/app/manager/communications/communications_types/communications_types';
-import { CHURN_WIN_BACK_TEMPLATES } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
+import { CHURN_WIN_BACK_TEMPLATES } from '@/app/manager/communications/communications_fixtures/ManagerCommunicationsMockData';
+import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
 
 interface ManagerChurnRecoveryComposerProps {
   member: ChurnedMember | null;
@@ -45,6 +46,10 @@ export default function ManagerChurnRecoveryComposer({
   const [tier, setTier]             = useState<WinBackTemplateTier>(defaultTier);
   const [message, setMessage]       = useState('');
   const [subject, setSubject]       = useState('');
+
+  // Protect against accidental navigation if the drawer is open and not sending
+  const isDirty = isOpen && !isSending;
+  useUnsavedChangesGuard(isDirty);
 
   // Sync state when member or default tier changes
   useEffect(() => {

@@ -2,6 +2,8 @@
 'use client';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { ManagerReferralsApi } from '@/app/manager/referrals/referrals_api/ManagerReferralsApi';
 import { useManagerReferralsStore } from '@/app/manager/referrals/referrals_store/useManagerReferralsStore';
@@ -11,6 +13,27 @@ import type { CreateReferralDto } from '@/app/manager/referrals/referrals_types/
 export function useManagerReferralsLogic() {
   const qc = useQueryClient();
   const store = useManagerReferralsStore();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const q = searchParams.get('q');
+    const s = searchParams.get('status');
+    const p = searchParams.get('page');
+    if (q !== null) store.setSearchQuery(q);
+    if (s !== null) store.setStatusFilter(s);
+    if (p !== null) store.setCurrentPage(Number(p));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (store.searchQuery) params.set('q', store.searchQuery);
+    if (store.statusFilter !== 'ALL') params.set('status', store.statusFilter);
+    if (store.currentPage > 1) params.set('page', String(store.currentPage));
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [store.searchQuery, store.statusFilter, store.currentPage, pathname, router]);
 
   const { data: kpis, isLoading: isKpisLoading } = useQuery({
     queryKey: ['managerReferrals', 'kpis'],

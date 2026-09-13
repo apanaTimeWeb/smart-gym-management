@@ -9,15 +9,19 @@ import { X, Check } from 'lucide-react';
 import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
 import { PayrollSchema, type PayrollFormValues, EMPTY_PAYROLL_FORM } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
 import { attendanceApi } from '@/app/manager/attendance/attendance_api/ManagerAttendanceApi';
+import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
+import { formatCurrency } from '@/lib/formatters';
 
 export default function ManagerHrPayrollModal() {
   const { showPayrollModal, setShowPayrollModal, savePayroll, saving, staff } = useHrContext();
   const [calcData, setCalcData] = React.useState<{base: number, attDed: number, advAdj: number, net: number} | null>(null);
 
-  const { register, handleSubmit, reset, watch, setValue, control, formState: { errors } } = useForm<PayrollFormValues>({
+  const { register, handleSubmit, reset, watch, setValue, control, formState: { errors, isDirty } } = useForm<PayrollFormValues>({
     resolver: zodResolver(PayrollSchema),
     defaultValues: EMPTY_PAYROLL_FORM
   });
+
+  useUnsavedChangesGuard(isDirty && showPayrollModal);
 
   const selectedStaffId = watch('staffId');
   const selectedMonth = watch('month');
@@ -98,7 +102,7 @@ export default function ManagerHrPayrollModal() {
           <h2 className="text-xl font-bold text-foreground">
             Disburse Payroll
           </h2>
-          <button onClick={() => setShowPayrollModal(false)} className="p-2 rounded-full hover:bg-primary/10 transition-colors text-secondary hover:text-primary">
+          <button onClick={() => { if (!isDirty || window.confirm('Discard unsaved changes?')) setShowPayrollModal(false); }} className="p-2 rounded-full hover:bg-primary/10 transition-colors text-secondary hover:text-primary">
             <X size={20} />
           </button>
         </div>
@@ -116,7 +120,7 @@ export default function ManagerHrPayrollModal() {
                     value={field.value || ''}
                     onChange={field.onChange}
                     placeholder="Select Staff"
-                    options={staff.map(s => ({ label: `${s.name} (${s.role}) - ₹${s.salary}`, value: String(s.id) }))}
+                    options={staff.map(s => ({ label: `${s.name} (${s.role}) - ${formatCurrency(s.salary)}`, value: String(s.id) }))}
                   />
                 )}
               />
@@ -142,22 +146,22 @@ export default function ManagerHrPayrollModal() {
               />
               
               {calcData ? (
-                <div className="mt-3 p-4 rounded-xl bg-white/5 border border-white/5 space-y-2">
+                <div className="mt-3 p-4 rounded-xl bg-primary/5 border border-border space-y-2">
                   <div className="flex justify-between text-xs text-secondary">
                     <span>Base Salary</span>
-                    <span className="font-medium text-foreground">₹{calcData.base}</span>
+                    <span className="font-medium text-foreground">{formatCurrency(calcData.base)}</span>
                   </div>
                   <div className="flex justify-between text-xs text-danger">
                     <span>Attendance Ded.</span>
-                    <span>-₹{calcData.attDed}</span>
+                    <span>-{formatCurrency(calcData.attDed)}</span>
                   </div>
                   <div className="flex justify-between text-xs text-warning">
                     <span>Advance Adj.</span>
-                    <span>-₹{calcData.advAdj}</span>
+                    <span>-{formatCurrency(calcData.advAdj)}</span>
                   </div>
                   <div className="pt-2 border-t border-white/10 flex justify-between text-sm font-bold text-primary">
                     <span>Net Auto-Calculated</span>
-                    <span>₹{calcData.net}</span>
+                    <span>{formatCurrency(calcData.net)}</span>
                   </div>
                 </div>
               ) : (
@@ -195,11 +199,11 @@ export default function ManagerHrPayrollModal() {
           </form>
         </div>
 
-        <div className="px-8 py-5 border-t border-border flex justify-end gap-3 bg-white/5">
+        <div className="px-8 py-5 border-t border-border flex justify-end gap-3 bg-primary/5">
           <button 
             type="button" 
-            onClick={() => setShowPayrollModal(false)}
-            className="px-6 py-2.5 rounded-xl text-sm font-semibold border border-border transition-colors text-secondary hover:bg-white/5 hover:text-foreground"
+            onClick={() => { if (!isDirty || window.confirm('Discard unsaved changes?')) setShowPayrollModal(false); }}
+            className="px-6 py-2.5 rounded-xl text-sm font-semibold border border-border transition-colors text-secondary hover:bg-primary/5 hover:text-foreground"
           >
             Cancel
           </button>

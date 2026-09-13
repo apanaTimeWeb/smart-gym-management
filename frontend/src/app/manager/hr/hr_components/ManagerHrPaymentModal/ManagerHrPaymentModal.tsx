@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { IndianRupee, X } from 'lucide-react';
-import { formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
+import { formatCurrency } from '@/lib/formatters';
 import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
 
 export default function ManagerHrPaymentModal() {
@@ -34,11 +34,11 @@ export default function ManagerHrPaymentModal() {
       <div className="bg-card/95 backdrop-blur-xl rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden motion-safe:animate-in motion-safe:zoom-in-95 duration-200 border border-white/5">
         <div className="p-5 flex justify-between items-center border-b border-border">
           <h3 className="font-bold text-foreground">Pay Salary</h3>
-          <button type="button" onClick={() => setPaymentModal(null)} className="p-1.5 text-secondary hover:text-foreground hover:bg-white/10 rounded-md transition-colors"><X size={18} /></button>
+          <button type="button" onClick={() => setPaymentModal(null)} className="p-1.5 text-secondary hover:text-foreground hover:bg-primary/10 rounded-md transition-colors"><X size={18} /></button>
         </div>
         
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div className="p-4 rounded-xl bg-white/5 border border-white/5 mb-2">
+          <div className="p-4 rounded-xl bg-primary/5 border border-border mb-2">
             <p className="text-sm text-secondary mb-1">
               Staff: <strong className="text-foreground">{paymentModal.staffName}</strong>
             </p>

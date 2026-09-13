@@ -7,10 +7,13 @@ import { INQUIRIES_STATUS_LABELS } from '@/app/manager/inquiries/inquiries_utils
 import { RefreshCw, Plus, MessageCircle, Mail } from 'lucide-react';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 
+import { useQueryClient } from '@tanstack/react-query';
+
 export default function ManagerInquiriesToolbar() {
-  const { search, setSearch, statusFilter, setStatusFilter, loadAll, openAdd, selectedIds, clearSelection, openBulkMsg, setCurrentPage } = useInquiriesContext();
+  const { search, setSearch, statusFilter, setStatusFilter, openAdd, selectedIds, clearSelection, openBulkMsg, setCurrentPage } = useInquiriesContext();
   const [prevSearch, setPrevSearch] = useState(search);
   const [localSearch, setLocalSearch] = useState(search);
+  const queryClient = useQueryClient();
 
   if (search !== prevSearch) {
     setPrevSearch(search);
@@ -77,7 +80,7 @@ export default function ManagerInquiriesToolbar() {
           />
         </div>
         <button
-          onClick={loadAll}
+          onClick={() => queryClient.invalidateQueries({ queryKey: ['manager', 'inquiries'] })}
           className="flex items-center gap-2 px-3 py-2.5 text-sm border border-border rounded-xl hover:opacity-80 transition-opacity text-secondary"
           aria-label="Refresh inquiries"
         >

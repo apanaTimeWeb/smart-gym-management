@@ -13,7 +13,7 @@ import { useFetchTrainers } from '@/app/manager/members/members_api/useManagerMe
 export default function ManagerProfileOverview() {
   const { selectedMember, openMsg, freezeMember, toggleSuspend, assignTrainer } = useMembersContext();
   const { data: trainersData } = useFetchTrainers();
-  const trainers = trainersData || [];
+  const trainers = (trainersData || []) as Array<{ id: string; name: string; role?: string }>;
   const [isAssigningTrainer, setIsAssigningTrainer] = useState(false);
   const [selectedTrainerId, setSelectedTrainerId] = useState('');
   const [isPT, setIsPT] = useState(false);
@@ -145,7 +145,7 @@ export default function ManagerProfileOverview() {
                     className="w-full p-2.5 bg-background border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
                   >
                     <option value="">Select Trainer</option>
-                    {trainers.map((t: any) => (
+                    {trainers.map((t) => (
                       <option key={t.id} value={t.id}>{t.name} ({t.role})</option>
                     ))}
                   </select>
@@ -157,7 +157,7 @@ export default function ManagerProfileOverview() {
                     <button 
                       onClick={() => {
                         if(selectedTrainerId) {
-                          const t = trainers.find((x: any) => x.id === selectedTrainerId);
+                          const t = trainers.find((x) => x.id === selectedTrainerId);
                           if(t) assignTrainer(selectedMember.id, t.id, t.name, isPT);
                           setIsAssigningTrainer(false);
                         }

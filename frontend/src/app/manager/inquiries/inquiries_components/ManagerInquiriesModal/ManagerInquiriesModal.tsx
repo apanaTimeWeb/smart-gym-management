@@ -8,41 +8,25 @@ import { X, Save } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import { inquiriesApi } from '@/app/manager/inquiries/inquiries_api/ManagerInquiriesApi';
+import { useInquiryPlansQuery } from '@/app/manager/inquiries/inquiries_api/useManagerInquiriesQueries';
+import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
 
 export default function ManagerInquiriesModal() {
   const { showModal, setShowModal, editId, editData, saveInquiry, saving } = useInquiriesContext();
 
-  const { register, handleSubmit, reset, control, formState: { errors } } = useForm<InquiryFormValues>({
+  const { register, handleSubmit, reset, control, formState: { errors, isDirty } } = useForm<InquiryFormValues>({
     resolver: zodResolver(InquirySchema),
     defaultValues: editData || {},
   });
 
-  const [plans, setPlans] = useState<{ label: string, value: string }[]>([]);
-  useEffect(() => {
-    if (showModal) {
-      inquiriesApi.getPlans().then(res => {
-        if (res.data && Array.isArray(res.data) && res.data.length > 0) {
-          setPlans(res.data.map((p: { name: string }) => ({ label: p.name, value: p.name })));
-        } else {
-          // Fallback if API returns empty
-          setPlans([
-            { label: 'Basic Plan', value: 'Basic Plan' },
-            { label: 'Pro Plan', value: 'Pro Plan' },
-            { label: 'VIP Plan', value: 'VIP Plan' }
-          ]);
-        }
-      }).catch(err => {
-        console.error("Failed to fetch plans:", err instanceof Error ? err.message : "Unknown error");
-        // Fallback if API fails
-        setPlans([
-          { label: 'Basic Plan', value: 'Basic Plan' },
-          { label: 'Pro Plan', value: 'Pro Plan' },
-          { label: 'VIP Plan', value: 'VIP Plan' }
-        ]);
-      });
-    }
-  }, [showModal]);
+  useUnsavedChangesGuard(isDirty && showModal);
+
+  const { data: plansData } = useInquiryPlansQuery();
+  const plans = plansData ? plansData.map((p) => ({ label: p.name, value: p.name })) : [
+    { label: 'Basic Plan', value: 'Basic Plan' },
+    { label: 'Pro Plan', value: 'Pro Plan' },
+    { label: 'VIP Plan', value: 'VIP Plan' }
+  ];
 
   // Sync form values when modal opens with new editData
   const [newNote, setNewNote] = useState('');
@@ -174,8 +158,8 @@ export default function ManagerInquiriesModal() {
                 
                 {editData?.followUpLogs && editData.followUpLogs.length > 0 ? (
                   <div className="space-y-3 mb-4 max-h-32 overflow-y-auto custom-scrollbar pr-2">
-                    {editData.followUpLogs.map((log, i) => (
-                      <div key={i} className="bg-primary-subtle p-3 rounded-lg border border-primary/20">
+                    {editData.followUpLogs.map((log) => (
+                      <div key={log.date} className="bg-primary-subtle p-3 rounded-lg border border-primary/20">
                         <div className="text-xs text-secondary font-medium mb-1">
                           {new Date(log.date).toLocaleDateString()} {new Date(log.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </div>

@@ -1,0 +1,73 @@
+import type { Expense, ExpenseStats } from '@/app/manager/expenses/expenses_types/ManagerExpensesTypes';
+
+export const MOCK_EXPENSES_STATS: ExpenseStats = {
+  totalAmount: 155000,
+  paidAmount: 140000,
+  pendingAmount: 15000,
+  thisMonthAmount: 45000,
+};
+
+export const MOCK_EXPENSES_LIST: Expense[] = [
+  {
+    id: '1',
+    title: 'Electricity Bill - August',
+    category: 'Utilities',
+    amount: 12500,
+    date: new Date().toISOString().split('T')[0] || '',
+    status: 'PAID',
+    paymentMode: 'NetBanking',
+    vendorName: 'State Electricity Board',
+    createdAt: new Date().toISOString(),
+    isRecurring: true,
+    recurringFrequency: 'Monthly',
+  },
+  {
+    id: '2',
+    title: 'Gym Equipment Maintenance',
+    category: 'Maintenance',
+    amount: 8000,
+    date: new Date(Date.now() - 86400000 * 2).toISOString().split('T')[0] || '',
+    status: 'PAID',
+    paymentMode: 'Card',
+    vendorName: 'FitTech Services',
+    createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
+    isRecurring: false,
+  },
+  {
+    id: '3',
+    title: 'Cleaning Supplies',
+    category: 'Supplies',
+    amount: 3500,
+    date: new Date(Date.now() - 86400000 * 5).toISOString().split('T')[0] || '',
+    status: 'PENDING',
+    paymentMode: 'Cash',
+    vendorName: 'Local Market',
+    createdAt: new Date(Date.now() - 86400000 * 5).toISOString(),
+    isRecurring: true,
+    recurringFrequency: 'Weekly',
+  },
+  {
+    id: '4',
+    title: 'Facebook Ads Campaign',
+    category: 'Marketing',
+    amount: 15000,
+    date: new Date(Date.now() - 86400000 * 10).toISOString().split('T')[0] || '',
+    status: 'PAID',
+    paymentMode: 'Card',
+    vendorName: 'Meta',
+    createdAt: new Date(Date.now() - 86400000 * 10).toISOString(),
+    isRecurring: false,
+  },
+  {
+    id: '5',
+    title: 'Trainer Certifications',
+    category: 'Training',
+    amount: 25000,
+    date: new Date(Date.now() - 86400000 * 15).toISOString().split('T')[0] || '',
+    status: 'PENDING',
+    paymentMode: 'Bank Transfer',
+    vendorName: 'ACE Fitness',
+    createdAt: new Date(Date.now() - 86400000 * 15).toISOString(),
+    isRecurring: false,
+  }
+];

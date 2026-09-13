@@ -7,7 +7,7 @@ import { useManagerReferralsLogic } from '@/app/manager/referrals/referrals_cont
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/SearchableDropdown';
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
-import { maskSensitiveData } from '@/lib/formatters';
+import { formatCurrency, maskSensitiveData } from '@/lib/formatters';
 
 const REFERRAL_STATUS_OPTIONS = [
   { value: 'ALL', label: 'All Statuses' },
@@ -122,7 +122,7 @@ export default function ManagerReferralsTable() {
                           disabled={isClaiming}
                           className="inline-flex items-center gap-1 px-3 py-1.5 bg-primary text-black rounded text-xs font-bold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-50"
                         >
-                          <IndianRupee size={14} /> Claim ₹{ref.rewardAmount}
+                          <IndianRupee size={14} /> Claim {formatCurrency(ref.rewardAmount)}
                         </button>
                       ) : (
                         <span className="text-secondary text-xs italic">Awaiting Join</span>

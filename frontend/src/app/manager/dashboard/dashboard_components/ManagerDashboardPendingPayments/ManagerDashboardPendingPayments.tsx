@@ -5,7 +5,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Search, BellRing } from 'lucide-react';
 import { useDashboardContext } from '@/app/manager/dashboard/dashboard_context/ManagerDashboardContext';
-import { formatCurrency } from '@/app/manager/dashboard/dashboard_utils/ManagerDashboardSharedConstants';
+import { formatCurrency } from '@/lib/formatters';
 
 export default function PendingPayments() {
   const { stats } = useDashboardContext();

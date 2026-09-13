@@ -1,18 +1,12 @@
-// RESPONSIBILITY: Central logic hook for the Attendance module. Manages state, API interactions, and URL synchronization.
-// DATA FLOW: UI Components -> useManagerAttendanceLogic (State + URL) -> API (Backend)
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import type { ApiResponse } from '@/lib/api';
-import { attendanceApi } from '@/app/manager/attendance/attendance_api/ManagerAttendanceApi';
-import { hrApi } from '@/app/manager/hr/hr_api/ManagerHrApi';
-import { membersApi } from '@/app/manager/members/members_api/ManagerMembersApi';
-import type { Member } from '@/app/manager/members/members_types/ManagerMembersTypes';
-import type { Staff } from '@/app/manager/hr/hr_types/ManagerHrTypes';
-import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
+import type { AttendanceContextType, FetchState, Attendance } from '@/app/manager/attendance/attendance_types/ManagerAttendanceTypes';
 import { EMPTY_ATTENDANCE_FORM, ATTENDANCE_TABS, type AttendanceTab } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
+import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import { useDebounce } from '@/app/manager/manager_utils/useDebounce';
-import type { AttendanceContextType, Attendance, AttendanceStatsResponse, AttendanceResponse, FetchState } from '@/app/manager/attendance/attendance_types/ManagerAttendanceTypes';
-import { useManagerAttendanceMutations } from './useManagerAttendanceMutations';
+import { useManagerAttendanceMutations } from '@/app/manager/attendance/attendance_context/useManagerAttendanceMutations';
+import { useAttendanceListQuery, useTodayStatsQuery, useActiveMembersQuery, useStaffQuery } from '@/app/manager/attendance/attendance_api/useManagerAttendanceQueries';
+import { filterAndSortAttendance } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceFilterUtils';
 
 export function useManagerAttendanceLogic(): AttendanceContextType {
   const router = useRouter();
@@ -25,7 +19,7 @@ export function useManagerAttendanceLogic(): AttendanceContextType {
   const [statusFilter, setStatusFilter] = useState(searchParams.get('status') || '');
   
   const tabParam = searchParams.get('tab') as AttendanceTab | null;
-  const tab: AttendanceTab = tabParam && ATTENDANCE_TABS?.includes(tabParam) ? tabParam : ATTENDANCE_TABS[0];
+  const tab: AttendanceTab = tabParam && ATTENDANCE_TABS.includes(tabParam) ? tabParam : ATTENDANCE_TABS[0];
   const debouncedSearch = useDebounce(search, 300);
 
   const setUrlParam = useCallback((key: string, value: string | null) => {
@@ -55,14 +49,34 @@ export function useManagerAttendanceLogic(): AttendanceContextType {
   const setCurrentPage = useCallback((val: number) => setUrlParam('page', val.toString()), [setUrlParam]);
   const setTab = useCallback((val: AttendanceTab) => setUrlParam('tab', val), [setUrlParam]);
 
-  // Local State
-  const [records, setRecords] = useState<Attendance[]>([]);
-  const [totalRecords, setTotalRecords] = useState(0);
-  const [todayStats, setTodayStats] = useState<AttendanceStatsResponse>({ totalCheckIns: 0, memberCheckIns: 0, staffCheckIns: 0 });
-  const [members, setMembers] = useState<Member[]>([]);
-  const [staff, setStaff] = useState<Staff[]>([]);
- 
-  const [fetchState, setFetchState] = useState<FetchState>('loading');
+  // Queries
+  const params: Record<string, string> = { limit: '10', page: currentPage.toString() };
+  if (debouncedSearch) params.search = debouncedSearch;
+  if (dateFilter) params.date = dateFilter;
+  if (statusFilter) params.status = statusFilter;
+  if (tab !== 'Daily Attendance Report') params.type = tab === 'Member Attendance' ? 'MEMBER' : 'STAFF';
+
+  const { data: listData, isLoading: listLoading, isError: listError, refetch } = useAttendanceListQuery(params);
+  const { data: statsData, isLoading: statsLoading, isError: statsError } = useTodayStatsQuery();
+  const { data: membersData } = useActiveMembersQuery();
+  const { data: staffData } = useStaffQuery();
+
+  const members = useMemo(() => membersData?.members || [], [membersData]);
+  const staffArray = Array.isArray(staffData) ? staffData : (staffData?.staff || []);
+  const staff = useMemo(() => staffArray, [staffArray]);
+
+  const rawRecords = listData?.attendances || [];
+  let records = useMemo(() => {
+    return filterAndSortAttendance(rawRecords, tab, debouncedSearch, dateFilter, statusFilter);
+  }, [rawRecords, tab, debouncedSearch, dateFilter, statusFilter]);
+
+  const totalRecords = listData?.total || 0;
+  const todayStats = statsData || { totalCheckIns: 0, memberCheckIns: 0, staffCheckIns: 0 };
+
+  const isLoading = listLoading || statsLoading;
+  const isError = listError || statsError;
+  const fetchState: FetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
+
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
  
@@ -74,82 +88,20 @@ export function useManagerAttendanceLogic(): AttendanceContextType {
   const hideToast = useCallback(() => setToast(null), []);
 
   const loadAll = useCallback(async () => {
-    setFetchState('loading');
-    try {
-      const params: Record<string, string> = {
-        limit: '10',
-        page: currentPage.toString()
-      };
-      if (debouncedSearch) params.search = debouncedSearch;
-      if (dateFilter) params.date = dateFilter;
-      if (statusFilter) params.status = statusFilter;
-      if (tab !== 'Daily Attendance Report') params.type = tab === 'Member Attendance' ? 'MEMBER' : 'STAFF';
-
-      // We explicitly cast the responses via our strict generic wrapper
-      const [attRes, statsRes, memRes, staffRes] = await Promise.all([
-        attendanceApi.getAll(params) as unknown as Promise<ApiResponse<AttendanceResponse>>,
-        attendanceApi.getTodayStats() as unknown as Promise<ApiResponse<AttendanceStatsResponse>>,
-        membersApi.getAll({ limit: '1000', status: 'active' }) as unknown as Promise<ApiResponse<{ members: Member[] }>>,
-        hrApi.getStaff() as unknown as Promise<ApiResponse<{ staff: Staff[] } | Staff[]>>,
-      ]);
-
-      let fetchedRecords = attRes.data.attendance || ((attRes.data as unknown) as { attendances?: import("@/app/manager/attendance/attendance_types/ManagerAttendanceTypes").Attendance[] }).attendances || [];
-      
-      if (tab !== 'Daily Attendance Report') {
-        fetchedRecords = fetchedRecords.filter((r: Attendance) => r.type === (tab === 'Member Attendance' ? 'MEMBER' : 'STAFF'));
-      }
-      
-      if (debouncedSearch) {
-        const q = debouncedSearch.toLowerCase();
-        fetchedRecords = fetchedRecords.filter((r: Attendance) => 
-          (r.member?.name && r.member.name?.toLowerCase().includes(q)) || 
-          (r.staff?.name && r.staff.name?.toLowerCase().includes(q))
-        );
-      }
-      if (dateFilter) {
-        fetchedRecords = fetchedRecords.filter((r: Attendance) => r.date === dateFilter);
-      }
-      if (statusFilter && statusFilter !== 'All') {
-        fetchedRecords = fetchedRecords.filter((r: Attendance) => r.status === statusFilter);
-      }
-
-      // Sort by newest first
-      fetchedRecords.sort((a: any, b: any) => {
-        const dateA = new Date(a.createdAt || a.date).getTime();
-        const dateB = new Date(b.createdAt || b.date).getTime();
-        return dateB - dateA;
-      });
-
-      setRecords(fetchedRecords);
-      setTotalRecords(attRes.data.total || 0);
-      setTodayStats(statsRes.data);
-      setMembers(memRes.data.members || []);
-      
-      const staffData = staffRes.data;
-      setStaff(Array.isArray(staffData) ? staffData : (staffData.staff || []));
-    } catch (e) { 
-      showToast((e as Error).message, 'error'); 
-    } finally { 
-      setFetchState('success'); 
-    }
-  }, [showToast, currentPage, debouncedSearch, tab]);
-
-  // Rely on URL changes to drive the fetch (plus initial mount)
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => { loadAll(); }, [loadAll]);
+    await refetch();
+  }, [refetch]);
 
   const { markAttendance } = useManagerAttendanceMutations(
     members, staff, setSaving, setShowModal, setForm, showToast, loadAll
   );
 
   const exportAttendance = useCallback(() => {
-    // Basic CSV Export mockup
     const csvContent = [
       ['Date', 'Name', 'Role', 'Status', 'Check In', 'Check Out'],
       ...records.map(r => [
         r.date, 
         r.member?.name || r.staff?.name || 'Unknown', 
-        r.memberId ? 'Member' : 'Staff', 
+        r.type === 'MEMBER' ? 'Member' : 'Staff', 
         r.status || 'Present', 
         r.checkIn || '-', 
         r.checkOut || '-'

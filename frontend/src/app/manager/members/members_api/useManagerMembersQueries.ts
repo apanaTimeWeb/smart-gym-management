@@ -39,8 +39,8 @@ export function useFetchTrainers() {
     queryKey: ['manager', 'trainers'],
     queryFn: async () => {
       try {
-        const res = await membersApi.getTrainers();
-        return (res as any)?.data?.staff?.filter((s: any) => s.role?.toLowerCase().includes('trainer')) || [];
+        const res = await membersApi.getTrainers() as { data?: { staff?: Array<{ role?: string; [key: string]: unknown }> } };
+        return res.data?.staff?.filter((s) => s.role?.toLowerCase().includes('trainer')) || [];
       } catch {
         return [];
       }
@@ -66,7 +66,7 @@ export function useFetchAttendance(memberId: string) {
     queryFn: async () => {
       if (!memberId) return [];
       const res = await attendanceApi.getAll({ memberId });
-      return res.data?.attendance || (res.data as any)?.attendances || [];
+      return res.data?.attendance || (res.data as { attendances?: unknown[] })?.attendances || [];
     },
     enabled: !!memberId,
   });

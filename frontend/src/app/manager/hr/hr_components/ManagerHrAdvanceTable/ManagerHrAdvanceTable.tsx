@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
+import { formatCurrency } from '@/lib/formatters';
 
 export default function ManagerHrAdvanceTable() {
   const { staff, giveAdvance, saving } = useHrContext();
@@ -35,14 +36,14 @@ export default function ManagerHrAdvanceTable() {
           >
             <option value="" disabled>Select Staff</option>
             {staff.map(s => (
-              <option key={s.id} value={s.id}>{s.name} ({s.role}) - Balance: ₹{s.advanceSalary || 0}</option>
+              <option key={s.id} value={s.id}>{s.name} ({s.role}) - Balance: {formatCurrency(s.advanceSalary || 0)}</option>
             ))}
           </select>
         </div>
 
         {selectedStaff && (
           <div className="p-4 bg-primary/5 rounded-lg border border-primary/20 text-sm">
-            <p><strong>Current Advance Balance:</strong> ₹{selectedStaff.advanceSalary || 0}</p>
+            <p><strong>Current Advance Balance:</strong> {formatCurrency(selectedStaff.advanceSalary || 0)}</p>
             <p className="text-secondary text-xs mt-1">Advances are automatically deducted from the next payroll calculation.</p>
           </div>
         )}

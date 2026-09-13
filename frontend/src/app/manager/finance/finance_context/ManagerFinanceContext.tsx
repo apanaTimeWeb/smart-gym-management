@@ -1,11 +1,13 @@
-// RESPONSIBILITY: React Context — bridges Zustand finance store with UI state (filters, tab, pagination).
+// RESPONSIBILITY: React Context — bridges TanStack Query with UI state (filters, tab, pagination).
 'use client';
 
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { createContext, useContext, useState, useCallback, useMemo } from 'react';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';
-import { useManagerFinanceStore } from '@/app/manager/finance/finance_store/useManagerFinanceStore';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
+import { useManagerFinancePayments, useManagerFinanceSummary } from '@/app/manager/finance/finance_api/useManagerFinanceQueries';
+import type { Payment, FinanceSummary } from '@/app/manager/finance/finance_types/ManagerFinanceTypes';
+import { useQueryClient } from '@tanstack/react-query';
 
 export type FinanceTab = 'Payments' | 'Summary';
 
@@ -24,11 +26,10 @@ interface FinanceContextValue {
   setStartDate: (v: string) => void;
   endDate: string;
   setEndDate: (v: string) => void;
-  payments: ReturnType<typeof useManagerFinanceStore.getState>['payments'];
-  summary: ReturnType<typeof useManagerFinanceStore.getState>['summary'];
+  payments: Payment[];
+  summary: FinanceSummary | null;
   totalPayments: number;
-  fetchState: ReturnType<typeof useManagerFinanceStore.getState>['fetchState'];
-  saving: boolean;
+  fetchState: 'idle' | 'loading' | 'success' | 'error';
   reload: () => void;
   exportCSV: () => void;
   exportPDF: () => void;
@@ -40,28 +41,70 @@ const ManagerFinanceContext = createContext<FinanceContextValue | undefined>(und
 export function FinanceProvider({ children }: { children: ReactNode }) {
   const [tab, setTab] = useState<FinanceTab>('Payments');
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
   const range = searchParams.get('range') || 'this_month';
+  
   const startDate = searchParams.get('startDate') || '';
   const endDate = searchParams.get('endDate') || '';
-  
-  const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState('ALL');
-  const [methodFilter, setMethodFilter] = useState('ALL');
-  const [currentPage, setCurrentPage] = useState(1);
+  const search = searchParams.get('search') || '';
+  const statusFilter = searchParams.get('status') || 'ALL';
+  const methodFilter = searchParams.get('method') || 'ALL';
+  const currentPage = parseInt(searchParams.get('page') || '1', 10);
 
-  const setStartDate = () => {};
-  const setEndDate = () => {};
+  const setUrlParam = useCallback((key: string, value: string | null) => {
+    const current = new URLSearchParams(Array.from(searchParams.entries()));
+    if (value && value !== 'ALL') current.set(key, value);
+    else current.delete(key);
+    if (key !== 'page') current.set('page', '1');
+    router.push(`${pathname}?${current.toString()}`);
+  }, [searchParams, pathname, router]);
 
-  const { payments, summary, totalPayments, fetchState, saving, loadAll } = useManagerFinanceStore();
+  const setSearch = useCallback((v: string) => setUrlParam('search', v || null), [setUrlParam]);
+  const setStatusFilter = useCallback((v: string) => setUrlParam('status', v), [setUrlParam]);
+  const setMethodFilter = useCallback((v: string) => setUrlParam('method', v), [setUrlParam]);
+  const setCurrentPage = useCallback((v: number) => setUrlParam('page', v.toString()), [setUrlParam]);
+  const setStartDate = useCallback((v: string) => setUrlParam('startDate', v || null), [setUrlParam]);
+  const setEndDate = useCallback((v: string) => setUrlParam('endDate', v || null), [setUrlParam]);
+
+  const queryClient = useQueryClient();
+
+  const queryParams = useMemo(() => ({
+    search,
+    status: statusFilter,
+    method: methodFilter,
+    page: currentPage.toString(),
+    limit: MANAGER_ITEMS_PER_PAGE.toString(),
+    range,
+    startDate,
+    endDate
+  }), [search, statusFilter, methodFilter, currentPage, range, startDate, endDate]);
+
+  const { 
+    data: paymentsData, 
+    isLoading: isPaymentsLoading,
+    isError: isPaymentsError,
+  } = useManagerFinancePayments(queryParams);
+
+  const {
+    data: summaryData,
+    isLoading: isSummaryLoading,
+  } = useManagerFinanceSummary(range);
+
+  const payments = paymentsData?.payments || [];
+  const totalPayments = paymentsData?.total || 0;
+  const summary = summaryData || null;
+
+  const fetchState = isPaymentsLoading || isSummaryLoading 
+    ? 'loading' 
+    : isPaymentsError 
+      ? 'error' 
+      : 'success';
 
   const reload = useCallback(() => {
-    loadAll({ search, status: statusFilter, method: methodFilter, page: currentPage.toString(), limit: MANAGER_ITEMS_PER_PAGE.toString(), range, startDate, endDate });
-  }, [search, statusFilter, methodFilter, currentPage, range, startDate, endDate, loadAll]);
-
-  useEffect(() => {
-    const t = setTimeout(reload, 300);
-    return () => clearTimeout(t);
-  }, [reload]);
+    queryClient.invalidateQueries({ queryKey: ['manager', 'finance', 'payments'] });
+    queryClient.invalidateQueries({ queryKey: ['manager', 'finance', 'summary'] });
+  }, [queryClient]);
 
   const exportCSV = useCallback(() => {
     const headers = ['Invoice No', 'Member', 'Plan', 'Amount', 'Method', 'Status', 'Date'];
@@ -102,7 +145,7 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
       startDate, setStartDate,
       endDate, setEndDate,
       payments, summary, totalPayments,
-      fetchState, saving,
+      fetchState,
       reload, exportCSV, exportPDF, printReceipt
     }}>
       {children}

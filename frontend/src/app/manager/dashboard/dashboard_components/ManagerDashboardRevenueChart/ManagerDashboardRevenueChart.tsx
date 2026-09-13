@@ -1,12 +1,20 @@
-// RESPONSIBILITY: Renders the revenue trend chart on the manager dashboard using Recharts.
 'use client';
 
+import React from 'react';
+import dynamic from 'next/dynamic';
 import { useDashboardContext } from '@/app/manager/dashboard/dashboard_context/ManagerDashboardContext';
-import { formatCurrency } from '@/app/manager/dashboard/dashboard_utils/ManagerDashboardSharedConstants';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { formatCurrency, formatKPI } from '@/lib/formatters';
+import { Loader2 } from 'lucide-react';
+import type { DashboardRevenueChartData } from '@/app/manager/dashboard/dashboard_types/ManagerDashboardTypes';
+
+const Chart = dynamic(() => import('react-apexcharts'), {
+  ssr: false,
+  loading: () => <div className="flex items-center justify-center h-64"><Loader2 className="w-6 h-6 motion-safe:animate-spin text-primary" /></div>,
+});
 
 export default function ManagerDashboardRevenueChart() {
   const { stats } = useDashboardContext();
+  
   if (!stats?.revenueChart || stats.revenueChart.length === 0) {
     return (
       <div className="bg-card rounded-xl shadow-sm border border-border p-5 h-[300px] flex items-center justify-center">
@@ -15,48 +23,37 @@ export default function ManagerDashboardRevenueChart() {
     );
   }
 
+  const options = {
+    chart: { background: 'transparent', toolbar: { show: false }, fontFamily: 'Inter, sans-serif' },
+    colors: ['#22c55e'],
+    stroke: { curve: 'smooth' as const, width: 3 },
+    fill: {
+      type: 'gradient',
+      gradient: { shadeIntensity: 1, opacityFrom: 0.3, opacityTo: 0, stops: [0, 90, 100] }
+    },
+    grid: { borderColor: 'rgba(255,255,255,0.05)', strokeDashArray: 4 },
+    tooltip: { theme: 'dark' as const, y: { formatter: (v: number) => formatCurrency(v) } },
+    xaxis: {
+      categories: stats.revenueChart.map((d: DashboardRevenueChartData) => d.month),
+      labels: { style: { colors: '#A1A1AA', fontSize: '11px' } },
+      axisBorder: { show: false }, axisTicks: { show: false },
+    },
+    yaxis: { labels: { style: { colors: '#A1A1AA', fontSize: '11px' }, formatter: (v: number) => formatKPI(v) } },
+    dataLabels: { enabled: false },
+  };
+
   return (
     <div className="bg-card rounded-xl shadow-sm border border-border p-5 flex flex-col h-full min-h-[300px]">
       <h3 className="text-base font-bold text-foreground mb-4">Revenue Trends</h3>
       <div className="flex-1 w-full h-[220px]">
-        <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={stats.revenueChart} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-            <defs>
-              <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
-            <XAxis 
-              dataKey="month" 
-              axisLine={false} 
-              tickLine={false} 
-              tick={{ fontSize: 11, fill: 'hsl(var(--secondary))' }} 
-              dy={10} 
-            />
-            <YAxis 
-              axisLine={false} 
-              tickLine={false} 
-              tick={{ fontSize: 11, fill: 'hsl(var(--secondary))' }}
-              tickFormatter={(value) => `₹${value >= 1000 ? (value / 1000).toFixed(1) + 'k' : value}`}
-            />
-            <Tooltip 
-              contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }}
-              itemStyle={{ color: '#22c55e', fontWeight: 'bold' }}
-              formatter={(value: any) => [formatCurrency(value), 'Revenue']}
-              labelStyle={{ color: 'hsl(var(--foreground))', marginBottom: '4px' }}
-            />
-            <Area 
-              type="monotone" 
-              dataKey="revenue" 
-              stroke="#22c55e" 
-              strokeWidth={3} 
-              fillOpacity={1} 
-              fill="url(#colorRevenue)" 
-            />
-          </AreaChart>
-        </ResponsiveContainer>
+        <Chart
+          type="area"
+          height={220}
+          options={options}
+          series={[
+            { name: 'Revenue', data: stats.revenueChart.map((d: DashboardRevenueChartData) => d.revenue || 0) },
+          ]}
+        />
       </div>
     </div>
   );
