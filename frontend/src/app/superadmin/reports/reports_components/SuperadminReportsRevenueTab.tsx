@@ -33,14 +33,14 @@ export function SuperadminReportsRevenueTab({
   };
 
   const revenueChartSeries = [
-    { name: 'MRR', data: revenueData.map((d) => d.mrr) },
-    { name: 'Churned Revenue', data: revenueData.map((d) => d.churnedRevenue) },
+    { name: 'Monthly Income', data: revenueData.map((d) => d.mrr) },
+    { name: 'Lost Income', data: revenueData.map((d) => d.churnedRevenue) },
   ];
 
   return (
     <div className="space-y-6">
       <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
-        <h2 className="text-base font-semibold text-foreground mb-6">MRR vs Churned Revenue</h2>
+        <h2 className="text-base font-semibold text-foreground mb-6">Monthly Income vs Lost Income</h2>
         <div className="h-72">
           <Chart options={revenueChartOptions} series={revenueChartSeries} type="area" height="100%" />
         </div>
@@ -51,7 +51,7 @@ export function SuperadminReportsRevenueTab({
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border bg-input/40">
-                {['Month', 'MRR', 'New Revenue', 'Churned', 'Net Revenue', 'Tenants'].map((h) => (
+                {['Month', 'Monthly Income', 'New Revenue', 'Churned', 'Net Revenue', 'Gyms'].map((h) => (
                   <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">{h}</th>
                 ))}
               </tr>

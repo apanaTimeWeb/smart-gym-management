@@ -15,7 +15,7 @@ export default function AdminReportsKPIs() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
       <AdminStatCard
-        title={`Total Revenue${dateSuffix}`}
+        title={`Total Income${dateSuffix}`}
         value={kpis ? formatCurrency(kpis.totalRevenue) : '—'}
         change="vs last period"
         changeType="up"

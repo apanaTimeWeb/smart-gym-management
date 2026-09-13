@@ -28,7 +28,7 @@ export function SuperadminReportsHealthTab({
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border bg-input/40">
-              {['Tenant', 'Plan', 'Score', 'Grade', 'Members', 'Last Login', 'Payment', 'Feature Use', 'Tickets'].map((h) => (
+              {['Gym', 'Plan', 'Score', 'Grade', 'Members', 'Last Login', 'Payment', 'Feature Use', 'Tickets'].map((h) => (
                 <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">{h}</th>
               ))}
             </tr>

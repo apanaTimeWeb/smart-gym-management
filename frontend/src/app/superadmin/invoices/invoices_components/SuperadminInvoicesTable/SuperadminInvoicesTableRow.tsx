@@ -28,7 +28,7 @@ export default function SuperadminInvoicesTableRow({ invoice: inv }: InvoicesTab
       subtitle: 'SaaS Invoice / Receipt',
       date: dateStr,
       customerInfo: {
-        'Tenant': inv.tenantName,
+        'Gym': inv.tenantName,
         'Invoice ID': inv.id,
       },
       sections: [

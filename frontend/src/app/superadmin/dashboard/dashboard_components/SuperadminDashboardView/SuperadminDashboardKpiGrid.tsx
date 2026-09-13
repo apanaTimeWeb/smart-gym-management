@@ -70,7 +70,7 @@ export function SuperadminDashboardKpiGrid({
       iconBgClass: 'bg-purple/10',
     },
     {
-      label: 'ARPU' + dateSuffix,
+      label: 'Avg. Income per Gym' + dateSuffix,
       value: formatIndianCurrency(metrics.arpu || 0),
       trend: undefined,
       trendUp: true,

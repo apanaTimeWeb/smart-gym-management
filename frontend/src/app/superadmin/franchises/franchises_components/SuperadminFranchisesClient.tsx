@@ -37,7 +37,7 @@ export default function SuperadminFranchisesClient() {
     { label: 'Active', value: franchises.filter(f => f.status === 'ACTIVE').length, icon: CheckCircle2, color: 'text-success', bg: 'bg-success/10' },
     { label: 'Total Branches', value: franchises.reduce((s, f) => s + f.branchCount, 0), icon: Building2, color: 'text-info', bg: 'bg-info/10' },
     { label: 'Total Members', value: franchises.reduce((s, f) => s + f.totalMembers, 0).toLocaleString('en-IN'), icon: Users, color: 'text-warning', bg: 'bg-warning/10' },
-    { label: 'Combined MRR', value: `₹${franchises.reduce((s, f) => s + f.totalMonthlyRevenue, 0).toLocaleString('en-IN')}`, icon: TrendingUp, color: 'text-success', bg: 'bg-success/10' },
+    { label: 'Combined Monthly Income', value: `₹${franchises.reduce((s, f) => s + f.totalMonthlyRevenue, 0).toLocaleString('en-IN')}`, icon: TrendingUp, color: 'text-success', bg: 'bg-success/10' },
   ];
 
   if (fetchState === 'loading') {
@@ -97,7 +97,7 @@ export default function SuperadminFranchisesClient() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border bg-input/40">
-                {['Franchise', 'Owner', 'Plan', 'Branches', 'Members', 'MRR', 'Status', 'Actions'].map((h) => (
+                {['Franchise', 'Owner', 'Plan', 'Branches', 'Members', 'Monthly Income', 'Status', 'Actions'].map((h) => (
                   <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">{h}</th>
                 ))}
               </tr>

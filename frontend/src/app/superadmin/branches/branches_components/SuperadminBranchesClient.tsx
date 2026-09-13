@@ -35,7 +35,7 @@ export default function SuperadminBranchesClient() {
     { label: 'Active', value: branches.filter(b => b.status === 'ACTIVE').length, icon: CheckCircle2, color: 'text-success', bg: 'bg-success/10' },
     { label: 'Suspended', value: branches.filter(b => b.status === 'SUSPENDED').length, icon: Ban, color: 'text-danger', bg: 'bg-danger/10' },
     { label: 'Total Members', value: branches.reduce((s, b) => s + b.memberCount, 0).toLocaleString('en-IN'), icon: Users, color: 'text-info', bg: 'bg-info/10' },
-    { label: 'Combined MRR', value: `₹${branches.reduce((s, b) => s + b.monthlyRevenue, 0).toLocaleString('en-IN')}`, icon: TrendingUp, color: 'text-warning', bg: 'bg-warning/10' },
+    { label: 'Combined Monthly Income', value: `₹${branches.reduce((s, b) => s + b.monthlyRevenue, 0).toLocaleString('en-IN')}`, icon: TrendingUp, color: 'text-warning', bg: 'bg-warning/10' },
   ];
 
   if (fetchState === 'loading') {
@@ -96,7 +96,7 @@ export default function SuperadminBranchesClient() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border bg-input/40">
-                {['Branch', 'Tenant', 'Manager', 'City', 'Members', 'MRR', 'Status', 'Actions'].map((h) => (
+                {['Branch', 'Gym', 'Manager', 'City', 'Members', 'Monthly Income', 'Status', 'Actions'].map((h) => (
                   <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">{h}</th>
                 ))}
               </tr>

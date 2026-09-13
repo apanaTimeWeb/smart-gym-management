@@ -129,7 +129,7 @@ export default function SuperadminMessagingClient() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Tenant Messaging</h1>
+          <h1 className="text-2xl font-bold text-foreground">Gym Messaging</h1>
           <p className="text-secondary mt-1 text-sm">
             Direct email/SMS to tenants and in-app notification center.
           </p>

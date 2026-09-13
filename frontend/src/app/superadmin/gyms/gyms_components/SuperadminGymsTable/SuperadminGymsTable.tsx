@@ -65,7 +65,7 @@ export default function SuperadminGymsTable() {
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-primary/10 border-b border-border">
-              {['Gym Name', 'Owner', 'Plan', 'Members', 'MRR', 'Status', 'Last Login', 'Actions'].map((h) => (
+              {['Gym Name', 'Owner', 'Plan', 'Members', 'Monthly Income', 'Status', 'Last Login', 'Actions'].map((h) => (
                 <th key={h} className="p-4">
                   <div className="h-3 bg-skeleton-base motion-safe:animate-pulse rounded w-16" />
                 </th>

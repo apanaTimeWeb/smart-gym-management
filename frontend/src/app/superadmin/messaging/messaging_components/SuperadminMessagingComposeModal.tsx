@@ -43,7 +43,7 @@ export function SuperadminMessagingComposeModal({
 
         <div className="space-y-3">
           <div>
-            <label className="text-xs font-medium text-secondary uppercase tracking-wider block mb-1">Tenant</label>
+            <label className="text-xs font-medium text-secondary uppercase tracking-wider block mb-1">Gym</label>
             <SuperadminMessagingTenantDropdown value={composeTenantId} onChange={setComposeTenantId} tenants={tenants} />
           </div>
 

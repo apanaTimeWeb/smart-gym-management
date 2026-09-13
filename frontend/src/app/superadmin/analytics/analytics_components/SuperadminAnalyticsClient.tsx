@@ -64,7 +64,7 @@ export default function SuperadminAnalyticsClient() {
 
   const kpiCards = [
     {
-      label: 'MRR' + dateSuffix,
+      label: 'Monthly Income' + dateSuffix,
       value: `₹${metrics.mrr.toLocaleString('en-IN')}`,
       delta: mrrDelta,
       deltaUp: (metrics.mrrDeltaPercent ?? 0) >= 0,
@@ -82,7 +82,7 @@ export default function SuperadminAnalyticsClient() {
       iconColor: 'text-primary',
     },
     {
-      label: 'Churn Rate' + dateSuffix,
+      label: 'Members Lost %' + dateSuffix,
       value: `${metrics.churnRate}%`,
       delta: churnDelta,
       deltaUp: metrics.churnRate < 2,
@@ -91,7 +91,7 @@ export default function SuperadminAnalyticsClient() {
       iconColor: 'text-danger',
     },
     {
-      label: 'Active Tenants' + dateSuffix,
+      label: 'Active Gyms' + dateSuffix,
       value: String(metrics.activeTenants),
       delta: undefined,
       deltaUp: true,
@@ -100,7 +100,7 @@ export default function SuperadminAnalyticsClient() {
       iconColor: 'text-warning',
     },
     {
-      label: 'ARPU' + dateSuffix,
+      label: 'Avg. Income per Gym' + dateSuffix,
       // Design §21: Indian currency — ₹1,24,500
       value: `₹${arpu.toLocaleString('en-IN')}`,
       delta: 'Avg revenue per tenant',
@@ -139,7 +139,7 @@ export default function SuperadminAnalyticsClient() {
     tooltip: { theme: 'dark' as const },
   };
 
-  const mrrAreaSeries = [{ name: 'MRR', data: monthlyData.map((d) => d.mrr) }];
+  const mrrAreaSeries = [{ name: 'Monthly Income', data: monthlyData.map((d) => d.mrr) }];
 
   // Design §10: Grouped bar chart — new tenants (gold) vs churned (red)
   const tenantBarOptions = {
@@ -165,7 +165,7 @@ export default function SuperadminAnalyticsClient() {
   };
 
   const tenantBarSeries = [
-    { name: 'Active Tenants', data: monthlyData.map((d) => d.tenantCount) },
+    { name: 'Active Gyms', data: monthlyData.map((d) => d.tenantCount) },
     { name: 'Churned', data: monthlyData.map((d) => d.churnedCount) },
   ];
 
@@ -211,7 +211,7 @@ export default function SuperadminAnalyticsClient() {
       {/* Charts Row — Design §10: ApexCharts area + bar */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
-          <h2 className="text-base font-semibold text-foreground mb-6">MRR Growth Trend</h2>
+          <h2 className="text-base font-semibold text-foreground mb-6">Monthly Income Growth Trend</h2>
           <div className="h-72">
             <Chart options={mrrAreaOptions} series={mrrAreaSeries} type="area" height="100%" />
           </div>

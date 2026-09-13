@@ -43,8 +43,8 @@ export function SuperadminReportsChurnTab({
         </div>
         <div className="bg-card border border-border rounded-xl p-6 shadow-sm space-y-3">
           <h2 className="text-base font-semibold text-foreground mb-2">Churn Summary</h2>
-          <div className="flex justify-between text-sm"><span className="text-secondary">Filtered Churned Tenants</span><span className="text-foreground font-medium">{filteredChurnData.length}</span></div>
-          <div className="flex justify-between text-sm"><span className="text-secondary">Total Lost MRR</span><span className="text-danger font-medium">₹{totalChurnedRevenue.toLocaleString('en-IN')}</span></div>
+          <div className="flex justify-between text-sm"><span className="text-secondary">Filtered Lost Gyms</span><span className="text-foreground font-medium">{filteredChurnData.length}</span></div>
+          <div className="flex justify-between text-sm"><span className="text-secondary">Total Lost Monthly Income</span><span className="text-danger font-medium">₹{totalChurnedRevenue.toLocaleString('en-IN')}</span></div>
           <div className="flex justify-between text-sm"><span className="text-secondary">Avg Days Active Before Churn</span><span className="text-foreground font-medium">{avgDaysActive} days</span></div>
           <div className="flex justify-between text-sm"><span className="text-secondary">Top Churn Reason</span><span className="text-foreground font-medium">Too expensive</span></div>
         </div>
@@ -55,7 +55,7 @@ export function SuperadminReportsChurnTab({
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border bg-input/40">
-                {['Tenant', 'Plan', 'Churned At', 'Reason', 'Lost MRR', 'Days Active'].map((h) => (
+                {['Gym', 'Plan', 'Left On', 'Reason', 'Lost Monthly Income', 'Days Active'].map((h) => (
                   <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">{h}</th>
                 ))}
               </tr>

@@ -99,17 +99,17 @@ export default function SuperadminReportsClient() {
     let csvRows: string[] = [];
     if (tab === 'revenue') {
       csvRows = [
-        ['Month', 'MRR', 'New Revenue', 'Churned', 'Net Revenue', 'Tenants'].join(','),
+        ['Month', 'Monthly Income', 'New Revenue', 'Churned', 'Net Revenue', 'Gyms'].join(','),
         ...revenueData.map(r => [r.month, r.mrr, r.newRevenue, r.churnedRevenue, r.netRevenue, r.tenantCount].join(','))
       ];
     } else if (tab === 'churn') {
       csvRows = [
-        ['Tenant', 'Owner', 'Plan', 'Churned At', 'Reason', 'Lost MRR', 'Days Active'].join(','),
+        ['Gym', 'Owner', 'Plan', 'Left On', 'Reason', 'Lost Monthly Income', 'Days Active'].join(','),
         ...churnData.map(c => [c.gymName, c.ownerName, c.plan, c.churnedAt, c.reason, c.mrr, c.daysActive].join(','))
       ];
     } else {
       csvRows = [
-        ['Tenant', 'Plan', 'Score', 'Grade', 'Members', 'Last Login', 'Payment Health', 'Feature Usage', 'Tickets'].join(','),
+        ['Gym', 'Plan', 'Score', 'Grade', 'Members', 'Last Login', 'Payment Health', 'Feature Usage', 'Tickets'].join(','),
         ...healthData.map(h => [h.gymName, h.plan, h.score, h.grade, h.memberCount, h.lastLogin, h.paymentHealth, h.featureUsage, h.supportTickets].join(','))
       ];
     }
@@ -229,7 +229,7 @@ export default function SuperadminReportsClient() {
       <div className="flex gap-1 bg-input border border-border rounded-xl p-1 w-fit flex-wrap">
         {([
           { key: 'revenue' as const, label: 'Revenue Report', icon: IndianRupee },
-          { key: 'churn' as const, label: 'Churn Analysis', icon: TrendingDown },
+          { key: 'churn' as const, label: 'Members Lost Analysis', icon: TrendingDown },
           { key: 'health' as const, label: 'Tenant Health', icon: HeartPulse },
         ]).map(({ key, label, icon: Icon }) => (
           <button

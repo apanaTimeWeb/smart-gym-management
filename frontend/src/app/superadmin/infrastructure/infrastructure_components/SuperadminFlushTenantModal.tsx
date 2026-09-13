@@ -148,7 +148,7 @@ export default function SuperadminFlushTenantModal({ isOpen, onClose, onFlush }:
             className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover disabled:bg-primary/50 text-white font-medium rounded-lg motion-safe:transition-colors text-sm disabled:cursor-not-allowed"
           >
             {isFlushing && <Loader2 className="w-4 h-4 motion-safe:animate-spin" />}
-            Flush {selectedTenantIds.length > 0 ? selectedTenantIds.length : ''} {selectedTenantIds.length === 1 ? 'Tenant' : 'Tenants'}
+            Flush {selectedTenantIds.length > 0 ? selectedTenantIds.length : ''} {selectedTenantIds.length === 1 ? 'Gym' : 'Gyms'}
           </button>
         </div>
       </div>

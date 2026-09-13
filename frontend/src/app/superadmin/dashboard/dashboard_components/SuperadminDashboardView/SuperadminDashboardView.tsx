@@ -79,7 +79,7 @@ export default function SuperadminDashboardView() {
   const { metrics, revenue: revenueChartData, growth: growthChartData = [] } = apiData;
 
   const timeMultiplier = 1; // Backend returns properly scaled metrics
-  const mrrLabel = (timeRange === 'this_year' || timeRange === 'yearly') ? 'YEARLY RR' : 'TOTAL MRR';
+  const mrrLabel = (timeRange === 'this_year' || timeRange === 'yearly') ? 'YEARLY INCOME' : 'TOTAL INCOME';
 
   return (
     <div className="space-y-6">

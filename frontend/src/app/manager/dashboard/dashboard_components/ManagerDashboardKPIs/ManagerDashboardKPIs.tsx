@@ -136,7 +136,7 @@ export default function ManagerDashboardKPIs() {
           iconColor="text-primary"
         />
         <ManagerStatCard
-          title="Churn Rate"
+          title="Members Lost %"
           value={`${s.churnRate || 0}%`}
           change="This Month"
           changeType={(s.churnRate || 0) > 5 ? "down" : "neutral"}

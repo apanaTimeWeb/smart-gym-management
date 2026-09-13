@@ -95,14 +95,14 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
       group: 'Communication & Support',
       items: [
         { name: 'Support Tickets', href: SuperadminUrlConfig.PAGES.TICKETS, icon: Ticket },
-        { name: 'Tenant Messaging', href: SuperadminUrlConfig.PAGES.MESSAGING, icon: MessageSquare },
+        { name: 'Gym Messaging', href: SuperadminUrlConfig.PAGES.MESSAGING, icon: MessageSquare },
         { name: 'Announcements', href: SuperadminUrlConfig.PAGES.BROADCASTS, icon: Megaphone },
       ]
     },
     {
       group: 'Insights & Reports',
       items: [
-        { name: 'Churn Alerts', href: SuperadminUrlConfig.PAGES.CHURN_ALERTS, icon: TrendingDown },
+        { name: 'Members About to Leave', href: SuperadminUrlConfig.PAGES.CHURN_ALERTS, icon: TrendingDown },
         { name: 'Usage Meters', href: SuperadminUrlConfig.PAGES.USAGE_METERS, icon: BarChart3 },
         { name: 'Reports & Exports', href: SuperadminUrlConfig.PAGES.REPORTS, icon: FileBarChart },
       ]

@@ -24,14 +24,14 @@ export default function SuperadminSystemSlaTab() {
         <div className="bg-card border border-border rounded-xl p-6">
           <div className="flex items-center gap-3 mb-2">
             <div className="p-2 bg-primary/10 rounded-lg text-primary"><ServerCog size={24} /></div>
-            <h3 className="font-semibold text-foreground">Tracked Tenants</h3>
+            <h3 className="font-semibold text-foreground">Tracked Gyms</h3>
           </div>
           <p className="text-3xl font-extrabold text-foreground">{totalTenants}</p>
         </div>
         <div className="bg-card border border-border rounded-xl p-6">
           <div className="flex items-center gap-3 mb-2">
             <div className="p-2 bg-danger/10 rounded-lg text-danger"><AlertCircle size={24} /></div>
-            <h3 className="font-semibold text-foreground">SLA Breaches (30d)</h3>
+            <h3 className="font-semibold text-foreground">Uptime Failures (30d)</h3>
           </div>
           <p className="text-3xl font-extrabold text-danger">{breachedTenants}</p>
         </div>
@@ -63,8 +63,8 @@ export default function SuperadminSystemSlaTab() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-input/40 border-b border-border text-secondary text-xs uppercase tracking-wider">
-                <th className="p-4 font-semibold">Tenant</th>
-                <th className="p-4 font-semibold">Target SLA</th>
+                <th className="p-4 font-semibold">Gym</th>
+                <th className="p-4 font-semibold">Target Uptime</th>
                 <th className="p-4 font-semibold">30d Uptime</th>
                 <th className="p-4 font-semibold">Downtime (Mins)</th>
                 <th className="p-4 font-semibold">Status</th>

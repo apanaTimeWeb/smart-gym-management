@@ -21,7 +21,7 @@ export default function SuperadminChurnTable({ alerts, onActionClick }: Superadm
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-border bg-input/40">
-            {['Tenant', 'Plan', 'Risk Level', 'Risk Score', 'Last Login', 'Member Drop', 'MRR', 'Last Payment', 'Contract End', 'Action Status', 'Actions'].map((h) => (
+            {['Gym', 'Plan', 'Risk Level', 'Risk Score', 'Last Login', 'Member Drop', 'Monthly Income', 'Last Payment', 'Contract End', 'Action Status', 'Actions'].map((h) => (
               <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider whitespace-nowrap">
                 {h}
               </th>

@@ -195,7 +195,7 @@ export default function ManagerInquiriesTable() {
             {inquiries.length === 0 && fetchState === FetchState.SUCCESS && (
               <tr>
                 <td colSpan={7} className="text-center py-12 text-sm text-secondary">
-                  {search || statusFilter !== 'All' ? 'No inquiries match the filter.' : 'No inquiries yet. Add your first lead!'}
+                  {search || statusFilter !== 'All' ? 'No inquiries match the filter.' : 'No inquiries yet. Add your first inquiry!'}
                 </td>
               </tr>
             )}

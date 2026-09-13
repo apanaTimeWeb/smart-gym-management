@@ -63,7 +63,7 @@ export function SuperadminMessagingMessagesTab({
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border bg-input/40">
-                <th className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">Tenant</th>
+                <th className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">Gym</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">Channel</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">Subject</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">Status</th>

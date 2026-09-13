@@ -28,7 +28,7 @@ export default function SuperadminInvoicesTable({ invoices, onLogPaymentClick }:
           <thead>
             <tr className="bg-header border-b border-border text-sm">
               <th className="p-4 font-semibold text-secondary">Invoice ID</th>
-              <th className="p-4 font-semibold text-secondary">Gym (Tenant)</th>
+              <th className="p-4 font-semibold text-secondary">Gym</th>
               <th className="p-4 font-semibold text-secondary">Tax ID</th>
               <th className="p-4 font-semibold text-secondary">Plan</th>
               <th className="p-4 font-semibold text-secondary">Type</th>

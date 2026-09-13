@@ -173,7 +173,7 @@ if (fetchState === 'loading') return (
             <thead>
               <tr className="bg-header border-b border-border text-sm">
                 <th className="p-4 font-semibold text-secondary">Backup ID</th>
-                <th className="p-4 font-semibold text-secondary">Tenant</th>
+                <th className="p-4 font-semibold text-secondary">Gym</th>
                 <th className="p-4 font-semibold text-secondary">Database Name</th>
                 <th className="p-4 font-semibold text-secondary">Size (MB)</th>
                 <th className="p-4 font-semibold text-secondary">Status</th>
