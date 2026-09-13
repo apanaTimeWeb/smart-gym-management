@@ -10,6 +10,8 @@ import AdminFinanceTabs from '@/app/admin/finance/finance_components/AdminFinanc
 import AdminFinanceAddPaymentModal from '@/app/admin/finance/finance_components/AdminFinanceAddPaymentModal/AdminFinanceAddPaymentModal';
 import type { FinanceInitialData } from '@/app/admin/finance/finance_types/finance_types';
 
+import { AdminDateFilterDropdown } from '@/app/admin/admin_components/AdminShared/AdminDateFilterDropdown';
+
 export default function AdminFinanceMain({ initialData }: { initialData?: FinanceInitialData | null }) {
   const { fetchState } = useAdminFinanceLogic(initialData);
 
@@ -17,6 +19,9 @@ export default function AdminFinanceMain({ initialData }: { initialData?: Financ
     <div className="min-h-full pb-10 bg-background text-foreground">
       <AdminHeader title="Finance" subtitle="Track revenue, payments and financial overview" />
       <div className="p-6 space-y-5">
+        <div className="flex justify-end items-center">
+          <AdminDateFilterDropdown />
+        </div>
         <AdminFinanceKPIs />
         <AdminFinanceRevenueByMethod />
         <AdminFinanceTabs />

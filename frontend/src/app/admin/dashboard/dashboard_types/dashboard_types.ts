@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Defines strict types for the Dashboard module, including comprehensive KPI stats and recent activity shapes.
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';
-export type TimeRange = 'weekly' | 'monthly' | 'yearly' | 'custom';
+export type TimeRange = 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly' | 'custom' | 'this_month' | 'last_month' | 'last_3_months' | 'last_6_months' | 'this_year';
 export interface DashboardContextType { 
   stats: DashboardStats | null; 
   status: FetchState; 

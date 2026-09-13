@@ -12,8 +12,7 @@ import AdminDashboardRevenueTrend from '@/app/admin/dashboard/dashboard_componen
 import AdminDashboardExpiringWidget from '@/app/admin/dashboard/dashboard_components/AdminDashboardExpiringWidget/AdminDashboardExpiringWidget';
 import AdminDashboardAttendanceTrend from '@/app/admin/dashboard/dashboard_components/AdminDashboardAttendanceTrend/AdminDashboardAttendanceTrend';
 import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
-
-import { TIME_RANGE_OPTIONS } from '@/app/admin/dashboard/dashboard_utils/AdminDashboardSharedConstants';
+import { AdminDateFilterDropdown } from '@/app/admin/admin_components/AdminShared/AdminDateFilterDropdown';
 
 function DashboardSkeleton() {
   return (
@@ -49,32 +48,8 @@ export default function AdminDashboardMain() {
       <div className="p-6 space-y-6">
 
         {/* Time Range Selector */}
-        <div className="flex flex-col sm:flex-row justify-end gap-3 items-center">
-          {timeRange === 'custom' && (
-            <div className="flex flex-wrap items-center gap-2 justify-center sm:justify-start w-full sm:w-auto">
-              <label className="text-sm font-medium text-secondary">From:</label>
-              <input type="date" value={startDate} onChange={(e) => setCustomDateRange(e.target.value, endDate)}
-                className="bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                aria-label="Start Date"
-              />
-              <label className="text-sm font-medium text-secondary ml-1">To:</label>
-              <input type="date" value={endDate} onChange={(e) => setCustomDateRange(startDate, e.target.value)}
-                className="bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                aria-label="End Date"
-              />
-            </div>
-          )}
-          <div className="w-full sm:w-48">
-            <AdminSearchableDropdown
-              options={TIME_RANGE_OPTIONS}
-              value={timeRange}
-              onChange={(v) => {
-                setTimeRange(v as TimeRange);
-                if (v !== 'custom') setCustomDateRange('', '');
-              }}
-              placeholder="Select range"
-            />
-          </div>
+        <div className="flex justify-end items-center">
+          <AdminDateFilterDropdown />
         </div>
 
         {/* KPIs */}

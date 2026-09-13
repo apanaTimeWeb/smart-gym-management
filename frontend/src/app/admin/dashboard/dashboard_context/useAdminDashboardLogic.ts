@@ -3,13 +3,17 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
+import { useSearchParams } from 'next/navigation';
 import { dashboardApi } from '@/app/admin/dashboard/dashboard_api/dashboard_api';
 import type { FetchState, DashboardStats } from '@/app/admin/dashboard/dashboard_types/dashboard_types';
 
 export function useAdminDashboardLogic(initialData?: DashboardStats | null) {
+  const searchParams = useSearchParams();
+  const range = searchParams.get('range') || 'this_month';
+
   const { data, isLoading, isError, error: queryError } = useQuery({
-    queryKey: ['adminDashboardStats'],
-    queryFn: () => dashboardApi.fetchDashboardStats().then(r => r.data),
+    queryKey: ['adminDashboardStats', range],
+    queryFn: () => dashboardApi.fetchDashboardStats(range).then(r => r.data),
     initialData: initialData ?? undefined,
     staleTime: Infinity,
   });

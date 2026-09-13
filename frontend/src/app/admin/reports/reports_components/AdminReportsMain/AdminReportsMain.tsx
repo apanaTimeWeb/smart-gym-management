@@ -14,7 +14,7 @@ import AdminReportsAttendance from '@/app/admin/reports/reports_components/Admin
 import AdminReportsPayroll from '@/app/admin/reports/reports_components/AdminReportsPayroll/AdminReportsPayroll';
 import AdminReportsPnL from '@/app/admin/reports/reports_components/AdminReportsPnL/AdminReportsPnL';
 import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
-import { DATE_RANGE_OPTIONS } from '@/app/admin/reports/reports_utils/AdminReportsSharedConstants';
+import { AdminDateFilterDropdown } from '@/app/admin/admin_components/AdminShared/AdminDateFilterDropdown';
 import { reportsApi } from '@/app/admin/reports/reports_api/reports_api';
 import type { ReportDateRange } from '@/app/admin/reports/reports_types/reports_types';
 
@@ -86,25 +86,7 @@ export default function AdminReportsMain() {
                 placeholder="All Gyms"
               />
             </div>
-            <div className="w-44">
-              <AdminSearchableDropdown
-                options={DATE_RANGE_OPTIONS}
-                value={dateRange}
-                onChange={(v) => { setDateRange(v as ReportDateRange); if (v !== 'custom') setCustomDateRange('', ''); }}
-                placeholder="Date Range"
-              />
-            </div>
-            {dateRange === 'custom' && (
-              <div className="flex items-center gap-2 flex-wrap">
-                <input type="date" value={startDate} onChange={(e) => setCustomDateRange(e.target.value, endDate)}
-                  className="bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                  aria-label="Start date" />
-                <span className="text-secondary text-sm">to</span>
-                <input type="date" value={endDate} onChange={(e) => setCustomDateRange(startDate, e.target.value)}
-                  className="bg-input border border-border text-sm rounded-lg px-3 py-2 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                  aria-label="End date" />
-              </div>
-            )}
+            <AdminDateFilterDropdown />
           </div>
 
           {/* Export Controls */}

@@ -24,7 +24,7 @@ export function useAdminSalesLogic(initialData?: SalesInitialData | null): Sales
   const { showToast } = useAdminToastStore();
 
   const tab = (searchParams.get('tab') || 'Overview') as SalesTab;
-  const dateFilter = (searchParams.get('dateFilter') || 'This Month') as DateFilter;
+  const range = searchParams.get('range') || 'this_month';
   const search = searchParams.get('search') || '';
   const currentPage = Number(searchParams.get('page')) || 1;
   const debouncedSearch = useDebounce(search, 300);
@@ -42,13 +42,6 @@ export function useAdminSalesLogic(initialData?: SalesInitialData | null): Sales
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   }, [router, searchParams, pathname]);
 
-  const setDateFilter = useCallback((val: DateFilter) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('dateFilter', val);
-    params.set('page', '1');
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
-  }, [router, searchParams, pathname]);
-
   const setCurrentPage = useCallback((page: number) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set('page', page.toString());
@@ -56,32 +49,32 @@ export function useAdminSalesLogic(initialData?: SalesInitialData | null): Sales
   }, [router, searchParams, pathname]);
 
   const refreshData = useCallback(async () => {
-    await queryClient.invalidateQueries({ queryKey: ['salesOverview', dateFilter, selectedBranchId] });
-  }, [queryClient, dateFilter, selectedBranchId]);
+    await queryClient.invalidateQueries({ queryKey: ['salesOverview', range, selectedBranchId] });
+  }, [queryClient, range, selectedBranchId]);
 
   const queryParams = { limit: '10', page: currentPage.toString(), branchId: selectedBranchId, ...(debouncedSearch ? { search: debouncedSearch } : {}) };
 
   const { data: overviewRes, isLoading: overviewLoading, isError: overviewError } = useQuery({
-    queryKey: ['salesOverview', dateFilter, selectedBranchId],
-    queryFn: () => salesApi.fetchOverview(selectedBranchId),
+    queryKey: ['salesOverview', range, selectedBranchId],
+    queryFn: () => salesApi.fetchOverview(selectedBranchId, range),
     initialData: initialData?.overviewData ? { success: true, message: 'SSR', data: { monthlyRevenue: initialData.overviewData } } : undefined,
   });
 
   const { data: reportRes, isLoading: reportLoading, isError: reportError } = useQuery({
-    queryKey: ['salesMembershipReport', dateFilter, selectedBranchId],
-    queryFn: () => salesApi.fetchMembershipReport(selectedBranchId),
+    queryKey: ['salesMembershipReport', range, selectedBranchId],
+    queryFn: () => salesApi.fetchMembershipReport(selectedBranchId, range),
     initialData: initialData?.membershipReport ? { success: true, message: 'SSR', data: { report: initialData.membershipReport, totals: initialData.membershipTotals || {} } } : undefined,
   });
 
   const { data: pendingRes, isLoading: pendingLoading, isError: pendingError } = useQuery({
-    queryKey: ['salesPendingPayments', queryParams, dateFilter, selectedBranchId],
-    queryFn: () => salesApi.fetchPendingPayments(queryParams),
+    queryKey: ['salesPendingPayments', queryParams, range, selectedBranchId],
+    queryFn: () => salesApi.fetchPendingPayments({ ...queryParams, range }),
     initialData: initialData?.pendingPayments ? { success: true, message: 'SSR', data: { members: initialData.pendingPayments, total: initialData.pendingTotal || 0 } } : undefined,
   });
 
   const { data: allMembershipsRes, isLoading: allMembershipsLoading, isError: allMembershipsError } = useQuery({
-    queryKey: ['salesAllMemberships', queryParams, dateFilter, selectedBranchId],
-    queryFn: () => salesApi.fetchAllMemberships(queryParams),
+    queryKey: ['salesAllMemberships', queryParams, range, selectedBranchId],
+    queryFn: () => salesApi.fetchAllMemberships({ ...queryParams, range }),
     initialData: initialData?.allMemberships ? { success: true, message: 'SSR', data: { members: initialData.allMemberships, total: initialData.allMembershipsTotal || 0 } } : undefined,
   });
 
@@ -93,7 +86,7 @@ export function useAdminSalesLogic(initialData?: SalesInitialData | null): Sales
 
   return {
     tab, setTab,
-    dateFilter, setDateFilter,
+    dateFilter: 'This Month' as DateFilter, setDateFilter: () => {},
     search, setSearch,
     currentPage, setCurrentPage,
     overviewData: overviewRes?.data?.monthlyRevenue || [],
