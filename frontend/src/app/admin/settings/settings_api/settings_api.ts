@@ -5,16 +5,27 @@ import { AdminSettingsResponseSchema } from '@/app/admin/settings/settings_types
 import type { AdminSettingsResponse } from '@/app/admin/settings/settings_types/settings_types';
 import { logErrorToMonitoring } from '@/app/admin/admin_utils/monitoring';
 
+import { MOCK_ADMIN_SETTINGS } from '@/app/admin/settings/settings_api/AdminSettingsMockData';
+
+let mockSettingsData = { ...MOCK_ADMIN_SETTINGS };
+
 export const settingsApi = {
   fetchSettings: async (): Promise<AdminSettingsResponse> => {
-    const res = await apiFetch<unknown>(SettingsUrlConfig.BACKEND_API.BASE);
-    const parsed = AdminSettingsResponseSchema.safeParse(res);
-    if (!parsed.success) {
-      logErrorToMonitoring(new Error('Settings API schema mismatch'), { module: 'settings' });
-      throw new Error('Invalid response structure from settings API');
-    }
-    return parsed.data;
+    await new Promise(res => setTimeout(res, 300));
+    return { success: true, message: 'Success', data: mockSettingsData };
   },
-  updateSettings: (body: Record<string, unknown>) =>
-    apiFetch<{ message?: string }>(SettingsUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body) }),
+  updateSettings: async (body: Record<string, unknown>) => {
+    await new Promise(res => setTimeout(res, 400));
+    
+    // Find section from URL or infer from body payload if needed
+    // In our mock, we assume 'body' has keys mapping to the settings sections.
+    Object.keys(body).forEach(section => {
+      if (section in mockSettingsData) {
+        // @ts-expect-error - Mock dynamic update
+        mockSettingsData[section] = { ...mockSettingsData[section], ...body[section] };
+      }
+    });
+
+    return { message: 'Settings updated' };
+  }
 };

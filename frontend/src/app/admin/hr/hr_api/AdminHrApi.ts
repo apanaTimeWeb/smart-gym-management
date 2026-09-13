@@ -2,41 +2,89 @@
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import { HrUrlConfig } from '@/app/admin/hr/hr_url_config';
+import { MOCK_ADMIN_STAFF, MOCK_ADMIN_PAYROLLS, MOCK_ADMIN_HR_SUMMARY, MOCK_ADMIN_LEDGER, MOCK_ADMIN_STAFF_PERFORMANCE } from '@/app/admin/hr/hr_api/AdminHrMockData';
 import type { Staff, Payroll, HrSummary, LedgerEntry } from '@/app/admin/hr/hr_types/AdminHrTypes';
 import type { StaffPerformanceRecord, PerformancePeriod } from '@/app/admin/hr/hr_types/AdminHrPerformanceTypes';
 
+let mockStaff = [...MOCK_ADMIN_STAFF];
+let mockPayrolls = [...MOCK_ADMIN_PAYROLLS];
+
 export const hrApi = {
-  getStaff: (params?: Record<string, string>) => {
-    const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<{ staff: Staff[]; total: number }>>(`${HrUrlConfig.BACKEND_API.STAFF_BASE}${q}`);
+  getStaff: async (params?: Record<string, string>) => {
+    await new Promise(res => setTimeout(res, 300));
+    return { success: true, message: 'Success', data: { staff: mockStaff, total: mockStaff.length } };
   },
-  getOneStaff: (id: string) => apiFetch<ApiResponse<Staff>>(HrUrlConfig.BACKEND_API.STAFF_GET_ONE(id)),
-  createStaff: (body: Partial<Staff>) =>
-    apiFetch<ApiResponse<Staff>>(HrUrlConfig.BACKEND_API.STAFF_BASE, { method: 'POST', body: JSON.stringify(body) }),
-  updateStaff: (id: string, body: Partial<Staff>) =>
-    apiFetch<ApiResponse<Staff>>(HrUrlConfig.BACKEND_API.STAFF_UPDATE(id), { method: 'PATCH', body: JSON.stringify(body) }),
-  removeStaff: (id: string) => apiFetch<ApiResponse<{ id: string }>>(HrUrlConfig.BACKEND_API.STAFF_DELETE(id), { method: 'DELETE' }),
-  bulkDeactivateStaff: (ids: string[]) => apiFetch<ApiResponse<{ count: number }>>(HrUrlConfig.BACKEND_API.BULK_DEACTIVATE, { method: 'PATCH', body: JSON.stringify({ ids }) }),
-  getPayrolls: (params?: Record<string, string>) => {
-    const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<{ payrolls: Payroll[]; total: number }>>(`${HrUrlConfig.BACKEND_API.PAYROLLS_BASE}${q}`);
+  getOneStaff: async (id: string) => {
+    await new Promise(res => setTimeout(res, 300));
+    const staff = mockStaff.find(s => s.id === id);
+    if (!staff) throw new Error('Not found');
+    return { success: true, message: 'Success', data: staff };
   },
-  createPayroll: (body: Partial<Payroll>) =>
-    apiFetch<ApiResponse<Payroll>>(HrUrlConfig.BACKEND_API.PAYROLLS_BASE, { method: 'POST', body: JSON.stringify(body) }),
-  updatePayroll: (id: string, body: Partial<Payroll>) =>
-    apiFetch<ApiResponse<Payroll>>(`${HrUrlConfig.BACKEND_API.PAYROLLS_BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
-  updatePayrollStatus: (id: string, status: string) =>
-    apiFetch<ApiResponse<Payroll>>(HrUrlConfig.BACKEND_API.PAYROLL_STATUS_UPDATE(id), { method: 'PATCH', body: JSON.stringify({ status }) }),
-  getSummary: (branchId?: string) => {
-    const q = branchId && branchId !== 'all' ? `?branchId=${branchId}` : '';
-    return apiFetch<ApiResponse<HrSummary>>(`${HrUrlConfig.BACKEND_API.SUMMARY}${q}`);
+  createStaff: async (body: Partial<Staff>) => {
+    await new Promise(res => setTimeout(res, 400));
+    const newStaff = { ...body, id: `s${Date.now()}` } as Staff;
+    mockStaff.push(newStaff);
+    return { success: true, message: 'Created', data: newStaff };
   },
-  getLedger: (staffId: string) => 
-    apiFetch<ApiResponse<{ ledger: LedgerEntry[]; total: number }>>(`${HrUrlConfig.BACKEND_API.STAFF_BASE}/ledger/${staffId}`),
-  giveAdvance: (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }) =>
-    apiFetch<ApiResponse<{ advanceAmount: number }>>(`${HrUrlConfig.BACKEND_API.STAFF_BASE}/advance`, { method: 'POST', body: JSON.stringify(data) }),
-  payDue: (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }) =>
-    apiFetch<ApiResponse<{ paidAmount: number }>>(`${HrUrlConfig.BACKEND_API.STAFF_BASE}/due/pay`, { method: 'POST', body: JSON.stringify(data) }),
-  fetchStaffPerformance: (period: PerformancePeriod) =>
-    apiFetch<ApiResponse<StaffPerformanceRecord[]>>(`/api/admin/hr/performance?period=${period}`),
+  updateStaff: async (id: string, body: Partial<Staff>) => {
+    await new Promise(res => setTimeout(res, 400));
+    const idx = mockStaff.findIndex(s => s.id === id);
+    if (idx === -1) throw new Error('Not found');
+    mockStaff[idx] = { ...mockStaff[idx], ...body } as Staff;
+    return { success: true, message: 'Updated', data: mockStaff[idx] };
+  },
+  removeStaff: async (id: string) => {
+    await new Promise(res => setTimeout(res, 400));
+    mockStaff = mockStaff.filter(s => s.id !== id);
+    return { success: true, message: 'Deleted', data: { id } };
+  },
+  bulkDeactivateStaff: async (ids: string[]) => {
+    await new Promise(res => setTimeout(res, 400));
+    mockStaff = mockStaff.map(s => (ids.includes(s.id) ? { ...s, isActive: false } : s));
+    return { success: true, message: 'Deactivated', data: { count: ids.length } };
+  },
+  getPayrolls: async (params?: Record<string, string>) => {
+    await new Promise(res => setTimeout(res, 300));
+    return { success: true, message: 'Success', data: { payrolls: mockPayrolls, total: mockPayrolls.length } };
+  },
+  createPayroll: async (body: Partial<Payroll>) => {
+    await new Promise(res => setTimeout(res, 400));
+    const newPayroll = { ...body, id: `pr${Date.now()}` } as Payroll;
+    mockPayrolls.push(newPayroll);
+    return { success: true, message: 'Created', data: newPayroll };
+  },
+  updatePayroll: async (id: string, body: Partial<Payroll>) => {
+    await new Promise(res => setTimeout(res, 400));
+    const idx = mockPayrolls.findIndex(p => p.id === id);
+    if (idx === -1) throw new Error('Not found');
+    mockPayrolls[idx] = { ...mockPayrolls[idx], ...body } as Payroll;
+    return { success: true, message: 'Updated', data: mockPayrolls[idx] };
+  },
+  updatePayrollStatus: async (id: string, status: string) => {
+    await new Promise(res => setTimeout(res, 400));
+    const idx = mockPayrolls.findIndex(p => p.id === id);
+    if (idx === -1) throw new Error('Not found');
+    mockPayrolls[idx] = { ...mockPayrolls[idx], status } as Payroll;
+    return { success: true, message: 'Updated', data: mockPayrolls[idx] };
+  },
+  getSummary: async (branchId?: string) => {
+    await new Promise(res => setTimeout(res, 300));
+    return { success: true, message: 'Success', data: MOCK_ADMIN_HR_SUMMARY };
+  },
+  getLedger: async (staffId: string) => {
+    await new Promise(res => setTimeout(res, 300));
+    return { success: true, message: 'Success', data: { ledger: MOCK_ADMIN_LEDGER, total: MOCK_ADMIN_LEDGER.length } };
+  },
+  giveAdvance: async (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }) => {
+    await new Promise(res => setTimeout(res, 400));
+    return { success: true, message: 'Advance recorded', data: { advanceAmount: data.amount } };
+  },
+  payDue: async (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }) => {
+    await new Promise(res => setTimeout(res, 400));
+    return { success: true, message: 'Due paid', data: { paidAmount: data.amount } };
+  },
+  fetchStaffPerformance: async (period: PerformancePeriod) => {
+    await new Promise(res => setTimeout(res, 300));
+    return { success: true, message: 'Success', data: MOCK_ADMIN_STAFF_PERFORMANCE };
+  },
 };

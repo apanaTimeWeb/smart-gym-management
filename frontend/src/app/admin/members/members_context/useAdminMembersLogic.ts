@@ -50,7 +50,7 @@ export function useAdminMembersLogic() {
   const isError = membersError || summaryError;
   const fetchState: FetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
   const members = membersResponse?.data ?? [];
-  const allFilteredCount = membersResponse?.meta?.total ?? members.length;
+  const allFilteredCount = members.length;
   const totalPages = Math.max(1, Math.ceil(allFilteredCount / ADMIN_MEMBERS_ITEMS_PER_PAGE));
 
   return {

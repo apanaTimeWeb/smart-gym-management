@@ -1,30 +1,32 @@
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import { FinanceUrlConfig } from '@/app/admin/finance/finance_url_config';
+import { MOCK_ADMIN_FINANCE_SUMMARY, MOCK_ADMIN_PAYMENTS, MOCK_ADMIN_BRANCH_PNL } from '@/app/admin/finance/finance_api/AdminFinanceMockData';
 import type { Payment, FinanceSummary, BranchPnlRecord } from '@/app/admin/finance/finance_types/finance_types';
 
+let mockPayments = [...MOCK_ADMIN_PAYMENTS];
+
 export const financeApi = {
-  fetchPayments: (params?: Record<string, string>) => {
-    const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<{ payments: Payment[]; total: number }>>(`${FinanceUrlConfig.BACKEND_API.PAYMENTS_BASE}${q}`);
+  fetchPayments: async (params?: Record<string, string>) => {
+    await new Promise(res => setTimeout(res, 300));
+    return { success: true, message: 'Success', data: { payments: mockPayments, total: mockPayments.length } };
   },
-  createPayment: (body: Partial<Payment>) =>
-    apiFetch<ApiResponse<Payment>>(FinanceUrlConfig.BACKEND_API.PAYMENTS_BASE, { method: 'POST', body: JSON.stringify(body) }),
+  createPayment: async (body: Partial<Payment>) => {
+    await new Promise(res => setTimeout(res, 400));
+    const newPayment = { ...body, id: `p${Date.now()}`, paidAt: new Date().toISOString() } as Payment;
+    mockPayments = [newPayment, ...mockPayments];
+    return { success: true, message: 'Created', data: newPayment };
+  },
   fetchSummary: async (branchId?: string, range?: string) => {
-    let q = branchId && branchId !== 'all' ? `?branchId=${branchId}` : '';
-    if (range) q += (q ? '&' : '?') + `range=${range}`;
-    const res = await apiFetch<ApiResponse<FinanceSummary>>(`${FinanceUrlConfig.BACKEND_API.SUMMARY}${q}`);
-    if (res.data) {
-      // Mocking Expenses since backend might not support it yet
-      res.data.totalExpenses = res.data.totalRevenue ? res.data.totalRevenue * 0.3 : 15000;
-      res.data.netProfit = (res.data.totalRevenue || 0) - res.data.totalExpenses;
-    }
-    return res;
+    await new Promise(res => setTimeout(res, 300));
+    return { success: true, message: 'Success', data: MOCK_ADMIN_FINANCE_SUMMARY };
   },
-  fetchBranchPnl: (period: string) =>
-    apiFetch<ApiResponse<BranchPnlRecord[]>>(`/api/admin/finance/pnl?period=${period}`),
-  fetchExpenses: (params?: Record<string, string>) => {
-    const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<any[]>>(`/api/admin/finance/expenses${q}`);
+  fetchBranchPnl: async (period: string) => {
+    await new Promise(res => setTimeout(res, 400));
+    return { success: true, message: 'Success', data: MOCK_ADMIN_BRANCH_PNL };
+  },
+  fetchExpenses: async (params?: Record<string, string>) => {
+    await new Promise(res => setTimeout(res, 300));
+    return { success: true, message: 'Success', data: [] };
   },
 };
