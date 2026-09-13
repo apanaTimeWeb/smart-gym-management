@@ -4,33 +4,59 @@ import type { ApiResponse } from '@/lib/api';
 import { HrUrlConfig } from '@/app/manager/hr/ManagerHrUrlConfig';
 import type { Staff, Payroll, HrSummary, LedgerEntry } from '@/app/manager/hr/hr_types/ManagerHrTypes';
 
-export const hrApi = {
-  getStaff: (params?: Record<string, string>) => {
-    const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<{ staff: Staff[]; total: number }>>(`${HrUrlConfig.BACKEND_API.STAFF_BASE}${q}`);
-  },
-  getOneStaff: (id: string) => apiFetch<ApiResponse<Staff>>(HrUrlConfig.BACKEND_API.STAFF_GET_ONE(id)),
-  createStaff: (body: Partial<Staff>) =>
-    apiFetch<ApiResponse<Staff>>(HrUrlConfig.BACKEND_API.STAFF_BASE, { method: 'POST', body: JSON.stringify(body) }),
-  updateStaff: (id: string, body: Partial<Staff>) =>
-    apiFetch<ApiResponse<Staff>>(HrUrlConfig.BACKEND_API.STAFF_UPDATE(id), { method: 'PATCH', body: JSON.stringify(body) }),
-  removeStaff: (id: string) => apiFetch<ApiResponse<{ id: string }>>(HrUrlConfig.BACKEND_API.STAFF_DELETE(id), { method: 'DELETE' }),
-  getPayrolls: (params?: Record<string, string>) => {
-    const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<{ payrolls: Payroll[]; total: number }>>(`${HrUrlConfig.BACKEND_API.PAYROLLS_BASE}${q}`);
-  },
-  createPayroll: (body: Partial<Payroll>) =>
-    apiFetch<ApiResponse<Payroll>>(HrUrlConfig.BACKEND_API.PAYROLLS_BASE, { method: 'POST', body: JSON.stringify(body) }),
-  updatePayroll: (id: string, body: Partial<Payroll>) =>
-    apiFetch<ApiResponse<Payroll>>(`${HrUrlConfig.BACKEND_API.PAYROLLS_BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
-  updatePayrollStatus: (id: string, status: string) =>
-    apiFetch<ApiResponse<Payroll>>(HrUrlConfig.BACKEND_API.PAYROLL_STATUS_UPDATE(id), { method: 'PATCH', body: JSON.stringify({ status }) }),
-  getSummary: () => apiFetch<ApiResponse<HrSummary>>(HrUrlConfig.BACKEND_API.SUMMARY),
-  getLedger: (staffId: string) => 
-    apiFetch<ApiResponse<{ ledger: LedgerEntry[]; total: number }>>(`${HrUrlConfig.BACKEND_API.STAFF_BASE}/ledger/${staffId}`),
-  giveAdvance: (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }) =>
-    apiFetch<ApiResponse<{ advanceAmount: number }>>(`${HrUrlConfig.BACKEND_API.STAFF_BASE}/advance`, { method: 'POST', body: JSON.stringify(data) }),
-  payDue: (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }) =>
-    apiFetch<ApiResponse<{ paidAmount: number }>>(`${HrUrlConfig.BACKEND_API.STAFF_BASE}/due/pay`, { method: 'POST', body: JSON.stringify(data) }),
-};
+import { MOCK_STAFF, MOCK_PAYROLLS, MOCK_HR_SUMMARY, MOCK_LEDGER } from '@/app/manager/hr/hr_fixtures/ManagerHrMockData';
 
+export const hrApi = {
+  getStaff: async (params?: Record<string, string>) => {
+    await new Promise(res => setTimeout(res, 400));
+    return { success: true, message: 'Success', data: { staff: MOCK_STAFF, total: MOCK_STAFF.length } };
+  },
+  getOneStaff: async (id: string) => {
+    await new Promise(res => setTimeout(res, 400));
+    return { success: true, message: 'Success', data: MOCK_STAFF.find(s => s.id === id) || MOCK_STAFF[0] };
+  },
+  createStaff: async (body: Partial<Staff>) => {
+    await new Promise(res => setTimeout(res, 400));
+    return { success: true, message: 'Created', data: MOCK_STAFF[0] };
+  },
+  updateStaff: async (id: string, body: Partial<Staff>) => {
+    await new Promise(res => setTimeout(res, 400));
+    return { success: true, message: 'Updated', data: MOCK_STAFF[0] };
+  },
+  removeStaff: async (id: string) => {
+    await new Promise(res => setTimeout(res, 400));
+    return { success: true, message: 'Removed', data: { id } };
+  },
+  getPayrolls: async (params?: Record<string, string>) => {
+    await new Promise(res => setTimeout(res, 400));
+    return { success: true, message: 'Success', data: { payrolls: MOCK_PAYROLLS, total: MOCK_PAYROLLS.length } };
+  },
+  createPayroll: async (body: Partial<Payroll>) => {
+    await new Promise(res => setTimeout(res, 400));
+    return { success: true, message: 'Created', data: MOCK_PAYROLLS[0] };
+  },
+  updatePayroll: async (id: string, body: Partial<Payroll>) => {
+    await new Promise(res => setTimeout(res, 400));
+    return { success: true, message: 'Updated', data: MOCK_PAYROLLS[0] };
+  },
+  updatePayrollStatus: async (id: string, status: string) => {
+    await new Promise(res => setTimeout(res, 400));
+    return { success: true, message: 'Updated', data: MOCK_PAYROLLS[0] };
+  },
+  getSummary: async () => {
+    await new Promise(res => setTimeout(res, 400));
+    return { success: true, message: 'Success', data: MOCK_HR_SUMMARY };
+  },
+  getLedger: async (staffId: string) => {
+    await new Promise(res => setTimeout(res, 400));
+    return { success: true, message: 'Success', data: { ledger: MOCK_LEDGER, total: MOCK_LEDGER.length } };
+  },
+  giveAdvance: async (data: any) => {
+    await new Promise(res => setTimeout(res, 400));
+    return { success: true, message: 'Success', data: { advanceAmount: data.amount } };
+  },
+  payDue: async (data: any) => {
+    await new Promise(res => setTimeout(res, 400));
+    return { success: true, message: 'Success', data: { paidAmount: data.amount } };
+  },
+};

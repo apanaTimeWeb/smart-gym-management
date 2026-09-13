@@ -1,13 +1,16 @@
 // RESPONSIBILITY: Renders the two rows of KPI metric stat cards on the dashboard using live data from DashboardContext.
 'use client';
 
-import { useDashboardContext } from '@/app/manager/dashboard/dashboard_context/ManagerDashboardContext';
+import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/useManagerDashboardQueries';
+import { useManagerDashboardStore } from '@/app/manager/dashboard/dashboard_store/useManagerDashboardStore';
 import ManagerStatCard from '@/app/manager/manager_components/ManagerShared/ManagerStatCard';
 import { formatCurrency, formatKPI } from '@/lib/formatters';
 import { Users, DollarSign, TrendingUp, AlertCircle, CheckCircle, Clock, UserCheck, ShoppingCart, Snowflake, TrendingDown, Target } from 'lucide-react';
 
 export default function ManagerDashboardKPIs() {
-  const { stats, timeRange } = useDashboardContext();
+  const { timeRange } = useManagerDashboardStore();
+  const { data: stats } = useDashboardStatsQuery(timeRange);
+  
   if (!stats) return null;
   const s = stats;
 

@@ -2,7 +2,8 @@
 'use client';
 
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
-import { DashboardProvider, useDashboardContext } from '@/app/manager/dashboard/dashboard_context/ManagerDashboardContext';
+import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/useManagerDashboardQueries';
+import { useManagerDashboardStore } from '@/app/manager/dashboard/dashboard_store/useManagerDashboardStore';
 import type { DashboardStats } from '@/app/manager/dashboard/dashboard_types/ManagerDashboardTypes';
 import ManagerDashboardKPIs from '@/app/manager/dashboard/dashboard_components/ManagerDashboardKPIs/ManagerDashboardKPIs';
 import ManagerDashboardRecentMembers from '@/app/manager/dashboard/dashboard_components/ManagerDashboardRecentMembers/ManagerDashboardRecentMembers';
@@ -36,16 +37,17 @@ function DashboardSkeleton() {
   );
 }
 
-function DashboardContent() {
-  const { status, error, timeRange, setTimeRange, startDate, endDate, setCustomDateRange } = useDashboardContext();
+export default function ManagerDashboardMain({ initialData }: { initialData?: DashboardStats | null }) {
+  const { timeRange } = useManagerDashboardStore();
+  const { data: stats, isLoading, isError, error } = useDashboardStatsQuery(timeRange);
 
-  if (status === 'loading') return <DashboardSkeleton />;
+  if (isLoading && !stats && !initialData) return <DashboardSkeleton />;
 
-  if (status === 'error') return (
+  if (isError) return (
     <div className="min-h-full flex items-center justify-center">
       <div className="text-center">
         <p className="font-medium text-danger">Failed to load dashboard</p>
-        <p className="text-sm mt-1 text-danger">{error}</p>
+        <p className="text-sm mt-1 text-danger">{(error as Error)?.message}</p>
       </div>
     </div>
   );
@@ -76,15 +78,5 @@ function DashboardContent() {
         <ManagerDashboardMembershipDistribution />
       </div>
     </>
-  );
-}
-
-export default function ManagerDashboardMain({ initialData }: { initialData?: DashboardStats | null }) {
-  return (
-    <DashboardProvider initialData={initialData}>
-      <div className="min-h-full">
-        <DashboardContent />
-      </div>
-    </DashboardProvider>
   );
 }

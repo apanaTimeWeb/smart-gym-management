@@ -3,18 +3,16 @@ import type { ReportSummary } from '@/app/manager/reports/reports_types/ManagerR
 import { apiFetch } from '@/lib/api';
 import { ManagerReportsUrlConfig } from '@/app/manager/reports/ManagerReportsUrlConfig';
 
+import { MOCK_REPORT_SUMMARY } from '@/app/manager/reports/reports_fixtures/ManagerReportsMockData';
+
 export const reportsApi = {
   fetchSummary: async (params?: Record<string, string>): Promise<ReportSummary> => {
-    const qs = new URLSearchParams(params).toString();
-    const q = qs ? `?${qs}` : '';
-    const res = await apiFetch<{ data?: ReportSummary } & ReportSummary>(`${ManagerReportsUrlConfig.BACKEND_API.SUMMARY}${q}`);
-    return res.data || res;
+    await new Promise(res => setTimeout(res, 300));
+    return MOCK_REPORT_SUMMARY;
   },
 
   exportReportCSV: async (tab: string, params?: Record<string, string>): Promise<Blob> => {
-    const qs = new URLSearchParams(params).toString();
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1'}${ManagerReportsUrlConfig.BACKEND_API.EXPORT}?tab=${tab}&${qs}`);
-    if (!res.ok) throw new Error('Failed to export CSV');
-    return res.blob();
+    await new Promise(res => setTimeout(res, 300));
+    return new Blob(['Mock CSV content'], { type: 'text/csv' });
   },
 };

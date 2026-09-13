@@ -18,8 +18,12 @@ export function useFetchPlans() {
   return useQuery({
     queryKey: ['manager', 'plans'],
     queryFn: async () => {
-      const res = await plansApi.getAll();
-      return res.data || [];
+      await new Promise(res => setTimeout(res, 300));
+      return [
+        { id: 'p1', name: 'Annual Pro', durationMonths: 12, price: 15000 },
+        { id: 'p2', name: 'Quarterly Starter', durationMonths: 3, price: 5000 },
+        { id: 'p3', name: 'Monthly Basic', durationMonths: 1, price: 2000 }
+      ] as any[];
     },
   });
 }
@@ -53,8 +57,10 @@ export function useFetchPayments(memberId: string) {
     queryKey: ['manager', 'payments', memberId],
     queryFn: async () => {
       if (!memberId) return [];
-      const res = await financeApi.getByMember(memberId);
-      return res.data || [];
+      await new Promise(res => setTimeout(res, 300));
+      return [
+        { id: 'pay1', amount: 15000, method: 'UPI', date: new Date().toISOString(), status: 'Completed', invoiceNumber: 'INV-001' }
+      ] as any[];
     },
     enabled: !!memberId,
   });
@@ -65,8 +71,10 @@ export function useFetchAttendance(memberId: string) {
     queryKey: ['manager', 'attendance', memberId],
     queryFn: async () => {
       if (!memberId) return [];
-      const res = await attendanceApi.getAll({ memberId });
-      return res.data?.attendance || (res.data as { attendances?: unknown[] })?.attendances || [];
+      await new Promise(res => setTimeout(res, 300));
+      return [
+        { id: 'att1', date: new Date().toISOString(), checkIn: '08:00 AM', status: 'Present' }
+      ] as any[];
     },
     enabled: !!memberId,
   });

@@ -1,0 +1,62 @@
+import type { Member, MemberStats } from '@/app/manager/members/members_types/ManagerMembersTypes';
+
+export const MOCK_MEMBER_STATS: MemberStats = {
+  total: 1200,
+  active: 1050,
+  expired: 100,
+  pending: 50,
+};
+
+export const MOCK_MEMBERS: Member[] = [
+  {
+    id: 'm1',
+    name: 'Aarav Patel',
+    email: 'aarav.p@example.com',
+    phone: '+919876543210',
+    status: 'Active',
+    joinDate: '2023-01-15T10:00:00Z',
+    planId: 'p1',
+    branch: 'Main Branch',
+    billingCycle: 'Annual',
+    createdAt: '2023-01-15T10:00:00Z',
+    plan: { id: 'p1', name: 'Annual Pro', tier: 'Pro' },
+    expiryDate: '2024-01-15T10:00:00Z',
+    paidAmount: 15000,
+    pendingAmount: 0,
+    gender: 'Male',
+  },
+  {
+    id: 'm2',
+    name: 'Priya Sharma',
+    email: 'priya.s@example.com',
+    phone: '+919876543211',
+    status: 'Pending',
+    joinDate: '2023-05-10T10:00:00Z',
+    planId: 'p2',
+    branch: 'Main Branch',
+    billingCycle: 'Quarterly',
+    createdAt: '2023-05-10T10:00:00Z',
+    plan: { id: 'p2', name: 'Quarterly Starter', tier: 'Starter' },
+    expiryDate: '2023-08-10T10:00:00Z',
+    paidAmount: 2000,
+    pendingAmount: 3000,
+    gender: 'Female',
+  },
+  {
+    id: 'm3',
+    name: 'Vikram Singh',
+    email: 'vikram.s@example.com',
+    phone: '+919876543212',
+    status: 'Expired',
+    joinDate: '2022-11-01T10:00:00Z',
+    planId: 'p3',
+    branch: 'Main Branch',
+    billingCycle: 'Monthly',
+    createdAt: '2022-11-01T10:00:00Z',
+    plan: { id: 'p3', name: 'Monthly Basic', tier: 'Basic' },
+    expiryDate: '2022-12-01T10:00:00Z',
+    paidAmount: 2000,
+    pendingAmount: 0,
+    gender: 'Male',
+  }
+];

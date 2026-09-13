@@ -2,7 +2,8 @@
 
 import React from 'react';
 import dynamic from 'next/dynamic';
-import { useDashboardContext } from '@/app/manager/dashboard/dashboard_context/ManagerDashboardContext';
+import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/useManagerDashboardQueries';
+import { useManagerDashboardStore } from '@/app/manager/dashboard/dashboard_store/useManagerDashboardStore';
 import { formatKPI } from '@/lib/formatters';
 import { Loader2 } from 'lucide-react';
 import type { DashboardGrowthChartData } from '@/app/manager/dashboard/dashboard_types/ManagerDashboardTypes';
@@ -13,7 +14,8 @@ const Chart = dynamic(() => import('react-apexcharts'), {
 });
 
 export default function ManagerDashboardMemberGrowthChart() {
-  const { stats } = useDashboardContext();
+  const { timeRange } = useManagerDashboardStore();
+  const { data: stats } = useDashboardStatsQuery(timeRange);
   
   if (!stats?.memberGrowth || stats.memberGrowth.length === 0) {
     return (

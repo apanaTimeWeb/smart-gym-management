@@ -2,7 +2,8 @@
 
 import React from 'react';
 import dynamic from 'next/dynamic';
-import { useDashboardContext } from '@/app/manager/dashboard/dashboard_context/ManagerDashboardContext';
+import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/useManagerDashboardQueries';
+import { useManagerDashboardStore } from '@/app/manager/dashboard/dashboard_store/useManagerDashboardStore';
 import { formatCurrency, formatKPI } from '@/lib/formatters';
 import { Loader2 } from 'lucide-react';
 import type { DashboardRevenueChartData } from '@/app/manager/dashboard/dashboard_types/ManagerDashboardTypes';
@@ -13,7 +14,8 @@ const Chart = dynamic(() => import('react-apexcharts'), {
 });
 
 export default function ManagerDashboardRevenueChart() {
-  const { stats } = useDashboardContext();
+  const { timeRange } = useManagerDashboardStore();
+  const { data: stats } = useDashboardStatsQuery(timeRange);
   
   if (!stats?.revenueChart || stats.revenueChart.length === 0) {
     return (

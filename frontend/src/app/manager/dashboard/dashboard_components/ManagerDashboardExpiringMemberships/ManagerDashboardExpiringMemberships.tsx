@@ -4,10 +4,12 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Search, BellRing } from 'lucide-react';
-import { useDashboardContext } from '@/app/manager/dashboard/dashboard_context/ManagerDashboardContext';
+import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/useManagerDashboardQueries';
+import { useManagerDashboardStore } from '@/app/manager/dashboard/dashboard_store/useManagerDashboardStore';
 
 export default function ManagerDashboardExpiringMemberships() {
-  const { stats } = useDashboardContext();
+  const { timeRange } = useManagerDashboardStore();
+  const { data: stats } = useDashboardStatsQuery(timeRange);
   const [search, setSearch] = useState('');
   const [remindedId, setRemindedId] = useState<string | null>(null);
 

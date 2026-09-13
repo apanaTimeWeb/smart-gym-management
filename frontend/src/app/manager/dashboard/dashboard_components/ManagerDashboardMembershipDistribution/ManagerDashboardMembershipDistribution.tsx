@@ -1,12 +1,16 @@
 // RESPONSIBILITY: Renders the distribution of members by plan on the dashboard.
 'use client';
 
-import { useDashboardContext } from '@/app/manager/dashboard/dashboard_context/ManagerDashboardContext';
+import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/useManagerDashboardQueries';
+import { useManagerDashboardStore } from '@/app/manager/dashboard/dashboard_store/useManagerDashboardStore';
 import { DASHBOARD_PLAN_BG_COLORS } from '@/app/manager/dashboard/dashboard_utils/ManagerDashboardSharedConstants';
+import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 
 export default function ManagerDashboardMembershipDistribution() {
- const { stats, timeRange } = useDashboardContext();
- if (!stats) return null;
+  const { timeRange } = useManagerDashboardStore();
+  const { data: stats } = useDashboardStatsQuery(timeRange);
+  if (!stats) return null;
+  const data = stats?.membersByPlan || [];
  const s = stats;
 
  const timeMultiplier = timeRange === 'weekly' ? 0.25 : timeRange === 'yearly' ? 12 : timeRange === 'custom' ? 1.5 : 1;

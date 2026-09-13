@@ -1,0 +1,71 @@
+import type { Payment, FinanceSummary } from '@/app/manager/finance/finance_types/ManagerFinanceTypes';
+
+export const MOCK_FINANCE_SUMMARY: FinanceSummary = {
+  totalRevenue: 1500000,
+  monthlyRevenue: 125000,
+  pendingAmount: 15000,
+  totalPayments: 450,
+  gstCollected: 22500,
+  totalRefunds: 5000,
+  netRevenue: 1472500,
+  revenueByMethod: {
+    'UPI': 80000,
+    'Card': 30000,
+    'Cash': 15000,
+    'NetBanking': 0,
+    'Cheque': 0,
+    'Other': 0,
+  },
+  monthlyData: [
+    { month: 'Jan', revenue: 110000 },
+    { month: 'Feb', revenue: 115000 },
+    { month: 'Mar', revenue: 120000 },
+    { month: 'Apr', revenue: 118000 },
+    { month: 'May', revenue: 125000 },
+  ],
+};
+
+export const MOCK_PAYMENTS: Payment[] = [
+  {
+    id: 'pay1',
+    memberId: 'm1',
+    amount: 15000,
+    method: 'UPI',
+    status: 'PAID',
+    invoiceNumber: 'INV-001',
+    receiptNumber: 'REC-001',
+    paidAt: '2024-05-01T10:00:00Z',
+    gstAmount: 2700,
+    discountAmount: 0,
+    taxableAmount: 12300,
+    member: { name: 'Aarav Patel', email: 'aarav.p@example.com', phone: '+919876543210', plan: { name: 'Annual Pro' } },
+  },
+  {
+    id: 'pay2',
+    memberId: 'm2',
+    amount: 2000,
+    method: 'Card',
+    status: 'PAID',
+    invoiceNumber: 'INV-002',
+    receiptNumber: 'REC-002',
+    paidAt: '2024-05-10T14:30:00Z',
+    gstAmount: 360,
+    discountAmount: 500,
+    taxableAmount: 1640,
+    member: { name: 'Priya Sharma', email: 'priya.s@example.com', phone: '+919876543211', plan: { name: 'Quarterly Starter' } },
+  },
+  {
+    id: 'pay3',
+    memberId: 'm3',
+    amount: 2000,
+    method: 'Cash',
+    status: 'PAID',
+    invoiceNumber: 'INV-003',
+    receiptNumber: 'REC-003',
+    paidAt: '2024-05-15T09:15:00Z',
+    gstAmount: 360,
+    discountAmount: 0,
+    taxableAmount: 1640,
+    member: { name: 'Vikram Singh', email: 'vikram.s@example.com', phone: '+919876543212', plan: { name: 'Monthly Basic' } },
+  }
+];

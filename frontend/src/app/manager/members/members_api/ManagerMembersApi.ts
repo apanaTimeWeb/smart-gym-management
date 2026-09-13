@@ -4,19 +4,40 @@ import type { ApiResponse } from '@/lib/api';
 import { MembersUrlConfig } from '@/app/manager/members/ManagerMembersUrlConfig';
 import type { Member, MemberStats } from '@/app/manager/members/members_types/ManagerMembersTypes';
 
+import { MOCK_MEMBERS, MOCK_MEMBER_STATS } from '@/app/manager/members/members_fixtures/ManagerMembersMockData';
+
 export const membersApi = {
-  getAll: (params?: Record<string, string>) => {
-    const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<{ members: Member[]; total: number; page: number; limit: number }>>(`${MembersUrlConfig.BACKEND_API.BASE}${q}`);
+  getAll: async (params?: Record<string, string>) => {
+    await new Promise(res => setTimeout(res, 600));
+    return { success: true, message: 'Success', data: { members: MOCK_MEMBERS, total: MOCK_MEMBERS.length, page: 1, limit: 10 } };
   },
-  getOne: (id: string) => apiFetch<ApiResponse<Member>>(MembersUrlConfig.BACKEND_API.GET_ONE(id)),
-  getStats: () => apiFetch<ApiResponse<MemberStats>>(MembersUrlConfig.BACKEND_API.STATS),
-  create: (body: Partial<Member>) =>
-    apiFetch<ApiResponse<Member>>(MembersUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body) }),
-  update: (id: string, body: Partial<Member> & Record<string, unknown>) =>
-    apiFetch<ApiResponse<Member>>(MembersUrlConfig.BACKEND_API.UPDATE(id), { method: 'PATCH', body: JSON.stringify(body) }),
-  remove: (id: string) => apiFetch<ApiResponse<{ id: string }>>(MembersUrlConfig.BACKEND_API.DELETE(id), { method: 'DELETE' }),
-  renew: (id: string, body: { planId: string; expiryDate: string; billingCycle: string; customDays?: number; status: string }) =>
-    apiFetch<ApiResponse<Member>>(MembersUrlConfig.BACKEND_API.RENEW(id), { method: 'POST', body: JSON.stringify(body) }),
-  getTrainers: () => apiFetch<ApiResponse<{ staff: { id: string; name: string; role: string }[] }>>('/manager/hr/staff'),
+  getOne: async (id: string) => {
+    await new Promise(res => setTimeout(res, 600));
+    const member = MOCK_MEMBERS.find(m => m.id === id) || MOCK_MEMBERS[0];
+    return { success: true, message: 'Success', data: member };
+  },
+  getStats: async () => {
+    await new Promise(res => setTimeout(res, 600));
+    return { success: true, message: 'Success', data: MOCK_MEMBER_STATS };
+  },
+  create: async (body: Partial<Member>) => {
+    await new Promise(res => setTimeout(res, 600));
+    return { success: true, message: 'Created', data: MOCK_MEMBERS[0] };
+  },
+  update: async (id: string, body: Partial<Member> & Record<string, unknown>) => {
+    await new Promise(res => setTimeout(res, 600));
+    return { success: true, message: 'Updated', data: MOCK_MEMBERS[0] };
+  },
+  remove: async (id: string) => {
+    await new Promise(res => setTimeout(res, 600));
+    return { success: true, message: 'Removed', data: { id } };
+  },
+  renew: async (id: string, body: any) => {
+    await new Promise(res => setTimeout(res, 600));
+    return { success: true, message: 'Renewed', data: MOCK_MEMBERS[0] };
+  },
+  getTrainers: async () => {
+    await new Promise(res => setTimeout(res, 600));
+    return { success: true, message: 'Success', data: { staff: [] } };
+  },
 };
