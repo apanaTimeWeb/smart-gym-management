@@ -14,18 +14,19 @@ import { AuthUrlConfig } from '@/app/auth/auth_url_config';
 import { loginSchema } from '@/app/auth/login/login_types/login_types';
 import type { UseLoginFormReturn, LoginFormData, FetchState } from '@/app/auth/login/login_types/login_types';
 
-/** Known demo credentials for mock authentication. Each entry maps email→password→role. */
-const DEMO_CREDENTIALS: Record<string, { password: string; role: string }> = {
-  'demo_admin@gym.com': { password: 'demo123', role: 'SUPERADMIN' },
-  'admin@gymsmart.com': { password: 'demo123', role: 'ADMIN' },
-  'manager@gymsmart.com': { password: 'demo123', role: 'MANAGER' },
-  'trainer@gymsmart.com': { password: 'demo123', role: 'TRAINER' },
+// Demo user profiles for mock-free offline login
+const DEMO_USERS: Record<string, { password: string; role: string; name: string; id: string; tenantId: string }> = {
+  'demo_admin@gym.com':   { password: 'demo123', role: 'SUPERADMIN', name: 'Demo Superadmin', id: 'u_superadmin', tenantId: 'tenant_global' },
+  'admin@gymsmart.com':   { password: 'demo123', role: 'ADMIN',      name: 'Demo Admin',     id: 'u_admin',      tenantId: 'tenant_001' },
+  'manager@gymsmart.com': { password: 'demo123', role: 'MANAGER',    name: 'Demo Manager',   id: 'u_manager',    tenantId: 'tenant_001' },
+  'trainer@gymsmart.com': { password: 'demo123', role: 'TRAINER',    name: 'Demo Trainer',   id: 'u_trainer',    tenantId: 'tenant_001' },
 };
 
 /**
  * Hook to manage login form state, validation, and handle the authentication flow.
  * Uses Zod for schema validation and explicitly tracks API network state.
  * Implements strict pessimistic UI state updates.
+ * Demo credentials bypass the real backend to work even when the backend is offline.
  */
 export function useLoginForm(): UseLoginFormReturn {
   const form = useForm<LoginFormData>({
@@ -39,14 +40,44 @@ export function useLoginForm(): UseLoginFormReturn {
   const onSubmit = useCallback(async (data: LoginFormData) => {
     setStatus('loading');
 
-    // --- Mock credential validation (TC-02/03/04/05 fix) ---
-    const knownAccount = DEMO_CREDENTIALS[data.email.toLowerCase().trim()];
-    if (!knownAccount || knownAccount.password !== data.password) {
-      toast.error('Invalid credentials. Please check your email and password.');
-      setStatus('error');
+    // --- Demo credential path: skip real backend entirely ---
+    const demoUser = DEMO_USERS[data.email.toLowerCase().trim()];
+    if (demoUser && demoUser.password === data.password) {
+      try {
+        // Build a synthetic response matching the real AuthResponse shape
+        const mockAccessToken  = `demo_access_${demoUser.role.toLowerCase()}_${Date.now()}`;
+        const mockRefreshToken = `demo_refresh_${demoUser.role.toLowerCase()}_${Date.now()}`;
+        const mockUser = { id: demoUser.id, name: demoUser.name, email: data.email, role: demoUser.role, tenantId: demoUser.tenantId };
+
+        const cookieRes = await fetch(AuthUrlConfig.PROXY_API.SET_COOKIE, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: mockAccessToken, refreshToken: mockRefreshToken, user: mockUser }),
+        });
+
+        if (!cookieRes.ok) throw new Error('Session setup failed');
+
+        setStatus('success');
+        toast.success('Login successful');
+
+        if (demoUser.role === 'SUPERADMIN') {
+          window.location.href = DashboardUrlConfig.PAGES.MAIN;
+        } else if (demoUser.role === 'MANAGER') {
+          window.location.replace(AuthUrlConfig.PAGES.MANAGER_DASHBOARD);
+        } else if (demoUser.role === 'TRAINER') {
+          window.location.replace(AuthUrlConfig.PAGES.TRAINER_DASHBOARD);
+        } else {
+          window.location.replace(AuthUrlConfig.PAGES.ADMIN_DASHBOARD);
+        }
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : 'Login failed. Please try again.';
+        toast.error(msg);
+        setStatus('error');
+      }
       return;
     }
 
+    // --- Real backend path for non-demo credentials ---
     try {
       const res = await authApi.login(data.email, data.password);
       if (res.success && res.data!.accessToken) {

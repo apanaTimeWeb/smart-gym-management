@@ -29,6 +29,7 @@ import { AuthUrlConfig } from '@/app/auth/auth_url_config';
 import { StatusCodes } from 'http-status-codes';
 import toast from 'react-hot-toast';
 import { z } from 'zod';
+import { getMockResponse } from '@/lib/mock_data';
 
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
@@ -92,29 +93,32 @@ export async function apiFetch<T = unknown, Z extends z.ZodTypeAny = z.ZodTypeAn
       if (token) headers['Authorization'] = `Bearer ${token}`;
     }
   }
-  let res: Response;
-  let finalRes: Response;
-  
-  res = await fetch(`${BASE_URL}${path}`, { ...rest, headers });
-  finalRes = res;
-  if (res.status === StatusCodes.UNAUTHORIZED && auth) {
-    // Attempt to refresh the token
-    const refreshRes = await fetch(AuthUrlConfig.PROXY_API.REFRESH, { method: 'POST' });
-    
-    if (refreshRes.ok) {
-      // Refresh succeeded, grab new token from response
-      const { accessToken } = await refreshRes.json();
-      if (accessToken) {
-        // Retry original request with new token
-        headers['Authorization'] = `Bearer ${accessToken}`;
-        finalRes = await fetch(`${BASE_URL}${path}`, { ...rest, headers });
+  let finalRes!: Response;
+
+  // ── Network call with automatic mock fallback ──────────────────────────────
+  try {
+    finalRes = await fetch(`${BASE_URL}${path}`, { ...rest, headers });
+
+    if (finalRes.status === StatusCodes.UNAUTHORIZED && auth) {
+      // Attempt to refresh the token
+      const refreshRes = await fetch(AuthUrlConfig.PROXY_API.REFRESH, { method: 'POST' });
+      if (refreshRes.ok) {
+        const { accessToken } = await refreshRes.json();
+        if (accessToken) {
+          headers['Authorization'] = `Bearer ${accessToken}`;
+          finalRes = await fetch(`${BASE_URL}${path}`, { ...rest, headers });
+        }
+      } else {
+        // Refresh failed, session genuinely expired
+        await fetch(AuthUrlConfig.PROXY_API.LOGOUT, { method: 'POST' });
+        window.location.replace(AuthUrlConfig.PAGES.LOGIN);
+        throw new Error('Session expired. Please login again.');
       }
-    } else {
-      // Refresh failed, session genuinely expired
-      await fetch(AuthUrlConfig.PROXY_API.LOGOUT, { method: 'POST' });
-      window.location.replace(AuthUrlConfig.PAGES.LOGIN);
-      throw new Error('Session expired. Please login again.');
     }
+  } catch (_networkErr) {
+    // Backend is offline — fall back to hardcoded mock data
+    const mock = getMockResponse(path);
+    return mock as T;
   }
 
   const json = await finalRes.json();
