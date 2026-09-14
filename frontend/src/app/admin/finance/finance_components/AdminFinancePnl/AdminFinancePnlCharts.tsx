@@ -78,7 +78,7 @@ export default function AdminFinancePnlCharts({ data }: AdminFinancePnlChartsPro
       background: 'transparent',
       fontFamily: CHART_FONT,
     },
-    colors: ['#FACC15', '#22C55E', '#3B82F6', '#C084FC', '#F59E0B'],
+    colors: ['#FACC15', '#22C55E', '#3B82F6', '#C084FC', 'var(--warning)'],
     labels: profitLabels,
     dataLabels: {
       enabled: true,

@@ -115,12 +115,12 @@ export default function AdminAnnouncementsModal() {
                 render={({ field }) => (
                   <div className="flex flex-wrap gap-2">
                     {ANNOUNCEMENT_AUDIENCE_OPTIONS.map(o => {
-                      const selected = field.value.includes(o.value as any);
+                      const selected = field.value.includes(o.value as unknown);
                       return (
                         <button
                           key={o.value}
                           type="button"
-                          onClick={() => field.onChange(toggleArrayValue(field.value, o.value as any))}
+                          onClick={() => field.onChange(toggleArrayValue(field.value, o.value as unknown))}
                           className={`px-3 py-1.5 rounded-lg text-xs font-semibold border motion-safe:transition-colors ${
                             selected
                               ? 'bg-primary text-white border-primary'

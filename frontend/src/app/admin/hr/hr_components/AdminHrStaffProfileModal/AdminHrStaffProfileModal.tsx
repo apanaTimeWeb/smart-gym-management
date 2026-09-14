@@ -63,7 +63,7 @@ export default function AdminHrStaffProfileModal() {
                 </div>
                 {isManager && (
                   <button
-                    onClick={() => openEdit(editData as any)}
+                    onClick={() => openEdit(editData as unknown)}
                     className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary font-semibold text-sm rounded-xl transition-colors flex items-center gap-2"
                   >
                     <Edit2 size={14} />
@@ -109,15 +109,15 @@ export default function AdminHrStaffProfileModal() {
                     Salary: {(editData.salary || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}
                   </span>
                 </div>
-                <div className="flex items-center gap-3 bg-input/50 p-3 rounded-xl border border-[var(--danger)]/50">
-                  <IndianRupee size={16} className="text-[var(--danger)]" />
-                  <span className="text-sm font-medium text-[var(--danger)]">
+                <div className="flex items-center gap-3 bg-input/50 p-3 rounded-xl border border-danger/50">
+                  <IndianRupee size={16} className="text-danger" />
+                  <span className="text-sm font-medium text-danger">
                     Advance: {(editData.advanceSalary || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}
                   </span>
                 </div>
-                <div className="flex items-center gap-3 bg-input/50 p-3 rounded-xl border border-[var(--warning)]/50">
-                  <IndianRupee size={16} className="text-[var(--warning)]" />
-                  <span className="text-sm font-medium text-[var(--warning)]">
+                <div className="flex items-center gap-3 bg-input/50 p-3 rounded-xl border border-warning/50">
+                  <IndianRupee size={16} className="text-warning" />
+                  <span className="text-sm font-medium text-warning">
                     Due: {(editData.currentDue || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}
                   </span>
                 </div>

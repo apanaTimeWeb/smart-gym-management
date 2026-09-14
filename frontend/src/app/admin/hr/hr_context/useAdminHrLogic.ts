@@ -7,7 +7,8 @@ import { hrApi } from '@/app/admin/hr/hr_api/AdminHrApi';
 import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
 import { EMPTY_STAFF } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
 import { useDebounce } from '@/app/admin/admin_utils/useDebounce';
-import { useAdminHrMutations } from './useAdminHrMutations';
+import { useAdminHrStaffMutations } from './useAdminHrStaffMutations';
+import { useAdminHrPayrollMutations } from './useAdminHrPayrollMutations';
 import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
 import { useAdminToastStore } from '@/app/admin/admin_store/useAdminToastStore';
 
@@ -166,8 +167,12 @@ export function useAdminHrLogic(initialData?: HrInitialData | null): HrContextTy
     setShowPayrollModal(true);
   }, []);
 
-  const { saveStaff, savePayroll, deleteStaff, toggleStaffStatus, markPayrollPaid, giveAdvance, payDue } = useAdminHrMutations(
-    staff, payrolls, setStaff, setPayrolls, setSummary, editId, setShowModal, setShowPayrollModal, setSaving, showToast
+  const { saveStaff, deleteStaff, toggleStaffStatus } = useAdminHrStaffMutations(
+    staff, setStaff, setSummary, editId, setShowModal, setSaving, showToast
+  );
+
+  const { savePayroll, markPayrollPaid, giveAdvance, payDue } = useAdminHrPayrollMutations(
+    staff, payrolls, setStaff, setPayrolls, setSummary, setShowPayrollModal, setSaving, showToast
   );
 
   return {

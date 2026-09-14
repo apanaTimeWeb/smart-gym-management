@@ -25,7 +25,7 @@ export default function AdminHrLedgerTable() {
       try {
         const res = await hrApi.getLedger(selectedStaffId);
         setLedger(res.data?.ledger || []);
-      } catch (e: any) {
+      } catch (e: unknown) {
         showToast(e.message, 'error');
       } finally {
         setLoading(false);
@@ -70,11 +70,11 @@ export default function AdminHrLedgerTable() {
           </div>
           <div className="bg-card p-4 rounded-xl border border-border">
             <p className="text-xs text-secondary uppercase">Advance Balance</p>
-            <p className="text-xl font-bold text-[var(--danger)]">{formatMoney(selectedStaff.advanceSalary || 0)}</p>
+            <p className="text-xl font-bold text-danger">{formatMoney(selectedStaff.advanceSalary || 0)}</p>
           </div>
           <div className="bg-card p-4 rounded-xl border border-border">
             <p className="text-xs text-secondary uppercase">Due Amount</p>
-            <p className="text-xl font-bold text-[var(--hr-highlight)]">{formatMoney(selectedStaff.currentDue || 0)}</p>
+            <p className="text-xl font-bold text-hr-highlight">{formatMoney(selectedStaff.currentDue || 0)}</p>
           </div>
         </div>
       )}
@@ -110,16 +110,16 @@ export default function AdminHrLedgerTable() {
                     <td className="p-4 text-foreground whitespace-nowrap">{new Date(l.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
                     <td className="p-4">
                       <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium 
-                        ${l.type.includes('Advance') ? 'bg-[var(--danger)]/10 text-[var(--danger)]' : 
+                        ${l.type.includes('Advance') ? 'bg-danger/10 text-danger' : 
                           l.type.includes('Salary Generated') ? 'bg-blue-500/10 text-blue-500' : 
-                          l.type.includes('Due') ? 'bg-[var(--warning)]/10 text-[var(--warning)]' :
-                          'bg-[var(--success)]/10 text-[var(--success)]'}`}>
+                          l.type.includes('Due') ? 'bg-warning/10 text-warning' :
+                          'bg-success/10 text-success'}`}>
                         {l.type}
                       </span>
                     </td>
                     <td className="p-4 text-secondary max-w-[200px] truncate" title={l.notes}>{l.notes || '-'}</td>
-                    <td className="p-4 text-right text-[var(--success)] font-medium">{l.credit > 0 ? `+${l.credit.toLocaleString('en-IN')}` : '-'}</td>
-                    <td className="p-4 text-right text-[var(--danger)] font-medium">{l.debit > 0 ? `-${l.debit.toLocaleString('en-IN')}` : '-'}</td>
+                    <td className="p-4 text-right text-success font-medium">{l.credit > 0 ? `+${l.credit.toLocaleString('en-IN')}` : '-'}</td>
+                    <td className="p-4 text-right text-danger font-medium">{l.debit > 0 ? `-${l.debit.toLocaleString('en-IN')}` : '-'}</td>
                     <td className="p-4 text-right font-bold text-foreground bg-primary/5">{l.balance.toLocaleString('en-IN')}</td>
                   </tr>
                 ))

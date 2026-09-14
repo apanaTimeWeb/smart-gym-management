@@ -4,7 +4,7 @@
 import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
 import { useAdminDashboardStore } from '@/app/admin/dashboard/dashboard_store/useAdminDashboardStore';
-import type { TimeRange } from '@/app/admin/dashboard/dashboard_types/dashboard_types';
+import type { TimeRange } from '@/app/admin/admin_types/AdminSharedTypes';
 import AdminDashboardKPIs from '@/app/admin/dashboard/dashboard_components/AdminDashboardKPIs/AdminDashboardKPIs';
 import AdminDashboardBranchLeaderboard from '@/app/admin/dashboard/dashboard_components/AdminDashboardBranchLeaderboard/AdminDashboardBranchLeaderboard';
 import AdminDashboardAlerts from '@/app/admin/dashboard/dashboard_components/AdminDashboardAlerts/AdminDashboardAlerts';

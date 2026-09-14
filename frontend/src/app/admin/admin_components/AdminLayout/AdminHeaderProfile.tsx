@@ -4,6 +4,8 @@ import { useState, useRef, useEffect } from 'react';
 import { User, Settings, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { getUser, logout } from '@/lib/api';
+import { AdminProfileUrlConfig } from '@/app/admin/profile/admin_profile_url_config';
+import { AdminSettingsUrlConfig } from '@/app/admin/settings/settings_url_config';
 
 export function AdminHeaderProfile() {
   const [showProfile, setShowProfile] = useState(false);
@@ -38,10 +40,10 @@ export function AdminHeaderProfile() {
             {mounted && user?.role && <p className="text-xs text-warning font-medium mt-0.5">{user.role}</p>}
           </div>
           <div className="py-1">
-            <Link href="/admin/settings" className="flex items-center gap-2 px-4 py-2 text-sm text-secondary hover:text-foreground hover:bg-input motion-safe:transition-colors" onClick={() => setShowProfile(false)}>
+            <Link href={AdminProfileUrlConfig.root} className="flex items-center gap-2 px-4 py-2 text-sm text-secondary hover:text-foreground hover:bg-input motion-safe:transition-colors" onClick={() => setShowProfile(false)}>
               <User size={15} /> My Profile
             </Link>
-            <Link href="/admin/settings" className="flex items-center gap-2 px-4 py-2 text-sm text-secondary hover:text-foreground hover:bg-input motion-safe:transition-colors" onClick={() => setShowProfile(false)}>
+            <Link href={AdminSettingsUrlConfig.root} className="flex items-center gap-2 px-4 py-2 text-sm text-secondary hover:text-foreground hover:bg-input motion-safe:transition-colors" onClick={() => setShowProfile(false)}>
               <Settings size={15} /> Settings
             </Link>
           </div>

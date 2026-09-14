@@ -3,7 +3,7 @@
 import { Calendar, ShieldCheck } from 'lucide-react';
 import { useAdminBranchesLogic } from '@/app/admin/branches/branches_context/useAdminBranchesLogic';
 import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
-import type { TimeRange } from '@/app/admin/dashboard/dashboard_types/dashboard_types';
+import type { TimeRange } from '@/app/admin/admin_types/AdminSharedTypes';
 
 const TIME_RANGE_OPTIONS = [
   { value: 'weekly', label: 'This Week' },

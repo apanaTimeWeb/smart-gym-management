@@ -3,6 +3,7 @@
 
 import { Clock, AlertTriangle, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
+import { AdminMembersUrlConfig } from '@/app/admin/members/admin_members_url_config';
 
 const EXPIRING_MOCK = [
   { id: 'm10', name: 'Pooja Iyer', branch: 'Downtown Core', plan: 'Silver Plan', expiryDate: '2025-01-20', daysLeft: 3 },
@@ -62,7 +63,7 @@ export default function AdminDashboardExpiringWidget() {
       </div>
 
       <Link
-        href="/admin/members?expiryFilter=this_month"
+        href={`${AdminMembersUrlConfig.root}?expiryFilter=this_month`}
         className="w-full mt-4 py-2 border border-border rounded-lg text-xs font-bold text-secondary hover:text-foreground hover:bg-primary/5 motion-safe:transition-colors flex items-center justify-center gap-1"
       >
         View All Expiring <ChevronRight size={13} />

@@ -179,16 +179,16 @@ export default function AdminAnnouncementsTable() {
                   {/* Views */}
                   <td className="p-4">
                     <div className="flex items-center gap-1 text-xs text-secondary">
-                      <Eye size={12} /> {(a as any).viewCount?.toLocaleString('en-IN') || 0}
+                      <Eye size={12} /> {(a as unknown).viewCount?.toLocaleString('en-IN') || 0}
                     </div>
                   </td>
                   {/* Acknowledged */}
                   <td className="p-4 text-xs text-secondary whitespace-nowrap">
-                    {(a as any).acknowledgedCount?.toLocaleString('en-IN') || 0}
+                    {(a as unknown).acknowledgedCount?.toLocaleString('en-IN') || 0}
                   </td>
                   {/* Delivery */}
                   <td className="p-4 text-xs text-secondary whitespace-nowrap capitalize">
-                    {(a as any).deliveryStatus || 'Sent'}
+                    {(a as unknown).deliveryStatus || 'Sent'}
                   </td>
                   {/* Actions */}
                   <td className="p-4">

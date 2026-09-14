@@ -1,3 +1,4 @@
+import { AdminDashboardUrlConfig } from '@/app/admin/dashboard/admin_dashboard_url_config';
 // RESPONSIBILITY: Renders the error boundary for the branches module.
 'use client';
 import Link from 'next/link';
@@ -11,12 +12,12 @@ export default function AdminBranchesError({ error, reset }: { error: Error & { 
     logErrorToMonitoring(error, { module: 'branches' });
   }, [error]);
 
-  if (error.message?.includes(String(StatusCodes.FORBIDDEN)) || (error as any).status === StatusCodes.FORBIDDEN) {
+  if (error.message?.includes(String(StatusCodes.FORBIDDEN)) || (error as unknown as { status?: number }).status === StatusCodes.FORBIDDEN) {
     return (
       <div className="min-h-full flex flex-col items-center justify-center p-8 text-center">
         <h2 className="text-2xl font-bold mb-4 text-danger">Access Denied</h2>
         <p className="text-secondary mb-6">You don't have permission to view this page.</p>
-        <Link href="/admin/dashboard" className="px-4 py-2 rounded-md bg-primary text-black hover:bg-primary-hover motion-safe:transition-colors">
+        <Link href={AdminDashboardUrlConfig.root} className="px-4 py-2 rounded-md bg-primary text-black hover:bg-primary-hover motion-safe:transition-colors">
           Return to Dashboard
         </Link>
       </div>

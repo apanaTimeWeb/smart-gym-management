@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Bell, X } from 'lucide-react';
 import Link from 'next/link';
 import { ADMIN_PLACEHOLDER_NOTIFICATIONS } from '@/app/admin/admin_url_config';
+import { AdminNotificationsUrlConfig } from '@/app/admin/notifications/admin_notifications_url_config';
 
 export function AdminHeaderNotifications() {
   const [showNotifications, setShowNotifications] = useState(false);
@@ -55,7 +56,7 @@ export function AdminHeaderNotifications() {
             ))}
           </div>
           <div className="p-3 text-center border-t border-border">
-            <Link href="/admin/notifications" onClick={() => setShowNotifications(false)} className="text-sm font-medium text-primary hover:underline">
+            <Link href={AdminNotificationsUrlConfig.root} onClick={() => setShowNotifications(false)} className="text-sm font-medium text-primary hover:underline">
               View All Notifications
             </Link>
           </div>

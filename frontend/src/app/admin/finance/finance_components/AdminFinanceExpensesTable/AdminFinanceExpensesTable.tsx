@@ -30,7 +30,7 @@ export default function AdminFinanceExpensesTable() {
   const { expenses = [] } = useAdminFinanceLogic();
 
   const filtered = useMemo(() => {
-    return expenses.filter((e: any) => {
+    return expenses.filter((e: unknown) => {
       const matchesBranch = selectedBranchId === 'all' || e.branchId === selectedBranchId;
       const matchesCategory = categoryFilter === 'All' || e.category === categoryFilter;
       return matchesBranch && matchesCategory;
@@ -39,9 +39,9 @@ export default function AdminFinanceExpensesTable() {
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
   const paginated = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
-  const totalAmount = filtered.reduce((sum: number, e: any) => sum + e.amount, 0);
+  const totalAmount = filtered.reduce((sum: number, e: unknown) => sum + e.amount, 0);
 
-  const categories = ['All', ...Array.from(new Set(expenses.map((e: any) => e.category)))];
+  const categories = ['All', ...Array.from(new Set(expenses.map((e: unknown) => e.category)))];
 
   return (
     <div className="space-y-4">
@@ -83,7 +83,7 @@ export default function AdminFinanceExpensesTable() {
                 <tr>
                   <td colSpan={6} className="px-4 py-12 text-center text-sm text-secondary">No expenses found.</td>
                 </tr>
-              ) : paginated.map((e: any) => (
+              ) : paginated.map((e: unknown) => (
                 <tr key={e.id} className="hover:bg-primary/5 motion-safe:transition-colors">
                   <td className="px-4 py-3 text-sm text-foreground whitespace-nowrap">{new Date(e.date).toLocaleDateString('en-IN')}</td>
                   <td className="px-4 py-3">

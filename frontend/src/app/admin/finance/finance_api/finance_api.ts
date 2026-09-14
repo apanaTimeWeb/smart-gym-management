@@ -1,32 +1,22 @@
-import { apiFetch } from '@/lib/api';
+import { apiFetch, type ApiResponse } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import { FinanceUrlConfig } from '@/app/admin/finance/finance_url_config';
-import { MOCK_ADMIN_FINANCE_SUMMARY, MOCK_ADMIN_PAYMENTS, MOCK_ADMIN_BRANCH_PNL } from '@/app/admin/finance/finance_api/AdminFinanceMockData';
 import type { Payment, FinanceSummary, BranchPnlRecord } from '@/app/admin/finance/finance_types/finance_types';
-
-let mockPayments = [...MOCK_ADMIN_PAYMENTS];
-
+import { z } from "zod";
 export const financeApi = {
   fetchPayments: async (params?: Record<string, string>) => {
-    await new Promise(res => setTimeout(res, 300));
-    return { success: true, message: 'Success', data: { payments: mockPayments, total: mockPayments.length } };
-  },
+            return apiFetch('/api/admin/finance/fetchPayments', { method: 'GET', dataSchema: z.unknown() });
+        },
   createPayment: async (body: Partial<Payment>) => {
-    await new Promise(res => setTimeout(res, 400));
-    const newPayment = { ...body, id: `p${Date.now()}`, paidAt: new Date().toISOString() } as Payment;
-    mockPayments = [newPayment, ...mockPayments];
-    return { success: true, message: 'Created', data: newPayment };
-  },
+            return apiFetch('/api/admin/finance/createPayment', { method: 'POST', body: JSON.stringify(body), dataSchema: z.unknown() });
+        },
   fetchSummary: async (branchId?: string, range?: string) => {
-    await new Promise(res => setTimeout(res, 300));
-    return { success: true, message: 'Success', data: MOCK_ADMIN_FINANCE_SUMMARY };
-  },
+          return apiFetch('/api/admin/finance/fetchSummary', { method: 'GET', dataSchema: z.unknown() });
+      },
   fetchBranchPnl: async (period: string) => {
-    await new Promise(res => setTimeout(res, 400));
-    return { success: true, message: 'Success', data: MOCK_ADMIN_BRANCH_PNL };
-  },
+          return apiFetch('/api/admin/finance/fetchBranchPnl', { method: 'GET', dataSchema: z.unknown() });
+      },
   fetchExpenses: async (params?: Record<string, string>) => {
-    await new Promise(res => setTimeout(res, 300));
-    return { success: true, message: 'Success', data: [] };
-  },
+          return apiFetch('/api/admin/finance/fetchExpenses', { method: 'GET', dataSchema: z.unknown() });
+      },
 };

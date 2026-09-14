@@ -40,7 +40,7 @@ The Admin module is the overarching control center for gym operations. It provid
 - **Zustand stores:** `useAdminGlobalStore` for selected branch, plus module-scoped stores (e.g., `useAdminPlansStore`)
 - **Context providers:** Contexts for complex module data flow (e.g., `AdminHrContext`, `AdminPlansContext`, `AdminConfirmProvider`)
 - **Local-storage keys:** None — auth token stored in HTTP-only cookie
-- **MSW handler file:** Not yet configured — all API calls go to real backend
+- **MSW handler file:** `src/mocks/handlers/admin.handlers.ts` intercepts API calls for stub-first development
 
 ## API Contract
 

@@ -24,10 +24,13 @@ import { superadminBranchesHandlers } from './handlers/superadmin-branches.handl
 import { superadminAnalyticsHandlers } from './handlers/superadmin-analytics.handlers';
 import { superadminAffiliatesHandlers } from './handlers/superadmin-affiliates.handlers';
 
+import { adminHandlers } from './handlers/admin.handlers';
+
 export const handlers = [
   http.get("/api/health", () => {
     return HttpResponse.json({ status: "ok" });
   }),
+  ...adminHandlers,
   ...superadminGymsHandlers,
   ...superadminDashboardHandlers,
   ...superadminPlansHandlers,

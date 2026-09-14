@@ -1,26 +1,17 @@
 // RESPONSIBILITY: API client for the Admin Profile module.
-import { apiFetch } from '@/lib/api';
-import type { ApiResponse } from '@/app/superadmin/superadmin_types/superadmin_types';
+import { apiFetch, type ApiResponse } from '@/lib/api';
 import type { AdminProfileData, UpdateAdminProfilePayload, UpdateAdminPasswordPayload } from '@/app/admin/profile/profile_types/AdminProfileTypes';
+import { z } from "zod";
 
 const BASE = '/admin/profile';
-
-import { MOCK_ADMIN_PROFILE } from '@/app/admin/profile/profile_api/AdminProfileMockData';
-
-let mockProfile = { ...MOCK_ADMIN_PROFILE };
-
 export const adminProfileApi = {
   fetchProfile: async () => {
-    await new Promise(res => setTimeout(res, 300));
-    return { success: true, message: 'Success', data: mockProfile };
-  },
+            return apiFetch('/api/admin/adminProfile/fetchProfile', { method: 'GET', dataSchema: z.unknown() });
+        },
   updateProfile: async (body: UpdateAdminProfilePayload) => {
-    await new Promise(res => setTimeout(res, 400));
-    mockProfile = { ...mockProfile, ...body };
-    return { success: true, message: 'Profile updated', data: mockProfile };
-  },
+            return apiFetch('/api/admin/adminProfile/updateProfile', { method: 'POST', body: JSON.stringify(body), dataSchema: z.unknown() });
+        },
   updatePassword: async (body: UpdateAdminPasswordPayload) => {
-    await new Promise(res => setTimeout(res, 400));
-    return { success: true, message: 'Password updated', data: undefined };
-  },
+          return apiFetch('/api/admin/adminProfile/updatePassword', { method: 'POST', body: JSON.stringify(body), dataSchema: z.unknown() });
+      },
 };

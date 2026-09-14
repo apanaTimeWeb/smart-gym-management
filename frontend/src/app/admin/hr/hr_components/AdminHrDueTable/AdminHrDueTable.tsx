@@ -27,10 +27,10 @@ export default function AdminHrDueTable() {
     <div className="max-w-4xl mx-auto space-y-6">
       
       {staffWithDues.length > 0 && (
-        <div className="bg-[var(--warning)]/10 border border-[var(--warning)]/30 rounded-xl p-4 flex gap-3 items-start">
-          <AlertCircle className="text-[var(--warning)] mt-0.5" size={20} />
+        <div className="bg-warning/10 border border-warning/30 rounded-xl p-4 flex gap-3 items-start">
+          <AlertCircle className="text-warning mt-0.5" size={20} />
           <div>
-            <h4 className="font-semibold text-[var(--warning)] text-sm">Outstanding Dues</h4>
+            <h4 className="font-semibold text-warning text-sm">Outstanding Dues</h4>
             <p className="text-sm text-secondary mt-1">
               You have {staffWithDues.length} staff members with pending salary dues. Total outstanding: 
               <strong className="ml-1 text-foreground">₹{staffWithDues.reduce((sum, s) => sum + (s.currentDue || 0), 0).toLocaleString('en-IN')}</strong>
@@ -63,7 +63,7 @@ export default function AdminHrDueTable() {
           </div>
 
           {selectedStaff && (
-            <div className="p-4 bg-[var(--hr-highlight)]/10 rounded-lg border border-[var(--hr-highlight)]/30 text-sm">
+            <div className="p-4 bg-hr-highlight/10 rounded-lg border border-hr-highlight/30 text-sm">
               <p><strong>Current Due Amount:</strong> ₹{selectedStaff.currentDue || 0}</p>
               <p className="text-secondary text-xs mt-1">This is the unpaid portion of past payrolls.</p>
             </div>

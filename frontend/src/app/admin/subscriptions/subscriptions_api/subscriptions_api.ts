@@ -4,58 +4,34 @@ import {
   MOCK_CURRENT_SUBSCRIPTION, MOCK_SAAS_PLANS, MOCK_INVOICES,
   MOCK_PAYMENT_METHODS, MOCK_SUBSCRIPTION_KPI,
 } from '@/app/admin/subscriptions/subscriptions_utils/AdminSubscriptionsSharedConstants';
-
-let mockSubscription = { ...MOCK_CURRENT_SUBSCRIPTION };
-let mockPaymentMethods = [...MOCK_PAYMENT_METHODS];
-
+import { z } from "zod";
+import { apiFetch, type ApiResponse } from "@/lib/api";
 export const subscriptionsApi = {
-  fetchSubscription: async (): Promise<CurrentSubscription> => {
-    await new Promise(r => setTimeout(r, 300));
-    return mockSubscription;
-  },
-  fetchPlans: async (): Promise<SaaSPlan[]> => {
-    await new Promise(r => setTimeout(r, 200));
-    return MOCK_SAAS_PLANS;
-  },
-  fetchInvoices: async (): Promise<Invoice[]> => {
-    await new Promise(r => setTimeout(r, 250));
-    return MOCK_INVOICES;
-  },
-  fetchPaymentMethods: async (): Promise<PaymentMethod[]> => {
-    await new Promise(r => setTimeout(r, 200));
-    return mockPaymentMethods;
-  },
-  fetchKPIs: async (): Promise<SubscriptionKPIData> => {
-    await new Promise(r => setTimeout(r, 150));
-    return MOCK_SUBSCRIPTION_KPI;
-  },
-  upgradePlan: async (planId: string): Promise<CurrentSubscription> => {
-    await new Promise(r => setTimeout(r, 800));
-    const plan = MOCK_SAAS_PLANS.find(p => p.id === planId);
-    if (!plan) throw new Error('Plan not found');
-    mockSubscription = {
-      ...mockSubscription,
-      planId: plan.id,
-      planName: plan.name,
-      tier: plan.tier,
-      monthlyPrice: plan.monthlyPrice,
-      annualPrice: plan.annualPrice,
-    };
-    return mockSubscription;
-  },
-  toggleAutoRenew: async (): Promise<CurrentSubscription> => {
-    await new Promise(r => setTimeout(r, 400));
-    mockSubscription = { ...mockSubscription, autoRenew: !mockSubscription.autoRenew };
-    return mockSubscription;
-  },
-  setDefaultPaymentMethod: async (id: string): Promise<PaymentMethod[]> => {
-    await new Promise(r => setTimeout(r, 400));
-    mockPaymentMethods = mockPaymentMethods.map(pm => ({ ...pm, isDefault: pm.id === id }));
-    return mockPaymentMethods;
-  },
-  removePaymentMethod: async (id: string): Promise<PaymentMethod[]> => {
-    await new Promise(r => setTimeout(r, 400));
-    mockPaymentMethods = mockPaymentMethods.filter(pm => pm.id !== id);
-    return mockPaymentMethods;
-  },
+  fetchSubscription: async () => {
+            return apiFetch('/api/admin/subscriptions/fetchSubscription', { method: 'GET', dataSchema: z.unknown() });
+        },
+  fetchPlans: async () => {
+            return apiFetch('/api/admin/subscriptions/fetchPlans', { method: 'GET', dataSchema: z.unknown() });
+        },
+  fetchInvoices: async () => {
+          return apiFetch('/api/admin/subscriptions/fetchInvoices', { method: 'GET', dataSchema: z.unknown() });
+      },
+  fetchPaymentMethods: async () => {
+          return apiFetch('/api/admin/subscriptions/fetchPaymentMethods', { method: 'GET', dataSchema: z.unknown() });
+      },
+  fetchKPIs: async () => {
+          return apiFetch('/api/admin/subscriptions/fetchKPIs', { method: 'GET', dataSchema: z.unknown() });
+      },
+  upgradePlan: async (planId: string) => {
+          return apiFetch('/api/admin/subscriptions/upgradePlan', { method: 'POST', body: JSON.stringify(planId), dataSchema: z.unknown() });
+      },
+  toggleAutoRenew: async () => {
+          return apiFetch('/api/admin/subscriptions/toggleAutoRenew', { method: 'POST', dataSchema: z.unknown() });
+      },
+  setDefaultPaymentMethod: async (id: string) => {
+          return apiFetch('/api/admin/subscriptions/setDefaultPaymentMethod', { method: 'POST', body: JSON.stringify(id), dataSchema: z.unknown() });
+      },
+  removePaymentMethod: async (id: string) => {
+          return apiFetch('/api/admin/subscriptions/removePaymentMethod', { method: 'DELETE', body: JSON.stringify(id), dataSchema: z.unknown() });
+      },
 };

@@ -12,10 +12,10 @@ export default function AdminSalesOverview() {
   const { overviewData, fetchState } = useAdminSalesLogic();
 
   const referralData = [
-    { name: 'Instagram', value: 45000, color: '#E1306C' },
-    { name: 'Google Ads', value: 65000, color: '#4285F4' },
-    { name: 'Word of Mouth', value: 25000, color: '#10B981' },
-    { name: 'Walk-in', value: 15000, color: '#F59E0B' },
+    { name: 'Instagram', value: 45000, color: 'var(--danger)' },
+    { name: 'Google Ads', value: 65000, color: 'var(--primary)' },
+    { name: 'Word of Mouth', value: 25000, color: 'var(--success)' },
+    { name: 'Walk-in', value: 15000, color: 'var(--warning)' },
   ];
 
   if (fetchState === 'loading') {
@@ -43,15 +43,15 @@ export default function AdminSalesOverview() {
  <div className="h-72 w-full">
   <ResponsiveContainer width="100%" height="100%">
     <BarChart data={overviewData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-      <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} />
-      <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} tickFormatter={(val) => `${(val / 1000).toFixed(0)}K`} />
+      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
+      <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} />
+      <YAxis axisLine={false} tickLine={false} tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} tickFormatter={(val) => `${(val / 1000).toFixed(0)}K`} />
       <Tooltip 
-        cursor={{ fill: '#f1f5f9', opacity: 0.5 }}
+        cursor={{ fill: 'var(--bg-card)', opacity: 0.5 }}
         contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', backgroundColor: 'var(--bg-card)', color: 'var(--text-primary)' }}
         formatter={(value: number | string | readonly (string | number)[] | undefined) => [`₹${Number(Array.isArray(value) ? value[0] : (value || 0)).toLocaleString()}`, 'Revenue']}
       />
-      <Bar dataKey="revenue" fill="#4F46E5" radius={[6, 6, 0, 0]} barSize={40} />
+      <Bar dataKey="revenue" fill="var(--primary)" radius={[6, 6, 0, 0]} barSize={40} />
     </BarChart>
   </ResponsiveContainer>
  </div>
@@ -64,17 +64,17 @@ export default function AdminSalesOverview() {
     <AreaChart data={overviewData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
       <defs>
         <linearGradient id="colorMembers" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="5%" stopColor="#F43F5E" stopOpacity={0.4}/>
-          <stop offset="95%" stopColor="#F43F5E" stopOpacity={0}/>
+          <stop offset="5%" stopColor="var(--danger)" stopOpacity={0.4}/>
+          <stop offset="95%" stopColor="var(--danger)" stopOpacity={0}/>
         </linearGradient>
       </defs>
-      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-      <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} />
-      <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} />
+      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
+      <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} />
+      <YAxis axisLine={false} tickLine={false} tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} />
       <Tooltip 
         contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', backgroundColor: 'var(--bg-card)', color: 'var(--text-primary)' }}
       />
-      <Area type="monotone" dataKey="newMembers" stroke="#F43F5E" strokeWidth={3} fillOpacity={1} fill="url(#colorMembers)" />
+      <Area type="monotone" dataKey="newMembers" stroke="var(--danger)" strokeWidth={3} fillOpacity={1} fill="url(#colorMembers)" />
     </AreaChart>
   </ResponsiveContainer>
  </div>
@@ -98,7 +98,7 @@ export default function AdminSalesOverview() {
             <Cell key={`cell-${index}`} fill={entry.color} />
           ))}
         </Pie>
-        <Tooltip formatter={(value: any) => `₹${Number(value || 0).toLocaleString()}`} />
+        <Tooltip formatter={(value: unknown) => `₹${Number(value || 0).toLocaleString()}`} />
         <Legend verticalAlign="bottom" height={36} />
       </PieChart>
     </ResponsiveContainer>

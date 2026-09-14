@@ -8,10 +8,21 @@ import { STATUS_STYLES } from '@/app/admin/admin_url_config';
 import { useQuery } from '@tanstack/react-query';
 import type { AdminMember } from '@/app/admin/members/members_types/AdminMembersTypes';
 
+import { AdminMembersUrlConfig } from '@/app/admin/members/admin_members_url_config';
+
 export function AdminHeaderSearch() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearch, setShowSearch] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
+
+  // RATIONALE: Required by architecture to sync state/lifecycle based on dependencies.
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) setShowSearch(false);
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const { data: membersData } = useQuery({
     queryKey: ['adminMembers'],
@@ -29,14 +40,6 @@ export function AdminHeaderSearch() {
         m.email.toLowerCase().includes(q)
     ).slice(0, 5);
   }, [searchQuery, membersData]);
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (searchRef.current && !searchRef.current.contains(event.target as Node)) setShowSearch(false);
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   return (
     <div className="relative hidden md:block" ref={searchRef}>
@@ -69,7 +72,7 @@ export function AdminHeaderSearch() {
               {searchResults.map((m) => (
                 <Link
                   key={m.id}
-                  href="/admin/members"
+                  href={AdminMembersUrlConfig.root}
                   onClick={() => { setSearchQuery(''); setShowSearch(false); }}
                   className="flex items-center justify-between px-3 py-2.5 hover:bg-input motion-safe:transition-colors border-b border-border last:border-0"
                 >
@@ -88,7 +91,7 @@ export function AdminHeaderSearch() {
                 </Link>
               ))}
               <Link
-                href="/admin/members"
+                href={AdminMembersUrlConfig.root}
                 onClick={() => { setSearchQuery(''); setShowSearch(false); }}
                 className="block px-3 py-2.5 text-center text-xs font-bold text-primary hover:bg-input motion-safe:transition-colors border-t border-border"
               >
