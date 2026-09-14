@@ -1,6 +1,6 @@
-// RESPONSIBILITY: API functions for the Trainer Notifications module. All calls go through apiFetch.
-// DATA FLOW: TrainerNotificationsApi → useTrainerNotificationsLogic → TrainerNotificationsMain
-// ROLE BOUNDARY: Trainers can read and mark notifications — delete/clearAll are Manager-only.
+﻿// RESPONSIBILITY: API functions for the Trainer Notifications module. All calls go through apiFetch.
+// DATA FLOW: TrainerNotificationsApi â†’ useTrainerNotificationsLogic â†’ TrainerNotificationsMain
+// ROLE BOUNDARY: Trainers can read and mark notifications â€” delete/clearAll are Manager-only.
 
 import { apiFetch } from '@/lib/api';
 import type { TrainerNotificationsApiResponse } from '@/app/trainer/notifications/notifications_types/TrainerNotificationsTypes';

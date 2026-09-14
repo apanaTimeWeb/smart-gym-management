@@ -5,13 +5,15 @@ import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback
 import type { MessageType, TrainerMessageRecipient } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerMessageModal';
 import type { MemberFormValues } from '@/app/trainer/members/members_utils/MembersSharedConstants';
 import { z } from 'zod';
-import { MemberSchema, MemberStatsSchema, DietPlanSchema } from './members.schema';
-import type { Workout, WorkoutExercise } from '@/app/trainer/trainer_types/trainer_types';
+import { MemberSchema, MemberStatsSchema } from './members.schema';
+import { TrainerMemberDietSnapshotSchema, type TrainerMemberDietSnapshot } from './TrainerMemberDietSnapshot';
+import { TrainerMemberWorkoutSnapshotSchema, type TrainerMemberWorkoutSnapshot, type TrainerMemberWorkoutExerciseSnapshot } from './TrainerMemberWorkoutSnapshot';
 
 export type Member = z.infer<typeof MemberSchema>;
 export type MemberStats = z.infer<typeof MemberStatsSchema>;
-export type DietPlan = z.infer<typeof DietPlanSchema>;
-export type { Workout, WorkoutExercise };
+export type DietPlan = TrainerMemberDietSnapshot;
+export type Workout = TrainerMemberWorkoutSnapshot;
+export type WorkoutExercise = TrainerMemberWorkoutExerciseSnapshot;
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 
 export interface MembersInitialData {

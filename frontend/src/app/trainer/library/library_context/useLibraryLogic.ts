@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { useDebounce } from '@/app/trainer/trainer_utils/useDebounce';
 import { libraryApi } from '@/app/trainer/library/library_api/library_api';
 import type { LibraryContextType, LibraryInitialData } from '@/app/trainer/library/library_types/library_types';
-import type { DietPlan, FetchState } from '@/app/trainer/trainer_types/trainer_types';
+import type { DietPlan, FetchState } from '@/app/trainer/library/library_types/library_types';
 import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
 import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';

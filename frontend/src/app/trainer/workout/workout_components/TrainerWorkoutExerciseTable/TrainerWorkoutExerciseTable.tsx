@@ -60,11 +60,11 @@ export default function TrainerWorkoutExerciseTable() {
               <tr key={ex.id} className="hover:bg-accent motion-safe:transition-colors">
                 <td className="px-4 py-3 text-sm font-medium text-foreground">{ex.name}</td>
                 <td className="px-4 py-3 text-sm text-secondary">
-                  {Array.isArray(ex.muscleGroup) ? ex.muscleGroup.join(', ') : (ex.muscleGroup || (ex as any).muscle || 'N/A')}
+                  {Array.isArray(ex.muscleGroup) ? ex.muscleGroup.join(', ') : (ex.muscleGroup || 'N/A')}
                 </td>
                 <td className="px-4 py-3">
                   <span className="text-xs bg-input text-secondary border border-border px-2 py-1 rounded-full">
-                    {ex.category || (ex as any).equipment || 'N/A'}
+                    {ex.category || 'N/A'}
                   </span>
                 </td>
                 <td className="px-4 py-3">

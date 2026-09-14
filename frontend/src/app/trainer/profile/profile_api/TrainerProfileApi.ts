@@ -1,4 +1,4 @@
-// RESPONSIBILITY: API client for the Trainer Profile module.
+﻿// RESPONSIBILITY: API client for the Trainer Profile module.
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import type {

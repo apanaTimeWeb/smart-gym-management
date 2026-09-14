@@ -1,28 +1,8 @@
 import { z } from 'zod';
-import { WorkoutSchema, WorkoutExerciseSchema } from '@/app/trainer/workout/workout_types/workout.schema';
+import { TrainerMemberWorkoutSnapshotSchema } from './TrainerMemberWorkoutSnapshot';
+import { TrainerMemberDietSnapshotSchema } from './TrainerMemberDietSnapshot';
 
-export const DietPlanSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  goal: z.string(),
-  calories: z.number().optional(),
-  protein: z.number().optional(),
-  carbs: z.number().optional(),
-  fats: z.number().optional(),
-  description: z.string().optional(),
-  meals: z.array(
-    z.union([
-      z.string(),
-      z.object({
-        name: z.string(),
-        time: z.string().optional(),
-        items: z.string().optional(),
-        description: z.string().optional(),
-      }),
-    ])
-  ),
-  isActive: z.boolean(),
-});
+
 
 
 
@@ -53,9 +33,9 @@ export const MemberSchema = z.object({
   assignedTrainerName: z.string().optional(),
   isPT: z.boolean().optional(),
   assignedDietId: z.string().optional(),
-  assignedDiet: DietPlanSchema.optional(),
+  assignedDiet: TrainerMemberDietSnapshotSchema.optional(),
   assignedWorkoutId: z.string().optional(),
-  assignedWorkout: WorkoutSchema.optional(),
+  assignedWorkout: TrainerMemberWorkoutSnapshotSchema.optional(),
   fitnessGoal: z.string().optional(),
   daysSinceLastCheckIn: z.number().optional(),
   trainerNotes: z.array(

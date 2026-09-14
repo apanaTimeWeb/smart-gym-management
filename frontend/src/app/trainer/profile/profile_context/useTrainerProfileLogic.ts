@@ -62,6 +62,10 @@ export function useTrainerProfileLogic() {
     }
   }
 
+  const isDirty = activeTab === 'personal'
+    ? (name !== (user?.name || '') || phone !== '' || specialization.length > 0)
+    : (currentPassword !== '' || newPassword !== '' || confirmPassword !== '');
+
   return {
     activeTab, setActiveTab,
     name, setName,
@@ -74,5 +78,6 @@ export function useTrainerProfileLogic() {
     saving, mounted,
     user, displayInitial,
     handleSaveProfile, handleChangePassword,
+    isDirty
   };
 }

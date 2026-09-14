@@ -7,13 +7,14 @@ import { Apple, Plus, Check, MessageCircle, RefreshCw, Flame, PieChart, Utensils
 import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
 import { useTrainerMembersMutations } from '@/app/trainer/members/members_queries/useTrainerMembersMutations';
 import { libraryApi } from '@/app/trainer/library/library_api/library_api';
-import type { DietPlan, FetchState } from '@/app/trainer/trainer_types/trainer_types';
+import type { FetchState } from '@/app/trainer/members/members_types/members_types';
+import type { TrainerMemberDietSnapshot } from '@/app/trainer/members/members_types/TrainerMemberDietSnapshot';
 
 export default function TrainerMembersProfileDiet() {
   const selectedMember = useTrainerMembersStore(s => s.selectedMember);
   const { assignDiet } = useTrainerMembersMutations();
   const [isAssigning, setIsAssigning] = useState(false);
-  const [availableDiets, setAvailableDiets] = useState<DietPlan[]>([]);
+  const [availableDiets, setAvailableDiets] = useState<TrainerMemberDietSnapshot[]>([]);
   const [fetchDietsState, setFetchDietsState] = useState<FetchState>('idle');
   const [selectedDietId, setSelectedDietId] = useState<string>('');
   const [saving, setSaving] = useState(false);

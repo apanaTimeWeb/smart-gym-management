@@ -3,8 +3,7 @@
 // RESPONSIBILITY: Server component that handles initial SSR data fetching for the members module.
 import TrainerMembersMain from '@/app/trainer/members/members_components/TrainerMembersMain/TrainerMembersMain';
 import { ssrMembersApi } from '@/app/trainer/members/members_api/members_server_api';
-import type { MembersInitialData } from '@/app/trainer/members/members_types/members_types';
-import type { Member, MemberStats } from '@/app/trainer/trainer_types/trainer_types';
+import type { MembersInitialData, Member, MemberStats } from '@/app/trainer/members/members_types/members_types';
 
 export default async function MembersPage() {
   let initialData: MembersInitialData = {

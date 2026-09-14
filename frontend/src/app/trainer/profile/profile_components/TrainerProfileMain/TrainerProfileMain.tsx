@@ -6,6 +6,7 @@ import { User, Lock, Save, Loader2, Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { useTrainerProfileLogic } from '@/app/trainer/profile/profile_context/useTrainerProfileLogic';
 import { TRAINER_SPECIALIZATIONS } from '@/app/trainer/profile/profile_utils/TrainerProfileSharedConstants';
+import { useUnsavedChangesGuard } from '@/lib/useUnsavedChangesGuard';
 
 export default function TrainerProfileMain() {
   const {
@@ -19,7 +20,10 @@ export default function TrainerProfileMain() {
     saving, mounted,
     user, displayInitial,
     handleSaveProfile, handleChangePassword,
+    isDirty
   } = useTrainerProfileLogic();
+
+  useUnsavedChangesGuard(isDirty);
 
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);

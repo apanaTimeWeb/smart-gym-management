@@ -3,7 +3,7 @@
 import { useTrainerDashboardQuery } from '@/app/trainer/dashboard/dashboard_queries/useTrainerDashboardQuery';
 import { CalendarClock, Clock, User, Users, Calendar } from 'lucide-react';
 import Link from 'next/link';
-import { SESSION_TYPE_STYLES } from '@/app/trainer/sessions/sessions_utils/TrainerSessionsSharedConstants';
+
 
 export default function TrainerDashboardUpcomingSessions() {
   const { data: stats } = useTrainerDashboardQuery();

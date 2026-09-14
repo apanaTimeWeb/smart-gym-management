@@ -1,10 +1,14 @@
 // RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
 // DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Defines all TypeScript types, interfaces, and the FetchState enum for the Diet Library module.
-import type { DietPlan, FetchState } from '@/app/trainer/trainer_types/trainer_types';
+import { z } from 'zod';
+import { DietPlanSchema } from './library.schema';
 import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
 import { type DietFormValues } from '@/app/trainer/library/library_utils/LibrarySharedConstants';
 import React from 'react';
+
+export type FetchState = 'idle' | 'loading' | 'success' | 'error';
+export type DietPlan = z.infer<typeof DietPlanSchema>;
 
 export interface LibraryInitialData {
   dietPlans: DietPlan[];

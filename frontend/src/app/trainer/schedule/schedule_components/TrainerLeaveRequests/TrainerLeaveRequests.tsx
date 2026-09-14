@@ -5,6 +5,7 @@ import { useTrainerScheduleQuery } from '@/app/trainer/schedule/schedule_queries
 import { useTrainerScheduleStore } from '@/app/trainer/schedule/schedule_store/useTrainerScheduleStore';
 import TrainerScheduleEmptyState from '@/app/trainer/schedule/schedule_components/TrainerScheduleEmptyState/TrainerScheduleEmptyState';
 import { Plus, Loader2 } from 'lucide-react';
+import { formatDate } from '@/lib/formatters';
 
 const STATUS_COLORS: Record<string, { bg: string, text: string }> = {
   PENDING: { bg: 'bg-warning/10', text: 'text-warning' },
@@ -61,7 +62,7 @@ export default function TrainerLeaveRequests() {
                 <tr key={leave.id} className="hover:bg-primary/5 motion-safe:transition-colors cursor-pointer">
                   <td className="px-4 py-4 text-xs font-bold text-primary whitespace-nowrap">{leave.id}</td>
                   <td className="px-4 py-4 text-sm font-semibold text-foreground whitespace-nowrap">
-                    {leave.startDate} <span className="text-secondary font-normal mx-1">to</span> {leave.endDate}
+                    {formatDate(leave.startDate)} <span className="text-secondary font-normal mx-1">to</span> {formatDate(leave.endDate)}
                   </td>
                   <td className="px-4 py-4 text-sm text-secondary truncate max-w-xs">{leave.reason}</td>
                   <td className="px-4 py-4 whitespace-nowrap">
@@ -70,7 +71,7 @@ export default function TrainerLeaveRequests() {
                     </span>
                   </td>
                   <td className="px-4 py-4 text-xs text-secondary whitespace-nowrap">
-                    {new Date(leave.createdAt).toLocaleDateString()}
+                    {formatDate(leave.createdAt)}
                   </td>
                 </tr>
               );

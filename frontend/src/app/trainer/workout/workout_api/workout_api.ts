@@ -1,91 +1,65 @@
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
-// RESPONSIBILITY: Provides strongly-typed network calls for the workout module.
-import { z } from 'zod';
+﻿import { z } from 'zod';
 import type { Workout, Exercise } from '@/app/trainer/workout/workout_types/workout.schema';
 import { WorkoutSchema, ExerciseSchema } from '@/app/trainer/workout/workout_types/workout.schema';
-import { MOCK_WORKOUTS, MOCK_EXERCISES } from '@/app/trainer/workout/workout_fixtures/TrainerWorkoutMockData';
-
-const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
-
-let mockWorkouts = [...MOCK_WORKOUTS];
-let mockExercises = [...MOCK_EXERCISES];
+import { apiFetch, type ApiResponse } from '@/lib/api';
+import { WorkoutUrlConfig } from '@/app/trainer/workout/workout_url_config';
 
 export const workoutApi = {
   getWorkouts: async (params?: Record<string, string>) => {
-    await delay(400);
-    let results = [...mockWorkouts];
-    if (params?.search) {
-      const s = params.search.toLowerCase();
-      results = results.filter(w => w.name.toLowerCase().includes(s) || w.tags.some(t => t.toLowerCase().includes(s)));
-    }
-    if (params?.category && params.category !== 'All') {
-      const cat = params.category;
-      results = results.filter(w => w.focus === cat || w.tags.includes(cat));
-    }
-    return { data: { workouts: z.array(WorkoutSchema).parse(results), total: results.length } };
+    const q = params ? '?' + new URLSearchParams(params).toString() : '';
+    const res = await apiFetch<ApiResponse<{ workouts: any[]; total: number }>>(`${WorkoutUrlConfig.BACKEND_API.WORKOUTS}${q}`);
+    return { data: { workouts: z.array(WorkoutSchema).parse(res.data?.workouts || []), total: res.data?.total || 0 } };
   },
   
   createWorkout: async (body: Partial<Workout>) => {
-    await delay(400);
-    const newWorkout = {
-      ...body,
-      id: `wk-${Date.now()}-${Math.random().toString(36).substring(2,6)}`,
-      isActive: true,
-      workoutExercises: body.workoutExercises ?? []
-    } as Workout;
-    mockWorkouts = [newWorkout, ...mockWorkouts];
-    return { data: WorkoutSchema.parse(newWorkout) };
+    const res = await apiFetch<ApiResponse<any>>(`${WorkoutUrlConfig.BACKEND_API.WORKOUTS}`, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+    return { data: WorkoutSchema.parse(res.data) };
   },
   
   updateWorkout: async (id: string, body: Partial<Workout>) => {
-    await delay(400);
-    const idx = mockWorkouts.findIndex(w => String(w.id) === String(id));
-    if (idx === -1) throw new Error('Workout not found');
-    const updated = { ...mockWorkouts[idx]!, ...body } as Workout;
-    mockWorkouts[idx] = updated;
-    return { data: WorkoutSchema.parse(updated) };
+    const res = await apiFetch<ApiResponse<any>>(`${WorkoutUrlConfig.BACKEND_API.WORKOUTS}/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+    });
+    return { data: WorkoutSchema.parse(res.data) };
   },
   
   removeWorkout: async (id: string) => {
-    await delay(400);
-    mockWorkouts = mockWorkouts.filter(w => String(w.id) !== String(id));
+    await apiFetch<ApiResponse<any>>(`${WorkoutUrlConfig.BACKEND_API.WORKOUTS}/${id}`, {
+      method: 'DELETE',
+    });
     return { data: { id } };
   },
   
   getExercises: async (params?: Record<string, string>) => {
-    await delay(400);
-    let results = [...mockExercises];
-    if (params?.search) {
-      const s = params.search.toLowerCase();
-      results = results.filter(e => e.name.toLowerCase().includes(s) || (e.category?.toLowerCase() ?? '').includes(s));
-    }
-    return { data: { exercises: z.array(ExerciseSchema).parse(results), total: results.length } };
+    const q = params ? '?' + new URLSearchParams(params).toString() : '';
+    const res = await apiFetch<ApiResponse<{ exercises: any[]; total: number }>>(`${WorkoutUrlConfig.BACKEND_API.EXERCISES}${q}`);
+    return { data: { exercises: z.array(ExerciseSchema).parse(res.data?.exercises || []), total: res.data?.total || 0 } };
   },
   
   createExercise: async (body: Partial<Exercise>) => {
-    await delay(400);
-    const newEx = {
-      ...body,
-      id: `ex-${Date.now()}-${Math.random().toString(36).substring(2,6)}`,
-      isActive: true,
-    } as Exercise;
-    mockExercises = [newEx, ...mockExercises];
-    return { data: ExerciseSchema.parse(newEx) };
+    const res = await apiFetch<ApiResponse<any>>(`${WorkoutUrlConfig.BACKEND_API.EXERCISES}`, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+    return { data: ExerciseSchema.parse(res.data) };
   },
   
   updateExercise: async (id: string, body: Partial<Exercise>) => {
-    await delay(400);
-    const idx = mockExercises.findIndex(e => String(e.id) === String(id));
-    if (idx === -1) throw new Error('Exercise not found');
-    const updated = { ...mockExercises[idx]!, ...body } as Exercise;
-    mockExercises[idx] = updated;
-    return { data: ExerciseSchema.parse(updated) };
+    const res = await apiFetch<ApiResponse<any>>(`${WorkoutUrlConfig.BACKEND_API.EXERCISES}/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+    });
+    return { data: ExerciseSchema.parse(res.data) };
   },
   
   removeExercise: async (id: string) => {
-    await delay(400);
-    mockExercises = mockExercises.filter(e => String(e.id) !== String(id));
+    await apiFetch<ApiResponse<any>>(`${WorkoutUrlConfig.BACKEND_API.EXERCISES}/${id}`, {
+      method: 'DELETE',
+    });
     return { data: { id } };
   },
 };

@@ -2,6 +2,7 @@
 import { CalendarClock } from 'lucide-react';
 import { useTrainerEarningsQuery } from '@/app/trainer/earnings/earnings_queries/useTrainerEarningsQuery';
 import { PAYOUT_STATUS_STYLES, formatCurrency } from '@/app/trainer/earnings/earnings_utils/TrainerEarningsSharedConstants';
+import { formatDate } from '@/lib/formatters';
 
 export default function TrainerEarningsPending() {
   const { data } = useTrainerEarningsQuery();
@@ -42,7 +43,7 @@ export default function TrainerEarningsPending() {
                 </div>
                 <div className="flex items-center gap-1.5 text-xs text-secondary pt-3 border-t border-border">
                   <CalendarClock size={13} />
-                  <span>Due by: {new Date(p.dueDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
+                  <span>Due by: {formatDate(p.dueDate)}</span>
                 </div>
               </div>
             );

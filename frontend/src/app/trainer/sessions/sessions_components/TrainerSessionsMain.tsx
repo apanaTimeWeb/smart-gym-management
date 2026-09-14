@@ -66,7 +66,7 @@ export default function TrainerSessionsMain() {
     }
   };
 
-  const handleScheduleSubmit = async (dto: any) => {
+  const handleScheduleSubmit = async (dto: CreateSessionDto) => {
     try {
       await createSession.mutateAsync(dto);
       setShowScheduleModal(false);

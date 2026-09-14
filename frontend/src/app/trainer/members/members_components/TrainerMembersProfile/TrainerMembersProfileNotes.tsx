@@ -3,6 +3,7 @@
 
 'use client';
 import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
+import { formatDate } from '@/lib/formatters';
 
 export default function TrainerMembersProfileNotes() {
   const selectedMember = useTrainerMembersStore(s => s.selectedMember);
@@ -21,7 +22,7 @@ export default function TrainerMembersProfileNotes() {
       ) : (
         notes.map(note => (
           <div key={note.id} className="p-4 bg-card border border-border rounded-xl">
-            <div className="text-xs text-secondary mb-1">{new Date(note.date).toLocaleDateString()}</div>
+            <div className="text-xs text-secondary mb-1">{formatDate(note.date)}</div>
             <p className="text-sm text-foreground">{note.text}</p>
           </div>
         ))

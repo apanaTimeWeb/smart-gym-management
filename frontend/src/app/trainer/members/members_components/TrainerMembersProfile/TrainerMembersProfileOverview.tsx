@@ -8,6 +8,7 @@ import { MessageCircle, Mail, Target, X, Trash2 } from 'lucide-react';
 import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
 import { useTrainerMembersMutations } from '@/app/trainer/members/members_queries/useTrainerMembersMutations';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { formatDate } from '@/lib/formatters';
 
 const progressData = [
   { month: 'Jan', weight: 82, bodyFat: 24 },
@@ -40,9 +41,9 @@ export default function TrainerMembersProfileOverview() {
     if (!text) return;
     setIsSavingNote(true);
     try {
-      const newNote = { id: Date.now(), text, date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) };
+      const newNote = { id: Date.now(), text, date: formatDate(new Date().toISOString()) };
       const updated = [...notes, newNote];
-      await updateMember.mutateAsync({ id: selectedMember.id, data: { trainerNotes: updated } as any });
+      await updateMember.mutateAsync({ id: selectedMember.id, data: { trainerNotes: updated } });
       setNotes(updated);
       showToast('Note saved successfully', 'success');
       setShowNoteModal(false);
@@ -56,7 +57,7 @@ export default function TrainerMembersProfileOverview() {
   const handleDeleteNote = async (id: number) => {
     const updated = notes.filter(n => n.id !== id);
     try {
-      await updateMember.mutateAsync({ id: selectedMember.id, data: { trainerNotes: updated } as any });
+      await updateMember.mutateAsync({ id: selectedMember.id, data: { trainerNotes: updated } });
       setNotes(updated);
     } catch {
       showToast('Failed to delete note', 'error');

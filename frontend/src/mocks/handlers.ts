@@ -44,6 +44,15 @@ import { managerMembersHandlers } from './handlers/manager-members.handlers';
 import { managerPlansHandlers } from './handlers/manager-plans.handlers';
 import { managerPtHandlers } from './handlers/manager-pt.handlers';
 
+import { trainerAttendanceHandlers } from './handlers/trainer-attendance.handlers';
+import { trainerDashboardHandlers } from './handlers/trainer-dashboard.handlers';
+import { trainerEarningsHandlers } from './handlers/trainer-earnings.handlers';
+import { trainerMembersHandlers } from './handlers/trainer-members.handlers';
+import { trainerProgressHandlers } from './handlers/trainer-progress.handlers';
+import { trainerScheduleHandlers } from './handlers/trainer-schedule.handlers';
+import { trainerSessionsHandlers } from './handlers/trainer-sessions.handlers';
+import { trainerWorkoutHandlers } from './handlers/trainer-workout.handlers';
+
 export const handlers = [
   http.get("/api/health", () => {
     return HttpResponse.json({ status: "ok" });
@@ -91,4 +100,12 @@ export const handlers = [
   ...superadminBranchesHandlers,
   ...superadminAnalyticsHandlers,
   ...superadminAffiliatesHandlers,
+  ...trainerAttendanceHandlers,
+  ...trainerDashboardHandlers,
+  ...trainerEarningsHandlers,
+  ...trainerMembersHandlers,
+  ...trainerProgressHandlers,
+  ...trainerScheduleHandlers,
+  ...trainerSessionsHandlers,
+  ...trainerWorkoutHandlers,
 ];

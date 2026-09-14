@@ -7,13 +7,14 @@ import { Dumbbell, Plus, Check, MessageCircle, RefreshCw, Calendar, Flame, Targe
 import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
 import { useTrainerMembersMutations } from '@/app/trainer/members/members_queries/useTrainerMembersMutations';
 import { workoutApi } from '@/app/trainer/workout/workout_api/workout_api';
-import type { Workout, FetchState } from '@/app/trainer/trainer_types/trainer_types';
+import type { FetchState } from '@/app/trainer/members/members_types/members_types';
+import type { TrainerMemberWorkoutSnapshot } from '@/app/trainer/members/members_types/TrainerMemberWorkoutSnapshot';
 
 export default function TrainerMembersProfileWorkout() {
   const selectedMember = useTrainerMembersStore(s => s.selectedMember);
   const { assignWorkout } = useTrainerMembersMutations();
   const [isAssigning, setIsAssigning] = useState(false);
-  const [availableWorkouts, setAvailableWorkouts] = useState<Workout[]>([]);
+  const [availableWorkouts, setAvailableWorkouts] = useState<TrainerMemberWorkoutSnapshot[]>([]);
   const [fetchWorkoutsState, setFetchWorkoutsState] = useState<FetchState>('idle');
   const [selectedWorkoutId, setSelectedWorkoutId] = useState<string>('');
   const [saving, setSaving] = useState(false);

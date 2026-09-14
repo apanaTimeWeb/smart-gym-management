@@ -5,6 +5,7 @@ import { useTrainerEarningsStore } from '@/app/trainer/earnings/earnings_store/u
 import { useTrainerEarningsQuery } from '@/app/trainer/earnings/earnings_queries/useTrainerEarningsQuery';
 import { PAYOUT_STATUS_STYLES, formatCurrency } from '@/app/trainer/earnings/earnings_utils/TrainerEarningsSharedConstants';
 import { TrainerEarningsUrlConfig } from '@/app/trainer/earnings/earnings_utils/TrainerEarningsUrlConfig';
+import { formatDate } from '@/lib/formatters';
 
 export default function TrainerEarningsHistory() {
   const { search, setSearch, currentPage, setCurrentPage, startDate, setStartDate, endDate, setEndDate } = useTrainerEarningsStore();
@@ -110,7 +111,7 @@ export default function TrainerEarningsHistory() {
                 return (
                   <tr key={row.id} className="hover:bg-primary/5 motion-safe:transition-colors">
                     <td className="py-3 px-4 text-sm text-secondary whitespace-nowrap">
-                      {new Date(row.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                      {formatDate(row.date)}
                     </td>
                     <td className="py-3 px-4">
                       <p className="text-sm font-medium text-foreground">{row.description}</p>

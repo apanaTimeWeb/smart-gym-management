@@ -1,9 +1,15 @@
-import { TrainerEarningsDataSchema, type TrainerEarningsData } from '@/app/trainer/earnings/earnings_types/TrainerEarningsTypes';
-import { MOCK_EARNINGS_DATA } from '@/app/trainer/earnings/earnings_fixtures/TrainerEarningsMockData';
+﻿import { TrainerEarningsDataSchema, type TrainerEarningsData } from '@/app/trainer/earnings/earnings_types/TrainerEarningsTypes';
+import { apiFetch } from '@/lib/api';
+import { EarningsUrlConfig } from '@/app/trainer/earnings/earnings_url_config';
 
 export const earningsApi = {
   getEarningsData: async (startDate?: string, endDate?: string): Promise<TrainerEarningsData> => {
-    await new Promise(resolve => setTimeout(resolve, 600)); // Simulate latency
-    return TrainerEarningsDataSchema.parse(MOCK_EARNINGS_DATA);
+    const params = new URLSearchParams();
+    if (startDate) params.append('startDate', startDate);
+    if (endDate) params.append('endDate', endDate);
+    
+    const q = params.toString() ? `?${params.toString()}` : '';
+    const raw = await apiFetch<unknown>(`${EarningsUrlConfig.BACKEND_API.DATA}${q}`);
+    return TrainerEarningsDataSchema.parse(raw);
   }
 };

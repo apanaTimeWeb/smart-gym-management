@@ -8,7 +8,7 @@ import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useT
 import { useTrainerMembersFilters } from '@/app/trainer/members/members_utils/useTrainerMembersFilters';
 import { useTrainerMembersQuery } from '@/app/trainer/members/members_queries/useTrainerMembersQuery';
 import { MEMBERS_STATUS_COLORS, MEMBERS_TABLE_HEADERS, formatCurrency } from '@/app/trainer/members/members_utils/MembersSharedConstants';
-import { maskSensitiveData } from '@/lib/formatters';
+import { maskSensitiveData, formatDate } from '@/lib/formatters';
 import TrainerMembersEmptyState from '@/app/trainer/members/members_components/TrainerMembersEmptyState/TrainerMembersEmptyState';
 
 import TrainerPagination from '@/app/trainer/trainer_components/TrainerShared/TrainerPagination';
@@ -87,7 +87,7 @@ export default function TrainerMembersTable() {
                         {m.status}
                       </span>
                     </td>
-                    <td className="px-5 py-3.5 text-sm text-secondary whitespace-nowrap">{new Date(m.expiryDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                    <td className="px-5 py-3.5 text-sm text-secondary whitespace-nowrap">{formatDate(m.expiryDate)}</td>
                     <td className="px-5 py-3.5 text-sm text-foreground whitespace-nowrap">{m.fitnessGoal || 'General Fitness'}</td>
                     <td className="px-5 py-3.5 text-sm text-secondary whitespace-nowrap">{m.lastWorkout || '2 days ago'}</td>
                     <td className="px-5 py-3.5 text-sm whitespace-nowrap">

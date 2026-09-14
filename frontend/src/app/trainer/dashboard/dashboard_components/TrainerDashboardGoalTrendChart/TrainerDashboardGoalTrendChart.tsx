@@ -42,7 +42,7 @@ export default function TrainerDashboardGoalTrendChart() {
             />
             <Tooltip 
               contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '0.5rem', color: 'hsl(var(--foreground))' }}
-              formatter={(value: any) => [`${value}%`, 'Completion Rate']}
+              formatter={(value: number) => [`${value}%`, 'Completion Rate']}
             />
             <Line 
               type="monotone" 
