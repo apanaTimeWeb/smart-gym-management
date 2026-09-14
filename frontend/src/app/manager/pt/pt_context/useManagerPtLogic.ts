@@ -1,7 +1,6 @@
+'use client';
 // RESPONSIBILITY: Logic hook for Manager PT page — tab state, packages, assignments, KPIs, and workload.
 // DATA FLOW: managerPtApi → useManagerPtLogic → ManagerPtMain
-'use client';
-
 import { useState, useEffect } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import toast from 'react-hot-toast';

@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Business logic hook for Audit Logs — filtering, pagination, CSV export.
-'use client';
 
 import { useQuery } from '@tanstack/react-query';
 import { auditLogsApi } from '@/app/admin/audit_logs/audit_api/audit_api';
@@ -15,13 +15,13 @@ export function useAdminAuditLogsLogic() {
 
   const { data: logs = [], isLoading, isError } = useQuery({
     queryKey: ['adminAuditLogs'],
-    queryFn: auditLogsApi.fetchLogs,
+    queryFn: () => auditLogsApi.fetchLogs().then(r => r.data),
     staleTime: 1000 * 60 * 2,
   });
 
   const { data: kpis } = useQuery({
     queryKey: ['adminAuditKPIs'],
-    queryFn: auditLogsApi.fetchKPIs,
+    queryFn: () => auditLogsApi.fetchKPIs().then(r => r.data),
     staleTime: 1000 * 60 * 5,
   });
 

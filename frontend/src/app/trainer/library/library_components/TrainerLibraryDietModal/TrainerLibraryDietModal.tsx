@@ -1,10 +1,9 @@
-﻿// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
+'use client';
+// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
 // DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Read-only view modal for a diet plan in the Diet Library module.
 // ROLE BOUNDARY: Trainers can only VIEW diet plans, not create or modify them.
 //                The "Edit Diet Plan" / "Add Diet Plan" buttons must not be shown in the Trainer UI.
-'use client';
-
 import { X, Utensils, Droplets, Zap } from 'lucide-react';
 import { useLibraryContext } from '@/app/trainer/library/library_context/LibraryContext';
 
@@ -69,7 +68,10 @@ export default function TrainerLibraryDietModal() {
                 {plan.meals.map((meal, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm text-foreground">
                     <span className="shrink-0 mt-0.5 w-5 h-5 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold">{i + 1}</span>
-                    {meal}
+                    <div className="flex flex-col">
+                      <span className="font-medium">{typeof meal === 'string' ? meal : meal.name}</span>
+                      {typeof meal !== 'string' && meal.description && <span className="text-xs text-secondary">{meal.description}</span>}
+                    </div>
                   </li>
                 ))}
               </ul>

@@ -1,7 +1,7 @@
+"use client";
 import type { TimeRange } from '@/app/admin/admin_types/AdminSharedTypes';
 // RESPONSIBILITY: Core data logic hook for the admin module.
 // DATA FLOW: Centralized store/hook logic mapping API mutations and query state to UI props.
-"use client";
 import { useAdminBranchesStore } from "@/app/admin/branches/branches_store/useAdminBranchesStore";
 import { useAdminBranchesQueries } from "@/app/admin/branches/branches_context/useAdminBranchesQueries";
 import type { Branch } from "@/app/admin/admin_store/useAdminGlobalStore";
@@ -13,7 +13,7 @@ export function useAdminBranchesLogic() {
   const { data: branchesData = [], isLoading, isError } = useAdminBranchesQueries();
   const branches = Array.isArray(branchesData) ? branchesData : ((branchesData as unknown)?.branches || []);
   const {
-    timeRange, setstartDate, setStartDate,
+    timeRange, setTimeRange, startDate, setStartDate,
     endDate, setEndDate,
     selectedBranch, setSelectedBranch,
     detailView, setDetailView
@@ -53,5 +53,3 @@ export function useAdminBranchesLogic() {
     multiplier,
   };
 }
-
-

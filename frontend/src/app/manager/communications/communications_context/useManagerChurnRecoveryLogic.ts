@@ -1,7 +1,6 @@
+'use client';
 // RESPONSIBILITY: Business logic hook for the Churn Recovery / Win-Back tab.
 // DATA FLOW: ManagerCommunicationsApi -> useManagerChurnRecoveryLogic -> ManagerChurnRecoveryTab -> child components
-'use client';
-
 import { useCallback, useMemo } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useManagerCommunicationsStore } from '@/app/manager/communications/communications_store/useManagerCommunicationsStore';

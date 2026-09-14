@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the search + status filter toolbar for the Coupons module.
-'use client';
 
 import { Search, Plus } from 'lucide-react';
 import { useState } from 'react';

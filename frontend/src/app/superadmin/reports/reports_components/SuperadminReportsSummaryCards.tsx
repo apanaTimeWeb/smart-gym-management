@@ -1,5 +1,4 @@
 'use client';
-
 import { TrendingDown, HeartPulse, IndianRupee } from 'lucide-react';
 import { KPI_CARD_GRADIENT } from '@/app/superadmin/reports/reports_types/reports_constants';
 import { formatCurrency } from '@/lib/formatters';

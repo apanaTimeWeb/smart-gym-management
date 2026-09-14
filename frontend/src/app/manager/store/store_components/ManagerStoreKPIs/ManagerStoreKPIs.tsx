@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the top KPI stat cards (total products, orders, revenue) for the Store module.
 'use client';
-
+// RESPONSIBILITY: Renders the top KPI stat cards (total products, orders, revenue) for the Store module.
 import { Package, ShoppingCart, TrendingUp, AlertTriangle } from 'lucide-react';
 import { useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';
 import { formatCurrency } from '@/lib/formatters';

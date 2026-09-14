@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Empty state shown when attendance table has zero rows matching current filters.
-'use client';
 
 import { CalendarX } from 'lucide-react';
 

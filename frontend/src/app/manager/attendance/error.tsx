@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Next.js error.tsx — renders the typed error boundary fallback for the Attendance tracking module with a Retry button.
 'use client';
-
+// RESPONSIBILITY: Next.js error.tsx — renders the typed error boundary fallback for the Attendance tracking module with a Retry button.
 import { useEffect } from 'react';
 import { AlertTriangle } from 'lucide-react';
 

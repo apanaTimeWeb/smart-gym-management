@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Paginated table of audit log events with severity color coding and row-click detail drawer.
-'use client';
 
 import { useState } from 'react';
 import {

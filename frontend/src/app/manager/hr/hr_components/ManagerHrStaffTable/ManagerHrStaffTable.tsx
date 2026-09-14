@@ -1,8 +1,7 @@
+'use client';
 // RESPONSIBILITY: Renders the paginated staff members table with inline row actions.
 // Rule 71 FIX: toggleStaffStatus now uses useConfirm() modal before firing.
 // Rule 48 FIX: Uses ManagerEmptyState component for empty state.
-'use client';
-
 import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
 import { STAFF_TABLE_HEADERS } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
 import { Edit2, Trash2, CheckCircle2, Ban, PlayCircle, Users, Download } from 'lucide-react';

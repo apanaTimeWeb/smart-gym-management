@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Provides the implementation for error.tsx functionality within its module.
 'use client';
-
+// RESPONSIBILITY: Provides the implementation for error.tsx functionality within its module.
 import { useEffect } from 'react';
 import { AlertTriangle } from 'lucide-react';
 

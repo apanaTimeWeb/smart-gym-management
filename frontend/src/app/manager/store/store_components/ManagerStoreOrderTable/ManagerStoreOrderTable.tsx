@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the paginated order history table with status badges and customer info.
 'use client';
-
+// RESPONSIBILITY: Renders the paginated order history table with status badges and customer info.
 import { Printer, MessageCircle } from 'lucide-react';
 import type { Order } from '@/app/manager/store/store_types/ManagerStoreTypes';
 import { useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';

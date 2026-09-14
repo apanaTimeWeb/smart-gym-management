@@ -1,7 +1,6 @@
+'use client';
 import { formatDate } from '@/lib/formatters';
 // RESPONSIBILITY: Renders a detailed view of a selected member's profile.
-'use client';
-
 import { Edit, MessageCircle, Mail } from 'lucide-react';
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';

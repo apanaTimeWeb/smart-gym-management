@@ -1,4 +1,4 @@
-'use client';
+"use client";
 // RESPONSIBILITY: Toolbar for the Admin Branches module — time range selector and custom date range inputs.
 import { Calendar, ShieldCheck } from 'lucide-react';
 import { useAdminBranchesLogic } from '@/app/admin/branches/branches_context/useAdminBranchesLogic';

@@ -25,7 +25,7 @@ const SystemInfoSchema = z.object({
 const HealthProbeSchema = z.object({
   status: z.string(),
   timestamp: z.string().optional(),
-  checks: z.record(z.string(), z.unknown()).optional(),
+  checks: z.object({}).catchall(z.unknown()).optional(),
 }).passthrough();
 
 export const systemApi = {

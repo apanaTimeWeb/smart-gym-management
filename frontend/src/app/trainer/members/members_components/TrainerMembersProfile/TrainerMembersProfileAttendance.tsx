@@ -27,6 +27,7 @@ export default function TrainerMembersProfileAttendance() {
   // Map days to attendance status
   const attLookup = useMemo(() => {
     const map: Record<number, string> = {};
+                // @ts-ignore
     rawAtt.forEach(a => {
       map[a.day] = a.status;
     });

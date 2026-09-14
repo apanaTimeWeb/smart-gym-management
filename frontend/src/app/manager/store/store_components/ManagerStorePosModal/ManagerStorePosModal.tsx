@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Point-of-sale modal for processing a new product sale/order in the Store module.
 'use client';
-
+// RESPONSIBILITY: Point-of-sale modal for processing a new product sale/order in the Store module.
 import { X, Printer, Plus, Minus, Send } from 'lucide-react';
 import { useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';
 import { PAYMENT_METHODS } from '@/app/manager/store/store_utils/ManagerStoreSharedConstants';

@@ -1,8 +1,7 @@
+'use client';
 // RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
 // DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the top banner/hero section with module title and CTA for the Workout Library.
-'use client';
-
 import { Dumbbell } from 'lucide-react';
 import { useTrainerWorkoutsQuery, useTrainerExercisesQuery } from '@/app/trainer/workout/workout_queries/useWorkoutQuery';
 import { useTrainerWorkoutFilters } from '@/app/trainer/workout/workout_utils/useTrainerWorkoutFilters';

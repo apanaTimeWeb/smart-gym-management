@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the modal form for creating a new subscription plan. Reads/writes via useSuperadminPlansStore.
 'use client';
-
+// RESPONSIBILITY: Renders the modal form for creating a new subscription plan. Reads/writes via useSuperadminPlansStore.
 import { useForm, useFieldArray } from 'react-hook-form';
 import type { SubmitHandler, Resolver } from 'react-hook-form';
 import { z } from 'zod';

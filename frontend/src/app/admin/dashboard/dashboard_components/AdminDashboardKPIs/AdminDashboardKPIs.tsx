@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the two rows of KPI metric stat cards on the dashboard using live data from AdminDashboardContext.
-'use client';
 
 import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
 import { useAdminDashboardStore } from '@/app/admin/dashboard/dashboard_store/useAdminDashboardStore';
@@ -101,5 +101,3 @@ export default function AdminDashboardKPIs() {
     </>
   );
 }
-
-

@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: KPI cards for the Payouts module.
-'use client';
 
 import { TrendingUp, IndianRupee, TrendingDown, Clock } from 'lucide-react';
 import AdminStatCard from '@/app/admin/admin_components/AdminShared/AdminStatCard';

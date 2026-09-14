@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Data table to track active PT assignments and mark sessions.
 'use client';
-
+// RESPONSIBILITY: Data table to track active PT assignments and mark sessions.
 import { Loader2, Dumbbell, FileWarning, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { PtAssignment } from '@/app/manager/pt/pt_types/ManagerPtTypes';
 

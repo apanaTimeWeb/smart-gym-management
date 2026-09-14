@@ -35,7 +35,7 @@ export function useAdminPlansRevenueLogic() {
   const filteredData = useMemo(() => {
     if (!searchQuery.trim()) return revenueData;
     const lowerQ = searchQuery.toLowerCase();
-    return revenueData.filter(r => 
+    return revenueData.filter((r: any) => 
       r.planName.toLowerCase().includes(lowerQ) || 
       r.tier.toLowerCase().includes(lowerQ)
     );

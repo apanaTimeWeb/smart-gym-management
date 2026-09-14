@@ -1,8 +1,7 @@
+'use client';
 // RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
 // DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the error boundary fallback for the dashboard module.
-'use client';
-
 import { useEffect } from "react";
 
 export default function DashboardError({

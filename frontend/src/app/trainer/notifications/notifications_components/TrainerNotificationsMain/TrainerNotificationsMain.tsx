@@ -1,7 +1,6 @@
+'use client';
 // RESPONSIBILITY: Entry component for the notifications module. Mounts provider and renders notification list.
 // DATA FLOW: page.tsx (SSR) → TrainerNotificationsMain → TrainerNotificationsProvider → TrainerNotificationsContent
-'use client';
-
 import { Loader2 } from 'lucide-react';
 import TrainerNotificationsList from '@/app/trainer/notifications/notifications_components/TrainerNotificationsList';
 import {

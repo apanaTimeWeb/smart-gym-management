@@ -1,5 +1,4 @@
 'use client';
-
 import { AlertTriangle, RefreshCcw } from 'lucide-react';
 
 export default function ErrorBoundary({

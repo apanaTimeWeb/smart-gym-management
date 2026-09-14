@@ -9,15 +9,10 @@ import type { AuthResponse } from '@/app/auth/login/login_types/login_types';
 
 export const authApi = {
   login: async (email: string, password: string) => {
-    const res = await apiFetch<unknown>(AuthUrlConfig.BACKEND_API.LOGIN, {
+    return apiFetch<import('@/lib/api').ApiResponse<AuthResponse>>(AuthUrlConfig.BACKEND_API.LOGIN, {
       method: 'POST',
       body: JSON.stringify({ email, password }),
+      dataSchema: AuthResponseSchema,
     });
-    
-    if (res.data) {
-      res.data = AuthResponseSchema.parse(res.data);
-    }
-    
-    return res as typeof res & { data: AuthResponse | null };
   },
 };

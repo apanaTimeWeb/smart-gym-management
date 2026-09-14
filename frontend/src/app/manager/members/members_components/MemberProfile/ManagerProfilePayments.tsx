@@ -1,7 +1,6 @@
+'use client';
 import { formatDate } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the payment history and transaction records for a specific member profile.
-'use client';
-
 import { Printer, MessageCircle } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
 import { useFetchPayments } from '@/app/manager/members/members_api/useManagerMembersQueries';

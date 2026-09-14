@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Business logic hook for Manager Referrals.
 'use client';
-
+// RESPONSIBILITY: Business logic hook for Manager Referrals.
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';

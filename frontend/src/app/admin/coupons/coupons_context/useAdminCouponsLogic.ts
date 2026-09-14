@@ -1,6 +1,6 @@
+"use client";
 // RESPONSIBILITY: Custom hook encapsulating all business logic for the Coupons module.
 // DATA FLOW: AdminCouponsMain → useAdminCouponsLogic → couponsApi
-'use client';
 
 import { useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';

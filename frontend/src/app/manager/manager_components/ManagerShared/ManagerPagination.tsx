@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the pagination bar (Previous/Next + page info + rows-per-page) shared across all MANAGER table views.
 'use client';
-
+// RESPONSIBILITY: Renders the pagination bar (Previous/Next + page info + rows-per-page) shared across all MANAGER table views.
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface ManagerPaginationProps {

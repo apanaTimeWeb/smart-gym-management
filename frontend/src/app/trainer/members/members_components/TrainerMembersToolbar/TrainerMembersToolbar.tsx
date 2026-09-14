@@ -1,8 +1,7 @@
+'use client';
 // RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
 // DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the toolbar for searching, filtering, and initiating the "Add Member" action.
-'use client';
-
 import { useState, useEffect } from 'react';
 import { Search, RefreshCw, Plus } from 'lucide-react';
 import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';

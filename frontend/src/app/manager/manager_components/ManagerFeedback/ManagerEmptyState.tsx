@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Reusable empty state component for tables and lists across the manager module.
 'use client';
-
+// RESPONSIBILITY: Reusable empty state component for tables and lists across the manager module.
 import type { ReactNode } from 'react';
 
 interface ManagerEmptyStateProps {

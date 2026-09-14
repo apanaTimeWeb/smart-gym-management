@@ -1,6 +1,5 @@
-// RESPONSIBILITY: SuperadminPlansClient.tsx is the root client entry for the Plans page. Initialises the Zustand store on mount.
 'use client';
-
+// RESPONSIBILITY: SuperadminPlansClient.tsx is the root client entry for the Plans page. Initialises the Zustand store on mount.
 import { useEffect } from 'react';
 import { useSuperadminPlansStore } from '@/app/superadmin/plans/plans_store/useSuperadminPlansStore';
 import SuperadminPlansList from '@/app/superadmin/plans/plans_components/SuperadminPlansList';

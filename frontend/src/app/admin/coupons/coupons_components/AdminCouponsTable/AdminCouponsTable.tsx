@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the coupons data table with edit, delete, and toggle actions.
-'use client';
 
 import { Edit2, Trash2, ToggleLeft, ToggleRight, Copy } from 'lucide-react';
 import { useAdminCouponsLogic } from '@/app/admin/coupons/coupons_context/useAdminCouponsLogic';

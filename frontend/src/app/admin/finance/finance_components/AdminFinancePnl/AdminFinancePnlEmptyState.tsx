@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Empty state shown when the status filter returns zero branches.
-'use client';
 
 import { BarChart3 } from 'lucide-react';
 import type { PnlStatusFilter } from '@/app/admin/finance/finance_types/finance_types';

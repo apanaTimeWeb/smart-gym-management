@@ -1,7 +1,6 @@
+'use client';
 // RESPONSIBILITY: Modal for editing an existing trainer session (title, time, duration, location, room).
 // DATA FLOW: TrainerSessionsMain → TrainerSessionsEditModal → updateTrainerSession API
-'use client';
-
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

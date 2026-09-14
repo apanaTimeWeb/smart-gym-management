@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the gym-specific override summary panel — shows which gyms have custom overrides.
-'use client';
 
 import { Building2, AlertTriangle } from 'lucide-react';
 import { useAdminPermissionsLogic } from '@/app/admin/permissions/permissions_context/useAdminPermissionsLogic';

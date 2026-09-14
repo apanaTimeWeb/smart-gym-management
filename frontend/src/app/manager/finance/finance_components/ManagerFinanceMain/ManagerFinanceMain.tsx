@@ -1,7 +1,6 @@
+'use client';
 // RESPONSIBILITY: Orchestrator for the Finance module — KPIs, tabbed Payments table + Summary chart.
 // DATA FLOW: FinanceProvider → useFinanceContext → sub-sections
-'use client';
-
 import { FinanceProvider, useFinanceContext } from '@/app/manager/finance/finance_context/ManagerFinanceContext';
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
 import { Wallet, Loader2 } from 'lucide-react';

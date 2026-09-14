@@ -1,5 +1,4 @@
-'use client';
-
+"use client";
 import { useState } from 'react';
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
 import { AlertCircle } from 'lucide-react';

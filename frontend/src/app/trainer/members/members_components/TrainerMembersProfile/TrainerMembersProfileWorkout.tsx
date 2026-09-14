@@ -24,7 +24,7 @@ export default function TrainerMembersProfileWorkout() {
       setFetchWorkoutsState('loading');
       workoutApi.getWorkouts()
         .then(res => {
-          setAvailableWorkouts(res.data?.workouts || []);
+          setAvailableWorkouts((res.data?.workouts as unknown as TrainerMemberWorkoutSnapshot[]) || []);
           setFetchWorkoutsState('success');
         })
         .catch(() => {

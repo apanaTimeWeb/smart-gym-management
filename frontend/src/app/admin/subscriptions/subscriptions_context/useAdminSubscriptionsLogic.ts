@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Business logic hook for Subscriptions — queries and mutations.
-'use client';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
@@ -15,31 +15,31 @@ export function useAdminSubscriptionsLogic() {
 
   const { data: subscription, isLoading: subLoading, isError: subError } = useQuery({
     queryKey: ['adminSubscription'],
-    queryFn: subscriptionsApi.fetchSubscription,
+    queryFn: () => subscriptionsApi.fetchSubscription().then(r => r.data),
     staleTime: 1000 * 60 * 5,
   });
 
   const { data: plans = [], isLoading: plansLoading } = useQuery({
     queryKey: ['adminSaaSPlans'],
-    queryFn: subscriptionsApi.fetchPlans,
+    queryFn: () => subscriptionsApi.fetchPlans().then(r => r.data),
     staleTime: 1000 * 60 * 10,
   });
 
   const { data: invoices = [], isLoading: invoicesLoading } = useQuery({
     queryKey: ['adminInvoices'],
-    queryFn: subscriptionsApi.fetchInvoices,
+    queryFn: () => subscriptionsApi.fetchInvoices().then(r => r.data),
     staleTime: 1000 * 60 * 5,
   });
 
   const { data: paymentMethods = [], isLoading: pmLoading } = useQuery({
     queryKey: ['adminPaymentMethods'],
-    queryFn: subscriptionsApi.fetchPaymentMethods,
+    queryFn: () => subscriptionsApi.fetchPaymentMethods().then(r => r.data),
     staleTime: 1000 * 60 * 5,
   });
 
   const { data: kpis } = useQuery({
     queryKey: ['adminSubscriptionKPIs'],
-    queryFn: subscriptionsApi.fetchKPIs,
+    queryFn: () => subscriptionsApi.fetchKPIs().then(r => r.data),
     staleTime: 1000 * 60 * 5,
   });
 

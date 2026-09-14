@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the exercises data table with muscle group, category, and inline edit/delete actions.
 'use client';
-
+// RESPONSIBILITY: Renders the exercises data table with muscle group, category, and inline edit/delete actions.
 import { Edit2, Trash2, Loader2 } from 'lucide-react';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { useWorkoutContext } from '@/app/manager/workout/workout_context/ManagerWorkoutContext';

@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Business logic hook for the Blacklist module.
-'use client';
 
 import { useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -17,13 +17,13 @@ export function useAdminBlacklistLogic() {
 
   const { data = [], isLoading, isError } = useQuery({
     queryKey: ['adminBlacklist'],
-    queryFn: blacklistApi.fetchBlacklist,
+    queryFn: () => blacklistApi.fetchBlacklist().then(r => r.data),
     staleTime: 1000 * 60 * 2,
   });
 
   const { data: kpis } = useQuery({
     queryKey: ['adminBlacklistKPIs'],
-    queryFn: blacklistApi.fetchKPIs,
+    queryFn: () => blacklistApi.fetchKPIs().then(r => r.data),
     staleTime: 1000 * 60 * 5,
   });
 

@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Main entry point for the Data Export module.
-'use client';
 
 import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 import AdminDataExportKPIs from '@/app/admin/data-export/data_export_components/AdminDataExportKPIs/AdminDataExportKPIs';

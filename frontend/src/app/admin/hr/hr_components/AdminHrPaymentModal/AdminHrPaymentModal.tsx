@@ -1,5 +1,4 @@
-'use client';
-
+"use client";
 import { useState, useEffect } from 'react';
 import { IndianRupee, X } from 'lucide-react';
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';

@@ -1,5 +1,4 @@
 'use client';
-
 import { useState } from 'react';
 import { ServerCog, Clock, AlertCircle, CheckCircle, Ticket, Search } from 'lucide-react';
 import toast from 'react-hot-toast';

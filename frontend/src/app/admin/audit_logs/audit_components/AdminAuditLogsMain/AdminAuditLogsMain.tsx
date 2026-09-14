@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Main orchestrator for the Audit Logs module.
-'use client';
 
 import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 import AdminAuditLogsKPIs from '@/app/admin/audit_logs/audit_components/AdminAuditLogsKPIs/AdminAuditLogsKPIs';

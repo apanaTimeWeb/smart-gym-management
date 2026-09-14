@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Main entry point for the Reports module. Composes toolbar, tabs, KPIs, and tab content panels.
-'use client';
 
 import { useState } from 'react';
 import { Download, Loader2 } from 'lucide-react';

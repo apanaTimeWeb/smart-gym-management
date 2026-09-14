@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Provides UI orchestration state to the attendance module hierarchy. Async data is managed in useManagerAttendanceLogic.
 'use client';
-
+// RESPONSIBILITY: Provides UI orchestration state to the attendance module hierarchy. Async data is managed in useManagerAttendanceLogic.
 import React, { createContext, useContext, useMemo } from 'react';
 import type { AttendanceContextType } from '@/app/manager/attendance/attendance_types/ManagerAttendanceTypes';
 import { useManagerAttendanceLogic } from '@/app/manager/attendance/attendance_context/useManagerAttendanceLogic';

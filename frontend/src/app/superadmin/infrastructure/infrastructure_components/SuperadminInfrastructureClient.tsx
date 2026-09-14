@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the Server Infrastructure page showing real-time node health metrics. Fetches data directly using TanStack Query.
 'use client';
-
+// RESPONSIBILITY: Renders the Server Infrastructure page showing real-time node health metrics. Fetches data directly using TanStack Query.
 import { useState } from 'react';
 import { Cpu, HardDrive, Server, Zap, RefreshCcw, Loader2 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';

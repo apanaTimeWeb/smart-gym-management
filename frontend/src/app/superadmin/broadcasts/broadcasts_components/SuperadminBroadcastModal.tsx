@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the Create/Edit Broadcast modal form. Receives form state via props from useSuperadminBroadcastsPage. No API calls except recipient count preview.
 'use client';
-
+// RESPONSIBILITY: Renders the Create/Edit Broadcast modal form. Receives form state via props from useSuperadminBroadcastsPage. No API calls except recipient count preview.
 import React from 'react';
 import { X, Loader2, Users } from 'lucide-react';
 import { Controller } from 'react-hook-form';

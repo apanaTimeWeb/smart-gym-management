@@ -1,6 +1,6 @@
+"use client";
 // RESPONSIBILITY: Business logic hook for the Data Export module.
 // DATA FLOW: API → useAdminDataExportLogic → components
-'use client';
 
 import { useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -18,14 +18,14 @@ export function useAdminDataExportLogic() {
 
   const { data: jobs = [], isLoading, isError } = useQuery({
     queryKey: ['adminDataExportJobs'],
-    queryFn: dataExportApi.fetchJobs,
+    queryFn: () => dataExportApi.fetchJobs().then(r => r.data),
     staleTime: 1000 * 30,
     refetchInterval: 10000, // Poll every 10s to catch processing → completed transitions
   });
 
   const { data: kpis } = useQuery({
     queryKey: ['adminDataExportKPIs'],
-    queryFn: dataExportApi.fetchKPIs,
+    queryFn: () => dataExportApi.fetchKPIs().then(r => r.data),
     staleTime: 1000 * 60 * 5,
   });
 

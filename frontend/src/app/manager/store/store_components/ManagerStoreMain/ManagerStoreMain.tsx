@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Entry component for the Store module. Wraps the UI in the context provider and handles page layout.
 'use client';
-
+// RESPONSIBILITY: Entry component for the Store module. Wraps the UI in the context provider and handles page layout.
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
 import ManagerToast from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import ManagerThermalReceipt from '@/app/manager/manager_components/ManagerFeedback/ManagerThermalReceipt';

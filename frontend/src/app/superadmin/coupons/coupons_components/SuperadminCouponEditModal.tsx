@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the Edit Coupon modal form. Manages its own local form state via React Hook Form. No API calls — delegates save to onSubmit prop.
 'use client';
-
+// RESPONSIBILITY: Renders the Edit Coupon modal form. Manages its own local form state via React Hook Form. No API calls — delegates save to onSubmit prop.
 import React, { useEffect } from 'react';
 import { X } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';

@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Main entry point for the Blacklist module.
-'use client';
 
 import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 import AdminBlacklistKPIs from '@/app/admin/blacklist/blacklist_components/AdminBlacklistKPIs/AdminBlacklistKPIs';

@@ -1,7 +1,6 @@
+'use client';
 // RESPONSIBILITY: Renders the attendance data table and pagination controls.
 // DATA FLOW: props (records, pagination) from TrainerAttendanceMain → display only
-'use client';
-
 import { Clock } from 'lucide-react';
 import { ATTENDANCE_TABLE_HEADERS, formatDate, formatTime } from '@/app/trainer/attendance/attendance_utils/AttendanceSharedConstants';
 import TrainerPagination from '@/app/trainer/trainer_components/TrainerShared/TrainerPagination';

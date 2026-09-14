@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders interactive KPI cards for Finance module. Clicking a card filters the AdminFinancePaymentsTable by payment method (Rule 74). Reads/writes state via AdminFinanceContext.
-'use client';
 
 import { useAdminFinanceLogic } from '@/app/admin/finance/finance_context/useAdminFinanceLogic';
 import { useAdminFinanceStore } from '@/app/admin/finance/finance_store/useAdminFinanceStore';
@@ -100,6 +100,3 @@ export default function AdminFinanceKPIs() {
     </div>
   );
 }
-
-
-

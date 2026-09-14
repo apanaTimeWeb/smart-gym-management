@@ -1,7 +1,6 @@
+'use client';
 import { formatDate } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the modal form for creating or editing an inquiry lead. Uses React Hook Form + Zod validation.
-'use client';
-
 import { useEffect, useState } from 'react';
 import { useInquiriesContext } from '@/app/manager/inquiries/inquiries_context/ManagerInquiriesContext';
 import { INQUIRY_MODAL_FIELDS, INQUIRIES_STATUS_LABELS, INQUIRY_SOURCES, InquirySchema, EMPTY_INQUIRY_FORM, type InquiryFormValues } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesSharedConstants';

@@ -1,7 +1,6 @@
+'use client';
 // RESPONSIBILITY: React Context — bridges Zustand reports store with UI state (active tab, date range).
 // DATA FLOW: ReportsProvider → useReportsContext → KPIs + Charts + Export
-'use client';
-
 import { createContext, useContext, useState, useEffect, useCallback, useMemo, type ReactNode } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useManagerReportsStore } from '@/app/manager/reports/reports_store/useManagerReportsStore';

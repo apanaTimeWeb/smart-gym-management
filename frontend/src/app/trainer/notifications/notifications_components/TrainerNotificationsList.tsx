@@ -1,8 +1,7 @@
+'use client';
 // RESPONSIBILITY: Renders the list of trainer notifications. Handles per-item mark-as-read on hover.
 // DATA FLOW: TrainerNotificationsMain → TrainerNotificationsList → TrainerNotificationsEmptyState
 // ROLE BOUNDARY: Deleting notifications is FORBIDDEN for trainer role. See notifications_forbidden.md.
-'use client';
-
 import type { TrainerNotificationItem } from '@/app/trainer/notifications/notifications_types/TrainerNotificationsTypes';
 import TrainerNotificationsEmptyState from '@/app/trainer/notifications/notifications_components/TrainerNotificationsEmptyState/TrainerNotificationsEmptyState';
 

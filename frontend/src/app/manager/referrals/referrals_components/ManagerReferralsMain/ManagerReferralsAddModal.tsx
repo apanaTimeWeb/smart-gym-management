@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Modal for adding a new referral manually.
 'use client';
-
+// RESPONSIBILITY: Modal for adding a new referral manually.
 import { useState } from 'react';
 import { X, Loader2 } from 'lucide-react';
 import { useManagerReferralsLogic } from '@/app/manager/referrals/referrals_context/useManagerReferralsLogic';

@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders sortable and searchable table for plan-wise revenue breakdown.
-'use client';
 
 import { ChevronDown, ChevronUp, ChevronsUpDown, FileWarning, ChevronLeft, ChevronRight } from 'lucide-react';
 import { REVENUE_TABLE_HEADERS } from '@/app/admin/plans/plans_utils/AdminPlansRevenueConstants';
@@ -63,7 +63,7 @@ export default function AdminPlansRevenueTable({ data, sortKey, sortDir, onSort 
                 </td>
               </tr>
             ) : (
-              data.map((row) => (
+              data.map((row: any) => (
                 <tr key={row.id} className="hover:bg-input motion-safe:transition-colors cursor-pointer">
                   {/* Plan Name */}
                   <td className="px-4 py-3.5">

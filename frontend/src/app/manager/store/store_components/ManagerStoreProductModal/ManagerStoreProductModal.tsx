@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Form modal for creating or editing a gym store product in the Store module.
 'use client';
-
+// RESPONSIBILITY: Form modal for creating or editing a gym store product in the Store module.
 import { useEffect } from 'react';
 import { X, Save } from 'lucide-react';
 import { useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';

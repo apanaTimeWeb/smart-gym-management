@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Core infrastructure component for routing, loading, and error boundaries in the module.
 'use client';
-
+// RESPONSIBILITY: Core infrastructure component for routing, loading, and error boundaries in the module.
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
 

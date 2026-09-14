@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the table of past and upcoming ad-hoc leave requests.
 'use client';
-
+// RESPONSIBILITY: Renders the table of past and upcoming ad-hoc leave requests.
 import { useTrainerScheduleQuery } from '@/app/trainer/schedule/schedule_queries/useTrainerScheduleQuery';
 import { useTrainerScheduleStore } from '@/app/trainer/schedule/schedule_store/useTrainerScheduleStore';
 import TrainerScheduleEmptyState from '@/app/trainer/schedule/schedule_components/TrainerScheduleEmptyState/TrainerScheduleEmptyState';

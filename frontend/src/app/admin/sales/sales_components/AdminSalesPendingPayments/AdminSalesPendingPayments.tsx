@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the list of members with pending payments, including skeleton loader, pagination, and overdue details. Receives data via SalesContext.
-'use client';
 
 import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
@@ -105,4 +105,3 @@ export default function PendingPayments() {
     </div>
   );
 }
-

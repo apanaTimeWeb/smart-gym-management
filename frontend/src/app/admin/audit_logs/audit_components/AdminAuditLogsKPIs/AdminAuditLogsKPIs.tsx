@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: KPI stat cards for the Audit Logs module.
-'use client';
 
 import { ShieldAlert, AlertTriangle, Info, CalendarClock, Users, Activity } from 'lucide-react';
 import AdminStatCard from '@/app/admin/admin_components/AdminShared/AdminStatCard';

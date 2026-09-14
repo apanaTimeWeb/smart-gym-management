@@ -1,6 +1,6 @@
+"use client";
 // RESPONSIBILITY: Custom hook for fetching and mutating permissions data.
 // DATA FLOW: AdminPermissionsMain → useAdminPermissionsLogic → permissionsApi
-'use client';
 
 import { useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';

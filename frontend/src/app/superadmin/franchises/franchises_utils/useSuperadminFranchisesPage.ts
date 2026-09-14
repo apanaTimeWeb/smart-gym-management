@@ -1,7 +1,6 @@
+'use client';
 // RESPONSIBILITY: Logic hook for the Superadmin Franchises page.
 // DATA FLOW: superadminFranchisesApi → useSuperadminFranchisesPage → SuperadminFranchisesClient
-
-'use client';
 
 import { useState, useMemo } from 'react';
 import toast from 'react-hot-toast';

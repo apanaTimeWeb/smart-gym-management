@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the top-level KPI stat cards for the PT Dashboard.
 'use client';
-
+// RESPONSIBILITY: Renders the top-level KPI stat cards for the PT Dashboard.
 import { Users, CalendarCheck, TrendingUp, AlertCircle } from 'lucide-react';
 import type { PtDashboardKpis } from '@/app/manager/pt/pt_types/ManagerPtTypes';
 import { formatKPI } from '@/lib/formatters';

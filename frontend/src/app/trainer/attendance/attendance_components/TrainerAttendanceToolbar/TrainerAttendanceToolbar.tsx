@@ -1,7 +1,6 @@
+'use client';
 // RESPONSIBILITY: Toolbar for Attendance — tabs, search, date filter, view-mode toggle, and action buttons.
 // DATA FLOW: props (from TrainerAttendanceMain) → URL state via useAttendanceFilters setters
-'use client';
-
 import { useState, useEffect } from 'react';
 import { RefreshCw, Search, Calendar as CalendarIcon, List, Plus, LogIn, LogOut, Loader2 } from 'lucide-react';
 import { ATTENDANCE_TABS, ATTENDANCE_DATE_FILTER_OPTIONS, type AttendanceTab } from '@/app/trainer/attendance/attendance_utils/AttendanceSharedConstants';

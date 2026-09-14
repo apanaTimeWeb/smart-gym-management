@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Toolbar with search, severity/module/branch/date filters, and CSV export for Audit Logs.
-'use client';
 
 import { Search, Download, RotateCcw } from 'lucide-react';
 import { useAdminAuditLogsStore } from '@/app/admin/audit_logs/audit_store/useAdminAuditLogsStore';

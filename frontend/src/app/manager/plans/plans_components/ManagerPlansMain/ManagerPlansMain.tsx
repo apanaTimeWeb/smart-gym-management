@@ -1,7 +1,6 @@
+'use client';
 // RESPONSIBILITY: Orchestrator for the Plans module.
 // DATA FLOW: PlansProvider → usePlansContext → Tabs, Toolbar, Grid, Modal
-'use client';
-
 import { PlansProvider } from '@/app/manager/plans/plans_context/ManagerPlansContext';
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
 import ManagerPlansTabs from '@/app/manager/plans/plans_components/ManagerPlansMain/ManagerPlansTabs';

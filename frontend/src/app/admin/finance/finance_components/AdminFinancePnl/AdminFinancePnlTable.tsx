@@ -1,6 +1,6 @@
+"use client";
 // RESPONSIBILITY: Renders the sortable branch-wise P&L comparison table with
 // clickable row expansion. Handles sorting indicators and inline breakdown toggle.
-'use client';
 
 import { ChevronDown, ChevronUp, ChevronsUpDown, ChevronRight } from 'lucide-react';
 import { PNL_TABLE_HEADERS, PNL_STATUS_CONFIG } from '@/app/admin/finance/finance_utils/AdminFinancePnlConstants';

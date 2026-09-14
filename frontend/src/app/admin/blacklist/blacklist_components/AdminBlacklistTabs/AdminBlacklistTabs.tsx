@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Tab switcher between "All Entries" and "Cross-Branch View" for the Blacklist module.
-'use client';
 
 import { Globe } from 'lucide-react';
 import { useAdminBlacklistLogic } from '@/app/admin/blacklist/blacklist_context/useAdminBlacklistLogic';

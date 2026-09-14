@@ -1,6 +1,5 @@
-// RESPONSIBILITY: 4 KPI stat cards for the Churn Recovery tab — Total Churned, Churned This Month, Recovery Rate, Avg Days Since Exit.
 'use client';
-
+// RESPONSIBILITY: 4 KPI stat cards for the Churn Recovery tab — Total Churned, Churned This Month, Recovery Rate, Avg Days Since Exit.
 import { UserX, TrendingDown, RotateCcw, Clock } from 'lucide-react';
 import type { ChurnKPIData } from '@/app/manager/communications/communications_types/communications_types';
 import { formatNumber, formatPercent } from '@/lib/formatters';

@@ -1,5 +1,4 @@
 'use client';
-
 import { useState } from 'react';
 import { TrendingDown, Calculator, Camera, Dumbbell, X, Plus } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';

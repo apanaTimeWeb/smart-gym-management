@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Provides the implementation for AdminFinanceRevenueByMethod.tsx functionality within its module.
-'use client';
 
 import { useAdminFinanceLogic } from '@/app/admin/finance/finance_context/useAdminFinanceLogic';
 import { useAdminFinanceStore } from '@/app/admin/finance/finance_store/useAdminFinanceStore';
@@ -22,5 +22,3 @@ export default function AdminFinanceRevenueByMethod() {
  </div>
  );
 }
-
-

@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the search, status filter, branch filter, and expiry filter toolbar for Admin Members.
-'use client';
 
 import { Search, Download, FileText } from 'lucide-react';
 import { useAdminMembersStore } from '@/app/admin/members/members_store/useAdminMembersStore';
@@ -33,7 +33,7 @@ export default function AdminMembersToolbar() {
       </div>
       <div className="w-full sm:w-44">
         <AdminSearchableDropdown
-          options={MEMBER_STATUS_OPTIONS.map((o) => ({ value: o.value, label: o.label }))}
+          options={MEMBER_STATUS_OPTIONS.map((o: any) => ({ value: o.value, label: o.label }))}
           value={statusFilter}
           onChange={(v) => setStatusFilter(v as MemberStatus | 'all')}
           placeholder="All Status"
@@ -49,7 +49,7 @@ export default function AdminMembersToolbar() {
       </div>
       <div className="w-full sm:w-52 flex gap-2">
         <AdminSearchableDropdown
-          options={EXPIRY_FILTER_OPTIONS.map((o) => ({ value: o.value, label: o.label }))}
+          options={EXPIRY_FILTER_OPTIONS.map((o: any) => ({ value: o.value, label: o.label }))}
           value={expiryFilter}
           onChange={(v) => setExpiryFilter(v as 'all' | 'this_week' | 'this_month')}
           placeholder="All Members"

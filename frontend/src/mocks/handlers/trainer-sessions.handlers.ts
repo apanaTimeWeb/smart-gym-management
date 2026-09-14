@@ -35,7 +35,7 @@ export const trainerSessionsHandlers = [
       location: body.location,
       room: body.room,
     };
-    sessionsDB = [...sessionsDB, newSession];
+    sessionsDB = [...sessionsDB, newSession as typeof sessionsDB[0]];
     return HttpResponse.json({ data: newSession });
   }),
 
@@ -44,7 +44,7 @@ export const trainerSessionsHandlers = [
     const body = (await request.json()) as any;
     const idx = sessionsDB.findIndex(s => s.id === params.id);
     if (idx === -1) return HttpResponse.json({ error: 'Not found' }, { status: 404 });
-    sessionsDB[idx] = { ...sessionsDB[idx], ...body };
+    sessionsDB[idx] = { ...sessionsDB[idx], ...body } as typeof sessionsDB[0];
     return HttpResponse.json({ data: sessionsDB[idx] });
   }),
 

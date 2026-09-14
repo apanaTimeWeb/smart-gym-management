@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Read-only profile view for Staff/Managers, showing details and assigned branches.
-'use client';
 
 import React from 'react';
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';

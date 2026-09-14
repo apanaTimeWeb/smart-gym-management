@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Root client orchestrator for Staff Performance Dashboard.
-'use client';
 
 import { useAdminHrPerformanceLogic } from '@/app/admin/hr/hr_context/useAdminHrPerformanceLogic';
 import AdminHrPerformancePeriodSelector from '@/app/admin/hr/hr_components/AdminHrPerformance/AdminHrPerformancePeriodSelector';

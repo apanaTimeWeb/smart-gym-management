@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the full permission toggle matrix grouped by feature group for the active role + scope.
-'use client';
 
 import { useAdminPermissionsLogic } from '@/app/admin/permissions/permissions_context/useAdminPermissionsLogic';
 import { useAdminPermissionsStore } from '@/app/admin/permissions/permissions_store/useAdminPermissionsStore';

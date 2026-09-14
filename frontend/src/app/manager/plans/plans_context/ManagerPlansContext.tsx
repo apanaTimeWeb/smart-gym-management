@@ -1,7 +1,6 @@
+'use client';
 // RESPONSIBILITY: React Context — bridges TanStack Query plans with UI state (search, filters, modal) synced to URL.
 // DATA FLOW: URL → usePlansContext → useManagerPlansQueries → API
-'use client';
-
 import { createContext, useContext, useState, useCallback, useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';

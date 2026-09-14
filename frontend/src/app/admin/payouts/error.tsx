@@ -1,4 +1,4 @@
-'use client';
+"use client";
 // RESPONSIBILITY: Error boundary for Admin Payouts page. Handles 403 permission-denied separately from generic errors.
 import AdminErrorFallback from '@/app/admin/admin_components/AdminShared/AdminErrorFallback';
 

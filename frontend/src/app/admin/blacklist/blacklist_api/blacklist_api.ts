@@ -6,22 +6,22 @@ import { z } from "zod";
 import { apiFetch, type ApiResponse } from "@/lib/api";
 export const blacklistApi = {
   fetchBlacklist: async () => {
-            return apiFetch(`${AdminBlacklistUrlConfig.BACKEND_API.BASE}/fetchBlacklist`, { method: 'GET', dataSchema: z.any() });
+            return apiFetch<ApiResponse<any>>(`${AdminBlacklistUrlConfig.api.base}/fetchBlacklist`, { method: 'GET', dataSchema: z.any() });
         },
   fetchKPIs: async () => {
-            return apiFetch(`${AdminBlacklistUrlConfig.BACKEND_API.BASE}/fetchKPIs`, { method: 'GET', dataSchema: z.any() });
+            return apiFetch<ApiResponse<any>>(`${AdminBlacklistUrlConfig.api.base}/fetchKPIs`, { method: 'GET', dataSchema: z.any() });
         },
   addToBlacklist: async (payload: BlacklistFormValues) => {
-          return apiFetch(`${AdminBlacklistUrlConfig.BACKEND_API.BASE}/addToBlacklist`, { method: 'POST', body: JSON.stringify(payload), dataSchema: z.any() });
+          return apiFetch<ApiResponse<any>>(`${AdminBlacklistUrlConfig.api.base}/addToBlacklist`, { method: 'POST', body: JSON.stringify(payload), dataSchema: z.any() });
       },
   removeFromBlacklist: async (id: string) => {
-          return apiFetch(`${AdminBlacklistUrlConfig.BACKEND_API.BASE}/removeFromBlacklist`, { method: 'DELETE', body: JSON.stringify(id), dataSchema: z.any() });
+          return apiFetch<ApiResponse<any>>(`${AdminBlacklistUrlConfig.api.base}/removeFromBlacklist`, { method: 'DELETE', body: JSON.stringify(id), dataSchema: z.any() });
       },
   toggleBlacklist: async (id: string) => {
-          return apiFetch(`${AdminBlacklistUrlConfig.BACKEND_API.BASE}/toggleBlacklist`, { method: 'POST', body: JSON.stringify(id), dataSchema: z.any() });
+          return apiFetch<ApiResponse<any>>(`${AdminBlacklistUrlConfig.api.base}/toggleBlacklist`, { method: 'POST', body: JSON.stringify(id), dataSchema: z.any() });
       },
   /** Upgrades a gym-specific ban to a global ban across all branches. */
   propagateToAllBranches: async (id: string) => {
-          return apiFetch(`${AdminBlacklistUrlConfig.BACKEND_API.BASE}/propagateToAllBranches`, { method: 'POST', body: JSON.stringify(id), dataSchema: z.any() });
+          return apiFetch<ApiResponse<any>>(`${AdminBlacklistUrlConfig.api.base}/propagateToAllBranches`, { method: 'POST', body: JSON.stringify(id), dataSchema: z.any() });
       },
 };

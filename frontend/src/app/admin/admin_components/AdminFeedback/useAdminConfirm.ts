@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Custom hook to use the AdminConfirm context.
-'use client';
 
 import { useContext } from 'react';
 import { ConfirmContext } from '@/app/admin/admin_components/AdminFeedback/AdminConfirmProvider';

@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders a modal for creating or editing a member.
 'use client';
-
+// RESPONSIBILITY: Renders a modal for creating or editing a member.
 import { useEffect } from 'react';
 import { X, Save } from 'lucide-react';
 import { Controller } from 'react-hook-form';

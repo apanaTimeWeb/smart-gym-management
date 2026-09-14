@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Main entry point for the Permissions module. Composes toolbar, role cards, matrix, and gym overrides panel.
-'use client';
 
 import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 import { useAdminPermissionsLogic } from '@/app/admin/permissions/permissions_context/useAdminPermissionsLogic';

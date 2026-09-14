@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: SaaS plan comparison cards with upgrade CTA.
-'use client';
 
 import { CheckCircle, Zap, Star } from 'lucide-react';
 import { useAdminSubscriptionsLogic } from '@/app/admin/subscriptions/subscriptions_context/useAdminSubscriptionsLogic';

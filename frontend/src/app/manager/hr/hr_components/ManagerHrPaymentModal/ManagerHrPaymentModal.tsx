@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders a modal to record a partial or full salary payment for staff.
 'use client';
-
+// RESPONSIBILITY: Renders a modal to record a partial or full salary payment for staff.
 import { useState, useEffect } from 'react';
 import { IndianRupee, X } from 'lucide-react';
 import { formatCurrency } from '@/lib/formatters';

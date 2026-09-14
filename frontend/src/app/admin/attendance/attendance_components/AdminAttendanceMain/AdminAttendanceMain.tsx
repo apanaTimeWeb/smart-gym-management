@@ -1,6 +1,6 @@
+"use client";
 // RESPONSIBILITY: Root client orchestrator for Admin Attendance. Composes KPIs, trend chart, toolbar, and table.
 // No manual check-in button — this is a read-only view for the gym owner (Admin role).
-'use client';
 
 import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 import AdminAttendanceKPIs from '@/app/admin/attendance/attendance_components/AdminAttendanceKPIs/AdminAttendanceKPIs';

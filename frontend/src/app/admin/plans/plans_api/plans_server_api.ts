@@ -5,5 +5,5 @@ import type { Plan } from '@/app/admin/plans/plans_types/plans_types';
 import type { ApiResponse } from '@/lib/api';
 
 export const ssrPlansApi = {
-  getAll: () => ssrApiFetch<ApiResponse<Plan[]>>(PlansUrlConfig.BACKEND_API.BASE),
+  getAll: () => ssrApiFetch<ApiResponse<Plan[]>>(PlansUrlConfig.api.base),
 };

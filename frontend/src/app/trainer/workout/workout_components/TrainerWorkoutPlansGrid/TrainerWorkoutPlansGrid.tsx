@@ -1,8 +1,7 @@
+'use client';
 // RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
 // DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the grid of workout plan cards with exercises count and action buttons.
-'use client';
-
 import { Dumbbell } from 'lucide-react';
 import { useTrainerWorkoutFilters } from '@/app/trainer/workout/workout_utils/useTrainerWorkoutFilters';
 import { useTrainerWorkoutsQuery } from '@/app/trainer/workout/workout_queries/useWorkoutQuery';

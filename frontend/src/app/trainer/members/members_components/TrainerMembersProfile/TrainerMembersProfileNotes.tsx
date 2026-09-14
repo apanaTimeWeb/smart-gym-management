@@ -1,7 +1,7 @@
+'use client';
 // RESPONSIBILITY: Renders the trainer notes tab for a member profile.
 // DATA FLOW: TrainerMembersProfile → TrainerMembersProfileNotes
 
-'use client';
 import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
 import { formatDate } from '@/lib/formatters';
 

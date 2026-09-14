@@ -1,8 +1,7 @@
+'use client';
 // RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
 // DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the four KPI stat cards (Total, Active, Pending, Expired) for the Members module.
-'use client';
-
 import { User, CheckCircle, Clock, XCircle } from 'lucide-react';
 import { useTrainerMemberStatsQuery } from '@/app/trainer/members/members_queries/useTrainerMembersQuery';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';

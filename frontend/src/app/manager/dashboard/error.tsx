@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the error boundary fallback for the dashboard module.
 'use client';
-
+// RESPONSIBILITY: Renders the error boundary fallback for the dashboard module.
 import { useEffect } from "react";
 
 export default function DashboardError({

@@ -1,8 +1,7 @@
+'use client';
 // RESPONSIBILITY: Root client component for the Trainer Attendance module.
 // Orchestrates query/store hooks and renders the attendance page layout.
 // DATA FLOW: page.tsx (Server) → TrainerAttendanceMain (Client) → hooks → sub-components
-'use client';
-
 import { useState, useEffect } from 'react';
 import TrainerToast from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
 import { useAttendanceFilters } from '@/app/trainer/attendance/attendance_queries/useAttendanceFilters';

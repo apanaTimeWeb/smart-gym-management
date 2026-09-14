@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the plan tier cards showing current plan and upgrade options.
-'use client';
 
 import { Check, Zap } from 'lucide-react';
 import { PLAN_TIERS } from '@/app/admin/usage/usage_utils/AdminUsageSharedConstants';
@@ -19,7 +19,7 @@ export default function AdminUsagePlanCard() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        {PLAN_TIERS.map((plan) => (
+        {PLAN_TIERS.map((plan: any) => (
           <div
             key={plan.name}
             className={`rounded-xl border p-4 space-y-3 motion-safe:transition-all motion-safe:duration-200 ${

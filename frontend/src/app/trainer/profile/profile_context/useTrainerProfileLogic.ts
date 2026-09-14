@@ -1,7 +1,6 @@
+'use client';
 // RESPONSIBILITY: Logic hook for Trainer Profile page — personal info + password change.
 // DATA FLOW: trainerProfileApi → useTrainerProfileLogic → TrainerProfileMain
-'use client';
-
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { trainerProfileApi } from '@/app/trainer/profile/profile_api/TrainerProfileApi';

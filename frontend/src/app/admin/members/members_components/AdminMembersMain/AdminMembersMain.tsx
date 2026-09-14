@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Main entry point for Admin Members module. Composes KPIs, toolbar, table, and profile drawer.
-'use client';
 
 import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 import AdminMembersKPIs from '@/app/admin/members/members_components/AdminMembersKPIs/AdminMembersKPIs';

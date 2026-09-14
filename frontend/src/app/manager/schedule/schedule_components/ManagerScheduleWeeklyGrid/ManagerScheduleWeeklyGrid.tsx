@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders the 7-day weekly schedule grid showing all trainer shifts per day column.
 'use client';
+// RESPONSIBILITY: Renders the 7-day weekly schedule grid showing all trainer shifts per day column.
 import { Plus, Pencil, Trash2, CalendarX } from 'lucide-react';
 import { useScheduleContext } from '@/app/manager/schedule/schedule_context/ManagerScheduleContext';
 import { SHIFT_DAYS, SHIFT_STATUS_STYLES } from '@/app/manager/schedule/schedule_utils/ManagerScheduleSharedConstants';

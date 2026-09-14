@@ -1,6 +1,6 @@
+"use client";
 // RESPONSIBILITY: Data logic hook for Admin Members. Fetches members + summary, applies filters, manages selected member.
 // DATA FLOW: Mock API → useAdminMembersLogic → AdminMembersMain → child components
-'use client';
 
 import { useCallback } from 'react';
 import { useAdminMembersStore } from '@/app/admin/members/members_store/useAdminMembersStore';

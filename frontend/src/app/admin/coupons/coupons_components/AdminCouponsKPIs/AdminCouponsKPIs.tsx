@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the 4 KPI cards for the Coupons module — total, active, redeemed, revenue lost. Derived from live coupon data.
-'use client';
 
 import { Tag, CheckCircle, BarChart2, TrendingDown } from 'lucide-react';
 import AdminStatCard from '@/app/admin/admin_components/AdminShared/AdminStatCard';
@@ -10,7 +10,7 @@ export default function AdminCouponsKPIs() {
   const { allCoupons } = useAdminCouponsLogic();
 
   const totalCoupons = allCoupons.length;
-  const activeCoupons = allCoupons.filter(c => c.status === 'active').length;
+  const activeCoupons = allCoupons.filter((c: any) => c.status === 'active').length;
   const totalRedeemed = allCoupons.reduce((sum, c) => sum + c.usedCount, 0);
   const revenueLost = allCoupons.reduce((sum, c) => {
     const avgDiscount = c.type === 'flat' ? c.value : Math.min(c.value * 10, c.maxDiscount || c.value * 10);

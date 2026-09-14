@@ -1,8 +1,7 @@
+'use client';
 // RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
 // DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Root shell layout for all TRAINER pages. Composes TrainerSidebar with the main content area. Manages sidebar collapsed state only.
-'use client';
-
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import TrainerSidebar from '@/app/trainer/trainer_components/TrainerLayout/TrainerSidebar';

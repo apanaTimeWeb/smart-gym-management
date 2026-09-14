@@ -1,4 +1,4 @@
-'use client';
+"use client";
 // RESPONSIBILITY: Error boundary for the Reports page.
 export default function ReportsError({ reset }: { reset: () => void }) {
   return (

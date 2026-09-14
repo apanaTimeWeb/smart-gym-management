@@ -1,7 +1,6 @@
+'use client';
 import { formatDate } from '@/lib/formatters';
 // RESPONSIBILITY: Single churned member row in the churn recovery table. Receives member data and callbacks via props. No API calls.
-'use client';
-
 import { Send, CheckCircle } from 'lucide-react';
 import type { ChurnedMember } from '@/app/manager/communications/communications_types/communications_types';
 import { CHURN_REASON_LABEL } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';

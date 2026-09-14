@@ -1,7 +1,6 @@
+'use client';
 import { formatDate } from '@/lib/formatters';
 // RESPONSIBILITY: Notifications list with toolbar (search + filters) and row actions (mark read, delete).
-'use client';
-
 import { useNotificationsContext } from '@/app/manager/notifications/notifications_context/ManagerNotificationsContext';
 import {
   NOTIFICATION_TYPE_STYLES,

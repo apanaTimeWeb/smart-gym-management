@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders a modal to record a new payment for a member.
 'use client';
-
+// RESPONSIBILITY: Renders a modal to record a new payment for a member.
 import { useState } from 'react';
 import { Calendar, CheckCircle2, Copy, FileText, Share2, Wallet, X } from 'lucide-react';
 import { formatCurrency } from '@/lib/formatters';

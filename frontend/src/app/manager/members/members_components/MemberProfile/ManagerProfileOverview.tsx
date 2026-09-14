@@ -1,9 +1,6 @@
-// RESPONSIBILITY: Contains logic, types, or component definition for this module.
 'use client';
-
 // RESPONSIBILITY: Contains logic, types, or component definition for this module.
-'use client';
-
+// RESPONSIBILITY: Contains logic, types, or component definition for this module.
 import React, { useState } from 'react';
 import { MessageCircle, Mail, Snowflake, Stethoscope, Ban, UserCheck } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';

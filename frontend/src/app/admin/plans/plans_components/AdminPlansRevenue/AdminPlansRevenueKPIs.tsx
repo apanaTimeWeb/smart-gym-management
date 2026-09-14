@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders KPI cards for the Plan Revenue dashboard.
-'use client';
 
 import { IndianRupee, Users, TrendingUp, Award } from 'lucide-react';
 import type { RevenueAggregates } from '@/app/admin/plans/plans_types/AdminPlansRevenueTypes';

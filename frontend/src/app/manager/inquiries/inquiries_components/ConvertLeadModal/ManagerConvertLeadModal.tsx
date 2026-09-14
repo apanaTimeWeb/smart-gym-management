@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the Add Member form specifically for converting a lead within the Inquiries page.
 'use client';
-
+// RESPONSIBILITY: Renders the Add Member form specifically for converting a lead within the Inquiries page.
 import { useEffect, useState } from 'react';
 import { X, Save } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';

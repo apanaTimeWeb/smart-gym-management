@@ -64,7 +64,7 @@ export const trainerProgressHandlers = [
       return HttpResponse.json({ error: 'Not found' }, { status: 404 });
     }
 
-    const oldEntry = progressDB[entryIndex];
+    const oldEntry = progressDB[entryIndex]!;
     const updatedWeight = body.weightKg ?? oldEntry.weightKg;
     const updatedHeight = body.heightCm ?? oldEntry.heightCm;
     const newBmi = Math.round((updatedWeight / Math.pow(updatedHeight / 100, 2)) * 10) / 10;

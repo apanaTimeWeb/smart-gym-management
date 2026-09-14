@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the cross-branch daily attendance trend chart using ApexCharts.
-'use client';
 
 import dynamic from 'next/dynamic';
 import { CalendarCheck } from 'lucide-react';

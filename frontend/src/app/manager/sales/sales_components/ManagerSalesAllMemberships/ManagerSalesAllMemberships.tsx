@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the paginated table of all gym memberships with status filter tabs. Receives data via ManagerSalesContext. No API calls.
 'use client';
-
+// RESPONSIBILITY: Renders the paginated table of all gym memberships with status filter tabs. Receives data via ManagerSalesContext. No API calls.
 import { useState } from 'react';
 import { useSalesContext } from '@/app/manager/sales/sales_context/ManagerSalesContext';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';

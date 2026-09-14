@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the Revenue report tab — breakdown by gym, payment method, plan, and monthly trend chart.
-'use client';
 
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { useAdminReportsLogic } from '@/app/admin/reports/reports_context/useAdminReportsLogic';
@@ -35,7 +35,7 @@ export default function AdminReportsRevenue() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {reportData.revenueByGym.map((row) => (
+              {reportData.revenueByGym.map((row: any) => (
                 <tr key={row.gymId} className="hover:bg-primary/5 motion-safe:transition-colors">
                   <td className="px-5 py-4">
                     <div>
@@ -71,8 +71,8 @@ export default function AdminReportsRevenue() {
             <h2 className="text-base font-semibold text-foreground">Revenue by Payment Method</h2>
           </div>
           <div className="p-5 space-y-3">
-            {reportData.revenueByMethod.map((row) => {
-              const total = reportData.revenueByMethod.reduce((s, r) => s + r.amount, 0);
+            {reportData.revenueByMethod.map((row: any) => {
+              const total = reportData.revenueByMethod.reduce((s: number, r: any) => s + r.amount, 0);
               const pct = ((row.amount / total) * 100).toFixed(1);
               return (
                 <div key={row.method}>
@@ -94,8 +94,8 @@ export default function AdminReportsRevenue() {
             <h2 className="text-base font-semibold text-foreground">Revenue by Plan</h2>
           </div>
           <div className="p-5 space-y-3">
-            {reportData.revenueByPlan.map((row) => {
-              const total = reportData.revenueByPlan.reduce((s, r) => s + r.amount, 0);
+            {reportData.revenueByPlan.map((row: any) => {
+              const total = reportData.revenueByPlan.reduce((s: number, r: any) => s + r.amount, 0);
               const pct = ((row.amount / total) * 100).toFixed(1);
               return (
                 <div key={row.planName}>
@@ -128,7 +128,7 @@ export default function AdminReportsRevenue() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {reportData.monthlyRevenue.map((row) => (
+              {reportData.monthlyRevenue.map((row: any) => (
                 <tr key={row.month} className="hover:bg-primary/5 motion-safe:transition-colors">
                   <td className="px-5 py-3 text-sm font-semibold text-foreground">{row.month}</td>
                   <td className="px-5 py-3 text-sm text-foreground">{formatCurrency(row.revenue)}</td>

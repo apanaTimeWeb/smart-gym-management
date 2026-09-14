@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders a promotional or informational card for the gym on the dashboard.
 'use client';
-
+// RESPONSIBILITY: Renders a promotional or informational card for the gym on the dashboard.
 import { GYM_DETAILS } from '@/app/manager/manager_utils/ManagerSharedConstants';
 
 export default function ManagerDashboardPromoCard() {

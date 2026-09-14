@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Display 4 key referral stats using ManagerStatCard.
 'use client';
-
+// RESPONSIBILITY: Display 4 key referral stats using ManagerStatCard.
 import { Users, UserCheck, Gift, CheckCircle } from 'lucide-react';
 import ManagerStatCard from '@/app/manager/manager_components/ManagerShared/ManagerStatCard';
 import { useManagerReferralsLogic } from '@/app/manager/referrals/referrals_context/useManagerReferralsLogic';

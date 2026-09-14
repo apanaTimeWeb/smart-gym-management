@@ -1,8 +1,7 @@
+'use client';
 // RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
 // DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Provides UI orchestration state to the Diet Library module hierarchy. Async data is managed in useLibraryLogic.
-'use client';
-
 import React, { createContext, useContext, useMemo } from 'react';
 import type { LibraryContextType, LibraryInitialData } from '@/app/trainer/library/library_types/library_types';
 import { useLibraryLogic } from '@/app/trainer/library/library_context/useLibraryLogic';

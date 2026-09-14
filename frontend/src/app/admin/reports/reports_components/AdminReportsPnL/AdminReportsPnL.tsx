@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the P&L (Profit & Loss) report tab — full breakdown per gym with margin indicators.
-'use client';
 
 import { useAdminReportsLogic } from '@/app/admin/reports/reports_context/useAdminReportsLogic';
 import { formatCurrency } from '@/app/admin/reports/reports_utils/AdminReportsSharedConstants';
@@ -25,7 +25,7 @@ export default function AdminReportsPnL() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {reportData.pnlSummary.map((row) => (
+              {reportData.pnlSummary.map((row: any) => (
                 <tr key={row.gymId} className="hover:bg-primary/5 motion-safe:transition-colors">
                   <td className="px-4 py-4 text-sm font-semibold text-foreground whitespace-nowrap">{row.gymName}</td>
                   <td className="px-4 py-4 text-sm font-semibold text-foreground">{formatCurrency(row.revenue)}</td>
@@ -51,13 +51,13 @@ export default function AdminReportsPnL() {
             <tfoot>
               <tr className="bg-primary/5 border-t-2 border-border">
                 <td className="px-4 py-3 text-sm font-bold text-foreground">Total</td>
-                <td className="px-4 py-3 text-sm font-bold text-foreground">{formatCurrency(reportData.pnlSummary.reduce((s, r) => s + r.revenue, 0))}</td>
-                <td className="px-4 py-3 text-sm font-bold text-foreground">{formatCurrency(reportData.pnlSummary.reduce((s, r) => s + r.membershipRevenue, 0))}</td>
-                <td className="px-4 py-3 text-sm font-bold text-foreground">{formatCurrency(reportData.pnlSummary.reduce((s, r) => s + r.storeRevenue, 0))}</td>
-                <td className="px-4 py-3 text-sm font-bold text-danger">{formatCurrency(reportData.pnlSummary.reduce((s, r) => s + r.staffCost, 0))}</td>
-                <td className="px-4 py-3 text-sm font-bold text-danger">{formatCurrency(reportData.pnlSummary.reduce((s, r) => s + r.operationalCost, 0))}</td>
-                <td className="px-4 py-3 text-sm font-bold text-danger">{formatCurrency(reportData.pnlSummary.reduce((s, r) => s + r.totalExpenses, 0))}</td>
-                <td className="px-4 py-3 text-sm font-bold text-success">{formatCurrency(reportData.pnlSummary.reduce((s, r) => s + r.netProfit, 0))}</td>
+                <td className="px-4 py-3 text-sm font-bold text-foreground">{formatCurrency(reportData.pnlSummary.reduce((s: number, r: any) => s + r.revenue, 0))}</td>
+                <td className="px-4 py-3 text-sm font-bold text-foreground">{formatCurrency(reportData.pnlSummary.reduce((s: number, r: any) => s + r.membershipRevenue, 0))}</td>
+                <td className="px-4 py-3 text-sm font-bold text-foreground">{formatCurrency(reportData.pnlSummary.reduce((s: number, r: any) => s + r.storeRevenue, 0))}</td>
+                <td className="px-4 py-3 text-sm font-bold text-danger">{formatCurrency(reportData.pnlSummary.reduce((s: number, r: any) => s + r.staffCost, 0))}</td>
+                <td className="px-4 py-3 text-sm font-bold text-danger">{formatCurrency(reportData.pnlSummary.reduce((s: number, r: any) => s + r.operationalCost, 0))}</td>
+                <td className="px-4 py-3 text-sm font-bold text-danger">{formatCurrency(reportData.pnlSummary.reduce((s: number, r: any) => s + r.totalExpenses, 0))}</td>
+                <td className="px-4 py-3 text-sm font-bold text-success">{formatCurrency(reportData.pnlSummary.reduce((s: number, r: any) => s + r.netProfit, 0))}</td>
                 <td className="px-4 py-3" />
               </tr>
             </tfoot>

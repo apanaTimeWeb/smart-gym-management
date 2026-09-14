@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Business logic hook for Announcements — queries, mutations, filtering.
-'use client';
 
 import { useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -23,13 +23,13 @@ export function useAdminAnnouncementsLogic() {
 
   const { data: announcements = [], isLoading, isError } = useQuery({
     queryKey: ['adminAnnouncements'],
-    queryFn: announcementsApi.fetchAnnouncements,
+    queryFn: () => announcementsApi.fetchAnnouncements().then(r => r.data),
     staleTime: 1000 * 60 * 2,
   });
 
   const { data: kpis } = useQuery({
     queryKey: ['adminAnnouncementsKPIs'],
-    queryFn: announcementsApi.fetchKPIs,
+    queryFn: () => announcementsApi.fetchKPIs().then(r => r.data),
     staleTime: 1000 * 60 * 5,
   });
 

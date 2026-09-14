@@ -1,7 +1,7 @@
+"use client";
 // RESPONSIBILITY: Root client orchestrator for the Branch P&L Comparison page.
 // Owns layout and composition. Delegates all logic to useAdminFinancePnlLogic. No direct API calls.
 // DATA FLOW: page.tsx → AdminFinancePnlMain → useAdminFinancePnlLogic → child components
-'use client';
 
 import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 import { useAdminFinancePnlLogic } from '@/app/admin/finance/finance_context/useAdminFinancePnlLogic';

@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Entry component for the HR module. Wraps the UI in the context provider and handles page layout.
-'use client';
 
 import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 import { HrProvider, useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';

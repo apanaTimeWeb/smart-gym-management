@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the search input, muscle group filter, and Add Plan CTA for the Workout Library.
 'use client';
-
+// RESPONSIBILITY: Renders the search input, muscle group filter, and Add Plan CTA for the Workout Library.
 import { useState, useEffect } from 'react';
 import { Search, Plus } from 'lucide-react';
 import { useWorkoutContext } from '@/app/manager/workout/workout_context/ManagerWorkoutContext';

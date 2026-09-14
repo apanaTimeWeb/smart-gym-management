@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: KPI cards for the Blacklist module.
-'use client';
 
 import { Ban, Globe, Building2, CalendarPlus } from 'lucide-react';
 import AdminStatCard from '@/app/admin/admin_components/AdminShared/AdminStatCard';

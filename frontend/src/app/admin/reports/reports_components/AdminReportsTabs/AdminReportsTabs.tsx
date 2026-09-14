@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the tab navigation bar for the Reports module.
-'use client';
 
 import { REPORT_TABS } from '@/app/admin/reports/reports_utils/AdminReportsSharedConstants';
 import { useAdminReportsStore } from '@/app/admin/reports/reports_store/useAdminReportsStore';

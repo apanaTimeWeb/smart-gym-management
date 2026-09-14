@@ -1,5 +1,4 @@
 'use client';
-
 import { useState, useCallback } from 'react';
 import type { TrainerScheduleSummary, TrainerShift, CreateShiftDto } from '@/app/manager/schedule/schedule_types/ManagerScheduleTypes';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';

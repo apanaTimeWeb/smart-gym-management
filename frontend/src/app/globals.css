@@ -247,6 +247,6 @@ html { scroll-behavior: smooth; }
 }
 
 @layer components {
-  .modal-scroll-area { @apply max-h-[70vh] overflow-y-auto custom-scrollbar; }
+  .modal-scroll-area { @apply max-h-[70vh] overflow-y-auto; }
   .empty-state-container { @apply min-h-[400px] flex flex-col items-center justify-center gap-4 text-center p-8; }
 }

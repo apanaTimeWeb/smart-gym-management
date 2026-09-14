@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Root client orchestrator for Referrals.
 'use client';
-
+// RESPONSIBILITY: Root client orchestrator for Referrals.
 import { Plus } from 'lucide-react';
 import ManagerReferralsKPIs from '@/app/manager/referrals/referrals_components/ManagerReferralsMain/ManagerReferralsKPIs';
 import ManagerReferralsTable from '@/app/manager/referrals/referrals_components/ManagerReferralsMain/ManagerReferralsTable';

@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Form modal for creating or editing a staff member profile in the HR module.
-'use client';
 
 import { useEffect } from 'react';
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';

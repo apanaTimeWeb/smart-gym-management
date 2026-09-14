@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders a bulk messaging modal for sending WhatsApp or Email messages to multiple recipients. Manages per-recipient send tracking for WhatsApp queue mode.
 'use client';
-
+// RESPONSIBILITY: Renders a bulk messaging modal for sending WhatsApp or Email messages to multiple recipients. Manages per-recipient send tracking for WhatsApp queue mode.
 import { useState, useEffect } from 'react';
 import { X, Send, MessageCircle, Mail, CheckCircle, Phone, AtSign, Users } from 'lucide-react';
 import type { MessageType, ManagerMessageRecipient } from '@/app/manager/manager_components/ManagerFeedback/ManagerMessageModal';

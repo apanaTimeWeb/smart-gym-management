@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the sticky impersonation banner shown when admin is viewing a branch as manager. Provides exit button.
-'use client';
 
 import { LogOut, Building2, Eye } from 'lucide-react';
 import { useAdminImpersonationStore } from '@/app/admin/admin_store/useAdminImpersonationStore';

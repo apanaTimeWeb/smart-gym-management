@@ -1,6 +1,6 @@
+"use client";
 // RESPONSIBILITY: Encapsulates all P&L state, sorting, filtering, and derived aggregates.
 // DATA FLOW: AdminFinancePnlConstants → useAdminFinancePnlLogic → AdminFinancePnlMain → child components
-'use client';
 
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';

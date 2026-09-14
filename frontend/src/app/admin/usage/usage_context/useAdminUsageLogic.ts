@@ -1,6 +1,6 @@
+"use client";
 // RESPONSIBILITY: Data logic hook for Admin Usage. Fetches usage data and computes metric cards.
 // DATA FLOW: Mock API → useAdminUsageLogic → AdminUsageMain → child components
-'use client';
 
 import { useState, useCallback, useMemo } from 'react';
 import { MOCK_USAGE_DATA } from '@/app/admin/usage/usage_utils/AdminUsageSharedConstants';

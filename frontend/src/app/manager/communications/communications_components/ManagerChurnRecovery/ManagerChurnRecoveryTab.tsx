@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Root orchestrator for the Churn Recovery / Win-Back tab. Renders KPIs, table, and composer drawer. No direct API calls.
 'use client';
-
+// RESPONSIBILITY: Root orchestrator for the Churn Recovery / Win-Back tab. Renders KPIs, table, and composer drawer. No direct API calls.
 import { useManagerChurnRecoveryLogic } from '@/app/manager/communications/communications_context/useManagerChurnRecoveryLogic';
 import ManagerChurnRecoveryKPIs from '@/app/manager/communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryKPIs';
 import ManagerChurnRecoveryTable from '@/app/manager/communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryTable';

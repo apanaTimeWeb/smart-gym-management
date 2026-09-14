@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the grid of membership plan cards with edit/delete actions and pagination.
-'use client';
 
 import { Edit2, Trash2, Tag, CheckCircle, Loader2, Snowflake } from 'lucide-react';
 import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';

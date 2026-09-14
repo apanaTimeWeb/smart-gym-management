@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Entry component for the Settings module. Wraps the UI in the context provider and handles page layout.
-'use client';
 
 import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 import AdminSettingsNav from '@/app/admin/settings/settings_components/AdminSettingsNav/AdminSettingsNav';
@@ -19,4 +19,3 @@ export default function AdminSettingsMain() {
     </div>
   );
 }
-

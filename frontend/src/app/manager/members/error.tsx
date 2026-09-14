@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the error boundary fallback for the members module.
 'use client';
-
+// RESPONSIBILITY: Renders the error boundary fallback for the members module.
 import { useEffect } from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { logger } from '@/lib/logger';

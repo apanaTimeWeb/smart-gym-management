@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the distribution of members by plan on the dashboard.
 'use client';
-
+// RESPONSIBILITY: Renders the distribution of members by plan on the dashboard.
 import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/useManagerDashboardQueries';
 import { useManagerDashboardStore } from '@/app/manager/dashboard/dashboard_store/useManagerDashboardStore';
 import { DASHBOARD_PLAN_BG_COLORS } from '@/app/manager/dashboard/dashboard_utils/ManagerDashboardSharedConstants';

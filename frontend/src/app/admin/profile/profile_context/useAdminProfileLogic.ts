@@ -1,7 +1,7 @@
+"use client";
 // RESPONSIBILITY: Logic hook for the Admin Profile page — personal info + password change.
 // DATA FLOW: adminProfileApi → useAdminProfileLogic → AdminProfileMain
 
-'use client';
 
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';

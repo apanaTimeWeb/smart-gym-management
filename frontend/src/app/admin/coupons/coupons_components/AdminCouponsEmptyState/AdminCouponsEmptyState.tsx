@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the empty state for the Coupons table when no coupons match filters.
-'use client';
 
 import { Tag } from 'lucide-react';
 import { useAdminCouponsLogic } from '@/app/admin/coupons/coupons_context/useAdminCouponsLogic';

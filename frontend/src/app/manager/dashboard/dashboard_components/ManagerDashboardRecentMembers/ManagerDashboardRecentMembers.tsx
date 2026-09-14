@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the recent members table on the dashboard with a local search filter.
 'use client';
-
+// RESPONSIBILITY: Renders the recent members table on the dashboard with a local search filter.
 import { useState } from 'react';
 import Link from 'next/link';
 import { Search, ArrowRight, UserPlus } from 'lucide-react';

@@ -1,6 +1,5 @@
-// RESPONSIBILITY: ApexCharts-based charts for each report tab — Revenue, Attendance, Members, Expenses.
 'use client';
-
+// RESPONSIBILITY: ApexCharts-based charts for each report tab — Revenue, Attendance, Members, Expenses.
 import dynamic from 'next/dynamic';
 import { useReportsContext } from '@/app/manager/reports/reports_context/ManagerReportsContext';
 import { EXPENSE_CATEGORY_STYLES } from '@/app/manager/reports/reports_utils/ManagerReportsSharedConstants';

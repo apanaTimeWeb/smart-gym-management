@@ -1,7 +1,6 @@
+'use client';
 // RESPONSIBILITY: Renders the tab switcher, search input, and category filter for the Workout Library (view-only; no Add button for trainers).
 // DATA FLOW: useWorkoutContext → TrainerWorkoutToolbar → URL params via context setters
-'use client';
-
 import { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
 import { useTrainerWorkoutFilters } from '@/app/trainer/workout/workout_utils/useTrainerWorkoutFilters';

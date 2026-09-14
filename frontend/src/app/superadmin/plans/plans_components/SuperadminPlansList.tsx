@@ -1,7 +1,6 @@
+'use client';
 // RESPONSIBILITY: Renders the grid of subscription plan cards using TanStack Query.
 // DATA FLOW: superadminApi -> useQuery -> SuperadminPlansList
-
-'use client';
 
 import { Check, Edit2, Trash2, Loader2, Archive } from 'lucide-react';
 import toast from 'react-hot-toast';

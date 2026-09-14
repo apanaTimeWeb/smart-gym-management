@@ -100,7 +100,7 @@ export function useAdminFinanceLogic(initialData?: FinanceInitialData | null) {
 
   let fetchedPayments = paymentsRes?.data?.payments || [];
   if (debouncedSearch) {
-    fetchedPayments = fetchedPayments.filter(p =>
+    fetchedPayments = fetchedPayments.filter((p: any) =>
       p.member?.name?.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
       p.memberId?.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
       p.invoiceNo?.toLowerCase().includes(debouncedSearch.toLowerCase())
@@ -108,11 +108,11 @@ export function useAdminFinanceLogic(initialData?: FinanceInitialData | null) {
   }
   
   if (methodFilter !== 'All') {
-    fetchedPayments = fetchedPayments.filter(p => p.method === methodFilter);
+    fetchedPayments = fetchedPayments.filter((p: any) => p.method === methodFilter);
   }
   
   if (statusFilter !== 'All') {
-    fetchedPayments = fetchedPayments.filter(p => p.status === statusFilter);
+    fetchedPayments = fetchedPayments.filter((p: any) => p.status === statusFilter);
   }
 
   return {

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders each branch card with revenue/expense/student/staff tiles and the "Open as Manager" impersonation CTA.
 "use client";
+// RESPONSIBILITY: Renders each branch card with revenue/expense/student/staff tiles and the "Open as Manager" impersonation CTA.
 import { Building2, TrendingUp, TrendingDown, Users, Activity, ChevronRight, LogIn } from "lucide-react";
 import { useAdminBranchesLogic } from "@/app/admin/branches/branches_context/useAdminBranchesLogic";
 import { formatCurrency } from "@/lib/formatters";

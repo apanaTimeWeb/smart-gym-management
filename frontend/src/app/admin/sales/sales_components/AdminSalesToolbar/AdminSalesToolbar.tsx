@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the date filter dropdown (with Custom date range pickers), search input, and export button for the Sales module. Reads/writes state via SalesContext.
-'use client';
 
 import { Download, Search } from 'lucide-react';
 import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
@@ -57,6 +57,3 @@ export default function AdminSalesToolbar() {
     </div>
   );
 }
-
-
-

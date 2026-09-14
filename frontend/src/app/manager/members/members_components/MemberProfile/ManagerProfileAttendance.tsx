@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Contains logic, types, or component definition for this module.
 'use client';
-
+// RESPONSIBILITY: Contains logic, types, or component definition for this module.
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
 import { useFetchAttendance } from '@/app/manager/members/members_api/useManagerMembersQueries';
 

@@ -1,10 +1,9 @@
+'use client';
 // RESPONSIBILITY: Renders the Product Management page — feature flag toggles and release note publishing.
 // Fetches data via useSuperadminFeaturesData hook. Mutations (toggle, publish) dispatched from here.
 // No raw API calls — all async state goes through the hook (Rule 6).
 //
 // DATA FLOW: featuresApi → useSuperadminFeaturesData → SuperadminFeaturesClient → FeatureFlags/ReleaseNotes JSX
-'use client';
-
 import { useSuperadminFeaturesData } from '@/app/superadmin/features/features_utils/useSuperadminFeaturesData';
 
 import { ToggleLeft, Send, Search, Users, Clock } from 'lucide-react';

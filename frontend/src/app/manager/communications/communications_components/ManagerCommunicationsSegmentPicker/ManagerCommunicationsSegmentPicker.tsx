@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Segment picker — shows all audience segments as selectable cards with description and live recipient count.
 'use client';
-
+// RESPONSIBILITY: Segment picker — shows all audience segments as selectable cards with description and live recipient count.
 import { Users, Loader2 } from 'lucide-react';
 import { useManagerCommunicationsLogic } from '@/app/manager/communications/communications_context/useManagerCommunicationsLogic';
 import { COMM_SEGMENT_OPTIONS } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';

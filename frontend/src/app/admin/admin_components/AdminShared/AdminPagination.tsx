@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the pagination bar (Previous/Next + page info + rows-per-page) shared across all ADMIN table views.
-'use client';
 
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 

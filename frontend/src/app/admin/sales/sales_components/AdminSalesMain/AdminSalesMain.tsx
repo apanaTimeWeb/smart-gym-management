@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Provides the implementation for AdminSalesMain.tsx functionality within its module.
-'use client';
 
 import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';

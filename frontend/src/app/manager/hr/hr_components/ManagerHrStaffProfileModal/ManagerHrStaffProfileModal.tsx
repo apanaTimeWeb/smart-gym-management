@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders a read-only profile modal for a staff member.
 'use client';
-
+// RESPONSIBILITY: Renders a read-only profile modal for a staff member.
 import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
 import { X, Edit2, Phone, Mail, Calendar, MapPin, IndianRupee, Hash } from 'lucide-react';
 import { formatCurrency , formatDate} from '@/lib/formatters';

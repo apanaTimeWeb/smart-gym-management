@@ -1,6 +1,6 @@
+"use client";
 // RESPONSIBILITY: React Query hook for fetching admin branches from the real API.
 // Rule 3B: No static mock data — all data comes from the backend via apiFetch.
-'use client';
 
 import { useQuery } from '@tanstack/react-query';
 import { branchesApi } from '@/app/admin/branches/branches_api/branches_api';

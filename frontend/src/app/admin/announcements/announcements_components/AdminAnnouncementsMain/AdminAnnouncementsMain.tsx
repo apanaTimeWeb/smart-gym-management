@@ -1,6 +1,6 @@
+"use client";
 // RESPONSIBILITY: Main orchestrator for the Admin Announcements module.
 // Renders the compose CTA banner, KPIs, and the announcement table with full CRUD.
-'use client';
 
 import { Megaphone, Send } from 'lucide-react';
 import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';

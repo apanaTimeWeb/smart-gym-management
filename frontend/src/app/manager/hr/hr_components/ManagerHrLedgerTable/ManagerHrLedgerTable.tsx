@@ -1,5 +1,4 @@
 'use client';
-
 import { useState, useEffect } from 'react';
 import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
 import { hrApi } from '@/app/manager/hr/hr_api/ManagerHrApi';

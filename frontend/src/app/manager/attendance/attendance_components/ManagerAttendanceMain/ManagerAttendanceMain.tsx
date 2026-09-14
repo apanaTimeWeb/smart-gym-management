@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Entry component for the Attendance module that wraps the UI in the context provider and handles the core page layout.
 'use client';
-
+// RESPONSIBILITY: Entry component for the Attendance module that wraps the UI in the context provider and handles the core page layout.
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
 import ManagerToast from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 

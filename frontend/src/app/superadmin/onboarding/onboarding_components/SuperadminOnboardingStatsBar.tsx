@@ -1,5 +1,4 @@
 'use client';
-
 import { KPI_CARD_GRADIENT } from '@/app/superadmin/onboarding/onboarding_types/onboarding_constants';
 import { useDateRangeSuffix } from '@/components/ui/SuperadminShared/useDateRangeSuffix';
 

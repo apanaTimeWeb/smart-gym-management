@@ -1,7 +1,5 @@
-// RESPONSIBILITY: Provides the implementation for ManagerSalesMembershipReport.tsx functionality within its module.
 'use client';
-
-
+// RESPONSIBILITY: Provides the implementation for ManagerSalesMembershipReport.tsx functionality within its module.
 import { useSalesContext } from '@/app/manager/sales/sales_context/ManagerSalesContext';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { formatCurrency } from '@/lib/formatters';

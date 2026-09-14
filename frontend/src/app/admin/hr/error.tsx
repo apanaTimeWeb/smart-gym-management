@@ -1,6 +1,6 @@
+"use client";
 import { AdminDashboardUrlConfig } from '@/app/admin/dashboard/admin_dashboard_url_config';
 // RESPONSIBILITY: Provides the implementation for error.tsx functionality within its module.
-'use client';
 
 import { useEffect } from "react";
 import Link from 'next/link';

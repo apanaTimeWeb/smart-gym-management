@@ -1,5 +1,4 @@
 'use client';
-
 import { Activity, HeartPulse, Scale, Target } from 'lucide-react';
 
 export default function TrainerMembersProfileFitness() {

@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Root client orchestrator for the Trainer Schedule module.
 'use client';
-
+// RESPONSIBILITY: Root client orchestrator for the Trainer Schedule module.
 import { useTrainerScheduleStore } from '@/app/trainer/schedule/schedule_store/useTrainerScheduleStore';
 import TrainerWeeklyAvailability from '@/app/trainer/schedule/schedule_components/TrainerWeeklyAvailability/TrainerWeeklyAvailability';
 import TrainerLeaveRequests from '@/app/trainer/schedule/schedule_components/TrainerLeaveRequests/TrainerLeaveRequests';

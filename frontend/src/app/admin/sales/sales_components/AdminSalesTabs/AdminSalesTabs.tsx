@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Provides the implementation for AdminSalesTabs.tsx functionality within its module.
-'use client';
 
 import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
 import { SALES_TABS } from '@/app/admin/sales/sales_utils/AdminSalesSharedConstants';
@@ -25,5 +25,3 @@ export default function AdminSalesTabs() {
  </div>
  );
 }
-
-

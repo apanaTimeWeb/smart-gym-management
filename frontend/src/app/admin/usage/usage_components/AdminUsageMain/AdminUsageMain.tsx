@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Main entry point for Admin Usage & Subscription page. Composes metric cards and plan cards.
-'use client';
 
 import { useRef } from 'react';
 import { RefreshCw, Calendar, CreditCard } from 'lucide-react';

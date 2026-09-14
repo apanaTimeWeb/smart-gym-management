@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Root shell layout for all ADMIN pages. Composes AdminSidebar with the main content area. Manages sidebar collapsed state only.
-'use client';
 
 import { useState } from 'react';
 import AdminSidebar from '@/app/admin/admin_components/AdminLayout/AdminSidebar';

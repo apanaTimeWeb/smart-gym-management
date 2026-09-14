@@ -1,6 +1,6 @@
+'use client';
 // RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
 // DATA FLOW: Standard component data flow.
-"use client";
 // RESPONSIBILITY: Renders the Contact section — location/phone/email info panel on the left
 // and a contact message form (name, email, message) on the right.
 // Reads/writes isSending, contactSuccess, contactData from LandingContext.

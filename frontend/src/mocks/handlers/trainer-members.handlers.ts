@@ -71,7 +71,7 @@ export const trainerMembersHandlers = [
       return HttpResponse.json({ success: false, message: 'Member not found' }, { status: 404 });
     }
     
-    membersDB[idx] = { ...membersDB[idx], ...body };
+    membersDB[idx] = { ...membersDB[idx], ...body } as typeof membersDB[0];
     return HttpResponse.json({
       success: true,
       message: 'Member updated successfully',

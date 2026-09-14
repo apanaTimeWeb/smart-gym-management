@@ -6,8 +6,6 @@ import toast from 'react-hot-toast';
 interface MutationOptions {
   onSuccess?: (data: unknown) => void;
   onError?: (error: Error) => void;
-  successMessage?: string;
-  errorMessage?: string;
 }
 
 /**
@@ -17,7 +15,7 @@ export function useSuperadminCouponsMutation() {
   const [isMutating, setIsMutating] = useState(false);
 
   const mutate = async <T,>(
-    mutationFn: () => Promise<{ success: boolean; data?: T; message?: string }>,
+    mutationFn: () => Promise<{ success: boolean; data?: T | null; message?: string }>,
     options?: MutationOptions
   ) => {
     setIsMutating(true);
@@ -25,8 +23,8 @@ export function useSuperadminCouponsMutation() {
       const response = await mutationFn();
       const responseData = response.data !== undefined ? response.data : response;
       
-      if (options?.successMessage || response.message) {
-        toast.success(response.message || options?.successMessage || 'Action successful');
+      if (response.message) {
+        toast.success(response.message, { id: response.message });
       }
       
       if (options?.onSuccess) {
@@ -36,8 +34,7 @@ export function useSuperadminCouponsMutation() {
       return responseData;
     } catch (error: unknown) {
       const errorObj = error instanceof Error ? error : new Error(String(error));
-      const message = options?.errorMessage || errorObj.message || 'Something went wrong';
-      toast.error(message);
+      toast.error(errorObj.message, { id: errorObj.message });
       
       if (options?.onError) {
         options.onError(errorObj);

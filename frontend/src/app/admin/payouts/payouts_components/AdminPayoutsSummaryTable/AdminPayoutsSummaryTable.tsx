@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Table showing monthly payout summary per gym with mark-as-paid action.
-'use client';
 
 import { CheckCircle, Clock, Loader2 } from 'lucide-react';
 import { useAdminPayoutsLogic } from '@/app/admin/payouts/payouts_context/useAdminPayoutsLogic';

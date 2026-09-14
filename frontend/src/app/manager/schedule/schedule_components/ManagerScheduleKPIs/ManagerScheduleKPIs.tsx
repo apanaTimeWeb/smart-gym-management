@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders the 4 KPI stat cards for the Schedule module (total trainers, on duty today, on leave, shifts this week).
 'use client';
+// RESPONSIBILITY: Renders the 4 KPI stat cards for the Schedule module (total trainers, on duty today, on leave, shifts this week).
 import { Users, UserCheck, UserX, CalendarDays } from 'lucide-react';
 import ManagerStatCard from '@/app/manager/manager_components/ManagerShared/ManagerStatCard';
 import { useScheduleContext } from '@/app/manager/schedule/schedule_context/ManagerScheduleContext';

@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: KPI stat cards for the Announcements module.
-'use client';
 
 import { Megaphone, CheckCircle, Clock, XCircle, Eye, Pin } from 'lucide-react';
 import AdminStatCard from '@/app/admin/admin_components/AdminShared/AdminStatCard';

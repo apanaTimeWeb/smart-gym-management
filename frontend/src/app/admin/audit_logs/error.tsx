@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { ShieldAlert } from 'lucide-react';
 
 export default function AdminAuditLogsError({ reset }: { reset: () => void }) {

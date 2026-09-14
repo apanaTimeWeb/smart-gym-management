@@ -1,7 +1,6 @@
+'use client';
 import { formatDate } from '@/lib/formatters';
 // RESPONSIBILITY: Paginated history table of past communication campaigns with search and channel filter.
-'use client';
-
 import { Search, MessageCircle, Mail, Users } from 'lucide-react';
 import { useManagerCommunicationsLogic } from '@/app/manager/communications/communications_context/useManagerCommunicationsLogic';
 import { TableSkeleton } from '@/app/manager/manager_components/ManagerShared/TableSkeleton';

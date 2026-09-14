@@ -1,4 +1,4 @@
-'use client';
+"use client";
 // RESPONSIBILITY: Manages the Roles & Permissions settings tab.
 import { MOCK_ROLES } from '@/app/admin/settings/settings_utils/AdminSettingsSharedConstants';
 import { Plus, Edit2, Trash2 } from 'lucide-react';

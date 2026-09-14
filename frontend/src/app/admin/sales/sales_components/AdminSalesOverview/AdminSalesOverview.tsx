@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Provides the implementation for AdminSalesOverview.tsx functionality within its module.
-'use client';
 
 import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
 import { 
@@ -107,4 +107,3 @@ export default function AdminSalesOverview() {
  </div>
  );
 }
-

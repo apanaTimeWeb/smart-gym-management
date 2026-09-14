@@ -1,8 +1,7 @@
+'use client';
 // RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
 // DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the diet plan cards grid with macronutrient info and action buttons.
-'use client';
-
 import { useLibraryContext } from '@/app/trainer/library/library_context/LibraryContext';
 import TrainerPagination from '@/app/trainer/trainer_components/TrainerShared/TrainerPagination';
 import { Apple, Edit2, Trash2, Flame, Loader2 } from 'lucide-react';

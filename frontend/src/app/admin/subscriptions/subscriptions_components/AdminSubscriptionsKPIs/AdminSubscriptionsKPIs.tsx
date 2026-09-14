@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: KPI cards for the Subscriptions module.
-'use client';
 
 import { CreditCard, IndianRupee, FileText, Calendar, TrendingDown, Zap } from 'lucide-react';
 import AdminStatCard from '@/app/admin/admin_components/AdminShared/AdminStatCard';

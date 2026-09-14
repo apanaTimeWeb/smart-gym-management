@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Business logic hook for the Payouts module.
-'use client';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
@@ -14,19 +14,19 @@ export function useAdminPayoutsLogic() {
 
   const { data: payouts = [], isLoading: loadingPayouts, isError: errorPayouts } = useQuery({
     queryKey: ['adminPayouts'],
-    queryFn: payoutsApi.fetchPayouts,
+    queryFn: () => payoutsApi.fetchPayouts().then(r => r.data),
     staleTime: 1000 * 60 * 5,
   });
 
   const { data: pnlData = [], isLoading: loadingPnL } = useQuery({
     queryKey: ['adminPnL'],
-    queryFn: payoutsApi.fetchPnL,
+    queryFn: () => payoutsApi.fetchPnL().then(r => r.data),
     staleTime: 1000 * 60 * 5,
   });
 
   const { data: kpis } = useQuery({
     queryKey: ['adminPayoutsKPIs'],
-    queryFn: payoutsApi.fetchKPIs,
+    queryFn: () => payoutsApi.fetchKPIs().then(r => r.data),
     staleTime: 1000 * 60 * 5,
   });
 

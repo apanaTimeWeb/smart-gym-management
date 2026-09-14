@@ -1,6 +1,6 @@
+"use client";
 // RESPONSIBILITY: Custom hook managing async fetching and state for the Reports module.
 // DATA FLOW: page.tsx → AdminReportsMain → useAdminReportsLogic → reportsApi
-'use client';
 
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';

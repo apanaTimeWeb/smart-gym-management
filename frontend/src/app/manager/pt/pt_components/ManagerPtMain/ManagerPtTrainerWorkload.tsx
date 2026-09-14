@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the trainer workload to help managers balance assignment distribution.
 'use client';
-
+// RESPONSIBILITY: Renders the trainer workload to help managers balance assignment distribution.
 import { Users, Star, User } from 'lucide-react';
 import type { PtTrainerWorkload } from '@/app/manager/pt/pt_types/ManagerPtTypes';
 

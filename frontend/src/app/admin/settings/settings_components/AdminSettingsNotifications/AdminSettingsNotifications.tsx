@@ -1,4 +1,4 @@
-'use client';
+"use client";
 // RESPONSIBILITY: Manages the Notifications settings tab.
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

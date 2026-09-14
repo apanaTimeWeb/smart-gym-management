@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the expenses table with branch filter, category filter, and pagination for Admin Finance.
-'use client';
 
 import { useState, useMemo } from 'react';
 import { Plus } from 'lucide-react';

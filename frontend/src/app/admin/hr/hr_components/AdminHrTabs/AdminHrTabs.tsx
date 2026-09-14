@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the tabbed view switching between the Staff and Payroll tables in the HR module.
-'use client';
 
 import { useState } from 'react';
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
@@ -120,4 +120,3 @@ export default function AdminHrTabs() {
  </div>
  );
 }
-

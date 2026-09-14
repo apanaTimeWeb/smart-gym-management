@@ -1,4 +1,4 @@
-'use client';
+"use client";
 // RESPONSIBILITY: Provides a generic dirty-state guard for forms to prevent accidental data loss on navigation or tab close.
 import { useEffect } from 'react';
 

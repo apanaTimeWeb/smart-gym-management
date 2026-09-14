@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the error boundary fallback for the plans module.
 'use client';
-
+// RESPONSIBILITY: Renders the error boundary fallback for the plans module.
 import { useEffect } from 'react';
 import { AlertTriangle } from 'lucide-react';
 

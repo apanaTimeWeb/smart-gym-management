@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Handles and displays errors encountered while loading the Plan Revenue Dashboard.
-'use client';
 
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 

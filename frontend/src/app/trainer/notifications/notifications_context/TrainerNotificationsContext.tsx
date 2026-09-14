@@ -1,5 +1,4 @@
 'use client';
-
 import React, { createContext, useContext, useMemo } from 'react';
 import { useTrainerNotificationsLogic } from '@/app/trainer/notifications/notifications_context/useTrainerNotificationsLogic';
 

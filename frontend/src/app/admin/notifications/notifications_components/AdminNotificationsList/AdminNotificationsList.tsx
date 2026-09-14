@@ -1,4 +1,4 @@
-'use client';
+"use client";
 // RESPONSIBILITY: Renders the list of admin notifications with mark-read and delete actions.
 // DATA FLOW: AdminNotificationsClient → AdminNotificationsList
 

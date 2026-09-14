@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Provides the implementation for AdminSalesMembershipReport.tsx functionality within its module.
-'use client';
 
 
 import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
@@ -100,4 +100,3 @@ export default function AdminSalesMembershipReport() {
   </>
   );
 }
-

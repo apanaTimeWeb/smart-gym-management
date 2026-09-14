@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Main entry point for the Payouts module.
-'use client';
 
 import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 import AdminPayoutsKPIs from '@/app/admin/payouts/payouts_components/AdminPayoutsKPIs/AdminPayoutsKPIs';

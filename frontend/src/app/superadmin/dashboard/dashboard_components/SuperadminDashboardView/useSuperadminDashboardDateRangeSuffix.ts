@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Derives a human-readable date range suffix string from URL search params for KPI card labels.
 'use client';
+// RESPONSIBILITY: Derives a human-readable date range suffix string from URL search params for KPI card labels.
 import { useSearchParams } from 'next/navigation';
 import { DASHBOARD_TIME_RANGE_LABELS } from '@/app/superadmin/dashboard/dashboard_utils/SuperadminDashboardConstants';
 

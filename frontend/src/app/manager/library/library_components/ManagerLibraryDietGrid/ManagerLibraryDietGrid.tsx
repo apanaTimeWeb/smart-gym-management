@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the diet plan cards grid with macronutrient info and action buttons.
 'use client';
-
+// RESPONSIBILITY: Renders the diet plan cards grid with macronutrient info and action buttons.
 import { useLibraryContext } from '@/app/manager/library/library_context/ManagerLibraryContext';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { Apple, Edit2, Trash2, Flame, Loader2 } from 'lucide-react';

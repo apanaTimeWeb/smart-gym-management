@@ -1,6 +1,5 @@
-// RESPONSIBILITY: KPI stat cards for the Notifications module.
 'use client';
-
+// RESPONSIBILITY: KPI stat cards for the Notifications module.
 import { useNotificationsContext } from '@/app/manager/notifications/notifications_context/ManagerNotificationsContext';
 import ManagerStatCard from '@/app/manager/manager_components/ManagerShared/ManagerStatCard';
 import { Bell, BellRing, AlertTriangle, CalendarClock } from 'lucide-react';

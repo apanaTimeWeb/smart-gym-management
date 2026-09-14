@@ -1,5 +1,4 @@
-'use client';
-
+"use client";
 import { useState, useRef, useEffect } from 'react';
 import { Bell, X } from 'lucide-react';
 import Link from 'next/link';

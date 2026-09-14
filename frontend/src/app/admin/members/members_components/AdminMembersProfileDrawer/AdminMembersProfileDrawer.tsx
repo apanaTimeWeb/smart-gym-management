@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the slide-in profile drawer for a selected member showing full details.
-'use client';
 
 import { X, Phone, Mail, Building2, Calendar, IndianRupee, User } from 'lucide-react';
 import { formatCurrency } from '@/lib/formatters';

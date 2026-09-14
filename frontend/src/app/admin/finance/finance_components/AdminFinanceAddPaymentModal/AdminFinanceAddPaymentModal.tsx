@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Provides the implementation for AdminFinanceAddPaymentModal.tsx functionality within its module.
-'use client';
 
 import { useState, useEffect } from 'react';
 import { useAdminFinanceLogic } from '@/app/admin/finance/finance_context/useAdminFinanceLogic';
@@ -120,6 +120,3 @@ export default function AdminFinanceAddPaymentModal() {
     </div>
   );
 }
-
-
-

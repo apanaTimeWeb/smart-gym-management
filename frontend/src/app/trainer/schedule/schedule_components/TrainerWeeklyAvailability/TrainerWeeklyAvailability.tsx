@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the toggleable weekly schedule allowing trainers to define their working hours.
 'use client';
-
+// RESPONSIBILITY: Renders the toggleable weekly schedule allowing trainers to define their working hours.
 import { useState, useEffect } from 'react';
 import { useTrainerScheduleQuery } from '@/app/trainer/schedule/schedule_queries/useTrainerScheduleQuery';
 import { useTrainerScheduleMutations } from '@/app/trainer/schedule/schedule_queries/useTrainerScheduleMutations';

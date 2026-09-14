@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Provides UI orchestration state to the Diet Library module hierarchy. Async data is managed in useManagerLibraryLogic.
 'use client';
-
+// RESPONSIBILITY: Provides UI orchestration state to the Diet Library module hierarchy. Async data is managed in useManagerLibraryLogic.
 import React, { createContext, useContext, useMemo } from 'react';
 import type { LibraryContextType, LibraryInitialData } from '@/app/manager/library/library_types/ManagerLibraryTypes';
 import { useManagerLibraryLogic } from '@/app/manager/library/library_context/useManagerLibraryLogic';

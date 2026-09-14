@@ -1,7 +1,7 @@
 import { ManagerReportsUrlConfig } from '@/app/manager/reports/reports_url_config';
 import type { ReportSummary } from '@/app/manager/reports/reports_types/ManagerReportsTypes';
 import { apiFetch, type ApiResponse } from '@/lib/api';
-import { ManagerReportsUrlConfig } from '@/app/manager/reports/ManagerReportsUrlConfig';
+
 
 export const reportsApi = {
   fetchSummary: async (params?: Record<string, string>): Promise<ApiResponse<ReportSummary>> => {

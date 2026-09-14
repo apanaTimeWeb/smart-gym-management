@@ -1,6 +1,6 @@
+"use client";
 // RESPONSIBILITY: Renders the inline branch breakdown panel that expands inside the P&L table row.
 // Shows revenue source split + expense category split + MoM delta context. No API calls.
-'use client';
 
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import type { BranchPnlRecord } from '@/app/admin/finance/finance_types/finance_types';

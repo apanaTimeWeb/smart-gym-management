@@ -1,6 +1,6 @@
+"use client";
 // RESPONSIBILITY: Root client orchestrator for Plan Revenue Dashboard.
 // THEME PORTABILITY CONTRACT: Depends on variables --bg-page, --bg-card, --bg-input, --border, --primary, --success, --info, --warning, --danger, --text-primary, --text-secondary, --disabled.
-'use client';
 
 import { useAdminPlansRevenueLogic } from '@/app/admin/plans/plans_context/useAdminPlansRevenueLogic';
 import AdminPlansRevenuePeriodSelector from '@/app/admin/plans/plans_components/AdminPlansRevenue/AdminPlansRevenuePeriodSelector';

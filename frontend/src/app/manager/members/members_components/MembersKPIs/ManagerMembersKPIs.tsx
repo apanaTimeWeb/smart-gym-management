@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the four KPI stat cards (Total, Active, Pending, Expired) for the Members module.
 'use client';
-
+// RESPONSIBILITY: Renders the four KPI stat cards (Total, Active, Pending, Expired) for the Members module.
 import { User, CheckCircle, Clock, XCircle } from 'lucide-react';
 import { useFetchMemberStats } from '@/app/manager/members/members_api/useManagerMembersQueries';
 

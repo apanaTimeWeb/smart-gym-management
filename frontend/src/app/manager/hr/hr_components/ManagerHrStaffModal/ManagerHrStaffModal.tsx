@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Form modal for creating or editing a staff member profile in the HR module.
 'use client';
-
+// RESPONSIBILITY: Form modal for creating or editing a staff member profile in the HR module.
 import { useEffect } from 'react';
 import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
 import { STAFF_MODAL_FIELDS, EMPTY_STAFF, GENDER_OPTIONS, StaffSchema, type StaffFormValues, STAFF_ROLE_OPTIONS } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';

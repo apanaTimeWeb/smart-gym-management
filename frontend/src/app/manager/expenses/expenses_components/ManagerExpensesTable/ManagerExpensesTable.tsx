@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the primary tabular list of expenses with actions and pagination.
 'use client';
-
+// RESPONSIBILITY: Renders the primary tabular list of expenses with actions and pagination.
 import { Edit, Trash2, Loader2, ExternalLink, CheckCircle2, Banknote } from 'lucide-react';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { useExpensesContext } from '@/app/manager/expenses/expenses_context/ManagerExpensesContext';

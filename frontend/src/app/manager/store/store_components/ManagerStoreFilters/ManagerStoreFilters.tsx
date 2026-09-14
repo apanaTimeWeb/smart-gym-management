@@ -1,5 +1,4 @@
 'use client';
-
 import { useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 

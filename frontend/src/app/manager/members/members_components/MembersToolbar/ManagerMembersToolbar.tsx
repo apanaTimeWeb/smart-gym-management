@@ -1,7 +1,6 @@
+'use client';
 // RESPONSIBILITY: Renders the toolbar for searching, filtering, and initiating the "Add Member" action.
 // CRITICAL FIX: Added gender filter, plan filter, expiry date range, and Export CSV/PDF buttons.
-'use client';
-
 import { useState, useEffect } from 'react';
 import { Search, RefreshCw, Plus, MessageCircle, Download, Calendar } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';

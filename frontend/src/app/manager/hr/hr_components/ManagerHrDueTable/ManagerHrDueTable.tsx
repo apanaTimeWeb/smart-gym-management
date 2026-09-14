@@ -1,5 +1,4 @@
 'use client';
-
 import { useState } from 'react';
 import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
 import { formatCurrency } from '@/lib/formatters';

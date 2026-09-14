@@ -1,8 +1,7 @@
+'use client';
 // RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
 // DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the send-message modal (WhatsApp/Email) for communicating with a member. Shared across the Members and Finance modules.
-'use client';
-
 import { useState } from 'react';
 import { X, Send, MessageCircle, Mail, CheckCircle, Phone, AtSign } from 'lucide-react';
 

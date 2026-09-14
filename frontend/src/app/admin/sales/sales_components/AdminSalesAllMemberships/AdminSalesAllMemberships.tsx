@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the paginated, filterable table of all gym memberships. KPI cards (Rule 74) double as interactive filters. Receives data via SalesContext. No API calls.
-'use client';
 
 import { useState, useMemo } from 'react';
 import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
@@ -157,5 +157,3 @@ export default function AdminSalesAllMemberships() {
     </div>
   );
 }
-
-

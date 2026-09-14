@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the modal form for creating or editing an expense.
 'use client';
-
+// RESPONSIBILITY: Renders the modal form for creating or editing an expense.
 import { useEffect } from 'react';
 import { useExpensesContext } from '@/app/manager/expenses/expenses_context/ManagerExpensesContext';
 import { ExpenseSchema, EXPENSE_CATEGORIES, EXPENSE_STATUS_LABELS, type ExpenseFormValues } from '@/app/manager/expenses/expenses_utils/ManagerExpensesSharedConstants';

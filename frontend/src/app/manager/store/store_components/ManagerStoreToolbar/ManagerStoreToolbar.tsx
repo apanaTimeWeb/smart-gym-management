@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the search input, category filter, and Add Product CTA for the Store module.
 'use client';
-
+// RESPONSIBILITY: Renders the search input, category filter, and Add Product CTA for the Store module.
 import { useState, useEffect } from 'react';
 import { Plus, ShoppingCart, RefreshCw, Search } from 'lucide-react';
 import { useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';

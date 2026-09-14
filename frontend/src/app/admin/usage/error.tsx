@@ -1,4 +1,4 @@
-'use client';
+"use client";
 // RESPONSIBILITY: Error boundary for Admin Usage page.
 import { RefreshCw } from 'lucide-react';
 

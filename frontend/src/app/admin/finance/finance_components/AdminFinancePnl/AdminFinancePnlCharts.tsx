@@ -1,6 +1,6 @@
+"use client";
 // RESPONSIBILITY: Renders two ApexCharts — grouped bar (Revenue vs Expenses per branch)
 // and donut (profit share by branch). Code-split via next/dynamic to avoid SSR issues.
-'use client';
 
 import dynamic from 'next/dynamic';
 import type { BranchPnlRecord } from '@/app/admin/finance/finance_types/finance_types';

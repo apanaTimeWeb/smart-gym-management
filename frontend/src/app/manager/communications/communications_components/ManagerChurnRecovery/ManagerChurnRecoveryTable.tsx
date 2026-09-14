@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Paginated, searchable, filterable table of churned/exited members in the Churn Recovery tab.
 'use client';
-
+// RESPONSIBILITY: Paginated, searchable, filterable table of churned/exited members in the Churn Recovery tab.
 import { Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import ManagerChurnRecoveryTableRow from '@/app/manager/communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryTableRow';
 import ManagerChurnRecoveryEmptyState from '@/app/manager/communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryEmptyState';

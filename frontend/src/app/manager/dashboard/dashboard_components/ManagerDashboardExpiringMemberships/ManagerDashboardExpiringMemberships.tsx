@@ -1,7 +1,6 @@
+'use client';
 import { formatDate } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the expiring memberships list on the dashboard.
-'use client';
-
 import { useState } from 'react';
 import Link from 'next/link';
 import { Search, BellRing } from 'lucide-react';

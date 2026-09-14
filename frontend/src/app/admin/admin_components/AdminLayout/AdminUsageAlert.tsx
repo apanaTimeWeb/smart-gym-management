@@ -1,13 +1,13 @@
-'use client';
+"use client";
 // RESPONSIBILITY: Renders a global alert banner if the gym tenant is nearing or has reached their subscription usage limits.
 
 import { useState, useEffect } from 'react';
 import { usageApi } from '@/app/admin/usage/usage_api/usage_api';
-import type { AdminUsageData } from '@/app/admin/usage/usage_api/usage_api';
+import type { UsageData } from '@/app/admin/usage/usage_types/AdminUsageTypes';
 import { AlertTriangle, X } from 'lucide-react';
 
 export default function AdminUsageAlert() {
-  const [usageData, setUsageData] = useState<AdminUsageData | null>(null);
+  const [usageData, setUsageData] = useState<UsageData | null>(null);
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {

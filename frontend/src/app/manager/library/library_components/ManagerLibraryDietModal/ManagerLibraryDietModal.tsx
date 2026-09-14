@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Form modal for creating or editing a diet plan in the Diet Library module.
 'use client';
-
+// RESPONSIBILITY: Form modal for creating or editing a diet plan in the Diet Library module.
 import { useEffect } from 'react';
 import { X, Save, Loader2 } from 'lucide-react';
 import { useLibraryContext } from '@/app/manager/library/library_context/ManagerLibraryContext';

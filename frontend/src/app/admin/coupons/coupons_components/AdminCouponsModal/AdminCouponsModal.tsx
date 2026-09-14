@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the create/edit coupon modal with full form validation via React Hook Form + Zod.
-'use client';
 
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';

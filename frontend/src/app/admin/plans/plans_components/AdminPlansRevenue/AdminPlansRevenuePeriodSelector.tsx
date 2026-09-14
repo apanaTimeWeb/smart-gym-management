@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the period selection segment controls.
-'use client';
 
 import { Download } from 'lucide-react';
 import { REVENUE_PERIOD_OPTIONS } from '@/app/admin/plans/plans_utils/AdminPlansRevenueConstants';

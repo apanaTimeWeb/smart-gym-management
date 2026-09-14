@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Provides UI orchestration state to the Store module hierarchy. Async data is managed in useManagerStoreLogic.
 'use client';
-
+// RESPONSIBILITY: Provides UI orchestration state to the Store module hierarchy. Async data is managed in useManagerStoreLogic.
 import React, { createContext, useContext, useMemo } from 'react';
 import type { StoreContextType, StoreInitialData } from '@/app/manager/store/store_types/ManagerStoreTypes';
 import { useManagerStoreLogic } from '@/app/manager/store/store_context/useManagerStoreLogic';

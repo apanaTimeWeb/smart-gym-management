@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Provides UI orchestration state to the HR module hierarchy. Async data is managed in useAdminHrLogic.
-'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';
 import type { HrContextType, HrInitialData } from '@/app/admin/hr/hr_types/AdminHrTypes';

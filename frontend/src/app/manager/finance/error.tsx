@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the error boundary fallback for the finance module.
 'use client';
-
+// RESPONSIBILITY: Renders the error boundary fallback for the finance module.
 import { useEffect } from 'react';
 import { AlertTriangle } from 'lucide-react';
 

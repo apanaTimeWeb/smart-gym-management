@@ -1,4 +1,4 @@
-import { adminSettingsDataSchema } from '@/app/admin/settings/settings_types/settings_schemas';
+
 // RESPONSIBILITY: Provides strongly-typed network calls for the settings module.
 import { apiFetch, type ApiResponse } from '@/lib/api';
 import { SettingsUrlConfig } from '@/app/admin/settings/settings_url_config';
@@ -8,9 +8,9 @@ import { logErrorToMonitoring } from '@/app/admin/admin_utils/monitoring';
 import { z } from "zod";
 export const settingsApi = {
   fetchSettings: async () => {
-            return apiFetch<ApiResponse<z.infer<typeof adminSettingsDataSchema>>>(`${SettingsUrlConfig.BACKEND_API.BASE}/fetchSettings`, { method: 'GET', dataSchema: adminSettingsDataSchema });
+            return apiFetch<ApiResponse<z.infer<typeof AdminSettingsResponseSchema>>>(`${SettingsUrlConfig.api.base}/fetchSettings`, { method: 'GET', dataSchema: AdminSettingsResponseSchema });
         },
   updateSettings: async (body: Record<string, unknown>) => {
-            return apiFetch<ApiResponse<z.infer<typeof adminSettingsDataSchema>>>(`${SettingsUrlConfig.BACKEND_API.BASE}/updateSettings`, { method: 'POST', body: JSON.stringify(body), dataSchema: adminSettingsDataSchema });
+            return apiFetch<ApiResponse<z.infer<typeof AdminSettingsResponseSchema>>>(`${SettingsUrlConfig.api.base}/updateSettings`, { method: 'POST', body: JSON.stringify(body), dataSchema: AdminSettingsResponseSchema });
         }
 };

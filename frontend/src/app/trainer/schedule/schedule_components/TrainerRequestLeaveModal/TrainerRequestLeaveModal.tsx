@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Modal for trainers to submit a new leave request.
 'use client';
-
+// RESPONSIBILITY: Modal for trainers to submit a new leave request.
 import { useTrainerScheduleMutations } from '@/app/trainer/schedule/schedule_queries/useTrainerScheduleMutations';
 import { useTrainerScheduleStore } from '@/app/trainer/schedule/schedule_store/useTrainerScheduleStore';
 import { LEAVE_TYPE_OPTIONS, CreateLeaveDtoSchema, type CreateLeaveDto } from '@/app/trainer/schedule/schedule_types/TrainerScheduleTypes';

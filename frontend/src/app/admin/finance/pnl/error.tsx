@@ -1,5 +1,4 @@
-'use client';
-
+"use client";
 // RESPONSIBILITY: Error boundary for the P&L page (Rule 9 — error.tsx).
 // Branded fallback with Retry button. Never exposes raw stack traces.
 import { AlertTriangle, RefreshCw } from 'lucide-react';

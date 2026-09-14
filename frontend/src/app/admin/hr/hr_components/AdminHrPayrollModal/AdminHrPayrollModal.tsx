@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Form modal for creating a new payroll entry for a staff member in the HR module.
-'use client';
 
 import React, { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';

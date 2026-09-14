@@ -1,6 +1,6 @@
+"use client";
 // RESPONSIBILITY: Renders the Kiosk-mode QR Scanner for the front desk. Handles face verification and check-in.
 // DATA FLOW: AdminHeader button → AdminQrScannerModal → useAdminQrScannerLogic → attendance log
-'use client';
 
 import Image from 'next/image';
 import { X, ScanLine, UserCheck, AlertCircle, Loader2 } from 'lucide-react';

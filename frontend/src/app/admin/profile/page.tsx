@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Server Component entry point for /admin/profile. Rule 8 compliant — no 'use client'.
+// RESPONSIBILITY: Server Component entry point for /admin/profile. Rule 8 compliant — no .
 import type { Metadata } from 'next';
 import AdminProfileMain from '@/app/admin/profile/profile_components/AdminProfileMain/AdminProfileMain';
 

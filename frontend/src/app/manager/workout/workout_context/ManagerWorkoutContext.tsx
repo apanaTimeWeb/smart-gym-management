@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Provides UI orchestration state to the Workout Library module hierarchy using URL parameters for filtering.
 'use client';
-
+// RESPONSIBILITY: Provides UI orchestration state to the Workout Library module hierarchy using URL parameters for filtering.
 import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import type { WorkoutFormValues, ExerciseFormValues } from '@/app/manager/workout/workout_utils/ManagerWorkoutSharedConstants';

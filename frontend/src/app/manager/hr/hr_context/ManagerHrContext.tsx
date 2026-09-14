@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Provides UI orchestration state to the HR module hierarchy. Async data is managed in useManagerHrLogic.
 'use client';
-
+// RESPONSIBILITY: Provides UI orchestration state to the HR module hierarchy. Async data is managed in useManagerHrLogic.
 import React, { createContext, useContext, useMemo } from 'react';
 import type { HrContextType, HrInitialData } from '@/app/manager/hr/hr_types/ManagerHrTypes';
 import { useManagerHrLogic } from '@/app/manager/hr/hr_context/useManagerHrLogic';

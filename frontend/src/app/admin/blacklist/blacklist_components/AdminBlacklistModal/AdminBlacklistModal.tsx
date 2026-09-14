@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Modal for adding a member to the blacklist.
-'use client';
 
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 // RESPONSIBILITY: Client orchestrator for the branches module.
 
 import AdminBranchesToolbar from '@/app/admin/branches/branches_components/AdminBranchesToolbar/AdminBranchesToolbar';

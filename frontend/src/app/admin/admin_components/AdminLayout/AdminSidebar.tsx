@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the collapsible left navigation sidebar with nav items, user identity footer, and mobile drawer. No API calls.
-'use client';
 
 import { useState, useEffect, useMemo } from 'react';
 import { usePathname } from 'next/navigation';

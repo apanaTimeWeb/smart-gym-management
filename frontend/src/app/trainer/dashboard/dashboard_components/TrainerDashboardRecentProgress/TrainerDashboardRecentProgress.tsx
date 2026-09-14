@@ -1,5 +1,4 @@
 'use client';
-
 import { useTrainerDashboardQuery } from '@/app/trainer/dashboard/dashboard_queries/useTrainerDashboardQuery';
 import { Activity, ArrowRight, User } from 'lucide-react';
 import Link from 'next/link';

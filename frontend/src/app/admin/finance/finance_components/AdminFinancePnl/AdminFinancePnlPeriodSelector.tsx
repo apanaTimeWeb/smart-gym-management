@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Period selector segmented control + Export CSV button for the P&L page.
-'use client';
 
 import { Download } from 'lucide-react';
 import { PNL_PERIOD_OPTIONS } from '@/app/admin/finance/finance_utils/AdminFinancePnlConstants';

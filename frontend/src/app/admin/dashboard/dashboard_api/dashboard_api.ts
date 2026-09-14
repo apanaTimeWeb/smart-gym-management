@@ -7,7 +7,7 @@ import { z } from "zod";
 
 export const dashboardApi = {
   fetchDashboardStats: async (range?: string) => {
-            return apiFetch<ApiResponse<z.infer<typeof dashboardStatsSchema>>>(`${AdminDashboardUrlConfig.BACKEND_API.BASE}/fetchDashboardStats`, { method: 'GET', dataSchema: dashboardStatsSchema });
+            return apiFetch<ApiResponse<z.infer<typeof dashboardStatsSchema>>>(`${AdminDashboardUrlConfig.api.base}/fetchDashboardStats`, { method: 'GET', dataSchema: dashboardStatsSchema });
         },
 };
 

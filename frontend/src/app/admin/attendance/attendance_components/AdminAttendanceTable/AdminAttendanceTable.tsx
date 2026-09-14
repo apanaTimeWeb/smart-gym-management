@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the read-only paginated attendance records table with status badges and duration.
-'use client';
 
 import { useAdminAttendanceLogic } from '@/app/admin/attendance/attendance_context/useAdminAttendanceLogic';
 import { useAdminAttendanceStore } from '@/app/admin/attendance/attendance_store/useAdminAttendanceStore';
@@ -40,7 +40,7 @@ export default function AdminAttendanceTable() {
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {records.map((r) => (
+            {records.map((r: any) => (
               <tr key={r.id} className="hover:bg-primary/5 motion-safe:transition-colors">
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">

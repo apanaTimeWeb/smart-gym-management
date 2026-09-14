@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Provides Schedule module state to the component tree via React Context.
 'use client';
+// RESPONSIBILITY: Provides Schedule module state to the component tree via React Context.
 import React, { createContext, useContext, useMemo } from 'react';
 import type { ScheduleContextType } from '@/app/manager/schedule/schedule_types/ManagerScheduleTypes';
 import { useManagerScheduleLogic } from '@/app/manager/schedule/schedule_context/useManagerScheduleLogic';

@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Main entry point for the Gym Health Alerts module.
-'use client';
 
 import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 import AdminGymHealthAlertsKPIs from '@/app/admin/gym-health-alerts/gym_health_alerts_components/AdminGymHealthAlertsKPIs/AdminGymHealthAlertsKPIs';

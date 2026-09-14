@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Table showing blacklisted members with toggle and remove actions.
-'use client';
 
 import { Globe, Building2, ToggleLeft, ToggleRight, Trash2, Unlock } from 'lucide-react';
 import { useAdminBlacklistLogic } from '@/app/admin/blacklist/blacklist_context/useAdminBlacklistLogic';

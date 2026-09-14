@@ -7,15 +7,15 @@ import { z } from "zod";
 
 export const salesApi = {
   fetchOverview: async (branchId?: string, range?: string) => {
-            return apiFetch<ApiResponse<z.infer<typeof object>>>(`${SalesUrlConfig.BACKEND_API.BASE}/fetchOverview`, { method: 'GET', dataSchema: z.object({ monthlyRevenue: z.array(overviewDataPointSchema) }) });
-        },
+    return apiFetch<ApiResponse<{ monthlyRevenue: OverviewDataPoint[] }>>(SalesUrlConfig.BACKEND_API.OVERVIEW, { method: 'GET', dataSchema: z.object({ monthlyRevenue: z.array(overviewDataPointSchema) }) });
+  },
   fetchMembershipReport: async (branchId?: string, range?: string) => {
-            return apiFetch<ApiResponse<z.infer<typeof object>>>(`${SalesUrlConfig.BACKEND_API.BASE}/fetchMembershipReport`, { method: 'GET', dataSchema: z.object({ report: z.array(membershipReportItemSchema), totals: membershipTotalsSchema }) });
-        },
+    return apiFetch<ApiResponse<{ report: MembershipReportItem[], totals: MembershipTotals }>>(SalesUrlConfig.BACKEND_API.MEMBERSHIP_REPORT, { method: 'GET', dataSchema: z.object({ report: z.array(membershipReportItemSchema), totals: membershipTotalsSchema }) });
+  },
   fetchPendingPayments: async (params?: Record<string, string>) => {
-          return apiFetch<ApiResponse<z.infer<typeof object>>>(`${SalesUrlConfig.BACKEND_API.BASE}/fetchPendingPayments`, { method: 'GET', dataSchema: z.object({ members: z.array(pendingPaymentMemberSchema), total: z.number() }) });
-      },
+    return apiFetch<ApiResponse<{ members: PendingPaymentMember[], total: number }>>(SalesUrlConfig.BACKEND_API.PENDING_PAYMENTS, { method: 'GET', dataSchema: z.object({ members: z.array(pendingPaymentMemberSchema), total: z.number() }) });
+  },
   fetchAllMemberships: async (params?: Record<string, string>) => {
-          return apiFetch<ApiResponse<z.infer<typeof object>>>(`${SalesUrlConfig.BACKEND_API.BASE}/fetchAllMemberships`, { method: 'GET', dataSchema: z.object({ members: z.array(memberSchema), total: z.number() }) });
-      },
+    return apiFetch<ApiResponse<{ members: Member[], total: number }>>(SalesUrlConfig.BACKEND_API.ALL_MEMBERSHIPS, { method: 'GET', dataSchema: z.object({ members: z.array(memberSchema), total: z.number() }) });
+  },
 };

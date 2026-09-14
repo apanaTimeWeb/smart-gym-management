@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the fixed top navigation bar — page title, global search, theme toggle, notifications dropdown, and user profile dropdown. No API calls.
-'use client';
 
 import { useState } from 'react';
 import { Menu, Building2, QrCode } from 'lucide-react';
@@ -12,7 +12,7 @@ import { AdminHeaderSearch } from './AdminHeaderSearch';
 import { AdminHeaderNotifications } from './AdminHeaderNotifications';
 import { AdminHeaderProfile } from './AdminHeaderProfile';
 import type { AdminHeaderProps } from '@/app/admin/admin_components/AdminLayout/AdminLayoutTypes';
-import type { Branch } from '@/app/admin/admin_store/useAdminGlobalStore';
+import type { Branch } from '@/app/admin/branches/branches_types/branches_types';
 
 export default function AdminHeader({ title, subtitle }: AdminHeaderProps) {
   const [showScanner, setShowScanner] = useState(false);

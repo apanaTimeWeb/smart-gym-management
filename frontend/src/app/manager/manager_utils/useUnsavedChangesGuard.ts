@@ -1,5 +1,4 @@
 'use client';
-
 import { useEffect } from 'react';
 
 // RESPONSIBILITY: Prevents accidental navigation or closing of a modal when there are unsaved form changes.

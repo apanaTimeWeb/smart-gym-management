@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Module-level error boundary for the Schedule module.
 'use client';
+// RESPONSIBILITY: Module-level error boundary for the Schedule module.
 import { useEffect } from 'react';
 import { AlertCircle } from 'lucide-react';
 

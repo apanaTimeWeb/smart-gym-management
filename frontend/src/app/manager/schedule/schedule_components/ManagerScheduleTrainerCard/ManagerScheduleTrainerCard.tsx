@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders a single trainer's availability summary card — total shifts, hours, and per-day status dots.
 'use client';
+// RESPONSIBILITY: Renders a single trainer's availability summary card — total shifts, hours, and per-day status dots.
 import { Clock, CalendarDays, Plus } from 'lucide-react';
 import type { TrainerScheduleSummary } from '@/app/manager/schedule/schedule_types/ManagerScheduleTypes';
 import { SHIFT_DAYS, SHIFT_STATUS_STYLES } from '@/app/manager/schedule/schedule_utils/ManagerScheduleSharedConstants';

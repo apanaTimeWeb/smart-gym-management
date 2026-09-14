@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Detail drawer for a single audit log — full metadata, IP, user agent, affected record.
-'use client';
 
 import { X, Download, ShieldAlert, Clock, User, Building2, Monitor, Hash } from 'lucide-react';
 import type { AuditLog } from '@/app/admin/audit_logs/audit_types/audit_types';

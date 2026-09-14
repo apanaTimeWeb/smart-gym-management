@@ -1,7 +1,6 @@
+'use client';
 // RESPONSIBILITY: Orchestrator for the Notifications module.
 // DATA FLOW: NotificationsProvider → useNotificationsContext → KPIs + Table
-'use client';
-
 import { NotificationsProvider } from '@/app/manager/notifications/notifications_context/ManagerNotificationsContext';
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
 import ManagerNotificationsKPIs from '@/app/manager/notifications/notifications_components/ManagerNotificationsKPIs/ManagerNotificationsKPIs';

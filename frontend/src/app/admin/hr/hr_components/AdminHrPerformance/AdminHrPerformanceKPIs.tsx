@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the top-level KPI cards for the Performance Dashboard.
-'use client';
 
 import { UserPlus, Calendar, Star, Users } from 'lucide-react';
 import type { PerformanceAggregates } from '@/app/admin/hr/hr_types/AdminHrPerformanceTypes';

@@ -1,7 +1,6 @@
+'use client';
 // RESPONSIBILITY: Orchestrator for the Reports module — KPIs, tab switcher, charts, table, and CSV export.
 // DATA FLOW: ReportsProvider → useReportsContext → KPIs + Charts + Table
-'use client';
-
 import { ReportsProvider, useReportsContext } from '@/app/manager/reports/reports_context/ManagerReportsContext';
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
 import ManagerReportsKPIs from '@/app/manager/reports/reports_components/ManagerReportsKPIs/ManagerReportsKPIs';

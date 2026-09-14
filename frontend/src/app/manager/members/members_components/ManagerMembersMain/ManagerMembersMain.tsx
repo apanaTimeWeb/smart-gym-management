@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Entry point component for the members module that sets up context providers and layout.
 'use client';
-
+// RESPONSIBILITY: Entry point component for the members module that sets up context providers and layout.
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
 import ManagerToast from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import ManagerMessageModal from '@/app/manager/manager_components/ManagerFeedback/ManagerMessageModal';

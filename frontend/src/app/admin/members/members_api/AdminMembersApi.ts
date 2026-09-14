@@ -6,8 +6,8 @@ import type { ApiResponse } from '@/lib/api';
 import type { AdminMember, AdminMembersSummary } from '@/app/admin/members/members_types/AdminMembersTypes';
 
 export const ADMIN_MEMBERS_URLS = {
-  list: AdminMembersUrlConfig.BACKEND_API.BASE,
-  summary: `${AdminMembersUrlConfig.BACKEND_API.BASE}/summary`,
+  list: AdminMembersUrlConfig.api.base,
+  summary: `${AdminMembersUrlConfig.api.base}/summary`,
 } as const;
 
 export interface FetchMembersParams {

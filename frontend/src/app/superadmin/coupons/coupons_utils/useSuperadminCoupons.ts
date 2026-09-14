@@ -1,7 +1,8 @@
 // RESPONSIBILITY: useCouponsPage.ts encapsulates all state and async logic for the Coupons page.
 // DATA FLOW: superadminApi â†’ useCouponsPage â†’ CouponsClient
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
@@ -11,41 +12,17 @@ import { couponsApi } from '@/app/superadmin/coupons/superadmin_coupons_api/supe
 import { useSuperadminCouponsMutation } from '@/app/superadmin/coupons/coupons_utils/useSuperadminCouponsMutation';
 import { CouponSchema, type CouponFormData } from '@/app/superadmin/coupons/superadmin_coupons_types/superadmin_coupons_types';
 import type { Coupon, CouponStatus, CouponKpiFilter } from '@/app/superadmin/coupons/superadmin_coupons_types/superadmin_coupons_types';
-import { useLocalStorage } from '@/lib/useLocalStorage';
-
-/** LocalStorage key for persisting coupon mutations across refreshes (TC-17/18 fix) */
-const COUPONS_STORAGE_KEY = 'superadmin_coupons_v1';
 
 export const useSuperadminCoupons = () => {
   const { data: fetchedData, fetchState, error } = useSuperadminCouponsData<Coupon[]>(
     CouponsUrlConfig.BACKEND_API.BASE
   );
+  const queryClient = useQueryClient();
+  const coupons = fetchedData ?? [];
 
-  const [persistedCoupons, setPersistedCoupons] = useLocalStorage<Coupon[] | null>(COUPONS_STORAGE_KEY, null);
-  const [coupons, setCoupons] = useState<Coupon[]>([]);
-
-  // Sync fetched data into local state for pessimistic mutations, but respect localStorage
-  useEffect(() => {
-    if (fetchedData) {
-      if (!persistedCoupons) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setPersistedCoupons(fetchedData);
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setCoupons(fetchedData);
-      } else {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setCoupons(persistedCoupons);
-      }
-    }
-  }, [fetchedData, persistedCoupons, setPersistedCoupons]);
-
-  const updateCoupons = useCallback((newCoupons: Coupon[] | ((prev: Coupon[]) => Coupon[])) => {
-    setCoupons(prev => {
-      const updated = typeof newCoupons === 'function' ? newCoupons(prev) : newCoupons;
-      setPersistedCoupons(updated);
-      return updated;
-    });
-  }, [setPersistedCoupons]);
+  const updateCoupons = useCallback((updater: (previous: Coupon[]) => Coupon[]) => {
+    queryClient.setQueryData<Coupon[]>(['superadmin', CouponsUrlConfig.BACKEND_API.BASE], previous => updater(previous ?? []));
+  }, [queryClient]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -73,7 +50,6 @@ export const useSuperadminCoupons = () => {
         setIsModalOpen(false);
         form.reset();
       },
-      successMessage: 'Coupon created successfully'
     });
   }, [form, updateCoupons, mutate]);
 
@@ -85,21 +61,18 @@ export const useSuperadminCoupons = () => {
         setIsEditModalOpen(false);
         setSelectedCoupon(null);
       },
-      successMessage: 'Coupon updated successfully'
     });
   }, [selectedCoupon, updateCoupons, mutate]);
 
   const handleDeleteCoupon = useCallback(async (id: string) => {
     await mutate(() => couponsApi.deleteCoupon(id), {
       onSuccess: () => updateCoupons(prev => prev.filter(c => c.id !== id)),
-      successMessage: 'Coupon deleted successfully'
     });
   }, [updateCoupons, mutate]);
 
   const handleToggleRestore = useCallback(async (id: string) => {
     await mutate(() => couponsApi.restoreCoupon(id), {
       onSuccess: () => updateCoupons(prev => prev.map(c => c.id === id ? { ...c, isDeleted: false } : c)),
-      successMessage: 'Coupon restored successfully'
     });
   }, [updateCoupons, mutate]);
 
@@ -111,7 +84,6 @@ export const useSuperadminCoupons = () => {
     const newStatus: CouponStatus = currentStatus === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
     await mutate(() => couponsApi.toggleStatus(id, newStatus), {
       onSuccess: () => updateCoupons(prev => prev.map(c => c.id === id ? { ...c, status: newStatus } : c)),
-      successMessage: `Coupon marked as ${newStatus}`
     });
   }, [updateCoupons, mutate]);
 

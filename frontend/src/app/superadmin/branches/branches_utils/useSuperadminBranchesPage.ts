@@ -1,7 +1,6 @@
+'use client';
 // RESPONSIBILITY: Logic hook for the Superadmin Branches page.
 // DATA FLOW: superadminBranchesApi → useSuperadminBranchesPage → SuperadminBranchesClient
-
-'use client';
 
 import { useState, useMemo, useEffect } from 'react';
 import toast from 'react-hot-toast';

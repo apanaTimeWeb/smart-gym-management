@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Form modal for creating or editing a workout plan in the Workout Library module.
 'use client';
-
+// RESPONSIBILITY: Form modal for creating or editing a workout plan in the Workout Library module.
 import { useEffect } from 'react';
 import { X, Save } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';

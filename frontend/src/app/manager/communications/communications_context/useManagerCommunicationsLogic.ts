@@ -1,7 +1,6 @@
+'use client';
 // RESPONSIBILITY: Business logic hook for the Manager Communications module.
 // DATA FLOW: ManagerCommunicationsApi -> useManagerCommunicationsLogic -> ManagerCommunicationsMain -> child components
-'use client';
-
 import { useCallback } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';

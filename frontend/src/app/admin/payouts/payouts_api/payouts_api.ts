@@ -7,15 +7,15 @@ import { apiFetch, type ApiResponse } from "@/lib/api";
 
 export const payoutsApi = {
   fetchPayouts: async () => {
-            return apiFetch(`${AdminPayoutsUrlConfig.BACKEND_API.BASE}/fetchPayouts`, { method: 'GET', dataSchema: z.any() });
+            return apiFetch(`${AdminPayoutsUrlConfig.api.base}/fetchPayouts`, { method: 'GET', dataSchema: z.any() });
         },
   fetchPnL: async () => {
-            return apiFetch(`${AdminPayoutsUrlConfig.BACKEND_API.BASE}/fetchPnL`, { method: 'GET', dataSchema: z.any() });
+            return apiFetch(`${AdminPayoutsUrlConfig.api.base}/fetchPnL`, { method: 'GET', dataSchema: z.any() });
         },
   fetchKPIs: async () => {
-          return apiFetch(`${AdminPayoutsUrlConfig.BACKEND_API.BASE}/fetchKPIs`, { method: 'GET', dataSchema: z.any() });
+          return apiFetch(`${AdminPayoutsUrlConfig.api.base}/fetchKPIs`, { method: 'GET', dataSchema: z.any() });
       },
   markPaid: async (gymId: string, month: string) => {
-          return apiFetch(`${AdminPayoutsUrlConfig.BACKEND_API.BASE}/markPaid`, { method: 'POST', body: JSON.stringify(gymId), dataSchema: z.any() });
+          return apiFetch(`${AdminPayoutsUrlConfig.api.base}/markPaid`, { method: 'POST', body: JSON.stringify(gymId), dataSchema: z.any() });
       },
 };

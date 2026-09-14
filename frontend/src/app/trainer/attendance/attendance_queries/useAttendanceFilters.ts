@@ -1,7 +1,6 @@
+'use client';
 // RESPONSIBILITY: URL search param-driven filter state for the Attendance module.
 // DATA FLOW: URL (?tab=&search=&date=&page=) → useAttendanceFilters → useAttendanceQuery
-'use client';
-
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useCallback } from 'react';
 import { ATTENDANCE_TABS, type AttendanceTab } from '@/app/trainer/attendance/attendance_utils/AttendanceSharedConstants';

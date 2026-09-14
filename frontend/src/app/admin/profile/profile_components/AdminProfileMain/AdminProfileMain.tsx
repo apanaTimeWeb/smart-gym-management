@@ -1,4 +1,4 @@
-'use client';
+"use client";
 // RESPONSIBILITY: Root client component for the Admin Profile page.
 // Renders personal info form and password change form in tabs.
 // DATA FLOW: useAdminProfileLogic → AdminProfileMain

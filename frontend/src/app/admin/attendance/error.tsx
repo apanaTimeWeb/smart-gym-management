@@ -1,4 +1,4 @@
-'use client';
+"use client";
 // RESPONSIBILITY: Error boundary for Admin Attendance page.
 import { RefreshCw } from 'lucide-react';
 

@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Core UI component/route for the admin module orchestrating views and displaying sub-components.
-'use client';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
@@ -23,4 +23,3 @@ export default function AdminQueryProvider({ children }: { children: React.React
     </QueryClientProvider>
   );
 }
-

@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the search/filter toolbar and bulk-action bar for the Inquiries module.
 'use client';
-
+// RESPONSIBILITY: Renders the search/filter toolbar and bulk-action bar for the Inquiries module.
 import { useState, useEffect } from 'react';
 import { useInquiriesContext } from '@/app/manager/inquiries/inquiries_context/ManagerInquiriesContext';
 import { INQUIRIES_STATUS_LABELS } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesSharedConstants';

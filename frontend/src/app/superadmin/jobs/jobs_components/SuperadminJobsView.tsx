@@ -1,4 +1,4 @@
-"use client";
+'use client';
 // RESPONSIBILITY: SuperadminJobsView.tsx — orchestrator for the Background Jobs page.
 // Composes all isolated sub-components and passes data from useJobsPage hook.
 // No business logic or rendering of UI primitives here (Rule 6, Rule 34).

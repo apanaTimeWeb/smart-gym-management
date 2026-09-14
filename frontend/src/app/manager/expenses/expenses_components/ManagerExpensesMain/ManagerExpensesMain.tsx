@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Main container for the Expenses module. Owns the ExpensesProvider and assembles Header, Toolbar, KPIs, Table, and Modal.
 'use client';
-
+// RESPONSIBILITY: Main container for the Expenses module. Owns the ExpensesProvider and assembles Header, Toolbar, KPIs, Table, and Modal.
 import { Suspense, useState, useEffect } from 'react';
 import { Loader2, Save } from 'lucide-react';
 import toast from 'react-hot-toast';

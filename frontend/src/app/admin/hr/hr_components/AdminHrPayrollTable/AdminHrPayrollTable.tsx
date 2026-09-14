@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the payroll records table with pay status badges and mark-as-paid inline action.
-'use client';
 
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
 import { PAYROLL_TABLE_HEADERS } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';

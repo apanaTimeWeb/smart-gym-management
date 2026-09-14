@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Provides the implementation for ManagerSalesMain.tsx functionality within its module.
 'use client';
-
+// RESPONSIBILITY: Provides the implementation for ManagerSalesMain.tsx functionality within its module.
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
 import { SalesProvider, useSalesContext } from '@/app/manager/sales/sales_context/ManagerSalesContext';
 import ManagerSalesToolbar from '@/app/manager/sales/sales_components/ManagerSalesToolbar/ManagerSalesToolbar';

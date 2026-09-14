@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the left-side vertical navigation tabs for different settings sections.
-'use client';
 
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { SETTINGS_TABS } from '@/app/admin/settings/settings_utils/AdminSettingsSharedConstants';
@@ -41,4 +41,3 @@ export default function AdminSettingsNav() {
     </div>
   );
 }
-

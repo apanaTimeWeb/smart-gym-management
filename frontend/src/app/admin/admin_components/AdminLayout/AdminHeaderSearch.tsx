@@ -1,5 +1,4 @@
-'use client';
-
+"use client";
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { Search, X } from 'lucide-react';
 import Link from 'next/link';

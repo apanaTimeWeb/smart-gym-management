@@ -1,5 +1,4 @@
 'use client';
-
 import { useState } from 'react';
 import { X, Loader2, Check, Users } from 'lucide-react';
 import type { TrainerSession } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';

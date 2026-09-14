@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Main orchestrator for the Subscriptions / Billing module — tabs for overview, plans, invoices, payment.
-'use client';
 
 import { Calendar, RefreshCw, ToggleLeft, ToggleRight, Loader2 } from 'lucide-react';
 import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';

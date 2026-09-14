@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Search + filter toolbar for the Blacklist module.
-'use client';
 
 import { Search, Plus } from 'lucide-react';
 import { useState } from 'react';

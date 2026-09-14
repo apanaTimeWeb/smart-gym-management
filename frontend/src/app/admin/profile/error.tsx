@@ -1,4 +1,4 @@
-'use client';
+"use client";
 export default function AdminProfileError({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <div className="max-w-3xl mx-auto flex flex-col items-center justify-center py-24 gap-4">

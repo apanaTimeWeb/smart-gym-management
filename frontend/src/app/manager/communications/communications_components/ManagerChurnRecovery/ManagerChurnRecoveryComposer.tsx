@@ -1,7 +1,6 @@
+'use client';
 // RESPONSIBILITY: Slide-in drawer composer for sending win-back messages to a single churned member.
 // Renders template tier selector, channel toggle, editable message body, and send button.
-'use client';
-
 import { X, MessageCircle, Mail, Send, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import type {

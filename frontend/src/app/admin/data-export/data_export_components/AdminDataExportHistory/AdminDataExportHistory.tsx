@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Table showing export job history with status, row count, file size, and delete action.
-'use client';
 
 import { Trash2, CheckCircle, Loader2, XCircle, Download } from 'lucide-react';
 import { useAdminDataExportLogic } from '@/app/admin/data-export/data_export_context/useAdminDataExportLogic';

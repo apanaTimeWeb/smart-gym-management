@@ -1,5 +1,4 @@
-'use client';
-
+"use client";
 import AdminToast from '@/app/admin/admin_components/AdminFeedback/AdminToast';
 import { useAdminToastStore } from '@/app/admin/admin_store/useAdminToastStore';
 

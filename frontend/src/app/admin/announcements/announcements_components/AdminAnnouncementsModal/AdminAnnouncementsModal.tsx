@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Create / Edit modal for Announcements — RHF + Zod validation.
-'use client';
 
 import { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';

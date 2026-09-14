@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Announcements table with search/filter toolbar, status badges, pin/edit/delete row actions.
-'use client';
 
 import { Search, Plus, Pin, PinOff, Edit2, Trash2, Eye, Megaphone, RotateCcw } from 'lucide-react';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';

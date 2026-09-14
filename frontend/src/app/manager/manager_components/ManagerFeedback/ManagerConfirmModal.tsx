@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the reusable confirmation/destructive action modal used across all MANAGER modules. Receives config via ManagerConfirmProvider. No API calls.
 'use client';
-
+// RESPONSIBILITY: Renders the reusable confirmation/destructive action modal used across all MANAGER modules. Receives config via ManagerConfirmProvider. No API calls.
 import { AlertTriangle } from 'lucide-react';
 
 interface ManagerConfirmModalProps {

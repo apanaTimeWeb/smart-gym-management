@@ -1,10 +1,9 @@
+'use client';
 // RESPONSIBILITY: Root client component for Trainer Sessions. Renders session list, filter toolbar, schedule modal, and edit/attendance modals.
 // DATA FLOW: page.tsx (Server) → TrainerSessionsMain (Client) → useTrainerSessionsLogic → TrainerSessionsApi
-'use client';
-
 import { useState } from 'react';
 import { Calendar as CalendarIcon, Clock, Users, User, CheckCircle, XCircle, Plus, X, Loader2, Pencil } from 'lucide-react';
-import type { TrainerSession } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
+import type { TrainerSession, CreateSessionDto } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
 import {
   SESSION_FILTER_OPTIONS,
   SESSION_STATUS_STYLES,

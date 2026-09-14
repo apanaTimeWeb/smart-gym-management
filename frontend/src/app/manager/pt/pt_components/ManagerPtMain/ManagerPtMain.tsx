@@ -1,7 +1,6 @@
+'use client';
 // RESPONSIBILITY: Root client component for Manager PT page.
 // THEME PORTABILITY CONTRACT: Depends on variables --bg-page, --bg-card, --bg-input, --border, --primary, --success, --info, --warning, --danger, --text-primary, --text-secondary, --disabled.
-'use client';
-
 import { useState } from 'react';
 import { Loader2, Dumbbell, X, UserPlus } from 'lucide-react';
 import { useManagerPtLogic } from '@/app/manager/pt/pt_context/useManagerPtLogic';

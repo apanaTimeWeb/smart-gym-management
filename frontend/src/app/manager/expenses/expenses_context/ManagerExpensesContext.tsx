@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Provides local UI state (filtering, pagination, modal visibility) for the Expenses module.
 'use client';
-
+// RESPONSIBILITY: Provides local UI state (filtering, pagination, modal visibility) for the Expenses module.
 import { createContext, useContext, useState, useCallback, useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';

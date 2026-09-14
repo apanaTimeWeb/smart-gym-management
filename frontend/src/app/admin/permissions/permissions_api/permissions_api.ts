@@ -6,12 +6,12 @@ import { MOCK_PERMISSIONS_DATA } from '@/app/admin/permissions/permissions_utils
 import { z } from "zod";
 export const permissionsApi = {
   fetchPermissions: async () => {
-            return apiFetch(`${AdminPermissionsUrlConfig.BACKEND_API.BASE}/fetchPermissions`, { method: 'GET', dataSchema: z.any() });
+            return apiFetch<ApiResponse<any>>(`${AdminPermissionsUrlConfig.api.base}/fetchPermissions`, { method: 'GET', dataSchema: z.any() });
         },
   updateRolePermissions: async (role: RoleType, permissions: Record<string, boolean>) => {
-            return apiFetch(`${AdminPermissionsUrlConfig.BACKEND_API.BASE}/updateRolePermissions`, { method: 'POST', body: JSON.stringify(role), dataSchema: z.any() });
+            return apiFetch<ApiResponse<any>>(`${AdminPermissionsUrlConfig.api.base}/updateRolePermissions`, { method: 'POST', body: JSON.stringify(role), dataSchema: z.any() });
         },
   updateGymOverride: async (gymId: string, role: RoleType, overrides: Record<string, boolean>) => {
-          return apiFetch(`${AdminPermissionsUrlConfig.BACKEND_API.BASE}/updateGymOverride`, { method: 'POST', body: JSON.stringify(gymId), dataSchema: z.any() });
+          return apiFetch<ApiResponse<any>>(`${AdminPermissionsUrlConfig.api.base}/updateGymOverride`, { method: 'POST', body: JSON.stringify(gymId), dataSchema: z.any() });
       },
 };

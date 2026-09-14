@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Entry point for the Plans module. Sets up the Context provider and composes AdminPlansToolbar, AdminPlansGrid, and AdminPlansModal.
-'use client';
 
 import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 

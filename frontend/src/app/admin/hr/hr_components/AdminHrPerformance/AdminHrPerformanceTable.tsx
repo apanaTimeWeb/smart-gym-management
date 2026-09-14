@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders sortable table displaying detailed staff performance metrics.
-'use client';
 
 import { ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react';
 import { PERFORMANCE_TABLE_HEADERS, PERFORMANCE_STATUS_CONFIG } from '@/app/admin/hr/hr_utils/AdminHrPerformanceConstants';

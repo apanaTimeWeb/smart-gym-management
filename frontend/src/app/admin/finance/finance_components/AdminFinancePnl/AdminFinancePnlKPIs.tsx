@@ -1,6 +1,6 @@
+"use client";
 // RESPONSIBILITY: Renders 4 clickable aggregate KPI cards (Total Revenue, Total Expenses,
 // Net Profit, Margin %). Clicking a Profitable/Loss card filters the table below.
-'use client';
 
 import { TrendingUp, TrendingDown, IndianRupee, Percent, Building2, AlertTriangle } from 'lucide-react';
 import type { BranchPnlAggregates, PnlStatusFilter } from '@/app/admin/finance/finance_types/finance_types';

@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the System & Audit page showing migration health and global audit logs. Fetches data directly using TanStack Query.
 'use client';
-
+// RESPONSIBILITY: Renders the System & Audit page showing migration health and global audit logs. Fetches data directly using TanStack Query.
 import { useState, useMemo } from 'react';
 import { Database, ShieldAlert, Activity, Filter, RefreshCcw, Search, Loader2, Clock, Download } from 'lucide-react';
 import SuperadminSystemEmptyState from '@/app/superadmin/system/system_components/SuperadminSystemEmptyState/SuperadminSystemEmptyState';

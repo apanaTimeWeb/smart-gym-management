@@ -1,8 +1,7 @@
+'use client';
 // RESPONSIBILITY: Next.js error boundary for the /landing route segment.
 // Displays a styled error card with a Retry button. Logs the error for observability.
-// Rule 9: error.tsx must be a Client Component ('use client') per Next.js spec.
-'use client';
-
+// Rule 9: error.tsx must be a Client Component () per Next.js spec.
 import { useEffect } from 'react';
 
 export default function LandingError({

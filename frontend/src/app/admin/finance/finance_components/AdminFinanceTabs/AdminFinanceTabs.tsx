@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the tab bar and tab content switcher for the Finance module (Payments, Expenses, Summary).
-'use client';
 
 import { useState, useEffect } from 'react';
 import { useAdminFinanceLogic } from '@/app/admin/finance/finance_context/useAdminFinanceLogic';

@@ -1,6 +1,5 @@
-// RESPONSIBILITY: KPI stat cards row for the Manager Reports module.
 'use client';
-
+// RESPONSIBILITY: KPI stat cards row for the Manager Reports module.
 import { useReportsContext } from '@/app/manager/reports/reports_context/ManagerReportsContext';
 import { TrendingUp, Users, CalendarCheck, TrendingDown, IndianRupee, UserPlus, UserMinus, Activity } from 'lucide-react';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';

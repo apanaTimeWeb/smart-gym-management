@@ -1,4 +1,4 @@
-'use client';
+"use client";
 // RESPONSIBILITY: A unified Date Filter dropdown used across Admin pages (Dashboard, Finance, Reports, Sales).
 // It syncs the selected preset directly to the URL query parameters (range, startDate, endDate), allowing SSR/hooks to fetch data accordingly.
 

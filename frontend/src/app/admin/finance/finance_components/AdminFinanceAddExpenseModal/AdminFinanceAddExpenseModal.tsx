@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Modal form for adding a new expense entry. Uses React Hook Form + Zod.
-'use client';
 
 import { X, Save, Loader2 } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';

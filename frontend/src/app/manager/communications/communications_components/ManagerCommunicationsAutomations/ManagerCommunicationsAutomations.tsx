@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the Automations tab in Communications, allowing managers to enable/disable and configure automated background triggers like Birthday and Anniversary messages.
 'use client';
-
+// RESPONSIBILITY: Renders the Automations tab in Communications, allowing managers to enable/disable and configure automated background triggers like Birthday and Anniversary messages.
 import { useState } from 'react';
 import { Loader2, Zap, Settings, MessageSquare, Clock } from 'lucide-react';
 import type { CommAutomation } from '@/app/manager/communications/communications_types/communications_types';

@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Provides the search, filter tabs, and action buttons for the Attendance module.
 'use client';
-
+// RESPONSIBILITY: Provides the search, filter tabs, and action buttons for the Attendance module.
 import { useState, useEffect } from 'react';
 import { RefreshCw, Plus, Search, Download } from 'lucide-react';
 import { useAttendanceContext } from '@/app/manager/attendance/attendance_context/ManagerAttendanceContext';

@@ -1,8 +1,7 @@
+'use client';
 // RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
 // DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Entry component for the Diet Library module. Wraps the UI in the context provider and handles page layout.
-'use client';
-
 import TrainerToast from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
 import { LibraryProvider, useLibraryContext } from '@/app/trainer/library/library_context/LibraryContext';
 import TrainerLibraryTabs from '@/app/trainer/library/library_components/TrainerLibraryTabs/TrainerLibraryTabs';

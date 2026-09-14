@@ -36,7 +36,7 @@ export function useAdminHrPerformanceLogic() {
   const filteredData = useMemo(() => {
     if (!searchQuery.trim()) return staffData;
     const lowerQ = searchQuery.toLowerCase();
-    return staffData.filter(s => 
+    return staffData.filter((s: any) => 
       s.name.toLowerCase().includes(lowerQ) || 
       s.role.toLowerCase().includes(lowerQ) ||
       s.branchName.toLowerCase().includes(lowerQ)

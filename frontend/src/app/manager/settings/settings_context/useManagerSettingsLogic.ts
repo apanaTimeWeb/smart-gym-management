@@ -1,7 +1,6 @@
+'use client';
 // RESPONSIBILITY: Logic hook for Manager Settings page — preferences state and save handler.
 // DATA FLOW: managerSettingsApi → useManagerSettingsLogic → ManagerSettingsMain
-'use client';
-
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { managerSettingsApi } from '@/app/manager/settings/settings_api/ManagerSettingsApi';

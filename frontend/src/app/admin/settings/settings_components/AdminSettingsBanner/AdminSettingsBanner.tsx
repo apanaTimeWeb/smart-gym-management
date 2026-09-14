@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the top banner with module title and save status indicator for the Settings page.
-'use client';
 import Link from 'next/link';
 
 import { GYM_DETAILS } from '@/app/admin/admin_url_config';

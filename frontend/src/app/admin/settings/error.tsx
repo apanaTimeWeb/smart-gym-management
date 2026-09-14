@@ -1,6 +1,6 @@
+"use client";
 import { AdminDashboardUrlConfig } from '@/app/admin/dashboard/admin_dashboard_url_config';
 // RESPONSIBILITY: Renders the error boundary fallback for the settings module.
-'use client';
 
 import { useEffect } from "react";
 import Link from 'next/link';

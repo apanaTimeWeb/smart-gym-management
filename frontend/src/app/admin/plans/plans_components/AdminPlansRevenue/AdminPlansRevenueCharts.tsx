@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the revenue distribution donut chart for Plans.
-'use client';
 
 import dynamic from 'next/dynamic';
 import type { PlanRevenueRecord } from '@/app/admin/plans/plans_types/AdminPlansRevenueTypes';

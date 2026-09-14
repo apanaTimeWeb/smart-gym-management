@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the top banner/hero section with module title and CTA for the Workout Library.
 'use client';
-
+// RESPONSIBILITY: Renders the top banner/hero section with module title and CTA for the Workout Library.
 import { Dumbbell } from 'lucide-react';
 import { useWorkoutPlansQuery, useExercisesQuery } from '@/app/manager/workout/workout_api/useManagerWorkoutQueries';
 

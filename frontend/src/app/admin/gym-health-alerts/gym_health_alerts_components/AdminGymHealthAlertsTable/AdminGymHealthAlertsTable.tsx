@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Table of gym health alerts with severity badges, metrics, and resolve/dismiss actions.
-'use client';
 
 import { CheckCircle, X, Building2, Clock } from 'lucide-react';
 import { useAdminGymHealthAlertsLogic } from '@/app/admin/gym-health-alerts/gym_health_alerts_context/useAdminGymHealthAlertsLogic';

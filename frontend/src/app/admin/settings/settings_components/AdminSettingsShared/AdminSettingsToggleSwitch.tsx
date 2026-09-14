@@ -1,4 +1,4 @@
-'use client';
+"use client";
 // RESPONSIBILITY: Shared toggle switch component for the Admin Settings module.
 
 export function AdminSettingsToggleSwitch({ checked, onChange, label }: { checked: boolean; onChange: (v: boolean) => void; label: string }) {

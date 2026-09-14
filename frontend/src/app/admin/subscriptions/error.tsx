@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { CreditCard } from 'lucide-react';
 
 export default function AdminSubscriptionsError({ reset }: { reset: () => void }) {

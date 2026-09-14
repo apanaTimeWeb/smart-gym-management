@@ -1,5 +1,4 @@
 'use client';
-
 import { useState, useCallback } from 'react';
 import { storeApi } from '@/app/manager/store/store_api/ManagerStoreApi';
 import type { Product, Order, StoreSummary, FetchState, StoreInitialData } from '@/app/manager/store/store_types/ManagerStoreTypes';

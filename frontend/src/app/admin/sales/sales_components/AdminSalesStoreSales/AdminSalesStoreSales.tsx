@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Displays store orders and summary KPIs for Admin's Sales & Reports view. Read-only analytics.
-'use client';
 
 import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
 import { Package, ShoppingCart, IndianRupee, TrendingUp, ChevronDown, ChevronUp } from 'lucide-react';
@@ -123,4 +123,3 @@ export default function AdminSalesStoreSales() {
     </div>
   );
 }
-

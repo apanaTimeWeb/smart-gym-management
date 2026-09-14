@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the collapsible left navigation sidebar for the Trainer portal. No API calls.
 'use client';
-
+// RESPONSIBILITY: Renders the collapsible left navigation sidebar for the Trainer portal. No API calls.
 import { useState, useEffect, useMemo } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';

@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Provides the implementation for ManagerSalesToolbar.tsx functionality within its module.
 'use client';
-
+// RESPONSIBILITY: Provides the implementation for ManagerSalesToolbar.tsx functionality within its module.
 import { useState, useEffect } from 'react';
 import { Download, Search } from 'lucide-react';
 import { useSalesContext } from '@/app/manager/sales/sales_context/ManagerSalesContext';

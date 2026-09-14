@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: KPI cards for the Data Export module.
-'use client';
 
 import { Download, Rows3, CalendarCheck, Loader2 } from 'lucide-react';
 import AdminStatCard from '@/app/admin/admin_components/AdminShared/AdminStatCard';

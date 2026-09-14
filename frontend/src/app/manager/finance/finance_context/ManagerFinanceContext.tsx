@@ -1,7 +1,6 @@
+'use client';
 import { formatDate } from '@/lib/formatters';
 // RESPONSIBILITY: React Context — bridges TanStack Query with UI state (filters, tab, pagination).
-'use client';
-
 import { createContext, useContext, useState, useCallback, useMemo } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';

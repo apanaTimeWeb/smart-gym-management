@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the data table for the active report tab — Revenue, Attendance, Members, or Expenses.
 'use client';
-
+// RESPONSIBILITY: Renders the data table for the active report tab — Revenue, Attendance, Members, or Expenses.
 import { useReportsContext } from '@/app/manager/reports/reports_context/ManagerReportsContext';
 import { EXPENSE_CATEGORY_STYLES } from '@/app/manager/reports/reports_utils/ManagerReportsSharedConstants';
 

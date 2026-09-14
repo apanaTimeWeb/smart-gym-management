@@ -1,5 +1,4 @@
-'use client';
-
+"use client";
 import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
 import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
 import { TrendingUp, TrendingDown, Minus, Building2 } from 'lucide-react';

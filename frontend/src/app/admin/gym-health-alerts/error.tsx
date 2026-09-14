@@ -1,4 +1,4 @@
-'use client';
+"use client";
 // RESPONSIBILITY: Error boundary for the Gym Health Alerts page.
 export default function GymHealthAlertsError({ reset }: { reset: () => void }) {
   return (

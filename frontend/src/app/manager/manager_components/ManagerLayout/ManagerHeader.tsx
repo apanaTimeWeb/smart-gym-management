@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the fixed top navigation bar — page title, global search, theme toggle, notifications dropdown, and user profile dropdown. No API calls.
 'use client';
-
+// RESPONSIBILITY: Renders the fixed top navigation bar — page title, global search, theme toggle, notifications dropdown, and user profile dropdown. No API calls.
 import { useState, useRef, useEffect } from 'react';
 import { Bell, LogOut, Settings, User, X, Menu, QrCode } from 'lucide-react';
 import Link from 'next/link';

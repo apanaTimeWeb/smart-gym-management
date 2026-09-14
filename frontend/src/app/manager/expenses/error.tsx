@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the error boundary fallback for the expenses module.
 'use client';
-
+// RESPONSIBILITY: Renders the error boundary fallback for the expenses module.
 import { useEffect } from 'react';
 import { AlertTriangle } from 'lucide-react';
 

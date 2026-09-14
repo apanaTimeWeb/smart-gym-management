@@ -1,5 +1,4 @@
 'use client';
-
 import { useTrainerDashboardQuery } from '@/app/trainer/dashboard/dashboard_queries/useTrainerDashboardQuery';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Target } from 'lucide-react';
@@ -42,7 +41,7 @@ export default function TrainerDashboardGoalTrendChart() {
             />
             <Tooltip 
               contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '0.5rem', color: 'hsl(var(--foreground))' }}
-              formatter={(value: number) => [`${value}%`, 'Completion Rate']}
+              formatter={(value: any) => [`${value}%`, 'Completion Rate']}
             />
             <Line 
               type="monotone" 

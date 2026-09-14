@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Full message composer — channel selector, segment picker, title, message body, subject (email), recipient preview, and send action.
 'use client';
+// RESPONSIBILITY: Full message composer — channel selector, segment picker, title, message body, subject (email), recipient preview, and send action.
 import { MessageCircle, Mail, Send, Loader2, Users, Eye, Zap } from 'lucide-react';
 import { useState } from 'react';
 import { useManagerCommunicationsLogic } from '@/app/manager/communications/communications_context/useManagerCommunicationsLogic';

@@ -1,6 +1,6 @@
+"use client";
 // RESPONSIBILITY: Business logic hook for the Gym Health Alerts module.
 // DATA FLOW: API → useAdminGymHealthAlertsLogic → components
-'use client';
 
 import { useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -24,14 +24,14 @@ export function useAdminGymHealthAlertsLogic() {
 
   const { data: alerts = [], isLoading, isError } = useQuery({
     queryKey: ['adminGymHealthAlerts'],
-    queryFn: gymHealthAlertsApi.fetchAlerts,
+    queryFn: () => gymHealthAlertsApi.fetchAlerts().then(r => r.data),
     staleTime: 1000 * 60 * 2,
     refetchInterval: 60000,
   });
 
   const { data: kpis } = useQuery({
     queryKey: ['adminGymHealthKPIs'],
-    queryFn: gymHealthAlertsApi.fetchKPIs,
+    queryFn: () => gymHealthAlertsApi.fetchKPIs().then(r => r.data),
     staleTime: 1000 * 60 * 5,
   });
 

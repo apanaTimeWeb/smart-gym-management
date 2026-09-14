@@ -1,5 +1,4 @@
-'use client';
-
+"use client";
 import { useState, useEffect } from 'react';
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
 import { hrApi } from '@/app/admin/hr/hr_api/AdminHrApi';

@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the list of members with pending payments, including skeleton loader, pagination, and overdue details. Receives data via ManagerSalesContext.
 'use client';
-
+// RESPONSIBILITY: Renders the list of members with pending payments, including skeleton loader, pagination, and overdue details. Receives data via ManagerSalesContext.
 import { useSalesContext } from '@/app/manager/sales/sales_context/ManagerSalesContext';
 import { formatCurrency , formatDate} from '@/lib/formatters';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';

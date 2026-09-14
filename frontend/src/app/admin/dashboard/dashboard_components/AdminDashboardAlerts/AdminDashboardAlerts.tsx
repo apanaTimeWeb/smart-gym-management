@@ -1,5 +1,4 @@
-'use client';
-
+"use client";
 import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
 import { ShieldAlert, AlertTriangle, Info, AlertCircle } from 'lucide-react';
 

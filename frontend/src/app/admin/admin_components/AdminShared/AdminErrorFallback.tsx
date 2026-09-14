@@ -1,7 +1,7 @@
+"use client";
 // RESPONSIBILITY: Shared error fallback renderer used by all admin module error.tsx boundaries.
 // Distinguishes between 403 Forbidden (permission denied) and generic errors.
 // Never expose raw error messages or stack traces to the user.
-'use client';
 
 import { ShieldOff, RefreshCw, LayoutDashboard } from 'lucide-react';
 import Link from 'next/link';

@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Root shell layout for all MANAGER pages. Composes ManagerSidebar with the main content area. Manages sidebar collapsed state only.
 'use client';
-
+// RESPONSIBILITY: Root shell layout for all MANAGER pages. Composes ManagerSidebar with the main content area. Manages sidebar collapsed state only.
 import { useState } from 'react';
 import ManagerSidebar from '@/app/manager/manager_components/ManagerLayout/ManagerSidebar';
 

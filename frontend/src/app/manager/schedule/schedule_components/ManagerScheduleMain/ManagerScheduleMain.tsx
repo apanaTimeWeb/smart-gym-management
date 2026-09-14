@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Root client orchestrator for the Schedule module. Owns layout, toolbar, view toggle, and renders sub-components.
 'use client';
+// RESPONSIBILITY: Root client orchestrator for the Schedule module. Owns layout, toolbar, view toggle, and renders sub-components.
 import { useState } from 'react';
 import { Search, LayoutGrid, Table2, AlertCircle } from 'lucide-react';
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';

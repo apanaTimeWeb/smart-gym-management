@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the modal form for creating or editing a membership plan. Uses React Hook Form + Zod validation.
-'use client';
 
 import { useEffect } from 'react';
 import { X, Save, Loader2 } from 'lucide-react';
@@ -136,6 +136,3 @@ export default function AdminPlansModal() {
     </div>
   );
 }
-
-
-

@@ -1,6 +1,6 @@
+"use client";
 // RESPONSIBILITY: Custom hook managing the asynchronous fetching of dashboard statistics.
 // DATA FLOW: page.tsx (SSR) → AdminDashboardMain → useAdminDashboardLogic
-'use client';
 
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
@@ -26,4 +26,3 @@ export function useAdminDashboardLogic(initialData?: DashboardStats | null) {
     error: isError ? (queryError as Error).message : '',
   };
 }
-

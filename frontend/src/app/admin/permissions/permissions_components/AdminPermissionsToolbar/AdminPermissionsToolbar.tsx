@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the role selector tabs and gym scope selector for the Permissions module.
-'use client';
 
 import { useAdminPermissionsStore } from '@/app/admin/permissions/permissions_store/useAdminPermissionsStore';
 import type { RoleType } from '@/app/admin/permissions/permissions_types/permissions_types';

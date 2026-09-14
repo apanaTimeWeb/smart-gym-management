@@ -1,8 +1,7 @@
+'use client';
 // RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
 // DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Form modal for creating or editing a workout plan in the Workout Library module.
-'use client';
-
 import { useEffect } from 'react';
 import { X, Save, Plus, Trash2, Dumbbell } from 'lucide-react';
 import { useForm, Controller, useFieldArray } from 'react-hook-form';

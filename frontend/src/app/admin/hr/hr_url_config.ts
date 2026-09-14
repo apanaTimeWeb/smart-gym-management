@@ -14,6 +14,9 @@ export const AdminHrUrlConfig = {
     PAYROLLS_BASE: '/admin/hr/payrolls',
     PAYROLL_STATUS_UPDATE: (id: string) => `/admin/hr/payrolls/${id}/status`,
     SUMMARY: '/admin/hr/summary',
+    ADVANCES: '/admin/hr/advances',
+    DUES_PAY: '/admin/hr/dues/pay',
+    PERFORMANCE: '/admin/hr/performance',
   }
 } as const;
 

@@ -1,7 +1,6 @@
+'use client';
 // RESPONSIBILITY: Logic hook for the Manager Profile page — personal info + password change.
 // DATA FLOW: managerProfileApi → useManagerProfileLogic → ManagerProfileMain
-'use client';
-
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { managerProfileApi } from '@/app/manager/profile/profile_api/ManagerProfileApi';

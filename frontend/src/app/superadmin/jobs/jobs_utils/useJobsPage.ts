@@ -13,8 +13,6 @@ import type { FetchState } from '@/app/superadmin/superadmin_utils/superadmin_sh
 
 const ITEMS_PER_PAGE = 10;
 
-
-
 export interface UseJobsPageReturn {
   fetchState: FetchState;
   filteredJobs: BackgroundJob[];
@@ -41,7 +39,6 @@ export interface UseJobsPageReturn {
   handleBulkDelete: () => void;
   metrics: { activeJobs: number; completed24h: number; failed24h: number; delayed: number };
 }
-
 /**
  * Logic hook for the Background Jobs page.
  * Returns job data, filter state, pagination, selection state, and all action handlers.
@@ -54,15 +51,12 @@ export function useJobsPage(): UseJobsPageReturn {
   const [queueFilter, setQueueFilter] = useState<string>('ALL');
   const [selectedJobIds, setSelectedJobIds] = useState<Set<string>>(new Set());
   const [inspectJob, setInspectJob] = useState<BackgroundJob | null>(null);
-
   const { data: fetchRes, isLoading, isError } = useQuery({
     queryKey: ['superadmin', 'jobs'],
     queryFn: () => jobsApi.fetchJobs(),
   });
-
   const rawJobs = (fetchRes?.data as BackgroundJob[]) ?? [];
   const allJobs: BackgroundJob[] = rawJobs;
-
   const metrics = {
     activeJobs:    allJobs.filter(j => j.status === 'ACTIVE').length,
     completed24h:  allJobs.filter(j => j.status === 'COMPLETED').length,
@@ -149,7 +143,6 @@ export function useJobsPage(): UseJobsPageReturn {
 
   return {
     fetchState: isLoading ? 'loading' : isError ? 'error' : 'success',
-
     filteredJobs,
     paginatedJobs,
     currentPage,

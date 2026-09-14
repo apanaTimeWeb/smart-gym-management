@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the tabbed view switching between the Staff and Payroll tables in the HR module.
 'use client';
-
+// RESPONSIBILITY: Renders the tabbed view switching between the Staff and Payroll tables in the HR module.
 import { useState } from 'react';
 import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
 import { HR_TABS } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';

@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders a month-wise calendar view of attendance for a specific user.
 'use client';
-
+// RESPONSIBILITY: Renders a month-wise calendar view of attendance for a specific user.
 import React, { useState } from 'react';
 import { useAttendanceContext } from '@/app/manager/attendance/attendance_context/ManagerAttendanceContext';
 import { useAttendanceHistoryQuery } from '@/app/manager/attendance/attendance_api/useManagerAttendanceQueries';

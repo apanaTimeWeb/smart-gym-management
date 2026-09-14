@@ -1,7 +1,6 @@
+'use client';
 // RESPONSIBILITY: Modal for recording a new attendance entry (member or staff).
 // DATA FLOW: props (from TrainerAttendanceMain) → react-hook-form + zod → onSubmit mutation
-'use client';
-
 import { useEffect } from 'react';
 import { X, CheckCircle, Loader2 } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';

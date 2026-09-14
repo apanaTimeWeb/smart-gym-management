@@ -1,6 +1,6 @@
+"use client";
 // RESPONSIBILITY: Data logic hook for Admin Attendance. Fetches records + summary + trend, applies filters, paginates.
 // DATA FLOW: Mock API → useAdminAttendanceLogic → AdminAttendanceMain → child components
-'use client';
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useAdminAttendanceStore } from '@/app/admin/attendance/attendance_store/useAdminAttendanceStore';

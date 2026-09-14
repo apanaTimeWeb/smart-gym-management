@@ -1,6 +1,6 @@
+"use client";
 // RESPONSIBILITY: Consolidated cross-branch view of gym-specific blacklist entries.
 // Shows all branch-scoped bans in one place and allows admin to propagate any entry to all branches.
-'use client';
 
 import { Building2, Globe, ArrowUpRight, Trash2 } from 'lucide-react';
 import { useAdminBlacklistLogic } from '@/app/admin/blacklist/blacklist_context/useAdminBlacklistLogic';

@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders a single usage metric bar card (label, used/limit, progress bar with color coding, and upgrade CTA at 80% threshold).
-'use client';
 
 import { ArrowUpCircle } from 'lucide-react';
 import type { AdminUsageMetric } from '@/app/admin/usage/usage_types/AdminUsageTypes';

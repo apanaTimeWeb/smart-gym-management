@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the fixed bottom-right toast notification. Auto-dismisses after 4 seconds. Shared across all ADMIN modules.
-'use client';
 
 import { useEffect, useState } from 'react';
 import { CheckCircle, XCircle, MessageCircle, Mail, Info, AlertTriangle, X } from 'lucide-react';

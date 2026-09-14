@@ -1,7 +1,6 @@
+'use client';
 // RESPONSIBILITY: Main entry point for the dashboard module. Renders layout, handles loading/error states.
 // DATA FLOW: page.tsx (SSR) → TrainerDashboardMain (Client) → hooks → child components
-'use client';
-
 import { useTrainerDashboardQuery } from '@/app/trainer/dashboard/dashboard_queries/useTrainerDashboardQuery';
 import type { DashboardStats } from '@/app/trainer/dashboard/dashboard_types/dashboard_types';
 import TrainerDashboardKPIs from '@/app/trainer/dashboard/dashboard_components/TrainerDashboardKPIs/TrainerDashboardKPIs';

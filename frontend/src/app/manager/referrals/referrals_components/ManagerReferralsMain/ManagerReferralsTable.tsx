@@ -1,7 +1,6 @@
+'use client';
 // RESPONSIBILITY: Display referrals table with claim reward action.
 // Rule 20 FIX: Replaced native <select> with SearchableDropdown.
-'use client';
-
 import { Loader2, Search, Gift, Check, IndianRupee } from 'lucide-react';
 import { useManagerReferralsLogic } from '@/app/manager/referrals/referrals_context/useManagerReferralsLogic';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';

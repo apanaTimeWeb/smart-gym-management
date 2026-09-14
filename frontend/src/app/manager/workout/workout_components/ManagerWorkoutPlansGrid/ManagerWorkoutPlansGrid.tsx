@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the grid of workout plan cards with exercises count and action buttons.
 'use client';
-
+// RESPONSIBILITY: Renders the grid of workout plan cards with exercises count and action buttons.
 import { Dumbbell, Edit2, Trash2, Loader2 } from 'lucide-react';
 import { useWorkoutContext } from '@/app/manager/workout/workout_context/ManagerWorkoutContext';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';

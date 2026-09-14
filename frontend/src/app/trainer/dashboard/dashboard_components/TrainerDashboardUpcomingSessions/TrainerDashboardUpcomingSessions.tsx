@@ -1,5 +1,4 @@
 'use client';
-
 import { useTrainerDashboardQuery } from '@/app/trainer/dashboard/dashboard_queries/useTrainerDashboardQuery';
 import { CalendarClock, Clock, User, Users, Calendar } from 'lucide-react';
 import Link from 'next/link';

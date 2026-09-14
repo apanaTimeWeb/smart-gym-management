@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Tax-ready P&L statement table per gym.
-'use client';
 
 import { useAdminPayoutsLogic } from '@/app/admin/payouts/payouts_context/useAdminPayoutsLogic';
 import { AdminTableSkeleton } from '@/app/admin/admin_components/AdminShared/AdminTableSkeleton';

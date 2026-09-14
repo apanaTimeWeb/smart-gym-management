@@ -1,5 +1,4 @@
 'use client';
-
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/useManagerDashboardQueries';

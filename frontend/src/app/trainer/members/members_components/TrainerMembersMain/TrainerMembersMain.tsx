@@ -1,8 +1,7 @@
+'use client';
 // RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
 // DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Entry point component for the members module that sets up context providers and layout.
-'use client';
-
 import TrainerToast from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
 import TrainerMessageModal from '@/app/trainer/trainer_components/TrainerFeedback/TrainerMessageModal';
 

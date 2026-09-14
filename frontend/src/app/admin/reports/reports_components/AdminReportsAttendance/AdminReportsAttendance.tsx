@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the Attendance report tab — attendance summary and heatmap-style grid per gym.
-'use client';
 
 import { useAdminReportsLogic } from '@/app/admin/reports/reports_context/useAdminReportsLogic';
 
@@ -33,7 +33,7 @@ export default function AdminReportsAttendance() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {reportData.attendanceSummary.map((row) => (
+              {reportData.attendanceSummary.map((row: any) => (
                 <tr key={row.gymId} className="hover:bg-primary/5 motion-safe:transition-colors">
                   <td className="px-5 py-4 text-sm font-semibold text-foreground">{row.gymName}</td>
                   <td className="px-5 py-4 text-sm text-foreground">{row.avgDailyAttendance}</td>

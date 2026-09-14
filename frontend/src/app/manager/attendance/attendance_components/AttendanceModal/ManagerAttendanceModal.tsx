@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the modal for marking new attendance records for members or staff.
 'use client';
-
+// RESPONSIBILITY: Renders the modal for marking new attendance records for members or staff.
 import { useEffect } from 'react';
 import { useAttendanceContext } from '@/app/manager/attendance/attendance_context/ManagerAttendanceContext';
 import { X, CheckCircle, Loader2 } from 'lucide-react';

@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the paginated staff members table with sortable columns and inline row actions.
-'use client';
 
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
 import { STAFF_TABLE_HEADERS } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';

@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the primary tabular list of members with actions, filtering state, and pagination.
 'use client';
-
+// RESPONSIBILITY: Renders the primary tabular list of members with actions, filtering state, and pagination.
 import { Edit, MessageCircle, Mail, Trash2, Loader2, Users, Banknote, Ban, ArrowUp, ArrowDown, ArrowUpDown } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
 import { useFetchMembers } from '@/app/manager/members/members_api/useManagerMembersQueries';

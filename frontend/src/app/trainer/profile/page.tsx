@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Server Component entry point for /trainer/profile. Rule 8 compliant — no 'use client'.
+// RESPONSIBILITY: Server Component entry point for /trainer/profile. Rule 8 compliant — no .
 import type { Metadata } from 'next';
 import TrainerProfileMain from '@/app/trainer/profile/profile_components/TrainerProfileMain/TrainerProfileMain';
 

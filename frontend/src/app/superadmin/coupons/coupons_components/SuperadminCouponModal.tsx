@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the Create Coupon modal form. Receives form state via props from useCouponsPage. No API calls.
 'use client';
-
+// RESPONSIBILITY: Renders the Create Coupon modal form. Receives form state via props from useCouponsPage. No API calls.
 import React from 'react';
 import { X } from 'lucide-react';
 import { Controller } from 'react-hook-form';

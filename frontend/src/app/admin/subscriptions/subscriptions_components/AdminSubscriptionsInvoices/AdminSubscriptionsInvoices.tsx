@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Invoice history table with status badges and PDF download.
-'use client';
 
 import { FileText, Download, CheckCircle, Clock, XCircle, RotateCcw } from 'lucide-react';
 import { useAdminSubscriptionsLogic } from '@/app/admin/subscriptions/subscriptions_context/useAdminSubscriptionsLogic';

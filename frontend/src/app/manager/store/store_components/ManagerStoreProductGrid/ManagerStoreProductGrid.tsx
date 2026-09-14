@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the product cards grid with stock status, price, and quick-action buttons.
 'use client';
-
+// RESPONSIBILITY: Renders the product cards grid with stock status, price, and quick-action buttons.
 import { Edit2, Trash2 } from 'lucide-react';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';

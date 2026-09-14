@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Payment method management — list, set default, remove.
-'use client';
 
 import { CreditCard, Smartphone, Building2, Star, Trash2, CheckCircle } from 'lucide-react';
 import { useAdminSubscriptionsLogic } from '@/app/admin/subscriptions/subscriptions_context/useAdminSubscriptionsLogic';

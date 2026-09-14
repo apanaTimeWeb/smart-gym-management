@@ -1,6 +1,5 @@
-// RESPONSIBILITY: React Context — bridges Zustand notifications store with UI state (filters, pagination).
 'use client';
-
+// RESPONSIBILITY: React Context — bridges Zustand notifications store with UI state (filters, pagination).
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import type { ReactNode } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';

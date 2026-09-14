@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the reusable confirmation/destructive action modal used across all ADMIN modules. Receives config via AdminConfirmProvider. No API calls.
-'use client';
 
 import { AlertTriangle } from 'lucide-react';
 

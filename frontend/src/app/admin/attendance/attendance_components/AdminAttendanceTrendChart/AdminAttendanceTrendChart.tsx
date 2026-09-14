@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the 7-day attendance trend bar chart using ApexCharts. Read-only, no mutations.
-'use client';
 
 import dynamic from 'next/dynamic';
 import { useAdminAttendanceLogic } from '@/app/admin/attendance/attendance_context/useAdminAttendanceLogic';

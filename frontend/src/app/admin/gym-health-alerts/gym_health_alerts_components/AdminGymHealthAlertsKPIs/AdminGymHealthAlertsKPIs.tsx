@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: KPI cards for the Gym Health Alerts module.
-'use client';
 
 import { AlertTriangle, AlertOctagon, AlertCircle, Building2 } from 'lucide-react';
 import AdminStatCard from '@/app/admin/admin_components/AdminShared/AdminStatCard';

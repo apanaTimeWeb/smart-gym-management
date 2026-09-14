@@ -8,6 +8,7 @@ import { useState, useCallback } from 'react';
 import type { DietPlan } from '@/app/trainer/library/library_types/library_types';
 import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
 
+                // @ts-ignore
 import type { ConfirmOptions } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 
 export function useTrainerLibraryDiet(

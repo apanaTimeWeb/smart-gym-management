@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Empty state for the Blacklist table.
-'use client';
 
 import { Ban } from 'lucide-react';
 import { useAdminBlacklistLogic } from '@/app/admin/blacklist/blacklist_context/useAdminBlacklistLogic';

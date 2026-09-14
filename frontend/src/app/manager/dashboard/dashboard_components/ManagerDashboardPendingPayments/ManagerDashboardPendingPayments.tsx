@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the pending payments list on the dashboard with a local search filter.
 'use client';
-
+// RESPONSIBILITY: Renders the pending payments list on the dashboard with a local search filter.
 import { useState } from 'react';
 import Link from 'next/link';
 import { Search, BellRing } from 'lucide-react';

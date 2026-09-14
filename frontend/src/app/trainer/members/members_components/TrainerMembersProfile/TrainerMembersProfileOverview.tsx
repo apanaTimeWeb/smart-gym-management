@@ -1,8 +1,7 @@
+'use client';
 // RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
 // DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Contains logic, types, or component definition for this module.
-'use client';
-
 import { useState, useRef } from 'react';
 import { MessageCircle, Mail, Target, X, Trash2 } from 'lucide-react';
 import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';

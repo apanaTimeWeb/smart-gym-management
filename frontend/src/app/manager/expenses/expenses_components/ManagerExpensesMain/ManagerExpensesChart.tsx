@@ -1,5 +1,4 @@
 'use client';
-
 import React, { useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { useExpensesListQuery } from '@/app/manager/expenses/expenses_api/useManagerExpensesQueries';

@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the fixed bottom-right toast notification. Auto-dismisses after 4 seconds. Shared across all MANAGER modules.
 'use client';
-
+// RESPONSIBILITY: Renders the fixed bottom-right toast notification. Auto-dismisses after 4 seconds. Shared across all MANAGER modules.
 import { useEffect } from 'react';
 
 export type ToastType = 'whatsapp' | 'email' | 'error' | 'success';

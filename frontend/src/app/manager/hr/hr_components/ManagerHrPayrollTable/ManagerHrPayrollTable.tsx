@@ -1,7 +1,6 @@
+'use client';
 // RESPONSIBILITY: Renders the payroll records table with pay status badges and mark-as-paid inline action.
 // CRITICAL FIX: Added Download Payslip per row, Bulk Generate Payroll button, and netPayable/deductions display.
-'use client';
-
 import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
 import { PAYROLL_TABLE_HEADERS } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';

@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Main entry point for the Coupons module. Composes KPIs, toolbar, table, and modal.
-'use client';
 
 import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 import AdminCouponsKPIs from '@/app/admin/coupons/coupons_components/AdminCouponsKPIs/AdminCouponsKPIs';

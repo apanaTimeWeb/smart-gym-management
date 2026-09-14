@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the period selection buttons and export action for the dashboard.
-'use client';
 
 import { Download } from 'lucide-react';
 import { PERFORMANCE_PERIOD_OPTIONS } from '@/app/admin/hr/hr_utils/AdminHrPerformanceConstants';

@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the paginated members table with clickable rows, status badges, and branch info.
-'use client';
 
 import { useAdminMembersLogic } from '@/app/admin/members/members_context/useAdminMembersLogic';
 import { useAdminMembersStore } from '@/app/admin/members/members_store/useAdminMembersStore';

@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the action bar for Expenses: Search, Filters, and "Add Expense" button.
 'use client';
-
+// RESPONSIBILITY: Renders the action bar for Expenses: Search, Filters, and "Add Expense" button.
 import { useExpensesContext } from '@/app/manager/expenses/expenses_context/ManagerExpensesContext';
 import { Search, Plus, Download } from 'lucide-react';
 import { EXPENSE_STATUS_LABELS } from '@/app/manager/expenses/expenses_utils/ManagerExpensesSharedConstants';

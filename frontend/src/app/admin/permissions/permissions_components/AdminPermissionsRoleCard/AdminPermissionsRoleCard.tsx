@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders a summary card showing how many permissions are enabled for a role.
-'use client';
 
 import { ShieldCheck, ShieldOff } from 'lucide-react';
 import { useAdminPermissionsLogic } from '@/app/admin/permissions/permissions_context/useAdminPermissionsLogic';

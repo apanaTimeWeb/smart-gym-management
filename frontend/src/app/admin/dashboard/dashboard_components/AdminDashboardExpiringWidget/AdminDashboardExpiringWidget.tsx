@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the expiring memberships widget showing members expiring this week and month across all branches.
-'use client';
 
 import { Clock, AlertTriangle, ChevronRight } from 'lucide-react';
 import Link from 'next/link';

@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the Revenue & Profit Trend area chart using ApexCharts (Recharts is forbidden per Rule 62).
-'use client';
 
 import dynamic from 'next/dynamic';
 import { BarChart3 } from 'lucide-react';

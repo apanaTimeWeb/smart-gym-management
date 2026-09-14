@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders dynamic charts visualizing staff performance metrics (sessions, additions).
-'use client';
 
 import dynamic from 'next/dynamic';
 import type { StaffPerformanceRecord } from '@/app/admin/hr/hr_types/AdminHrPerformanceTypes';

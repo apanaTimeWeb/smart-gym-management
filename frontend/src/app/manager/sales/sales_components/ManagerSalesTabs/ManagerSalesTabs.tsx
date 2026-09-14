@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Provides the implementation for ManagerSalesTabs.tsx functionality within its module.
 'use client';
-
+// RESPONSIBILITY: Provides the implementation for ManagerSalesTabs.tsx functionality within its module.
 import { useSalesContext } from '@/app/manager/sales/sales_context/ManagerSalesContext';
 import { SALES_TABS } from '@/app/manager/sales/sales_utils/ManagerSalesSharedConstants';
 

@@ -1,5 +1,4 @@
 'use client';
-
 import { useCallback } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import type { MemberSortColumn, SortDirection } from '@/app/manager/members/members_types/ManagerMembersTypes';

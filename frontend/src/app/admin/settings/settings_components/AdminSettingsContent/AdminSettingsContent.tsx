@@ -1,4 +1,4 @@
-'use client';
+"use client";
 // RESPONSIBILITY: Main orchestrator for the Settings module. Switches between sub-tabs based on URL parameter.
 import { useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
