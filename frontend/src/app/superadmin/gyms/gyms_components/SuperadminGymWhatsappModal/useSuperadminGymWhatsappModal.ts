@@ -8,7 +8,7 @@ import { z } from 'zod';
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
-import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
+import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
 
 const gymWhatsappSchema = z.object({
@@ -34,6 +34,7 @@ export function useSuperadminGymWhatsappModal() {
     resolver: zodResolver(gymWhatsappSchema),
   });
 
+  // RESPONSIBILITY: Handle side-effects for useSuperadminGymWhatsappModal
   useEffect(() => {
     if (isWhatsappModalOpen) {
       reset({ subject: '', message: '' });
@@ -42,7 +43,7 @@ export function useSuperadminGymWhatsappModal() {
 
   const whatsappMutation = useMutation({
     mutationFn: (data: GymWhatsappFormValues & { phone: string; ownerName: string; gymName: string }) => 
-      superadminApi.gyms.emailGymOwner(selectedGym!.id, data), // Still calling API for record keeping if necessary, or just skip
+      gymsApi.emailGymOwner(selectedGym!.id, data), // Still calling API for record keeping if necessary, or just skip
     onSuccess: (res, data) => {
       if (data.phone) {
         const cleanPhone = String(data.phone).replace(/\D/g, '');

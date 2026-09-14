@@ -6,7 +6,8 @@ import { X, Loader2, Network } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { SuperadminFranchise } from '@/app/superadmin/franchises/franchises_types/superadmin_franchises_types';
-import { franchiseSchema, type FranchiseFormValues } from '@/app/superadmin/superadmin_utils/SuperadminZodSchemas';
+import { franchiseSchema } from '@/app/superadmin/franchises/franchises_utils/SuperadminFranchisesSchemas';
+import { type FranchiseFormValues } from '@/app/superadmin/franchises/franchises_utils/SuperadminFranchisesSchemas';
 
 export interface FranchiseFormData extends FranchiseFormValues {}
 
@@ -29,6 +30,7 @@ export function SuperadminFranchiseModal({
     resolver: zodResolver(franchiseSchema)
   });
 
+  // RESPONSIBILITY: Handle side-effects for SuperadminFranchiseModal
   useEffect(() => {
     if (isOpen) {
       reset({

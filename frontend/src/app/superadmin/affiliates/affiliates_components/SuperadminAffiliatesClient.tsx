@@ -10,8 +10,10 @@ import SuperadminAffiliatesEmptyState from '@/app/superadmin/affiliates/affiliat
 import { SuperadminAffiliateModal } from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliateModal';
 import SuperadminAffiliatesPayoutHistory from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliatesPayoutHistory/SuperadminAffiliatesPayoutHistory';
 
+export type AffiliatesTab = 'AFFILIATES' | 'PAYOUTS';
+
 export default function SuperadminAffiliatesClient() {
-  const [activeTab, setActiveTab] = useState<'AFFILIATES' | 'PAYOUTS'>('AFFILIATES');
+  const [activeTab, setActiveTab] = useState<AffiliatesTab>('AFFILIATES');
   const {
     affiliates,
     searchQuery,

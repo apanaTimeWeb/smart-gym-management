@@ -2,7 +2,7 @@
 import { Plus, ArrowUpRight } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { invoicesApi } from '@/app/superadmin/invoices/superadmin_invoices_api/superadmin_invoices_api';
-import { SuperadminDateFilterDropdown } from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminDateFilterDropdown';
+import { SuperadminDateFilterDropdown } from '@/components/ui/SuperadminShared/SuperadminDateFilterDropdown';
 
 interface InvoicesHeaderProps {
   onLogPaymentClick: () => void;

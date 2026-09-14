@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Loader2, Search } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
+import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
 import { MOCK_GYMS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
 import type { FeatureFlag } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
@@ -23,13 +23,14 @@ export default function SuperadminFeatureRolloutModal({ isOpen, onClose, flag, o
 
   const { data: fetchRes, isLoading: fetchStateLoading } = useQuery({
     queryKey: ['superadmin', 'gyms'],
-    queryFn: () => superadminApi.gyms.fetchGyms(),
+    queryFn: () => gymsApi.fetchGyms(),
     enabled: isOpen,
   });
 
   const rawGyms = (fetchRes?.data as Tenant[]) ?? [];
   const gyms = rawGyms.length > 0 ? rawGyms : MOCK_GYMS;
 
+  // RESPONSIBILITY: Handle side-effects for SuperadminFeatureRolloutModal
   useEffect(() => {
     if (isOpen && flag) {
       setSelectedTenantIds(flag.enabledTenantIds || []);

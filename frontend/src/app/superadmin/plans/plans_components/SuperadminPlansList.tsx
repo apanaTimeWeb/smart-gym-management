@@ -6,9 +6,9 @@
 import { Check, Edit2, Trash2, Loader2, Archive } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
+import { plansApi } from '@/app/superadmin/plans/superadmin_plans_api/superadmin_plans_api';
 import { useSuperadminPlansStore } from '@/app/superadmin/plans/plans_store/useSuperadminPlansStore';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
+import { useSuperadminConfirm } from '@/components/ui/SuperadminFeedback/SuperadminConfirmProvider';
 
 export default function SuperadminPlansList() {
   const openEditModal = useSuperadminPlansStore(state => state.openEditModal);
@@ -17,13 +17,13 @@ export default function SuperadminPlansList() {
 
   const { data: fetchRes, isLoading, isError } = useQuery({
     queryKey: ['superadmin', 'plans'],
-    queryFn: () => superadminApi.plans.fetchPlans(),
+    queryFn: () => plansApi.fetchPlans(),
   });
 
   const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => superadminApi.plans.deletePlan(id),
+    mutationFn: (id: string) => plansApi.deletePlan(id),
     onSuccess: (res) => {
       toast.success(res.message || 'Plan deleted');
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'plans'] });
@@ -34,7 +34,7 @@ export default function SuperadminPlansList() {
   });
 
   const archiveMutation = useMutation({
-    mutationFn: (id: string) => superadminApi.plans.archivePlan(id),
+    mutationFn: (id: string) => plansApi.archivePlan(id),
     onSuccess: () => {
       toast.success('Plan archived. Existing gyms remain unaffected.');
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'plans'] });

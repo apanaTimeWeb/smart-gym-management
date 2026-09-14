@@ -8,8 +8,8 @@ import type { UseFormReturn } from 'react-hook-form';
 import { useQuery } from '@tanstack/react-query';
 import type { BroadcastFormData } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
 import { broadcastsApi } from '@/app/superadmin/broadcasts/superadmin_broadcasts_api/superadmin_broadcasts_api';
+import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
 import { MOCK_GYMS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
 
@@ -35,7 +35,7 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
 
   const { data: fetchRes, isLoading } = useQuery({
     queryKey: ['superadmin', 'gyms'],
-    queryFn: () => superadminApi.gyms.fetchGyms(),
+    queryFn: () => gymsApi.fetchGyms(),
     enabled: isOpen,
   });
 

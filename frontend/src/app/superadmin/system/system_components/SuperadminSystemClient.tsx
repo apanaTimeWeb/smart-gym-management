@@ -6,16 +6,19 @@ import { Database, ShieldAlert, Activity, Filter, RefreshCcw, Search, Loader2, C
 import SuperadminSystemEmptyState from '@/app/superadmin/system/system_components/SuperadminSystemEmptyState/SuperadminSystemEmptyState';
 import SuperadminSystemSlaTab from '@/app/superadmin/system/system_components/SuperadminSystemSlaTab';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
+import { migrationsApi } from '@/app/superadmin/migrations/superadmin_migrations_api/superadmin_migrations_api';
+import { auditLogsApi } from '@/app/superadmin/global-audit/superadmin_global-audit_api/superadmin_global-audit_api';
 import toast from 'react-hot-toast';
 import type { Tenant, GlobalAuditLog, MigrationsPageData } from '@/app/superadmin/superadmin_types/superadmin_types';
-import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
+import SuperadminPagination from '@/components/ui/SuperadminShared/SuperadminPagination';
 import { MOCK_AUDIT_LOGS } from '@/app/superadmin/global-audit/global-audit_utils/SuperadminGlobalAuditConstants';
 
 const CURRENT_SCHEMA_VERSION = process.env.NEXT_PUBLIC_CURRENT_SCHEMA_VERSION || 'v2.4.1';
 
+export type SystemTab = 'migrations' | 'sla';
+
 export default function SuperadminSystemClient() {
-  const [tab, setTab] = useState<'migrations' | 'sla'>('migrations');
+  const [tab, setTab] = useState<SystemTab>('migrations');
   const [logSearch, setLogSearch] = useState('');
   const [migratingTenants, setMigratingTenants] = useState<Record<string, boolean>>({});
   const [currentPage, setCurrentPage] = useState(1);
@@ -25,12 +28,12 @@ export default function SuperadminSystemClient() {
 
   const { data: migrationsRes, isLoading: isLoadingMigrations, isError: isErrorMigrations } = useQuery({
     queryKey: ['superadmin', 'system-migrations'],
-    queryFn: () => superadminApi.migrations.fetchMigrations(),
+    queryFn: () => migrationsApi.fetchMigrations(),
   });
 
   const { data: auditRes, isLoading: isLoadingAudit, isError: isErrorAudit } = useQuery({
     queryKey: ['superadmin', 'auditLogs'],
-    queryFn: () => superadminApi.auditLogs.fetchGlobalLogs(),
+    queryFn: () => auditLogsApi.fetchGlobalLogs(),
   });
 
   const fetchState = (isLoadingMigrations || isLoadingAudit) ? 'loading' : (isErrorMigrations || isErrorAudit) ? 'error' : 'success';
@@ -60,7 +63,7 @@ export default function SuperadminSystemClient() {
   const handleRunMigration = async (tenantId: string) => {
     setMigratingTenants(prev => ({ ...prev, [tenantId]: true }));
     try {
-      await superadminApi.migrations.triggerMigration(tenantId);
+      await migrationsApi.triggerMigration(tenantId);
       
       queryClient.setQueryData(['superadmin', 'system-migrations'], (old: { data?: MigrationsPageData } | undefined) => {
         if (!old?.data?.tenants) return old;

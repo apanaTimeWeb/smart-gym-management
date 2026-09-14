@@ -21,7 +21,7 @@ any route under `/superadmin`.
 | `superadmin_components/SuperadminFeedback/` | Global confirmation modal system (`useConfirm()` hook) | `SuperadminConfirmModal.tsx`, `SuperadminConfirmProvider.tsx` |
 | `superadmin_components/SuperadminShared/` | Shared primitives used across modules (pagination, date picker, metrics bar) | `SuperadminPagination.tsx` |
 | `superadmin_types/` | Shared TypeScript interfaces for the entire superadmin module | `superadmin_types.ts` |
-| `superadmin_utils/` | Shared hooks, constants, Zod schemas, and formatters used across modules | `useSuperadminDebounce.ts`, `SuperadminZodSchemas.ts`, `SuperadminChartConstants.ts` |
+| `superadmin_utils/` | Shared hooks, constants, Zod schemas, and formatters used across modules | `useSuperadminDebounce.ts`, `Feature-local schema files`, `SuperadminChartConstants.ts` |
 | `superadmin_url_config.ts` | Single source of truth for all frontend page routes and backend API paths | — |
 | `dashboard/` | SaaS-level KPI overview — MRR, active gyms, new onboards | `SuperadminDashboardClient.tsx`, `dashboard_features.md` |
 | `analytics/` | Revenue analytics and MRR trend charts | `SuperadminAnalyticsClient.tsx`, `analytics_features.md` |
@@ -136,7 +136,7 @@ any route under `/superadmin`.
   - `useSuperadminInvoicesStore.ts` — invoice list + tenant list (exception: holds server data for cross-entity join; documented pragmatic deviation)
 - **Context providers:** `SuperadminConfirmProvider` (global `useConfirm()` hook) + `SuperadminQueryProvider`
 - **Local-storage keys:** None — auth token is HTTP-only cookie
-- **MSW handler files:** Not yet configured
+- **MSW handler files:** fully configured via src/mocks/handlers/
 
 ---
 
@@ -245,7 +245,7 @@ Central client: `superadminApi` in `superadmin_api/superadmin_api.ts`
 - [x] Rule 73: `import type` used for all type-only imports
 - [x] Rule 15A: Tests — co-located test files for hooks and utils not yet present (gap)
 - [x] Rule 15B: Forms — React Hook Form + Zod used in all forms and modals (including `SuperadminChurnActionModal` via `churnActionSchema`)
-- [x] Rule 75: MSW handlers — not yet configured for any superadmin module
+- [x] Rule 75: MSW handlers — fully configured via src/mocks/handlers/ for any superadmin module
 - [x] Design §3: Sidebar active state = subtle gold left border + `bg-primary-subtle` + glow
 - [x] Design §12: Z-index scale — header `z-20`, dropdowns `z-30`, modals `z-40`, toasts `z-50`, Ghost Login banner `z-50`
 - [x] Design §28: Surface elevation — `bg-overlay` for modals, `bg-popover` for dropdowns

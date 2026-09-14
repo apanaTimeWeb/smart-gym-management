@@ -2,19 +2,23 @@
 // RESPONSIBILITY: Renders the Global Audit Logs dashboard for superadmins to monitor system-wide security events.
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { globalAuditApi } from '@/app/superadmin/global-audit/superadmin_global-audit_api/superadmin_global-audit_api';
+import { auditLogsApi } from '@/app/superadmin/global-audit/superadmin_global-audit_api/superadmin_global-audit_api';
 import type { AuditLog } from '@/app/superadmin/global-audit/superadmin_global-audit_types/superadmin_global-audit_types';
 import { ShieldAlert, Search, Filter, AlertTriangle, Info, Download } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 import { MOCK_AUDIT_LOGS } from '@/app/superadmin/global-audit/global-audit_utils/SuperadminGlobalAuditConstants';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
+import SuperadminPagination from '@/components/ui/SuperadminShared/SuperadminPagination';
+
+export type AuditSeverityFilter = 'ALL' | 'INFO' | 'WARNING' | 'CRITICAL';
+
+export type AuditActorFilter = 'ALL' | 'SUPERADMIN' | 'SYSTEM' | 'TENANT';
 
 export default function SuperadminGlobalAuditClient() {
   const [search, setSearch] = useState('');
-  const [severityFilter, setSeverityFilter] = useState<'ALL' | 'INFO' | 'WARNING' | 'CRITICAL'>('ALL');
-  const [actorTypeFilter, setActorTypeFilter] = useState<'ALL' | 'SUPERADMIN' | 'SYSTEM' | 'TENANT'>('ALL');
+  const [severityFilter, setSeverityFilter] = useState<AuditSeverityFilter>('ALL');
+  const [actorTypeFilter, setActorTypeFilter] = useState<AuditActorFilter>('ALL');
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 20;
 
@@ -22,7 +26,7 @@ export default function SuperadminGlobalAuditClient() {
     queryKey: ['superadmin', 'global-audit'],
     queryFn: async () => {
       try {
-        const res = await globalAuditApi.fetchAuditLogs();
+        const res = await auditLogsApi.fetchGlobalLogs();
         if (res.success && res.data && res.data.length > 0) {
           return { logs: res.data };
         }
@@ -38,11 +42,12 @@ export default function SuperadminGlobalAuditClient() {
   const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
   const displayLogs = queryData?.logs || MOCK_AUDIT_LOGS;
 
+  // RESPONSIBILITY: Handle side-effects for SuperadminGlobalAuditClient
   useEffect(() => {
     setCurrentPage(1);
   }, [search, severityFilter, actorTypeFilter]);
 
-  const filteredLogs = displayLogs.filter(log => {
+  const filteredLogs = displayLogs.filter((log: AuditLog) => {
     const matchesSearch = log.action?.toLowerCase().includes(search.toLowerCase()) || 
                           log.actor?.toLowerCase().includes(search.toLowerCase()) ||
                           log.resource?.toLowerCase().includes(search.toLowerCase());
@@ -74,7 +79,7 @@ export default function SuperadminGlobalAuditClient() {
     const headers = ['Timestamp', 'Severity', 'Action', 'Resource', 'Details', 'Actor', 'IP Address'];
     const csvContent = [
       headers.join(','),
-      ...filteredLogs.map(log => 
+      ...filteredLogs.map((log: AuditLog) => 
         [
           new Date(log.timestamp).toISOString(),
           log.severity,
@@ -208,7 +213,7 @@ export default function SuperadminGlobalAuditClient() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {paginatedLogs.map(log => (
+              {paginatedLogs.map((log: AuditLog) => (
                 <tr key={log.id} className="hover:bg-card-hover motion-safe:transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className="text-sm font-mono text-secondary">{new Date(log.timestamp).toLocaleString()}</span>

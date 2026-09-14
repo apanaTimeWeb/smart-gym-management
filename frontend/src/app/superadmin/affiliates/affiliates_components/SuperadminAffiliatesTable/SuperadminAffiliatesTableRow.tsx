@@ -2,9 +2,10 @@
 // RESPONSIBILITY: Renders a single row in the Affiliates data table. Handles row-level action buttons with stopPropagation. Purely presentational.
 import { Pencil, Trash2, Power, Check, Banknote } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
+import { useSuperadminConfirm } from '@/components/ui/SuperadminFeedback/SuperadminConfirmProvider';
 import SuperadminAffiliateStatusBadge from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliateStatusBadge/SuperadminAffiliateStatusBadge';
 import type { Affiliate, AffiliateStatus } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
+import { formatCurrency, formatNumber } from '@/lib/formatters';
 
 interface AffiliatesTableRowProps {
   affiliate: Affiliate;
@@ -37,9 +38,9 @@ export default function SuperadminAffiliatesTableRow({ affiliate: aff, onToggleS
         {aff.conversionRate !== undefined ? `${aff.conversionRate}%` : '—'}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-success font-medium">
-        ₹{aff.commissionEarned.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+        {formatCurrency(aff.commissionEarned)}
         {aff.pendingPayout ? (
-          <span className="ml-2 text-xs text-warning">(₹{aff.pendingPayout.toLocaleString()} pending)</span>
+          <span className="ml-2 text-xs text-warning">({formatCurrency(aff.pendingPayout)} pending)</span>
         ) : null}
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
@@ -61,7 +62,7 @@ export default function SuperadminAffiliatesTableRow({ affiliate: aff, onToggleS
                 e.stopPropagation();
                 const ok = await confirm({
                   title: 'Pay Commission',
-                  message: `Pay ₹${aff.pendingPayout?.toLocaleString()} to ${aff.name}? This will trigger a bank transfer.`,
+                  message: `Pay ${formatCurrency(aff.pendingPayout || 0)} to ${aff.name}? This will trigger a bank transfer.`,
                   type: 'warning',
                   confirmText: 'Pay Now',
                 });

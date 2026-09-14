@@ -26,6 +26,7 @@ export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps>
     resolver: zodResolver(CouponSchema),
   });
 
+  // RESPONSIBILITY: Handle side-effects for SuperadminCouponEditModal
   useEffect(() => {
     if (isOpen && coupon) {
       reset({

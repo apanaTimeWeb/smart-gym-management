@@ -8,7 +8,8 @@ import { Building2, Users, TrendingUp, Ban, Search, CheckCircle2, AlertTriangle 
 import { useSuperadminBranchesPage } from '@/app/superadmin/branches/branches_utils/useSuperadminBranchesPage';
 import { BRANCH_STATUS_STYLES, BRANCHES_PAGE_SIZE } from '@/app/superadmin/branches/branches_utils/SuperadminBranchesConstants';
 import type { SuperadminBranch } from '@/app/superadmin/branches/branches_types/superadmin_branches_types';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
+import { useSuperadminConfirm } from '@/components/ui/SuperadminFeedback/SuperadminConfirmProvider';
+import { formatCurrency, formatNumber } from '@/lib/formatters';
 
 export default function SuperadminBranchesClient() {
   const { branches, fetchState, search, setSearch, handleSuspend, handleActivate } = useSuperadminBranchesPage();
@@ -35,7 +36,7 @@ export default function SuperadminBranchesClient() {
     { label: 'Active', value: branches.filter(b => b.status === 'ACTIVE').length, icon: CheckCircle2, color: 'text-success', bg: 'bg-success/10' },
     { label: 'Suspended', value: branches.filter(b => b.status === 'SUSPENDED').length, icon: Ban, color: 'text-danger', bg: 'bg-danger/10' },
     { label: 'Total Members', value: branches.reduce((s, b) => s + b.memberCount, 0).toLocaleString('en-IN'), icon: Users, color: 'text-info', bg: 'bg-info/10' },
-    { label: 'Combined Monthly Income', value: `₹${branches.reduce((s, b) => s + b.monthlyRevenue, 0).toLocaleString('en-IN')}`, icon: TrendingUp, color: 'text-warning', bg: 'bg-warning/10' },
+    { label: 'Combined Monthly Income', value: formatCurrency(branches.reduce((s, b) => s + b.monthlyRevenue, 0)), icon: TrendingUp, color: 'text-warning', bg: 'bg-warning/10' },
   ];
 
   if (fetchState === 'loading') {
@@ -114,8 +115,8 @@ export default function SuperadminBranchesClient() {
                     <p className="text-secondary text-xs">{branch.managerEmail}</p>
                   </td>
                   <td className="px-4 py-3 text-secondary text-xs">{branch.city}</td>
-                  <td className="px-4 py-3 text-foreground font-medium">{branch.memberCount.toLocaleString('en-IN')}</td>
-                  <td className="px-4 py-3 text-success font-medium">₹{branch.monthlyRevenue.toLocaleString('en-IN')}</td>
+                  <td className="px-4 py-3 text-foreground font-medium">{formatNumber(branch.memberCount)}</td>
+                  <td className="px-4 py-3 text-success font-medium">{formatCurrency(branch.monthlyRevenue)}</td>
                   <td className="px-4 py-3">
                     <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-semibold ${BRANCH_STATUS_STYLES[branch.status] ?? ''}`}>
                       {branch.status}

@@ -4,12 +4,13 @@
 import { useState } from 'react';
 import { Cpu, HardDrive, Server, Zap, RefreshCcw, Loader2 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
+import { infrastructureApi } from '@/app/superadmin/infrastructure/superadmin_infrastructure_api/superadmin_infrastructure_api';
 import toast from 'react-hot-toast';
 import type { InfrastructureNode } from '@/app/superadmin/superadmin_types/superadmin_types';
 import SuperadminFlushTenantModal from '@/app/superadmin/infrastructure/infrastructure_components/SuperadminFlushTenantModal';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
+import { useSuperadminConfirm } from '@/components/ui/SuperadminFeedback/SuperadminConfirmProvider';
 import SuperadminUptimeChart from '@/app/superadmin/infrastructure/infrastructure_components/SuperadminUptimeChart/SuperadminUptimeChart';
+import { formatNumber } from '@/lib/formatters';
 
 export default function SuperadminInfrastructureClient() {
   const [isFlushingAll, setIsFlushingAll] = useState(false);
@@ -20,13 +21,13 @@ export default function SuperadminInfrastructureClient() {
 
   const { data: fetchRes, isLoading: isLoadingNodes, isError: isErrorNodes, refetch: refetchNodes, isFetching: isFetchingNodes } = useQuery({
     queryKey: ['superadmin', 'infrastructure'],
-    queryFn: () => superadminApi.infrastructure.fetchInfrastructureNodes(),
+    queryFn: () => infrastructureApi.fetchInfrastructureNodes(),
     refetchInterval: 30000,
   });
 
   const { data: redisRes, isLoading: isLoadingRedis, refetch: refetchRedis, isFetching: isFetchingRedis } = useQuery({
     queryKey: ['superadmin', 'redis'],
-    queryFn: () => superadminApi.infrastructure.fetchRedisTelemetry(),
+    queryFn: () => infrastructureApi.fetchRedisTelemetry(),
     refetchInterval: 30000,
   });
 
@@ -34,7 +35,7 @@ export default function SuperadminInfrastructureClient() {
   const redisTelemetry = redisRes?.data;
 
   const flushGlobalMutation = useMutation({
-    mutationFn: () => superadminApi.infrastructure.flushGlobalCache(),
+    mutationFn: () => infrastructureApi.flushGlobalCache(),
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'redis'] });
       toast.success(res?.message || 'Successfully flushed global cache');
@@ -47,7 +48,7 @@ export default function SuperadminInfrastructureClient() {
   });
 
   const flushTenantMutation = useMutation({
-    mutationFn: (tenantIds: string[]) => superadminApi.infrastructure.flushTenantCache(tenantIds),
+    mutationFn: (tenantIds: string[]) => infrastructureApi.flushTenantCache(tenantIds),
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'redis'] });
       toast.success(res?.message || 'Successfully flushed cache for gym(s)');
@@ -212,7 +213,7 @@ export default function SuperadminInfrastructureClient() {
               <h2 className="text-lg font-bold text-foreground">Cached Keys</h2>
             </div>
             <div className="flex items-end gap-2 mb-2">
-              <span className="text-4xl font-extrabold text-primary">{redisTelemetry.totalKeysCached.toLocaleString()}</span>
+              <span className="text-4xl font-extrabold text-primary">{formatNumber(redisTelemetry.totalKeysCached)}</span>
             </div>
             <p className="text-xs text-secondary mt-3">Uptime: {redisTelemetry.uptimeHours} hours</p>
           </div>

@@ -73,7 +73,7 @@ this route.
 - **FetchState enum:** `personalState`, `passwordState`, `twoFAState` track mutation lifecycle (`'idle' | 'loading' | 'success' | 'error'`) — passed as `isSaving` booleans to child forms
 - **Context providers:** None — inherits `SuperadminQueryProvider` from root layout
 - **Local-storage keys:** None
-- **MSW handler file:** Not yet configured — `src/mocks/handlers/superadmin-profile.handlers.ts` (planned)
+- **MSW handler file:** fully configured via src/mocks/handlers/ — `src/mocks/handlers/superadmin-profile.handlers.ts` (planned)
 
 ---
 
@@ -161,4 +161,4 @@ All calls go through `apiFetch` at `@/lib/api`. Response envelope: `{ success, m
 - [x] Rule 73: `import type` used for all type-only imports
 - [x] Rule 79: Unsaved changes guard — `useWarnIfUnsavedChanges(isDirty)` on personal and security forms
 - [ ] Rule 15A: Tests — `SuperadminProfileMain.test.tsx` exists; hooks and utils need co-located tests
-- [ ] Rule 75: MSW handlers — not yet configured
+- [ ] Rule 75: MSW handlers — fully configured via src/mocks/handlers/

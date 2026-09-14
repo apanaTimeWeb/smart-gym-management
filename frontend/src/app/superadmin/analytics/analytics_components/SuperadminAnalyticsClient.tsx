@@ -8,10 +8,11 @@ import dynamic from 'next/dynamic';
 import { TrendingUp, Users, IndianRupee, Activity, ArrowDownRight, DollarSign } from 'lucide-react';
 import { useAnalyticsPage } from '@/app/superadmin/analytics/analytics_utils/useAnalyticsPage';
 import { CHART_COLORS } from '@/app/superadmin/superadmin_utils/SuperadminChartConstants';
-import { SuperadminDateFilterDropdown } from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminDateFilterDropdown';
-import { useDateRangeSuffix } from '@/app/superadmin/superadmin_components/SuperadminShared/useDateRangeSuffix';
+import { SuperadminDateFilterDropdown } from '@/components/ui/SuperadminShared/SuperadminDateFilterDropdown';
+import { useDateRangeSuffix } from '@/components/ui/SuperadminShared/useDateRangeSuffix';
 
 // Heavy chart component — code-split via dynamic import (Rule 15, Design §10)
+import { formatCurrency } from '@/lib/formatters';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 export default function SuperadminAnalyticsClient() {
@@ -65,7 +66,7 @@ export default function SuperadminAnalyticsClient() {
   const kpiCards = [
     {
       label: 'Monthly Income' + dateSuffix,
-      value: `₹${metrics.mrr.toLocaleString('en-IN')}`,
+      value: formatCurrency(metrics.mrr),
       delta: mrrDelta,
       deltaUp: (metrics.mrrDeltaPercent ?? 0) >= 0,
       icon: IndianRupee,
@@ -74,7 +75,7 @@ export default function SuperadminAnalyticsClient() {
     },
     {
       label: 'ARR' + dateSuffix,
-      value: `₹${metrics.arr.toLocaleString('en-IN')}`,
+      value: formatCurrency(metrics.arr),
       delta: arrDelta,
       deltaUp: (metrics.arrDeltaPercent ?? 0) >= 0,
       icon: TrendingUp,
@@ -102,7 +103,7 @@ export default function SuperadminAnalyticsClient() {
     {
       label: 'Avg. Income per Gym' + dateSuffix,
       // Design §21: Indian currency — ₹1,24,500
-      value: `₹${arpu.toLocaleString('en-IN')}`,
+      value: formatCurrency(arpu),
       delta: 'Avg revenue per gym',
       deltaUp: true,
       icon: DollarSign,
@@ -234,7 +235,7 @@ export default function SuperadminAnalyticsClient() {
             </div>
             <span className="text-secondary text-xs font-medium uppercase tracking-wider">LTV (Lifetime Value)</span>
           </div>
-          <p className="text-3xl font-bold text-foreground mt-3">₹{metrics.ltv.toLocaleString('en-IN')}</p>
+          <p className="text-3xl font-bold text-foreground mt-3">{formatCurrency(metrics.ltv)}</p>
           <p className="text-xs text-success mt-2 font-medium">↑ Per tenant average</p>
         </div>
 
@@ -245,7 +246,7 @@ export default function SuperadminAnalyticsClient() {
             </div>
             <span className="text-secondary text-xs font-medium uppercase tracking-wider">CAC (Customer Acquisition Cost)</span>
           </div>
-          <p className="text-3xl font-bold text-foreground mt-3">₹{metrics.cac.toLocaleString('en-IN')}</p>
+          <p className="text-3xl font-bold text-foreground mt-3">{formatCurrency(metrics.cac)}</p>
           <p className="text-xs text-secondary mt-2">LTV:CAC = {(metrics.ltv / metrics.cac).toFixed(1)}x</p>
         </div>
       </div>

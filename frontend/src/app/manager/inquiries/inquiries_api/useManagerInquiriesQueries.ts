@@ -7,7 +7,7 @@ export function useInquiriesQuery(params: Record<string, string>) {
     queryKey: ['manager', 'inquiries', 'list', params],
     queryFn: async () => {
       const res = await inquiriesApi.getAll(params);
-      return { inquiries: res.data.inquiries as Inquiry[], total: res.data.total };
+      return { inquiries: res.data!.inquiries as Inquiry[], total: res.data!.total };
     },
     staleTime: 5 * 60 * 1000,
   });
@@ -18,7 +18,7 @@ export function useInquiryStatsQuery() {
     queryKey: ['manager', 'inquiries', 'stats'],
     queryFn: async () => {
       const res = await inquiriesApi.getStats();
-      return res.data as InquiryStats;
+      return res.data! as InquiryStats;
     },
     staleTime: 5 * 60 * 1000,
   });
@@ -29,7 +29,7 @@ export function useInquiryPlansQuery() {
     queryKey: ['manager', 'inquiries', 'plans'],
     queryFn: async () => {
       const res = await inquiriesApi.getPlans();
-      return res.data as { name: string }[];
+      return res.data! as { name: string }[];
     },
     staleTime: 5 * 60 * 1000,
   });

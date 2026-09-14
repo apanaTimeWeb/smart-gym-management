@@ -13,8 +13,8 @@ export default async function HrPage() {
       ssrHrApi.getSummary(),
     ]);
     initialData = {
-      staff: staffRes.data?.staff || staffRes.data || [],
-      payrolls: payrollRes.data?.payrolls || payrollRes.data || [],
+      staff: staffRes.data?.staff || (Array.isArray(staffRes.data) ? staffRes.data : []),
+      payrolls: payrollRes.data?.payrolls || (Array.isArray(payrollRes.data) ? payrollRes.data : []),
       summary: summaryRes.data || null
     };
   } catch {

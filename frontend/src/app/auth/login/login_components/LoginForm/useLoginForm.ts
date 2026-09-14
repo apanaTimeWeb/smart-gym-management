@@ -48,14 +48,14 @@ export function useLoginForm(): UseLoginFormReturn {
 
     try {
       const res = await authApi.login(data.email, data.password);
-      if (res.success && res.data.accessToken) {
+      if (res.success && res.data!.accessToken) {
         const cookieRes = await fetch(AuthUrlConfig.PROXY_API.SET_COOKIE, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            token: res.data.accessToken,
-            refreshToken: res.data.refreshToken,
-            user: res.data.user
+            token: res.data!.accessToken,
+            refreshToken: res.data!.refreshToken,
+            user: res.data!.user
           }),
         });
 
@@ -64,11 +64,11 @@ export function useLoginForm(): UseLoginFormReturn {
         setStatus('success');
         toast.success(res.message || 'Login successful');
 
-        if (res.data.user?.role === 'SUPERADMIN') {
+        if (res.data!.user?.role === 'SUPERADMIN') {
           window.location.replace(SuperadminUrlConfig.PAGES.DASHBOARD);
-        } else if (res.data.user?.role === 'MANAGER') {
+        } else if (res.data!.user?.role === 'MANAGER') {
           window.location.replace(AuthUrlConfig.PAGES.MANAGER_DASHBOARD);
-        } else if (res.data.user?.role === 'TRAINER') {
+        } else if (res.data!.user?.role === 'TRAINER') {
           window.location.replace(AuthUrlConfig.PAGES.TRAINER_DASHBOARD);
         } else {
           window.location.replace(AuthUrlConfig.PAGES.ADMIN_DASHBOARD);

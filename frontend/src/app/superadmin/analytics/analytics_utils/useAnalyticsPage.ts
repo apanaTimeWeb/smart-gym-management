@@ -54,6 +54,7 @@ export function useAnalyticsPage(): UseAnalyticsPageReturn {
     return () => { cancelled = true; };
   }, [timeRange, customStart, customEnd]);
 
+  // RESPONSIBILITY: Handle side-effects for useAnalyticsPage
   useEffect(() => {
     return fetchMetrics();
   }, [fetchMetrics]);

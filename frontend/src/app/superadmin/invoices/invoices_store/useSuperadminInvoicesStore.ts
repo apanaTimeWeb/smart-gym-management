@@ -1,6 +1,6 @@
 /**
  * RESPONSIBILITY: Zustand store that manages all async data for the Invoices module.
- * DATA FLOW: API (superadminApi) <-> useSuperadminInvoicesStore.ts <-> UI Components
+ * DATA FLOW: API (gymsApi) <-> useSuperadminInvoicesStore.ts <-> UI Components
  */
 
 // DATA FLOW: Component -> useSuperadminInvoicesStore.ts -> API/Store
@@ -8,7 +8,7 @@ import { create } from 'zustand';
 import toast from 'react-hot-toast';
 import { invoicesApi } from '@/app/superadmin/invoices/superadmin_invoices_api/superadmin_invoices_api';
 import type { CreateManualPaymentDto } from '@/app/superadmin/invoices/superadmin_invoices_api/superadmin_invoices_api';
-import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
+import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 import type { SaaSInvoice } from '@/app/superadmin/invoices/superadmin_invoices_types/superadmin_invoices_types';
 import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
 import type { FetchState } from '@/app/superadmin/superadmin_types/superadmin_types';
@@ -36,7 +36,7 @@ export const useSuperadminInvoicesStore = create<InvoicesState>((set) => ({
     try {
       const [invoicesRes, tenantsRes] = await Promise.all([
         invoicesApi.fetchInvoices(),
-        superadminApi.gyms.fetchGyms()
+        gymsApi.fetchGyms()
       ]);
       const tenants = tenantsRes.data || [];
       set({

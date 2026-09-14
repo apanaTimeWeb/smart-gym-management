@@ -9,9 +9,11 @@ import { DatabaseBackup, Search, Download, RotateCcw, Clock } from 'lucide-react
 import type { BackupRecord } from '@/app/superadmin/backups/superadmin_backups_types/superadmin_backups_types';
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
+import SuperadminPagination from '@/components/ui/SuperadminShared/SuperadminPagination';
 import { backupsApi } from '@/app/superadmin/backups/superadmin_backups_api/superadmin_backups_api';
-import { StatusColors } from '@/app/superadmin/backups/backups_utils/SuperadminBackupsConstants';
+import SuperadminBackupsTable from './SuperadminBackupsTable';
+import SuperadminBackupsRestoreModal from './SuperadminBackupsRestoreModal';
+import SuperadminBackupsTriggerModal from './SuperadminBackupsTriggerModal';
 
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 
@@ -27,23 +29,11 @@ export default function SuperadminBackupsClient() {
     const [currentPage, setCurrentPage] = useState(1);
     const ITEMS_PER_PAGE = 10;
 
+  // RESPONSIBILITY: Handle side-effects for SuperadminBackupsClient
     useEffect(() => {
       setCurrentPage(1);
     }, [search, statusFilter, typeFilter]);
 
-    const handleTriggerSnapshot = async () => {
-      setTriggerModalOpen(false);
-      setIsTriggering(true);
-      const loadingToast = toast.loading('Initiating global pg_dump snapshot...');
-      try {
-        await backupsApi.triggerSnapshot();
-        toast.success('Global snapshot completed successfully', { id: loadingToast });
-      } catch (err) {
-        toast.error('Failed to trigger snapshot', { id: loadingToast });
-      } finally {
-        setIsTriggering(false);
-      }
-    };
 
     const handleDownload = (id: string) => {
       toast.success(`Starting download for backup ${id}`);
@@ -65,21 +55,7 @@ export default function SuperadminBackupsClient() {
       setRestoreModalOpen(true);
     };
 
-    const confirmRestore = async () => {
-      if (!selectedBackup || restoreConfirmText !== 'RESTORE') return;
-      setRestoreModalOpen(false);
-      
-      const loadingToast = toast.loading(`Restoring database ${selectedBackup.databaseName} from snapshot...`);
-      try {
-        await backupsApi.restoreSnapshot(selectedBackup.id);
-        toast.success(`Database ${selectedBackup.databaseName} successfully restored!`, { id: loadingToast });
-      } catch (err) {
-        toast.error('Failed to restore snapshot', { id: loadingToast });
-      } finally {
-        setSelectedBackup(null);
-        setRestoreConfirmText('');
-      }
-    };
+
 if (fetchState === 'loading') return (
     <div className="space-y-6 motion-safe:animate-pulse">
       <div className="h-8 bg-card rounded w-48" />
@@ -168,62 +144,12 @@ if (fetchState === 'loading') return (
           </div>
         </div>
 
-        <div className="overflow-x-auto flex-1">
-          <table className="w-full text-left border-collapse min-w-full">
-            <thead>
-              <tr className="bg-header border-b border-border text-sm">
-                <th className="p-4 font-semibold text-secondary">Backup ID</th>
-                <th className="p-4 font-semibold text-secondary">Gym</th>
-                <th className="p-4 font-semibold text-secondary">Database Name</th>
-                <th className="p-4 font-semibold text-secondary">Size (MB)</th>
-                <th className="p-4 font-semibold text-secondary">Status</th>
-                <th className="p-4 font-semibold text-secondary">Timestamp</th>
-                <th className="p-4 font-semibold text-secondary text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {paginatedBackups.map((backup: BackupRecord) => (
-                <tr key={backup.id} className="hover:bg-input motion-safe:transition-colors">
-                  <td className="p-4 text-xs font-mono text-secondary">{backup.id}</td>
-                  <td className="p-4 text-sm font-medium text-foreground">{backup.tenantName}</td>
-                  <td className="p-4 text-sm font-mono text-primary">{backup.databaseName}</td>
-                  <td className="p-4 text-sm text-secondary font-mono">{backup.sizeMB.toFixed(1)}</td>
-                  <td className="p-4">
-                    <span className={`px-2.5 py-1 rounded-md text-xs font-bold ${StatusColors[backup.status]}`}>
-                      {backup.status.replace('_', ' ')}
-                    </span>
-                  </td>
-                  <td className="p-4 text-sm text-secondary">{new Date(backup.timestamp).toLocaleString()}</td>
-                  <td className="p-4 text-right flex items-center justify-end gap-2">
-                    <button 
-                      onClick={() => handleDownload(backup.id)}
-                      className="p-2 text-secondary hover:text-primary hover:bg-primary/10 rounded-lg motion-safe:transition-colors disabled:opacity-30" 
-                      title="Download pg_dump" 
-                      disabled={backup.status !== 'SUCCESS'}
-                    >
-                      <Download size={16} />
-                    </button>
-                    <button 
-                      onClick={() => handleRestoreClick(backup)}
-                      className="p-2 text-secondary hover:text-danger hover:bg-danger-bg/10 rounded-lg motion-safe:transition-colors disabled:opacity-30" 
-                      title="Restore Snapshot" 
-                      disabled={backup.status !== 'SUCCESS'}
-                    >
-                      <RotateCcw size={16} />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-              {filtered.length === 0 && (
-                <tr>
-                  <td colSpan={7} className="p-8 text-center text-disabled">
-                    <SuperadminBackupsEmptyState />
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+        <SuperadminBackupsTable 
+          paginatedBackups={paginatedBackups}
+          filteredLength={filtered.length}
+          handleDownload={handleDownload}
+          handleRestoreClick={handleRestoreClick}
+        />
         <SuperadminPagination 
           currentPage={currentPage}
           totalPages={totalPages}
@@ -231,81 +157,24 @@ if (fetchState === 'loading') return (
         />
       </div>
 
-      {restoreModalOpen && selectedBackup && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="bg-card w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-border motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95">
-            <div className="p-6">
-              <div className="w-12 h-12 rounded-full bg-danger-bg/10 text-danger flex items-center justify-center mb-4">
-                <RotateCcw size={24} />
-              </div>
-              <h2 className="text-xl font-bold text-foreground mb-2">Restore Database Snapshot</h2>
-              <p className="text-sm text-secondary mb-4">
-                Are you absolutely sure you want to restore the <strong className="text-foreground">{selectedBackup.databaseName}</strong> database using snapshot <strong className="text-foreground font-mono">{selectedBackup.id}</strong>?
-              </p>
-              <div className="bg-warning/10 border border-warning/20 p-3 rounded-lg mb-6">
-                <p className="text-xs text-warning font-medium">
-                  ⚠️ WARNING: This will immediately overwrite the live production database for <strong>{selectedBackup.tenantName}</strong>. Any data created after {new Date(selectedBackup.timestamp).toLocaleString()} will be permanently lost!
-                </p>
-              </div>
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-foreground mb-2">Type <span className="font-mono text-danger font-bold">RESTORE</span> to confirm</label>
-                <input 
-                  type="text" 
-                  value={restoreConfirmText}
-                  onChange={(e) => setRestoreConfirmText(e.target.value)}
-                  className="w-full px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-danger"
-                  placeholder="RESTORE"
-                />
-              </div>
-              <div className="flex gap-3 justify-end">
-                <button 
-                  onClick={() => { setRestoreModalOpen(false); setRestoreConfirmText(''); }}
-                  className="px-4 py-2 rounded-lg font-medium border border-border text-foreground hover:bg-card-hover motion-safe:transition-colors"
-                >
-                  Cancel
-                </button>
-                <button 
-                  onClick={confirmRestore}
-                  disabled={restoreConfirmText !== 'RESTORE'}
-                  className="px-4 py-2 rounded-lg font-medium bg-danger hover:bg-danger/90 text-white motion-safe:transition-colors disabled:opacity-50"
-                >
-                  Yes, Restore Snapshot
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <SuperadminBackupsRestoreModal 
+        isOpen={restoreModalOpen}
+        onClose={() => setRestoreModalOpen(false)}
+        selectedBackup={selectedBackup}
+        restoreConfirmText={restoreConfirmText}
+        setRestoreConfirmText={setRestoreConfirmText}
+        onSuccess={() => {
+          setSelectedBackup(null);
+          setRestoreConfirmText('');
+        }}
+      />
 
-      {triggerModalOpen && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="bg-card w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-border motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95">
-            <div className="p-6">
-              <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-4">
-                <DatabaseBackup size={24} />
-              </div>
-              <h2 className="text-xl font-bold text-foreground mb-2">Trigger Global Backup</h2>
-              <p className="text-sm text-secondary mb-6">
-                Are you sure you want to trigger a manual pg_dump snapshot for all tenant databases? This process is resource-intensive and may take a few minutes.
-              </p>
-              <div className="flex gap-3 justify-end">
-                <button 
-                  onClick={() => setTriggerModalOpen(false)}
-                  className="px-4 py-2 rounded-lg font-medium border border-border text-foreground hover:bg-card-hover motion-safe:transition-colors"
-                >
-                  Cancel
-                </button>
-                <button 
-                  onClick={handleTriggerSnapshot}
-                  className="px-4 py-2 rounded-lg font-medium bg-primary hover:bg-primary-hover text-white motion-safe:transition-colors"
-                >
-                  Yes, Start Backup
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <SuperadminBackupsTriggerModal 
+        isOpen={triggerModalOpen}
+        onClose={() => setTriggerModalOpen(false)}
+        isTriggering={isTriggering}
+        setIsTriggering={setIsTriggering}
+      />
 
       <SuperadminBackupsScheduleModal
         isOpen={scheduleModalOpen}

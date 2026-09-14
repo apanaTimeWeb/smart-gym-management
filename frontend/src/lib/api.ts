@@ -15,10 +15,10 @@ export interface PaginationMeta {
   totalPages: number;
 }
 
-export interface ApiResponse<T> {
+export interface ApiResponse<T = unknown> {
   success: boolean;
-  data: T;
-  message: string;
+  data?: T;
+  message?: string;
   meta?: PaginationMeta;
 }
 
@@ -26,7 +26,8 @@ export interface ApiResponse<T> {
 import { AuthUrlConfig } from '@/app/auth/auth_url_config';
 import { StatusCodes } from 'http-status-codes';
 import toast from 'react-hot-toast';
-import { routeMockRequest } from './mock_router';
+import { z } from 'zod';
+
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 
@@ -50,15 +51,16 @@ export async function logout() {
 
 // ─── Core Fetch ───────────────────────────────────────────────────────────────
 
-interface FetchOptions extends RequestInit {
+interface FetchOptions<Z extends z.ZodTypeAny = z.ZodTypeAny> extends RequestInit {
   auth?: boolean;
+  responseSchema?: Z;
 }
 
-export async function apiFetch<T = unknown>(
+export async function apiFetch<T = unknown, Z extends z.ZodTypeAny = z.ZodTypeAny>(
   path: string,
-  options: FetchOptions = {}
+  options: FetchOptions<Z> = {}
 ): Promise<T> {
-  const { auth = true, ...rest } = options;
+  const { auth = true, responseSchema, ...rest } = options;
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -89,23 +91,9 @@ export async function apiFetch<T = unknown>(
   }
   let res: Response;
   let finalRes: Response;
-  const method = rest.method || 'GET';
-  const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
-
-  try {
-    if (isDemoMode) {
-      throw new Error('DEMO_MODE_ACTIVE');
-    }
-    res = await fetch(`${BASE_URL}${path}`, { ...rest, headers });
-    finalRes = res;
-  } catch (error) {
-    // Intercept network failures or explicit demo mode
-    if (error instanceof TypeError || (error as Error).message === 'DEMO_MODE_ACTIVE') {
-      return await routeMockRequest<T>(path, method, rest.body) as unknown as T;
-    }
-    throw error;
-  }
   
+  res = await fetch(`${BASE_URL}${path}`, { ...rest, headers });
+  finalRes = res;
   if (res.status === StatusCodes.UNAUTHORIZED && auth) {
     // Attempt to refresh the token
     const refreshRes = await fetch(AuthUrlConfig.PROXY_API.REFRESH, { method: 'POST' });
@@ -134,6 +122,17 @@ export async function apiFetch<T = unknown>(
       toast.error(errorMsg, { id: errorMsg });
     }
     throw new Error(errorMsg);
+  }
+
+  if (responseSchema) {
+    const parseResult = responseSchema.safeParse(json);
+    if (!parseResult.success) {
+      console.error('Zod Validation Error:', parseResult.error);
+      const errorMsg = 'Invalid data received from server.';
+      if (typeof window !== 'undefined') toast.error(errorMsg);
+      throw new Error(errorMsg);
+    }
+    return parseResult.data as T;
   }
 
   return json;

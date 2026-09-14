@@ -12,6 +12,7 @@ export default function SuperadminProfileError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  // RESPONSIBILITY: Handle side-effects for error
   useEffect(() => {
     logger.error('Superadmin Profile Module Error:', error);
   }, [error]);

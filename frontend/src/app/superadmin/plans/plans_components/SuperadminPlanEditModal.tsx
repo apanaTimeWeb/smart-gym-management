@@ -10,8 +10,8 @@ import { X, Plus, Trash2, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { useSuperadminPlansStore } from '@/app/superadmin/plans/plans_store/useSuperadminPlansStore';
-import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
-import { useWarnIfUnsavedChanges } from '@/app/superadmin/superadmin_utils/useWarnIfUnsavedChanges';
+import { plansApi } from '@/app/superadmin/plans/superadmin_plans_api/superadmin_plans_api';
+import { useUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useUnsavedChangesGuard';
 import type { CreatePlanPayload, UpdatePlanPayload } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 const planSchema = z.object({
@@ -59,7 +59,7 @@ export default function SuperadminPlanEditModal() {
   }, [selectedPlan, isOpen, reset]);
 
   const editMutation = useMutation({
-    mutationFn: (data: UpdatePlanPayload) => superadminApi.plans.updatePlan(selectedPlan!.id, data),
+    mutationFn: (data: UpdatePlanPayload) => plansApi.updatePlan(selectedPlan!.id, data),
     onSuccess: (res) => {
       toast.success(res.message || 'Plan updated successfully');
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'plans'] });
@@ -72,13 +72,13 @@ export default function SuperadminPlanEditModal() {
 
   const isSubmitting = editMutation.isPending;
 
+  useUnsavedChangesGuard(isDirty);
+
   if (!isOpen || !selectedPlan) return null;
 
   const onSubmit: SubmitHandler<PlanFormValues> = async (data) => {
     editMutation.mutate({ ...data, features: data.features.map(f => f.value), currency: 'INR', isPublic: true, trialDays: 14, setupFee: 0 });
   };
-
-    useWarnIfUnsavedChanges(isDirty);
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">

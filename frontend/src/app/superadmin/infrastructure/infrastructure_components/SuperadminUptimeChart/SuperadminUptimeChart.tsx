@@ -19,7 +19,7 @@ export default function SuperadminUptimeChart() {
       const uptime = Math.random() > 0.9 ? (98 + Math.random() * 1.9) : 100;
       return {
         x: time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        y: Number(uptime.toFixed(2))
+        y: Number(formatCurrency(uptime))
       };
     });
 

@@ -6,7 +6,9 @@
     "dev": "node clean.js && next dev -H 0.0.0.0",
     "build": "node clean.js && next build",
     "start": "next start",
-    "lint": "eslint",
+    "lint": "next lint",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "prepare": "husky",
     "security-scan": "npm audit"
   },
@@ -40,20 +42,27 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@testing-library/react": "^16.3.2",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.7",
     "@types/jest": "^30.0.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^6.1.1",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
     "eslint-plugin-boundaries": "^7.2.0",
     "eslint-plugin-tailwindcss": "^4.4.0",
     "husky": "^9.1.7",
+    "jsdom": "^29.1.1",
     "lint-staged": "^17.4.1",
     "msw": "^2.15.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vite": "^8.3.0",
+    "vitest": "^5.0.0"
   },
   "lint-staged": {
     "*.{ts,tsx}": [

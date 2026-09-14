@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { Settings, Loader2, Save, FileText } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
+import { settingsApi } from '@/app/superadmin/settings/superadmin_settings_api/superadmin_settings_api';
 import toast from 'react-hot-toast';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import type { PlatformSetting } from '@/app/superadmin/superadmin_types/superadmin_types';
@@ -16,7 +16,7 @@ export default function SuperadminSettingsClient() {
 
   const { data: fetchRes, isLoading, isError } = useQuery({
     queryKey: ['superadmin', 'settings'],
-    queryFn: () => superadminApi.settings.fetchSettings(),
+    queryFn: () => settingsApi.fetchSettings(),
   });
 
   const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
@@ -25,7 +25,7 @@ export default function SuperadminSettingsClient() {
   const settings = responseData?.data && responseData.data.length > 0 ? responseData.data : MOCK_PLATFORM_SETTINGS;
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, value }: { id: string, value: string }) => superadminApi.settings.updateSetting(id, { value }),
+    mutationFn: ({ id, value }: { id: string, value: string }) => settingsApi.updateSetting(id, { value }),
     onSuccess: (res, variables) => {
       toast.success(res.message || 'Setting updated successfully');
       queryClient.setQueryData(['superadmin', 'settings'], (old: { data?: PlatformSetting[] } | undefined) => {

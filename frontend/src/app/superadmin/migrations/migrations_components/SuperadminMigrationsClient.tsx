@@ -8,7 +8,7 @@ import { Database, CheckCircle, AlertTriangle, Clock, RefreshCw, XCircle } from 
 import toast from 'react-hot-toast';
 
 import { MOCK_MIGRATIONS, STATUS_COLORS } from '@/app/superadmin/migrations/migrations_utils/SuperadminMigrationsConstants';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
+import { useSuperadminConfirm } from '@/components/ui/SuperadminFeedback/SuperadminConfirmProvider';
 
 export default function SuperadminMigrationsClient() {
   const [versionInput, setVersionInput] = useState('');
@@ -53,7 +53,7 @@ export default function SuperadminMigrationsClient() {
     try {
       const loadingToast = toast.loading(`Initializing schema rollout for ${versionInput}...`);
       
-      await migrationsApi.triggerMigration(versionInput, 'ALL_ACTIVE');
+      await migrationsApi.triggerMigration(versionInput);
 
       const newMigration: MigrationLog = {
         id: `mig-${Date.now()}`,
@@ -159,7 +159,7 @@ export default function SuperadminMigrationsClient() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {displayMigrations.map(mig => (
+              {displayMigrations.map((mig: MigrationLog) => (
                 <tr key={mig.id} className="hover:bg-card-hover motion-safe:transition-colors group">
                   <td className="px-6 py-4">
                     <span className="font-mono font-bold text-foreground">{mig.version}</span>

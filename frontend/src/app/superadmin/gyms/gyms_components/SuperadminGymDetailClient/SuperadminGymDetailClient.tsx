@@ -6,9 +6,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Building2, User, CreditCard, Activity, MapPin, Shield, Clock } from 'lucide-react';
-import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
+import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 import type { Tenant } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_types';
 import { MOCK_GYM_DETAIL } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
+import { formatCurrency } from '@/lib/formatters';
 
 interface SuperadminGymDetailClientProps {
   gymId: string;
@@ -19,7 +20,7 @@ export default function SuperadminGymDetailClient({ gymId }: SuperadminGymDetail
 
   const { data: res, isLoading, isError } = useQuery({
     queryKey: ['superadmin', 'gyms', gymId],
-    queryFn: () => superadminApi.gyms.fetchGymById(gymId),
+    queryFn: () => gymsApi.fetchGymById(gymId),
   });
 
   const gym: Tenant | undefined = res?.data || (process.env.NODE_ENV === 'development' ? MOCK_GYM_DETAIL : undefined);
@@ -82,7 +83,7 @@ export default function SuperadminGymDetailClient({ gymId }: SuperadminGymDetail
           <div className="p-3 bg-success/10 rounded-lg"><CreditCard size={20} className="text-success" /></div>
           <div>
             <p className="text-xs text-secondary uppercase tracking-wider">Monthly Revenue</p>
-            <p className="text-2xl font-bold text-foreground">₹{gym.monthlyRevenue.toLocaleString('en-IN')}</p>
+            <p className="text-2xl font-bold text-foreground">{formatCurrency(gym.monthlyRevenue)}</p>
           </div>
         </div>
         <div className="bg-card border border-border rounded-xl p-5 flex items-center gap-4">

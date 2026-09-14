@@ -9,9 +9,9 @@ import { X, Plus, Trash2, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { useSuperadminPlansStore } from '@/app/superadmin/plans/plans_store/useSuperadminPlansStore';
-import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
+import { plansApi } from '@/app/superadmin/plans/superadmin_plans_api/superadmin_plans_api';
 import type { CreatePlanPayload, UpdatePlanPayload } from '@/app/superadmin/superadmin_types/superadmin_types';
-import { useWarnIfUnsavedChanges } from '@/app/superadmin/superadmin_utils/useWarnIfUnsavedChanges';
+import { useUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useUnsavedChangesGuard';
 
 const planSchema = z.object({
   name: z.string().min(1, 'Plan Name is required'),
@@ -40,12 +40,12 @@ export default function SuperadminPlanCreateModal() {
     },
   });
 
-  useWarnIfUnsavedChanges(isDirty);
+  useUnsavedChangesGuard(isDirty);
 
   const { fields, append, remove } = useFieldArray({ control, name: 'features' });
 
   const createMutation = useMutation({
-    mutationFn: (data: CreatePlanPayload) => superadminApi.plans.createPlan(data),
+    mutationFn: (data: CreatePlanPayload) => plansApi.createPlan(data),
     onSuccess: (res) => {
       toast.success(res.message || 'Plan created successfully');
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'plans'] });

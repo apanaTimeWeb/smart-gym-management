@@ -7,7 +7,7 @@ import SuperadminChurnFilters from '@/app/superadmin/churn-alerts/churn_componen
 import SuperadminChurnTable from '@/app/superadmin/churn-alerts/churn_components/SuperadminChurnTable/SuperadminChurnTable';
 import SuperadminChurnEmptyState from '@/app/superadmin/churn-alerts/churn_components/SuperadminChurnEmptyState/SuperadminChurnEmptyState';
 import SuperadminChurnActionModal from '@/app/superadmin/churn-alerts/churn_components/SuperadminChurnActionModal/SuperadminChurnActionModal';
-import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
+import SuperadminPagination from '@/components/ui/SuperadminShared/SuperadminPagination';
 import type { ChurnFilterStatus } from '@/app/superadmin/churn-alerts/churn_types/churn_types';
 import { useChurnAlertsPage } from '@/app/superadmin/churn-alerts/churn_utils/useChurnAlertsPage';
 

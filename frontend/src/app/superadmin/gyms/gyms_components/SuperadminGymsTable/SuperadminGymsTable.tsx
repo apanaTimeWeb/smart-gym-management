@@ -11,8 +11,9 @@ import SuperadminGymEditModal from '@/app/superadmin/gyms/gyms_components/Supera
 import SuperadminGymWhatsappModal from '@/app/superadmin/gyms/gyms_components/SuperadminGymWhatsappModal/SuperadminGymWhatsappModal';
 import SuperadminGymDeleteModal from '@/app/superadmin/gyms/gyms_components/SuperadminGymDeleteModal/SuperadminGymDeleteModal';
 import SuperadminGymsEmptyState from '@/app/superadmin/gyms/gyms_components/SuperadminGymsEmptyState/SuperadminGymsEmptyState';
-import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
+import SuperadminPagination from '@/components/ui/SuperadminShared/SuperadminPagination';
 import { GYMS_PLAN_COLORS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
+import { formatCurrency } from '@/lib/formatters';
 
 // Rule 68: TABLE_COLUMN_COUNT must match <th> count AND colSpan on empty state
 const TABLE_COLUMN_COUNT = 8; // Name | Owner | Plan | Members | MRR | Status | Last Login | Actions
@@ -152,7 +153,7 @@ export default function SuperadminGymsTable() {
                 </td>
                 <td className="p-4 text-success font-medium text-right">
                   {/* Design §21: Indian Numbering System — ₹1,23,456 */}
-                  ₹{gym.monthlyRevenue.toLocaleString('en-IN')}
+                  {formatCurrency(gym.monthlyRevenue)}
                 </td>
                 <td className="p-4">
                   <div className="flex justify-center">

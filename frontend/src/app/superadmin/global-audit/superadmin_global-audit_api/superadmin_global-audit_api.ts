@@ -1,18 +1,12 @@
-// RESPONSIBILITY: Modular API client for the Superadmin Global Audit module.
+// RESPONSIBILITY: Modularized API client for the Global Audit module. All methods import apiFetch from src/lib/api.ts and define only superadmin-scoped endpoints. No UI logic.
+import { SuperadminGlobalAuditUrlConfig } from '@/app/superadmin/global-audit/superadmin_global-audit_url_config';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import type { AuditLog } from '@/app/superadmin/global-audit/superadmin_global-audit_types/superadmin_global-audit_types';
-import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 
-import { MOCK_SUPERADMIN_GLOBAL_AUDIT } from '@/app/superadmin/global-audit/superadmin_global-audit_api/SuperadminGlobalAuditMockData';
-
-export const globalAuditApi = {
-  fetchAuditLogs: async () => {
-    await new Promise(r => setTimeout(r, 400));
-    return {
-      success: true,
-      message: 'Audit logs fetched successfully',
-      data: MOCK_SUPERADMIN_GLOBAL_AUDIT
-    };
-  }
+export const auditLogsApi = {
+  fetchGlobalLogs: (params?: Record<string, string>) => {
+    const q = params ? '?' + new URLSearchParams(params).toString() : '';
+    return apiFetch<ApiResponse<AuditLog[]>>(`${SuperadminGlobalAuditUrlConfig.BACKEND_API.AUDIT_LOGS_BASE}${q}`);
+  },
 };

@@ -2,7 +2,7 @@
 // RESPONSIBILITY: Renders the page title, search input, and "Create Coupon" CTA button for the Coupons page. Receives all state via props — no API calls.
 import { Tag, Plus, Search, Filter } from 'lucide-react';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import { SuperadminDateFilterDropdown } from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminDateFilterDropdown';
+import { SuperadminDateFilterDropdown } from '@/components/ui/SuperadminShared/SuperadminDateFilterDropdown';
 
 const STATUS_OPTIONS = [
   { value: 'ALL', label: 'All Statuses' },

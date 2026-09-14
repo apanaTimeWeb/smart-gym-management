@@ -6,7 +6,7 @@ import { Controller } from 'react-hook-form';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { X, Eye, EyeOff } from 'lucide-react';
 import { useSuperadminGymEditModal } from '@/app/superadmin/gyms/gyms_components/SuperadminGymEditModal/useSuperadminGymEditModal';
-import { useWarnIfUnsavedChanges } from '@/app/superadmin/superadmin_utils/useWarnIfUnsavedChanges';
+import { useUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useUnsavedChangesGuard';
 
 export default function SuperadminGymEditModal() {
   const {
@@ -24,7 +24,7 @@ export default function SuperadminGymEditModal() {
     isSubmitting,
   } = useSuperadminGymEditModal();
 
-  useWarnIfUnsavedChanges(isDirty);
+  useUnsavedChangesGuard(isDirty);
 
   const [showPassword, setShowPassword] = React.useState(false);
 

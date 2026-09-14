@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
-import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
+import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 
 export function useSuperadminGymDeleteModal() {
   const isDeleteModalOpen = useSuperadminGymsStore(state => state.isDeleteModalOpen);
@@ -25,7 +25,7 @@ export function useSuperadminGymDeleteModal() {
   }, [isDeleteModalOpen]);
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => superadminApi.gyms.deleteGym(id),
+    mutationFn: (id: string) => gymsApi.deleteGym(id),
     onSuccess: (res) => {
       toast.success(res.message || 'Tenant deleted successfully.');
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'gyms'] });

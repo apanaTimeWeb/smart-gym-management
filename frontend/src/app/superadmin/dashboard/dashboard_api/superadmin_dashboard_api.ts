@@ -7,8 +7,9 @@ import type { SuperadminDashboardApiData } from '@/app/superadmin/dashboard/supe
 import { MOCK_SUPERADMIN_DASHBOARD_DATA } from '@/app/superadmin/dashboard/dashboard_api/SuperadminDashboardMockData';
 
 export const superadminDashboardApi = {
-  fetchDashboardData: async (params?: Record<string, string>) => {
-    await new Promise(res => setTimeout(res, 400));
-    return { success: true, message: 'Success', data: MOCK_SUPERADMIN_DASHBOARD_DATA };
+  fetchDashboardData: (params?: Record<string, string>) => {
+    const q = params ? '?' + new URLSearchParams(params).toString() : '';
+    return apiFetch<ApiResponse<any>>(`${SuperadminDashboardUrlConfig.BACKEND_API.DASHBOARD_DATA}${q}`);
   },
+  fetchDashboardMetrics: () => apiFetch<ApiResponse<SuperadminDashboardApiData>>(`${SuperadminDashboardUrlConfig.BACKEND_API.DASHBOARD_DATA}/metrics`),
 };

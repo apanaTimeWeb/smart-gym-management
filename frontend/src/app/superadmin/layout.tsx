@@ -1,9 +1,9 @@
 // RESPONSIBILITY: Root layout for all /superadmin/* routes. Wraps pages in the SuperadminLayout shell (Sidebar + Header). Pure Server Component — no client hooks.
 
 import '@/app/superadmin/superadmin.css';
-import SuperadminLayout from '@/app/superadmin/superadmin_components/SuperadminLayout/SuperadminLayout';
+import SuperadminLayout from '@/components/ui/SuperadminLayout/SuperadminLayout';
 import { SuperadminQueryProvider } from '@/app/superadmin/superadmin_components/SuperadminQueryProvider';
-import { SuperadminConfirmProvider } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
+import { SuperadminConfirmProvider } from '@/components/ui/SuperadminFeedback/SuperadminConfirmProvider';
 
 export const metadata = {
   title: 'Master Control Panel | GymSmart SaaS',

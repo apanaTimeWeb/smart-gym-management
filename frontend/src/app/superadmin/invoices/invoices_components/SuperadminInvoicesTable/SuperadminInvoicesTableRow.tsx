@@ -35,7 +35,7 @@ export default function SuperadminInvoicesTableRow({ invoice: inv }: InvoicesTab
         {
           items: {
             'Plan': inv.planName,
-            'Amount': `₹${inv.amount.toFixed(2)}`,
+            'Amount': `formatCurrency(inv.amount)`,
             'Status': inv.status,
           },
         },

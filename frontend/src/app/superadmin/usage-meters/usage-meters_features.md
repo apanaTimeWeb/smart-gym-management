@@ -12,14 +12,14 @@ Handles usage-meters operations, UI display, and logic isolation as part of the 
 ## Feature Inventory
 | Feature | Path | Purpose | Main API Calls | Owner |
 |---|---|---|---|---|
-| Core UI | `/usage-meters` | Main module view | TBD | Frontend Team |
+| Core UI | `/usage-meters` | Main module view | Q4 2024 | Frontend Team |
 
 ## Data and State Architecture
 - Server-state query keys: `['usage-meters']`
-- Zustand stores: TBD
-- Context providers: TBD
-- Local-storage keys: TBD
-- MSW handler file: TBD
+- Zustand stores: None
+- Context providers: None
+- Local-storage keys: None
+- MSW handler file: `src/mocks/handlers/superadmin-usage-meters.handlers.ts`
 
 ## API Contract
 List all endpoint builders and expected response types.

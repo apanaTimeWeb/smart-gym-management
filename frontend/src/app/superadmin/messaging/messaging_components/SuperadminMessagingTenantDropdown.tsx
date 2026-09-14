@@ -20,6 +20,7 @@ export function SuperadminMessagingTenantDropdown({
     t.name.toLowerCase().includes(query.toLowerCase())
   );
 
+  // RESPONSIBILITY: Handle side-effects for SuperadminMessagingTenantDropdown
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (ref.current && !ref.current.contains(e.target as Node)) {

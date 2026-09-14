@@ -7,6 +7,6 @@ import { MOCK_SUPERADMIN_ANALYTICS } from '@/app/superadmin/analytics/superadmin
 export const analyticsApi = {
   getRevenueMetrics: async (params?: Record<string, string>) => {
     await new Promise(r => setTimeout(r, 400));
-    return { success: true, message: 'Success', data: MOCK_SUPERADMIN_ANALYTICS as any };
+    return { success: true, message: 'Success', data: MOCK_SUPERADMIN_ANALYTICS as unknown as SuperadminAnalyticsData };
   },
 };

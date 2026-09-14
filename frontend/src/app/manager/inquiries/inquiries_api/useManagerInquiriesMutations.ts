@@ -18,7 +18,7 @@ export function useManagerInquiriesMutations({ showToast, onSuccessCallback }: U
   const createInquiryMutation = useMutation({
     mutationFn: (data: Partial<InquiryFormValues>) => inquiriesApi.create(data),
     onSuccess: (res) => {
-      showToast(res.message, 'success');
+      showToast(res.message || 'Success', 'success');
       invalidateQueries();
       onSuccessCallback?.();
     },
@@ -30,7 +30,7 @@ export function useManagerInquiriesMutations({ showToast, onSuccessCallback }: U
   const updateInquiryMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<InquiryFormValues> }) => inquiriesApi.update(id, data),
     onSuccess: (res) => {
-      showToast(res.message, 'success');
+      showToast(res.message || 'Success', 'success');
       invalidateQueries();
       onSuccessCallback?.();
     },
@@ -42,7 +42,7 @@ export function useManagerInquiriesMutations({ showToast, onSuccessCallback }: U
   const deleteInquiryMutation = useMutation({
     mutationFn: (id: string) => inquiriesApi.remove(id),
     onSuccess: (res) => {
-      showToast(res.message, 'success');
+      showToast(res.message || 'Success', 'success');
       invalidateQueries();
       onSuccessCallback?.();
     },

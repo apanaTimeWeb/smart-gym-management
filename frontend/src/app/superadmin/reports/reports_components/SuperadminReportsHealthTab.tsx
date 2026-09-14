@@ -1,5 +1,6 @@
 import { CheckCircle2, AlertTriangle, XCircle } from 'lucide-react';
 import type { TenantHealthScore } from '@/app/superadmin/reports/reports_types/reports_types';
+import { formatNumber } from '@/lib/formatters';
 import {
   GRADE_STYLES,
   PAYMENT_HEALTH_STYLES,
@@ -54,7 +55,7 @@ export function SuperadminReportsHealthTab({
                     {row.grade}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-secondary">{row.memberCount.toLocaleString('en-IN')}</td>
+                <td className="px-4 py-3 text-secondary">{formatNumber(row.memberCount)}</td>
                 <td className="px-4 py-3 text-secondary text-xs">{row.lastLogin}</td>
                 <td className="px-4 py-3">
                   <div className={`flex items-center gap-1 text-xs font-medium ${PAYMENT_HEALTH_STYLES[row.paymentHealth]}`}>

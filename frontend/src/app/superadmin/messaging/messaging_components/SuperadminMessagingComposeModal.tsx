@@ -1,6 +1,6 @@
 import { X, Send } from 'lucide-react';
 import type { MessageChannel, MessagingTenant } from '@/app/superadmin/messaging/messaging_types/messaging_types';
-import { SuperadminMessagingTenantDropdown } from './SuperadminMessagingTenantDropdown';
+import { SuperadminMessagingTenantDropdown } from '@/app/superadmin/messaging/messaging_components/SuperadminMessagingTenantDropdown';
 
 export function SuperadminMessagingComposeModal({
   composeTenantId,

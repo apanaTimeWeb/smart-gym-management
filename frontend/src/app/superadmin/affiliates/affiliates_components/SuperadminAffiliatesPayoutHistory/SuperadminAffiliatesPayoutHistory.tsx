@@ -3,6 +3,7 @@
 
 import React, { useMemo } from 'react';
 import type { Affiliate } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
+import { formatCurrency } from '@/lib/formatters';
 
 export default function SuperadminAffiliatesPayoutHistory({ affiliates }: { affiliates: Affiliate[] }) {
   // Generate mock payout history based on affiliates
@@ -56,7 +57,7 @@ export default function SuperadminAffiliatesPayoutHistory({ affiliates }: { affi
                 <span className="block text-xs text-disabled">{payout.affiliateId}</span>
               </td>
               <td className="p-4 font-medium text-foreground">
-                ₹{payout.amount.toLocaleString('en-IN')}
+                {formatCurrency(payout.amount)}
               </td>
               <td className="p-4 text-sm text-secondary">{payout.method}</td>
               <td className="p-4 text-xs font-mono text-secondary">{payout.referenceId}</td>

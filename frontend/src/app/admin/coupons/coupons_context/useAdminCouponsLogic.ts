@@ -36,25 +36,25 @@ export function useAdminCouponsLogic() {
 
   const createMutation = useMutation({
     mutationFn: (payload: Partial<Coupon>) => couponsApi.createCoupon(payload),
-    onSuccess: (res) => { toast.success(res.message); setShowModal(false); qc.invalidateQueries({ queryKey: ['adminCoupons'] }); },
+    onSuccess: (res) => { toast.success(res.message || 'Coupon created successfully'); setShowModal(false); qc.invalidateQueries({ queryKey: ['admin', 'coupons'] }); },
     onError: (err) => toast.error((err as Error).message),
   });
 
   const updateMutation = useMutation({
     mutationFn: ({ id, payload }: { id: string; payload: Partial<Coupon> }) => couponsApi.updateCoupon(id, payload),
-    onSuccess: (res) => { toast.success(res.message); setShowModal(false); qc.invalidateQueries({ queryKey: ['adminCoupons'] }); },
+    onSuccess: (res) => { toast.success(res.message || 'Coupon updated successfully'); setShowModal(false); qc.invalidateQueries({ queryKey: ['adminCoupons'] }); },
     onError: (err) => toast.error((err as Error).message),
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => couponsApi.deleteCoupon(id),
-    onSuccess: (res) => { toast.success(res.message); qc.invalidateQueries({ queryKey: ['adminCoupons'] }); },
+    onSuccess: (res) => { toast.success(res.message || 'Coupon deleted successfully'); qc.invalidateQueries({ queryKey: ['adminCoupons'] }); },
     onError: (err) => toast.error((err as Error).message),
   });
 
   const toggleMutation = useMutation({
     mutationFn: (id: string) => couponsApi.toggleCoupon(id),
-    onSuccess: (res) => { toast.success(res.message); qc.invalidateQueries({ queryKey: ['adminCoupons'] }); },
+    onSuccess: (res) => { toast.success(res.message || 'Coupon status toggled successfully'); qc.invalidateQueries({ queryKey: ['adminCoupons'] }); },
     onError: (err) => toast.error((err as Error).message),
   });
 

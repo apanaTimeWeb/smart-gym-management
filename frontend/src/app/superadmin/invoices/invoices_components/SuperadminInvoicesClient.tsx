@@ -21,8 +21,10 @@ const STATUS_OPTIONS = [
   { value: 'FAILED', label: 'Failed' },
 ];
 
+export type InvoicesTab = 'ALL' | 'AGING';
+
 export default function SuperadminInvoicesClient() {
-  const [activeTab, setActiveTab] = useState<'ALL' | 'AGING'>('ALL');
+  const [activeTab, setActiveTab] = useState<InvoicesTab>('ALL');
   const {
     fetchState,
     error,

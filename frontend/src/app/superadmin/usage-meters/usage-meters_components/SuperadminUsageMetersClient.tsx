@@ -13,6 +13,7 @@ import { HardDrive, MessageSquare, Users, Calendar } from 'lucide-react';
 
 import { MOCK_USAGE_METERS } from '@/app/superadmin/usage-meters/usage-meters_utils/SuperadminUsageMetersConstants';
 import { getProgressColor, getPercentage } from '@/app/superadmin/usage-meters/usage-meters_utils/SuperadminUsageMetersUtils';
+import { formatNumber } from '@/lib/formatters';
 
 export default function SuperadminUsageMetersClient() {
   const [dateRange, setDateRange] = useState('this_month');
@@ -113,7 +114,7 @@ export default function SuperadminUsageMetersClient() {
                   <span className="flex items-center gap-1.5 text-secondary font-medium">
                     <MessageSquare size={18} /> Total SMS Sent
                   </span>
-                  <span className="text-foreground font-semibold">{meter.smsSent.toLocaleString()}</span>
+                  <span className="text-foreground font-semibold">{formatNumber(meter.smsSent)}</span>
                 </div>
                 <div className="h-2 w-full bg-input rounded-full overflow-hidden">
                   <div 
@@ -121,7 +122,7 @@ export default function SuperadminUsageMetersClient() {
                     style={{ width: `${getPercentage(meter.smsSent, meter.smsLimit)}%` }}
                   />
                 </div>
-                <p className="text-xs text-secondary mt-1.5">Limit: {meter.smsLimit.toLocaleString()}</p>
+                <p className="text-xs text-secondary mt-1.5">Limit: {formatNumber(meter.smsLimit)}</p>
               </div>
 
               {/* Storage Meter */}
@@ -130,8 +131,7 @@ export default function SuperadminUsageMetersClient() {
                   <span className="flex items-center gap-1.5 text-secondary font-medium">
                     <HardDrive size={18} /> Total Storage (GB)
                   </span>
-                  <span className="text-foreground font-semibold">
-                    {totalStorage.toFixed(2)} GB
+                  <span className="text-foreground font-semibold">formatCurrency(totalStorage) GB
                   </span>
                 </div>
                 <div className="h-2 w-full bg-input rounded-full overflow-hidden flex">
@@ -167,7 +167,7 @@ export default function SuperadminUsageMetersClient() {
                       <Users size={18} /> Members
                     </span>
                     <span className="text-foreground font-semibold">
-                      {(meter.activeMembers ?? 0).toLocaleString()} <span className="text-xs text-secondary font-normal">Active</span> / {(meter.totalMembers ?? meter.activeMembers ?? 0).toLocaleString()} <span className="text-xs text-secondary font-normal">Total</span>
+                      {formatNumber((meter.activeMembers ?? 0))} <span className="text-xs text-secondary font-normal">Active</span> / {formatNumber((meter.totalMembers ?? meter.activeMembers ?? 0))} <span className="text-xs text-secondary font-normal">Total</span>
                     </span>
                   </div>
                   <div className="h-2 w-full bg-input rounded-full overflow-hidden">
@@ -176,7 +176,7 @@ export default function SuperadminUsageMetersClient() {
                       style={{ width: `${getPercentage(meter.activeMembers ?? 0, meter.memberLimit ?? 1)}%` }}
                     />
                   </div>
-                  <p className="text-xs text-secondary mt-1.5">Limit: {(meter.memberLimit ?? 0).toLocaleString()}</p>
+                  <p className="text-xs text-secondary mt-1.5">Limit: {formatNumber((meter.memberLimit ?? 0))}</p>
                 </div>
 
                 {/* Staff */}
@@ -185,7 +185,7 @@ export default function SuperadminUsageMetersClient() {
                     <span className="flex items-center gap-1.5 text-secondary font-medium">
                       <Users size={18} /> Staff
                     </span>
-                    <span className="text-foreground font-semibold">{(meter.staffCount ?? 0).toLocaleString()}</span>
+                    <span className="text-foreground font-semibold">{formatNumber((meter.staffCount ?? 0))}</span>
                   </div>
                   <div className="h-2 w-full bg-input rounded-full overflow-hidden">
                     <div 
@@ -193,7 +193,7 @@ export default function SuperadminUsageMetersClient() {
                       style={{ width: `${getPercentage(meter.staffCount ?? 0, meter.staffLimit ?? 1)}%` }}
                     />
                   </div>
-                  <p className="text-xs text-secondary mt-1.5">Limit: {(meter.staffLimit ?? 0).toLocaleString()}</p>
+                  <p className="text-xs text-secondary mt-1.5">Limit: {formatNumber((meter.staffLimit ?? 0))}</p>
                 </div>
               </div>
             </div>

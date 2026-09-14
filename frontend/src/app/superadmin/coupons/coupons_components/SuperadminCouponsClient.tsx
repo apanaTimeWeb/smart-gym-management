@@ -16,6 +16,7 @@ export default function SuperadminCouponsClient() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [drawerCoupon, setDrawerCoupon] = useState<Coupon | null>(null);
 
+  // RESPONSIBILITY: Handle side-effects for SuperadminCouponsClient
   useEffect(() => {
     const handleOpenHistory = (e: Event) => {
       const customEvent = e as CustomEvent<Coupon>;

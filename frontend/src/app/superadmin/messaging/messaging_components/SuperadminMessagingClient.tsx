@@ -15,9 +15,9 @@ import type {
   MessagingTenant,
 } from '@/app/superadmin/messaging/messaging_types/messaging_types';
 import { superadminMessagingApi } from '@/app/superadmin/messaging/messaging_api/superadmin_messaging_api';
-import { SuperadminMessagingComposeModal } from './SuperadminMessagingComposeModal';
-import { SuperadminMessagingNotificationsTab } from './SuperadminMessagingNotificationsTab';
-import { SuperadminMessagingMessagesTab } from './SuperadminMessagingMessagesTab';
+import { SuperadminMessagingComposeModal } from '@/app/superadmin/messaging/messaging_components/SuperadminMessagingComposeModal';
+import { SuperadminMessagingNotificationsTab } from '@/app/superadmin/messaging/messaging_components/SuperadminMessagingNotificationsTab';
+import { SuperadminMessagingMessagesTab } from '@/app/superadmin/messaging/messaging_components/SuperadminMessagingMessagesTab';
 
 export default function SuperadminMessagingClient() {
   const searchParams = useSearchParams();
@@ -39,6 +39,7 @@ export default function SuperadminMessagingClient() {
   const [composeSubject, setComposeSubject] = useState('');
   const [composeBody, setComposeBody] = useState('');
 
+  // RESPONSIBILITY: Handle side-effects for SuperadminMessagingClient
   useEffect(() => {
     let mounted = true;
     async function loadData() {

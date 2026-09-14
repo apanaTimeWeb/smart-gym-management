@@ -15,6 +15,7 @@ export function useSuperadminDashboardDateFilter() {
   const [customStart, setCustomStart] = useState(currentStartDate);
   const [customEnd, setCustomEnd] = useState(currentEndDate);
 
+  // RESPONSIBILITY: Handle side-effects for useSuperadminDashboardDateFilter
   useEffect(() => {
     if (value === 'custom') {
       setCustomStart(currentStartDate);

@@ -42,7 +42,7 @@ superadmin/
 │   ├── AuditLogsConstants.ts           # Fallback/mock data for Global Audit Logs page
 │   ├── SuperadminChartConstants.ts     # ApexCharts color constants (hex) mapped from design system tokens
 │   ├── SuperadminValidation.ts         # Pure-function validation helpers: isValidEmail, isValidSubdomain, isValidPhone, isFutureDate, etc.
-│   ├── SuperadminZodSchemas.ts         # Zod schemas for ALL superadmin forms: addGymSchema, couponSchema, broadcastSchema, affiliateSchema, etc.
+│   ├── Feature-local schema files         # Zod schemas for ALL superadmin forms: addGymSchema, couponSchema, broadcastSchema, affiliateSchema, etc.
 │   └── hooks/
 │       ├── useAffiliatesPage.ts        # Logic hook for Affiliates page
 │       ├── useBroadcastsPage.ts        # Logic hook for Broadcasts page
@@ -240,5 +240,5 @@ superadmin/
 - Do NOT use boolean `isLoading` flags — use `FetchState` enum.
 - Do NOT use Recharts — use ApexCharts exclusively.
 - Do NOT hardcode inline hex colors (`bg-[#1E1E2E]`) — use design token classes (`bg-input`).
-- Do NOT define Zod schemas inline in form components — import from `SuperadminZodSchemas.ts`.
+- Do NOT define Zod schemas inline in form components — import from `Feature-local schema files`.
 - Do NOT write validation helpers inline in hooks — import from `SuperadminValidation.ts`.

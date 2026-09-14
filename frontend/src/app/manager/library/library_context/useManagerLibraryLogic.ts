@@ -63,7 +63,8 @@ export function useManagerLibraryLogic(initialData?: LibraryInitialData | null):
   params.search = debouncedSearch;
  }
  const dietRes = await libraryApi.getDietPlans(params);
- let fetchedDiets = dietRes.data?.dietPlans || dietRes.data || [];
+ const rawData = dietRes.data as any;
+ let fetchedDiets: DietPlan[] = Array.isArray(rawData) ? rawData : (rawData?.dietPlans || []);
  if (debouncedSearch) {
    const q = debouncedSearch.toLowerCase();
    fetchedDiets = fetchedDiets.filter((d: DietPlan) => d.name?.toLowerCase().includes(q));

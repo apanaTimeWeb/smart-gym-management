@@ -4,7 +4,7 @@ export const SuperadminDashboardUrlConfig = {
     DASHBOARD: '/superadmin/dashboard',
     CHURN_ALERTS: '/superadmin/churn-alerts',
   },
-  API: {
+  BACKEND_API: {
     DASHBOARD_DATA: '/superadmin/dashboard',
   },
 } as const;

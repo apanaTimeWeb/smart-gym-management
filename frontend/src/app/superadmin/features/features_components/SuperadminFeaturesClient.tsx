@@ -9,34 +9,48 @@ import { useSuperadminFeaturesData } from '@/app/superadmin/features/features_ut
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { ToggleLeft, Send, Search, Users, Clock } from 'lucide-react';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { useUnsavedChangesGuard } from '@/lib/useUnsavedChangesGuard';
 import type { FeatureFlag, ReleaseNote } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
 import { featuresApi } from '@/app/superadmin/features/superadmin_features_api/superadmin_features_api';
 import toast from 'react-hot-toast';
-import SuperadminFeatureRolloutModal from './SuperadminFeatureRolloutModal';
-import SuperadminFeatureHistoryModal from './SuperadminFeatureHistoryModal';
+import SuperadminFeatureRolloutModal from '@/app/superadmin/features/features_components/SuperadminFeatureRolloutModal';
+import SuperadminFeatureHistoryModal from '@/app/superadmin/features/features_components/SuperadminFeatureHistoryModal';
+
+const releaseNoteSchema = z.object({
+  version: z.string().min(1, 'Version is required'),
+  title: z.string().min(1, 'Title is required'),
+  content: z.string().min(1, 'Content is required'),
+});
+type ReleaseNoteFormValues = z.infer<typeof releaseNoteSchema>;
+
+export type FeaturesTab = 'FLAGS' | 'NOTES';
 
 export default function SuperadminFeaturesClient() {
-  const [activeTab, setActiveTab] = useState<'FLAGS' | 'NOTES'>('FLAGS');
-  const [noteForm, setNoteForm] = useState({ version: '', title: '', content: '' });
+  const [activeTab, setActiveTab] = useState<FeaturesTab>('FLAGS');
   const [isPublishing, setIsPublishing] = useState(false);
   const [rolloutFlag, setRolloutFlag] = useState<FeatureFlag | null>(null);
   const [historyFlag, setHistoryFlag] = useState<FeatureFlag | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
+  const { register, handleSubmit, reset, formState: { errors, isDirty } } = useForm<ReleaseNoteFormValues>({
+    resolver: zodResolver(releaseNoteSchema),
+    defaultValues: { version: '', title: '', content: '' }
+  });
+
+  useUnsavedChangesGuard(isDirty && activeTab === 'NOTES', 'You have an unsaved release note. Discard?');
+
   const { data, fetchState, error, setData, toggleFlag, updateFlag } = useSuperadminFeaturesData();
 
-  /**
-   * Handles release note form submission — calls featuresApi.createNote and
-   * prepends the new note to the notes list in-place via setData.
-   */
-  const handlePublishNote = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onPublishNote = async (formData: ReleaseNoteFormValues) => {
     setIsPublishing(true);
     try {
-      const res = await featuresApi.createNote({ ...noteForm, isPublished: true, date: new Date().toISOString() });
+      const res = await featuresApi.createNote({ ...formData, isPublished: true, date: new Date().toISOString() });
       if (res.data) {
         setData((prev: { flags: FeatureFlag[]; notes: ReleaseNote[]; } | null) => prev ? { ...prev, notes: [res.data, ...prev.notes] } : prev);
-        setNoteForm({ version: '', title: '', content: '' });
+        reset();
         toast.success('Release note published successfully');
       }
     } catch (err: unknown) {
@@ -201,22 +215,25 @@ export default function SuperadminFeaturesClient() {
           </div>
           
           <div>
-            <form onSubmit={handlePublishNote} className="bg-card border border-border rounded-xl p-6 sticky top-24">
+            <form onSubmit={handleSubmit(onPublishNote)} className="bg-card border border-border rounded-xl p-6 sticky top-24">
               <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
                 <Send size={18} className="text-primary" /> Compose Release Note
               </h3>
               <div className="space-y-4">
                 <div>
                   <label className="text-xs font-medium text-secondary mb-1 block">Version Tag</label>
-                  <input type="text" placeholder="e.g. v2.6.1" required value={noteForm.version} onChange={e => setNoteForm({...noteForm, version: e.target.value})} className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground" />
+                  <input type="text" placeholder="e.g. v2.6.1" {...register('version')} className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground" />
+                  {errors.version && <p className="text-xs text-danger mt-1">{errors.version.message}</p>}
                 </div>
                 <div>
                   <label className="text-xs font-medium text-secondary mb-1 block">Title</label>
-                  <input type="text" placeholder="Feature announcement..." required value={noteForm.title} onChange={e => setNoteForm({...noteForm, title: e.target.value})} className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground" />
+                  <input type="text" placeholder="Feature announcement..." {...register('title')} className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground" />
+                  {errors.title && <p className="text-xs text-danger mt-1">{errors.title.message}</p>}
                 </div>
                 <div>
                   <label className="text-xs font-medium text-secondary mb-1 block">Content (Markdown supported)</label>
-                  <textarea rows={5} required value={noteForm.content} onChange={e => setNoteForm({...noteForm, content: e.target.value})} className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground resize-none" placeholder="We just shipped..."></textarea>
+                  <textarea rows={5} {...register('content')} className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground resize-none" placeholder="We just shipped..."></textarea>
+                  {errors.content && <p className="text-xs text-danger mt-1">{errors.content.message}</p>}
                 </div>
                 <button type="submit" disabled={isPublishing} className="w-full bg-primary text-white py-2.5 rounded-lg font-medium hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-70">
                   {isPublishing ? 'Publishing...' : 'Publish to All Gyms'}

@@ -23,7 +23,7 @@ export const useSuperadminAffiliatesPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingAffiliate, setEditingAffiliate] = useState<Affiliate | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'ALL' | 'ACTIVE' | 'INACTIVE'>('ALL');
+  const [statusFilter, setStatusFilter] = useState<AffiliateStatusFilter>('ALL');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 

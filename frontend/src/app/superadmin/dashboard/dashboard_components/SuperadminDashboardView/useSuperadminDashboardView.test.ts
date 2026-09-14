@@ -24,11 +24,11 @@ describe('useSuperadminDashboardView', () => {
   });
 
   it('should initialize with default timeRange when no search params are present', () => {
-    (useSearchParams as any).mockReturnValue({
+    (useSearchParams as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
       get: vi.fn().mockReturnValue(null),
     });
     
-    (useQuery as any).mockReturnValue({
+    (useQuery as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
       data: null,
       isLoading: false,
       isError: false,
@@ -41,7 +41,7 @@ describe('useSuperadminDashboardView', () => {
   });
 
   it('should parse custom date range correctly', () => {
-    (useSearchParams as any).mockReturnValue({
+    (useSearchParams as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
       get: vi.fn((key: string) => {
         if (key === 'range') return 'custom';
         if (key === 'startDate') return '2024-01-01';
@@ -50,7 +50,7 @@ describe('useSuperadminDashboardView', () => {
       }),
     });
     
-    (useQuery as any).mockReturnValue({
+    (useQuery as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
       data: { data: { metrics: {}, revenue: [], growth: [] } },
       isLoading: false,
       isError: false,
@@ -65,11 +65,11 @@ describe('useSuperadminDashboardView', () => {
   });
 
   it('should return fetchState loading when query is loading', () => {
-    (useSearchParams as any).mockReturnValue({
+    (useSearchParams as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
       get: vi.fn().mockReturnValue(null),
     });
     
-    (useQuery as any).mockReturnValue({
+    (useQuery as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
       data: null,
       isLoading: true,
       isError: false,
@@ -81,11 +81,11 @@ describe('useSuperadminDashboardView', () => {
   });
 
   it('should return fetchState error when query is in error', () => {
-    (useSearchParams as any).mockReturnValue({
+    (useSearchParams as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
       get: vi.fn().mockReturnValue(null),
     });
     
-    (useQuery as any).mockReturnValue({
+    (useQuery as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
       data: null,
       isLoading: false,
       isError: true,

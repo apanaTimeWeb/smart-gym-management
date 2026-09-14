@@ -12,10 +12,10 @@ import { superadminReportsApi } from '@/app/superadmin/reports/reports_api/super
 
 import { SuperadminReportsDatePresetDropdown, type DatePreset } from '@/app/superadmin/reports/reports_components/SuperadminReportsDatePresetDropdown';
 import { SuperadminReportsExportButton } from '@/app/superadmin/reports/reports_components/SuperadminReportsExportButton';
-import { SuperadminReportsSummaryCards } from './SuperadminReportsSummaryCards';
-import { SuperadminReportsRevenueTab } from './SuperadminReportsRevenueTab';
-import { SuperadminReportsChurnTab } from './SuperadminReportsChurnTab';
-import { SuperadminReportsHealthTab } from './SuperadminReportsHealthTab';
+import { SuperadminReportsSummaryCards } from '@/app/superadmin/reports/reports_components/SuperadminReportsSummaryCards';
+import { SuperadminReportsRevenueTab } from '@/app/superadmin/reports/reports_components/SuperadminReportsRevenueTab';
+import { SuperadminReportsChurnTab } from '@/app/superadmin/reports/reports_components/SuperadminReportsChurnTab';
+import { SuperadminReportsHealthTab } from '@/app/superadmin/reports/reports_components/SuperadminReportsHealthTab';
 
 const PLAN_OPTIONS = [
   { value: 'ALL', label: 'All Plans' },
@@ -42,6 +42,7 @@ export default function SuperadminReportsClient() {
   const [healthData, setHealthData] = useState<TenantHealthScore[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  // RESPONSIBILITY: Handle side-effects for SuperadminReportsClient
   useEffect(() => {
     let mounted = true;
     async function loadData() {

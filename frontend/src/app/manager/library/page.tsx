@@ -9,7 +9,7 @@ export default async function LibraryPage() {
   try {
     const dietRes = await ssrLibraryApi.getDietPlans();
     initialData = {
-      dietPlans: dietRes.data?.dietPlans || dietRes.data || [],
+      dietPlans: dietRes.data?.dietPlans || (Array.isArray(dietRes.data) ? dietRes.data : []),
     };
   } catch (e) {
     // Silently fail and return empty array. Client handles refetch.

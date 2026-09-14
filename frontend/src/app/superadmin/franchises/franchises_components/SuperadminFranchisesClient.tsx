@@ -9,7 +9,8 @@ import { SuperadminFranchiseModal } from '@/app/superadmin/franchises/franchises
 import type { FranchiseFormData } from '@/app/superadmin/franchises/franchises_components/SuperadminFranchiseModal/SuperadminFranchiseModal';
 import { FRANCHISE_STATUS_STYLES, FRANCHISES_PAGE_SIZE } from '@/app/superadmin/franchises/franchises_utils/SuperadminFranchisesConstants';
 import type { SuperadminFranchise } from '@/app/superadmin/franchises/franchises_types/superadmin_franchises_types';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
+import { useSuperadminConfirm } from '@/components/ui/SuperadminFeedback/SuperadminConfirmProvider';
+import { formatCurrency, formatNumber } from '@/lib/formatters';
 
 export default function SuperadminFranchisesClient() {
   const { franchises, fetchState, search, setSearch, handleSuspend, handleActivate, handleEdit, isEditing } = useSuperadminFranchisesPage();
@@ -37,7 +38,7 @@ export default function SuperadminFranchisesClient() {
     { label: 'Active', value: franchises.filter(f => f.status === 'ACTIVE').length, icon: CheckCircle2, color: 'text-success', bg: 'bg-success/10' },
     { label: 'Total Branches', value: franchises.reduce((s, f) => s + f.branchCount, 0), icon: Building2, color: 'text-info', bg: 'bg-info/10' },
     { label: 'Total Members', value: franchises.reduce((s, f) => s + f.totalMembers, 0).toLocaleString('en-IN'), icon: Users, color: 'text-warning', bg: 'bg-warning/10' },
-    { label: 'Combined Monthly Income', value: `₹${franchises.reduce((s, f) => s + f.totalMonthlyRevenue, 0).toLocaleString('en-IN')}`, icon: TrendingUp, color: 'text-success', bg: 'bg-success/10' },
+    { label: 'Combined Monthly Income', value: formatCurrency(franchises.reduce((s, f) => s + f.totalMonthlyRevenue, 0)), icon: TrendingUp, color: 'text-success', bg: 'bg-success/10' },
   ];
 
   if (fetchState === 'loading') {
@@ -119,8 +120,8 @@ export default function SuperadminFranchisesClient() {
                     </span>
                   </td>
                   <td className="px-4 py-3 text-foreground font-medium">{f.branchCount}</td>
-                  <td className="px-4 py-3 text-foreground font-medium">{f.totalMembers.toLocaleString('en-IN')}</td>
-                  <td className="px-4 py-3 text-success font-medium">₹{f.totalMonthlyRevenue.toLocaleString('en-IN')}</td>
+                  <td className="px-4 py-3 text-foreground font-medium">{formatNumber(f.totalMembers)}</td>
+                  <td className="px-4 py-3 text-success font-medium">{formatCurrency(f.totalMonthlyRevenue)}</td>
                   <td className="px-4 py-3">
                     <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-semibold ${FRANCHISE_STATUS_STYLES[f.status] ?? ''}`}>
                       {f.status}

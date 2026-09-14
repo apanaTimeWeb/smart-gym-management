@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic';
 import { CHART_COLORS } from '@/app/superadmin/superadmin_utils/SuperadminChartConstants';
 import type { RevenueRow } from '@/app/superadmin/reports/reports_types/reports_types';
+import { formatCurrency } from '@/lib/formatters';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -60,10 +61,10 @@ export function SuperadminReportsRevenueTab({
               {revenueData.map((row: RevenueRow) => (
                 <tr key={row.month} className="hover:bg-input/30 motion-safe:transition-colors">
                   <td className="px-4 py-3 font-medium text-foreground">{row.month}</td>
-                  <td className="px-4 py-3 text-foreground">₹{row.mrr.toLocaleString('en-IN')}</td>
-                  <td className="px-4 py-3 text-success">+₹{row.newRevenue.toLocaleString('en-IN')}</td>
-                  <td className="px-4 py-3 text-danger">-₹{row.churnedRevenue.toLocaleString('en-IN')}</td>
-                  <td className="px-4 py-3 font-semibold text-foreground">₹{row.netRevenue.toLocaleString('en-IN')}</td>
+                  <td className="px-4 py-3 text-foreground">{formatCurrency(row.mrr)}</td>
+                  <td className="px-4 py-3 text-success">+{formatCurrency(row.newRevenue)}</td>
+                  <td className="px-4 py-3 text-danger">-{formatCurrency(row.churnedRevenue)}</td>
+                  <td className="px-4 py-3 font-semibold text-foreground">{formatCurrency(row.netRevenue)}</td>
                   <td className="px-4 py-3 text-secondary">{row.tenantCount}</td>
                 </tr>
               ))}

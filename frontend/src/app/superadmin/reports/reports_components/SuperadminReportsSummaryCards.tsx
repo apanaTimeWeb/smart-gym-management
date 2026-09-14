@@ -2,6 +2,7 @@
 
 import { TrendingDown, HeartPulse, IndianRupee } from 'lucide-react';
 import { KPI_CARD_GRADIENT } from '@/app/superadmin/reports/reports_types/reports_constants';
+import { formatCurrency } from '@/lib/formatters';
 
 export function SuperadminReportsSummaryCards({
   totalMRR,
@@ -30,7 +31,7 @@ export function SuperadminReportsSummaryCards({
           <IndianRupee size={18} strokeWidth={2} className="text-primary" />
           <span className="text-xs text-secondary uppercase tracking-wider">Current Monthly Income{suffix}</span>
         </div>
-        <p className="text-3xl font-bold text-foreground">₹{totalMRR.toLocaleString('en-IN')}</p>
+        <p className="text-3xl font-bold text-foreground">{formatCurrency(totalMRR)}</p>
         <p className="text-xs text-success mt-1">↑ +8.6% from last month</p>
       </div>
       <div
@@ -41,7 +42,7 @@ export function SuperadminReportsSummaryCards({
           <TrendingDown size={18} strokeWidth={2} className="text-danger" />
           <span className="text-xs text-secondary uppercase tracking-wider">Lost Income{suffix}</span>
         </div>
-        <p className="text-3xl font-bold text-foreground">₹{totalChurnedRevenue.toLocaleString('en-IN')}</p>
+        <p className="text-3xl font-bold text-foreground">{formatCurrency(totalChurnedRevenue)}</p>
         <p className="text-xs text-danger mt-1">{churnCount} gyms left</p>
       </div>
       <div

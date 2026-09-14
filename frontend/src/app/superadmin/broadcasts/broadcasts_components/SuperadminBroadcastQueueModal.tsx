@@ -4,6 +4,7 @@
 import { useEffect, useState } from 'react';
 import { X, CheckCircle, Phone, Bell, Loader2 } from 'lucide-react';
 import { maskSensitiveData } from '@/lib/formatters';
+import { useLocalStorage } from '@/lib/useLocalStorage';
 import { logger } from '@/lib/logger';
 
 export interface BroadcastRecipient {
@@ -29,7 +30,9 @@ export default function SuperadminBroadcastQueueModal({
 }: SuperadminBroadcastQueueModalProps) {
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [completed, setCompleted] = useState<Set<string>>(new Set());
+  const [notifications, setNotifications] = useLocalStorage<any[]>('admin_notifications_v1', []);
 
+  // RESPONSIBILITY: Handle side-effects for SuperadminBroadcastQueueModal
   useEffect(() => {
     if (isOpen && recipients.length > 0) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -39,6 +42,7 @@ export default function SuperadminBroadcastQueueModal({
     }
   }, [isOpen, recipients]);
 
+  // RESPONSIBILITY: Handle side-effects for SuperadminBroadcastQueueModal
   useEffect(() => {
     if (currentIndex >= 0 && currentIndex < recipients.length) {
       const timer = setTimeout(() => {
@@ -48,16 +52,16 @@ export default function SuperadminBroadcastQueueModal({
 
         // Push notification logic (mocked to localstorage)
         try {
-          const key = 'admin_notifications_v1';
-          const stored = localStorage.getItem(key);
-          const notifs = stored ? JSON.parse(stored) : [];
-          notifs.unshift({
-            id: `n-${Date.now()}-${rec.id}`,
-            text: `[Broadcast] ${broadcastTitle}`,
-            time: 'Just now',
-            unread: true
+          setNotifications(prev => {
+            const notifs = [...(prev || [])];
+            notifs.unshift({
+              id: `n-${Date.now()}-${rec.id}`,
+              text: `[Broadcast] ${broadcastTitle}`,
+              time: 'Just now',
+              unread: true
+            });
+            return notifs;
           });
-          localStorage.setItem(key, JSON.stringify(notifs));
         } catch (e) {
           logger.error(e);
         }

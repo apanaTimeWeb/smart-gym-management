@@ -12,6 +12,7 @@ export default function ChurnAlertsError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  // RESPONSIBILITY: Handle side-effects for error
   useEffect(() => {
     logger.error('Churn Alerts Module Error:', error);
   }, [error]);

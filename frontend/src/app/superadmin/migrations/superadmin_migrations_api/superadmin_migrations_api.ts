@@ -1,24 +1,18 @@
-// RESPONSIBILITY: Modular API client for the Superadmin Migrations module.
+// RESPONSIBILITY: Modularized API client for the Migrations module. All methods import apiFetch from src/lib/api.ts and define only superadmin-scoped endpoints. No UI logic.
+import { SuperadminMigrationsUrlConfig } from '@/app/superadmin/migrations/superadmin_migrations_url_config';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import type { MigrationLog } from '@/app/superadmin/migrations/superadmin_migrations_types/superadmin_migrations_types';
-import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 
 export const migrationsApi = {
-  fetchMigrations: () => {
-    // Return a mocked API promise if endpoint doesn't exist yet
-    return Promise.resolve({
-      success: true,
-      message: 'Migrations fetched successfully',
-      data: [] // We'll inject mock data in the client for UI purposes
-    } as ApiResponse<MigrationLog[]>);
+  fetchMigrations: (params?: Record<string, string>) => {
+    const q = params ? '?' + new URLSearchParams(params).toString() : '';
+    return apiFetch<ApiResponse<MigrationLog[]>>(`${SuperadminMigrationsUrlConfig.BACKEND_API.MIGRATIONS_BASE}${q}`);
   },
-  
-  triggerMigration: (version: string, targetTenants: string) => {
-    return Promise.resolve({
-      success: true,
-      message: `Migration to ${version} triggered for ${targetTenants}`,
-      data: null
-    } as ApiResponse<null>);
-  }
+  triggerMigration: (tenantId: string) => {
+    return apiFetch<ApiResponse<void>>(`${SuperadminMigrationsUrlConfig.BACKEND_API.MIGRATIONS_BASE}/trigger`, {
+      method: 'POST',
+      body: JSON.stringify({ tenantId })
+    });
+  },
 };

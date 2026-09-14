@@ -7,7 +7,8 @@ import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { ArrowLeft, Database, Save, Loader2, Eye, EyeOff } from 'lucide-react';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
 import { useSuperadminAddGymForm } from '@/app/superadmin/gyms/gyms_components/SuperadminAddGymForm/useSuperadminAddGymForm';
-import { useWarnIfUnsavedChanges } from '@/app/superadmin/superadmin_utils/useWarnIfUnsavedChanges';
+import { useUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useUnsavedChangesGuard';
+import { useUnsavedChangesGuard } from '@/lib/useUnsavedChangesGuard';
 
 export default function SuperadminAddGymForm() {
   const {
@@ -25,7 +26,8 @@ export default function SuperadminAddGymForm() {
     loadingPlans,
   } = useSuperadminAddGymForm();
 
-  useWarnIfUnsavedChanges(isDirty && !isProvisioning);
+  useUnsavedChangesGuard(isDirty, 'You have unsaved gym details. Discard?');
+  useUnsavedChangesGuard(isDirty && !isProvisioning);
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">

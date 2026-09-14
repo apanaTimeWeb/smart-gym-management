@@ -14,12 +14,12 @@ describe('useSuperadminDashboardDateFilter', () => {
   
   beforeEach(() => {
     vi.clearAllMocks();
-    (useRouter as any).mockReturnValue({ replace: replaceMock });
-    (usePathname as any).mockReturnValue('/superadmin/dashboard');
+    (useRouter as unknown as ReturnType<typeof vi.fn>).mockReturnValue({ replace: replaceMock });
+    (usePathname as unknown as ReturnType<typeof vi.fn>).mockReturnValue('/superadmin/dashboard');
   });
 
   it('should initialize with this_month by default', () => {
-    (useSearchParams as any).mockReturnValue({
+    (useSearchParams as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
       get: vi.fn().mockReturnValue(null),
       toString: () => '',
     });
@@ -33,7 +33,7 @@ describe('useSuperadminDashboardDateFilter', () => {
 
   it('should update URL when handling preset change', () => {
     const searchParamsMock = new URLSearchParams('');
-    (useSearchParams as any).mockReturnValue({
+    (useSearchParams as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
       get: vi.fn().mockReturnValue('this_month'),
       toString: () => searchParamsMock.toString(),
     });
@@ -53,7 +53,7 @@ describe('useSuperadminDashboardDateFilter', () => {
 
   it('should clear dates when preset is custom and then handleCustomDateChange is called', () => {
     const searchParamsMock = new URLSearchParams('range=custom');
-    (useSearchParams as any).mockReturnValue({
+    (useSearchParams as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
       get: vi.fn((key) => {
         if (key === 'range') return 'custom';
         return null;

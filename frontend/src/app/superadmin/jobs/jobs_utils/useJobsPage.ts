@@ -2,12 +2,12 @@
 // pagination, and action handlers. Exposes a clean interface to SuperadminJobsView (view only).
 // No JSX — pure logic (Rule 6, Rule 56).
 //
-// DATA FLOW: superadminApi.jobs.fetchJobs() → useJobsPage → SuperadminJobsView → Sub-components
+// DATA FLOW: jobsApi.fetchJobs() → useJobsPage → SuperadminJobsView → Sub-components
 
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
+import { jobsApi } from '@/app/superadmin/jobs/superadmin_jobs_api/superadmin_jobs_api';
 import type { BackgroundJob, FetchState } from '@/app/superadmin/superadmin_types/superadmin_types';
 
 const ITEMS_PER_PAGE = 10;
@@ -62,7 +62,7 @@ export function useJobsPage(): UseJobsPageReturn {
 
   const { data: fetchRes, isLoading, isError } = useQuery({
     queryKey: ['superadmin', 'jobs'],
-    queryFn: () => superadminApi.jobs.fetchJobs(),
+    queryFn: () => jobsApi.fetchJobs(),
   });
 
   const rawJobs = (fetchRes?.data as BackgroundJob[]) ?? [];
@@ -87,7 +87,7 @@ export function useJobsPage(): UseJobsPageReturn {
   function handleRetryAll() {
     setIsRetrying(true);
     toast.promise(
-      superadminApi.jobs.retryAll().then((res) => {
+      jobsApi.retryAll().then((res) => {
         if (!res.success) throw new Error(res.message || 'Failed to retry jobs.');
         return res.data;
       }),

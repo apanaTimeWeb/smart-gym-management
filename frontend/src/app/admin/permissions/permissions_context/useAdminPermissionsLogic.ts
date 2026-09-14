@@ -24,14 +24,14 @@ export function useAdminPermissionsLogic() {
   const updateRoleMutation = useMutation({
     mutationFn: ({ role, permissions }: { role: RoleType; permissions: Record<string, boolean> }) =>
       permissionsApi.updateRolePermissions(role, permissions),
-    onSuccess: (res) => { toast.success(res.message); qc.invalidateQueries({ queryKey: ['adminPermissions'] }); },
+    onSuccess: (res) => { toast.success(res.message || 'Success'); qc.invalidateQueries({ queryKey: ['adminPermissions'] }); },
     onError: (err) => toast.error((err as Error).message),
   });
 
   const updateGymMutation = useMutation({
     mutationFn: ({ gymId, role, overrides }: { gymId: string; role: RoleType; overrides: Record<string, boolean> }) =>
       permissionsApi.updateGymOverride(gymId, role, overrides),
-    onSuccess: (res) => { toast.success(res.message); qc.invalidateQueries({ queryKey: ['adminPermissions'] }); },
+    onSuccess: (res) => { toast.success(res.message || 'Success'); qc.invalidateQueries({ queryKey: ['adminPermissions'] }); },
     onError: (err) => toast.error((err as Error).message),
   });
 

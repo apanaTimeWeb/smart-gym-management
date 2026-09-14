@@ -1,7 +1,8 @@
 'use client';
 // RESPONSIBILITY: Renders the KPI stat cards (Active Coupons, Total Redeemed) for the Coupons page. Purely presentational — receives data via props.
 import { Tag, CheckCircle2, Ticket } from 'lucide-react';
-import { useDateRangeSuffix } from '@/app/superadmin/superadmin_components/SuperadminShared/useDateRangeSuffix';
+import { useDateRangeSuffix } from '@/components/ui/SuperadminShared/useDateRangeSuffix';
+import { formatNumber } from '@/lib/formatters';
 
 interface CouponsStatsBarProps {
   activeCoupons: number;
@@ -58,7 +59,7 @@ export default function SuperadminCouponsStatsBar({
           </div>
           <span className="text-xs font-medium text-secondary uppercase tracking-wider">Total Redeemed{dateSuffix}</span>
         </div>
-        <div className="text-3xl font-bold text-foreground mt-1">{totalRedeemed.toLocaleString()}</div>
+        <div className="text-3xl font-bold text-foreground mt-1">{formatNumber(totalRedeemed)}</div>
       </div>
     </div>
   );

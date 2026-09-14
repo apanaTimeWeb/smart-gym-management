@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic';
 import { CHART_COLORS } from '@/app/superadmin/superadmin_utils/SuperadminChartConstants';
 import type { ChurnRecord } from '@/app/superadmin/reports/reports_types/reports_types';
+import { formatCurrency } from '@/lib/formatters';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -44,7 +45,7 @@ export function SuperadminReportsChurnTab({
         <div className="bg-card border border-border rounded-xl p-6 shadow-sm space-y-3">
           <h2 className="text-base font-semibold text-foreground mb-2">Lost Gyms Summary</h2>
           <div className="flex justify-between text-sm"><span className="text-secondary">Filtered Lost Gyms</span><span className="text-foreground font-medium">{filteredChurnData.length}</span></div>
-          <div className="flex justify-between text-sm"><span className="text-secondary">Total Lost Monthly Income</span><span className="text-danger font-medium">₹{totalChurnedRevenue.toLocaleString('en-IN')}</span></div>
+          <div className="flex justify-between text-sm"><span className="text-secondary">Total Lost Monthly Income</span><span className="text-danger font-medium">{formatCurrency(totalChurnedRevenue)}</span></div>
           <div className="flex justify-between text-sm"><span className="text-secondary">Avg Days Active Before Leaving</span><span className="text-foreground font-medium">{avgDaysActive} days</span></div>
           <div className="flex justify-between text-sm"><span className="text-secondary">Top Reason for Leaving</span><span className="text-foreground font-medium">Too expensive</span></div>
         </div>
@@ -70,7 +71,7 @@ export function SuperadminReportsChurnTab({
                   <td className="px-4 py-3 text-secondary">{row.plan}</td>
                   <td className="px-4 py-3 text-secondary">{row.churnedAt}</td>
                   <td className="px-4 py-3 text-secondary">{row.reason}</td>
-                  <td className="px-4 py-3 text-danger font-medium">₹{row.mrr.toLocaleString('en-IN')}</td>
+                  <td className="px-4 py-3 text-danger font-medium">{formatCurrency(row.mrr)}</td>
                   <td className="px-4 py-3 text-secondary">{row.daysActive}d</td>
                 </tr>
               ))}

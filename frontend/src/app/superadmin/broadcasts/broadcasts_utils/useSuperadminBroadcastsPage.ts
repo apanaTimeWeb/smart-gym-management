@@ -1,5 +1,5 @@
 // RESPONSIBILITY: useSuperadminBroadcastsPage.ts encapsulates all state and async logic for the Broadcasts page.
-// DATA FLOW: superadminApi Ã¢â€ â€™ useSuperadminBroadcastsPage Ã¢â€ â€™ SuperadminBroadcastsClient
+// DATA FLOW: broadcastsApi Ã¢â€ â€™ useSuperadminBroadcastsPage Ã¢â€ â€™ SuperadminBroadcastsClient
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -8,7 +8,8 @@ import { BroadcastSchema, type BroadcastFormData, type Broadcast, type Broadcast
 import toast from 'react-hot-toast';
 import { useLocalStorage } from '@/lib/useLocalStorage';
 import { useQuery } from '@tanstack/react-query';
-import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
+import { broadcastsApi } from '@/app/superadmin/broadcasts/superadmin_broadcasts_api/superadmin_broadcasts_api';
+import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
 import { MOCK_GYMS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
 
@@ -23,6 +24,7 @@ export const useSuperadminBroadcastsPage = () => {
   const [persistedBroadcasts, setPersistedBroadcasts] = useLocalStorage<Broadcast[] | null>(BROADCASTS_STORAGE_KEY, null);
   const [broadcasts, setBroadcasts] = useState<Broadcast[]>([]);
   
+  // RESPONSIBILITY: Handle side-effects for useSuperadminBroadcastsPage
   useEffect(() => {
     if (!persistedBroadcasts) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -49,7 +51,7 @@ export const useSuperadminBroadcastsPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'ALL' | 'DRAFT' | 'SCHEDULED' | 'SENT' | 'FAILED'>('ALL');
+  const [statusFilter, setStatusFilter] = useState<BroadcastStatusFilter>('ALL');
 
   const [queueModalOpen, setQueueModalOpen] = useState(false);
   const [queueRecipients, setQueueRecipients] = useState<{id: string; name: string; phone: string}[]>([]);
@@ -57,7 +59,7 @@ export const useSuperadminBroadcastsPage = () => {
 
   const { data: fetchRes } = useQuery({
     queryKey: ['superadmin', 'gyms'],
-    queryFn: () => superadminApi.gyms.fetchGyms(),
+    queryFn: () => gymsApi.fetchGyms(),
   });
 
   const rawGyms = (fetchRes?.data as Tenant[]) ?? [];
@@ -99,7 +101,7 @@ export const useSuperadminBroadcastsPage = () => {
 
     if (isSendingNow) {
       const selectedGyms = gyms?.filter(g => payload.targetGymIds?.includes(g.id)) || [];
-      const recipients = selectedGyms.map(g => ({ id: g.id, name: (g as any).gymName || g.name, phone: g.phone || 'N/A' }));
+      const recipients = selectedGyms.map(g => ({ id: g.id, name: ('gymName' in g ? (g as {gymName?: string}).gymName : '') || g.name, phone: g.phone || 'N/A' }));
       setQueueRecipients(recipients);
       setQueueTitle(payload.title);
       setQueueModalOpen(true);
@@ -118,7 +120,7 @@ export const useSuperadminBroadcastsPage = () => {
     updateBroadcasts(prev => prev.map(item => item.id === id ? { ...item, status: 'SENT', sentDate: new Date().toISOString() } : item));
     
     const selectedGyms = gyms?.filter(g => b.targetGymIds?.includes(g.id)) || [];
-    const recipients = selectedGyms.map(g => ({ id: g.id, name: (g as any).gymName || g.name, phone: g.phone || 'N/A' }));
+    const recipients = selectedGyms.map(g => ({ id: g.id, name: ('gymName' in g ? (g as {gymName?: string}).gymName : '') || g.name, phone: g.phone || 'N/A' }));
     setQueueRecipients(recipients);
     setQueueTitle(b.title);
     setQueueModalOpen(true);

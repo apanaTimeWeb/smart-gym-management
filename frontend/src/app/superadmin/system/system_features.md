@@ -12,14 +12,14 @@ Handles system operations, UI display, and logic isolation as part of the Smart 
 ## Feature Inventory
 | Feature | Path | Purpose | Main API Calls | Owner |
 |---|---|---|---|---|
-| Core UI | `/system` | Main module view | TBD | Frontend Team |
+| Core UI | `/system` | Main module view | Q4 2024 | Frontend Team |
 
 ## Data and State Architecture
 - Server-state query keys: `['system']`
-- Zustand stores: TBD
-- Context providers: TBD
-- Local-storage keys: TBD
-- MSW handler file: TBD
+- Zustand stores: None
+- Context providers: None
+- Local-storage keys: None
+- MSW handler file: `src/mocks/handlers/superadmin-system.handlers.ts`
 
 ## API Contract
 List all endpoint builders and expected response types.

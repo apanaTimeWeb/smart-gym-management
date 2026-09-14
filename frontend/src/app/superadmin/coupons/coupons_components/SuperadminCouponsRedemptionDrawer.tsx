@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { X, History, TrendingDown } from 'lucide-react';
 import type { Coupon, RedemptionRecord } from '@/app/superadmin/coupons/superadmin_coupons_types/superadmin_coupons_types';
 import SuperadminCouponsStatusBadge from '@/app/superadmin/coupons/coupons_components/SuperadminCouponsStatusBadge/SuperadminCouponsStatusBadge';
+import { formatCurrency } from '@/lib/formatters';
 
 interface SuperadminCouponsRedemptionDrawerProps {
   coupon: Coupon | null;
@@ -66,7 +67,7 @@ export default function SuperadminCouponsRedemptionDrawer({ coupon, isOpen, onCl
             </div>
             <div className="bg-input/50 p-4 rounded-xl border border-border">
               <p className="text-xs text-secondary uppercase tracking-wider mb-1">Total Value Given</p>
-              <p className="text-2xl font-bold text-success">₹{totalDiscount.toLocaleString('en-IN')}</p>
+              <p className="text-2xl font-bold text-success">{formatCurrency(totalDiscount)}</p>
             </div>
           </div>
 
@@ -86,7 +87,7 @@ export default function SuperadminCouponsRedemptionDrawer({ coupon, isOpen, onCl
                     <div className="flex justify-between items-center text-sm">
                       <span className="text-secondary bg-input px-2 py-0.5 rounded text-xs font-medium">{record.planName} Plan</span>
                       <span className="text-success font-medium flex items-center gap-1">
-                        <TrendingDown size={14} /> ₹{record.discountApplied.toLocaleString('en-IN')} saved
+                        <TrendingDown size={14} /> {formatCurrency(record.discountApplied)} saved
                       </span>
                     </div>
                   </div>

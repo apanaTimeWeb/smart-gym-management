@@ -1,14 +1,14 @@
 // RESPONSIBILITY: Provides the logic and state for the SuperadminGymsTable component using TanStack Query.
-// DATA FLOW: superadminApi -> useQuery -> useSuperadminGymsTable -> SuperadminGymsTable
+// DATA FLOW: gymsApi -> useQuery -> useSuperadminGymsTable -> SuperadminGymsTable
 
 import { useMemo } from 'react';
 import toast from 'react-hot-toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
+import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
 import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
 import { AuthUrlConfig } from '@/app/auth/auth_url_config';
-import { useSuperadminGhostLoginStore } from '@/app/superadmin/superadmin_components/SuperadminLayout/useSuperadminGhostLoginStore';
+import { useSuperadminGhostLoginStore } from '@/components/ui/SuperadminLayout/useSuperadminGhostLoginStore';
 
 import { MOCK_GYMS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
 
@@ -40,7 +40,7 @@ export function useSuperadminGymsTable() {
 
   const { data: fetchRes, isLoading, isError } = useQuery({
     queryKey: ['superadmin', 'gyms', queryParams],
-    queryFn: () => superadminApi.gyms.fetchGyms(queryParams),
+    queryFn: () => gymsApi.fetchGyms(queryParams),
   });
 
   const gyms = fetchRes?.data && fetchRes.data.length > 0 ? fetchRes.data : MOCK_GYMS;
@@ -54,7 +54,7 @@ export function useSuperadminGymsTable() {
 
   // Mutations
   const impersonateMutation = useMutation({
-    mutationFn: (id: string) => superadminApi.gyms.impersonateTenant(id),
+    mutationFn: (id: string) => gymsApi.impersonateTenant(id),
     onSuccess: async (res, id) => {
       if (res.success && res.data?.token) {
         toast.success(res.message || 'Ghost login active. Viewing as tenant admin.');
@@ -92,7 +92,7 @@ export function useSuperadminGymsTable() {
   });
 
   const suspendMutation = useMutation({
-    mutationFn: ({ id, status }: { id: string, status: string }) => superadminApi.gyms.changeGymStatus(id, status),
+    mutationFn: ({ id, status }: { id: string, status: string }) => gymsApi.changeGymStatus(id, status),
     onSuccess: (res) => {
       toast.success(res.message || 'Status updated successfully.');
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'gyms'] });

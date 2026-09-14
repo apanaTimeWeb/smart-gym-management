@@ -14,8 +14,8 @@ export default async function MembersPage() {
       ssrMembersApi.getStats(),
     ]);
     initialData = {
-      members: membersRes.data.members || [],
-      totalMembers: membersRes.data.total || 0,
+      members: membersRes.data?.members || [],
+      totalMembers: membersRes.data?.total || 0,
       plans: plansRes.data || [],
       stats: statsRes.data || { total: 0, active: 0, pending: 0, expired: 0 }
     } as unknown as MembersInitialData;

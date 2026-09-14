@@ -13,7 +13,7 @@ export default async function LibraryPage() {
       ssrLibraryApi.getDietPlans(),
     ]);
     initialData = {
-      dietPlans: dietRes.data?.dietPlans || dietRes.data || [],
+      dietPlans: dietRes.data?.dietPlans || (Array.isArray(dietRes.data) ? dietRes.data : []),
     };
   } catch (e) {
     // Error logged to monitoring provider

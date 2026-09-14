@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Manages form state, validation, and API submission for onboarding a new gym.
-// DATA FLOW: SuperadminAddGymForm -> useSuperadminAddGymForm -> superadminApi.gyms.create
+// DATA FLOW: SuperadminAddGymForm -> useSuperadminAddGymForm -> gymsApi.createGym
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -8,9 +8,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
 import { OnboardGymSchema } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsValidationSchemas';
 import type { OnboardGymFormValues } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsValidationSchemas';
-import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
+import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
+import { plansApi } from '@/app/superadmin/plans/superadmin_plans_api/superadmin_plans_api';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
-import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
 import type { Tenant } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_types';
 import type { SubscriptionPlan } from '@/app/superadmin/superadmin_types/superadmin_types';
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
@@ -41,12 +42,17 @@ export function useSuperadminAddGymForm() {
   const [isProvisioning, setIsProvisioning] = useState(false);
   const [provisioningLogs, setProvisioningLogs] = useState<string[]>([]);
   const [showPassword, setShowPassword] = useState(false);
-
-  const { data: plans, fetchState: fetchStatePlans } = useSuperadminData<SubscriptionPlan[]>(
-    SuperadminUrlConfig.BACKEND_API.PLANS_BASE
-  );
   
-  const loadingPlans = fetchStatePlans === 'loading';
+  const queryClient = useQueryClient();
+
+  const { data: fetchRes, isLoading: loadingPlans } = useQuery({
+    queryKey: ['superadmin', 'plans'],
+    queryFn: async () => {
+      const res = await plansApi.fetchPlans();
+      return res.data || [];
+    },
+  });
+  const plans = fetchRes || [];
 
   const { register, handleSubmit, control, formState: { errors, isDirty } } = useForm<OnboardGymFormValues>({
     resolver: zodResolver(OnboardGymSchema),
@@ -121,37 +127,24 @@ export function useSuperadminAddGymForm() {
       }
 
       addLog('Sending payload to backend...');
-      // Mocking the backend API success as per "fix with all hardcoded data"
-      const newGym = {
-        id: `mock-${Date.now()}`,
-        name: data.gymName,
-        ownerName: data.ownerName,
-        adminEmail: data.adminEmail,
-        phone: data.phone,
-        plan: data.plan,
-        status: NEW_TENANT_DEFAULTS.STATUS,
-        memberCount: NEW_TENANT_DEFAULTS.MEMBER_COUNT,
-        monthlyRevenue: NEW_TENANT_DEFAULTS.MONTHLY_REVENUE,
-        databaseVersion: NEW_TENANT_DEFAULTS.DB_VERSION,
-        temporaryPassword: data.temporaryPassword,
-        createdAt: new Date().toISOString(),
-      } as unknown as Tenant;
+      const response = await gymsApi.provisionGym({
+        ...data,
+        planId: data.plan // map to planId if needed
+      });
 
       // Invalidate queries to fetch new data on navigation
-      import('@tanstack/react-query').then(({ QueryClient }) => {
-         const queryClient = new QueryClient();
-         queryClient.invalidateQueries({ queryKey: ['superadmin', 'gyms'] });
-      });
+      queryClient.invalidateQueries({ queryKey: ['superadmin', 'gyms'] });
 
       addLog('Provisioning complete! Redirecting...');
       await delay(PROVISIONING_DELAYS.REDIRECT);
 
-      toast.success('Gym provisioned successfully');
+      toast.success(response.message || 'Gym provisioned successfully');
       router.push(SuperadminUrlConfig.PAGES.GYMS_LIST);
     } catch (e: unknown) {
       if (waWindow) waWindow.close();
       const errMsg = e instanceof Error ? e.message : 'An error occurred';
       addLog(`Error: ${errMsg}`);
+      toast.error(errMsg);
     } finally {
       setIsProvisioning(false);
     }

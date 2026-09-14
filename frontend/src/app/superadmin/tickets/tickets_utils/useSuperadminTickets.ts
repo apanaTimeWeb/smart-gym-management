@@ -2,7 +2,7 @@
 // DATA FLOW: API -> useSuperadminTicketsData -> useSuperadminTickets -> SuperadminTicketsClient
 
 import { useSuperadminTicketsData } from '@/app/superadmin/tickets/tickets_utils/useSuperadminTicketsData';
-import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
+import { SuperadminTicketsUrlConfig } from '@/app/superadmin/tickets/superadmin_tickets_url_config';
 import type { SupportTicket } from '@/app/superadmin/tickets/superadmin_tickets_types/superadmin_tickets_types';
 import { useSuperadminTicketsStore } from '@/app/superadmin/tickets/tickets_store/useSuperadminTicketsStore';
 import { MOCK_TICKETS } from '@/app/superadmin/tickets/tickets_utils/SuperadminTicketsConstants';
@@ -11,7 +11,7 @@ const IS_DEV = process.env.NODE_ENV === 'development';
 const ITEMS_PER_PAGE = 10;
 
 export function useSuperadminTickets() {
-  const { data: apiTickets, fetchState, error } = useSuperadminTicketsData<SupportTicket[]>(SuperadminUrlConfig.BACKEND_API.TICKETS_BASE);
+  const { data: apiTickets, fetchState, error } = useSuperadminTicketsData<SupportTicket[]>(SuperadminTicketsUrlConfig.BACKEND_API.TICKETS_BASE);
 
   const {
     search,

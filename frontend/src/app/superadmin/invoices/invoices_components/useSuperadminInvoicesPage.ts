@@ -7,6 +7,7 @@ import { useSuperadminInvoicesStore } from '@/app/superadmin/invoices/invoices_s
 export function useSuperadminInvoicesPage() {
   const { invoices, tenants, fetchState, error, fetchData } = useSuperadminInvoicesStore();
 
+  // RESPONSIBILITY: Handle side-effects for useSuperadminInvoicesPage
   useEffect(() => {
     fetchData();
   }, [fetchData]);

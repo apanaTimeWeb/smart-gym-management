@@ -11,7 +11,7 @@ import SuperadminJobsHeader from '@/app/superadmin/jobs/jobs_components/Superadm
 import SuperadminJobsStatsBar from '@/app/superadmin/jobs/jobs_components/SuperadminJobsStatsBar/SuperadminJobsStatsBar';
 import SuperadminJobsTable from '@/app/superadmin/jobs/jobs_components/SuperadminJobsTable/SuperadminJobsTable';
 import SuperadminJobInspectModal from '@/app/superadmin/jobs/jobs_components/SuperadminJobInspectModal/SuperadminJobInspectModal';
-import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
+import SuperadminPagination from '@/components/ui/SuperadminShared/SuperadminPagination';
 
 export default function SuperadminJobsView() {
   const {
@@ -78,7 +78,7 @@ export default function SuperadminJobsView() {
         onFilterChange={() => setCurrentPage(1)}
       />
 
-      <SuperadminJobsStatsBar metrics={metrics} onFilterSelect={(status) => { setStatusFilter(status as any); setCurrentPage(1); }} />
+      <SuperadminJobsStatsBar metrics={metrics} onFilterSelect={(status) => { setStatusFilter(status as 'ALL' | 'COMPLETED' | 'FAILED' | 'IN_PROGRESS'); setCurrentPage(1); }} />
 
       <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden flex flex-col min-h-96">
         <SuperadminJobsTable

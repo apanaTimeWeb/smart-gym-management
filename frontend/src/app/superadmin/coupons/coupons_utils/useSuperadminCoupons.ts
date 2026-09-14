@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
 import { useSuperadminCouponsData } from '@/app/superadmin/coupons/coupons_utils/useSuperadminCouponsData';
-import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
+import { SuperadminCouponsUrlConfig } from '@/app/superadmin/coupons/superadmin_coupons_url_config';
 import { couponsApi } from '@/app/superadmin/coupons/superadmin_coupons_api/superadmin_coupons_api';
 import { useSuperadminCouponsMutation } from '@/app/superadmin/coupons/coupons_utils/useSuperadminCouponsMutation';
 import { CouponSchema, type CouponFormData } from '@/app/superadmin/coupons/superadmin_coupons_types/superadmin_coupons_types';
@@ -18,7 +18,7 @@ const COUPONS_STORAGE_KEY = 'superadmin_coupons_v1';
 
 export const useSuperadminCoupons = () => {
   const { data: fetchedData, fetchState, error } = useSuperadminCouponsData<Coupon[]>(
-    SuperadminUrlConfig.BACKEND_API.COUPONS_BASE
+    SuperadminCouponsUrlConfig.BACKEND_API.COUPONS_BASE
   );
 
   const [persistedCoupons, setPersistedCoupons] = useLocalStorage<Coupon[] | null>(COUPONS_STORAGE_KEY, null);
@@ -51,7 +51,7 @@ export const useSuperadminCoupons = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeKpi, setActiveKpi] = useState<'ALL' | 'ACTIVE' | 'REDEEMED'>('ALL');
+  const [activeKpi, setActiveKpi] = useState<CouponKpiFilter>('ALL');
 
   const form = useForm<CouponFormData>({
     resolver: zodResolver(CouponSchema),
