@@ -4,7 +4,8 @@ import { Users, Building2, CreditCard, Activity, AlertCircle, Clock, CheckCircle
 import { useRouter } from 'next/navigation';
 import type { SuperadminDashboardKpiGridProps } from '@/app/superadmin/dashboard/superadmin_dashboard_types/superadmin_dashboard_types';
 import { useSuperadminDashboardDateRangeSuffix } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardView/useSuperadminDashboardDateRangeSuffix';
-import { SuperadminDashboardUrlConfig } from '@/app/superadmin/dashboard/dashboard_utils/SuperadminDashboardUrlConfig';
+import { DashboardUrlConfig } from '@/app/superadmin/dashboard/dashboard_url_config';
+import { ChurnUrlConfig } from '@/app/superadmin/churn-alerts/churn_url_config';
 import { formatCurrency, formatNumber } from '@/lib/formatters';
 
 export function SuperadminDashboardKpiGrid({
@@ -117,7 +118,7 @@ export function SuperadminDashboardKpiGrid({
       icon: AlertCircle,
       colorClass: 'text-warning',
       iconBgClass: 'bg-warning-bg',
-      onClick: () => router.push(SuperadminDashboardUrlConfig.PAGES.CHURN_ALERTS)
+      onClick: () => router.push(ChurnUrlConfig.PAGES.MAIN)
     },
   ];
 

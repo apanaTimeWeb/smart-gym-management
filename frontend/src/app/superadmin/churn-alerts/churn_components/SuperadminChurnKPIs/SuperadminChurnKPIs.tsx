@@ -5,6 +5,7 @@
 import { AlertTriangle, TrendingDown, DollarSign, Activity } from 'lucide-react';
 import { KPI_CARD_GRADIENT } from '@/app/superadmin/churn-alerts/churn_utils/churn_constants';
 import type { ChurnKpiData } from '@/app/superadmin/churn-alerts/churn_types/churn_types';
+import { formatKPI } from '@/lib/formatters';
 
 interface SuperadminChurnKPIsProps {
   kpis: ChurnKpiData;
@@ -40,7 +41,7 @@ export default function SuperadminChurnKPIs({ kpis, activeFilter, onFilterClick 
     },
     {
       label: 'Monthly Income At Risk',
-      value: `₹${(kpis.estimatedMrrAtRisk / 100000).toFixed(1)}L`,
+      value: formatKPI(kpis.estimatedMrrAtRisk),
       icon: DollarSign,
       color: 'text-danger',
       iconBg: 'bg-danger-bg',

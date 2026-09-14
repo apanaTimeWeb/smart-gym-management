@@ -7,9 +7,8 @@ import { useState, useMemo } from 'react';
 import toast from 'react-hot-toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { superadminFranchisesApi } from '@/app/superadmin/franchises/superadmin_franchises_api/superadmin_franchises_api';
-import { MOCK_FRANCHISES } from '@/app/superadmin/franchises/franchises_utils/SuperadminFranchisesConstants';
 import type { SuperadminFranchise, FranchisesFetchState } from '@/app/superadmin/franchises/franchises_types/superadmin_franchises_types';
-import type { FranchiseFormValues } from '@/app/superadmin/superadmin_utils/SuperadminZodSchemas';
+import type { FranchiseFormValues } from '@/app/superadmin/franchises/franchises_utils/SuperadminFranchisesSchemas';
 
 export function useSuperadminFranchisesPage() {
   const [search, setSearch] = useState('');
@@ -21,7 +20,7 @@ export function useSuperadminFranchisesPage() {
   });
 
   const fetchState: FranchisesFetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
-  const raw: SuperadminFranchise[] = data?.data && data.data.length > 0 ? data.data : MOCK_FRANCHISES;
+  const raw: SuperadminFranchise[] = data?.data || [];
 
   const franchises = useMemo(() => {
     if (!search.trim()) return raw;
@@ -40,7 +39,7 @@ export function useSuperadminFranchisesPage() {
       toast.success(res.message || 'Franchise suspended.');
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'franchises'] });
     },
-    onError: () => toast.error('Failed to suspend franchise.'),
+    onError: () => toast.error('Failed to suspend franchise.', { id: 'failed-to-suspend-franchise' }),
   });
 
   const activateMutation = useMutation({
@@ -49,7 +48,7 @@ export function useSuperadminFranchisesPage() {
       toast.success(res.message || 'Franchise activated.');
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'franchises'] });
     },
-    onError: () => toast.error('Failed to activate franchise.'),
+    onError: () => toast.error('Failed to activate franchise.', { id: 'failed-to-activate-franchise' }),
   });
 
   const editMutation = useMutation({
@@ -59,7 +58,7 @@ export function useSuperadminFranchisesPage() {
       toast.success(res.message || 'Updated successfully');
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'franchises'] });
     },
-    onError: () => toast.error('Failed to update franchise.'),
+    onError: () => toast.error('Failed to update franchise.', { id: 'failed-to-update-franchise' }),
   });
 
   return {
@@ -73,3 +72,4 @@ export function useSuperadminFranchisesPage() {
     isEditing: editMutation.isPending,
   };
 }
+

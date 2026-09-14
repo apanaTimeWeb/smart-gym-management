@@ -5,6 +5,7 @@ export const getProgressColor = (used: number, limit: number) => {
   return 'bg-primary';
 };
 
-export const getPercentage = (used: number, limit: number) => {
-  return Math.min(100, (used / limit) * 100).toFixed(1);
+/** Returns percentage as a number (0–100), capped at 100. Format for display with toFixed or formatNumber at call site. */
+export const getPercentage = (used: number, limit: number): number => {
+  return Math.min(100, (used / limit) * 100);
 };

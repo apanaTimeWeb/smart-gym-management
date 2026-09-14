@@ -1,6 +1,9 @@
 // RESPONSIBILITY: Defines all TypeScript types and interfaces for the Affiliates module.
 export type AffiliateStatus = 'ACTIVE' | 'INACTIVE';
 
+/** Filter tabs for the Affiliates status dropdown. */
+export type AffiliateStatusFilter = 'ALL' | AffiliateStatus;
+
 export interface Affiliate {
   id: string;
   name: string;

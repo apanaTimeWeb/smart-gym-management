@@ -16,15 +16,18 @@ interface SuperadminCouponEditModalProps {
   coupon: Coupon | null;
 }
 
+import { useUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useUnsavedChangesGuard';
+
 export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps> = ({
   isOpen,
   onClose,
   onSubmit,
   coupon,
 }) => {
-  const { register, handleSubmit, watch, control, formState: { errors }, reset } = useForm<CouponFormData>({
+  const { register, handleSubmit, watch, control, formState: { errors, isDirty }, reset } = useForm<CouponFormData>({
     resolver: zodResolver(CouponSchema),
   });
+  useUnsavedChangesGuard(isOpen && isDirty);
 
   // RESPONSIBILITY: Handle side-effects for SuperadminCouponEditModal
   useEffect(() => {

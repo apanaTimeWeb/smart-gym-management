@@ -17,9 +17,9 @@ export default function SuperadminTicketsClient() {
     try {
       const { ticketsApi } = await import('@/app/superadmin/tickets/superadmin_tickets_api/superadmin_tickets_api');
       await ticketsApi.closeTicket(ticketId);
-      toast.success('Ticket closed.');
+      toast.success('Ticket closed.', { id: 'ticket-closed' });
     } catch {
-      toast.error('Failed to close ticket.');
+      toast.error('Failed to close ticket.', { id: 'failed-to-close-ticket' });
     }
   };
 
@@ -33,9 +33,9 @@ export default function SuperadminTicketsClient() {
     try {
       const { ticketsApi } = await import('@/app/superadmin/tickets/superadmin_tickets_api/superadmin_tickets_api');
       await ticketsApi.assignTicket(assignModalTicketId, assigneeInput.trim());
-      toast.success(`Ticket assigned to ${assigneeInput.trim()}.`);
+      toast.success(`Ticket assigned to ${assigneeInput.trim()}.`, { id: 'ticket-assigned-to-assigneeinput-trim' });
     } catch {
-      toast.error('Failed to assign ticket.');
+      toast.error('Failed to assign ticket.', { id: 'failed-to-assign-ticket' });
     } finally {
       setAssignModalTicketId(null);
       setAssigneeInput('');

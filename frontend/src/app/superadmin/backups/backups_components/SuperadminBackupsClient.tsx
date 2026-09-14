@@ -3,60 +3,60 @@
 
 import { useSuperadminBackupsData } from '@/app/superadmin/backups/backups_utils/useSuperadminBackupsData';
 import SuperadminBackupsEmptyState from '@/app/superadmin/backups/backups_components/SuperadminBackupsEmptyState/SuperadminBackupsEmptyState';
-import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
+
 import SuperadminBackupsScheduleModal from '@/app/superadmin/backups/backups_components/SuperadminBackupsScheduleModal';
-import { DatabaseBackup, Search, Download, RotateCcw, Clock } from 'lucide-react';
+import { DatabaseBackup, Search, Clock } from 'lucide-react';
 import type { BackupRecord } from '@/app/superadmin/backups/superadmin_backups_types/superadmin_backups_types';
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import SuperadminPagination from '@/components/ui/SuperadminShared/SuperadminPagination';
 import { backupsApi } from '@/app/superadmin/backups/superadmin_backups_api/superadmin_backups_api';
-import SuperadminBackupsTable from './SuperadminBackupsTable';
-import SuperadminBackupsRestoreModal from './SuperadminBackupsRestoreModal';
-import SuperadminBackupsTriggerModal from './SuperadminBackupsTriggerModal';
-
+// Rule 10: Absolute imports only — no relative paths allowed
+import SuperadminBackupsTable from '@/app/superadmin/backups/backups_components/SuperadminBackupsTable';
+import SuperadminBackupsRestoreModal from '@/app/superadmin/backups/backups_components/SuperadminBackupsRestoreModal';
+import SuperadminBackupsTriggerModal from '@/app/superadmin/backups/backups_components/SuperadminBackupsTriggerModal';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 
 export default function SuperadminBackupsClient() {
   const { data: backups, fetchState, error } = useSuperadminBackupsData();
 
-    const [search, setSearch] = useState('');
-    const [statusFilter, setStatusFilter] = useState('ALL');
-    const [typeFilter, setTypeFilter] = useState('ALL');
-    const [isTriggering, setIsTriggering] = useState(false);
-    const [triggerModalOpen, setTriggerModalOpen] = useState(false);
-    const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
-    const [currentPage, setCurrentPage] = useState(1);
-    const ITEMS_PER_PAGE = 10;
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('ALL');
+  const [typeFilter, setTypeFilter] = useState('ALL');
+  const [isTriggering, setIsTriggering] = useState(false);
+  const [triggerModalOpen, setTriggerModalOpen] = useState(false);
+  const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
 
-  // RESPONSIBILITY: Handle side-effects for SuperadminBackupsClient
-    useEffect(() => {
-      setCurrentPage(1);
-    }, [search, statusFilter, typeFilter]);
-
-
-    const handleDownload = (id: string) => {
-      toast.success(`Starting download for backup ${id}`);
-      const link = document.createElement('a');
-      link.href = backupsApi.getDownloadUrl(id);
-      link.download = `${id}_snapshot.sql.gz`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    };
-
-    const [restoreModalOpen, setRestoreModalOpen] = useState(false);
-    const [selectedBackup, setSelectedBackup] = useState<BackupRecord | null>(null);
-    const [restoreConfirmText, setRestoreConfirmText] = useState('');
-
-    const handleRestoreClick = (backup: BackupRecord) => {
-      setSelectedBackup(backup);
-      setRestoreConfirmText('');
-      setRestoreModalOpen(true);
-    };
+  // Resets pagination to page 1 whenever a filter changes, preventing stale empty states.
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, statusFilter, typeFilter]);
 
 
-if (fetchState === 'loading') return (
+  const handleDownload = (id: string) => {
+    toast.success(`Starting download for backup ${id}`, { id: 'starting-download-for-backup-id' });
+    const link = document.createElement('a');
+    link.href = backupsApi.getDownloadUrl(id);
+    link.download = `${id}_snapshot.sql.gz`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const [restoreModalOpen, setRestoreModalOpen] = useState(false);
+  const [selectedBackup, setSelectedBackup] = useState<BackupRecord | null>(null);
+  const [restoreConfirmText, setRestoreConfirmText] = useState('');
+
+  const handleRestoreClick = (backup: BackupRecord) => {
+    setSelectedBackup(backup);
+    setRestoreConfirmText('');
+    setRestoreModalOpen(true);
+  };
+
+
+  if (fetchState === 'loading') return (
     <div className="space-y-6 motion-safe:animate-pulse">
       <div className="h-8 bg-card rounded w-48" />
       <div className="h-96 bg-card rounded-xl border border-border" />
@@ -183,4 +183,3 @@ if (fetchState === 'loading') return (
     </div>
   );
 }
-

@@ -1,9 +1,20 @@
 // RESPONSIBILITY: Modularized API client for the Broadcasts module. All methods import apiFetch from src/lib/api.ts and define only superadmin-scoped endpoints. No UI logic.
-import { SuperadminBroadcastsUrlConfig } from '@/app/superadmin/broadcasts/superadmin_broadcasts_url_config';
+import { BroadcastsUrlConfig } from '@/app/superadmin/broadcasts/broadcasts_url_config';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
+import type { Broadcast, BroadcastFormData } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
+import { z } from "zod";
 
 export const broadcastsApi = {
-  sendBroadcast: (message: string) => apiFetch<ApiResponse<void>>(SuperadminBroadcastsUrlConfig.BACKEND_API.BROADCASTS_BASE, { method: 'POST', body: JSON.stringify({ message }) }),
-  fetchRecipientCount: () => apiFetch<ApiResponse<{ count: number }>>(`${SuperadminBroadcastsUrlConfig.BACKEND_API.BROADCASTS_BASE}/recipient-count`),
+  fetchBroadcasts: (params?: Record<string, string>) => {
+    const q = params ? '?' + new URLSearchParams(params).toString() : '';
+    return apiFetch<ApiResponse<Broadcast[]>>(`${BroadcastsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.any() });
+  },
+  createBroadcast: (body: BroadcastFormData) => apiFetch<ApiResponse<Broadcast>>(BroadcastsUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body),
+      dataSchema: z.any()
+}),
+  deleteBroadcast: (id: string) => apiFetch<ApiResponse<void>>(`${BroadcastsUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'DELETE',
+      dataSchema: z.any()
+}),
+  fetchRecipientCount: () => apiFetch<ApiResponse<{ count: number }>>(`${BroadcastsUrlConfig.BACKEND_API.BASE}/recipient-count`, { dataSchema: z.any() }),
 };

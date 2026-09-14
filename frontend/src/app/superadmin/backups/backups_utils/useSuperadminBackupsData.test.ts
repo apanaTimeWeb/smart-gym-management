@@ -1,6 +1,6 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
-import { useSuperadminBackupsData } from './useSuperadminBackupsData';
+import { useSuperadminBackupsData } from '@/app/superadmin/backups/backups_utils/useSuperadminBackupsData';
 import { backupsApi } from '@/app/superadmin/backups/superadmin_backups_api/superadmin_backups_api';
 import toast from 'react-hot-toast';
 

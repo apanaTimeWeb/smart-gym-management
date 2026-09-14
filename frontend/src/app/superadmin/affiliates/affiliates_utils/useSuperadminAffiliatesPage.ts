@@ -4,11 +4,11 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSuperadminAffiliatesData } from '@/app/superadmin/affiliates/affiliates_utils/useSuperadminAffiliatesData';
-import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
+
 import { affiliatesApi } from '@/app/superadmin/affiliates/superadmin_affiliates_api/superadmin_affiliates_api';
 import { useSuperadminAffiliatesMutation } from '@/app/superadmin/affiliates/affiliates_utils/useSuperadminAffiliatesMutation';
 import { AffiliateSchema } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
-import type { Affiliate, AffiliateStatus, AffiliateFormData } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
+import type { Affiliate, AffiliateStatus, AffiliateStatusFilter, AffiliateFormData } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
 
 export const useSuperadminAffiliatesPage = () => {
   const [affiliates, setAffiliates] = useState<Affiliate[]>([

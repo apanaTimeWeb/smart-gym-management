@@ -1,6 +1,7 @@
 'use client';
 // RESPONSIBILITY: Renders the KPI stat cards (Total Affiliates, Total Commission Paid) for the Affiliates page. Purely presentational — receives data via props.
 import { Users, IndianRupee } from 'lucide-react';
+import { formatINR } from '@/lib/formatters';
 interface AffiliatesStatsBarProps {
   totalAffiliates: number;
   totalCommission: number;
@@ -26,7 +27,7 @@ export default function SuperadminAffiliatesStatsBar({ totalAffiliates, totalCom
           <span className="text-xs font-medium text-secondary uppercase tracking-wider">Total Commission Paid</span>
         </div>
         <div className="text-3xl font-bold text-foreground mt-1">
-          ₹{totalCommission.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+          {formatINR(totalCommission)}
         </div>
       </div>
     </div>

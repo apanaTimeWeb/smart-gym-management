@@ -87,7 +87,7 @@ export default function SuperadminMessagingClient() {
 
   function handleSend() {
     if (!composeTenantId || !composeSubject.trim() || !composeBody.trim()) {
-      toast.error('Please fill all fields.');
+      toast.error('Please fill all fields.', { id: 'please-fill-all-fields' });
       return;
     }
     const tenant = tenants.find((g) => g.id === composeTenantId);
@@ -102,7 +102,7 @@ export default function SuperadminMessagingClient() {
     superadminMessagingApi.sendMessage(newMsg).then(res => {
       if (res.success && res.data) {
         setMessages((prev) => [res.data as unknown as TenantMessage, ...prev]);
-        toast.success('Message sent successfully.');
+        toast.success('Message sent successfully.', { id: 'message-sent-successfully' });
         setComposeOpen(false);
         setComposeTenantId('');
         setComposeSubject('');
@@ -112,13 +112,13 @@ export default function SuperadminMessagingClient() {
         toast.error(res.message || 'Failed to send message');
       }
     }).catch(() => {
-      toast.error('Failed to send message');
+      toast.error('Failed to send message', { id: 'failed-to-send-message' });
     });
   }
 
   function handleMarkAllRead() {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
-    toast.success('All notifications marked as read.');
+    toast.success('All notifications marked as read.', { id: 'all-notifications-marked-as-read' });
   }
 
   function handleMarkRead(id: string) {

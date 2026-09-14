@@ -11,7 +11,6 @@ import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { broadcastsApi } from '@/app/superadmin/broadcasts/superadmin_broadcasts_api/superadmin_broadcasts_api';
 import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
-import { MOCK_GYMS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
 
 interface SuperadminBroadcastModalProps {
   isOpen: boolean;
@@ -21,6 +20,8 @@ interface SuperadminBroadcastModalProps {
   isEditMode?: boolean;
 }
 
+import { useUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useUnsavedChangesGuard';
+
 export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> = ({
   isOpen,
   onClose,
@@ -29,7 +30,8 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
   isEditMode = false,
 }) => {
 
-  const { register, handleSubmit, watch, setValue, formState: { errors } } = form;
+  const { register, handleSubmit, watch, setValue, formState: { errors, isDirty } } = form;
+  useUnsavedChangesGuard(isOpen && isDirty);
   const status = watch('status');
   const targetGymIds = watch('targetGymIds') || [];
 
@@ -47,7 +49,7 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
   });
 
   const rawGyms = (fetchRes?.data as Tenant[]) ?? [];
-  const gyms = rawGyms.length > 0 ? rawGyms : MOCK_GYMS;
+  const gyms = rawGyms;
 
   const allGymIds = gyms.map(g => g.id) || [];
   const isAllSelected = allGymIds.length > 0 && targetGymIds.length === allGymIds.length;

@@ -3,6 +3,7 @@
 
 import React, { useMemo, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
+import { formatDecimal } from '@/lib/formatters';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -19,7 +20,8 @@ export default function SuperadminUptimeChart() {
       const uptime = Math.random() > 0.9 ? (98 + Math.random() * 1.9) : 100;
       return {
         x: time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        y: Number(formatCurrency(uptime))
+        // Round to 2dp so chart labels don't show excessive precision
+        y: parseFloat(formatDecimal(uptime, 2))
       };
     });
 

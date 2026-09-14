@@ -15,12 +15,16 @@ interface SuperadminCouponModalProps {
   onSubmit: (data: CouponFormData) => void;
 }
 
+import { useUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useUnsavedChangesGuard';
+
 export const SuperadminCouponModal: React.FC<SuperadminCouponModalProps> = ({
   isOpen,
   onClose,
   form,
   onSubmit,
 }) => {
+  useUnsavedChangesGuard(isOpen && form.formState.isDirty);
+
   if (!isOpen) return null;
 
   return (

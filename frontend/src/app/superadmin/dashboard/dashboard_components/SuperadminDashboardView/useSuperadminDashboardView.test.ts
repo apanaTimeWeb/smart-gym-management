@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useSuperadminDashboardView } from './useSuperadminDashboardView';
+import { useSuperadminDashboardView } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardView/useSuperadminDashboardView';
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
 import { vi, describe, it, expect, beforeEach } from 'vitest';

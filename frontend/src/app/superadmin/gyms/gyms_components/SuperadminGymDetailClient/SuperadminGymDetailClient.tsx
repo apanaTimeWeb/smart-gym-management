@@ -8,7 +8,6 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Building2, User, CreditCard, Activity, MapPin, Shield, Clock } from 'lucide-react';
 import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 import type { Tenant } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_types';
-import { MOCK_GYM_DETAIL } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
 import { formatCurrency } from '@/lib/formatters';
 
 interface SuperadminGymDetailClientProps {
@@ -23,7 +22,7 @@ export default function SuperadminGymDetailClient({ gymId }: SuperadminGymDetail
     queryFn: () => gymsApi.fetchGymById(gymId),
   });
 
-  const gym: Tenant | undefined = res?.data || (process.env.NODE_ENV === 'development' ? MOCK_GYM_DETAIL : undefined);
+  const gym: any = res?.data;
 
   if (isLoading) {
     return (

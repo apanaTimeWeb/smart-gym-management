@@ -11,7 +11,7 @@ import type { OnboardGymFormValues } from '@/app/superadmin/gyms/gyms_utils/Supe
 import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 import { plansApi } from '@/app/superadmin/plans/superadmin_plans_api/superadmin_plans_api';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
+import { GymsUrlConfig } from '@/app/superadmin/gyms/gyms_url_config';
 import type { Tenant } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_types';
 import type { SubscriptionPlan } from '@/app/superadmin/superadmin_types/superadmin_types';
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
@@ -139,7 +139,7 @@ export function useSuperadminAddGymForm() {
       await delay(PROVISIONING_DELAYS.REDIRECT);
 
       toast.success(response.message || 'Gym provisioned successfully');
-      router.push(SuperadminUrlConfig.PAGES.GYMS_LIST);
+      router.push(GymsUrlConfig.PAGES.MAIN);
     } catch (e: unknown) {
       if (waWindow) waWindow.close();
       const errMsg = e instanceof Error ? e.message : 'An error occurred';

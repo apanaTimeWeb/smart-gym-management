@@ -10,7 +10,6 @@ import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types'
 import { AuthUrlConfig } from '@/app/auth/auth_url_config';
 import { useSuperadminGhostLoginStore } from '@/components/ui/SuperadminLayout/useSuperadminGhostLoginStore';
 
-import { MOCK_GYMS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
 
 export function useSuperadminGymsTable() {
   const search = useSuperadminGymsStore(state => state.search);
@@ -43,7 +42,7 @@ export function useSuperadminGymsTable() {
     queryFn: () => gymsApi.fetchGyms(queryParams),
   });
 
-  const gyms = fetchRes?.data && fetchRes.data.length > 0 ? fetchRes.data : MOCK_GYMS;
+  const gyms = fetchRes ? .data && fetchRes.data.length > 0 ? fetchRes.data : [];
   const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
 
   // Server-side filtering is now primary; this is a lightweight client guard

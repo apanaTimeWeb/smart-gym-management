@@ -1,3 +1,7 @@
+'use client';
+// RESPONSIBILITY: Modal for confirming a dangerous database restore from a backup snapshot.
+// Requires the user to type "RESTORE" before the action can be committed.
+
 import { RotateCcw } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { backupsApi } from '@/app/superadmin/backups/superadmin_backups_api/superadmin_backups_api';
@@ -21,13 +25,13 @@ export default function SuperadminBackupsRestoreModal({
     if (restoreConfirmText !== 'RESTORE') return;
     onClose();
     
-    const loadingToast = toast.loading(\`Restoring database \${selectedBackup.databaseName} from snapshot...\`);
+    const loadingToastId = toast.loading(`Restoring database ${selectedBackup.databaseName} from snapshot...`);
     try {
       await backupsApi.restoreSnapshot(selectedBackup.id);
-      toast.success(\`Database \${selectedBackup.databaseName} successfully restored!\`, { id: loadingToast });
+      toast.success(`Database ${selectedBackup.databaseName} successfully restored!`, { id: loadingToastId });
       onSuccess();
-    } catch (err) {
-      toast.error('Failed to restore snapshot', { id: loadingToast });
+    } catch {
+      toast.error('Failed to restore snapshot', { id: loadingToastId });
     }
   };
 

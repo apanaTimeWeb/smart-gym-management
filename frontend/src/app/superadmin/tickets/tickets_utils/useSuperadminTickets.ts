@@ -2,16 +2,13 @@
 // DATA FLOW: API -> useSuperadminTicketsData -> useSuperadminTickets -> SuperadminTicketsClient
 
 import { useSuperadminTicketsData } from '@/app/superadmin/tickets/tickets_utils/useSuperadminTicketsData';
-import { SuperadminTicketsUrlConfig } from '@/app/superadmin/tickets/superadmin_tickets_url_config';
+import { TicketsUrlConfig } from '@/app/superadmin/tickets/tickets_url_config';
 import type { SupportTicket } from '@/app/superadmin/tickets/superadmin_tickets_types/superadmin_tickets_types';
 import { useSuperadminTicketsStore } from '@/app/superadmin/tickets/tickets_store/useSuperadminTicketsStore';
-import { MOCK_TICKETS } from '@/app/superadmin/tickets/tickets_utils/SuperadminTicketsConstants';
-
-const IS_DEV = process.env.NODE_ENV === 'development';
 const ITEMS_PER_PAGE = 10;
 
 export function useSuperadminTickets() {
-  const { data: apiTickets, fetchState, error } = useSuperadminTicketsData<SupportTicket[]>(SuperadminTicketsUrlConfig.BACKEND_API.TICKETS_BASE);
+  const { data: apiTickets, fetchState, error } = useSuperadminTicketsData<SupportTicket[]>(TicketsUrlConfig.BACKEND_API.BASE);
 
   const {
     search,
@@ -20,11 +17,7 @@ export function useSuperadminTickets() {
     currentPage,
   } = useSuperadminTicketsStore();
 
-  // Use mock data in development when API returns empty or null
-  const tickets: SupportTicket[] = (() => {
-    if (apiTickets && (apiTickets as SupportTicket[]).length > 0) return apiTickets as SupportTicket[];
-    return IS_DEV ? MOCK_TICKETS : [];
-  })();
+  const tickets: SupportTicket[] = (apiTickets as SupportTicket[]) || [];
 
   const filtered = tickets.filter(t => {
     const matchesSearch = t.tenantName?.toLowerCase().includes(search.toLowerCase()) ||

@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic';
 import { CHART_COLORS } from '@/app/superadmin/superadmin_utils/SuperadminChartConstants';
 import type { RevenueRow } from '@/app/superadmin/reports/reports_types/reports_types';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency, formatKPI } from '@/lib/formatters';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -24,7 +24,7 @@ export function SuperadminReportsRevenueTab({
     yaxis: {
       labels: {
         style: { colors: CHART_COLORS.TEXT_SECONDARY },
-        formatter: (v: number) => `₹${(v / 1000).toFixed(0)}k`,
+        formatter: (v: number) => formatKPI(v),
       },
     },
     grid: { borderColor: CHART_COLORS.BORDER, strokeDashArray: 4 },

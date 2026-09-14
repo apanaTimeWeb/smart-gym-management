@@ -1,6 +1,7 @@
 'use client';
 // RESPONSIBILITY: Renders a single row in the Coupons data table. Handles row-level action buttons with stopPropagation. Purely presentational.
 import { Edit2, Trash2, RefreshCw, ToggleLeft, ToggleRight, MessageCircle, History } from 'lucide-react';
+import { formatINR } from '@/lib/formatters';
 import { useSuperadminConfirm } from '@/components/ui/SuperadminFeedback/SuperadminConfirmProvider';
 import SuperadminCouponsStatusBadge from '@/app/superadmin/coupons/coupons_components/SuperadminCouponsStatusBadge/SuperadminCouponsStatusBadge';
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
@@ -27,7 +28,7 @@ export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEd
     
     const discountStr = cpn.discountType === 'PERCENTAGE' 
       ? `${cpn.discountValue}% OFF` 
-      : `Rs ${cpn.discountValue} OFF`;
+      : `${formatINR(cpn.discountValue)} OFF`;
 
     const waText = WhatsAppFormatter.formatReceipt({
       title: 'Smart Gym 360',
@@ -65,7 +66,7 @@ export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEd
       <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary">
         {cpn.discountType === 'PERCENTAGE'
           ? <span className="font-semibold text-success">{cpn.discountValue}% OFF</span>
-          : <span className="font-semibold text-success">Rs {cpn.discountValue} OFF</span>
+          : <span className="font-semibold text-success">{formatINR(cpn.discountValue)} OFF</span>
         }
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary">{cpn.currentUses} / {cpn.maxUses}</td>

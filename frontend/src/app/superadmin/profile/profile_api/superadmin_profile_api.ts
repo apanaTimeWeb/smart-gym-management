@@ -3,33 +3,37 @@
 
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
-import { SuperadminProfileUrlConfig } from '@/app/superadmin/profile/profile_utils/SuperadminProfileUrlConfig';
+import { ProfileUrlConfig } from '@/app/superadmin/profile/profile_url_config';
 import type {
   SuperadminProfileData,
   UpdateSuperadminProfilePayload,
   UpdateSuperadminPasswordPayload,
   Toggle2FAPayload,
 } from '@/app/superadmin/profile/profile_types/SuperadminProfileTypes';
+import { z } from "zod";
 
 export const superadminProfileApi = {
   fetchProfile: () =>
-    apiFetch<ApiResponse<SuperadminProfileData>>(SuperadminProfileUrlConfig.BACKEND_API.BASE),
+    apiFetch<ApiResponse<SuperadminProfileData>>(ProfileUrlConfig.BACKEND_API.BASE, { dataSchema: z.any() }),
 
   updateProfile: (payload: UpdateSuperadminProfilePayload) =>
-    apiFetch<ApiResponse<SuperadminProfileData>>(SuperadminProfileUrlConfig.BACKEND_API.BASE, {
+    apiFetch<ApiResponse<SuperadminProfileData>>(ProfileUrlConfig.BACKEND_API.BASE, {
       method: 'PATCH',
       body: JSON.stringify(payload),
+        dataSchema: z.any()
     }),
 
   updatePassword: (payload: UpdateSuperadminPasswordPayload) =>
-    apiFetch<ApiResponse<void>>(SuperadminProfileUrlConfig.BACKEND_API.PASSWORD, {
+    apiFetch<ApiResponse<void>>(ProfileUrlConfig.BACKEND_API.PASSWORD, {
       method: 'PATCH',
       body: JSON.stringify(payload),
+        dataSchema: z.any()
     }),
 
   toggle2FA: (payload: Toggle2FAPayload) =>
-    apiFetch<ApiResponse<SuperadminProfileData>>(SuperadminProfileUrlConfig.BACKEND_API.TWO_FACTOR, {
+    apiFetch<ApiResponse<SuperadminProfileData>>(ProfileUrlConfig.BACKEND_API.TWO_FACTOR, {
       method: 'PATCH',
       body: JSON.stringify(payload),
+        dataSchema: z.any()
     }),
 };

@@ -102,17 +102,17 @@ export function useJobsPage(): UseJobsPageReturn {
   }
 
   function handleRetryJob(id: string) {
-    toast.success(`Job ${id} queued for retry.`);
+    toast.success(`Job ${id} queued for retry.`, { id: 'job-id-queued-for-retry' });
     void queryClient.invalidateQueries({ queryKey: ['superadmin', 'jobs'] });
   }
 
   function handleCancelJob(id: string) {
-    toast.success(`Job ${id} cancelled successfully.`);
+    toast.success(`Job ${id} cancelled successfully.`, { id: 'job-id-cancelled-successfully' });
     void queryClient.invalidateQueries({ queryKey: ['superadmin', 'jobs'] });
   }
 
   function handleDeleteJob(id: string) {
-    toast.success(`Job ${id} deleted.`);
+    toast.success(`Job ${id} deleted.`, { id: 'job-id-deleted' });
     setSelectedJobIds(prev => {
       const next = new Set(prev);
       next.delete(id);
@@ -121,17 +121,17 @@ export function useJobsPage(): UseJobsPageReturn {
   }
 
   function handleClearCompleted() {
-    toast.success('Cleared all completed jobs.');
+    toast.success('Cleared all completed jobs.', { id: 'cleared-all-completed-jobs' });
     setSelectedJobIds(new Set());
   }
 
   function handleBulkRetry() {
-    toast.success(`Queued ${selectedJobIds.size} jobs for retry.`);
+    toast.success(`Queued ${selectedJobIds.size} jobs for retry.`, { id: 'queued-selectedjobids-size-jobs-for-retry' });
     setSelectedJobIds(new Set());
   }
 
   function handleBulkDelete() {
-    toast.success(`Deleted ${selectedJobIds.size} jobs.`);
+    toast.success(`Deleted ${selectedJobIds.size} jobs.`, { id: 'deleted-selectedjobids-size-jobs' });
     setSelectedJobIds(new Set());
   }
 

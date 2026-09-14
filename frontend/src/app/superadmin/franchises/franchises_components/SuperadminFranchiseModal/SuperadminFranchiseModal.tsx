@@ -19,6 +19,8 @@ interface SuperadminFranchiseModalProps {
   isMutating: boolean;
 }
 
+import { useUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useUnsavedChangesGuard';
+
 export function SuperadminFranchiseModal({
   isOpen,
   onClose,
@@ -26,9 +28,10 @@ export function SuperadminFranchiseModal({
   onSubmit,
   isMutating,
 }: SuperadminFranchiseModalProps) {
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<FranchiseFormData>({
+  const { register, handleSubmit, reset, formState: { errors, isDirty } } = useForm<FranchiseFormData>({
     resolver: zodResolver(franchiseSchema)
   });
+  useUnsavedChangesGuard(isOpen && isDirty);
 
   // RESPONSIBILITY: Handle side-effects for SuperadminFranchiseModal
   useEffect(() => {

@@ -6,7 +6,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { Bell, Info, AlertTriangle, CheckCheck } from 'lucide-react';
 import Link from 'next/link';
-import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
+
+import { MessagingUrlConfig } from '@/app/superadmin/messaging/messaging_url_config';
 
 type NotificationType = 'INFO' | 'WARNING' | 'CRITICAL';
 interface SuperadminNotification {
@@ -125,7 +126,7 @@ export default function SuperadminNotificationBell() {
 
           <div className="p-2 border-t border-border bg-header">
             <Link
-              href={`${SuperadminUrlConfig.PAGES.MESSAGING}?tab=notifications`}
+              href={`${MessagingUrlConfig.PAGES.MAIN}?tab=notifications`}
               onClick={() => setOpen(false)}
               className="block w-full text-center py-2 text-sm font-semibold text-primary hover:text-primary-hover motion-safe:transition-colors rounded-lg hover:bg-primary/5 focus-visible:outline-none focus-visible:bg-primary/5"
             >

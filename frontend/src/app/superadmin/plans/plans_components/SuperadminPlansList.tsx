@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { plansApi } from '@/app/superadmin/plans/superadmin_plans_api/superadmin_plans_api';
 import { useSuperadminPlansStore } from '@/app/superadmin/plans/plans_store/useSuperadminPlansStore';
+import { formatCurrency } from '@/lib/formatters';
 import { useSuperadminConfirm } from '@/components/ui/SuperadminFeedback/SuperadminConfirmProvider';
 
 export default function SuperadminPlansList() {
@@ -36,10 +37,10 @@ export default function SuperadminPlansList() {
   const archiveMutation = useMutation({
     mutationFn: (id: string) => plansApi.archivePlan(id),
     onSuccess: () => {
-      toast.success('Plan archived. Existing gyms remain unaffected.');
+      toast.success('Plan archived. Existing gyms remain unaffected.', { id: 'plan-archived-existing-gyms-remain-unaffected' });
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'plans'] });
     },
-    onError: () => { toast.error('Failed to archive plan.'); },
+    onError: () => { toast.error('Failed to archive plan.', { id: 'failed-to-archive-plan' }); },
   });
 
   const plans = fetchRes?.data || [];
@@ -79,7 +80,7 @@ export default function SuperadminPlansList() {
             <div className="mb-4">
               <h2 className="text-xl font-bold text-foreground">{plan.name}</h2>
               <div className="flex items-end gap-1 mt-2">
-                <span className="text-3xl font-extrabold text-foreground">₹{Number(plan.priceMonthly).toFixed(2)}</span>
+                <span className="text-3xl font-extrabold text-foreground">{formatCurrency(Number(plan.priceMonthly))}</span>
                 <span className="text-secondary font-medium mb-1">/ mo</span>
               </div>
             </div>

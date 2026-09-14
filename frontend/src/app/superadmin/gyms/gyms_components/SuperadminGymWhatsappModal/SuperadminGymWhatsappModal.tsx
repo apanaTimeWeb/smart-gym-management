@@ -6,6 +6,8 @@ import { X } from 'lucide-react';
 import { maskSensitiveData } from '@/lib/formatters';
 import { useSuperadminGymWhatsappModal } from '@/app/superadmin/gyms/gyms_components/SuperadminGymWhatsappModal/useSuperadminGymWhatsappModal';
 
+import { useUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useUnsavedChangesGuard';
+
 export default function SuperadminGymWhatsappModal() {
   const {
     isWhatsappModalOpen,
@@ -16,7 +18,10 @@ export default function SuperadminGymWhatsappModal() {
     onSubmit,
     errors,
     isSubmitting,
+    isDirty,
   } = useSuperadminGymWhatsappModal();
+
+  useUnsavedChangesGuard(isWhatsappModalOpen && isDirty);
 
   if (!isWhatsappModalOpen || !selectedGym) return null;
 

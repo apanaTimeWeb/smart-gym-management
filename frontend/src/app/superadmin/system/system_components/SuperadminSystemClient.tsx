@@ -11,7 +11,6 @@ import { auditLogsApi } from '@/app/superadmin/global-audit/superadmin_global-au
 import toast from 'react-hot-toast';
 import type { Tenant, GlobalAuditLog, MigrationsPageData } from '@/app/superadmin/superadmin_types/superadmin_types';
 import SuperadminPagination from '@/components/ui/SuperadminShared/SuperadminPagination';
-import { MOCK_AUDIT_LOGS } from '@/app/superadmin/global-audit/global-audit_utils/SuperadminGlobalAuditConstants';
 
 const CURRENT_SCHEMA_VERSION = process.env.NEXT_PUBLIC_CURRENT_SCHEMA_VERSION || 'v2.4.1';
 
@@ -45,20 +44,7 @@ export default function SuperadminSystemClient() {
   const rawLogs = auditData?.data ?? [];
   const hasLogs = rawLogs.length > 0;
   
-  const finalLogs = useMemo(() => {
-    if (hasLogs) return rawLogs;
-    if (process.env.NODE_ENV === 'development') {
-      return MOCK_AUDIT_LOGS.map(log => ({
-        id: log.id,
-        timestamp: log.timestamp,
-        targetResource: log.resource,
-        actorName: log.actor,
-        actorRole: 'SYSTEM', // MOCK_AUDIT_LOGS doesn't have actorRole
-        action: log.action,
-      })) as GlobalAuditLog[];
-    }
-    return [];
-  }, [hasLogs, rawLogs]);
+  const finalLogs = rawLogs;
 
   const handleRunMigration = async (tenantId: string) => {
     setMigratingTenants(prev => ({ ...prev, [tenantId]: true }));
@@ -77,9 +63,9 @@ export default function SuperadminSystemClient() {
           }
         };
       });
-      toast.success(`Successfully migrated database for tenant ${tenantId}`);
+      toast.success(`Successfully migrated database for tenant ${tenantId}`, { id: 'successfully-migrated-database-for-tenant-tenantid' });
     } catch (err) {
-      toast.error('Migration failed. Please check logs.');
+      toast.error('Migration failed. Please check logs.', { id: 'migration-failed-please-check-logs' });
     } finally {
       setMigratingTenants(prev => ({ ...prev, [tenantId]: false }));
     }
@@ -109,7 +95,7 @@ export default function SuperadminSystemClient() {
     link.href = URL.createObjectURL(blob);
     link.download = `audit_logs_${new Date().toISOString().split('T')[0]}.csv`;
     link.click();
-    toast.success('Audit logs exported successfully');
+    toast.success('Audit logs exported successfully', { id: 'audit-logs-exported-successfully' });
   };
 
   const totalPages = Math.ceil(filteredLogs.length / ITEMS_PER_PAGE) || 1;

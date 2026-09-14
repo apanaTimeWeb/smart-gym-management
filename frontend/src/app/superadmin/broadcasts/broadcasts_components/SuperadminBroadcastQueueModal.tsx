@@ -13,6 +13,14 @@ export interface BroadcastRecipient {
   phone: string;
 }
 
+/** Shape of a notification persisted to local storage for the in-app notification bell. */
+interface BroadcastNotification {
+  id: string;
+  text: string;
+  time: string;
+  unread: boolean;
+}
+
 interface SuperadminBroadcastQueueModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -30,19 +38,19 @@ export default function SuperadminBroadcastQueueModal({
 }: SuperadminBroadcastQueueModalProps) {
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [completed, setCompleted] = useState<Set<string>>(new Set());
-  const [notifications, setNotifications] = useLocalStorage<any[]>('admin_notifications_v1', []);
+  // Rule 58: use the shared useLocalStorage hook — never access localStorage directly in a component.
+  // Key uses 'admin_notifications_v1' for versioning compatibility.
+  const [, setNotifications] = useLocalStorage<BroadcastNotification[]>('admin_notifications_v1', []);
 
-  // RESPONSIBILITY: Handle side-effects for SuperadminBroadcastQueueModal
+  // Starts the queue from the first recipient whenever the modal opens with a new list.
   useEffect(() => {
     if (isOpen && recipients.length > 0) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCurrentIndex(0);
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCompleted(new Set());
     }
   }, [isOpen, recipients]);
 
-  // RESPONSIBILITY: Handle side-effects for SuperadminBroadcastQueueModal
+  // Processes each recipient sequentially with a 1.5s visual delay.
   useEffect(() => {
     if (currentIndex >= 0 && currentIndex < recipients.length) {
       const timer = setTimeout(() => {
@@ -67,23 +75,20 @@ export default function SuperadminBroadcastQueueModal({
         }
 
         // We simulate the WhatsApp open without actually opening tabs to prevent popup blocker chaos for bulk sending
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setCompleted(prev => new Set(prev).add(rec.id));
         
         if (currentIndex + 1 === recipients.length) {
-          // eslint-disable-next-line react-hooks/set-state-in-effect
           setTimeout(() => {
             onComplete();
           }, 1000);
         } else {
-          // eslint-disable-next-line react-hooks/set-state-in-effect
           setCurrentIndex(prev => prev + 1);
         }
       }, 1500); // 1.5s per gym for visual effect
 
       return () => clearTimeout(timer);
     }
-  }, [currentIndex, recipients, broadcastTitle, onComplete]);
+  }, [currentIndex, recipients, broadcastTitle, onComplete, setNotifications]);
 
   if (!isOpen) return null;
 

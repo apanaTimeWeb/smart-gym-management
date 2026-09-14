@@ -8,8 +8,9 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
 import { authApi } from '@/app/auth/auth_api/auth_api';
+import { DashboardUrlConfig } from '@/app/superadmin/dashboard/dashboard_url_config';
 import { AuthUrlConfig } from '@/app/auth/auth_url_config';
-import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
+
 import { loginSchema } from '@/app/auth/login/login_types/login_types';
 import type { UseLoginFormReturn, LoginFormData, FetchState } from '@/app/auth/login/login_types/login_types';
 
@@ -65,7 +66,7 @@ export function useLoginForm(): UseLoginFormReturn {
         toast.success(res.message || 'Login successful');
 
         if (res.data!.user?.role === 'SUPERADMIN') {
-          window.location.replace(SuperadminUrlConfig.PAGES.DASHBOARD);
+          window.location.href = DashboardUrlConfig.PAGES.MAIN;
         } else if (res.data!.user?.role === 'MANAGER') {
           window.location.replace(AuthUrlConfig.PAGES.MANAGER_DASHBOARD);
         } else if (res.data!.user?.role === 'TRAINER') {

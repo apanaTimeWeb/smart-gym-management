@@ -1,6 +1,6 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
-import { useSuperadminAddGymForm } from './useSuperadminAddGymForm';
+import { useSuperadminAddGymForm } from '@/app/superadmin/gyms/gyms_components/SuperadminAddGymForm/useSuperadminAddGymForm';
 import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';

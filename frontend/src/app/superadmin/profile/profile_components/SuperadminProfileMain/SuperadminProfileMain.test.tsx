@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import SuperadminProfileMain from './SuperadminProfileMain';
+import SuperadminProfileMain from '@/app/superadmin/profile/profile_components/SuperadminProfileMain/SuperadminProfileMain';
 import { useProfilePage } from '@/app/superadmin/profile/profile_utils/useProfilePage';
 
 jest.mock('@/app/superadmin/profile/profile_utils/useProfilePage');

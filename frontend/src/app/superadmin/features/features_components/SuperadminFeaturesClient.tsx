@@ -6,7 +6,7 @@
 'use client';
 
 import { useSuperadminFeaturesData } from '@/app/superadmin/features/features_utils/useSuperadminFeaturesData';
-import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
+
 import { ToggleLeft, Send, Search, Users, Clock } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -51,10 +51,10 @@ export default function SuperadminFeaturesClient() {
       if (res.data) {
         setData((prev: { flags: FeatureFlag[]; notes: ReleaseNote[]; } | null) => prev ? { ...prev, notes: [res.data, ...prev.notes] } : prev);
         reset();
-        toast.success('Release note published successfully');
+        toast.success('Release note published successfully', { id: 'release-note-published-successfully' });
       }
     } catch (err: unknown) {
-      toast.error('Failed to publish release note');
+      toast.error('Failed to publish release note', { id: 'failed-to-publish-release-note' });
     } finally {
       setIsPublishing(false);
     }
@@ -78,9 +78,9 @@ export default function SuperadminFeaturesClient() {
   const handleToggle = async (flagId: string) => {
     try {
       await toggleFlag(flagId);
-      toast.success('Feature flag toggled');
+      toast.success('Feature flag toggled', { id: 'feature-flag-toggled' });
     } catch (e) {
-      toast.error('Failed to toggle feature flag');
+      toast.error('Failed to toggle feature flag', { id: 'failed-to-toggle-feature-flag' });
     }
   };
 
@@ -88,9 +88,9 @@ export default function SuperadminFeaturesClient() {
     if (!rolloutFlag) return;
     try {
       await updateFlag({ id: rolloutFlag.id, body: { enabledTenantIds: tenantIds } });
-      toast.success('Canary rollout updated successfully');
+      toast.success('Canary rollout updated successfully', { id: 'canary-rollout-updated-successfully' });
     } catch (e) {
-      toast.error('Failed to update canary rollout');
+      toast.error('Failed to update canary rollout', { id: 'failed-to-update-canary-rollout' });
     }
   };
 

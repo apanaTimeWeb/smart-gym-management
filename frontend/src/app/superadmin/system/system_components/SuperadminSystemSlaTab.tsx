@@ -3,19 +3,22 @@
 import { useState } from 'react';
 import { ServerCog, Clock, AlertCircle, CheckCircle, Ticket, Search } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { SUPERADMIN_SYSTEM_MOCK_SLA_DATA } from '@/app/superadmin/system/system_utils/SuperadminSystemConstants';
+import { formatNumber } from '@/lib/formatters';
 
 export default function SuperadminSystemSlaTab() {
   const [slaSearch, setSlaSearch] = useState('');
 
   const handleGenerateCredit = (tenantId: string) => {
-    toast.success(`Generated Downtime Credit invoice for gym ${tenantId}`);
+    toast.success(`Generated Downtime Credit invoice for gym ${tenantId}`, { id: 'generated-downtime-credit-invoice-for-gym-tenantid' });
   };
 
-  const filteredSla = SUPERADMIN_SYSTEM_MOCK_SLA_DATA.filter(sla => sla.name.toLowerCase().includes(slaSearch.toLowerCase()));
-  const totalTenants = SUPERADMIN_SYSTEM_MOCK_SLA_DATA.length;
-  const breachedTenants = SUPERADMIN_SYSTEM_MOCK_SLA_DATA.filter(s => s.status === 'BREACHED').length;
-  const avgUptime = (SUPERADMIN_SYSTEM_MOCK_SLA_DATA.reduce((acc, s) => acc + s.actualUptime, 0) / totalTenants).toFixed(2);
+  const filteredSla = [].filter(sla => sla.name.toLowerCase().includes(slaSearch.toLowerCase()));
+  const totalTenants = [].length;
+  const breachedTenants = [].filter(s => s.status === 'BREACHED').length;
+  const avgUptimeRaw = totalTenants > 0
+    ? [].reduce((acc, s) => acc + s.actualUptime, 0) / totalTenants
+    : 0;
+  const avgUptime = formatNumber(Math.round(avgUptimeRaw * 100) / 100);
 
   return (
     <div className="space-y-8 animate-superadmin-fade-in-up">

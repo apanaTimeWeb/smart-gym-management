@@ -1,0 +1,78 @@
+import { http, HttpResponse, delay } from 'msw';
+import type { Coupon } from '@/app/superadmin/coupons/superadmin_coupons_types/superadmin_coupons_types';
+import type { ApiResponse } from '@/lib/api';
+
+const BASE_URL = '*/api/v1/superadmin/coupons';
+
+let mockCoupons: Coupon[] = [
+  { id: 'c1', code: 'WINTER50', discountType: 'PERCENTAGE', discountValue: 50, maxUses: 100, currentUses: 45, status: 'ACTIVE', expiryDate: '2023-12-31', isDeleted: false },
+  { id: 'c2', code: 'NEWYEAR24', discountType: 'EXACT', discountValue: 5000, maxUses: 50, currentUses: 50, status: 'DEPLETED', expiryDate: '2024-01-31', isDeleted: false },
+  { id: 'c3', code: 'SUMMER20', discountType: 'PERCENTAGE', discountValue: 20, maxUses: 200, currentUses: 10, status: 'EXPIRED', expiryDate: '2022-08-31', isDeleted: false },
+];
+
+export const superadminCouponsHandlers = [
+  http.get(BASE_URL, async () => {
+    await delay(400);
+    return HttpResponse.json<ApiResponse<Coupon[]>>({
+      success: true,
+      message: 'Success',
+      data: mockCoupons.filter(c => !c.isDeleted),
+    });
+  }),
+  
+  http.post(BASE_URL, async ({ request }) => {
+    await delay(500);
+    const body = await request.json() as Partial<Coupon>;
+    const newCoupon: Coupon = {
+      ...body,
+      id: `c${Date.now()}`,
+      currentUses: 0,
+      status: 'ACTIVE',
+      isDeleted: false,
+      code: body.code || `NEW${Date.now()}`,
+      discountType: body.discountType || 'PERCENTAGE',
+      discountValue: body.discountValue || 10,
+      maxUses: body.maxUses || 100,
+      expiryDate: body.expiryDate || (new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] as string),
+    };
+    mockCoupons = [newCoupon, ...mockCoupons];
+    return HttpResponse.json<ApiResponse<Coupon>>({
+      success: true,
+      message: 'Created',
+      data: newCoupon,
+    });
+  }),
+
+  http.patch(`${BASE_URL}/:id`, async ({ params, request }) => {
+    await delay(500);
+    const id = params.id as string;
+    const body = await request.json() as Partial<Coupon>;
+    let updated: Coupon | null = null;
+    mockCoupons = mockCoupons.map(c => {
+      if (c.id === id) {
+        updated = { ...c, ...body };
+        return updated;
+      }
+      return c;
+    });
+    if (!updated) {
+      return HttpResponse.json<ApiResponse<Coupon>>({ success: false, message: 'Not found', data: null }, { status: 404 });
+    }
+    return HttpResponse.json<ApiResponse<Coupon>>({
+      success: true,
+      message: 'Updated',
+      data: updated,
+    });
+  }),
+
+  http.delete(`${BASE_URL}/:id`, async ({ params }) => {
+    await delay(400);
+    const id = params.id as string;
+    mockCoupons = mockCoupons.filter(c => c.id !== id);
+    return HttpResponse.json<ApiResponse<null>>({
+      success: true,
+      message: 'Deleted',
+      data: null,
+    });
+  }),
+];

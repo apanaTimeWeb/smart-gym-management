@@ -4,14 +4,14 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { BroadcastSchema, type BroadcastFormData, type Broadcast, type BroadcastStatus } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
+import { BroadcastSchema, type BroadcastFormData, type Broadcast, type BroadcastStatus, type BroadcastStatusFilter } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
 import toast from 'react-hot-toast';
 import { useLocalStorage } from '@/lib/useLocalStorage';
 import { useQuery } from '@tanstack/react-query';
 import { broadcastsApi } from '@/app/superadmin/broadcasts/superadmin_broadcasts_api/superadmin_broadcasts_api';
 import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
-import { MOCK_GYMS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
+
 
 /** LocalStorage key for persisting broadcasts across refreshes (TC-28/29 fix) */
 const BROADCASTS_STORAGE_KEY = 'superadmin_broadcasts_v1';
@@ -63,7 +63,7 @@ export const useSuperadminBroadcastsPage = () => {
   });
 
   const rawGyms = (fetchRes?.data as Tenant[]) ?? [];
-  const gyms = rawGyms.length > 0 ? rawGyms : MOCK_GYMS;
+  const gyms = rawGyms;
 
   const form = useForm<BroadcastFormData>({
     resolver: zodResolver(BroadcastSchema),
@@ -90,13 +90,13 @@ export const useSuperadminBroadcastsPage = () => {
       setIsModalOpen(false);
       setEditingId(null);
       form.reset();
-      if (!isSendingNow) toast.success('Broadcast updated successfully');
+      if (!isSendingNow) toast.success('Broadcast updated successfully', { id: 'broadcast-updated-successfully' });
     } else {
       newB = { ...payload, id: `b-${Date.now()}`, sentDate: isSendingNow ? new Date().toISOString() : undefined } as Broadcast;
       updateBroadcasts(prev => [newB!, ...prev]);
       setIsModalOpen(false);
       form.reset();
-      if (!isSendingNow) toast.success('Broadcast created successfully');
+      if (!isSendingNow) toast.success('Broadcast created successfully', { id: 'broadcast-created-successfully' });
     }
 
     if (isSendingNow) {
@@ -110,7 +110,7 @@ export const useSuperadminBroadcastsPage = () => {
 
   const handleDeleteBroadcast = useCallback(async (id: string) => {
     updateBroadcasts(prev => prev.filter(b => b.id !== id));
-    toast.success('Broadcast deleted successfully');
+    toast.success('Broadcast deleted successfully', { id: 'broadcast-deleted-successfully' });
   }, [updateBroadcasts]);
 
   const handleSendBroadcast = useCallback(async (id: string) => {
@@ -128,7 +128,7 @@ export const useSuperadminBroadcastsPage = () => {
 
   const onQueueComplete = useCallback(() => {
     setQueueModalOpen(false);
-    toast.success('Automated broadcast finished successfully!');
+    toast.success('Automated broadcast finished successfully!', { id: 'automated-broadcast-finished-successfully' });
   }, []);
 
   const openEditModal = useCallback((broadcast: Broadcast) => {

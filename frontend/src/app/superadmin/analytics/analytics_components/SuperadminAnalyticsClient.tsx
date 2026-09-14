@@ -12,7 +12,7 @@ import { SuperadminDateFilterDropdown } from '@/components/ui/SuperadminShared/S
 import { useDateRangeSuffix } from '@/components/ui/SuperadminShared/useDateRangeSuffix';
 
 // Heavy chart component — code-split via dynamic import (Rule 15, Design §10)
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency, formatKPI, formatDecimal } from '@/lib/formatters';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 export default function SuperadminAnalyticsClient() {
@@ -132,7 +132,7 @@ export default function SuperadminAnalyticsClient() {
       labels: {
         style: { colors: CHART_COLORS.TEXT_SECONDARY },
         // Design §21: Indian currency formatting in Y-axis
-        formatter: (val: number) => `₹${(val / 1000).toFixed(0)}k`,
+        formatter: (val: number) => formatKPI(val),
       },
     },
     grid: { borderColor: CHART_COLORS.BORDER, strokeDashArray: 4 },
@@ -247,7 +247,7 @@ export default function SuperadminAnalyticsClient() {
             <span className="text-secondary text-xs font-medium uppercase tracking-wider">CAC (Customer Acquisition Cost)</span>
           </div>
           <p className="text-3xl font-bold text-foreground mt-3">{formatCurrency(metrics.cac)}</p>
-          <p className="text-xs text-secondary mt-2">LTV:CAC = {(metrics.ltv / metrics.cac).toFixed(1)}x</p>
+          <p className="text-xs text-secondary mt-2">LTV:CAC = {metrics.cac > 0 ? formatDecimal(metrics.ltv / metrics.cac, 1) : '—'}x</p>
         </div>
       </div>
     </div>

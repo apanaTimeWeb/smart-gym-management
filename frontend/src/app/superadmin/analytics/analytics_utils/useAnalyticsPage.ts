@@ -7,7 +7,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { analyticsApi } from '@/app/superadmin/analytics/superadmin_analytics_api/superadmin_analytics_api';
 import type { RevenueMetrics, MonthlyAnalyticsDataPoint, FetchState } from '@/app/superadmin/analytics/superadmin_analytics_types/superadmin_analytics_types';
-import { MOCK_ANALYTICS_METRICS, MOCK_MONTHLY_DATA } from '@/app/superadmin/analytics/analytics_utils/SuperadminAnalyticsConstants';
 
 export type AnalyticsTimeRange = 'this_week' | 'this_month' | 'this_year' | 'custom';
 
@@ -23,7 +22,7 @@ interface UseAnalyticsPageReturn {
 
 export function useAnalyticsPage(): UseAnalyticsPageReturn {
   const [metrics, setMetrics] = useState<RevenueMetrics | null>(null);
-  const [monthlyData] = useState<MonthlyAnalyticsDataPoint[]>(MOCK_MONTHLY_DATA);
+  const [monthlyData, setMonthlyData] = useState<MonthlyAnalyticsDataPoint[]>([]);
   const [fetchState, setFetchState] = useState<FetchState>('loading');
   const [error, setError] = useState<string | null>(null);
   const searchParams = useSearchParams();
@@ -34,22 +33,21 @@ export function useAnalyticsPage(): UseAnalyticsPageReturn {
   const fetchMetrics = useCallback(() => {
     let cancelled = false;
     setFetchState('loading');
+    setError(null);
     analyticsApi
       .getRevenueMetrics({ timeRange, customStart, customEnd })
       .then((res) => {
         if (cancelled) return;
-        if (res.success && res.data) {
-          setMetrics(res.data);
-        } else {
-          setMetrics(MOCK_ANALYTICS_METRICS);
+        if (res.data) {
+          setMetrics(res.data.metrics);
+          setMonthlyData(res.data.monthly || []);
+          setFetchState('success');
         }
-        setFetchState('success');
       })
-      .catch(() => {
+      .catch((err) => {
         if (cancelled) return;
-        setMetrics(MOCK_ANALYTICS_METRICS);
-        setFetchState('success');
-        setError(null);
+        setError(err.message || 'Failed to fetch analytics');
+        setFetchState('error');
       });
     return () => { cancelled = true; };
   }, [timeRange, customStart, customEnd]);

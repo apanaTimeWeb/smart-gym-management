@@ -6,7 +6,6 @@ import { X, Loader2, Search } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
-import { MOCK_GYMS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
 import type { FeatureFlag } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
 
 interface FeatureRolloutModalProps {
@@ -28,7 +27,7 @@ export default function SuperadminFeatureRolloutModal({ isOpen, onClose, flag, o
   });
 
   const rawGyms = (fetchRes?.data as Tenant[]) ?? [];
-  const gyms = rawGyms.length > 0 ? rawGyms : MOCK_GYMS;
+  const gyms = rawGyms;
 
   // RESPONSIBILITY: Handle side-effects for SuperadminFeatureRolloutModal
   useEffect(() => {

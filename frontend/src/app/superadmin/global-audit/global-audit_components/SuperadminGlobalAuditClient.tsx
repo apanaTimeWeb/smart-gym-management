@@ -7,7 +7,6 @@ import type { AuditLog } from '@/app/superadmin/global-audit/superadmin_global-a
 import { ShieldAlert, Search, Filter, AlertTriangle, Info, Download } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-import { MOCK_AUDIT_LOGS } from '@/app/superadmin/global-audit/global-audit_utils/SuperadminGlobalAuditConstants';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import SuperadminPagination from '@/components/ui/SuperadminShared/SuperadminPagination';
 
@@ -35,12 +34,12 @@ export default function SuperadminGlobalAuditClient() {
       }
 
       // Mock Data for UI presentation
-      return { logs: MOCK_AUDIT_LOGS };
+      return { logs: [] };
     }
   });
 
   const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
-  const displayLogs = queryData?.logs || MOCK_AUDIT_LOGS;
+  const displayLogs = queryData?.logs || [];
 
   // RESPONSIBILITY: Handle side-effects for SuperadminGlobalAuditClient
   useEffect(() => {
@@ -73,7 +72,7 @@ export default function SuperadminGlobalAuditClient() {
 
   const exportLogs = () => {
     if (filteredLogs.length === 0) {
-      toast.error('No logs to export');
+      toast.error('No logs to export', { id: 'no-logs-to-export' });
       return;
     }
     const headers = ['Timestamp', 'Severity', 'Action', 'Resource', 'Details', 'Actor', 'IP Address'];
@@ -101,7 +100,7 @@ export default function SuperadminGlobalAuditClient() {
     link.click();
     document.body.removeChild(link);
     
-    toast.success('Exporting global audit logs as CSV...');
+    toast.success('Exporting global audit logs as CSV...', { id: 'exporting-global-audit-logs-as-csv' });
   };
 
   const severityOptions = [

@@ -16,15 +16,17 @@ interface SuperadminChurnActionModalProps {
   onConfirm: (payload: ChurnActionPayload) => void;
   onClose: () => void;
 }
+import { useUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useUnsavedChangesGuard';
 
 export default function SuperadminChurnActionModal({ alert, onConfirm, onClose }: SuperadminChurnActionModalProps) {
-  const { control, handleSubmit, formState: { errors } } = useForm<ChurnActionFormValues>({
+  const { control, handleSubmit, formState: { errors, isDirty } } = useForm<ChurnActionFormValues>({
     resolver: zodResolver(churnActionSchema),
     defaultValues: {
       status: alert.actionStatus,
       notes: alert.notes,
     },
   });
+  useUnsavedChangesGuard(isDirty);
 
   function onSubmit(data: ChurnActionFormValues) {
     onConfirm({ alertId: alert.id, status: data.status, notes: data.notes });

@@ -3,6 +3,9 @@ import { z } from 'zod';
 export type BroadcastStatus = 'SENT' | 'SCHEDULED' | 'DRAFT';
 export type BroadcastAudience = 'ALL_TENANTS' | 'PRO_ONLY' | 'SUSPENDED_ONLY';
 
+/** Filter tabs for the Broadcasts status dropdown. */
+export type BroadcastStatusFilter = 'ALL' | BroadcastStatus | 'FAILED';
+
 export interface Broadcast {
   id: string;
   title: string;

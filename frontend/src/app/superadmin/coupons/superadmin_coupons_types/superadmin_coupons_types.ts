@@ -1,6 +1,10 @@
 // RESPONSIBILITY: Defines all TypeScript types and interfaces for the Coupons module.
 export type CouponStatus = 'ACTIVE' | 'INACTIVE' | 'EXPIRED' | 'DEPLETED';
 
+/** KPI filter tabs on the Coupons page — controls which subset of coupons is displayed. */
+export type CouponKpiFilter = 'ALL' | 'ACTIVE' | 'REDEEMED';
+
+
 export interface Coupon {
   id: string;
   code: string;

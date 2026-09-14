@@ -4,6 +4,7 @@
 
 import { Eye, AlertTriangle, X as XIcon } from 'lucide-react';
 import type { BackgroundJob } from '@/app/superadmin/superadmin_types/superadmin_types';
+import { formatDuration } from '@/lib/formatters';
 
 const STATUS_TEXT_COLORS: Record<BackgroundJob['status'], string> = {
   ACTIVE:    'text-primary',
@@ -11,12 +12,6 @@ const STATUS_TEXT_COLORS: Record<BackgroundJob['status'], string> = {
   FAILED:    'text-danger',
   DELAYED:   'text-warning',
 };
-
-function formatDuration(ms?: number): string {
-  if (!ms) return '-';
-  if (ms < 1000) return `${ms}ms`;
-  return `${(ms / 1000).toFixed(2)}s`;
-}
 
 interface SuperadminJobInspectModalProps {
   job: BackgroundJob;

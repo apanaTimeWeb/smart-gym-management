@@ -1,16 +1,16 @@
 import { http, HttpResponse, delay } from 'msw';
-import { SuperadminMigrationsUrlConfig } from '@/app/superadmin/migrations/superadmin_migrations_url_config';
+import { MigrationsUrlConfig } from '@/app/superadmin/migrations/migrations_url_config';
 
 import { MOCK_MIGRATIONS } from '@/app/superadmin/migrations/migrations_utils/SuperadminMigrationsConstants';
 
 let mockMigrationsList = [...MOCK_MIGRATIONS];
 
 export const superadminMigrationsHandlers = [
-  http.get(SuperadminMigrationsUrlConfig.BACKEND_API.MIGRATIONS_BASE, async () => {
+  http.get(MigrationsUrlConfig.BACKEND_API.BASE, async () => {
     await delay(400);
     return HttpResponse.json({ success: true, message: 'Success', data: mockMigrationsList });
   }),
-  http.post(`${SuperadminMigrationsUrlConfig.BACKEND_API.MIGRATIONS_BASE}/trigger`, async ({ request }) => {
+  http.post(`${MigrationsUrlConfig.BACKEND_API.BASE}/trigger`, async ({ request }) => {
     await delay(600);
     const body = await request.json() as any;
     const tenantId = body?.tenantId || 'unknown';

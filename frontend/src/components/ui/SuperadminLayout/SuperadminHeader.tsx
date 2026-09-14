@@ -7,7 +7,8 @@ import { useState, useRef, useEffect } from 'react';
 import { LogOut, Settings, Menu } from 'lucide-react';
 import Link from 'next/link';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
+
+import { SettingsUrlConfig } from '@/app/superadmin/settings/settings_url_config';
 import { logout } from '@/lib/api';
 import SuperadminNotificationBell from '@/components/ui/SuperadminLayout/SuperadminNotificationBell';
 
@@ -100,7 +101,7 @@ export default function SuperadminHeader() {
               </div>
               <div className="py-1">
                 <Link
-                  href={SuperadminUrlConfig.PAGES.SETTINGS}
+                  href={SettingsUrlConfig.PAGES.MAIN}
                   role="menuitem"
                   className="flex items-center gap-2 px-4 py-2 text-sm text-secondary hover:text-foreground hover:bg-input motion-safe:transition-colors focus-visible:outline-none focus-visible:bg-input"
                   onClick={handleCloseProfile}

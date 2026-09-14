@@ -7,7 +7,6 @@ import type { MigrationLog } from '@/app/superadmin/migrations/superadmin_migrat
 import { Database, CheckCircle, AlertTriangle, Clock, RefreshCw, XCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-import { MOCK_MIGRATIONS, STATUS_COLORS } from '@/app/superadmin/migrations/migrations_utils/SuperadminMigrationsConstants';
 import { useSuperadminConfirm } from '@/components/ui/SuperadminFeedback/SuperadminConfirmProvider';
 
 export default function SuperadminMigrationsClient() {
@@ -28,16 +27,16 @@ export default function SuperadminMigrationsClient() {
       }
 
       // Mock Data for UI presentation
-      return { migrations: MOCK_MIGRATIONS };
+      return { migrations: [] };
     }
   });
 
   const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
-  const displayMigrations = queryData?.migrations || MOCK_MIGRATIONS;
+  const displayMigrations = queryData?.migrations || [];
 
   const handleRollout = async () => {
     if (!versionInput.trim()) {
-      toast.error('Please enter a target schema version.');
+      toast.error('Please enter a target schema version.', { id: 'please-enter-a-target-schema-version' });
       return;
     }
 
@@ -69,7 +68,7 @@ export default function SuperadminMigrationsClient() {
       // Optimistically add to UI at the top of the list
       queryClient.setQueryData(['superadmin', 'migrations-log'], (old: { migrations: MigrationLog[] } | undefined) => {
         return {
-          migrations: [newMigration, ...(old?.migrations || MOCK_MIGRATIONS)]
+          migrations: [newMigration, ...(old?.migrations || [])]
         };
       });
       
@@ -89,7 +88,7 @@ export default function SuperadminMigrationsClient() {
       }, 3500);
 
     } catch (err) {
-      toast.error('Failed to trigger rollout');
+      toast.error('Failed to trigger rollout', { id: 'failed-to-trigger-rollout' });
     }
   };
 

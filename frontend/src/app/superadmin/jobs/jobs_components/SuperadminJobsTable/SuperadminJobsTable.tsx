@@ -5,6 +5,7 @@
 import { RefreshCw, XCircle, Trash2, Eye, AlertTriangle, X as XIcon } from 'lucide-react';
 import type { BackgroundJob } from '@/app/superadmin/superadmin_types/superadmin_types';
 import SuperadminJobsEmptyState from '@/app/superadmin/jobs/jobs_components/SuperadminJobsEmptyState/SuperadminJobsEmptyState';
+import { formatDuration } from '@/lib/formatters';
 
 /** Maps BackgroundJob status → TailwindCSS color classes */
 const STATUS_STYLES: Record<BackgroundJob['status'], string> = {
@@ -13,13 +14,6 @@ const STATUS_STYLES: Record<BackgroundJob['status'], string> = {
   FAILED:    'text-danger bg-danger-bg/10',
   DELAYED:   'text-warning bg-warning/10',
 };
-
-/** Formats a millisecond duration to human-readable string */
-function formatDuration(ms?: number): string {
-  if (!ms) return '-';
-  if (ms < 1000) return `${ms}ms`;
-  return `${(ms / 1000).toFixed(2)}s`;
-}
 
 interface SuperadminJobsTableProps {
   jobs: BackgroundJob[];

@@ -3,9 +3,7 @@ import toast from 'react-hot-toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { churnAlertsApi } from '@/app/superadmin/churn-alerts/churn_api/superadmin_churn_api';
 import type { ChurnAlert, ChurnFilterStatus, ChurnActionPayload } from '@/app/superadmin/churn-alerts/churn_types/churn_types';
-import { MOCK_CHURN_ALERTS, MOCK_CHURN_KPI } from '@/app/superadmin/churn-alerts/churn_utils/churn_constants';
 
-const IS_DEV = process.env.NODE_ENV === 'development';
 const CHURN_PAGE_SIZE = 20;
 
 export function useChurnAlertsPage() {
@@ -47,15 +45,8 @@ export function useChurnAlertsPage() {
     }
   });
 
-  const alerts: ChurnAlert[] = (() => {
-    if (alertsRes?.data && alertsRes.data.length > 0) return alertsRes.data;
-    return IS_DEV ? MOCK_CHURN_ALERTS : [];
-  })();
-
-  const kpis = (() => {
-    if (kpisRes?.data) return kpisRes.data;
-    return IS_DEV ? MOCK_CHURN_KPI : { totalAtRisk: 0, criticalCount: 0, highCount: 0, estimatedMrrAtRisk: 0 };
-  })();
+  const alerts: ChurnAlert[] = alertsRes?.data || [];
+  const kpis = kpisRes?.data || { totalAtRisk: 0, criticalCount: 0, highCount: 0, estimatedMrrAtRisk: 0 };
 
   const filtered = useMemo(() => {
     return alerts.filter((a) => {

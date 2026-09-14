@@ -5,10 +5,10 @@ import Link from 'next/link';
 import { Controller } from 'react-hook-form';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { ArrowLeft, Database, Save, Loader2, Eye, EyeOff } from 'lucide-react';
-import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
+import { GymsUrlConfig } from '@/app/superadmin/gyms/gyms_url_config';
 import { useSuperadminAddGymForm } from '@/app/superadmin/gyms/gyms_components/SuperadminAddGymForm/useSuperadminAddGymForm';
 import { useUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useUnsavedChangesGuard';
-import { useUnsavedChangesGuard } from '@/lib/useUnsavedChangesGuard';
+import { formatCurrency } from '@/lib/formatters';
 
 export default function SuperadminAddGymForm() {
   const {
@@ -26,14 +26,13 @@ export default function SuperadminAddGymForm() {
     loadingPlans,
   } = useSuperadminAddGymForm();
 
-  useUnsavedChangesGuard(isDirty, 'You have unsaved gym details. Discard?');
-  useUnsavedChangesGuard(isDirty && !isProvisioning);
+  useUnsavedChangesGuard(isDirty && !isProvisioning, 'You have unsaved gym details. Discard?');
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex items-center gap-4">
         <Link 
-          href={SuperadminUrlConfig.PAGES.GYMS_LIST}
+          href={GymsUrlConfig.PAGES.MAIN}
           className="p-2 bg-card border border-border rounded-lg text-secondary hover:text-white motion-safe:transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
@@ -131,7 +130,7 @@ export default function SuperadminAddGymForm() {
                     <SearchableDropdown
                       value={field.value || ''}
                       onChange={field.onChange}
-                      options={plans ? plans.map(p => ({ label: `${p.name} ($${Number(p.priceMonthly).toFixed(2)}/mo)`, value: p.name })) : []}
+                      options={plans ? plans.map(p => ({ label: `${p.name} (${formatCurrency(Number(p.priceMonthly))}/mo)`, value: p.name })) : []}
                       disabled={loadingPlans}
                       placeholder={loadingPlans ? "Loading plans..." : "Select a plan"}
                     />

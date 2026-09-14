@@ -7,6 +7,7 @@ import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { X, Eye, EyeOff } from 'lucide-react';
 import { useSuperadminGymEditModal } from '@/app/superadmin/gyms/gyms_components/SuperadminGymEditModal/useSuperadminGymEditModal';
 import { useUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useUnsavedChangesGuard';
+import { formatCurrency } from '@/lib/formatters';
 
 export default function SuperadminGymEditModal() {
   const {
@@ -115,7 +116,7 @@ export default function SuperadminGymEditModal() {
                 <SearchableDropdown
                   value={field.value || ''}
                   onChange={field.onChange}
-                  options={plans ? plans.map(p => ({ label: `${p.name} ($${Number(p.priceMonthly).toFixed(2)}/mo)`, value: p.name })) : []}
+                  options={plans ? plans.map(p => ({ label: `${p.name} (${formatCurrency(Number(p.priceMonthly))}/mo)`, value: p.name })) : []}
                   disabled={loadingPlans}
                   placeholder={loadingPlans ? "Loading plans..." : "Select a plan"}
                 />

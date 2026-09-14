@@ -35,9 +35,37 @@ import {
   FileBarChart,
   TrendingDown,
   UserCircle,
+  Send,
   Search,
+  Dumbbell,
+  Server,
 } from 'lucide-react';
-import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
+
+import { AffiliatesUrlConfig } from '@/app/superadmin/affiliates/affiliates_url_config';
+import { AnalyticsUrlConfig } from '@/app/superadmin/analytics/analytics_url_config';
+import { BranchesUrlConfig } from '@/app/superadmin/branches/branches_url_config';
+import { ChurnUrlConfig } from '@/app/superadmin/churn-alerts/churn_url_config';
+import { CouponsUrlConfig } from '@/app/superadmin/coupons/coupons_url_config';
+import { FeaturesUrlConfig } from '@/app/superadmin/features/features_url_config';
+import { FranchisesUrlConfig } from '@/app/superadmin/franchises/franchises_url_config';
+import { InvoicesUrlConfig } from '@/app/superadmin/invoices/invoices_url_config';
+import { MessagingUrlConfig } from '@/app/superadmin/messaging/messaging_url_config';
+import { OnboardingUrlConfig } from '@/app/superadmin/onboarding/onboarding_url_config';
+import { ReportsUrlConfig } from '@/app/superadmin/reports/reports_url_config';
+import { BackupsUrlConfig } from '@/app/superadmin/backups/backups_url_config';
+import { SystemUrlConfig } from '@/app/superadmin/system/system_url_config';
+import { PlansUrlConfig } from '@/app/superadmin/plans/plans_url_config';
+import { ProfileUrlConfig } from '@/app/superadmin/profile/profile_url_config';
+import { SettingsUrlConfig } from '@/app/superadmin/settings/settings_url_config';
+import { GlobalAuditUrlConfig } from '@/app/superadmin/global-audit/global_audit_url_config';
+import { BroadcastsUrlConfig } from '@/app/superadmin/broadcasts/broadcasts_url_config';
+import { DashboardUrlConfig } from '@/app/superadmin/dashboard/dashboard_url_config';
+import { GymsUrlConfig } from '@/app/superadmin/gyms/gyms_url_config';
+import { InfrastructureUrlConfig } from '@/app/superadmin/infrastructure/infrastructure_url_config';
+import { MigrationsUrlConfig } from '@/app/superadmin/migrations/migrations_url_config';
+import { JobsUrlConfig } from '@/app/superadmin/jobs/jobs_url_config';
+import { TicketsUrlConfig } from '@/app/superadmin/tickets/tickets_url_config';
+import { UsageMetersUrlConfig } from '@/app/superadmin/usage-meters/usage_meters_url_config';
 import { logout } from '@/lib/api';
 
 interface SuperadminSidebarProps {
@@ -72,64 +100,66 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
     {
       group: 'Overview',
       items: [
-        { name: 'Dashboard', href: SuperadminUrlConfig.PAGES.DASHBOARD, icon: LayoutDashboard },
+        { name: 'Dashboard', href: DashboardUrlConfig.PAGES.MAIN, icon: LayoutDashboard },
       ]
     },
     {
       group: 'Gyms & Plans',
       items: [
-        { name: 'Gyms', href: SuperadminUrlConfig.PAGES.GYMS_LIST, icon: Building2 },
-        { name: 'Onboarding', href: SuperadminUrlConfig.PAGES.ONBOARDING, icon: UserPlus },
-        { name: 'Subscription Plans', href: SuperadminUrlConfig.PAGES.PLANS, icon: CreditCard },
+        { name: 'Gyms & Tenants', href: GymsUrlConfig.PAGES.MAIN, icon: Dumbbell },
+        { name: 'Gym Branches', href: BranchesUrlConfig.PAGES.MAIN, icon: ServerCog },
+        { name: 'Gym Franchises', href: FranchisesUrlConfig.PAGES.MAIN, icon: Building2 },
+        { name: 'Onboarding', href: OnboardingUrlConfig.PAGES.MAIN, icon: UserPlus },
+        { name: 'Subscription Plans', href: PlansUrlConfig.PAGES.MAIN, icon: CreditCard },
       ]
     },
     {
       group: 'Billing & Revenue',
       items: [
-        { name: 'Revenue Analytics', href: SuperadminUrlConfig.PAGES.ANALYTICS, icon: BarChart2 },
-        { name: 'SaaS Invoices', href: SuperadminUrlConfig.PAGES.INVOICES, icon: Receipt },
-        { name: 'Promotional Coupons', href: SuperadminUrlConfig.PAGES.COUPONS, icon: Tag },
+        { name: 'Revenue Analytics', href: AnalyticsUrlConfig.PAGES.MAIN, icon: BarChart2 },
+        { name: 'SaaS Invoices', href: InvoicesUrlConfig.PAGES.MAIN, icon: Receipt },
+        { name: 'Promotional Coupons', href: CouponsUrlConfig.PAGES.MAIN, icon: Tag },
       ]
     },
     {
       group: 'Communication & Support',
       items: [
-        { name: 'Support Tickets', href: SuperadminUrlConfig.PAGES.TICKETS, icon: Ticket },
-        { name: 'Gym Messaging', href: SuperadminUrlConfig.PAGES.MESSAGING, icon: MessageSquare },
-        { name: 'Announcements', href: SuperadminUrlConfig.PAGES.BROADCASTS, icon: Megaphone },
+        { name: 'Support Tickets', href: TicketsUrlConfig.PAGES.MAIN, icon: Ticket },
+        { name: 'Gym Messaging', href: MessagingUrlConfig.PAGES.MAIN, icon: MessageSquare },
+        { name: 'Broadcast Messages', href: BroadcastsUrlConfig.PAGES.MAIN, icon: Send },
       ]
     },
     {
       group: 'Insights & Reports',
       items: [
-        { name: 'Members About to Leave', href: SuperadminUrlConfig.PAGES.CHURN_ALERTS, icon: TrendingDown },
-        { name: 'Usage Meters', href: SuperadminUrlConfig.PAGES.USAGE_METERS, icon: BarChart3 },
-        { name: 'Reports & Exports', href: SuperadminUrlConfig.PAGES.REPORTS, icon: FileBarChart },
+        { name: 'Members About to Leave', href: ChurnUrlConfig.PAGES.MAIN, icon: TrendingDown },
+        { name: 'Usage Meters', href: UsageMetersUrlConfig.PAGES.MAIN, icon: BarChart3 },
+        { name: 'Reports & Exports', href: ReportsUrlConfig.PAGES.MAIN, icon: FileBarChart },
       ]
     },
     {
       group: 'Platform Management',
       items: [
-        { name: 'Feature Flags', href: SuperadminUrlConfig.PAGES.FEATURES, icon: ToggleLeft },
-        { name: 'Affiliate Partners', href: SuperadminUrlConfig.PAGES.AFFILIATES, icon: Users },
+        { name: 'Feature Flags', href: FeaturesUrlConfig.PAGES.MAIN, icon: ToggleLeft },
+        { name: 'Affiliate Partners', href: AffiliatesUrlConfig.PAGES.MAIN, icon: Users },
       ]
     },
     {
       group: 'System & Infra',
       items: [
-        { name: 'Infrastructure', href: SuperadminUrlConfig.PAGES.INFRASTRUCTURE, icon: HardDrive },
-        { name: 'Schema Rollouts', href: SuperadminUrlConfig.PAGES.MIGRATIONS, icon: DatabaseZap },
-        { name: 'Background Jobs', href: SuperadminUrlConfig.PAGES.JOBS, icon: Activity },
-        { name: 'Database Backups', href: SuperadminUrlConfig.PAGES.BACKUPS, icon: DatabaseBackup },
-        { name: 'System Health', href: SuperadminUrlConfig.PAGES.SYSTEM_HEALTH, icon: ServerCog },
-        { name: 'Global Audit Logs', href: SuperadminUrlConfig.PAGES.GLOBAL_AUDIT, icon: History },
-        { name: 'Global Settings', href: SuperadminUrlConfig.PAGES.SETTINGS, icon: Settings },
+        { name: 'Infrastructure', href: InfrastructureUrlConfig.PAGES.MAIN, icon: Server },
+        { name: 'Schema Rollouts', href: MigrationsUrlConfig.PAGES.MAIN, icon: DatabaseZap },
+        { name: 'Background Jobs', href: JobsUrlConfig.PAGES.MAIN, icon: Activity },
+        { name: 'Database Backups', href: BackupsUrlConfig.PAGES.MAIN, icon: DatabaseBackup },
+        { name: 'System Health', href: SystemUrlConfig.PAGES.MAIN, icon: ServerCog },
+        { name: 'Global Audit Logs', href: GlobalAuditUrlConfig.PAGES.MAIN, icon: History },
+        { name: 'Global Settings', href: SettingsUrlConfig.PAGES.MAIN, icon: Settings },
       ]
     },
     {
       group: 'Account',
       items: [
-        { name: 'My Profile', href: SuperadminUrlConfig.PAGES.PROFILE, icon: UserCircle },
+        { name: 'My Profile', href: ProfileUrlConfig.PAGES.MAIN, icon: UserCircle },
       ]
     }
   ];

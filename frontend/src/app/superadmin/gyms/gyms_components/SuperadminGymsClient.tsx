@@ -3,7 +3,7 @@
 import '@/app/superadmin/gyms/gyms.css';
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
-import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
+import { GymsUrlConfig } from '@/app/superadmin/gyms/gyms_url_config';
 import SuperadminGymsToolbar from '@/app/superadmin/gyms/gyms_components/SuperadminGymsToolbar/SuperadminGymsToolbar';
 import SuperadminGymsTable from '@/app/superadmin/gyms/gyms_components/SuperadminGymsTable/SuperadminGymsTable';
 
@@ -22,7 +22,7 @@ export default function SuperadminGymsClient() {
           <p className="text-secondary mt-1">Manage your SaaS clients, subscriptions, and access.</p>
         </div>
         <Link 
-          href={SuperadminUrlConfig.PAGES.GYM_ADD}
+          href={GymsUrlConfig.PAGES.ADD}
           className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg font-medium motion-safe:transition-colors shadow-lg shadow-primary/20"
         >
           <Plus className="w-5 h-5" />

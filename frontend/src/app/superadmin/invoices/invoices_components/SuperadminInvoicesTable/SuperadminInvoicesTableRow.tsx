@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
 import { invoicesApi } from '@/app/superadmin/invoices/superadmin_invoices_api/superadmin_invoices_api';
 import type { SaaSInvoice } from '@/app/superadmin/invoices/superadmin_invoices_types/superadmin_invoices_types';
+import { formatCurrency } from '@/lib/formatters';
 
 const STATUS_COLORS: Record<SaaSInvoice['status'], string> = {
   PAID: 'text-success bg-success/10',
@@ -35,7 +36,7 @@ export default function SuperadminInvoicesTableRow({ invoice: inv }: InvoicesTab
         {
           items: {
             'Plan': inv.planName,
-            'Amount': `formatCurrency(inv.amount)`,
+            'Amount': formatCurrency(inv.amount),
             'Status': inv.status,
           },
         },
@@ -79,7 +80,7 @@ export default function SuperadminInvoicesTableRow({ invoice: inv }: InvoicesTab
       <td className="p-4 text-sm text-secondary font-mono">{inv.taxId || 'N/A'}</td>
       <td className="p-4 text-sm text-secondary">{inv.planName || 'N/A'}</td>
       <td className="p-4 text-sm text-secondary capitalize">{inv.invoiceType ? inv.invoiceType.replace('_', ' ').toLowerCase() : 'N/A'}</td>
-      <td className="p-4 text-sm font-bold text-foreground">₹{Number(inv.amount || 0).toFixed(2)}</td>
+      <td className="p-4 text-sm font-bold text-foreground">{formatCurrency(Number(inv.amount || 0))}</td>
       <td className="p-4">
         <span className={`px-2.5 py-1 rounded-md text-xs font-bold ${STATUS_COLORS[inv.status] || 'bg-secondary/10 text-secondary'}`}>
           {inv.status || 'UNKNOWN'}

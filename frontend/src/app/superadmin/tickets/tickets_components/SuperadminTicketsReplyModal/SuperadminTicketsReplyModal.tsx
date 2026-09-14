@@ -31,11 +31,11 @@ export default function SuperadminTicketsReplyModal({ isOpen, onClose, ticketId 
     try {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 800));
-      toast.success('Reply sent successfully!');
+      toast.success('Reply sent successfully!', { id: 'reply-sent-successfully' });
       reset();
       onClose();
     } catch (err) {
-      toast.error('Failed to send reply.');
+      toast.error('Failed to send reply.', { id: 'failed-to-send-reply' });
     }
   };
 

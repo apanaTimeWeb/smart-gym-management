@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
-import { useProfilePage } from './useProfilePage';
+import { useProfilePage } from '@/app/superadmin/profile/profile_utils/useProfilePage';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient({

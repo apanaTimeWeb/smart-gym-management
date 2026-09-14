@@ -19,7 +19,7 @@ export default function SuperadminBackupsScheduleModal({ isOpen, onClose }: Supe
     // Mock save logic
     setTimeout(() => {
       setIsSaving(false);
-      toast.success('Backup schedule updated successfully');
+      toast.success('Backup schedule updated successfully', { id: 'backup-schedule-updated-successfully' });
       onClose();
     }, 1000);
   };

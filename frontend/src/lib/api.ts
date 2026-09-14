@@ -17,9 +17,11 @@ export interface PaginationMeta {
 
 export interface ApiResponse<T = unknown> {
   success: boolean;
-  data?: T;
-  message?: string;
+  message: string;
+  data: T | null;
   meta?: PaginationMeta;
+  error?: unknown;
+  statusCode?: number;
 }
 
 
@@ -54,13 +56,14 @@ export async function logout() {
 interface FetchOptions<Z extends z.ZodTypeAny = z.ZodTypeAny> extends RequestInit {
   auth?: boolean;
   responseSchema?: Z;
+  dataSchema?: Z;
 }
 
 export async function apiFetch<T = unknown, Z extends z.ZodTypeAny = z.ZodTypeAny>(
   path: string,
   options: FetchOptions<Z> = {}
 ): Promise<T> {
-  const { auth = true, responseSchema, ...rest } = options;
+  const { auth = true, responseSchema, dataSchema, ...rest } = options;
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -127,15 +130,26 @@ export async function apiFetch<T = unknown, Z extends z.ZodTypeAny = z.ZodTypeAn
   if (responseSchema) {
     const parseResult = responseSchema.safeParse(json);
     if (!parseResult.success) {
-      console.error('Zod Validation Error:', parseResult.error);
+      console.error('Zod Validation Error (response):', parseResult.error);
       const errorMsg = 'Invalid data received from server.';
-      if (typeof window !== 'undefined') toast.error(errorMsg);
+      if (typeof window !== 'undefined') toast.error(errorMsg, { id: 'zod-error' });
       throw new Error(errorMsg);
     }
     return parseResult.data as T;
   }
 
-  return json;
+  if (dataSchema && json.data !== undefined && json.data !== null) {
+    const parseResult = dataSchema.safeParse(json.data);
+    if (!parseResult.success) {
+      console.error('Zod Validation Error (data payload):', parseResult.error);
+      const errorMsg = 'Invalid data payload received from server.';
+      if (typeof window !== 'undefined') toast.error(errorMsg, { id: 'zod-error-data' });
+      throw new Error(errorMsg);
+    }
+    json.data = parseResult.data;
+  }
+
+  return json as T;
 }
 
 

@@ -79,7 +79,7 @@ export default function SuperadminReportsClient() {
   const handleDateFromChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     if (dateTo && val > dateTo) {
-      toast.error('Start date cannot be after end date');
+      toast.error('Start date cannot be after end date', { id: 'start-date-cannot-be-after-end-date' });
       return;
     }
     setDatePreset('CUSTOM');
@@ -89,7 +89,7 @@ export default function SuperadminReportsClient() {
   const handleDateToChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     if (dateFrom && val < dateFrom) {
-      toast.error('End date cannot be before start date');
+      toast.error('End date cannot be before start date', { id: 'end-date-cannot-be-before-start-date' });
       return;
     }
     setDatePreset('CUSTOM');
@@ -121,7 +121,7 @@ export default function SuperadminReportsClient() {
     a.href = url;
     a.download = `superadmin_${tab}_report.csv`;
     a.click();
-    toast.success('Report downloaded successfully');
+    toast.success('Report downloaded successfully', { id: 'report-downloaded-successfully' });
   }
 
   function handleExportPDF() {

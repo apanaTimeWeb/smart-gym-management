@@ -24,7 +24,7 @@ export function useSuperadminFeaturesData() {
         if (!old) return old;
         return {
           ...old,
-          flags: old.flags.map((f: FeatureFlag) => f.id === res.data.id ? res.data : f)
+          flags: old.flags.map((f: FeatureFlag) => f.id === res.data?.id ? res.data : f)
         };
       });
     }
@@ -37,7 +37,7 @@ export function useSuperadminFeaturesData() {
         if (!old) return old;
         return {
           ...old,
-          flags: old.flags.map((f: FeatureFlag) => f.id === res.data.id ? res.data : f)
+          flags: old.flags.map((f: FeatureFlag) => f.id === res.data?.id ? res.data : f)
         };
       });
     }

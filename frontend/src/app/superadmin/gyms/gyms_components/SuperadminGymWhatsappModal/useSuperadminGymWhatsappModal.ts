@@ -29,7 +29,7 @@ export function useSuperadminGymWhatsappModal() {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<GymWhatsappFormValues>({
     resolver: zodResolver(gymWhatsappSchema),
   });
@@ -102,5 +102,6 @@ export function useSuperadminGymWhatsappModal() {
     onSubmit,
     errors,
     isSubmitting: isSubmitting || whatsappMutation.isPending,
+    isDirty,
   };
 }

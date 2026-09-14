@@ -14,6 +14,7 @@ interface SuperadminAffiliateModalProps {
   isEdit?: boolean;
   isMutating?: boolean;
 }
+import { useUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useUnsavedChangesGuard';
 
 export const SuperadminAffiliateModal: React.FC<SuperadminAffiliateModalProps> = ({
   isOpen,
@@ -23,9 +24,10 @@ export const SuperadminAffiliateModal: React.FC<SuperadminAffiliateModalProps> =
   isEdit = false,
   isMutating = false,
 }) => {
-  if (!isOpen) return null;
+  const { register, handleSubmit, formState: { errors, isDirty } } = form;
+  useUnsavedChangesGuard(isOpen && isDirty);
 
-  const { register, handleSubmit, formState: { errors } } = form;
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black/60 z-40 flex items-center justify-center p-4 backdrop-blur-sm">

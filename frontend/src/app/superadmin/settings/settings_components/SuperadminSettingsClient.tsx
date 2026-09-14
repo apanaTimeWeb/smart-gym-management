@@ -8,7 +8,6 @@ import { settingsApi } from '@/app/superadmin/settings/superadmin_settings_api/s
 import toast from 'react-hot-toast';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import type { PlatformSetting } from '@/app/superadmin/superadmin_types/superadmin_types';
-import { MOCK_PLATFORM_SETTINGS } from '@/app/superadmin/settings/settings_utils/SuperadminSettingsConstants';
 
 export default function SuperadminSettingsClient() {
   const [editedValues, setEditedValues] = useState<Record<string, string>>({});
@@ -22,7 +21,7 @@ export default function SuperadminSettingsClient() {
   const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
 
   const responseData = fetchRes as { data?: PlatformSetting[] } | undefined;
-  const settings = responseData?.data && responseData.data.length > 0 ? responseData.data : MOCK_PLATFORM_SETTINGS;
+  const settings = responseData ? .data && responseData.data.length > 0 ? responseData.data : [];
 
   const updateMutation = useMutation({
     mutationFn: ({ id, value }: { id: string, value: string }) => settingsApi.updateSetting(id, { value }),

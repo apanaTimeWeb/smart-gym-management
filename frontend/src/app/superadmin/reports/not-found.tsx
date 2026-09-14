@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
+import { DashboardUrlConfig } from '@/app/superadmin/dashboard/dashboard_url_config';
 
 export default function ReportsNotFound() {
   return (
@@ -14,7 +14,7 @@ export default function ReportsNotFound() {
         </p>
       </div>
       <Link
-        href={SuperadminUrlConfig.PAGES.DASHBOARD}
+        href={DashboardUrlConfig.PAGES.MAIN}
         className="px-4 py-2 bg-primary hover:bg-primary-hover text-black font-semibold rounded-lg text-sm motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       >
         Back to Dashboard

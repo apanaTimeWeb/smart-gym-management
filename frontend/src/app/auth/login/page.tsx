@@ -6,8 +6,9 @@ import LoginHeroSection from '@/app/auth/login/login_components/LoginHeroSection
 import LoginMobileHeader from '@/app/auth/login/login_components/LoginMobileHeader/LoginMobileHeader';
 import LoginForm from '@/app/auth/login/login_components/LoginForm/LoginForm';
 import LoginErrorBoundary from '@/app/auth/login/login_components/LoginErrorBoundary/LoginErrorBoundary';
+import { DashboardUrlConfig } from '@/app/superadmin/dashboard/dashboard_url_config';
 import { AuthUrlConfig } from '@/app/auth/auth_url_config';
-import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
+
 import { ThemeToggle } from '@/components/ThemeToggle';
 
 // RESPONSIBILITY: Server Component that handles initial auth check and renders the login layout.
@@ -29,7 +30,7 @@ export default async function Login() {
     const role = user?.role?.toUpperCase();
     
     if (role === 'SUPERADMIN') {
-      redirect(SuperadminUrlConfig.PAGES.DASHBOARD);
+      redirect(DashboardUrlConfig.PAGES.MAIN);
     } else if (role === 'MANAGER') {
       redirect(AuthUrlConfig.PAGES.MANAGER_DASHBOARD);
     } else if (role === 'TRAINER') {

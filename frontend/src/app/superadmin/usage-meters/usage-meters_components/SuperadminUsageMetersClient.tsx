@@ -11,7 +11,6 @@ import { usageMetersApi } from '@/app/superadmin/usage-meters/superadmin_usage-m
 import type { UsageMeter } from '@/app/superadmin/usage-meters/superadmin_usage-meters_types/superadmin_usage-meters_types';
 import { HardDrive, MessageSquare, Users, Calendar } from 'lucide-react';
 
-import { MOCK_USAGE_METERS } from '@/app/superadmin/usage-meters/usage-meters_utils/SuperadminUsageMetersConstants';
 import { getProgressColor, getPercentage } from '@/app/superadmin/usage-meters/usage-meters_utils/SuperadminUsageMetersUtils';
 import { formatNumber } from '@/lib/formatters';
 
@@ -38,12 +37,12 @@ export default function SuperadminUsageMetersClient() {
       }
 
       // Mock Data for UI presentation
-      return { meters: MOCK_USAGE_METERS };
+      return { meters: [] };
     }
   });
 
   const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
-  const displayMeters = queryData?.meters || MOCK_USAGE_METERS;
+  const displayMeters = queryData?.meters || [];
 
   if (fetchState === 'loading') {
     return (

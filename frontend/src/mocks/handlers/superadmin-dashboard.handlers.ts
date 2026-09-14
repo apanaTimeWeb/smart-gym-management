@@ -1,14 +1,15 @@
 import { http, HttpResponse, delay } from 'msw';
 import { MOCK_SUPERADMIN_DASHBOARD_DATA } from '@/app/superadmin/dashboard/dashboard_api/SuperadminDashboardMockData';
-import { SuperadminDashboardUrlConfig } from '@/app/superadmin/dashboard/dashboard_utils/SuperadminDashboardUrlConfig';
+
+const BASE_URL = '*/superadmin/dashboard';
 
 export const superadminDashboardHandlers = [
-  http.get(SuperadminDashboardUrlConfig.BACKEND_API.DASHBOARD_DATA, async () => {
-    await delay(800);
+  http.get(`${BASE_URL}/metrics`, async () => {
+    await delay(600);
     return HttpResponse.json({ success: true, message: 'Success', data: MOCK_SUPERADMIN_DASHBOARD_DATA });
   }),
-  http.get(`${SuperadminDashboardUrlConfig.BACKEND_API.DASHBOARD_DATA}/refresh`, async () => {
-    await delay(400);
+  http.get(BASE_URL, async () => {
+    await delay(600);
     return HttpResponse.json({ success: true, message: 'Success', data: MOCK_SUPERADMIN_DASHBOARD_DATA });
-  })
+  }),
 ];
