@@ -28,10 +28,20 @@ export type FranchisesFetchState = 'idle' | 'loading' | 'success' | 'error';
 
 export const SuperadminFranchiseSchema = z.object({
   id: z.string(),
-  name: z.string(),
-  ownerId: z.string(),
-  totalBranches: z.number(),
-  status: z.enum(['ACTIVE', 'SUSPENDED', 'PENDING']),
-  joinDate: z.string(),
-  subscriptionPlanId: z.string()
+  franchiseName: z.string(),
+  ownerName: z.string(),
+  ownerEmail: z.string(),
+  phone: z.string(),
+  status: z.enum(['ACTIVE', 'INACTIVE', 'SUSPENDED']),
+  branchCount: z.number(),
+  totalMembers: z.number(),
+  totalStaff: z.number(),
+  totalMonthlyRevenue: z.number(),
+  plan: z.string(),
+  city: z.string(),
+  state: z.string(),
+  gstin: z.string().optional(),
+  registrationNumber: z.string().optional(),
+  contractStartDate: z.string().optional(),
+  createdAt: z.string()
 });

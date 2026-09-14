@@ -138,6 +138,113 @@ const GYMS = [
   { id: 'g5', name: 'ZenGym Pune', owner: 'Arun Kumar', city: 'Pune', status: 'inactive', members: 0, plan: 'Standard', revenue: 0, createdAt: '2022-12-01' },
 ];
 
+// ─── franchises ───────────────────────────────────────────────────────────────
+const FRANCHISES = [
+  {
+    id: 'f1', franchiseName: 'FitPulse India', ownerName: 'Rahul Sharma', ownerEmail: 'rahul@fitpulse.com',
+    phone: '9800000001', status: 'ACTIVE', branchCount: 3, totalMembers: 1450, totalStaff: 45,
+    totalMonthlyRevenue: 1200000, plan: 'Enterprise', city: 'Mumbai', state: 'Maharashtra', createdAt: '2024-01-10T00:00:00Z'
+  },
+  {
+    id: 'f2', franchiseName: 'IronCore Fitness Group', ownerName: 'Amit Patel', ownerEmail: 'amit@ironcore.com',
+    phone: '9800000002', status: 'ACTIVE', branchCount: 5, totalMembers: 3200, totalStaff: 80,
+    totalMonthlyRevenue: 2500000, plan: 'Enterprise', city: 'Delhi', state: 'Delhi', createdAt: '2023-06-15T00:00:00Z'
+  },
+  {
+    id: 'f3', franchiseName: 'Zenith Health Club', ownerName: 'Priya Singh', ownerEmail: 'priya@zenith.com',
+    phone: '9800000003', status: 'SUSPENDED', branchCount: 1, totalMembers: 450, totalStaff: 12,
+    totalMonthlyRevenue: 300000, plan: 'Pro', city: 'Pune', state: 'Maharashtra', createdAt: '2024-11-20T00:00:00Z'
+  }
+];
+
+// ─── onboarding ───────────────────────────────────────────────────────────────
+const ONBOARDING = [
+  {
+    id: 'o1', gymName: 'PowerLift Arena', ownerName: 'Vikram Singh', adminEmail: 'vikram@powerlift.com',
+    phone: '9800001101', plan: 'Pro', signupDate: '2025-01-10T00:00:00Z', trialEndsAt: '2025-01-24T00:00:00Z',
+    trialStatus: 'TRIAL', onboardingStatus: 'IN_PROGRESS', emailVerified: true, welcomeEmailSent: true,
+    checklist: [
+      { key: 'verify_email', label: 'Verify Email', done: true },
+      { key: 'setup_profile', label: 'Setup Profile', done: true },
+      { key: 'add_staff', label: 'Add Staff', done: false },
+      { key: 'add_members', label: 'Add Members', done: false },
+    ],
+    daysInTrial: 5, trialDaysLeft: 9
+  },
+  {
+    id: 'o2', gymName: 'Cardio Kings', ownerName: 'Neha Gupta', adminEmail: 'neha@cardiokings.com',
+    phone: '9800001102', plan: 'Enterprise', signupDate: '2025-01-14T00:00:00Z', trialEndsAt: '2025-01-28T00:00:00Z',
+    trialStatus: 'TRIAL', onboardingStatus: 'PENDING', emailVerified: false, welcomeEmailSent: true,
+    checklist: [
+      { key: 'verify_email', label: 'Verify Email', done: false },
+      { key: 'setup_profile', label: 'Setup Profile', done: false },
+      { key: 'add_staff', label: 'Add Staff', done: false },
+      { key: 'add_members', label: 'Add Members', done: false },
+    ],
+    daysInTrial: 1, trialDaysLeft: 13
+  }
+];
+
+// ─── affiliates ───────────────────────────────────────────────────────────────
+const AFFILIATES = [
+  { id: 'af1', name: 'Fitness Blog India', email: 'contact@fitnessblog.in', referralCode: 'FITBLOG20', totalReferred: 145, commissionEarned: 45000, status: 'ACTIVE', joinedAt: '2023-05-10T00:00:00Z', conversionRate: 12.5 },
+  { id: 'af2', name: 'John Doe', email: 'john@example.com', referralCode: 'JOHNFIT', totalReferred: 12, commissionEarned: 3500, status: 'ACTIVE', joinedAt: '2024-01-20T00:00:00Z', conversionRate: 8.2 },
+];
+
+// ─── backups ──────────────────────────────────────────────────────────────────
+const BACKUPS = [
+  { id: 'bk1', fileName: 'db_backup_2025_01_15.sql.gz', sizeBytes: 1024 * 1024 * 450, status: 'COMPLETED', type: 'AUTOMATED', createdAt: '2025-01-15T02:00:00Z', url: '#' },
+  { id: 'bk2', fileName: 'db_backup_2025_01_14.sql.gz', sizeBytes: 1024 * 1024 * 448, status: 'COMPLETED', type: 'AUTOMATED', createdAt: '2025-01-14T02:00:00Z', url: '#' },
+];
+
+// ─── tickets ──────────────────────────────────────────────────────────────────
+const TICKETS = [
+  { id: 'tk1', tenantId: 't1', tenantName: 'FitPulse Fitness', reporterEmail: 'admin@fitpulse.com', subject: 'Billing issue for Pro plan', description: 'We were charged twice this month.', status: 'OPEN', priority: 'HIGH', createdAt: '2025-01-15T10:30:00Z', lastUpdated: '2025-01-15T10:30:00Z', messages: [] },
+  { id: 'tk2', tenantId: 't2', tenantName: 'IronCore Gym', reporterEmail: 'admin@ironcore.com', subject: 'How to add custom SMS templates?', description: 'I cannot find the SMS template settings.', status: 'RESOLVED', priority: 'LOW', createdAt: '2025-01-10T14:15:00Z', lastUpdated: '2025-01-11T09:00:00Z', messages: [] },
+];
+
+// ─── jobs ─────────────────────────────────────────────────────────────────────
+const JOBS = [
+  { id: 'jb1', name: 'Daily Invoice Generation', type: 'CRON', status: 'COMPLETED', progress: 100, startedAt: '2025-01-15T01:00:00Z', completedAt: '2025-01-15T01:15:00Z', errorCount: 0 },
+  { id: 'jb2', name: 'Member Sync', type: 'WORKER', status: 'IN_PROGRESS', progress: 45, startedAt: '2025-01-15T12:00:00Z', errorCount: 0 },
+];
+
+// ─── migrations ───────────────────────────────────────────────────────────────
+const MIGRATIONS = [
+  { id: 'mg1', version: 'v1.5.0', name: 'Add Franchise Tables', status: 'SUCCESS', appliedAt: '2024-12-01T00:00:00Z', executionTimeMs: 1450 },
+  { id: 'mg2', version: 'v1.6.0', name: 'Update Churn Indexes', status: 'SUCCESS', appliedAt: '2025-01-05T00:00:00Z', executionTimeMs: 320 },
+];
+
+// ─── usage meters ─────────────────────────────────────────────────────────────
+const USAGE_METERS = [
+  { id: 'um1', tenantId: 't1', tenantName: 'FitPulse Fitness', metric: 'SMS_SENT', limit: 10000, current: 8450, percentage: 84.5, resetDate: '2025-02-01T00:00:00Z' },
+  { id: 'um2', tenantId: 't2', tenantName: 'IronCore Gym', metric: 'STORAGE_GB', limit: 50, current: 48.5, percentage: 97, resetDate: '2025-02-01T00:00:00Z' },
+];
+
+// ─── features ─────────────────────────────────────────────────────────────────
+const FEATURES = [
+  { id: 'ft1', key: 'ENABLE_AI_COACH', name: 'AI Coach Beta', description: 'Enable AI workout generation', type: 'BETA', status: 'ENABLED', targetTenants: [] },
+  { id: 'ft2', key: 'NEW_BILLING_UI', name: 'V2 Billing Interface', description: 'Modern billing interface', type: 'GA', status: 'ENABLED', targetTenants: [] },
+];
+
+// ─── audit logs ───────────────────────────────────────────────────────────────
+const AUDIT_LOGS = [
+  { id: 'au1', actorId: 'u1', actorName: 'Demo Admin', action: 'TENANT_SUSPENDED', targetId: 't3', targetName: 'Zenith Health Club', ipAddress: '192.168.1.1', timestamp: '2025-01-15T09:00:00Z' },
+  { id: 'au2', actorId: 'u2', actorName: 'System', action: 'BACKUP_CREATED', targetId: 'bk1', targetName: 'db_backup.sql', ipAddress: '127.0.0.1', timestamp: '2025-01-15T02:00:00Z' },
+];
+
+// ─── infrastructure ───────────────────────────────────────────────────────────
+const INFRASTRUCTURE = [
+  { id: 'in1', nodeName: 'web-worker-01', region: 'ap-south-1', status: 'HEALTHY', cpuUsage: 45, memoryUsage: 62, uptime: '45d' },
+  { id: 'in2', nodeName: 'db-primary', region: 'ap-south-1', status: 'HEALTHY', cpuUsage: 78, memoryUsage: 85, uptime: '120d' },
+];
+
+// ─── churn alerts ─────────────────────────────────────────────────────────────
+const CHURN_ALERTS = [
+  { id: 'ca1', tenantId: 't1', tenantName: 'FitPulse Fitness', riskScore: 85, reason: 'Drop in active members', lastLoginAt: '2025-01-10T00:00:00Z', mrr: 120000 },
+  { id: 'ca2', tenantId: 't3', tenantName: 'Zenith Health Club', riskScore: 92, reason: 'Missed payment', lastLoginAt: '2024-12-15T00:00:00Z', mrr: 45000 },
+];
+
 // ─── superadmin dashboard ─────────────────────────────────────────────────────
 const SUPERADMIN_DASHBOARD = {
   metrics: {
@@ -230,6 +337,27 @@ export function getMockResponse(path: string): unknown {
 
   // Superadmin Specific
   if (p.includes('/superadmin/dashboard')) return ok(SUPERADMIN_DASHBOARD, 'Superadmin stats fetched');
+  if (p.includes('/franchise')) return ok(FRANCHISES, 'Franchises fetched');
+  if (p.includes('/onboarding')) return ok(ONBOARDING, 'Onboarding data fetched');
+  if (p.includes('/affiliate')) return ok(AFFILIATES, 'Affiliates fetched');
+  if (p.includes('/backup')) return ok(BACKUPS, 'Backups fetched');
+  if (p.includes('/ticket')) return ok(TICKETS, 'Tickets fetched');
+  if (p.includes('/job')) return ok(JOBS, 'Jobs fetched');
+  if (p.includes('/migration')) return ok(MIGRATIONS, 'Migrations fetched');
+  if (p.includes('/usage-meter')) return ok(USAGE_METERS, 'Usage meters fetched');
+  if (p.includes('/feature')) return ok(FEATURES, 'Features fetched');
+  if (p.includes('/audit')) return ok(AUDIT_LOGS, 'Audit logs fetched');
+  if (p.includes('/infrastructure')) return ok(INFRASTRUCTURE, 'Infrastructure fetched');
+  if (p.includes('/churn')) return ok(CHURN_ALERTS, 'Churn alerts fetched');
+  
+  if (p.includes('/analytics')) {
+    return ok({
+      metrics: SUPERADMIN_DASHBOARD.metrics,
+      revenueHistory: REVENUE_TREND.map(r => ({ month: r.month, revenue: r.revenue })),
+      userGrowth: SUPERADMIN_DASHBOARD.growth.map(g => ({ month: g.month, users: g.gyms * 100 })),
+    });
+  }
+  
   if (p.includes('/gym')) return ok(GYMS, 'Gyms fetched');
 
   // Trainer Dashboard
