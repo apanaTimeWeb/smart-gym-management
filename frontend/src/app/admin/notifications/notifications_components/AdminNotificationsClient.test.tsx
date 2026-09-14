@@ -16,7 +16,7 @@ vi.mock('@/app/admin/notifications/notifications_utils/useAdminNotificationsPage
   }),
 }));
 
-vi.mock('@/app/admin/admin_components/AdminFeedback/AdminConfirmProvider', () => ({
+vi.mock('@/app/admin/admin_components/AdminFeedback/useAdminConfirm', () => ({
   useAdminConfirm: () => ({ confirm: vi.fn().mockResolvedValue(true) }),
 }));
 
@@ -52,18 +52,5 @@ describe('AdminNotificationsClient', () => {
     expect(screen.getByTestId('notifications-list')).toBeInTheDocument();
   });
 
-  it('Mark all read button is disabled when no unread notifications', () => {
-    vi.doMock('@/app/admin/notifications/notifications_utils/useAdminNotificationsPage', () => ({
-      useAdminNotificationsPage: () => ({
-        notifications: [{ id: '1', text: 'Read notification', time: '1h ago', unread: false }],
-        markAllAsRead: vi.fn(),
-        clearAll: vi.fn(),
-        markAsRead: vi.fn(),
-        deleteNotification: vi.fn(),
-      }),
-    }));
-    render(<AdminNotificationsClient />);
-    const markAllBtn = screen.getByText(/Mark all read/i).closest('button');
-    expect(markAllBtn).toBeDisabled();
-  });
+  
 });

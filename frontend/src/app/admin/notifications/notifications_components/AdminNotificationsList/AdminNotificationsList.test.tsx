@@ -4,7 +4,7 @@ import { describe, it, expect, vi } from 'vitest';
 import AdminNotificationsList from './AdminNotificationsList';
 import type { NotificationItem } from '@/app/admin/notifications/notifications_utils/useAdminNotificationsPage';
 
-vi.mock('@/app/admin/admin_components/AdminFeedback/AdminConfirmProvider', () => ({
+vi.mock('@/app/admin/admin_components/AdminFeedback/useAdminConfirm', () => ({
   useAdminConfirm: () => ({ confirm: vi.fn().mockResolvedValue(true) }),
 }));
 
