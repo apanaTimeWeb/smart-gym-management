@@ -17,7 +17,7 @@ export default function AdminFinancePaymentsTable() {
   // Apply client-side filter by payment status (DUE = Pending Amount KPI card)
   const filteredPayments = methodFilter === 'All'
     ? payments
-    : payments.filter(p => p.status === methodFilter);
+    : payments.filter((p: any) => p.status === methodFilter);
 
   const totalPages = Math.ceil((methodFilter === 'All' ? totalPayments : filteredPayments.length) / ADMIN_ITEMS_PER_PAGE) || 1;
 
@@ -77,7 +77,7 @@ export default function AdminFinancePaymentsTable() {
  </tr>
  </thead>
  <tbody className="divide-y divide-border">
- {filteredPayments.map(p => {
+ {filteredPayments.map((p: any) => {
  const mStyle = FINANCE_METHOD_STYLES[p.method] || { bg: 'bg-input', text: 'text-secondary' };
  const sStyle = FINANCE_STATUS_STYLES[p.status] || { bg: 'bg-input', text: 'text-secondary' };
  return (

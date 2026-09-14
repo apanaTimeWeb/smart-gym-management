@@ -95,6 +95,13 @@ export async function apiFetch<T = unknown, Z extends z.ZodTypeAny = z.ZodTypeAn
   }
   let finalRes!: Response;
 
+  // ── DEMO MODE: skip real network call entirely and return mock data ─────────
+  const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
+  if (isDemoMode) {
+    console.info(`[MOCK] ${rest.method ?? 'GET'} ${path}`);
+    return getMockResponse(path) as T;
+  }
+
   // ── Network call with automatic mock fallback ──────────────────────────────
   try {
     finalRes = await fetch(`${BASE_URL}${path}`, { ...rest, headers });
@@ -115,10 +122,16 @@ export async function apiFetch<T = unknown, Z extends z.ZodTypeAny = z.ZodTypeAn
         throw new Error('Session expired. Please login again.');
       }
     }
+
+    // ── 5xx server error fallback ─────────────────────────────────────────────
+    if (finalRes.status >= 500) {
+      console.warn(`[MOCK] Backend returned ${finalRes.status} for ${path} — falling back to mock data`);
+      return getMockResponse(path) as T;
+    }
   } catch (_networkErr) {
-    // Backend is offline — fall back to hardcoded mock data
-    const mock = getMockResponse(path);
-    return mock as T;
+    // Backend is offline / ECONNREFUSED — fall back to hardcoded mock data
+    console.warn(`[MOCK] Network error for ${path} — falling back to mock data`);
+    return getMockResponse(path) as T;
   }
 
   const json = await finalRes.json();

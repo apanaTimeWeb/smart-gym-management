@@ -3,6 +3,7 @@
 
 import { Globe, Building2, ToggleLeft, ToggleRight, Trash2, Unlock } from 'lucide-react';
 import { useAdminBlacklistLogic } from '@/app/admin/blacklist/blacklist_context/useAdminBlacklistLogic';
+import type { BlacklistedMember } from '@/app/admin/blacklist/blacklist_types/blacklist_types';
 import { AdminTableSkeleton } from '@/app/admin/admin_components/AdminShared/AdminTableSkeleton';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 import AdminBlacklistEmptyState from '@/app/admin/blacklist/blacklist_components/AdminBlacklistEmptyState/AdminBlacklistEmptyState';
@@ -25,7 +26,7 @@ export default function AdminBlacklistTable() {
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {members.map((m) => (
+            {members.map((m: BlacklistedMember) => (
               <tr key={m.id} className="hover:bg-danger/5 motion-safe:transition-colors group">
                 <td className="px-4 py-3">
                   <p className="text-sm font-medium text-foreground">{m.memberName}</p>

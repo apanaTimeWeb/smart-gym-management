@@ -18,20 +18,20 @@ export function useAdminDataExportLogic() {
 
   const { data: jobs = [], isLoading, isError } = useQuery({
     queryKey: ['adminDataExportJobs'],
-    queryFn: () => dataExportApi.fetchJobs().then(r => r.data),
+    queryFn: () => dataExportApi.fetchJobs().then((r: any) => r.data),
     staleTime: 1000 * 30,
     refetchInterval: 10000, // Poll every 10s to catch processing → completed transitions
   });
 
   const { data: kpis } = useQuery({
     queryKey: ['adminDataExportKPIs'],
-    queryFn: () => dataExportApi.fetchKPIs().then(r => r.data),
+    queryFn: () => dataExportApi.fetchKPIs().then((r: any) => r.data),
     staleTime: 1000 * 60 * 5,
   });
 
   const fetchState: FetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
 
-  const filtered = jobs.filter(j => statusFilter === 'all' || j.status === statusFilter);
+  const filtered = jobs.filter((j: any) => statusFilter === 'all' || j.status === statusFilter);
   const totalPages = Math.max(1, Math.ceil(filtered.length / DATA_EXPORT_ITEMS_PER_PAGE));
   const paginated = filtered.slice((currentPage - 1) * DATA_EXPORT_ITEMS_PER_PAGE, currentPage * DATA_EXPORT_ITEMS_PER_PAGE);
 

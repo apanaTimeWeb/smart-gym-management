@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 // RESPONSIBILITY: Server Component that fetches initial SSR data for the dashboard layout.
 import ManagerDashboardMain from '@/app/manager/dashboard/dashboard_components/ManagerDashboardMain/ManagerDashboardMain';
 import { cookies } from 'next/headers';

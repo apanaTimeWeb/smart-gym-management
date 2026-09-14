@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 // RESPONSIBILITY: Server Component — fetches initial SSR data and renders the Gym Store module entry point.
 import ManagerStoreMain from '@/app/manager/store/store_components/ManagerStoreMain/ManagerStoreMain';
 import { ssrStoreApi } from '@/app/manager/store/store_api/ManagerStoreServerApi';

@@ -4,6 +4,7 @@
 
 import { Building2, Globe, ArrowUpRight, Trash2 } from 'lucide-react';
 import { useAdminBlacklistLogic } from '@/app/admin/blacklist/blacklist_context/useAdminBlacklistLogic';
+import type { BlacklistedMember } from '@/app/admin/blacklist/blacklist_types/blacklist_types';
 import { AdminTableSkeleton } from '@/app/admin/admin_components/AdminShared/AdminTableSkeleton';
 
 const HEADERS = ['Member', 'Contact', 'Reason', 'Banned At Branches', 'Blacklisted By', 'Date', 'Actions'];
@@ -50,7 +51,7 @@ export default function AdminBlacklistCrossGymView() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {gymSpecificEntries.map((m) => (
+              {gymSpecificEntries.map((m: BlacklistedMember) => (
                 <tr key={m.id} className="hover:bg-warning/5 motion-safe:transition-colors group">
                   <td className="px-4 py-3">
                     <p className="text-sm font-medium text-foreground">{m.memberName}</p>
@@ -65,7 +66,7 @@ export default function AdminBlacklistCrossGymView() {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap gap-1">
-                      {m.assignedGymNames.map((gym) => (
+                      {m.assignedGymNames.map((gym: string) => (
                         <span key={gym} className="inline-flex items-center gap-1 px-2 py-0.5 bg-warning-bg text-warning rounded-full text-xs font-medium">
                           <Building2 size={10} />
                           {gym}

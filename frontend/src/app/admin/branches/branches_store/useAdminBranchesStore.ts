@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Core data logic hook for the admin module.
 // DATA FLOW: Centralized store/hook logic mapping API mutations and query state to UI props.
 import { create } from 'zustand';
-import type { Branch } from '@/app/admin/admin_store/useAdminGlobalStore';
+import type { Branch } from '@/app/admin/branches/branches_types/branches_types';
 import type { TimeRange } from '@/app/admin/admin_types/AdminSharedTypes';
 
 export type DetailView = "revenue" | "expenses" | "staff" | "students";

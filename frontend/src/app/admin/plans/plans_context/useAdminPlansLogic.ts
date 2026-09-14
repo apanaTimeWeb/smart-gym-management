@@ -6,6 +6,7 @@ import { useState, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { plansApi } from '@/app/admin/plans/plans_api/plans_api';
 import type { Plan, PlansContextType, PlansInitialData, FetchState } from '@/app/admin/plans/plans_types/plans_types';
+import type { ApiResponse } from '@/lib/api';
 import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
 import { EMPTY_PLAN_FORM, type PlanFormValues } from '@/app/admin/plans/plans_utils/AdminPlansSharedConstants';
 import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
@@ -83,7 +84,7 @@ export function useAdminPlansLogic(initialData?: PlansInitialData | null): Plans
 
   const createMutation = useMutation({
     mutationFn: (payload: Partial<Plan>) => plansApi.createPlan(payload),
-    onSuccess: (res) => {
+    onSuccess: (res: ApiResponse<Plan>) => {
       showToast(res.message || 'Plan created', 'success');
       setShowModal(false);
       queryClient.invalidateQueries({ queryKey: ['adminPlans'] });
@@ -93,7 +94,7 @@ export function useAdminPlansLogic(initialData?: PlansInitialData | null): Plans
 
   const updateMutation = useMutation({
     mutationFn: ({ id, payload }: { id: string, payload: Partial<Plan> }) => plansApi.updatePlan(id, payload),
-    onSuccess: (res) => {
+    onSuccess: (res: ApiResponse<Plan>) => {
       showToast(res.message || 'Plan updated', 'success');
       setShowModal(false);
       queryClient.invalidateQueries({ queryKey: ['adminPlans'] });
@@ -103,7 +104,7 @@ export function useAdminPlansLogic(initialData?: PlansInitialData | null): Plans
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => plansApi.deletePlan(id),
-    onSuccess: (res) => {
+    onSuccess: (res: ApiResponse<any>) => {
       showToast(res.message || 'Plan deleted', 'success');
       queryClient.invalidateQueries({ queryKey: ['adminPlans'] });
     },

@@ -61,7 +61,7 @@ export default function AdminAuditLogsTable() {
                     <p className="text-sm text-secondary">No logs match your filters</p>
                   </td>
                 </tr>
-              ) : paginated.map(log => (
+              ) : paginated.map((log: AuditLog) => (
                 <tr
                   key={log.id}
                   className="hover:bg-input/40 motion-safe:transition-colors cursor-pointer group"

@@ -73,5 +73,10 @@
       "tsc --noEmit",
       "eslint --fix"
     ]
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }

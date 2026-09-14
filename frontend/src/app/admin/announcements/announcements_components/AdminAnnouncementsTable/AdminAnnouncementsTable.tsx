@@ -138,7 +138,7 @@ export default function AdminAnnouncementsTable() {
                     </button>
                   </td>
                 </tr>
-              ) : paginated.map(a => (
+              ) : paginated.map((a: any) => (
                 <tr key={a.id} className="hover:bg-input/40 motion-safe:transition-colors group">
                   {/* Pin indicator */}
                   <td className="p-4 w-8">
@@ -152,7 +152,7 @@ export default function AdminAnnouncementsTable() {
                   {/* Audience */}
                   <td className="p-4">
                     <div className="flex flex-wrap gap-1">
-                      {a.audience.map(aud => (
+                      {a.audience.map((aud: string) => (
                         <span key={aud} className="px-2 py-0.5 bg-primary/10 text-primary text-xs rounded-full font-medium capitalize">{aud}</span>
                       ))}
                     </div>
@@ -166,29 +166,29 @@ export default function AdminAnnouncementsTable() {
                   </td>
                   {/* Priority */}
                   <td className="p-4">
-                    <span className={`px-2.5 py-1 rounded-full text-xs font-bold uppercase ${PRIORITY_STYLES[a.priority]}`}>
+                    <span className={`px-2.5 py-1 rounded-full text-xs font-bold uppercase ${PRIORITY_STYLES[a.priority as AnnouncementPriority]}`}>
                       {a.priority}
                     </span>
                   </td>
                   {/* Status */}
                   <td className="p-4">
-                    <span className={`px-2.5 py-1 rounded-full text-xs font-bold border capitalize ${STATUS_STYLES[a.status]}`}>
+                    <span className={`px-2.5 py-1 rounded-full text-xs font-bold border capitalize ${STATUS_STYLES[a.status as AnnouncementStatus]}`}>
                       {a.status}
                     </span>
                   </td>
                   {/* Views */}
                   <td className="p-4">
                     <div className="flex items-center gap-1 text-xs text-secondary">
-                      <Eye size={12} /> {(a as unknown).viewCount?.toLocaleString('en-IN') || 0}
+                      <Eye size={12} /> {(a as any).viewCount?.toLocaleString('en-IN') || 0}
                     </div>
                   </td>
                   {/* Acknowledged */}
                   <td className="p-4 text-xs text-secondary whitespace-nowrap">
-                    {(a as unknown).acknowledgedCount?.toLocaleString('en-IN') || 0}
+                    {(a as any).acknowledgedCount?.toLocaleString('en-IN') || 0}
                   </td>
                   {/* Delivery */}
                   <td className="p-4 text-xs text-secondary whitespace-nowrap capitalize">
-                    {(a as unknown).deliveryStatus || 'Sent'}
+                    {(a as any).deliveryStatus || 'Sent'}
                   </td>
                   {/* Actions */}
                   <td className="p-4">

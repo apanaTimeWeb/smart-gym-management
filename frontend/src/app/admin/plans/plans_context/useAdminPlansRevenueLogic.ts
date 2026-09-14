@@ -21,7 +21,7 @@ export function useAdminPlansRevenueLogic() {
     queryFn: () => plansApi.fetchPlanRevenue(period),
   });
 
-  const revenueData = rawResponse?.data || [];
+  const revenueData = (rawResponse as any)?.data || [];
 
   const handleSort = (key: RevenueSortKey) => {
     if (sortKey === key) {

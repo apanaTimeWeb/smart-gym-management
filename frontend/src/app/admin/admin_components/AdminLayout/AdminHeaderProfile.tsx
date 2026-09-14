@@ -42,7 +42,7 @@ export function AdminHeaderProfile() {
             <Link href={AdminProfileUrlConfig.root} className="flex items-center gap-2 px-4 py-2 text-sm text-secondary hover:text-foreground hover:bg-input motion-safe:transition-colors" onClick={() => setShowProfile(false)}>
               <User size={15} /> My Profile
             </Link>
-            <Link href={SettingsUrlConfig.root} className="flex items-center gap-2 px-4 py-2 text-sm text-secondary hover:text-foreground hover:bg-input motion-safe:transition-colors" onClick={() => setShowProfile(false)}>
+            <Link href={SettingsUrlConfig.PAGES.SETTINGS} className="flex items-center gap-2 px-4 py-2 text-sm text-secondary hover:text-foreground hover:bg-input motion-safe:transition-colors" onClick={() => setShowProfile(false)}>
               <Settings size={15} /> Settings
             </Link>
           </div>

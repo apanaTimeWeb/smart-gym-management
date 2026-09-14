@@ -51,7 +51,7 @@ export default function AdminReportsRevenue() {
                   <td className="px-5 py-4 text-sm text-foreground">{((row.profit / row.revenue) * 100).toFixed(1)}%</td>
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-1.5">
-                      {TREND_ICON[row.trend]}
+                      {TREND_ICON[row.trend as keyof typeof TREND_ICON]}
                       <span className={`text-xs font-medium ${row.trend === 'up' ? 'text-success' : row.trend === 'down' ? 'text-danger' : 'text-secondary'}`}>
                         {row.trendPercent > 0 ? '+' : ''}{row.trendPercent}%
                       </span>

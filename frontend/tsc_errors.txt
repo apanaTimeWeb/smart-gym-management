@@ -1,0 +1,156 @@
+﻿src/app/admin/admin_components/AdminLayout/AdminHeaderProfile.tsx(45,43): error TS2339: Property 'root' does not exist on type '{ PAGES: { SETTINGS: string; }; BACKEND_API: { BASE: string; TWO_FACTOR_STATUS: string; TWO_FACTOR_ENABLE: string; TWO_FACTOR_DISABLE: string; TWO_FACTOR_VERIFY: string; NOTIFICATION_PREFERENCES: string; }; }'.
+src/app/admin/admin_components/AdminLayout/AdminUsageAlert.tsx(6,15): error TS2305: Module '"@/app/admin/usage/usage_types/AdminUsageTypes"' has no exported member 'UsageData'.
+src/app/admin/announcements/announcements_api/announcements_api.ts(4,10): error TS2305: Module '"@/app/admin/announcements/announcements_utils/AdminAnnouncementsSharedConstants"' has no exported member 'MOCK_ANNOUNCEMENTS'.
+src/app/admin/announcements/announcements_api/announcements_api.ts(4,30): error TS2305: Module '"@/app/admin/announcements/announcements_utils/AdminAnnouncementsSharedConstants"' has no exported member 'MOCK_ANNOUNCEMENT_KPI'.
+src/app/admin/announcements/announcements_components/AdminAnnouncementsModal/AdminAnnouncementsModal.tsx(118,61): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'AnnouncementAudience'.
+src/app/admin/announcements/announcements_components/AdminAnnouncementsModal/AdminAnnouncementsModal.tsx(123,87): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'string'.
+src/app/admin/announcements/announcements_components/AdminAnnouncementsTable/AdminAnnouncementsTable.tsx(141,33): error TS7006: Parameter 'a' implicitly has an 'any' type.
+src/app/admin/announcements/announcements_components/AdminAnnouncementsTable/AdminAnnouncementsTable.tsx(155,39): error TS7006: Parameter 'aud' implicitly has an 'any' type.
+src/app/admin/announcements/announcements_components/AdminAnnouncementsTable/AdminAnnouncementsTable.tsx(169,94): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<AnnouncementPriority, string>'.
+src/app/admin/announcements/announcements_components/AdminAnnouncementsTable/AdminAnnouncementsTable.tsx(175,102): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<AnnouncementStatus, string>'.
+src/app/admin/announcements/announcements_components/AdminAnnouncementsTable/AdminAnnouncementsTable.tsx(182,42): error TS2571: Object is of type 'unknown'.
+src/app/admin/announcements/announcements_components/AdminAnnouncementsTable/AdminAnnouncementsTable.tsx(187,22): error TS2571: Object is of type 'unknown'.
+src/app/admin/announcements/announcements_components/AdminAnnouncementsTable/AdminAnnouncementsTable.tsx(191,22): error TS2571: Object is of type 'unknown'.
+src/app/admin/announcements/announcements_context/useAdminAnnouncementsLogic.ts(84,5): error TS2322: Type '(id: string) => Promise<ApiResponse<any>>' is not assignable to type 'MutationFunction<Announcement, string>'.
+  Type 'Promise<ApiResponse<any>>' is not assignable to type 'Promise<Announcement>'.
+    Type 'ApiResponse<any>' is missing the following properties from type 'Announcement': id, title, body, priority, and 10 more.
+src/app/admin/attendance/attendance_api/attendance_api.ts(1,25): error TS2300: Duplicate identifier 'ApiResponse'.
+src/app/admin/attendance/attendance_api/attendance_api.ts(2,15): error TS2300: Duplicate identifier 'ApiResponse'.
+src/app/admin/attendance/attendance_api/attendance_api.ts(7,19): error TS2304: Cannot find name 'AdminAttendanceUrlConfig'.
+src/app/admin/attendance/attendance_api/attendance_api.ts(11,22): error TS2304: Cannot find name 'AdminAttendanceUrlConfig'.
+src/app/admin/attendance/attendance_api/attendance_api.ts(15,22): error TS2304: Cannot find name 'AdminAttendanceUrlConfig'.
+src/app/admin/attendance/attendance_components/AdminAttendanceToolbar/AdminAttendanceToolbar.tsx(10,15): error TS2305: Module '"@/app/admin/admin_store/useAdminGlobalStore"' has no exported member 'Branch'.
+src/app/admin/audit_logs/audit_components/AdminAuditLogsTable/AdminAuditLogsTable.tsx(64,33): error TS7006: Parameter 'log' implicitly has an 'any' type.
+src/app/admin/audit_logs/audit_context/useAdminAuditLogsLogic.ts(18,55): error TS18046: 'r' is of type 'unknown'.
+src/app/admin/audit_logs/audit_context/useAdminAuditLogsLogic.ts(24,55): error TS18046: 'r' is of type 'unknown'.
+src/app/admin/blacklist/blacklist_components/AdminBlacklistCrossGymView/AdminBlacklistCrossGymView.tsx(53,40): error TS7006: Parameter 'm' implicitly has an 'any' type.
+src/app/admin/blacklist/blacklist_components/AdminBlacklistCrossGymView/AdminBlacklistCrossGymView.tsx(68,48): error TS7006: Parameter 'gym' implicitly has an 'any' type.
+src/app/admin/blacklist/blacklist_components/AdminBlacklistTable/AdminBlacklistTable.tsx(28,27): error TS7006: Parameter 'm' implicitly has an 'any' type.
+src/app/admin/blacklist/blacklist_context/useAdminBlacklistLogic.ts(32,32): error TS7006: Parameter 'm' implicitly has an 'any' type.
+src/app/admin/blacklist/blacklist_context/useAdminBlacklistLogic.ts(43,42): error TS7006: Parameter 'm' implicitly has an 'any' type.
+src/app/admin/branches/branches_api/branches_api.ts(3,25): error TS2300: Duplicate identifier 'ApiResponse'.
+src/app/admin/branches/branches_api/branches_api.ts(4,15): error TS2300: Duplicate identifier 'ApiResponse'.
+src/app/admin/branches/branches_api/branches_api.ts(5,15): error TS2305: Module '"@/app/admin/admin_store/useAdminGlobalStore"' has no exported member 'Branch'.
+src/app/admin/branches/branches_api/branches_api.ts(10,56): error TS2552: Cannot find name 'array'. Did you mean 'Array'?
+src/app/admin/branches/branches_components/AdminBranchCard/AdminBranchCard.tsx(7,15): error TS2305: Module '"@/app/admin/admin_store/useAdminGlobalStore"' has no exported member 'Branch'.
+src/app/admin/branches/branches_context/useAdminBranchesLogic.ts(2,15): error TS2300: Duplicate identifier 'TimeRange'.
+src/app/admin/branches/branches_context/useAdminBranchesLogic.ts(7,15): error TS2305: Module '"@/app/admin/admin_store/useAdminGlobalStore"' has no exported member 'Branch'.
+src/app/admin/branches/branches_context/useAdminBranchesLogic.ts(8,15): error TS2300: Duplicate identifier 'TimeRange'.
+src/app/admin/branches/branches_context/useAdminBranchesLogic.ts(8,15): error TS2305: Module '"@/app/admin/dashboard/dashboard_types/dashboard_types"' has no exported member 'TimeRange'.
+src/app/admin/branches/branches_context/useAdminBranchesLogic.ts(14,93): error TS2339: Property 'branches' does not exist on type '{}'.
+src/app/admin/branches/branches_context/useAdminBranchesLogic.ts(23,9): error TS2367: This comparison appears to be unintentional because the types 'TimeRange' and '"weekly"' have no overlap.
+src/app/admin/branches/branches_store/useAdminBranchesStore.ts(4,15): error TS2305: Module '"@/app/admin/admin_store/useAdminGlobalStore"' has no exported member 'Branch'.
+src/app/admin/coupons/coupons_components/AdminCouponsKPIs/AdminCouponsKPIs.tsx(14,44): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+src/app/admin/coupons/coupons_components/AdminCouponsKPIs/AdminCouponsKPIs.tsx(14,49): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/app/admin/coupons/coupons_components/AdminCouponsKPIs/AdminCouponsKPIs.tsx(15,42): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+src/app/admin/coupons/coupons_components/AdminCouponsKPIs/AdminCouponsKPIs.tsx(15,47): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/app/admin/coupons/coupons_context/useAdminCouponsLogic.ts(29,38): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/app/admin/dashboard/dashboard_api/dashboard_api.ts(3,28): error TS2300: Duplicate identifier 'apiFetch'.
+src/app/admin/dashboard/dashboard_api/dashboard_api.ts(5,10): error TS2300: Duplicate identifier 'apiFetch'.
+src/app/admin/dashboard/dashboard_api/dashboard_api.ts(10,20): error TS1361: 'apiFetch' cannot be used as a value because it was imported using 'import type'.
+src/app/admin/dashboard/dashboard_types/dashboard_types.ts(7,14): error TS2552: Cannot find name 'TimeRange'. Did you mean 'TimeRanges'?
+src/app/admin/dashboard/dashboard_types/dashboard_types.ts(8,25): error TS2552: Cannot find name 'TimeRange'. Did you mean 'TimeRanges'?
+src/app/admin/data-export/data_export_components/AdminDataExportHistory/AdminDataExportHistory.tsx(57,31): error TS7006: Parameter 'job' implicitly has an 'any' type.
+src/app/admin/data-export/data_export_context/useAdminDataExportLogic.ts(21,56): error TS18046: 'r' is of type 'unknown'.
+src/app/admin/data-export/data_export_context/useAdminDataExportLogic.ts(28,56): error TS18046: 'r' is of type 'unknown'.
+src/app/admin/data-export/data_export_context/useAdminDataExportLogic.ts(34,32): error TS7006: Parameter 'j' implicitly has an 'any' type.
+src/app/admin/finance/finance_api/finance_api.ts(1,25): error TS2300: Duplicate identifier 'ApiResponse'.
+src/app/admin/finance/finance_api/finance_api.ts(2,15): error TS2300: Duplicate identifier 'ApiResponse'.
+src/app/admin/finance/finance_api/finance_api.ts(8,67): error TS2339: Property 'api' does not exist on type '{ PAGES: { LIST: string; }; BACKEND_API: { PAYMENTS_BASE: string; SUMMARY: string; PNL_COMPARISON: string; PENDING_DUES: string; REFUND: string; PAYMENTS_BY_MEMBER: (memberId: string) => string; }; }'.
+src/app/admin/finance/finance_api/finance_api.ts(11,67): error TS2339: Property 'api' does not exist on type '{ PAGES: { LIST: string; }; BACKEND_API: { PAYMENTS_BASE: string; SUMMARY: string; PNL_COMPARISON: string; PENDING_DUES: string; REFUND: string; PAYMENTS_BY_MEMBER: (memberId: string) => string; }; }'.
+src/app/admin/finance/finance_api/finance_api.ts(14,65): error TS2339: Property 'api' does not exist on type '{ PAGES: { LIST: string; }; BACKEND_API: { PAYMENTS_BASE: string; SUMMARY: string; PNL_COMPARISON: string; PENDING_DUES: string; REFUND: string; PAYMENTS_BY_MEMBER: (memberId: string) => string; }; }'.
+src/app/admin/finance/finance_api/finance_api.ts(17,65): error TS2339: Property 'api' does not exist on type '{ PAGES: { LIST: string; }; BACKEND_API: { PAYMENTS_BASE: string; SUMMARY: string; PNL_COMPARISON: string; PENDING_DUES: string; REFUND: string; PAYMENTS_BY_MEMBER: (memberId: string) => string; }; }'.
+src/app/admin/finance/finance_api/finance_api.ts(20,65): error TS2339: Property 'api' does not exist on type '{ PAGES: { LIST: string; }; BACKEND_API: { PAYMENTS_BASE: string; SUMMARY: string; PNL_COMPARISON: string; PENDING_DUES: string; REFUND: string; PAYMENTS_BY_MEMBER: (memberId: string) => string; }; }'.
+src/app/admin/finance/finance_components/AdminFinanceAddExpenseModal/AdminFinanceAddExpenseModal.tsx(11,15): error TS2305: Module '"@/app/admin/admin_store/useAdminGlobalStore"' has no exported member 'Branch'.
+src/app/admin/finance/finance_components/AdminFinanceExpensesTable/AdminFinanceExpensesTable.tsx(34,59): error TS18046: 'e' is of type 'unknown'.
+src/app/admin/finance/finance_components/AdminFinanceExpensesTable/AdminFinanceExpensesTable.tsx(35,59): error TS18046: 'e' is of type 'unknown'.
+src/app/admin/finance/finance_components/AdminFinanceExpensesTable/AdminFinanceExpensesTable.tsx(42,74): error TS18046: 'e' is of type 'unknown'.
+src/app/admin/finance/finance_components/AdminFinanceExpensesTable/AdminFinanceExpensesTable.tsx(44,81): error TS18046: 'e' is of type 'unknown'.
+src/app/admin/finance/finance_components/AdminFinanceExpensesTable/AdminFinanceExpensesTable.tsx(56,44): error TS2322: Type 'unknown' is not assignable to type 'Key | null | undefined'.
+src/app/admin/finance/finance_components/AdminFinanceExpensesTable/AdminFinanceExpensesTable.tsx(56,52): error TS2322: Type 'unknown' is not assignable to type 'string | number | readonly string[] | undefined'.
+src/app/admin/finance/finance_components/AdminFinanceExpensesTable/AdminFinanceExpensesTable.tsx(56,62): error TS2322: Type 'unknown' is not assignable to type 'ReactNode'.
+src/app/admin/finance/finance_components/AdminFinanceExpensesTable/AdminFinanceExpensesTable.tsx(87,26): error TS18046: 'e' is of type 'unknown'.
+src/app/admin/finance/finance_components/AdminFinanceExpensesTable/AdminFinanceExpensesTable.tsx(88,97): error TS18046: 'e' is of type 'unknown'.
+src/app/admin/finance/finance_components/AdminFinanceExpensesTable/AdminFinanceExpensesTable.tsx(90,100): error TS18046: 'e' is of type 'unknown'.
+src/app/admin/finance/finance_components/AdminFinanceExpensesTable/AdminFinanceExpensesTable.tsx(90,155): error TS18046: 'e' is of type 'unknown'.
+src/app/admin/finance/finance_components/AdminFinanceExpensesTable/AdminFinanceExpensesTable.tsx(92,70): error TS18046: 'e' is of type 'unknown'.
+src/app/admin/finance/finance_components/AdminFinanceExpensesTable/AdminFinanceExpensesTable.tsx(93,91): error TS18046: 'e' is of type 'unknown'.
+src/app/admin/finance/finance_components/AdminFinanceExpensesTable/AdminFinanceExpensesTable.tsx(94,87): error TS18046: 'e' is of type 'unknown'.
+src/app/admin/finance/finance_components/AdminFinanceExpensesTable/AdminFinanceExpensesTable.tsx(95,69): error TS18046: 'e' is of type 'unknown'.
+src/app/admin/finance/finance_components/AdminFinancePaymentsTable/AdminFinancePaymentsTable.tsx(20,23): error TS7006: Parameter 'p' implicitly has an 'any' type.
+src/app/admin/finance/finance_components/AdminFinancePaymentsTable/AdminFinancePaymentsTable.tsx(80,24): error TS7006: Parameter 'p' implicitly has an 'any' type.
+src/app/admin/finance/finance_components/AdminFinanceRevenueSummary/AdminFinanceRevenueSummary.tsx(18,28): error TS7006: Parameter 'd' implicitly has an 'any' type.
+src/app/admin/finance/finance_components/AdminFinanceRevenueSummary/AdminFinanceRevenueSummary.tsx(18,31): error TS7006: Parameter 'i' implicitly has an 'any' type.
+src/app/admin/finance/finance_components/AdminFinanceRevenueSummary/AdminFinanceRevenueSummary.tsx(19,50): error TS7006: Parameter 'x' implicitly has an 'any' type.
+src/app/admin/gym-health-alerts/gym_health_alerts_components/AdminGymHealthAlertsTable/AdminGymHealthAlertsTable.tsx(52,29): error TS7006: Parameter 'alert' implicitly has an 'any' type.
+src/app/admin/gym-health-alerts/gym_health_alerts_components/AdminGymHealthAlertsTable/AdminGymHealthAlertsTable.tsx(66,22): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<AlertType, string>'.
+src/app/admin/gym-health-alerts/gym_health_alerts_components/AdminGymHealthAlertsTable/AdminGymHealthAlertsTable.tsx(70,111): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<AlertSeverity, string>'.
+src/app/admin/gym-health-alerts/gym_health_alerts_context/useAdminGymHealthAlertsLogic.ts(27,63): error TS18046: 'r' is of type 'unknown'.
+src/app/admin/gym-health-alerts/gym_health_alerts_context/useAdminGymHealthAlertsLogic.ts(34,61): error TS18046: 'r' is of type 'unknown'.
+src/app/admin/gym-health-alerts/gym_health_alerts_context/useAdminGymHealthAlertsLogic.ts(40,34): error TS7006: Parameter 'a' implicitly has an 'any' type.
+src/app/admin/hr/hr_components/AdminHrLedgerTable/AdminHrLedgerTable.tsx(28,19): error TS18046: 'e' is of type 'unknown'.
+src/app/admin/hr/hr_components/AdminHrStaffModal/AdminHrStaffModal.tsx(8,15): error TS2305: Module '"@/app/admin/admin_store/useAdminGlobalStore"' has no exported member 'Branch'.
+src/app/admin/hr/hr_components/AdminHrStaffProfileModal/AdminHrStaffProfileModal.tsx(66,45): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'Staff'.
+src/app/admin/hr/hr_components/AdminHrTabs/AdminHrTabs.tsx(8,15): error TS2305: Module '"@/app/admin/admin_store/useAdminGlobalStore"' has no exported member 'Branch'.
+src/app/admin/members/members_components/AdminMembersTable/AdminMembersTable.tsx(44,27): error TS7006: Parameter 'm' implicitly has an 'any' type.
+src/app/admin/members/members_components/AdminMembersToolbar/AdminMembersToolbar.tsx(10,15): error TS2305: Module '"@/app/admin/admin_store/useAdminGlobalStore"' has no exported member 'Branch'.
+src/app/admin/members/members_context/useAdminMembersLogic.ts(52,36): error TS2339: Property 'data' does not exist on type '{}'.
+src/app/admin/members/members_context/useAdminMembersLogic.ts(59,31): error TS2339: Property 'data' does not exist on type '{}'.
+src/app/admin/payouts/payouts_components/AdminPayoutsPnLStatement/AdminPayoutsPnLStatement.tsx(29,27): error TS7006: Parameter 'p' implicitly has an 'any' type.
+src/app/admin/payouts/payouts_components/AdminPayoutsSummaryTable/AdminPayoutsSummaryTable.tsx(41,31): error TS7006: Parameter 'p' implicitly has an 'any' type.
+src/app/admin/payouts/payouts_context/useAdminPayoutsLogic.ts(17,56): error TS18046: 'r' is of type 'unknown'.
+src/app/admin/payouts/payouts_context/useAdminPayoutsLogic.ts(23,52): error TS18046: 'r' is of type 'unknown'.
+src/app/admin/payouts/payouts_context/useAdminPayoutsLogic.ts(29,53): error TS18046: 'r' is of type 'unknown'.
+src/app/admin/payouts/payouts_context/useAdminPayoutsLogic.ts(35,42): error TS7006: Parameter 'p' implicitly has an 'any' type.
+src/app/admin/payouts/payouts_context/useAdminPayoutsLogic.ts(42,38): error TS7006: Parameter 'p' implicitly has an 'any' type.
+src/app/admin/permissions/permissions_api/permissions_api.ts(9,20): error TS1361: 'apiFetch' cannot be used as a value because it was imported using 'import type'.
+src/app/admin/permissions/permissions_api/permissions_api.ts(12,20): error TS1361: 'apiFetch' cannot be used as a value because it was imported using 'import type'.
+src/app/admin/permissions/permissions_api/permissions_api.ts(15,18): error TS1361: 'apiFetch' cannot be used as a value because it was imported using 'import type'.
+src/app/admin/permissions/permissions_components/AdminPermissionsGymOverride/AdminPermissionsGymOverride.tsx(34,25): error TS7006: Parameter 'override' implicitly has an 'any' type.
+src/app/admin/permissions/permissions_components/AdminPermissionsGymOverride/AdminPermissionsGymOverride.tsx(34,35): error TS7006: Parameter 'i' implicitly has an 'any' type.
+src/app/admin/permissions/permissions_context/useAdminPermissionsLogic.ts(39,45): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/app/admin/permissions/permissions_context/useAdminPermissionsLogic.ts(46,45): error TS7006: Parameter 'o' implicitly has an 'any' type.
+src/app/admin/permissions/permissions_context/useAdminPermissionsLogic.ts(55,50): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/app/admin/permissions/permissions_context/useAdminPermissionsLogic.ts(57,46): error TS7006: Parameter 'o' implicitly has an 'any' type.
+src/app/admin/plans/plans_api/plans_api.ts(9,47): error TS2339: Property 'api' does not exist on type '{ PAGES: { LIST: string; }; BACKEND_API: { BASE: string; GET_ONE: (id: string) => string; UPDATE: (id: string) => string; DELETE: (id: string) => string; }; }'.
+src/app/admin/plans/plans_api/plans_api.ts(12,47): error TS2339: Property 'api' does not exist on type '{ PAGES: { LIST: string; }; BACKEND_API: { BASE: string; GET_ONE: (id: string) => string; UPDATE: (id: string) => string; DELETE: (id: string) => string; }; }'.
+src/app/admin/plans/plans_api/plans_api.ts(15,45): error TS2339: Property 'api' does not exist on type '{ PAGES: { LIST: string; }; BACKEND_API: { BASE: string; GET_ONE: (id: string) => string; UPDATE: (id: string) => string; DELETE: (id: string) => string; }; }'.
+src/app/admin/plans/plans_api/plans_api.ts(18,45): error TS2339: Property 'api' does not exist on type '{ PAGES: { LIST: string; }; BACKEND_API: { BASE: string; GET_ONE: (id: string) => string; UPDATE: (id: string) => string; DELETE: (id: string) => string; }; }'.
+src/app/admin/plans/plans_api/plans_api.ts(21,45): error TS2339: Property 'api' does not exist on type '{ PAGES: { LIST: string; }; BACKEND_API: { BASE: string; GET_ONE: (id: string) => string; UPDATE: (id: string) => string; DELETE: (id: string) => string; }; }'.
+src/app/admin/plans/plans_api/plans_api.ts(24,45): error TS2339: Property 'api' does not exist on type '{ PAGES: { LIST: string; }; BACKEND_API: { BASE: string; GET_ONE: (id: string) => string; UPDATE: (id: string) => string; DELETE: (id: string) => string; }; }'.
+src/app/admin/plans/plans_api/plans_server_api.ts(8,65): error TS2339: Property 'api' does not exist on type '{ PAGES: { LIST: string; }; BACKEND_API: { BASE: string; GET_ONE: (id: string) => string; UPDATE: (id: string) => string; DELETE: (id: string) => string; }; }'.
+src/app/admin/plans/plans_context/useAdminPlansLogic.ts(57,32): error TS2339: Property 'data' does not exist on type '{}'.
+src/app/admin/plans/plans_context/useAdminPlansLogic.ts(87,17): error TS18046: 'res' is of type 'unknown'.
+src/app/admin/plans/plans_context/useAdminPlansLogic.ts(97,17): error TS18046: 'res' is of type 'unknown'.
+src/app/admin/plans/plans_context/useAdminPlansLogic.ts(107,17): error TS18046: 'res' is of type 'unknown'.
+src/app/admin/plans/plans_context/useAdminPlansRevenueLogic.ts(24,36): error TS2339: Property 'data' does not exist on type '{}'.
+src/app/admin/reports/reports_components/AdminReportsMain/AdminReportsMain.tsx(22,15): error TS2305: Module '"@/app/admin/admin_store/useAdminGlobalStore"' has no exported member 'Branch'.
+src/app/admin/reports/reports_components/AdminReportsRevenue/AdminReportsRevenue.tsx(54,24): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ up: Element; down: Element; flat: Element; }'.
+src/app/admin/settings/settings_api/settings_api.ts(11,108): error TS2339: Property 'api' does not exist on type '{ PAGES: { SETTINGS: string; }; BACKEND_API: { BASE: string; TWO_FACTOR_STATUS: string; TWO_FACTOR_ENABLE: string; TWO_FACTOR_DISABLE: string; TWO_FACTOR_VERIFY: string; NOTIFICATION_PREFERENCES: string; }; }'.
+src/app/admin/settings/settings_api/settings_api.ts(14,108): error TS2339: Property 'api' does not exist on type '{ PAGES: { SETTINGS: string; }; BACKEND_API: { BASE: string; TWO_FACTOR_STATUS: string; TWO_FACTOR_ENABLE: string; TWO_FACTOR_DISABLE: string; TWO_FACTOR_VERIFY: string; NOTIFICATION_PREFERENCES: string; }; }'.
+src/app/admin/settings/settings_components/AdminSettingsContent/AdminSettingsContent.tsx(44,93): error TS2339: Property 'profile' does not exist on type '{ success: boolean; message: string; data: { profile: { gymName: string; ownerName: string; phone: string; email: string; city: string; gstNumber?: string | undefined; }; notifications: { smssms: boolean; ... 15 more ...; absenceThresholdDays: number; }; integration: { ...; }; gst: { ...; }; payment: { ...; }; gener...'.
+src/app/admin/settings/settings_components/AdminSettingsContent/AdminSettingsContent.tsx(45,102): error TS2339: Property 'notifications' does not exist on type '{ success: boolean; message: string; data: { profile: { gymName: string; ownerName: string; phone: string; email: string; city: string; gstNumber?: string | undefined; }; notifications: { smssms: boolean; ... 15 more ...; absenceThresholdDays: number; }; integration: { ...; }; gst: { ...; }; payment: { ...; }; gener...'.
+src/app/admin/settings/settings_components/AdminSettingsContent/AdminSettingsContent.tsx(47,101): error TS2339: Property 'integration' does not exist on type '{ success: boolean; message: string; data: { profile: { gymName: string; ownerName: string; phone: string; email: string; city: string; gstNumber?: string | undefined; }; notifications: { smssms: boolean; ... 15 more ...; absenceThresholdDays: number; }; integration: { ...; }; gst: { ...; }; payment: { ...; }; gener...'.
+src/app/admin/settings/settings_components/AdminSettingsContent/AdminSettingsContent.tsx(48,82): error TS2339: Property 'gst' does not exist on type '{ success: boolean; message: string; data: { profile: { gymName: string; ownerName: string; phone: string; email: string; city: string; gstNumber?: string | undefined; }; notifications: { smssms: boolean; ... 15 more ...; absenceThresholdDays: number; }; integration: { ...; }; gst: { ...; }; payment: { ...; }; gener...'.
+src/app/admin/settings/settings_components/AdminSettingsContent/AdminSettingsContent.tsx(49,97): error TS2339: Property 'payment' does not exist on type '{ success: boolean; message: string; data: { profile: { gymName: string; ownerName: string; phone: string; email: string; city: string; gstNumber?: string | undefined; }; notifications: { smssms: boolean; ... 15 more ...; absenceThresholdDays: number; }; integration: { ...; }; gst: { ...; }; payment: { ...; }; gener...'.
+src/app/admin/settings/settings_components/AdminSettingsContent/AdminSettingsContent.tsx(50,90): error TS2339: Property 'general' does not exist on type '{ success: boolean; message: string; data: { profile: { gymName: string; ownerName: string; phone: string; email: string; city: string; gstNumber?: string | undefined; }; notifications: { smssms: boolean; ... 15 more ...; absenceThresholdDays: number; }; integration: { ...; }; gst: { ...; }; payment: { ...; }; gener...'.
+src/app/admin/subscriptions/subscriptions_components/AdminSubscriptionsInvoices/AdminSubscriptionsInvoices.tsx(26,51): error TS18047: 'invoices' is possibly 'null'.
+src/app/admin/subscriptions/subscriptions_components/AdminSubscriptionsInvoices/AdminSubscriptionsInvoices.tsx(38,14): error TS18047: 'invoices' is possibly 'null'.
+src/app/admin/subscriptions/subscriptions_components/AdminSubscriptionsPaymentMethod/AdminSubscriptionsPaymentMethod.tsx(38,10): error TS18047: 'paymentMethods' is possibly 'null'.
+src/app/admin/subscriptions/subscriptions_components/AdminSubscriptionsPaymentMethod/AdminSubscriptionsPaymentMethod.tsx(40,13): error TS18047: 'paymentMethods' is possibly 'null'.
+src/app/admin/subscriptions/subscriptions_components/AdminSubscriptionsPlanCards/AdminSubscriptionsPlanCards.tsx(76,8): error TS18047: 'plans' is possibly 'null'.
+src/app/admin/subscriptions/subscriptions_context/useAdminSubscriptionsLogic.ts(51,41): error TS2339: Property 'planName' does not exist on type 'ApiResponse<any>'.
+src/app/admin/subscriptions/subscriptions_context/useAdminSubscriptionsLogic.ts(63,26): error TS2339: Property 'autoRenew' does not exist on type 'ApiResponse<any>'.
+src/app/admin/usage/usage_api/usage_api.ts(1,10): error TS2724: '"@/app/admin/usage/usage_types/AdminUsage_schemas"' has no exported member named 'adminAdminUsageDataSchema'. Did you mean 'adminUsageDataSchema'?
+src/app/admin/usage/usage_components/AdminUsagePlanCard/AdminUsagePlanCard.tsx(41,35): error TS7006: Parameter 'f' implicitly has an 'any' type.
+src/lib/mock_data.ts(29,11): error TS2532: Object is possibly 'undefined'.
+src/lib/mock_data.ts(30,13): error TS2532: Object is possibly 'undefined'.
+src/lib/mock_data.ts(39,11): error TS2532: Object is possibly 'undefined'.
+src/lib/mock_data.ts(122,19): error TS2532: Object is possibly 'undefined'.
+src/lib/mock_data.ts(122,45): error TS2532: Object is possibly 'undefined'.
+src/lib/mock_data.ts(123,11): error TS2532: Object is possibly 'undefined'.
+src/lib/mock_data.ts(127,9): error TS2532: Object is possibly 'undefined'.
+src/lib/mock_data.ts(128,11): error TS2532: Object is possibly 'undefined'.
+src/lib/mock_data.ts(156,13): error TS2532: Object is possibly 'undefined'.
+src/lib/mock_data.ts(157,15): error TS2532: Object is possibly 'undefined'.
+src/lib/mock_data.ts(158,11): error TS2532: Object is possibly 'undefined'.

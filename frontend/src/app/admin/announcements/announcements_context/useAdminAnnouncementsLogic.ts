@@ -23,13 +23,13 @@ export function useAdminAnnouncementsLogic() {
 
   const { data: announcements = [], isLoading, isError } = useQuery({
     queryKey: ['adminAnnouncements'],
-    queryFn: () => announcementsApi.fetchAnnouncements().then(r => r.data),
+    queryFn: () => announcementsApi.fetchAnnouncements().then((r: any) => r.data || []),
     staleTime: 1000 * 60 * 2,
   });
 
   const { data: kpis } = useQuery({
     queryKey: ['adminAnnouncementsKPIs'],
-    queryFn: () => announcementsApi.fetchKPIs().then(r => r.data),
+    queryFn: () => announcementsApi.fetchKPIs().then((r: any) => r.data || null),
     staleTime: 1000 * 60 * 5,
   });
 
@@ -82,8 +82,8 @@ export function useAdminAnnouncementsLogic() {
 
   const pinMutation = useMutation({
     mutationFn: (id: string) => announcementsApi.togglePin(id),
-    onSuccess: (res: Announcement) => {
-      toast.success(res.isPinned ? 'Pinned' : 'Unpinned');
+    onSuccess: (res: any) => {
+      toast.success(res.data?.isPinned ? 'Pinned' : 'Unpinned');
       qc.invalidateQueries({ queryKey: ['adminAnnouncements'] });
     },
     onError: (err: Error) => toast.error(err.message ?? 'Failed to update pin status'),

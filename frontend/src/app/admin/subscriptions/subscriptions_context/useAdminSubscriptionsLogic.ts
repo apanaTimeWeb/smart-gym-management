@@ -21,19 +21,19 @@ export function useAdminSubscriptionsLogic() {
 
   const { data: plans = [], isLoading: plansLoading } = useQuery({
     queryKey: ['adminSaaSPlans'],
-    queryFn: () => subscriptionsApi.fetchPlans().then(r => r.data),
+    queryFn: () => subscriptionsApi.fetchPlans().then(r => r.data || []),
     staleTime: 1000 * 60 * 10,
   });
 
   const { data: invoices = [], isLoading: invoicesLoading } = useQuery({
     queryKey: ['adminInvoices'],
-    queryFn: () => subscriptionsApi.fetchInvoices().then(r => r.data),
+    queryFn: () => subscriptionsApi.fetchInvoices().then(r => r.data || []),
     staleTime: 1000 * 60 * 5,
   });
 
   const { data: paymentMethods = [], isLoading: pmLoading } = useQuery({
     queryKey: ['adminPaymentMethods'],
-    queryFn: () => subscriptionsApi.fetchPaymentMethods().then(r => r.data),
+    queryFn: () => subscriptionsApi.fetchPaymentMethods().then(r => r.data || []),
     staleTime: 1000 * 60 * 5,
   });
 
@@ -47,8 +47,8 @@ export function useAdminSubscriptionsLogic() {
 
   const upgradeMutation = useMutation({
     mutationFn: (planId: string) => subscriptionsApi.upgradePlan(planId),
-    onSuccess: (data) => {
-      toast.success(`Upgraded to ${data.planName} plan successfully!`);
+    onSuccess: (res: any) => {
+      toast.success(`Upgraded to ${res.data?.planName || 'new'} plan successfully!`);
       setShowUpgradeConfirm(null);
       qc.invalidateQueries({ queryKey: ['adminSubscription'] });
       qc.invalidateQueries({ queryKey: ['adminSubscriptionKPIs'] });
@@ -59,8 +59,8 @@ export function useAdminSubscriptionsLogic() {
 
   const autoRenewMutation = useMutation({
     mutationFn: subscriptionsApi.toggleAutoRenew,
-    onSuccess: (data) => {
-      toast.success(data.autoRenew ? 'Auto-renew enabled' : 'Auto-renew disabled');
+    onSuccess: (res: any) => {
+      toast.success(res.data?.autoRenew ? 'Auto-renew enabled' : 'Auto-renew disabled');
       qc.invalidateQueries({ queryKey: ['adminSubscription'] });
     },
     onError: (err) => toast.error((err as Error).message),

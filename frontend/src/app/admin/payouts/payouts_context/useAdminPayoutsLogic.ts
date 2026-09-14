@@ -14,32 +14,32 @@ export function useAdminPayoutsLogic() {
 
   const { data: payouts = [], isLoading: loadingPayouts, isError: errorPayouts } = useQuery({
     queryKey: ['adminPayouts'],
-    queryFn: () => payoutsApi.fetchPayouts().then(r => r.data),
+    queryFn: () => payoutsApi.fetchPayouts().then((r: any) => r.data || []),
     staleTime: 1000 * 60 * 5,
   });
 
   const { data: pnlData = [], isLoading: loadingPnL } = useQuery({
     queryKey: ['adminPnL'],
-    queryFn: () => payoutsApi.fetchPnL().then(r => r.data),
+    queryFn: () => payoutsApi.fetchPnL().then((r: any) => r.data || []),
     staleTime: 1000 * 60 * 5,
   });
 
   const { data: kpis } = useQuery({
     queryKey: ['adminPayoutsKPIs'],
-    queryFn: () => payoutsApi.fetchKPIs().then(r => r.data),
+    queryFn: () => payoutsApi.fetchKPIs().then((r: any) => r.data || null),
     staleTime: 1000 * 60 * 5,
   });
 
   const fetchState: FetchState = loadingPayouts ? 'loading' : errorPayouts ? 'error' : 'success';
 
-  const filteredPayouts = payouts.filter(p => {
+  const filteredPayouts = payouts.filter((p: any) => {
     const matchMonth = monthFilter === 'all' || p.month === monthFilter;
     const matchGym = gymFilter === 'all' || p.gymId === gymFilter;
     const matchStatus = statusFilter === 'all' || p.payoutStatus === statusFilter;
     return matchMonth && matchGym && matchStatus;
   });
 
-  const filteredPnL = pnlData.filter(p => {
+  const filteredPnL = pnlData.filter((p: any) => {
     const matchMonth = monthFilter === 'all' || p.month === monthFilter;
     const matchGym = gymFilter === 'all' || p.gymId === gymFilter;
     return matchMonth && matchGym;

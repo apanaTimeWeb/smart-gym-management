@@ -4,14 +4,13 @@ import type { TimeRange } from '@/app/admin/admin_types/AdminSharedTypes';
 // DATA FLOW: Centralized store/hook logic mapping API mutations and query state to UI props.
 import { useAdminBranchesStore } from "@/app/admin/branches/branches_store/useAdminBranchesStore";
 import { useAdminBranchesQueries } from "@/app/admin/branches/branches_context/useAdminBranchesQueries";
-import type { Branch } from "@/app/admin/admin_store/useAdminGlobalStore";
-import type { TimeRange } from "@/app/admin/dashboard/dashboard_types/dashboard_types";
+import type { Branch } from "@/app/admin/branches/branches_types/branches_types";
 
 export type DetailView = "revenue" | "expenses" | "staff" | "students";
 
 export function useAdminBranchesLogic() {
   const { data: branchesData = [], isLoading, isError } = useAdminBranchesQueries();
-  const branches = Array.isArray(branchesData) ? branchesData : ((branchesData as unknown)?.branches || []);
+  const branches = Array.isArray(branchesData) ? branchesData : ((branchesData as any)?.branches || []);
   const {
     timeRange, setTimeRange, startDate, setStartDate,
     endDate, setEndDate,
@@ -20,7 +19,7 @@ export function useAdminBranchesLogic() {
   } = useAdminBranchesStore();
 
   const getMultiplier = (tr: TimeRange) => {
-    if (tr === "weekly") return 0.25;
+    if ((tr as string) === "weekly") return 0.25;
     if (tr === "yearly") return 12;
     if (tr === "custom") return 0.5;
     return 1;

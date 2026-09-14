@@ -8,9 +8,9 @@ import { logErrorToMonitoring } from '@/app/admin/admin_utils/monitoring';
 import { z } from "zod";
 export const settingsApi = {
   fetchSettings: async () => {
-            return apiFetch<ApiResponse<z.infer<typeof AdminSettingsResponseSchema>>>(`${SettingsUrlConfig.api.base}/fetchSettings`, { method: 'GET', dataSchema: AdminSettingsResponseSchema });
+            return apiFetch<z.infer<typeof AdminSettingsResponseSchema>>(`${SettingsUrlConfig.BACKEND_API.BASE}/fetchSettings`, { method: 'GET', responseSchema: AdminSettingsResponseSchema });
         },
   updateSettings: async (body: Record<string, unknown>) => {
-            return apiFetch<ApiResponse<z.infer<typeof AdminSettingsResponseSchema>>>(`${SettingsUrlConfig.api.base}/updateSettings`, { method: 'POST', body: JSON.stringify(body), dataSchema: AdminSettingsResponseSchema });
+            return apiFetch<z.infer<typeof AdminSettingsResponseSchema>>(`${SettingsUrlConfig.BACKEND_API.BASE}/updateSettings`, { method: 'POST', body: JSON.stringify(body), responseSchema: AdminSettingsResponseSchema });
         }
 };

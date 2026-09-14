@@ -4,7 +4,7 @@ import { Building2, TrendingUp, TrendingDown, Users, Activity, ChevronRight, Log
 import { useAdminBranchesLogic } from "@/app/admin/branches/branches_context/useAdminBranchesLogic";
 import { formatCurrency } from "@/lib/formatters";
 import { useAdminImpersonationStore } from "@/app/admin/admin_store/useAdminImpersonationStore";
-import type { Branch } from "@/app/admin/admin_store/useAdminGlobalStore";
+import type { Branch } from "@/app/admin/branches/branches_types/branches_types";
 
 function AdminBranchCardSkeleton() {
   return (

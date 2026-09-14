@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
 import { STAFF_MODAL_FIELDS, EMPTY_STAFF, GENDER_OPTIONS, StaffSchema, type StaffFormValues, STAFF_ROLE_OPTIONS } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
 import { useAdminBranchesQueries } from '@/app/admin/branches/branches_context/useAdminBranchesQueries';
-import type { Branch } from '@/app/admin/admin_store/useAdminGlobalStore';
+import type { Branch } from '@/app/admin/branches/branches_types/branches_types';
 import { X, Save } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

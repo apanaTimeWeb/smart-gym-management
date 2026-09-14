@@ -11,8 +11,8 @@ export default function AdminCouponsKPIs() {
 
   const totalCoupons = allCoupons.length;
   const activeCoupons = allCoupons.filter((c: any) => c.status === 'active').length;
-  const totalRedeemed = allCoupons.reduce((sum, c) => sum + c.usedCount, 0);
-  const revenueLost = allCoupons.reduce((sum, c) => {
+  const totalRedeemed = allCoupons.reduce((sum: number, c: any) => sum + c.usedCount, 0);
+  const revenueLost = allCoupons.reduce((sum: number, c: any) => {
     const avgDiscount = c.type === 'flat' ? c.value : Math.min(c.value * 10, c.maxDiscount || c.value * 10);
     return sum + c.usedCount * avgDiscount;
   }, 0);

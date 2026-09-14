@@ -5,6 +5,7 @@ import NextTopLoader from 'nextjs-toploader';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { Toaster } from 'react-hot-toast';
 import { QueryProvider } from '@/components/QueryProvider';
+import { MSWProvider } from '@/components/MSWProvider';
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
@@ -47,7 +48,9 @@ export default function RootLayout({
             shadow="0 0 10px #FACC15,0 0 5px #FACC15"
           />
           <QueryProvider>
-            {children}
+            <MSWProvider>
+              {children}
+            </MSWProvider>
           </QueryProvider>
           <Toaster 
             position="top-center" 

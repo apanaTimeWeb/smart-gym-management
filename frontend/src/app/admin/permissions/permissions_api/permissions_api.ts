@@ -1,6 +1,6 @@
 // RESPONSIBILITY: API client for the Permissions module.
 import { AdminPermissionsUrlConfig } from '@/app/admin/permissions/admin_permissions_url_config';
-import type { ApiResponse, apiFetch } from '@/lib/api';
+import { apiFetch, type ApiResponse } from '@/lib/api';
 import type { PermissionsData, RoleType } from '@/app/admin/permissions/permissions_types/permissions_types';
 import { MOCK_PERMISSIONS_DATA } from '@/app/admin/permissions/permissions_utils/AdminPermissionsSharedConstants';
 import { z } from "zod";

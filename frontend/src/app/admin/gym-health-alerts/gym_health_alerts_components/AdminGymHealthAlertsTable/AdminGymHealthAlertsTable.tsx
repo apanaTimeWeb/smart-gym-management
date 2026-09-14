@@ -49,7 +49,7 @@ export default function AdminGymHealthAlertsTable() {
                   </div>
                 </td>
               </tr>
-            ) : alerts.map((alert) => (
+            ) : alerts.map((alert: any) => (
               <tr key={alert.id} className={`motion-safe:transition-colors group ${alert.severity === 'critical' ? 'hover:bg-danger/5' : alert.severity === 'warning' ? 'hover:bg-warning/5' : 'hover:bg-info/5'}`}>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
@@ -63,11 +63,11 @@ export default function AdminGymHealthAlertsTable() {
                 </td>
                 <td className="px-4 py-3">
                   <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium bg-input text-secondary whitespace-nowrap">
-                    {TYPE_LABELS[alert.alertType]}
+                    {TYPE_LABELS[alert.alertType as AlertType]}
                   </span>
                 </td>
                 <td className="px-4 py-3">
-                  <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold capitalize ${SEVERITY_STYLES[alert.severity]}`}>
+                  <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold capitalize ${SEVERITY_STYLES[alert.severity as AlertSeverity]}`}>
                     {alert.severity}
                   </span>
                 </td>

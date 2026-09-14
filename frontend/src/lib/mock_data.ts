@@ -26,8 +26,8 @@ const MEMBERS = Array.from({ length: 20 }, (_, i) => ({
   joinDate: `2024-0${(i % 9) + 1}-${String((i % 28) + 1).padStart(2, '0')}`,
   expiryDate: `2025-0${(i % 9) + 1}-${String((i % 28) + 1).padStart(2, '0')}`,
   paidAmount: 4999 + i * 500,
-  branch: BRANCHES[i % 4].name,
-  branchId: BRANCHES[i % 4].id,
+  branch: BRANCHES[i % 4]!.name,
+  branchId: BRANCHES[i % 4]!.id,
   gender: i % 2 === 0 ? 'Male' : 'Female',
   age: 22 + (i % 15),
 }));
@@ -36,7 +36,7 @@ const STAFF = Array.from({ length: 10 }, (_, i) => ({
   id: `s${i + 1}`,
   name: ['Ravi Trainer','Sunita Coach','Anand PT','Rekha Manager','Vijay Receptionist','Kavita Nutritionist','Suresh Admin','Lata Support','Arjun Security','Pradeep Cleaner'][i],
   role: ['Trainer','Coach','PT','Manager','Receptionist','Nutritionist','Admin','Support','Security','Cleaner'][i],
-  branch: BRANCHES[i % 4].name,
+  branch: BRANCHES[i % 4]!.name,
   salary: 18000 + i * 2000,
   status: i < 8 ? 'active' : 'inactive',
   joinDate: `2023-0${(i % 9) + 1}-01`,
@@ -119,13 +119,13 @@ const ANNOUNCEMENTS = [
 const PAYMENTS = Array.from({ length: 12 }, (_, i) => ({
   id: `pay${i + 1}`,
   invoiceNo: `INV-2025-${String(1000 + i).padStart(4, '0')}`,
-  member: { name: MEMBERS[i % 20].name, id: MEMBERS[i % 20].id },
-  amount: PLANS[i % 4].price,
-  method: ['UPI', 'Cash', 'Card', 'Net Banking'][i % 4],
+  member: { name: MEMBERS[i % 20]!.name, id: MEMBERS[i % 20]!.id },
+  amount: PLANS[i % 4]!.price,
+  method: ['UPI', 'Cash', 'Card', 'Net Banking'][i % 4]!,
   paidAt: `2025-01-${String((i % 28) + 1).padStart(2, '0')}`,
   status: i < 10 ? 'paid' : 'pending',
-  plan: PLANS[i % 4].name,
-  branch: BRANCHES[i % 4].name,
+  plan: PLANS[i % 4]!.name,
+  branch: BRANCHES[i % 4]!.name,
 }));
 
 // ─── superadmin gyms ──────────────────────────────────────────────────────────
@@ -153,9 +153,9 @@ const SUPERADMIN_DASHBOARD = {
 // ─── attendance ───────────────────────────────────────────────────────────────
 const ATTENDANCE = Array.from({ length: 15 }, (_, i) => ({
   id: `att${i + 1}`,
-  memberId: MEMBERS[i % 20].id,
-  memberName: MEMBERS[i % 20].name,
-  branch: BRANCHES[i % 4].name,
+  memberId: MEMBERS[i % 20]!.id,
+  memberName: MEMBERS[i % 20]!.name,
+  branch: BRANCHES[i % 4]!.name,
   checkIn: `2025-01-${String((i % 28) + 1).padStart(2, '0')}T0${6 + (i % 4)}:${String(i * 7 % 60).padStart(2, '0')}:00`,
   checkOut: `2025-01-${String((i % 28) + 1).padStart(2, '0')}T${8 + (i % 4)}:${String(i * 9 % 60).padStart(2, '0')}:00`,
   duration: 90 + (i % 30),

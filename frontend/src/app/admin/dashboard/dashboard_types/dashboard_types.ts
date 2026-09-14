@@ -1,4 +1,5 @@
 // RESPONSIBILITY: Defines strict types for the Dashboard module, including comprehensive KPI stats and recent activity shapes.
+import type { TimeRange } from '@/app/admin/admin_types/AdminSharedTypes';
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 export interface DashboardContextType { 
   stats: DashboardStats | null; 

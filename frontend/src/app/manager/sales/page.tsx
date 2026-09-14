@@ -1,4 +1,5 @@
 // RESPONSIBILITY: Server Component that fetches initial data and acts as the entry point for the Sales module.
+export const dynamic = 'force-dynamic';
 import ManagerSalesMain from '@/app/manager/sales/sales_components/ManagerSalesMain/ManagerSalesMain';
 import { ssrSalesApi } from '@/app/manager/sales/sales_api/ManagerSalesServerApi';
 import type { SalesInitialData } from '@/app/manager/sales/sales_types/ManagerSalesTypes';

@@ -30,7 +30,7 @@ export default function AdminFinanceExpensesTable() {
   const { expenses = [] } = useAdminFinanceLogic();
 
   const filtered = useMemo(() => {
-    return expenses.filter((e: unknown) => {
+    return expenses.filter((e: any) => {
       const matchesBranch = selectedBranchId === 'all' || e.branchId === selectedBranchId;
       const matchesCategory = categoryFilter === 'All' || e.category === categoryFilter;
       return matchesBranch && matchesCategory;
@@ -39,9 +39,9 @@ export default function AdminFinanceExpensesTable() {
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
   const paginated = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
-  const totalAmount = filtered.reduce((sum: number, e: unknown) => sum + e.amount, 0);
+  const totalAmount = filtered.reduce((sum: number, e: any) => sum + e.amount, 0);
 
-  const categories = ['All', ...Array.from(new Set(expenses.map((e: unknown) => e.category)))];
+  const categories = ['All', ...Array.from(new Set(expenses.map((e: any) => e.category)))];
 
   return (
     <div className="space-y-4">
@@ -50,10 +50,10 @@ export default function AdminFinanceExpensesTable() {
         <div className="flex items-center gap-3 flex-wrap">
           <select
             value={categoryFilter}
-            onChange={(e) => { setCategoryFilter(e.target.value); setCurrentPage(1); }}
+            onChange={(e: any) => { setCategoryFilter(e.target.value); setCurrentPage(1); }}
             className="px-3 py-2 border border-border rounded-xl text-sm bg-input text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
-            {categories.map((c) => <option key={c} value={c}>{c === 'All' ? 'All Categories' : c}</option>)}
+            {categories.map((c: any) => <option key={c} value={c}>{c === 'All' ? 'All Categories' : c}</option>)}
           </select>
           <span className="text-sm text-secondary">
             Total: <span className="font-bold text-danger">{formatCurrency(totalAmount)}</span>
@@ -83,7 +83,7 @@ export default function AdminFinanceExpensesTable() {
                 <tr>
                   <td colSpan={6} className="px-4 py-12 text-center text-sm text-secondary">No expenses found.</td>
                 </tr>
-              ) : paginated.map((e: unknown) => (
+              ) : paginated.map((e: any) => (
                 <tr key={e.id} className="hover:bg-primary/5 motion-safe:transition-colors">
                   <td className="px-4 py-3 text-sm text-foreground whitespace-nowrap">{new Date(e.date).toLocaleDateString('en-IN')}</td>
                   <td className="px-4 py-3">

@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 // RESPONSIBILITY: Server Component that fetches initial data and acts as the entry point for the Finance module.
 import AdminFinanceMain from '@/app/admin/finance/finance_components/AdminFinanceMain/AdminFinanceMain';
 import { ssrFinanceApi } from '@/app/admin/finance/finance_api/finance_server_api';

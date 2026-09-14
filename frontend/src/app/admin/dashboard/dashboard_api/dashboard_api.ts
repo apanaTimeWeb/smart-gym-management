@@ -1,6 +1,6 @@
 import { AdminDashboardUrlConfig } from '@/app/admin/dashboard/admin_dashboard_url_config';
 import { dashboardStatsSchema } from '@/app/admin/dashboard/dashboard_types/dashboard_schemas';
-import type { ApiResponse, apiFetch } from '@/lib/api';
+import type { ApiResponse } from '@/lib/api';
 import type { DashboardStats } from '@/app/admin/dashboard/dashboard_types/dashboard_types';
 import { apiFetch } from '@/lib/api';
 import { z } from "zod";

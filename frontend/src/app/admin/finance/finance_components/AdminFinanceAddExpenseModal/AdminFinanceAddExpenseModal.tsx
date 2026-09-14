@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
 import { useAdminBranchesQueries } from '@/app/admin/branches/branches_context/useAdminBranchesQueries';
 import { AddExpenseSchema, type AddExpenseFormValues, EMPTY_EXPENSE_FORM, EXPENSE_CATEGORIES } from '@/app/admin/finance/finance_utils/AdminFinanceSharedConstants';
-import type { Branch } from '@/app/admin/admin_store/useAdminGlobalStore';
+import type { Branch } from '@/app/admin/branches/branches_types/branches_types';
 
 interface AdminFinanceAddExpenseModalProps {
   onClose: () => void;

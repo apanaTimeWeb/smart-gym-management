@@ -8,7 +8,7 @@ import { blacklistApi } from '@/app/admin/blacklist/blacklist_api/blacklist_api'
 import { useAdminBlacklistStore } from '@/app/admin/blacklist/blacklist_store/useAdminBlacklistStore';
 import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
 import { BLACKLIST_ITEMS_PER_PAGE, EMPTY_BLACKLIST_FORM } from '@/app/admin/blacklist/blacklist_utils/AdminBlacklistSharedConstants';
-import type { BlacklistFormValues, FetchState } from '@/app/admin/blacklist/blacklist_types/blacklist_types';
+import type { BlacklistFormValues, FetchState, BlacklistedMember } from '@/app/admin/blacklist/blacklist_types/blacklist_types';
 
 export function useAdminBlacklistLogic() {
   const { confirm } = useAdminConfirm();
@@ -17,19 +17,19 @@ export function useAdminBlacklistLogic() {
 
   const { data = [], isLoading, isError } = useQuery({
     queryKey: ['adminBlacklist'],
-    queryFn: () => blacklistApi.fetchBlacklist().then(r => r.data),
+    queryFn: () => blacklistApi.fetchBlacklist().then((r: any) => r.data as BlacklistedMember[]),
     staleTime: 1000 * 60 * 2,
   });
 
   const { data: kpis } = useQuery({
     queryKey: ['adminBlacklistKPIs'],
-    queryFn: () => blacklistApi.fetchKPIs().then(r => r.data),
+    queryFn: () => blacklistApi.fetchKPIs().then((r: any) => r.data),
     staleTime: 1000 * 60 * 5,
   });
 
   const fetchState: FetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
 
-  const filtered = data.filter(m => {
+  const filtered = data.filter((m: BlacklistedMember) => {
     const matchSearch = !search || m.memberName.toLowerCase().includes(search.toLowerCase()) || m.memberId.toLowerCase().includes(search.toLowerCase()) || m.memberPhone.includes(search);
     const matchScope = scopeFilter === 'all' || m.scope === scopeFilter;
     const matchGym = gymFilter === 'all' || m.assignedGyms.includes(gymFilter) || m.assignedGyms.includes('all');
@@ -40,7 +40,7 @@ export function useAdminBlacklistLogic() {
   const paginated = filtered.slice((currentPage - 1) * BLACKLIST_ITEMS_PER_PAGE, currentPage * BLACKLIST_ITEMS_PER_PAGE);
 
   /** Cross-branch view: only gym-specific bans, grouped by member phone for deduplication. */
-  const gymSpecificEntries = data.filter(m => m.scope === 'specific' && m.isActive);
+  const gymSpecificEntries = data.filter((m: BlacklistedMember) => m.scope === 'specific' && m.isActive);
 
   const addMutation = useMutation({
     mutationFn: (payload: BlacklistFormValues) => blacklistApi.addToBlacklist(payload),

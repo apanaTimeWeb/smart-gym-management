@@ -49,14 +49,14 @@ export function useAdminMembersLogic() {
   const isLoading = membersLoading || summaryLoading;
   const isError = membersError || summaryError;
   const fetchState: FetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
-  const members = membersResponse?.data ?? [];
+  const members = (membersResponse as any)?.data ?? [];
   const allFilteredCount = members.length;
   const totalPages = Math.max(1, Math.ceil(allFilteredCount / ADMIN_MEMBERS_ITEMS_PER_PAGE));
 
   return {
     members,
     allFilteredCount,
-    summary: summaryResponse?.data ?? null,
+    summary: (summaryResponse as any)?.data ?? null,
     fetchState,
     selectedMember,
     setSelectedMember,

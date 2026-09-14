@@ -41,7 +41,7 @@ export default function AdminMembersTable() {
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {members.map((m) => (
+            {members.map((m: any) => (
               <tr
                 key={m.id}
                 onClick={() => setSelectedMember(m)}

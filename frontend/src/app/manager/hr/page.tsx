@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 // RESPONSIBILITY: Server Component � fetches initial SSR data and renders the HR & Payroll module entry point.
 import ManagerHrMain from '@/app/manager/hr/hr_components/ManagerHrMain/ManagerHrMain';
 import { ssrHrApi } from '@/app/manager/hr/hr_api/ManagerHrServerApi';

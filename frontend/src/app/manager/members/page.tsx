@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 // RESPONSIBILITY: Server component that handles initial SSR data fetching for the members module.
 import ManagerMembersMain from '@/app/manager/members/members_components/ManagerMembersMain/ManagerMembersMain';
 import { ssrMembersApi } from '@/app/manager/members/members_api/ManagerMembersServerApi';

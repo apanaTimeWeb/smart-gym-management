@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { usageApi } from '@/app/admin/usage/usage_api/usage_api';
-import type { UsageData } from '@/app/admin/usage/usage_types/AdminUsageTypes';
+import type { AdminUsageData as UsageData } from '@/app/admin/usage/usage_types/AdminUsageTypes';
 import { AlertTriangle, X } from 'lucide-react';
 
 export default function AdminUsageAlert() {

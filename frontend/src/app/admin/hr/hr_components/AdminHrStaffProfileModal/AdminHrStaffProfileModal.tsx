@@ -63,7 +63,7 @@ export default function AdminHrStaffProfileModal() {
                 </div>
                 {isManager && (
                   <button
-                    onClick={() => openEdit(editData as unknown)}
+                    onClick={() => openEdit(editData as any)}
                     className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary font-semibold text-sm rounded-xl transition-colors flex items-center gap-2"
                   >
                     <Edit2 size={14} />

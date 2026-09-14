@@ -26,7 +26,7 @@ export function useAdminCouponsLogic() {
 
   // Client-side filter
   const allCoupons = data ?? [];
-  const filtered = allCoupons.filter(c => {
+  const filtered = allCoupons.filter((c: Coupon) => {
     const matchSearch = !search || c.code.toLowerCase().includes(search.toLowerCase()) || c.description.toLowerCase().includes(search.toLowerCase());
     const matchStatus = statusFilter === 'all' || c.status === statusFilter;
     return matchSearch && matchStatus;

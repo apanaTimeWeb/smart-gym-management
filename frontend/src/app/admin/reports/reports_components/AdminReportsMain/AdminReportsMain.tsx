@@ -19,7 +19,7 @@ import { reportsApi } from '@/app/admin/reports/reports_api/reports_api';
 import type { ReportDateRange } from '@/app/admin/reports/reports_types/reports_types';
 
 import { useAdminBranchesQueries } from '@/app/admin/branches/branches_context/useAdminBranchesQueries';
-import type { Branch } from '@/app/admin/admin_store/useAdminGlobalStore';
+import type { Branch } from '@/app/admin/branches/branches_types/branches_types';
 
 const EXPORT_FORMAT_OPTIONS = [
   { value: 'pdf', label: 'Export as PDF' },

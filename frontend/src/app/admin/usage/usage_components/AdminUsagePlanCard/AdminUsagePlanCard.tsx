@@ -38,7 +38,7 @@ export default function AdminUsagePlanCard() {
               {plan.price === 0 ? 'Custom' : `${formatCurrency(plan.price)}/mo`}
             </p>
             <ul className="space-y-1.5">
-              {plan.features.map((f) => (
+              {plan.features.map((f: string) => (
                 <li key={f} className="flex items-center gap-2 text-xs text-secondary">
                   <Check size={12} className="text-success flex-shrink-0" />
                   {f}

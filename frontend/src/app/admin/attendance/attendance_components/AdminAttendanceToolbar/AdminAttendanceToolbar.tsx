@@ -7,7 +7,7 @@ import { useAdminBranchesQueries } from '@/app/admin/branches/branches_context/u
 import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
 import { ATTENDANCE_STATUS_OPTIONS, DATE_RANGE_OPTIONS } from '@/app/admin/attendance/attendance_utils/AdminAttendanceSharedConstants';
 import type { AttendanceStatus, DateRangeFilter } from '@/app/admin/attendance/attendance_types/attendance_types';
-import type { Branch } from '@/app/admin/admin_store/useAdminGlobalStore';
+import type { Branch } from '@/app/admin/branches/branches_types/branches_types';
 
 export default function AdminAttendanceToolbar() {
   const { search, setSearch, statusFilter, setStatusFilter, branchFilter, setBranchFilter, dateRange, setDateRange } =

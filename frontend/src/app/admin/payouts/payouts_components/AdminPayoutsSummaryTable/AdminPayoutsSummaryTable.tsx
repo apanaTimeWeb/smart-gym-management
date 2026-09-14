@@ -38,7 +38,7 @@ export default function AdminPayoutsSummaryTable() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                {payouts.map((p) => (
+                {payouts.map((p: any) => (
                   <tr key={`${p.gymId}-${p.month}`} className="hover:bg-primary/5 motion-safe:transition-colors">
                     <td className="px-4 py-3 text-sm font-medium text-foreground">{p.gymName}</td>
                     <td className="px-4 py-3 text-sm text-secondary">{p.month}</td>

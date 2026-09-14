@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 // RESPONSIBILITY: Server Component that fetches initial data and acts as the entry point for the Plans module.
 import AdminPlansMain from '@/app/admin/plans/plans_components/AdminPlansMain/AdminPlansMain';
 import { ssrPlansApi } from '@/app/admin/plans/plans_api/plans_server_api';

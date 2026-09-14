@@ -1,5 +1,5 @@
 import { apiFetch, type ApiResponse } from '@/lib/api';
-import type { ApiResponse } from '@/lib/api';
+import { AdminAttendanceUrlConfig } from '@/app/admin/attendance/admin_attendance_url_config';
 import type { AdminAttendanceRecord, AdminAttendanceSummary, AdminAttendanceTrendPoint } from '@/app/admin/attendance/attendance_types/attendance_types';
 import { z } from "zod";
 

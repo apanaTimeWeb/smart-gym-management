@@ -1,4 +1,4 @@
-import { adminAdminUsageDataSchema } from '@/app/admin/usage/usage_types/AdminUsage_schemas';
+import { adminUsageDataSchema } from '@/app/admin/usage/usage_types/AdminUsage_schemas';
 // RESPONSIBILITY: Legacy global-level usage API stub. The canonical implementation is
 // usage/usage_api/AdminUsageApi.ts. This file is kept only for backward-compat imports
 // from AdminHeader/AdminUsageAlert. Do NOT add new types or logic here.

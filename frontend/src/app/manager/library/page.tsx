@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 // RESPONSIBILITY: Server Component — fetches initial SSR data and renders the Diet Library module entry point.
 import ManagerLibraryMain from '@/app/manager/library/library_components/ManagerLibraryMain/ManagerLibraryMain';
 import { ssrLibraryApi } from '@/app/manager/library/library_api/ManagerLibraryServerApi';

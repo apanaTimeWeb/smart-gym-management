@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
 import { HR_TABS } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
 import { useAdminBranchesQueries } from '@/app/admin/branches/branches_context/useAdminBranchesQueries';
-import type { Branch } from '@/app/admin/admin_store/useAdminGlobalStore';
+import type { Branch } from '@/app/admin/branches/branches_types/branches_types';
 import { RefreshCw, Plus, Search } from 'lucide-react';
 import AdminHrStaffTable from '@/app/admin/hr/hr_components/AdminHrStaffTable/AdminHrStaffTable';
 import AdminHrPayrollTable from '@/app/admin/hr/hr_components/AdminHrPayrollTable/AdminHrPayrollTable';

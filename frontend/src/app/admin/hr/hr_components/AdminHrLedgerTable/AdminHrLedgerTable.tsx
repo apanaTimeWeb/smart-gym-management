@@ -24,7 +24,7 @@ export default function AdminHrLedgerTable() {
       try {
         const res = await hrApi.getLedger(selectedStaffId);
         setLedger(res.data?.ledger || []);
-      } catch (e: unknown) {
+      } catch (e: any) {
         showToast(e.message, 'error');
       } finally {
         setLoading(false);
