@@ -10,8 +10,8 @@ import { invoicesApi } from '@/app/superadmin/invoices/superadmin_invoices_api/s
 import type { CreateManualPaymentDto } from '@/app/superadmin/invoices/superadmin_invoices_api/superadmin_invoices_api';
 import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 import type { SaaSInvoice } from '@/app/superadmin/invoices/superadmin_invoices_types/superadmin_invoices_types';
-import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
-import type { FetchState } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { Tenant } from '@/app/superadmin/gyms/gyms_types/superadmin_gyms_types';
+import type { FetchState } from '@/app/superadmin/superadmin_utils/superadmin_shared_types';
 
 interface InvoicesState {
   invoices: SaaSInvoice[];

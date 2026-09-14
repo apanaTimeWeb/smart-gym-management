@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
-import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { Tenant } from '@/app/superadmin/gyms/gyms_types/superadmin_gyms_types';
 import { AuthUrlConfig } from '@/app/auth/auth_url_config';
 import { useSuperadminGhostLoginStore } from '@/components/ui/SuperadminLayout/useSuperadminGhostLoginStore';
 

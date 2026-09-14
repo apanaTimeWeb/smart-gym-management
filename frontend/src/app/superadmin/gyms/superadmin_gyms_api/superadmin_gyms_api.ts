@@ -2,43 +2,44 @@
 import { GymsUrlConfig } from '@/app/superadmin/gyms/gyms_url_config';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
-import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { Tenant } from '@/app/superadmin/gyms/gyms_types/superadmin_gyms_types';
 import { z } from "zod";
+import { TenantSchema } from '@/app/superadmin/gyms/gyms_types/superadmin_gyms_types';
 
 export const gymsApi = {
   fetchGyms: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<Tenant[]>>(`${GymsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.unknown() });
+    return apiFetch<ApiResponse<Tenant[]>>(`${GymsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(TenantSchema) });
   },
-  fetchGymById: (id: string) => apiFetch<ApiResponse<Tenant>>(`${GymsUrlConfig.BACKEND_API.BASE}/${id}`, { dataSchema: z.unknown() }),
+  fetchGymById: (id: string) => apiFetch<ApiResponse<Tenant>>(`${GymsUrlConfig.BACKEND_API.BASE}/${id}`, { dataSchema: TenantSchema }),
   createGym: (body: Partial<Tenant>) => apiFetch<ApiResponse<Tenant>>(GymsUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body),
-      dataSchema: z.unknown()
+      dataSchema: TenantSchema
 }),
   updateGym: (id: string, body: Partial<Tenant>) => apiFetch<ApiResponse<Tenant>>(`${GymsUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body),
-      dataSchema: z.unknown()
+      dataSchema: TenantSchema
 }),
   changeGymStatus: (id: string, status: string) => apiFetch<ApiResponse<Tenant>>(`${GymsUrlConfig.BACKEND_API.BASE}/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }),
-      dataSchema: z.unknown()
+      dataSchema: TenantSchema
 }),
   impersonateTenant: (id: string) => apiFetch<ApiResponse<{ token: string }>>(`${GymsUrlConfig.BACKEND_API.IMPERSONATE}/${id}/impersonate`, { method: 'POST',
-      dataSchema: z.unknown()
+      dataSchema: z.object({ token: z.string() })
 }),
   deleteGym: (id: string) => apiFetch<ApiResponse<void>>(`${GymsUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'DELETE',
-      dataSchema: z.unknown()
+      dataSchema: z.any()
 }),
   fetchGymStats: () => apiFetch<ApiResponse<unknown>>(`${GymsUrlConfig.BACKEND_API.BASE}/stats`, { dataSchema: z.unknown() }),
   emailGymOwner: (id: string, body: { subject: string; message: string;[key: string]: unknown }) => apiFetch<ApiResponse<void>>(`${GymsUrlConfig.BACKEND_API.BASE}/${id}/email`, { method: 'POST', body: JSON.stringify(body),
-      dataSchema: z.unknown()
+      dataSchema: z.any()
 }),
   exportGymsCSV: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<{ downloadUrl: string }>>(`${GymsUrlConfig.BACKEND_API.BASE}/export${q}`, { dataSchema: z.unknown() });
+    return apiFetch<ApiResponse<{ downloadUrl: string }>>(`${GymsUrlConfig.BACKEND_API.BASE}/export${q}`, { dataSchema: z.object({ downloadUrl: z.string() }) });
   },
   /** Provisions a brand-new isolated tenant database and creates the gym in the SaaS system. */
   provisionGym: (body: Record<string, unknown>) =>
     apiFetch<ApiResponse<Tenant>>(`${GymsUrlConfig.BACKEND_API.BASE}/provision`, {
       method: 'POST',
       body: JSON.stringify(body),
-        dataSchema: z.unknown()
+        dataSchema: TenantSchema
     }),
 };

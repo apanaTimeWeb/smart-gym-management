@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Centralized mock data constants for the Settings Module.
-import type { PlatformSetting } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { PlatformSetting } from '@/app/superadmin/settings/settings_types/superadmin_settings_types';
 
 export const MOCK_PLATFORM_SETTINGS: PlatformSetting[] = [
   { id: 'set_001', key: 'PLATFORM_MAINTENANCE_MODE', value: 'false', description: 'Enable global maintenance mode for all tenants', dataType: 'boolean', category: 'System' },

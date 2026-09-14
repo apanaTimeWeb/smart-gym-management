@@ -2,25 +2,26 @@
 import { PlansUrlConfig } from '@/app/superadmin/plans/plans_url_config';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
-import type { SubscriptionPlan, CreatePlanPayload, UpdatePlanPayload } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { SubscriptionPlan, CreatePlanPayload, UpdatePlanPayload } from '@/app/superadmin/plans/plans_types/superadmin_plans_types';
 import { z } from "zod";
+import { SubscriptionPlanSchema } from '@/app/superadmin/plans/plans_types/superadmin_plans_types';
 
 export const plansApi = {
   fetchPlans: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<SubscriptionPlan[]>>(`${PlansUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.unknown() });
+    return apiFetch<ApiResponse<SubscriptionPlan[]>>(`${PlansUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(SubscriptionPlanSchema) });
   },
-  fetchPlanById: (id: string) => apiFetch<ApiResponse<SubscriptionPlan>>(`${PlansUrlConfig.BACKEND_API.BASE}/${id}`, { dataSchema: z.unknown() }),
+  fetchPlanById: (id: string) => apiFetch<ApiResponse<SubscriptionPlan>>(`${PlansUrlConfig.BACKEND_API.BASE}/${id}`, { dataSchema: SubscriptionPlanSchema }),
   createPlan: (body: CreatePlanPayload) => apiFetch<ApiResponse<SubscriptionPlan>>(PlansUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body),
-      dataSchema: z.unknown()
+      dataSchema: SubscriptionPlanSchema
 }),
   updatePlan: (id: string, body: UpdatePlanPayload) => apiFetch<ApiResponse<SubscriptionPlan>>(`${PlansUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body),
-      dataSchema: z.unknown()
+      dataSchema: SubscriptionPlanSchema
 }),
   deletePlan: (id: string) => apiFetch<ApiResponse<void>>(`${PlansUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'DELETE',
-      dataSchema: z.unknown()
+      dataSchema: z.any()
 }),
   archivePlan: (id: string) => apiFetch<ApiResponse<void>>(`${PlansUrlConfig.BACKEND_API.BASE}/${id}/archive`, { method: 'PATCH',
-      dataSchema: z.unknown()
+      dataSchema: z.any()
 }),
 };

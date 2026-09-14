@@ -10,7 +10,7 @@ import { useLocalStorage } from '@/lib/useLocalStorage';
 import { useQuery } from '@tanstack/react-query';
 import { broadcastsApi } from '@/app/superadmin/broadcasts/superadmin_broadcasts_api/superadmin_broadcasts_api';
 import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
-import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { Tenant } from '@/app/superadmin/gyms/gyms_types/superadmin_gyms_types';
 
 
 /** LocalStorage key for persisting broadcasts across refreshes (TC-28/29 fix) */

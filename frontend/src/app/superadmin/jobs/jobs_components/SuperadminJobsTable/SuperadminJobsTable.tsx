@@ -3,7 +3,7 @@
 // Pure view component — consumes data + callbacks via props (Rule 34). No fetching, no state.
 
 import { RefreshCw, XCircle, Trash2, Eye, AlertTriangle, X as XIcon } from 'lucide-react';
-import type { BackgroundJob } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { BackgroundJob } from '@/app/superadmin/jobs/jobs_types/superadmin_jobs_types';
 import SuperadminJobsEmptyState from '@/app/superadmin/jobs/jobs_components/SuperadminJobsEmptyState/SuperadminJobsEmptyState';
 import { formatDuration } from '@/lib/formatters';
 

@@ -14,26 +14,26 @@ import { z } from "zod";
 
 export const superadminProfileApi = {
   fetchProfile: () =>
-    apiFetch<ApiResponse<SuperadminProfileData>>(ProfileUrlConfig.BACKEND_API.BASE, { dataSchema: z.unknown() }),
+    apiFetch<ApiResponse<SuperadminProfileData>>(ProfileUrlConfig.BACKEND_API.BASE, { dataSchema: SuperadminProfileDataSchema }),
 
   updateProfile: (payload: UpdateSuperadminProfilePayload) =>
     apiFetch<ApiResponse<SuperadminProfileData>>(ProfileUrlConfig.BACKEND_API.BASE, {
       method: 'PATCH',
       body: JSON.stringify(payload),
-        dataSchema: z.unknown()
+        dataSchema: SuperadminProfileDataSchema
     }),
 
   updatePassword: (payload: UpdateSuperadminPasswordPayload) =>
     apiFetch<ApiResponse<void>>(ProfileUrlConfig.BACKEND_API.PASSWORD, {
       method: 'PATCH',
       body: JSON.stringify(payload),
-        dataSchema: z.unknown()
+        dataSchema: z.any()
     }),
 
   toggle2FA: (payload: Toggle2FAPayload) =>
     apiFetch<ApiResponse<SuperadminProfileData>>(ProfileUrlConfig.BACKEND_API.TWO_FACTOR, {
       method: 'PATCH',
       body: JSON.stringify(payload),
-        dataSchema: z.unknown()
+        dataSchema: SuperadminProfileDataSchema
     }),
 };

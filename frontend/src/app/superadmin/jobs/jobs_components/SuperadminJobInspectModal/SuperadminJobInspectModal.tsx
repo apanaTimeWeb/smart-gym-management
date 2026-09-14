@@ -3,7 +3,7 @@
 // Pure view component — rendered conditionally by SuperadminJobsView (Rule 34). No state, no API calls.
 
 import { Eye, AlertTriangle, X as XIcon } from 'lucide-react';
-import type { BackgroundJob } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { BackgroundJob } from '@/app/superadmin/jobs/jobs_types/superadmin_jobs_types';
 import { formatDuration } from '@/lib/formatters';
 
 const STATUS_TEXT_COLORS: Record<BackgroundJob['status'], string> = {

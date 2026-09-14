@@ -1,3 +1,4 @@
+import { ManagerPtUrlConfig } from '@/app/manager/pt/pt_url_config';
 import { apiFetch, type ApiResponse } from '@/lib/api';
 import type { 
   PtPackage, 
@@ -9,26 +10,26 @@ import type {
 
 export const managerPtApi = {
   fetchDashboardKpis: async (): Promise<ApiResponse<PtDashboardKpis>> => {
-    return apiFetch(`/manager/pt/kpis`);
+    return apiFetch(`${ManagerPtUrlConfig.BACKEND_API.BASE}/kpis`);
   },
 
   fetchWorkload: async (): Promise<ApiResponse<PtTrainerWorkload[]>> => {
-    return apiFetch(`/manager/pt/workload`);
+    return apiFetch(`${ManagerPtUrlConfig.BACKEND_API.BASE}/workload`);
   },
 
   fetchPackages: async (): Promise<ApiResponse<PtPackage[]>> => {
-    return apiFetch(`/manager/pt/packages`);
+    return apiFetch(`${ManagerPtUrlConfig.BACKEND_API.BASE}/packages`);
   },
 
   fetchAssignments: async (): Promise<ApiResponse<PtAssignment[]>> => {
-    return apiFetch(`/manager/pt/assignments`);
+    return apiFetch(`${ManagerPtUrlConfig.BACKEND_API.BASE}/assignments`);
   },
 
   createAssignment: async (body: CreatePtAssignmentPayload): Promise<ApiResponse<PtAssignment>> => {
-    return apiFetch(`/manager/pt/assignments`, { method: 'POST', body: JSON.stringify(body) });
+    return apiFetch(`${ManagerPtUrlConfig.BACKEND_API.BASE}/assignments`, { method: 'POST', body: JSON.stringify(body) });
   },
 
   markSessionComplete: async (assignmentId: string): Promise<ApiResponse<PtAssignment>> => {
-    return apiFetch(`/manager/pt/assignments/${assignmentId}/complete-session`, { method: 'PATCH' });
+    return apiFetch(`${ManagerPtUrlConfig.BACKEND_API.BASE}/assignments/${assignmentId}/complete-session`, { method: 'PATCH' });
   },
 };

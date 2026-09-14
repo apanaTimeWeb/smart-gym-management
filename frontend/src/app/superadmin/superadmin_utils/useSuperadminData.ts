@@ -4,7 +4,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/api';
-import type { FetchState } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { FetchState } from '@/app/superadmin/superadmin_utils/superadmin_shared_types';
 
 /**
  * Fetches read-only data from a superadmin API endpoint.

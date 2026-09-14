@@ -1,4 +1,4 @@
-import type { InfrastructureNode, RedisTelemetry } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { InfrastructureNode, RedisTelemetry } from '@/app/superadmin/infrastructure/infrastructure_types/superadmin_infrastructure_types';
 
 export const MOCK_INFRASTRUCTURE_NODES: InfrastructureNode[] = [
   { id: 'node-1', name: 'Web-01 (API)', cpuPercent: 45, memoryPercent: 60, diskPercent: 30, status: 'healthy' },

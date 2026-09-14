@@ -12,7 +12,7 @@ import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { useSuperadminPlansStore } from '@/app/superadmin/plans/plans_store/useSuperadminPlansStore';
 import { plansApi } from '@/app/superadmin/plans/superadmin_plans_api/superadmin_plans_api';
 import { useUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useUnsavedChangesGuard';
-import type { CreatePlanPayload, UpdatePlanPayload } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { CreatePlanPayload, UpdatePlanPayload } from '@/app/superadmin/plans/plans_types/superadmin_plans_types';
 
 const planSchema = z.object({
   name: z.string().min(1, 'Plan Name is required'),

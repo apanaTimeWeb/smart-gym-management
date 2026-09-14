@@ -10,7 +10,7 @@ import type { BroadcastFormData } from '@/app/superadmin/broadcasts/superadmin_b
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { broadcastsApi } from '@/app/superadmin/broadcasts/superadmin_broadcasts_api/superadmin_broadcasts_api';
 import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
-import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { Tenant } from '@/app/superadmin/gyms/gyms_types/superadmin_gyms_types';
 
 interface SuperadminBroadcastModalProps {
   isOpen: boolean;

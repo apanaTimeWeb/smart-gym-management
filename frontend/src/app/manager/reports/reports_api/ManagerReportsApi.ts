@@ -1,3 +1,4 @@
+import { ManagerReportsUrlConfig } from '@/app/manager/reports/reports_url_config';
 import type { ReportSummary } from '@/app/manager/reports/reports_types/ManagerReportsTypes';
 import { apiFetch, type ApiResponse } from '@/lib/api';
 import { ManagerReportsUrlConfig } from '@/app/manager/reports/ManagerReportsUrlConfig';
@@ -5,7 +6,7 @@ import { ManagerReportsUrlConfig } from '@/app/manager/reports/ManagerReportsUrl
 export const reportsApi = {
   fetchSummary: async (params?: Record<string, string>): Promise<ApiResponse<ReportSummary>> => {
     const query = new URLSearchParams(params || {}).toString();
-    return apiFetch(`/manager/reports/summary${query ? `?${query}` : ''}`);
+    return apiFetch(`${ManagerReportsUrlConfig.BACKEND_API.BASE}/summary${query ? `?${query}` : ''}`);
   },
 
   exportReportCSV: async (tab: string, params?: Record<string, string>): Promise<Blob> => {

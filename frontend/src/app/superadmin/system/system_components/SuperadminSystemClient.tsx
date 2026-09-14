@@ -9,7 +9,9 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { migrationsApi } from '@/app/superadmin/migrations/superadmin_migrations_api/superadmin_migrations_api';
 import { auditLogsApi } from '@/app/superadmin/global-audit/superadmin_global-audit_api/superadmin_global-audit_api';
 import toast from 'react-hot-toast';
-import type { Tenant, GlobalAuditLog, MigrationsPageData } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { Tenant } from '@/app/superadmin/gyms/gyms_types/superadmin_gyms_types';
+import type { GlobalAuditLog } from '@/app/superadmin/global-audit/global_audit_types/superadmin_global_audit_types';
+import type { MigrationsPageData } from '@/app/superadmin/migrations/migrations_types/superadmin_migrations_types';
 import SuperadminPagination from '@/components/ui/SuperadminShared/SuperadminPagination';
 
 const CURRENT_SCHEMA_VERSION = process.env.NEXT_PUBLIC_CURRENT_SCHEMA_VERSION || 'v2.4.1';

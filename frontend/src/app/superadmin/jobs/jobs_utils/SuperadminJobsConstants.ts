@@ -1,4 +1,4 @@
-import type { BackgroundJob } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { BackgroundJob } from '@/app/superadmin/jobs/jobs_types/superadmin_jobs_types';
 
 export const MOCK_BACKGROUND_JOBS: BackgroundJob[] = [
   {

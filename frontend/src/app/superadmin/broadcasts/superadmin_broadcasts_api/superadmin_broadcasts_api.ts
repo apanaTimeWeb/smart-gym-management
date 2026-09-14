@@ -8,13 +8,13 @@ import { z } from "zod";
 export const broadcastsApi = {
   fetchBroadcasts: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<Broadcast[]>>(`${BroadcastsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.unknown() });
+    return apiFetch<ApiResponse<Broadcast[]>>(`${BroadcastsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(BroadcastSchema) });
   },
   createBroadcast: (body: BroadcastFormData) => apiFetch<ApiResponse<Broadcast>>(BroadcastsUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body),
-      dataSchema: z.unknown()
+      dataSchema: BroadcastSchema
 }),
   deleteBroadcast: (id: string) => apiFetch<ApiResponse<void>>(`${BroadcastsUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'DELETE',
-      dataSchema: z.unknown()
+      dataSchema: z.any()
 }),
-  fetchRecipientCount: () => apiFetch<ApiResponse<{ count: number }>>(`${BroadcastsUrlConfig.BACKEND_API.BASE}/recipient-count`, { dataSchema: z.unknown() }),
+  fetchRecipientCount: () => apiFetch<ApiResponse<{ count: number }>>(`${BroadcastsUrlConfig.BACKEND_API.BASE}/recipient-count`, { dataSchema: z.any() }),
 };

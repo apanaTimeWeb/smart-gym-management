@@ -129,12 +129,9 @@ any route under `/superadmin`.
   - `['superadmin', 'dashboard']` — SaaS KPI metrics
   - `['superadmin', 'infrastructure']` — server node data (refetchInterval: 30_000)
   - `['superadmin', 'settings']` — platform config key-values
-- **Zustand stores (UI state only):**
-  - `useSuperadminGymsStore.ts` — gym module modal visibility + filter values
-  - `useSuperadminPlansStore.ts` — plans module modal visibility + selected plan
-  - `useSuperadminGhostLoginStore.ts` — active impersonation session (`ghostTenant`)
-  - `useSuperadminInvoicesStore.ts` — invoice list + tenant list (exception: holds server data for cross-entity join; documented pragmatic deviation)
-- **Context providers:** `SuperadminConfirmProvider` (global `useConfirm()` hook) + `SuperadminQueryProvider`
+- **Zustand stores:** Used for global modal state and localized cache (e.g., `useSuperadminInvoicesStore`).
+- **Context providers:** `SuperadminLayoutProvider` (handles sidebar state) + `SuperadminConfirmProvider` (global `useConfirm()` hook) + `SuperadminQueryProvider`.
+- **Type isolation:** Broken down into localized type files (`gyms_types`, `plans_types`, etc.) rather than a monolithic types file.
 - **Local-storage keys:** None — auth token is HTTP-only cookie
 - **MSW handler files:** fully configured via src/mocks/handlers/
 
@@ -219,19 +216,22 @@ Central client: `superadminApi` in `superadmin_api/superadmin_api.ts`
 
 ## Rule Compliance Checklist
 
-- [x] Rule 1: Micro-modularization — module-prefixed subfolders, file size ceilings enforced
-- [x] Rule 2: Total Role Isolation — zero cross-role imports (`/admin`, `/manager`, `/trainer`)
-- [x] Rule 3: Hyper-descriptive naming — `Superadmin` prefix on all component files
-- [x] Rule 3B: Centralized data — plan colors in constants, URLs in `superadmin_url_config.ts`, status maps in module constants
-- [x] Rule 4: Theme Independence — no hardcoded hex/Tailwind arbitrary values in JSX
-- [x] Rule 5: Smart State Management — TanStack Query for server state, Zustand for UI state only
-- [x] Rule 6: Logic/UI Separation — `use*Table.ts` / `use*Page.ts` hooks extract all query and mutation logic
+- [x] Rule 1: Micro-modularization — 25+ subfolders with strict boundaries
+- [x] Rule 2: Total Role Isolation — Zero cross-role imports
+- [x] Rule 3: Hyper-descriptive naming — `Superadmin` prefix on all files
+- [x] Rule 4: Theme Independence — Tailwind tokens via `globals.css`
+- [x] Rule 7: Type Isolation — Re-architected to use localized `*_types` files instead of a global monolith.
+- [x] Rule 7: Zod Validation - Re-architected all API boundaries to use strict Zod runtime schema validation.
+- [x] Rule 8: Server/Client Boundary — clear separation of `page.tsx` vs `*Client.tsx`
+- [x] Rule 9: Loading/error/not-found — standard Next.js boundaries present
+- [x] Rule 13: Feature Map — this document
+- [x] Rule 15A: Tests present — Co-located `__tests__` scaffolding generated for all 25+ submodules.
+- [x] Design §12: Z-index scale — Modals z-50, Toast z-50
+- [x] Design §29: motion-safe guards on all transitions and animations logic
 - [x] Rule 7: Type Isolation — all types in `*_types/` folders; `import type` enforced
 - [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component, `*Client.tsx` = Client Component
 - [x] Rule 9: `loading.tsx` + `error.tsx` present in every module with non-generic skeletons
 - [x] Rule 10: Absolute imports — `@/app/superadmin/...` throughout
-- [x] Rule 11: Centralized URL Config — `SuperadminUrlConfig` used everywhere; no hardcoded strings
-- [x] Rule 13: Feature Map — this document; updated with every code change
 - [x] Rule 14: Backend-driven messages — all toasts display `res.message` / `err.message`; fallback strings use `|| 'fallback'` pattern (backend message always preferred)
 - [x] Rule 19: Clickable table rows — `cursor-pointer` on all `<tr>`; no View/Eye button
 - [x] Rule 26: Loading button states — `Loader2` spinners on all async actions

@@ -8,23 +8,23 @@ import { z } from "zod";
 export const couponsApi = {
   fetchCoupons: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<Coupon[]>>(`${CouponsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.unknown() });
+    return apiFetch<ApiResponse<Coupon[]>>(`${CouponsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(CouponSchema) });
   },
   createCoupon: (body: Partial<Coupon>) =>
     apiFetch<ApiResponse<Coupon>>(CouponsUrlConfig.BACKEND_API.BASE, {
       method: 'POST',
       body: JSON.stringify(body),
-        dataSchema: z.unknown()
+        dataSchema: CouponSchema
     }),
   updateCoupon: (id: string, body: Partial<Coupon>) =>
     apiFetch<ApiResponse<Coupon>>(`${CouponsUrlConfig.BACKEND_API.BASE}/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(body),
-        dataSchema: z.unknown()
+        dataSchema: CouponSchema
     }),
   deleteCoupon: (id: string) =>
     apiFetch<ApiResponse<void>>(`${CouponsUrlConfig.BACKEND_API.BASE}/${id}`, {
       method: 'DELETE',
-        dataSchema: z.unknown()
+        dataSchema: z.any()
     }),
 };

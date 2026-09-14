@@ -2,7 +2,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { superadminProfileApi } from '@/app/superadmin/profile/profile_api/superadmin_profile_api';
-import type { FetchState } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { FetchState } from '@/app/superadmin/superadmin_utils/superadmin_shared_types';
 import type {
   ProfileTab,
   UpdateSuperadminProfilePayload,

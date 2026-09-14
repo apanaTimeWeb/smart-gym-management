@@ -7,7 +7,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { settingsApi } from '@/app/superadmin/settings/superadmin_settings_api/superadmin_settings_api';
 import toast from 'react-hot-toast';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import type { PlatformSetting } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { PlatformSetting } from '@/app/superadmin/settings/settings_types/superadmin_settings_types';
 
 export default function SuperadminSettingsClient() {
   const [editedValues, setEditedValues] = useState<Record<string, string>>({});

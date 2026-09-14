@@ -6,7 +6,7 @@ import { Cpu, HardDrive, Server, Zap, RefreshCcw, Loader2 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { infrastructureApi } from '@/app/superadmin/infrastructure/superadmin_infrastructure_api/superadmin_infrastructure_api';
 import toast from 'react-hot-toast';
-import type { InfrastructureNode } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { InfrastructureNode } from '@/app/superadmin/infrastructure/infrastructure_types/superadmin_infrastructure_types';
 import SuperadminFlushTenantModal from '@/app/superadmin/infrastructure/infrastructure_components/SuperadminFlushTenantModal';
 import { useSuperadminConfirm } from '@/components/ui/SuperadminFeedback/SuperadminConfirmProvider';
 import SuperadminUptimeChart from '@/app/superadmin/infrastructure/infrastructure_components/SuperadminUptimeChart/SuperadminUptimeChart';

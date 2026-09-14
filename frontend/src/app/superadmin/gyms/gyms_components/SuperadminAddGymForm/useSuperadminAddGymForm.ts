@@ -13,7 +13,7 @@ import { plansApi } from '@/app/superadmin/plans/superadmin_plans_api/superadmin
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { GymsUrlConfig } from '@/app/superadmin/gyms/gyms_url_config';
 import type { Tenant } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_types';
-import type { SubscriptionPlan } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { SubscriptionPlan } from '@/app/superadmin/plans/plans_types/superadmin_plans_types';
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
 /** Simulated provisioning step delays (ms) — replace with real SSE/WebSocket events when backend supports it */
 const PROVISIONING_DELAYS = {

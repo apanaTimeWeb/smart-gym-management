@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Loader2, Search } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
-import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { Tenant } from '@/app/superadmin/gyms/gyms_types/superadmin_gyms_types';
 import type { FeatureFlag } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
 
 interface FeatureRolloutModalProps {

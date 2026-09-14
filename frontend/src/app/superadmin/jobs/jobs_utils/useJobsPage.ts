@@ -8,7 +8,8 @@ import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { jobsApi } from '@/app/superadmin/jobs/superadmin_jobs_api/superadmin_jobs_api';
-import type { BackgroundJob, FetchState } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { BackgroundJob } from '@/app/superadmin/jobs/jobs_types/superadmin_jobs_types';
+import type { FetchState } from '@/app/superadmin/superadmin_utils/superadmin_shared_types';
 
 const ITEMS_PER_PAGE = 10;
 

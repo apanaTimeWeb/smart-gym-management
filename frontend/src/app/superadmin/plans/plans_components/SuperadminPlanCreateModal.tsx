@@ -10,7 +10,7 @@ import toast from 'react-hot-toast';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { useSuperadminPlansStore } from '@/app/superadmin/plans/plans_store/useSuperadminPlansStore';
 import { plansApi } from '@/app/superadmin/plans/superadmin_plans_api/superadmin_plans_api';
-import type { CreatePlanPayload, UpdatePlanPayload } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { CreatePlanPayload, UpdatePlanPayload } from '@/app/superadmin/plans/plans_types/superadmin_plans_types';
 import { useUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useUnsavedChangesGuard';
 
 const planSchema = z.object({

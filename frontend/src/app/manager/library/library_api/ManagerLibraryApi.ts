@@ -1,3 +1,4 @@
+import { ManagerLibraryUrlConfig } from '@/app/manager/library/library_url_config';
 import { apiFetch, type ApiResponse } from '@/lib/api';
 import { LibraryUrlConfig } from '@/app/manager/library/ManagerLibraryUrlConfig';
 import type { DietPlan, Exercise } from '@/app/manager/library/library_types/ManagerLibraryTypes';
@@ -7,19 +8,19 @@ import { z } from 'zod';
 export const libraryApi = {
   getExercises: async (params?: Record<string, string>): Promise<ApiResponse<{ exercises: Exercise[]; total: number }>> => {
     const query = new URLSearchParams(params || {}).toString();
-    return apiFetch(`/manager/library/exercises${query ? `?${query}` : ''}`, { dataSchema: z.object({ exercises: z.array(exerciseSchema), total: z.number() }) });
+    return apiFetch(`${ManagerLibraryUrlConfig.BACKEND_API.BASE}/exercises${query ? `?${query}` : ''}`, { dataSchema: z.object({ exercises: z.array(exerciseSchema), total: z.number() }) });
   },
   
   createExercise: async (body: Partial<Exercise>): Promise<ApiResponse<Exercise>> => {
-    return apiFetch(`/manager/library/exercises`, { method: 'POST', body: JSON.stringify(body), dataSchema: exerciseSchema });
+    return apiFetch(`${ManagerLibraryUrlConfig.BACKEND_API.BASE}/exercises`, { method: 'POST', body: JSON.stringify(body), dataSchema: exerciseSchema });
   },
   
   updateExercise: async (id: string, body: Partial<Exercise>): Promise<ApiResponse<Exercise>> => {
-    return apiFetch(`/manager/library/exercises/${id}`, { method: 'PATCH', body: JSON.stringify(body), dataSchema: exerciseSchema });
+    return apiFetch(`${ManagerLibraryUrlConfig.BACKEND_API.BASE}/exercises/${id}`, { method: 'PATCH', body: JSON.stringify(body), dataSchema: exerciseSchema });
   },
   
   removeExercise: async (id: string): Promise<ApiResponse<{ id: string }>> => {
-    return apiFetch(`/manager/library/exercises/${id}`, { method: 'DELETE' });
+    return apiFetch(`${ManagerLibraryUrlConfig.BACKEND_API.BASE}/exercises/${id}`, { method: 'DELETE' });
   },
   
   getDietPlans: (params?: Record<string, string>) => {

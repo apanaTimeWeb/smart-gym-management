@@ -3,7 +3,7 @@
 import React from 'react';
 import { X, Search, DollarSign } from 'lucide-react';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
+import type { Tenant } from '@/app/superadmin/gyms/gyms_types/superadmin_gyms_types';
 
 interface InvoicesLogPaymentModalProps {
   onClose: () => void;
