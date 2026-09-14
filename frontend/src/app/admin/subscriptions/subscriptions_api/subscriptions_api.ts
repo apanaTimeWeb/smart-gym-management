@@ -1,3 +1,4 @@
+import { saaSPlanSchema, invoiceSchema, paymentMethodSchema, subscriptionKPISchema, subscriptionDataSchema } from '@/app/admin/subscriptions/subscriptions_types/subscriptions_schemas';
 // RESPONSIBILITY: API client for the Subscriptions / Billing module.
 import type { CurrentSubscription, SaaSPlan, Invoice, PaymentMethod, SubscriptionKPIData } from '@/app/admin/subscriptions/subscriptions_types/subscriptions_types';
 import {
@@ -8,19 +9,19 @@ import { z } from "zod";
 import { apiFetch, type ApiResponse } from "@/lib/api";
 export const subscriptionsApi = {
   fetchSubscription: async () => {
-            return apiFetch('/api/admin/subscriptions/fetchSubscription', { method: 'GET', dataSchema: z.unknown() });
+            return apiFetch<ApiResponse<z.infer<typeof subscriptionDataSchema>>>('/api/admin/subscriptions/fetchSubscription', { method: 'GET', dataSchema: subscriptionDataSchema });
         },
   fetchPlans: async () => {
-            return apiFetch('/api/admin/subscriptions/fetchPlans', { method: 'GET', dataSchema: z.unknown() });
+            return apiFetch<ApiResponse<z.infer<typeof array>>>('/api/admin/subscriptions/fetchPlans', { method: 'GET', dataSchema: z.array(saaSPlanSchema) });
         },
   fetchInvoices: async () => {
-          return apiFetch('/api/admin/subscriptions/fetchInvoices', { method: 'GET', dataSchema: z.unknown() });
+          return apiFetch<ApiResponse<z.infer<typeof array>>>('/api/admin/subscriptions/fetchInvoices', { method: 'GET', dataSchema: z.array(invoiceSchema) });
       },
   fetchPaymentMethods: async () => {
-          return apiFetch('/api/admin/subscriptions/fetchPaymentMethods', { method: 'GET', dataSchema: z.unknown() });
+          return apiFetch<ApiResponse<z.infer<typeof array>>>('/api/admin/subscriptions/fetchPaymentMethods', { method: 'GET', dataSchema: z.array(paymentMethodSchema) });
       },
   fetchKPIs: async () => {
-          return apiFetch('/api/admin/subscriptions/fetchKPIs', { method: 'GET', dataSchema: z.unknown() });
+          return apiFetch<ApiResponse<z.infer<typeof subscriptionKPISchema>>>('/api/admin/subscriptions/fetchKPIs', { method: 'GET', dataSchema: subscriptionKPISchema });
       },
   upgradePlan: async (planId: string) => {
           return apiFetch('/api/admin/subscriptions/upgradePlan', { method: 'POST', body: JSON.stringify(planId), dataSchema: z.unknown() });

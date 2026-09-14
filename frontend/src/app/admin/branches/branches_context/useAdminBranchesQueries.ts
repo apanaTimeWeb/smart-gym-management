@@ -3,14 +3,14 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { adminBranchesApi } from '@/app/admin/admin_api/admin_branches_api';
-import type { Branch } from '@/app/admin/admin_store/useAdminGlobalStore';
+import { branchesApi } from '@/app/admin/branches/branches_api/branches_api';
+import type { Branch } from '@/app/admin/branches/branches_types/branches_types';
 
-export const useAdminBranchesData = () => {
+export const useAdminBranchesQueries = () => {
   return useQuery({
     queryKey: ['admin', 'branches'],
     queryFn: async () => {
-      const res = await adminBranchesApi.fetchBranches();
+      const res = await branchesApi.fetchBranches();
       return (res.data ?? []) as Branch[];
     },
     staleTime: 5 * 60 * 1000, // 5 minutes — branches change infrequently

@@ -6,7 +6,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
-import { useAdminBranchesData } from '@/app/admin/admin_store/useAdminBranchesData';
+import { useAdminBranchesQueries } from '@/app/admin/branches/branches_context/useAdminBranchesQueries';
 import { AddExpenseSchema, type AddExpenseFormValues, EMPTY_EXPENSE_FORM, EXPENSE_CATEGORIES } from '@/app/admin/finance/finance_utils/AdminFinanceSharedConstants';
 import type { Branch } from '@/app/admin/admin_store/useAdminGlobalStore';
 
@@ -16,7 +16,7 @@ interface AdminFinanceAddExpenseModalProps {
 
 export default function AdminFinanceAddExpenseModal({ onClose }: AdminFinanceAddExpenseModalProps) {
   const [saving, setSaving] = useState(false);
-  const { data: branches = [] } = useAdminBranchesData();
+  const { data: branches = [] } = useAdminBranchesQueries();
 
   const { register, handleSubmit, control, formState: { errors } } = useForm<AddExpenseFormValues>({
     resolver: zodResolver(AddExpenseSchema),

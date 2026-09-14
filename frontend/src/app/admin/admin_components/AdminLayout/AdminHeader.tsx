@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { Menu, Building2, QrCode } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
-import { useAdminBranchesData } from '@/app/admin/admin_store/useAdminBranchesData';
+import { useAdminBranchesQueries } from '@/app/admin/branches/branches_context/useAdminBranchesQueries';
 import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
 import AdminQrScannerModal from '@/app/admin/admin_components/AdminQrScanner/AdminQrScannerModal';
 import { AdminHeaderSearch } from './AdminHeaderSearch';
@@ -17,7 +17,7 @@ import type { Branch } from '@/app/admin/admin_store/useAdminGlobalStore';
 export default function AdminHeader({ title, subtitle }: AdminHeaderProps) {
   const [showScanner, setShowScanner] = useState(false);
   const { selectedBranchId, setSelectedBranchId } = useAdminGlobalStore();
-  const { data: branchesData = [] } = useAdminBranchesData();
+  const { data: branchesData = [] } = useAdminBranchesQueries();
   const branches = Array.isArray(branchesData) ? branchesData : [];
 
   const branchOptions = [

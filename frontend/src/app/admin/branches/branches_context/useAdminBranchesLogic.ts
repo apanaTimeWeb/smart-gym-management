@@ -3,14 +3,14 @@ import type { TimeRange } from '@/app/admin/admin_types/AdminSharedTypes';
 // DATA FLOW: Centralized store/hook logic mapping API mutations and query state to UI props.
 "use client";
 import { useAdminBranchesStore } from "@/app/admin/branches/branches_store/useAdminBranchesStore";
-import { useAdminBranchesData } from "@/app/admin/admin_store/useAdminBranchesData";
+import { useAdminBranchesQueries } from "@/app/admin/branches/branches_context/useAdminBranchesQueries";
 import type { Branch } from "@/app/admin/admin_store/useAdminGlobalStore";
 import type { TimeRange } from "@/app/admin/dashboard/dashboard_types/dashboard_types";
 
 export type DetailView = "revenue" | "expenses" | "staff" | "students";
 
 export function useAdminBranchesLogic() {
-  const { data: branchesData = [], isLoading, isError } = useAdminBranchesData();
+  const { data: branchesData = [], isLoading, isError } = useAdminBranchesQueries();
   const branches = Array.isArray(branchesData) ? branchesData : ((branchesData as unknown)?.branches || []);
   const {
     timeRange, setstartDate, setStartDate,

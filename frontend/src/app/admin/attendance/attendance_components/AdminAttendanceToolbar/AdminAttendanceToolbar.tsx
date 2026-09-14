@@ -3,7 +3,7 @@
 
 import { Search } from 'lucide-react';
 import { useAdminAttendanceStore } from '@/app/admin/attendance/attendance_store/useAdminAttendanceStore';
-import { useAdminBranchesData } from '@/app/admin/admin_store/useAdminBranchesData';
+import { useAdminBranchesQueries } from '@/app/admin/branches/branches_context/useAdminBranchesQueries';
 import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
 import { ATTENDANCE_STATUS_OPTIONS, DATE_RANGE_OPTIONS } from '@/app/admin/attendance/attendance_utils/AdminAttendanceSharedConstants';
 import type { AttendanceStatus, DateRangeFilter } from '@/app/admin/attendance/attendance_types/attendance_types';
@@ -12,7 +12,7 @@ import type { Branch } from '@/app/admin/admin_store/useAdminGlobalStore';
 export default function AdminAttendanceToolbar() {
   const { search, setSearch, statusFilter, setStatusFilter, branchFilter, setBranchFilter, dateRange, setDateRange } =
     useAdminAttendanceStore();
-  const { data: branches = [] } = useAdminBranchesData();
+  const { data: branches = [] } = useAdminBranchesQueries();
 
   const branchOptions = [
     { value: 'all', label: 'All Branches' },

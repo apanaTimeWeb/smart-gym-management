@@ -18,7 +18,7 @@ import { AdminDateFilterDropdown } from '@/app/admin/admin_components/AdminShare
 import { reportsApi } from '@/app/admin/reports/reports_api/reports_api';
 import type { ReportDateRange } from '@/app/admin/reports/reports_types/reports_types';
 
-import { useAdminBranchesData } from '@/app/admin/admin_store/useAdminBranchesData';
+import { useAdminBranchesQueries } from '@/app/admin/branches/branches_context/useAdminBranchesQueries';
 import type { Branch } from '@/app/admin/admin_store/useAdminGlobalStore';
 
 const EXPORT_FORMAT_OPTIONS = [
@@ -41,7 +41,7 @@ function ReportsSkeleton() {
 export default function AdminReportsMain() {
   const { activeTab, dateRange, setDateRange, startDate, endDate, setCustomDateRange, selectedGymId, setSelectedGymId } = useAdminReportsStore();
   const { fetchState } = useAdminReportsLogic();
-  const { data: branches = [] } = useAdminBranchesData();
+  const { data: branches = [] } = useAdminBranchesQueries();
   const [exporting, setExporting] = useState(false);
   const [exportFormat, setExportFormat] = useState<string>('pdf');
 

@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
 import { HR_TABS } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
-import { useAdminBranchesData } from '@/app/admin/admin_store/useAdminBranchesData';
+import { useAdminBranchesQueries } from '@/app/admin/branches/branches_context/useAdminBranchesQueries';
 import type { Branch } from '@/app/admin/admin_store/useAdminGlobalStore';
 import { RefreshCw, Plus, Search } from 'lucide-react';
 import AdminHrStaffTable from '@/app/admin/hr/hr_components/AdminHrStaffTable/AdminHrStaffTable';
@@ -16,7 +16,7 @@ import AdminHrLedgerTable from '@/app/admin/hr/hr_components/AdminHrLedgerTable/
 export default function AdminHrTabs() {
   const [activeTab, setActiveTab] = useState(HR_TABS[0]);
   const { loadAll, openAdd, openAddPayroll, fetchState, search, setSearch, branchFilter, setBranchFilter, roleFilter, setRoleFilter, setCurrentPage, payrollMonth, setPayrollMonth } = useHrContext();
-  const { data: branches = [] } = useAdminBranchesData();
+  const { data: branches = [] } = useAdminBranchesQueries();
 
   return (
     <div className="rounded-xl shadow-sm border overflow-hidden bg-card border-border">

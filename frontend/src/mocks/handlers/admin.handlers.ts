@@ -1,14 +1,15 @@
+import { MOCK_ANNOUNCEMENTS, MOCK_ANNOUNCEMENT_KPI, MOCK_ADMIN_ATTENDANCE_SUMMARY, MOCK_ADMIN_ATTENDANCE_RECORDS, MOCK_ADMIN_ATTENDANCE_TREND, MOCK_ADMIN_DASHBOARD, MOCK_ADMIN_FINANCE_SUMMARY, MOCK_ADMIN_PAYMENTS, MOCK_ADMIN_BRANCH_PNL, MOCK_ADMIN_HR_SUMMARY, MOCK_ADMIN_STAFF, MOCK_ADMIN_PAYROLLS, MOCK_ADMIN_STAFF_PERFORMANCE, MOCK_ADMIN_LEDGER, MOCK_ADMIN_MEMBERS_SUMMARY, MOCK_ADMIN_MEMBERS, MOCK_ADMIN_PLANS, MOCK_ADMIN_PLAN_REVENUE, MOCK_ADMIN_PROFILE, MOCK_ADMIN_REPORTS, MOCK_ADMIN_SALES_OVERVIEW, MOCK_ADMIN_MEMBERSHIP_REPORT, MOCK_ADMIN_MEMBERSHIP_TOTALS, MOCK_ADMIN_PENDING_PAYMENTS, MOCK_ADMIN_ALL_MEMBERSHIPS, MOCK_ADMIN_SETTINGS, MOCK_ADMIN_USAGE_DATA } from '@/mocks/adminMockData';
 import { http, HttpResponse } from 'msw';
 import { z } from 'zod';
-import { MOCK_ADMIN_USAGE_DATA } from '@/app/admin/usage/usage_api/AdminUsageMockData';
-import { MOCK_ADMIN_ATTENDANCE_SUMMARY, MOCK_ADMIN_ATTENDANCE_RECORDS, MOCK_ADMIN_ATTENDANCE_TREND } from '@/app/admin/attendance/attendance_api/AdminAttendanceMockData';
-import { MOCK_ADMIN_DASHBOARD } from '@/app/admin/dashboard/dashboard_api/AdminDashboardMockData';
-import { MOCK_ADMIN_FINANCE_SUMMARY, MOCK_ADMIN_PAYMENTS, MOCK_ADMIN_BRANCH_PNL } from '@/app/admin/finance/finance_api/AdminFinanceMockData';
-import { MOCK_ADMIN_PLANS, MOCK_ADMIN_PLAN_REVENUE } from '@/app/admin/plans/plans_api/AdminPlansMockData';
-import { MOCK_ADMIN_REPORTS } from '@/app/admin/reports/reports_api/AdminReportsMockData';
-import { MOCK_ADMIN_SALES_OVERVIEW, MOCK_ADMIN_MEMBERSHIP_REPORT, MOCK_ADMIN_MEMBERSHIP_TOTALS, MOCK_ADMIN_PENDING_PAYMENTS, MOCK_ADMIN_ALL_MEMBERSHIPS } from '@/app/admin/sales/sales_api/AdminSalesMockData';
-import { MOCK_ADMIN_SETTINGS } from '@/app/admin/settings/settings_api/AdminSettingsMockData';
-import { MOCK_ADMIN_PROFILE } from '@/app/admin/profile/profile_api/AdminProfileMockData';
+
+
+
+
+
+
+
+
+
 export const adminHandlers = [
   http.get('/api/admin/adminBranches/fetchBranches', () => {
     return HttpResponse.json({ success: true, message: 'Success', data: [] });

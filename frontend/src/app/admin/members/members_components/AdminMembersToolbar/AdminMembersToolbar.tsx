@@ -3,7 +3,7 @@
 
 import { Search, Download, FileText } from 'lucide-react';
 import { useAdminMembersStore } from '@/app/admin/members/members_store/useAdminMembersStore';
-import { useAdminBranchesData } from '@/app/admin/admin_store/useAdminBranchesData';
+import { useAdminBranchesQueries } from '@/app/admin/branches/branches_context/useAdminBranchesQueries';
 import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
 import { MEMBER_STATUS_OPTIONS, EXPIRY_FILTER_OPTIONS } from '@/app/admin/members/members_utils/AdminMembersSharedConstants';
 import type { MemberStatus } from '@/app/admin/members/members_types/AdminMembersTypes';
@@ -11,7 +11,7 @@ import type { Branch } from '@/app/admin/admin_store/useAdminGlobalStore';
 
 export default function AdminMembersToolbar() {
   const { search, setSearch, statusFilter, setStatusFilter, branchFilter, setBranchFilter, expiryFilter, setExpiryFilter, genderFilter, setGenderFilter, planFilter, setPlanFilter } = useAdminMembersStore();
-  const { data: branches = [] } = useAdminBranchesData();
+  const { data: branches = [] } = useAdminBranchesQueries();
 
   const branchOptions = [
     { value: 'all', label: 'All Branches' },
