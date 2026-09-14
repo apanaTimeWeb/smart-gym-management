@@ -50,7 +50,7 @@ export default function AdminHrStaffModal() {
 
   return (
  <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60">
-  <div className="rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-card border-2 border-warning">
+  <div className="rounded-2xl shadow-xl w-full max-w-2xl max-h-[90%] overflow-y-auto bg-card border-2 border-warning">
   <div className="sticky top-0 px-8 py-5 border-b border-border bg-card flex items-center justify-between z-10">
   <h3 className="text-xl font-bold text-foreground">{editId ? 'Edit Staff' : 'Add Staff Member'}</h3>
   <button 

@@ -65,7 +65,7 @@ export default function AdminHrPerformanceCharts({ data }: AdminHrPerformanceCha
       <h3 className="text-sm font-bold text-secondary uppercase tracking-wider mb-4">
         Top Trainers by Sessions
       </h3>
-      <div className="h-[250px] w-full">
+      <div className="h-64 w-full">
         <Chart options={chartOptions} series={chartSeries} type="bar" height="100%" />
       </div>
     </div>

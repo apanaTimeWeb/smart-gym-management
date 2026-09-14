@@ -38,7 +38,7 @@ export default function AdminAnnouncementsModal() {
     <>
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40" onClick={() => setShowModal(false)} />
       <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
-        <div className="bg-overlay border border-border rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
+        <div className="bg-overlay border border-border rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90%] flex flex-col">
 
           {/* Header */}
           <div className="flex items-center justify-between p-5 border-b border-border shrink-0">
