@@ -228,12 +228,9 @@ export function getMockResponse(path: string): unknown {
   if (p.includes('/auth/login'))   return ok({ accessToken: 'mock_token', refreshToken: 'mock_refresh', user: { id: 'u1', name: 'Demo Admin', email: 'admin@gymsmart.com', role: 'ADMIN', tenantId: 'tenant_001' } });
   if (p.includes('/auth/me'))      return ok({ id: 'u1', name: 'Demo Admin', email: 'admin@gymsmart.com', role: 'ADMIN', tenantId: 'tenant_001' });
 
-  // Superadmin
-  if (p.includes('/superadmin')) {
-    if (p.includes('/dashboard')) return ok(SUPERADMIN_DASHBOARD, 'Superadmin stats fetched');
-    if (p.includes('/gym')) return ok(GYMS, 'Gyms fetched');
-    return ok([], 'Superadmin generic data');
-  }
+  // Superadmin Specific
+  if (p.includes('/superadmin/dashboard')) return ok(SUPERADMIN_DASHBOARD, 'Superadmin stats fetched');
+  if (p.includes('/gym')) return ok(GYMS, 'Gyms fetched');
 
   // Trainer Dashboard
   if (p.includes('/trainer/dashboard')) return ok(TRAINER_DASHBOARD, 'Trainer stats fetched');
