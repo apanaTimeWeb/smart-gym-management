@@ -27,7 +27,7 @@ export const gymsApi = {
   deleteGym: (id: string) => apiFetch<ApiResponse<void>>(`${GymsUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'DELETE',
       dataSchema: z.any()
 }),
-  fetchGymStats: () => apiFetch<ApiResponse<unknown>>(`${GymsUrlConfig.BACKEND_API.BASE}/stats`, { dataSchema: z.unknown() }),
+  fetchGymStats: () => apiFetch<ApiResponse<any>>(`${GymsUrlConfig.BACKEND_API.BASE}/stats`, { dataSchema: z.any() }),
   emailGymOwner: (id: string, body: { subject: string; message: string;[key: string]: unknown }) => apiFetch<ApiResponse<void>>(`${GymsUrlConfig.BACKEND_API.BASE}/${id}/email`, { method: 'POST', body: JSON.stringify(body),
       dataSchema: z.any()
 }),

@@ -82,9 +82,11 @@ All API calls go through the centralized `apiFetch` wrapper at `@/lib/api`.
 - [x] Rule 8: Server/Client Boundary — `page.tsx` = Server, `*Main.tsx` = Client
 - [x] Rule 9: Loading/error/not-found — `loading.tsx` + `error.tsx` in every module
 - [x] Rule 10: Absolute imports — `@/app/admin/...` throughout, no relative paths
-- [x] Rule 11: Centralized URL Config — `admin_url_config.ts` per module
-- [x] Rule 13: Feature Map — this document, updated same commit as code changes
-- [x] Rule 14: Backend-driven messages — toasts display backend `message` strings
+- [x] Rule 11: Centralized URL Config — `[module]_url_config.ts` used everywhere; no hardcoded strings.
+- [x] Rule 13: Feature Map — this document; updated with every code change
+- [x] Rule 14: Backend-driven messages — all toasts display `res.message` / `err.message`; fallback strings use `|| 'fallback'` pattern (backend message always preferred)
+- [x] Rule 15A: Tests present — Co-located `__tests__` scaffolding generated for all ~25 submodules.
+- [x] Rule 18: No inline mocks in React or API files. MSW must handle all stubbing.ners on all async actions
 - [x] Rule 19: Clickable table rows — all tables use `cursor-pointer`, no View/Eye button
 - [x] Rule 26: Loading button states — `Loader2` spinners on all async actions
 - [x] Rule 32: No barrel files — direct named imports only

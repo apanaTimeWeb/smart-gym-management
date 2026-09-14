@@ -9,6 +9,6 @@ import { z } from "zod";
 
 export const usageApi = {
   fetchMyUsage: async () => {
-      return apiFetch<ApiResponse<any>>('/api/admin/adminUsage/fetchMyUsage', { method: 'GET', dataSchema: z.unknown() });
+      return apiFetch<ApiResponse<any>>('/api/admin/adminUsage/fetchMyUsage', { method: 'GET', dataSchema: z.any() });
   },
 };

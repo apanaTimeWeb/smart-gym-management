@@ -1,4 +1,5 @@
 // RESPONSIBILITY: API client for the Admin Announcements module.
+import { AdminAnnouncementsUrlConfig } from '@/app/admin/announcements/admin_announcements_url_config';
 import type { Announcement, AnnouncementFormValues, AnnouncementKPIData } from '@/app/admin/announcements/announcements_types/announcements_types';
 import { MOCK_ANNOUNCEMENTS, MOCK_ANNOUNCEMENT_KPI, ANNOUNCEMENT_COMPOSE_GYM_OPTIONS } from '@/app/admin/announcements/announcements_utils/AdminAnnouncementsSharedConstants';
 import { z } from "zod";
@@ -19,21 +20,21 @@ function deriveStatus(publishedAt: string, expiresAt: string): Announcement['sta
 
 export const announcementsApi = {
   fetchAnnouncements: async () => {
-            return apiFetch('/api/admin/announcements/fetchAnnouncements', { method: 'GET', dataSchema: z.unknown() });
+            return apiFetch(`${AdminAnnouncementsUrlConfig.BACKEND_API.BASE}/fetchAnnouncements`, { method: 'GET', dataSchema: z.any() });
         },
   fetchKPIs: async () => {
-            return apiFetch('/api/admin/announcements/fetchKPIs', { method: 'GET', dataSchema: z.unknown() });
+            return apiFetch(`${AdminAnnouncementsUrlConfig.BACKEND_API.BASE}/fetchKPIs`, { method: 'GET', dataSchema: z.any() });
         },
   createAnnouncement: async (payload: AnnouncementFormValues) => {
-          return apiFetch('/api/admin/announcements/createAnnouncement', { method: 'POST', body: JSON.stringify(payload), dataSchema: z.unknown() });
+          return apiFetch(`${AdminAnnouncementsUrlConfig.BACKEND_API.BASE}/createAnnouncement`, { method: 'POST', body: JSON.stringify(payload), dataSchema: z.any() });
       },
   updateAnnouncement: async (id: string, payload: AnnouncementFormValues) => {
-          return apiFetch('/api/admin/announcements/updateAnnouncement', { method: 'POST', body: JSON.stringify(id), dataSchema: z.unknown() });
+          return apiFetch(`${AdminAnnouncementsUrlConfig.BACKEND_API.BASE}/updateAnnouncement`, { method: 'POST', body: JSON.stringify(id), dataSchema: z.any() });
       },
   deleteAnnouncement: async (id: string) => {
-          return apiFetch('/api/admin/announcements/deleteAnnouncement', { method: 'DELETE', body: JSON.stringify(id), dataSchema: z.unknown() });
+          return apiFetch(`${AdminAnnouncementsUrlConfig.BACKEND_API.BASE}/deleteAnnouncement`, { method: 'DELETE', body: JSON.stringify(id), dataSchema: z.any() });
       },
   togglePin: async (id: string) => {
-          return apiFetch('/api/admin/announcements/togglePin', { method: 'POST', body: JSON.stringify(id), dataSchema: z.unknown() });
+          return apiFetch(`${AdminAnnouncementsUrlConfig.BACKEND_API.BASE}/togglePin`, { method: 'POST', body: JSON.stringify(id), dataSchema: z.any() });
       },
 };

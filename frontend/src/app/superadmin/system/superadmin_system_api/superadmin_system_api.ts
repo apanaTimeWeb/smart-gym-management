@@ -5,6 +5,6 @@ import type { ApiResponse } from '@/lib/api';
 import { z } from "zod";
 
 export const systemApi = {
-  fetchSystemInfo: () => apiFetch<ApiResponse<unknown>>(SystemUrlConfig.BACKEND_API.BASE, { dataSchema: z.unknown() }),
-  fetchHealthProbe: () => apiFetch<ApiResponse<unknown>>(`${SystemUrlConfig.BACKEND_API.BASE}/health`, { dataSchema: z.unknown() }),
+  fetchSystemInfo: () => apiFetch<ApiResponse<any>>(SystemUrlConfig.BACKEND_API.BASE, { dataSchema: z.any() }),
+  fetchHealthProbe: () => apiFetch<ApiResponse<any>>(`${SystemUrlConfig.BACKEND_API.BASE}/health`, { dataSchema: z.any() }),
 };

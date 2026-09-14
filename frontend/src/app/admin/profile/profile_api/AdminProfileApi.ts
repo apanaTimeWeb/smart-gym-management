@@ -1,10 +1,11 @@
+import { AdminProfileUrlConfig } from '@/app/admin/profile/admin_profile_url_config';
 import { adminProfileDataSchema } from '@/app/admin/profile/profile_types/profile_schemas';
 // RESPONSIBILITY: API client for the Admin Profile module.
 import { apiFetch, type ApiResponse } from '@/lib/api';
 import type { AdminProfileData, UpdateAdminProfilePayload, UpdateAdminPasswordPayload } from '@/app/admin/profile/profile_types/AdminProfileTypes';
 import { z } from "zod";
 
-const BASE = '/admin/profile';
+const BASE = AdminProfileUrlConfig.BACKEND_API.BASE;
 export const adminProfileApi = {
   fetchProfile: async () => {
             return apiFetch<ApiResponse<z.infer<typeof adminProfileDataSchema>>>('/api/admin/adminProfile/fetchProfile', { method: 'GET', dataSchema: adminProfileDataSchema });

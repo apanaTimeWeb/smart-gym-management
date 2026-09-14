@@ -1,11 +1,13 @@
+import { z } from 'zod';
 // RESPONSIBILITY: API client for Admin Members module. All fetch calls go through apiFetch wrapper.
+import { AdminMembersUrlConfig } from '@/app/admin/members/admin_members_url_config';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import type { AdminMember, AdminMembersSummary } from '@/app/admin/members/members_types/AdminMembersTypes';
 
 export const ADMIN_MEMBERS_URLS = {
-  list: '/admin/members',
-  summary: '/admin/members/summary',
+  list: AdminMembersUrlConfig.BACKEND_API.BASE,
+  summary: `${AdminMembersUrlConfig.BACKEND_API.BASE}/summary`,
 } as const;
 
 export interface FetchMembersParams {
@@ -17,12 +19,17 @@ export interface FetchMembersParams {
   limit?: number;
 }
 
-import { MOCK_ADMIN_MEMBERS, MOCK_ADMIN_MEMBERS_SUMMARY } from '@/app/admin/members/members_api/AdminMembersMockData';
+
 
 export const adminMembersApi = {
   fetchMembers: async (params: FetchMembersParams) => {
-    await new Promise(res => setTimeout(res, 300));
-    return { success: true, message: 'Success', data: MOCK_ADMIN_MEMBERS };
+    const query = new URLSearchParams(params as any).toString();
+    return apiFetch(`${ADMIN_MEMBERS_URLS.list}${query ? '?' + query : ''}`, { dataSchema: z.any() });
+  },
+  fetchSummary: async () => {
+    return apiFetch(ADMIN_MEMBERS_URLS.summary, { dataSchema: z.any() });
+  },
+};
   },
   fetchSummary: async () => {
     await new Promise(res => setTimeout(res, 300));

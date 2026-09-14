@@ -6,9 +6,9 @@ import { apiFetch, type ApiResponse } from "@/lib/api";
 
 export const auditLogsApi = {
   fetchLogs: async () => {
-            return apiFetch('/api/admin/auditLogs/fetchLogs', { method: 'GET', dataSchema: z.unknown() });
+            return apiFetch('/api/admin/auditLogs/fetchLogs', { method: 'GET', dataSchema: z.any() });
         },
   fetchKPIs: async () => {
-            return apiFetch('/api/admin/auditLogs/fetchKPIs', { method: 'GET', dataSchema: z.unknown() });
+            return apiFetch('/api/admin/auditLogs/fetchKPIs', { method: 'GET', dataSchema: z.any() });
         },
 };

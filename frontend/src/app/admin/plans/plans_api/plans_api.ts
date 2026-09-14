@@ -7,21 +7,21 @@ import type { PlanRevenueRecord, RevenuePeriod } from '@/app/admin/plans/plans_t
 import { z } from "zod";
 export const plansApi = {
   fetchAllPlans: async () => {
-            return apiFetch('/api/admin/plans/fetchAllPlans', { method: 'GET', dataSchema: z.unknown() });
+            return apiFetch(`${PlansUrlConfig.BACKEND_API.BASE}/fetchAllPlans`, { method: 'GET', dataSchema: z.any() });
         },
   fetchPlanById: async (id: string) => {
-            return apiFetch('/api/admin/plans/fetchPlanById', { method: 'GET', dataSchema: z.unknown() });
+            return apiFetch(`${PlansUrlConfig.BACKEND_API.BASE}/fetchPlanById`, { method: 'GET', dataSchema: z.any() });
         },
   createPlan: async (body: Partial<Plan>) => {
-          return apiFetch('/api/admin/plans/createPlan', { method: 'POST', body: JSON.stringify(body), dataSchema: z.unknown() });
+          return apiFetch(`${PlansUrlConfig.BACKEND_API.BASE}/createPlan`, { method: 'POST', body: JSON.stringify(body), dataSchema: z.any() });
       },
   updatePlan: async (id: string, body: Partial<Plan>) => {
-          return apiFetch('/api/admin/plans/updatePlan', { method: 'POST', body: JSON.stringify(id), dataSchema: z.unknown() });
+          return apiFetch(`${PlansUrlConfig.BACKEND_API.BASE}/updatePlan`, { method: 'POST', body: JSON.stringify(id), dataSchema: z.any() });
       },
   deletePlan: async (id: string) => {
-          return apiFetch('/api/admin/plans/deletePlan', { method: 'DELETE', body: JSON.stringify(id), dataSchema: z.unknown() });
+          return apiFetch(`${PlansUrlConfig.BACKEND_API.BASE}/deletePlan`, { method: 'DELETE', body: JSON.stringify(id), dataSchema: z.any() });
       },
   fetchPlanRevenue: async (period: RevenuePeriod) => {
-          return apiFetch('/api/admin/plans/fetchPlanRevenue', { method: 'GET', dataSchema: z.unknown() });
+          return apiFetch(`${PlansUrlConfig.BACKEND_API.BASE}/fetchPlanRevenue`, { method: 'GET', dataSchema: z.any() });
       },
 };

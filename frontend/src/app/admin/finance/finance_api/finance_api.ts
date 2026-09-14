@@ -5,18 +5,18 @@ import type { Payment, FinanceSummary, BranchPnlRecord } from '@/app/admin/finan
 import { z } from "zod";
 export const financeApi = {
   fetchPayments: async (params?: Record<string, string>) => {
-            return apiFetch('/api/admin/finance/fetchPayments', { method: 'GET', dataSchema: z.unknown() });
+            return apiFetch(`${FinanceUrlConfig.BACKEND_API.BASE}/fetchPayments`, { method: 'GET', dataSchema: z.any() });
         },
   createPayment: async (body: Partial<Payment>) => {
-            return apiFetch('/api/admin/finance/createPayment', { method: 'POST', body: JSON.stringify(body), dataSchema: z.unknown() });
+            return apiFetch(`${FinanceUrlConfig.BACKEND_API.BASE}/createPayment`, { method: 'POST', body: JSON.stringify(body), dataSchema: z.any() });
         },
   fetchSummary: async (branchId?: string, range?: string) => {
-          return apiFetch('/api/admin/finance/fetchSummary', { method: 'GET', dataSchema: z.unknown() });
+          return apiFetch(`${FinanceUrlConfig.BACKEND_API.BASE}/fetchSummary`, { method: 'GET', dataSchema: z.any() });
       },
   fetchBranchPnl: async (period: string) => {
-          return apiFetch('/api/admin/finance/fetchBranchPnl', { method: 'GET', dataSchema: z.unknown() });
+          return apiFetch(`${FinanceUrlConfig.BACKEND_API.BASE}/fetchBranchPnl`, { method: 'GET', dataSchema: z.any() });
       },
   fetchExpenses: async (params?: Record<string, string>) => {
-          return apiFetch('/api/admin/finance/fetchExpenses', { method: 'GET', dataSchema: z.unknown() });
+          return apiFetch(`${FinanceUrlConfig.BACKEND_API.BASE}/fetchExpenses`, { method: 'GET', dataSchema: z.any() });
       },
 };
