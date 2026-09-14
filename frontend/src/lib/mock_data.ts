@@ -352,10 +352,25 @@ export function getMockResponse(path: string): unknown {
   
   if (p.includes('/analytics')) {
     return ok({
-      metrics: SUPERADMIN_DASHBOARD.metrics,
-      revenueHistory: REVENUE_TREND.map(r => ({ month: r.month, revenue: r.revenue })),
-      userGrowth: SUPERADMIN_DASHBOARD.growth.map(g => ({ month: g.month, users: g.gyms * 100 })),
-    });
+      metrics: {
+        mrr: 920000, arr: 11040000, churnRate: 1.2, ltv: 250000, cac: 12000,
+        activeTenants: 145, arpu: 28000, mrrDeltaPercent: 12.5, arrDeltaPercent: 45.2, churnDeltaPercent: -0.5
+      },
+      monthly: [
+        { month: 'Jul', mrr: 750000, tenantCount: 120, churnedCount: 2 },
+        { month: 'Aug', mrr: 780000, tenantCount: 125, churnedCount: 1 },
+        { month: 'Sep', mrr: 800000, tenantCount: 128, churnedCount: 3 },
+        { month: 'Oct', mrr: 820000, tenantCount: 135, churnedCount: 1 },
+        { month: 'Nov', mrr: 860000, tenantCount: 140, churnedCount: 2 },
+        { month: 'Dec', mrr: 900000, tenantCount: 142, churnedCount: 1 },
+        { month: 'Jan', mrr: 920000, tenantCount: 145, churnedCount: 0 },
+      ],
+      planRevenue: [
+        { plan: 'Enterprise', revenue: 450000, tenantCount: 25 },
+        { plan: 'Pro', revenue: 300000, tenantCount: 50 },
+        { plan: 'Standard', revenue: 170000, tenantCount: 70 },
+      ]
+    }, 'Analytics data fetched');
   }
   
   if (p.includes('/gym')) return ok(GYMS, 'Gyms fetched');
