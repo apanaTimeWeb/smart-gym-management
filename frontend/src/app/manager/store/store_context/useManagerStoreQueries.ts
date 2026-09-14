@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react';
 import { storeApi } from '@/app/manager/store/store_api/ManagerStoreApi';
 import type { Product, Order, StoreSummary, FetchState, StoreInitialData } from '@/app/manager/store/store_types/ManagerStoreTypes';
+import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 
 export function useManagerStoreQueries(
   currentPage: number,
@@ -12,7 +13,7 @@ export function useManagerStoreQueries(
   endDate: string,
   categoryFilter: string,
   stockFilter: string,
-  showToast: (msg: string, type: any) => void,
+  showToast: (msg: string, type: ToastType) => void,
   initialData?: StoreInitialData | null
 ) {
   const [products, setProducts] = useState<Product[]>(initialData?.products || []);
@@ -25,11 +26,8 @@ export function useManagerStoreQueries(
     setFetchState('loading');
     try {
       const params: Record<string, string> = { 
-        limit: '10', 
-        page: currentPage.toString(),
         sortOrder
       };
-      if (debouncedSearch) params.search = debouncedSearch;
       if (startDate) params.startDate = startDate;
       if (endDate) params.endDate = endDate;
 
@@ -39,7 +37,7 @@ export function useManagerStoreQueries(
         storeApi.getStoreSummary(),
       ]);
       let fetchedProducts = Array.isArray(productsRes.data) ? productsRes.data : (productsRes.data as { products?: unknown[] }).products as Product[] || [];
-      let fetchedOrders = ordersRes.data.orders || [];
+      let fetchedOrders = ordersRes.data?.orders || [];
 
       if (debouncedSearch || categoryFilter !== 'ALL' || stockFilter !== 'ALL') {
         const q = debouncedSearch.toLowerCase();
@@ -74,7 +72,7 @@ export function useManagerStoreQueries(
 
       setProducts(fetchedProducts);
       setOrders(fetchedOrders);
-      setTotalOrders(ordersRes.data.total || 0);
+      setTotalOrders(ordersRes.data?.total || 0);
       setSummary(summaryRes.data);
     } catch (e) { 
       showToast((e as Error).message, 'error'); 

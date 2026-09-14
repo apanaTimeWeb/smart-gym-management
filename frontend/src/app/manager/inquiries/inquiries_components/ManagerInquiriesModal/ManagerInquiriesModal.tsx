@@ -1,3 +1,4 @@
+import { formatDate } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the modal form for creating or editing an inquiry lead. Uses React Hook Form + Zod validation.
 'use client';
 
@@ -161,7 +162,7 @@ export default function ManagerInquiriesModal() {
                     {editData.followUpLogs.map((log) => (
                       <div key={log.date} className="bg-primary-subtle p-3 rounded-lg border border-primary/20">
                         <div className="text-xs text-secondary font-medium mb-1">
-                          {new Date(log.date).toLocaleDateString()} {new Date(log.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          {formatDate(log.date)} {new Date(log.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </div>
                         <div className="text-sm text-foreground">{log.note}</div>
                       </div>

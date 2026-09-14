@@ -34,3 +34,14 @@ export function useInquiryPlansQuery() {
     staleTime: 5 * 60 * 1000,
   });
 }
+
+export function useInquiryPlansSnapshotQuery() {
+  return useQuery({
+    queryKey: ['manager', 'inquiries', 'plans-snapshot'],
+    queryFn: async () => {
+      const res = await inquiriesApi.getPlansSnapshot();
+      return res.data! as unknown[];
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+}

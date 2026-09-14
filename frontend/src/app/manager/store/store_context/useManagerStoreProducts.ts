@@ -47,7 +47,7 @@ export function useManagerStoreProducts(
       } else {
         const payload = { ...data, status: data.stock && data.stock > 0 ? 'In Stock' : 'Out of Stock' } as Partial<Product>;
         const res = await storeApi.createProduct(payload);
-        const newProduct = res.data ? res.data : { ...payload, id: `prod-${Date.now()}`, sales: 0 } as unknown as Product;
+        const newProduct = res.data as unknown as Product;
         setProducts(prev => [newProduct, ...prev]);
         setSummary(prev => prev ? { ...prev, totalProducts: prev.totalProducts + 1 } : null);
         showToast(res.message || 'Product added successfully', 'success');

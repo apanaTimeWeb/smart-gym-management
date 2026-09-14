@@ -3,7 +3,7 @@
 // customerId, gstAmount, returnStatus on Order.
 
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import type { ManagerReceiptData } from '@/app/manager/members/members_components/ManagerMembersThermalReceipt';
+import type { ManagerReceiptData } from '@/app/manager/manager_components/ManagerFeedback/ManagerThermalReceipt';
 import type { ProductFormValues } from '@/app/manager/store/store_utils/ManagerStoreSharedConstants';
 
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';

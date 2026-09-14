@@ -3,7 +3,7 @@
 
 import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
 import { X, Edit2, Phone, Mail, Calendar, MapPin, IndianRupee, Hash } from 'lucide-react';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency , formatDate} from '@/lib/formatters';
 
 export default function ManagerHrStaffProfileModal() {
   const { viewProfileData, setViewProfileData, openEdit } = useHrContext();
@@ -63,7 +63,7 @@ export default function ManagerHrStaffProfileModal() {
               <Calendar className="w-5 h-5 text-secondary mt-0.5" />
               <div>
                 <p className="text-xs text-secondary mb-0.5">Join Date</p>
-                <p className="text-sm font-semibold text-foreground">{s.joinDate ? new Date(s.joinDate).toLocaleDateString('en-IN') : 'N/A'}</p>
+                <p className="text-sm font-semibold text-foreground">{s.joinDate ? formatDate(s.joinDate) : 'N/A'}</p>
               </div>
             </div>
 

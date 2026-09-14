@@ -50,10 +50,7 @@ export function useManagerAttendanceLogic(): AttendanceContextType {
   const setTab = useCallback((val: AttendanceTab) => setUrlParam('tab', val), [setUrlParam]);
 
   // Queries
-  const params: Record<string, string> = { limit: '10', page: currentPage.toString() };
-  if (debouncedSearch) params.search = debouncedSearch;
-  if (dateFilter) params.date = dateFilter;
-  if (statusFilter) params.status = statusFilter;
+  const params: Record<string, string> = {};
   if (tab !== 'Daily Attendance Report') params.type = tab === 'Member Attendance' ? 'MEMBER' : 'STAFF';
 
   const { data: listData, isLoading: listLoading, isError: listError, refetch } = useAttendanceListQuery(params);
@@ -62,11 +59,10 @@ export function useManagerAttendanceLogic(): AttendanceContextType {
   const { data: staffData } = useStaffQuery();
 
   const members = useMemo(() => membersData?.members || [], [membersData]);
-  const staffArray = Array.isArray(staffData) ? staffData : (staffData?.staff || []);
-  const staff = useMemo(() => staffArray, [staffArray]);
+  const staff = useMemo(() => staffData?.staff || [], [staffData]);
 
-  const rawRecords = listData?.attendances || [];
-  let records = useMemo(() => {
+  const rawRecords = listData?.attendances || listData?.attendance || [];
+  const records = useMemo(() => {
     return filterAndSortAttendance(rawRecords, tab, debouncedSearch, dateFilter, statusFilter);
   }, [rawRecords, tab, debouncedSearch, dateFilter, statusFilter]);
 

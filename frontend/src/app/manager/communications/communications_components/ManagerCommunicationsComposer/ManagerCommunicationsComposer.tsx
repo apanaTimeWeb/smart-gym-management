@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useManagerCommunicationsLogic } from '@/app/manager/communications/communications_context/useManagerCommunicationsLogic';
 import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
 import ManagerCommunicationsSegmentPicker from '@/app/manager/communications/communications_components/ManagerCommunicationsSegmentPicker/ManagerCommunicationsSegmentPicker';
-import ManagerBulkMessageModal from '@/app/manager/communications/communications_components/ManagerBulkMessageModal/ManagerBulkMessageModal';
+import ManagerBulkMessageModal from '@/app/manager/manager_components/ManagerFeedback/ManagerBulkMessageModal/ManagerBulkMessageModal';
 import type { MessageType } from '@/app/manager/manager_components/ManagerFeedback/ManagerMessageModal';
 
 // WhatsApp brand green — third-party brand color, not a design system token.

@@ -19,8 +19,12 @@ export const useManagerReportsStore = create<ReportsState>((set) => ({
   loadSummary: async (params) => {
     set({ fetchState: 'loading' });
     try {
-      const data = await reportsApi.fetchSummary(params);
-      set({ summary: data, fetchState: 'success' });
+      const res = await reportsApi.fetchSummary(params);
+      if (res.data) {
+        set({ summary: res.data, fetchState: 'success' });
+      } else {
+        set({ fetchState: 'error' });
+      }
     } catch {
       set({ fetchState: 'error' });
     }

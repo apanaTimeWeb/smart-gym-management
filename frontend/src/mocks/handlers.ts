@@ -25,12 +25,48 @@ import { superadminAnalyticsHandlers } from './handlers/superadmin-analytics.han
 import { superadminAffiliatesHandlers } from './handlers/superadmin-affiliates.handlers';
 
 import { adminHandlers } from './handlers/admin.handlers';
+import { managerWorkoutHandlers } from './handlers/manager-workout.handlers';
+import { managerStoreHandlers } from './handlers/manager-store.handlers';
+import { managerSettingsHandlers } from './handlers/manager-settings.handlers';
+import { managerSalesHandlers } from './handlers/manager-sales.handlers';
+import { managerReferralsHandlers } from './handlers/manager-referrals.handlers';
+import { managerReportsHandlers } from './handlers/manager-reports.handlers';
+import { managerProfileHandlers } from './handlers/manager-profile.handlers';
+import { managerLibraryHandlers } from './handlers/manager-library.handlers';
+import { managerDashboardHandlers } from './handlers/manager-dashboard.handlers';
+import { managerAttendanceHandlers } from './handlers/manager-attendance.handlers';
+import { managerCommunicationsHandlers } from './handlers/manager-communications.handlers';
+import { managerExpensesHandlers } from './handlers/manager-expenses.handlers';
+import { managerFinanceHandlers } from './handlers/manager-finance.handlers';
+import { managerHrHandlers } from './handlers/manager-hr.handlers';
+import { managerInquiriesHandlers } from './handlers/manager-inquiries.handlers';
+import { managerMembersHandlers } from './handlers/manager-members.handlers';
+import { managerPlansHandlers } from './handlers/manager-plans.handlers';
+import { managerPtHandlers } from './handlers/manager-pt.handlers';
 
 export const handlers = [
   http.get("/api/health", () => {
     return HttpResponse.json({ status: "ok" });
   }),
   ...adminHandlers,
+  ...managerWorkoutHandlers,
+  ...managerStoreHandlers,
+  ...managerSettingsHandlers,
+  ...managerSalesHandlers,
+  ...managerReferralsHandlers,
+  ...managerReportsHandlers,
+  ...managerProfileHandlers,
+  ...managerLibraryHandlers,
+  ...managerDashboardHandlers,
+  ...managerAttendanceHandlers,
+  ...managerCommunicationsHandlers,
+  ...managerExpensesHandlers,
+  ...managerFinanceHandlers,
+  ...managerHrHandlers,
+  ...managerInquiriesHandlers,
+  ...managerMembersHandlers,
+  ...managerPlansHandlers,
+  ...managerPtHandlers,
   ...superadminGymsHandlers,
   ...superadminDashboardHandlers,
   ...superadminPlansHandlers,

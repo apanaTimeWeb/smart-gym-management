@@ -37,7 +37,8 @@ export function useManagerFinanceSummary(range: string) {
   return useQuery({
     queryKey: ['manager', 'finance', 'summary', range],
     queryFn: async () => {
-      const res = await financeApi.getSummary(range);
+      const params: Record<string, string> = range ? { range } : {};
+      const res = await financeApi.getSummary(params);
       return res.data;
     }
   });

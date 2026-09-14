@@ -1,8 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { membersApi } from '@/app/manager/members/members_api/ManagerMembersApi';
-import { plansApi } from '@/app/manager/plans/plans_api/ManagerPlansApi';
-import { financeApi } from '@/app/manager/finance/finance_api/ManagerFinanceApi';
-import { attendanceApi } from '@/app/manager/attendance/attendance_api/ManagerAttendanceApi';
+import type { MemberStats } from '@/app/manager/members/members_types/ManagerMembersTypes';
+import type { PlanSnapshot, PaymentSnapshot, AttendanceSnapshot } from '@/app/manager/members/members_types/ManagerMembersSnapshotTypes';
 
 export function useFetchMembers(params: Record<string, string>) {
   return useQuery({
@@ -15,35 +14,31 @@ export function useFetchMembers(params: Record<string, string>) {
 }
 
 export function useFetchPlans() {
-  return useQuery({
-    queryKey: ['manager', 'plans'],
+  return useQuery<PlanSnapshot[]>({
+    queryKey: ['manager', 'members', 'plans-snapshot'],
     queryFn: async () => {
-      await new Promise(res => setTimeout(res, 300));
-      return [
-        { id: 'p1', name: 'Annual Pro', durationMonths: 12, price: 15000 },
-        { id: 'p2', name: 'Quarterly Starter', durationMonths: 3, price: 5000 },
-        { id: 'p3', name: 'Monthly Basic', durationMonths: 1, price: 2000 }
-      ] as any[];
+      const res = await membersApi.getPlans();
+      return (res.data as PlanSnapshot[]) || [];
     },
   });
 }
 
 export function useFetchMemberStats() {
-  return useQuery({
+  return useQuery<MemberStats | null>({
     queryKey: ['manager', 'members', 'stats'],
     queryFn: async () => {
       const res = await membersApi.getStats();
-      return res.data;
+      return res.data ?? null;
     },
   });
 }
 
 export function useFetchTrainers() {
   return useQuery({
-    queryKey: ['manager', 'trainers'],
+    queryKey: ['manager', 'members', 'trainers'],
     queryFn: async () => {
       try {
-        const res = await membersApi.getTrainers() as { data?: { staff?: Array<{ role?: string; [key: string]: unknown }> } };
+        const res = await membersApi.getTrainers();
         return res.data?.staff?.filter((s) => s.role?.toLowerCase().includes('trainer')) || [];
       } catch {
         return [];
@@ -53,28 +48,24 @@ export function useFetchTrainers() {
 }
 
 export function useFetchPayments(memberId: string) {
-  return useQuery({
-    queryKey: ['manager', 'payments', memberId],
+  return useQuery<PaymentSnapshot[]>({
+    queryKey: ['manager', 'members', 'payments', memberId],
     queryFn: async () => {
       if (!memberId) return [];
-      await new Promise(res => setTimeout(res, 300));
-      return [
-        { id: 'pay1', amount: 15000, method: 'UPI', date: new Date().toISOString(), status: 'Completed', invoiceNumber: 'INV-001' }
-      ] as any[];
+      const res = await membersApi.getPayments(memberId);
+      return (res.data as PaymentSnapshot[]) || [];
     },
     enabled: !!memberId,
   });
 }
 
 export function useFetchAttendance(memberId: string) {
-  return useQuery({
-    queryKey: ['manager', 'attendance', memberId],
+  return useQuery<AttendanceSnapshot[]>({
+    queryKey: ['manager', 'members', 'attendance', memberId],
     queryFn: async () => {
       if (!memberId) return [];
-      await new Promise(res => setTimeout(res, 300));
-      return [
-        { id: 'att1', date: new Date().toISOString(), checkIn: '08:00 AM', status: 'Present' }
-      ] as any[];
+      const res = await membersApi.getAttendance(memberId);
+      return (res.data as AttendanceSnapshot[]) || [];
     },
     enabled: !!memberId,
   });

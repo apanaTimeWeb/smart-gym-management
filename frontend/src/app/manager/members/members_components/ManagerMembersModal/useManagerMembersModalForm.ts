@@ -26,6 +26,7 @@ export function useManagerMembersModalForm(
   } = useFormReturn;
 
   // Refetch editData into form whenever modal opens for edit
+  // RATIONALE: Syncs state or fetches data when dependencies change.
   useEffect(() => {
     if (showAddModal) {
       reset({ ...EMPTY_MEMBER_FORM, ...(editData || {}) });
@@ -37,6 +38,7 @@ export function useManagerMembersModalForm(
   const watchCustomDays = useWatch({ control, name: 'customDays' }) as number;
   const watchJoinDate = useWatch({ control, name: 'joinDate' }) as string;
 
+  // RATIONALE: Syncs state or fetches data when dependencies change.
   useEffect(() => {
     if (watchPlanId && watchBillingCycle) {
       const selectedPlan = plans.find(p => p.id.toString() === watchPlanId.toString()) as PlanWithCustom | undefined;
@@ -46,6 +48,7 @@ export function useManagerMembersModalForm(
     }
   }, [watchPlanId, watchBillingCycle, watchCustomDays, plans, setValue]);
 
+  // RATIONALE: Syncs state or fetches data when dependencies change.
   useEffect(() => {
     if (watchJoinDate && watchBillingCycle) {
       const jd = new Date(watchJoinDate);

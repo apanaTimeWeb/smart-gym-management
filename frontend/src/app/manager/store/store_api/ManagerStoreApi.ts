@@ -1,34 +1,30 @@
-// RESPONSIBILITY: Provides strongly-typed network calls for the store module.
+import { apiFetch, type ApiResponse } from '@/lib/api';
 import type { Product, Order, StoreSummary } from '@/app/manager/store/store_types/ManagerStoreTypes';
-import { MOCK_PRODUCTS, MOCK_ORDERS, MOCK_STORE_SUMMARY } from '@/app/manager/store/store_fixtures/ManagerStoreMockData';
+import { productSchema, orderSchema, storeSummarySchema } from '@/app/manager/store/store_types/ManagerStoreSchema';
+import { z } from 'zod';
 
 export const storeApi = {
-  getProducts: async (params?: Record<string, string>) => {
-    await new Promise(res => setTimeout(res, 400));
-    return { success: true, message: 'Success', data: { products: MOCK_PRODUCTS, total: MOCK_PRODUCTS.length } };
+  getProducts: async (params?: Record<string, string>): Promise<ApiResponse<{ products: Product[], total: number }>> => {
+    const query = new URLSearchParams(params || {}).toString();
+    return apiFetch(`/manager/store/products${query ? `?${query}` : ''}`, { dataSchema: z.object({ products: z.array(productSchema), total: z.number() }) });
   },
-  createProduct: async (body: Partial<Product>) => {
-    await new Promise(res => setTimeout(res, 400));
-    return { success: true, message: 'Created', data: MOCK_PRODUCTS[0] };
+  createProduct: async (body: Partial<Product>): Promise<ApiResponse<Product>> => {
+    return apiFetch(`/manager/store/products`, { method: 'POST', body: JSON.stringify(body), dataSchema: productSchema });
   },
-  updateProduct: async (id: string, body: Partial<Product>) => {
-    await new Promise(res => setTimeout(res, 400));
-    return { success: true, message: 'Updated', data: MOCK_PRODUCTS[0] };
+  updateProduct: async (id: string, body: Partial<Product>): Promise<ApiResponse<Product>> => {
+    return apiFetch(`/manager/store/products/${id}`, { method: 'PATCH', body: JSON.stringify(body), dataSchema: productSchema });
   },
-  removeProduct: async (id: string) => {
-    await new Promise(res => setTimeout(res, 400));
-    return { success: true, message: 'Removed', data: { id } };
+  removeProduct: async (id: string): Promise<ApiResponse<{ id: string }>> => {
+    return apiFetch(`/manager/store/products/${id}`, { method: 'DELETE' });
   },
-  getOrders: async (params?: Record<string, string>) => {
-    await new Promise(res => setTimeout(res, 400));
-    return { success: true, message: 'Success', data: { orders: MOCK_ORDERS, total: MOCK_ORDERS.length } };
+  getOrders: async (params?: Record<string, string>): Promise<ApiResponse<{ orders: Order[], total: number }>> => {
+    const query = new URLSearchParams(params || {}).toString();
+    return apiFetch(`/manager/store/orders${query ? `?${query}` : ''}`, { dataSchema: z.object({ orders: z.array(orderSchema), total: z.number() }) });
   },
-  createOrder: async (body: { items: { productId: string; qty: number; price?: number }[]; method: string; notes?: string; customerName?: string; total?: number; status?: string; }) => {
-    await new Promise(res => setTimeout(res, 400));
-    return { success: true, message: 'Created', data: MOCK_ORDERS[0] };
+  createOrder: async (body: { items: { productId: string; qty: number; price?: number }[]; method: string; notes?: string; customerName?: string; total?: number; status?: string; }): Promise<ApiResponse<Order>> => {
+    return apiFetch(`/manager/store/orders`, { method: 'POST', body: JSON.stringify(body), dataSchema: orderSchema });
   },
-  getStoreSummary: async () => {
-    await new Promise(res => setTimeout(res, 400));
-    return { success: true, message: 'Success', data: MOCK_STORE_SUMMARY };
+  getStoreSummary: async (): Promise<ApiResponse<StoreSummary>> => {
+    return apiFetch(`/manager/store/summary`, { dataSchema: storeSummarySchema });
   },
 };

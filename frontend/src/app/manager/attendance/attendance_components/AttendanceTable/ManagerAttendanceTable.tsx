@@ -1,10 +1,11 @@
+import { formatDate } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the attendance data table and pagination controls.
 // CRITICAL FIX: Added Check-Out, Duration, and Method columns for time-tracking analytics.
 'use client';
 
 import { Clock, Calendar, CalendarCheck, Fingerprint, QrCode, Edit } from 'lucide-react';
 import { useAttendanceContext } from '@/app/manager/attendance/attendance_context/ManagerAttendanceContext';
-import { ATTENDANCE_TABLE_HEADERS, formatDate, formatTime } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
+import { ATTENDANCE_TABLE_HEADERS, formatTime } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';

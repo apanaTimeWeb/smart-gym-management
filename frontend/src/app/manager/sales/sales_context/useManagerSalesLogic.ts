@@ -79,16 +79,15 @@ export function useManagerSalesLogic(initialData?: SalesInitialData | null): Sal
 
   const queryParams = useMemo(() => {
     const range = searchParams.get('range') || 'this_month';
-    const params: Record<string, string> = { limit: '10', page: currentPage.toString(), range };
+    const params: Record<string, string> = { range };
     if (range === 'custom') {
       const customStartDate = searchParams.get('startDate');
       const customEndDate = searchParams.get('endDate');
       if (customStartDate) params.startDate = customStartDate;
       if (customEndDate) params.endDate = customEndDate;
     }
-    if (debouncedSearch) params.search = debouncedSearch;
     return params;
-  }, [currentPage, debouncedSearch, searchParams]);
+  }, [searchParams]);
 
   // TanStack Queries
   const { data: overviewData = initialData?.overviewData || [], isLoading: isLoadingOverview, isError: isErrorOverview } = useSalesOverviewQuery(queryParams);

@@ -9,4 +9,5 @@ export const ssrMembersApi = {
     return ssrApiFetch<ApiResponse<Record<string, unknown>>>(`${MembersUrlConfig.BACKEND_API.BASE}${q}`);
   },
   getStats: () => ssrApiFetch<ApiResponse<Record<string, unknown>>>(MembersUrlConfig.BACKEND_API.STATS),
+  getPlans: () => ssrApiFetch<ApiResponse<Record<string, unknown>>>(MembersUrlConfig.BACKEND_API.PLANS_SNAPSHOT),
 };

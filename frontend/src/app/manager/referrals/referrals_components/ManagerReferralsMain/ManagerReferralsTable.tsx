@@ -7,7 +7,7 @@ import { useManagerReferralsLogic } from '@/app/manager/referrals/referrals_cont
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/SearchableDropdown';
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
-import { formatCurrency, maskSensitiveData } from '@/lib/formatters';
+import { formatCurrency, maskSensitiveData , formatDate} from '@/lib/formatters';
 
 const REFERRAL_STATUS_OPTIONS = [
   { value: 'ALL', label: 'All Statuses' },
@@ -90,7 +90,7 @@ export default function ManagerReferralsTable() {
                       <p className="font-medium text-foreground">{ref.refereeName}</p>
                       <p className="text-xs text-secondary">{maskSensitiveData(ref.refereePhone, 'phone')}</p>
                     </td>
-                    <td className="px-6 py-4 text-secondary">{new Date(ref.dateReferred).toLocaleDateString()}</td>
+                    <td className="px-6 py-4 text-secondary">{formatDate(ref.dateReferred)}</td>
                     <td className="px-6 py-4">
                       <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
                         ref.status === 'JOINED' ? 'bg-success/10 text-success' :

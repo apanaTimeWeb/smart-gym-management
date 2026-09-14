@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Provides hardcoded fixture data for the Manager Sales module to simulate backend responses.
 import type { OverviewDataPoint, MembershipReportItem, PendingPaymentMember } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
-import type { Member } from '@/app/manager/members/members_types/ManagerMembersTypes';
+import type { SalesMemberSnapshot } from '@/app/manager/sales/sales_types/ManagerSalesMemberSnapshot';
 
 export const MOCK_SALES_OVERVIEW: OverviewDataPoint[] = [
   { month: 'Jan', revenue: 45000, storeRevenue: 5000, newMembers: 12 },
@@ -41,7 +41,7 @@ export const MOCK_PENDING_PAYMENTS: PendingPaymentMember[] = [
   } as unknown as PendingPaymentMember,
 ];
 
-export const MOCK_ALL_MEMBERSHIPS: Member[] = [
+export const MOCK_ALL_MEMBERSHIPS: SalesMemberSnapshot[] = [
   {
     id: '1',
     memberId: 'MEM001',
@@ -54,7 +54,7 @@ export const MOCK_ALL_MEMBERSHIPS: Member[] = [
     expiryDate: '2024-01-10',
     avatar: undefined,
     branch: 'Main',
-  } as unknown as Member,
+  } as unknown as SalesMemberSnapshot,
   {
     id: '2',
     memberId: 'MEM002',
@@ -67,7 +67,7 @@ export const MOCK_ALL_MEMBERSHIPS: Member[] = [
     expiryDate: '2023-11-15',
     avatar: undefined,
     branch: 'Main',
-  } as unknown as Member,
+  } as unknown as SalesMemberSnapshot,
   {
     id: '3',
     memberId: 'MEM003',
@@ -80,7 +80,7 @@ export const MOCK_ALL_MEMBERSHIPS: Member[] = [
     expiryDate: '2023-11-01',
     avatar: undefined,
     branch: 'Main',
-  } as unknown as Member,
+  } as unknown as SalesMemberSnapshot,
   {
     id: '4',
     memberId: 'MEM004',
@@ -93,5 +93,5 @@ export const MOCK_ALL_MEMBERSHIPS: Member[] = [
     expiryDate: '2024-05-20',
     avatar: undefined,
     branch: 'Main',
-  } as unknown as Member,
+  } as unknown as SalesMemberSnapshot,
 ];

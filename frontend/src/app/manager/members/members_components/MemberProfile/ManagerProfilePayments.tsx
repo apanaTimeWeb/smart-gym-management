@@ -1,3 +1,4 @@
+import { formatDate } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the payment history and transaction records for a specific member profile.
 'use client';
 
@@ -10,11 +11,12 @@ export default function ManagerProfilePayments() {
   const { handlePrint, handleSharePaymentWhatsApp, setShowRenewModal, setShowPaymentModal, selectedMember } = useMembersContext();
   const { data: payments = [] } = useFetchPayments(selectedMember?.id || '');
 
-  const totalPaid = payments.filter(p => p.status === 'PAID').reduce((s, p) => s + p.amount, 0);
+  const safePayments = payments || [];
+  const totalPaid = safePayments.filter(p => p.status === 'PAID').reduce((s, p) => s + p.amount, 0);
   const totalDue = selectedMember?.pendingAmount || 0;
 
   // Sort payments chronologically (newest first)
-  const sortedPayments = [...payments].sort((a, b) => new Date(b.paidAt).getTime() - new Date(a.paidAt).getTime());
+  const sortedPayments = [...safePayments].sort((a, b) => new Date(b.paidAt).getTime() - new Date(a.paidAt).getTime());
 
   return (
   <div>
@@ -33,7 +35,7 @@ export default function ManagerProfilePayments() {
   </div>
   <div className="bg-info-bg rounded-xl p-4 border border-info/20">
   <p className="text-xs text-info">Transactions</p>
-  <p className="text-xl font-bold text-info">{payments.length}</p>
+  <p className="text-xl font-bold text-info">{safePayments.length}</p>
   </div>
   </div>
   <div className="flex justify-end mb-4 gap-3">
@@ -52,7 +54,7 @@ export default function ManagerProfilePayments() {
   <div key={p.id} className="flex items-center justify-between p-3 border border-border rounded-lg bg-card">
   <div>
   <p className="text-sm font-medium text-foreground">{p.invoiceNumber}</p>
-  <p className="text-xs text-secondary">{p.method} · {new Date(p.paidAt).toLocaleDateString('en-IN')}</p>
+  <p className="text-xs text-secondary">{p.method} · {formatDate(p.paidAt)}</p>
  </div>
  <div className="flex items-center gap-3">
  <div className="text-right">

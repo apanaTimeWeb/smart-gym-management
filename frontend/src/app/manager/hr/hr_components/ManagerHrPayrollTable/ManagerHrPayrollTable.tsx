@@ -8,7 +8,7 @@ import ManagerPagination from '@/app/manager/manager_components/ManagerShared/Ma
 import { CheckCircle2, Search, Banknote, Download, RefreshCw } from 'lucide-react';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency , formatDate} from '@/lib/formatters';
 
 export default function ManagerHrPayrollTable() {
   const { search, setSearch, payrollMonth, setPayrollMonth, payrolls, markPayrollPaid, setPaymentModal, currentPage, setCurrentPage, fetchState, staff, bulkGeneratePayroll, downloadPayslip } = useHrContext();
@@ -119,7 +119,7 @@ export default function ManagerHrPayrollTable() {
                   </span>
                 </td>
                 <td className="px-4 py-3 text-sm text-secondary">
-                  {p.paidAt ? new Date(p.paidAt).toLocaleDateString('en-IN') : '—'}
+                  {p.paidAt ? formatDate(p.paidAt) : '—'}
                 </td>
                 <td className="px-4 py-3 text-right">
                   <div className="flex items-center justify-end gap-2">

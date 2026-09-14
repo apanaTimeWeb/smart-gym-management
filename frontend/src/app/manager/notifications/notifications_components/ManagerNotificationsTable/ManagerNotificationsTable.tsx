@@ -1,3 +1,4 @@
+import { formatDate } from '@/lib/formatters';
 // RESPONSIBILITY: Notifications list with toolbar (search + filters) and row actions (mark read, delete).
 'use client';
 
@@ -99,7 +100,7 @@ export default function ManagerNotificationsTable() {
                   <p className={`text-sm font-semibold ${isUnread ? 'text-foreground' : 'text-secondary'}`}>{n.title}</p>
                   <p className="text-xs text-secondary mt-0.5 line-clamp-2">{n.message}</p>
                   <p className="text-xs text-secondary/60 mt-1">
-                    {new Date(n.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                    {formatDate(n.createdAt)}
                   </p>
                 </div>
 

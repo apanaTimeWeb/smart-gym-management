@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Renders the success state after converting a lead.
 import React from 'react';
+import { formatCurrency, formatDate } from '@/lib/formatters';
 
 export interface ManagerConvertLeadSuccessProps {
   successData: {
@@ -21,7 +22,7 @@ export default function ManagerConvertLeadSuccess({ successData, closeConvert }:
     if (!successData || !successData.phone) return;
     const phone = successData.phone.replace(/\D/g, '');
     const aadhaarLine = successData.aadhaar ? `\n• *Aadhaar No:* ${successData.aadhaar}` : '';
-    const message = `🎉 *Congratulations ${successData.name}!* 🎉\n\nYour admission at GymSmart is confirmed. Welcome to the fitness family! 💪\n\n*📝 ADMISSION DETAILS*\n• *Gym ID:* ${successData.gymId}\n• *Plan:* ${successData.planName}${aadhaarLine}\n• *Join Date:* ${new Date(successData.joinDate).toLocaleDateString('en-IN')}\n• *Expiry Date:* ${new Date(successData.expiryDate).toLocaleDateString('en-IN')}\n\n*💰 PAYMENT DETAILS*\n• *Paid:* ₹${successData.paidAmount}\n• *Pending:* ₹${successData.pendingAmount}\n\nLet's crush those goals! 🔥`;
+    const message = `🎉 *Congratulations ${successData.name}!* 🎉\n\nYour admission at GymSmart is confirmed. Welcome to the fitness family! 💪\n\n*📝 ADMISSION DETAILS*\n• *Gym ID:* ${successData.gymId}\n• *Plan:* ${successData.planName}${aadhaarLine}\n• *Join Date:* ${formatDate(successData.joinDate)}\n• *Expiry Date:* ${formatDate(successData.expiryDate)}\n\n*💰 PAYMENT DETAILS*\n• *Paid:* ${formatCurrency(successData.paidAmount)}\n• *Pending:* ${formatCurrency(successData.pendingAmount)}\n\nLet's crush those goals! 🔥`;
     
     window.open(`https://wa.me/91${phone}?text=${encodeURIComponent(message)}`, '_blank');
   };

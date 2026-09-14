@@ -35,17 +35,19 @@ export function useManagerReferralsLogic() {
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   }, [store.searchQuery, store.statusFilter, store.currentPage, pathname, router]);
 
-  const { data: kpis, isLoading: isKpisLoading } = useQuery({
-    queryKey: ['managerReferrals', 'kpis'],
+  const { data: kpisResponse, isLoading: isKpisLoading } = useQuery({
+    queryKey: ['manager', 'referrals', 'kpis'],
     queryFn: ManagerReferralsApi.fetchKPIs,
     staleTime: 1000 * 60 * 5,
   });
+  const kpis = kpisResponse?.data || null;
 
-  const { data: referrals = [], isLoading: isReferralsLoading } = useQuery({
-    queryKey: ['managerReferrals', 'list'],
+  const { data: referralsResponse, isLoading: isReferralsLoading } = useQuery({
+    queryKey: ['manager', 'referrals', 'list'],
     queryFn: ManagerReferralsApi.fetchReferrals,
     staleTime: 1000 * 60 * 2,
   });
+  const referrals = referralsResponse?.data || [];
 
   // Filtering
   const filteredReferrals = referrals.filter((r) => {
@@ -65,19 +67,19 @@ export function useManagerReferralsLogic() {
   // Mutations
   const createMutation = useMutation({
     mutationFn: (dto: CreateReferralDto) => ManagerReferralsApi.createReferral(dto),
-    onSuccess: () => {
-      toast.success('Referral logged successfully!');
+    onSuccess: (res) => {
+      toast.success(res.message || 'Referral logged successfully!');
       store.setIsAddModalOpen(false);
-      qc.invalidateQueries({ queryKey: ['managerReferrals'] });
+      qc.invalidateQueries({ queryKey: ['manager', 'referrals'] });
     },
     onError: (err) => toast.error((err as Error).message),
   });
 
   const claimMutation = useMutation({
     mutationFn: (id: string) => ManagerReferralsApi.claimReward(id),
-    onSuccess: () => {
-      toast.success('Reward claimed successfully!');
-      qc.invalidateQueries({ queryKey: ['managerReferrals'] });
+    onSuccess: (res) => {
+      toast.success(res.message || 'Reward claimed successfully!');
+      qc.invalidateQueries({ queryKey: ['manager', 'referrals'] });
     },
     onError: (err) => toast.error((err as Error).message),
   });

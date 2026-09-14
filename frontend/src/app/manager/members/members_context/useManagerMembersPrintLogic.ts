@@ -1,7 +1,8 @@
+import { formatDate } from '@/lib/formatters';
 import { useCallback, useState } from 'react';
 import type { Member } from '@/app/manager/members/members_types/ManagerMembersTypes';
-import type { Payment } from '@/app/manager/finance/finance_types/ManagerFinanceTypes';
-import type { ManagerReceiptData } from '@/app/manager/members/members_components/ManagerMembersThermalReceipt';
+import type { PaymentSnapshot } from '@/app/manager/members/members_types/ManagerMembersSnapshotTypes';
+import type { ManagerReceiptData } from '@/app/manager/manager_components/ManagerFeedback/ManagerThermalReceipt';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import { GYM_DETAILS } from '@/app/manager/manager_utils/ManagerSharedConstants';
 import { formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
@@ -13,13 +14,13 @@ export function useManagerMembersPrintLogic(
 ) {
   const [printData, setPrintData] = useState<ManagerReceiptData | null>(null);
 
-  const handlePrint = useCallback((p: Payment) => {
+  const handlePrint = useCallback((p: PaymentSnapshot) => {
     if (!selectedMember) return;
     const m = selectedMember;
     setPrintData({
       gymName: GYM_DETAILS.name, gymPhone: GYM_DETAILS.phone,
       receiptNo: p.invoiceNumber,
-      date: new Date(p.paidAt).toLocaleDateString('en-IN'),
+      date: formatDate(p.paidAt),
       customerName: m.name,
       items: [{ name: `Membership - ${m.plan?.name || ''}`, price: p.amount, amount: p.amount }],
       total: p.amount, paymentMethod: p.method,
@@ -27,14 +28,14 @@ export function useManagerMembersPrintLogic(
     if (typeof window !== 'undefined') setTimeout(() => window.print(), 100);
   }, [selectedMember]);
 
-  const handleSharePaymentWhatsApp = useCallback((p: Payment) => {
+  const handleSharePaymentWhatsApp = useCallback((p: PaymentSnapshot) => {
     if (!selectedMember) return;
     const m = selectedMember;
     
     const waText = WhatsAppFormatter.formatReceipt({
       title: GYM_DETAILS.name,
       subtitle: 'Payment Receipt',
-      date: new Date(p.paidAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
+      date: formatDate(p.paidAt),
       customerInfo: {
         'Member': m.name,
         'Invoice': p.invoiceNumber,

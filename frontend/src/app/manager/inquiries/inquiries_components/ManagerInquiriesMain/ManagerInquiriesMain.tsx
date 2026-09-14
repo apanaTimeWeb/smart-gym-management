@@ -4,7 +4,7 @@
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
 import ManagerToast from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import ManagerMessageModal from '@/app/manager/manager_components/ManagerFeedback/ManagerMessageModal';
-import ManagerBulkMessageModal from '@/app/manager/communications/communications_components/ManagerBulkMessageModal/ManagerBulkMessageModal';
+import ManagerBulkMessageModal from '@/app/manager/manager_components/ManagerFeedback/ManagerBulkMessageModal/ManagerBulkMessageModal';
 import { InquiriesProvider, useInquiriesContext } from '@/app/manager/inquiries/inquiries_context/ManagerInquiriesContext';
 import ManagerInquiriesKPIs from '@/app/manager/inquiries/inquiries_components/ManagerInquiriesKPIs/ManagerInquiriesKPIs';
 import ManagerInquiriesToolbar from '@/app/manager/inquiries/inquiries_components/ManagerInquiriesToolbar/ManagerInquiriesToolbar';

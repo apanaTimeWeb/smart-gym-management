@@ -85,11 +85,11 @@ export function useManagerCommunicationsLogic() {
   const sendMutation = useMutation({
     mutationFn: (payload: CommFormValues & { recipientCount: number; segmentLabel: string }) =>
       ManagerCommunicationsApi.sendCampaign(payload),
-    onSuccess: () => {
-      toast.success('Campaign queued successfully');
+    onSuccess: (res) => {
+      toast.success(res.message || 'Campaign queued successfully');
       store.resetComposer();
       setActiveTab('history');
-      qc.invalidateQueries({ queryKey: ['managerCommunications'] });
+      qc.invalidateQueries({ queryKey: ['manager', 'communications'] });
     },
     onError: (err) => toast.error((err as Error).message),
   });
@@ -97,9 +97,9 @@ export function useManagerCommunicationsLogic() {
   const automationMutation = useMutation({
     mutationFn: ({ id, payload }: { id: string; payload: Partial<CommAutomation> }) =>
       ManagerCommunicationsApi.updateAutomation(id, payload),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['managerCommunications', 'automations'] });
-      toast.success('Automation updated successfully');
+    onSuccess: (res) => {
+      qc.invalidateQueries({ queryKey: ['manager', 'communications', 'automations'] });
+      toast.success(res.message || 'Automation updated successfully');
     },
     onError: (err) => toast.error((err as Error).message),
   });

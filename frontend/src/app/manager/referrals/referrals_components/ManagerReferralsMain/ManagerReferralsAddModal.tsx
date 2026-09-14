@@ -4,6 +4,7 @@
 import { useState } from 'react';
 import { X, Loader2 } from 'lucide-react';
 import { useManagerReferralsLogic } from '@/app/manager/referrals/referrals_context/useManagerReferralsLogic';
+import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
 
 export default function ManagerReferralsAddModal() {
   const { isAddModalOpen, setIsAddModalOpen, createReferral, isCreating } = useManagerReferralsLogic();
@@ -12,6 +13,9 @@ export default function ManagerReferralsAddModal() {
   const [referrerId, setReferrerId] = useState('');
   const [refereeName, setRefereeName] = useState('');
   const [refereePhone, setRefereePhone] = useState('');
+  
+  const isDirty = Boolean(referrerName || referrerId || refereeName || refereePhone);
+  useUnsavedChangesGuard(isDirty && isAddModalOpen);
 
   if (!isAddModalOpen) return null;
 

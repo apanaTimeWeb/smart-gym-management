@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useDebounce } from '@/app/manager/manager_utils/useDebounce';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import type { ManagerReceiptData } from '@/app/manager/members/members_components/ManagerMembersThermalReceipt';
+import type { ManagerReceiptData } from '@/app/manager/manager_components/ManagerFeedback/ManagerThermalReceipt';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import type { StoreContextType, StoreInitialData } from '@/app/manager/store/store_types/ManagerStoreTypes';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';

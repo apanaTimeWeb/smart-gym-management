@@ -2,7 +2,7 @@
 'use client';
 
 import { useSalesContext } from '@/app/manager/sales/sales_context/ManagerSalesContext';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency , formatDate} from '@/lib/formatters';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import ManagerSalesEmptyState from '@/app/manager/sales/sales_components/ManagerSalesEmptyState/ManagerSalesEmptyState';
 import type { PendingPaymentMember } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
@@ -75,7 +75,7 @@ export default function PendingPayments() {
                   const waText = WhatsAppFormatter.formatReceipt({
                     title: GYM_DETAILS.name,
                     subtitle: 'Payment Reminder',
-                    date: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
+                    date: formatDate(new Date().toISOString()),
                     customerInfo: {
                       'Member': p.name,
                       'Plan': p.plan || 'Standard',

@@ -5,7 +5,7 @@ import { useManagerMembersMutations } from '@/app/manager/members/members_contex
 // Mock dependencies
 vi.mock('@tanstack/react-query', () => ({
   useQueryClient: () => ({ invalidateQueries: vi.fn() }),
-  useMutation: (opts: any) => ({
+  useMutation: (opts: unknown) => ({
     mutateAsync: vi.fn(),
     mutate: vi.fn(),
   }),

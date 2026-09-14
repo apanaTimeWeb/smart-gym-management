@@ -1,3 +1,4 @@
+import { formatDate } from '@/lib/formatters';
 // RESPONSIBILITY: Single churned member row in the churn recovery table. Receives member data and callbacks via props. No API calls.
 'use client';
 
@@ -44,7 +45,7 @@ export default function ManagerChurnRecoveryTableRow({
 
       {/* Exit Date */}
       <td className="px-4 py-3 text-sm text-secondary whitespace-nowrap">
-        {new Date(member.exitDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+        {formatDate(member.exitDate)}
       </td>
 
       {/* Days Since Exit */}
@@ -67,7 +68,7 @@ export default function ManagerChurnRecoveryTableRow({
           </span>
         ) : member.lastContactedAt ? (
           <span className="text-[11px] text-secondary">
-            Contacted {new Date(member.lastContactedAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
+            Contacted {formatDate(member.lastContactedAt)}
           </span>
         ) : (
           <span className="text-[11px] text-disabled">Not contacted</span>

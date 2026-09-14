@@ -1,18 +1,17 @@
-// RESPONSIBILITY: Strongly-typed API calls for the Manager Reports module (mock until backend ready).
 import type { ReportSummary } from '@/app/manager/reports/reports_types/ManagerReportsTypes';
-import { apiFetch } from '@/lib/api';
+import { apiFetch, type ApiResponse } from '@/lib/api';
 import { ManagerReportsUrlConfig } from '@/app/manager/reports/ManagerReportsUrlConfig';
 
-import { MOCK_REPORT_SUMMARY } from '@/app/manager/reports/reports_fixtures/ManagerReportsMockData';
-
 export const reportsApi = {
-  fetchSummary: async (params?: Record<string, string>): Promise<ReportSummary> => {
-    await new Promise(res => setTimeout(res, 300));
-    return MOCK_REPORT_SUMMARY;
+  fetchSummary: async (params?: Record<string, string>): Promise<ApiResponse<ReportSummary>> => {
+    const query = new URLSearchParams(params || {}).toString();
+    return apiFetch(`/manager/reports/summary${query ? `?${query}` : ''}`);
   },
 
   exportReportCSV: async (tab: string, params?: Record<string, string>): Promise<Blob> => {
-    await new Promise(res => setTimeout(res, 300));
-    return new Blob(['Mock CSV content'], { type: 'text/csv' });
+    const query = new URLSearchParams({ tab, ...params }).toString();
+    const res = await fetch(`/api/v1/manager/reports/export?${query}`);
+    if (!res.ok) throw new Error('Failed to export report');
+    return res.blob();
   },
 };

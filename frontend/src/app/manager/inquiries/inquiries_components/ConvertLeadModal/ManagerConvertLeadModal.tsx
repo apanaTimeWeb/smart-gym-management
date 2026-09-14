@@ -7,45 +7,30 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { useInquiriesContext } from '@/app/manager/inquiries/inquiries_context/ManagerInquiriesContext';
-import { useManagerMembersStore } from '@/app/manager/members/members_store/useManagerMembersStore';
-import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency, MemberSchema, type MemberFormValues, EMPTY_MEMBER_FORM, GENDER_OPTIONS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
-import type { PlanWithCustom } from '@/app/manager/members/members_types/ManagerMembersTypes';
+import { INQUIRIES_CYCLE_LABELS, getPriceForCycleSnapshot, ConvertLeadSchema, type ConvertLeadFormValues, EMPTY_CONVERT_FORM, INQUIRIES_GENDER_OPTIONS, type PlanSnapshot } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesConvertConstants';
 import ManagerConvertLeadSuccess from '@/app/manager/inquiries/inquiries_components/ConvertLeadModal/ManagerConvertLeadSuccess';
 import ManagerConvertLeadForm from '@/app/manager/inquiries/inquiries_components/ConvertLeadModal/ManagerConvertLeadForm';
-import { useFetchPlans } from '@/app/manager/members/members_api/useManagerMembersQueries';
-import { membersApi } from '@/app/manager/members/members_api/ManagerMembersApi';
-import { financeApi } from '@/app/manager/finance/finance_api/ManagerFinanceApi';
+import { useInquiryPlansSnapshotQuery } from '@/app/manager/inquiries/inquiries_api/useManagerInquiriesQueries';
+import { inquiriesApi } from '@/app/manager/inquiries/inquiries_api/ManagerInquiriesApi';
 import { useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
-import type { ApiResponse } from '@/lib/api';
 
 export default function ManagerConvertLeadModal() {
   const { convertLead, closeConvert, updateStatus } = useInquiriesContext();
   const isOpen = !!convertLead;
   
-  const { data: plansData, isLoading: fetchState } = useFetchPlans();
-  const plans = plansData || [];
+  const { data: plansData, isLoading: fetchState } = useInquiryPlansSnapshotQuery();
+  const plans = (plansData || []) as PlanSnapshot[];
   const queryClient = useQueryClient();
   
-  const saveMember = async (data: MemberFormValues, _: unknown) => {
+  const saveMember = async (data: ConvertLeadFormValues, _: unknown) => {
+    if (!convertLead?.id) return;
     const payload = { ...data, status: 'ACTIVE' };
-    const res = await membersApi.create(payload) as ApiResponse<{id: string}>;
-    const newId = res.data?.id;
+    const res = await inquiriesApi.convertLead(convertLead.id, payload);
+    const newId = res.data?.memberId;
     
-    if (data.paidAmount && data.paidAmount > 0 && newId) {
-       await financeApi.createPayment({
-         memberId: newId,
-         amount: data.paidAmount,
-         method: 'UPI',
-         status: 'PAID',
-         paidAt: new Date().toISOString(),
-         invoiceNumber: `INV-${Date.now().toString().slice(-6)}`
-       });
-    }
-    queryClient.invalidateQueries({ queryKey: ['manager', 'members'] });
-    queryClient.invalidateQueries({ queryKey: ['manager', 'payments'] });
-    queryClient.invalidateQueries({ queryKey: ['manager', 'stats'] });
+    queryClient.invalidateQueries({ queryKey: ['manager', 'inquiries'] });
     toast.success('Member created successfully');
     return res;
   };
@@ -63,12 +48,12 @@ export default function ManagerConvertLeadModal() {
   } | null>(null);
 
   useEffect(() => {
-    // Plans are now fetched automatically by useFetchPlans.
+    // Plans are now fetched automatically by useInquiryPlansSnapshotQuery.
   }, [convertLead, plans.length, fetchState]);
 
-  const useFormReturn = useForm<MemberFormValues>({
-    resolver: zodResolver(MemberSchema),
-    defaultValues: EMPTY_MEMBER_FORM
+  const useFormReturn = useForm<ConvertLeadFormValues>({
+    resolver: zodResolver(ConvertLeadSchema),
+    defaultValues: EMPTY_CONVERT_FORM
   });
 
   const {
@@ -82,7 +67,7 @@ export default function ManagerConvertLeadModal() {
   useEffect(() => {
     if (convertLead) {
       reset({
-        ...EMPTY_MEMBER_FORM,
+        ...EMPTY_CONVERT_FORM,
         name: convertLead.name,
         phone: convertLead.phone,
         email: convertLead.email || '',
@@ -97,8 +82,8 @@ export default function ManagerConvertLeadModal() {
 
   useEffect(() => {
     if (watchPlanId && watchBillingCycle) {
-      const selectedPlan = plans.find(p => p.id.toString() === watchPlanId.toString()) as PlanWithCustom | undefined;
-      const price = getPriceForCycle(selectedPlan, watchBillingCycle, Number(watchCustomDays) || 0);
+      const selectedPlan = plans.find(p => p.id.toString() === watchPlanId.toString()) as PlanSnapshot | undefined;
+      const price = getPriceForCycleSnapshot(selectedPlan, watchBillingCycle, Number(watchCustomDays) || 0);
       useFormReturn.setValue('totalAmount', price, { shouldValidate: true });
       useFormReturn.setValue('paidAmount', price, { shouldValidate: true });
     }
@@ -120,7 +105,7 @@ export default function ManagerConvertLeadModal() {
     }
   }, [watchJoinDate, watchBillingCycle, watchCustomDays, useFormReturn]);
 
-  const onSubmit = async (data: MemberFormValues) => {
+  const onSubmit = async (data: ConvertLeadFormValues) => {
     setSaving(true);
     try {
       const total = data.totalAmount || 0;
@@ -134,7 +119,7 @@ export default function ManagerConvertLeadModal() {
         
         const planName = plans.find(p => p.id.toString() === data.planId?.toString())?.name || 'Membership';
         setSuccessData({
-          gymId: res.data?.id || 'N/A',
+          gymId: res?.data?.memberId || 'N/A',
           name: data.name,
           phone: data.phone,
           planName,

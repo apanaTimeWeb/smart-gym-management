@@ -4,12 +4,11 @@ import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback
 import type { AttendanceFormValues } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
 import { EMPTY_ATTENDANCE_FORM } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
 import type { Attendance } from '@/app/manager/attendance/attendance_types/ManagerAttendanceTypes';
-import type { Member } from '@/app/manager/members/members_types/ManagerMembersTypes';
-import type { Staff } from '@/app/manager/hr/hr_types/ManagerHrTypes';
+import type { MemberSnapshot, StaffSnapshot } from '@/app/manager/attendance/attendance_types/ManagerAttendanceSnapshotTypes';
 
 export function useManagerAttendanceMutations(
-  members: Member[],
-  staff: Staff[],
+  members: MemberSnapshot[],
+  staff: StaffSnapshot[],
   setSaving: (s: boolean) => void,
   setShowModal: (s: boolean) => void,
   setForm: (f: typeof EMPTY_ATTENDANCE_FORM) => void,
@@ -48,9 +47,17 @@ export function useManagerAttendanceMutations(
            checkInTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
         }
 
-        const checkInIso = (data.status === 'PRESENT' || data.type === 'MEMBER') && checkInTime
-          ? new Date(`${dateStr}T${checkInTime}:00`).toISOString() 
-          : undefined;
+        const recordCheckIn = async (person: MemberSnapshot | StaffSnapshot, type: 'MEMBER' | 'STAFF') => 
+          (data.type === 'MEMBER') && checkInTime
+            ? new Date(`${dateStr}T${checkInTime}:00`).toISOString() 
+            : undefined;
+
+        const checkInIso = await recordCheckIn(
+          (data.type === 'MEMBER' 
+            ? members.find(x => String(x.id) === data.memberId)
+            : staff.find(x => String(x.id) === data.staffId)) as MemberSnapshot | StaffSnapshot,
+          data.type as 'MEMBER' | 'STAFF'
+        );
         
         const payload: Record<string, unknown> = { 
           type: data.type, 

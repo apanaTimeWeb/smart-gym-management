@@ -10,7 +10,7 @@ import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/Man
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency , formatDate} from '@/lib/formatters';
 
 export default function ManagerHrStaffTable() {
   const { staff, summary, fetchState, debouncedSearch, roleFilter, currentPage, setCurrentPage, openEdit, deleteStaff, toggleStaffStatus, setViewProfileData, exportStaff } = useHrContext();
@@ -115,7 +115,7 @@ export default function ManagerHrStaffTable() {
                 <td className="px-4 py-3 text-sm font-medium text-success text-right">{formatCurrency(s.salary || 0)}</td>
                 <td className="px-4 py-3 text-sm font-medium text-primary text-right">{s.advanceSalary && s.advanceSalary > 0 ? formatCurrency(s.advanceSalary) : '—'}</td>
                 <td className="px-4 py-3 text-sm text-secondary">
-                  {s.joinDate ? new Date(s.joinDate).toLocaleDateString('en-IN') : 'N/A'}
+                  {s.joinDate ? formatDate(s.joinDate) : 'N/A'}
                 </td>
                 <td className="px-4 py-3 text-right">
                   <div className="flex items-center justify-end gap-2">

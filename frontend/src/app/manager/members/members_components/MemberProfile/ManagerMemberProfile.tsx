@@ -1,3 +1,4 @@
+import { formatDate } from '@/lib/formatters';
 // RESPONSIBILITY: Renders a detailed view of a selected member's profile.
 'use client';
 
@@ -88,8 +89,8 @@ export default function ManagerMemberProfile() {
               { label: 'Branch', value: selectedMember.branch },
               { label: 'Gender', value: selectedMember.gender },
               { label: 'Aadhaar Card', value: selectedMember.aadhaar || 'N/A' },
-              { label: 'Join Date', value: new Date(selectedMember.joinDate).toLocaleDateString('en-IN') },
-              { label: 'Expiry Date', value: new Date(selectedMember.expiryDate).toLocaleDateString('en-IN') },
+              { label: 'Join Date', value: formatDate(selectedMember.joinDate) },
+              { label: 'Expiry Date', value: formatDate(selectedMember.expiryDate) },
               { label: 'Address', value: selectedMember.address || 'N/A' },
               { label: 'Total Paid', value: formatCurrency(selectedMember.paidAmount) },
               { label: 'Pending', value: formatCurrency(selectedMember.pendingAmount) },

@@ -1,38 +1,30 @@
-// RESPONSIBILITY: Provides strongly-typed network calls for attendance operations.
-import type { ApiResponse } from '@/lib/api';
-import type { Attendance, AttendanceResponse } from '@/app/manager/attendance/attendance_types/ManagerAttendanceTypes';
-import { MOCK_ATTENDANCE_RECORDS, MOCK_ATTENDANCE_STATS } from '@/app/manager/attendance/attendance_api/ManagerAttendanceMockData';
+import { apiFetch, type ApiResponse } from '@/lib/api';
+import type { Attendance, AttendanceResponse, AttendanceStatsResponse } from '@/app/manager/attendance/attendance_types/ManagerAttendanceTypes';
+import type { MemberSnapshot, StaffSnapshot } from '@/app/manager/attendance/attendance_types/ManagerAttendanceSnapshotTypes';
+import { attendanceSchema, attendanceResponseSchema, attendanceStatsSchema } from '@/app/manager/attendance/attendance_types/ManagerAttendanceSchema';
+import { z } from 'zod';
 
 export const attendanceApi = {
-  mark: async (body: { memberId?: string; staffId?: string; date: string; checkIn?: string; type: string }) => {
-    await new Promise(resolve => setTimeout(resolve, 300));
-    return { success: true, message: 'Attendance marked' };
+  mark: async (body: { memberId?: string; staffId?: string; date: string; checkIn?: string; type: string }): Promise<ApiResponse<Attendance>> => {
+    return apiFetch(`/manager/attendance`, { method: 'POST', body: JSON.stringify(body), dataSchema: attendanceSchema });
   },
   getAll: async (params?: Record<string, string>): Promise<ApiResponse<AttendanceResponse>> => {
-    await new Promise(resolve => setTimeout(resolve, 300));
-    return {
-      success: true,
-      message: 'Fetched attendance records',
-      data: {
-        attendances: MOCK_ATTENDANCE_RECORDS,
-        total: MOCK_ATTENDANCE_RECORDS.length,
-      }
-    };
+    const query = new URLSearchParams(params || {}).toString();
+    return apiFetch(`/manager/attendance${query ? `?${query}` : ''}`, { dataSchema: attendanceResponseSchema });
   },
-  getTodayStats: async () => {
-    await new Promise(resolve => setTimeout(resolve, 300));
-    return {
-      success: true,
-      message: 'Fetched stats',
-      data: MOCK_ATTENDANCE_STATS,
-    };
+  getTodayStats: async (): Promise<ApiResponse<AttendanceStatsResponse>> => {
+    return apiFetch(`/manager/attendance/stats`, { dataSchema: attendanceStatsSchema });
   },
   getHistory: async (userId: string, type: 'MEMBER' | 'STAFF', month: string): Promise<ApiResponse<Attendance[]>> => {
-    await new Promise(resolve => setTimeout(resolve, 300));
-    return {
-      success: true,
-      message: 'Fetched history',
-      data: MOCK_ATTENDANCE_RECORDS.filter(r => r.type === type && (type === 'MEMBER' ? String(r.memberId) === userId : String(r.staffId) === userId)),
-    };
+    const query = new URLSearchParams({ userId, type, month }).toString();
+    return apiFetch(`/manager/attendance/history?${query}`, { dataSchema: z.array(attendanceSchema) });
+  },
+  getMembers: async (params?: Record<string, string>): Promise<ApiResponse<{ members: MemberSnapshot[] }>> => {
+    const query = new URLSearchParams(params || {}).toString();
+    return apiFetch(`/manager/attendance/members${query ? `?${query}` : ''}`);
+  },
+  getStaff: async (params?: Record<string, string>): Promise<ApiResponse<{ staff: StaffSnapshot[] }>> => {
+    const query = new URLSearchParams(params || {}).toString();
+    return apiFetch(`/manager/attendance/staff${query ? `?${query}` : ''}`);
   },
 };

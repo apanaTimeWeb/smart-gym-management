@@ -5,20 +5,22 @@ import { ManagerCommunicationsApi } from '@/app/manager/communications/communica
 
 export function useManagerChurnRecoveryQueries() {
   const {
-    data: churnedMembers = [],
+    data: churnedMembersResponse,
     isLoading: churnLoading,
     isError: churnError,
   } = useQuery({
-    queryKey: ['managerCommunications', 'churn', 'members'],
+    queryKey: ['manager', 'communications', 'churn', 'members'],
     queryFn: ManagerCommunicationsApi.fetchChurnedMembers,
     staleTime: 1000 * 60 * 3,
   });
+  const churnedMembers = churnedMembersResponse?.data || [];
 
-  const { data: churnKPIs } = useQuery({
-    queryKey: ['managerCommunications', 'churn', 'kpis'],
+  const { data: churnKPIsResponse } = useQuery({
+    queryKey: ['manager', 'communications', 'churn', 'kpis'],
     queryFn: ManagerCommunicationsApi.fetchChurnKPIs,
     staleTime: 1000 * 60 * 5,
   });
+  const churnKPIs = churnKPIsResponse?.data || undefined;
 
   return {
     churnedMembers,

@@ -5,7 +5,8 @@ import { storeApi } from '@/app/manager/store/store_api/ManagerStoreApi';
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
 import { GYM_DETAILS } from '@/app/manager/manager_utils/ManagerSharedConstants';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import type { ManagerReceiptData } from '@/app/manager/members/members_components/ManagerMembersThermalReceipt';
+import { formatCurrency , formatDate} from '@/lib/formatters';
+import type { ManagerReceiptData } from '@/app/manager/manager_components/ManagerFeedback/ManagerThermalReceipt';
 
 export function useManagerStoreOrder(
   loadAll: () => Promise<void>,
@@ -64,21 +65,21 @@ export function useManagerStoreOrder(
         showToast(`Order placed. Receipt sent to ${customerPhone}`, 'success');
         
         const itemsRecord = orderItems.reduce((acc, item) => {
-          acc[`${item.qty}x ${item.name}`] = `Rs ${item.price * item.qty}`;
+          acc[`${item.qty}x ${item.name}`] = formatCurrency(item.price * item.qty);
           return acc;
         }, {} as Record<string, string>);
 
         const waText = WhatsAppFormatter.formatReceipt({
           title: GYM_DETAILS.name,
           subtitle: 'Retail Invoice',
-          date: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
+          date: formatDate(new Date().toISOString()),
           customerInfo: {
             'Phone': customerPhone,
-            'Order ID': `ORD-${res.data?.id || Date.now()}`,
+            'Order ID': res.data?.id || 'PENDING',
           },
           sections: [
             { title: 'Items', items: itemsRecord },
-            { items: { 'Total': `Rs ${orderTotal}`, 'Payment': orderMethod } }
+            { items: { 'Total': formatCurrency(orderTotal), 'Payment': orderMethod } }
           ],
           footer: 'Thank You! Visit Again'
         });
@@ -89,8 +90,8 @@ export function useManagerStoreOrder(
         setPrintData({ 
           gymName: GYM_DETAILS.name, 
           gymPhone: GYM_DETAILS.phone, 
-          receiptNo: `ORD-${res.data?.id || Date.now()}`, 
-          date: new Date().toLocaleDateString('en-IN'), 
+          receiptNo: res.data?.id || 'PENDING', 
+          date: formatDate(new Date().toISOString()), 
           customerName: customerPhone || 'Walk-in', 
           items: orderItems.map((i) => ({ 
             name: i.unit ? `${i.name} (${i.unit})` : i.name, 

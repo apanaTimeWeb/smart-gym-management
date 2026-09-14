@@ -1,13 +1,13 @@
 # Manager Members — Feature Map
 
 ## Module Purpose
-The Manager Members module manages the full lifecycle of members including registration, profile viewing, membership renewal, payment logging, and soft deletion. It utilizes a URL-backed state for searching and filtering, and relies heavily on TanStack Query for server state management.
+The Manager Members module manages the full lifecycle of members including registration, profile viewing, membership renewal, payment logging, diet/workout assignment, and soft deletion. It uses URL-backed state for searching and filtering, and relies on TanStack Query as the **exclusive** server-state source of truth. All API calls go through MSW during development and testing.
 
 ## Exact Routes
 - `/manager/members`: Main list view, filterable and paginated. Profile, registration, and renewal are handled via modals on this route.
 
 ## Actual Feature Behavior
-- **Member List**: Paginated, filterable table. Syncs search, status, gender, and plan filters with the URL.
+- **Member List**: Paginated, filterable table. Syncs search, status, gender, plan, sort, and page filters with the URL.
 - **Registration**: Multi-tab modal form (`ManagerMembersModal`) for new members. Protected by `useUnsavedChangesGuard`.
 - **Profile View**: Drawer component (`ManagerMemberProfile`) displaying overview, attendance, payments, workout, and diet plans.
 - **Renewal**: Form modal (`ManagerRenewModal`) handling plan extensions.
@@ -26,25 +26,35 @@ The Manager Members module manages the full lifecycle of members including regis
 - `members_components/MemberProfile/ManagerMemberProfile.tsx`: Profile drawer.
 
 ## Actual Query Keys
-- `['manager', 'members', { search, status, gender, plan, sort, dir, page }]`: Fetching the member list.
+- `['manager', 'members', params]`: Fetching the paginated member list.
 - `['manager', 'members', 'stats']`: Fetching KPI statistics.
-- `['manager', 'trainers']`: Fetching trainers.
-- `['manager', 'payments', memberId]`: Fetching member payments.
-- `['manager', 'attendance', memberId]`: Fetching member attendance.
+- `['manager', 'members', 'plans-snapshot']`: Fetching available plans for the member form.
+- `['manager', 'members', 'trainers']`: Fetching available trainers.
+- `['manager', 'members', 'payments', memberId]`: Fetching member payment history.
+- `['manager', 'members', 'attendance', memberId]`: Fetching member attendance records.
 
 ## Actual State Model
-- **Server State**: Managed by TanStack Query (`useManagerMembersQueries.ts` and `useManagerMembersMutations.ts`).
+- **Server State**: Managed exclusively by TanStack Query (`useManagerMembersQueries.ts` and `useManagerMembersMutations.ts`).
 - **Context State**: `ManagerMembersContext` manages strictly UI transient states (e.g., active modals, selected member, profile tab).
 - **URL State**: `useManagerMembersLogic.ts` syncs filters and pagination to the URL.
 
-## Actual Fixture/Data Layer
-- `ManagerMembersSharedConstants.ts` contains hardcoded data for lists, statuses, and pricing options.
-- The `membersApi` abstraction serves as a bridge, currently returning mock data but fully prepared for backend integration.
+## MSW Mock Layer
+- **Handler file**: `src/mocks/handlers/manager-members.handlers.ts`
+- All member CRUD, payments, attendance, diet, and workout assignment endpoints are intercepted by MSW during dev/test.
+- `membersApi` calls `apiFetch` → MSW intercepts → typed response returned.
+- **No fixture files are directly imported by `membersApi`**. Mock data lives only in `members_fixtures/ManagerMembersMockData.ts` and is consumed exclusively by MSW handlers.
+
+## Snapshot Types (Feature-Local DTOs)
+Cross-feature field shapes are defined in `members_types/ManagerMembersSnapshotTypes.ts`:
+- `PlanSnapshot`: Minimal plan fields (id, name, prices)
+- `PaymentSnapshot`: id, amount, paidAt, method, status, invoiceNumber
+- `DietPlanSnapshot`: Typed with strongly-typed `meals[]` array
+- `WorkoutSnapshot`: Typed with strongly-typed `days[]` array containing `exercises[]`
+- `AttendanceSnapshot`: id, date, checkIn, type
 
 ## Actual API Files
-- `members_api/ManagerMembersApi.ts`: Mocked HTTP client functions for member CRUD.
-- `members_api/useManagerMembersQueries.ts`: TanStack Query fetchers.
-- `members_context/useManagerMembersMutations.ts`: Wrapper for TanStack Query mutations.
+- `members_api/ManagerMembersApi.ts`: HTTP client functions using `apiFetch` with Zod validation for all endpoints.
+- `members_api/useManagerMembersQueries.ts`: TanStack Query fetchers with explicit generic return types.
 - `members_context/useManagerMembersCoreMutations.ts` & `useManagerMembersStatusMutations.ts`: Core mutation handlers.
 
 ## Actual Loading State
@@ -58,17 +68,20 @@ The Manager Members module manages the full lifecycle of members including regis
 ## Actual Error State
 - Features `error.tsx` for unhandled exceptions.
 - Form submissions use `react-hot-toast` (via context wrapper) to display validation and API errors.
+- All toast messages come from `res.message` (API-provided), never hardcoded strings.
 
 ## Actual Security Rules
 - Requires Manager role authentication.
 - Masked sensitive data: Phone numbers and emails are masked in the main list, visible only inside the explicit profile view.
 
 ## Actual Multi-Step Flows
-- **Add Member**: Tabbed wizard (Personal -> Membership -> Payment) inside `ManagerMembersModal`. Protected by `useUnsavedChangesGuard`.
+- **Add Member**: Tabbed wizard (Personal → Membership → Payment) inside `ManagerMembersModal`. Protected by `useUnsavedChangesGuard`.
 
 ## Feature-Specific AI Warnings
-1. **Never use `any`**: All mutation returns and query extractions must be strictly typed.
-2. **Never break `useUnsavedChangesGuard`**: Complex forms must alert users before unloading.
-3. **Never bypass `useConfirm`**: Destructive actions (delete, suspend) must invoke the `confirm()` dialogue.
-4. **Never manipulate theme values**: Stick strictly to tokens in `members_theme_contract.md`.
-5. **Never handle filters locally**: URL `searchParams` is the absolute source of truth for the member list.
+1. **Never use `any`**: All mutation returns and query extractions must be strictly typed. Use snapshot types from `ManagerMembersSnapshotTypes.ts`.
+2. **Never use mock data files in API layer**: `ManagerMembersMockData.ts` is only for MSW handlers. Never import it from `ManagerMembersApi.ts`.
+3. **Never break `useUnsavedChangesGuard`**: Complex forms must alert users before unloading.
+4. **Never bypass `useConfirm`**: Destructive actions (delete, suspend) must invoke the `confirm()` dialogue.
+5. **Never manipulate theme values**: Stick strictly to tokens in `members_theme_contract.md`.
+6. **Never handle filters locally**: URL `searchParams` is the absolute source of truth for the member list.
+7. **Never generate IDs on frontend**: Invoice numbers, payment IDs, etc., are backend-owned. Consume from `res.data`.

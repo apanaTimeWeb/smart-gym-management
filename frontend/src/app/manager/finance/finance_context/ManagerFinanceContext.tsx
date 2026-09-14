@@ -1,3 +1,4 @@
+import { formatDate } from '@/lib/formatters';
 // RESPONSIBILITY: React Context — bridges TanStack Query with UI state (filters, tab, pagination).
 'use client';
 
@@ -115,7 +116,7 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
       p.amount,
       p.method,
       p.status,
-      new Date(p.paidAt).toLocaleDateString('en-IN'),
+      formatDate(p.paidAt),
     ]);
     const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });

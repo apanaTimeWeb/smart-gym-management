@@ -5,30 +5,34 @@ import { ManagerCommunicationsApi } from '@/app/manager/communications/communica
 import type { CommSegment } from '@/app/manager/communications/communications_types/communications_types';
 
 export function useManagerCommunicationsQueries(selectedSegment: CommSegment) {
-  const { data: campaigns = [], isLoading: campaignsLoading, isError: campaignsError } = useQuery({
-    queryKey: ['managerCommunications', 'campaigns'],
+  const { data: campaignsResponse, isLoading: campaignsLoading, isError: campaignsError } = useQuery({
+    queryKey: ['manager', 'communications', 'campaigns'],
     queryFn: ManagerCommunicationsApi.fetchCampaigns,
     staleTime: 1000 * 60 * 2,
   });
+  const campaigns = campaignsResponse?.data || [];
 
-  const { data: kpis } = useQuery({
-    queryKey: ['managerCommunications', 'kpis'],
+  const { data: kpisResponse } = useQuery({
+    queryKey: ['manager', 'communications', 'kpis'],
     queryFn: ManagerCommunicationsApi.fetchKPIs,
     staleTime: 1000 * 60 * 5,
   });
+  const kpis = kpisResponse?.data || undefined;
 
-  const { data: segmentRecipients = [], isFetching: loadingRecipients } = useQuery({
-    queryKey: ['managerCommunications', 'segment', selectedSegment],
+  const { data: segmentRecipientsResponse, isFetching: loadingRecipients } = useQuery({
+    queryKey: ['manager', 'communications', 'segment', selectedSegment],
     queryFn: () => ManagerCommunicationsApi.fetchSegmentRecipients(selectedSegment),
     enabled: selectedSegment !== 'custom',
     staleTime: 1000 * 60,
   });
+  const segmentRecipients = segmentRecipientsResponse?.data || [];
 
-  const { data: automations = [], isLoading: automationsLoading } = useQuery({
-    queryKey: ['managerCommunications', 'automations'],
+  const { data: automationsResponse, isLoading: automationsLoading } = useQuery({
+    queryKey: ['manager', 'communications', 'automations'],
     queryFn: ManagerCommunicationsApi.fetchAutomations,
     staleTime: 1000 * 60 * 5,
   });
+  const automations = automationsResponse?.data || [];
 
   return {
     campaigns,

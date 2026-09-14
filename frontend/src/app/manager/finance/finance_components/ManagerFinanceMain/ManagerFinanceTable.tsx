@@ -1,3 +1,4 @@
+import { formatDate } from '@/lib/formatters';
 import React from 'react';
 import { Printer } from 'lucide-react';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
@@ -51,7 +52,7 @@ export default function ManagerFinanceTable() {
                     }`}>{p.status}</span>
                   </td>
                   <td className="px-5 py-3.5 text-sm text-secondary whitespace-nowrap">
-                    {new Date(p.paidAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                    {formatDate(p.paidAt)}
                   </td>
                   <td className="px-5 py-3.5 whitespace-nowrap">
                     <button 

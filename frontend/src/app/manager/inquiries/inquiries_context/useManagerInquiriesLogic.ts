@@ -53,9 +53,7 @@ export function useManagerInquiriesLogic(): InquiriesContextType {
   const closeConvert = useCallback(() => setConvertLead(null), []);
 
   // React Query data fetching
-  const queryParams: Record<string, string> = { limit: '10', page: currentPage.toString() };
-  if (debouncedSearch) queryParams.search = debouncedSearch;
-  if (statusFilter !== 'All') queryParams.status = statusFilter;
+  const queryParams: Record<string, string> = {};
 
   const { data: inqData, isLoading: isListLoading, isError: isListError } = useInquiriesQuery(queryParams);
   const { data: statsData, isLoading: isStatsLoading } = useInquiryStatsQuery();

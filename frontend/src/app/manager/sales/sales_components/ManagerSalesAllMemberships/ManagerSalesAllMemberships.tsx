@@ -4,9 +4,9 @@
 import { useState } from 'react';
 import { useSalesContext } from '@/app/manager/sales/sales_context/ManagerSalesContext';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency , formatDate} from '@/lib/formatters';
 import ManagerSalesEmptyState from '@/app/manager/sales/sales_components/ManagerSalesEmptyState/ManagerSalesEmptyState';
-import type { Member } from '@/app/manager/members/members_types/ManagerMembersTypes';
+import type { SalesMemberSnapshot } from '@/app/manager/sales/sales_types/ManagerSalesMemberSnapshot';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 
 const MEMBERSHIP_FILTERS = ['All', 'Active', 'Expiring Soon', 'Expired'] as const;
@@ -27,7 +27,7 @@ export default function ManagerSalesAllMemberships() {
 
   const totalPages = Math.ceil(allMembershipsTotal / MANAGER_ITEMS_PER_PAGE) || 1;
 
-  const filteredMemberships = allMemberships.filter((m: Member) => {
+  const filteredMemberships = allMemberships.filter((m: SalesMemberSnapshot) => {
     if (filter === 'All') return true;
     if (filter === 'Active') return m.status === 'ACTIVE' && new Date(m.expiryDate).getTime() >= now;
     if (filter === 'Expired') return new Date(m.expiryDate).getTime() < now;
@@ -87,12 +87,12 @@ export default function ManagerSalesAllMemberships() {
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {filteredMemberships.map((r: Member) => (
+            {filteredMemberships.map((r: SalesMemberSnapshot) => (
               <tr key={r.id} className="hover:bg-primary-subtle transition-colors">
                 <td className="px-4 py-3 text-sm font-medium text-foreground">{r.name}</td>
                 <td className="px-4 py-3 text-sm text-secondary">{r.plan?.name ?? `Plan #${r.planId}`}</td>
-                <td className="px-4 py-3 text-sm text-secondary">{new Date(r.joinDate).toLocaleDateString('en-IN')}</td>
-                <td className="px-4 py-3 text-sm text-secondary">{new Date(r.expiryDate).toLocaleDateString('en-IN')}</td>
+                <td className="px-4 py-3 text-sm text-secondary">{formatDate(r.joinDate)}</td>
+                <td className="px-4 py-3 text-sm text-secondary">{formatDate(r.expiryDate)}</td>
                 <td className="px-4 py-3">
                   <span className={`text-xs px-2.5 py-0.5 rounded-full font-semibold ${
                     r.status === 'ACTIVE'

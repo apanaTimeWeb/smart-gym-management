@@ -55,16 +55,10 @@ export function useManagerLibraryLogic(initialData?: LibraryInitialData | null):
  const loadAll = useCallback(async () => {
  setFetchState('loading');
  try {
- const params: Record<string, string> = {
-  page: currentPage.toString(),
-  limit: '10'
- };
- if (debouncedSearch) {
-  params.search = debouncedSearch;
- }
+ const params: Record<string, string> = {};
  const dietRes = await libraryApi.getDietPlans(params);
- const rawData = dietRes.data as any;
- let fetchedDiets: DietPlan[] = Array.isArray(rawData) ? rawData : (rawData?.dietPlans || []);
+  const rawData = dietRes.data;
+  let fetchedDiets: DietPlan[] = Array.isArray(rawData) ? (rawData as DietPlan[]) : ((rawData as { dietPlans?: DietPlan[] })?.dietPlans || []);
  if (debouncedSearch) {
    const q = debouncedSearch.toLowerCase();
    fetchedDiets = fetchedDiets.filter((d: DietPlan) => d.name?.toLowerCase().includes(q));

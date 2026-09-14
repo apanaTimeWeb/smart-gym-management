@@ -6,7 +6,7 @@ import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import type { WorkoutFormValues, ExerciseFormValues } from '@/app/manager/workout/workout_utils/ManagerWorkoutSharedConstants';
 import { EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM } from '@/app/manager/workout/workout_utils/ManagerWorkoutSharedConstants';
 import type { Workout } from '@/app/manager/workout/workout_types/ManagerWorkoutTypes';
-import type { Exercise } from '@/app/manager/library/library_types/ManagerLibraryTypes';
+import type { ExerciseSnapshot } from '@/app/manager/workout/workout_types/ManagerWorkoutSnapshotTypes';
 
 interface WorkoutContextType {
   tab: string;
@@ -32,7 +32,7 @@ interface WorkoutContextType {
   exForm: ExerciseFormValues;
   setExForm: (f: ExerciseFormValues) => void;
   openAddEx: () => void;
-  openEditEx: (e: Exercise) => void;
+  openEditEx: (e: ExerciseSnapshot) => void;
 }
 
 const ManagerWorkoutContext = createContext<WorkoutContextType | undefined>(undefined);
@@ -96,12 +96,12 @@ export function WorkoutProvider({ children }: { children: React.ReactNode }) {
     setShowExModal(true); 
   }, []);
   
-  const openEditEx = useCallback((ex: Exercise) => { 
+  const openEditEx = useCallback((ex: ExerciseSnapshot) => { 
     setEditExId(ex.id); 
     setExForm({ 
       name: ex.name, 
-      muscle: ex.muscleGroup?.join(', ') || '', 
-      equipment: ex.category || '', 
+      muscle: Array.isArray(ex.muscleGroup) ? ex.muscleGroup.join(', ') : (ex.muscleGroup || ''), 
+      equipment: ex.equipment || '', 
       difficulty: ex.difficulty 
     }); 
     setShowExModal(true); 

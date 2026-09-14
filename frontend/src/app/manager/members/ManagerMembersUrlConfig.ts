@@ -9,6 +9,7 @@ export const MembersUrlConfig = {
   BACKEND_API: {
     BASE: '/manager/members',
     STATS: '/manager/members/stats',
+    PLANS_SNAPSHOT: '/manager/members/plans',
     RENEW: (id: string) => `/manager/members/${id}/renew`,
     GET_ONE: (id: string) => `/manager/members/${id}`,
     UPDATE: (id: string) => `/manager/members/${id}`,

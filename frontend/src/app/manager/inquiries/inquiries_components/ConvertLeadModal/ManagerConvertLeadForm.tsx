@@ -2,13 +2,13 @@
 import { Controller } from 'react-hook-form';
 import type { UseFormReturn } from 'react-hook-form';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency, GENDER_OPTIONS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
-import type { MemberFormValues } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
-import type { PlanWithCustom } from '@/app/manager/members/members_types/ManagerMembersTypes';
+import { INQUIRIES_CYCLE_LABELS, getPriceForCycleSnapshot, INQUIRIES_GENDER_OPTIONS } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesConvertConstants';
+import type { ConvertLeadFormValues, PlanSnapshot } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesConvertConstants';
+import { formatCurrency } from '@/lib/formatters';
 
 interface ManagerConvertLeadFormProps {
-  useFormReturn: UseFormReturn<MemberFormValues>;
-  plans: PlanWithCustom[];
+  useFormReturn: UseFormReturn<ConvertLeadFormValues>;
+  plans: PlanSnapshot[];
   watchPlanId?: string;
   watchBillingCycle?: string;
   watchCustomDays?: number;
@@ -45,13 +45,13 @@ export default function ManagerConvertLeadForm({
                 if (e.key.length === 1 && !/^[0-9]$/.test(e.key) && !e.ctrlKey && !e.metaKey) e.preventDefault();
               }
             }}
-            {...register(f.key as keyof MemberFormValues)}
+            {...register(f.key as keyof ConvertLeadFormValues)}
             className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-all duration-200 ${
-              errors[f.key as keyof MemberFormValues] ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
+              errors[f.key as keyof ConvertLeadFormValues] ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
             }`}
           />
-          {errors[f.key as keyof MemberFormValues] && (
-            <p className="text-danger text-xs mt-0.5">{errors[f.key as keyof MemberFormValues]?.message as string}</p>
+          {errors[f.key as keyof ConvertLeadFormValues] && (
+            <p className="text-danger text-xs mt-0.5">{errors[f.key as keyof ConvertLeadFormValues]?.message as string}</p>
           )}
         </div>
       ))}
@@ -62,7 +62,7 @@ export default function ManagerConvertLeadForm({
           name="gender"
           control={control}
           render={({ field }) => (
-            <SearchableDropdown value={field.value || ''} onChange={field.onChange} options={GENDER_OPTIONS} />
+            <SearchableDropdown value={field.value || ''} onChange={field.onChange} options={INQUIRIES_GENDER_OPTIONS} />
           )}
         />
       </div>
@@ -92,7 +92,7 @@ export default function ManagerConvertLeadForm({
             <SearchableDropdown
               value={field.value || ''}
               onChange={field.onChange}
-              options={Object.entries(MEMBERS_CYCLE_LABELS).map(([val, label]) => ({ label, value: val }))}
+              options={Object.entries(INQUIRIES_CYCLE_LABELS).map(([val, label]) => ({ label, value: val }))}
             />
           )}
         />
@@ -119,7 +119,7 @@ export default function ManagerConvertLeadForm({
           <div>
             <span className="font-semibold text-warning">Calculated Price:</span>
             <span className="text-warning ml-1 font-bold">
-              {formatCurrency(getPriceForCycle(selectedPlan, watchBillingCycle || '', Number(watchCustomDays) || 0))}
+              {formatCurrency(getPriceForCycleSnapshot(selectedPlan, watchBillingCycle || '', Number(watchCustomDays) || 0))}
             </span>
           </div>
           {watchBillingCycle === 'CUSTOM' && (

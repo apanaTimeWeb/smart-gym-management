@@ -4,7 +4,7 @@
 import { Printer, MessageCircle } from 'lucide-react';
 import type { Order } from '@/app/manager/store/store_types/ManagerStoreTypes';
 import { useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';
-import { formatCurrency, displayValue } from '@/lib/formatters';
+import { formatCurrency, displayValue , formatDate} from '@/lib/formatters';
 import { GYM_DETAILS } from '@/app/manager/manager_utils/ManagerSharedConstants';
 
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
@@ -20,7 +20,7 @@ export default function ManagerStoreOrderTable() {
       gymName: GYM_DETAILS.name, 
       gymPhone: GYM_DETAILS.phone, 
       receiptNo: `ORD-${o.id}`, 
-      date: new Date(o.createdAt).toLocaleDateString('en-IN'), 
+      date: formatDate(o.createdAt), 
       customerName: 'Customer', 
       items: (o.items || []).map((i) => ({ 
         name: i.product?.name ? (i.product?.unit ? `${i.product.name} (${i.product.unit})` : i.product.name) : '', 
@@ -39,7 +39,7 @@ export default function ManagerStoreOrderTable() {
       return `- ${name}\n  ${i.qty} x ${formatCurrency(i.price)} = ${formatCurrency(i.qty * i.price)}`;
     }).join('\n');
 
-    const text = `*${GYM_DETAILS.name.toUpperCase()}*\nPh: ${GYM_DETAILS.phone}\n\n*PAYMENT RECEIPT*\nReceipt No: ORD-${o.id}\nDate: ${new Date(o.createdAt).toLocaleDateString('en-IN')}\n\n*ITEMS:*\n${itemsText}\n\n*TOTAL: ${formatCurrency(o.total)}*\nPaid via: ${o.method}\n\nThank You!`;
+    const text = `*${GYM_DETAILS.name.toUpperCase()}*\nPh: ${GYM_DETAILS.phone}\n\n*PAYMENT RECEIPT*\nReceipt No: ORD-${o.id}\nDate: ${formatDate(o.createdAt)}\n\n*ITEMS:*\n${itemsText}\n\n*TOTAL: ${formatCurrency(o.total)}*\nPaid via: ${o.method}\n\nThank You!`;
     const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
     window.open(url, '_blank');
   };
@@ -108,7 +108,7 @@ export default function ManagerStoreOrderTable() {
                   </span>
                 </td>
                 <td className="px-4 py-3 text-sm text-secondary">
-                  {new Date(o.createdAt).toLocaleDateString('en-IN')}
+                  {formatDate(o.createdAt)}
                 </td>
                 <td className="px-4 py-3 flex items-center gap-2">
                   <button 

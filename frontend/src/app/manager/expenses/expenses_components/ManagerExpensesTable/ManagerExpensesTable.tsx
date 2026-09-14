@@ -6,7 +6,7 @@ import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/Man
 import { useExpensesContext } from '@/app/manager/expenses/expenses_context/ManagerExpensesContext';
 import { useExpensesListQuery } from '@/app/manager/expenses/expenses_api/useManagerExpensesQueries';
 import { EXPENSES_TABLE_HEADERS, EXPENSE_STATUS_STYLES } from '@/app/manager/expenses/expenses_utils/ManagerExpensesSharedConstants';
-import { formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
+import { formatCurrency , formatDate} from '@/lib/formatters';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
@@ -58,7 +58,7 @@ export default function ManagerExpensesTable() {
                       <td className="px-5 py-3.5 text-sm text-secondary whitespace-nowrap">{e.category}</td>
                       <td className="px-5 py-3.5 text-sm font-bold text-foreground whitespace-nowrap">{formatCurrency(e.amount)}</td>
                       <td className="px-5 py-3.5 text-sm text-secondary whitespace-nowrap">
-                        {new Date(e.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                        {formatDate(e.date)}
                       </td>
                       <td className="px-5 py-3.5 whitespace-nowrap">
                         <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusStyle.bg} ${statusStyle.text}`}>

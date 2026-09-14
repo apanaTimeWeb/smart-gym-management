@@ -5,7 +5,7 @@ import { Edit, MessageCircle, Mail, Trash2, Loader2, Users, Banknote, Ban, Arrow
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
 import { useFetchMembers } from '@/app/manager/members/members_api/useManagerMembersQueries';
 import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS, formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
-import { maskSensitiveData } from '@/lib/formatters';
+import { maskSensitiveData , formatDate} from '@/lib/formatters';
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
@@ -150,8 +150,8 @@ export default function ManagerMembersTable() {
                         {m.status}
                       </span>
                     </td>
-                    <td className="px-2 py-3 text-xs text-secondary whitespace-nowrap">{new Date(m.joinDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
-                    <td className="px-2 py-3 text-xs text-secondary whitespace-nowrap">{new Date(m.expiryDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                    <td className="px-2 py-3 text-xs text-secondary whitespace-nowrap">{formatDate(m.joinDate)}</td>
+                    <td className="px-2 py-3 text-xs text-secondary whitespace-nowrap">{formatDate(m.expiryDate)}</td>
                     <td className="px-2 py-3 text-xs font-semibold text-success whitespace-nowrap">{formatCurrency(m.paidAmount)}</td>
                     <td className="px-2 py-3 text-xs font-semibold text-danger whitespace-nowrap">{m.pendingAmount > 0 ? formatCurrency(m.pendingAmount) : '—'}</td>
                     <td className="px-2 py-3 text-xs whitespace-nowrap">

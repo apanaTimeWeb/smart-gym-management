@@ -8,6 +8,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AttendanceSchema, type AttendanceFormValues, EMPTY_ATTENDANCE_FORM } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
+import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
 
 export default function AttendanceModal() {
   const { 
@@ -22,7 +23,7 @@ export default function AttendanceModal() {
     watch,
     reset,
     control,
-    formState: { errors }
+    formState: { errors, isDirty }
   } = useForm<AttendanceFormValues>({
     resolver: zodResolver(AttendanceSchema),
     defaultValues: EMPTY_ATTENDANCE_FORM
@@ -33,6 +34,8 @@ export default function AttendanceModal() {
   
   const d = new Date();
   const todayDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+  useUnsavedChangesGuard(isDirty && showModal);
 
   useEffect(() => {
     if (showModal) {

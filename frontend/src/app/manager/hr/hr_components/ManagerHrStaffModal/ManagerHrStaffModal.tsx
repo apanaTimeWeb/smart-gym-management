@@ -11,10 +11,12 @@ import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { Eye, EyeOff } from 'lucide-react';
 import React from 'react';
 import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
+import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 
-export default function ManagerHrStaffModal() {
- const { showModal, setShowModal, editId, editData, saveStaff, saving } = useHrContext();
- const [showPassword, setShowPassword] = React.useState(false);
+ export default function ManagerHrStaffModal() {
+  const { showModal, setShowModal, editId, editData, saveStaff, saving } = useHrContext();
+  const { confirm } = useConfirm();
+  const [showPassword, setShowPassword] = React.useState(false);
 
   const { 
     register, 
@@ -44,7 +46,7 @@ export default function ManagerHrStaffModal() {
   <h3 className="text-xl font-bold text-foreground">{editId ? 'Edit Staff' : 'Add Staff Member'}</h3>
   <button 
   type="button" 
-  onClick={() => { if (!isDirty || window.confirm('Discard unsaved changes?')) setShowModal(false); }} 
+  onClick={async () => { if (!isDirty || await confirm({ title: 'Discard Changes', message: 'Discard unsaved changes?', confirmText: 'Discard', type: 'warning' })) setShowModal(false); }}
   className="p-2 rounded-full hover:bg-primary/10 transition-colors text-secondary hover:text-primary"
   >
   <X size={20} />
@@ -152,7 +154,7 @@ export default function ManagerHrStaffModal() {
   <div className="flex justify-end gap-3 mt-8 pt-6 border-t border-border">
   <button 
   type="button" 
-  onClick={() => { if (!isDirty || window.confirm('Discard unsaved changes?')) setShowModal(false); }} 
+  onClick={async () => { if (!isDirty || await confirm({ title: 'Discard Changes', message: 'Discard unsaved changes?', confirmText: 'Discard', type: 'warning' })) setShowModal(false); }}
   className="px-6 py-2.5 text-sm font-semibold rounded-xl border border-border text-secondary hover:bg-primary/5 hover:text-primary transition-colors"
   >
   Cancel

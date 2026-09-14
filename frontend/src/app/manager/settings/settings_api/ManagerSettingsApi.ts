@@ -1,18 +1,18 @@
-// RESPONSIBILITY: API client for the Manager Settings module.
-import { apiFetch } from '@/lib/api';
-import type { ApiResponse } from '@/lib/api';
-import type { ManagerSettingsPreferences, UpdateManagerSettingsPayload } from '@/app/manager/settings/settings_types/ManagerSettingsTypes';
-
-import { MOCK_SETTINGS_PREFERENCES } from '@/app/manager/settings/settings_fixtures/ManagerSettingsMockData';
+import { apiFetch, type ApiResponse } from '@/lib/api';
+import type { ManagerAllSettings, UpdateManagerSettingsPayload, UpdateGymProfilePayload, OperatingHours, UpdateMembershipSettingsPayload, UpdateNotificationTemplatePayload, NotificationTemplate } from '@/app/manager/settings/settings_types/ManagerSettingsTypes';
+import { managerAllSettingsSchema, notificationTemplateSchema } from '@/app/manager/settings/settings_types/ManagerSettingsSchema';
+import { z } from 'zod';
 
 export const managerSettingsApi = {
-  fetchSettings: async () => {
-    await new Promise(res => setTimeout(res, 300));
-    return { success: true, message: 'Success', data: MOCK_SETTINGS_PREFERENCES };
+  getAll: async (): Promise<ApiResponse<ManagerAllSettings>> => {
+    return apiFetch(`/manager/settings`, { dataSchema: managerAllSettingsSchema });
   },
 
-  updateSettings: async (body: UpdateManagerSettingsPayload) => {
-    await new Promise(res => setTimeout(res, 400));
-    return { success: true, message: 'Success', data: { ...MOCK_SETTINGS_PREFERENCES, ...body } };
+  updateSettings: async (body: UpdateManagerSettingsPayload): Promise<ApiResponse<ManagerAllSettings>> => {
+    return apiFetch(`/manager/settings`, {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+      dataSchema: managerAllSettingsSchema
+    });
   },
 };

@@ -1,3 +1,4 @@
+import { formatDate } from '@/lib/formatters';
 // RESPONSIBILITY: Paginated history table of past communication campaigns with search and channel filter.
 'use client';
 
@@ -104,7 +105,7 @@ export default function ManagerCommunicationsHistory() {
                         </span>
                       </td>
                       <td className="px-4 py-3 text-sm text-secondary whitespace-nowrap">
-                        {new Date(c.sentAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                        {formatDate(c.sentAt)}
                       </td>
                     </tr>
                   );

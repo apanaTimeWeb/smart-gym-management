@@ -65,17 +65,16 @@ export function useManagerHrLogic(initialData?: HrInitialData | null): HrContext
     setFetchState('loading');
     setError('');
     try {
-      const staffParams: Record<string, string> = { search: debouncedSearch, page: String(currentPage) };
-      if (roleFilter !== 'All') staffParams.role = roleFilter;
+      const staffParams: Record<string, string> = {};
       
       const [staffRes, payrollsRes, summaryRes] = await Promise.all([
         hrApi.getStaff(staffParams),
-        hrApi.getPayrolls({ search: debouncedSearch, page: String(currentPage), month: payrollMonth }),
+        hrApi.getPayrolls({ month: payrollMonth }),
         hrApi.getSummary()
       ]);
       
-      let fetchedStaff = staffRes.data.staff || [];
-      let fetchedPayrolls = payrollsRes.data.payrolls || [];
+      let fetchedStaff = staffRes.data?.staff || [];
+      let fetchedPayrolls = payrollsRes.data?.payrolls || [];
 
       if (roleFilter !== 'All') {
         fetchedStaff = fetchedStaff.filter((s: Staff) => s.role === roleFilter);
@@ -93,7 +92,7 @@ export function useManagerHrLogic(initialData?: HrInitialData | null): HrContext
 
       setStaff(fetchedStaff);
       setPayrolls(fetchedPayrolls);
-      setSummary(summaryRes.data || { totalStaff: 0, activeStaff: 0, totalPayrollThisMonth: 0, paidCount: 0, pendingCount: 0 });
+      setSummary((summaryRes.data || { totalStaff: 0, activeStaff: 0, totalPayrollThisMonth: 0, paidCount: 0, pendingCount: 0 }) as HrSummary);
       setFetchState('success');
     } catch (e) {
       const msg = (e as Error).message;

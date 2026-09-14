@@ -2,8 +2,7 @@ import { useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import type { Member } from '@/app/manager/members/members_types/ManagerMembersTypes';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
-import type { DietPlan } from '@/app/manager/library/library_types/ManagerLibraryTypes';
-import type { Workout } from '@/app/manager/workout/workout_types/ManagerWorkoutTypes';
+import type { DietPlanSnapshot, WorkoutSnapshot } from '@/app/manager/members/members_types/ManagerMembersSnapshotTypes';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 
 import { useManagerMembersCoreMutations } from '@/app/manager/members/members_context/useManagerMembersCoreMutations';
@@ -26,7 +25,7 @@ export function useManagerMembersMutations(
 
   const invalidateMemberQueries = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: ['manager', 'members'] });
-    queryClient.invalidateQueries({ queryKey: ['manager', 'payments'] });
+    queryClient.invalidateQueries({ queryKey: ['manager', 'members', 'payments'] });
     queryClient.invalidateQueries({ queryKey: ['manager', 'stats'] });
   }, [queryClient]);
 
@@ -44,8 +43,8 @@ export function useManagerMembersMutations(
       const isConfirmed = await confirm({ title: 'Delete Member', message: 'Are you sure you want to delete this member? This action cannot be undone.', confirmText: 'Delete', type: 'danger' });
       if (isConfirmed) deleteMutation.mutate(id);
     }, [confirm, deleteMutation]),
-    assignDiet: (memberId: string, diet: DietPlan | null) => assignDietMutation.mutateAsync({ memberId, diet }),
-    assignWorkout: (memberId: string, workout: Workout | null) => assignWorkoutMutation.mutateAsync({ memberId, workout }),
+    assignDiet: (memberId: string, diet: DietPlanSnapshot | null) => assignDietMutation.mutateAsync({ memberId, diet }),
+    assignWorkout: (memberId: string, workout: WorkoutSnapshot | null) => assignWorkoutMutation.mutateAsync({ memberId, workout }),
     renewMember: (data: { planId: string; newExpiryDate: string; amountPaid: number; paymentMethod: string; billingCycle: string; customDays?: number; }) => renewMutation.mutateAsync({ ...data, memberId: selectedMember?.id! }),
     recordPayment: (data: { amount: number; method: string }) => recordPaymentMutation.mutateAsync({ ...data, memberId: selectedMember?.id! }),
     freezeMember: (isFrozen: boolean) => freezeMutation.mutateAsync({ memberId: selectedMember?.id!, isFrozen }),

@@ -1,10 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { attendanceApi } from '@/app/manager/attendance/attendance_api/ManagerAttendanceApi';
-import { membersApi } from '@/app/manager/members/members_api/ManagerMembersApi';
-import { hrApi } from '@/app/manager/hr/hr_api/ManagerHrApi';
 
 export const managerAttendanceQueryKeys = {
-  all: ['manager', 'attendance'] as const,
+  all: ['manager', 'members', 'attendance'] as const,
   list: (params?: Record<string, string>) => [...managerAttendanceQueryKeys.all, 'list', params] as const,
   todayStats: () => [...managerAttendanceQueryKeys.all, 'todayStats'] as const,
   history: (userId: string, type: 'MEMBER' | 'STAFF', month: string) => [...managerAttendanceQueryKeys.all, 'history', userId, type, month] as const,
@@ -14,8 +12,21 @@ export const managerAttendanceQueryKeys = {
 
 export function useAttendanceListQuery(params?: Record<string, string>) {
   return useQuery({
-    queryKey: managerAttendanceQueryKeys.list(params),
-    queryFn: () => attendanceApi.getAll(params).then(res => res.data),
+    queryKey: ['manager', 'attendance', 'list', params],
+    queryFn: async () => {
+      const res = await attendanceApi.getAll(params);
+      return res.data;
+    },
+  });
+}
+
+export function useFetchStaff(params: Record<string, string>) {
+  return useQuery({
+    queryKey: ['manager', 'members', 'attendance', 'staff', params],
+    queryFn: async () => {
+      const res = await attendanceApi.getStaff(params);
+      return res.data;
+    },
   });
 }
 
@@ -36,14 +47,14 @@ export function useAttendanceHistoryQuery(userId: string, type: 'MEMBER' | 'STAF
 
 export function useActiveMembersQuery() {
   return useQuery({
-    queryKey: managerAttendanceQueryKeys.members(),
-    queryFn: () => membersApi.getAll({ limit: '1000', status: 'active' }).then(res => res.data),
+    queryKey: ['manager', 'attendance', 'members', 'active'],
+    queryFn: () => attendanceApi.getMembers({ limit: '1000', status: 'active' }).then(res => res.data),
   });
 }
 
 export function useStaffQuery() {
   return useQuery({
     queryKey: managerAttendanceQueryKeys.staff(),
-    queryFn: () => hrApi.getStaff().then(res => res.data),
+    queryFn: () => attendanceApi.getStaff().then(res => res.data),
   });
 }

@@ -5,7 +5,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Search, ArrowRight, UserPlus } from 'lucide-react';
 import { DASHBOARD_RECENT_MEMBERS_PAGE_SIZE, RECENT_MEMBERS_HEADERS, DASHBOARD_STATUS_STYLES } from '@/app/manager/dashboard/dashboard_utils/ManagerDashboardSharedConstants';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency , formatDate} from '@/lib/formatters';
 import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/useManagerDashboardQueries';
 import { useManagerDashboardStore } from '@/app/manager/dashboard/dashboard_store/useManagerDashboardStore';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
@@ -77,7 +77,7 @@ export default function ManagerDashboardRecentMembers() {
                     </span>
                   </td>
                   <td className="px-6 py-4 text-sm text-secondary">
-                    {new Date(m.joinDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                    {formatDate(m.joinDate)}
                   </td>
                   <td className="px-6 py-4 text-sm font-medium text-primary">{formatCurrency(m.paidAmount)}</td>
                 </tr>

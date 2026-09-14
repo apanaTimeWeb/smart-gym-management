@@ -1,27 +1,22 @@
-// RESPONSIBILITY: Provides strongly-typed network calls for the plans module.
-import { MOCK_PLANS } from '@/app/manager/plans/plans_fixtures/ManagerPlansMockData';
+import { apiFetch, type ApiResponse } from '@/lib/api';
 import type { Plan } from '@/app/manager/plans/plans_types/ManagerPlansTypes';
+import { planSchema } from '@/app/manager/plans/plans_types/ManagerPlansSchema';
+import { z } from 'zod';
 
 export const plansApi = {
-  getAll: async () => {
-    await new Promise(res => setTimeout(res, 400));
-    return { success: true, message: 'Success', data: MOCK_PLANS };
+  getAll: async (): Promise<ApiResponse<Plan[]>> => {
+    return apiFetch(`/manager/plans`, { dataSchema: z.array(planSchema) });
   },
-  getOne: async (id: string) => {
-    await new Promise(res => setTimeout(res, 400));
-    const plan = MOCK_PLANS.find(p => p.id === id) || MOCK_PLANS[0];
-    return { success: true, message: 'Success', data: plan };
+  getOne: async (id: string): Promise<ApiResponse<Plan>> => {
+    return apiFetch(`/manager/plans/${id}`, { dataSchema: planSchema });
   },
-  create: async (body: Partial<Plan>) => {
-    await new Promise(res => setTimeout(res, 400));
-    return { success: true, message: 'Created', data: MOCK_PLANS[0] };
+  create: async (body: Partial<Plan>): Promise<ApiResponse<Plan>> => {
+    return apiFetch(`/manager/plans`, { method: 'POST', body: JSON.stringify(body), dataSchema: planSchema });
   },
-  update: async (id: string, body: Partial<Plan>) => {
-    await new Promise(res => setTimeout(res, 400));
-    return { success: true, message: 'Updated', data: MOCK_PLANS[0] };
+  update: async (id: string, body: Partial<Plan>): Promise<ApiResponse<Plan>> => {
+    return apiFetch(`/manager/plans/${id}`, { method: 'PATCH', body: JSON.stringify(body), dataSchema: planSchema });
   },
-  remove: async (id: string) => {
-    await new Promise(res => setTimeout(res, 400));
-    return { success: true, message: 'Removed', data: { id } };
+  remove: async (id: string): Promise<ApiResponse<{ id: string }>> => {
+    return apiFetch(`/manager/plans/${id}`, { method: 'DELETE' });
   },
 };

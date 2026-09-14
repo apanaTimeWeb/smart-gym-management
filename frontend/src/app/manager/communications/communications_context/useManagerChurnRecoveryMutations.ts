@@ -19,10 +19,10 @@ export function useManagerChurnRecoveryMutations(closeComposer: () => void) {
       message: string;
       subject: string;
     }) => ManagerCommunicationsApi.sendWinBackMessage(payload),
-    onSuccess: () => {
-      toast.success('Win-back message sent successfully');
+    onSuccess: (res) => {
+      toast.success(res.message || 'Win-back message sent successfully');
       closeComposer();
-      qc.invalidateQueries({ queryKey: ['managerCommunications'] });
+      qc.invalidateQueries({ queryKey: ['manager', 'communications'] });
     },
     onError: (err) => toast.error((err as Error).message),
   });

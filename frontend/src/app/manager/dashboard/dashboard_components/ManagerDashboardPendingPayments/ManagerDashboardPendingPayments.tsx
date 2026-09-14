@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Search, BellRing } from 'lucide-react';
 import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/useManagerDashboardQueries';
 import { useManagerDashboardStore } from '@/app/manager/dashboard/dashboard_store/useManagerDashboardStore';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency , formatDate} from '@/lib/formatters';
 
 export default function ManagerDashboardPendingPayments() {
   const { timeRange } = useManagerDashboardStore();
@@ -50,7 +50,7 @@ export default function ManagerDashboardPendingPayments() {
               <div>
                 <p className="text-sm font-medium text-primary">{p.name}</p>
                 <p className="text-xs text-secondary">
-                  Expires: {new Date(p.expiryDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
+                  Expires: {formatDate(p.expiryDate)}
                 </p>
               </div>
             </div>

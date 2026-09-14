@@ -1,8 +1,7 @@
 // RESPONSIBILITY: Centralized constants, schema, and shared utilities for the Attendance module.
 import { z } from 'zod';
 
-export const formatDate = (d: string) => 
- new Date(d).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+import { formatDate } from '@/lib/formatters';
 
 export const formatTime = (d?: string) => 
  d ? new Date(d).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : '—';

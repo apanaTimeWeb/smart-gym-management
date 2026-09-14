@@ -1,3 +1,4 @@
+import { formatDate } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the expiring memberships list on the dashboard.
 'use client';
 
@@ -46,7 +47,7 @@ export default function ManagerDashboardExpiringMemberships() {
               <div>
                 <p className="text-sm font-medium text-primary">{m.name}</p>
                 <p className="text-xs text-secondary">
-                  Expires: {new Date(m.expiryDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                  Expires: {formatDate(m.expiryDate)}
                 </p>
               </div>
             </div>

@@ -8,12 +8,14 @@ import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { X, Check } from 'lucide-react';
 import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
 import { PayrollSchema, type PayrollFormValues, EMPTY_PAYROLL_FORM } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
-import { attendanceApi } from '@/app/manager/attendance/attendance_api/ManagerAttendanceApi';
+import { hrApi } from '@/app/manager/hr/hr_api/ManagerHrApi';
 import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
 import { formatCurrency } from '@/lib/formatters';
+import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 
 export default function ManagerHrPayrollModal() {
   const { showPayrollModal, setShowPayrollModal, savePayroll, saving, staff } = useHrContext();
+  const { confirm } = useConfirm();
   const [calcData, setCalcData] = React.useState<{base: number, attDed: number, advAdj: number, net: number} | null>(null);
 
   const { register, handleSubmit, reset, watch, setValue, control, formState: { errors, isDirty } } = useForm<PayrollFormValues>({
@@ -39,9 +41,9 @@ export default function ManagerHrPayrollModal() {
         const s = staff.find(x => String(x.id) === String(selectedStaffId));
         if (!s) return;
         try {
-          const res = await attendanceApi.getHistory(String(selectedStaffId), 'STAFF', selectedMonth);
+          const res = await hrApi.getStaffAttendance(String(selectedStaffId), selectedMonth);
           if (res.success && res.data) {
-            const history = res.data;
+            const history = res.data.history;
             const daysInMonth = new Date(parseInt((selectedMonth || '').split('-')[0] || '0'), parseInt((selectedMonth || '').split('-')[1] || '0'), 0).getDate();
             
             let presentDays = 0;
@@ -102,7 +104,7 @@ export default function ManagerHrPayrollModal() {
           <h2 className="text-xl font-bold text-foreground">
             Disburse Payroll
           </h2>
-          <button onClick={() => { if (!isDirty || window.confirm('Discard unsaved changes?')) setShowPayrollModal(false); }} className="p-2 rounded-full hover:bg-primary/10 transition-colors text-secondary hover:text-primary">
+          <button onClick={async () => { if (!isDirty || await confirm({ title: 'Discard Changes', message: 'Discard unsaved changes?', confirmText: 'Discard', type: 'warning' })) setShowPayrollModal(false); }} className="p-2 rounded-full hover:bg-primary/10 transition-colors text-secondary hover:text-primary">
             <X size={20} />
           </button>
         </div>
@@ -202,7 +204,7 @@ export default function ManagerHrPayrollModal() {
         <div className="px-8 py-5 border-t border-border flex justify-end gap-3 bg-primary/5">
           <button 
             type="button" 
-            onClick={() => { if (!isDirty || window.confirm('Discard unsaved changes?')) setShowPayrollModal(false); }}
+            onClick={async () => { if (!isDirty || await confirm({ title: 'Discard Changes', message: 'Discard unsaved changes?', confirmText: 'Discard', type: 'warning' })) setShowPayrollModal(false); }}
             className="px-6 py-2.5 rounded-xl text-sm font-semibold border border-border transition-colors text-secondary hover:bg-primary/5 hover:text-foreground"
           >
             Cancel

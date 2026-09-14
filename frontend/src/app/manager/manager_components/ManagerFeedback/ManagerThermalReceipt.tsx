@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Renders the printable 80mm thermal receipt layout. Triggered by window.print() — hidden except on @media print.
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { formatNumber } from '@/lib/formatters';
+import { formatNumber, formatCurrency } from '@/lib/formatters';
 
 export interface ManagerReceiptData {
  gymName: string;
@@ -14,7 +14,7 @@ export interface ManagerReceiptData {
  paymentMethod: string;
 }
 
-export default function ManagerMembersThermalReceipt({ data }: { data: ManagerReceiptData | null }) {
+export default function ManagerThermalReceipt({ data }: { data: ManagerReceiptData | null }) {
  const [mounted, setMounted] = useState(false);
 
  useEffect(() => {
@@ -41,7 +41,7 @@ export default function ManagerMembersThermalReceipt({ data }: { data: ManagerRe
  <thead className="border-black" style={{ borderTopWidth: '1.5px', borderBottomWidth: '1.5px' }}>
  <tr>
  <th className="text-left font-bold py-1.5">Description</th>
- <th className="text-right font-bold py-1.5">Amt(Rs)</th>
+ <th className="text-right font-bold py-1.5">Amount</th>
  </tr>
  </thead>
  <tbody className="border-black" style={{ borderBottomWidth: '1.5px' }}>
@@ -55,7 +55,7 @@ export default function ManagerMembersThermalReceipt({ data }: { data: ManagerRe
  </span>
  )}
  </td>
- <td className="text-right py-1.5 align-top">{formatNumber(item.amount)}</td>
+ <td className="text-right py-1.5 align-top">{formatCurrency(item.amount)}</td>
  </tr>
  ))}
  </tbody>
@@ -63,7 +63,7 @@ export default function ManagerMembersThermalReceipt({ data }: { data: ManagerRe
  
  <div className="flex justify-between font-bold text-base mb-2">
  <span>TOTAL:</span>
- <span>Rs. {formatNumber(data.total)}</span>
+ <span>{formatCurrency(data.total)}</span>
  </div>
  
  <div className="mb-4 text-xs">

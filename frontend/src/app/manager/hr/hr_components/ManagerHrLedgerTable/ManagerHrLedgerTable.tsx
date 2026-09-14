@@ -5,7 +5,7 @@ import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
 import { hrApi } from '@/app/manager/hr/hr_api/ManagerHrApi';
 import type { LedgerEntry } from '@/app/manager/hr/hr_types/ManagerHrTypes';
 import { FileText, Search } from 'lucide-react';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency , formatDate} from '@/lib/formatters';
 
 export default function ManagerHrLedgerTable() {
   const { staff, showToast } = useHrContext();
@@ -105,7 +105,7 @@ export default function ManagerHrLedgerTable() {
               ) : (
                 ledger.map(l => (
                   <tr key={l.id} className="hover:bg-secondary/5 transition-colors">
-                    <td className="p-4 text-foreground whitespace-nowrap">{new Date(l.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                    <td className="p-4 text-foreground whitespace-nowrap">{formatDate(l.date)}</td>
                     <td className="p-4">
                       <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium 
                         ${l.type.includes('Advance') ? 'bg-danger-bg text-danger' : 

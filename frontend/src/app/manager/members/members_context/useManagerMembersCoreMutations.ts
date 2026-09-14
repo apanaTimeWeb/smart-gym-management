@@ -3,7 +3,6 @@ import type { Member } from '@/app/manager/members/members_types/ManagerMembersT
 import type { MemberFormValues } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import { membersApi } from '@/app/manager/members/members_api/ManagerMembersApi';
-import { financeApi } from '@/app/manager/finance/finance_api/ManagerFinanceApi';
 
 export function useManagerMembersCoreMutations(
   showToast: (msg: string, t: ToastType) => void,
@@ -25,13 +24,11 @@ export function useManagerMembersCoreMutations(
         const newId = res.data?.id || (res as { id?: string }).id;
         
         if (data.paidAmount && data.paidAmount > 0 && newId) {
-           await financeApi.createPayment({
-             memberId: newId,
+           await membersApi.addPayment(newId, {
              amount: data.paidAmount,
              method: 'UPI',
              status: 'PAID',
-             paidAt: new Date().toISOString(),
-             invoiceNumber: `INV-${Date.now().toString().slice(-6)}`
+             paidAt: new Date().toISOString()
            });
         }
         return res;
@@ -69,22 +66,20 @@ export function useManagerMembersCoreMutations(
       };
       await membersApi.update(data.memberId, payload);
       
-      await financeApi.createPayment({
-         memberId: data.memberId,
+      const res = await membersApi.addPayment(data.memberId, {
          amount: data.amountPaid,
          method: data.paymentMethod as 'UPI' | 'Cash' | 'Card' | 'NetBanking',
          status: 'PAID',
-         paidAt: new Date().toISOString(),
-         invoiceNumber: `INV-REN-${Date.now().toString().slice(-6)}`
+         paidAt: new Date().toISOString()
       });
-      return payload;
+      return { payload, res };
     },
-    onSuccess: (res, variables) => {
-      showToast('Renewed successfully', 'success');
+    onSuccess: (data, variables) => {
+      showToast(data.res?.message || 'Renewed successfully', 'success');
       setShowRenewModal(false);
       invalidateMemberQueries();
       if (selectedMember?.id === variables.memberId) {
-        setSelectedMember(prev => prev ? { ...prev, ...res } as Member : null);
+        setSelectedMember(prev => prev ? { ...prev, ...data.payload } as Member : null);
       }
     },
     onError: (err: Error) => showToast(err.message || 'Renewal failed', 'error')
@@ -92,18 +87,16 @@ export function useManagerMembersCoreMutations(
 
   const recordPaymentMutation = useMutation({
     mutationFn: async (data: { amount: number; method: string; memberId: string }) => {
-      await financeApi.createPayment({
-         memberId: data.memberId,
+      const res = await membersApi.addPayment(data.memberId, {
          amount: data.amount,
          method: data.method as 'UPI' | 'Cash' | 'Card' | 'NetBanking',
          status: 'PAID',
-         paidAt: new Date().toISOString(),
-         invoiceNumber: `INV-PMT-${Date.now().toString().slice(-6)}`
+         paidAt: new Date().toISOString()
       });
-      return data;
+      return res;
     },
-    onSuccess: () => {
-      showToast('Payment recorded successfully', 'success');
+    onSuccess: (res) => {
+      showToast(res.message || 'Payment recorded successfully', 'success');
       setShowPaymentModal(false);
       invalidateMemberQueries();
     },

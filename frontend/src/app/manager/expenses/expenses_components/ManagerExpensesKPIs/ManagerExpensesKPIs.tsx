@@ -2,7 +2,7 @@
 'use client';
 
 import { IndianRupee, TrendingDown, Clock, CheckCircle } from 'lucide-react';
-import { formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants'; // Reusing formatCurrency
+import { formatCurrency } from '@/lib/formatters';
 import { useExpensesStatsQuery } from '@/app/manager/expenses/expenses_api/useManagerExpensesQueries';
 
 export default function ManagerExpensesKPIs() {

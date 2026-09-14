@@ -51,7 +51,7 @@ export function useManagerHrPayrollMutations(
         totalPayrollThisMonth: prev.totalPayrollThisMonth + (newPayroll.amount || 0),
         paidCount: prev.paidCount + 1 
       } : null);
-      showToast('Payroll recorded successfully', 'success');
+      showToast(res.message || 'Payroll recorded successfully', 'success');
       setShowPayrollModal(false);
     } catch (err) {
       showToast((err as Error).message, 'error');
@@ -75,7 +75,7 @@ export function useManagerHrPayrollMutations(
         status: newStatus
       };
       
-      await hrApi.updatePayroll(id, payload);
+      const res = await hrApi.updatePayroll(id, payload);
 
       setPayrolls(prev => prev.map(p => {
         if (String(p.id) === String(id)) {
@@ -84,7 +84,7 @@ export function useManagerHrPayrollMutations(
         return p;
       }));
       // We could update summary here, but let's just show success
-      showToast('Salary payment recorded successfully', 'success'); 
+      showToast(res.message || 'Salary payment recorded successfully', 'success'); 
     } catch (err) { 
       showToast((err as Error).message, 'error'); 
     }
@@ -93,9 +93,9 @@ export function useManagerHrPayrollMutations(
   const giveAdvance = useCallback(async (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }) => {
     setSaving(true);
     try {
-      await hrApi.giveAdvance(data);
+      const res = await hrApi.giveAdvance(data);
       setStaff(prev => prev.map(s => String(s.id) === String(data.staffId) ? { ...s, advanceSalary: (s.advanceSalary || 0) + data.amount } as Staff : s));
-      showToast('Advance recorded successfully', 'success');
+      showToast(res.message || 'Advance recorded successfully', 'success');
     } catch (err) {
       showToast((err as Error).message, 'error');
     } finally {
@@ -106,9 +106,9 @@ export function useManagerHrPayrollMutations(
   const payDue = useCallback(async (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }) => {
     setSaving(true);
     try {
-      await hrApi.payDue(data);
+      const res = await hrApi.payDue(data);
       setStaff(prev => prev.map(s => String(s.id) === String(data.staffId) ? { ...s, currentDue: Math.max(0, (s.currentDue || 0) - data.amount) } as Staff : s));
-      showToast('Due paid successfully', 'success');
+      showToast(res.message || 'Due paid successfully', 'success');
     } catch (err) {
       showToast((err as Error).message, 'error');
     } finally {
