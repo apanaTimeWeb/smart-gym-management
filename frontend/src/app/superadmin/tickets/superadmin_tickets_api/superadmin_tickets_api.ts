@@ -8,25 +8,25 @@ import { z } from "zod";
 export const ticketsApi = {
   fetchTickets: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<SupportTicket[]>>(`${TicketsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.any() });
+    return apiFetch<ApiResponse<SupportTicket[]>>(`${TicketsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.unknown() });
   },
   fetchTicketById: (id: string) =>
-    apiFetch<ApiResponse<SupportTicket>>(`${TicketsUrlConfig.BACKEND_API.BASE}/${id}`, { dataSchema: z.any() }),
+    apiFetch<ApiResponse<SupportTicket>>(`${TicketsUrlConfig.BACKEND_API.BASE}/${id}`, { dataSchema: z.unknown() }),
   updateTicket: (id: string, body: Partial<SupportTicket>) =>
     apiFetch<ApiResponse<SupportTicket>>(`${TicketsUrlConfig.BACKEND_API.BASE}/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(body),
-        dataSchema: z.any()
+        dataSchema: z.unknown()
     }),
   closeTicket: (id: string) =>
     apiFetch<ApiResponse<SupportTicket>>(`${TicketsUrlConfig.BACKEND_API.BASE}/${id}/close`, {
       method: 'POST',
-        dataSchema: z.any()
+        dataSchema: z.unknown()
     }),
   assignTicket: (id: string, assignee: string) =>
     apiFetch<ApiResponse<SupportTicket>>(`${TicketsUrlConfig.BACKEND_API.BASE}/${id}/assign`, {
       method: 'POST',
       body: JSON.stringify({ assignee }),
-        dataSchema: z.any()
+        dataSchema: z.unknown()
     }),
 };

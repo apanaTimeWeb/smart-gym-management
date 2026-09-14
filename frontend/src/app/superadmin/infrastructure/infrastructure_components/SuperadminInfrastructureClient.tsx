@@ -91,7 +91,7 @@ export default function SuperadminInfrastructureClient() {
         <div className="h-10 w-64 bg-card motion-safe:animate-pulse rounded-xl mb-8" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-40 bg-card motion-safe:animate-pulse rounded-xl" />
+            <div key={`skeleton-${i}`} className="h-40 bg-card motion-safe:animate-pulse rounded-xl" />
           ))}
         </div>
       </div>

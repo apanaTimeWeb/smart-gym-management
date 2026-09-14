@@ -6,9 +6,9 @@ import { z } from "zod";
 
 export const superadminReportsApi = {
   fetchRevenueData: () =>
-    apiFetch<ApiResponse<RevenueRow[]>>(`${ReportsUrlConfig.BACKEND_API.BASE}/revenue`, { dataSchema: z.any() }),
+    apiFetch<ApiResponse<RevenueRow[]>>(`${ReportsUrlConfig.BACKEND_API.BASE}/revenue`, { dataSchema: z.unknown() }),
   fetchChurnData: () =>
-    apiFetch<ApiResponse<ChurnRecord[]>>(`${ReportsUrlConfig.BACKEND_API.BASE}/churn`, { dataSchema: z.any() }),
+    apiFetch<ApiResponse<ChurnRecord[]>>(`${ReportsUrlConfig.BACKEND_API.BASE}/churn`, { dataSchema: z.unknown() }),
   fetchHealthData: () =>
-    apiFetch<ApiResponse<TenantHealthScore[]>>(`${ReportsUrlConfig.BACKEND_API.BASE}/health`, { dataSchema: z.any() }),
+    apiFetch<ApiResponse<TenantHealthScore[]>>(`${ReportsUrlConfig.BACKEND_API.BASE}/health`, { dataSchema: z.unknown() }),
 };

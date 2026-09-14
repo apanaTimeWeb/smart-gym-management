@@ -8,7 +8,7 @@ import { z } from "zod";
 export const superadminDashboardApi = {
   fetchDashboardData: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<SuperadminDashboardApiData>>(`${DashboardUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.any() });
+    return apiFetch<ApiResponse<SuperadminDashboardApiData>>(`${DashboardUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.unknown() });
   },
-  fetchDashboardMetrics: () => apiFetch<ApiResponse<SuperadminDashboardApiData>>(`${DashboardUrlConfig.BACKEND_API.BASE}/metrics`, { dataSchema: z.any() }),
+  fetchDashboardMetrics: () => apiFetch<ApiResponse<SuperadminDashboardApiData>>(`${DashboardUrlConfig.BACKEND_API.BASE}/metrics`, { dataSchema: z.unknown() }),
 };

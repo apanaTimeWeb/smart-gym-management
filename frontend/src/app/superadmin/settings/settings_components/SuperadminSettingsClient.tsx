@@ -21,7 +21,7 @@ export default function SuperadminSettingsClient() {
   const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
 
   const responseData = fetchRes as { data?: PlatformSetting[] } | undefined;
-  const settings = responseData ? .data && responseData.data.length > 0 ? responseData.data : [];
+  const settings = responseData?.data && responseData.data.length > 0 ? responseData.data : [];
 
   const updateMutation = useMutation({
     mutationFn: ({ id, value }: { id: string, value: string }) => settingsApi.updateSetting(id, { value }),

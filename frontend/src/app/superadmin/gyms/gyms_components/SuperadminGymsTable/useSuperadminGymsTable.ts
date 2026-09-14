@@ -42,7 +42,7 @@ export function useSuperadminGymsTable() {
     queryFn: () => gymsApi.fetchGyms(queryParams),
   });
 
-  const gyms = fetchRes ? .data && fetchRes.data.length > 0 ? fetchRes.data : [];
+  const gyms = fetchRes?.data && fetchRes.data.length > 0 ? fetchRes.data : [];
   const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
 
   // Server-side filtering is now primary; this is a lightweight client guard

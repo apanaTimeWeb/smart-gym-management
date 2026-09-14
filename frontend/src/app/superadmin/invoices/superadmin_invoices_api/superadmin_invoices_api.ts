@@ -14,23 +14,23 @@ export interface CreateManualPaymentDto {
 export const invoicesApi = {
   fetchInvoices: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<SaaSInvoice[]>>(`${InvoicesUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.any() });
+    return apiFetch<ApiResponse<SaaSInvoice[]>>(`${InvoicesUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.unknown() });
   },
   createManualPayment: (dto: CreateManualPaymentDto) =>
     apiFetch<ApiResponse<SaaSInvoice>>(InvoicesUrlConfig.BACKEND_API.MANUAL_PAYMENT, {
       method: 'POST',
       body: JSON.stringify(dto),
-        dataSchema: z.any()
+        dataSchema: z.unknown()
     }),
   getDownloadUrl: (id: string) =>
-    apiFetch<ApiResponse<{ downloadUrl: string }>>(`${InvoicesUrlConfig.BACKEND_API.BASE}/${id}/download`, { dataSchema: z.any() }),
+    apiFetch<ApiResponse<{ downloadUrl: string }>>(`${InvoicesUrlConfig.BACKEND_API.BASE}/${id}/download`, { dataSchema: z.unknown() }),
   exportInvoicesCSV: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<{ downloadUrl: string }>>(`${InvoicesUrlConfig.BACKEND_API.BASE}/export${q}`, { dataSchema: z.any() });
+    return apiFetch<ApiResponse<{ downloadUrl: string }>>(`${InvoicesUrlConfig.BACKEND_API.BASE}/export${q}`, { dataSchema: z.unknown() });
   },
   resendInvoiceEmail: (id: string) =>
     apiFetch<ApiResponse<null>>(`${InvoicesUrlConfig.BACKEND_API.BASE}/${id}/resend`, {
       method: 'POST',
-        dataSchema: z.any()
+        dataSchema: z.unknown()
     }),
 };

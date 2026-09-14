@@ -8,6 +8,6 @@ import { z } from "zod";
 export const auditLogsApi = {
   fetchGlobalLogs: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<AuditLog[]>>(`${GlobalAuditUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.any() });
+    return apiFetch<ApiResponse<AuditLog[]>>(`${GlobalAuditUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.unknown() });
   },
 };

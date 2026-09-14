@@ -7,6 +7,6 @@ import { z } from "zod";
 export const usageMetersApi = {
   fetchUsageMeters: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<UsageMeter[]>>(`${UsageMetersUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.any() });
+    return apiFetch<ApiResponse<UsageMeter[]>>(`${UsageMetersUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.unknown() });
   },
 };

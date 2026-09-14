@@ -8,34 +8,34 @@ import { z } from "zod";
 export const affiliatesApi = {
   fetchAffiliates: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<Affiliate[]>>(`${AffiliatesUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.any() });
+    return apiFetch<ApiResponse<Affiliate[]>>(`${AffiliatesUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.unknown() });
   },
   createAffiliate: (body: Partial<Affiliate>) =>
     apiFetch<ApiResponse<Affiliate>>(AffiliatesUrlConfig.BACKEND_API.BASE, {
       method: 'POST',
       body: JSON.stringify(body),
-        dataSchema: z.any()
+        dataSchema: z.unknown()
     }),
   updateAffiliate: (id: string, body: Partial<Affiliate>) =>
     apiFetch<ApiResponse<Affiliate>>(`${AffiliatesUrlConfig.BACKEND_API.BASE}/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(body),
-        dataSchema: z.any()
+        dataSchema: z.unknown()
     }),
   updateStatus: (id: string, status: string) =>
     apiFetch<ApiResponse<Affiliate>>(`${AffiliatesUrlConfig.BACKEND_API.BASE}/${id}/status`, {
       method: 'PATCH',
       body: JSON.stringify({ status }),
-        dataSchema: z.any()
+        dataSchema: z.unknown()
     }),
   deleteAffiliate: (id: string) =>
     apiFetch<ApiResponse<void>>(`${AffiliatesUrlConfig.BACKEND_API.BASE}/${id}`, {
       method: 'DELETE',
-        dataSchema: z.any()
+        dataSchema: z.unknown()
     }),
   payCommission: (id: string) =>
     apiFetch<ApiResponse<void>>(`${AffiliatesUrlConfig.BACKEND_API.BASE}/${id}/pay`, {
       method: 'POST',
-        dataSchema: z.any()
+        dataSchema: z.unknown()
     }),
 };

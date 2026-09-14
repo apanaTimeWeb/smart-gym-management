@@ -7,18 +7,18 @@ import { z } from "zod";
 export const backupsApi = {
   fetchBackups: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<BackupRecord[]>>(`${BackupsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.any() });
+    return apiFetch<ApiResponse<BackupRecord[]>>(`${BackupsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.unknown() });
   },
   triggerSnapshot: () => {
     return apiFetch<ApiResponse<null>>(`${BackupsUrlConfig.BACKEND_API.BASE}/trigger`, {
       method: 'POST',
-        dataSchema: z.any()
+        dataSchema: z.unknown()
     });
   },
   restoreSnapshot: (id: string) => {
     return apiFetch<ApiResponse<null>>(`${BackupsUrlConfig.BACKEND_API.BASE}/${id}/restore`, {
       method: 'POST',
-        dataSchema: z.any()
+        dataSchema: z.unknown()
     });
   },
   getDownloadUrl: (id: string) => {

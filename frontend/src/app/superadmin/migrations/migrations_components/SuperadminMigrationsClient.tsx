@@ -94,6 +94,12 @@ export default function SuperadminMigrationsClient() {
 
   const getStatusBadge = (status: MigrationLog['status']) => {
     const baseClasses = "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium";
+    const STATUS_COLORS: Record<string, string> = {
+      COMPLETED: 'bg-success/10 text-success',
+      FAILED: 'bg-danger-bg text-danger',
+      PENDING: 'bg-warning/10 text-warning',
+      IN_PROGRESS: 'bg-primary/10 text-primary'
+    };
     const colorClasses = STATUS_COLORS[status] || 'bg-secondary/10 text-secondary';
     
     switch (status) {

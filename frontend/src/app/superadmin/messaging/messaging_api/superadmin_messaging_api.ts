@@ -6,15 +6,15 @@ import { z } from "zod";
 
 export const superadminMessagingApi = {
   fetchMessages: () =>
-    apiFetch<ApiResponse<TenantMessage[]>>(`${MessagingUrlConfig.BACKEND_API.BASE}/messages`, { dataSchema: z.any() }),
+    apiFetch<ApiResponse<TenantMessage[]>>(`${MessagingUrlConfig.BACKEND_API.BASE}/messages`, { dataSchema: z.unknown() }),
   fetchNotifications: () =>
-    apiFetch<ApiResponse<SuperadminNotification[]>>(`${MessagingUrlConfig.BACKEND_API.BASE}/notifications`, { dataSchema: z.any() }),
+    apiFetch<ApiResponse<SuperadminNotification[]>>(`${MessagingUrlConfig.BACKEND_API.BASE}/notifications`, { dataSchema: z.unknown() }),
   fetchTenants: () =>
-    apiFetch<ApiResponse<MessagingTenant[]>>(`${MessagingUrlConfig.BACKEND_API.BASE}/tenants`, { dataSchema: z.any() }),
+    apiFetch<ApiResponse<MessagingTenant[]>>(`${MessagingUrlConfig.BACKEND_API.BASE}/tenants`, { dataSchema: z.unknown() }),
   sendMessage: (payload: Partial<TenantMessage>) =>
     apiFetch<ApiResponse<TenantMessage>>(`${MessagingUrlConfig.BACKEND_API.BASE}/messages`, {
       method: 'POST',
       body: JSON.stringify(payload),
-        dataSchema: z.any()
+        dataSchema: z.unknown()
     }),
 };

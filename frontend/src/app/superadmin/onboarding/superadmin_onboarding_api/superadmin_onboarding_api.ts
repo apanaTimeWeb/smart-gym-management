@@ -6,26 +6,26 @@ import { z } from "zod";
 
 export const onboardingApi = {
   fetchOnboardings: () =>
-    apiFetch<ApiResponse<TenantOnboarding[]>>(OnboardingUrlConfig.BACKEND_API.BASE, { dataSchema: z.any() }),
+    apiFetch<ApiResponse<TenantOnboarding[]>>(OnboardingUrlConfig.BACKEND_API.BASE, { dataSchema: z.unknown() }),
   resendVerification: (id: string) =>
     apiFetch<ApiResponse<TenantOnboarding>>(`${OnboardingUrlConfig.BACKEND_API.BASE}/${id}/resend-verification`, {
       method: 'POST',
-        dataSchema: z.any()
+        dataSchema: z.unknown()
     }),
   markVerified: (id: string) =>
     apiFetch<ApiResponse<TenantOnboarding>>(`${OnboardingUrlConfig.BACKEND_API.BASE}/${id}/mark-verified`, {
       method: 'POST',
-        dataSchema: z.any()
+        dataSchema: z.unknown()
     }),
   extendTrial: (id: string, days: number) =>
     apiFetch<ApiResponse<TenantOnboarding>>(`${OnboardingUrlConfig.BACKEND_API.BASE}/${id}/extend-trial`, {
       method: 'POST',
       body: JSON.stringify({ days }),
-        dataSchema: z.any()
+        dataSchema: z.unknown()
     }),
   convertToPaid: (id: string) =>
     apiFetch<ApiResponse<TenantOnboarding>>(`${OnboardingUrlConfig.BACKEND_API.BASE}/${id}/convert-to-paid`, {
       method: 'POST',
-        dataSchema: z.any()
+        dataSchema: z.unknown()
     }),
 };

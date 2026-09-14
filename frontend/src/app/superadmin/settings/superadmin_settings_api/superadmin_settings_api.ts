@@ -6,8 +6,8 @@ import type { PlatformSetting } from '@/app/superadmin/superadmin_types/superadm
 import { z } from "zod";
 
 export const settingsApi = {
-  fetchSettings: () => apiFetch<ApiResponse<PlatformSetting[]>>(SettingsUrlConfig.BACKEND_API.BASE, { dataSchema: z.any() }),
+  fetchSettings: () => apiFetch<ApiResponse<PlatformSetting[]>>(SettingsUrlConfig.BACKEND_API.BASE, { dataSchema: z.unknown() }),
   updateSetting: (id: string, body: Record<string, unknown>) => apiFetch<ApiResponse<PlatformSetting>>(`${SettingsUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body),
-      dataSchema: z.any()
+      dataSchema: z.unknown()
 }),
 };

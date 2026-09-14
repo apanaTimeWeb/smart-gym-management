@@ -8,37 +8,37 @@ import { z } from "zod";
 export const gymsApi = {
   fetchGyms: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<Tenant[]>>(`${GymsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.any() });
+    return apiFetch<ApiResponse<Tenant[]>>(`${GymsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.unknown() });
   },
-  fetchGymById: (id: string) => apiFetch<ApiResponse<Tenant>>(`${GymsUrlConfig.BACKEND_API.BASE}/${id}`, { dataSchema: z.any() }),
+  fetchGymById: (id: string) => apiFetch<ApiResponse<Tenant>>(`${GymsUrlConfig.BACKEND_API.BASE}/${id}`, { dataSchema: z.unknown() }),
   createGym: (body: Partial<Tenant>) => apiFetch<ApiResponse<Tenant>>(GymsUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body),
-      dataSchema: z.any()
+      dataSchema: z.unknown()
 }),
   updateGym: (id: string, body: Partial<Tenant>) => apiFetch<ApiResponse<Tenant>>(`${GymsUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body),
-      dataSchema: z.any()
+      dataSchema: z.unknown()
 }),
   changeGymStatus: (id: string, status: string) => apiFetch<ApiResponse<Tenant>>(`${GymsUrlConfig.BACKEND_API.BASE}/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }),
-      dataSchema: z.any()
+      dataSchema: z.unknown()
 }),
   impersonateTenant: (id: string) => apiFetch<ApiResponse<{ token: string }>>(`${GymsUrlConfig.BACKEND_API.IMPERSONATE}/${id}/impersonate`, { method: 'POST',
-      dataSchema: z.any()
+      dataSchema: z.unknown()
 }),
   deleteGym: (id: string) => apiFetch<ApiResponse<void>>(`${GymsUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'DELETE',
-      dataSchema: z.any()
+      dataSchema: z.unknown()
 }),
-  fetchGymStats: () => apiFetch<ApiResponse<unknown>>(`${GymsUrlConfig.BACKEND_API.BASE}/stats`, { dataSchema: z.any() }),
+  fetchGymStats: () => apiFetch<ApiResponse<unknown>>(`${GymsUrlConfig.BACKEND_API.BASE}/stats`, { dataSchema: z.unknown() }),
   emailGymOwner: (id: string, body: { subject: string; message: string;[key: string]: unknown }) => apiFetch<ApiResponse<void>>(`${GymsUrlConfig.BACKEND_API.BASE}/${id}/email`, { method: 'POST', body: JSON.stringify(body),
-      dataSchema: z.any()
+      dataSchema: z.unknown()
 }),
   exportGymsCSV: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<{ downloadUrl: string }>>(`${GymsUrlConfig.BACKEND_API.BASE}/export${q}`, { dataSchema: z.any() });
+    return apiFetch<ApiResponse<{ downloadUrl: string }>>(`${GymsUrlConfig.BACKEND_API.BASE}/export${q}`, { dataSchema: z.unknown() });
   },
   /** Provisions a brand-new isolated tenant database and creates the gym in the SaaS system. */
   provisionGym: (body: Record<string, unknown>) =>
     apiFetch<ApiResponse<Tenant>>(`${GymsUrlConfig.BACKEND_API.BASE}/provision`, {
       method: 'POST',
       body: JSON.stringify(body),
-        dataSchema: z.any()
+        dataSchema: z.unknown()
     }),
 };

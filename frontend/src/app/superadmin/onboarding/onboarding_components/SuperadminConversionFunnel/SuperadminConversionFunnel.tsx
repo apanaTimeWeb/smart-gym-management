@@ -9,6 +9,7 @@ const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false })
 
 export default function SuperadminConversionFunnel({ tenants }: { tenants: TenantOnboarding[] }) {
   const [mounted, setMounted] = useState(false);
+  // RATIONALE: Required by architecture to sync state/lifecycle based on dependencies.
   useEffect(() => setMounted(true), []);
 
   const { series, options } = useMemo(() => {

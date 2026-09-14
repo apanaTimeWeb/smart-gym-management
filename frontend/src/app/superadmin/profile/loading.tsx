@@ -18,7 +18,7 @@ export default function SuperadminProfileLoading() {
           <div className="h-7 w-28 bg-skeleton-base motion-safe:animate-pulse rounded-full" />
           <div className="w-full border-t border-border pt-4 space-y-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="flex justify-between">
+              <div key={`skeleton-${i}`} className="flex justify-between">
                 <div className="h-4 w-20 bg-skeleton-base motion-safe:animate-pulse rounded" />
                 <div className="h-4 w-24 bg-skeleton-base motion-safe:animate-pulse rounded" />
               </div>
@@ -34,7 +34,7 @@ export default function SuperadminProfileLoading() {
           </div>
           <div className="p-6 space-y-5">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="space-y-1.5">
+              <div key={`skeleton-${i}`} className="space-y-1.5">
                 <div className="h-4 w-28 bg-skeleton-base motion-safe:animate-pulse rounded" />
                 <div className="h-10 w-full bg-skeleton-base motion-safe:animate-pulse rounded-lg" />
               </div>

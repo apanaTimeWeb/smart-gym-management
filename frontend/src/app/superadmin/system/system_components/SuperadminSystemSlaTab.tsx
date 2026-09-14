@@ -5,6 +5,16 @@ import { ServerCog, Clock, AlertCircle, CheckCircle, Ticket, Search } from 'luci
 import toast from 'react-hot-toast';
 import { formatNumber } from '@/lib/formatters';
 
+interface SlaRecord {
+  id: string;
+  name: string;
+  targetSla: number;
+  actualUptime: number;
+  downtimeMinutes: number;
+  downtimeIncidents: number;
+  status: 'MET' | 'WARNING' | 'BREACHED';
+}
+
 export default function SuperadminSystemSlaTab() {
   const [slaSearch, setSlaSearch] = useState('');
 
@@ -12,11 +22,12 @@ export default function SuperadminSystemSlaTab() {
     toast.success(`Generated Downtime Credit invoice for gym ${tenantId}`, { id: 'generated-downtime-credit-invoice-for-gym-tenantid' });
   };
 
-  const filteredSla = [].filter(sla => sla.name.toLowerCase().includes(slaSearch.toLowerCase()));
-  const totalTenants = [].length;
-  const breachedTenants = [].filter(s => s.status === 'BREACHED').length;
+  const slaData: SlaRecord[] = [];
+  const filteredSla = slaData.filter(sla => sla.name.toLowerCase().includes(slaSearch.toLowerCase()));
+  const totalTenants = slaData.length;
+  const breachedTenants = slaData.filter(s => s.status === 'BREACHED').length;
   const avgUptimeRaw = totalTenants > 0
-    ? [].reduce((acc, s) => acc + s.actualUptime, 0) / totalTenants
+    ? slaData.reduce((acc, s) => acc + s.actualUptime, 0) / totalTenants
     : 0;
   const avgUptime = formatNumber(Math.round(avgUptimeRaw * 100) / 100);
 

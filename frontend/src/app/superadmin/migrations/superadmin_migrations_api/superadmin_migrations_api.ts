@@ -8,13 +8,13 @@ import { z } from "zod";
 export const migrationsApi = {
   fetchMigrations: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<MigrationLog[]>>(`${MigrationsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.any() });
+    return apiFetch<ApiResponse<MigrationLog[]>>(`${MigrationsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.unknown() });
   },
   triggerMigration: (tenantId: string) => {
     return apiFetch<ApiResponse<void>>(`${MigrationsUrlConfig.BACKEND_API.BASE}/trigger`, {
       method: 'POST',
       body: JSON.stringify({ tenantId }),
-        dataSchema: z.any()
+        dataSchema: z.unknown()
     });
   },
 };

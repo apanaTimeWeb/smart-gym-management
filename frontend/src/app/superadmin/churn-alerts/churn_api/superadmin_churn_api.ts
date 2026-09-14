@@ -6,28 +6,28 @@ import { z } from "zod";
 
 export const churnAlertsApi = {
   fetchAlerts: () =>
-    apiFetch<ApiResponse<ChurnAlert[]>>(ChurnUrlConfig.BACKEND_API.BASE, { dataSchema: z.any() }),
+    apiFetch<ApiResponse<ChurnAlert[]>>(ChurnUrlConfig.BACKEND_API.BASE, { dataSchema: z.unknown() }),
 
   fetchKpis: () =>
-    apiFetch<ApiResponse<ChurnKpiData>>(`${ChurnUrlConfig.BACKEND_API.BASE}/kpi`, { dataSchema: z.any() }),
+    apiFetch<ApiResponse<ChurnKpiData>>(`${ChurnUrlConfig.BACKEND_API.BASE}/kpi`, { dataSchema: z.unknown() }),
 
   updateAction: (payload: ChurnActionPayload) =>
     apiFetch<ApiResponse<ChurnAlert>>(`${ChurnUrlConfig.BACKEND_API.BASE}/${payload.alertId}/action`, {
       method: 'PATCH',
       body: JSON.stringify(payload),
-        dataSchema: z.any()
+        dataSchema: z.unknown()
     }),
 
   dismissAlert: (alertId: string) =>
     apiFetch<ApiResponse<void>>(`${ChurnUrlConfig.BACKEND_API.BASE}/${alertId}`, {
       method: 'DELETE',
-        dataSchema: z.any()
+        dataSchema: z.unknown()
     }),
 
   bulkOutreach: (tenantIds: string[]) =>
     apiFetch<ApiResponse<void>>(`${ChurnUrlConfig.BACKEND_API.BASE}/outreach`, {
       method: 'POST',
       body: JSON.stringify({ tenantIds }),
-        dataSchema: z.any()
+        dataSchema: z.unknown()
     }),
 };
