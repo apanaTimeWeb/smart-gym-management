@@ -47,8 +47,13 @@ export async function logout() {
   if (typeof window !== 'undefined') {
     localStorage.clear();
     sessionStorage.clear();
+    document.cookie = 'gymsmart_user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
   }
-  await fetch(AuthUrlConfig.PROXY_API.LOGOUT, { method: 'POST' });
+  try {
+    await fetch(AuthUrlConfig.PROXY_API.LOGOUT, { method: 'POST' });
+  } catch (err) {
+    // Proceed with redirect even if proxy fetch fails (e.g., offline)
+  }
   window.location.replace(AuthUrlConfig.PAGES.LOGIN);
 }
 

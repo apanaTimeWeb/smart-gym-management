@@ -66,6 +66,7 @@ const DASHBOARD_STATS = {
   totalProducts: 86, lowStockCount: 7,
   totalInquiries: 94, newInquiries: 18,
   churnRate: 4.2, retentionRate: 87.3, arpm: 4680,
+  revenueGrowthPercent: 12.5, todayCollection: 45000, frozenMembershipsCount: 15, totalPTRevenue: 120000,
   memberGrowth: REVENUE_TREND.map(r => ({ month: r.month, count: Math.floor(r.revenue / 6000) })),
   revenueTrend: REVENUE_TREND,
   membersByPlan: [
@@ -139,15 +140,73 @@ const GYMS = [
 
 // ─── superadmin dashboard ─────────────────────────────────────────────────────
 const SUPERADMIN_DASHBOARD = {
-  totalGyms: 5, activeGyms: 3, trialGyms: 1, inactiveGyms: 1,
-  totalMembers: 1160, totalRevenue: 4850000, monthlyRevenue: 920000,
-  newSignups: 2, churnedGyms: 0,
-  revenueTrend: REVENUE_TREND,
-  gymGrowth: [
-    { month: 'Jul', count: 3 }, { month: 'Aug', count: 3 }, { month: 'Sep', count: 4 },
-    { month: 'Oct', count: 4 }, { month: 'Nov', count: 4 }, { month: 'Dec', count: 5 }, { month: 'Jan', count: 5 },
+  metrics: {
+    totalGyms: 5,
+    activeGyms: 3,
+    suspendedGyms: 1,
+    trialGyms: 1,
+    totalEndUsers: 1160,
+    monthlyRecurringRevenue: 920000,
+    overdueInvoicesCount: 4,
+    pendingRevenue: 150000,
+    recentOnboards: GYMS.slice(0, 3),
+    mrrDeltaPercent: 12.5,
+    arrDeltaPercent: 45.2,
+    arpu: 28000,
+    revenueByTier: [
+      { plan: 'Enterprise', amount: 450000, tenantCount: 2 },
+      { plan: 'Pro', amount: 300000, tenantCount: 3 },
+      { plan: 'Standard', amount: 170000, tenantCount: 5 },
+    ],
+    revenueByGeography: [
+      { region: 'Mumbai', revenue: 620000 },
+      { region: 'Pune', revenue: 200000 },
+      { region: 'Delhi', revenue: 100000 },
+    ],
+    platformHealthScore: 92,
+  },
+  revenue: REVENUE_TREND.map(r => ({ month: r.month, mrr: r.revenue })),
+  growth: [
+    { month: 'Jul', gyms: 3 }, { month: 'Aug', gyms: 3 }, { month: 'Sep', gyms: 4 },
+    { month: 'Oct', gyms: 4 }, { month: 'Nov', gyms: 4 }, { month: 'Dec', gyms: 5 }, { month: 'Jan', gyms: 5 },
   ],
-  topGyms: GYMS.slice(0, 3),
+};
+
+// ─── trainer dashboard ────────────────────────────────────────────────────────
+const TRAINER_DASHBOARD = {
+  todaysSessions: 5,
+  completedSessions: 3,
+  pendingSessions: 2,
+  myMembersCount: 24,
+  todaysAttendance: 18,
+  pendingWorkoutPlans: 4,
+  monthlyEarnings: 45000,
+  memberGoalCompletionRate: 82,
+  goalCompletionTrend: [
+    { month: 'Jul', rate: 75 }, { month: 'Aug', rate: 78 }, { month: 'Sep', rate: 80 },
+    { month: 'Oct', rate: 81 }, { month: 'Nov', rate: 85 }, { month: 'Dec', rate: 82 },
+  ],
+  recentMemberProgress: [
+    { id: 'm1', name: 'Rahul Sharma', detail: 'Lost 2kg this month', time: '2h ago' },
+    { id: 'm2', name: 'Priya Singh', detail: 'Increased deadlift by 10kg', time: '1d ago' },
+  ],
+  upcomingSessions: [
+    { id: 's1', name: 'Amit Patel', time: '14:00', type: 'Weight Training' },
+    { id: 's2', name: 'Sneha Joshi', time: '16:30', type: 'HIIT' },
+  ],
+  membersByPlan: [
+    { plan: 'Gold Plan', count: 14 },
+    { plan: 'Annual Pro', count: 10 },
+  ],
+  trainerProfile: {
+    name: 'Ravi Trainer', shiftStart: '06:00', shiftEnd: '14:00', rating: 4.8
+  },
+  totalPTRevenue: 120000,
+  weeklySessionsCompleted: 15,
+  avgSessionRating: 4.9,
+  activeClientsCount: 20,
+  attendanceRate: 92,
+  nextSessionTime: '14:00',
 };
 
 // ─── attendance ───────────────────────────────────────────────────────────────
@@ -169,7 +228,17 @@ export function getMockResponse(path: string): unknown {
   if (p.includes('/auth/login'))   return ok({ accessToken: 'mock_token', refreshToken: 'mock_refresh', user: { id: 'u1', name: 'Demo Admin', email: 'admin@gymsmart.com', role: 'ADMIN', tenantId: 'tenant_001' } });
   if (p.includes('/auth/me'))      return ok({ id: 'u1', name: 'Demo Admin', email: 'admin@gymsmart.com', role: 'ADMIN', tenantId: 'tenant_001' });
 
-  // Admin Dashboard
+  // Superadmin
+  if (p.includes('/superadmin')) {
+    if (p.includes('/dashboard')) return ok(SUPERADMIN_DASHBOARD, 'Superadmin stats fetched');
+    if (p.includes('/gym')) return ok(GYMS, 'Gyms fetched');
+    return ok([], 'Superadmin generic data');
+  }
+
+  // Trainer Dashboard
+  if (p.includes('/trainer/dashboard')) return ok(TRAINER_DASHBOARD, 'Trainer stats fetched');
+
+  // Admin / Manager Dashboard
   if (p.includes('/dashboard'))    return ok(DASHBOARD_STATS);
 
   // Members
@@ -199,11 +268,7 @@ export function getMockResponse(path: string): unknown {
   // Announcements / Broadcasts
   if (p.includes('/announcement') || p.includes('/broadcast')) return ok(ANNOUNCEMENTS, 'Announcements fetched');
 
-  // Superadmin Gyms
-  if (p.includes('/gym'))          return ok(GYMS, 'Gyms fetched');
 
-  // Superadmin Dashboard
-  if (p.includes('/superadmin'))   return ok(SUPERADMIN_DASHBOARD, 'Superadmin stats fetched');
 
   // Revenue / Finance / Reports
   if (p.includes('/revenue') || p.includes('/finance') || p.includes('/report') || p.includes('/pnl')) {
