@@ -23,7 +23,7 @@ The Auth module provides authentication flows (Login, Logout, Token Refresh, Coo
 - **Zustand stores:** N/A (Forms use local state or React Hook Form)
 - **Context providers:** N/A
 - **Local-storage keys:** None — All tokens strictly reside in HTTP-only cookies.
-- **MSW handler file:** N/A
+- **MSW handler file:** `src/mocks/handlers/auth.handlers.ts`
 
 ## API Contract
 - `POST /auth/login`: Accepts `{ email, password }`, returns JWT and User object.
@@ -51,5 +51,6 @@ The Auth module provides authentication flows (Login, Logout, Token Refresh, Coo
 - [x] Rule 7: Type Isolation — `*_types/` folders used
 - [x] Rule 8: Server/Client Boundary — `page.tsx` = Server, `LoginForm.tsx` = Client
 - [x] Rule 13: Feature Map — this document
+- [x] Rule 15A: Tests present — co-located `__tests__` scaffolding exists
 - [x] Design §12: Z-index scale — floating toggles z-30
 - [x] Design §29: motion-safe guards on all transitions and animations

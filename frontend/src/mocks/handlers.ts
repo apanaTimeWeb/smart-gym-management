@@ -25,6 +25,8 @@ import { superadminAnalyticsHandlers } from './handlers/superadmin-analytics.han
 import { superadminAffiliatesHandlers } from './handlers/superadmin-affiliates.handlers';
 
 import { adminHandlers } from './handlers/admin.handlers';
+import { authHandlers } from './handlers/auth.handlers';
+import { landingHandlers } from './handlers/landing.handlers';
 import { managerWorkoutHandlers } from './handlers/manager-workout.handlers';
 import { managerStoreHandlers } from './handlers/manager-store.handlers';
 import { managerSettingsHandlers } from './handlers/manager-settings.handlers';
@@ -58,6 +60,8 @@ export const handlers = [
     return HttpResponse.json({ status: "ok" });
   }),
   ...adminHandlers,
+  ...authHandlers,
+  ...landingHandlers,
   ...managerWorkoutHandlers,
   ...managerStoreHandlers,
   ...managerSettingsHandlers,

@@ -13,19 +13,22 @@ export type LoginFormData = z.infer<typeof loginSchema>;
 
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 
-export interface AuthUser {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-  tenantId?: string;
-}
+export const AuthUserSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  email: z.string().email(),
+  role: z.string(),
+  tenantId: z.string().optional(),
+});
 
-export interface AuthResponse {
-  accessToken: string;
-  refreshToken: string;
-  user: AuthUser;
-}
+export const AuthResponseSchema = z.object({
+  accessToken: z.string(),
+  refreshToken: z.string(),
+  user: AuthUserSchema,
+});
+
+export type AuthUser = z.infer<typeof AuthUserSchema>;
+export type AuthResponse = z.infer<typeof AuthResponseSchema>;
 
 export interface UseLoginFormReturn {
   form: UseFormReturn<LoginFormData>;

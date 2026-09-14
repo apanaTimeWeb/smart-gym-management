@@ -20,12 +20,17 @@ The Landing module provides the public-facing marketing and information pages fo
 ## Data and State Architecture
 - **Server-state query keys:** N/A (No API fetching required for current landing page)
 - **Zustand stores:** N/A
-- **Context providers:** `LandingProvider` (handles `scrolled` state for navbar, and `menuOpen` state)
+- **Context providers:** `LandingProvider` (handles `scrolled` state for navbar, and `menuOpen` state, as well as Booking and Contact form state)
 - **Local-storage keys:** None
-- **MSW handler file:** N/A
+- **MSW handler file:** `src/mocks/handlers/landing.handlers.ts`
 
 ## API Contract
-No API calls are currently made from the Landing module. All content is static or passed as hardcoded constants to ensure maximum performance and SEO.
+Uses the centralized `apiFetch` wrapper.
+
+| Function | Method | Endpoint | Request | Response `data` type |
+|---|---|---|---|---|
+| `submitBooking(data)` | POST | `/landing/booking` | `{ name, email, phone, date, type }` | `null` |
+| `submitContact(data)` | POST | `/landing/contact` | `{ name, email, message }` | `null` |
 
 ## Permissions and Security
 - Role: Public access (Unauthenticated).
@@ -50,5 +55,6 @@ No API calls are currently made from the Landing module. All content is static o
 - [x] Rule 8: Server/Client Boundary — `page.tsx` = Server, `LandingNavbar.tsx` = Client
 - [x] Rule 9: Loading/error/not-found — `loading.tsx` + `error.tsx` present
 - [x] Rule 13: Feature Map — this document
+- [x] Rule 15A: Tests present — co-located `__tests__` scaffolding exists
 - [x] Design §12: Z-index scale — navbar z-20
 - [x] Design §29: motion-safe guards on all transitions and animations
