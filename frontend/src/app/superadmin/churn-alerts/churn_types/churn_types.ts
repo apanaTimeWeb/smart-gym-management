@@ -1,3 +1,4 @@
+import { z } from 'zod';
 // RESPONSIBILITY: TypeScript types for the Superadmin Churn Alerts module.
 
 export type ChurnRiskLevel = 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
@@ -39,3 +40,24 @@ export interface ChurnActionPayload {
 }
 
 export type ChurnFilterStatus = 'ALL' | ChurnRiskLevel | ChurnActionStatus;
+
+
+export const ChurnAlertSchema = z.object({
+  id: z.string(),
+  tenantId: z.string(),
+  tenantName: z.string(),
+  riskScore: z.number(),
+  riskLevel: z.enum(['LOW', 'MEDIUM', 'HIGH', 'CRITICAL']),
+  reasons: z.array(z.string()),
+  lastContactDate: z.string(),
+  status: z.enum(['OPEN', 'IN_PROGRESS', 'RESOLVED']),
+  assignedTo: z.string().optional(),
+  createdAt: z.string()
+});
+
+export const ChurnKpiDataSchema = z.object({
+  totalAtRisk: z.number(),
+  highRiskCount: z.number(),
+  averageRiskScore: z.number(),
+  resolvedThisMonth: z.number()
+});

@@ -19,7 +19,7 @@ export function SuperadminDashboardDateFilterDropdown() {
       </div>
 
       {value === 'custom' && (
-        <div className="flex items-center gap-2 bg-input border border-border rounded-lg shadow-sm px-3 py-[9px] shrink-0">
+        <div className="flex items-center gap-2 bg-input border border-border rounded-lg shadow-sm px-3 py-2 shrink-0">
           <input 
             type="date" 
             value={customStart}

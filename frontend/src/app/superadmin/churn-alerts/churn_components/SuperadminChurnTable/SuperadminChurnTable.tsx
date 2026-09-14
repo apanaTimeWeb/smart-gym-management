@@ -35,8 +35,8 @@ export default function SuperadminChurnTable({ alerts, onActionClick }: Superadm
               className="hover:bg-input/30 motion-safe:transition-colors group"
             >
               <td className="px-4 py-3">
-                <p className="font-medium text-foreground truncate max-w-[160px]">{alert.gymName}</p>
-                <p className="text-xs text-secondary truncate max-w-[160px]">{alert.ownerName}</p>
+                <p className="font-medium text-foreground truncate max-w-xs">{alert.gymName}</p>
+                <p className="text-xs text-secondary truncate max-w-xs">{alert.ownerName}</p>
               </td>
               <td className="px-4 py-3">
                 <span className="text-xs font-medium text-secondary">{alert.plan}</span>

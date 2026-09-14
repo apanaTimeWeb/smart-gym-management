@@ -86,9 +86,9 @@ export default function SuperadminJobsTable({
                     onChange={() => toggleSelection(job.id)}
                   />
                 </td>
-                <td className="p-4 text-xs font-mono text-secondary max-w-[120px] truncate">{job.id}</td>
+                <td className="p-4 text-xs font-mono text-secondary max-w-[8rem] truncate">{job.id}</td>
                 <td className="p-4 text-sm font-medium text-primary">{job.queueName}</td>
-                <td className="p-4 text-sm max-w-[200px]">
+                <td className="p-4 text-sm max-w-sm">
                   <div className="font-medium text-foreground truncate">{job.jobName}</div>
                   {job.error && (
                     <div className="text-xs text-danger truncate mt-1" title={job.error}>{job.error}</div>
@@ -100,7 +100,7 @@ export default function SuperadminJobsTable({
                       {job.status}
                     </span>
                     {job.attempts > 1 && (
-                      <span className="text-[10px] text-secondary">Attempts: {job.attempts}</span>
+                      <span className="text-[0.65rem] text-secondary">Attempts: {job.attempts}</span>
                     )}
                   </div>
                 </td>

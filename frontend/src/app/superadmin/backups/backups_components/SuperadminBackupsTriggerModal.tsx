@@ -12,12 +12,12 @@ interface SuperadminBackupsTriggerModalProps {
 export default function SuperadminBackupsTriggerModal({ isOpen, onClose, isTriggering, setIsTriggering }: SuperadminBackupsTriggerModalProps) {
   if (!isOpen) return null;
 
-  const handleTriggerSnapshot = async () => {
+  const handlecreateBackupSnapshot = async () => {
     onClose();
     setIsTriggering(true);
     const loadingToast = toast.loading('Initiating global pg_dump snapshot...');
     try {
-      await backupsApi.triggerSnapshot();
+      await backupsApi.createBackupSnapshot();
       toast.success('Global snapshot completed successfully', { id: loadingToast });
     } catch (err) {
       toast.error('Failed to trigger snapshot', { id: loadingToast });
@@ -45,7 +45,7 @@ export default function SuperadminBackupsTriggerModal({ isOpen, onClose, isTrigg
               Cancel
             </button>
             <button 
-              onClick={handleTriggerSnapshot}
+              onClick={handlecreateBackupSnapshot}
               className="px-4 py-2 rounded-lg font-medium bg-primary hover:bg-primary-hover text-white motion-safe:transition-colors"
             >
               Yes, Start Backup

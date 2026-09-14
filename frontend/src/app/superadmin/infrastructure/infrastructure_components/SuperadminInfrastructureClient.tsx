@@ -232,14 +232,14 @@ export default function SuperadminInfrastructureClient() {
           <button 
             onClick={handleFlushAll}
             disabled={isFlushingAll}
-            className="flex items-center justify-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg font-medium hover:opacity-90 motion-safe:transition-opacity min-w-[180px] disabled:opacity-50"
+            className="flex items-center justify-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg font-medium hover:opacity-90 motion-safe:transition-opacity min-w-44 disabled:opacity-50"
           >
             {isFlushingAll ? <Loader2 size={18} className="motion-safe:animate-spin" /> : null}
             Flush All Tenants
           </button>
           <button 
             onClick={() => setIsFlushModalOpen(true)}
-            className="flex items-center justify-center gap-2 bg-transparent text-foreground px-5 py-2.5 rounded-lg font-medium hover:bg-border motion-safe:transition-colors border border-border min-w-[180px] disabled:opacity-50"
+            className="flex items-center justify-center gap-2 bg-transparent text-foreground px-5 py-2.5 rounded-lg font-medium hover:bg-border motion-safe:transition-colors border border-border min-w-44 disabled:opacity-50"
           >
             Flush Specific Tenant
           </button>

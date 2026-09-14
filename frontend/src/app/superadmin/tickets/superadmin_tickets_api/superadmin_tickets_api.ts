@@ -1,3 +1,4 @@
+import { SupportTicketSchema } from '@/app/superadmin/tickets/superadmin_tickets_types/superadmin_tickets_types';
 // RESPONSIBILITY: Modularized API client for the Tickets module.
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';

@@ -19,8 +19,6 @@ export interface FetchMembersParams {
   limit?: number;
 }
 
-
-
 export const adminMembersApi = {
   fetchMembers: async (params: FetchMembersParams) => {
     const query = new URLSearchParams(params as any).toString();
@@ -28,11 +26,5 @@ export const adminMembersApi = {
   },
   fetchSummary: async () => {
     return apiFetch(ADMIN_MEMBERS_URLS.summary, { dataSchema: z.any() });
-  },
-};
-  },
-  fetchSummary: async () => {
-    await new Promise(res => setTimeout(res, 300));
-    return { success: true, message: 'Success', data: MOCK_ADMIN_MEMBERS_SUMMARY };
   },
 };

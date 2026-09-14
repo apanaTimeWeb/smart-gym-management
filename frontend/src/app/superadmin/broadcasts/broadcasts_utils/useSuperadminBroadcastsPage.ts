@@ -1,52 +1,38 @@
 // RESPONSIBILITY: useSuperadminBroadcastsPage.ts encapsulates all state and async logic for the Broadcasts page.
-// DATA FLOW: broadcastsApi Ã¢â€ â€™ useSuperadminBroadcastsPage Ã¢â€ â€™ SuperadminBroadcastsClient
-import { useState, useEffect, useMemo, useCallback } from 'react';
+// DATA FLOW: broadcastsApi → useSuperadminBroadcastsPage → SuperadminBroadcastsClient
+import { useState, useMemo, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { BroadcastSchema, type BroadcastFormData, type Broadcast, type BroadcastStatus, type BroadcastStatusFilter } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
 import toast from 'react-hot-toast';
-import { useLocalStorage } from '@/lib/useLocalStorage';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { broadcastsApi } from '@/app/superadmin/broadcasts/superadmin_broadcasts_api/superadmin_broadcasts_api';
 import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 import type { Tenant } from '@/app/superadmin/gyms/gyms_types/superadmin_gyms_types';
 
-
-/** LocalStorage key for persisting broadcasts across refreshes (TC-28/29 fix) */
-const BROADCASTS_STORAGE_KEY = 'superadmin_broadcasts_v1';
-
-const DEFAULT_BROADCASTS: Broadcast[] = [
-  { id: '1', title: 'System Maintenance', content: 'Scheduled downtime this weekend.', targetGymIds: ['1', '2'], status: 'SENT', scheduledDate: null, sentDate: '2023-08-10' }
-];
-
 export const useSuperadminBroadcastsPage = () => {
-  const [persistedBroadcasts, setPersistedBroadcasts] = useLocalStorage<Broadcast[] | null>(BROADCASTS_STORAGE_KEY, null);
-  const [broadcasts, setBroadcasts] = useState<Broadcast[]>([]);
-  
-  // RESPONSIBILITY: Handle side-effects for useSuperadminBroadcastsPage
-  useEffect(() => {
-    if (!persistedBroadcasts) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setPersistedBroadcasts(DEFAULT_BROADCASTS);
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setBroadcasts(DEFAULT_BROADCASTS);
-    } else {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setBroadcasts(persistedBroadcasts);
-    }
-  }, [persistedBroadcasts, setPersistedBroadcasts]);
+  const queryClient = useQueryClient();
 
-  const updateBroadcasts = useCallback((newBroadcasts: Broadcast[] | ((prev: Broadcast[]) => Broadcast[])) => {
-    setBroadcasts(prev => {
-      const updated = typeof newBroadcasts === 'function' ? newBroadcasts(prev) : newBroadcasts;
-      setPersistedBroadcasts(updated);
-      return updated;
+  const { data: broadcastsRes, status: fetchState, error } = useQuery({
+    queryKey: ['superadmin', 'broadcasts'],
+    queryFn: () => broadcastsApi.fetchBroadcasts(),
+  });
+
+  const { data: gymsRes } = useQuery({
+    queryKey: ['superadmin', 'gyms'],
+    queryFn: () => gymsApi.fetchGyms(),
+  });
+
+  const updateBroadcasts = useCallback((updater: (prev: Broadcast[]) => Broadcast[]) => {
+    queryClient.setQueryData(['superadmin', 'broadcasts'], (oldData: { data: Broadcast[] } | undefined) => {
+      if (!oldData?.data) return oldData;
+      return { ...oldData, data: updater(oldData.data) };
     });
-  }, [setPersistedBroadcasts]);
+  }, [queryClient]);
 
-  const fetchState = 'success';
-  const error = null;
+  const broadcasts = useMemo(() => (broadcastsRes?.data as Broadcast[]) ?? [], [broadcastsRes]);
+  const gyms = useMemo(() => (gymsRes?.data as Tenant[]) ?? [], [gymsRes]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -56,14 +42,6 @@ export const useSuperadminBroadcastsPage = () => {
   const [queueModalOpen, setQueueModalOpen] = useState(false);
   const [queueRecipients, setQueueRecipients] = useState<{id: string; name: string; phone: string}[]>([]);
   const [queueTitle, setQueueTitle] = useState('');
-
-  const { data: fetchRes } = useQuery({
-    queryKey: ['superadmin', 'gyms'],
-    queryFn: () => gymsApi.fetchGyms(),
-  });
-
-  const rawGyms = (fetchRes?.data as Tenant[]) ?? [];
-  const gyms = rawGyms;
 
   const form = useForm<BroadcastFormData>({
     resolver: zodResolver(BroadcastSchema),
@@ -84,7 +62,7 @@ export const useSuperadminBroadcastsPage = () => {
     const isSendingNow = payload.status === 'SENT';
 
     let newB: Broadcast | null = null;
-    
+
     if (editingId) {
       updateBroadcasts(prev => prev.map(b => b.id === editingId ? { ...b, ...payload } as Broadcast : b));
       setIsModalOpen(false);
@@ -118,7 +96,7 @@ export const useSuperadminBroadcastsPage = () => {
     if (!b) return;
 
     updateBroadcasts(prev => prev.map(item => item.id === id ? { ...item, status: 'SENT', sentDate: new Date().toISOString() } : item));
-    
+
     const selectedGyms = gyms?.filter(g => b.targetGymIds?.includes(g.id)) || [];
     const recipients = selectedGyms.map(g => ({ id: g.id, name: ('gymName' in g ? (g as {gymName?: string}).gymName : '') || g.name, phone: g.phone || 'N/A' }));
     setQueueRecipients(recipients);
@@ -191,4 +169,3 @@ export const useSuperadminBroadcastsPage = () => {
     onQueueComplete
   };
 };
-

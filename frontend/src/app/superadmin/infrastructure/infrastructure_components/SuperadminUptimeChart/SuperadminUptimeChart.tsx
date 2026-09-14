@@ -85,7 +85,7 @@ export default function SuperadminUptimeChart() {
     return { series, options };
   }, []);
 
-  if (!mounted) return <div className="h-[250px] bg-card rounded-xl border border-border animate-pulse" />;
+  if (!mounted) return <div className="h-64 bg-card rounded-xl border border-border animate-pulse" />;
 
   return (
     <div className="bg-card border border-border rounded-xl p-6">
@@ -93,7 +93,7 @@ export default function SuperadminUptimeChart() {
         <h2 className="text-xl font-bold text-foreground">Historical Uptime (24h)</h2>
         <p className="text-sm text-secondary mt-1">Platform availability over the last 24 hours</p>
       </div>
-      <div className="h-[250px] w-full">
+      <div className="h-64 w-full">
         <ReactApexChart options={options} series={series} type="area" height="100%" width="100%" />
       </div>
     </div>

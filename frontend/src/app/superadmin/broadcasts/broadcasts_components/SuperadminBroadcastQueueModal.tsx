@@ -123,11 +123,11 @@ export default function SuperadminBroadcastQueueModal({
                 <div className="flex items-center gap-3">
                   <div className={`flex flex-col items-center gap-1 ${isDone || isProcessing ? 'text-success' : 'text-secondary/30'}`}>
                     <Phone size={14} />
-                    <span className="text-[10px] font-bold">WA</span>
+                    <span className="text-[0.65rem] font-bold">WA</span>
                   </div>
                   <div className={`flex flex-col items-center gap-1 ${isDone || isProcessing ? 'text-primary' : 'text-secondary/30'}`}>
                     <Bell size={14} />
-                    <span className="text-[10px] font-bold">APP</span>
+                    <span className="text-[0.65rem] font-bold">APP</span>
                   </div>
                   <div className="ml-3 w-6 h-6 flex items-center justify-center">
                     {isProcessing && <Loader2 className="w-5 h-5 text-primary motion-safe:animate-spin" />}

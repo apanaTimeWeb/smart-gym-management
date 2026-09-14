@@ -50,7 +50,7 @@ export default function SuperadminInvoicesTableRow({ invoice: inv }: InvoicesTab
     e.stopPropagation();
     toast.loading(`Fetching PDF for ${inv.id}...`, { id: `dl-${inv.id}` });
     try {
-      const res = await invoicesApi.getDownloadUrl(inv.id);
+      const res = await invoicesApi.fetchInvoiceDownloadUrl(inv.id);
       if (res.data?.downloadUrl) {
         window.open(res.data.downloadUrl, '_blank');
         toast.success('Download started.', { id: `dl-${inv.id}` });
@@ -99,7 +99,7 @@ export default function SuperadminInvoicesTableRow({ invoice: inv }: InvoicesTab
         <button
           title="Share via WhatsApp"
           onClick={handleShareWhatsApp}
-          className="text-secondary hover:text-[#25D366] motion-safe:transition-colors p-1.5 bg-input hover:bg-[#25D366]/10 rounded-md border border-border"
+          className="text-secondary hover:text-green-500 motion-safe:transition-colors p-1.5 bg-input hover:bg-green-500/10 rounded-md border border-border"
           aria-label={`Share invoice ${inv.id} via WhatsApp`}
         >
           <MessageCircle className="w-4 h-4" />

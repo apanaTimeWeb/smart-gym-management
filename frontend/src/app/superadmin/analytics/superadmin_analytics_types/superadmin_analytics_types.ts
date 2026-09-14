@@ -1,3 +1,4 @@
+import { z } from 'zod';
 // RESPONSIBILITY: TypeScript types for the Analytics module. No business logic — types only.
 // Rule 7: All types isolated here; never inline in components or hooks.
 
@@ -38,3 +39,28 @@ export interface AnalyticsApiData {
 
 /** Canonical async state enum — Rule 42: never use boolean `isLoading` flags */
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';
+
+
+/** Schema for a single revenue history data point (API variant with generic keys). */
+const RevenueHistoryPointSchema = z.object({
+  month: z.string(),
+  amount: z.number(),
+}).passthrough();
+
+/** Schema for a single user growth data point. */
+const UserGrowthPointSchema = z.object({
+  month: z.string(),
+  count: z.number(),
+}).passthrough();
+
+export const AnalyticsApiDataSchema = z.object({
+  activeUsers: z.number(),
+  monthlyRecurringRevenue: z.number(),
+  churnRate: z.number(),
+  newSignups: z.number(),
+  revenueHistory: z.array(RevenueHistoryPointSchema),
+  userGrowth: z.array(UserGrowthPointSchema),
+});
+
+export type RevenueHistoryPoint = z.infer<typeof RevenueHistoryPointSchema>;
+export type UserGrowthPoint = z.infer<typeof UserGrowthPointSchema>;

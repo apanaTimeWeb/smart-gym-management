@@ -1,3 +1,4 @@
+import { ChurnAlertSchema, ChurnKpiDataSchema } from '@/app/superadmin/churn-alerts/churn_types/churn_types';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import type { ChurnAlert, ChurnKpiData, ChurnActionPayload } from '@/app/superadmin/churn-alerts/churn_types/churn_types';
@@ -21,13 +22,13 @@ export const churnAlertsApi = {
   dismissAlert: (alertId: string) =>
     apiFetch<ApiResponse<void>>(`${ChurnUrlConfig.BACKEND_API.BASE}/${alertId}`, {
       method: 'DELETE',
-        dataSchema: z.any()
+        dataSchema: z.object({}).passthrough()
     }),
 
   bulkOutreach: (tenantIds: string[]) =>
     apiFetch<ApiResponse<void>>(`${ChurnUrlConfig.BACKEND_API.BASE}/outreach`, {
       method: 'POST',
       body: JSON.stringify({ tenantIds }),
-        dataSchema: z.any()
+        dataSchema: z.object({}).passthrough()
     }),
 };

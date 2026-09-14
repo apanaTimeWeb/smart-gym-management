@@ -67,56 +67,53 @@ export const useSuperadminCoupons = () => {
   const { mutate, isMutating } = useSuperadminCouponsMutation();
 
   const handleCreateCoupon = useCallback(async (data: CouponFormData) => {
-    // Mocking the backend API success as per "fix with all hardcoded data"
-    const newCoupon = {
-      id: `mock-${Date.now()}`,
-      code: (data.code || `CODE-${Math.floor(Math.random() * 10000)}`).toUpperCase(),
-      discountType: data.discountType,
-      discountValue: data.discountValue || 0,
-      maxUses: data.maxUses || 0,
-      currentUses: 0,
-      expiryDate: data.expiryDate,
-      status: 'ACTIVE',
-      isDeleted: false,
-    } as Coupon;
-    
-    updateCoupons(prev => [newCoupon, ...prev]);
-    setIsModalOpen(false);
-    form.reset();
-    toast.success('Coupon created successfully', { id: 'coupon-created-successfully' });
-  }, [form, updateCoupons]);
+    await mutate(() => couponsApi.createCoupon(data), {
+      onSuccess: (newCoupon) => {
+        updateCoupons(prev => [newCoupon as Coupon, ...prev]);
+        setIsModalOpen(false);
+        form.reset();
+      },
+      successMessage: 'Coupon created successfully'
+    });
+  }, [form, updateCoupons, mutate]);
 
   const handleUpdateCoupon = useCallback(async (id: string, data: Partial<CouponFormData>) => {
     if (!selectedCoupon) return;
-    // Mocking update
-    updateCoupons(prev => prev.map(c => c.id === id ? { ...c, ...data } as Coupon : c));
-    setIsEditModalOpen(false);
-    setSelectedCoupon(null);
-    toast.success('Coupon updated successfully', { id: 'coupon-updated-successfully' });
-  }, [selectedCoupon, updateCoupons]);
+    await mutate(() => couponsApi.updateCoupon(id, data), {
+      onSuccess: (updatedCoupon) => {
+        updateCoupons(prev => prev.map(c => c.id === id ? { ...c, ...(updatedCoupon != null && typeof updatedCoupon === 'object' ? updatedCoupon as Partial<Coupon> : {}) } : c));
+        setIsEditModalOpen(false);
+        setSelectedCoupon(null);
+      },
+      successMessage: 'Coupon updated successfully'
+    });
+  }, [selectedCoupon, updateCoupons, mutate]);
 
   const handleDeleteCoupon = useCallback(async (id: string) => {
-    // Mocking delete
-    updateCoupons(prev => prev.filter(c => c.id !== id));
-    toast.success('Coupon deleted successfully', { id: 'coupon-deleted-successfully' });
-  }, [updateCoupons]);
+    await mutate(() => couponsApi.deleteCoupon(id), {
+      onSuccess: () => updateCoupons(prev => prev.filter(c => c.id !== id)),
+      successMessage: 'Coupon deleted successfully'
+    });
+  }, [updateCoupons, mutate]);
 
   const handleToggleRestore = useCallback(async (id: string) => {
-    // Mocking restore
-    updateCoupons(prev => prev.map(c => c.id === id ? { ...c, isDeleted: false } : c));
-    toast.success('Coupon restored successfully', { id: 'coupon-restored-successfully' });
-  }, [updateCoupons]);
+    await mutate(() => couponsApi.restoreCoupon(id), {
+      onSuccess: () => updateCoupons(prev => prev.map(c => c.id === id ? { ...c, isDeleted: false } : c)),
+      successMessage: 'Coupon restored successfully'
+    });
+  }, [updateCoupons, mutate]);
 
   const handleToggleStatus = useCallback(async (id: string, currentStatus: CouponStatus) => {
     if (currentStatus !== 'ACTIVE' && currentStatus !== 'INACTIVE') {
-      toast.error(`Cannot toggle status of ${currentStatus.toLowerCase()} coupon`, { id: 'cannot-toggle-status-of-currentstatus-tolowercase-coupon' });
+      toast.error(`Cannot toggle status of ${currentStatus.toLowerCase()} coupon`, { id: 'toggle-error' });
       return;
     }
     const newStatus: CouponStatus = currentStatus === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
-    // Mocking toggle
-    updateCoupons(prev => prev.map(c => c.id === id ? { ...c, status: newStatus } : c));
-    toast.success(`Coupon marked as ${newStatus}`, { id: 'coupon-marked-as-newstatus' });
-  }, [updateCoupons]);
+    await mutate(() => couponsApi.toggleStatus(id, newStatus), {
+      onSuccess: () => updateCoupons(prev => prev.map(c => c.id === id ? { ...c, status: newStatus } : c)),
+      successMessage: `Coupon marked as ${newStatus}`
+    });
+  }, [updateCoupons, mutate]);
 
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
 

@@ -1,3 +1,4 @@
+import { AffiliateSchema } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
 // RESPONSIBILITY: Modularized API client for the Affiliates module.
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
@@ -31,11 +32,11 @@ export const affiliatesApi = {
   deleteAffiliate: (id: string) =>
     apiFetch<ApiResponse<void>>(`${AffiliatesUrlConfig.BACKEND_API.BASE}/${id}`, {
       method: 'DELETE',
-        dataSchema: z.any()
+        dataSchema: z.object({}).passthrough()
     }),
   payCommission: (id: string) =>
     apiFetch<ApiResponse<void>>(`${AffiliatesUrlConfig.BACKEND_API.BASE}/${id}/pay`, {
       method: 'POST',
-        dataSchema: z.any()
+        dataSchema: z.object({}).passthrough()
     }),
 };

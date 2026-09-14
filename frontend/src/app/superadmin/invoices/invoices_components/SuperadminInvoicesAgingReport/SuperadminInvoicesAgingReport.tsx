@@ -74,7 +74,7 @@ export default function SuperadminInvoicesAgingReport({ invoices }: { invoices: 
               <div className="mt-4 pt-4 border-t border-border/50 max-h-32 overflow-y-auto scrollbar-thin">
                 {data.invoices.map(inv => (
                   <div key={inv.id} className="flex justify-between text-xs py-1">
-                    <span className="text-foreground truncate max-w-[100px]" title={inv.tenantName}>{inv.tenantName}</span>
+                    <span className="text-foreground truncate max-w-[6rem]" title={inv.tenantName}>{inv.tenantName}</span>
                     <span className="font-medium text-secondary">{formatCurrency(inv.amount)}</span>
                   </div>
                 ))}

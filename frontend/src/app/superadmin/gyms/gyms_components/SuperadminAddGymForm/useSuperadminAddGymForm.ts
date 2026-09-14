@@ -54,7 +54,7 @@ export function useSuperadminAddGymForm() {
   });
   const plans = fetchRes || [];
 
-  const { register, handleSubmit, control, formState: { errors, isDirty } } = useForm<OnboardGymFormValues>({
+  const form = useForm<OnboardGymFormValues>({
     resolver: zodResolver(OnboardGymSchema),
     defaultValues: { plan: '' },
   });
@@ -151,12 +151,13 @@ export function useSuperadminAddGymForm() {
   };
 
   return {
-    register,
-    handleSubmit,
+    form,
+    register: form.register,
+    handleSubmit: form.handleSubmit,
     onSubmit,
-    control,
-    errors,
-    isDirty,
+    control: form.control,
+    errors: form.formState.errors,
+    isDirty: form.formState.isDirty,
     isProvisioning,
     provisioningLogs,
     showPassword,

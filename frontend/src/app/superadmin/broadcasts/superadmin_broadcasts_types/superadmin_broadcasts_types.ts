@@ -56,3 +56,4 @@ export interface BroadcastStatusBadgeProps {
 export interface BroadcastsEmptyStateProps {
   onCreateClick: () => void;
 }
+

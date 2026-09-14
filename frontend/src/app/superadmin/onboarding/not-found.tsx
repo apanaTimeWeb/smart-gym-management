@@ -3,7 +3,7 @@ import { DashboardUrlConfig } from '@/app/superadmin/dashboard/dashboard_url_con
 
 export default function OnboardingNotFound() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[400px] gap-4 text-center p-8">
+    <div className="empty-state-container">
       <div className="w-16 h-16 rounded-full bg-input flex items-center justify-center">
         <span className="text-3xl font-bold text-secondary">404</span>
       </div>

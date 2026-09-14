@@ -60,7 +60,7 @@ export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps>
           </button>
         </div>
         
-        <form onSubmit={handleSubmit(onFormSubmit)} className="flex flex-col p-7 gap-5 overflow-y-auto max-h-[70vh] custom-scrollbar">
+        <form onSubmit={handleSubmit(onFormSubmit)} className="flex flex-col p-7 gap-5 modal-scroll-area">
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-bold text-secondary">Coupon Code <span className="text-danger">*</span></label>
             <input 

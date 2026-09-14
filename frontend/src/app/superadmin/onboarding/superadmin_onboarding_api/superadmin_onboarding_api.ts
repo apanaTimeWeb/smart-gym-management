@@ -1,3 +1,4 @@
+import { TenantOnboardingSchema } from '@/app/superadmin/onboarding/onboarding_types/onboarding_types';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import type { TenantOnboarding } from '@/app/superadmin/onboarding/onboarding_types/onboarding_types';

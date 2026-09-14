@@ -38,7 +38,7 @@ export default function SuperadminBackupsClient() {
   const handleDownload = (id: string) => {
     toast.success(`Starting download for backup ${id}`, { id: 'starting-download-for-backup-id' });
     const link = document.createElement('a');
-    link.href = backupsApi.getDownloadUrl(id);
+    link.href = backupsApi.fetchBackupDownloadUrl(id);
     link.download = `${id}_snapshot.sql.gz`;
     document.body.appendChild(link);
     link.click();

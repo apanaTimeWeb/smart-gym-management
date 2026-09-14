@@ -1,3 +1,4 @@
+import { z } from 'zod';
 // RESPONSIBILITY: TypeScript types for the Superadmin Profile module.
 
 export interface SuperadminProfileData {
@@ -33,3 +34,14 @@ export interface Toggle2FAPayload {
 
 export type ProfileTab = 'personal' | 'security';
 export type ProfileFetchState = 'idle' | 'loading' | 'success' | 'error';
+
+
+export const SuperadminProfileDataSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  email: z.string(),
+  role: z.string(),
+  avatarUrl: z.string().optional(),
+  lastLogin: z.string(),
+  twoFactorEnabled: z.boolean()
+});

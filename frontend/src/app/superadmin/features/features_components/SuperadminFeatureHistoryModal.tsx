@@ -61,7 +61,7 @@ export default function SuperadminFeatureHistoryModal({ isOpen, onClose, flag }:
         <div className="flex items-center justify-between p-6 border-b border-border">
           <div>
             <h2 id="modal-title" className="text-xl font-bold text-foreground">Change History</h2>
-            <p className="text-sm text-secondary mt-1 truncate max-w-[250px]">{flag.name}</p>
+            <p className="text-sm text-secondary mt-1 truncate max-w-md">{flag.name}</p>
           </div>
           <button 
             onClick={onClose}

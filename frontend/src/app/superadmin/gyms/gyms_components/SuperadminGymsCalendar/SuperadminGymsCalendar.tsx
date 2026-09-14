@@ -65,20 +65,20 @@ export default function SuperadminGymsCalendar() {
         ))}
         
         {blanks.map(blank => (
-          <div key={`blank-${blank}`} className="bg-card min-h-[120px] p-2" />
+          <div key={`blank-${blank}`} className="bg-card min-h-32 p-2" />
         ))}
         
         {days.map(day => {
           const dayGyms = gymsByDate[day] || [];
           return (
-            <div key={day} className="bg-card min-h-[120px] p-2 hover:bg-input/50 motion-safe:transition-colors group border-t border-border">
+            <div key={day} className="bg-card min-h-32 p-2 hover:bg-input/50 motion-safe:transition-colors group border-t border-border">
               <div className="flex justify-between items-start mb-2">
                 <span className="text-sm font-medium text-foreground">{day}</span>
                 {dayGyms.length > 0 && (
                   <span className="text-xs bg-primary/20 text-primary px-1.5 rounded-full font-medium">{dayGyms.length}</span>
                 )}
               </div>
-              <div className="space-y-1 overflow-y-auto max-h-[80px] scrollbar-thin">
+              <div className="space-y-1 overflow-y-auto max-h-20 scrollbar-thin">
                 {dayGyms.map(gym => (
                   <div 
                     key={gym.id} 

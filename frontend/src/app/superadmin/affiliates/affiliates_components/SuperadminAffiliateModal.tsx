@@ -41,7 +41,7 @@ export const SuperadminAffiliateModal: React.FC<SuperadminAffiliateModalProps> =
           </button>
         </div>
         
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col p-7 gap-5 overflow-y-auto max-h-[70vh] custom-scrollbar">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col p-7 gap-5 modal-scroll-area">
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-bold text-secondary">Partner Name <span className="text-danger">*</span></label>
             <input 

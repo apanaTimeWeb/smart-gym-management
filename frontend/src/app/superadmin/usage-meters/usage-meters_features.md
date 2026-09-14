@@ -1,56 +1,36 @@
-# Usage-meters Feature Map
+# Usage Meters Feature Map
 
 ## Module Purpose
-Handles usage-meters operations, UI display, and logic isolation as part of the Smart Gym 360 platform.
-
-## Directory Structure
-- `usage-meters_components/`: Contains all isolated micro-components for the module.
-- `usage-meters_types/` (if applicable): TypeScript definitions.
-- `usage-meters_utils/` (if applicable): Shared constants and hardcoded data.
-- `usage-meters_context/` (if applicable): Module-scoped React Context or Zustand store.
+Provides the Superadmin with a read-only dashboard view of per-tenant resource consumption: API call counts, storage usage, active-member bandwidth, and bandwidth-utilisation percentage. Alerts on approaching or exceeding plan limits.
 
 ## Feature Inventory
 | Feature | Path | Purpose | Main API Calls | Owner |
 |---|---|---|---|---|
-| Core UI | `/usage-meters` | Main module view | Q4 2024 | Frontend Team |
+| View Tenant Usage Meters | `/superadmin/usage-meters` | Display per-tenant current usage vs. plan limits | `GET /superadmin/usage-meters` → `fetchUsageMeters()` | Superadmin |
+| Export Usage CSV | `/superadmin/usage-meters` | Download CSV of all tenant usage metrics | `GET /superadmin/usage-meters/export` → `exportUsageMetersCSV()` | Superadmin |
 
 ## Data and State Architecture
-- Server-state query keys: `['usage-meters']`
-- Zustand stores: None
+- Server-state query keys: `['superadmin', 'usage-meters']`
+- Zustand stores: None — all state managed by TanStack Query
 - Context providers: None
 - Local-storage keys: None
 - MSW handler file: `src/mocks/handlers/superadmin-usage-meters.handlers.ts`
 
 ## API Contract
-List all endpoint builders and expected response types.
-- `fetchUsage-meters(params)`
-- `createUsage-meters(dto)`
-- `updateUsage-meters(id, dto)`
-- `deleteUsage-meters(id)`
+- `usageMetersApi.fetchUsageMeters(params?: Record<string, string>)` → `ApiResponse<TenantUsageMeter[]>`
+- `usageMetersApi.exportUsageMetersCSV()` → `ApiResponse<{ downloadUrl: string }>`
 
 ## Permissions and Security
-Document protected actions, roles, and CODEOWNERS paths.
+- **Role:** `SUPERADMIN` only — protected by Next.js middleware role check
+- **Risk:** Tenant usage data is PII-adjacent — endpoint must be rate-limited server-side
 
 ## Loading, Empty, Error States
-- **Loading:** Uses `loading.tsx` skeleton matching global design.
-- **Empty:** Follows Rule 48 (dedicated empty state component).
-- **Error:** Uses `error.tsx` typed React Error Boundary.
+- **Loading:** `loading.tsx` skeleton with animated rows matching usage table
+- **Empty:** "No tenant usage data" empty state shown when API returns empty array
+- **Error:** `error.tsx` typed React Error Boundary catches network failures
 
 ## Edge Cases / AI Warnings
-- Do not bypass API interceptors.
-- Do not mix complex React logic (`useEffect`) with JSX markup.
-
-## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization
-- [x] Rule 7: Type isolation
-- [x] Rule 8: Server/client boundary
-- [x] Rule 9: Loading/error/not-found handling
-- [x] Rule 14: Backend-driven messages
-- [x] Rule 15A: Tests present
-- [x] Rule 15B: Forms use React Hook Form + Zod
-- [x] Rule 15C: State placed per Server/Client decision matrix
-- [x] Rule 15D: Env vars validated centrally, none exposed unsafely
-- [x] Rule 15E: Error monitoring wired for critical flows
-- [x] Rule 74: Security scan gates passed (SCA + secrets)
-- [x] Rule 76: CODEOWNERS covers security-critical paths
-- [x] Rule 79: MSW handler present where needed
+- Usage counts update on a delay (15-minute cache on backend) — do not display as real-time
+- Always render the plan limit even when current usage is 0 — do not hide the column
+- `exportUsageMetersCSV()` returns a signed URL — open in new tab, never iframe
+- Exceeding-limit rows should be visually distinct (color token, not arbitrary inline style)

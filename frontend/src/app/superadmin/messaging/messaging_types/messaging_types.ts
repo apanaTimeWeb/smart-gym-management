@@ -1,3 +1,4 @@
+import { z } from 'zod';
 // RESPONSIBILITY: TypeScript types for the Tenant Messaging module.
 
 export type MessageChannel = 'EMAIL' | 'SMS' | 'IN_APP';
@@ -35,3 +36,30 @@ export interface SuperadminNotification {
 
 /** Tab identifiers for the messaging page. */
 export type MessagingTab = 'messages' | 'notifications';
+
+
+export const TenantMessageSchema = z.object({
+  id: z.string(),
+  tenantId: z.string(),
+  subject: z.string(),
+  content: z.string(),
+  senderRole: z.string(),
+  isRead: z.boolean(),
+  createdAt: z.string()
+});
+
+export const SuperadminNotificationSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  message: z.string(),
+  type: z.enum(['INFO', 'WARNING', 'ERROR', 'SUCCESS']),
+  isRead: z.boolean(),
+  createdAt: z.string()
+});
+
+export const MessagingTenantSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  contactEmail: z.string(),
+  unreadCount: z.number()
+});

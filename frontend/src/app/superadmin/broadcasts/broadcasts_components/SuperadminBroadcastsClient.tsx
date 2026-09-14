@@ -32,7 +32,7 @@ export default function SuperadminBroadcastsClient() {
     onQueueComplete
   } = useSuperadminBroadcastsPage();
 
-  if (fetchState === 'loading') return (
+  if (fetchState === 'pending') return (
     <div className="space-y-6 motion-safe:animate-pulse">
       <div className="h-8 bg-card rounded w-48" />
       <div className="h-96 bg-card rounded-xl border border-border" />

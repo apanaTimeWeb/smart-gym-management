@@ -2,18 +2,18 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import SuperadminProfileMain from '@/app/superadmin/profile/profile_components/SuperadminProfileMain/SuperadminProfileMain';
 import { useProfilePage } from '@/app/superadmin/profile/profile_utils/useProfilePage';
 
-jest.mock('@/app/superadmin/profile/profile_utils/useProfilePage');
-jest.mock('@/app/superadmin/profile/profile_components/SuperadminProfileAvatarCard/SuperadminProfileAvatarCard', () => () => <div data-testid="avatar-card" />);
-jest.mock('@/app/superadmin/profile/profile_components/SuperadminProfilePersonalForm/SuperadminProfilePersonalForm', () => () => <div data-testid="personal-form" />);
-jest.mock('@/app/superadmin/profile/profile_components/SuperadminProfileSecurityForm/SuperadminProfileSecurityForm', () => () => <div data-testid="security-form" />);
+vi.mock('@/app/superadmin/profile/profile_utils/useProfilePage');
+vi.mock('@/app/superadmin/profile/profile_components/SuperadminProfileAvatarCard/SuperadminProfileAvatarCard', () => ({ default: () => <div data-testid="avatar-card" /> }));
+vi.mock('@/app/superadmin/profile/profile_components/SuperadminProfilePersonalForm/SuperadminProfilePersonalForm', () => ({ default: () => <div data-testid="personal-form" /> }));
+vi.mock('@/app/superadmin/profile/profile_components/SuperadminProfileSecurityForm/SuperadminProfileSecurityForm', () => ({ default: () => <div data-testid="security-form" /> }));
 
 describe('SuperadminProfileMain', () => {
-  const mockUseProfilePage = useProfilePage as jest.Mock;
+  const mockUseProfilePage = useProfilePage as import('vitest').Mock;
 
   beforeEach(() => {
     mockUseProfilePage.mockReturnValue({
       activeTab: 'personal',
-      setActiveTab: jest.fn(),
+      setActiveTab: vi.fn(),
       profile: {
         id: '1',
         name: 'Admin',
@@ -26,18 +26,18 @@ describe('SuperadminProfileMain', () => {
       },
       profileLoading: false,
       personalState: 'idle',
-      updatePersonalMutation: { mutate: jest.fn() },
+      updatePersonalMutation: { mutate: vi.fn() },
       passwordState: 'idle',
-      updatePasswordMutation: { mutate: jest.fn() },
+      updatePasswordMutation: { mutate: vi.fn() },
       twoFAState: 'idle',
-      toggle2FAMutation: { mutate: jest.fn() },
+      toggle2FAMutation: { mutate: vi.fn() },
     });
   });
 
   it('renders loading state when profile is loading', () => {
     mockUseProfilePage.mockReturnValue({ profileLoading: true });
     const { container } = render(<SuperadminProfileMain />);
-    expect(container.querySelector('.animate-pulse')).toBeInTheDocument();
+    expect(container.querySelector('.motion-safe\\:animate-pulse')).toBeInTheDocument();
   });
 
   it('renders personal form by default', () => {
@@ -48,7 +48,7 @@ describe('SuperadminProfileMain', () => {
   });
 
   it('switches to security form when security tab is clicked', () => {
-    const setActiveTab = jest.fn();
+    const setActiveTab = vi.fn();
     mockUseProfilePage.mockReturnValue({
       ...mockUseProfilePage(),
       setActiveTab,

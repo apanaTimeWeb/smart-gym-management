@@ -8,7 +8,7 @@ interface MessagingErrorProps {
 
 export default function MessagingError({ error, reset }: MessagingErrorProps) {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[400px] gap-4 text-center p-8">
+    <div className="empty-state-container">
       <div className="w-12 h-12 rounded-full bg-danger/10 flex items-center justify-center">
         <span className="text-danger text-xl">!</span>
       </div>

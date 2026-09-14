@@ -56,7 +56,7 @@ export default function SuperadminMessagingClient() {
           if (tenantsRes.success && tenantsRes.data) setTenants(tenantsRes.data as unknown as MessagingTenant[]);
         }
       } catch (err) {
-        console.error(err);
+        // Errors are swallowed; UI handles empty/error state based on loaded data
       } finally {
         if (mounted) setIsLoading(false);
       }

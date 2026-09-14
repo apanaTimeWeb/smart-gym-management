@@ -1,3 +1,4 @@
+import { SuperadminProfileDataSchema } from '@/app/superadmin/profile/profile_types/SuperadminProfileTypes';
 // RESPONSIBILITY: API client for the Superadmin Profile module.
 // All endpoints sourced from SuperadminProfileUrlConfig — no hardcoded strings.
 
@@ -27,7 +28,7 @@ export const superadminProfileApi = {
     apiFetch<ApiResponse<void>>(ProfileUrlConfig.BACKEND_API.PASSWORD, {
       method: 'PATCH',
       body: JSON.stringify(payload),
-        dataSchema: z.any()
+        dataSchema: z.object({}).passthrough()
     }),
 
   toggle2FA: (payload: Toggle2FAPayload) =>

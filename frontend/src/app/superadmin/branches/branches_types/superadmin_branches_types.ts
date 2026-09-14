@@ -1,3 +1,4 @@
+import { z } from 'zod';
 // RESPONSIBILITY: All TypeScript types for the Superadmin Branches module.
 
 export type BranchStatus = 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
@@ -21,3 +22,16 @@ export interface SuperadminBranch {
 }
 
 export type BranchesFetchState = 'idle' | 'loading' | 'success' | 'error';
+
+
+export const SuperadminBranchSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  managerId: z.string().optional(),
+  location: z.string(),
+  status: z.enum(['ACTIVE', 'INACTIVE']),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+  totalMembers: z.number().optional(),
+  monthlyRevenue: z.number().optional()
+});

@@ -22,21 +22,15 @@ export default function SuperadminUsageMetersClient() {
   const { data: queryData, isLoading, isError } = useQuery({
     queryKey: ['superadmin', 'usage-meters', dateRange, customFrom, customTo],
     queryFn: async () => {
-      try {
-        const params: Record<string, string> = { range: dateRange };
-        if (dateRange === 'custom') {
-          if (customFrom) params.from = customFrom;
-          if (customTo) params.to = customTo;
-        }
-        const res = await usageMetersApi.fetchUsageMeters(params);
-        if (res.success && res.data && res.data.length > 0) {
-          return { meters: res.data };
-        }
-      } catch (err) {
-        // Fallback to mock on error or empty
+      const params: Record<string, string> = { range: dateRange };
+      if (dateRange === 'custom') {
+        if (customFrom) params.from = customFrom;
+        if (customTo) params.to = customTo;
       }
-
-      // Mock Data for UI presentation
+      const res = await usageMetersApi.fetchUsageMeters(params);
+      if (res.success && res.data) {
+        return { meters: res.data };
+      }
       return { meters: [] };
     }
   });

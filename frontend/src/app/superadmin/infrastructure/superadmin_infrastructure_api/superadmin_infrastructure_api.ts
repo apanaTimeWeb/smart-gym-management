@@ -12,9 +12,9 @@ export const infrastructureApi = {
   fetchInfrastructureNodes: () => apiFetch<ApiResponse<InfrastructureNode[]>>(InfrastructureUrlConfig.BACKEND_API.BASE, { dataSchema: z.array(InfrastructureNodeSchema) }),
   fetchRedisTelemetry: () => apiFetch<ApiResponse<RedisTelemetry>>(InfrastructureUrlConfig.BACKEND_API.REDIS_TELEMETRY, { dataSchema: RedisTelemetrySchema }),
   flushGlobalCache: () => apiFetch<ApiResponse<void>>(InfrastructureUrlConfig.BACKEND_API.REDIS_FLUSH_GLOBAL, { method: 'POST',
-      dataSchema: z.any()
+      dataSchema: z.object({}).passthrough()
 }),
   flushTenantCache: (tenantIds: string[]) => apiFetch<ApiResponse<void>>(InfrastructureUrlConfig.BACKEND_API.REDIS_FLUSH_TENANT, { method: 'POST', body: JSON.stringify({ tenantIds }),
-      dataSchema: z.any()
+      dataSchema: z.object({}).passthrough()
 }),
 };

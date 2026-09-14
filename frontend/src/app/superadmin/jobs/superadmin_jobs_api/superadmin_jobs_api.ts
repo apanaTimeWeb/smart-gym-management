@@ -11,7 +11,7 @@ export const jobsApi = {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
     return apiFetch<ApiResponse<BackgroundJob[]>>(`${JobsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(BackgroundJobSchema) });
   },
-  retryAll: () => apiFetch<ApiResponse<{ queuedCount: number }>>(`${JobsUrlConfig.BACKEND_API.BASE}/retry-all`, { method: 'POST',
-      dataSchema: z.any()
+  retryAllJobs: () => apiFetch<ApiResponse<{ queuedCount: number }>>(`${JobsUrlConfig.BACKEND_API.BASE}/retry-all`, { method: 'POST',
+      dataSchema: z.object({ queuedCount: z.number() })
 }),
 };

@@ -1,56 +1,41 @@
 # Settings Feature Map
 
 ## Module Purpose
-Handles settings operations, UI display, and logic isolation as part of the Smart Gym 360 platform.
-
-## Directory Structure
-- `settings_components/`: Contains all isolated micro-components for the module.
-- `settings_types/` (if applicable): TypeScript definitions.
-- `settings_utils/` (if applicable): Shared constants and hardcoded data.
-- `settings_context/` (if applicable): Module-scoped React Context or Zustand store.
+Manages superadmin-level platform-wide configuration: platform name / branding, default subscription trial period, maintenance-mode toggle, default timezone, and inter-service connectivity settings (SMTP relay, S3 bucket, WhatsApp API key).
 
 ## Feature Inventory
 | Feature | Path | Purpose | Main API Calls | Owner |
 |---|---|---|---|---|
-| Core UI | `/settings` | Main module view | Q4 2024 | Frontend Team |
+| View Platform Settings | `/superadmin/settings` | Fetch and display current platform config | `GET /superadmin/settings` → `settingsApi.fetchSettings()` | Superadmin |
+| Update General Settings | `/superadmin/settings` | Patch platform name, trial period, timezone | `PATCH /superadmin/settings` → `settingsApi.updateSettings(payload)` | Superadmin |
+| Toggle Maintenance Mode | `/superadmin/settings` | Enable/disable maintenance banner globally | `PATCH /superadmin/settings/maintenance` → `settingsApi.toggleMaintenanceMode(enabled)` | Superadmin |
+| Update Integration Keys | `/superadmin/settings` | Save SMTP / S3 / WhatsApp secrets | `PATCH /superadmin/settings/integrations` → `settingsApi.updateIntegrations(payload)` | Superadmin |
 
 ## Data and State Architecture
-- Server-state query keys: `['settings']`
+- Server-state query keys: `['superadmin', 'settings']`
+- Form state: `useForm<PlatformSettingsFormData>` with `zodResolver(PlatformSettingsSchema)` — no local state mutations
 - Zustand stores: None
 - Context providers: None
 - Local-storage keys: None
 - MSW handler file: `src/mocks/handlers/superadmin-settings.handlers.ts`
 
 ## API Contract
-List all endpoint builders and expected response types.
-- `fetchSettings(params)`
-- `createSettings(dto)`
-- `updateSettings(id, dto)`
-- `deleteSettings(id)`
+- `settingsApi.fetchSettings()` → `ApiResponse<PlatformSettings>`
+- `settingsApi.updateSettings(payload: UpdatePlatformSettingsPayload)` → `ApiResponse<PlatformSettings>`
+- `settingsApi.toggleMaintenanceMode(enabled: boolean)` → `ApiResponse<void>`
+- `settingsApi.updateIntegrations(payload: IntegrationSettingsPayload)` → `ApiResponse<void>`
 
 ## Permissions and Security
-Document protected actions, roles, and CODEOWNERS paths.
+- **Role:** `SUPERADMIN` only — settings endpoint is protected by server middleware
+- **Risk:** Integration keys (SMTP password, WhatsApp API key) must never be logged — mask on display, submit via HTTPS body only
+- **Risk:** Maintenance mode affects all tenants immediately — require explicit confirmation dialog before toggling on
 
 ## Loading, Empty, Error States
-- **Loading:** Uses `loading.tsx` skeleton matching global design.
-- **Empty:** Follows Rule 48 (dedicated empty state component).
-- **Error:** Uses `error.tsx` typed React Error Boundary.
+- **Loading:** `loading.tsx` skeleton with input placeholders
+- **Empty:** Not applicable — settings always have a default config response
+- **Error:** `error.tsx` boundary shows "Failed to load settings" with a retry button
 
 ## Edge Cases / AI Warnings
-- Do not bypass API interceptors.
-- Do not mix complex React logic (`useEffect`) with JSX markup.
-
-## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization
-- [x] Rule 7: Type isolation
-- [x] Rule 8: Server/client boundary
-- [x] Rule 9: Loading/error/not-found handling
-- [x] Rule 14: Backend-driven messages
-- [x] Rule 15A: Tests present
-- [x] Rule 15B: Forms use React Hook Form + Zod
-- [x] Rule 15C: State placed per Server/Client decision matrix
-- [x] Rule 15D: Env vars validated centrally, none exposed unsafely
-- [x] Rule 15E: Error monitoring wired for critical flows
-- [x] Rule 74: Security scan gates passed (SCA + secrets)
-- [x] Rule 76: CODEOWNERS covers security-critical paths
-- [x] Rule 79: MSW handler present where needed
+- Integration key fields should use `type="password"` inputs — do not auto-fill or store in query cache beyond the initial load
+- `toggleMaintenanceMode(true)` should only be callable after a confirmation modal with the text "This will affect ALL active tenant sessions"
+- `updateSettings()` must use optimistic updates then revert on failure — do not invalidate the query before confirming server success

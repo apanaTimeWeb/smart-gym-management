@@ -1,3 +1,4 @@
+import { RevenueRowSchema, ChurnRecordSchema, TenantHealthScoreSchema } from '@/app/superadmin/reports/reports_types/reports_types';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import type { RevenueRow, ChurnRecord, TenantHealthScore } from '@/app/superadmin/reports/reports_types/reports_types';

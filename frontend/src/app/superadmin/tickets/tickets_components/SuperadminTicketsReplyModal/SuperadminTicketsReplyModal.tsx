@@ -53,7 +53,7 @@ export default function SuperadminTicketsReplyModal({ isOpen, onClose, ticketId 
             <label className="block text-sm font-medium text-foreground mb-2">Your Message</label>
             <textarea
               {...register('replyText')}
-              className="w-full px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary min-h-[120px]"
+              className="w-full px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary min-h-32"
               placeholder="Type your reply here..."
               disabled={isSubmitting}
             />

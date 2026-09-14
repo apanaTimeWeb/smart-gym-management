@@ -17,17 +17,11 @@ export default function SuperadminMigrationsClient() {
   const { data: queryData, isLoading, isError } = useQuery({
     queryKey: ['superadmin', 'migrations-log'],
     queryFn: async () => {
-      try {
-        const res = await migrationsApi.fetchMigrations();
-        if (res.success && res.data && res.data.length > 0) {
-          return { migrations: res.data };
-        }
-      } catch (err) {
-        // Fallback to mock data
+      const res = await migrationsApi.fetchMigrations();
+      if (!res.success) {
+        throw new Error(res.message || 'Failed to fetch migrations');
       }
-
-      // Mock Data for UI presentation
-      return { migrations: [] };
+      return { migrations: res.data || [] };
     }
   });
 
@@ -52,7 +46,7 @@ export default function SuperadminMigrationsClient() {
     try {
       const loadingToast = toast.loading(`Initializing schema rollout for ${versionInput}...`);
       
-      await migrationsApi.triggerMigration(versionInput);
+      await migrationsApi.startMigration(versionInput);
 
       const newMigration: MigrationLog = {
         id: `mig-${Date.now()}`,

@@ -7,7 +7,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
 import type { Tenant } from '@/app/superadmin/gyms/gyms_types/superadmin_gyms_types';
-import { AuthUrlConfig } from '@/app/auth/auth_url_config';
+import { GymsUrlConfig } from '@/app/superadmin/gyms/gyms_url_config';
 import { useSuperadminGhostLoginStore } from '@/components/ui/SuperadminLayout/useSuperadminGhostLoginStore';
 
 
@@ -60,15 +60,7 @@ export function useSuperadminGymsTable() {
 
         // Set impersonation cookie so Next.js middleware sees an Admin session
         try {
-          await fetch(AuthUrlConfig.PROXY_API.SET_COOKIE, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              token: res.data.token,
-              refreshToken: res.data.token,
-              user: { role: 'ADMIN', email: `admin-${id}@gym.com`, name: 'Impersonated Admin', tenantId: id, id: `user-${id}` },
-            }),
-          });
+          await gymsApi.setGhostLoginCookie(res.data.token, id);
         } catch {
           // Cookie set failure is non-fatal — token is still in the response
         }
@@ -79,7 +71,7 @@ export function useSuperadminGymsTable() {
           startGhostLogin({ id: gym.id, name: gym.name, plan: gym.plan, adminEmail: gym.adminEmail });
         }
 
-        window.location.href = AuthUrlConfig.PAGES.ADMIN_DASHBOARD;
+        window.location.href = GymsUrlConfig.GHOST_LOGIN.ADMIN_DASHBOARD;
       } else {
         toast.error(res.message || 'Failed to start ghost login');
       }

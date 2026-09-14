@@ -53,26 +53,26 @@ export function SuperadminOnboardingTable({
                         className="hover:bg-input/30 motion-safe:transition-colors cursor-pointer"
                         onClick={() => setExpandedId(expandedId === tenant.id ? null : tenant.id)}
                       >
-                        <td className="px-4 py-3 w-[15%]">
+                        <td className="px-4 py-3 w-2/12">
                           <p className="font-medium text-foreground">{tenant.gymName}</p>
                           <p className="text-xs text-secondary">{tenant.ownerName}</p>
                         </td>
-                        <td className="px-4 py-3 w-[20%]">
+                        <td className="px-4 py-3 w-1/5">
                           <div className="flex items-center gap-1.5">
                             {tenant.emailVerified ? (
                               <CheckCircle2 size={18} strokeWidth={2} className="text-success shrink-0" />
                             ) : (
                               <XCircle size={18} strokeWidth={2} className="text-danger shrink-0" />
                             )}
-                            <span className="text-secondary text-xs truncate max-w-[160px]">{tenant.adminEmail}</span>
+                            <span className="text-secondary text-xs truncate max-w-xs">{tenant.adminEmail}</span>
                           </div>
                         </td>
-                        <td className="px-4 py-3 w-[15%]">
+                        <td className="px-4 py-3 w-2/12">
                           <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${ONBOARDING_STATUS_STYLES[tenant.onboardingStatus]}`}>
                             {tenant.onboardingStatus.replace('_', ' ')}
                           </span>
                         </td>
-                        <td className="px-4 py-3 w-[15%]">
+                        <td className="px-4 py-3 w-2/12">
                           <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${TRIAL_STATUS_STYLES[tenant.trialStatus]}`}>
                             {tenant.trialStatus}
                           </span>
@@ -80,7 +80,7 @@ export function SuperadminOnboardingTable({
                             <p className="text-xs text-secondary mt-0.5">{tenant.trialDaysLeft}d left</p>
                           )}
                         </td>
-                        <td className="px-4 py-3 w-[15%]">
+                        <td className="px-4 py-3 w-2/12">
                           <div className="flex items-center gap-1.5">
                             <div className="w-20 h-1.5 bg-input rounded-full overflow-hidden">
                               <div
@@ -93,7 +93,7 @@ export function SuperadminOnboardingTable({
                             </span>
                           </div>
                         </td>
-                        <td className="px-4 py-3 w-[15%]">
+                        <td className="px-4 py-3 w-2/12">
                           <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
                             {!tenant.emailVerified && (
                               <button
@@ -135,7 +135,7 @@ export function SuperadminOnboardingTable({
                             )}
                           </div>
                         </td>
-                        <td className="px-4 py-3 text-secondary w-[5%]">
+                        <td className="px-4 py-3 text-secondary w-1/12">
                           {expandedId === tenant.id ? <ChevronUp size={18} strokeWidth={2} /> : <ChevronDown size={18} strokeWidth={2} />}
                         </td>
                       </tr>

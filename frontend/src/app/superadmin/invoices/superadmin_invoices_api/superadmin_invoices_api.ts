@@ -1,3 +1,4 @@
+import { SaaSInvoiceSchema } from '@/app/superadmin/invoices/superadmin_invoices_types/superadmin_invoices_types';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import type { SaaSInvoice } from '@/app/superadmin/invoices/superadmin_invoices_types/superadmin_invoices_types';
@@ -22,7 +23,7 @@ export const invoicesApi = {
       body: JSON.stringify(dto),
         dataSchema: SaaSInvoiceSchema
     }),
-  getDownloadUrl: (id: string) =>
+  fetchInvoiceDownloadUrl: (id: string) =>
     apiFetch<ApiResponse<{ downloadUrl: string }>>(`${InvoicesUrlConfig.BACKEND_API.BASE}/${id}/download`, { dataSchema: z.object({ downloadUrl: z.string() }) }),
   exportInvoicesCSV: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';

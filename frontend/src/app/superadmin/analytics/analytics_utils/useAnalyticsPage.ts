@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Logic hook for the Analytics page. Fetches revenue metrics and monthly chart data.
 // Exposes fetchState enum (never boolean flags — Rule 42). No JSX — pure logic.
 //
-// DATA FLOW: analyticsApi.getRevenueMetrics() → useAnalyticsPage → SuperadminAnalyticsClient → UI
+// DATA FLOW: analyticsApi.fetchRevenueMetrics() → useAnalyticsPage → SuperadminAnalyticsClient → UI
 
 import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -35,7 +35,7 @@ export function useAnalyticsPage(): UseAnalyticsPageReturn {
     setFetchState('loading');
     setError(null);
     analyticsApi
-      .getRevenueMetrics({ timeRange, customStart, customEnd })
+      .fetchRevenueMetrics({ timeRange, customStart, customEnd })
       .then((res) => {
         if (cancelled) return;
         if (res.data) {

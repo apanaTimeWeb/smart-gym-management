@@ -27,7 +27,7 @@ export default function SuperadminBackupsRestoreModal({
     
     const loadingToastId = toast.loading(`Restoring database ${selectedBackup.databaseName} from snapshot...`);
     try {
-      await backupsApi.restoreSnapshot(selectedBackup.id);
+      await backupsApi.restoreBackupSnapshot(selectedBackup.id);
       toast.success(`Database ${selectedBackup.databaseName} successfully restored!`, { id: loadingToastId });
       onSuccess();
     } catch {

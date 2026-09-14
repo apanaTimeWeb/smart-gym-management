@@ -19,3 +19,11 @@ export const SaaSDashboardMetricsSchema = z.object({
   trialsExpiringIn7Days: z.number().optional(),
 });
 export type SaaSDashboardMetrics = z.infer<typeof SaaSDashboardMetricsSchema>;
+
+
+export const SuperadminDashboardApiDataSchema = z.object({
+  totalTenants: z.number(),
+  activeUsers: z.number(),
+  monthlyRevenue: z.number(),
+  systemHealth: z.number()
+});

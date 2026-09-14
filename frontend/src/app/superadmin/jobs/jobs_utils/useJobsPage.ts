@@ -13,13 +13,7 @@ import type { FetchState } from '@/app/superadmin/superadmin_utils/superadmin_sh
 
 const ITEMS_PER_PAGE = 10;
 
-/** Mock fallback jobs — displayed when backend returns empty until MSW/API is ready */
-const FALLBACK_JOBS: BackgroundJob[] = [
-  { id: 'job-1', queueName: 'billing',   jobName: 'Process Monthly Invoices', status: 'ACTIVE',    attempts: 1, createdAt: '2026-01-01T00:00:00Z' },
-  { id: 'job-2', queueName: 'email',     jobName: 'Send Welcome Email',       status: 'FAILED',    attempts: 3, error: 'Connection timeout', createdAt: '2026-01-01T01:00:00Z' },
-  { id: 'job-3', queueName: 'database',  jobName: 'Nightly Backup',           status: 'COMPLETED', attempts: 1, createdAt: '2026-01-02T00:00:00Z' },
-  { id: 'job-4', queueName: 'webhook',   jobName: 'Stripe Webhook Delivery',  status: 'DELAYED',   attempts: 2, createdAt: '2026-01-02T02:00:00Z' },
-];
+
 
 export interface UseJobsPageReturn {
   fetchState: FetchState;
@@ -67,7 +61,7 @@ export function useJobsPage(): UseJobsPageReturn {
   });
 
   const rawJobs = (fetchRes?.data as BackgroundJob[]) ?? [];
-  const allJobs: BackgroundJob[] = rawJobs.length > 0 ? rawJobs : FALLBACK_JOBS;
+  const allJobs: BackgroundJob[] = rawJobs;
 
   const metrics = {
     activeJobs:    allJobs.filter(j => j.status === 'ACTIVE').length,
@@ -88,7 +82,7 @@ export function useJobsPage(): UseJobsPageReturn {
   function handleRetryAll() {
     setIsRetrying(true);
     toast.promise(
-      jobsApi.retryAll().then((res) => {
+      jobsApi.retryAllJobs().then((res) => {
         if (!res.success) throw new Error(res.message || 'Failed to retry jobs.');
         return res.data;
       }),

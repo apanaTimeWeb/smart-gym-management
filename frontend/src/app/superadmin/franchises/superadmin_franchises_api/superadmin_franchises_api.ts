@@ -1,3 +1,4 @@
+import { SuperadminFranchiseSchema } from '@/app/superadmin/franchises/franchises_types/superadmin_franchises_types';
 // RESPONSIBILITY: API client for the Superadmin Franchises module.
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
@@ -14,11 +15,11 @@ export const superadminFranchisesApi = {
     apiFetch<ApiResponse<SuperadminFranchise>>(`${FranchisesUrlConfig.BACKEND_API.BASE}/${id}`, { dataSchema: SuperadminFranchiseSchema }),
   suspendFranchise: (id: string) =>
     apiFetch<ApiResponse<void>>(`${FranchisesUrlConfig.BACKEND_API.BASE}/${id}/suspend`, { method: 'POST',
-        dataSchema: z.any()
+        dataSchema: z.object({}).passthrough()
     }),
   activateFranchise: (id: string) =>
     apiFetch<ApiResponse<void>>(`${FranchisesUrlConfig.BACKEND_API.BASE}/${id}/activate`, { method: 'POST',
-        dataSchema: z.any()
+        dataSchema: z.object({}).passthrough()
     }),
   updateFranchise: (id: string, body: Partial<SuperadminFranchise>) =>
     apiFetch<ApiResponse<SuperadminFranchise>>(`${FranchisesUrlConfig.BACKEND_API.BASE}/${id}`, {

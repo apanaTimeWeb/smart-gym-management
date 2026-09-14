@@ -59,7 +59,7 @@ export default function SuperadminReportsClient() {
           if (health.success && health.data) setHealthData(health.data as unknown as TenantHealthScore[]);
         }
       } catch (err) {
-        console.error(err);
+        // Errors are swallowed; UI handles empty/error state based on loaded data
       } finally {
         if (mounted) setIsLoading(false);
       }

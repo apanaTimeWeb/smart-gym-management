@@ -1,3 +1,4 @@
+import { z } from 'zod';
 export interface UsageMeter {
   id: string;
   tenantId: string;
@@ -20,3 +21,14 @@ export interface UsageMeter {
   staffLimit: number;
   billingCycleEnd: string;
 }
+
+
+export const UsageMeterSchema = z.object({
+  id: z.string(),
+  tenantId: z.string(),
+  tenantName: z.string(),
+  metricName: z.string(),
+  currentValue: z.number(),
+  limitValue: z.number(),
+  resetDate: z.string()
+});

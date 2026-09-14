@@ -98,7 +98,7 @@ export default function SuperadminConversionFunnel({ tenants }: { tenants: Tenan
     return { series, options };
   }, [tenants]);
 
-  if (!mounted) return <div className="h-[350px] bg-card rounded-xl border border-border animate-pulse" />;
+  if (!mounted) return <div className="h-80 bg-card rounded-xl border border-border animate-pulse" />;
 
   return (
     <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
@@ -106,7 +106,7 @@ export default function SuperadminConversionFunnel({ tenants }: { tenants: Tenan
         <h2 className="text-xl font-bold text-foreground">Conversion Funnel</h2>
         <p className="text-sm text-secondary mt-1">Track drop-offs from signup to paid conversion.</p>
       </div>
-      <div className="h-[350px] w-full">
+      <div className="h-80 w-full">
         <ReactApexChart options={options} series={series} type="bar" height="100%" width="100%" />
       </div>
     </div>

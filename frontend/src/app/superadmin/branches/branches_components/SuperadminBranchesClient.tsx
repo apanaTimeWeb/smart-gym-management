@@ -106,7 +106,7 @@ export default function SuperadminBranchesClient() {
               {paginated.map((branch: SuperadminBranch) => (
                 <tr key={branch.id} className="hover:bg-input/30 motion-safe:transition-colors">
                   <td className="px-4 py-3">
-                    <p className="font-medium text-foreground truncate max-w-[160px]" title={branch.branchName}>{branch.branchName}</p>
+                    <p className="font-medium text-foreground truncate max-w-xs" title={branch.branchName}>{branch.branchName}</p>
                     <p className="text-xs text-secondary">{branch.location}</p>
                   </td>
                   <td className="px-4 py-3 text-secondary text-xs">{branch.tenantName}</td>

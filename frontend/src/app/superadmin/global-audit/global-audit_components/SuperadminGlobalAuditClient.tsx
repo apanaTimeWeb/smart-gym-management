@@ -18,22 +18,17 @@ export default function SuperadminGlobalAuditClient() {
   const [search, setSearch] = useState('');
   const [severityFilter, setSeverityFilter] = useState<AuditSeverityFilter>('ALL');
   const [actorTypeFilter, setActorTypeFilter] = useState<AuditActorFilter>('ALL');
+
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 20;
 
   const { data: queryData, isLoading, isError, refetch, isFetching } = useQuery({
     queryKey: ['superadmin', 'global-audit'],
     queryFn: async () => {
-      try {
-        const res = await auditLogsApi.fetchGlobalLogs();
-        if (res.success && res.data && res.data.length > 0) {
-          return { logs: res.data };
-        }
-      } catch (err) {
-        // Fallback to mock data
+      const res = await auditLogsApi.fetchGlobalLogs();
+      if (res.success && res.data) {
+        return { logs: res.data };
       }
-
-      // Mock Data for UI presentation
       return { logs: [] };
     }
   });
@@ -62,11 +57,11 @@ export default function SuperadminGlobalAuditClient() {
   const getSeverityBadge = (severity: AuditLog['severity']) => {
     switch (severity) {
       case 'CRITICAL':
-        return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-bold bg-danger text-white tracking-wider"><ShieldAlert size={12} /> CRITICAL</span>;
+        return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[0.65rem] font-bold bg-danger text-white tracking-wider"><ShieldAlert size={12} /> CRITICAL</span>;
       case 'WARNING':
-        return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-bold bg-warning text-white tracking-wider"><AlertTriangle size={12} /> WARNING</span>;
+        return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[0.65rem] font-bold bg-warning text-white tracking-wider"><AlertTriangle size={12} /> WARNING</span>;
       case 'INFO':
-        return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-bold bg-primary/10 text-primary tracking-wider"><Info size={12} /> INFO</span>;
+        return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[0.65rem] font-bold bg-primary/10 text-primary tracking-wider"><Info size={12} /> INFO</span>;
     }
   };
 
@@ -130,7 +125,7 @@ export default function SuperadminGlobalAuditClient() {
             <div className="w-32 h-10 bg-skeleton-base motion-safe:animate-pulse rounded-lg" />
           </div>
         </div>
-        <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm flex flex-col min-h-[500px]">
+        <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm flex flex-col min-h-[32rem]">
           <div className="p-4 border-b border-border bg-card-hover/50">
             <div className="h-10 w-full max-w-md bg-skeleton-base motion-safe:animate-pulse rounded-lg" />
           </div>
@@ -169,7 +164,7 @@ export default function SuperadminGlobalAuditClient() {
         </div>
       </div>
 
-      <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm flex flex-col min-h-[500px]">
+      <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm flex flex-col min-h-[32rem]">
         <div className="p-4 border-b border-border bg-card-hover/50 flex flex-col sm:flex-row items-center gap-4 justify-between">
           <div className="relative w-full max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />
@@ -229,7 +224,7 @@ export default function SuperadminGlobalAuditClient() {
                     <div className="flex items-center gap-2">
                       <p className="text-sm font-medium text-foreground">{log.actor}</p>
                       {log.actorType && (
-                        <span className="text-[10px] font-bold bg-input text-secondary px-1.5 py-0.5 rounded tracking-wider">
+                        <span className="text-[0.65rem] font-bold bg-input text-secondary px-1.5 py-0.5 rounded tracking-wider">
                           {log.actorType}
                         </span>
                       )}

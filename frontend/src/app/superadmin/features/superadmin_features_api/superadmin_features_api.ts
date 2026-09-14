@@ -1,3 +1,4 @@
+import { FeatureFlagSchema, ReleaseNoteSchema } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import type { FeatureFlag, ReleaseNote } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
@@ -6,7 +7,7 @@ import { z } from "zod";
 
 export const featuresApi = {
   fetchFeatures: () =>
-    apiFetch<ApiResponse<{ flags: FeatureFlag[]; notes: ReleaseNote[] }>>(FeaturesUrlConfig.BACKEND_API.BASE, { dataSchema: z.any() }),
+    apiFetch<ApiResponse<{ flags: FeatureFlag[]; notes: ReleaseNote[] }>>(FeaturesUrlConfig.BACKEND_API.BASE, { dataSchema: z.object({}).passthrough() }),
 
   createFlag: (body: Partial<FeatureFlag>) =>
     apiFetch<ApiResponse<FeatureFlag>>(`${FeaturesUrlConfig.BACKEND_API.BASE}/flags`, {
@@ -31,7 +32,7 @@ export const featuresApi = {
   removeFlag: (id: string) =>
     apiFetch<ApiResponse<void>>(`${FeaturesUrlConfig.BACKEND_API.BASE}/flags/${id}`, {
       method: 'DELETE',
-        dataSchema: z.any()
+        dataSchema: z.object({}).passthrough()
     }),
 
   createNote: (body: Partial<ReleaseNote>) =>
@@ -51,6 +52,6 @@ export const featuresApi = {
   removeNote: (id: string) =>
     apiFetch<ApiResponse<void>>(`${FeaturesUrlConfig.BACKEND_API.BASE}/notes/${id}`, {
       method: 'DELETE',
-        dataSchema: z.any()
+        dataSchema: z.object({}).passthrough()
     }),
 };

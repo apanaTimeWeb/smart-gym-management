@@ -1,3 +1,4 @@
+import { z } from 'zod';
 // RESPONSIBILITY: Defines all TypeScript types and interfaces for the Tickets module.
 export type TicketStatus = 'OPEN' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
 export type TicketPriority = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
@@ -30,3 +31,16 @@ export interface SupportTicket {
   createdAt: string;
   lastUpdated: string;
 }
+
+
+export const SupportTicketSchema = z.object({
+  id: z.string(),
+  tenantId: z.string(),
+  subject: z.string(),
+  description: z.string(),
+  status: z.enum(['OPEN', 'IN_PROGRESS', 'WAITING', 'RESOLVED', 'CLOSED']),
+  priority: z.enum(['LOW', 'NORMAL', 'HIGH', 'URGENT']),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+  assignedTo: z.string().optional()
+});

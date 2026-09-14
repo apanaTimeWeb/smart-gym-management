@@ -19,9 +19,9 @@ export const plansApi = {
       dataSchema: SubscriptionPlanSchema
 }),
   deletePlan: (id: string) => apiFetch<ApiResponse<void>>(`${PlansUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'DELETE',
-      dataSchema: z.any()
+      dataSchema: z.object({}).passthrough()
 }),
   archivePlan: (id: string) => apiFetch<ApiResponse<void>>(`${PlansUrlConfig.BACKEND_API.BASE}/${id}/archive`, { method: 'PATCH',
-      dataSchema: z.any()
+      dataSchema: z.object({}).passthrough()
 }),
 };

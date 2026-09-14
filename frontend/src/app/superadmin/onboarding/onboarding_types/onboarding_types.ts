@@ -1,3 +1,4 @@
+import { z } from 'zod';
 // RESPONSIBILITY: TypeScript types for the Tenant Onboarding module.
 
 export type OnboardingStatus = 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'STALLED';
@@ -25,3 +26,15 @@ export interface TenantOnboarding {
   daysInTrial: number;
   trialDaysLeft: number;
 }
+
+
+export const TenantOnboardingSchema = z.object({
+  id: z.string(),
+  tenantName: z.string(),
+  ownerEmail: z.string(),
+  status: z.enum(['PENDING', 'IN_PROGRESS', 'COMPLETED', 'REJECTED']),
+  step: z.number(),
+  totalSteps: z.number(),
+  createdAt: z.string(),
+  updatedAt: z.string()
+});

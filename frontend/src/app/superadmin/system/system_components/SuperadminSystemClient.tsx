@@ -51,7 +51,7 @@ export default function SuperadminSystemClient() {
   const handleRunMigration = async (tenantId: string) => {
     setMigratingTenants(prev => ({ ...prev, [tenantId]: true }));
     try {
-      await migrationsApi.triggerMigration(tenantId);
+      await migrationsApi.startMigration(tenantId);
       
       queryClient.setQueryData(['superadmin', 'system-migrations'], (old: { data?: MigrationsPageData } | undefined) => {
         if (!old?.data?.tenants) return old;

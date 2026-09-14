@@ -1,5 +1,5 @@
-import { renderHook, waitFor } from '@testing-library/react';
-import { vi, describe, it, expect, beforeEach } from 'vitest';
+import { renderHook, waitFor, act } from '@testing-library/react';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { useSuperadminAddGymForm } from '@/app/superadmin/gyms/gyms_components/SuperadminAddGymForm/useSuperadminAddGymForm';
 import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
@@ -25,14 +25,20 @@ describe('useSuperadminAddGymForm', () => {
     vi.mocked(useRouter).mockReturnValue(mockRouter as never);
     vi.mocked(useQueryClient).mockReturnValue(mockQueryClient as never);
     vi.mocked(useQuery).mockReturnValue({ data: [] } as never);
+    vi.stubGlobal('open', vi.fn());
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
   });
 
   it('initializes form with default values', () => {
     const { result } = renderHook(() => useSuperadminAddGymForm());
-    expect(result.current.form.getValues('gymName')).toBe('');
+    expect(result.current.form.getValues('gymName')).toBeUndefined();
   });
 
   it('submits form successfully', async () => {
+    vi.useFakeTimers();
     vi.mocked(gymsApi.provisionGym).mockResolvedValue({ success: true, message: 'Provisioned', data: { id: 'test-gym' } } as never);
     const { result } = renderHook(() => useSuperadminAddGymForm());
     
@@ -42,16 +48,19 @@ describe('useSuperadminAddGymForm', () => {
       ownerName: 'Owner',
       adminEmail: 'owner@test.com',
       phone: '9876543210',
-      subdomain: 'test-gym',
-      planId: 'plan-1',
-      password: 'Password1',
-      confirmPassword: 'Password1'
+      plan: 'plan-1',
+      temporaryPassword: 'Password1'
     });
 
-    await result.current.form.handleSubmit(result.current.onSubmit)();
+    let submitPromise: Promise<void>;
+    await act(async () => {
+      submitPromise = result.current.form.handleSubmit(result.current.onSubmit)();
+      await vi.runAllTimersAsync();
+      await submitPromise;
+    });
     
     expect(gymsApi.provisionGym).toHaveBeenCalled();
-    expect(toast.success).toHaveBeenCalledWith('Provisioned', expect.anything());
+    expect(toast.success).toHaveBeenCalledWith('Provisioned');
     expect(mockQueryClient.invalidateQueries).toHaveBeenCalled();
   });
 });

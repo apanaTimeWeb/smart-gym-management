@@ -1,3 +1,4 @@
+import { BackupRecordSchema } from '@/app/superadmin/backups/superadmin_backups_types/superadmin_backups_types';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import { BackupsUrlConfig } from '@/app/superadmin/backups/backups_url_config';
@@ -9,19 +10,19 @@ export const backupsApi = {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
     return apiFetch<ApiResponse<BackupRecord[]>>(`${BackupsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(BackupRecordSchema) });
   },
-  triggerSnapshot: () => {
+  createBackupSnapshot: () => {
     return apiFetch<ApiResponse<null>>(`${BackupsUrlConfig.BACKEND_API.BASE}/trigger`, {
       method: 'POST',
         dataSchema: z.null()
     });
   },
-  restoreSnapshot: (id: string) => {
+  restoreBackupSnapshot: (id: string) => {
     return apiFetch<ApiResponse<null>>(`${BackupsUrlConfig.BACKEND_API.BASE}/${id}/restore`, {
       method: 'POST',
         dataSchema: z.null()
     });
   },
-  getDownloadUrl: (id: string) => {
+  fetchBackupDownloadUrl: (id: string) => {
     // In a real app, this might return a signed URL or stream a blob. We just construct a relative API URL for the <a> tag.
     return `${process.env.NEXT_PUBLIC_API_URL || ''}${BackupsUrlConfig.BACKEND_API.BASE}/${id}/download`;
   }
