@@ -472,6 +472,47 @@ Testing rules:
 - Reuse Rule 75 MSW handlers in unit/component tests.
 - A bug fix must include a regression test if reasonably testable.
 
+### AI Test Integrity Gate
+
+A test file existing is NOT sufficient evidence that the feature is actually tested.
+
+AI-generated tests MUST verify real behavior and MUST NOT be created merely to
+satisfy coverage or checklist requirements.
+
+The AI MUST NOT satisfy testing requirements with:
+- Placeholder assertions such as `expect(true).toBe(true)` or `expect(1).toBe(1)`.
+- Empty test bodies.
+- Tests that only render/mount a component without asserting meaningful behavior.
+- Snapshot-only tests for dynamic business UI.
+- Assertions against implementation details when user-visible behavior can be asserted.
+- Tests that mock away the exact behavior the feature is supposed to prove.
+- Tests that pass only because the expected value is copied from the implementation
+  rather than the documented requirement.
+- Tests that bypass the real feature API path when API behavior is part of the requirement.
+
+For every non-trivial data-driven feature, tests MUST verify, where applicable:
+
+1. API-driven data reaches the UI through the real feature API layer.
+2. Every documented UI Data Requirement renders from the response contract (Rule 75A).
+3. Loading state renders correctly.
+4. Empty state can actually be triggered.
+5. Error state can actually be triggered.
+6. Search/filter/sort/pagination behavior changes the request or rendered result appropriately.
+7. Form validation and submission behavior work through the real feature flow.
+8. Mutation success uses the backend response as the source of truth.
+9. Backend `message` is surfaced correctly where required (Rule 14).
+10. Security/permission-denied UI behaves correctly.
+11. Regression tests exist for bug fixes whenever the behavior is testable.
+
+A passing test suite is NOT accepted as proof of correctness if the tests themselves
+are meaningless.
+
+**AI completion gate:**
+- Read the test code.
+- Identify what real behavior each test proves.
+- Confirm each critical requirement has at least one meaningful assertion.
+- Reject tests that would still pass if the actual feature behavior were broken.
+
 15B. **Form Management, Validation, and Submission Architecture**:
 All non-trivial forms MUST use:
 - React Hook Form
@@ -785,9 +826,20 @@ No PR may merge if a required gate fails.
 62. **Dependency-Addition Guardrail**:
 AI agents frequently install redundant packages. **An AI cannot add a new dependency without checking `package.json` first.** Before adding a new library, you must explicitly flag why an existing approved library (e.g., React Hook Form, Zod, date-fns, Zustand, socket.io-client, lucide-react, react-apexcharts (canonical chart library — see global_design_system.md §10; Recharts and Chart.js are forbidden)) does not suffice for the task.
 
-63. **Zero Cross-Module Imports & Full Self-Containment (The Portable Folder Rule)**:
-- **Zero Cross-Module Imports:** Module A (e.g., `billing`) is explicitly FORBIDDEN from importing anything from Module B (e.g., `attendance`) — no components, no hooks, no types, no constants. This must be mechanically enforced using ESLint (`no-restricted-imports` or `eslint-plugin-boundaries`).
-- **Full Self-Containment:** Every feature module must be a completely self-contained unit. It may depend ONLY on: (a) npm packages, (b) generic zero-business-logic primitives from `src/components/ui/`, and (c) its own internal files. This guarantees the entire module folder can be deleted, copied, and pasted into a different project with zero broken imports.
+63. **Zero Cross-Module Imports & Controlled Infrastructure Dependencies**:
+- **Zero Cross-Module Business Imports:** Module A (e.g., `billing`) is explicitly FORBIDDEN from importing business logic from Module B (e.g., `attendance`) — no business components, hooks, stores, schemas, types, constants, API services, or business utilities. This MUST be mechanically enforced using ESLint (`no-restricted-imports` or `eslint-plugin-boundaries`).
+- **Controlled Infrastructure Dependencies:** A feature/module MAY depend on approved application infrastructure that is intentionally global and contains no feature-specific business logic, including:
+  - `src/components/ui/` — dumb reusable UI primitives
+  - `src/lib/api.ts` — canonical network/API infrastructure
+  - `src/lib/logger.ts` — centralized logging infrastructure
+  - `src/lib/formatters.ts` — canonical formatting infrastructure (`formatCurrency`, `formatNumber`, `displayValue`, `maskSensitiveData`)
+  - authentication/session infrastructure
+  - approved configuration and observability infrastructure
+- `src/lib/` MUST NOT become a generic business-logic dumping ground. Feature-specific business logic MUST remain inside the owning feature/module.
+- If a business utility is required by multiple business modules, duplicate it inside those modules rather than moving it into a global shared business utility.
+
+**Portable Folder Definition:**
+A feature is considered portable when it has no dependency on another feature's business implementation. Approved global infrastructure dependencies are allowed because they are architectural contracts of the application, not feature business dependencies.
 
 64. **Strict Mobile-First Enforcement (Tailwind is not magic)**:
 Tailwind does not automatically make things responsive. Every component must be built **mobile-first**: base Tailwind classes must target mobile (`<768px`), then overridden with `md:` (tablet) and `lg:/xl:` (desktop) prefixes as needed.

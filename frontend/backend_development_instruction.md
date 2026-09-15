@@ -57,7 +57,11 @@ Handling errors with generic `throw new Error()` makes it hard for AI to write p
 ## 7. Isolated Database/Query Layer (The Repository Pattern)
 Never write massive, complex raw SQL or 50-line ORM queries directly inside your business logic services.
 Extract complex queries into a dedicated Repository or Query file (e.g., `member-analytics.repository.ts`).
-* **The Rule:** If the backend is built using a JavaScript/TypeScript framework (NestJS, Express), you MUST use **TypeORM**. For other languages/frameworks (like Django), use the framework's native/standard ORM.
+* **The Rule:** If the backend is built with JavaScript/TypeScript, it MUST use the project's single approved ORM. The repository pattern is mandatory; the specific ORM implementation is an architectural project decision and MUST NOT be changed per module.
+  - If Prisma is selected for the project, ALL modules use Prisma.
+  - If TypeORM is selected for the project, ALL modules use TypeORM.
+  - If another approved ORM is selected, ALL modules use that ORM consistently.
+  AI agents MUST NOT introduce a second ORM into an existing backend. The ORM implementation MUST remain behind the repository/data-access boundary so business services do not become coupled to ORM-specific APIs.
 - **Why?** If the dashboard stats are calculating incorrectly, it's a database query issue. You provide the AI the `repository` file, not the `service` file.
 
 ---
@@ -904,15 +908,20 @@ If a backend implementation cannot provide a field currently required by the fro
       } else { throw new Error('Not found'); }
     }
     ```
-  - ✅ **GOOD (Guard Clauses):**
+  - ✅ **GOOD (Guard Clauses + Repository-Owned Mutation):**
     ```typescript
-    async suspendMember(id: string) {
-      const member = await this.repo.findByIdOrThrow(id); // throws MemberNotFoundException
-      if (member.status === 'SUSPENDED') throw new MemberAlreadySuspendedException(id);
-      if (!member.hasActiveSubscription) throw new NoActiveSubscriptionException(id);
-      // happy path — completely flat, no nesting
-      member.status = 'SUSPENDED';
-      return this.repo.save(member);
+    async suspendMember(id: string): Promise<MemberDomain> {
+      const member = await this.memberRepo.findByIdOrThrow(id);
+
+      if (member.status === MemberStatus.SUSPENDED) {
+        throw new MemberAlreadySuspendedException(id);
+      }
+
+      if (!member.hasActiveSubscription) {
+        throw new NoActiveSubscriptionException(id);
+      }
+
+      return this.memberRepo.suspendById(id, new Date());
     }
     ```
 * **Maximum Nesting Depth:** No function body may have more than **2 levels of indentation** for conditional logic. If a third level is needed, extract it into a private helper method.
@@ -925,14 +934,19 @@ If a backend implementation cannot provide a field currently required by the fro
 
   | Operation | Service Layer Verb | Repository Layer Verb |
   |---|---|---|
-  | Create | `create[Entity](dto)` | `save(entity)` |
+  | Create | `create[Entity](dto)` | `create[Entity](data)` |
   | Read single | `find[Entity]ById(id)` | `findById(id)` |
   | Read single (throws) | `find[Entity]ByIdOrThrow(id)` | `findByIdOrThrow(id)` |
   | Read list | `findAll[Entities](filters)` | `findAll(filters)` |
-  | Update | `update[Entity](id, dto)` | `save(entity)` |
+  | Update | `update[Entity](id, dto)` | `updateById(id, dto)` or a domain-specific named mutation |
   | Soft Delete | `delete[Entity](id)` | `softDelete(id)` |
   | Check existence | `does[Entity]Exist(id)` | `existsById(id)` |
   | Count | `count[Entities](filters)` | `count(filters)` |
+
+Repository mutation methods MUST be intention-revealing.
+The generic ORM persistence primitive (`save`, `update`, `create`, etc.) is an implementation detail and MUST NOT be part of the public service-facing contract.
+Services call named repository methods. Repositories alone may call the underlying ORM persistence APIs.
+This rule MUST remain consistent with Rule 99.
 
 * **The `OrThrow` Pattern:** Repository methods that return a single entity MUST have two variants: `findById(id): Entity | null` (returns null if not found) and `findByIdOrThrow(id): Entity` (throws `EntityNotFoundException` if not found). Services must choose explicitly — never let a `null` propagate silently.
 * **Why:** When two different AI agents work on two different modules, they will produce consistent, predictable method signatures. Any AI reading a repository interface instantly knows what methods are available without having to read the implementation. This eliminates the most common AI mistake: calling a method that doesn't exist (hallucinated method names).
@@ -1362,6 +1376,7 @@ If a backend implementation cannot provide a field currently required by the fro
    - Does the global `ValidationExceptionFilter` transform `400` errors into the canonical `validationErrors` shape? (Rule 98)
    - Do service methods call named repository mutation methods — never directly mutating entity properties and calling `save()` inline? (Rule 99)
    - Are all DB constraints (FK, UQ, IDX, CHK) explicitly named following the `FK_[table]_[ref]_[col]` convention — never auto-generated? (Rule 100)
+   - Do all AI-generated tests verify real observable behavior — no placeholder assertions, no tests that would pass if the feature were broken? (Rule 101)
    - Are there any barrel file imports or relative path imports?
    - Does every new method follow the verb naming convention with `OrThrow` where needed? (Rule 86)
    - Is every new method ≤ 20 lines using Guard Clauses? (Rule 85/87)
@@ -1374,3 +1389,60 @@ If a backend implementation cannot provide a field currently required by the fro
 7. Run `pytest` against the live API to confirm contract compliance.
 8. For security-critical modules, ensure `CODEOWNERS` human approval is obtained. (Rule 93)
 9. Review the AI's isolated changes one final time.
+
+---
+
+## 101. AI Test Integrity Gate — Tests Must Prove Real Behavior
+
+A test file existing is NOT sufficient evidence of correctness.
+
+All AI-generated backend tests MUST verify meaningful application behavior and MUST NOT
+exist only to satisfy coverage, file-count, or checklist requirements.
+
+The AI MUST NOT create or keep:
+- Placeholder assertions.
+- Trivial self-evident assertions (e.g. `expect(true).toBe(true)`, `expect(1).toBe(1)`).
+- Empty tests.
+- Tests that only instantiate a class without verifying behavior.
+- Tests that mock the exact business logic under test.
+- Tests that assert implementation details when externally observable behavior can be tested.
+- Tests whose expected value is copied directly from the implementation rather than the business contract.
+- E2E tests that never exercise the actual HTTP endpoint being claimed as covered.
+
+### Unit Test Integrity
+
+For service/repository/validator tests, verify real branches including:
+- successful execution
+- validation failure
+- not-found behavior
+- authorization/permission failure where applicable
+- business-rule violations
+- persistence failure where applicable
+- transaction rollback behavior where applicable
+- idempotency behavior for critical mutations
+- correct repository method invocation
+- correct domain/DTO transformation
+
+### API / E2E Test Integrity
+
+Pytest E2E tests MUST verify:
+- actual HTTP method and endpoint
+- request validation
+- canonical response envelope
+- response data shape
+- required frontend-facing response fields
+- status/error behavior
+- authentication/authorization
+- pagination/filter/sort behavior where applicable
+- mutation side effects where observable
+- regression behavior for fixed bugs
+
+### Anti-False-Passing Rule
+
+A test is invalid if the test would still pass after the behavior it claims to protect
+is deliberately broken.
+
+Before marking a backend feature complete, the AI MUST review its tests and explain
+what real defect each important test would catch.
+
+The build passing is not equivalent to behavioral correctness.

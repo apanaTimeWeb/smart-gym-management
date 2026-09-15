@@ -442,18 +442,19 @@ visually renders with placeholder values.
 
 ## Rule 17 — Testing (Full Pyramid)
 
-- **Unit tests:** pure logic, validators, utility functions — fast, no
-  framework rendering involved.
-- **Component/widget tests:** every non-trivial component/widget in a feature
-  folder has a matching test in that folder's `tests/` directory (Jest +
-  Testing Library for RN; Flutter's built-in widget-test framework).
-- **Integration tests:** critical user flows tested end-to-end within the app
-  process (RN's integration-test tooling; Flutter's `integration_test`
-  package).
-- **E2E tests (real device/simulator):** pick ONE tool project-wide for
-  black-box, full-app-flow testing (e.g. Maestro or a comparable YAML/script-
-  driven E2E runner works across both RN and Flutter) and document the choice
-  once — do not mix multiple E2E tools in the same repo.
+- **Unit tests:** Pure business logic, validators, formatters, and utility functions
+  are co-located directly beside the source file they test.
+- **Component/widget tests:** Every non-trivial component/widget MUST have its
+  matching test file co-located directly beside the component/widget file it tests.
+  The feature-level `tests/` directory is reserved ONLY for integration-level tests
+  that exercise multiple feature files together.
+- **Integration tests:** Live inside the feature's `tests/` directory and verify
+  multi-file feature flows, API/mock integration, state coordination, and critical
+  feature behavior.
+- **E2E tests:** Live in the project-level E2E suite and verify complete user
+  journeys through the real application (e.g. Maestro or a comparable YAML/script-
+  driven E2E runner works across both RN and Flutter — choose ONE tool project-wide
+  and document the choice; do not mix multiple E2E tools in the same repo).
 - Native modules (camera, biometrics, secure storage, notifications) are
   mocked at the test boundary — unit and component tests never touch a real
   native API.
@@ -875,20 +876,47 @@ future AI agents.
 
 ## Rule 28 — Zero Cross-Feature Imports (The Portable Folder Rule)
 
-Feature A (`members`) is **explicitly FORBIDDEN** from importing anything from
-Feature B (`attendance`) — no components, no hooks, no types, no constants.
+Every feature folder must be a **completely self-contained BUSINESS unit**.
 
-Every feature folder must be a **completely self-contained unit**. It may depend ONLY on:
-- (a) npm / pub packages
-- (b) Generic zero-business-logic primitives from `src/core/ui/` (shared UI atoms)
-- (c) Its own internal files
+A feature MUST NOT import or depend on another feature's business logic.
 
-This guarantees the entire feature folder can be deleted, copied, and pasted
-into a different project with **zero broken imports** — the drag-and-drop-to-AI
-workflow depends entirely on this guarantee.
+A feature **MAY** depend on:
+
+- **(a)** Approved framework/package dependencies.
+- **(b)** Approved zero-business-logic primitives from `src/core/ui/`.
+- **(c)** Approved framework-level infrastructure from `src/core/`, such as:
+  - network client
+  - API response types (`ApiResponse<T>`, `PaginationMeta`)
+  - authentication/session infrastructure
+  - secure storage abstraction
+  - navigation infrastructure
+  - route constants
+  - pagination types
+  - formatting primitives (`formatCurrency`, `formatNumber`, `displayValue`, `maskSensitiveData`)
+  - logging/observability infrastructure
+  - accessibility infrastructure
+  - app-wide configuration required for correctness
+- **(d)** Its own internal files.
+
+A feature **MUST NEVER** depend on:
+- another feature's components
+- another feature's hooks/controllers/notifiers
+- another feature's stores/providers/blocs
+- another feature's schemas/validators
+- another feature's business types/models
+- another feature's API services
+- another feature's business constants
+- another feature's business utilities
+
+`src/core/` is an **infrastructure boundary**, NOT a business-logic sharing layer.
+
+If business logic is required by two features, duplicate it inside each feature
+rather than moving it into `src/core/`. This preserves portability without
+artificially duplicating mandatory application infrastructure.
 
 Enforce mechanically via `eslint-plugin-boundaries` (React Native) or equivalent
-static analysis / import linter (Flutter) so violations are caught in CI, not in code review.
+static analysis / import linter (Flutter) so violations are caught in CI, not in
+code review.
 
 ---
 
