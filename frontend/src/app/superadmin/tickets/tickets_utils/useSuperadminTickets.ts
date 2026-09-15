@@ -8,7 +8,7 @@ import { useSuperadminTicketsStore } from '@/app/superadmin/tickets/tickets_stor
 const ITEMS_PER_PAGE = 10;
 
 export function useSuperadminTickets() {
-  const { data: apiTickets, fetchState, error } = useSuperadminTicketsData<SupportTicket[]>(TicketsUrlConfig.BACKEND_API.BASE);
+  const { data: apiTickets, isLoading, error } = useSuperadminTicketsData<SupportTicket[]>(TicketsUrlConfig.BACKEND_API.BASE);
 
   const {
     search,
@@ -32,7 +32,7 @@ export function useSuperadminTickets() {
   const paginatedTickets = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   return {
-    fetchState,
+    isLoading,
     error,
     totalPages,
     paginatedTickets,

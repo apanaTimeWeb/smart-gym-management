@@ -317,7 +317,7 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
             className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:text-danger hover:bg-danger-bg motion-safe:transition-all motion-safe:duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger ${isCollapsed ? 'justify-center' : ''
               }`}
           >
-            <LogOut className="w-5 h-5" strokeWidth={2} className="shrink-0" />
+            <LogOut className="w-5 h-5 shrink-0" strokeWidth={2}  />
             {!isCollapsed && <span className="font-medium text-sm">Logout</span>}
           </button>
         </div>

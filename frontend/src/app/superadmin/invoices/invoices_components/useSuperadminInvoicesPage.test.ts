@@ -51,7 +51,7 @@ describe('useSuperadminInvoicesPage', () => {
 
     const { result } = renderHook(() => useSuperadminInvoicesPage());
 
-    expect(result.current.fetchState).toBe('success');
+    expect(result.current.isLoading).toBe(false);
     expect(result.current.invoices).toEqual(mockInvoices);
   });
 
@@ -62,7 +62,7 @@ describe('useSuperadminInvoicesPage', () => {
 
     const { result } = renderHook(() => useSuperadminInvoicesPage());
 
-    expect(result.current.fetchState).toBe('loading');
+    expect(result.current.isLoading).toBe(true);
   });
 
   it('returns error state when invoice query fails', () => {
@@ -72,7 +72,7 @@ describe('useSuperadminInvoicesPage', () => {
 
     const { result } = renderHook(() => useSuperadminInvoicesPage());
 
-    expect(result.current.fetchState).toBe('error');
+    expect(result.current.isError).toBe(true);
     expect(result.current.error).not.toBeNull();
   });
 
@@ -95,7 +95,7 @@ describe('useSuperadminInvoicesPage', () => {
     renderHook(() => useSuperadminInvoicesPage());
 
     expect(useQuery).toHaveBeenCalledWith(expect.objectContaining({
-      queryKey: ['superadmin', 'invoices'],
+      queryKey: ['superadmin', 'invoices', expect.any(Object)],
     }));
   });
 

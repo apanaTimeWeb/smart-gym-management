@@ -78,9 +78,9 @@ export function SuperadminOnboardingTable({
                         <td className="px-4 py-3 w-1/5">
                           <div className="flex items-center gap-1.5">
                             {tenant.emailVerified ? (
-                              <CheckCircle2 className="w-5 h-5" strokeWidth={2} className="text-success shrink-0" />
+                              <CheckCircle2 className="w-5 h-5 text-success shrink-0" strokeWidth={2}  />
                             ) : (
-                              <XCircle className="w-5 h-5" strokeWidth={2} className="text-danger shrink-0" />
+                              <XCircle className="w-5 h-5 text-danger shrink-0" strokeWidth={2}  />
                             )}
                             <span className="text-secondary text-xs truncate max-w-xs">{tenant.adminEmail}</span>
                           </div>
@@ -168,9 +168,9 @@ export function SuperadminOnboardingTable({
                                   {tenant.checklist.map((item) => (
                                     <div key={item.key} className="flex items-center gap-2">
                                       {item.done ? (
-                                        <CheckCircle2 className="w-5 h-5" strokeWidth={2} className="text-success shrink-0" />
+                                        <CheckCircle2 className="w-5 h-5 text-success shrink-0" strokeWidth={2}  />
                                       ) : (
-                                        <Clock className="w-5 h-5" strokeWidth={2} className="text-secondary shrink-0" />
+                                        <Clock className="w-5 h-5 text-secondary shrink-0" strokeWidth={2}  />
                                       )}
                                       <span className={`text-sm ${item.done ? 'text-foreground' : 'text-secondary'}`}>
                                         {item.label}

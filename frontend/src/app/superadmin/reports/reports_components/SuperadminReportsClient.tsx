@@ -164,7 +164,7 @@ export default function SuperadminReportsClient() {
   const sortedHealthData = [...filteredHealthData].sort((a, b) => b.score - a.score);
 
   if (isLoading) return <div className="p-8 text-center text-secondary motion-safe:animate-pulse">Loading reports...</div>;
-  if (isError) return <div className="p-8 text-center text-danger">Failed to load reports data.</div>;
+  if (error) return <div className="p-8 text-center text-danger">Failed to load reports data.</div>;
 
   return (
     <div className="space-y-6">

@@ -34,7 +34,7 @@ describe('useSuperadminBackupsData', () => {
 
     const { result } = renderHook(() => useSuperadminBackupsData());
 
-    expect(result.current.fetchState).toBe('success');
+    expect(result.current.isLoading).toBe(false);
     expect(result.current.data).toEqual(mockBackups);
     expect(result.current.error).toBeNull();
   });
@@ -49,7 +49,7 @@ describe('useSuperadminBackupsData', () => {
 
     const { result } = renderHook(() => useSuperadminBackupsData());
 
-    expect(result.current.fetchState).toBe('loading');
+    expect(result.current.isLoading).toBe(true);
     expect(result.current.data).toBeUndefined();
   });
 
@@ -63,7 +63,7 @@ describe('useSuperadminBackupsData', () => {
 
     const { result } = renderHook(() => useSuperadminBackupsData());
 
-    expect(result.current.fetchState).toBe('error');
+    expect(result.current.isLoading).toBe(false);
     expect(result.current.error).not.toBeNull();
   });
 
@@ -77,7 +77,7 @@ describe('useSuperadminBackupsData', () => {
 
     const { result } = renderHook(() => useSuperadminBackupsData());
 
-    expect(result.current.fetchState).toBe('success');
+    expect(result.current.isLoading).toBe(false);
     expect(result.current.data).toEqual([]);
   });
 

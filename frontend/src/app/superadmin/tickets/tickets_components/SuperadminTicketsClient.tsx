@@ -43,7 +43,7 @@ export default function SuperadminTicketsClient() {
   };
 
   const {
-    fetchState,
+    isLoading,
     error,
     totalPages,
     paginatedTickets,

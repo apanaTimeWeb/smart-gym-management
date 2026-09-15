@@ -3,9 +3,9 @@ import { AlertTriangle, Info, X } from 'lucide-react';
 import type { SuperadminNotification, NotificationType } from '@/app/superadmin/messaging/messaging_types/superadmin_messaging_types';
 
 function NotifIcon({ type }: { type: NotificationType }) {
-  if (type === 'INFO') return <Info className="w-5 h-5" strokeWidth={2} className="text-info shrink-0" />;
-  if (type === 'WARNING') return <AlertTriangle className="w-5 h-5" strokeWidth={2} className="text-warning shrink-0" />;
-  return <AlertTriangle className="w-5 h-5" strokeWidth={2} className="text-danger shrink-0" />;
+  if (type === 'INFO') return <Info className="w-5 h-5 text-info shrink-0" strokeWidth={2}  />;
+  if (type === 'WARNING') return <AlertTriangle className="w-5 h-5 text-warning shrink-0" strokeWidth={2}  />;
+  return <AlertTriangle className="w-5 h-5 text-danger shrink-0" strokeWidth={2}  />;
 }
 
 export function SuperadminMessagingNotificationsTab({

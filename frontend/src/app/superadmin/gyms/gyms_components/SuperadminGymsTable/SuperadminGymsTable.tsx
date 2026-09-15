@@ -100,7 +100,7 @@ export default function SuperadminGymsTable() {
     );
   }
 
-  if (isError) {
+  if (error) {
     return <div className="p-8 text-center text-danger">Error loading gyms. Please try again.</div>;
   }
 

@@ -34,7 +34,7 @@ describe('useSuperadminTicketsData', () => {
 
     const { result } = renderHook(() => useSuperadminTicketsData<MockTicket[]>('/superadmin/tickets'));
 
-    expect(result.current.fetchState).toBe('success');
+    expect(result.current.isLoading).toBe(false);
     expect(result.current.data).toEqual(mockTickets);
     expect(result.current.error).toBeNull();
   });
@@ -50,7 +50,7 @@ describe('useSuperadminTicketsData', () => {
 
     const { result } = renderHook(() => useSuperadminTicketsData<MockTicket[]>('/superadmin/tickets'));
 
-    expect(result.current.fetchState).toBe('loading');
+    expect(result.current.isLoading).toBe(true);
     expect(result.current.data).toBeNull();
   });
 
@@ -65,7 +65,7 @@ describe('useSuperadminTicketsData', () => {
 
     const { result } = renderHook(() => useSuperadminTicketsData<MockTicket[]>('/superadmin/tickets'));
 
-    expect(result.current.fetchState).toBe('error');
+    expect(result.current.isError).toBe(true);
     expect(result.current.error).toBe('Unauthorized');
   });
 
@@ -80,7 +80,7 @@ describe('useSuperadminTicketsData', () => {
 
     const { result } = renderHook(() => useSuperadminTicketsData<MockTicket[]>('/superadmin/tickets'));
 
-    expect(result.current.fetchState).toBe('success');
+    expect(result.current.isLoading).toBe(false);
     expect(result.current.data).toBeNull();
   });
 

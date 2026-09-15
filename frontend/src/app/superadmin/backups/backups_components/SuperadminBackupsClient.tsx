@@ -1,9 +1,8 @@
 'use client';
-// RESPONSIBILITY: SuperadminBackupsClient.tsx renders the Database Backups page. Purely a view layer â€” data fetched via useSuperadminData.
+// RESPONSIBILITY: SuperadminBackupsClient.tsx renders the Database Backups page. Purely a view layer — data fetched via useSuperadminData.
 
 import { useSuperadminBackupsData } from '@/app/superadmin/backups/backups_utils/useSuperadminBackupsData';
 import SuperadminBackupsEmptyState from '@/app/superadmin/backups/backups_components/SuperadminBackupsEmptyState/SuperadminBackupsEmptyState';
-
 import SuperadminBackupsScheduleModal from '@/app/superadmin/backups/backups_components/SuperadminBackupsScheduleModal';
 import { DatabaseBackup, Search, Clock } from 'lucide-react';
 import type { BackupRecord } from '@/app/superadmin/backups/superadmin_backups_types/superadmin_backups_types';
@@ -11,22 +10,7 @@ import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 import { backupsApi } from '@/app/superadmin/backups/superadmin_backups_api/superadmin_backups_api';
-// Rule 10: Absolute imports only â€” no relative paths allowed
-import SuperadminBackupsTable from '@/app/superadmin/backups/backups_components/SuperadminBackupsTable';
-'use client';
-// RESPONSIBILITY: SuperadminBackupsClient.tsx renders the Database Backups page. Purely a view layer â€” data fetched via useSuperadminData.
-
-import { useSuperadminBackupsData } from '@/app/superadmin/backups/backups_utils/useSuperadminBackupsData';
-import SuperadminBackupsEmptyState from '@/app/superadmin/backups/backups_components/SuperadminBackupsEmptyState/SuperadminBackupsEmptyState';
-
-import SuperadminBackupsScheduleModal from '@/app/superadmin/backups/backups_components/SuperadminBackupsScheduleModal';
-import { DatabaseBackup, Search, Clock } from 'lucide-react';
-import type { BackupRecord } from '@/app/superadmin/backups/superadmin_backups_types/superadmin_backups_types';
-import { useState, useEffect } from 'react';
-import toast from 'react-hot-toast';
-import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
-import { backupsApi } from '@/app/superadmin/backups/superadmin_backups_api/superadmin_backups_api';
-// Rule 10: Absolute imports only â€” no relative paths allowed
+// Rule 10: Absolute imports only — no relative paths allowed
 import SuperadminBackupsTable from '@/app/superadmin/backups/backups_components/SuperadminBackupsTable';
 import SuperadminBackupsRestoreModal from '@/app/superadmin/backups/backups_components/SuperadminBackupsRestoreModal';
 import SuperadminBackupsTriggerModal from '@/app/superadmin/backups/backups_components/SuperadminBackupsTriggerModal';
@@ -48,10 +32,27 @@ export default function SuperadminBackupsClient() {
   // Resets pagination to page 1 whenever a filter changes, preventing stale empty states.
   // EXPLANATION: Synchronize component state with external dependencies.
   // EFFECT DEPENDENCIES: Documented intentionally.
+
+  const [restoreModalOpen, setRestoreModalOpen] = useState(false);
+  const [selectedBackup, setSelectedBackup] = useState<BackupRecord | null>(null);
+  const [restoreConfirmText, setRestoreConfirmText] = useState('');
+
+  const handleDownload = (backup: BackupRecord) => {
+    toast.success(`Downloading backup ${backup.id}`);
+  };
+
+  const handleRestoreClick = (backup: BackupRecord) => {
+    setSelectedBackup(backup);
+    setRestoreModalOpen(true);
+  };
+
+  const filtered = backups?.filter(b => {
+    const matchesSearch = b.id.toLowerCase().includes(search.toLowerCase()) || b.tenantId.toLowerCase().includes(search.toLowerCase());
+    const matchesStatus = statusFilter === 'ALL' || b.status === statusFilter;
     const bType = b.id.includes('MANUAL') ? 'MANUAL' : 'AUTOMATED'; // Mock logic for type
     const matchesType = typeFilter === 'ALL' || bType === typeFilter;
     return matchesSearch && matchesStatus && matchesType;
-  });
+  }) || [];
 
   const totalPages: number = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;
   const paginatedBackups: BackupRecord[] = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);

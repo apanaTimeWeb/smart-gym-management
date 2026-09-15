@@ -12,7 +12,8 @@ export function useSuperadminFeaturesData() {
     queryKey,
     queryFn: async () => {
       const res = await featuresApi.fetchFeatures();
-      return res.data;
+      if (!(res.data as any)) throw new Error(res.message || 'Failed to fetch features data');
+      return (res.data as any);
     }
   });
 
@@ -22,11 +23,11 @@ export function useSuperadminFeaturesData() {
       queryClient.setQueryData(queryKey, (old: { flags: FeatureFlag[]; notes: ReleaseNote[] } | undefined) => {
         if (!old) return old;
         return {
-          ...old,
-          flags: old.flags.map((f: FeatureFlag) => f.id === res.data?.id ? res.data : f)
+          flags: old.flags.map((f) => (f.id === (res.data as any)?.id ? (res.data as any) : f)),
+          notes: old.notes,
         };
       });
-    }
+    },
   });
 
   const updateFlagMutation = useMutation({
@@ -35,26 +36,35 @@ export function useSuperadminFeaturesData() {
       queryClient.setQueryData(queryKey, (old: { flags: FeatureFlag[]; notes: ReleaseNote[] } | undefined) => {
         if (!old) return old;
         return {
-          ...old,
-          flags: old.flags.map((f: FeatureFlag) => f.id === res.data?.id ? res.data : f)
+          flags: old.flags.map((f) => (f.id === (res.data as any)?.id ? (res.data as any) : f)),
+          notes: old.notes,
         };
       });
-    }
+    },
+  });
+
+  const publishNoteMutation = useMutation({
+    mutationFn: (data: Partial<ReleaseNote>) => featuresApi.publishNote(data),
+    onSuccess: (res) => {
+      queryClient.setQueryData(queryKey, (old: { flags: FeatureFlag[]; notes: ReleaseNote[] } | undefined) => {
+        if (!old) return old;
+        return {
+          flags: old.flags,
+          notes: [(res.data as any), ...old.notes],
+        };
+      });
+    },
   });
 
   return {
-    data: query.data as { flags: FeatureFlag[]; notes: ReleaseNote[] } | undefined,
-    fetchState,
-    error: query.isError ? new Error('Failed to fetch product data') : null,
-    
-    // Legacy setters maintained to not break existing component code completely, 
-    // but the component should ideally be migrated to use mutations directly
-    setData: (updater: unknown) => queryClient.setQueryData(queryKey, updater),
-    setFetchState: () => {}, 
-
-    // New mutation exports
+    data: query.data,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    error: query.error,
     toggleFlag: toggleFlagMutation.mutateAsync,
-    updateFlag: updateFlagMutation.mutateAsync
+    isToggling: toggleFlagMutation.isPending,
+    publishNote: publishNoteMutation.mutateAsync,
+    isPublishing: publishNoteMutation.isPending,
+    updateFlag: updateFlagMutation.mutateAsync,
   };
 }
-

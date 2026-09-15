@@ -1,3 +1,4 @@
+import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
 // RESPONSIBILITY: Encapsulates functionality for superadmin_features_api.ts
 import { FeatureFlagSchema, ReleaseNoteSchema } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
 import { apiFetch } from '@/lib/api';

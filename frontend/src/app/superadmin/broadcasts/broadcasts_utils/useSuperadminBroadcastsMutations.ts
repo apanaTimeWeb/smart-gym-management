@@ -26,7 +26,7 @@ export const useSuperadminBroadcastsMutations = ({
 }) => {
   const createMutation = useMutation({
     mutationFn: (data: BroadcastFormData) => broadcastsApi.createBroadcast(data),
-    onSuccess: (res: unknown, variables: unknown) => {
+    onSuccess: (res: any, variables: any) => {
       if (res.success && res.data) {
         updateBroadcasts(prev => [res.data!, ...prev]);
         setIsModalOpen(false);
@@ -46,14 +46,14 @@ export const useSuperadminBroadcastsMutations = ({
         toast.error(res.message);
       }
     },
-    onError: (error: unknown) => {
+    onError: (error: any) => {
         toast.error(error.message);
     }
   });
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: string, data: Partial<BroadcastFormData> }) => broadcastsApi.updateBroadcast(id, data),
-    onSuccess: (res: unknown, variables: unknown) => {
+    onSuccess: (res: any, variables: any) => {
       if (res.success && res.data) {
         updateBroadcasts(prev => prev.map(b => b.id === variables.id ? res.data! : b));
         setIsModalOpen(false);
@@ -74,14 +74,14 @@ export const useSuperadminBroadcastsMutations = ({
         toast.error(res.message);
       }
     },
-    onError: (error: unknown) => {
+    onError: (error: any) => {
         toast.error(error.message);
     }
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => broadcastsApi.deleteBroadcast(id),
-    onSuccess: (res: unknown, id: unknown) => {
+    mutationFn: (id: any) => broadcastsApi.deleteBroadcast(id),
+    onSuccess: (res: any, id: string) => {
       if (res.success) {
         updateBroadcasts(prev => prev.filter(b => b.id !== id));
         toast.success(res.message);
@@ -89,7 +89,7 @@ export const useSuperadminBroadcastsMutations = ({
         toast.error(res.message);
       }
     },
-    onError: (error: unknown) => {
+    onError: (error: any) => {
         toast.error(error.message);
     }
   });

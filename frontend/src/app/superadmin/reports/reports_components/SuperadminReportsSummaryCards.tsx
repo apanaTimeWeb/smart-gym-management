@@ -28,7 +28,7 @@ export function SuperadminReportsSummaryCards({
         style={{ background: KPI_CARD_GRADIENT }}
       >
         <div className="flex items-center gap-2 mb-2">
-          <IndianRupee className="w-5 h-5" strokeWidth={2} className="text-primary" />
+          <IndianRupee className="w-5 h-5 text-primary" strokeWidth={2}  />
           <span className="text-xs text-secondary uppercase tracking-wider">Current Monthly Income{suffix}</span>
         </div>
         <p className="text-3xl font-bold text-foreground">{formatCurrency(totalMRR)}</p>
@@ -39,7 +39,7 @@ export function SuperadminReportsSummaryCards({
         style={{ background: KPI_CARD_GRADIENT }}
       >
         <div className="flex items-center gap-2 mb-2">
-          <TrendingDown className="w-5 h-5" strokeWidth={2} className="text-danger" />
+          <TrendingDown className="w-5 h-5 text-danger" strokeWidth={2}  />
           <span className="text-xs text-secondary uppercase tracking-wider">Lost Income{suffix}</span>
         </div>
         <p className="text-3xl font-bold text-foreground">{formatCurrency(totalCancelledRevenue)}</p>
@@ -50,7 +50,7 @@ export function SuperadminReportsSummaryCards({
         style={{ background: KPI_CARD_GRADIENT }}
       >
         <div className="flex items-center gap-2 mb-2">
-          <HeartPulse className="w-5 h-5" strokeWidth={2} className="text-success" />
+          <HeartPulse className="w-5 h-5 text-success" strokeWidth={2}  />
           <span className="text-xs text-secondary uppercase tracking-wider">Avg Health Score{suffix}</span>
         </div>
         <p className="text-3xl font-bold text-foreground">{avgHealthScore}/100</p>

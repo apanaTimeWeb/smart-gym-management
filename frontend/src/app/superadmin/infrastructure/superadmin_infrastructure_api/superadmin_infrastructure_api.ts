@@ -1,3 +1,4 @@
+import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
 // RESPONSIBILITY: Modularized API client for the Infrastructure module. All methods import apiFetch from src/lib/api.ts and define only superadmin-scoped endpoints. No UI logic.
 import { InfrastructureUrlConfig } from '@/app/superadmin/infrastructure/superadmin_infrastructure_url_config';
 import { apiFetch } from '@/lib/api';

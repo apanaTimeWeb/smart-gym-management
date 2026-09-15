@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 
 export default function SuperadminGymsCalendar() {
   const router = useRouter();
-  const { filteredGyms, fetchState, handleRowClick } = useSuperadminGymsTable();
+  const { filteredGyms, isLoading, handleRowClick } = useSuperadminGymsTable();
 
   // Create a simple calendar grid for the current month
   const { daysInMonth, startDay, currentYear, currentMonth, monthName } = useMemo(() => {
@@ -38,7 +38,7 @@ export default function SuperadminGymsCalendar() {
     return <div className="p-8 text-center text-secondary">Loading calendar...</div>;
   }
 
-  if (isError) {
+  if (error) {
     return <div className="p-8 text-center text-danger">Error loading calendar. Please try again.</div>;
   }
 

@@ -66,7 +66,7 @@ export function SuperadminOnboardingModals({
           <div className="bg-overlay border border-border rounded-2xl p-6 w-full max-w-sm shadow-2xl">
             <div className="flex items-center gap-3 mb-3">
               <div className="w-10 h-10 rounded-full bg-warning/10 flex items-center justify-center shrink-0">
-                <AlertTriangle className="w-5 h-5" strokeWidth={2} className="text-warning" />
+                <AlertTriangle className="w-5 h-5 text-warning" strokeWidth={2}  />
               </div>
               <h2 className="text-lg font-bold text-foreground">Convert to Paid?</h2>
             </div>

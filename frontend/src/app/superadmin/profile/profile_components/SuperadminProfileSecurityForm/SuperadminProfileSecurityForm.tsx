@@ -102,7 +102,7 @@ export default function SuperadminProfileSecurityForm({
               disabled={isSavingPassword || !isDirty}
               className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-black font-semibold text-sm rounded-lg motion-safe:transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
-              {isSavingPassword && <Loader2 className="w-4 h-4" strokeWidth={2} className="motion-safe:animate-spin" />}
+              {isSavingPassword && <Loader2 className="w-4 h-4 motion-safe:animate-spin" strokeWidth={2}  />}
               {isSavingPassword ? 'Updating...' : 'Update Password'}
             </button>
           </div>
@@ -161,7 +161,7 @@ export default function SuperadminProfileSecurityForm({
                 : 'bg-success-bg text-success hover:bg-success hover:text-white focus-visible:ring-success'
             }`}
           >
-            {isTogglingTwoFA && <Loader2 className="w-4 h-4" strokeWidth={2} className="motion-safe:animate-spin" />}
+            {isTogglingTwoFA && <Loader2 className="w-4 h-4 motion-safe:animate-spin" strokeWidth={2}  />}
             {profile.twoFactorEnabled ? 'Disable 2FA' : 'Enable 2FA'}
           </button>
         </div>

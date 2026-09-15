@@ -1,3 +1,4 @@
+import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
 // RESPONSIBILITY: Encapsulates functionality for superadmin_invoices_api.ts
 import { SaaSInvoiceSchema } from '@/app/superadmin/invoices/superadmin_invoices_types/superadmin_invoices_types';
 import { apiFetch } from '@/lib/api';

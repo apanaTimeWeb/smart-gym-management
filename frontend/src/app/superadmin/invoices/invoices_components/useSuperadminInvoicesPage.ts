@@ -56,15 +56,15 @@ export function useSuperadminInvoicesPage() {
     onSuccess: (res) => {
       if (res.success && res.data) {
         queryClient.setQueryData(['superadmin', 'invoices'], (oldData: unknown) => {
-          if (!oldData?.data) return oldData;
-          return { ...oldData, data: [res.data, ...oldData.data] };
+          if (!(oldData as any)?.data) return oldData;
+          return { ...(oldData as any), data: [res.data, ...(oldData as any).data] };
         });
         toast.success(res.message || 'Payment logged successfully');
       } else {
         toast.error(res.message || 'Failed to log payment');
       }
     },
-    onError: (err: unknown) => {
+    onError: (err: any) => {
       toast.error(err.message || 'Failed to log payment');
     }
   });

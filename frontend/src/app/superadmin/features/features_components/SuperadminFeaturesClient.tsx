@@ -41,14 +41,14 @@ export default function SuperadminFeaturesClient() {
 
   useUnsavedChangesGuard(isDirty && activeTab === 'NOTES', 'You have an unsaved release note. Discard?');
 
-  const { data, fetchState, error, setData, toggleFlag, updateFlag } = useSuperadminFeaturesData();
+  const { data, isLoading, isError, error, toggleFlag, updateFlag, publishNote } = useSuperadminFeaturesData();
 
   const onPublishNote = async (formData: ReleaseNoteFormValues) => {
     setIsPublishing(true);
     try {
       const res = await featuresApi.createNote({ ...formData, isPublished: true, date: new Date().toISOString() });
       if (res.data) {
-        setData((prev: { flags: FeatureFlag[]; notes: ReleaseNote[]; } | null) => prev ? { ...prev, notes: [res.data, ...prev.notes] } : prev);
+        // setData removed((prev: { flags: FeatureFlag[]; notes: ReleaseNote[]; } | null) => prev ? { ...prev, notes: [res.data, ...prev.notes] } : prev);
         reset();
         toast.success('Release note published successfully', { id: 'release-note-published-successfully' });
       }

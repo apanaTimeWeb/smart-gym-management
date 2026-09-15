@@ -36,7 +36,7 @@ export default function SuperadminCancellationsClient() {
     );
   }
 
-  if (isError) {
+  if (error) {
     return (
       <div className="p-8 text-center text-danger">Failed to load cancellations data.</div>
     );

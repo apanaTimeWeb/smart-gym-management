@@ -4,8 +4,8 @@ export const GymsUrlConfig = {
     ADD: "/superadmin/gyms/add",
   },
   BACKEND_API: {
-    BASE: GymsUrlConfig.BACKEND_API.BASE,
-    IMPERSONATE: GymsUrlConfig.BACKEND_API.BASE,
+    BASE: '/api/gyms',
+    IMPERSONATE: '/api/gyms',
   },
   /** Ghost-login constants. Owned here so the gyms module does not cross-import /auth. */
   GHOST_LOGIN: {

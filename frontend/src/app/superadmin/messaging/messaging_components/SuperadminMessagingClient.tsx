@@ -128,7 +128,7 @@ export default function SuperadminMessagingClient() {
   }
 
   if (isLoading) return <div className="p-8 text-center text-secondary motion-safe:animate-pulse">Loading messages...</div>;
-  if (isError) return <div className="p-8 text-center text-danger">Failed to load data.</div>;
+  if (error) return <div className="p-8 text-center text-danger">Failed to load data.</div>;
 
   return (
     <div className="space-y-6">

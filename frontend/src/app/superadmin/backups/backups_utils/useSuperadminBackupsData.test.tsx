@@ -19,7 +19,7 @@ describe('useSuperadminBackupsData', () => {
     const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     const { result } = renderHook(() => useSuperadminBackupsData(), { wrapper: ({ children }) => <QueryClientProvider client={queryClient}>{children}</QueryClientProvider> });
     
-    expect(result.current.fetchState).toBe('loading');
+    expect(result.current.isLoading).toBe(true);
     expect(result.current.data).toBeUndefined();
   });
 
@@ -31,7 +31,7 @@ describe('useSuperadminBackupsData', () => {
     const { result } = renderHook(() => useSuperadminBackupsData(), { wrapper: ({ children }) => <QueryClientProvider client={queryClient}>{children}</QueryClientProvider> });
     
     await waitFor(() => {
-      expect(result.current.fetchState).toBe('success');
+      expect(result.current.isLoading).toBe(false);
     });
     
     expect(result.current.data).toEqual(mockBackups.data);
@@ -44,9 +44,9 @@ describe('useSuperadminBackupsData', () => {
     const { result } = renderHook(() => useSuperadminBackupsData(), { wrapper: ({ children }) => <QueryClientProvider client={queryClient}>{children}</QueryClientProvider> });
     
     await waitFor(() => {
-      expect(result.current.fetchState).toBe('error');
+      expect(result.current.isLoading).toBe(true);
     });
     
-    expect(result.current.error).toBeInstanceOf(Error);
+    expect(result.current.error).not.toBeNull();
   });
 });

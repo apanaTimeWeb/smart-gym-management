@@ -26,7 +26,7 @@ export type InvoicesTab = 'ALL' | 'AGING';
 export default function SuperadminInvoicesClient() {
   const [activeTab, setActiveTab] = useState<InvoicesTab>('ALL');
   const {
-    fetchState,
+    isLoading,
     error,
     invoices,
     filteredInvoices,

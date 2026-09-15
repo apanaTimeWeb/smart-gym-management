@@ -33,7 +33,7 @@ export default function SuperadminProfileAvatarCard({ profile }: SuperadminProfi
         <p className="text-sm text-secondary">{profile.email}</p>
       </div>
       <div className="flex items-center gap-2 px-3 py-1.5 bg-primary-subtle rounded-full">
-        <ShieldCheck className="w-3.5 h-3.5" strokeWidth={2} className="text-primary" />
+        <ShieldCheck className="w-3.5 h-3.5 text-primary" strokeWidth={2}  />
         <span className="text-xs font-semibold text-primary">SUPERADMIN</span>
       </div>
       <div className="w-full border-t border-border pt-4 space-y-2 text-sm">

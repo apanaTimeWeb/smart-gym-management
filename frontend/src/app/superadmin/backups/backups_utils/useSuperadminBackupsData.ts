@@ -4,19 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import { backupsApi } from '@/app/superadmin/backups/superadmin_backups_api/superadmin_backups_api';
 import type { BackupRecord } from '@/app/superadmin/backups/superadmin_backups_types/superadmin_backups_types';
 
-
-
-export function useSuperadminBackupsData() {
-  const query = useQuery({
-    queryKey: ['superadmin', 'backups'],
-    queryFn: async () => {
-// DATA FLOW: Component -> useSuperadminBackupsData.ts -> API/Store
-import { useQuery } from '@tanstack/react-query';
-import { backupsApi } from '@/app/superadmin/backups/superadmin_backups_api/superadmin_backups_api';
-import type { BackupRecord } from '@/app/superadmin/backups/superadmin_backups_types/superadmin_backups_types';
-
-
-
 export function useSuperadminBackupsData() {
   const query = useQuery({
     queryKey: ['superadmin', 'backups'],

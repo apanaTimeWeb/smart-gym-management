@@ -58,7 +58,7 @@ export default function SuperadminJobsView() {
     );
   }
 
-  if (isError) {
+  if (error) {
     return <div className="p-8 text-center text-danger font-medium">Error loading jobs. Please try again.</div>;
   }
 
