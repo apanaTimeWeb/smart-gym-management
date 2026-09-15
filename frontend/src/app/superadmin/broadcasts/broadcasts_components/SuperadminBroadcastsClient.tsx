@@ -9,8 +9,7 @@ import { SuperadminBroadcastModal } from '@/app/superadmin/broadcasts/broadcasts
 import SuperadminBroadcastQueueModal from '@/app/superadmin/broadcasts/broadcasts_components/SuperadminBroadcastQueueModal';
 
 export default function SuperadminBroadcastsClient() {
-  const {
-    broadcasts,
+  const { broadcasts,
     searchQuery,
     setSearchQuery,
     statusFilter,
@@ -32,6 +31,7 @@ export default function SuperadminBroadcastsClient() {
     queueTitle,
     onQueueComplete
   } = useSuperadminBroadcastsPage();
+  const isLoading = fetchState === 'pending';
 
   if (fetchState === 'pending') return (
     <div className="space-y-6 motion-safe:animate-pulse">
@@ -39,7 +39,7 @@ export default function SuperadminBroadcastsClient() {
       <div className="h-96 bg-card rounded-xl border border-border" />
     </div>
   );
-  if (isError || error) return <div className="p-8 text-center text-danger">Error loading data.</div>;
+  if (error) return <div className="p-8 text-center text-danger">Error loading data.</div>;
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto">

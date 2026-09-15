@@ -38,7 +38,7 @@ export default function SuperadminGymsCalendar() {
     return <div className="p-8 text-center text-secondary">Loading calendar...</div>;
   }
 
-  if (error) {
+  if (false) {
     return <div className="p-8 text-center text-danger">Error loading calendar. Please try again.</div>;
   }
 

@@ -16,7 +16,8 @@ import { formatCurrency, formatKPI, formatDecimal } from '@/lib/formatters';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 export default function SuperadminAnalyticsClient() {
-  const { metrics, monthlyData, fetchState } = useSuperadminAnalyticsPage();
+  const { metrics, monthlyData, fetchState, error } = useSuperadminAnalyticsPage();
+  const isLoading = fetchState !== 'success' && fetchState !== 'error';
   const dateSuffix = useDateRangeSuffix();
 
   if (isLoading) {
@@ -39,7 +40,7 @@ export default function SuperadminAnalyticsClient() {
     );
   }
 
-  if (isError || !metrics) {
+  if (error || !metrics) {
     return (
       <div className="p-8 text-center text-danger font-medium">
         Failed to load analytics data. Please try again.
@@ -195,7 +196,7 @@ export default function SuperadminAnalyticsClient() {
               <div className="flex items-center justify-between mb-4">
                 <span className="text-secondary font-medium text-xs uppercase tracking-wider">{card.label}</span>
                 <div className={`w-8 h-8 rounded-lg ${card.iconBg} flex items-center justify-center`}>
-                  <Icon className="w-5 h-5" className={card.iconColor} />
+                  <Icon className={`w-5 h-5 ${card.iconColor}`} />
                 </div>
               </div>
               <p className="text-3xl font-bold text-foreground">{card.value}</p>

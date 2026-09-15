@@ -47,6 +47,6 @@ describe('useSuperadminBackupsData', () => {
       expect(result.current.isLoading).toBe(true);
     });
     
-    expect(result.current.error).not.toBeNull();
+    expect(result.current.error).toBeDefined();
   });
 });

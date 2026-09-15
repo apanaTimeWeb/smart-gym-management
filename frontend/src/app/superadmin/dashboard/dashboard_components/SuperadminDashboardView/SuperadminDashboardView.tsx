@@ -1,18 +1,17 @@
 'use client';
 // RESPONSIBILITY: Pure View component for the Dashboard. Renders KPI cards, charts, and recent onboards by consuming useSuperadminDashboardView.
+
 import { SuperadminDashboardHeader } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardView/SuperadminDashboardHeader';
 import { SuperadminDashboardKpiGrid } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardView/SuperadminDashboardKpiGrid';
 import { SuperadminDashboardCharts } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardView/SuperadminDashboardCharts';
 import { SuperadminDashboardRecentOnboards } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardView/SuperadminDashboardRecentOnboards';
 import { useSuperadminDashboardView } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardView/useSuperadminDashboardView';
-
 import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_components/SuperadminLayout/SuperadminErrorBoundary';
 
 export default function SuperadminDashboardView() {
   const { fetchState, apiData, timeRange } = useSuperadminDashboardView();
   const isLoading = fetchState === 'loading';
-  const isError = fetchState === 'error';
-
+  const error = fetchState === 'error';
 
   if (isLoading) {
     return (
@@ -34,7 +33,7 @@ export default function SuperadminDashboardView() {
     );
   }
 
-  if (isError || !apiData) {
+  if (error || !apiData) {
     return (
       <div className="p-8 text-center text-danger font-medium">
         Failed to load dashboard data. Please try again.

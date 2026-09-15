@@ -11,7 +11,7 @@ export const superadminSettingsHandlers = [
   }),
   http.patch(`${BASE_URL}/:id`, async ({ params, request }) => {
     await delay(400);
-    const body = await request.json() as unknown;
+    const body = await request.json() as Record<string, any>;
     mockSettings = mockSettings.map(s => s.id === params.id ? { ...s, value: body.value, updatedAt: new Date().toISOString() } : s);
     return HttpResponse.json({ success: true, message: 'Setting updated', data: mockSettings.find(s => s.id === params.id) });
   }),

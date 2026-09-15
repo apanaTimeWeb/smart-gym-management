@@ -14,6 +14,8 @@ import { formatCurrency, formatNumber } from '@/lib/formatters';
 
 export default function SuperadminFranchisesClient() {
   const { franchises, fetchState, search, setSearch, handleSuspend, handleActivate, handleEdit, isEditing } = useSuperadminFranchisesPage();
+  const isLoading = fetchState === 'loading';
+  const error = fetchState === 'error';
   const [page, setPage] = useState(1);
   const [editingFranchise, setEditingFranchise] = useState<SuperadminFranchise | null>(null);
   const { confirm } = useSuperadminConfirm();
@@ -71,7 +73,7 @@ export default function SuperadminFranchisesClient() {
               className="bg-card border border-border rounded-xl p-4 shadow-sm motion-safe:hover:-translate-y-1 motion-safe:transition-all motion-safe:duration-200 bg-gradient-to-b from-yellow-400/10 to-transparent"
             >
               <div className={`w-8 h-8 rounded-lg ${k.bg} flex items-center justify-center mb-3`}>
-                <Icon className="w-5 h-5" strokeWidth={2} className={k.color} />
+                <Icon className={`w-5 h-5 ${k.color}`} strokeWidth={2} />
               </div>
               <p className="text-xs text-secondary uppercase tracking-wider mb-1">{k.label}</p>
               <p className="text-xl font-bold text-foreground">{k.value}</p>

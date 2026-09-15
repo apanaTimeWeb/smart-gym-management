@@ -134,9 +134,7 @@ export function SuperadminDashboardKpiGrid({
           >
             <div className="flex items-center justify-between mb-4">
               <span className="text-secondary font-medium text-xs uppercase tracking-wider">{card.label}</span>
-              <div className={`w-8 h-8 rounded-lg ${card.iconBgClass} flex items-center justify-center`}>
-                <Icon className="w-5 h-5" className={card.colorClass} />
-              </div>
+                <Icon className={`w-5 h-5 ${card.colorClass}`} />
             </div>
             <div className="text-3xl font-bold text-foreground">{card.value}</div>
             {card.trend && (

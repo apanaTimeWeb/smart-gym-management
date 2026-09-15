@@ -58,7 +58,7 @@ export default function SuperadminJobsHeader({
             disabled={isRetrying}
             className="flex items-center gap-2 bg-danger-bg/10 text-danger px-4 py-2 rounded-lg font-medium hover:bg-danger-bg hover:text-white motion-safe:transition-colors border border-destructive/20 hover:border-transparent disabled:opacity-50 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger"
           >
-            <RefreshCw className="w-4 h-4" className={isRetrying ? 'motion-safe:animate-spin' : ''} />
+            <RefreshCw className={`w-4 h-4 ${isRetrying ? 'motion-safe:animate-spin' : ''}`} />
             Retry All Failed
           </button>
         </div>

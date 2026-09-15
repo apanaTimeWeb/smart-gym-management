@@ -44,7 +44,7 @@ export function useSuperadminFeaturesData() {
   });
 
   const publishNoteMutation = useMutation({
-    mutationFn: (data: Partial<ReleaseNote>) => featuresApi.publishNote(data),
+    mutationFn: (data: Partial<ReleaseNote>) => featuresApi.createNote(data),
     onSuccess: (res) => {
       queryClient.setQueryData(queryKey, (old: { flags: FeatureFlag[]; notes: ReleaseNote[] } | undefined) => {
         if (!old) return old;

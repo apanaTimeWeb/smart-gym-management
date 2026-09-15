@@ -68,7 +68,7 @@ export default function SuperadminSettingsClient() {
     );
   }
   
-  if (error) {
+  if (isError) {
     return <div className="flex h-96 items-center justify-center text-danger font-medium">Error loading settings.</div>;
   }
 

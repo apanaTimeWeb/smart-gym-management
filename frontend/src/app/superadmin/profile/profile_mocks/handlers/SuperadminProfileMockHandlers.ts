@@ -22,7 +22,7 @@ export const superadminProfileHandlers = [
   }),
   http.patch(BASE_URL, async ({ request }) => {
     await delay(500);
-    const body = await request.json() as unknown;
+    const body = await request.json() as Record<string, any>;
     mockProfile = { ...mockProfile, ...body };
     return HttpResponse.json({ success: true, message: 'Profile updated', data: mockProfile });
   }),
@@ -32,7 +32,7 @@ export const superadminProfileHandlers = [
   }),
   http.patch(`${BASE_URL}/2fa`, async ({ request }) => {
     await delay(500);
-    const body = await request.json() as unknown;
+    const body = await request.json() as Record<string, any>;
     mockProfile.twoFactorEnabled = body.enabled;
     return HttpResponse.json({ success: true, message: '2FA toggled', data: mockProfile });
   }),

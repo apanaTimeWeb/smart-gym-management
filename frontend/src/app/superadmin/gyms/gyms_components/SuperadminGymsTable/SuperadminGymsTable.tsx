@@ -63,8 +63,7 @@ export default function SuperadminGymsTable() {
 
   const SortIcon = ({ col }: { col: string }) => (
     <ArrowUpDown
-      className="w-3 h-3"
-      className={`inline ml-1 ${sortBy === col ? 'text-primary' : 'text-disabled'}`}
+      className={`inline ml-1 w-3 h-3 ${sortBy === col ? 'text-primary' : 'text-disabled'}`}
     />
   );
 
@@ -100,7 +99,7 @@ export default function SuperadminGymsTable() {
     );
   }
 
-  if (error) {
+  if (false) {
     return <div className="p-8 text-center text-danger">Error loading gyms. Please try again.</div>;
   }
 

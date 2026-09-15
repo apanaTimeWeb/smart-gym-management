@@ -1,4 +1,4 @@
-import { SuperadminUrlConfig as UrlConfig } from '@/app/superadmin/superadmin_url_config';
+import { GymsUrlConfig as UrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
 import { BroadcastSchema, BroadcastResponseSchema } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
 // RESPONSIBILITY: Modularized API client for the Broadcasts module. All methods import apiFetch from src/lib/api.ts and define only superadmin-scoped endpoints. No UI logic.
 import { BroadcastsUrlConfig } from '@/app/superadmin/broadcasts/superadmin_broadcasts_url_config';

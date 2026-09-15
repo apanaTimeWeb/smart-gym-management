@@ -24,14 +24,14 @@ export const superadminGymsHandlers = [
   }),
   http.post(GymsUrlConfig.BACKEND_API.BASE, async ({ request }) => {
     await delay(500);
-    const body = await request.json() as unknown;
+    const body = await request.json() as Record<string, any>;
     const newGym = { ...body, id: `t${Date.now()}`, createdAt: new Date().toISOString() };
-    mockGymsList = [newGym, ...mockGymsList];
+    mockGymsList = [newGym as any, ...mockGymsList];
     return HttpResponse.json({ success: true, message: 'Created', data: newGym });
   }),
   http.patch(`${GymsUrlConfig.BACKEND_API.BASE}/:id`, async ({ params, request }) => {
     await delay(500);
-    const body = await request.json() as unknown;
+    const body = await request.json() as Record<string, any>;
     mockGymsList = mockGymsList.map(g => g.id === params.id ? { ...g, ...body } : g);
     return HttpResponse.json({ success: true, message: 'Updated', data: mockGymsList.find(g => g.id === params.id) });
   }),
@@ -42,7 +42,7 @@ export const superadminGymsHandlers = [
   }),
   http.patch(`${GymsUrlConfig.BACKEND_API.BASE}/:id/status`, async ({ params, request }) => {
     await delay(300);
-    const { status } = await request.json() as unknown;
+    const { status } = await request.json() as Record<string, any>;
     mockGymsList = mockGymsList.map(g => g.id === params.id ? { ...g, status } : g);
     return HttpResponse.json({ success: true, message: 'Status updated', data: mockGymsList.find(g => g.id === params.id) });
   }),

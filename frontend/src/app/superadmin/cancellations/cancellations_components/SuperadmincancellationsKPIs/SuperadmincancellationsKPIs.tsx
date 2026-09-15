@@ -68,7 +68,7 @@ export default function SuperadminCancellationsKPIs({ kpis, activeFilter, onFilt
           >
             <div className="flex items-start justify-between mb-3">
               <div className={`w-8 h-8 rounded-lg ${card.iconBg} flex items-center justify-center`}>
-                <Icon className="w-5 h-5" strokeWidth={2} className={card.color} />
+                <Icon className={`w-5 h-5 ${card.color}`} strokeWidth={2} />
               </div>
             </div>
             <p className="text-xs font-medium text-secondary uppercase tracking-wider mb-1">{card.label}</p>

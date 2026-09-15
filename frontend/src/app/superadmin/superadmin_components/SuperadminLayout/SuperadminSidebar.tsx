@@ -293,9 +293,8 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
                         `}
                       >
                         <Icon
-                          className="w-5 h-5"
+                          className={`w-5 h-5 shrink-0 ${isActive ? 'text-primary' : 'text-zinc-400 group-hover:text-white'}`}
                           strokeWidth={2}
-                          className={`shrink-0 ${isActive ? 'text-primary' : 'text-zinc-400 group-hover:text-white'}`}
                         />
                         {!isCollapsed && (
                           <span className="font-medium text-sm leading-none">{item.name}</span>

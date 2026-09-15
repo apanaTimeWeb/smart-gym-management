@@ -127,6 +127,9 @@ export default function SuperadminMessagingClient() {
     setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
   }
 
+  const isLoading = fetchState === 'loading';
+  const error = fetchState === 'error';
+
   if (isLoading) return <div className="p-8 text-center text-secondary motion-safe:animate-pulse">Loading messages...</div>;
   if (error) return <div className="p-8 text-center text-danger">Failed to load data.</div>;
 

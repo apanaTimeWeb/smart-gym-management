@@ -47,7 +47,7 @@ export default function SuperadminBackupsClient() {
   };
 
   const filtered = backups?.filter(b => {
-    const matchesSearch = b.id.toLowerCase().includes(search.toLowerCase()) || b.tenantId.toLowerCase().includes(search.toLowerCase());
+    const matchesSearch = b.id.toLowerCase().includes(search.toLowerCase()) || (b as any).gymId.toLowerCase().includes(search.toLowerCase());
     const matchesStatus = statusFilter === 'ALL' || b.status === statusFilter;
     const bType = b.id.includes('MANUAL') ? 'MANUAL' : 'AUTOMATED'; // Mock logic for type
     const matchesType = typeFilter === 'ALL' || bType === typeFilter;
@@ -128,8 +128,8 @@ export default function SuperadminBackupsClient() {
         <SuperadminBackupsTable 
           paginatedBackups={paginatedBackups}
           filteredLength={filtered.length}
-          handleDownload={handleDownload}
-          handleRestoreClick={handleRestoreClick}
+          handleDownload={(id: string) => handleDownload({ id } as any)}
+          handleRestoreClick={(id: any) => handleRestoreClick({ id } as any)}
         />
         <SuperadminPagination 
           currentPage={currentPage}

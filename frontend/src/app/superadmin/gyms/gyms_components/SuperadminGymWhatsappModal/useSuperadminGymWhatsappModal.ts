@@ -39,7 +39,7 @@ export function useSuperadminGymWhatsappModal() {
 
   const whatsappMutation = useMutation({
     mutationFn: (data: GymWhatsappFormValues & { phone: string; ownerName: string; gymName: string }) => 
-      gymsApi.emailGymOwner(selectedGym!.id, data as unknown), // Still calling API for record keeping if necessary, or just skip
+      gymsApi.emailGymOwner(selectedGym!.id, data as any), // Still calling API for record keeping if necessary, or just skip
     onSuccess: (res, data) => {
       if (data.phone) {
         const cleanPhone = String(data.phone).replace(/\D/g, '');

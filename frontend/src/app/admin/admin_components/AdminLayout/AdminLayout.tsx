@@ -5,7 +5,7 @@ import { useState } from 'react';
 import AdminSidebar from '@/app/admin/admin_components/AdminLayout/AdminSidebar';
 import AdminUsageAlert from '@/app/admin/admin_components/AdminLayout/AdminUsageAlert';
 import AdminImpersonationBanner from '@/app/admin/admin_components/AdminLayout/AdminImpersonationBanner';
-import SuperadminGhostLoginBanner from '@/components/ui/SuperadminLayout/SuperadminGhostLoginBanner';
+import SuperadminGhostLoginBanner from '@/app/superadmin/superadmin_components/SuperadminLayout/SuperadminGhostLoginBanner';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [isCollapsed, setIsCollapsed] = useState(false);

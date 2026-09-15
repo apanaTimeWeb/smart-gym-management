@@ -12,8 +12,7 @@ import type { CancellationsFilterStatus } from '@/app/superadmin/cancellations/c
 import { useSuperadminCancellationsAlertsPage } from '@/app/superadmin/cancellations/cancellations_utils/useSuperadminCancellationsAlertsPage';
 
 export default function SuperadminCancellationsClient() {
-  const {
-    search, setSearch,
+  const { search, setSearch,
     activeFilter, setActiveFilter,
     actionAlert, setActionAlert,
     currentPage, setCurrentPage,
@@ -21,6 +20,8 @@ export default function SuperadminCancellationsClient() {
     kpis, filtered, paginatedAlerts, totalPages, isFiltered,
     handleActionConfirm, handleBulkOutreach
   } = useSuperadminCancellationsAlertsPage();
+  const isLoading = fetchState === 'loading';
+  const error = fetchState === 'error';
 
   if (isLoading) {
     return (

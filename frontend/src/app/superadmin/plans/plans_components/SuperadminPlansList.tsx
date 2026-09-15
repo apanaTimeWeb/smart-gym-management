@@ -54,7 +54,7 @@ export default function SuperadminPlansList() {
     );
   }
 
-  if (error) {
+  if (isError) {
     return <div className="p-8 text-center text-danger">Error loading plans.</div>;
   }
 

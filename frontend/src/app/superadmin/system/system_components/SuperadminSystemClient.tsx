@@ -106,7 +106,7 @@ export default function SuperadminSystemClient() {
     return <div className="flex h-96 items-center justify-center"><Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" /></div>;
   }
   
-  if (isError) {
+  if (fetchState === 'error') {
     return <div className="flex h-96 items-center justify-center text-danger">Error loading data.</div>;
   }
 

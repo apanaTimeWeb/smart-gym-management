@@ -131,7 +131,7 @@ export default function SuperadminInfrastructureClient() {
             disabled={isFetchingNodes || isFetchingRedis}
             className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:opacity-90 motion-safe:transition-opacity flex items-center gap-2 border border-primary disabled:opacity-50"
           >
-            <RefreshCcw className="w-4 h-4" className={isFetchingNodes || isFetchingRedis ? 'motion-safe:animate-spin' : ''} /> Force Sync Metrics
+            <RefreshCcw className={`w-4 h-4 ${isFetchingNodes || isFetchingRedis ? 'motion-safe:animate-spin' : ''}`} /> Force Sync Metrics
           </button>
         </div>
       </div>
