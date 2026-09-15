@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Centralized mock data for offline/demo mode.
 // DATA FLOW: apiFetch → getMockResponse() → hardcoded data when backend is unreachable.
+import { mockFlags, mockNotes } from '@/app/superadmin/features/features_mocks/handlers/SuperadminFeaturesMockHandlers';
 // Every module's API path is matched here and returns a realistic ApiResponse<T>.
 
 // ─── helpers ─────────────────────────────────────────────────────────────────
@@ -493,9 +494,11 @@ export function getMockResponse(path: string): unknown {
   if (p.includes('/affiliate')) return ok(AFFILIATES, 'Affiliates fetched');
   if (p.includes('/backup')) return ok(BACKUPS, 'Backups fetched');
   if (p.includes('/ticket')) return ok(TICKETS, 'Tickets fetched');
+  if (p.includes('/superadmin/jobs')) return ok(JOBS.jobs, 'Jobs fetched');
   if (p.includes('/job')) return ok(JOBS, 'Jobs fetched');
   if (p.includes('/migration')) return ok(MIGRATIONS, 'Migrations fetched');
   if (p.includes('/usage-meter')) return ok(USAGE_METERS, 'Usage meters fetched');
+  if (p.includes('/superadmin/features')) return ok({ flags: mockFlags, notes: mockNotes }, 'Features fetched');
   if (p.includes('/feature') || p.includes('/setting')) return ok(FEATURES, 'Features fetched');
   if (p.includes('/audit')) return ok(AUDIT_LOGS, 'Audit logs fetched');
   if (p.includes('/system')) return ok(SYSTEM_HEALTH, 'System health fetched');
