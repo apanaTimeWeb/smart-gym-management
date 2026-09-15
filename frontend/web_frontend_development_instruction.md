@@ -285,6 +285,22 @@ All calls go through `apiFetch` at `@/lib/api`. Response envelope: `{ success, m
 | `deleteMember(id)` | DELETE | `/manager/members/:id` | — | `null` |
 | `renewMembership(id, dto)` | POST | `/manager/members/:id/renew` | `RenewalDto` | `MembershipRecord` |
 
+## UI Data Requirements
+[REQUIRED: List every table column, KPI, chart series, filter, dropdown, detail field,
+and other data-driven UI element with its exact API response field. This section is the
+source used to verify MSW fixture completeness. No UI element may be left unlisted.
+Generic entries like "All fields" are forbidden — name every column and field explicitly.]
+
+| UI Element | Required Field(s) | API Endpoint | Response Path | Nullable? | Mocked? |
+|---|---|---|---|---|---|
+| Table: Member Name | `name` | `GET /manager/members` | `data.items[].name` | No | Yes |
+| Table: Status Badge | `status` | `GET /manager/members` | `data.items[].status` | No | Yes |
+| KPI: Total Members | `totalCount` | `GET /manager/members/stats` | `data.totalCount` | No | Yes |
+| Filter: Status | `status` | `GET /manager/members` | `data.items[].status` | No | Yes |
+
+*(Replace the example rows above with the real field names, endpoint names, and response
+paths for this specific module. Every rendered UI element must have a row here.)*
+
 ## Permissions and Security
 [REQUIRED: Must specify the exact role, what actions are protected, and HOW they are
 protected (which hook/component/guard). Generic statements are not acceptable.]
@@ -370,6 +386,7 @@ actually implemented. An honest [ ] is better than a false [x].]
 - [ ] Rule 73: `import type` used for all type-only imports
 - [ ] Rule 74: Security scan gates passed (SCA + secrets)
 - [ ] Rule 75: MSW handler present where needed
+- [ ] Rule 75A: MSW fixture covers ALL UI fields — no missing table columns, KPIs, chart series, filters, or detail fields; `## UI Data Requirements` section in `_features.md` is complete
 - [ ] Rule 76: CODEOWNERS covers security-critical paths
 - [ ] Rule 78: En-dash fallback — `displayValue()` used for all nullable fields in tables and profiles
 - [ ] Rule 79: Unsaved changes guard — `useUnsavedChangesGuard(isDirty)` on all complex forms and wizards
@@ -830,6 +847,218 @@ When a backend API endpoint does not yet exist (the stub-first phase of Backend 
 - ✅ **GOOD:** An MSW handler in `src/mocks/handlers/members.handlers.ts` that intercepts `GET /api/v1/members` and returns a realistic typed payload matching the `ApiResponse<Member[]>` envelope.
 - **Required Structure:** All mock handlers must live in `src/mocks/handlers/[moduleName].handlers.ts`. A central `src/mocks/browser.ts` file registers all handlers. MSW is enabled only in `development` and `test` environments — never in production builds.
 - **Why:** Hardcoded fake data scattered in hooks creates a massive cleanup burden. An AI agent can forget to remove it, or worse, the fake data can shadow the real API call silently. MSW intercepts at the network level, meaning the same `useEffect`/`fetch` code runs in both development and production — only the response source changes. The transition from mock to real API is a one-line change in the MSW handler, not a hunt across 10 component files.
+
+75A. **Complete MSW UI Contract & Fixture Coverage — No Missing UI Data**:
+MSW is not merely a network mock. During frontend-first development, each MSW handler MUST provide a complete, realistic response that satisfies **every data requirement of the UI that consumes that endpoint**.
+
+An MSW handler MUST NOT return a minimal response containing only a few convenient fields while leaving other rendered UI fields empty, undefined, or permanently unavailable.
+
+Before creating or modifying an MSW handler, the AI agent MUST inspect the complete consuming UI and identify the exact data required by:
+- Every table column
+- Every table row
+- Every KPI / statistic card
+- Every chart and chart series
+- Every filter
+- Every searchable field
+- Every sorting field
+- Every pagination control
+- Every dropdown/select option
+- Every detail view
+- Every modal/drawer
+- Every badge/status indicator
+- Every timeline/history entry
+- Every summary section
+- Every relationship/reference displayed by the UI
+
+### UI-to-API Data Contract Requirement
+
+For every data-consuming feature, the following chain MUST be explicitly aligned:
+
+```text
+UI Requirement
+    ↓
+API Request Contract
+    ↓
+Response Type
+    ↓
+Zod Response Schema
+    ↓
+MSW Fixture / Handler
+    ↓
+TanStack Query
+    ↓
+UI Rendering
+```
+
+The AI MUST NOT invent a disconnected mock response merely to satisfy TypeScript.
+The MSW response MUST contain all fields that the UI actually consumes.
+
+### Required Data Coverage Matrix
+
+Every feature that depends on MSW MUST document or be able to derive the following mapping (use the `## UI Data Requirements` section of its `_features.md` — see Rule 13):
+
+| UI Element | Required Field(s) | API Endpoint | Response Path | Nullable? | Mocked? |
+|---|---|---|---|---|---|
+| Table: Gym Name | `name` | `GET /.../gyms` | `data.items[].name` | No | Yes |
+| Table: Owner | `ownerName` | `GET /.../gyms` | `data.items[].ownerName` | Yes | Yes |
+| KPI: Active Gyms | `activeCount` | `GET /.../gyms/stats` | `data.activeCount` | No | Yes |
+| Filter: Plan | `planId`, `planName` | `GET /.../gyms` | `data.items[]` | No | Yes |
+
+The actual project feature MUST use its real field names, endpoint names, and response paths. The example above is illustrative only.
+
+### Fixture Completeness Rules
+
+MSW fixtures MUST contain enough records and value variation to exercise the actual UI. For list/table features, mock data MUST include realistic variation for at least:
+- Multiple records
+- Different statuses
+- Different plans/categories where applicable
+- Different dates
+- Different numeric values
+- Nullable/optional fields
+- Long text values where truncation is expected
+- Searchable values
+- Filterable values
+- Sortable values
+- Enough records to exercise pagination
+- At least one realistic empty-result scenario
+- At least one realistic error scenario through a separate MSW handler/state
+
+The exact number of records is determined by the feature's pagination and UI requirements. Do not artificially limit a paginated feature to one or two records when the UI requires multiple pages to be testable.
+
+### Table Completeness Rule
+
+For every rendered table:
+1. Every visible header MUST correspond to a real response field.
+2. Every row cell MUST receive its value from the API response or an explicitly documented derived value.
+3. No table cell may depend on an undocumented mock-only field.
+4. No required cell may silently render `undefined` because the MSW fixture omitted the field.
+5. Nullable fields MUST use the canonical nullable display fallback (Rule 78 `displayValue()`).
+6. Header count, cell count, and `colSpan` MUST remain consistent (Rule 68).
+
+### KPI and Chart Completeness Rule
+
+For every KPI or chart:
+- Every displayed metric MUST have a defined response source.
+- Every chart series MUST have mocked values.
+- Every chart axis used by the UI MUST have corresponding mock data.
+- Empty datasets MUST be explicitly handled.
+- Loading, success, empty, and error states MUST all be testable with MSW.
+
+A chart MUST NOT render because static values were embedded directly inside the component.
+
+### Filter / Search / Pagination Rule
+
+If the UI contains search, filter, sort, or pagination, the MSW handler MUST support the corresponding request parameters and return data that makes those interactions visibly testable.
+
+```text
+search=active
+→ handler receives search parameter
+→ handler filters fixture dataset
+→ response contains matching records
+→ UI visibly changes
+```
+
+The AI MUST NOT implement a visually interactive filter that always returns the same mocked dataset.
+
+### Dropdown / Relationship Rule
+
+For dropdowns and relational fields:
+- If the options are backend-driven, mock them through an API endpoint/MSW handler.
+- If they are truly static UI constants, keep them in the feature-specific constants architecture defined by Rule 3B. Do not duplicate backend-driven options inside component constants.
+- When one entity references another entity, the mock response MUST provide the relationship data required by the UI.
+
+```text
+Gym
+ ├── planId
+ ├── planName
+ ├── ownerId
+ └── ownerName
+```
+
+If the UI displays `planName` and `ownerName`, the MSW response must provide those values through the documented API contract or through an explicitly documented relationship mapping.
+
+### No "Minimal Mock" Rule
+
+This pattern is **forbidden**:
+```text
+UI requires: name, owner, plan, memberCount, revenue, status
+MSW returns: id, name, status
+```
+This creates a false implementation where the page appears structurally complete but cannot render the actual product data correctly. The AI MUST fix the contract/fixture instead of adding hardcoded fallback values to the component.
+
+### No Component-Level Mock Fallback
+
+This pattern is **forbidden**:
+```ts
+// ❌ FORBIDDEN
+const ownerName = apiData.ownerName ?? "Demo Owner";
+const revenue = apiData.revenue ?? 125000;
+```
+when those values are required fields of the API contract. Do not use hardcoded fallback business data to hide an incomplete MSW response.
+
+Correct approach:
+```text
+UI requires field
+→ update API contract
+→ update TypeScript type
+→ update Zod schema
+→ update MSW fixture
+→ render from response
+```
+
+### Fixture Source-of-Truth Rule
+
+MSW fixtures are mock implementations of the API contract. They are NOT an alternative business-data architecture.
+
+The following separation MUST be preserved:
+```text
+Static UI Configuration  → feature constants (Rule 3B)
+Server/API Data          → API contract + Zod → MSW fixtures → real backend
+UI State                 → local state / Zustand
+Server State             → TanStack Query
+```
+
+### Backend Transition Rule
+
+When the real backend endpoint becomes available:
+- The UI MUST continue consuming the same API contract.
+- The feature API client MUST remain the same unless the backend contract legitimately changes.
+- MSW must be disabled/replaced for the production path.
+- Components MUST NOT require a rewrite merely because mocked responses are replaced by real responses.
+- Any contract change MUST update the corresponding TypeScript types, Zod schemas, MSW handlers, `_features.md` documentation, and tests in the same change.
+
+### AI Verification Requirement
+
+Before declaring a frontend feature complete, the AI MUST verify:
+1. Every displayed data field has a documented source (in `## UI Data Requirements` of `_features.md`).
+2. Every source exists in the response type/schema.
+3. Every required response field is returned by the MSW handler.
+4. Every MSW field is consumed correctly by the UI where applicable.
+5. Tables display populated values in all intended columns.
+6. KPIs display non-placeholder values.
+7. Charts receive complete series data.
+8. Filters/search/sorting/pagination produce different mocked results where applicable.
+9. Empty states can actually be triggered.
+10. Error states can actually be triggered.
+11. No component/hook contains hidden hardcoded business fallback data.
+12. The feature works using the same API access path that will be used with the real backend.
+
+A feature MUST NOT be marked complete merely because TypeScript compiles or the page visually renders.
+
+### Completion Standard
+
+```text
+"Backend does not exist yet"
+        DOES NOT MEAN
+"Return a tiny fake response"
+
+It means:
+
+"Backend does not exist yet,
+so MSW temporarily behaves like the backend
+and must faithfully provide the complete API data contract
+required by the finished UI."
+```
 
 76. **`CODEOWNERS` Human Review Gate for Security-Critical Frontend Code**:
 Just as Backend Rule 93 mandates human review for `auth/`, `billing/`, and `permissions/` backend modules, the frontend MUST implement a `CODEOWNERS` file requiring mandatory human reviewer approval on PRs that touch security-critical frontend paths. AI agents cannot self-certify security-critical UI changes.
