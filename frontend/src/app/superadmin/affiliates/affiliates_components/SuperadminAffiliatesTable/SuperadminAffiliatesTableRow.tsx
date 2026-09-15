@@ -2,7 +2,7 @@
 // RESPONSIBILITY: Renders a single row in the Affiliates data table. Handles row-level action buttons with stopPropagation. Purely presentational.
 import { Pencil, Trash2, Power, Check, Banknote } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { useSuperadminConfirm } from '@/components/ui/SuperadminFeedback/SuperadminConfirmProvider';
+import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
 import SuperadminAffiliateStatusBadge from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliateStatusBadge/SuperadminAffiliateStatusBadge';
 import type { Affiliate, AffiliateStatus } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
 import { formatCurrency, formatNumber } from '@/lib/formatters';
@@ -35,7 +35,7 @@ export default function SuperadminAffiliatesTableRow({ affiliate: aff, onToggleS
         {aff.referralCount ?? aff.totalReferred} Gyms
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground">
-        {aff.conversionRate !== undefined ? `${aff.conversionRate}%` : '—'}
+        {aff.conversionRate !== undefined ? `${aff.conversionRate}%` : 'â€”'}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-success font-medium">
         {formatCurrency(aff.commissionEarned)}

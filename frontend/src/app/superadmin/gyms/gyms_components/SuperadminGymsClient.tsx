@@ -10,7 +10,7 @@ import SuperadminGymsTable from '@/app/superadmin/gyms/gyms_components/Superadmi
 
 import SuperadminGymsCalendar from '@/app/superadmin/gyms/gyms_components/SuperadminGymsCalendar/SuperadminGymsCalendar';
 import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
-import { SuperadminErrorBoundary } from '@/components/ui/SuperadminLayout/SuperadminErrorBoundary';
+import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_components/SuperadminLayout/SuperadminErrorBoundary';
 
 export default function SuperadminGymsClient() {
   const viewMode = useSuperadminGymsStore(state => state.viewMode);

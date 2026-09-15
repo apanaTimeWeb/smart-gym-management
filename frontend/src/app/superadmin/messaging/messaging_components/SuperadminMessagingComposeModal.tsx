@@ -38,7 +38,7 @@ export function SuperadminMessagingComposeModal({
             aria-label="Close compose modal"
             className="p-1.5 rounded-lg text-secondary hover:text-foreground hover:bg-input motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
-            <X size={18} strokeWidth={2} />
+            <X className="w-5 h-5" strokeWidth={2} />
           </button>
         </div>
 
@@ -101,7 +101,7 @@ export function SuperadminMessagingComposeModal({
             onClick={onSend}
             className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary hover:bg-primary-hover text-black font-semibold text-sm motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
-            <Send size={18} strokeWidth={2} /> Send
+            <Send className="w-5 h-5" strokeWidth={2} /> Send
           </button>
         </div>
       </div>

@@ -52,7 +52,7 @@ export function SuperadminMessagingTenantDropdown({
         <span className={selected ? 'text-foreground' : 'text-secondary'}>
           {selected ? `${selected.name} — ${selected.plan}` : 'Select gym...'}
         </span>
-        <ChevronDown size={18} strokeWidth={2} className="text-secondary shrink-0" />
+        <ChevronDown className="w-5 h-5" strokeWidth={2} className="text-secondary shrink-0" />
       </button>
 
       {open && (

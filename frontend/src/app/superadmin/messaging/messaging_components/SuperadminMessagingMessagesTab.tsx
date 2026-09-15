@@ -2,7 +2,7 @@
 import { Search, Mail, MessageSquare, Bell } from 'lucide-react';
 import type { TenantMessage, MessageChannel } from '@/app/superadmin/messaging/messaging_types/superadmin_messaging_types';
 import { CHANNEL_STYLES, MESSAGE_STATUS_STYLES } from '@/app/superadmin/messaging/messaging_types/SuperadminMessagingConstants';
-import SuperadminDateRangePicker from '@/components/ui/SuperadminShared/SuperadminDateRangePicker';
+import SuperadminDateRangePicker from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminDateRangePicker';
 
 export function SuperadminMessagingMessagesTab({
   search,

@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useSuperadminAffiliatesData } from './useSuperadminAffiliatesData';
+import { useSuperadminAffiliatesData } from '@/app/superadmin/affiliates/affiliates_utils/useSuperadminAffiliatesData';
 
 describe('useSuperadminAffiliatesData', () => {
   it('should initialize correctly', () => {

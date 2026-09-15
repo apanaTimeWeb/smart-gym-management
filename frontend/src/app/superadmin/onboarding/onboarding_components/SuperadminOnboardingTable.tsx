@@ -78,9 +78,9 @@ export function SuperadminOnboardingTable({
                         <td className="px-4 py-3 w-1/5">
                           <div className="flex items-center gap-1.5">
                             {tenant.emailVerified ? (
-                              <CheckCircle2 size={18} strokeWidth={2} className="text-success shrink-0" />
+                              <CheckCircle2 className="w-5 h-5" strokeWidth={2} className="text-success shrink-0" />
                             ) : (
-                              <XCircle size={18} strokeWidth={2} className="text-danger shrink-0" />
+                              <XCircle className="w-5 h-5" strokeWidth={2} className="text-danger shrink-0" />
                             )}
                             <span className="text-secondary text-xs truncate max-w-xs">{tenant.adminEmail}</span>
                           </div>
@@ -120,7 +120,7 @@ export function SuperadminOnboardingTable({
                                 title="Mark email verified"
                                 className="p-1.5 rounded-lg bg-success/10 text-success hover:bg-success/20 motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-success"
                               >
-                                <UserCheck size={18} strokeWidth={2} />
+                                <UserCheck className="w-5 h-5" strokeWidth={2} />
                               </button>
                             )}
                             <button
@@ -129,7 +129,7 @@ export function SuperadminOnboardingTable({
                               title="Resend welcome email"
                               className="p-1.5 rounded-lg bg-input text-secondary hover:text-foreground hover:bg-card motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                             >
-                              <Mail size={18} strokeWidth={2} />
+                              <Mail className="w-5 h-5" strokeWidth={2} />
                             </button>
                             {(tenant.trialStatus === 'TRIAL' || tenant.trialStatus === 'EXPIRED') && (
                               <button
@@ -138,7 +138,7 @@ export function SuperadminOnboardingTable({
                                 title="Extend trial"
                                 className="p-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                               >
-                                <RefreshCw size={18} strokeWidth={2} />
+                                <RefreshCw className="w-5 h-5" strokeWidth={2} />
                               </button>
                             )}
                             {tenant.trialStatus !== 'CONVERTED' && tenant.trialStatus !== 'ACTIVE' && (
@@ -148,13 +148,13 @@ export function SuperadminOnboardingTable({
                                 title="Convert to paid"
                                 className="p-1.5 rounded-lg bg-success/10 text-success hover:bg-success/20 motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-success"
                               >
-                                <ArrowUpCircle size={18} strokeWidth={2} />
+                                <ArrowUpCircle className="w-5 h-5" strokeWidth={2} />
                               </button>
                             )}
                           </div>
                         </td>
                         <td className="px-4 py-3 text-secondary w-1/12">
-                          {expandedId === tenant.id ? <ChevronUp size={18} strokeWidth={2} /> : <ChevronDown size={18} strokeWidth={2} />}
+                          {expandedId === tenant.id ? <ChevronUp className="w-5 h-5" strokeWidth={2} /> : <ChevronDown className="w-5 h-5" strokeWidth={2} />}
                         </td>
                       </tr>
 
@@ -168,9 +168,9 @@ export function SuperadminOnboardingTable({
                                   {tenant.checklist.map((item) => (
                                     <div key={item.key} className="flex items-center gap-2">
                                       {item.done ? (
-                                        <CheckCircle2 size={18} strokeWidth={2} className="text-success shrink-0" />
+                                        <CheckCircle2 className="w-5 h-5" strokeWidth={2} className="text-success shrink-0" />
                                       ) : (
-                                        <Clock size={18} strokeWidth={2} className="text-secondary shrink-0" />
+                                        <Clock className="w-5 h-5" strokeWidth={2} className="text-secondary shrink-0" />
                                       )}
                                       <span className={`text-sm ${item.done ? 'text-foreground' : 'text-secondary'}`}>
                                         {item.label}
@@ -207,7 +207,7 @@ export function SuperadminOnboardingTable({
                                 </div>
                                 {tenant.trialDaysLeft <= 3 && tenant.trialStatus === 'TRIAL' && (
                                   <div className="mt-3 flex items-center gap-2 text-xs text-warning bg-warning/10 border border-warning/20 rounded-lg px-3 py-2">
-                                    <AlertTriangle size={18} strokeWidth={2} />
+                                    <AlertTriangle className="w-5 h-5" strokeWidth={2} />
                                     Trial expiring soon — consider extending or converting.
                                   </div>
                                 )}

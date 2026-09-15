@@ -32,7 +32,7 @@ export default function SuperadminBackupsTriggerModal({ isOpen, onClose, isTrigg
       <div className="bg-card w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-border motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95">
         <div className="p-6">
           <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-4">
-            <DatabaseBackup size={24} />
+            <DatabaseBackup className="w-6 h-6" />
           </div>
           <h2 className="text-xl font-bold text-foreground mb-2">Trigger Global Backup</h2>
           <p className="text-sm text-secondary mb-6">

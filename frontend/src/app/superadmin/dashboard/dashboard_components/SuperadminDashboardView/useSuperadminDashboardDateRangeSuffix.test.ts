@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useSuperadminDashboardDateRangeSuffix } from './useSuperadminDashboardDateRangeSuffix';
+import { useSuperadminDashboardDateRangeSuffix } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardView/useSuperadminDashboardDateRangeSuffix';
 
 describe('useSuperadminDashboardDateRangeSuffix', () => {
   it('should initialize correctly', () => {

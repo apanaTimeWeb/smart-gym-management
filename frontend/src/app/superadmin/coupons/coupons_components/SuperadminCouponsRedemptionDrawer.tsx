@@ -65,7 +65,7 @@ export default function SuperadminCouponsRedemptionDrawer({ coupon, isOpen, onCl
             aria-label="Close drawer"
             className="p-2 text-secondary hover:text-foreground hover:bg-input rounded-full motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
-            <X size={20} />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
@@ -83,7 +83,7 @@ export default function SuperadminCouponsRedemptionDrawer({ coupon, isOpen, onCl
 
           <div>
             <h3 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
-              <History size={16} className="text-primary" /> Recent Redemptions
+              <History className="w-4 h-4 text-primary" /> Recent Redemptions
             </h3>
 
             {redemptions.length > 0 ? (
@@ -97,7 +97,7 @@ export default function SuperadminCouponsRedemptionDrawer({ coupon, isOpen, onCl
                     <div className="flex justify-between items-center text-sm">
                       <span className="text-secondary bg-input px-2 py-0.5 rounded text-xs font-medium">{record.planName} Plan</span>
                       <span className="text-success font-medium flex items-center gap-1">
-                        <TrendingDown size={14} /> {formatCurrency(record.discountApplied)} saved
+                        <TrendingDown className="w-3.5 h-3.5" /> {formatCurrency(record.discountApplied)} saved
                       </span>
                     </div>
                   </div>

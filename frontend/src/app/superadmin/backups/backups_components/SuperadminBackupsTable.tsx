@@ -49,7 +49,7 @@ export default function SuperadminBackupsTable({ paginatedBackups, filteredLengt
                   title="Download pg_dump" 
                   disabled={backup.status !== 'SUCCESS'}
                 >
-                  <Download size={16} />
+                  <Download className="w-4 h-4" />
                 </button>
                 <button 
                   onClick={() => handleRestoreClick(backup)}
@@ -57,7 +57,7 @@ export default function SuperadminBackupsTable({ paginatedBackups, filteredLengt
                   title="Restore Snapshot" 
                   disabled={backup.status !== 'SUCCESS'}
                 >
-                  <RotateCcw size={16} />
+                  <RotateCcw className="w-4 h-4" />
                 </button>
               </td>
             </tr>

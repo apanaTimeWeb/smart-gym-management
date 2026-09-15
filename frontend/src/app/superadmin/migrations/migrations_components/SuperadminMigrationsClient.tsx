@@ -7,7 +7,7 @@ import type { MigrationLog } from '@/app/superadmin/migrations/superadmin_migrat
 import { Database, CheckCircle, AlertTriangle, Clock, RefreshCw, XCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-import { useSuperadminConfirm } from '@/components/ui/SuperadminFeedback/SuperadminConfirmProvider';
+import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
 
 const TABLE_COLUMN_COUNT = 5;
 
@@ -100,19 +100,19 @@ export default function SuperadminMigrationsClient() {
     
     switch (status) {
       case 'COMPLETED':
-        return <span className={`${baseClasses} ${colorClasses}`}><CheckCircle size={14} /> Completed</span>;
+        return <span className={`${baseClasses} ${colorClasses}`}><CheckCircle className="w-3.5 h-3.5" /> Completed</span>;
       case 'FAILED':
-        return <span className={`${baseClasses} ${colorClasses}`}><XCircle size={14} /> Failed</span>;
+        return <span className={`${baseClasses} ${colorClasses}`}><XCircle className="w-3.5 h-3.5" /> Failed</span>;
       case 'PENDING':
-        return <span className={`${baseClasses} ${colorClasses}`}><Clock size={14} /> Pending</span>;
+        return <span className={`${baseClasses} ${colorClasses}`}><Clock className="w-3.5 h-3.5" /> Pending</span>;
       case 'IN_PROGRESS':
-        return <span className={`${baseClasses} ${colorClasses}`}><RefreshCw size={14} className="motion-safe:animate-spin" /> In Progress</span>;
+        return <span className={`${baseClasses} ${colorClasses}`}><RefreshCw className="w-3.5 h-3.5 motion-safe:animate-spin" /> In Progress</span>;
       default:
         return <span className={`${baseClasses} ${colorClasses}`}>{status}</span>;
     }
   };
 
-  if (fetchState === 'loading') {
+  if (isLoading) {
     return (
       <div className="p-6 space-y-4">
         {[1, 2, 3].map(i => (
@@ -142,7 +142,7 @@ export default function SuperadminMigrationsClient() {
             onClick={handleRollout}
             className="flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg font-medium hover:bg-primary/90 motion-safe:transition-colors"
           >
-            <Database size={18} /> Deploy New Schema
+            <Database className="w-5 h-5" /> Deploy New Schema
           </button>
         </div>
       </div>
@@ -169,7 +169,7 @@ export default function SuperadminMigrationsClient() {
                     <p className="text-sm text-foreground">{mig.description}</p>
                     {mig.errorLog && (
                       <p className="text-xs text-danger mt-1 flex items-center gap-1">
-                        <AlertTriangle size={12} /> {mig.errorLog}
+                        <AlertTriangle className="w-3 h-3" /> {mig.errorLog}
                       </p>
                     )}
                   </td>

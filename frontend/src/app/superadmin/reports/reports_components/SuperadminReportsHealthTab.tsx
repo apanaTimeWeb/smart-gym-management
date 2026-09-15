@@ -60,9 +60,9 @@ export function SuperadminReportsHealthTab({
                 <td className="px-4 py-3 text-secondary text-xs">{row.lastLogin}</td>
                 <td className="px-4 py-3">
                   <div className={`flex items-center gap-1 text-xs font-medium ${PAYMENT_HEALTH_STYLES[row.paymentHealth]}`}>
-                    {row.paymentHealth === 'GOOD' && <CheckCircle2 size={18} strokeWidth={2} />}
-                    {row.paymentHealth === 'AT_RISK' && <AlertTriangle size={18} strokeWidth={2} />}
-                    {row.paymentHealth === 'OVERDUE' && <XCircle size={18} strokeWidth={2} />}
+                    {row.paymentHealth === 'GOOD' && <CheckCircle2 className="w-5 h-5" strokeWidth={2} />}
+                    {row.paymentHealth === 'AT_RISK' && <AlertTriangle className="w-5 h-5" strokeWidth={2} />}
+                    {row.paymentHealth === 'OVERDUE' && <XCircle className="w-5 h-5" strokeWidth={2} />}
                     {row.paymentHealth}
                   </div>
                 </td>

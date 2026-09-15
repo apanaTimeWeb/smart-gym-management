@@ -39,21 +39,21 @@ export default function SuperadminSystemSlaTab() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-card border border-border rounded-xl p-6">
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-primary/10 rounded-lg text-primary"><ServerCog size={24} /></div>
+            <div className="p-2 bg-primary/10 rounded-lg text-primary"><ServerCog className="w-6 h-6" /></div>
             <h3 className="font-semibold text-foreground">Tracked Gyms</h3>
           </div>
           <p className="text-3xl font-extrabold text-foreground">{totalTenants}</p>
         </div>
         <div className="bg-card border border-border rounded-xl p-6">
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-danger/10 rounded-lg text-danger"><AlertCircle size={24} /></div>
+            <div className="p-2 bg-danger/10 rounded-lg text-danger"><AlertCircle className="w-6 h-6" /></div>
             <h3 className="font-semibold text-foreground">Uptime Failures (30d)</h3>
           </div>
           <p className="text-3xl font-extrabold text-danger">{breachedTenants}</p>
         </div>
         <div className="bg-card border border-border rounded-xl p-6">
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-success/10 rounded-lg text-success"><CheckCircle size={24} /></div>
+            <div className="p-2 bg-success/10 rounded-lg text-success"><CheckCircle className="w-6 h-6" /></div>
             <h3 className="font-semibold text-foreground">Global Avg Uptime</h3>
           </div>
           <p className="text-3xl font-extrabold text-success">{avgUptime}%</p>
@@ -63,7 +63,7 @@ export default function SuperadminSystemSlaTab() {
       {/* SLA Table */}
       <div className="bg-card border border-border rounded-xl overflow-hidden flex flex-col min-h-96">
         <div className="p-4 border-b border-border flex justify-between items-center bg-header">
-          <h2 className="text-lg font-bold text-foreground flex items-center gap-2"><Clock size={20} className="text-primary"/> Gym Uptime Status</h2>
+          <h2 className="text-lg font-bold text-foreground flex items-center gap-2"><Clock className="w-5 h-5 text-primary"/> Gym Uptime Status</h2>
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-disabled" />
             <input
@@ -113,7 +113,7 @@ export default function SuperadminSystemSlaTab() {
                         onClick={() => handleGenerateCredit(sla.id)}
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-danger/10 hover:bg-danger/20 text-danger text-xs font-semibold motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger"
                       >
-                        <Ticket size={14} /> Issue Credit
+                        <Ticket className="w-3.5 h-3.5" /> Issue Credit
                       </button>
                     )}
                     {sla.status !== 'BREACHED' && (

@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useSuperadminFeaturesData } from './useSuperadminFeaturesData';
+import { useSuperadminFeaturesData } from '@/app/superadmin/features/features_utils/useSuperadminFeaturesData';
 
 describe('useSuperadminFeaturesData', () => {
   it('should initialize correctly', () => {

@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useSuperadminCouponsData } from './useSuperadminCouponsData';
+import { useSuperadminCouponsData } from '@/app/superadmin/coupons/coupons_utils/useSuperadminCouponsData';
 
 describe('useSuperadminCouponsData', () => {
   it('should initialize correctly', () => {

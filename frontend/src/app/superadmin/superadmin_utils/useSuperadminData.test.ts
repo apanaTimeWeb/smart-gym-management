@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useSuperadminData } from './useSuperadminData';
+import { useSuperadminData } from '@/app/superadmin/superadmin_utils/useSuperadminData';
 
 describe('useSuperadminData', () => {
   it('should initialize correctly', () => {

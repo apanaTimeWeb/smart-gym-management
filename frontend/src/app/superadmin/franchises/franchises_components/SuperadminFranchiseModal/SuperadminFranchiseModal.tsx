@@ -60,7 +60,7 @@ export function SuperadminFranchiseModal({
         <div className="flex items-center justify-between p-6 border-b border-border bg-card">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-              <Network size={20} strokeWidth={2.5} />
+              <Network className="w-5 h-5" strokeWidth={2.5} />
             </div>
             <div>
               <h2 className="text-xl font-bold text-foreground">Edit Franchise</h2>
@@ -72,7 +72,7 @@ export function SuperadminFranchiseModal({
             className="p-2 text-secondary hover:text-foreground hover:bg-input rounded-xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             aria-label="Close"
           >
-            <X size={20} />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
@@ -173,7 +173,7 @@ export function SuperadminFranchiseModal({
               disabled={isMutating}
               className="px-6 py-2.5 rounded-xl font-medium bg-primary text-white hover:bg-primary-hover shadow-lg shadow-primary/20 motion-safe:transition-colors disabled:opacity-50 flex items-center justify-center min-w-32"
             >
-              {isMutating ? <Loader2 size={18} className="motion-safe:animate-spin" /> : 'Save Changes'}
+              {isMutating ? <Loader2 className="w-5 h-5 motion-safe:animate-spin" /> : 'Save Changes'}
             </button>
           </div>
         </form>

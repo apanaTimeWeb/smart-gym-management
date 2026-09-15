@@ -163,8 +163,8 @@ export default function SuperadminReportsClient() {
 
   const sortedHealthData = [...filteredHealthData].sort((a, b) => b.score - a.score);
 
-  if (fetchState === 'loading') return <div className="p-8 text-center text-secondary motion-safe:animate-pulse">Loading reports...</div>;
-  if (fetchState === 'error') return <div className="p-8 text-center text-danger">Failed to load reports data.</div>;
+  if (isLoading) return <div className="p-8 text-center text-secondary motion-safe:animate-pulse">Loading reports...</div>;
+  if (isError) return <div className="p-8 text-center text-danger">Failed to load reports data.</div>;
 
   return (
     <div className="space-y-6">
@@ -245,7 +245,7 @@ export default function SuperadminReportsClient() {
               tab === key ? 'bg-card text-foreground shadow-sm' : 'text-secondary hover:text-foreground'
             }`}
           >
-            <Icon size={18} strokeWidth={2} /> {label}
+            <Icon className="w-5 h-5" strokeWidth={2} /> {label}
           </button>
         ))}
       </div>

@@ -59,7 +59,7 @@ export default function SuperadminFeaturesClient() {
     }
   };
 
-  if (fetchState === 'loading') return (
+  if (isLoading) return (
     <div className="space-y-4 motion-safe:animate-pulse">
       <div className="h-8 w-64 bg-skeleton-base rounded" />
       <div className="h-96 bg-skeleton-base rounded-xl border border-border" />
@@ -216,7 +216,7 @@ export default function SuperadminFeaturesClient() {
           <div>
             <form onSubmit={handleSubmit(onPublishNote)} className="bg-card border border-border rounded-xl p-6 sticky top-24">
               <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
-                <Send size={18} className="text-primary" /> Compose Release Note
+                <Send className="w-5 h-5 text-primary" /> Compose Release Note
               </h3>
               <div className="space-y-4">
                 <div>

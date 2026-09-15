@@ -85,7 +85,7 @@ export default function SuperadminProfileSecurityForm({
                   aria-label={show ? 'Hide password' : 'Show password'}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-foreground focus-visible:outline-none"
                 >
-                  {show ? <EyeOff size={16} strokeWidth={2} /> : <Eye size={16} strokeWidth={2} />}
+                  {show ? <EyeOff className="w-4 h-4" strokeWidth={2} /> : <Eye className="w-4 h-4" strokeWidth={2} />}
                 </button>
               </div>
               {errors[id as keyof PasswordFormValues] && (
@@ -102,7 +102,7 @@ export default function SuperadminProfileSecurityForm({
               disabled={isSavingPassword || !isDirty}
               className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-black font-semibold text-sm rounded-lg motion-safe:transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
-              {isSavingPassword && <Loader2 size={16} strokeWidth={2} className="motion-safe:animate-spin" />}
+              {isSavingPassword && <Loader2 className="w-4 h-4" strokeWidth={2} className="motion-safe:animate-spin" />}
               {isSavingPassword ? 'Updating...' : 'Update Password'}
             </button>
           </div>
@@ -122,8 +122,8 @@ export default function SuperadminProfileSecurityForm({
           </div>
           <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${profile.twoFactorEnabled ? 'bg-success-bg text-success' : 'bg-danger-bg text-danger'}`}>
             {profile.twoFactorEnabled
-              ? <><ShieldCheck size={12} strokeWidth={2} /> Enabled</>
-              : <><ShieldOff size={12} strokeWidth={2} /> Disabled</>}
+              ? <><ShieldCheck className="w-3 h-3" strokeWidth={2} /> Enabled</>
+              : <><ShieldOff className="w-3 h-3" strokeWidth={2} /> Disabled</>}
           </div>
         </div>
 
@@ -146,7 +146,7 @@ export default function SuperadminProfileSecurityForm({
                 aria-label={showTwoFAPassword ? 'Hide password' : 'Show password'}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-foreground focus-visible:outline-none"
               >
-                {showTwoFAPassword ? <EyeOff size={16} strokeWidth={2} /> : <Eye size={16} strokeWidth={2} />}
+                {showTwoFAPassword ? <EyeOff className="w-4 h-4" strokeWidth={2} /> : <Eye className="w-4 h-4" strokeWidth={2} />}
               </button>
             </div>
           </div>
@@ -161,7 +161,7 @@ export default function SuperadminProfileSecurityForm({
                 : 'bg-success-bg text-success hover:bg-success hover:text-white focus-visible:ring-success'
             }`}
           >
-            {isTogglingTwoFA && <Loader2 size={16} strokeWidth={2} className="motion-safe:animate-spin" />}
+            {isTogglingTwoFA && <Loader2 className="w-4 h-4" strokeWidth={2} className="motion-safe:animate-spin" />}
             {profile.twoFactorEnabled ? 'Disable 2FA' : 'Enable 2FA'}
           </button>
         </div>

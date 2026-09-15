@@ -42,7 +42,7 @@ export default function SuperadminCancellationsActionModal({ alert, onConfirm, o
             aria-label="Close modal"
             className="p-1.5 rounded-lg text-secondary hover:text-foreground hover:bg-input motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
-            <X size={18} strokeWidth={2} />
+            <X className="w-5 h-5" strokeWidth={2} />
           </button>
         </div>
 

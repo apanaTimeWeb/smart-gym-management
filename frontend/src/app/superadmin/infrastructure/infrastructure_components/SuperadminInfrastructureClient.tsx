@@ -7,11 +7,11 @@ import { infrastructureApi } from '@/app/superadmin/infrastructure/superadmin_in
 import toast from 'react-hot-toast';
 import type { InfrastructureNode } from '@/app/superadmin/infrastructure/infrastructure_types/superadmin_infrastructure_types';
 import SuperadminFlushTenantModal from '@/app/superadmin/infrastructure/infrastructure_components/SuperadminFlushTenantModal';
-import { useSuperadminConfirm } from '@/components/ui/SuperadminFeedback/SuperadminConfirmProvider';
+import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
 import SuperadminUptimeChart from '@/app/superadmin/infrastructure/infrastructure_components/SuperadminUptimeChart/SuperadminUptimeChart';
 import { formatNumber } from '@/lib/formatters';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import { SuperadminErrorBoundary } from '@/components/ui/SuperadminLayout/SuperadminErrorBoundary';
+import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_components/SuperadminLayout/SuperadminErrorBoundary';
 
 export default function SuperadminInfrastructureClient() {
   const [isFlushingAll, setIsFlushingAll] = useState(false);
@@ -131,7 +131,7 @@ export default function SuperadminInfrastructureClient() {
             disabled={isFetchingNodes || isFetchingRedis}
             className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:opacity-90 motion-safe:transition-opacity flex items-center gap-2 border border-primary disabled:opacity-50"
           >
-            <RefreshCcw size={16} className={isFetchingNodes || isFetchingRedis ? 'motion-safe:animate-spin' : ''} /> Force Sync Metrics
+            <RefreshCcw className="w-4 h-4" className={isFetchingNodes || isFetchingRedis ? 'motion-safe:animate-spin' : ''} /> Force Sync Metrics
           </button>
         </div>
       </div>
@@ -141,7 +141,7 @@ export default function SuperadminInfrastructureClient() {
         <div className="bg-card border border-border rounded-xl p-6 relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full -z-10 group-hover:bg-primary/10 motion-safe:transition-colors" />
           <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 bg-primary/10 rounded-lg text-primary"><Cpu size={24} /></div>
+            <div className="p-2 bg-primary/10 rounded-lg text-primary"><Cpu className="w-6 h-6" /></div>
             <h2 className="text-lg font-bold text-foreground">CPU Usage</h2>
           </div>
           <div className="flex items-end gap-2 mb-2">
@@ -158,7 +158,7 @@ export default function SuperadminInfrastructureClient() {
         <div className="bg-card border border-border rounded-xl p-6 relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-32 h-32 bg-warning/5 rounded-bl-full -z-10 group-hover:bg-warning/10 motion-safe:transition-colors" />
           <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 bg-warning/10 rounded-lg text-warning"><Server size={24} /></div>
+            <div className="p-2 bg-warning/10 rounded-lg text-warning"><Server className="w-6 h-6" /></div>
             <h2 className="text-lg font-bold text-foreground">Memory (RAM)</h2>
           </div>
           <div className="flex items-end gap-2 mb-2">
@@ -175,7 +175,7 @@ export default function SuperadminInfrastructureClient() {
         <div className="bg-card border border-border rounded-xl p-6 relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-32 h-32 bg-success/5 rounded-bl-full -z-10 group-hover:bg-success/10 motion-safe:transition-colors" />
           <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 bg-success/10 rounded-lg text-success"><HardDrive size={24} /></div>
+            <div className="p-2 bg-success/10 rounded-lg text-success"><HardDrive className="w-6 h-6" /></div>
             <h2 className="text-lg font-bold text-foreground">Storage (SSD)</h2>
           </div>
           <div className="flex items-end gap-2 mb-2">
@@ -199,7 +199,7 @@ export default function SuperadminInfrastructureClient() {
           {/* REDIS MEMORY */}
           <div className="bg-card border border-border rounded-xl p-6 relative overflow-hidden group">
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 bg-primary/10 rounded-lg text-primary"><Zap size={24} /></div>
+              <div className="p-2 bg-primary/10 rounded-lg text-primary"><Zap className="w-6 h-6" /></div>
               <h2 className="text-lg font-bold text-foreground">Redis Memory</h2>
             </div>
             <div className="flex items-end gap-2 mb-2">
@@ -215,7 +215,7 @@ export default function SuperadminInfrastructureClient() {
           {/* REDIS HIT RATIO */}
           <div className="bg-card border border-border rounded-xl p-6 relative overflow-hidden group">
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 bg-success/10 rounded-lg text-success"><RefreshCcw size={24} /></div>
+              <div className="p-2 bg-success/10 rounded-lg text-success"><RefreshCcw className="w-6 h-6" /></div>
               <h2 className="text-lg font-bold text-foreground">Cache Hit Ratio</h2>
             </div>
             <div className="flex items-end gap-2 mb-2">
@@ -256,7 +256,7 @@ export default function SuperadminInfrastructureClient() {
             disabled={isFlushingAll}
             className="flex items-center justify-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg font-medium hover:opacity-90 motion-safe:transition-opacity min-w-44 disabled:opacity-50"
           >
-            {isFlushingAll ? <Loader2 size={18} className="motion-safe:animate-spin" /> : null}
+            {isFlushingAll ? <Loader2 className="w-5 h-5 motion-safe:animate-spin" /> : null}
             Flush All Tenants
           </button>
           <button 

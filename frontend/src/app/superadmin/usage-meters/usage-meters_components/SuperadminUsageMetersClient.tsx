@@ -39,7 +39,7 @@ export default function SuperadminUsageMetersClient() {
   const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
   const displayMeters = queryData?.meters || [];
 
-  if (fetchState === 'loading') {
+  if (isLoading) {
     return (
       <div className="p-6 space-y-4">
         {[1, 2, 3].map(i => (
@@ -105,7 +105,7 @@ export default function SuperadminUsageMetersClient() {
               <div>
                 <div className="flex justify-between text-sm mb-1.5">
                   <span className="flex items-center gap-1.5 text-secondary font-medium">
-                    <MessageSquare size={18} /> Total SMS Sent
+                    <MessageSquare className="w-5 h-5" /> Total SMS Sent
                   </span>
                   <span className="text-foreground font-semibold">{formatNumber(meter.smsSent)}</span>
                 </div>
@@ -122,7 +122,7 @@ export default function SuperadminUsageMetersClient() {
               <div>
                 <div className="flex justify-between text-sm mb-1.5">
                   <span className="flex items-center gap-1.5 text-secondary font-medium">
-                    <HardDrive size={18} /> Total Storage (GB)
+                    <HardDrive className="w-5 h-5" /> Total Storage (GB)
                   </span>
                   <span className="text-foreground font-semibold">formatCurrency(totalStorage) GB
                   </span>
@@ -157,7 +157,7 @@ export default function SuperadminUsageMetersClient() {
                 <div>
                   <div className="flex justify-between text-sm mb-1.5">
                     <span className="flex items-center gap-1.5 text-secondary font-medium">
-                      <Users size={18} /> Members
+                      <Users className="w-5 h-5" /> Members
                     </span>
                     <span className="text-foreground font-semibold">
                       {formatNumber((meter.activeMembers ?? 0))} <span className="text-xs text-secondary font-normal">Active</span> / {formatNumber((meter.totalMembers ?? meter.activeMembers ?? 0))} <span className="text-xs text-secondary font-normal">Total</span>
@@ -176,7 +176,7 @@ export default function SuperadminUsageMetersClient() {
                 <div>
                   <div className="flex justify-between text-sm mb-1.5">
                     <span className="flex items-center gap-1.5 text-secondary font-medium">
-                      <Users size={18} /> Staff
+                      <Users className="w-5 h-5" /> Staff
                     </span>
                     <span className="text-foreground font-semibold">{formatNumber((meter.staffCount ?? 0))}</span>
                   </div>

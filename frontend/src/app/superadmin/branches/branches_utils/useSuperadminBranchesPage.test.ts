@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useSuperadminBranchesPage } from './useSuperadminBranchesPage';
+import { useSuperadminBranchesPage } from '@/app/superadmin/branches/branches_utils/useSuperadminBranchesPage';
 
 describe('useSuperadminBranchesPage', () => {
   it('should initialize correctly', () => {

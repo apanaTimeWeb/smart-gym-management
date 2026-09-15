@@ -1,5 +1,5 @@
 'use client';
-// RESPONSIBILITY: SuperadminBackupsClient.tsx renders the Database Backups page. Purely a view layer — data fetched via useSuperadminData.
+// RESPONSIBILITY: SuperadminBackupsClient.tsx renders the Database Backups page. Purely a view layer â€” data fetched via useSuperadminData.
 
 import { useSuperadminBackupsData } from '@/app/superadmin/backups/backups_utils/useSuperadminBackupsData';
 import SuperadminBackupsEmptyState from '@/app/superadmin/backups/backups_components/SuperadminBackupsEmptyState/SuperadminBackupsEmptyState';
@@ -9,17 +9,32 @@ import { DatabaseBackup, Search, Clock } from 'lucide-react';
 import type { BackupRecord } from '@/app/superadmin/backups/superadmin_backups_types/superadmin_backups_types';
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import SuperadminPagination from '@/components/ui/SuperadminShared/SuperadminPagination';
+import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 import { backupsApi } from '@/app/superadmin/backups/superadmin_backups_api/superadmin_backups_api';
-// Rule 10: Absolute imports only — no relative paths allowed
+// Rule 10: Absolute imports only â€” no relative paths allowed
+import SuperadminBackupsTable from '@/app/superadmin/backups/backups_components/SuperadminBackupsTable';
+'use client';
+// RESPONSIBILITY: SuperadminBackupsClient.tsx renders the Database Backups page. Purely a view layer â€” data fetched via useSuperadminData.
+
+import { useSuperadminBackupsData } from '@/app/superadmin/backups/backups_utils/useSuperadminBackupsData';
+import SuperadminBackupsEmptyState from '@/app/superadmin/backups/backups_components/SuperadminBackupsEmptyState/SuperadminBackupsEmptyState';
+
+import SuperadminBackupsScheduleModal from '@/app/superadmin/backups/backups_components/SuperadminBackupsScheduleModal';
+import { DatabaseBackup, Search, Clock } from 'lucide-react';
+import type { BackupRecord } from '@/app/superadmin/backups/superadmin_backups_types/superadmin_backups_types';
+import { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
+import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
+import { backupsApi } from '@/app/superadmin/backups/superadmin_backups_api/superadmin_backups_api';
+// Rule 10: Absolute imports only â€” no relative paths allowed
 import SuperadminBackupsTable from '@/app/superadmin/backups/backups_components/SuperadminBackupsTable';
 import SuperadminBackupsRestoreModal from '@/app/superadmin/backups/backups_components/SuperadminBackupsRestoreModal';
 import SuperadminBackupsTriggerModal from '@/app/superadmin/backups/backups_components/SuperadminBackupsTriggerModal';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import { SuperadminErrorBoundary } from '@/components/ui/SuperadminLayout/SuperadminErrorBoundary';
+import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_components/SuperadminLayout/SuperadminErrorBoundary';
 
 export default function SuperadminBackupsClient() {
-  const { data: backups, fetchState, error } = useSuperadminBackupsData();
+  const { data: backups, isLoading, isError, error } = useSuperadminBackupsData();
 
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
@@ -33,45 +48,6 @@ export default function SuperadminBackupsClient() {
   // Resets pagination to page 1 whenever a filter changes, preventing stale empty states.
   // EXPLANATION: Synchronize component state with external dependencies.
   // EFFECT DEPENDENCIES: Documented intentionally.
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [search, statusFilter, typeFilter]);
-
-
-  const handleDownload = (id: string) => {
-    toast.success(`Starting download for backup ${id}`, { id: 'starting-download-for-backup-id' });
-    const link = document.createElement('a');
-    link.href = backupsApi.fetchBackupDownloadUrl(id);
-    link.download = `${id}_snapshot.sql.gz`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  const [restoreModalOpen, setRestoreModalOpen] = useState(false);
-  const [selectedBackup, setSelectedBackup] = useState<BackupRecord | null>(null);
-  const [restoreConfirmText, setRestoreConfirmText] = useState('');
-
-  const handleRestoreClick = (backup: BackupRecord) => {
-    setSelectedBackup(backup);
-    setRestoreConfirmText('');
-    setRestoreModalOpen(true);
-  };
-
-
-  if (fetchState === 'loading') return (
-    <div className="space-y-6 motion-safe:animate-pulse">
-      <div className="h-8 bg-card rounded w-48" />
-      <div className="h-96 bg-card rounded-xl border border-border" />
-    </div>
-  );
-  if (error || !backups) return <div className="p-8 text-center text-danger">Error loading data.</div>;
-
-  const filtered: BackupRecord[] = backups.filter((b: BackupRecord) => {
-    const matchesSearch = b.tenantName?.toLowerCase().includes(search.toLowerCase()) || 
-                          b.databaseName?.toLowerCase().includes(search.toLowerCase()) ||
-                          b.id?.toLowerCase().includes(search.toLowerCase());
-    const matchesStatus = statusFilter === 'ALL' || b.status === statusFilter;
     const bType = b.id.includes('MANUAL') ? 'MANUAL' : 'AUTOMATED'; // Mock logic for type
     const matchesType = typeFilter === 'ALL' || bType === typeFilter;
     return matchesSearch && matchesStatus && matchesType;
@@ -92,14 +68,14 @@ export default function SuperadminBackupsClient() {
             onClick={() => setScheduleModalOpen(true)}
             className="bg-input text-foreground px-4 py-2 rounded-lg font-medium hover:bg-border motion-safe:transition-colors border border-border flex items-center gap-2"
           >
-            <Clock size={16} /> Configure Schedule
+            <Clock className="w-4 h-4" /> Configure Schedule
           </button>
           <button 
             onClick={() => setTriggerModalOpen(true)}
             disabled={isTriggering}
             className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-hover motion-safe:transition-colors flex items-center gap-2 disabled:opacity-50"
           >
-            <DatabaseBackup size={16} /> {isTriggering ? 'Creating Snapshot...' : 'Global Snapshot'}
+            <DatabaseBackup className="w-4 h-4" /> {isTriggering ? 'Creating Snapshot...' : 'Global Snapshot'}
           </button>
         </div>
       </div>

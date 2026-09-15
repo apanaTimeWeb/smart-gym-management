@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useSuperadminUrlState } from './useSuperadminUrlState';
+import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
 
 describe('useSuperadminUrlState', () => {
   it('should initialize correctly', () => {

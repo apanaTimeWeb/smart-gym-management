@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useSuperadminAnalyticsPage } from './useSuperadminAnalyticsPage';
+import { useSuperadminAnalyticsPage } from '@/app/superadmin/analytics/analytics_utils/useSuperadminAnalyticsPage';
 
 describe('useSuperadminAnalyticsPage', () => {
   it('should initialize correctly', () => {

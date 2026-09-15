@@ -20,7 +20,6 @@ export function useSuperadminData<T>(endpoint: string) {
     })
   });
 
-  const fetchState: FetchState = query.isLoading ? 'loading' : query.isError ? 'error' : 'success';
   const data = query.data ?? null;
   const error = query.error ? query.error.message : null;
 
@@ -36,5 +35,5 @@ export function useSuperadminData<T>(endpoint: string) {
     });
   }, [queryClient, endpoint]);
 
-  return { data, fetchState, error, mutate };
+  return { data, isLoading: query.isLoading, isError: query.isError, error, mutate };
 }

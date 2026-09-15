@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useSuperadminCancellationsAlertsPage } from './useSuperadminCancellationsAlertsPage';
+import { useSuperadminCancellationsAlertsPage } from '@/app/superadmin/cancellations/cancellations_utils/useSuperadminCancellationsAlertsPage';
 
 describe('useSuperadminCancellationsAlertsPage', () => {
   it('should initialize correctly', () => {

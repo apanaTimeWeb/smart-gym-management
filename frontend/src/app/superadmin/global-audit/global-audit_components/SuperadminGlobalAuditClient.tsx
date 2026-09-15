@@ -8,7 +8,7 @@ import { ShieldAlert, Search, Filter, AlertTriangle, Info, Download } from 'luci
 import toast from 'react-hot-toast';
 
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import SuperadminPagination from '@/components/ui/SuperadminShared/SuperadminPagination';
+import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 
 export type AuditSeverityFilter = 'ALL' | 'INFO' | 'WARNING' | 'CRITICAL';
 
@@ -61,11 +61,11 @@ export default function SuperadminGlobalAuditClient() {
   const getSeverityBadge = (severity: AuditLog['severity']) => {
     switch (severity) {
       case 'CRITICAL':
-        return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-bold bg-danger text-white tracking-wider"><ShieldAlert size={12} /> CRITICAL</span>;
+        return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-bold bg-danger text-white tracking-wider"><ShieldAlert className="w-3 h-3" /> CRITICAL</span>;
       case 'WARNING':
-        return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-bold bg-warning text-white tracking-wider"><AlertTriangle size={12} /> WARNING</span>;
+        return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-bold bg-warning text-white tracking-wider"><AlertTriangle className="w-3 h-3" /> WARNING</span>;
       case 'INFO':
-        return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-bold bg-primary/10 text-primary tracking-wider"><Info size={12} /> INFO</span>;
+        return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-bold bg-primary/10 text-primary tracking-wider"><Info className="w-3 h-3" /> INFO</span>;
     }
   };
 
@@ -116,7 +116,7 @@ export default function SuperadminGlobalAuditClient() {
     { value: 'TENANT', label: 'Gym' },
   ];
 
-  if (fetchState === 'loading') {
+  if (isLoading) {
     return (
       <div className="p-6 max-w-7xl mx-auto space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
@@ -163,7 +163,7 @@ export default function SuperadminGlobalAuditClient() {
             onClick={exportLogs}
             className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground font-medium rounded-lg hover:bg-primary/90 motion-safe:transition-colors"
           >
-            <Download size={16} /> Export CSV
+            <Download className="w-4 h-4" /> Export CSV
           </button>
         </div>
       </div>

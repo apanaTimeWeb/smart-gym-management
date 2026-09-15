@@ -4,7 +4,18 @@ import { useQuery } from '@tanstack/react-query';
 import { backupsApi } from '@/app/superadmin/backups/superadmin_backups_api/superadmin_backups_api';
 import type { BackupRecord } from '@/app/superadmin/backups/superadmin_backups_types/superadmin_backups_types';
 
-type FetchState = 'idle' | 'loading' | 'success' | 'error';
+
+
+export function useSuperadminBackupsData() {
+  const query = useQuery({
+    queryKey: ['superadmin', 'backups'],
+    queryFn: async () => {
+// DATA FLOW: Component -> useSuperadminBackupsData.ts -> API/Store
+import { useQuery } from '@tanstack/react-query';
+import { backupsApi } from '@/app/superadmin/backups/superadmin_backups_api/superadmin_backups_api';
+import type { BackupRecord } from '@/app/superadmin/backups/superadmin_backups_types/superadmin_backups_types';
+
+
 
 export function useSuperadminBackupsData() {
   const query = useQuery({
@@ -16,14 +27,10 @@ export function useSuperadminBackupsData() {
     }
   });
 
-  const fetchState: FetchState = query.isLoading ? 'loading' : query.isError ? 'error' : 'success';
-
   return {
     data: query.data,
-    fetchState,
-    error: query.isError ? new Error('Failed to fetch backups data') : null,
-    setFetchState: (state: React.SetStateAction<FetchState>) => {}, // mock to keep signature
-    setData: (updater: React.SetStateAction<BackupRecord[] | null>) => {} // mock to keep signature
+    isLoading: query.isLoading,
+    isError: query.isError,
+    error: query.error
   };
 }
-

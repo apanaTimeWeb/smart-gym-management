@@ -34,11 +34,11 @@ export default function SuperadminGymsCalendar() {
     return map;
   }, [filteredGyms, daysInMonth]);
 
-  if (fetchState === 'loading') {
+  if (isLoading) {
     return <div className="p-8 text-center text-secondary">Loading calendar...</div>;
   }
 
-  if (fetchState === 'error') {
+  if (isError) {
     return <div className="p-8 text-center text-danger">Error loading calendar. Please try again.</div>;
   }
 

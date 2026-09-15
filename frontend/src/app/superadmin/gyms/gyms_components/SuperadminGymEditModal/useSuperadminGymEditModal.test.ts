@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useSuperadminGymEditModal } from './useSuperadminGymEditModal';
+import { useSuperadminGymEditModal } from '@/app/superadmin/gyms/gyms_components/SuperadminGymEditModal/useSuperadminGymEditModal';
 
 describe('useSuperadminGymEditModal', () => {
   it('should initialize correctly', () => {

@@ -58,7 +58,7 @@ export default function SuperadminJobsHeader({
             disabled={isRetrying}
             className="flex items-center gap-2 bg-danger-bg/10 text-danger px-4 py-2 rounded-lg font-medium hover:bg-danger-bg hover:text-white motion-safe:transition-colors border border-destructive/20 hover:border-transparent disabled:opacity-50 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger"
           >
-            <RefreshCw size={15} className={isRetrying ? 'motion-safe:animate-spin' : ''} />
+            <RefreshCw className="w-4 h-4" className={isRetrying ? 'motion-safe:animate-spin' : ''} />
             Retry All Failed
           </button>
         </div>
@@ -68,7 +68,7 @@ export default function SuperadminJobsHeader({
       <div className="bg-card border border-border rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2">
-            <Filter size={15} className="text-secondary shrink-0" />
+            <Filter className="w-4 h-4 text-secondary shrink-0" />
             <div className="w-40 border-none bg-input rounded-lg">
               <SearchableDropdown
                 value={statusFilter}
@@ -107,13 +107,13 @@ export default function SuperadminJobsHeader({
               onClick={onBulkRetry}
               className="flex items-center gap-1.5 bg-primary text-white px-3 py-1.5 rounded-md text-sm hover:bg-primary-hover motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
-              <RefreshCw size={13} /> Retry
+              <RefreshCw className="w-3.5 h-3.5" /> Retry
             </button>
             <button
               onClick={onBulkDelete}
               className="flex items-center gap-1.5 bg-danger text-white px-3 py-1.5 rounded-md text-sm hover:opacity-90 motion-safe:transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger"
             >
-              <Trash2 size={13} /> Delete
+              <Trash2 className="w-3.5 h-3.5" /> Delete
             </button>
           </div>
         )}

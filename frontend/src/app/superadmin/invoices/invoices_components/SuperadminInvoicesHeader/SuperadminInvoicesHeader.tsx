@@ -2,7 +2,7 @@
 import { Plus, ArrowUpRight } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { invoicesApi } from '@/app/superadmin/invoices/superadmin_invoices_api/superadmin_invoices_api';
-import { SuperadminDateFilterDropdown } from '@/components/ui/SuperadminShared/SuperadminDateFilterDropdown';
+import { SuperadminDateFilterDropdown } from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminDateFilterDropdown';
 
 interface InvoicesHeaderProps {
   onLogPaymentClick: () => void;
@@ -36,13 +36,13 @@ export default function SuperadminInvoicesHeader({ onLogPaymentClick }: Invoices
           onClick={onLogPaymentClick}
           className="bg-input text-foreground border border-border px-4 py-2 rounded-lg font-medium hover:bg-border motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out flex items-center gap-2"
         >
-          <Plus size={18} /> Log Manual Payment
+          <Plus className="w-5 h-5" /> Log Manual Payment
         </button>
         <button
           onClick={handleExportCSV}
           className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-hover motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out flex items-center gap-2"
         >
-          <ArrowUpRight size={18} /> Export CSV
+          <ArrowUpRight className="w-5 h-5" /> Export CSV
         </button>
       </div>
     </div>

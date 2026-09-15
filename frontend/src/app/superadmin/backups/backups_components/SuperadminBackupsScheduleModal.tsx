@@ -30,7 +30,7 @@ export default function SuperadminBackupsScheduleModal({ isOpen, onClose }: Supe
       <div className="bg-card w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-border motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95">
         <div className="p-6">
           <div className="w-12 h-12 rounded-full bg-info/10 text-info flex items-center justify-center mb-4">
-            <Clock size={24} />
+            <Clock className="w-6 h-6" />
           </div>
           <h2 className="text-xl font-bold text-foreground mb-2">Automated Backup Schedule</h2>
           <p className="text-sm text-secondary mb-6">
@@ -80,7 +80,7 @@ export default function SuperadminBackupsScheduleModal({ isOpen, onClose }: Supe
               {isSaving ? (
                 <>Saving...</>
               ) : (
-                <><Check size={16} /> Save Schedule</>
+                <><Check className="w-4 h-4" /> Save Schedule</>
               )}
             </button>
           </div>

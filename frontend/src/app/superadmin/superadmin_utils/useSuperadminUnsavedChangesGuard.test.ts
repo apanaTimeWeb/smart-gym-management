@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useSuperadminUnsavedChangesGuard } from './useSuperadminUnsavedChangesGuard';
+import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useSuperadminUnsavedChangesGuard';
 
 describe('useSuperadminUnsavedChangesGuard', () => {
   it('should initialize correctly', () => {

@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useSuperadminGymsTable } from './useSuperadminGymsTable';
+import { useSuperadminGymsTable } from '@/app/superadmin/gyms/gyms_components/SuperadminGymsTable/useSuperadminGymsTable';
 
 describe('useSuperadminGymsTable', () => {
   it('should initialize correctly', () => {

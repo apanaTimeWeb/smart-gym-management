@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useSuperadminBroadcastsData } from './useSuperadminBroadcastsData';
+import { useSuperadminBroadcastsData } from '@/app/superadmin/broadcasts/broadcasts_utils/useSuperadminBroadcastsData';
 
 describe('useSuperadminBroadcastsData', () => {
   it('should initialize correctly', () => {

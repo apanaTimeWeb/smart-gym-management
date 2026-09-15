@@ -1,7 +1,7 @@
 'use client';
 // RESPONSIBILITY: Renders the SuperadminInvoicesStatsBar component.
 import { DollarSign, AlertCircle } from 'lucide-react';
-import { useDateRangeSuffix } from '@/components/ui/SuperadminShared/useDateRangeSuffix';
+import { useDateRangeSuffix } from '@/app/superadmin/superadmin_components/SuperadminShared/useDateRangeSuffix';
 import { formatCurrency } from '@/lib/formatters';
 
 interface InvoicesStatsBarProps {

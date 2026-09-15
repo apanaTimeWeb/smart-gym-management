@@ -52,7 +52,7 @@ export default function SuperadminSettingsClient() {
     updateMutation.mutate({ id, value: newValue });
   };
 
-  if (fetchState === 'loading') {
+  if (isLoading) {
     return (
       <div className="space-y-6">
         <div>
@@ -68,7 +68,7 @@ export default function SuperadminSettingsClient() {
     );
   }
   
-  if (fetchState === 'error') {
+  if (isError) {
     return <div className="flex h-96 items-center justify-center text-danger font-medium">Error loading settings.</div>;
   }
 

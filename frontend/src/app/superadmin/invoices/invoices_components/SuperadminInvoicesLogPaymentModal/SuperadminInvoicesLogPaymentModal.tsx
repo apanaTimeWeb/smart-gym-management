@@ -41,7 +41,7 @@ export default function SuperadminInvoicesLogPaymentModal({
         <div className="flex items-center justify-between p-5 border-b border-border">
           <h2 className="text-xl font-bold text-foreground">Log Manual Payment</h2>
           <button onClick={onClose} className="text-secondary hover:text-foreground motion-safe:transition-colors" aria-label="Close modal">
-            <X size={20} />
+            <X className="w-5 h-5" />
           </button>
         </div>
 

@@ -81,7 +81,7 @@ export default function SuperadminJobInspectModal({ job, onClose }: SuperadminJo
           {job.error && (
             <div>
               <h3 className="text-xs font-semibold text-danger mb-3 uppercase tracking-wider flex items-center gap-1">
-                <AlertTriangle size={13} /> Error Trace
+                <AlertTriangle className="w-3.5 h-3.5" /> Error Trace
               </h3>
               <div className="bg-danger-bg/10 border border-destructive/20 text-danger p-4 rounded-lg text-sm font-mono overflow-x-auto whitespace-pre-wrap">
                 {job.error}

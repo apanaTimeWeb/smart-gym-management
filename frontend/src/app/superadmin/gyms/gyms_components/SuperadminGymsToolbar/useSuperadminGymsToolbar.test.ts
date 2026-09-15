@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useSuperadminGymsToolbar } from './useSuperadminGymsToolbar';
+import { useSuperadminGymsToolbar } from '@/app/superadmin/gyms/gyms_components/SuperadminGymsToolbar/useSuperadminGymsToolbar';
 
 describe('useSuperadminGymsToolbar', () => {
   it('should initialize correctly', () => {

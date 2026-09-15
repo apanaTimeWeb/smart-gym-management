@@ -4,11 +4,11 @@ import { useState } from 'react';
 import { useSuperadminTickets } from '@/app/superadmin/tickets/tickets_utils/useSuperadminTickets';
 import SuperadminTicketsHeader from '@/app/superadmin/tickets/tickets_components/SuperadminTicketsHeader/SuperadminTicketsHeader';
 import SuperadminTicketsTable from '@/app/superadmin/tickets/tickets_components/SuperadminTicketsTable/SuperadminTicketsTable';
-import SuperadminPagination from '@/components/ui/SuperadminShared/SuperadminPagination';
+import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 import SuperadminTicketsReplyModal from '@/app/superadmin/tickets/tickets_components/SuperadminTicketsReplyModal/SuperadminTicketsReplyModal';
 import toast from 'react-hot-toast';
 import { useSuperadminTicketsStore } from '@/app/superadmin/tickets/tickets_store/useSuperadminTicketsStore';
-import { SuperadminErrorBoundary } from '@/components/ui/SuperadminLayout/SuperadminErrorBoundary';
+import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_components/SuperadminLayout/SuperadminErrorBoundary';
 
 export default function SuperadminTicketsClient() {
   const [assigneeInput, setAssigneeInput] = useState('');
@@ -66,7 +66,7 @@ export default function SuperadminTicketsClient() {
     setAssignModalTicketId,
   } = useSuperadminTicketsStore();
 
-  if (fetchState === 'loading') return (
+  if (isLoading) return (
     <div className="space-y-6 motion-safe:animate-pulse">
       <div className="h-8 bg-card rounded w-48" />
       <div className="h-96 bg-card rounded-xl border border-border" />

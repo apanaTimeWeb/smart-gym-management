@@ -8,11 +8,13 @@ import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gy
 import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
 import type { Tenant } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_types';
 import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
-import { useSuperadminGhostLoginStore } from '@/components/ui/SuperadminLayout/useSuperadminGhostLoginStore';
+import { useSuperadminGhostLoginStore } from '@/app/superadmin/superadmin_components/SuperadminLayout/useSuperadminGhostLoginStore';
 import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
+import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
 
 export function useSuperadminGymsTable() {
   const { getParam, setParam } = useSuperadminUrlState();
+  const { confirm } = useSuperadminConfirm();
   
   const search = getParam('search', '');
   const statusFilter = getParam('statusFilter', 'All');
@@ -33,7 +35,7 @@ export function useSuperadminGymsTable() {
 
   const queryClient = useQueryClient();
 
-  // Fetch Gyms — passes server-side params (page, limit, status, plan, search, sortBy, order)
+  // Fetch Gyms â€” passes server-side params (page, limit, status, plan, search, sortBy, order)
   const queryParams = {
     ...(search && { search }),
     ...(statusFilter !== 'All' && { status: statusFilter }),
@@ -50,7 +52,7 @@ export function useSuperadminGymsTable() {
   });
 
   const gyms = fetchRes?.data && fetchRes.data.length > 0 ? fetchRes.data : [];
-  const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
+  const total = fetchRes?.meta?.total || gyms.length;
 
   // Server-side filtering is now primary; this is a lightweight client guard
   const filteredGyms = useMemo(() => {
@@ -69,7 +71,7 @@ export function useSuperadminGymsTable() {
         try {
           await gymsApi.setGhostLoginCookie(res.data.token, id);
         } catch {
-          // Cookie set failure is non-fatal — token is still in the response
+          // Cookie set failure is non-fatal â€” token is still in the response
         }
 
         // Find the gym to populate the banner
@@ -116,10 +118,21 @@ export function useSuperadminGymsTable() {
     impersonateMutation.mutate(gymId);
   };
 
-  const onSuspendClick = (e: React.MouseEvent, gymId: string, gymName: string, currentStatus: string) => {
+  const onSuspendClick = async (e: React.MouseEvent, gymId: string, gymName: string, currentStatus: string) => {
     e.stopPropagation();
     const newStatus = currentStatus === 'SUSPENDED' ? 'ACTIVE' : 'SUSPENDED';
-    suspendMutation.mutate({ id: gymId, status: newStatus });
+    const action = currentStatus === 'SUSPENDED' ? 'unsuspend' : 'suspend';
+    
+    const confirmed = await confirm({
+      title: `${action.charAt(0).toUpperCase() + action.slice(1)} Gym`,
+      message: `Are you sure you want to ${action} ${gymName}?`,
+      type: currentStatus === 'SUSPENDED' ? 'info' : 'warning',
+      confirmText: `Yes, ${action}`
+    });
+
+    if (confirmed) {
+      suspendMutation.mutate({ id: gymId, status: newStatus });
+    }
   };
 
   const onDeleteClick = (e: React.MouseEvent, gym: Tenant) => {
@@ -129,8 +142,10 @@ export function useSuperadminGymsTable() {
 
   return {
     filteredGyms,
-    fetchState,
+    isLoading,
+    isError,
     error: isError ? 'Error loading gyms' : null,
+    total,
     actionLoadingId,
     handleRowClick,
     onGhostLoginClick,

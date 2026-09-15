@@ -53,7 +53,7 @@ export default function SuperadminTicketsHeader({
             onClick={() => setShowFilter(!showFilter)}
             className="flex items-center gap-2 px-4 py-2 bg-input border border-border rounded-lg text-sm font-medium text-secondary hover:text-foreground motion-safe:transition-colors"
           >
-            <Filter size={16} /> Filter
+            <Filter className="w-4 h-4" /> Filter
           </button>
           {showFilter && (
             <div className="absolute right-0 top-full mt-2  w-full sm:w-64  bg-card border border-border rounded-xl shadow-lg p-4 z-10 flex flex-col gap-4">

@@ -5,8 +5,6 @@ import { useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/api';
 
-export type FetchState = 'idle' | 'loading' | 'success' | 'error';
-
 export function useSuperadminAffiliatesData<T>(endpoint: string) {
   const query = useQuery({
     queryKey: ['superadmin', endpoint],
@@ -16,7 +14,6 @@ export function useSuperadminAffiliatesData<T>(endpoint: string) {
     })
   });
 
-  const fetchState: FetchState = query.isLoading ? 'loading' : query.isError ? 'error' : 'success';
   const data = query.data ?? null;
   const error = query.error ? query.error.message : null;
 
@@ -24,5 +21,5 @@ export function useSuperadminAffiliatesData<T>(endpoint: string) {
     query.refetch();
   }, [query]);
 
-  return { data, fetchState, error, mutate };
+  return { data, isLoading: query.isLoading, isError: query.isError, error, mutate };
 }

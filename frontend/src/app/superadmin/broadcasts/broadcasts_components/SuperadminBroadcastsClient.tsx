@@ -39,7 +39,7 @@ export default function SuperadminBroadcastsClient() {
       <div className="h-96 bg-card rounded-xl border border-border" />
     </div>
   );
-  if (fetchState === 'error' || error) return <div className="p-8 text-center text-danger">Error loading data.</div>;
+  if (isError || error) return <div className="p-8 text-center text-danger">Error loading data.</div>;
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto">

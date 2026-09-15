@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Pure Server Component entry point for /superadmin/cancellations.
 import type { Metadata } from 'next';
-import SuperadminCancellationsMain from '@/app/superadmin/cancellations/cancellations_components/SuperadminCancellationsMain/SuperadminCancellationsMain';
+import SuperadminCancellationsClient from '@/app/superadmin/cancellations/cancellations_components/SuperadminCancellationsClient/SuperadminCancellationsClient';
 
 export const metadata: Metadata = {
   title: 'Cancellations Alerts | Superadmin | GymSmart',
@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function SuperadminCancellationsAlertsPage() {
-  return <SuperadminCancellationsMain />;
+  return <SuperadminCancellationsClient />;
 }

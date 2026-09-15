@@ -11,7 +11,7 @@ import SuperadminJobsHeader from '@/app/superadmin/jobs/jobs_components/Superadm
 import SuperadminJobsStatsBar from '@/app/superadmin/jobs/jobs_components/SuperadminJobsStatsBar/SuperadminJobsStatsBar';
 import SuperadminJobsTable from '@/app/superadmin/jobs/jobs_components/SuperadminJobsTable/SuperadminJobsTable';
 import SuperadminJobInspectModal from '@/app/superadmin/jobs/jobs_components/SuperadminJobInspectModal/SuperadminJobInspectModal';
-import SuperadminPagination from '@/components/ui/SuperadminShared/SuperadminPagination';
+import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 
 export default function SuperadminJobsView() {
   const {
@@ -41,7 +41,7 @@ export default function SuperadminJobsView() {
     metrics,
   } = useSuperadminJobsPage();
 
-  if (fetchState === 'loading') {
+  if (isLoading) {
     return (
       <div className="space-y-6">
         <div className="flex justify-between items-center">
@@ -58,7 +58,7 @@ export default function SuperadminJobsView() {
     );
   }
 
-  if (fetchState === 'error') {
+  if (isError) {
     return <div className="p-8 text-center text-danger font-medium">Error loading jobs. Please try again.</div>;
   }
 

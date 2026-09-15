@@ -1,17 +1,17 @@
 'use client';
-// RESPONSIBILITY: Renders the Revenue Analytics dashboard — KPI cards + ApexCharts area/bar charts.
+// RESPONSIBILITY: Renders the Revenue Analytics dashboard â€” KPI cards + ApexCharts area/bar charts.
 // Pure view layer: consumes useSuperadminAnalyticsPage hook. No data-fetching or business logic here.
 //
-// DATA FLOW: useSuperadminAnalyticsPage → SuperadminAnalyticsClient → KPI Cards + Charts
+// DATA FLOW: useSuperadminAnalyticsPage â†’ SuperadminAnalyticsClient â†’ KPI Cards + Charts
 
 import dynamic from 'next/dynamic';
 import { TrendingUp, Users, IndianRupee, Activity, ArrowDownRight, DollarSign } from 'lucide-react';
 import { useSuperadminAnalyticsPage } from '@/app/superadmin/analytics/analytics_utils/useSuperadminAnalyticsPage';
 import { CHART_COLORS } from '@/app/superadmin/superadmin_utils/SuperadminChartConstants';
-import { SuperadminDateFilterDropdown } from '@/components/ui/SuperadminShared/SuperadminDateFilterDropdown';
-import { useDateRangeSuffix } from '@/components/ui/SuperadminShared/useDateRangeSuffix';
+import { SuperadminDateFilterDropdown } from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminDateFilterDropdown';
+import { useDateRangeSuffix } from '@/app/superadmin/superadmin_components/SuperadminShared/useDateRangeSuffix';
 
-// Heavy chart component — code-split via dynamic import (Rule 15, Design §10)
+// Heavy chart component â€” code-split via dynamic import (Rule 15, Design Â§10)
 import { formatCurrency, formatKPI, formatDecimal } from '@/lib/formatters';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -19,7 +19,7 @@ export default function SuperadminAnalyticsClient() {
   const { metrics, monthlyData, fetchState } = useSuperadminAnalyticsPage();
   const dateSuffix = useDateRangeSuffix();
 
-  if (fetchState === 'loading') {
+  if (isLoading) {
     return (
       <div className="space-y-6">
         <div>
@@ -39,7 +39,7 @@ export default function SuperadminAnalyticsClient() {
     );
   }
 
-  if (fetchState === 'error' || !metrics) {
+  if (isError || !metrics) {
     return (
       <div className="p-8 text-center text-danger font-medium">
         Failed to load analytics data. Please try again.
@@ -102,7 +102,7 @@ export default function SuperadminAnalyticsClient() {
     },
     {
       label: 'Avg. Income per Gym' + dateSuffix,
-      // Design §21: Indian currency — ₹1,24,500
+      // Design Â§21: Indian currency â€” â‚¹1,24,500
       value: formatCurrency(arpu),
       delta: 'Avg revenue per gym',
       deltaUp: true,
@@ -112,7 +112,7 @@ export default function SuperadminAnalyticsClient() {
     },
   ];
 
-  // Design §10: Area chart for MRR trend — gold line, green area fill
+  // Design Â§10: Area chart for MRR trend â€” gold line, green area fill
   const mrrAreaOptions = {
     chart: { type: 'area' as const, toolbar: { show: false }, background: 'transparent' },
     colors: [CHART_COLORS.PRIMARY],
@@ -131,7 +131,7 @@ export default function SuperadminAnalyticsClient() {
     yaxis: {
       labels: {
         style: { colors: CHART_COLORS.TEXT_SECONDARY },
-        // Design §21: Indian currency formatting in Y-axis
+        // Design Â§21: Indian currency formatting in Y-axis
         formatter: (val: number) => formatKPI(val),
       },
     },
@@ -142,7 +142,7 @@ export default function SuperadminAnalyticsClient() {
 
   const mrrAreaSeries = [{ name: 'Monthly Income', data: monthlyData.map((d) => d.mrr) }];
 
-  // Design §10: Grouped bar chart — new tenants (gold) vs cancelled (red)
+  // Design Â§10: Grouped bar chart â€” new tenants (gold) vs cancelled (red)
   const tenantBarOptions = {
     chart: { type: 'bar' as const, toolbar: { show: false }, background: 'transparent' },
     colors: [CHART_COLORS.PRIMARY, CHART_COLORS.DANGER],
@@ -183,7 +183,7 @@ export default function SuperadminAnalyticsClient() {
         </div>
       </div>
 
-      {/* KPI Cards — Design §5a: gold gradient, icon, trend line */}
+      {/* KPI Cards â€” Design Â§5a: gold gradient, icon, trend line */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         {kpiCards.map((card) => {
           const Icon = card.icon;
@@ -195,13 +195,13 @@ export default function SuperadminAnalyticsClient() {
               <div className="flex items-center justify-between mb-4">
                 <span className="text-secondary font-medium text-xs uppercase tracking-wider">{card.label}</span>
                 <div className={`w-8 h-8 rounded-lg ${card.iconBg} flex items-center justify-center`}>
-                  <Icon size={18} className={card.iconColor} />
+                  <Icon className="w-5 h-5" className={card.iconColor} />
                 </div>
               </div>
               <p className="text-3xl font-bold text-foreground">{card.value}</p>
               {card.delta && (
                 <p className={`text-xs mt-2 font-medium ${card.deltaUp ? 'text-success' : 'text-secondary'}`}>
-                  {card.deltaUp ? '↑' : '↓'} {card.delta}
+                  {card.deltaUp ? 'â†‘' : 'â†“'} {card.delta}
                 </p>
               )}
             </div>
@@ -209,7 +209,7 @@ export default function SuperadminAnalyticsClient() {
         })}
       </div>
 
-      {/* Charts Row — Design §10: ApexCharts area + bar */}
+      {/* Charts Row â€” Design Â§10: ApexCharts area + bar */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
           <h2 className="text-base font-semibold text-foreground mb-6">Monthly Income Growth Trend</h2>
@@ -231,23 +231,23 @@ export default function SuperadminAnalyticsClient() {
         <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-              <Activity size={18} className="text-primary" />
+              <Activity className="w-5 h-5 text-primary" />
             </div>
             <span className="text-secondary text-xs font-medium uppercase tracking-wider">LTV (Lifetime Value)</span>
           </div>
           <p className="text-3xl font-bold text-foreground mt-3">{formatCurrency(metrics.ltv)}</p>
-          <p className="text-xs text-success mt-2 font-medium">↑ Per tenant average</p>
+          <p className="text-xs text-success mt-2 font-medium">â†‘ Per tenant average</p>
         </div>
 
         <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-8 h-8 rounded-lg bg-warning/10 flex items-center justify-center">
-              <IndianRupee size={18} className="text-warning" />
+              <IndianRupee className="w-5 h-5 text-warning" />
             </div>
             <span className="text-secondary text-xs font-medium uppercase tracking-wider">CAC (Customer Acquisition Cost)</span>
           </div>
           <p className="text-3xl font-bold text-foreground mt-3">{formatCurrency(metrics.cac)}</p>
-          <p className="text-xs text-secondary mt-2">LTV:CAC = {metrics.cac > 0 ? formatDecimal(metrics.ltv / metrics.cac, 1) : '—'}x</p>
+          <p className="text-xs text-secondary mt-2">LTV:CAC = {metrics.cac > 0 ? formatDecimal(metrics.ltv / metrics.cac, 1) : 'â€”'}x</p>
         </div>
       </div>
     </div>

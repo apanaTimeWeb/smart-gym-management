@@ -5,7 +5,7 @@ import type { SupportTicket } from '@/app/superadmin/tickets/superadmin_tickets_
 import { PriorityColors, StatusColors } from '@/app/superadmin/tickets/tickets_utils/SuperadminTicketsConstants';
 import SuperadminTicketsEmptyState from '@/app/superadmin/tickets/tickets_components/SuperadminTicketsEmptyState/SuperadminTicketsEmptyState';
 import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
-import SuperadminCopyButton from '@/components/ui/SuperadminShared/SuperadminCopyButton';
+import SuperadminCopyButton from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminCopyButton';
 import { formatDateTime } from '@/lib/formatters';
 
 interface SuperadminTicketsTableProps {
@@ -20,9 +20,9 @@ export default function SuperadminTicketsTable({ tickets, onReply, onClose, onAs
   const getSlaStatus = (ticket: SupportTicket) => {
     if (!ticket.slaDeadline) return { label: 'No SLA', color: 'text-secondary', icon: null };
     const diff = new Date(ticket.slaDeadline).getTime() - new Date().getTime();
-    if (diff < 0) return { label: 'Breached', color: 'text-danger', icon: <AlertOctagon size={12} /> };
-    if (diff < 12 * 60 * 60 * 1000) return { label: 'Approaching', color: 'text-warning', icon: <AlertOctagon size={12} /> };
-    return { label: 'OK', color: 'text-success', icon: <CheckCircle2 size={12} /> };
+    if (diff < 0) return { label: 'Breached', color: 'text-danger', icon: <AlertOctagon className="w-3 h-3" /> };
+    if (diff < 12 * 60 * 60 * 1000) return { label: 'Approaching', color: 'text-warning', icon: <AlertOctagon className="w-3 h-3" /> };
+    return { label: 'OK', color: 'text-success', icon: <CheckCircle2 className="w-3 h-3" /> };
   };
 
   return (
@@ -69,7 +69,7 @@ export default function SuperadminTicketsTable({ tickets, onReply, onClose, onAs
                     className="flex items-center gap-1 hover:text-primary motion-safe:transition-colors"
                     title="View Gym"
                   >
-                    {ticket.tenantName} <ExternalLink size={12} />
+                    {ticket.tenantName} <ExternalLink className="w-3 h-3" />
                   </button>
                 </td>
                 <td className="p-4 text-sm text-foreground font-medium">{ticket.subject}</td>
@@ -95,7 +95,7 @@ export default function SuperadminTicketsTable({ tickets, onReply, onClose, onAs
                         title="Reply to ticket"
                         aria-label={`Reply to ticket ${ticket.id}`}
                       >
-                      <MessageSquare size={16} />
+                      <MessageSquare className="w-4 h-4" />
                     </button>
                     {onAssign && (
                       <button
@@ -103,7 +103,7 @@ export default function SuperadminTicketsTable({ tickets, onReply, onClose, onAs
                         className="p-2 text-secondary hover:bg-input hover:text-foreground rounded-lg motion-safe:transition-colors"
                         title="Assign To"
                       >
-                        <UserCheck size={16} />
+                        <UserCheck className="w-4 h-4" />
                       </button>
                     )}
                     {onClose && ticket.status !== 'RESOLVED' && ticket.status !== 'CLOSED' && (
@@ -112,7 +112,7 @@ export default function SuperadminTicketsTable({ tickets, onReply, onClose, onAs
                         className="p-2 text-success hover:bg-success/10 rounded-lg motion-safe:transition-colors"
                         title="Close Ticket"
                       >
-                        <CheckCircle2 size={16} />
+                        <CheckCircle2 className="w-4 h-4" />
                       </button>
                     )}
                   </div>

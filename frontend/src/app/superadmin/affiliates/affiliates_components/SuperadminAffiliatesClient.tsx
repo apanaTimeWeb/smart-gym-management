@@ -9,7 +9,7 @@ import SuperadminAffiliatesTable from '@/app/superadmin/affiliates/affiliates_co
 import SuperadminAffiliatesEmptyState from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliatesEmptyState/SuperadminAffiliatesEmptyState';
 import { SuperadminAffiliateModal } from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliateModal';
 import SuperadminAffiliatesPayoutHistory from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliatesPayoutHistory/SuperadminAffiliatesPayoutHistory';
-import { SuperadminErrorBoundary } from '@/components/ui/SuperadminLayout/SuperadminErrorBoundary';
+import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_components/SuperadminLayout/SuperadminErrorBoundary';
 
 export type AffiliatesTab = 'AFFILIATES' | 'PAYOUTS';
 
@@ -52,7 +52,7 @@ export default function SuperadminAffiliatesClient() {
       <div className="h-96 bg-card rounded-xl border border-border" />
     </div>
   );
-  if (fetchState === 'error' || error) return <div className="p-8 text-center text-danger">Error loading data.</div>;
+  if (isError || error) return <div className="p-8 text-center text-danger">Error loading data.</div>;
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto">

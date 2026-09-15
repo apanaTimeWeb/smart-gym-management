@@ -6,12 +6,12 @@ import { SuperadminDashboardCharts } from '@/app/superadmin/dashboard/dashboard_
 import { SuperadminDashboardRecentOnboards } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardView/SuperadminDashboardRecentOnboards';
 import { useSuperadminDashboardView } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardView/useSuperadminDashboardView';
 
-import { SuperadminErrorBoundary } from '@/components/ui/SuperadminLayout/SuperadminErrorBoundary';
+import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_components/SuperadminLayout/SuperadminErrorBoundary';
 
 export default function SuperadminDashboardView() {
   const { fetchState, apiData, timeRange } = useSuperadminDashboardView();
 
-  if (fetchState === 'loading') {
+  if (isLoading) {
     return (
       <div className="space-y-6">
         <div>
@@ -31,7 +31,7 @@ export default function SuperadminDashboardView() {
     );
   }
 
-  if (fetchState === 'error' || !apiData) {
+  if (isError || !apiData) {
     return (
       <div className="p-8 text-center text-danger font-medium">
         Failed to load dashboard data. Please try again.

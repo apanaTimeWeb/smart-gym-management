@@ -127,8 +127,8 @@ export default function SuperadminMessagingClient() {
     setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
   }
 
-  if (fetchState === 'loading') return <div className="p-8 text-center text-secondary motion-safe:animate-pulse">Loading messages...</div>;
-  if (fetchState === 'error') return <div className="p-8 text-center text-danger">Failed to load data.</div>;
+  if (isLoading) return <div className="p-8 text-center text-secondary motion-safe:animate-pulse">Loading messages...</div>;
+  if (isError) return <div className="p-8 text-center text-danger">Failed to load data.</div>;
 
   return (
     <div className="space-y-6">
@@ -145,7 +145,7 @@ export default function SuperadminMessagingClient() {
             onClick={() => setComposeOpen(true)}
             className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-black font-semibold px-4 py-2 rounded-lg text-sm shadow-lg shadow-primary/20 motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
-            <Plus size={18} strokeWidth={2} /> Compose Message
+            <Plus className="w-5 h-5" strokeWidth={2} /> Compose Message
           </button>
         )}
         {tab === 'notifications' && unreadCount > 0 && (
@@ -153,7 +153,7 @@ export default function SuperadminMessagingClient() {
             onClick={handleMarkAllRead}
             className="flex items-center gap-2 bg-input border border-border text-secondary hover:text-foreground px-4 py-2 rounded-lg text-sm motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
-            <CheckCheck size={18} strokeWidth={2} /> Mark All Read
+            <CheckCheck className="w-5 h-5" strokeWidth={2} /> Mark All Read
           </button>
         )}
       </div>
@@ -171,7 +171,7 @@ export default function SuperadminMessagingClient() {
               tab === key ? 'bg-card text-foreground shadow-sm' : 'text-secondary hover:text-foreground'
             }`}
           >
-            <Icon size={18} strokeWidth={2} /> {label}
+            <Icon className="w-5 h-5" strokeWidth={2} /> {label}
           </button>
         ))}
       </div>

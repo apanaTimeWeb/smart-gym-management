@@ -10,8 +10,8 @@ import SuperadminGymEditModal from '@/app/superadmin/gyms/gyms_components/Supera
 import SuperadminGymWhatsappModal from '@/app/superadmin/gyms/gyms_components/SuperadminGymWhatsappModal/SuperadminGymWhatsappModal';
 import SuperadminGymDeleteModal from '@/app/superadmin/gyms/gyms_components/SuperadminGymDeleteModal/SuperadminGymDeleteModal';
 import SuperadminGymsEmptyState from '@/app/superadmin/gyms/gyms_components/SuperadminGymsEmptyState/SuperadminGymsEmptyState';
-import SuperadminPagination from '@/components/ui/SuperadminShared/SuperadminPagination';
-import SuperadminCopyButton from '@/components/ui/SuperadminShared/SuperadminCopyButton';
+import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
+import SuperadminCopyButton from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminCopyButton';
 import { GYMS_PLAN_COLORS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
 import { formatCurrency, formatDate } from '@/lib/formatters';
 import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
@@ -21,7 +21,7 @@ const TABLE_COLUMN_COUNT = 8; // Name | Owner | Plan | Members | MRR | Status | 
 
 /**
  * Returns the Tailwind badge classes for a given plan tier name.
- * Source of truth: GYMS_PLAN_COLORS constant — never inline in JSX.
+ * Source of truth: GYMS_PLAN_COLORS constant â€” never inline in JSX.
  */
 function getPlanBadgeClasses(plan: string | undefined): string {
   const key = plan?.toUpperCase() as keyof typeof GYMS_PLAN_COLORS;
@@ -32,7 +32,9 @@ export default function SuperadminGymsTable() {
   const router = useRouter();
   const {
     filteredGyms,
-    fetchState,
+    isLoading,
+    isError,
+    total,
     actionLoadingId,
     handleRowClick,
     onGhostLoginClick,
@@ -48,7 +50,7 @@ export default function SuperadminGymsTable() {
     sortBy,
     sortOrder,
   } = useSuperadminGymsTable();
-  const totalPages = Math.ceil(filteredGyms.length / pageLimit) || 1;
+  const totalPages = Math.ceil(total / pageLimit) || 1;
 
   const handleSort = (col: string) => {
     if (sortBy === col) {
@@ -61,12 +63,12 @@ export default function SuperadminGymsTable() {
 
   const SortIcon = ({ col }: { col: string }) => (
     <ArrowUpDown
-      size={12}
+      className="w-3 h-3"
       className={`inline ml-1 ${sortBy === col ? 'text-primary' : 'text-disabled'}`}
     />
   );
 
-  if (fetchState === 'loading') {
+  if (isLoading) {
     return (
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
@@ -98,7 +100,7 @@ export default function SuperadminGymsTable() {
     );
   }
 
-  if (fetchState === 'error') {
+  if (isError) {
     return <div className="p-8 text-center text-danger">Error loading gyms. Please try again.</div>;
   }
 
@@ -161,7 +163,7 @@ export default function SuperadminGymsTable() {
                   {gym.memberCount}
                 </td>
                 <td className="p-4 text-success font-medium text-right">
-                  {/* Design §21: Indian Numbering System — ₹1,23,456 */}
+                  {/* Design Â§21: Indian Numbering System â€” â‚¹1,23,456 */}
                   {formatCurrency(gym.monthlyRevenue)}
                 </td>
                 <td className="p-4">

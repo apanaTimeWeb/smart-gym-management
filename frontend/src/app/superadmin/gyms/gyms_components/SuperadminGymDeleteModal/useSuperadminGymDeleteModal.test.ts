@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useSuperadminGymDeleteModal } from './useSuperadminGymDeleteModal';
+import { useSuperadminGymDeleteModal } from '@/app/superadmin/gyms/gyms_components/SuperadminGymDeleteModal/useSuperadminGymDeleteModal';
 
 describe('useSuperadminGymDeleteModal', () => {
   it('should initialize correctly', () => {

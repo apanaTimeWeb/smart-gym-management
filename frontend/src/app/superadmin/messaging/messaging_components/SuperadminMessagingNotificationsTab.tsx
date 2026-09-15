@@ -3,9 +3,9 @@ import { AlertTriangle, Info, X } from 'lucide-react';
 import type { SuperadminNotification, NotificationType } from '@/app/superadmin/messaging/messaging_types/superadmin_messaging_types';
 
 function NotifIcon({ type }: { type: NotificationType }) {
-  if (type === 'INFO') return <Info size={18} strokeWidth={2} className="text-info shrink-0" />;
-  if (type === 'WARNING') return <AlertTriangle size={18} strokeWidth={2} className="text-warning shrink-0" />;
-  return <AlertTriangle size={18} strokeWidth={2} className="text-danger shrink-0" />;
+  if (type === 'INFO') return <Info className="w-5 h-5" strokeWidth={2} className="text-info shrink-0" />;
+  if (type === 'WARNING') return <AlertTriangle className="w-5 h-5" strokeWidth={2} className="text-warning shrink-0" />;
+  return <AlertTriangle className="w-5 h-5" strokeWidth={2} className="text-danger shrink-0" />;
 }
 
 export function SuperadminMessagingNotificationsTab({
@@ -46,7 +46,7 @@ export function SuperadminMessagingNotificationsTab({
               title="Mark as read"
               className="p-1.5 rounded-lg text-secondary hover:text-foreground hover:bg-input motion-safe:transition-colors shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
-              <X size={18} strokeWidth={2} />
+              <X className="w-5 h-5" strokeWidth={2} />
             </button>
           )}
         </div>

@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useSuperadminJobsMutations } from './useSuperadminJobsMutations';
+import { useSuperadminJobsMutations } from '@/app/superadmin/jobs/jobs_utils/useSuperadminJobsMutations';
 
 describe('useSuperadminJobsMutations', () => {
   it('should initialize correctly', () => {

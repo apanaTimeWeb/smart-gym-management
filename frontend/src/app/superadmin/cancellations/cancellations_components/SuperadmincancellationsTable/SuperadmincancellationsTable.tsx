@@ -96,7 +96,7 @@ export default function SuperadminCancellationsTable({ alerts, onActionClick }: 
                     onClick={(e) => e.stopPropagation()}
                     className="p-1.5 rounded-lg text-secondary hover:text-foreground hover:bg-input motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                   >
-                    <Mail size={18} strokeWidth={2} />
+                    <Mail className="w-5 h-5" strokeWidth={2} />
                   </a>
                   <a
                     href={`tel:${alert.phone}`}
@@ -104,14 +104,14 @@ export default function SuperadminCancellationsTable({ alerts, onActionClick }: 
                     onClick={(e) => e.stopPropagation()}
                     className="p-1.5 rounded-lg text-secondary hover:text-foreground hover:bg-input motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                   >
-                    <Phone size={18} strokeWidth={2} />
+                    <Phone className="w-5 h-5" strokeWidth={2} />
                   </a>
                   <button
                     onClick={(e) => { e.stopPropagation(); onActionClick(alert); }}
                     aria-label={`Update action for ${alert.gymName}`}
                     className="p-1.5 rounded-lg text-secondary hover:text-primary hover:bg-primary-subtle motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                   >
-                    <Edit2 size={18} strokeWidth={2} />
+                    <Edit2 className="w-5 h-5" strokeWidth={2} />
                   </button>
                 </div>
               </td>

@@ -9,9 +9,30 @@ import toast from 'react-hot-toast';
 export function useSuperadminInvoicesPage() {
   const queryClient = useQueryClient();
 
-  const { data: invoicesRes, isLoading: invoicesLoading, isError: invoicesError } = useQuery({
-    queryKey: ['superadmin', 'invoices'],
-    queryFn: () => invoicesApi.fetchInvoices(),
+  const searchParams = useSearchParams();
+  const startDate = searchParams.get('startDate') || '';
+  const endDate = searchParams.get('endDate') || '';
+
+  const [search, setSearch] = useState('');
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [gymSearchTerm, setGymSearchTerm] = useState('');
+  const [isGymDropdownOpen, setIsGymDropdownOpen] = useState(false);
+  const [selectedGymId, setSelectedGymId] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('UPI');
+  const [statusFilter, setStatusFilter] = useState<string | null>(null);
+
+  const queryParams = useMemo(() => {
+    const p: Record<string, string> = {};
+    if (search) p.search = search;
+    if (statusFilter) p.status = statusFilter;
+    if (startDate) p.startDate = startDate;
+    if (endDate) p.endDate = endDate;
+    return p;
+  }, [search, statusFilter, startDate, endDate]);
+
+  const { data: invoicesRes, isLoading, isError, error: queryError } = useQuery({
+    queryKey: ['superadmin', 'invoices', queryParams],
+    queryFn: () => invoicesApi.fetchInvoices(queryParams),
   });
 
   const { data: tenantsRes } = useQuery({
@@ -20,9 +41,9 @@ export function useSuperadminInvoicesPage() {
   });
 
   const invoices = invoicesRes?.data || [];
+  const filteredInvoices = invoices; // Server-side filtering applied
   const tenants = tenantsRes?.data || [];
-  const fetchState = invoicesLoading ? 'loading' : invoicesError ? 'error' : 'success';
-  const error = invoicesError ? 'Failed to load invoices' : null;
+  const error = isError ? 'Failed to load invoices' : null;
 
   const logManualPaymentMutation = useMutation({
     mutationFn: (data: { gymId: string, amount: number, planName: string }) => 
@@ -34,7 +55,7 @@ export function useSuperadminInvoicesPage() {
       }),
     onSuccess: (res) => {
       if (res.success && res.data) {
-        queryClient.setQueryData(['superadmin', 'invoices'], (oldData: any) => {
+        queryClient.setQueryData(['superadmin', 'invoices'], (oldData: unknown) => {
           if (!oldData?.data) return oldData;
           return { ...oldData, data: [res.data, ...oldData.data] };
         });
@@ -43,7 +64,7 @@ export function useSuperadminInvoicesPage() {
         toast.error(res.message || 'Failed to log payment');
       }
     },
-    onError: (err: any) => {
+    onError: (err: unknown) => {
       toast.error(err.message || 'Failed to log payment');
     }
   });
@@ -52,37 +73,7 @@ export function useSuperadminInvoicesPage() {
     return logManualPaymentMutation.mutateAsync({ gymId, amount, planName });
   };
 
-  const [search, setSearch] = useState('');
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [gymSearchTerm, setGymSearchTerm] = useState('');
-
-  const [isGymDropdownOpen, setIsGymDropdownOpen] = useState(false);
-  const [selectedGymId, setSelectedGymId] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('UPI');
-  const [statusFilter, setStatusFilter] = useState<string | null>(null);
-
-  const searchParams = useSearchParams();
-  const startDate = searchParams.get('startDate') || '';
-  const endDate = searchParams.get('endDate') || '';
-
-  const filteredInvoices = useMemo(() => {
-    const lower = search.toLowerCase();
-    return invoices.filter((i) => {
-      const matchSearch = ((i.tenantName || '').toLowerCase().includes(lower) || (i.id || '').toLowerCase().includes(lower));
-      const matchStatus = statusFilter ? i.status === statusFilter : true;
-      let matchDate = true;
-      if (startDate && endDate && i.issuedAt && startDate !== 'this_month' && startDate !== 'this_week' && startDate !== 'this_year' && startDate !== 'today') {
-        const iDate = new Date(i.issuedAt);
-        const sDate = new Date(startDate);
-        const eDate = new Date(endDate);
-        if (!isNaN(iDate.getTime()) && !isNaN(sDate.getTime()) && !isNaN(eDate.getTime())) {
-          eDate.setHours(23, 59, 59, 999);
-          matchDate = iDate >= sDate && iDate <= eDate;
-        }
-      }
-      return matchSearch && matchStatus && matchDate;
-    });
-  }, [invoices, search, statusFilter, startDate, endDate]);
+  // filtering moved to server
 
   const filteredTenantsForDropdown = useMemo(
     () => tenants.filter((t) => (t.name || '').toLowerCase().includes(gymSearchTerm.toLowerCase())),
@@ -118,7 +109,8 @@ export function useSuperadminInvoicesPage() {
   };
 
   return {
-    fetchState,
+    isLoading,
+    isError,
     error,
     invoices,
     filteredInvoices,

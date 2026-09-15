@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useSuperadminGymsStore } from './useSuperadminGymsStore';
+import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
 
 describe('useSuperadminGymsStore', () => {
   it('should initialize correctly', () => {

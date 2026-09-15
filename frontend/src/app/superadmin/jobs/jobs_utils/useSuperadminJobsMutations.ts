@@ -4,7 +4,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { jobsApi } from '@/app/superadmin/jobs/superadmin_jobs_api/superadmin_jobs_api';
 
-export const useSuperadminJobsMutations = ({ setSelectedJobIds, selectedJobIds }: { setSelectedJobIds: (val: any) => void, selectedJobIds: Set<string> }) => {
+export const useSuperadminJobsMutations = ({ setSelectedJobIds, selectedJobIds }: { setSelectedJobIds: (val: unknown) => void, selectedJobIds: Set<string> }) => {
   const queryClient = useQueryClient();
   const [isRetrying, setIsRetrying] = useState(false);
 

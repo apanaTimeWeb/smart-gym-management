@@ -1,14 +1,14 @@
 'use client';
 // RESPONSIBILITY: Root client component for the Superadmin Branches page.
 // Renders KPI bar, toolbar, and branches table. Consumes useSuperadminBranchesPage hook.
-// DATA FLOW: superadminBranchesApi → useSuperadminBranchesPage → SuperadminBranchesClient
+// DATA FLOW: superadminBranchesApi â†’ useSuperadminBranchesPage â†’ SuperadminBranchesClient
 
 import { useState } from 'react';
 import { Building2, Users, TrendingUp, Ban, Search, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { useSuperadminBranchesPage } from '@/app/superadmin/branches/branches_utils/useSuperadminBranchesPage';
 import { BRANCH_STATUS_STYLES, BRANCHES_PAGE_SIZE } from '@/app/superadmin/branches/branches_utils/SuperadminBranchesConstants';
 import type { SuperadminBranch } from '@/app/superadmin/branches/branches_types/superadmin_branches_types';
-import { useSuperadminConfirm } from '@/components/ui/SuperadminFeedback/SuperadminConfirmProvider';
+import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
 import { formatCurrency, formatNumber } from '@/lib/formatters';
 
 export default function SuperadminBranchesClient() {
@@ -39,7 +39,7 @@ export default function SuperadminBranchesClient() {
     { label: 'Combined Monthly Income', value: formatCurrency(branches.reduce((s, b) => s + b.monthlyRevenue, 0)), icon: TrendingUp, color: 'text-warning', bg: 'bg-warning/10' },
   ];
 
-  if (fetchState === 'loading') {
+  if (isLoading) {
     return (
       <div className="space-y-6">
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
@@ -70,7 +70,7 @@ export default function SuperadminBranchesClient() {
               className="bg-card border border-border rounded-xl p-4 shadow-sm motion-safe:hover:-translate-y-1 motion-safe:transition-all motion-safe:duration-200 bg-gradient-to-b from-yellow-400/10 to-transparent"
             >
               <div className={`w-8 h-8 rounded-lg ${k.bg} flex items-center justify-center mb-3`}>
-                <Icon size={18} strokeWidth={2} className={k.color} />
+                <Icon className="w-5 h-5" strokeWidth={2} className={k.color} />
               </div>
               <p className="text-xs text-secondary uppercase tracking-wider mb-1">{k.label}</p>
               <p className="text-xl font-bold text-foreground">{k.value}</p>
@@ -128,14 +128,14 @@ export default function SuperadminBranchesClient() {
                         onClick={() => onActivateClick(branch.id)}
                         className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-success/10 text-success text-xs font-medium hover:bg-success/20 motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-success"
                       >
-                        <CheckCircle2 size={12} /> Activate
+                        <CheckCircle2 className="w-3 h-3" /> Activate
                       </button>
                     ) : (
                       <button
                         onClick={() => onSuspendClick(branch.id)}
                         className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-danger/10 text-danger text-xs font-medium hover:bg-danger/20 motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger"
                       >
-                        <AlertTriangle size={12} /> Suspend
+                        <AlertTriangle className="w-3 h-3" /> Suspend
                       </button>
                     )}
                   </td>
@@ -156,7 +156,7 @@ export default function SuperadminBranchesClient() {
         {totalPages > 1 && (
           <div className="flex items-center justify-between px-4 py-3 border-t border-border">
             <p className="text-xs text-secondary">
-              Showing {(page - 1) * BRANCHES_PAGE_SIZE + 1}–{Math.min(page * BRANCHES_PAGE_SIZE, branches.length)} of {branches.length}
+              Showing {(page - 1) * BRANCHES_PAGE_SIZE + 1}â€“{Math.min(page * BRANCHES_PAGE_SIZE, branches.length)} of {branches.length}
             </p>
             <div className="flex gap-2">
               <button

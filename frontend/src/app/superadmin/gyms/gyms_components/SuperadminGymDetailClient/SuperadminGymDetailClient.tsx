@@ -53,7 +53,7 @@ export default function SuperadminGymDetailClient({ gymId }: SuperadminGymDetail
         onClick={() => router.push(GymsUrlConfig.PAGES.MAIN)}
         className="flex items-center gap-2 text-secondary hover:text-foreground motion-safe:transition-colors text-sm"
       >
-        <ArrowLeft size={16} /> Back to Gyms
+        <ArrowLeft className="w-4 h-4" /> Back to Gyms
       </button>
 
       {/* Header */}
@@ -73,28 +73,28 @@ export default function SuperadminGymDetailClient({ gymId }: SuperadminGymDetail
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-card border border-border rounded-xl p-5 flex items-center gap-4">
-          <div className="p-3 bg-primary/10 rounded-lg"><User size={20} className="text-primary" /></div>
+          <div className="p-3 bg-primary/10 rounded-lg"><User className="w-5 h-5 text-primary" /></div>
           <div>
             <p className="text-xs text-secondary uppercase tracking-wider">Members</p>
             <p className="text-2xl font-bold text-foreground">{gym.memberCount}</p>
           </div>
         </div>
         <div className="bg-card border border-border rounded-xl p-5 flex items-center gap-4">
-          <div className="p-3 bg-success/10 rounded-lg"><CreditCard size={20} className="text-success" /></div>
+          <div className="p-3 bg-success/10 rounded-lg"><CreditCard className="w-5 h-5 text-success" /></div>
           <div>
             <p className="text-xs text-secondary uppercase tracking-wider">Monthly Revenue</p>
             <p className="text-2xl font-bold text-foreground">{formatCurrency(gym.monthlyRevenue)}</p>
           </div>
         </div>
         <div className="bg-card border border-border rounded-xl p-5 flex items-center gap-4">
-          <div className="p-3 bg-purple/10 rounded-lg"><Activity size={20} className="text-purple" /></div>
+          <div className="p-3 bg-purple/10 rounded-lg"><Activity className="w-5 h-5 text-purple" /></div>
           <div>
             <p className="text-xs text-secondary uppercase tracking-wider">Plan</p>
             <p className="text-2xl font-bold text-foreground">{gym.plan?.toUpperCase() || '—'}</p>
           </div>
         </div>
         <div className="bg-card border border-border rounded-xl p-5 flex items-center gap-4">
-          <div className="p-3 bg-warning/10 rounded-lg"><Clock size={20} className="text-warning" /></div>
+          <div className="p-3 bg-warning/10 rounded-lg"><Clock className="w-5 h-5 text-warning" /></div>
           <div>
             <p className="text-xs text-secondary uppercase tracking-wider">DB Version</p>
             <p className="text-lg font-bold text-foreground">{gym.databaseVersion || '—'}</p>
@@ -107,7 +107,7 @@ export default function SuperadminGymDetailClient({ gymId }: SuperadminGymDetail
         {/* Contact Info */}
         <div className="bg-card border border-border rounded-xl p-6 space-y-4">
           <h2 className="text-base font-semibold text-foreground flex items-center gap-2">
-            <User size={16} className="text-primary" /> Owner & Contact
+            <User className="w-4 h-4 text-primary" /> Owner & Contact
           </h2>
           <div className="space-y-3 text-sm">
             <div className="flex justify-between"><span className="text-secondary">Owner</span><span className="text-foreground font-medium">{gym.ownerName}</span></div>
@@ -121,7 +121,7 @@ export default function SuperadminGymDetailClient({ gymId }: SuperadminGymDetail
         {/* Location & Legal */}
         <div className="bg-card border border-border rounded-xl p-6 space-y-4">
           <h2 className="text-base font-semibold text-foreground flex items-center gap-2">
-            <MapPin size={16} className="text-primary" /> Location & Legal
+            <MapPin className="w-4 h-4 text-primary" /> Location & Legal
           </h2>
           <div className="space-y-3 text-sm">
             <div className="flex justify-between"><span className="text-secondary">City</span><span className="text-foreground font-medium">{gym.city || '—'}</span></div>

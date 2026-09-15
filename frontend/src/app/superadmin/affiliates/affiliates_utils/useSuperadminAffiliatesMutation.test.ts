@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useSuperadminAffiliatesMutation } from './useSuperadminAffiliatesMutation';
+import { useSuperadminAffiliatesMutation } from '@/app/superadmin/affiliates/affiliates_utils/useSuperadminAffiliatesMutation';
 
 describe('useSuperadminAffiliatesMutation', () => {
   it('should initialize correctly', () => {

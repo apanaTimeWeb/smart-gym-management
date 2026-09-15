@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useSuperadminGymWhatsappModal } from './useSuperadminGymWhatsappModal';
+import { useSuperadminGymWhatsappModal } from '@/app/superadmin/gyms/gyms_components/SuperadminGymWhatsappModal/useSuperadminGymWhatsappModal';
 
 describe('useSuperadminGymWhatsappModal', () => {
   it('should initialize correctly', () => {

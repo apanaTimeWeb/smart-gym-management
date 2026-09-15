@@ -4,8 +4,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { featuresApi } from '@/app/superadmin/features/superadmin_features_api/superadmin_features_api';
 import type { FeatureFlag, ReleaseNote } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
 
-type FetchState = 'idle' | 'loading' | 'success' | 'error';
-
 export function useSuperadminFeaturesData() {
   const queryClient = useQueryClient();
   const queryKey = ['superadmin', 'features'];
@@ -43,8 +41,6 @@ export function useSuperadminFeaturesData() {
       });
     }
   });
-
-  const fetchState: FetchState = query.isLoading ? 'loading' : query.isError ? 'error' : 'success';
 
   return {
     data: query.data as { flags: FeatureFlag[]; notes: ReleaseNote[] } | undefined,

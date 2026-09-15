@@ -109,7 +109,7 @@ export default function SuperadminInvoicesTableRow({ invoice: inv }: InvoicesTab
           className="text-sm font-medium text-primary hover:underline flex items-center gap-1"
           aria-label={`Download PDF for invoice ${inv.id}`}
         >
-          <Receipt size={14} /> View
+          <Receipt className="w-3.5 h-3.5" /> View
         </button>
       </td>
     </tr>

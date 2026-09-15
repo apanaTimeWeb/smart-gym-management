@@ -105,7 +105,7 @@ export default function SuperadminBroadcastQueueModal({
             <p className="text-white/80 text-xs">Sending to {recipients.length} Gyms directly...</p>
           </div>
           <button onClick={onClose} className="text-white/80 hover:text-white motion-safe:transition-colors p-1 bg-white/10 rounded-full hover:bg-white/20">
-            <X size={18} />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
@@ -126,11 +126,11 @@ export default function SuperadminBroadcastQueueModal({
                 </div>
                 <div className="flex items-center gap-3">
                   <div className={`flex flex-col items-center gap-1 ${isDone || isProcessing ? 'text-success' : 'text-secondary/30'}`}>
-                    <Phone size={14} />
+                    <Phone className="w-3.5 h-3.5" />
                     <span className="text-xs font-bold">WA</span>
                   </div>
                   <div className={`flex flex-col items-center gap-1 ${isDone || isProcessing ? 'text-primary' : 'text-secondary/30'}`}>
-                    <Bell size={14} />
+                    <Bell className="w-3.5 h-3.5" />
                     <span className="text-xs font-bold">APP</span>
                   </div>
                   <div className="ml-3 w-6 h-6 flex items-center justify-center">

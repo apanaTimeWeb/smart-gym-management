@@ -4,7 +4,7 @@ import { useState } from 'react';
 import SuperadminAffiliatesTableRow from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliatesTable/SuperadminAffiliatesTableRow';
 import SuperadminAffiliatesEmptyState from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliatesEmptyState/SuperadminAffiliatesEmptyState';
 import type { Affiliate, AffiliateStatus } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
-import SuperadminPagination from '@/components/ui/SuperadminShared/SuperadminPagination';
+import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 
 interface AffiliatesTableProps {
   affiliates: Affiliate[];

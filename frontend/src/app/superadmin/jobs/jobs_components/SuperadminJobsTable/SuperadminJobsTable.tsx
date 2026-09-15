@@ -117,7 +117,7 @@ export default function SuperadminJobsTable({
                       title="Inspect Job"
                       aria-label={`Inspect job ${job.id}`}
                     >
-                      <Eye size={15} />
+                      <Eye className="w-4 h-4" />
                     </button>
                     {job.status === 'FAILED' && (
                       <button
@@ -126,7 +126,7 @@ export default function SuperadminJobsTable({
                         title="Retry Job"
                         aria-label={`Retry job ${job.id}`}
                       >
-                        <RefreshCw size={15} />
+                        <RefreshCw className="w-4 h-4" />
                       </button>
                     )}
                     {(job.status === 'ACTIVE' || job.status === 'DELAYED') && (
@@ -136,7 +136,7 @@ export default function SuperadminJobsTable({
                         title="Cancel Job"
                         aria-label={`Cancel job ${job.id}`}
                       >
-                        <XCircle size={15} />
+                        <XCircle className="w-4 h-4" />
                       </button>
                     )}
                     <button
@@ -145,7 +145,7 @@ export default function SuperadminJobsTable({
                       title="Delete Job"
                       aria-label={`Delete job ${job.id}`}
                     >
-                      <Trash2 size={15} />
+                      <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
                 </td>

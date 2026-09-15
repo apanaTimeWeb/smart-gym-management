@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useSuperadminProfilePage } from './useSuperadminProfilePage';
+import { useSuperadminProfilePage } from '@/app/superadmin/profile/profile_utils/useSuperadminProfilePage';
 
 describe('useSuperadminProfilePage', () => {
   it('should initialize correctly', () => {

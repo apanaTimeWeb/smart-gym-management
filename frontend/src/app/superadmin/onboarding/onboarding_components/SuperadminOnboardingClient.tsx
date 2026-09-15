@@ -14,7 +14,7 @@ import SuperadminConversionFunnel from '@/app/superadmin/onboarding/onboarding_c
 import { SuperadminOnboardingStatsBar } from '@/app/superadmin/onboarding/onboarding_components/SuperadminOnboardingStatsBar';
 import { SuperadminOnboardingTable } from '@/app/superadmin/onboarding/onboarding_components/SuperadminOnboardingTable';
 import { SuperadminOnboardingModals } from '@/app/superadmin/onboarding/onboarding_components/SuperadminOnboardingModals';
-import { SuperadminDateFilterDropdown } from '@/components/ui/SuperadminShared/SuperadminDateFilterDropdown';
+import { SuperadminDateFilterDropdown } from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminDateFilterDropdown';
 
 export default function SuperadminOnboardingClient() {
   const queryClient = useQueryClient();

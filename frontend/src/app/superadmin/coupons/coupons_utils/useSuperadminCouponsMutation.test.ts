@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useSuperadminCouponsMutation } from './useSuperadminCouponsMutation';
+import { useSuperadminCouponsMutation } from '@/app/superadmin/coupons/coupons_utils/useSuperadminCouponsMutation';
 
 describe('useSuperadminCouponsMutation', () => {
   it('should initialize correctly', () => {

@@ -8,7 +8,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { plansApi } from '@/app/superadmin/plans/superadmin_plans_api/superadmin_plans_api';
 import { useSuperadminPlansStore } from '@/app/superadmin/plans/plans_store/useSuperadminPlansStore';
 import { formatCurrency } from '@/lib/formatters';
-import { useSuperadminConfirm } from '@/components/ui/SuperadminFeedback/SuperadminConfirmProvider';
+import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
 
 export default function SuperadminPlansList() {
   const openEditModal = useSuperadminPlansStore(state => state.openEditModal);
@@ -44,7 +44,7 @@ export default function SuperadminPlansList() {
 
   const plans = fetchRes?.data || [];
 
-  if (fetchState === 'loading') {
+  if (isLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[...Array(3)].map((_, i) => (
@@ -54,7 +54,7 @@ export default function SuperadminPlansList() {
     );
   }
 
-  if (fetchState === 'error') {
+  if (isError) {
     return <div className="p-8 text-center text-danger">Error loading plans.</div>;
   }
 
@@ -114,7 +114,7 @@ export default function SuperadminPlansList() {
                 aria-label={`Edit ${plan.name}`}
                 className="flex-1 py-2.5 flex items-center justify-center bg-input hover:bg-primary hover:text-white text-foreground rounded-xl motion-safe:transition-colors border border-border disabled:opacity-50"
               >
-                <Edit2 size={18} />
+                <Edit2 className="w-5 h-5" />
               </button>
               <button
                 onClick={async () => {
@@ -144,10 +144,10 @@ export default function SuperadminPlansList() {
                 className="flex-1 py-2.5 flex items-center justify-center bg-input hover:bg-danger hover:text-white text-secondary rounded-xl motion-safe:transition-colors border border-border disabled:opacity-50"
               >
                 {isDeleting || archiveMutation.isPending
-                  ? <Loader2 size={18} className="motion-safe:animate-spin" />
+                  ? <Loader2 className="w-5 h-5 motion-safe:animate-spin" />
                   : (plan.activeTenants ?? 0) > 0
-                    ? <Archive size={18} />
-                    : <Trash2 size={18} />}
+                    ? <Archive className="w-5 h-5" />
+                    : <Trash2 className="w-5 h-5" />}
               </button>
             </div>
           </div>

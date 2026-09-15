@@ -1,6 +1,6 @@
 'use client';
 // RESPONSIBILITY: Root client component for the Superadmin Franchises page.
-// DATA FLOW: superadminFranchisesApi → useSuperadminFranchisesPage → SuperadminFranchisesClient
+// DATA FLOW: superadminFranchisesApi â†’ useSuperadminFranchisesPage â†’ SuperadminFranchisesClient
 
 import { useState } from 'react';
 import { Network, Users, TrendingUp, Ban, Search, CheckCircle2, AlertTriangle, Building2, Edit2 } from 'lucide-react';
@@ -9,7 +9,7 @@ import { SuperadminFranchiseModal } from '@/app/superadmin/franchises/franchises
 import type { FranchiseFormData } from '@/app/superadmin/franchises/franchises_components/SuperadminFranchiseModal/SuperadminFranchiseModal';
 import { FRANCHISE_STATUS_STYLES, FRANCHISES_PAGE_SIZE } from '@/app/superadmin/franchises/franchises_utils/SuperadminFranchisesConstants';
 import type { SuperadminFranchise } from '@/app/superadmin/franchises/franchises_types/superadmin_franchises_types';
-import { useSuperadminConfirm } from '@/components/ui/SuperadminFeedback/SuperadminConfirmProvider';
+import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
 import { formatCurrency, formatNumber } from '@/lib/formatters';
 
 export default function SuperadminFranchisesClient() {
@@ -41,7 +41,7 @@ export default function SuperadminFranchisesClient() {
     { label: 'Combined Monthly Income', value: formatCurrency(franchises.reduce((s, f) => s + f.totalMonthlyRevenue, 0)), icon: TrendingUp, color: 'text-success', bg: 'bg-success/10' },
   ];
 
-  if (fetchState === 'loading') {
+  if (isLoading) {
     return (
       <div className="space-y-6">
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
@@ -71,7 +71,7 @@ export default function SuperadminFranchisesClient() {
               className="bg-card border border-border rounded-xl p-4 shadow-sm motion-safe:hover:-translate-y-1 motion-safe:transition-all motion-safe:duration-200 bg-gradient-to-b from-yellow-400/10 to-transparent"
             >
               <div className={`w-8 h-8 rounded-lg ${k.bg} flex items-center justify-center mb-3`}>
-                <Icon size={18} strokeWidth={2} className={k.color} />
+                <Icon className="w-5 h-5" strokeWidth={2} className={k.color} />
               </div>
               <p className="text-xs text-secondary uppercase tracking-wider mb-1">{k.label}</p>
               <p className="text-xl font-bold text-foreground">{k.value}</p>
@@ -134,21 +134,21 @@ export default function SuperadminFranchisesClient() {
                         className="p-1.5 text-secondary hover:text-primary hover:bg-primary-subtle rounded-lg motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                         aria-label="Edit Franchise"
                       >
-                        <Edit2 size={16} />
+                        <Edit2 className="w-4 h-4" />
                       </button>
                       {f.status === 'SUSPENDED' ? (
                         <button
                           onClick={() => onActivateClick(f.id)}
                           className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-success/10 text-success text-xs font-medium hover:bg-success/20 motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-success"
                         >
-                          <CheckCircle2 size={12} /> Activate
+                          <CheckCircle2 className="w-3 h-3" /> Activate
                         </button>
                       ) : (
                         <button
                           onClick={() => onSuspendClick(f.id)}
                           className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-danger/10 text-danger text-xs font-medium hover:bg-danger/20 motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger"
                         >
-                          <AlertTriangle size={12} /> Suspend
+                          <AlertTriangle className="w-3 h-3" /> Suspend
                         </button>
                       )}
                     </div>
@@ -169,7 +169,7 @@ export default function SuperadminFranchisesClient() {
         {totalPages > 1 && (
           <div className="flex items-center justify-between px-4 py-3 border-t border-border">
             <p className="text-xs text-secondary">
-              Showing {(page - 1) * FRANCHISES_PAGE_SIZE + 1}–{Math.min(page * FRANCHISES_PAGE_SIZE, franchises.length)} of {franchises.length}
+              Showing {(page - 1) * FRANCHISES_PAGE_SIZE + 1}â€“{Math.min(page * FRANCHISES_PAGE_SIZE, franchises.length)} of {franchises.length}
             </p>
             <div className="flex gap-2">
               <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="px-3 py-1.5 rounded-lg bg-input border border-border text-xs text-secondary disabled:opacity-40 hover:text-foreground motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Previous</button>

@@ -40,7 +40,7 @@ export default function SuperadminBackupsRestoreModal({
       <div className="bg-card w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-border motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95">
         <div className="p-6">
           <div className="w-12 h-12 rounded-full bg-danger-bg/10 text-danger flex items-center justify-center mb-4">
-            <RotateCcw size={24} />
+            <RotateCcw className="w-6 h-6" />
           </div>
           <h2 className="text-xl font-bold text-foreground mb-2">Restore Database Snapshot</h2>
           <p className="text-sm text-secondary mb-4">

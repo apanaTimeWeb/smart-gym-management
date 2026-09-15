@@ -64,7 +64,7 @@ export default function SuperadminGymsToolbar() {
         className="flex items-center gap-2 px-4 py-2 border border-border rounded-lg text-sm text-foreground bg-card hover:bg-input motion-safe:transition-colors"
         title="Export Gyms as CSV"
       >
-        <Download size={16} /> Export
+        <Download className="w-4 h-4" /> Export
       </button>
     </div>
   );

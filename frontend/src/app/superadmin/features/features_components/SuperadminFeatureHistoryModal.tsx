@@ -68,7 +68,7 @@ export default function SuperadminFeatureHistoryModal({ isOpen, onClose, flag }:
             className="p-2 text-secondary hover:bg-input hover:text-foreground rounded-lg motion-safe:transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
             aria-label="Close modal"
           >
-            <X size={20} />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
@@ -78,7 +78,7 @@ export default function SuperadminFeatureHistoryModal({ isOpen, onClose, flag }:
               <div key={log.id} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
                 {/* Icon */}
                 <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-card bg-input text-secondary shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
-                  <Clock size={14} />
+                  <Clock className="w-3.5 h-3.5" />
                 </div>
                 {/* Card */}
                 <div className="w-full md:w-1/2 p-4 rounded border border-border bg-card shadow-sm">

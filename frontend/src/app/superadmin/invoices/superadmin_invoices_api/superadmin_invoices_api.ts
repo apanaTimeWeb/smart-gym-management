@@ -37,7 +37,7 @@ export const invoicesApi = {
     }),
   fetchTenants: () => {
     // Local tenant lookup to avoid cross-module business imports
-    return apiFetch<ApiResponse<any[]>>('/superadmin/gyms-list');
+    return apiFetch<ApiResponse<any[]>>(GymsUrlConfig.BACKEND_API.BASE);
   },
 };
 

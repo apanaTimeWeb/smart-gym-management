@@ -57,6 +57,6 @@ export const gymsApi = {
       }),
     });
     if (!res.ok) throw new Error('Failed to set ghost login cookie');
-    return { success: true, message: 'Cookie set', data: null as any };
+    return { success: true, message: 'Cookie set', data: null as unknown };
   },
 };

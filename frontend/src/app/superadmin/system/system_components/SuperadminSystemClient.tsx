@@ -11,7 +11,7 @@ import toast from 'react-hot-toast';
 import type { SuperadminMigrationsTenant } from '@/app/superadmin/migrations/superadmin_migrations_types/superadmin_migrations_types';
 import type { GlobalAuditLog } from '@/app/superadmin/global-audit/superadmin_global-audit_types/superadmin_global-audit_types';
 import type { MigrationsPageData } from '@/app/superadmin/migrations/superadmin_migrations_types/superadmin_migrations_types';
-import SuperadminPagination from '@/components/ui/SuperadminShared/SuperadminPagination';
+import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 
 const CURRENT_SCHEMA_VERSION = process.env.NEXT_PUBLIC_CURRENT_SCHEMA_VERSION || 'v2.4.1';
 
@@ -102,11 +102,11 @@ export default function SuperadminSystemClient() {
   const totalPages = Math.ceil(filteredLogs.length / ITEMS_PER_PAGE) || 1;
   const paginatedLogs = filteredLogs.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
-  if (fetchState === 'loading') {
+  if (isLoading) {
     return <div className="flex h-96 items-center justify-center"><Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" /></div>;
   }
   
-  if (fetchState === 'error') {
+  if (isError) {
     return <div className="flex h-96 items-center justify-center text-danger">Error loading data.</div>;
   }
 
@@ -125,7 +125,7 @@ export default function SuperadminSystemClient() {
             tab === 'migrations' ? 'bg-card text-foreground shadow-sm' : 'text-secondary hover:text-foreground'
           }`}
         >
-          <Database size={18} strokeWidth={2} /> Migrations & Audit
+          <Database className="w-5 h-5" strokeWidth={2} /> Migrations & Audit
         </button>
         <button
           onClick={() => setTab('sla')}
@@ -133,7 +133,7 @@ export default function SuperadminSystemClient() {
             tab === 'sla' ? 'bg-card text-foreground shadow-sm' : 'text-secondary hover:text-foreground'
           }`}
         >
-          <Clock size={18} strokeWidth={2} /> Uptime Tracker
+          <Clock className="w-5 h-5" strokeWidth={2} /> Uptime Tracker
         </button>
       </div>
 
