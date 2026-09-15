@@ -60,7 +60,7 @@ export function useSuperadminGymEditModal() {
       closeEditModal();
     },
     onError: (err: unknown) => {
-      toast.error((err as Error).message || 'Failed to update gym details.');
+      toast.error((err as Error).message, { id: 'failed-to-update-gym' });
     }
   });
 

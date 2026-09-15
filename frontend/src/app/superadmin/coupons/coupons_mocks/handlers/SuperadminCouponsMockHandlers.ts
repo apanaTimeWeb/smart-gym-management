@@ -11,12 +11,35 @@ let mockCoupons: Coupon[] = [
 ];
 
 export const superadminCouponsHandlers = [
-  http.get(BASE_URL, async () => {
+  http.get(BASE_URL, async ({ request }) => {
     await delay(400);
+    const url = new URL(request.url);
+    const page = Number(url.searchParams.get('page')) || 1;
+    const limit = Number(url.searchParams.get('limit')) || 20;
+    const search = url.searchParams.get('search')?.toLowerCase() || '';
+    const status = url.searchParams.get('statusFilter');
+
+    let filtered = mockCoupons.filter(c => !c.isDeleted);
+
+    if (search) {
+      filtered = filtered.filter(
+        c => c.code?.toLowerCase().includes(search) ||
+             c.id?.toLowerCase().includes(search)
+      );
+    }
+    
+    if (status && status !== 'ALL') {
+      filtered = filtered.filter(c => c.status === status);
+    }
+
+    const total = filtered.length;
+    const paginated = filtered.slice((page - 1) * limit, page * limit);
+
     return HttpResponse.json<ApiResponse<Coupon[]>>({
       success: true,
       message: 'Success',
-      data: mockCoupons.filter(c => !c.isDeleted),
+      data: paginated,
+      meta: { total, page, limit, totalPages: Math.ceil(total / limit) }
     });
   }),
   

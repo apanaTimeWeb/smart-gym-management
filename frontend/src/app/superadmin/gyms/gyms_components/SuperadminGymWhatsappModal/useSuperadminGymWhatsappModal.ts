@@ -74,7 +74,7 @@ export function useSuperadminGymWhatsappModal() {
       closeWhatsappModal();
     },
     onError: (err: unknown) => {
-      toast.error((err as Error).message || 'Failed to send WhatsApp message.');
+      toast.error((err as Error).message, { id: 'failed-to-send-whatsapp' });
     }
   });
 

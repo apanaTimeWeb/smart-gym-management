@@ -14,6 +14,12 @@ export interface CreateManualPaymentDto {
   currency?: string;
 }
 
+export interface InvoicesTenant {
+  id: string;
+  name: string;
+  plan: string;
+}
+
 export const invoicesApi = {
   fetchInvoices: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
@@ -38,7 +44,6 @@ export const invoicesApi = {
     }),
   fetchTenants: () => {
     // Local tenant lookup to avoid cross-module business imports
-    return apiFetch<ApiResponse<any[]>>(GymsUrlConfig.BACKEND_API.BASE);
+    return apiFetch<ApiResponse<InvoicesTenant[]>>(GymsUrlConfig.BACKEND_API.BASE);
   },
 };
-

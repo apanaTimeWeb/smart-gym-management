@@ -7,28 +7,29 @@ import { OnboardingUrlConfig } from '@/app/superadmin/onboarding/superadmin_onbo
 import { z } from "zod";
 
 export const onboardingApi = {
-  fetchOnboardings: () =>
-    apiFetch<ApiResponse<TenantOnboarding[]>>(OnboardingUrlConfig.BACKEND_API.BASE, { dataSchema: z.array(TenantOnboardingSchema) }),
+  fetchOnboardings: (params?: Record<string, string>) => {
+    const q = params ? '?' + new URLSearchParams(params).toString() : '';
+    return apiFetch<ApiResponse<TenantOnboarding[]>>(`${OnboardingUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(TenantOnboardingSchema) });
+  },
   resendVerification: (id: string) =>
     apiFetch<ApiResponse<TenantOnboarding>>(`${OnboardingUrlConfig.BACKEND_API.BASE}/${id}/resend-verification`, {
       method: 'POST',
-        dataSchema: TenantOnboardingSchema
+      dataSchema: TenantOnboardingSchema
     }),
   markVerified: (id: string) =>
     apiFetch<ApiResponse<TenantOnboarding>>(`${OnboardingUrlConfig.BACKEND_API.BASE}/${id}/mark-verified`, {
       method: 'POST',
-        dataSchema: TenantOnboardingSchema
+      dataSchema: TenantOnboardingSchema
     }),
   extendTrial: (id: string, days: number) =>
     apiFetch<ApiResponse<TenantOnboarding>>(`${OnboardingUrlConfig.BACKEND_API.BASE}/${id}/extend-trial`, {
       method: 'POST',
       body: JSON.stringify({ days }),
-        dataSchema: TenantOnboardingSchema
+      dataSchema: TenantOnboardingSchema
     }),
   convertToPaid: (id: string) =>
     apiFetch<ApiResponse<TenantOnboarding>>(`${OnboardingUrlConfig.BACKEND_API.BASE}/${id}/convert-to-paid`, {
       method: 'POST',
-        dataSchema: TenantOnboardingSchema
+      dataSchema: TenantOnboardingSchema
     }),
 };
-

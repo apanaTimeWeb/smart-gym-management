@@ -7,10 +7,16 @@ import { ReportsUrlConfig } from '@/app/superadmin/reports/superadmin_reports_ur
 import { z } from "zod";
 
 export const superadminReportsApi = {
-  fetchRevenueData: () =>
-    apiFetch<ApiResponse<RevenueRow[]>>(`${ReportsUrlConfig.BACKEND_API.BASE}/revenue`, { dataSchema: z.array(RevenueRowSchema) }),
-  fetchCancellationsData: () =>
-    apiFetch<ApiResponse<CancellationsRecord[]>>(`${ReportsUrlConfig.BACKEND_API.BASE}/cancellations`, { dataSchema: z.array(CancellationsRecordSchema) }),
-  fetchHealthData: () =>
-    apiFetch<ApiResponse<TenantHealthScore[]>>(`${ReportsUrlConfig.BACKEND_API.BASE}/health`, { dataSchema: z.array(TenantHealthScoreSchema) }),
+  fetchRevenueData: (params?: Record<string, string>) => {
+    const q = params ? '?' + new URLSearchParams(params).toString() : '';
+    return apiFetch<ApiResponse<RevenueRow[]>>(`${ReportsUrlConfig.BACKEND_API.BASE}/revenue${q}`, { dataSchema: z.array(RevenueRowSchema) });
+  },
+  fetchCancellationsData: (params?: Record<string, string>) => {
+    const q = params ? '?' + new URLSearchParams(params).toString() : '';
+    return apiFetch<ApiResponse<CancellationsRecord[]>>(`${ReportsUrlConfig.BACKEND_API.BASE}/cancellations${q}`, { dataSchema: z.array(CancellationsRecordSchema) });
+  },
+  fetchHealthData: (params?: Record<string, string>) => {
+    const q = params ? '?' + new URLSearchParams(params).toString() : '';
+    return apiFetch<ApiResponse<TenantHealthScore[]>>(`${ReportsUrlConfig.BACKEND_API.BASE}/health${q}`, { dataSchema: z.array(TenantHealthScoreSchema) });
+  },
 };

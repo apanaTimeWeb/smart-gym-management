@@ -24,40 +24,30 @@ export default function SuperadminOnboardingClient() {
   const [extendDays, setExtendDays] = useState('7');
   const [convertConfirmId, setConvertConfirmId] = useState<string | null>(null);
 
-  const { data: response, isLoading } = useQuery({
-    queryKey: ['superadmin_onboardings'],
-    queryFn: () => onboardingApi.fetchOnboardings(),
-  });
-  const tenants = response?.data || [];
-
   const searchParams = useSearchParams();
-  const startDate = searchParams.get('startDate');
-  const endDate = searchParams.get('endDate');
+  const startDate = searchParams.get('startDate') || '';
+  const endDate = searchParams.get('endDate') || '';
 
-  // Filter based on Date Range
-  const dateFilteredTenants = useMemo(() => {
-    if (!startDate && !endDate) return tenants;
-    return tenants.filter((t) => {
-      if (!t.signupDate) return true;
-      const signup = new Date(t.signupDate);
-      if (startDate && signup < new Date(startDate)) return false;
-      if (endDate && signup > new Date(endDate)) return false;
-      return true;
-    });
-  }, [tenants, startDate, endDate]);
+  const queryParams = useMemo(() => {
+    const params: Record<string, string> = {};
+    if (search) params.search = search;
+    if (startDate) params.startDate = startDate;
+    if (endDate) params.endDate = endDate;
+    return params;
+  }, [search, startDate, endDate]);
 
-  const filtered = dateFilteredTenants.filter(
-    (t) =>
-      t.gymName.toLowerCase().includes(search.toLowerCase()) ||
-      t.adminEmail.toLowerCase().includes(search.toLowerCase())
-  );
+  const { data: response, isLoading } = useQuery({
+    queryKey: ['superadmin_onboardings', queryParams],
+    queryFn: () => onboardingApi.fetchOnboardings(queryParams),
+  });
+  const filtered = response?.data || [];
 
   const stats = {
-    total: dateFilteredTenants.length,
-    completed: dateFilteredTenants.filter((t) => t.onboardingStatus === 'COMPLETED').length,
-    inProgress: dateFilteredTenants.filter((t) => t.onboardingStatus === 'IN_PROGRESS').length,
-    stalled: dateFilteredTenants.filter((t) => t.onboardingStatus === 'STALLED').length,
-    trial: dateFilteredTenants.filter((t) => t.trialStatus === 'TRIAL').length,
+    total: filtered.length,
+    completed: filtered.filter((t) => t.onboardingStatus === 'COMPLETED').length,
+    inProgress: filtered.filter((t) => t.onboardingStatus === 'IN_PROGRESS').length,
+    stalled: filtered.filter((t) => t.onboardingStatus === 'STALLED').length,
+    trial: filtered.filter((t) => t.trialStatus === 'TRIAL').length,
   };
 
   const resendMut = useMutation({
@@ -133,7 +123,7 @@ export default function SuperadminOnboardingClient() {
 
       <SuperadminOnboardingStatsBar stats={stats} />
 
-      <SuperadminConversionFunnel tenants={dateFilteredTenants} />
+      <SuperadminConversionFunnel tenants={filtered} />
 
       <div className="relative max-w-sm">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />

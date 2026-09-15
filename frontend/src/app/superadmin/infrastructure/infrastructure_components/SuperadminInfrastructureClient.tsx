@@ -1,6 +1,6 @@
 'use client';
 // RESPONSIBILITY: Renders the Server Infrastructure page showing real-time node health metrics. Fetches data directly using TanStack Query.
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Cpu, HardDrive, Server, Zap, RefreshCcw, Loader2 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { infrastructureApi } from '@/app/superadmin/infrastructure/superadmin_infrastructure_api/superadmin_infrastructure_api';
@@ -12,18 +12,28 @@ import SuperadminUptimeChart from '@/app/superadmin/infrastructure/infrastructur
 import { formatNumber } from '@/lib/formatters';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_components/SuperadminLayout/SuperadminErrorBoundary';
+import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
 
 export default function SuperadminInfrastructureClient() {
   const [isFlushingAll, setIsFlushingAll] = useState(false);
   const [isFlushModalOpen, setIsFlushModalOpen] = useState(false);
-  const [statusFilter, setStatusFilter] = useState('ALL');
+  
+  const { getParam, setParam } = useSuperadminUrlState();
+  const statusFilter = getParam('statusFilter', 'ALL');
+  const setStatusFilter = (val: string) => setParam('statusFilter', val);
 
   const { confirm } = useSuperadminConfirm();
   const queryClient = useQueryClient();
 
+  const queryParams = useMemo(() => {
+    const p: Record<string, string> = {};
+    if (statusFilter && statusFilter !== 'ALL') p.statusFilter = statusFilter;
+    return p;
+  }, [statusFilter]);
+
   const { data: fetchRes, isLoading: isLoadingNodes, isError: isErrorNodes, refetch: refetchNodes, isFetching: isFetchingNodes } = useQuery({
-    queryKey: ['superadmin', 'infrastructure'],
-    queryFn: () => infrastructureApi.fetchInfrastructureNodes(),
+    queryKey: ['superadmin', 'infrastructure', queryParams],
+    queryFn: () => infrastructureApi.fetchInfrastructureNodes(queryParams),
     refetchInterval: 30000,
   });
 
@@ -97,7 +107,7 @@ export default function SuperadminInfrastructureClient() {
     return <div className="flex h-96 items-center justify-center text-danger font-medium">Error loading data.</div>;
   }
 
-  const filteredNodes = statusFilter === 'ALL' ? nodes : nodes.filter(n => n.status === statusFilter);
+  const filteredNodes = nodes;
   const withCpu = filteredNodes.filter(n => n.cpuPercent !== null);
   const avgCpu = withCpu.length ? Math.round(withCpu.reduce((acc, n) => acc + (n.cpuPercent ?? 0), 0) / withCpu.length) : 0;
 

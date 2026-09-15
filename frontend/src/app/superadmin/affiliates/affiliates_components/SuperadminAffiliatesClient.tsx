@@ -41,6 +41,9 @@ export default function SuperadminAffiliatesClient() {
     setStartDate,
     endDate,
     setEndDate,
+    currentPage,
+    totalPages,
+    setPage,
   } = useSuperadminAffiliatesPage();
 
   if (fetchState === 'pending') return (
@@ -107,6 +110,9 @@ export default function SuperadminAffiliatesClient() {
                 onEdit={openEditModal}
                 onDelete={handleDeleteAffiliate}
                 onPayCommission={handlePayCommission}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                setPage={setPage}
               />
             )
           )}

@@ -117,8 +117,8 @@ export default function SuperadminMessagingClient() {
       } else {
         toast.error(res.message);
       }
-    }).catch(() => {
-      toast.error('Failed to send message', { id: 'failed-to-send-message' });
+    }).catch((err) => {
+      toast.error(err.message || 'Failed to send message', { id: 'failed-to-send-message' });
     });
   }
 

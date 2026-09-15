@@ -55,7 +55,7 @@ export default function SuperadminPlanEditModal() {
       closeEditModal();
     },
     onError: (err: unknown) => {
-      toast.error((err as Error).message || 'Failed to update plan');
+      toast.error((err as Error).message, { id: 'failed-to-update-plan' });
     }
   });
 

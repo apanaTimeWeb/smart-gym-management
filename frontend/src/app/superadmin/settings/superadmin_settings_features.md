@@ -17,7 +17,7 @@ Manages superadmin-level platform-wide configuration: platform name / branding, 
 - Zustand stores: None
 - Context providers: None
 - Local-storage keys: None
-- MSW handler file: `src/mocks/handlers/superadmin-settings.handlers.ts`
+- MSW handler file: `src/app/superadmin/settings/settings_mocks/handlers/SuperadminSettingsMockHandlers.ts`
 
 ## API Contract
 - `settingsApi.fetchSettings()` → `ApiResponse<PlatformSettings>`
@@ -48,7 +48,7 @@ Manages superadmin-level platform-wide configuration: platform name / branding, 
 - **Settings Table Row Clicks:** The `Settings` list view uses clickable table rows (`<tr className="cursor-pointer">`) for navigation. Ensure that any inline action buttons (like Edit or Delete) inside the table call `e.stopPropagation()` so they don't accidentally trigger the row navigation.
 - **Section-Level Error Boundaries in Settings:** Do not allow a single failed API fetch in Settings to unmount the entire page. Major components (like the Settings data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
 - **Backend-Driven Messages for Settings Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Settings.
-- **No Client-Side Pagination for Settings:** If the dataset grows large, do not fetch all Settings and paginate on the client. Always implement robust server-side pagination, sorting, and filtering via query parameters.
+- **No Client-Side Pagination for Settings:** If the dataset grows large, do not fetch all Settings and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
 
 ## UI Data Requirements
 

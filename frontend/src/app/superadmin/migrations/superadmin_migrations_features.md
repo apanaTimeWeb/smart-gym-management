@@ -67,7 +67,7 @@ no manual SQL editing is permitted from the UI.
 - **Context providers:** Inherits `SuperadminQueryProvider` and `SuperadminConfirmProvider` from root layout
 - **Local state:** `migrations: MigrationLog[]` in `SuperadminMigrationsClient` — managed via `useState` and synced from query data via `useEffect`
 - **Local-storage keys:** None
-- **MSW handler file:** fully configured via src/mocks/handlers/ — `src/mocks/handlers/superadmin-migrations.handlers.ts` (planned)
+- **MSW handler file:** fully configured via src/mocks/handlers/ — `src/app/superadmin/migrations/migrations_mocks/handlers/SuperadminMigrationsMockHandlers.ts` (planned)
 
 ---
 

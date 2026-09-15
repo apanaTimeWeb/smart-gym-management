@@ -49,7 +49,26 @@ export default function SuperadminAffiliatesTableRow({ affiliate: aff, onToggleS
       <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
         <div className="flex items-center justify-end gap-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity">
           <button
-            onClick={(e) => { e.stopPropagation(); onToggleStatus(aff.id, aff.status); }}
+            onClick={async (e) => {
+              e.stopPropagation();
+              if (aff.status === 'ACTIVE') {
+                const ok = await confirm({
+                  title: 'Suspend Affiliate',
+                  message: `Are you sure you want to suspend ${aff.name}? Their referral links will stop working and they will not earn further commission.`,
+                  type: 'danger',
+                  confirmText: 'Suspend',
+                });
+                if (ok) onToggleStatus(aff.id, aff.status);
+              } else {
+                const ok = await confirm({
+                  title: 'Activate Affiliate',
+                  message: `Are you sure you want to activate ${aff.name}? Their referral links will be active again.`,
+                  type: 'info',
+                  confirmText: 'Activate',
+                });
+                if (ok) onToggleStatus(aff.id, aff.status);
+              }
+            }}
             className="p-1.5 text-secondary hover:text-primary motion-safe:transition-colors"
             title={aff.status === 'ACTIVE' ? 'Suspend Affiliate' : 'Activate Affiliate'}
             aria-label={aff.status === 'ACTIVE' ? `Suspend ${aff.name}` : `Activate ${aff.name}`}

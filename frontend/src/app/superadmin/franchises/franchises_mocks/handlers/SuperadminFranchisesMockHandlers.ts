@@ -26,12 +26,31 @@ let mockFranchises: SuperadminFranchise[] = [
 ];
 
 export const superadminFranchisesHandlers = [
-  http.get(BASE_URL, async () => {
+  http.get(BASE_URL, async ({ request }) => {
     await delay(400);
+    const url = new URL(request.url);
+    const page = Number(url.searchParams.get('page')) || 1;
+    const limit = Number(url.searchParams.get('limit')) || 20;
+    const search = url.searchParams.get('search')?.toLowerCase() || '';
+
+    let filtered = [...mockFranchises];
+
+    if (search) {
+      filtered = filtered.filter(
+        f => f.franchiseName?.toLowerCase().includes(search) ||
+             f.ownerName?.toLowerCase().includes(search) ||
+             f.id?.toLowerCase().includes(search)
+      );
+    }
+
+    const total = filtered.length;
+    const paginated = filtered.slice((page - 1) * limit, page * limit);
+
     return HttpResponse.json<ApiResponse<SuperadminFranchise[]>>({
       success: true,
       message: 'Success',
-      data: mockFranchises,
+      data: paginated,
+      meta: { total, page, limit, totalPages: Math.ceil(total / limit) }
     });
   }),
   

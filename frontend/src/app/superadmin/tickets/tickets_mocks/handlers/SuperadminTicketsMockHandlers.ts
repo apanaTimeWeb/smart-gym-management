@@ -8,12 +8,39 @@ const BASE_URL = '*/api/v1/superadmin/tickets';
 let mockTickets = [...MOCK_TICKETS];
 
 export const superadminTicketsHandlers = [
-  http.get(BASE_URL, async () => {
+  http.get(BASE_URL, async ({ request }) => {
     await delay(400);
+    const url = new URL(request.url);
+    const page = Number(url.searchParams.get('page')) || 1;
+    const limit = Number(url.searchParams.get('limit')) || 10;
+    const search = url.searchParams.get('search')?.toLowerCase() || '';
+    const status = url.searchParams.get('status');
+    const priority = url.searchParams.get('priority');
+
+    let filtered = [...mockTickets];
+
+    if (search) {
+      filtered = filtered.filter(
+        t => t.tenantName?.toLowerCase().includes(search) ||
+             t.subject?.toLowerCase().includes(search) ||
+             t.id?.toLowerCase().includes(search)
+      );
+    }
+    if (status) {
+      filtered = filtered.filter(t => t.status === status);
+    }
+    if (priority) {
+      filtered = filtered.filter(t => t.priority === priority);
+    }
+
+    const total = filtered.length;
+    const paginated = filtered.slice((page - 1) * limit, page * limit);
+
     return HttpResponse.json<ApiResponse<SupportTicket[]>>({
       success: true,
       message: 'Success',
-      data: mockTickets,
+      data: paginated,
+      meta: { total, page, limit, totalPages: Math.ceil(total / limit) }
     });
   }),
 

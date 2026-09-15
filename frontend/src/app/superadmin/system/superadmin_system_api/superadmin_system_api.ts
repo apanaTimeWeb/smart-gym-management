@@ -29,6 +29,9 @@ const HealthProbeSchema = z.object({
 }).passthrough();
 
 export const systemApi = {
-  fetchSystemInfo: () => apiFetch<ApiResponse<SuperadminTenantSla[]>>(SystemUrlConfig.BACKEND_API.BASE, { dataSchema: z.array(SuperadminTenantSlaSchema) }),
+  fetchSystemInfo: (params?: Record<string, string>) => {
+    const q = params ? '?' + new URLSearchParams(params).toString() : '';
+    return apiFetch<ApiResponse<SuperadminTenantSla[]>>(`${SystemUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(SuperadminTenantSlaSchema) });
+  },
   fetchHealthProbe: () => apiFetch<ApiResponse<{ status: string }>>(`${SystemUrlConfig.BACKEND_API.BASE}/health`, { dataSchema: HealthProbeSchema }),
 };

@@ -26,12 +26,36 @@ let mockBranches: SuperadminBranch[] = [
 ];
 
 export const superadminBranchesHandlers = [
-  http.get(BASE_URL, async () => {
+  http.get(BASE_URL, async ({ request }) => {
     await delay(400);
+    const url = new URL(request.url);
+    const page = Number(url.searchParams.get('page')) || 1;
+    const limit = Number(url.searchParams.get('limit')) || 20;
+    const search = url.searchParams.get('search')?.toLowerCase() || '';
+    const status = url.searchParams.get('statusFilter');
+
+    let filtered = [...mockBranches];
+
+    if (search) {
+      filtered = filtered.filter(
+        b => b.branchName?.toLowerCase().includes(search) ||
+             b.tenantName?.toLowerCase().includes(search) ||
+             b.id?.toLowerCase().includes(search)
+      );
+    }
+    
+    if (status && status !== 'ALL') {
+      filtered = filtered.filter(b => b.status === status);
+    }
+
+    const total = filtered.length;
+    const paginated = filtered.slice((page - 1) * limit, page * limit);
+
     return HttpResponse.json<ApiResponse<SuperadminBranch[]>>({
       success: true,
       message: 'Success',
-      data: mockBranches,
+      data: paginated,
+      meta: { total, page, limit, totalPages: Math.ceil(total / limit) }
     });
   }),
   

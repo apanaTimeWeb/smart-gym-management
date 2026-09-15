@@ -25,12 +25,35 @@ let mockAffiliates: Affiliate[] = [
 ];
 
 export const superadminAffiliatesHandlers = [
-  http.get(BASE_URL, async () => {
+  http.get(BASE_URL, async ({ request }) => {
     await delay(400);
+    const url = new URL(request.url);
+    const page = Number(url.searchParams.get('page')) || 1;
+    const limit = Number(url.searchParams.get('limit')) || 10;
+    const search = url.searchParams.get('search')?.toLowerCase() || '';
+    const status = url.searchParams.get('status');
+
+    let filtered = [...mockAffiliates];
+
+    if (search) {
+      filtered = filtered.filter(
+        a => a.name?.toLowerCase().includes(search) ||
+             a.email?.toLowerCase().includes(search) ||
+             a.referralCode?.toLowerCase().includes(search)
+      );
+    }
+    if (status && status !== 'ALL') {
+      filtered = filtered.filter(a => a.status === status);
+    }
+
+    const total = filtered.length;
+    const paginated = filtered.slice((page - 1) * limit, page * limit);
+
     return HttpResponse.json<ApiResponse<Affiliate[]>>({
       success: true,
       message: 'Success',
-      data: mockAffiliates,
+      data: paginated,
+      meta: { total, page, limit, totalPages: Math.ceil(total / limit) }
     });
   }),
 

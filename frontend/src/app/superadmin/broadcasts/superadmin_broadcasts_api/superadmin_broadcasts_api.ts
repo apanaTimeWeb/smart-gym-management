@@ -21,6 +21,6 @@ export const broadcastsApi = {
   updateBroadcast: (id: string, body: Partial<BroadcastFormData>) => apiFetch<ApiResponse<Broadcast>>(`${BroadcastsUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body),
       dataSchema: BroadcastResponseSchema
 }),
-  fetchTenants: () => apiFetch<ApiResponse<any[]>>(UrlConfig.BACKEND_API.BASE),
+  fetchTenants: () => apiFetch<ApiResponse<unknown[]>>(UrlConfig.BACKEND_API.BASE),
   fetchRecipientCount: () => apiFetch<ApiResponse<{ count: number }>>(`${BroadcastsUrlConfig.BACKEND_API.BASE}/recipient-count`, { dataSchema: z.object({}).passthrough() }),
 };

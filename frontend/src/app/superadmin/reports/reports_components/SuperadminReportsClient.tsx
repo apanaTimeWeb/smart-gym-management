@@ -3,13 +3,14 @@
 // All data imported from reports_constants. Pure view layer.
 // DATA FLOW: reports_constants → SuperadminReportsClient → tabs + charts + tables
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { IndianRupee, TrendingDown, HeartPulse, Search } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import type { RevenueRow, CancellationsRecord, TenantHealthScore, ReportsTab } from '@/app/superadmin/reports/reports_types/superadmin_reports_types';
 import { useQuery } from '@tanstack/react-query';
 import { superadminReportsApi } from '@/app/superadmin/reports/reports_api/superadmin_reports_api';
+import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
 
 import { SuperadminReportsDatePresetDropdown, type DatePreset } from '@/app/superadmin/reports/reports_components/SuperadminReportsDatePresetDropdown';
 import { SuperadminReportsExportButton } from '@/app/superadmin/reports/reports_components/SuperadminReportsExportButton';
@@ -27,20 +28,38 @@ const PLAN_OPTIONS = [
 ];
 
 export default function SuperadminReportsClient() {
-  const [tab, setTab] = useState<ReportsTab>('revenue');
+  const { getParam, setParam, setParams } = useSuperadminUrlState();
+  const tab = (getParam('tab', 'revenue') as ReportsTab);
+  const setTab = (t: string) => setParam('tab', t);
+
   const today = new Date();
   const firstDay = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
   const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0];
   
-  const [datePreset, setDatePreset] = useState<DatePreset>('THIS_MONTH');
-  const [dateFrom, setDateFrom] = useState(firstDay);
-  const [dateTo, setDateTo] = useState(lastDay);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [planFilter, setPlanFilter] = useState('ALL');
-  
-  const { data: revRes, isLoading: revLoading, isError: revError } = useQuery({ queryKey: ['reports', 'revenue'], queryFn: () => superadminReportsApi.fetchRevenueData() });
-  const { data: canRes, isLoading: canLoading, isError: canError } = useQuery({ queryKey: ['reports', 'cancellations'], queryFn: () => superadminReportsApi.fetchCancellationsData() });
-  const { data: healthRes, isLoading: healthLoading, isError: healthError } = useQuery({ queryKey: ['reports', 'health'], queryFn: () => superadminReportsApi.fetchHealthData() });
+  const datePreset = (getParam('preset', 'THIS_MONTH') as DatePreset);
+  const dateFrom = getParam('startDate', firstDay);
+  const dateTo = getParam('endDate', lastDay);
+  const searchQuery = getParam('search', '');
+  const planFilter = getParam('planFilter', 'ALL');
+
+  const setDatePreset = (p: string) => setParam('preset', p);
+  const setDateFrom = (d: string) => setParam('startDate', d);
+  const setDateTo = (d: string) => setParam('endDate', d);
+  const setSearchQuery = (s: string) => setParam('search', s);
+  const setPlanFilter = (p: string) => setParam('planFilter', p);
+
+  const queryParams = useMemo(() => {
+    const p: Record<string, string> = {};
+    if (searchQuery) p.search = searchQuery;
+    if (planFilter && planFilter !== 'ALL') p.planFilter = planFilter;
+    if (dateFrom) p.startDate = dateFrom;
+    if (dateTo) p.endDate = dateTo;
+    return p;
+  }, [searchQuery, planFilter, dateFrom, dateTo]);
+
+  const { data: revRes, isLoading: revLoading, isError: revError } = useQuery({ queryKey: ['reports', 'revenue', queryParams], queryFn: () => superadminReportsApi.fetchRevenueData(queryParams) });
+  const { data: canRes, isLoading: canLoading, isError: canError } = useQuery({ queryKey: ['reports', 'cancellations', queryParams], queryFn: () => superadminReportsApi.fetchCancellationsData(queryParams) });
+  const { data: healthRes, isLoading: healthLoading, isError: healthError } = useQuery({ queryKey: ['reports', 'health', queryParams], queryFn: () => superadminReportsApi.fetchHealthData(queryParams) });
 
   const revenueData = (revRes?.data as unknown as RevenueRow[]) || [];
   const cancellationsData = (canRes?.data as unknown as CancellationsRecord[]) || [];
@@ -123,23 +142,11 @@ export default function SuperadminReportsClient() {
   };
   const computedDateSuffix = dateSuffixMap[datePreset] || '';
 
-  const filteredCancellationsData = cancellationsData.filter(c => {
-    const matchSearch = c.gymName.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchPlan = planFilter === 'ALL' || c.plan === planFilter;
-    return matchSearch && matchPlan;
-  });
-
-  const avgDaysActive = filteredCancellationsData.length > 0 ? Math.round(
-    filteredCancellationsData.reduce((s, c) => s + c.daysActive, 0) / filteredCancellationsData.length
+  const avgDaysActive = cancellationsData.length > 0 ? Math.round(
+    cancellationsData.reduce((s, c) => s + c.daysActive, 0) / cancellationsData.length
   ) : 0;
 
-  const filteredHealthData = healthData.filter(h => {
-    const matchSearch = h.gymName.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchPlan = planFilter === 'ALL' || h.plan === planFilter;
-    return matchSearch && matchPlan;
-  });
-
-  const sortedHealthData = [...filteredHealthData].sort((a, b) => b.score - a.score);
+  const sortedHealthData = [...healthData].sort((a, b) => b.score - a.score);
 
   const isLoading = revLoading || canLoading || healthLoading;
   const error = revError || canError || healthError;
@@ -232,7 +239,7 @@ export default function SuperadminReportsClient() {
       </div>
 
       {tab === 'revenue' && <SuperadminReportsRevenueTab revenueData={revenueData} />}
-      {tab === 'cancellations' && <SuperadminReportsCancellationsTab cancellationsData={cancellationsData} filteredCancellationsData={filteredCancellationsData} totalCancelledRevenue={totalCancelledRevenue} avgDaysActive={avgDaysActive} />}
+      {tab === 'cancellations' && <SuperadminReportsCancellationsTab cancellationsData={cancellationsData} filteredCancellationsData={cancellationsData} totalCancelledRevenue={totalCancelledRevenue} avgDaysActive={avgDaysActive} />}
       {tab === 'health' && <SuperadminReportsHealthTab sortedHealthData={sortedHealthData} />}
     </div>
   );

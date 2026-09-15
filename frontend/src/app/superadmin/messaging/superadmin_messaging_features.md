@@ -13,19 +13,19 @@ Provides superadmins with per-tenant direct messaging (Email, SMS, In-App) and a
 ## Feature Inventory
 | Feature | Path | Purpose | Main API Calls | Owner |
 |---|---|---|---|---|
-| Messages tab | `SuperadminMessagingClient.tsx` | Lists all sent/draft messages with channel + status badges | `GET /superadmin/messaging` (future) | Superadmin |
+| Messages tab | `SuperadminMessagingClient.tsx` | Lists all sent/draft messages with channel + status badges | `GET /superadmin/messaging`  | Superadmin |
 | Channel filter | `SuperadminMessagingClient.tsx` | Filters messages by EMAIL / SMS / IN_APP | — (client-side) | Superadmin |
-| Compose modal | `SuperadminMessagingClient.tsx` | Compose and send a message to a specific tenant | `POST /superadmin/messaging` (future) | Superadmin |
-| Notifications tab | `SuperadminMessagingClient.tsx` | In-app alert center with unread count badge | `GET /superadmin/notifications` (future) | Superadmin |
-| Mark read | `SuperadminMessagingClient.tsx` | Marks individual notification as read | `PATCH /superadmin/notifications/:id/read` (future) | Superadmin |
-| Mark all read | `SuperadminMessagingClient.tsx` | Marks all notifications as read | `POST /superadmin/notifications/read-all` (future) | Superadmin |
+| Compose modal | `SuperadminMessagingClient.tsx` | Compose and send a message to a specific tenant | `POST /superadmin/messaging`  | Superadmin |
+| Notifications tab | `SuperadminMessagingClient.tsx` | In-app alert center with unread count badge | `GET /superadmin/notifications`  | Superadmin |
+| Mark read | `SuperadminMessagingClient.tsx` | Marks individual notification as read | `PATCH /superadmin/notifications/:id/read`  | Superadmin |
+| Mark all read | `SuperadminMessagingClient.tsx` | Marks all notifications as read | `POST /superadmin/notifications/read-all`  | Superadmin |
 
 ## Data and State Architecture
-- Server-state query keys: `['superadmin', 'messaging']`, `['superadmin', 'notifications']` (future)
+- Server-state query keys: `['superadmin', 'messaging']`, `['superadmin', 'notifications']` 
 - Zustand stores: none
 - Context providers: none
 - Local-storage keys: none
-- MSW handler file: `src/mocks/handlers/superadmin-messaging.handlers.ts` (future)
+- MSW handler file: `src/app/superadmin/messaging/messaging_mocks/handlers/SuperadminMessagingMockHandlers.ts` 
 
 ## API Contract
 - `GET /superadmin/messaging` → `ApiResponse<TenantMessage[]>`
@@ -82,4 +82,4 @@ Types found but could not be parsed.
 - **Messaging Table Row Clicks:** The `Messaging` list view uses clickable table rows (`<tr className="cursor-pointer">`) for navigation. Ensure that any inline action buttons (like Edit or Delete) inside the table call `e.stopPropagation()` so they don't accidentally trigger the row navigation.
 - **Section-Level Error Boundaries in Messaging:** Do not allow a single failed API fetch in Messaging to unmount the entire page. Major components (like the Messaging data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
 - **Backend-Driven Messages for Messaging Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Messaging.
-- **No Client-Side Pagination for Messaging:** If the dataset grows large, do not fetch all Messaging and paginate on the client. Always implement robust server-side pagination, sorting, and filtering via query parameters.
+- **No Client-Side Pagination for Messaging:** If the dataset grows large, do not fetch all Messaging and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.

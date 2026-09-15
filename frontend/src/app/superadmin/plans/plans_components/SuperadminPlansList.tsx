@@ -30,8 +30,8 @@ export default function SuperadminPlansList() {
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'plans'] });
     },
     onError: (err: unknown) => {
-      toast.error((err as Error).message || 'Failed to delete plan');
-    }
+      toast.error((err as Error).message, { id: 'failed-to-delete-plan' });
+    },
   });
 
   const archiveMutation = useMutation({

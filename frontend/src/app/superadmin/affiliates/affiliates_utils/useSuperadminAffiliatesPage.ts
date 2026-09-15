@@ -18,20 +18,26 @@ export const useSuperadminAffiliatesPage = () => {
   const statusFilter = getParam('status', 'ALL') as AffiliateStatusFilter;
   const startDate = getParam('startDate', '');
   const endDate = getParam('endDate', '');
+  const currentPage = Number(getParam('page', '1'));
+  const pageLimit = Number(getParam('limit', '10'));
 
-  const setSearchQuery = (val: string) => setParam('search', val);
-  const setStatusFilter = (val: AffiliateStatusFilter) => setParam('status', val);
-  const setStartDate = (val: string) => setParam('startDate', val);
-  const setEndDate = (val: string) => setParam('endDate', val);
+  const setSearchQuery = (val: string) => { setParam('search', val); setParam('page', '1'); };
+  const setStatusFilter = (val: AffiliateStatusFilter) => { setParam('status', val); setParam('page', '1'); };
+  const setStartDate = (val: string) => { setParam('startDate', val); setParam('page', '1'); };
+  const setEndDate = (val: string) => { setParam('endDate', val); setParam('page', '1'); };
+  const setPage = (page: number) => setParam('page', String(page));
 
   const queryParams = useMemo(() => {
-    const params: Record<string, string> = {};
+    const params: Record<string, string> = {
+      page: String(currentPage),
+      limit: String(pageLimit),
+    };
     if (searchQuery) params.search = searchQuery;
     if (statusFilter !== 'ALL') params.status = statusFilter;
     if (startDate) params.startDate = startDate;
     if (endDate) params.endDate = endDate;
     return params;
-  }, [searchQuery, statusFilter, startDate, endDate]);
+  }, [searchQuery, statusFilter, startDate, endDate, currentPage, pageLimit]);
 
   const queryKey = useMemo(() => ['superadmin', 'affiliates', queryParams], [queryParams]);
   const { data: affiliatesResponse, status: fetchState, error: queryError } = useQuery({
@@ -39,6 +45,8 @@ export const useSuperadminAffiliatesPage = () => {
     queryFn: () => affiliatesApi.fetchAffiliates(queryParams),
   });
   const affiliates = affiliatesResponse?.data ?? [];
+  const total = affiliatesResponse?.meta?.total ?? affiliates.length;
+  const totalPages = Math.ceil(total / pageLimit) || 1;
   const error = queryError instanceof Error ? queryError.message : null;
 
   const updateCachedAffiliates = useCallback((updater: (previous: Affiliate[]) => Affiliate[]) => {
@@ -115,5 +123,8 @@ export const useSuperadminAffiliatesPage = () => {
     setStartDate,
     endDate,
     setEndDate,
+    currentPage,
+    totalPages,
+    setPage,
   };
 };

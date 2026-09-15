@@ -39,7 +39,7 @@ export default function SuperadminPlanCreateModal() {
       closeCreateModal();
     },
     onError: (err: unknown) => {
-      toast.error((err as Error).message || 'Failed to create plan');
+      toast.error((err as Error).message, { id: 'failed-to-create-plan' });
     }
   });
 

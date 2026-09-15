@@ -1,11 +1,12 @@
 'use client';
 // RESPONSIBILITY: Renders the System Sla Tab component and its associated UI logic.
-import { useState } from 'react';
+import { useMemo } from 'react';
 import { ServerCog, Clock, AlertCircle, CheckCircle, Ticket, Search } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { formatNumber } from '@/lib/formatters';
 import { useQuery } from '@tanstack/react-query';
 import { systemApi } from '@/app/superadmin/system/superadmin_system_api/superadmin_system_api';
+import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
 
 interface SlaRecord {
   id: string;
@@ -20,23 +21,30 @@ interface SlaRecord {
 const TABLE_COLUMN_COUNT = 6;
 
 export default function SuperadminSystemSlaTab() {
-  const [slaSearch, setSlaSearch] = useState('');
+  const { getParam, setParam } = useSuperadminUrlState();
+  const slaSearch = getParam('search', '');
+  const setSlaSearch = (val: string) => setParam('search', val);
 
   const handleGenerateCredit = (tenantId: string) => {
     toast.success(`Generated Downtime Credit invoice for gym ${tenantId}`, { id: 'generated-downtime-credit-invoice-for-gym-tenantid' });
   };
 
+  const queryParams = useMemo(() => {
+    const params: Record<string, string> = {};
+    if (slaSearch) params.search = slaSearch;
+    return params;
+  }, [slaSearch]);
+
   const { data: res, isLoading } = useQuery({
-    queryKey: ['superadmin', 'system-sla'],
-    queryFn: () => systemApi.fetchSystemInfo(),
+    queryKey: ['superadmin', 'system-sla', queryParams],
+    queryFn: () => systemApi.fetchSystemInfo(queryParams),
   });
 
   const slaData: SlaRecord[] = (res?.data || []) as SlaRecord[];
-  const filteredSla = slaData.filter(sla => sla.name.toLowerCase().includes(slaSearch.toLowerCase()));
-  const totalTenants = slaData.length;
+  const totalTenants = res?.meta?.total || slaData.length;
   const breachedTenants = slaData.filter(s => s.status === 'BREACHED').length;
-  const avgUptimeRaw = totalTenants > 0
-    ? slaData.reduce((acc, s) => acc + s.actualUptime, 0) / totalTenants
+  const avgUptimeRaw = slaData.length > 0
+    ? slaData.reduce((acc, s) => acc + s.actualUptime, 0) / slaData.length
     : 0;
   const avgUptime = formatNumber(Math.round(avgUptimeRaw * 100) / 100);
 
@@ -95,7 +103,7 @@ export default function SuperadminSystemSlaTab() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {filteredSla.map((sla) => (
+              {slaData.map((sla) => (
                 <tr key={sla.id} className="superadmin-table-row group hover:bg-input motion-safe:transition-colors text-sm">
                   <td className="p-4 text-foreground font-medium">{sla.name}</td>
                   <td className="p-4 text-secondary">{sla.targetSla}%</td>
@@ -129,7 +137,7 @@ export default function SuperadminSystemSlaTab() {
                   </td>
                 </tr>
               ))}
-              {filteredSla.length === 0 && (
+              {slaData.length === 0 && (
                 <tr>
                   <td colSpan={TABLE_COLUMN_COUNT} className="p-8 text-center text-secondary">No gyms found.</td>
                 </tr>

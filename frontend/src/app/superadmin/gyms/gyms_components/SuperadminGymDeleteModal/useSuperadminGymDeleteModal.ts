@@ -11,6 +11,7 @@ export function useSuperadminGymDeleteModal() {
   const isDeleteModalOpen = useSuperadminGymsStore(state => state.isDeleteModalOpen);
   const closeDeleteModal = useSuperadminGymsStore(state => state.closeDeleteModal);
   const gymToDelete = useSuperadminGymsStore(state => state.gymToDelete);
+
   
   const queryClient = useQueryClient();
 
@@ -34,7 +35,7 @@ export function useSuperadminGymDeleteModal() {
       closeDeleteModal();
     },
     onError: (err: unknown) => {
-      toast.error((err as Error).message || 'Failed to delete tenant');
+      toast.error((err as Error).message, { id: 'failed-to-delete-tenant' });
     }
   });
 
@@ -54,4 +55,3 @@ export function useSuperadminGymDeleteModal() {
     actionLoadingId: deleteMutation.isPending ? gymToDelete?.id : null
   };
 }
-

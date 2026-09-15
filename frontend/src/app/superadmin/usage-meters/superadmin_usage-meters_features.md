@@ -14,7 +14,7 @@ Provides the Superadmin with a read-only dashboard view of per-tenant resource c
 - Zustand stores: None — all state managed by TanStack Query
 - Context providers: None
 - Local-storage keys: None
-- MSW handler file: `src/mocks/handlers/superadmin-usage-meters.handlers.ts`
+- MSW handler file: `src/app/superadmin/usage-meters/usage-meters_mocks/handlers/SuperadminUsageMetersMockHandlers.ts`
 
 ## API Contract
 - `usageMetersApi.fetchUsageMeters(params?: Record<string, string>)` → `ApiResponse<TenantUsageMeter[]>`
@@ -43,7 +43,7 @@ Provides the Superadmin with a read-only dashboard view of per-tenant resource c
 - **Usage-meters Table Row Clicks:** The `Usage-meters` list view uses clickable table rows (`<tr className="cursor-pointer">`) for navigation. Ensure that any inline action buttons (like Edit or Delete) inside the table call `e.stopPropagation()` so they don't accidentally trigger the row navigation.
 - **Section-Level Error Boundaries in Usage-meters:** Do not allow a single failed API fetch in Usage-meters to unmount the entire page. Major components (like the Usage-meters data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
 - **Backend-Driven Messages for Usage-meters Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Usage-meters.
-- **No Client-Side Pagination for Usage-meters:** If the dataset grows large, do not fetch all Usage-meters and paginate on the client. Always implement robust server-side pagination, sorting, and filtering via query parameters.
+- **No Client-Side Pagination for Usage-meters:** If the dataset grows large, do not fetch all Usage-meters and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
 
 ## UI Data Requirements
 

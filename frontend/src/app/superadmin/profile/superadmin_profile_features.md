@@ -73,7 +73,7 @@ this route.
 - **FetchState enum:** `personalState`, `passwordState`, `twoFAState` track mutation lifecycle (`'idle' | 'loading' | 'success' | 'error'`) — passed as `isSaving` booleans to child forms
 - **Context providers:** None — inherits `SuperadminQueryProvider` from root layout
 - **Local-storage keys:** None
-- **MSW handler file:** fully configured via src/mocks/handlers/ — `src/mocks/handlers/superadmin-profile.handlers.ts` (planned)
+- **MSW handler file:** fully configured via src/mocks/handlers/ — `src/app/superadmin/profile/profile_mocks/handlers/SuperadminProfileMockHandlers.ts` (planned)
 
 ---
 

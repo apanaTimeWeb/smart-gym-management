@@ -40,7 +40,7 @@ export default function SuperadminSettingsClient() {
       });
     },
     onError: (err: unknown) => {
-      toast.error((err as Error).message || 'Failed to update setting');
+      toast.error((err as Error).message, { id: 'failed-to-update-setting' });
     }
   });
 
@@ -158,7 +158,7 @@ export default function SuperadminSettingsClient() {
               <ul className="list-disc pl-4 text-secondary space-y-1">
                 <li>Added support for trialGyms count in dashboard.</li>
                 <li>Fixed overdue invoices KPI aggregation bug.</li>
-                <li>Added "Revenue by Plan Tier" donut chart.</li>
+                <li>Added &quot;Revenue by Plan Tier&quot; donut chart.</li>
               </ul>
             </div>
             <div className="relative pl-6 border-l-2 border-primary/20 pb-2">

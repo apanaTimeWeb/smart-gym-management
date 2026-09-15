@@ -13,19 +13,19 @@ Tracks the full lifecycle of a new tenant from signup through email verification
 ## Feature Inventory
 | Feature | Path | Purpose | Main API Calls | Owner |
 |---|---|---|---|---|
-| Onboarding table | `SuperadminOnboardingClient.tsx` | Lists all tenants with status, trial info, checklist progress | `GET /superadmin/onboarding` (future) | Superadmin |
+| Onboarding table | `SuperadminOnboardingClient.tsx` | Lists all tenants with status, trial info, checklist progress | `GET /superadmin/onboarding`  | Superadmin |
 | Expand row | `SuperadminOnboardingClient.tsx` | Shows full checklist + trial details inline | — | Superadmin |
-| Mark email verified | `SuperadminOnboardingClient.tsx` | Manually marks email as verified | `PATCH /superadmin/onboarding/:id/verify` (future) | Superadmin |
-| Resend welcome email | `SuperadminOnboardingClient.tsx` | Triggers welcome email resend | `POST /superadmin/onboarding/:id/resend` (future) | Superadmin |
-| Extend trial | `SuperadminOnboardingClient.tsx` | Adds N days to trial — modal with hardened numeric input | `PATCH /superadmin/onboarding/:id/extend-trial` (future) | Superadmin |
-| Convert to paid | `SuperadminOnboardingClient.tsx` | Converts trial to paid — double confirmation modal (Rule 71) | `POST /superadmin/onboarding/:id/convert` (future) | Superadmin |
+| Mark email verified | `SuperadminOnboardingClient.tsx` | Manually marks email as verified | `PATCH /superadmin/onboarding/:id/verify`  | Superadmin |
+| Resend welcome email | `SuperadminOnboardingClient.tsx` | Triggers welcome email resend | `POST /superadmin/onboarding/:id/resend`  | Superadmin |
+| Extend trial | `SuperadminOnboardingClient.tsx` | Adds N days to trial — modal with hardened numeric input | `PATCH /superadmin/onboarding/:id/extend-trial`  | Superadmin |
+| Convert to paid | `SuperadminOnboardingClient.tsx` | Converts trial to paid — double confirmation modal (Rule 71) | `POST /superadmin/onboarding/:id/convert`  | Superadmin |
 
 ## Data and State Architecture
 - Server-state query keys: `['superadmin', 'onboarding']` (future TanStack Query)
 - Zustand stores: none
 - Context providers: none
 - Local-storage keys: none
-- MSW handler file: `src/mocks/handlers/superadmin-onboarding.handlers.ts` (future)
+- MSW handler file: `src/app/superadmin/onboarding/onboarding_mocks/handlers/SuperadminOnboardingMockHandlers.ts` 
 
 ## API Contract
 - `GET /superadmin/onboarding` → `ApiResponse<TenantOnboarding[]>`
@@ -82,4 +82,4 @@ Types found but could not be parsed.
 - **Onboarding Table Row Clicks:** The `Onboarding` list view uses clickable table rows (`<tr className="cursor-pointer">`) for navigation. Ensure that any inline action buttons (like Edit or Delete) inside the table call `e.stopPropagation()` so they don't accidentally trigger the row navigation.
 - **Section-Level Error Boundaries in Onboarding:** Do not allow a single failed API fetch in Onboarding to unmount the entire page. Major components (like the Onboarding data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
 - **Backend-Driven Messages for Onboarding Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Onboarding.
-- **No Client-Side Pagination for Onboarding:** If the dataset grows large, do not fetch all Onboarding and paginate on the client. Always implement robust server-side pagination, sorting, and filtering via query parameters.
+- **No Client-Side Pagination for Onboarding:** If the dataset grows large, do not fetch all Onboarding and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.

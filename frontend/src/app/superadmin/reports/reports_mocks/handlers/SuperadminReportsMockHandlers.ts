@@ -30,20 +30,60 @@ export const superadminReportsHandlers = [
       data: MOCK_SUPERADMIN_REPORTS_REVENUE,
     });
   }),
-  http.get(`${BASE_URL}/cancellations`, async () => {
+  http.get(`${BASE_URL}/cancellations`, async ({ request }) => {
     await delay(400);
+    const url = new URL(request.url);
+    const search = url.searchParams.get('search')?.toLowerCase() || '';
+    const planFilter = url.searchParams.get('planFilter');
+    const startDate = url.searchParams.get('startDate');
+    const endDate = url.searchParams.get('endDate');
+
+    let filtered = [...MOCK_SUPERADMIN_REPORTS_CANCELLATIONS];
+
+    if (search) {
+      filtered = filtered.filter(c => c.gymName.toLowerCase().includes(search));
+    }
+    
+    if (planFilter && planFilter !== 'ALL') {
+      filtered = filtered.filter(c => c.plan.toUpperCase() === planFilter.toUpperCase());
+    }
+
+    if (startDate || endDate) {
+      filtered = filtered.filter(c => {
+        if (!c.cancelledAt) return true;
+        const cancelled = new Date(c.cancelledAt);
+        if (startDate && cancelled < new Date(startDate)) return false;
+        if (endDate && cancelled > new Date(endDate)) return false;
+        return true;
+      });
+    }
+
     return HttpResponse.json<ApiResponse<CancellationsRecord[]>>({
       success: true,
       message: 'Success',
-      data: MOCK_SUPERADMIN_REPORTS_CANCELLATIONS,
+      data: filtered,
     });
   }),
-  http.get(`${BASE_URL}/health`, async () => {
+  http.get(`${BASE_URL}/health`, async ({ request }) => {
     await delay(400);
+    const url = new URL(request.url);
+    const search = url.searchParams.get('search')?.toLowerCase() || '';
+    const planFilter = url.searchParams.get('planFilter');
+
+    let filtered = [...MOCK_SUPERADMIN_REPORTS_HEALTH];
+
+    if (search) {
+      filtered = filtered.filter(h => h.gymName.toLowerCase().includes(search));
+    }
+    
+    if (planFilter && planFilter !== 'ALL') {
+      filtered = filtered.filter(h => h.plan.toUpperCase() === planFilter.toUpperCase());
+    }
+
     return HttpResponse.json<ApiResponse<TenantHealthScore[]>>({
       success: true,
       message: 'Success',
-      data: MOCK_SUPERADMIN_REPORTS_HEALTH,
+      data: filtered,
     });
   }),
 ];

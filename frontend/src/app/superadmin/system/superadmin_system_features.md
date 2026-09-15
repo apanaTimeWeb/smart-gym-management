@@ -16,7 +16,7 @@ Provides the Superadmin with a live health overview of the SaaS infrastructure: 
 - Zustand stores: None
 - Context providers: None
 - Local-storage keys: None
-- MSW handler file: `src/mocks/handlers/superadmin-system.handlers.ts`
+- MSW handler file: `src/app/superadmin/system/system_mocks/handlers/SuperadminSystemMockHandlers.ts`
 
 ## API Contract
 - `systemApi.fetchSystemInfo()` → `ApiResponse<SuperadminTenantSla[]>`
@@ -48,7 +48,7 @@ Provides the Superadmin with a live health overview of the SaaS infrastructure: 
 - **System Table Row Clicks:** The `System` list view uses clickable table rows (`<tr className="cursor-pointer">`) for navigation. Ensure that any inline action buttons (like Edit or Delete) inside the table call `e.stopPropagation()` so they don't accidentally trigger the row navigation.
 - **Section-Level Error Boundaries in System:** Do not allow a single failed API fetch in System to unmount the entire page. Major components (like the System data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
 - **Backend-Driven Messages for System Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting System.
-- **No Client-Side Pagination for System:** If the dataset grows large, do not fetch all System and paginate on the client. Always implement robust server-side pagination, sorting, and filtering via query parameters.
+- **No Client-Side Pagination for System:** If the dataset grows large, do not fetch all System and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
 
 ## UI Data Requirements
 

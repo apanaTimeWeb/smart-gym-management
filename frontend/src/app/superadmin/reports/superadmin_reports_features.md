@@ -13,19 +13,19 @@ Provides superadmins with global financial intelligence: MRR/ARR revenue reports
 ## Feature Inventory
 | Feature | Path | Purpose | Main API Calls | Owner |
 |---|---|---|---|---|
-| Revenue Report tab | `SuperadminReportsClient.tsx` | MRR area chart + monthly revenue table | `GET /superadmin/reports/revenue` (future) | Superadmin |
-| CSV Export | `SuperadminReportsClient.tsx` | Exports filtered revenue data as CSV | `GET /superadmin/reports/revenue/export?format=csv` (future) | Superadmin |
-| PDF Export | `SuperadminReportsClient.tsx` | Generates PDF revenue report | `GET /superadmin/reports/revenue/export?format=pdf` (future) | Superadmin |
+| Revenue Report tab | `SuperadminReportsClient.tsx` | MRR area chart + monthly revenue table | `GET /superadmin/reports/revenue`  | Superadmin |
+| CSV Export | `SuperadminReportsClient.tsx` | Exports filtered revenue data as CSV | `GET /superadmin/reports/revenue/export?format=csv`  | Superadmin |
+| PDF Export | `SuperadminReportsClient.tsx` | Generates PDF revenue report | `GET /superadmin/reports/revenue/export?format=pdf`  | Superadmin |
 | Date range filter | `SuperadminReportsClient.tsx` | Filters all report data by date range | — (passed as query params future) | Superadmin |
-| Cancellations Analysis tab | `SuperadminReportsClient.tsx` | Donut chart of cancellations reasons + cancellations table | `GET /superadmin/reports/cancellations` (future) | Superadmin |
-| Tenant Health tab | `SuperadminReportsClient.tsx` | Health score table sorted by score desc | `GET /superadmin/reports/health` (future) | Superadmin |
+| Cancellations Analysis tab | `SuperadminReportsClient.tsx` | Donut chart of cancellations reasons + cancellations table | `GET /superadmin/reports/cancellations`  | Superadmin |
+| Tenant Health tab | `SuperadminReportsClient.tsx` | Health score table sorted by score desc | `GET /superadmin/reports/health`  | Superadmin |
 
 ## Data and State Architecture
-- Server-state query keys: `['superadmin', 'reports', 'revenue']`, `['superadmin', 'reports', 'cancellations']`, `['superadmin', 'reports', 'health']` (future)
+- Server-state query keys: `['superadmin', 'reports', 'revenue']`, `['superadmin', 'reports', 'cancellations']`, `['superadmin', 'reports', 'health']` 
 - Zustand stores: none
 - Context providers: none
 - Local-storage keys: none
-- MSW handler file: `src/mocks/handlers/superadmin-reports.handlers.ts` (future)
+- MSW handler file: `src/app/superadmin/reports/reports_mocks/handlers/SuperadminReportsMockHandlers.ts` 
 
 ## API Contract
 - `GET /superadmin/reports/revenue?from=&to=` → `ApiResponse<RevenueRow[]>`
@@ -81,4 +81,4 @@ Types found but could not be parsed.
 - **Reports Table Row Clicks:** The `Reports` list view uses clickable table rows (`<tr className="cursor-pointer">`) for navigation. Ensure that any inline action buttons (like Edit or Delete) inside the table call `e.stopPropagation()` so they don't accidentally trigger the row navigation.
 - **Section-Level Error Boundaries in Reports:** Do not allow a single failed API fetch in Reports to unmount the entire page. Major components (like the Reports data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
 - **Backend-Driven Messages for Reports Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Reports.
-- **No Client-Side Pagination for Reports:** If the dataset grows large, do not fetch all Reports and paginate on the client. Always implement robust server-side pagination, sorting, and filtering via query parameters.
+- **No Client-Side Pagination for Reports:** If the dataset grows large, do not fetch all Reports and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.

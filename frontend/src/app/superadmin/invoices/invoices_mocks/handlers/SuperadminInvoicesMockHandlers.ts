@@ -24,12 +24,34 @@ let mockInvoices: SaaSInvoice[] = [
 ];
 
 export const superadminInvoicesHandlers = [
-  http.get(BASE_URL, async () => {
+  http.get(BASE_URL, async ({ request }) => {
     await delay(400);
+    const url = new URL(request.url);
+    const page = Number(url.searchParams.get('page')) || 1;
+    const limit = Number(url.searchParams.get('limit')) || 10;
+    const search = url.searchParams.get('search')?.toLowerCase() || '';
+    const status = url.searchParams.get('status');
+
+    let filtered = [...mockInvoices];
+
+    if (search) {
+      filtered = filtered.filter(
+        i => i.tenantName?.toLowerCase().includes(search) ||
+             i.id?.toLowerCase().includes(search)
+      );
+    }
+    if (status && status !== 'ALL') {
+      filtered = filtered.filter(i => i.status === status);
+    }
+
+    const total = filtered.length;
+    const paginated = filtered.slice((page - 1) * limit, page * limit);
+
     return HttpResponse.json<ApiResponse<SaaSInvoice[]>>({
       success: true,
       message: 'Success',
-      data: mockInvoices,
+      data: paginated,
+      meta: { total, page, limit, totalPages: Math.ceil(total / limit) }
     });
   }),
   

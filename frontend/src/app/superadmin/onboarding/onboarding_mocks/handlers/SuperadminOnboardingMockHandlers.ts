@@ -26,12 +26,36 @@ const initialMockOnboardings: TenantOnboarding[] = [
 let mockOnboardings = [...initialMockOnboardings];
 
 export const superadminOnboardingHandlers = [
-  http.get(BASE_URL, async () => {
+  http.get(BASE_URL, async ({ request }) => {
     await delay(400);
+    const url = new URL(request.url);
+    const search = url.searchParams.get('search')?.toLowerCase() || '';
+    const startDate = url.searchParams.get('startDate');
+    const endDate = url.searchParams.get('endDate');
+
+    let filtered = [...mockOnboardings];
+
+    if (startDate || endDate) {
+      filtered = filtered.filter(t => {
+        if (!t.signupDate) return true;
+        const signup = new Date(t.signupDate);
+        if (startDate && signup < new Date(startDate)) return false;
+        if (endDate && signup > new Date(endDate)) return false;
+        return true;
+      });
+    }
+
+    if (search) {
+      filtered = filtered.filter(
+        t => t.gymName?.toLowerCase().includes(search) ||
+             t.adminEmail?.toLowerCase().includes(search)
+      );
+    }
+
     return HttpResponse.json<ApiResponse<TenantOnboarding[]>>({
       success: true,
       message: 'Success',
-      data: mockOnboardings,
+      data: filtered,
     });
   }),
   
