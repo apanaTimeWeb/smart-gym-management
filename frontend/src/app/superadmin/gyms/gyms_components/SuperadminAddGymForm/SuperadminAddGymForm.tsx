@@ -130,7 +130,7 @@ export default function SuperadminAddGymForm() {
                     <SearchableDropdown
                       value={field.value || ''}
                       onChange={field.onChange}
-                      options={plans ? plans.map(p => ({ label: `${p.name} (${formatCurrency(Number(p.priceMonthly))}/mo)`, value: p.name })) : []}
+                      options={plans ? plans.map((p: any) => ({ label: `${p.name} (${formatCurrency(Number(p.priceMonthly))}/mo)`, value: p.name })) : []}
                       disabled={loadingPlans}
                       placeholder={loadingPlans ? "Loading plans..." : "Select a plan"}
                     />

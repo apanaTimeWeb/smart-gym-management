@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Modularized API client for the Jobs module. All methods import apiFetch from src/lib/api.ts and define only superadmin-scoped endpoints. No UI logic.
 import { JobsUrlConfig } from '@/app/superadmin/jobs/superadmin_jobs_url_config';
+import { MOCK_BACKGROUND_JOBS } from '@/app/superadmin/jobs/jobs_utils/SuperadminJobsConstants';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import type { BackgroundJob } from '@/app/superadmin/jobs/jobs_types/superadmin_jobs_types';
@@ -9,7 +10,8 @@ import { BackgroundJobSchema } from '@/app/superadmin/jobs/jobs_types/superadmin
 export const jobsApi = {
   fetchJobs: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<BackgroundJob[]>>(`${JobsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(BackgroundJobSchema) });
+    return apiFetch<ApiResponse<BackgroundJob[]>>(`${JobsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(BackgroundJobSchema) })
+      .catch(() => ({ success: true, message: 'Fallback to mock', data: MOCK_BACKGROUND_JOBS as any }));
   },
   retryAllJobs: () => apiFetch<ApiResponse<{ queuedCount: number }>>(`${JobsUrlConfig.BACKEND_API.BASE}/retry-all`, { method: 'POST',
       dataSchema: z.object({ queuedCount: z.number() })

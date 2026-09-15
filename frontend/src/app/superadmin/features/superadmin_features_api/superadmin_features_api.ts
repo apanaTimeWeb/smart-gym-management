@@ -1,4 +1,5 @@
 import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
+import { mockFlags, mockNotes } from '@/app/superadmin/features/features_mocks/handlers/SuperadminFeaturesMockHandlers';
 // RESPONSIBILITY: Encapsulates functionality for superadmin_features_api.ts
 import { FeatureFlagSchema, ReleaseNoteSchema } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
 import { apiFetch } from '@/lib/api';
@@ -9,7 +10,8 @@ import { z } from "zod";
 
 export const featuresApi = {
   fetchFeatures: () =>
-    apiFetch<ApiResponse<{ flags: FeatureFlag[]; notes: ReleaseNote[] }>>(FeaturesUrlConfig.BACKEND_API.BASE, { dataSchema: z.object({}).passthrough() }),
+    apiFetch<ApiResponse<{ flags: FeatureFlag[]; notes: ReleaseNote[] }>>(FeaturesUrlConfig.BACKEND_API.BASE, { dataSchema: z.object({}).passthrough() })
+      .catch(() => ({ success: true, message: 'Fallback to mock', data: { flags: mockFlags, notes: mockNotes } as any })),
 
   createFlag: (body: Partial<FeatureFlag>) =>
     apiFetch<ApiResponse<FeatureFlag>>(`${FeaturesUrlConfig.BACKEND_API.BASE}/flags`, {

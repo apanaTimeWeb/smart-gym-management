@@ -60,7 +60,7 @@ export default function SuperadminPlansList() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {plans.map((plan) => {
+      {plans.map((plan: any) => {
         const isDeleting = deleteMutation.isPending && deleteMutation.variables === plan.id;
         return (
           <div
@@ -98,7 +98,7 @@ export default function SuperadminPlansList() {
                 Binary Limit (GB): <span className="text-foreground">{plan.binaryLimitGb ?? 'Unlimited'}</span>
               </p>
               <div className="pt-2">
-                {plan.features?.map((feat) => (
+                {plan.features?.map((feat: any, idx: number) => (
                   <div key={feat} className="flex items-center gap-2 mb-2 text-sm text-secondary">
                     <Check className="w-4 h-4 text-success shrink-0" />
                     {feat}

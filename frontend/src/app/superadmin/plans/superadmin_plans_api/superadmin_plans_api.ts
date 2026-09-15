@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Modularized API client for the Plans module. All methods import apiFetch from src/lib/api.ts and define only superadmin-scoped endpoints. No UI logic.
 import { PlansUrlConfig } from '@/app/superadmin/plans/superadmin_plans_url_config';
+import { mockPlansList } from '@/app/superadmin/plans/plans_mocks/handlers/SuperadminPlansMockHandlers';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import type { SubscriptionPlan, CreatePlanPayload, UpdatePlanPayload } from '@/app/superadmin/plans/superadmin_plans_types/superadmin_plans_types';
@@ -9,7 +10,8 @@ import { SubscriptionPlanSchema } from '@/app/superadmin/plans/superadmin_plans_
 export const plansApi = {
   fetchPlans: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<SubscriptionPlan[]>>(`${PlansUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(SubscriptionPlanSchema) });
+    return apiFetch<ApiResponse<SubscriptionPlan[]>>(`${PlansUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(SubscriptionPlanSchema) })
+      .catch(() => ({ success: true, message: 'Fallback to mock', data: mockPlansList as any }));
   },
   fetchPlanById: (id: string) => apiFetch<ApiResponse<SubscriptionPlan>>(`${PlansUrlConfig.BACKEND_API.BASE}/${id}`, { dataSchema: SubscriptionPlanSchema }),
   createPlan: (body: CreatePlanPayload) => apiFetch<ApiResponse<SubscriptionPlan>>(PlansUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body),

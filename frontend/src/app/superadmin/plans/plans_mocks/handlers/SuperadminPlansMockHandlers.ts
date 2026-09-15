@@ -6,7 +6,7 @@ const MOCK_PLANS = [
   { id: '2', name: 'Pro Plan', basePrice: 99.99, billingCycle: 'MONTHLY', maxMembers: 500, features: ['Custom App', 'Adv Reports', 'API Access'], status: 'ACTIVE' },
 ];
 
-let mockPlansList = [...MOCK_PLANS];
+export let mockPlansList = [...MOCK_PLANS];
 
 export const superadminPlansHandlers = [
   http.get(BASE_URL, async () => {
