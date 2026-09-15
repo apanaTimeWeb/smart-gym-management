@@ -232,13 +232,14 @@ const FEATURES = [
 // ─── superadmin system health ─────────────────────────────────────────────────
 const SYSTEM_HEALTH = [
   { id: 'sh1', name: 'Database primary', targetSla: 99.99, actualUptime: 99.98, downtimeIncidents: 1, downtimeMinutes: 5, status: 'WARNING' },
-  { id: 'sh2', name: 'API Gateway', targetSla: 99.99, actualUptime: 100, downtimeIncidents: 0, downtimeMinutes: 0, status: 'MET' }
+  { id: 'sh2', name: 'API Gateway', targetSla: 99.99, actualUptime: 100, downtimeIncidents: 0, downtimeMinutes: 0, status: 'MET' },
+  { id: 'sh3', name: 'FitPulse India - Dedicated DB', targetSla: 99.99, actualUptime: 98.50, downtimeIncidents: 3, downtimeMinutes: 145, status: 'BREACHED' }
 ];
 
 // ─── audit logs ───────────────────────────────────────────────────────────────
 const AUDIT_LOGS = [
-  { id: 'au1', actorId: 'u1', actorName: 'Demo Admin', action: 'TENANT_SUSPENDED', targetId: 't3', targetName: 'Zenith Health Club', ipAddress: '192.168.1.1', timestamp: '2025-01-15T09:00:00Z' },
-  { id: 'au2', actorId: 'u2', actorName: 'System', action: 'BACKUP_CREATED', targetId: 'bk1', targetName: 'db_backup.sql', ipAddress: '127.0.0.1', timestamp: '2025-01-15T02:00:00Z' },
+  { id: 'au1', actorId: 'u1', actorName: 'Demo Admin', actorRole: 'SUPERADMIN', action: 'TENANT_SUSPENDED', targetId: 't3', targetResource: 'Zenith Health Club', targetName: 'Zenith Health Club', ipAddress: '192.168.1.1', timestamp: '2025-01-15T09:00:00Z' },
+  { id: 'au2', actorId: 'u2', actorName: 'System', actorRole: 'SYSTEM', action: 'BACKUP_CREATED', targetId: 'bk1', targetResource: 'db_backup.sql', targetName: 'db_backup.sql', ipAddress: '127.0.0.1', timestamp: '2025-01-15T02:00:00Z' },
 ];
 
 // ─── infrastructure ───────────────────────────────────────────────────────────
@@ -496,6 +497,7 @@ export function getMockResponse(path: string): unknown {
   if (p.includes('/ticket')) return ok(TICKETS, 'Tickets fetched');
   if (p.includes('/superadmin/jobs')) return ok(JOBS.jobs, 'Jobs fetched');
   if (p.includes('/job')) return ok(JOBS, 'Jobs fetched');
+  if (p.includes('/superadmin/migrations')) return ok({ tenants: GYMS.map((g, i) => ({ id: g.id, name: g.name, plan: g.plan, databaseVersion: i === 1 ? 'v2.4.0' : 'v2.4.1' })) }, 'Migrations fetched');
   if (p.includes('/migration')) return ok(MIGRATIONS, 'Migrations fetched');
   if (p.includes('/usage-meter')) return ok(USAGE_METERS, 'Usage meters fetched');
   if (p.includes('/superadmin/features')) return ok({ flags: mockFlags, notes: mockNotes }, 'Features fetched');

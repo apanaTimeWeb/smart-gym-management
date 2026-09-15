@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { ServerCog, Clock, AlertCircle, CheckCircle, Ticket, Search } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { formatNumber } from '@/lib/formatters';
+import { useQuery } from '@tanstack/react-query';
+import { systemApi } from '@/app/superadmin/system/superadmin_system_api/superadmin_system_api';
 
 interface SlaRecord {
   id: string;
@@ -24,7 +26,12 @@ export default function SuperadminSystemSlaTab() {
     toast.success(`Generated Downtime Credit invoice for gym ${tenantId}`, { id: 'generated-downtime-credit-invoice-for-gym-tenantid' });
   };
 
-  const slaData: SlaRecord[] = [];
+  const { data: res, isLoading } = useQuery({
+    queryKey: ['superadmin', 'system-sla'],
+    queryFn: () => systemApi.fetchSystemInfo(),
+  });
+
+  const slaData: SlaRecord[] = (res?.data || []) as SlaRecord[];
   const filteredSla = slaData.filter(sla => sla.name.toLowerCase().includes(slaSearch.toLowerCase()));
   const totalTenants = slaData.length;
   const breachedTenants = slaData.filter(s => s.status === 'BREACHED').length;
