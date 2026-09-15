@@ -217,6 +217,140 @@ the same verb naming as Backend Rule 86 and Frontend Rule 72 — 1:1 symmetry:
 
 AI agents must never invent arbitrary function names like `loadData()` or `getData()`.
 
+## Rule 7A — Complete API Contract & UI Data Coverage
+
+This rule is the mobile equivalent of Web Rule 75A and Backend Rule 82A. It closes
+the same gap on mobile: API/mock responses being incomplete while the UI silently
+renders empty cards, lists, and charts.
+
+### The Required Chain
+
+For every data-consuming feature, the following chain MUST be fully aligned before
+the feature is considered complete:
+
+```text
+UI Requirement
+      ↓
+Feature API Contract (_features.md § API Contract)
+      ↓
+Type / Model (*.types.ts / models/*.dart)
+      ↓
+Schema / Validator (Zod schema or validator class)
+      ↓
+Mock / Stub Response (test boundary mock or backend stub)
+      ↓
+Server-State Cache (TanStack Query / Riverpod AsyncNotifier)
+      ↓
+UI Rendering
+```
+
+### UI Data Coverage Requirement
+
+Before creating or modifying a feature's API function or mock response, the AI agent
+MUST inspect the complete consuming UI and identify the exact data required by:
+
+- Every card and list-item field
+- Every KPI / count / statistic widget
+- Every chart and chart series
+- Every filter, search, and sort parameter
+- Every dropdown or picker option source
+- Every detail-screen field
+- Every modal / bottom-sheet field
+- Every badge / status indicator
+- Every relationship or reference displayed (e.g. plan name, owner name)
+- Every pagination control
+- Loading, empty, and error states
+
+### Mock / Stub Response Completeness
+
+During the frontend-first development phase (before a real backend endpoint exists),
+the mock response used in tests and development MUST:
+
+1. Contain **every field** that the UI actually consumes — not just the fields
+   convenient for initial development.
+2. Include realistic value variation across multiple records:
+   - Different statuses
+   - Different plan/category combinations
+   - Different dates and numeric values
+   - Nullable/optional fields present and absent
+   - Long text values where truncation is expected
+   - Enough records to exercise pagination
+3. Support an **empty-result scenario** (zero records) that visibly triggers the
+   `EmptyState` component.
+4. Support an **error scenario** that visibly triggers the error fallback.
+
+### Forbidden: Minimal Mock / Stub
+
+```text
+❌ INVALID — UI needs all of these:
+name, phone, membershipPlan, status, expiryDate, paymentStatus
+
+Mock returns only:
+id, name, status
+→ Remaining fields render empty or undefined. FORBIDDEN.
+
+✔ REQUIRED — Mock returns:
+id, name, phone, membershipPlan, status, expiryDate, paymentStatus
+→ Every rendered field has a source in the mock response.
+```
+
+### Forbidden: Component-Level Hardcoded Fallback Data
+
+This pattern is **forbidden**:
+
+```dart
+// ❌ Flutter — FORBIDDEN
+final planName = member.planName ?? 'Basic Plan';
+final revenue = stats.revenue ?? 125000;
+```
+
+```typescript
+// ❌ React Native — FORBIDDEN
+const planName = member.planName ?? 'Basic Plan';
+const revenue = stats.revenue ?? 125000;
+```
+
+when those values are required fields of the API contract. Hardcoded fallback
+business data hides an incomplete mock/API response. The correct fix is:
+
+```text
+UI requires field
+→ update API contract in _features.md
+→ update Type / Model
+→ update Schema / Validator
+→ update mock/stub response
+→ render from response
+```
+
+### Backend Transition Rule
+
+When the real backend endpoint becomes available:
+- The UI MUST continue consuming the same API contract — no screen rewrites.
+- The feature API client MUST remain the same unless the backend contract
+  legitimately changes (see Backend Rule 67).
+- Any contract change MUST update the corresponding Type/Model, Schema/Validator,
+  mock response, `_features.md` API Contract, and tests in the same change.
+
+### AI Verification Requirement
+
+Before declaring a mobile feature complete, the AI MUST verify:
+
+1. Every displayed data field has a documented source in `_features.md § API Contract`.
+2. Every source field exists in the feature's Type/Model.
+3. Every required field is present in the mock/stub response.
+4. Every mock field is consumed correctly by the UI.
+5. Cards and list items display populated values in all intended fields.
+6. KPI and count widgets display non-placeholder values.
+7. Charts receive complete series data.
+8. Filters/search/sort/pagination produce different mocked results where applicable.
+9. Empty state can actually be triggered.
+10. Error state can actually be triggered.
+11. No component contains hidden hardcoded business fallback data.
+12. The feature works using the same API path that will be used with the real backend.
+
+A feature MUST NOT be marked complete merely because the app builds or the screen
+visually renders with placeholder values.
+
 ## Rule 8 — Lists & Rendering Performance
 
 - Any list rendering more than ~20 items MUST use a virtualization-aware list
@@ -325,6 +459,54 @@ AI agents must never invent arbitrary function names like `loadData()` or `getDa
   native API.
 - No feature is considered complete without its core logic/component tests
   passing — tracked in that feature's `_features.md` checklist.
+
+### AI Test Integrity Gate
+
+A test file existing is NOT sufficient evidence of testing.
+
+The AI MUST NOT satisfy a test requirement with:
+- Placeholder assertions (e.g. `expect(true).toBe(true)`, `expect(1).toEqual(1)`)
+- Empty test bodies or `// TODO: add assertions`
+- Snapshot-only tests for behavior that requires interaction testing
+- Tests that only verify a component or widget mounts without asserting rendered data
+- Mocked values that are completely unrelated to the feature's API contract
+- Tests that pass while the UI visibly renders empty or incorrect data
+
+Every required test MUST verify **observable behavior**, not implementation details.
+
+For API-driven features, tests MUST verify:
+
+1. Mock/stub response is returned through the real feature API path (not injected
+   directly into the widget/component).
+2. All required UI fields render the correct values from the mock response —
+   this directly verifies Rule 7A fixture completeness.
+3. Loading state appears while the request is pending.
+4. Empty state component appears when the mock response contains zero records.
+5. Error fallback appears when the mock request fails.
+6. Search/filter/sort/pagination interactions change the requested parameters
+   where applicable (verify the outgoing request, not just the rendered result).
+7. Mutation success updates the UI only according to the feature's mutation
+   policy (pessimistic — wait for 2xx, per Rule 4).
+8. Backend `response.message` is surfaced for all user-facing API errors and
+   successes — no hardcoded strings (Rule 7).
+9. Critical user flows (add, edit, delete, renewal, payment) are covered by
+   integration or E2E tests with a real app process.
+
+**A test suite is considered incomplete if the application can visually fail
+while all tests still pass.**
+
+```text
+npm test → PASS
+
+does NOT mean:
+
+feature is correct
+
+It means:
+the tests that were written happened to pass.
+If those tests did not verify the right behavior,
+the feature can be broken and PASS at the same time.
+```
 
 ## Rule 18 — Native Build & Code Signing
 
@@ -611,9 +793,10 @@ which file to open for any task without reading all files.]
 - [ ] Rule 6: Auth tokens in hardware-backed secure storage only
 - [ ] Rule 7 (API): All API calls through central network client, typed verb contract
 - [ ] Rule 7 (messages): User-facing messages come from backend response.message — never hardcoded
+- [ ] Rule 7A: API/mock response covers ALL UI fields — no missing card fields, KPI fields, chart series, filter fields, or relationship fields; no hardcoded business fallback data in components
 - [ ] Rule 8: Lists use virtualized component for >20 items
 - [ ] Rule 8: Search/filter inputs debounced — minimum 300ms before API call
-- [ ] Rule 17: Co-located unit tests present; E2E for critical flows
+- [ ] Rule 17: Co-located unit tests present; E2E for critical flows; AI Test Integrity Gate satisfied — no placeholder assertions, all required API-driven behaviors verified
 - [ ] Rule 22: No unapproved dependencies added
 - [ ] Rule 23: Observability wired for critical error paths
 - [ ] Rule 24: This _features.md is complete, specific, and non-generic
